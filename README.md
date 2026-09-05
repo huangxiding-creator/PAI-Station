@@ -1,0 +1,118 @@
+<div align="center">
+
+# 🖥️ PAI-Station
+
+### 把每一台 Windows 电脑，变成懂你胜过你自己的超级 AI 工作站
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-1F3A5F.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/Platform-Windows_10%2B-0078D6.svg)]()
+[![LLM Cost](https://img.shields.io/badge/LLM_成本-¥0_永久免费-success.svg)]()
+[![Research](https://img.shields.io/badge/调研底盘-350个开源项目-9B59B6.svg)]()
+[![Status](https://img.shields.io/badge/状态-提案冻结_待批准开-red.svg)]()
+
+**全盘感知 · 深度上下文 · 规则内化 · 技能沉淀 · 主动服务 —— 五位一体，螺旋自学习**
+
+[提案全文](PROPOSAL.md) · [商业计划](BUSINESS_MODEL.md) · [竞品解剖](RESEARCH_DOCKET/competitor-deep-dive.md) · [调研档案](RESEARCH_DOCKET/RESEARCH_DIGEST.md)
+
+</div>
+
+---
+
+## 💡 它是什么
+
+你的电脑里躺着你全部的工作痕迹：文档、邮件、会议、聊天、浏览器、内网……但没有一个 AI 真正"活"在这些数据里。
+
+**PAI-Station 是一个 7×24 常驻 Windows 的个人 AI 工作站**：它读你读过的文件、听你开过的会、学你写过的每一版稿子，最终——
+
+> **比用户更懂用户自己，比用户更懂用户的工作，比用户更早知道用户此刻需要什么。**
+
+而且：**模型调用永久 ¥0**（智谱免费模型链），数据 100% 本地，绿色免安装。
+
+## 🏗️ 五大支柱
+
+| 支柱 | 它做的事 |
+|---|---|
+| 🎧 **任务感知** | 文件到达、语音指令、会议进行中——用 JTBD×Fogg×Eisenhower 判断何时该出手、何时闭嘴 |
+| 🧠 **深度上下文** | 全盘文件→Markdown 摘要库 + OpenViking 分层记忆（LoCoMo 82% 精度，token 省 34-91%） |
+| 📜 **规则内化** | 爬取企业内网学习行文风格、公文模板、领导画像、组织规则（GB/T 9704 标准） |
+| 🛠️ **技能沉淀** | 从你的"初稿→终稿"diff 自动蒸馏个人技能卡（SKILL.md 标准），可发布到技能市场 |
+| 🔄 **自学习** | 每次任务后 5Whys 根因复盘，画像/技能/规则螺旋升级——用得越久越懂你 |
+
+## 📡 中国 IM 原生接入
+
+飞书（官方 WS 长连接）· 钉钉（Stream 模式）· 企业微信（自建应用）· 微信（纯视觉只读，零封号风险）
+
+无需公网 IP、无需服务器——家里的笔记本电脑就是你的 AI 中枢。
+
+## ⚔️ 为什么不是 OpenClaw / openhuman / QwenPaw？
+
+| 能力 | PAI-Station | OpenClaw | openhuman | QwenPaw |
+|---|---|:---:|:---:|:---:|
+| 中国四大 IM 官方接入 | ✅ | ❌ | ❌ | ⚠️ 部分 |
+| 全盘感知（文件/屏幕/音频/会议） | ✅ | ❌ | ❌ | ❌ |
+| 从工作产物蒸馏技能 | ✅ | ❌ | ❌ | ❌ |
+| 三模型收敛个人画像报告 | ✅ | ❌ | ❌ | ❌ |
+| 模型成本 | **¥0** | BYO | 订阅制 | 本地/云 |
+| 权威思维模型驱动业务逻辑 | ✅ | ❌ | ❌ | ❌ |
+
+*完整解剖见 [RESEARCH_DOCKET/competitor-deep-dive.md](RESEARCH_DOCKET/competitor-deep-dive.md)*
+
+## 🌍 生态战略：售卖这个产品玩的就是生态
+
+```
+第一层 组件生态：缝合 350 项开源精华（OpenViking/MarkItDown/SenseVoice/DrissionPage…）
+第二层 技能生态：SKILL.md 开放标准 × 双边市场（人人既是用户也是技能供给者）
+第三层 用户生态：分身资产（画像+记忆+技能）随时间指数增值 → 数据护城河
+```
+
+软件免费、模型免费、服务器免费——生态即生意。详见 [BUSINESS_MODEL.md](BUSINESS_MODEL.md)。
+
+## 🗺️ 路线图（每阶段 PDCA 螺旋闭环 + 企微里程碑通知）
+
+- [ ] **M0 地基**：项目骨架 + INI 配置 + 智谱免费链打通（glm-4-flash → glm-4.7-flash → glm-z1-flash 链式降级）
+- [ ] **M1 感知+上下文**：全盘扫描→MD 摘要库 + OpenViking 侧车 + 1AM 增量
+- [ ] **M2 通道**：飞书/钉钉/企微收发 + 微信纯视觉只读
+- [ ] **M3 技能+主动**：SKILL.md 引擎 + 初终稿 diff 蒸馏 + JTBD 主动引擎 + 截屏感知
+- [ ] **M4 画像+自学习**：三模型画像报告(Word) + 企业画像 + 会话沉淀
+- [ ] **M5 生态发布**：技能市场(GitHub 托管) + v1.0
+
+## 🧩 站在巨人肩膀上
+
+本项目不重新发明轮子。350 项调研（[档案](RESEARCH_DOCKET/github/_digest.md)）沉淀出 17 项核心缝合件，向以下项目致敬并直接借力：
+
+<table>
+<tr><td><b>记忆</b></td><td><a href="https://github.com/volcengine/OpenViking">OpenViking</a>（字节，分层上下文数据库）</td></tr>
+<tr><td><b>浏览器</b></td><td><a href="https://github.com/g1879/DrissionPage">DrissionPage</a></td></tr>
+<tr><td><b>语音</b></td><td><a href="https://github.com/QwenAudio/SenseVoice">SenseVoice</a>（169× 实时中文 ASR）</td></tr>
+<tr><td><b>文档</b></td><td><a href="https://github.com/microsoft/markitdown">MarkItDown</a> · <a href="https://github.com/opendatalab/MinerU">MinerU</a></td></tr>
+<tr><td><b>技能标准</b></td><td><a href="https://github.com/anthropics/skills">SKILL.md</a> 开放标准</td></tr>
+<tr><td><b>通道</b></td><td>飞书 lark-oapi · 钉钉 dingtalk-stream · 企微自建应用</td></tr>
+<tr><td><b>安全范式</b></td><td><a href="https://github.com/agentscope-ai/QwenPaw">QwenPaw</a> 五层防护体系</td></tr>
+<tr><td><b>模型</b></td><td>智谱 AI 免费模型链（glm-4-flash / glm-4.7-flash / glm-z1-flash / glm-4v-flash）</td></tr>
+</table>
+
+## 📚 项目文档
+
+| 文档 | 内容 |
+|---|---|
+| [PROPOSAL.md](PROPOSAL.md) | 完整提案：六引擎×权威思维模型矩阵、架构、10× 差异指数、可行性 |
+| [BUSINESS_MODEL.md](BUSINESS_MODEL.md) | 商业计划：RICE 收入引擎、定价阶梯、¥3.4 亿/年 baseline |
+| [SCORECARD.json](SCORECARD.json) | 机读评分卡（综合 9.2/10） |
+| [RESEARCH_DOCKET/](RESEARCH_DOCKET/) | 350 项调研全档案 + 四大竞品深度解剖 |
+| PAI-Station提案.docx | 专业排版提案文档（封面/目录/表格） |
+
+## 🔒 隐私与安全
+
+- **只读红线**：项目目录之外零写入，感知层全只读
+- **本地优先**：所有数据存储在本机，用户可见、可审计、可删除
+- **微信零风险**：纯视觉截图方案，不注入、不 Hook、不模拟点击
+
+## ⭐ Star 这个项目
+
+如果你也想要一台"懂你胜过你自己"的电脑——Star 并关注，提案批准后开发即刻启动。
+
+<div align="center">
+
+**PAI-Station** · 你的工作即挖矿，你的电脑即金矿 ⛏️
+
+</div>

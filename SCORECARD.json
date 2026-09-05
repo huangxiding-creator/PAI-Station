@@ -1,0 +1,38 @@
+{
+  "project": "PAI-Station",
+  "version": "1.0",
+  "date": "2026-09-05",
+  "verdict": "proceed",
+  "scores": {
+    "vision": 9.5,
+    "ten_x_delta": 9.0,
+    "feasibility": 9.0,
+    "ecosystem": 9.5,
+    "wealth_potential": 9.0,
+    "overall": 9.2
+  },
+  "gate": {
+    "type": "proposal-approval",
+    "options": ["批准", "修订", "否决"],
+    "on_approve": "enter M0 with real local testing"
+  },
+  "research": {
+    "repos_surveyed": 350,
+    "direct_competitors_deep_dived": ["openhuman", "nanobot", "QwenPaw", "OpenViking"],
+    "components_stitched": 17,
+    "delta_dimensions": 10
+  },
+  "business": {
+    "baseline_revenue": "¥3.4亿/年 @ 400万 DAU × ¥84/年",
+    "primary_lever": "skill_marketplace",
+    "cost_structure": "zero (free models + local + GitHub hosting)"
+  },
+  "constraints": {
+    "models": "Zhipu free chain only (glm-4-flash/glm-4.7-flash/glm-z1-flash/glm-4v-flash)",
+    "browser": "DrissionPage mandatory",
+    "config": "INI files",
+    "security": "read-only outside project dir",
+    "wechat": "pure vision read-only, no hooks",
+    "notify": "WeCom webhook at milestones"
+  }
+}
