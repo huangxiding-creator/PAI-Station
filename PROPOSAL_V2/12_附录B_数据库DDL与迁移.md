@@ -109,3 +109,38 @@ CREATE INDEX idx_audit_actor ON audit(actor, ts);
 - 单用户年增记忆：文档 200 条/月 + 屏幕 1,440 条/月（10 分钟×12h×30d，摘要后仅高价值入 L1）+ IM 500 条/月 ≈ 2,000 条/月 → 年 2.4 万条，10 万条前不达升级阈值；
 - 10 万条 FTS5+jieba 查询实测基准 <300ms（含实体图两跳扩展）；
 - audit 年增 ~50 万行，纯插入无性能问题，按年分库（audit-2026.db）。
+
+## B.6 V2.1 增补：智能复利引擎相关 DDL（对应第 15 章）
+
+```sql
+-- 1) 任务域奇点判据字段（skills.db，迁移 002_singularity.sql）
+ALTER TABLE skills ADD COLUMN e2e_rate REAL DEFAULT 0.0;      -- 30天滚动：端到端完成率（≥0.95 过线）
+ALTER TABLE skills ADD COLUMN adopt_rate REAL DEFAULT 0.0;    -- 30天滚动：轻改采纳率（≥0.60 过线）
+ALTER TABLE skills ADD COLUMN incident_cnt INTEGER DEFAULT 0; -- 30天滚动：重大事故数（=0 过线）
+ALTER TABLE skills ADD COLUMN autonomy_level TEXT DEFAULT 'L1' CHECK(autonomy_level IN ('L1','L2','L3'));
+
+-- 2) 意图表（memory.db，迁移 003_intents.sql）
+CREATE TABLE IF NOT EXISTS intents (
+  intent_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  domain TEXT NOT NULL,                    -- 任务域，外键→skills.skill_name
+  hypothesis TEXT NOT NULL,                -- 意图假设（如"送礼选品：预算内体面优先"）
+  evidence_hash TEXT NOT NULL,             -- 证据摘要哈希（不存原文，隐私最小化）
+  confidence REAL DEFAULT 0.5,
+  status TEXT DEFAULT 'active' CHECK(status IN ('active','retired')),
+  created_at INTEGER, retired_at INTEGER
+);
+CREATE INDEX IF NOT EXISTS idx_intents_domain ON intents(domain, status);
+
+-- 3) 授权升降级审计（audit.db，迁移 004_autonomy.sql）
+CREATE TABLE IF NOT EXISTS autonomy_events (
+  event_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  ts INTEGER NOT NULL,
+  domain TEXT NOT NULL,
+  old_level TEXT, new_level TEXT NOT NULL,
+  reason TEXT NOT NULL,                    -- 'singularity_passed' | 'incident_demotion' | 'user_override' | 'panic_switch'
+  metrics_json TEXT,                       -- 触发时的三项判据快照
+  prev_hash TEXT, hash TEXT NOT NULL       -- 哈希链：hash=sha256(prev_hash||ts||domain||new_level||reason)
+);
+```
+
+迁移说明：①三个脚本遵循 B.4 顺序执行与备份策略；②`autonomy_events` 与既有审计哈希链同构，可合并校验；③`evidence_hash` 设计呼应零信任约束——意图库可导出但导出时 evidence_hash 保留、原文永不入库；④技能市场回流（15.8.3 防失速）只回流传销后的规则文本，`intents`/diff 原始数据永不离开本机。

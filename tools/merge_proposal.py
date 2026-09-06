@@ -1,0 +1,88 @@
+# -*- coding: utf-8 -*-
+"""合并 PROPOSAL_V2/ 全部章节为 PROPOSAL.md。
+
+使用 EXPLICIT ORDERED FILE LIST（非 glob 排序）——新增章节必须加进 ORDER。
+运行: python tools/merge_proposal.py
+"""
+import os
+import sys
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SRC = os.path.join(ROOT, "PROPOSAL_V2")
+DST = os.path.join(ROOT, "PROPOSAL.md")
+
+# 主线 00-10 → 第11-14章(18/23/27/29) → 第15章(35) → 附录(A-S) → 结语
+ORDER = [
+    "00_执行摘要.md",
+    "01_愿景体系与四支柱实施路径.md",
+    "02_技术路径总纲.md",
+    "03_权威思维模型深度调研.md",
+    "04_系统架构详设.md",
+    "05_中国IM通道实施手册.md",
+    "06_生态战略详论.md",
+    "07_商业计划书详解.md",
+    "08_实施计划与进度.md",
+    "09_市场预测与收益.md",
+    "10_风险登记册.md",
+    "18_第11章_竞品全景解剖.md",
+    "23_第12章_分场景用户旅程.md",
+    "27_第13章_未来路线图M6M12.md",
+    "29_第14章_技术地图综述.md",
+    "35_第15章_智能复利引擎设计.md",
+    "11_附录A_SKILL技能规范与示例.md",
+    "12_附录B_数据库DDL与迁移.md",
+    "13_附录C_INI配置字段手册.md",
+    "14_附录D_验收测试全集.md",
+    "15_附录E_智谱免费链集成手册.md",
+    "16_附录F_安全威胁建模.md",
+    "17_附录G_术语表与FAQ.md",
+    "19_附录H_六大引擎详设.md",
+    "20_附录I_首年运营手册.md",
+    "21_附录J_开发环境与协作手册.md",
+    "22_附录K_架构决策记录ADR.md",
+    "24_附录L_提示词资产库.md",
+    "25_附录M_种子技能百件清单.md",
+    "26_附录N_安装排查与升级FAQ.md",
+    "28_附录O_贡献者与作者分成细则.md",
+    "30_附录P_M0第一周逐日演练.md",
+    "32_附录P2_M1至M5周计划演练.md",
+    "31_附录Q_十大尖锐问题回应.md",
+    "33_附录R_市场测算推导细节.md",
+    "34_附录S_核心模块参考实现.md",
+]
+
+TAIL = """
+# 结语与审批
+
+## 结语
+本手册从愿景（1.1 盖茨类比）、理论（第 3 章 32 个思维模型，含曾鸣三部曲）、复利（第 15 章智能复利引擎：任务域级 60 分奇点、责任转移协议 L1-L3、意图引擎、复利仪表盘）、技术（第 2/4/5 章+附录 A-N+S 参考代码）、生态（第 6 章+第 11 章竞品解剖）、商业（第 7/9 章+附录 R 推导）、执行（第 8 章+附录 P/P2 逐周演练）到治理（第 10 章+附录 O 生态契约），形成可独立实施的完整闭环。**一个不具备本项目背景的工程师，拿着本手册，可以在 22 周内把它实现出来**——这是"操作手册"标准的自我验证。
+
+## ✋ 审批请求（等待用户决定）
+- 批准 → 立即启动 M0 地基（第 8.2 节与附录 P，第一周逐日计划已就绪）；
+- 修改 → 指出章节号，按此文档结构定点迭代。
+"""
+
+
+def main() -> int:
+    parts, missing = [], []
+    for name in ORDER:
+        path = os.path.join(SRC, name)
+        if not os.path.exists(path):
+            missing.append(name)
+            continue
+        text = open(path, encoding="utf-8").read().strip()
+        parts.append(text + "\n")
+    if missing:
+        print("MISSING FILES:", missing)
+        return 1
+    merged = "\n".join(parts) + TAIL
+    with open(DST, "w", encoding="utf-8", newline="\n") as fh:
+        fh.write(merged)
+    cjk = sum(1 for ch in merged if "一" <= ch <= "鿿")
+    print(f"merged {len(ORDER)} files -> PROPOSAL.md")
+    print(f"total_chars={len(merged)} cjk={cjk} bytes={os.path.getsize(DST)}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
