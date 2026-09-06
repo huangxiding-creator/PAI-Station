@@ -113,7 +113,7 @@ set_font(t.add_run("PAI-Station"), "微软雅黑", 40, NAVY, bold=True)
 st = doc.add_paragraph(); st.alignment = WD_ALIGN_PARAGRAPH.CENTER
 set_font(st.add_run("个人超级 AI 工作站 · 产品提案与商业计划书"), "微软雅黑", 16, RGBColor(0x44,0x44,0x44))
 for _ in range(3): doc.add_paragraph()
-for label, val in [("提案版本","V1.0"),("提案日期","2026 年 9 月 5 日"),("状态","待批准（批准 / 修订 / 否决）"),("研发基线","350 项开源调研 · 4 大直接竞品深度解剖 · 17 项缝合件")]:
+for label, val in [("提案版本","V2.0（操作手册级 · 10 倍扩充版）"),("提案日期","2026 年 9 月 6 日"),("状态","待批准（批准 / 修订 / 否决）"),("研发基线","350 项开源调研 · 4 大竞品官网级解剖 · 19 项缝合件 · 29 个思维模型 · 14 章 + 19 附录")]:
     p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     set_font(p.add_run(f"{label}：{val}"), "微软雅黑", 12, RGBColor(0x33,0x33,0x33))
 doc.add_paragraph()
