@@ -4,13 +4,13 @@
 
 ## C.1 pai.ini 主配置（27 字段）
 
-### [llm] 推理链（6 字段）
+### [llm] 推理链（6 字段；V3.0 勘误：默认值依附录 E E.1 勘误后现行免费族谱更新）
 | 字段 | 类型 | 默认 | 取值域 | 说明 |
 |---|---|---|---|---|
-| api_key | str | 空 | 32 位智谱 key | 可被环境变量 PAI_LLM_KEY 覆盖（优先级：env > ini） |
-| fast_model | str | glm-4-flash | 智谱在售免费模型 | 系统 1 通道 |
-| deep_model | str | glm-z1-flash | 带推理链模型 | 系统 2 通道 |
-| vision_model | str | glm-4v-flash | 视觉模型 | 截图理解 |
+| api_key | str | 空 | 32 位智谱 key | 可被环境变量 PAI_LLM_KEY 覆盖（优先级：env > ini）；落盘自动 DPAPI 加密（16.6.3），配置文件中仅存 SecretRef |
+| fast_model | str | glm-4-flash-250414 | 任意模型名（端点商店） | 系统 1 高速通道 |
+| deep_model | str | glm-4.7-flash | 同上 | 系统 2：thinking 开关路由（附录 E E.1） |
+| vision_model | str | glm-4.6v-flash | 同上 | 视觉主力（128K 视觉推理） |
 | long_model | str | glm-4.7-flash | ≥200K 上下文 | 长文档 |
 | upgrade_confidence | float | 0.7 | 0.5-0.9 | 系统 1→2 升级阈值；越低越保守 |
 
@@ -50,3 +50,6 @@ capture_interval_sec（默认 900）；target_windows（"微信" 标题匹配）
 4. 路径不存在 → 列出原始值与展开值；
 5. 危险组合 → wechat_mode 非 vision_readonly 时直接拒绝（防篡改）。
 校验器 200 行内实现（纯标准库），单测覆盖全部错误分支。
+
+## C.5 V3.0 十维灵活性新增配置面（第 17 章；附录 C 全集目标 ≥300 字段）
+[models.*]（端点商店：多端点+降级链用户可编辑+monthly_token_budget）；[domain.*]（每任务域 model/channel/autonomy 三键覆盖全局）；[autonomy]（max_level 全局总闸+审批模式+approved_recipients 外发白名单）；[memory]（分层 TTL+profile_domains 画像参与范围+隐身会话开关）；[storage]/[backup.*]（data_dir 任意位置+多目标轮转）；[ui]（四形态）；[proactive] 增 intensity 0-5 滑块；[extensions]（MCP/插件/本机 REST API 端口与 token）。全部热加载：文件监视+原子替换，失败自动回滚上一好配置（17.12）。
