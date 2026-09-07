@@ -290,3 +290,30 @@ CREATE TABLE IF NOT EXISTS annual_retrospectives (
 ```
 
 迁移说明：①`attention_ledger.roi` 是推送发出前的准入门（挡掉:递进 ≥10:1 验收的量化基础）；②`immune_rules.origin_event` 关联信任修复协议——同一纠正事件的两个产出（信任修复+能力抗体）；③`legacy_grants` 吊销采用标志位+时间戳（不物理删，审计可追溯）。
+
+## B.11 V4.0 免费模型极限工程新增（第 26 章，迁移 009_free_extreme.sql）
+
+```sql
+-- 1) 语义缓存（core.db；兵器五：一切学过的永不重算）
+CREATE TABLE IF NOT EXISTS semantic_cache (
+  cache_key TEXT PRIMARY KEY,            -- sha256(任务签名+提示词签名)
+  q_sig TEXT NOT NULL,                   -- SimHash 指纹（jieba 分词，本地零依赖）
+  result_ref TEXT NOT NULL,              -- 结果引用（outbox/产物路径/技能id）
+  hits INTEGER DEFAULT 0,
+  created_ts INTEGER, last_hit_ts INTEGER
+);
+CREATE INDEX IF NOT EXISTS idx_sc_sig ON semantic_cache(q_sig);
+-- 2) 挥霍流水（core.db；挥霍仪表盘与 ¥0 复利对账单数据源）
+CREATE TABLE IF NOT EXISTS squander_log (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  ts INTEGER NOT NULL,
+  purpose TEXT NOT NULL CHECK(purpose IN ('ensemble','verify','retry','decompose','cross_model','thinking')),
+  calls INTEGER NOT NULL, tokens INTEGER NOT NULL,
+  counterfactual_cost REAL NOT NULL      -- 等价付费成本（¥0 账单数据源）
+);
+-- 3) 价值反事实扩列（B.9 value_attribution 幂等 ALTER）
+--    counterfactual_cost REAL           -- 若走付费旗舰的等价成本
+--    saved_hours REAL                   -- 归还小时（价值公式 H·w 的 H）
+```
+
+迁移说明：①`q_sig` 用 SimHash 而非向量——本地、零依赖、零成本（诚实边界：不为优雅引入向量库，GPTCache 仅作参考实现）；②`squander_log` 按月分区归档（同 audit 年分库策略）；③`counterfactual_cost` 折算牌价表存 INI（改牌价只改配置不动库）；④第 25 章三感宪章**零新增表**——哇时刻用 outbox 状态+audit 回溯、奇点宣告复用 autonomy_events、对账单聚合 value_attribution（体验层全部站在既有引擎上）。

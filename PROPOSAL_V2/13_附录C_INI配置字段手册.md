@@ -13,6 +13,9 @@
 | vision_model | str | glm-4.6v-flash | 同上 | 视觉主力（128K 视觉推理） |
 | long_model | str | glm-4.7-flash | ≥200K 上下文 | 长文档 |
 | upgrade_confidence | float | 0.7 | 0.5-0.9 | 系统 1→2 升级阈值；越低越保守 |
+| ensemble_size | int | 8 | 1-32 | V4.0 N 路自洽采样数（第 26 章兵器一；限流时自动阶梯降至 4→1） |
+| verify_rounds | int | 2 | 0-5 | V4.0 验证环最大重试轮数（兵器二） |
+| semantic_cache | bool | 1 | — | V4.0 语义缓存开关（兵器五；关闭用于 A/B 度量缓存收益） |
 
 ### [sense] 感知（7 字段）
 | 字段 | 类型 | 默认 | 说明 |
@@ -62,3 +65,6 @@ coach_mode（off|on|auto，默认 auto：检测到同类问题重复求助时才
 
 ## C.8 V3.4 产品灵魂宪章配置面（第 24 章；[soul] 段 7 字段）
 devil_advocate（on|major_only|off，默认 major_only——重大外发自动红队第二意见卡）；honesty_confidence_display（bool 默认 1，**不可关**——诚实不可选，字段仅展示当前状态）；attention_broker（off|digest|full，默认 digest：每周值得你亲自看的 5 件事）；stop_doing_suggestions（bool 默认 1，每月 Stop-Doing 清单）；legacy_mode（off|on，默认 off——明示开启才生成传承教学副本，三铁律见 24.5）；annual_report（bool 默认 1，年末纯本地生成人生工作年报）；soul_report_merge（bool 默认 1，注意力审计与成长周报合版推送）。
+
+## C.9 V4.0 三感产品宪章配置面（第 25 章；[wow] 段 3 字段）
+wow_first_run（bool 默认 1，首扫镜像报告——60 秒零输入上帝时刻，10 条"真度+非显然度"双约束陈述）；singularity_announce（bool 默认 1，奇点宣告仪式——任务域跨过 60 分奇点时发岗位交接消息）；zero_bill_monthly（bool 默认 1，¥0 复利对账单——月度恐怖装置，数据源 squander_log+value_attribution）。三感推送全部计入 [proactive].max_push_per_day 与周日历配额，绝不因"仪式"另开通知通道（25.2.5 恐怖≠惊吓红线）。
