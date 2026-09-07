@@ -24,7 +24,8 @@ def token():
     p = subprocess.run(["git", "credential", "fill"], cwd=ROOT,
                        input=b"protocol=https\nhost=github.com\n\n",
                        capture_output=True, timeout=10)
-    creds = dict(l.split("=", 1) for l in p.stdout.decode().splitlines() if "=" in l)
+    creds = dict(line.split("=", 1) for line in p.stdout.decode().splitlines()
+                 if "=" in line)
     tok = creds.get("password", "")
     if not tok:
         raise SystemExit("no credential token")
@@ -98,9 +99,10 @@ def main():
     msg = subprocess.run(["git", "log", "-1", "--pretty=%B"], cwd=ROOT,
                          capture_output=True, text=True, encoding="utf-8",
                          errors="replace").stdout.strip()
+    trailer = ("\n\n（GitHub API 通道直连推送：api.github.com 大 payload 经代理会被污染为 400，"
+               "故此提交由 Git Data API 创建，与本地提交内容等价）")
     _, c = call("POST", f"/repos/{REPO}/git/commits", tok,
-                {"message": msg + "\n\n（GitHub API 通道直连推送：api.github.com 大 payload 经代理会被污染为 400，"
-                            "故此提交由 Git Data API 创建，与本地提交内容等价）",
+                {"message": msg + trailer,
                  "tree": t["sha"], "parents": [remote_sha]})
     _, rr = call("PATCH", f"/repos/{REPO}/git/refs/heads/main", tok,
                  {"sha": c["sha"], "force": False})
