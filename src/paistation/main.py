@@ -155,10 +155,11 @@ def _wecom_webhook() -> str:
 
 
 def serve(config_path: str, db: str | None = None, max_ticks: int | None = None,
-          interval: float = 60.0) -> int:
-    """服务主循环（WinSW 守护）：心跳审计 + Ctrl+C/SIGTERM 干净退出。
+          interval: float = 60.0, runtime_factory=None) -> int:
+    """服务主循环（WinSW 守护）：Runtime 整机 + 心跳审计 + 干净退出。
 
-    M0：心跳空转占位；M1 起逐里程碑接入 watcher/调度器。
+    runtime_factory(cfg, audit=...) 注入（测试用假件）；None 时纯心跳
+    （M0 兼容行为）。每拍心跳后过一次 daily_tick 复盘闸门（内部当日幂等）。
     """
     import signal
     import time
@@ -167,6 +168,14 @@ def serve(config_path: str, db: str | None = None, max_ticks: int | None = None,
 
     cfg = config.load(config_path)
     audit = AuditLog(db or os.path.join(cfg["privacy"]["data_dir"], "audit.db"))
+    runtime = None
+    if runtime_factory is not None:
+        try:
+            runtime = runtime_factory(cfg, audit=audit)
+            runtime.start()
+        except Exception as exc:  # noqa: BLE001 - 整机故障退回心跳保活
+            print(f"[serve] runtime 启动失败，退回心跳模式：{exc}")
+            runtime = None
     stopping = {"flag": False}
 
     def _stop(signum, frame):  # noqa: ARG001 - signal 签名固定
@@ -177,8 +186,15 @@ def serve(config_path: str, db: str | None = None, max_ticks: int | None = None,
     ticks = 0
     while not stopping["flag"] and (max_ticks is None or ticks < max_ticks):
         audit.record("heartbeat", module="serve", pid=os.getpid(), tick=ticks)
+        if runtime is not None:
+            try:
+                runtime.daily_tick()
+            except Exception as exc:  # noqa: BLE001 - 复盘故障不杀主循环
+                print(f"[serve] daily_tick 异常（忽略）：{exc}")
         time.sleep(interval)
         ticks += 1
+    if runtime is not None:
+        runtime.stop()
     audit.record("serve.stop", module="serve", pid=os.getpid(), ticks=ticks)
     audit.close()
     return 0
@@ -216,7 +232,8 @@ def main(argv: list[str] | None = None) -> int:
             print(f"[doctor] {'✓' if ok else '✗'} {name}")
         return 0 if all(ok for _, ok in results) else 1
     if args.serve:
-        return serve(args.config)
+        from paistation.runtime import Runtime
+        return serve(args.config, runtime_factory=Runtime.from_config)
     if args.first_scan:
         return first_scan(args.config)
     ap.print_help()
