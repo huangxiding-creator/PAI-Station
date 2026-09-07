@@ -181,13 +181,14 @@ def load(path: str, env: dict[str, str] | None = None) -> types.MappingProxyType
             ("proactive", proactive), ("privacy", privacy), ("learn", learn), ("wow", wow))})
 
 
-def resolve_api_key(cfg: types.MappingProxyType, env: dict[str, str] | None = None) -> str:
+def resolve_api_key(cfg: types.MappingProxyType, env: dict[str, str] | None = None,
+                    secret_ini: str | None = None) -> str:
     """优先级：env PAI_LLM_KEY > [llm].api_key > config/llm.secret.ini。"""
     env = os.environ if env is None else env
     for val in (env.get("PAI_LLM_KEY", "").strip(), cfg["llm"]["api_key"].strip()):
         if val:
             return val
-    secret_ini = os.path.join(os.path.dirname(os.path.abspath(
+    secret_ini = secret_ini or os.path.join(os.path.dirname(os.path.abspath(
         __file__)), "..", "..", "config", "llm.secret.ini")
     if os.path.isfile(secret_ini):
         sp = configparser.ConfigParser()

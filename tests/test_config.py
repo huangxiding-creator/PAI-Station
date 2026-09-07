@@ -280,4 +280,4 @@ def test_api_key_missing_everywhere(tmp_path, monkeypatch):
     monkeypatch.delenv("PAI_LLM_KEY", raising=False)
     c = cfg.load(write(tmp_path, build_ini(tmp_path)))
     with pytest.raises(cfg.ConfigError, match="PAI_LLM_KEY"):
-        cfg.resolve_api_key(c)
+        cfg.resolve_api_key(c, secret_ini=str(tmp_path / "none.secret.ini"))

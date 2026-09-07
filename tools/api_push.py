@@ -104,11 +104,11 @@ def main():
     ok = verify["object"]["sha"] == c["sha"]
     print(f"api push {'SUCCESS' if ok else 'FAILED'} remote_main={verify['object']['sha'][:8]}")
     if ok:
+        subject = msg.splitlines()[0]
         subprocess.run([sys.executable, os.path.join(ROOT, "tools", "notify_wecom.py"),
-                        "提案V3.4已推送（GitHub API 通道）",
-                        f"第23章共同成长引擎（双螺旋/PGI+UGI/教学三档/防退化五机制）+第24章产品灵魂宪章"
-                        f"（第二注意力/诚实引擎/错误免疫/减法智能/分身传承/人生年报）已合并推送，"
-                        f"remote main={verify['object']['sha'][:8]}，{len(tree)}个文件，docx稍后另发"],
+                        "PAI-Station 已推送（GitHub API 通道）",
+                        f"{subject}；remote main={verify['object']['sha'][:8]}，"
+                        f"{len(tree)}个文件变更"],
                        cwd=ROOT, capture_output=True)
     return 0 if ok else 1
 
