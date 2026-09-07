@@ -112,6 +112,48 @@ def doctor(config_path: str, secret_ini: str | None = None,
     return results
 
 
+def first_scan(config_path: str, push: bool = True) -> int:
+    """首扫镜像（锚点 1.x / T23 上帝时刻）：白名单只读扫描 + 企微投递。"""
+    cfg = config.load(config_path)
+    key = config.resolve_api_key(cfg)
+    from paistation.channels.wecom import WeComChannel
+    from paistation.llm.zhipu_client import ZhipuClient
+    from paistation.proactive.first_scan import run_first_scan
+    from paistation.proactive.outbox import Outbox
+
+    client = ZhipuClient(
+        key, [cfg["llm"]["fast_model"], cfg["llm"]["deep_model"]],
+        vision_model=cfg["llm"]["vision_model"])
+    channel = outbox = None
+    if push:
+        channel = WeComChannel(_wecom_webhook())
+        outbox = Outbox(max_push_per_day=cfg["proactive"]["max_push_per_day"],
+                        quiet_hours=cfg["proactive"]["quiet_hours"],
+                        state_path=os.path.join(cfg["privacy"]["data_dir"],
+                                                "outbox.json"))
+    report = run_first_scan(watch_dirs=list(cfg["sense"]["watch_dirs"]),
+                            deep_fn=client.deep, channel=channel, outbox=outbox)
+    for i, s in enumerate(report["statements"], 1):
+        print(f"[first-scan] {i}. {s['text']}")
+        print(f"              依据：{s['evidence']}")
+    if "delivery" in report:
+        d = report["delivery"]
+        print(f"[first-scan] 投递：{'✓ 已推送' if d.get('delivered') else d.get('reason')}")
+    return 0
+
+
+def _wecom_webhook() -> str:
+    """企微 webhook：环境变量 PAI_WECOM_WEBHOOK 优先，其次 secret ini。"""
+    import configparser
+    hook = os.environ.get("PAI_WECOM_WEBHOOK", "")
+    if hook:
+        return hook
+    parser = configparser.ConfigParser()
+    parser.read(os.path.join(os.path.dirname(DEFAULT_INI), "wecom.secret.ini"),
+                encoding="utf-8")
+    return parser.get("wecom", "webhook", fallback="")
+
+
 def serve(config_path: str, db: str | None = None, max_ticks: int | None = None,
           interval: float = 60.0) -> int:
     """服务主循环（WinSW 守护）：心跳审计 + Ctrl+C/SIGTERM 干净退出。
@@ -152,6 +194,8 @@ def main(argv: list[str] | None = None) -> int:
                     help="自检：配置/密钥/依赖/数据目录")
     ap.add_argument("--serve", action="store_true",
                     help="服务主循环（WinSW 守护，锚点 0.6）")
+    ap.add_argument("--first-scan", action="store_true",
+                    help="首扫镜像：白名单只读扫描生成 10 条陈述并投递企微")
     ap.add_argument("--config", default=os.environ.get("PAI_INI", DEFAULT_INI),
                     help=f"INI 路径（默认 {DEFAULT_INI}，环境变量 PAI_INI 可覆盖）")
     ap.add_argument("--version", action="version",
@@ -168,6 +212,8 @@ def main(argv: list[str] | None = None) -> int:
         return 0 if all(ok for _, ok in results) else 1
     if args.serve:
         return serve(args.config)
+    if args.first_scan:
+        return first_scan(args.config)
     ap.print_help()
     return 0
 

@@ -8,6 +8,7 @@ import fnmatch
 import json
 import logging
 import os
+import re
 import time
 
 _log = logging.getLogger("paistation.sense.mirror")
@@ -107,7 +108,7 @@ class MirrorScanner:
             f"快照：{json.dumps(snap, ensure_ascii=False)}")
         try:
             raw = self._deep(prompt, reasoning=True)["text"]
-            data = json.loads(raw)
+            data = self._loads_array(raw)
             if isinstance(data, list):
                 sts = [{"text": str(d.get("text", "")).strip(),
                         "evidence": str(d.get("evidence", "")).strip()}
@@ -119,6 +120,19 @@ class MirrorScanner:
         except Exception as exc:
             _log.warning("deep 镜像生成失败，规则补足: %s", exc)
         return []
+
+    @staticmethod
+    def _loads_array(raw: str):
+        """容错解析 JSON 数组：去 ``` 围栏 → 整体 loads → 抓最外层 [ ]。"""
+        cleaned = re.sub(r"^```(?:json)?|```$", "", raw.strip(),
+                         flags=re.MULTILINE).strip()
+        try:
+            return json.loads(cleaned)
+        except ValueError:
+            match = re.search(r"\[[\s\S]*\]", cleaned)
+            if match:
+                return json.loads(match.group(0))
+            raise
 
     def _rule_statements(self, snap: dict, n: int) -> list:
         out: list[dict] = []

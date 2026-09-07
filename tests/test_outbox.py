@@ -117,3 +117,27 @@ def test_stats(state):
     ob.push(ch, "a", "x")
     st = ob.stats()
     assert st["today_sent"] == 1 and st["drawer_items"] == 0
+
+
+def test_quiet_hours_accepts_c1_dash_string(state):
+    """附录 C.1 单串格式 '22:00-07:00' 直接可用。"""
+    ch = FakeChannel()
+    ob = Outbox(max_push_per_day=5, quiet_hours="22:00-07:00",
+                state_path=state, now_fn=fixed_now("23:30"))
+    assert ob.push(ch, "t", "b")["delivered"] is False
+
+
+def test_quiet_hours_rejects_garbage(state):
+    import pytest as _pytest
+    with _pytest.raises(ValueError):
+        Outbox(max_push_per_day=1, quiet_hours="随时随地",
+               state_path=state, now_fn=fixed_now("10:00"))
+
+
+def test_real_struct_time_clock(state):
+    """生产路径 time.localtime()（struct_time）与勿扰判定兼容。"""
+    import time as _t
+    ch = FakeChannel()
+    ob = Outbox(max_push_per_day=5, quiet_hours="00:00-23:59",
+                state_path=state, now_fn=_t.localtime)
+    assert ob.push(ch, "t", "b")["delivered"] is False  # 全天勿扰

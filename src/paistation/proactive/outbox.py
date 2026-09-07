@@ -12,9 +12,28 @@ import time
 _log = logging.getLogger("paistation.proactive.outbox")
 
 
+def _normalize_quiet(quiet_hours) -> tuple[str, str]:
+    """接受 ("22:00","07:00") 或 C.1 单串 "22:00-07:00"。"""
+    if isinstance(quiet_hours, str):
+        parts = quiet_hours.split("-")
+        if len(parts) == 2:
+            return parts[0].strip(), parts[1].strip()
+        raise ValueError(f"quiet_hours 格式非法：{quiet_hours}（应为 HH:MM-HH:MM）")
+    if len(quiet_hours) == 2:
+        return quiet_hours[0], quiet_hours[1]
+    raise ValueError(f"quiet_hours 应为 2 元素或 'HH:MM-HH:MM'，得到 {quiet_hours}")
+
+
+def _minutes(now) -> int:
+    """datetime 与 time.struct_time 通吃的当日分钟数。"""
+    if hasattr(now, "tm_hour"):
+        return now.tm_hour * 60 + now.tm_min
+    return now.hour * 60 + now.minute
+
+
 def _in_quiet(now, quiet_hours) -> bool:
     start_s, end_s = quiet_hours
-    minutes = now.hour * 60 + now.minute
+    minutes = _minutes(now)
     start = _hhmm(start_s)
     end = _hhmm(end_s)
     if start <= end:  # 同日区间
@@ -33,7 +52,7 @@ class Outbox:
     def __init__(self, max_push_per_day: int, quiet_hours: tuple,
                  state_path: str, now_fn=None, retention_days: int = 7):
         self._max = int(max_push_per_day)
-        self._quiet = tuple(quiet_hours)
+        self._quiet = _normalize_quiet(quiet_hours)
         self._path = state_path
         self._now = now_fn or (lambda: time.localtime())
         self._retention_days = retention_days
@@ -96,9 +115,8 @@ class Outbox:
 
     def _to_drawer(self, title: str, body: str, why: str):
         now = self._now()
-        self._drawer.append({"title": title, "body": body, "why": why,
-                             "ts": time.mktime(now.timetuple())
-                             if hasattr(now, "timetuple") else now.timestamp()})
+        ts = time.mktime(now) if hasattr(now, "tm_year") else now.timestamp()
+        self._drawer.append({"title": title, "body": body, "why": why, "ts": ts})
         self._save()
 
     def drawer(self) -> list[dict]:
