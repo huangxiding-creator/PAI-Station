@@ -5,6 +5,7 @@ upsert 以 path 为键幂等；stats 供首扫镜像报告聚合。
 """
 import os
 import sqlite3
+import threading
 
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS docs(
@@ -25,7 +26,10 @@ class MemoryStore:
     def __init__(self, db_path: str):
         parent = os.path.dirname(os.path.abspath(db_path))
         os.makedirs(parent, exist_ok=True)
-        self._db = sqlite3.connect(db_path)
+        # watchdog 回调线程与主线程共用（实机 2026-09-07 日志教训：
+        # 默认 check_same_thread=True → 实时入库全败）；串行锁保安全
+        self._lock = threading.Lock()
+        self._db = sqlite3.connect(db_path, check_same_thread=False)
         self._db.row_factory = sqlite3.Row
         self._db.execute(_SCHEMA)
         self._fts = self._init_fts()
@@ -45,31 +49,35 @@ class MemoryStore:
         import time
         now = time.time()
         norm = path.replace("\\", "/")  # 两表同键归一，JOIN 才能对上
-        self._db.execute(
-            "INSERT INTO docs(path, title, summary, score, size, mtime, ingested_at)"
-            " VALUES(?,?,?,?,?,?,?)"
-            " ON CONFLICT(path) DO UPDATE SET title=excluded.title,"
-            " summary=excluded.summary, score=excluded.score, size=excluded.size,"
-            " mtime=excluded.mtime, ingested_at=excluded.ingested_at",
-            (norm, title, summary, score, size, mtime, now))
-        if self._fts:
-            self._db.execute("DELETE FROM docs_fts WHERE path=?", (norm,))
-            self._db.execute("INSERT INTO docs_fts(path, title, summary) VALUES(?,?,?)",
-                             (norm, title, summary))
-        self._db.commit()
+        with self._lock:
+            self._db.execute(
+                "INSERT INTO docs(path, title, summary, score, size, mtime, ingested_at)"
+                " VALUES(?,?,?,?,?,?,?)"
+                " ON CONFLICT(path) DO UPDATE SET title=excluded.title,"
+                " summary=excluded.summary, score=excluded.score, size=excluded.size,"
+                " mtime=excluded.mtime, ingested_at=excluded.ingested_at",
+                (norm, title, summary, score, size, mtime, now))
+            if self._fts:
+                self._db.execute("DELETE FROM docs_fts WHERE path=?", (norm,))
+                self._db.execute(
+                    "INSERT INTO docs_fts(path, title, summary) VALUES(?,?,?)",
+                    (norm, title, summary))
+            self._db.commit()
 
     def search(self, query: str, limit: int = 10) -> list[dict]:
         if not query.strip():
             return []
-        if self._fts:
-            rows = self._db.execute(
-                "SELECT d.* FROM docs_fts f JOIN docs d ON d.path = f.path "
-                "WHERE docs_fts MATCH ? LIMIT ?", (self._fts_query(query), limit))
-        else:
-            like = f"%{query}%"
-            rows = self._db.execute(
-                "SELECT * FROM docs WHERE summary LIKE ? OR title LIKE ? "
-                "LIMIT ?", (like, like, limit))
+        with self._lock:
+            if self._fts:
+                rows = self._db.execute(
+                    "SELECT d.* FROM docs_fts f JOIN docs d ON d.path = f.path "
+                    "WHERE docs_fts MATCH ? LIMIT ?",
+                    (self._fts_query(query), limit)).fetchall()
+            else:
+                like = f"%{query}%"
+                rows = self._db.execute(
+                    "SELECT * FROM docs WHERE summary LIKE ? OR title LIKE ? "
+                    "LIMIT ?", (like, like, limit)).fetchall()
         return [dict(r) for r in rows]
 
     @staticmethod
@@ -79,8 +87,9 @@ class MemoryStore:
         return f'"{safe}"'
 
     def stats(self) -> dict:
-        rows = self._db.execute(
-            "SELECT path, score FROM docs").fetchall()
+        with self._lock:
+            rows = self._db.execute(
+                "SELECT path, score FROM docs").fetchall()
         by_suffix: dict[str, int] = {}
         by_dir: dict[str, int] = {}
         for row in rows:

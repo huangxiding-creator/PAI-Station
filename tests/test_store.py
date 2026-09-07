@@ -60,3 +60,24 @@ def test_like_fallback_when_no_fts(store):
     store._fts = False
     store.upsert(path="d:/n/备份.md", title="备份", summary="回退检索测试", score=0.5)
     assert store.search("回退检索")[0]["path"] == "d:/n/备份.md"
+
+
+def test_cross_thread_upsert(store):
+    """实机 bug（2026-09-07 服务日志）：watchdog 回调线程用主线程连接 →
+    "SQLite objects created in a thread can only be used in that same
+    thread"。主线程建库，子线程 upsert+search 必须成功。"""
+    import threading
+    errs = []
+
+    def worker():
+        try:
+            store.upsert(path="C:/Desktop/notes.md", title="笔记",
+                         summary="跨线程写入测试", score=0.6)
+            assert store.search("跨线程写入")
+        except Exception as exc:  # noqa: BLE001
+            errs.append(exc)
+
+    t = threading.Thread(target=worker)
+    t.start()
+    t.join()
+    assert not errs, f"跨线程操作失败: {errs}"
