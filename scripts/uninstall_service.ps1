@@ -1,4 +1,4 @@
-# PAI-Station 服务卸载（需管理员 PowerShell）
+﻿# PAI-Station 服务卸载（需管理员 PowerShell）
 $ErrorActionPreference = "Stop"
 $exe = Join-Path $PSScriptRoot "winsw\PAI-Station.exe"
 if (Test-Path $exe) {

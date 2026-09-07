@@ -1,4 +1,4 @@
-# PAI-Station 服务安装（需管理员 PowerShell）
+﻿# PAI-Station 服务安装（需管理员 PowerShell）
 # 用法：右键"以管理员身份运行"或 Start-Process powershell -Verb RunAs -ArgumentList "-File install_service.ps1"
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $PSScriptRoot   # 仓库根
@@ -13,6 +13,7 @@ if (-not (Test-Path $exe)) {
 }
 
 # 自检先行：配置/密钥/依赖/数据目录（附录 P：不带病运行）
+$env:PYTHONIOENCODING = "utf-8"   # GBK 控制台免疫（✓/✗ 输出）
 & (Join-Path $root ".venv\Scripts\python.exe") -m paistation --doctor
 if ($LASTEXITCODE -ne 0) { throw "doctor 自检未通过，拒绝安装服务" }
 

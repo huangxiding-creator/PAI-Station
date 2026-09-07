@@ -185,6 +185,11 @@ def serve(config_path: str, db: str | None = None, max_ticks: int | None = None,
 
 
 def main(argv: list[str] | None = None) -> int:
+    # GBK 控制台兜底：✓/✗ 等字符在中文 Windows 默认代码页下不可编码，
+    # 服务/脚本场景（WinSW 日志、PowerShell）必须免疫（errors=replace）。
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8", errors="replace")
     ap = argparse.ArgumentParser(prog="paistation",
                                  description="PAI-Station 个人超级 AI 工作站")
     ap.add_argument("--check", action="store_true", help="校验配置文件后退出")
