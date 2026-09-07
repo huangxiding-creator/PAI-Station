@@ -231,10 +231,10 @@ class ZhipuClient:
 
     # ---------- 4.2 接口契约 ----------
 
-    def fast(self, prompt: str, context: str = "") -> dict:
-        """系统 1 高速通道：{text, confidence, usage}。"""
+    def fast(self, prompt: str, context: str = "", json_mode: bool = False) -> dict:
+        """系统 1 高速通道：{text, confidence, usage}（json_mode 供 ingest 摘要）。"""
         r = self._call([{"role": "user", "content": f"{context}\n{prompt}".strip()}],
-                       self._free_models[0], json_mode=False, temperature=0.3)
+                       self._free_models[0], json_mode=json_mode, temperature=0.3)
         return {"text": r["text"], "usage": r["usage"],
                 "confidence": 1.0 if r["finish_reason"] == "stop" else 0.5}
 
