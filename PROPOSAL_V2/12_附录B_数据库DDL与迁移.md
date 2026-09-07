@@ -208,3 +208,85 @@ CREATE TABLE IF NOT EXISTS context_sources (
 ```
 
 迁移说明：①`trust_ledger.trust_delta` 只做趋势展示不做访问控制判据（权限判定永远以用户明示授权为准——账本是透明工具不是隐形评分）；②`context_sources.hit_count` 由需求命中回写，构成"每格贡献了多少次命中"的覆盖度仪表盘；③`intents` 升级保留旧字段写入兼容（evidence_hash 继续维护，防降级丢数据）。
+
+## B.9 V3.4 共同成长引擎新增（第 23 章，迁移 007_cogrowth.sql）
+
+```sql
+-- 1) 双成长账本（core.db；PGI/UGI 的数据源，6×2 成长矩阵的库化）
+CREATE TABLE IF NOT EXISTS growth_ledger (
+  event_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  ts INTEGER NOT NULL,
+  subject TEXT NOT NULL CHECK(subject IN ('product','user')),   -- 哪条螺旋
+  track TEXT NOT NULL CHECK(track IN ('knowledge','skill','capability','value')),
+  event TEXT NOT NULL,                       -- 'skill_acquired'|'gap_filled'|'domain_singularity'|'practice_done'|...
+  evidence_json TEXT,                        -- 证据引用（技能id/图谱节点/任务id）
+  delta REAL DEFAULT 0                       -- PGI/UGI 分量增量
+);
+-- 2) 教学会话（core.db；教中学缺口的采集点）
+CREATE TABLE IF NOT EXISTS teaching_sessions (
+  session_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  ts INTEGER NOT NULL,
+  domain TEXT NOT NULL,
+  mode TEXT NOT NULL CHECK(mode IN ('teach','coach','delegate')),  -- L1/L2/L3 教学档位
+  topic TEXT, socratic_rounds INTEGER DEFAULT 0,
+  comprehension_score REAL,                  -- L1 追问理解分
+  knowledge_gap_found INTEGER DEFAULT 0      -- 被问倒→23.2.1 知识缺口登记
+);
+-- 3) FSRS 练习队列（core.db；py-fsrs 调度，每日 3 张上限硬编码）
+CREATE TABLE IF NOT EXISTS practice_items (
+  item_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  front TEXT NOT NULL, back TEXT NOT NULL,
+  source_skill TEXT, source_node TEXT,       -- 来自哪个技能/图谱节点
+  due INTEGER NOT NULL, stability REAL, difficulty REAL,  -- FSRS 三参数
+  reviews INTEGER DEFAULT 0, lapses INTEGER DEFAULT 0
+);
+-- 4) 价值归因（core.db；月度共同价值报告数据源）
+CREATE TABLE IF NOT EXISTS value_attribution (
+  task_id TEXT PRIMARY KEY, ts INTEGER NOT NULL,
+  product_share REAL, user_share REAL,       -- 归因（缺省估算/用户 10 秒修正）
+  basis_json TEXT                            -- 归因依据
+);
+```
+
+迁移说明：①`growth_ledger` 与 `trust_ledger` 同构（事件流+增量），月报合并校验；②`practice_items` 的 due/stability/difficulty 直接由 py-fsrs 维护，不自研调度算法；③螺旋上升判定器（23.1.3）以 `growth_ledger` 双 subject 聚合为判据——连续两个宏循环全维停滞才触发诊断，防误报。
+
+## B.10 V3.4 产品灵魂宪章新增（第 24 章，迁移 008_soul.sql）
+
+```sql
+-- 1) 注意力账本（core.db；注意力 ROI 判定与月度审计数据源）
+CREATE TABLE IF NOT EXISTS attention_ledger (
+  event_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  ts INTEGER NOT NULL,
+  kind TEXT NOT NULL CHECK(kind IN ('flow','deliver','blocked')),  -- 流向/递进/挡掉
+  source TEXT,                              -- 应用/信息源/推送候选
+  duration_sec INTEGER, value_est REAL,     -- 注意力成本/预期价值
+  roi REAL                                  -- value_est/(duration_sec+打扰成本系数)
+);
+-- 2) 疫苗库（core.db；错误免疫系统：纠正→抗体→复拦）
+CREATE TABLE IF NOT EXISTS immune_rules (
+  rule_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  created_ts INTEGER NOT NULL,
+  scene_sig TEXT NOT NULL,                  -- 场景签名（scanner 签名体系复用）
+  error_pattern TEXT NOT NULL, correct_action TEXT NOT NULL,
+  origin_event TEXT,                        -- 来源纠正事件（trust_ledger 引用）
+  blocked_count INTEGER DEFAULT 0,          -- 复拦次数（免疫有效性）
+  shared INTEGER DEFAULT 0                  -- 脱敏上架标志（只发模式不发数据）
+);
+-- 3) 传承授权（core.db；全 opt-in+可吊销+禁冒充三铁律的库化）
+CREATE TABLE IF NOT EXISTS legacy_grants (
+  grant_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  created_ts INTEGER NOT NULL,
+  grantee TEXT NOT NULL,                    -- 被传授人（市场用户/团队成员）
+  scope_json TEXT,                          -- 授权范围（技能集/画像维度；不含隐私原始数据）
+  revoked INTEGER DEFAULT 0, revoked_ts INTEGER
+);
+-- 4) 年报索引（raw.db；Word 产物在文件系统，库存索引与素材引用）
+CREATE TABLE IF NOT EXISTS annual_retrospectives (
+  year INTEGER PRIMARY KEY,
+  generated_ts INTEGER NOT NULL,
+  narrative_path TEXT,                      -- Word 产物路径（纯本地）
+  stats_json TEXT                           -- 六章数据快照
+);
+```
+
+迁移说明：①`attention_ledger.roi` 是推送发出前的准入门（挡掉:递进 ≥10:1 验收的量化基础）；②`immune_rules.origin_event` 关联信任修复协议——同一纠正事件的两个产出（信任修复+能力抗体）；③`legacy_grants` 吊销采用标志位+时间戳（不物理删，审计可追溯）。

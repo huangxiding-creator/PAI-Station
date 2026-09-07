@@ -56,3 +56,9 @@ capture_interval_sec（默认 900）；target_windows（"微信" 标题匹配）
 
 ## C.6 V3.1 技能铸造厂配置面（第 19 章；info_sources.ini，每源 6 字段——"配置要简洁，没必要的不搞"）
 type（web_course|feishu_wiki|ebook_dir|intranet）；url/path（资料在哪）；auth=secretref:名称（凭据只存 DPAPI 保险箱引用，附录 C 明文禁区）；schedule（cron 增量调度：混沌 weekly MON 08:00、飞书知识库可 daily 07:30）；formats（docx,md,pdf 产物渲染）；enabled（一键启停）。选择器与翻页规则存同文件 selectors 段——源站改版只改配置不改代码（R17）。配套 [foundry] 段：default_recipe（默认铸造配方，开箱即用）、cross_casting（交叉铸造开关，19.7）、notes_publish（学习笔记→公众号运营飞轮开关，19.9）、upload_targets（组织库回流目标，如工程行业大脑）。支持 IM 对话式增改源（"帮我把这个知识库加进采集"），热加载机制同 C.5。
+
+## C.7 V3.4 共同成长引擎配置面（第 23 章；[growth] 段 6 字段）
+coach_mode（off|on|auto，默认 auto：检测到同类问题重复求助时才建议练习——不打扰优先）；challenge_frequency（never|monthly|weekly，默认 monthly，能力保持测试 opt-in）；srs_enabled（bool 默认 1，FSRS 每日 3 张上限硬编码不配置化）；growth_report_day（SUN/MON/.../off，默认 SUN）；dependency_alert_threshold（0.5-1.0，默认 0.85，依赖度超阈仅提示不强制）；teaching_style（socratic|direct|adaptive，默认 adaptive——按用户纠正历史自动切换）。教练类推送全部计入 [proactive].max_push_per_day，永不另开通知通道（23.5 打扰预算）。
+
+## C.8 V3.4 产品灵魂宪章配置面（第 24 章；[soul] 段 7 字段）
+devil_advocate（on|major_only|off，默认 major_only——重大外发自动红队第二意见卡）；honesty_confidence_display（bool 默认 1，**不可关**——诚实不可选，字段仅展示当前状态）；attention_broker（off|digest|full，默认 digest：每周值得你亲自看的 5 件事）；stop_doing_suggestions（bool 默认 1，每月 Stop-Doing 清单）；legacy_mode（off|on，默认 off——明示开启才生成传承教学副本，三铁律见 24.5）；annual_report（bool 默认 1，年末纯本地生成人生工作年报）；soul_report_merge（bool 默认 1，注意力审计与成长周报合版推送）。

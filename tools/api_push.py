@@ -16,8 +16,9 @@ import urllib.request as u
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = "huangxiding-creator/PAI-Station"
 API = "https://api.github.com"
-PROXY = {"http": "http://127.0.0.1:7890", "https": "http://127.0.0.1:7890"}
-opener = u.build_opener(u.ProxyHandler(PROXY))
+# 2026-09-07 实测：大 payload（约 >100KB b64）经 7890 代理 POST 会被机场污染成
+# 400 "malformed request"；api.github.com 直连可用（gh CLI 同为直连）。故走直连。
+opener = u.build_opener(u.ProxyHandler({}))
 
 
 def token():
@@ -53,10 +54,20 @@ def main():
                                 capture_output=True, text=True).stdout.strip()[:8]
     print(f"remote={remote_sha[:8]} base_tree={base_tree[:8]} local={local_head}")
 
-    out = subprocess.run(["git", "diff", "--name-only", remote_sha + "..HEAD"],
-                         cwd=ROOT, capture_output=True, text=True,
-                         encoding="utf-8", errors="replace").stdout.split()
-    files = [f for f in out if f.strip()]
+    # 远端树逐文件比对本地 HEAD 树（blob sha）——远端可能含本地未知的 API 提交，
+    # git diff 对未知 SHA 会静默失败返回空；树比对不依赖共同历史。
+    # CJK 路径必须 -c core.quotepath=false（否则 \347\253\236 转义致 isfile 失败静默跳过）。
+    _, rt = call("GET", f"/repos/{REPO}/git/trees/{base_tree}?recursive=1", tok)
+    remote_blobs = {e["path"]: e["sha"] for e in rt.get("tree", []) if e.get("type") == "blob"}
+    ls = subprocess.run(["git", "-c", "core.quotepath=false", "ls-tree", "-r", "HEAD"],
+                        cwd=ROOT, capture_output=True, text=True,
+                        encoding="utf-8", errors="replace").stdout.splitlines()
+    files = []
+    for line in ls:
+        meta, path = line.split("\t", 1)
+        sha = meta.split()[2]
+        if remote_blobs.get(path) != sha:
+            files.append(path)
     print(f"changed files vs remote: {len(files)}")
 
     tree = []
@@ -76,12 +87,13 @@ def main():
 
     _, t = call("POST", f"/repos/{REPO}/git/trees", tok,
                 {"base_tree": base_tree, "tree": tree})
+    # 提交信息自动取本地 HEAD 的 message——推送内容即本地提交内容，信息天然一致
+    msg = subprocess.run(["git", "log", "-1", "--pretty=%B"], cwd=ROOT,
+                         capture_output=True, text=True, encoding="utf-8",
+                         errors="replace").stdout.strip()
     _, c = call("POST", f"/repos/{REPO}/git/commits", tok,
-                {"message": "feat: 提案V2.1——曾鸣智能复利调研+第15章智能复利引擎设计（GitHub API 通道）\n\n"
-                            "任务域级60分奇点判据/责任转移协议L1-L3/意图引擎/复利仪表盘/北极星变更；\n"
-                            "思维模型库29→32（曾鸣三部曲）；附录B.6 DDL、附录Q11、README理论底座；\n"
-                            "PROPOSAL.md 112,048字符（12.2×V1.0）；Word V2.1 1,689段/41表。\n"
-                            "含 tools/merge_proposal.py、tools/clash_push.py（Clash API 自动切点推送）。",
+                {"message": msg + "\n\n（GitHub API 通道直连推送：api.github.com 大 payload 经代理会被污染为 400，"
+                            "故此提交由 Git Data API 创建，与本地提交内容等价）",
                  "tree": t["sha"], "parents": [remote_sha]})
     _, rr = call("PATCH", f"/repos/{REPO}/git/refs/heads/main", tok,
                  {"sha": c["sha"], "force": False})
@@ -90,9 +102,10 @@ def main():
     print(f"api push {'SUCCESS' if ok else 'FAILED'} remote_main={verify['object']['sha'][:8]}")
     if ok:
         subprocess.run([sys.executable, os.path.join(ROOT, "tools", "notify_wecom.py"),
-                        "PAI-Station GitHub 推送成功",
-                        f"GitHub API 通道原子提交完成，remote main={verify['object']['sha'][:8]}，"
-                        f"含 Word 成果 V2.1 全部 {len(tree)} 个文件"],
+                        "提案V3.4已推送（GitHub API 通道）",
+                        f"第23章共同成长引擎（双螺旋/PGI+UGI/教学三档/防退化五机制）+第24章产品灵魂宪章"
+                        f"（第二注意力/诚实引擎/错误免疫/减法智能/分身传承/人生年报）已合并推送，"
+                        f"remote main={verify['object']['sha'][:8]}，{len(tree)}个文件，docx稍后另发"],
                        cwd=ROOT, capture_output=True)
     return 0 if ok else 1
 
