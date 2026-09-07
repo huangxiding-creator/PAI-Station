@@ -140,9 +140,13 @@ class Runtime:
     # ---------- 每日 PDCA ----------
 
     def daily_tick(self) -> dict | None:
-        """pdca_time 之后当日首次调用执行复盘；未到/已做过返回 None。"""
+        """pdca_time 之后、勿扰结束后当日首次调用执行复盘并投递。
+
+        勿扰中跳过且不消耗当日名额（默认 pdca_time=02:00 落在勿扰时段，
+        复盘属"明早可执行"建议，应在早晨送达而非沉入抽屉）。
+        """
         now = self._now()
-        if _mins(now) < self._pdca_time:
+        if _mins(now) < self._pdca_time or self.outbox.is_quiet():
             return None
         today = _date_str(now)
         if self._last_pdca() == today:

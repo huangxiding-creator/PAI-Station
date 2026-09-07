@@ -98,6 +98,10 @@ class Outbox:
             return f"今日预算已用尽（{self._sent_today()}/{self._max}）"
         return None
 
+    def is_quiet(self) -> bool:
+        """当前是否处于勿扰时段（供调度方延迟非紧急推送）。"""
+        return _in_quiet(self._now(), self._quiet)
+
     # ---------- 出口 ----------
 
     def push(self, channel, title: str, body: str) -> dict:

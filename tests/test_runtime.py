@@ -110,6 +110,18 @@ def test_daily_tick_before_pdca_time_skips(tmp_path):
     rt.close()
 
 
+def test_daily_tick_in_quiet_defers_not_consumes(tmp_path):
+    # 测试 ini 勿扰 03:30-04:00：勿扰中不标记当日，勿扰结束后补送
+    clock = {"now": datetime(2026, 9, 7, 3, 45)}
+    rt, channel = make_runtime(tmp_path, now_fn=lambda: clock["now"])
+    assert rt.daily_tick() is None          # 勿扰中：跳过且不占名额
+    assert channel.sent == []
+    clock["now"] = datetime(2026, 9, 7, 5, 0)
+    rt.daily_tick()                         # 同日勿扰后：正常送
+    assert len([t for t, _ in channel.sent if "复盘" in t]) == 1
+    rt.close()
+
+
 def test_daily_tick_without_channel_safe(tmp_path):
     cfg = config.load(write_ini(tmp_path))
     rt = Runtime(cfg, client=FakeClient(), channel=None, watcher_factory=FakeWatcher,
