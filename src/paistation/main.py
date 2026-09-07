@@ -4,11 +4,10 @@ M0 骨架阶段仅支持 `--check`（INI 配置校验）与 `--version`；
 引擎装配随里程碑逐个接入（见附录 P 逐日计划）。
 """
 import argparse
-import configparser
 import os
 import sys
 
-from paistation import __version__
+from paistation import __version__, config
 
 # 配置文件解析顺序：项目根 config/pai.ini，可用环境变量 PAI_INI 覆盖
 DEFAULT_INI = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(
@@ -16,26 +15,13 @@ DEFAULT_INI = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(
 
 
 def check(config_path: str) -> int:
-    """骨架期校验：pai.ini 存在且可解析，[llm]/[sense] 段非空。
-
-    周二配置日将替换为 config.py 五类错误完整校验（附录 C.4）。
-    """
-    if not os.path.isfile(config_path):
-        print(f"[check] 未找到配置文件：{config_path}"
-              f"（请参考 config/pai.ini 或用环境变量 PAI_INI 指定）")
-        return 1
-    parser = configparser.ConfigParser()
+    """全量校验（附录 C.4）：五类错误中文报错，非法即拒绝。"""
     try:
-        with open(config_path, encoding="utf-8") as fh:
-            parser.read_file(fh)
-    except (OSError, configparser.Error) as exc:
-        print(f"[check] 配置文件解析失败：{exc}")
+        config.load(config_path)
+    except config.ConfigError as exc:
+        print(f"[check] 配置非法：{exc}")
         return 1
-    missing = [sec for sec in ("llm", "sense") if not parser.has_section(sec)]
-    if missing:
-        print(f"[check] 配置缺少必填段：{', '.join(missing)}")
-        return 1
-    print(f"[check] OK config={config_path} sections={len(parser.sections())}")
+    print(f"[check] OK config={config_path}")
     return 0
 
 
