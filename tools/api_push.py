@@ -72,10 +72,13 @@ def main():
 
     tree = []
     for path in files:
-        full = os.path.join(ROOT, path)
-        if not os.path.isfile(full):
+        # 上传 HEAD 的 blob 原始字节而非工作区文件——autocrlf 环境下工作区可能是
+        # CRLF 而 HEAD 对象是 LF，读工作区会造成"上传 blob sha ≠ 本地树 sha"的幻影差异
+        p = subprocess.run(["git", "cat-file", "blob", f"HEAD:{path}"],
+                           cwd=ROOT, capture_output=True, timeout=30)
+        if p.returncode != 0:
             continue
-        content = base64.b64encode(open(full, "rb").read()).decode()
+        content = base64.b64encode(p.stdout).decode()
         _, blob = call("POST", f"/repos/{REPO}/git/blobs", tok,
                        {"content": content, "encoding": "base64"})
         tree.append({"path": path.replace("\\", "/"), "mode": "100644",
