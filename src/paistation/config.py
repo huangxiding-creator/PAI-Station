@@ -51,7 +51,8 @@ class _Reader:
 
     def str(self, key, default=""):
         raw = self._raw(key, default)
-        return default if raw is None else raw
+        # INI 惯例：显式空值 = 未设置（如 data_dir 留空回退默认路径）
+        return default if raw is None or raw == "" else raw
 
     def int(self, key, default, lo, hi):
         return self._num(key, default, int, lo, hi, "整数")

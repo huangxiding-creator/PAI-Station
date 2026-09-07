@@ -1,0 +1,16 @@
+<service>
+  <id>PAI-Station</id>
+  <name>PAI-Station 个人超级 AI 工作站</name>
+  <description>7×24 常驻：感知→上下文→规则→技能→主动→自学习（提案 4.2）</description>
+  <executable>e:\AI-Station\.venv\Scripts\python.exe</executable>
+  <arguments>-m paistation --serve</arguments>
+  <workingdirectory>e:\AI-Station</workingdirectory>
+  <env name="PYTHONIOENCODING" value="utf-8" />
+  <startmode>Automatic</startmode>
+  <onfailure action="restart" delay="10 sec" />
+  <stoptimeout>30 sec</stoptimeout>
+  <log mode="roll-by-size">
+    <sizeThreshold>1024</sizeThreshold>
+    <keepFiles>4</keepFiles>
+  </log>
+</service>

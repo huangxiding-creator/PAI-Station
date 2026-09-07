@@ -77,12 +77,81 @@ def _vision_probe(client) -> str:
         os.unlink(path)
 
 
+def doctor(config_path: str, secret_ini: str | None = None,
+           data_dir: str | None = None) -> list[tuple[str, bool]]:
+    """自修复自检（借 OpenClaw doctor 设计）：配置/密钥/依赖/数据目录。"""
+    results: list[tuple[str, bool]] = []
+    try:
+        cfg = config.load(config_path)
+        results.append(("配置校验", True))
+    except config.ConfigError as exc:
+        results.append((f"配置校验（{exc}）", False))
+        return results
+    try:
+        config.resolve_api_key(cfg, secret_ini=secret_ini)
+        results.append(("智谱密钥", True))
+    except config.ConfigError:
+        results.append(("智谱密钥（缺 PAI_LLM_KEY/llm.secret.ini）", False))
+    try:
+        import apscheduler  # noqa: F401
+        import tenacity  # noqa: F401
+        import watchdog  # noqa: F401
+        results.append(("核心依赖", True))
+    except ImportError:
+        results.append(("核心依赖", False))
+    target = data_dir or cfg["privacy"]["data_dir"]
+    try:
+        os.makedirs(target, exist_ok=True)
+        probe = os.path.join(target, ".doctor_probe")
+        with open(probe, "w", encoding="utf-8") as fh:
+            fh.write("ok")
+        os.remove(probe)
+        results.append(("数据目录可写", True))
+    except OSError:
+        results.append(("数据目录可写", False))
+    return results
+
+
+def serve(config_path: str, db: str | None = None, max_ticks: int | None = None,
+          interval: float = 60.0) -> int:
+    """服务主循环（WinSW 守护）：心跳审计 + Ctrl+C/SIGTERM 干净退出。
+
+    M0：心跳空转占位；M1 起逐里程碑接入 watcher/调度器。
+    """
+    import signal
+    import time
+
+    from paistation.security.audit import AuditLog
+
+    cfg = config.load(config_path)
+    audit = AuditLog(db or os.path.join(cfg["privacy"]["data_dir"], "audit.db"))
+    stopping = {"flag": False}
+
+    def _stop(signum, frame):  # noqa: ARG001 - signal 签名固定
+        stopping["flag"] = True
+
+    signal.signal(signal.SIGINT, _stop)
+    signal.signal(signal.SIGTERM, _stop)
+    ticks = 0
+    while not stopping["flag"] and (max_ticks is None or ticks < max_ticks):
+        audit.record("heartbeat", module="serve", pid=os.getpid(), tick=ticks)
+        time.sleep(interval)
+        ticks += 1
+    audit.record("serve.stop", module="serve", pid=os.getpid(), ticks=ticks)
+    audit.close()
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="paistation",
                                  description="PAI-Station 个人超级 AI 工作站")
     ap.add_argument("--check", action="store_true", help="校验配置文件后退出")
     ap.add_argument("--check-llm", action="store_true",
                     help="真实连通测试：fast/deep/vision 各一次（锚点 0.3）")
+    ap.add_argument("--doctor", action="store_true",
+                    help="自检：配置/密钥/依赖/数据目录")
+    ap.add_argument("--serve", action="store_true",
+                    help="服务主循环（WinSW 守护，锚点 0.6）")
     ap.add_argument("--config", default=os.environ.get("PAI_INI", DEFAULT_INI),
                     help=f"INI 路径（默认 {DEFAULT_INI}，环境变量 PAI_INI 可覆盖）")
     ap.add_argument("--version", action="version",
@@ -92,6 +161,13 @@ def main(argv: list[str] | None = None) -> int:
         return check(args.config)
     if args.check_llm:
         return check_llm(args.config)
+    if args.doctor:
+        results = doctor(args.config)
+        for name, ok in results:
+            print(f"[doctor] {'✓' if ok else '✗'} {name}")
+        return 0 if all(ok for _, ok in results) else 1
+    if args.serve:
+        return serve(args.config)
     ap.print_help()
     return 0
 
