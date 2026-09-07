@@ -8,7 +8,7 @@
 [![Platform](https://img.shields.io/badge/Platform-Windows_10%2B-0078D6.svg)]()
 [![LLM Cost](https://img.shields.io/badge/LLM_成本-默认¥0起步_永不锁定-success.svg)]()
 [![Research](https://img.shields.io/badge/调研底盘-350个开源项目-9B59B6.svg)]()
-[![Status](https://img.shields.io/badge/状态-提案冻结_待批准开-red.svg)]()
+[![Status](https://img.shields.io/badge/状态-开发中_M0地基-0078D6.svg)]()
 
 **全盘感知 · 深度上下文 · 规则内化 · 技能沉淀 · 主动服务 —— 五位一体，双螺旋共同成长**
 
@@ -184,6 +184,8 @@
 
 ## 🗺️ 路线图（每阶段 PDCA 螺旋闭环 + 企微里程碑通知）
 
+**开发已启动**（2026-09-07 提案批准，按[附录 P 第一周逐日计划](PROPOSAL.md)推进）：M0.1 骨架落地（4.2 目录树 36 模块/pyproject/`python -m paistation --check`）✅ · M0.2 配置校验器（附录 C.4 五类错误中文报错，TDD 34 测试全绿，覆盖率 94%）✅
+
 - [ ] **M0 地基**：项目骨架 + INI 配置 + 智谱免费链打通（glm-4-flash → glm-4.7-flash → glm-z1-flash 链式降级）+ 挥霍基建一期（ensemble 执行器/验证环/semantic_cache，第 26 章）
 - [ ] **M1 感知+上下文**：全盘扫描→MD 摘要库 + OpenViking 侧车 + 1AM 增量 + **首扫镜像报告（零输入上帝时刻，第 25 章 T23）**
 - [ ] **M2 通道**：飞书/钉钉/企微收发 + 微信纯视觉只读 + 挥霍限流自适应
@@ -225,7 +227,7 @@
 
 ## ⭐ Star 这个项目
 
-如果你也想要一台"懂你胜过你自己"的电脑——Star 并关注，提案批准后开发即刻启动。
+如果你也想要一台"懂你胜过你自己"的电脑——Star 并关注，开发正在推进（M0 地基进行中）。
 
 <div align="center">
 
