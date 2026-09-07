@@ -58,6 +58,7 @@ def test_batch_pending_view():
 def test_fswatcher_end_to_end(tmp_path):
     """真 watchdog：写入文件 → 窗口到期 → on_batch 收到路径。"""
     import time as _time
+
     from paistation.sense.fs_watcher import FsWatcher
 
     got: list[list[str]] = []
