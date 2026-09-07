@@ -62,15 +62,20 @@ def main():
     ls = subprocess.run(["git", "-c", "core.quotepath=false", "ls-tree", "-r", "HEAD"],
                         cwd=ROOT, capture_output=True, text=True,
                         encoding="utf-8", errors="replace").stdout.splitlines()
-    files = []
+    local_blobs = {}
     for line in ls:
         meta, path = line.split("\t", 1)
-        sha = meta.split()[2]
-        if remote_blobs.get(path) != sha:
-            files.append(path)
-    print(f"changed files vs remote: {len(files)}")
+        local_blobs[path] = meta.split()[2]
+    files = [p for p, sha in local_blobs.items() if remote_blobs.get(p) != sha]
+    deleted = [p for p in remote_blobs if p not in local_blobs]
+    print(f"changed files vs remote: {len(files)}, deleted: {len(deleted)}")
 
     tree = []
+    # 删除传播：sha=None 从 base_tree 摘除条目（否则本地删除的文件在远端永生）
+    for path in deleted:
+        tree.append({"path": path.replace("\\", "/"), "mode": "100644",
+                     "type": "blob", "sha": None})
+        print(f"  delete {path}")
     for path in files:
         # 上传 HEAD 的 blob 原始字节而非工作区文件——autocrlf 环境下工作区可能是
         # CRLF 而 HEAD 对象是 LF，读工作区会造成"上传 blob sha ≠ 本地树 sha"的幻影差异
@@ -101,7 +106,14 @@ def main():
     _, rr = call("PATCH", f"/repos/{REPO}/git/refs/heads/main", tok,
                  {"sha": c["sha"], "force": False})
     _, verify = call("GET", f"/repos/{REPO}/git/ref/heads/main", tok)
-    ok = verify["object"]["sha"] == c["sha"]
+    ref_ok = verify["object"]["sha"] == c["sha"]
+    # 硬校验：远端提交树必须与本地 HEAD 树逐 sha 等价（ref 相同≠内容等价）
+    local_tree = subprocess.run(["git", "rev-parse", "HEAD^{tree}"], cwd=ROOT,
+                                capture_output=True, text=True).stdout.strip()
+    _, vc = call("GET", f"/repos/{REPO}/git/commits/{verify['object']['sha']}", tok)
+    ok = ref_ok and vc.get("tree", {}).get("sha") == local_tree
+    if not ok:
+        print(f"TREE MISMATCH remote={vc.get('tree', {}).get('sha')} local={local_tree}")
     print(f"api push {'SUCCESS' if ok else 'FAILED'} remote_main={verify['object']['sha'][:8]}")
     if ok:
         subject = msg.splitlines()[0]
