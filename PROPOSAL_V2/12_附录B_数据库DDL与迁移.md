@@ -144,3 +144,38 @@ CREATE TABLE IF NOT EXISTS autonomy_events (
 ```
 
 迁移说明：①三个脚本遵循 B.4 顺序执行与备份策略；②`autonomy_events` 与既有审计哈希链同构，可合并校验；③`evidence_hash` 设计呼应零信任约束——意图库可导出但导出时 evidence_hash 保留、原文永不入库；④技能市场回流（15.8.3 防失速）只回流传销后的规则文本，`intents`/diff 原始数据永不离开本机。
+
+## B.7 V3.1 技能铸造厂新增（第 19 章，迁移 005_foundry.sql）
+
+```sql
+-- 1) 信息源登记（core.db；INI 每源 6 字段，库表存运行态）
+CREATE TABLE IF NOT EXISTS info_sources (
+  source_id TEXT PRIMARY KEY,              -- '混沌学园'
+  type TEXT NOT NULL CHECK(type IN ('web_course','feishu_wiki','ebook_dir','intranet')),
+  url TEXT, path TEXT,
+  auth_ref TEXT,                           -- SecretRef→DPAPI 保险箱，明文永不入库
+  schedule TEXT NOT NULL,                  -- cron，如 'weekly MON 08:00'
+  formats TEXT DEFAULT 'docx,md,pdf',
+  enabled INTEGER DEFAULT 1,
+  last_cursor TEXT,                        -- 增量游标（课程页码/知识库节点 token）
+  fingerprint TEXT,                        -- 源级内容指纹
+  health INTEGER DEFAULT 100               -- 源站改版健康度（低于阈值触发 heal 告警）
+);
+-- 2) 知识原料湖索引（raw.db；目录是缓存、库是索引）
+CREATE TABLE IF NOT EXISTS raw_corpus (
+  chunk_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  source_id TEXT NOT NULL,
+  coords TEXT NOT NULL,                    -- 来源坐标：'混沌学园/课程A/第3节'
+  fingerprint TEXT NOT NULL,               -- 章节级指纹（增量再蒸馏定位，成本降 90%+）
+  license TEXT NOT NULL CHECK(license IN ('self_only','market_ok','rewrite_ok')),
+  created_at INTEGER, updated_at INTEGER
+);
+CREATE INDEX IF NOT EXISTS idx_raw_src ON raw_corpus(source_id, fingerprint);
+-- 3) skills 表增列（幂等 ALTER）
+--    price_tokens INTEGER DEFAULT 0       -- 自铸=0 永远免费自用；上架才定价（19.10）
+--    origin TEXT CHECK(origin IN ('diff','ebook','course','wiki','intranet'))
+--    parents TEXT                          -- 血缘 JSON：父技能/源 chunk_id/杂交配方（19.12）
+--    license_flag INTEGER DEFAULT 0       -- 0 自用 / 1 可上架（19.11 分层自动执行）
+```
+
+迁移说明：①`license` 三态由采集器按源类型自动标注（混沌课程=rewrite_ok 且上市场拦截、企业内网=self_only 硬编码）；②血缘 `parents` 支撑血缘图与"源更新→技能可升级"反查（raw_corpus.fingerprint 变更即定位受影响技能）；③`info_sources.health` 是 R17（源站改版）的量化哨兵。

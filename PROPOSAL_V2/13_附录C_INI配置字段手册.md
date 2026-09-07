@@ -53,3 +53,6 @@ capture_interval_sec（默认 900）；target_windows（"微信" 标题匹配）
 
 ## C.5 V3.0 十维灵活性新增配置面（第 17 章；附录 C 全集目标 ≥300 字段）
 [models.*]（端点商店：多端点+降级链用户可编辑+monthly_token_budget）；[domain.*]（每任务域 model/channel/autonomy 三键覆盖全局）；[autonomy]（max_level 全局总闸+审批模式+approved_recipients 外发白名单）；[memory]（分层 TTL+profile_domains 画像参与范围+隐身会话开关）；[storage]/[backup.*]（data_dir 任意位置+多目标轮转）；[ui]（四形态）；[proactive] 增 intensity 0-5 滑块；[extensions]（MCP/插件/本机 REST API 端口与 token）。全部热加载：文件监视+原子替换，失败自动回滚上一好配置（17.12）。
+
+## C.6 V3.1 技能铸造厂配置面（第 19 章；info_sources.ini，每源 6 字段——"配置要简洁，没必要的不搞"）
+type（web_course|feishu_wiki|ebook_dir|intranet）；url/path（资料在哪）；auth=secretref:名称（凭据只存 DPAPI 保险箱引用，附录 C 明文禁区）；schedule（cron 增量调度：混沌 weekly MON 08:00、飞书知识库可 daily 07:30）；formats（docx,md,pdf 产物渲染）；enabled（一键启停）。选择器与翻页规则存同文件 selectors 段——源站改版只改配置不改代码（R17）。配套 [foundry] 段：default_recipe（默认铸造配方，开箱即用）、cross_casting（交叉铸造开关，19.7）、notes_publish（学习笔记→公众号运营飞轮开关，19.9）、upload_targets（组织库回流目标，如工程行业大脑）。支持 IM 对话式增改源（"帮我把这个知识库加进采集"），热加载机制同 C.5。
