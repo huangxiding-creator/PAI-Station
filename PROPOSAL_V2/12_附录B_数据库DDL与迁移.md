@@ -179,3 +179,32 @@ CREATE INDEX IF NOT EXISTS idx_raw_src ON raw_corpus(source_id, fingerprint);
 ```
 
 迁移说明：①`license` 三态由采集器按源类型自动标注（混沌课程=rewrite_ok 且上市场拦截、企业内网=self_only 硬编码）；②血缘 `parents` 支撑血缘图与"源更新→技能可升级"反查（raw_corpus.fingerprint 变更即定位受影响技能）；③`info_sources.health` 是 R17（源站改版）的量化哨兵。
+
+## B.8 V3.2 信任-上下文引擎新增（第 21 章，迁移 006_trust_context.sql）
+
+```sql
+-- 1) 信任账本（core.db；月度信任报告的数据源）
+CREATE TABLE IF NOT EXISTS trust_ledger (
+  event_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  ts INTEGER NOT NULL,
+  kind TEXT NOT NULL CHECK(kind IN ('grant','revoke','upgrade','downgrade','incident','repair','report')),
+  scope TEXT NOT NULL,                     -- 感知源/通道/任务域
+  detail_json TEXT,                        -- 事件细节（含出境 payload 哈希引用）
+  trust_delta REAL DEFAULT 0               -- 信任余额变动（incident 为负，repair 回补）
+);
+CREATE INDEX IF NOT EXISTS idx_trust_ts ON trust_ledger(ts);
+-- 2) 上下文覆盖度矩阵（18 源×4 态；仪表盘的库化）
+CREATE TABLE IF NOT EXISTS context_sources (
+  source TEXT PRIMARY KEY,                 -- 'files'|'email'|'calendar'|'im_feishu'|...18 源
+  layer TEXT NOT NULL CHECK(layer IN ('explicit','behavioral','environmental')),  -- L0/L1/L2
+  status TEXT DEFAULT 'dormant' CHECK(status IN ('dormant','granted','active','deep')),
+  ladder TEXT DEFAULT 'T0' CHECK(ladder IN ('T0','T1','T2','T3')),   -- 信任阶梯门槛
+  last_event_at INTEGER, refresh_sec INTEGER,
+  hit_count INTEGER DEFAULT 0              -- 该源贡献的需求命中次数（覆盖度仪表盘列）
+);
+-- 3) 意图库证据升级（兼容扩展，迁移内幂等）
+--    intents.evidence_hash TEXT  →  intents.evidence_json TEXT
+--    数组元素 {layer: L0|L1|L2, kind, hash, ts}；置信度 = 层间一致度函数（21.3.2 三角定位）
+```
+
+迁移说明：①`trust_ledger.trust_delta` 只做趋势展示不做访问控制判据（权限判定永远以用户明示授权为准——账本是透明工具不是隐形评分）；②`context_sources.hit_count` 由需求命中回写，构成"每格贡献了多少次命中"的覆盖度仪表盘；③`intents` 升级保留旧字段写入兼容（evidence_hash 继续维护，防降级丢数据）。
