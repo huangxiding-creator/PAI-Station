@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 r"""GitHub Git Data API 推送——绕开 github.com receive-pack（机场中转坏）。
 
 api.github.com 与 github.com 是不同 CDN 通道，实测经 7890 代理可用。
