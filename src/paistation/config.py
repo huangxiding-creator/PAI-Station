@@ -167,6 +167,8 @@ def load(path: str, env: dict[str, str] | None = None) -> types.MappingProxyType
         raise ConfigError("[learn].double_loop_confirm 安全默认不可低于 1：双环改动必须用户确认")
     learn = {
         "pdca_time": learn_r.pattern("pdca_time", "02:00", _HHMM, "HH:MM"),
+        "incremental_time": learn_r.pattern("incremental_time", "01:00",
+                                            _HHMM, "HH:MM"),
         "distill_min_samples": learn_r.int("distill_min_samples", 5, 3, 10),
         "double_loop_confirm": True,
     }

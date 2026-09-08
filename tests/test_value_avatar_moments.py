@@ -1,12 +1,9 @@
 """R8 T16 价值账本 + T22 avatar.pai 传承 + T24 恐怖时刻/奇点宣告 + T27 ¥0对账单。"""
 import json
-import os
 
 from paistation.soul.avatar import export_avatar
-from paistation.soul.moments import (SingularityWatch, horror_calendar,
-                                     singularity_message)
+from paistation.soul.moments import SingularityWatch, horror_calendar, singularity_message
 from paistation.soul.value_ledger import ValueLedger
-
 
 # ---- T16/T27 价值账本 ----
 

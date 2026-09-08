@@ -2,8 +2,7 @@
 import os
 
 from paistation.learn.narrative import annual_report
-from paistation.learn.subtraction import (declutter_info, stop_doing_list,
-                                          time_flow_microscope)
+from paistation.learn.subtraction import declutter_info, stop_doing_list, time_flow_microscope
 from paistation.soul.word_report import profile_word_report, save_docx
 
 METRICS = {

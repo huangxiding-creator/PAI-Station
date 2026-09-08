@@ -1,6 +1,5 @@
 """R4 T17 注意力账本：ROI 门槛 + 挡:递 ≥10:1 + 每周 5 件事。"""
 import json
-import os
 
 from paistation.soul.attention import AttentionLedger, roi_gate
 

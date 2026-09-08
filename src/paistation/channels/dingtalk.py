@@ -36,7 +36,7 @@ class DingTalkChannel:
     @staticmethod
     def _sign(secret: str, timestamp_ms: int) -> str:
         digest = hmac.new(secret.encode("utf-8"),
-                          f"{timestamp_ms}\n{secret}".encode("utf-8"),
+                          f"{timestamp_ms}\n{secret}".encode(),
                           hashlib.sha256).digest()
         return urllib.parse.quote_plus(base64.b64encode(digest).decode("ascii"))
 

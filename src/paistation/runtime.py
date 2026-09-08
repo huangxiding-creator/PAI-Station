@@ -19,6 +19,7 @@ from .proactive.outbox import Outbox
 from .security.audit import AuditLog
 from .security.file_guard import FileGuard
 from .sense.fs_watcher import EventFilter, FsWatcher
+from .sense.incremental import IncrementalScanner
 from .sense.ingest import Ingester
 
 _log = logging.getLogger("paistation.runtime")
@@ -86,6 +87,11 @@ class Runtime:
         self._pdca_time = _hhmm(learn["pdca_time"])
         self._pdca_state = os.path.join(data, "pdca.state.json")
         self._first_scan_marker = os.path.join(data, "first-scan.done")
+        self._inc_time = _hhmm(learn.get("incremental_time", "01:00"))
+        self._inc_state = os.path.join(data, "incremental.state.json")
+        self._incremental = IncrementalScanner(
+            self._dirs, self.on_batch, self._inc_state,
+            ignore_patterns=sense["ignore_patterns"])
         self._started = False
 
     # ---------- 感知入库链 ----------
@@ -144,8 +150,11 @@ class Runtime:
 
         勿扰中跳过且不消耗当日名额（默认 pdca_time=02:00 落在勿扰时段，
         复盘属"明早可执行"建议，应在早晨送达而非沉入抽屉）。
+        另含 01:00 增量补扫（先于 PDCA）：mtime 兜底补 watcher 停机窗口
+        漏报，静默维护、勿扰不限（不产生任何推送）。
         """
         now = self._now()
+        self._incremental_step(now)
         if _mins(now) < self._pdca_time or self.outbox.is_quiet():
             return None
         today = _date_str(now)
@@ -160,6 +169,25 @@ class Runtime:
         self.audit.record("pdca.review", module="learn",
                           delivered=delivery.get("delivered", False))
         return delivery
+
+    def _incremental_step(self, now) -> None:
+        """incremental_time 后当日一次：mtime 增量补扫（静默维护）。"""
+        if _mins(now) < self._inc_time:
+            return
+        today = _date_str(now)
+        try:
+            with open(self._inc_state, encoding="utf-8") as fh:
+                if json.load(fh).get("date") == today:
+                    return
+        except (OSError, ValueError):
+            pass
+        try:
+            out = self._incremental.run(now_fn=self._now)
+            self.audit.record("incremental.scan", module="sense",
+                              changed=out.get("changed", 0),
+                              ingested=out.get("ingested", 0))
+        except Exception as exc:  # noqa: BLE001 - 补扫失败不挡复盘
+            _log.warning("增量补扫失败（服务继续）: %s", exc)
 
     def _last_pdca(self) -> str:
         try:

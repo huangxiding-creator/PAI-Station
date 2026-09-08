@@ -142,6 +142,26 @@ def first_scan(config_path: str, push: bool = True) -> int:
     return 0
 
 
+def gui(config_path: str) -> int:
+    """托盘 GUI（提案 4.2 ui 四形态之常驻形态）：暂停感知/设置/退出。
+
+    阻塞直至用户点退出；配置非法时先报错退出（不带病上托盘）。
+    """
+    try:
+        config.load(config_path)
+    except config.ConfigError as exc:
+        print(f"[gui] 配置非法：{exc}")
+        return 1
+    from paistation.ui.tray import TrayApp
+    app = TrayApp(config_dir=os.path.dirname(os.path.abspath(config_path)))
+    try:
+        app.run()
+    except RuntimeError as exc:
+        print(f"[gui] {exc}")
+        return 1
+    return 0
+
+
 def _wecom_webhook() -> str:
     """企微 webhook：环境变量 PAI_WECOM_WEBHOOK 优先，其次 secret ini。"""
     import configparser
@@ -217,6 +237,8 @@ def main(argv: list[str] | None = None) -> int:
                     help="服务主循环（WinSW 守护，锚点 0.6）")
     ap.add_argument("--first-scan", action="store_true",
                     help="首扫镜像：白名单只读扫描生成 10 条陈述并投递企微")
+    ap.add_argument("--gui", action="store_true",
+                    help="启动系统托盘（暂停感知/设置/退出）")
     ap.add_argument("--config", default=os.environ.get("PAI_INI", DEFAULT_INI),
                     help=f"INI 路径（默认 {DEFAULT_INI}，环境变量 PAI_INI 可覆盖）")
     ap.add_argument("--version", action="version",
@@ -236,6 +258,8 @@ def main(argv: list[str] | None = None) -> int:
         return serve(args.config, runtime_factory=Runtime.from_config)
     if args.first_scan:
         return first_scan(args.config)
+    if args.gui:
+        return gui(args.config)
     ap.print_help()
     return 0
 

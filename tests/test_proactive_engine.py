@@ -3,7 +3,6 @@ from paistation.proactive.quadrant import classify
 from paistation.proactive.timing import FoggScorer, should_interrupt
 from paistation.proactive.triggers import TriggerEngine
 
-
 # ---- triggers：事件 → JTBD 候选 ----
 
 def test_file_trigger_produces_job_with_evidence():

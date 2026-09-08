@@ -1,14 +1,13 @@
 """R6 T14 FSRS 队列+成长周报(PGI/UGI) + T15 教学三档。"""
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from paistation.learn.fsrs_queue import FsrsQueue
 from paistation.learn.growth import pgi_score, ugi_score, weekly_report
-from paistation.learn.teaching import (scaffold_feedback, socratic_questions,
-                                       minute_recap)
+from paistation.learn.teaching import minute_recap, scaffold_feedback, socratic_questions
 
 
 def _now():
-    return datetime(2026, 9, 8, 10, 0, tzinfo=timezone.utc)
+    return datetime(2026, 9, 8, 10, 0, tzinfo=UTC)
 
 
 # ---- T14 FSRS 队列 ----
@@ -28,7 +27,7 @@ def test_daily_limit_three(tmp_path):
 
 
 def test_review_good_schedules_future(tmp_path):
-    clock = {"t": datetime.now(timezone.utc)}
+    clock = {"t": datetime.now(UTC)}
     q = FsrsQueue(str(tmp_path / "fsrs.json"), now_fn=lambda: clock["t"])
     cid = q.add(front="Q", back="A", source="s")
     q.review(cid, rating=3)  # Good → 学习步（分钟级）后排未来
@@ -38,7 +37,7 @@ def test_review_good_schedules_future(tmp_path):
 
 
 def test_review_again_redue_in_learning_step(tmp_path):
-    clock = {"t": datetime.now(timezone.utc)}
+    clock = {"t": datetime.now(UTC)}
     q = FsrsQueue(str(tmp_path / "fsrs.json"), now_fn=lambda: clock["t"])
     cid = q.add(front="Q", back="A", source="s")
     q.review(cid, rating=1)  # Again → 1 分钟学习步内再见

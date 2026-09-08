@@ -5,7 +5,7 @@
 """
 import json
 import os
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from fsrs import Card, Rating, Scheduler
 
@@ -16,7 +16,7 @@ class FsrsQueue:
     """出卡/到期/复习三操作；卡片持久化 JSON（fsrs Card 字段序列化）。"""
 
     def __init__(self, json_path: str, daily_limit: int = 3,
-                 now_fn=lambda: datetime.now(timezone.utc)):
+                 now_fn=lambda: datetime.now(UTC)):
         self._path = json_path
         self._limit = daily_limit
         self._now = now_fn

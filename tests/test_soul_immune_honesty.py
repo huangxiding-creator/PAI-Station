@@ -2,7 +2,6 @@
 from paistation.soul.honesty import DevilAdvocate, sycophancy_drift
 from paistation.soul.immune import ImmuneSystem
 
-
 # ---- T18 错误免疫系统 ----
 
 def test_learn_creates_rule_from_correction(tmp_path):

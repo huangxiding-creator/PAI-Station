@@ -49,6 +49,7 @@ class TrayApp:
     state: TrayState = field(default_factory=TrayState)
     config_dir: str = ""
     on_quit: object = None
+    icon_image: object = None  # PIL.Image；缺省运行时生成
 
     def _dispatch(self, action: MenuAction):
         if action is MenuAction.TOGGLE_PAUSE:
@@ -65,6 +66,8 @@ class TrayApp:
         """打开配置目录（explorer 只读浏览，不改动任何文件）。"""
         target = self.config_dir or os.getcwd()
         _log.info("打开设置目录：%s", target)
+        if os.name == "nt" and os.path.isdir(target):
+            os.startfile(target)  # noqa: S606 - 用户主动点击"设置"
 
     def run(self):
         """启动托盘循环（阻塞）。pystray 缺失时抛出可行动的指引。"""
@@ -76,12 +79,34 @@ class TrayApp:
         import pystray  # 上面仅探测
 
         def _pystray_menu():
+            # pystray 要求 action 参数量恰为 2（co_argcount）；用 partial
+            # 绑定动作（partial 无 __code__，按原样透传 icon/item 调用）
+            def _on_menu(act: MenuAction, _icon=None, _item=None):
+                self._dispatch(act)
+
+            import functools
             return pystray.Menu(*(
-                pystray.MenuItem(m.label,
-                                 lambda _s, _a, act=m.action: self._dispatch(act),
+                pystray.MenuItem(m.label, functools.partial(_on_menu, m.action),
                                  enabled=m.enabled)
                 for m in build_menu(self.state)))
 
         icon = pystray.Icon("PAI-Station", title="PAI-Station",
+                            icon=self.icon_image or make_icon_image(),
                             menu=_pystray_menu())
         icon.run()
+
+
+def make_icon_image(size: int = 64):
+    """托盘图标：深蓝圆角底 + 青色圆点（纯 Pillow 绘制，零素材文件）。"""
+    try:
+        from PIL import Image, ImageDraw
+    except ImportError as exc:  # Pillow 属 tray 可选依赖
+        raise RuntimeError("托盘图标需要 Pillow：pip install 'paistation[tray]'") from exc
+    img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
+    draw.rounded_rectangle([1, 1, size - 2, size - 2], radius=size // 5,
+                           fill=(31, 41, 85, 255))
+    r = size // 6
+    draw.ellipse([size // 2 - r, size // 2 - r, size // 2 + r, size // 2 + r],
+                 fill=(0, 212, 191, 255))
+    return img
