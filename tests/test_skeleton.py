@@ -10,7 +10,7 @@ def _valid_ini(tmp_path):
 
 
 def test_version():
-    assert __version__ == "0.1.0"
+    assert __version__ == "1.0.0"
 
 
 def test_check_ok(tmp_path):
