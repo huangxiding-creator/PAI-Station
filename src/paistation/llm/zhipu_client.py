@@ -117,7 +117,7 @@ def _mark_model_dead(model: str, alert: Callable[[str, str], None] | None) -> No
             _log.debug("1113 告警回调异常（忽略）: %s", exc)
 
 
-def _http_post(url: str, headers: dict, payload: dict, timeout: int = 60):
+def _http_post(url: str, headers: dict, payload: dict, timeout: int = 120):
     data = json.dumps(payload).encode()
     req = urllib.request.Request(url, data=data, headers=headers, method="POST")
     try:

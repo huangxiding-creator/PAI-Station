@@ -36,6 +36,7 @@ class FsrsQueue:
     def add(self, front: str, back: str, source: str = "") -> str:
         """工作产物自动出卡：立即到期（首练当天）。"""
         card = Card()
+        card.due = self._now()  # 尊重注入时钟（py-fsrs 默认用真实 now，测试会随日期漂移）
         entry = {"id": str(card.card_id), "front": front, "back": back,
                  "source": source, "reps": 0,
                  "fsrs": card.to_dict()}
