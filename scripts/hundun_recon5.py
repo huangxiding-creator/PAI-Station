@@ -1,5 +1,4 @@
 """混沌学园侦察5：文稿页全域抓包 + DOM 文本提取 + 完整请求 URL。"""
-import json
 import os
 import sys
 import time

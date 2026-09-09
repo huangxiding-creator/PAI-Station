@@ -1,7 +1,10 @@
-"""混沌学园 markdown → DOCX（metaso 专题库上传格式）。"""
+"""混沌学园 markdown → DOCX（metaso 专题库上传格式，递归批量）。
+
+扫描 data/hundun/ 下所有课程目录（AI课程/、课程资料/<tab>/），
+.md → .docx；已存在 .docx 跳过（幂等，供采集后增量转换）。
+"""
 import glob
 import os
-import re
 import sys
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -45,10 +48,26 @@ def convert(md_path: str) -> str:
 
 
 def main():
-    for md in sorted(glob.glob(os.path.join(SRC, "*.md"))):
-        out = convert(md)
-        print(f"[docx] {os.path.basename(md)} -> {os.path.basename(out)} "
-              f"({os.path.getsize(out) // 1024}KB)")
+    # 递归收集课程 md（根级旧文件 + AI课程/ + 课程资料/<tab>/）；
+    # 排除 _recon 档案与 skills/ 技能卡（非课程文稿）
+    mds = [m for m in sorted(glob.glob(os.path.join(SRC, "**", "*.md"),
+                                       recursive=True))
+           if "_recon" not in m and f"{os.sep}skills{os.sep}" not in m]
+    done = skipped = 0
+    for md in mds:
+        out = os.path.splitext(md)[0] + ".docx"
+        if os.path.exists(out):
+            skipped += 1
+            continue
+        convert(md)
+        done += 1
+        if done % 50 == 0:
+            print(f"[docx] 已转换 {done}（跳过 {skipped}）", flush=True)
+    print(f"[docx] 完成：转换 {done}，跳过已存在 {skipped}")
+
+
+def convert_file(md: str) -> str:  # 兼容旧调用
+    return convert(md)
 
 
 if __name__ == "__main__":

@@ -166,13 +166,16 @@ def extract_course(cli: HundunClient, course_id: str) -> dict:
         except Exception:  # noqa: BLE001 - 单章字幕失败降级为空
             item["transcript"] = ""
         chapters.append(item)
+    def _tag(t):
+        return t.get("tag_name", "") if isinstance(t, dict) else str(t)
+
     return {"course_id": course_id,
             "title": meta.get("title", ""),
             "teacher": meta.get("teacher_name", ""),
             "teacher_position": meta.get("teacher_position", ""),
             "duration": meta.get("course_duration", 0),
-            "tags": [t.get("tag_name") for t in meta.get("tag_list") or []
-                     if t.get("tag_name")],
+            "tags": [tag for tag in (_tag(t) for t in meta.get("tag_list") or [])
+                     if tag],
             "intro": intro,
             "golden_words": [w.get("content", "") for w in words
                              if w.get("content")],
