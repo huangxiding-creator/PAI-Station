@@ -33,7 +33,7 @@ def load_courses() -> list:
     out = []
     for path in glob.glob(os.path.join(BASE, "**", "*.json"), recursive=True):
         parent = os.path.basename(os.path.dirname(path))
-        if parent in ("_recon",):
+        if parent in ("_recon", "_mining"):
             continue
         name = os.path.basename(path)
         if len(name) != 37 or not name.endswith(".json"):

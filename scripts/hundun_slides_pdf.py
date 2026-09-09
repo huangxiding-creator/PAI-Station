@@ -90,7 +90,10 @@ def main(argv: list) -> int:
     limit = int(argv[argv.index("--limit") + 1]) if "--limit" in argv else 0
     only = argv[argv.index("--only") + 1] if "--only" in argv else ""
     jsons = [f for f in sorted(glob.glob(os.path.join(
-        BASE, "**", "*.json"), recursive=True)) if "_recon" not in f]
+        BASE, "**", "*.json"), recursive=True))
+        if "_recon" not in f and "_mining" not in f]
+    if "--reverse" in argv:  # 双进程对向推进，零重叠
+        jsons = jsons[::-1]
     if only:
         jsons = [f for f in jsons if f"\\{only}\\" in f or f"/{only}/" in f]
     done = skipped = empty = 0
