@@ -133,6 +133,8 @@ def main(argv: list) -> int:
             todo.append((cid, meta, src))
     if limit:
         todo = todo[:limit]
+    if "--reverse" in argv:  # 双进程对向推进，零重叠
+        todo = todo[::-1]
     print(f"[mine] 待挖 {len(todo)} 门（triage 降序）", flush=True)
     cli = build_client()
     failed = []
