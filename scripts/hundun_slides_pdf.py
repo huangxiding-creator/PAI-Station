@@ -68,8 +68,12 @@ def make_pdf(urls: list, out_path: str) -> tuple:
                 fails += 1
     if not pages:
         return 0, fails
-    pages[0].save(out_path, save_all=True, append_images=pages[1:],
+    # 先写 pid 临时文件再原子替换：Pillow save_all 对已存在文件是「追加」
+    # 语义，并行进程/重跑撞上会得到翻倍页数或半写文件崩溃
+    tmp = f"{out_path}.{os.getpid()}.tmp"
+    pages[0].save(tmp, save_all=True, append_images=pages[1:],
                   resolution=96.0)
+    os.replace(tmp, out_path)
     for p in pages:
         p.close()
     return len(pages), fails
@@ -104,7 +108,12 @@ def main(argv: list) -> int:
         if not urls:
             empty += 1
             continue
-        pages, fails = make_pdf(urls, out)
+        try:
+            pages, fails = make_pdf(urls, out)
+        except Exception as exc:  # noqa: BLE001 - 单课失败不挡批
+            print(f"[{i}/{len(jsons)}] FAIL {os.path.basename(out)[:40]}: "
+                  f"{str(exc)[:80]}", flush=True)
+            continue
         if pages:
             done += 1
             size = os.path.getsize(out) // 1024
