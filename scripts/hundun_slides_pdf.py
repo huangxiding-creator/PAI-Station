@@ -69,9 +69,10 @@ def make_pdf(urls: list, out_path: str) -> tuple:
     if not pages:
         return 0, fails
     # 先写 pid 临时文件再原子替换：Pillow save_all 对已存在文件是「追加」
-    # 语义，并行进程/重跑撞上会得到翻倍页数或半写文件崩溃
+    # 语义，并行进程/重跑撞上会得到翻倍页数或半写文件崩溃；
+    # format 必须显式指定——Pillow 按扩展名推断格式，.tmp 会 unknown
     tmp = f"{out_path}.{os.getpid()}.tmp"
-    pages[0].save(tmp, save_all=True, append_images=pages[1:],
+    pages[0].save(tmp, format="PDF", save_all=True, append_images=pages[1:],
                   resolution=96.0)
     os.replace(tmp, out_path)
     for p in pages:
