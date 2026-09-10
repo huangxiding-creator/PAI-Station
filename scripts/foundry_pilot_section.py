@@ -56,7 +56,7 @@ def main():
     print(f"[corpus] {len(corpus)} 字", flush=True)
 
     theme = "传统企业 AI 转型实施方案"
-    print(f"[toc] 生成三级目录（真实 GLM）...", flush=True)
+    print("[toc] 生成三级目录（真实 GLM）...", flush=True)
     toc = engine.reconstruct_toc(theme, corpus=corpus, n_chapters=6)
     json.dump(toc, open(os.path.join(OUT, "toc.json"), "w", encoding="utf-8"),
               ensure_ascii=False, indent=2)

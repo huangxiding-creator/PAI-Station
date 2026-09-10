@@ -29,7 +29,6 @@ def census(cli: HundunClient) -> dict:
     courses: dict[str, dict] = {}
     for tab in tabs:
         tab_name = tab.get("name", "")
-        tab_key = tab.get("key")
         subs = tab.get("sub_tab_list") or []
         if not subs:  # 无子分类的 tab（课程上新/购买记录）跳过——包结构不同
             continue

@@ -17,10 +17,15 @@ import time
 sys.path.insert(0, "scripts")
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-from metaso_upload_batch import (  # noqa: E402
-    CFID, URL, _ensure_login, _creds, _get_token, _list_files)
-
 from DrissionPage import ChromiumOptions, ChromiumPage  # noqa: E402
+from metaso_upload_batch import (  # noqa: E402
+    CFID,
+    URL,
+    _creds,
+    _ensure_login,
+    _get_token,
+    _list_files,
+)
 
 AI1 = "2097575145811836928"  # 测试期误建
 AI2 = "2097575451932459008"  # 全量正式
@@ -65,8 +70,10 @@ def main() -> int:
     page = ChromiumPage(co)
     try:
         if not _ensure_login(page, account, password):
-            print("[clean] 登录失败"); return 1
-        page.get(URL, timeout=30); time.sleep(3)
+            print("[clean] 登录失败")
+            return 1
+        page.get(URL, timeout=30)
+        time.sleep(3)
         token = _get_token(page)
 
         # 1) #1 的文件移入 #2

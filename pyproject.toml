@@ -43,3 +43,7 @@ src = ["src", "tests"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+# scripts/ 统一采用 sys.path 引导后 import 本仓库包的直跑模式
+"scripts/*" = ["E402"]

@@ -3,7 +3,6 @@
 用法: python scripts/foundry_feedback_sim.py
 产物: data/foundry/ledger/（immune/epc-fde-ai.json + feedback_ledger.jsonl）
 """
-import json
 import os
 import sys
 
@@ -13,7 +12,10 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 from paistation import config
 from paistation.foundry.feedback import (
-    deposit_immune_rule, load_immune_rules, refund_tier, score_feedback,
+    deposit_immune_rule,
+    load_immune_rules,
+    refund_tier,
+    score_feedback,
 )
 from paistation.llm.zhipu_client import ZhipuClient
 
@@ -43,7 +45,6 @@ def main():
     for fb in FEEDBACKS:
         score = score_feedback(fb["text"], fast_fn=client.fast)
         refund = refund_tier(fb["minutes"], price=PRICE, quality=score["quality"])
-        rule_added = "" if refund["amount"] == 0 and score["quality"] < 4 else fb["rule"]
         if score["quality"] >= 4:
             deposit_immune_rule("epc-fde-ai", fb["rule"], quality=score["quality"],
                                 ledger_dir=LEDGER, minutes=fb["minutes"],

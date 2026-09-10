@@ -187,7 +187,8 @@ def _find_or_create_subfolder(page, token: str, parent: str,
             """
             raw = str(page.run_js(js_get, timeout=20) or "||")
             body = json.loads(raw.partition("||")[2] or "null")
-            items = ((body or {}).get("data") or {}).get("content") if isinstance(body, dict) else None
+            items = (((body or {}).get("data") or {}).get("content")
+                     if isinstance(body, dict) else None)
             for it in items or []:
                 if isinstance(it, dict) and (it.get("fileName") or it.get("name")) == name:
                     new_id = str(it.get("cfid") or it.get("id") or "") or None

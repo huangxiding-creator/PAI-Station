@@ -82,7 +82,7 @@ def main() -> int:
     for th in (50, 40, 30, 20, 10, 0):
         print(f"  score>={th}: {sum(1 for s in scores if s >= th)} 门")
     print("Top10:")
-    for cid, v in sorted(out.items(), key=lambda kv: -kv[1]["score"])[:10]:
+    for _, v in sorted(out.items(), key=lambda kv: -kv[1]["score"])[:10]:
         print(f"  {v['score']:>5} {v['title'][:28]} ({v['teacher'][:8]})")
     return 0
 

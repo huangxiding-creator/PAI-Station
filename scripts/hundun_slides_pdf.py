@@ -14,9 +14,8 @@ import os
 import re
 import sys
 import time
-from concurrent.futures import ThreadPoolExecutor
-
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 

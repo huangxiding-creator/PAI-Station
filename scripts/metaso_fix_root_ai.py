@@ -10,11 +10,16 @@ sys.path.insert(0, "scripts")
 sys.path.insert(0, ".")
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-from metaso_upload_batch import (  # noqa: E402
-    CFID, SID, URL, _ensure_login, _creds, _get_token, _list_files,
-    _norm, _upload_docx)
-
 from DrissionPage import ChromiumOptions, ChromiumPage  # noqa: E402
+from metaso_upload_batch import (  # noqa: E402
+    CFID,
+    URL,
+    _creds,
+    _ensure_login,
+    _get_token,
+    _list_files,
+    _upload_docx,
+)
 
 AI_CFID = "2097575451932459008"  # 云端「AI课程」子目录
 
@@ -37,8 +42,10 @@ def main() -> int:
     page = ChromiumPage(co)
     try:
         if not _ensure_login(page, account, password):
-            print("[fix] 登录失败"); return 1
-        page.get(URL, timeout=30); time.sleep(3)
+            print("[fix] 登录失败")
+            return 1
+        page.get(URL, timeout=30)
+        time.sleep(3)
         token = _get_token(page)
         # 1) 补传 3 个进 AI课程/
         for p in flat_three:

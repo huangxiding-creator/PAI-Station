@@ -47,9 +47,11 @@ def is_ai(rec: dict) -> bool:
 
 def existing_ids() -> set:
     done = set()
-    for sub in (AI_DIR, *(os.path.join(OTHER_BASE, d) for d in
-                          os.listdir(OTHER_BASE) if os.path.isdir(
-                              os.path.join(OTHER_BASE, d)))) if os.path.isdir(OTHER_BASE) else (AI_DIR,):
+    subs = [AI_DIR]
+    if os.path.isdir(OTHER_BASE):
+        subs += [os.path.join(OTHER_BASE, d) for d in os.listdir(OTHER_BASE)
+                 if os.path.isdir(os.path.join(OTHER_BASE, d))]
+    for sub in subs:
         for name in os.listdir(sub):
             if name.endswith(".json") and _HEX32.match(name[:-5]):
                 done.add(name[:-5])

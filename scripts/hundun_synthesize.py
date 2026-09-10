@@ -22,7 +22,7 @@ from paistation.llm.zhipu_client import ZhipuClient, extract_json  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MINE = os.path.join(ROOT, "data", "hundun", "_mining")
-BATCH = 120
+BATCH = 60
 MAX_CLUSTERS = 120
 THROTTLE = 1.0
 
@@ -124,6 +124,32 @@ def merge_batch(cli: ZhipuClient, label: str, entries: list) -> list:
                     "aliases": []}]
 
 
+def merge_robust(cli: ZhipuClient, label: str, entries: list,
+                 depth: int = 0) -> list:
+    """带二分降级的合并：失败→睡60s重试→再失败对半分开各合→兜底透传。"""
+    try:
+        return merge_batch(cli, label, entries)
+    except Exception as exc:  # noqa: BLE001 - 限流/超时均降级
+        print(f"  [{label}] batch 失败({str(exc)[:60]}) "
+              f"depth={depth} n={len(entries)}", flush=True)
+        if depth >= 2 or len(entries) <= 5:
+            time.sleep(30)
+            try:
+                return merge_batch(cli, label, entries)
+            except Exception:
+                print(f"  [{label}] 透传 {len(entries)} 条待后续轮次", flush=True)
+                return [{"name": e["name"], "aliases": [], "core": e["core"],
+                         "quote": e.get("quote", ""),
+                         "ai_application": e.get("ai_application", ""),
+                         "steps": e.get("steps", ""),
+                         "courses": [e["course"]], "freq": 1}
+                        for e in entries]
+        time.sleep(60)
+        mid = len(entries) // 2
+        return (merge_robust(cli, label, entries[:mid], depth + 1)
+                + merge_robust(cli, label, entries[mid:], depth + 1))
+
+
 def reduce_type(cli: ZhipuClient, label: str, entries: list) -> list:
     """迭代 map-reduce 至 ≤MAX_CLUSTERS；每批落盘缓存可断点续跑。"""
     cache_dir = os.path.join(MINE, "synth_cache")
@@ -138,7 +164,7 @@ def reduce_type(cli: ZhipuClient, label: str, entries: list) -> list:
             if os.path.exists(cache):
                 merged.extend(json.load(open(cache, encoding="utf-8")))
                 continue
-            batch = merge_batch(cli, label, entries[s:s + BATCH])
+            batch = merge_robust(cli, label, entries[s:s + BATCH])
             with open(cache, "w", encoding="utf-8") as fh:
                 json.dump(batch, fh, ensure_ascii=False)
             merged.extend(batch)

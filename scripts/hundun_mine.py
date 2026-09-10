@@ -8,7 +8,6 @@
 用法: python scripts/hundun_mine.py [--limit N] [--only AI课程]
 """
 import configparser
-import glob
 import json
 import os
 import re
@@ -41,10 +40,13 @@ TPL = """课程：《{title}》｜讲师：{teacher}｜分类：{tab}
 
 输出 JSON（UTF-8、无围栏），四类知识资产，每类≤8条、严格筛选：
 {{
- "thinking_models": [{{"name":"模型名≤15字","core":"核心思想2-3句","quote":"原文最精华金句≤80字","ai_application":"对AI产品研发的应用启示1-2句","src":"所属章节标题"}}],
+ "thinking_models": [{{"name":"模型名≤15字","core":"核心思想2-3句",
+   "quote":"原文最精华金句≤80字","ai_application":"对AI产品研发的应用启示1-2句","src":"所属章节标题"}}],
  "principles": [同上结构],
- "methodologies": [{{"name","core","steps":"操作步骤，分号分隔，无则空串","quote","ai_application","src"}}],
- "experiences": [{{"name":"经验/教训标题≤15字","core":"具体经验或失败教训，含案例主体与结果","quote","ai_application","src"}}]
+ "methodologies": [{{"name","core",
+   "steps":"操作步骤，分号分隔，无则空串","quote","ai_application","src"}}],
+ "experiences": [{{"name":"经验/教训标题≤15字",
+   "core":"具体经验或失败教训，含案例主体与结果","quote","ai_application","src"}}]
 }}
 thinking_models=思维模型；principles=原则/定律；methodologies=可操作方法论；experiences=实战经验教训。无则空数组。"""
 
