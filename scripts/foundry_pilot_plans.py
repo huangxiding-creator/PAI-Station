@@ -20,6 +20,7 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 from paistation import config
 from paistation.foundry.export_docx import plan_to_docx
 from paistation.foundry.fde import compose_plan, digest_markdown, save_plan
+from paistation.foundry.promo import save_promo
 from paistation.foundry.reconstructor import Reconstructor
 from paistation.foundry.report import generate_report
 from paistation.llm.zhipu_client import ZhipuClient
@@ -31,6 +32,10 @@ EPC_BOOKS = ("EPC工程总承包项目过程控制概论", "工程总承包_EPC_
 ZENGMING_BOOK = "智能商业"
 HUNDUN_WANT = ("生成式创造", "100% 可以落地的AI产品", "从用户任务出发",
                "建立AI思维", "认知型创新", "AI 商业领导者")
+
+# 首发定价（与 scripts/foundry_build_site.py CATALOG 保持一致）
+PRICES = {"epc-fde-ai": 498, "zengming-smart-business-fde": 298,
+          "legacy-innovation-fde": 198}
 
 # 语料降级说明（账号安全铁律：当日微信读书限额触顶，明日可换真书语料再版）
 DEGRADED_CORPUS_NOTE = ("语料说明：本版语料为混沌学园方法论库（微信读书行业书挖掘"
@@ -89,7 +94,9 @@ def forge(client: ZhipuClient, slug: str, gen) -> dict:
     plan["slug"] = slug
     jp, mp = save_plan(plan, out_dir)
     dp = plan_to_docx(plan, os.path.join(out_dir, "plan.docx"))
-    print(f"[plan:{slug}] 密度 {plan['score']} passed={plan['passed']} → {jp} / {mp} / {dp}",
+    pp = save_promo(plan, os.path.join(out_dir, "promo.md"),
+                    price=PRICES.get(slug, ""))
+    print(f"[plan:{slug}] 密度 {plan['score']} passed={plan['passed']} → {jp} / {mp} / {dp} / {pp}",
           flush=True)
     return plan
 
