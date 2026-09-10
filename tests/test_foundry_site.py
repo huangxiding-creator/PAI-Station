@@ -83,3 +83,12 @@ class TestPromo:
     def test_promo_corpus_note(self):
         md = render_promo_article(_plan_fixture(), price=298)
         assert "语料说明" in md
+
+    def test_promo_preview_cuts_at_paragraph_boundary(self):
+        """试读截断必须落在完整段落边界——不悬空半句/半个加粗符。"""
+        plan = _plan_fixture()
+        plan["chapters"][0]["sections"][0]["content"] = (
+            "第一段完整内容END1。\n\n第二段完整内容END2。\n\n" + "丙" * 2000)
+        md = render_promo_article(plan, price=298)
+        assert "END2" in md          # 完整段落保留
+        assert "丙" not in md        # 被截断的残段整段舍弃，不留悬空字符

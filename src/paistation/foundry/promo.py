@@ -6,7 +6,15 @@
 
 import os
 
+_MAX_PREVIEW_CHARS = 1500
 _MAX_PREVIEW_SECTIONS = 1  # 宣传文只放首节试读，防泄正文
+
+
+def _preview_cut(content: str) -> str:
+    """试读截断：预算内回退到最后一个完整行，绝不悬空半句/半个加粗符。"""
+    preview = content[:_MAX_PREVIEW_CHARS]
+    cut = preview.rfind("\n")
+    return preview[:cut] if cut != -1 else preview
 
 
 def render_promo_article(plan: dict, price: int | str = "") -> str:
@@ -52,7 +60,7 @@ def render_promo_article(plan: dict, price: int | str = "") -> str:
     if first_section:
         lines += [f"## 试读：{first_section.get('title', '')}", "",
                   f"（节框架：{first_section.get('framework', '')}）", "",
-                  first_section.get("content", "")[:1500], "",
+                  _preview_cut(first_section.get("content", "")), "",
                   "……（完整版购买后解锁）", ""]
 
     lines += ["## 如何购买", "",
