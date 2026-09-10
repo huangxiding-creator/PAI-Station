@@ -127,6 +127,8 @@ def _http_post(url: str, headers: dict, payload: dict, timeout: int = 120):
         return exc.code, exc.read().decode("utf-8", "ignore")
     except urllib.error.URLError as exc:
         raise _NetError(str(exc)) from exc
+    except TimeoutError as exc:  # 读阶段超时（socket.timeout）——同样走重试
+        raise _NetError(f"read timeout: {exc}") from exc
 
 
 def extract_json(text: str) -> dict:

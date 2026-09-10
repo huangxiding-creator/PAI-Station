@@ -125,14 +125,26 @@ def merge_batch(cli: ZhipuClient, label: str, entries: list) -> list:
 
 
 def reduce_type(cli: ZhipuClient, label: str, entries: list) -> list:
-    """迭代 map-reduce 至 ≤MAX_CLUSTERS。"""
+    """迭代 map-reduce 至 ≤MAX_CLUSTERS；每批落盘缓存可断点续跑。"""
+    cache_dir = os.path.join(MINE, "synth_cache")
+    os.makedirs(cache_dir, exist_ok=True)
     round_no = 0
     while len(entries) > MAX_CLUSTERS:
         round_no += 1
         merged = []
-        for s in range(0, len(entries), BATCH):
-            merged.extend(merge_batch(cli, label, entries[s:s + BATCH]))
+        n_batches = (len(entries) + BATCH - 1) // BATCH
+        for bi, s in enumerate(range(0, len(entries), BATCH)):
+            cache = os.path.join(cache_dir, f"{label}_r{round_no}_b{bi}.json")
+            if os.path.exists(cache):
+                merged.extend(json.load(open(cache, encoding="utf-8")))
+                continue
+            batch = merge_batch(cli, label, entries[s:s + BATCH])
+            with open(cache, "w", encoding="utf-8") as fh:
+                json.dump(batch, fh, ensure_ascii=False)
+            merged.extend(batch)
             time.sleep(THROTTLE)
+            print(f"  [{label}] r{round_no} batch {bi + 1}/{n_batches}",
+                  flush=True)
         entries = merged
         print(f"  [{label}] round{round_no}: {len(entries)} 簇", flush=True)
     return entries
