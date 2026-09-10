@@ -99,7 +99,7 @@ CARDS: tuple[dict, ...] = (
      "source": "肖恩·埃利斯（增长黑客）"},
     {"id": "eisenhower", "name": "艾森豪威尔矩阵", "level": "L2",
      "one_liner": "按紧急重要四象限分配资源",
-     "structure": "重要紧急（立即做）× 重要不紧急（排计划）× 紧急不重要（委托）× 不紧急不重要（删除）",
+     "structure": "重要紧急→立即做；重要不紧急→排计划；紧急不重要→委托；其余→删除",
      "scenarios": "实施路线图任务排期节",
      "source": "时间管理经典（艾森豪威尔）"},
     {"id": "fogg", "name": "Fogg 行为模型", "level": "L2",
@@ -245,3 +245,22 @@ def validate_cards() -> list[str]:
             if not str(c.get(field, "")).strip():
                 problems.append(f"{c['id']} 字段缺失: {field}")
     return problems
+
+
+def suggest_cards(query: str, level: str, k: int = 6) -> list[dict]:
+    """按章节标题关键词推荐卡：2 字滑窗计分排序；无命中回退前 k 张（弹药不断供）。
+
+    level 为层级串（"L1"/"L2"/"L3"/"L2L3"，包含即生效）。
+    """
+    levels = {lv for lv in ("L1", "L2", "L3") if lv in level}
+    pool = [c for c in CARDS if c["level"] in levels] or list(CARDS)
+    windows = [query[i:i + 2] for i in range(max(len(query) - 1, 0))]
+
+    def _hits(card: dict) -> int:
+        hay = " ".join((card["name"], card["one_liner"], card["structure"],
+                        card["scenarios"]))
+        return sum(1 for w in windows if w and w in hay)
+
+    scored = sorted(pool, key=_hits, reverse=True)
+    matched = [c for c in scored if _hits(c) > 0]
+    return (matched or scored)[:k]
