@@ -41,14 +41,31 @@ def compose_plan(engine: Reconstructor, theme: str, corpus: str, *,
                  n_chapters: int = 6, coverage: str = FDE_COVERAGE,
                  immune_rules: tuple | list = (),
                  checkpoint_path: str | None = None) -> dict:
-    """整案编排：目录 → 逐节（断点续传）→ 终检。返回带 score/passed/failures 的方案。"""
-    done: dict[str, dict] = {}
-    if checkpoint_path and os.path.exists(checkpoint_path):
-        done = json.load(open(checkpoint_path, encoding="utf-8"))
-        print(f"[resume] 断点续传：已完成 {len(done)} 节", flush=True)
+    """整案编排：目录 → 逐节（断点续传）→ 终检。返回带 score/passed/failures 的方案。
 
-    toc = engine.reconstruct_toc(theme, corpus=corpus, n_chapters=n_chapters,
-                                 immune_rules=immune_rules, coverage=coverage)
+    断点文件含 toc 本身（续跑不重掷目录，防章题漂移致 key 失配）；
+    兼容旧格式（无 toc 键的扁平 sections dict）。
+    """
+    state: dict = {"theme": theme, "toc": None, "sections": {}}
+    if checkpoint_path and os.path.exists(checkpoint_path):
+        loaded = json.load(open(checkpoint_path, encoding="utf-8"))
+        if "sections" in loaded and isinstance(loaded.get("sections"), dict):
+            state = loaded  # 新格式：toc + sections
+        else:
+            state["sections"] = loaded  # 旧格式：扁平 sections（toc 重掷一次）
+        print(f"[resume] 断点续传：已完成 {len(state['sections'])} 节", flush=True)
+
+    toc = state["toc"] or engine.reconstruct_toc(
+        theme, corpus=corpus, n_chapters=n_chapters,
+        immune_rules=immune_rules, coverage=coverage)
+
+    def _save_state() -> None:
+        if checkpoint_path:
+            json.dump({**state, "toc": toc}, open(checkpoint_path, "w",
+                                                  encoding="utf-8"),
+                      ensure_ascii=False)
+
+    done = state["sections"]
     chapters = []
     for ch in toc["chapters"]:
         sections = []
@@ -63,11 +80,9 @@ def compose_plan(engine: Reconstructor, theme: str, corpus: str, *,
                    "components": out["components"], "content": out["content"],
                    "degraded": out["degraded"], "degrade_note": out["degrade_note"]}
             sections.append(sec)
-            if checkpoint_path:
-                state = {**done, key: sec}
-                json.dump(state, open(checkpoint_path, "w", encoding="utf-8"),
-                          ensure_ascii=False)
-                done = state
+            done = {**done, key: sec}
+            state["sections"] = done
+            _save_state()
             print(f"  [section] {key} → {out['score']} 分"
                   f"{'（降级）' if out['degraded'] else ''}", flush=True)
         chapters.append({**ch, "sections": sections})

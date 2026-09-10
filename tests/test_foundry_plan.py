@@ -99,7 +99,23 @@ class TestComposePlan:
             compose_plan(Reconstructor(fake), "主题", corpus="语料",
                          checkpoint_path=str(ckpt))
         saved = json.loads(ckpt.read_text(encoding="utf-8"))
-        assert "第1章 诊断||1.1 现状" in saved
+        assert "第1章 诊断||1.1 现状" in saved["sections"]
+        assert saved["toc"]["title"] == "试点方案"  # 目录随断点保存
+
+    def test_resume_with_saved_toc_skips_toc_call(self, tmp_path):
+        """续跑不重掷目录：章题漂移会让已完成的节 key 失配（实跑教训）。"""
+        ckpt = tmp_path / "plan.ckpt.json"
+        done_sec = {"title": "1.1 现状", "framework": "SCQA",
+                    "components": ["case"], "content": "完成节。标准化SOP。",
+                    "degraded": False, "degrade_note": ""}
+        state = {"theme": "主题", "toc": json.loads(_toc_json()),
+                 "sections": {"第1章 诊断||1.1 现状": done_sec}}
+        ckpt.write_text(json.dumps(state, ensure_ascii=False), encoding="utf-8")
+        fake = _FakeDeep([_sec_json("乙")])  # 只该有 1 次节调用，无目录调用
+        plan = compose_plan(Reconstructor(fake), "主题", corpus="语料",
+                            checkpoint_path=str(ckpt))
+        assert len(fake.calls) == 1
+        assert plan["title"] == "试点方案"  # 复用断点目录，非重掷
 
 
 class TestRender:
