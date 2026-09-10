@@ -1,6 +1,10 @@
 # M7.0 思想密度计：三层标注×九件套×四前提×三级目录（提案 M7 §3.4）
 from paistation.foundry.density import (
-    NINE_COMPONENTS, PREMISES, density_score, four_premises, toc_depth_ok,
+    NINE_COMPONENTS,
+    PREMISES,
+    density_score,
+    four_premises,
+    toc_depth_ok,
 )
 
 

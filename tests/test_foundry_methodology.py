@@ -1,6 +1,11 @@
 # M7.0 方法论卡库：36 张三层卡 + 选卡检索（提案 M7 §3.3）
 from paistation.foundry.methodology import (
-    CARDS, card_count, cards_by_level, find_cards, get_card, validate_cards,
+    CARDS,
+    card_count,
+    cards_by_level,
+    find_cards,
+    get_card,
+    validate_cards,
 )
 
 

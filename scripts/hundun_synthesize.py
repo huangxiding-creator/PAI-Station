@@ -58,6 +58,38 @@ def build_client() -> ZhipuClient:
                        free_models=["glm-4-flash-250414", "glm-4.7-flash"])
 
 
+def _norm_name(s: str) -> str:
+    import re
+    return re.sub(r"[\s\W_]+", "", s).lower()
+
+
+def _pre_merge(by_type: dict) -> dict:
+    """本地预合并：同名（去空白/标点/大小写后一致）条目先归一，
+    频次累加、来源课程去重——省掉一批本不必进 LLM 的重复。"""
+    out = {}
+    for label, entries in by_type.items():
+        seen: dict[str, dict] = {}
+        for e in entries:
+            k = _norm_name(e["name"])
+            if k in seen:
+                hit = seen[k]
+                hit["freq"] = hit.get("freq", 1) + 1
+                if e["course"] not in hit["courses"]:
+                    hit["courses"].append(e["course"])
+                if len(e["core"]) > len(hit["core"]):
+                    hit["core"] = e["core"]
+                for f in ("quote", "ai_application", "steps"):
+                    if not hit.get(f) and e.get(f):
+                        hit[f] = e[f]
+            else:
+                e2 = dict(e)
+                e2["courses"] = [e["course"]]
+                e2["freq"] = 1
+                seen[k] = e2
+        out[label] = list(seen.values())
+    return out
+
+
 def aggregate() -> dict:
     """汇总全部课程挖掘产物 → 按类型分组（含来源课程与 triage 分）。"""
     triage = json.load(open(os.path.join(MINE, "triage.json"), encoding="utf-8"))
@@ -87,6 +119,7 @@ def aggregate() -> dict:
             if entry["name"]:
                 by_type.setdefault(it.get("type", "经验"), []).append(entry)
                 stats["items"] += 1
+    by_type = _pre_merge(by_type)
     return {"by_type": by_type, "stats": stats}
 
 
@@ -125,29 +158,31 @@ def merge_batch(cli: ZhipuClient, label: str, entries: list) -> list:
 
 
 def merge_robust(cli: ZhipuClient, label: str, entries: list,
-                 depth: int = 0) -> list:
-    """带二分降级的合并：失败→睡60s重试→再失败对半分开各合→兜底透传。"""
+                 depth: int = 0) -> tuple:
+    """带二分降级的合并：失败→睡60s重试→再失败对半分开各合→兜底透传。
+    返回 (clusters, degraded)：透传的 degraded=True，不落缓存可重试。"""
     try:
-        return merge_batch(cli, label, entries)
+        return merge_batch(cli, label, entries), False
     except Exception as exc:  # noqa: BLE001 - 限流/超时均降级
         print(f"  [{label}] batch 失败({str(exc)[:60]}) "
               f"depth={depth} n={len(entries)}", flush=True)
         if depth >= 2 or len(entries) <= 5:
             time.sleep(30)
             try:
-                return merge_batch(cli, label, entries)
+                return merge_batch(cli, label, entries), False
             except Exception:
                 print(f"  [{label}] 透传 {len(entries)} 条待后续轮次", flush=True)
-                return [{"name": e["name"], "aliases": [], "core": e["core"],
-                         "quote": e.get("quote", ""),
-                         "ai_application": e.get("ai_application", ""),
-                         "steps": e.get("steps", ""),
-                         "courses": [e["course"]], "freq": 1}
-                        for e in entries]
+                return ([{"name": e["name"], "aliases": [], "core": e["core"],
+                          "quote": e.get("quote", ""),
+                          "ai_application": e.get("ai_application", ""),
+                          "steps": e.get("steps", ""),
+                          "courses": [e["course"]], "freq": 1}
+                         for e in entries], True)
         time.sleep(60)
         mid = len(entries) // 2
-        return (merge_robust(cli, label, entries[:mid], depth + 1)
-                + merge_robust(cli, label, entries[mid:], depth + 1))
+        left, ld = merge_robust(cli, label, entries[:mid], depth + 1)
+        right, rd = merge_robust(cli, label, entries[mid:], depth + 1)
+        return left + right, (ld or rd)
 
 
 def reduce_type(cli: ZhipuClient, label: str, entries: list) -> list:
@@ -164,9 +199,10 @@ def reduce_type(cli: ZhipuClient, label: str, entries: list) -> list:
             if os.path.exists(cache):
                 merged.extend(json.load(open(cache, encoding="utf-8")))
                 continue
-            batch = merge_robust(cli, label, entries[s:s + BATCH])
-            with open(cache, "w", encoding="utf-8") as fh:
-                json.dump(batch, fh, ensure_ascii=False)
+            batch, degraded = merge_robust(cli, label, entries[s:s + BATCH])
+            if not degraded:
+                with open(cache, "w", encoding="utf-8") as fh:
+                    json.dump(batch, fh, ensure_ascii=False)
             merged.extend(batch)
             time.sleep(THROTTLE)
             print(f"  [{label}] r{round_no} batch {bi + 1}/{n_batches}",
