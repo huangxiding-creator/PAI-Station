@@ -76,6 +76,15 @@ class TestImmuneSediment:
     def test_load_missing_slug_empty(self, tmp_path):
         assert load_immune_rules("no-such", ledger_dir=str(tmp_path)) == []
 
+    def test_deposit_same_rule_text_dedup(self, tmp_path):
+        """同文本规则只入一条——两位买家反馈同一问题时，注入清单不重复。"""
+        deposit_immune_rule("epc-fde-ai", "WBS 表必须含责任人与工期两列",
+                            quality=8.3, ledger_dir=str(tmp_path))
+        deposit_immune_rule("epc-fde-ai", "WBS 表必须含责任人与工期两列",
+                            quality=7.7, ledger_dir=str(tmp_path))
+        rules = load_immune_rules("epc-fde-ai", ledger_dir=str(tmp_path))
+        assert len(rules) == 1  # 文本相同仅一条，质量分不同也不重复入库
+
     def test_ledger_appended(self, tmp_path):
         deposit_immune_rule("epc-fde-ai", "规则甲", quality=8, ledger_dir=str(tmp_path),
                             minutes=25, refund_amount=100)

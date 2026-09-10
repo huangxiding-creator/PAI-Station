@@ -93,7 +93,7 @@ def deposit_immune_rule(slug: str, rule_text: str, *, quality: float,
     if os.path.exists(path):
         rules = json.load(open(path, encoding="utf-8"))
     entry = {"rule": rule, "quality": quality, "date": datetime.date.today().isoformat()}
-    if entry not in rules:
+    if rule not in {r.get("rule") for r in rules}:  # 按文本去重：同一问题不重复入库
         rules = rules + [entry]  # 只增不删（宪法红线）
         json.dump(rules, open(path, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
 
