@@ -61,6 +61,7 @@ def compose_plan(engine: Reconstructor, theme: str, corpus: str, *,
 
     def _save_state() -> None:
         if checkpoint_path:
+            os.makedirs(os.path.dirname(checkpoint_path) or ".", exist_ok=True)
             json.dump({**state, "toc": toc}, open(checkpoint_path, "w",
                                                   encoding="utf-8"),
                       ensure_ascii=False)
