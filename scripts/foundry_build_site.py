@@ -21,7 +21,7 @@ DOCS_DIR = os.path.join(ROOT, "docs")
 CATALOG = {
     "epc-fde-ai": {
         "price": 498,
-        "tagline": "EPC 工程总承包 × AI 转型全案——两本行业专著重构，7 章 31 节抄作业工具包。",
+        "tagline": "EPC 工程总承包 × AI 转型全案——两本行业专著重构，7 章 35 节抄作业工具包。",
     },
     "zengming-smart-business-fde": {
         "price": 298,
