@@ -33,13 +33,20 @@ class FsrsQueue:
         with open(self._path, "w", encoding="utf-8") as fh:
             json.dump({"cards": self._cards}, fh, ensure_ascii=False, indent=1)
 
-    def add(self, front: str, back: str, source: str = "") -> str:
-        """工作产物自动出卡：立即到期（首练当天）。"""
+    def add(self, front: str, back: str, source: str = "",
+            retention: float | None = None) -> str:
+        """工作产物自动出卡：立即到期（首练当天）。
+
+        retention：分档目标记忆率（B2——概念卡 0.9 / 行动卡 0.8）。
+        不传则沿用默认 Scheduler（0.9），且不写键（向后兼容旧 JSON）。
+        """
         card = Card()
         card.due = self._now()  # 尊重注入时钟（py-fsrs 默认用真实 now，测试会随日期漂移）
         entry = {"id": str(card.card_id), "front": front, "back": back,
                  "source": source, "reps": 0,
                  "fsrs": card.to_dict()}
+        if retention is not None:
+            entry["retention"] = float(retention)
         self._cards.append(entry)
         self._save()
         return entry["id"]
@@ -57,16 +64,29 @@ class FsrsQueue:
                 for _, entry in due[:self._limit]]
 
     def review(self, card_id: str, rating: int) -> dict:
-        """复习一张：1 Again / 2 Hard / 3 Good / 4 Easy → FSRS 重排期。"""
+        """复习一张：1 Again / 2 Hard / 3 Good / 4 Easy → FSRS 重排期。
+
+        分档卡按各自 desired_retention 调度（每卡一个 Scheduler 视图）；
+        ReviewLog 落库（rating/时间），未来可喂 fsrs-rs Optimizer 重训个人曲线。
+        """
         if rating not in _RATINGS:
             raise ValueError(f"rating 应为 1-4，收到 {rating}")
         for entry in self._cards:
             if entry["id"] == str(card_id):
                 card = Card.from_dict(entry["fsrs"])
-                card, _log = self._sched.review_card(
-                    card, _RATINGS[rating])
+                sched = (Scheduler(desired_retention=entry["retention"])
+                         if "retention" in entry else self._sched)
+                card, log = sched.review_card(card, _RATINGS[rating])
                 entry["fsrs"] = card.to_dict()
                 entry["reps"] = entry.get("reps", 0) + 1
+                duration = log.review_duration
+                seconds = (duration.total_seconds()
+                           if hasattr(duration, "total_seconds") else duration)
+                entry.setdefault("logs", []).append({
+                    "rating": int(log.rating),
+                    "review_datetime": log.review_datetime.isoformat(),
+                    "review_duration": seconds,
+                })
                 self._save()
                 return {"due": card.due.isoformat(),
                         "stability": round(card.stability, 3)}

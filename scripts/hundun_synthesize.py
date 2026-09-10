@@ -1,11 +1,11 @@
 """知识资产综合：全部 _mining/<cid>.json → 规范化聚类 → 武器库数据底座。
 
 map-reduce 聚类（GLM 免费链）：
-- 汇总四类 items（思维模型/原则/方法论/经验），按类型分批 ~120 条
-- 每批 GLM 聚合去重 → clusters（规范名/别名/核心/金句/AI应用/来源/频次）
-- 迭代 reduce 直至每类 ≤120 簇，按 频次×来源分 排序
+- 汇总四类 items（思维模型/原则/方法论/经验），本地同名预合并
+- 每轮按规范名排序分批（同义条目自然同批），GLM 只判分组（输出编号组），
+  字段合并本地完成——避免长输出复读导致的不收敛
+- 迭代 reduce 直至每类 ≤MAX_CLUSTERS 簇，按 频次×来源分 排序
 输出 data/hundun/_mining/synthesized.json（handbook 生成的数据底座）。
-幂等：--from-cache 用缓存的中 programmatically 产物重排；默认全量重跑。
 """
 import configparser
 import glob
@@ -23,32 +23,23 @@ from paistation.llm.zhipu_client import ZhipuClient, extract_json  # noqa: E402
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MINE = os.path.join(ROOT, "data", "hundun", "_mining")
 BATCH = 60
-MAX_CLUSTERS = 120
+MAX_CLUSTERS = 800  # 成册只取每卷 Top80；磨更细只是浪费配额
 THROTTLE = 1.0
 
 SYSTEM = (
-    "你是知识架构师，把多门商业/创新课程中提炼出的同类知识资产去重合并成规范条目。"
-    "铁律：语义同一才合并（同一模型/原则/方法的不同表述）；独特条目不得丢失；"
-    "不编造；保留中文术语习惯。"
+    "你是知识架构师，只做一件事：判断哪些条目是同一概念的不同表述。"
+    "铁律：语义同一才同组（同一模型/原则/方法的不同叫法）；拿不准就分开，"
+    "合并错误的代价远大于分开；不发明新名称。"
 )
 
-TPL = """以下是 {n} 条「{label}」原始条目（来自混沌学园不同课程，大量同义重复）：
+TPL = """以下是 {n} 条「{label}」条目（编号. 名称｜要义｜来源）：
 
 {items}
 
-请聚合同类项，输出 JSON（UTF-8、无围栏）：
-{{
- "clusters": [
-  {{"name": "规范名≤15字", "aliases": ["其他常见叫法"],
-    "core": "合并后的核心思想，2-4句，综合多家表述",
-    "quote": "最有代表性的原文金句≤80字",
-    "ai_application": "对AI产品研发的应用启示，2-3句",
-    "steps": "操作步骤，分号分隔（仅方法论有，无则空串）",
-    "courses": ["来源课程标题（去重）"],
-    "freq": 出现条数}}
- ]
-}}
-freq 按输入中实际出现条数统计；输出簇数不限，但不得丢弃语义独立的条目。"""
+哪些编号属于同一概念的不同表述？输出 JSON（UTF-8、无围栏）：
+{{"groups": [[编号, 编号, ...], ...]}}
+
+规则：每个编号恰好归入一组（单例自成一组如 [5]）；同组必须语义同一；不得遗漏编号。"""
 
 
 def build_client() -> ZhipuClient:
@@ -124,37 +115,66 @@ def aggregate() -> dict:
 
 
 def fmt(entries: list) -> str:
+    def course_of(e):
+        if e.get("courses"):
+            return e["courses"][0]
+        return e.get("course", "")
     return "\n".join(
-        f"[{i}] {e['name']}｜{e['course']}｜{e['core']}"
-        + (f"｜步骤:{e['steps']}" if e.get("steps") else "")
+        f"{i}. {e['name']}｜{e['core'][:80]}｜{course_of(e)}"
         for i, e in enumerate(entries, 1))
 
 
+def _join_group(grp: list) -> dict:
+    """本地合并一组语义同一的条目：代表取频次最高/要义最长的，字段全保真。"""
+    rep = max(grp, key=lambda e: (e.get("freq", 1), len(e.get("core", ""))))
+    courses = list(dict.fromkeys(
+        c for e in grp for c in (e.get("courses")
+                                 or ([e["course"]] if e.get("course") else []))))
+    def first(field):
+        return next((e.get(field) for e in grp if e.get(field)), "")
+    return {
+        "name": rep["name"][:40],
+        "aliases": [e["name"][:30] for e in grp if e is not rep][:6],
+        "core": rep.get("core", "")[:600],
+        "quote": first("quote")[:160],
+        "ai_application": first("ai_application")[:400],
+        "steps": first("steps")[:400],
+        "courses": [str(c)[:50] for c in courses][:40],
+        "freq": sum(e.get("freq", 1) for e in grp),
+    }
+
+
 def merge_batch(cli: ZhipuClient, label: str, entries: list) -> list:
+    """GLM 只输出编号分组（输出小、判断准），字段合并全部本地完成。
+    GLM 遗漏的编号按单例兜底；覆盖率 <50% 视为失败（交给降级重试）。"""
     prompt = TPL.format(n=len(entries), label=label, items=fmt(entries))
     raw = cli.chat(SYSTEM, prompt, json_mode=True, temperature=0.2)
-    clusters = extract_json(raw).get("clusters") or []
-    out = []
-    for c in clusters:
-        if not isinstance(c, dict) or not c.get("name"):
+    groups = extract_json(raw).get("groups") or []
+    seen: set[int] = set()
+    idx_groups: list[list[int]] = []
+    for g in groups:
+        if not isinstance(g, list):
             continue
-        courses = c.get("courses") or []
-        out.append({
-            "name": str(c["name"])[:40],
-            "aliases": [str(a)[:30] for a in c.get("aliases") or []][:6],
-            "core": str(c.get("core") or "")[:600],
-            "quote": str(c.get("quote") or "")[:160],
-            "ai_application": str(c.get("ai_application") or "")[:400],
-            "steps": str(c.get("steps") or "")[:400],
-            "courses": [str(x)[:50] for x in courses][:40],
-            "freq": int(c.get("freq") or len(courses) or 1),
-        })
-    return out or [{"name": "（本批合并失败，保留原始首条）",
-                    "core": entries[0]["core"], "quote": entries[0]["quote"],
-                    "ai_application": entries[0]["ai_application"],
-                    "steps": entries[0].get("steps", ""),
-                    "courses": [entries[0]["course"]], "freq": 1,
-                    "aliases": []}]
+        ids = []
+        for x in g:
+            try:
+                i = int(x)
+            except (TypeError, ValueError):
+                continue
+            if 1 <= i <= len(entries) and i not in seen:
+                seen.add(i)
+                ids.append(i)
+        if ids:
+            idx_groups.append(ids)
+    big = [ids for ids in idx_groups if len(ids) > 10]
+    if big:  # GLM 偷懒把整批塞一组（实测 60→1），判失败走重试/二分
+        raise ValueError(f"异常大组: {len(big[0])} 条同组")
+    if len(seen) < len(entries) // 2:
+        raise ValueError(f"分组覆盖不足 {len(seen)}/{len(entries)}")
+    for i in range(1, len(entries) + 1):  # 遗漏 → 单例
+        if i not in seen:
+            idx_groups.append([i])
+    return [_join_group([entries[i - 1] for i in ids]) for ids in idx_groups]
 
 
 def merge_robust(cli: ZhipuClient, label: str, entries: list,
@@ -172,11 +192,16 @@ def merge_robust(cli: ZhipuClient, label: str, entries: list,
                 return merge_batch(cli, label, entries), False
             except Exception:
                 print(f"  [{label}] 透传 {len(entries)} 条待后续轮次", flush=True)
-                return ([{"name": e["name"], "aliases": [], "core": e["core"],
+                return ([{"name": e["name"],
+                          "aliases": e.get("aliases", []),
+                          "core": e.get("core", ""),
                           "quote": e.get("quote", ""),
                           "ai_application": e.get("ai_application", ""),
                           "steps": e.get("steps", ""),
-                          "courses": [e["course"]], "freq": 1}
+                          "courses": (e.get("courses")
+                                      or ([e["course"]]
+                                          if e.get("course") else [])),
+                          "freq": e.get("freq", 1)}
                          for e in entries], True)
         time.sleep(60)
         mid = len(entries) // 2
@@ -186,11 +211,14 @@ def merge_robust(cli: ZhipuClient, label: str, entries: list,
 
 
 def reduce_type(cli: ZhipuClient, label: str, entries: list) -> list:
-    """迭代 map-reduce 至 ≤MAX_CLUSTERS；每批落盘缓存可断点续跑。"""
+    """迭代 map-reduce 至 ≤MAX_CLUSTERS；每批落盘缓存可断点续跑。
+    每轮先按规范名排序再分批——同义条目前缀相近自然同批，60条能真合并
+    （随机序实测 60→57 几乎不合并，永远收敛不了）。"""
     cache_dir = os.path.join(MINE, "synth_cache")
     os.makedirs(cache_dir, exist_ok=True)
     round_no = 0
     while len(entries) > MAX_CLUSTERS:
+        entries = sorted(entries, key=lambda e: _norm_name(e["name"]))
         round_no += 1
         merged = []
         n_batches = (len(entries) + BATCH - 1) // BATCH
