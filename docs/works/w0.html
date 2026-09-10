@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>混沌学园技能卡总览（13 张） · PAI 书城</title>
+<style>
+ :root{--bg:#f6f7f9;--fg:#24292f;--card:#fff;--side:#2e2f33;--side-fg:#cfd3d9;
+       --accent:#07c160;--muted:#6a737d;--line:#e4e7eb;--reader:#fff}
+ [data-theme="dark"]{--bg:#1b1d21;--fg:#d8dce1;--card:#24262b;--side:#141518;
+       --side-fg:#9aa0a8;--accent:#2ea86e;--muted:#8a9099;--line:#33363c;
+       --reader:#24262b}
+ body{margin:0;font-family:'Microsoft YaHei',system-ui,sans-serif;background:var(--bg);
+      color:var(--fg)}
+ .side{position:fixed;left:0;top:0;bottom:0;width:190px;background:var(--side);
+       color:var(--side-fg);padding:22px 0;box-sizing:border-box;z-index:9}
+ .side .logo{color:#fff;font-weight:bold;font-size:18px;padding:0 20px 18px;
+       border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:14px}
+ .side a{display:block;color:var(--side-fg);text-decoration:none;padding:11px 20px;
+       font-size:15px}
+ .side a.on{color:var(--accent);background:rgba(255,255,255,.06);
+       border-right:3px solid var(--accent)}
+ .main{margin-left:190px;padding:28px 36px;max-width:1040px;box-sizing:border-box}
+ h1{font-size:26px} h2{font-size:19px;border-bottom:2px solid var(--line);
+       padding-bottom:6px} h3{font-size:16px}
+ .meta{color:var(--muted);font-size:13px}
+ .banner{background:linear-gradient(120deg,#1f3a5f,#2e6e5e);color:#fff;
+       border-radius:12px;padding:26px 30px;margin-bottom:26px}
+ .banner p{color:rgba(255,255,255,.85);font-size:14px}
+ .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));
+       gap:18px;margin:18px 0 34px}
+ .book{text-align:center}
+ .book a{color:inherit;text-decoration:none}
+ .book .t{font-size:14px;font-weight:600;margin:8px 2px 2px;
+       overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ .book .p{color:#c0392b;font-weight:bold;font-size:15px}
+ .cover{width:100%;max-width:150px;box-shadow:0 4px 12px rgba(0,0,0,.18);
+       border-radius:8px;transition:transform .15s}
+ .book:hover .cover{transform:translateY(-4px)}
+ .rank{background:var(--card);border:1px solid var(--line);border-radius:12px;
+       padding:18px 24px;margin-bottom:30px}
+ .rank ol{margin:8px 0 0;padding-left:0;list-style:none}
+ .rank li{display:flex;gap:12px;padding:9px 4px;border-bottom:1px dashed var(--line);
+       font-size:14px;align-items:baseline}
+ .rank .no{color:#c0392b;font-weight:800;width:38px}
+ .rank a{color:var(--fg);text-decoration:none;flex:1}
+ .rank .sc{color:var(--accent);font-weight:bold}
+ .card{background:var(--card);border:1px solid var(--line);border-radius:12px;
+       padding:20px 24px;margin:16px 0}
+ .detail{display:flex;gap:28px;align-items:flex-start;margin-bottom:8px}
+ .detail .cover{width:170px;flex:none}
+ .tag{display:inline-block;color:#fff;border-radius:12px;padding:2px 12px;
+       font-size:13px;margin-right:8px}
+ .price{color:#c0392b;font-size:24px;font-weight:bold;margin:8px 0}
+ .cta{background:#07c160;color:#fff;border-radius:8px;padding:10px 26px;
+       text-decoration:none;font-weight:bold;display:inline-block}
+ .lock{color:var(--muted);background:var(--bg);border-radius:6px;
+       padding:8px 14px;margin:6px 0;font-size:14px}
+ .note{color:#8a6d3b;background:#fcf8e3;border:1px solid #faebcc;border-radius:6px;
+       padding:10px 14px;font-size:13px}
+ [data-theme="dark"] .note{background:#33301d;border-color:#57502e;color:#d8c88a}
+ .comp{display:inline-block;background:color-mix(in srgb,var(--accent) 12%,transparent);
+       border-radius:4px;padding:1px 8px;margin:2px;font-size:12px;
+       color:var(--accent)}
+ details{border:1px solid var(--line);border-radius:8px;padding:10px 16px;
+       margin:8px 0;background:var(--card)}
+ summary{cursor:pointer;font-weight:600}
+ details .meta{margin-left:1.2em}
+ .reader{background:var(--reader);border:1px solid var(--line);border-radius:12px;
+       padding:34px 40px;line-height:1.95;font-size:18px;
+       font-family:Georgia,'Songti SC','SimSun',serif}
+ .reader h3,.reader h4{font-family:inherit}
+ .tools{display:flex;gap:8px;align-items:center;margin:12px 0;flex-wrap:wrap}
+ .tools button,.tools .chip{background:var(--card);border:1px solid var(--line);
+       border-radius:16px;padding:4px 14px;font-size:13px;cursor:pointer;
+       color:var(--fg)}
+ .tools .chip.on{border-color:var(--accent);color:var(--accent)}
+ .reader.sepia{background:#f8f1e3;color:#423a2c}
+ .reader.nightmode{background:#1c1e22;color:#c9cdd3}
+ blockquote{border-left:3px solid var(--accent);margin:8px 0;padding:2px 12px;
+       color:var(--muted)}
+ footer{color:var(--muted);font-size:12px;margin-top:40px;border-top:1px solid var(--line);
+       padding-top:12px}
+ @media(max-width:800px){.side{position:static;width:auto;display:flex;gap:4px;
+       padding:8px;align-items:center}.side .logo{border:none;padding:6px 12px;margin:0}
+       .main{margin:0;padding:14px}.detail{flex-direction:column}}
+</style></head>
+<body>
+<nav class="side"><div class="logo">📖 PAI 书城</div><a href="index.html">书城</a><a href="index.html#shelves">书架</a><a href="works.html" class=on>笔记</a><div style='margin-top:24px'><a href="javascript:void(0)" class="theme-chip" data-t="dark">🌙 夜间</a></div></nav>
+<div class="main">
+<h1>混沌学园技能卡总览（13 张）</h1><p class="meta">逆向 Sign V3 提取 15 万字文稿 → deep 蒸馏 → 五层安全扫描全过</p><div class="card"><article class="reader"><p>﻿# 混沌学园技能卡总览（13 张）</p>
+<p>来源：三门课蒸馏，全部通过五层安全扫描。</p>
+<p>---</p>
+<p>---</p>
+<p>name: 业务留档</p>
+<p>description: 用AI理解并操作业务</p>
+<p>---</p>
+<h3>业务留档</h3>
+<p>用AI理解并操作业务</p>
+<h3>适用时机</h3>
+<p>AI无法进入公司，无法读取数据</p>
+<h3>操作步骤</h3>
+<p>1. 将业务过程存档留记录，如录音、文档、埋点</p>
+<p>2. 梳理公司业务实体、关系和动作</p>
+<p>3. 建立本体论或知识图谱，让AI理解业务逻辑</p>
+<p>4. 将公司系统CLI化，方便AI操作</p>
+<p>5. 建立MCP，为AI编写说明书</p>
+<h3>示例</h3>
+<p>YC利用创业者Office Hour录音生成创业手册</p>
+<p>（出处：课程：AI原生组织转型）</p>
+<p>---</p>
+<p>---</p>
+<p>name: 人才大于岗位</p>
+<p>description: 关注人的通用素质和创造力，而非岗位的标准化</p>
+<p>---</p>
+<h3>人才大于岗位</h3>
+<p>关注人的通用素质和创造力，而非岗位的标准化</p>
+<h3>适用时机</h3>
+<p>招聘和团队建设，寻找不可替代的人才时</p>
+<h3>操作步骤</h3>
+<p>1. 识别工作中不可替代的非标、综合性判断和人际交往部分</p>
+<p>2. 招聘时注重候选人的底层素质和通用能力</p>
+<p>3. 培养团队成员的独立思考和举一反三的能力</p>
+<p>4. 鼓励成员发挥创造力，而非简单执行</p>
+<h3>示例</h3>
+<p>德邦物流教授用AI工具提升科研效率，团队整体水平提升</p>
+<p>（出处：组织管理哪些变了，哪些没变）</p>
+<p>---</p>
+<p>---</p>
+<p>name: 分圈作战</p>
+<p>description: 用AI支持小团队端到端闭环</p>
+<p>---</p>
+<h3>分圈作战</h3>
+<p>用AI支持小团队端到端闭环</p>
+<h3>适用时机</h3>
+<p>大公司转型阻力大，难以整体推进</p>
+<h3>操作步骤</h3>
+<p>1. 将公司拆解为端到端负责的小团队</p>
+<p>2. 小团队高内聚低耦合，内部能搞定所有事</p>
+<p>3. 每个小团队拥有独立业务和决策权</p>
+<p>4. 紧缩预算，给小团队超量授权</p>
+<p>5. 小团队之间进行技能和经验共享</p>
+<h3>示例</h3>
+<p>安克公司成立组织专小化部门，将流程缩短为四步</p>
+<p>（出处：课程：AI原生组织转型）</p>
+<p>---</p>
+<p>---</p>
+<p>name: 区分事实与趋势</p>
+<p>description: 区分已发生的变化和未来趋势，避免盲目乐观或悲观</p>
+<p>---</p>
+<h3>区分事实与趋势</h3>
+<p>区分已发生的变化和未来趋势，避免盲目乐观或悲观</p>
+<h3>适用时机</h3>
+<p>AI转型初期，制定组织策略时</p>
+<h3>操作步骤</h3>
+<p>1. 识别已发生的技术突破和行业变化</p>
+<p>2. 分析这些变化对工作和组织的影响</p>
+<p>3. 区分短期可执行的变化和长期不确定的趋势</p>
+<p>4. 根据企业阶段和业务属性制定策略</p>
+<h3>示例</h3>
+<p>2022年ChatGPT和2024年Claude Code的突破，以及具身机器人的发展</p>
+<p>（出处：已知的事实与可预知的趋势）</p>
+<p>---</p>
+<p>---</p>
+<p>name: 品牌实体构建</p>
+<p>description: 保持品牌信息一致性</p>
+<p>---</p>
+<h3>品牌实体构建</h3>
+<p>保持品牌信息一致性</p>
+<h3>适用时机</h3>
+<p>建立品牌信任度</p>
+<h3>操作步骤</h3>
+<p>1. 整合各部门品牌信息</p>
+<p>2. 确保信息来源权威</p>
+<p>3. 统一品牌名称和属性</p>
+<p>4. 建立品牌知识库</p>
+<h3>示例</h3>
+<p>统一官网、社交媒体和线下门店的品牌信息和名称</p>
+<p>（出处：课程内容）</p>
+<p>---</p>
+<p>---</p>
+<p>name: 团队大于组织</p>
+<p>description: 小团队的高效协作比大型组织的层级结构更重要</p>
+<p>---</p>
+<h3>团队大于组织</h3>
+<p>小团队的高效协作比大型组织的层级结构更重要</p>
+<h3>适用时机</h3>
+<p>组织转型和团队建设，提升组织效率时</p>
+<h3>操作步骤</h3>
+<p>1. 建立小团队，确保成员间的高效沟通和责任感</p>
+<p>2. 明确团队目标和成员角色，避免多头汇报</p>
+<p>3. 鼓励自下而上的领导力和建设性冲突</p>
+<p>4. 从间接管理回归直接管理，以信息决策为中心</p>
+<h3>示例</h3>
+<p>皮克斯团队通过坦诚沟通和协作，实现电影制作效率提升</p>
+<p>（出处：组织管理哪些变了，哪些没变）</p>
+<p>---</p>
+<p>---</p>
+<p>name: 多渠道发布</p>
+<p>description: 在AI信任渠道发布结构化内容</p>
+<p>---</p>
+<h3>多渠道发布</h3>
+<p>在AI信任渠道发布结构化内容</p>
+<h3>适用时机</h3>
+<p>提升内容可见性</p>
+<h3>操作步骤</h3>
+<p>1. 梳理数字门牌信息</p>
+<p>2. 发布在AI信任渠道</p>
+<p>3. 保持内容及时更新</p>
+<p>4. 确保全渠道表达一致</p>
+<h3>示例</h3>
+<p>在今日头条、百科、抖音等渠道发布产品规格和使用说明</p>
+<p>（出处：课程内容）</p>
+<p>---</p>
+<p>---</p>
+<p>name: 对齐事实</p>
+<p>description: 用AI让所有人看到同一张地图</p>
+<p>---</p>
+<h3>对齐事实</h3>
+<p>用AI让所有人看到同一张地图</p>
+<h3>适用时机</h3>
+<p>组织效率低下，信息传递损耗大</p>
+<h3>操作步骤</h3>
+<p>1. 建立共享文档或系统，所有人操作同一对象</p>
+<p>2. 所有人基于同一事实源头工作，减少沟通成本</p>
+<p>3. 用AI替代人工进行信息传递和解释</p>
+<p>4. 将规范和流程嵌入系统，自动执行，而非人工记忆</p>
+<p>5. 用可感知的实体（如原型）进行讨论，而非语言描述</p>
+<h3>示例</h3>
+<p>波音公司使用统一软件进行数字化设计，避免信息传递错误</p>
+<p>（出处：课程：AI原生组织转型）</p>
+<p>---</p>
+<p>---</p>
+<p>name: 形态大于结构</p>
+<p>description: 组织结构应保持流变性，鼓励创新和多元</p>
+<p>---</p>
+<h3>形态大于结构</h3>
+<p>组织结构应保持流变性，鼓励创新和多元</p>
+<h3>适用时机</h3>
+<p>组织设计和转型，追求组织活力和创新时</p>
+<h3>操作步骤</h3>
+<p>1. 建立信息流通和决策机制，促进自下而上的创新</p>
+<p>2. 鼓励多元观点和不同想法的涌现</p>
+<p>3. 避免过度强调组织秩序和标准化，保持组织的张力</p>
+<p>4. 以信息决策为中心，而非执行效率</p>
+<h3>示例</h3>
+<p>DeepSeek公司依靠自下而上的创新和多元观点，实现快速发展</p>
+<p>（出处：组织管理哪些变了，哪些没变）</p>
+<p>---</p>
+<p>---</p>
+<p>name: 推进工作</p>
+<p>description: 用AI让工作自己往前走</p>
+<p>---</p>
+<h3>推进工作</h3>
+<p>用AI让工作自己往前走</p>
+<h3>适用时机</h3>
+<p>组织协调成本高，工作推进缓慢</p>
+<h3>操作步骤</h3>
+<p>1. 让AI发现工作，让问题自己举手</p>
+<p>2. 让AI分配工作，根据能力和状态匹配任务</p>
+<p>3. 让AI传导工作，实现自动化流程交接</p>
+<p>4. 让AI检查工作，设置自动门禁和对抗式检查</p>
+<p>5. 用AI进行复盘，沉淀经验，形成闭环</p>
+<h3>示例</h3>
+<p>海底捞使用AI根据监控情况自动派活给服务员</p>
+<p>（出处：课程：AI原生组织转型）</p>
+<p>---</p>
+<p>---</p>
+<p>name: 智能内容生成</p>
+<p>description: 利用智能系统生成AI可读内容</p>
+<p>---</p>
+<h3>智能内容生成</h3>
+<p>利用智能系统生成AI可读内容</p>
+<h3>适用时机</h3>
+<p>优化内容可读性</p>
+<h3>操作步骤</h3>
+<p>1. 利用智能系统计算用户画像和问题</p>
+<p>2. 生成结构化的事实性内容</p>
+<p>3. 多渠道自动发布内容</p>
+<p>4. 智能评估和优化内容质量</p>
+<h3>示例</h3>
+<p>使用智能系统生成产品规格说明和常见问题解答</p>
+<p>（出处：课程内容）</p>
+<p>---</p>
+<p>---</p>
+<p>name: 用户问题导向</p>
+<p>description: 基于用户真实问题优化内容</p>
+<p>---</p>
+<h3>用户问题导向</h3>
+<p>基于用户真实问题优化内容</p>
+<h3>适用时机</h3>
+<p>AI品牌营销基础</p>
+<h3>操作步骤</h3>
+<p>1. 分析用户画像和常见问题</p>
+<p>2. 计算问题扩展和模拟提问</p>
+<p>3. 监测AI提问和回答情况</p>
+<p>4. 优化内容可见性和排名</p>
+<h3>示例</h3>
+<p>根据用户购买前的常见问题优化官网和社交媒体内容</p>
+<p>（出处：课程内容）</p>
+<p>---</p>
+<p>---</p>
+<p>name: 超级个体</p>
+<p>description: 识别并培养AI时代的人才</p>
+<p>---</p>
+<h3>超级个体</h3>
+<p>识别并培养AI时代的人才</p>
+<h3>适用时机</h3>
+<p>公司转型需要人才支持</p>
+<h3>操作步骤</h3>
+<p>1. 老板带头使用AI，展现转型决心</p>
+<p>2. 寻找并激励自费购买AI工具的员工</p>
+<p>3. 为超级个体提供一对一辅导和资源支持</p>
+<p>4. 安排专人解决员工使用AI的基础问题</p>
+<p>5. 建立内部竞赛机制，鼓励员工使用AI</p>
+<h3>示例</h3>
+<p>鹿客公司全员信鼓励员工展示AI能力</p>
+<p>（出处：课程：AI原生组织转型）</p></article></div>
+<footer>PAI-Station 方案铸造厂 · 你的电脑替你造钱 · 零服务器 · GitHub Pages</footer>
+</div>
+<script>
+ const KEY='paistation-theme';
+ const apply=t=>{document.body.dataset.theme=t;
+   document.querySelectorAll('.theme-chip').forEach(c=>
+     c.classList.toggle('on',c.dataset.t===t));
+   try{localStorage.setItem(KEY,t)}catch(e){}};
+ const saved=(()=>{try{return localStorage.getItem(KEY)}catch(e){return null}})();
+ if(saved)apply(saved);
+ document.addEventListener('click',e=>{const t=e.target;
+   if(t.classList&&t.classList.contains('theme-chip'))apply(t.dataset.t);});
+ const R=document.querySelector('.reader');
+ if(R){const fs=()=>R.style.fontSize||getComputedStyle(R).fontSize;
+   const setFs=v=>R.style.fontSize=Math.min(24,Math.max(14,v))+'px';
+   document.getElementById('fminus')&&(
+     document.getElementById('fminus').onclick=()=>setFs(parseFloat(fs())-2),
+     document.getElementById('fplus').onclick=()=>setFs(parseFloat(fs())+2));
+   document.querySelectorAll('.read-chip').forEach(c=>c.onclick=()=>{
+     R.classList.remove('sepia','nightmode');
+     if(c.dataset.r==='sepia')R.classList.add('sepia');
+     if(c.dataset.r==='night')R.classList.add('nightmode');
+     document.querySelectorAll('.read-chip').forEach(x=>
+       x.classList.toggle('on',x===c));});}
+</script>
+</body></html>

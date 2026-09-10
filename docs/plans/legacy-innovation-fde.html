@@ -1,36 +1,104 @@
 <!DOCTYPE html>
 <html lang="zh-CN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>传统企业创新转型 FDE 实施方案 · PAI-Station 方案铸造厂</title>
+<title>传统企业创新转型 FDE 实施方案 · PAI 书城</title>
 <style>
- body{font-family:'Microsoft YaHei',system-ui,sans-serif;max-width:860px;
-      margin:0 auto;padding:24px;color:#222;background:#fafafa}
- h1{color:#1f3a5f} h2{color:#1f3a5f;border-bottom:2px solid #1f3a5f;
-      padding-bottom:6px} h3{color:#333}
- .card{background:#fff;border:1px solid #e5e5e5;border-radius:10px;
-      padding:20px 24px;margin:16px 0;box-shadow:0 1px 3px rgba(0,0,0,.06)}
- .meta{color:#666;font-size:14px} .badge{display:inline-block;background:#1f3a5f;
-      color:#fff;border-radius:12px;padding:2px 12px;font-size:13px;margin-left:8px}
- .price{color:#c0392b;font-size:22px;font-weight:bold}
- .lock{color:#999;background:#f3f3f3;border-radius:6px;padding:10px 14px;margin:8px 0}
- .note{color:#8a6d3b;background:#fcf8e3;border:1px solid #faebcc;
-      border-radius:6px;padding:10px 14px}
- .comp{display:inline-block;background:#eef;border-radius:4px;
-      padding:1px 8px;margin:2px;font-size:12px}
- .cta{background:#c0392b;color:#fff;border-radius:8px;padding:10px 24px;
-      text-decoration:none;font-weight:bold}
- footer{color:#999;font-size:12px;margin-top:40px;border-top:1px solid #ddd;
-      padding-top:12px}
-</style></head><body>
-
+ :root{--bg:#f6f7f9;--fg:#24292f;--card:#fff;--side:#2e2f33;--side-fg:#cfd3d9;
+       --accent:#07c160;--muted:#6a737d;--line:#e4e7eb;--reader:#fff}
+ [data-theme="dark"]{--bg:#1b1d21;--fg:#d8dce1;--card:#24262b;--side:#141518;
+       --side-fg:#9aa0a8;--accent:#2ea86e;--muted:#8a9099;--line:#33363c;
+       --reader:#24262b}
+ body{margin:0;font-family:'Microsoft YaHei',system-ui,sans-serif;background:var(--bg);
+      color:var(--fg)}
+ .side{position:fixed;left:0;top:0;bottom:0;width:190px;background:var(--side);
+       color:var(--side-fg);padding:22px 0;box-sizing:border-box;z-index:9}
+ .side .logo{color:#fff;font-weight:bold;font-size:18px;padding:0 20px 18px;
+       border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:14px}
+ .side a{display:block;color:var(--side-fg);text-decoration:none;padding:11px 20px;
+       font-size:15px}
+ .side a.on{color:var(--accent);background:rgba(255,255,255,.06);
+       border-right:3px solid var(--accent)}
+ .main{margin-left:190px;padding:28px 36px;max-width:1040px;box-sizing:border-box}
+ h1{font-size:26px} h2{font-size:19px;border-bottom:2px solid var(--line);
+       padding-bottom:6px} h3{font-size:16px}
+ .meta{color:var(--muted);font-size:13px}
+ .banner{background:linear-gradient(120deg,#1f3a5f,#2e6e5e);color:#fff;
+       border-radius:12px;padding:26px 30px;margin-bottom:26px}
+ .banner p{color:rgba(255,255,255,.85);font-size:14px}
+ .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));
+       gap:18px;margin:18px 0 34px}
+ .book{text-align:center}
+ .book a{color:inherit;text-decoration:none}
+ .book .t{font-size:14px;font-weight:600;margin:8px 2px 2px;
+       overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ .book .p{color:#c0392b;font-weight:bold;font-size:15px}
+ .cover{width:100%;max-width:150px;box-shadow:0 4px 12px rgba(0,0,0,.18);
+       border-radius:8px;transition:transform .15s}
+ .book:hover .cover{transform:translateY(-4px)}
+ .rank{background:var(--card);border:1px solid var(--line);border-radius:12px;
+       padding:18px 24px;margin-bottom:30px}
+ .rank ol{margin:8px 0 0;padding-left:0;list-style:none}
+ .rank li{display:flex;gap:12px;padding:9px 4px;border-bottom:1px dashed var(--line);
+       font-size:14px;align-items:baseline}
+ .rank .no{color:#c0392b;font-weight:800;width:38px}
+ .rank a{color:var(--fg);text-decoration:none;flex:1}
+ .rank .sc{color:var(--accent);font-weight:bold}
+ .card{background:var(--card);border:1px solid var(--line);border-radius:12px;
+       padding:20px 24px;margin:16px 0}
+ .detail{display:flex;gap:28px;align-items:flex-start;margin-bottom:8px}
+ .detail .cover{width:170px;flex:none}
+ .tag{display:inline-block;color:#fff;border-radius:12px;padding:2px 12px;
+       font-size:13px;margin-right:8px}
+ .price{color:#c0392b;font-size:24px;font-weight:bold;margin:8px 0}
+ .cta{background:#07c160;color:#fff;border-radius:8px;padding:10px 26px;
+       text-decoration:none;font-weight:bold;display:inline-block}
+ .lock{color:var(--muted);background:var(--bg);border-radius:6px;
+       padding:8px 14px;margin:6px 0;font-size:14px}
+ .note{color:#8a6d3b;background:#fcf8e3;border:1px solid #faebcc;border-radius:6px;
+       padding:10px 14px;font-size:13px}
+ [data-theme="dark"] .note{background:#33301d;border-color:#57502e;color:#d8c88a}
+ .comp{display:inline-block;background:color-mix(in srgb,var(--accent) 12%,transparent);
+       border-radius:4px;padding:1px 8px;margin:2px;font-size:12px;
+       color:var(--accent)}
+ details{border:1px solid var(--line);border-radius:8px;padding:10px 16px;
+       margin:8px 0;background:var(--card)}
+ summary{cursor:pointer;font-weight:600}
+ details .meta{margin-left:1.2em}
+ .reader{background:var(--reader);border:1px solid var(--line);border-radius:12px;
+       padding:34px 40px;line-height:1.95;font-size:18px;
+       font-family:Georgia,'Songti SC','SimSun',serif}
+ .reader h3,.reader h4{font-family:inherit}
+ .tools{display:flex;gap:8px;align-items:center;margin:12px 0;flex-wrap:wrap}
+ .tools button,.tools .chip{background:var(--card);border:1px solid var(--line);
+       border-radius:16px;padding:4px 14px;font-size:13px;cursor:pointer;
+       color:var(--fg)}
+ .tools .chip.on{border-color:var(--accent);color:var(--accent)}
+ .reader.sepia{background:#f8f1e3;color:#423a2c}
+ .reader.nightmode{background:#1c1e22;color:#c9cdd3}
+ blockquote{border-left:3px solid var(--accent);margin:8px 0;padding:2px 12px;
+       color:var(--muted)}
+ footer{color:var(--muted);font-size:12px;margin-top:40px;border-top:1px solid var(--line);
+       padding-top:12px}
+ @media(max-width:800px){.side{position:static;width:auto;display:flex;gap:4px;
+       padding:8px;align-items:center}.side .logo{border:none;padding:6px 12px;margin:0}
+       .main{margin:0;padding:14px}.detail{flex-direction:column}}
+</style></head>
+<body>
+<nav class="side"><div class="logo">📖 PAI 书城</div><a href="index.html" class=on>书城</a><a href="index.html#shelves">书架</a><a href="works.html">笔记</a><div style='margin-top:24px'><a href="javascript:void(0)" class="theme-chip" data-t="dark">🌙 夜间</a></div></nav>
+<div class="main">
+<div class="detail"><svg class="cover" viewBox="0 0 150 210" role="img" aria-label="传统企业创新转型 FDE 实"><defs><linearGradient id="glegacy-innovation-fde" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="hsl(315,52%,42%)"/><stop offset="1" stop-color="hsl(355,58%,26%)"/></linearGradient></defs><rect width="150" height="210" rx="8" fill="url(#glegacy-innovation-fde)"/><rect x="6" y="6" width="138" height="198" rx="5" fill="none" stroke="rgba(255,255,255,.35)"/><text x="118" y="32" fill="#fff" font-size="8.5" font-weight="bold" letter-spacing="2" style="writing-mode:vertical-rl;text-orientation:upright">传统企业创新转型 FDE 实</text><text x="22" y="192" fill="rgba(255,255,255,.92)" font-size="11">PAI-Station 铸造厂</text><rect x="10" y="10" width="52" height="20" rx="10" fill="#07c160"/><text x="36" y="24" fill="#fff" font-size="11" text-anchor="middle">71</text></svg><div>
 <h1>传统企业创新转型 FDE 实施方案</h1>
-<p class="meta">思想密度分 <b>71</b>/100 <span class="badge">通过密度闸门</span> · 九件套可抄作业</p>
+<p style="font-size:15px;margin:6px 0"><span style="color:var(--accent);font-weight:800;font-size:22px">推荐值 71%</span><span class="tag" style="background:#07c160">好评如潮</span><span class="tag" style="background:#576b95">通过密度闸门</span></p>
+<p class="meta">24 节 · 6 章 · 6 种思维模型框架 · 抄作业九件套逐节落位</p>
 <div class="note">语料说明：本版语料为混沌学园方法论库（微信读书行业书挖掘当日限额已满，按预案降级生成）。下一版将换行业书语料重锻。</div>
-<p class="price">¥198</p>
-<div class="card"><h2>为什么值得（用户价值）</h2><p>这不是一份「看看就好」的报告，而是一套<b>能直接搬走执行</b>的作业：每章标注思维模型、每节至少 2 件抄作业组件（WBS/业务公式/避坑清单/实操武器库/小案例…），四前提（标准化/流程化/数据化/知识化）逐节落位。读完不满意？<b>写下真诚反馈，按时长返钱</b>（15 分钟 ¥100 起，70 分钟以上全退）——你的每条反馈都会变成下一版的免疫规则。</p></div>
-<div class="card"><h2>推荐序 · 免费试读（约 20%）</h2>
-<h3>第1章 行业诊断：从现象到模式的深度洞察<span class='meta'>（章框架：系统思考冰山模型）</span></h3>
-<h4>1.1 现象扫描：识别行业关键趋势与颠覆性信号</h4><p class='meta'>节框架：MECE 原则 <span class="comp">key_points</span><span class="comp">wbs</span><span class="comp">infographic</span><span class="comp">flowchart</span></p><h3>1.1 现象扫描：识别行业关键趋势与颠覆性信号</h3>
+<p class="price">¥198<span class="meta" style="font-size:13px">（反馈可返钱）</span></p><a class="cta" href="#buy">立即购买</a><span class="meta" style="margin-left:12px">付款后 24 小时内交付 MD + DOCX</span>
+</div></div>
+<div class="card"><h2>简介</h2><p>传统企业创新转型方法论——混沌大学课程语料重构（语料降级已明示，折价销售）。</p><p>这不是一份「看看就好」的报告，而是一套<b>能直接搬走执行</b>的作业：每章标注思维模型、每节至少 2 件抄作业组件（WBS/业务公式/避坑清单/实操武器库/小案例…），四前提（标准化/流程化/数据化/知识化）逐节落位。读完不满意？<b>写下真诚反馈，按时长返钱</b>（15 分钟 ¥100 起，70 分钟以上全退）。</p></div>
+<div class="card"><h2>目录（点击展开）</h2><details><summary>第1章 行业诊断：从现象到模式的深度洞察<span class='meta'>（系统思考冰山模型）</span></summary><p class="meta">1.1 现象扫描：识别行业关键趋势与颠覆性信号</p><p class="meta">1.2 模式解构：剖析行业价值链与竞争格局演变</p><p class="meta">1.3 结构分析：识别行业核心驱动力与潜在变革点</p><p class="meta">1.4 心智洞察：理解行业参与者认知与行为模式变迁</p></details><details><summary>第2章 AI 机会识别：从技术到商业的精准切入<span class='meta'>（金字塔原理）</span></summary><p class="meta">2.1 技术趋势研判：评估 AI 技术成熟度与适用性</p><p class="meta">2.2 商业价值挖掘：识别 AI 可赋能的核心业务场景</p><p class="meta">2.3 竞争格局分析：评估 AI 驱动的市场机会与威胁</p><p class="meta">2.4 机会优先级排序：基于价值与可行性制定选择策略</p></details><details><summary>第3章 实施路线图：从战略到落地的行动规划<span class='meta'>（PDCA 双环）</span></summary><p class="meta">3.1 战略目标对齐：明确 AI 转型的顶层设计与预期成果</p><p class="meta">3.2 阶段性目标分解：基于 PDCA 循环制定分阶段实施计划</p><p class="meta">3.3 关键举措设计：规划试点先行与规模化推广的路径</p><p class="meta">3.4 资源配置规划：确定预算、人才与技术投入方案</p></details><details><summary>第4章 抄作业工具包：借鉴成功案例与创新实践<span class='meta'>（组合创新）</span></summary><p class="meta">4.1 行业标杆分析：提炼 AI 转型领先企业的成功经验</p><p class="meta">4.2 跨行业创新借鉴：挖掘其他行业 AI 应用的可复用模式</p><p class="meta">4.3 开源工具集：整理常用 AI 工具与平台资源清单</p><p class="meta">4.4 最佳实践库：构建企业内部 AI 应用案例知识库</p></details><details><summary>第5章 度量体系：从过程到结果的绩效评估<span class='meta'>（精益创业循环）</span></summary><p class="meta">5.1 关键绩效指标（KPI）设计：量化 AI 转型成效</p><p class="meta">5.2 数据采集与监控：建立 AI 应用效果追踪机制</p><p class="meta">5.3 结果分析与迭代：基于数据反馈持续优化 AI 应用</p><p class="meta">5.4 组织绩效关联：将 AI 转型成果与激励机制挂钩</p></details><details><summary>第6章 文化与能力：从认知到行动的组织升级<span class='meta'>（第二曲线）</span></summary><p class="meta">6.1 AI 思维培育：构建数据驱动与持续学习的组织文化</p><p class="meta">6.2 人才梯队建设：规划 AI 转型所需的人才结构与培养路径</p><p class="meta">6.3 组织架构调整：优化适配 AI 转型的敏捷协作机制</p><p class="meta">6.4 全员赋能计划：推动 AI 技能普及与深度应用</p></details></div>
+<div class="card"><h2>免费试读（约 20%）</h2>
+<div class="tools"><span class="meta">排版：</span><button id="fminus" type="button">A−</button><button id="fplus" type="button">A+</button><span class="meta" style="margin-left:10px">背景：</span><button class="chip read-chip on" data-r="paper" type="button">纸白</button><button class="chip read-chip" data-r="sepia" type="button">护眼</button><button class="chip read-chip" data-r="night" type="button">夜间</button><span class="meta" style="margin-left:10px">字号与背景本机记忆，试读为全文 20%</span></div>
+<article class="reader">
+<h3>1.1 现象扫描：识别行业关键趋势与颠覆性信号</h3><p class='meta'>节框架：MECE 原则 <span class="comp">key_points</span><span class="comp">wbs</span><span class="comp">infographic</span><span class="comp">flowchart</span></p><h3>1.1 现象扫描：识别行业关键趋势与颠覆性信号</h3>
 <p>本节将遵循MECE（Mutually Exclusive, Collectively Exhaustive）原则，从多个维度系统性地扫描行业关键趋势与颠覆性信号，为后续深入诊断奠定基础。我们将从宏观趋势、技术变革、商业模式创新、用户行为变迁四个维度展开，确保分析框架的完整性与逻辑性。</p>
 <h3>宏观趋势扫描</h3>
 <h4>经济全球化与区域化并存</h4>
@@ -165,7 +233,7 @@
 <li>颠覆性信号识别流程</li>
 <li>行动建议制定流程）</li>
 <p>通过以上MECE框架的系统扫描，我们可以全面识别行业关键趋势与颠覆性信号，为后续的行业诊断提供有力支撑。</p>
-<h4>1.2 模式解构：剖析行业价值链与竞争格局演变</h4><p class='meta'>节框架：系统思考冰山模型 <span class="comp">key_points</span><span class="comp">wbs</span><span class="comp">infographic</span><span class="comp">flowchart</span><span class="comp">formula</span><span class="comp">experience_map</span></p><h3>1.2 模式解构：剖析行业价值链与竞争格局演变</h3>
+<h3>1.2 模式解构：剖析行业价值链与竞争格局演变</h3><p class='meta'>节框架：系统思考冰山模型 <span class="comp">key_points</span><span class="comp">wbs</span><span class="comp">infographic</span><span class="comp">flowchart</span><span class="comp">formula</span><span class="comp">experience_map</span></p><h3>1.2 模式解构：剖析行业价值链与竞争格局演变</h3>
 <p>在行业诊断阶段，我们不仅要识别现象，更要深入剖析现象背后的模式。本节将运用<b>系统思考冰山模型</b>，从结构化视角解构行业价值链与竞争格局的演变规律，为后续的战略决策提供底层逻辑支撑。</p>
 <h4>系统思考冰山模型：看见水面之下的结构</h4>
 <p>系统思考冰山模型强调，我们观察到的行业现象（水面之上）只是系统整体运作的一部分。水面之下，隐藏着更深层的关键结构，包括<b>关键要素、相互作用关系、反馈机制和根本假设</b>。只有理解这些深层结构，才能真正把握行业模式的本质和演变趋势。在本节中，我们将重点关注以下方面：</p>
@@ -226,7 +294,7 @@
 <h4>根本假设演变经验地图【experience_map】</h4>
 <p>（此处应插入一张经验地图，展示不同行业在不同发展阶段可能存在的根本假设，以及这些根本假设如何影响行业价值链和竞争格局。）</p>
 <p>通过运用系统思考冰山模型，我们可以更深入地理解行业价值链和竞争格局的演变规律，为后续的战略决策提供更可靠的依据。在下一节中，我们将进一步探讨行业诊断的具体方法，帮助读者更好地应用系统思考冰山模型进行行业分析。</p>
-<h4>1.3 结构分析：识别行业核心驱动力与潜在变革点</h4><p class='meta'>节框架：系统思考冰山模型 <span class="comp">key_points</span><span class="comp">wbs</span><span class="comp">infographic</span><span class="comp">formula</span><span class="comp">experience_map</span><span class="comp">pitfall_checklist</span></p><h3>1.3 结构分析：识别行业核心驱动力与潜在变革点</h3>
+<h3>1.3 结构分析：识别行业核心驱动力与潜在变革点</h3><p class='meta'>节框架：系统思考冰山模型 <span class="comp">key_points</span><span class="comp">wbs</span><span class="comp">infographic</span><span class="comp">formula</span><span class="comp">experience_map</span><span class="comp">pitfall_checklist</span></p><h3>1.3 结构分析：识别行业核心驱动力与潜在变革点</h3>
 <p>本节将运用系统思考冰山模型，深入剖析行业结构，识别核心驱动力与潜在变革点。冰山模型强调，我们观察到的行业现象（冰山一角）只是其背后庞大结构（冰山水体）的冰山一角。真正的变革往往源于对水面下结构的深刻洞察与系统性调整。</p>
 <h3>一、行业结构的核心构成</h3>
 <p>行业结构并非静态，而是由一系列相互关联、动态演变的要素构成。根据系统思考冰山模型，我们可以从以下几个维度理解行业结构：</p>
@@ -285,7 +353,7 @@
 <li>避免忽视技术进步和市场变化带来的挑战</li>
 <li>避免被过去的成功因素束缚</li>
 <p>通过以上分析，我们可以更深入地理解行业结构，为AI产品研发提供指导，推动行业的持续创新和发展。</p>
-<h4>1.4 心智洞察：理解行业参与者认知与行为模式变迁</h4><p class='meta'>节框架：系统思考冰山模型 <span class="comp">key_points</span><span class="comp">wbs</span><span class="comp">formula</span><span class="comp">pitfall_checklist</span><span class="comp">case</span></p><h3>1.4 心智洞察：理解行业参与者认知与行为模式变迁</h3>
+<h3>1.4 心智洞察：理解行业参与者认知与行为模式变迁</h3><p class='meta'>节框架：系统思考冰山模型 <span class="comp">key_points</span><span class="comp">wbs</span><span class="comp">formula</span><span class="comp">pitfall_checklist</span><span class="comp">case</span></p><h3>1.4 心智洞察：理解行业参与者认知与行为模式变迁</h3>
 <p>在行业变革浪潮中，参与者的认知与行为模式变迁是决定胜负的关键因素。本节基于系统思考冰山模型，从结构化视角剖析行业参与者如何从现象层深入到模式层，并最终实现认知与行为的系统性转变。</p>
 <h3>系统思考冰山模型：揭示认知与行为的深层结构</h3>
 <p>系统思考冰山模型将行业参与者的认知与行为模式分解为三个层次：表面现象、深层结构、以及支撑结构。通过这一框架，我们可以更清晰地理解行业参与者如何从表层应对转向深层变革。</p>
@@ -327,8 +395,7 @@
 <p><b>结果</b>：猎豹清理大师成为全球最受欢迎的移动应用之一，猎豹移动成功实现全球化发展。</p>
 <h3>总结</h3>
 <p>通过系统思考冰山模型，我们可以更清晰地理解行业参与者认知与行为模式的变迁路径。从认知觉醒到结构重构，再到文化重塑，行业参与者需要经历一个系统性的转变过程。只有通过这一过程，才能实现真正的创新与增长。</p>
-<h3>第2章 AI 机会识别：从技术到商业的精准切入<span class='meta'>（章框架：金字塔原理）</span></h3>
-<h4>2.1 技术趋势研判：评估 AI 技术成熟度与适用性</h4><p class='meta'>节框架：MECE 原则 <span class="comp">key_points</span><span class="comp">wbs</span><span class="comp">infographic</span><span class="comp">flowchart</span></p><h3>2.1 技术趋势研判：评估 AI 技术成熟度与适用性</h3>
+<h3>2.1 技术趋势研判：评估 AI 技术成熟度与适用性</h3><p class='meta'>节框架：MECE 原则 <span class="comp">key_points</span><span class="comp">wbs</span><span class="comp">infographic</span><span class="comp">flowchart</span></p><h3>2.1 技术趋势研判：评估 AI 技术成熟度与适用性</h3>
 <h3>MECE 原则下的技术趋势研判框架</h3>
 <p>为了精准识别 AI 技术的机遇，我们需要采用 MECE（相互独立，完全穷尽）的原则，从多个维度对技术趋势进行系统性研判。本节将围绕技术成熟度和技术适用性两大核心维度，展开 MECE 分析，为 AI 机会识别提供结构化依据。</p>
 <h4>一、技术成熟度研判（评估技术当前发展阶段）</h4>
@@ -424,28 +491,49 @@
 <div class="lock">🔒 2.2 商业价值挖掘：识别 AI 可赋能的核心业务场景 —— 购买后解锁</div>
 <div class="lock">🔒 2.3 竞争格局分析：评估 AI 驱动的市场机会与威胁 —— 购买后解锁</div>
 <div class="lock">🔒 2.4 机会优先级排序：基于价值与可行性制定选择策略 —— 购买后解锁</div>
-<h3>第3章 实施路线图：从战略到落地的行动规划<span class='meta'>（章框架：PDCA 双环）</span></h3>
 <div class="lock">🔒 3.1 战略目标对齐：明确 AI 转型的顶层设计与预期成果 —— 购买后解锁</div>
 <div class="lock">🔒 3.2 阶段性目标分解：基于 PDCA 循环制定分阶段实施计划 —— 购买后解锁</div>
 <div class="lock">🔒 3.3 关键举措设计：规划试点先行与规模化推广的路径 —— 购买后解锁</div>
 <div class="lock">🔒 3.4 资源配置规划：确定预算、人才与技术投入方案 —— 购买后解锁</div>
-<h3>第4章 抄作业工具包：借鉴成功案例与创新实践<span class='meta'>（章框架：组合创新）</span></h3>
 <div class="lock">🔒 4.1 行业标杆分析：提炼 AI 转型领先企业的成功经验 —— 购买后解锁</div>
 <div class="lock">🔒 4.2 跨行业创新借鉴：挖掘其他行业 AI 应用的可复用模式 —— 购买后解锁</div>
 <div class="lock">🔒 4.3 开源工具集：整理常用 AI 工具与平台资源清单 —— 购买后解锁</div>
 <div class="lock">🔒 4.4 最佳实践库：构建企业内部 AI 应用案例知识库 —— 购买后解锁</div>
-<h3>第5章 度量体系：从过程到结果的绩效评估<span class='meta'>（章框架：精益创业循环）</span></h3>
 <div class="lock">🔒 5.1 关键绩效指标（KPI）设计：量化 AI 转型成效 —— 购买后解锁</div>
 <div class="lock">🔒 5.2 数据采集与监控：建立 AI 应用效果追踪机制 —— 购买后解锁</div>
 <div class="lock">🔒 5.3 结果分析与迭代：基于数据反馈持续优化 AI 应用 —— 购买后解锁</div>
 <div class="lock">🔒 5.4 组织绩效关联：将 AI 转型成果与激励机制挂钩 —— 购买后解锁</div>
-<h3>第6章 文化与能力：从认知到行动的组织升级<span class='meta'>（章框架：第二曲线）</span></h3>
 <div class="lock">🔒 6.1 AI 思维培育：构建数据驱动与持续学习的组织文化 —— 购买后解锁</div>
 <div class="lock">🔒 6.2 人才梯队建设：规划 AI 转型所需的人才结构与培养路径 —— 购买后解锁</div>
 <div class="lock">🔒 6.3 组织架构调整：优化适配 AI 转型的敏捷协作机制 —— 购买后解锁</div>
 <div class="lock">🔒 6.4 全员赋能计划：推动 AI 技能普及与深度应用 —— 购买后解锁</div>
-</div>
-<div class="card"><h2>三级完整目录</h2><p><b>第1章 行业诊断：从现象到模式的深度洞察</b><span class='meta'>（系统思考冰山模型）</span></p><p class='meta' style='margin-left:1.5em'>1.1 现象扫描：识别行业关键趋势与颠覆性信号</p><p class='meta' style='margin-left:1.5em'>1.2 模式解构：剖析行业价值链与竞争格局演变</p><p class='meta' style='margin-left:1.5em'>1.3 结构分析：识别行业核心驱动力与潜在变革点</p><p class='meta' style='margin-left:1.5em'>1.4 心智洞察：理解行业参与者认知与行为模式变迁</p><p><b>第2章 AI 机会识别：从技术到商业的精准切入</b><span class='meta'>（金字塔原理）</span></p><p class='meta' style='margin-left:1.5em'>2.1 技术趋势研判：评估 AI 技术成熟度与适用性</p><p class='meta' style='margin-left:1.5em'>2.2 商业价值挖掘：识别 AI 可赋能的核心业务场景</p><p class='meta' style='margin-left:1.5em'>2.3 竞争格局分析：评估 AI 驱动的市场机会与威胁</p><p class='meta' style='margin-left:1.5em'>2.4 机会优先级排序：基于价值与可行性制定选择策略</p><p><b>第3章 实施路线图：从战略到落地的行动规划</b><span class='meta'>（PDCA 双环）</span></p><p class='meta' style='margin-left:1.5em'>3.1 战略目标对齐：明确 AI 转型的顶层设计与预期成果</p><p class='meta' style='margin-left:1.5em'>3.2 阶段性目标分解：基于 PDCA 循环制定分阶段实施计划</p><p class='meta' style='margin-left:1.5em'>3.3 关键举措设计：规划试点先行与规模化推广的路径</p><p class='meta' style='margin-left:1.5em'>3.4 资源配置规划：确定预算、人才与技术投入方案</p><p><b>第4章 抄作业工具包：借鉴成功案例与创新实践</b><span class='meta'>（组合创新）</span></p><p class='meta' style='margin-left:1.5em'>4.1 行业标杆分析：提炼 AI 转型领先企业的成功经验</p><p class='meta' style='margin-left:1.5em'>4.2 跨行业创新借鉴：挖掘其他行业 AI 应用的可复用模式</p><p class='meta' style='margin-left:1.5em'>4.3 开源工具集：整理常用 AI 工具与平台资源清单</p><p class='meta' style='margin-left:1.5em'>4.4 最佳实践库：构建企业内部 AI 应用案例知识库</p><p><b>第5章 度量体系：从过程到结果的绩效评估</b><span class='meta'>（精益创业循环）</span></p><p class='meta' style='margin-left:1.5em'>5.1 关键绩效指标（KPI）设计：量化 AI 转型成效</p><p class='meta' style='margin-left:1.5em'>5.2 数据采集与监控：建立 AI 应用效果追踪机制</p><p class='meta' style='margin-left:1.5em'>5.3 结果分析与迭代：基于数据反馈持续优化 AI 应用</p><p class='meta' style='margin-left:1.5em'>5.4 组织绩效关联：将 AI 转型成果与激励机制挂钩</p><p><b>第6章 文化与能力：从认知到行动的组织升级</b><span class='meta'>（第二曲线）</span></p><p class='meta' style='margin-left:1.5em'>6.1 AI 思维培育：构建数据驱动与持续学习的组织文化</p><p class='meta' style='margin-left:1.5em'>6.2 人才梯队建设：规划 AI 转型所需的人才结构与培养路径</p><p class='meta' style='margin-left:1.5em'>6.3 组织架构调整：优化适配 AI 转型的敏捷协作机制</p><p class='meta' style='margin-left:1.5em'>6.4 全员赋能计划：推动 AI 技能普及与深度应用</p></div>
-<div class="card"><h2>购买引导</h2><p>支付占位（真实支付随 M8 商户号接入）：<br>① 微信/支付宝收款码位置 —— 付款后截图 <br>② 企业微信扫码加好友 —— 发送付款截图与邮箱，24 小时内交付完整版 MD + DOCX 双格式。</p><p><a class="cta" href="javascript:void(0)">扫码购买（¥198）</a></p></div>
+</article></div>
+<div class="card" id="buy"><h2>购买引导</h2><p>支付占位（真实支付随 M8 商户号接入）：<br>① 微信/支付宝收款码位置 —— 付款后截图 <br>② 企业微信扫码加好友 —— 发送付款截图与邮箱，24 小时内交付完整版 MD + DOCX 双格式。</p></div>
 <div class="card"><h2>反馈返钱（写反馈 = 挣钱 = 训练下一版）</h2><p>购买后通过企业微信发送反馈：写清用时时长与具体问题。三维 AI 评分（真诚度/具体性/可行动性）定返款成色：＞15 分钟 ¥100 · ＞30 分钟 ¥200 · ＞60 分钟 ¥400 · ＞70 分钟全退（灌水三折，真诚满档）。</p></div>
-<footer>PAI-Station 方案铸造厂 · 你的电脑替你造钱 · GitHub Pages 零服务器成本运营</footer></body></html>
+<div class="card"><h2>猜你喜欢</h2><ul><li><a href="epc-fde-ai.html">工程总承包（EPC）行业 AI 转型 FDE 实施方案</a><span class="meta"> · 推荐值 68% · 值得一读</span></li><li><a href="zengming-smart-business-fde.html">智能商业时代传统企业转型 FDE 实施方案</a><span class="meta"> · 推荐值 78% · 好评如潮</span></li></ul></div>
+<footer>PAI-Station 方案铸造厂 · 你的电脑替你造钱 · 零服务器 · GitHub Pages</footer>
+</div>
+<script>
+ const KEY='paistation-theme';
+ const apply=t=>{document.body.dataset.theme=t;
+   document.querySelectorAll('.theme-chip').forEach(c=>
+     c.classList.toggle('on',c.dataset.t===t));
+   try{localStorage.setItem(KEY,t)}catch(e){}};
+ const saved=(()=>{try{return localStorage.getItem(KEY)}catch(e){return null}})();
+ if(saved)apply(saved);
+ document.addEventListener('click',e=>{const t=e.target;
+   if(t.classList&&t.classList.contains('theme-chip'))apply(t.dataset.t);});
+ const R=document.querySelector('.reader');
+ if(R){const fs=()=>R.style.fontSize||getComputedStyle(R).fontSize;
+   const setFs=v=>R.style.fontSize=Math.min(24,Math.max(14,v))+'px';
+   document.getElementById('fminus')&&(
+     document.getElementById('fminus').onclick=()=>setFs(parseFloat(fs())-2),
+     document.getElementById('fplus').onclick=()=>setFs(parseFloat(fs())+2));
+   document.querySelectorAll('.read-chip').forEach(c=>c.onclick=()=>{
+     R.classList.remove('sepia','nightmode');
+     if(c.dataset.r==='sepia')R.classList.add('sepia');
+     if(c.dataset.r==='night')R.classList.add('nightmode');
+     document.querySelectorAll('.read-chip').forEach(x=>
+       x.classList.toggle('on',x===c));});}
+</script>
+</body></html>

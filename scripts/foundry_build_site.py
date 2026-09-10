@@ -17,6 +17,29 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PLANS_DIR = os.path.join(ROOT, "data", "foundry", "plans")
 DOCS_DIR = os.path.join(ROOT, "docs")
 
+# 笔记页：知识环真实产出（存在才展示——不假完成）
+_WORK_SOURCES = (
+    ("技能卡库", "混沌学园技能卡总览（13 张）",
+     "逆向 Sign V3 提取 15 万字文稿 → deep 蒸馏 → 五层安全扫描全过",
+     os.path.join("data", "hundun", "技能卡总览_混沌学园13张.md")),
+    ("学习笔记", "混沌学园三门课学习笔记",
+     "公开可读的工厂学习成果（公众号发布链入口）",
+     os.path.join("data", "hundun", "学习笔记_混沌学园三门课.md")),
+    ("语料底座", "混沌学园语料库说明",
+     "知识原料湖：章节指纹增量 / 全程溯源 / 版权三态标记",
+     os.path.join("data", "hundun", "README.md")),
+)
+
+
+def _real_works() -> list[dict]:
+    works = []
+    for wtype, title, desc, rel in _WORK_SOURCES:
+        path = os.path.join(ROOT, rel)
+        if os.path.isfile(path):
+            works.append({"type": wtype, "title": title, "desc": desc,
+                          "content": open(path, encoding="utf-8").read()})
+    return works
+
 # 定价与一句话卖点（PROPOSAL_M7 §5.1 定价策略：深案高值/广案普惠/降级案明示折价）
 CATALOG = {
     "epc-fde-ai": {
@@ -35,7 +58,8 @@ CATALOG = {
 
 
 def main() -> None:
-    result = build_site(PLANS_DIR, DOCS_DIR, catalog=CATALOG)
+    result = build_site(PLANS_DIR, DOCS_DIR, catalog=CATALOG,
+                        works=_real_works())
     print(f"[site] 发布 {len(result['plans'])} 份方案：")
     for e in result["plans"]:
         print(f"  - {e['slug']}: 密度 {e['score']} 分 · {e['n_chapters']} 章 "
