@@ -20,9 +20,13 @@ NINE_MARKERS: tuple[tuple[str, str], ...] = (
 
 _NINE_TEXT = "\n".join(f"  - {mark}（组件 id: {key}）" for key, mark in NINE_MARKERS)
 
+# 目录覆盖线（两类产品的骨架差异所在，由 fde/report 各自传入）
+DEFAULT_COVERAGE = "行业诊断 → AI 机会识别 → 实施路线图 → 抄作业工具包 → 度量体系"
 
-def toc_prompt(theme: str, corpus: str = "", cards_l1=(), n_chapters: int = 8) -> str:
-    """目录生成提示词（L1 章层骨架 + 三级目录铁律）。"""
+
+def toc_prompt(theme: str, corpus: str = "", cards_l1=(), n_chapters: int = 8,
+               coverage: str = DEFAULT_COVERAGE) -> str:
+    """目录生成提示词（L1 章层骨架 + 三级目录铁律 + 产品覆盖线）。"""
     cards_text = "\n".join(f"- {name}：{one}" for name, one in cards_l1) or "-（自选成熟框架）"
     return f"""你是顶级咨询公司的资深合伙人，正在为《{theme}》设计实施方案目录。
 
@@ -34,7 +38,7 @@ def toc_prompt(theme: str, corpus: str = "", cards_l1=(), n_chapters: int = 8) -
 2. 每章必须标注所用 L1 框架（framework 字段），每节必须标注 L2 子框架；
 3. 建议 {n_chapters} 章左右，每章 3-6 节；
 4. 节标题具体到可执行（"1.1 现状诊断：从事件到心智的四层下钻"，不要"1.1 概述"）；
-5. 全书须覆盖：行业诊断 → AI 机会识别 → 实施路线图 → 抄作业工具包 → 度量体系。
+5. 全书须覆盖：{coverage}。
 
 ## 语料（仅供提炼，不得照抄原文）
 {corpus[:30000] or "（无语料，凭行业常识与框架推演）"}

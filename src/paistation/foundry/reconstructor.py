@@ -128,13 +128,16 @@ class Reconstructor:
     # ---------- 目录重构（L1 章层） ----------
 
     def reconstruct_toc(self, theme: str, corpus: str = "", n_chapters: int = 8,
-                        immune_rules: tuple | list = ()) -> dict:
-        """生成三级目录骨架；解析失败自动重试，弹尽粮绝如实报错。"""
+                        immune_rules: tuple | list = (), coverage: str = "") -> dict:
+        """生成三级目录骨架；解析失败自动重试，弹尽粮尽如实报错。"""
         cards = [(c["name"], c["one_liner"]) for c in suggest_cards(theme, "L1", k=12)]
+        kwargs = {"theme": theme, "corpus": corpus, "cards_l1": cards,
+                  "n_chapters": n_chapters}
+        if coverage:
+            kwargs["coverage"] = coverage
         attempts = self._max_regens + 1
         for _ in range(attempts):
-            prompt = toc_prompt(theme, corpus=corpus, cards_l1=cards, n_chapters=n_chapters)
-            toc = self._normalize_toc(_loads_json(self._call(prompt)))
+            toc = self._normalize_toc(_loads_json(self._call(toc_prompt(**kwargs))))
             if toc:
                 return toc
         raise RuntimeError(f"目录生成失败：{attempts} 次尝试均无法解析出合法三级目录")
