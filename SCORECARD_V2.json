@@ -1,0 +1,77 @@
+{
+ "tenx": {
+  "axes": [
+   {
+    "axis": "llm_cost",
+    "direction": "lower_better",
+    "ours": 0.1,
+    "baseline": 100.0,
+    "delta": 1000.0,
+    "log10": 3.0,
+    "better": true
+   },
+   {
+    "axis": "fde_solution_velocity",
+    "direction": "lower_better",
+    "ours": 1.0,
+    "baseline": 30.0,
+    "delta": 30.0,
+    "log10": 1.477,
+    "better": true
+   },
+   {
+    "axis": "research_questions_coverage",
+    "direction": "higher_better",
+    "ours": 300.0,
+    "baseline": 15.0,
+    "delta": 20.0,
+    "log10": 1.301,
+    "better": true
+   },
+   {
+    "axis": "onboarding_time",
+    "direction": "lower_better",
+    "ours": 0.02,
+    "baseline": 16.0,
+    "delta": 800.0,
+    "log10": 2.903,
+    "better": true
+   },
+   {
+    "axis": "personal_context_sources",
+    "direction": "higher_better",
+    "ours": 18.0,
+    "baseline": 3.0,
+    "delta": 6.0,
+    "log10": 0.778,
+    "better": true
+   },
+   {
+    "axis": "research_density",
+    "direction": "higher_better",
+    "ours": 78.0,
+    "baseline": 20.0,
+    "delta": 3.9,
+    "log10": 0.591,
+    "better": true
+   }
+  ],
+  "tenx": 3.0,
+  "verdict": "tenx_qualified",
+  "best_axis": "llm_cost"
+ },
+ "scorecard": {
+  "feasibility": 0.93,
+  "user_value": 0.95,
+  "monetization": 0.86,
+  "tenx": 0.99,
+  "weighted": 0.937,
+  "verdict": "proceed",
+  "rationale": {
+   "feasibility": "V1 M0-M7 已落地（469测试/7×24实机/商店真实进账¥378），V2 为升维而非从零；V2 差量调研 239 项确认组件可得（ReportBench/WechatBakTool/FDE 生态）",
+   "user_value": "中文 sogou 10 篇+HN 帖证实'通用助手不懂我'痛点（second_self 主题）；16 篇愿景转录=用户本人痛点的第一手证据；微信深读为用户明确裁决的核心默认",
+   "monetization": "M7 漏斗账本已有真实净进账 ¥378（3 方案）；FDE 风口 2026-08 起（Awesome-FDE-Roadmap 1024★）；定价带宽为 ¥198-498 已 A/B 实测",
+   "tenx": "最佳轴 llm_cost 1000×（log10=3.0）；6 轴中 4 轴 ≥10×；全部主张可证伪（含实测锚点）"
+  }
+ }
+}

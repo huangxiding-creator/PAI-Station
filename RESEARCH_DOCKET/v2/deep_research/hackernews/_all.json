@@ -1,0 +1,282 @@
+[
+  {
+    "channel": "hackernews",
+    "doc_type": "post",
+    "title": "Ask HN: Is Claude Code bad for ADHD?",
+    "url": "https://news.ycombinator.com/item?id=46639144",
+    "content": "I think it might be.<p>I have ADHD. I&#x27;ve posted a little here on that. This one was cool, 142 comments: https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=46610156.<p>Claude is powerful. This week feels like it has moved up a notch (running for 20mins on longer tasks and then getting stuff right). I don&#x27;t know if&#x2F;when&#x2F;how it replaces devs, I know a lot on here have very strong thoughts on it. But for someone like me it is like rocket fuel.<p>But then ADHD. I&#x27;ve realised a thought I have for a product, an app, a website, an idea just no longer sits in a list of cool ideas. Now I can do stuff. But do I need this stuff?<p>Is all this activity healthy?<p>To give you an idea last 6 months I&#x27;ve built:<p>- A ChatGPT wrapper with a few bells and whistles and lots of system prompt work and sold it to a big IT company on a £30k annual retainer<p>- A tool that takes a spreadsheet of data (think people&#x2F;company&#x2F;lead data) and allows you to construct a prompt using placeholders for any of the data then run each line&#x2F;query through an AI prompt. Need websites and mailing address for 30k companies. Easy. They paid us £50k (they got a few other bits of marketing as well for this).<p>- I built an internal tool for our SEO team which takes a blog post and does all the on-page, and some off page optimisations for them at click of a button. So they can do more interesting work. It sort of works, but they don&#x27;t use it.<p>- I built a widget that I can push urls at and at end of the day get a personalised 2 person podcast (GoogleLM style) so I can listen on my cycle home to what I couldn&#x27;t read. The AI API is some 3rd party tool, its neat very like GoogleLM. It&#x27;s a cool idea but I don&#x27;t use it<p>- I built a AI power content writing tool. Two panes. Paste a content brief in left and it is mirrored right. Select text left and prompt against the selection (&quot;Turn these bullet points into a flesh out para focusing on the stat",
+    "signals": {
+      "points": 6,
+      "comments": 4,
+      "date": "2026-01-15T20:52:51Z"
+    },
+    "retrieved_at": "2026-09-11T03:19:44+00:00",
+    "credibility": 0.6
+  },
+  {
+    "channel": "hackernews",
+    "doc_type": "post",
+    "title": "Show HN: Agent File (.af) – A standard file format for serializing AI agents",
+    "url": "https://github.com/letta-ai/agent-file",
+    "content": "Hi HN - We’re building Agent File (.af), which makes it possible to re-create the exact same agent (including memories, tools, message history, configs, etc.) across different machines.<p>A big difference between LLMs and <i>agents</i> is that agents have associated state: system prompts, editable memory (personality and user information), tool configurations (code and schemas), and LLM&#x2F;embedding model settings. While you can run the same LLM as someone else by downloading the weights, there’s no “representation” of agents that allows you to re-create an instance of an agent across services.<p>Agent File (.af) is an open standard file format for serializing stateful agents. Originally designed for the Letta framework, .af is a human-readable representation of all the associated state of an agent to reproduce the exact behavior and memories.<p>To demonstrate .af, we also made a few example agents with download links to .af:<p>- MemGPT: An agent with memory management tools for infinite context, as described in the MemGPT paper \nDeep Research: A research agent with planning, search, and memory tools to enable writing deep research reports from iterative research<p>- Customer Support: A customer support agent that has dummy tools for handling order cancellations, looking up order status, and also memory<p>- Stateless Workflow: A stateless graph workflow agent (no memory and deterministic tool calling) that evaluates recruiting candidates and drafts emails<p>- Composio Tools: An example of an agent that uses a Composio tool to star a GitHub repository<p>We’d love to hear what people think of the agent schema we chose and if we’re missing anything (we included everything that we need from Letta, but there may be other features in other frameworks).",
+    "signals": {
+      "points": 5,
+      "comments": 1,
+      "date": "2025-04-02T16:44:00Z"
+    },
+    "retrieved_at": "2026-09-11T03:19:44+00:00",
+    "credibility": 0.6
+  },
+  {
+    "channel": "hackernews",
+    "doc_type": "post",
+    "title": "Show HN: Computer Agents – AI Agents That Work While You Sleep",
+    "url": "https://computer-agents.com",
+    "content": "Hey HN,\nChatbots are amazing at conversation. They suck at getting shit done while you’re sleeping, in a meeting, or at the beach.\nSo I built Computer Agents: real AI coworkers that each get their own isolated computer in the cloud.\nWhat actually happens when you create one:<p>It boots its own persistent workspace (files, code, memory, everything survives forever)\nYou give it a goal + tools&#x2F;skills\nIt runs 24&#x2F;7 on cron, webhooks, or just “keep working until done”\nYou get results via email, Telegram, or just check back whenever<p>No more “remember this for next time.” It literally remembers.\nKiller features I’m stupidly excited about<p>Persistent workspaces: your agent can iterate on the same codebase&#x2F;project for weeks\nCode execution that just works – auto pip install &#x2F; npm install, isolated containers, no Docker hell\nDeep Research skill – reads dozens of sources, synthesizes, cites everything (actually useful reports)\nMulti-agent orchestration: chain, parallel, map-reduce, conditional workflows (yes, agent teams)\nTriggers: GitHub push → agent starts reviewing PR. Slack message → agent replies. Webhook with HMAC.\nNative SDKs – npm install computer-agents or pip install computer-agents (TypeScript + Python)\niOS + Mac apps so you can literally yell at your agents from your phone<p>Real examples people are already running:<p>London architect: agents generate full floor plans + client presentations overnight\nFireChatbot team: 80% of customer emails handled autonomously, 35% workload drop\nSolo devs: daily competitive analysis reports waiting in inbox every morning<p>This isn’t another wrapper around Claude Computer Use or Perplexity. It’s the operating system for those kinds of agents. always-on, persistent, and actually shippable.\nFree tier gives you 150 compute tokens (~15-23 solid tasks) so you can go deploy something stupid right now. First paid tier is $19&#x2F;mo for basically your first full-time AI employee.\nLive at → <a href=\"https:&#x2F;&#x2F;",
+    "signals": {
+      "points": 1,
+      "comments": 0,
+      "date": "2026-03-02T13:12:55Z"
+    },
+    "retrieved_at": "2026-09-11T03:19:44+00:00",
+    "credibility": 0.6
+  },
+  {
+    "channel": "hackernews",
+    "doc_type": "post",
+    "title": "Show HN: An open-source AI researcher that generates reports with 3D animations",
+    "url": "https://github.com/precious112/prism_ai",
+    "content": "Hi HN,\nI built this because I’ve been using deep-search AI agents for research, but I always found the &quot;wall of text&quot; output exhausting to parse. When we learn from textbooks, we rely on diagrams, charts, and 2D&#x2F;3D illustrations to build a mental model. I wanted an AI researcher that does the same.\nThe agent doesn&#x27;t just write a report; it identifies concepts that are better explained visually and generates the code to render them inline.\nThe Tech Stack:\nFrontend: Next.js for the UI and report rendering.\nReal-time Server: Go. I chose Go to handle the high-concurrency needs of streaming agentic thoughts and managing WebSocket connections during long-running research tasks.\nAI Background Worker: Python. This handles the agentic logic, using various LLMs to orchestrate the research, search, and code generation for the visuals.\nVisualization Engine: * 3D: Three.js for interactive models and animations.\n2D: p5.js for generative illustrations.\nCharts: D3.js for data-heavy visualizations.\nDiagrams: Mermaid.js for quick flowcharts and architecture.\nHow it works:\nThe Python worker isn&#x27;t just generating an image; it’s generating the actual code&#x2F;schema for these libraries based on the research context. The Next.js client then sanitizes and renders these components dynamically within the report.\nI’m really looking for feedback on the &quot;agentic&quot; part of the visualization—specifically how to better prompt the model to choose the right type of diagram for the data it finds.\nGitHub: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;precious112&#x2F;prism_ai\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;precious112&#x2F;prism_ai</a>\nI’ll be around to answer any questions about the architecture or the 3D generation logic!",
+    "signals": {
+      "points": 2,
+      "comments": 0,
+      "date": "2026-01-07T11:07:01Z"
+    },
+    "retrieved_at": "2026-09-11T03:19:44+00:00",
+    "credibility": 0.6
+  },
+  {
+    "channel": "hackernews",
+    "doc_type": "post",
+    "title": "Show HN: Computer Agents – Agents that work while you sleep",
+    "url": "https://computer-agents.com",
+    "content": "Hey HN,\nMost AI “agents” I’ve tried are basically chatbots with amnesia — they forget everything the moment you close the tab and can’t do anything unless you’re sitting there watching them.\nI wanted real AI coworkers that just… work.\nSo I built Computer Agents (aiOS).\nEvery agent you create gets its own isolated computer in the cloud — complete with persistent memory, a real file system, code execution environment (with automatic dependency management), and the ability to run scheduled or webhook-triggered tasks 24&#x2F;7.\nYou give it a goal (“research this market and email me a report every Monday”, “generate floor plans from client briefs”, “handle incoming support emails”, “run my weekly data analysis”), walk away, and come back to finished results in your inbox, Telegram, or dashboard.\nKey highlights:\n•  Persistent workspaces — context and files survive forever (no more “remember what we talked about last week?”)\n•  Native iOS app (iPhone + iPad) + native Mac app + web dashboard\n•  Python + TypeScript SDKs (pip install computer-agents, npm install computer-agents)\n•  Multi-agent orchestration (sequential, parallel, map-reduce, conditional flows)\n•  Built-in skills: deep web research with citations, web search, image generation, full code interpreter\n•  Integrations: Email, Telegram, GitHub, Google Drive, OneDrive, Notion, webhooks, etc.\n•  Runs in secure isolated cloud containers (you own your data)\nIt’s live at <a href=\"https:&#x2F;&#x2F;computer-agents.com\" rel=\"nofollow\">https:&#x2F;&#x2F;computer-agents.com</a>\nFree tier gives you 150 compute tokens (~15–23 decent-sized tasks) so you can try it right now. Pro starts at $19&#x2F;mo when you want more.\nThis is very much still a young indie project (I’m the solo founder), but it’s already helping real teams automate support, research, content, and coding workflows.\nWould love your honest feedback — especially:\n•  What persistent&#x2F;long-running agent pain points have you hit with other tools?\n•  Interesting ",
+    "signals": {
+      "points": 7,
+      "comments": 0,
+      "date": "2026-03-01T03:28:41Z"
+    },
+    "retrieved_at": "2026-09-11T03:19:44+00:00",
+    "credibility": 0.6
+  },
+  {
+    "channel": "hackernews",
+    "doc_type": "post",
+    "title": "Show HN: I built Deep Research for stocks",
+    "url": "https://app.deepvalue.tech/",
+    "content": "Hey there HN,<p>I&#x27;m a data scientist and amateur investor. I&#x27;ve been using OpenAI&#x27;s Deep Research to get quick overviews of investment candidates, and I saw an opportunity for a version specialized for stocks.<p>So in the last month I built an MVP with a simple UI: pick a stock (or multiple!), click &quot;research,&quot; and in ~5 minutes it produces a report. Here&#x27;s the demo: <a href=\"https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=2wCM44B6iH8\" rel=\"nofollow\">https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=2wCM44B6iH8</a><p>At first I just wanted to build a tool that automatically integrates SEC filings with OpenAI&#x27;s Deep Research API to save time on manual uploads. But their API is insanely expensive (up to $10 for one run!), so I decided to build my own agents. They currently do the following:<p>- Parse data from SEC (10-Ks and 10-Qs)<p>- Search the web for relevant data (I made a list of industry-specific publications for each sector — agents only search those links and avoid market news like CNBC)<p>- Pull up-to-date financial data from Financial Modeling Prep<p>The final combiner agent takes data from these sources and produces a structured report with three parts:<p>- One-pager for a quick glance<p>- Full report with citations for a deep dive<p>- Financials section with graphs to see trends<p>I also built a dashboard where you can organize reports in folders and easily compare them.<p>This is NOT a stock tip generator or a replacement for your own judgment. Think of it as a scalable junior analyst who does the research part for you.<p>I&#x27;d love feedback on how this fits into your research workflow. Since API costs are still high, I require a signup, but you get 3 free research credits to try it out.<p>If you don&#x27;t feel like signing up, you can comment a ticker you&#x27;d like to see and I will share the report in a reply.",
+    "signals": {
+      "points": 4,
+      "comments": 2,
+      "date": "2025-10-15T12:51:31Z"
+    },
+    "retrieved_at": "2026-09-11T03:19:44+00:00",
+    "credibility": 0.6
+  },
+  {
+    "channel": "hackernews",
+    "doc_type": "post",
+    "title": "Show HN: Auto-generate stock research reports from SEC and industry publicaitons",
+    "url": "https://app.deepvalue.tech/",
+    "content": "I built a tool that produces stock research reports in ~5 minutes by combining SEC filings, curated industry sources, and live financial data. Demo: <a href=\"https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=2wCM44B6iH8\" rel=\"nofollow\">https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=2wCM44B6iH8</a><p>Instead of relying on OpenAI’s Deep Research (too costly, ~$10&#x2F;run), I built my own agents that:<p>- Parse 10-Ks and 10-Qs directly from the SEC<p>- Search curated industry publications (avoiding noisy market news)<p>- Pull financials from Financial Modeling Prep<p>A combiner agent then outputs:<p>- A one-page summary<p>- A detailed report with citations<p>- Financials talbes + graphs<p>This is NOT a stock tip generator or a replacement for your own judgment. Think of it as a scalable junior analyst who does the research part for you.<p>You can sign up (3 free credits) or just comment a ticker and I’ll share a sample report. Would love feedback on whether this fits your workflow, especially from folks who do deep equity research.",
+    "signals": {
+      "points": 3,
+      "comments": 0,
+      "date": "2025-10-28T11:12:46Z"
+    },
+    "retrieved_at": "2026-09-11T03:19:44+00:00",
+    "credibility": 0.6
+  },
+  {
+    "channel": "hackernews",
+    "doc_type": "post",
+    "title": "Show HN: Deep Code Research – AI surveys 10 similar repos to review yours",
+    "url": "https://news.ycombinator.com/item?id=46416029",
+    "content": "Deep Code Research is a CLI tool that automatically finds repositories similar to yours, analyzes how they handle things differently, and produces a comparative report.<p>Instead of generic advice like &quot;add error handling,&quot; it shows you exactly what related projects do and where your code differs. Each finding includes side-by-side code snippets from both your repo and the reference repo, with specific file paths and line numbers.<p>The tool uses a multi-agent architecture: a main agent discovers related repos via GitHub search, then spawns parallel sub-agents to analyze each one. Results are synthesized into a prioritized list of findings.<p>I built this because code &quot;literature review&quot; is time-consuming. Before building something, you should survey similar projects to learn patterns and avoid known pitfalls. But reading through 10+ repos takes hours. This automates that process.<p><a href=\"https:&#x2F;&#x2F;github.com&#x2F;WindChimeRan&#x2F;deep_code_research\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;WindChimeRan&#x2F;deep_code_research</a>",
+    "signals": {
+      "points": 2,
+      "comments": 0,
+      "date": "2025-12-29T00:31:21Z"
+    },
+    "retrieved_at": "2026-09-11T03:19:44+00:00",
+    "credibility": 0.6
+  },
+  {
+    "channel": "hackernews",
+    "doc_type": "post",
+    "title": "Show HN: Open-Source] Deep Research Assistant Built Solely for Gemini API",
+    "url": "https://github.com/zyakita/gemini-deep-research-oss",
+    "content": "Hi everyone,<p>I&#x27;ve been working on an open-source project called Deep Research OSS and would love to get some feedback from the community.<p>I was frustrated by AI research tools that only performed a single&#x2F;double-pass search and often missed important details.<p>To solve this problem, I built a multi-agent pipeline that mimics how a human team works.<p>First, it creates a broad plan. Then, it uses agents to conduct research. Finally, it has another agent perform a gap analysis to identify missing information and assign new tasks to dig deeper. Additionally, to avoid errors, AI is forced to use code execution for all numbers in the report.<p>The whole thing is built specifically for the Gemini API to see how far it can be pushed. I&#x27;ve been using it for my own stock analysis, and the iterative process seems to generate much more comprehensive reports.<p>It&#x27;s still a work in progress, and I&#x27;m sure there are better ways to approach this. I&#x27;m looking for contributors and feedback to improve the pipeline and make it more robust.<p>If you&#x27;re interested in multi-agent systems or just want to help build a better research tool, you can check out the repo.<p><a href=\"https:&#x2F;&#x2F;github.com&#x2F;zyakita&#x2F;gemini-deep-research-oss\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;zyakita&#x2F;gemini-deep-research-oss</a>",
+    "signals": {
+      "points": 2,
+      "comments": 0,
+      "date": "2025-08-28T01:19:59Z"
+    },
+    "retrieved_at": "2026-09-11T03:19:44+00:00",
+    "credibility": 0.6
+  },
+  {
+    "channel": "hackernews",
+    "doc_type": "post",
+    "title": "Launch HN: Poly (YC S22) – Cursor for Files",
+    "url": "https://news.ycombinator.com/item?id=45995394",
+    "content": "Hello world, this is Abhay from Poly (<a href=\"https:&#x2F;&#x2F;poly.app\">https:&#x2F;&#x2F;poly.app</a>). We’re building an app to replace Finder&#x2F;File Explorer with something more intelligent and searchable. Think of it like Dropbox + NotebookLM + Perplexity for terabytes of your files. Here’s a quick demo: <a href=\"https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=RsqCySU4Ln0\" rel=\"nofollow\">https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=RsqCySU4Ln0</a>.<p>Poly can search your content in natural language, across a broad range of file types and down to the page, paragraph, pixel, or point in time. We also provide an integrated agent that can take actions on your files such as creating, editing, summarizing, and researching. Any action that you can take, the agent can also take, from renaming, moving, tagging, annotating, and organizing files for you. The agent can also read URLs, youtube links, and can search the web and even download files for you.<p>Here are some public drives that you can poke around in (note: it doesn’t work in Safari yet—sorry! we’re working on it.)<p><i>Every issue of the Whole Earth Catalogue</i>: <a href=\"https:&#x2F;&#x2F;poly.app&#x2F;shared&#x2F;whole-earth-catalogues\">https:&#x2F;&#x2F;poly.app&#x2F;shared&#x2F;whole-earth-catalogues</a><p><i>Archive of old Playstation Manuals</i>: <a href=\"https:&#x2F;&#x2F;poly.app&#x2F;shared&#x2F;playstation-manuals-archive\">https:&#x2F;&#x2F;poly.app&#x2F;shared&#x2F;playstation-manuals-archive</a><p><i>Mini archive of Orson Welles interviews and commercial spots</i>: <a href=\"https:&#x2F;&#x2F;poly.app&#x2F;shared&#x2F;orson-welles-archive\">https:&#x2F;&#x2F;poly.app&#x2F;shared&#x2F;orson-welles-archive</a><p><i>Archive of Salvador Dali’s paintings for Alice in Wonderland</i>: <a href=\"https:&#x2F;&#x2F;poly.app&#x2F;shared&#x2F;salvador-dali-alice-in-wonderland\">https:&#x2F;&#x2F;poly.app&#x2F;shared&#x2F;salvador-dali-alice-in-wonderland</a><p>To try it out, navigate to one of these public f",
+    "signals": {
+      "points": 66,
+      "comments": 68,
+      "date": "2025-11-20T17:47:06Z"
+    },
+    "retrieved_at": "2026-09-11T03:19:44+00:00",
+    "credibility": 0.6
+  },
+  {
+    "channel": "hackernews",
+    "doc_type": "post",
+    "title": "Show HN: Spine AI – Visual workspace to think across multiple AI models",
+    "url": "https://app.getspine.ai/guest",
+    "content": "Hey HN – Akshay &amp; Ashwin here, founders of Spine AI (YC S23). We’d like to show you our new product: Spine Canvas.<p>TL;DR: Spine AI is an infinite visual workspace where you can collaborate with 300+ AI models and agents to think and create better than you would in a single chat. You can try it without signing up: <a href=\"https:&#x2F;&#x2F;app.getspine.ai&#x2F;guest\">https:&#x2F;&#x2F;app.getspine.ai&#x2F;guest</a><p>Backstory:\nWe started building multilingual RAG in 2022, got into YC S23, and through multiple iterations learned that users want iteration and control - not just another chat interface.<p>ChatGPT was originally meant to collect training data for GPT’s next version — but it blew up because it made AI accessible. While chat is great for Q&amp;A, it’s terrible for thinking: you get stuck in linear threads, the only way to iterate is to send another message, and you can’t control how much of the previous context the model actually remembers.<p>Each model also has its own “superpower”: Claude is great for coding, Gemini for critique, Grok for marketing. I often use different LLMs as advisors, because each brings a slightly different lens – useful when you’re thinking deeply, exploring tradeoffs, or checking blind spots.<p>So we built Spine:\nSpine Canvas lets you think in blocks instead of threads. You can connect blocks, which ensures implicit context passing. You can also explicitly refer to connected blocks as part of the current block’s parameters.<p>We have dedicated blocks for: Image generation, deep research reports, slides, chats, prompts. All of these can pass context seamlessly between each other.<p>Because it’s a canvas, you can branch — explore rabbit holes without losing the main path. You can swap models freely. Lists are first-class citizens: run the same process across multiple items (e.g., “deep research these 10 companies”) simultaneously. You can change a single block and trickle updates through the entire branch.<p>To help with the ",
+    "signals": {
+      "points": 11,
+      "comments": 0,
+      "date": "2025-11-09T18:13:29Z"
+    },
+    "retrieved_at": "2026-09-11T03:19:44+00:00",
+    "credibility": 0.6
+  },
+  {
+    "channel": "hackernews",
+    "doc_type": "post",
+    "title": "Show HN: Votito helps you decide what to build next with confidence",
+    "url": "https://www.votito.com/",
+    "content": "Hey HN,<p>We&#x27;re finally launching Votito, after about a year of development, as it&#x27;s now (almost) polished enough for other people to use. I&#x27;d love your feedback!<p>AI tools make software faster to write, so the constraint is no longer building things. It is knowing which things deserve to be built. Votito aims to be a &quot;product decision platform&quot; to help figure that out.<p>Having previously built two relatively successful SaaS products, we&#x27;ve spent a ton of time figuring out what users need, collecting feedback and trying to turn signals from the user community into actionable ideas, using a bunch of disconnected tools and half-baked scripts. We&#x27;ve consolidated those internal tools and processes into an online idea management system, combining user feedback with product research, so product teams can engage their users easily.<p>Votito is not trying to compete with task management tools like Jira and Linear, but to work in the area before the backlog, in the &quot;weak commitment&quot; zone where unstructured proposals need to mature to become implementable ideas. Throw random stakeholder demands, user suggestions and feature requests into Votito and let them marinate until they become something useful, if they ever do. Votito will help you spot the gems that deserve your attention. It will also stop garbage from going into your actual task tracking tools, and prevent people from being overwhelmed with managing bad ideas.<p>While the product is naturally oriented towards PMs, we&#x27;re betting on the trend that teams are becoming smaller with AI support, and that people inside delivery teams will need to take on most traditional product responsibilities in the future. The Wall Street Journal recently reported on the trend of &quot;pods&quot; of 3-4 people augmented with AI agents taking on the tasks that previously needed much larger groups. When teams have 10-15 people, companies can justify assigning a dedicated product person. ",
+    "signals": {
+      "points": 2,
+      "comments": 0,
+      "date": "2026-09-04T14:04:23Z"
+    },
+    "retrieved_at": "2026-09-11T03:19:44+00:00",
+    "credibility": 0.6
+  },
+  {
+    "channel": "hackernews",
+    "doc_type": "post",
+    "title": "Show HN: Best AI Tool Finder",
+    "url": "https://bestaitoolfinder.com/",
+    "content": "Are you overwhelmed by the explosion of new AI tools and struggling to find the right ones for your needs?\nBest AI Tool Finder is a comprehensive directory featuring over 1,500 handpicked AI tools, each thoroughly evaluated for usefulness, reliability, and real-world impact.<p>What sets us apart:<p>Expert-Curated Reports: Detailed reviews and “Deep Research Reports” assess tools across 13+ key criteria, including usability, data sources, transparency, and value—leveraging both expert and AI-led fact-checking.<p>Fresh &amp; Trusted: Only tools with a proven track record and positive reviews across platforms are listed, with every addition vetted for at least 3 days after public release.<p>Search &amp; Discovery: Effortlessly browse by category (Automation, Content Generation, Data Analysis, Marketing, Coding, and more), or jump straight to trending tags (AI Agent, AI Avatar, Workflow, etc.).<p>Cutting-Edge Trends: Stay updated on global AI news and the latest breakthroughs with our curated news summary and in-depth market analysis.<p>Open to Feedback: Correction and listing requests are welcomed to ensure accuracy and up-to-date information.<p>If you need to discover, compare, and select the best AI tools for productivity, automation, or business transformation—from startups to enterprises—check out Best AI Tool Finder!<p>User-centric, clean design, and completely free to use\nWebsite: <a href=\"https:&#x2F;&#x2F;bestaitoolfinder.com&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;bestaitoolfinder.com&#x2F;</a>",
+    "signals": {
+      "points": 2,
+      "comments": 0,
+      "date": "2025-07-22T03:44:54Z"
+    },
+    "retrieved_at": "2026-09-11T03:19:44+00:00",
+    "credibility": 0.6
+  },
+  {
+    "channel": "hackernews",
+    "doc_type": "post",
+    "title": "Show HN: Brewly – AI newsletter creator for any topics you want to deep dive in",
+    "url": "https://brewly.ai/",
+    "content": "Hi HN,<p>We are launching Brewly.ai today!<p>It’s an AI newsletter creator for any topics you want to deep dive in. You can set quality requirements or special instructions for the content, authors or sources you want to see, Brewly will expand your topics into a set of sub-topics&#x2F;knowledge paths, find and filter the most relevant content and create a personal newsletter for each of the topics.<p>Here is how it works:<p>For a given topic, the agent browses the Internet with self-generated keywords based on the chat with you, and checks if any result page is a high-quality article to be added into your newsletter using the following factors:\n   - It finds and summarizes the author information based on LinkedIn and other sources to judge if the authors are credible. For example, an author with the bio “PhD in CS from Stanford University, Principle Researcher at Microsoft Research, Focuses on large-scale pre-training of deep neural networks” is considered credible on the topic “Multimodal LLMs”.\n   - It checks if the article is from a well-known source such as TechCrunch, MIT Technology Review and OpenAI blogs. It also prioritizes articles from official sources.\n   - It evaluates the relevance level of the content to your topic.\n   - It checks how well the article content meets your instructions.\n   - It filters out clickbait articles including flashy titles, promotional contents, poor technical details on a technical subject, etc.  \n   - It prioritizes articles that are well structured and have no misspells.<p>You can ask Brewly to create either a one time result or a daily updated newsletter, chat with the agent to generate more knowledge paths, ask follow up questions, or adjust the focus with new instructions.<p>The agent will also create a wiki-like report that lays out important knowledge from those selected articles to help you digest, and continue to find new qualified articles(if you choose the daily update option) and update the report correspondingly.<p",
+    "signals": {
+      "points": 10,
+      "comments": 3,
+      "date": "2024-03-26T21:05:19Z"
+    },
+    "retrieved_at": "2026-09-11T03:19:44+00:00",
+    "credibility": 0.6
+  },
+  {
+    "channel": "hackernews",
+    "doc_type": "post",
+    "title": "Launch HN: Undermind (YC S24) – AI agent for discovering scientific papers",
+    "url": "https://news.ycombinator.com/item?id=41069909",
+    "content": "Hey HN! We’re Josh and Tom from Undermind (<a href=\"https:&#x2F;&#x2F;www.undermind.ai&#x2F;\">https:&#x2F;&#x2F;www.undermind.ai&#x2F;</a>). We’re building a search engine for complex scientific research. There&#x27;s a demo video at <a href=\"https:&#x2F;&#x2F;www.loom.com&#x2F;share&#x2F;10067c49e4424b949a4b8c9fd8f3b12c?sid=5ee3cd96-2b05-4768-8856-cb1b83e40a70\" rel=\"nofollow\">https:&#x2F;&#x2F;www.loom.com&#x2F;share&#x2F;10067c49e4424b949a4b8c9fd8f3b12c?...</a>, as well as example search results on our homepage.<p>We’re both physicists, and one of our biggest frustrations during grad school was finding research — There were a lot of times when we had to sit down to scope out new ideas for a project and quickly become a deep expert, or we had to find solutions to really complex technical problems, but the only way to do that was manually dig through papers on Google Scholar for hours. It was very tedious, to the point where we would often just skip the careful research and hope for the best. Sometimes you’d get burned a few months later because someone already solved the problem you thought was novel and important, or you’d waste your time inventing&#x2F;building a solution for something when one already existed.<p>The problem was there’s just no easy way to figure out what others have done in research, and load it into your brain. It’s one of the biggest bottlenecks for doing truly good, important research.<p>We wanted to fix that. LLMs clearly help, but are mostly limited to general knowledge. Instead, we needed something that would pull in research papers, and give you exactly what you need to know, even for very complex ideas and topics. We realized the way to do this is to mimic the research strategies we already know work, because we do them ourselves, and so we built an agent-like LLM pipeline to carefully search in a way that mimics human research strategies.<p>Our search system works a bit differently from casual search engines. First, we have you chat bac",
+    "signals": {
+      "points": 292,
+      "comments": 126,
+      "date": "2024-07-25T15:36:57Z"
+    },
+    "retrieved_at": "2026-09-11T03:19:44+00:00",
+    "credibility": 0.6
+  },
+  {
+    "channel": "hackernews",
+    "doc_type": "post",
+    "title": "Launch HN: Spine Swarm (YC S23) – AI agents that collaborate on a visual canvas",
+    "url": "https://www.getspine.ai/",
+    "content": "Hey HN! We&#x27;re Ashwin and Akshay from Spine AI (<a href=\"https:&#x2F;&#x2F;www.getspine.ai\">https:&#x2F;&#x2F;www.getspine.ai</a>). Spine Swarm is a multi-agent system that works on an infinite visual canvas to complete complex non-coding projects: competitive analysis, financial modeling, SEO audits, pitch decks, interactive prototypes, and more. Here&#x27;s a video of it in action: <a href=\"https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=R_2-ggpZz0Q\" rel=\"nofollow\">https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=R_2-ggpZz0Q</a>.<p>We&#x27;ve been friends for over 13 years. We took our first ML course together at NTU, in a part of campus called North Spine, which is where the name comes from. We went through YC in S23 and have spent about 3 years building Spine across many product iterations.<p>The core idea: chat is the wrong interface for complex AI work. It&#x27;s a linear thread, and real projects aren&#x27;t linear. Sure, you can ask a chatbot to reference the financial model from earlier in the thread, or run research and market sizing together, but you&#x27;re trusting the model to juggle that context implicitly. There&#x27;s no way to see how it&#x27;s connecting the pieces, no way to correct one step without rerunning everything, and no way to branch off and explore two strategies side by side. ChatGPT was a demo that blew up, and chat stuck around as the default interface, not because it&#x27;s the right abstraction. We thought humans and agents needed a real workspace where the structure of the work is explicit and user-controllable, not hidden inside a context window.<p>So we built an infinite visual canvas where you think in blocks instead of threads. Each block is our abstraction on top of AI models. There are dedicated block types for LLM calls, image generation, web browsing, apps, slides, spreadsheets, and more. Think of them as Lego bricks for AI workflows: each one does something specific, but they can be snapped together and composed in many d",
+    "signals": {
+      "points": 109,
+      "comments": 69,
+      "date": "2026-03-13T13:22:40Z"
+    },
+    "retrieved_at": "2026-09-11T03:19:44+00:00",
+    "credibility": 0.6
+  },
+  {
+    "channel": "hackernews",
+    "doc_type": "post",
+    "title": "Show HN: I created an open source AI research assistant",
+    "url": "https://www.youtube.com/watch?v=uyo3dfR9DDc",
+    "content": "Imagine typing ANY question and getting a perfectly organized answer with sources, summaries, AND a knowledge graph... instantly!<p>That&#x27;s the power of the AI Research Assistant we&#x27;re building TODAY using Motia, the backend framework that&#x27;s changing the game for AI agents!<p>This isn&#x27;t just another tutorial – it&#x27;s a peek into the future of AI workflows.<p>See how Motia&#x27;s event-driven magic lets you chain together complex tasks: \n Accepting your query, \n Generating search ideas with Gemini, \n  Scouring the web, \n Deep-diving into content analysis, \n Extracting key concepts, \n Delivering a full research report.<p>We&#x27;ll start coding LIVE (well, almost!) and you&#x27;ll see just how FAST and SIMPLE it is to get a powerful agent running.",
+    "signals": {
+      "points": 2,
+      "comments": 0,
+      "date": "2025-05-08T16:48:37Z"
+    },
+    "retrieved_at": "2026-09-11T03:19:44+00:00",
+    "credibility": 0.6
+  },
+  {
+    "channel": "hackernews",
+    "doc_type": "post",
+    "title": "Launch HN: Expanse (YC P26) – Unlock Wasted GPU Capacity",
+    "url": "https://news.ycombinator.com/item?id=48356312",
+    "content": "Hey HN, we’re Ismaeel, Eren, Yafet and Nikodem. We built Expanse (<a href=\"https:&#x2F;&#x2F;expanse.sh&#x2F;\">https:&#x2F;&#x2F;expanse.sh&#x2F;</a>) to increase the effective capacity of your HPC&#x2F;GPU clusters running schedulers&#x2F;orchestrators like Kubernetes and SLURM. We read the source code, job submission script, and the hardware a workload is about to run on to predict what the job actually needs before the cluster sees it. We also flag failures we think are about to happen and surface line-level optimisations the researcher can apply themselves.<p>The problem: Datacenters run at roughly 30% to 40% effective utilisation. Users request more resources than what they actually need, because of asymmetric risk: while over-requesting is bad because it’s expensive and wastes capacity that someone else could have used, under-requesting kills your job mid-run and you lose days of work. So everyone over-requests by two to three times.<p>We measured one national-scale HPC cluster for a month and from 122k jobs, 59% of the compute was wasted. At on-demand cloud rates for the same hardware, that’s roughly $8.5M of compute wasted in one month on one cluster. The pattern is similar in large scale compute industries as well, such as quant funds, AI labs, and manufacturing.<p>The four of us ran HPC and GPU training workloads at the largest quant funds and HPC facilities. Ismaeel did research at EPCC (Edinburgh’s Parallel Computing Centre, the UK’s national HPC site) under Adrian Jackson, where he built the first multimodal HPC resource predictor: a model that ingests job source code, submission scripts, hardware telemetry and cluster metadata in order to figure out how much compute will actually be needed. On a dataset of real workloads on EPCC’s own clusters it scored 34% better than any other baseline, and outperformed frontier general-purpose LLMs prompted on the same prediction task by roughly 8x. These results convinced us the problem was solvable with software.<",
+    "signals": {
+      "points": 103,
+      "comments": 27,
+      "date": "2026-06-01T13:05:02Z"
+    },
+    "retrieved_at": "2026-09-11T03:19:44+00:00",
+    "credibility": 0.6
+  },
+  {
+    "channel": "hackernews",
+    "doc_type": "post",
+    "title": "Show HN: Countify – Collaborative No-code computer vision for labs",
+    "url": "https://www.countifybio.com/",
+    "content": "Hi HN! This is Mateo, Maria, Faisal, and Osse from Countify (<a href=\"https:&#x2F;&#x2F;www.countifybio.com&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;www.countifybio.com&#x2F;</a>). We&#x27;re building a collaborative no-code computer vision platform for life sciences. Think Replit, but for scientific image analysis. Labs use us to build, train, and automate AI image analysis workflows and experimental design without writing a single line of code.<p>Almost every experiment in biology produces images: microscopy, cell cultures, tissue slides, well plates. Someone has to analyze them. Today that means one of two bad options.<p>Option one: a scientist counts cells and traces regions by hand. It&#x27;s slow, it&#x27;s subjective, and it&#x27;s nearly impossible to reproduce. \nOption two: someone on the team learns to code — Python, ImageJ macros, deep learning models — which most biologists never will.<p>The tools that already exist don&#x27;t close the gap and spread out throughout the workflow in capture, analysis, and data management. ImageJ and CellProfiler are powerful but have brutal learning curves. Arivis and others costs $30k+ per year and are for very specific use cases.\nOff-the-shelf AI models don&#x27;t generalize to your specific assay and need to deal with tiny datasets that don&#x27;t exist anywhere else. Building a custom model that actually works on your data takes an ML engineer, and academic labs and early-stage biotechs don&#x27;t have one. So image analysis becomes the bottleneck that stalls the entire experiment.<p>Countify runs as a visual-intelligence agent that works alongside you in real time. Point it at your image; with any specimen, any experiment and it detects, reporting as data comes in. No code, and no manual annotation. You build and automate the workflow once; it runs the same way every time. Reproducible by default.<p>We serve a single kind of user that is in spread across industry and academia, small teams performing frontier research ",
+    "signals": {
+      "points": 2,
+      "comments": 0,
+      "date": "2026-07-28T14:21:35Z"
+    },
+    "retrieved_at": "2026-09-11T03:19:44+00:00",
+    "credibility": 0.6
+  },
+  {
+    "channel": "hackernews",
+    "doc_type": "post",
+    "title": "Show HN: Show HN: Cy. An AI coworker that works from Slack",
+    "url": "https://www.neonblue.ai/",
+    "content": "Hi HN!<p>We are building Cy, an AI coworker that runs inside Slack. Cy works like any teammate in slack. Except he is really good and always on. @Cy and he will do anything from simple research tasks to complete workflows like outbound, ad operations, analytics deep dives and suggestions, hiring and much more.<p>This is giving everyone on the team access to a super capable agent without dealing with CLI complexities and security issues. As it&#x27;s a team agent it also keeps context accross different functions and threads and can ensure everyone is aligned. Connections, skills and routines are all observable and we tuned Cy to be super smooth in creating and editing them.<p>We have been using Cy internally at Neon Blue for sales, engineering support, growth analysis, experiment reporting, outbound ops, research, content, and small internal apps. It&#x27;s completely changed how we work so thought we would share it with everyone here.<p>Try it here: <a href=\"https:&#x2F;&#x2F;www.neonblue.ai&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;www.neonblue.ai&#x2F;</a>",
+    "signals": {
+      "points": 2,
+      "comments": 0,
+      "date": "2026-06-17T16:14:37Z"
+    },
+    "retrieved_at": "2026-09-11T03:19:44+00:00",
+    "credibility": 0.6
+  }
+]

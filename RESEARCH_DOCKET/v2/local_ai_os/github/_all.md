@@ -1,0 +1,231 @@
+# Channel: github (20 docs)
+
+## 1. tinyhumansai/openhuman
+
+- type: `repo` | url: https://github.com/tinyhumansai/openhuman | credibility: 0.8
+
+- signals: `{"stars": 39620, "forks": 3911, "open_issues": 312, "updated_at": "2026-09-11T03:01:20Z", "language": "Rust", "license": "GPL-3.0", "topics": ["agent-orchestration", "ai-agents", "ai-assistant", "desktop", "llm", "local-first", "mcp", "personal-ai", "privacy", "rust", "second-brain", "tauri"], "full_name": "tinyhumansai/openhuman"}`
+
+
+OpenHuman is an open source personal AI for Mac, Windows and Linux — local-first memory, agent orchestration, and deep research.
+
+Topics: agent-orchestration, ai-agents, ai-assistant, desktop, llm, local-first, mcp, personal-ai, privacy, rust, second-brain, tauri
+
+
+## 2. siddsachar/row-bot
+
+- type: `repo` | url: https://github.com/siddsachar/row-bot | credibility: 0.8
+
+- signals: `{"stars": 1489, "forks": 172, "open_issues": 31, "updated_at": "2026-09-10T17:55:44Z", "language": "Python", "license": "Apache-2.0", "topics": ["ai-assistant", "langchain", "langchain-python", "local-llm", "ollama", "privacy", "react-agent", "sovereign-ai"], "full_name": "siddsachar/row-bot"}`
+
+
+Row-Bot - Personal AI Sovereignty. A local-first AI assistant with integrated tools, a personal knowledge graph, voice, vision, shell, browser automation, scheduled tasks, health tracking, and messaging channels. Run locally via Ollama or add opt-in cloud models. Your data stays on your machine.
+
+Topics: ai-assistant, langchain, langchain-python, local-llm, ollama, privacy, react-agent, sovereign-ai
+
+
+## 3. swarmclawai/swarmvault
+
+- type: `repo` | url: https://github.com/swarmclawai/swarmvault | credibility: 0.8
+
+- signals: `{"stars": 684, "forks": 79, "open_issues": 8, "updated_at": "2026-09-11T01:45:33Z", "language": "TypeScript", "license": "MIT", "topics": ["agent-memory", "ai-agents", "claude-code", "claude-code-memory", "codex", "karpathy", "knowledge-graph", "llm", "llm-wiki", "local-first", "mcp", "mcp-server", "obsidian", "obsidian-alternative", "openclaw", "opencode", "personal-knowledge-management", "pkm", "rag", "wiki"], "full_name": "swarmclawai/swarmvault"}`
+
+
+The local-first LLM Wiki: open-source knowledge graph builder, RAG knowledge base, and agent memory store. Built on Andrej Karpathy's pattern. An Obsidian alternative for personal knowledge management, AI second brain, and durable Claude Code / Codex / OpenClaw memory.
+
+Topics: agent-memory, ai-agents, claude-code, claude-code-memory, codex, karpathy, knowledge-graph, llm, llm-wiki, local-first, mcp, mcp-server, obsidian, obsidian-alternative, openclaw, opencode, personal-knowledge-management, pkm, rag, wiki
+
+
+## 4. qhkm/zeptoclaw
+
+- type: `repo` | url: https://github.com/qhkm/zeptoclaw | credibility: 0.8
+
+- signals: `{"stars": 651, "forks": 97, "open_issues": 41, "updated_at": "2026-09-10T06:54:05Z", "language": "Rust", "license": "Apache-2.0", "topics": ["ai", "ai-assistant", "open-source", "rust"], "full_name": "qhkm/zeptoclaw"}`
+
+
+Fast, small, secure, local-first personal AI assistant infrastructure: one Rust binary for tools, memory, channels, providers, and sandboxed autonomy.
+
+Topics: ai, ai-assistant, open-source, rust
+
+
+## 5. exon-research/genomi
+
+- type: `repo` | url: https://github.com/exon-research/genomi | credibility: 0.8
+
+- signals: `{"stars": 482, "forks": 62, "open_issues": 0, "updated_at": "2026-09-07T19:18:30Z", "language": "Python", "license": "Apache-2.0", "topics": ["agent-harness", "genome-analysis", "whole-genome-sequencing"], "full_name": "exon-research/genomi"}`
+
+
+Local-first, open-source Claude Science alternative, before Claude Science is a thing. Turn your AI agent into personal DNA expert.
+
+Topics: agent-harness, genome-analysis, whole-genome-sequencing
+
+
+## 6. 5pyj29s7cm-tech/LumiCore
+
+- type: `repo` | url: https://github.com/5pyj29s7cm-tech/LumiCore | credibility: 0.8
+
+- signals: `{"stars": 266, "forks": 69, "open_issues": 13, "updated_at": "2026-09-09T09:15:47Z", "language": "TypeScript", "license": "AGPL-3.0", "topics": [], "full_name": "5pyj29s7cm-tech/LumiCore"}`
+
+
+LumiCore local-first personal AI runtime and desktop agent platform
+
+
+## 7. zhuzhaoyun/Molio
+
+- type: `repo` | url: https://github.com/zhuzhaoyun/Molio | credibility: 0.8
+
+- signals: `{"stars": 246, "forks": 37, "open_issues": 28, "updated_at": "2026-09-10T16:14:50Z", "language": "TypeScript", "license": "NOASSERTION", "topics": ["claude-code", "knowledge-management", "llmwiki", "local-first", "obsidian", "web-clipper", "wechat-bot"], "full_name": "zhuzhaoyun/Molio"}`
+
+
+A local-first personal knowledge layer for AI agents. Build evolving knowledge spaces with LLM Wiki, knowledge graphs, and agent workflows.
+
+Topics: claude-code, knowledge-management, llmwiki, local-first, obsidian, web-clipper, wechat-bot
+
+
+## 8. Health-Yang/MineEcho
+
+- type: `repo` | url: https://github.com/Health-Yang/MineEcho | credibility: 0.8
+
+- signals: `{"stars": 218, "forks": 25, "open_issues": 0, "updated_at": "2026-09-02T03:57:45Z", "language": "TypeScript", "license": "NOASSERTION", "topics": ["ai-agent", "ai-assistant", "knowledge-graph", "local-first", "memory", "openclaw", "personal-ai", "rag", "skills", "typescript"], "full_name": "Health-Yang/MineEcho"}`
+
+
+Local-first Memory OS for personal AI assistants with L0-L3 memory, Wiki++ knowledge, skill routing, and TokenLess context compression.
+
+Topics: ai-agent, ai-assistant, knowledge-graph, local-first, memory, openclaw, personal-ai, rag, skills, typescript
+
+
+## 9. Pls-1q43/Dibao
+
+- type: `repo` | url: https://github.com/Pls-1q43/Dibao | credibility: 0.8
+
+- signals: `{"stars": 176, "forks": 8, "open_issues": 4, "updated_at": "2026-09-10T05:42:01Z", "language": "TypeScript", "license": "NOASSERTION", "topics": [], "full_name": "Pls-1q43/Dibao"}`
+
+
+Local first, super low cost AI-powered personal RSS reader. / 0.6B 模型可驱动的低成本 AI 个人 RSS 阅读器。
+
+
+## 10. flagdizero/jenny-android-ai-agent
+
+- type: `repo` | url: https://github.com/flagdizero/jenny-android-ai-agent | credibility: 0.8
+
+- signals: `{"stars": 84, "forks": 20, "open_issues": 4, "updated_at": "2026-09-10T09:20:15Z", "language": "Python", "license": "AGPL-3.0", "topics": ["agpl", "ai-agent", "android", "android-launcher", "anthropic", "byok", "chaquopy", "llm", "local-first", "openai", "personal-assistant", "privacy", "python", "self-hosted"], "full_name": "flagdizero/jenny-android-ai-agent"}`
+
+
+A local-first personal AI agent that lives on your Android phone. Permanent memory, scheduled autonomous work, self-written mini-apps, and an optional home-screen launcher. Your data stays on the device — bring your own API key, or run a local model and keep the whole loop offline.
+
+Topics: agpl, ai-agent, android, android-launcher, anthropic, byok, chaquopy, llm, local-first, openai, personal-assistant, privacy, python, self-hosted
+
+
+## 11. tech4idea/viforge
+
+- type: `repo` | url: https://github.com/tech4idea/viforge | credibility: 0.8
+
+- signals: `{"stars": 79, "forks": 15, "open_issues": 1, "updated_at": "2026-09-08T22:17:09Z", "language": "TypeScript", "license": "MIT", "topics": [], "full_name": "tech4idea/viforge"}`
+
+
+ViForge is a local-first AI collaboration workbench for creative and knowledge work. It helps people turn ideas, judgment, and personal methodology into reusable agents, skills, knowledge bases, and evaluable workflows.
+
+
+## 12. mypaios/mypaios
+
+- type: `repo` | url: https://github.com/mypaios/mypaios | credibility: 0.8
+
+- signals: `{"stars": 78, "forks": 22, "open_issues": 8, "updated_at": "2026-09-01T16:17:27Z", "language": "Python", "license": "NOASSERTION", "topics": [], "full_name": "mypaios/mypaios"}`
+
+
+My Personal AI OS — local-first chat, agents, video analysis, research & email triage on your own machine
+
+
+## 13. YiShu5/YiShu-Workbench
+
+- type: `repo` | url: https://github.com/YiShu5/YiShu-Workbench | credibility: 0.8
+
+- signals: `{"stars": 74, "forks": 0, "open_issues": 0, "updated_at": "2026-09-08T20:51:11Z", "language": "HTML", "license": "NONE", "topics": ["ai-workspace", "content-creation", "local-first", "productivity"], "full_name": "YiShu5/YiShu-Workbench"}`
+
+
+A local-first, single-file AI workspace for content creation, business workflows, and personal productivity.
+
+Topics: ai-workspace, content-creation, local-first, productivity
+
+
+## 14. marswangyang/personal-ai-memory
+
+- type: `repo` | url: https://github.com/marswangyang/personal-ai-memory | credibility: 0.8
+
+- signals: `{"stars": 63, "forks": 11, "open_issues": 3, "updated_at": "2026-09-10T14:15:48Z", "language": "TypeScript", "license": "Apache-2.0", "topics": ["chatgpt", "chrome-extension", "claude", "gemini", "grok", "hybrid-search", "indexeddb", "knowledge-graph", "llm", "local-first", "no-api-key", "offline-first", "perplexity", "personal-ai", "privacy-first", "rag", "semantic-search", "transformers-js", "vector-database", "webassembly"], "full_name": "marswangyang/personal-ai-memory"}`
+
+
+A local-first Chrome extension that passively captures ChatGPT, Gemini, Claude, Grok, Perplexity conversations into a private memory graph. Features in-browser Hybrid RAG (Vector + BM25), semantic search, and 100% privacy via WebAssembly and IndexedDB. No servers, no API keys.
+
+Topics: chatgpt, chrome-extension, claude, gemini, grok, hybrid-search, indexeddb, knowledge-graph, llm, local-first, no-api-key, offline-first, perplexity, personal-ai, privacy-first, rag, semantic-search, transformers-js, vector-database, webassembly
+
+
+## 15. Danialsamadi/synapse
+
+- type: `repo` | url: https://github.com/Danialsamadi/synapse | credibility: 0.8
+
+- signals: `{"stars": 62, "forks": 10, "open_issues": 1, "updated_at": "2026-09-10T22:34:02Z", "language": "TypeScript", "license": "GPL-3.0", "topics": ["agent", "agent-skills", "agentic-ai", "agentic-workflow", "herme", "hermes-agent", "ml", "nous-research"], "full_name": "Danialsamadi/synapse"}`
+
+
+Synapse is a local-first personal memory operating system designed for AI agents. It provides durable, typed, and highly reliable long-term memory using only local SQLite — giving agents the ability to remember, update, and reason over facts across sessions with full user control.
+
+Topics: agent, agent-skills, agentic-ai, agentic-workflow, herme, hermes-agent, ml, nous-research
+
+
+## 16. titechprabhasolutions/Brahma-AI
+
+- type: `repo` | url: https://github.com/titechprabhasolutions/Brahma-AI | credibility: 0.8
+
+- signals: `{"stars": 51, "forks": 41, "open_issues": 1, "updated_at": "2026-09-10T12:13:40Z", "language": "Python", "license": "MIT", "topics": [], "full_name": "titechprabhasolutions/Brahma-AI"}`
+
+
+Brahma AI is a Windows‑first personal AI assistant with voice control, local task automation, and an Electron UI. It supports multi‑step commands, browser automation, routines, and a modular backend.
+
+
+## 17. hamedgitty/bloks
+
+- type: `repo` | url: https://github.com/hamedgitty/bloks | credibility: 0.8
+
+- signals: `{"stars": 50, "forks": 9, "open_issues": 4, "updated_at": "2026-09-11T03:15:10Z", "language": "TypeScript", "license": "NOASSERTION", "topics": ["ai-agents", "desktop", "electron", "llm", "local-first", "typescript"], "full_name": "hamedgitty/bloks"}`
+
+
+A local-first desktop workspace for personal AI agents
+
+Topics: ai-agents, desktop, electron, llm, local-first, typescript
+
+
+## 18. danyQe/codebase-mcp
+
+- type: `repo` | url: https://github.com/danyQe/codebase-mcp | credibility: 0.8
+
+- signals: `{"stars": 50, "forks": 9, "open_issues": 1, "updated_at": "2026-09-01T12:58:29Z", "language": "Python", "license": "Apache-2.0", "topics": ["ai-coding-assistant", "ai-tools", "automation", "claude", "claude-desktop", "code-generation", "coding-assistant", "cursor-alternative", "faiss", "fastapi", "mcp", "model-context-protocol", "open-source", "privacy-first", "python", "react", "semantic-search", "typescript"], "full_name": "danyQe/codebase-mcp"}`
+
+
+Open-source AI development assistant via Model Context Protocol (MCP). Turn Claude or any LLM into your personal coding assistant. Privacy-first with local semantic search, AI-assisted editing, persistent memory, and quality-checked code generation. Built for Python & React. Free alternative to paid AI coding tools.
+
+Topics: ai-coding-assistant, ai-tools, automation, claude, claude-desktop, code-generation, coding-assistant, cursor-alternative, faiss, fastapi, mcp, model-context-protocol, open-source, privacy-first, python, react, semantic-search, typescript
+
+
+## 19. ttmouse/X-data
+
+- type: `repo` | url: https://github.com/ttmouse/X-data | credibility: 0.8
+
+- signals: `{"stars": 47, "forks": 12, "open_issues": 0, "updated_at": "2026-09-07T08:40:13Z", "language": "JavaScript", "license": "MIT", "topics": ["ai-workflow", "chrome-extension", "data-collection", "javascript", "local-first", "personal-knowledge-management", "productivity", "social-media-research", "twitter", "x-twitter"], "full_name": "ttmouse/X-data"}`
+
+
+Local-first Chrome extension for collecting, organizing, and exporting X/Twitter posts for research, AI workflows, and personal knowledge management.
+
+Topics: ai-workflow, chrome-extension, data-collection, javascript, local-first, personal-knowledge-management, productivity, social-media-research, twitter, x-twitter
+
+
+## 20. KadenMc/work-buddy
+
+- type: `repo` | url: https://github.com/KadenMc/work-buddy | credibility: 0.8
+
+- signals: `{"stars": 44, "forks": 9, "open_issues": 15, "updated_at": "2026-09-09T14:12:14Z", "language": "Python", "license": "GPL-3.0", "topics": ["agent-orchestration", "agentic-ai-development", "agentic-automation", "agentic-framework", "agentic-workflow", "ai", "ai-agent", "ai-assistant", "ai-assisted-development", "ai-automation", "automation-framework", "claude-code", "claude-code-skills", "claude-desktop", "mcp-gateway", "obsidian", "obsidian-notes", "obsidianmd", "personal-automation", "personal-knowledge-management"], "full_name": "KadenMc/work-buddy"}`
+
+
+The AI assistant for knowledge workers — a local-first personal-agent runtime built on Claude Code and Obsidian.
+
+Topics: agent-orchestration, agentic-ai-development, agentic-automation, agentic-framework, agentic-workflow, ai, ai-agent, ai-assistant, ai-assisted-development, ai-automation, automation-framework, claude-code, claude-code-skills, claude-desktop, mcp-gateway, obsidian, obsidian-notes, obsidianmd, personal-automation, personal-knowledge-management
+

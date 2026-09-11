@@ -1,0 +1,91 @@
+{
+  "coverage": [
+    {
+      "dimension": "problem",
+      "covered": false,
+      "count": 0,
+      "contributing_channels": []
+    },
+    {
+      "dimension": "competitors",
+      "covered": true,
+      "count": 37,
+      "contributing_channels": [
+        "github",
+        "npm_pypi"
+      ]
+    },
+    {
+      "dimension": "pricing",
+      "covered": false,
+      "count": 0,
+      "contributing_channels": []
+    },
+    {
+      "dimension": "maturity",
+      "covered": true,
+      "count": 37,
+      "contributing_channels": [
+        "github",
+        "npm_pypi"
+      ]
+    },
+    {
+      "dimension": "demand",
+      "covered": false,
+      "count": 0,
+      "contributing_channels": []
+    },
+    {
+      "dimension": "differentiation",
+      "covered": false,
+      "count": 0,
+      "contributing_channels": [
+        "github",
+        "npm_pypi"
+      ]
+    }
+  ],
+  "gaps": [
+    "problem",
+    "pricing",
+    "demand",
+    "differentiation"
+  ],
+  "re_research": [
+    {
+      "dimension": "problem",
+      "channels": [
+        "sogou_wechat",
+        "reddit",
+        "hackernews"
+      ],
+      "note": "broaden pain query; add domain subreddits"
+    },
+    {
+      "dimension": "pricing",
+      "channels": [
+        "competitor_site"
+      ],
+      "note": "add competitor_urls (homepages) to seed; fetch /pricing"
+    },
+    {
+      "dimension": "demand",
+      "channels": [
+        "googletrends",
+        "reddit",
+        "producthunt"
+      ],
+      "note": "check mention volume; set PRODUCTHUNT_TOKEN"
+    },
+    {
+      "dimension": "differentiation",
+      "channels": [
+        "github",
+        "sogou_wechat"
+      ],
+      "note": "need both pain + competitor evidence to argue a delta"
+    }
+  ],
+  "differentiation_possible": false
+}

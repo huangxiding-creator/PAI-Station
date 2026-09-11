@@ -1,0 +1,94 @@
+{
+  "coverage": [
+    {
+      "dimension": "problem",
+      "covered": true,
+      "count": 10,
+      "contributing_channels": [
+        "sogou_wechat"
+      ]
+    },
+    {
+      "dimension": "competitors",
+      "covered": false,
+      "count": 0,
+      "contributing_channels": []
+    },
+    {
+      "dimension": "pricing",
+      "covered": false,
+      "count": 0,
+      "contributing_channels": []
+    },
+    {
+      "dimension": "maturity",
+      "covered": false,
+      "count": 0,
+      "contributing_channels": []
+    },
+    {
+      "dimension": "demand",
+      "covered": false,
+      "count": 0,
+      "contributing_channels": []
+    },
+    {
+      "dimension": "differentiation",
+      "covered": false,
+      "count": 0,
+      "contributing_channels": [
+        "sogou_wechat"
+      ]
+    }
+  ],
+  "gaps": [
+    "competitors",
+    "pricing",
+    "maturity",
+    "demand",
+    "differentiation"
+  ],
+  "re_research": [
+    {
+      "dimension": "competitors",
+      "channels": [
+        "github",
+        "appstore"
+      ],
+      "note": "try alternate keywords; lower star threshold"
+    },
+    {
+      "dimension": "pricing",
+      "channels": [
+        "competitor_site"
+      ],
+      "note": "add competitor_urls (homepages) to seed; fetch /pricing"
+    },
+    {
+      "dimension": "maturity",
+      "channels": [
+        "github",
+        "npm_pypi"
+      ],
+      "note": "inspect top repos' commit/release cadence"
+    },
+    {
+      "dimension": "demand",
+      "channels": [
+        "googletrends",
+        "reddit",
+        "producthunt"
+      ],
+      "note": "check mention volume; set PRODUCTHUNT_TOKEN"
+    },
+    {
+      "dimension": "differentiation",
+      "channels": [
+        "github",
+        "sogou_wechat"
+      ],
+      "note": "need both pain + competitor evidence to argue a delta"
+    }
+  ],
+  "differentiation_possible": false
+}

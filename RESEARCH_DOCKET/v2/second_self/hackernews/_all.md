@@ -1,0 +1,62 @@
+# Channel: hackernews (5 docs)
+
+## 1. Show HN: PeopleAI – Boost your personal brand with your own AI digital twin
+
+- type: `post` | url: https://peopleai.app/ | credibility: 0.6
+
+- signals: `{"points": 3, "comments": 0, "date": "2023-03-13T14:35:24Z"}`
+
+
+https://peopleai.app/
+
+
+## 2. Show HN: Digital Double with Cypher AI
+
+- type: `post` | url: https://apps.apple.com/us/app/cypher-ai-personas/id6449046604 | credibility: 0.6
+
+- signals: `{"points": 1, "comments": 0, "date": "2023-11-17T17:38:11Z"}`
+
+
+Ready to meet your digital twin?<p>Cypher instantly creates an AI that talks &amp; sounds just like you.<p>Create your personal AI clone, or chat with friends and familiar faces in the most natural and human-like experience yet. The future we envisioned in movies like Her and Black Mirror is here.<p>We created this to push the boundaries of digital consciousness and are excited to see how people use it.
+
+
+## 3. Building Personal Digital Twins for Health Optimisation and Drug Simulation
+
+- type: `post` | url: https://news.ycombinator.com/item?id=43817933 | credibility: 0.6
+
+- signals: `{"points": 1, "comments": 0, "date": "2025-04-28T05:35:03Z"}`
+
+
+Hi HN,<p>We’re working on BioReplica, a platform that lets you create a digital replica of your own biology, based on your DNA, medical records, wearable data, and physiological metrics.
+Why?
+Right now, if you want to know how a supplement, diet, or exercise protocol will affect you, you usually have to experiment on yourself and hope for the best.
+No two bodies respond the same way, but personalization is still mostly guesswork.
+BioReplica is an early attempt to change that.
+We build a personal biological model, a simulation  that lets you test &quot;what if?&quot; scenarios safely before trying them in real life.<p>Examples:<p>&quot;If I start taking NMN, will my inflammation markers likely improve or worsen?&quot;<p>&quot;Would intermittent fasting affect my heart health risk, based on my baseline data?&quot;<p>&quot;Is this new nootropic likely to interact badly with my genetics or medications?&quot;<p>Instead of generic advice, you can start seeing predictions based on you, your genome, your health history, your day-to-day physiology.<p>We’re very early.
+Right now the simulations are basic, focused mainly on lifestyle and supplement interventions.
+But over time, the idea is to make it richer, more data inputs, better modeling, higher accuracy.<p>Caveats:<p>Biology is still messy, and simulations are probabilistic, not certainties.<p>The platform isn&#x27;t diagnostic or a substitute for real medicine (and shouldn’t be).<p>Getting the modeling right is hard, and we’re very upfront about that.
+The long term goal is for these replica&#x27;s to be used for pharma simulations. In clinical trials today, most failures happen late, billions spent, and sometimes only then do we learn that a drug doesn’t work or has hidden risks.<p>Still, we believe even imperfect simulations, if used carefully, can help people make smarter decisions about their health.<p>If this idea resonates (or if you see flaws we should be thinking about), we’d love feedback.
+Learn more on https:&#x
+
+
+## 4. My 11-step GraphRAG pipeline, what worked, and what's still broken
+
+- type: `post` | url: https://news.ycombinator.com/item?id=47639059 | credibility: 0.6
+
+- signals: `{"points": 3, "comments": 1, "date": "2026-04-04T13:50:22Z"}`
+
+
+While building a financial assistant for an SF start-up, we learned that AI frameworks add complexity without value. When I started building a personal assistant with GraphRAG, I carried that lesson but still tried LangChain&#x27;s MongoDBGraphStore. It gave me a working knowledge graph in 10 minutes.<p>Then I looked at the data. I had 17 node types and 34 relationship types from just 5 documents, including three versions of &quot;part of&quot;. GraphRAG is a data modeling problem, not a retrieval problem.<p>The attached diagram shows the full 11-step pipeline I ended up with. Here is a walkthrough of what you can learn from each step.<p>So basically, in steps 1 and 2 of the data pipeline, raw sources go through an Extract, Transform, Load (ETL) process. They land as documents in a MongoDB data warehouse. Each document stores the source type, URI, content, and metadata.<p>Then in step 3, we clean the documents and split them into token-bounded chunks. We started with 512 tokens with a 64-token overlap. Still, we have to run more tests on this.<p>The thing is, step 4 handles graph extraction. We defined a strict ontology. An ontology is just a formal contract defining exactly what categories and relationships exist in your data. We used 6 node types and 8 edge types. The LLM can only extract what this ontology allows.<p>For example, if it outputs a PERSON to TASK connection with an EXPERIENCED edge, the pipeline rejects it. EXPERIENCED must connect a PERSON to an EPISODE.<p>We also split LLM extraction from deterministic extraction. We create structural entries like Document or Chunk nodes without LLM calls.<p>Turns out, step 5 for normalization is the hardest part. We use a three-phase deduplication process. We do in-memory fuzzy matching, cross-document resolution against MongoDB, and edge remapping.<p>Anyway, in step 6, we batch embed the nodes. The system uses a mock for tests, Sentence Transformers for development, and the Voyage API for production.<p>Ultimately
+
+
+## 5. Show HN: EK-1 – A local-first, sovereign AI agent built in Go and Rust
+
+- type: `post` | url: https://egokernel.com | credibility: 0.6
+
+- signals: `{"points": 2, "comments": 0, "date": "2026-02-26T17:28:24Z"}`
+
+
+I’ve spent the last few months thinking about why personal AI feels like a leash rather than a tool. Current &quot;agents&quot; are just thin wrappers over centralized LLMs that harvest your data to sell it back to you. You still have to do the work and make decisions whenever a tool proposes a solution. More pressure on you.<p>I’m building Ego-Kernel (EK-1). It’s an attempt to build a &quot;Unitary Intelligence&quot; - a single, local-first agent that manages your digital life, financial trades on Solana, and social reputation without your data ever leaving your enclave.<p>The Tech Stack:<p>The Brain (Go): A high-concurrency orchestrator running locally. It handles &quot;Titan Handshakes&quot; (P2P agent negotiations) and indexes your local life-data.<p>The Court (Rust&#x2F;Anchor): An on-chain Reputation Ledger on Solana that makes &quot;Social Honor&quot; unforgeable and programmable.<p>The Shield (BUSL 1.1): I’m using the Business Source License to prevent the &quot;Big Tech Vampirism&quot; we saw in &#x27;24-&#x27;25. It’s free for individuals, but enterprises pay their share.<p>Why this is different:
+Most AI projects are trying to be the next big chatbot. I’m trying to build a protocol for cognitive independence. The system uses a &quot;Value-Weighting Matrix&quot; that you tune locally. If your stress (biometrics) is high or your bank balance is low, your agent&#x27;s aggression threshold shifts automatically.<p>The Manifesto explains the &quot;Soul Drift&quot; problem and how we&#x27;re solving it through graduated autonomy.<p>GitHub: <a href="https:&#x2F;&#x2F;github.com&#x2F;EgoKernel&#x2F;The-Protocol" rel="nofollow">https:&#x2F;&#x2F;github.com&#x2F;EgoKernel&#x2F;The-Protocol</a>
+Manifesto: <a href="https:&#x2F;&#x2F;github.com&#x2F;EgoKernel&#x2F;The-Protocol&#x2F;blob&#x2F;main&#x2F;Manifesto.md" rel="nofollow">https:&#x2F;&#x2F;github.com&#x2F;EgoKernel&#x2F;The-Protocol&#x2F;blob&#x2F;main&#x2F;Manifest...</a><p>Would love to hear your thoughts on t
+
