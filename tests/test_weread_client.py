@@ -358,6 +358,33 @@ def test_renew_success_rotates_skey():
     assert body["ql"] is False and body["rq"].startswith("http")
 
 
+def test_renew_success_persists_auth_file(tmp_path):
+    auth = tmp_path / "auth.json"
+    auth.write_text(json.dumps(
+        {"cookie": "wr_skey=OLD; wr_vid=123", "vid": "123",
+         "name": "me", "saved_at": "2026-09-10T00:00:00"}), encoding="utf-8")
+    cli = WeReadClient(
+        auth_path=str(auth), fast=True,
+        opener=FakeOpener([({"succ": 1},
+                            ["wr_skey=NEW; Path=/; HttpOnly"])]))
+    assert cli.renew() is True
+    saved = json.loads(auth.read_text(encoding="utf-8"))
+    assert "wr_skey=NEW" in saved["cookie"]      # 新 skey 落盘
+    assert saved["vid"] == "123"                 # 旧字段保留
+    assert saved["name"] == "me"                 # name 不被抹掉
+    assert saved["saved_at"] != "2026-09-10T00:00:00"
+
+
+def test_renew_persist_failure_does_not_break(tmp_path):
+    # auth_path 指向不可写目录：落盘失败但 renew 仍算成功（内存 cookie 有效）
+    bad = tmp_path / "no_dir" / "auth.json"
+    cli = WeReadClient(
+        cookie="wr_skey=OLD; wr_vid=123", auth_path=str(bad), fast=True,
+        opener=FakeOpener([({"succ": 1}, ["wr_skey=NEW"]) ]))
+    assert cli.renew() is True
+    assert "wr_skey=NEW" in cli.cookie
+
+
 def test_renew_failure_returns_false():
     cli = make_client(FakeOpener([{"succ": 0}]))
     assert cli.renew() is False

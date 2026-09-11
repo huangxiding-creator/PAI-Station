@@ -2,7 +2,8 @@
 
 逆向自 weread.qq.com web 端（对照 touchFish TS 原版移植，黄金向量对拍）：
 - 登录态：cookie（wr_skey/wr_vid…）由 scripts/weread_login.py 扫码落盘
-  data/weread/_auth/weread_auth.json；本模块只读该文件
+  data/weread/_auth/weread_auth.json；renew() 成功后原子写回该文件
+  （2026-09-11 修复：原先只更新内存，进程退出即丢→下个进程 -2012）
 - 搜索/详情/目录：GET/POST /web/book/*，cookie 认证、无签名
 - 章节正文：POST /web/book/chapter/e_0..e_3（epub/pdf）或 t_0/t_1（txt），
   签名见 weread_sign.py；响应 = md5 头 32 位 + 混淆体（chk 剥离 →
@@ -134,6 +135,7 @@ class WeReadClient:
         self._last_request = 0.0
         self._consecutive_errors = 0
         self._fast = fast                             # 测试关节流
+        self._auth_path = auth_path
         if not cookie and auth_path:
             cookie = self._load_cookie(auth_path)
         self.cookie = cookie
@@ -266,9 +268,42 @@ class WeReadClient:
                     merged[k.strip()] = v
             merged.update({k: v for k, v in pairs.items() if v})
             self.cookie = "; ".join(f"{k}={v}" for k, v in merged.items())
+            self._persist_auth()
             return "wr_skey" in pairs
         except urllib.error.HTTPError as exc:
             raise WeReadApiError(f"renewal HTTP {exc.code}") from exc
+
+    def _persist_auth(self) -> None:
+        """renew 成功后把合并 cookie 原子写回登录态文件。
+
+        2026-09-11 实测：renew 只更新内存 cookie，进程退出即丢——
+        下个进程重读旧 wr_skey 仍 -2012。schema 与 weread_login.py 一致
+        （cookie/vid/name/saved_at）；无 auth_path（显式传 cookie）或
+        落盘失败均不阻断（内存 cookie 本轮仍有效，失败仅降级）。
+        """
+        if not self._auth_path:
+            return
+        try:
+            auth: dict = {}
+            if os.path.exists(self._auth_path):
+                with open(self._auth_path, encoding="utf-8") as fh:
+                    auth = json.load(fh)
+            pairs = {}
+            for kv in self.cookie.split(";"):
+                if "=" in kv:
+                    k, v = kv.split("=", 1)
+                    pairs[k.strip()] = v
+            auth.update({
+                "cookie": self.cookie,
+                "vid": pairs.get("wr_vid", auth.get("vid", "")),
+                "saved_at": time.strftime("%Y-%m-%dT%H:%M:%S")})
+            tmp = self._auth_path + ".tmp"
+            with open(tmp, "w", encoding="utf-8") as fh:
+                json.dump(auth, fh, ensure_ascii=False, indent=1)
+            os.replace(tmp, self._auth_path)
+        except (OSError, ValueError) as exc:
+            print(f"[weread] 续期落盘失败（不阻断，内存 cookie 仍有效）: {exc}",
+                  flush=True)
 
     def search(self, keyword: str, count: int = 20) -> list:
         """关键词搜索书单（bookId/标题/作者/简介/封面）。

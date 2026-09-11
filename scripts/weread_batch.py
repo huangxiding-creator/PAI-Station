@@ -227,6 +227,8 @@ def main() -> int:
             def prog(idx, total, title):
                 print(f"  章节 {idx}/{total} {title[:36]}", flush=True)
             book = extract_book(cli, book_id, on_progress=prog)
+            if not book["chapters"]:
+                raise RuntimeError("目录为空（疑似登录态失效/协议漂移/下架）")
             persist_book(book, cli, with_docx=not args.no_docx)
             bump_daily()
             ok += 1
