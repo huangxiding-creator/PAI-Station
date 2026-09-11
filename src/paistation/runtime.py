@@ -102,6 +102,13 @@ class Runtime:
             state_path=os.path.join(data, "deepread.state.json"),
             channel=channel if channel is not None else None,
             reader_fn=deepread_reader)
+        # M12 进化提案（每周，用户 2026-09-11 裁决）：R15 系统永不自批
+        self._evolution = None
+        if station_root is not None:
+            from .evolve.proposer import EvolutionEngine
+            self._evolution = EvolutionEngine(station_root=station_root,
+                                              channel=channel,
+                                              now_fn=self._now)
         self._started = False
 
     # ---------- 感知入库链 ----------
@@ -166,6 +173,7 @@ class Runtime:
         now = self._now()
         self._incremental_step(now)
         self._deepread_step(now)
+        self._evolution_step()
         if _mins(now) < self._pdca_time or self.outbox.is_quiet():
             return None
         today = _date_str(now)
@@ -214,6 +222,15 @@ class Runtime:
             self._deepread.set_presence(last_input_at())
         except Exception as exc:  # noqa: BLE001 - 在场探测故障不杀主循环
             _log.warning("在场探测异常（服务继续）: %s", exc)
+
+    def _evolution_step(self) -> None:
+        """每周提案闸（ISO 周内幂等；零信号周发心跳不编造）。"""
+        if self._evolution is None:
+            return
+        try:
+            self._evolution.maybe_weekly()
+        except Exception as exc:  # noqa: BLE001 - 进化环故障不杀主循环
+            _log.warning("进化提案步异常（服务继续）: %s", exc)
 
     def _last_pdca(self) -> str:
         try:
