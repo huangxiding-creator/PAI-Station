@@ -10,6 +10,7 @@ import json
 import logging
 import os
 import time
+from pathlib import Path
 
 from . import config
 from .learn.pdca import DailyReview
@@ -59,7 +60,8 @@ class Runtime:
     """感知-记忆-推送-复盘整机。start/stop 管监听，daily_tick 管复盘闸门。"""
 
     def __init__(self, cfg: dict, client=None, channel=None,
-                 watcher_factory=None, now_fn=None, audit: AuditLog | None = None):
+                 watcher_factory=None, now_fn=None, audit: AuditLog | None = None,
+                 station_root=None, deepread_reader=None):
         sense, prov, learn = cfg["sense"], cfg["proactive"], cfg["learn"]
         data = cfg["privacy"]["data_dir"]
         self._dirs = list(sense["watch_dirs"])
@@ -94,10 +96,12 @@ class Runtime:
             self._dirs, self.on_batch, self._inc_state,
             ignore_patterns=sense["ignore_patterns"])
         # M10 微信深读（PROPOSAL_V2.md 第 6 章 + R13：夜间窗口+启动提醒；
-        # reader_fn 缺席 = 调度/提醒链上线而零读屏，后续实机接入注入）
+        # deepread_reader 注入 V1 纯视觉读取器（零注入/即读即删/缺席空转），
+        # 缺席时 = 调度/提醒链上线而零读屏（安全默认）
         self._deepread = DeepReadEngine(
             state_path=os.path.join(data, "deepread.state.json"),
-            channel=channel if channel is not None else None)
+            channel=channel if channel is not None else None,
+            reader_fn=deepread_reader)
         self._started = False
 
     # ---------- 感知入库链 ----------
@@ -203,6 +207,14 @@ class Runtime:
         except Exception as exc:  # noqa: BLE001 - 深读故障不杀主循环
             _log.warning("深读 tick 异常（服务继续）: %s", exc)
 
+    def refresh_presence(self) -> None:
+        """刷用户在场探测（只读系统输入空闲；失败按不在场，绝不抛）。"""
+        try:
+            from .sense.presence import last_input_at
+            self._deepread.set_presence(last_input_at())
+        except Exception as exc:  # noqa: BLE001 - 在场探测故障不杀主循环
+            _log.warning("在场探测异常（服务继续）: %s", exc)
+
     def _last_pdca(self) -> str:
         try:
             with open(self._pdca_state, encoding="utf-8") as fh:
@@ -225,7 +237,8 @@ class Runtime:
                 "started": self._started}
 
     @classmethod
-    def from_config(cls, cfg: dict, audit: AuditLog | None = None) -> "Runtime":
+    def from_config(cls, cfg: dict, audit: AuditLog | None = None,
+                    station_root=None) -> "Runtime":
         """生产装配：密钥/密文缺席一律降级，不抛。"""
         client = None
         try:
@@ -241,7 +254,17 @@ class Runtime:
         if webhook:
             from .channels.wecom import WeComChannel
             channel = WeComChannel(webhook)
-        return cls(cfg, client=client, channel=channel, audit=audit)
+        # M10.2a：深读 V1 纯视觉读取器（client 缺席/开关关 → None 零读屏）
+        reader = None
+        try:
+            from .sense.wechat_vision import build_reader
+            reader = build_reader(
+                client, station_root or Path.cwd(),
+                enabled=bool(cfg["sense"].get("deepread_enabled", True)))
+        except Exception as exc:  # noqa: BLE001 - 装配失败→调度链照常
+            _log.warning("深读读取器装配失败（零读屏，调度照常）: %s", exc)
+        return cls(cfg, client=client, channel=channel, audit=audit,
+                   station_root=station_root, deepread_reader=reader)
 
 
 def _wecom_webhook() -> str:

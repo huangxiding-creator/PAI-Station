@@ -132,6 +132,8 @@ def load(path: str, env: dict[str, str] | None = None) -> types.MappingProxyType
         "deepwork_apps": sec("sense").list("deepwork_apps",
                                            ["WINWORD.EXE", "idea64.exe", "Code.exe", "wps.exe"]),
         "clipboard_enabled": sec("sense").bool("clipboard_enabled", False),
+        # M10 深读开关：默认启用（用户 2026-09-11 裁决），只能关不能改参数
+        "deepread_enabled": sec("sense").bool("deepread_enabled", True),
     }
     ch = sec("channels")
     wechat_mode = ch.str("wechat_mode", "vision_readonly")

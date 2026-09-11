@@ -260,12 +260,19 @@ class ZhipuClient:
                 last = exc
         raise _GLMError(f"deep 全链失败，链={tried}，最后错误={last}")
 
-    def vision(self, image_path: str, schema: dict) -> dict:
-        """截图 → GLM-4V → 结构化事件：{json}。"""
-        if not os.path.isfile(image_path):
-            raise _GLMError(f"图片不存在: {image_path}")
-        with open(image_path, "rb") as fh:
-            b64 = base64.b64encode(fh.read()).decode()
+    def vision(self, image, schema: dict) -> dict:
+        """截图 → GLM-4V → 结构化事件：{json}。
+
+        image 接受路径或 PNG bytes——bytes 直传支持即读即删
+        （深读截图永不落盘，M10.2a 隐私红线）。
+        """
+        if isinstance(image, (bytes, bytearray)):
+            b64 = base64.b64encode(bytes(image)).decode()
+        else:
+            if not os.path.isfile(image):
+                raise _GLMError(f"图片不存在: {image}")
+            with open(image, "rb") as fh:
+                b64 = base64.b64encode(fh.read()).decode()
         messages = [{"role": "user", "content": [
             {"type": "text", "content": "把截图内容结构化为 JSON，schema="
              + json.dumps(schema, ensure_ascii=False)},
