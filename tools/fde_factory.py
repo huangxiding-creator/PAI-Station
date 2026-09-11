@@ -116,8 +116,25 @@ def main() -> int:
         out_dir = os.path.join(ROOT, "data", "foundry", "plans", slug)
         print(f"\n[factory] === {slug}：{theme} ===", flush=True)
         t0 = time.time()
-        plan = compose_plan(engine, theme, corpus=corpus, n_chapters=6,
-                            checkpoint_path=os.path.join(out_dir, "checkpoint.json"))
+        attempts = 0
+        while True:
+            try:
+                plan = compose_plan(
+                    engine, theme, corpus=corpus, n_chapters=6,
+                    checkpoint_path=os.path.join(out_dir, "checkpoint.json"))
+                break
+            except Exception as exc:  # noqa: BLE001 - GLM 限流/瞬断→断点重试
+                attempts += 1
+                if attempts >= 3:
+                    print(f"[factory] {slug} 三次尝试仍失败，跳过（账本不记，"
+                          f"下次重跑续作）: {exc}", flush=True)
+                    plan = None
+                    break
+                print(f"[factory] {slug} 第 {attempts} 次尝试失败：{exc}"
+                      f"——睡 90s 后从断点续作", flush=True)
+                time.sleep(90)
+        if plan is None:
+            continue
         save_plan(plan, out_dir)
         write_sku(ROOT, plan, plan_id=slug)
         spec = find_by_name("发布")
@@ -132,6 +149,7 @@ def main() -> int:
         built += 1
         print(f"[factory] {slug} 完成：{plan.get('score')} 分"
               f"（{time.time() - t0:.0f}s）已上架", flush=True)
+        time.sleep(30)                     # 案间冷却：让免费链喘口气
     print(f"\n[factory] 排产结束：本次出厂 {built} 案，累计 {len(done)}/"
           f"{len(THEMES)}", flush=True)
     return 0
