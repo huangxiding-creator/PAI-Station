@@ -18,6 +18,7 @@ from .proactive.first_scan import run_first_scan
 from .proactive.outbox import Outbox
 from .security.audit import AuditLog
 from .security.file_guard import FileGuard
+from .sense.deepread_engine import DeepReadEngine
 from .sense.fs_watcher import EventFilter, FsWatcher
 from .sense.incremental import IncrementalScanner
 from .sense.ingest import Ingester
@@ -92,6 +93,11 @@ class Runtime:
         self._incremental = IncrementalScanner(
             self._dirs, self.on_batch, self._inc_state,
             ignore_patterns=sense["ignore_patterns"])
+        # M10 微信深读（PROPOSAL_V2.md 第 6 章 + R13：夜间窗口+启动提醒；
+        # reader_fn 缺席 = 调度/提醒链上线而零读屏，后续实机接入注入）
+        self._deepread = DeepReadEngine(
+            state_path=os.path.join(data, "deepread.state.json"),
+            channel=channel if channel is not None else None)
         self._started = False
 
     # ---------- 感知入库链 ----------
@@ -155,6 +161,7 @@ class Runtime:
         """
         now = self._now()
         self._incremental_step(now)
+        self._deepread_step(now)
         if _mins(now) < self._pdca_time or self.outbox.is_quiet():
             return None
         today = _date_str(now)
@@ -188,6 +195,13 @@ class Runtime:
                               ingested=out.get("ingested", 0))
         except Exception as exc:  # noqa: BLE001 - 补扫失败不挡复盘
             _log.warning("增量补扫失败（服务继续）: %s", exc)
+
+    def _deepread_step(self, now) -> None:
+        """微信深读状态机（每拍过闸：窗口/提醒/熔断/让路内部幂等）。"""
+        try:
+            self._deepread.tick(now)
+        except Exception as exc:  # noqa: BLE001 - 深读故障不杀主循环
+            _log.warning("深读 tick 异常（服务继续）: %s", exc)
 
     def _last_pdca(self) -> str:
         try:
