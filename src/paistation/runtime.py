@@ -6,6 +6,7 @@ Runtime = FsWatcher→Ingester→MemoryStore（感知入库链）
 所有外部依赖（client/channel/watcher/时钟）可注入；client 缺席时
 全链路降级为规则模板——服务不因模型故障停摆（附录 P 底线）。
 """
+import datetime
 import json
 import logging
 import os
@@ -49,6 +50,15 @@ def _date_str(now) -> str:
     if hasattr(now, "tm_year"):
         return f"{now.tm_year:04d}-{now.tm_mon:02d}-{now.tm_mday:02d}"
     return now.strftime("%Y-%m-%d")
+
+
+def _as_datetime(now) -> datetime.datetime:
+    """struct_time → datetime：老路径双轨通吃，新引擎（深读/进化）契约
+    是 datetime（.hour/.isocalendar）——生产默认时钟 time.localtime 在
+    边界处归一，注入的 datetime 假钟原样通过。"""
+    if isinstance(now, time.struct_time):
+        return datetime.datetime(*now[:6])
+    return now
 
 
 def _hhmm(text: str) -> int:
@@ -108,7 +118,8 @@ class Runtime:
             from .evolve.proposer import EvolutionEngine
             self._evolution = EvolutionEngine(station_root=station_root,
                                               channel=channel,
-                                              now_fn=self._now)
+                                              now_fn=lambda: _as_datetime(
+                                                  self._now()))
         self._started = False
 
     # ---------- 感知入库链 ----------
@@ -211,7 +222,7 @@ class Runtime:
     def _deepread_step(self, now) -> None:
         """微信深读状态机（每拍过闸：窗口/提醒/熔断/让路内部幂等）。"""
         try:
-            self._deepread.tick(now)
+            self._deepread.tick(_as_datetime(now))
         except Exception as exc:  # noqa: BLE001 - 深读故障不杀主循环
             _log.warning("深读 tick 异常（服务继续）: %s", exc)
 

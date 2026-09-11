@@ -188,3 +188,20 @@ def test_serve_wires_runtime_lifecycle(tmp_path):
     assert rt.started == 1 and rt.stopped == 1
     assert rt.ticked == 2          # 每拍一次 PDCA 闸门检查
     assert rt.audit is not None    # 复用 serve 的审计实例
+
+
+def test_production_clock_struct_time_feeds_new_engines(tmp_path, caplog):
+    """实机雷（2026-09-11 守护重启实测暴露）：生产默认时钟是
+    time.localtime（struct_time），而深读/进化引擎契约是 datetime。
+    不注入 now_fn 时 daily_tick 也不许炸（夹具此前恒注 datetime 假钟，
+    该组合从未被测过）。"""
+    import logging
+
+    cfg = config.load(write_ini(tmp_path))
+    rt = Runtime(cfg, client=FakeClient(), channel=FakeChannel(),
+                 watcher_factory=FakeWatcher, station_root=tmp_path)
+    with caplog.at_level(logging.WARNING, logger="paistation.runtime"):
+        rt.daily_tick()
+    assert "深读 tick 异常" not in caplog.text
+    assert "进化提案步异常" not in caplog.text
+    rt.close()
