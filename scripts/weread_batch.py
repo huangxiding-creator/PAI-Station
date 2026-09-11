@@ -16,6 +16,7 @@ import argparse
 import configparser
 import hashlib
 import json
+import msvcrt                                      # Windows 文件锁（串行铁律）
 import os
 import re
 import sys
@@ -60,6 +61,30 @@ def load_safety() -> dict:
         "cooldown_seconds": conf.getint(
             "safety", "cooldown_seconds", fallback=120),
     }
+
+
+def acquire_extract_lock():
+    """串行铁律（2026-09-11 用户令："为避免被封号，请不要使用并行提取"）：
+    OS 级独占锁——同一时刻只允许一个提取进程。进程退出/崩溃自动释放，
+    无死锁残留；第二进程抢锁失败即拒绝启动（宁可拒跑，绝不并行）。
+    """
+    os.makedirs(RECON, exist_ok=True)
+    fh = open(os.path.join(RECON, "extract.lock"), "a+")
+    try:
+        fh.seek(0)
+        msvcrt.locking(fh.fileno(), msvcrt.LK_NBLCK, 1)
+    except OSError:
+        fh.close()
+        return None
+    try:
+        fh.seek(0)
+        fh.truncate()
+        fh.write(f'{{"pid": {os.getpid()}, '
+                 f'"since": "{time.strftime("%Y-%m-%dT%H:%M:%S")}"}}\n')
+        fh.flush()
+    except OSError:
+        pass                                        # 记录失败不影响锁语义
+    return fh                                       # 调用方持有至进程结束
 
 
 def daily_count() -> int:
@@ -179,6 +204,12 @@ def main() -> int:
     args = ap.parse_args()
     if not args.keyword and not args.book_id:
         ap.error("需要 --keyword 或 --book-id")
+
+    lock = acquire_extract_lock()                   # 串行铁律：抢不到锁即拒跑
+    if lock is None:
+        print("[batch] 已有另一提取进程在运行（_recon/extract.lock 被持有）——"
+              "账号安全红线：绝不两本及以上书同时提取，请等其结束再跑")
+        return 1
 
     safety = load_safety()
     done_today = daily_count()
