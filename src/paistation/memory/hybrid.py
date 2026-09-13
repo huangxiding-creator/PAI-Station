@@ -128,6 +128,59 @@ def _f32_blob(vec: np.ndarray) -> bytes:
     return np.asarray(vec, dtype=np.float32).tobytes()
 
 
+class FtsRoute:
+    """SQLite FTS5 全文路由（trigram 分词：中文连续子串可搜）。
+
+    trigram 需 ≥3 字符才有 token——两字短词查不到属正常降级
+    （vec 路由兜底）；非法查询语法一律吞掉回空，绝不向上抛。
+    """
+
+    def __init__(self, db_path: str | Path):
+        self._lock = threading.Lock()
+        self._db = sqlite3.connect(str(db_path), check_same_thread=False)
+        self._db.execute(
+            "CREATE VIRTUAL TABLE IF NOT EXISTS fts_docs USING fts5("
+            "path UNINDEXED, content, tokenize='trigram')")
+        self._db.commit()
+
+    def available(self) -> bool:
+        return True
+
+    def upsert(self, docs: list[tuple[str, str]]) -> int:
+        with self._lock:
+            cur = self._db.cursor()
+            for path, text in docs:
+                cur.execute("DELETE FROM fts_docs WHERE path=?", (path,))
+                cur.execute("INSERT INTO fts_docs (path, content) VALUES (?, ?)",
+                            (path, text))
+            self._db.commit()
+        return len(docs)
+
+    def search(self, query: str, k: int = 8) -> list[Hit]:
+        tokens = query.replace('"', " ").split()
+        if not tokens:
+            return []
+        phrase = " ".join(f'"{t}"' for t in tokens)
+        try:
+            with self._lock:
+                rows = self._db.execute(
+                    "SELECT path, bm25(fts_docs) FROM fts_docs "
+                    "WHERE fts_docs MATCH ? "
+                    "ORDER BY bm25(fts_docs) LIMIT ?",
+                    (phrase, int(k))).fetchall()
+        except sqlite3.Error as exc:
+            _log.warning("fts 查询失败（降级空回）: %s", exc)
+            return []
+        hits = []
+        for path, bm in rows:
+            hits.append(Hit(path=path, layer="L2", score=-float(bm),
+                            snippet="", source="fts"))
+        return hits
+
+    def close(self) -> None:
+        self._db.close()
+
+
 class VecRoute:
     """sqlite-vec 语义路由：独立 vec.db，path 即主键（upsert 替换语义）。"""
 
