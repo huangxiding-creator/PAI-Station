@@ -276,6 +276,9 @@ class TaskCardStore:
     def proposed(self) -> list[TaskCard]:
         return [c for c in self._cards.values() if c.status == "proposed"]
 
+    def confirmed(self) -> list[TaskCard]:
+        return [c for c in self._cards.values() if c.status == "confirmed"]
+
     def _set_status(self, card_id: str, status: str) -> None:
         card = self._cards.get(card_id)
         if card:
