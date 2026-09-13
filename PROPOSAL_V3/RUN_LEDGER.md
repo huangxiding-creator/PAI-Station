@@ -33,6 +33,12 @@
 | 09-13 | ✅ M2.3/2.5 检索注入接线完成（29 测试绿）：FtsRoute（FTS5 trigram 中文子串搜+非法语法吞掉回空）；FileIndexer（只读扫描+mtime 水位线增量+自身产物不自举）；ContextInjector（零命中回空串宁缺毋滥）；**金标准问答集 20 条**（12 文档语料，真实问句→命中正确文件→关键词入包全链路验收）。全量回归 735 passed | `src/paistation/memory/{hybrid,index,inject}.py` `tests/test_inject.py` `tests/test_golden_qa.py` `tests/fixtures/golden_*` |
 | 09-13 | ✅ 第 10 路调研回收（用户指令⑤）：**93 项**（≥50 达标，open-core 13/dual-license 10/saas-oss 15/marketplace 6/plugin-ecosystem 14/foundation 6/token-economy 6/cn-case 18/负面 5）。C14 抽查通过（JSON 可解析+schema 合规+relevance 无越界）。Top 情报：Civitai Buzz 积分闭环=非区块链最成功样本（FR17 直接参照）；ClawHub 头部技能恶意软件事件=市场安全前车之鉴；cal.com 闭源当天被分叉=开源信任的经济价值实证。ECOSYSTEM.md 生态飞轮设计排在 M2.6 后 | `RESEARCH_DOCKET/v3/10-oss-ecosystem-business/`（_all.json+DIGEST.md） |
 | 09-13 | ✅ M2.6 云感知连接器框架完成（22 测试绿）：RateLimiter 四件套（节流+冷却+日限额+熔断，全非阻塞拒绝不耗配额）；SessionVault DPAPI 加密（密文绑定本机用户复制即废，永不入同步范围）；CloudConnector 契约+opt-in 授权门+WatermarkStore 水位线；CloudSensingService 单线程串行轮询+异常进冷却零风暴；飞书首例连接器（可注入 transport 不打真平台+故障水位线原地踏步）。事件流增 cloud.doc.change/cloud.file.list。**M2 无限上下文全里程碑收官**（2.1-2.6 全绿，全量回归 757 passed） | `src/paistation/sense/cloud/`（846dfd4） |
+| 09-13 | ✅ **M3 任务发现+确认完成**：parse_deadline 相对日/星期/月日/时段+CJK 数字全解析；extract_task_cards 规则引擎（19 动作词命中才建卡，闲聊零误报优先；bigram Jaccard≥0.30 去重，重提=置信度证据）；InterruptionBudget 时机/内容分离（置信度≥0.6+24h 内+日预算 5 硬顶→即时，否则晨报）；ConfirmCenter notify/question/review 三模式+WinRT toast（EncodedCommand 绕 GBK）；**会议金标 9 句样本 3 卡零闲聊误报** | `src/paistation/proactive/`（ff13a88） |
+| 09-13 | ✅ **M4 执行闭环完成**：LlmGateway 多供应商按序 failover（不被任何上游卡脖子）；OpenAiCompatProvider 密钥只进请求头、错误只报类型零泄露；AgentRunner 记忆注入（检索故障裸跑）+runs/{card_id}.json 断点 done 幂等；Deliverer 落 08 成果/+回执 jsonl；ExecutionService confirmed→执行→交付→done（失败不误标）；**E2E 全链：语音→卡→确认→执行→交付→晨报清空**（暂停阻断/失败留 confirmed 可重试均验证） | `src/paistation/execute/`（5c7ee3e） |
+| 09-13 | ✅ **M5 用户建模完成**：ProfileModel 五层（identity/preference/knowledge/workflow/achievement）+双时间线（effective_to 封口不删可溯）+四操作；NightConsolidator 22:00-06:00 三提案（高频主题 n-gram 合并→knowledge/高频动作→workflow/陈旧 30 天→expire）全部 approved=False 出厂；ObsidianMirror 镜像只写有效+回写三判（值改封旧录新/行删失效/新行入库，pop 制防自匹配）。全量回归 804 passed | `src/paistation/profile/`（01e788c） |
+| 09-13 | ✅ **M6.4-6.8 技能资产五件套完成**（35 测试绿）：forge 案例层+repetition/failure_to_success 信号+SKILL.md 兼容提案+**升格闸**（promote 无 approved=True 直接 PermissionError）+git 版本化（commit+tag vN，回滚=checkout+提交留痕）；effects 滚动 10 次成功率 vs 基线→劣化>15% 且样本≥5 出回滚建议任务卡→一键回滚+基线重置；sync 用户自配远端（.gitignore 硬注入排除模式+ls-files 守卫拒推已追踪敏感文件+断网积压补推）；seed 扫 08 成果反推（LLM 升级位+章节模板兜底，已入库去重）；market meta.yaml（author/version/license/price）+export/import（安全扫描→同版拒覆盖） | `src/paistation/skills/`（573cf28） |
+| 09-13 | ✅ **M6.1-6.3+6.9 分发层完成**：tiers 探测（ctypes GlobalMemoryStatusEx+nvidia-smi）+三档映射（短板定档，低配关深读退 hashing，12 核 32G 才 bge-m3）；wizard 3 步首启（密钥只记环境变量名，误粘 sk- 拒收降级默认名，幂等）；build.ps1（测试门禁→wheel→离线 wheels）+installer.iss（免管理员 {localappdata}\PAI-Station\app，断网可装，**卸载不删数据目录**）+postinstall.ps1（ensurepip 离线 venv+doctor）；fetch_bge_m3.py 后置模型下载（运行时零依赖）；doctor 增 git/向导健康检查；acceptance_e2e.py **六环一键验收本机 6/6 通过**。.gitignore 豁免 src/paistation/dist | `src/paistation/dist/` `setup/`（255cabd） |
+| 09-13 | 🏁 **一周里程碑 M1-M6 全部完成**：测试 465→839 全绿（+374）；金标准 20 条+会议金标+E2E 三层验收网；四条用户中途指令全部兑现（FR10b 效果跟踪回滚/FR14 GitHub 备份/FR16 成果反推全自动+晨报确认/FR17 市场接口预留）；升级位齐备（bge-m3/LLM 抽卡/云连接器新源即插） | 全仓 |
 
 ## 状态板
 
@@ -44,7 +50,11 @@
 - [x] **M1 常驻骨架+语音感知完成**（09-13）：ipc/daemon/watchdog/audio/vad/asr/voice_events/pipeline/tray/entry 十件全绿；E2E=TTS→silero→SenseVoice→「你好，请帮我调研一下腾讯办公助手的定价策略…」入事件流；真机 10s 采集+杀进程自愈+Mutex 双开拒绝验证；全量回归 ~465 测试通过；已推送 origin/main（318fc69）
 - [x] **M2 无限上下文完成**（09-13）：2.1 embeddings/2.2 hybrid+RRF/2.3 Everything/2.4 layers/2.5 注入接线+金标准 20 条/2.6 云连接器框架；757 测试全绿
 - [x] ECOSYSTEM.md 生态飞轮设计完成（09-13）：双层飞轮（个体 skill-forge×群体市场）+SKILL.md 兼容+积分锚定算力+capability 白名单安全+收入三层+治理宪法五条+本周施工边界
-- [ ] M3 任务发现+确认 → M4 执行闭环 → M5 用户建模 → M6 打包安装器+进化 v0
+- [x] **M3 任务发现+确认完成**（09-13，ff13a88）：截止解析+规则抽卡零闲聊误报+打扰预算+三模式确认+会议金标
+- [x] **M4 执行闭环完成**（09-13，5c7ee3e）：多供应商网关+断点幂等+交付回执+E2E 全链
+- [x] **M5 用户建模完成**（09-13，01e788c）：五层双时间线+夜间提案闸+Obsidian 双向镜像
+- [x] **M6 打包+进化 v0 完成**（09-13，573cf28+255cabd）：技能资产五件套（forge 版本化/effects 回滚/sync 备份/seed 反推/market 元数据）+分发层（tiers/wizard/打包三件/验收 6/6）
+- [x] 一周里程碑收官：**839 tests passed**（起点 ~465，+374）
 
 ## 红线备忘（每轮心跳自查）
 
