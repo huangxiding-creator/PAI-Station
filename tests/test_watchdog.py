@@ -14,6 +14,15 @@ from paistation.resident.watchdog import (
     Watchdog,
 )
 
+# 弹窗/泄漏教训（2026-09-13）：mintty 下无控制台父进程 spawn 的 python.exe
+# 会各自新开可见控制台；venv python.exe 是蹦床（再 spawn 基础解释器），
+# 心跳 pid ≠ Popen pid，teardown 只杀一方就漏一串永生进程+常驻窗口。
+# 对策：①daemon 直接用基础解释器（单进程，pid 可对上）；
+# ②全部子进程 CREATE_NO_WINDOW（弹窗绝迹）；③teardown 重试读心跳 +
+# 双 pid 无条件 /T 整树击杀 + 断言死透（再泄漏直接红测试）。
+_BASE_PY = getattr(sys, "_base_executable", sys.executable)
+_NO_WINDOW = subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
+
 
 def _write_hb(path, seq=1, note="tick#1", pid=None, age=0.0):
     data = {"pid": pid or os.getpid(), "ts": time.time() - age,
@@ -72,7 +81,8 @@ def test_proc_exists_true_for_current():
 
 def test_proc_exists_false_after_reap():
     proc = subprocess.Popen([sys.executable, "-c", "import sys; sys.exit(0)"],
-                            creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
+                            creationflags=subprocess.CREATE_NEW_PROCESS_GROUP
+                            | _NO_WINDOW)
     pid = proc.pid
     proc.wait(timeout=10)
     # 已退出的 PID：Windows 会残留句柄直到 reap；OpenProcess 可能仍成功
@@ -98,24 +108,32 @@ HB_CHILD = (
 @pytest.fixture()
 def child_env(tmp_path):
     hb = tmp_path / "heartbeat.json"
-    cmd = [sys.executable, "-c", HB_CHILD, str(hb)]
-    proc = subprocess.Popen(cmd)
+    cmd = [_BASE_PY, "-c", HB_CHILD, str(hb)]
+    proc = subprocess.Popen(cmd, creationflags=_NO_WINDOW)
     deadline = time.time() + 10
     while not hb.exists() and time.time() < deadline:
         time.sleep(0.05)
     yield hb, cmd, proc
-    # 收尾：尽力清掉可能的重拉子进程
+    # 收尾：心跳并发非原子写（50ms 一刷）——重试解析防半截 JSON 竞态；
+    # 双 pid 无条件 /T 整树击杀（含看护器重拉的新 daemon）
     pid = None
-    if hb.exists():
+    for _ in range(6):
         try:
             pid = json.loads(hb.read_text(encoding="utf-8"))["pid"]
-        except Exception:  # noqa: BLE001
-            pass
-    proc.poll() or subprocess.run(["taskkill", "/PID", str(proc.pid), "/F", "/T"],
-                                  capture_output=True)
-    if pid and pid != proc.pid:
-        subprocess.run(["taskkill", "/PID", str(pid), "/F", "/T"],
-                       capture_output=True)
+            break
+        except (OSError, json.JSONDecodeError, ValueError):
+            time.sleep(0.05)
+    for victim in {proc.pid, pid}:
+        if victim:
+            subprocess.run(["taskkill", "/PID", str(victim), "/F", "/T"],
+                           capture_output=True, creationflags=_NO_WINDOW)
+    deadline = time.time() + 3
+    while time.time() < deadline and (ProcInfo.exists(proc.pid)
+                                      or (pid and ProcInfo.exists(pid))):
+        time.sleep(0.1)
+    assert not ProcInfo.exists(proc.pid), "daemon 未死透（弹窗泄漏复现）"
+    if pid:
+        assert not ProcInfo.exists(pid), "重拉 daemon 未死透（弹窗泄漏复现）"
 
 
 def test_watchdog_relanches_killed_daemon(child_env):
@@ -126,7 +144,7 @@ def test_watchdog_relanches_killed_daemon(child_env):
     assert wd.fails == 0
     # 杀死
     subprocess.run(["taskkill", "/PID", str(proc.pid), "/F", "/T"],
-                   capture_output=True)
+                   capture_output=True, creationflags=_NO_WINDOW)
     proc.wait(timeout=10)
     # 心跳拨旧避免竞态判活
     old = time.time() - 999
