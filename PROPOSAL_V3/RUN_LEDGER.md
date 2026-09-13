@@ -29,6 +29,10 @@
 | 09-13 | 📌 用户中途指令③：**感知层升维=云端连接器框架**（FR15）——百度网盘/腾讯微云/飞书云文档/腾讯文档等，用户给账号或扫码授权后登录态永久保存（DPAPI 加密 vault），持续感知云端文件与工作入统一事件流；"只要用户能提供就能感知"，新源=注册即接入；每连接器必配账号安全四件套+opt-in 可撤授权。已落 REQUIREMENTS/ARCHITECTURE（事件流增 cloud.* 类型+连接器协议契约）/WBS（M2.6 框架+首个示例连接器）。与账号安全第一红线完全兼容：节流/冷却/日限额/熔断为框架强制件 | `PROPOSAL_V3/` 三文档更新 |
 | 09-13 | 📌 用户中途指令④：**执行专业化=技能资产化**——①成果反推 skill 库（扫历史成果 LLM 反推方法论固化 SKILL.md，全自动零安排，FR16）；②任务过程自动沉淀案例→升格；③**skill 交易市场生态**（共享入市、下载赚/耗积分 token，FR17 本周接口预留+L3b 商业模式）。红线调和：形成全自动、上岗走晨报一键确认（进化提案永不自批保留）+FR10b 效果跟踪回滚 | `PROPOSAL_V3/` 四文档更新 |
 | 09-13 | ✅ M1.5 VAD 守门（9 测试绿）+ M1.7 事件流（8 测试绿）完成；M1.6 SenseVoice int8 经 GitHub 超时改走 hf-mirror 下载完成（239MB）；M1 管线集成件 pipeline.py 测试就绪待实现 | `src/paistation/sense/` |
+| 09-13 | ✅ M2.1/2.2/2.4 记忆检索核心 TDD 完成（15 测试绿）：HashingEmbedder 兜底+bge-m3 升级位；Hit 契约+RRF(k=60) 共识优先+TokenBudget 首条保底；Everything 在位即用降级；VecRoute sqlite_vec 独立 vec.db（path 主键替换语义，hashing 往返"企业版定价"语义命中验证）；LayeredLoader L0/L1 卡缓存/L2 片段+pack 预算打包+_credentials 硬编码黑名单脱敏[NFR2]。全量回归 706 passed 零破坏 | `src/paistation/memory/` `tests/test_hybrid.py` `tests/test_layers.py` |
+| 09-13 | ✅ M2.3/2.5 检索注入接线完成（29 测试绿）：FtsRoute（FTS5 trigram 中文子串搜+非法语法吞掉回空）；FileIndexer（只读扫描+mtime 水位线增量+自身产物不自举）；ContextInjector（零命中回空串宁缺毋滥）；**金标准问答集 20 条**（12 文档语料，真实问句→命中正确文件→关键词入包全链路验收）。全量回归 735 passed | `src/paistation/memory/{hybrid,index,inject}.py` `tests/test_inject.py` `tests/test_golden_qa.py` `tests/fixtures/golden_*` |
+| 09-13 | ✅ 第 10 路调研回收（用户指令⑤）：**93 项**（≥50 达标，open-core 13/dual-license 10/saas-oss 15/marketplace 6/plugin-ecosystem 14/foundation 6/token-economy 6/cn-case 18/负面 5）。C14 抽查通过（JSON 可解析+schema 合规+relevance 无越界）。Top 情报：Civitai Buzz 积分闭环=非区块链最成功样本（FR17 直接参照）；ClawHub 头部技能恶意软件事件=市场安全前车之鉴；cal.com 闭源当天被分叉=开源信任的经济价值实证。ECOSYSTEM.md 生态飞轮设计排在 M2.6 后 | `RESEARCH_DOCKET/v3/10-oss-ecosystem-business/`（_all.json+DIGEST.md） |
+| 09-13 | ✅ M2.6 云感知连接器框架完成（22 测试绿）：RateLimiter 四件套（节流+冷却+日限额+熔断，全非阻塞拒绝不耗配额）；SessionVault DPAPI 加密（密文绑定本机用户复制即废，永不入同步范围）；CloudConnector 契约+opt-in 授权门+WatermarkStore 水位线；CloudSensingService 单线程串行轮询+异常进冷却零风暴；飞书首例连接器（可注入 transport 不打真平台+故障水位线原地踏步）。事件流增 cloud.doc.change/cloud.file.list。**M2 无限上下文全里程碑收官**（2.1-2.6 全绿，全量回归 757 passed） | `src/paistation/sense/cloud/`（846dfd4） |
 
 ## 状态板
 
@@ -37,7 +41,10 @@
 - [x] proposal-forge：PROPOSAL.md + SCORECARD.json + BUSINESS_MODEL.md（verdict=proceed, 加权 .83）
 - [x] ✋ 提案审批闸：**用户已批准（2026-09-13，选"批准，开始一周开发"）**。种子三假设按默认生效；Phase 4 计划门由提案内 M1-M6 里程碑一并覆盖（提案含完整计划，用户显式授权批准后全自主）——透明记录此解释
 - [x] Phase 0-6 文档：VISION / REQUIREMENTS / ARCHITECTURE / WBS 全部落盘（Phase 1/2/2b/3 被 scorecard+docket 吸收，透明记录）
-- [ ] Phase 7-8 一周全自主开发：**M1 常驻骨架+感知（进行中）** → M2 无限上下文 → M3 任务发现 → M4 执行闭环 → M5 用户建模 → M6 打包安装器
+- [x] **M1 常驻骨架+语音感知完成**（09-13）：ipc/daemon/watchdog/audio/vad/asr/voice_events/pipeline/tray/entry 十件全绿；E2E=TTS→silero→SenseVoice→「你好，请帮我调研一下腾讯办公助手的定价策略…」入事件流；真机 10s 采集+杀进程自愈+Mutex 双开拒绝验证；全量回归 ~465 测试通过；已推送 origin/main（318fc69）
+- [x] **M2 无限上下文完成**（09-13）：2.1 embeddings/2.2 hybrid+RRF/2.3 Everything/2.4 layers/2.5 注入接线+金标准 20 条/2.6 云连接器框架；757 测试全绿
+- [x] ECOSYSTEM.md 生态飞轮设计完成（09-13）：双层飞轮（个体 skill-forge×群体市场）+SKILL.md 兼容+积分锚定算力+capability 白名单安全+收入三层+治理宪法五条+本周施工边界
+- [ ] M3 任务发现+确认 → M4 执行闭环 → M5 用户建模 → M6 打包安装器+进化 v0
 
 ## 红线备忘（每轮心跳自查）
 
