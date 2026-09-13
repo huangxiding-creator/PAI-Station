@@ -40,6 +40,9 @@
 | 09-13 | ✅ **M6.1-6.3+6.9 分发层完成**：tiers 探测（ctypes GlobalMemoryStatusEx+nvidia-smi）+三档映射（短板定档，低配关深读退 hashing，12 核 32G 才 bge-m3）；wizard 3 步首启（密钥只记环境变量名，误粘 sk- 拒收降级默认名，幂等）；build.ps1（测试门禁→wheel→离线 wheels）+installer.iss（免管理员 {localappdata}\PAI-Station\app，断网可装，**卸载不删数据目录**）+postinstall.ps1（ensurepip 离线 venv+doctor）；fetch_bge_m3.py 后置模型下载（运行时零依赖）；doctor 增 git/向导健康检查；acceptance_e2e.py **六环一键验收本机 6/6 通过**。.gitignore 豁免 src/paistation/dist | `src/paistation/dist/` `setup/`（255cabd） |
 | 09-13 | 🏁 **一周里程碑 M1-M6 全部完成**：测试 465→839 全绿（+374）；金标准 20 条+会议金标+E2E 三层验收网；四条用户中途指令全部兑现（FR10b 效果跟踪回滚/FR14 GitHub 备份/FR16 成果反推全自动+晨报确认/FR17 市场接口预留）；升级位齐备（bge-m3/LLM 抽卡/云连接器新源即插） | 全仓 |
 | 09-13 | ✅ 心跳轮·Phase 9 QA 覆盖率 pass：全仓 **89%**（门槛 80%）；补测三盲区——entry.py 服务入口装配链（0%→降级矩阵下骨架不散）/main.py CLI 分发契约（--check/--config/--version）/market.install zip 全路径（M6.8 重构后的安全扫描+meta 校验闭环）。847 tests，推送 51963c4 | `tests/test_phase9_qa.py` |
+| 09-13 | ✅ **Phase 10 Ralph 审计轮**（用户令"全部完成/全部自主完成"）：时间线重构+浪费计算+S1-S6 根因修复全验证——lint 70→0；test_repo_hygiene 源码树 gitignore 吞噬守卫（dist 撞名教训约束化）；**cleanroom 干净房闸**（全新 venv 纯离线装→--version→六环验收，实测通过=M6.9 B 节可自动化部分实证）；弱项补测 2。847→851 tests 全绿，收敛判定停轮（剩余未覆盖=硬件/模型/真平台合理留白）。修正：误入库的 setup/wheels/.coverage.json 撤出改 ignore | `PROPOSAL_V3/RALPH_AUDIT.md` `scripts/cleanroom_test.py`（2182ecc+262f65a） |
+| 09-13 | ✅ **Phase 12 进化复盘**：EVOLUTION.md 胶囊——可重复方法 4 条（三层验收网/降级矩阵/永不自批三层实现/干净房闸）、失败→约束 S1-S6 全部约束化、可复用判断 4 条（批准≠终点/覆盖率数字≠质量/包名先查惯例/全自动与安全闸拆动作调和）、进化决策表+下轮候选。跨项目记忆沉淀 cleanroom-gate-pattern | `PROPOSAL_V3/EVOLUTION.md` |
+| 09-13 | 🏆 **V3 周期全收官**：调研 10 路 454 项 → 提案（.83 proceed）→ 批准 → M1-M6 + Phase 9/10/12 全部完成；465→851 tests；唯余真 VM 双击验收待用户 | 全仓 |
 
 ## 状态板
 

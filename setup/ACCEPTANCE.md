@@ -13,6 +13,17 @@
 技能锻造+回滚 / 备份推送（本地 bare）/ 技能包导出导入。
 全假件零网络零密钥；产物在临时目录，验收完即焚。
 
+## A+. 干净房验证（2026-09-13 已通过 ✅）
+
+```powershell
+.venv\Scripts\python.exe -X utf8 scripts\cleanroom_test.py
+```
+
+模拟新机器：产 wheel+离线 wheels → 临时目录全新 venv（零 dev 依赖）
+→ `pip install --no-index` 纯离线装 → 干净房内 `--version` + A 节六环。
+**首跑实证**：paistation 1.0.0 可跑、6/6 环节通过、退出码 0。
+这是 B 节真 VM 双击之外能自动化的全部。
+
 ## B. 虚拟机双击验收（发布前必做一次）
 
 环境：全新 Windows 10/11 VM（或新用户目录），只装：
