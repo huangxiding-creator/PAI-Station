@@ -40,3 +40,9 @@
   - C5 approval：HMAC-SHA256 签名授权日志（密钥外部注入；篡改/换钥必验假）
   - C6 knob：METR 旋钮（无干预 4h 间隔翻倍，12h 封顶，单调）
   - 全量 **1001 passed**（977+24），ruff 0（首跑 1 例偶败未复现，两连绿）
+- 🏁 **Phase D 收官（D1-D4 全绿，market 包+sidecar 25 测例）**：
+  - D1 x402：HTTP 402 微结算语义（invoice 解析→支付处理器注入→带证明重放）；**免费期也全程计量**（402 即刻入账 meter）
+  - D2 市场协议：publish=签名 skill card（HMAC+内容指纹）/install=验签+依赖白名单+版本缓存 skills-cache
+  - D3 跨标准适配器：Anthropic 一键导入（导入即 eval：空壳拒收）/OpenClaw 导入补 version/→MCP manifest/→AGENTS.md
+  - D4 IM 侧挂：/run /status /help→Gateway 执行→回执（待确认明确标注）；AstrBot 同协议可挂
+  - 全量 **1026 passed**（1001+25），ruff 0；真钱微付费闭环留待用户配置支付处理器（协议+计量已就绪）
