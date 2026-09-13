@@ -12,7 +12,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
 
@@ -63,7 +63,7 @@ class ProfileModel:
                 dup = e
         if dup is not None:
             dup.effective_to = now                # 双时间线：旧事实封口
-        eid = hashlib.sha1(f"{layer}|{key}|{value}".encode("utf-8")
+        eid = hashlib.sha1(f"{layer}|{key}|{value}".encode()
                            ).hexdigest()[:10]
         entry = ProfileEntry(id=eid, layer=layer, key=key, value=value,
                              confidence=confidence, source=source,

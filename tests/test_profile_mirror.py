@@ -46,8 +46,8 @@ def test_mirror_delete_line_expires_entry(tmp_path):
     mirror = ObsidianMirror(profile=p, root=tmp_path / "obsidian")
     mirror.write()
     pref = tmp_path / "obsidian" / "PAI-Profile" / "preference.md"
-    lines = [l for l in pref.read_text(encoding="utf-8").splitlines()
-             if "作息" not in l]
+    lines = [ln for ln in pref.read_text(encoding="utf-8").splitlines()
+             if "作息" not in ln]
     pref.write_text("\n".join(lines) + "\n", encoding="utf-8")
     stats = mirror.sync_back()
     assert stats["expired"] >= 1

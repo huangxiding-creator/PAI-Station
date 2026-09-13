@@ -16,7 +16,7 @@ import argparse
 import configparser
 import hashlib
 import json
-import msvcrt                                      # Windows 文件锁（串行铁律）
+import msvcrt  # Windows 文件锁（串行铁律）
 import os
 import re
 import sys

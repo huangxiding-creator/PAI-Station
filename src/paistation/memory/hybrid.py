@@ -211,7 +211,7 @@ class VecRoute:
         vecs = self._emb.embed([t for _, t in docs])
         with self._lock:
             cur = self._db.cursor()
-            for (path, _text), vec in zip(docs, vecs):
+            for (path, _text), vec in zip(docs, vecs, strict=False):
                 row = cur.execute("SELECT doc_id FROM doc_map WHERE path=?",
                                   (path,)).fetchone()
                 if row:  # 替换：删旧向量，doc_id 复用

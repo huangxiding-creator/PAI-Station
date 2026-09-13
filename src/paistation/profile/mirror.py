@@ -63,7 +63,7 @@ class ObsidianMirror:
                         layer=layer, key=hit[0], value=hit[1],
                         confidence=hit[2], source="obsidian-镜像回写")
                     stats["updated"] += 1
-            for pid, (key, value, conf) in parsed.items():  # 剩余=新行
+            for _pid, (key, value, conf) in parsed.items():  # 剩余=新行
                 if any(e.key == key and e.value == value
                        for e in self._profile.query(layer=layer)):
                     continue                              # 同值已存在不重复

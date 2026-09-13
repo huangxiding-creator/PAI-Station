@@ -7,7 +7,6 @@
 from paistation.foundry.frame_extract import parse_toc
 from paistation.foundry.frame_synthesis import synthesize
 
-
 TOC = """第一章 合同风险管理
 1.1 风险识别
 1.2 风险分担

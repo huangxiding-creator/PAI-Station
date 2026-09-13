@@ -1,9 +1,5 @@
 """M1.7 事件流：schema 校验+日滚动+隐私红线（音频零落盘）。"""
-import json
-import time
-from datetime import datetime, timedelta
-
-import pytest
+from datetime import datetime
 
 from paistation.sense.voice_events import (
     ALLOWED_TYPES,

@@ -14,7 +14,7 @@ from dataclasses import dataclass, field, replace
 from datetime import datetime
 from pathlib import Path
 
-from .registry import ORGANS, find, organ_dir
+from .registry import ORGANS, organ_dir
 
 CREDENTIALS_DIRNAME = "_credentials"
 CHAIN_FILENAME = "chain.jsonl"

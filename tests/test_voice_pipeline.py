@@ -1,5 +1,4 @@
 """M1 感知管线集成：块→VAD→(段)→ASR→事件流，回调零阻塞+暂停语义。"""
-import json
 import os
 import queue
 import time

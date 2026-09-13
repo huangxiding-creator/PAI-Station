@@ -5,7 +5,8 @@ from paistation.organ import doctor
 
 
 def test_doctor_full_house(tmp_path):
-    import subprocess, sys
+    import subprocess
+    import sys
     repo_root = Path(__file__).resolve().parents[1]
     subprocess.run([sys.executable, "tools/bootstrap_organs.py",
                     "--root", str(tmp_path)], check=True,
@@ -18,7 +19,8 @@ def test_doctor_full_house(tmp_path):
 
 
 def test_doctor_detects_missing_constitution(tmp_path):
-    import subprocess, sys
+    import subprocess
+    import sys
     repo_root = Path(__file__).resolve().parents[1]
     subprocess.run([sys.executable, "tools/bootstrap_organs.py",
                     "--root", str(tmp_path)], check=True,

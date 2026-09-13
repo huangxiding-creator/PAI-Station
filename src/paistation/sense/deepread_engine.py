@@ -14,7 +14,7 @@ import tempfile
 from datetime import datetime, timedelta
 from pathlib import Path
 
-from .deepread import BudgetGuard, CircuitBreaker, NightWindow, Presence, Reminder
+from .deepread import BudgetGuard, CircuitBreaker, NightWindow
 
 _log = logging.getLogger("paistation.deepread")
 

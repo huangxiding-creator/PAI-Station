@@ -13,7 +13,6 @@ import subprocess
 from datetime import datetime
 from pathlib import Path
 
-
 # ---- 案例层 ----
 
 class CaseLog:
@@ -79,8 +78,8 @@ class SkillRepo:
         except RuntimeError:
             return []
         versions = sorted(
-            (int(t.rsplit("/v", 1)[1]) for t in out.split()
-             if t.startswith(f"{name}/v") and t.rsplit("/v", 1)[1].isdigit()))
+            int(t.rsplit("/v", 1)[1]) for t in out.split()
+             if t.startswith(f"{name}/v") and t.rsplit("/v", 1)[1].isdigit())
         return [f"{name}/v{v}" for v in versions]
 
     def rollback(self, name: str, tag: str) -> None:

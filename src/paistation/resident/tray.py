@@ -83,7 +83,7 @@ class TrayHost:
     # ---- 菜单（复用 V2 菜单语义）----
 
     def build_menu(self):
-        from paistation.ui.tray import MenuAction, build_menu
+        from paistation.ui.tray import build_menu
 
         class _State:  # 适配 V2 TrayState 形状
             def __init__(self, paused):

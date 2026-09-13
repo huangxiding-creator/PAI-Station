@@ -18,7 +18,6 @@ from paistation.resident.ipc import (
     load_or_create_authkey,
 )
 
-
 # ---- 纯协议层 ----
 
 def test_request_roundtrip_preserves_fields():

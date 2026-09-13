@@ -59,7 +59,7 @@ def synthesize(frames: list[tuple[str, list[dict]]] | list[list[dict]],
     if cluster_fn is not None:
         groups = cluster_fn([node["title"] for _, node in all_nodes])
         buckets: list[_Cluster] = [_Cluster(title="") for _ in groups]
-        for (name, node), group_idx in zip(all_nodes, groups):
+        for (name, node), group_idx in zip(all_nodes, groups, strict=False):
             buckets[group_idx].members.append((name, node))
         for b in buckets:
             if b.members:

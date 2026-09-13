@@ -9,8 +9,6 @@
 """
 from datetime import datetime, timedelta
 
-import pytest
-
 from paistation.sense.deepread import (
     BudgetGuard,
     CircuitBreaker,
@@ -18,7 +16,6 @@ from paistation.sense.deepread import (
     Presence,
     Reminder,
 )
-
 
 # ---------------------------------------------------------------------------
 

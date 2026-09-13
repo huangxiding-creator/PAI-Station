@@ -1,7 +1,6 @@
 """M6.1 硬件分级探测器+三档配置映射：低配机器也能跑（普适性红线）。"""
-import pytest
 
-from paistation.dist.tiers import tier_of, TIER_SETTINGS, detect
+from paistation.dist.tiers import TIER_SETTINGS, detect, tier_of
 
 
 def test_tier_rules():

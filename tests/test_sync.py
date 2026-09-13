@@ -5,8 +5,6 @@
 """
 import subprocess
 
-import pytest
-
 from paistation.skills.forge import SkillForge
 from paistation.skills.sync import BackupSync
 

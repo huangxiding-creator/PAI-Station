@@ -6,7 +6,6 @@ import pytest
 
 from paistation.sense.asr import AsrEngine, ModelManager, find_model_dir
 
-
 # ---- 模型管理器（纯逻辑：候选根目录扫描+就绪判定）----
 
 def test_model_manager_finds_sensevoice_dir(tmp_path):

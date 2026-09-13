@@ -7,7 +7,7 @@
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 
 DEFAULT_MIN_QUESTIONS = 300
 DEFAULT_MAX_QUESTIONS = 600
@@ -43,7 +43,7 @@ class Question:
 
 def _norm(text: str) -> str:
     """文本归一化（去空白与标点）用于去重。"""
-    return re.sub(r"[\s，。？！、；：""''（）\[\]【】,.?!;:()\"']+", "", text)
+    return re.sub(r"[\s，。？！、；：""''（）\\[\\]【】,.?!;:()\"']+", "", text)
 
 
 def _grade(frequency: float) -> str:

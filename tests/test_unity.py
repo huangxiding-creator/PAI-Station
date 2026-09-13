@@ -19,7 +19,6 @@ from paistation.evolve.unity import (
     u_score,
 )
 
-
 # ---------------------------------------------------------------- 分量
 
 def test_npi_full_and_zero():

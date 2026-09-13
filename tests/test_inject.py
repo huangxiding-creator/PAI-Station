@@ -1,11 +1,8 @@
 """M2.5 检索注入接线：FTS 路由+文件索引增量+上下文注入器。"""
 from pathlib import Path
 
-import pytest
-
 from paistation.memory.embeddings import HashingEmbedder
 from paistation.memory.hybrid import FtsRoute, VecRoute
-
 
 # ---- FTS5 路由（trigram 分词，中文子串可搜）----
 
@@ -91,8 +88,8 @@ def test_injector_builds_context_pack(tmp_path):
     emb = HashingEmbedder(dim=256)
     vec = VecRoute(db_path=tmp_path / "vec.db", embedder=emb)
     fts = FtsRoute(db_path=tmp_path / "fts.db")
-    from paistation.memory.index import FileIndexer
     from paistation.memory.hybrid import HybridRetriever
+    from paistation.memory.index import FileIndexer
 
     FileIndexer(routes=[vec, fts]).scan(tmp_path)
     injector = ContextInjector(retriever=HybridRetriever(routes={"vec": vec, "fts": fts}))

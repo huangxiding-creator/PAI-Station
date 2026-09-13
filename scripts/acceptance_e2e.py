@@ -13,17 +13,16 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from paistation.dist.tiers import detect                # noqa: E402
-from paistation.dist.wizard import FirstRunWizard        # noqa: E402
-from paistation.execute.agent import AgentRunner         # noqa: E402
+from paistation.dist.tiers import detect  # noqa: E402
+from paistation.dist.wizard import FirstRunWizard  # noqa: E402
+from paistation.execute.agent import AgentRunner  # noqa: E402
 from paistation.execute.service import ExecutionService  # noqa: E402
-from paistation.proactive.confirm import (               # noqa: E402
-    ConfirmCenter, RecordingNotifier)
+from paistation.proactive.confirm import ConfirmCenter, RecordingNotifier  # noqa: E402
 from paistation.proactive.taskcards import extract_task_cards  # noqa: E402
-from paistation.skills.effects import EffectTracker      # noqa: E402
-from paistation.skills.forge import SkillForge           # noqa: E402
-from paistation.skills.market import SkillMarket, write_meta, read_meta  # noqa: E402,E501
-from paistation.skills.sync import BackupSync            # noqa: E402
+from paistation.skills.effects import EffectTracker  # noqa: E402
+from paistation.skills.forge import SkillForge  # noqa: E402
+from paistation.skills.market import SkillMarket, read_meta, write_meta  # noqa: E402,E501
+from paistation.skills.sync import BackupSync  # noqa: E402
 
 VOICE = {"ts": "2026-09-13T09:10:00", "type": "voice.transcript",
          "source": "mic",

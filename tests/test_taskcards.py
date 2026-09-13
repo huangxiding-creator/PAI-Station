@@ -1,8 +1,7 @@
 """M3.1 任务卡抽取：规则引擎默认+LLM 升级位+证据指针+去重。"""
 from datetime import datetime
 
-from paistation.proactive.taskcards import (
-    TaskCardStore, extract_task_cards, parse_deadline)
+from paistation.proactive.taskcards import TaskCardStore, extract_task_cards, parse_deadline
 
 
 def _ev(text, ts="2026-09-13T10:00:00", ev_type="voice.transcript"):

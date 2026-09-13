@@ -4,7 +4,6 @@
 CLI 分发（用户面契约）/market.install zip 链（M6.8 重构后经
 import_from 的完整路径）。
 """
-import sys
 import zipfile
 from pathlib import Path
 
@@ -12,7 +11,6 @@ import pytest
 
 from paistation.main import main
 from paistation.resident import entry
-
 
 # ---- entry.py：装配链（降级矩阵下骨架不散） ----
 

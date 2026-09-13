@@ -1,5 +1,4 @@
 """M1.2 主控 daemon：Mutex 防双开 + 心跳契约 + IPC 调度 + PAUSE 熔断。"""
-import json
 import os
 import time
 
@@ -12,7 +11,6 @@ from paistation.resident.daemon import (
     PauseFlag,
     SingleInstance,
 )
-
 
 # ---- 心跳契约（判活铁律 v3：进程∧新鲜∧证据）----
 
@@ -108,7 +106,6 @@ _CTR = [0]
 
 
 def _free_pipe():
-    import threading
     _CTR[0] += 1
     return f"pai-daemon-test-{int(time.time() * 1000)}-{_CTR[0]}"
 

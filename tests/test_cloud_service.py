@@ -1,6 +1,5 @@
 """M2.6 云感知框架：连接器注册/授权门/水位线/服务编排（FR15）。"""
-from paistation.sense.cloud.base import (CloudConnector, ConnectorRegistry,
-                                         WatermarkStore)
+from paistation.sense.cloud.base import CloudConnector, ConnectorRegistry, WatermarkStore
 from paistation.sense.cloud.rate import RateLimiter
 from paistation.sense.cloud.service import CloudSensingService
 from paistation.sense.voice_events import EventStream

@@ -3,8 +3,7 @@ import json
 
 import pytest
 
-from paistation.execute.agent import (
-    AgentRunner, LlmGateway, OpenAiCompatProvider, ProviderError)
+from paistation.execute.agent import AgentRunner, LlmGateway, OpenAiCompatProvider, ProviderError
 from paistation.memory.hybrid import FtsRoute
 from paistation.memory.index import FileIndexer
 from paistation.memory.inject import ContextInjector

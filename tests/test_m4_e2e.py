@@ -50,9 +50,9 @@ def test_voice_to_delivery_e2e(tmp_path):
     artifacts = list((tmp_path / "data" / "08 成果").glob("*.md"))
     assert len(artifacts) == 1
     assert "680" in artifacts[0].read_text(encoding="utf-8")
-    receipts = [json.loads(l) for l in
+    receipts = [json.loads(ln) for ln in
                 (tmp_path / "data" / "deliveries" / "receipts.jsonl")
-                .read_text(encoding="utf-8").splitlines() if l.strip()]
+                .read_text(encoding="utf-8").splitlines() if ln.strip()]
     assert receipts[0]["card_id"] == card.card_id
 
     # 4) 晨报清空：已完成的不再出现

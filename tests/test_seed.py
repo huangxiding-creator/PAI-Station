@@ -2,9 +2,10 @@
 
 扫 08 成果/ → 反推方法论 → SKILL.md 候选（LLM 升级位，模板兜底）。
 """
-from paistation.skills.seed import AchievementSeeder
-from paistation.skills.forge import SkillForge
 import pytest
+
+from paistation.skills.forge import SkillForge
+from paistation.skills.seed import AchievementSeeder
 
 
 def _doc(title, *sections):

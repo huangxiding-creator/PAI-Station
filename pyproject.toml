@@ -50,3 +50,6 @@ select = ["E", "F", "W", "I", "UP", "B"]
 [tool.ruff.lint.per-file-ignores]
 # scripts/ 统一采用 sys.path 引导后 import 本仓库包的直跑模式
 "scripts/*" = ["E402"]
+# 长行在字符串模板内部（PowerShell toast 脚本/LLM prompt），拆行会改内容
+"src/paistation/proactive/confirm.py" = ["E501"]
+"src/paistation/foundry/report_dense.py" = ["E501"]

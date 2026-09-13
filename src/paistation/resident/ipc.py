@@ -11,7 +11,6 @@ import logging
 import os
 import secrets
 import threading
-
 from multiprocessing.connection import AuthenticationError, Client, Listener
 
 _log = logging.getLogger("paistation.resident.ipc")

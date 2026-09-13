@@ -11,7 +11,6 @@ from paistation.foundry.question_gen import (
     generate_questions,
 )
 
-
 NODES = [
     {"id": "ch1.s1", "title": "合同风险识别", "frequency": 0.9},
     {"id": "ch1.s2", "title": "索赔程序", "frequency": 0.6},

@@ -13,7 +13,7 @@ from pathlib import Path
 
 from .frame_extract import parse_toc
 from .frame_synthesis import synthesize
-from .question_gen import check_gate, generate_questions, to_records
+from .question_gen import generate_questions, to_records
 
 MANIFEST = "manifest.json"
 

@@ -70,7 +70,7 @@ class LlmGateway:
         self._providers = list(providers)
 
     @classmethod
-    def from_config(cls, cfg: dict) -> "LlmGateway":
+    def from_config(cls, cfg: dict) -> LlmGateway:
         providers = []
         for c in cfg.get("providers", []):
             if c.get("type") == "openai-compat":

@@ -1,5 +1,4 @@
 """M2.6 云连接器登录态保险库：DPAPI 加密+落盘密文+可删除。"""
-import pytest
 
 from paistation.sense.cloud.vault import SessionVault
 

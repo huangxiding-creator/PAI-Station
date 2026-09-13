@@ -179,7 +179,7 @@ class TaskCard:
         return d
 
     @classmethod
-    def from_dict(cls, d: dict) -> "TaskCard":
+    def from_dict(cls, d: dict) -> TaskCard:
         ddl = d.get("deadline")
         d = dict(d)
         d["deadline"] = datetime.fromisoformat(ddl) if ddl else None

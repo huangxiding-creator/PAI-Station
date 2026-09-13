@@ -4,7 +4,7 @@
 """
 import pytest
 
-from paistation.skills.forge import CaseLog, SkillForge, SkillRepo
+from paistation.skills.forge import CaseLog, SkillForge
 
 
 def _case(title, outcome, ts="2026-09-13T10:00:00"):

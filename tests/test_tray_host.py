@@ -1,5 +1,4 @@
 """M1.8 托盘宿主：IPC 状态镜像+菜单命令映射+断线退避（纯逻辑）。"""
-import pytest
 
 from paistation.resident.tray import TrayHost, map_menu_action
 
@@ -28,8 +27,10 @@ def test_map_menu_action_to_ipc_cmd():
 
 
 def test_host_refresh_mirrors_daemon_status():
-    t = FakeTransport({"status": {"ok": True, "data": {"paused": True,
-                                                       "services": [{"name": "sense", "healthy": True}]}}})
+    payload = {"ok": True, "data": {"paused": True,
+                                "services": [{"name": "sense",
+                                              "healthy": True}]}}
+    t = FakeTransport({"status": payload})
     host = TrayHost(transport=t)
     host.refresh()
     assert host.paused is True

@@ -1,7 +1,6 @@
 """M6.3 后置模型下载脚本：plan/check_state 纯函数可测，下载本身不进测试。"""
-from pathlib import Path
 
-from scripts.fetch_bge_m3 import plan, check_state
+from scripts.fetch_bge_m3 import check_state, plan
 
 
 def test_plan_targets_under_dest(tmp_path):
