@@ -25,3 +25,10 @@
   - scripts/heritage_cleanroom.py：全新 venv 离线装 wheel→CLI 造资产→heritage 产包→继承人 import 复活→HERITAGE-CLEANROOM-OK；全量 930 passed，ruff 0
 - 🏁 **Phase A 收官**：主权层 MVP 完整落地（记忆/决策/画像/遗忘/审计/遗产/三向适配器/CLI 七动作）
 - 🚧 Phase B WBS 细化完成（心跳轮）：B1 出口闸 done-token / B2 记忆自检三套统一入口 / B3 任务级进化代谢 / B4 金标准增长管线（origin+质量闸）/ B5 上下文预算+fresh-context（后置）/ B6 验收回放；地基盘点=金标准 40 条在 tests/fixtures、evolve/ 骨架、画像双时间线、audit_vault 遗忘合规
+- 🏁 **Phase B 收官（B1-B6 全绿）**：
+  - B1 出口闸：gate/exit.py ExitToken+validate（done=测试全绿+ruff+evidence 存在+status）+ CLI `--sovereign exit`（退出码=裁决）
+  - B2 自检三套：gate/selfcheck.py（冲突不变量/vault 纯读结构回归+画像结构/坟回流）；重构 protocol.forget_violations 公共函数；夹具健康态补 MANIFEST
+  - B3 任务级进化：evolve/task_mutation.py（propose 幂等→A/B→KEEP/DISCARD 末事件行语义，append-only）
+  - B4 金标准管线：gate/golden_growth.py（origin 溯源+bigram/unigram max Jaccard≥0.70 拒稀释；拒收不入库）
+  - B5 上下文预算：evolve/budget.py（无预算=无授权；超支→fresh-context 复盘候选→复盘闭环）
+  - B6 验收：全量 **977 passed**（938+39），ruff 0；四判据达成（任务级进化闭环测试/管线可用/冲突回归绿/done-token 收口）

@@ -249,13 +249,10 @@ def forget(data_dir: str | Path, kind: str, target: str, actor: str = "user",
 
 # ---- audit ----
 
-def audit_vault(data_dir: str | Path, report_path: str | Path | None = None,
-                clock=None) -> dict:
+def forget_violations(data_dir: str | Path, clock=None) -> tuple[list[dict], int]:
+    """坟回流扫描：被忘内容重回活动视图=违规（audit 与 gate.selfcheck 共用）。"""
     data_dir = Path(data_dir)
     vdir = _vault_dir(data_dir)
-    build_manifest(vdir, clock=clock)
-    integrity = vault_validate(vdir)
-
     vault = MemoryVault(vdir, clock=clock)
     active_texts = [e.text for e in vault.entries()]
     from .vault import DecisionLedger
@@ -286,13 +283,30 @@ def audit_vault(data_dir: str | Path, report_path: str | Path | None = None,
                 violations.append({
                     "kind": "decision", "target": tomb.get("target"),
                     "why": "被忘决策仍在决策列表"})
+    return violations, len(tombs)
+
+
+def audit_vault(data_dir: str | Path, report_path: str | Path | None = None,
+                clock=None) -> dict:
+    data_dir = Path(data_dir)
+    vdir = _vault_dir(data_dir)
+    build_manifest(vdir, clock=clock)
+    integrity = vault_validate(vdir)
+
+    from .vault import DecisionLedger
+
+    ledger = DecisionLedger(vdir / "decisions", clock=clock)
+    live_decisions = ledger.list_decisions(include_superseded=True)
+    model = ProfileModel(data_dir)
+
+    violations, tombs_n = forget_violations(data_dir, clock=clock)
 
     actives = ledger.list_decisions()
     with_alts = sum(1 for d in actives
                     if "否决理由" in ledger.body(d.id))
     report = {
         "integrity": integrity,
-        "forget_compliance": {"checked": len(tombs),
+        "forget_compliance": {"checked": tombs_n,
                               "violations": violations},
         "profile": {"entries_active": len(model.query()),
                     "with_source": sum(1 for e in model.query() if e.source)},
@@ -300,7 +314,7 @@ def audit_vault(data_dir: str | Path, report_path: str | Path | None = None,
                       "superseded": len(live_decisions) - len(actives),
                       "with_alternatives":
                           with_alts / len(actives) if actives else 1.0},
-        "forgotten": tombs,
+        "forgotten": _read_jsonl(vdir / "forgotten.jsonl"),
     }
     if report_path:
         Path(report_path).write_text(_render_audit_md(report),

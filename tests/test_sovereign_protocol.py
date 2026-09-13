@@ -6,7 +6,7 @@
 import json
 
 from paistation.profile.model import ProfileModel
-from paistation.sovereign.format import vault_validate
+from paistation.sovereign.format import build_manifest, vault_validate
 from paistation.sovereign.protocol import (
     audit_vault,
     export_vault,
@@ -34,6 +34,7 @@ def _seed_data(data_dir):
     (skill / "SKILL.md").write_text(
         "---\nname: weekly-report\ndescription: 周报锻造\n---\n# 周报\n",
         encoding="utf-8")
+    build_manifest(data_dir / "sovereign")  # 健康态自带指纹（B2 自检语义）
     return profile, vault, ledger
 
 

@@ -279,6 +279,38 @@ def sovereign_cli(args, config_path: str) -> int:
                                               heir=args.heir or "")
         print(f"[sovereign] heritage → {report['dest']}")
         return 0
+    if action == "selfcheck":
+        from paistation.gate.selfcheck import selfcheck as run_selfcheck
+
+        report = run_selfcheck(data_dir)
+        mark = "✅ 全绿" if report["ok"] else "❌ 有违规"
+        print(f"[sovereign] selfcheck：{mark} 报告 → {report['report']}")
+        return 0 if report["ok"] else 1
+    if action == "exit":
+        import subprocess
+        from datetime import datetime
+
+        from paistation.gate.exit import ExitToken, write_exit_token
+
+        try:
+            commit = subprocess.run(
+                ["git", "rev-parse", "--short", "HEAD"],
+                capture_output=True, text=True, timeout=10,
+            ).stdout.strip()
+        except (OSError, subprocess.SubprocessError):
+            commit = ""
+        token = ExitToken(
+            task_id=args.target or "unnamed", ts=datetime.now().isoformat(timespec="seconds"),
+            status=args.status or "done",
+            evidence=[e.strip() for e in (args.evidence or "").split(",") if e.strip()],
+            commit=commit, tests_total=args.tests_total or 0,
+            tests_failed=args.tests_failed or 0, ruff_ok=bool(args.ruff_ok),
+            note=args.rationale or "")
+        verdict = write_exit_token(data_dir, token)
+        mark = "✅ done" if verdict["done"] else "❌ not-done"
+        print(f"[sovereign] exit-token {token.task_id}: {mark}"
+              + (f"（{'; '.join(verdict['reasons'])}）" if verdict["reasons"] else ""))
+        return 0 if verdict["done"] else 1
     print(f"[sovereign] 未知动作：{action}")
     return 2
 
@@ -304,16 +336,23 @@ def main(argv: list[str] | None = None) -> int:
                     help="启动系统托盘（暂停感知/设置/退出）")
     ap.add_argument("--sovereign", metavar="ACTION",
                     choices=["remember", "decide", "export", "import",
-                             "forget", "audit", "heritage"],
-                    help="主权层（V4 Phase A）：资产法定化七命令")
+                             "forget", "audit", "heritage", "exit",
+                             "selfcheck"],
+                    help="主权层（V4）：资产法定化七命令 + exit 出口闸 + selfcheck 自检（Phase B）")
     ap.add_argument("--dest", help="目标路径（export/heritage 目的地；audit 报告）")
     ap.add_argument("--src", help="来源路径（import 的主权包）")
-    ap.add_argument("--target", help="目标文本/主题（remember/forget/decide）")
+    ap.add_argument("--target", help="目标文本/主题（remember/forget/decide/exit 任务名）")
     ap.add_argument("--kind", choices=["memory", "profile", "decision"],
                     help="forget 类别")
     ap.add_argument("--chosen", help="decide：选定方案")
     ap.add_argument("--rationale", help="decide：理由")
     ap.add_argument("--alts", help='decide：被否方案 JSON（[{"option","why_rejected"}]）')
+    ap.add_argument("--status", choices=["done", "failed", "running"],
+                    help="exit：任务状态")
+    ap.add_argument("--evidence", help="exit：证据路径（逗号分隔，相对 cwd）")
+    ap.add_argument("--tests-total", type=int, default=0, help="exit：测试总数")
+    ap.add_argument("--tests-failed", type=int, default=0, help="exit：失败数")
+    ap.add_argument("--ruff-ok", type=int, default=1, help="exit：ruff 是否 0（1/0）")
     ap.add_argument("--heir", help="heritage：继承人")
     ap.add_argument("--source", help="remember：来源标注")
     ap.add_argument("--config", default=os.environ.get("PAI_INI", DEFAULT_INI),
