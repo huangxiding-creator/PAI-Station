@@ -25,7 +25,9 @@ ENERGY_PRECHECK_DB = -45.0  # 回调级粗筛：低于此直接丢（省 worker 
 
 
 class VoicePipeline:
-    """daemon 服务协议：start/stop/tick(paused)。"""
+    """daemon 服务协议：name/start/stop/tick(paused)。"""
+
+    name = "sense.voice"
 
     def __init__(self, stream: EventStream, vad_model=None,
                  model_dir=None, on_event=None, mic=False, loopback=False):
