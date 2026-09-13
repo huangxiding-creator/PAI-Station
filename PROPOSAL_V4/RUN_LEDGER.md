@@ -46,3 +46,10 @@
   - D3 跨标准适配器：Anthropic 一键导入（导入即 eval：空壳拒收）/OpenClaw 导入补 version/→MCP manifest/→AGENTS.md
   - D4 IM 侧挂：/run /status /help→Gateway 执行→回执（待确认明确标注）；AstrBot 同协议可挂
   - 全量 **1026 passed**（1001+25），ruff 0；真钱微付费闭环留待用户配置支付处理器（协议+计量已就绪）
+- 🏁 **Phase E 收官（E1-E4，governance 包 10 测例）+ V4 五阶段全案完成**：
+  - E1 章程：三律（永不卖用户数据/数据本地/一键带走）+open-core 清单+商业边界；CHARTER.md 已发布，audit_charter 机器校验一致（说一套做一套=假章程防线）
+  - E2 小时数：替你完成的小时数报表（exits done-token × meter seconds，机器账本背书非自述）
+  - E3 托管最小可用：sync（export 幂等）+backup（微秒时间戳 zip 只增不删）
+  - E4 仪表盘：信息贸易顺差指标（intake:/output: 计量，逆差=退化警报）
+  - 全量 **1036 passed**（871→1036，V4 期间净增 165 测例），ruff 0
+- 🏆 **V4 全案状态**：A 主权层 / B 验证资产 / C 控制面 / D 网络节点 / E 商业治理 五阶段全部落地；每阶段独立 commit+推送+done-token 收口；后续=运营（金标准 40→200+/7 天无人值守实测/真钱微付费/真 VM 双击验收——均留用户参与）
