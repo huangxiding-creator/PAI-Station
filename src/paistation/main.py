@@ -222,6 +222,67 @@ def serve(config_path: str, db: str | None = None, max_ticks: int | None = None,
     return 0
 
 
+def sovereign_cli(args, config_path: str) -> int:
+    """主权层七命令（Phase A5）：remember/decide/export/import/forget/audit/heritage。"""
+    try:
+        cfg = config.load(config_path)
+    except config.ConfigError as exc:
+        print(f"[sovereign] 配置非法：{exc}")
+        return 1
+    from pathlib import Path
+
+    from paistation.sovereign import heritage as heritage_mod
+    from paistation.sovereign import protocol
+    from paistation.sovereign.vault import DecisionLedger, MemoryVault
+
+    data_dir = Path(cfg["privacy"]["data_dir"])
+    action = args.sovereign
+    if action == "remember":
+        MemoryVault(data_dir / "sovereign").remember(
+            args.target or "", source=args.source or "cli")
+        print(f"[sovereign] remembered: {(args.target or '')[:40]}")
+        return 0
+    if action == "decide":
+        import json
+
+        alternatives = json.loads(args.alts) if args.alts else None
+        ledger = DecisionLedger(data_dir / "sovereign" / "decisions")
+        decision = ledger.decide(topic=args.target or "", chosen=args.chosen or "",
+                                 rationale=args.rationale or "",
+                                 alternatives=alternatives)
+        print(f"[sovereign] decision: {decision.id}")
+        return 0
+    if action == "export":
+        report = protocol.export_vault(data_dir, args.dest)
+        print(f"[sovereign] export → {args.dest}（{report['files']} 文件）")
+        return 0
+    if action == "import":
+        result = protocol.import_vault(args.src, data_dir)
+        print(f"[sovereign] import ← {args.src}"
+              f"（记忆 {result['memories']} / 决策 {result['decisions']}"
+              f" / 画像 {result['profile']}）")
+        return 0
+    if action == "forget":
+        report = protocol.forget(data_dir, args.kind, args.target or "")
+        print(f"[sovereign] forget[{args.kind}] ×{report['forgotten']}"
+              f"（坟墓：sovereign/forgotten.jsonl）")
+        return 0
+    if action == "audit":
+        report_path = args.dest or (data_dir / "sovereign" / "AUDIT.md")
+        report = protocol.audit_vault(data_dir, report_path=report_path)
+        healthy = (report["integrity"]["ok"]
+                   and not report["forget_compliance"]["violations"])
+        print(f"[sovereign] audit：{'✅' if healthy else '❌'} 报告 → {report_path}")
+        return 0 if healthy else 1
+    if action == "heritage":
+        report = heritage_mod.heritage_bundle(data_dir, args.dest,
+                                              heir=args.heir or "")
+        print(f"[sovereign] heritage → {report['dest']}")
+        return 0
+    print(f"[sovereign] 未知动作：{action}")
+    return 2
+
+
 def main(argv: list[str] | None = None) -> int:
     # GBK 控制台兜底：✓/✗ 等字符在中文 Windows 默认代码页下不可编码，
     # 服务/脚本场景（WinSW 日志、PowerShell）必须免疫（errors=replace）。
@@ -241,6 +302,20 @@ def main(argv: list[str] | None = None) -> int:
                     help="首扫镜像：白名单只读扫描生成 10 条陈述并投递企微")
     ap.add_argument("--gui", action="store_true",
                     help="启动系统托盘（暂停感知/设置/退出）")
+    ap.add_argument("--sovereign", metavar="ACTION",
+                    choices=["remember", "decide", "export", "import",
+                             "forget", "audit", "heritage"],
+                    help="主权层（V4 Phase A）：资产法定化七命令")
+    ap.add_argument("--dest", help="目标路径（export/heritage 目的地；audit 报告）")
+    ap.add_argument("--src", help="来源路径（import 的主权包）")
+    ap.add_argument("--target", help="目标文本/主题（remember/forget/decide）")
+    ap.add_argument("--kind", choices=["memory", "profile", "decision"],
+                    help="forget 类别")
+    ap.add_argument("--chosen", help="decide：选定方案")
+    ap.add_argument("--rationale", help="decide：理由")
+    ap.add_argument("--alts", help='decide：被否方案 JSON（[{"option","why_rejected"}]）')
+    ap.add_argument("--heir", help="heritage：继承人")
+    ap.add_argument("--source", help="remember：来源标注")
     ap.add_argument("--config", default=os.environ.get("PAI_INI", DEFAULT_INI),
                     help=f"INI 路径（默认 {DEFAULT_INI}，环境变量 PAI_INI 可覆盖）")
     ap.add_argument("--version", action="version",
@@ -250,6 +325,8 @@ def main(argv: list[str] | None = None) -> int:
         return check(args.config)
     if args.check_llm:
         return check_llm(args.config)
+    if args.sovereign:
+        return sovereign_cli(args, args.config)
     if args.doctor:
         results = doctor(args.config)
         for name, ok in results:
