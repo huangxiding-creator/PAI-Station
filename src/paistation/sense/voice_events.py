@@ -15,6 +15,7 @@ RATE = 16000
 ALLOWED_TYPES = frozenset({
     "voice.transcript", "voice.utterance", "voice.wakeword",
     "ambient.event", "fs.change", "screen.ocr", "im.webhook", "cron.tick",
+    "cloud.doc.change", "cloud.file.list",
 })
 _EVENT_FIELDS = ("ts", "type", "source", "text", "speaker", "evidence", "meta")
 
