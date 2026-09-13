@@ -1,0 +1,259 @@
+{
+  "track": "08-postmortem-china",
+  "generated_at": "2026-09-13",
+  "items": [
+    {
+      "name": "Humane AI Pin（尸检）",
+      "url": "https://techcrunch.com/2025/02/18/humanes-ai-pin-is-dead-as-hp-buys-startups-assets-for-116m/",
+      "kind": "product",
+      "stars": null,
+      "one_liner": "$699+月租的无屏 AI 胸针烧掉 $230M 后于 2025-02 关停，HP 以 $116M 收购资产并裁员团队（创始人 2025-07 离开 HP，资产化为 HP IQ）。",
+      "why_relevant": "个人 AI 硬件最著名的整体死亡案例：解决不存在的问题、强制订阅、被手机侧多模态 AI（Apple Intelligence 等）正面碾过。",
+      "dimension": "business",
+      "signal_for_v4": "尸检教训：常驻个人 AI 不要做专机+订阅（凡手机/PC 能做的别单独做硬件）；成本模型里不得含月租式暗坑。V4 的入口应复用用户已有设备（托盘/耳机/眼镜外挂），Humane 的死法是「硬件税+功能替代」双重绞杀。",
+      "source_note": "cn.bing（Chrome MCP）搜索 'Humane AI Pin shutting down HP acquires assets'，SERP 含 TechCrunch/Fortune/Verge 多源互证"
+    },
+    {
+      "name": "Rabbit R1（尸检）",
+      "url": "https://www.digitalapplied.com/blog/ai-product-failures-2026-sora-humane-rabbit-lessons",
+      "kind": "product",
+      "stars": null,
+      "one_liner": "卖掉约 13 万台的「LAM 大动作模型」AI 伙伴机，被拆穿只是 Playwright 脚本+硬编码密钥+Perplexity 透传后信任破产，公司转向 web 自动化，设备被弃养。",
+      "why_relevant": "与 PAI-Station「agent 代操作」主张同赛道：Rabbit 证明了把自动化包装成「魔法模型」的叙事一旦被审计拆穿即不可逆死亡。",
+      "dimension": "tech",
+      "signal_for_v4": "尸检教训：每个 agent 动作必须可审计、可回放、可解释（V3 的人审闸门恰是反例的解药）；营销上绝不造「黑盒魔法」叙事，主动公开操作链路反而是护城河。",
+      "source_note": "cn.bing（Chrome MCP）搜索 'Rabbit R1 flop sales 2025 company pivot'，佐证 rabbit.tech/newsroom 官网存续"
+    },
+    {
+      "name": "HuggingChat 关停（尸检）",
+      "url": "https://thelettertwo.com/2025/07/01/hugging-face-ends-huggingchat-teases-more-integrated-future/",
+      "kind": "product",
+      "stars": null,
+      "one_liner": "Hugging Face 的免费开源聊天前端 HuggingChat 于 2025-07-01 由 CTO Julien Chaumond 宣布关停，「为更整合的新助手让路」。",
+      "why_relevant": "连坐拥模型生态的 Hugging Face 都养不起一个「模型壳」：无差异化、无留存、无付费理由的聊天界面是负资产。",
+      "dimension": "business",
+      "signal_for_v4": "尸检教训：价值绝不能沉淀在「聊天壳」层。V4 的留存资产必须是用户的记忆库/技能库/工作流（AI-Station 的 OKF+技能账本路线正确），壳层可随时换模型、换 UI。",
+      "source_note": "cn.bing（Chrome MCP）搜索 'HuggingChat shutdown 2025'，多源（theaieconomy/thelettertwo/alternativeto/dataconomy）一致 2025-07-01/02"
+    },
+    {
+      "name": "Dot / New Computer（尸检）",
+      "url": "https://techcrunch.com/2025/09/05/personalized-ai-companion-app-dot-is-shutting-down/",
+      "kind": "product",
+      "stars": null,
+      "one_liner": "被公认为设计最好的「与你一起成长的个人 AI」Dot 于 2025-09-05 宣布关停，官方站明言 winding down，团队被 Perplexity 收编，2026-02 化身为 Perplexity Computer。",
+      "why_relevant": "与 PAI-Station「个人成长型 AI」愿景最接近的独立产品之死：设计极致也扛不住获客与推理成本，归宿是被平台吸收。",
+      "dimension": "business",
+      "signal_for_v4": "尸检教训：①个人 AI 独立产品必须尽早自造血（本地模型+订阅混合），不能赌融资；②「被收购即数据死」应成为设计约束——本地数据主权（可导出、离线最小功能集）本身就是对 Dot 用户创伤的卖点；③情感陪伴只能当副产品，主价值必须是可度量的任务产出。",
+      "source_note": "cn.bing（Chrome MCP）搜索 'Dot app New Computer Perplexity acquired'，官方 new.computer 首页 winding-down 声明+TechCrunch 互证"
+    },
+    {
+      "name": "Google Assistant 终结（尸检）",
+      "url": "https://www.androidheadlines.com/2026/08/google-assistant-shutdown-date-android-gemini-september-4.html",
+      "kind": "product",
+      "stars": null,
+      "one_liner": "服役近十年的 Google Assistant 于 2026-09-04 从 Android 手机/平板/Wear OS 正式移除，全面替换为 Gemini；报道直指替换后在部分机型上更慢、体验倒退。",
+      "why_relevant": "巨头示范：宁可杀死「快而稳」的成熟助手也要换 LLM 内核——旧式指令助手的护城河（可靠性/速度）不再构成价值锚。",
+      "dimension": "vision",
+      "signal_for_v4": "尸检教训（双面）：①个人 AI 的竞争力已从「响应快/稳」迁移到「懂我+能替我做事」，V4 不要把目标锚在旧指标；②平台位（Android 助手位、OS 级入口）说没就没——独立产品必须拥有自己的常驻锚点（托盘/热键/IM），这是 PAI-Station 桌面常驻路线的旁证。",
+      "source_note": "cn.bing（Chrome MCP）搜索 'Google Assistant shut down August 2025 Gemini'，SERP 显示确切日期 2026-09-04（androidheadlines/techtimes 等）"
+    },
+    {
+      "name": "Inflection AI / Pi（尸检）",
+      "url": "https://www.turingpost.com/p/inflectionai",
+      "kind": "company",
+      "stars": null,
+      "one_liner": "融资 $1.5B、估值 $4B 的消费陪伴 AI 公司 2024 年被微软「acqui-hire 式收编」（创始人+多数员工+技术授权约 $650M），放弃 Pi 消费者陪伴，转型企业 API。",
+      "why_relevant": "「纯陪伴型消费 AI」单位经济（推理成本 vs 留存价值）跑不通的最早大样本；陪伴情感不产生付费闭环。",
+      "dimension": "business",
+      "signal_for_v4": "尸检教训：情感陪伴是留存粘合剂而非付费理由。V4 的商业闭环必须挂在任务产出（省时间/赚钱/交付物）上，情感层只做体验增量。",
+      "source_note": "cn.bing（Chrome MCP）搜索 'Inflection AI Pi Microsoft founders enterprise pivot'，turingpost/eesel/aiwiki 多源一致"
+    },
+    {
+      "name": "Moxie / Embodied 破产（尸检）",
+      "url": "https://moxierobots.com/story",
+      "kind": "product",
+      "stars": null,
+      "one_liner": "$800 的儿童 AI 陪伴机器人 Moxie 因 Embodied Inc 2024-12 破产而集体「睡死」，上万儿童被迫与「朋友」告别引发哀伤伦理风暴；一年后被新资方复活（官网自述 'Moxie slept. For a year. But…'）。",
+      "why_relevant": "云依赖陪伴硬件=公司死则产品死的极端案例；与 PAI-Station 的常驻/记忆功能同构——用户把情感投进产品，产品死亡成为伦理事件。",
+      "dimension": "tech",
+      "signal_for_v4": "尸检教训：所有依赖在线服务的能力必须设计「遗产模式」——本地可用的最小功能集+一键全量导出。V4 的记忆库（OKF/git-native）天然满足，应把「公司死了你的 AI 还活着」写成显性承诺与卖点。",
+      "source_note": "cn.bing（Chrome MCP）搜索 'Moxie robot Embodied bankruptcy'，latintimes/greenbot/theaicemetery 与官网互证"
+    },
+    {
+      "name": "Talkie 美区下架（尸检·中国出海）",
+      "url": "https://pandaily.com/minimaxs-emotional-companion-product-talkie-is-suspected-to-be-delisted-in-the-us",
+      "kind": "product",
+      "stars": null,
+      "one_liner": "MiniMax 的全球爆款陪伴 App Talkie（美区百万级用户）2024-12 被 Apple 美区 App Store 以隐私/内容/地缘原因一夜下架，后更名 Talkie Lab 求生，国内版星野继续。",
+      "why_relevant": "中国出海陪伴 AI 的「无常驻权」样本：平台治理+中美地缘可以零通知杀死分发渠道。",
+      "dimension": "business",
+      "signal_for_v4": "尸检教训：分发渠道本身就是死因变量。V4 桌面本地安装+自有更新通道（GitHub Releases 直发）是对应用商店治理风险的直接免疫；若做内容生态，合规熔断要前置。",
+      "source_note": "cn.bing（Chrome MCP）搜索 'Talkie MiniMax removed US App Store'，pandaily/techinasia/ctol 多源一致"
+    },
+    {
+      "name": "Bee → Amazon（复录+新进展）",
+      "url": "https://techcrunch.com/2025/07/22/amazon-acquires-bee-the-ai-wearable-that-records-everything-you-say/",
+      "kind": "company",
+      "stars": null,
+      "one_liner": "基线已录的 $50 常听 AI 腕带 Bee 于 2025-07-22 被 Amazon 收购（重大新进展）：「录下你说的一切」的合法性最终由巨头生态背书收编。",
+      "why_relevant": "与 Humane 之死对照：同为常听硬件，Bee 以低价+收购退场而非暴毙——常听类个人 AI 的终局是成为大平台的数据触角。",
+      "dimension": "business",
+      "signal_for_v4": "信号：用户对「被大厂收编的常听设备」的信任天花板极低。V4 的本地优先+用户可控录音边界恰是 Amazon 永远无法复制的差异化定位，应显式对标营销。",
+      "source_note": "cn.bing（Chrome MCP）搜索 'Amazon acquires Bee AI wearable 2025'，TechCrunch 首发+多源"
+    },
+    {
+      "name": "Friend（存活对照）",
+      "url": "https://www.wired.com/story/the-friend-2-necklace-can-talk-back-to-you-now/",
+      "kind": "product",
+      "stars": null,
+      "one_liner": "AI 项链 Friend 靠 $1M 被涂鸦地铁广告等营销奇观维持存在感，2026-07 发布能开口说话的 Friend 2——没死，但也仍是小众陪伴硬件。",
+      "why_relevant": "陪伴型个人 AI 硬件的「幸存但天花板可见」对照样本，校准 V4 不高估陪伴赛道规模。",
+      "dimension": "business",
+      "signal_for_v4": "信号：纯陪伴定位撑不起百倍愿景（连营销天才也只能续命）；注意力入口+任务价值才是规模主线。V4 不做陪伴优先。",
+      "source_note": "cn.bing（Chrome MCP）搜索 'Friend AI pendant 2025'，Fortune/WIRED/TechCrunch 互证"
+    },
+    {
+      "name": "The AI Cemetery（尸检方法学资源）",
+      "url": "https://theaicemetery.com/moxie-robot/",
+      "kind": "article",
+      "stars": null,
+      "one_liner": "专门收录死亡 AI 产品的「AI 墓场」数据库站点，含 Moxie 等条目化死因档案。",
+      "why_relevant": "给 V4 提供持续可查的同类项目死因库，避免重复踩坑；也是竞品尸检的系统化外部对照源。",
+      "dimension": "ecosystem",
+      "signal_for_v4": "方法信号：V4 立项文档应附「死因对照表」——每个新功能提案必须对照已知死法（订阅硬件/魔法叙事/壳层无差异化/云依赖无遗产模式）做检查。",
+      "source_note": "Moxie 搜索 SERP 中顺带发现"
+    },
+    {
+      "name": "OpenManus（中国开源）",
+      "url": "https://github.com/FoundationAgents/OpenManus",
+      "kind": "repo",
+      "stars": 58291,
+      "one_liner": "MetaGPT 团队 2025-03 开源复刻 Manus 的通用 agent，数日爆红，现 58.3k stars。",
+      "why_relevant": "基线已录闭源 Manus，但开源复刻体量（6 万星级）未录：中国开源社区把「闭源 agent 产品」平权化的速度以天计。",
+      "dimension": "ecosystem",
+      "signal_for_v4": "信号：agent 框架本身没有护城河（任何闭源能力数日内被开源复刻）。V4 的护城河必须放在框架之外——个人数据资产、技能账本与记忆连续性（AI-Station 已有资产），框架层保持开源可替换。",
+      "source_note": "gh search repos openmanus（GitHub API 直查，star 数实时）"
+    },
+    {
+      "name": "AstrBot（中国开源）",
+      "url": "https://github.com/AstrBotDevs/AstrBot",
+      "kind": "repo",
+      "stars": 40412,
+      "one_liner": "40.4k stars 的多 IM 平台个人 AI agent 框架（QQ/微信/Telegram 等），插件生态活跃，官方描述自称「openclaw alternative」。",
+      "why_relevant": "中国「个人 AI 助手」的实际最大载体不是独立 App 而是 IM 机器人框架——用户在哪里，agent 就寄生在哪里。",
+      "dimension": "ecosystem",
+      "signal_for_v4": "信号：V4 在中国的分发第一站应是 IM 接入（微信/企微/QQ 侧挂）而非独立客户端；AstrBot 插件生态证明该路径已有 4 万星级的需求验证，PAI-Station 可做其「重型宿主」。",
+      "source_note": "gh search repos astrbot（GitHub API 直查）"
+    },
+    {
+      "name": "通义 App 并入夸克（中国整合）",
+      "url": "https://zhuanlan.zhihu.com/p/16742440652",
+      "kind": "product",
+      "stars": null,
+      "one_liner": "2024-12 阿里将通义从阿里云分拆、ToC 团队并入夸克（智能信息事业群），澎湃 2025-03 称之为「夸克夺嫡」——大模型旗舰 App 让位于「AI 超级框」。",
+      "why_relevant": "基线已录夸克但未录此整合事件：中国大厂收敛「多 AI App」为单一超级入口的标志性重组。",
+      "dimension": "business",
+      "signal_for_v4": "信号：巨头把个人 AI 收敛为「框+搜索+场景」，恰把「跨应用的个人主权工作台」空出来——用户不愿把全部个人数据锁进单一巨头框里，V4 的跨生态中立位（本地优先）是被巨头战略让出来的空档。",
+      "source_note": "cn.bing（Chrome MCP）中文搜索，知乎速递+澎湃『夸克夺嫡』互证"
+    },
+    {
+      "name": "支小宝（蚂蚁·中国增量）",
+      "url": "https://www.antgroup.com/news-media/press-releases/1725523200000",
+      "kind": "product",
+      "stars": null,
+      "one_liner": "支付宝 2024-09-05 外滩大会发布的「国内首个服务型 AI 独立 App」AI 生活管家，基于蚂蚁百灵，场景感知记忆通勤/消费习惯，连接支付宝生态订票打车点咖啡。",
+      "why_relevant": "基线未录：中国「AI 管家独立 App」的大厂样本——成立的前提是背后有服务生态（支付/出行/本地生活）可连接。",
+      "dimension": "ecosystem",
+      "signal_for_v4": "信号：中国用户要的「个人 AI」=帮我办事（服务闭环），不是陪我聊天。V4 中国化要打通的「手」是服务 API/小程序/支付通道而非搜索框；桌面侧等价物是本地系统自动化+文件/应用操作。",
+      "source_note": "cn.bing（Chrome MCP）中文搜索，蚂蚁官方新闻稿+新华网互证"
+    },
+    {
+      "name": "vivo PhoneGPT / 蓝心智能（中国增量）",
+      "url": "https://zhuanlan.zhihu.com/p/934694861",
+      "kind": "product",
+      "stars": null,
+      "one_liner": "vivo 2024-10 开发者大会发布「蓝心智能」战略与 PhoneGPT 手机智能体（语音/视觉驱动的端侧 GUI agent），配套蓝心智能体平台 agents.vivo.com.cn，模型线 BlueLM 开源（vivo-ai-lab/BlueLM，943 星）。",
+      "why_relevant": "基线只有小米：手机厂商第二家（vivo）把「手机端 agent」上升为 AI 战略主线并开源模型底座。",
+      "dimension": "tech",
+      "signal_for_v4": "信号：端侧 GUI agent 在中国由手机厂商全力推进（vivo/荣耀/小米/华为四家齐备）——V4 不必自研端侧手机 agent，应做「PC 重型工作台+与手机厂商 agent 互补跨端」的生态位，并保持模型无关（BlueLM 类国产底座可插拔）。",
+      "source_note": "cn.bing（Chrome MCP）中文搜索 + gh api repos/vivo-ai-lab/BlueLM 验证 943 星"
+    },
+    {
+      "name": "荣耀 YOYO 智能体（中国增量）",
+      "url": "https://www.sohu.com/a/945310573_362225",
+      "kind": "product",
+      "stars": null,
+      "one_liner": "荣耀把 YOYO 升级为跨应用自主执行的「自进化」系统级智能体（2025-10 叙事，2026-03 MagicOS 再升级）：一句话跨 app 操作、远程 PC 操控、宣称越用越懂你。",
+      "why_relevant": "「跨应用自主操作+自进化记忆」已成为国产手机 OS 标配叙事——正是 PAI-Station 在 PC 侧的核心主张，验证了需求真实且被厂商教育中。",
+      "dimension": "tech",
+      "signal_for_v4": "信号：手机侧已把用户教育做完，PC 侧同款能力存在 2-3 年窗口期；V4 的差异化必须落在厂商做不到的三件事上——跨厂商中立（不锁单一手机品牌）、可审计的人审闸门、用户可拥有的记忆资产。",
+      "source_note": "cn.bing（Chrome MCP）中文搜索，sohu/sina/知乎实测文互证"
+    },
+    {
+      "name": "华为小艺 / 鸿蒙智能体框架 2.0（中国增量）",
+      "url": "https://developer.huawei.com/consumer/cn/harmonyos-ai",
+      "kind": "product",
+      "stars": null,
+      "one_liner": "HarmonyOS 6（2025-10-22 发布）带来「超能小艺」+鸿蒙应用智能体深度协同；华为开发者平台开放 Harmony Intelligence：Agent & Skill 能力、鸿蒙智能体框架 2.0、系统应用 AI 能力全面 API 化。",
+      "why_relevant": "基线未录华为：OS 厂商正在把「Agent+Skill 开放平台」做成操作系统级基础设施，与 agentskills.io/Anthropic Skills 形成中国平行标准。",
+      "dimension": "ecosystem",
+      "signal_for_v4": "信号：技能开放标准正被 OS 厂商各自瓜分（华为 Skill/荣耀/小爱/鸿蒙智能体）。V4 的技能层必须做成「跨标准适配器」（一份技能定义可编译到 Anthropic Skills/鸿蒙 Skill/OpenClaw 等多目标），而不是自造第四个孤岛标准。",
+      "source_note": "cn.bing（Chrome MCP）中文搜索，华为开发者官网一手链接"
+    },
+    {
+      "name": "小米 AI 眼镜（中国增量）",
+      "url": "https://finance.sina.com.cn/wm/2026-03-25/doc-inhseiye3730233.shtml",
+      "kind": "product",
+      "stars": null,
+      "one_liner": "小米 2025 年报披露 AI 眼镜出货 35 万台居国内第一；2025 全球 AI 眼镜出货 870 万台、同比 +322%，Rokid/小米居世界前三。",
+      "why_relevant": "Humane/Rabbit 在美国宣告「AI 硬件已死」，中国市场用千元级定价+手机生态把同类感知入口做成了增长赛道——生死分野在价格与生态借力。",
+      "dimension": "business",
+      "signal_for_v4": "信号：V4 的多模态感知入口（视觉/听觉）可以低成本外挂成熟中国硬件（眼镜/耳机），不必自研；接口设计应假设「眼镜/耳机/手机/PC 多端入口」，感知数据回流 PC 侧统一记忆库。",
+      "source_note": "cn.bing（Chrome MCP）中文搜索，新浪财经年报报道+头条 IDC 口径互证"
+    },
+    {
+      "name": "Rokid Glasses × 支付宝「看一眼支付」（中国增量）",
+      "url": "https://www.toutiao.com/article/7516819068452635199/",
+      "kind": "product",
+      "stars": null,
+      "one_liner": "2025-06-17 Rokid 与支付宝上线全球首个智能眼镜支付：看一眼二维码即完成支付，靠支付宝多维度风控保障资金安全。",
+      "why_relevant": "眼镜上做「高危动作」（花钱）的中国式解法：不是权限弹窗而是风控系统兜底——个人 AI 信任机制的本土范式。",
+      "dimension": "tech",
+      "signal_for_v4": "信号：V4 对高风险 agent 动作（删文件/发消息/花钱）的信任设计应从「确认弹窗」升级为「风控式分级」（限额/白名单/异常检测+事后可回滚），这比一次性授权更符合中国用户心智。",
+      "source_note": "cn.bing（Chrome MCP）中文搜索，头条/搜狐/知乎多源互证"
+    },
+    {
+      "name": "小度 AI 眼镜 Pro（中国增量）",
+      "url": "https://www.36kr.com/p/3546829403631752",
+      "kind": "product",
+      "stars": null,
+      "one_liner": "百度 2025-11-13 世界大会发布小度 AI 眼镜 Pro（无屏 AI 拍摄），11 月开售 2199 元起，成为国内第二家正式开售 AI 眼镜的互联网大厂。",
+      "why_relevant": "百度/阿里/小米/华为等头部玩家全部入局 AI 眼镜（36 氪口径），中国「AI 硬件坟场」叙事被彻底逆转。",
+      "dimension": "ecosystem",
+      "signal_for_v4": "信号：2026 起音频+视觉常驻入口在中国是标配赛道且价格下探——V4 的架构预留「外设热插拔」（今天耳机、明天眼镜），感知层抽象成统一事件流即可吃到下一波硬件红利。",
+      "source_note": "cn.bing（Chrome MCP）中文搜索，36 氪+百度百科互证"
+    },
+    {
+      "name": "字节 Ola Friend 二代在研（中国增量）",
+      "url": "https://gadgets.cnmo.com/news/802700.html",
+      "kind": "product",
+      "stars": null,
+      "one_liner": "字节首款 AI 智能体耳机 Ola Friend（2024-10 发布）虽销量平淡但未停产：2026-01 曝光二代由歌尔代工在研；用户社区评价其真价值点是「AI 消息播报」（智能过滤垃圾通知再朗读）。",
+      "why_relevant": "巨头把「常驻听觉入口」当长期战役打（一代平淡→继续迭代），而非 Humane 式一次失败即撤——中国 AI 硬件耐心资本样本。",
+      "dimension": "tech",
+      "signal_for_v4": "信号：常驻听觉入口已被验证的杀手级场景是「通知智能过滤/播报」而非对话。V4 桌面侧对应物=系统通知中枢（先过滤、再摘要、可代回复），实现成本低、感知强，应进 V4 P0 功能候选。",
+      "source_note": "cn.bing（Chrome MCP）中文搜索，CNMO/163 报道+Chiphell 一年长测互证"
+    },
+    {
+      "name": "零一万物 01.AI 收缩转型（中国尸检）",
+      "url": "https://www.51cto.com/article/805717.html",
+      "kind": "company",
+      "stars": null,
+      "one_liner": "「AI 六小虎」之一零一万物被曝收缩预训练、训练团队部分并入阿里云（官方否认收购但承认战略转型），从通用大模型全面转向企业级行业智能体（官网现定位）。",
+      "why_relevant": "中国大模型创业公司第一波集体退场的标志事件：自研底层模型的公司收敛到头部 3-4 家，其余转为应用层。",
+      "dimension": "business",
+      "signal_for_v4": "信号：中国底层模型供给将进一步集中——V4 坚持模型无关+多路由（国产底座可插拔）是对「单一模型供应商死亡/转型」的尸检免疫；也再次验证应用层（个人 AI 工作站）才是 survivors 的战场。",
+      "source_note": "cn.bing（Chrome MCP）中文搜索，51CTO/雪球/腾讯新闻+官网现状互证"
+    }
+  ]
+}

@@ -1,0 +1,293 @@
+{
+  "track": "05-oss-business-models",
+  "generated_at": "2026-09-13",
+  "degradation_note": "WebSearch/web_reader 主力配额耗尽（2026-09-26 重置）→ 降级链：本地代理 curl 直读官网 + gh API + HN Algolia API（真实提交 URL+日期）+ Bing（仅部分有效）。所有 URL 均经状态码核验（200/3xx），被反爬挡住的大媒体 URL（Reuters/Bloomberg/NYT/substack/BI）来自 HN 提交记录并在 source_note 标注。营收/估值数字只引公开报道或官方博客原文，未核实处标 null。",
+  "items": [
+    {
+      "name": "x402 (x402 Foundation)",
+      "url": "https://github.com/x402-foundation/x402",
+      "kind": "repo",
+      "stars": 6607,
+      "one_liner": "HTTP 402 原生支付协议：服务器对未付费请求直接回 402，AI agent 用稳定币即时付款后重试；已由 Coinbase 移交中立的 x402 Foundation（Cloudflare 等参与）。",
+      "why_relevant": "技能/数据/算力三种资产都可以变成『HTTP 端点自带价格』的机器可付商品，替代注册-充值-API key 的旧流程。",
+      "dimension": "business",
+      "signal_for_v4": "x402.org 实时面板（2026-09-13 直读）：近 30 天 75.41M 笔交易、$24.24M 交易额、94.06K 买家、22K 卖家；零协议费+无账号无 API key。比『市场抽成』先进在：清算变成协议原语而非平台特权——PAI-Station 可做个人侧 x402 钱包+记账层，让用户的技能互相调用时按次结算。",
+      "source_note": "x402.org 首页实时统计直读 + gh api（6607★，2025-02 创建，2026-09 仍在推送）；HN Show HN 2025-05-06"
+    },
+    {
+      "name": "Universal Commerce Protocol (UCP)",
+      "url": "https://github.com/Universal-Commerce-Protocol/ucp",
+      "kind": "repo",
+      "stars": 3370,
+      "one_liner": "Google+Shopify 牵头、Amazon/Meta/Microsoft/Salesforce/Stripe/Booking.com/Expedia/Hilton/Marriott 等共建的 agentic commerce 统一协议（发现→购物车→结账→履约），支付层对接 AP2/x402。",
+      "why_relevant": "2026 年 agentic 商务事实标准的整合层；个人 agent 代表用户完成采购的协议通道。",
+      "dimension": "business",
+      "signal_for_v4": "repo 2025-12-31 创建、9 个月 3370★；2026-05 Google I/O『Universal Cart』已上线 Search/Gemini/YouTube/Gmail，Nike/Walmart/Target/Sephora 等商户在列；Shopify 2026-06 开放自助 agent 注册（无审批门槛）。标准+头部渠道绑定=平台级护城河；PAI-Station 内建 UCP/ACP 客户端即可让技能代表用户走完商业闭环（佣金/代购分成随之而来）。",
+      "source_note": "ucp.dev 直读成员名单与『UCP and AP2』章节 + gh api + awesome-agent-payments-protocol README（2026-09-07 更新）交叉"
+    },
+    {
+      "name": "Agentic Commerce Protocol (ACP)",
+      "url": "https://github.com/agentic-commerce-protocol/agentic-commerce-protocol",
+      "kind": "repo",
+      "stars": 1541,
+      "one_liner": "OpenAI+Stripe 维护的开放标准：买家-AI agent-商家三方通过支付 token 完成购买，含 agentic checkout/capability negotiation/payment handlers 等 RFC 与 MCP 集成。",
+      "why_relevant": "『Buy it in ChatGPT』的底层规范——agent 作为新销售渠道的第一份正式协议。",
+      "dimension": "business",
+      "signal_for_v4": "规范从 2025-09-29 初版迭代到 2026-04-17（购物车/商品 feed/订单/认证/MCP），节奏极快；OpenAI Instant Checkout（HN 248 分）是其首个大规模部署。对 PAI-Station 的启示：把技能市场商品暴露成 ACP/UCP 可发现的『agent 可购服务』，市场抽成进化为『agentic 渠道佣金』——用户 agent 自动比价采购技能。",
+      "source_note": "gh api README 直读（spec 目录含全部版本日期）+ openai.com/index/buy-it-in-chatgpt/（HN 248pts, 2025-09-29）"
+    },
+    {
+      "name": "x402 Bazaar 全量登记簿分析",
+      "url": "https://github.com/rikocr8orh8/x402-bazaar-survey",
+      "kind": "repo",
+      "stars": 0,
+      "one_liner": "对 Coinbase x402 agent 支付登记簿全部 14,865 个挂单的可复现分析：只有 3.5% 的条目显示真实需求。",
+      "why_relevant": "机器付费市场的第一份供给侧普查，直接检验『agent 经济』的真实温度。",
+      "dimension": "business",
+      "signal_for_v4": "冷启动教训：『可以收费』≠『有人付』——供给侧爆炸而需求侧极稀。PAI-Station 技能市场必须先造需求侧（每日任务流/工作负载），再给供给侧挂价格牌；市场的护城河是『结算+验收+复购』闭环，不是货架本身。",
+      "source_note": "HN Algolia 2026-07-28 + gh api description 直读（『only 3.5% of listings show real demand』）"
+    },
+    {
+      "name": "Cloudflare Pay Per Crawl",
+      "url": "https://blog.cloudflare.com/introducing-pay-per-crawl/",
+      "kind": "article",
+      "stars": null,
+      "one_liner": "Cloudflare 提议用 HTTP 402 + x-402 响应头给 AI 爬虫按次收费（默认拒绝、付费放行），把内容方『被白嫖』变成新收入流。",
+      "why_relevant": "个人数据/语料资产默认姿势从『公开』翻转为『402 付费墙』的标志性提案。",
+      "dimension": "business",
+      "signal_for_v4": "HN 569 分热帖；2026-06 beehiiv 等平台已落地 Cloudflare『AI Crawl Control』（放行/封锁/收费三态，SiliconAngle 报道）。PAI-Station 用户的私有语料/技能输出可按次向外部 agent 收费——这是『数据资产』变现的最短路径，比数据集市更轻。",
+      "source_note": "博客直读 200 + siliconangle.com/2026/06/23/beehiiv-adds-cloudflare-ai-crawl-control（200）"
+    },
+    {
+      "name": "Intercom Fin",
+      "url": "https://www.intercom.com/pricing",
+      "kind": "company",
+      "stars": null,
+      "one_liner": "客服 AI agent Fin 按『解决量』计费（From $0.99 per Fin outcome），叠加席位订阅的混合定价，附『百万美元保障』承诺。",
+      "why_relevant": "按结果计费进入主流 SaaS 在售价目表的最著名案例。",
+      "dimension": "business",
+      "signal_for_v4": "2026-09 官网直读：三个套餐全部『From $0.99 per Fin outcome』+座位费并存——比纯订阅先进在于把模型成本波动转成可随效果伸缩的单位经济，且『resolution』这个计量单位本身就是产品定义权。PAI-Station 的对应单位应是『完成的任务/交付的产物』。",
+      "source_note": "intercom.com/pricing 官网在售页面直读"
+    },
+    {
+      "name": "Sierra",
+      "url": "https://sierra.ai",
+      "kind": "company",
+      "stars": null,
+      "one_liner": "Bret Taylor 的企业对话式 AI 平台，全站第一卖点『Pay for a job well done』——按结果（resolution）计费。",
+      "why_relevant": "企业级 agent 按结果计费的理论与实践源头。",
+      "dimension": "business",
+      "signal_for_v4": "官网把 outcome-based pricing 当主标语；官方博客《Outcome-based pricing for AI agents》(2024-12) 系统论证为何按结果卖。核心机制：卖『做成的事』而非『用的 token』，模型成本风险自担换取溢价与信任——个人工作站的『数字员工』服务可整套照抄该定价哲学。",
+      "source_note": "sierra.ai 首页直读 + sierra.ai/blog/outcome-based-pricing-for-ai-agents（200）"
+    },
+    {
+      "name": "Salesforce Agentforce（摇摆/反面案例）",
+      "url": "https://slack.com/blog/news/june-2025-pricing-and-packaging-announcement",
+      "kind": "company",
+      "stars": null,
+      "one_liner": "Salesforce 的 agent 消耗制定价实验：Flex Credits/按对话计费打包进 Slack 与 CRM 套餐，但采用不及预期，2025-12 宣布转向『确定性自动化』并裁员 4000。",
+      "why_relevant": "消耗制/按次计费在企业市场翻车的最大样本，与 Intercom/Sierra 形成对照组。",
+      "dimension": "business",
+      "signal_for_v4": "Reuters（2025-02）『Agentforce adoption lags』+ TOI（2025-12）pivot 报道：当结果不可控、不可验证时，按次计费=收入与口碑双杀。PAI-Station 若按结果计费，前提是先建『可验证结果』层（评测/验收协议），否则退回 credits+保底。",
+      "source_note": "slack.com 官方定价公告直读 200 + HN 收录的 Reuters/TOI 报道 URL"
+    },
+    {
+      "name": "Lovable",
+      "url": "https://techcrunch.com/2025/11/19/as-lovable-hits-200m-arr-its-ceo-credits-staying-in-europe-for-its-success/",
+      "kind": "company",
+      "stars": null,
+      "one_liner": "对话式建站/应用生成器：2025-07 达 $100M ARR（约 8 个月，史上最快之一），2025-11 达 $200M ARR；7 月官方博客同步宣布转向 agentic。",
+      "why_relevant": "AI 时代『个人级创作工具+用量计费』现金流速度的标杆。",
+      "dimension": "business",
+      "signal_for_v4": "credits 消耗制+订阅混合，交付单位是『可运行产物』而非工时；$100M→$200M 仅 4 个月。PAI-Station 面向个人的技能工作台可直接套用该结构：订阅保底（心理账户）+credits 计量（成本传导）+产物验收（价值锚点）。",
+      "source_note": "TechCrunch 直读 200 + lovable.dev/blog/agent（200，官方自证 $100M ARR）"
+    },
+    {
+      "name": "Cognition (Devin)【复录+新进展】",
+      "url": "https://cognition.com/blog/series-e",
+      "kind": "company",
+      "stars": null,
+      "one_liner": "基线已有 Devin/Cognition；重大新进展：2026-09-08 宣布融资 $2B+，估值 $48B（a16z/Accel 领投），官方博客披露 run-rate 从 5 月 $492M 涨至近 $900M；2025-07 已吞并 Windsurf。",
+      "why_relevant": "『AI 员工』单位经济的最新官方数据点 + 开发工具横向整合样本。",
+      "dimension": "business",
+      "signal_for_v4": "官方原文数字：4 个月 run-rate $492M→$900M，客户含 NVIDIA/GE Aerospace/Citi/Mercedes-Benz。护城河叙事是 Devin 工具链+企业部署而非模型本身——证明『按用量订阅的数字劳动力』爆发速度远超传统 SaaS，个人工作站的『替你干活小时数』可对标该单位经济。",
+      "source_note": "cognition.com/blog/series-e 直读（grep 出 $2B/$48B/$492M→$900M 原文）+ cognition.ai/blog/windsurf（301→200）；基线复录，新进展为 2026-09 融资"
+    },
+    {
+      "name": "Anthropic（收入进度条与 IPO）",
+      "url": "https://www.reuters.com/technology/anthropic-revenue-run-rate-tops-65-billion-source-says-2026-08-17/",
+      "kind": "company",
+      "stars": null,
+      "one_liner": "2026-08-17 Bloomberg/Reuters 报道：Anthropic 年化收入突破 $65B，筹备 IPO；Claude Code 等 agent 产品是增长主引擎。",
+      "why_relevant": "模型上游公司亲自下场吃应用层利润的最新证据，决定下游技能市场的生存空间。",
+      "dimension": "business",
+      "signal_for_v4": "上游『模型+第一方杀手应用』双轮碾压：PAI-Station 建在 Claude 生态上必须假设 Anthropic 会持续向应用层挤压——技能市场定位应选上游不愿做的长尾个人场景（本地化、隐私、跨设备、中文生态），并把多模型路由作为对冲。",
+      "source_note": "Bloomberg/Reuters 2026-08-17（HN 收录，直连被反爬挡返回 000；URL 来自 HN 提交记录）；数字为公开报道口径"
+    },
+    {
+      "name": "OpenAI Instant Checkout + ChatGPT 广告",
+      "url": "https://openai.com/index/buy-it-in-chatgpt/",
+      "kind": "company",
+      "stars": null,
+      "one_liner": "DevDay 2025 发布基于 ACP 的『Buy it in ChatGPT』agentic 即时购买；2026 年起测试 ChatGPT 广告（NYT 报道其品牌广告战役）。",
+      "why_relevant": "对话入口同时成为新商店与新媒体的双引擎样本。",
+      "dimension": "business",
+      "signal_for_v4": "佣金（agentic 购买渠道化）+注意力（广告）双收入结构首次在 agent 入口合体；技能市场可镜像：技能内推广位（注意力）+agentic 购买佣金（交易）+技能订阅（SaaS）三层叠加，而非只有抽成。",
+      "source_note": "openai.com/index/buy-it-in-chatgpt/（HN 248pts, 2025-09-29）+ NYT 2026-06-04 报道（HN 收录，直连被挡）"
+    },
+    {
+      "name": "GitHub Copilot Premium Requests",
+      "url": "https://github.blog/changelog/2025-05-07-enforcement-of-copilot-premium-request-limits-moved-to-june-4-2025/",
+      "kind": "product",
+      "stars": null,
+      "one_liner": "Copilot 从『无限用』转向订阅内含配额+高阶模型按 premium requests 计量的混合模式，2025-06-04 起强制执行。",
+      "why_relevant": "巨头给出的『订阅→混合计量』定价迁移完整剧本。",
+      "dimension": "business",
+      "signal_for_v4": "结构=订阅保留（心理账户）+premium request 计量（成本传导）+超量另购。PAI-Station『订阅+算力差价』可直接套用，关键设计是把计量单位翻译成用户可理解的动作（一次任务/一次技能调用/一次深度思考），而非 token。",
+      "source_note": "github.blog changelog 直读（301→200）+ HN 收录；docs.github.com 被代理挡（000）"
+    },
+    {
+      "name": "Service as a Software（uxtigers）",
+      "url": "https://www.uxtigers.com/post/service-as-software",
+      "kind": "article",
+      "stars": null,
+      "one_liner": "提出『Service as a Software』：AI 卖的结果替代的是人力服务预算（万亿级市场），软件只是交付载体，按结果计费是自然对齐。",
+      "why_relevant": "给『按结果收费』提供 TAM 级论证的理论支点。",
+      "dimension": "business",
+      "signal_for_v4": "价值锚从『软件价值』换成『替代的人工成本』：个人工作站卖的不是工具订阅，而是『替你完成的数字劳动』，可定价到人工时薪的 1/10 仍有 10 倍价差空间——比『市场抽成』高一个数量级的定价天花板来源。",
+      "source_note": "uxtigers.com 直读 200（HN 2025-02-27）"
+    },
+    {
+      "name": "Getlago：outcome-based 不会是 AI 的主导定价",
+      "url": "https://getlago.substack.com/p/outcome-based-pricing-is-not-the",
+      "kind": "article",
+      "stars": null,
+      "one_liner": "计费基础设施公司 Getlago 的反方论证：结果计费在计量、归因、反作弊上成本过高，赢家是 hybrid（订阅保底+用量+少量结果指标）。",
+      "why_relevant": "对按结果计费狂热的最有力冷水，来自真正做计费的公司。",
+      "dimension": "business",
+      "signal_for_v4": "Intercom/Sierra 的 resolution 只在『结果可验证』的窄场景成立；泛任务市场按结果计费必须先解决结果的机器可验证性（验收协议/评测）。PAI-Station 的顺序应是：credits 保底→可验证任务逐步切结果计价→两者混合。",
+      "source_note": "HN 2025-08-12（substack 直连被挡返回 000；URL 来自 HN 提交记录）"
+    },
+    {
+      "name": "a16z crypto：Agentic commerce 不会杀死卡，但会撕开缺口",
+      "url": "https://a16zcrypto.substack.com/p/agentic-commerce-wont-kill-cards",
+      "kind": "article",
+      "stars": null,
+      "one_liner": "分析 agent 支付格局：大额仍走卡组织，但 agent 间高频小额交易（API 调用、数据购买）是全新增量市场，稳定币/x402 类基建吃这块。",
+      "why_relevant": "界定了『机器商务』的真实增量在哪，避免与卡组织正面竞争的定位错误。",
+      "dimension": "business",
+      "signal_for_v4": "『小额高频机器商务』是无人的新大陆：PAI-Station 内部技能互相调用、技能向外购数据/算力的内部结算天然属于这个市场——内建代理记账+限额+审计，把工作站变成一个小型清算所，是抽成之外的第二条收入暗线。",
+      "source_note": "HN 2026-03-04（substack 直连被挡；URL 来自 HN 提交记录）"
+    },
+    {
+      "name": "Scale AI",
+      "url": "https://www.businessinsider.com/pay-cuts-poaching-pivoting-inside-scale-ai-meta-2025-12",
+      "kind": "company",
+      "stars": null,
+      "one_liner": "数据标注巨头：2025-06 Meta 以约 $14.3B 换取 49%（当时公开广泛报道），创始人 Alexandr Wang 转 Meta；此后转向服务多家模型商的『data foundry』。",
+      "why_relevant": "高质量训练数据=硬通货的定价上限案例，及数据人力工厂的天花板。",
+      "dimension": "business",
+      "signal_for_v4": "BI 2025-12 长文揭示投资后的内伤（减薪/挖角/转向）——『数据人力外包』有天花板且客户即竞争者。教训：数据生意要做成可复用、可定价的『资产平台』而非人力工厂；PAI-Station 汇聚的应是可沉淀复利的资产（语料/技能），不是一次性人力。",
+      "source_note": "Business Insider 2025-12-30（HN 收录，直连被挡返回 000）；$14.3B/49% 为 2025-06 公开广泛报道数字"
+    },
+    {
+      "name": "Mercor",
+      "url": "https://www.mercor.com",
+      "kind": "company",
+      "stars": null,
+      "one_liner": "『组织人类智能以驱动 AI 经济』：专家数据/RL 训练任务市场平台，按小时给专家结酬、向模型商收数据费（估值曾有 $10B 级公开报道，本轮未独立核实，标 null）。",
+      "why_relevant": "数据劳动市场的最大新玩家 + 数据资产平台安全风险的活案例。",
+      "dimension": "business",
+      "signal_for_v4": "2026-03 LiteLLM 供应链攻击导致 4TB 语音样本/40K 专家数据泄露（TechCrunch 报道+独立复盘 HN 600 分）——数据资产平台=高价值靶标。PAI-Station 若汇聚用户语料，『数据可携带性+安全』是商业模式的地基而非附件；泄露一次，信任资产清零（参照 23andMe）。",
+      "source_note": "mercor.com 直读 200 + TechCrunch 2026-03-31 直读 200 + oravys 复盘（HN 600pts）；估值数字未核实标 null"
+    },
+    {
+      "name": "Surge AI",
+      "url": "https://surgehq.ai",
+      "kind": "company",
+      "stars": null,
+      "one_liner": "不依赖风投的盈利数据公司，定位『Human Intelligence for AGI』：前沿数据与 RL 环境做成 off-the-shelf 货架商品 + 专家人力网络（营收/估值未公开核实，标 null）。",
+      "why_relevant": "数据生意『产品化目录化』（非项目制）的代表样本。",
+      "dimension": "business",
+      "signal_for_v4": "把数据/RL 环境做成明码标价、即取即用的货架商品——PAI-Station 的语料与技能资产可同样『货架化』：版本化、明码标价、可订阅更新，让购买方（人或 agent）无需谈判即可成交，交易摩擦降一个量级。",
+      "source_note": "surgehq.ai 直读 200（含 off-the-shelf 产品目录框架）；财务数字无公开报道核实，标 null"
+    },
+    {
+      "name": "Vana",
+      "url": "https://vana.org",
+      "kind": "company",
+      "stars": null,
+      "one_liner": "个人数据主权基础设施：用户把数据锁进 Data DAO、集体投票决定授权给模型训练换取回报；2026-08 在 Linux Foundation 系 LF Decentralized Trust 设立 PDP-Connect 个人数据授权规范实验室。",
+      "why_relevant": "个人数据资产化的协议层正在进入 Linux Foundation 标准化轨道。",
+      "dimension": "business",
+      "signal_for_v4": "Vana Cup：3 周 43 个应用、18,000 人自带数据（BYOD）参赛——证明『数据自携』有真实需求。PAI-Station 天然是 BYOD 工作站：内建授权/分红原语（用户决定哪个技能可用哪份语料、收益如何分），比中心化数据集市先进在资产控制权留在用户手里。",
+      "source_note": "vana.org 直读 200（2026-08-26 LFDT 公告与 2026-09-09 日内瓦 GDC 回顾为官网日志原文）"
+    },
+    {
+      "name": "23andMe → Regeneron（反面案例）",
+      "url": "https://www.reuters.com/business/healthcare-pharmaceuticals/regeneron-buy-bankrupt-genetic-testing-firm-23andme-256-million-2025-05-19/",
+      "kind": "company",
+      "stars": null,
+      "one_liner": "基因数据公司破产，2025-05 以 $256M 将业务连同千万人级 DNA 数据卖给 Regeneron（附『伦理使用』承诺）；此前经历集体诉讼与信任崩塌。",
+      "why_relevant": "『拿用户最敏感数据变现』公司的终局样本。",
+      "dimension": "business",
+      "signal_for_v4": "结局=资产贱卖+声誉地狱。PAI-Station 若做数据资产，本地优先+用户可控授权是唯一可持续路线：用户数据留在自己机器，对外卖的是『加工后的技能/结果』而非原料——这既是商业模式差异点也是获客信任锚。",
+      "source_note": "Reuters 2025-05-19（HN 收录 221pts，直连被挡返回 000；URL 来自 HN 提交记录）；$256M 为标题内数字"
+    },
+    {
+      "name": "Klarna AI 客服",
+      "url": "https://www.klarna.com/international/press/klarna-ai-assistant-handles-two-thirds-of-customer-service-chats-in-its-first-month/",
+      "kind": "company",
+      "stars": null,
+      "one_liner": "官方新闻稿：AI 助手上线首月处理 2/3 客服对话，等效约 700 名全职人工的工作量（2024-02）。",
+      "why_relevant": "『替代人工』结果经济最早的规模化官方量化案例。",
+      "dimension": "business",
+      "signal_for_v4": "省下的人工成本=可分配的价值池——个人工作站对用户的价值陈述同构：『替你干活的小时数』是最直观的定价锚；比订阅费叙事强一个量级（订阅费对比的是软件价格，小时数对比的是工资）。",
+      "source_note": "klarna.com 官方新闻稿直读 200（2024-02-28，HN 54pts）"
+    },
+    {
+      "name": "ClickHouse",
+      "url": "https://clickhouse.com/blog/clickhouse-raises-350-million-series-c-to-power-analytics-for-ai-era",
+      "kind": "company",
+      "stars": null,
+      "one_liner": "开源列式数据库公司：2025-05 融 $350M C 轮（官方博客），2025-10 再发『扩展 C 轮』加码融资与高管扩充。",
+      "why_relevant": "最新一代 open-core 公司的融资节奏与叙事样本（AI 时代分析）。",
+      "dimension": "business",
+      "signal_for_v4": "新一代范式：核心引擎全开放（非功能阉割式 open-core），商业护城河=ClickHouse Cloud 托管（运维复杂度即付费理由）。PAI-Station 可让核心全开源，把『托管同步/备份/多端/常驻服务』做成付费层——个人用户最愿意为『不用自己运维』付钱。",
+      "source_note": "官方博客直读 200 x2（HN 119pts 350M 篇）"
+    },
+    {
+      "name": "Neon → Databricks",
+      "url": "https://neon.tech/databricks-faq",
+      "kind": "company",
+      "stars": null,
+      "one_liner": "开源 serverless Postgres 公司 Neon 2025-05 被 Databricks 收购（官方 FAQ）；2026-08 又吸收 Electric SQL 团队成『team Neon at Databricks』（官方博客）。",
+      "why_relevant": "『OSS 作为分发漏斗→被平台收购』的新退出通道样本。",
+      "dimension": "business",
+      "signal_for_v4": "Neon 的开源开发者流量正是数据平台想要的入口资产。PAI-Station 类个人工作站的可设计终局之一：被大平台当作『个人入口』收购/投资——现在就要想清楚什么资产值得被买（用户关系+本地数据主权+技能生态，而非代码本身）。",
+      "source_note": "neon.tech/databricks-faq（308→200）+ neon.com/blog/electric-joins-neon 直读 200（HN 8pts）"
+    },
+    {
+      "name": "Ghost",
+      "url": "https://ghost.org/about/",
+      "kind": "company",
+      "stars": null,
+      "one_liner": "非营利基金会运营的开源出版平台：免费核心+Ghost(Pro) 托管付费；章程规定公司永不可被买卖、100% 收入再投入产品与社区。",
+      "why_relevant": "『宪法级不可收购』+托管养开源的可持续样本，跑了 10 年自给自足。",
+      "dimension": "business",
+      "signal_for_v4": "『永不卖用户/永不可被收购』写进法律结构本身就是护城河（对数据敏感型产品=最强获客信任锚）；托管服务养免费核心的闭环（用得越多→托管需求越大→收入越多→产品更好）是 PAI-Station 订阅层最可抄的飞轮结构。",
+      "source_note": "ghost.org/about 直读 200（章程表述为官网原文）"
+    },
+    {
+      "name": "Bitwarden",
+      "url": "https://bitwarden.com/blog/accelerating-value-for-bitwarden-users-bitwarden-raises-usd100-million/",
+      "kind": "company",
+      "stars": null,
+      "one_liner": "开源密码管理器：免费核心+$10/年个人高级层+家庭/企业版；2022 融 $100M；2026-05 社区长文《The quiet renovation at Bitwarden》（HN 715 分）批评其方向漂移。",
+      "why_relevant": "与 PAI-Station 形态最像的个人 OSS 工具（隐私敏感+本地优先+极低价个人付费层）。",
+      "dimension": "business",
+      "signal_for_v4": "正面：$10/年个人层证明隐私敏感工具的超低价大规模可行，企业版才是利润池。反面：社区信任是复利也是负资产——每次『价值扩展』决策都在消耗它（715 分批评长文），透明路线图+开放治理比短期收入更值钱。",
+      "source_note": "bitwarden.com 官方博客直读 200 + blog.ppb1701.com/the-quiet-renovation-at-bitwarden 直读 200（HN 715pts, 2026-05-16）"
+    }
+  ]
+}
