@@ -1,7 +1,8 @@
 """INI 加载与校验（附录 C.4）：五类错误中文报错，不带病运行。
 
 纯标准库；返回只读映射（不可变）。密钥永不落本仓库：
-api_key 优先级 环境变量 PAI_LLM_KEY > [llm].api_key > config/llm.secret.ini。
+api_key 优先级 环境变量 PAI_LLM_KEY > [llm].api_key > config/llm.secret.ini；
+多账号免费池：PAI_LLM_KEY_2 / api_key_2 槽位同规则（resolve_api_keys）。
 """
 import configparser
 import os
@@ -120,7 +121,12 @@ def load(path: str, env: dict[str, str] | None = None) -> types.MappingProxyType
         "ensemble_size": sec("llm").int("ensemble_size", 8, 1, 32),
         "verify_rounds": sec("llm").int("verify_rounds", 2, 0, 5),
         "semantic_cache": sec("llm").bool("semantic_cache", True),
+        # 多账号免费池第三棒：官方免费文本模型（docs model-overview）
+        "extra_free_models": sec("llm").list("extra_free_models", ["glm-4.5-flash"]),
     }
+    for n in range(2, 9):  # api_key_2..api_key_8：多账号槽位（通常放 secret ini）
+        if val := sec("llm").str(f"api_key_{n}", ""):
+            llm[f"api_key_{n}"] = val
     sense = {
         "watch_dirs": _watch_dirs(sec("sense")),
         "ignore_patterns": sec("sense").list("ignore_patterns",
@@ -186,20 +192,56 @@ def load(path: str, env: dict[str, str] | None = None) -> types.MappingProxyType
             ("proactive", proactive), ("privacy", privacy), ("learn", learn), ("wow", wow))})
 
 
-def resolve_api_key(cfg: types.MappingProxyType, env: dict[str, str] | None = None,
-                    secret_ini: str | None = None) -> str:
-    """优先级：env PAI_LLM_KEY > [llm].api_key > config/llm.secret.ini。"""
+def resolve_api_keys(cfg: types.MappingProxyType, env: dict[str, str] | None = None,
+                     secret_ini: str | None = None) -> list[str]:
+    """多账号免费池：返回 1..N 个 key（去重保序）。
+
+    槽位 n（n=1 无后缀，n≥2 为 _2/_3/…）优先级：
+    env PAI_LLM_KEY[_n] > [llm].api_key[_n] > config/llm.secret.ini api_key[_n]；
+    首个全空槽位即停止扫描（不跳洞）。
+    """
     env = os.environ if env is None else env
-    for val in (env.get("PAI_LLM_KEY", "").strip(), cfg["llm"]["api_key"].strip()):
-        if val:
-            return val
     secret_ini = secret_ini or os.path.join(os.path.dirname(os.path.abspath(
         __file__)), "..", "..", "config", "llm.secret.ini")
-    if os.path.isfile(secret_ini):
-        sp = configparser.ConfigParser()
-        sp.read(secret_ini, encoding="utf-8")
-        from_secret = sp.get("llm", "api_key", fallback="").strip()
-        if from_secret:
-            return from_secret
-    raise ConfigError("缺少智谱 API Key：请设置环境变量 PAI_LLM_KEY，"
-                      "或填写 [llm].api_key / llm.secret.ini")
+    sp: configparser.ConfigParser | None = None
+    keys: list[str] = []
+    for n in range(1, 9):
+        suffix = "" if n == 1 else f"_{n}"
+        cfg_val = cfg["llm"].get(f"api_key{suffix}", "")
+        candidates = (env.get(f"PAI_LLM_KEY{suffix}", "").strip(),
+                      cfg_val.strip() if isinstance(cfg_val, str) else "")
+        if os.path.isfile(secret_ini):
+            if sp is None:
+                sp = configparser.ConfigParser()
+                sp.read(secret_ini, encoding="utf-8")
+            candidates += (sp.get("llm", f"api_key{suffix}",
+                                  fallback="").strip(),)
+        val = next((v for v in candidates if v), "")
+        if not val:
+            break
+        if val not in keys:
+            keys.append(val)
+    if not keys:
+        raise ConfigError("缺少智谱 API Key：请设置环境变量 PAI_LLM_KEY"
+                          "（多账号配 PAI_LLM_KEY_2），或填写 [llm].api_key / "
+                          "llm.secret.ini（api_key / api_key_2）")
+    return keys
+
+
+def resolve_api_key(cfg: types.MappingProxyType, env: dict[str, str] | None = None,
+                    secret_ini: str | None = None) -> str:
+    """单 key 兼容入口（= resolve_api_keys 首槽位）：doctor 等仅探活用。"""
+    return resolve_api_keys(cfg, env, secret_ini)[0]
+
+
+def free_chain(cfg: types.MappingProxyType) -> list[str]:
+    """免费链组装：fast → deep → extra_free_models（去重保序）。
+
+    三构造点（check_llm/first_scan/from_config）共用，避免链定义漂移。
+    """
+    llm = cfg["llm"]
+    chain: list[str] = []
+    for m in (llm["fast_model"], llm["deep_model"], *llm["extra_free_models"]):
+        if m and m not in chain:
+            chain.append(m)
+    return chain

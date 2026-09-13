@@ -271,9 +271,9 @@ class Runtime:
         client = None
         try:
             from .llm.zhipu_client import ZhipuClient
-            key = config.resolve_api_key(cfg)
+            keys = config.resolve_api_keys(cfg)
             client = ZhipuClient(
-                key, [cfg["llm"]["fast_model"], cfg["llm"]["deep_model"]],
+                keys, config.free_chain(cfg),
                 vision_model=cfg["llm"]["vision_model"])
         except Exception as exc:  # noqa: BLE001 - 无密钥→规则降级
             _log.warning("LLM 客户端不可用（规则降级）: %s", exc)

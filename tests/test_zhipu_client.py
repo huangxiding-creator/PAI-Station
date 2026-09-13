@@ -12,12 +12,13 @@ from paistation.llm import zhipu_client as zc
 
 @pytest.fixture(autouse=True)
 def _reset_chain_state():
-    """摘链/冷却是模块级全局态——测试间必须隔离，否则 120s 真实冷却跨测试泄漏。"""
-    zc._DEAD_MODELS.clear()
-    zc._MODEL_COOLDOWN.clear()
+    """摘链/冷却是模块级全局态——测试间必须隔离，否则 120s 真实冷却跨测试泄漏。
+
+    多账号免费池（2026-09-13）：状态按 key 隔离，测试固定 key "k"*32。
+    """
+    zc._ACCOUNT_STATE.clear()
     yield
-    zc._DEAD_MODELS.clear()
-    zc._MODEL_COOLDOWN.clear()
+    zc._ACCOUNT_STATE.clear()
 
 
 def ok(content="hi", usage=None, finish="stop"):
@@ -109,10 +110,10 @@ def test_chat_429_falls_to_next():
 def test_chat_1113_marks_dead_and_skips_without_call():
     c = Client([(429, '{"error":{"code":"1113"}}'), ok("活了")])
     assert c.chat("sys", "user") == "活了"
-    # 第二次 chat：死模型 glm-a 不发请求直接从 glm-b 开始
+    # 第二次 chat：死模型 glm-a 不发请求直接从 glm-b 开始（预置到该账号状态槽）
     c2 = Client([ok("直连B")])
-    zc._DEAD_MODELS.clear()
-    zc._DEAD_MODELS.add("glm-a")
+    zc._ACCOUNT_STATE.clear()
+    zc._acct("k" * 32)["dead"].add("glm-a")
     assert c2.chat("sys", "user") == "直连B"
     assert [p["model"] for p in c2.calls] == ["glm-b"]
 
@@ -127,8 +128,7 @@ def test_chat_content_filter_raises_immediately():
 def test_chat_429_registers_cooldown():
     c = Client([(429, "overload"), ok("B接手")])
     assert c.chat("sys", "user") == "B接手"
-    assert zc._cooled_out("glm-a")  # FIX-0816g：120s 冷却登记
-    zc._MODEL_COOLDOWN.clear()
+    assert zc._cooled_out("k" * 32, "glm-a")  # FIX-0816g：120s 冷却登记（按账号）
 
 
 def test_chat_all_fail_raises_with_chain():
@@ -144,7 +144,6 @@ def test_chat_all_rate_limited_sleeps_once(monkeypatch):
     with pytest.raises(zc._GLMError):
         c.chat("sys", "user")
     assert len(slept) == 1  # FIX-0819i：仅全链限流时睡一次
-    zc._MODEL_COOLDOWN.clear()
 
 
 # ---------- 三契约方法（4.2） ----------
@@ -175,7 +174,6 @@ def test_deep_chain_records_fallback():
     r = c.deep("难题")
     assert r["chain"] == ["glm-a", "glm-b"]
     assert r["text"] == "B深思"
-    zc._MODEL_COOLDOWN.clear()
 
 
 def test_vision_contract(tmp_path):

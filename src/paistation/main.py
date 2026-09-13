@@ -29,13 +29,13 @@ def check_llm(config_path: str) -> int:
     """锚点 0.3：fast/deep/vision 各一次真实调用，返回结构正确即过。"""
     try:
         cfg = config.load(config_path)
-        key = config.resolve_api_key(cfg)
+        keys = config.resolve_api_keys(cfg)
     except config.ConfigError as exc:
         print(f"[check-llm] {exc}")
         return 1
     from paistation.llm.zhipu_client import ZhipuClient
     client = ZhipuClient(
-        key, [cfg["llm"]["fast_model"], cfg["llm"]["deep_model"]],
+        keys, config.free_chain(cfg),
         vision_model=cfg["llm"]["vision_model"])
     results = []
 
@@ -88,8 +88,8 @@ def doctor(config_path: str, secret_ini: str | None = None,
         results.append((f"配置校验（{exc}）", False))
         return results
     try:
-        config.resolve_api_key(cfg, secret_ini=secret_ini)
-        results.append(("智谱密钥", True))
+        keys = config.resolve_api_keys(cfg, secret_ini=secret_ini)
+        results.append((f"智谱密钥×{len(keys)}（多账号免费池）", True))
     except config.ConfigError:
         results.append(("智谱密钥（缺 PAI_LLM_KEY/llm.secret.ini）", False))
     try:
@@ -117,14 +117,14 @@ def doctor(config_path: str, secret_ini: str | None = None,
 def first_scan(config_path: str, push: bool = True) -> int:
     """首扫镜像（锚点 1.x / T23 上帝时刻）：白名单只读扫描 + 企微投递。"""
     cfg = config.load(config_path)
-    key = config.resolve_api_key(cfg)
+    keys = config.resolve_api_keys(cfg)
     from paistation.channels.wecom import WeComChannel
     from paistation.llm.zhipu_client import ZhipuClient
     from paistation.proactive.first_scan import run_first_scan
     from paistation.proactive.outbox import Outbox
 
     client = ZhipuClient(
-        key, [cfg["llm"]["fast_model"], cfg["llm"]["deep_model"]],
+        keys, config.free_chain(cfg),
         vision_model=cfg["llm"]["vision_model"])
     channel = outbox = None
     if push:
