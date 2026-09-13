@@ -32,3 +32,11 @@
   - B4 金标准管线：gate/golden_growth.py（origin 溯源+bigram/unigram max Jaccard≥0.70 拒稀释；拒收不入库）
   - B5 上下文预算：evolve/budget.py（无预算=无授权；超支→fresh-context 复盘候选→复盘闭环）
   - B6 验收：全量 **977 passed**（938+39），ruff 0；四判据达成（任务级进化闭环测试/管线可用/冲突回归绿/done-token 收口）
+- 🏁 **Phase C 收官（C1-C6 全绿，control 包 24 测例）**：
+  - C1 registry：动作法定清单（不在册=不可执行）；path 四级 read/write/spend/irreversible
+  - C2 policy：风控式信任（read 放行/write 白名单/spend 限额累计/irreversible 恒 confirm/unknown 恒 deny）
+  - C3 gateway：judge→执行→失败回滚→execution.jsonl 回放；无 handler=dry-run；**第三方复用判据达成**（子进程裸 import 网关 GATEWAY-REUSE-OK）
+  - C4 meter：token/秒/元三维账本（append-only+聚合）
+  - C5 approval：HMAC-SHA256 签名授权日志（密钥外部注入；篡改/换钥必验假）
+  - C6 knob：METR 旋钮（无干预 4h 间隔翻倍，12h 封顶，单调）
+  - 全量 **1001 passed**（977+24），ruff 0（首跑 1 例偶败未复现，两连绿）
