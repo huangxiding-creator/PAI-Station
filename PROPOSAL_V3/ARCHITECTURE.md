@@ -32,6 +32,7 @@ pai-tray（托盘    pai-sense（感知   pai-panel（pywebview
 | `sense/wakeword.py` | sherpa-onnx KWS 拼音词表唤醒（三层防误触） | 03 卷 B 类 |
 | `sense/asr.py` | SenseVoice-Small int8 常开转写（升级位 Fun-ASR-Nano GGUF）+CAM++ 归属 | 03 卷 A/D 类 |
 | `sense/voice_events.py` | 转写+事件标签→统一事件流 schema | — |
+| `sense/cloud/` | 云端感知连接器框架（FR15）：connector 协议（login_flow/test_session/collect 水位线增量）+注册表；登录态 DPAPI 加密存 session vault（永不入 GitHub 同步）；每源账号安全四件套（节流+冷却+日限额+熔断）+opt-in 可撤授权 | 用户指令 09-13；weread/feishu 登录态先例 |
 | `proactive/taskcards.py` | 事件流→LLM 任务卡（责任人/动作/截止/证据指针/置信度） | 04 卷 L2 |
 | `proactive/budget.py` | 时机/内容分离置信+每日打扰预算 | 04 卷 L3 |
 | `proactive/confirm.py` | notify/question/review 三模式+Windows toast+晨报 digest | 04 卷 L4 |
@@ -45,6 +46,8 @@ pai-tray（托盘    pai-sense（感知   pai-panel（pywebview
 | `skills/forge.py` | skill-forge 五段流水线（案例→升格→验证→注册） | 07 卷 |
 | `skills/effects.py` | 进化效果跟踪：激活技能的使用结果落 `effects.jsonl`，滚动成功率 vs 基线对比，下降→生成回滚建议任务卡（FR10b） | 用户指令 09-13 |
 | `skills/sync.py` | GitHub 备份同步：进化产物 git 提交+推送到用户自配仓库，断网积压补推（FR14）；.gitignore 硬排除 secrets/authkey/事件流 | 用户指令 09-13 |
+| `skills/seed.py` | 成果反推 skill 库（FR16）：扫描 08 成果/与云端文档→LLM 反推方法论→SKILL.md+scripts 候选（全自动；激活走晨报确认）；复用 V2 05 方法器官萃取先例 | 用户指令 09-13 |
+| `skills/market.py` | skill 交易生态（FR17，接口预留）：技能包元数据 author/version/license/price+导入导出；V2 skills/market.py 为底座 | 用户指令 09-13 |
 | `resident/daemon.py` | 主控 daemon（事件环+Mutex+心跳） | 05 卷 |
 | `resident/tray.py` | 托盘宿主（pywin32）+pipe 客户端 | 05 卷 |
 | `resident/watchdog.py` | 看护器（判活铁律 v3 移植+更新交接） | 05 卷 |
@@ -55,9 +58,20 @@ pai-tray（托盘    pai-sense（感知   pai-panel（pywebview
 
 **事件流**（`%APPDATA%/PAI-Station/events/YYYY-MM-DD.jsonl`）：
 ```json
-{"ts":"...","type":"voice.transcript|voice.wakeword|ambient.event|fs.change|screen.ocr|im.webhook|cron.tick",
- "source":"mic|loopback|watcher|...","text":"...","speaker":"me|other|unknown",
- "evidence":{"audio_hash":"...","segment_ms":[0,4200],"app":"..."},"meta":{...}}
+{"ts":"...","type":"voice.transcript|voice.wakeword|ambient.event|fs.change|screen.ocr|im.webhook|cron.tick|cloud.doc.change|cloud.file.list",
+ "source":"mic|loopback|watcher|baidu-netdisk|weiyun|feishu-docs|...","text":"...","speaker":"me|other|unknown",
+ "evidence":{"audio_hash":"...","segment_ms":[0,4200],"app":"...","watermark":"..."},"meta":{...}}
+```
+**云连接器协议**（FR15，`sense/cloud/connector.py`）：
+```python
+class CloudConnector:            # 注册即接入：name/scopes/登录/采集四件
+    name: str                    # "feishu-docs"
+    scopes: list[str]            # 申请的感知范围（文档/网盘文件/日历…）
+    def login_flow(self) -> bool         # 扫码/粘贴 cookie；成功即存 session vault
+    def test_session(self) -> bool       # 登录态体检（失效→生成"需重新登录"任务卡）
+    def collect(self, since: str) -> tuple[list[Event], str]  # 水位线增量，返回新事件+新水位
+# 框架强制：RateLimiter(节流+冷却+日限额+熔断)；session 用 DPAPI 加密；
+# vault 目录在 GitHub 同步排除清单内；每源 opt-in 授权，撤销即静默。
 ```
 **任务卡**（`07 任务/inbox/*.json`）：
 ```json

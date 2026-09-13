@@ -127,14 +127,13 @@ class SileroVad:
             self._harvest()
 
     def _harvest(self) -> None:
-        import sherpa_onnx  # noqa: F401 - 类型引用
-
         while not self._vad.empty():
             seg = self._vad.front
             start_ms = int(round(seg.start / RATE * 1000))
-            dur_ms = int(round(len(seg.samples) / RATE * 1000))
+            samples = np.array(seg.samples, dtype=np.float32)  # front 引用短命，拷贝
+            dur_ms = int(round(len(samples) / RATE * 1000))
             self._segments.append({"start_ms": start_ms, "end_ms": start_ms + dur_ms,
-                                   "duration_ms": dur_ms})
+                                   "duration_ms": dur_ms, "pcm": samples})
             self._vad.pop()
 
     def flush(self) -> None:

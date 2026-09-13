@@ -26,6 +26,9 @@
 | 09-13 | 🚧 Phase 7-8 开工：M1 常驻骨架+语音感知（ipc→daemon→watchdog→audio→vad→asr→voice_events→tray，TDD 先行） | `src/paistation/resident/` `sense/` |
 | 09-13 | ✅ M1.1 `resident/ipc.py` TDD 完成（11 测试全绿）：JSON 行协议（请求/响应分离校验）+Listener/Client 薄壳+authkey 落盘管理+坏包回错误响应不连坐+坏 digest 握手不杀 accept 环+8 并发客户端全服务 | `src/paistation/resident/ipc.py` `tests/test_ipc.py` |
 | 09-13 | 📌 用户中途指令×2（产品需求补强）：①**进化效果跟踪+回滚**——批准≠终点，激活后持续记录使用效果，下降主动反馈回滚建议，一键回滚（FR10b）；②**GitHub 备份同步**——用户可配置自己的 GitHub 仓库，本地进化产物自动同步远端，换机可恢复（FR14）。已落 REQUIREMENTS/ARCHITECTURE（ADR-10 技能库即 git 仓库+effects.jsonl 契约+skills/effects.py+skills/sync.py 新模块）/WBS（M6.4-6.6 重排）。secrets/authkey/事件流永不入同步范围 | `PROPOSAL_V3/` 三文档更新 |
+| 09-13 | 📌 用户中途指令③：**感知层升维=云端连接器框架**（FR15）——百度网盘/腾讯微云/飞书云文档/腾讯文档等，用户给账号或扫码授权后登录态永久保存（DPAPI 加密 vault），持续感知云端文件与工作入统一事件流；"只要用户能提供就能感知"，新源=注册即接入；每连接器必配账号安全四件套+opt-in 可撤授权。已落 REQUIREMENTS/ARCHITECTURE（事件流增 cloud.* 类型+连接器协议契约）/WBS（M2.6 框架+首个示例连接器）。与账号安全第一红线完全兼容：节流/冷却/日限额/熔断为框架强制件 | `PROPOSAL_V3/` 三文档更新 |
+| 09-13 | 📌 用户中途指令④：**执行专业化=技能资产化**——①成果反推 skill 库（扫历史成果 LLM 反推方法论固化 SKILL.md，全自动零安排，FR16）；②任务过程自动沉淀案例→升格；③**skill 交易市场生态**（共享入市、下载赚/耗积分 token，FR17 本周接口预留+L3b 商业模式）。红线调和：形成全自动、上岗走晨报一键确认（进化提案永不自批保留）+FR10b 效果跟踪回滚 | `PROPOSAL_V3/` 四文档更新 |
+| 09-13 | ✅ M1.5 VAD 守门（9 测试绿）+ M1.7 事件流（8 测试绿）完成；M1.6 SenseVoice int8 经 GitHub 超时改走 hf-mirror 下载完成（239MB）；M1 管线集成件 pipeline.py 测试就绪待实现 | `src/paistation/sense/` |
 
 ## 状态板
 

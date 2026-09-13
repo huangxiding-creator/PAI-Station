@@ -25,6 +25,7 @@
 | 2.3 | Everything 接入 | es.exe 子进程封装+降级路径 |
 | 2.4 | memory/layers.py | L0/L1/L2 摘要生成+按需加载 |
 | 2.5 | 检索注入接线 | agent 上下文包装配（金标准问答集 20 条） |
+| 2.6 | sense/cloud/ 连接器框架 | connector 协议+注册表+session vault（DPAPI）+RateLimiter 四件套+水位线增量（FR15）；首个示例连接器=飞书文档（复用 channels/feishu 登录态经验） |
 
 ## M3 任务发现+确认（Day 3-4）
 
@@ -61,7 +62,9 @@
 | 6.4 | skills/forge.py 案例层+版本化 | 信号→案例条目（升格闸留位，永不自批）；技能库 git 化：升格=commit+tag，回滚=checkout（FR10b） |
 | 6.5 | skills/effects.py 效果跟踪 | 使用结果 effects.jsonl→滚动成功率 vs 基线→回滚建议任务卡→一键回滚+基线重置 |
 | 6.6 | skills/sync.py GitHub 备份 | 用户自配仓库 git 推送（FR14）；.gitignore 硬排除 secrets/authkey/事件流；断网积压补推 |
-| 6.7 | 干净环境验收 | 虚拟机/新用户目录双击跑通 M1-M4 |
+| 6.7 | skills/seed.py 成果反推 | 扫描 08 成果/→LLM 反推→SKILL.md 候选（全自动，激活走晨报确认，FR16） |
+| 6.8 | skills/market.py 接口预留 | 技能包 author/version/license/price 元数据+导入导出（FR17 市场闭环后置） |
+| 6.9 | 干净环境验收 | 虚拟机/新用户目录双击跑通 M1-M4 |
 
 ## 横切（全程）
 
