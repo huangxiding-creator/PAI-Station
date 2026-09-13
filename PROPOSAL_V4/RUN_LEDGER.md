@@ -24,3 +24,4 @@
   - ③干净房抓到真缺陷——import_vault 不建 MANIFEST（测试盲区）；修复=导入后重算 build_manifest+roundtrip 补断言
   - scripts/heritage_cleanroom.py：全新 venv 离线装 wheel→CLI 造资产→heritage 产包→继承人 import 复活→HERITAGE-CLEANROOM-OK；全量 930 passed，ruff 0
 - 🏁 **Phase A 收官**：主权层 MVP 完整落地（记忆/决策/画像/遗忘/审计/遗产/三向适配器/CLI 七动作）
+- 🚧 Phase B WBS 细化完成（心跳轮）：B1 出口闸 done-token / B2 记忆自检三套统一入口 / B3 任务级进化代谢 / B4 金标准增长管线（origin+质量闸）/ B5 上下文预算+fresh-context（后置）/ B6 验收回放；地基盘点=金标准 40 条在 tests/fixtures、evolve/ 骨架、画像双时间线、audit_vault 遗忘合规
