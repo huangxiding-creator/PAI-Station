@@ -20,3 +20,7 @@
   **Workbench 连接实测打通**：`wb list`（实例「AI测试」i-f8za6qhv365cwhti5y35 Running）+ `wb exec`（Ubuntu 24.04.2 LTS kernel 6.8）零密码免公网 IP 直达；凭据落 ~/.workbench/config.json（0600，不进 repo）
 - ⏭ 企微 CLI：官方/社区无包 → 自建（channels/wecom.py 封装）
 - ⏭ Phase A 验收三判据：①三向导出导入实测回放（tests 已覆盖）②遗忘权审计报告（CLI audit 已通）③遗产模式干净房离线跑通（待做）
+- ✅ **Phase A 验收三判据全部达成**（commit 28c2e83 已推送，ls-remote 真判据过）：
+  - ③干净房抓到真缺陷——import_vault 不建 MANIFEST（测试盲区）；修复=导入后重算 build_manifest+roundtrip 补断言
+  - scripts/heritage_cleanroom.py：全新 venv 离线装 wheel→CLI 造资产→heritage 产包→继承人 import 复活→HERITAGE-CLEANROOM-OK；全量 930 passed，ruff 0
+- 🏁 **Phase A 收官**：主权层 MVP 完整落地（记忆/决策/画像/遗忘/审计/遗产/三向适配器/CLI 七动作）
