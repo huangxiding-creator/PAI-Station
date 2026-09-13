@@ -39,6 +39,7 @@
 | 09-13 | ✅ **M6.4-6.8 技能资产五件套完成**（35 测试绿）：forge 案例层+repetition/failure_to_success 信号+SKILL.md 兼容提案+**升格闸**（promote 无 approved=True 直接 PermissionError）+git 版本化（commit+tag vN，回滚=checkout+提交留痕）；effects 滚动 10 次成功率 vs 基线→劣化>15% 且样本≥5 出回滚建议任务卡→一键回滚+基线重置；sync 用户自配远端（.gitignore 硬注入排除模式+ls-files 守卫拒推已追踪敏感文件+断网积压补推）；seed 扫 08 成果反推（LLM 升级位+章节模板兜底，已入库去重）；market meta.yaml（author/version/license/price）+export/import（安全扫描→同版拒覆盖） | `src/paistation/skills/`（573cf28） |
 | 09-13 | ✅ **M6.1-6.3+6.9 分发层完成**：tiers 探测（ctypes GlobalMemoryStatusEx+nvidia-smi）+三档映射（短板定档，低配关深读退 hashing，12 核 32G 才 bge-m3）；wizard 3 步首启（密钥只记环境变量名，误粘 sk- 拒收降级默认名，幂等）；build.ps1（测试门禁→wheel→离线 wheels）+installer.iss（免管理员 {localappdata}\PAI-Station\app，断网可装，**卸载不删数据目录**）+postinstall.ps1（ensurepip 离线 venv+doctor）；fetch_bge_m3.py 后置模型下载（运行时零依赖）；doctor 增 git/向导健康检查；acceptance_e2e.py **六环一键验收本机 6/6 通过**。.gitignore 豁免 src/paistation/dist | `src/paistation/dist/` `setup/`（255cabd） |
 | 09-13 | 🏁 **一周里程碑 M1-M6 全部完成**：测试 465→839 全绿（+374）；金标准 20 条+会议金标+E2E 三层验收网；四条用户中途指令全部兑现（FR10b 效果跟踪回滚/FR14 GitHub 备份/FR16 成果反推全自动+晨报确认/FR17 市场接口预留）；升级位齐备（bge-m3/LLM 抽卡/云连接器新源即插） | 全仓 |
+| 09-13 | ✅ 心跳轮·Phase 9 QA 覆盖率 pass：全仓 **89%**（门槛 80%）；补测三盲区——entry.py 服务入口装配链（0%→降级矩阵下骨架不散）/main.py CLI 分发契约（--check/--config/--version）/market.install zip 全路径（M6.8 重构后的安全扫描+meta 校验闭环）。847 tests，推送 51963c4 | `tests/test_phase9_qa.py` |
 
 ## 状态板
 
