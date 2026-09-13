@@ -97,6 +97,10 @@ def test_import_roundtrip_lossless(tmp_path):
     assert len(DecisionLedger(dst_data / "sovereign" / "decisions")
                .list_decisions()) == 1
     assert len(ProfileModel(dst_data).query()) == 2
+    # 导入后的 vault 必须自带有效 MANIFEST（干净房闸 2026-09-13 抓到的回归）
+    report = vault_validate(dst_data / "sovereign")
+    assert report["ok"], report
+    assert not report["missing"] and not report["tampered"]
 
 
 def test_import_merge_is_idempotent(tmp_path):

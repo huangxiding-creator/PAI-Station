@@ -14,3 +14,9 @@
   ②专家交付（任务级专家技能赋能，普通工作者出专家级成果）③前后对比
   （原成果 vs 赋能后成果的对照证据=采纳证据链）。已写入 VISION_V4 P2。
 - 🚧 A1 动工：test_sovereign_vault.py 红测试 → format.py + vault.py
+- ✅ A1-A5 TDD 全绿：vault16/protocol11/heritage4/adapters7/cli5=43 例；全量回归 **930 passed**；ruff 项目范围 0
+- ✅ A6 收口：commit **76fe08d** 已推送（ls-remote 真判据 76fe08dc…==HEAD；网络走 push_net_heal 开窗→schannel→--restore）
+- ✅ CLI 三线收尾（用户指令）：aliyun v3.5.0 / feishu-cli 0.2.0+lark-cli 0.1.0 / workbench v1.0.1（~/bin + wb 别名；用户级 PATH 原为空→已设）；
+  **Workbench 连接实测打通**：`wb list`（实例「AI测试」i-f8za6qhv365cwhti5y35 Running）+ `wb exec`（Ubuntu 24.04.2 LTS kernel 6.8）零密码免公网 IP 直达；凭据落 ~/.workbench/config.json（0600，不进 repo）
+- ⏭ 企微 CLI：官方/社区无包 → 自建（channels/wecom.py 封装）
+- ⏭ Phase A 验收三判据：①三向导出导入实测回放（tests 已覆盖）②遗忘权审计报告（CLI audit 已通）③遗产模式干净房离线跑通（待做）

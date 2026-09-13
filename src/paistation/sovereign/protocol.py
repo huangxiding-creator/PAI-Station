@@ -172,6 +172,9 @@ def import_vault(src: str | Path, data_dir: str | Path, merge: bool = True,
                              confidence=float(row.get("confidence", 0.7)),
                              source=row.get("source", ""))
                 result["profile"] += 1
+    # 导入落位后重算 MANIFEST：新 vault 必须自校验通过（干净房闸教训）
+    if _vault_dir(data_dir).exists():
+        build_manifest(_vault_dir(data_dir), clock=clock)
     return result
 
 
