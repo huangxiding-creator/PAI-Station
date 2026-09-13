@@ -109,6 +109,8 @@ def doctor(config_path: str, secret_ini: str | None = None,
         results.append(("数据目录可写", True))
     except OSError:
         results.append(("数据目录可写", False))
+    from paistation.dist.checks import bundle_report   # M6.3 打包自检
+    results.extend(bundle_report(target))
     return results
 
 
