@@ -1,7 +1,9 @@
-"""M2.5 金标准问答集（20 条）：索引→混合检索→pack 注入全链路验收。
+"""金标准问答集（40 条）：索引→混合检索→pack 注入全链路验收。
 
 金标语义：真实问句必须命中正确文件且关键词进入上下文包——
 这是"无限上下文"承诺的可证伪测试，检索质量退化即红。
+扩容史：M2.5 首发 20 条/12 文档；Phase 10 后扩至 40 条/25 文档
+（用户渠道/工程/办公/安全场景加倍防退化网密度）。
 """
 import json
 from pathlib import Path
@@ -41,5 +43,5 @@ def test_golden_qa(item, injector):
     assert item["expect_keyword"] in pack, f"关键词未入包: {item['q']}"
 
 
-def test_golden_qa_has_twenty_items():
-    assert len(QA) == 20
+def test_golden_qa_has_forty_items():
+    assert len(QA) == 40

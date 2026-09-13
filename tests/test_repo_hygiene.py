@@ -27,10 +27,14 @@ def test_no_source_file_gitignored():
 
 
 def test_packaging_sources_gitignored():
-    """setup/ 与 scripts/*.py 同样不许被吞（M6 分发层教训泛化）。"""
+    """setup/ 源文件与 scripts/*.py 不许被吞（M6 分发层教训泛化）。
+
+    setup/wheels/ 是 build.ps1 现生成的构建产物，合法被忽略，不计入。
+    """
     targets = [str(p.relative_to(ROOT)).replace("\\", "/")
-               for p in (ROOT / "setup").glob("*")]
+               for p in (ROOT / "setup").glob("*")
+               if p.is_file()]
     targets += ["scripts/fetch_bge_m3.py", "scripts/acceptance_e2e.py",
                 "conftest.py"]
     swallowed = _check_ignore(targets)
-    assert swallowed == [], f"分发工件被 .gitignore 误吞：{swallowed}"
+    assert swallowed == [], f"分发源文件被 .gitignore 误吞：{swallowed}"
