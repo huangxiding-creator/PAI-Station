@@ -1,0 +1,41 @@
+# V3 运行台账（C10：run-ledger beats documents）
+
+> 周期：2026-09-13 起，连续自主一周 ｜ 心跳：durable cron 每小时 :23（7 天自动过期）
+> 唯一人工触点：提案审批闸（proposal-forge 之后）
+
+| 时间 | 事件 | 产出 |
+|---|---|---|
+| 09-13 | 用户语音指令 V3 产品化（100× 办公 AI / 24/7 常驻 / 感知→确认→自主执行 / 比用户更懂用户 / 无限上下文 / super-skill 自举 / 每环节调研≥20 / 一周连续自主）+ 中途补充**极强普适性**（一套方式装任何人笔记本） | — |
+| 09-13 | idea-intake：歧义评分 7/10 → "ask"档按用户显式自主授权转显式假设（弱字段 persona/value，留审批闸确认） | `PROPOSAL_V3/IDEA_SEED.md` |
+| 09-13 | research-orchestrator：V3 增量调研计划（9 环节 × ≥20 项） | `PROPOSAL_V3/RESEARCH_PLAN_V3.md` |
+| 09-13 | 九路调研代理并行出发（01 对标办公AI·含"5克巴迪"确证 / 02 无限上下文 / 03 语音环境声 / 04 主动任务发现 / 05 Windows常驻 / 06 用户建模 / 07 自进化skill / 08 普适安装器 / 09 AgentOS增量） | `RESEARCH_DOCKET/v3/01..09/`（进行中） |
+| 09-13 | durable 心跳任务建立（每小时 :23，7 天过期，含红线与审批闸保护） | — |
+| 09-13 | ✅ 环节03回收：**39 项**（流式ASR18/唤醒5/VAD4/说话人3/环境声5/Win采集2/服务化2+）。推荐感知栈：sounddevice+PyAudioWPatch 双路采集 → silero-vad 守门(<1ms/块) → sherpa-onnx KWS 拼音免训练唤醒 + YAMNet/CLAP 环境事件分流 → SenseVoice-Small int8 常开转写（升级路径 Fun-ASR-Nano GGUF 单二进制）→ CAM++ 说话人归属 → 本地 LLM 抽待办；静默期 CPU <5%、常驻内存 <1GB。重大情报：FunASR 官方已把 Fun-ASR-Nano(800M,7方言26口音) 移植 llama.cpp/GGUF 预编译 Windows 单二进制，中文 CER 8-10% @ CPU 20x 实时、比 whisper.cpp 精度高约2.7倍且更快——"中文一流+CPU常开"权衡已消失。备注：Z.ai 搜索配额耗尽→gh CLI 走 GitHub API 一手取证（FunASR 官方 BENCHMARKS.md） | `RESEARCH_DOCKET/v3/03-voice-ambient-sensing/` |
+| 09-13 | ✅ 九路全齐（361 项）→ 主线汇总：v3/RESEARCH_DIGEST.md（七器官缝合图+八条跨环节收敛发现）+ v3/GAP_REPORT.md（四格空白矩阵+5 条可证伪十倍声明全部达标） | `RESEARCH_DOCKET/v3/` 两文件 |
+| 09-13 | proposal-forge：PROPOSAL.md（一页速览/产品定义/七器官架构/M1-M6 一周里程碑/风险/审批请求）+ SCORECARD.json（feasibility .85/user_value .8/monetization .65/tenx .9 → 加权 .83 ≥ .7 = proceed）+ BUSINESS_MODEL.md（成果溢价三层结构） → **✋ 提案审批闸开启，等待用户裁决** | `PROPOSAL_V3/` 三件 |
+| 09-13 | ✅ 环节01回收：**33 项**（腾讯系10全覆盖+国内17+海外6）。**"5克巴迪"确证=腾讯 WorkBuddy**（置信度~95%，音近链 WorkBuddy→沃克巴迪→5克巴迪；腾讯云 CodeBuddy 团队、全平台桌面客户端、打通文档/会议/ima/微信、免费→¥99/月）——V3 最正面假想敌。100× 差量四维（33 项扫描近乎全空）：D1 24/7 常驻持续感知（环境声/屏幕/打字流无人做）/ D2 记忆+进化闭环（33 项无一有公开"随反馈变强"机制）/ D3 硬盘即记忆（上下文=模型窗口或云配额，WorkBuddy 旗舰仅 50GB）/ D4 成果计价（全市场按积分会员收费）。警示样本：Rewind 四年走完 个人付费失败→$350M 转型 B2B→Limitless 挂件→被 Meta 收购——验证需求真实+写好三条规避（云端算力成本/个人订阅意愿/隐私叙事），中国此位置仍空 | `RESEARCH_DOCKET/v3/01-benchmark-cn-office-ai/` |
+| 09-13 | ✅ C14 抽查核验八卷宗：JSON 全部可解析、项数无虚报（04/08 为 {meta,items} 包裹结构非虚报）；09 卷宗发现 1 处单引号非法 JSON（作者为规避内嵌双引号换引号）→ 正则修复后 42 项校验通过。各代理 WebSearch 配额尽后统一降级 gh API/curl 一手取证，数据链路可靠 | — |
+| 09-13 | ✅ 环节06回收：**31 项**（记忆系统8/数字孪生4/风格建模3/知识沉淀9/纵向固化5/工作流2；gh API 当日实测+论文 ID 交叉核实）。推荐建模架构：五层画像（身份事实/偏好风格/领域知识/做事流程/成果库）+ 双时间线（Zep 式事实失效不删可溯，防画像僵化）+ 夜间整理（sleep-time 固化/艾宾浩斯遗忘/反思升格待用户确认）+ 全程 Obsidian Markdown 镜像人可编辑——画像本体=带生命周期的结构化条目，向量只做检索。重大情报：Stanford 千人实验证明 2 小时访谈即可复刻一人 85% 社会调查回答（arXiv:2411.10109）——建模上限不在算法在采集覆盖，工作站坐拥全盘文档+聊天+diff=永不结束的深度访谈；反面教材 MindBank.ai 域名已死（纯云端个人孪生无变现闭环即死）。Top5：TencentDB-Agent-Memory(L0-L3分层蒸馏+技能卡,中文一手)/Letta/mem0/Zep-Graphiti/AWM | `RESEARCH_DOCKET/v3/06-user-modeling/` |
+| 09-13 | ✅ 环节09回收：**41 项**（V2已录动态8/框架格局10/桌面新品10/协议生态6/ClaudeCode生态5/同类愿景9；gh api+HN Algolia+官方站 curl 实测）。格局判断：通用"个人 agent 网关"已三级红海（OpenClaw 389.5k★→ZeroClaw 32.8k★→NanoClaw 30.7k★）且头部集体基金会化；商业 always-on agent 被 Cursor/Cognition 以云端+开发者向定义；**唯一无人占位="普通人现有 Windows 笔记本上的中文职场 24/7 感知-执行工作站"**——screenpipe 卖感知水、飞书桥断供半年、GLM 免费链被 Open Interpreter 默认背书，五线交点正是我们的位置。重大情报：2026-04 Anthropic 公开禁止 Claude Code 订户跑 OpenClaw（HN 1099pt）、Google 限制 Ultra 用户——389k★ 头部项目照样被单一供应商断供，实锤"多供应商 API+GLM 免费链"是生死架构非省钱选择；Devin 2026-09-11 也推出本地桌面 harness（Fusion）——云端巨头集体杀回本地。Top5：screenpipe/Claude Agent SDK(经 gateway 接 GLM)/NanoClaw 容器隔离/letta-code/AgentSkills+MCP registry 双直通车 | `RESEARCH_DOCKET/v3/09-personal-agent-os-delta/` |
+| 09-13 | ✅ 环节07回收：**36 项**（技能库先驱5/官方体系10/失败学习5/自动设计6/提示进化4/工程化4/风险对齐2，平均相关度4.22；GitHub API+Semantic Scholar 实证）。推荐自进化架构：五段式 skill-forge 流水线——四类信号触发（失败/重复/缺口/停滞）→ 案例库两阶升格防膨胀 → SKILL.md+scripts+evals 三件套技能包（代码优先）→ eval-first 三闸验证+DGM 归档回滚 → ClawHub 式注册表版本管理 → hooks 强制分级人审（进化提案永不自批）；进化引擎外包 DSPy/GEPA+OpenEvolve 夜间批处理。重大情报：NousResearch hermes-agent-self-evolution(5.3k★) 已把设想的自进化流水线完整跑通（单次优化 $2-10 无需 GPU，自动出 eval 考卷=V2 缺的那环）；anthropics/skills 已 176k★、SKILL.md 事实上成跨厂商标准（OpenClaw 技能生态 5,400+）。Top5：SkillWeaver/AgentSkills标准+ClawHub/Hermes Self-Evolution/AWM/DGM | `RESEARCH_DOCKET/v3/07-self-evolving-skills/` |
+| 09-13 | ✅ 环节05回收：**49 项**（含本仓 NJSupervisor 判活铁律 v3 基线 1 项；stars/license/pushed_at GitHub API 实测+curl 内容级核验）。推荐常驻架构：全用户态四进程——主 daemon（无UI、登录触发、Mutex 防双开）+ 托盘宿主（纯客户端）+ 感知 worker（PyAudioWPatch、采集窗内 wakepy 防睡）+ schtasks MINUTE 看护器（判活铁律 v3 兜底）；daemon↔托盘走标准库 named pipe（multiprocessing.connection+authkey，Tailscale 拓扑 Python 直译）；更新交接复用看护链（下载→原子换目录→自杀→看护拉新）。重大情报：18 万星 Ollama 的 Windows"永不退出+自动更新"完全没用 Windows 服务——纯用户态免管理员装 %LOCALAPPDATA%、WebView2 托盘、LOCALAPPDATA 换启更新、自带 logrotate——普通用户常驻产品可零服务零 UAC 做到产品级。Top5：Ollama 三件套(repo app/目录即施工图)/Tailscale 服务GUI分离+named pipe/NJSupervisor v3/PyAudioWPatch/Velopack | `RESEARCH_DOCKET/v3/05-windows-resident-daemon/` |
+| 09-13 | ✅ 环节08回收：**44 项**（先例解剖8/Python分发8/GUI壳7/分发渠道6/向导设计4/数据与更新7/硬件基线4），gh api+curl 一等来源核实（Release 资产体积逐个实测）。推荐安装形态：Inno Setup 单 exe（120-200MB：pywebview 轻壳+uv.exe 16.8MB+embeddable Python+离线 wheels+仅CPU引擎）→ per-user 免管理员安装 → 首启硬件探测三档分级、引擎与模型后置下载 → 数据全落 %APPDATA% 绿色升级 → Velopack delta 增量自更新 → winget 主渠道对冲 SmartScreen。重大情报：Python 官方 3.14 起 full installer 与 py launcher 双双 deprecated——"让用户先装 Python"已是官方反对项；Jan 55MB（引擎后置）vs Ollama 1.47GB（预捆后端）27 倍体积差=安装包膨胀唯一变量。Top5：Ollama(形态灵魂,反其巨包)/uv/Velopack/Inno Setup/Cherry Studio(BYO-key 中文向导逐屏抄) | `RESEARCH_DOCKET/v3/08-universal-installer/` |
+| 09-13 | ✅ 环节04回收：**39 项**（常驻感知9/会议行动项6/任务挖掘5/触发调度9/研究前沿10）。推荐任务发现管线：多信号事件流本地落盘（screenpipe 屏显+本机音频+watchdog 文件+OpenClaw webhook+cron 兜底）→ LLM 抽"责任人+动作+截止+证据指针"任务卡 → 时机/内容分离置信度模型+每日打扰预算 → notify/question/review 三模式确认（默认晨报汇总、例外即时，Windows 通知承载）→ agent inbox 派发后台执行、需要输入才召回。重大情报：Rewind/Limitless 2025-12 被 Meta 收购后永久关停（云端全量记忆死于收购），screenpipe 以"本地 agent 记忆"进 YC S26 存活——直接定义 PAI 记忆层本地优先技术底线。Top5：screenpipe/OpenClaw(借件不借架)/LangChain agent-inbox(MIT可fork)/Omi(开源全链对照)/ProAgentBench+FingerTip20K(置信度基准) | `RESEARCH_DOCKET/v3/04-proactive-task-discovery/` |
+| 09-13 | ✅ 环节02回收：**47 项**（记忆框架17/RAG管线8/向量库9/Win检索基建9/协同标准4），GitHub API 当日实测 stars/推送日期。推荐架构：Everything 秒搜文件名 + SQLite FTS5+sqlite-vec 混合 + bge-m3 CPU 嵌入 + L0/L1/L2 目录摘要按需加载 + Claude memory tool 注入。重大情报：Google OKF 开放知识格式（记忆=markdown+YAML 目录，git 可 diff）与 Anthropic /memories 殊途同归——"记忆即文件"成行业窗口；微软 GraphRAG 官宣维护模式（全量图构建路线被判死）。备注：该代理 WebSearch 配额耗尽，全程 GitHub REST API+HN Algolia 取证（数据可靠性不受影响）；汇总时按 C14 抽查核验 | `RESEARCH_DOCKET/v3/02-infinite-context-memory/` |
+| 09-13 | ✅ Phase 0-6 文档完成：VISION.md（四支柱+AI原生五选项裁决）＋ REQUIREMENTS.md（FR1-FR13/NFR1-NFR6，均带可测验收）＋ ARCHITECTURE.md（四进程拓扑+21 新模块映射+三数据契约〔事件流/任务卡/OKF记忆文件〕+ADR-1..9+降级矩阵+组件接口）＋ WBS.md（M1-M6 tracer-bullet 纵切片）。Phase 1 被 SCORECARD 吸收（feasibility .85 已含四维）；Phase 2/2b/3 被 docket 361 项吸收（九环节已覆盖 GitHub/竞品/方法发现，重复检索违反 C14 效率）；Phase 4 计划门由提案审批一并覆盖（台账已透明记录） | `PROPOSAL_V3/` 四件 |
+| 09-13 | 🚧 Phase 7-8 开工：M1 常驻骨架+语音感知（ipc→daemon→watchdog→audio→vad→asr→voice_events→tray，TDD 先行） | `src/paistation/resident/` `sense/` |
+| 09-13 | ✅ M1.1 `resident/ipc.py` TDD 完成（11 测试全绿）：JSON 行协议（请求/响应分离校验）+Listener/Client 薄壳+authkey 落盘管理+坏包回错误响应不连坐+坏 digest 握手不杀 accept 环+8 并发客户端全服务 | `src/paistation/resident/ipc.py` `tests/test_ipc.py` |
+| 09-13 | 📌 用户中途指令×2（产品需求补强）：①**进化效果跟踪+回滚**——批准≠终点，激活后持续记录使用效果，下降主动反馈回滚建议，一键回滚（FR10b）；②**GitHub 备份同步**——用户可配置自己的 GitHub 仓库，本地进化产物自动同步远端，换机可恢复（FR14）。已落 REQUIREMENTS/ARCHITECTURE（ADR-10 技能库即 git 仓库+effects.jsonl 契约+skills/effects.py+skills/sync.py 新模块）/WBS（M6.4-6.6 重排）。secrets/authkey/事件流永不入同步范围 | `PROPOSAL_V3/` 三文档更新 |
+
+## 状态板
+
+- [x] 九路调研回收（361 项，C14 抽查通过）
+- [x] v3/RESEARCH_DIGEST.md + GAP_REPORT.md 主线汇总
+- [x] proposal-forge：PROPOSAL.md + SCORECARD.json + BUSINESS_MODEL.md（verdict=proceed, 加权 .83）
+- [x] ✋ 提案审批闸：**用户已批准（2026-09-13，选"批准，开始一周开发"）**。种子三假设按默认生效；Phase 4 计划门由提案内 M1-M6 里程碑一并覆盖（提案含完整计划，用户显式授权批准后全自主）——透明记录此解释
+- [x] Phase 0-6 文档：VISION / REQUIREMENTS / ARCHITECTURE / WBS 全部落盘（Phase 1/2/2b/3 被 scorecard+docket 吸收，透明记录）
+- [ ] Phase 7-8 一周全自主开发：**M1 常驻骨架+感知（进行中）** → M2 无限上下文 → M3 任务发现 → M4 执行闭环 → M5 用户建模 → M6 打包安装器
+
+## 红线备忘（每轮心跳自查）
+
+项目外全盘只读 ｜ 账号安全第一 ｜ secrets 不入库 ｜ 00 愿景/付费语料不上公开仓 ｜ 只增不删+Git 留痕 ｜ 每环节调研≥20 ｜ 进化提案永不自批 ｜ commit 带 Co-Authored-By

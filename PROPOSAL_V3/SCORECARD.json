@@ -1,0 +1,40 @@
+{
+  "meta": {
+    "generated": "2026-09-13",
+    "skill": "super-skill V4.1.13 / proposal-forge",
+    "docket": "RESEARCH_DOCKET/v3 (9 tracks, 361 items, all first-hand verified 2026-09-13)",
+    "gate": "PROPOSAL APPROVAL GATE — awaiting user decision (approve/revise/reject)"
+  },
+  "feasibility": {
+    "score": 0.85,
+    "basis": "maturity_index: median organ maturity high — SenseVoice int8 (CER 8.17 @ 20x realtime CPU, official benchmarks), silero-vad/sherpa-onnx (production), SQLite FTS5+sqlite-vec+bge-m3 (established), Claude Agent SDK (v0.2.152 daily), Inno+uv+Velopack+pywebview (Ollama-proven pattern), schtasks watchdog (battle-tested in-repo, 判活铁律 v3). No organ below production-grade. Risk concentrated in stitching layer, not parts."
+  },
+  "user_value": {
+    "score": 0.8,
+    "basis": "pain evidence cited: (a) user's own directive (transcript 2026-09-13) — full-time knowledge worker drowning in manual research/writing; (b) 5+ domestic giants shipping desktop agents 2025-2026 (WorkBuddy/豆包/Kimi Work/纳米Work) = demand validation; (c) Rewind $350M pivot + Limitless acquisition = 'always-on personal memory' demand real; (d) WorkBuddy ¥99/月 = WTP anchor exists. Cited docs: docket 01 _all.json (33 products), GAP_REPORT.md."
+  },
+  "monetization": {
+    "score": 0.65,
+    "basis": "D4 outcome-pricing is unproven for consumer China (free-giant pressure: 豆包/企微/夸克 free); mitigation: local-free default (zero marginal cost), BYO-key cloud option, FDE store (V2 approved track) as monetization rail, skill marketplace long-tail. Compliance: AI content labeling rules 2025-09-15 in force. Capped at 0.65 pending first paid outcome."
+  },
+  "tenx": {
+    "score": 0.9,
+    "claims": [
+      {"axis": "memory_capacity", "ours": "full local disk (512GB-2TB)", "baseline": "WorkBuddy flagship 50GB cloud", "factor": "20-40x", "log10": "1.3-1.6"},
+      {"axis": "sensing_coverage_hours", "ours": "24h/day resident (idle CPU<5%)", "baseline": "<=2h/day (in-meeting or in-page)", "factor": "12x", "log10": "1.08"},
+      {"axis": "capability_growth", "ours": "per-task skill consolidation (compounding)", "baseline": "0 of 33 products have any evolution mechanism", "factor": "0->inf (qualitative shift)", "log10": "inf"},
+      {"axis": "monthly_cost", "ours": "0 CNY (free-chain + local)", "baseline": "99 CNY/mo (WorkBuddy standard)", "factor": "paid->zero", "log10": "inf"},
+      {"axis": "deployment_barrier", "ours": "double-click on existing laptop (120-200MB)", "baseline": "new hardware (Olares ~20k CNY class)", "factor": "hardware->zero", "log10": "inf"}
+    ],
+    "axes_at_10x_or_more": 5,
+    "verdict": "tenx-qualified"
+  },
+  "weighted": {
+    "weights": {"feasibility": 0.25, "user_value": 0.3, "monetization": 0.15, "tenx": 0.3},
+    "total": 0.83,
+    "threshold": 0.7,
+    "verdict": "proceed"
+  },
+  "weakest_dim": "monetization",
+  "notes": "user_value grounded in transcript + 33-product matrix (not LLM-inferred pain articles; Sogou channel unavailable this cycle, flagged per forge protocol). Proceed triggers PROPOSAL.md + BUSINESS_MODEL.md + this scorecard to the human gate."
+}
