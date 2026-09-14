@@ -1,0 +1,96 @@
+---
+name: weread-download
+description: 微信读书整书提取落盘（book.json + md + docx），产出喂 B1 技能包/B2 记忆卡管线。Use when 用户要提取/下载/抓取微信读书的书、建书库语料、找书入库、或需要某书的 book.json 原料时。内嵌账号安全铁律（日限 3 本、书间冷却、熔断、只读接口）与 -2012 登录失效处置流程。
+---
+
+# 微信读书整书提取
+
+项目内成熟管线：搜索 → 选书 → 批量提取 → 验收 → 喂书加工管线。
+实现源码在仓库里（`scripts/weread_*.py` + `src/paistation/forge/weread*.py`），
+本 skill 只编排它们，不重新发明。
+
+## 产物落点
+
+`data/weread/<书名slug>/`：`book.json`（章节树+全文，管线原料）、`<书名>.md`、`<书名>.docx`、`images/`。
+书名特殊字符（`/?:`等）自动替换为 `_`，中文保留。
+
+## 五步流程
+
+### 1. 查重 + 搜索
+
+```bash
+ls data/weread/                          # 已有书一目了然（_auth/_recon 除外）
+.venv/Scripts/python.exe scripts/weread_search.py <关键词> [数量默认20]
+```
+
+搜索结果落盘 `data/weread/_recon/search_<关键词>.json`，记下目标 `bookId`。
+
+### 2. 选书
+
+对照已有书目（按书名+bookId 双查重）。注意版本字样：
+**抢读版/试读版**可能只有部分内容（验收时看 `partial` 字段），可提示用户换正式版。
+
+### 3. 提取（单本命令，多本必须串行）
+
+```bash
+.venv/Scripts/python.exe scripts/weread_batch.py --book-id <bookId>
+# 加 --no-docx 只出 md+json（省时）
+```
+
+多本：**一本一条命令，书间 `sleep 130` 以上**——冷却纪律在脚本外，靠自觉执行。
+后台跑推荐把整链写成一个子 shell（参考既有用法），总耗时按 10~17 分钟/本预估。
+
+### 4. 验收
+
+```bash
+.venv/Scripts/python.exe -X utf8 -c "
+import json
+b = json.load(open('data/weread/<目录名>/book.json', encoding='utf-8'))
+chs = b['chapters']
+print(b['title'], len(chs), '章',
+      'skipped', sum(1 for c in chs if c.get('skipped')),
+      '空文', sum(1 for c in chs if not (c.get('text') or '').strip() and not c.get('skipped')),
+      'partial', b.get('partial'))"
+```
+
+合格线：`partial=False`、skipped=0；少量空文若为篇题页/分隔页属正常，报告注明即可。
+
+### 5. 报告 + 下游
+
+向用户报告：书名/章数/字数/耗时/完整性表格。下游加工（另一能力，勿自动执行）：
+
+```bash
+.venv/Scripts/python.exe scripts/weread_book_products.py skill  <书目录> --depth study
+.venv/Scripts/python.exe scripts/weread_book_products.py cards  <书目录>
+```
+
+## 账号安全铁律（硬约束，不可协商）
+
+- **日限 3 本**：`data/weread/_recon/daily_count.json` 自动拦截，到达即停，明日再跑；
+  用户要求超量时引用此铁律说明风险，不绕过。
+- **书间冷却 ≥120s**：多本串行时手动 sleep。
+- **节流 1.5~3.5s/章**：已内置在 client，禁止调快。
+- **只读接口**：永不调用任何写端点（加书架/写笔记/点赞一律不碰）。
+- **熔断**：连续异常自动停并落盘 `_recon/circuit_break.json`；当日不再重试。
+
+## 常见信号（速查）
+
+| 信号 | 处置 |
+|---|---|
+| `WeReadAuthError errCode=-2012` | 登录态失效 → 跑 `scripts/weread_login.py`（见下） |
+| 提取 10~17 分钟未完成 | **正常**（节流所致），勿杀进程；判活方法见 playbook |
+| 搜索能用但提取报 -2012 | 搜索接口对 cookie 宽松，是假象——以章节接口为准 |
+
+### 登录（-2012 时）
+
+```bash
+.venv/Scripts/python.exe scripts/weread_login.py 300
+```
+
+打开可见 Chrome 窗口等扫码。**窗口闪开即关 = 浏览器 profile 还活着、自动登录成功**，
+用户没看到窗口不代表失败——以 `data/weread/_auth/weread_auth.json` 的 mtime 为准。
+真需扫码时窗口会停留等待（用户动作）。
+
+## 故障与边界情况
+
+详见 [references/playbook.md](references/playbook.md)——遇异常先读它再动手。
