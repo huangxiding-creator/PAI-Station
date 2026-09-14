@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAI-Station · 个人超级AI工作站 — 你的认知，从此是主权资产</title>
+<meta name="description" content="PAI-Station v4：个人认知主权操作系统。记忆与决策写进本地账本，动作过风控闸门，任务不拿 done-token 不算完成。章程三律：永不卖用户数据 · 数据本地优先 · 一键带走。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='29' fill='%230b0e13' stroke='%23e8b04b' stroke-width='3'/%3E%3Ccircle cx='32' cy='32' r='22' fill='none' stroke='%23e8b04b' stroke-width='1' stroke-dasharray='3 3'/%3E%3Ctext x='32' y='42' font-size='28' text-anchor='middle' fill='%23e8b04b' font-family='serif' font-weight='700'%3E主%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --ink:#0b0e13; --ink2:#10141c; --ink3:#151b26;
+  --gold:#e8b04b; --gold-hi:#f7d488; --gold-dim:rgba(232,176,75,.14);
+  --green:#7ee787; --green-dim:rgba(126,231,135,.12);
+  --text:#d8dee9; --dim:#8b98ab; --faint:#5c6773;
+  --line:rgba(139,152,171,.14); --line-gold:rgba(232,176,75,.28);
+  --serif:"Noto Serif SC","Source Han Serif SC","Songti SC",STSong,SimSun,serif;
+  --mono:"Cascadia Code","JetBrains Mono","SF Mono",Consolas,"Courier New",monospace;
+  --sans:"PingFang SC","Microsoft YaHei","Noto Sans SC","Segoe UI",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink); color:var(--text); font-family:var(--sans);
+  line-height:1.75; overflow-x:hidden;
+  background-image:
+    radial-gradient(ellipse 60% 40% at 75% -5%, rgba(232,176,75,.07), transparent 60%),
+    radial-gradient(ellipse 40% 30% at 10% 15%, rgba(126,231,135,.035), transparent 60%),
+    linear-gradient(rgba(139,152,171,.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139,152,171,.028) 1px, transparent 1px);
+  background-size:auto,auto,64px 64px,64px 64px;
+}
+body::after{ /* grain */
+  content:""; position:fixed; inset:0; z-index:9999; pointer-events:none; opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--gold);color:#0b0e13}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 5vw;
+  background:rgba(11,14,19,.82);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.brand{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:14px}
+.brand .seal-mini{
+  width:30px;height:30px;border-radius:50%;border:2px solid var(--gold);
+  display:grid;place-items:center;font-family:var(--serif);font-weight:700;
+  color:var(--gold);font-size:15px;
+}
+.brand b{color:var(--text);font-weight:600}
+.brand span{color:var(--faint)}
+.nav{display:flex;gap:26px;font-size:13px;color:var(--dim);font-family:var(--mono)}
+.nav a{transition:color .2s}
+.nav a:hover{color:var(--gold-hi)}
+@media(max-width:760px){.nav{display:none}}
+
+/* ---------- hero ---------- */
+.hero{
+  min-height:100vh; display:grid; grid-template-columns:1.15fr .95fr; gap:5vw;
+  align-items:center; padding:130px 5vw 70px; max-width:1440px; margin:0 auto;
+}
+.kicker{
+  font-family:var(--mono); font-size:12px; color:var(--gold); letter-spacing:.28em;
+  margin-bottom:26px; display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+}
+.kicker::before{content:"";width:44px;height:1px;background:var(--gold)}
+h1{
+  font-family:var(--serif); font-weight:900; line-height:1.22;
+  font-size:clamp(40px,5.4vw,76px); letter-spacing:.01em; margin-bottom:30px;
+}
+h1 .gold{
+  background:linear-gradient(120deg,var(--gold-hi),var(--gold) 55%,#b9862f);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  border-bottom:3px solid var(--gold-dim);
+}
+.sub{color:var(--dim);font-size:17px;max-width:34em;margin-bottom:38px}
+.sub em{color:var(--gold-hi);font-style:normal;font-family:var(--mono);font-size:15px}
+.cta{display:flex;gap:16px;flex-wrap:wrap}
+.btn{
+  font-family:var(--mono);font-size:14px;padding:13px 30px;border:1px solid var(--line-gold);
+  transition:all .25s; display:inline-flex;align-items:center;gap:10px;
+}
+.btn:hover{transform:translateY(-2px)}
+.btn-solid{background:var(--gold);color:#151000;border-color:var(--gold);font-weight:700}
+.btn-solid:hover{background:var(--gold-hi);box-shadow:0 8px 30px rgba(232,176,75,.28)}
+.btn-ghost{color:var(--gold-hi);border-color:rgba(232,176,75,.45)}
+.btn-ghost:hover{border-color:var(--gold);background:var(--gold-dim)}
+
+/* terminal */
+.term{
+  background:var(--ink2); border:1px solid var(--line); border-radius:10px;
+  overflow:hidden; box-shadow:0 30px 80px rgba(0,0,0,.55), 0 0 0 1px rgba(232,176,75,.05);
+  font-family:var(--mono); font-size:13px;
+}
+.term-bar{
+  display:flex;align-items:center;gap:8px;padding:11px 16px;
+  background:var(--ink3);border-bottom:1px solid var(--line);
+}
+.term-bar i{width:11px;height:11px;border-radius:50%;background:#3a4252}
+.term-bar i:first-child{background:#e5695e}.term-bar i:nth-child(2){background:#e5b95e}.term-bar i:nth-child(3){background:#69c56e}
+.term-bar span{margin-left:8px;color:var(--faint);font-size:12px}
+.term-body{padding:22px 24px 26px;line-height:2.05;min-height:340px}
+.tl{opacity:0;animation:linein .5s forwards}
+.tl .p{color:var(--gold)}
+.tl .k{color:var(--text)}
+.tl .v{color:var(--dim)}
+.tl .lab{display:inline-block;width:11ch;color:var(--dim)}
+.tl .ok{color:var(--green)}
+@keyframes linein{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+.cursor{display:inline-block;width:9px;height:17px;background:var(--gold);vertical-align:-3px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* stat strip */
+.stats{
+  grid-column:1/-1; display:grid; grid-template-columns:repeat(4,1fr);
+  border-top:1px solid var(--line); margin-top:20px; padding-top:34px;
+}
+.stat .n{font-family:var(--mono);font-size:clamp(28px,3vw,42px);color:var(--gold-hi);font-weight:700}
+.stat .n small{font-size:.5em;color:var(--gold);margin-left:2px}
+.stat .l{color:var(--dim);font-size:13px;margin-top:6px;letter-spacing:.08em}
+@media(max-width:1020px){
+  .hero{grid-template-columns:1fr;padding-top:110px}
+  .stats{grid-template-columns:repeat(2,1fr);gap:26px}
+}
+
+/* ---------- marquee ---------- */
+.marquee{
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  overflow:hidden;white-space:nowrap;padding:13px 0;
+  font-family:var(--mono);font-size:13px;color:var(--faint);
+  background:var(--ink2);
+}
+.marquee .track{display:inline-block;animation:scroll 46s linear infinite}
+.marquee span{margin:0 26px}
+.marquee .g{color:var(--green)} .marquee .a{color:var(--gold)}
+@keyframes scroll{to{transform:translateX(-50%)}}
+
+/* ---------- sections ---------- */
+section{max-width:1180px;margin:0 auto;padding:110px 5vw 20px}
+.snum{
+  font-family:var(--serif);font-size:15px;color:var(--gold);letter-spacing:.4em;
+  margin-bottom:14px;display:flex;align-items:center;gap:16px;
+}
+.snum::after{content:"";flex:1;height:1px;background:var(--line)}
+h2{
+  font-family:var(--serif);font-weight:900;font-size:clamp(30px,3.6vw,46px);
+  line-height:1.3;margin-bottom:18px;
+}
+.lead{color:var(--dim);max-width:44em;font-size:16px}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+.rv.in{opacity:1;transform:none}
+
+/* ---------- why ---------- */
+.pains{margin-top:56px;border-top:1px solid var(--line)}
+.pain{
+  display:grid;grid-template-columns:110px 1fr 300px;gap:30px;align-items:baseline;
+  padding:34px 8px;border-bottom:1px solid var(--line);transition:background .3s;
+}
+.pain:hover{background:var(--gold-dim)}
+.pain .no{font-family:var(--serif);font-size:44px;color:var(--faint);font-weight:700}
+.pain:hover .no{color:var(--gold)}
+.pain h3{font-family:var(--serif);font-size:22px;font-weight:700;margin-bottom:8px}
+.pain p{color:var(--dim);font-size:15px}
+.pain .antidote{
+  font-family:var(--mono);font-size:12.5px;color:var(--green);text-align:right;line-height:1.9;
+}
+@media(max-width:900px){.pain{grid-template-columns:70px 1fr}.pain .antidote{grid-column:2;text-align:left}}
+
+/* ---------- pillars ---------- */
+.pillars{display:grid;grid-template-columns:repeat(6,1fr);gap:18px;margin-top:56px}
+.pillar{
+  border:1px solid var(--line);background:var(--ink2);padding:30px 26px;
+  position:relative;transition:all .3s;overflow:hidden;
+}
+.pillar::before{
+  content:attr(data-tag);position:absolute;top:0;right:0;
+  font-family:var(--mono);font-size:11px;color:var(--gold);
+  background:var(--gold-dim);padding:4px 12px;letter-spacing:.1em;
+}
+.pillar:hover{border-color:var(--line-gold);transform:translateY(-4px);box-shadow:0 18px 44px rgba(0,0,0,.4)}
+.pillar h3{font-family:var(--serif);font-size:21px;margin:6px 0 12px}
+.pillar p{color:var(--dim);font-size:14px;margin-bottom:18px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  font-family:var(--mono);font-size:11px;color:var(--dim);
+  border:1px solid var(--line);padding:3px 10px;
+}
+.pillar:nth-child(1){grid-column:span 2}
+.pillar:nth-child(2){grid-column:span 2}
+.pillar:nth-child(3){grid-column:span 2}
+.pillar:nth-child(4){grid-column:span 3}
+.pillar:nth-child(5){grid-column:span 3}
+@media(max-width:900px){.pillar{grid-column:span 6!important}}
+
+/* ---------- systems ---------- */
+.sysgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:20px;margin-top:56px}
+.sys{
+  grid-column:span 2;border:1px solid var(--line);background:var(--ink2);
+  font-family:var(--mono);transition:all .3s;
+}
+.sys:hover{border-color:var(--line-gold)}
+.sys:nth-child(4){grid-column:span 3}
+.sys:nth-child(5){grid-column:span 3}
+@media(max-width:900px){.sys{grid-column:span 6!important}}
+.sys-head{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 18px;background:var(--ink3);border-bottom:1px solid var(--line);
+  font-size:13px;color:var(--gold-hi);
+}
+.sys-head em{font-style:normal;color:var(--faint);font-size:11px}
+.sys-body{padding:18px 20px;font-size:13px;color:var(--dim);line-height:2.1}
+.sys-body b{color:var(--text);font-weight:500}
+.sys-foot{
+  padding:10px 18px;border-top:1px solid var(--line);
+  display:flex;gap:14px;font-size:11.5px;
+}
+.sys-foot .ok{color:var(--green)} .sys-foot .idx{color:var(--faint)}
+
+/* ---------- charter ---------- */
+#charter .frame{
+  border:1px solid var(--line-gold);background:linear-gradient(180deg,var(--ink2),var(--ink));
+  padding:70px 7vw 60px;margin-top:56px;position:relative;
+}
+.law{display:grid;grid-template-columns:120px 1fr;gap:34px;padding:36px 0;border-bottom:1px dashed var(--line);align-items:start}
+.law:last-of-type{border-bottom:none}
+.law .rn{font-family:var(--serif);font-size:58px;color:var(--gold);font-weight:900;line-height:1}
+.law h3{font-family:var(--serif);font-size:clamp(22px,2.6vw,32px);font-weight:900;margin-bottom:10px}
+.law p{color:var(--dim);font-size:15px;max-width:38em}
+@media(max-width:760px){.law{grid-template-columns:70px 1fr;gap:18px}.law .rn{font-size:40px}}
+.seal{
+  position:absolute;top:-46px;right:6vw;width:104px;height:104px;border-radius:50%;
+  border:3px double var(--gold);display:grid;place-items:center;
+  color:var(--gold);font-family:var(--serif);font-weight:900;font-size:21px;
+  letter-spacing:.18em;writing-mode:vertical-rl;background:var(--ink);
+  box-shadow:0 0 0 8px var(--ink),0 12px 40px rgba(232,176,75,.22);
+}
+.seal::before{
+  content:"";position:absolute;inset:-12px;border-radius:50%;
+  border:1px dashed var(--gold);opacity:.55;animation:spin 60s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:760px){.seal{width:74px;height:74px;font-size:15px;top:-34px;right:5vw}}
+.falsifiable{
+  margin-top:44px;border:1px dashed var(--gold);padding:26px 30px;
+  display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;
+}
+.falsifiable .tag{
+  font-family:var(--mono);font-size:12px;color:var(--gold);
+  border:1px solid var(--gold);padding:6px 14px;white-space:nowrap;
+}
+.falsifiable p{font-size:14.5px;color:var(--dim)}
+.falsifiable b{color:var(--gold-hi)}
+@media(max-width:700px){.falsifiable{grid-template-columns:1fr}}
+
+/* ---------- ledger ---------- */
+.ledger{margin-top:56px;border:1px solid var(--line);background:var(--ink2);font-family:var(--mono)}
+.lrow{
+  display:grid;grid-template-columns:170px 1fr 220px;gap:20px;
+  padding:19px 26px;border-bottom:1px solid var(--line);font-size:14px;align-items:baseline;
+}
+.lrow:last-child{border-bottom:none}
+.lrow:hover{background:var(--green-dim)}
+.lrow .k{color:var(--gold)}
+.lrow .v{color:var(--text)}
+.lrow .v .hl{color:var(--green)}
+.lrow .note{color:var(--faint);font-size:12px;text-align:right}
+@media(max-width:800px){.lrow{grid-template-columns:120px 1fr}.lrow .note{display:none}}
+
+/* ---------- open core ---------- */
+.core-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:56px}
+.core-col{border:1px solid var(--line);padding:36px 34px;background:var(--ink2)}
+.core-col.hi{border-color:var(--line-gold)}
+.core-col h3{font-family:var(--serif);font-size:24px;margin-bottom:6px}
+.core-col .cap{font-family:var(--mono);font-size:12px;letter-spacing:.2em;margin-bottom:24px}
+.core-col.free .cap{color:var(--green)}
+.core-col.biz .cap{color:var(--gold)}
+.core-col ul{list-style:none}
+.core-col li{
+  padding:11px 0;border-bottom:1px dashed var(--line);color:var(--dim);font-size:14.5px;
+  display:flex;justify-content:space-between;gap:14px;
+}
+.core-col li::after{content:attr(data-m);font-family:var(--mono);font-size:12px;color:var(--faint);white-space:nowrap}
+.core-col.hi li::after{color:var(--gold)}
+@media(max-width:800px){.core-grid{grid-template-columns:1fr}}
+
+/* ---------- footer ---------- */
+footer{
+  margin-top:120px;border-top:1px solid var(--line);padding:56px 5vw;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;
+  background:var(--ink2);
+}
+footer .fbrand{font-family:var(--serif);font-size:19px;color:var(--text)}
+footer .fbrand span{color:var(--gold)}
+footer .fnote{font-family:var(--mono);font-size:12px;color:var(--faint);text-align:right;line-height:2}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="brand" href="#top">
+    <span class="seal-mini">主</span>
+    <b>PAI-Station</b><span>个人超级AI工作站 · v4</span>
+  </a>
+  <nav class="nav">
+    <a href="#why">宣言</a><a href="#pillars">五支柱</a><a href="#systems">系统</a>
+    <a href="#charter">章程</a><a href="#ledger">工程</a><a href="#core">边界</a>
+  </nav>
+</div>
+
+<!-- ================= HERO ================= -->
+<header class="hero" id="top">
+  <div>
+    <div class="kicker">个人认知主权操作系统 · PERSONAL COGNITIVE SOVEREIGNTY OS</div>
+    <h1>你的认知，<br>从此是<span class="gold">主权资产</span>。</h1>
+    <p class="sub">
+      PAI-Station 把你的记忆、决策与技能写进<em>本地账本</em>——只增不删、可审计、可继承。
+      AI 替你完成的每一个小时都有 <em>done-token</em> 背书，摄入与产出用 <em>信息贸易顺差</em> 计价。
+      不租借判断力，不出卖注意力。
+    </p>
+    <div class="cta">
+      <a class="btn btn-solid" href="https://github.com/huangxiding-creator/PAI-Station" target="_blank" rel="noopener">开源核心 ↗</a>
+      <a class="btn btn-ghost" href="#charter">阅读章程三律</a>
+    </div>
+  </div>
+
+  <div class="term">
+    <div class="term-bar"><i></i><i></i><i></i><span>pai@localhost:~ — sovereign shell</span></div>
+    <div class="term-body">
+      <div class="tl" style="animation-delay:.2s"><span class="p">$</span> <span class="k">pai status</span></div>
+      <div class="tl" style="animation-delay:.7s"><span class="lab">sovereign</span><span class="ok">✓</span> <span class="v">记忆 vault · 决策账本 supersede · 遗产模式就绪</span></div>
+      <div class="tl" style="animation-delay:1.2s"><span class="lab">gate</span><span class="ok">✓</span> <span class="v">exit-token V4-全案五阶段收官 → </span><span class="ok">✅ done</span></div>
+      <div class="tl" style="animation-delay:1.7s"><span class="lab">control</span><span class="ok">✓</span> <span class="v">动作四级风控 · meter 三维计量中</span></div>
+      <div class="tl" style="animation-delay:2.2s"><span class="lab">market</span><span class="ok">✓</span> <span class="v">签名技能卡 · x402 按次计量就绪</span></div>
+      <div class="tl" style="animation-delay:2.7s"><span class="lab">governance</span><span class="ok">✓</span> <span class="v">章程三律 · audit 一致</span></div>
+      <div class="tl" style="animation-delay:3.4s"><br><span class="p">$</span> <span class="k">pai charter --audit</span> <span class="cursor"></span></div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="n"><span data-count="5">0</span><small>大</small></div><div class="l">主权系统模块</div></div>
+    <div class="stat"><div class="n"><span data-count="1036">0</span><small>项</small></div><div class="l">测试全绿 · 机器可查</div></div>
+    <div class="stat"><div class="n">+<span data-count="165">0</span><small>例</small></div><div class="l">V4 净增测例（871 → 1036）</div></div>
+    <div class="stat"><div class="n"><span data-count="0">0</span><small>条</small></div><div class="l">用户数据外流 · 永不卖出</div></div>
+  </div>
+</header>
+
+<!-- ================= MARQUEE ================= -->
+<div class="marquee" aria-hidden="true">
+  <div class="track">
+    <span class="g">exit-token ✅ done</span><span>·</span>
+    <span class="a">meter +1.5h</span><span>·</span>
+    <span class="g">decide supersede → effective</span><span>·</span>
+    <span class="a">golden jaccard 0.70 ✓ 拒稀释</span><span>·</span>
+    <span class="g">charter audit ✓ 三律一致</span><span>·</span>
+    <span class="a">gateway allow(read) → log</span><span>·</span>
+    <span class="g">heritage OFFLINE ✓ HEIRLOOM</span><span>·</span>
+    <span class="a">backup pai-20260913.zip</span><span>·</span>
+    <span class="g">selfcheck 0 conflicts</span><span>·</span>
+    <span class="a">x402 invoice → meter 计量</span><span>·</span>
+    <span class="g">exit-token ✅ done</span><span>·</span>
+    <span class="a">meter +1.5h</span><span>·</span>
+    <span class="g">decide supersede → effective</span><span>·</span>
+    <span class="a">golden jaccard 0.70 ✓ 拒稀释</span><span>·</span>
+    <span class="g">charter audit ✓ 三律一致</span><span>·</span>
+    <span class="a">gateway allow(read) → log</span><span>·</span>
+    <span class="g">heritage OFFLINE ✓ HEIRLOOM</span><span>·</span>
+    <span class="a">backup pai-20260913.zip</span><span>·</span>
+    <span class="g">selfcheck 0 conflicts</span><span>·</span>
+    <span class="a">x402 invoice → meter 计量</span><span>·</span>
+  </div>
+</div>
+
+<!-- ================= WHY ================= -->
+<section id="why">
+  <div class="snum rv">§ 01 · 宣言</div>
+  <h2 class="rv">AI 越强，<br>你的判断力越值钱——也越被收租。</h2>
+  <p class="lead rv">对话记录留在平台、经验随会话蒸发、技能无复利。三笔账，正在悄悄扣走你的认知净资产。</p>
+  <div class="pains">
+    <div class="pain rv">
+      <div class="no">壹</div>
+      <div><h3>记忆即弃</h3><p>聊得再深，会话一关全蒸发。你的洞察没有账本，三个月后等于没想过。</p></div>
+      <div class="antidote">解 → sovereign.vault<br>append-only 本地账本</div>
+    </div>
+    <div class="pain rv">
+      <div class="no">贰</div>
+      <div><h3>经验无复利</h3><p>同一个坑踩三遍，同一个判断重下三次。工具在进化，你的资产不进账。</p></div>
+      <div class="antidote">解 → gate 金标准<br>done-token 出口闸</div>
+    </div>
+    <div class="pain rv">
+      <div class="no">叁</div>
+      <div><h3>主权旁落</h3><p>数据在别人的云上，定价权在别人的手里。你不是用户，你是库存。</p></div>
+      <div class="antidote">解 → 章程三律<br>数据本地 · 一键带走</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PILLARS ================= -->
+<section id="pillars">
+  <div class="snum rv">§ 02 · 五支柱</div>
+  <h2 class="rv">一座工作站的承重结构</h2>
+  <p class="lead rv">从资产法定化到验证复利，五根支柱按依赖序浇筑，1036 项测试逐层验收。</p>
+  <div class="pillars">
+    <div class="pillar rv" data-tag="P0">
+      <h3>主权层</h3>
+      <p>记忆、决策、技能写入本地账本，append-only 只增不删；导入导出幂等，遗产模式可继承。</p>
+      <div class="chips"><span class="chip">vault 记忆</span><span class="chip">决策账本</span><span class="chip">三向适配器</span></div>
+    </div>
+    <div class="pillar rv" data-tag="P1">
+      <h3>控制面</h3>
+      <p>每个动作过四级闸门：读取放行、写入白名单、花费限额、不可逆必审。风控式信任，全程可回放。</p>
+      <div class="chips"><span class="chip">动作注册表</span><span class="chip">审批 HMAC</span><span class="chip">METR 后退</span></div>
+    </div>
+    <div class="pillar rv" data-tag="P2">
+      <h3>反退化</h3>
+      <p>任务不拿 done-token 不算完成；技能变异 A/B 留优汰劣，账本可翻案。</p>
+      <div class="chips"><span class="chip">出口闸</span><span class="chip">变异 A/B</span><span class="chip">预算表</span></div>
+    </div>
+    <div class="pillar rv" data-tag="P3">
+      <h3>网络节点</h3>
+      <p>技能卡签名发行、依赖白名单安装；x402 按次计量付费，IM 侧挂远程指挥。协议先行，真钱留给你决定。</p>
+      <div class="chips"><span class="chip">签名 skill card</span><span class="chip">x402 客户端</span><span class="chip">IM 侧挂</span></div>
+    </div>
+    <div class="pillar rv" data-tag="P4">
+      <h3>验证资产</h3>
+      <p>金标准每条带 origin 溯源，Jaccard ≥ 0.70 拒稀释——资产只增不贬，复利发生在验证层。</p>
+      <div class="chips"><span class="chip">origin 溯源</span><span class="chip">防稀释闸</span><span class="chip">增长报表</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SYSTEMS ================= -->
+<section id="systems">
+  <div class="snum rv">§ 03 · 五大系统</div>
+  <h2 class="rv">不是幻灯片，<br>是可以 import 的包</h2>
+  <p class="lead rv">五大模块全部落在 src/paistation/ 下，第三方裸 import 即可复用——子进程实测，100 行跑通控制面。</p>
+  <div class="sysgrid">
+    <div class="sys rv">
+      <div class="sys-head">sovereign/<em>记忆与决策</em></div>
+      <div class="sys-body">
+        <b>vault</b> 记忆库 · <b>decide</b> 决策账本 supersede<br>
+        导入导出幂等 · 遗忘坟墓 · <b>heritage</b> 遗产干净房
+      </div>
+      <div class="sys-foot"><span class="ok">938 ✓</span><span class="idx">Phase A</span></div>
+    </div>
+    <div class="sys rv">
+      <div class="sys-head">gate/ + evolve/<em>出口与进化</em></div>
+      <div class="sys-body">
+        <b>done-token</b> 写入口自动裁决 · selfcheck 三检<br>
+        变异 A/B 末事件行 · 预算表 · 金标准防稀释
+      </div>
+      <div class="sys-foot"><span class="ok">977 ✓</span><span class="idx">Phase B</span></div>
+    </div>
+    <div class="sys rv">
+      <div class="sys-head">control/<em>机器控制面</em></div>
+      <div class="sys-body">
+        动作注册表 · 风控策略 · 网关执行/回滚/回放<br>
+        <b>meter</b> 三维账本 · 审批 HMAC · METR 旋钮
+      </div>
+      <div class="sys-foot"><span class="ok">1001 ✓</span><span class="idx">Phase C · 第三方复用实证</span></div>
+    </div>
+    <div class="sys rv">
+      <div class="sys-head">market/<em>网络节点</em></div>
+      <div class="sys-body">
+        <b>x402</b> 客户端（402 → invoice → 计量） · 签名技能卡 publish/verify/install<br>
+        跨标准转换（Anthropic / OpenClaw / MCP / AGENTS.md） · IM 侧挂 /run /status
+      </div>
+      <div class="sys-foot"><span class="ok">1026 ✓</span><span class="idx">Phase D</span></div>
+    </div>
+    <div class="sys rv">
+      <div class="sys-head">governance/<em>商业治理</em></div>
+      <div class="sys-body">
+        章程三律 + open-core 边界 + <b>audit_charter</b> 机器校验<br>
+        <b>小时数报表</b>（done-token × meter 账本背书） · 托管同步 · 顺差仪表盘
+      </div>
+      <div class="sys-foot"><span class="ok">1036 ✓</span><span class="idx">Phase E · 全案收官</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CHARTER ================= -->
+<section id="charter">
+  <div class="snum rv">§ 04 · 章程</div>
+  <h2 class="rv">三律入章，<br>机器可审</h2>
+  <p class="lead rv">CHARTER.md 与代码同仓发布，audit_charter 逐目录校验——章程说到的，仓库里必须真的有。</p>
+  <div class="frame rv">
+    <div class="seal">主權在己</div>
+    <div class="law">
+      <div class="rn">Ⅰ</div>
+      <div><h3>永不卖用户数据</h3><p>任何形式、任何价格、任何时候。这不是隐私政策的一行小字，是产品存在的前提。</p></div>
+    </div>
+    <div class="law">
+      <div class="rn">Ⅱ</div>
+      <div><h3>数据本地优先</h3><p>你的认知资产默认长在你自己的磁盘上。账本 append-only，只增不删，可审计。</p></div>
+    </div>
+    <div class="law">
+      <div class="rn">Ⅲ</div>
+      <div><h3>一键带走</h3><p>export 幂等导出，随时整体迁离，零锁定。留下是因为值得，不是因为走不了。</p></div>
+    </div>
+    <div class="falsifiable">
+      <div class="tag">判伪条款</div>
+      <p>本产品<b>敢被证伪</b>：10× 判据若在 12 个月内达成不足三条，V4 判伪回滚。我们不接受不可检验的宏大叙事——<b>承诺写进章程，验证交给账本。</b></p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= LEDGER ================= -->
+<section id="ledger">
+  <div class="snum rv">§ 05 · 工程账本</div>
+  <h2 class="rv">质量不是口号，<br>是行可查的账</h2>
+  <div class="ledger rv">
+    <div class="lrow"><span class="k">tests</span><span class="v">871 → <span class="hl">1036</span> 全绿</span><span class="note">pytest · 每 commit 全量回归</span></div>
+    <div class="lrow"><span class="k">lint</span><span class="v">ruff <span class="hl">0</span> 违例</span><span class="note">静态检查 · 提交前硬闸</span></div>
+    <div class="lrow"><span class="k">exit-token</span><span class="v"><span class="hl">5</span> 枚 done · 机器裁决</span><span class="note">status=done ∧ tests=0 伤 ∧ evidence 在</span></div>
+    <div class="lrow"><span class="k">cleanroom</span><span class="v">全新 venv 离线安装实测</span><span class="note">抓出 import 缺 MANIFEST 真缺陷</span></div>
+    <div class="lrow"><span class="k">mutation</span><span class="v">变异 A/B → KEEP / DISCARD</span><span class="note">末事件行可翻案 · git 留痕</span></div>
+    <div class="lrow"><span class="k">append-only</span><span class="v">jsonl 全系只增不删</span><span class="note">拒收不入库，而非删除</span></div>
+  </div>
+</section>
+
+<!-- ================= OPEN CORE ================= -->
+<section id="core">
+  <div class="snum rv">§ 06 · 边界</div>
+  <h2 class="rv">开源核心，<br>商业有界</h2>
+  <p class="lead rv">open-core 2.0：能装进你电脑的永远免费；省你时间与心力的，才是可选项。</p>
+  <div class="core-grid">
+    <div class="core-col free rv">
+      <h3>开源核心</h3>
+      <div class="cap">永久免费 · 本地运行 · 可审计</div>
+      <ul>
+        <li data-m="本地">sovereign — 记忆 · 决策 · 遗产</li>
+        <li data-m="本地">gate / evolve — 出口闸 · 变异 · 预算</li>
+        <li data-m="本地">control — 网关 · 风控 · 计量</li>
+        <li data-m="本地">market — 技能卡 · x402 · 适配器</li>
+        <li data-m="本地">governance — 章程 · 报表 · 备份</li>
+        <li data-m="CLI">全量 CLI + 三向适配器</li>
+      </ul>
+    </div>
+    <div class="core-col hi biz rv">
+      <h3>商业边界</h3>
+      <div class="cap">可选项 · 永远可退回本地</div>
+      <ul>
+        <li data-m="可选">托管同步 sync — 多端一致</li>
+        <li data-m="可选">时间戳备份 — 只增不删</li>
+        <li data-m="未来">x402 微付费技能市场</li>
+        <li data-m="未来">增值网络节点服务</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="fbrand">PAI·<span>Station</span> — 个人超级AI工作站</div>
+  <div class="fnote">
+    章程可审计 · 判伪条款生效中 · 双北极星：信息贸易顺差 / 替你完成的小时数<br>
+    © 2026 PAI-Station · <a href="https://github.com/huangxiding-creator/PAI-Station" target="_blank" rel="noopener" style="color:var(--gold)">GitHub ↗</a>
+  </div>
+</footer>
+
+<script>
+// scroll reveal
+const io = new IntersectionObserver(es => {
+  es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold: .12 });
+document.querySelectorAll('.rv').forEach(el => io.observe(el));
+
+// counters
+const cio = new IntersectionObserver(es => {
+  es.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el = e.target, end = +el.dataset.count, t0 = performance.now(), dur = 1400;
+    const tick = now => {
+      const p = Math.min((now - t0) / dur, 1), ease = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(end * ease).toLocaleString();
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+    cio.unobserve(el);
+  });
+}, { threshold: .6 });
+document.querySelectorAll('[data-count]').forEach(el => cio.observe(el));
+</script>
+</body>
+</html>
