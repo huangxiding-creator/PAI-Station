@@ -6,10 +6,12 @@ from paistation.proactive.taskcards import extract_task_cards
 
 
 def _card(text, ts="2026-09-13T10:00:00"):
+    # now 必须随 ts 注入：否则 deadline 按真实时钟解析，与 _now() 假钟比对必翻车
     return extract_task_cards([{"ts": ts, "type": "voice.transcript",
                                 "source": "mic", "text": text,
                                 "speaker": "unknown",
-                                "evidence": {}, "meta": {}}])[0]
+                                "evidence": {}, "meta": {}}],
+                              now=datetime.fromisoformat(ts))[0]
 
 
 def _now():

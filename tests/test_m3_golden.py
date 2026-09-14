@@ -1,6 +1,10 @@
 """M3.4 金标：会议语音样本→抽取→晨报含正确待办（三件齐、闲聊零误报）。"""
+from datetime import datetime
+
 from paistation.proactive.confirm import ConfirmCenter, RecordingNotifier
 from paistation.proactive.taskcards import extract_task_cards
+
+_NOW = datetime(2026, 9, 13, 9, 30)   # 会议同日：金标全链钉死时钟，不受真实日期影响
 
 MEETING = [
     ("09:02:00", "好，咱们开始周会吧，先过一下上周的进度。", "chatter"),
@@ -25,7 +29,7 @@ def _events():
 
 
 def test_meeting_extraction_precision():
-    cards = extract_task_cards(_events())
+    cards = extract_task_cards(_events(), now=_NOW)
     titles = " ".join(c.title for c in cards)
     assert len(cards) == 3                    # 三件待办，零闲聊误报
     assert "纪要" in titles and "定价" in titles and "季度总结" in titles
@@ -35,7 +39,7 @@ def test_meeting_extraction_precision():
 
 
 def test_meeting_deadlines_and_owners():
-    cards = {c.title: c for c in extract_task_cards(_events())}
+    cards = {c.title: c for c in extract_task_cards(_events(), now=_NOW)}
     research = next(c for c in cards.values() if "定价" in c.title)
     minutes = next(c for c in cards.values() if "纪要" in c.title)
     summary = next(c for c in cards.values() if "总结" in c.title)
@@ -46,7 +50,7 @@ def test_meeting_deadlines_and_owners():
 
 def test_morning_digest_contains_all_three():
     center = ConfirmCenter(notifier=RecordingNotifier())
-    for card in extract_task_cards(_events()):
+    for card in extract_task_cards(_events(), now=_NOW):
         center.route(card)
     digest = center.morning_digest()
     for word in ("纪要", "定价", "季度总结"):

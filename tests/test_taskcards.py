@@ -33,7 +33,8 @@ def test_parse_deadline_weekday_and_date():
 
 def test_extract_research_request_with_deadline():
     cards = extract_task_cards([_ev("你好，请帮我调研一下腾讯办公助手的定价策略，"
-                                    "明天上午要结果。")])
+                                    "明天上午要结果。")],
+                               now=datetime(2026, 9, 13, 10, 0))
     assert len(cards) == 1
     card = cards[0]
     assert "定价策略" in card.title or "调研" in card.title
