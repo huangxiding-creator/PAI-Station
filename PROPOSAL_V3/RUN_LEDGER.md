@@ -45,7 +45,8 @@
 | 09-13 | 🏆 **V3 周期全收官**：调研 10 路 454 项 → 提案（.83 proceed）→ 批准 → M1-M6 + Phase 9/10/12 全部完成；465→851 tests；唯余真 VM 双击验收待用户 | 全仓 |
 | 09-14 | 心跳轮·留痕审计：九路+汇总+提案+开发台账全数在位无新可推进项（V3 已收官，V4 五阶段亦已于 09-13 收官 9079cfb）；**发现第10路卷宗（93 项，09-13 回收）漏入库**→补提交闭合 Git 留痕缺口（secrets 扫描清洁）；website/ 两文件改动属官网文案修订另线 WIP 不并入本轮；推送按 ls-remote 真判据 | `RESEARCH_DOCKET/v3/10-oss-ecosystem-business/` |
 | 09-14 | ✅ 推送落地 e60e71b..d978892（含上轮滞留 ae49990）：网络形态反常——开窗（rule+香港04/07）10 连 Connection reset 全败，wrapper 还原 direct 后 github 直连 200，schannel 直推一次过；ls-remote==HEAD 真判据通过。新形态已沉淀全局记忆 github-push 配方（两窗口交替，先 curl 探活再选路） | origin/main |
-| 09-14 | 心跳轮·回归健康检查抓真问题：全量套件 **5 红**（budget×3/taskcards×1/m3_golden×1）——测试调 `extract_task_cards` **漏注 now**，deadline 按真实时钟解析（09-14 23:31 下"今天16点"滚明日）再与假钟 09-13 比对 → 09-14 00:00 起确定性永久红。时钟陷阱·漏注型（对照恒注型）；实现注入缝（taskcards.py:189 now=None）无罪，判例=修测试不修实现。修复：`budget._card` now 随 ts 派生/m3_golden 钉死 `_NOW=09-13 09:30`/taskcards 单点注入，断言零改动。**1036 passed 复绿**（与 9079cfb 基线同数）。GitHub 直连窗口本轮不通（127.0.0.1:443 本地代理死），ls-remote 无法验证，推送按配方重试 | `tests/{test_budget,test_taskcards,test_m3_golden}.py` |
+| 09-14 | 心跳轮·回归健康检查抓真问题：全量套件 **5 红**（budget×3/taskcards×1/m3_golden×1）——测试调 `extract_task_cards` **漏注 now**，deadline 按真实时钟解析（09-14 23:31 下"今天16点"滚明日）再与假钟 09-13 比对 → 09-14 00:00 起确定性永久红。时钟陷阱·漏注型（对照恒注型）；实现注入缝（taskcards.py:189 now=None）无罪，判例=修测试不修实现。修复：`budget._card` now 随 ts 派生/m3_golden 钉死 `_NOW=09-13 09:30`/taskcards 单点注入，断言零改动。**1036 passed 复绿**（与 9079cfb 基线同数） | `tests/{test_budget,test_taskcards,test_m3_golden}.py`（af33350） |
+| 09-14 | ✅ 推送落地 5887af0..af33350：新网络形态——env 无代理变量、`git config --get http.proxy` 亦空，但 **URL 级配置 `http.https://github.com.proxy=127.0.0.1:7890`**（本地代理已死）强劫持一切 github 流量；普通 `-c http.proxy=` 压不住 URL 范围项，须 `-c http.https://github.com.proxy=`（置空）+schannel 直推一次过。curl 探活 200 与 git 失败并存之谜即此（curl 不读 git 的 URL 级配置）。ls-remote==HEAD 真判据通过；新形态已沉淀全局记忆 github-push 配方 | origin/main |
 
 ## 状态板
 
