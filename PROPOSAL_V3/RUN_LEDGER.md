@@ -44,6 +44,7 @@
 | 09-13 | ✅ **Phase 12 进化复盘**：EVOLUTION.md 胶囊——可重复方法 4 条（三层验收网/降级矩阵/永不自批三层实现/干净房闸）、失败→约束 S1-S6 全部约束化、可复用判断 4 条（批准≠终点/覆盖率数字≠质量/包名先查惯例/全自动与安全闸拆动作调和）、进化决策表+下轮候选。跨项目记忆沉淀 cleanroom-gate-pattern | `PROPOSAL_V3/EVOLUTION.md` |
 | 09-13 | 🏆 **V3 周期全收官**：调研 10 路 454 项 → 提案（.83 proceed）→ 批准 → M1-M6 + Phase 9/10/12 全部完成；465→851 tests；唯余真 VM 双击验收待用户 | 全仓 |
 | 09-14 | 心跳轮·留痕审计：九路+汇总+提案+开发台账全数在位无新可推进项（V3 已收官，V4 五阶段亦已于 09-13 收官 9079cfb）；**发现第10路卷宗（93 项，09-13 回收）漏入库**→补提交闭合 Git 留痕缺口（secrets 扫描清洁）；website/ 两文件改动属官网文案修订另线 WIP 不并入本轮；推送按 ls-remote 真判据 | `RESEARCH_DOCKET/v3/10-oss-ecosystem-business/` |
+| 09-14 | ✅ 推送落地 e60e71b..d978892（含上轮滞留 ae49990）：网络形态反常——开窗（rule+香港04/07）10 连 Connection reset 全败，wrapper 还原 direct 后 github 直连 200，schannel 直推一次过；ls-remote==HEAD 真判据通过。新形态已沉淀全局记忆 github-push 配方（两窗口交替，先 curl 探活再选路） | origin/main |
 
 ## 状态板
 
