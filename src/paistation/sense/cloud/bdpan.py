@@ -23,15 +23,17 @@ ROOT = "/apps/bdpan"
 NO_WINDOW = 0x08000000  # CREATE_NO_WINDOW（Windows 不弹窗铁律）
 
 
-def _default_runner(argv: list[str], timeout: float = 20.0) -> tuple[int, str]:
-    """bdpan CLI 子进程薄壳：CREATE_NO_WINDOW，异常按失败返回。"""
-    try:
-        r = subprocess.run(["bdpan"] + argv, capture_output=True, timeout=timeout,
-                           creationflags=NO_WINDOW)
-        return r.returncode, r.stdout.decode("utf-8", errors="replace")
-    except (OSError, subprocess.SubprocessError) as exc:
-        _log.warning("bdpan %s 失败: %s", argv[:1], exc)
-        return 1, ""
+def _make_runner(exe: str):
+    """bdpan CLI 子进程薄壳工厂：绑定解析后的可执行体路径。"""
+    def _runner(argv: list[str], timeout: float = 20.0) -> tuple[int, str]:
+        try:
+            r = subprocess.run([exe] + argv, capture_output=True, timeout=timeout,
+                               creationflags=NO_WINDOW)
+            return r.returncode, r.stdout.decode("utf-8", errors="replace")
+        except (OSError, subprocess.SubprocessError) as exc:
+            _log.warning("bdpan %s 失败: %s", argv[:1], exc)
+            return 1, ""
+    return _runner
 
 
 class BaiduDriveConnector(CloudConnector):
@@ -40,7 +42,7 @@ class BaiduDriveConnector(CloudConnector):
 
     def __init__(self, cli_path: str | None = None, runner=None):
         self._cli = cli_path if cli_path is not None else shutil.which("bdpan")
-        self._run = runner or _default_runner
+        self._run = runner or _make_runner(self._cli or "bdpan")
 
     def login_flow(self) -> bool:
         """授权走用户人工 login.sh，连接器不代登（永远返回未登录态）。"""

@@ -147,6 +147,23 @@ def test_bdpan_ls_failure_keeps_watermark():
     assert events == [] and wm == {"files": {"/apps/bdpan/x": 1}}
 
 
+def test_bdpan_default_runner_executes_cli_path(tmp_path):
+    """cli_path 指向真实可执行体时，默认 runner 必须执行它（而非裸名 bdpan）。"""
+    from paistation.sense.cloud.bdpan import BaiduDriveConnector
+    fake = tmp_path / "fake_bdpan.cmd"
+    fake.write_text('@echo off\r\necho {"list": []}\r\n', encoding="ascii")
+    conn = BaiduDriveConnector(cli_path=str(fake))
+    assert conn.test_session() is True
+    events, wm = conn.collect(None)
+    assert events == [] and wm == {"files": {}}
+
+
+def test_bdpan_runner_missing_exe_safe():
+    from paistation.sense.cloud.bdpan import _make_runner
+    runner = _make_runner("Z:/definitely/missing/bdpan.exe")
+    assert runner(["whoami"]) == (1, "")
+
+
 # ---------------------------------------------------------------- 微信情报
 
 def test_wih_no_dir_inactive(tmp_path):
