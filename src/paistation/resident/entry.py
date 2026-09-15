@@ -24,9 +24,9 @@ def default_data_dir() -> str:
 def build_daemon(data_dir: str, with_mic: bool = False,
                  with_loopback: bool = False, tick_interval: float = 30.0):
     """按在位模型装配感知管线+主控（缺件降级不阻塞）。"""
+    from paistation.intent.service import IntentService
     from paistation.resident.daemon import Daemon
     from paistation.resident.ipc import load_or_create_authkey
-    from paistation.intent.service import IntentService
     from paistation.sense.asr import ModelManager
     from paistation.sense.pipeline import VoicePipeline
     from paistation.sense.signal_service import SignalService
@@ -52,24 +52,40 @@ def build_daemon(data_dir: str, with_mic: bool = False,
     # M8 意图常驻件：默认 L1 口径（无 profile/网关配置时安全降级，
     # 读当日事件流增量提取意图）
     intents = IntentService(stream=stream)
-    # M9 云感知：三连接器注册+授权持久化回灌（默认 opt-in 全关，
-    # 未授权 tick 零调用）；wih 产物目录约定 data_dir/wih/
+    # M9 云感知：四连接器注册+授权持久化回灌（默认 opt-in 全关，
+    # 未授权 tick 零调用）；wih 产物目录约定 data_dir/wih/；
+    # local.files=本地盘感知（P4）：29 万级枚举重，配专属重节流
     from paistation.sense.cloud.base import ConnectorRegistry, WatermarkStore
+    from paistation.sense.cloud.bdpan import BaiduDriveConnector
     from paistation.sense.cloud.grants import GrantsStore
+    from paistation.sense.cloud.rate import RateLimiter
     from paistation.sense.cloud.service import CloudSensingService
     from paistation.sense.cloud.tencent import TencentMeetingConnector
-    from paistation.sense.cloud.bdpan import BaiduDriveConnector
     from paistation.sense.cloud.wih import WeChatIntelConnector
+    from paistation.sense.localfiles.connector import LocalFilesConnector
+    from paistation.sense.localfiles.domain import ScanDomain
+    from paistation.sense.localfiles.indexer import Indexer
+    from paistation.sense.localfiles.inventory import Inventory
+    from paistation.sense.localfiles.store import ChunkIndex
     registry = ConnectorRegistry()
+    lf_dir = os.path.join(data_dir, "local_index")
+    os.makedirs(lf_dir, exist_ok=True)
+    lf_chunks = ChunkIndex(os.path.join(lf_dir, "index.db"))
+    lf_indexer = Indexer(ScanDomain(),
+                         Inventory(os.path.join(lf_dir, "inventory.db")),
+                         lf_chunks)
     for conn in (TencentMeetingConnector(),
                  BaiduDriveConnector(),
                  WeChatIntelConnector(
-                     out_dir=os.path.join(data_dir, "wih"))):
+                     out_dir=os.path.join(data_dir, "wih")),
+                 LocalFilesConnector(lf_indexer)):
         registry.register(conn)
     GrantsStore(os.path.join(data_dir, "cloud_grants.json")).load_into(registry)
     cloud = CloudSensingService(
         stream=stream, registry=registry,
-        watermarks=WatermarkStore(os.path.join(data_dir, "cloud_watermarks.json")))
+        watermarks=WatermarkStore(os.path.join(data_dir, "cloud_watermarks.json")),
+        limiters={"local.files": RateLimiter(
+            "local.files", min_interval_s=600.0, daily_cap=144)})
     return Daemon(data_dir=data_dir, services=[pipeline, signals, intents, cloud],
                   pipe_name="pai-station", authkey=authkey,
                   tick_interval=tick_interval)

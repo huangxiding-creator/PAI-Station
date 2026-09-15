@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """M9 三云感知连接器测试：腾讯会议/百度网盘/微信情报 + 授权持久化 + 装配。
 
 假件铁律：全部注入假 transport/runner/目录，绝不打真平台（账号安全）。
@@ -9,16 +8,12 @@ import json
 import os
 import sys
 import time
-from pathlib import Path
-
-import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from paistation.sense.cloud.base import ConnectorRegistry
 from paistation.sense.cloud.grants import GrantsStore
 from paistation.sense.voice_events import ALLOWED_TYPES, validate_event
-
 
 # ---------------------------------------------------------------- 腾讯会议
 
@@ -246,8 +241,8 @@ def test_wih_new_artifact_emits_event(tmp_path):
 # ---------------------------------------------------------------- 授权持久化
 
 def _three_connectors(tmp_path):
-    from paistation.sense.cloud.tencent import TencentMeetingConnector
     from paistation.sense.cloud.bdpan import BaiduDriveConnector
+    from paistation.sense.cloud.tencent import TencentMeetingConnector
     from paistation.sense.cloud.wih import WeChatIntelConnector
     return (TencentMeetingConnector(token="t"),
             BaiduDriveConnector(cli_path=None),
@@ -299,6 +294,7 @@ def test_build_daemon_wires_cloud_service(tmp_path):
                  if getattr(s, "name", "") == "sense.cloud")
     reg_names = {c.name for c in cloud._registry.all()}
     assert {"cloud.tencent-meeting", "cloud.baidu-drive",
-            "cloud.wechat-intel"} <= reg_names
-    # 默认 opt-in：未授权连接器 tick 零调用
-    assert cloud._limiters == {}
+            "cloud.wechat-intel", "local.files"} <= reg_names
+    # 默认 opt-in：未授权连接器 tick 零调用；local.files 专属重节流在位
+    assert set(cloud._limiters) == {"local.files"}
+    assert cloud._limiters["local.files"]._min_interval == 600.0
