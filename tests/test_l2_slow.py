@@ -1,0 +1,101 @@
+"""M7c L2 慢通道：银甲虫 prompt 移植 + UItron 三档复杂度路由。"""
+from paistation.intent.l2_slow import (
+    build_messages,
+    parse_llm_json,
+    route,
+    summarize_block,
+)
+
+_LLM_JSON = ('{"activity": "在写 PAI 意图层测试", "project": "PAI-Station",'
+             ' "category": "project", "summary": "为意图层补 L2 测试",'
+             ' "evidence": ["main.py"], "confidence": 0.85,'
+             ' "next_action": "继续写金标准"}')
+
+
+class _FakeGateway:
+    def __init__(self, reply=None, error=None):
+        self.reply = reply or _LLM_JSON
+        self.error = error
+        self.calls = []
+
+    def chat(self, messages, **kw):
+        self.calls.append((messages, kw))
+        if self.error:
+            raise self.error
+        return self.reply, "fake"
+
+
+def _block(**kw):
+    b = {"start": "2026-09-15T10:00:00", "end": "2026-09-15T10:30:00",
+         "duration_min": 30.0, "samples": 10, "process": "Code.exe",
+         "titles": ["main.py - pai"], "domains": ["github.com"],
+         "category": "project", "label": "做项目",
+         "category_counts": {"project": 10}, "coverage": 1.0,
+         "confidence": 0.8, "related_files": ["main.py"],
+         "related_clipboard": ["text"]}
+    b.update(kw)
+    return b
+
+
+def test_route_simple_high_confidence():
+    assert route(_block()) == "simple"
+
+
+def test_route_complex_moderate():
+    assert route(_block(confidence=0.6, coverage=0.55)) == "complex"
+
+
+def test_route_hardest_unknown_or_mixed():
+    assert route(_block(category="unknown", confidence=0.3)) == "hardest"
+    assert route(_block(coverage=0.4)) == "hardest"
+
+
+def test_summarize_simple_skips_llm():
+    gw = _FakeGateway()
+    r = summarize_block(_block(), gw)
+    assert r["llm"] is False and r["tier"] == "simple"
+    assert gw.calls == []                       # 高置信直判不烧 token
+
+
+def test_summarize_complex_uses_llm():
+    gw = _FakeGateway()
+    r = summarize_block(_block(confidence=0.6, coverage=0.55), gw)
+    assert r["llm"] is True and r["provider"] == "fake"
+    assert r["activity"] == "在写 PAI 意图层测试"
+    assert r["confidence"] == 0.85
+    assert gw.calls[0][1].get("temperature") == 0.2   # 银甲虫标定
+
+
+def test_summarize_gateway_failure_degrades():
+    r = summarize_block(_block(coverage=0.5),
+                        _FakeGateway(error=RuntimeError("全供应商死")))
+    assert r["llm"] is False and r["degraded"] == "gateway"
+    assert r["confidence"] == 0.3               # 降级 L1 直判低置信
+
+
+def test_summarize_parse_failure_degrades():
+    r = summarize_block(_block(coverage=0.5),
+                        _FakeGateway(reply="我觉得用户在写代码啦"))
+    assert r["llm"] is False and r["degraded"] == "parse"
+    assert r["confidence"] == 0.3
+
+
+def test_parse_llm_json_fences_and_plain():
+    assert parse_llm_json(_LLM_JSON)["project"] == "PAI-Station"
+    assert parse_llm_json(f"```json\n{_LLM_JSON}\n```") is not None
+    assert parse_llm_json("垃圾输出") is None
+
+
+def test_build_messages_injects_icl():
+    msgs = build_messages(_block(), icl="[历史修正示例]\n正确判读: 修代码")
+    assert msgs[0]["role"] == "system"
+    assert "历史修正示例" in msgs[1]["content"]
+    assert "main.py - pai" in msgs[1]["content"]          # 块证据入 prompt
+    assert "只输出 JSON" in msgs[1]["content"]
+
+
+def test_needs_screen_flag_on_hardest():
+    r = summarize_block(_block(category="unknown", confidence=0.3),
+                        _FakeGateway())
+    assert r["tier"] == "hardest"
+    assert r.get("needs_screen") is True          # M8 感知升级件接入位

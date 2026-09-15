@@ -47,6 +47,7 @@ _PROC_SUBSTR = {
                 "terminal", "powershell", "pwsh", "git", "node",
                 "python", "docker"),
     "docs": ("acrobat", "obsidian", "notion", "typora", "xmind"),
+    "leisure": ("steam", "cloudmusic", "spotify"),
     "system": ("services", "ms-settings"),
 }
 # 域名后缀匹配（www. 前缀等）
