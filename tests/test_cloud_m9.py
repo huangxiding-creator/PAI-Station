@@ -90,7 +90,7 @@ def test_tencent_token_header_present():
 # ---------------------------------------------------------------- 百度网盘
 
 class FakeBdpanRunner:
-    """按 argv[0] 返回预置结果：(rc, stdout)。"""
+    """按 argv[0] 返回预置结果：(rc, stdout)。ls_json 支持 dict 按目录分发。"""
 
     def __init__(self, ls_json=None, whoami_rc=0, ls_rc=0):
         self._ls = ls_json
@@ -105,7 +105,10 @@ class FakeBdpanRunner:
         if argv[0] == "ls":
             if self._ls_rc != 0:
                 return self._ls_rc, ""
-            return 0, json.dumps(self._ls, ensure_ascii=False)
+            payload = self._ls
+            if isinstance(payload, dict) and "list" not in payload:
+                payload = payload.get(argv[1], {"list": []})
+            return 0, json.dumps(payload, ensure_ascii=False)
         return 1, ""
 
 
@@ -162,6 +165,49 @@ def test_bdpan_runner_missing_exe_safe():
     from paistation.sense.cloud.bdpan import _make_runner
     runner = _make_runner("Z:/definitely/missing/bdpan.exe")
     assert runner(["whoami"]) == (1, "")
+
+
+def test_bdpan_walk_senses_subfolder_files():
+    """子目录文件必须被感知（skill 生态惯例：agent-memory/<agent>/<device>/...）。"""
+    from paistation.sense.cloud.bdpan import ROOT, BaiduDriveConnector
+    runner = FakeBdpanRunner(ls_json={
+        ROOT: {"list": [{"path": f"{ROOT}/画像报告", "isdir": 1, "size": 0}]},
+        f"{ROOT}/画像报告": {"list": [
+            {"path": f"{ROOT}/画像报告/a.docx", "size": 10},
+            {"path": f"{ROOT}/画像报告/b.docx", "size": 20},
+        ]},
+    })
+    conn = BaiduDriveConnector(cli_path="bdpan", runner=runner)
+    events, wm = conn.collect(None)
+    texts = " | ".join(e["text"] for e in events)
+    assert "a.docx" in texts and "b.docx" in texts
+    assert set(wm["files"]) == {f"{ROOT}/画像报告/a.docx",
+                                f"{ROOT}/画像报告/b.docx"}
+    # 子目录列过一次即去重（防环/防重复扫）
+    ls_dirs = [c[1] for c in runner.calls if c[0] == "ls"]
+    assert ls_dirs.count(f"{ROOT}/画像报告") == 1
+
+
+def test_bdpan_walk_depth_bounded():
+    """超过深度上限的嵌套不再下钻（限流防失控），已见层照常快照。"""
+    from paistation.sense.cloud.bdpan import MAX_DEPTH, ROOT, BaiduDriveConnector
+    chain = ROOT
+    levels = {}
+    for d in range(MAX_DEPTH + 2):  # 造一条比上限深 2 层的链
+        child = f"{ROOT}/d{d}"
+        levels[chain] = {"list": [{"path": child, "isdir": 1},
+                                  {"path": f"{chain}/f{d}.txt", "size": d}]}
+        chain = child
+    levels[chain] = {"list": []}
+    conn = BaiduDriveConnector(cli_path="bdpan",
+                               runner=FakeBdpanRunner(ls_json=levels))
+    events, wm = conn.collect(None)
+    seen = set(wm["files"])
+    assert f"{ROOT}/f0.txt" in seen
+    # 最深可见层=depth MAX_DEPTH 的目录仍被列出（其文件可见），
+    # 但它不再下钻——下一层文件不可见
+    assert f"{ROOT}/d{MAX_DEPTH - 1}/f{MAX_DEPTH}.txt" in seen
+    assert f"{ROOT}/d{MAX_DEPTH}/f{MAX_DEPTH + 1}.txt" not in seen  # 超深不见
 
 
 # ---------------------------------------------------------------- 微信情报

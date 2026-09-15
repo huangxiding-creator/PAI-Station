@@ -20,6 +20,8 @@ from paistation.sense.cloud.base import CloudConnector
 _log = logging.getLogger("paistation.sense.cloud.bdpan")
 
 ROOT = "/apps/bdpan"
+MAX_DEPTH = 3  # 递归深度上限（防失控下钻）
+MAX_DIRS = 50  # 单轮最多列目录数（节流边界）
 NO_WINDOW = 0x08000000  # CREATE_NO_WINDOW（Windows 不弹窗铁律）
 
 
@@ -57,12 +59,9 @@ class BaiduDriveConnector(CloudConnector):
     def collect(self, since_watermark):
         if not self._cli:
             return [], since_watermark  # CLI 未装=未激活
-        rc, out = self._run(["ls", ROOT, "--json", "--order", "time"])
-        if rc != 0:
-            return [], since_watermark  # 未登录/故障：水位线原地踏步
-        current = self._parse(out)
+        current = self._walk()
         if current is None:
-            return [], since_watermark
+            return [], since_watermark  # 未登录/故障：水位线原地踏步
         previous = since_watermark.get("files", {}) if isinstance(
             since_watermark, dict) else {}
         events: list[dict] = []
@@ -79,9 +78,34 @@ class BaiduDriveConnector(CloudConnector):
             })
         return events, {"files": current}
 
+    def _walk(self) -> dict[str, int] | None:
+        """有界 BFS：ROOT 起，目录入队下钻（MAX_DEPTH/MAX_DIRS 封顶），
+        文件入快照。任一 ls 失败=整轮失败（水位线原地踏步）。"""
+        snap: dict[str, int] = {}
+        queue: list[tuple[str, int]] = [(ROOT, 0)]
+        listed: set[str] = set()
+        while queue and len(listed) < MAX_DIRS:
+            directory, depth = queue.pop(0)
+            if directory in listed:
+                continue
+            rc, out = self._run(["ls", directory, "--json", "--order", "time"])
+            if rc != 0:
+                return None
+            items = self._items(out, directory)
+            if items is None:
+                return None
+            listed.add(directory)
+            for item in items:
+                if item.get("isdir") in (1, True, "1"):
+                    if depth < MAX_DEPTH:
+                        queue.append((item["path"], depth + 1))
+                else:
+                    snap[item["path"]] = int(item.get("size") or 0)
+        return snap
+
     @staticmethod
-    def _parse(out: str) -> dict[str, int] | None:
-        """ls --json 输出 → {路径: 大小}；容错 list/{"list":[]}/坏档。"""
+    def _items(out: str, parent: str = "") -> list[dict] | None:
+        """ls --json 输出 → 条目列表；裸名按父目录拼接防跨目录撞键。"""
         try:
             data = json.loads(out)
         except ValueError:
@@ -93,14 +117,16 @@ class BaiduDriveConnector(CloudConnector):
                     break
             else:
                 return None
-        snap: dict[str, int] = {}
-        for item in data:
-            if not isinstance(item, dict):
+        items: list[dict] = []
+        for entry in data:
+            if not isinstance(entry, dict):
                 continue
-            path = item.get("path") or item.get("server_filename") or item.get("name")
+            path = str(entry.get("path") or "")
             if not path:
-                continue
-            if item.get("isdir") in (1, True, "1"):
-                continue  # 目录不入快照（其子文件自身会出现在列表里）
-            snap[str(path)] = int(item.get("size") or 0)
-        return snap
+                name = entry.get("server_filename") or entry.get("name")
+                if not name:
+                    continue
+                path = f"{parent}/{name}" if parent else str(name)
+            items.append({"path": path, "isdir": entry.get("isdir"),
+                          "size": entry.get("size") or 0})
+        return items
