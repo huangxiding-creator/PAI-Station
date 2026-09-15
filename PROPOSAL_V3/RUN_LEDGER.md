@@ -67,6 +67,8 @@
 
 | 09-15 | ✅ **腾讯文档 skill 接入完成**（用户给 CDN zip+Token）：官方包 v1.0.41（374KB 直连）→ mcporter 0.13.13 npm 装（npmmirror，首跑 exit 1 系同 shell PATH 未刷新假象，二进制实已就位）→ skill 部署 .claude/skills/tencent-docs/（九品类目录+setup.sh+references）→ 四服务注册 mcporter home 配置（tencent-docs/slide-mcp/doc-mcp/sheet-mcp 独立端点共用 Token，Authorization header 直带）→ Token 双落位（用户级 env TENCENT_DOCS_TOKEN + config/tencent_docs.secret.ini gitignore 豁免）→ **真机验证四端点全活：224+88+69+63=444 工具 schema 拉取成功=鉴权通过**；skill 已被会话系统识别 | `.claude/skills/tencent-docs/`、`C:\Users\91216\.mcporter\mcporter.json` |
 
+| 09-15 | ✅ **积压全量推送 eeb8049..24de6ec（6 commits）**（用户指令「项目推送 github」）：双窗皆活（直连 0.95s/7890 200），直连+schannel+URL级代理临时置空一次过，**零 Clash 操作**（NB 约束兑现）；入库内容=渠道栈 skill 生态 703 文件（secrets 扫描清洁+tm_token.txt 补 gitignore）+README 云感知时代更新（1173 徽章/云感知段/渠道栈/里程碑）+pai.ini 免费池刷新；不入库维持=SELF_PROFILE/build/vendor/EngOpp-Mining/Multi-Platform/_recon/.agents（待用户定）。ls-remote==HEAD 真判据通过 | origin/main |
+
 ## 状态板
 
 - [x] 九路调研回收（361 项，C14 抽查通过）
