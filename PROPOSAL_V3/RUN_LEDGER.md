@@ -48,6 +48,8 @@
 | 09-14 | 心跳轮·回归健康检查抓真问题：全量套件 **5 红**（budget×3/taskcards×1/m3_golden×1）——测试调 `extract_task_cards` **漏注 now**，deadline 按真实时钟解析（09-14 23:31 下"今天16点"滚明日）再与假钟 09-13 比对 → 09-14 00:00 起确定性永久红。时钟陷阱·漏注型（对照恒注型）；实现注入缝（taskcards.py:189 now=None）无罪，判例=修测试不修实现。修复：`budget._card` now 随 ts 派生/m3_golden 钉死 `_NOW=09-13 09:30`/taskcards 单点注入，断言零改动。**1036 passed 复绿**（与 9079cfb 基线同数） | `tests/{test_budget,test_taskcards,test_m3_golden}.py`（af33350） |
 | 09-14 | ✅ 推送落地 5887af0..af33350：新网络形态——env 无代理变量、`git config --get http.proxy` 亦空，但 **URL 级配置 `http.https://github.com.proxy=127.0.0.1:7890`**（本地代理已死）强劫持一切 github 流量；普通 `-c http.proxy=` 压不住 URL 范围项，须 `-c http.https://github.com.proxy=`（置空）+schannel 直推一次过。curl 探活 200 与 git 失败并存之谜即此（curl 不读 git 的 URL 级配置）。ls-remote==HEAD 真判据通过；新形态已沉淀全局记忆 github-push 配方 | origin/main |
 
+| 09-15 | 心跳轮·留痕审计抓真缺口：**FDE 发布线账本漏入库**——`09 发布/` 目录晚于 gitignore 液态器官段（09-11）建立，`_credentials/chain.jsonl`（4 条发布凭证）与 `store/` 货架（4 技能包 manifest+试读，2145 行）一直未 add，违反只增不删+Git 留痕。secrets 扫描清洁后补提交 d6f2e2f。推送网络形态第三变：直连死（000）/代理 7890 活（200）——URL 级代理配置恰好指向活路，schannel 直用一次过，未动 Clash。`_recon/`（即席调研 scratch，无硬编码 token）与 website/ WIP、SELF_PROFILE/ 维持不入库待用户定 | `09 发布/_credentials/` `09 发布/store/`（d6f2e2f→origin/main） |
+
 ## 状态板
 
 - [x] 九路调研回收（361 项，C14 抽查通过）
