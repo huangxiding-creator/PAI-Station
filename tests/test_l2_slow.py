@@ -99,3 +99,57 @@ def test_needs_screen_flag_on_hardest():
                         _FakeGateway())
     assert r["tier"] == "hardest"
     assert r.get("needs_screen") is True          # M8 感知升级件接入位
+
+
+# ---------- M8 屏幕观察接缝 ----------
+
+def test_screen_observer_only_called_on_hardest():
+    calls = []
+
+    def screen():
+        calls.append(1)
+        return {"tier": "hardest", "text": "微信读书页面"}
+
+    gw = _FakeGateway()
+    r = summarize_block(_block(category="unknown", confidence=0.3),
+                        gw, screen=screen)
+    assert r["screen_used"] is True
+    assert calls == [1]                        # hardest 档才观察
+    assert "微信读书页面" in gw.calls[0][0][1]["content"]
+
+
+def test_screen_not_called_on_simple_and_complex():
+    calls = []
+
+    def screen():
+        calls.append(1)
+        return "屏幕内容"
+
+    summarize_block(_block(), _FakeGateway(), screen=screen)          # simple
+    summarize_block(_block(confidence=0.6, coverage=0.55),
+                    _FakeGateway(), screen=screen)                    # complex
+    assert calls == []                         # 省资源：非 hardest 零观察
+    r = summarize_block(_block(confidence=0.6, coverage=0.55),
+                        _FakeGateway(), screen=screen)
+    assert r["screen_used"] is False
+
+
+def test_screen_failsoft_exception_and_forms():
+    def boom():
+        raise RuntimeError("截图死")
+
+    r = summarize_block(_block(category="unknown", confidence=0.3),
+                        _FakeGateway(), screen=boom)
+    assert r["llm"] is True and r["screen_used"] is False   # fail-soft 不崩
+    r2 = summarize_block(_block(category="unknown", confidence=0.3),
+                         _FakeGateway(), screen=lambda: "纯字符串观察")
+    assert r2["screen_used"] is True
+    r3 = summarize_block(_block(category="unknown", confidence=0.3),
+                         _FakeGateway(), screen=lambda: {"text": ""})
+    assert r3["screen_used"] is False              # 空文本=未使用
+
+
+def test_build_messages_screen_section():
+    msgs = build_messages(_block(), screen_text="浏览器在看招标公告")
+    assert "[屏幕观察]" in msgs[1]["content"]
+    assert "招标公告" in msgs[1]["content"]

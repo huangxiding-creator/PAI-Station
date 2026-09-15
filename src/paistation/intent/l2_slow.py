@@ -62,10 +62,13 @@ def render_digest(block: dict) -> str:
     return "\n".join(lines)
 
 
-def build_messages(block: dict, icl: str = "") -> list[dict]:
+def build_messages(block: dict, icl: str = "",
+                   screen_text: str = "") -> list[dict]:
     user = []
     if icl:
         user.append(icl)
+    if screen_text:
+        user.append(f"[屏幕观察]\n{screen_text}")
     user.append(f"[活动记录]\n{render_digest(block)}\n\n[输出要求]\n"
                 "只输出 JSON 对象（不要 markdown 代码块、不要多余文字），"
                 "字段：{\"activity\": 一句话活动描述, \"project\": 所属项目, "
@@ -94,19 +97,26 @@ def parse_llm_json(text: str) -> dict | None:
     return obj
 
 
-def summarize_block(block: dict, gateway, icl: str = "") -> dict:
-    """活动块 → 意图判读。gateway: execute.LlmGateway（chat(msgs,**kw)）。"""
+def summarize_block(block: dict, gateway, icl: str = "",
+                    screen=None) -> dict:
+    """活动块 → 意图判读。gateway: execute.LlmGateway（chat(msgs,**kw)）。
+
+    screen: 屏幕观察提供方（M8 升级件，() -> {"tier","text"}|str|None）。
+    仅 hardest 档调用；simple 档零调用（省资源）。
+    """
     tier = route(block)
     if tier == TIER_SIMPLE:
         out = _l1_direct(block)
-        out.update({"tier": tier, "llm": False})
+        out.update({"tier": tier, "llm": False, "screen_used": False})
         return out
     out = _l1_direct(block)
     out["tier"] = tier
     out["llm"] = False
+    out["screen_used"] = False
+    screen_text = _observe_screen(screen) if tier == TIER_HARDEST else ""
     try:
-        text, provider = gateway.chat(build_messages(block, icl),
-                                      temperature=0.2)
+        text, provider = gateway.chat(
+            build_messages(block, icl, screen_text), temperature=0.2)
     except Exception:  # noqa: BLE001 - 网关失败降级，缺席不崩
         out["degraded"] = "gateway"
         return out
@@ -123,7 +133,23 @@ def summarize_block(block: dict, gateway, icl: str = "") -> dict:
     parsed["llm"] = True
     parsed["provider"] = provider
     parsed["needs_screen"] = tier == TIER_HARDEST
+    parsed["screen_used"] = bool(screen_text)
     return parsed
+
+
+def _observe_screen(screen) -> str:
+    """屏幕观察接缝（fail-soft）：任何形态失败/缺席 → 空串。"""
+    if screen is None:
+        return ""
+    try:
+        obs = screen()
+    except Exception:  # noqa: BLE001
+        return ""
+    if isinstance(obs, dict):
+        return str(obs.get("text") or "").strip()
+    if isinstance(obs, str):
+        return obs.strip()
+    return ""
 
 
 def _l1_direct(block: dict) -> dict:

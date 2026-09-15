@@ -26,6 +26,7 @@ def build_daemon(data_dir: str, with_mic: bool = False,
     """按在位模型装配感知管线+主控（缺件降级不阻塞）。"""
     from paistation.resident.daemon import Daemon
     from paistation.resident.ipc import load_or_create_authkey
+    from paistation.intent.service import IntentService
     from paistation.sense.asr import ModelManager
     from paistation.sense.pipeline import VoicePipeline
     from paistation.sense.signal_service import SignalService
@@ -48,7 +49,10 @@ def build_daemon(data_dir: str, with_mic: bool = False,
                              model_dir=model_dir, mic=with_mic,
                              loopback=with_loopback)
     signals = SignalService(stream=stream)
-    return Daemon(data_dir=data_dir, services=[pipeline, signals],
+    # M8 意图常驻件：默认 L1 口径（无 profile/网关配置时安全降级，
+    # 读当日事件流增量提取意图）
+    intents = IntentService(stream=stream)
+    return Daemon(data_dir=data_dir, services=[pipeline, signals, intents],
                   pipe_name="pai-station", authkey=authkey,
                   tick_interval=tick_interval)
 
