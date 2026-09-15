@@ -37,6 +37,10 @@
 {"kind": "l1", "name": "任务管理器", "sample": {"process": "Taskmgr.exe", "title": "任务管理器", "domain": "", "idle_s": 0}, "expect": "system"}
 {"kind": "l1", "name": "记事本", "sample": {"process": "notepad.exe", "title": "备忘", "domain": "", "idle_s": 0}, "expect": "system"}
 {"kind": "l1", "name": "afk离席", "sample": {"process": "", "title": "", "domain": "", "idle_s": 9999}, "expect": "idle"}
+{"kind": "l1", "name": "腾讯会议", "sample": {"process": "wemeetapp.exe", "title": "腾讯会议", "domain": "", "idle_s": 0}, "expect": "meeting"}
+{"kind": "l1", "name": "zoom", "sample": {"process": "Zoom.exe", "title": "Zoom Meeting", "domain": "", "idle_s": 0}, "expect": "meeting"}
+{"kind": "l1", "name": "teams会议", "sample": {"process": "ms-teams.exe", "title": "Standup | Microsoft Teams", "domain": "", "idle_s": 0}, "expect": "meeting"}
+{"kind": "l1", "name": "浏览器入会", "sample": {"process": "chrome.exe", "title": "视频会议 - 正在交谈", "domain": "zoom.us", "idle_s": 0}, "expect": "meeting"}
 {"kind": "l1", "name": "未知软件", "sample": {"process": "ZhmBa.exe", "title": "神秘界面", "domain": "", "idle_s": 0}, "expect": "unknown"}
 {"kind": "reject", "name": "一眼扫过的消息", "block": {"category": "chat", "confidence": 0.9, "coverage": 1.0, "duration_min": 0.3, "samples": 1, "category_counts": {"chat": 1}}, "expect": "irrelevant"}
 {"kind": "reject", "name": "离席段", "block": {"category": "idle", "confidence": 0.95, "coverage": 1.0, "duration_min": 25.0, "samples": 2, "category_counts": {"idle": 2}}, "expect": "irrelevant"}

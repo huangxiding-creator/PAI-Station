@@ -12,6 +12,7 @@ from __future__ import annotations
 
 CATEGORIES = {
     "idle": "空闲",
+    "meeting": "开会议",
     "chat": "聊天",
     "project": "做项目",
     "docs": "写文档",
@@ -23,13 +24,13 @@ CATEGORIES = {
 }
 
 CONFIDENCE = {
-    "idle": 0.95, "chat": 0.9, "project": 0.8, "leisure": 0.78,
-    "thinking": 0.72, "research": 0.72, "docs": 0.7, "system": 0.6,
-    "unknown": 0.3,
+    "idle": 0.95, "chat": 0.9, "meeting": 0.85, "project": 0.8,
+    "leisure": 0.78, "thinking": 0.72, "research": 0.72, "docs": 0.7,
+    "system": 0.6, "unknown": 0.3,
 }
 
-# 级联顺序即优先级：idle > chat > project > docs > thinking >
-# research > leisure > system > unknown
+# 级联顺序即优先级：idle > meeting > chat > project > docs >
+# thinking > research > leisure > system > unknown
 # 进程名精确匹配（防短名误伤：qq 不匹配 qqmusic）
 _PROC_EXACT = {
     "chat": frozenset({"qq", "tim"}),
@@ -41,6 +42,8 @@ _PROC_EXACT = {
 }
 # 进程名子串匹配（无歧义的长名）
 _PROC_SUBSTR = {
+    "meeting": ("zoom", "teams", "wemeet", "voov", "dingtalk-meeting",
+                "tencentmeeting"),
     "chat": ("wechat", "weixin", "dingtalk", "feishu", "lark",
              "telegram", "discord"),
     "project": ("cursor", "pycharm", "webstorm", "goland", "clion",
@@ -52,6 +55,7 @@ _PROC_SUBSTR = {
 }
 # 域名后缀匹配（www. 前缀等）
 _DOMAINS = {
+    "meeting": ("zoom.us", "meet.google.com", "teams.microsoft.com"),
     "project": ("github.com", "gitlab.com", "gitee.com",
                 "stackoverflow.com"),
     "thinking": ("chatgpt.com", "claude.ai", "gemini.google.com",
@@ -67,6 +71,8 @@ _DOMAINS = {
 }
 # 标题关键词（进程/域名都缺席时的兜底信号）
 _TITLES = {
+    "meeting": ("会议中", "zoom 会议", "腾讯会议", "视频会议", "线上会议",
+                "meeting"),
     "chat": ("微信", "聊天", "消息", "钉钉", "飞书"),
     "project": ("visual studio", "vscode", "npm", "electron", "node.js",
                 "代码", "开发", "编译", "调试", "终端", "仓库", "分支"),
@@ -112,8 +118,8 @@ def classify(sample: dict) -> dict:
     process = sample.get("process") or ""
     domain = sample.get("domain") or ""
     title = sample.get("title") or ""
-    for cat in ("chat", "project", "docs", "thinking", "research",
-                "leisure", "system"):
+    for cat in ("meeting", "chat", "project", "docs", "thinking",
+                "research", "leisure", "system"):
         if _proc_hit(cat, process):
             return _hit(cat, f"进程={_base(process)}")
         if _domain_hit(cat, domain):

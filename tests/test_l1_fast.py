@@ -58,6 +58,16 @@ def test_leisure_bilibili():
     assert (r["category"], r["confidence"]) == ("leisure", 0.78)
 
 
+def test_meeting_processes_and_priority():
+    """会议场景（M7_PLAN 验收四场景之一）：进程/域名/标题三路命中。"""
+    assert classify(_s(process="wemeetapp.exe"))["category"] == "meeting"
+    assert classify(_s(process="chrome.exe", domain="zoom.us"))["category"] \
+        == "meeting"
+    # 会议优先于聊天/项目：Zoom 里共享代码仍是会议
+    r = classify(_s(process="Zoom.exe", title="main.py 代码评审"))
+    assert (r["category"], r["confidence"]) == ("meeting", 0.85)
+
+
 def test_system_explorer():
     r = classify(_s(process="explorer.exe", title="此电脑"))
     assert (r["category"], r["confidence"]) == ("system", 0.6)

@@ -18,7 +18,7 @@ from datetime import datetime, timedelta
 from .l1_fast import CATEGORIES, classify
 
 _GAP_SEC = 300.0                       # 采样间隔 >5min → 断块
-_HARD_SWITCH = frozenset({"chat", "leisure", "idle"})
+_HARD_SWITCH = frozenset({"meeting", "chat", "leisure", "idle"})
 _VOTES_CATEGORY = 6
 _VOTES_APP = 10
 _VOTES_APP_CATEGORY = 4
