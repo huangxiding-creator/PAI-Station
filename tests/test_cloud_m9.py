@@ -46,8 +46,9 @@ def _mk_meeting(mid, subject, status="MEETING_STATUS_ING"):
     return {"meeting_id": mid, "subject": subject, "status": status}
 
 
-def test_tencent_unconfigured_token_inactive():
+def test_tencent_unconfigured_token_inactive(monkeypatch):
     from paistation.sense.cloud.tencent import TencentMeetingConnector
+    monkeypatch.delenv("TENCENT_MEETING_TOKEN", raising=False)  # 夹具密封
     conn = TencentMeetingConnector(token="", transport=FakeTencentTransport())
     events, wm = conn.collect(None)
     assert events == [] and wm is None
@@ -112,8 +113,10 @@ class FakeBdpanRunner:
         return 1, ""
 
 
-def test_bdpan_cli_absent_inactive():
+def test_bdpan_cli_absent_inactive(monkeypatch):
+    from paistation.sense.cloud import bdpan
     from paistation.sense.cloud.bdpan import BaiduDriveConnector
+    monkeypatch.setattr(bdpan.shutil, "which", lambda name: None)  # 夹具密封
     conn = BaiduDriveConnector(cli_path=None, runner=FakeBdpanRunner())
     events, wm = conn.collect(None)
     assert events == [] and wm is None
