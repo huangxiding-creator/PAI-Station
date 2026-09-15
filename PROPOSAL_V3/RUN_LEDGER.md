@@ -54,6 +54,7 @@
 | 09-15 | ✅ 跨日回归健康检查：**1036 passed 全绿**（exit 0），与 af33350 基线同数——09-14 时钟陷阱修复（_NOW 钉死/单点注入）经受住 09-14→09-15 跨日验证，无复发 | 全仓 |
 | 09-15 | ✅ **M7a 七路信号源落地**（第 11 路调研→代码，用户指令「全网最全信号源」）：window_watcher（(process,title)签名去重）/presence_stream（AFK 迟滞 300s/60s）/clipboard（密码形状零痕迹+签名去重，正文永不入流）/browser_url（标题→History SQLite 只读副本反查域名，免装扩展）/process_snapshot（tasklist CREATE_NO_WINDOW）/session_events（锁屏 OpenInputDesktop 探针）/net_state（netsh wlan 中英双语）+ SignalService 聚合调度（可注入七路采样缝/节流/单源故障隔离/暂停熔断），resident/entry.py 接线。三参照（银甲虫/xvfeng/TaskTracer）招式全数吸收。**1076 tests 0 failures**（基线 1036，+40） | `src/paistation/sense/`（f5b77f3） |
 | 09-15 | ✅ **M7b 意图最小闭环**（用户指令「一定要实现顶级的理解」，七层方法论栈①②④层落地）：`paistation/intent/` 三组件——l1_fast（9 类规则级联，银甲虫标定置信度+docs 中文办公类，纯本地零 LLM）/segmenter（task-blocks 断块规则移植：5min 间隔/AFK 双向/硬类别切换/6-10-4 票投票；TaskTracer fs/剪贴板 ±30s 时间窗资源绑定；时长用真实时间戳优于银甲虫估计）/reject_gate（xvfeng 双层拒识，「无关」一等输出；**方向性有意反转**：车载 fail-open→PAI fail-closed 宁沉默勿误报）。**1109 tests 0 failures**（+33） | `src/paistation/intent/`（4afa907） |
+| 09-15 | ✅ **M7c 理解深化收官**（七层栈③⑤⑥层+金标准验收）：l2_slow（银甲虫 strict JSON prompt 移植 temp0.2 + UItron 三档路由：simple 直判不烧 token/hardest 标 needs_screen 留 M8 屏幕观察；网关死/解析失败→降级 L1 conf0.3 由拒识门兜底）/intent_memory（MIRIX 六类↔profile 五层 workflow 层对接，复用双时间线+幂等）/flywheel（晨报修正→jsonl 样本库只增不删→build_icl few-shot 注入 L2，SummAct 路线 ICL 先于微调）。**金标准 40 条 L1+8 拒识+2 接受**（M7_PLAN 验收 ≥30/≥8 达标），L1 准确率断言 ≥0.90、拒识零漏放全绿。**1131 tests 0 failures**（+22）。M7 三里程碑（a 信号源/b 最小闭环/c 理解深化）全数落地 | `src/paistation/intent/`（a462471） |
 
 ## 状态板
 
