@@ -6,11 +6,11 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-1F3A5F.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Windows_10%2B-0078D6.svg)]()
-[![Tests](https://img.shields.io/badge/测试-1157_全绿-success.svg)]()
+[![Tests](https://img.shields.io/badge/测试-1173_全绿-success.svg)]()
 [![LLM Cost](https://img.shields.io/badge/LLM_成本-默认¥0_永不锁定-success.svg)]()
-[![Status](https://img.shields.io/badge/状态-V4_主权架构_+_意图层-9B59B6.svg)]()
+[![Status](https://img.shields.io/badge/状态-V4_意图层_+_云感知-9B59B6.svg)]()
 
-**液态 12 器官 · 感知型意图发现 · 7×24 主循环 · 两阶段调研管线 · 微信夜间深读 · FDE 方案工厂 · 每周进化提案**
+**液态 12 器官 · 感知型意图发现 · 云感知连接器 · 7×24 主循环 · 两阶段调研管线 · 微信夜间深读 · FDE 方案工厂 · 每周进化提案**
 
 [提案全文](PROPOSAL_V2.md) · [V3 提案](PROPOSAL_V3/PROPOSAL.md) · [愿景档案](00%20愿景/) · [方案商店](09%20发布/store/index.json)
 
@@ -70,6 +70,23 @@ GitHub 十万星项目都在做「指令 → 操作」的执行型 agent；PAI �
 - **隐私红线**：剪贴板密码形状零痕迹（连元数据不留）；正文永不入事件流；屏幕观察遇黑名单窗口提供方零调用
 - **金标准验收**：81 行（69 分类 + 10 拒识 + 2 接受），L1 准确率 ≥90% 断言 + 拒识零漏放，测试卡死不漂移
 - **7 天无人值守浸泡**：`python tools/soak_unattended.py --data-dir <目录>`（journal 断点续跑、单轮异常不杀、随时 Ctrl-C）
+
+## ☁️ 云感知连接器：事件流长出云上触角（V3 M9）
+
+「只要用户能提供就能感知」——ConnectorRegistry 把云端变化汇入与本地信号同一条事件流，新源=注册即接入：
+
+| 连接器 | 感知方式 | 事件类型 |
+|---|---|---|
+| 腾讯会议 | MCP JSON-RPC（38 工具真机验证） | `cloud.meeting.list` |
+| 百度网盘 | bdpan CLI 只读 ls diff（有界 BFS 深度 3 封顶） | `cloud.drive.change` |
+| 微信情报 | 产物目录 mtime 轮询 | `cloud.wih.insight` |
+
+- **opt-in 授权门**：GrantsStore 落盘重启不丢、随时可撤；登录永不由 agent 代走（用户浏览器授权）
+- **水位线增量**：会议=(id,status) 集合 / 网盘={路径:大小} 快照——重复 collect 零重复事件，故障时水位线原地踏步不丢账
+- **账号安全四件套**（节流+冷却+日限额+熔断）为框架强制件，单源故障隔离零风暴
+- **沙箱边界实证**：bdpan 授权范围=/apps/bdpan 应用目录（开放平台安全设计），连接器只做只读，删除永不执行
+
+**渠道栈**（`.claude/skills/`，skill 生态即插件）：飞书 23 域 lark-cli · 企微双通道 · 金山文档 kdocs-cli · 腾讯文档 mcporter 四服务 444 工具 · 百度网盘 bdpan · 钉钉 dws · 腾讯会议 MCP。
 
 ## ⚙️ 7×24 主循环（一行命令）
 
@@ -158,7 +175,7 @@ python -m venv .venv && .venv\Scripts\pip install -e ".[dev]"
 # 2. 配置（密钥外置，参考 config/pai.ini）
 #    PAI_LLM_KEY=智谱key  PAI_WECOM_WEBHOOK=企微机器人
 
-# 3. 测试（1157 项全绿为出厂标准）
+# 3. 测试（1173 项全绿为出厂标准）
 .venv\Scripts\python -m pytest
 
 # 4. 器官自检 + 启动主循环
@@ -193,6 +210,7 @@ src/paistation/
 ├── evolve/       # 合一指数 U + 每周进化提案（M12）
 ├── foundry/      # 调研管线/框架合成/问题生成/FDE工厂/漏斗（M9/M11）
 ├── sense/        # 15 路信号源/增量扫描/深读安全脑/视觉读取器（M7a/M10）
+│   └── cloud/    # 三云感知连接器：腾讯会议/百度网盘/微信情报（V3 M9）
 ├── llm/          # 智谱免费链客户端（429自愈/余额摘链/视觉bytes直传）
 ├── memory/ security/ learn/ proactive/ channels/ soul/ skills/ forge/ rules/
 └── runtime.py    # 整机装配：每分钟一拍的主循环状态机
@@ -212,6 +230,7 @@ src/paistation/
 | V4 五阶段 | sovereign/gate/control/market/governance 主权架构 + CHARTER | ✅ |
 | M7 意图层 | 七路信号源补全 + 意图最小闭环 + 理解深化（71 项调研落地） | ✅ |
 | M8 意图运营 | 常驻服务接线 + 屏幕观察档位 + 金标准 81 行 + 7 天浸泡基建 | ✅ / 🌙 浸泡实测待跑 |
+| 云感知连接器（V3 M9） | 腾讯会议/百度网盘/微信情报三连接器 + opt-in 授权 + 水位线增量 | ✅ 真机闭环（会议预订/网盘 3 事件/上传验证） |
 
 ## 📜 治理
 
