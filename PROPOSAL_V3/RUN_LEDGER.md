@@ -52,6 +52,8 @@
 
 | 09-15 | 心跳轮·留痕审计抓真缺口：**FDE 发布线账本漏入库**——`09 发布/` 目录晚于 gitignore 液态器官段（09-11）建立，`_credentials/chain.jsonl`（4 条发布凭证）与 `store/` 货架（4 技能包 manifest+试读，2145 行）一直未 add，违反只增不删+Git 留痕。secrets 扫描清洁后补提交 d6f2e2f。推送网络形态第三变：直连死（000）/代理 7890 活（200）——URL 级代理配置恰好指向活路，schannel 直用一次过，未动 Clash。`_recon/`（即席调研 scratch，无硬编码 token）与 website/ WIP、SELF_PROFILE/ 维持不入库待用户定 | `09 发布/_credentials/` `09 发布/store/`（d6f2e2f→origin/main） |
 | 09-15 | ✅ 跨日回归健康检查：**1036 passed 全绿**（exit 0），与 af33350 基线同数——09-14 时钟陷阱修复（_NOW 钉死/单点注入）经受住 09-14→09-15 跨日验证，无复发 | 全仓 |
+| 09-15 | ✅ **M7a 七路信号源落地**（第 11 路调研→代码，用户指令「全网最全信号源」）：window_watcher（(process,title)签名去重）/presence_stream（AFK 迟滞 300s/60s）/clipboard（密码形状零痕迹+签名去重，正文永不入流）/browser_url（标题→History SQLite 只读副本反查域名，免装扩展）/process_snapshot（tasklist CREATE_NO_WINDOW）/session_events（锁屏 OpenInputDesktop 探针）/net_state（netsh wlan 中英双语）+ SignalService 聚合调度（可注入七路采样缝/节流/单源故障隔离/暂停熔断），resident/entry.py 接线。三参照（银甲虫/xvfeng/TaskTracer）招式全数吸收。**1076 tests 0 failures**（基线 1036，+40） | `src/paistation/sense/`（f5b77f3） |
+| 09-15 | ✅ **M7b 意图最小闭环**（用户指令「一定要实现顶级的理解」，七层方法论栈①②④层落地）：`paistation/intent/` 三组件——l1_fast（9 类规则级联，银甲虫标定置信度+docs 中文办公类，纯本地零 LLM）/segmenter（task-blocks 断块规则移植：5min 间隔/AFK 双向/硬类别切换/6-10-4 票投票；TaskTracer fs/剪贴板 ±30s 时间窗资源绑定；时长用真实时间戳优于银甲虫估计）/reject_gate（xvfeng 双层拒识，「无关」一等输出；**方向性有意反转**：车载 fail-open→PAI fail-closed 宁沉默勿误报）。**1109 tests 0 failures**（+33） | `src/paistation/intent/`（4afa907） |
 
 ## 状态板
 
