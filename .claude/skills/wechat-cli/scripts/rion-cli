@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# rion-wechat-cli 引擎薄壳：指向本仓 vendor 部署（reader.sh 经 RION_WECHAT_CLI_BIN 找到它）。
+# 用户级环境变量 RION_WECHAT_CLI_BIN=E:/AI-Station/.claude/skills/wechat-cli/scripts/rion-cli
+exec python "E:/AI-Station/vendor/wechat-intelligence-hub/projects/rion-wechat-reader/rion_wechat_reader.py" "$@"
