@@ -1,18 +1,18 @@
 <div align="center">
 
-# 🧬 PAI-Station V2
+# 🧬 PAI-Station
 
 ### 让每个人与第二个自己共同进化，直至合一
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-1F3A5F.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Windows_10%2B-0078D6.svg)]()
-[![Tests](https://img.shields.io/badge/测试-610_全绿-success.svg)]()
+[![Tests](https://img.shields.io/badge/测试-1157_全绿-success.svg)]()
 [![LLM Cost](https://img.shields.io/badge/LLM_成本-默认¥0_永不锁定-success.svg)]()
-[![Status](https://img.shields.io/badge/状态-V2_液态架构_M12-9B59B6.svg)]()
+[![Status](https://img.shields.io/badge/状态-V4_主权架构_+_意图层-9B59B6.svg)]()
 
-**液态 12 器官 · 7×24 主循环 · 两阶段调研管线 · 微信夜间深读 · FDE 方案工厂 · 每周进化提案**
+**液态 12 器官 · 感知型意图发现 · 7×24 主循环 · 两阶段调研管线 · 微信夜间深读 · FDE 方案工厂 · 每周进化提案**
 
-[提案全文](PROPOSAL_V2.md) · [愿景档案](00%20愿景/) · [方案商店](09%20发布/store/index.json)
+[提案全文](PROPOSAL_V2.md) · [V3 提案](PROPOSAL_V3/PROPOSAL.md) · [愿景档案](00%20愿景/) · [方案商店](09%20发布/store/index.json)
 
 </div>
 
@@ -47,6 +47,29 @@
 | `05 方法` | 从智库炼出的方法论 | `11 进化` | 免疫/复盘/合一指数/进化提案 |
 
 每个器官 = `README.md`（宪法）+ `_state.json`（水位状态）+ `_credentials/chain.jsonl`（**sha256 凭证链**——器官间流转必落凭证，篡改即时可验，红线 R14）。
+
+## 🧠 感知型意图发现：活动 → 意图（V3 意图层，M7/M8）
+
+GitHub 十万星项目都在做「指令 → 操作」的执行型 agent；PAI 做的是反方向的蓝海——**「活动 → 意图」的感知型理解**：不等你开口，先看懂你在干什么。方法论栈来自 71 项调研（20 年学术谱系 TaskTracer→SWISH→SummAct + 工程互证，见 `RESEARCH_DOCKET/v3/11-intent-recognition/`）：
+
+```
+15 路信号源                    七层理解栈
+─────────────────────         ─────────────────────────────
+前台窗口/AFK 迟滞/剪贴板        ① 事件流分段（task-blocks 断块规则）
+浏览器域名反查(免扩展)/进程      ② L1 快通道（10 类规则级联，零 LLM）
+会话锁屏/网络 SSID/语音/fs      ③ L2 慢通道（UItron 三档路由按需烧 token）
+        │                      ④ 双层拒识门（「无关」是一等输出）
+        ▼                      ⑤ 时序记忆（MIRIX↔profile 五层对接）
+  IntentService 常驻            ⑥ 纠正飞轮（晨报修正→ICL 注入）
+  （增量游标·断点续跑）          ⑦ 屏幕观察档位（OCR/VLM 升级件）
+```
+
+- **拒识方向性**：车载语音 fail-open（漏识代价高）→ PAI **fail-closed**（主动助理误触发代价高，宁沉默勿打扰），闸门异常一律保守不触发
+- **省 token 秩序**：L1 统计门先拦（拒掉的块不进 LLM）→ L2 摘要 → LLM 出品再过细判门
+- **降级矩阵**：无 LLM 网关 → L1 直判照常出意图；OCR/VLM 缺席 → tier 0 纯信号；全部缺席不崩
+- **隐私红线**：剪贴板密码形状零痕迹（连元数据不留）；正文永不入事件流；屏幕观察遇黑名单窗口提供方零调用
+- **金标准验收**：81 行（69 分类 + 10 拒识 + 2 接受），L1 准确率 ≥90% 断言 + 拒识零漏放，测试卡死不漂移
+- **7 天无人值守浸泡**：`python tools/soak_unattended.py --data-dir <目录>`（journal 断点续跑、单轮异常不杀、随时 Ctrl-C）
 
 ## ⚙️ 7×24 主循环（一行命令）
 
@@ -135,7 +158,7 @@ python -m venv .venv && .venv\Scripts\pip install -e ".[dev]"
 # 2. 配置（密钥外置，参考 config/pai.ini）
 #    PAI_LLM_KEY=智谱key  PAI_WECOM_WEBHOOK=企微机器人
 
-# 3. 测试（610 项全绿为出厂标准）
+# 3. 测试（1157 项全绿为出厂标准）
 .venv\Scripts\python -m pytest
 
 # 4. 器官自检 + 启动主循环
@@ -150,6 +173,7 @@ python tools/run_station.py          # 7×24：感知/深读/进化/PDCA
 | `tools/run_station.py` | 7×24 主循环守护 |
 | `tools/research_run.py` | 两阶段调研管线实跑 |
 | `tools/fde_factory.py` | FDE 20 案排产（断点账本） |
+| `tools/soak_unattended.py` | 意图层 7 天无人值守浸泡（断点续跑） |
 | `tools/maoxuan_harvest.py` | 搜狗微信采集（35 分钟冷却/串行） |
 | `tools/evolution_approve.py` | 进化提案用户裁决 |
 | `tools/notify_wecom.py` | 企微通知 |
@@ -159,11 +183,18 @@ python tools/run_station.py          # 7×24：感知/深读/进化/PDCA
 ```
 src/paistation/
 ├── organ/        # 12 器官注册表/状态/凭证链/巡检（液态架构内核）
+├── intent/       # 感知型意图发现：segmenter/l1_fast/l2_slow/reject_gate
+│                #   /intent_memory/flywheel/screen_tier/常驻服务（M7/M8）
+├── ops/          # 无人值守长跑基建：浸泡跑/断点续跑/随时可停（M8）
+├── resident/     # 常驻 daemon/托盘/IPC（V3 骨架，服务契约 tick(paused)）
+├── profile/      # 用户画像五层模型+双时间线+夜间整合（V3）
+├── execute/      # LlmGateway 多供应商 failover + AgentRunner（V3）
+├── sovereign/ gate/ control/ market/ governance/   # V4 五阶段主权架构
 ├── evolve/       # 合一指数 U + 每周进化提案（M12）
 ├── foundry/      # 调研管线/框架合成/问题生成/FDE工厂/漏斗（M9/M11）
-├── sense/        # 感知/增量扫描/深读安全脑+视觉读取器/在场探测（M10）
+├── sense/        # 15 路信号源/增量扫描/深读安全脑/视觉读取器（M7a/M10）
 ├── llm/          # 智谱免费链客户端（429自愈/余额摘链/视觉bytes直传）
-├── memory/ security/ learn/ proactive/ channels/ soul/ skills/ forge/
+├── memory/ security/ learn/ proactive/ channels/ soul/ skills/ forge/ rules/
 └── runtime.py    # 整机装配：每分钟一拍的主循环状态机
 ```
 
@@ -177,6 +208,10 @@ src/paistation/
 | M10 | 深读安全脑 + V1 纯视觉读取器 + 7 夜实测 | ✅ 代码 / 🌙 实测进行中 |
 | M11 | FDE 扩产 20 案 + 漏斗三段 + 定价实验 | 🏭 排产中（断点账本） |
 | M12 | 合一指数 U 仪表盘 + 每周进化提案 | ✅ |
+| V3 M1–M6 | 常驻 daemon/事件流/画像/执行网关/规则/分发（10 路调研 454 项） | ✅ |
+| V4 五阶段 | sovereign/gate/control/market/governance 主权架构 + CHARTER | ✅ |
+| M7 意图层 | 七路信号源补全 + 意图最小闭环 + 理解深化（71 项调研落地） | ✅ |
+| M8 意图运营 | 常驻服务接线 + 屏幕观察档位 + 金标准 81 行 + 7 天浸泡基建 | ✅ / 🌙 浸泡实测待跑 |
 
 ## 📜 治理
 
@@ -190,6 +225,6 @@ src/paistation/
 
 **"懂你是起点，合一是方向。"**
 
-PAI-Station V2 · 与你共同进化 · [提案](PROPOSAL_V2.md) · [愿景](00%20愿景/) · [商店](09%20发布/store/index.json)
+PAI-Station · 与你共同进化 · [提案](PROPOSAL_V2.md) · [V3 提案](PROPOSAL_V3/PROPOSAL.md) · [愿景](00%20愿景/) · [商店](09%20发布/store/index.json)
 
 </div>
