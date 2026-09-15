@@ -49,6 +49,7 @@
 | 09-14 | ✅ 推送落地 5887af0..af33350：新网络形态——env 无代理变量、`git config --get http.proxy` 亦空，但 **URL 级配置 `http.https://github.com.proxy=127.0.0.1:7890`**（本地代理已死）强劫持一切 github 流量；普通 `-c http.proxy=` 压不住 URL 范围项，须 `-c http.https://github.com.proxy=`（置空）+schannel 直推一次过。curl 探活 200 与 git 失败并存之谜即此（curl 不读 git 的 URL 级配置）。ls-remote==HEAD 真判据通过；新形态已沉淀全局记忆 github-push 配方 | origin/main |
 
 | 09-15 | 心跳轮·留痕审计抓真缺口：**FDE 发布线账本漏入库**——`09 发布/` 目录晚于 gitignore 液态器官段（09-11）建立，`_credentials/chain.jsonl`（4 条发布凭证）与 `store/` 货架（4 技能包 manifest+试读，2145 行）一直未 add，违反只增不删+Git 留痕。secrets 扫描清洁后补提交 d6f2e2f。推送网络形态第三变：直连死（000）/代理 7890 活（200）——URL 级代理配置恰好指向活路，schannel 直用一次过，未动 Clash。`_recon/`（即席调研 scratch，无硬编码 token）与 website/ WIP、SELF_PROFILE/ 维持不入库待用户定 | `09 发布/_credentials/` `09 发布/store/`（d6f2e2f→origin/main） |
+| 09-15 | ✅ 跨日回归健康检查：**1036 passed 全绿**（exit 0），与 af33350 基线同数——09-14 时钟陷阱修复（_NOW 钉死/单点注入）经受住 09-14→09-15 跨日验证，无复发 | 全仓 |
 
 ## 状态板
 
