@@ -57,6 +57,7 @@
 | 09-15 | ✅ **M7c 理解深化收官**（七层栈③⑤⑥层+金标准验收）：l2_slow（银甲虫 strict JSON prompt 移植 temp0.2 + UItron 三档路由：simple 直判不烧 token/hardest 标 needs_screen 留 M8 屏幕观察；网关死/解析失败→降级 L1 conf0.3 由拒识门兜底）/intent_memory（MIRIX 六类↔profile 五层 workflow 层对接，复用双时间线+幂等）/flywheel（晨报修正→jsonl 样本库只增不删→build_icl few-shot 注入 L2，SummAct 路线 ICL 先于微调）。**金标准 40 条 L1+8 拒识+2 接受**（M7_PLAN 验收 ≥30/≥8 达标），L1 准确率断言 ≥0.90、拒识零漏放全绿。**1131 tests 0 failures**（+22）。M7 三里程碑（a 信号源/b 最小闭环/c 理解深化）全数落地 | `src/paistation/intent/`（a462471） |
 | 09-15 | ✅ **M7 验收补口：meeting 类**——M7_PLAN 验收项 3 点名四场景（会议/编码/调研/闲聊），前收仅有后三。l1_fast 增 meeting（conf 0.85，进程/域名/标题三路命中，级联位次席仅次 idle）；segmenter 硬切换集纳入 meeting（进出会议=天然任务边界）；金标准 40→44 条 L1。**1132 tests 0 failures**。M7 验收五项（金标准≥30含≥8拒识/L1≥90%拒识零误报/L2 schema 合规/晨报回流断点续跑/全量零破坏）全数闭环 | `src/paistation/intent/`（e1be110） |
 | 09-15 | ✅ **M8 三候选全收官**（用户指令「请完成全部候选」）：①感知升级件 screen_tier（tier 0无/1OCR/2VLM 档位制，l2_slow hardest 档 screen 接缝，隐私红线=黑名单窗口提供方零调用，真实引擎接入位留模型在位）；②IntentService 常驻件（resident 契约，管线=分段→L1门省token→L2→l2细判门→画像，增量游标零重复，build_daemon 接线默认 L1 降级）；③运营件（金标准 54→81 行含 69 L1+10 拒识；ops/soak.py 断点续跑+异常不杀+随时停；tools/soak_unattended.py 7 天浸泡壳真实冒烟 6 轮 ok+续跑零重复）。**1157 tests 0 failures**（+25） | `src/paistation/{intent,ops}` + `tools/soak_unattended.py`（0b54994） |
+| 09-15 | ✅ README 更新并推送（用户指令）：610→1157 测试徽章/状态徽章 V4 主权架构+意图层/新增「感知型意图发现」旗舰段（15 路信号源+七层栈 ASCII 图+拒识方向性/降级矩阵/隐私红线/金标准/7 天浸泡）/代码结构补 intent·ops·resident·profile·execute·sovereign 五包/里程碑表补 V3 M1-M6·V4 五阶段·M7·M8 四行/工具表补 soak_unattended；引用路径四项核验在位 | README.md |
 
 ## 状态板
 
