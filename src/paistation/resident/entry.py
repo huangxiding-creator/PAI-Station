@@ -28,6 +28,7 @@ def build_daemon(data_dir: str, with_mic: bool = False,
     from paistation.resident.ipc import load_or_create_authkey
     from paistation.sense.asr import ModelManager
     from paistation.sense.pipeline import VoicePipeline
+    from paistation.sense.signal_service import SignalService
     from paistation.sense.voice_events import EventStream
 
     os.makedirs(data_dir, exist_ok=True)
@@ -46,7 +47,8 @@ def build_daemon(data_dir: str, with_mic: bool = False,
     pipeline = VoicePipeline(stream=stream, vad_model=silero,
                              model_dir=model_dir, mic=with_mic,
                              loopback=with_loopback)
-    return Daemon(data_dir=data_dir, services=[pipeline],
+    signals = SignalService(stream=stream)
+    return Daemon(data_dir=data_dir, services=[pipeline, signals],
                   pipe_name="pai-station", authkey=authkey,
                   tick_interval=tick_interval)
 

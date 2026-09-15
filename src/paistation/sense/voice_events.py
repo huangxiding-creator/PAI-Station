@@ -16,6 +16,9 @@ ALLOWED_TYPES = frozenset({
     "voice.transcript", "voice.utterance", "voice.wakeword",
     "ambient.event", "fs.change", "screen.ocr", "im.webhook", "cron.tick",
     "cloud.doc.change", "cloud.file.list",
+    # M7a 信号源补全（第 11 路调研：对标 ActivityWatch/银甲虫/screenpipe）
+    "window.focus", "presence.afk", "clipboard.change", "browser.url",
+    "process.snapshot", "session.state", "net.state",
 })
 _EVENT_FIELDS = ("ts", "type", "source", "text", "speaker", "evidence", "meta")
 
