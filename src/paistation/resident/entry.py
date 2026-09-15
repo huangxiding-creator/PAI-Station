@@ -52,7 +52,25 @@ def build_daemon(data_dir: str, with_mic: bool = False,
     # M8 意图常驻件：默认 L1 口径（无 profile/网关配置时安全降级，
     # 读当日事件流增量提取意图）
     intents = IntentService(stream=stream)
-    return Daemon(data_dir=data_dir, services=[pipeline, signals, intents],
+    # M9 云感知：三连接器注册+授权持久化回灌（默认 opt-in 全关，
+    # 未授权 tick 零调用）；wih 产物目录约定 data_dir/wih/
+    from paistation.sense.cloud.base import ConnectorRegistry, WatermarkStore
+    from paistation.sense.cloud.grants import GrantsStore
+    from paistation.sense.cloud.service import CloudSensingService
+    from paistation.sense.cloud.tencent import TencentMeetingConnector
+    from paistation.sense.cloud.bdpan import BaiduDriveConnector
+    from paistation.sense.cloud.wih import WeChatIntelConnector
+    registry = ConnectorRegistry()
+    for conn in (TencentMeetingConnector(),
+                 BaiduDriveConnector(),
+                 WeChatIntelConnector(
+                     out_dir=os.path.join(data_dir, "wih"))):
+        registry.register(conn)
+    GrantsStore(os.path.join(data_dir, "cloud_grants.json")).load_into(registry)
+    cloud = CloudSensingService(
+        stream=stream, registry=registry,
+        watermarks=WatermarkStore(os.path.join(data_dir, "cloud_watermarks.json")))
+    return Daemon(data_dir=data_dir, services=[pipeline, signals, intents, cloud],
                   pipe_name="pai-station", authkey=authkey,
                   tick_interval=tick_interval)
 

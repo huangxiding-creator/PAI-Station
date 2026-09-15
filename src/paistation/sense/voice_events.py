@@ -16,6 +16,8 @@ ALLOWED_TYPES = frozenset({
     "voice.transcript", "voice.utterance", "voice.wakeword",
     "ambient.event", "fs.change", "screen.ocr", "im.webhook", "cron.tick",
     "cloud.doc.change", "cloud.file.list",
+    # M9 云感知连接器（腾讯会议/百度网盘/微信情报）
+    "cloud.meeting.list", "cloud.drive.change", "cloud.wih.insight",
     # M7a 信号源补全（第 11 路调研：对标 ActivityWatch/银甲虫/screenpipe）
     "window.focus", "presence.afk", "clipboard.change", "browser.url",
     "process.snapshot", "session.state", "net.state",

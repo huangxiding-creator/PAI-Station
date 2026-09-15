@@ -58,6 +58,8 @@
 | 09-15 | ✅ **M7 验收补口：meeting 类**——M7_PLAN 验收项 3 点名四场景（会议/编码/调研/闲聊），前收仅有后三。l1_fast 增 meeting（conf 0.85，进程/域名/标题三路命中，级联位次席仅次 idle）；segmenter 硬切换集纳入 meeting（进出会议=天然任务边界）；金标准 40→44 条 L1。**1132 tests 0 failures**。M7 验收五项（金标准≥30含≥8拒识/L1≥90%拒识零误报/L2 schema 合规/晨报回流断点续跑/全量零破坏）全数闭环 | `src/paistation/intent/`（e1be110） |
 | 09-15 | ✅ **M8 三候选全收官**（用户指令「请完成全部候选」）：①感知升级件 screen_tier（tier 0无/1OCR/2VLM 档位制，l2_slow hardest 档 screen 接缝，隐私红线=黑名单窗口提供方零调用，真实引擎接入位留模型在位）；②IntentService 常驻件（resident 契约，管线=分段→L1门省token→L2→l2细判门→画像，增量游标零重复，build_daemon 接线默认 L1 降级）；③运营件（金标准 54→81 行含 69 L1+10 拒识；ops/soak.py 断点续跑+异常不杀+随时停；tools/soak_unattended.py 7 天浸泡壳真实冒烟 6 轮 ok+续跑零重复）。**1157 tests 0 failures**（+25） | `src/paistation/{intent,ops}` + `tools/soak_unattended.py`（0b54994） |
 | 09-15 | ✅ README 更新并推送（用户指令）：610→1157 测试徽章/状态徽章 V4 主权架构+意图层/新增「感知型意图发现」旗舰段（15 路信号源+七层栈 ASCII 图+拒识方向性/降级矩阵/隐私红线/金标准/7 天浸泡）/代码结构补 intent·ops·resident·profile·execute·sovereign 五包/里程碑表补 V3 M1-M6·V4 五阶段·M7·M8 四行/工具表补 soak_unattended；引用路径四项核验在位 | README.md |
+| 09-15 | 📌 用户指令「接入」：三渠道信息源部署（腾讯会议 skill 官方 CDN v1.0.15+token 入 secret.ini 不入库/百度网盘 bdpan 双 skill·CLI 首用装/微信情报 wih 引擎 vendor 部署+虚构 Demo 全链路跑通）；GitHub 第四网络形态沉淀记忆——主站死但 codeload/api/raw 直连 200 | `.claude/skills/` ×5、`vendor/wechat-intelligence-hub/` |
+| 09-15 | ✅ **M9 三云感知连接器**（用户指令「接入」=M2.6 FR15 新源注册）：tencent（MCP JSON-RPC·X-Tencent-Meeting-Token·水位线=(meeting_id,status) 集合增量幂等）/bdpan（CLI 只读 ls --json diff·未装=未激活·登录永不代走）/wih（产物目录 mtime 轮询·salt-key 永留用户人工）/grants.py（opt-in 授权 json 持久化重启不丢）/entry 装配（默认全关 tick 零调用）。事件类型 +3。**实测闭环**：token 38 工具可用，明 15:00 会议预订成功（924446372，服务端验证标题完好，+08:00 显式）。**1169 tests 全绿**（+12） | `src/paistation/sense/cloud/{grants,tencent,bdpan,wih}.py`、`resident/entry.py`、`tests/test_cloud_m9.py` |
 
 ## 状态板
 
