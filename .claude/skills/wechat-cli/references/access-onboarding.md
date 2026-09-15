@@ -57,6 +57,8 @@ Mac可研究 [wxkey](https://github.com/r266-tech/wxkey)。上游bootstrap可能
 
 不将关闭SIP、修改主微信应用、持久保存管理员密码作为安装本Skill的隐含步骤。需要这些操作时，先针对具体影响征求用户确认。Windows必须独立核验provider，不使用Mac路径。没有已验证路线时明确说明，提供Demo或标注不完整的通知预览。
 
+**Windows 已验证路线（2026-09-15 实测）**：provider=huohuoer/wechat-cli v0.2.4（codeload 源码装于 `vendor/wechat-cli/.venv`，先审后跑：VM_READ 只读内存扫描/零网络/零微信文件写入）。`wechat-cli init --db-dir <活跃账号 db_storage>` 同用户进程无需 UAC，21/21 密钥秒级命中。密钥经 `.claude/skills/wechat-cli/scripts/import-keys-rion.py` 直迁 Rion schema-2 `salt_keys`（引擎 import-access/setup 的 POSIX safe_mode 闸在 Windows 恒不过，查询构造器无闸=直写合法）。sqlcipher3/pysqlcipher3 无 Windows pip 轮子=加密库直读被驱动墙卡死；已验证替代=`config.plain.json` 明文缓存桥（huohuoer 明文副本缓存在 `%TEMP%/wechat_cli_cache/<md5(rel)[:12]>.db`，mtime 键控，查询前先跑一次该 CLI 让副本落盘）。
+
 使用有界尝试：扫描有进展时不要因起初零命中反复重启；超时、取消或同样失败再次出现就停止，条件改变才重试。密码、key和数据库不得发给Agent、群友或Issue。
 
 ## 导入与验收
