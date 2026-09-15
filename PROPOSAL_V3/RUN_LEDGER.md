@@ -65,6 +65,8 @@
 | 09-15 | ✅ **百度网盘渠道接入完成**（用户「确认」→OAuth 授权码经 FIFO 中继喂官方 login.sh，账号 pyeyeye）：一级目录实测为空——**沙箱边界实证**（CLI 授权范围=/apps/bdpan 应用目录，非全网盘根，百度开放平台安全设计）；M9 连接器激活（grants 落盘 %APPDATA%\PAI-Station\cloud_grants.json+回灌验证 enabled）；**顺手抓真 bug**——`_default_runner` 硬编码裸名 bdpan，cli_path 传了也不执行（测试全假件从未打到），TDD 修复 `_make_runner(exe)` 绑定解析路径+2 新测试（.cmd 真执行体/缺 exe 安全失败）；生产冒烟全通（whoami True/首采 0 事件水位线建立）。**1171 tests 全绿**（+2） | `src/paistation/sense/cloud/bdpan.py`、`tests/test_cloud_m9.py` |
 | 09-15 | ✅ 画像报告三份上云+**第二只真 bug**（用户「丢进去」指令闭环）：三份 docx（全量数字画像/KWP-7 人格/情报级 ICD203）上传「我的应用数据/bdpan/画像报告/」（中文名完好）；连接器水位线 0——collect 只 ls 根目录一层且 _parse 跳过目录条目，**子目录文件永远不可见**（skill 生态恰恰全往子目录写）。TDD 修复：有界 BFS `_walk`（MAX_DEPTH=3/MAX_DIRS=50 封顶防失控+listed 去重防环）+ `_items` 裸名按父目录拼接防跨目录撞键；FakeBdpanRunner 升级 dict 按目录分发+2 新测试（子目录感知/深度上限，断言差一错误修测试）。真机闭环：collect 即发 3 条 cloud.drive.change 事件（路径+字节数全对）。**1173 tests 全绿**（+2） | `src/paistation/sense/cloud/bdpan.py`、`tests/test_cloud_m9.py` |
 
+| 09-15 | ✅ **腾讯文档 skill 接入完成**（用户给 CDN zip+Token）：官方包 v1.0.41（374KB 直连）→ mcporter 0.13.13 npm 装（npmmirror，首跑 exit 1 系同 shell PATH 未刷新假象，二进制实已就位）→ skill 部署 .claude/skills/tencent-docs/（九品类目录+setup.sh+references）→ 四服务注册 mcporter home 配置（tencent-docs/slide-mcp/doc-mcp/sheet-mcp 独立端点共用 Token，Authorization header 直带）→ Token 双落位（用户级 env TENCENT_DOCS_TOKEN + config/tencent_docs.secret.ini gitignore 豁免）→ **真机验证四端点全活：224+88+69+63=444 工具 schema 拉取成功=鉴权通过**；skill 已被会话系统识别 | `.claude/skills/tencent-docs/`、`C:\Users\91216\.mcporter\mcporter.json` |
+
 ## 状态板
 
 - [x] 九路调研回收（361 项，C14 抽查通过）
