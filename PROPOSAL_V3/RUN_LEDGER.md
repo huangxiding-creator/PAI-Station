@@ -89,6 +89,8 @@
 - [x] **M6 打包+进化 v0 完成**（09-13，573cf28+255cabd）：技能资产五件套（forge 版本化/effects 回滚/sync 备份/seed 反推/market 元数据）+分发层（tiers/wizard/打包三件/验收 6/6）
 - [x] 一周里程碑收官：**839 tests passed**（起点 ~465，+374）
 
+- [x] **本地文件宇宙连接器 P0-P4 落地**（09-15，ee23e2e）：64 项目调研方案全量实施——L0 es.exe/并行遍历双后端（首扫 296,835 文件入清单）→L1 分诊路由+提取缓存阶梯（行业空白=护城河，P1 验收「二次全扫零解析」绿）→L2 FTS5 trigram+LIKE 双字词兜底+vec0 差分重嵌+RRF（无 Ollama 自动 keyword-only）→L3 活跃目录/命名模式/TODO 信号→LOCAL_FILES_PROFILE.md→L4 local.files 入 M2.6 注册表（opt-in+600s 重节流）；红线：994 密钥模式文件只登记不提取；测试 +47；待办=晚间全量提取（295,741 pending）+MCP 工具暴露+金标准 100 条
+
 ## 红线备忘（每轮心跳自查）
 
 项目外全盘只读 ｜ 账号安全第一 ｜ secrets 不入库 ｜ 00 愿景/付费语料不上公开仓 ｜ 只增不删+Git 留痕 ｜ 每环节调研≥20 ｜ 进化提案永不自批 ｜ commit 带 Co-Authored-By
