@@ -152,7 +152,9 @@ class ChunkIndex:
         routes: dict[str, list[ChunkHit]] = {}
         kw = self._search_fts(query, k)
         if kw:
-            routes["fts"] = kw
+            # 路由键取 hit 实际后端（fts/like）：RRF 重建 source 时
+            # 不把 LIKE 兜底误标成 fts（溯源失真曾致金标准断言误判）
+            routes[kw[0].source or "fts"] = kw
         if self._embedder is not None and self._vec_ready:
             try:
                 sem = self._search_vec(self._embedder(query), k)
