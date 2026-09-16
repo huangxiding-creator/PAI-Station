@@ -33,6 +33,9 @@ CREATE TABLE IF NOT EXISTS entity_links (
     first_seen TEXT,
     last_seen  TEXT,
     created_at TEXT NOT NULL,
+    valid_at   TEXT,
+    invalid_at TEXT,
+    expired_at TEXT,
     PRIMARY KEY (from_id, to_id, relation, source)
 );
 """
@@ -51,6 +54,17 @@ class EntityStore:
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self._conn = sqlite3.connect(str(self.db_path))
         self._conn.executescript(_SCHEMA)
+        self._ensure_bitemporal_cols()
+
+    def _ensure_bitemporal_cols(self) -> None:
+        """graphiti 四列协议（2026-09-17 J 组）：老库就地补列，存量 NULL=当前有效。"""
+        cols = {r[1] for r in self._conn.execute(
+            "PRAGMA table_info(entity_links)")}
+        for col in ("valid_at", "invalid_at", "expired_at"):
+            if col not in cols:
+                self._conn.execute(
+                    f"ALTER TABLE entity_links ADD COLUMN {col} TEXT")
+        self._conn.commit()
 
     def register(
         self,
@@ -147,20 +161,52 @@ class EntityStore:
         ).fetchone()
         if row is None:
             self._conn.execute(
-                "INSERT INTO entity_links VALUES (?,?,?,?,?,?,?)",
-                (from_id, to_id, relation, source, seen_at, seen_at, now),
+                "INSERT INTO entity_links (from_id, to_id, relation, source,"
+                " first_seen, last_seen, created_at, valid_at)"
+                " VALUES (?,?,?,?,?,?,?,?)",
+                (from_id, to_id, relation, source, seen_at, seen_at, now,
+                 seen_at or now),
             )
             self._conn.commit()
             return True
         first = min((x for x in [row[0], seen_at] if x), default=None)
         last = max((x for x in [row[1], seen_at] if x), default=None)
+        # 曾失效的边再登记 = 复活：invalid_at 清空，expired_at 留上次失效痕
         self._conn.execute(
-            "UPDATE entity_links SET first_seen=?, last_seen=? "
-            "WHERE from_id=? AND to_id=? AND relation=? AND source=?",
-            (first, last, from_id, to_id, relation, source),
+            "UPDATE entity_links SET first_seen=?, last_seen=?,"
+            " valid_at=COALESCE(?, valid_at), invalid_at=NULL"
+            " WHERE from_id=? AND to_id=? AND relation=? AND source=?",
+            (first, last, seen_at, from_id, to_id, relation, source),
         )
         self._conn.commit()
         return False
+
+    def expire_link(self, from_id: str, to_id: str, relation: str,
+                    source: str | None = None,
+                    at: str | None = None) -> int:
+        """失效同向有效边（graphiti 双写：不删，invalid_at+expired_at 留痕）。
+
+        at 为新事实生效时刻（如新边的 valid_at）；缺省用当前时间。
+        返回失效条数（可跨 source 批量失效）。
+        """
+        now = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        sql = ("UPDATE entity_links SET invalid_at=?, expired_at=?"
+               " WHERE from_id=? AND to_id=? AND relation=?"
+               " AND invalid_at IS NULL")
+        args: list = [at or now, now, from_id, to_id, relation]
+        if source:
+            sql += " AND source=?"
+            args.append(source)
+        cur = self._conn.execute(sql, args)
+        self._conn.commit()
+        return cur.rowcount
+
+    def active_links(self, entity_id: str) -> list[tuple]:
+        """该实体的当前有效出边（invalid_at IS NULL）。"""
+        return self._conn.execute(
+            "SELECT to_id, relation, source FROM entity_links"
+            " WHERE from_id=? AND invalid_at IS NULL",
+            (entity_id,)).fetchall()
 
     def link_stats(self) -> dict[str, int]:
         rows = self._conn.execute(

@@ -15,7 +15,7 @@ OWNER_EID = "person/总包君"
 def role_of_org(store, org_eid: str) -> str | None:
     """机构/群实体 → 角色（主/副）。群经 part_of→project→operated_by 传导。"""
     owner = store._conn.execute(
-        "SELECT to_id FROM entity_links WHERE from_id=? AND relation='operated_by'",
+        "SELECT to_id FROM entity_links WHERE from_id=? AND relation='operated_by' AND invalid_at IS NULL",
         (org_eid,),
     ).fetchone()
     if owner:
@@ -23,7 +23,7 @@ def role_of_org(store, org_eid: str) -> str | None:
                 else "side" if owner[0] == SIDE_ORG else None)
     # 群 → 所属项目 → 项目归属
     proj = store._conn.execute(
-        "SELECT to_id FROM entity_links WHERE from_id=? AND relation='part_of' "
+        "SELECT to_id FROM entity_links WHERE from_id=? AND relation='part_of' AND invalid_at IS NULL "
         "AND to_id LIKE 'project/%'", (org_eid,)
     ).fetchone()
     if proj:
@@ -35,7 +35,7 @@ def role_of_project(store, project_eid: str) -> str | None:
     """项目 → 角色：operated_by 主业机构=main / 副业公司=side；
     仅 owned_by 本人=personal。"""
     owner = store._conn.execute(
-        "SELECT to_id FROM entity_links WHERE from_id=? AND relation='operated_by'",
+        "SELECT to_id FROM entity_links WHERE from_id=? AND relation='operated_by' AND invalid_at IS NULL",
         (project_eid,),
     ).fetchone()
     if owner:
@@ -45,7 +45,7 @@ def role_of_project(store, project_eid: str) -> str | None:
             return "side"
         return None
     owned = store._conn.execute(
-        "SELECT 1 FROM entity_links WHERE from_id=? AND relation='owned_by'",
+        "SELECT 1 FROM entity_links WHERE from_id=? AND relation='owned_by' AND invalid_at IS NULL",
         (project_eid,),
     ).fetchone()
     return "personal" if owned else None
@@ -55,7 +55,7 @@ def entity_roles(store, person_eid: str) -> set[str]:
     """人物 → 角色集合（member_of 群传导 + works_on 项目直挂；跨角色多值）。"""
     roles: set[str] = set()
     groups = store._conn.execute(
-        "SELECT to_id FROM entity_links WHERE from_id=? AND relation='member_of' "
+        "SELECT to_id FROM entity_links WHERE from_id=? AND relation='member_of' AND invalid_at IS NULL "
         "AND to_id LIKE 'org/%'", (person_eid,)
     ).fetchall()
     for (gid,) in groups:
@@ -63,7 +63,7 @@ def entity_roles(store, person_eid: str) -> set[str]:
         if r:
             roles.add(r)
     projects = store._conn.execute(
-        "SELECT to_id FROM entity_links WHERE from_id=? AND relation='works_on' "
+        "SELECT to_id FROM entity_links WHERE from_id=? AND relation='works_on' AND invalid_at IS NULL "
         "AND to_id LIKE 'project/%'", (person_eid,)
     ).fetchall()
     for (pid,) in projects:
@@ -100,7 +100,7 @@ def tag_event_role(store, event_type: str, payload: dict) -> str | None:
         if not eid:
             return None
         for (tid,) in store._conn.execute(
-            "SELECT to_id FROM entity_links WHERE from_id=?", (eid,)
+            "SELECT to_id FROM entity_links WHERE from_id=? AND invalid_at IS NULL", (eid,)
         ).fetchall():
             if tid.startswith("project/"):
                 r = role_of_project(store, str(tid))
