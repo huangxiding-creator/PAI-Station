@@ -88,12 +88,12 @@ def test_ping(svc):
     assert _payload(handle_message(_req(1, "ping"), svc))["result"] == {}
 
 
-def test_tools_list_three(svc):
+def test_tools_list_four(svc):
     tools = _payload(
         handle_message(_req(1, "tools/list"), svc))["result"]["tools"]
     names = {t["name"] for t in tools}
     assert names == {"localfiles_search", "localfiles_find",
-                     "localfiles_status"}
+                     "localfiles_status", "localfiles_facets"}
     for t in tools:  # 每个工具必须有 inputSchema（JSON Schema）
         assert isinstance(t["inputSchema"].get("type"), str)
         assert t.get("description")
@@ -195,3 +195,30 @@ def test_serve_malformed_line_continues(svc):
     assert lines[0]["error"]["code"] == -32700
     assert lines[0]["id"] is None
     assert lines[1]["result"] == {}
+
+
+def test_search_ext_dir_filters(svc):
+    # Everything 参数面（K）：命中集内按扩展名/路径段过滤
+    base = _text_payload(handle_message(
+        _call(10, "localfiles_search", {"query": "数字孪生"}), svc))
+    assert base
+    pdfs = _text_payload(handle_message(
+        _call(11, "localfiles_search",
+              {"query": "数字孪生", "ext": ".pdf"}), svc))
+    assert pdfs and all(h["path"].endswith(".pdf") for h in pdfs)
+    none = _text_payload(handle_message(
+        _call(12, "localfiles_search",
+              {"query": "数字孪生", "ext": ".xyz"}), svc))
+    assert none == []
+    in_docs = _text_payload(handle_message(
+        _call(13, "localfiles_search",
+              {"query": "数字孪生", "dir": "docs"}), svc))
+    assert in_docs and all("docs" in h["path"].lower() for h in in_docs)
+
+
+def test_facets_tool(svc):
+    out = _text_payload(handle_message(
+        _call(14, "localfiles_facets", {"query": "数字孪生"}), svc))
+    assert out["mode"] and out["files"] >= 1
+    exts = {f["ext"]: f["n"] for f in out["facets"]}
+    assert exts.get(".pdf") == 1

@@ -43,6 +43,24 @@ _TOOLS = [
                 "query": {"type": "string", "description": "检索词"},
                 "k": {"type": "integer", "default": 8,
                       "minimum": 1, "maximum": 50},
+                "ext": {"type": "string",
+                        "description": "命中集内按扩展名过滤（如 .pdf）"},
+                "dir": {"type": "string",
+                        "description": "命中集内按路径段过滤（大小写不敏感）"},
+            },
+            "required": ["query"],
+        },
+    },
+    {
+        "name": "localfiles_facets",
+        "description": "命中集扩展名分布（E 组免费聚合）：回答「讲 X 的"
+                       "材料都是什么类型」。只读。",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "query": {"type": "string", "description": "检索词"},
+                "top": {"type": "integer", "default": 10,
+                        "minimum": 1, "maximum": 25},
             },
             "required": ["query"],
         },
@@ -90,25 +108,50 @@ def _clean(s: str) -> str:
 class LocalFilesMcpService:
     """只读检索门面：Inventory + ChunkIndex 的 agent 出口。"""
 
-    def __init__(self, inv: Inventory, chunks: ChunkIndex):
+    def __init__(self, inv: Inventory, chunks: ChunkIndex,
+                 index_db=None):
         self._inv = inv
         self._chunks = chunks
+        self._index_db = index_db  # cx_search 全量路由（500 行/混检模式）
 
     @classmethod
     def open(cls, db_dir) -> LocalFilesMcpService:
         """从索引目录开门（无嵌入器 = keyword-only，查询侧零外部依赖）。"""
         d = Path(db_dir)
         return cls(Inventory(d / "inventory.db"),
-                   ChunkIndex(d / "index.db"))
+                   ChunkIndex(d / "index.db"),
+                   index_db=d / "index.db")
 
-    # ---------- 三工具实现 ----------
+    # ---------- 四工具实现 ----------
 
-    def search(self, query: str, k: int = 8) -> list[dict]:
+    def search(self, query: str, k: int = 8, ext: str = "",
+               dir_contains: str = "") -> list[dict]:
         hits = self._chunks.search(query, k=k)
-        return [{"path": _clean(h.path), "seq": h.seq,
-                 "source": _clean(h.source), "score": h.score,
-                 "snippet": _clean(h.text[:SNIPPET_CHARS])}
-                for h in hits]
+        out = [{"path": _clean(h.path), "seq": h.seq,
+                "source": _clean(h.source), "score": h.score,
+                "snippet": _clean(h.text[:SNIPPET_CHARS])}
+               for h in hits]
+        if ext:  # Everything 参数面（K）：命中集内内存过滤
+            e = ext.lower()
+            out = [h for h in out if h["path"].lower().endswith(e)]
+        if dir_contains:
+            d = dir_contains.lower()
+            out = [h for h in out if d in h["path"].lower()]
+        return out
+
+    def facets(self, query: str, top: int = 10) -> dict:
+        """命中集扩展名分布：cx_search 全量路由（500 行）优先，
+        无 index_db 时退 chunks.search。"""
+        from paistation.cx.search import facet_exts, run_query
+        if self._index_db and Path(self._index_db).exists():
+            rows, mode = run_query(self._index_db, query, limit=500)
+        else:
+            hits = self._chunks.search(query, k=50)
+            rows = [(h.path, h.text) for h in hits]
+            mode = hits[0].source if hits else "empty"
+        return {"mode": mode, "files": len({p for p, _ in rows}),
+                "facets": [{"ext": e, "n": n}
+                           for e, n in facet_exts(rows, top)]}
 
     def find(self, pattern: str, limit: int = 20) -> list[dict]:
         rows = self._inv.search_paths(pattern, limit=limit,
@@ -149,7 +192,12 @@ def _call_tool(svc: LocalFilesMcpService, name, args) -> object:
         raise _RpcError(-32602, "arguments 必须是对象")
     if name == "localfiles_search":
         return svc.search(_require_str(args, "query"),
-                          k=_clamp(args.get("k", 8), 8, 1, 50))
+                          k=_clamp(args.get("k", 8), 8, 1, 50),
+                          ext=str(args.get("ext") or ""),
+                          dir_contains=str(args.get("dir") or ""))
+    if name == "localfiles_facets":
+        return svc.facets(_require_str(args, "query"),
+                          top=_clamp(args.get("top", 10), 10, 1, 25))
     if name == "localfiles_find":
         return svc.find(_require_str(args, "pattern"),
                         limit=_clamp(args.get("limit", 20), 20, 1, 100))
