@@ -72,7 +72,7 @@ LEVEL_EVIDENCE: dict[Dimension, str] = {
     Dimension.RELATION: "实体登记表 27142（person 26948/org 177/project 17；四渠道：微信好友 2832+微信 166 群成员+飞书 29 p2p 与 12 群+企微会议参与人+git 作者）+ 边 34388（friend_of 2746/member_of 31608/associate_of 30/alter_ego_of 4）；主人身份簇 12 标识五渠道闭环（真名黄细丁=git邮箱=微信号=3个wxid=企微=飞书open_id=QQ号），AI 分身族挂 alter_ego_of；活跃度加权 v1：22833 人计分（会话新鲜度+会议同场+群摊派封顶）；企微 77 场会议详情已入 20 场（频控断点续跑中），钉钉未登录",
     Dimension.OPINION: "浏览器书签三套已采；微信读书划线首次拉取为空(reviews.jsonl 0条，需按weread渠道重拉)",
     Dimension.RHYTHM: "电源+活动事件可算作息（首登07:22已出首个洞察），未常态化月度产出",
-    Dimension.EVOLUTION: "git 两年史+活动史纵向数据在轴，未做主题迁移/成长曲线分析",
+    Dimension.EVOLUTION: "主题迁移首版完成（2026-09-16）：月度主导仓迁移+产出加速度 35 倍+双角色月度投入曲线（副业 7-9 月爆发）；2025 前数据待入轴",
 }
 
 
