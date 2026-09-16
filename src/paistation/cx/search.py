@@ -109,3 +109,27 @@ def keyword_window(text: str, words: list[str], width: int = 60) -> str:
             seg = text[s:e].replace("\r", " ").replace("\n", " ").strip()
             return ("…" if s else "") + seg + ("…" if e < len(text) else "")
     return "…" + text.replace("\r", " ").replace("\n", " ").strip()[:width]
+
+
+def filter_rows(rows: list[tuple[str, str]], ext: str | None = None,
+                dir_contains: str | None = None) -> list[tuple[str, str]]:
+    """命中集内存过滤：按扩展名 / 路径包含（大小写不敏感，空串跳过）。"""
+    out = rows
+    if ext:
+        e = ext.lower()
+        out = [(p, t) for p, t in out if p.lower().endswith(e)]
+    if dir_contains:
+        d = dir_contains.lower()
+        out = [(p, t) for p, t in out if d in p.lower()]
+    return out
+
+
+def facet_exts(rows: list[tuple[str, str]], top: int = 10) -> list[tuple[str, int]]:
+    """命中块的扩展名分布（免费聚合：命中集一行 GROUP BY 的等价物）。"""
+    counts: dict[str, int] = {}
+    for path, _ in rows:
+        dot = path.rfind(".")
+        slash = max(path.rfind("/"), path.rfind("\\"))
+        ext = path[dot:].lower() if dot > slash else "(无扩展名)"
+        counts[ext] = counts.get(ext, 0) + 1
+    return sorted(counts.items(), key=lambda kv: -kv[1])[:top]

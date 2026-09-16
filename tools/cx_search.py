@@ -19,6 +19,8 @@ sys.path.insert(0, str(REPO / "src"))
 
 from paistation.cx.search import (  # noqa: E402
     aggregate_by_file,
+    facet_exts,
+    filter_rows,
     keyword_window,
     run_query,
 )
@@ -27,21 +29,28 @@ INDEX = REPO / "data/local_index/index.db"
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="全盘文件关键词检索（FTS5+LIKE兜底）")
+    ap = argparse.ArgumentParser(description="全盘文件关键词检索（FTS5+LIKE兜底+facets）")
     ap.add_argument("query", help="关键词，空格分隔=AND；短词(<3字)自动LIKE兜底")
     ap.add_argument("--files", type=int, default=20, help="最多显示文件数")
     ap.add_argument("--samples", type=int, default=2, help="每文件样本行数")
     ap.add_argument("--limit", type=int, default=500, help="命中块上限")
+    ap.add_argument("--ext", help="按扩展名过滤，如 .pdf")
+    ap.add_argument("--dir", help="按路径包含过滤，如 白龟湖")
+    ap.add_argument("--facets", action="store_true", help="打印命中块扩展名分布")
     a = ap.parse_args()
 
     if not INDEX.exists():
         print(f"索引不存在：{INDEX}")
         return 1
     rows, mode = run_query(INDEX, a.query, limit=a.limit)
+    rows = filter_rows(rows, ext=a.ext, dir_contains=a.dir)
     agg = aggregate_by_file(rows)
     total = sum(len(v) for _, v in agg)
     print(f"「{a.query}」[{mode}] → {total} 命中块 / {len(agg)} 文件"
           f"（块上限 {a.limit}）")
+    if a.facets:
+        dist = "  ".join(f"{e}×{n}" for e, n in facet_exts(rows))
+        print(f"扩展名分布：{dist}")
     words = a.query.split()
     for path, texts in agg[: a.files]:
         print(f"\n[{len(texts)}] {path}")

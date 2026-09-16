@@ -117,3 +117,27 @@ class TestLikeFallback:
         rows, mode = run_query(tmp_path / "i.db", "白龟湖 EP")
         assert mode == "mixed"
         assert rows == [("E:/a/白龟湖方案.md", "白龟湖 EPC 总包合同谈判")]
+
+
+class TestFacets:
+    """命中集过滤与聚合（E 组：files/chunks 已是免费 fast fields）。"""
+
+    def test_filter_rows_ext_and_dir(self):
+        from paistation.cx.search import filter_rows
+        rows = [("E:/docs/白龟湖.pdf", "白龟湖内容"),
+                ("E:/docs/白龟湖.docx", "白龟湖内容2"),
+                ("D:/proj/白龟湖.pdf", "白龟湖内容3")]
+        assert filter_rows(rows, ext=".pdf") == [
+            ("E:/docs/白龟湖.pdf", "白龟湖内容"),
+            ("D:/proj/白龟湖.pdf", "白龟湖内容3")]
+        assert filter_rows(rows, dir_contains="docs") == [
+            ("E:/docs/白龟湖.pdf", "白龟湖内容"),
+            ("E:/docs/白龟湖.docx", "白龟湖内容2")]
+        assert filter_rows(rows, ext=".pdf", dir_contains="docs") == [
+            ("E:/docs/白龟湖.pdf", "白龟湖内容")]
+
+    def test_facet_exts(self):
+        from paistation.cx.search import facet_exts
+        rows = [("a/1.pdf", "x"), ("a/2.pdf", "y"), ("a/3.docx", "z")]
+        assert facet_exts(rows) == [(".pdf", 2), (".docx", 1)]
+        assert facet_exts([("无扩展名", "x")]) == [("(无扩展名)", 1)]
