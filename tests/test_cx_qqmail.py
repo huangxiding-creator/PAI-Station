@@ -76,6 +76,10 @@ class TestClassifyMail:
     def test_unknown_promo(self):
         assert classify_mail("限时优惠全场五折", "news@shop.com") == "promo"
 
+    def test_single_char_subject_personal(self):
+        # 主题"1"（文件中转/私人）不算工作面，即使来自 qq.com
+        assert classify_mail("1", "634698572@qq.com") == "personal"
+
 
 class TestRegisterAndEvents:
     def test_work_only_registered(self, tmp_path):

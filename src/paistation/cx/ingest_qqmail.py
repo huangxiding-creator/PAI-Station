@@ -36,10 +36,12 @@ def classify_mail(subject: str, from_email: str) -> str:
     domain = from_email.split("@")[-1].lower() if "@" in from_email else ""
     for dom, cls in _DOMAIN_RULES:
         if domain == dom or domain.endswith("." + dom):
-            # 域名命中后主题反证：期刊/银行域里的消费主题仍按主题定
+            # 域名命中后主题反证：消费主题/单字符随手邮件仍按主题定
             for kw in _SUBJECT_PERSONAL:
                 if kw in subject:
                     return "personal"
+            if len(subject.strip()) <= 2:
+                return "personal"
             return cls
     for kw in _SUBJECT_WORK:
         if kw in subject:
