@@ -28,7 +28,8 @@ _DOMAIN_RULES: list[tuple[str, str]] = [
 ]
 
 _SUBJECT_PERSONAL = ("账单", "发票", "积分", "信用卡", "还款", "白条")
-_SUBJECT_WORK = ("催稿", "审稿", "投稿", "备案", "结算", "合同", "项目", "论文")
+_SUBJECT_WORK = ("催稿", "审稿", "投稿", "备案", "结算", "合同", "项目", "论文",
+                 "EPC", "监控日报", "workflow", "工作流")
 
 
 def classify_mail(subject: str, from_email: str) -> str:

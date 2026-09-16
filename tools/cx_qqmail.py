@@ -32,45 +32,50 @@ CLI = Path.home() / "AppData/Local/Microsoft/WindowsApps/qqmail-cli.exe"
 MAX_PAGES = 10
 
 
-def pull_envelopes(pages: int) -> list[dict]:
-    """分页拉信封（增量合并缓存），返回全量列表。"""
+def pull_envelopes(pages: int, folders: tuple[str, ...] = ("INBOX",)) -> list[dict]:
+    """分页拉信封（增量合并缓存），返回全量列表。多文件夹支持。"""
     cached = json.loads(CACHE.read_text(encoding="utf-8")) if CACHE.exists() else []
-    have = {m["id"] for m in cached}
+    have = {(m.get("folder", "INBOX"), m["id"]) for m in cached}
     merged = list(cached)
-    before_uid = 0
-    for page in range(pages):
-        cmd = [str(CLI), "envelope", "list", "--json", "--limit", "50"]
-        if before_uid:
-            cmd += ["--before-uid", str(before_uid)]
-        proc = subprocess.run(cmd, capture_output=True, text=True,
-                              encoding="utf-8", errors="replace",
-                              env={"QQMAIL_CLI_READONLY": "1", **__import__("os").environ},
-                              creationflags=0x08000000, timeout=90)
-        if proc.returncode == 30:
-            print("限流（rc=30）——停 10-15 分钟后再跑（断点在缓存）")
-            break
-        if proc.returncode != 0:
-            print(f"rc={proc.returncode}: {proc.stderr.strip()[:200]}")
-            break
-        mails = parse_envelopes(proc.stdout)
-        new = [m for m in mails if m["id"] not in have]
-        for m in new:
-            have.add(m["id"])
-            merged.append(m)
-        print(f"页{page + 1}: +{len(new)}（服务端 {len(mails)}）")
-        if not mails:
-            break
-        CACHE.write_text(json.dumps(merged, ensure_ascii=False, indent=1),
-                         encoding="utf-8")
-        try:
-            nxt = json.loads(proc.stdout).get("data", {}).get("page", {}).get(
-                "next_before_uid")
-        except ValueError:
-            nxt = None
-        if not nxt or len(mails) < 20:
-            break
-        before_uid = int(nxt)
-        time.sleep(2.0)
+    for folder in folders:
+        before_uid = 0
+        for page in range(pages):
+            cmd = [str(CLI), "envelope", "list", "--json", "--limit", "50",
+                   "--folder", folder]
+            if before_uid:
+                cmd += ["--before-uid", str(before_uid)]
+            proc = subprocess.run(cmd, capture_output=True, text=True,
+                                  encoding="utf-8", errors="replace",
+                                  env={"QQMAIL_CLI_READONLY": "1",
+                                       **__import__("os").environ},
+                                  creationflags=0x08000000, timeout=90)
+            if proc.returncode == 30:
+                print("限流（rc=30）——停 10-15 分钟后再跑（断点在缓存）")
+                break
+            if proc.returncode != 0:
+                print(f"[{folder}] rc={proc.returncode}: "
+                      f"{proc.stderr.strip()[:160]}")
+                break
+            mails = parse_envelopes(proc.stdout)
+            new = [dict(m, folder=folder) for m in mails
+                   if (folder, m["id"]) not in have]
+            for m in new:
+                have.add((folder, m["id"]))
+                merged.append(m)
+            print(f"[{folder}] 页{page + 1}: +{len(new)}（服务端 {len(mails)}）")
+            if not mails:
+                break
+            CACHE.write_text(json.dumps(merged, ensure_ascii=False, indent=1),
+                             encoding="utf-8")
+            try:
+                nxt = json.loads(proc.stdout).get("data", {}).get(
+                    "page", {}).get("next_before_uid")
+            except ValueError:
+                nxt = None
+            if not nxt or len(mails) < 20:
+                break
+            before_uid = int(nxt)
+            time.sleep(2.0)
     return merged
 
 
@@ -78,8 +83,12 @@ def main() -> int:
     pages = MAX_PAGES
     if "--pages" in sys.argv:
         pages = int(sys.argv[sys.argv.index("--pages") + 1])
-    mails = pull_envelopes(pages)
-    print(f"缓存合计: {len(mails)} 封")
+    folders = ("INBOX", "Deleted Messages")
+    if "--folders" in sys.argv:
+        folders = tuple(
+            sys.argv[sys.argv.index("--folders") + 1].split(","))
+    mails = pull_envelopes(pages, folders)
+    print(f"缓存合计: {len(mails)} 封（{folders}）")
 
     by_cls: dict[str, int] = {}
     for m in mails:
