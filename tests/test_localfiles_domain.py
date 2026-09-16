@@ -56,3 +56,11 @@ def test_existing_roots_separator_canonical():
     (root,) = domain.existing_roots()
     if sys.platform == "win32":
         assert "/" not in root and "\\" in root
+
+
+def test_office_lock_file_excluded(tmp_path):
+    """Office 全程锁文件 ~$xxx.docx：零价值，枚举级排除。"""
+    domain = ScanDomain(includes=[str(tmp_path)],
+                        exclude_names=["node_modules"])
+    assert domain.covers(str(tmp_path / "~$报告.docx")) is False
+    assert domain.covers(str(tmp_path / "报告.docx")) is True

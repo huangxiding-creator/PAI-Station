@@ -34,12 +34,26 @@ ROUTES: dict[str, tuple[tuple[str, ...], str]] = {
 }
 _SUFFIX2KIND = {sfx: kind for kind, (sfxs, _) in ROUTES.items() for sfx in sfxs}
 
+# 真机实证（09-16 双会话长跑）：企业微信 WeDrive 云端占位文件 open()
+# 会挂起拉云（单文件可卡 6+ 分钟，整轮提取几乎零推进的元凶）——
+# 前缀路由 metadata-only（只 stat 不 open），本地缓存恢复后自然重扫。
+CLOUD_PLACEHOLDER_PREFIXES = (
+    "c:/users/91216/documents/wxwork/",
+)
+
+
+def _norm_path(path: str) -> str:
+    return str(path).replace("\\", "/").lower()
+
 
 class Triage:
     """后缀路由 + PDF magic 复核（后缀撒谎最常见的就是 pdf/doc）。"""
 
     def classify(self, path: str) -> tuple[str, str]:
         """→ (kind, parser_id)；metadata-only 的 kind 由调用方按需覆盖。"""
+        p = _norm_path(path)
+        if any(p.startswith(pref) for pref in CLOUD_PLACEHOLDER_PREFIXES):
+            return "cloud-placeholder", "metadata-only"
         suffix = os.path.splitext(path)[1].lower()
         kind = _SUFFIX2KIND.get(suffix, "")
         if not kind:

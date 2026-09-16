@@ -157,7 +157,9 @@ class Inventory:
                 self._db.execute(
                     "UPDATE files SET size=:size, mtime=:mtime, secret=:secret,"
                     " seen_gen=:seen_gen, last_seen=:ts,"
-                    " status=CASE :secret WHEN 1 THEN 'secret' ELSE 'pending' END"
+                    " status=CASE WHEN :secret=1 THEN 'secret'"
+                    " WHEN status='skipped' THEN 'skipped'"
+                    " ELSE 'pending' END"
                     " WHERE path=:path", row)
             if gone:
                 self._db.executemany(

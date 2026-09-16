@@ -92,6 +92,8 @@ class ScanDomain:
         for seg in norm.split("/"):
             if seg in self.exclude_names:
                 return False
+        if norm.rsplit("/", 1)[-1].startswith("~$"):
+            return False  # Office 全程锁文件：零价值，枚举级排除
         return True
 
     def is_secret(self, path: str) -> bool:

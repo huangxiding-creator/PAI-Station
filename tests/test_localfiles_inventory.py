@@ -45,6 +45,22 @@ def test_backend_switch_mtime_fraction_tolerated(tmp_path):
     inv.close()
 
 
+def test_skipped_status_sticky_across_rescan(tmp_path):
+    """DB 级隔离（WeDrive 占位等）不得被后续扫描无条件打回 pending
+    （09-16 双会话实测：占位文件回队即挂起拉云拖死整轮提取）。"""
+    inv = Inventory(tmp_path / "inv.db")
+    inv.apply_scan([_rec("a.txt", mtime=1.0)])
+    inv._db.execute("UPDATE files SET status='skipped' WHERE path='a.txt'")
+    inv._db.commit()
+    diff = inv.apply_scan([_rec("a.txt", mtime=2.0)])  # 变更行也保持 skipped
+    assert diff.changed  # 差分照报
+    row = inv._db.execute(
+        "SELECT status FROM files WHERE path='a.txt'").fetchone()
+    assert row["status"] == "skipped"
+    assert [r["path"] for r in inv.pending()] == []  # 队外
+    inv.close()
+
+
 def test_missing_file_marked_gone_not_deleted(tmp_path):
     inv = Inventory(tmp_path / "inv.db")
     inv.apply_scan([_rec("a.txt"), _rec("b.txt")])
