@@ -43,6 +43,34 @@ _MAIN_PROJECTS = {"江巷灌区信息化"}
 _WHITEBAIGUIHU = ("project", "白龟湖生态环境保护EPC", ["白龟湖", "大浪河项目"])
 _DALANGHE = ("project", "大浪河治理工程", ["大浪河"])
 
+# 落款/内容证据归属校准（2026-09-16 cx_search 全盘扫描实证）：
+# 工程豹=总包千问公众号改名（飞书《总包大脑实战方案》20260125 条目）→ 副业自媒体矩阵；
+# 工程大脑=metaso"工程商机研究报告"知识库（EngOpp-Mining 上传目的地）→ 副业内容管线；
+# ResearchFactory-Eng=研究主题全为 EPC 总包内容（公众号素材线）→ 副业。
+_TOPIC_ATTRIBUTIONS: dict[str, tuple[str, str]] = {
+    "工程豹": (_SIDE_COMPANY, "signature_calibration"),
+    "工程大脑": (_SIDE_COMPANY, "signature_calibration"),
+    "水利安全AI眼镜": (_MAIN_EMPLOYER, "owner_statement"),
+}
+_GIT_ATTRIBUTIONS: dict[str, tuple[str, str]] = {
+    "ResearchFactory-Eng": (_SIDE_COMPANY, "signature_calibration"),
+}
+
+
+def calibrate_attributions(store) -> int:
+    """落款判据归属校准：topic/git 项目挂 operated_by（幂等），返回新建边数。"""
+    _ensure_orgs(store)
+    added = 0
+    for name, (target, source) in {
+        **_TOPIC_ATTRIBUTIONS, **_GIT_ATTRIBUTIONS,
+    }.items():
+        kind = "topic" if name in _TOPIC_ATTRIBUTIONS else "project"
+        store.register(kind, name, source=source)
+        added += store.register_link(
+            f"{kind}/{name}", target, "operated_by", source)
+    store._conn.commit()
+    return added
+
 
 def classify_group_project(name: str) -> str | None:
     """群名 → 业务线 project 名；无法归属返回 None（克制不硬凑）。"""

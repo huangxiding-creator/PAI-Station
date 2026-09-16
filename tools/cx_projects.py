@@ -16,6 +16,7 @@ sys.path.insert(0, str(REPO / "src"))
 
 from paistation.cx.entities import EntityStore  # noqa: E402
 from paistation.cx.ingest_projects import (  # noqa: E402
+    calibrate_attributions,
     register_baiguihu,
     register_group_projects,
     register_meeting_projects,
@@ -42,6 +43,9 @@ def main() -> int:
 
     baigu = register_baiguihu(store)
     print(f"白龟湖线新建: {baigu}")
+
+    calibrated = calibrate_attributions(store)
+    print(f"落款校准 operated_by 边新建: {calibrated}")
 
     # git 来源代码项目 → 第三线"个人 AI 基建"挂 owned_by→本人
     conn = store._conn

@@ -12,6 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from paistation.cx.entities import EntityStore  # noqa: E402
 from paistation.cx.ingest_projects import (  # noqa: E402
+    calibrate_attributions,
     classify_group_project,
     extract_meeting_projects,
     register_group_projects,
@@ -122,4 +123,37 @@ class TestRegisterProjects:
             "SELECT 1 FROM entity_links WHERE from_id='project/江巷灌区信息化' "
             "AND to_id='org/黄河勘测规划设计研究院' AND relation='operated_by'"
         ).fetchone()
+        store.close()
+
+
+class TestCalibrateAttributions:
+    """落款/内容证据归属校准（cx_search 全盘扫描实证 2026-09-16）。"""
+
+    def test_topics_attributed(self, tmp_path):
+        store = EntityStore(tmp_path / "e.db")
+        added = calibrate_attributions(store)
+        assert added >= 3
+        # 工程豹=总包千问公众号改名 → 副业
+        assert store._conn.execute(
+            "SELECT 1 FROM entity_links WHERE from_id='topic/工程豹' "
+            "AND to_id LIKE 'org/总包说%' AND relation='operated_by'"
+        ).fetchone()
+        # 水利安全AI眼镜 → 主业（owner_statement 口径不变）
+        assert store._conn.execute(
+            "SELECT 1 FROM entity_links WHERE from_id='topic/水利安全AI眼镜' "
+            "AND to_id='org/黄河勘测规划设计研究院' AND relation='operated_by'"
+        ).fetchone()
+
+    def test_git_project_researchfactory_side(self, tmp_path):
+        store = EntityStore(tmp_path / "e.db")
+        calibrate_attributions(store)
+        assert store._conn.execute(
+            "SELECT 1 FROM entity_links WHERE from_id='project/ResearchFactory-Eng' "
+            "AND to_id LIKE 'org/总包说%' AND relation='operated_by'"
+        ).fetchone()
+
+    def test_idempotent(self, tmp_path):
+        store = EntityStore(tmp_path / "e.db")
+        calibrate_attributions(store)
+        assert calibrate_attributions(store) == 0
         store.close()
