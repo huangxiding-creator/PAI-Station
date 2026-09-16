@@ -138,3 +138,17 @@ def test_hung_file_times_out_without_blocking_batch(
     assert r["failed"] == 1
     assert r["extracted"] == 6  # 挂死者不连坐
     ix.close()
+
+
+def test_proc_engine_end_to_end(tmp_path):
+    """进程引擎（spawn 真并行）：语义与线程引擎一致，全量入库。"""
+    ix, root = _make_indexer(tmp_path)
+    for i in range(6):
+        (root / f"pr{i}.txt").write_text(f"进程引擎内容{i}" * 15,
+                                         encoding="utf-8")
+    ix.scan()
+    r = ix.extract_pending(200, workers=3, engine="proc")
+    assert r["extracted"] == 6 and r["failed"] == 0
+    assert any("进程引擎内容" in h.text for h in
+               ix._chunks.search("进程引擎内容", k=5))
+    ix.close()

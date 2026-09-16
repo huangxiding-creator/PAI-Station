@@ -13,6 +13,7 @@ partial hash 4096B 初筛 → full hash 定案 → parser 指纹比对，命中
 from __future__ import annotations
 
 import logging
+import multiprocessing
 import time
 from collections import deque
 from concurrent.futures import ThreadPoolExecutor
@@ -30,6 +31,30 @@ _log = logging.getLogger("paistation.sense.localfiles.indexer")
 
 EXTRACT_TIMEOUT_S = 30.0
 EXTRACT_WORKERS = 8
+PROC_WORKERS = 12
+MpTimeout = multiprocessing.TimeoutError
+
+
+def _cancel(fut) -> None:
+    """线程 Future 可取消；mp AsyncResult 无 cancel——静默跳过。"""
+    cancel = getattr(fut, "cancel", None)
+    if callable(cancel):
+        try:
+            cancel()
+        except Exception:  # noqa: BLE001 — 取消尽力而为
+            pass
+
+
+class _MpFut:
+    """mp ApplyResult 适配器：统一成 thread Future 的 .result(timeout)。"""
+
+    __slots__ = ("_ar",)
+
+    def __init__(self, ar):
+        self._ar = ar
+
+    def result(self, timeout=None):
+        return self._ar.get(timeout)
 
 
 class Indexer:
@@ -57,8 +82,8 @@ class Indexer:
 
     # ---------- L1 提取 → P2 入库 ----------
 
-    def extract_pending(self, limit: int = 200, workers: int | None = None
-                        ) -> dict:
+    def extract_pending(self, limit: int = 200, workers: int | None = None,
+                        engine: str = "thread") -> dict:
         rows = self._inv.pending(limit)
         done = failed = cached = 0
         head = rows[0]["priority"] if rows else None
@@ -82,54 +107,71 @@ class Indexer:
                              row["hash_partial"], row["hash_full"],
                              row["parser_id"], row["parser_ver"]))
         # 滚动窗口满水收割：窗口=工人数 → 提交即开工；头部收割 →
-        # 挂死文件至多烧掉自己的超时预算，其余槽位照常产出
-        w = workers or EXTRACT_WORKERS
+        # 挂死文件至多烧掉自己的超时预算，其余槽位照常产出。
+        # 双引擎同构：thread（fut.result 兼容）/ proc（spawn 子进程
+        # 真并行破 GIL——pymupdf 纯 Python 段线程加不动，16 核机
+        # 生产位用 proc；池批级生命周期 + terminate 硬清场防孤儿）
+        w = workers or (PROC_WORKERS if engine == "proc" else EXTRACT_WORKERS)
         embedder_ver = self._chunks.stats()["embedder"]  # 每批一次
-        inflight: deque = deque()  # (fut, deadline, ctx)
-        ji = 0
-        while ji < len(jobs) or inflight:
-            while ji < len(jobs) and len(inflight) < w:
-                path, kind, parser_id, hp, hf, old_pid, old_pv = jobs[ji]
-                ji += 1
-                inflight.append((
-                    self._pool.submit(_extract_job, path, kind, parser_id,
-                                      hp, hf, old_pid, old_pv),
-                    time.monotonic() + EXTRACT_TIMEOUT_S,
-                    (path, kind, parser_id)))
-            fut, deadline, (path, kind, parser_id) = inflight[0]
-            try:
-                res = fut.result(timeout=max(deadline - time.monotonic(),
-                                             0.05))
-            except FutTimeout:
-                fut.cancel()
-                _log.warning("提取超时标记失败: %s", path)
-                self._inv.mark_extracted(path, parser_id, "?", "", kind,
-                                         status="failed")
-                failed += 1
-            except (ExtractionError, OSError) as exc:
-                _log.info("提取失败（毒文件常态）: %s", exc)
-                self._inv.mark_extracted(path, parser_id, "?", "", kind,
-                                         status="failed")
-                failed += 1
-            else:
-                if res["status"] == "cached":  # hash 阶梯复活
-                    self._inv.mark_extracted(
-                        path, res["parser_id"], res["parser_ver"],
-                        res["full"], res["kind"],
-                        hash_partial=res["partial"])
-                    cached += 1
-                else:  # ok
-                    self._inv.mark_extracted(
-                        path, res["parser_id"], res["parser_ver"],
-                        res["full"], res["kind"],
-                        hash_partial=res["partial"])
-                    if res["texts"]:
-                        self._chunks.upsert_file(
-                            path, res["texts"],
-                            f"{CHUNKER_VER}+{embedder_ver}",
-                            file_gen=self._inv.generation)
-                    done += 1
-            inflight.popleft()
+        mp_pool = None
+        if engine == "proc" and jobs:
+            import multiprocessing as mp
+            ctx = mp.get_context("spawn")
+            mp_pool = ctx.Pool(processes=max(1, w), maxtasksperchild=200)
+            submit = lambda fn, *a: _MpFut(  # noqa: E731
+                mp_pool.apply_async(fn, a))
+        else:
+            submit = self._pool.submit
+        try:
+            inflight: deque = deque()  # (fut, deadline, ctx)
+            ji = 0
+            while ji < len(jobs) or inflight:
+                while ji < len(jobs) and len(inflight) < w:
+                    path, kind, parser_id, hp, hf, old_pid, old_pv = jobs[ji]
+                    ji += 1
+                    inflight.append((
+                        submit(_extract_job, path, kind, parser_id,
+                               hp, hf, old_pid, old_pv),
+                        time.monotonic() + EXTRACT_TIMEOUT_S,
+                        (path, kind, parser_id)))
+                fut, deadline, (path, kind, parser_id) = inflight[0]
+                try:
+                    res = fut.result(timeout=max(
+                        deadline - time.monotonic(), 0.05))
+                except (FutTimeout, MpTimeout):
+                    _cancel(fut)
+                    _log.warning("提取超时标记失败: %s", path)
+                    self._inv.mark_extracted(path, parser_id, "?", "", kind,
+                                             status="failed")
+                    failed += 1
+                except (ExtractionError, OSError) as exc:
+                    _log.info("提取失败（毒文件常态）: %s", exc)
+                    self._inv.mark_extracted(path, parser_id, "?", "", kind,
+                                             status="failed")
+                    failed += 1
+                else:
+                    if res["status"] == "cached":  # hash 阶梯复活
+                        self._inv.mark_extracted(
+                            path, res["parser_id"], res["parser_ver"],
+                            res["full"], res["kind"],
+                            hash_partial=res["partial"])
+                        cached += 1
+                    else:  # ok
+                        self._inv.mark_extracted(
+                            path, res["parser_id"], res["parser_ver"],
+                            res["full"], res["kind"],
+                            hash_partial=res["partial"])
+                        if res["texts"]:
+                            self._chunks.upsert_file(
+                                path, res["texts"],
+                                f"{CHUNKER_VER}+{embedder_ver}",
+                                file_gen=self._inv.generation)
+                        done += 1
+                inflight.popleft()
+        finally:
+            if mp_pool is not None:
+                mp_pool.terminate()  # 硬清场：挂死子进程不滞留不 join 卡
+                mp_pool.join()
         return {"processed": len(rows), "extracted": done,
                 "cached": cached, "failed": failed,
                 "queue_priority_head": head}

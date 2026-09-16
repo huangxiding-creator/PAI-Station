@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 """高价值优先提取批（白昼批）：消费 priority 队列 top-N，不触发全盘扫描。
 
-用法：python tools/cx_extract_batch.py [limit=3000]
+用法：python tools/cx_extract_batch.py [limit=3000] [--thread]
 夜跑 full_cycle 之外的加餐——队列头永远是主业/高价值文件。
+默认进程引擎（12 spawn 真并行）；--thread 退线程引擎。
 """
 from __future__ import annotations
 
@@ -29,7 +30,8 @@ def main() -> int:
     chunks = ChunkIndex(LF_DIR / "index.db")
     idx = Indexer(ScanDomain(), inv, chunks)
     t0 = time.time()
-    report = idx.extract_pending(limit)
+    engine = "thread" if "--thread" in sys.argv else "proc"
+    report = idx.extract_pending(limit, engine=engine)
     dt = time.time() - t0
     print(f"limit={limit} 耗时 {dt/60:.1f} 分钟：{report}")
     head = inv.pending(1)
