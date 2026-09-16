@@ -109,3 +109,15 @@ def test_search_paths(tmp_path):
     hits = inv.search_paths("report")
     assert len(hits) == 1 and "report" in hits[0]["path"]
     inv.close()
+
+
+def test_path_normalization_no_double_write(tmp_path):
+    """路径归一：E:\\a\\b 与 E:/a/b 是同一文件，绝不双写（2026-09-17 I 组实查 bug）。"""
+    back = "E:" + chr(92) + "a" + chr(92) + "b.txt"
+    inv = Inventory(tmp_path / "inv.db")
+    inv.apply_scan([_rec(back), _rec("E:/a/b.txt")])
+    assert inv.stats()["total_alive"] == 1
+    # 跨代形态切换（gen1 反斜杠、gen2 正斜杠）不算 gone 也不算 added
+    diff = inv.apply_scan([_rec(back)])
+    assert not diff.added and not diff.gone
+    inv.close()

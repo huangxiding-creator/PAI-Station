@@ -66,6 +66,14 @@ def file_hashes(path: str) -> tuple[str, str]:
     return h_part.hexdigest(), h_full.hexdigest()
 
 
+def _norm_path(path) -> str:
+    """路径归一：统一正斜杠 + 折叠重复斜杠（E:\\a\\b ≡ E:/a/b），主键前必经。"""
+    s = str(path).replace("\\", "/")
+    while "//" in s:
+        s = s.replace("//", "/")
+    return s
+
+
 @dataclass
 class ScanDiff:
     """一轮扫描的差分结果（喂给提取层与连接器事件）。"""
@@ -122,17 +130,19 @@ class Inventory:
         """
         ts = time.time() if now is None else now
         self._gen = self._bump_gen()  # 扫描即换代（apply_scan 独有）
-        # 入口去重（防御任何后端的重复行；冲突留首条，确定性优先）
+        # 入口去重（防御任何后端的重复行；冲突留首条，确定性优先）。
+        # 路径归一：E:\a\b 与 E:/a/b 同一文件绝不双写（2026-09-17 I 组实查
+        # 588,259 行中 285,320 行系斜杠形态双写，gone 统计同被污染）
         uniq: dict[str, dict] = {}
         for rec in records:
-            uniq.setdefault(str(rec["path"]), rec)
+            uniq.setdefault(_norm_path(rec["path"]), rec)
         known = {
             r["path"]: (r["size"], r["mtime"])
             for r in self._db.execute("SELECT path, size, mtime FROM files")
         }
         added, changed = [], []
         for rec in uniq.values():
-            path = str(rec["path"])
+            path = _norm_path(rec["path"])
             prev = known.pop(path, None)
             row = {
                 "path": path,
