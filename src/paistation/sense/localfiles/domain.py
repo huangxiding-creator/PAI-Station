@@ -46,12 +46,21 @@ DEFAULT_INCLUDES = (
     "~/Desktop", "~/Documents", "~/Downloads", "~/Pictures",
     "E:/AI-Station",
     # 2026-09-17 扩域：D/F 盘工作阵地（白龟湖全案档案 01-10 编号体系/
-    # 自媒体图库/工程知识库超市·水利系列）。BaiduSyncdisk 云占位与
-    # MemoTrace 微信备份按红线暂缓，须用户点头才进。
+    # 自媒体图库/工程知识库超市·水利系列）。
+    # 2026-09-17 二次扩域（用户拍板"全部进大脑"）：MemoTrace 微信全量
+    # 导出（聊天记录/朋友圈，文字金矿+媒体 metadata 零成本路由）、
+    # BaiduSyncdisk（实测真本地文件）、浏览器下载区、用户媒体目录。
     "D:/20 白龟湖项目",
     "D:/WEMedia",
     "D:/WEMediaOutput",
     "F:/工程知识库超市",
+    "D:/MemoTrace",
+    "D:/BaiduSyncdisk",
+    "D:/360Downloads",
+    "D:/360安全浏览器下载",
+    "D:/md2wechat-skill",
+    "~/Videos",
+    "~/Music",
 )
 
 
