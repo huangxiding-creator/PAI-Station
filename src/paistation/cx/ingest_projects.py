@@ -111,6 +111,38 @@ def register_meeting_projects(store, subjects: list[str]) -> int:
     return created
 
 
+def link_meeting_attendees(store, meetings: list[dict]) -> int:
+    """企微会议详情 → 主题命中项目关键词的，参与人挂 works_on→project。
+
+    主业人际主要在企微会议里（江巷灌区等无微信群），此边补角色传导链。
+    meetings 元素形如 {"subject","attendees":[{"userid","name"}]}。
+    """
+    created = 0
+    from paistation.cx.ingest_wecom import _clean_name
+    for m in meetings:
+        subj = m.get("subject", "")
+        for kind, name in extract_meeting_projects(subj):
+            if kind != "project":
+                continue
+            store.register("project", name, source="meeting_subject")
+            store.register_link(f"project/{name}", _operated_by_target(name),
+                                "operated_by", "owner_context")
+            for a in m.get("attendees", []):
+                eid = store.lookup_by_alias(a["userid"]) if a.get("userid") else None
+                if not eid and a.get("name"):
+                    clean = _clean_name(a["name"])[0]
+                    row = store._conn.execute(
+                        "SELECT entity_id FROM entities WHERE kind='person' "
+                        "AND display_name=?", (clean,),
+                    ).fetchone()
+                    eid = str(row[0]) if row else None
+                if eid and eid != "person/总包君":
+                    created += int(store.register_link(
+                        eid, f"project/{name}", "works_on", "wecom_meeting"))
+    store._conn.commit()
+    return created
+
+
 def register_baiguihu(store, exists: bool = True) -> int:
     """白龟湖生态环境保护 EPC（含大浪河子项目，主业线）。exists=False 供测试。"""
     _ensure_orgs(store)
