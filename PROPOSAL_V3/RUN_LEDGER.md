@@ -110,6 +110,9 @@
 
 | 09-16 | ✅ **wechat-cc 桥自启+看护双层**（用户确认）：`tools/wechat_cc_bridge_autostart.py` 幂等启动器（wmic 按命令行探测在跑即退出/扩展版本 glob 择新钉 PATH/DETACHED+CREATE_NO_WINDOW 零弹窗/pythonw 载体）；HKCU Run 键登录即启（schtasks onlogon 拒绝访问的免管理员替代，Ollama 同款形态）+ schtasks watchdog 每 5 分钟；实测杀→自动拉活（pid 27260）+复跑幂等（实例恒 1）+轮询恢复 | `tools/wechat_cc_bridge_autostart.py`、HKCU\...\Run、schtasks watchdog |
 
+| 09-16 | ✅ **信息源全景开采（用户「全要」+「全部列出」+「按建议来」）**：60 候选源只读探针 38 有货（SELF_PROFILE/data/source_census_20260916/）；**三钻全落**——①活动时间线 6,161 行全量（2024-11~今，Unix 秒修正 FILETIME 误诊；应用榜 VSCode 1206/python 887/微信 809/Chrome 多 profile 生态/metaso 246）②白龟湖诉讼跨源档案（Recent 39 命中+跳转列表 D:\20 白龟湖项目+浏览器 OA 律师函审批+活动侧写 → SELF_PROFILE/白龟湖诉讼项目档案_20260916.md；十一年时间线 2015 实施→2026-09-16 移交法务全还原；07任务→08成果管线实战实证）③腾讯会议 26 场 8.5 个月（**新任务簇：江巷灌区/工程安全AI眼镜/总包圈社群**）；另腾讯文档 221 项 BFS（黄藏寺2026/小禹智慧建管 33/总包学园/总包之声/飞云江二期）、TypedPaths 任务地图（E:\AIResearch×4/总包生态圈招募/AI眼镜）、WPS 备份 7 份水利业务文书、WLAN 8 网络+USB 9 设备+电源 74 天作息（7-8 点首解锁 41 天=早起型）、已装 150 程序、PowerShell 史 390 行；微信读书划线/笔记三端点 404 漂移+熔断正确触发（页内钩子探针排队）。全景清单落 SELF_PROFILE/可挖信息源全景清单_20260916.md | `SELF_PROFILE/`（不入库） |
+| 09-16 | ✅ **感知与提取常态化三件**：①微信每日提取 schtasks 00:40（tools/wechat_daily_yesterday.py 幂等载体）+28 天回填后台断点跑（08-18/08-19 已落 9749 条）；②**M7a 七路信号源常驻上电**（tools/signal_stream_resident.py：命名互斥量防双开——venv python shim 双进程同 cmdline 使 wmic 探测自杀的陷阱实证；PAUSE 旗标+EventStream 按日 jsonl；schtasks watchdog 每 5 分钟；实测事件流滚动 window.focus/presence.afk/...）③通知库 11 条（系统自清，薄）+电源事件 299 条入档 | `tools/` ×2、schtasks ×2、`data/signal_stream/` |
+
 ## 红线备忘（每轮心跳自查）
 
 项目外全盘只读 ｜ 账号安全第一 ｜ secrets 不入库 ｜ 00 愿景/付费语料不上公开仓 ｜ 只增不删+Git 留痕 ｜ 每环节调研≥20 ｜ 进化提案永不自批 ｜ commit 带 Co-Authored-By
