@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PAI-Station · 个人超级AI工作站 — 你的认知，从此是主权资产</title>
-<meta name="description" content="PAI-Station v4：个人认知主权操作系统。记忆与决策写进本地账本，动作过风控闸门，任务不拿 done-token 不算完成。章程三律：永不卖用户数据 · 数据本地优先 · 一键带走。">
+<title>PAI-Station · 个人超级AI工作站 — 你的经验不再蒸发，你的数据属于你</title>
+<meta name="description" content="PAI-Station：一台越用越懂你的 AI 工作站。它记住你的每个判断与教训，替你干的活有凭证可查，花钱删文件先过你审批；你的数据永远长在你自己的电脑里——不卖、不丢、一键带走。">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='29' fill='%230b0e13' stroke='%23e8b04b' stroke-width='3'/%3E%3Ccircle cx='32' cy='32' r='22' fill='none' stroke='%23e8b04b' stroke-width='1' stroke-dasharray='3 3'/%3E%3Ctext x='32' y='42' font-size='28' text-anchor='middle' fill='%23e8b04b' font-family='serif' font-weight='700'%3E主%3C/text%3E%3C/svg%3E">
 <style>
 :root{
@@ -69,7 +69,7 @@ a{color:inherit;text-decoration:none}
 .kicker::before{content:"";width:44px;height:1px;background:var(--gold)}
 h1{
   font-family:var(--serif); font-weight:900; line-height:1.22;
-  font-size:clamp(40px,5.4vw,76px); letter-spacing:.01em; margin-bottom:30px;
+  font-size:clamp(36px,4.6vw,64px); letter-spacing:.01em; margin-bottom:30px;
 }
 h1 .gold{
   background:linear-gradient(120deg,var(--gold-hi),var(--gold) 55%,#b9862f);
@@ -107,7 +107,7 @@ h1 .gold{
 .tl .p{color:var(--gold)}
 .tl .k{color:var(--text)}
 .tl .v{color:var(--dim)}
-.tl .lab{display:inline-block;width:11ch;color:var(--dim)}
+.tl .lab{display:inline-block;width:9ch;color:var(--dim)}
 .tl .ok{color:var(--green)}
 @keyframes linein{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
 .cursor{display:inline-block;width:9px;height:17px;background:var(--gold);vertical-align:-3px;animation:blink 1s steps(1) infinite}
@@ -120,7 +120,7 @@ h1 .gold{
 }
 .stat .n{font-family:var(--mono);font-size:clamp(28px,3vw,42px);color:var(--gold-hi);font-weight:700}
 .stat .n small{font-size:.5em;color:var(--gold);margin-left:2px}
-.stat .l{color:var(--dim);font-size:13px;margin-top:6px;letter-spacing:.08em}
+.stat .l{color:var(--dim);font-size:12.5px;margin-top:6px;letter-spacing:.06em;white-space:nowrap}
 @media(max-width:1020px){
   .hero{grid-template-columns:1fr;padding-top:110px}
   .stats{grid-template-columns:repeat(2,1fr);gap:26px}
@@ -142,7 +142,7 @@ h1 .gold{
 section{max-width:1180px;margin:0 auto;padding:110px 5vw 20px}
 .snum{
   font-family:var(--serif);font-size:15px;color:var(--gold);letter-spacing:.4em;
-  margin-bottom:14px;display:flex;align-items:center;gap:16px;
+  margin-bottom:14px;display:flex; align-items:center;gap:16px;
 }
 .snum::after{content:"";flex:1;height:1px;background:var(--line)}
 h2{
@@ -168,6 +168,7 @@ h2{
 .pain p{color:var(--dim);font-size:15px}
 .pain .antidote{
   font-family:var(--mono);font-size:12.5px;color:var(--green);text-align:right;line-height:1.9;
+  white-space:nowrap;
 }
 @media(max-width:900px){.pain{grid-template-columns:70px 1fr}.pain .antidote{grid-column:2;text-align:left}}
 
@@ -202,6 +203,7 @@ h2{
 .sys{
   grid-column:span 2;border:1px solid var(--line);background:var(--ink2);
   font-family:var(--mono);transition:all .3s;
+  display:flex;flex-direction:column;
 }
 .sys:hover{border-color:var(--line-gold)}
 .sys:nth-child(4){grid-column:span 3}
@@ -213,11 +215,12 @@ h2{
   font-size:13px;color:var(--gold-hi);
 }
 .sys-head em{font-style:normal;color:var(--faint);font-size:11px}
-.sys-body{padding:18px 20px;font-size:13px;color:var(--dim);line-height:2.1}
-.sys-body b{color:var(--text);font-weight:500}
+.sys-body{padding:18px 20px;font-size:13px;color:var(--dim);line-height:2.1;font-family:var(--sans)}
+.sys-body b{color:var(--text);font-weight:600}
 .sys-foot{
   padding:10px 18px;border-top:1px solid var(--line);
   display:flex;gap:14px;font-size:11.5px;
+  margin-top:auto;
 }
 .sys-foot .ok{color:var(--green)} .sys-foot .idx{color:var(--faint)}
 
@@ -266,9 +269,9 @@ h2{
 .lrow:last-child{border-bottom:none}
 .lrow:hover{background:var(--green-dim)}
 .lrow .k{color:var(--gold)}
-.lrow .v{color:var(--text)}
+.lrow .v{color:var(--text);font-family:var(--sans);font-size:14.5px}
 .lrow .v .hl{color:var(--green)}
-.lrow .note{color:var(--faint);font-size:12px;text-align:right}
+.lrow .note{color:var(--faint);font-size:12px;text-align:right;font-family:var(--sans)}
 @media(max-width:800px){.lrow{grid-template-columns:120px 1fr}.lrow .note{display:none}}
 
 /* ---------- open core ---------- */
@@ -307,44 +310,44 @@ footer .fnote{font-family:var(--mono);font-size:12px;color:var(--faint);text-ali
     <b>PAI-Station</b><span>个人超级AI工作站 · v4</span>
   </a>
   <nav class="nav">
-    <a href="#why">宣言</a><a href="#pillars">五支柱</a><a href="#systems">系统</a>
-    <a href="#charter">章程</a><a href="#ledger">工程</a><a href="#core">边界</a>
+    <a href="#why">宣言</a><a href="#pillars">能力</a><a href="#systems">系统</a>
+    <a href="#charter">章程</a><a href="#ledger">信任</a><a href="#core">边界</a>
   </nav>
 </div>
 
 <!-- ================= HERO ================= -->
 <header class="hero" id="top">
   <div>
-    <div class="kicker">个人认知主权操作系统 · PERSONAL COGNITIVE SOVEREIGNTY OS</div>
-    <h1>你的认知，<br>从此是<span class="gold">主权资产</span>。</h1>
+    <div class="kicker">AI 时代，个体最可靠的工作站 · PERSONAL AI WORKSTATION</div>
+    <h1>你的经验不再蒸发，<br>数据从此<span class="gold">属于你</span>。</h1>
     <p class="sub">
-      PAI-Station 把你的记忆、决策与技能写进<em>本地账本</em>——只增不删、可审计、可继承。
-      AI 替你完成的每一个小时都有 <em>done-token</em> 背书，摄入与产出用 <em>信息贸易顺差</em> 计价。
-      不租借判断力，不出卖注意力。
+      PAI-Station 是一台<em>越用越懂你</em>的 AI 工作站：你聊过的每个想法、下过的每个判断，它都替你记着——
+      同一个坑，不踩第二遍；它替你干的活，<em>有凭证可查</em>，省下的每个小时都算数；
+      花钱、删文件这类动作，<em>先过你审批</em>。而这一切，都长在你自己的电脑里。
     </p>
     <div class="cta">
-      <a class="btn btn-solid" href="https://github.com/huangxiding-creator/PAI-Station" target="_blank" rel="noopener">开源核心 ↗</a>
-      <a class="btn btn-ghost" href="#charter">阅读章程三律</a>
+      <a class="btn btn-solid" href="https://github.com/huangxiding-creator/PAI-Station" target="_blank" rel="noopener">免费开源 · 立即查看 ↗</a>
+      <a class="btn btn-ghost" href="#charter">我们敢写下的三条铁律</a>
     </div>
   </div>
 
   <div class="term">
-    <div class="term-bar"><i></i><i></i><i></i><span>pai@localhost:~ — sovereign shell</span></div>
+    <div class="term-bar"><i></i><i></i><i></i><span>pai@你的电脑 — 每天都在为你工作</span></div>
     <div class="term-body">
-      <div class="tl" style="animation-delay:.2s"><span class="p">$</span> <span class="k">pai status</span></div>
-      <div class="tl" style="animation-delay:.7s"><span class="lab">sovereign</span><span class="ok">✓</span> <span class="v">记忆 vault · 决策账本 supersede · 遗产模式就绪</span></div>
-      <div class="tl" style="animation-delay:1.2s"><span class="lab">gate</span><span class="ok">✓</span> <span class="v">exit-token V4-全案五阶段收官 → </span><span class="ok">✅ done</span></div>
-      <div class="tl" style="animation-delay:1.7s"><span class="lab">control</span><span class="ok">✓</span> <span class="v">动作四级风控 · meter 三维计量中</span></div>
-      <div class="tl" style="animation-delay:2.2s"><span class="lab">market</span><span class="ok">✓</span> <span class="v">签名技能卡 · x402 按次计量就绪</span></div>
-      <div class="tl" style="animation-delay:2.7s"><span class="lab">governance</span><span class="ok">✓</span> <span class="v">章程三律 · audit 一致</span></div>
-      <div class="tl" style="animation-delay:3.4s"><br><span class="p">$</span> <span class="k">pai charter --audit</span> <span class="cursor"></span></div>
+      <div class="tl" style="animation-delay:.2s"><span class="p">$</span> <span class="k">pai 今天怎么样</span></div>
+      <div class="tl" style="animation-delay:.7s"><span class="lab">记忆</span><span class="ok">✓</span> <span class="v">你三月的判断，还问得回</span></div>
+      <div class="tl" style="animation-delay:1.2s"><span class="lab">干活</span><span class="ok">✓</span> <span class="v">替你完成 1.5 小时 · 有凭证</span></div>
+      <div class="tl" style="animation-delay:1.7s"><span class="lab">掌舵</span><span class="ok">✓</span> <span class="v">付费 2 次 · 均经你批准</span></div>
+      <div class="tl" style="animation-delay:2.2s"><span class="lab">增值</span><span class="ok">✓</span> <span class="v">经验库本周又强了一点</span></div>
+      <div class="tl" style="animation-delay:2.7s"><span class="lab">归属</span><span class="ok">✓</span> <span class="v">数据在你磁盘 · 外流 0 条</span></div>
+      <div class="tl" style="animation-delay:3.4s"><br><span class="p">$</span> <span class="k">继续，交给你了</span> <span class="cursor"></span></div>
     </div>
   </div>
 
   <div class="stats">
-    <div class="stat"><div class="n"><span data-count="5">0</span><small>大</small></div><div class="l">主权系统模块</div></div>
-    <div class="stat"><div class="n"><span data-count="1036">0</span><small>项</small></div><div class="l">测试全绿 · 机器可查</div></div>
-    <div class="stat"><div class="n">+<span data-count="165">0</span><small>例</small></div><div class="l">V4 净增测例（871 → 1036）</div></div>
+    <div class="stat"><div class="n"><span data-count="5">0</span><small>大</small></div><div class="l">能力系统 · 真实可用</div></div>
+    <div class="stat"><div class="n"><span data-count="1036">0</span><small>项</small></div><div class="l">自动化测试 · 逐条验收</div></div>
+    <div class="stat"><div class="n"><span data-count="3">0</span><small>条</small></div><div class="l">铁律入章程 · 机器在查</div></div>
     <div class="stat"><div class="n"><span data-count="0">0</span><small>条</small></div><div class="l">用户数据外流 · 永不卖出</div></div>
   </div>
 </header>
@@ -352,212 +355,213 @@ footer .fnote{font-family:var(--mono);font-size:12px;color:var(--faint);text-ali
 <!-- ================= MARQUEE ================= -->
 <div class="marquee" aria-hidden="true">
   <div class="track">
-    <span class="g">exit-token ✅ done</span><span>·</span>
-    <span class="a">meter +1.5h</span><span>·</span>
-    <span class="g">decide supersede → effective</span><span>·</span>
-    <span class="a">golden jaccard 0.70 ✓ 拒稀释</span><span>·</span>
-    <span class="g">charter audit ✓ 三律一致</span><span>·</span>
-    <span class="a">gateway allow(read) → log</span><span>·</span>
-    <span class="g">heritage OFFLINE ✓ HEIRLOOM</span><span>·</span>
-    <span class="a">backup pai-20260913.zip</span><span>·</span>
-    <span class="g">selfcheck 0 conflicts</span><span>·</span>
-    <span class="a">x402 invoice → meter 计量</span><span>·</span>
-    <span class="g">exit-token ✅ done</span><span>·</span>
-    <span class="a">meter +1.5h</span><span>·</span>
-    <span class="g">decide supersede → effective</span><span>·</span>
-    <span class="a">golden jaccard 0.70 ✓ 拒稀释</span><span>·</span>
-    <span class="g">charter audit ✓ 三律一致</span><span>·</span>
-    <span class="a">gateway allow(read) → log</span><span>·</span>
-    <span class="g">heritage OFFLINE ✓ HEIRLOOM</span><span>·</span>
-    <span class="a">backup pai-20260913.zip</span><span>·</span>
-    <span class="g">selfcheck 0 conflicts</span><span>·</span>
-    <span class="a">x402 invoice → meter 计量</span><span>·</span>
+    <span class="g">替你完成 +1.5 小时 ✓</span><span>·</span>
+    <span class="a">你三月的判断，还在 ✓</span><span>·</span>
+    <span class="g">敏感动作 · 已获批准 ✓</span><span>·</span>
+    <span class="a">数据外流 0 条 ✓</span><span>·</span>
+    <span class="g">好方法留下 · 坏方法淘汰 ✓</span><span>·</span>
+    <span class="a">账本只记不删 ✓</span><span>·</span>
+    <span class="g">经验库 · 又强了一点 ✓</span><span>·</span>
+    <span class="a">一键带走 · 全部数据 ✓</span><span>·</span>
+    <span class="g">每日自检 · 0 冲突 ✓</span><span>·</span>
+    <span class="a">省下的时间 · 都算数 ✓</span><span>·</span>
+    <span class="g">替你完成 +1.5 小时 ✓</span><span>·</span>
+    <span class="a">你三月的判断，还在 ✓</span><span>·</span>
+    <span class="g">敏感动作 · 已获批准 ✓</span><span>·</span>
+    <span class="a">数据外流 0 条 ✓</span><span>·</span>
+    <span class="g">好方法留下 · 坏方法淘汰 ✓</span><span>·</span>
+    <span class="a">账本只记不删 ✓</span><span>·</span>
+    <span class="g">经验库 · 又强了一点 ✓</span><span>·</span>
+    <span class="a">一键带走 · 全部数据 ✓</span><span>·</span>
+    <span class="g">每日自检 · 0 冲突 ✓</span><span>·</span>
+    <span class="a">省下的时间 · 都算数 ✓</span><span>·</span>
   </div>
 </div>
 
 <!-- ================= WHY ================= -->
 <section id="why">
-  <div class="snum rv">§ 01 · 宣言</div>
+  <div class="snum rv">§ 01 · 为什么需要它</div>
   <h2 class="rv">AI 越强，<br>你的判断力越值钱——也越被收租。</h2>
-  <p class="lead rv">对话记录留在平台、经验随会话蒸发、技能无复利。三笔账，正在悄悄扣走你的认知净资产。</p>
+  <p class="lead rv">用 AI 的人都有三笔糊涂账，正在悄悄扣走你的认知净资产。而 PAI-Station 相信：AI 时代的个体不该只是平台的用户，更不该是平台的库存。</p>
   <div class="pains">
     <div class="pain rv">
       <div class="no">壹</div>
-      <div><h3>记忆即弃</h3><p>聊得再深，会话一关全蒸发。你的洞察没有账本，三个月后等于没想过。</p></div>
-      <div class="antidote">解 → sovereign.vault<br>append-only 本地账本</div>
+      <div><h3>聊得再深，关掉就忘</h3><p>你和 AI 讨论出的每个洞察、每个决定，会话一关全部蒸发。三个月后，等于没想过。你的经验一直在给平台打工，从没进过你自己的账。</p></div>
+      <div class="antidote">→ 全部入账，三月后翻得回</div>
     </div>
     <div class="pain rv">
       <div class="no">贰</div>
-      <div><h3>经验无复利</h3><p>同一个坑踩三遍，同一个判断重下三次。工具在进化，你的资产不进账。</p></div>
-      <div class="antidote">解 → gate 金标准<br>done-token 出口闸</div>
+      <div><h3>同一个坑，踩三遍</h3><p>工具在进化，你的资产却不进账：教训没人记，好方法没处存，判断重复下。用了一年 AI，你变强了吗？还是只有 AI 变强了？</p></div>
+      <div class="antidote">→ 教训入库，越用越懂你</div>
     </div>
     <div class="pain rv">
       <div class="no">叁</div>
-      <div><h3>主权旁落</h3><p>数据在别人的云上，定价权在别人的手里。你不是用户，你是库存。</p></div>
-      <div class="antidote">解 → 章程三律<br>数据本地 · 一键带走</div>
+      <div><h3>数据在别人手里</h3><p>你的记忆、偏好、判断全存在别人的云上——不卖你卖谁？想带走？没门。你不是用户，你是库存。你的认知主权，正在不知不觉中旁落。</p></div>
+      <div class="antidote">→ 数据在你家，随时带走</div>
     </div>
   </div>
 </section>
 
 <!-- ================= PILLARS ================= -->
 <section id="pillars">
-  <div class="snum rv">§ 02 · 五支柱</div>
-  <h2 class="rv">一座工作站的承重结构</h2>
-  <p class="lead rv">从资产法定化到验证复利，五根支柱按依赖序浇筑，1036 项测试逐层验收。</p>
+  <div class="snum rv">§ 02 · 它能为你做什么</div>
+  <h2 class="rv">五件实事，<br>每一件都冲着你的利益</h2>
+  <p class="lead rv">不是功能清单，是五份承诺——从「你的经验归你」到「你的技能值钱」，全部已经做出来，可验证。</p>
   <div class="pillars">
-    <div class="pillar rv" data-tag="P0">
-      <h3>主权层</h3>
-      <p>记忆、决策、技能写入本地账本，append-only 只增不删；导入导出幂等，遗产模式可继承。</p>
-      <div class="chips"><span class="chip">vault 记忆</span><span class="chip">决策账本</span><span class="chip">三向适配器</span></div>
+    <div class="pillar rv" data-tag="记忆">
+      <h3>你的第二大脑，产权归你</h3>
+      <p>你聊过的每个想法、下过的每个判断，它都替你记着。三个月后你还能问它：「我当时为什么这样决定？」——而且这份记忆永远属于你，可传给后人。</p>
+      <div class="chips"><span class="chip">产权归你</span><span class="chip">只记不删</span><span class="chip">可传承</span></div>
     </div>
-    <div class="pillar rv" data-tag="P1">
-      <h3>控制面</h3>
-      <p>每个动作过四级闸门：读取放行、写入白名单、花费限额、不可逆必审。风控式信任，全程可回放。</p>
-      <div class="chips"><span class="chip">动作注册表</span><span class="chip">审批 HMAC</span><span class="chip">METR 后退</span></div>
+    <div class="pillar rv" data-tag="掌舵">
+      <h3>AI 动手，你掌舵</h3>
+      <p>花钱、删文件、对外发布——这类敏感动作，必须先过你的审批才能执行，每一步可撤销、可回放。像银行风控一样看着你的 AI，放心把事交出去。</p>
+      <div class="chips"><span class="chip">先审批后执行</span><span class="chip">可撤销</span><span class="chip">全程留痕</span></div>
     </div>
-    <div class="pillar rv" data-tag="P2">
-      <h3>反退化</h3>
-      <p>任务不拿 done-token 不算完成；技能变异 A/B 留优汰劣，账本可翻案。</p>
-      <div class="chips"><span class="chip">出口闸</span><span class="chip">变异 A/B</span><span class="chip">预算表</span></div>
+    <div class="pillar rv" data-tag="不糊弄">
+      <h3>完不成，不算完成</h3>
+      <p>每个任务必须拿到「完成凭证」才算数，AI 没法蒙混过关。干得好的方法自动保留，干砸的自动淘汰——它只会越来越称职，不会越用越笨。</p>
+      <div class="chips"><span class="chip">完成凭证</span><span class="chip">优留劣汰</span><span class="chip">不能蒙混</span></div>
     </div>
-    <div class="pillar rv" data-tag="P3">
-      <h3>网络节点</h3>
-      <p>技能卡签名发行、依赖白名单安装；x402 按次计量付费，IM 侧挂远程指挥。协议先行，真钱留给你决定。</p>
-      <div class="chips"><span class="chip">签名 skill card</span><span class="chip">x402 客户端</span><span class="chip">IM 侧挂</span></div>
+    <div class="pillar rv" data-tag="值钱">
+      <h3>你的经验，第一次有了市场价</h3>
+      <p>你沉淀的好方法，签名后可以分享给别人用，按次计费、收益归你。你踩坑换来的经验，第一次不只是学费，还可以是资产。</p>
+      <div class="chips"><span class="chip">签名可溯源</span><span class="chip">按次计费</span><span class="chip">收益归你</span></div>
     </div>
-    <div class="pillar rv" data-tag="P4">
-      <h3>验证资产</h3>
-      <p>金标准每条带 origin 溯源，Jaccard ≥ 0.70 拒稀释——资产只增不贬，复利发生在验证层。</p>
-      <div class="chips"><span class="chip">origin 溯源</span><span class="chip">防稀释闸</span><span class="chip">增长报表</span></div>
+    <div class="pillar rv" data-tag="只增值">
+      <h3>经验库只增值，不贬值</h3>
+      <p>别人越攒越乱，你越攒越强：新经验必须证明真有价值才能入库，稀释不进来。你的经验库像定期盘点的资产表——只涨不跌，复利发生在你身上。</p>
+      <div class="chips"><span class="chip">防稀释</span><span class="chip">来源可查</span><span class="chip">只增不贬</span></div>
     </div>
   </div>
 </section>
 
 <!-- ================= SYSTEMS ================= -->
 <section id="systems">
-  <div class="snum rv">§ 03 · 五大系统</div>
-  <h2 class="rv">不是幻灯片，<br>是可以 import 的包</h2>
-  <p class="lead rv">五大模块全部落在 src/paistation/ 下，第三方裸 import 即可复用——子进程实测，100 行跑通控制面。</p>
+  <div class="snum rv">§ 03 · 真做出来了，不是概念片</div>
+  <h2 class="rv">五大系统，<br>今天就能用</h2>
+  <p class="lead rv">全部开发完成、开源可查。我们不接受「情怀先行、产品永远下周」——每一项能力背后，是上千项自动化测试在验收。</p>
   <div class="sysgrid">
     <div class="sys rv">
-      <div class="sys-head">sovereign/<em>记忆与决策</em></div>
+      <div class="sys-head">记忆与决策<em>sovereign</em></div>
       <div class="sys-body">
-        <b>vault</b> 记忆库 · <b>decide</b> 决策账本 supersede<br>
-        导入导出幂等 · 遗忘坟墓 · <b>heritage</b> 遗产干净房
+        你的每个想法和判断都被<b>好好记住</b>，随时翻回、随时追问。
+        不想要了可以正式告别——但<b>想带走时，一个键全带走</b>。
       </div>
-      <div class="sys-foot"><span class="ok">938 ✓</span><span class="idx">Phase A</span></div>
+      <div class="sys-foot"><span class="ok">938 项测试 ✓</span><span class="idx">已开源</span></div>
     </div>
     <div class="sys rv">
-      <div class="sys-head">gate/ + evolve/<em>出口与进化</em></div>
+      <div class="sys-head">验收与进化<em>gate · evolve</em></div>
       <div class="sys-body">
-        <b>done-token</b> 写入口自动裁决 · selfcheck 三检<br>
-        变异 A/B 末事件行 · 预算表 · 金标准防稀释
+        任务要拿到<b>完成凭证</b>才算数，糊弄不过验收。
+        好方法自动留下，坏方法自动淘汰——<b>翻案有据，绝不静默</b>。
       </div>
-      <div class="sys-foot"><span class="ok">977 ✓</span><span class="idx">Phase B</span></div>
+      <div class="sys-foot"><span class="ok">977 项测试 ✓</span><span class="idx">已开源</span></div>
     </div>
     <div class="sys rv">
-      <div class="sys-head">control/<em>机器控制面</em></div>
+      <div class="sys-head">掌舵台<em>control</em></div>
       <div class="sys-body">
-        动作注册表 · 风控策略 · 网关执行/回滚/回放<br>
-        <b>meter</b> 三维账本 · 审批 HMAC · METR 旋钮
+        敏感动作<b>先审批、可撤销、可回放</b>；它替你干了多少活，
+        <b>小时数报表</b>替你对账——像银行流水一样清楚。
       </div>
-      <div class="sys-foot"><span class="ok">1001 ✓</span><span class="idx">Phase C · 第三方复用实证</span></div>
+      <div class="sys-foot"><span class="ok">1001 项测试 ✓</span><span class="idx">已开源</span></div>
     </div>
     <div class="sys rv">
-      <div class="sys-head">market/<em>网络节点</em></div>
+      <div class="sys-head">技能市<em>market</em></div>
       <div class="sys-body">
-        <b>x402</b> 客户端（402 → invoice → 计量） · 签名技能卡 publish/verify/install<br>
-        跨标准转换（Anthropic / OpenClaw / MCP / AGENTS.md） · IM 侧挂 /run /status
+        你的方法<b>签名后可分享</b>，按次计费、收益归你；
+        别家 AI 工具攒的经验也能<b>搬家进来</b>，不吃独食、不锁你。
       </div>
-      <div class="sys-foot"><span class="ok">1026 ✓</span><span class="idx">Phase D</span></div>
+      <div class="sys-foot"><span class="ok">1026 项测试 ✓</span><span class="idx">已开源</span></div>
     </div>
     <div class="sys rv">
-      <div class="sys-head">governance/<em>商业治理</em></div>
+      <div class="sys-head">章程治理<em>governance</em></div>
       <div class="sys-body">
-        章程三律 + open-core 边界 + <b>audit_charter</b> 机器校验<br>
-        <b>小时数报表</b>（done-token × meter 账本背书） · 托管同步 · 顺差仪表盘
+        三条铁律不是墙上的标语——<b>机器每天都在检查</b>代码是否守约。
+        说不卖数据就真不卖：每一条承诺，<b>敢被证伪</b>。
       </div>
-      <div class="sys-foot"><span class="ok">1036 ✓</span><span class="idx">Phase E · 全案收官</span></div>
+      <div class="sys-foot"><span class="ok">1036 项测试 ✓</span><span class="idx">全案收官</span></div>
     </div>
   </div>
 </section>
 
 <!-- ================= CHARTER ================= -->
 <section id="charter">
-  <div class="snum rv">§ 04 · 章程</div>
-  <h2 class="rv">三律入章，<br>机器可审</h2>
-  <p class="lead rv">CHARTER.md 与代码同仓发布，audit_charter 逐目录校验——章程说到的，仓库里必须真的有。</p>
+  <div class="snum rv">§ 04 · 三条铁律</div>
+  <h2 class="rv">写进章程，<br>机器每天在查</h2>
+  <p class="lead rv">AI 时代，个体的判断力与注意力是最后的稀缺资产。这三条铁律，是我们站在个体一边的立场书——不是隐私政策里的小字，是产品存在的前提。</p>
   <div class="frame rv">
     <div class="seal">主權在己</div>
     <div class="law">
       <div class="rn">Ⅰ</div>
-      <div><h3>永不卖用户数据</h3><p>任何形式、任何价格、任何时候。这不是隐私政策的一行小字，是产品存在的前提。</p></div>
+      <div><h3>永不卖用户数据</h3><p>任何形式、任何价格、任何时候。你的记忆和判断不是我们的库存，是我们服务你的凭据。</p></div>
     </div>
     <div class="law">
       <div class="rn">Ⅱ</div>
-      <div><h3>数据本地优先</h3><p>你的认知资产默认长在你自己的磁盘上。账本 append-only，只增不删，可审计。</p></div>
+      <div><h3>数据长在你家</h3><p>你的认知资产默认存在你自己的电脑上，每一笔记录只增不删、随时可查——像一本只进不出的家账。</p></div>
     </div>
     <div class="law">
       <div class="rn">Ⅲ</div>
-      <div><h3>一键带走</h3><p>export 幂等导出，随时整体迁离，零锁定。留下是因为值得，不是因为走不了。</p></div>
+      <div><h3>一键带走</h3><p>随时整体迁离，零锁定。你留下来是因为值得，不是因为走不了。</p></div>
     </div>
     <div class="falsifiable">
-      <div class="tag">判伪条款</div>
-      <p>本产品<b>敢被证伪</b>：10× 判据若在 12 个月内达成不足三条，V4 判伪回滚。我们不接受不可检验的宏大叙事——<b>承诺写进章程，验证交给账本。</b></p>
+      <div class="tag">我们敢被证伪</div>
+      <p>本产品立下十条可检验的军令状：若 12 个月内达成不足三条，<b>我们主动宣布失败并回滚</b>。我们不接受不可检验的宏大叙事——<b>承诺写进章程，验证交给机器。</b></p>
     </div>
   </div>
 </section>
 
 <!-- ================= LEDGER ================= -->
 <section id="ledger">
-  <div class="snum rv">§ 05 · 工程账本</div>
-  <h2 class="rv">质量不是口号，<br>是行可查的账</h2>
+  <div class="snum rv">§ 05 · 凭什么信我们</div>
+  <h2 class="rv">六不承诺，<br>行行可查</h2>
+  <p class="lead rv">信任不靠口号，靠机制。每一行都是一条正在运转的纪律，欢迎任何人来查证。</p>
   <div class="ledger rv">
-    <div class="lrow"><span class="k">tests</span><span class="v">871 → <span class="hl">1036</span> 全绿</span><span class="note">pytest · 每 commit 全量回归</span></div>
-    <div class="lrow"><span class="k">lint</span><span class="v">ruff <span class="hl">0</span> 违例</span><span class="note">静态检查 · 提交前硬闸</span></div>
-    <div class="lrow"><span class="k">exit-token</span><span class="v"><span class="hl">5</span> 枚 done · 机器裁决</span><span class="note">status=done ∧ tests=0 伤 ∧ evidence 在</span></div>
-    <div class="lrow"><span class="k">cleanroom</span><span class="v">全新 venv 离线安装实测</span><span class="note">抓出 import 缺 MANIFEST 真缺陷</span></div>
-    <div class="lrow"><span class="k">mutation</span><span class="v">变异 A/B → KEEP / DISCARD</span><span class="note">末事件行可翻案 · git 留痕</span></div>
-    <div class="lrow"><span class="k">append-only</span><span class="v">jsonl 全系只增不删</span><span class="note">拒收不入库，而非删除</span></div>
+    <div class="lrow"><span class="k">不吹牛</span><span class="v">页面上每句话，背后是 <span class="hl">1036</span> 项自动化测试在验收</span><span class="note">机器裁决，不是文案自由发挥</span></div>
+    <div class="lrow"><span class="k">不糊弄</span><span class="v">任务拿到<span class="hl">完成凭证</span>才算完成</span><span class="note">凭证可查，AI 蒙混不过验收</span></div>
+    <div class="lrow"><span class="k">不删账</span><span class="v">所有记录<span class="hl">只增不删</span>，翻案有据</span><span class="note">拒绝入库，而非悄悄抹掉</span></div>
+    <div class="lrow"><span class="k">真装过</span><span class="v">每次发布前，在<span class="hl">全新环境</span>完整装一遍</span><span class="note">真抓出过「装不上」的缺陷</span></div>
+    <div class="lrow"><span class="k">能翻案</span><span class="v">坏方法淘汰、好方法保留，<span class="hl">全程留痕</span></span><span class="note">你随时能查它学了什么</span></div>
+    <div class="lrow"><span class="k">可带走</span><span class="v">全部数据<span class="hl">一键导出</span>，零锁定</span><span class="note">今天装，明天走，都随你</span></div>
   </div>
 </section>
 
 <!-- ================= OPEN CORE ================= -->
 <section id="core">
-  <div class="snum rv">§ 06 · 边界</div>
-  <h2 class="rv">开源核心，<br>商业有界</h2>
-  <p class="lead rv">open-core 2.0：能装进你电脑的永远免费；省你时间与心力的，才是可选项。</p>
+  <div class="snum rv">§ 06 · 花钱边界</div>
+  <h2 class="rv">装进你电脑的，<br>永久免费</h2>
+  <p class="lead rv">我们靠增值服务活，不靠卖你的数据活——这是商业模式层面的承诺，和章程三律互为印证。</p>
   <div class="core-grid">
     <div class="core-col free rv">
-      <h3>开源核心</h3>
-      <div class="cap">永久免费 · 本地运行 · 可审计</div>
+      <h3>永久免费</h3>
+      <div class="cap">五大系统全量 · 本地运行 · 开源可查</div>
       <ul>
-        <li data-m="本地">sovereign — 记忆 · 决策 · 遗产</li>
-        <li data-m="本地">gate / evolve — 出口闸 · 变异 · 预算</li>
-        <li data-m="本地">control — 网关 · 风控 · 计量</li>
-        <li data-m="本地">market — 技能卡 · x402 · 适配器</li>
-        <li data-m="本地">governance — 章程 · 报表 · 备份</li>
-        <li data-m="CLI">全量 CLI + 三向适配器</li>
+        <li data-m="免费">你的第二大脑——记忆、决策、传承</li>
+        <li data-m="免费">验收与进化——完成凭证、优留劣汰</li>
+        <li data-m="免费">掌舵台——审批、可撤销、小时数对账</li>
+        <li data-m="免费">技能市——签名分享、按次计费</li>
+        <li data-m="免费">章程治理——铁律 + 机器每日校验</li>
+        <li data-m="免费">全部数据，永远在你磁盘上</li>
       </ul>
     </div>
     <div class="core-col hi biz rv">
-      <h3>商业边界</h3>
-      <div class="cap">可选项 · 永远可退回本地</div>
+      <h3>可选项</h3>
+      <div class="cap">为省你时间心力而生 · 永远可退回免费版</div>
       <ul>
-        <li data-m="可选">托管同步 sync — 多端一致</li>
-        <li data-m="可选">时间戳备份 — 只增不删</li>
-        <li data-m="未来">x402 微付费技能市场</li>
-        <li data-m="未来">增值网络节点服务</li>
+        <li data-m="可选">多端同步 — 换台电脑，记忆还在</li>
+        <li data-m="可选">异地备份 — 你的资产，多一份保险</li>
+        <li data-m="未来">技能市场 — 买别人的经验，卖自己的</li>
+        <li data-m="未来">增值网络服务 — 团队协作等</li>
       </ul>
     </div>
   </div>
 </section>
 
 <footer>
-  <div class="fbrand">PAI·<span>Station</span> — 个人超级AI工作站</div>
+  <div class="fbrand">PAI·<span>Station</span> — AI 越强，个体判断越值钱。我们站在你这边。</div>
   <div class="fnote">
-    章程可审计 · 判伪条款生效中 · 双北极星：信息贸易顺差 / 替你完成的小时数<br>
-    © 2026 PAI-Station · <a href="https://github.com/huangxiding-creator/PAI-Station" target="_blank" rel="noopener" style="color:var(--gold)">GitHub ↗</a>
+    三条铁律生效中 · 敢被证伪 · 你省下的每个小时都算数<br>
+    © 2026 PAI-Station · <a href="https://github.com/huangxiding-creator/PAI-Station" target="_blank" rel="noopener" style="color:var(--gold)">免费开源 · GitHub ↗</a>
   </div>
 </footer>
 

@@ -6,15 +6,27 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-1F3A5F.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Windows_10%2B-0078D6.svg)]()
-[![Tests](https://img.shields.io/badge/测试-1173_全绿-success.svg)]()
+[![Tests](https://img.shields.io/badge/测试-1352_全绿-success.svg)]()
 [![LLM Cost](https://img.shields.io/badge/LLM_成本-默认¥0_永不锁定-success.svg)]()
 [![Status](https://img.shields.io/badge/状态-V4_意图层_+_云感知-9B59B6.svg)]()
 
-**液态 12 器官 · 感知型意图发现 · 云感知连接器 · 7×24 主循环 · 两阶段调研管线 · 微信夜间深读 · FDE 方案工厂 · 每周进化提案**
+**液态 12 器官 · 感知型意图发现 · 云感知连接器 · 7×24 主循环 · 两阶段调研管线 · 微信夜间深读 · 微信简报夜间流水线 · FDE 方案工厂 · 每周进化提案**
 
 [提案全文](PROPOSAL_V2.md) · [V3 提案](PROPOSAL_V3/PROPOSAL.md) · [愿景档案](00%20愿景/) · [方案商店](09%20发布/store/index.json)
 
 </div>
+
+<details>
+<summary><strong>English</strong> — what is this?</summary>
+
+**PAI-Station** is a 7×24 resident personal AI workstation for Windows — not a tool, but a *relationship*: it reads your local activity signals, understands intent before you ask, ships deliverables, and converges toward you through every correction. Key subsystems: a liquid 12-organ directory architecture with SHA-256 credential chains, perception-first intent discovery (15 signal sources → 7-layer understanding stack, fail-closed), cloud-aware connectors (Tencent Meeting / Baidu Netdisk / WeChat intelligence), a two-phase research pipeline, an FDE plan factory with a three-stage funnel, and a weekly self-evolution proposal loop that the user — never the system — approves. LLM calls start at ¥0 (free Zhipu chain by default, any endpoint via 3 lines of config); data stays 100% local; paid artifacts never enter this public repo.
+
+</details>
+
+> **最近更新（2026-09-16）**
+> 📡 七路本地信号源常驻上电 + 微信每日提取任务 + 信息源全景开采台账（`39a98fe`）
+> 🌉 微信↔Claude Code 桥自启看护（官方 ilink Bot API · 幂等启动器 + 5min watchdog · `a26f79e`）
+> 📰 微信简报夜间流水线上线：每晚 22:00 自动生成群聊日报 → 发布阿里云站点 → 微信（PDF+网址）+ 企微双通道推送（端到端实测通过）
 
 ---
 
@@ -104,6 +116,22 @@ GitHub 十万星项目都在做「指令 → 操作」的执行型 agent；PAI �
 
 外部情报渠道（秘塔/搜狗微信/研报等）属调研线，不采集用户数据，不在本表。
 
+## 📰 微信简报夜间流水线（2026-09-16 上线，端到端实测）
+
+「深数据」的产品化第一弹——每天替你读完微信，早上一句话知道该干什么：
+
+```
+每晚 22:00（schtasks WeChatBriefDaily）
+  S1 全天索引（80 会话×500 条） → S2 机器初筛（话题/跨群链接/信号雷达）
+  → S3 无头 Claude 语义编辑（甄别培训投放≠商单、转发者≠品牌方）
+  → S4 旗舰交互 HTML → S5 PDF（Edge 无头）
+  → S6 发布阿里云 :8883（index + latest.pdf + archive/日归档）
+  → S7 双通道推送：微信（PDF+网址，桥发件箱·离线补送）+ 企微（必达）
+```
+
+- 全链路只读本地微信库；单轮约 10 分钟；失败段企微告警；`WeChatBriefPause` 旗标一键暂停
+- 运维口径：日志/状态/断点全落 `tools/logs/`，技术细节不进推送（用户视角大白话）
+
 ## ⚙️ 7×24 主循环（一行命令）
 
 ```bash
@@ -191,7 +219,7 @@ python -m venv .venv && .venv\Scripts\pip install -e ".[dev]"
 # 2. 配置（密钥外置，参考 config/pai.ini）
 #    PAI_LLM_KEY=智谱key  PAI_WECOM_WEBHOOK=企微机器人
 
-# 3. 测试（1173 项全绿为出厂标准）
+# 3. 测试（1352 项全绿为出厂标准，2026-09-16 实测）
 .venv\Scripts\python -m pytest
 
 # 4. 器官自检 + 启动主循环
@@ -209,6 +237,7 @@ python tools/run_station.py          # 7×24：感知/深读/进化/PDCA
 | `tools/soak_unattended.py` | 意图层 7 天无人值守浸泡（断点续跑） |
 | `tools/maoxuan_harvest.py` | 搜狗微信采集（35 分钟冷却/串行） |
 | `tools/evolution_approve.py` | 进化提案用户裁决 |
+| `tools/wechat_brief_daily.py` | 微信简报夜间流水线（22:00 七段：索引→编辑→渲染→PDF→发布→推送） |
 | `tools/notify_wecom.py` | 企微通知 |
 
 ## 📁 代码结构
@@ -247,6 +276,7 @@ src/paistation/
 | M7 意图层 | 七路信号源补全 + 意图最小闭环 + 理解深化（71 项调研落地） | ✅ |
 | M8 意图运营 | 常驻服务接线 + 屏幕观察档位 + 金标准 81 行 + 7 天浸泡基建 | ✅ / 🌙 浸泡实测待跑 |
 | 云感知连接器（V3 M9） | 腾讯会议/百度网盘/微信情报三连接器 + opt-in 授权 + 水位线增量 | ✅ 真机闭环（会议预订/网盘 3 事件/上传验证） |
+| 运行时自治（2026-09-16） | 七路信号源常驻上电 · 微信桥自启看护 · 微信简报夜间流水线（阿里云站点+双通道推送） | ✅ 端到端实测 |
 
 ## 📜 治理
 
