@@ -79,3 +79,141 @@
 {"kind": "reject", "name": "置信与占比双低", "block": {"category": "research", "confidence": 0.45, "coverage": 0.35, "duration_min": 6.0, "samples": 7, "category_counts": {"research": 3, "unknown": 4}}, "expect": "irrelevant"}
 {"kind": "accept", "name": "正常编码块", "block": {"category": "project", "confidence": 0.8, "coverage": 0.75, "duration_min": 10.0, "samples": 12, "category_counts": {"project": 9, "research": 3}}, "expect": "accept"}
 {"kind": "accept", "name": "正常调研块", "block": {"category": "research", "confidence": 0.72, "coverage": 0.9, "duration_min": 15.0, "samples": 10, "category_counts": {"research": 9, "thinking": 1}}, "expect": "accept"}
+{"kind": "l1", "name": "cursor-agent", "sample": {"process": "Cursor.exe", "title": "agent.ts — repo", "domain": "", "idle_s": 0}, "expect": "project"}
+{"kind": "l1", "name": "webstorm-vue", "sample": {"process": "webstorm64.exe", "title": "app.vue - 前端", "domain": "", "idle_s": 0}, "expect": "project"}
+{"kind": "l1", "name": "goland-main", "sample": {"process": "goland64.exe", "title": "main.go", "domain": "", "idle_s": 0}, "expect": "project"}
+{"kind": "l1", "name": "windows-terminal", "sample": {"process": "WindowsTerminal.exe", "title": "pwsh", "domain": "", "idle_s": 0}, "expect": "project"}
+{"kind": "l1", "name": "pwsh-shell", "sample": {"process": "pwsh.exe", "title": "PS>", "domain": "", "idle_s": 0}, "expect": "project"}
+{"kind": "l1", "name": "git-bash", "sample": {"process": "git-bash.exe", "title": "MINGW64", "domain": "", "idle_s": 0}, "expect": "project"}
+{"kind": "l1", "name": "python-train", "sample": {"process": "python.exe", "title": "train.py", "domain": "", "idle_s": 0}, "expect": "project"}
+{"kind": "l1", "name": "docker-desktop", "sample": {"process": "Docker Desktop.exe", "title": "Containers", "domain": "", "idle_s": 0}, "expect": "project"}
+{"kind": "l1", "name": "node-server", "sample": {"process": "node.exe", "title": "server.js", "domain": "", "idle_s": 0}, "expect": "project"}
+{"kind": "l1", "name": "gitlab-domain", "sample": {"process": "chrome.exe", "title": "CI 流水线", "domain": "gitlab.com", "idle_s": 0}, "expect": "project"}
+{"kind": "l1", "name": "gitee-domain", "sample": {"process": "edge.exe", "title": "镜像仓", "domain": "gitee.com", "idle_s": 0}, "expect": "project"}
+{"kind": "l1", "name": "stackoverflow-domain", "sample": {"process": "chrome.exe", "title": "how to parse json", "domain": "stackoverflow.com", "idle_s": 0}, "expect": "project"}
+{"kind": "l1", "name": "title-代码", "sample": {"process": "notepad++.exe", "title": "订单系统代码 - Notepad++", "domain": "", "idle_s": 0}, "expect": "project"}
+{"kind": "l1", "name": "title-开发", "sample": {"process": "foo.exe", "title": "插件开发环境搭建", "domain": "", "idle_s": 0}, "expect": "project"}
+{"kind": "l1", "name": "title-调试", "sample": {"process": "chrome.exe", "title": "调试控制台 - DevTools", "domain": "", "idle_s": 0}, "expect": "project"}
+{"kind": "l1", "name": "title-编译", "sample": {"process": "msbuild.exe", "title": "编译输出 - Build", "domain": "", "idle_s": 0}, "expect": "project"}
+{"kind": "l1", "name": "title-终端", "sample": {"process": "wt.exe", "title": "终端 - Ubuntu (WSL)", "domain": "", "idle_s": 0}, "expect": "project"}
+{"kind": "l1", "name": "title-分支-优先于知乎", "sample": {"process": "chrome.exe", "title": "git 分支管理策略 - 知乎", "domain": "", "idle_s": 0}, "expect": "project"}
+{"kind": "l1", "name": "code-优先于bilibili域名", "sample": {"process": "Code.exe", "title": "x.py", "domain": "bilibili.com", "idle_s": 0}, "expect": "project"}
+{"kind": "l1", "name": "pycharm-engine", "sample": {"process": "pycharm64.exe", "title": "engine.py - proj", "domain": "", "idle_s": 0}, "expect": "project"}
+{"kind": "l1", "name": "powershell-cmd", "sample": {"process": "powershell.exe", "title": "PS C:\\>", "domain": "", "idle_s": 0}, "expect": "project"}
+{"kind": "l1", "name": "github-pr", "sample": {"process": "chrome.exe", "title": "PR #42 · PAI-Station", "domain": "github.com", "idle_s": 0}, "expect": "project"}
+{"kind": "l1", "name": "idea-exact", "sample": {"process": "idea.exe", "title": "UserService.java", "domain": "", "idle_s": 0}, "expect": "project"}
+{"kind": "l1", "name": "et-excel", "sample": {"process": "et.exe", "title": "预算表.xlsx", "domain": "", "idle_s": 0}, "expect": "docs"}
+{"kind": "l1", "name": "wpp-ppt", "sample": {"process": "wpp.exe", "title": "宣讲.pptx", "domain": "", "idle_s": 0}, "expect": "docs"}
+{"kind": "l1", "name": "winword-contract", "sample": {"process": "WINWORD.EXE", "title": "合同审查.docx", "domain": "", "idle_s": 0}, "expect": "docs"}
+{"kind": "l1", "name": "powerpnt", "sample": {"process": "POWERPNT.EXE", "title": "汇报.pptx", "domain": "", "idle_s": 0}, "expect": "docs"}
+{"kind": "l1", "name": "acrobat-spec", "sample": {"process": "acrobat.exe", "title": "规范.pdf", "domain": "", "idle_s": 0}, "expect": "docs"}
+{"kind": "l1", "name": "obsidian-vault", "sample": {"process": "Obsidian.exe", "title": "知识库 - vault", "domain": "", "idle_s": 0}, "expect": "docs"}
+{"kind": "l1", "name": "notion-prd", "sample": {"process": "Notion.exe", "title": "产品需求文档", "domain": "", "idle_s": 0}, "expect": "docs"}
+{"kind": "l1", "name": "typora-md", "sample": {"process": "Typora.exe", "title": "调研笔记.md", "domain": "", "idle_s": 0}, "expect": "docs"}
+{"kind": "l1", "name": "xmind-arch", "sample": {"process": "XMind.exe", "title": "系统架构图", "domain": "", "idle_s": 0}, "expect": "docs"}
+{"kind": "l1", "name": "title-docx", "sample": {"process": "foo.exe", "title": "方案.docx - 预览", "domain": "", "idle_s": 0}, "expect": "docs"}
+{"kind": "l1", "name": "title-pdf", "sample": {"process": "chrome.exe", "title": "招投标法规.pdf", "domain": "", "idle_s": 0}, "expect": "docs"}
+{"kind": "l1", "name": "title-表格", "sample": {"process": "foo.exe", "title": "报价表格", "domain": "", "idle_s": 0}, "expect": "docs"}
+{"kind": "l1", "name": "google-search", "sample": {"process": "chrome.exe", "title": "Google 搜索", "domain": "google.com", "idle_s": 0}, "expect": "research"}
+{"kind": "l1", "name": "zhihu-q", "sample": {"process": "chrome.exe", "title": "如何选型", "domain": "zhihu.com", "idle_s": 0}, "expect": "research"}
+{"kind": "l1", "name": "wikipedia", "sample": {"process": "firefox.exe", "title": "维基百科", "domain": "wikipedia.org", "idle_s": 0}, "expect": "research"}
+{"kind": "l1", "name": "csdn-blog", "sample": {"process": "chrome.exe", "title": "报错解决", "domain": "csdn.net", "idle_s": 0}, "expect": "research"}
+{"kind": "l1", "name": "juejin", "sample": {"process": "chrome.exe", "title": "前端掘金", "domain": "juejin.cn", "idle_s": 0}, "expect": "research"}
+{"kind": "l1", "name": "cnblogs", "sample": {"process": "edge.exe", "title": "园子随笔", "domain": "cnblogs.com", "idle_s": 0}, "expect": "research"}
+{"kind": "l1", "name": "arxiv-paper", "sample": {"process": "chrome.exe", "title": "1706.03762", "domain": "arxiv.org", "idle_s": 0}, "expect": "research"}
+{"kind": "l1", "name": "duckduckgo", "sample": {"process": "chrome.exe", "title": "privacy search", "domain": "duckduckgo.com", "idle_s": 0}, "expect": "research"}
+{"kind": "l1", "name": "tieba-baidu", "sample": {"process": "chrome.exe", "title": "贴吧", "domain": "tieba.baidu.com", "idle_s": 0}, "expect": "research"}
+{"kind": "l1", "name": "title-搜索", "sample": {"process": "chrome.exe", "title": "百度搜索_工程总承包", "domain": "", "idle_s": 0}, "expect": "research"}
+{"kind": "l1", "name": "title-百科", "sample": {"process": "foo.exe", "title": "百度百科", "domain": "", "idle_s": 0}, "expect": "research"}
+{"kind": "l1", "name": "tim-im", "sample": {"process": "TIM.exe", "title": "TIM", "domain": "", "idle_s": 0}, "expect": "chat"}
+{"kind": "l1", "name": "lark-im", "sample": {"process": "lark.exe", "title": "Lark", "domain": "", "idle_s": 0}, "expect": "chat"}
+{"kind": "l1", "name": "telegram", "sample": {"process": "telegram.exe", "title": "Telegram", "domain": "", "idle_s": 0}, "expect": "chat"}
+{"kind": "l1", "name": "discord", "sample": {"process": "Discord.exe", "title": "Discord", "domain": "", "idle_s": 0}, "expect": "chat"}
+{"kind": "l1", "name": "title-公众平台", "sample": {"process": "chrome.exe", "title": "微信公众平台", "domain": "", "idle_s": 0}, "expect": "chat"}
+{"kind": "l1", "name": "title-消息-wxwork", "sample": {"process": "wxwork.exe", "title": "企业微信 - 消息", "domain": "", "idle_s": 0}, "expect": "chat"}
+{"kind": "l1", "name": "title-钉钉", "sample": {"process": "foo.exe", "title": "钉钉 - 已连接", "domain": "", "idle_s": 0}, "expect": "chat"}
+{"kind": "l1", "name": "wechat-transfer", "sample": {"process": "WeChat.exe", "title": "文件传输助手", "domain": "", "idle_s": 0}, "expect": "chat"}
+{"kind": "l1", "name": "gemini-domain", "sample": {"process": "chrome.exe", "title": "Gemini", "domain": "gemini.google.com", "idle_s": 0}, "expect": "thinking"}
+{"kind": "l1", "name": "kimi-domain", "sample": {"process": "chrome.exe", "title": "Kimi", "domain": "kimi.moonshot.cn", "idle_s": 0}, "expect": "thinking"}
+{"kind": "l1", "name": "doubao-domain", "sample": {"process": "chrome.exe", "title": "豆包", "domain": "doubao.com", "idle_s": 0}, "expect": "thinking"}
+{"kind": "l1", "name": "yuanbao-domain", "sample": {"process": "chrome.exe", "title": "元宝", "domain": "yuanbao.tencent.com", "idle_s": 0}, "expect": "thinking"}
+{"kind": "l1", "name": "metaso-domain", "sample": {"process": "chrome.exe", "title": "秘塔", "domain": "metaso.cn", "idle_s": 0}, "expect": "thinking"}
+{"kind": "l1", "name": "poe-domain", "sample": {"process": "chrome.exe", "title": "Poe", "domain": "poe.com", "idle_s": 0}, "expect": "thinking"}
+{"kind": "l1", "name": "title-claude", "sample": {"process": "chrome.exe", "title": "Claude - 询问", "domain": "", "idle_s": 0}, "expect": "thinking"}
+{"kind": "l1", "name": "title-新对话", "sample": {"process": "foo.exe", "title": "新对话 - AI", "domain": "", "idle_s": 0}, "expect": "thinking"}
+{"kind": "l1", "name": "youku", "sample": {"process": "chrome.exe", "title": "优酷", "domain": "youku.com", "idle_s": 0}, "expect": "leisure"}
+{"kind": "l1", "name": "iqiyi", "sample": {"process": "chrome.exe", "title": "爱奇艺", "domain": "iqiyi.com", "idle_s": 0}, "expect": "leisure"}
+{"kind": "l1", "name": "netflix", "sample": {"process": "edge.exe", "title": "Netflix", "domain": "netflix.com", "idle_s": 0}, "expect": "leisure"}
+{"kind": "l1", "name": "music163-domain", "sample": {"process": "chrome.exe", "title": "网易云", "domain": "music.163.com", "idle_s": 0}, "expect": "leisure"}
+{"kind": "l1", "name": "steam-proc", "sample": {"process": "steam.exe", "title": "Steam 商店", "domain": "", "idle_s": 0}, "expect": "leisure"}
+{"kind": "l1", "name": "qqmusic-probe", "sample": {"process": "qqmusic.exe", "title": "QQ音乐", "domain": "", "idle_s": 0}, "expect": "leisure"}
+{"kind": "l1", "name": "title-电影", "sample": {"process": "foo.exe", "title": "电影预告片", "domain": "", "idle_s": 0}, "expect": "leisure"}
+{"kind": "l1", "name": "title-哔哩", "sample": {"process": "foo.exe", "title": "哔哩哔哩弹幕网", "domain": "", "idle_s": 0}, "expect": "leisure"}
+{"kind": "l1", "name": "voov-proc", "sample": {"process": "voovmeeting.exe", "title": "VooV Meeting", "domain": "", "idle_s": 0}, "expect": "meeting"}
+{"kind": "l1", "name": "tencent-meeting-proc", "sample": {"process": "tencentmeeting.exe", "title": "腾讯会议", "domain": "", "idle_s": 0}, "expect": "meeting"}
+{"kind": "l1", "name": "zoom-domain", "sample": {"process": "chrome.exe", "title": "Zoom", "domain": "zoom.us", "idle_s": 0}, "expect": "meeting"}
+{"kind": "l1", "name": "gmeet-domain", "sample": {"process": "chrome.exe", "title": "Meet", "domain": "meet.google.com", "idle_s": 0}, "expect": "meeting"}
+{"kind": "l1", "name": "teams-domain", "sample": {"process": "edge.exe", "title": "Teams", "domain": "teams.microsoft.com", "idle_s": 0}, "expect": "meeting"}
+{"kind": "l1", "name": "title-会议中", "sample": {"process": "foo.exe", "title": "全体员工大会 会议中", "domain": "", "idle_s": 0}, "expect": "meeting"}
+{"kind": "l1", "name": "title-视频会议", "sample": {"process": "foo.exe", "title": "视频会议 - 主持", "domain": "", "idle_s": 0}, "expect": "meeting"}
+{"kind": "l1", "name": "wechat-但线上会议-优先级探针", "sample": {"process": "WeChat.exe", "title": "线上会议", "domain": "", "idle_s": 0}, "expect": "meeting"}
+{"kind": "l1", "name": "taskmgr", "sample": {"process": "taskmgr.exe", "title": "任务管理器", "domain": "", "idle_s": 0}, "expect": "system"}
+{"kind": "l1", "name": "control-panel", "sample": {"process": "control.exe", "title": "控制面板", "domain": "", "idle_s": 0}, "expect": "system"}
+{"kind": "l1", "name": "mmc-devmgmt", "sample": {"process": "mmc.exe", "title": "设备管理器", "domain": "", "idle_s": 0}, "expect": "system"}
+{"kind": "l1", "name": "regedit", "sample": {"process": "regedit.exe", "title": "注册表编辑器", "domain": "", "idle_s": 0}, "expect": "system"}
+{"kind": "l1", "name": "services-proc", "sample": {"process": "services.exe", "title": "服务", "domain": "", "idle_s": 0}, "expect": "system"}
+{"kind": "l1", "name": "title-设置", "sample": {"process": "systemsettings.exe", "title": "设置 - 蓝牙", "domain": "", "idle_s": 0}, "expect": "system"}
+{"kind": "l1", "name": "idle-360", "sample": {"process": "Code.exe", "title": "main.py", "domain": "", "idle_s": 360}, "expect": "idle"}
+{"kind": "l1", "name": "idle-600", "sample": {"process": "chrome.exe", "title": "B站", "domain": "bilibili.com", "idle_s": 600}, "expect": "idle"}
+{"kind": "l1", "name": "idle-900", "sample": {"process": "WeChat.exe", "title": "微信", "domain": "", "idle_s": 900}, "expect": "idle"}
+{"kind": "l1", "name": "idle-1800", "sample": {"process": "foo.exe", "title": "", "domain": "", "idle_s": 1800}, "expect": "idle"}
+{"kind": "l1", "name": "idle-恰好300边界", "sample": {"process": "wps.exe", "title": "文档", "domain": "", "idle_s": 300}, "expect": "idle"}
+{"kind": "l1", "name": "idea64-未映射留档", "sample": {"process": "idea64.exe", "title": "App.java", "domain": "", "idle_s": 0}, "expect": "unknown"}
+{"kind": "l1", "name": "calc-未映射", "sample": {"process": "Calculator.exe", "title": "计算器", "domain": "", "idle_s": 0}, "expect": "unknown"}
+{"kind": "l1", "name": "paint-未映射", "sample": {"process": "mspaint.exe", "title": "画图", "domain": "", "idle_s": 0}, "expect": "unknown"}
+{"kind": "l1", "name": "blank-sample", "sample": {"process": "", "title": "", "domain": "", "idle_s": 0}, "expect": "unknown"}
+{"kind": "reject", "name": "离席段-午后小憩", "block": {"category": "idle", "duration_min": 20, "confidence": 0.95, "coverage": 0.9, "category_counts": {"idle": 30}}}
+{"kind": "reject", "name": "离席段-午休", "block": {"category": "idle", "duration_min": 60, "confidence": 0.95, "coverage": 0.95, "category_counts": {"idle": 60}}}
+{"kind": "reject", "name": "离席段-夜里挂机", "block": {"category": "idle", "duration_min": 240, "confidence": 0.95, "coverage": 0.99, "category_counts": {"idle": 200}}}
+{"kind": "reject", "name": "离席段-会议忘关", "block": {"category": "idle", "duration_min": 45, "confidence": 0.85, "coverage": 0.9, "category_counts": {"idle": 40, "meeting": 4}}}
+{"kind": "reject", "name": "时短-闪切窗口", "block": {"category": "chat", "duration_min": 0.3, "confidence": 0.9, "coverage": 0.8, "category_counts": {"chat": 2}}}
+{"kind": "reject", "name": "时短-一分钟", "block": {"category": "project", "duration_min": 1.0, "confidence": 0.8, "coverage": 0.8, "category_counts": {"project": 5}}}
+{"kind": "reject", "name": "时短-1.5min", "block": {"category": "docs", "duration_min": 1.5, "confidence": 0.7, "coverage": 0.7, "category_counts": {"docs": 4}}}
+{"kind": "reject", "name": "时短-边界下1.99", "block": {"category": "research", "duration_min": 1.99, "confidence": 0.72, "coverage": 0.6, "category_counts": {"research": 6}}}
+{"kind": "reject", "name": "时短-零时长", "block": {"category": "project", "duration_min": 0, "confidence": 0.8, "coverage": 0.8, "category_counts": {"project": 1}}}
+{"kind": "reject", "name": "置信不足-0.35", "block": {"category": "project", "duration_min": 30, "confidence": 0.35, "coverage": 0.8, "category_counts": {"project": 20}}}
+{"kind": "reject", "name": "置信不足-0.45", "block": {"category": "docs", "duration_min": 15, "confidence": 0.45, "coverage": 0.7, "category_counts": {"docs": 10}}}
+{"kind": "reject", "name": "置信不足-0.49", "block": {"category": "research", "duration_min": 10, "confidence": 0.49, "coverage": 0.6, "category_counts": {"research": 8}}}
+{"kind": "reject", "name": "置信不足-unknown0.3", "block": {"category": "unknown", "duration_min": 25, "confidence": 0.3, "coverage": 0.5, "category_counts": {"unknown": 15}}}
+{"kind": "reject", "name": "置信不足-缺字段按0", "block": {"category": "chat", "duration_min": 8, "coverage": 0.7, "category_counts": {"chat": 6}}}
+{"kind": "reject", "name": "离席为主-0.82", "block": {"category": "project", "duration_min": 40, "confidence": 0.8, "coverage": 0.8, "category_counts": {"idle": 41, "project": 9}}}
+{"kind": "reject", "name": "离席为主-恰好0.8边界", "block": {"category": "docs", "duration_min": 30, "confidence": 0.7, "coverage": 0.7, "category_counts": {"idle": 8, "docs": 2}}}
+{"kind": "reject", "name": "离席为主-0.9", "block": {"category": "research", "duration_min": 50, "confidence": 0.72, "coverage": 0.6, "category_counts": {"idle": 18, "research": 2}}}
+{"kind": "reject", "name": "离席为主-挂机下载", "block": {"category": "leisure", "duration_min": 120, "confidence": 0.78, "coverage": 0.7, "category_counts": {"idle": 35, "leisure": 3}}}
+{"kind": "reject", "name": "离席为主-回神五分钟", "block": {"category": "thinking", "duration_min": 90, "confidence": 0.72, "coverage": 0.65, "category_counts": {"idle": 80, "thinking": 12}}}
+{"kind": "reject", "name": "混杂-coverage0.2", "block": {"category": "project", "duration_min": 35, "confidence": 0.8, "coverage": 0.2, "category_counts": {"project": 10, "chat": 10, "docs": 10, "research": 10, "leisure": 10}}}
+{"kind": "reject", "name": "混杂-coverage0.3", "block": {"category": "docs", "duration_min": 25, "confidence": 0.7, "coverage": 0.3, "category_counts": {"docs": 6, "chat": 5, "meeting": 4, "project": 5}}}
+{"kind": "reject", "name": "混杂-coverage0.39", "block": {"category": "chat", "duration_min": 18, "confidence": 0.9, "coverage": 0.39, "category_counts": {"chat": 8, "project": 7, "system": 5}}}
+{"kind": "reject", "name": "混杂-五类均摊", "block": {"category": "research", "duration_min": 30, "confidence": 0.72, "coverage": 0.25, "category_counts": {"research": 4, "docs": 4, "thinking": 4, "chat": 4}}}
+{"kind": "reject", "name": "L2不足-0.55", "block": {"category": "project", "duration_min": 40, "confidence": 0.8, "coverage": 0.8, "category_counts": {"project": 30}, "l2_confidence": 0.55}}
+{"kind": "reject", "name": "L2不足-0.3", "block": {"category": "docs", "duration_min": 20, "confidence": 0.7, "coverage": 0.7, "category_counts": {"docs": 15}, "l2_confidence": 0.3}}
+{"kind": "reject", "name": "L2不足-边界下0.59", "block": {"category": "research", "duration_min": 15, "confidence": 0.72, "coverage": 0.6, "category_counts": {"research": 10}, "l2_confidence": 0.59}}
+{"kind": "reject", "name": "非活动块-null", "block": null}
+{"kind": "reject", "name": "非活动块-字符串", "block": "not-a-block"}
+{"kind": "reject", "name": "非活动块-数字", "block": 42}
+{"kind": "reject", "name": "闸门异常-counts列表", "block": {"category_counts": ["bad"], "duration_min": 10, "confidence": 0.8, "coverage": 0.8}}
+{"kind": "reject", "name": "闸门异常-counts脏值", "block": {"category": "project", "duration_min": 10, "confidence": 0.8, "coverage": 0.8, "category_counts": {"project": "x"}}}
+{"kind": "reject", "name": "闸门异常-duration字符串", "block": {"category": "docs", "duration_min": "abc", "confidence": 0.8, "coverage": 0.8, "category_counts": {"docs": 6}}}
+{"kind": "reject", "name": "闸门异常-coverage字符串", "block": {"category": "chat", "duration_min": 10, "confidence": 0.9, "coverage": "abc", "category_counts": {"chat": 6}}}
+{"kind": "accept", "name": "project-深度工作45min", "block": {"category": "project", "duration_min": 45, "confidence": 0.8, "coverage": 0.85, "category_counts": {"project": 40, "chat": 5}}}
+{"kind": "accept", "name": "research-专题30min", "block": {"category": "research", "duration_min": 30, "confidence": 0.72, "coverage": 0.6, "category_counts": {"research": 20, "thinking": 8}}}
+{"kind": "accept", "name": "docs-写作25min", "block": {"category": "docs", "duration_min": 25, "confidence": 0.7, "coverage": 0.75, "category_counts": {"docs": 30}}}
+{"kind": "accept", "name": "meeting-整点会议", "block": {"category": "meeting", "duration_min": 60, "confidence": 0.85, "coverage": 0.9, "category_counts": {"meeting": 50, "system": 3}}}
+{"kind": "accept", "name": "thinking-对话15min", "block": {"category": "thinking", "duration_min": 15, "confidence": 0.72, "coverage": 0.8, "category_counts": {"thinking": 12, "chat": 2}}}
+{"kind": "accept", "name": "chat-运营沟通", "block": {"category": "chat", "duration_min": 10, "confidence": 0.9, "coverage": 0.55, "category_counts": {"chat": 20, "project": 10}}}
+{"kind": "accept", "name": "边界-duration恰好2.0", "block": {"category": "project", "duration_min": 2.0, "confidence": 0.8, "coverage": 0.8, "category_counts": {"project": 3}}}
+{"kind": "accept", "name": "边界-confidence恰好0.5", "block": {"category": "system", "duration_min": 10, "confidence": 0.5, "coverage": 0.6, "category_counts": {"system": 8}}}
+{"kind": "accept", "name": "边界-coverage恰好0.4", "block": {"category": "leisure", "duration_min": 12, "confidence": 0.78, "coverage": 0.4, "category_counts": {"leisure": 6, "chat": 5, "project": 4}}}
+{"kind": "accept", "name": "边界-idle占比0.79", "block": {"category": "project", "duration_min": 90, "confidence": 0.8, "coverage": 0.8, "category_counts": {"idle": 79, "project": 21}}}
+{"kind": "accept", "name": "长跑-3小时浸泡", "block": {"category": "project", "duration_min": 180, "confidence": 0.8, "coverage": 0.9, "category_counts": {"project": 150, "docs": 10, "thinking": 5}}}
+{"kind": "accept", "name": "混合-0.45过线", "block": {"category": "docs", "duration_min": 22, "confidence": 0.78, "coverage": 0.45, "category_counts": {"docs": 10, "research": 6, "chat": 5}}}
