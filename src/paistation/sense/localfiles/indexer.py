@@ -53,6 +53,7 @@ class Indexer:
     def extract_pending(self, limit: int = 200) -> dict:
         rows = self._inv.pending(limit)
         done = failed = cached = 0
+        head = rows[0]["priority"] if rows else None
         for row in rows:
             path = row["path"]
             kind, parser_id = self._triage.classify(path)
@@ -77,7 +78,8 @@ class Indexer:
             else:
                 failed += 1
         return {"processed": len(rows), "extracted": done,
-                "cached": cached, "failed": failed}
+                "cached": cached, "failed": failed,
+                "queue_priority_head": head}
 
     def _extract_one(self, path: str, kind: str, parser_id: str,
                      row) -> str:

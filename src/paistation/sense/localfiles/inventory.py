@@ -32,7 +32,11 @@ CREATE TABLE IF NOT EXISTS files (
     extracted_at REAL NOT NULL DEFAULT 0,
     parser_id   TEXT NOT NULL DEFAULT '',
     parser_ver  TEXT NOT NULL DEFAULT '',
-    status      TEXT NOT NULL DEFAULT 'pending'
+    status      TEXT NOT NULL DEFAULT 'pending',
+    priority    REAL NOT NULL DEFAULT 0,
+    priority_reason TEXT NOT NULL DEFAULT '',
+    attempts    INTEGER NOT NULL DEFAULT 0,
+    last_attempt REAL NOT NULL DEFAULT 0
 );
 CREATE INDEX IF NOT EXISTS idx_files_status ON files(status);
 CREATE INDEX IF NOT EXISTS idx_files_kind ON files(kind);
@@ -97,6 +101,7 @@ class Inventory:
         self._db = sqlite3.connect(self._path)
         self._db.row_factory = sqlite3.Row
         self._db.executescript(SCHEMA)
+        self._ensure_queue_cols()
         self._db.execute("PRAGMA journal_mode=WAL")
         self._db.execute("PRAGMA synchronous=NORMAL")
         self._db.commit()
@@ -193,17 +198,43 @@ class Inventory:
                 "UPDATE files SET size=?, mtime=?, seen_gen=?, last_seen=?"
                 " WHERE path=?", (size, mtime, self._gen, ts, path))
 
+    def _ensure_queue_cols(self) -> None:
+        """老库就地补列（2026-09-17）：priority 由 cx_prioritize 打分，
+        attempts/last_attempt 为毒文件退避计数。存量行为零变化。"""
+        cols = {r[1] for r in self._db.execute("PRAGMA table_info(files)")}
+        for col, ddl in (
+            ("priority", "REAL NOT NULL DEFAULT 0"),
+            ("priority_reason", "TEXT NOT NULL DEFAULT ''"),
+            ("attempts", "INTEGER NOT NULL DEFAULT 0"),
+            ("last_attempt", "REAL NOT NULL DEFAULT 0"),
+        ):
+            if col not in cols:
+                self._db.execute(f"ALTER TABLE files ADD COLUMN {col} {ddl}")
+        self._db.commit()
+
     # ---------- 提取层接口（P1 缓存） ----------
 
-    def pending(self, limit: int = 500) -> list[sqlite3.Row]:
-        """待提取队列：pending/failed 且非红线。"""
+    def pending(self, limit: int = 500, max_attempts: int = 3,
+                now: float | None = None) -> list[sqlite3.Row]:
+        """待提取队列：pending/failed 且非红线，priority 高者先出。
+
+        Calibre 式毒文件治理（V3 落地）：失败计数 attempts 达
+        max_attempts 封顶出队；未封顶的 failed 冷却 attempts² 小时再
+        重试。崩溃恢复零额外位——status 即断点，killed 进程留下的
+        pending 行下轮原样重取。
+        """
+        ts = time.time() if now is None else now
         return self._db.execute(
             "SELECT * FROM files WHERE status IN ('pending','failed')"
-            " AND secret=0 ORDER BY last_seen DESC LIMIT ?", (limit,)).fetchall()
+            " AND secret=0 AND attempts < ?"
+            " AND (status!='failed' OR last_attempt + attempts*attempts*3600 <= ?)"
+            " ORDER BY COALESCE(priority, 0) DESC, last_seen DESC LIMIT ?",
+            (max_attempts, ts, limit)).fetchall()
 
     def cache_hit(self, path: str, size: int, mtime: float,
                   parser_id: str, parser_ver: str) -> bool:
         """快路径：size+mtime+parser 指纹全未变 → 跳过解析。"""
+        path = _norm_path(path)
         row = self._db.execute(
             "SELECT size, mtime, parser_id, parser_ver, hash_full, status"
             " FROM files WHERE path=?", (path,)).fetchone()
@@ -216,13 +247,18 @@ class Inventory:
     def mark_extracted(self, path: str, parser_id: str, parser_ver: str,
                        hash_full: str, kind: str, now: float | None = None,
                        status: str = "ok", hash_partial: str = "") -> None:
+        """记提取结果；失败 attempts+1 起退避，成功清零。"""
+        path = _norm_path(path)
+        ts = time.time() if now is None else now
         with self._db:
             self._db.execute(
                 "UPDATE files SET parser_id=?, parser_ver=?, hash_full=?,"
-                " hash_partial=?, kind=?, extracted_at=?, status=?"
+                " hash_partial=?, kind=?, extracted_at=?, status=?,"
+                " attempts=CASE WHEN ?='ok' THEN 0 ELSE attempts+1 END,"
+                " last_attempt=?"
                 " WHERE path=?",
                 (parser_id, parser_ver, hash_full, hash_partial, kind,
-                 time.time() if now is None else now, status, path))
+                 ts, status, status, ts, path))
 
     # ---------- 统计/检索 ----------
 
@@ -244,8 +280,10 @@ class Inventory:
         """文件名 LIKE 秒查（L0 名字级检索，Everything 不在时的兜底）。
 
         secret 行默认过滤（agent 出口纵深防御：密钥文件路径也不外喂）；
-        内部诊断需全量时显式 include_secret=True。
+        内部诊断需全量时显式 include_secret=True。pattern 一并归一
+        （Windows 反斜杠习惯照样命中正斜杠存储）。
         """
+        pattern = _norm_path(pattern)
         cond = "" if include_secret else " AND secret=0"
         return self._db.execute(
             "SELECT path, size, mtime, kind, status FROM files"

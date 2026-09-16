@@ -72,6 +72,8 @@ class ChunkIndex:
     def upsert_file(self, path: str, texts: list[str], logic_ver: str,
                     file_gen: int = 0) -> dict:
         """整文件替换事务：旧块向量可复用则复用，只嵌真正的新块。"""
+        from paistation.sense.localfiles.inventory import _norm_path
+        path = _norm_path(path)  # 主键前必经：与 files 表同形态
         old = {
             r["chunk_id"]: r["embedding_status"]
             for r in self._db.execute(

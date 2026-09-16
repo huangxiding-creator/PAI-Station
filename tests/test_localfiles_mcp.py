@@ -25,9 +25,12 @@ from paistation.sense.localfiles.mcp_server import (
 from paistation.sense.localfiles.store import ChunkIndex
 
 NOW = 1_700_000_000.0
+# 输入用 Windows 反斜杠形态（证明边界归一）；断言对归一存储形态
 PDF = r"C:\Docs\数字孪生方案.pdf"
 DOCX = r"C:\Docs\会议纪要.docx"
 KEY = r"C:\Keys\id_rsa"
+PDF_N = "C:/Docs/数字孪生方案.pdf"
+DOCX_N = "C:/Docs/会议纪要.docx"
 
 
 @pytest.fixture()
@@ -101,7 +104,7 @@ def test_tools_list_three(svc):
 def test_search_hits_content(svc):
     hits = _text_payload(handle_message(
         _call(2, "localfiles_search", {"query": "数字孪生"}), svc))
-    assert hits and hits[0]["path"] == PDF
+    assert hits and hits[0]["path"] == PDF_N
     assert "数字孪生" in hits[0]["snippet"]
     assert hits[0]["source"]  # fts 或 like 路由标注
 
@@ -110,14 +113,14 @@ def test_find_paths_and_secret_filter(svc):
     hits = _text_payload(handle_message(
         _call(3, "localfiles_find", {"pattern": "Docs"}), svc))
     paths = [h["path"] for h in hits]
-    assert PDF in paths and DOCX in paths
+    assert PDF_N in paths and DOCX_N in paths
     # 红线：secret 文件的路径也不喂给 agent 会话
     assert _text_payload(handle_message(
         _call(4, "localfiles_find", {"pattern": "id_rsa"}), svc)) == []
     assert all("id_rsa" not in p for p in paths)
     # mtime 可读化须与本地时区无关地对照（不硬编码日期，防时区耦合）
     expect = datetime.fromtimestamp(int(NOW)).isoformat(timespec="seconds")
-    assert any(h["path"] == PDF and h["mtime_iso"] == expect for h in hits)
+    assert any(h["path"] == PDF_N and h["mtime_iso"] == expect for h in hits)
 
 
 def test_status_mixes_inventory_and_chunks(svc):
