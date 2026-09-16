@@ -51,8 +51,14 @@ _TOPIC_ATTRIBUTIONS: dict[str, tuple[str, str]] = {
     "工程豹": (_SIDE_COMPANY, "signature_calibration"),
     "工程大脑": (_SIDE_COMPANY, "signature_calibration"),
     "水利安全AI眼镜": (_MAIN_EMPLOYER, "owner_statement"),
+    # 本人 2026-09-16 口径："工程豹、工程大脑、知识工厂都是总包说公司的作品"
+    "知识工厂": (_SIDE_COMPANY, "owner_statement"),
     # 飞书《2026工作记录》主业任务原文："8月31日前黄河总包AI问答正式上线"
     "黄河总包AI问答": (_MAIN_EMPLOYER, "feishu_worklog"),
+}
+# 登记别名（飞书文档全名等）
+_ATTRIBUTION_ALIASES: dict[str, list[str]] = {
+    "知识工厂": ["AI原生知识炼金工厂"],
 }
 _GIT_ATTRIBUTIONS: dict[str, tuple[str, str]] = {
     "ResearchFactory-Eng": (_SIDE_COMPANY, "signature_calibration"),
@@ -69,7 +75,8 @@ def calibrate_attributions(store) -> int:
         **_TOPIC_ATTRIBUTIONS, **_GIT_ATTRIBUTIONS,
     }.items():
         kind = "topic" if name in _TOPIC_ATTRIBUTIONS else "project"
-        store.register(kind, name, source=source)
+        store.register(kind, name, aliases=_ATTRIBUTION_ALIASES.get(name, []),
+                       source=source)
         added += store.register_link(
             f"{kind}/{name}", target, "operated_by", source)
     store._conn.commit()

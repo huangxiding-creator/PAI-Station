@@ -168,3 +168,14 @@ class TestCalibrateAttributions:
                 "AND to_id='org/黄河勘测规划设计研究院' "
                 "AND relation='operated_by'", (eid,)).fetchone(), eid
         store.close()
+
+    def test_knowledge_factory_side_with_alias(self, tmp_path):
+        # 本人 9-16 口径：知识工厂（=AI原生知识炼金工厂）是总包说作品
+        store = EntityStore(tmp_path / "e.db")
+        calibrate_attributions(store)
+        assert store._conn.execute(
+            "SELECT 1 FROM entity_links WHERE from_id='topic/知识工厂' "
+            "AND to_id LIKE 'org/总包说%' AND relation='operated_by'"
+        ).fetchone()
+        assert store.lookup_by_alias("AI原生知识炼金工厂") == "topic/知识工厂"
+        store.close()
