@@ -75,3 +75,36 @@ def entity_roles(store, person_eid: str) -> set[str]:
 
 ROLE_LABELS = {"main": "主业 · 黄河设计院", "side": "副业 · 总包说",
                "personal": "个人线"}
+
+
+def tag_event_role(store, event_type: str, payload: dict) -> str | None:
+    """时间轴事件 → 角色标签（年终总结等"按角色过滤"任务的地基）。
+
+    meeting.attend: 主题命中项目关键词 → 项目角色
+    work.commit:    repo 名即 project slug → 项目角色
+    email.receive:  发件人实体沿边传导到项目 → 项目角色（传导不到=None）
+    """
+    from paistation.cx.ingest_projects import extract_meeting_projects
+
+    if event_type == "meeting.attend":
+        for kind, name in extract_meeting_projects(payload.get("subject", "")):
+            if kind == "project":
+                r = role_of_project(store, f"project/{name}")
+                if r:
+                    return r
+        return None
+    if event_type == "work.commit":
+        return role_of_project(store, f"project/{payload.get('repo', '')}")
+    if event_type == "email.receive":
+        eid = store.lookup_by_alias(payload.get("from_email", ""))
+        if not eid:
+            return None
+        for (tid,) in store._conn.execute(
+            "SELECT to_id FROM entity_links WHERE from_id=?", (eid,)
+        ).fetchall():
+            if tid.startswith("project/"):
+                r = role_of_project(store, str(tid))
+                if r:
+                    return r
+        return None
+    return None

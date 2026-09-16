@@ -31,6 +31,8 @@ def _seed(store: EntityStore) -> None:
     # 副业项目+群
     store.register("project", "总包之声", source="t")
     store.register_link("project/总包之声", SIDE_ORG, "operated_by", "t")
+    store.register("project", "总包大家谈", source="t")
+    store.register_link("project/总包大家谈", SIDE_ORG, "operated_by", "t")
     store.register("org", "总包之声01群", source="t")
     store.register_link("org/总包之声01群", "project/总包之声", "part_of", "t")
     # 个人线项目（owned_by 本人、无 operated_by）
@@ -43,8 +45,6 @@ def _seed(store: EntityStore) -> None:
     store.register("person", "学园运营者", source="t")
     store.register_link("person/学园运营者", "org/总包之声01群",
                         "member_of", "t")
-    store.register("person", "期刊编辑", aliases=["rmhh2010@163.com"], source="t")
-    store.register_link("person/期刊编辑", "person/总包君", "emailed_of", "t")
     # 混合：既在主业群也在副业群
     store.register("person", "两栖协作者", source="t")
     store.register_link("person/两栖协作者", "org/江巷灌区项目群",
@@ -112,3 +112,56 @@ class TestWorksOnConduction:
         assert created == 1
         assert entity_roles(store, "person/大家谈嘉宾") == {"side"}
         store.close()
+
+
+class TestTagEventRole:
+    """时间轴事件 → 角色标签（年终总结等按角色过滤的地基）。"""
+
+    def test_meeting_subject_main(self, tmp_path):
+        from paistation.cx.roles import tag_event_role
+        store = EntityStore(tmp_path / "e.db")
+        _seed(store)
+        assert tag_event_role(store, "meeting.attend",
+                              {"subject": "江巷灌区视频监控方案讨论"}) == "main"
+        assert tag_event_role(store, "meeting.attend",
+                              {"subject": "总包大家谈 27 期"}) == "side"
+
+    def test_meeting_quick_unknown(self, tmp_path):
+        from paistation.cx.roles import tag_event_role
+        store = EntityStore(tmp_path / "e.db")
+        _seed(store)
+        assert tag_event_role(store, "meeting.attend",
+                              {"subject": "总包君的快速会议"}) is None
+
+    def test_commit_by_repo(self, tmp_path):
+        from paistation.cx.roles import tag_event_role
+        store = EntityStore(tmp_path / "e.db")
+        _seed(store)
+        store.register("project", "We-AIPO", source="t")
+        store.register_link("project/We-AIPO", SIDE_ORG, "operated_by", "t")
+        store._conn.commit()
+        # repo 名直接对应 project slug
+        assert tag_event_role(store, "work.commit",
+                              {"repo": "We-AIPO"}) == "side"
+        assert tag_event_role(store, "work.commit",
+                              {"repo": "IdeaDig"}) == "personal"
+        assert tag_event_role(store, "work.commit",
+                              {"repo": "无此仓"}) is None
+
+    def test_email_by_sender(self, tmp_path):
+        from paistation.cx.roles import tag_event_role
+        store = EntityStore(tmp_path / "e.db")
+        _seed(store)
+        # 期刊社 ←往来→ 论文 project → 黄河院（真实库同构）
+        store.register("org", "人民黄河杂志社",
+                       aliases=["rmhh2010@163.com"], source="t")
+        store.register("project", "论文：知识增强视觉推理", source="t")
+        store.register_link("project/论文-知识增强视觉推理", MAIN_ORG,
+                            "operated_by", "t")
+        store.register_link("org/人民黄河杂志社", "project/论文-知识增强视觉推理",
+                            "corresponds_with", "t")
+        store._conn.commit()
+        assert tag_event_role(store, "email.receive",
+                              {"from_email": "rmhh2010@163.com"}) == "main"
+        assert tag_event_role(store, "email.receive",
+                              {"from_email": "news@random.com"}) is None
