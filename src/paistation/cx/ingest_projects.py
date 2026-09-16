@@ -51,14 +51,18 @@ _TOPIC_ATTRIBUTIONS: dict[str, tuple[str, str]] = {
     "工程豹": (_SIDE_COMPANY, "signature_calibration"),
     "工程大脑": (_SIDE_COMPANY, "signature_calibration"),
     "水利安全AI眼镜": (_MAIN_EMPLOYER, "owner_statement"),
+    # 飞书《2026工作记录》主业任务原文："8月31日前黄河总包AI问答正式上线"
+    "黄河总包AI问答": (_MAIN_EMPLOYER, "feishu_worklog"),
 }
 _GIT_ATTRIBUTIONS: dict[str, tuple[str, str]] = {
     "ResearchFactory-Eng": (_SIDE_COMPANY, "signature_calibration"),
+    # 同源：智慧总包科研项目下的 AI 应用开发（黄河院新一代科研项目）
+    "智慧总包科研项目": (_MAIN_EMPLOYER, "feishu_worklog"),
 }
 
 
 def calibrate_attributions(store) -> int:
-    """落款判据归属校准：topic/git 项目挂 operated_by（幂等），返回新建边数。"""
+    """落款判据归属校准：topic/project 挂 operated_by（幂等），返回新建边数。"""
     _ensure_orgs(store)
     added = 0
     for name, (target, source) in {

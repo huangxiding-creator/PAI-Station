@@ -157,3 +157,14 @@ class TestCalibrateAttributions:
         calibrate_attributions(store)
         assert calibrate_attributions(store) == 0
         store.close()
+
+    def test_main_ai_line_from_worklog(self, tmp_path):
+        # 飞书《2026工作记录》捞到的主业 AI 任务线
+        store = EntityStore(tmp_path / "e.db")
+        calibrate_attributions(store)
+        for eid in ("topic/黄河总包AI问答", "project/智慧总包科研项目"):
+            assert store._conn.execute(
+                "SELECT 1 FROM entity_links WHERE from_id=? "
+                "AND to_id='org/黄河勘测规划设计研究院' "
+                "AND relation='operated_by'", (eid,)).fetchone(), eid
+        store.close()
