@@ -38,6 +38,47 @@ def test_fts_chinese_search(tmp_path):
     assert hits[0].source == "fts"
 
 
+def test_mixed_long_short_terms_and_filter(tmp_path):
+    """混合查询（长词+双字短词）：FTS 候选内 AND 过滤，毫秒级精确
+    （09-17 白龟湖实战：『尾款 划抵 244』整串 LIKE 永远零命中）。"""
+    idx = ChunkIndex(tmp_path / "t.db")
+    idx.upsert_file("pay.pdf", ["尾款支付说明：其余 244 万元从前期支付给贵公司的款项中划抵"], LOGIC)
+    idx.upsert_file("noise.md", ["无关文本 244 号宿舍楼施工记录"], LOGIC)
+    hits = idx.search("尾款 划抵 244")
+    assert len(hits) == 1 and hits[0].path == "pay.pdf"
+
+
+def test_short_filter_empty_falls_back_to_long_hits(tmp_path):
+    """短词过滤后空：退回长词命中保召回（不空手）。"""
+    idx = ChunkIndex(tmp_path / "t.db")
+    idx.upsert_file("a.md", ["水库大坝安全监测规范正文"], LOGIC)
+    hits = idx.search("大坝 安全监测")  # "大坝"不在文本 → 过滤空 → 退回
+    assert hits and hits[0].source == "fts"
+
+
+def test_pure_short_terms_and_then_or(tmp_path):
+    """纯双字词：AND 一次扫命中；AND 空走 OR 兜底。"""
+    idx = ChunkIndex(tmp_path / "t.db")
+    idx.upsert_file("a.md", ["合同里约定了尾款划抵条款"], LOGIC)
+    idx.upsert_file("b.md", ["只有尾款字样的另一份"], LOGIC)
+    idx.upsert_file("c.md", ["完全无关"], LOGIC)
+    assert idx.search("尾款 划抵")[0].path == "a.md"  # AND 命中
+    idx2 = ChunkIndex(tmp_path / "t2.db")
+    idx2.upsert_file("x.md", ["尾款说明"], LOGIC)
+    idx2.upsert_file("y.md", ["划抵说明"], LOGIC)
+    hits = idx2.search("尾款 划抵")  # 无同块双词 → OR 兜底
+    assert len(hits) == 2
+
+
+def test_like_wildcards_escaped(tmp_path):
+    """查询含 %/_ 字面量：转义后不误当通配符。"""
+    idx = ChunkIndex(tmp_path / "t.db")
+    idx.upsert_file("a.md", ["进度 100% 完成"], LOGIC)
+    idx.upsert_file("b.md", ["进度 9999 完成毫无关系的内容"], LOGIC)
+    hits = idx.search("100%")  # % 不当通配 → 只命中字面 100%
+    assert len(hits) == 1 and hits[0].path == "a.md"
+
+
 def test_differential_reembed(tmp_path):
     idx = ChunkIndex(tmp_path / "t.db", embedder=_fake_embedder,
                      embedder_ver="fake")

@@ -188,27 +188,91 @@ class ChunkIndex:
         return _rrf_fuse(routes, k)
 
     def _search_fts(self, query: str, k: int) -> list[ChunkHit]:
-        """trigram ≥3 字走 FTS；中文双字词（方案/合同类）走 LIKE 兜底。"""
+        """分级路由（09-17 实战重构，白龟湖诉讼检索暴露的整串 LIKE bug）：
+
+        - 长词(≥3字) FTS 取候选（OR + bm25 rank，向后兼容）
+        - 短词(<3字，中文双字词常态) 在候选内 AND 过滤——毫秒级精确，
+          不落全表扫；过滤后空则退回纯长词命中保召回
+        - 纯短词查询才落 LIKE：AND 一次扫完（87 万行 ~8s），空则
+          OR 兜底按命中词数排序
+        旧版混合查询（『尾款 划抵 244』）整串 `LIKE '%尾款 划抵 244%'`
+        连空格都要求匹配——永远零命中，OCR 入库的核心证据查不出来。
+        """
         terms = [t for t in query.replace('"', " ").split() if t]
-        if terms and all(len(t) >= 3 for t in terms):
-            try:
-                rows = self._db.execute(
-                    "SELECT c.path, c.seq, c.text FROM chunks_fts f"
-                    " JOIN chunks c ON c.rowid = f.rowid"
-                    " WHERE chunks_fts MATCH ? ORDER BY rank LIMIT ?",
-                    (_fts_query(query), k)).fetchall()
-                if rows:
-                    return [ChunkHit(r["path"], r["seq"], r["text"],
-                                     source="fts") for r in rows]
-            except sqlite3.OperationalError as exc:
-                _log.debug("FTS 查询失败: %s", exc)
-        # 短词兜底：暴力 LIKE（十万级 chunk 暴力扫描足够，调研共识）
-        like = f"%{query.strip()}%"
-        rows = self._db.execute(
-            "SELECT path, seq, text FROM chunks WHERE text LIKE ?"
-            " LIMIT ?", (like, k)).fetchall()
-        return [ChunkHit(r["path"], r["seq"], r["text"], source="like")
-                for r in rows]
+        if not terms:
+            return []
+        longs = [t for t in terms if len(t) >= 3]
+        shorts = [t for t in terms if len(t) < 3]
+        if longs:
+            # 有短词时候选放大 32 倍：短词过滤的空间基础（『244』这类
+            # 弱区分度长词 bm25 前排全是噪声，真目标在几十名开外）
+            hits = self._fts_match(_fts_query(" ".join(longs)),
+                                   k * (32 if shorts else 1))
+            if hits and shorts:
+                filtered = [h for h in hits
+                            if all(s in h.text for s in shorts)]
+                if filtered:  # AND 命中
+                    return filtered[:k]
+                # 快路径空 → 慢路径：path 级全词 AND-LIKE（数字弱区分
+                # 词 bm25 前排全是噪声，真目标在候选窗外；~8s 换精确）
+                slow = self._like_graduated(longs + shorts, k)
+                if slow:
+                    return slow
+                # AND 空：含短词数作相关性信号重排（稳定排序保 bm25 序）
+                hits.sort(key=lambda h: (0 - sum(
+                    s in h.text for s in shorts)))
+            if hits:  # 退回长词命中保召回（重排后）
+                return hits[:k]
+        if shorts:
+            return self._like_graduated(shorts, k)
+        return []
+
+    def _fts_match(self, match_expr: str, k: int) -> list[ChunkHit]:
+        try:
+            rows = self._db.execute(
+                "SELECT c.path, c.seq, c.text FROM chunks_fts f"
+                " JOIN chunks c ON c.rowid = f.rowid"
+                " WHERE chunks_fts MATCH ? ORDER BY rank LIMIT ?",
+                (match_expr, k)).fetchall()
+            return [ChunkHit(r["path"], r["seq"], r["text"],
+                             source="fts") for r in rows]
+        except sqlite3.OperationalError as exc:
+            _log.debug("FTS 查询失败: %s", exc)
+            return []
+
+    def _like_graduated(self, terms: list[str], k: int) -> list[ChunkHit]:
+        """path 级 AND-LIKE 聚合 → 空 OR 兜底。
+
+        块级 AND 过苛（『尾款』在标题块、『划抵 244』在正文块——
+        用户心智是文档级）：先 DISTINCT path 找全词文档（一次全表
+        扫，~8s@87 万块），再取回该文档的块按命中词数排。
+        """
+        pats = [f"%{_like_escape(t)}%" for t in terms]
+        cond = 'text LIKE ? ESCAPE "\\"'
+        paths = [r[0] for r in self._db.execute(
+            f"SELECT DISTINCT path FROM chunks WHERE "
+            f"{' AND '.join([cond] * len(pats))} LIMIT ?",
+            (*pats, k * 4)).fetchall()]
+        if paths:
+            qmarks = ",".join("?" * len(paths))
+            rows = self._db.execute(
+                f"SELECT path, seq, text FROM chunks WHERE path IN ({qmarks})",
+                paths).fetchall()
+            hits = [ChunkHit(r["path"], r["seq"], r["text"],
+                             score=float(sum(t in r["text"]
+                                             for t in terms)),
+                             source="like") for r in rows]
+            hits.sort(key=lambda h: (-h.score, h.path, h.seq))
+            return hits[:k]
+        or_rows = self._db.execute(
+            f"SELECT path, seq, text FROM chunks WHERE "
+            f"{' OR '.join([cond] * len(pats))} LIMIT ?",
+            (*pats, k * 3)).fetchall()
+        hits = [ChunkHit(r["path"], r["seq"], r["text"],
+                         score=float(sum(t in r["text"] for t in terms)),
+                         source="like") for r in or_rows]
+        hits.sort(key=lambda h: (-h.score, h.path, h.seq))
+        return hits[:k]
 
     def _search_vec(self, vec: list[float], k: int) -> list[ChunkHit]:
         import sqlite_vec
@@ -240,6 +304,11 @@ class ChunkIndex:
 def _fts_query(query: str) -> str:
     terms = [t for t in query.replace('"', " ").split() if t]
     return " OR ".join(f'"{t}"' for t in terms) or '""'
+
+
+def _like_escape(s: str) -> str:
+    """LIKE 通配符转义（配合 ESCAPE '\\'）：%/_/\\ 字面量化。"""
+    return s.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
 
 
 def _rrf_fuse(routes: dict[str, list[ChunkHit]], k: int) -> list[ChunkHit]:

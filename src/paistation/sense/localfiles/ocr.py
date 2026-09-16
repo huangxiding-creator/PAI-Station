@@ -25,6 +25,9 @@ OCR_MAX_PAGES = 40
 _CJK = r"　-鿿＀-￯"
 _CJK_GAP = re.compile(f"(?<=([{_CJK}])) +(?=[{_CJK}])")
 _EDGE_GAP = re.compile(r" ?([，。；：、！？）】」》]) ?")
+# 数字间 WinRT 间隔号（小数点误识）：『244 · 378』『2020 · 12 · 29』
+# → 小数点形态——否则检索『244.378』永远查不到（09-17 支付凭证实锤）
+_NUM_DOT = re.compile(r"(?<=\d) ?[·°。・] ?(?=\d)")
 
 _engine = None  # 进程级缓存：OcrEngine 单例
 
@@ -39,7 +42,8 @@ def squeeze_ocr_spaces(text: str) -> str:
     实测样本：『平 顶 山 市 白 龟 湖 … 合 同 金 额 为 3691 ， 409』
     → 『平顶山市白龟湖…合同金额为 3691，409』。英文单词间空格保留。
     """
-    out = _CJK_GAP.sub("", text)
+    out = _NUM_DOT.sub(".", text)
+    out = _CJK_GAP.sub("", out)
     return _EDGE_GAP.sub(r"\1", out)
 
 
