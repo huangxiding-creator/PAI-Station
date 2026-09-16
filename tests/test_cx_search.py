@@ -19,13 +19,14 @@ from paistation.cx.search import (
 
 def _db(tmp_path: Path) -> sqlite3.Connection:
     conn = sqlite3.connect(tmp_path / "i.db")
+    conn.execute("CREATE TABLE chunks (path TEXT, text TEXT)")
     conn.execute("CREATE VIRTUAL TABLE chunks_fts USING fts5(path, text)")
-    conn.executemany(
-        "INSERT INTO chunks_fts VALUES (?,?)",
-        [("E:/a/白龟湖方案.md", "白龟湖 EPC 总包合同谈判"),
-         ("E:/a/白龟湖方案.md", "白龟湖 大浪河 子项目"),
-         ("E:/a/黄藏寺.md", "黄藏寺 变电站运维"),
-         ("E:/a/日志.txt", "日常 白龟湖 提及一次")])
+    rows = [("E:/a/白龟湖方案.md", "白龟湖 EPC 总包合同谈判"),
+            ("E:/a/白龟湖方案.md", "白龟湖 大浪河 子项目"),
+            ("E:/a/黄藏寺.md", "黄藏寺 变电站运维"),
+            ("E:/a/日志.txt", "日常 白龟湖 提及一次")]
+    conn.executemany("INSERT INTO chunks VALUES (?,?)", rows)
+    conn.executemany("INSERT INTO chunks_fts VALUES (?,?)", rows)
     conn.commit()
     return conn
 
@@ -76,3 +77,43 @@ class TestSearchAndAggregate:
         conn.close()
         rows = search(tmp_path / "i.db", "白龟湖 大浪河")
         assert rows == [("E:/a/白龟湖方案.md", "白龟湖 大浪河 子项目")]
+
+
+class TestLikeFallback:
+    """trigram 下 <3 字词（如"总包"）零命中 → LIKE 兜底。"""
+
+    def test_like_pattern(self):
+        from paistation.cx.search import like_pattern
+        assert like_pattern("总包") == "%总包%"
+        assert like_pattern("a%c_") == "%a\%c\_%"
+
+    def test_search_like_and(self, tmp_path):
+        from paistation.cx.search import search_like
+        conn = _db(tmp_path)
+        conn.close()
+        rows = search_like(tmp_path / "i.db", ["白龟湖", "大浪河"])
+        assert rows == [("E:/a/白龟湖方案.md", "白龟湖 大浪河 子项目")]
+
+    def test_short_word_reaches_like_path(self, tmp_path):
+        # 全部词 <3 字 → 整个查询走 LIKE 而非 FTS（0 命中陷阱）
+        from paistation.cx.search import resolve_query
+        plan = resolve_query("总包 AI")
+        assert plan.mode == "like"
+        assert plan.like_terms == ["总包", "AI"]
+        plan2 = resolve_query("白龟湖 大浪河")
+        assert plan2.mode == "fts"
+        plan3 = resolve_query("白龟湖 AI")
+        assert plan3.mode == "mixed"
+
+    def test_run_query_mixed_filters_in_fts_set(self, tmp_path):
+        # 长词走 FTS，短词在同块内 AND 过滤（AND 语义无损）
+        from paistation.cx.search import run_query
+        conn = _db(tmp_path)
+        conn.close()
+        rows, mode = run_query(tmp_path / "i.db", "白龟湖 EPC")
+        assert mode == "fts"
+        rows, mode = run_query(tmp_path / "i.db", "白龟湖 EPC")
+        assert rows == [("E:/a/白龟湖方案.md", "白龟湖 EPC 总包合同谈判")]
+        rows, mode = run_query(tmp_path / "i.db", "白龟湖 EP")
+        assert mode == "mixed"
+        assert rows == [("E:/a/白龟湖方案.md", "白龟湖 EPC 总包合同谈判")]
