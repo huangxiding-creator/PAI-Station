@@ -79,3 +79,42 @@ def test_everything_failure_degrades(tmp_path, caplog):
     records, backend = enumerate_files(
         domain, es=EverythingEnumerator(es_exe="fake://es.exe", runner=boom))
     assert backend == "walker" and records  # 抖动降级不致命
+
+
+def test_walker_carries_birthtime_atime(tmp_path):
+    domain, root = _tree(tmp_path)
+    records = WalkerEnumerator(workers=2).enumerate(domain)
+    md = next(r for r in records if r["path"].endswith("a.md"))
+    assert md["birthtime"] > 0 and md["atime"] > 0  # 零额外 stat 成本
+
+
+def _csv5(*rows):
+    lines = ["Filename,Size,Date Modified,Date Created,Date Accessed"]
+    lines += [f'"{p}",{size},{dm},{dc},{da}' for p, size, dm, dc, da in rows]
+    return "\n".join(lines)
+
+
+def test_everything_csv5_birthtime_atime(tmp_path):
+    # 列序真机实证（2026-09-17）：Filename,Size,Date Modified,
+    # Date Created,Date Accessed
+    domain, root = _tree(tmp_path)
+    target = str(root / "docs" / "a.md")
+    es = EverythingEnumerator(
+        es_exe="fake://es.exe",
+        runner=lambda cmd, **kw: _csv5(
+            (target, 5, "2026-06-20T13:34:58.5288214",
+             "2025-01-01T08:00:00.0000000", "2026-07-01T09:00:00.0000000")))
+    rec = es.enumerate(domain)[0]
+    assert rec["birthtime"] == int(datetime(2025, 1, 1, 8, 0, 0).timestamp())
+    assert rec["atime"] == int(datetime(2026, 7, 1, 9, 0, 0).timestamp())
+
+
+def test_everything_csv3_backcompat_zero_dates(tmp_path):
+    # 老 3 列 CSV（dm-only）：birthtime/atime 缺省 0 不炸
+    domain, root = _tree(tmp_path)
+    target = str(root / "docs" / "a.md")
+    es = EverythingEnumerator(
+        es_exe="fake://es.exe",
+        runner=lambda cmd, **kw: _csv((target, 5, "2026-06-20T13:34:58.5288214")))
+    rec = es.enumerate(domain)[0]
+    assert rec["birthtime"] == 0 and rec["atime"] == 0

@@ -121,3 +121,31 @@ def test_path_normalization_no_double_write(tmp_path):
     diff = inv.apply_scan([_rec(back)])
     assert not diff.added and not diff.gone
     inv.close()
+
+
+def test_scan_stores_birthtime_atime(tmp_path):
+    """NTFS 三时间戳（K）：创建/访问时间随扫描入库，变更行与 touch 均刷新。"""
+    inv = Inventory(tmp_path / "inv.db")
+    inv.apply_scan([_rec_ts("a.txt", birthtime=900.0, atime=1100.0)])
+    row = inv._db.execute(
+        "SELECT birthtime, atime FROM files WHERE path='a.txt'").fetchone()
+    assert row["birthtime"] == 900.0 and row["atime"] == 1100.0
+    # 不带时间字段的记录缺省 0（老后端兼容）
+    inv.apply_scan([_rec("b.txt")])
+    row = inv._db.execute(
+        "SELECT birthtime FROM files WHERE path='b.txt'").fetchone()
+    assert row["birthtime"] == 0
+    # 变更行刷新
+    inv.apply_scan([_rec_ts("a.txt", size=11, mtime=1001.0, atime=1200.0)])
+    assert inv._db.execute(
+        "SELECT atime FROM files WHERE path='a.txt'").fetchone()["atime"] == 1200.0
+    # 不变行 touch 也刷新（访问时间随时在变）
+    inv.apply_scan([_rec_ts("a.txt", size=11, mtime=1001.0, atime=1300.0)])
+    assert inv._db.execute(
+        "SELECT atime FROM files WHERE path='a.txt'").fetchone()["atime"] == 1300.0
+    inv.close()
+
+
+def _rec_ts(path, size=10, mtime=1000.0, birthtime=0.0, atime=0.0):
+    return {"path": path, "size": size, "mtime": mtime, "secret": 0,
+            "birthtime": birthtime, "atime": atime}

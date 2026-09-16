@@ -64,7 +64,7 @@ def _parse_es_csv(out: str, domain: ScanDomain) -> list[dict]:
     """
     records: dict[str, dict] = {}
     for row in csv.reader(out.splitlines()):
-        if len(row) != 3:
+        if len(row) not in (3, 5):  # 3=dm-only 旧形态；5=dm+dc+da
             continue
         path, size_s, dm_s = row[0].strip(), row[1].strip(), row[2].strip()
         try:
@@ -73,9 +73,13 @@ def _parse_es_csv(out: str, domain: ScanDomain) -> list[dict]:
             continue
         if not path or path in records or not domain.covers(path):
             continue
-        records[path] = {"path": path, "size": size,
-                         "mtime": _parse_es_mtime(dm_s),
-                         "secret": int(domain.is_secret(path))}
+        rec = {"path": path, "size": size, "mtime": _parse_es_mtime(dm_s),
+               "secret": int(domain.is_secret(path)),
+               "birthtime": 0, "atime": 0}
+        if len(row) == 5:  # 列序真机实证：dm, dc(创建), da(访问)
+            rec["birthtime"] = _parse_es_mtime(row[3].strip())
+            rec["atime"] = _parse_es_mtime(row[4].strip())
+        records[path] = rec
     return list(records.values())
 
 
@@ -101,7 +105,8 @@ class EverythingEnumerator:
         for root in domain.existing_roots():
             out = self._runner(
                 [self._es, "-n", str(limit), "-csv", "-size",
-                 "-date-modified", "-date-format", "5", "-path", root, "file:"])
+                 "-date-modified", "-date-created", "-date-accessed",
+                 "-date-format", "5", "-path", root, "file:"])
             records.extend(_parse_es_csv(out, domain))
         return records
 
@@ -142,6 +147,11 @@ class WalkerEnumerator:
                                         "path": entry.path,
                                         "size": st.st_size,
                                         "mtime": int(st.st_mtime),
+                                        # Windows st_ctype=创建（3.12+ 另有
+                                        # st_birthtime，取到哪个用哪个）
+                                        "birthtime": int(getattr(
+                                            st, "st_birthtime", st.st_ctime)),
+                                        "atime": int(st.st_atime),
                                         "secret": int(domain.is_secret(entry.path)),
                                     })
                         except OSError:  # 单项失败不阻塞推进

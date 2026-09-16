@@ -22,6 +22,8 @@ CREATE TABLE IF NOT EXISTS files (
     path        TEXT PRIMARY KEY,
     size        INTEGER NOT NULL DEFAULT 0,
     mtime       REAL NOT NULL DEFAULT 0,
+    birthtime   REAL NOT NULL DEFAULT 0,
+    atime       REAL NOT NULL DEFAULT 0,
     kind        TEXT NOT NULL DEFAULT '',
     hash_full   TEXT NOT NULL DEFAULT '',
     hash_partial TEXT NOT NULL DEFAULT '',
@@ -153,6 +155,8 @@ class Inventory:
                 "path": path,
                 "size": int(rec.get("size", 0)),
                 "mtime": float(rec.get("mtime", 0)),
+                "birthtime": float(rec.get("birthtime", 0) or 0),
+                "atime": float(rec.get("atime", 0) or 0),
                 "secret": int(rec.get("secret", 0)),
                 "seen_gen": self._gen,
                 "ts": ts,
@@ -164,18 +168,21 @@ class Inventory:
             else:
                 # 未变：推进代际时间戳；顺带回写 size/mtime 自愈
                 # （旧库存里的浮点 mtime 归一为整秒，双后端口径一致）
-                self._touch(path, row["size"], row["mtime"], ts)
+                self._touch(path, row["size"], row["mtime"], ts,
+                            row["birthtime"], row["atime"])
         gone = list(known.keys())
         with self._db:  # 单事务
             self._db.executemany(
-                "INSERT INTO files(path, size, mtime, secret, seen_gen,"
-                " first_seen, last_seen, status)"
-                " VALUES(:path, :size, :mtime, :secret, :seen_gen, :ts, :ts,"
+                "INSERT INTO files(path, size, mtime, birthtime, atime,"
+                " secret, seen_gen, first_seen, last_seen, status)"
+                " VALUES(:path, :size, :mtime, :birthtime, :atime, :secret,"
+                " :seen_gen, :ts, :ts,"
                 " CASE :secret WHEN 1 THEN 'secret' ELSE 'pending' END)",
                 added)
             for row in changed:
                 self._db.execute(
-                    "UPDATE files SET size=:size, mtime=:mtime, secret=:secret,"
+                    "UPDATE files SET size=:size, mtime=:mtime,"
+                    " birthtime=:birthtime, atime=:atime, secret=:secret,"
                     " seen_gen=:seen_gen, last_seen=:ts,"
                     " status=CASE WHEN :secret=1 THEN 'secret'"
                     " WHEN status='skipped' THEN 'skipped'"
@@ -192,21 +199,29 @@ class Inventory:
             changed=[{**r, "kind": ""} for r in changed],
             gone=gone)
 
-    def _touch(self, path: str, size: int, mtime: int, ts: float) -> None:
+    def _touch(self, path: str, size: int, mtime: int, ts: float,
+               birthtime: float = 0, atime: float = 0) -> None:
         with self._db:
             self._db.execute(
-                "UPDATE files SET size=?, mtime=?, seen_gen=?, last_seen=?"
-                " WHERE path=?", (size, mtime, self._gen, ts, path))
+                "UPDATE files SET size=?, mtime=?, seen_gen=?, last_seen=?,"
+                " birthtime=CASE WHEN ?>0 THEN ? ELSE birthtime END,"
+                " atime=CASE WHEN ?>0 THEN ? ELSE atime END"
+                " WHERE path=?",
+                (size, mtime, self._gen, ts,
+                 birthtime, birthtime, atime, atime, path))
 
     def _ensure_queue_cols(self) -> None:
         """老库就地补列（2026-09-17）：priority 由 cx_prioritize 打分，
-        attempts/last_attempt 为毒文件退避计数。存量行为零变化。"""
+        attempts/last_attempt 为毒文件退避计数，birthtime/atime 为
+        NTFS 三时间戳（K）。存量行为零变化。"""
         cols = {r[1] for r in self._db.execute("PRAGMA table_info(files)")}
         for col, ddl in (
             ("priority", "REAL NOT NULL DEFAULT 0"),
             ("priority_reason", "TEXT NOT NULL DEFAULT ''"),
             ("attempts", "INTEGER NOT NULL DEFAULT 0"),
             ("last_attempt", "REAL NOT NULL DEFAULT 0"),
+            ("birthtime", "REAL NOT NULL DEFAULT 0"),
+            ("atime", "REAL NOT NULL DEFAULT 0"),
         ):
             if col not in cols:
                 self._db.execute(f"ALTER TABLE files ADD COLUMN {col} {ddl}")
