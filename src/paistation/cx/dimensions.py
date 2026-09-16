@@ -41,8 +41,8 @@ DIMENSION_FEEDS: dict[Dimension, list[str]] = {
         "shell_history", "signal_service",
     ],
     Dimension.RELATION: [
-        "wechat_db", "feishu", "wecom", "contacts", "meetings",
-        "entity_registry", "git_authors",
+        "wechat_contacts", "wechat_db", "feishu", "wecom", "contacts",
+        "meetings", "entity_registry", "git_authors",
     ],
     Dimension.OPINION: [
         "weread_notes", "bookmarks", "favorites", "chat_statements",
@@ -69,7 +69,7 @@ CURRENT_LEVELS: dict[Dimension, int] = {
 LEVEL_EVIDENCE: dict[Dimension, str] = {
     Dimension.FACT: "静态清点两波（143程序/20扩展/184Recent）+ localfiles 29.6万文件 L0-L4 提取夜跑；工作账户未采（个人消费/订阅按目的边界不采）",
     Dimension.BEHAVIOR: "主时间轴 10601 事件 8 源（活动/git/Recent/电源/浏览器三套/会议），幂等可重跑；信号流未入轴",
-    Dimension.RELATION: "实体登记表落地（25实体：8人物含邮箱锚点+17项目）；git作者已现多身份簇（ZongBaoJ/总包君/geekjourney*）待消解；微信/飞书联系人与会议参与人未入登记表",
+    Dimension.RELATION: "实体登记表 2771（person 2754：微信好友全量 2832+git 作者，wxid/微信号/邮箱强标识符进别名）+ entity_links 首类边 friend_of 2746；主人实体已跨渠道锚定（git 邮箱×微信号×wxid 三标识同体）；飞书/企微联系人与会议参与人仍缺，群成员关系未展开",
     Dimension.OPINION: "浏览器书签三套已采；微信读书划线首次拉取为空(reviews.jsonl 0条，需按weread渠道重拉)",
     Dimension.RHYTHM: "电源+活动事件可算作息（首登07:22已出首个洞察），未常态化月度产出",
     Dimension.EVOLUTION: "git 两年史+活动史纵向数据在轴，未做主题迁移/成长曲线分析",

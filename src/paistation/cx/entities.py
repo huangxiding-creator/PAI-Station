@@ -25,6 +25,16 @@ CREATE TABLE IF NOT EXISTS entities (
     updated_at   TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_entities_kind ON entities (kind);
+CREATE TABLE IF NOT EXISTS entity_links (
+    from_id    TEXT NOT NULL,
+    to_id      TEXT NOT NULL,
+    relation   TEXT NOT NULL,
+    source     TEXT NOT NULL,
+    first_seen TEXT,
+    last_seen  TEXT,
+    created_at TEXT NOT NULL,
+    PRIMARY KEY (from_id, to_id, relation, source)
+);
 """
 
 _KINDS = {"person", "org", "project", "topic"}
@@ -117,6 +127,46 @@ class EntityStore:
         )
         self._conn.commit()
         return True
+
+    def register_link(
+        self,
+        from_id: str,
+        to_id: str,
+        relation: str,
+        source: str,
+        seen_at: str | None = None,
+    ) -> bool:
+        """登记实体间关系边（只增不删，幂等）。返回是否新建。"""
+        if not (from_id and to_id and relation and source):
+            raise ValueError("关系边四要素（from/to/relation/source）不能为空")
+        now = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        row = self._conn.execute(
+            "SELECT first_seen, last_seen FROM entity_links "
+            "WHERE from_id=? AND to_id=? AND relation=? AND source=?",
+            (from_id, to_id, relation, source),
+        ).fetchone()
+        if row is None:
+            self._conn.execute(
+                "INSERT INTO entity_links VALUES (?,?,?,?,?,?,?)",
+                (from_id, to_id, relation, source, seen_at, seen_at, now),
+            )
+            self._conn.commit()
+            return True
+        first = min((x for x in [row[0], seen_at] if x), default=None)
+        last = max((x for x in [row[1], seen_at] if x), default=None)
+        self._conn.execute(
+            "UPDATE entity_links SET first_seen=?, last_seen=? "
+            "WHERE from_id=? AND to_id=? AND relation=? AND source=?",
+            (first, last, from_id, to_id, relation, source),
+        )
+        self._conn.commit()
+        return False
+
+    def link_stats(self) -> dict[str, int]:
+        rows = self._conn.execute(
+            "SELECT relation, COUNT(*) FROM entity_links GROUP BY relation"
+        ).fetchall()
+        return {str(r): int(n) for r, n in rows}
 
     def count(self, kind: str | None = None) -> int:
         if kind:
