@@ -86,3 +86,16 @@ def test_secret_file_registered_not_extracted(tmp_path):
     assert row["status"] == "secret"  # 红线：只登记不提取
     assert ix._chunks.stats()["files"] == 1
     ix.close()
+
+
+def test_metadata_only_skips_hashing(tmp_path):
+    """零解析路由不 hash：大视频/压缩包全量 hash 是纯 IO 浪费。"""
+    ix, root = _make_indexer(tmp_path)
+    big = root / "video.mp4"
+    big.write_bytes(b"\x00" * 8192)
+    r = ix.full_cycle()
+    assert r["extracted"] == 0  # mp4 = metadata-only，零解析
+    row = ix._inv._db.execute(
+        "SELECT status, hash_full FROM files WHERE path LIKE '%video%'").fetchone()
+    assert row["status"] == "ok" and row["hash_full"] == ""
+    ix.close()

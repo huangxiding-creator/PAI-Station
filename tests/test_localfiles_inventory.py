@@ -33,6 +33,18 @@ def test_mtime_change_marks_changed(tmp_path):
     inv.close()
 
 
+def test_backend_switch_mtime_fraction_tolerated(tmp_path):
+    """walker 浮点 mtime → es 整秒 mtime：不得误判「已变更」触发全量重提取。"""
+    inv = Inventory(tmp_path / "inv.db")
+    inv.apply_scan([_rec("a.txt", mtime=1000.7)])
+    diff = inv.apply_scan([_rec("a.txt", mtime=1000)])  # 整秒截断口径
+    assert not diff.changed and not diff.added
+    row = inv._db.execute(
+        "SELECT mtime FROM files WHERE path='a.txt'").fetchone()
+    assert row["mtime"] == 1000  # _touch 自愈归一
+    inv.close()
+
+
 def test_missing_file_marked_gone_not_deleted(tmp_path):
     inv = Inventory(tmp_path / "inv.db")
     inv.apply_scan([_rec("a.txt"), _rec("b.txt")])

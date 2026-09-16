@@ -2,11 +2,14 @@
 
 索引库默认落 data/local_index/（gitignored）。全量首扫属重活，
 晚间跑（既有惯例）；日常增量随时可跑（断点续跑=重开即续）。
+长跑模式 extract --loop：批次循环直至队列清空（只乘毒文件时收敛
+停止），配合 pythonw + --log-file 即为计划任务的零弹窗形态。
 """
 from __future__ import annotations
 
 import argparse
 import json
+import logging
 import sys
 from pathlib import Path
 
@@ -22,6 +25,7 @@ from paistation.sense.localfiles.signals import SignalAnalyzer
 from paistation.sense.localfiles.store import ChunkIndex
 
 DEFAULT_DIR = Path("data/local_index")
+POISON_STALL_BATCHES = 3  # 连续全失败批数上限：判定队列只剩毒文件
 
 
 def _build(args):
@@ -41,13 +45,46 @@ def _build(args):
     return Indexer(domain, inv, chunks), inv, chunks
 
 
+def _extract_loop(ix: Indexer, limit: int, log) -> dict:
+    """断点续跑长跑：批次循环至队列清空；毒文件停机判定防死循环。
+
+    pending() 含 failed 态（老 last_seen 排后），队列只剩毒文件时
+    批批全失败——连续 POISON_STALL_BATCHES 批零产出即收敛退出。
+    随时可停（Ctrl+C/杀进程）：进度全在 inventory 行级状态里。
+    """
+    total = {"processed": 0, "extracted": 0, "cached": 0, "failed": 0}
+    stall = 0
+    batch_no = 0
+    while True:
+        r = ix.extract_pending(limit)
+        if r["processed"] == 0:
+            log.info("队列清空，长跑完成：总计 %s", total)
+            break
+        batch_no += 1
+        for k in total:
+            total[k] += r[k]
+        log.info("批 %d：%s（累计 %s）", batch_no, r, total)
+        if r["extracted"] == 0 and r["cached"] == 0:
+            stall += 1
+            if stall >= POISON_STALL_BATCHES:
+                log.warning("连续 %d 批零产出：队列只剩毒文件，停机", stall)
+                break
+        else:
+            stall = 0
+    return total
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="paistation.sense.localfiles")
     ap.add_argument("--db-dir", type=Path, default=DEFAULT_DIR)
+    ap.add_argument("--log-file", type=Path, default=None,
+                    help="日志落盘（pythonw 零弹窗计划任务必带）")
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("scan", help="L0 枚举 + 清单差分（只 stat 不读内容）")
     ex = sub.add_parser("extract", help="提取待处理队列 → chunk 入库")
     ex.add_argument("--limit", type=int, default=200)
+    ex.add_argument("--loop", action="store_true",
+                    help="断点续跑长跑模式（计划任务用）")
     sub.add_parser("cycle", help="scan + extract 一键")
     sub.add_parser("status", help="索引状态统计")
     sq = sub.add_parser("search", help="混合检索")
@@ -60,6 +97,17 @@ def main(argv=None) -> int:
     ap.add_argument("--ollama", default="http://127.0.0.1:11434/api/embeddings")
     args = ap.parse_args(argv)
 
+    if args.log_file:
+        args.log_file.parent.mkdir(parents=True, exist_ok=True)
+        handlers = [logging.FileHandler(args.log_file, encoding="utf-8")]
+        if sys.stderr is not None:  # pythonw 下 stderr 为 None，跳过控制台
+            handlers.append(logging.StreamHandler(sys.stderr))
+        logging.basicConfig(
+            level=logging.INFO,
+            format="%(asctime)s %(levelname)s %(message)s",
+            handlers=handlers)
+    log = logging.getLogger("paistation.sense.localfiles.cli")
+
     if args.cmd == "status":
         inv = Inventory(args.db_dir / "inventory.db")
         print(json.dumps(inv.stats(), ensure_ascii=False, indent=2))
@@ -70,8 +118,12 @@ def main(argv=None) -> int:
         if args.cmd == "scan":
             print(json.dumps(ix.scan(), ensure_ascii=False, indent=2))
         elif args.cmd == "extract":
-            print(json.dumps(ix.extract_pending(args.limit),
-                             ensure_ascii=False, indent=2))
+            if args.loop:
+                total = _extract_loop(ix, args.limit, log)
+                print(json.dumps(total, ensure_ascii=False, indent=2))
+            else:
+                print(json.dumps(ix.extract_pending(args.limit),
+                                 ensure_ascii=False, indent=2))
         elif args.cmd == "cycle":
             print(json.dumps(ix.full_cycle(), ensure_ascii=False, indent=2))
         elif args.cmd == "search":

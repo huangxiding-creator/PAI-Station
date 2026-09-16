@@ -117,12 +117,16 @@ class Inventory:
         绝不在此层读文件内容（秘密文件也只登记元数据）。
         """
         ts = time.time() if now is None else now
+        # 入口去重（防御任何后端的重复行；冲突留首条，确定性优先）
+        uniq: dict[str, dict] = {}
+        for rec in records:
+            uniq.setdefault(str(rec["path"]), rec)
         known = {
             r["path"]: (r["size"], r["mtime"])
             for r in self._db.execute("SELECT path, size, mtime FROM files")
         }
         added, changed = [], []
-        for rec in records:
+        for rec in uniq.values():
             path = str(rec["path"])
             prev = known.pop(path, None)
             row = {
@@ -135,10 +139,12 @@ class Inventory:
             }
             if prev is None:
                 added.append(row)
-            elif prev != (row["size"], row["mtime"]):
+            elif (int(prev[0]), int(prev[1])) != (row["size"], row["mtime"]):
                 changed.append(row)  # 内容键失效 → 重新提取
             else:
-                self._touch(path, ts)  # 未变：只推进代际时间戳
+                # 未变：推进代际时间戳；顺带回写 size/mtime 自愈
+                # （旧库存里的浮点 mtime 归一为整秒，双后端口径一致）
+                self._touch(path, row["size"], row["mtime"], ts)
         gone = list(known.keys())
         with self._db:  # 单事务
             self._db.executemany(
@@ -164,11 +170,11 @@ class Inventory:
             changed=[{**r, "kind": ""} for r in changed],
             gone=gone)
 
-    def _touch(self, path: str, ts: float) -> None:
+    def _touch(self, path: str, size: int, mtime: int, ts: float) -> None:
         with self._db:
             self._db.execute(
-                "UPDATE files SET seen_gen=?, last_seen=? WHERE path=?",
-                (self._gen, ts, path))
+                "UPDATE files SET size=?, mtime=?, seen_gen=?, last_seen=?"
+                " WHERE path=?", (size, mtime, self._gen, ts, path))
 
     # ---------- 提取层接口（P1 缓存） ----------
 
@@ -186,7 +192,7 @@ class Inventory:
             " FROM files WHERE path=?", (path,)).fetchone()
         return bool(
             row and row["status"] == "ok"
-            and row["size"] == size and row["mtime"] == mtime
+            and row["size"] == size and int(row["mtime"]) == int(mtime)
             and row["parser_id"] == parser_id and row["parser_ver"] == parser_ver
             and row["hash_full"])
 

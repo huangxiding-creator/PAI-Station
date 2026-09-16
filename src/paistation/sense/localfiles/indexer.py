@@ -57,10 +57,11 @@ class Indexer:
             path = row["path"]
             kind, parser_id = self._triage.classify(path)
             if parser_id == "metadata-only":
-                # 零解析路由：元数据登记即可，不产文本块
-                _, hash_full = _safe_hashes(path)
+                # 零解析路由：登记即完成，不产文本块。hash 对无文本
+                # 路由没有缓存价值，大视频全量 hash 是纯 IO 浪费——
+                # size+mtime 变更走 pending→重新登记（stat 级成本）
                 self._inv.mark_extracted(
-                    path, "metadata-only", "1", hash_full, kind,
+                    path, "metadata-only", "1", "", kind,
                     status="ok")
                 cached += 1
                 continue

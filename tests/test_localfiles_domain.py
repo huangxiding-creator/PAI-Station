@@ -46,3 +46,13 @@ def test_secret_patterns_path_only(tmp_path):
 def test_existing_roots_filters_missing(tmp_path):
     domain = ScanDomain(includes=[str(tmp_path), "Z:/不存在盘"])
     assert domain.existing_roots() == [str(tmp_path)]
+
+
+def test_existing_roots_separator_canonical():
+    """expanduser('~/x') 保留 '/x' 正斜杠——必须 normpath 归一，
+    否则 walker 与 es.exe 纯反斜杠输出零交集（09-16 真机翻车实录）。"""
+    import sys
+    domain = ScanDomain(includes=["~/Desktop"])
+    (root,) = domain.existing_roots()
+    if sys.platform == "win32":
+        assert "/" not in root and "\\" in root

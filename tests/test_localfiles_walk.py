@@ -1,4 +1,6 @@
 """L0 枚举：walker 真目录 + es.exe 可注入 runner + 自动降级。"""
+from datetime import datetime
+
 from paistation.sense.localfiles.domain import ScanDomain
 from paistation.sense.localfiles.walk import EverythingEnumerator, WalkerEnumerator, enumerate_files
 
@@ -28,14 +30,24 @@ def test_walker_enumerates_and_prunes(tmp_path):
     assert md["size"] == 5 and md["mtime"] > 0
 
 
+def _csv(*rows):
+    lines = ["Filename,Size,Date Modified"]
+    lines += [f'"{p}",{size},{dm}' for p, size, dm in rows]
+    return "\n".join(lines)
+
+
 def test_everything_backend_with_fake_runner(tmp_path):
     domain, root = _tree(tmp_path)
     target = str(root / "docs" / "a.md")
     es = EverythingEnumerator(
-        es_exe="fake://es.exe", runner=lambda cmd, **kw: f'"{target}"\n')
+        es_exe="fake://es.exe",
+        runner=lambda cmd, **kw: _csv((target, 5, "2026-06-20T13:34:58.5288214")))
     assert es.available
     records = es.enumerate(domain)
     assert [r["path"] for r in records] == [target]
+    rec = records[0]
+    assert rec["size"] == 5  # CSV 列直取，零 stat
+    assert rec["mtime"] == int(datetime(2026, 6, 20, 13, 34, 58).timestamp())
 
 
 def test_everything_filters_uncovered_paths(tmp_path):
@@ -43,7 +55,9 @@ def test_everything_filters_uncovered_paths(tmp_path):
     outside = str(tmp_path / "elsewhere" / "x.md")
     es = EverythingEnumerator(
         es_exe="fake://es.exe",
-        runner=lambda cmd, **kw: f'"{str(root / "c.txt")}"\n"{outside}"\n')
+        runner=lambda cmd, **kw: _csv(
+            (str(root / "c.txt"), 5, "2026-06-20T13:34:58.5288214"),
+            (outside, 5, "2026-06-20T13:34:58.5288214")))
     records = es.enumerate(domain)
     assert [r["path"] for r in records] == [str(root / "c.txt")]
 

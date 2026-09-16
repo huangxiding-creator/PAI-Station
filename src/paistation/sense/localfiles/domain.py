@@ -72,7 +72,10 @@ class ScanDomain:
         roots = []
         for root in self.includes:
             if os.path.isdir(root):
-                roots.append(root)
+                # normpath 归一分隔符：expanduser('~/Desktop') 会保留
+                # '/Desktop' 正斜杠，与 es.exe 纯反斜杠输出零交集——
+                # 双后端必须同一规范形（Windows=反斜杠）
+                roots.append(os.path.normpath(root))
             else:
                 _log.debug("扫描根不存在，跳过: %s", root)
         return roots
