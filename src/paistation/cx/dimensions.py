@@ -42,6 +42,7 @@ DIMENSION_FEEDS: dict[Dimension, list[str]] = {
     ],
     Dimension.RELATION: [
         "wechat_db", "feishu", "wecom", "contacts", "meetings",
+        "entity_registry", "git_authors",
     ],
     Dimension.OPINION: [
         "weread_notes", "bookmarks", "favorites", "chat_statements",
@@ -59,7 +60,7 @@ DIMENSION_FEEDS: dict[Dimension, list[str]] = {
 CURRENT_LEVELS: dict[Dimension, int] = {
     Dimension.FACT: 2,
     Dimension.BEHAVIOR: 2,
-    Dimension.RELATION: 1,
+    Dimension.RELATION: 2,
     Dimension.OPINION: 1,
     Dimension.RHYTHM: 1,
     Dimension.EVOLUTION: 1,
@@ -67,8 +68,8 @@ CURRENT_LEVELS: dict[Dimension, int] = {
 
 LEVEL_EVIDENCE: dict[Dimension, str] = {
     Dimension.FACT: "静态清点两波（143程序/20扩展/184Recent）+ localfiles 29.6万文件 L0-L4 提取夜跑；账户/订阅未采",
-    Dimension.BEHAVIOR: "活动时间线/git/Recent/电源四源入主时间轴（幂等可重跑），9298 事件可查询；浏览器史已采未入轴",
-    Dimension.RELATION: "微信21库/飞书530万字/会议记录数据在位，尚未做实体消解与关系图谱",
+    Dimension.BEHAVIOR: "主时间轴 10601 事件 8 源（活动/git/Recent/电源/浏览器三套/会议），幂等可重跑；信号流未入轴",
+    Dimension.RELATION: "实体登记表落地（25实体：8人物含邮箱锚点+17项目）；git作者已现多身份簇（ZongBaoJ/总包君/geekjourney*）待消解；微信/飞书联系人与会议参与人未入登记表",
     Dimension.OPINION: "浏览器书签三套已采；微信读书划线首次拉取为空(reviews.jsonl 0条，需按weread渠道重拉)",
     Dimension.RHYTHM: "电源+活动事件可算作息（首登07:22已出首个洞察），未常态化月度产出",
     Dimension.EVOLUTION: "git 两年史+活动史纵向数据在轴，未做主题迁移/成长曲线分析",

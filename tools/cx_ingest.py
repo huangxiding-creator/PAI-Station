@@ -20,17 +20,26 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 
 from paistation.cx.events import EventEnvelope  # noqa: E402
+from paistation.cx.ingest_browser import (  # noqa: E402
+    parse_360_history,
+    parse_chromium_history,
+)
 from paistation.cx.ingest_sources import (  # noqa: E402
     CREATE_NO_WINDOW,
     collect_git_events,
     find_git_repos,
     parse_activities_jsonl,
+    parse_meetings_json,
     parse_power_json,
     parse_recent_json,
 )
 from paistation.cx.timeline import TimelineStore  # noqa: E402
 
 ACTIVITIES_JSONL = REPO / "SELF_PROFILE/data/activity_20260916/activities.jsonl"
+MEETINGS_JSON = REPO / "SELF_PROFILE/data/tencent_meetings_20260916/ended_meetings.json"
+CHROME_DB = REPO / "SELF_PROFILE/data/chrome_history.db"
+EDGE_DB = REPO / "SELF_PROFILE/data/edge_history.db"
+P360_JSON = REPO / "SELF_PROFILE/data/p360_history_final.json"
 CACHE_DIR = REPO / "data/cx/collect_cache"
 
 _PS_RECENT = (
@@ -84,6 +93,19 @@ def load_events(sources: list[str], refresh: bool) -> dict[str, list[EventEnvelo
     if "power" in sources:
         text = _ps_collect(_PS_POWER, CACHE_DIR / "power_events.json", refresh)
         out["power"] = parse_power_json(text)
+    if "browser" in sources:
+        evs: list[EventEnvelope] = []
+        if CHROME_DB.exists():
+            evs.extend(parse_chromium_history(CHROME_DB, "browser_chrome"))
+        if EDGE_DB.exists():
+            evs.extend(parse_chromium_history(EDGE_DB, "browser_edge"))
+        if P360_JSON.exists():
+            evs.extend(parse_360_history(P360_JSON.read_text(encoding="utf-8")))
+        out["browser"] = evs
+    if "meetings" in sources and MEETINGS_JSON.exists():
+        out["meetings"] = parse_meetings_json(
+            MEETINGS_JSON.read_text(encoding="utf-8")
+        )
     return out
 
 

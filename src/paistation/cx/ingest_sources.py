@@ -198,6 +198,32 @@ def parse_power_json(text: str) -> list[EventEnvelope]:
     return events
 
 
+# -- 腾讯会议（ended_meetings.json 导出） ------------------------------------
+
+def parse_meetings_json(text: str) -> list[EventEnvelope]:
+    data = json.loads(text)
+    events: list[EventEnvelope] = []
+    for m in data.get("meetings", []):
+        start = _parse_dt(m.get("start_time"))
+        if start is None:
+            continue
+        subject = (m.get("subject") or "未命名会议")[:100]
+        events.append(
+            EventEnvelope(
+                source="tencent_meeting",
+                source_id=str(
+                    m.get("meeting_id") or m.get("meeting_code")
+                    or f"{subject}|{m.get('start_time')}"
+                ),
+                start=start,
+                end=_parse_dt(m.get("end_time")),
+                type="meeting.attend",
+                payload={"subject": subject, "code": m.get("meeting_code", "")},
+            )
+        )
+    return events
+
+
 # -- 工具 -------------------------------------------------------------------
 
 def _parse_dt(value) -> datetime | None:
