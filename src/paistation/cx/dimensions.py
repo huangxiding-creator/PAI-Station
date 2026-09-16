@@ -23,7 +23,7 @@ LEVEL_NAMES = {
 
 
 class Dimension(str, Enum):
-    FACT = "fact"            # 事实：有什么（装机/账户/文件/订阅）
+    FACT = "fact"            # 事实：有什么（装机/工作账户/文件；个人消费不入，目的边界 2026-09-16）
     BEHAVIOR = "behavior"    # 行为：做什么（应用流/文档/命令行/浏览）
     RELATION = "relation"    # 关系：和谁（人/组织图谱）
     OPINION = "opinion"      # 观点：信什么（划线/收藏/发言）
@@ -34,7 +34,7 @@ class Dimension(str, Enum):
 DIMENSION_FEEDS: dict[Dimension, list[str]] = {
     Dimension.FACT: [
         "static_inventory", "localfiles_index", "installed_apps",
-        "accounts", "subscriptions",
+        "work_accounts",
     ],
     Dimension.BEHAVIOR: [
         "activities_cache", "recent_lnk", "git", "browser_history",
@@ -67,7 +67,7 @@ CURRENT_LEVELS: dict[Dimension, int] = {
 }
 
 LEVEL_EVIDENCE: dict[Dimension, str] = {
-    Dimension.FACT: "静态清点两波（143程序/20扩展/184Recent）+ localfiles 29.6万文件 L0-L4 提取夜跑；账户/订阅未采",
+    Dimension.FACT: "静态清点两波（143程序/20扩展/184Recent）+ localfiles 29.6万文件 L0-L4 提取夜跑；工作账户未采（个人消费/订阅按目的边界不采）",
     Dimension.BEHAVIOR: "主时间轴 10601 事件 8 源（活动/git/Recent/电源/浏览器三套/会议），幂等可重跑；信号流未入轴",
     Dimension.RELATION: "实体登记表落地（25实体：8人物含邮箱锚点+17项目）；git作者已现多身份簇（ZongBaoJ/总包君/geekjourney*）待消解；微信/飞书联系人与会议参与人未入登记表",
     Dimension.OPINION: "浏览器书签三套已采；微信读书划线首次拉取为空(reviews.jsonl 0条，需按weread渠道重拉)",
