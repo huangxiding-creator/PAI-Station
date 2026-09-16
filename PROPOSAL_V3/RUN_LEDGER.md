@@ -108,6 +108,8 @@
 
 | 09-16 | ✅ **wechat-claude-code 桥部署（用户指令：读开源项目装 skill+扫码绑定）**：684★ MIT 项目先审后跑——端点硬锁微信官方 `ilinkai.weixin.qq.com`（ilink Bot API 扫码绑 bot，非协议破解；自带 2.5s 节流+30s 熔断）→ 装 `~/.claude/skills/wechat-claude-code/`（35 依赖+TS 构建）→ Windows 三坑处置：daemon.sh 只认 Darwin/Linux 改手动 nohup 守护（pid 落 ~/.wechat-claude-code/）、PATH 钉 VSCode 扩展原生 claude.exe（npm shim 是坏 .cmd）、provider.ts 补 windowsHide 防每消息闪窗 → `printf 管道 | setup` 免交互扫码（账号 d921257961a6@im.bot 绑定成功）→ **全链实测**：用户微信消息→claude 查询→回复推送微信（sendmessage×2 零错误）→ 会话 cwd 盖 config 坑修复（sessions/*.json 改 E:\AI-Station+重启）；渠道记忆 wechat-cc-bridge-channel 沉淀 | `~/.claude/skills/wechat-claude-code/`、`~/.wechat-claude-code/`（库外） |
 
+| 09-16 | ✅ **wechat-cc 桥自启+看护双层**（用户确认）：`tools/wechat_cc_bridge_autostart.py` 幂等启动器（wmic 按命令行探测在跑即退出/扩展版本 glob 择新钉 PATH/DETACHED+CREATE_NO_WINDOW 零弹窗/pythonw 载体）；HKCU Run 键登录即启（schtasks onlogon 拒绝访问的免管理员替代，Ollama 同款形态）+ schtasks watchdog 每 5 分钟；实测杀→自动拉活（pid 27260）+复跑幂等（实例恒 1）+轮询恢复 | `tools/wechat_cc_bridge_autostart.py`、HKCU\...\Run、schtasks watchdog |
+
 ## 红线备忘（每轮心跳自查）
 
 项目外全盘只读 ｜ 账号安全第一 ｜ secrets 不入库 ｜ 00 愿景/付费语料不上公开仓 ｜ 只增不删+Git 留痕 ｜ 每环节调研≥20 ｜ 进化提案永不自批 ｜ commit 带 Co-Authored-By
