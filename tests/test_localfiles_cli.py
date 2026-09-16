@@ -11,7 +11,7 @@ class _FakeIx:
         self._script = list(script)
         self.calls = 0
 
-    def extract_pending(self, limit):
+    def extract_pending(self, limit, workers=None):
         self.calls += 1
         return self._script.pop(0) if self._script else {"processed": 0}
 

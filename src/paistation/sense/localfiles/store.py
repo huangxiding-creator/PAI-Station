@@ -74,7 +74,15 @@ class ChunkIndex:
 
     def upsert_file(self, path: str, texts: list[str], logic_ver: str,
                     file_gen: int = 0) -> dict:
-        """整文件替换事务：旧块向量可复用则复用，只嵌真正的新块。"""
+        """整文件替换事务：旧块向量可复用则复用，只嵌真正的新块。
+
+        rowid 配对（2026-09-17 根治入库瓶颈）：chunks 与 chunks_fts
+        同 rowid 双写，删除走 rowid B 树直击。FTS5 虚表列无索引——
+        旧版 `DELETE FROM chunks_fts WHERE path=?` 是 86 万行全表扫
+        （真机实测 73 块文件 2.12s，29ms/块全烧在删旧行），rowid
+        直击后整文件替换回到毫秒级。存量两表 rowid 失配由
+        rebuild_fts_prefix(v2) 一次性同步。
+        """
         from paistation.sense.localfiles.inventory import _norm_path
         path = _norm_path(path)  # 主键前必经：与 files 表同形态
         old = {
@@ -82,12 +90,19 @@ class ChunkIndex:
             for r in self._db.execute(
                 "SELECT chunk_id, embedding_status FROM chunks WHERE path=?",
                 (path,))}
+        old_rids = [r[0] for r in self._db.execute(
+            "SELECT rowid FROM chunks WHERE path=?", (path,))]
         new = [(seq, _chunk_id(t), t) for seq, t in enumerate(texts)]
         now = time.time()
         embedded = reused = 0
         with self._db:
+            if old_rids:
+                self._db.executemany(
+                    "DELETE FROM chunks_fts WHERE rowid=?",
+                    [(r,) for r in old_rids])
             self._db.execute("DELETE FROM chunks WHERE path=?", (path,))
-            self._db.execute("DELETE FROM chunks_fts WHERE path=?", (path,))
+            rid = self._db.execute(
+                "SELECT COALESCE(MAX(rowid), 0) FROM chunks").fetchone()[0]
             for seq, cid, text in new:
                 status = "none"
                 if self._embedder is not None:
@@ -96,14 +111,17 @@ class ChunkIndex:
                         embedded += 1
                     else:
                         reused += 1
+                rid += 1
                 self._db.execute(
-                    "INSERT INTO chunks(chunk_id, path, seq, text, logic_ver,"
-                    " embedding_status, file_gen, updated_at)"
-                    " VALUES(?,?,?,?,?,?,?,?)",
-                    (cid, path, seq, text, logic_ver, status, file_gen, now))
+                    "INSERT INTO chunks(rowid, chunk_id, path, seq, text,"
+                    " logic_ver, embedding_status, file_gen, updated_at)"
+                    " VALUES(?,?,?,?,?,?,?,?,?)",
+                    (rid, cid, path, seq, text, logic_ver, status,
+                     file_gen, now))
                 self._db.execute(
-                    "INSERT INTO chunks_fts(text, path, seq) VALUES(?,?,?)",
-                    (f"[{path}] {text}", path, seq))  # Contextual 元前缀
+                    "INSERT INTO chunks_fts(rowid, text, path, seq)"
+                    " VALUES(?,?,?,?)",
+                    (rid, f"[{path}] {text}", path, seq))  # Contextual 元前缀
         return {"chunks": len(texts), "embedded": embedded, "reused": reused}
 
     def _embed_chunk(self, cid: str, text: str,
@@ -176,7 +194,7 @@ class ChunkIndex:
             try:
                 rows = self._db.execute(
                     "SELECT c.path, c.seq, c.text FROM chunks_fts f"
-                    " JOIN chunks c ON c.path = f.path AND c.seq = f.seq"
+                    " JOIN chunks c ON c.rowid = f.rowid"
                     " WHERE chunks_fts MATCH ? ORDER BY rank LIMIT ?",
                     (_fts_query(query), k)).fetchall()
                 if rows:
@@ -244,17 +262,21 @@ def _rrf_fuse(routes: dict[str, list[ChunkHit]], k: int) -> list[ChunkHit]:
 
 
 def rebuild_fts_prefix(conn: sqlite3.Connection, batch: int = 50_000) -> int:
-    """存量 fts 一次性补 Contextual 元前缀（新表分批重建+原子换名）。
+    """存量 fts 一次性重建（新表分批重建+原子换名）。
 
-    前缀路径归一为正斜杠形态（trigram 分隔符形态统一，查得中）。
-    重建期间旧表可查（换名一瞬完成切换）；meta.fts_prefix 标记幂等，
-    二跑零成本。返回重建行数。
+    v2（2026-09-17）：fts 行显式携带 chunks 同款 rowid——rowid 配对
+    后 upsert 的整文件替换走 B 树直击，根治 `DELETE WHERE path=?`
+    86 万行全表扫的入库瓶颈。前缀路径归一为正斜杠形态。重建期间
+    旧表可查（换名一瞬完成切换）；meta.fts_prefix 标记幂等，二跑
+    零成本。返回重建行数。
     """
     from paistation.sense.localfiles.inventory import _norm_path
     conn.execute(
         "CREATE TABLE IF NOT EXISTS meta(key TEXT PRIMARY KEY,"
         " value TEXT NOT NULL)")
-    if conn.execute("SELECT 1 FROM meta WHERE key='fts_prefix'").fetchone():
+    if conn.execute(
+            "SELECT 1 FROM meta WHERE key='fts_prefix'"
+            " AND value='v2-rowid'").fetchone():
         return 0
     conn.execute(
         "CREATE VIRTUAL TABLE IF NOT EXISTS chunks_fts_new USING fts5("
@@ -271,13 +293,15 @@ def rebuild_fts_prefix(conn: sqlite3.Connection, batch: int = 50_000) -> int:
             else rows[-1][0]
         with conn:
             conn.executemany(
-                "INSERT INTO chunks_fts_new(text, path, seq) VALUES(?,?,?)",
-                [(f"[{_norm_path(p)}] {t}", _norm_path(p), s)
-                 for _, p, s, t in rows])
+                "INSERT INTO chunks_fts_new(rowid, text, path, seq)"
+                " VALUES(?,?,?,?)",
+                [(rid, f"[{_norm_path(p)}] {t}", _norm_path(p), s)
+                 for rid, p, s, t in rows])
         total += len(rows)
     with conn:  # 原子换名：DROP 旧 + 换名 + 打标一事务
         conn.execute("DROP TABLE IF EXISTS chunks_fts")
         conn.execute("ALTER TABLE chunks_fts_new RENAME TO chunks_fts")
         conn.execute(
-            "INSERT OR REPLACE INTO meta(key, value) VALUES('fts_prefix','v1')")
+            "INSERT OR REPLACE INTO meta(key, value)"
+            " VALUES('fts_prefix','v2-rowid')")
     return total

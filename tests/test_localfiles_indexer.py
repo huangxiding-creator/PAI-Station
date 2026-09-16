@@ -99,3 +99,42 @@ def test_metadata_only_skips_hashing(tmp_path):
         "SELECT status, hash_full FROM files WHERE path LIKE '%video%'").fetchone()
     assert row["status"] == "ok" and row["hash_full"] == ""
     ix.close()
+
+
+def test_parallel_batch_all_ok(tmp_path):
+    """并行满水：一批多文件全提取，语义与串行一致。"""
+    ix, root = _make_indexer(tmp_path)
+    for i in range(12):
+        (root / f"p{i}.txt").write_text(f"内容{i}" * 20, encoding="utf-8")
+    ix.scan()
+    r = ix.extract_pending(200, workers=4)
+    assert r["extracted"] == 12 and r["failed"] == 0
+    assert len(ix._inv.search_paths("p", limit=20)) >= 12
+    ix.close()
+
+
+def test_hung_file_times_out_without_blocking_batch(
+        tmp_path, monkeypatch):
+    """滚动窗口收割：一个挂死文件只烧自己的超时预算，其余照常入库
+    （头部收割 + fut.cancel，槽位不连坐）。"""
+    import paistation.sense.localfiles.indexer as ixmod
+    monkeypatch.setattr(ixmod, "EXTRACT_TIMEOUT_S", 0.4)
+
+    real_extract = ixmod.extract  # 先留原函数，补丁后再引用
+
+    def fake_extract(path, kind, parser_id):
+        import time as _t
+        if "hang" in path:
+            _t.sleep(5.0)  # 远超预算
+        return real_extract(path, kind, parser_id)
+
+    monkeypatch.setattr(ixmod, "extract", fake_extract)
+    ix, root = _make_indexer(tmp_path)
+    for i in range(6):
+        (root / f"ok{i}.txt").write_text(f"正常{i}" * 10, encoding="utf-8")
+    (root / "hang.txt").write_text("挂死文件", encoding="utf-8")
+    ix.scan()
+    r = ix.extract_pending(200, workers=4)
+    assert r["failed"] == 1
+    assert r["extracted"] == 6  # 挂死者不连坐
+    ix.close()

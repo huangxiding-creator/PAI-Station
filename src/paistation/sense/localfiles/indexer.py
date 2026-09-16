@@ -2,12 +2,19 @@
 
 缓存阶梯（护城河）：size+mtime 未变 → 跳过（零 IO）；变了 →
 partial hash 4096B 初筛 → full hash 定案 → parser 指纹比对，命中
-即复用旧提取结果只重切分。原生挂死护栏：线程池 + 单文件超时，
-超时标记 failed-timeout 不阻塞批次（Tika fork 隔离的进程内平替）。
+即复用旧提取结果只重切分。
+
+并行收割（2026-09-17 根治单文件串行）：滚动窗口满水提交——窗口=
+工人数，每个提交立即有线程开工；hash 阶梯（GIL 释放）与 pymupdf
+解析在多线程下真并行。单文件超时只占用自己那个槽位（头部收割，
+挂死者至多烧掉自己 30s 预算），绝不阻塞批次（Tika fork 隔离的
+线程内平替）。DB 写入全在主线程收割侧——SQLite 单写者纪律。
 """
 from __future__ import annotations
 
 import logging
+import time
+from collections import deque
 from concurrent.futures import ThreadPoolExecutor
 from concurrent.futures import TimeoutError as FutTimeout
 
@@ -22,7 +29,7 @@ from paistation.sense.localfiles.walk import enumerate_files
 _log = logging.getLogger("paistation.sense.localfiles.indexer")
 
 EXTRACT_TIMEOUT_S = 30.0
-EXTRACT_WORKERS = 4
+EXTRACT_WORKERS = 8
 
 
 class Indexer:
@@ -50,10 +57,13 @@ class Indexer:
 
     # ---------- L1 提取 → P2 入库 ----------
 
-    def extract_pending(self, limit: int = 200) -> dict:
+    def extract_pending(self, limit: int = 200, workers: int | None = None
+                        ) -> dict:
         rows = self._inv.pending(limit)
         done = failed = cached = 0
         head = rows[0]["priority"] if rows else None
+        # 主线程预筛：零成本行（metadata-only / 缓存命中）不进池
+        jobs: list[tuple] = []
         for row in rows:
             path = row["path"]
             kind, parser_id = self._triage.classify(path)
@@ -62,67 +72,67 @@ class Indexer:
                 # 路由没有缓存价值，大视频全量 hash 是纯 IO 浪费——
                 # size+mtime 变更走 pending→重新登记（stat 级成本）
                 self._inv.mark_extracted(
-                    path, "metadata-only", "1", "", kind,
-                    status="ok")
+                    path, "metadata-only", "1", "", kind, status="ok")
                 cached += 1
-                continue
-            if self._inv.cache_hit(path, row["size"], row["mtime"],
-                                   parser_id, _parser_ver(parser_id)):
-                cached += 1
-                continue
-            outcome = self._extract_one(path, kind, parser_id, row)
-            if outcome == "ok":
-                done += 1
-            elif outcome == "cached":
+            elif self._inv.cache_hit(path, row["size"], row["mtime"],
+                                     parser_id, _parser_ver(parser_id)):
                 cached += 1
             else:
+                jobs.append((row["path"], kind, parser_id,
+                             row["hash_partial"], row["hash_full"],
+                             row["parser_id"], row["parser_ver"]))
+        # 滚动窗口满水收割：窗口=工人数 → 提交即开工；头部收割 →
+        # 挂死文件至多烧掉自己的超时预算，其余槽位照常产出
+        w = workers or EXTRACT_WORKERS
+        embedder_ver = self._chunks.stats()["embedder"]  # 每批一次
+        inflight: deque = deque()  # (fut, deadline, ctx)
+        ji = 0
+        while ji < len(jobs) or inflight:
+            while ji < len(jobs) and len(inflight) < w:
+                path, kind, parser_id, hp, hf, old_pid, old_pv = jobs[ji]
+                ji += 1
+                inflight.append((
+                    self._pool.submit(_extract_job, path, kind, parser_id,
+                                      hp, hf, old_pid, old_pv),
+                    time.monotonic() + EXTRACT_TIMEOUT_S,
+                    (path, kind, parser_id)))
+            fut, deadline, (path, kind, parser_id) = inflight[0]
+            try:
+                res = fut.result(timeout=max(deadline - time.monotonic(),
+                                             0.05))
+            except FutTimeout:
+                fut.cancel()
+                _log.warning("提取超时标记失败: %s", path)
+                self._inv.mark_extracted(path, parser_id, "?", "", kind,
+                                         status="failed")
                 failed += 1
+            except (ExtractionError, OSError) as exc:
+                _log.info("提取失败（毒文件常态）: %s", exc)
+                self._inv.mark_extracted(path, parser_id, "?", "", kind,
+                                         status="failed")
+                failed += 1
+            else:
+                if res["status"] == "cached":  # hash 阶梯复活
+                    self._inv.mark_extracted(
+                        path, res["parser_id"], res["parser_ver"],
+                        res["full"], res["kind"],
+                        hash_partial=res["partial"])
+                    cached += 1
+                else:  # ok
+                    self._inv.mark_extracted(
+                        path, res["parser_id"], res["parser_ver"],
+                        res["full"], res["kind"],
+                        hash_partial=res["partial"])
+                    if res["texts"]:
+                        self._chunks.upsert_file(
+                            path, res["texts"],
+                            f"{CHUNKER_VER}+{embedder_ver}",
+                            file_gen=self._inv.generation)
+                    done += 1
+            inflight.popleft()
         return {"processed": len(rows), "extracted": done,
                 "cached": cached, "failed": failed,
                 "queue_priority_head": head}
-
-    def _extract_one(self, path: str, kind: str, parser_id: str,
-                     row) -> str:
-        """单文件：hash 阶梯前置 → 未变零解析复活；变了才提取。"""
-        # ① partial 4KB 初筛：头部已变 → 必然内容变，直接进提取
-        partial = _safe_partial(path)
-        if (partial and row["hash_partial"] == partial
-                and row["hash_full"]):
-            # ② 头部未变 → full hash 定案（touch 场景零解析复活）
-            _, full = _safe_hashes(path)
-            if (full and row["hash_full"] == full
-                    and row["parser_id"] == parser_id
-                    and row["parser_ver"] == _parser_ver(parser_id)):
-                self._inv.mark_extracted(path, parser_id,
-                                         _parser_ver(parser_id), full, kind,
-                                         hash_partial=partial)
-                return "cached"
-
-        fut = self._pool.submit(extract, path, kind, parser_id)
-        try:
-            doc = fut.result(timeout=EXTRACT_TIMEOUT_S)
-        except FutTimeout:
-            fut.cancel()
-            _log.warning("提取超时标记失败: %s", path)
-            self._inv.mark_extracted(path, parser_id, "?", "", kind,
-                                     status="failed")
-            return "failed"
-        except ExtractionError as exc:
-            _log.info("提取失败（毒文件常态）: %s", exc)
-            self._inv.mark_extracted(path, parser_id, "?", "", kind,
-                                     status="failed")
-            return "failed"
-
-        _, full = _safe_hashes(path)
-        self._inv.mark_extracted(path, doc.parser_id, doc.parser_ver,
-                                 full, doc.kind, hash_partial=partial)
-        embedder_ver = self._chunks.stats()["embedder"]
-        texts = chunk_text(doc.text) if doc.text else []
-        if texts:
-            self._chunks.upsert_file(
-                path, texts, f"{CHUNKER_VER}+{embedder_ver}",
-                file_gen=self._inv.generation)
-        return "ok"
 
     # ---------- 组合 ----------
 
@@ -142,6 +152,32 @@ class Indexer:
 
 
 _PARSER_VERS: dict[str, str] = {}
+
+
+def _extract_job(path: str, kind: str, parser_id: str, row_hp: str,
+                 row_hf: str, old_pid: str, old_pv: str) -> dict:
+    """worker 纯函数（线程体）：hash 阶梯 + 解析 + 切分，绝不碰 DB。
+
+    返回 {"status": "ok"/"cached", ...}；解析失败以 ExtractionError
+    抛给收割侧统一记 failed。old_pid/old_pv 是行内旧指纹，供阶梯
+    比对（touch 场景零解析复活）。
+    """
+    # ① partial 4KB 初筛：头部已变 → 必然内容变，直接进提取
+    partial = _safe_partial(path)
+    if (partial and row_hp == partial and row_hf):
+        # ② 头部未变 → full hash 定案（touch 场景零解析复活）
+        _, full = _safe_hashes(path)
+        if (full and row_hf == full and old_pid == parser_id
+                and old_pv == _parser_ver(parser_id)):
+            return {"status": "cached", "parser_id": parser_id,
+                    "parser_ver": _parser_ver(parser_id), "full": full,
+                    "partial": partial, "kind": kind, "texts": None}
+    doc = extract(path, kind, parser_id)
+    _, full = _safe_hashes(path)
+    texts = chunk_text(doc.text) if doc.text else []
+    return {"status": "ok", "parser_id": doc.parser_id,
+            "parser_ver": doc.parser_ver, "full": full,
+            "partial": partial, "kind": doc.kind, "texts": texts}
 
 
 def _parser_ver(parser_id: str) -> str:

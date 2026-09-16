@@ -45,7 +45,8 @@ def _build(args):
     return Indexer(domain, inv, chunks), inv, chunks
 
 
-def _extract_loop(ix: Indexer, limit: int, log) -> dict:
+def _extract_loop(ix: Indexer, limit: int, log,
+                  workers: int | None = None) -> dict:
     """断点续跑长跑：批次循环至队列清空；毒文件停机判定防死循环。
 
     pending() 含 failed 态（老 last_seen 排后），队列只剩毒文件时
@@ -56,7 +57,7 @@ def _extract_loop(ix: Indexer, limit: int, log) -> dict:
     stall = 0
     batch_no = 0
     while True:
-        r = ix.extract_pending(limit)
+        r = ix.extract_pending(limit, workers=workers)
         if r["processed"] == 0:
             log.info("队列清空，长跑完成：总计 %s", total)
             break
@@ -83,6 +84,8 @@ def main(argv=None) -> int:
     sub.add_parser("scan", help="L0 枚举 + 清单差分（只 stat 不读内容）")
     ex = sub.add_parser("extract", help="提取待处理队列 → chunk 入库")
     ex.add_argument("--limit", type=int, default=200)
+    ex.add_argument("--workers", type=int, default=None,
+                    help="并行工人数（默认 8；滚动窗口满水收割）")
     ex.add_argument("--loop", action="store_true",
                     help="断点续跑长跑模式（计划任务用）")
     sub.add_parser("cycle", help="scan + extract 一键")
@@ -131,11 +134,13 @@ def main(argv=None) -> int:
             print(json.dumps(ix.scan(), ensure_ascii=False, indent=2))
         elif args.cmd == "extract":
             if args.loop:
-                total = _extract_loop(ix, args.limit, log)
+                total = _extract_loop(ix, args.limit, log,
+                                      workers=args.workers)
                 print(json.dumps(total, ensure_ascii=False, indent=2))
             else:
-                print(json.dumps(ix.extract_pending(args.limit),
-                                 ensure_ascii=False, indent=2))
+                print(json.dumps(
+                    ix.extract_pending(args.limit, workers=args.workers),
+                    ensure_ascii=False, indent=2))
         elif args.cmd == "cycle":
             print(json.dumps(ix.full_cycle(), ensure_ascii=False, indent=2))
         elif args.cmd == "search":

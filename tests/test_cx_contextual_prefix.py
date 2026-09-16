@@ -62,3 +62,49 @@ def test_rebuild_legacy_fts_idempotent(tmp_path):
     assert got["text"] == "[E:/old/y.md] 老路径正文"  # 前缀归一
     assert rebuild_fts_prefix(conn) == 0  # 已标记，幂等跳过
     idx.close()
+
+
+def test_upsert_rowid_paired_no_zombie_fts(tmp_path):
+    """rowid 配对（09-17 根治）：重提取替换后 fts 与 chunks 行数一致，
+    两表 rowid 集合相等——无僵尸命中、无全表扫删除。"""
+    from paistation.sense.localfiles.store import ChunkIndex
+    ci = ChunkIndex(tmp_path / "idx.db")
+    ci.upsert_file("C:/Docs/a.txt", ["第一版内容甲", "第一版内容乙"], "v1")
+    ci.upsert_file("C:/Docs/b.txt", ["另一文件"], "v1")
+    # 重提取：文本全换
+    ci.upsert_file("C:/Docs/a.txt", ["第二版内容丙"], "v2")
+    n_c = ci._db.execute("SELECT COUNT(*) FROM chunks").fetchone()[0]
+    n_f = ci._db.execute("SELECT COUNT(*) FROM chunks_fts").fetchone()[0]
+    assert n_c == n_f == 2  # b(1) + a 新版(1)
+    rids_c = {r[0] for r in ci._db.execute("SELECT rowid FROM chunks")}
+    rids_f = {r[0] for r in ci._db.execute("SELECT rowid FROM chunks_fts")}
+    assert rids_c == rids_f
+    # 旧词不再命中（第一版已被替换干净）
+    hits = ci.search("第一版内容甲", k=5)
+    assert all("第一版内容甲" not in h.text for h in hits)
+    assert any("第二版内容丙" in h.text for h in
+               ci.search("第二版内容", k=5))
+    ci.close()
+
+
+def test_rebuild_v2_carries_rowid(tmp_path):
+    """v2 重建：fts 显式携带 chunks rowid（老库失配一次性同步）。"""
+    import sqlite3
+    from paistation.sense.localfiles.store import ChunkIndex, rebuild_fts_prefix
+    ci = ChunkIndex(tmp_path / "idx.db")
+    ci.upsert_file("C:/Docs/a.txt", ["内容甲内容甲"], "v1")
+    ci.upsert_file("C:/Docs/b.txt", ["内容乙内容乙"], "v1")
+    db = ci._db
+    # 模拟老库失配：打乱 fts rowid（删了重插）
+    with db:
+        db.execute("DELETE FROM chunks_fts")
+        db.execute("INSERT INTO chunks_fts(text, path, seq) VALUES(?,?,?)",
+                   ("[C:/Docs/a.txt] 内容甲内容甲", "C:/Docs/a.txt", 0))
+    db.execute("DELETE FROM meta WHERE key='fts_prefix'")
+    n = rebuild_fts_prefix(db)
+    assert n == 2
+    rids = {r[0] for r in db.execute("SELECT rowid FROM chunks_fts")}
+    want = {r[0] for r in db.execute("SELECT rowid FROM chunks")}
+    assert rids == want  # 同步完成
+    assert rebuild_fts_prefix(db) == 0  # v2 标记幂等
+    ci.close()
