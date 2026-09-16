@@ -30,9 +30,24 @@ from paistation.sense.localfiles.walk import enumerate_files
 _log = logging.getLogger("paistation.sense.localfiles.indexer")
 
 EXTRACT_TIMEOUT_S = 30.0
+PDF_TIMEOUT_MULT = 4  # PDF 预算 ×4：OCR 是真计算（0.5s/页）非挂死
 EXTRACT_WORKERS = 8
 PROC_WORKERS = 12
 MpTimeout = multiprocessing.TimeoutError
+
+
+def _job_timeout_s(kind: str) -> float:
+    """kind 感知超时：扫描件 OCR 40 页×0.5s×并行争抢需 ~120s 预算。"""
+    return EXTRACT_TIMEOUT_S * (PDF_TIMEOUT_MULT if kind == "pdf" else 1)
+
+
+def _pv_compatible(old_pv: str, expect_pv: str) -> bool:
+    """parser_ver 前缀兼容：『1.26.x+winrt-ocr1』命中期望『1.26.x』。
+
+    OCR 兜底的产物 parser_ver 带后缀，但基础库未升级时缓存应照常
+    复用（否则每轮复活/升级重扫都会全量重跑 OCR）。
+    """
+    return old_pv == expect_pv or old_pv.startswith(expect_pv + "+")
 
 
 def _cancel(fut) -> None:
@@ -132,7 +147,7 @@ class Indexer:
                     inflight.append((
                         submit(_extract_job, path, kind, parser_id,
                                hp, hf, old_pid, old_pv),
-                        time.monotonic() + EXTRACT_TIMEOUT_S,
+                        time.monotonic() + _job_timeout_s(kind),
                         (path, kind, parser_id)))
                 fut, deadline, (path, kind, parser_id) = inflight[0]
                 try:
@@ -210,7 +225,7 @@ def _extract_job(path: str, kind: str, parser_id: str, row_hp: str,
         # ② 头部未变 → full hash 定案（touch 场景零解析复活）
         _, full = _safe_hashes(path)
         if (full and row_hf == full and old_pid == parser_id
-                and old_pv == _parser_ver(parser_id)):
+                and _pv_compatible(old_pv, _parser_ver(parser_id))):
             return {"status": "cached", "parser_id": parser_id,
                     "parser_ver": _parser_ver(parser_id), "full": full,
                     "partial": partial, "kind": kind, "texts": None}

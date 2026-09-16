@@ -262,7 +262,11 @@ class Inventory:
         return bool(
             row and row["status"] == "ok"
             and row["size"] == size and int(row["mtime"]) == int(mtime)
-            and row["parser_id"] == parser_id and row["parser_ver"] == parser_ver
+            and row["parser_id"] == parser_id
+            # 前缀兼容：OCR 兜底产物 ver 带 +winrt-ocr1 后缀，基础库
+            # 未升级即复用（否则复活/重扫会全量重跑 OCR）
+            and (row["parser_ver"] == parser_ver
+                 or row["parser_ver"].startswith(parser_ver + "+"))
             and row["hash_full"])
 
     def mark_extracted(self, path: str, parser_id: str, parser_ver: str,

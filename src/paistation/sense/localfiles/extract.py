@@ -2,8 +2,9 @@
 
 统一 IR（Tika 式）：{path, kind, title, text, meta, attachments,
 parser_id, parser_ver}。parser_ver 取各库实际版本号（升级自动
-失效提取缓存）。质量阶梯 P1 先做 born-digital fast 文本层；OCR
-兜底（扫描件/CMAP 失败）P3 按金标准缺口再上——90% 场景零模型够用。
+失效提取缓存）。质量阶梯：born-digital fast 文本层优先；无文本层
+扫描件（白龟湖支付凭证/影像卷类核心证据）当场 WinRT OCR 兜底
+（见 ocr.py，09-17 落地）。
 崩溃隔离：per-file 异常全捕 + 容量硬顶；原生段错误风险由索引层的
 线程超时护栏兜（见 indexer）。
 """
@@ -62,8 +63,27 @@ def extract_pdf(path: str) -> Document:
         doc.meta = {"pages": pdf.page_count, "producer": pdf.metadata.get("producer", "")}
         doc.title = pdf.metadata.get("title", "")
     if not doc.text.strip():
-        raise ExtractionError("PDF 无文本层（疑似扫描件，待 OCR 阶段）")
+        _ocr_fallback(doc)
     return doc
+
+
+def _ocr_fallback(doc: Document) -> None:
+    """无文本层扫描件 → WinRT OCR 收编（09-17 落地，原「待 OCR 阶段」兑现）。
+
+    OCR 出字：text 回填 + parser_ver 加 +winrt-ocr1 后缀（版本参与
+    缓存失效）。引擎不在位/零字（纯图印章页）：维持原失败口径。
+    """
+    from paistation.sense.localfiles.ocr import OCR_VER, OcrUnavailable, ocr_pdf
+
+    try:
+        text = ocr_pdf(doc.path)
+    except OcrUnavailable as exc:
+        raise ExtractionError(f"PDF 无文本层（OCR 不可用: {exc})") from exc
+    if not text.strip():
+        raise ExtractionError("PDF 无文本层且 OCR 零字（纯图/印章页）")
+    doc.text = text
+    doc.parser_ver = f"{doc.parser_ver}+{OCR_VER}"
+    doc.meta["ocr"] = OCR_VER
 
 
 def extract_docx(path: str) -> Document:

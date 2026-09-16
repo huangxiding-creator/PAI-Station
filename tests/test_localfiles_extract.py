@@ -126,3 +126,109 @@ def test_metadata_only_never_reads_content(tmp_path):
     f.write_bytes(b"\x89PNG garbage")
     doc = extract(str(f), "image", "metadata-only")
     assert doc.text == "" and doc.meta["size"] > 0
+
+
+# ---------- OCR 兜底（09-17 扫描件收编） ----------
+
+def _make_scan_pdf(path, text="平顶山市白龟湖 尾款支付 说明"):
+    """合成扫描件：PIL 画字→PNG→pymupdf 嵌图页，零文本层。"""
+    import pymupdf
+    from PIL import Image, ImageDraw, ImageFont
+
+    font = ImageFont.truetype("C:/Windows/Fonts/msyh.ttc", 36)
+    img = Image.new("RGB", (1200, 400), "white")
+    ImageDraw.Draw(img).text((40, 160), text, fill="black", font=font)
+    png = str(path) + ".png"
+    img.save(png)
+    with pymupdf.open() as pdf:
+        pdf.new_page(width=600, height=200).insert_image(
+            pymupdf.Rect(0, 0, 600, 200), filename=png)
+        pdf.save(str(path))
+
+
+def test_squeeze_ocr_spaces():
+    from paistation.sense.localfiles.ocr import squeeze_ocr_spaces
+
+    raw = "平 顶 山 市 白 龟 湖 3691 ， 409 万 元 Total Cost Paid"
+    assert squeeze_ocr_spaces(raw) == "平顶山市白龟湖 3691，409 万元 Total Cost Paid"
+
+
+def test_ocr_fallback_marks_parser_ver(tmp_path, monkeypatch):
+    import paistation.sense.localfiles.ocr as ocrmod
+
+    _make_scan_pdf(tmp_path / "scan.pdf")
+    monkeypatch.setattr(ocrmod, "ocr_pdf",
+                        lambda p: "白龟湖尾款支付凭证 OCR 全文")
+    doc = extract_pdf(str(tmp_path / "scan.pdf"))
+    assert "OCR 全文" in doc.text
+    assert doc.parser_ver.endswith("+winrt-ocr1")
+    assert doc.meta["ocr"] == "winrt-ocr1"
+
+
+def test_ocr_zero_text_keeps_failing(tmp_path, monkeypatch):
+    import paistation.sense.localfiles.ocr as ocrmod
+
+    _make_scan_pdf(tmp_path / "blank.pdf")
+    monkeypatch.setattr(ocrmod, "ocr_pdf", lambda p: "  \n  ")
+    try:
+        extract_pdf(str(tmp_path / "blank.pdf"))
+        raise AssertionError("应当失败")
+    except ExtractionError as exc:
+        assert "纯图" in str(exc)
+
+
+def test_ocr_unavailable_falls_back_to_error(tmp_path, monkeypatch):
+    import paistation.sense.localfiles.ocr as ocrmod
+
+    _make_scan_pdf(tmp_path / "scan.pdf")
+    def boom(_p):
+        raise ocrmod.OcrUnavailable("缺语言包")
+    monkeypatch.setattr(ocrmod, "ocr_pdf", boom)
+    try:
+        extract_pdf(str(tmp_path / "scan.pdf"))
+        raise AssertionError("应当失败")
+    except ExtractionError as exc:
+        assert "OCR 不可用" in str(exc)
+
+
+def test_winrt_ocr_end_to_end_real(tmp_path):
+    """真机 WinRT OCR smoke（无语言包机器自动跳过）。"""
+    import pytest
+
+    from paistation.sense.localfiles.ocr import has_ocr, ocr_pdf
+    if not has_ocr():
+        pytest.skip("本机无 WinRT OCR 语言包")
+    p = tmp_path / "real_scan.pdf"
+    _make_scan_pdf(p)
+    text = ocr_pdf(str(p))
+    assert len(text.strip()) > 5  # 渲染清晰的雅黑 200dpi 必出字
+    assert any(k in text for k in ("白龟湖", "龟湖", "尾款"))
+
+
+def test_pdf_ocr_gets_longer_budget():
+    from paistation.sense.localfiles.indexer import (
+        EXTRACT_TIMEOUT_S, _job_timeout_s)
+
+    assert _job_timeout_s("pdf") == EXTRACT_TIMEOUT_S * 4
+    assert _job_timeout_s("word") == EXTRACT_TIMEOUT_S
+
+
+def test_pv_compatible_ocr_suffix():
+    from paistation.sense.localfiles.indexer import _pv_compatible
+
+    assert _pv_compatible("1.26.4+winrt-ocr1", "1.26.4")
+    assert _pv_compatible("1.26.4", "1.26.4")
+    assert not _pv_compatible("1.26.5+winrt-ocr1", "1.26.4")
+
+
+def test_cache_hit_accepts_ocr_suffix(tmp_path):
+    from paistation.sense.localfiles.inventory import Inventory
+
+    inv = Inventory(tmp_path / "inv.db")
+    inv.apply_scan([{"path": "a.pdf", "size": 10, "mtime": 1000.0,
+                     "secret": 0}])
+    inv.mark_extracted("a.pdf", "pymupdf", "1.26.4+winrt-ocr1",
+                       "deadbeef", "pdf")
+    assert inv.cache_hit("a.pdf", 10, 1000.0, "pymupdf", "1.26.4")
+    assert not inv.cache_hit("a.pdf", 10, 1000.0, "pymupdf", "1.26.5")
+    inv.close()
