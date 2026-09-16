@@ -115,6 +115,8 @@
 
 | 09-16 | ✅ **ima 官方 skill 安装（用户给官方 CDN zip+凭证）**：`app-dl.ima.qq.com/skills/ima-skills-1.1.10.zip`（官方域，与腾讯文档官方包同款先例）→ 解包剔渣（__MACOSX/.DS_Store/.history）→ **先审后跑全过**（ima_api.cjs 凭证只发 ima.qq.com header、cos-upload 只碰 *.myqcloud.com 临时凭证、preflight 纯本地、note-images 官方端点+临时文件自清）→ 用户级 `~/.claude/skills/ima-skill/` **1.1.7→1.1.10 升级**（旧版备份 tmp/ima_skill/old-1.1.7-backup；新增 notes 图片换链件）→ 凭证双落位（`~/.config/ima/{client_id,api_key}` 运行时位 + `config/ima.secret.ini` gitignored）→ **真机验证双绿**：notes `list_notebook` code 0、KB `search_knowledge_base` code 0 拉回 10 库（总包知识库-998/水利工程建设-449/招投标实务库-329/司法案例-149/化工安全-69…EPC 语料金矿）；skill 已被会话系统即时识别 | `~/.claude/skills/ima-skill/`、`config/ima.secret.ini`（不入库） |
 
+| 09-16 | ✅ **qqmail-cli 安装 + QQ 邮箱接入（用户给授权码）**：situker/qqmail-cli v0.1.0（Go，Apache-2.0，"safety-first for AI agents"：只读默认/发信白名单门/删信熔断门+备份 HMAC 校验）→ GitHub Release windows_amd64 直下 **SHA256 对照 checksums.txt 全等** → 先审后跑（端点仅 imap.qq.com:993/smtp.qq.com:465 官方域；授权码 keyring 存储）→ exe 落 `%LOCALAPPDATA%\Microsoft\WindowsApps`（PATH 全局可调）+ 官方 SKILL.md 落项目级 `.claude/skills/qqmail-cli/`（含 docs/）→ **auth login 51817@qq.com**（授权码 stdin 管道进，不进参数/日志；本机身份锚点匹配 weread 登录身份）→ **只读验证收件箱 6 封真实信封 1.1s**（Qoder/DeepSeek/BestBlogs）；凭证在 Windows 凭据管理器（keyring），零落盘零入库 | `%LOCALAPPDATA%\...\qqmail-cli.exe`、`.claude/skills/qqmail-cli/` |
+
 ## 红线备忘（每轮心跳自查）
 
 项目外全盘只读 ｜ 账号安全第一 ｜ secrets 不入库 ｜ 00 愿景/付费语料不上公开仓 ｜ 只增不删+Git 留痕 ｜ 每环节调研≥20 ｜ 进化提案永不自批 ｜ commit 带 Co-Authored-By
