@@ -66,3 +66,44 @@ def save_sources(conn: sqlite3.Connection, records: list[dict]) -> int:
                 (r["path"], r["browser"], r["url"], r["downloaded_at"]))
             added += cur.rowcount
     return added
+
+
+def read_zone_identifier(path: str) -> dict[str, str]:
+    """读 NTFS ADS Zone.Identifier（UTF-8/UTF-16 INI）→ {key: value}。
+
+    无流/不可读返回 {}（云盘占位文件由调用方先行排除）。
+    """
+    try:
+        with open(path + ":Zone.Identifier", "rb") as fh:
+            raw = fh.read(4096)
+    except OSError:
+        return {}
+    encodings = ("utf-16", "utf-8") if raw[:2] in (b"\xff\xfe", b"\xfe\xff") \
+        else ("utf-8", "utf-16")
+    for enc in encodings:
+        try:
+            text = raw.decode(enc)
+        except (UnicodeDecodeError, ValueError):
+            continue
+        out = {
+            k.strip(): v.strip()
+            for line in text.splitlines()
+            if not line.startswith("[") and "=" in line
+            for k, _, v in [line.partition("=")]
+        }
+        if out:
+            return out
+    return {}
+
+
+def zone_source(path: str) -> dict | None:
+    """ADS 兜底通道（K 组双通道之二）：HostUrl → file_sources 记录。
+
+    browser='zone'；非 http(s)/ftp（如 about:blank、本地路径）不入。
+    """
+    z = read_zone_identifier(path)
+    url = z.get("HostUrl") or z.get("ReferrerUrl") or ""
+    if not url.lower().startswith(("http", "ftp")):
+        return None
+    return {"path": _norm(path), "url": url,
+            "downloaded_at": "", "browser": "zone"}

@@ -63,3 +63,37 @@ class TestSave:
         n = inv.execute("SELECT COUNT(*) FROM file_sources").fetchone()[0]
         assert n == 1
         inv.close()
+
+
+class TestZoneIdentifier:
+    def test_read_utf8_and_utf16(self, tmp_path):
+        from paistation.cx.download_link import read_zone_identifier, zone_source
+        f = tmp_path / "报.pdf"
+        f.write_bytes(b"%PDF-1.4")
+        with open(str(f) + ":Zone.Identifier", "wb") as fh:
+            fh.write("[Zone.Identifier]\r\nReferrerUrl=https://r.example/x\r\n"
+                     "HostUrl=https://down.example/file.pdf\r\n".encode("utf-8"))
+        z = read_zone_identifier(str(f))
+        assert z["HostUrl"] == "https://down.example/file.pdf"
+        rec = zone_source(str(f))
+        assert rec == {"path": (str(f).replace(chr(92), "/")),
+                       "url": "https://down.example/file.pdf",
+                       "downloaded_at": "", "browser": "zone"}
+        # UTF-16（带 BOM）形态
+        f2 = tmp_path / "b.zip"
+        f2.write_bytes(b"PK")
+        with open(str(f2) + ":Zone.Identifier", "wb") as fh:
+            fh.write("[Zone.Identifier]\r\nHostUrl=https://u.example/b.zip"
+                     .encode("utf-16"))
+        assert read_zone_identifier(str(f2))["HostUrl"] == "https://u.example/b.zip"
+
+    def test_no_stream_or_local_url_none(self, tmp_path):
+        from paistation.cx.download_link import zone_source
+        f = tmp_path / "plain.txt"
+        f.write_text("无流")
+        assert zone_source(str(f)) is None
+        f2 = tmp_path / "local.pdf"
+        f2.write_bytes(b"%PDF")
+        with open(str(f2) + ":Zone.Identifier", "w") as fh:
+            fh.write("[Zone.Identifier]\r\nHostUrl=about:blank\r\n")
+        assert zone_source(str(f2)) is None  # 非 http(s)/ftp 不入

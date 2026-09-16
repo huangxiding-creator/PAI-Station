@@ -18,7 +18,11 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 
-from paistation.cx.download_link import extract_downloads, save_sources  # noqa: E402
+from paistation.cx.download_link import (  # noqa: E402
+    extract_downloads,
+    save_sources,
+    zone_source,
+)
 
 INV = REPO / "data/local_index/inventory.db"
 BROWSERS = {
@@ -34,6 +38,30 @@ def snapshot(history: str, tmpdir: Path) -> Path:
     for side in glob.glob(history + "-*"):
         shutil.copy2(side, str(dst) + "-" + side.rsplit("-", 1)[-1])
     return dst
+
+
+def ads_sweep(inv) -> int:
+    """ADS 兜底通道：全清单活文件读 Zone.Identifier（跳过云盘占位）。
+
+    History 只见浏览器下载；微信/IM/邮件附件等落盘文件靠 ADS 补齐来源。
+    """
+    from paistation.sense.localfiles.triage import CLOUD_PLACEHOLDER_PREFIXES
+    paths = [r[0] for r in inv.execute(
+        "SELECT path FROM files WHERE status IN ('ok','pending','failed')"
+        " AND secret=0").fetchall()]
+    records, scanned = [], 0
+    for p in paths:
+        low = p.replace("\\", "/").lower()
+        if any(low.startswith(x) for x in CLOUD_PLACEHOLDER_PREFIXES):
+            continue  # 占位文件读流会触发拉云
+        rec = zone_source(p)
+        scanned += 1
+        if rec:
+            records.append(rec)
+    n = save_sources(inv, records) if records else 0
+    print(f"zone(ADS): 清扫 {scanned} 文件，带来源流 {len(records)}，"
+          f"新入 {n}")
+    return n
 
 
 def main() -> int:
@@ -52,12 +80,18 @@ def main() -> int:
                     total_new += n
                     print(f"{browser}({Path(history).parent.name}): "
                           f"{len(rows)} 条，新入 {n}")
+    total_new += ads_sweep(inv)
 
     n_src = inv.execute("SELECT COUNT(*) FROM file_sources").fetchone()[0]
     matched = inv.execute(
         "SELECT COUNT(*) FROM file_sources s JOIN files f ON s.path=f.path"
     ).fetchone()[0]
-    print(f"\nfile_sources 共 {n_src} 条；对上 files 清单 {matched} 条")
+    zone_only = inv.execute(
+        "SELECT COUNT(*) FROM file_sources z WHERE z.browser='zone' AND NOT"
+        " EXISTS (SELECT 1 FROM file_sources b WHERE b.path=z.path"
+        " AND b.browser!='zone')").fetchone()[0]
+    print(f"\nfile_sources 共 {n_src} 条；对上 files 清单 {matched} 条；"
+          f"ADS 独有来源 {zone_only} 条")
     print("\n== 来源域名 Top 10 ==")
     for host, n in inv.execute(
         "SELECT substr(url, instr(url,'://')+3), COUNT(*) c FROM file_sources "

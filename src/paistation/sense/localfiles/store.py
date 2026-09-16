@@ -31,6 +31,9 @@ CREATE TABLE IF NOT EXISTS chunks (
 CREATE INDEX IF NOT EXISTS idx_chunks_id ON chunks(chunk_id);
 CREATE VIRTUAL TABLE IF NOT EXISTS chunks_fts USING fts5(
     text, path UNINDEXED, seq UNINDEXED, tokenize='trigram');
+CREATE TABLE IF NOT EXISTS meta (
+    key TEXT PRIMARY KEY, value TEXT NOT NULL
+);
 """
 
 NONE_EMBEDDER = "none"
@@ -100,7 +103,7 @@ class ChunkIndex:
                     (cid, path, seq, text, logic_ver, status, file_gen, now))
                 self._db.execute(
                     "INSERT INTO chunks_fts(text, path, seq) VALUES(?,?,?)",
-                    (text, path, seq))
+                    (f"[{path}] {text}", path, seq))  # Contextual 元前缀
         return {"chunks": len(texts), "embedded": embedded, "reused": reused}
 
     def _embed_chunk(self, cid: str, text: str,
@@ -238,3 +241,43 @@ def _rrf_fuse(routes: dict[str, list[ChunkHit]], k: int) -> list[ChunkHit]:
         for key, h in first.items()]
     fused.sort(key=lambda h: (-h.score, h.path, h.seq))
     return fused[:k]
+
+
+def rebuild_fts_prefix(conn: sqlite3.Connection, batch: int = 50_000) -> int:
+    """存量 fts 一次性补 Contextual 元前缀（新表分批重建+原子换名）。
+
+    前缀路径归一为正斜杠形态（trigram 分隔符形态统一，查得中）。
+    重建期间旧表可查（换名一瞬完成切换）；meta.fts_prefix 标记幂等，
+    二跑零成本。返回重建行数。
+    """
+    from paistation.sense.localfiles.inventory import _norm_path
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS meta(key TEXT PRIMARY KEY,"
+        " value TEXT NOT NULL)")
+    if conn.execute("SELECT 1 FROM meta WHERE key='fts_prefix'").fetchone():
+        return 0
+    conn.execute(
+        "CREATE VIRTUAL TABLE IF NOT EXISTS chunks_fts_new USING fts5("
+        " text, path UNINDEXED, seq UNINDEXED, tokenize='trigram')")
+    conn.execute("DELETE FROM chunks_fts_new")
+    total, last = 0, 0
+    while True:
+        rows = conn.execute(
+            "SELECT rowid, path, seq, text FROM chunks"
+            " WHERE rowid > ? ORDER BY rowid LIMIT ?", (last, batch)).fetchall()
+        if not rows:
+            break
+        last = rows[-1]["rowid"] if isinstance(rows[-1], sqlite3.Row) \
+            else rows[-1][0]
+        with conn:
+            conn.executemany(
+                "INSERT INTO chunks_fts_new(text, path, seq) VALUES(?,?,?)",
+                [(f"[{_norm_path(p)}] {t}", _norm_path(p), s)
+                 for _, p, s, t in rows])
+        total += len(rows)
+    with conn:  # 原子换名：DROP 旧 + 换名 + 打标一事务
+        conn.execute("DROP TABLE IF EXISTS chunks_fts")
+        conn.execute("ALTER TABLE chunks_fts_new RENAME TO chunks_fts")
+        conn.execute(
+            "INSERT OR REPLACE INTO meta(key, value) VALUES('fts_prefix','v1')")
+    return total
