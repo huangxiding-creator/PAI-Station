@@ -92,7 +92,11 @@ class Inventory:
         self._db.execute("PRAGMA journal_mode=WAL")
         self._db.execute("PRAGMA synchronous=NORMAL")
         self._db.commit()
-        self._gen = self._bump_gen()
+        # 代际在 apply_scan 时才 bump（「每轮扫描代+1」语义）——
+        # 只读开门（MCP/status）不再虚增代际计数（2026-09-16 真机冒烟实锤）
+        row = self._db.execute(
+            "SELECT value FROM meta WHERE key='gen'").fetchone()
+        self._gen = int(row["value"]) if row else 0
 
     # ---------- 代际 ----------
 
@@ -117,6 +121,7 @@ class Inventory:
         绝不在此层读文件内容（秘密文件也只登记元数据）。
         """
         ts = time.time() if now is None else now
+        self._gen = self._bump_gen()  # 扫描即换代（apply_scan 独有）
         # 入口去重（防御任何后端的重复行；冲突留首条，确定性优先）
         uniq: dict[str, dict] = {}
         for rec in records:
@@ -224,11 +229,18 @@ class Inventory:
             "total_alive": sum(r["n"] for r in rows if r["status"] != "gone"),
         }
 
-    def search_paths(self, pattern: str, limit: int = 50) -> list[sqlite3.Row]:
-        """文件名 LIKE 秒查（L0 名字级检索，Everything 不在时的兜底）。"""
+    def search_paths(self, pattern: str, limit: int = 50,
+                     include_secret: bool = False) -> list[sqlite3.Row]:
+        """文件名 LIKE 秒查（L0 名字级检索，Everything 不在时的兜底）。
+
+        secret 行默认过滤（agent 出口纵深防御：密钥文件路径也不外喂）；
+        内部诊断需全量时显式 include_secret=True。
+        """
+        cond = "" if include_secret else " AND secret=0"
         return self._db.execute(
             "SELECT path, size, mtime, kind, status FROM files"
-            " WHERE path LIKE ? AND status!='gone' LIMIT ?",
+            f" WHERE path LIKE ? AND status!='gone'{cond}"
+            " ORDER BY last_seen DESC, path LIMIT ?",
             (f"%{pattern}%", limit)).fetchall()
 
     def close(self) -> None:

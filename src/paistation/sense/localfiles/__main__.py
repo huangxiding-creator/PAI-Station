@@ -92,6 +92,7 @@ def main(argv=None) -> int:
     sq.add_argument("-k", type=int, default=8)
     pr = sub.add_parser("profile", help="生成 LOCAL_FILES_PROFILE.md")
     pr.add_argument("-o", type=Path, default=None)
+    sub.add_parser("mcp", help="MCP stdio 服务器（只读检索暴露给 agent 会话）")
     ap.add_argument("--no-embed", action="store_true",
                     help="跳过嵌入器探测（纯 keyword 模式）")
     ap.add_argument("--ollama", default="http://127.0.0.1:11434/api/embeddings")
@@ -111,6 +112,17 @@ def main(argv=None) -> int:
     if args.cmd == "status":
         inv = Inventory(args.db_dir / "inventory.db")
         print(json.dumps(inv.stats(), ensure_ascii=False, indent=2))
+        return 0
+
+    if args.cmd == "mcp":  # stdout 即协议通道：禁 banner、禁打印
+        from paistation.sense.localfiles.mcp_server import LocalFilesMcpService, force_utf8_stdio
+        from paistation.sense.localfiles.mcp_server import serve as mcp_serve
+        force_utf8_stdio()
+        svc = LocalFilesMcpService.open(args.db_dir)
+        try:
+            mcp_serve(sys.stdin, sys.stdout, svc)
+        finally:
+            svc.close()
         return 0
 
     ix, inv, chunks = _build(args)
