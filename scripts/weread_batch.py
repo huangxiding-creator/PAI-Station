@@ -56,10 +56,11 @@ def load_safety() -> dict:
     conf = configparser.ConfigParser()
     conf.read(SECRET, encoding="utf-8")
     return {
+        # 2026-09-16 风控提醒后收紧：日限 3→2、书间冷却 120→300
         "daily_book_limit": conf.getint(
-            "safety", "daily_book_limit", fallback=3),
+            "safety", "daily_book_limit", fallback=2),
         "cooldown_seconds": conf.getint(
-            "safety", "cooldown_seconds", fallback=120),
+            "safety", "cooldown_seconds", fallback=300),
     }
 
 

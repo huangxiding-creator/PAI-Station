@@ -11,7 +11,8 @@
 - 续期：POST /web/login/renewal，succ==1 时从 Set-Cookie 更新 wr_skey
 
 安全红线（账号安全宪法 R8/R10——违者熔断）：
-- 节流：请求间隔 uniform(1.5, 3.5)s，可注入 time_func 供测试
+- 节流：请求间隔 uniform(3.5, 8.0)s（2026-09-16 风控提醒后收紧），
+  另每 45~70 章插入 60~150s 长歇；可注入 time_func 供测试
 - 熔断：连续 3 次异常 / 登录失效码（-2012/-2013/-12013/401）即抛错停止
 - 永不调用 /web/book/read（写操作）与安卓 chapterdownload
 - 内容只写 data/weread/；凭据不落本模块
@@ -34,7 +35,10 @@ from paistation.forge.weread_sign import (
 
 BASE = "https://weread.qq.com"
 AUTH_CODES = {-2012, -2013, -12013}
-THROTTLE_RANGE = (1.5, 3.5)      # 章节请求随机间隔（秒）
+THROTTLE_RANGE = (3.5, 8.0)      # 章节请求随机间隔（秒）——2026-09-16 风控提醒后
+                                 # 由 (1.5, 3.5) 收紧，请求密度约降 4×
+BREAK_EVERY = (45, 70)           # 每提取这么多章插入一次长歇（模拟真人放下书）
+BREAK_PAUSE = (60, 150)          # 长歇时长（秒）
 BREAKER_LIMIT = 3                # 连续异常熔断阈值
 
 
@@ -134,6 +138,8 @@ class WeReadClient:
         self._sleep = sleep_func
         self._last_request = 0.0
         self._consecutive_errors = 0
+        self._since_break = 0                         # 距上次长歇的请求数
+        self._break_at = random.randint(*BREAK_EVERY)
         self._fast = fast                             # 测试关节流
         self._auth_path = auth_path
         if not cookie and auth_path:
@@ -172,6 +178,11 @@ class WeReadClient:
         if wait > 0:
             self._sleep(wait)
         self._last_request = self._time()
+        self._since_break += 1
+        if self._since_break >= self._break_at:
+            self._since_break = 0
+            self._break_at = random.randint(*BREAK_EVERY)
+            self._sleep(random.uniform(*BREAK_PAUSE))
 
     def _breaker_hit(self, exc: Exception) -> None:
         self._consecutive_errors += 1
