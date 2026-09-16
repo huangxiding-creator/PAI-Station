@@ -118,3 +118,63 @@ def test_everything_csv3_backcompat_zero_dates(tmp_path):
         runner=lambda cmd, **kw: _csv((target, 5, "2026-06-20T13:34:58.5288214")))
     rec = es.enumerate(domain)[0]
     assert rec["birthtime"] == 0 and rec["atime"] == 0
+
+
+def test_everything_zero_ntfs_timestamp_1601_not_fatal(tmp_path):
+    r"""NTFS 零时间戳回归（09-17 真机）：es 吐 1601-01-01 时
+    Windows .timestamp() 抛 OSError 22 而非 ValueError——吞掉归零，
+    绝不让一行坏日期炸掉整轮 43 万行枚举（静默降级 walker 实锤过）。"""
+    domain, root = _tree(tmp_path)
+    target = str(root / "docs" / "a.md")
+    es = EverythingEnumerator(
+        es_exe="fake://es.exe",
+        runner=lambda cmd, **kw: _csv5(
+            (target, 5, "2026-06-20T13:34:58.5288214",
+             "1601-01-01T00:00:00.0000000", "1601-01-01T00:00:00.0000000")))
+    rec = es.enumerate(domain)[0]
+    assert rec["mtime"] == int(datetime(2026, 6, 20, 13, 34, 58).timestamp())
+    assert rec["birthtime"] == 0 and rec["atime"] == 0  # 前纪元归零不炸
+
+
+def test_enumerate_files_prefers_walker(tmp_path):
+    """主次对调（09-17）：两后端都健康时 walker 主——忠实坏名文件。"""
+    domain, root = _tree(tmp_path)
+    records, backend = enumerate_files(
+        domain,
+        es=EverythingEnumerator(es_exe="fake://es.exe",
+                                runner=lambda cmd, **kw: _csv(
+            (str(root / "ghost?.md"), 5, "2026-06-20T13:34:58.5288214"))))
+    assert backend == "walker"
+    assert {r["path"] for r in records} == {str(root / "docs" / "a.md"),
+                                            str(root / "docs" / "s_secret.txt"),
+                                            str(root / "c.txt")}
+
+
+def test_es_phantom_path_rejected(tmp_path):
+    """幽灵行拒收：含 NTFS 不合法字符（`?` 等）的 es 行是 mbcs 失真
+    假路径，open() 必炸 Errno 22——解析层直接拒收，绝不入库。"""
+    domain, root = _tree(tmp_path)
+    es = EverythingEnumerator(
+        es_exe="fake://es.exe",
+        runner=lambda cmd, **kw: _csv(
+            (str(root / "docs" / "a.md"), 5, "2026-06-20T13:34:58.5288214"),
+            (str(root / "9???王欢.md"), 5, "2026-06-20T13:34:58.5288214"),
+            (str(root / '坏"引号.md'), 5, "2026-06-20T13:34:58.5288214")))
+    records = es.enumerate(domain)
+    assert [r["path"] for r in records] == [str(root / "docs" / "a.md")]
+
+
+def test_walker_failure_falls_back_to_es(tmp_path):
+    domain, root = _tree(tmp_path)
+    target = str(root / "docs" / "a.md")
+
+    class Boom:
+        def enumerate(self, domain):
+            raise RuntimeError("disk dead")
+
+    records, backend = enumerate_files(
+        domain, walker=Boom(),
+        es=EverythingEnumerator(es_exe="fake://es.exe",
+                                runner=lambda cmd, **kw: _csv(
+            (target, 5, "2026-06-20T13:34:58.5288214"))))
+    assert backend == "everything" and records

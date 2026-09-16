@@ -72,6 +72,22 @@ def test_missing_file_marked_gone_not_deleted(tmp_path):
     inv.close()
 
 
+def test_gone_file_resurrects_on_reappearance(tmp_path):
+    """后端覆盖差自愈：gone 行再次被扫到（内容未变）→ 回待处理，
+    不留僵尸盲区（2026-09-17 walker/es 差 6,119 行 gone 实锤）。"""
+    inv = Inventory(tmp_path / "inv.db")
+    inv.apply_scan([_rec("a.txt"), _rec("key.pem", secret=1)])
+    inv.apply_scan([])  # 全消失
+    # 原样重现：内容未变走 _touch 路径
+    inv.apply_scan([_rec("a.txt"), _rec("key.pem", secret=1)])
+    st = {r["path"]: r["status"] for r in inv._db.execute(
+        "SELECT path, status FROM files")}
+    assert st["a.txt"] == "pending"  # 复活回队
+    assert st["key.pem"] == "secret"  # secret 复活仍守红线
+    assert [r["path"] for r in inv.pending()] == ["a.txt"]
+    inv.close()
+
+
 def test_extract_cache_roundtrip(tmp_path):
     inv = Inventory(tmp_path / "inv.db")
     inv.apply_scan([_rec("a.pdf")])

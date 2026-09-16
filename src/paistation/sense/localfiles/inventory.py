@@ -205,7 +205,13 @@ class Inventory:
             self._db.execute(
                 "UPDATE files SET size=?, mtime=?, seen_gen=?, last_seen=?,"
                 " birthtime=CASE WHEN ?>0 THEN ? ELSE birthtime END,"
-                " atime=CASE WHEN ?>0 THEN ? ELSE atime END"
+                " atime=CASE WHEN ?>0 THEN ? ELSE atime END,"
+                # 复活：gone 行再次被扫到（后端覆盖差/误标自愈）→
+                # 回到待处理；secret 文件复活仍守红线（2026-09-17
+                # walker/es 后端差 6,119 行 gone 实锤此边界）
+                " status=CASE WHEN status='gone' THEN"
+                " CASE WHEN secret=1 THEN 'secret' ELSE 'pending' END"
+                " ELSE status END"
                 " WHERE path=?",
                 (size, mtime, self._gen, ts,
                  birthtime, birthtime, atime, atime, path))

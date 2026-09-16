@@ -45,6 +45,13 @@ SECRET_PATH_SEGMENTS = (".ssh", ".gnupg", ".password-store")
 DEFAULT_INCLUDES = (
     "~/Desktop", "~/Documents", "~/Downloads", "~/Pictures",
     "E:/AI-Station",
+    # 2026-09-17 扩域：D/F 盘工作阵地（白龟湖全案档案 01-10 编号体系/
+    # 自媒体图库/工程知识库超市·水利系列）。BaiduSyncdisk 云占位与
+    # MemoTrace 微信备份按红线暂缓，须用户点头才进。
+    "D:/20 白龟湖项目",
+    "D:/WEMedia",
+    "D:/WEMediaOutput",
+    "F:/工程知识库超市",
 )
 
 
