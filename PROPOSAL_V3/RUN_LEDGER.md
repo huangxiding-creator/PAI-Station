@@ -117,6 +117,8 @@
 
 | 09-16 | ✅ **qqmail-cli 安装 + QQ 邮箱接入（用户给授权码）**：situker/qqmail-cli v0.1.0（Go，Apache-2.0，"safety-first for AI agents"：只读默认/发信白名单门/删信熔断门+备份 HMAC 校验）→ GitHub Release windows_amd64 直下 **SHA256 对照 checksums.txt 全等** → 先审后跑（端点仅 imap.qq.com:993/smtp.qq.com:465 官方域；授权码 keyring 存储）→ exe 落 `%LOCALAPPDATA%\Microsoft\WindowsApps`（PATH 全局可调）+ 官方 SKILL.md 落项目级 `.claude/skills/qqmail-cli/`（含 docs/）→ **auth login 51817@qq.com**（授权码 stdin 管道进，不进参数/日志；本机身份锚点匹配 weread 登录身份）→ **只读验证收件箱 6 封真实信封 1.1s**（Qoder/DeepSeek/BestBlogs）；凭证在 Windows 凭据管理器（keyring），零落盘零入库 | `%LOCALAPPDATA%\...\qqmail-cli.exe`、`.claude/skills/qqmail-cli/` |
 
+| 09-16 | ✅ **QQ 邮箱治理收口**（用户指令「删除 Qoder/Refly」→「分类整理」）：①5 封删除闭环——圈地→备份 HMAC 三验→`cmd start` 弹真 TTY 控制台**用户键入 5 执行成功**（「agent 备好一切+人工只敲计数」的落地形态，用户终端敲错命令报错后的解法）；②全箱分类盘点：INBOX 25 封六类（账单发票10/订阅3/官方1/个人工作2/服务通知5/推销4）、Junk 6（PayPal 钓鱼+随手写「邮箱地址已变更」误判 2 封已警示用户）、已删除 26（今日5+8月手动21）；③推销 4 封（QualiTaTi×2+screenpipe×2，与用户 8 月手动删旧件惯例一致）计划+备份齐备弹窗待键入 4。**坑沉淀**：本地缓存对已搬移邮件保留陈旧行（by_from_domain 虚高，真相以 envelope list 服务器实查为准） | `tmp/qqmail/`（gitignored 工件：plan/backup/bat） |
+
 ## 红线备忘（每轮心跳自查）
 
 项目外全盘只读 ｜ 账号安全第一 ｜ secrets 不入库 ｜ 00 愿景/付费语料不上公开仓 ｜ 只增不删+Git 留痕 ｜ 每环节调研≥20 ｜ 进化提案永不自批 ｜ commit 带 Co-Authored-By
