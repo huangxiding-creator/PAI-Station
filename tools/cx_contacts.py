@@ -9,8 +9,6 @@
 from __future__ import annotations
 
 import json
-import os
-import subprocess
 import sys
 from pathlib import Path
 
@@ -21,25 +19,18 @@ from paistation.cx.entities import EntityStore  # noqa: E402
 from paistation.cx.ingest_contacts import (  # noqa: E402
     parse_rion_contacts,
     register_wechat_contacts,
+    run_reader,
 )
 
 CACHE = REPO / "data/cx/collect_cache/wechat_friends.json"
-READER = REPO / ".claude/skills/wechat-cli/scripts/reader.sh"
 OWNER = REPO / "data/cx/owner.json"
 
 
 def pull() -> str:
-    env = dict(os.environ, PYTHONUTF8="1")
-    proc = subprocess.run(
-        ["bash", str(READER), "contacts", "--friends-only", "--limit", "5000"],
-        capture_output=True, text=True, encoding="utf-8", errors="replace",
-        creationflags=0x08000000, timeout=300, env=env, cwd=str(REPO),
-    )
-    if proc.returncode != 0 or not proc.stdout.strip():
-        raise SystemExit(f"reader 拉取失败 rc={proc.returncode}: {proc.stderr[-300:]}")
+    text = run_reader("contacts", "--friends-only", "--limit", "5000", timeout=300)
     CACHE.parent.mkdir(parents=True, exist_ok=True)
-    CACHE.write_text(proc.stdout, encoding="utf-8")
-    return proc.stdout
+    CACHE.write_text(text, encoding="utf-8")
+    return text
 
 
 def main() -> int:
