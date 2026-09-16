@@ -168,6 +168,19 @@ class EntityStore:
         ).fetchall()
         return {str(r): int(n) for r, n in rows}
 
+    def lookup_by_alias(self, alias: str) -> str | None:
+        """按别名（含 wxid/open_id/邮箱/chatroom id 等强标识符）反查实体 id。
+
+        aliases 列为 JSON 数组文本，用引号包裹精确匹配避免前缀误中。
+        """
+        if not alias:
+            return None
+        row = self._conn.execute(
+            "SELECT entity_id FROM entities WHERE aliases LIKE ? LIMIT 1",
+            (f'%"{alias}"%',),
+        ).fetchone()
+        return str(row[0]) if row else None
+
     def count(self, kind: str | None = None) -> int:
         if kind:
             row = self._conn.execute(
