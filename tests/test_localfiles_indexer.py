@@ -15,7 +15,8 @@ def _make_indexer(tmp_path):
                         exclude_names=["node_modules", ".git"])
     inv = Inventory(tmp_path / "inv.db")
     chunks = ChunkIndex(tmp_path / "idx.db")  # 无嵌入器 → keyword-only
-    return Indexer(domain, inv, chunks), root
+    return Indexer(domain, inv, chunks,
+                   events_queue=tmp_path / "usn_queue.jsonl"), root
 
 
 def test_full_cycle_and_zero_reparse_second_pass(tmp_path):
@@ -151,4 +152,77 @@ def test_proc_engine_end_to_end(tmp_path):
     assert r["extracted"] == 6 and r["failed"] == 0
     assert any("进程引擎内容" in h.text for h in
                ix._chunks.search("进程引擎内容", k=5))
+    ix.close()
+
+
+# ---------- USN rename 保语义换路径（秒级通道新事件形态） ----------
+
+def _queue_event(tmp_path, ev):
+    import json as _json
+    with open(tmp_path / "usn_queue.jsonl", "a", encoding="utf-8") as fh:
+        fh.write(_json.dumps(ev, ensure_ascii=False) + "\n")
+
+
+def test_drain_rename_preserves_extraction_state(tmp_path):
+    """rename 事件：状态/提取指纹/chunk 全保留，只换路径零重嵌。"""
+    ix, root = _make_indexer(tmp_path)
+    f = root / "docs" / "note.md"
+    f.write_text("工程款支付条件谈判纪要全文", encoding="utf-8")
+    ix.full_cycle()
+    ix.drain_events()  # 清空本轮可能的 created 事件
+    inv = ix._inv
+    old = str(f).replace("\\", "/")
+    row = inv._db.execute(
+        "SELECT status, extracted_at, parser_id FROM files"
+        " WHERE path=?", (old,)).fetchone()
+    assert row and row["status"] == "ok"
+    n_chunks = ix._chunks._db.execute(
+        "SELECT COUNT(*) FROM chunks WHERE path=?", (old,)).fetchone()[0]
+    assert n_chunks >= 1
+
+    dest = str(root / "docs" / "moved.md").replace("\\", "/")
+    _queue_event(tmp_path, {"path": old, "op": "renamed", "dest": dest})
+    stats = ix.drain_events()
+    assert stats.get("renamed") == 1
+    # 库行整行保留只换主键
+    row2 = inv._db.execute(
+        "SELECT status, extracted_at, parser_id FROM files"
+        " WHERE path=?", (dest,)).fetchone()
+    assert row2 and row2["status"] == "ok"
+    assert row2["extracted_at"] == row["extracted_at"]
+    assert inv._db.execute(
+        "SELECT COUNT(*) FROM files WHERE path=?", (old,)).fetchone()[0] == 0
+    # chunk 跟到新路径，检索仍命中（fts 元前缀已重建）
+    assert ix._chunks._db.execute(
+        "SELECT COUNT(*) FROM chunks WHERE path=?",
+        (dest,)).fetchone()[0] == n_chunks
+    assert ix._chunks.search("支付条件谈判")
+    ix.close()
+
+
+def test_drain_rename_unknown_old_falls_to_created(tmp_path):
+    """旧路径不在库（域外移入）：新路径按新增走，不炸不丢。"""
+    ix, root = _make_indexer(tmp_path)
+    dest_file = root / "docs" / "outside.md"
+    dest_file.write_text("域外移入的内容", encoding="utf-8")
+    dest = str(dest_file).replace("\\", "/")
+    _queue_event(tmp_path, {"path": "E:/不存在/旧路径.md",
+                            "op": "renamed", "dest": dest})
+    stats = ix.drain_events()
+    assert stats.get("renamed") is None
+    row = ix._inv._db.execute(
+        "SELECT status FROM files WHERE path=?", (dest,)).fetchone()
+    assert row and row["status"] == "pending"
+    ix.close()
+
+
+def test_walk_records_carry_frn(tmp_path):
+    """walk 枚举记录携带 NTFS 引用号（USN 反解钥匙，非零可稳定）。"""
+    ix, root = _make_indexer(tmp_path)
+    f = root / "docs" / "note.md"
+    f.write_text("内容", encoding="utf-8")
+    ix.full_cycle()
+    row = ix._inv._db.execute(
+        "SELECT frn FROM files WHERE path LIKE '%note.md'").fetchone()
+    assert row and row["frn"] > 0
     ix.close()

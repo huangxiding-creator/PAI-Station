@@ -128,6 +128,35 @@ class ChunkIndex:
                     (rid, f"[{path}] {text}", path, seq))  # Contextual 元前缀
         return {"chunks": len(texts), "embedded": embedded, "reused": reused}
 
+    def rename_path(self, old: str, dest: str) -> int:
+        """USN rename 伴生换路径：chunks 主键 + fts 行同步改写。
+
+        chunk_id=内容哈希与向量不参与——移动文件零重嵌零重建，
+        向量经 chunk_id join 天然跟到新路径。返回改写行数。
+        """
+        from paistation.sense.localfiles.inventory import _norm_path
+
+        old, dest = _norm_path(old), _norm_path(dest)
+        with self._db:
+            cur = self._db.execute(
+                "UPDATE chunks SET path=? WHERE path=?", (dest, old))
+            n = cur.rowcount
+            if n:
+                self._db.execute(
+                    "UPDATE chunks_fts SET path=? WHERE path=?", (dest, old))
+                # fts text 带 [路径] 元前缀（Contextual 检索），需重建该组行
+                rids = [r[0] for r in self._db.execute(
+                    "SELECT f.rowid FROM chunks_fts f JOIN chunks c"
+                    " ON c.rowid=f.rowid WHERE c.path=?", (dest,))]
+                for rid in rids:
+                    row = self._db.execute(
+                        "SELECT c.path, c.text FROM chunks c"
+                        " WHERE c.rowid=?", (rid,)).fetchone()
+                    self._db.execute(
+                        "UPDATE chunks_fts SET text=? WHERE rowid=?",
+                        (f"[{row['path']}] {row['text']}", rid))
+        return n
+
     def _embed_chunk(self, cid: str, text: str,
                      old_status: dict[str, str]) -> str:
         """同 chunk_id 且旧向量已在 → 复用；否则真嵌。失败降级 none。"""

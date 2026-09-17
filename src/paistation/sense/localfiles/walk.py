@@ -160,7 +160,10 @@ class WalkerEnumerator:
                                     stack.append(entry.path)
                             elif entry.is_file(follow_symlinks=False):
                                 if domain.covers(entry.path):
-                                    st = entry.stat(follow_symlinks=False)
+                                    # os.stat 而非 DirEntry.stat：后者走
+                                    # FindData 缓存无文件 ID（st_ino 恒 0），
+                                    # FRN 必须真开句柄取（34 万文件 +~30s）
+                                    st = os.stat(entry.path)
                                     out.append({
                                         "path": entry.path,
                                         "size": st.st_size,
@@ -170,6 +173,9 @@ class WalkerEnumerator:
                                         "birthtime": int(getattr(
                                             st, "st_birthtime", st.st_ctime)),
                                         "atime": int(st.st_atime),
+                                        # NTFS 文件引用号=USN file_id 的
+                                        # 反解钥匙（rename 保语义增量的地基）
+                                        "frn": int(getattr(st, "st_ino", 0) or 0),
                                         "secret": int(domain.is_secret(entry.path)),
                                     })
                         except OSError:  # 单项失败不阻塞推进

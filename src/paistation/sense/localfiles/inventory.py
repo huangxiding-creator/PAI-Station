@@ -158,6 +158,7 @@ class Inventory:
                 "birthtime": float(rec.get("birthtime", 0) or 0),
                 "atime": float(rec.get("atime", 0) or 0),
                 "secret": int(rec.get("secret", 0)),
+                "frn": int(rec.get("frn", 0) or 0),
                 "seen_gen": self._gen,
                 "ts": ts,
             }
@@ -174,16 +175,16 @@ class Inventory:
         with self._db:  # 单事务
             self._db.executemany(
                 "INSERT INTO files(path, size, mtime, birthtime, atime,"
-                " secret, seen_gen, first_seen, last_seen, status)"
+                " secret, frn, seen_gen, first_seen, last_seen, status)"
                 " VALUES(:path, :size, :mtime, :birthtime, :atime, :secret,"
-                " :seen_gen, :ts, :ts,"
+                " :frn, :seen_gen, :ts, :ts,"
                 " CASE :secret WHEN 1 THEN 'secret' ELSE 'pending' END)",
                 added)
             for row in changed:
                 self._db.execute(
                     "UPDATE files SET size=:size, mtime=:mtime,"
                     " birthtime=:birthtime, atime=:atime, secret=:secret,"
-                    " seen_gen=:seen_gen, last_seen=:ts,"
+                    " frn=:frn, seen_gen=:seen_gen, last_seen=:ts,"
                     " status=CASE WHEN :secret=1 THEN 'secret'"
                     " WHEN status='skipped' THEN 'skipped'"
                     " ELSE 'pending' END"
@@ -222,13 +223,14 @@ class Inventory:
             with self._db:
                 self._db.execute(
                     "INSERT INTO files(path, size, mtime, birthtime, atime,"
-                    " secret, seen_gen, first_seen, last_seen, status)"
-                    " VALUES(?,?,?,?,?,?,?,?,?,"
+                    " secret, frn, seen_gen, first_seen, last_seen, status)"
+                    " VALUES(?,?,?,?,?,?,?,?,?,?,"
                     " CASE ? WHEN 1 THEN 'secret' ELSE 'pending' END)",
                     (path, int(rec.get("size", 0)), float(rec.get("mtime", 0)),
                      float(rec.get("birthtime", 0) or 0),
                      float(rec.get("atime", 0) or 0),
-                     int(rec.get("secret", 0)), self._gen, ts, ts,
+                     int(rec.get("secret", 0)), int(rec.get("frn", 0) or 0),
+                     self._gen, ts, ts,
                      int(rec.get("secret", 0))))
             return "added"
         if (int(prev["size"]), int(prev["mtime"])) != (
@@ -236,7 +238,7 @@ class Inventory:
             with self._db:
                 self._db.execute(
                     "UPDATE files SET size=?, mtime=?, birthtime=?,"
-                    " atime=?, secret=?, last_seen=?,"
+                    " atime=?, secret=?, frn=?, last_seen=?,"
                     " status=CASE WHEN ?=1 THEN 'secret'"
                     " WHEN status='skipped' THEN 'skipped'"
                     " WHEN status='secret' THEN 'secret'"
@@ -244,13 +246,29 @@ class Inventory:
                     (int(rec.get("size", 0)), float(rec.get("mtime", 0)),
                      float(rec.get("birthtime", 0) or 0),
                      float(rec.get("atime", 0) or 0),
-                     int(rec.get("secret", 0)), ts,
+                     int(rec.get("secret", 0)), int(rec.get("frn", 0) or 0),
+                     ts,
                      int(rec.get("secret", 0)), path))
             return "changed"
         self._touch(path, int(rec.get("size", 0)), int(rec.get("mtime", 0)),
                     ts, float(rec.get("birthtime", 0) or 0),
                     float(rec.get("atime", 0) or 0))
         return "touched"
+
+    def rename_path(self, old: str, dest: str) -> bool:
+        """USN rename 语义入库：同一文件换路径，状态/提取指纹全保留。
+
+        轮询型 watch 眼里移动=删+建——500 页 PDF 挪目录重 OCR 一遍；
+        USN 同 file_id 证明是同一文件 → 只换主键，extracted_at/parser
+        /status 原样保留，chunk 层由 Indexer 伴生换路径。旧路径不在
+        库（域外移入/游标盲区）→ False，上层按新增走。
+        """
+        old, dest = _norm_path(old), _norm_path(dest)
+        with self._db:
+            cur = self._db.execute(
+                "UPDATE files SET path=?, last_seen=? WHERE path=?",
+                (dest, time.time(), old))
+        return bool(cur.rowcount)
 
     def _touch(self, path: str, size: int, mtime: int, ts: float,
                birthtime: float = 0, atime: float = 0) -> None:
@@ -281,9 +299,14 @@ class Inventory:
             ("last_attempt", "REAL NOT NULL DEFAULT 0"),
             ("birthtime", "REAL NOT NULL DEFAULT 0"),
             ("atime", "REAL NOT NULL DEFAULT 0"),
+            # NTFS 文件引用号（st_ino）——USN 记录 file_id 反解全路径的钥匙
+            ("frn", "INTEGER NOT NULL DEFAULT 0"),
         ):
             if col not in cols:
                 self._db.execute(f"ALTER TABLE files ADD COLUMN {col} {ddl}")
+        self._db.execute(
+            "CREATE INDEX IF NOT EXISTS idx_files_frn ON files(frn)"
+            " WHERE frn>0")
         self._db.commit()
 
     # ---------- 提取层接口（P1 缓存） ----------

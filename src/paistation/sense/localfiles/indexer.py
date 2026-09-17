@@ -116,6 +116,7 @@ class Indexer:
         off_file = q.with_suffix(".offset")
         prev_off = off = int(off_file.read_text()) if off_file.exists() else 0
         latest: dict[str, str] = {}
+        renames: list[tuple[str, str]] = []
         with q.open("rb") as fh:
             fh.seek(off)
             for i, raw in enumerate(fh):
@@ -125,6 +126,13 @@ class Indexer:
                     ev = _json.loads(raw)
                 except ValueError:
                     continue
+                if ev.get("op") == "renamed" and ev.get("dest"):
+                    # USN rename 对：不进 per-path 塌缩（旧路径 stat 必
+                    # 失败会被跳过成幽灵行），走保语义换路径专线
+                    renames.append((_norm_path(ev["path"]),
+                                    _norm_path(ev["dest"])))
+                    off += len(raw)
+                    continue
                 latest[_norm_path(ev["path"])] = ev.get("op", "modified")
                 if ev.get("dest"):
                     latest[_norm_path(ev["dest"])] = "created"
@@ -133,6 +141,12 @@ class Indexer:
         if off > QUEUE_ROTATE_BYTES:
             self._rotate_queue(q, off)
         stats: dict[str, int] = {}
+        for old, dest in renames:
+            if self._inv.rename_path(old, dest):
+                self._chunks.rename_path(old, dest)
+                stats["renamed"] = stats.get("renamed", 0) + 1
+            else:  # 旧路径不在库（域外移入/游标盲区）→ 新路径按新增
+                latest[dest] = "created"
         for path, op in latest.items():
             if op == "deleted":
                 self._inv.apply_event({"path": path}, "deleted")
@@ -146,6 +160,7 @@ class Indexer:
                    "mtime": int(st.st_mtime),
                    "birthtime": int(getattr(st, "st_birthtime", st.st_ctime)),
                    "atime": int(st.st_atime),
+                   "frn": int(getattr(st, "st_ino", 0) or 0),
                    "secret": int(self._domain.is_secret(path))}
             r = self._inv.apply_event(rec, op)
             stats[r] = stats.get(r, 0) + 1
