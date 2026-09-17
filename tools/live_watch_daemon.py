@@ -46,6 +46,10 @@ EXCLUDE_NAMES = {
 
 def _covered(path: str) -> bool:
     p = path.replace("\\", "/").lower()
+    # 自指免疫：索引库自身产物（队列/日志/PID）不进事件流——
+    # 否则每次 flush 都触发自己的 modified 事件（1 条/秒空转）
+    if p.startswith("e:/ai-station/data/local_index/"):
+        return False
     if not any(p.startswith(r.replace("\\", "/").lower() + "/")
                for r in ROOTS):
         return False
@@ -98,14 +102,19 @@ class Collector(FileSystemEventHandler):
 
 def main() -> int:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    if PIDF.exists():
-        try:
-            pid = int(PIDF.read_text().strip())
-            os.kill(pid, 0)  # 活着 → 双实例，退
-            return 0
-        except (OSError, ValueError):
-            pass  # 陈尸 PID 文件 → 接管
-    PIDF.write_text(str(os.getpid()))
+    # 内核级独占锁（msvcrt）：补拉任务与本进程启动撞窗口时，PID
+    # 探活有 check-then-act 竞态（实测双实例），锁由内核原子授予、
+    # 进程死自动释放——补拉幂等的可靠形态
+    import msvcrt
+    lockf = OUT_DIR / "live_watch.lock"
+    fh = lockf.open("w")
+    try:
+        msvcrt.locking(fh.fileno(), msvcrt.LK_NBLCK, 1)
+    except OSError:
+        fh.close()
+        return 0  # 已有活实例
+    fh.write(str(os.getpid()))
+    fh.flush()
     col = Collector()
     obs = Observer()
     live = 0
@@ -129,6 +138,11 @@ def main() -> int:
         col.flush()
         PIDF.unlink(missing_ok=True)
         _log(f"守护退出：累计事件 {col.count}")
+        try:
+            msvcrt.locking(fh.fileno(), msvcrt.LK_UNLCK, 1)
+        except OSError:
+            pass
+        fh.close()
     return 0
 
 
