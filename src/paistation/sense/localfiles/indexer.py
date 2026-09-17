@@ -150,7 +150,7 @@ class Indexer:
             r = self._inv.apply_event(rec, op)
             stats[r] = stats.get(r, 0) + 1
         if off != prev_off or stats:
-            _log.info("秒级事件消费：读 %d 行 → %s", off - prev_off, stats)
+            _log.info("秒级事件消费：读 %d 字节 → %s", off - prev_off, stats)
         return stats
 
     @staticmethod
