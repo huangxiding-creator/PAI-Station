@@ -20,6 +20,7 @@ from pathlib import Path
 
 sys.path.insert(0, r"E:\AI-Station\src")
 
+from paistation.sense.localfiles.domain import DEFAULT_EXCLUDE_NAMES  # noqa: E402
 from paistation.sense.localfiles.usn import (  # noqa: E402
     build_dir_frn_map, gap_check, parse_csv, parse_meta, resolve_events)
 
@@ -113,7 +114,8 @@ def main() -> int:
         d["records"] = len(records)
         if records and dir_frn is None:
             dir_frn = build_dir_frn_map(
-                [p.rstrip("\\") for p in DOMAIN_PREFIXES])
+                [p.rstrip("\\") for p in DOMAIN_PREFIXES],
+                exclude_names=set(DEFAULT_EXCLUDE_NAMES))
         if records and dir_frn is not None:
             events = resolve_events(records, dir_frn, DOMAIN_PREFIXES)
             if events:

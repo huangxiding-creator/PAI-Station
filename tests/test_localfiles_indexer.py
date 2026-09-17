@@ -201,18 +201,46 @@ def test_drain_rename_preserves_extraction_state(tmp_path):
 
 
 def test_drain_rename_unknown_old_falls_to_created(tmp_path):
-    """旧路径不在库（域外移入）：新路径按新增走，不炸不丢。"""
+    """旧路径在域内但不在库（瞬态 tmp 改名，扫描从未见）：
+    新路径按新增走，不炸不丢。"""
     ix, root = _make_indexer(tmp_path)
     dest_file = root / "docs" / "outside.md"
     dest_file.write_text("域外移入的内容", encoding="utf-8")
     dest = str(dest_file).replace("\\", "/")
-    _queue_event(tmp_path, {"path": "E:/不存在/旧路径.md",
-                            "op": "renamed", "dest": dest})
+    old = str(root / "docs" / "瞬态.tmp").replace("\\", "/")
+    _queue_event(tmp_path, {"path": old, "op": "renamed", "dest": dest})
     stats = ix.drain_events()
     assert stats.get("renamed") is None
     row = ix._inv._db.execute(
         "SELECT status FROM files WHERE path=?", (dest,)).fetchone()
     assert row and row["status"] == "pending"
+    ix.close()
+
+
+def test_drain_domain_gate_drops_excluded_and_move_out(tmp_path):
+    """域闸门：排除名路径事件丢弃不登库；rename 移出域=域内消失。"""
+    ix, root = _make_indexer(tmp_path)
+    # ① 排除名（node_modules）事件：丢弃
+    bad = str(root / "node_modules" / "pkg" / "x.py").replace("\\", "/")
+    _queue_event(tmp_path, {"path": bad, "op": "created"})
+    stats = ix.drain_events()
+    assert stats == {}  # 无任何行落库
+    assert ix._inv._db.execute(
+        "SELECT COUNT(*) FROM files WHERE path=?", (bad,)).fetchone()[0] == 0
+
+    # ② 域内已提取文件 rename 到域外：old 标 gone（文件离开域）
+    f = root / "docs" / "leave.md"
+    f.write_text("要被移出域的内容", encoding="utf-8")
+    ix.full_cycle()
+    ix.drain_events()
+    old = str(f).replace("\\", "/")
+    out = str(tmp_path / "outside" / "leave.md").replace("\\", "/")
+    _queue_event(tmp_path, {"path": old, "op": "renamed", "dest": out})
+    stats = ix.drain_events()
+    assert stats.get("gone") == 1 and "renamed" not in stats
+    row = ix._inv._db.execute(
+        "SELECT status FROM files WHERE path=?", (old,)).fetchone()
+    assert row and row["status"] == "gone"
     ix.close()
 
 

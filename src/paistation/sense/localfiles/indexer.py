@@ -128,15 +128,24 @@ class Indexer:
                         raise ValueError("事件缺 path")
                 except ValueError:
                     continue  # 畸形事件丢弃（跨进程生产者格式漂移防御）
+                p = _norm_path(ev["path"])
+                if not self._domain.covers(p):  # 域闸门：.venv 等排除名
+                    off += len(raw)              # 防队列生产者灌排除路径
+                    continue
                 if ev.get("op") == "renamed" and ev.get("dest"):
                     # USN rename 对：不进 per-path 塌缩（旧路径 stat 必
-                    # 失败会被跳过成幽灵行），走保语义换路径专线
-                    renames.append((_norm_path(ev["path"]),
-                                    _norm_path(ev["dest"])))
+                    # 失败会被跳过成幽灵行），走保语义换路径专线。
+                    # 移出域（dest 不在域内）= 域内消失 → deleted
+                    dest = _norm_path(ev["dest"])
+                    if self._domain.covers(dest):
+                        renames.append((p, dest))
+                    else:
+                        latest[p] = "deleted"
                     off += len(raw)
                     continue
-                latest[_norm_path(ev["path"])] = ev.get("op", "modified")
-                if ev.get("dest"):
+                latest[p] = ev.get("op", "modified")
+                if ev.get("dest") and self._domain.covers(
+                        _norm_path(ev["dest"])):
                     latest[_norm_path(ev["dest"])] = "created"
                 off += len(raw)
         off_file.write_text(str(off))
