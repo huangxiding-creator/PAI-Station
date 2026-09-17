@@ -124,8 +124,10 @@ class Indexer:
                     break
                 try:
                     ev = _json.loads(raw)
+                    if "path" not in ev:
+                        raise ValueError("事件缺 path")
                 except ValueError:
-                    continue
+                    continue  # 畸形事件丢弃（跨进程生产者格式漂移防御）
                 if ev.get("op") == "renamed" and ev.get("dest"):
                     # USN rename 对：不进 per-path 塌缩（旧路径 stat 必
                     # 失败会被跳过成幽灵行），走保语义换路径专线

@@ -171,3 +171,84 @@ def gap_check(cursor_usn: int, meta: dict) -> bool:
     """journal 回卷判定：游标早于最早记录=中间记录已被覆盖丢失。"""
     first = meta.get("first_usn")
     return first is not None and cursor_usn < first
+
+
+def resolve_events(records: list[UsnRecord],
+                   dir_frn: dict[int, str],
+                   domain_prefixes: tuple[str, ...] = (),
+                   ) -> list[dict]:
+    """记录 → 队列事件（路径反解全靠父目录 FRN 映射，零库存依赖）。
+
+    - rename 对（synthesize_moves）→ {"path": 旧, "op": "renamed",
+      "dest": 新}：新旧路径任一拼不出（父目录不在映射=域外/新目录
+      未刷新）→ 整对丢弃，全量扫兜底
+    - 普通记录 classify 后按 父FRN+文件名 拼全路径，域前缀过滤
+    - deleted/created/modified 直接发；消费端 apply_event 幂等
+    载荷与库存库完全解耦——避免与 extract 写端并发。
+    """
+    events: list[dict] = []
+
+    def _path(parent: int, name: str) -> str | None:
+        d = dir_frn.get(parent)
+        if d is None:
+            return None
+        p = f"{d}\\{name}" if not d.endswith("\\") else f"{d}{name}"
+        if domain_prefixes and not p.startswith(domain_prefixes):
+            return None
+        return p
+
+    moves, news = synthesize_moves(records)
+    for m in moves:
+        old = _path(m.old_parent, m.old_name)
+        new = _path(m.new_parent, m.new_name)
+        if old and new:
+            events.append({"path": old, "op": "renamed", "dest": new})
+    for r in news:  # 旧侧在窗口外的 rename 新侧：等价 created
+        p = _path(r.parent_id, r.name)
+        if p:
+            events.append({"path": p, "op": "created"})
+    seen: set[tuple] = set()
+    for r in records:
+        op = classify(r)
+        if op is None or op == "renamed":  # rename 已走对专线
+            continue
+        p = _path(r.parent_id, r.name)
+        if p and (p, op) not in seen:
+            seen.add((p, op))
+            events.append({"path": p, "op": op})
+    return events
+
+
+def build_dir_frn_map(roots: list[str],
+                      exclude_names: set[str] = frozenset(
+                          {"node_modules", ".git", "__pycache__"})
+                      ) -> dict[int, str]:
+    """域根目录树 → {目录FRN: 目录绝对路径}（文件不进，秒级）。
+
+    新建目录 15 分钟窗内的事件可能拼不出路径而丢弃——全量扫兜底；
+    映射每轮全量重建自愈。
+    """
+    import os
+
+    out: dict[int, str] = {}
+    stack = [r.rstrip("\\") for r in roots]
+    while stack:
+        cur = stack.pop()
+        try:
+            frn = os.stat(cur).st_ino
+            if frn:
+                out[frn] = cur
+        except OSError:
+            continue
+        try:
+            with os.scandir(cur) as it:
+                for e in it:
+                    try:
+                        if e.is_dir(follow_symlinks=False) and \
+                                e.name.lower() not in exclude_names:
+                            stack.append(e.path)
+                    except OSError:
+                        continue
+        except OSError:
+            continue
+    return out

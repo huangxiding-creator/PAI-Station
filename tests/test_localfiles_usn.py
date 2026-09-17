@@ -56,11 +56,11 @@ def test_chained_renames_link():
     base = ('{usn},"{name}",{nlen},0x{reason:x},"x","2026/9/17 4:37:29",'
             '0x20,"存档",0000000000000000001400000009b539,'
             '0000000000000000002800000009b465,0x0,"*无*",0,3,0,104')
-    fid = 0x1400000009B539
     text = META + "\n".join([
         base.format(usn=100, name="a.tmp", nlen=7, reason=usn.REASON_RENAME_OLD_NAME),
         base.format(usn=104, name="b.mid", nlen=7, reason=usn.REASON_RENAME_NEW_NAME),
-        base.format(usn=108, name="c.final", nlen=8, reason=usn.REASON_RENAME_NEW_NAME),
+        base.format(usn=108, name="c.final", nlen=8,
+                    reason=usn.REASON_RENAME_NEW_NAME),
     ])
     # 构造第二条 OLD 缺失的链：b→c 只有 NEW（a→b 有对）
     moves, news = usn.synthesize_moves(usn.parse_csv(text))
@@ -101,3 +101,75 @@ def test_meta_and_gap_check():
     assert usn.gap_check(5846859775, meta)   # 游标早于最早记录=回卷
     assert not usn.gap_check(5846859776, meta)
     assert not usn.gap_check(0, {"first_usn": None})  # 元信息缺席不误报
+
+
+# ---------- 记录 → 队列事件（父目录 FRN 反解，零库存依赖） ----------
+# chr(92)=反斜杠：heredoc/传输层对反斜杠+数字/字母序列会吞字，禁直写
+
+BS = chr(92)
+IN_DIR = "E:" + BS + "AI-Station" + BS + "tmp"
+D_DIR = "D:" + BS + "20 白龟湖项目" + BS + "docs"
+DIR_FRN = {0x2800000009b465: IN_DIR, 0x100: D_DIR}
+DOM = ("E:" + BS + "AI-Station" + BS,
+       "D:" + BS + "20 白龟湖项目" + BS)
+
+
+def _rec(usn_, name, reasons, fid, pid):
+    return usn.UsnRecord(usn=usn_, name=name, reasons=reasons,
+                         file_id=fid, parent_id=pid, ts="t")
+
+
+def test_resolve_events_rename_pair_to_queue_event():
+    recs = [
+        _rec(10, "a.tmp", usn.REASON_RENAME_OLD_NAME, 0x14, 0x2800000009b465),
+        _rec(14, "a.md", usn.REASON_RENAME_NEW_NAME, 0x14, 0x2800000009b465),
+    ]
+    evs = usn.resolve_events(recs, DIR_FRN, DOM)
+    assert evs == [{"path": IN_DIR + BS + "a.tmp",
+                    "op": "renamed", "dest": IN_DIR + BS + "a.md"}]
+
+
+def test_resolve_events_cross_dir_move():
+    recs = [
+        _rec(10, "mv.pdf", usn.REASON_RENAME_OLD_NAME, 0x14,
+             0x2800000009b465),
+        _rec(14, "mv.pdf", usn.REASON_RENAME_NEW_NAME, 0x14, 0x100),
+    ]
+    evs = usn.resolve_events(recs, DIR_FRN, DOM)
+    assert evs and evs[0]["dest"] == D_DIR + BS + "mv.pdf"
+
+
+def test_resolve_events_domain_filter_and_dedup():
+    recs = [
+        _rec(1, "in.md", usn.REASON_FILE_CREATE | usn.REASON_CLOSE,
+             0x1, 0x2800000009b465),
+        _rec(2, "in.md", usn.REASON_FILE_CREATE | usn.REASON_CLOSE,
+             0x1, 0x2800000009b465),  # 重复同类事件去重
+        _rec(3, "out.md", usn.REASON_FILE_CREATE, 0x2, 0x999),  # 域外父目录
+        _rec(4, "noise.md", usn.REASON_CLOSE, 0x3, 0x2800000009b465),
+        _rec(5, "del.md", usn.REASON_FILE_DELETE, 0x4, 0x100),
+    ]
+    evs = usn.resolve_events(recs, DIR_FRN, DOM)
+    ops = {(e["path"], e["op"]) for e in evs}
+    assert (IN_DIR + BS + "in.md", "created") in ops
+    assert (D_DIR + BS + "del.md", "deleted") in ops
+    assert len(evs) == 2  # 域外丢/噪音丢/重复去重
+
+
+def test_resolve_events_rename_new_without_old_is_created():
+    recs = [_rec(10, "lonely.md", usn.REASON_RENAME_NEW_NAME,
+                 0x14, 0x2800000009b465)]
+    evs = usn.resolve_events(recs, DIR_FRN, DOM)
+    assert evs == [{"path": IN_DIR + BS + "lonely.md", "op": "created"}]
+
+
+def test_build_dir_frn_map_real(tmp_path):
+    (tmp_path / "sub1" / "deep").mkdir(parents=True)
+    (tmp_path / "sub2").mkdir()
+    m = usn.build_dir_frn_map([str(tmp_path)])
+    paths = set(m.values())
+    assert str(tmp_path) in paths
+    assert str(tmp_path / "sub1") in paths
+    assert str(tmp_path / "sub1" / "deep") in paths
+    assert str(tmp_path / "sub2") in paths
+    assert all(isinstance(k, int) and k > 0 for k in m)
