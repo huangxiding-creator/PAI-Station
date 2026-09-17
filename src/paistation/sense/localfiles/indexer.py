@@ -143,7 +143,10 @@ class Indexer:
                         latest[p] = "deleted"
                     off += len(raw)
                     continue
-                latest[p] = ev.get("op", "modified")
+                op = ev.get("op", "modified")
+                if op == "moved":  # live_watch 移动语义：旧侧消失
+                    op = "deleted"
+                latest[p] = op
                 if ev.get("dest") and self._domain.covers(
                         _norm_path(ev["dest"])):
                     latest[_norm_path(ev["dest"])] = "created"

@@ -138,6 +138,16 @@ class ChunkIndex:
 
         old, dest = _norm_path(old), _norm_path(dest)
         with self._db:
+            if self._db.execute(
+                    "SELECT 1 FROM chunks WHERE path=?", (old,)).fetchone():
+                # dest 残留重复块（老环轮/竞态）让位：rowid 直击删 fts
+                rids = [r[0] for r in self._db.execute(
+                    "SELECT rowid FROM chunks WHERE path=?", (dest,))]
+                if rids:
+                    self._db.executemany(
+                        "DELETE FROM chunks_fts WHERE rowid=?",
+                        [(r,) for r in rids])
+                self._db.execute("DELETE FROM chunks WHERE path=?", (dest,))
             cur = self._db.execute(
                 "UPDATE chunks SET path=? WHERE path=?", (dest, old))
             n = cur.rowcount

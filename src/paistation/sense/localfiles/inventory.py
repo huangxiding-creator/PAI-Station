@@ -261,10 +261,25 @@ class Inventory:
         轮询型 watch 眼里移动=删+建——500 页 PDF 挪目录重 OCR 一遍；
         USN 同 file_id 证明是同一文件 → 只换主键，extracted_at/parser
         /status 原样保留，chunk 层由 Indexer 伴生换路径。旧路径不在
-        库（域外移入/游标盲区）→ False，上层按新增走。
+        库（域外移入/游标盲区）→ False，上层按新增走。目标行已在
+        （老环轮/竞态残留的重复行）→ 提取态新者胜：dest 更新则删
+        old 保 dest 返回 False（上层 created 兜底只重 stat 不毁态）；
+        old 更新则删 dest 后迁移。
         """
         old, dest = _norm_path(old), _norm_path(dest)
         with self._db:
+            orow = self._db.execute(
+                "SELECT extracted_at FROM files WHERE path=?",
+                (old,)).fetchone()
+            if not orow:
+                return False
+            drow = self._db.execute(
+                "SELECT extracted_at FROM files WHERE path=?",
+                (dest,)).fetchone()
+            if drow and (drow[0] or 0) > (orow[0] or 0):
+                self._db.execute("DELETE FROM files WHERE path=?", (old,))
+                return False
+            self._db.execute("DELETE FROM files WHERE path=?", (dest,))
             cur = self._db.execute(
                 "UPDATE files SET path=?, last_seen=? WHERE path=?",
                 (dest, time.time(), old))

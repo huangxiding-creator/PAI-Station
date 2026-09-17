@@ -244,6 +244,57 @@ def test_drain_domain_gate_drops_excluded_and_move_out(tmp_path):
     ix.close()
 
 
+def test_drain_rename_dest_conflict_richer_row_wins(tmp_path):
+    """rename 时目标行已在（老环轮残留重复行）：提取态新者胜不撞 PK。"""
+    ix, root = _make_indexer(tmp_path)
+    f = root / "docs" / "rich.md"
+    f.write_text("已有完整提取态的内容", encoding="utf-8")
+    ix.full_cycle()
+    ix.drain_events()
+    dest = str(f).replace("\\", "/")
+    row = ix._inv._db.execute(
+        "SELECT extracted_at FROM files WHERE path=?", (dest,)).fetchone()
+
+    # 老环轮残留：旧路径挂着一行更老的 pending 重复行
+    stale = str(root / "docs" / "stale.tmp").replace("\\", "/")
+    ix._inv._db.execute(
+        "INSERT INTO files (path, status, extracted_at, last_seen)"
+        " VALUES (?, 'pending', 0, 0)", (stale,))
+    _queue_event(tmp_path, {"path": stale, "op": "renamed", "dest": dest})
+    stats = ix.drain_events()
+    # dest 提取态更新 → 保 dest 删 stale，回退 created 只重 stat 不毁态
+    assert "renamed" not in stats
+    row2 = ix._inv._db.execute(
+        "SELECT status, extracted_at FROM files WHERE path=?",
+        (dest,)).fetchone()
+    assert row2["status"] == "ok" and row2["extracted_at"] == row["extracted_at"]
+    assert ix._inv._db.execute(
+        "SELECT COUNT(*) FROM files WHERE path=?", (stale,)).fetchone()[0] == 0
+    ix.close()
+
+
+def test_drain_live_moved_op_marks_old_deleted(tmp_path):
+    """live_watch moved 事件：旧侧标 gone + 新侧 created（USN 缺席兜底）。"""
+    ix, root = _make_indexer(tmp_path)
+    f = root / "docs" / "lv.md"
+    f.write_text("live_watch 移动语义的内容", encoding="utf-8")
+    ix.full_cycle()
+    ix.drain_events()
+    old = str(f).replace("\\", "/")
+    dest_file = root / "docs" / "lv2.md"
+    dest_file.write_text("live_watch 移动语义的内容", encoding="utf-8")
+    os.remove(f)  # 模拟移动完成：旧路径消失
+    dest = str(dest_file).replace("\\", "/")
+    _queue_event(tmp_path, {"ts": 1, "op": "moved", "path": old, "dest": dest})
+    stats = ix.drain_events()
+    assert stats.get("gone") == 1
+    assert ix._inv._db.execute(
+        "SELECT status FROM files WHERE path=?", (old,)).fetchone()[0] == "gone"
+    assert ix._inv._db.execute(
+        "SELECT status FROM files WHERE path=?", (dest,)).fetchone()[0] == "pending"
+    ix.close()
+
+
 def test_walk_records_carry_frn(tmp_path):
     """walk 枚举记录携带 NTFS 引用号（USN 反解钥匙，非零可稳定）。"""
     ix, root = _make_indexer(tmp_path)
