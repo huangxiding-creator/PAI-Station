@@ -119,7 +119,7 @@
 
 | 09-16 | ✅ **QQ 邮箱治理收口**（用户指令「删除 Qoder/Refly」→「分类整理」）：①5 封删除闭环——圈地→备份 HMAC 三验→`cmd start` 弹真 TTY 控制台**用户键入 5 执行成功**（「agent 备好一切+人工只敲计数」的落地形态，用户终端敲错命令报错后的解法）；②全箱分类盘点：INBOX 25 封六类（账单发票10/订阅3/官方1/个人工作2/服务通知5/推销4）、Junk 6（PayPal 钓鱼+随手写「邮箱地址已变更」误判 2 封已警示用户）、已删除 26（今日5+8月手动21）；③推销 4 封（QualiTaTi×2+screenpipe×2，与用户 8 月手动删旧件惯例一致）计划+备份齐备弹窗待键入 4。**坑沉淀**：本地缓存对已搬移邮件保留陈旧行（by_from_domain 虚高，真相以 envelope list 服务器实查为准） | `tmp/qqmail/`（gitignored 工件：plan/backup/bat） |
 
-| 09-17 | ✅ **第 12 路调研（用户指令「有没有更底层的理念」+「模型越强我越强」+「混沌颠覆」三连）**：五切片四路已回收 **90 项**（A 理念考古 23：Memex1945/Engelbart1962/延展心智1998/Xanadu；B 记忆身份 22：EverOS/memU 记忆主权共识+Second-Me 停更死亡谷；C 环境感知 22：Weiser 消失的技术+screenpipe/Omi+独立感知产品被平台收编警示；D 代理执行 23：意图物化非劳动转移+lotti 最同构+A2A/ANP 协议层），全部 URL 亲测+gh api 实测 stars，WebSearch 429 全程 curl/gh 降级；E 愿景论述回收后补 _all.json+DIGEST。**产出 DISRUPTION_PLAN.md**（混沌破界五步：五个隐含假设逐条击破——站→运行时/记忆→主权卷宗【单点破局尖点】/软件→per-outcome/孤岛→站群第二曲线/工具→意图物化；反脆弱宪法：智能全外购+资产全自积+套壳三问入心跳；死亡谷不做清单四条；P0-P3 执行序列）——**✋ 提案审批闸开启待用户裁决** | `RESEARCH_DOCKET/v3/12-foundational-vision/` `PROPOSAL_V3/DISRUPTION_PLAN.md` |
+| 09-17 | ✅ **第 12 路调研（用户指令「有没有更底层的理念」+「模型越强我越强」+「混沌颠覆」三连）**：五切片全回收 **109 项去重入册**（A 考古 23：Memex1945/Engelbart1962/延展心智/Xanadu；B 记忆 20：记忆主权共识+死亡谷；C 感知 22：Weiser+收编警示；D 执行 21：意图物化+lotti/A2A/ANP；E 论述 23：四共识四分歧图谱+引文勘误「个人AI团队」实为 Altman 语），全部 URL 亲测+gh api stars，WebSearch 429 全程降级；_all.json+DIGEST.md 出理念地层图（L0 人的有限性→L4 产品综合）。**产出 DISRUPTION_PLAN.md**（五隐含假设击破：站→运行时/记忆→主权卷宗【尖点】/软件→per-outcome/孤岛→站群/工具→意图物化；反脆弱宪法三铁律；死亡谷四不做；P0-P3）——**✋ 提案审批闸开启待用户裁决** | `RESEARCH_DOCKET/v3/12-foundational-vision/` `PROPOSAL_V3/DISRUPTION_PLAN.md` |
 
 ## 红线备忘（每轮心跳自查）
 

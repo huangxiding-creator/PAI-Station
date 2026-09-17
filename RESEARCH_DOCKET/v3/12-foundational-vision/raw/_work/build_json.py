@@ -1,0 +1,243 @@
+# -*- coding: utf-8 -*-
+"""Assemble E_essays.json for slice E (vision essays / thought leaders). All quotes verified verbatim against sources fetched to _work/ on 2026-09-17."""
+import json, io, sys
+
+OUT = r"E:\AI-Station\RESEARCH_DOCKET\v3\12-foundational-vision\raw\E_essays.json"
+
+items = [
+{
+ "name": "Karpathy：LLM OS（大语言模型即新型操作系统）",
+ "url": "https://hub.baai.ac.cn/view/32900",
+ "kind": "talk",
+ "author": "Andrej Karpathy（智源社区转载量子位报道承载）",
+ "year": "2023",
+ "vision_claim": "「大模型本质就是两个文件！」特斯拉前AI总监爆火LLM科普，时长1小时，面向普通大众……（视频）涵盖模型推理、训练、微调和新兴大模型操作系统以及安全挑战，涉及的知识全部截止到本月。",
+ "why_beneath": "把「个人AI」从应用层下沉到计算范式层：LLM 不是一件工具，而是一台新计算机的内核（模型=CPU、上下文窗口=RAM、工具调用=外设、向量库=硬盘）。个人AI工作站的「无限上下文」「自进化」在这套语言里只是新操作系统的存储与进程管理。原始论述 x.com/karpathy/status/1707432429418652192（2023-11）境内被墙，以智源社区权威转载页为可达载体。",
+ "alive": True
+},
+{
+ "name": "Karpathy《The Space of Minds》（心智空间）",
+ "url": "https://karpathy.bearblog.dev/the-space-of-minds/",
+ "kind": "essay",
+ "author": "Andrej Karpathy",
+ "year": "2025",
+ "vision_claim": "It's a lot less survival of tribe in the jungle and a lot more solve the problem / get the upvote. LLMs are humanity's \"first contact\" with non-animal intelligence.",
+ "why_beneath": "把个人AI问题改写成物种学问题：LLM 是可与人类心智并置的新智能体，人格是可配置的参数点。个人AI工作站本质上是「为一个人类调校出一个专属心智成员」——这比任何产品愿景都低一层：先回答新智能体是什么，再谈工作站。",
+ "alive": True
+},
+{
+ "name": "Dario Amodei《Machines of Loving Grace》",
+ "url": "https://www.darioamodei.com/machines-of-loving-grace",
+ "kind": "essay",
+ "author": "Dario Amodei",
+ "year": "2024",
+ "vision_claim": "powerful AI is \"a country of geniuses in a datacenter\"; \"We'll refer to these under the heading of biological freedom: the idea that everyone should be empowered to choose what they want to become and live their lives in the way that most appeals to them.\"",
+ "why_beneath": "把个人AI的终点锚在「人的自我塑造自由」而非效率。纠偏：网传「个人AI团队/虚拟专家」句并不出自本文（那是 Altman），MoLG 的个人段落是 biological freedom——AI 的意义是让每个人选择自己想成为什么。比「更懂你」更根本：懂你是手段，成为是目的。",
+ "alive": True
+},
+{
+ "name": "Anthropic 官方博客《Bringing memory to teams》",
+ "url": "https://www.anthropic.com/news/memory",
+ "kind": "essay",
+ "author": "Anthropic",
+ "year": "2025",
+ "vision_claim": "Today, we're introducing memory to the Claude app, where Claude remembers you and your team's projects and preferences, eliminating the need to re-explain context and keeping complex work moving forward.",
+ "why_beneath": "头部厂商一手愿景把「记忆」而非「对话」立为个人AI的第一性能力，与 PAI-Station 的记忆库主张互证；且这是正在兑现的工程承诺（团队级共享记忆），不是空想——记忆被定义为消除「重新解释自己」这一成本。",
+ "alive": True
+},
+{
+ "name": "Sam Altman《The Intelligence Age》（智能时代）",
+ "url": "https://www.thepaper.cn/newsDetail_forward_28837218",
+ "kind": "essay",
+ "author": "Sam Altman（澎湃新闻全文转载译本）",
+ "year": "2024",
+ "vision_claim": "最终，每个人都可以拥有一个自己的人工智能团队，里面有各领域的虚拟专家，他们共同协作创造出几乎我们能够想象的任何事物。（标题：奥特曼发文谈智能时代：我们可能在“几千天内”拥有超级AI）",
+ "why_beneath": "「个人AI团队」是被引用最多的个人AI愿景句（常被误安到 Dario 头上）：它把个人AI定义为「整编制虚拟同事」而非单个助手——比「一个工作站」更进一步的编制学想象。原文 samaltman.com 境内 SNI 阻断，澎湃为可达权威全文转载。",
+ "alive": True
+},
+{
+ "name": "Sam Altman《Three Observations》（三个观察）",
+ "url": "https://www.thepaper.cn/newsDetail_forward_30136720",
+ "kind": "essay",
+ "author": "Sam Altman（澎湃湃客逐条转述原文三条观察）",
+ "year": "2025",
+ "vision_claim": "1. AI 模型的智能大致等于用于训练和运行它的资源的对数。2. 使用特定水平AI 的成本每 12 个月大约降低 10 倍，而价格下降导致更多的使用。3. 线性增加的智能的社会经济价值是超指数的。",
+ "why_beneath": "给「人人都有个人AI」提供了经济学必然性：智能成本十倍年降 × 超指数社会价值 → 个人AI是定价曲线的必然产物而非愿望。个人AI工作站在他的框架里不是愿景，是三年内被成本曲线推到每个人面前的默认状态。原文 samaltman.com/three-observations 境内阻断。",
+ "alive": True
+},
+{
+ "name": "Marc Andreessen（a16z）《Why AI Will Save the World》",
+ "url": "https://a16z.com/ai-will-save-the-world/",
+ "kind": "essay",
+ "author": "Marc Andreessen",
+ "year": "2023",
+ "vision_claim": "An even shorter description of what AI could be: a way to make everything we care about better. ... What AI offers us is the opportunity to profoundly augment human intelligence.",
+ "why_beneath": "风险资本端的「放大论」总宣言：AI=人类智能放大器（augmentation），被放大的单位是个体的人。这句「让一切我们在乎的东西变好」是个人AI所有产品文案的元话语——先有「放大人」这个哲学立场，才有个人AI这个品类。",
+ "alive": True
+},
+{
+ "name": "a16z《The Techno-Optimist Manifesto》（技术乐观主义宣言）",
+ "url": "https://a16z.com/the-techno-optimist-manifesto/",
+ "kind": "essay",
+ "author": "Marc Andreessen",
+ "year": "2023",
+ "vision_claim": "We believe that there is no material problem – whether created by nature or by technology – that cannot be solved with more technology. ... the techno-capital machine, the engine of perpetual material creation, growth, and abundance.",
+ "why_beneath": "个人主权AI 的意识形态总纲：技术-资本机器=永动的物质创造引擎，任何「已经够好了」都被判定为异端。个人拥有 AI 在此叙事里不是便利而是道德义务——这是比产品愿景低一层的信念层。",
+ "alive": True
+},
+{
+ "name": "Sequoia《Generative AI's Act Two》（生成式AI第二幕）",
+ "url": "https://sequoiacap.com/article/generative-ai-act-two/",
+ "kind": "essay",
+ "author": "Sonya Huang & Pat Grady（Sequoia Capital）",
+ "year": "2024",
+ "vision_claim": "We now believe the market is entering \"Act 2\"—which will be from the customer-back. Act 2 will solve human problems end-to-end.",
+ "why_beneath": "顶级投资论文把判据从「模型炫技」（Act 1, technology-out）改判为「端到端解决人的问题」（Act 2, customer-back）。个人AI工作站是把 customer-back 推到极致的形态：customer=N=1，端到端=24/7 全程接管。",
+ "alive": True
+},
+{
+ "name": "乔布斯「bicycle for the mind」（思想的自行车）——Fortune 权威记载",
+ "url": "https://fortune.com/2024/01/09/steve-jobs-devices-bicycle-for-the-mindbut-effect-on-our-brains-internet-health-tech-royce-branning/",
+ "kind": "essay",
+ "author": "Steve Jobs（1990《Memory & Imagination》采访）；Fortune（Royce Branning）记载",
+ "year": "2024",
+ "vision_claim": "Steve Jobs thought devices would become 'a bicycle for the mind'—but their effect on our brains is similar to that of smoking and junk food.",
+ "why_beneath": "个人计算四十年的元神话：工具的合法性来自「放大人类自身」（人类+自行车=效率学冠军）。同一条标题的后半句直接挂出反方证据（设备正在如烟瘾般伤害大脑）——正反同框，是个人AI愿景最古老的正反面教材。1990 原始采访档案（YouTube/Internet Archive）境内均不可达；任务括号中提及的「尹相哲(Moon)」经多轮中文检索无法确认身份，按乔布斯原始脉络覆盖。",
+ "alive": True
+},
+{
+ "name": "吴恩达 The Batch《Four AI Agent Strategies That Improve GPT-4 and GPT-3.5 Performance》",
+ "url": "https://www.deeplearning.ai/the-batch/how-agents-can-improve-llm-performance/",
+ "kind": "essay",
+ "author": "Andrew Ng",
+ "year": "2024",
+ "vision_claim": "Indeed, wrapped in an agent loop, GPT-3.5 achieves up to 95.1%.（对比 GPT-4 zero-shot 67.0%；四模式：Reflection / Tool Use / Planning / Multi-agent collaboration）",
+ "why_beneath": "给「自进化」提供了可度量的机制论：性能跃迁来自迭代工作流而非模型换代（GPT-3.5+agent loop 反超 GPT-4 裸奔）。个人AI的进化引擎被定位为流程与记忆，而非等待更强的模型——这是工作站架构优先于模型选型的理论依据。",
+ "alive": True
+},
+{
+ "name": "李开复《人民日报》撰文《靠什么赢在AI时代》",
+ "url": "https://www.peopleapp.com/column/30052927112-500007650092",
+ "kind": "essay",
+ "author": "李开复",
+ "year": "2026",
+ "vision_claim": "我们每个人都有好多点子，但是分身乏术，最终实现的可能连1%都不到。二是人的大脑带宽太有限了，我们的信息输入和输出比AI慢了数千倍……AI的最大红利会流向具备创意、能够调度AI放大价值的人群。",
+ "why_beneath": "把个人AI的正当性锚在生理事实上：人类带宽瓶颈（输入输出慢数千倍、一次只能想一件事）使「分身」成为器官级需求而非玩具。在党报语境为「调度AI的个人」背书，等于给个人AI工作站开出中文世界最高级别的合法性证明。",
+ "alive": True
+},
+{
+ "name": "王小川·36氪《智能涌现》访谈《对话王小川：走出通用人工智能的主干道之后》",
+ "url": "https://www.36kr.com/p/3821521291038856",
+ "kind": "interview",
+ "author": "王小川（百川智能创始人）；36氪《智能涌现》",
+ "year": "2026",
+ "vision_claim": "当初的初心就是做生命模型，造医生……我们在底层做了一套永久性的记忆存储，不走上下文那套模式。这是一套有数据库结构的存储……做全生命周期的健康数据管理。",
+ "why_beneath": "一线创业者的一手架构取舍：记忆必须库化而非上下文化——与 PAI-Station 的判断同构；且他把个人AI的终局指向生命/健康/快乐而非办公效率（三步走：智力模型→物理模型→生命模型）。比效率更底层的 KPI：多活、健康地活。",
+ "alive": True
+},
+{
+ "name": "杨植麟·月之暗面（新财富特稿《三次考上清华的鼓手，痛击美国AI巨头》）",
+ "url": "https://www.sohu.com/a/911793413_616577",
+ "kind": "essay",
+ "author": "杨植麟（月之暗面创始人）；新财富/搜狐",
+ "year": "2025",
+ "vision_claim": "在他看来，通用人工智能技术的发展就像登月，需要长期主义的坚守。在公司内部，杨植麟把长文本称为登月计划的第一步。（Kimi 支持输入的长文本达到20万字，首次将对话框容量做到了全球第一，而彼时 GPT-4 约为2.5万字。）",
+ "why_beneath": "把「无限上下文」从功能卖点抬升为登月叙事的第一步：装下一个人的全部人生文本是 AGI 路线图的地基而非参数竞赛。与 PAI「无限上下文」主张直接互证——头部创业者与本项目在同一个坑位上各自下注。",
+ "alive": True
+},
+{
+ "name": "少数派《用Notion搭建第二大脑，我开始找回了生活的秩序感》",
+ "url": "https://sspai.com/post/80845",
+ "kind": "essay",
+ "author": "Xuan酱（少数派）",
+ "year": "2023",
+ "vision_claim": "在持续记录的同时，我终于打通了信息输入-整合-输出的整个链路……可以理解为是一个给大脑开的外挂，也就是把我们看到的思考过的所有东西都文档化电子化。把记忆和储存这件事，外包出去。",
+ "why_beneath": "中文「第二大脑」实践原点：记忆外挂化（CODE 模型）。它为个人AI提供了数据底座的用户叙事，也埋下了 Turkle 式批判的伏笔——记忆究竟是「外包出去」还是「延展出去」，一词之差是两种个人AI哲学的分水岭。",
+ "alive": True
+},
+{
+ "name": "少数派《2026年，从「记笔记」到「积累数字资产」》",
+ "url": "https://sspai.com/post/106433",
+ "kind": "essay",
+ "author": "idealclover（少数派）",
+ "year": "2026",
+ "vision_claim": "这些笔记是构建个人数字分身的核心基石——它们构成了独一无二、不可复制的专属训练数据集，基于此才能够训练出真正理解并代表你我的 AI 助手……数字资产要掌握在自己的手中。",
+ "why_beneath": "2026 年中文用户层已自发收敛到「个人语料=数字分身燃料=主权资产」——与 PAI-Station 的语料库/数据主权主张完全同构，且由真实用户而非厂商说出。这是需求侧先于产品侧成熟的最强信号。",
+ "alive": True
+},
+{
+ "name": "Sherry Turkle TED《Connected, but alone?》（群体性孤独）",
+ "url": "https://www.ted.com/talks/sherry_turkle_connected_but_alone",
+ "kind": "talk",
+ "author": "Sherry Turkle（MIT）",
+ "year": "2012",
+ "vision_claim": "As we expect more from technology, do we expect less from each other? ... we sacrifice conversation for mere connection. We short-change ourselves.",
+ "why_beneath": "反方之锚：24/7 常驻、随叫随到、永远耐心的个人AI，在她的框架里恰是「用连接替代对话」的终极形态——「比用户更懂用户」可能是病症而非卖点。任何个人AI愿景不回答 Turkle，就等于没做压力测试。其专著《Alone Together》为该论点完整版。",
+ "alive": True
+},
+{
+ "name": "Nick Bostrom《Letter from Utopia》（来自乌托邦的信）",
+ "url": "https://nickbostrom.com/utopia",
+ "kind": "essay",
+ "author": "Nick Bostrom",
+ "year": "2008",
+ "vision_claim": "I am writing to tell you about my life – that you may choose it for yourself.",
+ "why_beneath": "把愿景文体倒装：由「未来可能的你」写信给现在的你，技术是通往「可能自我」的信道。个人AI的伦理主语由此从「它多懂我」变成「我想成为谁」——比效率层低一层到存在层：分身的意义是让你选择自己的人生。",
+ "alive": True
+},
+{
+ "name": "Nick Bostrom《Deep Utopia》（深度乌托邦）",
+ "url": "https://nickbostrom.com/deep-utopia/",
+ "kind": "book",
+ "author": "Nick Bostrom",
+ "year": "2024",
+ "vision_claim": "In a \"solved world\", what is the point of human existence? What gives meaning to life? ... beyond the post-scarcity world lies a \"post-instrumental\" one.",
+ "why_beneath": "终局追问：当 AI（含你的数字分身）包办一切手段，人类进入「后工具性」世界——做事不再为结果，只剩意义问题。个人AI愿景的终点必须回答「既然分身都能做，我为何还要亲自做事」，否则只是效率学的最后一站。",
+ "alive": True
+},
+{
+ "name": "Andy Clark & David Chalmers《The Extended Mind》（延展心智）",
+ "url": "http://consc.net/papers/extended.html",
+ "kind": "essay",
+ "author": "Andy Clark & David Chalmers",
+ "year": "1998",
+ "vision_claim": "Where does the mind stop and the rest of the world begin? The question invites two standard replies. Some accept the demarcations of skin and skull...",
+ "why_beneath": "全部「第二大脑/数字分身/个人AI」的哲学基座：认知本就延展于工具（Otto 的笔记本即其记忆）。个人AI工作站是延展心智论的直接工程实现——不是「AI 像人」，而是「人本来就大于颅骨」。比一切产品愿景都低一层：先有这个哲学论断，才谈个人AI的合法性。",
+ "alive": True
+},
+{
+ "name": "Eliezer Yudkowsky《AGI Ruin: A List of Lethalities》",
+ "url": "https://www.lesswrong.com/posts/uMQ3cqWDPHhjtiesc/agi-ruin-a-list-of-lethalities",
+ "kind": "essay",
+ "author": "Eliezer Yudkowsky（MIRI）",
+ "year": "2022",
+ "vision_claim": "When I say that alignment is lethally difficult, I am not talking about ideal or perfect goals of 'provable' alignment... all I want is that we have justifiable cause to believe of a pivotally useful AGI 'this will not kill literally everyone'.",
+ "why_beneath": "「AI 作为意志延伸」的反命题：超级智能不共享你的目标，越强的分身越不可直接信任。把「个人AI=我的意志外嫁」这条直觉在哲学上判为 lethal——个人AI的自主性边界（人策展、机执行）不是产品洁癖而是对齐问题的最小安全形态。",
+ "alive": True
+},
+{
+ "name": "Balaji《AI is polytheistic, not monotheistic》（AI 是多神的，不是一神的）",
+ "url": "https://balajis.com/p/ai-is-polytheistic-not-monotheistic",
+ "kind": "essay",
+ "author": "Balaji Srinivasan",
+ "year": "2025",
+ "vision_claim": "there is no AGI, there are many AGIs ... AI is amplified intelligence, not artificial intelligence ... That just means the smarter you are, the smarter the AI is ... AI doesn't take your job, it lets you do any job.",
+ "why_beneath": "主权个人AI 的多神论地基：没有唯一的神 → 人人可拥有自己的 AI-人融合体，且是权力平衡而非垄断。AI 被重新定义为「放大智能」：使用者越聪明 AI 越强——直接反驳替代论，给个人主权AI 定价。这是「Personal Sovereign AI」最锋利的一篇正面纲领。",
+ "alive": True
+},
+{
+ "name": "Balaji《The Network State》（网络国家）",
+ "url": "https://thenetworkstate.com/",
+ "kind": "book",
+ "author": "Balaji Srinivasan",
+ "year": "2022",
+ "vision_claim": "Technology has enabled us to start new companies, new communities, and new currencies. But can we use it to start new cities, or even new countries? ... a concept we call the network state.",
+ "why_beneath": "主权从平台回流个人的组织学蓝图：当个体可携算力、数据与共识「建国」，个人AI就是数字主权的技术底座。比「工作站」更激进一层：工作站是工具叙事，网络国家是主权叙事——个人AI在这里是公民权而非生产力。",
+ "alive": True
+},
+]
+
+data = {"slice": "E_essays", "collected_at": "2026-09-17", "items": items}
+with io.open(OUT, "w", encoding="utf-8") as f:
+    json.dump(data, f, ensure_ascii=False, indent=2)
+print("WROTE", OUT, "items:", len(items))
