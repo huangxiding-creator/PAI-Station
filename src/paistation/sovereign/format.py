@@ -81,3 +81,30 @@ def vault_validate(vault_dir: str | Path) -> dict:
     report["ok"] = not (report["missing"] or report["tampered"]
                         or report["unmanifested"])
     return report
+
+
+def manifest_validate(root_dir: str | Path) -> dict:
+    """纯指纹校验（P0 卷宗目录化布局用）：只验 MANIFEST 指纹与未登记文件，
+    不硬性要求 vault 根的 memory.md（A1 布局专属）。"""
+    root = Path(root_dir)
+    report: dict = {"spec": SOVEREIGN_SPEC_VERSION, "ok": False,
+                    "missing": [], "tampered": [], "unmanifested": []}
+    try:
+        manifest = json.loads(
+            (root / "MANIFEST.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        report["tampered"].append("MANIFEST.json")
+        return report
+    declared = manifest.get("files", {})
+    for rel, fingerprint in declared.items():
+        path = root / rel
+        if not path.is_file():
+            report["missing"].append(rel)
+        elif file_sha256(path) != fingerprint:
+            report["tampered"].append(rel)
+    for rel, _path in _iter_files(root):
+        if rel not in declared:
+            report["unmanifested"].append(rel)
+    report["ok"] = not (report["missing"] or report["tampered"]
+                        or report["unmanifested"])
+    return report
