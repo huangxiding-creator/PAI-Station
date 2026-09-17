@@ -11,6 +11,7 @@ import argparse
 import json
 import logging
 import sys
+import time
 from pathlib import Path
 
 from paistation.sense.localfiles.domain import ScanDomain
@@ -84,6 +85,30 @@ def _extract_loop(ix: Indexer, limit: int, log,
     return total
 
 
+def _embed_loop(chunks, batch: int, loop: bool, max_hours: float,
+                log) -> dict:
+    """补嵌长跑：循环至清空；max_hours>0 时到点优雅收工。
+
+    203 万欠账块 30 块/s ≈ 18.5h——不限时会跟次日白天的 OCR 风暴
+    抢一整天。断点=embedding_status，收工明夜续磨零浪费。
+    """
+    total = {"embedded": 0, "rows_lit": 0, "failed": 0}
+    deadline = (time.monotonic() + max_hours * 3600
+                if max_hours > 0 else None)
+    while True:
+        r = chunks.backfill(batch=batch)
+        for k in total:
+            total[k] += r[k]
+        log.info("补嵌批：%s（累计 %s 剩 %s）", r, total, r["remaining"])
+        if not loop or r["embedded"] == 0:
+            break
+        if deadline and time.monotonic() > deadline:
+            log.info("补嵌达 %sh 预算优雅收工（断点=embedding_status，"
+                     "明夜续磨）", max_hours)
+            break
+    return total
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="paistation.sense.localfiles")
     ap.add_argument("--db-dir", type=Path, default=DEFAULT_DIR)
@@ -104,6 +129,8 @@ def main(argv=None) -> int:
     em.add_argument("--batch", type=int, default=256)
     em.add_argument("--loop", action="store_true",
                     help="循环至补嵌完成（夜间长跑）")
+    em.add_argument("--max-hours", type=float, default=0,
+                    help="长跑时长预算（0=不限；到点优雅收工，明夜续磨）")
     sub.add_parser("status", help="索引状态统计")
     sq = sub.add_parser("search", help="混合检索")
     sq.add_argument("query", nargs="+")
@@ -165,15 +192,8 @@ def main(argv=None) -> int:
             if chunks.stats()["embedder"] == "none":
                 print("[嵌入] Ollama 不在位，拒绝空转（先启动服务）")
                 return 1
-            total = {"embedded": 0, "rows_lit": 0, "failed": 0}
-            while True:
-                r = chunks.backfill(batch=args.batch)
-                for k in total:
-                    total[k] += r[k]
-                log.info("补嵌批：%s（累计 %s 剩 %s）",
-                         r, total, r["remaining"])
-                if not args.loop or r["embedded"] == 0:
-                    break
+            total = _embed_loop(chunks, args.batch, args.loop,
+                                args.max_hours, log)
             print(json.dumps(total, ensure_ascii=False, indent=2))
         elif args.cmd == "search":
             query = " ".join(args.query)
