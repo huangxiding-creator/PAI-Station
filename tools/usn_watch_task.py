@@ -69,6 +69,10 @@ def _probe(drv: str) -> dict:
 
 
 def main() -> int:
+    # 暂停旗标：白天归还算力用——任务照常被调度拉起但秒退零IO（管理员任务
+    # 普通权限禁不掉，代码口是最稳的暂停开关；恢复=删旗标文件）
+    if (OUT_DIR / "PAUSE").exists():
+        return 0
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     cursors = {}
     if CURSOR.exists():
