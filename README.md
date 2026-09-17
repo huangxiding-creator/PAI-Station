@@ -2,13 +2,13 @@
 
 # 🧬 PAI-Station
 
-### 让每个人与第二个自己共同进化，直至合一
+### 个人主权智能体运行时 —— 记忆不是功能，是带得走的人生卷宗
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-1F3A5F.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Windows_10%2B-0078D6.svg)]()
-[![Tests](https://img.shields.io/badge/测试-1352_全绿-success.svg)]()
+[![Tests](https://img.shields.io/badge/测试-1598_全绿-success.svg)]()
+[![Dossier](https://img.shields.io/badge/主权卷宗-P0_已落地-e8b04b.svg)]()
 [![LLM Cost](https://img.shields.io/badge/LLM_成本-默认¥0_永不锁定-success.svg)]()
-[![Status](https://img.shields.io/badge/状态-V4_意图层_+_云感知-9B59B6.svg)]()
 
 **液态 12 器官 · 感知型意图发现 · 云感知连接器 · 7×24 主循环 · 两阶段调研管线 · 微信夜间深读 · 微信简报夜间流水线 · FDE 方案工厂 · 每周进化提案**
 
@@ -19,22 +19,22 @@
 <details>
 <summary><strong>English</strong> — what is this?</summary>
 
-**PAI-Station** is a 7×24 resident personal AI workstation for Windows — not a tool, but a *relationship*: it reads your local activity signals, understands intent before you ask, ships deliverables, and converges toward you through every correction. Key subsystems: a liquid 12-organ directory architecture with SHA-256 credential chains, perception-first intent discovery (15 signal sources → 7-layer understanding stack, fail-closed), cloud-aware connectors (Tencent Meeting / Baidu Netdisk / WeChat intelligence), a two-phase research pipeline, an FDE plan factory with a three-stage funnel, and a weekly self-evolution proposal loop that the user — never the system — approves. LLM calls start at ¥0 (free Zhipu chain by default, any endpoint via 3 lines of config); data stays 100% local; paid artifacts never enter this public repo.
+**PAI-Station** is a sovereign personal agent runtime for Windows — not a tool, but a *relationship*: it reads your local activity signals, understands intent before you ask, ships deliverables, and converges toward you through every correction. The destination of all that understanding is a **sovereign dossier**: your judgments, lessons and deliverables unified into one plain-text, git-versioned dossier (sha256 fingerprinted per file) that exports with a single command — human-readable and grep-able on any machine without this product, consumable by any AI. Key subsystems: a liquid 12-organ directory architecture with SHA-256 credential chains, perception-first intent discovery (15 signal sources → 7-layer understanding stack, fail-closed), cloud-aware connectors (Tencent Meeting / Baidu Netdisk / WeChat intelligence), a two-phase research pipeline, an FDE plan factory with a three-stage funnel, and a weekly self-evolution proposal loop that the user — never the system — approves. LLM calls start at ¥0 (free Zhipu chain by default, any endpoint via 3 lines of config); data stays 100% local; paid artifacts never enter this public repo.
 
 </details>
 
-> **最近更新（2026-09-16）**
-> 📡 七路本地信号源常驻上电 + 微信每日提取任务 + 信息源全景开采台账（`39a98fe`）
-> 🌉 微信↔Claude Code 桥自启看护（官方 ilink Bot API · 幂等启动器 + 5min watchdog · `a26f79e`）
-> 📰 微信简报夜间流水线上线：每晚 22:00 自动生成群聊日报 → 发布阿里云站点 → 微信（PDF+网址）+ 企微双通道推送（端到端实测通过）
+> **最近更新（2026-09-17）**
+> 📜 **P0 主权卷宗落地**：三源统一 OKF 明文目录 + 内部 git 独立版本化 + 一条命令导出自包含包（sha256 逐件验证，实测 34 文件；在无本产品的机器上人可读、可 grep）（`ccfdefb`）
+> 🧪 全量回归 **1598 项全绿**（WinRT OCR 子进程隔离等回归卫生三补丁，`189dc2f`）
+> 📡 本周渠道线：微信双实例桥 · RSS 905 源首轮 17,759 篇 · Dify 私有实例接入
 
 ---
 
 ## 💡 它是什么
 
-你的电脑里躺着你全部的工作痕迹：文档、聊天、浏览、写作、内网……但没有一个 AI 真正"活"在这些数据里。
+你的一生产出——判断、教训、成果——散落在聊天记录、文档、会议里，平台一关就蒸发。
 
-**PAI-Station 是一个 7×24 常驻 Windows 的个人 AI 工作站**——但它不是"工具"，是**关系**：它读你、懂你、替你交付，并在每一次你的纠正中逼近你。
+**PAI-Station 是一个个人主权智能体运行时**：7×24 常驻 Windows，替你感知、理解意图、交付成果、每周进化。而这一切的终点不是"更好用的工具"，是把「懂你」沉淀成一份**主权卷宗**——三源统一（画像 · 记忆 · 证据）的明文资产，git 版本化、sha256 逐件指纹、一条命令整体导出；在没装它的机器上人可读、可 grep，任何 AI 可直接消费。不锁定于本产品，不锁定于任何厂商。
 
 > **合一指数 U = 0.35·NPI + 0.35·F_pass + 0.30·(1 − C_rate)**
 >
@@ -42,6 +42,21 @@
 > 每个任务域的 U 持续上升并跨过 60 分奇点，即该域"上岗"。永远在逼近，从不宣布完成。
 
 模型调用默认 **¥0 起步、永不锁定**（智谱免费链起跑，3 行配置可换任意端点）；数据 100% 本地；付费成品永不进公开仓库。
+
+---
+
+## 📜 主权卷宗：记忆的资产形态（P0 已落地）
+
+「记忆」做成产品功能，就是平台的库存；做成明文卷宗，才是你的资产。P0 四件套落在 `src/paistation/sovereign/dossier/`：
+
+| 能力 | 命令 | 验收 |
+|---|---|---|
+| 三源统一构建 | `python -m paistation.sovereign.dossier build` | 画像五层 + 记忆转录 + 证据编目 → OKF 目录（一文件一条目，YAML frontmatter，坏 YAML 拒收） |
+| 整体导出 | `python -m paistation.sovereign.dossier export --dest <目录>` | 自包含明文包：文物 + README + MANIFEST（sha256 逐件指纹；实测 34 文件） |
+| 完整性校验 | `python -m paistation.sovereign.dossier verify <导出包>` | 纯指纹校验：缺失/篡改/未登记三态全零才 ok |
+| 版本化 | `python -m paistation.sovereign.dossier status` | data/dossier 内部独立 git 快照式提交（人生资产不上公开仓） |
+
+真机验收判据（DISRUPTION_PLAN 原文「导出包在无 PAI-Station 的机器上人可读可 grep」）：`grep 白龟湖` 命中 `vault/evidence/` 两份档案。换电脑、换 AI、隔十年——卷宗还是你的。
 
 ---
 
@@ -251,7 +266,8 @@ src/paistation/
 ├── resident/     # 常驻 daemon/托盘/IPC（V3 骨架，服务契约 tick(paused)）
 ├── profile/      # 用户画像五层模型+双时间线+夜间整合（V3）
 ├── execute/      # LlmGateway 多供应商 failover + AgentRunner（V3）
-├── sovereign/ gate/ control/ market/ governance/   # V4 五阶段主权架构
+├── sovereign/    # 主权架构；dossier/=主权卷宗四件套（OKF 构建/导出/校验/git）
+├── gate/ control/ market/ governance/   # V4 五阶段主权架构其余四件
 ├── evolve/       # 合一指数 U + 每周进化提案（M12）
 ├── foundry/      # 调研管线/框架合成/问题生成/FDE工厂/漏斗（M9/M11）
 ├── sense/        # 15 路信号源/增量扫描/深读安全脑/视觉读取器（M7a/M10）
@@ -277,6 +293,7 @@ src/paistation/
 | M8 意图运营 | 常驻服务接线 + 屏幕观察档位 + 金标准 81 行 + 7 天浸泡基建 | ✅ / 🌙 浸泡实测待跑 |
 | 云感知连接器（V3 M9） | 腾讯会议/百度网盘/微信情报三连接器 + opt-in 授权 + 水位线增量 | ✅ 真机闭环（会议预订/网盘 3 事件/上传验证） |
 | 运行时自治（2026-09-16） | 七路信号源常驻上电 · 微信桥自启看护 · 微信简报夜间流水线（阿里云站点+双通道推送） | ✅ 端到端实测 |
+| **P0 主权卷宗（2026-09-17）** | 三源统一 OKF 明文目录 + git 独立版本化 + 一条命令导出（sha256 逐件验证，无本产品机器可读可 grep） | ✅ 真机验收（`ccfdefb`） |
 
 ## 📜 治理
 

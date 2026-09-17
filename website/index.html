@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PAI-Station · 个人超级AI工作站 — 你的经验不再蒸发，你的数据属于你</title>
-<meta name="description" content="PAI-Station：一台越用越懂你的 AI 工作站。它记住你的每个判断与教训，替你干的活有凭证可查，花钱删文件先过你审批；你的数据永远长在你自己的电脑里——不卖、不丢、一键带走。">
+<title>PAI-Station · 个人主权智能体运行时 — 记忆不是功能，是带得走的人生卷宗</title>
+<meta name="description" content="PAI-Station：个人主权智能体运行时。它常驻你的电脑替你感知、执行、进化，并把懂你的一切沉淀成一份明文主权卷宗——git 版本化、sha256 逐件指纹、一条命令整体导出；任何机器、任何 AI 都能读。花钱删文件先过你审批，数据永不外流。">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='29' fill='%230b0e13' stroke='%23e8b04b' stroke-width='3'/%3E%3Ccircle cx='32' cy='32' r='22' fill='none' stroke='%23e8b04b' stroke-width='1' stroke-dasharray='3 3'/%3E%3Ctext x='32' y='42' font-size='28' text-anchor='middle' fill='%23e8b04b' font-family='serif' font-weight='700'%3E主%3C/text%3E%3C/svg%3E">
 <style>
 :root{
@@ -109,6 +109,7 @@ h1 .gold{
 .tl .v{color:var(--dim)}
 .tl .lab{display:inline-block;width:9ch;color:var(--dim)}
 .tl .ok{color:var(--green)}
+.tl .cm{color:var(--faint)}
 @keyframes linein{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
 .cursor{display:inline-block;width:9px;height:17px;background:var(--gold);vertical-align:-3px;animation:blink 1s steps(1) infinite}
 @keyframes blink{50%{opacity:0}}
@@ -206,8 +207,6 @@ h2{
   display:flex;flex-direction:column;
 }
 .sys:hover{border-color:var(--line-gold)}
-.sys:nth-child(4){grid-column:span 3}
-.sys:nth-child(5){grid-column:span 3}
 @media(max-width:900px){.sys{grid-column:span 6!important}}
 .sys-head{
   display:flex;justify-content:space-between;align-items:center;
@@ -223,6 +222,7 @@ h2{
   margin-top:auto;
 }
 .sys-foot .ok{color:var(--green)} .sys-foot .idx{color:var(--faint)}
+.sys.first{border-color:var(--line-gold);box-shadow:0 0 0 1px rgba(232,176,75,.12)}
 
 /* ---------- charter ---------- */
 #charter .frame{
@@ -307,10 +307,10 @@ footer .fnote{font-family:var(--mono);font-size:12px;color:var(--faint);text-ali
 <div class="topbar">
   <a class="brand" href="#top">
     <span class="seal-mini">主</span>
-    <b>PAI-Station</b><span>个人超级AI工作站 · v4</span>
+    <b>PAI-Station</b><span>个人主权智能体运行时</span>
   </a>
   <nav class="nav">
-    <a href="#why">宣言</a><a href="#pillars">能力</a><a href="#systems">系统</a>
+    <a href="#why">宣言</a><a href="#pillars">承诺</a><a href="#systems">系统</a>
     <a href="#charter">章程</a><a href="#ledger">信任</a><a href="#core">边界</a>
   </nav>
 </div>
@@ -318,62 +318,64 @@ footer .fnote{font-family:var(--mono);font-size:12px;color:var(--faint);text-ali
 <!-- ================= HERO ================= -->
 <header class="hero" id="top">
   <div>
-    <div class="kicker">AI 时代，个体最可靠的工作站 · PERSONAL AI WORKSTATION</div>
-    <h1>你的经验不再蒸发，<br>数据从此<span class="gold">属于你</span>。</h1>
+    <div class="kicker">个人主权智能体运行时 · SOVEREIGN PERSONAL AGENT RUNTIME</div>
+    <h1>记忆不是产品的功能，<br>是你带得走的<span class="gold">人生卷宗</span>。</h1>
     <p class="sub">
-      PAI-Station 是一台<em>越用越懂你</em>的 AI 工作站：你聊过的每个想法、下过的每个判断，它都替你记着——
-      同一个坑，不踩第二遍；它替你干的活，<em>有凭证可查</em>，省下的每个小时都算数；
-      花钱、删文件这类动作，<em>先过你审批</em>。而这一切，都长在你自己的电脑里。
+      你的判断、教训、成果，散落在各家平台的聊天记录里——账号一封、服务一关，全部蒸发。
+      PAI-Station 是常驻你电脑的<em>个人主权智能体运行时</em>：替你感知、执行、进化，
+      并把懂你的一切沉淀成一份<em>明文卷宗</em>——git 版本化、sha256 逐件指纹、
+      <em>一条命令整体带走</em>。任何机器、任何 AI 都能读，谁也锁不住你。
     </p>
     <div class="cta">
       <a class="btn btn-solid" href="https://github.com/huangxiding-creator/PAI-Station" target="_blank" rel="noopener">免费开源 · 立即查看 ↗</a>
-      <a class="btn btn-ghost" href="#charter">我们敢写下的三条铁律</a>
+      <a class="btn btn-ghost" href="#charter">三条铁律，机器每天在查</a>
     </div>
   </div>
 
   <div class="term">
-    <div class="term-bar"><i></i><i></i><i></i><span>pai@你的电脑 — 每天都在为你工作</span></div>
+    <div class="term-bar"><i></i><i></i><i></i><span>you@你的电脑 — 主权在你，不在平台</span></div>
     <div class="term-body">
-      <div class="tl" style="animation-delay:.2s"><span class="p">$</span> <span class="k">pai 今天怎么样</span></div>
-      <div class="tl" style="animation-delay:.7s"><span class="lab">记忆</span><span class="ok">✓</span> <span class="v">你三月的判断，还问得回</span></div>
-      <div class="tl" style="animation-delay:1.2s"><span class="lab">干活</span><span class="ok">✓</span> <span class="v">替你完成 1.5 小时 · 有凭证</span></div>
-      <div class="tl" style="animation-delay:1.7s"><span class="lab">掌舵</span><span class="ok">✓</span> <span class="v">付费 2 次 · 均经你批准</span></div>
-      <div class="tl" style="animation-delay:2.2s"><span class="lab">增值</span><span class="ok">✓</span> <span class="v">经验库本周又强了一点</span></div>
-      <div class="tl" style="animation-delay:2.7s"><span class="lab">归属</span><span class="ok">✓</span> <span class="v">数据在你磁盘 · 外流 0 条</span></div>
-      <div class="tl" style="animation-delay:3.4s"><br><span class="p">$</span> <span class="k">继续，交给你了</span> <span class="cursor"></span></div>
+      <div class="tl" style="animation-delay:.2s"><span class="p">$</span> <span class="k">python -m paistation.sovereign.dossier export --dest 我的卷宗</span></div>
+      <div class="tl" style="animation-delay:.9s"><span class="v">exported: 34 files -> 我的卷宗</span></div>
+      <div class="tl" style="animation-delay:1.6s"><span class="p">$</span> <span class="k">python -m paistation.sovereign.dossier verify 我的卷宗</span></div>
+      <div class="tl" style="animation-delay:2.3s"><span class="v">{'ok': True, 'missing': [], 'tampered': [], 'unmanifested': []}</span></div>
+      <div class="tl" style="animation-delay:3.0s"><span class="p">$</span> <span class="k">grep -rl "白龟湖" 我的卷宗 | head -1</span></div>
+      <div class="tl" style="animation-delay:3.7s"><span class="ok">vault/evidence/白龟湖诉讼项目档案_20260916.md</span></div>
+      <div class="tl" style="animation-delay:4.4s"><span class="cm"># 任何机器 · 任何 AI · 无需本产品</span></div>
+      <div class="tl" style="animation-delay:4.9s"><br><span class="p">$</span> <span class="cursor"></span></div>
     </div>
   </div>
 
   <div class="stats">
-    <div class="stat"><div class="n"><span data-count="5">0</span><small>大</small></div><div class="l">能力系统 · 真实可用</div></div>
-    <div class="stat"><div class="n"><span data-count="1036">0</span><small>项</small></div><div class="l">自动化测试 · 逐条验收</div></div>
-    <div class="stat"><div class="n"><span data-count="3">0</span><small>条</small></div><div class="l">铁律入章程 · 机器在查</div></div>
-    <div class="stat"><div class="n"><span data-count="0">0</span><small>条</small></div><div class="l">用户数据外流 · 永不卖出</div></div>
+    <div class="stat"><div class="n"><span data-count="1">0</span><small>条</small></div><div class="l">命令 · 整卷带走，全明文</div></div>
+    <div class="stat"><div class="n"><span data-count="34">0</span><small>件</small></div><div class="l">文物 · 可 grep 可验证 · 真机实测</div></div>
+    <div class="stat"><div class="n"><span data-count="1598">0</span><small>项</small></div><div class="l">自动化测试 · 逐条验收全绿</div></div>
+    <div class="stat"><div class="n"><span data-count="0">0</span><small>家</small></div><div class="l">厂商锁定 · 永不发生</div></div>
   </div>
 </header>
 
 <!-- ================= MARQUEE ================= -->
 <div class="marquee" aria-hidden="true">
   <div class="track">
-    <span class="g">替你完成 +1.5 小时 ✓</span><span>·</span>
+    <span class="g">一条命令 · 整卷带走 ✓</span><span>·</span>
+    <span class="a">明文卷宗 · 任何 AI 可读 ✓</span><span>·</span>
+    <span class="g">sha256 逐件指纹 ✓</span><span>·</span>
+    <span class="a">git 版本化 · 只增不删 ✓</span><span>·</span>
+    <span class="g">换电脑换 AI · 卷宗还是你的 ✓</span><span>·</span>
     <span class="a">你三月的判断，还在 ✓</span><span>·</span>
     <span class="g">敏感动作 · 已获批准 ✓</span><span>·</span>
     <span class="a">数据外流 0 条 ✓</span><span>·</span>
-    <span class="g">好方法留下 · 坏方法淘汰 ✓</span><span>·</span>
-    <span class="a">账本只记不删 ✓</span><span>·</span>
-    <span class="g">经验库 · 又强了一点 ✓</span><span>·</span>
-    <span class="a">一键带走 · 全部数据 ✓</span><span>·</span>
-    <span class="g">每日自检 · 0 冲突 ✓</span><span>·</span>
+    <span class="g">三条铁律 · 机器每天在查 ✓</span><span>·</span>
     <span class="a">省下的时间 · 都算数 ✓</span><span>·</span>
-    <span class="g">替你完成 +1.5 小时 ✓</span><span>·</span>
+    <span class="g">一条命令 · 整卷带走 ✓</span><span>·</span>
+    <span class="a">明文卷宗 · 任何 AI 可读 ✓</span><span>·</span>
+    <span class="g">sha256 逐件指纹 ✓</span><span>·</span>
+    <span class="a">git 版本化 · 只增不删 ✓</span><span>·</span>
+    <span class="g">换电脑换 AI · 卷宗还是你的 ✓</span><span>·</span>
     <span class="a">你三月的判断，还在 ✓</span><span>·</span>
     <span class="g">敏感动作 · 已获批准 ✓</span><span>·</span>
     <span class="a">数据外流 0 条 ✓</span><span>·</span>
-    <span class="g">好方法留下 · 坏方法淘汰 ✓</span><span>·</span>
-    <span class="a">账本只记不删 ✓</span><span>·</span>
-    <span class="g">经验库 · 又强了一点 ✓</span><span>·</span>
-    <span class="a">一键带走 · 全部数据 ✓</span><span>·</span>
-    <span class="g">每日自检 · 0 冲突 ✓</span><span>·</span>
+    <span class="g">三条铁律 · 机器每天在查 ✓</span><span>·</span>
     <span class="a">省下的时间 · 都算数 ✓</span><span>·</span>
   </div>
 </div>
@@ -381,23 +383,23 @@ footer .fnote{font-family:var(--mono);font-size:12px;color:var(--faint);text-ali
 <!-- ================= WHY ================= -->
 <section id="why">
   <div class="snum rv">§ 01 · 为什么需要它</div>
-  <h2 class="rv">AI 越强，<br>你的判断力越值钱——也越被收租。</h2>
-  <p class="lead rv">用 AI 的人都有三笔糊涂账，正在悄悄扣走你的认知净资产。而 PAI-Station 相信：AI 时代的个体不该只是平台的用户，更不该是平台的库存。</p>
+  <h2 class="rv">AI 越强，<br>你的一生产出越值钱——也越容易蒸发。</h2>
+  <p class="lead rv">用 AI 的人都有三笔糊涂账，正在悄悄扣走你的认知净资产。PAI-Station 的立场：你的记忆不是任何平台的库存，是一份主权在你的人生卷宗。</p>
   <div class="pains">
     <div class="pain rv">
       <div class="no">壹</div>
       <div><h3>聊得再深，关掉就忘</h3><p>你和 AI 讨论出的每个洞察、每个决定，会话一关全部蒸发。三个月后，等于没想过。你的经验一直在给平台打工，从没进过你自己的账。</p></div>
-      <div class="antidote">→ 全部入账，三月后翻得回</div>
+      <div class="antidote">→ 全部落卷，三月后翻得回</div>
     </div>
     <div class="pain rv">
       <div class="no">贰</div>
       <div><h3>同一个坑，踩三遍</h3><p>工具在进化，你的资产却不进账：教训没人记，好方法没处存，判断重复下。用了一年 AI，你变强了吗？还是只有 AI 变强了？</p></div>
-      <div class="antidote">→ 教训入库，越用越懂你</div>
+      <div class="antidote">→ 教训入卷，越用越懂你</div>
     </div>
     <div class="pain rv">
       <div class="no">叁</div>
       <div><h3>数据在别人手里</h3><p>你的记忆、偏好、判断全存在别人的云上——不卖你卖谁？想带走？没门。你不是用户，你是库存。你的认知主权，正在不知不觉中旁落。</p></div>
-      <div class="antidote">→ 数据在你家，随时带走</div>
+      <div class="antidote">→ 一条命令，整卷带走</div>
     </div>
   </div>
 </section>
@@ -405,13 +407,13 @@ footer .fnote{font-family:var(--mono);font-size:12px;color:var(--faint);text-ali
 <!-- ================= PILLARS ================= -->
 <section id="pillars">
   <div class="snum rv">§ 02 · 它能为你做什么</div>
-  <h2 class="rv">五件实事，<br>每一件都冲着你的利益</h2>
-  <p class="lead rv">不是功能清单，是五份承诺——从「你的经验归你」到「你的技能值钱」，全部已经做出来，可验证。</p>
+  <h2 class="rv">五份承诺，<br>第一份就是「卷宗归你」</h2>
+  <p class="lead rv">不是功能清单，是五份承诺——从「你的记忆以卷宗的形态属于你」到「你的技能值钱」，全部已经做出来，可验证。</p>
   <div class="pillars">
-    <div class="pillar rv" data-tag="记忆">
-      <h3>你的第二大脑，产权归你</h3>
-      <p>你聊过的每个想法、下过的每个判断，它都替你记着。三个月后你还能问它：「我当时为什么这样决定？」——而且这份记忆永远属于你，可传给后人。</p>
-      <div class="chips"><span class="chip">产权归你</span><span class="chip">只记不删</span><span class="chip">可传承</span></div>
+    <div class="pillar rv" data-tag="卷宗">
+      <h3>你的第二大脑，是一份卷宗</h3>
+      <p>你聊过的每个想法、下过的每个判断，都落成一条明文条目——git 版本化、只增不删。三个月后能追问「当时为什么这样决定」，十年后能整体带走、传给后人。</p>
+      <div class="chips"><span class="chip">一条命令导出</span><span class="chip">明文可 grep</span><span class="chip">可传承</span></div>
     </div>
     <div class="pillar rv" data-tag="掌舵">
       <h3>AI 动手，你掌舵</h3>
@@ -439,9 +441,17 @@ footer .fnote{font-family:var(--mono);font-size:12px;color:var(--faint);text-ali
 <!-- ================= SYSTEMS ================= -->
 <section id="systems">
   <div class="snum rv">§ 03 · 真做出来了，不是概念片</div>
-  <h2 class="rv">五大系统，<br>今天就能用</h2>
+  <h2 class="rv">六大系统，<br>首件就是主权卷宗</h2>
   <p class="lead rv">全部开发完成、开源可查。我们不接受「情怀先行、产品永远下周」——每一项能力背后，是上千项自动化测试在验收。</p>
   <div class="sysgrid">
+    <div class="sys first rv">
+      <div class="sys-head">主权卷宗<em>dossier</em></div>
+      <div class="sys-body">
+        三源统一（画像 · 记忆 · 证据）落成 OKF 明文目录，内部 git 快照留痕。
+        导出包 sha256 逐件验证——<b>在没装本产品的机器上，人可读、可 grep</b>。
+      </div>
+      <div class="sys-foot"><span class="ok">P0 已收官 ✓</span><span class="idx">一条命令</span></div>
+    </div>
     <div class="sys rv">
       <div class="sys-head">记忆与决策<em>sovereign</em></div>
       <div class="sys-body">
@@ -480,7 +490,7 @@ footer .fnote{font-family:var(--mono);font-size:12px;color:var(--faint);text-ali
         三条铁律不是墙上的标语——<b>机器每天都在检查</b>代码是否守约。
         说不卖数据就真不卖：每一条承诺，<b>敢被证伪</b>。
       </div>
-      <div class="sys-foot"><span class="ok">1036 项测试 ✓</span><span class="idx">全案收官</span></div>
+      <div class="sys-foot"><span class="ok">1598 项测试 ✓</span><span class="idx">全案收官</span></div>
     </div>
   </div>
 </section>
@@ -502,7 +512,7 @@ footer .fnote{font-family:var(--mono);font-size:12px;color:var(--faint);text-ali
     </div>
     <div class="law">
       <div class="rn">Ⅲ</div>
-      <div><h3>一键带走</h3><p>随时整体迁离，零锁定。你留下来是因为值得，不是因为走不了。</p></div>
+      <div><h3>一键带走</h3><p>随时整体迁离，零锁定。你的记忆是一份明文卷宗——一条命令导出，任何机器、任何 AI 可读。你留下来是因为值得，不是因为走不了。</p></div>
     </div>
     <div class="falsifiable">
       <div class="tag">我们敢被证伪</div>
@@ -517,12 +527,12 @@ footer .fnote{font-family:var(--mono);font-size:12px;color:var(--faint);text-ali
   <h2 class="rv">六不承诺，<br>行行可查</h2>
   <p class="lead rv">信任不靠口号，靠机制。每一行都是一条正在运转的纪律，欢迎任何人来查证。</p>
   <div class="ledger rv">
-    <div class="lrow"><span class="k">不吹牛</span><span class="v">页面上每句话，背后是 <span class="hl">1036</span> 项自动化测试在验收</span><span class="note">机器裁决，不是文案自由发挥</span></div>
+    <div class="lrow"><span class="k">不吹牛</span><span class="v">页面上每句话，背后是 <span class="hl">1598</span> 项自动化测试在验收</span><span class="note">机器裁决，不是文案自由发挥</span></div>
     <div class="lrow"><span class="k">不糊弄</span><span class="v">任务拿到<span class="hl">完成凭证</span>才算完成</span><span class="note">凭证可查，AI 蒙混不过验收</span></div>
     <div class="lrow"><span class="k">不删账</span><span class="v">所有记录<span class="hl">只增不删</span>，翻案有据</span><span class="note">拒绝入库，而非悄悄抹掉</span></div>
     <div class="lrow"><span class="k">真装过</span><span class="v">每次发布前，在<span class="hl">全新环境</span>完整装一遍</span><span class="note">真抓出过「装不上」的缺陷</span></div>
     <div class="lrow"><span class="k">能翻案</span><span class="v">坏方法淘汰、好方法保留，<span class="hl">全程留痕</span></span><span class="note">你随时能查它学了什么</span></div>
-    <div class="lrow"><span class="k">可带走</span><span class="v">全部数据<span class="hl">一键导出</span>，零锁定</span><span class="note">今天装，明天走，都随你</span></div>
+    <div class="lrow"><span class="k">可带走</span><span class="v">全部记忆一条命令导出为<span class="hl">明文卷宗</span>，零锁定</span><span class="note">任何机器、任何 AI 可读</span></div>
   </div>
 </section>
 
@@ -534,8 +544,9 @@ footer .fnote{font-family:var(--mono);font-size:12px;color:var(--faint);text-ali
   <div class="core-grid">
     <div class="core-col free rv">
       <h3>永久免费</h3>
-      <div class="cap">五大系统全量 · 本地运行 · 开源可查</div>
+      <div class="cap">六大系统全量 · 本地运行 · 开源可查</div>
       <ul>
+        <li data-m="免费">主权卷宗——明文资产，一条命令带走</li>
         <li data-m="免费">你的第二大脑——记忆、决策、传承</li>
         <li data-m="免费">验收与进化——完成凭证、优留劣汰</li>
         <li data-m="免费">掌舵台——审批、可撤销、小时数对账</li>
@@ -558,7 +569,7 @@ footer .fnote{font-family:var(--mono);font-size:12px;color:var(--faint);text-ali
 </section>
 
 <footer>
-  <div class="fbrand">PAI·<span>Station</span> — AI 越强，个体判断越值钱。我们站在你这边。</div>
+  <div class="fbrand">PAI·<span>Station</span> — 记忆是资产，主权在你。我们站在你这边。</div>
   <div class="fnote">
     三条铁律生效中 · 敢被证伪 · 你省下的每个小时都算数<br>
     © 2026 PAI-Station · <a href="https://github.com/huangxiding-creator/PAI-Station" target="_blank" rel="noopener" style="color:var(--gold)">免费开源 · GitHub ↗</a>
@@ -583,7 +594,7 @@ const cio = new IntersectionObserver(es => {
       if (p < 1) requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
-    cio.unobserve(el);
+    cio.unobserve(e.target);
   });
 }, { threshold: .6 });
 document.querySelectorAll('[data-count]').forEach(el => cio.observe(el));
