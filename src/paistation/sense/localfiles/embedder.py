@@ -15,6 +15,7 @@ _log = logging.getLogger("paistation.sense.localfiles.embedder")
 DEFAULT_MODEL = "bge-m3"
 DEFAULT_ENDPOINT = "http://127.0.0.1:11434/api/embeddings"
 PROBE_TIMEOUT = 1.5
+COLD_LOAD_TIMEOUT = 150.0  # 模型冷加载实测 ~78s：probe 超时值得等
 EMBED_TIMEOUT = 30.0
 
 
@@ -26,11 +27,24 @@ def _post(url: str, payload: dict, timeout: float) -> dict:
         return json.loads(resp.read().decode("utf-8"))
 
 
+def _probe(url: str, payload: dict) -> dict:
+    """两段式探测：快失败（1.5s）识别服务不在位；超时=模型冷加载中
+    ——凌晨首跑实测 78s 加载，值得长等（否则批量回填任务必然误判
+    拒跑）。连接拒绝类错误毫秒级返回不吃长超时。"""
+    try:
+        return _post(url, payload, PROBE_TIMEOUT)
+    except Exception as first:
+        if "timed out" not in str(first).lower() and "timeout" not in str(first).lower():
+            raise  # 永久错误（拒绝/404）不重试
+        _log.info("探测超时（疑模型冷加载 ~78s），长等待重试")
+        return _post(url, payload, COLD_LOAD_TIMEOUT)
+
+
 def make_ollama_embedder(endpoint: str = DEFAULT_ENDPOINT,
                          model: str = DEFAULT_MODEL):
     """→ callable(text)->list[float]；服务不在位返回 None。"""
     try:
-        out = _post(endpoint, {"model": model, "prompt": "probe"}, PROBE_TIMEOUT)
+        out = _probe(endpoint, {"model": model, "prompt": "probe"})
         if not out.get("embedding"):
             return None
     except Exception as exc:
@@ -61,8 +75,7 @@ def make_ollama_batch_embedder(
     服务不在位返回 None（上层回退逐条）。
     """
     try:
-        out = _post(endpoint, {"model": model, "input": ["probe"]},
-                    PROBE_TIMEOUT)
+        out = _probe(endpoint, {"model": model, "input": ["probe"]})
         if not out.get("embeddings"):
             return None
     except Exception as exc:
