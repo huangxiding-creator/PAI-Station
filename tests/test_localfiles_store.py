@@ -176,3 +176,60 @@ def test_backfill_batch_route_with_poison_fallback(tmp_path):
     assert r["embedded"] == 4 and r["failed"] == 0 and calls["n"] >= 2
     assert idx.backfill()["embedded"] == 0  # 断点续跑
     idx.close()
+
+
+# ---------- 查询侧 jieba 分词（无空格中文整串零命中根治） ----------
+
+def test_unsegmented_cjk_query_hits(tmp_path):
+    """整串『尾款划抵244』不切分时按 7 字短语 trigram 匹配必零命中。"""
+    idx = ChunkIndex(tmp_path / "t.db")
+    idx.upsert_file("pay.pdf", ["尾款支付说明：金额 244 万元予以划抵处理"], LOGIC)
+    idx.upsert_file("noise.md", ["完全无关的菜谱文本若干"], LOGIC)
+    hits = idx.search("尾款划抵244")
+    assert hits and hits[0].path == "pay.pdf"
+
+
+def test_all_two_char_words_rebuild_phrase(tmp_path):
+    """全 2 字词查询（工程质量）邻接拼接重建 ≥3 字短语保住 FTS 快路径。"""
+    idx = ChunkIndex(tmp_path / "t.db")
+    idx.upsert_file("doc.md", ["工程质量问题的整改通知全文"], LOGIC)
+    hits = idx.search("工程质量")
+    assert hits and hits[0].path == "doc.md"
+
+
+def test_segment_cjk_ascii_untouched():
+    from paistation.sense.localfiles.store import _segment_cjk
+
+    assert _segment_cjk("rrf fuse") == ["rrf fuse"]
+    assert _segment_cjk("244") == ["244"]
+
+
+def test_segment_cjk_expands_phrase():
+    from paistation.sense.localfiles.store import _segment_cjk
+
+    out = _segment_cjk("尾款划抵244")
+    assert out[0] == "尾款划抵244"  # 原短语保留（精确命中优先）
+    assert "244" in out  # 单词进 FTS OR / shorts
+
+
+def test_segment_cjk_jieba_absent_degrades(monkeypatch):
+    """jieba 导入失败 → 原词返回，检索降级不崩（嵌入器同哲学）。"""
+    import builtins
+
+    from paistation.sense.localfiles import store as st
+
+    monkeypatch.setattr(st, "_jieba_tried", True)
+    monkeypatch.setattr(st, "_jieba_cut", None)
+    assert st._segment_cjk("尾款划抵244") == ["尾款划抵244"]
+
+    real_import = builtins.__import__
+
+    def fake_import(name, *a, **k):
+        if name == "jieba":
+            raise ImportError("no jieba")
+        return real_import(name, *a, **k)
+
+    monkeypatch.setattr(st, "_jieba_tried", False)
+    monkeypatch.setattr(builtins, "__import__", fake_import)
+    assert st._segment_cjk("工程质量问题") == ["工程质量问题"]
+    assert st._jieba_cut is None  # 失败记忆：后续调用不再重试导入

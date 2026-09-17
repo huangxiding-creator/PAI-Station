@@ -276,7 +276,11 @@ class ChunkIndex:
         旧版混合查询（『尾款 划抵 244』）整串 `LIKE '%尾款 划抵 244%'`
         连空格都要求匹配——永远零命中，OCR 入库的核心证据查不出来。
         """
-        terms = [t for t in query.replace('"', " ").split() if t]
+        terms: list[str] = []
+        for t in query.replace('"', " ").split():
+            for w in _segment_cjk(t):
+                if w and w not in terms:
+                    terms.append(w)
         if not terms:
             return []
         longs = [t for t in terms if len(t) >= 3]
@@ -382,6 +386,46 @@ class ChunkIndex:
 def _fts_query(query: str) -> str:
     terms = [t for t in query.replace('"', " ").split() if t]
     return " OR ".join(f'"{t}"' for t in terms) or '""'
+
+
+# jieba 查询侧分词（惰性加载：词典 ~1s，不拖累进程启动）
+_jieba_cut = None
+_jieba_tried = False
+
+
+def _segment_cjk(term: str) -> list[str]:
+    """CJK 词项 jieba 切分 + 邻接词对重建 ≥3 字短语。
+
+    无空格中文整串（『尾款划抵244』——用户最常态的粘贴行为）按
+    短语走 trigram 匹配必然零命中：要求 7 字连续共现。切词后：
+    原短语保留（精确命中 bm25 天然前排）+ 单词（≥3 字进 FTS OR，
+    2 字进 shorts AND 过滤）+ 邻接拼接（全 2 字词时『尾款+划抵』
+    →『尾款划抵』重建快路径，不落 8s LIKE 全表扫）。
+    jieba 缺席 → 原词返回（嵌入器同款降级哲学，检索永不 502）。
+    """
+    global _jieba_cut, _jieba_tried
+    if not any("一" <= ch <= "鿿" for ch in term):
+        return [term]
+    if not _jieba_tried:
+        _jieba_tried = True
+        try:
+            import jieba
+
+            jieba.setLogLevel(logging.WARNING)
+            _jieba_cut = jieba.cut_for_search
+        except Exception:
+            _log.info("jieba 不在位，中文整串查询按短语降级")
+    if _jieba_cut is None:
+        return [term]
+    words = [w for w in _jieba_cut(term) if len(w) >= 2]
+    if len(words) <= 1:
+        return [term]
+    out: list[str] = []
+    for w in [term, *words,
+              *(a + b for a, b in zip(words, words[1:]))]:
+        if w not in out:
+            out.append(w)
+    return out
 
 
 def _like_escape(s: str) -> str:
