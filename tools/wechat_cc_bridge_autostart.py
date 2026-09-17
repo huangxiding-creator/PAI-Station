@@ -52,28 +52,50 @@ def claude_bin_dir():
     return hits[-1] if hits else ""
 
 
+def pid_alive(pid: str) -> bool:
+    """pid 文件探活（tasklist）——双实例下 wmic 命令行匹配无法区分
+    两个 main.js，各自 DATA 目录的 pid 文件才是实例身份。"""
+    if not (pid or "").isdigit():
+        return False
+    try:
+        out = subprocess.run(
+            ["tasklist", "/FI", f"PID eq {pid}"],
+            capture_output=True, text=True, timeout=10,
+            creationflags=_creationflags()).stdout
+    except Exception:
+        return False
+    return pid in out
+
+
 def main():
-    if not MAIN_JS.exists():
-        return
-    if alive_pid():
-        return
-    LOGS.mkdir(parents=True, exist_ok=True)
+    import argparse
+
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--data-dir", default=str(DATA),
+                    help="桥数据目录（第二实例传 ~/.wechat-claude-code-b）")
+    args = ap.parse_args()
+    data = Path(args.data_dir)
+    pidf = data / "wechat-claude-code.pid"
+    if pidf.exists() and pid_alive(pidf.read_text().strip()):
+        return  # 本实例已在跑（pid 文件制，双实例互不误判）
+    data.mkdir(parents=True, exist_ok=True)
+    (data / "logs").mkdir(parents=True, exist_ok=True)
     node = shutil.which("node")
     if not node:
         return
     env = os.environ.copy()
+    env["WCC_DATA_DIR"] = str(data)  # constants.js 原生支持
     cbd = claude_bin_dir()
     if cbd:
         env["PATH"] = cbd + os.pathsep + env.get("PATH", "")
-    with open(LOGS / "stdout.log", "ab") as so, \
-            open(LOGS / "stderr.log", "ab") as se:
-        subprocess.Popen(
+    with open(data / "logs" / "stdout.log", "ab") as so, \
+            open(data / "logs" / "stderr.log", "ab") as se:
+        proc = subprocess.Popen(
             [node, str(MAIN_JS), "start"],
             cwd=str(SKILL), env=env, stdin=subprocess.DEVNULL,
             stdout=so, stderr=se, creationflags=_creationflags())
     time.sleep(2)
-    pid = alive_pid()
-    (DATA / "wechat-claude-code.pid").write_text(str(pid or ""), encoding="utf-8")
+    pidf.write_text(str(proc.pid), encoding="utf-8")
 
 
 if __name__ == "__main__":
