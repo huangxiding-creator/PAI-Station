@@ -33,7 +33,7 @@ def to_cn(iso: str) -> datetime:
 def main() -> int:
     db = sqlite3.connect(DB)
     rows = db.execute(
-        "SELECT source, start, type FROM events "
+        "SELECT source, start, type, payload FROM events "
         "WHERE source IN ('activities_cache','power_system','git')").fetchall()
     prompts = [json.loads(l) for l in
                PROMPTS.read_text(encoding="utf-8").splitlines() if l.strip()]
@@ -46,7 +46,7 @@ def main() -> int:
     per_day_last: dict = {}
     night_days = Counter()        # 深夜活跃天
     month_act = Counter()         # 月度活动量（全部源）
-    for src, start, _ in rows:
+    for src, start, _, _payload in rows:
         dt = to_cn(start)
         h = dt.hour
         hour_all[h] += 1
@@ -150,19 +150,15 @@ def main() -> int:
 
     # ---------- 演化 v2 ----------
     git_month_repo: dict = defaultdict(Counter)
-    for src, start, _ in rows:
+    for src, start, _, payload in rows:
         if src != "git":
             continue
-        payload = db.execute(
-            "SELECT payload FROM events WHERE source='git' AND start=?",
-            (start,)).fetchone()
         dt = to_cn(start)
         repo = ""
-        if payload:
-            try:
-                repo = json.loads(payload[0]).get("repo", "")
-            except Exception:
-                pass
+        try:
+            repo = json.loads(payload).get("repo", "")
+        except Exception:
+            pass
         git_month_repo[dt.strftime("%Y-%m")][repo] += 1
     evo_md = [
         "# 演化维融合曲线 v2（L3）· 2026-09-17",
@@ -182,25 +178,31 @@ def main() -> int:
         evo_md.append(f"| {m} | {sum(g.values())} | {gt} | {sum(p.values())} | {pt} |")
     evo_md += [
         "",
-        "## 三幕叙事（数据化）",
+        "## 三幕叙事（数据化，git 源已纯化重灌 2026-09-17）",
         "",
-        "1. **酝酿幕（2026-01→06）**：月均 git <60，prompt 稀疏——单点工具试水期"
-        "（md2wechat→ResearchFactory），思维以文档形态存在（飞书 530 万字即此期沉淀）",
-        "2. **爆发幕（2026-07→08）**：git 7 月 268→8 月 934；prompt 8 月 410 条——"
+        "0. **试水幕（2026-03→06）**：git 共 199 条（8/133/36/22），主体 = "
+        "ResearchFactory-Eng 148 条（网站逆向复刻单点工程）+ notebooklm/SouGouWeDown2/"
+        "feishu-Down/Doc2Video 零星试水——**本人 git 史起点即 2026-03-02**（此前"
+        "『2025 前历史缺口』经 104 仓全量核实不存在：2025 年及更早的 1.2 万条 commit "
+        "全是克隆仓里别人的）。5-6 月低谷非停摆：ZBBrain-LIVE5 以配置调试为主、"
+        "思维以文档形态沉淀（飞书 530 万字）",
+        "1. **爆发幕（2026-07→08）**：git 245→932；prompt 8 月 410 条——"
         "We-AIPO 自媒体永动机主战场期，驭 AI 方法论（100倍提案/自复盘循环）在此期定型",
-        "3. **跃迁幕（2026-09）**：git 695（AI-Station 占比从 0→26%）+ prompt 702 条"
-        "创月峰——从『做自媒体管线』跃迁到『做懂自己的工作站』，观点维/人格维工程启动",
+        "2. **跃迁幕（2026-09）**：git 824 条高位 + prompt 702 条创月峰——"
+        "从『做自媒体管线』跃迁到『做懂自己的工作站』（AI-Station），"
+        "观点维/人格维工程启动",
         "",
         "## 演化判读",
         "",
-        "- 主导仓迁移链：md2wechat → ResearchFactory/KnowFactory → We-AIPO → AI-Station"
+        "- 主导仓迁移链：ResearchFactory-Eng → We-AIPO → AI-Station"
         "——**工具思维→系统思维→自我建模思维**",
         "- prompt 月峰值领先 git 峰值约半月——思维先于代码（意图先行的行为签名）",
         "- 与 CLAIM_LEDGER 时间锚互证：CX 哲学宣言（9-05/9-07）正落在跃迁幕起点",
         "",
         "## 数据缺口（升 L4 待补）",
         "",
-        "- 2025 年及更早 git 历史未入轴（64+ 仓聚合待做）",
+        "- git 史已全量（104 仓主人身份六变体过滤+跨拷贝 sha 去重，"
+        "tools/cx_git_all.py 可复跑）——缺口关闭",
         "- 飞书文档版本时间线未量化（现仅有文档主题跨度）",
     ]
     (OUT / "cx_演化维_融合曲线_20260917.md").write_text(
