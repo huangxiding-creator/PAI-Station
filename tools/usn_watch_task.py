@@ -63,7 +63,11 @@ def main() -> int:
             cursors = json.loads(CURSOR.read_text(encoding="utf-8"))
         except Exception:
             cursors = {}
-    first_run = "next_usn" not in cursors
+    # 游标键=盘符（"C:"…）——旧判 "next_usn" not in cursors 永真，
+    # 水位差从未算过（2026-09-17 修）
+    first_run = not any(
+        isinstance(v, dict) and "next_usn" in v
+        for v in cursors.values())
     results = {d: _probe(d) for d in DRIVES}
     now_meta = {d: m.get("next_usn") for d, m in results.items()}
     entry = {"ts": time.time(), "first_run": first_run,
