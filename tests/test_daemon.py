@@ -143,7 +143,7 @@ def test_daemon_lifecycle_ping_pause_shutdown(tmp_path):
 
     resp = client.call("shutdown", {})
     assert resp["ok"]
-    daemon.join_thread(timeout=5)
+    daemon.join_thread(timeout=15)  # 全量套件高负载下 5s 关停窗偶发不够（09-17 实锤）
     assert svc.stopped and daemon.ready is False
 
 

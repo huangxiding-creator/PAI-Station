@@ -224,7 +224,8 @@ def test_drain_events_offset_and_semantics(tmp_path):
 
     q = tmp_path / "usn_queue.jsonl"
     inv = Inventory(tmp_path / "inv.db")
-    ix = Indexer(ScanDomain(), inv, ChunkIndex(tmp_path / "idx.db"),
+    ix = Indexer(ScanDomain(includes=[str(tmp_path)], exclude_names=()),  # 显式域：默认域=15真实根且排除名含 AppData，pytest 临时目录需双豁免
+                 inv, ChunkIndex(tmp_path / "idx.db"),
                  events_queue=q)
     live = tmp_path / "实况.txt"
     live.write_text("现场记录")
@@ -264,7 +265,8 @@ def test_drain_events_queue_rotation(tmp_path):
 
     q = tmp_path / "usn_queue.jsonl"
     inv = Inventory(tmp_path / "inv.db")
-    ix = Indexer(ScanDomain(), inv, ChunkIndex(tmp_path / "idx.db"),
+    ix = Indexer(ScanDomain(includes=[str(tmp_path)], exclude_names=()),  # 显式域：默认域=15真实根且排除名含 AppData，pytest 临时目录需双豁免
+                 inv, ChunkIndex(tmp_path / "idx.db"),
                  events_queue=q)
     f = tmp_path / "轮转.txt"
     f.write_text("v1")

@@ -94,13 +94,18 @@ def test_poison_file_raises_not_crashes(tmp_path):
         pass  # 单文件失败绝不崩批
 
 
-def test_empty_pdf_detected_as_scan_candidate(tmp_path):
+def test_empty_pdf_detected_as_scan_candidate(tmp_path, monkeypatch):
     import pymupdf
 
+    import paistation.sense.localfiles.ocr as ocrmod
+
     f = tmp_path / "扫描件.pdf"
-    with pymupdf.open() as pdf:  # 有页无文本层 → 留给 OCR 阶段
+    with pymupdf.open() as pdf:  # 有页无文本层 → 走 OCR 兜底
         pdf.new_page()
         pdf.save(str(f))
+    # 单测不真调 WinRT：长套件进程累积态下进程内 OCR 会死锁（09-17
+    # 全量回归两挂+93 文件前缀复现实锤）；真机覆盖归子进程隔离的真机冒烟
+    monkeypatch.setattr(ocrmod, "ocr_pdf", lambda p: "")
     try:
         extract_pdf(str(f))
         raise AssertionError("空 PDF 应抛 OCR 候选")
@@ -191,16 +196,40 @@ def test_ocr_unavailable_falls_back_to_error(tmp_path, monkeypatch):
         assert "OCR 不可用" in str(exc)
 
 
-def test_winrt_ocr_end_to_end_real(tmp_path):
-    """真机 WinRT OCR smoke（无语言包机器自动跳过）。"""
-    import pytest
+def _ocr_in_subprocess(fn_name: str, path) -> str:
+    """真机 OCR 冒烟统一走子进程：长套件进程累积态下进程内 WinRT
+    recognize_async 会死锁（09-17 全量回归两挂+93 文件前缀复现实锤，
+    单测/小子集却恒过——累积效应非单文件污染）。子进程干净态真跑，
+    90s 超时兜底；无语言包机器转 skip 保留原口径。"""
+    import subprocess
+    import sys
 
-    from paistation.sense.localfiles.ocr import has_ocr, ocr_pdf
-    if not has_ocr():
-        pytest.skip("本机无 WinRT OCR 语言包")
+    code = (
+        "import sys\n"
+        "sys.stdout.reconfigure(encoding='utf-8', errors='replace')\n"
+        "from paistation.sense.localfiles.ocr import OcrUnavailable, "
+        f"{fn_name}\n"
+        "try:\n"
+        f"    sys.stdout.write({fn_name}(sys.argv[1]))\n"
+        "except OcrUnavailable as exc:\n"
+        "    sys.stdout.write('OCRUNAVAILABLE:' + str(exc))\n"
+    )
+    r = subprocess.run([sys.executable, "-c", code, str(path)],
+                       capture_output=True, timeout=90,
+                       encoding="utf-8", errors="replace")
+    if r.stdout.startswith("OCRUNAVAILABLE"):
+        import pytest
+
+        pytest.skip(f"本机 OCR 不可用: {r.stdout}")
+    assert r.returncode == 0, r.stderr[-300:]
+    return r.stdout
+
+
+def test_winrt_ocr_end_to_end_real(tmp_path):
+    """真机 WinRT OCR smoke（子进程隔离，无语言包机器自动跳过）。"""
     p = tmp_path / "real_scan.pdf"
     _make_scan_pdf(p)
-    text = ocr_pdf(str(p))
+    text = _ocr_in_subprocess("ocr_pdf", p)
     assert len(text.strip()) > 5  # 渲染清晰的雅黑 200dpi 必出字
     assert any(k in text for k in ("白龟湖", "龟湖", "尾款"))
 
@@ -281,12 +310,7 @@ def test_image_ocr_unavailable_degrades(tmp_path, monkeypatch):
 
 
 def test_winrt_image_ocr_end_to_end_real(tmp_path):
-    """真机 WinRT 图片 OCR smoke（无语言包机器自动跳过）。"""
-    import pytest
-
-    from paistation.sense.localfiles.ocr import has_ocr, ocr_image
-    if not has_ocr():
-        pytest.skip("本机无 WinRT OCR 语言包")
+    """真机 WinRT 图片 OCR smoke（子进程隔离，无语言包机器自动跳过）。"""
     from PIL import Image, ImageDraw, ImageFont
     font = ImageFont.truetype("C:/Windows/Fonts/msyh.ttc", 40)
     img = Image.new("RGB", (900, 200), "white")
@@ -294,5 +318,5 @@ def test_winrt_image_ocr_end_to_end_real(tmp_path):
                              fill="black", font=font)
     p = tmp_path / "evidence.png"
     img.save(p)
-    text = ocr_image(str(p))
+    text = _ocr_in_subprocess("ocr_image", p)
     assert any(k in text for k in ("白龟湖", "影像", "2020"))
