@@ -49,3 +49,32 @@ def make_ollama_embedder(endpoint: str = DEFAULT_ENDPOINT,
 
 def ollama_embedder_version(model: str = DEFAULT_MODEL) -> str:
     return f"ollama:{model}"
+
+
+def make_ollama_batch_embedder(
+        endpoint: str = DEFAULT_ENDPOINT.replace("/embeddings", "/embed"),
+        model: str = DEFAULT_MODEL):
+    """批量嵌入器：callable(texts)->list[vec]，走 /api/embed 一次推理。
+
+    回填专用——单条老接口逐次 HTTP+推理启动开销，实测 1 块/s；
+    批量 128/片摊薄后 30 块/s（RTX 3000 实测，batch>128 无增益）。
+    服务不在位返回 None（上层回退逐条）。
+    """
+    try:
+        out = _post(endpoint, {"model": model, "input": ["probe"]},
+                    PROBE_TIMEOUT)
+        if not out.get("embeddings"):
+            return None
+    except Exception as exc:
+        _log.info("批量嵌入服务不在位: %s", exc)
+        return None
+
+    def embed_batch(texts: list[str]) -> list[list[float]]:
+        out = _post(endpoint, {"model": model, "input": texts},
+                    max(EMBED_TIMEOUT, 8.0 * len(texts)))
+        vecs = out.get("embeddings") or []
+        if len(vecs) != len(texts):
+            raise RuntimeError(f"批量返回数不符 {len(vecs)}!={len(texts)}")
+        return vecs
+
+    return embed_batch

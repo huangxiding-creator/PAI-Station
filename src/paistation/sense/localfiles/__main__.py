@@ -16,6 +16,7 @@ from pathlib import Path
 from paistation.sense.localfiles.domain import ScanDomain
 from paistation.sense.localfiles.embedder import (
     DEFAULT_MODEL,
+    make_ollama_batch_embedder,
     make_ollama_embedder,
     ollama_embedder_version,
 )
@@ -31,16 +32,19 @@ POISON_STALL_BATCHES = 3  # 连续全失败批数上限：判定队列只剩毒�
 def _build(args):
     inv = Inventory(args.db_dir / "inventory.db")
     embedder = None
+    batch_embedder = None
     ver = "none"
     if not args.no_embed:
         embedder = make_ollama_embedder(endpoint=args.ollama)
         if embedder is not None:
             ver = ollama_embedder_version(DEFAULT_MODEL)
-            print(f"[嵌入] Ollama {DEFAULT_MODEL} 在位")
+            batch_embedder = make_ollama_batch_embedder()
+            print(f"[嵌入] Ollama {DEFAULT_MODEL} 在位"
+                  f"（批量{'✓' if batch_embedder else '✗'}）")
         else:
             print("[嵌入] 服务不在位 → keyword-only 降级（检索仍可用）")
     chunks = ChunkIndex(args.db_dir / "index.db", embedder=embedder,
-                        embedder_ver=ver)
+                        embedder_ver=ver, batch_embedder=batch_embedder)
     domain = ScanDomain()
     return Indexer(domain, inv, chunks,
                    events_queue=args.db_dir / "usn_queue.jsonl"), inv, chunks

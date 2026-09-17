@@ -58,7 +58,8 @@ class ChunkIndex:
     embedder 契约：callable(text) -> list[float]，维度须恒定。
     """
 
-    def __init__(self, db_path, embedder=None, embedder_ver: str = NONE_EMBEDDER):
+    def __init__(self, db_path, embedder=None, embedder_ver: str = NONE_EMBEDDER,
+                 batch_embedder=None):
         self._db = sqlite3.connect(str(db_path))
         self._db.row_factory = sqlite3.Row
         self._db.executescript(SCHEMA)
@@ -67,6 +68,9 @@ class ChunkIndex:
         self._embedder = embedder
         self._embedder_ver = (
             embedder_ver if embedder is not None else NONE_EMBEDDER)
+        # 批量嵌入器（回填专用）：callable(texts)->list[vec]，一次推理
+        # 摊薄 GPU 启动开销——实测单条 1 块/s vs 批量 30 块/s
+        self._batch_embedder = batch_embedder
         self._vec_dim: int | None = None
         self._vec_ready = False
 
@@ -144,27 +148,66 @@ class ChunkIndex:
         去重键）；断点 = embedding_status，重跑零产出。毒文本单块
         失败跳过不阻塞批次（Calibre 纪律）。批间 yield 事务，随时可停。
         """
-        if self._embedder is None:
+        if self._embedder is None and self._batch_embedder is None:
             return {"error": "no embedder"}
         rows = self._db.execute(
             "SELECT DISTINCT chunk_id, text FROM chunks"
             " WHERE embedding_status='none' LIMIT ?", (batch,)).fetchall()
         embedded = rows_lit = failed = 0
-        for r in rows:
-            try:
-                self._vec_put(r["chunk_id"], self._embedder(r["text"]))
-                with self._db:
-                    cur = self._db.execute(
-                        "UPDATE chunks SET embedding_status='embedded'"
-                        " WHERE chunk_id=?", (r["chunk_id"],))
-                    rows_lit += cur.rowcount
-                embedded += 1
-            except Exception as exc:
-                failed += 1
-                _log.warning("补嵌失败跳过 chunk %s: %s",
-                             r["chunk_id"][:12], exc)
+        if self._batch_embedder is not None:
+            embedded, rows_lit, failed = self._backfill_batched(rows)
+        else:
+            for r in rows:
+                try:
+                    self._vec_put(r["chunk_id"], self._embedder(r["text"]))
+                    with self._db:
+                        cur = self._db.execute(
+                            "UPDATE chunks SET embedding_status='embedded'"
+                            " WHERE chunk_id=?", (r["chunk_id"],))
+                        rows_lit += cur.rowcount
+                    embedded += 1
+                except Exception as exc:
+                    failed += 1
+                    _log.warning("补嵌失败跳过 chunk %s: %s",
+                                 r["chunk_id"][:12], exc)
         return {"embedded": embedded, "rows_lit": rows_lit,
                 "failed": failed, "remaining": self._pending_count()}
+
+    def _backfill_batched(self, rows) -> tuple[int, int, int]:
+        """批嵌 128/片一次推理；毒片降级逐条救回好块。"""
+        SLICE = 128
+        embedded = rows_lit = failed = 0
+        for i in range(0, len(rows), SLICE):
+            sl = rows[i:i + SLICE]
+            try:
+                vecs = self._batch_embedder([r["text"] for r in sl])
+                if len(vecs) != len(sl):
+                    raise ValueError(f"批量返回数不符 {len(vecs)}!={len(sl)}")
+                for r, vec in zip(sl, vecs):
+                    self._vec_put(r["chunk_id"], vec)
+                    with self._db:
+                        cur = self._db.execute(
+                            "UPDATE chunks SET embedding_status='embedded'"
+                            " WHERE chunk_id=?", (r["chunk_id"],))
+                        rows_lit += cur.rowcount
+                    embedded += 1
+            except Exception as exc:
+                _log.warning("批嵌片失败降级逐条（%d 块）: %s", len(sl), exc)
+                for r in sl:  # 逐条救：定位毒块，好块不陪葬
+                    try:
+                        vec = self._batch_embedder([r["text"]])[0]
+                        self._vec_put(r["chunk_id"], vec)
+                        with self._db:
+                            cur = self._db.execute(
+                                "UPDATE chunks SET embedding_status='embedded'"
+                                " WHERE chunk_id=?", (r["chunk_id"],))
+                            rows_lit += cur.rowcount
+                        embedded += 1
+                    except Exception as exc1:
+                        failed += 1
+                        _log.warning("补嵌失败跳过 chunk %s: %s",
+                                     r["chunk_id"][:12], exc1)
+        return embedded, rows_lit, failed
 
     def _pending_count(self) -> int:
         row = self._db.execute(

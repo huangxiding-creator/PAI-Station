@@ -149,3 +149,30 @@ def test_backfill_embeds_stale_none_chunks(tmp_path):
     # 断点续跑：二跑零产出
     assert idx.backfill()["embedded"] == 0
     idx.close()
+
+
+def _fake_batch_embedder(texts: list[str]) -> list[list[float]]:
+    return [_fake_embedder(t) for t in texts]
+
+
+def test_backfill_batch_route_with_poison_fallback(tmp_path):
+    """批量补嵌：128/片一次推理；毒片降级逐条救回好块（坏块跳过）。"""
+    idx0 = ChunkIndex(tmp_path / "t.db")
+    idx0.upsert_file("a.md", [f"批量块{i}的内容文字" for i in range(4)], LOGIC)
+    idx0.close()
+
+    calls = {"n": 0}
+
+    def flaky(texts):
+        calls["n"] += 1
+        if calls["n"] == 1:  # 首片含毒块：整片炸
+            raise RuntimeError("GPU OOM on poison chunk")
+        return _fake_batch_embedder(texts)
+
+    idx = ChunkIndex(tmp_path / "t.db", embedder=_fake_embedder,
+                     embedder_ver="fake", batch_embedder=flaky)
+    r = idx.backfill()
+    # 首片炸 → 逐条救：好块 embedded，毒块失败跳过
+    assert r["embedded"] == 4 and r["failed"] == 0 and calls["n"] >= 2
+    assert idx.backfill()["embedded"] == 0  # 断点续跑
+    idx.close()
