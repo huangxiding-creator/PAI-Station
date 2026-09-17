@@ -1,0 +1,231 @@
+{
+  "slice": "D_agency",
+  "collected_at": "2026-09-17",
+  "method_note": "gh api search/repos 实测星数与 push 时间；产品官网 curl -sL 直连实测 HTTP 状态并抓取 title/meta/正文提取 vision_claim；百度文库/Coze 为 SPA，用 Chrome MCP 渲染后取文。WebSearch 与 web_reader 均 429（限额 2026-09-26 重置），全程走 curl 降级通道。gamma.app 本机 TLS 直连两次失败（000）+ Chrome 连接重置，按任务规则放弃收录。",
+  "items": [
+    {
+      "name": "QwenPaw (AgentScope)",
+      "url": "https://github.com/agentscope-ai/QwenPaw",
+      "kind": "github",
+      "stars": 35036,
+      "vision_claim": "\"Your personal AI assistant — deploy locally or in the cloud, extend with Skills & Plugins, connect across every channel.\" README 列举：定时自动化（新闻简报/报告生成/多渠道分发）、代码读写、PDF/Word/Excel/PPT 处理、个人知识库检索、钉钉/飞书/Discord/Telegram 多渠道路由。",
+      "why_beneath": "阿里系把『个人助理』做成可部署基础设施：agency 被拆解为 Skills+Plugins 扩展树 + 定时任务编排。它的深层假设是：个人 agency 不在对话里，而在『把个人运营管道（采集→加工→分发）模板化』。与 OpenClaw 同赛道但走『官方工程化精装』路线。",
+      "alive": true
+    },
+    {
+      "name": "nanobot (HKUDS)",
+      "url": "https://github.com/HKUDS/nanobot",
+      "kind": "github",
+      "stars": 48229,
+      "vision_claim": "\"Ultra-lightweight, open-source, self-hosted personal AI agent framework in Python with WebUI, tools, memory, MCP, multi-agent workflows, automation, and chat apps.\" 2026-02-01 建仓，7 个月冲到 4.8 万星。",
+      "why_beneath": "港大 Data Intelligence Lab（LightRAG 团队）出手，把『个人 agent』压缩成一个超轻量自托管盒子。增速本身即信号：个人 agent 网关已从 OpenClaw 一家独大进入『百家争鸣、以轻取胜』阶段——深层竞争点不是能力上限而是『占有个人机器』的部署摩擦下限。",
+      "alive": true
+    },
+    {
+      "name": "khoj",
+      "url": "https://github.com/khoj-ai/khoj",
+      "kind": "github",
+      "stars": 37369,
+      "vision_claim": "\"Your AI second brain. Self-hostable. Get answers from the web or your docs. Build custom agents, schedule automations, do deep research.\"",
+      "why_beneath": "把『第二大脑』叙事（个人知识检索）升级挂上 agents + scheduled automations：感知层（你的文档）→ 计划层（定时自动化）→ 执行层（自定义 agent）。证明『记忆先行』派正在向『执行』补课——只有大脑没有手的个人 AI 被认为不完整。",
+      "alive": true
+    },
+    {
+      "name": "lotti",
+      "url": "https://github.com/matthiasn/lotti",
+      "kind": "github",
+      "stars": 1174,
+      "vision_claim": "\"A private logbook for the work you actually did.\" + \"A private logbook with a staff of personal AI assistants. Agents read what you record and propose what to do next — you approve.\"",
+      "why_beneath": "全场与 PAI-Station『感知→确认→自主执行』最同构的项目：私人日志=感知，agents 读日志提出行动=计划，you approve=确认关。星数小但理念最干净：agency 的外包不是把事扔给 AI，而是让 AI 基于『你实际做了什么』持续提案、人只保留批准动作。个人记录被视为 agent 的原始燃料。",
+      "alive": true
+    },
+    {
+      "name": "MIRIX",
+      "url": "https://github.com/Mirix-AI/MIRIX",
+      "kind": "github",
+      "stars": 3443,
+      "vision_claim": "\"Your personal AI that builds memory through screen observation and natural conversation\"（多 agent 记忆系统 + 屏幕活动追踪，配套论文 arXiv:2507.07957）。",
+      "why_beneath": "感知激进的『读屏派』：连屏幕活动都被截入多 agent 记忆。深层理念：意图的原料是上下文，个人 agent 的护城河不在执行器而在『对你全程注视形成的记忆结构』。与 PAI-Station 的本地感知/索引管线同一判断，但把边界推到了隐私极限。",
+      "alive": true
+    },
+    {
+      "name": "Devin Fusion (Cognition)",
+      "url": "https://cognition.ai/blog/devin-fusion",
+      "kind": "product",
+      "stars": null,
+      "vision_claim": "2026-06-29 博客实测原文：\"Devin Fusion: Frontier Performance at 60% Lower Cost\"——\"a new kind of multi-model harness\"，混合前沿模型与 sidekick 模型，保持 \"Fable 5-level performance\" 同时每任务成本 $10.53 级别。注意：实测为多模型混合 harness，并非传闻中的『桌面 harness』。",
+      "why_beneath": "云端分身赛道已从『能不能干活』翻页到『干活的经济学』：把任务按难度路由给不同价位的认知劳动力。深层信号：当执行能力商品化后，竞争的是『认知劳动的定价权』——混合 harness 本质是在给每一段推理标价。",
+      "alive": true
+    },
+    {
+      "name": "Cursor background agents",
+      "url": "https://docs.cursor.com/agent/background",
+      "kind": "product",
+      "stars": null,
+      "vision_claim": "官方文档（实测 200）：云端异步 agent——在 Cursor 云端隔离环境克隆仓库执行任务（写码/测试/跑命令），产出 diff 供 review；可从编辑器、dashboard、Slack、CLI、API 发起，本地下线后仍并行运行。",
+      "why_beneath": "执行与『座位』的分离：劳动被搬进可无限并行的云端沙箱，人只保留 review 检查点。这是『执行外包』最成熟的工业化形态——不是造一个像人的分身，而是造一个不占用你时间的隔间劳动力，意图（一条任务描述）进去、产物（diff）出来。",
+      "alive": true
+    },
+    {
+      "name": "GitHub Copilot Workspace",
+      "url": "https://githubnext.com/projects/copilot-workspace",
+      "kind": "product",
+      "stars": null,
+      "vision_claim": "GitHub Next 项目页实测仍 200 存活（title: Copilot Workspace）：从 issue 出发的任务委派环境（issue→plan→实施→PR）。2025 年起 GitHub 将该方向吸收进 Copilot coding agent（issue/PR 上自主指派的编码 agent）。",
+      "why_beneath": "半失败的先行者：把『意图』结构化成工作单（issue→plan→PR diff 每步可改）的理念正确，但作为独立产品形态被 coding agent 吸收。墓志铭值得刻：GitHub 证明『意图→可执行工单』的表示层才是关键，工具形态会死、表示会长存。",
+      "alive": false
+    },
+    {
+      "name": "Reclaim.ai",
+      "url": "https://reclaim.ai/",
+      "kind": "product",
+      "stars": null,
+      "vision_claim": "实测 meta：\"Reclaim is an AI-powered app that creates 40% more time for teams — auto-schedule tasks, habits, meeting & breaks — free on Google Calendar & Outlook.\"",
+      "why_beneath": "个人事务自动化中最早兑现的一类：日程不是被『代做』而是被『代排』。深层：时间/注意力是最后一种不可储存不可转移的个人资源，代理只能替你决策其配置——这是『意图物化』（把你想要的生活节奏变成日历块）而非『劳动转移』。",
+      "alive": true
+    },
+    {
+      "name": "Motion",
+      "url": "https://www.usemotion.com/",
+      "kind": "product",
+      "stars": null,
+      "vision_claim": "实测首页：\"The AI Powered SuperApp for Work\"——AI Project Manager / AI Task Manager / AI Calendar / AI Meeting Assistant / AI Docs / AI Workflows 全家桶。",
+      "why_beneath": "从日程工具膨胀成『AI 打包的工作超级应用』：路线是收编整张个人工作台而非做单一代理。与 PAI-Station 的分野：Motion 把每个办公对象加一个 AI 前缀（功能视角），个人工作站把人加一个执行层（意图视角）——两条路线的赛跑。",
+      "alive": true
+    },
+    {
+      "name": "Shortwave Agent / Tasklet",
+      "url": "https://www.shortwave.com/",
+      "kind": "product",
+      "stars": null,
+      "vision_claim": "实测首页：\"Automate your email with AI — Save hours each day with the Shortwave Agent — organize, schedule, write and search with just a prompt\"，首页力推新产品入口 \"Try Tasklet\"。",
+      "why_beneath": "邮件是数字员工最窄也最刚需的入口；值得记录的是它正从『邮箱代理』向 Tasklet（通用任务委派）横向扩张——从代读信到代办事，是『劳动转移→意图物化』跃迁的活标本：一句 prompt 进、跨工具动作出。",
+      "alive": true
+    },
+    {
+      "name": "Rabbit r1",
+      "url": "https://www.rabbit.tech/",
+      "kind": "product",
+      "stars": null,
+      "vision_claim": "实测官网（rabbitOS 2.3）：\"your AI assistant device\" $199 无订阅；关键转向——\"third-party agents on r1: speak to r1 to control Hermes Agent, Claude Code, and OpenClaw\"；保留 LAM playground 栏目；主打 magic recorder 无限转写。",
+      "why_beneath": "LAM 独立硬件路线的活化石兼墓碑：当初宣称『Large Action Model 替你操作一切 App』，2026 年实测官网上 r1 的卖点已是『用语音遥控别人家的 agent（含 OpenClaw/Claude Code）』+录音笔。深层教训：动作生成没有独立模型层价值，溶解为工具调用+浏览器自动化；硬件残值为『意图的语音入口』。",
+      "alive": true
+    },
+    {
+      "name": "Brain.ai (Brain Technologies)",
+      "url": "https://brain.ai/",
+      "kind": "product",
+      "stars": null,
+      "vision_claim": "实测 meta：\"Brain organizes the world's software and make it natural to use.\"（We Build Computers That Think；Natural-language software / generative apps 路线）。",
+      "why_beneath": "全场最激进的意图派：不是让 AI 学会用你的软件（劳动转移），而是按意图即时生成软件界面（意图物化的极端形态——App 不再存在，意图到达时软件才被生成）。早年与 Teenage Engineering 合作的自然语言手机是 Rabbit 之前更早的 LAM 先驱。",
+      "alive": true
+    },
+    {
+      "name": "LaVague",
+      "url": "https://github.com/lavague-ai/LaVague",
+      "kind": "github",
+      "stars": 6389,
+      "vision_claim": "\"Large Action Model framework to develop AI Web Agents\"（GitHub 上最以 LAM 自称的开源框架）。",
+      "why_beneath": "开源 LAM 的墓碑：最后 push 2025-01，此后停滞。证据链完整：LAM 之名的产品（Rabbit 硬件、LaVague 框架）两年内全线哑火，『动作模型』被视觉-语言-动作模型（机器人侧）与通用 agent loop + browser-use（软件侧）吸收。执行外包的底层不是新模型，是把动作当工具调用。",
+      "alive": false
+    },
+    {
+      "name": "ANP (Agent Network Protocol)",
+      "url": "https://github.com/agent-network-protocol/AgentNetworkProtocol",
+      "kind": "protocol",
+      "stars": 1430,
+      "vision_claim": "实测 README：\"ANP aims to become the HTTP of the Agentic Web era: a protocol suite for agent identity, naming, discovery, negotiation, secure messaging, and application-level collaboration.\" 已发布 did:wba 身份、WNS 命名、agent 描述/发现、端到端即时消息、AP2 agent 支付协议。",
+      "why_beneath": "中国团队主导的 agent 互联网地基：当个人 agent 相互协作，交换的不再是劳动而是『身份+意图+支付承诺』。它把『代理性外包』推到协议层——你的 agent 在网上是谁、能承诺什么、怎么结算。是『意图物化』的基础设施化表述。",
+      "alive": true
+    },
+    {
+      "name": "Agora Protocol",
+      "url": "https://agora-protocol.github.io/",
+      "kind": "protocol",
+      "stars": 183,
+      "vision_claim": "实测官网：\"Scalable and reliable communication between your agents... Reduce token usage by 98%. Robust. Framework-agnostic. fully decentralized\"（论文协议：自然语言+协议混合路由，让 agent 间通信从纯 prompt 降为结构化协议）。",
+      "why_beneath": "agent 经济的经济学派：指出 agent 间用自然语言对话的成本灾难，主张高频协作下沉为协议。GitHub org 最后 push 2025-03、官网仍活——研究先行、工程停滞。深层贡献：给『agent 间分工』算账——外包的不是劳动而是通信开销。",
+      "alive": false
+    },
+    {
+      "name": "A2A (Agent2Agent)",
+      "url": "https://github.com/a2aproject/A2A",
+      "kind": "protocol",
+      "stars": 25799,
+      "vision_claim": "\"Agent2Agent (A2A) is an open protocol enabling communication and interoperability between opaque agentic applications.\"（Google 发起、已捐 Linux Foundation，2026-09 仍高频更新）。",
+      "why_beneath": "巨头的答案：agent 间协作被标准化成『不透明应用』之间的互操作——每个 agent 对他人是黑盒能力，只交换任务卡片与结果。个人 agent 要接入的将不是某个云，而是这张协议网；个人 agency 的行使面从『一个人的工具箱』扩展为『全网可委托的黑盒劳动力市场』。",
+      "alive": true
+    },
+    {
+      "name": "memU",
+      "url": "https://github.com/NevaMind-AI/memU",
+      "kind": "github",
+      "stars": 14412,
+      "vision_claim": "\"Personal memory across agents\"（MCP 生态中的个人记忆层：把个人记忆做成可迁移资产，任何 agent 皆可挂载）。",
+      "why_beneath": "MCP 生态里『personal』的真正卡位：不争执行器，争『跨 agent 的个人记忆主权』。判断与 PAI-Station 一致——执行器会不断更换（今天 OpenClaw 明天别的），个人上下文才是唯一不该锁死在任何一个 agent 里的资产。记忆=意图的矿层。",
+      "alive": true
+    },
+    {
+      "name": "扣子（Coze 空间）",
+      "url": "https://space.coze.cn/",
+      "kind": "product",
+      "stars": null,
+      "vision_claim": "实测官网：\"扣子是强大的AI办公助手，基于Agent技术，集成了AI写作、AI PPT生成、AI表格处理、AI设计、AI播客、AI生图与AI视频等全功能……多场景办公任务自动化，全面提升工作效率。\"",
+      "why_beneath": "字节把『数字员工』落成『办公杂物一站式代工』：写作/PPT/表格/播客全包。这是『劳动转移』的彻底具象化——按劳动类型开店。深层缺位：没有『对你的持续感知与记忆』，每次都是匿名代工；恰好反衬个人工作站的差异在于带上下文的常驻代理。",
+      "alive": true
+    },
+    {
+      "name": "智谱清言（ChatGLM 智能体）",
+      "url": "https://chatglm.cn/",
+      "kind": "product",
+      "stars": null,
+      "vision_claim": "实测官网 meta：\"基于 GLM 大模型，不只是 AI 助手，更是能帮你把事办成的 Agent。从理解目标到调用工具、从拆解任务到协调配合，把回答变成交付结果。\"",
+      "why_beneath": "中文世界对本次核心问题最直白的作答：『把回答变成交付结果』就是意图物化的市场话术——竞争单位从 token（生成答案）变为 deliverable（交付结果）。『从理解目标到协调配合』完整复述了 感知→规划→执行 价值链，是国产大厂中理念表述最清晰的一家。",
+      "alive": true
+    },
+    {
+      "name": "WPS AI",
+      "url": "https://ai.wps.cn/",
+      "kind": "product",
+      "stars": null,
+      "vision_claim": "实测官网：\"WPS AI 是金山办公旗下具备大语言模型能力的人工智能应用，提供智能文档写作、长文阅读处理与人机交互等能力……自动生成 PPT、表格分析处理、文章改写续写、翻译\"",
+      "why_beneath": "寄生路线：agency 附属於文档而不是附属於人。AI 是 WPS 文档里的一个功能位，无个人持续记忆、无跨场景代办。与『个人工作站』的本质差异：它外包的是『对文档的劳动』，而非『对人的代理』。",
+      "alive": true
+    },
+    {
+      "name": "文小库（百度文库）",
+      "url": "https://wenku.baidu.com/",
+      "kind": "product",
+      "stars": null,
+      "vision_claim": "Chrome 实测渲染：站点标题 \"百度文库 - 一站式AI内容获取和创作平台\"，主导航现名『库库AI』，首页口号 \"搜你想搜，问你想问，能搜能问又能干\"。",
+      "why_beneath": "从文档库转型『内容获取+创作』一站式 AI 平台——『能干』二字是向执行层的宣示。路线是先垄断个人内容消费场景再谈代理；深层逻辑与扣子同构（场景代工），但多了内容资产底座。文小库品牌 2026 年在页面上已让位于『库库AI』入口，产品名漂移本身即执行层定位未稳的证据。",
+      "alive": true
+    },
+    {
+      "name": "prime-agent (PrimeIntellect)",
+      "url": "https://github.com/PrimeIntellect-ai/prime-agent",
+      "kind": "github",
+      "stars": 20926,
+      "vision_claim": "实测 README：\"Prime Agent: A Self-Improving RLM Harness\"——面向 coding 与长时程自主任务的自改进 agent harness（配套 verifiers / PRIME-RL 体系），2026-09-17 仍在更新。",
+      "why_beneath": "执行外包的终局形态假说：不是一次外包而是『自改进循环』——用任务结果的验证信号反哺能力。深层理念：当外包的劳动能自我训练，『转移劳动』这个词就失效了，剩下的只是给一个不断变强的进程持续供给意图与验证标准。",
+      "alive": true
+    }
+  ],
+  "reference_not_included": [
+    {"name": "OpenClaw", "url": "https://github.com/openclaw/openclaw", "stars": 389901, "note": "任务指定排除，仅作水位参照（gh api 实测 2026-09-17）"},
+    {"name": "ZeroClaw", "url": "https://github.com/zeroclaw-labs/zeroclaw", "stars": 32857, "note": "任务指定排除"},
+    {"name": "NanoClaw", "url": "https://github.com/nanocoai/nanoclaw", "stars": 30788, "note": "任务指定排除（实测确认 nanoclaw=nanocoai/nanoclaw，与 HKUDS/nanobot 无关）"},
+    {"name": "Gamma", "url": "https://gamma.app/", "note": "本机网络 TLS 直连两次失败（000）且 Chrome 连接重置，URL 无法亲测，按规则不收录"},
+    {"name": "browser-use", "url": "https://github.com/browser-use/browser-use", "stars": 114838, "note": "执行基建层非个人代理理念，超出本切片焦点，留档星数供切片间引用"}
+  ],
+  "synthesis": {
+    "deeper_idea": "意图的物化（intent materialization），而非劳动的转移（labor transfer）",
+    "evidence": [
+      "失败样本全部倒在『劳动转移』一侧：Rabbit r1 的 LAM（复现人类动作序列）已让位于语音遥控第三方 agent；LaVague（LAM 框架）2025-01 停更；Copilot Workspace 作为独立产品被吸收。复刻人的动作被证明没有独立价值层。",
+      "存活样本全部收敛于『意图物化』：智谱清言『把回答变成交付结果』（答案→交付物）；Brain.ai 按意图即时生成软件（App 消失）；Copilot Workspace 遗产是 issue→plan→PR 的意图结构化表示；lotti『agents 提案—人批准』把确认点钉在意图层；Cursor background agents 一条任务描述进、一个 diff 出。",
+      "协议层在把『意图交换』基础设施化：A2A（25.8k★，agent 间黑盒任务卡交换）、ANP（『Agentic Web 时代的 HTTP』，did:wba 身份+AP2 支付=意图方与承诺的结算）、Agora（把 agent 间通信从自然语言降为协议，省 98% token）。agent 经济里被定价和交易的不是劳动，是结构化意图。",
+      "经济学证据：Devin Fusion 的多模型混合 harness 是在给每段认知劳动动态定价——执行能力商品化后，护城河只剩两处：个人上下文（memU 1.4 万星『跨 agent 个人记忆』、MIRIX 读屏记忆）与验证/自改进回路（prime-agent）。上下文是意图的矿层，验证是意图的收货口。"
+    ],
+    "implication_for_paistation": "PAI-Station 的『感知→确认→自主执行』三层恰落在正确一侧：感知层（本地全盘索引/自画像）占有个人上下文=意图矿层；确认关对应意图的批准动作（lotti 同构）；执行层应视为可替换的商品件（连 Rabbit 都转去遥控 OpenClaw/Claude Code），不宜自研重执行栈。最深的理念不是『AI 替你干活』，而是『你的意图第一次有了可编译的表示与可结算的通道』。"
+  }
+}

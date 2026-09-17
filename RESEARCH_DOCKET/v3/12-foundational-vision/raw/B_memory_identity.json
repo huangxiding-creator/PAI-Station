@@ -1,0 +1,205 @@
+{
+  "slice": "B_memory_identity",
+  "collected_at": "2026-09-17",
+  "method_notes": "GitHub 项均经 gh api repos/<name> 实测 stargazers_count/pushed_at/archived；产品项均经 curl 实测 HTTP 200 并抓取标题/og:description。WebSearch 与 webReader 均 429 限流（9-26 恢复），已按预案降级 curl 官网验证。hereafterai.com DNS 解析到域名转发 IP（76.223.54.146/13.248.169.48, Global Accelerator 转发段）但 443 持续超时、本机 Chrome 亦遭 DNS 污染跳转百度文库——疑似域名停靠/服务已死，因无法亲测可访问，按纪律不列入 items。deepbrainai.com 返回 522、www.rememory.ai 返回 403 反爬，同样无法亲测可访问，不列入。",
+  "items": [
+    {
+      "name": "MemOS",
+      "url": "https://github.com/MemTensor/MemOS",
+      "kind": "github",
+      "stars": 11445,
+      "vision_claim": "Self-evolving memory OS for LLM & AI Agents: ultra-persistent memory, hybrid-retrieval, and cross-task skill reuse",
+      "why_beneath": "把记忆从『RAG检索配件』升维成操作系统级一等资源：记忆像内存/CPU一样被调度、换页、计量。个人记忆因此不再是某个会话的附属品，而是被『记忆操作系统』管理的资产——比工作站更底层：先有记忆内核，才有工作站应用。",
+      "alive": true
+    },
+    {
+      "name": "EverOS",
+      "url": "https://github.com/EverMind-AI/EverOS",
+      "kind": "github",
+      "stars": 13003,
+      "vision_claim": "One portable memory layer for every AI agent: local-first, Markdown-native, user-owned, and self-evolving across apps, tools, and workflows",
+      "why_beneath": "记忆主权归用户：一份本地优先、Markdown 原生、可跨应用携带的自进化记忆层。理念上比『个人AI工作站』更根本——工作站会被换掉，但『你随身穿戴的记忆卷宗』是跨工具恒存的，身份=可携带记忆本身。",
+      "alive": true
+    },
+    {
+      "name": "memU",
+      "url": "https://github.com/NevaMind-AI/memU",
+      "kind": "github",
+      "stars": 14412,
+      "vision_claim": "Personal memory across agents — 用类文件系统的目录结构（而非常规向量库）组织记忆，人可读可改",
+      "why_beneath": "直接宣称『记忆不属于任何一个 app，而属于横跨所有 agent 的你』：memU 把个人记忆做成了独立于任何 AI 产品的第三方层，等于把『自我』从应用里抽出来单独托管。",
+      "alive": true
+    },
+    {
+      "name": "Cognee",
+      "url": "https://github.com/topoteretes/cognee",
+      "kind": "github",
+      "stars": 30749,
+      "vision_claim": "The open-source AI memory platform for agents — persistent long-term memory via a self-hosted knowledge graph engine",
+      "why_beneath": "记忆=自托管知识图谱：关于你的事实被提炼成实体-关系图而非对话日志堆。它的底层主张是『没有结构化的图，就没有真正的长期记忆』——记忆的形态学优先于记忆的应用。",
+      "alive": true
+    },
+    {
+      "name": "MIRIX",
+      "url": "https://github.com/Mirix-AI/MIRIX",
+      "kind": "github",
+      "stars": 3443,
+      "vision_claim": "Multi-agent personal assistant that tracks on-screen activities in real time and consolidates them into structured memories",
+      "why_beneath": "全量屏幕录制的『总量记忆』路线：不等你告诉 AI，而是让 AI 持续看着你的一切自动写成记忆。记忆从『被动输入』变成『主动观察』——这是 Monitor 派的『自我即数据』：你根本不用表达，你的一举一动就是数据。",
+      "alive": true
+    },
+    {
+      "name": "Memobase",
+      "url": "https://github.com/memodb-io/memobase",
+      "kind": "github",
+      "stars": 2897,
+      "vision_claim": "User Profile-Based Long-Term Memory for AI Chatbot Applications",
+      "why_beneath": "把长期记忆显式建模为『用户画像（profile）』：记忆的目的不是召回对话，而是收敛出一份稳定的人格档案。等价于宣告：记忆的终点是身份模型，不是检索命中率。",
+      "alive": true
+    },
+    {
+      "name": "Basic Memory",
+      "url": "https://github.com/basicmachines-co/basic-memory",
+      "kind": "github",
+      "stars": 3981,
+      "vision_claim": "AI conversations that actually remember — local Markdown knowledge pairs humans and AI on shared notes",
+      "why_beneath": "Markdown 文件即记忆，人与 AI 共读共写同一份本地文件：记忆所有权的技术形态被压到最朴素——不是数据库、不是云服务，是你可以用记事本打开的文件夹。『我』的一切必须留在人类可读介质上。",
+      "alive": true
+    },
+    {
+      "name": "Solid",
+      "url": "https://solidproject.org",
+      "kind": "product",
+      "stars": null,
+      "vision_claim": "Solid: Your data, your choice — Tim Berners-Lee 的 Web 再去中心化：每人一个 POD 个人数据舱，应用向 POD 申请授权（规范社区站实测 200；活跃实现 CommunitySolidServer/604 星、node-solid-server/1795 星；原 solid/solid 8090 星已归档）",
+      "why_beneath": "个人数据主权运动的理论原点（2016 起）：身份=数据舱。你的一生数据放进你拥有的 POD，所有应用只是授权访客。它比『个人AI工作站』底层一个数量级——工作站是 POD 之上的一种访客程序而已。",
+      "alive": true
+    },
+    {
+      "name": "Inrupt (Solid 商业化)",
+      "url": "https://inrupt.com",
+      "kind": "product",
+      "stars": null,
+      "vision_claim": "官网现主打：AI That Actually Knows Your Customers — 基于客户 data-wallets（Solid 数据钱包）的企业级 AI 体验",
+      "why_beneath": "Solid 商业化的实测现状：消费者 POD 愿景未兑现，Berners-Lee 联创的公司已转向 B2B『客户数据钱包』。证明『个人数据主权』目前唯一跑通的变现路径是企业侧合规需求，而非 C 端个人舱——对『比用户更懂用户』路线是最直接的商业警示样本。",
+      "alive": true
+    },
+    {
+      "name": "Databox",
+      "url": "https://github.com/me-box/databox",
+      "kind": "github",
+      "stars": 100,
+      "vision_claim": "Databox container manager — 隐私敏感个人数据只留在本地边缘盒子、按授权流出的 personal data store（剑桥/诺丁汉学术项目）",
+      "why_beneath": "2016-2020 的『个人数据盒子』实验：把个人数据的信任边界压缩到一台物理边缘设备。本地优先运动的工程先驱，但 2020 年停更——它是一块墓碑，标出『个人数据主权』路线的工程与商业难度上限。",
+      "alive": false
+    },
+    {
+      "name": "Second-Me",
+      "url": "https://github.com/mindverse/Second-Me",
+      "kind": "github",
+      "stars": 15686,
+      "vision_claim": "Train your AI self, amplify you, bridge the world — 用你自己的数据在本地训练一个『第二个我』",
+      "why_beneath": "最激进的『自我即数据』宣言：AI 不是工具而是人格副本，直接把『我』整体当作可训练模型（本地训练+代表你对外对话的 AI 角色）。2025 年爆红后近一年无提交——数字自我路线目前最响亮的实证墓志铭。",
+      "alive": false
+    },
+    {
+      "name": "Delphi",
+      "url": "https://delphi.ai",
+      "kind": "product",
+      "stars": null,
+      "vision_claim": "Delphi turns your expertise into an always-on presence — 你的数字克隆 24 小时在线替你回答（实测 200）",
+      "why_beneath": "『自我』被克隆成可无限并发的在线服务：你的思维方式成为能同时服务一万人的资产。比工作站更根本的问题是它把身份变成了可复制、可规模化分发的 IP。",
+      "alive": true
+    },
+    {
+      "name": "Personal AI",
+      "url": "https://personal.ai",
+      "kind": "product",
+      "stars": null,
+      "vision_claim": "Personal AI | The AI Memory Platform — 用你的消息/文档喂养专属个人模型（实测 200）",
+      "why_beneath": "把『个人记忆』直接立为一个产品品类（Memory Platform）：记忆不是功能而是产品本身；个人小模型（而非通用大模型）才是『懂你』的正确载体——反通用模型的身份路线。",
+      "alive": true
+    },
+    {
+      "name": "MindBank.ai",
+      "url": "https://mindbank.ai",
+      "kind": "product",
+      "stars": null,
+      "vision_claim": "Learn & earn more with a digital twin AI Assistant — 数字孪生助手（实测 200，官网在线；实际产品运营深度未能进一步核实）",
+      "why_beneath": "把数字孪生定位成『自我反思工具』：AI 镜像帮你认识并升级自己——自我认知外包给机器镜子，这比『帮你干活』的工作站叙事更哲学一层：认识你自己。",
+      "alive": true
+    },
+    {
+      "name": "StoryFile",
+      "url": "https://storyfile.com",
+      "kind": "product",
+      "stars": null,
+      "vision_claim": "Bringing History to Life Through Interactive Conversation — 生前录制视频、死后仍可交互对话的 conversational video AI（实测 200）",
+      "why_beneath": "『记忆即遗物』的产业化：在大限到来前建档，让身份以对话视频形式存续。伦理敏感仅记录不评价——但它把『自我即数据』推到了终点站：数据比肉身活得久。",
+      "alive": true
+    },
+    {
+      "name": "Project December",
+      "url": "https://www.projectdecember.net",
+      "kind": "product",
+      "stars": null,
+      "vision_claim": "Project December — 著名 GPT-3 聊天机器人（曾公开仿真逝者恋人， grief-tech 标志性事件），站点实测 200 仍在线",
+      "why_beneath": "极简形态的最早公开实验：证明仅凭文本对话样本，人格即可被语言模型俘获并让生者产生身份投射。『身份可被语言统计完整捕获』是所有数字永生产品的隐含公理。伦理敏感仅记录不评价。",
+      "alive": true
+    },
+    {
+      "name": "claude-obsidian",
+      "url": "https://github.com/AgriciDaniel/claude-obsidian",
+      "kind": "github",
+      "stars": 15010,
+      "vision_claim": "Self-organizing AI second brain for Obsidian + Claude Code — AI 把任意来源读、链、归档进一张你拥有的 Markdown 知识图谱（基于 Karpathy LLM Wiki 模式）",
+      "why_beneath": "个人知识图谱的 2026 新解：外化大脑由人机共建——你丢原料，AI 负责连线成图，产权是纯 Markdown。『第二大脑』从笔记方法论升格为 agent 时代的基础设施。",
+      "alive": true
+    },
+    {
+      "name": "unigraph",
+      "url": "https://github.com/unigraph-dev/unigraph-dev",
+      "kind": "github",
+      "stars": 765,
+      "vision_claim": "A local-first and universal knowledge graph, personal search engine, and workspace for your life",
+      "why_beneath": "把『一生』整体建进单一图数据库：不按应用切场景，万物皆图、检索即人生（search engine for your life）。比工作站更极端的统一性假设——生活本身就是一张图。2023 年停更，理念先于时代。",
+      "alive": false
+    },
+    {
+      "name": "awesome-lifelong-llm-agent",
+      "url": "https://github.com/qianlima-lab/awesome-lifelong-llm-agent",
+      "kind": "github",
+      "stars": 329,
+      "vision_claim": "TPAMI 2026 综述配套仓库：lifelong learning LLM agents 的综述/资源/论文全集",
+      "why_beneath": "『终身学习 Agent』被 TPAMI 综述正名为独立研究方向：工作站是建成后静态使用的工具，终身 Agent 是随经历持续生长的有机体——『持续学习』比『记忆存储』更根本，因为记忆最终要变成能力。",
+      "alive": true
+    },
+    {
+      "name": "ELL-StuLife",
+      "url": "https://github.com/ECNU-ICALK/ELL-StuLife",
+      "kind": "github",
+      "stars": 72,
+      "vision_claim": "Self-Evolving Agent via Experience-Driven Lifelong Learning — 经验驱动的自进化终身学习智能体",
+      "why_beneath": "把『活着=学习着』工程化：Agent 把每日经历自动转化为技能沉淀。与工作站的核心分野在时间轴——不是配置好后为你服务，而是与你共同经历、共同成长。",
+      "alive": true
+    },
+    {
+      "name": "qs_ledger",
+      "url": "https://github.com/markwk/qs_ledger",
+      "kind": "github",
+      "stars": 1077,
+      "vision_claim": "Quantified Self Personal Data Aggregator and Data Analysis — 把睡眠/阅读/步数/时间开销等全部人生数据聚合进一张个人账本（Django）",
+      "why_beneath": "personal API / 量化自我运动的代表作：『自我=可查询的数据表』的理念比 LLM 记忆热潮早了整整十年，是『比用户更懂用户』的鼻祖工程。2022 年停更——先驱完成了启蒙，接力棒交给了 AI 记忆层。",
+      "alive": false
+    },
+    {
+      "name": "awesome-quantified-self",
+      "url": "https://github.com/woop/awesome-quantified-self",
+      "kind": "github",
+      "stars": 2773,
+      "vision_claim": "Websites, Resources, Devices, Wearables, Applications, and Platforms for Self Tracking — 自我追踪全景清单（2026-07 仍在更新）",
+      "why_beneath": "仍在维护的活清单，证明『把人变成数据』的社区早于且独立于 AI 记忆热潮存在：量化自我运动是 personal API 思想的群众基础，今天的记忆框架只是给它装上了 LLM。",
+      "alive": true
+    }
+  ]
+}
