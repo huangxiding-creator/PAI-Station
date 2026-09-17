@@ -11,6 +11,9 @@ class _FakeIx:
         self._script = list(script)
         self.calls = 0
 
+    def drain_events(self):
+        return {}
+
     def extract_pending(self, limit, workers=None, engine="thread"):
         self.calls += 1
         return self._script.pop(0) if self._script else {"processed": 0}

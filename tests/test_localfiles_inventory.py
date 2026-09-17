@@ -165,3 +165,87 @@ def test_scan_stores_birthtime_atime(tmp_path):
 def _rec_ts(path, size=10, mtime=1000.0, birthtime=0.0, atime=0.0):
     return {"path": path, "size": size, "mtime": mtime, "secret": 0,
             "birthtime": birthtime, "atime": atime}
+
+
+# ---------- 秒级事件通道（09-17 live-watch 线） ----------
+
+def test_apply_event_lifecycle(tmp_path):
+    """added→changed→touched→deleted 四态；skipped/secret 行守护。"""
+    import os
+
+    from paistation.sense.localfiles.inventory import Inventory
+
+    inv = Inventory(tmp_path / "inv.db")
+    f = tmp_path / "新文件.txt"
+    f.write_text("v1")
+    st = os.stat(f)
+    rec = {"path": str(f), "size": st.st_size, "mtime": int(st.st_mtime),
+           "secret": 0}
+    assert inv.apply_event(rec, "created") == "added"
+    assert [r["path"] for r in inv.pending()] == [
+        str(f).replace(chr(92), "/")]
+    # 内容变 → changed 回 pending
+    f.write_text("v2 变更")
+    st = os.stat(f)
+    rec2 = {"path": str(f), "size": st.st_size, "mtime": int(st.st_mtime),
+            "secret": 0}
+    assert inv.apply_event(rec2, "modified") == "changed"
+    # 未变 → touched（不回队）
+    assert inv.apply_event(rec2, "modified") == "touched"
+    assert inv.apply_event({"path": str(f)}, "deleted") == "gone"
+    row = inv._db.execute(
+        "SELECT status FROM files WHERE path=?", (str(f).replace(
+            chr(92), "/"),)).fetchone()
+    assert row["status"] == "gone"
+    inv.close()
+
+
+def test_apply_event_never_flags_others_gone(tmp_path):
+    """单行补丁语义：apply_event 绝不把未提及行标 gone。"""
+    from paistation.sense.localfiles.inventory import Inventory
+
+    inv = Inventory(tmp_path / "inv.db")
+    inv.apply_scan([_rec("a.txt")])
+    inv.apply_event({"path": "b.txt", "size": 1, "mtime": 1}, "created")
+    st = {r["path"]: r["status"] for r in inv._db.execute(
+        "SELECT path, status FROM files")}
+    assert st["a.txt"] == "pending"  # 未被误伤
+    inv.close()
+
+
+def test_drain_events_offset_and_semantics(tmp_path):
+    """jsonl 续读 + offset 推进 + deleted/moved/瞬时文件语义。"""
+    import json as j
+
+    from paistation.sense.localfiles.domain import ScanDomain
+    from paistation.sense.localfiles.indexer import Indexer
+    from paistation.sense.localfiles.inventory import Inventory
+    from paistation.sense.localfiles.store import ChunkIndex
+
+    q = tmp_path / "usn_queue.jsonl"
+    inv = Inventory(tmp_path / "inv.db")
+    ix = Indexer(ScanDomain(), inv, ChunkIndex(tmp_path / "idx.db"),
+                 events_queue=q)
+    live = tmp_path / "实况.txt"
+    live.write_text("现场记录")
+    dead = tmp_path / "已删.txt"
+    dead.write_text("待删除")  # 真实存在才过 stat（瞬时文件会被跳过）
+    with q.open("a", encoding="utf-8") as fh:
+        fh.write(j.dumps({"ts": 1, "op": "created", "path": str(live)}) + '\n')
+        fh.write(j.dumps({"ts": 2, "op": "created",
+                          "path": str(dead)}) + '\n')
+    st1 = ix.drain_events()
+    assert st1.get("added") == 2
+    # 第二轮：dead 删除 + 幽灵路径（stat 失败）+ moved
+    with q.open("a", encoding="utf-8") as fh:
+        fh.write(j.dumps({"ts": 3, "op": "deleted", "path": str(dead)}) + '\n')
+        fh.write(j.dumps({"ts": 4, "op": "created",
+                          "path": str(tmp_path / "幽灵.txt")}) + '\n')
+    st2 = ix.drain_events()
+    assert st2.get("gone") == 1 and "幽灵" not in str(st2)
+    # offset 推进：三跑零新事件
+    assert ix.drain_events() == {}
+    row = inv._db.execute("SELECT status FROM files WHERE path=?",
+                          (str(dead).replace(chr(92), "/"),)).fetchone()
+    assert row["status"] == "gone"
+    ix.close()

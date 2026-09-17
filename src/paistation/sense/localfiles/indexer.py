@@ -77,12 +77,13 @@ class Indexer:
 
     def __init__(self, domain: ScanDomain, inventory: Inventory,
                  chunks: ChunkIndex, triage: Triage | None = None,
-                 es=None):
+                 es=None, events_queue=None):
         self._domain = domain
         self._inv = inventory
         self._chunks = chunks
         self._triage = triage or Triage()
         self._es = es
+        self._events_queue = events_queue  # 秒级事件 jsonl（live_watch 产）
         self._pool = ThreadPoolExecutor(
             max_workers=EXTRACT_WORKERS, thread_name_prefix="lfextract")
 
@@ -96,6 +97,58 @@ class Indexer:
                 "gone": len(diff.gone)}
 
     # ---------- L1 提取 → P2 入库 ----------
+
+    def drain_events(self, limit: int = 5000) -> dict:
+        """消费秒级事件队列：offset 续读 → per-path 取最新 op →
+        单行 apply_event（deleted→gone；stat 失败且非 deleted 跳过
+        ——瞬时文件由全量 walk 兜底）。"""
+        if self._events_queue is None:
+            return {}
+        import json as _json
+        import os as _os
+        from pathlib import Path as _P
+
+        from paistation.sense.localfiles.inventory import _norm_path
+        q = _P(self._events_queue)
+        if not q.exists():
+            return {}
+        off_file = q.with_suffix(".offset")
+        prev_off = off = int(off_file.read_text()) if off_file.exists() else 0
+        latest: dict[str, str] = {}
+        with q.open("rb") as fh:
+            fh.seek(off)
+            for i, raw in enumerate(fh):
+                if i >= limit:
+                    break
+                try:
+                    ev = _json.loads(raw)
+                except ValueError:
+                    continue
+                latest[_norm_path(ev["path"])] = ev.get("op", "modified")
+                if ev.get("dest"):
+                    latest[_norm_path(ev["dest"])] = "created"
+                off += len(raw)
+        off_file.write_text(str(off))
+        stats: dict[str, int] = {}
+        for path, op in latest.items():
+            if op == "deleted":
+                self._inv.apply_event({"path": path}, "deleted")
+                stats["gone"] = stats.get("gone", 0) + 1
+                continue
+            try:
+                st = _os.stat(path)
+            except OSError:
+                continue  # 瞬时文件（创建即删）——USN/全量兜底
+            rec = {"path": path, "size": st.st_size,
+                   "mtime": int(st.st_mtime),
+                   "birthtime": int(getattr(st, "st_birthtime", st.st_ctime)),
+                   "atime": int(st.st_atime),
+                   "secret": int(self._domain.is_secret(path))}
+            r = self._inv.apply_event(rec, op)
+            stats[r] = stats.get(r, 0) + 1
+        if off != prev_off or stats:
+            _log.info("秒级事件消费：读 %d 行 → %s", off - prev_off, stats)
+        return stats
 
     def extract_pending(self, limit: int = 200, workers: int | None = None,
                         engine: str = "thread") -> dict:

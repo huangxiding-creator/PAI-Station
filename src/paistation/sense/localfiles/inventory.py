@@ -199,6 +199,59 @@ class Inventory:
             changed=[{**r, "kind": ""} for r in changed],
             gone=gone)
 
+    def apply_event(self, rec: dict, op: str = "modified") -> str:
+        """单文件事件入库（秒级增量通道，live_watch 产 / 提取循环消费）。
+
+        与 apply_scan 的整代全量差分相对：此处是**单行补丁**——绝不
+        换代、绝不把未提及行标 gone（apply_scan([]) 会清场的坑）。
+        行级语义与全量差分同源：新增→pending、size/mtime 变→回
+        pending（skipped/secret 守住）、未变→touch、deleted→gone。
+        返回 added/changed/touched/gone。
+        """
+        path = _norm_path(rec["path"])
+        if op == "deleted":
+            with self._db:
+                self._db.execute(
+                    "UPDATE files SET status='gone', seen_gen=0"
+                    " WHERE path=?", (path,))
+            return "gone"
+        ts = time.time()
+        prev = self._db.execute(
+            "SELECT size, mtime FROM files WHERE path=?", (path,)).fetchone()
+        if prev is None:
+            with self._db:
+                self._db.execute(
+                    "INSERT INTO files(path, size, mtime, birthtime, atime,"
+                    " secret, seen_gen, first_seen, last_seen, status)"
+                    " VALUES(?,?,?,?,?,?,?,?,?,"
+                    " CASE ? WHEN 1 THEN 'secret' ELSE 'pending' END)",
+                    (path, int(rec.get("size", 0)), float(rec.get("mtime", 0)),
+                     float(rec.get("birthtime", 0) or 0),
+                     float(rec.get("atime", 0) or 0),
+                     int(rec.get("secret", 0)), self._gen, ts, ts,
+                     int(rec.get("secret", 0))))
+            return "added"
+        if (int(prev["size"]), int(prev["mtime"])) != (
+                int(rec.get("size", 0)), int(rec.get("mtime", 0))):
+            with self._db:
+                self._db.execute(
+                    "UPDATE files SET size=?, mtime=?, birthtime=?,"
+                    " atime=?, secret=?, last_seen=?,"
+                    " status=CASE WHEN ?=1 THEN 'secret'"
+                    " WHEN status='skipped' THEN 'skipped'"
+                    " WHEN status='secret' THEN 'secret'"
+                    " ELSE 'pending' END WHERE path=?",
+                    (int(rec.get("size", 0)), float(rec.get("mtime", 0)),
+                     float(rec.get("birthtime", 0) or 0),
+                     float(rec.get("atime", 0) or 0),
+                     int(rec.get("secret", 0)), ts,
+                     int(rec.get("secret", 0)), path))
+            return "changed"
+        self._touch(path, int(rec.get("size", 0)), int(rec.get("mtime", 0)),
+                    ts, float(rec.get("birthtime", 0) or 0),
+                    float(rec.get("atime", 0) or 0))
+        return "touched"
+
     def _touch(self, path: str, size: int, mtime: int, ts: float,
                birthtime: float = 0, atime: float = 0) -> None:
         with self._db:

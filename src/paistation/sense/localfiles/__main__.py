@@ -42,7 +42,8 @@ def _build(args):
     chunks = ChunkIndex(args.db_dir / "index.db", embedder=embedder,
                         embedder_ver=ver)
     domain = ScanDomain()
-    return Indexer(domain, inv, chunks), inv, chunks
+    return Indexer(domain, inv, chunks,
+                   events_queue=args.db_dir / "usn_queue.jsonl"), inv, chunks
 
 
 def _extract_loop(ix: Indexer, limit: int, log,
@@ -58,6 +59,9 @@ def _extract_loop(ix: Indexer, limit: int, log,
     stall = 0
     batch_no = 0
     while True:
+        ev = ix.drain_events()  # 秒级事件通道：live_watch 产 → 此处入队
+        if ev:
+            log.info("秒级事件入队：%s", ev)
         r = ix.extract_pending(limit, workers=workers, engine=engine)
         if r["processed"] == 0:
             log.info("队列清空，长跑完成：总计 %s", total)
