@@ -249,3 +249,49 @@ def test_drain_events_offset_and_semantics(tmp_path):
                           (str(dead).replace(chr(92), "/"),)).fetchone()
     assert row["status"] == "gone"
     ix.close()
+
+
+def test_drain_events_queue_rotation(tmp_path):
+    """jsonl 膨胀治理：累计消费超阈值且读到尾 → offset 归零+截断；
+    尾部有未读新事件时不动（绝不丢未消费行）；归零后新事件照常消费。"""
+    import json as j
+
+    import paistation.sense.localfiles.indexer as ixmod
+    from paistation.sense.localfiles.domain import ScanDomain
+    from paistation.sense.localfiles.indexer import Indexer
+    from paistation.sense.localfiles.inventory import Inventory
+    from paistation.sense.localfiles.store import ChunkIndex
+
+    q = tmp_path / "usn_queue.jsonl"
+    inv = Inventory(tmp_path / "inv.db")
+    ix = Indexer(ScanDomain(), inv, ChunkIndex(tmp_path / "idx.db"),
+                 events_queue=q)
+    f = tmp_path / "轮转.txt"
+    f.write_text("v1")
+    # ① 尾部有未消费行（模拟 offset 落后）：_rotate_queue 拒绝动
+    with q.open("a", encoding="utf-8") as fh:
+        fh.write(j.dumps({"ts": 1, "op": "created", "path": str(f)}) + '\n')
+        fh.write(j.dumps({"ts": 2, "op": "modified", "path": str(f)}) + '\n')
+    size = q.stat().st_size
+    off_partial = len(j.dumps({"ts": 1, "op": "created",
+                               "path": str(f)}).encode()) + 1
+    assert ix._rotate_queue(q, off_partial) is False  # size != off
+    assert q.stat().st_size == size  # 原样未动
+    # ② 阈值调小 → drain 消费到尾触发轮转：文件清空 offset 归零
+    monkey_threshold = 16
+    orig = ixmod.QUEUE_ROTATE_BYTES
+    ixmod.QUEUE_ROTATE_BYTES = monkey_threshold
+    try:
+        assert size > monkey_threshold
+        assert ix.drain_events().get("added") == 1  # per-path 取最新 op
+        assert q.stat().st_size == 0
+        assert q.with_suffix(".offset").read_text() == "0"
+        # ③ 归零后新事件照常消费（offset 无错位）
+        f.write_text("v2 变更")
+        with q.open("a", encoding="utf-8") as fh:
+            fh.write(j.dumps({"ts": 3, "op": "modified", "path": str(f)})
+                     + '\n')
+        assert ix.drain_events().get("changed") == 1
+    finally:
+        ixmod.QUEUE_ROTATE_BYTES = orig
+    ix.close()

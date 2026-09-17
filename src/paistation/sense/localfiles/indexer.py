@@ -31,6 +31,7 @@ _log = logging.getLogger("paistation.sense.localfiles.indexer")
 
 EXTRACT_TIMEOUT_S = 30.0
 PDF_TIMEOUT_MULT = 4  # PDF 预算 ×4：OCR 是真计算（0.5s/页）非挂死
+QUEUE_ROTATE_BYTES = 16 << 20  # 事件队列已消费前缀超 16MB 即压缩
 EXTRACT_WORKERS = 8
 PROC_WORKERS = 12
 MpTimeout = multiprocessing.TimeoutError
@@ -129,6 +130,8 @@ class Indexer:
                     latest[_norm_path(ev["dest"])] = "created"
                 off += len(raw)
         off_file.write_text(str(off))
+        if off > QUEUE_ROTATE_BYTES:
+            self._rotate_queue(q, off)
         stats: dict[str, int] = {}
         for path, op in latest.items():
             if op == "deleted":
@@ -149,6 +152,24 @@ class Indexer:
         if off != prev_off or stats:
             _log.info("秒级事件消费：读 %d 行 → %s", off - prev_off, stats)
         return stats
+
+    @staticmethod
+    def _rotate_queue(q, off: int) -> bool:
+        """压缩已消费前缀：仅当消费到文件尾（off==size）才动——
+        尾部有未读新事件时绝不截。顺序先 offset 归零再清文件：
+        中途崩溃最坏是重放（apply_event 幂等），不会丢。stat 检查与
+        截断之间 daemon 追加的微秒窗口由 USN/全量兜底——快速通道
+        是锦上添花，不是唯一真理源。"""
+        try:
+            if q.stat().st_size != off:
+                return False
+            q.with_suffix(".offset").write_text("0")
+            with q.open("w"):
+                pass
+            _log.info("事件队列压缩：%d 字节 → 0", off)
+            return True
+        except OSError:
+            return False
 
     def extract_pending(self, limit: int = 200, workers: int | None = None,
                         engine: str = "thread") -> dict:
