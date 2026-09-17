@@ -137,6 +137,41 @@ class ChunkIndex:
             _log.warning("嵌入失败降级 keyword-only: %s", exc)
             return "none"
 
+    def backfill(self, batch: int = 256) -> dict:
+        """存量 none 块批量补嵌（--no-embed 时代入库的欠账）。
+
+        同 chunk_id 跨文件多行只嵌一次、全部点亮（chunks_vec 主键即
+        去重键）；断点 = embedding_status，重跑零产出。毒文本单块
+        失败跳过不阻塞批次（Calibre 纪律）。批间 yield 事务，随时可停。
+        """
+        if self._embedder is None:
+            return {"error": "no embedder"}
+        rows = self._db.execute(
+            "SELECT DISTINCT chunk_id, text FROM chunks"
+            " WHERE embedding_status='none' LIMIT ?", (batch,)).fetchall()
+        embedded = rows_lit = failed = 0
+        for r in rows:
+            try:
+                self._vec_put(r["chunk_id"], self._embedder(r["text"]))
+                with self._db:
+                    cur = self._db.execute(
+                        "UPDATE chunks SET embedding_status='embedded'"
+                        " WHERE chunk_id=?", (r["chunk_id"],))
+                    rows_lit += cur.rowcount
+                embedded += 1
+            except Exception as exc:
+                failed += 1
+                _log.warning("补嵌失败跳过 chunk %s: %s",
+                             r["chunk_id"][:12], exc)
+        return {"embedded": embedded, "rows_lit": rows_lit,
+                "failed": failed, "remaining": self._pending_count()}
+
+    def _pending_count(self) -> int:
+        row = self._db.execute(
+            "SELECT COUNT(DISTINCT chunk_id) FROM chunks"
+            " WHERE embedding_status='none'").fetchone()
+        return row[0]
+
     # ---------- vec0 侧车（惰性建表，缺 sqlite_vec 则纯 keyword） ----------
 
     def _ensure_vec_table(self, dim: int) -> None:

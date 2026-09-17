@@ -119,3 +119,33 @@ def test_stats(tmp_path):
     idx.upsert_file("a.md", ["块一", "块二"], LOGIC)
     s = idx.stats()
     assert s["chunks"] == 2 and s["files"] == 1 and s["embedder"] == "fake"
+
+
+def test_backfill_embeds_stale_none_chunks(tmp_path):
+    """存量补嵌：--no-embed 时代入库的 none 块批量点亮；同 chunk_id
+    跨文件多行只嵌一次但全部点亮（chunks_vec 主键即去重键）；
+    断点=embedding_status，二跑零产出；无嵌入器报错不动库。"""
+    # 先无嵌入器入库（模拟 --no-embed 时代）
+    idx0 = ChunkIndex(tmp_path / "t.db")
+    idx0.upsert_file("a.md", ["共享文本块", "独有块甲"], LOGIC)
+    idx0.upsert_file("b.md", ["共享文本块", "独有块乙"], LOGIC)
+    idx0.close()
+    # 无嵌入器 backfill → 拒跑
+    idx1 = ChunkIndex(tmp_path / "t.db")
+    assert "error" in idx1.backfill()
+    idx1.close()
+    # 带嵌入器补嵌：3 个 unique 块（共享块去重）点亮 4 行
+    idx = ChunkIndex(tmp_path / "t.db", embedder=_fake_embedder,
+                     embedder_ver="fake")
+    r = idx.backfill()
+    assert r["embedded"] == 3 and r["rows_lit"] == 4
+    st = idx._db.execute(
+        "SELECT embedding_status, COUNT(*) n FROM chunks"
+        " GROUP BY embedding_status").fetchall()
+    assert {row["embedding_status"]: row["n"] for row in st} == {"embedded": 4}
+    # 语义路由立即可用
+    hits = idx.search("共享文本")
+    assert hits and {h.path for h in hits} == {"a.md", "b.md"}
+    # 断点续跑：二跑零产出
+    assert idx.backfill()["embedded"] == 0
+    idx.close()

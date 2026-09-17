@@ -96,6 +96,10 @@ def main(argv=None) -> int:
     ex.add_argument("--loop", action="store_true",
                     help="断点续跑长跑模式（计划任务用）")
     sub.add_parser("cycle", help="scan + extract 一键")
+    em = sub.add_parser("embed", help="存量 none 块批量补嵌（断点续跑）")
+    em.add_argument("--batch", type=int, default=256)
+    em.add_argument("--loop", action="store_true",
+                    help="循环至补嵌完成（夜间长跑）")
     sub.add_parser("status", help="索引状态统计")
     sq = sub.add_parser("search", help="混合检索")
     sq.add_argument("query", nargs="+")
@@ -153,6 +157,20 @@ def main(argv=None) -> int:
                     ensure_ascii=False, indent=2))
         elif args.cmd == "cycle":
             print(json.dumps(ix.full_cycle(), ensure_ascii=False, indent=2))
+        elif args.cmd == "embed":
+            if chunks.stats()["embedder"] == "none":
+                print("[嵌入] Ollama 不在位，拒绝空转（先启动服务）")
+                return 1
+            total = {"embedded": 0, "rows_lit": 0, "failed": 0}
+            while True:
+                r = chunks.backfill(batch=args.batch)
+                for k in total:
+                    total[k] += r[k]
+                log.info("补嵌批：%s（累计 %s 剩 %s）",
+                         r, total, r["remaining"])
+                if not args.loop or r["embedded"] == 0:
+                    break
+            print(json.dumps(total, ensure_ascii=False, indent=2))
         elif args.cmd == "search":
             query = " ".join(args.query)
             for h in chunks.search(query, k=args.k):
