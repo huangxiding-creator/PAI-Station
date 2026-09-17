@@ -79,24 +79,58 @@ def ocr_pdf(path: str, dpi: int = OCR_DPI,
         raise OcrUnavailable(f"OCR 管线故障: {exc}") from exc
 
 
-async def _ocr_pdf_async(path: str, dpi: int, max_pages: int) -> str:
-    import pymupdf
+def ocr_image(path: str) -> str:
+    """图片 → 文本（聊天截图/票据/现场照片内文字）。
+
+    大图预缩到 3200px 内（相机原图常超 WinRT MaxImageDimension
+    上限，解码整图既慢又可能拒收）；WebP 由 PIL 统一转 PNG 喂给
+    BitmapDecoder。零字（纯风景/人像）返回空串，上层走 metadata。
+    """
+    import io
+
+    from PIL import Image
+
+    try:
+        with Image.open(path) as im:
+            im = im.convert("RGB") if im.mode != "RGB" else im
+            if max(im.size) > 3200:
+                im.thumbnail((3200, 3200))
+            buf = io.BytesIO()
+            im.save(buf, format="PNG")
+    except Exception as exc:
+        raise OcrUnavailable(f"图片解码失败: {exc}") from exc
+    try:
+        return asyncio.run(_recognize_png_async(buf.getvalue()))
+    except OcrUnavailable:
+        raise
+    except Exception as exc:
+        raise OcrUnavailable(f"OCR 管线故障: {exc}") from exc
+
+
+async def _recognize_png_async(png: bytes) -> str:
     import winsdk.windows.storage.streams as streams
     from winsdk.windows.graphics.imaging import BitmapDecoder
+
+    engine = _get_engine()
+    st = streams.InMemoryRandomAccessStream()
+    dw = streams.DataWriter(st.get_output_stream_at(0))
+    dw.write_bytes(png)
+    await dw.store_async()
+    dec = await BitmapDecoder.create_async(st)
+    bmp = await dec.get_software_bitmap_async()
+    return squeeze_ocr_spaces((await engine.recognize_async(bmp)).text)
+
+
+async def _ocr_pdf_async(path: str, dpi: int, max_pages: int) -> str:
+    import pymupdf
 
     engine = _get_engine()
     parts: list[str] = []
     with pymupdf.open(path) as pdf:
         pages = pdf.page_count
         for i in range(min(pages, max_pages)):
-            png = pdf[i].get_pixmap(dpi=dpi).tobytes("png")
-            st = streams.InMemoryRandomAccessStream()
-            dw = streams.DataWriter(st.get_output_stream_at(0))
-            dw.write_bytes(png)
-            await dw.store_async()
-            dec = await BitmapDecoder.create_async(st)
-            bmp = await dec.get_software_bitmap_async()
-            parts.append((await engine.recognize_async(bmp)).text)
+            parts.append(await _recognize_png_async(
+                pdf[i].get_pixmap(dpi=dpi).tobytes("png")))
         if pages > max_pages:
             parts.append(f"[OCR 截断：共 {pages} 页，收编前 {max_pages} 页]")
-    return squeeze_ocr_spaces("\n\n".join(parts))
+    return "\n\n".join(parts)

@@ -34,6 +34,29 @@ ROUTES: dict[str, tuple[tuple[str, ...], str]] = {
 }
 _SUFFIX2KIND = {sfx: kind for kind, (sfxs, _) in ROUTES.items() for sfx in sfxs}
 
+# ---------- 图片 OCR 资格（09-17 收编线） ----------
+# 目的边界（本人+工作）+ 价值密度双闸：C 盘用户区照片多为私人/
+# 消费内容不采；公众号文章配图（Auto-wechat-article-exporter，
+# 4.9 万张）量大留作主力队列磨完后的第二波。第一波=工作证据图
+# （白龟湖影像卷 627 张/知识库/MemoTrace/企微聊天截图）。
+OCR_IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
+OCR_IMAGE_MIN_BYTES = 51_200  # 50KB 起：表情包/小图标不值 OCR
+OCR_IMAGE_PREFIXES = (
+    "d:/20 白龟湖项目/", "d:/memotrace/", "f:/工程知识库超市/",
+    "d:/wemedia/", "d:/wemediaoutput/", "d:/baidusyncdisk/",
+    "e:/ai-station/07 任务/", "e:/ai-station/04 智库/",
+    "e:/ai-station/research/",
+    "c:/users/91216/documents/wxwork/",  # 企微聊天截图=工作通信
+)
+
+
+def ocr_image_eligible(path: str, size: int) -> bool:
+    """图片是否值得 OCR：后缀 × 尺寸 × 目录资格三闸。"""
+    p = _norm_path(path)
+    return (os.path.splitext(p)[1] in OCR_IMAGE_SUFFIXES
+            and size >= OCR_IMAGE_MIN_BYTES
+            and p.startswith(OCR_IMAGE_PREFIXES))
+
 # 真机实证（09-16 双会话长跑）：企业微信 WeDrive 云端占位文件 open()
 # 会挂起拉云（单文件可卡 6+ 分钟，整轮提取几乎零推进的元凶）——
 # 前缀路由 metadata-only（只 stat 不 open），本地缓存恢复后自然重扫。

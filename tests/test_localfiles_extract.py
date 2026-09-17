@@ -232,3 +232,67 @@ def test_cache_hit_accepts_ocr_suffix(tmp_path):
     assert inv.cache_hit("a.pdf", 10, 1000.0, "pymupdf", "1.26.4")
     assert not inv.cache_hit("a.pdf", 10, 1000.0, "pymupdf", "1.26.5")
     inv.close()
+
+
+# ---------- 图片 OCR 路由（09-17 收编线） ----------
+
+def test_ocr_image_eligibility_gates():
+    from paistation.sense.localfiles.triage import ocr_image_eligible
+
+    assert ocr_image_eligible("D:/20 白龟湖项目/影像/现场.jpg", 300_000)
+    assert not ocr_image_eligible("D:/20 白龟湖项目/影像/小.png", 5_000)  # <50KB
+    assert not ocr_image_eligible("C:/Users/91216/Pictures/家人.jpg", 900_000)  # 边界外
+    assert not ocr_image_eligible("D:/20 白龟湖项目/影像/现场.gif", 300_000)  # 后缀外
+
+
+def test_image_ocr_with_text(tmp_path, monkeypatch):
+    import paistation.sense.localfiles.ocr as ocrmod
+    from paistation.sense.localfiles.extract import extract_image_ocr
+
+    monkeypatch.setattr(ocrmod, "ocr_image",
+                        lambda p: "微信聊天截图：尾款支付事项已确认")
+    doc = extract_image_ocr(str(tmp_path / "shot.png"))
+    assert "尾款支付" in doc.text and doc.parser_id == "image-ocr"
+
+
+def test_image_ocr_zero_text_degrades_to_metadata(tmp_path, monkeypatch):
+    """纯风景/人像零字：metadata 语义 ok 登记，不 failed 且指纹保
+    image-ocr（重扫 cache_hit 命中，不重复 OCR）。"""
+    import paistation.sense.localfiles.ocr as ocrmod
+    from paistation.sense.localfiles.extract import extract_image_ocr
+
+    monkeypatch.setattr(ocrmod, "ocr_image", lambda p: "")
+    doc = extract_image_ocr(str(tmp_path / "scene.jpg"))
+    assert not doc.text and doc.ok  # title 在 → ok
+    assert doc.parser_id == "image-ocr"
+
+
+def test_image_ocr_unavailable_degrades(tmp_path, monkeypatch):
+    import paistation.sense.localfiles.ocr as ocrmod
+    from paistation.sense.localfiles.extract import extract_image_ocr
+
+    def boom(_p):
+        raise ocrmod.OcrUnavailable("缺语言包")
+    monkeypatch.setattr(ocrmod, "ocr_image", boom)
+    f = tmp_path / "x.png"
+    f.write_bytes(b"\x89PNG stub")
+    doc = extract_image_ocr(str(f))
+    assert not doc.text and doc.parser_id == "image-ocr"
+
+
+def test_winrt_image_ocr_end_to_end_real(tmp_path):
+    """真机 WinRT 图片 OCR smoke（无语言包机器自动跳过）。"""
+    import pytest
+
+    from paistation.sense.localfiles.ocr import has_ocr, ocr_image
+    if not has_ocr():
+        pytest.skip("本机无 WinRT OCR 语言包")
+    from PIL import Image, ImageDraw, ImageFont
+    font = ImageFont.truetype("C:/Windows/Fonts/msyh.ttc", 40)
+    img = Image.new("RGB", (900, 200), "white")
+    ImageDraw.Draw(img).text((30, 70), "白龟湖影像卷编号 2020-12",
+                             fill="black", font=font)
+    p = tmp_path / "evidence.png"
+    img.save(p)
+    text = ocr_image(str(p))
+    assert any(k in text for k in ("白龟湖", "影像", "2020"))

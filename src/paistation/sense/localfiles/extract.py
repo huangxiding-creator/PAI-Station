@@ -220,6 +220,28 @@ def metadata_only(path: str, kind: str = "unknown") -> Document:
     return doc
 
 
+def extract_image_ocr(path: str) -> Document:
+    """图片 OCR 路由：聊天截图/票据/现场照片内文字。
+
+    零字（纯风景/人像）→ metadata 语义登记（ok 不 failed，指纹仍
+    记 image-ocr——cache_hit 会命中，重扫不再重复 OCR）；引擎不在
+    位 → 同样优雅降级 metadata（无语言包机器不炸批）。
+    """
+    from paistation.sense.localfiles.ocr import OCR_VER, OcrUnavailable, ocr_image
+
+    doc = Document(path, "image", "image-ocr", f"1+{OCR_VER}")
+    try:
+        text = ocr_image(path)
+    except OcrUnavailable:
+        md = metadata_only(path, "image")
+        md.parser_id, md.parser_ver = "image-ocr", f"1+{OCR_VER}"
+        return md
+    if text.strip():
+        doc.text = text
+    doc.title = os.path.basename(path)
+    return doc
+
+
 PARSERS = {
     "pymupdf": extract_pdf,
     "python-docx": extract_docx,
@@ -228,6 +250,7 @@ PARSERS = {
     "extract_msg": extract_msg,
     "stdlib-email": extract_eml,
     "plaintext": extract_plaintext,
+    "image-ocr": extract_image_ocr,
     "metadata-only": lambda p: metadata_only(p),
 }
 

@@ -23,8 +23,8 @@ from paistation.sense.localfiles.chunker import CHUNKER_VER, chunk_text
 from paistation.sense.localfiles.domain import ScanDomain
 from paistation.sense.localfiles.extract import ExtractionError, extract
 from paistation.sense.localfiles.inventory import Inventory, file_hashes, file_partial_hash
+from paistation.sense.localfiles.triage import Triage, ocr_image_eligible
 from paistation.sense.localfiles.store import ChunkIndex
-from paistation.sense.localfiles.triage import Triage
 from paistation.sense.localfiles.walk import enumerate_files
 
 _log = logging.getLogger("paistation.sense.localfiles.indexer")
@@ -107,6 +107,9 @@ class Indexer:
         for row in rows:
             path = row["path"]
             kind, parser_id = self._triage.classify(path)
+            if parser_id == "metadata-only" and ocr_image_eligible(
+                    path, row["size"]):
+                parser_id = "image-ocr"  # 工作证据图升 OCR 路由
             if parser_id == "metadata-only":
                 # 零解析路由：登记即完成，不产文本块。hash 对无文本
                 # 路由没有缓存价值，大视频全量 hash 是纯 IO 浪费——
@@ -246,11 +249,14 @@ def _parser_ver(parser_id: str) -> str:
         import pptx
         import pymupdf
 
+        from paistation.sense.localfiles.ocr import OCR_VER
+
         _PARSER_VERS.update({
             "pymupdf": pymupdf.__version__, "python-docx": docx.__version__,
             "openpyxl": openpyxl.__version__,
             "python-pptx": pptx.__version__,
             "extract_msg": extract_msg.__version__,
+            "image-ocr": f"1+{OCR_VER}",
             "stdlib-email": "stdlib", "plaintext": "1", "metadata-only": "1"})
     return _PARSER_VERS.get(parser_id, "?")
 
