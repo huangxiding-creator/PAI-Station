@@ -123,6 +123,8 @@
 
 | 09-17 | ✅ **调研采集 CLI 四件套接入**（用户指令安装清单，先审后跑全过）：①opencli v1.8.7（29.4k★，任意网站 CLI 化+浏览器 30 命令族+13 外部 CLI+10 应用适配器；daemon 19825 在跑；扩展已解包 vendor/opencli/extension 待用户 Chrome 加载）②dokobot v2.11.0（read/search/screenshot/download；chrome bridge 已装 ext-ID dlbiig…；telemetry 已持久禁用；待用户装 dokobot.ai/install 扩展）③agent-reach 0.1.0（pipx 隔离；rss+youtube 双通道 ok，yt-dlp 2026.08.19 就位——播客/视频转写调研金矿）④xyz-dl 211★（vendor+专属 venv，Python3.11 实跑过；**只用免登录公开单集**——README 官方封号警告与账号安全红线一致）。坑：npm 前缀与 ~/.local/bin 均不在 bash PATH；xyz-dl 🎧 撞 GBK 家族病须 PYTHONIOENCODING=utf-8；pipx --user 在 venv 内不可用→装进项目 venv。六源全真验（npm/PyPI/gh api/release 资产逐个核），运行配方沉淀记忆 research-cli-stack | `vendor/{xyz-dl,opencli}/`（gitignored）、npm 全局 ×2、pipx、`~/.local/bin` ×4 exe |
 
+| 09-17 | ✅ **RSS 源复用 We-AIPO**（用户指令「复用 We-AIPO、按它的做法始终保持最新」）：①勘察 We-AIPO 三资产——OPML 905 源（今晨 03:58 仍在更新=清单活体）+ rss_source.py 做法（OPML 唯一基准/自适应节拍器/休眠周探针/条件拉取/风控即停）+ RSS-Auto 子项目；②落地 `src/paistation/sense/rss/`——做法移植+复用方保守化（串行不并行、节拍 0.8s 基线〔主人 0.15s〕、持久化日限额 2500 跨进程、feedparser 解析）；③**OPML 只读同步**=「始终保持最新」机制（sha256 比对零拷贝、增删源差分报告、主人目录不可用退镜像不断粮）；④schtasks PAIStation-rss-harvest 07:37/19:37 pythonw 零弹窗；⑤**首轮全量实测：905 源 905 成 0 败，17,759 篇初始语料 18 分钟入库**（data/rss_harvest/ gitignored，~155MB），日请求 910/2500。测试 +13（全 fake transport 零真网），全量回归 **1557 passed**。顺带：仓库根 4 个 CLI 验活工件验明归 tmp/cli-onboarding-0917/ | `src/paistation/sense/rss/`、`tools/rss_harvest_run.py`、`data/rss_harvest/`（gitignored） |
+
 ## 红线备忘（每轮心跳自查）
 
 项目外全盘只读 ｜ 账号安全第一 ｜ secrets 不入库 ｜ 00 愿景/付费语料不上公开仓 ｜ 只增不删+Git 留痕 ｜ 每环节调研≥20 ｜ 进化提案永不自批 ｜ commit 带 Co-Authored-By
