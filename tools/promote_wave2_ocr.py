@@ -53,7 +53,26 @@ def main(dry: bool = False) -> int:
             [(p,) for p in targets])
     db.close()
     print(f"已回队 {len(targets):,} 行（下轮提取走 image-ocr 路由）")
+    import subprocess
+    subprocess.run(
+        ["powershell", "-NoProfile", "-Command",
+         f"Start-ScheduledTask -TaskName '{TASK}'"],
+        capture_output=True)  # 新代码进程载入第二波白名单开磨
+    _self_uninstall()
     return 0
+
+
+def _self_uninstall() -> None:
+    """回队成功即自删系统任务（幂等巡检形态：反复跑无副作用，
+    完成使命即退场——09-17 会话重启丢 session-cron 的教训，
+    触发执行层必须系统级化）。"""
+    import subprocess
+
+    subprocess.run(
+        ["powershell", "-NoProfile", "-Command",
+         "Unregister-ScheduledTask -TaskName 'PAIStation-wave2-promote'"
+         " -Confirm:$false"],
+        capture_output=True)
 
 
 if __name__ == "__main__":
