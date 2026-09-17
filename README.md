@@ -6,7 +6,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-1F3A5F.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Windows_10%2B-0078D6.svg)]()
-[![Tests](https://img.shields.io/badge/测试-1598_全绿-success.svg)]()
+[![Tests](https://img.shields.io/badge/测试-1622_全绿-success.svg)]()
 [![Dossier](https://img.shields.io/badge/主权卷宗-P0_已落地-e8b04b.svg)]()
 [![LLM Cost](https://img.shields.io/badge/LLM_成本-默认¥0_永不锁定-success.svg)]()
 
@@ -234,7 +234,7 @@ python -m venv .venv && .venv\Scripts\pip install -e ".[dev]"
 # 2. 配置（密钥外置，参考 config/pai.ini）
 #    PAI_LLM_KEY=智谱key  PAI_WECOM_WEBHOOK=企微机器人
 
-# 3. 测试（1352 项全绿为出厂标准，2026-09-16 实测）
+# 3. 测试（1622 项全绿为出厂标准，2026-09-17 实测）
 .venv\Scripts\python -m pytest
 
 # 4. 器官自检 + 启动主循环
@@ -267,6 +267,7 @@ src/paistation/
 ├── profile/      # 用户画像五层模型+双时间线+夜间整合（V3）
 ├── execute/      # LlmGateway 多供应商 failover + AgentRunner（V3）
 ├── sovereign/    # 主权架构；dossier/=主权卷宗四件套（OKF 构建/导出/校验/git）
+│                #   /settle/=P3 意图结算：per-outcome 价值当量账本（显式汇率可审计）
 ├── swarm/        # P2 站群试点：站点身份(ed25519)/注册表/积分账本/技能包互换
 ├── gate/ control/ market/ governance/   # V4 五阶段主权架构其余四件
 ├── evolve/       # 合一指数 U + 每周进化提案（M12）
@@ -297,6 +298,7 @@ src/paistation/
 | **P0 主权卷宗（2026-09-17）** | 三源统一 OKF 明文目录 + git 独立版本化 + 一条命令导出（sha256 逐件验证，无本产品机器可读可 grep） | ✅ 真机验收（`ccfdefb`） |
 | **P1 叙事升维（2026-09-17）** | 定位语→个人主权智能体运行时；官网+README 首屏讲卷宗不讲功能；部署 8882 | ✅ curl 验真 |
 | **P2 站群试点（本仓侧）** | swarm 包：站点身份/注册表/积分账本/签名互换（复用市场五层扫描闸）；真机 E2E=wwg 技能包 30 积分双站互换 | ✅ 闭环跑通（真实他人站待总包圈拉人） |
+| **P3 意图结算预留（2026-09-17）** | sovereign/settle：交付回执→价值当量账本（jsonl 只增不删+basis 审计串+settle_key 幂等）；ANP/did:wba 预研 | ✅ per-outcome 计量 demo（3 成果 110 点≈4.4 人力小时，汇率显式声明） |
 
 ## 📜 治理
 

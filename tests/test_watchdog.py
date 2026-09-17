@@ -152,8 +152,9 @@ def test_watchdog_relanches_killed_daemon(child_env):
     verdict = wd.check_once()
     assert verdict == Verdict.DEAD_STALE
     assert wd.fails == 1
-    # 重拉的新进程开始写心跳
-    deadline = time.time() + 15
+    # 重拉的新进程开始写心跳（全量负载下子进程拉起可远慢于单跑，
+    # daemon 族时窗抖动第三例：5s→15s→30s，先例见 RUN_LEDGER 09-17）
+    deadline = time.time() + 30
     relaunched = False
     while time.time() < deadline:
         try:

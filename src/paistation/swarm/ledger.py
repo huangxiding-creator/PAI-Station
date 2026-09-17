@@ -59,7 +59,12 @@ class PointsLedger:
                "counterparty": counterparty, "points": int(points)}
         if extra:
             row.update(extra)
+        # 断电半行先封口，永不拼在残行后（读侧跳过的那半行）
+        needs_nl = (os.path.getsize(self._path) > 0
+                    and not open(self._path, "rb").read().endswith(b"\n"))
         with open(self._path, "a", encoding="utf-8") as fh:
+            if needs_nl:
+                fh.write("\n")
             fh.write(json.dumps(row, ensure_ascii=False) + "\n")
         return row
 

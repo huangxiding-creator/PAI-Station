@@ -3,16 +3,23 @@
 E2E 主线：站 A 打包 wwg 精简 fixture → 站 B 验签扫描导入+支出记账 →
 B 签回执 → A confirm 入账收入——双边账本各自平衡（+30 / -30）。
 """
-import json
+
+import re
 
 import pytest
 
+from paistation.skills.market import write_meta
 from paistation.swarm import (
-    PointsLedger, SiteIdentity, SiteRegistry, confirm_receipt, pack_swap,
-    receive_swap, verify_swap,
+    PointsLedger,
+    SiteIdentity,
+    SiteRegistry,
+    confirm_receipt,
+    pack_swap,
+    receive_swap,
+    verify_document,
+    verify_swap,
 )
 from paistation.swarm.swap import read_swap_package
-from paistation.skills.market import write_meta
 
 pytest.importorskip("cryptography")
 
@@ -55,11 +62,42 @@ def test_identity_persists_and_idempotent(tmp_path):
 
 def test_sign_verify_and_tamper(tmp_path):
     a = SiteIdentity.load_or_create(str(tmp_path))
-    sig = a.sign("hello".encode())
+    sig = a.sign(b"hello")
     assert SiteIdentity.verify(b"hello", sig, a.public_key_b64())
     assert not SiteIdentity.verify(b"hell0", sig, a.public_key_b64())
     assert not SiteIdentity.verify(b"hello", "AAAA" + sig[4:],
                                    a.public_key_b64())
+
+
+# ---------- did:wba（P3 预研落地：ANP-03 v1.1 spec 六步派生）----------
+
+def test_did_wba_fingerprint_spec_shape(tmp_path):
+    a = SiteIdentity.load_or_create(str(tmp_path), site_id="alpha")
+    b = SiteIdentity.load_or_create(str(tmp_path / "B"), site_id="beta")
+    fp = a.did_wba_fingerprint()
+    assert re.fullmatch(r"e1_[A-Za-z0-9_-]{43}", fp)   # spec 2.2.2：43 位 base64url
+    assert fp == a.did_wba_fingerprint()               # 确定性
+    assert fp != b.did_wba_fingerprint()               # 密钥绑定：换钥换指纹
+    assert a.did_wba("gcblog.net") == f"did:wba:gcblog.net:{fp}"
+    with pytest.raises(ValueError, match="ABNF"):
+        a.did_wba("gcblog.net", "站")                  # 中文路径段违反 ABNF 拒收
+    with pytest.raises(ValueError, match="域名"):
+        a.did_wba("host:8882")                         # 带端口裸写拒收（%3A 属基建档）
+
+
+def test_did_document_e1_profile_and_proof_roundtrip(tmp_path):
+    a = SiteIdentity.load_or_create(str(tmp_path), site_id="alpha")
+    doc = a.did_document("gcblog.net")
+    assert doc["id"] == a.did_wba("gcblog.net")
+    assert len(doc["@context"]) == 3                   # did/v1 + DI v2 + multikey
+    vm = doc["verificationMethod"][0]
+    assert vm["publicKeyMultibase"].startswith("z")    # base58btc multibase
+    assert doc["authentication"] == [vm["id"]]
+    assert doc["proof"]["cryptosuite"] == "eddsa-jcs-2022"
+    assert verify_document(doc, a.public_key_b64())    # 简化口径自验通过
+    doc["id"] = "did:wba:evil.net:e1_" + "0" * 43     # 篡改文档
+    assert not verify_document(doc, a.public_key_b64())
+    assert not verify_document({"id": "x"}, "K")       # 无 proof 一律 False
 
 
 # ---------- 注册表 ----------
@@ -90,6 +128,19 @@ def test_ledger_append_only_and_balance(tmp_path):
     assert led.balance() == 100
     with pytest.raises(ValueError, match="未知事件"):
         led.append("steal", points=999)
+
+
+def test_ledger_append_after_partial_line(tmp_path):
+    """断电半行封口：append 不拼在残行后，序号仍接得上。"""
+    path = tmp_path / "l.jsonl"
+    led = PointsLedger(str(path), "s1")
+    led.ensure_mint(100)
+    with open(path, "a", encoding="utf-8") as fh:
+        fh.write('{"seq": 2, "kind": "swa')       # 模拟写一半断电
+    led.append("swap_in", package="p", points=-5)
+    rows = led.events()
+    assert [r["seq"] for r in rows] == [1, 2]     # 半行废弃，序号从可读最大值接续
+    assert led.balance() == 95
 
 
 # ---------- 打包与验签 ----------
@@ -239,9 +290,11 @@ def test_e2e_two_stations_full_loop(tmp_path):
 def test_cli_identity_and_balance(tmp_path, capsys):
     from paistation.swarm.__main__ import main
     data = tmp_path / "swarm"
-    assert main(["--data-dir", str(data), "identity", "--name", "cli站"]) == 0
+    assert main(["--data-dir", str(data), "identity", "--name", "cli站",
+                 "--domain", "gcblog.net"]) == 0
     out = capsys.readouterr().out
     assert "cli站" in out and "did:wba" in out
+    assert re.search(r"did:wba:gcblog\.net:e1_[A-Za-z0-9_-]{43}", out)
     assert main(["--data-dir", str(data), "balance"]) == 0
     assert "0" in capsys.readouterr().out
     ident = SiteIdentity.load_or_create(str(data))

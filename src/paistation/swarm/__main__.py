@@ -15,8 +15,7 @@ import json
 import sys
 from pathlib import Path
 
-from . import (PointsLedger, SiteIdentity, SiteRegistry, confirm_receipt,
-               pack_swap, receive_swap)
+from . import PointsLedger, SiteIdentity, SiteRegistry, confirm_receipt, pack_swap, receive_swap
 
 
 def _find_root() -> Path:
@@ -39,6 +38,8 @@ def main(argv=None) -> int:
 
     p_id = sub.add_parser("identity")
     p_id.add_argument("--name", default=None, help="站名（仅首次建身份时生效）")
+    p_id.add_argument("--domain", default=None,
+                      help="给真 did:wba 用自己的域名（如 gcblog.net）")
 
     p_reg = sub.add_parser("register")
     p_reg.add_argument("--site-id", required=True)
@@ -71,6 +72,9 @@ def main(argv=None) -> int:
         print(f"site_id:  {ident.site_id}")
         print(f"pubkey:   {ident.public_key_b64()}")
         print(f"did 预留:  {ident.did_hint()}")
+        if args.domain:
+            # P3 预研落地：真 e1_ 指纹 DID（HTTPS 端点上线前不可解析，绑定已成立）
+            print(f"did_wba:  {ident.did_wba(args.domain)}")
         print(f"created:  {ident.created_at}")
         return 0
     if args.cmd == "register":
