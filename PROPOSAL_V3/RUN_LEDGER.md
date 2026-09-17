@@ -121,6 +121,8 @@
 
 | 09-17 | ✅ **第 12 路调研（用户指令「有没有更底层的理念」+「模型越强我越强」+「混沌颠覆」三连）**：五切片全回收 **109 项去重入册**（A 考古 23：Memex1945/Engelbart1962/延展心智/Xanadu；B 记忆 20：记忆主权共识+死亡谷；C 感知 22：Weiser+收编警示；D 执行 21：意图物化+lotti/A2A/ANP；E 论述 23：四共识四分歧图谱+引文勘误「个人AI团队」实为 Altman 语），全部 URL 亲测+gh api stars，WebSearch 429 全程降级；_all.json+DIGEST.md 出理念地层图（L0 人的有限性→L4 产品综合）。**产出 DISRUPTION_PLAN.md**（五隐含假设击破：站→运行时/记忆→主权卷宗【尖点】/软件→per-outcome/孤岛→站群/工具→意图物化；反脆弱宪法三铁律；死亡谷四不做；P0-P3）——**✋ 提案审批闸开启待用户裁决** | `RESEARCH_DOCKET/v3/12-foundational-vision/` `PROPOSAL_V3/DISRUPTION_PLAN.md` |
 
+| 09-17 | ✅ **调研采集 CLI 四件套接入**（用户指令安装清单，先审后跑全过）：①opencli v1.8.7（29.4k★，任意网站 CLI 化+浏览器 30 命令族+13 外部 CLI+10 应用适配器；daemon 19825 在跑；扩展已解包 vendor/opencli/extension 待用户 Chrome 加载）②dokobot v2.11.0（read/search/screenshot/download；chrome bridge 已装 ext-ID dlbiig…；telemetry 已持久禁用；待用户装 dokobot.ai/install 扩展）③agent-reach 0.1.0（pipx 隔离；rss+youtube 双通道 ok，yt-dlp 2026.08.19 就位——播客/视频转写调研金矿）④xyz-dl 211★（vendor+专属 venv，Python3.11 实跑过；**只用免登录公开单集**——README 官方封号警告与账号安全红线一致）。坑：npm 前缀与 ~/.local/bin 均不在 bash PATH；xyz-dl 🎧 撞 GBK 家族病须 PYTHONIOENCODING=utf-8；pipx --user 在 venv 内不可用→装进项目 venv。六源全真验（npm/PyPI/gh api/release 资产逐个核），运行配方沉淀记忆 research-cli-stack | `vendor/{xyz-dl,opencli}/`（gitignored）、npm 全局 ×2、pipx、`~/.local/bin` ×4 exe |
+
 ## 红线备忘（每轮心跳自查）
 
 项目外全盘只读 ｜ 账号安全第一 ｜ secrets 不入库 ｜ 00 愿景/付费语料不上公开仓 ｜ 只增不删+Git 留痕 ｜ 每环节调研≥20 ｜ 进化提案永不自批 ｜ commit 带 Co-Authored-By
