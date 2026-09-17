@@ -127,6 +127,9 @@
 
 | 09-17 | ✅ **RSS 源复用 We-AIPO**（用户指令「复用 We-AIPO、按它的做法始终保持最新」）：①勘察 We-AIPO 三资产——OPML 905 源（今晨 03:58 仍在更新=清单活体）+ rss_source.py 做法（OPML 唯一基准/自适应节拍器/休眠周探针/条件拉取/风控即停）+ RSS-Auto 子项目；②落地 `src/paistation/sense/rss/`——做法移植+复用方保守化（串行不并行、节拍 0.8s 基线〔主人 0.15s〕、持久化日限额 2500 跨进程、feedparser 解析）；③**OPML 只读同步**=「始终保持最新」机制（sha256 比对零拷贝、增删源差分报告、主人目录不可用退镜像不断粮）；④schtasks PAIStation-rss-harvest 07:37/19:37 pythonw 零弹窗；⑤**首轮全量实测：905 源 905 成 0 败，17,759 篇初始语料 18 分钟入库**（data/rss_harvest/ gitignored，~155MB），日请求 910/2500。测试 +13（全 fake transport 零真网），全量回归 **1557 passed**。顺带：仓库根 4 个 CLI 验活工件验明归 tmp/cli-onboarding-0917/ | `src/paistation/sense/rss/`、`tools/rss_harvest_run.py`、`data/rss_harvest/`（gitignored） |
 
+| 09-17 | ✅ **Dify 私有实例接入收官**（用户给凭证 https://dify.gcblog.net）：①difyctl v1.17.1 对实例（服务端 **1.16.1**）无原生通道——OAuth device flow 端点 1.17 才有（404 实证）、DIFY_TOKEN 只吃 dfoe_ External-SSO 前缀；②逆向 Dify 源码确证登录工艺：password 须 **Base64**（api/libs/encryption.py 自述混淆非加密）+ 三 cookie（access 1h/refresh 30d/csrf）+ **X-CSRF-Token 双重提交**（cookie 与头同在场）；③`tools/dify_session.py` 三级兜底自动会话（落盘 cookie 直用→401 refresh→再 401 重登）+5 测试全 fake http + 真机冒烟 whoami 200/apps 8 个（MainSafecon_SL 水利工程安全生产对话流等）；④refresh_token 持久化 secret.ini（30 天）。用户三连指令沉淀记忆 [[agent-auto-login]]（凭证给过一次后登录 agent 全自理） | `tools/dify_session.py`、`tests/test_dify_session.py`、`config/dify.secret.ini`（不入库） |
+| 09-17 | 📌 **用户裁决落锤：DISRUPTION_PLAN P0-P3 全部批准实施**（第 12 路调研驱动，五隐含假设击破，尖点=假设②主权卷宗）。执行序列：P0 主权卷宗 v0（OKF 目录+导出器）→ P1 叙事升维 → P2 站群试点 → P3 意图结算预留。70% 力量压 P0 | `PROPOSAL_V3/DISRUPTION_PLAN.md` |
+
 ## 红线备忘（每轮心跳自查）
 
 项目外全盘只读 ｜ 账号安全第一 ｜ secrets 不入库 ｜ 00 愿景/付费语料不上公开仓 ｜ 只增不删+Git 留痕 ｜ 每环节调研≥20 ｜ 进化提案永不自批 ｜ commit 带 Co-Authored-By
