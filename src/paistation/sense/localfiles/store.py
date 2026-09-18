@@ -73,6 +73,10 @@ class ChunkIndex:
         self._batch_embedder = batch_embedder
         self._vec_dim: int | None = None
         self._vec_ready = False
+        # vec0 在位即探测装载（2026-09-18 夜回归）：补嵌进程不先 upsert
+        # 直接 backfill 时 _vec_ready 恒 False——预检分流整体失效，
+        # 夜夜重嵌已嵌块撞 UNIQUE 白磨（04:17 轮 11,388 次实证）。
+        self._init_vec_if_present()
 
     # ---------- 写入（差分重嵌，per-file 单事务） ----------
 
@@ -115,6 +119,13 @@ class ChunkIndex:
                         embedded += 1
                     else:
                         reused += 1
+                elif old.get(cid) == "embedded" and self._vec_has(cid):
+                    # --no-embed 提取（夜跑 22:00）整文件重写时不再把
+                    # 向量在库的旧块打回 none——否则 remaining 夜夜暴涨
+                    # （2026-09-18 轮 2.43M→2.70M），补嵌预算全烧在
+                    # 重点亮上（差分重嵌原则在提取侧的补全）
+                    status = "embedded"
+                    reused += 1
                 rid += 1
                 self._db.execute(
                     "INSERT INTO chunks(rowid, chunk_id, path, seq, text,"
@@ -208,9 +219,9 @@ class ChunkIndex:
             else:
                 todo.append(r)
         rows = todo
-        embedded = rows_lit = failed = 0
+        embedded = rows_lit = failed = healed = 0
         if self._batch_embedder is not None:
-            embedded, rows_lit, failed = self._backfill_batched(rows)
+            embedded, rows_lit, failed, healed = self._backfill_batched(rows)
         else:
             for r in rows:
                 try:
@@ -222,18 +233,54 @@ class ChunkIndex:
                         rows_lit += cur.rowcount
                     embedded += 1
                 except Exception as exc:
-                    failed += 1
-                    _log.warning("补嵌失败跳过 chunk %s: %s",
-                                 r["chunk_id"][:12], exc)
+                    if self._heal_if_raced(r["chunk_id"]):
+                        healed += 1
+                        rows_lit += 1
+                    else:
+                        failed += 1
+                        _log.warning("补嵌失败跳过 chunk %s: %s",
+                                     r["chunk_id"][:12], exc)
         return {"embedded": embedded, "rows_lit": rows_lit + lit_pre,
-                "failed": failed, "remaining": self._pending_count()}
+                "failed": failed, "healed": healed,
+                "remaining": self._pending_count()}
 
-    def _backfill_batched(self, rows) -> tuple[int, int, int]:
+    def _heal_if_raced(self, cid: str) -> bool:
+        """UNIQUE 竞态自愈：向量已被并发者抢先写入则点亮状态行。
+
+        预检（批前）与提交（批嵌 ~90s 后）之间，并发提取/另一次补嵌
+        可能写入同一 chunk_id 的向量——vec0 不认 OR REPLACE，提交撞
+        UNIQUE。此时向量已在库，点亮即完成，不得计失败（否则状态留
+        none 夜夜重试已嵌块，2026-09-18 白磨 11,388 次实证）。
+        """
+        if not (self._vec_ready and self._vec_has(cid)):
+            return False
+        with self._db:
+            cur = self._db.execute(
+                "UPDATE chunks SET embedding_status='embedded'"
+                " WHERE chunk_id=?", (cid,))
+            return cur.rowcount > 0
+
+    def _backfill_batched(self, rows) -> tuple[int, int, int, int]:
         """批嵌 128/片一次推理；毒片降级逐条救回好块。"""
         SLICE = 128
-        embedded = rows_lit = failed = 0
+        embedded = rows_lit = failed = healed = 0
         for i in range(0, len(rows), SLICE):
             sl = rows[i:i + SLICE]
+            if self._vec_ready:  # 逐片复检：批嵌 90s 窗口内并发者可能
+                fresh = []       # 已重灌同块向量——已到者免嵌直接点亮
+                for r in sl:
+                    if self._vec_has(r["chunk_id"]):
+                        with self._db:
+                            cur = self._db.execute(
+                                "UPDATE chunks SET embedding_status="
+                                "'embedded' WHERE chunk_id=?",
+                                (r["chunk_id"],))
+                            rows_lit += cur.rowcount
+                    else:
+                        fresh.append(r)
+                sl = fresh
+            if not sl:
+                continue
             try:
                 vecs = self._batch_embedder([r["text"] for r in sl])
                 if len(vecs) != len(sl):
@@ -259,10 +306,14 @@ class ChunkIndex:
                             rows_lit += cur.rowcount
                         embedded += 1
                     except Exception as exc1:
-                        failed += 1
-                        _log.warning("补嵌失败跳过 chunk %s: %s",
-                                     r["chunk_id"][:12], exc1)
-        return embedded, rows_lit, failed
+                        if self._heal_if_raced(r["chunk_id"]):
+                            healed += 1
+                            rows_lit += 1
+                        else:
+                            failed += 1
+                            _log.warning("补嵌失败跳过 chunk %s: %s",
+                                         r["chunk_id"][:12], exc1)
+        return embedded, rows_lit, failed, healed
 
     def _pending_count(self) -> int:
         row = self._db.execute(
@@ -283,6 +334,26 @@ class ChunkIndex:
             f"CREATE VIRTUAL TABLE IF NOT EXISTS chunks_vec USING vec0("
             f"chunk_id TEXT PRIMARY KEY, embedding float[{dim}])")
         self._vec_dim, self._vec_ready = dim, True
+
+    def _init_vec_if_present(self) -> None:
+        """chunks_vec 已在库（前夜已建）即装载扩展点亮 _vec_ready。
+
+        无表（全新库）或无 sqlite_vec 时保持惰性语义不变（纯 keyword）。
+        不设 _vec_dim——首个 _vec_put 落位时自会校准。
+        """
+        row = self._db.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table'"
+            " AND name='chunks_vec'").fetchone()
+        if row is None:
+            return
+        try:
+            import sqlite_vec
+
+            self._db.enable_load_extension(True)
+            sqlite_vec.load(self._db)
+            self._vec_ready = True
+        except Exception:
+            pass  # 扩展缺席降级 keyword（与惰性路径同语义）
 
     def _vec_put(self, cid: str, vec: list[float]) -> None:
         import sqlite_vec

@@ -181,6 +181,97 @@ def _fake_batch_embedder(texts: list[str]) -> list[list[float]]:
     return [_fake_embedder(t) for t in texts]
 
 
+def test_backfill_fresh_process_precheck_not_blind(tmp_path):
+    """夜跑形态回归（2026-09-18 04:17 轮 11,388 次白磨）：补嵌进程
+    直接 backfill、进程内从不 upsert——旧版 _vec_ready 惰性置位让
+    预检分流整体失效（_vec_has 恒 False），已嵌块真重嵌撞 UNIQUE。
+    vec0 表在库即装载（_init_vec_if_present），预检从首批起生效。"""
+    import sqlite3
+
+    # 进程 A：正常嵌入（建 vec 表 + 写向量 + 点亮）
+    idxA = ChunkIndex(tmp_path / "t.db", embedder=_fake_embedder,
+                      embedder_ver="fake")
+    idxA.upsert_file("a.md", ["夜跑盲区块甲", "夜跑盲区块乙"], LOGIC)
+    idxA.close()
+    # 进程间：提取端把状态打回 none（模拟 --no-embed 重注册）
+    con = sqlite3.connect(tmp_path / "t.db")
+    con.execute("UPDATE chunks SET embedding_status='none'")
+    con.commit()
+    con.close()
+    # 进程 B：全新补嵌进程，嵌入器为哨兵——真被调用即测试失败
+    def _must_not_embed(text):
+        raise AssertionError("预检失效：向量在库的块被重嵌")
+
+    idxB = ChunkIndex(tmp_path / "t.db", embedder=_must_not_embed,
+                      embedder_ver="fake")
+    r = idxB.backfill()
+    assert r["failed"] == 0 and r["embedded"] == 0 and r["rows_lit"] == 2
+    n = idxB._db.execute(
+        "SELECT COUNT(*) n FROM chunks"
+        " WHERE embedding_status='embedded'").fetchone()["n"]
+    assert n == 2
+    idxB.close()
+
+
+def test_backfill_raced_unique_self_heals(tmp_path):
+    """UNIQUE 竞态自愈（预检与提交之间被并发者抢先写入）：嵌入器在
+    返回前经第二连接写入同 chunk 向量 → 主路提交撞 UNIQUE → 点亮
+    计 healed 不计 failed（旧版留 none 态夜夜重试已嵌块）。"""
+    import sqlite3
+    import sqlite_vec
+
+    from paistation.sense.localfiles.store import _chunk_id
+
+    db = tmp_path / "t.db"
+    idxA = ChunkIndex(db, embedder=_fake_embedder, embedder_ver="fake")
+    idxA.upsert_file("anchor.md", ["锚点块"], LOGIC)  # 建 vec 表
+    idxA.close()
+    idxN = ChunkIndex(db)  # 提取端（无嵌入器）新增待嵌块
+    idxN.upsert_file("race.md", ["竞态块甲", "竞态块乙"], LOGIC)
+    idxN.close()
+
+    def racer(text):  # 并发者：抢先经第二连接写同 chunk 向量
+        con = sqlite3.connect(db)
+        con.enable_load_extension(True)
+        sqlite_vec.load(con)
+        con.execute(
+            "INSERT INTO chunks_vec(chunk_id, embedding) VALUES(?,?)",
+            (_chunk_id(text),
+             sqlite_vec.serialize_float32(_fake_embedder(text))))
+        con.commit()
+        con.close()
+        return _fake_embedder(text)
+
+    idx = ChunkIndex(db, embedder=racer, embedder_ver="fake")
+    r = idx.backfill()
+    assert r["healed"] == 2 and r["failed"] == 0 and r["embedded"] == 0
+    n = idx._db.execute(
+        "SELECT COUNT(*) n FROM chunks"
+        " WHERE embedding_status='none'").fetchone()["n"]
+    assert n == 0
+    idx.close()
+
+
+def test_no_embed_reupsert_preserves_embedded(tmp_path):
+    """提取侧 none 洪峰根治（2026-09-18 remaining 2.43M→2.70M 实证）：
+    --no-embed 夜跑整文件重写不得把向量在库的旧块打回 none——差分
+    复用（向量按 chunk_id 存活于 chunks_vec）下沉到提取端。"""
+    db = tmp_path / "t.db"
+    idxA = ChunkIndex(db, embedder=_fake_embedder, embedder_ver="fake")
+    assert idxA.upsert_file(
+        "a.md", ["洪峰根治块甲", "洪峰根治块乙"], LOGIC)["embedded"] == 2
+    idxA.close()
+    idxN = ChunkIndex(db)  # 无嵌入器 = 提取端夜跑形态
+    r2 = idxN.upsert_file(
+        "a.md", ["洪峰根治块甲", "洪峰根治块乙"], LOGIC)
+    st = {row["embedding_status"] for row in idxN._db.execute(
+        "SELECT DISTINCT embedding_status FROM chunks")}
+    assert st == {"embedded"}  # 不再打回 none
+    assert r2["reused"] == 2   # 向量复用如实计数
+    assert idxN._pending_count() == 0  # 欠账口径不虚增
+    idxN.close()
+
+
 def test_backfill_batch_route_with_poison_fallback(tmp_path):
     """批量补嵌：128/片一次推理；毒片降级逐条救回好块（坏块跳过）。"""
     idx0 = ChunkIndex(tmp_path / "t.db")

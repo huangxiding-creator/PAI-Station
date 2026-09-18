@@ -92,15 +92,19 @@ def _embed_loop(chunks, batch: int, loop: bool, max_hours: float,
     203 万欠账块 30 块/s ≈ 18.5h——不限时会跟次日白天的 OCR 风暴
     抢一整天。断点=embedding_status，收工明夜续磨零浪费。
     """
-    total = {"embedded": 0, "rows_lit": 0, "failed": 0}
+    total = {"embedded": 0, "rows_lit": 0, "failed": 0, "healed": 0}
     deadline = (time.monotonic() + max_hours * 3600
                 if max_hours > 0 else None)
     while True:
         r = chunks.backfill(batch=batch)
         for k in total:
-            total[k] += r[k]
+            total[k] += r.get(k, 0)
         log.info("补嵌批：%s（累计 %s 剩 %s）", r, total, r["remaining"])
-        if not loop or r["embedded"] == 0:
+        # 早退条件=本批零进展（非仅 embedded==0）：纯点亮/纯竞态自愈批
+        # 也是进展（remaining 在降），只有三类全零才收工——否则并发
+        # 提取灌 none 时补嵌会提前一天罢工（2026-09-18 诊断）
+        if not loop or (r["embedded"] == 0 and r.get("healed", 0) == 0
+                        and r["rows_lit"] == 0):
             break
         if deadline and time.monotonic() > deadline:
             log.info("补嵌达 %sh 预算优雅收工（断点=embedding_status，"

@@ -89,3 +89,20 @@ def test_embed_no_budget_runs_to_empty():
                         log=logging.getLogger("t"))
     assert ch.calls == 2
     assert total["embedded"] == 5
+
+
+def test_embed_heal_only_batch_keeps_looping():
+    """纯自愈/纯点亮批不算完工（2026-09-18 早退回归）：embedded=0
+    但 healed>0 说明 remaining 在降，继续磨；真零进展批才收工。"""
+    from paistation.sense.localfiles.__main__ import _embed_loop
+
+    ch = _FakeChunks(script=[
+        {"embedded": 0, "rows_lit": 30, "failed": 0, "healed": 30,
+         "remaining": 2703000},
+        {"embedded": 0, "rows_lit": 0, "failed": 0, "healed": 0,
+         "remaining": 0},
+    ])
+    total = _embed_loop(ch, 256, loop=True, max_hours=0,
+                        log=logging.getLogger("t"))
+    assert ch.calls == 2
+    assert total["healed"] == 30
