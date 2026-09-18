@@ -83,7 +83,7 @@ def main() -> int:
             return ("—", "")
         local = datetime.fromisoformat(row[0]).astimezone().strftime("%m-%d")
         kind = {"wecom_meeting": "企微会", "tencent_meeting": "腾讯会",
-                "git": "git"}.get(row[1], row[1])
+                "git": "git", "chat.activity": "群聊"}.get(row[1], row[1])
         return (local, kind)
 
     L = ["# 关系维融合画像（登记×共现）", ""]
@@ -109,6 +109,42 @@ def main() -> int:
     L.append("")
     L.append("> 判读口径：分=群成员摊派（封顶30防失衡）+会议/git 加权；最近同框="
              "timeline payload 名字 LIKE 命中的最新事件（近似，重名会串）。")
+
+    # 聊天轴（关系维时间层）：群×日 元数据聚合
+    L.append("")
+    L.append("## 聊天轴（群×日 纯元数据，2026-09-18 入轴）")
+    L.append("")
+    span = tl.execute(
+        "SELECT COUNT(*), COUNT(DISTINCT source_id), MIN(start), MAX(start) "
+        "FROM events WHERE source='wechat_chat'").fetchone()
+    if span and span[0]:
+        grp = tl.execute(
+            "SELECT COUNT(DISTINCT json_extract(payload,'$.group')) "
+            "FROM events WHERE source='wechat_chat'").fetchone()[0]
+        total_msgs = tl.execute(
+            "SELECT SUM(json_extract(payload,'$.total')) FROM events "
+            "WHERE source='wechat_chat'").fetchone()[0]
+        d0 = datetime.fromisoformat(span[2]).astimezone().strftime("%Y-%m-%d")
+        d1 = datetime.fromisoformat(span[3]).astimezone().strftime("%Y-%m-%d")
+        L.append(f"- 覆盖：{grp} 群 × {span[1]} 群·日 × {total_msgs:,} 条消息"
+                 f"（{d0} → {d1}，零内容纪律：只记 发送者×类型×计数）")
+        L.append("")
+        L.append("### Top15 活跃群（消息总量 × 主人在场日）")
+        L.append("")
+        L.append("| 群 | 消息数 | 活跃日 | 主人在场日 |")
+        L.append("|---|---:|---:|---:|")
+        rows = tl.execute("""
+            SELECT json_extract(payload,'$.group') g,
+                   SUM(json_extract(payload,'$.total')) msgs,
+                   COUNT(*) days,
+                   SUM(CASE WHEN json_extract(payload,'$.senders.me') > 0
+                        THEN 1 ELSE 0 END) me_days
+            FROM events WHERE source='wechat_chat'
+            GROUP BY g ORDER BY msgs DESC LIMIT 15""").fetchall()
+        for g, msgs, days, me_days in rows:
+            L.append(f"| {g} | {msgs} | {days} | {me_days} |")
+    else:
+        L.append("- （聊天轴为空）")
     OUT.write_text("\n".join(L), encoding="utf-8")
     print(f"关系融合画像 → {OUT}")
     return 0
