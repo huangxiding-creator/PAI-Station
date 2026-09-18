@@ -60,7 +60,20 @@ class DossierIndex:
             (s for s in self.sections if s.score > 0),
             key=lambda s: -s.score,
         )
-        return ranked[:k]
+        # 同源限位（多样化）：同一卷宗最多占 2 席（实测扫参 1/2/3/4 →
+        # 65/65/64/61）——切分后的 dump 兄弟节（"已导入"22 副本）不再
+        # 包场 top-k，真画像卡才有席；2 优于 1（多节真画像卡不误伤）
+        per_src: dict[str, int] = {}
+        picked: list[Section] = []
+        for s in ranked:
+            n = per_src.get(s.dossier, 0)
+            if n >= 2:
+                continue
+            per_src[s.dossier] = n + 1
+            picked.append(s)
+            if len(picked) >= k:
+                break
+        return picked
 
 
 def query_grams(query: str) -> set[str]:
