@@ -38,6 +38,28 @@ CREATE TABLE IF NOT EXISTS meta (
 
 NONE_EMBEDDER = "none"
 
+# 补嵌优先层（2026-09-18 pending 跨步抽样定层，(include_globs, exclude_globs)）：
+# 目的边界内"本人痕迹 > 本人产出 > 工作域参考 > 其余"。前层不空不落下层
+# ——SELF_PROFILE 仅 ~1.4 万块（一晚磨完，全局语义路由最快下周可用），
+# F: 水利知识库 ~2.2M 与 ResearchFactory-Eng ~1.6M 等大库垫后渐进。
+# 路径为 _norm_path 正斜杠形态；GLOB 前缀走 (path,seq) 主键索引范围扫。
+BACKFILL_TIERS: tuple[tuple[tuple[str, ...], tuple[str, ...]], ...] = (
+    # T1 本人痕迹与在办
+    (("E:/AI-Station/SELF_PROFILE/*", "C:/Users/91216/Documents/*",
+      "C:/Users/91216/Desktop/*", "C:/Users/91216/Downloads/*",
+      "C:/Users/91216/OneDrive/*", "E:/AI-Station/07 任务/*"), ()),
+    # T2 本人产出（AI-Station 项目仓；数据仓/上游大库/环境目录除外）
+    (("E:/AI-Station/*",),
+     ("E:/AI-Station/data/*", "E:/AI-Station/ResearchFactory-Eng/*",
+      "E:/AI-Station/04 智库/*", "E:/AI-Station/IdeaDig/*",
+      "E:/AI-Station/.venv/*", "E:/AI-Station/node_modules/*")),
+    # T3 工作域参考（水利知识库九库 + 情报采集仓）
+    (("F:/工程知识库超市/*", "E:/AI-Station/04 智库/*",
+      "E:/AI-Station/IdeaDig/*"), ()),
+    # T4 全局兜底
+    ((), ()),
+)
+
 
 def _chunk_id(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
@@ -191,18 +213,17 @@ class ChunkIndex:
             _log.warning("嵌入失败降级 keyword-only: %s", exc)
             return "none"
 
-    def backfill(self, batch: int = 256) -> dict:
+    def backfill(self, batch: int = 256, slice_size: int = 128) -> dict:
         """存量 none 块批量补嵌（--no-embed 时代入库的欠账）。
 
         同 chunk_id 跨文件多行只嵌一次、全部点亮（chunks_vec 主键即
         去重键）；断点 = embedding_status，重跑零产出。毒文本单块
         失败跳过不阻塞批次（Calibre 纪律）。批间 yield 事务，随时可停。
+        选块走 BACKFILL_TIERS 分层（本人痕迹优先），结果带 tier 留痕。
         """
         if self._embedder is None and self._batch_embedder is None:
             return {"error": "no embedder"}
-        rows = self._db.execute(
-            "SELECT DISTINCT chunk_id, text FROM chunks"
-            " WHERE embedding_status='none' LIMIT ?", (batch,)).fetchall()
+        rows, tier = self._select_pending(batch)
         # 预检分流：并发重注册的"假 none"块（vec 已在、状态翻回）直接
         # 点亮跳过——不预检会撞 chunks_vec 主键 UNIQUE（sqlite_vec 虚拟
         # 表不支持 OR REPLACE 冲突解决，延迟到 commit 才炸），计成失败
@@ -221,7 +242,8 @@ class ChunkIndex:
         rows = todo
         embedded = rows_lit = failed = healed = 0
         if self._batch_embedder is not None:
-            embedded, rows_lit, failed, healed = self._backfill_batched(rows)
+            embedded, rows_lit, failed, healed = self._backfill_batched(
+                rows, slice_size)
         else:
             for r in rows:
                 try:
@@ -241,8 +263,30 @@ class ChunkIndex:
                         _log.warning("补嵌失败跳过 chunk %s: %s",
                                      r["chunk_id"][:12], exc)
         return {"embedded": embedded, "rows_lit": rows_lit + lit_pre,
-                "failed": failed, "healed": healed,
+                "failed": failed, "healed": healed, "tier": tier,
                 "remaining": self._pending_count()}
+
+    def _select_pending(self, batch: int) -> tuple[list, int]:
+        """分层选块：BACKFILL_TIERS 前层不空不落下层（高价值先上桌）。
+
+        空层 ((), ()) = 全局兜底不带路径条件。GLOB 前缀字面量走
+        (path,seq) 主键索引范围扫；NOT GLOB 排除在扫描后过滤。
+        """
+        for i, (inc, exc) in enumerate(BACKFILL_TIERS):
+            where, params = "embedding_status='none'", []
+            if inc:
+                where += " AND (" + " OR ".join(
+                    ["path GLOB ?"] * len(inc)) + ")"
+                params += list(inc)
+            for g in exc:
+                where += " AND NOT path GLOB ?"
+                params.append(g)
+            rows = self._db.execute(
+                f"SELECT DISTINCT chunk_id, text FROM chunks WHERE {where}"
+                " LIMIT ?", (*params, batch)).fetchall()
+            if rows:
+                return rows, i
+        return [], len(BACKFILL_TIERS) - 1
 
     def _heal_if_raced(self, cid: str) -> bool:
         """UNIQUE 竞态自愈：向量已被并发者抢先写入则点亮状态行。
@@ -260,9 +304,10 @@ class ChunkIndex:
                 " WHERE chunk_id=?", (cid,))
             return cur.rowcount > 0
 
-    def _backfill_batched(self, rows) -> tuple[int, int, int, int]:
-        """批嵌 128/片一次推理；毒片降级逐条救回好块。"""
-        SLICE = 128
+    def _backfill_batched(self, rows, slice_size: int = 128
+                          ) -> tuple[int, int, int, int]:
+        """批嵌每片一次推理（默认 128 块）；毒片降级逐条救回好块。"""
+        SLICE = slice_size
         embedded = rows_lit = failed = healed = 0
         for i in range(0, len(rows), SLICE):
             sl = rows[i:i + SLICE]

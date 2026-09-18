@@ -86,7 +86,7 @@ def _extract_loop(ix: Indexer, limit: int, log,
 
 
 def _embed_loop(chunks, batch: int, loop: bool, max_hours: float,
-                log) -> dict:
+                log, slice_size: int = 128) -> dict:
     """补嵌长跑：循环至清空；max_hours>0 时到点优雅收工。
 
     203 万欠账块 30 块/s ≈ 18.5h——不限时会跟次日白天的 OCR 风暴
@@ -96,7 +96,7 @@ def _embed_loop(chunks, batch: int, loop: bool, max_hours: float,
     deadline = (time.monotonic() + max_hours * 3600
                 if max_hours > 0 else None)
     while True:
-        r = chunks.backfill(batch=batch)
+        r = chunks.backfill(batch=batch, slice_size=slice_size)
         for k in total:
             total[k] += r.get(k, 0)
         log.info("补嵌批：%s（累计 %s 剩 %s）", r, total, r["remaining"])
@@ -131,6 +131,8 @@ def main(argv=None) -> int:
     sub.add_parser("cycle", help="scan + extract 一键")
     em = sub.add_parser("embed", help="存量 none 块批量补嵌（断点续跑）")
     em.add_argument("--batch", type=int, default=256)
+    em.add_argument("--slice", type=int, default=128,
+                    help="批嵌每片块数（单次推理摊薄开销的调优杠杆）")
     em.add_argument("--loop", action="store_true",
                     help="循环至补嵌完成（夜间长跑）")
     em.add_argument("--max-hours", type=float, default=0,
@@ -197,7 +199,7 @@ def main(argv=None) -> int:
                 print("[嵌入] Ollama 不在位，拒绝空转（先启动服务）")
                 return 1
             total = _embed_loop(chunks, args.batch, args.loop,
-                                args.max_hours, log)
+                                args.max_hours, log, slice_size=args.slice)
             print(json.dumps(total, ensure_ascii=False, indent=2))
         elif args.cmd == "search":
             query = " ".join(args.query)

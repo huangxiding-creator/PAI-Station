@@ -272,6 +272,51 @@ def test_no_embed_reupsert_preserves_embedded(tmp_path):
     idxN.close()
 
 
+def test_backfill_tier_priority(tmp_path, monkeypatch):
+    """分层选块（2026-09-18 pending 分布定层）：前层不空不落下层——
+    高价值语料先上桌，本人痕迹磨完才轮到全局兜底。结果带 tier 留痕。"""
+    import paistation.sense.localfiles.store as st
+
+    monkeypatch.setattr(st, "BACKFILL_TIERS", (
+        (("gold/*",), ()),
+        ((), ()),  # 全局兜底
+    ))
+    idx0 = ChunkIndex(tmp_path / "t.db")  # 提取端先入库（none 态）
+    idx0.upsert_file("bulk/大库文件.md", ["垫底大库块"], LOGIC)
+    idx0.upsert_file("gold/本人痕迹.md", ["优先层块甲", "优先层块乙"], LOGIC)
+    idx0.close()
+    idx = ChunkIndex(tmp_path / "t.db", embedder=_fake_embedder,
+                     embedder_ver="fake")
+    r1 = idx.backfill(batch=8)
+    assert r1["tier"] == 0 and r1["embedded"] == 2  # 只磨优先层
+    st_bulk = idx._db.execute(
+        "SELECT embedding_status FROM chunks WHERE path LIKE 'bulk%'"
+    ).fetchone()
+    assert st_bulk["embedding_status"] == "none"  # 垫底块未动
+    r2 = idx.backfill(batch=8)  # 优先层已空 → 兜底层
+    assert r2["tier"] == 1 and r2["embedded"] == 1
+    assert idx._pending_count() == 0
+    idx.close()
+
+
+def test_backfill_slice_size_tunable(tmp_path):
+    """--slice 调优杠杆：批嵌每片块数可调（大片摊薄单次推理开销）。"""
+    sizes = []
+
+    def spy_batch(texts):
+        sizes.append(len(texts))
+        return _fake_batch_embedder(texts)
+
+    idx0 = ChunkIndex(tmp_path / "t.db")  # 提取端先入库（none 态）
+    idx0.upsert_file("a.md", [f"片大小块{i}" for i in range(6)], LOGIC)
+    idx0.close()
+    idx = ChunkIndex(tmp_path / "t.db", embedder=_fake_embedder,
+                     embedder_ver="fake", batch_embedder=spy_batch)
+    r = idx.backfill(batch=64, slice_size=2)
+    assert r["embedded"] == 6 and sizes == [2, 2, 2]
+    idx.close()
+
+
 def test_backfill_batch_route_with_poison_fallback(tmp_path):
     """批量补嵌：128/片一次推理；毒片降级逐条救回好块（坏块跳过）。"""
     idx0 = ChunkIndex(tmp_path / "t.db")

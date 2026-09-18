@@ -56,7 +56,7 @@ class _FakeChunks:
         self._script = script
         self.calls = 0
 
-    def backfill(self, batch=256):
+    def backfill(self, batch=256, **kwargs):
         self.calls += 1
         if self._script is not None:
             return self._script.pop(0)
