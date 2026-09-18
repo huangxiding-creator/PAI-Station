@@ -54,7 +54,7 @@ def main() -> int:
     cnt = Counter(m[1] for m in miss)
     print(f"卷宗通道：{n_hit}/{len(questions)} 命中；未命中归因 "
           + " ".join(f"{k} {v}" for k, v in cnt.most_common()))
-    out = REPO / "SELF_PROFILE" / "golden_set" / f"diagnose_{datetime.now():%Y%m%d_%H%M}.md"
+    out = REPO / "SELF_PROFILE" / "golden_set" / f"diagnose_{datetime.now():%Y%m%d_%H%M%S}.md"
     L = ["# 金标准未命中归因", "",
          f"> {datetime.now():%Y-%m-%d %H:%M} · 命中 {n_hit}/{len(questions)} · "
          + " ".join(f"{k} {v}" for k, v in cnt.most_common()), ""]
