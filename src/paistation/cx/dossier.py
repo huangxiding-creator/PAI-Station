@@ -6,8 +6,10 @@
 原理：SELF_PROFILE 精炼卷宗（画像/思想地图/覆盖度卡等 curated md）是小而
 浓缩的答案池——问题词在卷宗里密度远高于 30 万原始块，路由进去再细查。
 
-卷宗源：SELF_PROFILE/*.md + feishu/*.md + zbzs/*.md（golden_set 排除——
-考卷不得泄漏进检索域；data/ 子目录排除——原始 dump 非卷宗）。
+卷宗源：SELF_PROFILE/*.md + feishu/*.md + zbzs/*.md + cc_sessions/*.md
+（golden_set 排除——考卷不得泄漏进检索域；data/ 子目录排除——原始
+dump 非卷宗；cc_sessions 两张策展卡=对话画像+prompt 流统计，并入实测
+金标准 66→74——策展卡在 glob 外=答案沉睡，2026-09-18）。
 检索单元=markdown 节（##/### 标题切分），路由=问题 bigram 频次×标题加成。
 """
 
@@ -131,7 +133,7 @@ def _split_long(header: str, body: str) -> list[tuple[str, str]]:
 def load_dossiers(sp_dir: Path) -> DossierIndex:
     """SELF_PROFILE 卷宗 → 节索引（golden_set/data 子目录排除）。"""
     idx = DossierIndex()
-    patterns = ["*.md", "feishu/*.md", "zbzs/*.md"]
+    patterns = ["*.md", "feishu/*.md", "zbzs/*.md", "cc_sessions/*.md"]
     for pat in patterns:
         for f in sorted(sp_dir.glob(pat)):
             if not f.is_file():
