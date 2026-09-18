@@ -23,7 +23,9 @@ from paistation.cx.dimensions import (  # noqa: E402
 DB = REPO / "data/cx/timeline.db"
 STATIC = REPO / "SELF_PROFILE/static_inventory/2026-09-16"
 WEREAD = REPO / "SELF_PROFILE/data/weread_notes_20260916/reviews.jsonl"
-DEFAULT_OUT = REPO / "SELF_PROFILE/cx_六维覆盖度_20260916.md"
+# 探针快照（自动重算）——手工叙事卡 cx_六维覆盖度_20260916.md 另存，
+# 引用本快照的实读数，二者职责分开防覆盖
+DEFAULT_OUT = REPO / "SELF_PROFILE/cx_六维探针_自动.md"
 
 CN = {
     Dimension.FACT: "事实（有什么）",
@@ -37,8 +39,10 @@ CN = {
 
 def build_markdown(rep: dict) -> str:
     tp, ap = rep["probe_timeline"], rep["probe_assets"]
-    lines = ["# CX 六维覆盖度记分卡 · 2026-09-16", "",
+    lines = ["# CX 六维探针快照（自动重算，算法估级）", "",
              "> 六维 = 事实×行为×关系×观点×节律×演化（用户拍板顶层方法）。",
+             "> 本文件=量化探针实读+算法估级（夜刷自动覆盖）；人工判级与证据叙事",
+             "> 见 cx_六维覆盖度_20260916.md（叙事卡，不被自动覆盖）。",
              "> 等级：L0无数据 / L1数据在位 / L2管线化 / L3融合可检索 / L4可评测", ""]
     for dim in Dimension:
         d = rep[dim.value]
