@@ -24,6 +24,7 @@ GENERATORS = [
     "cx_facts_card.py",
     "cx_signal_profile.py",
     "cx_relations_profile.py",
+    "cx_relations_temporal.py",
     "cx_rhythm_evolution.py",
     "cx_idea_evolution.py",
 ]
