@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
-"""cx_search 驱动：全盘关键词检索（FTS5）。
+"""cx_search 驱动：全盘关键词检索（FTS5）+ 卷宗混合路由（--dossier）。
 
 用法：
   python tools/cx_search.py 白龟湖
   python tools/cx_search.py "黄藏寺 变电站" --files 10 --samples 3
-多词空格分隔 = AND。
+  python tools/cx_search.py "我的工具付费观" --dossier
+多词空格分隔 = AND；--dossier 走卷宗通道（keyword×语义 RRF 深池融合，
+嵌入服务不在位自动降级 keyword）。
 """
 from __future__ import annotations
 
@@ -37,7 +39,13 @@ def main() -> int:
     ap.add_argument("--ext", help="按扩展名过滤，如 .pdf")
     ap.add_argument("--dir", help="按路径包含过滤，如 白龟湖")
     ap.add_argument("--facets", action="store_true", help="打印命中块扩展名分布")
+    ap.add_argument("--dossier", action="store_true",
+                    help="卷宗通道：SELF_PROFILE 策展卷宗混合路由 top-k")
+    ap.add_argument("--k", type=int, default=8, help="--dossier 返回节数")
     a = ap.parse_args()
+
+    if a.dossier:
+        return run_dossier(a)
 
     if not INDEX.exists():
         print(f"索引不存在：{INDEX}")
@@ -56,6 +64,34 @@ def main() -> int:
         print(f"\n[{len(texts)}] {path}")
         for t in texts[: a.samples]:
             print("   " + keyword_window(t, words))
+    return 0
+
+
+def run_dossier(a) -> int:
+    """卷宗混合路由：keyword 深池×语义深池 RRF → top-k 节。"""
+    from paistation.cx.dossier import load_dossiers
+    from paistation.cx.semantic import SemanticIndex, hybrid_route
+    from paistation.sense.localfiles.embedder import make_ollama_embedder
+
+    sp = REPO / "SELF_PROFILE"
+    if not sp.is_dir():
+        print(f"卷宗目录不存在：{sp}")
+        return 1
+    idx = load_dossiers(sp)
+    embedder = make_ollama_embedder()
+    sem = None
+    mode = "keyword"
+    if embedder:
+        sem = SemanticIndex.build(idx.sections, embedder,
+                                  REPO / "data" / "cx" / "dossier_vecs.npz")
+        mode = "hybrid(rrf)"
+    top = hybrid_route(idx, sem, embedder, a.query, k=a.k)
+    print(f"「{a.query}」[dossier/{mode}] → {len(top)}/{len(idx.sections)} 节")
+    for i, s in enumerate(top, 1):
+        head = s.header or s.text.splitlines()[0][:30] if s.text else ""
+        snippet = s.text[:120].replace("\n", " ")
+        print(f"\n{i}. [{s.dossier}] {head}（score {s.score:.6g}）")
+        print(f"   {snippet}")
     return 0
 
 

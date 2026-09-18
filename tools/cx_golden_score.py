@@ -27,6 +27,8 @@ sys.path.insert(0, str(REPO / "src"))
 
 from paistation.cx.dossier import load_dossiers  # noqa: E402
 from paistation.cx.golden import classify_miss, extract_tokens, is_hit  # noqa: E402
+from paistation.cx.semantic import SemanticIndex, hybrid_route  # noqa: E402
+from paistation.sense.localfiles.embedder import make_ollama_embedder  # noqa: E402
 from paistation.sense.localfiles.store import ChunkIndex  # noqa: E402
 
 
@@ -40,12 +42,17 @@ def main() -> int:
     questions = [json.loads(ln) for ln in open(args.golden, encoding="utf-8")]
     index = ChunkIndex(REPO / "data" / "local_index" / "index.db")
     dossier = load_dossiers(REPO / "SELF_PROFILE")
+    embedder = make_ollama_embedder()
+    sem = None
+    if embedder:
+        sem = SemanticIndex.build(dossier.sections, embedder,
+                                  REPO / "data" / "cx" / "dossier_vecs.npz")
 
     rows = []
     for q in questions:
         toks = extract_tokens(q["a"])
         hits = index.search(q["q"], k=args.k)
-        dhits = dossier.route(q["q"], k=args.k)
+        dhits = hybrid_route(dossier, sem, embedder, q["q"], k=args.k)
         hit_g = is_hit(hits, toks)
         hit_d = is_hit(dhits, toks)
         hit = hit_g or hit_d
