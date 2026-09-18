@@ -21,6 +21,7 @@ REPO = Path(__file__).resolve().parents[1]
 # （生成器， 预计秒）——顺序跑，前一个失败不挡后一个
 GENERATORS = [
     "cx_dimensions.py",
+    "cx_facts_card.py",
     "cx_signal_profile.py",
     "cx_relations_profile.py",
     "cx_rhythm_evolution.py",
