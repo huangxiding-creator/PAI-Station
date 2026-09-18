@@ -1,0 +1,103 @@
+# -*- coding: utf-8 -*-
+"""卷宗通道（dossier-first 检索）——金标准升级路径之二。
+
+诊断背景：全局 chunk 检索 hit@8=2%，98% 未命中是"问答词面鸿沟"。
+两条升级路径：语义路由（等嵌入回填）/ **卷宗路由（本模块，零依赖可跑）**。
+原理：SELF_PROFILE 精炼卷宗（画像/思想地图/覆盖度卡等 curated md）是小而
+浓缩的答案池——问题词在卷宗里密度远高于 30 万原始块，路由进去再细查。
+
+卷宗源：SELF_PROFILE/*.md + feishu/*.md + zbzs/*.md（golden_set 排除——
+考卷不得泄漏进检索域；data/ 子目录排除——原始 dump 非卷宗）。
+检索单元=markdown 节（##/### 标题切分），路由=问题 bigram 频次×标题加成。
+"""
+
+from __future__ import annotations
+
+import re
+from dataclasses import dataclass, field
+from pathlib import Path
+
+TOKEN_RE = re.compile(r"[一-龥]{2,}|[A-Za-z][A-Za-z0-9_-]{2,}|\d{2,}")
+_HEADER_RE = re.compile(r"^#{1,3} ", re.M)
+
+# 路由层噪声 bigram（问句套话，不携带领域信号）
+_ROUTING_STOP = {
+    "什么", "如何", "我的", "自己", "哪些", "哪个", "现在", "主要", "一下",
+    "请问", "是否", "多少", "几个", "怎样", "怎么样", "为什么", "还是", "以及",
+}
+
+
+@dataclass
+class Section:
+    """卷宗检索单元：标题 + 正文（is_hit 兼容 .text 属性）。"""
+
+    text: str
+    dossier: str
+    header: str = ""
+    score: int = 0
+
+
+@dataclass
+class DossierIndex:
+    sections: list[Section] = field(default_factory=list)
+
+    def route(self, query: str, k: int = 8) -> list[Section]:
+        """问题 → top-k 节（bigram 频次 + 标题 3 倍加成）。"""
+        grams = query_grams(query)
+        if not grams:
+            return []
+        for s in self.sections:
+            body = sum(s.text.count(g) for g in grams)
+            head = sum(s.header.count(g) for g in grams)
+            s.score = body + 3 * head
+        ranked = sorted(
+            (s for s in self.sections if s.score > 0),
+            key=lambda s: -s.score,
+        )
+        return ranked[:k]
+
+
+def query_grams(query: str) -> set[str]:
+    """问题 → 路由信号集（CJK run 转 bigram；拉丁/数字整词）。"""
+    grams: set[str] = set()
+    for t in TOKEN_RE.findall(query):
+        if re.fullmatch(r"[一-龥]+", t):
+            grams |= {t[i : i + 2] for i in range(len(t) - 1)}
+        else:
+            grams.add(t.lower())
+    return grams - _ROUTING_STOP
+
+
+def split_sections(md_text: str) -> list[tuple[str, str]]:
+    """markdown → [(标题, 节正文)]；无标题正文归首节。"""
+    parts = _HEADER_RE.split(md_text)
+    if len(parts) == 1:
+        return [("", md_text)] if md_text.strip() else []
+    out: list[tuple[str, str]] = []
+    if parts[0].strip():
+        out.append(("", parts[0]))
+    for seg in parts[1:]:  # 每段=标题行+正文（到下一标题为止）
+        head, _, body = seg.partition("\n")
+        header = head.strip()
+        if header or body.strip():
+            out.append((header, f"# {header}\n{body}"))
+    return out
+
+
+def load_dossiers(sp_dir: Path) -> DossierIndex:
+    """SELF_PROFILE 卷宗 → 节索引（golden_set/data 子目录排除）。"""
+    idx = DossierIndex()
+    patterns = ["*.md", "feishu/*.md", "zbzs/*.md"]
+    for pat in patterns:
+        for f in sorted(sp_dir.glob(pat)):
+            if not f.is_file():
+                continue
+            try:
+                text = f.read_text(encoding="utf-8")
+            except (OSError, UnicodeDecodeError):
+                continue
+            for header, body in split_sections(text):
+                idx.sections.append(
+                    Section(text=body, dossier=f.stem, header=header)
+                )
+    return idx

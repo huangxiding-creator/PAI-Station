@@ -73,12 +73,19 @@ def main() -> int:
     src_of = dict(ent.execute(
         "SELECT entity_id, sources FROM entities WHERE kind='person'").fetchall())
 
-    # 时间轴最近同框（top 名字 LIKE 检索）
+    # 时间轴最近同框：聊天轴优先（senders JSON 键=引号包裹，精确），
+    # 回退会议/git（payload 名字裸现）。短名防窗口标题 LIKE 误命中。
     def last_seen(name: str) -> tuple[str, str]:
         row = tl.execute(
-            "SELECT start, type, payload FROM events "
-            "WHERE payload LIKE ? ORDER BY start DESC LIMIT 1",
-            (f"%{name}%",)).fetchone()
+            "SELECT start, type FROM events WHERE source='wechat_chat' "
+            "AND payload LIKE ? ORDER BY start DESC LIMIT 1",
+            (f'%\"{name}\"%',)).fetchone()
+        if not row:
+            row = tl.execute(
+                "SELECT start, type FROM events "
+                "WHERE source IN ('wecom_meeting','tencent_meeting','git') "
+                "AND payload LIKE ? ORDER BY start DESC LIMIT 1",
+                (f"%{name}%",)).fetchone()
         if not row:
             return ("—", "")
         local = datetime.fromisoformat(row[0]).astimezone().strftime("%m-%d")

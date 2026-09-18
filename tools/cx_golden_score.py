@@ -25,6 +25,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 
+from paistation.cx.dossier import load_dossiers  # noqa: E402
 from paistation.sense.localfiles.store import ChunkIndex  # noqa: E402
 
 TOKEN_RE = re.compile(r"[一-龥]{2,}|[A-Za-z][A-Za-z0-9_-]{2,}|\d{2,}")
@@ -87,17 +88,28 @@ def main() -> int:
 
     questions = [json.loads(ln) for ln in open(args.golden, encoding="utf-8")]
     index = ChunkIndex(REPO / "data" / "local_index" / "index.db")
+    dossier = load_dossiers(REPO / "SELF_PROFILE")
 
     rows = []
     for q in questions:
         toks = extract_tokens(q["a"])
         hits = index.search(q["q"], k=args.k)
-        hit = is_hit(hits, toks)
+        dhits = dossier.route(q["q"], k=args.k)
+        hit_g = is_hit(hits, toks)
+        hit_d = is_hit(dhits, toks)
+        hit = hit_g or hit_d
+        miss_type = ""
+        if not hit:
+            miss_type = classify_miss(
+                hits or dhits, toks
+            ) if (hits or dhits) else "零结果（索引无此词汇面）"
+            if hits and dhits and not hit_g and not hit_d:
+                miss_type = "词面不匹配（问答鸿沟：问题词≠文档词）"
         rows.append({
             "id": q["id"], "dim": q["dim"], "diff": q["diff"],
-            "q": q["q"], "hit": hit,
-            "miss_type": "" if hit else classify_miss(hits, toks),
-            "tokens": toks, "n_hits": len(hits),
+            "q": q["q"], "hit": hit, "hit_g": hit_g, "hit_d": hit_d,
+            "miss_type": miss_type,
+            "tokens": toks, "n_hits": len(hits), "n_dhits": len(dhits),
         })
 
     out = REPO / "SELF_PROFILE" / "golden_set" / f"score_{datetime.now():%Y%m%d_%H%M}.md"
@@ -113,20 +125,27 @@ def main() -> int:
             by_diff[r["diff"]][0] += 1
 
     L = ["# 金标准跑分 v0（keyword-only 检索命中代理）", ""]
-    L.append(f"> {datetime.now():%Y-%m-%d %H:%M} · hit@{args.k} = {n_hit}/{total}"
-             f"（{n_hit / total:.0%}）· 语义路由未接（嵌入回填中，分数为下界）")
+    n_g = sum(r["hit_g"] for r in rows)
+    n_d = sum(r["hit_d"] for r in rows)
+    L.append(f"> {datetime.now():%Y-%m-%d %H:%M} · 合并 hit@{args.k} = {n_hit}/{total}"
+             f"（{n_hit / total:.0%}）· 全局通道 {n_g} + 卷宗通道 {n_d}"
+             f" · 语义路由未接（嵌入回填中，分数为下界）")
     L.append("")
-    L.append("| 维度 | 命中/总数 |")
-    L.append("|---|---|")
+    L.append("| 维度 | 命中/总数 | 全局 | 卷宗 |")
+    L.append("|---|---|---:|---:|")
     for d in sorted(by_dim):
         h, n = by_dim[d]
-        L.append(f"| {d} | {h}/{n} |")
+        g = sum(r["hit_g"] for r in rows if r["dim"] == d)
+        c = sum(r["hit_d"] for r in rows if r["dim"] == d)
+        L.append(f"| {d} | {h}/{n} | {g} | {c} |")
     L.append("")
-    L.append("| 难度 | 命中/总数 |")
-    L.append("|---|---|")
+    L.append("| 难度 | 命中/总数 | 全局 | 卷宗 |")
+    L.append("|---|---|---:|---:|")
     for d in sorted(by_diff):
         h, n = by_diff[d]
-        L.append(f"| {d} | {h}/{n} |")
+        g = sum(r["hit_g"] for r in rows if r["diff"] == d)
+        c = sum(r["hit_d"] for r in rows if r["diff"] == d)
+        L.append(f"| {d} | {h}/{n} | {g} | {c} |")
     L.append("")
     L.append("## 未命中清单")
     L.append("")
