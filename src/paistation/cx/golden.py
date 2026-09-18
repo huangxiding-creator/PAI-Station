@@ -34,6 +34,9 @@ def extract_tokens(answer: str) -> list[str]:
 
     中文连续 run 不分词，故通用性判定用"剔通用子词看残值"：整串通用
     （如"我的主业单位与岗位是什么"）残值空 → 弃；含专名残值留 → 保。
+    注：超长 run 滑窗细化（防语料标点变体切断匹配）已试并实测劣化
+    （65→60：6 字窗挤掉真区分度短 token，如"黄河院"），弃用——
+    标点变体缺口留给语义路由（嵌入天然容忍表述变体）。
     """
     toks = [t for t in TOKEN_RE.findall(answer)
             if t not in GENERIC and len(_residual(t)) >= 2]
