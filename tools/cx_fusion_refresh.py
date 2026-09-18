@@ -28,6 +28,7 @@ GENERATORS = [
     "cx_rhythm_evolution.py",
     "cx_idea_evolution.py",
     "cx_opinions_map.py",
+    "cx_dossier_vecs.py",
 ]
 
 
