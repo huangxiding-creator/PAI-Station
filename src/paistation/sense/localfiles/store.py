@@ -192,6 +192,22 @@ class ChunkIndex:
         rows = self._db.execute(
             "SELECT DISTINCT chunk_id, text FROM chunks"
             " WHERE embedding_status='none' LIMIT ?", (batch,)).fetchall()
+        # 预检分流：并发重注册的"假 none"块（vec 已在、状态翻回）直接
+        # 点亮跳过——不预检会撞 chunks_vec 主键 UNIQUE（sqlite_vec 虚拟
+        # 表不支持 OR REPLACE 冲突解决，延迟到 commit 才炸），计成失败
+        # 后夜夜重试已嵌块（2026-09-18 夜 11,329 次白磨实证）。
+        lit_pre = 0
+        todo = []
+        for r in rows:
+            if self._vec_ready and self._vec_has(r["chunk_id"]):
+                with self._db:
+                    cur = self._db.execute(
+                        "UPDATE chunks SET embedding_status='embedded'"
+                        " WHERE chunk_id=?", (r["chunk_id"],))
+                    lit_pre += cur.rowcount
+            else:
+                todo.append(r)
+        rows = todo
         embedded = rows_lit = failed = 0
         if self._batch_embedder is not None:
             embedded, rows_lit, failed = self._backfill_batched(rows)
@@ -209,7 +225,7 @@ class ChunkIndex:
                     failed += 1
                     _log.warning("补嵌失败跳过 chunk %s: %s",
                                  r["chunk_id"][:12], exc)
-        return {"embedded": embedded, "rows_lit": rows_lit,
+        return {"embedded": embedded, "rows_lit": rows_lit + lit_pre,
                 "failed": failed, "remaining": self._pending_count()}
 
     def _backfill_batched(self, rows) -> tuple[int, int, int]:

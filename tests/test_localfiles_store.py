@@ -151,6 +151,32 @@ def test_backfill_embeds_stale_none_chunks(tmp_path):
     idx.close()
 
 
+def test_backfill_reupserted_chunk_not_counted_failed(tmp_path):
+    """并发重注册 UNIQUE 回归（2026-09-18 夜 11,329 次白磨实证）：
+
+    提取端把已嵌 chunk 重新注册回 none 态（同 chunk_id）时，
+    backfill 重嵌撞 chunks_vec 主键。sqlite_vec 虚拟表不支持
+    OR REPLACE 冲突解决会抛 UNIQUE——须吞掉并点亮状态行，
+    不得计失败（否则夜夜重试已嵌块，吞吐腰斩）。
+    """
+    idx = ChunkIndex(tmp_path / "t.db", embedder=_fake_embedder,
+                     embedder_ver="fake")
+    idx.upsert_file("a.md", ["并发重注册回归块"], LOGIC)
+    assert idx.backfill()["embedded"] == 0  # 正常路径已嵌
+    # 模拟提取端并发重注册：同 chunk_id 行翻回 none
+    idx._db.execute(
+        "UPDATE chunks SET embedding_status='none'"
+        " WHERE chunk_id=(SELECT chunk_id FROM chunks LIMIT 1)")
+    idx._db.commit()
+    r = idx.backfill()
+    assert r["failed"] == 0
+    assert r["rows_lit"] >= 1  # 状态行被点亮而非失败
+    st = idx._db.execute(
+        "SELECT embedding_status FROM chunks").fetchall()
+    assert all(row["embedding_status"] == "embedded" for row in st)
+    idx.close()
+
+
 def _fake_batch_embedder(texts: list[str]) -> list[list[float]]:
     return [_fake_embedder(t) for t in texts]
 
