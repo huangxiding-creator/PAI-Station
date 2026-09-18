@@ -76,6 +76,10 @@ def test_part() -> str:
     text = p.read_text(encoding="utf-8", errors="replace")
     m = re.findall(r"=+ (.*?) =+\s*$", text, re.M)
     line = m[-1].strip() if m else ""
+    if not line:  # 纯绿短格式：末行裸 "N passed in ..."（无 ==== 边框）
+        lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
+        if lines and re.search(r"\d+ (passed|failed|error)", lines[-1]):
+            line = lines[-1].strip("= ")
     if not line:
         return "■ 全套测试：⚠️ 无汇总行（跑挂了？看 test_suite_latest.log）"
     bad = "failed" in line or "error" in line
@@ -147,10 +151,50 @@ def stock_part() -> str:
         return "■ 库存：读取失败"
 
 
+def bonus_part() -> str:
+    """加路：金标准基线 / 企微补录 / 信号流入轴（各自防御，缺了不影响主体）。"""
+    parts: list[str] = []
+    try:  # 金标准跑分（最新一份报告首行）
+        scores = sorted((BASE.parent.parent / "SELF_PROFILE" / "golden_set").glob("score_*.md"))
+        if scores:
+            head = scores[-1].read_text(encoding="utf-8").splitlines()
+            line = next((l for l in head if "hit@" in l), "")
+            m = re.search(r"hit@(\d+) = (\d+)/(\d+)（(\d+%)）", line)
+            if m:
+                parts.append(f"金标准基线 hit@{m.group(1)}={m.group(2)}/{m.group(3)}"
+                             f"（{m.group(4)}，词面鸿沟下界，语义路由待接）")
+    except Exception:
+        pass
+    try:  # 企微会议补录进度
+        wl = (BASE.parent / "cx" / "wecom_continue.log").read_text(
+            encoding="utf-8", errors="replace").splitlines()
+        pend = [int(m.group(1)) for ln in wl
+                if (m := re.search(r"频控熔断：(\d+) 场", ln))]
+        if pend:
+            parts.append(f"企微补录剩 {pend[-1]} 场待冷却重试（自适应推进中）")
+        elif any("to fetch" in ln for ln in wl[-6:]):
+            parts.append("企微补录已收工")
+    except Exception:
+        pass
+    try:  # 信号流入轴存量
+        cxdb = sqlite3.connect(BASE.parent / "cx" / "timeline.db")
+        n = cxdb.execute(
+            "SELECT COUNT(*) FROM events WHERE source='signal_service'"
+        ).fetchone()[0]
+        cxdb.close()
+        parts.append(f"信号流入轴 {n:,} 条（前台窗口/锁屏真值）")
+    except Exception:
+        pass
+    if not parts:
+        return ""
+    return "■ 加路：" + "；".join(parts)
+
+
 def main() -> int:
     msg = "\n".join([
         f"【夜班战报 {datetime.now():%m-%d} 晨】",
         extract_part(), test_part(), embed_part(), usn_part(), stock_part(),
+        bonus_part(),
     ])
     print(msg)
     try:
