@@ -10,6 +10,12 @@ from __future__ import annotations
 import re
 
 TOKEN_RE = re.compile(r"[一-龥]{2,}|[A-Za-z][A-Za-z0-9_-]{2,}|\d{2,}")
+
+# 判定 v1.1（标点归一）：中文卷宗的标点变体（，'"「」与直引号混用、
+# 手写卡 76 字折行断词）不构成语义差异——归一化对语料文本与答案 token
+# 同规则适用，零裁量空间（区别于 LLM 判定的自由度）。
+_PUNCT_STRIP_RE = re.compile(
+    r"[\s，。、；：？！…·—\-~～「」『』“”‘’（）()【】\[\]{}<>《》*#>|/\\_=+&%$@^`'\"]+")
 # 答案里的通用词（命中也不证明检对了文档）
 GENERIC = {
     "什么", "如何", "我的", "自己", "关系", "岗位", "单位", "公司", "有限",
@@ -49,11 +55,22 @@ def extract_tokens(answer: str) -> list[str]:
     return shorts[:3]
 
 
-def is_hit(hits: list, tokens: list[str]) -> bool:
-    """top-k 块任一含任一 token。hits=带 .text 属性的对象列表。"""
+def norm_text(t: str) -> str:
+    """判定用归一化：剥标点/空白（中英文标点、引号家族、md 记号）。"""
+    return _PUNCT_STRIP_RE.sub("", t)
+
+
+def is_hit(hits: list, tokens: list[str], norm: bool = False) -> bool:
+    """top-k 块任一含任一 token。hits=带 .text 属性的对象列表。
+
+    norm=True 走 v1.1 标点归一判定（语料与 token 同规则，零裁量）。
+    """
     if not tokens:
         return False
-    return any(tok in h.text for tok in tokens for h in hits)
+    if not norm:
+        return any(tok in h.text for tok in tokens for h in hits)
+    return any(norm_text(tok) in norm_text(h.text)
+               for tok in tokens for h in hits)
 
 
 def classify_miss(hits: list, tokens: list[str]) -> str:

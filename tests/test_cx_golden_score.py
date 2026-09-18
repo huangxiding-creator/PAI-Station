@@ -32,3 +32,23 @@ def test_is_hit_and_miss_classification():
     assert classify_miss([], ["黄细丁"]) == "零结果（索引无此词汇面）"
     assert classify_miss([miss], ["黄细丁"]) == "词面不匹配（问答鸿沟：问题词≠文档词）"
     assert classify_miss([miss], []) == "答案无区分 token（考题待修）"
+
+
+def test_is_hit_punct_norm_variant():
+    """v1.1 标点归一：引号/逗号变体与折行断词不算未命中。"""
+    from types import SimpleNamespace
+    from paistation.cx.golden import is_hit
+
+    sec = SimpleNamespace(text="我认为AI时代管理的本质是，'激活人机协同的创造力'")
+    toks = ["时代管理的本质是激活人机协同的创造力"]
+    assert not is_hit([sec], toks)              # 严格子串：标点挡住
+    assert is_hit([sec], toks, norm=True)       # 归一后过
+
+
+def test_is_hit_norm_still_requires_content():
+    """归一不放水：内容不同照样 miss。"""
+    from types import SimpleNamespace
+    from paistation.cx.golden import is_hit
+
+    sec = SimpleNamespace(text="完全无关的另一段内容")
+    assert not is_hit([sec], ["激活人机协同"], norm=True)
