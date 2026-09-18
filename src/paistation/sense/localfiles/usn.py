@@ -15,7 +15,6 @@ OCR；USN 的 RENAME_OLD/NEW_NAME 同文件 ID 把两侧连成一次 path
 from __future__ import annotations
 
 import csv
-import io
 import logging
 import re
 from dataclasses import dataclass

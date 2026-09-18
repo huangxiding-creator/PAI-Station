@@ -28,6 +28,8 @@ from paistation.sense.localfiles.store import ChunkIndex
 
 DEFAULT_DIR = Path("data/local_index")
 POISON_STALL_BATCHES = 3  # 连续全失败批数上限：判定队列只剩毒文件
+LOCK_STALL_BATCHES = 20  # 补嵌连续零进展全失败批上限：锁风暴放弃本轮
+LOCK_BACKOFF_S = 60      # 补嵌锁风暴退避：让并发写手（extract 12 workers）先走
 
 
 def _build(args):
@@ -95,21 +97,40 @@ def _embed_loop(chunks, batch: int, loop: bool, max_hours: float,
     total = {"embedded": 0, "rows_lit": 0, "failed": 0, "healed": 0}
     deadline = (time.monotonic() + max_hours * 3600
                 if max_hours > 0 else None)
+    lock_stall = 0
     while True:
         r = chunks.backfill(batch=batch, slice_size=slice_size)
         for k in total:
             total[k] += r.get(k, 0)
         log.info("补嵌批：%s（累计 %s 剩 %s）", r, total, r["remaining"])
-        # 早退条件=本批零进展（非仅 embedded==0）：纯点亮/纯竞态自愈批
-        # 也是进展（remaining 在降），只有三类全零才收工——否则并发
-        # 提取灌 none 时补嵌会提前一天罢工（2026-09-18 诊断）
-        if not loop or (r["embedded"] == 0 and r.get("healed", 0) == 0
-                        and r["rows_lit"] == 0):
-            break
         if deadline and time.monotonic() > deadline:
             log.info("补嵌达 %sh 预算优雅收工（断点=embedding_status，"
                      "明夜续磨）", max_hours)
             break
+        if not loop:
+            break
+        # 进展=三类任一非零（纯点亮/纯竞态自愈批也是进展，remaining 在
+        # 降——2026-09-18 早退回归）。零进展且 failed==0 才是真清空。
+        if (r["embedded"] > 0 or r.get("healed", 0) > 0
+                or r["rows_lit"] > 0):
+            lock_stall = 0
+            continue
+        if r.get("failed", 0) == 0:
+            break  # 队列清空，长跑完成
+        # 零进展但整批失败 = database is locked 风暴（extract 12 写手
+        # 同库并发，2026-09-18 夜 22:00 实锤 9 分钟假绿退出）：退避重试，
+        # 不得当"无活"罢工；连续触顶才放弃且置 aborted（main 转 exit 1，
+        # schtask 上次结果可见，不静默）
+        lock_stall += 1
+        if lock_stall >= LOCK_STALL_BATCHES:
+            log.error("补嵌连续 %d 批零进展全失败（锁风暴/嵌入服务故障？）"
+                      "放弃本轮，明夜续磨（exit 1 非静默）", lock_stall)
+            total["aborted"] = 1
+            break
+        log.warning("批零进展且 failed=%s（并发写锁？）退避 %ss 重试"
+                    "（连续 %d/%d）", r["failed"], LOCK_BACKOFF_S,
+                    lock_stall, LOCK_STALL_BATCHES)
+        time.sleep(LOCK_BACKOFF_S)
     return total
 
 
@@ -201,6 +222,8 @@ def main(argv=None) -> int:
             total = _embed_loop(chunks, args.batch, args.loop,
                                 args.max_hours, log, slice_size=args.slice)
             print(json.dumps(total, ensure_ascii=False, indent=2))
+            if total.get("aborted"):
+                return 1  # 锁风暴放弃：schtask 上次结果非零，夜报可见
         elif args.cmd == "search":
             query = " ".join(args.query)
             for h in chunks.search(query, k=args.k):

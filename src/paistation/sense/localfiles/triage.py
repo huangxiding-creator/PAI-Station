@@ -46,7 +46,8 @@ OCR_IMAGE_PREFIXES = (
     "d:/wemedia/", "d:/wemediaoutput/", "d:/baidusyncdisk/",
     "e:/ai-station/07 任务/", "e:/ai-station/04 智库/",
     "e:/ai-station/research/",
-    "e:/ai-station/researchfactory-eng/auto-wechat-article-exporter/",  # 第二波：公众号配图（图表/截图有信息量，装饰图零字自动回 metadata）
+    # 第二波：公众号配图（图表/截图有信息量，装饰图零字自动回 metadata）
+    "e:/ai-station/researchfactory-eng/auto-wechat-article-exporter/",
     "c:/users/91216/documents/wxwork/",  # 企微聊天截图=工作通信
 )
 

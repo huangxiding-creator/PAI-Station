@@ -124,7 +124,7 @@ async def _recognize_png_async(png: bytes) -> str:
 async def _ocr_pdf_async(path: str, dpi: int, max_pages: int) -> str:
     import pymupdf
 
-    engine = _get_engine()
+    _get_engine()  # 预热引擎（副作用），返回值此处不用
     parts: list[str] = []
     with pymupdf.open(path) as pdf:
         pages = pdf.page_count

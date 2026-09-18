@@ -82,7 +82,9 @@ class ChunkIndex:
 
     def __init__(self, db_path, embedder=None, embedder_ver: str = NONE_EMBEDDER,
                  batch_embedder=None):
-        self._db = sqlite3.connect(str(db_path))
+        # timeout 30s（默认 5s）：补嵌与 extract 12 写手同库并发时，
+        # 5s 等锁即 "database is locked" 整批报废（2026-09-18 夜实锤）
+        self._db = sqlite3.connect(str(db_path), timeout=30.0)
         self._db.row_factory = sqlite3.Row
         self._db.executescript(SCHEMA)
         self._db.execute("PRAGMA journal_mode=WAL")
@@ -330,7 +332,7 @@ class ChunkIndex:
                 vecs = self._batch_embedder([r["text"] for r in sl])
                 if len(vecs) != len(sl):
                     raise ValueError(f"批量返回数不符 {len(vecs)}!={len(sl)}")
-                for r, vec in zip(sl, vecs):
+                for r, vec in zip(sl, vecs, strict=True):
                     self._vec_put(r["chunk_id"], vec)
                     with self._db:
                         cur = self._db.execute(
@@ -593,7 +595,7 @@ def _segment_cjk(term: str) -> list[str]:
         return [term]
     out: list[str] = []
     for w in [term, *words,
-              *(a + b for a, b in zip(words, words[1:]))]:
+              *(a + b for a, b in zip(words, words[1:], strict=False))]:
         if w not in out:
             out.append(w)
     return out

@@ -23,8 +23,8 @@ from paistation.sense.localfiles.chunker import CHUNKER_VER, chunk_text
 from paistation.sense.localfiles.domain import ScanDomain
 from paistation.sense.localfiles.extract import ExtractionError, extract
 from paistation.sense.localfiles.inventory import Inventory, file_hashes, file_partial_hash
-from paistation.sense.localfiles.triage import Triage, ocr_image_eligible
 from paistation.sense.localfiles.store import ChunkIndex
+from paistation.sense.localfiles.triage import Triage, ocr_image_eligible
 from paistation.sense.localfiles.walk import enumerate_files
 
 _log = logging.getLogger("paistation.sense.localfiles.indexer")

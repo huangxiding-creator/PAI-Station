@@ -106,3 +106,43 @@ def test_embed_heal_only_batch_keeps_looping():
                         log=logging.getLogger("t"))
     assert ch.calls == 2
     assert total["healed"] == 30
+
+
+def test_embed_lockstorm_backs_off_and_recovers(monkeypatch):
+    """锁风暴批（零进展且 failed>0）不得当"无活"收工（2026-09-18 夜
+    22:00 实锤：extract 12 写手启动风暴下 9 分钟假绿退出，2.7M 块
+    只字未动）——退避重试，风暴过后继续磨。"""
+    import paistation.sense.localfiles.__main__ as m
+
+    monkeypatch.setattr(m, "LOCK_BACKOFF_S", 0)
+    storm = {"embedded": 0, "rows_lit": 0, "failed": 256, "healed": 0,
+             "remaining": 2703201}
+    ch = _FakeChunks(script=[
+        storm, storm,
+        {"embedded": 250, "rows_lit": 300, "failed": 6, "healed": 0,
+         "remaining": 2702951},
+        {"embedded": 0, "rows_lit": 0, "failed": 0, "healed": 0,
+         "remaining": 0},
+    ])
+    total = m._embed_loop(ch, 256, loop=True, max_hours=0,
+                          log=logging.getLogger("t"))
+    assert ch.calls == 4  # 两批全灭没退出，风暴后第三批真嵌了
+    assert total["embedded"] == 250
+    assert total.get("aborted", 0) == 0
+
+
+def test_embed_lockstorm_gives_up_loud(monkeypatch):
+    """连续 LOCK_STALL_BATCHES 批零进展全失败 → 放弃本轮且置 aborted
+    信号位（main 转非零退出码，schtask 上次结果可见=不静默）。"""
+    import paistation.sense.localfiles.__main__ as m
+
+    monkeypatch.setattr(m, "LOCK_BACKOFF_S", 0)
+    monkeypatch.setattr(m, "LOCK_STALL_BATCHES", 3)
+    storm = {"embedded": 0, "rows_lit": 0, "failed": 256, "healed": 0,
+             "remaining": 2703201}
+    ch = _FakeChunks(script=[storm, storm, storm, storm])
+    total = m._embed_loop(ch, 256, loop=True, max_hours=0,
+                          log=logging.getLogger("t"))
+    assert ch.calls == 3  # 第 3 批触顶停（第 4 剧本未消费）
+    assert total["aborted"] == 1
+    assert total["failed"] == 768
