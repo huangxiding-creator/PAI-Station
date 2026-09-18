@@ -18,7 +18,7 @@ def test_split_sections():
     secs = split_sections(md)
     assert [h for h, _ in secs] == ["", "甲", "乙"]
     assert "内容A" in secs[1][1] and "内容B" in secs[2][1]
-    assert secs[1][1].startswith("# 甲")
+    assert not secs[1][1].startswith("#")  # 原始体无前缀，load 统一加
 
 
 def test_query_grams_bigrams_and_stops():
@@ -36,6 +36,27 @@ def test_route_header_boost():
     ])
     top = idx.route("主业单位是哪个黄河院", k=1)
     assert top and top[0].dossier == "b"  # 标题命中 3 倍加成
+
+
+def test_long_section_split(tmp_path: Path):
+    """巨型 dump 节须被切分（~4k 字 → 2 节），不得整体吸走路由。"""
+    (tmp_path / "dump.md").write_text(
+        "# 已导入\n" + "\n\n".join(f"第{i}段 噪声词{i}" for i in range(300)),
+        encoding="utf-8")
+    idx = load_dossiers(tmp_path)
+    assert len(idx.sections) == 2  # 3.9k 字按 2500 上限切两节
+    assert all(len(s.text) <= 2600 for s in idx.sections)
+
+
+def test_density_beats_bulk():
+    """精炼小节（密度高）应胜巨型 dump 节（绝对频次高）。"""
+    from paistation.cx.dossier import DossierIndex
+    dump = Section(text="黄河院 " * 500, dossier="dump", header="导出清单")
+    card = Section(text="主业单位=黄河院，岗位信息化", dossier="card",
+                   header="主业单位")
+    idx = DossierIndex(sections=[dump, card])
+    top = idx.route("主业单位在哪个黄河院", k=1)
+    assert top and top[0].dossier == "card"
 
 
 def test_load_dossiers_excludes_golden(tmp_path: Path):

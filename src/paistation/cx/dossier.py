@@ -42,14 +42,20 @@ class DossierIndex:
     sections: list[Section] = field(default_factory=list)
 
     def route(self, query: str, k: int = 8) -> list[Section]:
-        """问题 → top-k 节（bigram 频次 + 标题 3 倍加成）。"""
+        """问题 → top-k 节（bigram 频次密度归一 + 标题 3 倍加成）。
+
+        归一=频次/√节长 + 单 gram 频次饱和（cap 5）：巨型 dump 节
+        （书签/清单导出数万字）绝对频次高但密度低，且重复命中不线性
+        加分——不再吸走路由；精炼画像卡密度高，小节也能赢。
+        """
         grams = query_grams(query)
         if not grams:
             return []
         for s in self.sections:
-            body = sum(s.text.count(g) for g in grams)
+            body = sum(min(s.text.count(g), 5) for g in grams)
             head = sum(s.header.count(g) for g in grams)
-            s.score = body + 3 * head
+            dens = body / (len(s.text) ** 0.5)
+            s.score = dens + 3 * head
         ranked = sorted(
             (s for s in self.sections if s.score > 0),
             key=lambda s: -s.score,
@@ -69,7 +75,11 @@ def query_grams(query: str) -> set[str]:
 
 
 def split_sections(md_text: str) -> list[tuple[str, str]]:
-    """markdown → [(标题, 节正文)]；无标题正文归首节。"""
+    """markdown → [(标题, 节正文原始体)]；无标题正文归首节。
+
+    返回的正文不带标题前缀（前缀由 load_dossiers 统一加），
+    与 _split_long 的再切分衔接。
+    """
     parts = _HEADER_RE.split(md_text)
     if len(parts) == 1:
         return [("", md_text)] if md_text.strip() else []
@@ -80,7 +90,28 @@ def split_sections(md_text: str) -> list[tuple[str, str]]:
         head, _, body = seg.partition("\n")
         header = head.strip()
         if header or body.strip():
-            out.append((header, f"# {header}\n{body}"))
+            out.append((header, body))
+    return out
+
+
+_MAX_SECTION = 2500  # 节上限：超长 dump 节按空行再切，防清单吸流
+
+
+def _split_long(header: str, body: str) -> list[tuple[str, str]]:
+    """超长节 → ≤_MAX_SECTION 子节（header 前缀保留，正文按空行拼块）。"""
+    if len(body) <= _MAX_SECTION:
+        return [(header, body)]
+    paras = body.split("\n\n")
+    out: list[tuple[str, str]] = []
+    buf = ""
+    for p in paras:
+        if buf and len(buf) + len(p) > _MAX_SECTION:
+            out.append((header, buf))
+            buf = p
+        else:
+            buf = f"{buf}\n\n{p}" if buf else p
+    if buf:
+        out.append((header, buf))
     return out
 
 
@@ -97,7 +128,9 @@ def load_dossiers(sp_dir: Path) -> DossierIndex:
             except (OSError, UnicodeDecodeError):
                 continue
             for header, body in split_sections(text):
-                idx.sections.append(
-                    Section(text=body, dossier=f.stem, header=header)
-                )
+                for h2, b2 in _split_long(header, body):
+                    text2 = f"# {h2}\n{b2}" if h2 else b2
+                    idx.sections.append(
+                        Section(text=text2, dossier=f.stem, header=h2)
+                    )
     return idx

@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from types import SimpleNamespace
 
-from tools.cx_golden_score import classify_miss, extract_tokens, is_hit
+from paistation.cx.golden import classify_miss, extract_tokens, is_hit
 
 
 def test_extract_tokens_prefers_long_distinctive():
