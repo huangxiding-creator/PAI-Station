@@ -48,15 +48,19 @@ def test_long_section_split(tmp_path: Path):
     assert all(len(s.text) <= 2600 for s in idx.sections)
 
 
-def test_density_beats_bulk():
-    """精炼小节（密度高）应胜巨型 dump 节（绝对频次高）。"""
+def test_raw_repetition_is_signal():
+    """实测判决（62 vs 50）：打分核用 raw 频次，合法重复=信号。
+
+    防吸流由 _split_long 承担（见 test_long_section_split），
+    频次饱和+密度归一已实证过度矫正，弃用。
+    """
     from paistation.cx.dossier import DossierIndex
-    dump = Section(text="黄河院 " * 500, dossier="dump", header="导出清单")
-    card = Section(text="主业单位=黄河院，岗位信息化", dossier="card",
-                   header="主业单位")
-    idx = DossierIndex(sections=[dump, card])
-    top = idx.route("主业单位在哪个黄河院", k=1)
-    assert top and top[0].dossier == "card"
+    a = Section(text="黄河院 " * 3, dossier="a", header="")
+    b = Section(text="黄河院 黄河院 黄河院 黄河院 黄河院 黄河院",
+                dossier="b", header="")
+    idx = DossierIndex(sections=[a, b])
+    top = idx.route("黄河院在哪", k=1)
+    assert top and top[0].dossier == "b"  # 重复多者胜（raw 语义）
 
 
 def test_load_dossiers_excludes_golden(tmp_path: Path):

@@ -42,20 +42,20 @@ class DossierIndex:
     sections: list[Section] = field(default_factory=list)
 
     def route(self, query: str, k: int = 8) -> list[Section]:
-        """问题 → top-k 节（bigram 频次密度归一 + 标题 3 倍加成）。
+        """问题 → top-k 节（bigram 原始频次 + 标题 3 倍加成）。
 
-        归一=频次/√节长 + 单 gram 频次饱和（cap 5）：巨型 dump 节
-        （书签/清单导出数万字）绝对频次高但密度低，且重复命中不线性
-        加分——不再吸走路由；精炼画像卡密度高，小节也能赢。
+        防吸流靠 _split_long 长节切分（巨型 dump 切成 ≤2500 字节），
+        不靠频次归一——实测（金标准 100 题，2026-09-18）：raw 62 vs
+        频次饱和+密度归一 50。中文卷宗里合法重复就是信号，归一反而
+        压制真答案节。经验证保留 raw。
         """
         grams = query_grams(query)
         if not grams:
             return []
         for s in self.sections:
-            body = sum(min(s.text.count(g), 5) for g in grams)
+            body = sum(s.text.count(g) for g in grams)
             head = sum(s.header.count(g) for g in grams)
-            dens = body / (len(s.text) ** 0.5)
-            s.score = dens + 3 * head
+            s.score = body + 3 * head
         ranked = sorted(
             (s for s in self.sections if s.score > 0),
             key=lambda s: -s.score,
