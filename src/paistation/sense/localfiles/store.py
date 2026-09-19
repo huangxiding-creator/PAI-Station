@@ -102,10 +102,6 @@ class ChunkIndex:
         # （WAL 涨至 631MB）——每批重数不可持续。首数落缓存，600s 窗内
         # 增量扣减，到点重数收漂移。
         self._remaining_cache: int | None = None
-        # 嵌入毒名单（进程内）：Ollema 400 拒绝的碎屑/控制字符块，
-        # 同一进程内不再重选（每夜新进程保留一次自愈试探机会）——
-        # 2026-09-20 夜实锤同一毒 chunk 每批重试 114 次白耗
-        self._poison: set[str] = set()
         self._remaining_at = 0.0
         self._now = time.monotonic  # 可注入假钟（夹具时钟纪律）
         # vec0 在位即探测装载（2026-09-18 夜回归）：补嵌进程不先 upsert
@@ -237,8 +233,6 @@ class ChunkIndex:
         if self._embedder is None and self._batch_embedder is None:
             return {"error": "no embedder"}
         rows, tier = self._select_pending(batch)
-        # 毒名单过滤：本进程已确认 400 的块不再重选（见 __init__ 注）
-        rows = [r for r in rows if r["chunk_id"] not in self._poison]
         # 空白文本块批点亮（2026-09-20 夜 02:42 实锤：extract 从
         # .Trash PDF 产的空块让 Ollama 批量 400）——空块无嵌入意义，
         # FTS 侧也无 token，点亮 embedded 零打嵌入器
@@ -287,7 +281,7 @@ class ChunkIndex:
                         rows_lit += 1
                     else:
                         failed += 1
-                        self._poison.add(r["chunk_id"])
+                        self._poison_if_reject(r["chunk_id"], exc)
                         _log.warning("补嵌失败跳过 chunk %s: %s",
                                      r["chunk_id"][:12], exc)
         return {"embedded": embedded,
@@ -332,6 +326,26 @@ class ChunkIndex:
                 "UPDATE chunks SET embedding_status='embedded'"
                 " WHERE chunk_id=?", (cid,))
             return cur.rowcount > 0
+
+    def _poison_if_reject(self, cid: str, exc: Exception) -> None:
+        """400 类拒绝（服务明确拒收该输入=块毒）：DB 终态 poisoned。
+
+        终态而非进程内名单——2026-09-20 夜两连实锤：同一毒 chunk 每批
+        重试 114 次白耗；07:15 更触发选块区毒块密集、20 批零进展
+        abort（进程内名单过滤后 rows 空会伪装『队列清空』饿死后续）。
+        跨进程持久 + 选块器（WHERE none）天然不再选中。非 400 类
+        （超时/连接/GPU）= 服务嫌疑，保持 none 明夜再试，防系统性
+        故障误毒化健康块。文件重扫差分重嵌仍给新生机会。
+        """
+        if "400" not in str(exc):
+            return
+        try:
+            with self._db:
+                self._db.execute(
+                    "UPDATE chunks SET embedding_status='poisoned'"
+                    " WHERE chunk_id=?", (cid,))
+        except Exception:  # noqa: BLE001 - 标记失败不阻塞批次
+            pass
 
     def _backfill_batched(self, rows, slice_size: int = 128
                           ) -> tuple[int, int, int, int]:
@@ -385,7 +399,7 @@ class ChunkIndex:
                             rows_lit += 1
                         else:
                             failed += 1
-                            self._poison.add(r["chunk_id"])
+                            self._poison_if_reject(r["chunk_id"], exc1)
                             _log.warning("补嵌失败跳过 chunk %s: %s",
                                          r["chunk_id"][:12], exc1)
         return embedded, rows_lit, failed, healed

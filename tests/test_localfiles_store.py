@@ -195,9 +195,10 @@ def test_backfill_empty_text_lit_without_embedding(tmp_path):
 
 
 def test_backfill_poison_not_retried_next_batch(tmp_path):
-    """嵌入抛错的毒块（碎屑/控制字符致 400）：进程内毒名单——
-    同批内不再重试，下批不再选中（每夜最多试一次，2026-09-20 夜
-    实锤同一 chunk 重试 114 次白耗）。"""
+    """嵌入抛错的毒块（碎屑/控制字符致 400）：DB 终态 poisoned——
+    下批不再选中、跨进程持久（2026-09-20 夜实锤同一 chunk 重试
+    114 次白耗；07:15 更触发 20 批零进展 abort）。文件重扫时差分
+    重嵌获得新生（logic_ver 变化走增量路径）。"""
     idx0 = ChunkIndex(tmp_path / "t.db")
     idx0.upsert_file("poison.pdf", ["好块甲", "毒\x00块", "好块乙"], LOGIC)
     idx0.close()
@@ -213,14 +214,37 @@ def test_backfill_poison_not_retried_next_batch(tmp_path):
                      embedder_ver="fake")
     r1 = idx.backfill(batch=3)
     assert r1["embedded"] == 2 and r1["failed"] == 1
-    r2 = idx.backfill(batch=3)           # 毒名单挡选：零选中零重试
+    r2 = idx.backfill(batch=3)           # poisoned 不选：零选中零重试
     assert r2["embedded"] == 0 and r2["failed"] == 0
     assert n_calls["n"] == 3             # 毒块全进程只打 1 发
-    # 毒块仍 none（明夜新进程有一次自愈机会：Ollama 升级/修复后）
     st = dict(idx._db.execute(
         "SELECT embedding_status, COUNT(*) n FROM chunks"
         " GROUP BY embedding_status").fetchall())
-    assert st == {"embedded": 2, "none": 1}
+    assert st == {"embedded": 2, "poisoned": 1}
+    idx.close()
+
+
+def test_backfill_poison_dense_region_not_starved(tmp_path):
+    """毒块密集区不饿死后续（07:15 abort 实锤形态）：选块落在毒区
+    （前层全毒）时不得伪装『队列清空』提前收工——poisoned 是 DB
+    终态，选块器越过毒区够到健康块。"""
+    idx0 = ChunkIndex(tmp_path / "t.db")
+    # T0 层（SELF_PROFILE）放 2 个毒块；全局层放健康块
+    idx0.upsert_file("SELF_PROFILE/x.pdf", ["毒\x00甲", "毒\x00乙"], LOGIC)
+    idx0.upsert_file("other/好文件.md", ["健康块内容"], LOGIC)
+    idx0.close()
+
+    def poison_aware(text: str) -> list[float]:
+        if "\x00" in text:
+            raise OSError("HTTP Error 400: Bad Request")
+        return _fake_embedder(text)
+
+    idx = ChunkIndex(tmp_path / "t.db", embedder=poison_aware,
+                     embedder_ver="fake")
+    r1 = idx.backfill(batch=2)           # 首批全毒：failed=2 + 标 poisoned
+    assert r1["failed"] == 2 and r1["embedded"] == 0
+    r2 = idx.backfill(batch=2)           # 毒区已终态 → 选块越过够健康块
+    assert r2["embedded"] == 1 and r2["failed"] == 0
     idx.close()
 
 

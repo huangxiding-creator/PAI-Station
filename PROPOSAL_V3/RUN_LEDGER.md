@@ -153,6 +153,8 @@
 
 | 09-20 | 🔧 **心跳轮抓真虫×2：补嵌 400 毒块反复重试白耗根治**：现象=02:42 起 Ollama 批量 400、降级逐条后个别仍 400，累计 11,770 次跳过且 **同一毒 chunk 重试 114 次**（chunk 3dd2f5b71243 len=37 PDF 碎屑 / aa0b8abf0175 **len=0 空块**——extract 从 WeDrive/.Trash PDF 产的空文本块，bge-m3 拒空输入 400）；根因=失败块停留 none 态无黑名单，下批又捞。修复（TDD 红→绿）：①**空文本块批点亮** embedded 零打嵌入器（空块无嵌入意义、FTS 侧也无 token，executemany 一发 SQL）；②**进程内毒名单** `_poison: set`——失败即进，选块后过滤（每夜新进程保留一次自愈试探：Ollama 升级/修复后可翻盘），明夜生效不影响今晚运行中进程。+2 测试（空块点亮零嵌入器调用/毒块全进程只打 1 发+状态仍 none），全量 **1735 passed**，lint 0 | `src/paistation/sense/localfiles/store.py`、`tests/test_localfiles_store.py` |
 
+| 09-20 | 🔧 **07:15 补嵌 abort 复盘 + 毒名单升级 DB 终态 poisoned**：07:15:08 补嵌触发 733f6a7 非静默放弃（exit 1，日志可见，明夜断点无损续磨）——**abort 机制本身按设计工作**。分诊：Ollama 活着（bge-m3 在位/11434 监听），日志形态 embedded=0/failed=12 连续 20 批全 400 → **选块区毒块密集**（旧代码无黑名单反复捞同一批毒块）。复盘昨夜 fc15522 的进程内名单发现边界 bug：过滤后 rows 空会伪装『队列清空』饿死下层健康块（毒区全毒时永不到兜底层）。修复：①失败标记从进程内 set 升级为 **DB 终态 `poisoned`**——跨进程持久、选块器（WHERE none）天然不再选中、remaining 重数归真；②**400 语义判据**：Ollama 拒收输入（HTTP 400）=块毒标终态；超时/连接类=服务嫌疑保持 none 明夜再试，防系统性故障误毒化健康块；③文件重扫差分重嵌保留新生机会（换嵌入器版本可翻盘）。+1 测试（毒区密集不饿死：T0 层全毒→次批越过够到全局层健康块），全量 **1736 passed** | `src/paistation/sense/localfiles/store.py`、`tests/test_localfiles_store.py` |
+
 ## 红线备忘（每轮心跳自查）
 
 项目外全盘只读 ｜ 账号安全第一 ｜ secrets 不入库 ｜ 00 愿景/付费语料不上公开仓 ｜ 只增不删+Git 留痕 ｜ 每环节调研≥20 ｜ 进化提案永不自批 ｜ commit 带 Co-Authored-By
