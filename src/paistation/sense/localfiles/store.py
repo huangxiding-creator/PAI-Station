@@ -102,6 +102,10 @@ class ChunkIndex:
         # （WAL 涨至 631MB）——每批重数不可持续。首数落缓存，600s 窗内
         # 增量扣减，到点重数收漂移。
         self._remaining_cache: int | None = None
+        # 嵌入毒名单（进程内）：Ollema 400 拒绝的碎屑/控制字符块，
+        # 同一进程内不再重选（每夜新进程保留一次自愈试探机会）——
+        # 2026-09-20 夜实锤同一毒 chunk 每批重试 114 次白耗
+        self._poison: set[str] = set()
         self._remaining_at = 0.0
         self._now = time.monotonic  # 可注入假钟（夹具时钟纪律）
         # vec0 在位即探测装载（2026-09-18 夜回归）：补嵌进程不先 upsert
@@ -233,6 +237,20 @@ class ChunkIndex:
         if self._embedder is None and self._batch_embedder is None:
             return {"error": "no embedder"}
         rows, tier = self._select_pending(batch)
+        # 毒名单过滤：本进程已确认 400 的块不再重选（见 __init__ 注）
+        rows = [r for r in rows if r["chunk_id"] not in self._poison]
+        # 空白文本块批点亮（2026-09-20 夜 02:42 实锤：extract 从
+        # .Trash PDF 产的空块让 Ollama 批量 400）——空块无嵌入意义，
+        # FTS 侧也无 token，点亮 embedded 零打嵌入器
+        empties = [r["chunk_id"] for r in rows if not (r["text"] or "").strip()]
+        lit_empty = 0
+        if empties:
+            with self._db:
+                cur = self._db.executemany(
+                    "UPDATE chunks SET embedding_status='embedded'"
+                    " WHERE chunk_id=?", [(c,) for c in empties])
+                lit_empty = cur.rowcount if cur.rowcount > 0 else len(empties)
+            rows = [r for r in rows if (r["text"] or "").strip()]
         # 预检分流：并发重注册的"假 none"块（vec 已在、状态翻回）直接
         # 点亮跳过——不预检会撞 chunks_vec 主键 UNIQUE（sqlite_vec 虚拟
         # 表不支持 OR REPLACE 冲突解决，延迟到 commit 才炸），计成失败
@@ -269,11 +287,13 @@ class ChunkIndex:
                         rows_lit += 1
                     else:
                         failed += 1
+                        self._poison.add(r["chunk_id"])
                         _log.warning("补嵌失败跳过 chunk %s: %s",
                                      r["chunk_id"][:12], exc)
-        return {"embedded": embedded, "rows_lit": rows_lit + lit_pre,
+        return {"embedded": embedded,
+                "rows_lit": rows_lit + lit_pre + lit_empty,
                 "failed": failed, "healed": healed, "tier": tier,
-                "remaining": self._remaining(rows_lit + lit_pre)}
+                "remaining": self._remaining(rows_lit + lit_pre + lit_empty)}
 
     def _select_pending(self, batch: int) -> tuple[list, int]:
         """分层选块：BACKFILL_TIERS 前层不空不落下层（高价值先上桌）。
@@ -365,6 +385,7 @@ class ChunkIndex:
                             rows_lit += 1
                         else:
                             failed += 1
+                            self._poison.add(r["chunk_id"])
                             _log.warning("补嵌失败跳过 chunk %s: %s",
                                          r["chunk_id"][:12], exc1)
         return embedded, rows_lit, failed, healed

@@ -167,6 +167,63 @@ def test_backfill_remaining_throttled_incremental(tmp_path):
     idx.close()
 
 
+def test_backfill_empty_text_lit_without_embedding(tmp_path):
+    """空文本块（extract 从 .Trash PDF 产的空块，2026-09-20 夜 02:42
+    Ollama 400 实锤）：无嵌入意义——批点亮 embedded 零打嵌入器，
+    不再夜夜撞 400。"""
+    idx0 = ChunkIndex(tmp_path / "t.db")
+    idx0.upsert_file("empty.pdf", ["正常块内容", "", "  "], LOGIC)
+    idx0.close()
+    calls = {"n": 0}
+
+    def counting(text: str) -> list[float]:
+        calls["n"] += 1
+        return _fake_embedder(text)
+
+    idx = ChunkIndex(tmp_path / "t.db", embedder=counting,
+                     embedder_ver="fake")
+    r = idx.backfill()
+    # 空白块点亮但不占 embedded 计数；正常块 1 个真嵌
+    assert r["embedded"] == 1 and r["failed"] == 0
+    st = dict(idx._db.execute(
+        "SELECT embedding_status, COUNT(*) n FROM chunks"
+        " GROUP BY embedding_status").fetchall())
+    assert st == {"embedded": 3}
+    assert calls["n"] == 1               # 空块零打嵌入器
+    assert idx.backfill()["embedded"] == 0  # 断点续跑零产出
+    idx.close()
+
+
+def test_backfill_poison_not_retried_next_batch(tmp_path):
+    """嵌入抛错的毒块（碎屑/控制字符致 400）：进程内毒名单——
+    同批内不再重试，下批不再选中（每夜最多试一次，2026-09-20 夜
+    实锤同一 chunk 重试 114 次白耗）。"""
+    idx0 = ChunkIndex(tmp_path / "t.db")
+    idx0.upsert_file("poison.pdf", ["好块甲", "毒\x00块", "好块乙"], LOGIC)
+    idx0.close()
+    n_calls = {"n": 0}
+
+    def poison_aware(text: str) -> list[float]:
+        n_calls["n"] += 1
+        if "\x00" in text:
+            raise OSError("HTTP Error 400: Bad Request")
+        return _fake_embedder(text)
+
+    idx = ChunkIndex(tmp_path / "t.db", embedder=poison_aware,
+                     embedder_ver="fake")
+    r1 = idx.backfill(batch=3)
+    assert r1["embedded"] == 2 and r1["failed"] == 1
+    r2 = idx.backfill(batch=3)           # 毒名单挡选：零选中零重试
+    assert r2["embedded"] == 0 and r2["failed"] == 0
+    assert n_calls["n"] == 3             # 毒块全进程只打 1 发
+    # 毒块仍 none（明夜新进程有一次自愈机会：Ollama 升级/修复后）
+    st = dict(idx._db.execute(
+        "SELECT embedding_status, COUNT(*) n FROM chunks"
+        " GROUP BY embedding_status").fetchall())
+    assert st == {"embedded": 2, "none": 1}
+    idx.close()
+
+
 def test_backfill_embeds_stale_none_chunks(tmp_path):
     """存量补嵌：--no-embed 时代入库的 none 块批量点亮；同 chunk_id
     跨文件多行只嵌一次但全部点亮（chunks_vec 主键即去重键）；
@@ -264,6 +321,7 @@ def test_backfill_raced_unique_self_heals(tmp_path):
     返回前经第二连接写入同 chunk 向量 → 主路提交撞 UNIQUE → 点亮
     计 healed 不计 failed（旧版留 none 态夜夜重试已嵌块）。"""
     import sqlite3
+
     import sqlite_vec
 
     from paistation.sense.localfiles.store import _chunk_id

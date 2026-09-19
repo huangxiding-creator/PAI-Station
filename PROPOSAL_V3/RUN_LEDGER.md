@@ -151,6 +151,8 @@
 
 | 09-20 | 🔧 **心跳补记：remaining 重数窗 600s→3600s**（并行会话 3a20aea，00:20 落地、正主沉寂一小时后补记）：31.5GB 库单次 COUNT 实测 **19 分钟**，600s 重数窗=干 10 分钟等 19 分钟（34% 占空比）；3600s 小时级归真摊薄到 68%。纯观测口径（remaining 显示值），早退判定不读此值——不影响 733f6a7 的锁风暴根治语义。补嵌修复版首跑全绿实证：连续 256 块/批、failed 0、批间 15-30s（对比昨夜卡死），00:26-01:26 一小时推进 remaining 303.3 万→296.8 万 | `src/paistation/sense/localfiles/store.py`（git 3a20aea） |
 
+| 09-20 | 🔧 **心跳轮抓真虫×2：补嵌 400 毒块反复重试白耗根治**：现象=02:42 起 Ollama 批量 400、降级逐条后个别仍 400，累计 11,770 次跳过且 **同一毒 chunk 重试 114 次**（chunk 3dd2f5b71243 len=37 PDF 碎屑 / aa0b8abf0175 **len=0 空块**——extract 从 WeDrive/.Trash PDF 产的空文本块，bge-m3 拒空输入 400）；根因=失败块停留 none 态无黑名单，下批又捞。修复（TDD 红→绿）：①**空文本块批点亮** embedded 零打嵌入器（空块无嵌入意义、FTS 侧也无 token，executemany 一发 SQL）；②**进程内毒名单** `_poison: set`——失败即进，选块后过滤（每夜新进程保留一次自愈试探：Ollama 升级/修复后可翻盘），明夜生效不影响今晚运行中进程。+2 测试（空块点亮零嵌入器调用/毒块全进程只打 1 发+状态仍 none），全量 **1735 passed**，lint 0 | `src/paistation/sense/localfiles/store.py`、`tests/test_localfiles_store.py` |
+
 ## 红线备忘（每轮心跳自查）
 
 项目外全盘只读 ｜ 账号安全第一 ｜ secrets 不入库 ｜ 00 愿景/付费语料不上公开仓 ｜ 只增不删+Git 留痕 ｜ 每环节调研≥20 ｜ 进化提案永不自批 ｜ commit 带 Co-Authored-By
