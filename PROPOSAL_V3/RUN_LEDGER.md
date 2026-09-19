@@ -147,6 +147,8 @@
 
 | 09-20 | 🔬 **Jev E3 实验：verification 腿（官方指令三腿收齐）——语义命中判定双侧语义筛实证**：100 题×卷宗混合路由 top-8（judge_v2 同口径），Jev Noul vs 词面 v1.1 vs 引文判 ground truth 三判对照——**核心发现=真假分离结构**：词面 miss+Jev hit 的 3 题 noul 0.58-0.97 全真（引文判翻中实证 #3/#68/#96），词面 hit+Jev miss 的 17 题全部 ≤0.48，**0.5 正切分离缝零跨界**；hit 侧 17 假阳候选抽验 2/2 成立（#9 无正面回答句/#42 无数量答案——**词面 90 分注水面首次可量化**，引文判 96 从未审过 hit 侧）；miss 侧捕获 3/5（漏 2 均为表格/数字变体语境）→ 定位=初筛分流器非裁判；经济性 100 题 4 分钟 $0.02 可日常跑。**接线提案留用户裁决**（cx_golden_score --jev-screen：miss 侧≥0.5 缩引文判样本、hit 侧<0.5 进人审——金标准=L4 验收裁判位，按「进化提案永不自批」精神不擅动）。运行时发现：夜班写库窗全局 FTS 单查 100s（LIKE 降级全表扫）——judge_v2 口径本就不含全局通道，E3 harness 初版误加即删，重跑 3.6s/题 | 报告 `SELF_PROFILE/golden_set/jev_e3_20260920.md`、数据 tmp/jev_exp3_verify.jsonl（均 gitignored） |
 
+| 09-20 | ✅ **Jev 调用轨迹审计落地（typesafe 官方报告六项合规，判断层可观测收尾件）**：JudgmentClient 增 traj_path 参数（默认 None=零写入；生产 resident/entry 装配 data_dir/jev_traj.jsonl）——一行一调用落 {ts, state_hash(sha256 前 16), q 摘要(type), a 数值摘要(noul/choice+conf), usage, latency_s, ok}；**隐私优先**：state 只落 hash、answers 只落数值层不落文本负载，写失败 fail-soft 绝不反噬主链；熔断失败调用同记（ok=false）供复盘。价值：快路径命中率/误判复盘从此有数据底座（此前判断层零观测）。+3 测试（六字段+hash 不落明文/失败调用 ok=false/None 零写+坏路径不炸），全量 **1733 passed**，lint 0 | `src/paistation/judgment/client.py`、`src/paistation/resident/entry.py`、`tests/test_judgment.py` |
+
 ## 红线备忘（每轮心跳自查）
 
 项目外全盘只读 ｜ 账号安全第一 ｜ secrets 不入库 ｜ 00 愿景/付费语料不上公开仓 ｜ 只增不删+Git 留痕 ｜ 每环节调研≥20 ｜ 进化提案永不自批 ｜ commit 带 Co-Authored-By

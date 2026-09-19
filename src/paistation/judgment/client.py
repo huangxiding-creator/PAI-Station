@@ -13,6 +13,7 @@
 from __future__ import annotations
 
 import configparser
+import hashlib
 import json
 import os
 import time
@@ -87,7 +88,8 @@ class JudgmentClient:
                  model: str = DEFAULT_MODEL, *,
                  config_dir: Path | None = None,
                  timeout: float = DEFAULT_TIMEOUT,
-                 transport: Transport | None = None):
+                 transport: Transport | None = None,
+                 traj_path: Path | None = None):
         self._cfg_dir = config_dir or _config_dir()
         status = switch_status(self._cfg_dir)
         self._api_key = api_key if api_key is not None else _load_key(self._cfg_dir)
@@ -95,6 +97,10 @@ class JudgmentClient:
         self.model = model
         self._timeout = float(timeout)
         self._transport = transport or self._http
+        # 调用轨迹审计（typesafe 六项合规，隐私优先：state 只落 hash、
+        # answers 只落数值摘要；None=不记录（默认零写入）；
+        # 写入失败 fail-soft 不影响 ask 主链）
+        self._traj_path = traj_path
         # 熔断器状态
         self._consecutive_failures = 0
         self._open_until: float = 0.0
@@ -104,6 +110,7 @@ class JudgmentClient:
     def ask(self, state, questions: dict) -> dict | None:
         if not self.enabled or not self._breaker_allows():
             return None
+        t0 = time.monotonic()
         body = json.dumps({"state": state, "model": self.model,
                            "questions": questions}, ensure_ascii=False).encode("utf-8")
         for attempt in range(_MAX_RETRIES + 1):
@@ -113,12 +120,15 @@ class JudgmentClient:
                 if not isinstance(answers, dict) or not answers:
                     raise ValueError("empty answers")
                 self._breaker_success()
+                self._record_traj(state, questions, answers,
+                                  payload.get("usage"), t0, ok=True)
                 return answers
             except Exception:  # noqa: BLE001 - 一切故障统一降级
                 if attempt < _MAX_RETRIES:
                     time.sleep(2 ** attempt + 1)
                     continue
         self._breaker_fail()
+        self._record_traj(state, questions, None, None, t0, ok=False)
         return None
 
     def ask_noul(self, state, instructions: str,
@@ -146,6 +156,34 @@ class JudgmentClient:
                                    "confidence": float(ans["confidence"])}
         except (KeyError, TypeError, ValueError):
             return None
+
+    # ---- 调用轨迹审计（六项合规，fail-soft）----
+
+    def _record_traj(self, state, questions, answers, usage, t0, *,
+                     ok: bool) -> None:
+        """一行一调用：ts/state_hash/question 摘要/answer 数值摘要/
+        usage/latency/outcome。traj_path 缺席或写失败=零影响。"""
+        if self._traj_path is None:
+            return
+        try:
+            state_json = json.dumps(state, ensure_ascii=False, sort_keys=True)
+            row = {
+                "ts": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                "state_hash": hashlib.sha256(
+                    state_json.encode("utf-8")).hexdigest()[:16],
+                "q": {qid: q.get("type")
+                      for qid, q in (questions or {}).items()
+                      if isinstance(q, dict)},
+                "a": _answer_digest(answers),
+                "usage": usage if isinstance(usage, dict) else None,
+                "latency_s": round(time.monotonic() - t0, 2),
+                "ok": ok,
+            }
+            self._traj_path.parent.mkdir(parents=True, exist_ok=True)
+            with self._traj_path.open("a", encoding="utf-8") as fh:
+                fh.write(json.dumps(row, ensure_ascii=False) + "\n")
+        except Exception:  # noqa: BLE001 - 审计绝不反噬主链
+            pass
 
     # ---- 熔断器 ----
 
@@ -186,6 +224,23 @@ def _load_key(cfg_dir: Path) -> str:
     cp = configparser.ConfigParser()
     cp.read(cfg_dir / "typesafe.secret.ini", encoding="utf-8")
     return cp.get("typesafe", "api_key", fallback="").strip()
+
+
+def _answer_digest(answers) -> dict | None:
+    """answers → 数值摘要（noul 值/choice+confidence），不落文本负载。"""
+    if not isinstance(answers, dict):
+        return None
+    out = {}
+    for qid, ans in answers.items():
+        if not isinstance(ans, dict):
+            continue
+        t = ans.get("type")
+        if t == "noul":
+            out[qid] = {"noul": ans.get("noul")}
+        elif t == "choice":
+            out[qid] = {"choice": ans.get("choice"),
+                        "confidence": ans.get("confidence")}
+    return out or None
 
 
 def make_task_judge(config_dir: Path | None = None,

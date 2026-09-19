@@ -10,6 +10,7 @@ import argparse
 import logging
 import os
 import sys
+from pathlib import Path
 
 _log = logging.getLogger("paistation.resident.entry")
 
@@ -53,7 +54,8 @@ def build_daemon(data_dir: str, with_mic: bool = False,
     # 读当日事件流增量提取意图）；Jev 判断层快路径装配（开关关/
     # 无 key/熔断 → 客户端自惰性，summarize 走原 LLM 路径）
     from paistation.judgment import JudgmentClient
-    intents = IntentService(stream=stream, jev=JudgmentClient().ask)
+    intents = IntentService(stream=stream, jev=JudgmentClient(
+        traj_path=Path(data_dir) / "jev_traj.jsonl").ask)
     # M9 云感知：四连接器注册+授权持久化回灌（默认 opt-in 全关，
     # 未授权 tick 零调用）；wih 产物目录约定 data_dir/wih/；
     # local.files=本地盘感知（P4）：29 万级枚举重，配专属重节流

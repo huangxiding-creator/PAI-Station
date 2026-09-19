@@ -99,6 +99,53 @@ class TestSwitch:
                       "ini_enabled": None, "has_key": False}
 
 
+class TestTrajectory:
+    def _client(self, tmp_path, traj):
+        _write_key(tmp_path)
+        return JudgmentClient(config_dir=tmp_path,
+                              transport=lambda d: NOUL_OK,
+                              traj_path=traj)
+
+    def test_records_six_fields_with_hash_not_plaintext(self, tmp_path):
+        traj = tmp_path / "t" / "traj.jsonl"
+        c = self._client(tmp_path, traj)
+        assert c.ask_noul("机密状态文本", "是任务吗") == 0.9
+        row = json.loads(traj.read_text(encoding="utf-8").splitlines()[0])
+        assert row["ok"] is True and row["latency_s"] >= 0
+        assert row["q"] == {"noul": "noul"}
+        assert row["a"] == {"noul": {"noul": 0.9}}
+        assert row["usage"] == {"input_tokens": 10, "output_tokens": 2}
+        assert len(row["state_hash"]) == 16
+        assert "机密状态文本" not in traj.read_text(encoding="utf-8")
+
+    def test_failed_call_recorded_ok_false(self, tmp_path):
+        traj = tmp_path / "traj.jsonl"
+
+        def boom(data: bytes) -> dict:
+            raise OSError("down")
+
+        _write_key(tmp_path)
+        import pytest
+        with pytest.MonkeyPatch.context() as mp:
+            mp.setattr(client_mod.time, "sleep", lambda s: None)
+            c = JudgmentClient(config_dir=tmp_path, transport=boom,
+                               traj_path=traj)
+            assert c.ask_noul("s", "i") is None
+        row = json.loads(traj.read_text(encoding="utf-8").splitlines()[0])
+        assert row["ok"] is False and row["a"] is None
+
+    def test_none_path_writes_nothing_and_bad_path_never_raises(
+            self, tmp_path):
+        c = self._client(tmp_path, None)
+        assert c.ask_noul("s", "i") == 0.9
+        assert not (tmp_path / "traj.jsonl").exists()
+        # 不可写路径：审计失败绝不反噬主链
+        bad = JudgmentClient(config_dir=tmp_path,
+                             transport=lambda d: NOUL_OK,
+                             traj_path=tmp_path / "x" / "." / "traj.jsonl")
+        assert bad.ask_noul("s", "i") == 0.9
+
+
 class TestBreaker:
     def _client(self, tmp_path, behavior):
         """behavior() -> dict，可抛异常；由测试在 ask 之间切换模式。"""
