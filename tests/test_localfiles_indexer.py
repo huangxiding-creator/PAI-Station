@@ -37,6 +37,22 @@ def test_full_cycle_and_zero_reparse_second_pass(tmp_path):
     ix.close()
 
 
+def test_extract_pending_no_fullscan_stats(tmp_path, monkeypatch):
+    """stats() 全表扫回归（2026-09-19 夜 18 分钟卡批实锤）：extract
+    每批只要 embedder 版本串，热路径不得触发 chunks 聚合扫。"""
+    ix, root = _make_indexer(tmp_path)
+    (root / "docs" / "a.md").write_text("统计禁扫回归块", encoding="utf-8")
+    ix.scan()  # 只差分入队不提取：留活给 extract_pending
+
+    def boom():
+        raise AssertionError("stats() 全表扫禁入 extract 热路径")
+
+    monkeypatch.setattr(ix._chunks, "stats", boom)
+    r = ix.extract_pending(200, workers=2)
+    assert r["processed"] >= 1
+    ix.close()
+
+
 def test_modified_file_reextracts_and_rechunks(tmp_path):
     ix, root = _make_indexer(tmp_path)
     f = root / "docs" / "note.md"

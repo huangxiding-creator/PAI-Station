@@ -121,6 +121,52 @@ def test_stats(tmp_path):
     assert s["chunks"] == 2 and s["files"] == 1 and s["embedder"] == "fake"
 
 
+def test_embedder_version_zero_sql(tmp_path):
+    """extract 每批只要版本串（2026-09-19 夜实锤）：stats() 是全表
+    聚合，31.5GB 库分钟级 I/O 风暴——版本号必须零 SQL 直取。"""
+    idx = ChunkIndex(tmp_path / "t.db", embedder=_fake_embedder,
+                     embedder_ver="fake")
+    assert idx.embedder_version == "fake"
+    idx._db.close()  # 连接已关：任何 SQL 即抛错，属性仍可取
+    assert idx.embedder_version == "fake"
+
+
+def test_backfill_remaining_throttled_incremental(tmp_path):
+    """remaining 口径（2026-09-19 夜 18 分钟卡批实锤）：31.5GB 库全表
+    COUNT 每批重数不可持续——首数落缓存后 600s 窗内走增量扣减
+    不再扫表，到点重数收漂移（extract 并发入 none 块致估计偏低）。"""
+    idx0 = ChunkIndex(tmp_path / "t.db")
+    idx0.upsert_file("a.md", ["甲块", "乙块", "丙块"], LOGIC)
+    idx0.close()
+    idx = ChunkIndex(tmp_path / "t.db", embedder=_fake_embedder,
+                     embedder_ver="fake")
+    calls = {"n": 0}
+    real_count = idx._pending_count
+
+    def counting():
+        calls["n"] += 1
+        return real_count()
+
+    idx._pending_count = counting
+    clock = {"v": 0.0}
+    idx._now = lambda: clock["v"]  # 注入假钟（夹具时钟纪律）
+
+    r1 = idx.backfill(batch=2)  # 首批：嵌 2 块后首数（真值 1）
+    assert r1["embedded"] == 2 and calls["n"] == 1
+    r2 = idx.backfill(batch=2)  # 窗内：增量扣减 1-1=0，不重数
+    assert r2["embedded"] == 1
+    assert calls["n"] == 1 and r2["remaining"] == 0
+    # 模拟 extract 并发重注册翻回 none → 到点重数归真
+    idx._db.execute(
+        "UPDATE chunks SET embedding_status='none'"
+        " WHERE chunk_id=(SELECT chunk_id FROM chunks LIMIT 1)")
+    idx._db.commit()
+    clock["v"] += 601.0
+    r3 = idx.backfill()  # 过窗：嵌掉该块 + 重数
+    assert calls["n"] == 2 and r3["remaining"] == 0
+    idx.close()
+
+
 def test_backfill_embeds_stale_none_chunks(tmp_path):
     """存量补嵌：--no-embed 时代入库的 none 块批量点亮；同 chunk_id
     跨文件多行只嵌一次但全部点亮（chunks_vec 主键即去重键）；

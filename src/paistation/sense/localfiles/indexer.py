@@ -233,7 +233,9 @@ class Indexer:
         # 真并行破 GIL——pymupdf 纯 Python 段线程加不动，16 核机
         # 生产位用 proc；池批级生命周期 + terminate 硬清场防孤儿）
         w = workers or (PROC_WORKERS if engine == "proc" else EXTRACT_WORKERS)
-        embedder_ver = self._chunks.stats()["embedder"]  # 每批一次
+        # 零 SQL 取版本：stats() 是全表聚合，31.5GB 库分钟级 I/O
+        # 风暴（2026-09-19 夜 18 分钟卡批实锤），热路径禁走。
+        embedder_ver = self._chunks.embedder_version
         mp_pool = None
         if engine == "proc" and jobs:
             import multiprocessing as mp

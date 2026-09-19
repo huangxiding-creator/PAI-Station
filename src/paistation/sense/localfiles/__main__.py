@@ -216,7 +216,7 @@ def main(argv=None) -> int:
         elif args.cmd == "cycle":
             print(json.dumps(ix.full_cycle(), ensure_ascii=False, indent=2))
         elif args.cmd == "embed":
-            if chunks.stats()["embedder"] == "none":
+            if chunks.embedder_version == "none":
                 print("[嵌入] Ollama 不在位，拒绝空转（先启动服务）")
                 return 1
             total = _embed_loop(chunks, args.batch, args.loop,

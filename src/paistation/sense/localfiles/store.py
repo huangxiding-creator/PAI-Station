@@ -97,6 +97,13 @@ class ChunkIndex:
         self._batch_embedder = batch_embedder
         self._vec_dim: int | None = None
         self._vec_ready = False
+        # remaining 观测缓存（2026-09-19 夜实锤）：31.5GB 库全表 COUNT
+        # 是分钟级 I/O 风暴，且长读事务钉住 WAL 快照饿死 checkpoint
+        # （WAL 涨至 631MB）——每批重数不可持续。首数落缓存，600s 窗内
+        # 增量扣减，到点重数收漂移。
+        self._remaining_cache: int | None = None
+        self._remaining_at = 0.0
+        self._now = time.monotonic  # 可注入假钟（夹具时钟纪律）
         # vec0 在位即探测装载（2026-09-18 夜回归）：补嵌进程不先 upsert
         # 直接 backfill 时 _vec_ready 恒 False——预检分流整体失效，
         # 夜夜重嵌已嵌块撞 UNIQUE 白磨（04:17 轮 11,388 次实证）。
@@ -266,7 +273,7 @@ class ChunkIndex:
                                      r["chunk_id"][:12], exc)
         return {"embedded": embedded, "rows_lit": rows_lit + lit_pre,
                 "failed": failed, "healed": healed, "tier": tier,
-                "remaining": self._pending_count()}
+                "remaining": self._remaining(rows_lit + lit_pre)}
 
     def _select_pending(self, batch: int) -> tuple[list, int]:
         """分层选块：BACKFILL_TIERS 前层不空不落下层（高价值先上桌）。
@@ -367,6 +374,23 @@ class ChunkIndex:
             "SELECT COUNT(DISTINCT chunk_id) FROM chunks"
             " WHERE embedding_status='none'").fetchone()
         return row[0]
+
+    # remaining 重数节流窗：extract 并发入 none 块会让估计值偏低，
+    # 600s 到点重数归真（观测口径，不参与循环控制——早退判定用
+    # embedded/healed/rows_lit，见 __main__._embed_loop）。
+    REMAINING_RECOUNT_S = 600.0
+
+    def _remaining(self, rows_lit: int) -> int:
+        """剩余欠账观测值：rows_lit 皆是 none→embedded 翻转，窗内
+        扣减即可；过期或首调才落一次全表真数。"""
+        now = self._now()
+        if (self._remaining_cache is None
+                or now - self._remaining_at >= self.REMAINING_RECOUNT_S):
+            self._remaining_cache = self._pending_count()
+            self._remaining_at = now
+        else:
+            self._remaining_cache = max(0, self._remaining_cache - rows_lit)
+        return self._remaining_cache
 
     # ---------- vec0 侧车（惰性建表，缺 sqlite_vec 则纯 keyword） ----------
 
@@ -543,6 +567,13 @@ class ChunkIndex:
                          score=r["distance"], source="vec") for r in rows]
 
     # ---------- 状态 ----------
+
+    @property
+    def embedder_version(self) -> str:
+        """零 SQL 版本串：热路径（extract 每批）只取版本时禁走
+        stats()——那是一次全表聚合，31.5GB 库分钟级（2026-09-19 夜
+        18 分钟卡批实锤）。"""
+        return self._embedder_ver
 
     def stats(self) -> dict:
         row = self._db.execute(
