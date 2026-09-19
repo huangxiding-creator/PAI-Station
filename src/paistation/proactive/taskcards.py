@@ -187,39 +187,63 @@ class TaskCard:
 
 
 def extract_task_cards(events: list[dict], llm=None,
-                       now: datetime | None = None) -> list[TaskCard]:
+                       now: datetime | None = None, *,
+                       judge: object = None,
+                       judge_veto_th: float = 0.40,
+                       judge_recruit_th: float = 0.55) -> list[TaskCard]:
     """事件流→任务卡。llm 升级位：给 callable(prompt_events)→list[dict] 时
-    由其产出候选，本函数仍负责校验/去重/证据接线（缝合怪律：交接显式）。"""
+    由其产出候选，本函数仍负责校验/去重/证据接线（缝合怪律：交接显式）。
+
+    judge 升级位（Jev 判断层，09-19 E2 实证）：callable(text)→float|None，
+    Noul「是否任务指派」概率。两道作用（缺席/失败→原行为分毫不动）：
+      - veto    规则卡概率 < judge_veto_th → 弃（清含动作词闲聊误报）
+      - recruit 无动作词句子概率 ≥ judge_recruit_th → 建卡（补召回；
+                conf 0.45 低于即时打扰阈值，天然走晨报）
+    """
     now = now or datetime.now()
     raw = events if llm is None else _llm_candidates(events, llm)
     cards: list[TaskCard] = []
     for ev in raw:
         text = (ev.get("text") or "").strip()
-        if not text or not any(k in text for k in ACTION_MARKERS):
+        if not text:
             continue
-        title = _title_from(text)
-        if not title or not any(k in title for k in ACTION_MARKERS):
-            # 标题清洗丢了标记（如纯呼语句），退整句重试一次
-            title = _title_from(text.replace("，", ""))
-            if not any(k in title for k in ACTION_MARKERS):
+        verdict = _judge_verdict(judge, text)
+        marked = any(k in text for k in ACTION_MARKERS)
+        if marked:
+            if verdict is not None and verdict < judge_veto_th:
+                continue                     # veto：Jev 判非任务 → 弃
+            title = _title_from(text)
+            if not title or not any(k in title for k in ACTION_MARKERS):
+                # 标题清洗丢了标记（如纯呼语句），退整句重试一次
+                title = _title_from(text.replace("，", ""))
+                if not any(k in title for k in ACTION_MARKERS):
+                    continue
+            conf = 0.5
+        else:
+            if verdict is None or verdict < judge_recruit_th:
+                continue                     # recruit：无标记且 Jev 不背书 → 原跳过
+            title = _title_from(text)        # 无 marker 句取首子句，不做标记校验
+            if not title:
                 continue
+            conf = 0.45
         deadline = parse_deadline(text, now)
         owner = _owner_of(text)
-        conf = 0.5
-        if deadline:
-            conf += 0.2
-        if "请" in text or "帮我" in text or "麻烦" in text:
-            conf += 0.15
-        if "别忘了" in text or "记得" in text:
-            conf += 0.1
-        if deadline and "要结果" in text:
-            conf += 0.05
+        if conf >= 0.5:
+            if deadline:
+                conf += 0.2
+            if "请" in text or "帮我" in text or "麻烦" in text:
+                conf += 0.15
+            if "别忘了" in text or "记得" in text:
+                conf += 0.1
+            if deadline and "要结果" in text:
+                conf += 0.05
         card = TaskCard(
             title=title, owner=owner, deadline=deadline,
             confidence=min(round(conf, 2), 0.95), source=ev.get("source", "mic"),
             evidence={"ts": ev.get("ts", ""),
                       "audio_hash": (ev.get("evidence") or {}).get("audio_hash", ""),
-                      "segment_ms": (ev.get("evidence") or {}).get("segment_ms", [])},
+                      "segment_ms": (ev.get("evidence") or {}).get("segment_ms", []),
+                      "jev_noul": verdict},
         )
         dup = next((c for c in cards if c.owner == card.owner
                     and _similar(c.title, card.title)), None)
@@ -240,6 +264,17 @@ def _llm_candidates(events: list[dict], llm) -> list[dict]:
         return out if isinstance(out, list) else []
     except Exception:  # noqa: BLE001 - LLM 故障退规则
         return [e for e in events if e.get("text")]
+
+
+def _judge_verdict(judge, text: str) -> float | None:
+    """judge 升级位 fail-soft：缺席/异常/非数值 → None（无该道信号）。"""
+    if judge is None:
+        return None
+    try:
+        verdict = judge(text)
+    except Exception:  # noqa: BLE001 - 判断层故障不连坐
+        return None
+    return verdict if isinstance(verdict, (int, float)) else None
 
 
 class TaskCardStore:

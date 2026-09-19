@@ -315,6 +315,26 @@ def sovereign_cli(args, config_path: str) -> int:
     return 2
 
 
+def jev_cli(action: str) -> int:
+    """Jev 判断层总开关（--jev on|off|status）。"""
+    from paistation.judgment import set_switch, switch_status
+    if action == "on":
+        path = set_switch(True)
+        print(f"[jev] 已开启（{path}；如设了 PAI_JEV=0 环境变量仍会被硬关）")
+        return 0
+    if action == "off":
+        path = set_switch(False)
+        print(f"[jev] 已一键全关（{path}）——所有接线点静默回退原行为")
+        return 0
+    st = switch_status()
+    env = st["env"]
+    print(f"[jev] enabled={st['enabled']}")
+    print(f"  env PAI_JEV = {env!r}{'（硬关，优先级最高）' if st['env_off'] else ''}")
+    print(f"  jev.ini enabled = {st['ini_enabled']!r}{'（未配置=默认开）' if st['ini_enabled'] is None else ''}")
+    print(f"  api_key = {'在位' if st['has_key'] else '缺失（config/typesafe.secret.ini）'}")
+    return 0 if st["enabled"] else 1
+
+
 def main(argv: list[str] | None = None) -> int:
     # GBK 控制台兜底：✓/✗ 等字符在中文 Windows 默认代码页下不可编码，
     # 服务/脚本场景（WinSW 日志、PowerShell）必须免疫（errors=replace）。
@@ -332,6 +352,9 @@ def main(argv: list[str] | None = None) -> int:
                     help="服务主循环（WinSW 守护，锚点 0.6）")
     ap.add_argument("--first-scan", action="store_true",
                     help="首扫镜像：白名单只读扫描生成 10 条陈述并投递企微")
+    ap.add_argument("--jev", metavar="SWITCH", choices=["on", "off", "status"],
+                    help="Jev 判断层总开关：on 开 / off 一键全关"
+                         "（所有接线点静默回退原行为）/ status 看三要素状态")
     ap.add_argument("--gui", action="store_true",
                     help="启动系统托盘（暂停感知/设置/退出）")
     ap.add_argument("--sovereign", metavar="ACTION",
@@ -360,6 +383,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--version", action="version",
                     version=f"paistation {__version__}")
     args = ap.parse_args(argv)
+    if args.jev:
+        return jev_cli(args.jev)
     if args.check:
         return check(args.config)
     if args.check_llm:

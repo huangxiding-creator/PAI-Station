@@ -91,3 +91,57 @@ def test_store_roundtrip_and_status(tmp_path):
     assert loaded.status == "confirmed"
     assert "定价" in loaded.title
     assert reopened.proposed() == []
+
+
+# ---- Jev 判断层接线（09-19 深度融合：veto 清误报 + recruit 补召回）----
+
+def _mk_events(*texts):
+    return [{"ts": "2026-09-13T09:10:00", "type": "voice.transcript",
+             "source": "mic", "text": t, "speaker": "unknown",
+             "evidence": {"segment_ms": [0, 100], "audio_hash": "h"},
+             "meta": {}} for t in texts]
+
+
+class TestJevJudge:
+    def test_judge_none_keeps_original_behavior(self):
+        events = _mk_events("小王，会议纪要今天下班前整理好发给大家。",
+                            "中午想吃火锅，谁一起？")
+        assert len(extract_task_cards(events)) == 1   # 原规则行为
+
+    def test_veto_clears_marker_chatter_false_positive(self):
+        judge = lambda t: 0.02   # noqa: E731 - Jev 判非任务
+        events = _mk_events("我记得去年团建也是在这家店吃的火锅。")
+        assert extract_task_cards(events, judge=judge) == []
+
+    def test_veto_keeps_marker_todo(self):
+        judge = lambda t: 0.95   # noqa: E731
+        events = _mk_events("小王，会议纪要今天下班前整理好发给大家。")
+        cards = extract_task_cards(events, judge=judge)
+        assert len(cards) == 1 and "纪要" in cards[0].title
+
+    def test_recruit_builds_card_without_markers(self):
+        judge = lambda t: 0.90   # noqa: E731
+        events = _mk_events("李工，下周三的评审材料您那边出一下。")
+        cards = extract_task_cards(events, judge=judge)
+        assert len(cards) == 1
+        assert cards[0].confidence == 0.45            # 低于即时打扰阈值→晨报
+        assert cards[0].deadline is not None          # 截止解析照常
+        assert cards[0].evidence["jev_noul"] == 0.90
+
+    def test_recruit_below_threshold_skips(self):
+        judge = lambda t: 0.30   # noqa: E731
+        events = _mk_events("那家店的奶茶要排队四十分钟，太夸张了。")
+        assert extract_task_cards(events, judge=judge) == []
+
+    def test_judge_exception_degrades_silently(self):
+        def boom(_):
+            raise RuntimeError("jev down")
+        events = _mk_events("小王，会议纪要今天下班前整理好发给大家。",
+                            "李工，评审材料您那边出一下。")
+        cards = extract_task_cards(events, judge=boom)
+        assert len(cards) == 1 and "纪要" in cards[0].title  # 退回纯规则
+
+    def test_judge_none_return_treated_as_absent(self):
+        judge = lambda t: None   # noqa: E731 - 判断层不可用
+        events = _mk_events("李工，评审材料您那边出一下。")
+        assert extract_task_cards(events, judge=judge) == []

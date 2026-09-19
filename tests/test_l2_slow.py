@@ -153,3 +153,57 @@ def test_build_messages_screen_section():
     msgs = build_messages(_block(), screen_text="浏览器在看招标公告")
     assert "[屏幕观察]" in msgs[1]["content"]
     assert "招标公告" in msgs[1]["content"]
+
+
+# ---- Jev 判断层快路径（09-19 深度融合）----
+
+def _jev_answers(choice="research", conf=0.85, noul=0.9, probs=None):
+    return {"category": {"type": "choice", "choice": choice,
+                         "probabilities": probs or {choice: conf},
+                         "confidence": conf},
+            "needs_screen": {"type": "noul", "noul": noul}}
+
+
+def test_jev_fast_path_skips_llm():
+    gw = _FakeGateway()
+    called = []
+    gw.chat = lambda *a, **k: called.append(1) or ("{}", "fake")
+    r = summarize_block(_block(confidence=0.4), gw,
+                        jev=lambda s, q: _jev_answers())
+    assert r["engine"] == "jev" and r["llm"] is False
+    assert r["category"] == "research" and r["confidence"] == 0.85
+    assert called == []                               # LLM 零调用
+
+
+def test_jev_low_confidence_falls_back_to_llm():
+    gw = _FakeGateway()
+    r = summarize_block(_block(confidence=0.4), gw,
+                        jev=lambda s, q: _jev_answers(conf=0.60))
+    assert r.get("llm") is True                      # 回退 LLM 原路径
+
+
+def test_jev_needs_screen_falls_back():
+    gw = _FakeGateway()
+    r = summarize_block(_block(confidence=0.4), gw,
+                        jev=lambda s, q: _jev_answers(noul=0.3))
+    assert r.get("llm") is True
+
+
+def test_jev_failure_falls_back():
+    gw = _FakeGateway()
+    r = summarize_block(_block(confidence=0.4), gw,
+                        jev=lambda s, q: (_ for _ in ()).throw(OSError()))
+    assert r.get("llm") is True or r.get("degraded") == "gateway"
+
+
+def test_jev_none_falls_back():
+    gw = _FakeGateway()
+    r = summarize_block(_block(confidence=0.4), gw, jev=lambda s, q: None)
+    assert r.get("llm") is True
+
+
+def test_jev_invalid_choice_rejected():
+    gw = _FakeGateway()
+    r = summarize_block(_block(confidence=0.4), gw,
+                        jev=lambda s, q: _jev_answers(choice="乱造类"))
+    assert r.get("llm") is True

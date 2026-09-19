@@ -36,8 +36,8 @@ class IntentService:
 
     def __init__(self, stream=None, events_fn=None, profile=None,
                  gateway=None, store: IntentSampleStore | None = None,
-                 interval: float = DEFAULT_INTERVAL, *, now_fn=None,
-                 mono_fn=None):
+                 interval: float = DEFAULT_INTERVAL, *, jev=None,
+                 now_fn=None, mono_fn=None):
         if events_fn is None:
             def events_fn():
                 return stream.read_today() if stream else []
@@ -45,6 +45,7 @@ class IntentService:
         self._profile = profile
         self._gateway = gateway
         self._store = store
+        self._jev = jev               # 判断层快路径（judgment client.ask）
         self._interval = float(interval)
         self._now = now_fn or datetime.now
         self._mono = mono_fn or time.monotonic
@@ -99,7 +100,7 @@ class IntentService:
         try:
             if gate(b)["decision"] != "accept":
                 return                         # L1 门拒 → 不烧 LLM
-            intent = summarize_block(b, self._gateway, icl=icl)
+            intent = summarize_block(b, self._gateway, icl=icl, jev=self._jev)
             l2_conf = intent["confidence"] if intent.get("llm") else None
             final = gate(b, l2_confidence=l2_conf)
             if final["decision"] != "accept":
