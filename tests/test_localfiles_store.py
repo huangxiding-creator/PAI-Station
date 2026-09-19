@@ -161,7 +161,7 @@ def test_backfill_remaining_throttled_incremental(tmp_path):
         "UPDATE chunks SET embedding_status='none'"
         " WHERE chunk_id=(SELECT chunk_id FROM chunks LIMIT 1)")
     idx._db.commit()
-    clock["v"] += 601.0
+    clock["v"] += 3601.0
     r3 = idx.backfill()  # 过窗：嵌掉该块 + 重数
     assert calls["n"] == 2 and r3["remaining"] == 0
     idx.close()

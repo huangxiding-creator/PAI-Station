@@ -376,9 +376,11 @@ class ChunkIndex:
         return row[0]
 
     # remaining 重数节流窗：extract 并发入 none 块会让估计值偏低，
-    # 600s 到点重数归真（观测口径，不参与循环控制——早退判定用
-    # embedded/healed/rows_lit，见 __main__._embed_loop）。
-    REMAINING_RECOUNT_S = 600.0
+    # 到点重数归真（观测口径，不参与循环控制——早退判定用
+    # embedded/healed/rows_lit，见 __main__._embed_loop）。窗宽权衡：
+    # 31.5GB 库单次全表 COUNT 实测 ~19 分钟——600s 窗=干 10 分钟等
+    # 19 分钟（34% 占空比），3600s 窗把重数摊到小时级（~68% 占空比）。
+    REMAINING_RECOUNT_S = 3600.0
 
     def _remaining(self, rows_lit: int) -> int:
         """剩余欠账观测值：rows_lit 皆是 none→embedded 翻转，窗内
