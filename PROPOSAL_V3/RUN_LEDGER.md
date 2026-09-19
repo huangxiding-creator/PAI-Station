@@ -149,6 +149,8 @@
 
 | 09-20 | ✅ **Jev 调用轨迹审计落地（typesafe 官方报告六项合规，判断层可观测收尾件）**：JudgmentClient 增 traj_path 参数（默认 None=零写入；生产 resident/entry 装配 data_dir/jev_traj.jsonl）——一行一调用落 {ts, state_hash(sha256 前 16), q 摘要(type), a 数值摘要(noul/choice+conf), usage, latency_s, ok}；**隐私优先**：state 只落 hash、answers 只落数值层不落文本负载，写失败 fail-soft 绝不反噬主链；熔断失败调用同记（ok=false）供复盘。价值：快路径命中率/误判复盘从此有数据底座（此前判断层零观测）。+3 测试（六字段+hash 不落明文/失败调用 ok=false/None 零写+坏路径不炸），全量 **1733 passed**，lint 0 | `src/paistation/judgment/client.py`、`src/paistation/resident/entry.py`、`tests/test_judgment.py` |
 
+| 09-20 | 🔧 **心跳补记：remaining 重数窗 600s→3600s**（并行会话 3a20aea，00:20 落地、正主沉寂一小时后补记）：31.5GB 库单次 COUNT 实测 **19 分钟**，600s 重数窗=干 10 分钟等 19 分钟（34% 占空比）；3600s 小时级归真摊薄到 68%。纯观测口径（remaining 显示值），早退判定不读此值——不影响 733f6a7 的锁风暴根治语义。补嵌修复版首跑全绿实证：连续 256 块/批、failed 0、批间 15-30s（对比昨夜卡死），00:26-01:26 一小时推进 remaining 303.3 万→296.8 万 | `src/paistation/sense/localfiles/store.py`（git 3a20aea） |
+
 ## 红线备忘（每轮心跳自查）
 
 项目外全盘只读 ｜ 账号安全第一 ｜ secrets 不入库 ｜ 00 愿景/付费语料不上公开仓 ｜ 只增不删+Git 留痕 ｜ 每环节调研≥20 ｜ 进化提案永不自批 ｜ commit 带 Co-Authored-By
