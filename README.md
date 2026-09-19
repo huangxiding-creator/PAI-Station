@@ -147,6 +147,23 @@ GitHub 十万星项目都在做「指令 → 操作」的执行型 agent；PAI �
 - 全链路只读本地微信库；单轮约 10 分钟；失败段企微告警；`WeChatBriefPause` 旗标一键暂停
 - 运维口径：日志/状态/断点全落 `tools/logs/`，技术细节不进推送（用户视角大白话）
 
+## 📡 RSS 情报收割 + 信息级告警（2026-09-19 上线告警层）
+
+外部情报面的常亮底座——复用 We-AIPO 905 源 OPML 只读同步，串行收割（每日 07:37/19:37 双班，schtasks `PAIStation-rss-harvest`）：
+
+```
+OPML 只读同步 → 串行收割（节流/去重/日限额/熔断四件套）→ 语料入库
+                                ↓
+              AlertEngine 关键词层（--alert-keywords "核电,华龙一号"）
+              → alerts.jsonl 只增档案（命中即记：标题/链接/命中词）
+              → 每日摘要 alert_digest_YYYY-MM-DD.md
+              → 企微单条摘要（--push-alerts 显式开关）
+```
+
+- 首轮战果：**17,759 篇 / 905 源全成 / 0 败**
+- 告警层纯观测式挂载：引擎故障只记日志，绝不打断收割
+- 推送限频纪律代码化：24h 滚动窗 200 条上限（达帽记一次标记后静默）、企微失败不重试、无命中不推、每轮最多一条摘要
+
 ## ⚙️ 7×24 主循环（一行命令）
 
 ```bash
@@ -234,7 +251,7 @@ python -m venv .venv && .venv\Scripts\pip install -e ".[dev]"
 # 2. 配置（密钥外置，参考 config/pai.ini）
 #    PAI_LLM_KEY=智谱key  PAI_WECOM_WEBHOOK=企微机器人
 
-# 3. 测试（1622 项全绿为出厂标准，2026-09-17 实测）
+# 3. 测试（1692 项全绿为出厂标准，2026-09-19 实测）
 .venv\Scripts\python -m pytest
 
 # 4. 器官自检 + 启动主循环
@@ -253,6 +270,7 @@ python tools/run_station.py          # 7×24：感知/深读/进化/PDCA
 | `tools/maoxuan_harvest.py` | 搜狗微信采集（35 分钟冷却/串行） |
 | `tools/evolution_approve.py` | 进化提案用户裁决 |
 | `tools/wechat_brief_daily.py` | 微信简报夜间流水线（22:00 七段：索引→编辑→渲染→PDF→发布→推送） |
+| `tools/rss_harvest_run.py` | RSS 905 源双班收割（07:37/19:37）+ 关键词信息级告警（`--alert-keywords`） |
 | `tools/notify_wecom.py` | 企微通知 |
 
 ## 📁 代码结构

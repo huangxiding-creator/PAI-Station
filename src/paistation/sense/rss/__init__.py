@@ -3,6 +3,12 @@
 源清单唯一基准 = E:\\CPOPC\\We-AIPO\\公众号RSS\\wechat2rss_subscriptions.opml
 （We-AIPO 侧持续更新，本域每次采集前只读同步镜像 → 「始终保持最新」）。
 """
+from .alert import (
+    ALERT_DAILY_CAP,
+    AlertEngine,
+    match_keywords,
+    parse_keywords,
+)
 from .harvester import (
     AdaptivePacer,
     FeedRef,
@@ -18,4 +24,5 @@ from .harvester import (
 __all__ = [
     "AdaptivePacer", "FeedRef", "HarvestReport", "SyncReport",
     "harvest", "html_to_text", "parse_opml", "slugify", "sync_opml",
+    "ALERT_DAILY_CAP", "AlertEngine", "match_keywords", "parse_keywords",
 ]

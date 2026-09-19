@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import re
 import time
 import xml.etree.ElementTree as ET
@@ -211,6 +212,7 @@ class HarvestReport:
     dormant_skipped: int = 0
     probed: int = 0
     new_articles: int = 0
+    alerts: int = 0
     breaker_tripped: bool = False
     daily_cap_hit: bool = False
     duration_s: float = 0.0
@@ -221,9 +223,10 @@ class HarvestReport:
             flags.append("⚠️风控熔断停轮")
         if self.daily_cap_hit:
             flags.append("日限额止")
+        alert_s = f" 告警{self.alerts}" if self.alerts else ""
         return (f"源{self.feeds_total} 试{self.attempted} 成{self.ok} 败{self.fail} "
                 f"304:{self.not_modified} 休眠跳过{self.dormant_skipped} 探针{self.probed} "
-                f"新文{self.new_articles} {' '.join(flags)}").strip()
+                f"新文{self.new_articles}{alert_s} {' '.join(flags)}").strip()
 
 
 def _today(now_s: float) -> str:
@@ -248,11 +251,15 @@ def harvest(feeds: list[FeedRef], state_path: Path, out_dir: Path, *,
             fetch, parse=None, now=None, clock=time.monotonic,
             sleep=time.sleep, daily_cap: int = DAILY_CAP,
             max_requests: int | None = None,
-            keep_going_after_breaker: bool = False) -> HarvestReport:
+            keep_going_after_breaker: bool = False,
+            alert=None) -> HarvestReport:
     """串行收割一轮。fetch(url, headers) -> (status, text, resp_headers)。
 
     状态=持久 JSON：feed 健康/guid 去重/日请求数（跨进程）。断点=按 feed
     幂等（新文去重、失败计数），整轮可随时中断重跑零重复。
+
+    alert=AlertEngine 时逐篇新文章做关键词观测（G12 观测层：只旁挂，
+    任何告警层异常只记日志，绝不改收割节拍/限额行为）。
     """
     import feedparser
     parse = parse or feedparser.parse
@@ -365,6 +372,15 @@ def harvest(feeds: list[FeedRef], state_path: Path, out_dir: Path, *,
                 f"# {title}\n\n{body}\n")
             (day_dir / fn).write_text(front, encoding="utf-8")
             written += 1
+            if alert is not None:  # G12 观测层：命中即告警（旁挂，绝不反噬收割）
+                try:
+                    if alert.on_article(feed=feed.name, title=title, body=body,
+                                        link=link, published=pub,
+                                        path=day_dir / fn, now=now):
+                        rep.alerts += 1
+                except Exception as e:
+                    logging.getLogger("rss_alert").warning(
+                        "告警层异常(忽略): %s", e)
         rep.new_articles += written
         fs["seen"] = seen[-SEEN_BOUND:]
         fs["fail_count"] = 0

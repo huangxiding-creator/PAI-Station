@@ -9,6 +9,8 @@
   python tools/rss_harvest_run.py                 # 全量一轮
   python tools/rss_harvest_run.py --max-requests 5  # 冒烟
   python tools/rss_harvest_run.py --sync-only     # 只同步清单不采集
+  python tools/rss_harvest_run.py --alert-keywords "东方电气,核电,华龙一号"  # 命中即告警
+  python tools/rss_harvest_run.py --alert-keywords "..." --push-alerts    # 班次汇总推企微
 """
 import argparse
 import logging
@@ -65,6 +67,11 @@ def main() -> int:
     ap.add_argument("--max-requests", type=int, default=None)
     ap.add_argument("--timeout", type=float, default=15.0)
     ap.add_argument("--sync-only", action="store_true")
+    ap.add_argument("--alert-keywords", default=None,
+                    help='逗号分隔告警关键词（多词 OR），如 "东方电气,核电,华龙一号"'
+                         "；不给则整层关闭")
+    ap.add_argument("--push-alerts", action="store_true",
+                    help="班次告警汇总推企微（默认静默不推；每班次至多 1 条）")
     args = ap.parse_args()
 
     log = _setup_log()
@@ -78,10 +85,26 @@ def main() -> int:
         return 2
     if args.sync_only:
         return 0
+    # G12 信息级告警：--alert-keywords 给了才装配（默认整层关闭，零行为变化）
+    alert = None
+    if args.alert_keywords:
+        from paistation.sense.rss.alert import AlertEngine, parse_keywords
+        kws = parse_keywords(args.alert_keywords)
+        if not kws:
+            log.error("--alert-keywords 全为空白，无法装配告警层")
+            return 2
+        alert = AlertEngine(kws, base=ROOT / "data" / "rss_harvest")
+        log.info("告警层就绪: %d 关键词 %s | 推送=%s | 落盘=%s",
+                 len(kws), kws, bool(args.push_alerts), alert.alerts_path)
+    elif args.push_alerts:
+        log.warning("--push-alerts 需与 --alert-keywords 同用，本忽略（零推送）")
     report = harvest(feeds, Path(args.state), Path(args.out),
                      fetch=_real_fetch(args.timeout),
-                     max_requests=args.max_requests)
+                     max_requests=args.max_requests, alert=alert)
     log.info("收割完成 [%d]: %s", round(time.time() - t0), report.brief())
+    if alert is not None:
+        n = alert.finalize(push=bool(args.push_alerts))
+        log.info("告警班次收口: 命中 %d 条（digest=%s）", n, alert.digest_dir)
     if report.breaker_tripped:
         log.warning("⚠️ 风控熔断触发——本轮提前停止，下轮自动恢复（连败源走休眠探针制）")
         return 3
