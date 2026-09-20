@@ -125,9 +125,30 @@ def _chapter_md(chapter: dict, image_mapper) -> list:
 
 # ---------- DOCX ----------
 
+_XML_ILLEGAL = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f]")
+
+
+def _xml_safe_book(book: dict) -> dict:
+    """深拷贝并剥离 XML 1.0 非法控制字符（保留 \\t\\n\\r）。
+
+    2026-09-20 实锤：《风险管理实用指南》第 28/45/71 章书源含控制字符，
+    python-docx 写 XML 抛 "All strings must be XML compatible" 整本导出
+    失败（md 层无此约束已正常落盘）。纯函数不改入参。"""
+    def clean(v):
+        if isinstance(v, str):
+            return _XML_ILLEGAL.sub("", v)
+        if isinstance(v, list):
+            return [clean(x) for x in v]
+        if isinstance(v, dict):
+            return {k: clean(x) for k, x in v.items()}
+        return v
+    return clean(book)
+
+
 def to_docx(book: dict, out_path: str, image_mapper=None,
             cover_image: str = "") -> str:
     """Book → DOCX（封面/点线目录/层级标题/中文字体/页码）。返回路径。"""
+    book = _xml_safe_book(book)
     doc = Document()
     _setup_page(doc)
     _setup_fonts(doc)

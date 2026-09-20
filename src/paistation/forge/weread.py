@@ -448,6 +448,7 @@ def extract_book(cli: WeReadClient, book_id: str,
     else:
         limit = max_free if max_free else 0
     chapters, partial_reasons = [], []
+    _last_renew = time.time()
     for idx, meta in enumerate(chapters_meta, 1):
         uid = meta["chapterUid"]
         title = meta.get("title", f"章节{uid}")
@@ -465,6 +466,16 @@ def extract_book(cli: WeReadClient, book_id: str,
                          "html": got["html"], "text": "", "images": []})
         if on_progress:
             on_progress(idx, len(chapters_meta), title)
+        # 2026-09-20：wr_skey 实测 ~30-40 分钟过期（08:05 扫码→08:45 即 -2012，
+        # 47 章 29 分钟健康后暴毙）；官方网页挂着每约 30 分钟自动 renewal。
+        # 长书章节循环中途续期——拟人补齐"页面开着"语义；失败不炸（下一章
+        # 若真死自然抛 -2012 走批处理兜底），成功则内存+落盘双更新。
+        if time.time() - _last_renew > 1200:
+            try:
+                cli.renew(origin_path=f"/web/reader/{book_id}")
+            except WeReadApiError:
+                pass                                        # 20 分钟后再试
+            _last_renew = time.time()
     return {"bookId": book_id, "title": info.get("title", book_id),
             "author": info.get("author", ""), "cover": info.get("cover", ""),
             "intro": info.get("intro", ""), "format": fmt,

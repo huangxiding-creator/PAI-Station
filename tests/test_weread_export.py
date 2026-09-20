@@ -1,5 +1,6 @@
 """M2.5 铸造厂：微信读书导出层（MD/DOCX 专业排版）测试。"""
 import os
+import json
 
 from docx import Document
 
@@ -117,3 +118,19 @@ def test_docx_heading_styles_chinese_fonts(tmp_path):
         "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
         "eastAsia")
     assert east == "微软雅黑"
+
+
+def test_docx_control_chars_stripped(tmp_path):
+    """2026-09-20 实锤回归：书源控制字符（\x0b 等）曾使 python-docx 抛
+    "All strings must be XML compatible" 整本导出失败——_xml_safe_book
+    剥离 XML 非法控制字符后导出成功且入参不被修改。"""
+    book = _book()
+    book["chapters"][0]["title"] = "第一章\x0b智能商业"
+    book["chapters"][0]["html"] = "<p>数据智能\x0c双螺旋\x00。</p>"
+    snapshot = json.dumps(book, ensure_ascii=False)
+    out = to_docx(book, str(tmp_path / "c.docx"))
+    assert os.path.exists(out)
+    doc = Document(out)
+    assert any(p.text == "第一章智能商业" for p in doc.paragraphs)
+    assert any("数据智能双螺旋。" in p.text for p in doc.paragraphs)
+    assert json.dumps(book, ensure_ascii=False) == snapshot   # 纯函数不改入参
