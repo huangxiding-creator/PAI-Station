@@ -11,14 +11,21 @@
 | 指标 | 数量 |
 |------|-----|
 | **渠道类总数** | **139** |
-| 在位渠道类（已建 python 采集器） | 64 |
-| **新增缺口渠道类** | **75** |
+| 在位渠道类（已建 python 采集器） | 66（09-20 P1b 第一批接入：ggzy/zzlh，实弹落真文件） |
+| **新增缺口渠道类** | **73** |
 | 其中：免费公开（免登录，含反爬需浏览器态） | 50 |
 | 其中：免费需登录/强登录态 | 4 |
 | 其中：付费 API/商业凭证 | 6 |
 | 其中：待验证（入口漂移/分散/未实测） | 15 |
 | 分类框架（尽调本体） | 15 大类 |
 | 本日实测存活 URL | 66 个（≥20 要求达成，无编造） |
+
+> **P1b 第一批接入实况（09-20 当日）**：SOP 四步全走——①探测锚点
+> （ggzy 首页 17 公告锚点 SSR/zzlh 25 锚点 UTF-8/eco_penalty 栏目 JS 壳缓施/
+> cebps·water_market·tzxm 缓施）②GovListChannel 子类双落地③五线接线
+> （registry/DEFAULT_CHANNELS/CHANNEL_META/survey_runner/测试 expected set）
+> ④守卫 11 测试+studio 11 测试全绿+实弹烟测（ggzy 落「NOx超低排放技改
+> EPC总承包」公告/zzlh 落 4 份招标公告，EPC 关键词真命中）。
 
 ---
 
@@ -70,11 +77,11 @@
 | ccgp | ccgp.gov.cn 中国政府采购网 | 政采工程合同公告 | 在位 | 在位（C2 破墙） |
 | sinopec | ec.sinopec.com 中石化物资采购 | 央企业主招标 | 在位 | 在位 |
 | wbproj | 世界银行项目库 API | 国际项目 | 在位 | 在位 |
-| cebps | http://www.cebpubservice.com 中国招标投标公共服务平台 | **全国招标公告/中标公示总枢纽** | ★新建-免费 | 200 |
-| ggzy | https://www.ggzy.gov.cn 全国公共资源交易平台 | 各省公共资源交易聚合（工程/土地/矿权） | ★新建-免费 | 301→200 |
+| cebps | http://www.cebpubservice.com 中国招标投标公共服务平台 | 全国招标公告/中标公示枢纽（**首页 JS 壳，公告面在 API 后，缓施**） | ★缓施-免费 | 200 |
+| ggzy | https://www.ggzy.gov.cn 全国公共资源交易平台 | **30+省招标/中标/成交公告聚合总枢纽（首页 SSR 直出，已接入）** | ✅在位 | 200 |
 | sgcc_ecp | https://ecp.sgcc.com.cn 国家电网电子商务平台 | 电网工程招标/中标（输变电 EPC 主市场） | ★新建-免费 | 302（存活） |
 | csg_bidding | 南方电网阳光电子商务平台（bidding.csg.cn DNS 不解析，改版漂移） | 南网招标 | ★待验证 | DNS 失败 |
-| zzlh | http://www.365trade.com.cn 中招联合招标采购网 | 央企采购聚合（数十家央企接入） | ★新建-免费 | 200 |
+| zzlh | http://www.365trade.com.cn 中招联合招标采购网 | 央企采购聚合（UTF-8 SSR 直出，已接入） | ✅在位 | 200 |
 | chinabidding_cn | https://www.chinabidding.com.cn 中国采购与招标网 | 招标公告老牌门户 | ★新建-免费（部分收费） | 301→200 |
 | telecom_bid | txzb.miit.gov.cn 通信工程招投标平台（DNS 不解析） | 通信工程招标 | ★待验证 | DNS 失败 |
 | military_proc | 全军武器装备采购网/军队采购网（未实测） | 军队采购 | ★待验证 | 未实测 |
@@ -211,9 +218,9 @@ cnki / cnki_direct / shutong（书童图书馆）/ wenchuanyun（文献云 wxy88
 9. safety_credit_list 安全生产严重失信名单
 
 **招投标业绩组（EPC 订单与对手盘核心，优先做）**
-10. cebps 中国招标投标公共服务平台（总枢纽）
-11. ggzy 全国公共资源交易平台
-12. zzlh 中招联合（央企聚合）
+10. ggzy 全国公共资源交易平台（总枢纽，✅已接入 09-20）
+11. cebps 中国招标投标公共服务平台（JS 壳缓施）
+12. zzlh 中招联合（央企聚合，✅已接入 09-20）
 13. sgcc_ecp 国网电商平台
 14. chinabidding_cn 中国采购与招标网
 15. arbitration 贸仲/北仲
