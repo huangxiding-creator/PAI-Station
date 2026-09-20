@@ -112,6 +112,13 @@ def main() -> int:
         })
 
     out = REPO / "SELF_PROFILE" / "golden_set" / f"score_{datetime.now():%Y%m%d_%H%M}.md"
+    # 逐题 jsonl 落盘（缝合交接契约：分析永远用已落盘数据，不为分析重跑付费调用）
+    jl = out.with_suffix(".jsonl")
+    jl.write_text(
+        "\n".join(json.dumps(
+            {k: r[k] for k in ("id", "dim", "diff", "q", "hit", "hit_g",
+                               "hit_d", "miss_type", "verdict", "noul")},
+            ensure_ascii=False) for r in rows) + "\n", encoding="utf-8")
     total = len(rows)
     n_hit = sum(r["hit"] for r in rows)
     by_dim = defaultdict(lambda: [0, 0])
