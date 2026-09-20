@@ -11,8 +11,8 @@
 | 指标 | 数量 |
 |------|-----|
 | **渠道类总数** | **139** |
-| 在位渠道类（已建 python 采集器） | 66（09-20 P1b 第一批接入：ggzy/zzlh，实弹落真文件） |
-| **新增缺口渠道类** | **73** |
+| 在位渠道类（已建 python 采集器） | 68（09-20 P1b 三批五站接入：ggzy/zzlh/samr_penalty/nafmii/railway_market，全部实弹落真文件） |
+| **新增缺口渠道类** | **71** |
 | 其中：免费公开（免登录，含反爬需浏览器态） | 50 |
 | 其中：免费需登录/强登录态 | 4 |
 | 其中：付费 API/商业凭证 | 6 |
@@ -50,7 +50,7 @@
 | shixin | zxgk.court.gov.cn/shixin 失信被执行人 | 失信名单 | 在位 | 200 |
 | wenshu | https://wenshu.court.gov.cn 裁判文书网 | 判决/裁定全文（施工合同纠纷、工程质量诉讼） | ★新建-登录（注册+限流；另有本地 102G BT 裁判文书存量可先离线） | 200 |
 | zxgk_exec | https://zxgk.court.gov.cn 中国执行信息公开网 | 被执行人/限制消费/终本案件（shixin 超集） | ★新建-免费 | 301→200 |
-| court_notice | https://rmfygg.court.gov.cn 人民法院公告网 | 开庭/破产/清算/拍卖公告 | ★新建-免费 | 200 |
+| court_notice | https://rmfygg.court.gov.cn 人民法院公告网（09-20 探测：查询表单形态，列表在接口后，缓施） | 开庭/破产/清算/拍卖公告 | ★缓施-免费 | 200 |
 | tingshen | https://tingshen.court.gov.cn 中国庭审公开网 | 庭审录像/争点 | ★新建-免费 | 200 |
 | procuratorate | https://www.12309.gov.cn 中国检察网 | 起诉书/单位行贿等企业犯罪记录 | ★新建-免费 | 200 |
 | arbitration | https://www.cietac.org 贸仲 + http://www.bjac.org.cn 北仲 | 仲裁程序公告/规则（工程仲裁主战场） | ★新建-免费（公开信息有限） | 200 / 200 |
@@ -79,7 +79,7 @@
 | wbproj | 世界银行项目库 API | 国际项目 | 在位 | 在位 |
 | cebps | http://www.cebpubservice.com 中国招标投标公共服务平台 | 全国招标公告/中标公示枢纽（**首页 JS 壳，公告面在 API 后，缓施**） | ★缓施-免费 | 200 |
 | ggzy | https://www.ggzy.gov.cn 全国公共资源交易平台 | **30+省招标/中标/成交公告聚合总枢纽（首页 SSR 直出，已接入）** | ✅在位 | 200 |
-| sgcc_ecp | https://ecp.sgcc.com.cn 国家电网电子商务平台 | 电网工程招标/中标（输变电 EPC 主市场） | ★新建-免费 | 302（存活） |
+| sgcc_ecp | https://ecp.sgcc.com.cn 国家电网电子商务平台（09-20 探测：首页 8.9KB SPA 壳，公告在 JS 后，缓施） | 电网工程招标/中标（输变电 EPC 主市场） | ★缓施-免费 | 200（壳） |
 | csg_bidding | 南方电网阳光电子商务平台（bidding.csg.cn DNS 不解析，改版漂移） | 南网招标 | ★待验证 | DNS 失败 |
 | zzlh | http://www.365trade.com.cn 中招联合招标采购网 | 央企采购聚合（UTF-8 SSR 直出，已接入） | ✅在位 | 200 |
 | chinabidding_cn | https://www.chinabidding.com.cn 中国采购与招标网 | 招标公告老牌门户 | ★新建-免费（部分收费） | 301→200 |
@@ -97,7 +97,7 @@
 | permit | permit.mee.gov.cn 全国排污许可证平台 | 排污许可 | 在位 | 200 |
 | water_market | http://xypt.mwr.cn 全国水利建设市场监管平台 | 水利市场主体信用/资质/不良行为（水利 EPC 权威库） | ★新建-免费 | 200（标题实测「水利建设市场监管平台」） |
 | highway_credit | glxy.mot.gov.cn 全国公路建设市场信用信息管理系统（DNS 不解析，可能改版） | 公路设计/施工/监理信用评价 | ★待验证 | DNS 失败 |
-| railway_market | http://www.nra.gov.cn 国家铁路局 | 铁路建设市场资质/监管 | ★新建-免费 | 200 |
+| railway_market | http://www.nra.gov.cn 国家铁路局（首页 89KB SSR 61 锚点直出，已接入） | 铁路建设市场资质/失信名单/规章 | ✅在位 | 200 |
 | aviation_market | http://www.caac.gov.cn 中国民航局 | 民航专业工程建设市场 | ★新建-免费 | 200 |
 | special_equipment | https://cnse.samr.gov.cn/info-pub/pub 全国特种设备公示信息查询 | 特种设备生产/使用公示（压力容器/起重机械） | ★新建-免费 | 301→200 |
 | safety_permit | 安全生产许可证查询（住建部+省级入口分散） | 安许证状态（jzsc 部分覆盖） | ★待验证 | 未实测 |
@@ -122,8 +122,8 @@
 | 渠道类 | 官方入口 | 覆盖维度 | 状态 | 实测 |
 |--------|---------|---------|------|------|
 | cninfo / chinamoney / shclearing / earnings_call / edgar / inquiry / irm / damodaran / panjiva | 巨潮/货币网/上清所/业绩会/SEC/问询函/互动易/估值/海关提单 | 财务资本面主力 | 在位×9 | 在位 |
-| nafmii | https://www.nafmii.org.cn 交易商协会 | 债务融资工具注册/披露（中票短融=EPC 巨头主流融资） | ★新建-免费 | 200 |
-| chinabond | https://www.chinabond.com.cn 中国债券信息网 | 债券发行/兑付（违约预警） | ★新建-免费 | 200 |
+| nafmii | https://www.nafmii.org.cn 交易商协会（首页 181KB SSR 58 锚点直出，已接入；回包 19s 级需 45s 超时） | 债务融资工具注册/披露（中票短融=EPC 巨头主流融资） | ✅在位 | 200 |
+| chinabond | https://www.chinabond.com.cn 中国债券信息网（09-20 探测：383KB 但详情锚点 JS 装载，缓施） | 债券发行/兑付（违约预警） | ★缓施-免费 | 200 |
 | sse | https://www.sse.com.cn 上交所 | 上市披露（与巨潮互补的监管口径） | ★新建-免费 | 200 |
 | szse | https://www.szse.cn 深交所 | 同上 | ★新建-免费 | 200 |
 | hkex | https://www.hkexnews.hk 披露易 | 港股披露（多数央企工程股两地上市） | ★新建-免费 | 302（存活） |
