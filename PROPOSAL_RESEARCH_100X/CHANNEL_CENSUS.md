@@ -82,7 +82,8 @@
 | sgcc_ecp | https://ecp.sgcc.com.cn 国家电网电子商务平台（09-20 探测：首页 8.9KB SPA 壳，公告在 JS 后，缓施） | 电网工程招标/中标（输变电 EPC 主市场） | ★缓施-免费 | 200（壳） |
 | csg_bidding | 南方电网阳光电子商务平台（bidding.csg.cn DNS 不解析，改版漂移） | 南网招标 | ★待验证 | DNS 失败 |
 | zzlh | http://www.365trade.com.cn 中招联合招标采购网 | 央企采购聚合（UTF-8 SSR 直出，已接入） | ✅在位 | 200 |
-| chinabidding_cn | https://www.chinabidding.com.cn 中国采购与招标网（列表 SSR 59 锚点可读；**详情页 405 WAF 浏览器态检测**——Referer/cookie/同主域三路全败，已注册默认关，破壁后再开） | 招标公告老牌门户 | ★缓施-免费 | 301→200 |
+| chinabidding_cn | https://www.chinabidding.com.cn 中国采购与招标网（09-20 晚 B 线破壁全解：WAF 二代双关=TLS 指纹关 curl_cffi 可过 + JS 质询关 cookie 离体失效（绑环境指纹）；唯一通路=单浏览器会话连续导航，质询只触发一次、2s/页、实弹 3/3+2 真文件。**但正文实体在免费注册墙后**（可见面=标题+地区+预告，「立即注册查看」占位主导）→ 价值密度不足默认关，工程保留待复核） | 招标公告老牌门户 | ★缓施-免费（墙已破待价值复核） | 200 |
+| customs_credit | credit.customs.gov.cn 海关企业信用信息公示（09-20 晚 curl_cffi 探针：chrome 伪装后仍 412, server=SingleWindow——非 TLS 指纹墙, 是应用层检测, 唯一候选=浏览器态, 与 creditchina 同缓施组） | 海关注册/信用等级/失信 | ★缓施-免费 | 412 |
 | telecom_bid | txzb.miit.gov.cn 通信工程招投标平台（DNS 不解析） | 通信工程招标 | ★待验证 | DNS 失败 |
 | military_proc | 全军武器装备采购网/军队采购网（未实测） | 军队采购 | ★待验证 | 未实测 |
 | soe_eproc | 央企电子采购平台族：中石油/国家电投/华能/大唐/中核/中广核/能建/电建（入口分散未实测，sinopec 已在位） | 央工业主招标公告 | ★待验证（一类多源） | 未实测 |
