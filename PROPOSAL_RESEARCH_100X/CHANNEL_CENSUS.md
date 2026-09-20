@@ -63,11 +63,11 @@
 | mem_gov | mem.gov.cn 应急管理部 | 事故通报/监管处罚 | 在位 | 200 |
 | safety_credit_list | https://www.mem.gov.cn 安全生产严重失信名单（mem_gov 补强专采） | 安全生产黑名单 | ★新建-免费（部分在位） | 200 |
 | customs_credit | http://credit.customs.gov.cn 海关企业信用信息公示 | 海关注册/信用等级/失信（国际工程贸易面） | ★新建-免费（反爬需浏览器态） | 412（存活，反爬） |
-| tax_credit_violation | https://www.chinatax.gov.cn（重大税收违法/纳税信用A级栏目，栏目级 URL 待验证） | 重大税收违法案件/纳税信用等级 | ★新建-免费 | 200（首页） |
-| wage_blacklist | http://www.mohrss.gov.cn 人社部 + 信用中国欠薪栏目 | 拖欠农民工工资失信联合惩戒名单（EPC 业主/总包高压线） | ★新建-免费 | 200 |
+| tax_credit_violation | https://www.chinatax.gov.cn（09-20 探测：首页 126KB SSR 但重大税收违法栏目锚点未现于首页，栏目级 URL 待深探） | 重大税收违法案件/纳税信用等级 | ★待验证 | 200（首页） |
+| wage_blacklist | http://www.mohrss.gov.cn 人社部 + 信用中国欠薪栏目（09-20 探测：首页 986B JS 壳，栏目级 URL 待深探） | 拖欠农民工工资失信联合惩戒名单（EPC 业主/总包高压线） | ★缓施-免费 | 200（壳） |
 | eco_penalty | https://www.mee.gov.cn 生态环境部行政处罚公示 | 环保处罚决定（环评在位 eia，处罚是缺口侧） | ★新建-免费 | 200 |
 | env_disclosure | 企业环境信息依法披露系统（入口待验证） | 环境信息披露年报 | ★待验证 | 未实测 |
-| samr_penalty | https://www.samr.gov.cn 市场监管总局 | 行政处罚/垄断/质量抽查 | ★新建-免费 | 200 |
+| samr_penalty | https://www.samr.gov.cn 市场监管总局（首页SSR直出处罚决定书 /zw/xzcfjd/art/，已接入；栏目页JS壳；个案查询WAF墙后待浏览器路径） | 行政处罚/垄断/质量抽查 | ✅在位 | 200 |
 
 ### 4. 招投标与公共资源交易（15：4 在位 + 11 新增）
 
@@ -185,7 +185,7 @@ cnki / cnki_direct / shutong（书童图书馆）/ wenchuanyun（文献云 wxy88
 
 | 渠道类 | 官方入口 | 覆盖维度 | 状态 | 实测 |
 |--------|---------|---------|------|------|
-| wb_sanctions | https://www.worldbank.org/en/projects-operations/procurement/debarred-firms 世行除名企业 | 世行制裁名单（含大量中资工程企业，海外投标一票否决项） | ★新建-免费 | 200（经代理） |
+| wb_sanctions | 世行除名企业页（09-20 探测：worldbank.org/projects 版/bancomundial 版/搜索 API 三 URL 全 404，**页面已漂移**，需页内检索重定位） | 世行制裁名单（含大量中资工程企业，海外投标一票否决项） | ★待验证 | 404×3 |
 | ofac_sdn | https://sanctionssearch.ofac.treas.gov OFAC SDN 搜索 | 美国制裁名单（美元结算风险） | ★新建-免费 | 200（经代理） |
 | adb_sanctions | https://www.adb.org/who-we-are/integrity 亚开行廉政（制裁列表子页漂移待验证） | 亚开行制裁 | ★待验证（主站存活） | 200（经代理） |
 | fcpa_enforcement | SEC/DOJ FCPA 执法（子页 404 漂移；www.justice.gov 存活） | FCPA 反腐执法（海外工程代理风险） | ★待验证 | justice.gov 200 / 子页 404 |
