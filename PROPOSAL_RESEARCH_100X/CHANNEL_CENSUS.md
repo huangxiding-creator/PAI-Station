@@ -99,7 +99,7 @@
 | highway_credit | glxy.mot.gov.cn 全国公路建设市场信用信息管理系统（DNS 不解析，可能改版） | 公路设计/施工/监理信用评价 | ★待验证 | DNS 失败 |
 | railway_market | http://www.nra.gov.cn 国家铁路局（首页 89KB SSR 61 锚点直出，已接入） | 铁路建设市场资质/失信名单/规章 | ✅在位 | 200 |
 | aviation_market | http://www.caac.gov.cn 中国民航局（09-20 探测：888B JS 壳） | 民航专业工程建设市场 | ★缓施-免费 | 200（壳） |
-| special_equipment | https://cnse.samr.gov.cn/info-pub/pub 全国特种设备公示信息查询 | 特种设备生产/使用公示（压力容器/起重机械） | ★新建-免费 | 301→200 |
+| special_equipment | https://cnse.samr.gov.cn/info-pub/pub 全国特种设备公示信息查询（09-20 探测：68KB 查询表单态，0 详情锚点） | 特种设备生产/使用公示（压力容器/起重机械） | ★缓施-免费 | 200 |
 | safety_permit | 安全生产许可证查询（住建部+省级入口分散） | 安许证状态（jzsc 部分覆盖） | ★待验证 | 未实测 |
 | power_license | 国家能源局资质中心 承装（修、试）电力设施许可（入口待验证） | 电力设施许可 | ★待验证 | 未实测 |
 | trademark | https://sbj.cnipa.gov.cn 中国商标网（09-20 探测：44KB SSR 16 锚点可采，但为工作动态/典型案例流，企业级商标查询在表单后——低优先缓施） | 商标注册（品牌/出海商标布局） | ★缓施-免费 | 200 |
@@ -124,8 +124,8 @@
 | cninfo / chinamoney / shclearing / earnings_call / edgar / inquiry / irm / damodaran / panjiva | 巨潮/货币网/上清所/业绩会/SEC/问询函/互动易/估值/海关提单 | 财务资本面主力 | 在位×9 | 在位 |
 | nafmii | https://www.nafmii.org.cn 交易商协会（首页 181KB SSR 58 锚点直出，已接入；回包 19s 级需 45s 超时） | 债务融资工具注册/披露（中票短融=EPC 巨头主流融资） | ✅在位 | 200 |
 | chinabond | https://www.chinabond.com.cn 中国债券信息网（09-20 探测：383KB 但详情锚点 JS 装载，缓施） | 债券发行/兑付（违约预警） | ★缓施-免费 | 200 |
-| sse | https://www.sse.com.cn 上交所 | 上市披露（与巨潮互补的监管口径） | ★新建-免费 | 200 |
-| szse | https://www.szse.cn 深交所 | 同上 | ★新建-免费 | 200 |
+| sse | https://www.sse.com.cn 上交所（09-20 探测：62KB SSR 19 锚点为交易所新闻面；公司公告查询系统形态，披露主体已由 cninfo 在位覆盖——低增量缓施） | 上市披露（与巨潮互补的监管口径） | ★缓施-免费 | 200 |
+| szse | https://www.szse.cn 深交所（09-20 探测：88KB 仅 3 新闻锚点，公告在查询系统——同 sse 低增量缓施） | 同上 | ★缓施-免费 | 200 |
 | hkex | https://www.hkexnews.hk 披露易 | 港股披露（多数央企工程股两地上市） | ★新建-免费 | 302（存活） |
 | esg_index | https://www.csindex.com.cn 中证指数 | ESG 评级/指数成分 | ★新建-免费 | 200 |
 | customs_stats | http://stats.customs.gov.cn 海关统计数据平台 | 进出口贸易统计（国际 EPC 设备贸易） | ★新建-免费（反爬需浏览器态） | 412（存活，反爬） |
@@ -136,7 +136,7 @@
 | 渠道类 | 官方入口 | 覆盖维度 | 状态 | 实测 |
 |--------|---------|---------|------|------|
 | patents | 专利（专利检索/概览） | 专利 | 在位 | 在位 |
-| sci_award | http://www.nosta.gov.cn 国家科学技术奖励工作办公室 | 国家科技奖名单（国家优质工程金奖/科技进步奖=技术背书） | ★新建-免费 | 200 |
+| sci_award | http://www.nosta.gov.cn 国家科学技术奖励工作办公室（09-20 探测：1.7KB 壳） | 国家科技奖名单（国家优质工程金奖/科技进步奖=技术背书） | ★缓施-免费 | 200（壳） |
 | tech_registry | 国家科技成果登记（nast.org.cn 连接失败，入口漂移） | 成果登记库 | ★待验证 | 连接失败 |
 
 ### 9. 标准规范（3：2 在位 + 1 新增）
