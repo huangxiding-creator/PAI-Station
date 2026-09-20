@@ -51,9 +51,9 @@
 | wenshu | https://wenshu.court.gov.cn 裁判文书网 | 判决/裁定全文（施工合同纠纷、工程质量诉讼） | ★新建-登录（注册+限流；另有本地 102G BT 裁判文书存量可先离线） | 200 |
 | zxgk_exec | https://zxgk.court.gov.cn 中国执行信息公开网 | 被执行人/限制消费/终本案件（shixin 超集） | ★新建-免费 | 301→200 |
 | court_notice | https://rmfygg.court.gov.cn 人民法院公告网（09-20 探测：查询表单形态，列表在接口后，缓施） | 开庭/破产/清算/拍卖公告 | ★缓施-免费 | 200 |
-| tingshen | https://tingshen.court.gov.cn 中国庭审公开网 | 庭审录像/争点 | ★新建-免费 | 200 |
+| tingshen | https://tingshen.court.gov.cn 中国庭审公开网（09-20 探测：171KB 但检索应用形态，0 详情锚点） | 庭审录像/争点 | ★缓施-免费 | 200 |
 | procuratorate | https://www.12309.gov.cn 中国检察网（首页 57KB SSR 18 锚点直出，已接入；案件信息公开为查询表单待深探） | 法律监督动态/公益诉讼/专项监督（企业红旗司法前哨） | ✅在位 | 200 |
-| arbitration | https://www.cietac.org 贸仲 + http://www.bjac.org.cn 北仲 | 仲裁程序公告/规则（工程仲裁主战场） | ★新建-免费（公开信息有限） | 200 / 200 |
+| arbitration | https://www.cietac.org 贸仲 + http://www.bjac.org.cn 北仲（09-20 探测：贸仲 140KB 仅论坛栏目锚点，个案仲裁信息不公开——普查预判证实） | 仲裁程序公告/规则（工程仲裁主战场） | ★缓施-免费（公开信息有限） | 200 / 200 |
 
 ### 3. 信用与行政处罚（9：2 在位 + 7 新增）
 
@@ -98,11 +98,11 @@
 | water_market | http://xypt.mwr.cn 全国水利建设市场监管平台 | 水利市场主体信用/资质/不良行为（水利 EPC 权威库） | ★新建-免费 | 200（标题实测「水利建设市场监管平台」） |
 | highway_credit | glxy.mot.gov.cn 全国公路建设市场信用信息管理系统（DNS 不解析，可能改版） | 公路设计/施工/监理信用评价 | ★待验证 | DNS 失败 |
 | railway_market | http://www.nra.gov.cn 国家铁路局（首页 89KB SSR 61 锚点直出，已接入） | 铁路建设市场资质/失信名单/规章 | ✅在位 | 200 |
-| aviation_market | http://www.caac.gov.cn 中国民航局 | 民航专业工程建设市场 | ★新建-免费 | 200 |
+| aviation_market | http://www.caac.gov.cn 中国民航局（09-20 探测：888B JS 壳） | 民航专业工程建设市场 | ★缓施-免费 | 200（壳） |
 | special_equipment | https://cnse.samr.gov.cn/info-pub/pub 全国特种设备公示信息查询 | 特种设备生产/使用公示（压力容器/起重机械） | ★新建-免费 | 301→200 |
 | safety_permit | 安全生产许可证查询（住建部+省级入口分散） | 安许证状态（jzsc 部分覆盖） | ★待验证 | 未实测 |
 | power_license | 国家能源局资质中心 承装（修、试）电力设施许可（入口待验证） | 电力设施许可 | ★待验证 | 未实测 |
-| trademark | https://sbj.cnipa.gov.cn 中国商标网 | 商标注册（品牌/出海商标布局） | ★新建-免费 | 200 |
+| trademark | https://sbj.cnipa.gov.cn 中国商标网（09-20 探测：44KB SSR 16 锚点可采，但为工作动态/典型案例流，企业级商标查询在表单后——低优先缓施） | 商标注册（品牌/出海商标布局） | ★缓施-免费 | 200 |
 | software_copyright | https://www.ccopyright.com.cn 中国版权保护中心（09-20 探测：查询表单态，0 详情锚点） | 软著登记（数字化能力证据） | ★缓施-免费 | 200 |
 | hightech_cert | http://www.innocom.gov.cn 高新技术企业认定管理工作网 | 高企名录（税收优惠/技术实力） | ★新建-免费 | 200 |
 
@@ -115,7 +115,7 @@
 | tzxm | https://www.tzxm.gov.cn 全国投资项目在线审批监管平台 | 项目审批/核准/备案结果（**EPC 项目源头**） | ★新建-免费 | 200（标题 JS 渲染） |
 | land_market | https://www.landchina.com 中国土地市场网（09-20 探测：4.9KB JS 壳） | 土地出让/成交公示（业主拿地=项目储备） | ★缓施-免费 | 200（壳） |
 | planning_publicity | 规划公示（自然资源部+地方规划局，入口分散） | 控规/修规公示 | ★待验证 | 未实测 |
-| carbon_market | https://www.cneeex.com 上海环交所/全国碳市场 | 碳配额履约（重资产能耗证据） | ★新建-免费 | 200 |
+| carbon_market | https://www.cneeex.com 上海环交所/全国碳市场（09-20 探测：59KB 但锚点标题为「查看详细」无信息量，列表需解析相邻文本——缓施） | 碳配额履约（重资产能耗证据） | ★缓施-免费 | 200 |
 
 ### 7. 财务证券债券 ESG（17：9 在位 + 8 新增）
 
