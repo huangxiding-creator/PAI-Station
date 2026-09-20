@@ -26,7 +26,12 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 
 from paistation.cx.dossier import load_dossiers  # noqa: E402
-from paistation.cx.golden import classify_miss, extract_tokens, is_hit  # noqa: E402
+from paistation.cx.golden import (  # noqa: E402
+    classify_miss,
+    drop_exam_chunks,
+    extract_tokens,
+    is_hit,
+)
 from paistation.cx.jev_screen import screen, verdict_matrix  # noqa: E402
 from paistation.cx.semantic import SemanticIndex, hybrid_route  # noqa: E402
 from paistation.sense.localfiles.embedder import make_ollama_embedder  # noqa: E402
@@ -88,7 +93,8 @@ def main() -> int:
     rows = []
     for q in questions:
         toks = extract_tokens(q["a"])
-        hits = index.search(q["q"], k=args.k)
+        # 捞宽一倍再滤考卷再截回 k：滤后不丢排名靠后的非考卷候选
+        hits = drop_exam_chunks(index.search(q["q"], k=args.k * 2))[:args.k]
         dhits = hybrid_route(dossier, sem, embedder, q["q"], k=args.k)
         hit_g = is_hit(hits, toks)
         hit_d = is_hit(dhits, toks)

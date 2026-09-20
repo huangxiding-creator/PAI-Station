@@ -79,3 +79,15 @@ def classify_miss(hits: list, tokens: list[str]) -> str:
     if not tokens:
         return "答案无区分 token（考题待修）"
     return "词面不匹配（问答鸿沟：问题词≠文档词）"
+
+
+# 考卷泄漏修复（09-20 用户裁决：查询侧排除）——金标准题面/答案/旧报告
+# 被 localfiles 索引收录（实锤：#9 命中片段即旧跑分报告的未命中清单），
+# 词面满分含「考卷进考场」成分。跑分检索一律先滤考卷来源。
+EXAM_PATH_MARKERS = ("golden_set",)
+
+
+def drop_exam_chunks(hits: list, markers: tuple = EXAM_PATH_MARKERS) -> list:
+    """滤掉考卷来源 chunk（path 含任一 marker）。诊断工具与跑分器共用。"""
+    return [h for h in hits
+            if not any(m in (getattr(h, "path", "") or "") for m in markers)]
