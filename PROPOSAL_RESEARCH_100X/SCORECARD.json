@@ -1,0 +1,39 @@
+{
+  "proposal": "调研框架双百倍扩容（范围×100 · 质量×100）",
+  "date": "2026-09-20",
+  "dimensions": {
+    "feasibility": {
+      "score": 0.85,
+      "basis": "三层各有巨人在位（STORM 31k/deer-flow 82k/企查查API/校准链9项）；Jev 三实验本仓实锤（E2 召回1.00、E3 分离缝零跨界）；唯一外部依赖=企查查API付费开通（已列为用户决策点）"
+    },
+    "user_value": {
+      "score": 0.9,
+      "basis": "直接服务 EPC100 交付质量与「总包之声」内容护城河；横截面对比/可结算预测/私有证据三形态是董事长与员工都没有的东西",
+      "citations": ["RESEARCH_DOCKET/factory/现状六块.md", "FRAMEWORK_MAP.md §五 产能实数"]
+    },
+    "monetization": {
+      "score": 0.7,
+      "basis": "研报交付+宣传链已有变现路径；企查查API为成本项；Jev 六角色 <$50/企业；预测校准层是 per-outcome 定价的远期地基"
+    },
+    "tenx": {
+      "score": 2.0,
+      "axes": {
+        "范围": {"ours": 500000, "baseline": 5000, "ratio": 100, "log10": 2.0,
+                 "分解": "企业数100→1000 (×10) × 每家信源50→500 (×10)"},
+        "质量": {"ours": 108, "baseline": 1, "ratio": 108, "log10": 2.03,
+                 "分解": "盲评20→45 (×2.25) × 引注5→20/千字 (×4) × 有效引用80→97% (×1.2) × 独家证据×10 × 预测校准从无到有"}
+      },
+      "verdict": "双轴 ≥2.0 → 百倍合格"
+    }
+  },
+  "verdict": "proceed",
+  "approval_gate": {
+    "status": "PENDING_USER_APPROVAL",
+    "options": ["approve → 14-Phase 全自主开发", "revise → 指出修改点重调研", "reject → 回 idea-intake"],
+    "decision_points_for_user": [
+      "提案整体批准与否",
+      "企查查/天眼查 API 付费开通（P2 前置）",
+      "Jev 费用预算 <$50/企业 上限确认"
+    ]
+  }
+}
