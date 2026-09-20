@@ -11,8 +11,8 @@
 | 指标 | 数量 |
 |------|-----|
 | **渠道类总数** | **139** |
-| 在位渠道类（已建 python 采集器） | 68（09-20 P1b 三批五站接入：ggzy/zzlh/samr_penalty/nafmii/railway_market，全部实弹落真文件） |
-| **新增缺口渠道类** | **71** |
+| 在位渠道类（已建 python 采集器） | 69（09-20 P1b 四批六站接入：ggzy/zzlh/samr_penalty/nafmii/railway_market/procuratorate，全部实弹落真文件；另 chinabidding_cn 注册缓施） |
+| **新增缺口渠道类** | **70** |
 | 其中：免费公开（免登录，含反爬需浏览器态） | 50 |
 | 其中：免费需登录/强登录态 | 4 |
 | 其中：付费 API/商业凭证 | 6 |
@@ -52,7 +52,7 @@
 | zxgk_exec | https://zxgk.court.gov.cn 中国执行信息公开网 | 被执行人/限制消费/终本案件（shixin 超集） | ★新建-免费 | 301→200 |
 | court_notice | https://rmfygg.court.gov.cn 人民法院公告网（09-20 探测：查询表单形态，列表在接口后，缓施） | 开庭/破产/清算/拍卖公告 | ★缓施-免费 | 200 |
 | tingshen | https://tingshen.court.gov.cn 中国庭审公开网 | 庭审录像/争点 | ★新建-免费 | 200 |
-| procuratorate | https://www.12309.gov.cn 中国检察网 | 起诉书/单位行贿等企业犯罪记录 | ★新建-免费 | 200 |
+| procuratorate | https://www.12309.gov.cn 中国检察网（首页 57KB SSR 18 锚点直出，已接入；案件信息公开为查询表单待深探） | 法律监督动态/公益诉讼/专项监督（企业红旗司法前哨） | ✅在位 | 200 |
 | arbitration | https://www.cietac.org 贸仲 + http://www.bjac.org.cn 北仲 | 仲裁程序公告/规则（工程仲裁主战场） | ★新建-免费（公开信息有限） | 200 / 200 |
 
 ### 3. 信用与行政处罚（9：2 在位 + 7 新增）
@@ -82,7 +82,7 @@
 | sgcc_ecp | https://ecp.sgcc.com.cn 国家电网电子商务平台（09-20 探测：首页 8.9KB SPA 壳，公告在 JS 后，缓施） | 电网工程招标/中标（输变电 EPC 主市场） | ★缓施-免费 | 200（壳） |
 | csg_bidding | 南方电网阳光电子商务平台（bidding.csg.cn DNS 不解析，改版漂移） | 南网招标 | ★待验证 | DNS 失败 |
 | zzlh | http://www.365trade.com.cn 中招联合招标采购网 | 央企采购聚合（UTF-8 SSR 直出，已接入） | ✅在位 | 200 |
-| chinabidding_cn | https://www.chinabidding.com.cn 中国采购与招标网 | 招标公告老牌门户 | ★新建-免费（部分收费） | 301→200 |
+| chinabidding_cn | https://www.chinabidding.com.cn 中国采购与招标网（列表 SSR 59 锚点可读；**详情页 405 WAF 浏览器态检测**——Referer/cookie/同主域三路全败，已注册默认关，破壁后再开） | 招标公告老牌门户 | ★缓施-免费 | 301→200 |
 | telecom_bid | txzb.miit.gov.cn 通信工程招投标平台（DNS 不解析） | 通信工程招标 | ★待验证 | DNS 失败 |
 | military_proc | 全军武器装备采购网/军队采购网（未实测） | 军队采购 | ★待验证 | 未实测 |
 | soe_eproc | 央企电子采购平台族：中石油/国家电投/华能/大唐/中核/中广核/能建/电建（入口分散未实测，sinopec 已在位） | 央工业主招标公告 | ★待验证（一类多源） | 未实测 |
@@ -103,7 +103,7 @@
 | safety_permit | 安全生产许可证查询（住建部+省级入口分散） | 安许证状态（jzsc 部分覆盖） | ★待验证 | 未实测 |
 | power_license | 国家能源局资质中心 承装（修、试）电力设施许可（入口待验证） | 电力设施许可 | ★待验证 | 未实测 |
 | trademark | https://sbj.cnipa.gov.cn 中国商标网 | 商标注册（品牌/出海商标布局） | ★新建-免费 | 200 |
-| software_copyright | https://www.ccopyright.com.cn 中国版权保护中心 | 软著登记（数字化能力证据） | ★新建-免费 | 200 |
+| software_copyright | https://www.ccopyright.com.cn 中国版权保护中心（09-20 探测：查询表单态，0 详情锚点） | 软著登记（数字化能力证据） | ★缓施-免费 | 200 |
 | hightech_cert | http://www.innocom.gov.cn 高新技术企业认定管理工作网 | 高企名录（税收优惠/技术实力） | ★新建-免费 | 200 |
 
 ### 6. 监管批复与项目要素（14：10 在位 + 4 新增）
@@ -113,7 +113,7 @@
 | ndrc / ndrc_pifu | 发改委 + 批复库 | 项目批复 | 在位×2 | 在位 |
 | nea / mofcom / mot / mohurd / nnsa / eia / policy / sasac | 能源局/商务部/交通部/住建部/核安全局/环评/政策/国资委 | 各监管口批复与政策 | 在位×8 | 在位 |
 | tzxm | https://www.tzxm.gov.cn 全国投资项目在线审批监管平台 | 项目审批/核准/备案结果（**EPC 项目源头**） | ★新建-免费 | 200（标题 JS 渲染） |
-| land_market | https://www.landchina.com 中国土地市场网 | 土地出让/成交公示（业主拿地=项目储备） | ★新建-免费 | 200 |
+| land_market | https://www.landchina.com 中国土地市场网（09-20 探测：4.9KB JS 壳） | 土地出让/成交公示（业主拿地=项目储备） | ★缓施-免费 | 200（壳） |
 | planning_publicity | 规划公示（自然资源部+地方规划局，入口分散） | 控规/修规公示 | ★待验证 | 未实测 |
 | carbon_market | https://www.cneeex.com 上海环交所/全国碳市场 | 碳配额履约（重资产能耗证据） | ★新建-免费 | 200 |
 
