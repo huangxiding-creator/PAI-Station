@@ -123,8 +123,10 @@ tm_token.txt
 # 个人画像档案（self-profile 产物，隐私红线）
 SELF_PROFILE/
 
-# 第三方仓库克隆（vendor 副本，独立上游许可）
-vendor/
+# 第三方仓库克隆（vendor 副本，独立上游许可；gitignore 不下钻，用 /* 写法留例外口）
+vendor/*
+# 例外：wechat-ai-memory（MIT，允许再分发；桥接件 tools/wechat4 的运行时依赖，换机不断链）
+!vendor/wechat-ai-memory/
 
 # 调研侦察与运营工作区（内部数据，可再生）
 _recon/
