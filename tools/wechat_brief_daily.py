@@ -304,7 +304,13 @@ STAGES = {"s1": s1_index, "s2": s2_reports, "s3": s3_semantic,
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--stages", default="s1,s2,s3,s4,s5,s6,s7")
+    parser.add_argument("--run-dir", default=None,
+                        help="续跑既有 run 目录（缺省每次新建；分段跑必须显式传）")
     args = parser.parse_args()
+
+    global _run_dir
+    if args.run_dir:
+        _run_dir = Path(args.run_dir)
 
     if PAUSE_FLAG.exists():
         print("暂停旗标存在，退出")

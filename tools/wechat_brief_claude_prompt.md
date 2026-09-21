@@ -5,7 +5,7 @@
 - 编辑素材：{run_dir}/group-daily/group_daily_editorial_packet.json（讨论候选/跨群链接/机器初判）
 - 机器群聊稿：{run_dir}/group-daily/group_daily_digest.md（参考，不直接交付）
 - 机器私聊稿：{run_dir}/contact-daily/contact_daily_digest.md（可能为空：无重点标签时）
-- 今日消息全量：{run_dir}/db-index/indexed_messages.json（chat/sender/time/content；私聊补漏用）
+- 今日消息全量：{run_dir}/db-index/indexed_messages.json（chat/sender/time/content；**4.x 解密全量+桥流实时流合并版**，群聊私聊主力素材，覆盖远超机器稿）
 
 ## 输出（四份，缺一不可，全部 UTF-8）
 
