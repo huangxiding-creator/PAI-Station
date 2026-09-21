@@ -51,8 +51,8 @@ def _run(cmd: list[str], timeout: int = 120, cwd: str | None = None):
     )
 
 
-def _git(repo: str, *args: str) -> str:
-    r = _run(["git", "-C", repo, *args])
+def _git(repo: str, *args: str, timeout: int = 120) -> str:
+    r = _run(["git", "-C", repo, *args], timeout=timeout)
     if r.returncode != 0:
         raise RuntimeError(
             f"git {' '.join(args)} 失败: "
@@ -141,7 +141,8 @@ def backup_repo(name: str, repo: str, force_full: bool,
         args = ["bundle", "create", str(local), "--all"]
     else:
         args = ["bundle", "create", str(local), f"^{last_head}", branch]
-    _git(repo, *args)                     # 失败直接抛 (含 last_head 丢失)
+    # 2G 级仓库打包远超默认 120s (We-AIPO 2026-09-21 实锤超时), 给足 90 分钟
+    _git(repo, *args, timeout=5400)       # 失败直接抛 (含 last_head 丢失)
 
     ok, detail = _upload_verify(local, remote_dir, fname)
     local.unlink(missing_ok=True)
