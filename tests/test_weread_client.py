@@ -286,7 +286,7 @@ def test_extract_book_partial_for_free():
 # ---------- 覆盖补强：节流/错误规约/续期/txt/边界 ----------
 
 def test_guard_throttles_between_requests():
-    """标准节奏下第二次请求必须落入 3.5~8.0s 随机睡眠窗（09-16 风控收紧后）。"""
+    """标准节奏下第二次请求必须落入 5.5~12.0s 随机睡眠窗（09-21 用户再令降速）。"""
     now = {"t": 1000.0}
     slept = []
     cli = WeReadClient(cookie="wr_skey=S", opener=FakeOpener([]),
@@ -295,11 +295,11 @@ def test_guard_throttles_between_requests():
     cli._guard()                                          # noqa: SLF001 - 直测节流
     assert slept == []                                    # 首次无等待
     cli._guard()                                          # noqa: SLF001
-    assert len(slept) == 1 and 3.5 <= slept[0] <= 8.0
+    assert len(slept) == 1 and 5.5 <= slept[0] <= 12.0
 
 
 def test_guard_inserts_reading_break():
-    """距上次长歇达到阈值后，节流等待之外必须追加一次 60~150s 长歇。"""
+    """距上次长歇达到阈值后，节流等待之外必须追加一次 90~240s 长歇。"""
     now = {"t": 1000.0}
     slept = []
     cli = WeReadClient(cookie="wr_skey=S", opener=FakeOpener([]),
@@ -308,7 +308,7 @@ def test_guard_inserts_reading_break():
     cli._break_at = 2                                     # noqa: SLF001 - 压低阈值直测
     cli._guard()                                          # noqa: SLF001
     cli._guard()                                          # noqa: SLF001 - 触发长歇
-    assert len(slept) == 2 and 60 <= slept[1] <= 150
+    assert len(slept) == 2 and 90 <= slept[1] <= 240
 
 
 def test_circuit_breaker_error_propagates():
