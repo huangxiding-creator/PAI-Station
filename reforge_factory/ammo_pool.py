@@ -85,6 +85,11 @@ def parse_kws(kw: str) -> list[str]:
     return [k for k in re.split(r"[\s,，、]+", kw) if len(k) >= 2]
 
 
+# ---------- 证据分级 (G3: Cochrane GRADE 简化版) ----------
+GRADE_MAP = {"official": "A", "research": "B", "media": "B",
+             "unknown": "C"}   # A=官方一手 B=权威二手 C=未验证
+
+
 # ---------- 有效性判断 (R0 启发式 — 免费优先/fail-soft/证据先行) ----------
 _GARBAGE = ("登录后查看", "请输入验证码", "404 Not Found", "403 Forbidden",
             "扫码关注", "访问过于频繁", "页面不存在", "网络出错")
@@ -141,9 +146,12 @@ def _manifest_keys(d: Path) -> set[str]:
 
 
 def ingest(cid: str, file: str, engine: str, url: str = "",
-           cred: str = "unknown") -> int:
-    """单条入池: URL 归一 + 去重 + source_engine 标记. 入池即 pending,
-    **不计门槛账** — 判有效 (judge) 才计数 (用户 09-22 铁律)."""
+           cred: str = "unknown", tree: str = "",
+           stance: str = "support") -> int:
+    """单条入池: URL 归一 + 去重 + source_engine 标记 + 挂树 (G3).
+    入池即 pending, **不计门槛账** — 判有效 (judge) 才计数 (用户铁律).
+    tree=EEI id (question_tree.json, 如 Q1-E2); stance=support/against/
+    contradict (对竞争假设的立场 — ACH 对抗场原料)."""
     d = _camp_dir(cid)
     if not d.is_dir():
         print(f"[pool] 战役池不存在, 先 init {cid}", file=sys.stderr)
@@ -164,7 +172,8 @@ def ingest(cid: str, file: str, engine: str, url: str = "",
     row = {"ts": time.strftime("%Y-%m-%dT%H:%M:%S"), "engine": engine,
            "source_path": str(fp), "url_norm": norm_url(url) if url else "",
            "chars": ch, "credibility": cred, "dedup_key": key,
-           "judge": "pending", "judge_reason": "", "judge_engine": ""}
+           "judge": "pending", "judge_reason": "", "judge_engine": "",
+           "tree_node": tree, "stance": stance}
     with (d / "manifest.jsonl").open("a", encoding="utf-8") as f:
         f.write(json.dumps(row, ensure_ascii=False) + "\n")
     s = _load_state(d)
@@ -206,7 +215,8 @@ def judge(cid: str, limit: int = 500) -> int:
             n_keep += 1
             continue
         verdict, reason = judge_heuristic(text, kws)
-        row.update(judge=verdict, judge_reason=reason, judge_engine="heuristic")
+        row.update(judge=verdict, judge_reason=reason, judge_engine="heuristic",
+                   grade=GRADE_MAP.get(row.get("credibility", "unknown"), "C"))
         ch = row["chars"]
         if verdict == "valid":
             n_valid += 1
@@ -279,6 +289,69 @@ def stocktake(cid: str, dirs: list[str], kw: str = "") -> int:
     return 0
 
 
+def coverage(cid: str) -> int:
+    """G4 覆盖度仪表 (饱和门): 问题树逐 EEI 亮灯.
+    饱和=该 EEI 有效证据 >=2 条且独立信源 >=2 (交叉验证);
+    子问题级另判反证位 (stance=against 至少 1 条 valid).
+    灯: ✓饱和 △单源 ○零源 ✗缺反证. 不足叶子=缺口清单→下轮采集任务."""
+    d = _camp_dir(cid)
+    tp = d / "question_tree.json"
+    if not tp.is_file():
+        print(f"[coverage] 无问题树, 先 question_tree.py generate {cid}",
+              file=sys.stderr)
+        return 1
+    tree = json.loads(tp.read_text(encoding="utf-8"))
+    rows = []
+    mp = d / "manifest.jsonl"
+    if mp.is_file():
+        rows = [json.loads(x) for x in
+                mp.read_text(encoding="utf-8").splitlines() if x.strip()]
+    valid = [r for r in rows if r.get("judge") == "valid"]
+    by_eei: dict[str, list[dict]] = {}
+    for r in valid:
+        if r.get("tree_node"):
+            by_eei.setdefault(r["tree_node"], []).append(r)
+    n_sat = n_gap = 0
+    print(f"\n╔═ 覆盖度仪表 (饱和门) ═ {cid} ═ {tree['topic']}")
+    for q in tree["subquestions"]:
+        eei_flags = []
+        for e in q["eeis"]:
+            ev = by_eei.get(e["id"], [])
+            hosts = {(urlsplit(r["url_norm"]).netloc or
+                      Path(r["source_path"]).stem) for r in ev}
+            if len(ev) >= 2 and len(hosts) >= 2:
+                e["status"], flag = "saturated", "✓"
+                n_sat += 1
+            elif len(ev) == 1 or (ev and len(hosts) == 1):
+                e["status"], flag = "single", "△"
+                n_gap += 1
+            else:
+                e["status"], flag = "zero", "○"
+                n_gap += 1
+            eei_flags.append(f"{e['id']}:{flag}{len(ev)}")
+        has_against = any(r.get("stance") == "against" for r in valid
+                          if r.get("tree_node", "").startswith(q["id"] + "-"))
+        q_flag = "✓" if all(e["status"] == "saturated" for e in q["eeis"]) \
+            else ("✗缺反证" if not has_against else "△")
+        print(f"║ {q['id']} [{q['dim']}] {q_flag} {q['text'][:38]}")
+        print(f"║    {' '.join(eei_flags)}")
+    total_eei = sum(len(q["eeis"]) for q in tree["subquestions"])
+    sat_pct = 100 * n_sat / max(1, total_eei)
+    tree["coverage"] = {"eei_total": total_eei, "saturated": n_sat,
+                        "gap": n_gap, "sat_pct": round(sat_pct, 1),
+                        "checked": time.strftime("%Y-%m-%d %H:%M")}
+    tp.write_text(json.dumps(tree, ensure_ascii=False, indent=1),
+                  encoding="utf-8")
+    print(f"║")
+    print(f"║ 饱和度: {n_sat}/{total_eei} EEI ({sat_pct:.1f}%) | "
+          f"缺口 {n_gap} 个 → 下轮定向采集任务源")
+    print(f"║ 报告准入: 字数门 "
+          f"({'✅' if json.loads((d / 'pool_state.json').read_text(encoding='utf-8'))['total_chars'] >= AMMO_GATE_CHARS else '⏳ 未过'}) "
+          f"∧ 饱和门 ({'✅' if sat_pct >= 80 else f'⏳ {sat_pct:.0f}%<80%'}) "
+          f"— 双门全过才准成稿")
+    return 0
+
+
 def status(cid: str) -> int:
     """仪表首屏: 门槛账只认有效弹药 (valid); 待审/废弃为审计副账."""
     d = _camp_dir(cid)
@@ -309,10 +382,14 @@ def status(cid: str) -> int:
 def main() -> int:
     ap = argparse.ArgumentParser(description="弹药池 (千万字弹药工程 F-2)")
     ap.add_argument("cmd", choices=["init", "ingest", "judge",
-                                    "stocktake", "status"])
+                                    "stocktake", "coverage", "status"])
     ap.add_argument("cid", help="campaign_id (如 EPC100-2026Q4)")
     ap.add_argument("--kw", default="", help="课题关键词 (init 配置判断判据)")
     ap.add_argument("--limit", type=int, default=500, help="judge 批量上限")
+    ap.add_argument("--tree", default="", help="挂树 EEI id (如 Q1-E2)")
+    ap.add_argument("--stance", default="support",
+                    choices=["support", "against", "contradict"],
+                    help="对竞争假设的立场 (ACH 原料)")
     ap.add_argument("--file", default="")
     ap.add_argument("--engine", default="own:manual")
     ap.add_argument("--url", default="")
@@ -332,9 +409,12 @@ def main() -> int:
             if not args.file:
                 print("--file 必填", file=sys.stderr)
                 return 2
-            return ingest(args.cid, args.file, args.engine, args.url, args.cred)
+            return ingest(args.cid, args.file, args.engine, args.url,
+                          args.cred, args.tree, args.stance)
         elif args.cmd == "judge":
             return judge(args.cid, args.limit)
+        elif args.cmd == "coverage":
+            return coverage(args.cid)
         elif args.cmd == "stocktake":
             if not args.dirs:
                 print("--dirs 必填 (可多次)", file=sys.stderr)

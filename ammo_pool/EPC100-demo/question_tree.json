@@ -1,0 +1,1173 @@
+{
+ "campaign": "EPC100-demo",
+ "topic": "四川省 EPC总承包市场",
+ "region": "四川省",
+ "generated": "2026-09-22 21:54",
+ "engine": "v0-heuristic (军团参谋网络恢复后升级 — M4)",
+ "context_pack": {
+  "pool_items": 1,
+  "pool_valid_chars": 759,
+  "pool_kws": [
+   "EPC",
+   "总承包",
+   "水利水电",
+   "设计院"
+  ],
+  "note": "存量仅防重扫参考; 门槛只算本次新增有效弹药 (用户铁律)"
+ },
+ "loop_policy": "M3 增量生长: 小批采→即时判挂树→按 coverage 缺口补下批",
+ "hypotheses": [
+  {
+   "id": "H1",
+   "text": "四川省 EPC总承包市场 处于扩张周期, 机会大于风险",
+   "prior": 0.4
+  },
+  {
+   "id": "H2",
+   "text": "四川省 EPC总承包市场 已过峰值/竞争恶化, 风险大于机会",
+   "prior": 0.3
+  },
+  {
+   "id": "H3",
+   "text": "四川省 EPC总承包市场 结构性分化: 细分领域机会与风险并存",
+   "prior": 0.3
+  }
+ ],
+ "subquestions": [
+  {
+   "id": "Q1",
+   "dim": "政策监管",
+   "text": "四川省 EPC总承包市场 主管部门与监管框架",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q1-E1",
+     "need": "正面证据: 主管部门与监管框架 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 主管部门与监管框架 2025-2026",
+      "四川省 EPC总承包市场 主管部门与监管框架 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q1-E2",
+     "need": "反面证据: 主管部门与监管框架 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 主管部门与监管框架 风险 纠纷 处罚",
+      "四川省 EPC总承包市场 主管部门与监管框架 失败案例 质疑"
+     ],
+     "status": "single"
+    },
+    {
+     "id": "Q1-E3",
+     "need": "权威口径: 主管部门与监管框架 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "四川省省政府官网",
+      "四川省发展和改革委员会",
+      "四川省住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "Q2",
+   "dim": "政策监管",
+   "text": "EPC总承包市场 国家层面政策文件与五年规划定位",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q2-E1",
+     "need": "正面证据: 国家层面政策文件与五年规划定位 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 国家层面政策文件与五年规划定位 2025-2026",
+      "四川省 EPC总承包市场 国家层面政策文件与五年规划定位 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q2-E2",
+     "need": "反面证据: 国家层面政策文件与五年规划定位 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 国家层面政策文件与五年规划定位 风险 纠纷 处罚",
+      "四川省 EPC总承包市场 国家层面政策文件与五年规划定位 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q2-E3",
+     "need": "权威口径: 国家层面政策文件与五年规划定位 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "四川省省政府官网",
+      "四川省发展和改革委员会",
+      "四川省住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "Q3",
+   "dim": "政策监管",
+   "text": "EPC总承包市场 准入资质与招投标制度改革动向",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q3-E1",
+     "need": "正面证据: 准入资质与招投标制度改革动向 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 准入资质与招投标制度改革动向 2025-2026",
+      "四川省 EPC总承包市场 准入资质与招投标制度改革动向 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q3-E2",
+     "need": "反面证据: 准入资质与招投标制度改革动向 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 准入资质与招投标制度改革动向 风险 纠纷 处罚",
+      "四川省 EPC总承包市场 准入资质与招投标制度改革动向 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q3-E3",
+     "need": "权威口径: 准入资质与招投标制度改革动向 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "四川省省政府官网",
+      "四川省发展和改革委员会",
+      "四川省住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "Q4",
+   "dim": "市场规模",
+   "text": "四川省 EPC总承包市场 市场规模与近三年新签合同额趋势",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q4-E1",
+     "need": "正面证据: 市场规模与近三年新签合同额趋势 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 市场规模与近三年新签合同额趋势 2025-2026",
+      "四川省 EPC总承包市场 市场规模与近三年新签合同额趋势 官方数据"
+     ],
+     "status": "single"
+    },
+    {
+     "id": "Q4-E2",
+     "need": "反面证据: 市场规模与近三年新签合同额趋势 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 市场规模与近三年新签合同额趋势 风险 纠纷 处罚",
+      "四川省 EPC总承包市场 市场规模与近三年新签合同额趋势 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q4-E3",
+     "need": "权威口径: 市场规模与近三年新签合同额趋势 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "四川省省政府官网",
+      "四川省发展和改革委员会",
+      "四川省住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "Q5",
+   "dim": "市场规模",
+   "text": "EPC总承包市场 全国统计口径与权威数据源清单",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q5-E1",
+     "need": "正面证据: 全国统计口径与权威数据源清单 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 全国统计口径与权威数据源清单 2025-2026",
+      "四川省 EPC总承包市场 全国统计口径与权威数据源清单 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q5-E2",
+     "need": "反面证据: 全国统计口径与权威数据源清单 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 全国统计口径与权威数据源清单 风险 纠纷 处罚",
+      "四川省 EPC总承包市场 全国统计口径与权威数据源清单 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q5-E3",
+     "need": "权威口径: 全国统计口径与权威数据源清单 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "四川省省政府官网",
+      "四川省发展和改革委员会",
+      "四川省住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "Q6",
+   "dim": "市场规模",
+   "text": "四川省 EPC总承包市场 增速驱动因素与天花板研判",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q6-E1",
+     "need": "正面证据: 增速驱动因素与天花板研判 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 增速驱动因素与天花板研判 2025-2026",
+      "四川省 EPC总承包市场 增速驱动因素与天花板研判 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q6-E2",
+     "need": "反面证据: 增速驱动因素与天花板研判 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 增速驱动因素与天花板研判 风险 纠纷 处罚",
+      "四川省 EPC总承包市场 增速驱动因素与天花板研判 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q6-E3",
+     "need": "权威口径: 增速驱动因素与天花板研判 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "四川省省政府官网",
+      "四川省发展和改革委员会",
+      "四川省住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "Q7",
+   "dim": "竞争格局",
+   "text": "EPC总承包市场 头部企业排名与市场份额",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q7-E1",
+     "need": "正面证据: 头部企业排名与市场份额 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 头部企业排名与市场份额 2025-2026",
+      "四川省 EPC总承包市场 头部企业排名与市场份额 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q7-E2",
+     "need": "反面证据: 头部企业排名与市场份额 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 头部企业排名与市场份额 风险 纠纷 处罚",
+      "四川省 EPC总承包市场 头部企业排名与市场份额 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q7-E3",
+     "need": "权威口径: 头部企业排名与市场份额 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "四川省省政府官网",
+      "四川省发展和改革委员会",
+      "四川省住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "Q8",
+   "dim": "竞争格局",
+   "text": "央企/地方国企/民企在 EPC总承包市场 的竞争分层",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q8-E1",
+     "need": "正面证据: 央企/地方国企/民企在  的竞争分层 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 央企/地方国企/民企在  的竞争分层 2025-2026",
+      "四川省 EPC总承包市场 央企/地方国企/民企在  的竞争分层 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q8-E2",
+     "need": "反面证据: 央企/地方国企/民企在  的竞争分层 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 央企/地方国企/民企在  的竞争分层 风险 纠纷 处罚",
+      "四川省 EPC总承包市场 央企/地方国企/民企在  的竞争分层 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q8-E3",
+     "need": "权威口径: 央企/地方国企/民企在  的竞争分层 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "四川省省政府官网",
+      "四川省发展和改革委员会",
+      "四川省住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "Q9",
+   "dim": "竞争格局",
+   "text": "EPC总承包市场 主要玩家近三年重大战略动作",
+   "falsifiable": false,
+   "falsify_note": "未见指标/实体词 — 建议点名数字、机构、时间窗",
+   "eeis": [
+    {
+     "id": "Q9-E1",
+     "need": "正面证据: 主要玩家近三年重大战略动作 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 主要玩家近三年重大战略动作 2025-2026",
+      "四川省 EPC总承包市场 主要玩家近三年重大战略动作 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q9-E2",
+     "need": "反面证据: 主要玩家近三年重大战略动作 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 主要玩家近三年重大战略动作 风险 纠纷 处罚",
+      "四川省 EPC总承包市场 主要玩家近三年重大战略动作 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q9-E3",
+     "need": "权威口径: 主要玩家近三年重大战略动作 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "四川省省政府官网",
+      "四川省发展和改革委员会",
+      "四川省住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "Q10",
+   "dim": "项目案例",
+   "text": "EPC总承包市场 标志性项目清单 (业主/金额/工期)",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q10-E1",
+     "need": "正面证据: 标志性项目清单 业主/金额/工期 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 标志性项目清单 业主/金额/工期 2025-2026",
+      "四川省 EPC总承包市场 标志性项目清单 业主/金额/工期 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q10-E2",
+     "need": "反面证据: 标志性项目清单 业主/金额/工期 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 标志性项目清单 业主/金额/工期 风险 纠纷 处罚",
+      "四川省 EPC总承包市场 标志性项目清单 业主/金额/工期 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q10-E3",
+     "need": "权威口径: 标志性项目清单 业主/金额/工期 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "四川省省政府官网",
+      "四川省发展和改革委员会",
+      "四川省住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "Q11",
+   "dim": "项目案例",
+   "text": "EPC总承包市场 典型合同模式与计价方式",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q11-E1",
+     "need": "正面证据: 典型合同模式与计价方式 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 典型合同模式与计价方式 2025-2026",
+      "四川省 EPC总承包市场 典型合同模式与计价方式 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q11-E2",
+     "need": "反面证据: 典型合同模式与计价方式 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 典型合同模式与计价方式 风险 纠纷 处罚",
+      "四川省 EPC总承包市场 典型合同模式与计价方式 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q11-E3",
+     "need": "权威口径: 典型合同模式与计价方式 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "四川省省政府官网",
+      "四川省发展和改革委员会",
+      "四川省住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "Q12",
+   "dim": "项目案例",
+   "text": "EPC总承包市场 重大失败或超概算案例",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q12-E1",
+     "need": "正面证据: 重大失败或超概算案例 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 重大失败或超概算案例 2025-2026",
+      "四川省 EPC总承包市场 重大失败或超概算案例 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q12-E2",
+     "need": "反面证据: 重大失败或超概算案例 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 重大失败或超概算案例 风险 纠纷 处罚",
+      "四川省 EPC总承包市场 重大失败或超概算案例 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q12-E3",
+     "need": "权威口径: 重大失败或超概算案例 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "四川省省政府官网",
+      "四川省发展和改革委员会",
+      "四川省住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "Q13",
+   "dim": "风险事件",
+   "text": "EPC总承包市场 重大质量安全事故与行政处罚",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q13-E1",
+     "need": "正面证据: 重大质量安全事故与行政处罚 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 重大质量安全事故与行政处罚 2025-2026",
+      "四川省 EPC总承包市场 重大质量安全事故与行政处罚 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q13-E2",
+     "need": "反面证据: 重大质量安全事故与行政处罚 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 重大质量安全事故与行政处罚 风险 纠纷 处罚",
+      "四川省 EPC总承包市场 重大质量安全事故与行政处罚 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q13-E3",
+     "need": "权威口径: 重大质量安全事故与行政处罚 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "四川省省政府官网",
+      "四川省发展和改革委员会",
+      "四川省住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "Q14",
+   "dim": "风险事件",
+   "text": "EPC总承包市场 合同纠纷判例与败诉原因",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q14-E1",
+     "need": "正面证据: 合同纠纷判例与败诉原因 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 合同纠纷判例与败诉原因 2025-2026",
+      "四川省 EPC总承包市场 合同纠纷判例与败诉原因 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q14-E2",
+     "need": "反面证据: 合同纠纷判例与败诉原因 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 合同纠纷判例与败诉原因 风险 纠纷 处罚",
+      "四川省 EPC总承包市场 合同纠纷判例与败诉原因 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q14-E3",
+     "need": "权威口径: 合同纠纷判例与败诉原因 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "四川省省政府官网",
+      "四川省发展和改革委员会",
+      "四川省住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "Q15",
+   "dim": "风险事件",
+   "text": "EPC总承包市场 主要风险因子与对冲实践",
+   "falsifiable": false,
+   "falsify_note": "未见指标/实体词 — 建议点名数字、机构、时间窗",
+   "eeis": [
+    {
+     "id": "Q15-E1",
+     "need": "正面证据: 主要风险因子与对冲实践 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 主要风险因子与对冲实践 2025-2026",
+      "四川省 EPC总承包市场 主要风险因子与对冲实践 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q15-E2",
+     "need": "反面证据: 主要风险因子与对冲实践 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 主要风险因子与对冲实践 风险 纠纷 处罚",
+      "四川省 EPC总承包市场 主要风险因子与对冲实践 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q15-E3",
+     "need": "权威口径: 主要风险因子与对冲实践 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "四川省省政府官网",
+      "四川省发展和改革委员会",
+      "四川省住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "Q16",
+   "dim": "财务经营",
+   "text": "EPC总承包市场 头部企业营收/毛利率趋势",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q16-E1",
+     "need": "正面证据: 头部企业营收/毛利率趋势 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 头部企业营收/毛利率趋势 2025-2026",
+      "四川省 EPC总承包市场 头部企业营收/毛利率趋势 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q16-E2",
+     "need": "反面证据: 头部企业营收/毛利率趋势 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 头部企业营收/毛利率趋势 风险 纠纷 处罚",
+      "四川省 EPC总承包市场 头部企业营收/毛利率趋势 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q16-E3",
+     "need": "权威口径: 头部企业营收/毛利率趋势 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "四川省省政府官网",
+      "四川省发展和改革委员会",
+      "四川省住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "Q17",
+   "dim": "财务经营",
+   "text": "EPC总承包市场 应收账款与现金流风险信号",
+   "falsifiable": false,
+   "falsify_note": "未见指标/实体词 — 建议点名数字、机构、时间窗",
+   "eeis": [
+    {
+     "id": "Q17-E1",
+     "need": "正面证据: 应收账款与现金流风险信号 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 应收账款与现金流风险信号 2025-2026",
+      "四川省 EPC总承包市场 应收账款与现金流风险信号 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q17-E2",
+     "need": "反面证据: 应收账款与现金流风险信号 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "四川省 EPC总承包市场 应收账款与现金流风险信号 风险 纠纷 处罚",
+      "四川省 EPC总承包市场 应收账款与现金流风险信号 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "Q17-E3",
+     "need": "权威口径: 应收账款与现金流风险信号 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "四川省省政府官网",
+      "四川省发展和改革委员会",
+      "四川省住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  }
+ ],
+ "stats": {
+  "subquestions": 17,
+  "unfalsifiable": 3,
+  "eeis": 51,
+  "queries": 119
+ },
+ "coverage": {
+  "eei_total": 51,
+  "saturated": 0,
+  "gap": 51,
+  "sat_pct": 0.0,
+  "checked": "2026-09-22 21:56"
+ }
+}
