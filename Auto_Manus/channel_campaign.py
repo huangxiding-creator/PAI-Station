@@ -129,8 +129,11 @@ def build_campaign(need: str, origin: str = "EPC100") -> dict:
                      "先极致调研后撰写 — 调研收集做到极致是成稿的唯一前提 (用户 09-22 定调)",
         "ammo_gate": {
             "min_chars": 10_000_000,
-            "rule": "调研成果总字数 ≥1000万字 才准进入撰写 (用户 09-22 铁律)",
-            "check": "Phase B 盘点; 不足则回 A/C 继续采, 严禁带伤撰写",
+            "rule": "本次新增调研资料 (通过有效性判断的, judge=valid) "
+                    "总字数 ≥1000万字 才准进入撰写 (用户 09-22 终版铁律: "
+                    "存量不计门槛; 成稿素材不受限=存量+新增皆可引用)",
+            "check": "Phase B 盘点 (ammo_pool.status 门槛账只认 valid); "
+                     "不足则回 A/C 继续采, 严禁带伤撰写",
         },
         "phases": {
             "A_广度扫": {"executors": order,
