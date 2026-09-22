@@ -85,7 +85,9 @@ def fetch_kind(page, tok: dict, sid: str, kind: str) -> tuple[int, str]:
         method, path = "GET", KIND_PATHS[kind].format(sid=sid)
         body = None
     st, text = api.api_call(page, method, path, tok, body=body)
-    if st in (401, 403):
+    if st in (401, 403) and page is not None:
+        # 无浏览器模式 (page=None): token 失效无法现场重捕, 直接返回让上层
+        # 走浏览器重登路; 有浏览器才自愈刷新.
         try:
             tok.update(api.capture_token(page))
             api.save_token(_current_email, tok)
@@ -152,17 +154,23 @@ def main():
 
     accounts = lib.load_accounts(args.account_file, args.limit)
     print(f"[harvest] {args.account_file}: {len(accounts)} 账号", flush=True)
-    exit_country = lib.ensure_network()  # 网络预检 (用户令: 不要用户提醒)
+    page = lib.make_page()
+    exit_country = lib.ensure_network(page)  # 浏览器实测判据 (curl/urllib 假阴性)
     print(f"[harvest] 代理出口: {exit_country}", flush=True)
     m = load_manifest()
     breaker = lib.CircuitBreaker()
-    page = lib.make_page()
 
     total_new = 0
     for i, (email, password) in enumerate(accounts, 1):
         global _current_email
         _current_email = email
         print(f"[harvest] === 账号 {i}/{len(accounts)}: {email} ===", flush=True)
+        # 跨文件去重 (用户令 09-22: 同账号会话集固定, 列一次即全,
+        # 重复账号不重跑; 漏项由 rescan 终局对账兜底)
+        listed = set(m.get("listed_accounts", []))
+        if email in listed:
+            print(f"[harvest] 已全量列取过 → 跨文件跳过", flush=True)
+            continue
         try:
             sessions = lib.ensure_login(page, email, password)
         except RuntimeError as e:
@@ -201,6 +209,9 @@ def main():
         m["accounts"][email] = {"sessions": stats["sessions"],
                                 "credits": stats["credits"],
                                 "ts": time.strftime("%Y-%m-%dT%H:%M:%S")}
+        # 全量列取完成 → 登记 (后续文件遇同账号整账号跳过)
+        listed.add(email)
+        m["listed_accounts"] = sorted(listed)
         save_manifest(m)
         cr = stats["credits"]
         cr_txt = ""

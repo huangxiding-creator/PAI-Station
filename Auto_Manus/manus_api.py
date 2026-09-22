@@ -94,12 +94,43 @@ def load_token(email: str) -> dict | None:
     return None
 
 
+_PROXY = {"https": "http://127.0.0.1:7890"}
+
+
+def _urllib_call(method: str, path: str, tok: dict,
+                 body: dict | None, timeout: int = 25):
+    """无浏览器路: urllib + 存档 token 直打 api.manus.im (走 7890)."""
+    import urllib.error
+    import urllib.request
+    data = (json.dumps(body, ensure_ascii=False).encode("utf-8")
+            if body is not None else (b"{}" if method == "POST" else None))
+    headers = {"Authorization": tok.get("authorization", ""),
+               "x-client-id": tok.get("client_id") or "",
+               "x-client-type": "web", "Origin": "https://manus.im"}
+    if data is not None:
+        headers["Content-Type"] = "application/json"
+    req = urllib.request.Request(API_BASE + path, data=data, method=method,
+                                 headers=headers)
+    op = urllib.request.build_opener(
+        urllib.request.ProxyHandler(_PROXY))
+    try:
+        r = op.open(req, timeout=timeout)
+        return r.status, r.read().decode("utf-8", "replace")
+    except urllib.error.HTTPError as e:
+        return e.code, e.read().decode("utf-8", "replace")[:500]
+    except Exception as e:
+        return -1, f"{type(e).__name__}: {e}"[:300]
+
+
 def api_call(page, method: str, path: str, tok: dict,
              body: dict | None = None, timeout_note: str = ""):
     """通用调用 → (status:int, body:str). path 以 / 开头.
 
-    页面刷新窗口内 run_js 会 ContextLost — 等 doc_loaded 后重试 (≤3 次).
+    page=None → 纯 urllib token 直调 (0922 实证 API 面对 token 全开,
+    免疫 web 前端区域判定); 有 page → 浏览器内 XHR (原路).
     """
+    if page is None:
+        return _urllib_call(method, path, tok, body)
     body_str = json.dumps(body, ensure_ascii=False) if body is not None else ""
     raw = None
     for attempt in range(3):
