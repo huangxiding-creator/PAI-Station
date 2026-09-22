@@ -202,12 +202,15 @@ def dispatch_mock(t: dict) -> dict:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="ResearchTicket 七环总线 (F0)")
-    ap.add_argument("cmd", choices=["intake", "route", "plan-mock",
+    ap.add_argument("cmd", choices=["intake", "route", "campaign", "plan-mock",
                                     "dispatch-mock", "record", "show", "stats"])
     ap.add_argument("tid", nargs="?", default="")
     ap.add_argument("--need", default="")
     ap.add_argument("--origin", default="EPC100",
                     choices=["EPC100", "P5", "战略课题", "用户点名"])
+    ap.add_argument("--scale", default="ammo",
+                    choices=["ammo", "campaign"],
+                    help="ammo=小任务单路由; campaign=大战役全渠道总动员")
     ap.add_argument("--corpus", action="append", default=[],
                     help="context_pack 扫描目录 (可多次)")
     ap.add_argument("--engine", choices=["own", "manus", "dual"])
@@ -221,12 +224,28 @@ def main() -> int:
                 print("--need 不能为空", file=sys.stderr)
                 return 2
             tid = _next_ticket_id()
-            t = {"ticket_id": tid, "stage": "intake",
+            t = {"ticket_id": tid, "stage": "intake", "scale": args.scale,
                  "created": time.strftime("%Y-%m-%d %H:%M"),
                  "intake": {"need": args.need.strip(), "origin": args.origin,
                             **jev_verdict_stub(args.need)}}
             _save_ticket(t)
-            print(f"[bus] 工单建立: {tid} (stage=intake, origin={args.origin})")
+            print(f"[bus] 工单建立: {tid} (stage=intake, scale={args.scale}, "
+                  f"origin={args.origin})")
+
+        elif args.cmd == "campaign":
+            # 大战役: 全渠道总动员编成 (channel_campaign 模块), 写入 ticket
+            t = _load_ticket(args.tid)
+            import channel_campaign as cc
+            cp = cc.build_campaign(t["intake"]["need"], t["intake"]["origin"])
+            _save_ticket({**t, "scale": "campaign", "campaign": cp,
+                          "stage": "planning"})
+            gate = cp["ammo_gate"]
+            print(f"[bus] 战役编成: {args.tid} → {cp['campaign_id']} "
+                  f"(全渠道 {cp['totals']['channels']} 个, 主力 "
+                  f"{cp['totals']['main']} 个)")
+            print(f"     弹药硬门: {gate['rule']}")
+            for o in cp["phases"]["A_广度扫"]["executors"][:5]:
+                print(f"     A{o['seq']:>2}. [{o['role']}] {o['channel']}")
 
         elif args.cmd in ("route", "plan-mock", "dispatch-mock"):
             corpus = [Path(x) for x in args.corpus] or [
