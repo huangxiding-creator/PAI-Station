@@ -51,6 +51,7 @@ def _set_current(email: str):
 
 def _boot(page, account_idx: int | None):
     """返回 (email, tok). account_idx 给出=确保该账号登录; 不给=复用当前态."""
+    exit_country = lib.ensure_network()  # 网络预检 (用户令: 不要用户提醒)
     email = _current_email()
     if account_idx is not None:
         email, password = lib.load_accounts(ACCOUNT_FILE)[account_idx - 1]

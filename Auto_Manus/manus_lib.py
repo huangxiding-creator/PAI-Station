@@ -13,6 +13,7 @@
 from __future__ import annotations
 
 import json
+import sys
 import time
 from pathlib import Path
 
@@ -30,6 +31,44 @@ BAN_KEYWORDS = ("账号已被", "账号已停用", "暂停使用", "Account susp
 
 BETWEEN_ACCOUNTS_S = 30      # 节流: 账号间隔 (原 main.py 5s 收紧)
 MAX_CONSECUTIVE_FAILURES = 3  # 冷却: 连续 3 账号失败停批
+
+
+# ---------------------------------------------------------------- 网络预检
+def ensure_network(timeout_s: int = 15) -> str:
+    """网络预检 — 用户令 (2026-09-22): 首先就要检查网络, 不要用户提醒.
+
+    Manus 封锁中国大陆出口, 浏览器实例须走 7890 代理 (美国/新加坡等).
+    本函数在任何登录/采集动作前调用: 验证出口国非 CN; 死则自动跑
+    We-AIPO 三段梯自愈 (保 7890 活, 零组零模式操作, 红线兼容);
+    复活返回 "国家/城市", 仍死 raise RuntimeError.
+    """
+    import urllib.request
+    proxy = urllib.request.ProxyHandler({"http": PROXY, "https": PROXY})
+    opener = urllib.request.build_opener(proxy)
+
+    def probe() -> dict:
+        with opener.open("https://ipinfo.io/json", timeout=timeout_s) as r:
+            return json.loads(r.read().decode("utf-8", "replace"))
+
+    try:
+        info = probe()
+        if info.get("country") != "CN":
+            return f"{info.get('country')}/{info.get('city')}"
+    except Exception:
+        pass
+    print("[net] 7890 出口异常 → 三段梯自愈 (保核心活)", flush=True)
+    try:
+        scripts = r"E:\CPOPC\We-AIPO\scripts"
+        if scripts not in sys.path:
+            sys.path.insert(0, scripts)
+        import push_net_heal as h
+        h.ensure_clash_core_alive()
+    except Exception as e:
+        raise RuntimeError(f"代理死且自愈失败: {type(e).__name__} {e}")
+    info = probe()
+    if info.get("country") == "CN":
+        raise RuntimeError("代理出口仍在中国 (Manus 封锁区), 须人工介入")
+    return f"{info.get('country')}/{info.get('city')}"
 
 
 # ---------------------------------------------------------------- 账号加载

@@ -126,18 +126,20 @@ def api_call(page, method: str, path: str, tok: dict,
 
 
 # ---------------------------------------------------------------- 读端点族
-def list_sessions(page, tok: dict) -> list:
-    st, text = api_call(page, "GET", "/session.v1.SessionService/ListSessions",
-                        tok, body={})
-    # ListSessions 是 POST (probe: req={}); 若 GET 405 则改 POST
-    if st in (405, -1):
+def list_sessions(page, tok: dict, page_size: int = 200) -> list:
+    """列会话 (protojson POST). page_size 调大防前端默认截断 —
+    用户令 (09-22): 不漏任何账号/任务/会话; 若服务端支持 pageSize
+    则一次拉全, 不支持则忽略参数返回默认."""
+    st, text = api_call(page, "POST",
+                        "/session.v1.SessionService/ListSessions",
+                        tok, body={"pageSize": page_size})
+    if st != 200:  # 兜底: 老契约空 body
         st, text = api_call(page, "POST",
                             "/session.v1.SessionService/ListSessions",
                             tok, body={})
     if st != 200:
         raise RuntimeError(f"ListSessions {st}: {text[:120]}")
     d = json.loads(text)
-    # 响应可能是 protojson: {'sessions': [...]}
     return d.get("sessions", [])
 
 

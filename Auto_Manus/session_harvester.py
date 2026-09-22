@@ -50,6 +50,24 @@ def load_manifest() -> dict:
     return {"collected": {}, "accounts": {}}
 
 
+FAILED_PATH = OUT_ROOT / "failed_accounts.json"
+
+
+def _record_failed(email: str, reason: str):
+    """防漏②: 失败账号登记 — 供 session_rescan 复扫补齐."""
+    d = {}
+    if FAILED_PATH.is_file():
+        try:
+            d = json.loads(FAILED_PATH.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    d[email] = {"reason": reason,
+                "ts": time.strftime("%Y-%m-%dT%H:%M:%S")}
+    FAILED_PATH.parent.mkdir(parents=True, exist_ok=True)
+    FAILED_PATH.write_text(json.dumps(d, ensure_ascii=False, indent=1),
+                           encoding="utf-8")
+
+
 def save_manifest(m: dict):
     MANIFEST.parent.mkdir(parents=True, exist_ok=True)
     tmp = MANIFEST.with_suffix(".tmp")
@@ -134,6 +152,8 @@ def main():
 
     accounts = lib.load_accounts(args.account_file, args.limit)
     print(f"[harvest] {args.account_file}: {len(accounts)} 账号", flush=True)
+    exit_country = lib.ensure_network()  # 网络预检 (用户令: 不要用户提醒)
+    print(f"[harvest] 代理出口: {exit_country}", flush=True)
     m = load_manifest()
     breaker = lib.CircuitBreaker()
     page = lib.make_page()
@@ -153,6 +173,7 @@ def main():
             stop = breaker.record_fail()
             print(f"[harvest] 登录失败 (连续 {breaker.consecutive}) "
                   f"{'→ 冷却停批' if stop else '→ 跳过'}", flush=True)
+            _record_failed(email, "login")  # 防漏②: 失败账号登记待复扫
             if stop:
                 break
             time.sleep(args.delay)
@@ -163,8 +184,18 @@ def main():
             api.save_token(email, tok)
         except RuntimeError as e:
             print(f"[harvest] token 捕获失败: {e} — 跳过该账号", flush=True)
+            _record_failed(email, f"token:{e}")
             time.sleep(args.delay)
             continue
+        # 防漏①: 登录后主动全量拉会话 (pageSize=200, 防前端默认截断)
+        try:
+            full = api.list_sessions(page, tok)
+            if len(full) > len(sessions or []):
+                print(f"[harvest] 全量列会话: {len(sessions or [])} → "
+                      f"{len(full)} (分页截断已防)", flush=True)
+                sessions = full
+        except Exception as e:
+            print(f"[harvest] 全量列会话失败 (用监听值): {e}", flush=True)
         stats = collect_account(page, email, sessions, m)
         total_new += stats["new"]
         m["accounts"][email] = {"sessions": stats["sessions"],
@@ -175,7 +206,8 @@ def main():
         cr_txt = ""
         if isinstance(cr, dict):
             cr_txt = " 积分=" + str(
-                cr.get("availableCredits", cr.get("credits", "?")))
+                cr.get("totalCredits",
+                       cr.get("availableCredits", "?")))
         print(f"[harvest] {email}: 会话 {stats['sessions']} 新采 "
               f"{stats['new']} 跳 {stats['skip']} 败 {stats['fail']}"
               f"{cr_txt}", flush=True)
