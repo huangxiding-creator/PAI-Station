@@ -1,0 +1,70 @@
+{
+ "ts": "2026-09-24T03:15:57",
+ "tolerance_pp": 5.0,
+ "E1_intent_choice": {
+  "jev": {
+   "n": 159,
+   "answered": 159,
+   "acc": 0.7169811320754716,
+   "conf_correct": 0.9235964912280702,
+   "conf_wrong": 0.7002222222222222,
+   "latency_p50_s": 1.282
+  },
+  "laya": {
+   "n": 162,
+   "answered": 162,
+   "acc": 0.8827160493827161,
+   "conf_correct": 0.7412475524475525,
+   "conf_wrong": 0.2778157894736842,
+   "latency_p50_s": 0.053
+  },
+  "headline": "acc",
+  "verdict": "PASS"
+ },
+ "E2_taskreq_noul": {
+  "jev": {
+   "n": 23,
+   "todo": 11,
+   "chatter": 12,
+   "recall@0.5": 1.0,
+   "fp@0.5": 0.0,
+   "recall@0.6": 0.9090909090909091,
+   "fp@0.6": 0.0,
+   "recall@0.7": 0.9090909090909091,
+   "fp@0.7": 0.0
+  },
+  "laya": {
+   "n": 23,
+   "todo": 11,
+   "chatter": 12,
+   "recall@0.5": 1.0,
+   "fp@0.5": 0.0,
+   "recall@0.6": 0.9090909090909091,
+   "fp@0.6": 0.0,
+   "recall@0.7": 0.9090909090909091,
+   "fp@0.7": 0.0
+  },
+  "headline": "recall@0.5 (fp@0.5 须同时 ≤ Jev+5pp)",
+  "verdict": "PASS"
+ },
+ "E3_hit_verify_noul": {
+  "jev": {
+   "n": 100,
+   "lexical_hits": 90,
+   "laya_hits": 76,
+   "agree_with_lexical": 0.8,
+   "citation_capture": 3,
+   "sep_gap": 0.52
+  },
+  "laya": {
+   "n": 100,
+   "lexical_hits": 88,
+   "laya_hits": 82,
+   "agree_with_lexical": 0.8,
+   "citation_capture": 4,
+   "sep_gap": 0.5315
+  },
+  "headline": "citation_capture /5 + sep_gap≥0.1 双门（防恒真探测器）",
+  "verdict": "PASS"
+ }
+}
