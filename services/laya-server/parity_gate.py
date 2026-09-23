@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import io
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -24,8 +25,10 @@ REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "src"))
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-OUT_DIR = Path(__file__).resolve().parent / "parity"
-OUT_DIR.mkdir(exist_ok=True)
+# 夜训回归门用独立目录（LAYA_PARITY_DIR 覆写），零样本基线档不被污染
+OUT_DIR = Path(os.environ.get("LAYA_PARITY_DIR") or
+               (Path(__file__).resolve().parent / "parity"))
+OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # ---- 原措辞契约（钉死不改，与 tmp/jev_exp_run.py / jev_exp3_verify.py 逐字一致）----
 

@@ -16,6 +16,7 @@ import sys
 import threading
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
 
 # 环境必须先于 transformers/laya 导入
 os.environ.setdefault("USE_TF", "0")
@@ -26,7 +27,12 @@ os.environ.setdefault("TRANSFORMERS_NO_ADVISORY_WARNINGS", "1")
 HOST, PORT = "127.0.0.1", int(os.environ.get("LAYA_PORT", "8864"))
 BUNDLE_REPO = "convaiinnovations/laya"
 SUBFOLDER = os.environ.get("LAYA_SUBFOLDER", "multilingual")   # ADR-3: 首版仅 multilingual
-MODEL_PATH = os.environ.get("LAYA_MODEL_PATH", "")             # 微调产物热换入口 (P2)
+# 微调检查点热换（P2）：env > active_checkpoint.txt（keepalive 无窗重启也能带上）
+# 文件内容=检查点目录绝对路径；空文件/不存在=用官方 multilingual。
+_CKPT_FILE = Path(__file__).resolve().parent / "active_checkpoint.txt"
+MODEL_PATH = os.environ.get("LAYA_MODEL_PATH", "").strip() or (
+    _CKPT_FILE.read_text(encoding="utf-8").strip()
+    if _CKPT_FILE.is_file() else "")
 
 T0 = time.monotonic()
 _LOCK = threading.Lock()          # 推理串行化 (ADR-1)
