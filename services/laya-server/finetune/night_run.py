@@ -27,11 +27,14 @@ from pathlib import Path
 SVC = Path(__file__).resolve().parents[1]
 FT = SVC / "finetune"
 REPO = SVC.parents[1]
-CKPT = FT / "checkpoint-ft-v1"
+# 可选后缀参数（"" = v1；"_v2" = 扩标数据集 → checkpoint/parity/result 全带后缀）
+SUFFIX = (f"_{sys.argv[1].lstrip('_')}" if len(sys.argv) > 1
+          and sys.argv[1].strip() else "")
+CKPT = FT / f"checkpoint-ft-v1{SUFFIX}"
 CKPT_FLAG = SVC / "active_checkpoint.txt"
 KEEPALIVE_TASK = "LayaServerKeepalive"
 HEALTHZ = "http://127.0.0.1:8864/healthz"
-RESULT = FT / "night_run_result.json"
+RESULT = FT / f"night_run_result{SUFFIX}.json"
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 LOG_FH = open(FT / "night_run.log", "ab", buffering=0)
@@ -102,15 +105,17 @@ def main() -> int:
             time.sleep(2)
         log(f"   服务停妥，VRAM={_vram_used_mb()}MB")
 
-        # 3. 全量训练
+        # 3. 全量训练（v2: LAYA_DS_SUFFIX=_v2 + LAYA_EPOCHS 可调）
         env = {**os.environ, "USE_TF": "0", "HF_HUB_OFFLINE": "1",
-               "PYTHONIOENCODING": "utf-8"}
+               "PYTHONIOENCODING": "utf-8",
+               "LAYA_DS_SUFFIX": SUFFIX}
         log("3. 全量训练开始（fp32 单卡）...")
         t0 = time.time()
         p = subprocess.run(
             [str(SVC / "venv" / "Scripts" / "python.exe"),
              str(FT / "train.py")],
             cwd=str(FT), env=env, capture_output=True, text=True,
+            encoding="utf-8", errors="replace",
             creationflags=0x08000000)
         result["steps"].append({"step": "train", "rc": p.returncode,
                                 "seconds": round(time.time() - t0, 1)})
@@ -142,21 +147,23 @@ def main() -> int:
         log("5. 看护已回复")
 
         # 6. 回归门（独立目录，零样本基线档不污染）
+        parity_dir = SVC / f"parity-ft-v1{SUFFIX}"
         env2 = {**os.environ, "PAI_JEV_ENGINE": "laya",
-                "LAYA_PARITY_DIR": str(SVC / "parity-ft-v1"),
+                "LAYA_PARITY_DIR": str(parity_dir),
                 "PYTHONIOENCODING": "utf-8"}
         log("6. 回归门重放 E1+E2+E3 ...")
         t0 = time.time()
         p2 = subprocess.run(
             [_main_python(), str(SVC / "parity_gate.py"), "all"],
             cwd=str(REPO), env=env2, capture_output=True, text=True,
+            encoding="utf-8", errors="replace",
             creationflags=0x08000000)
         result["steps"].append({"step": "parity_gate", "rc": p2.returncode,
                                 "seconds": round(time.time() - t0, 1)})
         (FT / "parity_stdout.log").write_text(
             (p2.stdout or "") + (p2.stderr or ""), encoding="utf-8",
             errors="replace")
-        report_path = SVC / "parity-ft-v1" / "parity_report.json"
+        report_path = parity_dir / "parity_report.json"
         verdicts = {}
         if report_path.is_file():
             rep = json.loads(report_path.read_text(encoding="utf-8"))

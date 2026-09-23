@@ -232,9 +232,13 @@ def _retrieval():
     return dossier, sem, embedder
 
 
-def _snippets(dossier, sem, embedder, q: str) -> list[str]:
+def _hits(dossier, sem, embedder, q: str) -> list:
     from paistation.cx.semantic import hybrid_route
-    dhits = hybrid_route(dossier, sem, embedder, q, k=K)
+    return hybrid_route(dossier, sem, embedder, q, k=K) or []
+
+
+def _texts(dhits: list) -> list[str]:
+    """与平价门同款截断：命中全文判词面、260 字入 state。"""
     out = []
     for h in (dhits or []):
         t = (h.text or "").strip().replace("\n", " ")
@@ -284,10 +288,11 @@ def run_e3(client, smoke: bool = False) -> int:
                 dedup = f"e3{mode}|{q}"
                 if dedup in done:
                     continue
-                snips = _snippets(dossier, sem, embedder, q)
+                dhits = _hits(dossier, sem, embedder, q)
+                snips = _texts(dhits)
                 if len(snips) < 4:
                     continue                    # 检索太弱=分布外，不训
-                hit = is_hit(snips, extract_tokens(a), norm=True)
+                hit = is_hit(dhits, extract_tokens(a), norm=True)
                 if mode == "pos" and not hit:
                     continue                    # 词面不命中=标签不确定，弃
                 if mode == "neg" and hit:

@@ -24,7 +24,7 @@ REPO = SVC.parents[1]
 SUFFIX = (sys.argv[1] if len(sys.argv) > 1 else "").lstrip("_")
 SUFFIX = f"_{SUFFIX}" if SUFFIX else ""
 CKPT = FT / f"checkpoint-ft-v1{SUFFIX}"
-PARITY_DIR = SVC / f"parity-ft{SUFFIX or '-v1'}"
+PARITY_DIR = SVC / f"parity-ft-v1{SUFFIX}"   # 与 night_run 命名一致
 CKPT_FLAG = SVC / "active_checkpoint.txt"
 HEALTHZ = "http://127.0.0.1:8864/healthz"
 RESULT = FT / f"gate_result{SUFFIX}.json"
@@ -93,7 +93,8 @@ def main() -> int:
         t0 = time.time()
         p2 = subprocess.run([_main_python(), str(SVC / "parity_gate.py"), "all"],
                             cwd=str(REPO), env=env2, capture_output=True,
-                            text=True, creationflags=0x08000000)
+                            text=True, encoding="utf-8", errors="replace",
+                            creationflags=0x08000000)
         result["steps"].append({"step": "parity_gate", "rc": p2.returncode,
                                 "seconds": round(time.time() - t0, 1)})
         (FT / f"parity_stdout{SUFFIX}.log").write_text(

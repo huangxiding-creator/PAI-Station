@@ -35,7 +35,7 @@ SVC = FT.parent
 SUFFIX = os.environ.get("LAYA_DS_SUFFIX", "")   # "" | "_v2"（v2 扩标数据集）
 OUT_DIR = FT / f"checkpoint-ft-v1{SUFFIX}"
 
-EPOCHS = 4
+EPOCHS = int(os.environ.get("LAYA_EPOCHS", "4"))   # v2 大数据集可降（收敛早）
 MICRO_BATCH = 2
 GRAD_ACCUM = 16
 GROUP_SIZE = 4
