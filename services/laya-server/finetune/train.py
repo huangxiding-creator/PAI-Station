@@ -16,6 +16,7 @@
 from __future__ import annotations
 
 import json
+import os
 import random
 import sys
 import time
@@ -31,7 +32,8 @@ from laya.common import QTYPES, build_model, proper_reward
 
 FT = Path(__file__).resolve().parent
 SVC = FT.parent
-OUT_DIR = FT / "checkpoint-ft-v1"
+SUFFIX = os.environ.get("LAYA_DS_SUFFIX", "")   # "" | "_v2"（v2 扩标数据集）
+OUT_DIR = FT / f"checkpoint-ft-v1{SUFFIX}"
 
 EPOCHS = 4
 MICRO_BATCH = 2
@@ -120,8 +122,9 @@ def main() -> int:
     model.to(device)
     model.train()
 
-    train_items = torch.load(FT / "train_items.pt", weights_only=False)
-    heldout_items = torch.load(FT / "heldout_items.pt", weights_only=False)
+    train_items = torch.load(FT / f"train_items{SUFFIX}.pt", weights_only=False)
+    heldout_items = torch.load(FT / f"heldout_items{SUFFIX}.pt",
+                               weights_only=False)
     if smoke:
         train_items, heldout_items = train_items[:16], heldout_items[:8]
         EPOCHS_S = 1

@@ -31,6 +31,7 @@ from parity_gate import (  # noqa: E402
 )
 
 FT = SVC / "finetune"
+AUG_FILE = FT / "augment" / "aug_samples.jsonl"   # augment_label.py 产物
 SEED = 42
 HELDOUT_FRAC = 0.15
 SMOOTH = 0.95          # 软标签平滑：真类 0.95/其余均摊（防过度自信）
@@ -202,11 +203,26 @@ def main() -> int:
     neg_pairs, _ = build_mismatch_negatives(e3_rows)
     pairs += neg_pairs
 
+    # v2 扩标腿：吞 augment_label.py 产物（同构 pair，去重后并入）
+    v2 = "--v2" in sys.argv
+    suffix = "_v2" if v2 else ""
+    if v2:
+        if not AUG_FILE.is_file():
+            raise SystemExit("--v2 需要 augment/aug_samples.jsonl（先跑 augment_label.py）")
+        aug = _load_jsonl(AUG_FILE)
+        def _key(p: dict) -> str:
+            return json.dumps([p["src"], p["state"]], ensure_ascii=False,
+                              sort_keys=True)
+        seen = {_key(p) for p in pairs}
+        added = [p for p in aug if _key(p) not in seen]
+        pairs += added
+        print(f"v2 扩标: +{len(added)}（弃重复 {len(aug) - len(added)}）")
+
     # E3 snippets 需要落盘：把片段补写回 e3_laya.jsonl（一次性）
     _persist_snippets(e3_rows)
 
     items, skipped = _build_items(pairs)
-    rng = random.Random(SEED)
+    rng = random.Random(SEED + (7 if v2 else 0))
     rng.shuffle(items)
     by_src: dict[str, list] = {}
     for it in items:
@@ -216,17 +232,19 @@ def main() -> int:
         n_hold = max(1, int(len(lst) * HELDOUT_FRAC))
         heldout += lst[:n_hold]
         train += lst[n_hold:]
-    torch.save(train, FT / "train_items.pt")
-    torch.save(heldout, FT / "heldout_items.pt")
+    torch.save(train, FT / f"train_items{suffix}.pt")
+    torch.save(heldout, FT / f"heldout_items{suffix}.pt")
     manifest = {
         "ts": __import__("time").strftime("%Y-%m-%dT%H:%M:%S"),
         "total": len(items), "train": len(train), "heldout": len(heldout),
         "skipped_shape_mismatch": skipped,
         "by_src": {k: len(v) for k, v in by_src.items()},
-        "smoothing": SMOOTH, "seed": SEED,
+        "smoothing": SMOOTH, "seed": SEED + (7 if v2 else 0),
         "note": "E3neg=错配负例(教sep)；E3 六未知题不训；borderline 不训",
     }
-    (FT / "dataset_manifest.json").write_text(
+    if v2:
+        manifest["v2"] = True
+    (FT / f"dataset_manifest{suffix}.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=1), encoding="utf-8")
     print(json.dumps(manifest, ensure_ascii=False, indent=1))
     return 0

@@ -49,6 +49,19 @@ def _run(cmd: list[str]) -> tuple[int, str]:
     return p.returncode, (p.stdout or "") + (p.stderr or "")
 
 
+def _main_python() -> str:
+    """主 Python（带 paistation 依赖）：钉死 3.11 绝对路径 > which 回退。"""
+    pinned = Path(r"C:\Users\91216\AppData\Local\Programs\Python"
+                  r"\Python311\python.exe")
+    if pinned.is_file():
+        return str(pinned)
+    import shutil
+    hit = shutil.which("python")
+    if hit:
+        return hit
+    raise RuntimeError("找不到主 Python（paistation 依赖所在）")
+
+
 def _alive() -> bool:
     try:
         with urllib.request.urlopen(HEALTHZ, timeout=2) as r:
@@ -135,7 +148,7 @@ def main() -> int:
         log("6. 回归门重放 E1+E2+E3 ...")
         t0 = time.time()
         p2 = subprocess.run(
-            ["python", str(SVC / "parity_gate.py"), "all"],
+            [_main_python(), str(SVC / "parity_gate.py"), "all"],
             cwd=str(REPO), env=env2, capture_output=True, text=True,
             creationflags=0x08000000)
         result["steps"].append({"step": "parity_gate", "rc": p2.returncode,
