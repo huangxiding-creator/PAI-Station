@@ -96,7 +96,8 @@ class TestSwitch:
     def test_switch_secret_file_not_required_for_status(self, tmp_path):
         st = switch_status(tmp_path)
         assert st == {"enabled": False, "env": None, "env_off": False,
-                      "ini_enabled": None, "has_key": False}
+                      "ini_enabled": None, "has_key": False,
+                      "engine": "typesafe"}
 
 
 class TestTrajectory:
@@ -227,8 +228,88 @@ class TestTaskJudgeAdapter:
         assert judge("小王，纪要今天下班前弄完。") == 0.9
 
 
-@pytest.mark.parametrize("value,expect", [
-    ("0", False), ("false", False), ("off", False), ("", False),
+class TestEngine:
+    """LayaForge 引擎位：laya（本机免费）与 typesafe（云端付费）可切。"""
+
+    def test_default_engine_is_typesafe(self, tmp_path):
+        _write_key(tmp_path)
+        c = JudgmentClient(config_dir=tmp_path, transport=lambda d: NOUL_OK)
+        assert c.engine == "typesafe" and c.enabled
+
+    def test_ini_laya_enables_without_key(self, tmp_path):
+        # laya=本机免鉴权：无 typesafe.key 也必须可用
+        (tmp_path / "jev.ini").write_text(
+            "[jev]\nengine = laya\nenabled = 1\n", encoding="utf-8")
+        c = JudgmentClient(config_dir=tmp_path)   # 不传 transport → 引擎自选
+        assert c.engine == "laya" and c.enabled
+        assert c._transport == c._laya_http
+        assert c._timeout == client_mod.LAYA_TIMEOUT
+
+    def test_env_engine_beats_ini(self, tmp_path, monkeypatch):
+        monkeypatch.setenv("PAI_JEV_ENGINE", "laya")
+        _write_key(tmp_path)
+        assert client_mod.engine_status(tmp_path) == "laya"
+        c = JudgmentClient(config_dir=tmp_path, transport=lambda d: NOUL_OK)
+        assert c.engine == "laya"
+
+    def test_invalid_engine_values_fall_back(self, tmp_path):
+        (tmp_path / "jev.ini").write_text(
+            "[jev]\nengine = bogus\n", encoding="utf-8")
+        assert client_mod.engine_status(tmp_path) == "typesafe"
+
+    def test_set_switch_preserves_engine(self, tmp_path):
+        set_switch(True, config_dir=tmp_path, engine="laya")
+        set_switch(False, config_dir=tmp_path)          # 不带 engine 切开关
+        assert client_mod.engine_status(tmp_path) == "laya"
+        set_switch(True, config_dir=tmp_path)           # 再切回 on 仍保留
+        assert client_mod.engine_status(tmp_path) == "laya"
+
+    def test_laya_off_disables(self, tmp_path):
+        set_switch(False, config_dir=tmp_path, engine="laya")
+        calls = []
+        c = JudgmentClient(config_dir=tmp_path,
+                           transport=lambda d: calls.append(1) or NOUL_OK)
+        assert c.engine == "laya" and not c.enabled
+        assert c.ask_noul("s", "i") is None and calls == []
+
+    def test_laya_transport_posts_without_auth_header(self, tmp_path):
+        # 真打本机服务属于集成面（parity_gate 覆盖）；此处固化请求形态：
+        # 同款 JSON body、无 Authorization、端点=LAYA_ENDPOINT
+        captured = {}
+
+        def fake_urlopen(req, timeout=None):
+            captured["url"] = req.full_url
+            captured["headers"] = dict(req.header_items())
+            captured["timeout"] = timeout
+            captured["body"] = req.data.decode("utf-8")
+
+            class R:
+                def __enter__(self):
+                    return self
+
+                def __exit__(self, *a):
+                    return False
+
+                def read(self):
+                    return json.dumps(NOUL_OK).encode("utf-8")
+
+            return R()
+
+        set_switch(True, config_dir=tmp_path, engine="laya")
+        c = JudgmentClient(config_dir=tmp_path)          # 用真 _laya_http
+        orig = client_mod.urllib.request.urlopen
+        client_mod.urllib.request.urlopen = fake_urlopen
+        try:
+            assert c.ask_noul("状态", "是任务吗") == 0.9
+        finally:
+            client_mod.urllib.request.urlopen = orig
+        assert captured["url"] == client_mod.LAYA_ENDPOINT
+        assert "Authorization" not in captured["headers"]
+        assert json.loads(captured["body"])["state"] == "状态"
+        assert captured["timeout"] == client_mod.LAYA_TIMEOUT
+
+
+@pytest.mark.parametrize("value,expect", [    ("0", False), ("false", False), ("off", False), ("", False),
     ("1", True), (None, True)])
 def test_env_off_values(tmp_path, monkeypatch, value, expect):
     _write_key(tmp_path)

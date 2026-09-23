@@ -29,6 +29,12 @@ BREAKER_FAILURES = 3          # 连续失败阈值 → 熔断
 BREAKER_COOLDOWN = 300.0      # 熔断冷却（秒），过后半开试探
 _MAX_RETRIES = 2              # 429/529/网络抖动退避重试次数（共 3 发）
 
+# LayaForge 引擎位（09-23）：laya=本机常驻服务（免费/50ms/可微调），
+# typesafe=Jev 云端付费。应答逐字段同构 → 只换 transport，ask 主链零改动。
+LAYA_ENDPOINT = "http://127.0.0.1:8864/v1/systemone"
+LAYA_TIMEOUT = 5.0            # 本机服务，快失败快熔断
+_DEFAULT_ENGINE = "typesafe"  # 平价门未过前默认云端；过门后切 laya
+
 # transport: 请求数据(bytes) -> 响应 JSON(dict)；抛异常视作失败
 Transport = Callable[[bytes], dict]
 
@@ -40,9 +46,26 @@ def _config_dir() -> Path:
     return Path(__file__).resolve().parents[3] / "config"
 
 
-def switch_status(config_dir: Path | None = None) -> dict:
-    """三要素静态开关状态（env > ini > key）。"""
+def engine_status(config_dir: Path | None = None) -> str:
+    """引擎选择：PAI_JEV_ENGINE env > jev.ini engine > typesafe 默认。"""
     cfg_dir = config_dir or _config_dir()
+    env_raw = os.environ.get("PAI_JEV_ENGINE", "").strip().lower()
+    if env_raw in ("laya", "typesafe"):
+        return env_raw
+    ini = cfg_dir / "jev.ini"
+    if ini.is_file():
+        cp = configparser.ConfigParser()
+        cp.read(ini, encoding="utf-8")
+        raw = cp.get("jev", "engine", fallback="").strip().lower()
+        if raw in ("laya", "typesafe"):
+            return raw
+    return _DEFAULT_ENGINE
+
+
+def switch_status(config_dir: Path | None = None) -> dict:
+    """三要素静态开关状态（env > ini > key）。laya 引擎免鉴权=不要求 key。"""
+    cfg_dir = config_dir or _config_dir()
+    engine = engine_status(cfg_dir)
     env_raw = os.environ.get("PAI_JEV")
     enabled_ini = None
     ini = cfg_dir / "jev.ini"
@@ -58,18 +81,23 @@ def switch_status(config_dir: Path | None = None) -> dict:
         cp.read(key_file, encoding="utf-8")
         has_key = bool(cp.get("typesafe", "api_key", fallback="").strip())
     env_off = env_raw is not None and env_raw.strip().lower() in _OFF_VALUES
-    enabled = (not env_off) and (enabled_ini is not False) and has_key
+    enabled = ((not env_off) and (enabled_ini is not False)
+               and (has_key or engine == "laya"))
     return {"enabled": enabled, "env": env_raw, "env_off": env_off,
-            "ini_enabled": enabled_ini, "has_key": has_key}
+            "ini_enabled": enabled_ini, "has_key": has_key, "engine": engine}
 
 
-def set_switch(on: bool, config_dir: Path | None = None) -> Path:
-    """一键开关：写 config/jev.ini（入库无秘密；env 硬关不受此影响）。"""
+def set_switch(on: bool, config_dir: Path | None = None,
+               engine: str | None = None) -> Path:
+    """一键开关：写 config/jev.ini（入库无秘密；env 硬关不受此影响）。
+    engine=None 保持现状（不覆写已配置的引擎位）。"""
     cfg_dir = config_dir or _config_dir()
+    engine = engine or engine_status(cfg_dir)
     ini = cfg_dir / "jev.ini"
     ini.parent.mkdir(parents=True, exist_ok=True)
     ini.write_text(
         f"[jev]\n# Jev 判断层总开关：off 后所有接线点静默回退原行为\n"
+        f"engine = {engine}\n"
         f"enabled = {1 if on else 0}\n",
         encoding="utf-8")
     return ini
@@ -92,11 +120,17 @@ class JudgmentClient:
                  traj_path: Path | None = None):
         self._cfg_dir = config_dir or _config_dir()
         status = switch_status(self._cfg_dir)
+        self.engine = status["engine"]
         self._api_key = api_key if api_key is not None else _load_key(self._cfg_dir)
-        self.enabled = status["enabled"] and bool(self._api_key)
+        # laya=本机免鉴权服务，无 key 也算可用；typesafe 必须有 key
+        self.enabled = status["enabled"] and (bool(self._api_key)
+                                              or self.engine == "laya")
         self.model = model
-        self._timeout = float(timeout)
-        self._transport = transport or self._http
+        self._timeout = (LAYA_TIMEOUT if (self.engine == "laya"
+                                          and timeout == DEFAULT_TIMEOUT)
+                         else float(timeout))
+        self._transport = transport or (self._laya_http if self.engine == "laya"
+                                        else self._http)
         # 调用轨迹审计（typesafe 六项合规，隐私优先：state 只落 hash、
         # answers 只落数值摘要；None=不记录（默认零写入）；
         # 写入失败 fail-soft 不影响 ask 主链）
@@ -215,6 +249,14 @@ class JudgmentClient:
         req = urllib.request.Request(
             ENDPOINT, data=data, method="POST", headers={
                 "Authorization": f"Bearer {self._api_key}",
+                "Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=self._timeout) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+
+    def _laya_http(self, data: bytes) -> dict:
+        """laya transport：同款 JSON body POST 本机服务，免鉴权（ADR-2）。"""
+        req = urllib.request.Request(
+            LAYA_ENDPOINT, data=data, method="POST", headers={
                 "Content-Type": "application/json"})
         with urllib.request.urlopen(req, timeout=self._timeout) as resp:
             return json.loads(resp.read().decode("utf-8"))
