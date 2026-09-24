@@ -165,3 +165,25 @@
 | E3 捕获+分离度 | 3/5，sep 0.52 | **4/5（超 Jev），sep 0.53（超 Jev）** | **PASS** |
 
 **读法**：三门质量全部 ≥ Jev（两门反超、一门全同），24× 快，$0，断网可用——Jev 替换的技术前提全部兑现。扩标弹药定向命中：E2aug 闲聊负例把 fp 0.667→0.00；E3 幻觉负例把 sep_gap 0.028→0.53。下一步=P1 八位渐进切换（生产 jev.ini 仍默认 typesafe，切 laya 待用户令+traj 双轨）。
+
+## 9. P1 渐进替换+双轨（2026-09-24 落档，用户令「继续」开工）
+
+**位级诚实口径**：三门 PASS 只证训练措辞位——**措辞逐字节对上训练集才切**。
+过门切 laya：taskcards（E2 措辞逐字）/ golden=jev_screen 复核（E3 措辞逐字）。
+留 typesafe 主+laya 免费影子：intent 快路径（instructions 改述+未训 needs_screen
+问）/ J1 信源筛（自有措辞，试点旗标）/ RF 三腿（实体裁决/方法论 choice/
+滚雪球，均未训，真实日流量位=双轨数据主源）。
+
+| 件 | 状态 | 说明 |
+|---|---|---|
+| `[engines]` 位级引擎 | ✅ | jev.ini 位覆盖：env > [engines] 位 > 全局 engine > 默认；`set_switch` 改读改写（round-trip 不再吞节） |
+| 双轨影子 | ✅ | `[shadow] engine=laya`：主≠laya 位答完**单发** laya（免费/不抛/不重试/三连败本实例停摆/仅 traj 在位时跑），traj 记 agree+影子延迟 |
+| traj 升级 | ✅ | 行加 position/engine/dual；带 position 的客户端默认落 `data/traj/jev-{位}.jsonl`（state 仍只 hash） |
+| 接线点名 | ✅ | taskcards（make_task_judge）/golden（cx_golden_score）/intent（resident entry）/rf（jev_adjudicator.make_jev_ask 一处改，三腿共用） |
+| 周报生成器 | ✅ | `tools/dual_track_report.py`：调用量/ok率/主延迟 p50·p95/影子覆盖/一致率/影子错误 |
+| 实弹冒烟 | ✅ | taskcards 位真调 laya：todo 句 0.886 / 闲聊句 0.182 分离干净；traj `engine=laya` 落盘；测试 43+57 全绿 |
+
+**切换判据（DoD 路线）**：未过门位影子一致率（choice 同选 / noul |Δ|≤0.15，
+None 不计分母）连续一周 ≥95% → `[engines]` 加一行切 laya；全位过 →
+全局 `engine=laya` + 影子退役 = 成本归零。回滚 = 删位行或全局一行 typesafe。
+延迟不降由 traj 主/影延迟分布自证（laya 实测 53ms vs Jev 1.28s）。

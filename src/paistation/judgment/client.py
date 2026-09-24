@@ -16,6 +16,7 @@ import configparser
 import hashlib
 import json
 import os
+import random
 import time
 import urllib.error
 import urllib.request
@@ -46,20 +47,48 @@ def _config_dir() -> Path:
     return Path(__file__).resolve().parents[3] / "config"
 
 
-def engine_status(config_dir: Path | None = None) -> str:
-    """引擎选择：PAI_JEV_ENGINE env > jev.ini engine > typesafe 默认。"""
+def _read_jev_ini(config_dir: Path) -> configparser.ConfigParser:
+    cp = configparser.ConfigParser()
+    cp.read(config_dir / "jev.ini", encoding="utf-8")
+    return cp
+
+
+def engine_status(config_dir: Path | None = None,
+                  position: str | None = None) -> str:
+    """引擎选择：PAI_JEV_ENGINE env > [engines] 位覆盖 > jev.ini engine >
+    typesafe 默认。position=P1 渐进位名（intent/taskcards/golden/rf…）。"""
     cfg_dir = config_dir or _config_dir()
     env_raw = os.environ.get("PAI_JEV_ENGINE", "").strip().lower()
     if env_raw in ("laya", "typesafe"):
         return env_raw
     ini = cfg_dir / "jev.ini"
     if ini.is_file():
-        cp = configparser.ConfigParser()
-        cp.read(ini, encoding="utf-8")
+        cp = _read_jev_ini(cfg_dir)
+        if position:
+            raw = cp.get("engines", position, fallback="").strip().lower()
+            if raw in ("laya", "typesafe"):
+                return raw
         raw = cp.get("jev", "engine", fallback="").strip().lower()
         if raw in ("laya", "typesafe"):
             return raw
     return _DEFAULT_ENGINE
+
+
+def shadow_status(config_dir: Path | None = None) -> tuple[str, float]:
+    """双轨影子配置：[shadow] engine/sample。返回 (引擎, 采样率)；
+    引擎空串=双轨关。影子只在主引擎≠影子引擎且有 traj 时生效（免费位
+    全采样；付费影子不默认开——免费模型优先铁律）。"""
+    cfg_dir = config_dir or _config_dir()
+    ini = cfg_dir / "jev.ini"
+    if not ini.is_file():
+        return "", 1.0
+    cp = _read_jev_ini(cfg_dir)
+    eng = cp.get("shadow", "engine", fallback="").strip().lower()
+    try:
+        sample = float(cp.get("shadow", "sample", fallback="1.0"))
+    except ValueError:
+        sample = 1.0
+    return (eng if eng in ("laya", "typesafe") else ""), max(0.0, min(1.0, sample))
 
 
 def switch_status(config_dir: Path | None = None) -> dict:
@@ -88,18 +117,36 @@ def switch_status(config_dir: Path | None = None) -> dict:
 
 
 def set_switch(on: bool, config_dir: Path | None = None,
-               engine: str | None = None) -> Path:
-    """一键开关：写 config/jev.ini（入库无秘密；env 硬关不受此影响）。
-    engine=None 保持现状（不覆写已配置的引擎位）。"""
+               engine: str | None = None,
+               engines: dict[str, str] | None = None,
+               shadow: dict[str, str] | None = None) -> Path:
+    """一键开关：读改写 config/jev.ini（入库无秘密；env 硬关不受此影响）。
+    engine=None 保持现状；engines/shadow 合并进对应节（P1 渐进位/双轨），
+    未提到的键原样保留——round-trip 不再吞节。"""
     cfg_dir = config_dir or _config_dir()
     engine = engine or engine_status(cfg_dir)
     ini = cfg_dir / "jev.ini"
     ini.parent.mkdir(parents=True, exist_ok=True)
-    ini.write_text(
-        f"[jev]\n# Jev 判断层总开关：off 后所有接线点静默回退原行为\n"
-        f"engine = {engine}\n"
-        f"enabled = {1 if on else 0}\n",
-        encoding="utf-8")
+    cp = configparser.ConfigParser()
+    if ini.is_file():
+        cp.read(ini, encoding="utf-8")
+    if not cp.has_section("jev"):
+        cp.add_section("jev")
+    cp.set("jev", "engine", engine)
+    cp.set("jev", "enabled", "1" if on else "0")
+    if engines:
+        if not cp.has_section("engines"):
+            cp.add_section("engines")
+        for pos, eng in engines.items():
+            cp.set("engines", pos, eng)
+    if shadow:
+        if not cp.has_section("shadow"):
+            cp.add_section("shadow")
+        for key, val in shadow.items():
+            cp.set("shadow", key, val)
+    with ini.open("w", encoding="utf-8") as fh:
+        fh.write("# Jev 判断层总开关：off 后所有接线点静默回退原行为\n")
+        cp.write(fh)
     return ini
 
 
@@ -117,10 +164,13 @@ class JudgmentClient:
                  config_dir: Path | None = None,
                  timeout: float = DEFAULT_TIMEOUT,
                  transport: Transport | None = None,
-                 traj_path: Path | None = None):
+                 traj_path: Path | None = None,
+                 position: str | None = None,
+                 shadow_transport: Transport | None = None):
         self._cfg_dir = config_dir or _config_dir()
+        self.position = position
         status = switch_status(self._cfg_dir)
-        self.engine = status["engine"]
+        self.engine = engine_status(self._cfg_dir, position)
         self._api_key = api_key if api_key is not None else _load_key(self._cfg_dir)
         # laya=本机免鉴权服务，无 key 也算可用；typesafe 必须有 key
         self.enabled = status["enabled"] and (bool(self._api_key)
@@ -133,8 +183,25 @@ class JudgmentClient:
                                         else self._http)
         # 调用轨迹审计（typesafe 六项合规，隐私优先：state 只落 hash、
         # answers 只落数值摘要；None=不记录（默认零写入）；
-        # 写入失败 fail-soft 不影响 ask 主链）
-        self._traj_path = traj_path
+        # 写入失败 fail-soft 不影响 ask 主链）。
+        # P1：带 position 的接线位默认落 traj（双轨报告的数据面）
+        if traj_path is None and position:
+            # 锚在 config_dir 的仓库根（config/ 的上级）：默认落位
+            # <repo>/data/traj/jev-{position}.jsonl；测试 tmp 目录同样成立
+            self._traj_path = (self._cfg_dir.parent / "data" / "traj"
+                               / f"jev-{position}.jsonl")
+        else:
+            self._traj_path = traj_path
+        # 双轨影子（P1）：主引擎之外单发采样调第二引擎，traj 记
+        # agree/latency；免费位全采样，绝不抛、绝不重试、三连败停摆
+        s_engine, s_sample = shadow_status(self._cfg_dir)
+        self._shadow_engine = (s_engine if s_engine and s_engine != self.engine
+                               else "")
+        self._shadow_sample = s_sample
+        # 影子专线：默认按引擎名自选（生产）；测试注入同一 fake 分流用
+        self._shadow_transport = shadow_transport
+        self._shadow_fails = 0
+        self._shadow_off = False
         # 熔断器状态
         self._consecutive_failures = 0
         self._open_until: float = 0.0
@@ -154,15 +221,17 @@ class JudgmentClient:
                 if not isinstance(answers, dict) or not answers:
                     raise ValueError("empty answers")
                 self._breaker_success()
+                dual = self._shadow_run(state, questions, answers)
                 self._record_traj(state, questions, answers,
-                                  payload.get("usage"), t0, ok=True)
+                                  payload.get("usage"), t0, ok=True, dual=dual)
                 return answers
             except Exception:  # noqa: BLE001 - 一切故障统一降级
                 if attempt < _MAX_RETRIES:
                     time.sleep(2 ** attempt + 1)
                     continue
         self._breaker_fail()
-        self._record_traj(state, questions, None, None, t0, ok=False)
+        dual = self._shadow_run(state, questions, None)
+        self._record_traj(state, questions, None, None, t0, ok=False, dual=dual)
         return None
 
     def ask_noul(self, state, instructions: str,
@@ -191,18 +260,55 @@ class JudgmentClient:
         except (KeyError, TypeError, ValueError):
             return None
 
+    # ---- 双轨影子（P1 渐进替换的观察器）----
+
+    def _shadow_run(self, state, questions, primary_answers) -> dict | None:
+        """主引擎答完后再单发一次影子引擎（免费位），返回 dual 摘要。
+        契约：绝不抛、绝不重试（单发）、三连败本实例停摆、
+        仅 traj 在位时运行（影子是观察仪器，无记录=无意义白烧）。"""
+        if (not self._shadow_engine or self._traj_path is None
+                or self._shadow_off
+                or random.random() > self._shadow_sample):
+            return None
+        t0 = time.monotonic()
+        try:
+            body = json.dumps({"state": state, "model": self.model,
+                               "questions": questions},
+                              ensure_ascii=False).encode("utf-8")
+            transport = (self._shadow_transport or
+                         (self._laya_http if self._shadow_engine == "laya"
+                          else self._http))
+            payload = transport(body)
+            answers = payload.get("answers")
+            if not isinstance(answers, dict) or not answers:
+                raise ValueError("empty answers")
+        except Exception:  # noqa: BLE001 - 影子任何故障都不碰主链
+            self._shadow_fails += 1
+            if self._shadow_fails >= 3:
+                self._shadow_off = True
+            return {"engine": self._shadow_engine, "latency_s":
+                    round(time.monotonic() - t0, 2), "error": True}
+        self._shadow_fails = 0
+        return {"engine": self._shadow_engine,
+                "latency_s": round(time.monotonic() - t0, 2),
+                "agree": _answers_agree(primary_answers, answers),
+                "sa": _answer_digest(answers)}
+
     # ---- 调用轨迹审计（六项合规，fail-soft）----
 
     def _record_traj(self, state, questions, answers, usage, t0, *,
-                     ok: bool) -> None:
+                     ok: bool, dual: dict | None = None) -> None:
         """一行一调用：ts/state_hash/question 摘要/answer 数值摘要/
-        usage/latency/outcome。traj_path 缺席或写失败=零影响。"""
+        usage/latency/outcome（+position/engine/dual 双轨字段）。
+        traj_path 缺席或写失败=零影响。"""
         if self._traj_path is None:
             return
         try:
             state_json = json.dumps(state, ensure_ascii=False, sort_keys=True)
             row = {
                 "ts": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                "position": self.position,
+                "engine": self.engine,
                 "state_hash": hashlib.sha256(
                     state_json.encode("utf-8")).hexdigest()[:16],
                 "q": {qid: q.get("type")
@@ -212,6 +318,7 @@ class JudgmentClient:
                 "usage": usage if isinstance(usage, dict) else None,
                 "latency_s": round(time.monotonic() - t0, 2),
                 "ok": ok,
+                "dual": dual,
             }
             self._traj_path.parent.mkdir(parents=True, exist_ok=True)
             with self._traj_path.open("a", encoding="utf-8") as fh:
@@ -285,10 +392,31 @@ def _answer_digest(answers) -> dict | None:
     return out or None
 
 
+def _answers_agree(primary, shadow) -> bool | None:
+    """双轨一致性：choice 同选 / noul |Δ|≤0.15（E2/E3 分离缝两侧不跨界）。
+    任一侧缺席或无可比字段 → None（不计入一致率分母）。"""
+    da, db = _answer_digest(primary), _answer_digest(shadow)
+    if not da or not db or set(da) != set(db):
+        return None
+    verdicts = []
+    for qid, x in da.items():
+        y = db[qid]
+        if "choice" in x:
+            verdicts.append(x["choice"] == y.get("choice"))
+        if "noul" in x:
+            try:
+                verdicts.append(abs(float(x["noul"]) - float(y["noul"])) <= 0.15)
+            except (TypeError, ValueError):
+                verdicts.append(False)
+    return all(verdicts) if verdicts else None
+
+
 def make_task_judge(config_dir: Path | None = None,
                     transport: Transport | None = None) -> Callable[[str], float | None]:
-    """taskcards 专用 judge 适配器：text -> Noul(是否任务指派) | None。"""
-    client = JudgmentClient(config_dir=config_dir, transport=transport)
+    """taskcards 专用 judge 适配器：text -> Noul(是否任务指派) | None。
+    位名 taskcards：E2 门已过 → [engines] 可切 laya，traj 自动落位。"""
+    client = JudgmentClient(config_dir=config_dir, transport=transport,
+                            position="taskcards")
     instructions = "这句话是否是在向某人指派或请求完成一项具体任务或待办事项？"
     criteria = {
         "true": "有明确的受托人和要完成的具体事项，常含时间要求；"

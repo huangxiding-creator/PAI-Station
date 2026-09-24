@@ -56,7 +56,7 @@ def _make_jev_ask():
     """装配 Jev 复核腿（--jev-screen 时才 import；失败返回 None=旗标失效）。"""
     try:
         from paistation.judgment.client import JudgmentClient
-        client = JudgmentClient()
+        client = JudgmentClient(position="golden")
 
         def ask(state, questions):
             for _ in range(2):  # 轻重试 1 次：单题抖动不当轮熔断

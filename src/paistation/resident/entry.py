@@ -55,6 +55,7 @@ def build_daemon(data_dir: str, with_mic: bool = False,
     # 无 key/熔断 → 客户端自惰性，summarize 走原 LLM 路径）
     from paistation.judgment import JudgmentClient
     intents = IntentService(stream=stream, jev=JudgmentClient(
+        position="intent",
         traj_path=Path(data_dir) / "jev_traj.jsonl").ask)
     # M9 云感知：四连接器注册+授权持久化回灌（默认 opt-in 全关，
     # 未授权 tick 零调用）；wih 产物目录约定 data_dir/wih/；

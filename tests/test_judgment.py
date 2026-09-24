@@ -345,3 +345,155 @@ class TestCliSwitch:
         assert main(["--jev", "status"]) == 1     # 无 key → disabled → exit 1
         out = capsys.readouterr().out
         assert "enabled=False" in out and "api_key" in out
+
+
+class TestPositionEngines:
+    """P1 渐进位：[engines] 按位覆盖全局引擎（未命名位仍走全局）。"""
+
+    def _ini(self, tmp_path, text):
+        (tmp_path / "jev.ini").write_text(text, encoding="utf-8")
+
+    def test_position_override_beats_global(self, tmp_path):
+        self._ini(tmp_path, "[jev]\nengine = typesafe\nenabled = 1\n"
+                  "[engines]\ntaskcards = laya\n")
+        assert client_mod.engine_status(tmp_path) == "typesafe"
+        assert client_mod.engine_status(tmp_path, "taskcards") == "laya"
+        assert client_mod.engine_status(tmp_path, "unknown") == "typesafe"
+
+    def test_env_beats_position_override(self, tmp_path, monkeypatch):
+        monkeypatch.setenv("PAI_JEV_ENGINE", "typesafe")
+        self._ini(tmp_path, "[jev]\nengine = typesafe\n"
+                  "[engines]\ntaskcards = laya\n")
+        assert client_mod.engine_status(tmp_path, "taskcards") == "typesafe"
+
+    def test_positioned_client_uses_override_and_default_traj(self, tmp_path):
+        _write_key(tmp_path)
+        self._ini(tmp_path, "[jev]\nengine = typesafe\nenabled = 1\n"
+                  "[engines]\ntaskcards = laya\n")
+        calls = []
+
+        def transport(data: bytes) -> dict:
+            calls.append(json.loads(data.decode("utf-8")))
+            return NOUL_OK
+
+        c = JudgmentClient(config_dir=tmp_path, transport=transport,
+                           position="taskcards")
+        assert c.engine == "laya"
+        assert c._traj_path == (tmp_path.parent / "data" / "traj"
+                                / "jev-taskcards.jsonl")
+        assert c.ask_noul("s", "i") == 0.9
+        assert calls[0]["state"] == "s"
+
+    def test_unpositioned_client_no_traj_default(self, tmp_path):
+        _write_key(tmp_path)
+        c = JudgmentClient(config_dir=tmp_path, transport=lambda d: NOUL_OK)
+        assert c._traj_path is None
+
+    def test_set_switch_preserves_engines_and_shadow_sections(self, tmp_path):
+        set_switch(True, config_dir=tmp_path, engine="typesafe",
+                   engines={"taskcards": "laya", "golden": "laya"},
+                   shadow={"engine": "laya", "sample": "1.0"})
+        set_switch(False, config_dir=tmp_path)          # 老式开关调用
+        cp = configparser.ConfigParser()
+        cp.read(tmp_path / "jev.ini", encoding="utf-8")
+        assert cp.get("jev", "enabled") == "0"
+        assert cp.get("engines", "taskcards") == "laya"
+        assert cp.get("shadow", "engine") == "laya"
+        assert cp.get("shadow", "sample") == "1.0"
+
+
+class TestShadowDualTrack:
+    """双轨影子：主引擎答完后单发第二引擎，traj 记 agree/延迟。
+    测试纪律：注入 shadow_transport 与主 transport 同一 fake，零真网。"""
+
+    def _shadow_ini(self, tmp_path):
+        (tmp_path / "jev.ini").write_text(
+            "[jev]\nengine = typesafe\nenabled = 1\n"
+            "[shadow]\nengine = laya\nsample = 1.0\n", encoding="utf-8")
+
+    def test_agree_helper_semantics(self):
+        p = {"noul": {"type": "noul", "noul": 0.9}}
+        assert client_mod._answers_agree(p, {"noul": {"type": "noul",
+                                                      "noul": 0.85}}) is True
+        assert client_mod._answers_agree(p, {"noul": {"type": "noul",
+                                                      "noul": 0.3}}) is False
+        assert client_mod._answers_agree(None, p) is None
+        pc = {"c": {"type": "choice", "choice": "a", "confidence": 0.8}}
+        sc = {"c": {"type": "choice", "choice": "b", "confidence": 0.7}}
+        assert client_mod._answers_agree(pc, sc) is False
+        assert client_mod._answers_agree(pc, {"c": {"type": "choice",
+                                                    "choice": "a"}}) is True
+
+    def test_shadow_records_dual_row_and_never_breaks_primary(self, tmp_path):
+        traj = tmp_path / "traj.jsonl"
+        _write_key(tmp_path)
+        self._shadow_ini(tmp_path)
+        queue = [{"answers": {"noul": {"type": "noul", "noul": 0.9}}},
+                 {"answers": {"noul": {"type": "noul", "noul": 0.88}}}]
+
+        def transport(data: bytes) -> dict:
+            return queue.pop(0)
+
+        c = JudgmentClient(config_dir=tmp_path, transport=transport,
+                           shadow_transport=transport, traj_path=traj)
+        assert c._shadow_engine == "laya"
+        assert c.ask_noul("状态", "是吗") == 0.9          # 主答不受影子影响
+        row = json.loads(traj.read_text(encoding="utf-8").splitlines()[0])
+        assert row["ok"] is True and row["engine"] == "typesafe"
+        assert row["dual"]["engine"] == "laya"
+        assert row["dual"]["agree"] is True
+        assert row["dual"]["latency_s"] >= 0
+
+    def test_shadow_same_engine_disables(self, tmp_path):
+        _write_key(tmp_path)
+        (tmp_path / "jev.ini").write_text(
+            "[jev]\nengine = laya\nenabled = 1\n"
+            "[shadow]\nengine = laya\n", encoding="utf-8")
+        c = JudgmentClient(config_dir=tmp_path, traj_path=tmp_path / "t.jsonl")
+        assert c._shadow_engine == ""                    # 同引擎=无影子
+
+    def test_shadow_off_without_traj(self, tmp_path):
+        _write_key(tmp_path)
+        self._shadow_ini(tmp_path)
+        c = JudgmentClient(config_dir=tmp_path, transport=lambda d: NOUL_OK,
+                           traj_path=None)
+        assert c._shadow_engine == "laya"
+        assert c._shadow_run("s", {}, None) is None      # 无 traj 不烧影子
+
+    def test_shadow_three_failures_trip_local_off(self, tmp_path):
+        traj = tmp_path / "traj.jsonl"
+        _write_key(tmp_path)
+        self._shadow_ini(tmp_path)
+
+        def dead(data: bytes) -> dict:
+            raise OSError("laya down")
+
+        c = JudgmentClient(config_dir=tmp_path, transport=lambda d: NOUL_OK,
+                           shadow_transport=dead, traj_path=traj)
+        for _ in range(3):
+            dual = c._shadow_run("s", {}, None)
+            assert dual is not None and dual["error"] is True
+        assert c._shadow_off is True
+        assert c._shadow_run("s", {}, None) is None      # 停摆后零调用
+
+    def test_shadow_primary_fail_still_records_dual(self, tmp_path,
+                                                     monkeypatch):
+        traj = tmp_path / "traj.jsonl"
+        _write_key(tmp_path)
+        self._shadow_ini(tmp_path)
+        n = {"i": 0}
+
+        def transport(data: bytes) -> dict:
+            n["i"] += 1
+            if n["i"] <= 3:                               # 主 3 发重试全败
+                raise OSError("typesafe down")
+            return NOUL_OK                                # 第 4 发=影子成功
+
+        monkeypatch.setattr(client_mod.time, "sleep", lambda s: None)
+        c = JudgmentClient(config_dir=tmp_path, transport=transport,
+                           shadow_transport=transport, traj_path=traj)
+        assert c.ask_noul("s", "i") is None
+        row = json.loads(traj.read_text(encoding="utf-8").splitlines()[0])
+        assert row["ok"] is False and row["a"] is None
+        assert row["dual"]["engine"] == "laya"
+        assert row["dual"]["agree"] is None               # 主缺席=不计分母
