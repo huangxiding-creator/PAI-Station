@@ -1,0 +1,156 @@
+[
+  {
+    "title": "ima 官网主页",
+    "url": "https://ima.qq.com/",
+    "what": "腾讯 ima.copilot 官网；知识库为核心的 AI 工作台（搜读写），接混元+DeepSeek R1",
+    "availability": "anonymous_ok",
+    "relevance": "背景；非分享面"
+  },
+  {
+    "title": "ima 下载页（知识库广场官方口径）",
+    "url": "https://ima.qq.com/download/",
+    "what": "官方口径：知识库广场覆盖科技/金融/教育/医疗/法律/政务等 20+ 行业，沉淀 4亿+ 份知识库文件",
+    "availability": "anonymous_ok",
+    "relevance": "高：广场规模的官方量化"
+  },
+  {
+    "title": "knowledge-share.ima.qq.com 首页（web 版 ima）",
+    "url": "https://knowledge-share.ima.qq.com/",
+    "what": "web 版入口：导航含 新对话/知识库/发现广场/问答历史；精选示例区块；SSG(Vite React) 匿名可达，数据由签名 API 拉取",
+    "availability": "anonymous_ok",
+    "relevance": "高：广场 web 入口"
+  },
+  {
+    "title": "知识库广场 discover 路由",
+    "url": "https://knowledge-share.ima.qq.com/discover",
+    "what": "广场列表页：匿名 200 但仅 2KB SPA shell，列表数据走 /cgi-bin/s/ tRPC 签名接口（x-ima-ckey/x-ima-ctk），匿名 API 被拒",
+    "availability": "login_required",
+    "relevance": "高：广场枚举需登录态或签名复刻"
+  },
+  {
+    "title": "ima web app bundle（API 结构证据）",
+    "url": "https://static.ima.qq.com/ima/assets/chat/assets/app-C7HsXeeY.js",
+    "what": "2.7MB bundle：路由表(/discover /wikis /download)、可见性枚举 Public=1/Private=2/Square=3、角色枚举 Visitor=0/User=100/Collaborator=1000、短链体系 s/ 与 /cgi-bin/s/、签名头 x-ima-ckey/x-ima-ctk、cgi: knowledge_share_get/get_applet_jump_info",
+    "availability": "anonymous_ok",
+    "relevance": "高：渠道逆向的一手结构证据"
+  },
+  {
+    "title": "分享链接样例1：IPO问询与反馈科创板（实测）",
+    "url": "https://ima.qq.com/wiki/?shareId=8e3a3ba5f93dad603b9ee96822dcdca1bf5eb671f18c5c652d075271649b0988",
+    "what": "SSR 匿名 200：692人订阅/1万个内容；子库计数=招股书1036+律师意见2841+会计师回复2869（2019-2025全量）；「CPA注会」+「投资投行」母库群的外挂子库",
+    "availability": "anonymous_ok",
+    "relevance": "极高：研报/投行语料金矿铁证"
+  },
+  {
+    "title": "分享链接样例2：顶级经济人财经文集（实测）",
+    "url": "https://ima.qq.com/wiki/?shareId=4824b346a7690834657b0429d56613505537896f0dad9c9757def836dcb7f738",
+    "what": "SSR 匿名 200：58人订阅/1284个内容；条目列表直出（标题+来源公众号/网址+时间戳）；如松/卢麒元/时寒冰/管清友等合集持续更新",
+    "availability": "anonymous_ok",
+    "relevance": "极高：证明匿名可枚举条目清单"
+  },
+  {
+    "title": "分享链接样例3：openclaw龙虾-优质skills（实测）",
+    "url": "https://ima.qq.com/wiki/?shareId=a948e4fa05d236772f7dfeb109d510bfc07e986a97dcd4bd60941ab7d7518ad1",
+    "what": "SSR 匿名 200：3460人订阅/243个内容；GitHub 优质 skills 合集搬运（awesome-claude-skills 等 6 子包）",
+    "availability": "anonymous_ok",
+    "relevance": "高：与自家 OpenClaw 生态直接相关"
+  },
+  {
+    "title": "分享链接样例4：生物医药科研统计（实测，失效样例）",
+    "url": "https://ima.qq.com/wiki/?shareId=e4fef8e27571a75077eaac5741b47e0e26e2d44d9e87edba63956fd265c413cc1",
+    "what": "匿名 400「服务器繁忙」：链接失效/私密化样例（删除库→链接失效，bundle 文案证实）",
+    "availability": "login_required",
+    "relevance": "中：链接生命周期风险实证"
+  },
+  {
+    "title": "分享链接样例5-8：未实测完整 hash 备用",
+    "url": "https://ima.qq.com/wiki/?shareId=c2aa04d0e6e39ec5306e022d6d2f0f08570ad9027cb9166fdf26819138bbcc82",
+    "what": "每日AI资讯库(2026-09-14)；同系列 c973afb7(09-20)、6b45ac6b(贠氏宗谱家谱馆)、3ff27b0d(历史爱好者)；截断样例 c4e9ac8c(老刘历史工坊)、be894664(压力容器标准库)",
+    "availability": "unknown",
+    "relevance": "中：链接形态与领域分布补充"
+  },
+  {
+    "title": "压力容器标准 AI 知识号（3000+文件）",
+    "url": "sogou-wx:《腾讯ima压力容器工程师必备的AI知识库上线》",
+    "what": "超3000份文件：约2000份核心标准PDF（ASME等承压设备法规标准2026版）；已升级为 ima 知识号（订阅态）",
+    "availability": "unknown",
+    "relevance": "极高：工程标准语料（PDF 原文件）最重单库"
+  },
+  {
+    "title": "安全生产/大坝安全管理资料库（工程水例）",
+    "url": "sogou-wx:《利用ima知识库快速查标准》",
+    "what": "作者完全开放3个共享库：安全生产资料库、大坝安全管理资料库、废（料库）；查标准工作流",
+    "availability": "unknown",
+    "relevance": "极高：水利水电工程直接对口的公开库"
+  },
+  {
+    "title": "腾讯云开发者社区：共享知识库评测",
+    "url": "https://cloud.tencent.com/developer/article/2503414",
+    "what": "2025-03-10 实测文：广场入口=「发现」按钮；可直接用/加入后看文档；发布=权限管理→发布到广场；共享库不占个人空间可无限建",
+    "availability": "anonymous_ok",
+    "relevance": "高：广场机制权威描述"
+  },
+  {
+    "title": "AIGC工具导航：ima 全方位解析",
+    "url": "https://www.aigc.cn/ima-knowledge-base",
+    "what": "第三方导航页：20+行业/2亿+文件（2026-02口径）/月活9个月80倍增长；RAG+双模型架构描述",
+    "availability": "anonymous_ok",
+    "relevance": "中：市场规模第三方口径"
+  },
+  {
+    "title": "B站：个人腾讯ima知识库-800篇文章已上传共享",
+    "url": "https://www.bilibili.com/video/BV1cZAteUEfv/",
+    "what": "UP主「人月聊IT」（架构/中台/微服务领域）800篇IT文章共享库；1.4万播放/399收藏——工程IT类共享有真实供需",
+    "availability": "anonymous_ok",
+    "relevance": "高：工程类共享供给+流量验证"
+  },
+  {
+    "title": "公众号：ima知识库一键批量下载（下载器+插件）",
+    "url": "sogou-wx 链接（/link 需 JS，未取得 mp 直链）",
+    "what": "社区已有成品：网页转PDF+文档原格式落盘，下载器+浏览器插件双形态——下载层已被社区证明可行",
+    "availability": "unknown",
+    "relevance": "极高：渠道设计直接对标物"
+  },
+  {
+    "title": "公众号：10几年公众号文章自动进ima知识库",
+    "url": "sogou-wx 链接（标题级）",
+    "what": "1500篇文章自动搬运进 ima 的保姆级教程——入库自动化已有社区方案",
+    "availability": "unknown",
+    "relevance": "中"
+  },
+  {
+    "title": "公众号：律锥·legalskill 解读 ima 生态与知识号订阅变现",
+    "url": "sogou-wx 链接（标题级）",
+    "what": "知识库三分类（个人/共享/订阅知识号）；知识号订阅变现机制；法律垂类库运营",
+    "availability": "unknown",
+    "relevance": "中：生态商业化结构"
+  },
+  {
+    "title": "公众号：百晓智能入驻 ima MCP 广场",
+    "url": "sogou-wx 链接（标题级）",
+    "what": "ima 存在 MCP 广场，第三方 MCP（学术检索）可入驻直达知识库",
+    "availability": "unknown",
+    "relevance": "中：ima 开放面线索"
+  },
+  {
+    "title": "知乎：ima 完整使用指南 / 艾玛知识库五分钟读懂",
+    "url": "https://zhuanlan.zhihu.com/p/1996895232399257983",
+    "what": "403 反爬仅标题级；同题 https://zhuanlan.zhihu.com/p/24462427630",
+    "availability": "login_required",
+    "relevance": "低（不可达）"
+  },
+  {
+    "title": "百度百科：ima（腾讯AI知识管家）",
+    "url": "https://baike.baidu.com/item/ima/65111768",
+    "what": "词条级：ima 2.0 任务模式（Agent）等（未展开抓取）",
+    "availability": "anonymous_ok",
+    "relevance": "低"
+  },
+  {
+    "title": "PyPI: ima-copilot / ima-export",
+    "url": "https://pypi.org/pypi/ima-copilot/json",
+    "what": "均 404——无现成 PyPI 下载器包（github/npm 深查由并行调研员覆盖）",
+    "availability": "unknown",
+    "relevance": "中：空白=自建必要性"
+  }
+]
