@@ -34,41 +34,134 @@ MAX_CONSECUTIVE_FAILURES = 3  # 冷却: 连续 3 账号失败停批
 
 
 # ---------------------------------------------------------------- 网络预检
-def ensure_network(timeout_s: int = 15) -> str:
+# 0922 深夜重构: 原 ipinfo.io 判据在本机 rule 表下系统性假阳性 —
+# 所有 IP 回显服务 (ipinfo/ifconfig/ip.sb/myip.ipip.net...) 被规则
+# 分流 DIRECT → 探测永远显示 CN → 收割链每腿 rc=1 全灭 (2min 节奏
+# = 3 attempts × 60s). 真判据两件:
+#   1. 可达性 = urllib 走 7890 GET api.manus.im — 任何 HTTP 状态码
+#      (含 404/401) = 网络层通, 仅 URLError/超时 = 不通;
+#   2. 出口国 = Clash 组链 (api.manus.im 无专属规则 → 🐟 漏网之鱼
+#      MATCH 兜底 → 🚀 手动切换 → 节点名), 描述流量真实走向, 比
+#      IP 回显直连假象可靠. 统一网络管理: 只读组链, 不动网络.
+CLASH_SECRET = "d42f2047-3a9e-45a1-9e1c-b6a91441588f"
+
+
+def clash_ports() -> list[int]:
+    """controller 口候选: config.yaml + 已知口 + 7890 监听进程回环口.
+
+    H11 (0924 夜): controller 口三漂 (20225→40233→15198), config.yaml
+    记录也失真 — 唯一可靠判据 = 7890 监听进程自己的 127.0.0.1 监听口.
+    """
+    import re as _re
+    import subprocess as _sp
+    ports: list[int] = [15198, 29069, 11845, 20225]
+    try:
+        cfg = Path.home() / ".config" / "clash" / "config.yaml"
+        ports += [int(q) for q in _re.findall(
+            r"external-controller:\s*127\.0\.0\.1:(\d+)",
+            cfg.read_text(encoding="utf-8", errors="replace"))]
+    except Exception:
+        pass
+    try:
+        out = _sp.check_output(["netstat", "-ano"], timeout=15,
+                               text=True, errors="replace")
+        pid = next((ln.split()[-1] for ln in out.splitlines()
+                    if "LISTENING" in ln and ":7890 " in ln), None)
+        if pid:
+            for ln in out.splitlines():
+                f = ln.split()
+                if (len(f) >= 5 and f[3] == "LISTENING" and f[-1] == pid
+                        and f[1].startswith("127.0.0.1:")):
+                    ports.append(int(f[1].rsplit(":", 1)[1]))
+    except Exception:
+        pass
+    return list(dict.fromkeys(ports))
+
+
+def _clash_group_chain() -> str:
+    """读 Clash 组链: 漏网之鱼 → (组) → 节点名. 只读不动网."""
+    import re
+    import urllib.request
+    ports = clash_ports()
+    hdr = {"Authorization": "Bearer " + CLASH_SECRET}
+
+    def get(base, name):
+        from urllib.parse import quote
+        r = urllib.request.Request(
+            base + "/proxies/" + quote(name), headers=hdr)
+        return json.loads(urllib.request.urlopen(r, timeout=4).read())
+
+    for p in dict.fromkeys(ports):
+        base = "http://127.0.0.1:" + str(p)
+        try:
+            urllib.request.urlopen(
+                urllib.request.Request(base + "/version",
+                                       headers=hdr), timeout=2).read()
+        except Exception:
+            continue
+        # 0925 实锤: Clash 配置被切到新订阅 (无「🚀 手动切换」/「🐟 漏网之鱼」组,
+        # 主组=Proxy→Auto-UrlTest) → 404 恒「Clash API 不可达」假死.
+        # 修复: 组名按序降级 (漏网之鱼 → Others → Proxy), 哪个存在读哪个.
+        for gname in ("🐟 漏网之鱼", "Others", "Proxy"):
+            try:
+                node = get(base, gname).get("now") or "?"
+                for _ in range(3):  # 组套组最多跟 3 层
+                    info = get(base, node)
+                    if info.get("type") not in ("Selector", "URLTest",
+                                                "Fallback", "LoadBalance"):
+                        return node
+                    node = info.get("now") or node
+                return node
+            except Exception:
+                continue
+        # 0924 实锤: config.yaml 口漂移后可能命中另一活 core
+        # (无此组名) — 续试下一口, 不能一口失败就判死
+        continue
+    return "Clash API 不可达"
+
+
+def ensure_network(page=None, timeout_s: int = 15) -> str:
     """网络预检 — 用户令 (2026-09-22): 首先就要检查网络, 不要用户提醒.
 
-    Manus 封锁中国大陆出口, 浏览器实例须走 7890 代理 (美国/新加坡等).
-    本函数在任何登录/采集动作前调用: 验证出口国非 CN; 死则自动跑
-    We-AIPO 三段梯自愈 (保 7890 活, 零组零模式操作, 红线兼容);
-    复活返回 "国家/城市", 仍死 raise RuntimeError.
+    可达性判据 = urllib 走 7890 打 api.manus.im (任何 HTTP 状态=通);
+    出口判据 = Clash 组链节点名 (IP 回显服务被 rule 表分流直连=假阳性,
+    0922 实锤). 出口节点非海外名 → 拒 (账号安全: 出口国一致性).
+    统一网络管理令: 只探测不动网, 仍死 raise 由人工处置.
     """
+    import urllib.error
     import urllib.request
     proxy = urllib.request.ProxyHandler({"http": PROXY, "https": PROXY})
     opener = urllib.request.build_opener(proxy)
 
-    def probe() -> dict:
-        with opener.open("https://ipinfo.io/json", timeout=timeout_s) as r:
-            return json.loads(r.read().decode("utf-8", "replace"))
-
-    try:
-        info = probe()
-        if info.get("country") != "CN":
-            return f"{info.get('country')}/{info.get('city')}"
-    except Exception:
-        pass
-    print("[net] 7890 出口异常 → 三段梯自愈 (保核心活)", flush=True)
-    try:
-        scripts = r"E:\CPOPC\We-AIPO\scripts"
-        if scripts not in sys.path:
-            sys.path.insert(0, scripts)
-        import push_net_heal as h
-        h.ensure_clash_core_alive()
-    except Exception as e:
-        raise RuntimeError(f"代理死且自愈失败: {type(e).__name__} {e}")
-    info = probe()
-    if info.get("country") == "CN":
-        raise RuntimeError("代理出口仍在中国 (Manus 封锁区), 须人工介入")
-    return f"{info.get('country')}/{info.get('city')}"
+    last_err = None
+    for attempt in range(3):
+        try:  # 1) 可达性: api.manus.im 网络层通
+            opener.open("https://api.manus.im/",
+                        timeout=timeout_s).read(64)
+        except urllib.error.HTTPError:
+            pass  # 404/401 等也是通
+        except Exception as e:
+            last_err = ("api.manus.im 不可达 " + type(e).__name__
+                        + " " + str(e)[:50])
+            if attempt < 2:
+                print("[net] " + last_err + " → 等 60s 重测 (只探测不自愈)",
+                      flush=True)
+                time.sleep(60)
+            continue
+        try:  # 2) 出口: Clash 组链
+            chain = _clash_group_chain()
+            if any(k in chain for k in ("美国", "香港", "日本", "新加坡",
+                                        "台湾", "韩国", "US", "HK", "JP")):
+                return chain + "/api通"
+            last_err = "出口链非海外(" + chain + ")"
+        except Exception as e:
+            last_err = "组链读取异常 " + type(e).__name__
+        if attempt < 2:
+            print("[net] 出口异常(" + last_err + ") → 等 60s 重测 "
+                  "(只探测不自愈, 统一网络管理令)", flush=True)
+            time.sleep(60)
+    raise RuntimeError("代理出口不可用: " + str(last_err)
+                       + " (人工处置, 勿自动切网)")
 
 
 # ---------------------------------------------------------------- 账号加载
@@ -98,6 +191,7 @@ def make_page(port: int = BROWSER_PORT, profile: str = PROFILE_DIR,
     co.set_paths(local_port=port, user_data_path=profile)
     co.set_argument("--no-first-run")
     co.set_argument("--no-default-browser-check")
+    co.set_argument("--start-minimized")   # 0924 不弹窗铁律: 出生即最小化
     return Chromium(co).latest_tab
 
 
@@ -130,6 +224,61 @@ def dismiss_ads(page) -> list:
 
 
 # ---------------------------------------------------------------- 登录
+_JS_TURNSTILE_HOST = """
+function() {
+  var els = document.querySelectorAll('[class*="turnstile" i]');
+  for (var i = 0; i < els.length; i++) {
+    var r = els[i].getBoundingClientRect();
+    if (r.width > 100 && r.height > 30) {
+      return JSON.stringify({x: r.left, y: r.top, w: r.width, h: r.height});
+    }
+  }
+  return 'NONE';
+}
+"""
+
+_JS_BTN_DISABLED = """
+function() {
+  var btns = document.querySelectorAll('button');
+  for (var i = 0; i < btns.length; i++) {
+    if ((btns[i].textContent || '').trim() === '继续') return btns[i].disabled;
+  }
+  return null;
+}
+"""
+
+
+def _handle_turnstile(page) -> bool:
+    """Cloudflare Turnstile 可见复选框 (09-22 风控升级形态).
+
+    实锤: iframe 藏 closed shadow root, 常规定位全失效; 但宿主容器
+    div.turnstile-container 在主 DOM. 坐标点击复选框区 (宿主 x+58,
+    垂直中心) → 「继续」解禁. 已实测全链路登录成功 (probe_ts6).
+    返回 True=点击过.
+    """
+    import json as _json
+    try:
+        raw = page.run_js(_JS_TURNSTILE_HOST)
+        if not raw or raw == "NONE":
+            return False
+        host = _json.loads(raw)
+        page.actions.click((host["x"] + 58, host["y"] + host["h"] / 2))
+        time.sleep(8)
+        print("[lib] Turnstile 复选框已点击", flush=True)
+        return True
+    except Exception as e:
+        print(f"[lib] Turnstile 处理异常: {type(e).__name__}", flush=True)
+        return False
+
+
+def _btn_continue_disabled(page):
+    """「继续」按钮真实 disabled 态 (states.is_enabled 对此按钮有假象)."""
+    try:
+        return page.run_js(_JS_BTN_DISABLED)
+    except Exception:
+        return None
+
+
 def _page_ban_hit(page) -> str | None:
     try:
         body = page.ele("tag:body")
@@ -163,33 +312,34 @@ def login(page, email: str, password: str, timeout_s: int = 150):
     email_input.input(email)
 
     page.listen.start(LIST_SESSIONS)
-    # 人机验证智能等待 (最长 ~50s) — 冒烟实测通常自动通过
+    # Turnstile 智能等待 (09-22 升级形态): 复选框不勾 → 「继续」禁用
+    # → 密码框永不出现. 判据 = input[type=password] 可见 (placeholder
+    # 已漂移, 不再用 @placeholder=输入密码).
     pw = None
-    for _ in range(5):
-        pw = page.ele("@placeholder=输入密码", timeout=2)
-        if pw:
+    for _ in range(6):
+        cand = page.ele("css:input[type='password']", timeout=2)
+        if cand and cand.states.is_displayed:
+            pw = cand
             break
-        cont = page.ele("text=继续", timeout=2)
-        if cont:
-            cont.click()
-            time.sleep(2)
-            continue
-        try:
-            el = page.ele("input[type='checkbox']", timeout=1)
-            if el:
-                el.click()
-                time.sleep(3)
-        except Exception:
-            pass
+        if _btn_continue_disabled(page) is True:
+            _handle_turnstile(page)
+        else:
+            cont = page.ele("text=继续", timeout=2)
+            if cont:
+                cont.click()
         time.sleep(3)
     if not pw:
-        pw = page.ele("@placeholder=输入密码", timeout=5)
+        cand = page.ele("css:input[type='password']", timeout=5)
+        if cand and cand.states.is_displayed:
+            pw = cand
     if not pw:
-        print("[lib] 密码框未出现 (人机验证未过)", flush=True)
+        print("[lib] 密码框未出现 (Turnstile/人机验证未过)", flush=True)
         page.listen.stop()
         return None
     pw.clear()
     pw.input(password)
+    if _btn_continue_disabled(page) is True:
+        _handle_turnstile(page)
     btn = page.ele("text=继续", timeout=5)
     if btn:
         btn.click()
@@ -223,6 +373,20 @@ def login(page, email: str, password: str, timeout_s: int = 150):
     ad = dismiss_ads(page)
     if ad:
         print(f"[lib] 广告清理: {ad}", flush=True)
+    # 0924 串号根治: 登录完成即固化 token + 归属实证 (不符 = 登录失败)
+    import manus_api as api
+    try:
+        tok = api.capture_token(page)
+        api.save_token(email, tok)
+        real = whoami_browser(page)
+        if real and real != email.lower():
+            print(f"[lib] ✗ 登录后身份仍不符 ({real} ≠ {email}) — 拒绝派发",
+                  flush=True)
+            return None
+        print(f"[lib] ✓ 登录实证 {real or email}", flush=True)
+    except Exception as e:
+        print(f"[lib] token 固化异常 {type(e).__name__}: {str(e)[:50]}",
+              flush=True)
     return sessions
 
 
@@ -257,35 +421,54 @@ def check_login(page, wait_s: int = 12):
     return got
 
 
-def ensure_login(page, email: str, password: str, timeout_s: int = 150):
-    """登录态优先: 已登录直接复用 (零登出零重登); 仅未登录才走完整登录.
+def whoami_browser(page) -> str:
+    """浏览器现役身份实证 — capture_token(现役) + UserInfo(urllib).
 
-    返回 sessions 列表; 失败 None. 已登录但身份不符时才切换账号
-    (切账号 = 一次完整登录, 这是多账号轮转的最小必要动作).
+    0924 串号根治: 唯一可信判据是浏览器当前 token 的主人是谁,
+    绝不信「token 文件名 == 登录者」(token 库污染实锤: 110 文件
+    仅 23 把真 token). 返回小写 email; 查不到返回 ''.
     """
-    sessions = check_login(page)
-    if sessions is not None:
-        # 身份核对: 用已存 token 查 user_info, 不符才切换
-        import manus_api as api
-        tok = api.load_token(email)
-        if tok:
-            try:
-                st, text = api.api_call(
-                    page, "POST", "/user.v1.UserService/UserInfo", tok,
-                    body={})
-                if st == 200:
-                    import json as _json
-                    info = _json.loads(text)
-                    logged = info.get("email") or info.get("data", {}).get("email", "")
-                    if logged and logged.lower() != email.lower():
-                        print(f"[lib] 登录态身份不符 ({logged} ≠ {email}) → 切换",
-                              flush=True)
-                        return login(page, email, password, timeout_s)
-            except Exception:
-                pass  # 查不到身份就按已登录复用 (宁可少登录)
-        print(f"[lib] 登录态有效, 复用会话 (零重登): {email}", flush=True)
-        return sessions
-    print("[lib] 无登录态 → 完整登录一次", flush=True)
+    import manus_api as api
+    try:
+        tok = api.capture_token(page)
+    except Exception:
+        return ""
+    try:
+        st, text = api.api_call(
+            None, "POST", "/user.v1.UserService/UserInfo", tok, body={})
+        if st == 200:
+            import json as _json
+            info = _json.loads(text)
+            return (info.get("email")
+                    or info.get("data", {}).get("email", "")).lower()
+    except Exception:
+        pass
+    return ""
+
+
+def ensure_login(page, email: str, password: str, timeout_s: int = 150):
+    """登录态优先 — 但身份判据 = 浏览器现役 token 实证 (0924 重写).
+
+    旧版 bug: 用目标账号自己的 token 查身份 = 同义反复, 永远"符合"
+    → 无 token/污染 token 的账号全部复用上一个登录者 → 单任务堆到
+    单账号 (j2phz0tkfk 16 单实锤). 新判据: whoami_browser 实证
+    现役主人; 符合才复用并顺手固化正确 token, 不符/查不到 = 完整登录.
+    """
+    import manus_api as api
+    logged = whoami_browser(page)
+    if logged == email.lower():
+        try:
+            tok = api.capture_token(page)
+            api.save_token(email, tok)  # 固化正确归属 (治库污染)
+            return api.list_sessions(None, tok)
+        except Exception:
+            pass  # 身份已证实, sessions 拿不到也不阻断派发
+        return []  # 已登录但列不出会话 — 视作空账号 (可派发)
+    if logged:
+        print(f"[lib] 登录态身份不符 ({logged} ≠ {email}) → 切换",
+              flush=True)
+    else:
+        print("[lib] 现役身份不明 → 完整登录一次", flush=True)
     return login(page, email, password, timeout_s)
 
 
@@ -330,11 +513,20 @@ def _composer(page, timeout_s: int = 8):
 def send_task(page, prompt: str, create_timeout_s: int = 90):
     """从 app 主界面新建任务并发送 — 返回 (sid, 命中的 api 端点清单).
 
+    0924 夜修: 切号登录后页面可能停在 chrome://newtab (登录实证≠在站)
+    → 入口自愈: 不在 manus.im 域则先导航 APP_URL (已登录态会话直达).
+
     路径 (DOM 实证 2026-09-22): 主界面 composer = contenteditable div →
     input(prompt) → 最后一个 button 发送 (Enter 兜底) → URL 跳 /app/<sid>.
     监听同步开着: 抓新建会话的真实 API 契约 (CLI 化素材).
     """
     import re
+    if "manus.im" not in (page.url or ""):   # 0924 夜修: newtab 自愈导航
+        try:
+            page.get(APP_URL)
+            time.sleep(3)
+        except Exception:
+            pass
     dismiss_ads(page)
     box = _composer(page)
     if not box:
@@ -349,39 +541,45 @@ def send_task(page, prompt: str, create_timeout_s: int = 90):
         page.actions.key_up("ctrl")
     box.input(prompt)
     time.sleep(1.5)
-    sent = False
-    # 发送按钮 = composer 祖先容器内最后一个 button (实证 div.contents)
-    anc, btn = box, None
-    for _ in range(6):
-        try:
-            anc = anc.parent()
-        except Exception:
-            break
-        btns = anc.eles("tag:button")
-        if btns:
-            btn = btns[-1]
-            break
-    if btn:
-        try:
-            btn.click()
-            sent = True
-        except Exception:
-            pass
-    sid_probe_deadline = time.time() + 8
+    # 0925 实锤 (Manus 1.6 Lite 改版): 发送键 (svg 上箭头, btns[-1] 定位
+    # 本身没错) 对程序化 click 免疫 — 元素 click()/坐标点击只触发埋点包
+    # batch_create_event_v2, 任务创建请求根本不发; 唯真实键序 Enter 触发
+    # 创建 (probe2 实证 Enter→sid 直落). 发送顺序反转: Enter 优先,
+    # click 沦为兜底 (防未来改版回滚).
+    box.click()                       # 焦点钉在 composer
+    page.actions.key_down("enter").key_up("enter")
     import re as _re
+    sid_probe_deadline = time.time() + 8
     while time.time() < sid_probe_deadline:
-        m = _re.search(r"/app/([A-Za-z0-9_-]{8,})", page.url or "")
-        if m:
+        if _re.search(r"/app/([A-Za-z0-9_-]{8,})", page.url or ""):
             break
         time.sleep(1)
-    if not sent:
-        box = _composer(page)
-        if box:
-            page.actions.key_down("enter").key_up("enter")  # Enter 兜底
+    if not _re.search(r"/app/([A-Za-z0-9_-]{8,})", page.url or ""):
+        # Enter 未中 → 老路兜底: 发送按钮 click
+        anc, btn = box, None
+        for _ in range(6):
+            try:
+                anc = anc.parent()
+            except Exception:
+                break
+            btns = anc.eles("tag:button")
+            if btns:
+                btn = btns[-1]
+                break
+        if btn:
+            try:
+                btn.click()
+            except Exception:
+                pass
 
     sid = None
     deadline = time.time() + create_timeout_s
     while time.time() < deadline:
+        # 0924 夜实锤: 积分尽时点发送弹「获取更多积分」对话框, 任务不会
+        # 创建 — 早退省 80s 空等 (corps 侧另有 GetAvailableCredits 预检)
+        if page.ele("text=获取更多积分", timeout=0.5):
+            print("[lib] 积分墙 (获取更多积分弹窗), 本单中止", flush=True)
+            break
         url = page.url or ""
         m = re.search(r"/app/([A-Za-z0-9_-]{8,})", url)
         if m:
@@ -461,17 +659,23 @@ def build_prompt(use_case: str, topic: str, extra: str = "") -> str:
         task = ("生成一份深度研究报告的完整研究规划：1）不少于15章的报告结构，"
                 "每章给出专业标题、本章核心洞察假设、3-5个内容要点；"
                 "2）每章列出所需关键数据与事实清单（注明建议来源渠道类型）；"
-                "3）给出章节间的逻辑主线说明。成果文件名：research_plan.md。")
+                "3）给出章节间的逻辑主线说明。注意：规划中不要编造任何具体"
+                "数字或事实，数据需求只描述需要找什么。"
+                "成果文件名：research_plan.md。")
     elif use_case == "survey_plan":
         task = ("生成一份调研规划：1）不少于40个按主题分组的调研问题清单；"
                 "2）公开信息渠道地图（按权威度分级，指出每类渠道适合回答哪些问题）；"
                 "3）专家访谈提纲（若有）；4）调研优先级与风险点。"
+                "注意：问题设计基于真实信息需求，不要预设未经证实的事实。"
                 "成果文件名：survey_plan.md。")
     elif use_case == "collect":
-        task = ("搜集整理该课题的公开资料并汇编：1）按主题分组的资料汇编，"
-                "每条注明来源与可信度；2）关键数据表格（含来源标注）；"
-                "3）指出尚无法从公开渠道获得的信息缺口。"
-                "成果文件名：collected_materials.md。")
+        task = ("搜集该课题的公开资料并汇编成资料库。只基于实际检索到的原始"
+                "资料，严禁编造：1）按主题分组，每条资料必须包含：来源名称、"
+                "原文链接（URL）、发布时间、原文关键段落摘录（照抄原文，"
+                "不要改写）；2）关键数据表格：每个数据注明出处链接与年份，"
+                "查不到出处的数据一律不写；3）严禁用自己的话改写事实，"
+                "没有资料支撑的内容不写；4）最后列出尚无法从公开渠道获得的"
+                "信息缺口。成果文件名：collected_materials.md。")
     else:
         raise ValueError(f"未知用途: {use_case}")
     extra_sec = f"附加要求：{extra}。" if extra else ""

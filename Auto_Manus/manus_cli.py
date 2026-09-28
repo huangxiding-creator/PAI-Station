@@ -35,7 +35,8 @@ import manus_lib as lib
 ACCOUNT_FILE = "账号列表 - 调试.txt"
 DOWNLOAD_ROOT = Path("downloads")
 LEDGER = Path("dispatch_ledger.json")
-DAILY_PER_ACCOUNT = 1  # 日限额: 每账号每日下发次数帽 (四件套之四)
+DAILY_PER_ACCOUNT = 2  # 日限额帽 (四件套之四); 2026-09-23 用户明示授权:
+# 每账号 300 免费积分/日, 任务实耗 55-110 → ≤2 任务/日吃满不浪费
 
 
 # ---------------------------------------------------------------- 会话引导
@@ -51,7 +52,7 @@ def _set_current(email: str):
 
 def _boot(page, account_idx: int | None):
     """返回 (email, tok). account_idx 给出=确保该账号登录; 不给=复用当前态."""
-    exit_country = lib.ensure_network()  # 网络预检 (用户令: 不要用户提醒)
+    exit_country = lib.ensure_network(page)  # 浏览器实测判据 (curl/urllib 假阴性)
     email = _current_email()
     if account_idx is not None:
         email, password = lib.load_accounts(ACCOUNT_FILE)[account_idx - 1]
