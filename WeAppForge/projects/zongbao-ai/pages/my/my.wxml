@@ -1,0 +1,104 @@
+<view class="page">
+
+  <!-- ══ 打破砂锅头：蓝图底（用户令 v0.5.0 更名）══ -->
+  <view class="head bp-grid ticks">
+    <view style="height: {{nav.statusBarHeight}}px;"></view>
+    <view class="head-nav" style="height: {{nav.navHeight}}px">
+      <text class="head-title">打破砂锅 · FOLDER</text>
+    </view>
+
+    <view class="head-inner">
+      <view class="avatar-frame">
+        <text class="avatar-glyph">锅</text>
+      </view>
+      <view class="head-info">
+        <view class="nick">总包AI顾问 · 7×24小时</view>
+        <view class="head-sub">打破砂锅问到底 · 我来给您开拓思路</view>
+      </view>
+      <view class="head-no mono">NO.{{sheetNo}}</view>
+    </view>
+  </view>
+
+  <!-- 额度票据组：常显，未登录/加载中也占位 -->
+  <view class="card ticks quota-card rise" style="animation-delay: 60ms">
+    <view class="sheet-head">
+      <text class="kicker kicker-on-paper">今日额度 · QUOTA</text>
+    </view>
+    <view class="quota-grid" wx:if="{{quota}}">
+      <view class="q-item">
+        <view class="q-num mono">{{quota.free_left}}</view>
+        <view class="q-label">免费剩余</view>
+      </view>
+      <view class="q-perf"></view>
+      <view class="q-item">
+        <view class="q-num mono">{{quota.bonus_left}}</view>
+        <view class="q-label">互动加赠</view>
+      </view>
+      <view class="q-perf"></view>
+      <view class="q-item">
+        <view class="q-num mono q-num-main">{{quota.total_left}}</view>
+        <view class="q-label">还可咨询</view>
+      </view>
+    </view>
+    <view class="muted" wx:else>额度加载中…</view>
+    <view class="muted quota-rule">每天免费 6 次 · 有用/导出/分享/纠错（写具体意见）各 +1 次，上不封顶 · 北京时间 0 点清零</view>
+  </view>
+
+  <!-- 咨询记录 -->
+  <view class="card ticks rise" style="animation-delay: 140ms">
+    <view class="sheet-head">
+      <text class="kicker kicker-on-paper">咨询记录 · RECORDS</text>
+    </view>
+
+    <block wx:if="{{loading}}">
+      <view class="muted center-pad">加载中…</view>
+    </block>
+
+    <block wx:elif="{{loadError}}">
+      <view class="muted center-pad">{{loadError}}</view>
+      <button class="btn-primary mini-retry" hover-class="btn-hover" bindtap="onRetry">重试</button>
+    </block>
+
+    <block wx:elif="{{items.length === 0}}">
+      <!-- 空态：空白图纸 -->
+      <view class="blank-sheet">
+        <view class="blank-frame">
+          <view class="blank-cross"></view>
+          <view class="blank-mark mono">BLANK SHEET</view>
+        </view>
+        <view class="empty-text">还没有咨询记录</view>
+        <view class="muted">第一次咨询免费，马上试试</view>
+        <button class="btn-primary empty-btn" hover-class="btn-hover" bindtap="goAsk">去咨询</button>
+      </view>
+    </block>
+
+    <block wx:else>
+      <view
+        class="hist-item"
+        wx:for="{{items}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="onItem"
+        hover-class="hist-hover"
+      >
+        <view class="hist-no mono">S-{{index + 1 < 10 ? '0' : ''}}{{index + 1}}</view>
+        <view class="hist-main">
+          <view class="hist-q">{{item.question}}</view>
+          <view class="hist-meta">
+            <text class="muted mono hist-time">{{item.timeText}}</text>
+            <text class="{{item.badgeCls}}" wx:if="{{item.badge}}">{{item.badge}}</text>
+            <text class="hist-badge hist-liked" wx:if="{{item.liked}}">已点赞</text>
+          </view>
+        </view>
+        <view class="hist-arrow">›</view>
+      </view>
+
+      <!-- 批量导出：全部咨询问答 → Word/PDF/Markdown（用户令 v0.5.0） -->
+      <button class="btn-ghost export-all-btn" hover-class="btn-hover" bindtap="onExportAll">批量导出全部咨询（Word / PDF / Markdown）</button>
+    </block>
+  </view>
+
+  <view class="muted mono" style="text-align: center; padding: 8rpx 0 24rpx; letter-spacing: 2rpx;">v0.5.1 · 总包AI顾问 · 顶级总包智库</view>
+
+  <view class="safe-bottom"></view>
+</view>

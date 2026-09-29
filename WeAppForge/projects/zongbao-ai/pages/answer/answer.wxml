@@ -1,0 +1,220 @@
+<view class="page">
+
+  <!-- 自绘导航：蓝图带 + 返回 -->
+  <view class="topnav bp-grid">
+    <view style="height: {{nav.statusBarHeight}}px;"></view>
+    <view class="topnav-row" style="height: {{nav.navHeight}}px">
+      <view class="back-btn" bindtap="goBack" hover-class="back-hover"><text>‹</text></view>
+      <text class="topnav-title">回答 · ANSWER</text>
+      <view class="topnav-cap mono">AI · 智库</view>
+    </view>
+  </view>
+
+  <!-- 问题芯片：问题永远住在蓝图上 -->
+  <view class="q-band bp-grid ticks">
+    <view class="q-band-inner">
+      <view class="q-kicker">咨询 · CONSULT</view>
+      <view class="q-text">{{question}}</view>
+    </view>
+  </view>
+
+  <!-- ══ 工程大脑工作中：绘图仪扫描动画 ══ -->
+  <block wx:if="{{polling}}">
+    <view class="card ticks draft-card">
+      <view class="draft-stage bp-grid-soft">
+        <view class="plotter-line"></view>
+        <view class="draft-elapsed mono">{{elapsed}}s</view>
+      </view>
+      <view class="draft-head">
+        <view class="draft-dot"></view>
+        <text class="draft-title">总包AI智库 · 绘制中</text>
+      </view>
+      <view class="proc-list">
+        <view class="proc-item" wx:for="{{progress}}" wx:key="index">
+          <text class="proc-t mono">{{item.t}}s</text>
+          <text class="proc-x">{{item.text}}</text>
+        </view>
+        <view class="proc-item proc-current">
+          <text class="proc-t mono">…</text>
+          <text class="proc-x">正在组织专业回答</text>
+        </view>
+      </view>
+      <view class="muted proc-tip">全程通常 10-60 秒 · 完成后自动展示</view>
+    </view>
+  </block>
+
+  <!-- 首次加载骨架 -->
+  <block wx:elif="{{loading}}">
+    <view class="card">
+      <view class="sk sk-title"></view>
+    </view>
+    <view class="card">
+      <view class="sk sk-line"></view>
+      <view class="sk sk-line"></view>
+      <view class="sk sk-line short"></view>
+      <view class="loading-hint">加载中…</view>
+    </view>
+  </block>
+
+  <!-- 网络加载失败 -->
+  <view class="card ticks err-card" wx:elif="{{loadError}}">
+    <view class="err-kicker kicker kicker-on-paper">ERROR · 加载遇到问题</view>
+    <view class="muted">{{loadError}}</view>
+    <button class="btn-primary retry-btn" hover-class="btn-hover" bindtap="onRetry">重新加载</button>
+  </view>
+
+  <!-- 引擎处理失败（次数已退） -->
+  <view class="card ticks err-card" wx:elif="{{kbError}}">
+    <view class="err-kicker kicker kicker-on-paper">REJECTED · 这次没有回答成功</view>
+    <view class="muted">{{kbError}}</view>
+    <view class="muted refund-note">提问次数已自动退回</view>
+    <button class="btn-primary retry-btn" hover-class="btn-hover" bindtap="goAsk">重新咨询</button>
+  </view>
+
+  <!-- ══ 正文：答案落在白图上 ══ -->
+  <block wx:else>
+
+    <view class="card ticks a-card">
+      <view class="a-head">
+        <view class="a-badge">
+          <view class="a-badge-dot"></view>
+          <text>总包AI智库 · 专业解答</text>
+        </view>
+        <view class="a-meta">
+          <text class="meta-chip mono" wx:if="{{fullChars}}">{{fullChars}} 字</text>
+          <text class="meta-chip mono" wx:if="{{citations.length > 0}}">{{citations.length}} 条依据</text>
+        </view>
+      </view>
+
+      <view class="md">
+        <block wx:for="{{blocks}}" wx:key="index" wx:for-item="b">
+
+          <view wx:if="{{b.t === 'h1'}}" class="md-h1">
+            <text user-select><template is="inl" data="{{segs: b.inl}}" /></text>
+          </view>
+          <view wx:elif="{{b.t === 'h2'}}" class="md-h2">
+            <view class="h2-bar"></view>
+            <text class="md-h2-text" user-select><template is="inl" data="{{segs: b.inl}}" /></text>
+          </view>
+          <view wx:elif="{{b.t === 'h3'}}" class="md-h3">
+            <text user-select><template is="inl" data="{{segs: b.inl}}" /></text>
+          </view>
+
+          <view wx:elif="{{b.t === 'p'}}" class="md-p">
+            <text user-select><template is="inl" data="{{segs: b.inl}}" /></text>
+          </view>
+
+          <view wx:elif="{{b.t === 'quote'}}" class="md-quote">
+            <text user-select><template is="inl" data="{{segs: b.inl}}" /></text>
+          </view>
+
+          <view wx:elif="{{b.t === 'hr'}}" class="md-hr"></view>
+
+          <view wx:elif="{{b.t === 'code'}}" class="md-code-wrap">
+            <scroll-view scroll-x class="md-code-scroll" enhanced show-scrollbar="{{false}}">
+              <text class="md-code" user-select>{{b.text}}</text>
+            </scroll-view>
+          </view>
+
+          <view wx:elif="{{b.t === 'ul'}}" class="md-list">
+            <view class="md-li" wx:for="{{b.items}}" wx:key="index" wx:for-item="li">
+              <view class="li-dot"></view>
+              <text class="li-text" user-select><template is="inl" data="{{segs: li}}" /></text>
+            </view>
+          </view>
+
+          <view wx:elif="{{b.t === 'ol'}}" class="md-list">
+            <view class="md-li" wx:for="{{b.items}}" wx:key="index" wx:for-item="li" wx:for-index="liIdx">
+              <view class="li-num mono">{{b.nums[liIdx]}}</view>
+              <text class="li-text" user-select><template is="inl" data="{{segs: li}}" /></text>
+            </view>
+          </view>
+
+          <scroll-view wx:elif="{{b.t === 'table'}}" scroll-x class="md-tbl-scroll" enhanced show-scrollbar="{{false}}">
+            <view class="md-tbl">
+              <view class="md-tr md-tr-head">
+                <view class="md-th" wx:for="{{b.head}}" wx:key="index" wx:for-item="cell">
+                  <text user-select><template is="inl" data="{{segs: cell}}" /></text>
+                </view>
+              </view>
+              <view class="md-tr" wx:for="{{b.rows}}" wx:key="index" wx:for-item="row">
+                <view class="md-td" wx:for="{{row}}" wx:key="index" wx:for-item="cell">
+                  <text user-select><template is="inl" data="{{segs: cell}}" /></text>
+                </view>
+              </view>
+            </view>
+          </scroll-view>
+
+        </block>
+      </view>
+
+      <view class="lock-note" wx:if="{{!unlocked}}">
+        <view class="lock-line"></view>
+        <view class="lock-text">以上为预览 · 全文约 {{fullChars}} 字</view>
+      </view>
+
+      <view class="unlock-bar ticks" wx:if="{{!unlocked}}">
+        <view class="unlock-price mono"><text class="unlock-rmb">¥</text>1</view>
+        <view class="unlock-info">
+          <view class="unlock-title">解锁本篇全文</view>
+          <view class="muted">一次解锁 · 永久可看</view>
+        </view>
+        <button class="btn-primary unlock-btn" hover-class="btn-hover" bindtap="onUnlock">解锁</button>
+      </view>
+
+      <!-- 依据来源：图签栏（title block）样式 -->
+      <view class="cite-block" wx:if="{{unlocked && citations.length > 0}}">
+        <view class="cite-title kicker kicker-on-paper">依据来源 · BASIS OF ANSWER</view>
+        <view class="cite-tbl">
+          <view class="cite-item" wx:for="{{citations}}" wx:key="n">
+            <view class="cite-chip mono">{{item.n}}</view>
+            <view class="cite-body">
+              <text class="cite-src" user-select>{{item.source}}</text>
+              <text class="cite-loc" wx:if="{{item.loc}}">第 {{item.loc}} 条</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- ══ 互动小按钮排（用户令 v0.5.0：精美小按钮）══ -->
+    <view class="card ticks act-card" wx:if="{{unlocked}}">
+      <view class="pill-row">
+        <view class="pill {{liked ? 'pill-on' : ''}}" bindtap="onLike" hover-class="pill-hover">
+          <view class="pill-glyph"><text>{{liked ? '✓' : '👍'}}</text></view>
+          <text class="pill-t">{{liked ? '已+1次' : '有用 +1次'}}</text>
+        </view>
+        <view class="pill" bindtap="onCopy" hover-class="pill-hover">
+          <view class="pill-glyph"><text>📋</text></view>
+          <text class="pill-t">复制全文</text>
+        </view>
+        <view class="pill" bindtap="onExport" hover-class="pill-hover">
+          <view class="pill-glyph"><text>📄</text></view>
+          <text class="pill-t">导出 +1次</text>
+        </view>
+        <view class="pill" bindtap="onCriticize" hover-class="pill-hover">
+          <view class="pill-glyph"><text>✏️</text></view>
+          <text class="pill-t">纠错 +1次</text>
+        </view>
+        <button class="pill share-pill" open-type="share" bindtap="onShareTap" hover-class="pill-hover">
+          <view class="pill-glyph"><text>📤</text></view>
+          <text class="pill-t">分享 +1次</text>
+        </button>
+      </view>
+      <view class="muted act-tip">有用 / 导出 / 纠错（写具体意见）/ 分享 —— 每篇各 +1 次咨询机会 · 明日 0 点清零</view>
+    </view>
+  </block>
+
+  <view class="safe-bottom"></view>
+</view>
+
+<!-- 行内段渲染模板：加粗/斜体/行内代码/链接，供各类块复用 -->
+<template name="inl">
+  <block wx:for="{{segs}}" wx:key="index" wx:for-item="s">
+    <text wx:if="{{s.k === 'b'}}" class="in-b" user-select>{{s.v}}</text>
+    <text wx:elif="{{s.k === 'i'}}" class="in-i" user-select>{{s.v}}</text>
+    <text wx:elif="{{s.k === 'c'}}" class="in-c" user-select>{{s.v}}</text>
+    <text wx:elif="{{s.k === 'l'}}" class="in-l" user-select>{{s.v}}</text>
+    <block wx:else><text user-select>{{s.v}}</text></block>
+  </block>
+</template>

@@ -1,0 +1,132 @@
+/* ═══════════════════════════════════════════════════════════════
+   设计系统 — 总包AI顾问 v0.3.0 「工程蓝图 Blueprint」
+   叙事：提问写在蓝图上（深蓝图纸），答案落在白图上（暖白纸面）
+   ═══════════════════════════════════════════════════════════════ */
+page {
+  /* ── 蓝图皮层 ── */
+  --navy-0: #081a36;      /* 图纸最深底 */
+  --navy-1: #0d2547;      /* 图纸渐变中段 */
+  --navy-2: #16355f;      /* 图纸渐变亮段 */
+  --grid: rgba(101, 160, 255, 0.14);   /* 主网格线 */
+  --grid-soft: rgba(101, 160, 255, 0.055); /* 次网格线 */
+  --white-ink: #eaf3ff;   /* 白墨 */
+  --ink-dim: #93acd1;     /* 蓝图上的注记灰 */
+
+  /* ── 白图纸面 ── */
+  --paper: #f7f4ec;       /* 暖白纸面 */
+  --card: #ffffff;
+  --ink: #1b2434;         /* 正文墨 */
+  --ink-2: #39445a;
+  --muted: #7a8496;
+  --line: #e6e1d2;        /* 纸面发丝线 */
+
+  /* ── 点睛 ── */
+  --accent: #ff9432;      /* 安全橙 */
+  --accent-deep: #e07a0e;
+  --stamp: #c8452b;       /* 图章红 */
+  --draft: #1d6fd0;       /* 制图蓝（链接） */
+
+  background: var(--paper);
+  font-family: -apple-system, "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Microsoft YaHei", sans-serif;
+  font-size: 28rpx;
+  color: var(--ink);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 清除微信原生按钮边框（默认 button::after 有一圈灰线，必须剥离） */
+button::after { border: none; }
+button { padding-left: 0; padding-right: 0; }
+
+/* ── 蓝图网格（主网格 160rpx + 次网格 32rpx，工程制图纸规格）+ 顶部纵深光 ── */
+.bp-grid {
+  background-color: var(--navy-0);
+  background-image:
+    radial-gradient(120% 90% at 28% 0%, rgba(101, 160, 255, 0.13), transparent 55%),
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    linear-gradient(var(--grid-soft) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-soft) 1px, transparent 1px);
+  background-size: 100% 100%, 160rpx 160rpx, 160rpx 160rpx, 32rpx 32rpx, 32rpx 32rpx;
+}
+
+/* ── 图框角标（drawing frame ticks）：左上+右下 L 形制图标记 ── */
+.ticks { position: relative; }
+.ticks::before {
+  content: '';
+  position: absolute; left: 0; top: 0;
+  width: 26rpx; height: 26rpx;
+  border-left: 3rpx solid var(--tick, rgba(234, 243, 255, 0.55));
+  border-top: 3rpx solid var(--tick, rgba(234, 243, 255, 0.55));
+  pointer-events: none;
+}
+.ticks::after {
+  content: '';
+  position: absolute; right: 0; bottom: 0;
+  width: 26rpx; height: 26rpx;
+  border-right: 3rpx solid var(--tick, rgba(234, 243, 255, 0.55));
+  border-bottom: 3rpx solid var(--tick, rgba(234, 243, 255, 0.55));
+  pointer-events: none;
+}
+
+/* ── 注记体 kicker（图纸标注：小号+宽字距） ── */
+.kicker {
+  font-size: 20rpx;
+  letter-spacing: 5rpx;
+  font-weight: 600;
+  color: var(--ink-dim);
+}
+.kicker-on-paper { color: var(--muted); }
+
+/* 等宽数字（图签/编号的制图感） */
+.mono {
+  font-family: "SF Mono", Menlo, Consolas, "Courier New", monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 纸面卡片：直角工业感 + 微投影 ── */
+.card {
+  background: var(--card);
+  border-radius: 6rpx;
+  padding: 36rpx 32rpx;
+  margin: 22rpx 24rpx;
+  box-shadow: 0 2rpx 0 rgba(27, 36, 52, 0.04), 0 10rpx 34rpx rgba(27, 36, 52, 0.07);
+  --tick: rgba(13, 37, 71, 0.35);
+}
+
+/* ── 主 CTA：安全橙工业按钮 ── */
+.btn-primary {
+  background: linear-gradient(180deg, #ffa53f 0%, #ff9432 45%, #f0821a 100%);
+  color: #0a1e3c;
+  border-radius: 10rpx;
+  font-size: 32rpx;
+  font-weight: 800;
+  letter-spacing: 2rpx;
+  line-height: 2.4;
+  box-shadow: 0 12rpx 28rpx rgba(255, 148, 50, 0.34), inset 0 2rpx 0 rgba(255, 255, 255, 0.55);
+}
+.btn-primary[disabled] {
+  background: #d9d2c2;
+  color: #8b8474;
+  box-shadow: none;
+}
+.btn-hover { transform: scale(0.985); box-shadow: 0 6rpx 14rpx rgba(255, 148, 50, 0.28), inset 0 2rpx 0 rgba(255, 255, 255, 0.4); }
+
+.muted { color: var(--muted); font-size: 24rpx; }
+
+.sec-title { font-weight: 800; font-size: 30rpx; margin-bottom: 20rpx; color: var(--ink); letter-spacing: 1rpx; }
+
+/* ── 入场动效：图纸渐次铺开 ── */
+.rise { animation: rise 0.42s cubic-bezier(0.22, 0.9, 0.3, 1) both; }
+@keyframes rise {
+  from { opacity: 0; transform: translateY(16rpx); }
+  to { opacity: 1; transform: none; }
+}
+.fade-in { animation: fadeIn 0.32s ease both; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10rpx); }
+  to { opacity: 1; transform: none; }
+}
+
+/* 底部安全区（全面屏） */
+.safe-bottom { padding-bottom: calc(env(safe-area-inset-bottom) + 24rpx); }

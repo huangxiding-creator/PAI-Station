@@ -1,0 +1,101 @@
+<view class="page">
+
+  <!-- ══ 蓝图头部：问题写在蓝图上 ══ -->
+  <view class="hero bp-grid ticks">
+    <view style="height: {{nav.statusBarHeight}}px;"></view>
+    <view class="hero-nav" style="height: {{nav.navHeight}}px;"></view>
+
+    <view class="hero-inner">
+      <view class="hero-kicker">GENERAL CONTRACTOR · AI ADVISOR</view>
+      <view class="hero-title">总包AI顾问</view>
+      <view class="hero-sub">专业解答，来自背后的顶级总包智库 · 总包人的 7×24 小时随身顾问 / 招投标 / 合同 / 签约 / 风险 / 造价争议 / 审计 / 法务 / 诉讼</view>
+
+      <!-- 额度票根 -->
+      <view class="quota-ticket" wx:if="{{quota}}">
+        <view class="qt-left">
+          <view class="qt-label">今日可咨询</view>
+          <view class="qt-num mono">{{quota.total_left}}</view>
+        </view>
+        <view class="qt-perf"></view>
+        <view class="qt-right">
+          <view class="qt-kv">免费 {{quota.free_left}} 次</view>
+          <view class="qt-kv" wx:if="{{quota.bonus_left > 0}}">互动加赠 {{quota.bonus_left}} 次</view>
+          <view class="qt-kv qt-dim" wx:else>有用/导出/分享/纠错 各+1次</view>
+        </view>
+      </view>
+      <view class="quota-ticket quota-empty" wx:else>
+        <view class="qt-label">今日可咨询</view>
+        <view class="qt-num mono">–</view>
+      </view>
+
+      <view class="hero-dwg mono">DWG NO. {{sheetNo}} · SCALE 1:1<view class="dim-rule"></view><text class="dim-cap">SHT 1/1</text></view>
+    </view>
+  </view>
+
+  <!-- 连接状态自检：失败时常驻警示卡 -->
+  <view class="net-down ticks" wx:if="{{netStatus === 'down'}}" bindtap="recheck">
+    <text>⚠ 无法连接服务 · 点击重试，请检查手机网络是否可用</text>
+  </view>
+
+  <!-- ══ 咨询问题单：白图纸面（先写问题） ══ -->
+  <view class="card ticks ask-card rise" style="animation-delay: 60ms">
+    <view class="sheet-head">
+      <text class="kicker kicker-on-paper">咨询问题 · CONSULTATION</text>
+      <text class="sheet-no mono">NO. {{sheetNo}}</text>
+    </view>
+    <textarea
+      class="ask-input"
+      value="{{question}}"
+      placeholder="例如：EPC 固定总价合同下材料暴涨，能申请调价吗？依据和操作步骤是什么？"
+      placeholder-class="ask-ph"
+      maxlength="500"
+      bindinput="onInput"
+      auto-height
+      show-confirm-bar="{{false}}"
+    ></textarea>
+    <view class="ask-foot">
+      <text class="char-count mono">{{charCount}}/500</text>
+      <text class="clear-btn" wx:if="{{charCount > 0}}" bindtap="onClear">清空</text>
+    </view>
+  </view>
+
+  <!-- ══ 双按钮排：AI优化提问（左）+ 立即咨询（右）——用户令 v0.5.0 ══ -->
+  <view class="btn-row rise" style="animation-delay: 90ms">
+    <button
+      class="btn-ghost opt-btn"
+      disabled="{{optimizing || !canAsk}}"
+      hover-class="btn-hover"
+      bindtap="onOptimize"
+    >{{optimizing ? 'AI 优化中…' : 'AI优化提问'}}</button>
+    <button
+      class="btn-primary ask-btn"
+      disabled="{{asking || !canAsk}}"
+      hover-class="btn-hover"
+      bindtap="onSubmit"
+    >{{asking ? '智库检索中…' : '立即咨询'}}</button>
+  </view>
+  <view class="opt-hint muted" wx:if="{{!optimizing}}">AI优化提问：把您的问题改写成更深入、更究竟的递进式三小问</view>
+
+  <!-- ══ 示范性问题：EPC 热点题库 ══ -->
+  <view class="card ticks rise" style="animation-delay: 140ms">
+    <view class="sheet-head">
+      <text class="kicker kicker-on-paper">示范性问题 · SAMPLE QUESTIONS</text>
+      <text class="sheet-no">每条都是递进三问</text>
+    </view>
+    <view class="chips">
+      <view
+        class="chip"
+        wx:for="{{samples}}"
+        wx:key="tag"
+        data-i="{{index}}"
+        bindtap="onSample"
+        hover-class="chip-hover"
+      ><text class="chip-tag">{{item.tag}}</text><text class="chip-3q mono">三问</text></view>
+    </view>
+  </view>
+
+  <view class="bottom-bar safe-bottom rise" style="animation-delay: 220ms">
+    <view class="muted tip-line">每天免费 6 次 · 有用/导出/分享/纠错各 +1 次（上不封顶）· 北京时间 0 点清零</view>
+  </view>
+</view>
+<!-- bottom-bar 不用 fixed：本页是 tabBar 页，fixed bottom:0 会被 tabBar 盖住吃掉点击 -->

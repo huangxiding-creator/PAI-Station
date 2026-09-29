@@ -1,0 +1,349 @@
+/* 答案页 — v0.3.0 蓝图设计：蓝图带（导航+问题）→ 白图纸面（解答） */
+.page { padding-bottom: 40rpx; }
+
+/* ══ 自绘导航 ══ */
+.topnav { position: relative; z-index: 5; }
+.topnav-row {
+  display: flex;
+  align-items: center;
+  padding: 0 24rpx;
+  position: relative;
+}
+.back-btn {
+  width: 60rpx; height: 60rpx;
+  border-radius: 10rpx;
+  border: 2rpx solid rgba(147, 172, 209, 0.5);
+  color: var(--white-ink);
+  font-size: 40rpx;
+  display: flex; align-items: center; justify-content: center;
+  line-height: 1;
+  margin-top: -4rpx;
+}
+.back-hover { background: rgba(101, 160, 255, 0.15); }
+.topnav-title {
+  margin-left: 20rpx;
+  font-size: 22rpx;
+  letter-spacing: 6rpx;
+  color: var(--ink-dim);
+  font-weight: 600;
+}
+
+/* 顶栏右侧铭牌（语音撤除后） */
+.topnav-cap {
+  margin-left: auto;
+  height: 60rpx;
+  padding: 0 20rpx;
+  border-radius: 10rpx;
+  border: 2rpx solid rgba(147, 172, 209, 0.5);
+  color: var(--ink-dim);
+  font-size: 22rpx;
+  letter-spacing: 3rpx;
+  display: flex; align-items: center;
+  line-height: 1;
+}
+
+/* ══ 问题芯片：蓝图底白墨 ══ */
+.q-band {
+  margin: -2rpx 24rpx 22rpx;
+  border: 2rpx solid rgba(101, 160, 255, 0.3);
+  border-radius: 8rpx;
+  color: var(--white-ink);
+  position: relative;
+}
+.q-band-inner { padding: 26rpx 28rpx 30rpx; border-left: 6rpx solid var(--accent); }
+.q-kicker {
+  font-size: 19rpx; letter-spacing: 6rpx;
+  color: var(--ink-dim);
+  font-weight: 600;
+  margin-bottom: 12rpx;
+}
+.q-text {
+  font-size: 34rpx; font-weight: 700; line-height: 1.55;
+  color: #f4f8ff;
+  text-shadow: 0 2rpx 0 rgba(0, 0, 0, 0.22);
+}
+
+/* ══ 绘制中：绘图仪扫描动画 ══ */
+.draft-card { padding: 26rpx 28rpx 28rpx; }
+.draft-stage {
+  position: relative;
+  height: 120rpx;
+  border: 2rpx dashed rgba(13, 37, 71, 0.22);
+  border-radius: 8rpx;
+  overflow: hidden;
+  background-color: #f2f0e8;
+  background-image:
+    linear-gradient(rgba(29, 111, 208, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(29, 111, 208, 0.07) 1px, transparent 1px);
+  background-size: 28rpx 28rpx;
+}
+/* 扫描线：往返移动的绘图笔 */
+.plotter-line {
+  position: absolute; top: 12rpx; bottom: 12rpx; left: 0;
+  width: 3rpx;
+  background: linear-gradient(180deg, transparent, var(--accent) 22%, var(--accent) 78%, transparent);
+  box-shadow: 0 0 18rpx rgba(255, 148, 50, 0.65);
+  animation: plot 2.2s ease-in-out infinite alternate;
+}
+@keyframes plot {
+  from { left: 6%; }
+  to { left: 94%; }
+}
+.draft-elapsed {
+  position: absolute; right: 14rpx; bottom: 8rpx;
+  font-size: 22rpx; color: var(--navy-1);
+  opacity: 0.75;
+}
+.draft-head { display: flex; align-items: center; gap: 16rpx; margin-top: 24rpx; }
+.draft-dot {
+  width: 18rpx; height: 18rpx; border-radius: 50%;
+  background: var(--accent);
+  animation: pulse 1.1s ease-in-out infinite;
+}
+@keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.5; } }
+.draft-title { font-weight: 800; font-size: 30rpx; letter-spacing: 2rpx; }
+
+.proc-list { margin-top: 22rpx; padding-left: 8rpx; border-left: 2rpx solid #e2ddcd; }
+.proc-item {
+  display: flex; gap: 18rpx;
+  padding: 10rpx 0 10rpx 22rpx; font-size: 26rpx; color: var(--ink-2);
+  position: relative;
+  animation: fadeIn 0.3s ease both;
+}
+.proc-item::before {
+  content: '';
+  position: absolute; left: -7rpx; top: 22rpx;
+  width: 12rpx; height: 12rpx; border-radius: 50%;
+  background: #9db8ff;
+}
+.proc-t { color: var(--muted); min-width: 64rpx; text-align: right; font-size: 24rpx; }
+.proc-current .proc-x { color: var(--draft); font-weight: 600; }
+.proc-tip { margin-top: 24rpx; text-align: center; }
+
+/* ══ 解答头 ══ */
+.a-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16rpx; flex-wrap: wrap;
+  padding-bottom: 22rpx; border-bottom: 2rpx solid var(--line);
+}
+.a-badge {
+  display: inline-flex; align-items: center; gap: 10rpx;
+  font-size: 26rpx; font-weight: 700; color: var(--navy-1);
+  letter-spacing: 1rpx;
+}
+.a-badge-dot {
+  width: 14rpx; height: 14rpx; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 6rpx rgba(255, 148, 50, 0.16);
+}
+.a-meta { display: flex; gap: 12rpx; }
+.meta-chip {
+  font-size: 21rpx; color: var(--navy-1);
+  background: #eef2fa; border: 2rpx solid #dde5f2;
+  border-radius: 4rpx; padding: 4rpx 16rpx;
+  letter-spacing: 1rpx;
+}
+
+/* ══ Markdown 排版系统（白图纸面） ══ */
+.md { margin-top: 6rpx; }
+.md-p {
+  font-size: 30rpx; line-height: 1.92; color: #252d3d;
+  letter-spacing: 0.3rpx; text-align: justify;
+  margin: 0 0 26rpx;
+}
+.md-h1 {
+  font-size: 36rpx; font-weight: 800; color: var(--navy-0); line-height: 1.45;
+  margin: 40rpx 0 22rpx;
+  padding-left: 18rpx;
+  border-left: 8rpx solid var(--accent);
+}
+.md-h2 { display: flex; align-items: center; gap: 16rpx; margin: 44rpx 0 20rpx; }
+.h2-bar {
+  width: 12rpx; height: 34rpx; border-radius: 3rpx; flex-shrink: 0;
+  background: linear-gradient(180deg, var(--navy-2), var(--navy-0));
+  box-shadow: 4rpx 0 0 rgba(255, 148, 50, 0.75);
+}
+.md-h2-text { font-size: 33rpx; font-weight: 800; color: var(--navy-0); line-height: 1.5; }
+.md-h3 {
+  font-size: 31rpx; font-weight: 700; color: var(--navy-1);
+  margin: 34rpx 0 16rpx;
+}
+.md-quote {
+  border-left: 6rpx solid var(--draft);
+  background: #f0f4fb;
+  border-radius: 0 8rpx 8rpx 0;
+  padding: 20rpx 24rpx; margin: 0 0 26rpx;
+  font-size: 28rpx; color: var(--ink-2); line-height: 1.85;
+}
+.md-hr {
+  height: 2rpx; margin: 38rpx 0;
+  background: repeating-linear-gradient(90deg, var(--line) 0 26rpx, transparent 26rpx 42rpx);
+}
+.md-code-wrap {
+  background: #0b1a33; border-radius: 10rpx; margin: 0 0 26rpx;
+  padding: 26rpx 24rpx; overflow: hidden;
+  border: 2rpx solid rgba(101, 160, 255, 0.25);
+}
+.md-code-scroll { width: 100%; }
+.md-code {
+  font-family: "SF Mono", Menlo, Consolas, "Courier New", monospace;
+  font-size: 25rpx; line-height: 1.75; color: #d7e6ff; white-space: pre;
+}
+.md-list { margin: 0 0 26rpx; }
+.md-li { display: flex; gap: 16rpx; align-items: flex-start; }
+.md-li + .md-li { margin-top: 14rpx; }
+.li-dot {
+  width: 12rpx; height: 12rpx; border-radius: 50%;
+  background: var(--accent); flex-shrink: 0; margin-top: 21rpx;
+  box-shadow: 0 0 0 5rpx rgba(255, 148, 50, 0.14);
+}
+.li-num {
+  min-width: 38rpx; height: 38rpx; border-radius: 4rpx;
+  background: var(--navy-0); color: var(--white-ink);
+  font-size: 22rpx; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 9rpx;
+}
+.li-text { flex: 1; font-size: 30rpx; line-height: 1.85; color: #252d3d; }
+
+/* 行内段 */
+.in-b { font-weight: 700; color: var(--navy-0); }
+.in-i { font-style: italic; color: var(--ink-2); }
+.in-c {
+  font-family: "SF Mono", Menlo, Consolas, "Courier New", monospace;
+  font-size: 26rpx; background: #efe9da; color: #8a4a00;
+  padding: 2rpx 12rpx; border-radius: 6rpx;
+}
+.in-l { color: var(--draft); text-decoration: underline; }
+
+/* 表格：图签风格（深蓝表头白墨） */
+.md-tbl-scroll { width: 100%; margin-bottom: 26rpx; }
+.md-tbl { display: inline-block; min-width: 100%; border-radius: 6rpx; overflow: hidden; border: 2rpx solid #dcd7c6; }
+.md-tr { display: flex; }
+.md-tr-head { background: var(--navy-0); }
+.md-th, .md-td {
+  padding: 16rpx 22rpx; font-size: 26rpx; line-height: 1.6;
+  flex-shrink: 0; max-width: 420rpx;
+}
+.md-th { font-weight: 700; color: var(--white-ink); letter-spacing: 1rpx; }
+.md-td { color: #252d3d; border-top: 2rpx solid #e6e1d2; background: #fffdf8; }
+.md-tr .md-th + .md-th { border-left: 2rpx solid rgba(101, 160, 255, 0.3); }
+.md-tr .md-td + .md-td { border-left: 2rpx solid #e6e1d2; }
+
+/* 首块不吃上边距 */
+.md > view:first-child, .md > scroll-view:first-child { margin-top: 0; }
+
+/* ══ 锁定与解锁：票据风 ══ */
+.lock-note { margin-top: 26rpx; }
+.lock-line { height: 2rpx; background: repeating-linear-gradient(90deg, #d5cfbd 0 24rpx, transparent 24rpx 40rpx); }
+.lock-text { text-align: center; color: var(--muted); font-size: 24rpx; padding-top: 14rpx; letter-spacing: 2rpx; }
+
+.unlock-bar {
+  margin-top: 28rpx;
+  display: flex; align-items: center;
+  background: #fdf3e4;
+  border: 2rpx solid #f3d5ab;
+  border-radius: 8rpx;
+  padding: 28rpx 26rpx;
+  --tick: rgba(224, 122, 14, 0.5);
+}
+.unlock-price {
+  font-size: 54rpx; font-weight: 800; color: var(--accent-deep);
+  margin-right: 24rpx; display: flex; align-items: baseline;
+}
+.unlock-rmb { font-size: 30rpx; font-weight: 700; margin-right: 2rpx; }
+.unlock-info { flex: 1; }
+.unlock-title { font-weight: 800; font-size: 30rpx; color: #4a2e07; letter-spacing: 1rpx; }
+.unlock-btn { width: 180rpx; line-height: 2.15; font-size: 28rpx; }
+
+/* ══ 依据来源：图签栏 ══ */
+.cite-block { margin-top: 32rpx; border-top: 2rpx solid var(--line); padding-top: 26rpx; }
+.cite-tbl {
+  border: 2rpx solid #dcd7c6;
+  border-radius: 6rpx;
+  overflow: hidden;
+  background: #fffdf8;
+}
+.cite-item { display: flex; gap: 16rpx; align-items: flex-start; padding: 16rpx 20rpx; }
+.cite-item + .cite-item { border-top: 2rpx dashed #e6e1d2; }
+.cite-chip {
+  flex-shrink: 0;
+  min-width: 38rpx; height: 38rpx; border-radius: 4rpx;
+  background: var(--navy-0); color: var(--white-ink);
+  font-size: 21rpx; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 8rpx; margin-top: 2rpx;
+}
+.cite-body { flex: 1; font-size: 25rpx; color: var(--ink-2); line-height: 1.7; }
+.cite-loc { color: var(--muted); margin-left: 10rpx; }
+
+/* ══ 互动小按钮排（用户令 v0.5.0：精美小按钮）══ */
+.act-card { padding: 26rpx 22rpx 20rpx; }
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16rpx 14rpx;
+}
+.pill {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 6rpx;
+  min-width: 118rpx;
+  padding: 16rpx 12rpx 12rpx;
+  border-radius: 14rpx;
+  border: 2rpx solid #e2ddcd;
+  background: #fffdf8;
+  line-height: 1.35;
+}
+.pill-hover {
+  background: var(--navy-0);
+  border-color: var(--navy-0);
+  transform: scale(0.96);
+}
+.pill-glyph {
+  width: 52rpx; height: 52rpx;
+  border-radius: 50%;
+  background: #eef2fa;
+  border: 2rpx solid #dde5f2;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26rpx;
+  line-height: 1;
+}
+.pill-t {
+  font-size: 21rpx; color: var(--ink-2);
+  letter-spacing: 1rpx;
+  white-space: nowrap;
+}
+.pill-on {
+  border-color: #f3d5ab;
+  background: #fdf3e4;
+}
+.pill-on .pill-glyph {
+  background: #fdf3e4;
+  border-color: #f3d5ab;
+}
+.pill-on .pill-t { color: var(--accent-deep); font-weight: 700; }
+.pill-hover .pill-t { color: var(--white-ink); }
+/* 分享 pill 是 button：抹平原生样式 */
+.share-pill {
+  margin: 0;
+  font-size: inherit;
+  font-weight: 400;
+}
+.share-pill::after { border: none; }
+button.share-pill .pill-t { color: var(--ink-2); }
+.act-tip { text-align: center; margin-top: 20rpx; letter-spacing: 1rpx; font-size: 21rpx; }
+
+/* ══ 骨架屏（纸面色调） ══ */
+.sk { background: linear-gradient(90deg, #ece8db 25%, #f5f2e8 45%, #ece8db 65%); background-size: 400% 100%; animation: shimmer 1.4s ease infinite; border-radius: 6rpx; }
+@keyframes shimmer { from { background-position: 100% 0; } to { background-position: 0 0; } }
+.sk-title { height: 40rpx; width: 70%; }
+.sk-line { height: 30rpx; margin-top: 24rpx; }
+.sk-line.short { width: 55%; }
+.loading-hint { margin-top: 28rpx; color: var(--muted); font-size: 24rpx; text-align: center; }
+
+/* ══ 失败卡 ══ */
+.err-card { text-align: center; padding: 60rpx 32rpx; }
+.err-kicker { display: block; margin-bottom: 14rpx; }
+.refund-note { margin-top: 8rpx; color: var(--accent-deep); }
+.retry-btn { margin-top: 30rpx; width: 60%; }

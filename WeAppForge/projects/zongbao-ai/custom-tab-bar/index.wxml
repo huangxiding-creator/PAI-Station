@@ -1,0 +1,12 @@
+<view class="bar">
+  <view
+    class="tab {{selected === item.i ? 'tab-on' : ''}}"
+    wx:for="{{list}}"
+    wx:key="i"
+    data-i="{{item.i}}"
+    bindtap="switchTo"
+  >
+    <view class="tab-sq"><text class="tab-glyph">{{item.glyph}}</text></view>
+    <text class="tab-t">{{item.text}}</text>
+  </view>
+</view>
