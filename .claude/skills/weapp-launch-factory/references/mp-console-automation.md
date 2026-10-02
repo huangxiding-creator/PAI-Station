@@ -165,15 +165,24 @@ for (var i = 0; i < blocks.length; i++) {
 // 在 target 内找「选为体验版」按钮（§1 自有文本节点配方，作用域限 target）
 ```
 
-## 7. 审核状态查询（API 路，不走控制台）
+## 7. 审核状态查询（⚠ API 死路实锤，走控制台/手机推送）
 
-控制台页面看状态不如 API 稳。`get_latest_auditstatus`（access_token 制）：
+**`get_latest_auditstatus` 仅第三方平台可调**——自管理小程序用自家 appsecret
+换 token 后调用回 `errcode 86000 "should be called only from third party"`
+（2026-10-02 实测）。别再往这条路写监视器；且该接口是 GET（POST 回 43001）。
 
-- secret 只在 ECS 时，用**云助手 inline 探针**：命令体在 ECS 上读 secret → 换 token →
-  POST 查状态 → 只回状态 JSON。secret 永不出 ECS。
-- 状态值：`1`=审核中，`0`=通过，`2`=被拒。
-- 拒审详情：audit_id + 失败原因文本（0.7.4 拒审根因即由此拿到）。
-- 长效监视：durable cron 每 3h 探一次，状态 1 静默记日志，变化才上报。
+自管理小程序查审核状态的两条真通道：
+
+1. **管理员手机推送（主通道，零成本）**：审核结果出来微信「公众平台安全助手」
+   直接推到管理员手机——用户永远比我先知道。
+2. **控制台 UI（自动化通道）**：mp.weixin.qq.com 版本管理页看「审核中/通过/被拒」
+   + 被拒时的失败原因（0.7.4 的 audit_id+失败原因即从控制台通知拿到）。
+   长效监视=会话级 durable cron 每 3h 跑一轮浏览器探查（先 list_tabs 确认浏览器
+   空闲，忙则静默收队；审核中只记日志不扰用户，状态变化才上报）。
+
+若仍想留 API 探针（如未来接第三方平台代管）：云助手 inline 探针读 secret 时注意
+secret 文件多为 `appid=…/appsecret=…` 多行键值且 CRLF——`cat` 整读必挂，
+须 `sed -n 's/^appsecret=//p' 文件 | head -1 | tr -d '\r\n'`。
 
 ## 8. 其他控制台操作备忘
 
