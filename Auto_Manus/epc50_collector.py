@@ -29,6 +29,12 @@ RAW_ROOT = Path("harvest_sessions/epc50")
 BATTLE = Path(r"E:\AI-Station\ResearchFactory-Eng\ResearchTopics"
               r"\《中石化南京工程有限公司怎么干EPC总承包？》")
 OUT_DIR = BATTLE / "04 网络调研搜集的资料" / "35_Manus军团"
+# 多战役路由 (0930 #49 起): corps_log 行带 battle 字段 — epc49 落四川院
+# 战场, 其余/缺省落 #50 (向后兼容). 金矿 raw 同步分目录 (只增不删).
+BATTLE_49 = Path(r"E:\AI-Station\ResearchFactory-Eng\ResearchTopics"
+                 r"\《四川电力设计咨询有限责任公司怎么干EPC总承包？》")
+OUT_49 = BATTLE_49 / "02 初次网络调研" / "35_Manus军团"
+RAW_49 = Path("harvest_sessions/epc49")
 
 TERMINAL_KEYS = ("stopped", "error", "completed", "finished", "failed")
 RUNNING_KEYS = ("running", "pending", "queued", "working", "generating",
@@ -82,13 +88,14 @@ def download(url: str, dest: Path) -> bool:
         return False
 
 
-def collect_sid(email: str, sid: str, tag: str, tok: dict,
-                m: dict) -> str:
+def collect_sid(email: str, sid: str, tag: str, tok: dict, m: dict,
+                raw_root: Path = RAW_ROOT,
+                out_dir: Path = OUT_DIR) -> str:
     """拉一个终态会话: files 下载 + v2 金矿. 返回终态登记值."""
     safe = email.replace("@", "_at_").replace(":", "_")
-    raw_dir = RAW_ROOT / safe
+    raw_dir = raw_root / safe
     raw_dir.mkdir(parents=True, exist_ok=True)
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    out_dir.mkdir(parents=True, exist_ok=True)
 
     st, text = api.get_files(None, tok, sid)
     if st != 200:
@@ -107,7 +114,7 @@ def collect_sid(email: str, sid: str, tag: str, tok: dict,
                 url = r.get("url")
                 name = (r.get("filename") or r.get("name")
                         or f"{sid}_file{n_all}")
-                dest = OUT_DIR / f"{tag}__{name}"
+                dest = out_dir / f"{tag}__{name}"
                 if dest.exists() and dest.stat().st_size > 0:
                     n_ok += 1
                     continue
@@ -167,7 +174,10 @@ def sweep(m: dict) -> None:
             stt = smap.get(t["sid"], "?")
             tag = t.get("q") or t.get("topic") or "T?"
             if _is_terminal(stt):
-                state = collect_sid(email, t["sid"], str(tag), tok, m)
+                b49 = t.get("battle") == "epc49"
+                state = collect_sid(email, t["sid"], str(tag), tok, m,
+                                    raw_root=RAW_49 if b49 else RAW_ROOT,
+                                    out_dir=OUT_49 if b49 else OUT_DIR)
                 if "error" in stt:
                     state = "error_task_" + state
                 m["collected"][t["sid"]] = state

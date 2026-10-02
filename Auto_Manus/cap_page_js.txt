@@ -1,0 +1,68 @@
+
+        (function () {
+            if (!window.Promise) {
+                document.writeln('<script src="https://cdnjs.cloudflare.com/ajax/libs/es6-promise/4.1.1/es6-promise.min.js"><' + '/' + 'script>');
+            }
+        })();
+    
+=====
+
+        var domain = getDomain();
+        window.imgCode = -1;
+
+        (function() {
+            function checkSNUID() {
+                var cookieArr = document.cookie.split('; '),
+                    count = 0;
+
+                for(var i = 0, len = cookieArr.length; i < len; i++) {
+                    if (cookieArr[i].indexOf('SNUID=') > -1) {
+                        count++;
+                    }
+                }
+
+                return count > 1;
+            }
+
+            if(checkSNUID()) {
+                var date = new Date(), expires;
+                date.setTime(date.getTime() -100000);
+                expires = date.toGMTString();
+                document.cookie = 'SNUID=1;path=/;expires=' + expires;
+                document.cookie = 'SNUID=1;path=/;expires=' + expires + ';domain=.www.sogo.com';
+                document.cookie = 'SNUID=1;path=/;expires=' + expires + ';domain=.weixin.sogo.com';
+                document.cookie = 'SNUID=1;path=/;expires=' + expires + ';domain=.sogo.com';
+                document.cookie = 'SNUID=1;path=/;expires=' + expires + ';domain=.www.sogou.com';
+                document.cookie = 'SNUID=1;path=/;expires=' + expires + ';domain=.weixin.sogou.com';
+                document.cookie = 'SNUID=1;path=/;expires=' + expires + ';domain=.sogou.com';
+                document.cookie = 'SNUID=1;path=/;expires=' + expires + ';domain=.snapshot.sogoucdn.com';
+                sendLog('delSNUID');
+            }
+
+            if(getCookie('seccodeRight') === 'success') {
+                sendLog('verifyLoop');
+
+                setCookie('seccodeRight', 1, getUTCString(-1), location.hostname, '/');
+            }
+
+            if(getCookie('refresh')) {
+                sendLog('refresh');
+            }
+        })();
+
+        function setImgCode(code) {
+            try {
+                var t = new Date().getTime() - imgRequestTime.getTime();
+                sendLog('imgCost',"cost="+t);
+            } catch (e) {
+            }
+            window.imgCode = code;
+        }
+        sendLog('index');
+
+        function changeImg2() {
+        	if(window.event) {
+        		window.event.returnValue=false
+        	}
+        }
+        var suuid = "";var auuid = "1e74649c-5e48-4a36-b5b9-3668d7f6a25c";    

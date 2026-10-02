@@ -55,6 +55,9 @@ SAT_OUT = BATTLE / "_pipeline" / "epc50_saturation.json"
 
 SQUAD_FILE = ROOT / "data" / "corps_v3_squad.json"
 COOLDOWN = ROOT / "data" / "corps_v3_cooldown.json"
+# 多战役树队列 (0930 #49 起): trees 列表顺序=优先级, 第一个还有 pending
+# 问的 tree2 作为当日派单源; 无队列文件/空队列 → 退回 TREE2 单树 (#50).
+BATTLE_QUEUE = ROOT / "data" / "epc_battle_queue.json"
 V3_LOG = ROOT / "data" / "epc50_corps_log.jsonl"   # 同一 append-only 真源
 LEDGER = ROOT / "data" / "dispatch_ledger.json"
 PROFILES = ROOT / "data" / "profiles_v3"
@@ -275,6 +278,32 @@ def next_seed() -> dict | None:
     return None
 
 
+def load_active_tree2() -> tuple[Path | None, dict | None]:
+    """按战役队列取第一个还有 pending 问的 tree2 (路径, 树dict).
+
+    #49 (四川院) 起新战役优先; 该树全 dispatched 后自动落回 #50 剩余
+    (缺口储备). 单棵树读坏跳过不炸链; 全军无 pending 返回 (None, None).
+    """
+    paths: list[Path] = []
+    try:
+        q = json.loads(BATTLE_QUEUE.read_text(encoding="utf-8"))
+        paths = [Path(p) for p in q.get("trees", [])]
+    except Exception:
+        pass
+    paths.append(TREE2)
+    for p in paths:
+        if not p.is_file():
+            continue
+        try:
+            t = json.loads(p.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if any(qq["status"] == "pending"
+               for tp in t.get("topics", []) for qq in tp["questions"]):
+            return p, t
+    return None, None
+
+
 def next_question(tree2: dict) -> dict | None:
     hungry = _hungry_ids()
     first = None
@@ -424,9 +453,10 @@ def dispatch(page, email: str) -> str | None:
             topic = min(tree["topics"], key=lambda x: x.get("rounds", 0))
             rnd = 1
         question = None
-        if rnd >= 1 and TREE2.is_file():
-            question = next_question(
-                json.loads(TREE2.read_text(encoding="utf-8")))
+        q_tree_path: Path | None = None
+        if rnd >= 1:
+            q_tree_path, q_tree2 = load_active_tree2()
+            question = next_question(q_tree2) if q_tree2 else None
         prompt = build_variant_prompt(tree, topic, rnd, question)
         label = {"kind": "q" if question else "topic",
                  "id": question["id"] if question else topic["id"],
@@ -451,14 +481,15 @@ def dispatch(page, email: str) -> str | None:
                 s["account"] = email
         _atomic_json(SURVEY_SEEDS, seeds)
     elif label["kind"] == "q":
-        tree2 = json.loads(TREE2.read_text(encoding="utf-8"))
+        back_path = q_tree_path or TREE2
+        tree2 = json.loads(back_path.read_text(encoding="utf-8"))
         for tp in tree2["topics"]:
             for q in tp["questions"]:
                 if q["id"] == label["id"]:
                     q["status"] = "dispatched"
                     q["sid"] = sid
                     q["account"] = email
-        _atomic_json(TREE2, tree2)
+        _atomic_json(back_path, tree2)
     else:
         for t in tree["topics"]:
             if t["id"] == label["id"]:
@@ -472,7 +503,9 @@ def dispatch(page, email: str) -> str | None:
             "ts": time.strftime("%Y-%m-%dT%H:%M:%S"), "email": email,
             "sid": sid, "topic": label["id"], "round": label["kind"],
             "q": label["id"] if label["kind"] == "q" else None,
-            "title": label["title"], "use": "collect", "engine": "v3"},
+            "title": label["title"], "use": "collect", "engine": "v3",
+            "battle": (q_tree_path.name[:5] if label["kind"] == "q"
+                       and q_tree_path else "epc50")},
             ensure_ascii=False) + "\n")
     log(f"✓ {email} → {sid} ({label['kind']}:{label['id']})")
     try:                          # 成功即健康: 清失败计数 (不背包袱)
