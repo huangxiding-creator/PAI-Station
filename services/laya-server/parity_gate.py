@@ -110,6 +110,8 @@ def _client():
 
 
 def _load_jsonl(p: Path) -> list[dict]:
+    if not p.is_file():
+        return []
     return [json.loads(ln) for ln in io.open(p, encoding="utf-8") if ln.strip()]
 
 
@@ -154,6 +156,9 @@ def run_e1() -> None:
 
 def _e1_metrics(rows: list[dict]) -> dict:
     n = len(rows)
+    if not n:
+        return {"n": 0, "answered": 0, "acc": None, "conf_correct": None,
+                "conf_wrong": None, "latency_p50_s": None}
     ok = [r for r in rows if r.get("choice") == r["expect"]]
     wrong = [r for r in rows if r.get("choice") is not None
              and r["choice"] != r["expect"]]
@@ -260,6 +265,10 @@ def run_e3() -> None:
 
 def _e3_metrics(rows: list[dict]) -> dict:
     n = len(rows)
+    if not n:
+        return {"n": 0, "lexical_hits": 0, "laya_hits": 0,
+                "agree_with_lexical": None, "citation_capture": None,
+                "sep_gap": None}
     val = lambda r: r.get("noul", r.get("jev_noul")) or 0  # noqa: E731
     laya_hit = [val(r) >= HIT_TH for r in rows]
     hits = [val(r) for r in rows if r["lexical"]]
@@ -337,11 +346,15 @@ def build_report() -> dict:
 
 if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else "all"
-    if cmd in ("e1", "all"):
-        run_e1()
-    if cmd in ("e2", "all"):
-        run_e2()
-    if cmd in ("e3", "all"):
-        run_e3()
+    errors = []
+    for leg, fn in (("e1", run_e1), ("e2", run_e2), ("e3", run_e3)):
+        if cmd in (leg, "all"):
+            try:
+                fn()
+            except SystemExit as e:
+                errors.append(f"{leg}: {e}")
+                print(f"[{leg}] 硬失败: {e}", flush=True)
     if cmd in ("report", "all"):
         build_report()
+        if errors:
+            print("告警:", *errors, sep="\n  ")

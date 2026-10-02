@@ -1,0 +1,193 @@
+{
+  "docs": [
+    {
+      "title": "虚拟支付：企业、个体户 | 微信开放文档（开通条件/入口/六步流程/独立新商户号/iOS额外条件）",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/platform-capabilities/business-capabilities/virtual-payment.html",
+      "source_channel": "deep_pay",
+      "credibility": 0.95,
+      "summary": "企业/事业单位/个体工商户主体；MP后台【支付与交易→虚拟支付】六步开通：阅读协议→提交商户资料开独立新商户号→审核→账户验证→扫码签约→商户管理后台配置道具/代币。iOS用Apple支付需已开通虚拟支付+配置小程序简称。"
+    },
+    {
+      "title": "虚拟支付：个人 | 微信开放文档（2026-09新开放）",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/platform-capabilities/business-capabilities/virtual-payment/person.html",
+      "source_channel": "deep_pay",
+      "credibility": 0.95,
+      "summary": "个人主体仅工具类目、月支付限额10万元、只做道具直购(short_series_goods)；费率Android 1%/iOS 12%(苹果代收)；结算T+3/iOS 45-60天；iOS需微信8.0.68+；退款Android可经MP后台或refund_order API主动发起+ipay_refund_notify回调、iOS开发者无法主动退(用户向App Store申请)；支付后180天内退款返还手续费、超180天不退。个人月10万限额对¥498研报规模化不足→须企业主体。"
+    },
+    {
+      "title": "会员订阅：安卓/鸿蒙 | 微信开放文档",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/platform-capabilities/business-capabilities/vips.html",
+      "source_channel": "deep_pay",
+      "credibility": 0.9,
+      "summary": "一次签约周期扣费；准入=已接入虚拟支付+首次发布≥90天+近30天日均DAU≥1万(初创期不可行)；扣费金额最低1元最高为道具价格且不超过5000元(道具价格上限实证锚点，¥498安全)；费率工具/社交首笔1%后续10%、短剧小说10%；结算单次/周T+7、月季年T+31；须提供退款界面、24小时投诉处理。"
+    },
+    {
+      "title": "小程序虚拟支付产品介绍（framework/open-ability，微短剧试点期旧版）",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/virtual-payment.html",
+      "source_channel": "deep_pay",
+      "credibility": 0.9,
+      "summary": "2023年起虚拟支付在微短剧类目先行(当时无iOS)；开通六步流程与新商户号体系；历史沿革基线。"
+    },
+    {
+      "title": "虚拟支付业务运营指南 | 微信开放社区",
+      "url": "https://developers.weixin.qq.com/community/minihome/doc/00002cf077cd4810fee42f4b865c01",
+      "source_channel": "deep_pay",
+      "credibility": 0.9,
+      "summary": "官方判定：虚拟商品含虚拟代币/解锁功能/订阅内容/付费功能/打赏/虚拟礼物，购买和支付均须接入小程序虚拟支付，不得引导至app/公众号/h5/个人号/网站完成支付。典型形态一'付费数字内容'=付费解锁已制作好的数字内容(课程视频/小说章节/专栏文章/数字藏品等)，研报售卖同构落入。"
+    },
+    {
+      "title": "wx.requestVirtualPayment API | 微信开放文档",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/api/payment/wx.requestVirtualPayment.html",
+      "source_channel": "deep_pay",
+      "credibility": 0.9,
+      "summary": "mode='short_series_goods'(道具直购,productId+goodsPrice必填)与'short_series_coin'(代币)两模式；signType SHA256；金额单位分。"
+    },
+    {
+      "title": "小程序运营规范 | 微信开放文档",
+      "url": "https://developers.weixin.qq.com/miniprogram/product/",
+      "source_channel": "deep_pay",
+      "credibility": 0.85,
+      "summary": "含微短剧/小说绕开虚拟支付专条(现行5.33族)；禁止iOS虚拟支付规避与引导至外部网站/App完成支付；违规按程度处置至下架。"
+    },
+    {
+      "title": "微信支付商户文档：申请退款/查询单笔退款/剩余可退款金额/垫付回补（v3）",
+      "url": "https://pay.weixin.qq.com/",
+      "source_channel": "deep_pay",
+      "credibility": 0.9,
+      "summary": "商户号v3退款：交易成功1年内可退、单笔订单多次部分退款(不同out_refund_no累计不超订单额)、手续费按比例返还、结算后退款=可用余额扣减+手续费返还、余额不足触发垫付回补(90天内重试)。对比：虚拟支付退款Android可控但无公开部分退款参数、iOS不可主动退。"
+    },
+    {
+      "title": "微信小程序iOS虚拟支付全面开放：4月1日起全终端强制接入（含官方公告引文）",
+      "url": "https://www.csweigou.com/article/3389.html",
+      "source_channel": "deep_pay",
+      "credibility": 0.7,
+      "summary": "《小程序虚拟支付业务管理规范更新公告》：2026-04-01前须全终端(iOS/安卓/Windows/鸿蒙)接入虚拟支付，未接入判违规，风险提醒→限流→下架；禁止引导外部支付；iOS走Apple支付。与tiandianyun(2026-02公告)/mpaypass(2026-03)/ask.csdn(2025-11)多源交叉一致，综合可信0.8。今日2026-09-28已生效。"
+    },
+    {
+      "title": "一文读懂2026知识付费小程序功能迭代（全终端虚拟支付政策落地）",
+      "url": "https://www.tiandianyun.cn/",
+      "source_channel": "deep_pay",
+      "credibility": 0.6,
+      "summary": "2026年2月微信团队发布《小程序虚拟支付业务管理规范更新公告》，4月1日起全终端强制接入；iOS用户无法付款问题已解决；知识付费小程序利好。"
+    },
+    {
+      "title": "移动支付网：微信更新小程序虚拟支付业务管理规范（2026-03）",
+      "url": "https://m.mpaypass.com.cn/",
+      "source_channel": "deep_pay",
+      "credibility": 0.6,
+      "summary": "行业媒体确认2026年管理规范更新与全终端强制接入。"
+    },
+    {
+      "title": "iOS小程序虚拟支付审核被拒如何解决（CSDN问答 2025-11-25）",
+      "url": "https://ask.csdn.net/",
+      "source_channel": "deep_pay",
+      "credibility": 0.6,
+      "summary": "确认2026-04-01起全终端强制接入；接入主体为企业/事业单位/个体工商户等；全流程解析。"
+    },
+    {
+      "title": "中国何以撼动'苹果税'？（腾讯新闻 2026-03）",
+      "url": "https://view.inews.qq.com/",
+      "source_channel": "deep_pay",
+      "credibility": 0.7,
+      "summary": "2025-11微信与苹果按15%分成协议开放iOS虚拟支付；后苹果'小程序合作伙伴计划'将小程序/小游戏佣金降至12%。"
+    },
+    {
+      "title": "微信小程序iOS虚拟支付开放报道（凤凰科技 2025-11-17）",
+      "url": "https://tech.ifeng.com/",
+      "source_channel": "deep_pay",
+      "credibility": 0.7,
+      "summary": "iOS端虚拟商品须走苹果通道、苹果抽成15%~30%的背景与开放时点。"
+    },
+    {
+      "title": "想爆火纯靠投流？小程序短剧并不是暴富神话（人人都是产品经理）",
+      "url": "https://www.woshipm.com/it/5929633.html",
+      "source_channel": "deep_pay",
+      "credibility": 0.7,
+      "summary": "2023-08起微信对微短剧类目虚拟支付交易收20%技术服务费(此前10%)，剩余80%由出品/制作/分销分配；与36氪报道交叉一致。注意：20%为微短剧类目专属费率，不适用于研报商城(预期按工具/知识付费类目低费率，以签约协议为准)。"
+    },
+    {
+      "title": "微信一次性下架近百部违规微短剧（网易 2026-07-18，微信珊瑚安全公告转述）",
+      "url": "https://www.163.com/",
+      "source_channel": "deep_pay",
+      "credibility": 0.7,
+      "summary": "2026-07-13微信珊瑚安全按广电总局部署全域专项排查，一次性下架近百部违规剧目、处置一批违规短剧小程序。"
+    },
+    {
+      "title": "微信9月微短剧整改公告（腾讯新闻 2026-09-16）",
+      "url": "https://news.qq.com/",
+      "source_channel": "deep_pay",
+      "credibility": 0.7,
+      "summary": "2026-09-11微信公告下架数十部不良价值观/侵权微短剧并处置相关违规小程序。"
+    },
+    {
+      "title": "上线24小时吸金2000万后被下架（渤海时贝 2023-11-21）",
+      "url": "https://www.bohaishibei.com/",
+      "source_channel": "deep_pay",
+      "credibility": 0.5,
+      "summary": "短剧小程序野蛮生长被按暂停键的标志性个案；广电2022-11起小程序微短剧专项整治至2023-02-28下线25300余部。"
+    },
+    {
+      "title": "互联网法律常识及微信禁止规则（知乎专栏 2021-11）",
+      "url": "https://zhuanlan.zhihu.com/p/432965287",
+      "source_channel": "deep_pay",
+      "credibility": 0.6,
+      "summary": "微信规则明文禁止iOS端虚拟支付及引导用户至外部网站或APP完成支付(规避平台虚拟支付)。"
+    },
+    {
+      "title": "小程序屡次审核被拒高频原因汇总（CSDN）",
+      "url": "https://blog.csdn.net/",
+      "source_channel": "deep_pay",
+      "credibility": 0.6,
+      "summary": "iOS端售卖会员/课程等虚拟商品用微信支付绕过苹果内购是审核被拒高频原因(约占支付合规被拒10%)；伪装实体服务/咨询类目绕审核属灰色操作，随时可能永久封禁。"
+    },
+    {
+      "title": "短剧小程序源码部署全攻略：支付回调与合规避坑（CSDN 2026-08-30）",
+      "url": "https://blog.csdn.net/",
+      "source_channel": "deep_pay",
+      "credibility": 0.5,
+      "summary": "存量短剧源码通行做法：Android直接调微信支付、iOS提示'请用安卓设备支付'或跳H5支付——2026-04-01全终端强制新规后已属违规存量，反证Plan B'安卓JSAPI+iOS不卖'路径失效。"
+    },
+    {
+      "title": "微信小程序虚拟支付正式开放，个人开发者不用注册公司了（人人都是产品经理 2026-09）",
+      "url": "https://www.woshipm.com/",
+      "source_channel": "deep_pay",
+      "credibility": 0.6,
+      "summary": "2026-09个人主体工具类小程序开放虚拟支付自助申请(实名+备案+勾选类目)。与person.html官方文档互证。"
+    },
+    {
+      "title": "不用注册公司也能做虚拟支付？微信小程序这次把门槛降到位（搜狐 2026-09-05）",
+      "url": "https://www.sohu.com/",
+      "source_channel": "deep_pay",
+      "credibility": 0.6,
+      "summary": "个人主体工具类小程序自助申请虚拟支付的政策动作确认。"
+    },
+    {
+      "title": "ThinkPHP整合微信虚拟支付文档（优惠价规则转述）",
+      "url": "https://ai6s.net/",
+      "source_channel": "deep_pay",
+      "credibility": 0.5,
+      "summary": "优惠价(activitySellingPrice)最低为道具价格的40%(最高打4折)；行业转述，需MP后台实证。"
+    },
+    {
+      "title": "微信小程序虚拟支付接入实战：会员购买与金币充值（CSDN 2026-05）",
+      "url": "https://blog.csdn.net/qq_35653974/article/details/164147752",
+      "source_channel": "deep_pay",
+      "credibility": 0.5,
+      "summary": "平台侧开通与道具发布全流程实战；双端价格差价配置操作参考。"
+    },
+    {
+      "title": "微信小程序虚拟支付对接全流程（掘金）",
+      "url": "https://juejin.cn/post/7659034306871984180",
+      "source_channel": "deep_pay",
+      "credibility": 0.5,
+      "summary": "官方文档语焉不详处(签名/回调/道具配置)的实操补充。"
+    },
+    {
+      "title": "腾讯云：小程序虚拟支付实践教程（short_series_goods示例）",
+      "url": "https://intl.cloud.tencent.com/zh/document/product/1219/74868",
+      "source_channel": "deep_pay",
+      "credibility": 0.7,
+      "summary": "腾讯云官方教程，道具直购short_series_goods模式服务端接入示例。"
+    }
+  ]
+}

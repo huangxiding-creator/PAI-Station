@@ -1,0 +1,150 @@
+<!-- 产品详情页 — 图纸卡式 (sheet) -->
+<view class="page" wx:if="{{p}}">
+
+  <!-- 侧栏轨: 序号 + 竖线 + 名 -->
+  <view class="sheet">
+    <view class="sheet-rail">
+      <text class="no zh-display">{{p.no}}</text>
+      <view class="bar-v" />
+      <text class="rail-zh zh-display">{{p.name}}</text>
+    </view>
+
+    <view class="sheet-body">
+      <text class="eyebrow mono">{{p.eyebrow}}</text>
+      <view class="prod-title">
+        <text class="t zh-display">{{p.title}}</text>
+        <text class="en">{{p.en}}</text>
+      </view>
+      <view class="pos"><text class="b">{{p.posHead}}</text>{{p.pos}}</view>
+
+      <!-- 双图 (眼镜) -->
+      <view wx:if="{{p.images}}" class="fig-duo">
+        <view class="fig" wx:for="{{p.images}}" wx:key="src" data-src="{{item.src}}" bindtap="previewImage">
+          <image class="fig-img" src="{{item.src}}" mode="widthFix" />
+          <view class="fig-cap"><text class="b">{{item.cap}}</text><text class="i">{{item.sub}}</text></view>
+        </view>
+      </view>
+
+      <!-- 单图 -->
+      <view wx:if="{{p.image}}" class="fig {{p.image.narrow ? 'narrow' : ''}}">
+        <image class="fig-img" src="{{p.image.src}}" mode="widthFix" data-src="{{p.image.src}}" bindtap="previewImage" />
+        <view class="fig-cap"><text class="b">{{p.image.cap}}</text><text class="i">{{p.image.sub}}</text></view>
+      </view>
+
+      <!-- 特性列表 -->
+      <view class="feat">
+        <view class="feat-item" wx:for="{{p.features}}" wx:key="t">
+          <text class="ft">{{item.t}}</text>
+          <text class="fd">{{item.d}}</text>
+        </view>
+      </view>
+
+      <!-- 指标 -->
+      <view class="metrics">
+        <view class="metric" wx:for="{{p.metrics}}" wx:key="k">
+          <view class="v">{{item.v}}</view>
+          <view class="k">{{item.k}}</view>
+        </view>
+        <view class="metric wide" wx:if="{{p.metricWide}}">
+          <view class="v">{{p.metricWide.v}}</view>
+          <view class="k">{{p.metricWide.k}}</view>
+        </view>
+      </view>
+
+      <!-- 大数 (永动机) -->
+      <view class="bignums" wx:if="{{p.bignums}}">
+        <view class="bignum {{item.flag ? 'flag' : ''}}" wx:for="{{p.bignums}}" wx:key="k">
+          <view class="v">{{item.v}}<text class="u">{{item.u}}</text></view>
+          <view class="k">{{item.k}}</view>
+        </view>
+      </view>
+
+      <!-- 熵减漏斗 (工程豹) -->
+      <view class="funnel" wx:if="{{p.funnel}}">
+        <view class="fstep {{item.top ? 'top' : ''}} {{item.dark ? 'dark' : ''}}" wx:for="{{p.funnel}}" wx:key="main">
+          <text class="fm">{{item.main}}</text>
+          <text class="fs">{{item.sub}}</text>
+        </view>
+        <view class="ffoot">层层筛选 · 只让精华入库</view>
+      </view>
+
+      <!-- 运转链 -->
+      <view class="subsec" wx:if="{{p.flow}}"><text class="b">运转链 · 一条资讯的旅程</text></view>
+      <view class="flow" wx:if="{{p.flow}}">
+        <block wx:for="{{p.flow}}" wx:key="*this">
+          <text class="fn {{index === p.flow.length - 1 ? 'hot' : ''}}">{{item}}</text>
+          <text wx:if="{{index < p.flow.length - 1}}" class="fa">→</text>
+        </block>
+      </view>
+
+      <!-- 六项机制 (眼镜) -->
+      <view class="subsec" wx:if="{{p.mech}}"><text class="b">六项机制 · 从看见到闭环</text></view>
+      <view class="mech" wx:if="{{p.mech}}">
+        <view class="step" wx:for="{{p.mech}}" wx:key="en">
+          <text class="szh zh-display">{{item.zh}}</text>
+          <text class="sen mono">{{item.en}}</text>
+        </view>
+        <text class="mech-arrow" wx:if="{{false}}">→</text>
+      </view>
+
+      <!-- 场景 (眼镜) -->
+      <view class="industries" wx:if="{{p.industries}}">
+        <view class="cap"><text>{{p.industries.cap}}</text><text class="badge mono">SCENE FIRST</text></view>
+        <view class="ind-chips">
+          <text class="ind" wx:for="{{p.industries.chips}}" wx:key="*this">{{item}}</text>
+        </view>
+        <view class="note">{{p.industries.note}}</view>
+      </view>
+
+      <!-- 五力汇流 (机器人) -->
+      <view class="subsec" wx:if="{{p.forces}}"><text class="b">{{p.forcesTitle}}</text></view>
+      <view class="forces" wx:if="{{p.forces}}">
+        <view class="frow" wx:for="{{p.forces}}" wx:key="*this">
+          <text class="fname">{{item}}</text>
+          <text class="farr">→</text>
+        </view>
+        <view class="fhub">
+          <text class="fh zh-display">顾问机器人</text>
+          <text class="fe mono">ZEROth BRIDGE · 八线会师</text>
+        </view>
+        <view class="fnote">一台顶一队：资讯 × 知识 × 研判 × 调研 × 表达</view>
+      </view>
+
+      <!-- 底牌行 -->
+      <view class="only-line" wx:if="{{p.stamp}}">
+        <text class="stamp">{{p.stamp.tag}}</text>
+        <view class="ol-text">{{p.stamp.text}}</view>
+      </view>
+
+      <!-- 金句 -->
+      <view class="pin-line" wx:if="{{p.pin}}">{{p.pin.pre}}<text class="em">{{p.pin.em}}</text></view>
+
+      <!-- 扫码块 -->
+      <view class="qr-inline" wx:if="{{p.qr}}">
+        <image class="qr-box" src="{{p.qr.src}}" mode="aspectFit" data-src="{{p.qr.src}}" bindtap="previewQr" />
+        <view class="qr-txt">
+          <text class="b">{{p.qr.title}}</text>
+          <view class="d">{{p.qr.desc}}</view>
+        </view>
+      </view>
+
+      <!-- 标签 -->
+      <view class="tags" wx:if="{{p.tags}}">
+        <text class="tag {{item.hot ? 'hot' : ''}}" wx:for="{{p.tags}}" wx:key="text">{{item.text}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 上一条 / 下一条 -->
+  <view class="nav-row">
+    <view class="nav-btn" wx:if="{{prev}}" data-id="{{prev.id}}" bindtap="goProduct">
+      <text class="dir">← 上一条</text>
+      <text class="nm">{{prev.no}} {{prev.name}}</text>
+    </view>
+    <view class="nav-btn right" wx:if="{{next}}" data-id="{{next.id}}" bindtap="goProduct">
+      <text class="dir">下一条 →</text>
+      <text class="nm">{{next.no}} {{next.name}}</text>
+    </view>
+  </view>
+  <view class="home-hint">长按二维码可识别 · 点击图片可放大</view>
+</view>

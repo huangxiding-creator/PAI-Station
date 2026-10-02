@@ -1,0 +1,135 @@
+/* 总包说科技 · 全局样式 — 纸张蓝图风 (移植自官网 v10)
+   浅色纸张底 + 墨色字 + 安全橙 + 蓝图蓝 + 宋体展示字 + 纸张硬阴影 */
+
+page {
+  --paper: #f4f1e8;
+  --paper2: #faf8f2;
+  --ink: #182236;
+  --mut: #3c4962;
+  --faint: #707b93;
+  --acc: #e8590c;
+  --acc-bright: #ff7a1a;
+  --blue: #2b56c0;
+  --blue-deep: #1c3f97;
+  --line: rgba(24, 34, 54, 0.16);
+
+  background: var(--paper);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC",
+    "Helvetica Neue", "Microsoft YaHei", sans-serif;
+  font-size: 28rpx;
+  line-height: 1.65;
+}
+
+/* 宋体展示字 (iOS: Songti SC / Android 回退衬线) */
+.zh-display {
+  font-family: "Songti SC", "STSong", "STSongti-SC-Regular", "SimSun",
+    "Noto Serif CJK SC", serif;
+  font-weight: 900;
+}
+
+/* 等宽小字 (图纸编号感) */
+.mono {
+  font-family: "SF Mono", Menlo, Consolas, "Courier New", monospace;
+  letter-spacing: 2rpx;
+}
+
+/* 蓝图网格底纹 */
+.bp-grid {
+  background-image:
+    linear-gradient(rgba(43, 86, 192, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(43, 86, 192, 0.055) 1px, transparent 1px);
+  background-size: 44rpx 44rpx;
+}
+
+/* 纸张卡 (硬阴影 + 细边) */
+.paper-card {
+  background: var(--paper2);
+  border: 2rpx solid var(--ink);
+  box-shadow: 8rpx 8rpx 0 rgba(24, 34, 54, 0.85);
+  border-radius: 6rpx;
+}
+
+/* 眉题 */
+.eyebrow {
+  display: inline-block;
+  font-size: 20rpx;
+  letter-spacing: 4rpx;
+  color: var(--acc);
+  border: 2rpx solid currentColor;
+  padding: 4rpx 14rpx;
+  border-radius: 4rpx;
+  font-weight: 700;
+}
+
+/* 章节标题 */
+.sec-title {
+  font-size: 44rpx;
+  line-height: 1.3;
+  margin: 18rpx 0 10rpx;
+}
+.sec-title .em {
+  color: var(--acc);
+}
+
+/* 金句行 (针脚线) */
+.pin-line {
+  position: relative;
+  margin-top: 26rpx;
+  padding: 18rpx 20rpx;
+  border-left: 6rpx solid var(--acc);
+  background: rgba(232, 89, 12, 0.06);
+  font-size: 26rpx;
+  color: var(--ink);
+  font-weight: 600;
+}
+.pin-line .em {
+  color: var(--acc);
+}
+
+/* 标签组 */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-top: 24rpx;
+}
+.tags .tag {
+  font-size: 20rpx;
+  padding: 6rpx 16rpx;
+  border: 2rpx solid var(--line);
+  border-radius: 999rpx;
+  color: var(--mut);
+}
+.tags .tag.hot {
+  border-color: var(--acc);
+  color: var(--acc);
+  font-weight: 700;
+}
+
+/* 流程链 */
+.flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10rpx;
+  margin-top: 18rpx;
+}
+.flow .fn {
+  font-size: 22rpx;
+  padding: 8rpx 16rpx;
+  background: var(--paper2);
+  border: 2rpx solid var(--ink);
+  border-radius: 6rpx;
+  font-weight: 600;
+}
+.flow .fn.hot {
+  background: var(--acc);
+  color: #fff;
+  border-color: var(--ink);
+}
+.flow .fa {
+  color: var(--acc);
+  font-weight: 900;
+  font-size: 24rpx;
+}

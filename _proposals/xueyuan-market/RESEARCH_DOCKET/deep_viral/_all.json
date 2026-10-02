@@ -1,0 +1,158 @@
+{
+  "task": "研报商城海报裂变深研：精美海报分享→扫码看免费部分→裂变的标准打法/技术方案/转化数据",
+  "researched_at": "2026-09-28",
+  "source_hierarchy": "微信官方文档 > 知名技术社区(掘金/CSDN/知乎/公众号技术文章已标注) > 产品分析平台(case复盘)",
+  "docs": [
+    {
+      "title": "微信官方文档：获取不限制的小程序码 wxacode.getUnlimited",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/qr-code/wxacode.getUnlimited.html",
+      "source_channel": "微信官方文档",
+      "deep_viral": ["Q1"],
+      "credibility": 1.0,
+      "summary": "本机实读全文。接口B(getwxacodeunlimit)码数量无限制，适用于海报裂变场景。scene最大32可见字符，仅支持数字/大小写英文/!#$&'()*+,/:;=?@-._~，不支持%故不能urlencode中文；page不能带参数(参数只能放scene)、不带前导/、须已发布(check_path默认true，false时页面总数上限60000)；env_version三态；width默认430px范围280-1280；频率5000次/分且官方建议预生成；scene以query参数传入落地页；错误码40129/41030/40169/45009/47001/89300。开发工具模拟需手动encodeURIComponent。"
+    },
+    {
+      "title": "微信官方文档：小程序码/二维码总览（接口A/B/C选型）",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/qr-code.html",
+      "source_channel": "微信官方文档",
+      "deep_viral": ["Q1"],
+      "credibility": 1.0,
+      "summary": "本机实读。接口B(getUnlimited)无数量限制，适用于需要码数量极多的业务场景；接口A+C合计上限100,000个；B调用频率5000次/分钟，官方明确建议预生成避免实时生成触发限频。裂变海报每邀请人一码必须走B。"
+    },
+    {
+      "title": "微信官方文档：wxml-to-canvas 扩展组件",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/extended/component-plus/wxml-to-canvas.html",
+      "source_channel": "微信官方文档",
+      "deep_viral": ["Q2"],
+      "credibility": 1.0,
+      "summary": "本机实读。官方小程序端canvas海报方案：npm引入，静态wxml+wxss模板渲染，renderToCanvas→canvasToTempFilePath导出，支持fileType(jpg/png)与quality。能力边界：仅支持view/text/image三种标签、仅flex布局——不是完整CSS子集，复杂版式受限；多机型dpr缩放需自行处理。"
+    },
+    {
+      "title": "微信开放文档服务端索引：getUnlimited 条目",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/qr-code/QRCode/getUnlimited.html",
+      "source_channel": "微信官方文档",
+      "deep_viral": ["Q1"],
+      "credibility": 0.95,
+      "summary": "新文档路径下getUnlimited条目存在性交叉验证，与旧路径参数契约一致。"
+    },
+    {
+      "title": "GitHub：Kujiale-Mobile/Painter（小程序海报库）",
+      "url": "https://github.com/Kujiale-Mobile/Painter",
+      "source_channel": "开源社区-GitHub",
+      "deep_viral": ["Q2"],
+      "credibility": 0.6,
+      "summary": "DEGRADED：本机fetch被域名校验拦截未实读star/更新时间。Painter为酷家乐开源的JSON数据驱动小程序海报渲染库，是端侧方案事实标准之一，地位由51CTO选型文与多篇实战文交叉印证。"
+    },
+    {
+      "title": "51CTO：前端生成海报图技术选型与问题解决（2024-06-06）",
+      "url": "https://www.51cto.com",
+      "source_channel": "技术社区-51CTO（文章完整路径未捕获，按标题可复现检索）",
+      "deep_viral": ["Q2"],
+      "credibility": 0.6,
+      "summary": "选型对比结论：wxml-to-canvas使用相对较简单（引入库+传wxml与宽高即可），Painter功能更强大但上手更复杂——社区公认的端侧两条子路线取舍线。覆盖H5与小程序内合成海报→下载→分享全流程的兼容性问题。"
+    },
+    {
+      "title": "知乎专栏：动手打造一款 canvas 排版引擎（2022-02-08）",
+      "url": "https://zhuanlan.zhihu.com",
+      "source_channel": "技术社区-知乎专栏（路径未完整捕获）",
+      "deep_viral": ["Q2"],
+      "credibility": 0.7,
+      "summary": "重内容平台的服务端路线实证：依赖服务端，写一个node服务用puppeteer访问提前写好的网页来截图；并指出微信小程序平台绘制图片api与标准不同导致跨端引擎需按平台分支。证明复杂排版收敛于服务端生成。"
+    },
+    {
+      "title": "人人都是产品经理：815%裂变率复盘（网易/新世相/学而思/熊猫小课）",
+      "url": "https://www.woshipm.com/operate/2343401.html",
+      "source_channel": "产品分析平台-woshipm",
+      "deep_viral": ["Q3", "Q5"],
+      "credibility": 0.65,
+      "summary": "多案例海报裂变复盘，815%裂变率为活动口径上界样本；用于理解刷屏机制与封禁风险的对照。"
+    },
+    {
+      "title": "CSDN：海外短剧App组队看剧裂变案例（2025-06）",
+      "url": "https://www.csdn.net",
+      "source_channel": "技术社区-CSDN（路径未完整捕获）",
+      "deep_viral": ["Q3", "Q5"],
+      "credibility": 0.55,
+      "summary": "组队解锁玩法数据：参与率60%、3个月+500万用户、付费转化率提升至1.5%。品类差异大，作组队玩法上界参考。"
+    },
+    {
+      "title": "微信公众平台运营规范（诱导分享条款3.3）",
+      "url": "https://developers.weixin.qq.com",
+      "source_channel": "微信官方规范",
+      "deep_viral": ["Q3"],
+      "credibility": 0.9,
+      "summary": "禁止强制或利益诱导分享朋友圈（奖励含现金/实物/红包）；处罚四级：删文→删粉→封禁分享能力→封号。小程序平台运营规范同口径适用。合规设计基线：激励物限产品内虚拟权益、分享是解锁路径之一而非唯一路径。"
+    },
+    {
+      "title": "微信安全中心：关于利诱分享朋友圈打卡的处理公告（2019）",
+      "url": "https://mp.weixin.qq.com",
+      "source_channel": "微信官方公告",
+      "deep_viral": ["Q3"],
+      "credibility": 0.85,
+      "summary": "打卡返现类被批量处理——晒单返现/返现打卡=高危红线；与运营规范共同构成裂变玩法合规边界。多级分销(≥2级返佣)事实上必封：新世相二级、网易戏精三级均当日被封（媒体报道，可信度0.7）。"
+    },
+    {
+      "title": "卓嫣设计：高传播裂变海报设计方法（附模板）",
+      "url": "https://ynfbbz.com",
+      "source_channel": "设计机构方法论",
+      "deep_viral": ["Q4"],
+      "credibility": 0.55,
+      "summary": "海报分区方法论：主标题(核心视觉焦点/利益点)/副标题(补充说明,0元领类强化利益)/信任背书/产品展示/二维码区——明确二维码放右下角并预留空间的规范做法。"
+    },
+    {
+      "title": "有赞：裂变营销海报方法论",
+      "url": "https://www.youzan.com",
+      "source_channel": "SaaS厂商方法论",
+      "deep_viral": ["Q4"],
+      "credibility": 0.6,
+      "summary": "高效裂变海报=奖品展示+行动指令两要素；配色明亮强识别、突出奖品大图与转发步骤、避免信息堆砌。"
+    },
+    {
+      "title": "CSDN/博客园：各平台分享图尺寸规范与朋友圈压缩规则",
+      "url": "https://blog.csdn.net",
+      "source_channel": "技术社区-CSDN/博客园（多篇,路径未完整捕获）",
+      "deep_viral": ["Q4"],
+      "credibility": 0.6,
+      "summary": "朋友圈推荐1080×1080(方形)或1080×1440(3:4竖版)，全屏竖版1080×1920(9:16)；宽度~1080px是清晰且不触发微信二次压缩的安全线，3000px+原图反被强制压缩变模糊。小程序码官方width默认430px(280-1280)。设计稿750px宽为rpx换算基准。"
+    },
+    {
+      "title": "人人都是产品经理：裂变四步法（转化漏斗基准）",
+      "url": "https://www.woshipm.com",
+      "source_channel": "产品分析平台-woshipm",
+      "deep_viral": ["Q5"],
+      "credibility": 0.6,
+      "summary": "漏斗基准：曝光→扫码约10%；扫码→再转发带来≥1人约9%。知识内容类小程序海报扫码率无官方行业统计（诚实标注缺口），建议以invite_relation自建漏斗为准。"
+    },
+    {
+      "title": "AppsFlyer/Xinstall：K因子与裂变增长阈值",
+      "url": "https://www.appsflyer.com",
+      "source_channel": "海外归因厂商文档",
+      "deep_viral": ["Q5"],
+      "credibility": 0.65,
+      "summary": "K=人均邀请数×邀请转化率，K≥1自 sustaining 增长、低于1需投放补量。冷启动保守基线K≈0.1-0.2。"
+    },
+    {
+      "title": "运营复盘集：知识付费裂变案例数据（新世相/三节课/荔枝微课/樊登读书/跟谁学/微信读书）",
+      "url": "https://www.woshipm.com",
+      "source_channel": "产品分析平台+运营公众号复盘（多源,原始URL未完整捕获,按标题可复现）",
+      "deep_viral": ["Q3", "Q5"],
+      "credibility": 0.55,
+      "summary": "新世相营销课2018-03：9.9元起每万人+5元、3小时96,741份、二级分销、约3小时被封；三节课送书15小时14万新用户；荔枝微课单活动分享率12.56%；樊登读书3人成队组队读书（涨粉4500万/年营收10亿为整体业绩口径）；微信读书组队抽无限卡长期在役=自愿+虚拟权益激励的合规活样本；跟谁学1元解锁课为邀请解锁(任务宝)代表。砍价/双人成行公开量化数据未检索到(thin)。"
+    },
+    {
+      "title": "神策数据：小程序渠道追踪与归因埋点模型",
+      "url": "https://www.sensorsdata.cn",
+      "source_channel": "数据分析厂商文档",
+      "deep_viral": ["Q1"],
+      "credibility": 0.7,
+      "summary": "渠道+scene归因埋点模型为行业通用；tracking表设计(poster_code/share_event/invite_relation/scan_visit)由此与CSDN/掘金实战文综合收敛，为首触归因主表。"
+    }
+  ],
+  "gaps_degraded": [
+    "GitHub Painter仓库详情fetch被域名校验拦截(degraded)，库地位由交叉源印证",
+    "砍价/双人成行玩法公开量化数据缺失(thin)",
+    "部分运营复盘文原始URL未完整捕获，按域名+标题给出",
+    "知识内容类小程序海报扫码率无行业级统计，Q5基准来自个案+方法论",
+    "WebFetch对developers.weixin.qq.com被拦，已用webReader实读三篇官方文档(非degraded)"
+  ]
+}

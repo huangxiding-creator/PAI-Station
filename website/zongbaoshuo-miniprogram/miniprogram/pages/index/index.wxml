@@ -1,0 +1,188 @@
+<!-- 总包说科技 · 首页 (纸张蓝图风 · 移植官网 v10) -->
+<view class="page">
+
+  <!-- ============ HERO ============ -->
+  <view class="hero bp-grid">
+    <view class="live-pill"><view class="live-dot" /><text>{{hero.live}}</text></view>
+    <view class="hero-title zh-display">
+      <view class="tl">{{hero.titleA}}</view>
+      <view class="tl">{{hero.titleB}}<text class="em">{{hero.titleEm}}</text></view>
+    </view>
+    <view class="hero-slogan">{{hero.slogan}}</view>
+    <view class="hero-desc"><text class="b">{{hero.descHead}}</text>{{hero.desc}}</view>
+    <view class="hero-chips">
+      <view class="chip" wx:for="{{chips}}" wx:key="id" data-id="{{item.id}}" bindtap="goProduct" hover-class="chip-hover">
+        <text class="no mono">{{item.no}}</text><text>{{item.text}}</text><text class="arr">›</text>
+      </view>
+    </view>
+    <view class="chips-hint">↑ 点击产品名 · 直达产品详情</view>
+
+    <!-- 图纸卡: 资产快照 -->
+    <view class="dwg-card">
+      <view class="corner c3" /><view class="corner c4" />
+      <view class="dwg-head"><text class="b">{{dwg.head}}</text><text class="mono dwg-no">{{dwg.no}}</text></view>
+      <view class="dwg-row" wx:for="{{dwg.rows}}" wx:key="k">
+        <text class="k">{{item.k}}</text>
+        <view class="v"><text class="num">{{item.v}}</text><text class="u">{{item.u}}</text></view>
+      </view>
+      <view class="loop"><text class="b">{{dwg.loopA}}</text><text class="b">{{dwg.loopB}}</text></view>
+      <view class="dwg-stamp">{{dwg.stamp}}</view>
+    </view>
+
+  </view>
+
+  <!-- ============ 战绩带 ============ -->
+  <view class="marquee">
+    <view class="mq-track">
+      <text class="mq-item" wx:for="{{marquee}}" wx:key="*this">◆ {{item}}</text>
+      <text class="mq-item" wx:for="{{marquee}}" wx:key="*this">◆ {{item}}</text>
+    </view>
+  </view>
+
+  <!-- ============ 数据带 ============ -->
+  <view class="stats">
+    <view class="stat" wx:for="{{stats}}" wx:key="k">
+      <view class="v zh-display">{{item.v}}</view>
+      <view class="k">{{item.k}}</view>
+    </view>
+  </view>
+
+  <!-- ============ AI 原生宣言 (暗色) ============ -->
+  <view class="native">
+    <view class="sec-head">
+      <text class="eyebrow eyebrow-dark">{{native.eyebrow}}</text>
+      <view class="sec-title light zh-display">{{native.title}}<text class="em">{{native.titleEm}}</text></view>
+    </view>
+    <view class="ncell" wx:for="{{native.cells}}" wx:key="en">
+      <view class="ico zh-display">{{item.ico}}</view>
+      <view class="nbody">
+        <view class="nh">{{item.h}}<text class="nen mono">{{item.en}}</text></view>
+        <view class="np">{{item.p}}</view>
+      </view>
+    </view>
+    <view class="fly-title">{{native.flywheelTitle}}</view>
+    <view class="flow flow-dark">
+      <block wx:for="{{native.flywheel}}" wx:key="*this">
+        <text class="fn">{{item}}</text>
+        <text wx:if="{{index < native.flywheel.length - 1}}" class="fa">→</text>
+      </block>
+    </view>
+    <view class="fly-note">{{native.flywheelNote}}</view>
+    <view class="pin-line pin-dark">{{native.pin.pre}}<text class="em">{{native.pin.em}}</text></view>
+  </view>
+
+  <!-- ============ 四重价值 ============ -->
+  <view class="sec">
+    <text class="eyebrow">{{value.eyebrow}}</text>
+    <view class="sec-title zh-display">{{value.title}}<text class="em">{{value.titleEm}}</text></view>
+    <view class="lede">{{value.lede}}</view>
+    <view class="ucell" wx:for="{{value.cells}}" wx:key="en">
+      <text class="role mono">{{item.role}}</text>
+      <view class="uh zh-display">{{item.h}}<text class="uen mono">{{item.en}}</text></view>
+      <view class="up">{{item.p}}</view>
+      <text class="ud">{{item.ud}}</text>
+    </view>
+    <view class="pin-line">{{value.pin.pre}}<text class="em">{{value.pin.em}}</text></view>
+  </view>
+
+  <!-- ============ 资产盘点 ============ -->
+  <view class="sec">
+    <text class="eyebrow">{{ledger.eyebrow}}</text>
+    <view class="sec-title zh-display">{{ledger.title}}<text class="em">{{ledger.titleEm}}</text></view>
+    <view class="lede"><text class="b">{{ledger.ledeHead}}</text>{{ledger.lede}}</view>
+    <view class="ledger">
+      <view class="ledger-head"><text class="b">{{ledger.head}}</text><text class="sub mono">{{ledger.headSub}}</text></view>
+      <view class="ledger-row" wx:for="{{ledger.rows}}" wx:key="cat">
+        <view class="cat"><text class="cn">{{item.cat}}</text><text class="en mono">{{item.en}}</text></view>
+        <view class="desc">{{item.d}}</view>
+        <view class="val"><text class="num zh-display">{{item.v}}</text><text class="unit">{{item.u}}</text><text class="small">{{item.sub}}</text></view>
+      </view>
+    </view>
+    <view class="subsec"><text class="b">{{ledger.flowTitle}}</text></view>
+    <view class="flow">
+      <block wx:for="{{ledger.flow}}" wx:key="*this">
+        <text class="fn {{index === ledger.flow.length - 1 ? 'hot' : ''}}">{{item}}</text>
+        <text wx:if="{{index < ledger.flow.length - 1}}" class="fa">→</text>
+      </block>
+    </view>
+    <view class="pin-line">{{ledger.pin.pre}}<text class="em">{{ledger.pin.em}}</text></view>
+  </view>
+
+  <!-- ============ 八位一体 ============ -->
+  <view class="sec">
+    <text class="eyebrow">{{unity.eyebrow}}</text>
+    <view class="sec-title zh-display">{{unity.title}}<text class="em">{{unity.titleEm}}</text></view>
+    <view class="lede">{{unity.lede}}</view>
+    <view class="ucell ucell-tap" wx:for="{{unity.cells}}" wx:key="id" data-id="{{item.id}}" bindtap="goProduct" hover-class="ucell-hover">
+      <text class="role mono">{{item.no}} · {{item.role}}</text>
+      <view class="uh zh-display">{{item.h}}<text class="ui mono">{{item.i}}</text></view>
+      <view class="up">{{item.p}}</view>
+      <view class="ucta">
+        <text class="uct">{{item.ud}}</text>
+        <text class="ucgo">查看详情 ›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ============ 收入引擎 ============ -->
+  <view class="sec">
+    <text class="eyebrow">{{business.eyebrow}}</text>
+    <view class="sec-title zh-display">{{business.title}}<text class="em">{{business.titleEm}}</text></view>
+    <view class="lede">{{business.lede}}</view>
+    <view class="ecard ecard-tap {{item.on ? 'on' : 'soon'}}" wx:for="{{business.cards}}" wx:key="h" data-id="{{item.id}}" bindtap="goProduct" hover-class="ecard-hover">
+      <view class="etags"><text class="live">{{item.live}}</text><text class="etag mono">{{item.tag}}</text></view>
+      <view class="ehead"><text class="eh zh-display">{{item.h}}</text><view class="price"><text class="pv zh-display">{{item.price}}</text><text class="pu">{{item.unit}}</text></view></view>
+      <view class="ep">{{item.p}}</view>
+      <view class="ego">查看产品 ›</view>
+    </view>
+    <view class="subsec"><text class="b">{{business.flywheelTitle}}</text></view>
+    <view class="flow">
+      <block wx:for="{{business.flywheel}}" wx:key="*this">
+        <text class="fn {{index === business.flywheel.length - 1 ? 'hot' : ''}}">{{item}}</text>
+        <text wx:if="{{index < business.flywheel.length - 1}}" class="fa">→</text>
+      </block>
+    </view>
+    <view class="pin-line">{{business.pin.pre}}<text class="em">{{business.pin.em}}</text></view>
+  </view>
+
+  <!-- ============ 联系 ============ -->
+  <view class="sec">
+    <view class="contact-card">
+      <text class="eyebrow">{{contact.eyebrow}}</text>
+      <view class="sec-title zh-display">{{contact.title}}<text class="em">{{contact.titleEm}}</text></view>
+      <view class="en-line mono">{{contact.en}}</view>
+      <view class="lede">{{contact.pos}}</view>
+      <view class="act" wx:for="{{contact.acts}}" wx:key="h">
+        <text class="ano mono">{{item.no}}</text>
+        <view class="ah zh-display">{{item.h}}</view>
+        <view class="ap">{{item.p}}</view>
+      </view>
+      <view class="cta-block">
+        <view class="cta-text">
+          <view class="cta-desc">{{contact.desc}}</view>
+          <view class="tags">
+            <text class="tag {{item.hot ? 'hot' : ''}}" wx:for="{{contact.tags}}" wx:key="text">{{item.text}}</text>
+          </view>
+          <view class="mega-cta"><text>{{contact.cta}}</text><text class="cta-sub mono">{{contact.ctaSub}}</text></view>
+        </view>
+        <view class="qr-card" bindtap="previewQr" data-src="{{contact.qr}}">
+          <view class="corner qc3" /><view class="corner qc4" />
+          <image class="qr-img" src="{{contact.qr}}" mode="aspectFit" />
+          <text class="qr-b">{{contact.qrTitle}}</text>
+          <text class="qr-sub">{{contact.qrSub}}</text>
+          <view class="qr-save" catchtap="saveQr">保存二维码到相册</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ============ 页脚 ============ -->
+  <view class="footer">
+    <view class="foot-zh zh-display">{{footer.zh}}<text class="em">{{footer.zhEm}}</text>{{footer.zhTail}}</view>
+    <view class="foot-slogan">{{footer.sloganA}}<text class="em">{{footer.sloganEm}}</text></view>
+    <view class="foot-desc">{{footer.desc}}</view>
+    <view class="foot-base">
+      <text class="mono" wx:for="{{footer.base}}" wx:key="*this">{{item}}</text>
+    </view>
+  </view>
+</view>

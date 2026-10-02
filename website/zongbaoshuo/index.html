@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f4f1e8">
+<title>总包说科技 · 工程行业的AI原生数字资产与产品矩阵</title>
+<meta name="description" content="总包说科技——工程行业的AI原生数字资产与产品矩阵。1000+信源持续采集、1000座子知识库、110+份AI研报、八条产品线7×24运转。对用户、对行业、对社会、对投资人的四重价值，一次讲清：三年攒下的稀缺语料资产与八件咬合成一套的独特打法。">
+<style>
+/* ============================================================
+   总包说官网 · 工程蓝图×现场安全 编辑风 · 四重价值版
+   纸张底 / 蓝图网格 / 宋体展示 / 安全橙点睛 / 零外部依赖
+   ============================================================ */
+:root{
+  --paper:#f4f1e8;
+  --paper-2:#ece8db;
+  --sheet:#faf8f2;
+  --ink:#182236;
+  --ink-2:#3c4962;
+  --mut:#707b93;
+  --line:rgba(24,34,54,.16);
+  --line-soft:rgba(24,34,54,.08);
+  --acc:#e8590c;
+  --acc-bright:#ff7a1a;
+  --blue:#2b56c0;
+  --blue-deep:#1c3f97;
+  --ok:#0f7b4f;
+  --serif:"Songti SC","STSong","SimSun",Georgia,"Times New Roman",serif;
+  --sans:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+  --mono:"Cascadia Code",Consolas,"SF Mono",monospace;
+  --maxw:1180px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+section[id],footer[id]{scroll-margin-top:76px}
+body{
+  font-family:var(--sans);
+  color:var(--ink);
+  background:var(--paper);
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+  -webkit-text-size-adjust:100%;
+  -webkit-tap-highlight-color:transparent;
+  overflow-x:hidden;
+}
+::selection{background:var(--acc);color:#fff}
+a{color:inherit;text-decoration:none}
+ul{list-style:none}
+img,svg{display:block}
+
+/* ---------- 蓝图网格底纹 ---------- */
+.bp{
+  position:relative;
+}
+.bp::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    linear-gradient(rgba(43,86,192,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(43,86,192,.045) 1px,transparent 1px),
+    linear-gradient(rgba(43,86,192,.08) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(43,86,192,.08) 1px,transparent 1px);
+  background-size:28px 28px,28px 28px,140px 140px,140px 140px;
+}
+.bp-dark::before{
+  background:
+    linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),
+    linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);
+  background-size:28px 28px,28px 28px,140px 140px,140px 140px;
+}
+
+/* ---------- 顶栏 ---------- */
+header.bar{
+  position:fixed;top:0;left:0;right:0;z-index:90;
+  background:rgba(244,241,232,.92);
+  -webkit-backdrop-filter:blur(10px);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.bar-in{
+  max-width:var(--maxw);margin:0 auto;padding:0 24px;
+  height:62px;display:flex;align-items:center;gap:22px;
+}
+.brand{display:flex;align-items:baseline;gap:10px;flex-shrink:0}
+.brand-zh{font-family:var(--serif);font-size:24px;font-weight:900;letter-spacing:.14em}
+.brand-zh b{color:var(--acc)}
+.brand-en{font-family:var(--mono);font-size:11px;color:var(--mut);letter-spacing:.22em}
+nav.tnav{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+nav.tnav::-webkit-scrollbar{display:none}
+nav.tnav.fade-end{
+  -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 30px),transparent);
+  mask-image:linear-gradient(90deg,#000 calc(100% - 30px),transparent);
+}
+nav.tnav a{
+  font-size:13px;color:var(--ink-2);padding:7px 9px;border-radius:3px;
+  white-space:nowrap;position:relative;transition:color .2s;
+}
+nav.tnav a::after{
+  content:"";position:absolute;left:9px;right:9px;bottom:3px;height:2px;
+  background:var(--acc);transform:scaleX(0);transform-origin:left;transition:transform .25s;
+}
+nav.tnav a:hover,nav.tnav a.on{color:var(--ink)}
+nav.tnav a:hover::after,nav.tnav a.on::after{transform:scaleX(1)}
+.bar-cta{
+  flex-shrink:0;font-size:13px;font-weight:700;color:#fff;background:var(--ink);
+  padding:8px 18px;border-radius:3px;letter-spacing:.08em;transition:background .2s;
+}
+.bar-cta:hover{background:var(--acc)}
+
+/* ---------- Hero ---------- */
+.hero{padding:150px 0 0}
+.hero-in{max-width:var(--maxw);margin:0 auto;padding:0 24px;position:relative}
+.hero-eyebrow{
+  display:flex;align-items:center;gap:14px;margin-bottom:26px;
+  font-family:var(--mono);font-size:12px;letter-spacing:.3em;color:var(--blue-deep);
+}
+.hero-eyebrow::before{content:"";width:44px;height:2px;background:var(--acc)}
+.hero-grid{display:grid;grid-template-columns:1.35fr .9fr;gap:56px;align-items:center}
+h1.hero-title{
+  font-family:var(--serif);font-weight:900;
+  font-size:clamp(44px,5.8vw,74px);
+  line-height:1.12;letter-spacing:.04em;
+  font-variant-numeric:tabular-nums;
+}
+h1.hero-title em{
+  font-style:normal;color:var(--acc);
+  text-decoration:underline;text-decoration-thickness:5px;text-underline-offset:12px;
+  text-decoration-color:rgba(232,89,12,.32);
+}
+.hero-slogan{
+  margin-top:30px;font-family:var(--serif);font-size:clamp(19px,2.3vw,26px);
+  font-weight:700;letter-spacing:.12em;color:var(--ink-2);
+}
+.hero-slogan span{color:var(--acc)}
+.hero-desc{
+  margin-top:18px;max-width:580px;font-size:15.5px;color:var(--mut);
+}
+.hero-desc b{color:var(--ink-2)}
+.hero-chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+.hero-chips a{
+  font-size:13px;padding:8px 15px;border:1px solid var(--line);border-radius:999px;
+  color:var(--ink-2);background:var(--sheet);transition:all .2s;
+}
+.hero-chips a:hover{border-color:var(--acc);color:var(--acc);transform:translateY(-2px)}
+.hero-chips a b{font-family:var(--mono);font-weight:600;color:var(--blue);margin-right:6px;font-size:11px}
+
+/* Hero 右侧图纸卡 */
+.dwg-card{
+  position:relative;background:var(--sheet);border:1.5px solid var(--ink);
+  border-radius:4px;padding:26px 26px 20px;
+  box-shadow:8px 8px 0 rgba(24,34,54,.12);
+  transform:rotate(1.2deg);
+}
+.dwg-card::before,.dwg-card::after,
+.dwg-card .cm3,.dwg-card .cm4{
+  content:"";position:absolute;width:14px;height:14px;
+  border:1.5px solid var(--acc);
+}
+.dwg-card::before{top:-8px;left:-8px;border-right:none;border-bottom:none}
+.dwg-card::after{top:-8px;right:-8px;border-left:none;border-bottom:none}
+.dwg-card .cm3{bottom:-8px;left:-8px;border-right:none;border-top:none}
+.dwg-card .cm4{bottom:-8px;right:-8px;border-left:none;border-top:none}
+.dwg-head{
+  display:flex;justify-content:space-between;align-items:baseline;
+  border-bottom:1.5px solid var(--ink);padding-bottom:12px;margin-bottom:14px;
+}
+.dwg-head b{font-family:var(--serif);font-size:17px;letter-spacing:.1em}
+.dwg-head span{font-family:var(--mono);font-size:11px;color:var(--mut);letter-spacing:.14em}
+.dwg-row{
+  display:flex;justify-content:space-between;gap:12px;
+  padding:8px 0;border-bottom:1px dashed var(--line);font-size:13px;
+}
+.dwg-row:last-of-type{border-bottom:none}
+.dwg-row .k{font-family:var(--mono);color:var(--mut);font-size:11.5px;letter-spacing:.1em;white-space:nowrap}
+.dwg-row .v{font-weight:600;text-align:right}
+.dwg-row .v i{font-style:normal;color:var(--acc)}
+.dwg-stamp{
+  position:absolute;left:18px;bottom:14px;
+  font-family:var(--serif);font-weight:900;font-size:13px;color:var(--acc);
+  border:2px solid var(--acc);border-radius:3px;padding:2px 8px;
+  transform:rotate(-8deg);letter-spacing:.2em;opacity:.82;
+}
+.dwg-card .loop{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.dwg-card .loop b{
+  font-family:var(--serif);font-size:14px;letter-spacing:.08em;text-align:center;
+  background:var(--ink);color:var(--paper);border-radius:2px;padding:5px 0;
+}
+
+/* ---------- 数据带 ---------- */
+.stats{margin-top:84px;border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);background:var(--paper-2)}
+.stats-in{
+  max-width:var(--maxw);margin:0 auto;padding:0 24px;
+  display:grid;grid-template-columns:repeat(6,1fr);
+}
+.stat{padding:26px 8px;text-align:center;border-left:1px dashed var(--line)}
+.stat:first-child{border-left:none}
+.stat .n{
+  font-family:var(--serif);font-weight:900;font-size:clamp(26px,3.2vw,38px);
+  line-height:1.1;letter-spacing:.02em;
+}
+.stat .n small{font-size:.55em;color:var(--acc);margin-left:2px}
+.stat .l{font-size:12px;color:var(--mut);margin-top:6px;letter-spacing:.06em}
+
+/* ---------- 产品章节通用 ---------- */
+section.product{padding:96px 0 30px}
+.prod-in{max-width:var(--maxw);margin:0 auto;padding:0 24px;position:relative}
+.sheet{
+  background:var(--sheet);border:1.5px solid var(--ink);border-radius:4px;
+  box-shadow:10px 10px 0 rgba(24,34,54,.1);
+  display:grid;grid-template-columns:96px 1fr;overflow:hidden;
+}
+.sheet-rail{
+  background:var(--ink);color:var(--paper);padding:26px 0;
+  display:flex;flex-direction:column;align-items:center;gap:14px;
+}
+.sheet-rail .no{font-family:var(--mono);font-size:30px;font-weight:700;letter-spacing:.04em}
+.sheet-rail .bar-v{width:1.5px;flex:1;background:rgba(244,241,232,.25)}
+.sheet-rail .zh{writing-mode:vertical-rl;font-family:var(--serif);font-size:15px;letter-spacing:.5em;opacity:.85}
+.sheet-body{padding:46px 54px 44px}
+.eyebrow{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.26em;color:var(--blue-deep);
+  display:flex;align-items:center;gap:12px;
+}
+.eyebrow::before{content:"";width:30px;height:2px;background:var(--acc)}
+.prod-title{
+  margin-top:14px;display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;
+}
+.prod-title h2{
+  font-family:var(--serif);font-weight:900;font-size:clamp(30px,4vw,44px);
+  letter-spacing:.08em;line-height:1.2;
+}
+.prod-title .en{
+  font-family:var(--mono);font-size:13px;color:var(--mut);letter-spacing:.22em;
+}
+.prod-pos{
+  margin-top:12px;font-size:16.5px;color:var(--ink-2);font-weight:600;letter-spacing:.02em;
+}
+.prod-pos b{color:var(--acc)}
+.prod-cols{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;margin-top:30px}
+.feat li{
+  position:relative;padding:11px 0 11px 30px;border-bottom:1px dashed var(--line-soft);
+  font-size:14.5px;color:var(--ink-2);
+}
+.feat li:last-child{border-bottom:none}
+.feat li::before{
+  content:"";position:absolute;left:2px;top:19px;width:12px;height:12px;
+  border:1.5px solid var(--acc);transform:rotate(45deg);
+}
+.feat li b{color:var(--ink)}
+.feat li .sub{display:block;font-size:12.5px;color:var(--mut);margin-top:2px}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-content:start}
+.metric{
+  border:1px solid var(--line);border-radius:3px;padding:14px 16px;background:var(--paper);
+}
+.metric .v{
+  font-family:var(--serif);font-weight:900;font-size:26px;line-height:1.15;color:var(--blue-deep);
+}
+.metric .v i{font-style:normal;font-size:.5em;color:var(--acc);margin-left:3px}
+.metric .k{font-size:12px;color:var(--mut);margin-top:3px;letter-spacing:.04em}
+.metric.wide{grid-column:1/-1;display:flex;align-items:center;gap:14px}
+.metric.wide .v{font-size:22px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
+.tags span{
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+  border:1px solid var(--line);border-radius:2px;padding:4px 10px;color:var(--ink-2);
+  background:var(--paper);
+}
+.tags span.hot{border-color:var(--acc);color:var(--acc)}
+
+/* ---------- 05 眼镜反色重点 panel ---------- */
+section#glasses .sheet{border-color:var(--blue-deep);box-shadow:10px 10px 0 rgba(28,63,151,.18)}
+section#glasses .sheet-rail{background:var(--blue-deep)}
+section#glasses .sheet-body{
+  background:linear-gradient(160deg,#16223e 0%,#101a30 100%);color:#e9ecf4;
+}
+section#glasses .eyebrow{color:#8fb0ff}
+section#glasses .prod-pos{color:#c3cde2}
+section#glasses .prod-pos b{color:var(--acc-bright)}
+.mech{
+  margin-top:28px;display:grid;grid-template-columns:repeat(6,1fr);gap:8px;
+}
+.mech .step{
+  position:relative;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);
+  border-radius:3px;padding:14px 6px 12px;text-align:center;transition:all .25s;
+}
+.mech .step:hover{background:rgba(255,122,26,.13);border-color:var(--acc-bright);transform:translateY(-3px)}
+.mech .step svg{margin:0 auto 8px;width:26px;height:26px;stroke:var(--acc-bright)}
+.mech .step b{display:block;font-size:14.5px;letter-spacing:.1em}
+.mech .step i{display:block;font-style:normal;font-family:var(--mono);font-size:9.5px;color:#7e8db0;margin-top:3px;letter-spacing:.06em}
+.mech .step:not(:last-child)::after{
+  content:"→";position:absolute;right:-9px;top:50%;transform:translateY(-50%);
+  color:var(--acc-bright);font-size:13px;z-index:2;
+}
+.industries{
+  margin-top:26px;border:1px dashed rgba(255,255,255,.22);border-radius:4px;padding:18px 20px;
+}
+.industries .cap{
+  font-family:var(--serif);font-size:16px;font-weight:700;letter-spacing:.1em;color:#fff;
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+}
+.industries .cap .badge{
+  font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--acc-bright);
+  border:1px solid var(--acc-bright);border-radius:999px;padding:2px 10px;letter-spacing:.16em;
+}
+.ind-chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+.ind-chips span{
+  font-size:13px;border:1px solid rgba(255,255,255,.2);border-radius:999px;
+  padding:6px 15px;color:#dbe2f2;background:rgba(255,255,255,.04);transition:all .2s;
+}
+.ind-chips span:hover{border-color:var(--acc-bright);color:var(--acc-bright)}
+.ind-chips span::before{content:"◆ ";color:var(--acc-bright);font-size:11px}
+.industries .note{margin-top:12px;font-size:12.5px;color:#93a1c2}
+section#glasses .feat li{color:#c3cde2;border-bottom-color:rgba(255,255,255,.09)}
+section#glasses .feat li b{color:#fff}
+section#glasses .feat li .sub{color:#93a1c2}
+section#glasses .feat li::before{border-color:var(--acc-bright)}
+section#glasses .metric{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.14)}
+section#glasses .metric .v{color:#fff}
+section#glasses .metric .k{color:#93a1c2}
+section#glasses .tags span{background:transparent;border-color:rgba(255,255,255,.2);color:#c3cde2}
+section#glasses .tags span.hot{border-color:var(--acc-bright);color:var(--acc-bright)}
+
+/* ---------- 产品深读组件（痛点 / 运转链 / 战绩 / 对比 / 金句） ---------- */
+.subsec{margin-top:34px;display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--mut)}
+.subsec b{color:var(--acc);font-weight:700}
+.subsec::after{content:"";flex:1;height:1px;background:var(--line-soft)}
+.flow{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.flow .fn{font-size:13px;padding:8px 14px;border:1px solid var(--line);background:var(--sheet);border-radius:2px;color:var(--ink-2);letter-spacing:.04em}
+.flow .fn.hot{background:var(--ink);color:var(--paper);border-color:var(--ink);font-weight:600}
+.flow .fa{align-self:center;color:var(--acc);font-size:12px;font-weight:700}
+.paink{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+.pk{border:1px dashed var(--line);border-radius:3px;padding:14px 16px;background:var(--paper)}
+.pk .no{font-family:var(--serif);color:var(--acc);font-size:13px;letter-spacing:.2em}
+.pk h4{font-size:14.5px;margin-top:6px;color:var(--ink);letter-spacing:.04em}
+.pk p{font-size:12.5px;color:var(--mut);margin-top:4px;line-height:1.65}
+.bignums{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:12px}
+.bignum{border:1.5px solid var(--ink);border-radius:3px;padding:16px 18px;background:var(--paper)}
+.bignum .v{font-family:var(--serif);font-weight:900;font-size:clamp(22px,3.4vw,38px);color:var(--ink);line-height:1.12;white-space:nowrap}
+.bignum .v i{font-style:normal;font-size:.42em;color:var(--acc);margin-left:3px;letter-spacing:.02em}
+.bignum .k{font-size:12px;color:var(--mut);margin-top:4px;letter-spacing:.04em}
+.bignum.flag{background:var(--ink);border-color:var(--ink)}
+.bignum.flag .v{color:#fff}
+.bignum.flag .v i{color:var(--acc-bright)}
+.bignum.flag .k{color:#9aa6bf}
+.vsgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}
+.vscard{border:1px solid var(--line);border-radius:3px;padding:16px 20px;background:var(--paper)}
+.vscard h4{font-family:var(--serif);font-size:16px;letter-spacing:.08em;margin-bottom:8px;color:var(--ink-2)}
+.vscard ul li{font-size:13px;color:var(--mut);padding:6px 0 6px 20px;position:relative;border-bottom:1px dashed var(--line-soft);line-height:1.6}
+.vscard ul li:last-child{border-bottom:none}
+.vscard ul li::before{content:"×";position:absolute;left:0;top:6px;color:#a5715c;font-weight:700}
+.vscard.win{border:2px solid var(--acc);background:var(--sheet)}
+.vscard.win h4{color:var(--acc)}
+.vscard.win ul li{color:var(--ink-2)}
+.vscard.win ul li::before{content:"√";color:var(--acc);font-weight:700}
+.pin-line{margin-top:28px;text-align:center;font-family:var(--serif);font-size:clamp(16px,2.2vw,21px);letter-spacing:.1em;color:var(--ink-2);line-height:1.9}
+.pin-line em{font-style:normal;color:var(--acc)}
+/* 眼镜暗底适配 */
+section#glasses .subsec{color:#7e8db0}
+section#glasses .subsec b{color:var(--acc-bright)}
+section#glasses .subsec::after{background:rgba(255,255,255,.12)}
+section#glasses .flow .fn{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.16);color:#dbe2f2}
+section#glasses .flow .fn.hot{background:var(--acc-bright);border-color:var(--acc-bright);color:#231303}
+section#glasses .flow .fa{color:var(--acc-bright)}
+section#glasses .vscard{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.14)}
+section#glasses .vscard h4{color:#c3cde2}
+section#glasses .vscard ul li{color:#93a1c2;border-bottom-color:rgba(255,255,255,.08)}
+section#glasses .vscard ul li::before{color:#8a6a5a}
+section#glasses .vscard.win{border-color:var(--acc-bright);background:rgba(255,122,26,.08)}
+section#glasses .vscard.win h4{color:var(--acc-bright)}
+section#glasses .vscard.win ul li{color:#e9ecf4}
+section#glasses .vscard.win ul li::before{color:var(--acc-bright)}
+section#glasses .pin-line{color:#c3cde2}
+section#glasses .pin-line em{color:var(--acc-bright)}
+@media (max-width:700px){.paink,.vsgrid{grid-template-columns:1fr}}
+@media (max-width:480px){.bignums{grid-template-columns:1fr 1fr}.bignum{padding:12px 12px}}
+
+/* ---------- 七幕组件：蓝图图框（产品实拍/官方图） ---------- */
+.fig{
+  position:relative;background:#fff;border:1.5px solid var(--ink);border-radius:4px;
+  box-shadow:8px 8px 0 rgba(24,34,54,.12);overflow:hidden;
+}
+.fig .fig-img{width:100%;height:auto;display:block}
+.fig .fig-cap{
+  display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+  padding:10px 16px;border-top:1.5px solid var(--ink);
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--mut);background:var(--paper);
+}
+.fig .fig-cap b{color:var(--ink);font-weight:700;letter-spacing:.06em}
+.fig .fig-cap i{font-style:normal;color:var(--acc);white-space:nowrap}
+section#glasses .fig{box-shadow:8px 8px 0 rgba(0,0,0,.32);border-color:rgba(255,255,255,.4)}
+section#glasses .fig .fig-cap{background:rgba(22,34,62,.9);border-top-color:rgba(255,255,255,.4);color:#93a1c2}
+section#glasses .fig .fig-cap b{color:#e9ecf4}
+.fig-duo{display:grid;grid-template-columns:1.25fr 1fr;gap:16px;align-items:start;margin-top:26px}
+@media (max-width:700px){.fig-duo{grid-template-columns:1fr}}
+
+/* ---------- 七幕组件：资产盘点表（财务报表风） ---------- */
+.ledger{
+  margin-top:30px;border:1.5px solid var(--ink);border-radius:4px;background:var(--sheet);
+  box-shadow:10px 10px 0 rgba(24,34,54,.1);overflow:hidden;
+}
+.ledger-head{
+  display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+  padding:14px 22px;border-bottom:1.5px solid var(--ink);
+  font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--mut);
+}
+.ledger-head b{font-family:var(--serif);font-size:16px;letter-spacing:.14em;color:var(--ink)}
+.ledger-row{
+  display:grid;grid-template-columns:128px 1fr auto;gap:20px;
+  padding:17px 22px;border-bottom:1px dashed var(--line);align-items:center;
+}
+.ledger-row:last-child{border-bottom:none}
+.ledger-row .cat{font-family:var(--serif);font-weight:900;font-size:17.5px;letter-spacing:.06em}
+.ledger-row .cat i{
+  display:block;font-style:normal;font-family:var(--mono);font-size:9px;
+  color:var(--blue-deep);letter-spacing:.2em;margin-top:3px;font-weight:400;
+}
+.ledger-row .desc{font-size:13.5px;color:var(--ink-2);line-height:1.8}
+.ledger-row .desc b{color:var(--ink)}
+.ledger-row .val{
+  font-family:var(--serif);font-weight:900;font-size:clamp(20px,2.4vw,28px);
+  color:var(--blue-deep);white-space:nowrap;text-align:right;line-height:1.15;
+}
+.ledger-row .val i{font-style:normal;font-size:.52em;color:var(--acc);margin-left:2px}
+.ledger-row .val small{display:block;font-family:var(--sans);font-size:11px;font-weight:400;color:var(--mut);letter-spacing:.04em;margin-top:2px}
+@media (max-width:820px){
+  .ledger-row{grid-template-columns:1fr;gap:8px;padding:15px 18px}
+  .ledger-row .val{text-align:left}
+}
+
+/* ---------- 七幕组件：三年交付时间线 ---------- */
+.tl-rail{display:flex;margin-top:26px;border:1.5px solid var(--ink);border-radius:4px;background:var(--sheet);box-shadow:10px 10px 0 rgba(24,34,54,.1);overflow-x:auto}
+.tl-node{flex:1;min-width:150px;position:relative;padding:24px 16px 18px;border-left:1px dashed var(--line)}
+.tl-node:first-child{border-left:none}
+.tl-node::before{content:"";position:absolute;top:0;left:0;right:0;height:1.5px;background:var(--ink)}
+.tl-node::after{
+  content:"";position:absolute;top:-5.5px;left:18px;width:11px;height:11px;
+  background:var(--paper);border:2px solid var(--acc);border-radius:50%;
+}
+.tl-node.now::after{background:var(--acc);box-shadow:0 0 0 4px rgba(232,89,12,.18)}
+.tl-node .yr{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:.14em;font-weight:700}
+.tl-node b{display:block;font-family:var(--serif);font-size:15.5px;margin-top:5px;letter-spacing:.04em}
+.tl-node p{font-size:12px;color:var(--mut);margin-top:4px;line-height:1.65}
+.tl-node p em{font-style:normal;color:var(--ink-2);font-weight:700}
+
+/* ---------- 七幕组件：三级火箭 ---------- */
+.runway{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:30px}
+.rw{
+  position:relative;border:1.5px solid var(--ink);border-radius:3px;padding:22px 22px 20px;
+  background:var(--sheet);box-shadow:5px 5px 0 rgba(24,34,54,.08);overflow:hidden;
+}
+.rw .stage{font-family:var(--mono);font-size:10.5px;color:var(--blue-deep);letter-spacing:.24em}
+.rw .stage b{color:var(--acc);font-weight:700}
+.rw .big{
+  position:absolute;top:6px;right:14px;font-family:var(--serif);font-weight:900;
+  font-size:clamp(40px,5vw,62px);line-height:1;color:rgba(24,34,54,.08);pointer-events:none;
+}
+.rw h3{font-family:var(--serif);font-size:21px;font-weight:900;margin-top:10px;letter-spacing:.06em}
+.rw p{font-size:13px;color:var(--mut);margin-top:10px;line-height:1.8}
+.rw p b{color:var(--ink-2)}
+.rw.fire{border-color:var(--acc);box-shadow:5px 5px 0 rgba(232,89,12,.16)}
+.rw.fire .big{color:rgba(232,89,12,.12)}
+@media (max-width:820px){.runway{grid-template-columns:1fr}}
+
+/* ---------- 七幕组件：时机窗口 / 市场深算 / 收入引擎 / 一人军团 / 尖问题 / 行动 ---------- */
+.win-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:30px}
+.win{position:relative;border:1.5px solid var(--ink);border-radius:3px;background:var(--sheet);padding:24px 22px 20px;box-shadow:5px 5px 0 rgba(24,34,54,.08);overflow:hidden}
+.win .wtag{font-family:var(--mono);font-size:10.5px;color:var(--blue-deep);letter-spacing:.24em}
+.win h3{font-family:var(--serif);font-size:20px;font-weight:900;margin-top:10px;letter-spacing:.04em}
+.win p{font-size:13px;color:var(--mut);margin-top:8px;line-height:1.8}
+.win p b{color:var(--ink-2)}
+.win .wno{position:absolute;top:10px;right:16px;font-family:var(--serif);font-weight:900;font-size:40px;color:rgba(24,34,54,.07);line-height:1}
+@media (max-width:820px){.win-grid{grid-template-columns:1fr}}
+
+.fermi{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:30px}
+.fcard{border:1.5px solid var(--blue-deep);border-radius:3px;background:linear-gradient(160deg,#fdfcf9,#f1f3fa);padding:24px 22px 18px;box-shadow:5px 5px 0 rgba(28,63,151,.12);position:relative;overflow:hidden}
+.fcard .ftag{font-family:var(--mono);font-size:10.5px;color:var(--blue-deep);letter-spacing:.22em}
+.fcard .fval{font-family:var(--serif);font-weight:900;font-size:clamp(30px,4vw,46px);color:var(--ink);margin-top:10px;line-height:1.05}
+.fcard .fval i{font-style:normal;font-size:.48em;color:var(--acc)}
+.fcard p{font-size:12.5px;color:var(--mut);margin-top:10px;line-height:1.75}
+.fcard p b{color:var(--ink-2)}
+.fcard .fnote{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line);font-family:var(--mono);font-size:10px;color:var(--mut);letter-spacing:.06em}
+@media (max-width:820px){.fermi{grid-template-columns:1fr}}
+
+.eng{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:30px}
+.ecard{border:1.5px solid var(--ink);border-radius:3px;background:var(--sheet);padding:18px 16px 16px;box-shadow:4px 4px 0 rgba(24,34,54,.08);position:relative}
+.ecard .etag{font-family:var(--mono);font-size:10px;color:var(--mut);letter-spacing:.18em}
+.ecard h4{font-family:var(--serif);font-size:17px;font-weight:900;margin-top:8px;letter-spacing:.04em}
+.ecard .price{font-family:var(--serif);font-weight:900;color:var(--blue-deep);font-size:19px;margin-top:8px}
+.ecard .price i{font-style:normal;font-size:.6em;color:var(--acc)}
+.ecard p{font-size:11.5px;color:var(--mut);margin-top:6px;line-height:1.65}
+.ecard .live{position:absolute;top:-9px;right:10px;font-family:var(--mono);font-size:9px;letter-spacing:.14em;background:var(--acc);color:#fff;border-radius:2px;padding:2px 7px}
+.ecard .live.soon{background:var(--ink)}
+@media (max-width:960px){.eng{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.eng{grid-template-columns:1fr}}
+
+.org-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:26px;margin-top:26px;align-items:start}
+.org-quote{border-left:4px solid var(--acc);padding:6px 0 6px 20px;font-family:var(--serif);font-size:clamp(17px,2.2vw,22px);font-weight:700;letter-spacing:.06em;line-height:1.9;color:var(--ink-2)}
+.org-quote em{font-style:normal;color:var(--acc)}
+@media (max-width:820px){.org-grid{grid-template-columns:1fr}}
+
+.risk3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:12px}
+.rk{border:1.5px dashed var(--line);border-radius:3px;padding:18px 18px 16px;background:var(--paper)}
+.rk .rq{font-family:var(--serif);font-weight:900;font-size:15px;color:var(--ink);letter-spacing:.04em}
+.rk .rq::before{content:"? ";color:var(--acc);font-family:var(--mono);font-weight:700}
+.rk p{font-size:12.5px;color:var(--mut);margin-top:8px;line-height:1.75}
+.rk p b{color:var(--ink-2)}
+@media (max-width:820px){.risk3{grid-template-columns:1fr}}
+
+.mega-cta{display:block;text-align:center;margin-top:30px;padding:24px 30px;
+  background:var(--ink);color:#fff;border-radius:4px;border:1.5px solid var(--ink);
+  font-family:var(--serif);font-weight:900;font-size:clamp(19px,2.6vw,26px);letter-spacing:.12em;
+  box-shadow:8px 8px 0 rgba(232,89,12,.3);transition:transform .18s,box-shadow .18s}
+.mega-cta:hover{transform:translate(-2px,-2px);box-shadow:11px 11px 0 rgba(232,89,12,.42)}
+.mega-cta .arr{color:var(--acc-bright);font-family:var(--mono);font-weight:700;margin-left:8px}
+.mega-cta small{display:block;font-family:var(--sans);font-weight:400;font-size:12.5px;color:#aab4c9;letter-spacing:.1em;margin-top:8px}
+.act3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:26px}
+.act{border:1.5px solid var(--ink);border-radius:3px;background:var(--sheet);padding:20px;box-shadow:5px 5px 0 rgba(24,34,54,.08)}
+.act .ano{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:.2em;font-weight:700}
+.act h4{font-family:var(--serif);font-size:17.5px;font-weight:900;margin-top:8px;letter-spacing:.04em}
+.act p{font-size:12.5px;color:var(--mut);margin-top:6px;line-height:1.7}
+.act p b{color:var(--ink-2)}
+@media (max-width:820px){.act3{grid-template-columns:1fr}}
+
+/* ---------- 顶级视觉引擎（光晕/跑马灯/grain/进度条/独一份/AI原生） ---------- */
+#pbar{position:fixed;top:0;left:0;right:0;height:3px;z-index:99;background:linear-gradient(90deg,var(--blue),var(--acc));transform-origin:0 50%;transform:scaleX(0)}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:97;opacity:.045;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E")}
+header.bar.scrolled{box-shadow:0 10px 34px rgba(24,34,54,.1)}
+.stat .n,.bignum .v,.metric .v,.marq-g b,.ledger-row .val{font-variant-numeric:tabular-nums}
+
+/* Hero 光晕 */
+.hero{position:relative;overflow:clip}
+.halo{position:absolute;top:-22%;right:-14%;width:58vw;height:58vw;max-width:840px;max-height:840px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(43,86,192,.15) 0%,rgba(232,89,12,.07) 46%,transparent 70%);
+  filter:blur(46px);animation:breathe 9s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:.62;transform:scale(1)}50%{opacity:.95;transform:scale(1.05)}}
+.hero-grid{position:relative;z-index:2}
+
+/* 活性徽章 */
+.live-pill{display:inline-flex;align-items:center;gap:10px;border:1.5px solid var(--ink);border-radius:999px;
+  padding:7px 16px 7px 13px;background:var(--sheet);font-family:var(--mono);font-size:11px;letter-spacing:.2em;
+  color:var(--ink);box-shadow:4px 4px 0 rgba(24,34,54,.1);white-space:nowrap}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--acc);flex-shrink:0;animation:ping 2.4s cubic-bezier(.4,0,.6,1) infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(232,89,12,.5)}70%,100%{box-shadow:0 0 0 9px rgba(232,89,12,0)}}
+.hero-eyebrow{flex-wrap:wrap}
+
+/* 跑马灯战绩带 */
+.marq{position:relative;overflow:hidden;margin-top:84px;background:var(--ink);border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+.marq-track{display:flex;width:max-content;animation:tick 46s linear infinite}
+.marq-g{display:flex;align-items:center;gap:2.4em;padding:16px 1.2em 16px 0;color:#c8d1e2;font-size:13px;letter-spacing:.12em;white-space:nowrap}
+.marq-g i{font-style:normal;color:var(--acc-bright);font-size:9px}
+.marq-g b{font-family:var(--serif);font-weight:900;font-size:18px;color:#fff;letter-spacing:.04em;margin-right:8px}
+@keyframes tick{to{transform:translateX(-50%)}}
+
+/* 独一份标线 */
+.only-line{display:flex;align-items:flex-start;gap:14px;margin-top:24px;padding:14px 18px;
+  border:1.5px dashed var(--acc);border-radius:4px;background:rgba(232,89,12,.045)}
+.only-line .stamp{flex-shrink:0;font-family:var(--serif);font-weight:900;font-size:12px;color:#fff;background:var(--acc);
+  border-radius:2px;padding:3px 11px;letter-spacing:.22em;transform:rotate(-2deg);margin-top:2px}
+.only-line p{font-size:14px;color:var(--ink-2);line-height:1.75}
+.only-line p b{color:var(--acc)}
+section#glasses .only-line{border-color:var(--acc-bright);background:rgba(255,122,26,.07)}
+section#glasses .only-line p{color:#dbe2f2}
+section#glasses .only-line p b{color:var(--acc-bright)}
+
+/* AI 原生宣言 */
+.native{padding:96px 0 30px}
+.native-title{margin-top:14px;font-family:var(--serif);font-weight:900;font-size:clamp(30px,4vw,44px);letter-spacing:.08em;line-height:1.25}
+.native-title em{font-style:normal;color:var(--acc)}
+.native-lede{margin-top:14px;max-width:720px;font-size:15.5px;color:var(--mut)}
+.native-lede b{color:var(--ink)}
+.native-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:30px}
+.ncell{border:1.5px solid var(--blue-deep);border-radius:3px;background:var(--sheet);padding:20px 22px;
+  box-shadow:5px 5px 0 rgba(28,63,151,.1);transition:all .25s}
+.ncell:hover{transform:translateY(-3px);box-shadow:5px 9px 0 rgba(28,63,151,.16)}
+.ncell .ico{font-family:var(--serif);font-size:26px;font-weight:900;color:var(--blue-deep);line-height:1}
+.ncell h3{font-family:var(--serif);font-size:19px;font-weight:900;margin-top:10px;letter-spacing:.06em}
+.ncell h3 i{font-style:normal;font-family:var(--mono);font-size:10.5px;font-weight:400;color:var(--mut);margin-left:8px;letter-spacing:.14em}
+.ncell p{font-size:13px;color:var(--mut);margin-top:6px;line-height:1.75}
+.ncell p b{color:var(--ink-2)}
+@media (max-width:700px){.native-grid{grid-template-columns:1fr}.marq-g{font-size:12px;gap:1.8em}.marq-g b{font-size:15px}}
+
+/* ---------- 百倍视觉引擎（粒子/逐字/印章/盖章/暗色段/3D/光标） ---------- */
+/* Hero 粒子画布 */
+#bpfx{position:absolute;inset:0;z-index:1;pointer-events:none}
+.hero-grid{position:relative;z-index:2}
+/* 大标题逐字入场 */
+.hero-title .tl{display:block;overflow:hidden;padding-bottom:.06em;margin-bottom:-.06em}
+.hero-title.split .char{display:inline-block;transform:translateY(118%);transition:transform .9s cubic-bezier(.16,.84,.28,1)}
+.hero-title.split .tl em{display:inline-block;transform:translateY(118%);transition:transform .95s cubic-bezier(.16,.84,.28,1) .58s}
+.hero-title.on .char,.hero-title.on .tl em{transform:none}
+
+/* 旋转印章（骑缝章：圆心钉图纸卡右下角，一半卡内一半卡外；移动端隐藏） */
+.seal{position:absolute;right:-52px;bottom:6px;width:120px;height:120px;z-index:2;animation:spin 26s linear infinite;pointer-events:none;opacity:.92;filter:drop-shadow(3px 4px 0 rgba(24,34,54,.16))}
+@keyframes spin{to{transform:rotate(360deg)}}
+.seal text{font-family:var(--mono);font-size:10.5px;fill:var(--acc);letter-spacing:.22em}
+.seal .seal-core{fill:var(--ink)}
+
+/* 产品卡「盖章式」入场 */
+.sheet.rv{opacity:0;transform:translateY(36px) scale(.962) rotate(-.45deg)}
+.sheet.rv.in{opacity:1;transform:none;
+  transition:transform .8s cubic-bezier(.17,.9,.26,1.14),opacity .55s ease}
+.sheet.rv.in:hover{transition:transform .16s ease-out}
+
+/* AI 原生区 · 暗色电影段 */
+section#native{position:relative;overflow:clip;background:linear-gradient(168deg,#18233f 0%,#0f182c 100%)}
+#npfx{position:absolute;inset:0;z-index:0;pointer-events:none}
+section#native .prod-in{position:relative;z-index:1}
+section#native .eyebrow{color:#8fb0ff}
+section#native .native-title{color:#f4f1e8}
+section#native .native-title em{color:var(--acc-bright)}
+section#native .native-lede{color:#a9b5cd}
+section#native .native-lede b{color:#e9ecf4}
+section#native .ncell{background:rgba(255,255,255,.045);border-color:rgba(143,176,255,.28);box-shadow:5px 5px 0 rgba(0,0,0,.28)}
+section#native .ncell:hover{box-shadow:5px 9px 0 rgba(0,0,0,.36)}
+section#native .ncell .ico{color:#8fb0ff}
+section#native .ncell h3{color:#fff}
+section#native .ncell p{color:#93a1c2}
+section#native .ncell p b{color:#dbe2f2}
+section#native .subsec{color:#7e8db0}
+section#native .subsec b{color:var(--acc-bright)}
+section#native .subsec::after{background:rgba(255,255,255,.12)}
+section#native .vscard{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.14)}
+section#native .vscard h4{color:#c3cde2}
+section#native .vscard ul li{color:#93a1c2;border-bottom-color:rgba(255,255,255,.08)}
+section#native .vscard ul li::before{color:#8a6a5a}
+section#native .vscard.win{border-color:var(--acc-bright);background:rgba(255,122,26,.08)}
+section#native .vscard.win h4{color:var(--acc-bright)}
+section#native .vscard.win ul li{color:#e9ecf4}
+section#native .vscard.win ul li::before{color:var(--acc-bright)}
+
+/* 工程十字光标（桌面精确指针） */
+#xcursor{position:fixed;left:0;top:0;z-index:100;width:34px;height:34px;pointer-events:none;
+  transform:translate(-50%,-50%);opacity:0;transition:opacity .4s,scale .25s}
+#xcursor::before,#xcursor::after{content:"";position:absolute;background:rgba(232,89,12,.72)}
+#xcursor::before{left:50%;top:0;width:1.5px;height:100%;transform:translateX(-50%)}
+#xcursor::after{top:50%;left:0;height:1.5px;width:100%;transform:translateY(-50%)}
+#xcursor i{position:absolute;left:50%;top:50%;width:5px;height:5px;border:1.5px solid var(--acc);border-radius:50%;transform:translate(-50%,-50%);background:var(--paper)}
+#xcursor.show{opacity:1}
+#xcursor.zoom{scale:1.55}
+@media (hover:none),(pointer:coarse){#xcursor{display:none}}
+
+/* 磁吸 CTA */
+.bar-cta{transition:transform .18s ease-out,background .2s}
+.bar-cta.magnet{transition:transform .05s linear}
+
+/* 动效降级 */
+@media (prefers-reduced-motion:reduce){
+  #bpfx,.seal{display:none}
+  .hero-title .char,.hero-title .tl em{transform:none!important;transition:none!important}
+  .sheet.rv{opacity:1;transform:none}
+  .marq-track{animation-duration:120s}
+}
+
+/* ---------- 八位一体 ---------- */
+.unity{padding:88px 0 26px}
+.unity-title{margin-top:14px;font-family:var(--serif);font-weight:900;font-size:clamp(30px,4vw,44px);letter-spacing:.08em;line-height:1.25}
+.unity-lede{margin-top:14px;max-width:720px;font-size:15.5px;color:var(--mut)}
+.unity-lede b{color:var(--ink)}
+.ucell .ud{display:block;margin-top:8px;font-family:var(--mono);font-size:11px;color:var(--blue-deep);letter-spacing:.05em}
+.unity-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:30px}
+.ucell{border:1.5px solid var(--ink);border-radius:3px;background:var(--sheet);padding:18px 20px;box-shadow:5px 5px 0 rgba(24,34,54,.08);transition:all .25s}
+.ucell:hover{transform:translateY(-3px);box-shadow:5px 9px 0 rgba(24,34,54,.12)}
+.ucell .role{font-family:var(--mono);font-size:10.5px;color:var(--blue-deep);letter-spacing:.22em}
+.ucell h3{font-family:var(--serif);font-size:19px;font-weight:900;margin-top:6px;letter-spacing:.06em}
+.ucell h3 i{font-style:normal;font-family:var(--mono);font-size:11px;font-weight:400;color:var(--mut);margin-left:8px;letter-spacing:.08em}
+.ucell p{font-size:13px;color:var(--mut);margin-top:6px;line-height:1.7}
+@media (max-width:960px){.unity-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.unity-grid{grid-template-columns:1fr}}
+
+/* ---------- 联系（总包君二维码） ---------- */
+.contact-flex{display:grid;grid-template-columns:1.2fr .8fr;gap:36px;margin-top:26px;align-items:center}
+.qr-wrap{display:flex;justify-content:center}
+.qr-card{
+  position:relative;background:#fff;border:1.5px solid var(--ink);border-radius:4px;
+  padding:22px 22px 18px;text-align:center;box-shadow:8px 8px 0 rgba(24,34,54,.12);
+}
+.qr-card::before,.qr-card::after,.qr-card .cm3,.qr-card .cm4{position:absolute;width:14px;height:14px;border:1.5px solid var(--acc)}
+.qr-card::before{content:"";top:-8px;left:-8px;border-right:none;border-bottom:none}
+.qr-card::after{content:"";top:-8px;right:-8px;border-left:none;border-bottom:none}
+.qr-card .cm3{bottom:-8px;left:-8px;border-right:none;border-top:none}
+.qr-card .cm4{bottom:-8px;right:-8px;border-left:none;border-top:none}
+.qr-card img{width:210px;height:210px;max-width:100%;object-fit:contain;background:#fff;border:1px solid var(--line);border-radius:2px}
+.qr-card b{display:block;margin-top:12px;font-family:var(--serif);font-size:16px;letter-spacing:.1em}
+.qr-card .qr-sub{display:block;margin-top:4px;font-family:var(--mono);font-size:10.5px;color:var(--mut);letter-spacing:.3em}
+
+@media (max-width:700px){
+  .contact-flex{grid-template-columns:1fr;gap:26px}
+}
+
+/* ---------- 产品内扫码体验行（智库官网码 / 大脑小程序码） ---------- */
+.qr-inline{display:flex;gap:22px;align-items:center;margin-top:26px;padding:16px 20px;
+  border:1.5px dashed var(--acc);border-radius:4px;background:rgba(232,89,12,.045)}
+.qr-inline .qr-box{flex-shrink:0;width:126px;text-align:center}
+.qr-inline .qr-box img{width:118px;height:118px;object-fit:contain;background:#fff;
+  border:1px solid var(--line);border-radius:3px;display:block;margin:0 auto}
+.qr-inline .qr-txt b{display:block;font-family:var(--serif);font-size:16.5px;letter-spacing:.06em;color:var(--ink)}
+.qr-inline .qr-txt p{font-size:13px;color:var(--mut);margin-top:6px;line-height:1.75}
+.qr-inline .qr-txt p b{display:inline;font-family:var(--sans);color:var(--acc)}
+@media (max-width:560px){.qr-inline{flex-direction:column;gap:14px;text-align:center}}
+
+/* ---------- 页脚 ---------- */
+footer{
+  margin-top:100px;background:var(--ink);color:#aab4c9;
+  border-top:4px solid var(--acc);
+}
+.foot-in{
+  max-width:var(--maxw);margin:0 auto;padding:56px 24px 40px;
+  display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:start;
+}
+.foot-zh{font-family:var(--serif);font-size:34px;font-weight:900;color:#f4f1e8;letter-spacing:.14em}
+.foot-zh b{color:var(--acc-bright)}
+.foot-slogan{margin-top:10px;font-size:14px;letter-spacing:.1em;color:#c3cde2}
+.foot-slogan span{color:var(--acc-bright)}
+.foot-prod{display:grid;grid-template-columns:1fr 1fr;gap:6px 20px;font-size:13px}
+.foot-prod a{color:#aab4c9;transition:color .2s;padding:3px 0}
+.foot-prod a:hover{color:var(--acc-bright)}
+.foot-prod a::before{content:"— ";color:var(--acc)}
+.foot-base{
+  max-width:var(--maxw);margin:0 auto;padding:0 24px 30px;
+  border-top:1px solid rgba(244,241,232,.12);padding-top:18px;
+  display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:#707b93;
+}
+
+/* ---------- 动效 ---------- */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+.rv.in{opacity:1;transform:none}
+.rv.d1{transition-delay:.1s}.rv.d2{transition-delay:.22s}.rv.d3{transition-delay:.34s}
+@keyframes rise{from{opacity:0;transform:translateY(34px)}to{opacity:1;transform:none}}
+.hero .rv{animation:rise .9s cubic-bezier(.2,.7,.2,1) both}
+.hero .rv.d1{animation-delay:.12s}.hero .rv.d2{animation-delay:.26s}.hero .rv.d3{animation-delay:.42s}.hero .rv.d4{animation-delay:.58s}
+
+/* ---------- 响应式（平板 960 → 大屏手机 700 → 小屏手机 480） ---------- */
+@media (max-width:960px){
+  .hero{padding-top:126px}
+  .seal{display:none}
+  .hero-grid{grid-template-columns:1fr;gap:44px}
+  .dwg-card{max-width:460px;margin:0 auto}
+  .stats-in{grid-template-columns:repeat(3,1fr)}
+  .stat:nth-child(4){border-left:none}
+  .stat{border-top:1px dashed var(--line)}
+  .stat:nth-child(-n+3){border-top:none}
+  .sheet{grid-template-columns:1fr}
+  .sheet-rail{flex-direction:row;padding:12px 20px}
+  .sheet-rail .bar-v{height:1.5px;width:auto;flex:1}
+  .sheet-rail .zh{writing-mode:horizontal-tb;letter-spacing:.3em;font-size:13px}
+  .sheet-body{padding:34px 26px 32px}
+  .prod-cols{grid-template-columns:1fr;gap:26px}
+  .mech{grid-template-columns:repeat(3,1fr);gap:10px}
+  .mech .step:not(:last-child)::after{display:none}
+  .foot-in{grid-template-columns:1fr}
+  nav.tnav{margin-left:8px}
+  .bar-cta{display:none}
+}
+@media (max-width:700px){
+  .bar-in{gap:14px;padding:0 16px}
+  .brand-zh{font-size:21px}
+  .hero{padding-top:104px}
+  .hero-in,.prod-in{padding:0 18px}
+  .stats{margin-top:60px}
+  .stats-in{padding:0 18px}
+  section.product{padding:70px 0 20px}
+  .hero-title{font-size:clamp(34px,10.4vw,52px)}
+  .hero-title em{text-decoration-thickness:4px;text-underline-offset:9px}
+  .hero-eyebrow{font-size:10px;letter-spacing:.18em;flex-wrap:wrap}
+  .dwg-card{transform:rotate(.8deg);padding:20px 18px 16px}
+  .sheet{box-shadow:6px 6px 0 rgba(24,34,54,.1)}
+  section#glasses .sheet{box-shadow:6px 6px 0 rgba(28,63,151,.18)}
+  .sheet-body{padding:28px 18px 28px}
+  .mech .step{padding:12px 4px 10px}
+  .industries{padding:14px 16px}
+  .metric .v{font-size:22px}
+  .tags{gap:6px}
+}
+@media (max-width:480px){
+  .stat{padding:20px 6px}
+  .stats-in{grid-template-columns:repeat(2,1fr)}
+  .stat:nth-child(odd){border-left:none}
+  .stat:nth-child(even){border-left:1px dashed var(--line)}
+  .stat:nth-child(-n+2){border-top:none}
+  .stat:nth-child(3){border-top:1px dashed var(--line)}
+  .metrics{grid-template-columns:1fr 1fr;gap:10px}
+  .metric{padding:12px}
+  .hero-chips a{font-size:12.5px;padding:7px 12px}
+  .ind-chips span{font-size:12.5px;padding:5px 12px}
+  .mech .step b{font-size:13.5px}
+  .tags span{font-size:10.5px;padding:3px 8px}
+  .foot-prod{gap:4px 14px}
+}
+</style>
+</head>
+<body>
+<div id="pbar" aria-hidden="true"></div>
+<header class="bar" id="topbar">
+  <div class="bar-in">
+    <a class="brand" href="#top" aria-label="总包说">
+      <span class="brand-zh">总包<b>说</b></span>
+      <span class="brand-en">ZBS·2023-2026</span>
+    </a>
+    <nav class="tnav" id="tnav" aria-label="产品导航">
+      <a href="#leopard">工程豹</a>
+      <a href="#brain">工程大脑</a>
+      <a href="#zhiku">总包智库</a>
+      <a href="#factory">研究工厂</a>
+      <a href="#aipo">自媒永动机</a>
+      <a href="#station">AI工作站</a>
+      <a href="#glasses">安全AI眼镜</a>
+      <a href="#robot">顾问机器人</a>
+      <a href="#value">四重价值</a>
+    </nav>
+    <a class="bar-cta" href="#contact">联系总包君</a>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero bp" id="top">
+  <div class="halo" aria-hidden="true"></div>
+  <canvas id="bpfx" aria-hidden="true"></canvas>
+  <div class="hero-in">
+    <div class="hero-eyebrow rv">
+      <span class="live-pill"><span class="live-dot"></span>八条产品线 · 7×24 在役运转中</span>
+    </div>
+    <div class="hero-grid">
+      <div>
+        <h1 class="hero-title" id="heroTitle">
+          <span class="tl">大模型兵马已动</span>
+          <span class="tl">行业<em>粮草先行十年</em></span>
+        </h1>
+        <p class="hero-slogan rv d1">总包说科技 —— 工程行业的 AI 原生数字资产与产品矩阵</p>
+        <p class="hero-desc rv d2">大模型是兵马，人人买得到；<b>行业语料是粮草，只有我们有</b>。三年只做一件事：让工程行业的资讯、知识、判断持续流入自己的管线——今天全网 1000+ 信源仍在为我们采集，攒下的每一篇都在给八条产品线供弹。<b>工程人来这里取工具，同行者在这里看资产</b>——这一页，把总包说完整摊开给您。</p>
+        <div class="hero-chips rv d3">
+          <a href="#leopard"><b>01</b>工程豹</a>
+          <a href="#brain"><b>02</b>工程大脑</a>
+          <a href="#zhiku"><b>03</b>总包智库</a>
+          <a href="#factory"><b>04</b>研究工厂</a>
+          <a href="#aipo"><b>05</b>自媒永动机</a>
+          <a href="#station"><b>06</b>AI工作站</a>
+          <a href="#glasses"><b>07</b>安全AI眼镜</a>
+          <a href="#robot"><b>08</b>顾问机器人</a>
+        </div>
+      </div>
+      <div style="position:relative">
+        <div class="dwg-card rv d2">
+          <span class="cm3" aria-hidden="true"></span><span class="cm4" aria-hidden="true"></span>
+          <div class="dwg-head"><b>资产总览 · 快照</b><span>DWG-2026-09</span></div>
+          <div class="dwg-row"><span class="k">产品线 LINES</span><span class="v"><i>08</i> 条 · 全部在役</span></div>
+          <div class="dwg-row"><span class="k">信源 FEEDSTOCK</span><span class="v"><i>1000+</i> 源 · 每 30 分钟</span></div>
+          <div class="dwg-row"><span class="k">知识 KNOWLEDGE</span><span class="v"><i>1000</i> 座子知识库</span></div>
+          <div class="dwg-row"><span class="k">质检 TESTS</span><span class="v"><i>4,717</i> 条 · 全绿</span></div>
+          <div class="dwg-row"><span class="k">运转 UPTIME</span><span class="v"><i>7×24</i> · 无人值守</span></div>
+          <div class="loop">
+            <b>采集 → 熵减 → 沉淀</b>
+            <b>研究 → 硬件 → 具身</b>
+          </div>
+          <span class="dwg-stamp">粮草先行</span>
+        </div>
+        <svg class="seal" viewBox="0 0 120 120" aria-hidden="true">
+          <circle cx="60" cy="60" r="57" fill="none" stroke="#e8590c" stroke-width="2.5"/>
+          <circle cx="60" cy="60" r="40" fill="none" stroke="#e8590c" stroke-width="1.2" stroke-dasharray="3 4"/>
+          <text x="60" y="24" text-anchor="middle">ZONGBAOSHUO · EST.2023</text>
+          <text x="60" y="106" text-anchor="middle">数字资产 · 已验收</text>
+          <g class="seal-core"><path d="M60 46 l14 8 v16 l-14 8 -14 -8 v-16 z"/></g>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <div class="marq" aria-hidden="true">
+    <div class="marq-track">
+      <div class="marq-g"><i>◆</i><b>1000+</b>信源持续采集<i>◆</i><b>每30分钟</b>全网扫描一轮<i>◆</i><b>25,000+篇</b>语料在库<i>◆</i><b>172,591篇</b>喂出3,983条商机<i>◆</i><b>1000座</b>子知识库<i>◆</i><b>110+份</b>AI研报已交付<i>◆</i><b>996次</b>无人值守迭代<i>◆</i><b>4,717条</b>测试全绿<i>◆</i><b>24万</b>短视频播放<i>◆</i><b>43,053</b>次内容转发<i>◆</i><b>8条</b>产品线在役<i>◆</i><b>7×24</b>不停转</div>
+      <div class="marq-g"><i>◆</i><b>1000+</b>信源持续采集<i>◆</i><b>每30分钟</b>全网扫描一轮<i>◆</i><b>25,000+篇</b>语料在库<i>◆</i><b>172,591篇</b>喂出3,983条商机<i>◆</i><b>1000座</b>子知识库<i>◆</i><b>110+份</b>AI研报已交付<i>◆</i><b>996次</b>无人值守迭代<i>◆</i><b>4,717条</b>测试全绿<i>◆</i><b>24万</b>短视频播放<i>◆</i><b>43,053</b>次内容转发<i>◆</i><b>8条</b>产品线在役<i>◆</i><b>7×24</b>不停转</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 数据带 ================= -->
+<div class="stats">
+  <div class="stats-in">
+    <div class="stat"><div class="n">8<small>条</small></div><div class="l">产品线全部在役</div></div>
+    <div class="stat"><div class="n">1000<small>+</small></div><div class="l">信源持续采集</div></div>
+    <div class="stat"><div class="n">25,000<small>+篇</small></div><div class="l">语料持续入库</div></div>
+    <div class="stat"><div class="n">4,717<small>条</small></div><div class="l">测试全部通过</div></div>
+    <div class="stat"><div class="n">110<small>+份</small></div><div class="l">AI研报已交付</div></div>
+    <div class="stat"><div class="n">7×24</div><div class="l">无人值守运转</div></div>
+  </div>
+</div>
+
+<!-- ================= AI 原生宣言 ================= -->
+<section class="native" id="native">
+  <canvas id="npfx" aria-hidden="true"></canvas>
+  <div class="prod-in">
+    <p class="eyebrow rv">DOCTRINE · 我们的独门见解</p>
+    <h2 class="native-title rv">兵马与粮草：<em>我们投的是粮草</em></h2>
+    <p class="native-lede rv">全行业的目光都盯在「兵马」上——更大的模型、更强的算力、更炫的演示。我们的判断恰恰相反：<b>大模型会成为水电煤，人人可得；真正稀缺的，是喂饱它的行业粮草</b>。三年前我们开始攒，今天还在攒，明天也不会停。</p>
+    <div class="native-grid">
+      <div class="ncell rv"><div class="ico">壹</div><h3>大模型是兵马<i>COMMODITY</i></h3><p>模型能力每半年翻一番，价格每半年降一截。<b>今天花大钱建的能力，明年人人买得起</b>——投资兵马，护城河会自己蒸发。</p></div>
+      <div class="ncell rv d1"><div class="ico">贰</div><h3>行业语料是粮草<i>SCARCE</i></h3><p>工程行业的资讯、政策、判例、企业动态散落全网，<b>必须一天一天采集、清洗、结构化</b>。这个时间差，就是我们的窗口。</p></div>
+      <div class="ncell rv d2"><div class="ico">叁</div><h3>粮草要自己长<i>COMPOUND</i></h3><p>我们的管线 7×24 自动运转：<b>采得越多，产品越准；产品越准，用户越多；用户越多，采得越多</b>——一个会自己长大的飞轮。</p></div>
+    </div>
+    <svg class="rv" viewBox="0 0 1040 300" role="img" aria-label="粮草飞轮：采集-评分-入库-喂养-更准-更多用户的自转循环" style="display:block;width:100%;height:auto;margin-top:26px;font-family:var(--sans)">
+      <defs><marker id="fwA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ff7a1a"/></marker></defs>
+      <g stroke="#8fb0ff" stroke-width="2" fill="none" marker-end="url(#fwA)">
+        <path d="M627.6,172.9 A110,110 0 0 1 593.4,231.8"/>
+        <path d="M554,254.7 A110,110 0 0 1 486,254.7"/>
+        <path d="M446.6,231.8 A110,110 0 0 1 412.4,172.9"/>
+        <path d="M412.4,127.1 A110,110 0 0 1 446.6,68.2"/>
+        <path d="M486,45.4 A110,110 0 0 1 554,45.4"/>
+        <path d="M593.4,68.2 A110,110 0 0 1 627.6,127.1"/>
+      </g>
+      <g>
+        <rect x="568" y="133" width="124" height="34" rx="17" fill="rgba(255,255,255,.08)" stroke="rgba(143,176,255,.55)" stroke-width="1.2"/>
+        <text x="630" y="155" text-anchor="middle" font-size="13" font-weight="700" fill="#e9ecf4">自动采集</text>
+        <rect x="513" y="228" width="124" height="34" rx="17" fill="rgba(255,255,255,.08)" stroke="rgba(143,176,255,.55)" stroke-width="1.2"/>
+        <text x="575" y="250" text-anchor="middle" font-size="13" font-weight="700" fill="#e9ecf4">清洗评分</text>
+        <rect x="403" y="228" width="124" height="34" rx="17" fill="rgba(255,255,255,.08)" stroke="rgba(143,176,255,.55)" stroke-width="1.2"/>
+        <text x="465" y="250" text-anchor="middle" font-size="13" font-weight="700" fill="#e9ecf4">结构化入库</text>
+        <rect x="348" y="133" width="124" height="34" rx="17" fill="rgba(255,255,255,.08)" stroke="rgba(143,176,255,.55)" stroke-width="1.2"/>
+        <text x="410" y="155" text-anchor="middle" font-size="13" font-weight="700" fill="#e9ecf4">喂养产品</text>
+        <rect x="403" y="38" width="124" height="34" rx="17" fill="rgba(255,255,255,.08)" stroke="rgba(143,176,255,.55)" stroke-width="1.2"/>
+        <text x="465" y="60" text-anchor="middle" font-size="13" font-weight="700" fill="#e9ecf4">回答更准</text>
+        <rect x="513" y="38" width="124" height="34" rx="17" fill="rgba(255,255,255,.08)" stroke="rgba(143,176,255,.55)" stroke-width="1.2"/>
+        <text x="575" y="60" text-anchor="middle" font-size="13" font-weight="700" fill="#e9ecf4">用户更多</text>
+      </g>
+      <text x="520" y="143" text-anchor="middle" font-size="19" font-weight="900" fill="#fff" font-family="Songti SC,STSong,SimSun,serif">粮草飞轮</text>
+      <text x="520" y="168" text-anchor="middle" font-size="11.5" fill="#93a1c2" letter-spacing="2">7×24 自转不停</text>
+      <text x="175" y="140" text-anchor="middle" font-size="12.5" fill="#8fb0ff" letter-spacing="1">资产侧</text>
+      <text x="175" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#dbe2f2">入库 → 供弹</text>
+      <text x="175" y="182" text-anchor="middle" font-size="11.5" fill="#93a1c2">采得越多 · 产品越准</text>
+      <text x="865" y="140" text-anchor="middle" font-size="12.5" fill="#8fb0ff" letter-spacing="1">用户侧</text>
+      <text x="865" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#dbe2f2">提问 → 回流</text>
+      <text x="865" y="182" text-anchor="middle" font-size="11.5" fill="#93a1c2">用户越多 · 采集越广</text>
+      <text x="520" y="292" text-anchor="middle" font-size="12.5" fill="#93a1c2">飞轮每转一圈，资产就厚一层——别人抢兵马，我们给飞轮上油</text>
+    </svg>
+    <div class="pin-line rv">别人抢兵马，我们囤粮草——<em>十年后见分晓</em></div>
+  </div>
+</section>
+
+<!-- ================= 四重价值 ================= -->
+<section class="unity" id="value">
+  <div class="prod-in">
+    <p class="eyebrow rv">FOUR VALUES · 我们对谁有用</p>
+    <h2 class="unity-title rv">总包说靠什么立足：<em style="font-style:normal;color:var(--acc)">对四类人有用</em></h2>
+    <p class="unity-lede rv">工具给工程人用，资产让同行者看，知识为行业沉淀，安全替社会值守——<b>四重价值，共用同一个粮仓</b>：三年攒下的行业语料，和八条 7×24 运转的产品线。</p>
+    <div class="unity-grid">
+      <div class="ucell rv"><span class="role">01 · 对用户</span><h3>一个人，就是一支队伍<i>FOR ENGINEERS</i></h3><p>工程豹免费读，每天省 80% 刷资讯的时间；365 元把「不下班的老专家」装进手机；眼镜替你盯住 1350+ 条安全条款；要深研有研报，要弹药有弹药——<b>每件工具，今天就能上手</b>。</p><span class="ud">»工具，拿来就用</span></div>
+      <div class="ucell rv d1"><span class="role">02 · 对投资人</span><h3>稀缺资产在复利<i>FOR INVESTORS</i></h3><p>行业语料是粮草——<b>模型人人买得起，三年时间差谁也抄不走</b>；五台收银机三台已响铃：订阅在收费、研报在交付、样机在手。八件产品咬合成一套，我们至今没见到第二家。</p><span class="ud">»不是 PPT 公司</span></div>
+      <div class="ucell rv d2"><span class="role">03 · 对行业</span><h3>知识变成公共设施<i>FOR THE INDUSTRY</i></h3><p>散落全网的政策、法规、判例、企业动态，被一条管线结构化成<b>成体系、可检索、持续更新</b>的行业知识层；研究产能从人海变管线——中小院所，也用得起顶配的调研。</p><span class="ud">»行业数字化的一块真砖</span></div>
+      <div class="ucell rv d3"><span class="role">04 · 对社会</span><h3>工地更安全，知识更平等<i>FOR SOCIETY</i></h3><p>1300+ 部安全法规装进 49 克的眼镜——<b>隐患不过夜，生命有防线</b>；偏远项目部的年轻人与顶级专家同屏问答——知识平权，正在工程行业发生。</p><span class="ud">»安全是最大的公益</span></div>
+    </div>
+    <p class="pin-line rv">用户得到效率，行业得到设施，社会得到安全——<em>同行者得到一份会自己长厚的资产</em></p>
+  </div>
+</section>
+
+<!-- ================= ACT 01 · 资产盘点 ================= -->
+<section class="product" id="assets">
+  <div class="prod-in">
+    <p class="eyebrow rv">ACT 01 · 三年家底</p>
+    <h2 class="native-title rv" style="color:var(--ink)">十年凿井，<em>井井见油</em></h2>
+    <p class="native-lede rv" style="color:var(--mut)">先看家底。我们的核心资产不在资产负债表上，而在服务器里——<b style="color:var(--ink)">每一天都在自动生长、越攒越值钱</b>。下面这张盘点表，就是十年凿井的出水记录。</p>
+    <div class="ledger rv">
+      <div class="ledger-head"><b>数字资产盘点表</b><span>截至 2026-09 · 持续增持中</span></div>
+      <div class="ledger-row">
+        <div class="cat">语料资产<i>FEEDSTOCK</i></div>
+        <div class="desc">1000+ 信源 × 每 30 分钟 × 三年，中英双语采集，<b>25,000+ 篇清洗、评分、结构化入库</b>——这是喂饱一切产品的原粮。</div>
+        <div class="val">1000+<i>源</i><small>25,000+ 篇在库</small></div>
+      </div>
+      <div class="ledger-row">
+        <div class="cat">知识资产<i>KNOWLEDGE</i></div>
+        <div class="desc"><b>1000 座子知识库</b>，覆盖 1800+ 课程、251+ 政策（国家 + 29 省）、1300+ 部法规、490 页实务手册——工程行业的「经史子集」，成体系、可检索、可喂养。</div>
+        <div class="val">1000<i>座</i><small>子知识库</small></div>
+      </div>
+      <div class="ledger-row">
+        <div class="cat">产能资产<i>PRODUCTION</i></div>
+        <div class="desc">研究工厂已交付 <b>110+ 份 AI 深度研报</b>；385 页浙江市场研报从 172,591 篇语料中提炼出 <b>3,983 条商机管线</b>——资产到收入的完整链路已经跑通。</div>
+        <div class="val">110+<i>份</i><small>3,983 条商机</small></div>
+      </div>
+      <div class="ledger-row">
+        <div class="cat">工程资产<i>ENGINEERING</i></div>
+        <div class="desc">自媒永动机 90 天 <b>996 次无人值守迭代</b>、420 个模块、82,406 行代码、4,717 条测试全绿——产能不再是人力问题，是电力问题。</div>
+        <div class="val">996<i>次</i><small>4,717 测试全绿</small></div>
+      </div>
+      <div class="ledger-row">
+        <div class="cat">流量资产<i>AUDIENCE</i></div>
+        <div class="desc">永动机日产 18 篇图文 + 20 条视频，累计 <b>24 万播放、43,053 次转发</b>——资产不仅在库里，也在市场上持续换回注意力。</div>
+        <div class="val">24万<i>播放</i><small>43,053 次转发</small></div>
+      </div>
+    </div>
+    <p class="subsec rv"><b>复利公式</b> · 这张表为什么会自己长大</p>
+    <div class="flow rv">
+      <span class="fn">自动采集</span><span class="fa">→</span>
+      <span class="fn">清洗评分</span><span class="fa">→</span>
+      <span class="fn">结构化入库</span><span class="fa">→</span>
+      <span class="fn">越攒越厚</span><span class="fa">→</span>
+      <span class="fn hot">喂养全线产品 ∞</span>
+    </div>
+    <p class="pin-line rv">代码可以抄，产品可以仿——<em>三年攒下的时间，谁也抄不走</em></p>
+    <svg class="rv" viewBox="0 0 1040 312" role="img" aria-label="成长阶梯：2023到2026五级真实里程碑，一路涨到八线在役" style="display:block;width:100%;height:auto;margin-top:14px;font-family:var(--sans)">
+      <line x1="30" y1="290" x2="1010" y2="290" stroke="#182236" stroke-width="2"/>
+      <g>
+        <rect x="30" y="230" width="150" height="60" fill="#faf8f2" stroke="#182236" stroke-width="1.6"/>
+        <text x="105" y="212" text-anchor="middle" font-size="11" font-weight="700" fill="#e8590c" letter-spacing="1">2023.08</text>
+        <text x="105" y="196" text-anchor="middle" font-size="13" font-weight="900" fill="#182236">总包GPT 上线</text>
+        <text x="105" y="272" text-anchor="middle" font-size="11.5" fill="#3c4962">240 位工程人率先用上</text>
+        <rect x="235" y="185" width="150" height="105" fill="#faf8f2" stroke="#182236" stroke-width="1.6"/>
+        <text x="310" y="167" text-anchor="middle" font-size="11" font-weight="700" fill="#e8590c" letter-spacing="1">2025.12</text>
+        <text x="310" y="151" text-anchor="middle" font-size="13" font-weight="900" fill="#182236">眼镜样机 0.5</text>
+        <text x="310" y="247" text-anchor="middle" font-size="11.5" fill="#3c4962">软件能力第一次</text>
+        <text x="310" y="266" text-anchor="middle" font-size="11.5" fill="#3c4962">装进硬件</text>
+        <rect x="440" y="140" width="150" height="150" fill="#faf8f2" stroke="#182236" stroke-width="1.6"/>
+        <text x="515" y="122" text-anchor="middle" font-size="11" font-weight="700" fill="#e8590c" letter-spacing="1">2026.03</text>
+        <text x="515" y="106" text-anchor="middle" font-size="13" font-weight="900" fill="#182236">工程豹试运行</text>
+        <text x="515" y="212" text-anchor="middle" font-size="11.5" fill="#3c4962">采掘前端上线</text>
+        <text x="515" y="231" text-anchor="middle" font-size="11.5" fill="#3c4962">信源规模化起跑</text>
+        <rect x="645" y="90" width="150" height="200" fill="#faf8f2" stroke="#182236" stroke-width="1.6"/>
+        <text x="720" y="72" text-anchor="middle" font-size="11" font-weight="700" fill="#e8590c" letter-spacing="1">2026.06</text>
+        <text x="720" y="56" text-anchor="middle" font-size="13" font-weight="900" fill="#182236">眼镜研制成功</text>
+        <text x="720" y="180" text-anchor="middle" font-size="11.5" fill="#3c4962">首批 80 座知识库</text>
+        <text x="720" y="199" text-anchor="middle" font-size="11.5" fill="#3c4962">开放</text>
+        <rect x="850" y="40" width="150" height="250" fill="#e8590c" stroke="#182236" stroke-width="1.6"/>
+        <text x="925" y="24" text-anchor="middle" font-size="11" font-weight="700" fill="#e8590c" letter-spacing="1">2026.09 · 今天</text>
+        <text x="925" y="130" text-anchor="middle" font-size="14" font-weight="900" fill="#fff">八线在役</text>
+        <text x="925" y="158" text-anchor="middle" font-size="11" fill="#ffe3cf">1000 座子库</text>
+        <text x="925" y="176" text-anchor="middle" font-size="11" fill="#ffe3cf">25,000+ 篇语料</text>
+        <text x="925" y="194" text-anchor="middle" font-size="11" fill="#ffe3cf">4,717 测试全绿</text>
+        <text x="925" y="212" text-anchor="middle" font-size="11" fill="#ffe3cf">7×24 无人值守</text>
+      </g>
+    </svg>
+  </div>
+</section>
+<!-- ================= 八位一体 ================= -->
+<section class="unity" id="system">
+  <div class="prod-in">
+    <p class="eyebrow rv">ARCHITECTURE · 产品矩阵</p>
+    <h2 class="unity-title rv">不是八个工具，<em style="font-style:normal;color:var(--acc)">是一套越走越深的打法</em></h2>
+    <p class="unity-lede rv">看懂总包说科技，最短路径是这张图：八条产品线按<b>价值阶梯</b>排开——从免费好用到具身智能，越往上价值越大；而每一级，又同时是下一级的<b>原料供应商</b>。单看任何一件产品都有对手；八件咬合成一套的打法，我们至今没见到第二家。</p>
+    <div class="unity-grid">
+      <div class="ucell rv"><span class="role">01 · 采集前端 · 免费有意思</span><h3>工程豹<i>gcblog.net</i></h3><p>全网工程资讯的免费精选平台，管线的采掘铲斗，持续把行业语料挖进库</p><span class="ud">»语料从这进</span></div>
+      <div class="ucell rv"><span class="role">02 · 智能中枢 · 随身就有用</span><h3>工程大脑<i>1000 座子库</i></h3><p>把知识资产变成随身顾问：7×24 答得准、答得快、答得有出处</p><span class="ud">»知识在这说话</span></div>
+      <div class="ucell rv"><span class="role">03 · 资产底座 · 越挖越厚</span><h3>总包智库<i>四库全通</i></h3><p>市场 / 企业 / 专家 / 知识四座金库，三年语料沉淀成的结构化资产层</p><span class="ud">»语料在这变钱</span></div>
+      <div class="ucell rv"><span class="role">04 · 产能引擎 · 产能成规模</span><h3>研究工厂<i>110+ 份研报</i></h3><p>语料进、研报出，全自动生产线——产能不靠人海，靠管线</p><span class="ud">»资产在这变现</span></div>
+      <div class="ucell rv"><span class="role">05 · 获客引擎 · 创意自己跑</span><h3>自媒永动机<i>996 次迭代</i></h3><p>7×24 自产自发自复盘，24 万播放——产品自己会吆喝</p><span class="ud">»流量自己长</span></div>
+      <div class="ucell rv"><span class="role">06 · 本地底座 · 进您机房</span><h3>AI工作站<i>1730+ 测试</i></h3><p>数据不出门的私有化底座，工程级严苛质检，企业侧的信任根</p><span class="ud">»数据留在本地</span></div>
+      <div class="ucell rv"><span class="role">07 · 硬件触角 · 能力上身</span><h3>安全AI眼镜<i>样机已成</i></h3><p>把大脑戴上安全帽：第一视角看见隐患、开口就是整改单</p><span class="ud">»能力长到身上</span></div>
+      <div class="ucell rv"><span class="role">08 · 具身终端 · 终局会师</span><h3>顾问机器人<i>Zeroth Bridge</i></h3><p>八线能力装进人形机器人——旗舰级交付形态，最后一米</p><span class="ud">»全线在此会师</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 01 工程豹 ================= -->
+<section class="product" id="leopard">
+  <div class="prod-in">
+    <div class="sheet rv">
+      <div class="sheet-rail"><span class="no">01</span><span class="bar-v"></span><span class="zh">工程豹</span></div>
+      <div class="sheet-body">
+        <p class="eyebrow">GC LEOPARD · gcblog.net · LADDER 01</p>
+        <div class="prod-title"><h2>工程豹</h2><span class="en">工程人的AI资讯精选 · 数字管线第一环</span></div>
+        <p class="prod-pos">价值阶梯第一级，<b>免费有意思</b>。遇见 AI 时代的工程阅读——免费开放的工程资讯精选平台，更是我们<b>数字资产管线的采掘前端</b>。</p>
+        <div class="prod-cols">
+          <ul class="feat">
+            <li><b>1000+ 信源 · 7×24 聚合</b><span class="sub">每 30 分钟全网扫描一轮，中英双语，从不间断</span></li>
+            <li><b>AI 熵减引擎</b><span class="sub">机器先读一遍：0-100 评分、3 秒摘要、自动打标——读者只见精华</span></li>
+            <li><b>专家把关的方法学</b><span class="sub">评分公式 40-30-20-10 公开透明，90 分才进精选，拒绝算法黑箱</span></li>
+            <li><b>17 频道 × 30+ 子行业</b><span class="sub">从招投标到新能源，从央国企动态到地方债——工程全域覆盖</span></li>
+            <li><b>34 省一手政策直达</b><span class="sub">源头抓取、原文入库，政策不二手、不过夜</span></li>
+            <li><b>三层价值设计</b><span class="sub">给人看：每天少花 80% 刷资讯时间；给 AI 用：全线产品的备料库</span></li>
+          </ul>
+          <div class="metrics">
+            <div class="metric"><div class="v">1000<i>+</i></div><div class="k">在采信源</div></div>
+            <div class="metric"><div class="v">30<i>min</i></div><div class="k">扫描周期</div></div>
+            <div class="metric"><div class="v">17<i>个</i></div><div class="k">内容频道</div></div>
+            <div class="metric"><div class="v">34<i>省</i></div><div class="k">政策一手抓</div></div>
+            <div class="metric wide"><div class="v">40-30-20-10</div><div class="k">公开评分公式 · 90 分才精选</div></div>
+          </div>
+        </div>
+        <figure class="fig rv" style="margin-top:26px">
+          <img class="fig-img" src="shot-leopard.jpg" alt="工程豹产品首页——今日精选与工程资讯流" loading="lazy" width="1440" height="900">
+          <figcaption class="fig-cap"><b>工程豹 · 产品首页（gcblog.net）</b><i>免费开放 · 今日已更新</i></figcaption>
+        </figure>
+        <p class="subsec"><b>运转链</b> · 一条资讯的旅程</p>
+        <div class="flow">
+          <span class="fn">全网聚合</span><span class="fa">→</span>
+          <span class="fn">AI 熵减评分</span><span class="fa">→</span>
+          <span class="fn">专家把关</span><span class="fa">→</span>
+          <span class="fn">结构化入库</span><span class="fa">→</span>
+          <span class="fn hot">喂养全线产品 ∞</span>
+        </div>
+        <svg class="rv" viewBox="0 0 1040 312" role="img" aria-label="熵减漏斗：1000+信源层层筛选到结构化入库" style="display:block;width:100%;height:auto;margin-top:14px;font-family:var(--sans)">
+          <defs><linearGradient id="funG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#faf8f2"/><stop offset="1" stop-color="#ece8db"/></linearGradient></defs>
+          <polygon points="70,6 970,6 710,300 330,300" fill="url(#funG)" stroke="#182236" stroke-width="2"/>
+          <polygon points="275,238 765,238 710,300 330,300" fill="#182236"/>
+          <line x1="121.5" y1="64" x2="918.5" y2="64" stroke="rgba(24,34,54,.4)" stroke-dasharray="5 4"/>
+          <line x1="222.5" y1="122" x2="817.5" y2="122" stroke="rgba(24,34,54,.4)" stroke-dasharray="5 4"/>
+          <line x1="224" y1="180" x2="816" y2="180" stroke="rgba(24,34,54,.4)" stroke-dasharray="5 4"/>
+          <line x1="275" y1="238" x2="765" y2="238" stroke="#182236" stroke-width="1.5"/>
+          <text x="520" y="41" text-anchor="middle" font-size="15.5" font-weight="700" fill="#182236"><tspan fill="#e8590c" font-weight="900">1000+</tspan> 信源 · 中英双语 7×24 聚合</text>
+          <text x="520" y="99" text-anchor="middle" font-size="14.5" font-weight="600" fill="#3c4962">每 <tspan fill="#e8590c" font-weight="900">30</tspan> 分钟 · 全网扫描一轮</text>
+          <text x="520" y="157" text-anchor="middle" font-size="14.5" font-weight="600" fill="#3c4962">AI 熵减引擎 · 评分 / 摘要 / 打标</text>
+          <text x="520" y="215" text-anchor="middle" font-size="14.5" font-weight="600" fill="#3c4962">专家把关 · <tspan fill="#e8590c" font-weight="900">90</tspan> 分才进精选</text>
+          <text x="520" y="276" text-anchor="middle" font-size="15" font-weight="700" fill="#f4f1e8">结构化入库 · 喂养全线产品</text>
+        </svg>
+        <div class="only-line"><span class="stamp">底牌</span><p>表面是免费阅读产品，底牌是<b>语料资产的前端采集器</b>：用户免费读精选，管线默默攒原粮——免费，是因为它生产的数据本身就是收入。</p></div>
+        <p class="pin-line">每天替工程人省下 80% 的刷资讯时间，<em>顺便替我们攒下整个行业</em></p>
+        <div class="tags"><span class="hot">免费开放</span><span>gcblog.net</span><span>中英双语</span><span>AI 评分</span><span>政策直达</span><span>资产管线</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ================= 02 工程大脑 ================= -->
+<section class="product" id="brain">
+  <div class="prod-in">
+    <div class="sheet rv">
+      <div class="sheet-rail"><span class="no">02</span><span class="bar-v"></span><span class="zh">工程大脑</span></div>
+      <div class="sheet-body">
+        <p class="eyebrow">ENGINEERING BRAIN · 智能中枢 · LADDER 02</p>
+        <div class="prod-title"><h2>工程大脑</h2><span class="en">把知识资产变成随身顾问</span></div>
+        <p class="prod-pos">价值阶梯第二级，<b>随身就有用</b>。从 2023 年行业首个总包GPT，到今天 <b>1000 座子知识库</b>的工程行业大脑——<b>答得准、答得快、答得有出处</b>。</p>
+        <div class="prod-cols">
+          <ul class="feat">
+            <li><b>三年进化史，一步没停</b><span class="sub">2023.08 总包GPT 上线（据我们所知是建设工程行业最早的 GPT 应用之一，240 人率先使用）→ 2026.06.28 首批 80 座子知识库开放 → 升级为工程行业大脑</span></li>
+            <li><b>1000 座子知识库</b><span class="sub">每个专业话题一座专属库，问什么都在库里有据可查——不是泛泛聊天，是专业应答</span></li>
+            <li><b>759 个信源直连</b><span class="sub">回答背后是持续更新的活水，不是过时快照</span></li>
+            <li><b>7×24 随身顾问</b><span class="sub">手机上随时问：条款、案例、政策、价格——工地上的疑问不过夜</span></li>
+            <li><b>订阅制已跑通</b><span class="sub">365 元 / 年，前 200 名赠 608 元智库 VIP——软硬件联动，一票双库</span></li>
+          </ul>
+          <div class="metrics">
+            <div class="metric"><div class="v">1000<i>座</i></div><div class="k">子知识库</div></div>
+            <div class="metric"><div class="v">759<i>源</i></div><div class="k">信源直连</div></div>
+            <div class="metric"><div class="v">2023<i>年</i></div><div class="k">行业先行 · 三年迭代</div></div>
+            <div class="metric"><div class="v">240<i>人</i></div><div class="k">首批真实用户</div></div>
+            <div class="metric wide"><div class="v">365<i>元/年</i></div><div class="k">订阅制已跑通 · 前 200 名赠 608 元智库 VIP</div></div>
+          </div>
+        </div>
+        <div class="only-line"><span class="stamp">验证</span><p>通用大模型谁都能问，但<b>工程问题的答案在行业库里</b>——这正是「粮草先行」最直接的变现出口：订阅收入已经到账。</p></div>
+        <p class="pin-line">让每位工程师兜里，都装着一位<em>不下班的老专家</em></p>
+        <div class="qr-inline">
+          <div class="qr-box"><img src="qrcode-brain-mini.png" alt="工程大脑微信小程序码"></div>
+          <div class="qr-txt"><b>微信扫码 · 立即体验工程大脑</b><p>扫一扫打开小程序，把<b>不下班的老专家</b>装进手机——365 元/年随身问，前 200 名再赠 <b>608 元</b>智库 VIP。</p></div>
+        </div>
+        <div class="tags"><span class="hot">订阅在售</span><span>2023 行业先行</span><span>1000 子库</span><span>759 信源</span><span>移动随身</span><span>有据可查</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ================= 03 总包智库 ================= -->
+<section class="product" id="zhiku">
+  <div class="prod-in">
+    <div class="sheet rv">
+      <div class="sheet-rail"><span class="no">03</span><span class="bar-v"></span><span class="zh">总包智库</span></div>
+      <div class="sheet-body">
+        <p class="eyebrow">ZONGBA ZHIKU · 四库全通 · LADDER 03</p>
+        <div class="prod-title"><h2>总包智库</h2><span class="en">三年语料沉淀的结构化资产层</span></div>
+        <p class="prod-pos">价值阶梯第三级，<b>越挖越厚</b>。工程行业的四座金库——<b>每一座都由 7×24 管线三年攒成</b>，别人想抄，先补三年课。</p>
+        <div class="prod-cols">
+          <ul class="feat">
+            <li><b>市场库 · 商机雷达</b><span class="sub">385 页浙江市场研报从 172,591 篇语料中筛出 3,983 条商机；甘肃、新疆、西藏、湖北、河南已上新，抽水蓄能 / 风电 / 储能 / 城市更新细分研报持续出库</span></li>
+            <li><b>企业库 · 百强深描</b><span class="sub">百强企业 30 万字画像 + 中铁设计 15.4 万字麦肯锡式拆解——每一家都值得一份档案</span></li>
+            <li><b>专家库 · 大家都在</b><span class="sub">朱树英、尹贻林、王先伟、李芊、衡臣、马楠、袁华之、韩如波、周显峰、谢洪学、宋丰涛 11 位大家 + 27 期「大家谈」实录</span></li>
+            <li><b>知识库 · 行业经史</b><span class="sub">1800+ 课程、251+ 政策（国家 + 29 省）、515 场直播、226 套表单、490 页实务手册</span></li>
+            <li><b>VIP 一票四库</b><span class="sub">398 元 / 年，四库全通——工程行业最厚的一份年卡</span></li>
+          </ul>
+          <div class="metrics">
+            <div class="metric"><div class="v">172,591<i>篇</i></div><div class="k">语料喂入市场库</div></div>
+            <div class="metric"><div class="v">3,983<i>条</i></div><div class="k">商机管线产出</div></div>
+            <div class="metric"><div class="v">11<i>位</i></div><div class="k">顶级专家入库</div></div>
+            <div class="metric"><div class="v">1800<i>+</i></div><div class="k">结构化课程</div></div>
+            <div class="metric wide"><div class="v">398<i>元/年</i></div><div class="k">VIP 四库全通</div></div>
+          </div>
+        </div>
+        <div class="only-line"><span class="stamp">独一份</span><p>市面上的智库卖报告，我们卖<b>会自己长厚的库</b>——数据每天入库，您买到的是一份复利资产的使用权。</p></div>
+        <p class="pin-line">别人把知识当商品卖，<em>我们把知识当资产攒</em></p>
+        <div class="qr-inline">
+          <div class="qr-box"><img src="qrcode-zhiku.png" alt="总包智库官网二维码"></div>
+          <div class="qr-txt"><b>扫码直达 · 总包智库官网</b><p>市场、企业、专家、知识四座金库，扫码即逛、看到再买——四库全通 <b>398 元/年</b>，数据每天还在自动入库。</p></div>
+        </div>
+        <div class="tags"><span class="hot">四库全通</span><span>385页浙江研报</span><span>1300+法规</span><span>251+政策</span><span>515场直播</span><span>持续出库</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ================= 04 研究工厂 ================= -->
+<section class="product" id="factory">
+  <div class="prod-in">
+    <div class="sheet rv">
+      <div class="sheet-rail"><span class="no">04</span><span class="bar-v"></span><span class="zh">研究工厂</span></div>
+      <div class="sheet-body">
+        <p class="eyebrow">RESEARCH FACTORY · 产能引擎 · LADDER 04</p>
+        <div class="prod-title"><h2>研究工厂</h2><span class="en">语料进 · 研报出 · 全自动</span></div>
+        <p class="prod-pos">价值阶梯第四级，<b>产能成规模</b>。别人写研报靠研究员，我们出研报靠<b>生产线</b>——百万字弹药深度研究，产多少取决于开多少班。</p>
+        <div class="prod-cols">
+          <ul class="feat">
+            <li><b>110+ 份 AI 深度研报已发布</b><span class="sub">工程百强逐家深研——每份都是千万字级弹药喂出来的硬货</span></li>
+            <li><b>100 家在研 · 流水线并行</b><span class="sub">EPC100 工程：百强榜逐家开卷，队列自动推进</span></li>
+            <li><b>21+ 渠道全渠道取证</b><span class="sub">官网、微信、论文、视频、政策、判例……每份研报都过完备门，静默缺席不许收官</span></li>
+            <li><b>千万字弹药库供弹</b><span class="sub">证据饱和引擎双门准入：字数门 × 饱和门——不达世界顶级水准不出厂</span></li>
+            <li><b>从研报到商机</b><span class="sub">385 页浙江研报 = 3,983 条商机管线：研报不是纸上文章，是销售弹药</span></li>
+          </ul>
+          <div class="metrics">
+            <div class="metric"><div class="v">110<i>+份</i></div><div class="k">研报已发布</div></div>
+            <div class="metric"><div class="v">100<i>家</i></div><div class="k">在研流水线</div></div>
+            <div class="metric"><div class="v">21<i>+渠道</i></div><div class="k">全渠道取证</div></div>
+            <div class="metric"><div class="v">1000万<i>字</i></div><div class="k">弹药深度研究</div></div>
+            <div class="metric wide"><div class="v">3,983<i>条</i></div><div class="k">385 页浙江研报产出商机</div></div>
+          </div>
+        </div>
+        <figure class="fig rv" style="margin-top:26px">
+          <img class="fig-img" src="shot-factory-ui.jpg" alt="研究工厂知识弹药与深度研究工作台界面" loading="lazy" width="1050" height="811">
+          <figcaption class="fig-cap"><b>研究工厂 · 知识弹药与深度研究工作台</b><i>12万+ 知识文档供弹 · 快思考/深度研究双模式</i></figcaption>
+        </figure>
+        <div class="only-line"><span class="stamp">护城河</span><p>研报行业的人力模型是「一个专家带三个助理」；我们的模型是<b>一条管线带 21 个渠道</b>——产能差距，会随时间持续拉开。</p></div>
+        <p class="pin-line">研报行业的「人海战术」撞上<em>我们的「弹药流水线」</em></p>
+        <div class="tags"><span class="hot">110+ 份已交付</span><span>EPC100 工程</span><span>证据饱和双门</span><span>21+ 渠道</span><span>按份计价</span><span>商机管线</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ================= 05 自媒永动机 ================= -->
+<section class="product" id="aipo">
+  <div class="prod-in">
+    <div class="sheet rv">
+      <div class="sheet-rail"><span class="no">05</span><span class="bar-v"></span><span class="zh">自媒永动机</span></div>
+      <div class="sheet-body">
+        <p class="eyebrow">WE-AIPO PERPETUAL ENGINE · 获客引擎 · LADDER 05</p>
+        <div class="prod-title"><h2>自媒永动机</h2><span class="en">7×24 自产 · 自发 · 自复盘</span></div>
+        <p class="prod-pos">价值阶梯第五级，<b>AI 人眼里的创意天花板</b>。一台<b>不需要人盯的内容发电站</b>：每天 17:00 自动醒来，897 个信源里刨选题，一夜成稿成片，天亮自复盘——传统内容团队要排班分工人盯的活，它全自动完成。</p>
+        <div class="prod-cols">
+          <ul class="feat">
+            <li><b>897 源 · 千分之三到百分之三的过筛率</b><span class="sub">宁可错杀一千不可放过一个——每天从海量资讯里只留最锋利的选题</span></li>
+            <li><b>三个好问题 × 六种人设</b><span class="sub">同一选题六种视角开花，「一鱼多吃」三形态分发，一份素材吃干榨净</span></li>
+            <li><b>85 套主题模板 + 广告位体系</b><span class="sub">内容工业化：模板填空式成稿，广告位随内容自动排期</span></li>
+            <li><b>六维复盘 · 60 分干到 92 分</b><span class="sub">每晚自动打分、自动归因、自动改进——越写越懂流量</span></li>
+            <li><b>90 天硬账全公开</b><span class="sub">996 次迭代（日均 21 次）· 420 个模块 · 82,406 行代码 · 413 个测试文件 4,717 条测试全绿 · 连续多日完全无人值守自处理数百次突发</span></li>
+          </ul>
+          <div class="metrics">
+            <div class="metric"><div class="v">897<i>源</i></div><div class="k">信源持续供题</div></div>
+            <div class="metric"><div class="v">996<i>次</i></div><div class="k">90 天无人迭代</div></div>
+            <div class="metric"><div class="v">60→92<i>分</i></div><div class="k">六维复盘自进化</div></div>
+            <div class="metric"><div class="v">90<i>天</i></div><div class="k">硬账全公开</div></div>
+            <div class="metric wide"><div class="v">18篇+20条<i>/日</i></div><div class="k">图文 + 视频日产能 · 无人值守</div></div>
+          </div>
+        </div>
+        <div class="bignums">
+          <div class="bignum"><div class="v">24万<i>播放</i></div><div class="k">短视频累计</div></div>
+          <div class="bignum"><div class="v">43,053<i>转发</i></div><div class="k">内容被主动转发</div></div>
+          <div class="bignum flag"><div class="v">82,406<i>行</i></div><div class="k">全自动产出的代码资产</div></div>
+        </div>
+        <figure class="fig rv" style="margin-top:26px">
+          <img class="fig-img" src="shot-aipo.jpg" alt="自媒永动机生产线监控面板实况" loading="lazy" width="1440" height="668">
+          <figcaption class="fig-cap"><b>自媒永动机 · 生产线监控面板</b><i>运行实况 · 每晚 17:00 自动开跑</i></figcaption>
+        </figure>
+        <div class="only-line"><span class="stamp">铁证</span><p>这不是「AI 能不能做自媒体」的实验，是<b>已经连续无人值守跑了 90 天的生产系统</b>——它的迭代日志、测试记录、复盘账本，随时可以当面查证。</p></div>
+        <p class="pin-line">别的团队在招运营，<em>我们在给机器发工牌</em></p>
+        <div class="tags"><span class="hot">90天硬账</span><span>996 迭代</span><span>4717 测试全绿</span><span>24万播放</span><span>一鱼多吃</span><span>7×24</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ================= 06 AI工作站 ================= -->
+<section class="product" id="station">
+  <div class="prod-in">
+    <div class="sheet rv">
+      <div class="sheet-rail"><span class="no">06</span><span class="bar-v"></span><span class="zh">AI工作站</span></div>
+      <div class="sheet-body">
+        <p class="eyebrow">PAI-STATION · 本地底座 · LADDER 06</p>
+        <div class="prod-title"><h2>个人超级AI工作站</h2><span class="en">数据不出门的私有化底座</span></div>
+        <p class="prod-pos">价值阶梯第六级，<b>进您机房值班</b>。全线能力的<b>企业级落地面</b>——工程级质检标准打造的本地 AI 工作站，数据留在您自己的机器上。</p>
+        <div class="prod-cols">
+          <ul class="feat">
+            <li><b>1730+ 条测试 · 工程级质检</b><span class="sub">每个功能都被测试钉死，工程行业的软件也该有工程级的质量标准</span></li>
+            <li><b>20+ 平台能力聚合</b><span class="sub">文档、知识库、渠道、自动化——一台工作站就是一间迷你数字化部门</span></li>
+            <li><b>本地优先 · 数据主权</b><span class="sub">敏感数据不出内网，央国企客户的信任根</span></li>
+            <li><b>全线产品的承载面</b><span class="sub">大脑、智库、工厂的私有化形态都跑在这块底座上——软硬产品线在此合流</span></li>
+          </ul>
+          <div class="metrics">
+            <div class="metric"><div class="v">1730<i>+</i></div><div class="k">测试全部通过</div></div>
+            <div class="metric"><div class="v">20<i>+</i></div><div class="k">平台能力</div></div>
+            <div class="metric wide"><div class="v">本地优先</div><div class="k">数据主权 · 央国企信任根</div></div>
+          </div>
+        </div>
+        <figure class="fig rv" style="margin-top:26px">
+          <img class="fig-img" src="shot-station.jpg" alt="AI工作站产品站首页——个人主权智能体运行时" loading="lazy" width="1440" height="900">
+          <figcaption class="fig-cap"><b>AI 工作站 · 产品站首页</b><i>个人主权智能体运行时</i></figcaption>
+        </figure>
+        <div class="only-line"><span class="stamp">信任根</span><p>AI 落地工程行业最大的墙是<b>数据不敢出去</b>——工作站把这堵墙变成我们的护城河：能力进来，数据留下。</p></div>
+        <p class="pin-line">别的 AI 在云端等您投喂，<em>我们的 AI 进您机房值班</em></p>
+        <div class="tags"><span class="hot">1730+ 测试</span><span>本地部署</span><span>数据主权</span><span>20+ 平台</span><span>私有化承载</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ================= 07 安全AI眼镜（反色重点段） ================= -->
+<section class="product" id="glasses">
+  <div class="prod-in">
+    <div class="sheet rv">
+      <div class="sheet-rail"><span class="no">07</span><span class="bar-v"></span><span class="zh">安全AI眼镜</span></div>
+      <div class="sheet-body">
+        <p class="eyebrow">SAFETY AI GLASSES · 硬件触角 · LADDER 07</p>
+        <div class="prod-title"><h2>安全AI眼镜</h2><span class="en">把大脑戴上安全帽</span></div>
+        <p class="prod-pos">价值阶梯第七级，<b>能力长到身上</b>。软件能力第一次<b>长到人身上</b>——戴上看现场，开口就是整改单。2025.12 样机 0.5 → <b>2026.06.25 样机研制成功</b>。</p>
+        <div class="fig-duo rv">
+          <figure class="fig">
+            <img class="fig-img" src="glasses-hero.jpg" alt="水利安全AI眼镜——佩戴巡检现场，发现隐患即发整改通知" loading="lazy" width="1268" height="841">
+            <figcaption class="fig-cap"><b>水利安全AI眼镜 · 现场佩戴实况</b><i>发现隐患 → 发送整改</i></figcaption>
+          </figure>
+          <figure class="fig">
+            <img class="fig-img" src="glasses-principle.jpg" alt="看-想-说工作原理：麦克风阵列→AI芯片本地处理→云端AI→扬声器播报" loading="lazy" width="1080" height="720">
+            <figcaption class="fig-cap"><b>看 → 想 → 说 · 工作闭环</b><i>原理图</i></figcaption>
+          </figure>
+        </div>
+        <div class="prod-cols" style="margin-top:26px">
+          <ul class="feat">
+            <li><b>看见即看懂</b><span class="sub">第一视角识别现场隐患，1350+ 安全规范条款装在镜腿里</span></li>
+            <li><b>开口即整改</b><span class="sub">语音直出整改建议与依据条款——老师傅的经验，新人的效率</span></li>
+            <li><b>700 余次实测</b><span class="sub">水利工地场景反复打磨，识别准确率 95%+（水利场景实测口径）</span></li>
+            <li><b>报告 ≤ 3 分钟</b><span class="sub">巡检结束报告自动成文，当天闭环</span></li>
+            <li><b>49g · 3000 元级</b><span class="sub">整机 49 克久戴不累；3000 元级定价，成本较行业方案降约 80%</span></li>
+          </ul>
+          <div class="metrics">
+            <div class="metric"><div class="v">95<i>%+</i></div><div class="k">隐患识别准确率</div></div>
+            <div class="metric"><div class="v">1350<i>+</i></div><div class="k">规范条款内置</div></div>
+            <div class="metric"><div class="v">700<i>余次</i></div><div class="k">工地实测</div></div>
+            <div class="metric"><div class="v">49<i>g</i></div><div class="k">整机重量</div></div>
+            <div class="metric wide"><div class="v">≤3<i>min</i></div><div class="k">巡检报告自动成文</div></div>
+          </div>
+        </div>
+        <p class="subsec"><b>六项机制</b> · 从看见到闭环</p>
+        <div class="mech">
+          <div class="step"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="12" cy="12" r="3.2"/><path d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12s-3.5 6.5-9.5 6.5S2.5 12 2.5 12z"/></svg><b>看见</b><i>SEE</i></div>
+          <div class="step"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8"/></svg><b>识别</b><i>DETECT</i></div>
+          <div class="step"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M4 19V9l8-5 8 5v10"/><path d="M9 19v-6h6v6"/></svg><b>研判</b><i>JUDGE</i></div>
+          <div class="step"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 2a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4M9 21h6"/></svg><b>播报</b><i>SPEAK</i></div>
+          <div class="step"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M7 3h10v18H7z"/><path d="M10 8h4M10 12h4M10 16h4"/></svg><b>成文</b><i>REPORT</i></div>
+          <div class="step"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M20 6L9 17l-5-5"/></svg><b>闭环</b><i>CLOSE</i></div>
+        </div>
+        <div class="industries">
+          <div class="cap">一套眼镜，先啃四个高危场景<span class="badge">SCENE FIRST</span></div>
+          <div class="ind-chips"><span>水利工地的安全巡检</span><span>地铁施工的隐患排查</span><span>水电站的运维点检</span><span>石化装置的作业监护</span></div>
+          <p class="note">工地安全是「看图说话」问题——最适合 AI 落地的物理现场，也是我们选择的第一块硬件阵地。</p>
+        </div>
+        <div class="only-line"><span class="stamp">三级火箭</span><p>软件（订阅）→ 硬件（放量）→ 具身（机器人）：眼镜是<b>第二级火箭的点火证据</b>——样机已在手，成本较行业方案降约八成。</p></div>
+        <p class="pin-line">安全员的眼界有限，<em>眼镜背后的 1300+ 部法规不打盹</em></p>
+        <div class="tags"><span class="hot">2026.06 样机成功</span><span>3000 元级</span><span>49g</span><span>95%+ 识别</span><span>≤3min 报告</span><span>水利场景首发</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ================= 08 顾问机器人 ================= -->
+<section class="product" id="robot">
+  <div class="prod-in">
+    <div class="sheet rv">
+      <div class="sheet-rail"><span class="no">08</span><span class="bar-v"></span><span class="zh">顾问机器人</span></div>
+      <div class="sheet-body">
+        <p class="eyebrow">ZEROth BRIDGE · EMBODIED CONSULTANT · LADDER 08</p>
+        <div class="prod-title"><h2>工程顾问机器人</h2><span class="en">具身智能旗舰 · Zeroth Bridge</span></div>
+        <p class="prod-pos">价值阶梯第八级，<b>终局会师</b>。八条产品线的全部能力，装进一台<b>人形机器人</b>——总包说的具身智能旗舰，三级火箭的最后一级。</p>
+        <div class="fig-duo rv" style="grid-template-columns:1fr">
+          <figure class="fig" style="max-width:340px;margin:26px auto 0">
+            <img class="fig-img" src="robot-figure.jpg" alt="Zeroth Bridge 人形工程顾问机器人全身像" loading="lazy" width="574" height="1419">
+            <figcaption class="fig-cap"><b>ZEROth BRIDGE · 顾问机器人</b><i>全身样机</i></figcaption>
+          </figure>
+        </div>
+        <svg class="rv" viewBox="0 0 1040 268" role="img" aria-label="五力汇流：八线能力汇聚到顾问机器人一身" style="display:block;width:100%;height:auto;margin-top:22px;font-family:var(--sans)">
+          <defs><marker id="rbA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e8590c"/></marker></defs>
+          <g stroke="#2b56c0" stroke-width="1.8" fill="none" marker-end="url(#rbA)" opacity=".75">
+            <path d="M232,34 C470,34 540,112 642,126"/>
+            <path d="M232,82 C460,82 530,118 642,128"/>
+            <path d="M232,130 C460,130 530,130 642,130"/>
+            <path d="M232,178 C460,178 530,142 642,132"/>
+            <path d="M232,226 C470,226 540,148 642,134"/>
+          </g>
+          <g font-size="12.5" font-weight="700" fill="#182236">
+            <rect x="72" y="17" width="160" height="34" rx="17" fill="#faf8f2" stroke="#182236" stroke-width="1.3"/>
+            <text x="152" y="39" text-anchor="middle">工程豹 · 资讯视野</text>
+            <rect x="72" y="65" width="160" height="34" rx="17" fill="#faf8f2" stroke="#182236" stroke-width="1.3"/>
+            <text x="152" y="87" text-anchor="middle">总包智库 · 知识储备</text>
+            <rect x="72" y="113" width="160" height="34" rx="17" fill="#faf8f2" stroke="#182236" stroke-width="1.3"/>
+            <text x="152" y="135" text-anchor="middle">工程大脑 · 研判能力</text>
+            <rect x="72" y="161" width="160" height="34" rx="17" fill="#faf8f2" stroke="#182236" stroke-width="1.3"/>
+            <text x="152" y="183" text-anchor="middle">研究工厂 · 调研产能</text>
+            <rect x="72" y="209" width="160" height="34" rx="17" fill="#faf8f2" stroke="#182236" stroke-width="1.3"/>
+            <text x="152" y="231" text-anchor="middle">自媒永动机 · 表达力</text>
+          </g>
+          <rect x="648" y="96" width="264" height="70" rx="6" fill="#182236"/>
+          <text x="780" y="126" text-anchor="middle" font-size="17" font-weight="900" fill="#f4f1e8" font-family="Songti SC,STSong,SimSun,serif">顾问机器人</text>
+          <text x="780" y="149" text-anchor="middle" font-size="11" fill="#ff7a1a" letter-spacing="2">ZEROth BRIDGE · 八线会师</text>
+          <text x="960" y="124" text-anchor="middle" font-size="11.5" fill="#707b93">一台顶一队</text>
+          <text x="960" y="144" text-anchor="middle" font-size="11.5" fill="#707b93">资讯×知识×研判</text>
+          <text x="960" y="164" text-anchor="middle" font-size="11.5" fill="#707b93">×调研×表达</text>
+        </svg>
+        <div class="prod-cols" style="margin-top:26px">
+          <ul class="feat">
+            <li><b>全线能力集于一身</b><span class="sub">工程豹的资讯视野 × 智库的知识储备 × 大脑的研判能力 × 工厂的调研产能 × 永动机的表达力——一台机器人，一支队伍</span></li>
+            <li><b>现场专家级应答</b><span class="sub">1000 座子知识库随身携带，项目部里问到哪答到哪，条条有出处</span></li>
+            <li><b>第一视角现场研判</b><span class="sub">复用眼镜的「看-想-说」闭环：巡视现场、发现隐患、开出整改</span></li>
+            <li><b>深度研究随身委托</b><span class="sub">站在展厅就能接单：一句话立项，研究工厂连夜出卷</span></li>
+            <li><b>展会与接待扛旗</b><span class="sub">技术发布会上不知疲倦的讲解员，每个潜在客户都被它记住</span></li>
+          </ul>
+          <div class="metrics">
+            <div class="metric"><div class="v">5<i>大</i></div><div class="k">全线能力汇聚</div></div>
+            <div class="metric"><div class="v">1000<i>座</i></div><div class="k">子知识库随身</div></div>
+            <div class="metric"><div class="v">2026<i>年</i></div><div class="k">样机形态</div></div>
+            <div class="metric"><div class="v">7×24</div><div class="k">不知疲倦在线</div></div>
+            <div class="metric wide"><div class="v">1台=1支队伍</div><div class="k">资讯×知识×研判×调研×表达</div></div>
+          </div>
+        </div>
+        <div class="only-line"><span class="stamp">终局</span><p>软件定义能力，硬件承载能力，机器人交付能力——<b>三级跳的最后一级，我们已经起跳</b>。它站上工地的那天，八条产品线在同一副躯壳里会师。</p></div>
+        <p class="pin-line">让每一个项目部，都请得起一位<em>不知疲倦的总工程师</em></p>
+        <div class="tags"><span class="hot">Zeroth Bridge</span><span>人形机器人</span><span>具身智能</span><span>看-想-说闭环</span><span>展会扛旗</span><span>2026 样机</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ================= ACT 02 · 为什么是现在 ================= -->
+<section class="product" id="why">
+  <div class="prod-in">
+    <p class="eyebrow rv">ACT 02 · 时机</p>
+    <h2 class="native-title rv" style="color:var(--ink)">为什么是<em>现在</em></h2>
+    <p class="native-lede rv" style="color:var(--mut)">无论来用工具还是看门道，第一问都该是<b style="color:var(--ink)">「为什么是现在」</b>。我们的答案：三扇窗正在同时打开——我们判断，这样的共振窗口不会一直敞开。</p>
+    <div class="win-grid">
+      <div class="win rv"><span class="wno">壹</span><span class="wtag">WINDOW 01 · 模型平权</span>
+        <h3>能力白菜化，粮草称王</h3>
+        <p>GPT 级能力正从稀缺品变成水电煤，人人买得起。应用层的胜负手，已经从<b>「谁买得起模型」变成「谁喂得饱模型」</b>——粮草持有者第一次站上食物链顶端。2023 年我们入场时模型还很贵；今天模型降价十倍，而我们的粮草已经满仓。</p>
+      </div>
+      <div class="win rv d1"><span class="wno">贰</span><span class="wtag">WINDOW 02 · 政策东风</span>
+        <h3>行业数字化成必答题</h3>
+        <p>数字中国、智能建造试点、水利工程安全监管持续加码——工程行业的数字化正从「可选项」变「必答题」。<b>央国企的采购清单里，AI 应用从今年起密集出现</b>：需求端的地，刚刚翻好。</p>
+      </div>
+      <div class="win rv d2"><span class="wno">叁</span><span class="wtag">WINDOW 03 · 同行缺位</span>
+        <h3>三年未见第二个我们</h3>
+        <p>行业媒体还在人工搬字，咨询公司还在卖装订成册的 PDF，工具厂还在做单点功能。三年过去，<b>我们没有遇到第二个用管线攒粮草的同行</b>——不是做不了，是这份冷板凳要先坐三年。</p>
+      </div>
+    </div>
+    <p class="pin-line rv">早三年是先烈，晚三年是跟随者——<em>我们刚好走在潮头上</em></p>
+    <div class="tl-rail rv">
+      <div class="tl-node"><span class="yr">2023.08</span><b>窗口开启</b><p>总包GPT 上线，彼时模型昂贵、无人看好垂直粮草</p></div>
+      <div class="tl-node"><span class="yr">2024-2025</span><b>默默囤积</b><p>模型价格逐级跳水，我们的采集管线逐级提速</p></div>
+      <div class="tl-node"><span class="yr">2026.06</span><b>软硬齐备</b><p>大脑订阅在售、眼镜样机成功——产品侧万事俱备</p></div>
+      <div class="tl-node now"><span class="yr">2026.09</span><b>共振时刻</b><p>三窗同开：模型白菜价 × 政策加码 × 同行缺位</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ACT 03 · 市场深算 ================= -->
+<section class="product" id="market">
+  <div class="prod-in">
+    <p class="eyebrow rv">ACT 03 · 市场有多大</p>
+    <h2 class="native-title rv" style="color:var(--ink)">这口井，<em>到底有多深</em></h2>
+    <p class="native-lede rv" style="color:var(--mut)">工程行业是中国规模最大的行业之一。我们不吹玄乎的天花板，只从下往上<b style="color:var(--ink)">一笔一笔地算</b>——每一个数字，都欢迎当面核验。</p>
+    <div class="fermi">
+      <div class="fcard rv"><span class="ftag">盘面一 · 知识订阅</span>
+        <div class="fval">36.5<i>亿/年</i></div>
+        <p>百万工程人 × 365 元/年。大脑与智库双订阅<b>已经跑通、已在收费</b>：240 位首批用户验证过需求，续费制验证过粘性。1% 渗透率是我们的<b>假设</b>而非成绩——写出来，是给这口井的量级一个可核验的算法。</p>
+        <div class="fnote">自下而上估算 · 欢迎当面核验</div>
+      </div>
+      <div class="fcard rv d1"><span class="ftag">盘面二 · 安全硬件</span>
+        <div class="fval">百亿<i>级</i></div>
+        <p>全国数十万在建工地 × 每项目 1-3 副眼镜 × 3000 元级。49g、95%+ 识别、≤3 分钟出报告的<b>样机已在手</b>，成本已压到位——这是替换盘，不是教育盘。</p>
+        <div class="fnote">工地数量取住建/水利公开口径量级</div>
+      </div>
+      <div class="fcard rv d2"><span class="ftag">盘面三 · 决策服务</span>
+        <div class="fval">三类<i>收入</i></div>
+        <p>深度研报按份、私有化工作站按项目、具身机器人按台——<b>三类收入，同一个粮仓</b>。EPC100 工程已按此口径逐家开卷：110+ 份成品就是报价单。</p>
+        <div class="fnote">EPC100 工程实证口径</div>
+      </div>
+    </div>
+    <div class="only-line rv"><span class="stamp">差别</span><p>市场数字人人会算，<b>差别在「每一条产品线都已在市场里收到过钱或跑过实测」</b>——订阅在收费、研报在交付、眼镜实测 700 余次、机器人样机在手：这是我们与 PPT 公司的分界线。</p></div>
+    <p class="pin-line rv">别人给您画饼，我们给您<em>报菜名</em></p>
+  </div>
+</section>
+
+<!-- ================= ACT 04 · 收入引擎 ================= -->
+<section class="product" id="business">
+  <div class="prod-in">
+    <p class="eyebrow rv">ACT 04 · 钱从哪来</p>
+    <h2 class="native-title rv" style="color:var(--ink)">五台收银机，<em>三台已响铃</em></h2>
+    <p class="native-lede rv" style="color:var(--mut)">商业模式不复杂：粮草喂养产品，产品各自收钱。五条收入线按成熟度排开——<b style="color:var(--ink)">不是规划图，是进度表</b>。</p>
+    <div class="eng">
+      <div class="ecard rv"><span class="live">LIVE · 已到账</span><span class="etag">01 · 订阅</span><h4>工程大脑</h4><div class="price">365<i>元/年</i></div><p>移动随身问答，前 200 名赠 608 元智库 VIP——软硬件联动获客</p></div>
+      <div class="ecard rv d1"><span class="live">LIVE · 已到账</span><span class="etag">02 · 订阅</span><h4>总包智库 VIP</h4><div class="price">398<i>元/年</i></div><p>四库全通年卡：市场、企业、专家、知识——复利资产使用权</p></div>
+      <div class="ecard rv d2"><span class="live">LIVE · 已交付</span><span class="etag">03 · 按份</span><h4>研究工厂研报</h4><div class="price">按份<i>计价</i></div><p>110+ 份已发布，百强逐家开卷——千万字弹药喂出的硬通货</p></div>
+      <div class="ecard rv d3"><span class="live soon">SOON · 样机已成</span><span class="etag">04 · 硬件</span><h4>安全AI眼镜</h4><div class="price">3000<i>元级</i></div><p>49g / 95%+ / ≤3min 报告——放量只差量产一步</p></div>
+      <div class="ecard rv d3"><span class="live soon">SOON · 样机在手</span><span class="etag">05 · 具身</span><h4>顾问机器人</h4><div class="price">按台<i>/项目</i></div><p>Zeroth Bridge 八线会师形态——展会、接待、巡检三场景先行</p></div>
+    </div>
+    <svg class="rv" viewBox="0 0 1040 226" role="img" aria-label="五台收银机战报：三台已响铃，两台样机在手待放量" style="display:block;width:100%;height:auto;margin-top:22px;font-family:var(--sans)">
+      <text x="30" y="20" font-size="11" fill="#707b93" letter-spacing="2" font-weight="700">收银进度 · 实色=已在收钱 虚框=样机待放量</text>
+      <g font-size="12.5" font-weight="700" fill="#182236" text-anchor="end">
+        <text x="238" y="42">01 订阅 · 工程大脑</text>
+        <text x="238" y="85">02 订阅 · 智库 VIP</text>
+        <text x="238" y="128">03 按份 · 研报</text>
+        <text x="238" y="171">04 硬件 · 眼镜</text>
+        <text x="238" y="214">05 具身 · 机器人</text>
+      </g>
+      <g>
+        <rect x="250" y="26" width="540" height="26" rx="3" fill="#e8590c"/>
+        <text x="270" y="44" font-size="12.5" font-weight="700" fill="#fff">365 元/年 · 订阅收入已经到账</text>
+        <rect x="250" y="69" width="540" height="26" rx="3" fill="#e8590c"/>
+        <text x="270" y="87" font-size="12.5" font-weight="700" fill="#fff">398 元/年 · 四库全通已在售</text>
+        <rect x="250" y="112" width="540" height="26" rx="3" fill="#e8590c"/>
+        <text x="270" y="130" font-size="12.5" font-weight="700" fill="#fff">110+ 份已发布 · 按份计价</text>
+        <rect x="250" y="155" width="330" height="26" rx="3" fill="rgba(232,89,12,.07)" stroke="#e8590c" stroke-width="1.4" stroke-dasharray="6 4"/>
+        <text x="270" y="173" font-size="12.5" font-weight="700" fill="#e8590c">3000 元级 · 样机已成</text>
+        <rect x="250" y="198" width="270" height="26" rx="3" fill="rgba(232,89,12,.07)" stroke="#e8590c" stroke-width="1.4" stroke-dasharray="6 4"/>
+        <text x="270" y="216" font-size="12.5" font-weight="700" fill="#e8590c">按台/项目 · 样机在手</text>
+      </g>
+      <g font-size="11.5" font-weight="700">
+        <text x="810" y="44" fill="#0f7b4f">已到账</text>
+        <text x="810" y="87" fill="#0f7b4f">已到账</text>
+        <text x="810" y="130" fill="#0f7b4f">已交付</text>
+        <text x="810" y="173" fill="#707b93">SOON</text>
+        <text x="810" y="216" fill="#707b93">SOON</text>
+      </g>
+      <line x1="804" y1="26" x2="804" y2="224" stroke="rgba(24,34,54,.18)" stroke-dasharray="3 4"/>
+    </svg>
+    <p class="subsec rv"><b>回头客飞轮</b> · 为什么客户会一直留下来</p>
+    <div class="flow rv">
+      <span class="fn">用户提问</span><span class="fa">→</span>
+      <span class="fn">粮草供弹</span><span class="fa">→</span>
+      <span class="fn">回答更准</span><span class="fa">→</span>
+      <span class="fn">续费 + 口碑</span><span class="fa">→</span>
+      <span class="fn hot">粮草更厚 ∞</span>
+    </div>
+    <div class="only-line rv"><span class="stamp">质地</span><p>这不是卖断式生意——<b>订阅是年年续费的收入，粮草是越攒越厚的资产，硬件是放大器</b>：收入质量三件套，一次配齐。模型越进步，我们的产品越便宜越好——成本曲线站在我们这边。</p></div>
+    <p class="pin-line rv">好的生意自己会滚雪球，<em>我们只负责让它起步就有坡度</em></p>
+  </div>
+</section>
+
+<!-- ================= ACT 05 · 一人军团 ================= -->
+<section class="product" id="team">
+  <div class="prod-in">
+    <p class="eyebrow rv">ACT 05 · 谁在干活</p>
+    <h2 class="native-title rv" style="color:var(--ink)">一人军团，<em>八线在役</em></h2>
+    <p class="native-lede rv" style="color:var(--mut)">组织这件事，说到底比的是<b style="color:var(--ink)">人均产出</b>。这里可能是全行业人均产出最高的内容组织形态——每一分投入都沉淀为资产，而非费用。</p>
+    <div class="org-grid">
+      <div class="rv">
+        <p class="org-quote">「别人还在讲 OPC，<br>我们已经跑成了 <em>0PC</em>」</p>
+        <p class="native-lede rv" style="margin-top:18px">OPC，一人公司；0PC，<b style="color:var(--ink)">零个人</b>——整套 AI 原生系统的运转，不需要一个人盯着。我们没有五十人的内容团队，只有一条 7×24 的管线：<b style="color:var(--ink)">996 次无人值守迭代、420 个模块、82,406 行代码全自动产出、4,717 条测试全绿</b>。传统组织里，这是「一个总编辑 + 三个研究员 + 五个运营」的年工作量；在这里，它是一个人的指挥艺术。</p>
+        <p class="native-lede rv" style="margin-top:12px">创始团队出身工程一线——既下过工地，也建过管线：<b style="color:var(--ink)">懂行业的痛，也懂 AI 的刃</b>。三年八线零融资烧穿式扩张，靠的是复利，不是烧钱。</p>
+      </div>
+      <div class="vsgrid rv d1">
+        <div class="vscard">
+          <h4>传统内容团队</h4>
+          <ul>
+            <li>数十人编制，年成本数百万</li>
+            <li>产能受限于排班与人性</li>
+            <li>知识装在人脑里——人走茶凉</li>
+            <li>每一次扩张都是成本项</li>
+          </ul>
+        </div>
+        <div class="vscard win">
+          <h4>我们 · 一人军团</h4>
+          <ul>
+            <li>一条管线 × 电力成本</li>
+            <li>7×24 不知疲倦，60 分自进化到 92 分</li>
+            <li>知识沉淀在库里——越攒越厚</li>
+            <li>每一次扩张都是资产项</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <p class="pin-line rv">别人的成本项是团队，<em>我们的成本项是电费</em></p>
+  </div>
+</section>
+
+<!-- ================= ACT 06 · 前景 ================= -->
+<section class="product" id="prospect">
+  <div class="prod-in">
+    <p class="eyebrow rv">ACT 06 · 往后三年</p>
+    <h2 class="native-title rv" style="color:var(--ink)">三级火箭，<em>逐级点火</em></h2>
+    <p class="native-lede rv" style="color:var(--mut)">从订阅软件到放量硬件，再到具身智能——<b style="color:var(--ink)">每一级都已有点火证据，不是 PPT 愿景</b>。</p>
+    <div class="runway rv">
+      <div class="rw fire">
+        <div class="stage">STAGE 01 · <b>已点火</b></div><div class="big">壹</div>
+        <h3>软件订阅</h3>
+        <p><b>大脑 365 元/年、智库 VIP 398 元/年、研报按份计价</b>——订阅制收入已经到账，商业闭环最先跑通的一级。</p>
+      </div>
+      <div class="rw fire">
+        <div class="stage">STAGE 02 · <b>样机已成</b></div><div class="big">贰</div>
+        <h3>硬件放量</h3>
+        <p><b>安全AI眼镜 2026.06 研制成功</b>：49g、95%+ 识别、≤3 分钟成报告，成本较行业方案降约八成——放量只差量产。</p>
+      </div>
+      <div class="rw">
+        <div class="stage">STAGE 03 · <b>样机在手</b></div><div class="big">叁</div>
+        <h3>具身智能</h3>
+        <p><b>Zeroth Bridge 人形机器人样机在手</b>：八线能力会师一副躯壳，卡位行业智能化「最后一米」的入场券。</p>
+      </div>
+    </div>
+    <p class="subsec rv"><b>复制逻辑</b> · 为什么这套打法能从工程走向千行百业</p>
+    <div class="flow rv">
+      <span class="fn hot">工程行业完整验证</span><span class="fa">→</span>
+      <span class="fn">换信源</span><span class="fa">→</span>
+      <span class="fn">换知识库</span><span class="fa">→</span>
+      <span class="fn">换玩法模板</span><span class="fa">→</span>
+      <span class="fn hot">千行百业复制 ∞</span>
+    </div>
+    <div class="only-line rv"><span class="stamp">判断</span><p>市面上的 AI 公司在卖工具，我们在建<b>资产</b>——工具会过时，资产在复利。管线、语料、飞轮都在自己手里，换一个行业只是换一套参数。</p></div>
+    <p class="pin-line rv">每一个垂直行业，都是一座<em>待凿的新井</em>——而凿井的手艺，我们已经练了三年</p>
+    <p class="subsec rv" style="margin-top:40px"><b>先泼三盆冷水</b> · 您想问的，我们先替您问了</p>
+    <div class="risk3 rv">
+      <div class="rk"><div class="rq">大厂下场碾压怎么办？</div><p>模型与算力我们从不自建——那是兵马的事，平权了反而对我们有利。我们守粮草：语料、结构化知识、行业信任。<b>大厂要做行业 AI，绕不开这样一份三年积累的行业语料</b>——它可以是我们的护城河，也可以是将来与大厂平起平坐谈合作的筹码。</p></div>
+      <div class="rk"><div class="rq">数据合规有没有雷？</div><p>1000+ 信源均为<b>公开资讯与一手政策原文</b>，不碰个人隐私、不做灰色抓取；眼镜方案面向工地安全场景，本地处理优先（AI 工作站就是为此备的底座）——合规是设计出来的，不是补出来的。</p></div>
+      <div class="rk"><div class="rq">硬件供应链会不会拖垮？</div><p>样机已跑两轮（2025.12 的 0.5 → 2026.06 成功），BOM 成本压到 3000 元级；量产走成熟代工，<b>软件栈全部自持</b>——供应链波动影响的是节奏，不是可行性。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 联系 ================= -->
+<section class="product" id="contact" style="padding-bottom:10px">
+  <div class="prod-in">
+    <div class="sheet rv">
+      <div class="sheet-rail"><span class="no">※</span><span class="bar-v"></span><span class="zh">见面聊</span></div>
+      <div class="sheet-body">
+        <p class="eyebrow">ACT 07 · 见面聊</p>
+        <div class="prod-title"><h2>百闻不如<span style="color:var(--acc)">一见</span></h2><span class="en">SEEING IS BELIEVING</span></div>
+        <p class="prod-pos">这份页面上每一个数字——996 次迭代的日志、4,717 条测试的记录、110+ 份研报的成品、3,983 条商机的管线——<b>都不是写出来的，是跑出来的</b>。信不信，可以来看。</p>
+        <div class="act3">
+          <div class="act rv"><span class="ano">其一 · 用户</span><h4>工具，拿来就用</h4><p>工程豹免费读、大脑随口问、研报直接订——<b>今天就能上手</b>，不用等谁批准。</p></div>
+          <div class="act rv d1"><span class="ano">其二 · 企业</span><h4>合作，当面细谈</h4><p>私有化部署、研报定制、眼镜试点——<b>把八线能力接进您的业务</b>，数据不出门。</p></div>
+          <div class="act rv d2"><span class="ano">其三 · 同行者</span><h4>故事，坐下来说</h4><p>迭代日志、测试记录、研报成品随时可查——<b>十年凿井的完整历程与下一程蓝图</b>，聊透为止。</p></div>
+        </div>
+        <div class="contact-flex">
+          <div>
+            <p class="hero-desc" style="margin-top:4px">粮草每天都在自己变厚，我们更在意把每一件工具做扎实。<b>想用产品的、想谈合作的、想看这份资产怎么生长的</b>——无论哪一种，总包君扫到就回。</p>
+            <div class="tags" style="margin-top:20px"><span class="hot">产品可试用</span><span>合作可细谈</span><span>系统可参观</span><span>日志可查证</span><span>全套资料 备索</span></div>
+            <div class="mega-cta rv">想用、想聊、想合作——找总包君<span class="arr">→</span><small>ZONGBAO JUN · WECHAT · 即加即回</small></div>
+          </div>
+          <div class="qr-wrap">
+            <div class="qr-card">
+              <span class="cm3" aria-hidden="true"></span><span class="cm4" aria-hidden="true"></span>
+              <img src="qrcode-zongbaojun.jpg" alt="总包君微信二维码">
+              <b>扫码加「总包君」</b>
+              <span class="qr-sub">ZONGBAO JUN · WECHAT</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 页脚 ================= -->
+<footer id="foot">
+  <div class="foot-in">
+    <div>
+      <div class="foot-zh">总包<b>说</b>科技</div>
+      <p class="foot-slogan">兵马已动 <span>粮草先行</span></p>
+      <p style="margin-top:14px;font-size:13px;line-height:1.9;color:#93a1c2">总包说科技 · 工程行业的 AI 原生数字资产与产品矩阵。<br>1000+ 信源 × 1000 座子知识库 × 8 条产品线 × 7×24 无人值守。<br>代码可以抄，三年时间抄不走。</p>
+    </div>
+    <div class="foot-prod">
+      <a href="#leopard">01 工程豹 · 免费有意思</a>
+      <a href="#brain">02 工程大脑 · 随身就有用</a>
+      <a href="#zhiku">03 总包智库 · 越挖越厚</a>
+      <a href="#factory">04 研究工厂 · 产能成规模</a>
+      <a href="#aipo">05 自媒永动机 · 创意自己跑</a>
+      <a href="#station">06 AI工作站 · 进您机房</a>
+      <a href="#glasses">07 安全AI眼镜 · 能力上身</a>
+      <a href="#robot">08 顾问机器人 · 终局会师</a>
+      <a href="#value" style="color:#ff7a1a">★ 四重价值 · 看懂总包说</a>
+    </div>
+  </div>
+  <div class="foot-base">
+    <span>ZONGBAOSHUO © 2023-2026</span>
+    <span>EST. 2023.08 · 八线在役</span>
+    <span>DWG NO. ZBS-2026-09</span>
+  </div>
+</footer>
+
+<div id="xcursor" aria-hidden="true"><i></i></div>
+
+<script>
+/* ============================================================
+   总包说 · 视觉引擎（粒子/逐字/盖章/导航/光标/磁吸/进度）
+   零依赖 · prefers-reduced-motion 降级 · ?qa=1 强制显形
+   ============================================================ */
+(function(){
+"use strict";
+var d=document, w=window;
+var RM = w.matchMedia && w.matchMedia("(prefers-reduced-motion: reduce)").matches;
+var QA = /(?:\?|&)qa=1(?:&|$)/.test(w.location.search);
+
+/* ---- 进度条 + 顶栏阴影 ---- */
+var pbar=d.getElementById("pbar"), topbar=d.getElementById("topbar");
+function onScroll(){
+  var sy=w.scrollY||d.documentElement.scrollTop;
+  var h=d.documentElement.scrollHeight-w.innerHeight;
+  if(pbar) pbar.style.transform="scaleX("+(h>0?Math.min(sy/h,1):0)+")";
+  if(topbar) topbar.classList.toggle("scrolled", sy>24);
+  navHi();
+}
+w.addEventListener("scroll", onScroll, {passive:true});
+
+/* ---- 导航渐隐（横向溢出时右侧淡出，滚到头消失）---- */
+var tnav=d.getElementById("tnav");
+if(tnav){
+  var tnUpd=function(){ tnav.classList.toggle("fade-end", tnav.scrollWidth>tnav.clientWidth+1 && tnav.scrollLeft+tnav.clientWidth<tnav.scrollWidth-4); };
+  tnav.addEventListener("scroll", tnUpd, {passive:true});
+  w.addEventListener("resize", tnUpd);
+  tnUpd();
+}
+
+/* ---- 导航高亮当前段 ---- */
+var secs=[].slice.call(d.querySelectorAll("section[id]")), navLinks=[].slice.call(tnav?tnav.querySelectorAll("a"):[]);
+function navHi(){
+  if(!navLinks.length) return;
+  var pos=(w.scrollY||0)+120, cur=secs[0]?secs[0].id:"";
+  secs.forEach(function(s){ if(d.getElementById(s.id) && s.offsetTop<=pos) cur=s.id; });
+  navLinks.forEach(function(a){ a.classList.toggle("on", a.getAttribute("href")==="#"+cur); });
+}
+
+/* ---- Hero 标题逐字入场 ---- */
+(function(){
+  var t=d.getElementById("heroTitle"); if(!t) return;
+  [].slice.call(t.querySelectorAll(".tl")).forEach(function(line){
+    var frag=d.createDocumentFragment(), txt=line.textContent;
+    var em=line.querySelector("em"), head=em?txt.slice(0,txt.indexOf(em.textContent)):txt;
+    [].forEach.call(head,function(ch){
+      if(ch===" "){ frag.appendChild(d.createTextNode(" ")); return; }
+      var s=d.createElement("span"); s.className="char"; s.textContent=ch; frag.appendChild(s);
+    });
+    if(em){ em.classList.add("em-w"); frag.appendChild(em); }
+    line.textContent=""; line.appendChild(frag);
+  });
+  t.classList.add("split");
+  if(RM||QA){ t.classList.add("on"); return; }
+  w.setTimeout(function(){ t.classList.add("on"); }, 120);
+})();
+
+/* ---- 滚动显形（sheet=盖章入场）---- */
+var rvs=[].slice.call(d.querySelectorAll(".rv"));
+if(QA||RM){ rvs.forEach(function(el){ el.classList.add("in"); }); }
+else if("IntersectionObserver" in w){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } });
+  },{threshold:.12, rootMargin:"0px 0px -6% 0px"});
+  rvs.forEach(function(el){ io.observe(el); });
+}else{ rvs.forEach(function(el){ el.classList.add("in"); }); }
+
+/* ---- 粒子引擎：蓝图网格漂浮点 ---- */
+function zbsParticles(cv, opts){
+  var ctx=cv.getContext("2d"); if(!ctx) return;
+  var o=opts||{};
+  var cssW, cssH, dpr=Math.min(w.devicePixelRatio||1,2), parts=[], raf=null, running=false;
+  var N=o.count||42, COL=o.color||"43,86,192", ACC=o.accent||"232,89,12";
+  function size(){
+    var r=cv.parentElement.getBoundingClientRect();
+    cssW=Math.max(r.width,1); cssH=Math.max(r.height,1);
+    cv.width=cssW*dpr; cv.height=cssH*dpr; cv.style.width=cssW+"px"; cv.style.height=cssH+"px";
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  function mk(){
+    parts=[]; for(var i=0;i<N;i++) parts.push({
+      x:Math.random()*cssW, y:Math.random()*cssH,
+      vx:(Math.random()-.5)*.22, vy:(Math.random()-.5)*.22,
+      r:Math.random()*1.6+.7, a:Math.random()*.5+.15,
+      acc:Math.random()<.12, ph:Math.random()*Math.PI*2
+    });
+  }
+  function frame(ts){
+    ctx.clearRect(0,0,cssW,cssH);
+    for(var i=0;i<parts.length;i++){
+      var p=parts[i];
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<-8) p.x=cssW+8; if(p.x>cssW+8) p.x=-8;
+      if(p.y<-8) p.y=cssH+8; if(p.y>cssH+8) p.y=-8;
+      var tw=.6+.4*Math.sin(ts/900+p.ph);
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,6.2832);
+      ctx.fillStyle="rgba("+(p.acc?ACC:COL)+","+(p.a*tw)+")"; ctx.fill();
+    }
+    for(var j=0;j<parts.length;j++) for(var k=j+1;k<parts.length;k++){
+      var a=parts[j], b=parts[k], dx=a.x-b.x, dy=a.y-b.y, dd=dx*dx+dy*dy;
+      if(dd<14000){
+        ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+        ctx.strokeStyle="rgba("+(a.acc||b.acc?ACC:COL)+","+(.14*(1-dd/14000))+")";
+        ctx.lineWidth=.7; ctx.stroke();
+      }
+    }
+    raf=requestAnimationFrame(frame);
+  }
+  function start(){ if(running) return; running=true; raf=requestAnimationFrame(frame); }
+  function stop(){ running=false; if(raf) cancelAnimationFrame(raf); }
+  size(); mk();
+  w.addEventListener("resize", function(){ size(); mk(); });
+  if("IntersectionObserver" in w){
+    new IntersectionObserver(function(es){ es[0].isIntersecting?start():stop(); },{threshold:.02}).observe(cv);
+  } else start();
+  d.addEventListener("visibilitychange", function(){ d.hidden?stop():start(); });
+}
+if(!RM){
+  var bpfx=d.getElementById("bpfx"); if(bpfx) zbsParticles(bpfx,{count:46});
+  var npfx=d.getElementById("npfx"); if(npfx) zbsParticles(npfx,{count:34,color:"143,176,255",accent:"255,122,26"});
+}
+
+/* ---- 工程十字光标 ---- */
+(function(){
+  var xc=d.getElementById("xcursor"); if(!xc) return;
+  if(w.matchMedia("(hover:none),(pointer:coarse)").matches) return;
+  var mx=0,my=0,cx=0,cy=0,shown=false,tick=null;
+  d.addEventListener("mousemove",function(e){
+    mx=e.clientX; my=e.clientY;
+    if(!shown){ shown=true; xc.classList.add("show"); }
+    var t=e.target;
+    xc.classList.toggle("zoom", !!(t&&t.closest&&t.closest("a,button,.ucell,.ncell,.metric,.rw,.ledger-row,.tl-node,.mech .step,.ind-chips span,.tags span")));
+    if(!tick){ cx=mx; cy=my; loop(); }
+  },{passive:true});
+  d.addEventListener("mouseleave",function(){ shown=false; xc.classList.remove("show"); });
+  function loop(){
+    cx+=(mx-cx)*.28; cy+=(my-cy)*.28;
+    xc.style.left=cx+"px"; xc.style.top=cy+"px";
+    tick=(Math.abs(mx-cx)>.4||Math.abs(my-cy)>.4)?requestAnimationFrame(loop):null;
+  }
+})();
+
+/* ---- 磁吸 CTA ---- */
+(function(){
+  var cta=d.querySelector(".bar-cta"); if(!cta||w.matchMedia("(hover:none)").matches) return;
+  cta.addEventListener("mousemove",function(e){
+    var r=cta.getBoundingClientRect();
+    var dx=e.clientX-(r.left+r.width/2), dy=e.clientY-(r.top+r.height/2);
+    cta.classList.add("magnet");
+    cta.style.transform="translate("+dx*.22+"px,"+dy*.32+"px)";
+  });
+  cta.addEventListener("mouseleave",function(){
+    cta.classList.remove("magnet"); cta.style.transform="";
+  });
+})();
+
+/* ---- 产品卡 3D 微倾（桌面）---- */
+(function(){
+  if(w.matchMedia("(hover:none)").matches||RM) return;
+  [].slice.call(d.querySelectorAll(".sheet")).forEach(function(s){
+    s.addEventListener("mousemove",function(e){
+      var r=s.getBoundingClientRect();
+      var px=(e.clientX-r.left)/r.width-.5, py=(e.clientY-r.top)/r.height-.5;
+      s.style.transform="perspective(1400px) rotateX("+(-py*1.1)+"deg) rotateY("+(px*1.1)+"deg)";
+    });
+    s.addEventListener("mouseleave",function(){ s.style.transform=""; });
+  });
+})();
+
+onScroll();
+})();
+</script>
+</body>
+</html>

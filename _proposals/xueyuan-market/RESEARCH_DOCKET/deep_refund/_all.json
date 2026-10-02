@@ -1,0 +1,78 @@
+{
+  "channel": "deep_refund",
+  "topic": "按反馈质量退款机制(批评→AI评真诚度0-100%→退50%~100%)与点赞随机赠报告的先例/滥用风控/法规合规/微信生态合规",
+  "researched_at": "2026-09-28",
+  "verdict": {
+    "feasible": true,
+    "top_abuse_risk": "批量账号+模板化/LLM生成批评文本薅高分退款；研报属一次性消费完形态，Steam个案显示此类内容退款率可达20%+，Panera无频次上限被击穿",
+    "three_gates": [
+      "AI评分防模板闸：语义锚定(必须引用报告具体章节/数据)+跨账号查重+字数上限300字(校正LLM冗长偏差)",
+      "账号闸：单账号月退款上限+历史退款率>30%转人工+滥用者剥夺AI退款权(Steam先例)",
+      "熔断+公示闸：单报告退款率>25%或周退款额>营收15%自动停；评分规则/比例映射/时限事前进协议并在支付页可见(承诺即合同)"
+    ]
+  },
+  "docs": [
+    {"id": 1, "url": "https://store.steampowered.com/steam_refunds/", "title": "Steam Refunds 官方政策(14天/2小时无理由+反滥用条款)", "source_type": "official", "credibility": 0.85, "degraded": "本机fetch被网络策略拦截,内容经GameDeveloper与Steam社区FAQ多源印证", "used_for": "Q1"},
+    {"id": 2, "url": "https://newsletter.gamediscover.co/p/steam-refunds-how-many-should-you", "title": "GameDiscoverCo: Steam退款率中位10.4%/平均11.4%(EA转1.0游戏)", "source_type": "industry", "credibility": 0.75, "used_for": "Q1"},
+    {"id": 3, "url": "https://www.tweaktown.com/news/105091/", "title": "独立开发者:约55000玩家(21%买家)通关后退款短游戏", "source_type": "media", "credibility": 0.65, "used_for": "Q1"},
+    {"id": 4, "url": "https://www.epicgames.com/site/en-US/help", "title": "Epic Games Store退款帮助(14天/2小时自服务退款)", "source_type": "official", "credibility": 0.75, "degraded": "政策细节经社区对比与媒体报道印证", "used_for": "Q1"},
+    {"id": 5, "url": "https://www.mobiread.com/forums/showthread.php?t=35083", "title": "作者抗议Amazon电子书读完即退(read and return),提议按已读20%限制", "source_type": "community", "credibility": 0.6, "used_for": "Q1"},
+    {"id": 6, "url": "https://www.yicai.com/news/5274231.html", "title": "第一财经:知乎Live 7天无理由退款(收听≤15条语音,2017-04)", "source_type": "media", "credibility": 0.8, "used_for": "Q1,Q2"},
+    {"id": 7, "url": "https://www.zhihu.com/question/58992550", "title": "知乎问题页:知乎Live退款规则官方问答", "source_type": "community", "credibility": 0.6, "used_for": "Q1"},
+    {"id": 8, "url": "https://www.xinhuanet.com/", "title": "新华网:一经报名不予退款 内容付费一锤子买卖何时休(2018-05)", "source_type": "media", "credibility": 0.8, "used_for": "Q1"},
+    {"id": 9, "url": "https://www.businessinsider.com/panera-cares-closing-boston-2019-2", "title": "Business Insider:最后一家Panera Cares随心付餐厅关闭", "source_type": "media", "credibility": 0.8, "used_for": "Q1"},
+    {"id": 10, "url": "https://link.springer.com/article/10.1007/s11747-007-0043-5", "title": "Kim/Nattero/Spann(2008) Pay-What-You-Want奠基论文(Journal of Marketing)", "source_type": "academic", "credibility": 0.9, "used_for": "Q1"},
+    {"id": 11, "url": "https://www.sciencedirect.com/science/article/pii/S2444845425000111", "title": "Güzel(2025) PWYW系统文献综述", "source_type": "academic", "credibility": 0.85, "used_for": "Q1"},
+    {"id": 12, "url": "https://www.humblebundle.com/about", "title": "Humble Bundle官网:PWYW数字内容累计慈善$195M+", "source_type": "official", "credibility": 0.7, "used_for": "Q1"},
+    {"id": 13, "url": "https://www.sciencedirect.com/science/article/abs/pii/S0022435915000822", "title": "Janakiraman et al.(2016)退款宽松度meta分析21篇:购买增量>退货增量,净正(Journal of Retailing)", "source_type": "academic", "credibility": 0.9, "used_for": "Q1"},
+    {"id": 14, "url": "https://research.hanken.fi/zh/publications/online-purchase-return-policy-leniency-and-purchase-decision", "title": "Oghazi et al.(2018)退款宽松度→购买意愿由信任完全中介", "source_type": "academic", "credibility": 0.85, "used_for": "Q1"},
+    {"id": 15, "url": "https://www.sciencedirect.com/science/article/abs/pii/S0022435917301226", "title": "Rao et al.(2018)退货时间宽松的信号理论", "source_type": "academic", "credibility": 0.8, "used_for": "Q1"},
+    {"id": 16, "url": "http://www.npc.gov.cn", "title": "中国人大网:《消费者权益保护法》第25条(在线下载的数字化商品不适用七日无理由)", "source_type": "gov", "credibility": 0.95, "degraded": "法库具体页面未直达,条文经多政府官网转载互证", "used_for": "Q2"},
+    {"id": 17, "url": "https://scjgj.beijing.gov.cn", "title": "北京市监局:《网络购买商品七日无理由退货暂行办法》全文(2020修订,第七条四类豁免+不得擅自扩大)", "source_type": "gov", "credibility": 0.9, "used_for": "Q2"},
+    {"id": 18, "url": "https://xinwen.bjd.com.cn", "title": "北京日报刊发:《消费者权益保护法实施条例》全文(国务院令778号,2024-07-01施行,第19条)", "source_type": "gov_media", "credibility": 0.9, "used_for": "Q2"},
+    {"id": 19, "url": "http://kpzg.people.com.cn", "title": "人民网科普中国:无理由退货承诺属经营者自愿,承诺即合同义务,拒不履行市监局责令改正", "source_type": "media", "credibility": 0.8, "used_for": "Q2"},
+    {"id": 20, "url": "http://www.gzns.gov.cn", "title": "南沙区政府:虚假广告广告法55条处广告费3-5倍罚款", "source_type": "gov", "credibility": 0.7, "used_for": "Q2"},
+    {"id": 21, "url": "https://developers.weixin.qq.com/miniprogram/product/", "title": "微信小程序平台运营规范(官方文档入口)", "source_type": "official", "credibility": 0.85, "degraded": "官方页本机fetch被拦截,条款经多方转载与搜索摘要印证;全文镜像https://www.cnblogs.com/AtlasLapetos/p/18730051(0.6)", "used_for": "Q3"},
+    {"id": 22, "url": "https://developers.weixin.qq.com/miniprogram/dev/framework/ministore/minishopguidance.html", "title": "微信开放社区:商品接口使用场景指引(含退款规则及流程/小程序虚拟支付)", "source_type": "official", "credibility": 0.85, "used_for": "Q3"},
+    {"id": 23, "url": "https://pay.weixin.qq.com", "title": "微信支付商户文档:退款API支持按金额部分退款(原路退回)", "source_type": "official", "credibility": 0.8, "degraded": "接口文档页未逐字核对,API能力多方印证", "used_for": "Q3"},
+    {"id": 24, "url": "https://www.apple.com/", "title": "苹果小程序合作伙伴计划(2025-11):iOS虚拟支付开放,虚拟商品抽15%佣金", "source_type": "official", "credibility": 0.7, "degraded": "官方细则页未直达,经行业报道印证", "used_for": "Q3"},
+    {"id": 25, "url": "https://www.sciencedirect.com/science/article/pii/S1319157823001982", "title": "Mohawesh et al.(2023)假评论检测多视图深度学习综述(LSTM达94.56%)", "source_type": "academic", "credibility": 0.85, "used_for": "Q4"},
+    {"id": 26, "url": "https://www2.cs.uh.edu/~arjun/tr/UIC-CS-TR-yelp-spam.pdf", "title": "Mukherjee et al. Yelp假评论检测:仅词面n-gram达89.6%", "source_type": "academic", "credibility": 0.8, "used_for": "Q4"},
+    {"id": 27, "url": "https://www.researchgate.net/publication/325993727", "title": "Identification of Fake Reviews Using Semantic and Behavioral Features:语义+行为特征优于n-gram", "source_type": "academic", "credibility": 0.7, "used_for": "Q4"},
+    {"id": 28, "url": "https://arxiv.org/abs/2306.05685", "title": "Zheng et al.(NeurIPS 2023) Judging LLM-as-a-Judge:GPT-4级与人类一致性>80%,已知位置/冗长/自我偏好三偏差", "source_type": "academic", "credibility": 0.95, "used_for": "Q4"},
+    {"id": 29, "url": "https://arxiv.org/abs/2411.15594", "title": "Gu et al.(2024) A Survey on LLM-as-a-Judge", "source_type": "academic", "credibility": 0.9, "used_for": "Q4"},
+    {"id": 30, "url": "https://www.moj.gov.cn", "title": "司法部刊载:《规范促销行为暂行规定》全文(第11条有奖销售=抽奖式+附赠式;第17条抽奖式最高奖≤5万;第18条非现金奖品按市价折算)", "source_type": "gov", "credibility": 0.95, "used_for": "Q5"},
+    {"id": 31, "url": "https://zh.wikisource.org/wiki/规范促销行为暂行规定", "title": "维基文库:规范促销行为暂行规定全文镜像", "source_type": "mirror", "credibility": 0.8, "used_for": "Q5"},
+    {"id": 32, "url": "https://www.samr.gov.cn", "title": "市场监管总局:《反不正当竞争法》第10条(抽奖式最高奖≤5万+事前公示奖品数量/中奖概率/兑奖条件,开始后不得变更)", "source_type": "gov", "credibility": 0.9, "degraded": "具体条文页未直达,条文经司法部规定与人民网案例多源印证", "used_for": "Q5"},
+    {"id": 33, "url": "http://gd.people.com.cn/n2/2024/0313/c123932-40188241.html", "title": "人民网广东:广州2023消费维权典型案例-未公示且随意变更中奖概率被查处", "source_type": "media", "credibility": 0.8, "used_for": "Q5"},
+    {"id": 34, "url": "https://finance.sina.cn", "title": "新浪财经:微信回应限制元宝红包链接-引《微信外部链接内容管理规范》2.1.2条(利益诱导分享:红包/虚拟奖品/邀请好友均违规)", "source_type": "media", "credibility": 0.8, "used_for": "Q5"},
+    {"id": 35, "url": "https://weixin.qq.com/cgi-bin/antispam-statement", "title": "微信官方:《微信外部链接内容管理规范》(2.1.2诱导分享条款)", "source_type": "official", "credibility": 0.85, "used_for": "Q5"}
+  ],
+  "key_findings": {
+    "q1_precedent": {
+      "refund_rate_baseline": "Steam宽松退款政策下退款率中位10.4%/平均11.4%(GameDiscoverCo 2025);短内容个案21%买家退款(TweakTown)",
+      "domestic_precedent": "知乎Live 2017-04首个'知识退款':7天无理由但收听≤15条语音(消费深度门槛),第一财经",
+      "pwyw": "Panera Cares无频次上限被击穿2019关闭(BI);Humble Bundle PWYW数字内容$195M+成功;Kim et al.2008奠基",
+      "trust_marketing": "Janakiraman 2016 meta(21篇):宽松度购买增量>退货增量净正;Oghazi 2018:信任完全中介;Rao 2018信号理论"
+    },
+    "q2_regulation": {
+      "digital_exemption": "消保法25条+暂行办法第7条:在线下载/拆封的数字化商品不适用七日无理由退货(法定豁免)",
+      "2024_rule": "实施条例(国务院令778号,2024-07-01)第19条:不得擅自扩大不适用范围——商家只能更宽松不能更严",
+      "partial_refund": "无按质量分档部分退款的法规/平台判例;最接近=知乎Live消费深度门槛;部分退款属商家自主承诺,承诺即合同(民法典要约),不兑现=违约/虚假广告(广告法55条3-5倍)"
+    },
+    "q3_wechat": {
+      "virtual_pay": "小程序虚拟支付需企业主体+虚拟支付服务协议;退款走商户平台/官方API;微信支付支持按金额部分退款",
+      "ios": "2025-11苹果小程序合作伙伴计划后iOS虚拟支付开放但抽15%佣金,退款利润测算须扣",
+      "voluntary_promise": "微信规范无条款禁止商家提供优于法定的退款承诺;约束=真实兑现+官方退款通道+类目资质"
+    },
+    "q4_anti_abuse": {
+      "features": ["语义锚定(批评须引用报告具体章节/数据,embedding相似度)", "新颖度查重(跨账号n-gram/语义查重,n-gram基线89.6%可检)", "字数上限+质量密度(校正LLM冗长偏差,Zheng 2023)", "频次/退款率账户闸(Panera每周一份+Steam滥用剥夺先例)", "消费深度闸(未读不可评,知乎Live移植)", "黑名单转人工+申诉双通道", "财务熔断(单报告>25%或周退款>营收15%停)"],
+      "llm_judge": "GPT-4级judge与人类一致性>80%(Zheng NeurIPS 2023),可行但须校正位置/冗长/自我偏好三偏差"
+    },
+    "q5_gift": {
+      "conditional_gift": "站内点赞→必赠(无概率)=附赠式/附条件赠送,不构成抽奖,无概率公示义务无金额上限",
+      "random_gift": "随机抽赠=抽奖式有奖销售:最高奖≤5万(反法10条+规范促销规定17条),须事前公示奖品数量/中奖概率/兑奖条件且不得暗中变更(广州番禺执法案例);研报奖值天然合规",
+      "inducement_line": "微信外链规范2.1.2:利益诱导分享(分享得报告/邀请解锁)=违规;站内点赞不触发外链规范;用户自愿分享无对价=常规。判据=利益与分享行为的因果链"
+    }
+  }
+}
