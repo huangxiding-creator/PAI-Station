@@ -18,6 +18,12 @@ import sys
 import time
 from pathlib import Path
 
+# 暂停旗标（0929 用户让路令）：旗标文件存在即静默退出，schtask 仍按点触发但不干活。
+# 挂起 = 创建该文件；恢复 = 删除该文件。见 memory:order-execution-doctrine。
+PAUSE_FLAG = Path(__file__).with_suffix(".PAUSE")
+if PAUSE_FLAG.exists():
+    raise SystemExit(0)
+
 sys.path.insert(0, r"E:\AI-Station\src")
 
 from paistation.sense.localfiles.domain import DEFAULT_EXCLUDE_NAMES  # noqa: E402
