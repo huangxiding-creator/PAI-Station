@@ -1,0 +1,66 @@
+<view class="page">
+  <!-- 加载/失败空态 -->
+  <view wx:if="{{loading}}" class="state-hint">正在拉取本周榜单…</view>
+  <view wx:elif="{{failed}}" class="state-hint">
+    <view>榜单拉取失败，请稍后重试</view>
+    <button class="retry-btn" size="mini" bindtap="onRetry">重试</button>
+  </view>
+
+  <block wx:else>
+    <view class="week-chip">{{week}} · 每周更新</view>
+
+    <!-- 一周商机故事（三段式：背景→项目→谁能吃） -->
+    <view wx:if="{{story}}" class="card story">
+      <view class="story-tag">本周商机故事</view>
+      <view class="story-title">{{story.title}}</view>
+      <view class="story-amount" wx:if="{{story.amount}}">{{story.amount}}</view>
+      <view class="story-p" wx:for="{{story.paragraphs}}" wx:key="index">{{item}}</view>
+      <view class="story-cta" data-rid="{{story.report_id}}" bindtap="onOpenReport">读完整拆解（免费试读）›</view>
+    </view>
+
+    <!-- 省级商机热度榜 -->
+    <view wx:if="{{heat.length}}" class="card">
+      <view class="section-title">省级商机热度榜</view>
+      <view class="heat-row" wx:for="{{heat}}" wx:key="rank">
+        <text class="heat-rank {{item.rank <= 3 ? 'top' : ''}}">{{item.rank}}</text>
+        <view class="heat-main">
+          <view class="heat-line">
+            <text class="heat-prov">{{item.province}}</text>
+            <text class="heat-score">{{item.score}}</text>
+          </view>
+          <view class="heat-bar"><view class="heat-bar-in" style="width: {{item.barPct}}%;"></view></view>
+          <view class="heat-sub">{{item.cards}} 条商机 · 近7日扫码 {{item.scans_7d}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 最大商机单 -->
+    <view wx:if="{{deals.length}}" class="card">
+      <view class="section-title">最大商机单（库内）</view>
+      <view class="deal-row" wx:for="{{deals}}" wx:key="card_id" data-id="{{item.card_id}}" bindtap="onOpenCard">
+        <text class="deal-rank {{item.rank <= 3 ? 'top' : ''}}">{{item.rank}}</text>
+        <view class="deal-main">
+          <view class="deal-title">{{item.title}}</view>
+          <view class="deal-sub">{{item.province}}<text wx:if="{{item.owner}}"> · {{item.owner}}</text></view>
+        </view>
+        <text class="deal-amount" wx:if="{{item.amount}}">{{item.amount}}</text>
+      </view>
+    </view>
+
+    <!-- 新入榜业主 -->
+    <view wx:if="{{owners.length}}" class="card">
+      <view class="section-title">新入榜业主</view>
+      <view class="owner-row" wx:for="{{owners}}" wx:key="rank" data-rid="{{item.report_id}}" bindtap="onOpenReport">
+        <text class="deal-rank {{item.rank <= 3 ? 'top' : ''}}">{{item.rank}}</text>
+        <view class="deal-main">
+          <view class="deal-title">{{item.owner}}</view>
+          <view class="deal-sub">{{item.province}} · 出自{{item.report_title}}</view>
+        </view>
+        <text class="deal-amount" wx:if="{{item.amount}}">{{item.amount}}</text>
+      </view>
+    </view>
+
+    <view wx:if="{{!heat.length && !deals.length && !owners.length && !story}}" class="state-hint">本周榜单生成中，下周一见</view>
+    <view class="foot-note">行业研究，非投资建议；决策自担</view>
+  </block>
+</view>

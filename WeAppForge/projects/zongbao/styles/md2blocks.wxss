@@ -1,0 +1,174 @@
+/* styles/md2blocks.wxss — md2blocks 排版系统（自总包AI顾问排版革命移植；biaoxun answer 同款）。
+   供阅读器等正文渲染页 @import 复用。 */
+.md-p {
+  font-size: 30rpx;
+  line-height: 1.92;
+  color: #2a2f38;
+  letter-spacing: 0.3rpx;
+  text-align: justify;
+  margin: 0 0 26rpx;
+}
+.md-h1 {
+  font-size: 36rpx;
+  font-weight: 800;
+  color: #10151f;
+  line-height: 1.45;
+  margin: 40rpx 0 22rpx;
+}
+.md-h2 {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin: 44rpx 0 20rpx;
+}
+.h2-bar {
+  width: 10rpx;
+  height: 34rpx;
+  border-radius: 6rpx;
+  flex-shrink: 0;
+  background: linear-gradient(180deg, #2a6bff, #1e5eff);
+}
+.md-h2-text {
+  font-size: 33rpx;
+  font-weight: 700;
+  color: #10151f;
+  line-height: 1.5;
+}
+.md-h3 {
+  font-size: 31rpx;
+  font-weight: 700;
+  color: #1c2430;
+  margin: 34rpx 0 16rpx;
+}
+.md-quote {
+  border-left: 8rpx solid #c9d8ff;
+  background: #f6f8fd;
+  border-radius: 0 16rpx 16rpx 0;
+  padding: 20rpx 24rpx;
+  margin: 0 0 26rpx;
+  font-size: 28rpx;
+  color: #4a5462;
+  line-height: 1.85;
+}
+.md-hr {
+  height: 2rpx;
+  margin: 38rpx 0;
+  background: linear-gradient(90deg, transparent, #dfe4ec 18%, #dfe4ec 82%, transparent);
+}
+.md-code-wrap {
+  background: #0f172a;
+  border-radius: 18rpx;
+  margin: 0 0 26rpx;
+  padding: 26rpx 24rpx;
+  overflow: hidden;
+}
+.md-code-scroll {
+  width: 100%;
+}
+.md-code {
+  font-family: "SF Mono", Menlo, Consolas, "Courier New", monospace;
+  font-size: 25rpx;
+  line-height: 1.75;
+  color: #e2e8f0;
+  white-space: pre;
+}
+.md-list {
+  margin: 0 0 26rpx;
+}
+.md-li {
+  display: flex;
+  gap: 16rpx;
+  align-items: flex-start;
+}
+.md-li + .md-li {
+  margin-top: 14rpx;
+}
+.li-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background: #7ba0ff;
+  flex-shrink: 0;
+  margin-top: 21rpx;
+}
+.li-num {
+  min-width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+  background: #eef3ff;
+  color: #1e5eff;
+  font-size: 22rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 10rpx;
+}
+.li-text {
+  flex: 1;
+  font-size: 30rpx;
+  line-height: 1.85;
+  color: #2a2f38;
+}
+.in-b {
+  font-weight: 700;
+  color: #0e141f;
+}
+.in-i {
+  font-style: italic;
+  color: #3a4150;
+}
+.in-c {
+  font-family: "SF Mono", Menlo, Consolas, "Courier New", monospace;
+  font-size: 26rpx;
+  background: #f1f4f9;
+  color: #3556c9;
+  padding: 2rpx 12rpx;
+  border-radius: 8rpx;
+}
+.in-l {
+  color: #1e5eff;
+  text-decoration: underline;
+}
+.md-tbl-scroll {
+  width: 100%;
+  margin-bottom: 26rpx;
+}
+.md-tbl {
+  display: inline-block;
+  min-width: 100%;
+  border-radius: 14rpx;
+  overflow: hidden;
+  border: 2rpx solid #edf0f5;
+}
+.md-tr {
+  display: flex;
+}
+.md-tr-head {
+  background: #f2f5fb;
+}
+.md-th,
+.md-td {
+  padding: 16rpx 22rpx;
+  font-size: 26rpx;
+  line-height: 1.6;
+  flex-shrink: 0;
+  max-width: 420rpx;
+}
+.md-th {
+  font-weight: 700;
+  color: #1c2430;
+}
+.md-td {
+  color: #2a2f38;
+  border-top: 2rpx solid #edf0f5;
+}
+.md-tr .md-th + .md-th,
+.md-tr .md-td + .md-td {
+  border-left: 2rpx solid #edf0f5;
+}
+.md > view:first-child,
+.md > scroll-view:first-child {
+  margin-top: 0;
+}

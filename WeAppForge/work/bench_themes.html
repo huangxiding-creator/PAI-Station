@@ -1,0 +1,519 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#111; font-family:"Microsoft YaHei",sans-serif; padding:18px; display:flex; flex-wrap:wrap; gap:18px; }
+.phone { width:300px; }
+.scr { width:300px; height:520px; overflow:hidden; border-radius:14px; position:relative;
+  background: var(--deep, #081a36); border:1px solid #333; }
+.hero { position:relative; padding:18px 16px 14px; overflow:hidden; }
+.hero-grid { position:absolute; inset:0; opacity:.5;
+  background-image: linear-gradient(rgba(var(--grid-rgb),.14) 1px, transparent 1px), linear-gradient(90deg, rgba(var(--grid-rgb),.14) 1px, transparent 1px);
+  background-size: 24px 24px; }
+.hero-glow { position:absolute; top:-70px; left:50%; transform:translateX(-50%); width:340px; height:200px;
+  background: radial-gradient(ellipse at center, rgba(var(--glow-rgb),.30), transparent 65%); }
+.brand { position:relative; font-size:10px; letter-spacing:2px; color: var(--ink-faint); }
+.hero-t1 { position:relative; margin-top:8px; font-size:21px; font-weight:800; color: var(--ink); letter-spacing:1px; }
+.hero-sub { position:relative; margin-top:5px; font-size:10.5px; color: var(--ink-dim); }
+.chipbox { position:relative; margin-top:10px; display:flex; gap:6px; flex-wrap:wrap; }
+.chip { font-size:9.5px; color: var(--ink-dim); border:1px dashed rgba(var(--grid-rgb),.55); padding:4px 8px; border-radius:3px; background: rgba(var(--navy2-rgb),.35); }
+.cta { position:relative; margin-top:12px; text-align:center; font-size:13px; font-weight:700; color:#1b1206;
+  background: linear-gradient(135deg, var(--accent), var(--accent-deep)); border-radius:6px; padding:10px 0;
+  box-shadow: 0 6px 18px rgba(var(--accent-rgb),.32); }
+.ticket { position:relative; margin-top:10px; display:flex; align-items:center; justify-content:space-between;
+  background: rgba(var(--raise-rgb),.6); border:1px solid rgba(var(--grid-rgb),.35); border-radius:6px; padding:7px 10px;
+  border-style: dashed; }
+.tk-l { font-size:9px; color: var(--ink-faint); }
+.tk-v { font-size:16px; font-weight:800; color: var(--accent-soft); } .tk-v i { font-size:9px; font-style:normal; color: var(--ink-faint); }
+.tk-r { font-size:8.5px; color: var(--ink-faint); max-width:110px; text-align:right; }
+.card { margin:10px 12px; background: var(--paper); border-radius:8px; padding:12px; position:relative;
+  box-shadow: 0 8px 20px rgba(0,0,0,.35); }
+.q-line { display:flex; gap:6px; align-items:flex-start; }
+.q-tag { font-size:8.5px; background: var(--amber-bg); color: var(--amber-ink); border-left:3px solid var(--accent); padding:2px 5px; border-radius:2px; white-space:nowrap; }
+.q-txt { font-size:11.5px; font-weight:700; color:#2a2f3a; }
+.para { margin-top:7px; font-size:10px; line-height:1.7; color:#3d4350; }
+.cite { color: var(--blue); font-size:8px; vertical-align:super; }
+.tldr { margin-top:8px; background: var(--paper-cool); border:1px solid var(--blue-tint); border-radius:6px; padding:8px; }
+.tldr-h { font-size:9.5px; font-weight:800; color: var(--blue); letter-spacing:1px; }
+.tldr-i { margin-top:4px; font-size:9.5px; color:#3d4350; } .tldr-i b { color: var(--blue); font-size:8.5px; margin-right:4px; }
+.pills { margin-top:9px; display:flex; gap:5px; flex-wrap:wrap; }
+.pill { font-size:9px; color:#4a5160; border:1px solid var(--paper-edge); background: var(--paper-hi); border-radius:20px; padding:4px 8px; }
+.p-on { color:#fff; background: var(--stamp); border-color: var(--stamp); }
+.stamp { position:absolute; right:10px; top:44px; transform:rotate(-14deg); color: var(--stamp);
+  border:2px solid var(--stamp); border-radius:4px; padding:2px 6px; font-size:11px; font-weight:900; opacity:.85; }
+</style></head><body>
+
+<div class="phone" style="--dummy:0">
+ <style>.pnavy {   --deep: #050e1c;
+  --navy1: #071a39;
+  --navy2: #0d2449;
+  --navy3: #16325f;
+  --raise: #233147;
+  --raise2: #33435e;
+  --line: #3a4a63;
+  --ink: #edf4ff;
+  --inkdim: #9cadc9;
+  --inkdimhi: #bac8de;
+  --inkfaint: #7887a1;
+  --glow: #65a1fb;
+  --glowsoft: #accaf6;
+  --blue: #2164ca;
+  --bluetint: #e2e9f3;
+  --paper: #f8f5ed;
+  --paperhi: #fdfbf7;
+  --papercool: #f0f4f9;
+  --paperdim: #ebe7db;
+  --paperedge: #ddd6c6;
+  --accent: #ff9633;
+  --accentsoft: #ffba7a;
+  --accentdeep: #f98110;
+  --accentink: #ae5e13;
+  --accentbg: #fcf2e8;
+  --amberbg: #faefe5;
+  --amberline: #f0d3b7;
+  --amberink: #ae6119;
+  --amberdeep: #4e2f13;
+  --stamp: #c5402b;
+  --stamphi: #d86655;
+  --stampbg: #f2d8d4;
+  --stampmid: #e2afa7;
+  --stampdeep: #64322b;
+  --inkrgb: 237,244,255;
+  --glowrgb: 101,161,251;
+  --bluergb: 33,100,202;
+  --accentrgb: 255,150,51;
+  --accentdeeprgb: 249,129,16;
+  --accentinkrgb: 174,94,19;
+  --navy1rgb: 7,26,57;
+  --navy2rgb: 13,36,73;
+  --deeprgb: 5,14,28;
+  --raisergb: 35,49,71;
+  --gridrgb: 163,181,210;
+  --grid2rgb: 177,190,211; }</style>
+ <div class="scr pnavy">
+  <div class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="brand">总包AI顾问 · 周一 深海蓝图</div>
+    <div class="hero-t1">工程难题，问总包智库</div>
+    <div class="hero-sub">背后是10年沉淀的顶级总包智库</div>
+    <div class="chipbox"><span class="chip">EPC 固定总价调价</span><span class="chip">背靠背条款</span><span class="chip">结算审计</span></div>
+    <div class="cta">立即咨询 · 每天免费 6 次</div>
+    <div class="ticket"><span class="tk-l">今日额度</span><span class="tk-v">6 <i>/ 次</i></span><span class="tk-r">有用/分享/纠错 各+1次</span></div>
+  </div>
+  <div class="card">
+    <div class="q-line"><span class="q-tag">咨询</span><span class="q-txt">EPC 合同下钢材涨价超 5% 能调价吗？</span></div>
+    <div class="para">原则上讲，固定总价合同的材料价格风险由承包人承担，但合同约定了调价窗口的，超出部分可主张调整……<span class="cite">[1]</span></div>
+    <div class="tldr"><div class="tldr-h">要点速览</div><div class="tldr-i"><b>01</b> 看合同是否约定±5%调差窗口</div><div class="tldr-i"><b>02</b> 情势变更的司法边界：商业风险 vs 不可预见</div></div>
+    <div class="pills"><span class="pill p-on">✓ 有用 +1次</span><span class="pill">导出</span><span class="pill">纠错 +1次</span><span class="pill">分享 +1次</span></div>
+    <div class="stamp">有用 ✓</div>
+  </div>
+ </div>
+</div>
+
+<div class="phone" style="--dummy:0">
+ <style>.ppine {   --deep: #061b16;
+  --navy1: #08372b;
+  --navy2: #0e4839;
+  --navy3: #185d4c;
+  --raise: #24463e;
+  --raise2: #345d53;
+  --line: #3b6258;
+  --ink: #edfffb;
+  --inkdim: #9dc8bd;
+  --inkdimhi: #bbddd4;
+  --inkfaint: #79a096;
+  --glow: #65fbdd;
+  --glowsoft: #acf6e7;
+  --blue: #21caa8;
+  --bluetint: #e2f3ef;
+  --paper: #f8f6ed;
+  --paperhi: #fdfcf7;
+  --papercool: #f0f9f8;
+  --paperdim: #ebe8db;
+  --paperedge: #ddd8c6;
+  --accent: #ffa733;
+  --accentsoft: #ffc67a;
+  --accentdeep: #f99410;
+  --accentink: #ae6b13;
+  --accentbg: #fcf4e8;
+  --amberbg: #faf1e5;
+  --amberline: #f0d7b7;
+  --amberink: #ae6d19;
+  --amberdeep: #4e3413;
+  --stamp: #c5402b;
+  --stamphi: #d86655;
+  --stampbg: #f2d8d4;
+  --stampmid: #e2afa7;
+  --stampdeep: #64322b;
+  --inkrgb: 237,255,251;
+  --glowrgb: 101,251,221;
+  --bluergb: 33,202,168;
+  --accentrgb: 255,167,51;
+  --accentdeeprgb: 249,148,16;
+  --accentinkrgb: 174,107,19;
+  --navy1rgb: 8,55,43;
+  --navy2rgb: 14,72,57;
+  --deeprgb: 6,27,22;
+  --raisergb: 36,70,62;
+  --gridrgb: 164,208,197;
+  --grid2rgb: 178,210,202; }</style>
+ <div class="scr ppine">
+  <div class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="brand">总包AI顾问 · 周二 松烟制图</div>
+    <div class="hero-t1">工程难题，问总包智库</div>
+    <div class="hero-sub">背后是10年沉淀的顶级总包智库</div>
+    <div class="chipbox"><span class="chip">EPC 固定总价调价</span><span class="chip">背靠背条款</span><span class="chip">结算审计</span></div>
+    <div class="cta">立即咨询 · 每天免费 6 次</div>
+    <div class="ticket"><span class="tk-l">今日额度</span><span class="tk-v">6 <i>/ 次</i></span><span class="tk-r">有用/分享/纠错 各+1次</span></div>
+  </div>
+  <div class="card">
+    <div class="q-line"><span class="q-tag">咨询</span><span class="q-txt">EPC 合同下钢材涨价超 5% 能调价吗？</span></div>
+    <div class="para">原则上讲，固定总价合同的材料价格风险由承包人承担，但合同约定了调价窗口的，超出部分可主张调整……<span class="cite">[1]</span></div>
+    <div class="tldr"><div class="tldr-h">要点速览</div><div class="tldr-i"><b>01</b> 看合同是否约定±5%调差窗口</div><div class="tldr-i"><b>02</b> 情势变更的司法边界：商业风险 vs 不可预见</div></div>
+    <div class="pills"><span class="pill p-on">✓ 有用 +1次</span><span class="pill">导出</span><span class="pill">纠错 +1次</span><span class="pill">分享 +1次</span></div>
+    <div class="stamp">有用 ✓</div>
+  </div>
+ </div>
+</div>
+
+<div class="phone" style="--dummy:0">
+ <style>.pobsidian {   --deep: #14110d;
+  --navy1: #272019;
+  --navy2: #342c23;
+  --navy3: #453b30;
+  --raise: #3a3530;
+  --raise2: #4f4942;
+  --line: #544f49;
+  --ink: #fff7ed;
+  --inkdim: #b9b3ac;
+  --inkdimhi: #d1ccc7;
+  --inkfaint: #928d86;
+  --glow: #fbab65;
+  --glowsoft: #f6cfac;
+  --blue: #ca7021;
+  --bluetint: #f3eae2;
+  --paper: #f8f4ed;
+  --paperhi: #fdfbf7;
+  --papercool: #f9f4f0;
+  --paperdim: #ebe6db;
+  --paperedge: #ddd6c6;
+  --accent: #ffc233;
+  --accentsoft: #ffd77a;
+  --accentdeep: #f9b310;
+  --accentink: #ae8013;
+  --accentbg: #fcf6e8;
+  --amberbg: #faf4e5;
+  --amberline: #f0dfb7;
+  --amberink: #ae8119;
+  --amberdeep: #4e3c13;
+  --stamp: #c5402b;
+  --stamphi: #d86655;
+  --stampbg: #f2d8d4;
+  --stampmid: #e2afa7;
+  --stampdeep: #64322b;
+  --inkrgb: 255,247,237;
+  --glowrgb: 251,171,101;
+  --bluergb: 202,112,33;
+  --accentrgb: 255,194,51;
+  --accentdeeprgb: 249,179,16;
+  --accentinkrgb: 174,128,19;
+  --navy1rgb: 39,32,25;
+  --navy2rgb: 52,44,35;
+  --deeprgb: 20,17,13;
+  --raisergb: 58,53,48;
+  --gridrgb: 193,187,180;
+  --grid2rgb: 199,194,189; }</style>
+ <div class="scr pobsidian">
+  <div class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="brand">总包AI顾问 · 周三 曜石鎏金</div>
+    <div class="hero-t1">工程难题，问总包智库</div>
+    <div class="hero-sub">背后是10年沉淀的顶级总包智库</div>
+    <div class="chipbox"><span class="chip">EPC 固定总价调价</span><span class="chip">背靠背条款</span><span class="chip">结算审计</span></div>
+    <div class="cta">立即咨询 · 每天免费 6 次</div>
+    <div class="ticket"><span class="tk-l">今日额度</span><span class="tk-v">6 <i>/ 次</i></span><span class="tk-r">有用/分享/纠错 各+1次</span></div>
+  </div>
+  <div class="card">
+    <div class="q-line"><span class="q-tag">咨询</span><span class="q-txt">EPC 合同下钢材涨价超 5% 能调价吗？</span></div>
+    <div class="para">原则上讲，固定总价合同的材料价格风险由承包人承担，但合同约定了调价窗口的，超出部分可主张调整……<span class="cite">[1]</span></div>
+    <div class="tldr"><div class="tldr-h">要点速览</div><div class="tldr-i"><b>01</b> 看合同是否约定±5%调差窗口</div><div class="tldr-i"><b>02</b> 情势变更的司法边界：商业风险 vs 不可预见</div></div>
+    <div class="pills"><span class="pill p-on">✓ 有用 +1次</span><span class="pill">导出</span><span class="pill">纠错 +1次</span><span class="pill">分享 +1次</span></div>
+    <div class="stamp">有用 ✓</div>
+  </div>
+ </div>
+</div>
+
+<div class="phone" style="--dummy:0">
+ <style>.pviolet {   --deep: #0e071b;
+  --navy1: #1a0936;
+  --navy2: #241046;
+  --navy3: #321a5b;
+  --raise: #312545;
+  --raise2: #43355c;
+  --line: #4a3c61;
+  --ink: #f4edff;
+  --inkdim: #ad9ec7;
+  --inkdimhi: #c8bcdc;
+  --inkfaint: #877a9f;
+  --glow: #9c65fb;
+  --glowsoft: #c7acf6;
+  --blue: #5f21ca;
+  --bluetint: #e8e2f3;
+  --paper: #f2edf8;
+  --paperhi: #faf7fd;
+  --papercool: #f4f0f9;
+  --paperdim: #e2dbeb;
+  --paperedge: #d0c6dd;
+  --accent: #33ddff;
+  --accentsoft: #7ae9ff;
+  --accentdeep: #10d2f9;
+  --accentink: #1395ae;
+  --accentbg: #e8f9fc;
+  --amberbg: #e5f7fa;
+  --amberline: #b7e6f0;
+  --amberink: #1995ae;
+  --amberdeep: #13444e;
+  --stamp: #c5402b;
+  --stamphi: #d86655;
+  --stampbg: #f2d8d4;
+  --stampmid: #e2afa7;
+  --stampdeep: #64322b;
+  --inkrgb: 244,237,255;
+  --glowrgb: 156,101,251;
+  --bluergb: 95,33,202;
+  --accentrgb: 51,221,255;
+  --accentdeeprgb: 16,210,249;
+  --accentinkrgb: 19,149,174;
+  --navy1rgb: 26,9,54;
+  --navy2rgb: 36,16,70;
+  --deeprgb: 14,7,27;
+  --raisergb: 49,37,69;
+  --gridrgb: 181,165,207;
+  --grid2rgb: 190,178,209; }</style>
+ <div class="scr pviolet">
+  <div class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="brand">总包AI顾问 · 周四 暮山紫电</div>
+    <div class="hero-t1">工程难题，问总包智库</div>
+    <div class="hero-sub">背后是10年沉淀的顶级总包智库</div>
+    <div class="chipbox"><span class="chip">EPC 固定总价调价</span><span class="chip">背靠背条款</span><span class="chip">结算审计</span></div>
+    <div class="cta">立即咨询 · 每天免费 6 次</div>
+    <div class="ticket"><span class="tk-l">今日额度</span><span class="tk-v">6 <i>/ 次</i></span><span class="tk-r">有用/分享/纠错 各+1次</span></div>
+  </div>
+  <div class="card">
+    <div class="q-line"><span class="q-tag">咨询</span><span class="q-txt">EPC 合同下钢材涨价超 5% 能调价吗？</span></div>
+    <div class="para">原则上讲，固定总价合同的材料价格风险由承包人承担，但合同约定了调价窗口的，超出部分可主张调整……<span class="cite">[1]</span></div>
+    <div class="tldr"><div class="tldr-h">要点速览</div><div class="tldr-i"><b>01</b> 看合同是否约定±5%调差窗口</div><div class="tldr-i"><b>02</b> 情势变更的司法边界：商业风险 vs 不可预见</div></div>
+    <div class="pills"><span class="pill p-on">✓ 有用 +1次</span><span class="pill">导出</span><span class="pill">纠错 +1次</span><span class="pill">分享 +1次</span></div>
+    <div class="stamp">有用 ✓</div>
+  </div>
+ </div>
+</div>
+
+<div class="phone" style="--dummy:0">
+ <style>.pceladon {   --deep: #07171b;
+  --navy1: #092f36;
+  --navy2: #103d46;
+  --navy3: #1a505b;
+  --raise: #254045;
+  --raise2: #35555c;
+  --line: #3c5b61;
+  --ink: #edfcff;
+  --inkdim: #9ec0c7;
+  --inkdimhi: #bcd7dc;
+  --inkfaint: #7a999f;
+  --glow: #65fbef;
+  --glowsoft: #acf6f0;
+  --blue: #21cabc;
+  --bluetint: #e2f3f1;
+  --paper: #edf8ed;
+  --paperhi: #f7fdf7;
+  --papercool: #f0f9f9;
+  --paperdim: #dbebdb;
+  --paperedge: #c6ddc6;
+  --accent: #ff4433;
+  --accentsoft: #ff857a;
+  --accentdeep: #f92410;
+  --accentink: #ae2013;
+  --accentbg: #fceae8;
+  --amberbg: #fae7e5;
+  --amberline: #f0bcb7;
+  --amberink: #ae2519;
+  --amberdeep: #4e1813;
+  --stamp: #c5402b;
+  --stamphi: #d86655;
+  --stampbg: #f2d8d4;
+  --stampmid: #e2afa7;
+  --stampdeep: #64322b;
+  --inkrgb: 237,252,255;
+  --glowrgb: 101,251,239;
+  --bluergb: 33,202,188;
+  --accentrgb: 255,68,51;
+  --accentdeeprgb: 249,36,16;
+  --accentinkrgb: 174,32,19;
+  --navy1rgb: 9,47,54;
+  --navy2rgb: 16,61,70;
+  --deeprgb: 7,23,27;
+  --raisergb: 37,64,69;
+  --gridrgb: 165,200,207;
+  --grid2rgb: 178,204,209; }</style>
+ <div class="scr pceladon">
+  <div class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="brand">总包AI顾问 · 周五 青瓷官窑</div>
+    <div class="hero-t1">工程难题，问总包智库</div>
+    <div class="hero-sub">背后是10年沉淀的顶级总包智库</div>
+    <div class="chipbox"><span class="chip">EPC 固定总价调价</span><span class="chip">背靠背条款</span><span class="chip">结算审计</span></div>
+    <div class="cta">立即咨询 · 每天免费 6 次</div>
+    <div class="ticket"><span class="tk-l">今日额度</span><span class="tk-v">6 <i>/ 次</i></span><span class="tk-r">有用/分享/纠错 各+1次</span></div>
+  </div>
+  <div class="card">
+    <div class="q-line"><span class="q-tag">咨询</span><span class="q-txt">EPC 合同下钢材涨价超 5% 能调价吗？</span></div>
+    <div class="para">原则上讲，固定总价合同的材料价格风险由承包人承担，但合同约定了调价窗口的，超出部分可主张调整……<span class="cite">[1]</span></div>
+    <div class="tldr"><div class="tldr-h">要点速览</div><div class="tldr-i"><b>01</b> 看合同是否约定±5%调差窗口</div><div class="tldr-i"><b>02</b> 情势变更的司法边界：商业风险 vs 不可预见</div></div>
+    <div class="pills"><span class="pill p-on">✓ 有用 +1次</span><span class="pill">导出</span><span class="pill">纠错 +1次</span><span class="pill">分享 +1次</span></div>
+    <div class="stamp">有用 ✓</div>
+  </div>
+ </div>
+</div>
+
+<div class="phone" style="--dummy:0">
+ <style>.pforge {   --deep: #180c09;
+  --navy1: #31160e;
+  --navy2: #402016;
+  --navy3: #542d21;
+  --raise: #422e28;
+  --raise2: #584039;
+  --line: #5d4740;
+  --ink: #fff1ed;
+  --inkdim: #c3aaa2;
+  --inkdimhi: #d8c5c0;
+  --inkfaint: #9b857e;
+  --glow: #fba365;
+  --glowsoft: #f6cbac;
+  --blue: #ca6721;
+  --bluetint: #f3e9e2;
+  --paper: #f8f3ed;
+  --paperhi: #fdfaf7;
+  --papercool: #f9f4f0;
+  --paperdim: #ebe4db;
+  --paperedge: #ddd3c6;
+  --accent: #ffcc33;
+  --accentsoft: #ffde7a;
+  --accentdeep: #f9bf10;
+  --accentink: #ae8813;
+  --accentbg: #fcf7e8;
+  --amberbg: #faf5e5;
+  --amberline: #f0e2b7;
+  --amberink: #ae8919;
+  --amberdeep: #4e3f13;
+  --stamp: #c5402b;
+  --stamphi: #d86655;
+  --stampbg: #f2d8d4;
+  --stampmid: #e2afa7;
+  --stampdeep: #64322b;
+  --inkrgb: 255,241,237;
+  --glowrgb: 251,163,101;
+  --bluergb: 202,103,33;
+  --accentrgb: 255,204,51;
+  --accentdeeprgb: 249,191,16;
+  --accentinkrgb: 174,136,19;
+  --navy1rgb: 49,22,14;
+  --navy2rgb: 64,32,22;
+  --deeprgb: 24,12,9;
+  --raisergb: 66,46,40;
+  --gridrgb: 203,177,170;
+  --grid2rgb: 206,187,182; }</style>
+ <div class="scr pforge">
+  <div class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="brand">总包AI顾问 · 周六 熔炉信号</div>
+    <div class="hero-t1">工程难题，问总包智库</div>
+    <div class="hero-sub">背后是10年沉淀的顶级总包智库</div>
+    <div class="chipbox"><span class="chip">EPC 固定总价调价</span><span class="chip">背靠背条款</span><span class="chip">结算审计</span></div>
+    <div class="cta">立即咨询 · 每天免费 6 次</div>
+    <div class="ticket"><span class="tk-l">今日额度</span><span class="tk-v">6 <i>/ 次</i></span><span class="tk-r">有用/分享/纠错 各+1次</span></div>
+  </div>
+  <div class="card">
+    <div class="q-line"><span class="q-tag">咨询</span><span class="q-txt">EPC 合同下钢材涨价超 5% 能调价吗？</span></div>
+    <div class="para">原则上讲，固定总价合同的材料价格风险由承包人承担，但合同约定了调价窗口的，超出部分可主张调整……<span class="cite">[1]</span></div>
+    <div class="tldr"><div class="tldr-h">要点速览</div><div class="tldr-i"><b>01</b> 看合同是否约定±5%调差窗口</div><div class="tldr-i"><b>02</b> 情势变更的司法边界：商业风险 vs 不可预见</div></div>
+    <div class="pills"><span class="pill p-on">✓ 有用 +1次</span><span class="pill">导出</span><span class="pill">纠错 +1次</span><span class="pill">分享 +1次</span></div>
+    <div class="stamp">有用 ✓</div>
+  </div>
+ </div>
+</div>
+
+<div class="phone" style="--dummy:0">
+ <style>.pgraphite {   --deep: #0d1014;
+  --navy1: #171d28;
+  --navy2: #212836;
+  --navy3: #2e3747;
+  --raise: #2f333b;
+  --raise2: #414650;
+  --line: #474d56;
+  --ink: #edf4ff;
+  --inkdim: #aab0bb;
+  --inkdimhi: #c6cad2;
+  --inkfaint: #858a93;
+  --glow: #65abfb;
+  --glowsoft: #accff6;
+  --blue: #2170ca;
+  --bluetint: #e2eaf3;
+  --paper: #edf0f8;
+  --paperhi: #f7f9fd;
+  --papercool: #f0f4f9;
+  --paperdim: #dbe0eb;
+  --paperedge: #c6cddd;
+  --accent: #ff6933;
+  --accentsoft: #ff9e7a;
+  --accentdeep: #f94e10;
+  --accentink: #ae3d13;
+  --accentbg: #fcede8;
+  --amberbg: #faebe5;
+  --amberline: #f0c7b7;
+  --amberink: #ae4119;
+  --amberdeep: #4e2313;
+  --stamp: #c5402b;
+  --stamphi: #d86655;
+  --stampbg: #f2d8d4;
+  --stampmid: #e2afa7;
+  --stampdeep: #64322b;
+  --inkrgb: 237,244,255;
+  --glowrgb: 101,171,251;
+  --bluergb: 33,112,202;
+  --accentrgb: 255,105,51;
+  --accentdeeprgb: 249,78,16;
+  --accentinkrgb: 174,61,19;
+  --navy1rgb: 23,29,40;
+  --navy2rgb: 33,40,54;
+  --deeprgb: 13,16,20;
+  --raisergb: 47,51,59;
+  --gridrgb: 178,184,194;
+  --grid2rgb: 188,192,200; }</style>
+ <div class="scr pgraphite">
+  <div class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="brand">总包AI顾问 · 周日 晨雾石墨</div>
+    <div class="hero-t1">工程难题，问总包智库</div>
+    <div class="hero-sub">背后是10年沉淀的顶级总包智库</div>
+    <div class="chipbox"><span class="chip">EPC 固定总价调价</span><span class="chip">背靠背条款</span><span class="chip">结算审计</span></div>
+    <div class="cta">立即咨询 · 每天免费 6 次</div>
+    <div class="ticket"><span class="tk-l">今日额度</span><span class="tk-v">6 <i>/ 次</i></span><span class="tk-r">有用/分享/纠错 各+1次</span></div>
+  </div>
+  <div class="card">
+    <div class="q-line"><span class="q-tag">咨询</span><span class="q-txt">EPC 合同下钢材涨价超 5% 能调价吗？</span></div>
+    <div class="para">原则上讲，固定总价合同的材料价格风险由承包人承担，但合同约定了调价窗口的，超出部分可主张调整……<span class="cite">[1]</span></div>
+    <div class="tldr"><div class="tldr-h">要点速览</div><div class="tldr-i"><b>01</b> 看合同是否约定±5%调差窗口</div><div class="tldr-i"><b>02</b> 情势变更的司法边界：商业风险 vs 不可预见</div></div>
+    <div class="pills"><span class="pill p-on">✓ 有用 +1次</span><span class="pill">导出</span><span class="pill">纠错 +1次</span><span class="pill">分享 +1次</span></div>
+    <div class="stamp">有用 ✓</div>
+  </div>
+ </div>
+</div>
+</body></html>

@@ -1,3 +1,5 @@
+<page-meta page-style="{{themeStyle}}" />
+
 <view class="page">
 
   <!-- ══ 打破砂锅头：蓝图底（用户令 v0.5.0 更名）══ -->
@@ -12,8 +14,8 @@
         <text class="avatar-glyph">锅</text>
       </view>
       <view class="head-info">
-        <view class="nick">总包AI顾问 · 7×24小时</view>
-        <view class="head-sub">打破砂锅问到底 · 我来给您开拓思路</view>
+        <view class="nick">总包AI顾问 · 工程问答</view>
+        <view class="head-sub">打破砂锅问到底 · 我来给您拓思路</view>
       </view>
       <view class="head-no mono">NO.{{sheetNo}}</view>
     </view>
@@ -41,7 +43,34 @@
       </view>
     </view>
     <view class="muted" wx:else>额度加载中…</view>
-    <view class="muted quota-rule">每天免费 6 次 · 有用/导出/分享/纠错（写具体意见）各 +1 次，上不封顶 · 北京时间 0 点清零</view>
+    <view class="muted quota-rule">每天免费 6 次 · 有用/纠错（写具体意见）各 +1 次，上不封顶 · 北京时间 0 点清零</view>
+  </view>
+
+  <!-- ══ v0.7.3 外观 · 周换装（用户令：七天自动轮换 + 可锁定心仪配色）══ -->
+  <view class="card ticks rise" style="animation-delay: 100ms">
+    <view class="sheet-head">
+      <text class="kicker kicker-on-paper">外观 · APPEARANCE</text>
+      <text class="muted ap-hint">每周七天自动轮换 · 也可锁定</text>
+    </view>
+    <view class="ap-grid">
+      <view class="ap-cell {{item.active ? 'ap-on' : ''}}" wx:for="{{themes}}" wx:key="key"
+            data-key="{{item.key}}" bindtap="onThemeTap" hover-class="ap-hover">
+        <view class="ap-swatch" style="background: {{item.swatchDeep}};">
+          <view class="ap-dot" style="background: {{item.swatchAccent}};"></view>
+          <view class="ap-paper" style="background: {{item.swatchPaper}};"></view>
+        </view>
+        <view class="ap-name">{{item.name}}</view>
+        <view class="muted ap-wd">{{item.weekdayLabel}}</view>
+        <view class="ap-check" wx:if="{{item.active}}">✓</view>
+      </view>
+      <view class="ap-cell" bindtap="onThemeAuto" hover-class="ap-hover">
+        <view class="ap-swatch ap-swatch-auto">
+          <view class="ap-dot" style="background: var(--accent);"></view>
+        </view>
+        <view class="ap-name">跟随星期</view>
+        <view class="muted ap-wd">自动轮换</view>
+      </view>
+    </view>
   </view>
 
   <!-- 咨询记录 -->
@@ -93,12 +122,20 @@
         <view class="hist-arrow">›</view>
       </view>
 
-      <!-- 批量导出：全部咨询问答 → Word/PDF/Markdown（用户令 v0.5.0） -->
-      <button class="btn-ghost export-all-btn" hover-class="btn-hover" bindtap="onExportAll">批量导出全部咨询（Word / PDF / Markdown）</button>
+      <!-- 批量导出：全部咨询问答 → Word/PDF/Markdown（v0.7.0 重设计：藏青主视觉+橙色图标块） -->
+      <button class="export-all-btn" hover-class="export-all-hover" bindtap="onExportAll">
+        <view class="ea-icon"><text>📦</text></view>
+        <view class="ea-main">
+          <view class="ea-title">批量导出全部咨询</view>
+          <view class="ea-sub">Word / PDF / Markdown 三格式 · 一键转发同事</view>
+        </view>
+        <text class="ea-arrow">›</text>
+      </button>
     </block>
   </view>
 
-  <view class="muted mono" style="text-align: center; padding: 8rpx 0 24rpx; letter-spacing: 2rpx;">v0.5.1 · 总包AI顾问 · 顶级总包智库</view>
+  <view class="muted mono" style="text-align: center; padding: 8rpx 0 0; letter-spacing: 2rpx;">v0.7.6 · 总包AI顾问</view>
+  <view class="legal-row" bindtap="goPrivacy" hover-class="legal-hover">用户协议 · 隐私政策</view>
 
   <view class="safe-bottom"></view>
 </view>

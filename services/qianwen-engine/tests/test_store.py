@@ -35,8 +35,12 @@ def test_reward_flow_per_answer_per_action(tmp_db):
     assert s.grant_reward("u1", "a1", "like") is True      # 首次：+1
     assert s.grant_reward("u1", "a1", "like") is False     # 同答案同动作：只有一次
     assert s.grant_reward("u1", "a2", "like") is True      # 不同答案：再 +1（不封顶）
-    assert s.grant_reward("u1", "a1", "export") is True    # 同答案不同动作：再 +1
-    assert s.quota_left("u1")["bonus_left"] == 3
+    assert s.grant_reward("u1", "a1", "share") is True     # 同答案不同动作：再 +1
+    assert s.grant_reward("u1", "a1", "criticize") is True
+    assert s.quota_left("u1")["bonus_left"] == 4
+    # v0.7.3（用户令）：导出退出赠次动作表
+    with pytest.raises(ValueError):
+        s.grant_reward("u1", "a1", "export")
     with pytest.raises(ValueError):
         s.grant_reward("u1", "a1", "hack")                 # 未知动作拒绝
 
@@ -92,8 +96,9 @@ def test_pot_list_and_likes(tmp_db):
     s.save_pot_answer("问题A", "甲" * 200, [], sort=2)
     s.save_pot_answer("问题B", "乙" * 150, [], sort=1)
     items = s.pot_list()
-    assert [i["question"] for i in items] == ["问题B", "问题A"]   # 按 sort
-    assert items[0]["preview"] == "乙" * 100 and len(items[0]["preview"]) == 100
+    # v0.7.0 排序：时间最新优先 + 互动加权（sort 列退役）；同刻落库 → 稳定保持插入序
+    assert [i["question"] for i in items] == ["问题A", "问题B"]
+    assert items[0]["preview"] == "甲" * 200 and len(items[0]["preview"]) == 200
     assert items[0]["likes"] == 0
     # 锅圈点赞：按人走 rewards 去重（人人可赞，mark_liked 只管本人答案）
     a_b = items[0]["id"]
@@ -119,3 +124,38 @@ def test_optimize_counter(tmp_db):
     assert s.opt_used_today("u1") == 10
     s.refund_optimize("u1")
     assert s.consume_optimize("u1") is True     # 失败退还后可用
+
+
+def test_init_mysql_mode_never_executes_none(tmp_db, monkeypatch):
+    """回归（v0.8.0 云托管实弹）：_SCHEMA 存在 (sqlite语句, None) 对（mysql 无对应，
+    如 CREATE INDEX IF NOT EXISTS）——init() 在 mysql 模式必须跳过而非 execute(None)。
+    实弹症状：/api/quota 等首个触库请求 500（'NoneType' has no attribute 'lstrip'）。"""
+    import sqlite3
+    from contextlib import contextmanager
+    s = tmp_db
+    executed: list = []
+
+    class _Rec:
+        def execute(self, sql, params=()):
+            if sql is None:
+                raise AssertionError("init() 在 mysql 模式执行了 None 模板")
+            executed.append(sql)
+            return self
+        def fetchone(self):
+            return None
+        def fetchall(self):
+            return []
+
+    @contextmanager
+    def fake_db():
+        yield _Rec()
+
+    monkeypatch.setattr(s, "_IS_MYSQL", True)
+    monkeypatch.setattr(s, "_db", fake_db)
+    # _upgrade 在 mysql 模式逐列 ALTER：模拟列已存在（dup column）走吞异常路径
+    monkeypatch.setattr(s, "_upgrade", lambda *a, **k: None)
+    s.init()
+    assert executed, "应执行建表语句"
+    assert all(isinstance(x, str) and x for x in executed)
+    # mysql 侧 None 的两条 CREATE INDEX 不得出现，也不得把 sqlite 原文发去 mysql
+    assert not any("CREATE INDEX" in x for x in executed)

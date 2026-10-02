@@ -1,0 +1,117 @@
+<!-- templates/p1-sheet.wxml — P1 三弹层共享模板（detail/reader 引用；样式 styles/p1-sheet.wxss）：
+     like-sheet 点赞赠报告结果卡（赠品由服务端指定，前端不本地随机；FR-P1-01）
+     team-sheet 3 人组队 ¥998（创建/加入/进度；72h 规则文案引自 agreement 真源；FR-P1-10）
+     criticize-sheet 批评评分退款（50-300 计数器+受理回执+线性退款规则展示；FR-P1-02~05）
+     事件绑定宿主页方法：onLikeSheetClose/onLikeGoRead/onLikeRules、onTeamClose/onTeamRules/
+     onTeamCreate/onTeamJoinIdInput/onTeamJoin、onCritClose/onCritRules/onCritInput/onCritSubmit/
+     onCritRefresh/onCritApplyRefund。 -->
+<template name="like-sheet">
+  <view wx:if="{{likeOpen}}" class="p1-mask" bindtap="onLikeSheetClose">
+    <view class="p1-sheet" catchtap="noop">
+      <view class="p1-title">点赞必得赠阅</view>
+      <view wx:if="{{liking}}" class="p1-hint">正在领取…</view>
+      <block wx:elif="{{likeGift.granted}}">
+        <view class="like-gift-card">
+          <view class="like-gift-tag">今日赠阅</view>
+          <view class="like-gift-title">{{likeGift.title}}</view>
+          <view class="like-gift-rule">{{likeGift.rule}}</view>
+        </view>
+        <view class="like-rules">
+          <view class="like-rules-li" wx:for="{{likeRules}}" wx:key="index">{{item}}</view>
+        </view>
+        <view class="p1-actions">
+          <button class="p1-btn" plain bindtap="onLikeRules">完整规则</button>
+          <button class="p1-btn primary" bindtap="onLikeGoRead">去阅读赠阅研报</button>
+        </view>
+      </block>
+      <block wx:else>
+        <view class="p1-hint">今日赠阅已领取，明日再来</view>
+        <view class="p1-actions">
+          <button class="p1-btn primary" plain bindtap="onLikeSheetClose">知道了</button>
+        </view>
+      </block>
+    </view>
+  </view>
+</template>
+
+<template name="team-sheet">
+  <view wx:if="{{teamOpen}}" class="p1-mask" bindtap="onTeamClose">
+    <view class="p1-sheet" catchtap="noop">
+      <view class="p1-title">3 人组队 · ¥{{teamPriceYuan}}/队</view>
+      <view class="p1-hint">组满 3 人，全队每人均得本报告完整阅读权益</view>
+
+      <block wx:if="{{team}}">
+        <view class="team-progress">
+          <view class="team-progress-text">{{team.progressText}} · {{team.statusText}}</view>
+          <view class="team-bar"><view class="team-bar-in" style="width: {{team.size / team.capacity * 100}}%"></view></view>
+          <view class="team-id-line" wx:if="{{team.teamId}}">组队编号：{{team.teamId}}（发给队友填入加入）</view>
+        </view>
+      </block>
+      <block wx:else>
+        <view class="form-row">方式一：发起组队（您是队长）</view>
+        <button class="p1-btn primary block" disabled="{{teamCreating}}" bindtap="onTeamCreate">
+          {{teamCreating ? '创建中…' : '发起组队 ¥' + teamPriceYuan}}
+        </button>
+        <view class="form-row">方式二：输入队友的组队编号加入</view>
+        <view class="team-join-row">
+          <input class="form-input join" value="{{teamJoinId}}" placeholder="组队编号" bindinput="onTeamJoinIdInput" />
+          <button class="p1-btn join-btn" plain bindtap="onTeamJoin">加入</button>
+        </view>
+      </block>
+
+      <scroll-view class="team-rules" scroll-y>
+        <view class="team-rules-li" wx:for="{{teamRules}}" wx:key="index">{{item}}</view>
+      </scroll-view>
+      <view class="p1-actions">
+        <button class="p1-btn" plain bindtap="onTeamRules">完整组队规则</button>
+        <button class="p1-btn primary" plain bindtap="onTeamClose">{{team ? '完成' : '暂不组队'}}</button>
+      </view>
+    </view>
+  </view>
+</template>
+
+<template name="criticize-sheet">
+  <view wx:if="{{critOpen}}" class="p1-mask" bindtap="onCritClose">
+    <view class="p1-sheet" catchtap="noop">
+      <view class="p1-title">批评评分退款</view>
+
+      <block wx:if="{{!critReceipt}}">
+        <view class="p1-hint">认真读完不满意？50-300 字批评（须引用具体章节或数据点），评分 ≥50 分按分数线性退款。</view>
+        <textarea
+          class="crit-textarea"
+          value="{{critContent}}"
+          maxlength="300"
+          placeholder="例：第 X 章的某项数据与我的项目经验不符，建议补充…"
+          bindinput="onCritInput"
+        ></textarea>
+        <view class="crit-counter {{critCounter.ok ? 'ok' : 'warn'}}">
+          <text>{{critCounter.text}}</text>
+          <text class="crit-counter-hint">{{critCounter.ok ? '字数符合 50-300 要求' : '还须写满 50 字（上限 300 字）'}}</text>
+        </view>
+        <view class="crit-rules">
+          <view class="crit-rules-li" wx:for="{{critRules}}" wx:key="index">{{item}}</view>
+        </view>
+        <view class="p1-actions">
+          <button class="p1-btn" plain bindtap="onCritRules">完整退款规则</button>
+          <button class="p1-btn primary" disabled="{{critSubmitting || !critCounter.ok}}" bindtap="onCritSubmit">
+            {{critSubmitting ? '提交中…' : '提交批评'}}
+          </button>
+        </view>
+      </block>
+
+      <block wx:else>
+        <view class="crit-receipt">
+          <view class="crit-receipt-stage">{{critReceipt.stageText}}</view>
+          <view class="crit-receipt-score" wx:if="{{critReceipt.scoreText}}">{{critReceipt.scoreText}}</view>
+          <view class="crit-receipt-why" wx:if="{{critReceipt.rationale}}">评分依据：{{critReceipt.rationale}}</view>
+          <view class="crit-receipt-refund" wx:if="{{critReceipt.refundText}}">{{critReceipt.refundText}}</view>
+        </view>
+        <view class="p1-actions">
+          <button wx:if="{{!critReceipt.refundApplied}}" class="p1-btn" plain bindtap="onCritRefresh">刷新评分结果</button>
+          <button wx:if="{{critReceipt.canApplyRefund}}" class="p1-btn refund" bindtap="onCritApplyRefund">申请退款</button>
+          <button class="p1-btn primary" plain bindtap="onCritClose">关闭</button>
+        </view>
+      </block>
+    </view>
+  </view>
+</template>

@@ -1,3 +1,4 @@
+<page-meta page-style="{{themeStyle}}" />
 <view class="page">
 
   <!-- ══ 蓝图头部：锅圈 · 打破砂锅问到底 ══ -->
@@ -8,10 +9,16 @@
     <view class="hero-inner">
       <view class="hero-kicker">POT CIRCLE · BREAK THE POT</view>
       <view class="hero-title">锅圈</view>
-      <view class="hero-sub">打破砂锅问到底 · EPC 总承包热点难点问题，由背后的顶级总包智库逐一拆解答疑</view>
+      <view class="hero-sub">打破砂锅问到底 · EPC 总承包热点难点问题逐一拆解答疑</view>
 
       <view class="hero-dwg mono">DWG NO. {{sheetNo}} · SCALE 1:1<view class="dim-rule"></view><text class="dim-cap">HOT</text></view>
     </view>
+  </view>
+
+  <!-- v0.7.5 深度合成合规：AI 生成内容显著标识（页首常驻） -->
+  <view class="ai-flag">
+    <view class="ai-flag-badge">AI</view>
+    <view class="ai-flag-text">本展区问答内容由人工智能（AI）生成 · 仅供参考</view>
   </view>
 
   <!-- 列表 -->
@@ -41,7 +48,7 @@
     </view>
   </view>
 
-  <!-- 热点问题列表：问题 + 答案前 100 字预览，点开看全文 -->
+  <!-- 热点问题列表：问题 + 答案前 200 字预览（服务端已去 markdown 符号），点开看全文 -->
   <block wx:else>
     <view
       class="card ticks pot-item rise"
@@ -56,18 +63,22 @@
         <view class="pot-no mono">H-{{index + 1 < 10 ? '0' : ''}}{{index + 1}}</view>
         <view class="pot-q">{{item.question}}</view>
       </view>
-      <view class="pot-preview">{{item.preview}}…</view>
+      <view class="pot-preview">{{item.preview}}{{item.preview.length >= 200 ? '…' : ''}}</view>
       <view class="pot-foot">
         <text class="pot-meta mono">{{item.full_chars}} 字全文</text>
         <view class="pot-like {{item.liked ? 'pot-like-on' : ''}}">
           <text class="pot-like-glyph">{{item.liked ? '❤' : '♡'}}</text>
           <text class="mono">{{item.likes}}</text>
         </view>
+        <text class="pot-meta mono">观看 {{item.views}}</text>
+        <text class="pot-meta mono">转发 {{item.shares}}</text>
+        <view class="pot-report" catchtap="onReport" data-id="{{item.id}}" data-q="{{item.question}}">举报</view>
         <text class="pot-more">看全文 ›</text>
       </view>
     </view>
 
-    <view class="muted tip-line">点开任意热点 · 「有用/导出/纠错/分享」同样各 +1 次咨询机会</view>
+    <view class="muted tip-line">点开任意热点 · 「有用 / 纠错」同样各 +1 次咨询机会</view>
+    <view class="muted pot-ai-note">本展区问答内容由 AI 生成 · 仅供参考 · 发现不当内容可点「举报」</view>
   </block>
 
   <view class="safe-bottom"></view>

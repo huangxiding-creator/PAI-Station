@@ -1,0 +1,43 @@
+/* 协议与隐私静态页 — v0.7.4 提审合规（复用答案页 topnav + card 语言） */
+.page { padding-bottom: 40rpx; }
+
+.topnav { color: var(--white-ink); }
+.topnav-row {
+  display: flex;
+  align-items: center;
+  padding: 0 30rpx;
+  position: relative;
+}
+.back-btn {
+  width: 64rpx; height: 64rpx;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 52rpx; font-weight: 300;
+  border: 2rpx solid rgba(var(--t-inkdim-rgb), 0.6);
+  border-radius: 50%;
+}
+.back-hover { opacity: 0.6; }
+.topnav-title {
+  position: absolute; left: 0; right: 0;
+  text-align: center;
+  font-size: 30rpx; font-weight: 700; letter-spacing: 2rpx;
+  pointer-events: none;
+}
+.topnav-cap {
+  position: absolute; right: 30rpx;
+  font-size: 19rpx; letter-spacing: 4rpx;
+  color: var(--ink-dim);
+}
+
+.lg-kicker { margin-bottom: 8rpx; }
+.lg-h {
+  margin-top: 26rpx;
+  font-size: 27rpx;
+  font-weight: 700;
+  color: var(--ink, var(--navy-0));
+}
+.lg-p {
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  line-height: 1.8;
+  color: var(--muted-ink, #5a6a7e);
+}

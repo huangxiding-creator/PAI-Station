@@ -1,0 +1,266 @@
+{
+  "channel": "pilot_features",
+  "generated_at": "2026-09-27T21:15:00+08:00",
+  "docs": [
+    {
+      "channel": "pilot_features",
+      "doc_type": "api",
+      "title": "wx.openDocument - 小程序打开本地文档（PDF）",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/api/file/wx.openDocument.html",
+      "content": "官方 API，打开本地路径的文档，fileType 支持 doc/docx/xls/xlsx/ppt/pptx/pdf。filePath 必须是本地路径，即 PDF 需先经 wx.downloadFile / 云存储 downloadFile 拿到本地文件后才能打开。关键限制：参数只有 filePath/fileType/showMenu 等，没有任何页码范围或页数控制参数，无法实现『只允许阅读前20页』。showMenu 控制右上角菜单（转发/保存等）。",
+      "signals": {"stars": 0, "notes": "前20页免费不能靠 openDocument 实现，必须内容层切分（双 PDF 文件或章节化渲染）；文件不落明文可配 downloadFile 临时目录"},
+      "retrieved_at": "2026-09-27T20:40:00+08:00",
+      "credibility": 0.95
+    },
+    {
+      "channel": "pilot_features",
+      "doc_type": "doc",
+      "title": "web-view 组件 - 小程序内嵌网页（在线 PDF 预览备选）",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/component/web-view.html",
+      "content": "web-view 可加载外部 H5 页面实现 PDF 在线预览（如自建 H5 PDF 阅读器）。硬性限制：个人主体小程序不支持 web-view，仅企业等非个人主体可用；目标域名须配置为业务域名，要求 HTTPS + ICP 备案 + 后台放置校验文件，业务域名每年修改次数有限（20次/年）。web-view 内网页无法直接调用小程序 API 与支付能力，交互需通过 postMessage 且仅在特定时机触发。",
+      "signals": {"stars": 0, "notes": "若主体是企业可用自建 H5 阅读器做精细付费墙；个人主体此路不通"},
+      "retrieved_at": "2026-09-27T21:05:00+08:00",
+      "credibility": 0.95
+    },
+    {
+      "channel": "pilot_features",
+      "doc_type": "repo",
+      "title": "xiaowangzhixiao/wechat-miniprogram-pdf - PDF.js Canvas 原生渲染",
+      "url": "https://github.com/xiaowangzhixiao/wechat-miniprogram-pdf",
+      "content": "在小程序内用原生 Canvas 跑 PDF.js 渲染 PDF 的实现，无需跳转系统预览。2026-07 仍在更新，说明当前基础库环境可用。星数极低（2星），无社区验证，需自行踩坑适配 iOS/安卓 Canvas 差异。此类方案的潜在优势：页数可控（可只渲染前20页）、可加水印层。",
+      "signals": {"stars": 2, "notes": "方向正确但成熟度低；若走 canvas 渲染路线要按自研组件预算评估"},
+      "retrieved_at": "2026-09-27T20:55:00+08:00",
+      "credibility": 0.6
+    },
+    {
+      "channel": "pilot_features",
+      "doc_type": "repo",
+      "title": "zprial/wx-book - 仿追书神器的小说阅读器小程序",
+      "url": "https://github.com/zprial/wx-book",
+      "content": "169 星的小说阅读器小程序开源实现，含书架、章节列表、正文阅读等完整阅读类功能骨架，JavaScript 原生小程序。2019 年后停更，API 层面可能需要升级，但其章节切分、阅读进度、目录交互的结构可直接借鉴到『研报分章节阅读』场景。",
+      "signals": {"stars": 169, "notes": "结构参考价值大于直接复用价值；阅读进度用 storage 持久化的做法可直接抄"},
+      "retrieved_at": "2026-09-27T20:52:00+08:00",
+      "credibility": 0.7
+    },
+    {
+      "channel": "pilot_features",
+      "doc_type": "repo",
+      "title": "vace/wechatapp-news-reader - 微信小程序新闻阅读器",
+      "url": "https://github.com/vace/wechatapp-news-reader",
+      "content": "526 星的新闻阅读类小程序，展示图文长文内容流与详情页的常见实现。可作为研报列表页/详情页排版（图文混排、长文滚动、阅读体验）的参考实现。",
+      "signals": {"stars": 526, "notes": "偏旧（早期小程序时代代码），借鉴排版思路即可"},
+      "retrieved_at": "2026-09-27T20:53:00+08:00",
+      "credibility": 0.7
+    },
+    {
+      "channel": "pilot_features",
+      "doc_type": "api",
+      "title": "wx.requestVirtualPayment - 小程序虚拟支付（付费解锁的合规主通道）",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/api/payment/wx.requestVirtualPayment.html",
+      "content": "官方小程序虚拟支付拉起接口，配合服务端下单+签名（signData/paySig/signature 由服务端生成）。行业规则背景：2026-04-01 起全终端小程序虚拟交易（内容会员、课程付费、充值等）必须接入官方虚拟支付接口，禁止普通支付或外链引导外部支付；2026 年微信与苹果达成分成协议后 iOS 端小程序虚拟支付也已开放（小程序合作伙伴计划佣金约 12%，此前安卓虚拟支付技术服务费约 20%）。『前20页免费+付费解锁全文』属于典型虚拟商品，应走本接口（道具直购或会员订阅模式）。",
+      "signals": {"stars": 0, "notes": "费率与类目准入以官方虚拟支付文档（微信开放社区『虚拟支付：企业、个体户/个人』『会员订阅：安卓/鸿蒙/iOS』系列）为准；普通 wx.requestPayment 卖虚拟内容有下架风险"},
+      "retrieved_at": "2026-09-27T21:00:00+08:00",
+      "credibility": 0.9
+    },
+    {
+      "channel": "pilot_features",
+      "doc_type": "repo",
+      "title": "devoink/miniprogram-virtual-pay - wx.requestVirtualPayment 轻封装",
+      "url": "https://github.com/devoink/miniprogram-virtual-pay",
+      "content": "对 wx.requestVirtualPayment 的轻量封装库，下单与签名逻辑由调用方注入（prepareVirtualPayment），可选支付后轮询订单（pollOrder），兼容微信原生小程序与 UniApp。2026-03 更新，贴合现行虚拟支付接口形态。星数为 0，属新轮子，使用前需自测。",
+      "signals": {"stars": 0, "notes": "封装思路可抄；签名三件套 signData(必须是JSON字符串)/paySig/signature 在服务端生成是铁律"},
+      "retrieved_at": "2026-09-27T21:01:00+08:00",
+      "credibility": 0.6
+    },
+    {
+      "channel": "pilot_features",
+      "doc_type": "api",
+      "title": "RecorderManager.start - 小程序录音（语音录入底座）",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/api/media/recorder/RecorderManager.start.html",
+      "content": "官方录音管理器，单次录音 duration 上限 600000ms（10 分钟）。支持格式 mp3/aac/wav/PCM 等；设置 frameSize 后 mp3/pcm 格式会触发分片回调 onFrameRecorded（流式上送 ASR 的基础）。基础库 3.17.3+ 新增 audioMode 参数，voiceRecognition 模式针对语音识别场景优化。",
+      "signals": {"stars": 0, "notes": "研报提问场景一句话约 10-30 秒，10 分钟上限完全够用；PCM 分片可对接实时识别"},
+      "retrieved_at": "2026-09-27T20:41:00+08:00",
+      "credibility": 0.95
+    },
+    {
+      "channel": "pilot_features",
+      "doc_type": "doc",
+      "title": "微信同声传译插件（WechatSI）- 官方免费语音识别/翻译插件",
+      "url": "https://mp.weixin.qq.com/wxopen/plugindevdoc?appid=wx069ba97219f34d2c",
+      "content": "微信智聆团队提供的官方小程序插件，提供语音识别（getRecordRecognitionManager，边说边出字的实时转写）、文本翻译、语音合成接口，面向小程序免费开放。接入方式：小程序后台『设置-第三方设置-添加插件』搜索『微信同声传译』，前端 requirePlugin('WechatSI') 后 manager.start({lang:'zh_CN'})，onRecognize 回调实时中间结果、onStop 回调最终结果。第三方资料提示该插件不支持个人主体小程序添加（需企业主体），且社区长期反馈有配额/稳定性波动。",
+      "signals": {"stars": 0, "notes": "免费+官方是最大吸引力；企业主体前提下首选；务必做降级（识别失败转文字输入）"},
+      "retrieved_at": "2026-09-27T20:58:00+08:00",
+      "credibility": 0.85
+    },
+    {
+      "channel": "pilot_features",
+      "doc_type": "doc",
+      "title": "腾讯云语音识别 ASR 计费概述（一句话识别/录音文件识别/实时语音识别）",
+      "url": "https://cloud.tencent.com/document/product/1093/35686",
+      "content": "腾讯云 ASR 提供三种模式：一句话识别（60 秒内短音频，按调用次数计费）、录音文件识别（异步，按音频时长计费）、实时语音识别（流式，按时长计费）。开通后默认后付费（按日结算），预付费资源包更便宜，各服务每月有免费额度。小程序接入的标准姿势：RecorderManager 录音 → 云函数/服务端调用 ASR SDK → 返回文本，密钥放服务端不进前端。",
+      "signals": {"stars": 0, "notes": "一句话识别单次价格在厘级（0.0x 元/次量级），具体单价以该计费页实时表格为准；研报提问场景用量小成本可忽略"},
+      "retrieved_at": "2026-09-27T21:03:00+08:00",
+      "credibility": 0.85
+    },
+    {
+      "channel": "pilot_features",
+      "doc_type": "doc",
+      "title": "云开发 CloudBase AI 大模型简介（wx.cloud.extend.AI）",
+      "url": "https://docs.cloudbase.net/ai/overview",
+      "content": "微信云开发官方 AI 能力：小程序端通过 wx.cloud.extend.AI 直接调用大模型（DeepSeek、混元等，模型列表持续扩充），无需自建推理服务与 API key 分发。基础库要求 3.7.1+。计费走云开发环境（基础版有免费额度，超出按量付费），控制台可创建模型调用与 Agent（智能体）。同时提供知识库/Agent 能力，可在 Agent 上传研报文档做问答（RAG 的官方低代码路径）。",
+      "signals": {"stars": 0, "notes": "『用上微信官方AI』的最短路径；流式输出与多轮对话在文档树（AI/大模型接入/流式输出）有专章"},
+      "retrieved_at": "2026-09-27T20:57:00+08:00",
+      "credibility": 0.9
+    },
+    {
+      "channel": "pilot_features",
+      "doc_type": "repo",
+      "title": "TencentCloudBase/cloudbase-agent-ui - 官方 AI 对话组件（小程序/React）",
+      "url": "https://github.com/TencentCloudBase/cloudbase-agent-ui",
+      "content": "腾讯云开发官方开源的 AI 对话 UI 组件，覆盖微信小程序与 React，内置流式输出、多轮对话界面、消息渲染等聊天室全套交互，chatMode 配置为 agent 可直连云开发 Agent。拷贝组件到小程序 components 目录、app.js 配云开发环境 ID 即可用，2026-01 仍在更新。",
+      "signals": {"stars": 96, "notes": "免去自研聊天 UI 的大量细节（滚动、光标、markdown 气泡）；与云开发 AI 同源配套，首选"},
+      "retrieved_at": "2026-09-27T21:12:00+08:00",
+      "credibility": 0.9
+    },
+    {
+      "channel": "pilot_features",
+      "doc_type": "doc",
+      "title": "在 CloudBase 上实现流式 Chatbot：三种实现路径（官方实践文档）",
+      "url": "https://docs.cloudbase.net/ai/best-practice/streaming-chatbot",
+      "content": "官方文档梳理小程序流式对话三条路径：1) 官方 cloudbase-agent-ui 组件零代码接入；2) 手写 SSE 云函数，前端 wx.request enableChunked + RequestTask.onChunkReceived 收流式分块；3) Vercel AI SDK 数据流协议。含小程序端收流示例代码，是『AI 回答打字机效果』的权威实现参考。",
+      "signals": {"stars": 0, "notes": "自建模型代理（OpenAI 兼容）时按路径2实现；onChunkReceived 收到的是 ArrayBuffer 需前端解码"},
+      "retrieved_at": "2026-09-27T21:13:00+08:00",
+      "credibility": 0.9
+    },
+    {
+      "channel": "pilot_features",
+      "doc_type": "api",
+      "title": "wx.request - enableChunked 分块传输（流式渲染底座）",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/api/network/request/wx.request.html",
+      "content": "wx.request 的 enableChunked 参数（默认 false）开启 transfer-encoding chunked，基础库 2.20.2 起支持，是小程序接收 LLM 流式响应（SSE/分块）的原生机制。注意高性能模式下 enableChunked 强制走 HTTP1，不自动升级 HTTP2/3。请求域名须在小程序后台配置 request 合法域名（HTTPS）。",
+      "signals": {"stars": 0, "notes": "云开发 AI（wx.cloud.extend.AI）内部已处理流式，不必手写；自建代理时必用此参数"},
+      "retrieved_at": "2026-09-27T21:02:00+08:00",
+      "credibility": 0.95
+    },
+    {
+      "channel": "pilot_features",
+      "doc_type": "api",
+      "title": "RequestTask.onChunkReceived - 监听分块数据到达",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/api/network/request/RequestTask.onChunkReceived.html",
+      "content": "配合 wx.request enableChunked 使用，监听传输分块接收事件，回调 res.data 类型为 ArrayBuffer（不是字符串），需自行 TextDecoder/手工解码 UTF-8 后拼接到聊天界面。基础库 2.20.2 起支持。",
+      "signals": {"stars": 0, "notes": "ArrayBuffer 解码是高频踩坑点；SSE 的 data: 行协议也需自己解析"},
+      "retrieved_at": "2026-09-27T21:04:00+08:00",
+      "credibility": 0.95
+    },
+    {
+      "channel": "pilot_features",
+      "doc_type": "repo",
+      "title": "leon-fong/ChatGPT-miniprogram - ChatGPT 小程序",
+      "url": "https://github.com/leon-fong/ChatGPT-miniprogram",
+      "content": "378 星的 ChatGPT 微信小程序客户端实现，演示小程序侧 AI 对话界面与流式接收的最小结构，代码量小适合快速通读理解链路。",
+      "signals": {"stars": 378, "notes": "学习参考；2024-05 后未更新"},
+      "retrieved_at": "2026-09-27T20:52:00+08:00",
+      "credibility": 0.7
+    },
+    {
+      "channel": "pilot_features",
+      "doc_type": "repo",
+      "title": "oldinaction/ChatGPT-MP - 流式输出+次数限制的 AI 聊天小程序（含前后端）",
+      "url": "https://github.com/oldinaction/ChatGPT-MP",
+      "content": "352 星，基于 DeepSeek/ChatGPT 等模型的聊天微信小程序全栈实现（前端小程序+后端），支持打字机流式输出、AI 聊天次数限制、分享增加次数等商业化必需功能，2025-02 更新。其『次数限制/分享解锁』逻辑可直接映射到研报问答的免费额度设计。",
+      "signals": {"stars": 352, "notes": "含后端代理转发模型 API 的标准写法（key 在服务端）；商业化功能齐全"},
+      "retrieved_at": "2026-09-27T20:52:00+08:00",
+      "credibility": 0.7
+    },
+    {
+      "channel": "pilot_features",
+      "doc_type": "doc",
+      "title": "腾讯云向量数据库 VectorDB（小程序 RAG 检索底座）",
+      "url": "https://cloud.tencent.com/product/vdb",
+      "content": "腾讯云全托管向量数据库产品，面向 AI 应用提供向量存储与相似度检索，可作研报 RAG 问答的检索层：研报切分向量化入库（服务端/云函数）→ 用户提问向量检索 top-k → 拼 prompt 给云开发 AI/自建模型。轻量替代：云开发 Agent 自带知识库（上传研报文档即可问答），无需自建向量库。",
+      "signals": {"stars": 0, "notes": "起步用云开发 Agent 知识库零运维；检索质量不够时再上 VectorDB 自控切分策略"},
+      "retrieved_at": "2026-09-27T21:14:00+08:00",
+      "credibility": 0.85
+    },
+    {
+      "channel": "pilot_features",
+      "doc_type": "api",
+      "title": "security.msgSecCheck v2 - 文本内容安全检测",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/sec-center/sec-check/msgSecCheck.html",
+      "content": "服务端接口（支持云调用 openapi.security.msgSecCheck），检测文本是否含违法违规内容，v2.0 单次 content 上限 2500 字，必须传用户 openid（要求用户近两小时内访问过小程序）与 scene 场景枚举。频次限制单 appId 4000 次/分钟、200 万次/天，未标收费（即免费额度极大）。AI 对话场景的合规姿势：用户输入与 AI 生成的回答在落库/下发前过检，返回 suggest=risky/pass/review 与 label 分类。",
+      "signals": {"stars": 0, "notes": "AI 生成内容同属平台内容安全责任范围，对话类小程序普遍按『先检后显』或『先显后检+违规即撤』落地；研报问答建议对 AI 输出做异步二次检测"},
+      "retrieved_at": "2026-09-27T20:47:00+08:00",
+      "credibility": 0.95
+    },
+    {
+      "channel": "pilot_features",
+      "doc_type": "api",
+      "title": "security.mediaCheckAsync - 图片/音频媒体内容安全异步检测",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/sec-center/sec-check/mediaCheckAsync.html",
+      "content": "服务端接口，异步检测图片/音频是否违规，入参 media_url、media_type（2=图片）、version=2、openid、scene，检测结果通过消息推送回调或查询接口获取。频次限制同 4000 次/分钟、200 万次/天。研报小程序用户头像、截图反馈、用户上传内容时需要；纯阅读+文字问答场景用到不多。",
+      "signals": {"stars": 0, "notes": "异步接口需配置回调或轮询；用户头像昵称如今默认是微信侧已审内容，实际触发面小"},
+      "retrieved_at": "2026-09-27T21:10:00+08:00",
+      "credibility": 0.9
+    },
+    {
+      "channel": "pilot_features",
+      "doc_type": "api",
+      "title": "auth.code2Session - 登录凭证校验（wx.login 标准链路）",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/user-management/code2Session.html",
+      "content": "登录标准链路：前端 wx.login 拿临时 code → 服务端（或云开发云函数）以 appid+secret+js_code 调 code2Session → 返回 openid 与 session_key；仅当小程序绑定到微信开放平台账号下同主体账号时才返回 unionid。频次限制每用户每分钟约 100 次。openid 是用户在本小程序的唯一标识，自建用户表、订单归属、已购记录均以 openid 为主键即可，无需强制要手机号。",
+      "signals": {"stars": 0, "notes": "云开发场景可用 wx.cloud 开放接口免维护 secret；session_key 切勿下发给前端"},
+      "retrieved_at": "2026-09-27T21:06:00+08:00",
+      "credibility": 0.95
+    },
+    {
+      "channel": "pilot_features",
+      "doc_type": "doc",
+      "title": "UnionID 机制说明 - 多端用户打通",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/union-id.html",
+      "content": "UnionID 用于同一微信开放平台账号（同主体）下多个小程序/公众号/App 间识别同一用户。获取方式包括 code2Session 直接返回（满足绑定条件时）、getUserInfo 等开放接口返回。若试点期只有单一小程序，仅用 openid 即可；后续要做公众号/网站/App 矩阵时才需注册微信开放平台账号并绑定获取 unionid。",
+      "signals": {"stars": 0, "notes": "开放平台账号需认证（有年费）；单小程序试点可推迟此项投入"},
+      "retrieved_at": "2026-09-27T21:05:00+08:00",
+      "credibility": 0.9
+    },
+    {
+      "channel": "pilot_features",
+      "doc_type": "doc",
+      "title": "手机号快速验证组件（getPhoneNumber）收费说明",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/getPhoneNumber.html",
+      "content": "button open-type=getPhoneNumber 拿 code，服务端调 phonenumber.getPhoneNumber 换手机号。收费：快速验证组件 0.03 元/次（不保证实时验证），实时验证组件 0.04 元/次；仅对获取成功的调用收费，每小程序有 1000 次免费额度；政府、非营利组织等主体免费。研报付费阅读用 openid 即可标识用户与权益，手机号非必需，仅在需要线下联系/对账时按需调用。",
+      "signals": {"stars": 0, "notes": "成本可控但试点期可完全不用；企业主体是使用前提"},
+      "retrieved_at": "2026-09-27T20:47:00+08:00",
+      "credibility": 0.95
+    },
+    {
+      "channel": "pilot_features",
+      "doc_type": "api",
+      "title": "wx.onUserCaptureScreen - 用户截屏监听",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/api/device/screen/wx.onUserCaptureScreen.html",
+      "content": "监听用户截屏事件，基础库 2.29.0 起支持。平台差异：iOS 仅系统主动截屏才回调，安卓主动/被动截屏均有回调（含下拉通知栏截屏）。典型用法：截屏回调后弹出版权提醒/记入风控日志，配合动态水印实现『事后可追溯』的威慑式防盗版。",
+      "signals": {"stars": 0, "notes": "只通知不拦截；防不住拍照录屏，定位是威慑+溯源"},
+      "retrieved_at": "2026-09-27T21:05:00+08:00",
+      "credibility": 0.95
+    },
+    {
+      "channel": "pilot_features",
+      "doc_type": "api",
+      "title": "wx.setVisualEffectOnCapture - 截屏时隐藏页面内容",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/api/device/screen/wx.setVisualEffectOnCapture.html",
+      "content": "设置截屏时的视觉效果，visualEffect='hidden' 可使截屏画面中隐藏全部页面内容，基础库 3.0.0 起支持，仅 iOS 支持且对截屏与录屏均生效；安卓不支持。对付费研报正文页可开启此能力，iOS 用户截屏得到空白页，配合安卓侧水印+截屏提醒形成双端互补。",
+      "signals": {"stars": 0, "notes": "iOS 专属能力，安卓只能靠水印+提醒；3.0.0 基础库要求 2024 年后机型基本覆盖"},
+      "retrieved_at": "2026-09-27T21:05:00+08:00",
+      "credibility": 0.9
+    },
+    {
+      "channel": "pilot_features",
+      "doc_type": "repo",
+      "title": "Byclemon/watermark-camera - 水印相机小程序（canvas 水印参考）",
+      "url": "https://github.com/Byclemon/watermark-camera",
+      "content": "83 星的水印相机小程序，拍照自动叠加时间/地点/自定义文字水印，其 canvas 文字水印绘制与合成逻辑可迁移到研报阅读页的动态水印层（用户 openid 脱敏 + 时间戳平铺）。",
+      "signals": {"stars": 83, "notes": "场景是照片水印，正文页水印需自己改成覆盖层组件；文字水印+低透明度平铺是通行做法"},
+      "retrieved_at": "2026-09-27T21:09:00+08:00",
+      "credibility": 0.6
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+<!-- P2 订阅位：探测失败/未配置整页隐藏（wx:if），不报错 -->
+<view class="sub" wx:if="{{!hidden && p1}}">
+  <view class="card">
+    <view class="sub-title">订阅新报告提醒</view>
+    <view class="sub-hint">选择关注的省份与主题，新报告上架时通过微信服务通知提醒您。</view>
+
+    <view class="sub-group-title">省份（多选）</view>
+    <view class="chip-grid">
+      <view
+        class="chip {{item.on ? 'on' : ''}}"
+        wx:for="{{provinces}}"
+        wx:key="value"
+        data-value="{{item.value}}"
+        bindtap="onToggleProvince"
+      >{{item.value}}</view>
+    </view>
+
+    <view class="sub-group-title">主题（多选）</view>
+    <view class="chip-grid">
+      <view
+        class="chip {{item.on ? 'on' : ''}}"
+        wx:for="{{topics}}"
+        wx:key="value"
+        data-value="{{item.value}}"
+        bindtap="onToggleTopic"
+      >{{item.value}}</view>
+    </view>
+
+    <button class="sub-save" disabled="{{saving}}" bindtap="onSubSave">{{saving ? '保存中…' : '保存订阅'}}</button>
+  </view>
+
+  <view class="card">
+    <view class="sub-title">已订阅（{{saved.length}}）</view>
+    <view class="saved-item" wx:for="{{saved}}" wx:key="value">
+      <text class="saved-name">{{item.kind === 'province' ? '省份' : '主题'}} · {{item.value}}</text>
+      <text
+        class="saved-del"
+        data-kind="{{item.kind}}"
+        data-value="{{item.value}}"
+        bindtap="onSubRemove"
+      >删除</text>
+    </view>
+    <view wx:if="{{saved.length === 0}}" class="sub-hint">暂无订阅：上方选择后保存即可。</view>
+  </view>
+</view>

@@ -17,7 +17,7 @@ function rawRequest(method, path, data) {
       url: BASE_URL + path,
       method,
       data,
-      timeout: 300000, // KB 回答约 15-60s，上限 5 分钟
+      timeout: 120000, // ask 秒回进答案页轮询；主请求 2 分钟足够（v0.7.6 收紧，防弱网转圈）
       header: {
         'Content-Type': 'application/json',
         Authorization: token() ? 'Bearer ' + token() : ''
@@ -106,13 +106,20 @@ module.exports = {
   quota: () => request('GET', '/api/quota'),
   like: (id) => request('POST', '/api/answer/' + id + '/like'),
   criticize: (id, text) => request('POST', '/api/answer/' + id + '/criticize', { text }),
-  paySign: (id) => request('POST', '/api/answer/' + id + '/pay_sign', {}),
-  unlockPaid: (id, outTradeNo) => request('POST', '/api/answer/' + id + '/unlock_paid', { out_trade_no: outTradeNo || '' }),
   exportAnswer: (id, fmt) => request('POST', '/api/answer/' + id + '/export', { fmt }),
   history: () => request('GET', '/api/history'),
   // ── v0.5.0（用户九点令）──
   optimize: (question) => request('POST', '/api/question/optimize', { question }),          // AI优化提问
-  shareReward: (id) => request('POST', '/api/answer/' + id + '/share', {}),                 // 分享赠次
   exportAll: (fmt) => request('POST', '/api/answers/export_all', { fmt }),                  // 批量导出全部咨询
-  potList: () => request('GET', '/api/pot/list')                                            // 锅圈热点列表
+  potList: () => request('GET', '/api/pot/list'),                                           // 锅圈热点列表
+  potReport: (id, reason) => request('POST', '/api/pot/report', { aid: id, reason }),      // 锅圈内容举报（UGC 合规）
+  // ── v0.6.0（100× 弧线：全免费，智谱接地）──
+  followup: (id, question) => request('POST', '/api/answer/' + id + '/followup', { question }), // 免费追问
+  followups: (id) => request('GET', '/api/answer/' + id + '/followups'),                    // 追问对话流
+  digest: (id) => request('GET', '/api/answer/' + id + '/digest'),                          // 要点速览+相关问题
+  poster: (id) => request('GET', '/api/answer/' + id + '/poster'),                           // 分享海报 b64
+  // ── v0.7.0（用户十一点令：公益免费）──
+  shareOn: (id) => request('POST', '/api/answer/' + id + '/share_on', {}),                   // 共享入锅圈 +1 次
+  shareOff: (id) => request('POST', '/api/answer/' + id + '/share_off', {}),                 // 取消共享 -1 次
+  citationFulltext: (id, n) => request('GET', '/api/answer/' + id + '/citations/' + n)       // 依据全文展开
 };

@@ -1,0 +1,97 @@
+/* 智库页 — v0.7.2 蓝图设计：蓝图头 + 四库介绍 + 链接卡（复用 ask/pot 的 hero/card 语言） */
+.page { padding-bottom: 40rpx; }
+
+/* ══ 蓝图头部（同 pot 页语言）══ */
+.hero {
+  position: relative;
+  color: var(--white-ink);
+  padding: 0 36rpx 44rpx;
+  overflow: hidden;
+}
+.hero-nav { position: relative; }
+.hero-inner { position: relative; animation: rise 0.5s cubic-bezier(0.22, 0.9, 0.3, 1) both; }
+
+.hero-kicker {
+  font-size: 19rpx;
+  letter-spacing: 7rpx;
+  color: var(--ink-dim);
+  font-weight: 600;
+}
+.hero-title {
+  margin-top: 14rpx;
+  font-size: 58rpx;
+  font-weight: 800;
+  letter-spacing: 6rpx;
+  text-shadow: 0 2rpx 0 rgba(0, 0, 0, 0.25);
+}
+.hero-sub {
+  margin-top: 14rpx;
+  font-size: 25rpx;
+  color: var(--ink-dim);
+  letter-spacing: 1rpx;
+  line-height: 1.7;
+}
+.hero-inner::after {
+  content: '';
+  position: absolute; right: 0; top: 8rpx;
+  width: 34rpx; height: 34rpx;
+  background:
+    linear-gradient(var(--ink-dim), var(--ink-dim)) center/100% 2rpx no-repeat,
+    linear-gradient(var(--ink-dim), var(--ink-dim)) center/2rpx 100% no-repeat;
+  opacity: 0.65;
+}
+.hero-dwg {
+  margin-top: 26rpx;
+  font-size: 19rpx;
+  letter-spacing: 4rpx;
+  color: rgba(var(--t-inkdim-rgb), 0.5);
+  display: flex;
+  align-items: center;
+}
+.dim-rule {
+  flex: 1;
+  height: 18rpx;
+  margin: 0 20rpx;
+  border-left: 2rpx solid rgba(var(--t-inkdim-rgb), 0.4);
+  border-right: 2rpx solid rgba(var(--t-inkdim-rgb), 0.4);
+  position: relative;
+}
+.dim-rule::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; top: 50%;
+  border-top: 2rpx solid rgba(var(--t-inkdim-rgb), 0.4);
+}
+.dim-cap { letter-spacing: 4rpx; }
+
+/* ══ 四座金库 ══ */
+.zk-kicker { margin-bottom: 20rpx; }
+.zk-vault {
+  display: flex;
+  align-items: center;
+  gap: 22rpx;
+  padding: 18rpx 0;
+  border-bottom: 2rpx dashed var(--line, rgba(var(--t-blue-rgb), 0.25));
+}
+.zk-vault:last-child { border-bottom: none; }
+.zk-v-glyph {
+  width: 64rpx; height: 64rpx;
+  flex-shrink: 0;
+  border-radius: 10rpx;
+  border: 3rpx solid var(--acc, var(--accent));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30rpx; font-weight: 800;
+  color: var(--acc, var(--accent));
+}
+.zk-v-h { font-size: 29rpx; font-weight: 700; color: var(--ink, var(--navy-0)); }
+.zk-v-d { font-size: 23rpx; margin-top: 4rpx; }
+
+/* ══ 知识库链接卡（v0.7.4：低姿态单一入口，二维码/长按识别已撤）══ */
+.zk-url {
+  font-size: 26rpx;
+  color: var(--ink, var(--navy-0));
+  letter-spacing: 1rpx;
+  padding: 14rpx 0 4rpx;
+}
+.zk-copy { margin-top: 26rpx; }
+.zk-note { margin-top: 14rpx; font-size: 21rpx; }

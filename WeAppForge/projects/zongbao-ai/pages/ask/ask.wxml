@@ -1,3 +1,4 @@
+<page-meta page-style="{{themeStyle}}" />
 <view class="page">
 
   <!-- ══ 蓝图头部：问题写在蓝图上 ══ -->
@@ -8,7 +9,7 @@
     <view class="hero-inner">
       <view class="hero-kicker">GENERAL CONTRACTOR · AI ADVISOR</view>
       <view class="hero-title">总包AI顾问</view>
-      <view class="hero-sub">专业解答，来自背后的顶级总包智库 · 总包人的 7×24 小时随身顾问 / 招投标 / 合同 / 签约 / 风险 / 造价争议 / 审计 / 法务 / 诉讼</view>
+      <view class="hero-sub">AI 检索行业知识库生成的专业参考 · 总包人的随身工程顾问 / 招投标 / 签约 / 风险 / 造价争议 / 审计 / 合同实务</view>
 
       <!-- 额度票根 -->
       <view class="quota-ticket" wx:if="{{quota}}">
@@ -20,7 +21,7 @@
         <view class="qt-right">
           <view class="qt-kv">免费 {{quota.free_left}} 次</view>
           <view class="qt-kv" wx:if="{{quota.bonus_left > 0}}">互动加赠 {{quota.bonus_left}} 次</view>
-          <view class="qt-kv qt-dim" wx:else>有用/导出/分享/纠错 各+1次</view>
+          <view class="qt-kv qt-dim" wx:else>有用/分享/纠错 各+1次</view>
         </view>
       </view>
       <view class="quota-ticket quota-empty" wx:else>
@@ -35,6 +36,12 @@
   <!-- 连接状态自检：失败时常驻警示卡 -->
   <view class="net-down ticks" wx:if="{{netStatus === 'down'}}" bindtap="recheck">
     <text>⚠ 无法连接服务 · 点击重试，请检查手机网络是否可用</text>
+  </view>
+
+  <!-- v0.7.5 深度合成合规：AI 生成内容显著标识（首屏常驻，公告 000ce4a4 要求） -->
+  <view class="ai-flag rise" style="animation-delay: 45ms">
+    <view class="ai-flag-badge">AI</view>
+    <view class="ai-flag-text">本服务内容由人工智能（AI）生成，仅供参考，不构成专业意见</view>
   </view>
 
   <!-- ══ 咨询问题单：白图纸面（先写问题） ══ -->
@@ -95,7 +102,7 @@
   </view>
 
   <view class="bottom-bar safe-bottom rise" style="animation-delay: 220ms">
-    <view class="muted tip-line">每天免费 6 次 · 有用/导出/分享/纠错各 +1 次（上不封顶）· 北京时间 0 点清零</view>
+    <view class="muted tip-line">每天免费 6 次 · 有用/纠错各 +1 次（上不封顶）· 北京时间 0 点清零</view>
   </view>
 </view>
 <!-- bottom-bar 不用 fixed：本页是 tabBar 页，fixed bottom:0 会被 tabBar 盖住吃掉点击 -->

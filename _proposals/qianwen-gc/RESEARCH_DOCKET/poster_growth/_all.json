@@ -1,0 +1,212 @@
+[
+  {
+    "channel": "poster_growth",
+    "doc_type": "official_doc",
+    "title": "微信开放文档：获取不限制的小程序码 getUnlimitedQRCode（wxacode.getUnlimited）",
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/server/API/qrcode-link/qr-code/api_getunlimitedqrcode.html",
+    "content": "官方全文已核验（服务端渲染HTML解析）。要点：1)接口仅限服务端调用：HTTPS POST https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=xxx，请求体须JSON字符串（不支持form）；云函数wx-server-sdk可 cloud.openapi.wxacode.getUnlimited({page,scene,checkPath,envVersion})；支持第三方平台代调用（权限集id=17）。2)scene必填，最大32个可见字符，仅支持数字/大小写英文/特殊字符 !#$&'()*+,/:;=?@-._~；不支持%，故中文无法urlencode（需短ID映射等其他编码）；超限报错40129 invalid scene。3)page不能携带参数（参数放scene），根路径前不加/，默认主页；check_path默认true须已发布页面，false允许未发布但page上限60000个；env_version: release/trial/develop。4)扫码进入解析：Page({onLoad(query){ const scene = decodeURIComponent(query.scene) }})；小游戏用wx.getLaunchOptionsSync()/wx.onShow；调试用开发者工具编译模式自定义scene（值需encodeURIComponent）。5)频率限制5000次/分钟，大量海报码建议预生成；成功返回图片Buffer，失败返回JSON；width默认430（280-1280）；is_hyaline可透明底。6)scancode_time为系统保留参数（85096）。7)适用范围表仅区分小程序/小游戏（均✔），未按个人/企业主体区分。",
+    "signals": {},
+    "retrieved_at": "2026-09-27",
+    "credibility": "high"
+  },
+  {
+    "channel": "poster_growth",
+    "doc_type": "official_doc",
+    "title": "微信开放文档：分享到朋友圈（单页模式与限制）",
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/share-timeline.html",
+    "content": "官方全文已核验。要点：1)基础库2.11.3+支持，Android/iOS微信8.0.24+；页面须先设置onShareAppMessage（允许发给朋友）再设onShareTimeline才可分享到朋友圈。2)朋友圈打开进入『单页模式』而非真小程序：顶部固定导航栏+底部『前往小程序』操作栏均不可自定义；无登录态（wx.login不可用）；不允许跳转任何页面（navigateTo/redirectTo/switchTab/reLaunch/navigateBack全禁）；tabBar不渲染；本地存储不共用；禁用组件：button open-type/camera/editor/form/navigator/web-view等；禁用支付/登录/授权/用户信息等开放接口；禁用wx.saveImageToPhotosAlbum/wx.chooseImage等媒体接口；禁转发接口。3)场景值=1154用于页面适配。4)运营须知：分享朋友圈能力为纯内容场景分享诉求，滥用营销、诱导将被打击；不得强制分享、分享立即获得利益诱导、明示暗示诱导；单页模式下不得诱导或强制用户点击『打开小程序』，应尽可能呈现完整内容。5)注意事项：不支持页面内直接发起分享；onShareTimeline不支持自定义页面路径（对比：onShareAppMessage可带path参数）；含web-view页面不支持分享；低版本微信打开进入升级提示页。",
+    "signals": {},
+    "retrieved_at": "2026-09-27",
+    "credibility": "high"
+  },
+  {
+    "channel": "poster_growth",
+    "doc_type": "official_doc",
+    "title": "《微信小程序平台运营规范》——诱导分享/分销/虚拟支付/过度营销红线（5.1/5.3/5.9/5.13/5.16/5.28原文）",
+    "url": "https://developers.weixin.qq.com/miniprogram/product/",
+    "content": "官方全文已核验并逐条提取原文。5.1滥用分享行为：不得强制用户分享、暗示用户分享，不得利益诱导分享至朋友圈；『利益』包括但不限于现金奖励、实物奖品、虚拟奖品（红包、优惠券、代金券、积分、话费、流量、信息等）。子条款：5.1.1强制分享（分享后才能解锁功能/查阅/下载图片视频——『扫码解锁』设计的第一红线）；5.1.2暗示分享（红点提醒/按钮动态变化）；5.1.3诱导分享朋友圈（分享至朋友圈获取利益）；5.1.4无深度互动诱导分享（『深度互动』=被分享者理解内容并主动参与活动或业务流程的进入页面/点击等操作）；5.1.5分享活动误导（规则不明/标题党/小字体）；5.1.6分享收益存在概率性；5.1.7分享收益非即时获得（须满足即时性）；5.1.8组队分享人数未限制在5人内；5.1.9分享量过大且转化率过低→自动限制分享能力（连带限制关联开放平台账号）。处理规则：限制活动页面、限制分享能力或朋友圈二维码识别能力，直至下架封号。5.3网赚行为：诱导转发内容后获取收益（现金/积分/礼品）即违规→封禁分享能力或被搜索能力直至封号。5.9多级分销：分级佣金/上下级代理/多层级抽利润→封禁分享、支付能力直至封号。5.13虚拟支付：虚拟商品（含解锁功能、订阅内容、付费功能）购买和支付均需接入小程序虚拟支付，不得引导至app/公众号/H5/个人号/网站支付——『付费解锁看全文』必须走虚拟支付。5.16过度营销：对用户造成骚扰→封禁剪切板能力直至封号。5.28分享场景频率限制：存在利诱行为且一段时间内分享次数过多→触发频率限制，新增分享页面被限制访问。",
+    "signals": {},
+    "retrieved_at": "2026-09-27",
+    "credibility": "high"
+  },
+  {
+    "channel": "poster_growth",
+    "doc_type": "repo",
+    "title": "Painter（manycore-maas/Painter，原Kujiale-Mobile/Painter）——小程序JSON绘制图片库",
+    "url": "https://github.com/manycore-maas/Painter",
+    "content": "GitHub API实证（2026-09-27）：stars 4477，forks 588，最后push 2024-03-12，未归档（仓库已从Kujiale-Mobile/Painter迁移至manycore-maas）。定位『小程序生成图片库，轻松通过json方式绘制一张可以发到朋友圈的图片』。生态最大、社区案例最多；有第三方可视化配置工具（lingxiaoyi.github.io/painter）可拖拽生成Painter的JSON配置。坑：JSON方式学习成本；canvas层级/离屏渲染需适配；npm方式需构建miniprogram_npm。选型结论：海报裂变首选。",
+    "signals": {"stars": 4477, "forks": 588, "pushed_at": "2024-03-12", "archived": false},
+    "retrieved_at": "2026-09-27",
+    "credibility": "high"
+  },
+  {
+    "channel": "poster_growth",
+    "doc_type": "repo",
+    "title": "wxa-plugin-canvas（jasondu/wxa-plugin-canvas）——小程序海报专用组件",
+    "url": "https://github.com/jasondu/wxa-plugin-canvas",
+    "content": "GitHub API实证（2026-09-27）：stars 3188，forks 485，最后push 2024-05-08，未归档。定位『小程序海报组件-生成朋友圈分享海报并生成图片』，组件式接入（poster标签+配置），海报场景开箱即用，比Painter更聚焦。坑：定制自由度低于Painter/原生；长期维护趋缓（2024-05后无push）。选型结论：快速上线海报功能次选。",
+    "signals": {"stars": 3188, "forks": 485, "pushed_at": "2024-05-08", "archived": false},
+    "retrieved_at": "2026-09-27",
+    "credibility": "high"
+  },
+  {
+    "channel": "poster_growth",
+    "doc_type": "repo",
+    "title": "wxml-to-canvas（wechat-miniprogram/wxml-to-canvas）——官方扩展组件，已归档",
+    "url": "https://github.com/wechat-miniprogram/wxml-to-canvas",
+    "content": "GitHub API实证（2026-09-27）：stars 168，forks 42，最后push 2021-08-29，仓库状态archived=true（官方已归档停维护）。用WXML+WXSS模板方式生成canvas图片。虽然靠微信官方组织背书，但已归档4年+，新项目不应选型；存量项目需自行承担兼容修复。选型结论：不推荐。",
+    "signals": {"stars": 168, "forks": 42, "pushed_at": "2021-08-29", "archived": true},
+    "retrieved_at": "2026-09-27",
+    "credibility": "high"
+  },
+  {
+    "channel": "poster_growth",
+    "doc_type": "repo",
+    "title": "mp-painter（xlfsummer/mp-painter）——声明式跨端canvas绘制库，维护最新",
+    "url": "https://github.com/xlfsummer/mp-painter",
+    "content": "GitHub API实证（2026-09-27）：stars 70，最后push 2025-06-29（四库中最新的维护活动），未归档。声明式（类WXML标签）绘制，支持uniapp/微信原生/H5，基于canvas 2d接口。坑：star基数小、社区案例少，踩坑时检索资料有限。选型结论：跨端（uni-app）或想要canvas 2d新接口栈时的备选。",
+    "signals": {"stars": 70, "pushed_at": "2025-06-29", "archived": false},
+    "retrieved_at": "2026-09-27",
+    "credibility": "high"
+  },
+  {
+    "channel": "poster_growth",
+    "doc_type": "article",
+    "title": "uni-app跨端开发之生成小程序码和调试scene参数爬坑指南（艺灵）",
+    "url": "https://www.yilingsj.com/xwzj/2020-12-26/uni-app-wxacode-getUnlimited.html",
+    "content": "精确URL实证。要点：解析scene必须在页面onLoad生命周期中做（query参数传入）；多处用到分享/扫码入口时需统一封装解析逻辑；开发者工具调试scene需在编译模式里自定义启动参数（模拟值需encodeURIComponent），否则本地无法复现扫码链路；page路径须与线上已发布版本一致否则报页面不存在。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "medium"
+  },
+  {
+    "channel": "poster_growth",
+    "doc_type": "article",
+    "title": "小程序带参数二维码：scene参数全链路解析（CSDN）",
+    "url": "https://blog.csdn.net/Superxpang/article/details/145034656",
+    "content": "精确URL实证。要点：带参数小程序码通过scene字段传递渠道、邀请人等归因信息；32字符限制下用短ID/数字编码，长参数存数据库以短key映射；onLoad中decodeURIComponent(options.scene)后按自定义分隔符解析k-v。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "medium"
+  },
+  {
+    "channel": "poster_growth",
+    "doc_type": "article",
+    "title": "uniapp小程序码scene参数踩坑总结（CSDN）",
+    "url": "https://blog.csdn.net/u014724048/article/details/131823162",
+    "content": "精确URL实证。要点：scene只支持有限字符集（数字/大小写英文/部分特殊字符），中文与%不可用；扫码进入与普通分享进入的options结构不同，解析需兼容两态；参数过长报40129；建议服务端生成短码+映射表。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "medium"
+  },
+  {
+    "channel": "poster_growth",
+    "doc_type": "article",
+    "title": "Java生成微信小程序二维码（掘金）",
+    "url": "https://juejin.cn/post/7340229050235961398",
+    "content": "精确URL实证。要点：scene的值会作为query参数传递给小程序，用户扫码进入后开发者获取scene值再做业务逻辑处理；服务端生成码返回图片流直接可嵌入海报模板；与getwxacode（10万上限）对比，getwxacodeunlimit数量暂无限制、永久有效，适合裂变海报按人发码。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "medium"
+  },
+  {
+    "channel": "poster_growth",
+    "doc_type": "article",
+    "title": "微信营销玩法总结分享思维导图（Processon，2022-10）",
+    "url": "https://www.processon.com",
+    "content": "站点级URL（模板页，搜索摘要获取，精确模板页URL未落）。要点：裂变玩法三要素=诱饵（超出预期的奖励，如免费听课/免费资料包）+门槛（邀请好友才能领取，如分享海报并截图、两位好友扫码）+路径（海报裂变→免费入群听课→社群运营转化）。注意：『分享后截图』类门槛在2019年后微信侧已被认定为诱导分享形态，现代做法改为『好友扫码即计任务进度』。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "low"
+  },
+  {
+    "channel": "poster_growth",
+    "doc_type": "case",
+    "title": "微信生态下的裂变玩法全拆解（2018-07）——千聊等知识付费平台『邀请卡』模式",
+    "url": "http://www.cjzzc.com",
+    "content": "站点级URL（搜索摘要获取，精确文章URL未落）。要点：千聊等各大知识付费平台都开发了『邀请卡』功能，典型路径=用户分享海报→几位好友扫码→达成任务要求→获得目标产品（免费课程）。这是『任务裂变』的标准形态，与纯分销（按付费抽佣）区分。历史案例（同期搜索佐证，均为摘要级）：网易戏精课12小时13万+报名、新世相营销课、三联中读2018分销刷屏——均属2018-2019分销裂变高峰期，其后微信收紧诱导分享与多级分销判定。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "low"
+  },
+  {
+    "channel": "poster_growth",
+    "doc_type": "case",
+    "title": "如何设计一款社交营销裂变产品（人人都是产品经理）",
+    "url": "https://www.woshipm.com",
+    "content": "站点级URL（搜索摘要获取，精确文章URL未落）。要点：作者参与过10+款裂变产品设计；裂变类型二分=传播导向（品牌宣传）与转化导向（直接促进付费转化）；群裂变标准流程=用户看到海报→扫码进入→生成自己的专属海报→分享→完成任务→获得产品/资料。设计核心是任务进度可视化（每有1人扫码即提醒进度）。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "low"
+  },
+  {
+    "channel": "poster_growth",
+    "doc_type": "case",
+    "title": "王六六：转型线上裂变模式完整指南（增长黑客growthhk）——任务宝模式",
+    "url": "https://www.growthhk.cn",
+    "content": "站点级URL（搜索摘要获取，精确文章URL未落）。要点：任务宝工具模式=每个人扫码后自动生成专属海报，邀请2人扫码即解锁/得奖励；工具成本约3000元/年；配套微信个人号活码承接；进度提醒模型（『15人扫码才能收礼品，每1人扫码都提醒你』）是提升裂变完成率的关键机制。对应小程序自建等价物：getUnlimited按用户发码+服务端任务进度计数+订阅消息推送进度。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "low"
+  },
+  {
+    "channel": "poster_growth",
+    "doc_type": "case",
+    "title": "学而思2020线上裂变案例拆解（地产博客dcbbs转载案例点评合集）——1元解锁+好友支付解锁",
+    "url": "https://www.dcbbs.com",
+    "content": "站点级URL（搜索摘要获取，精确文章URL未落）。要点：学而思2020裂变路径=朋友圈看到海报→扫码购买（1元解锁第一节课）→自动生成邀请卡→分享邀请卡→两位好友支付→解锁后续课程。即『低价内容钩子+邀请N人完成指定行为（支付）解锁』。与『问题+答案预览+扫码看全文』同构：预览=钩子，解锁=转化动作。合规注意：解锁条件是『好友完成付费/深度行为』而非『用户分享』，规避5.1.1强制分享；但解锁收费即触发5.13虚拟支付要求。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "low"
+  },
+  {
+    "channel": "poster_growth",
+    "doc_type": "case",
+    "title": "送给每个运营人的裂变指南：何为流量池思维（知乎专栏/人人都是产品经理）",
+    "url": "https://zhuanlan.zhihu.com",
+    "content": "站点级URL（搜索摘要获取）。要点：裂变四模式归类——1)分享免费听/免费领型（案例：有书社群裂变、喜马拉雅分享免费听）；2)邀请裂变=邀请者和被邀请者同时得福利（双向奖励）；3)拼团裂变（案例：拼多多、千聊）；4)分销裂变（裂变海报+佣金）。『问题+答案预览+扫码看全文』最接近模式1+2的杂交：内容预览做钩子（模式1），邀请/付费解锁做转化（模式2）。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "low"
+  },
+  {
+    "channel": "poster_growth",
+    "doc_type": "case",
+    "title": "互联网运营20年玩法迭代观察（36氪，2021修订）——裂变海报的代际演化",
+    "url": "https://www.36kr.com",
+    "content": "站点级URL（搜索摘要获取，精确文章URL未落）。要点：旧式『分销海报+社群裂变』一开始就要求分享海报，易触发用户反感与平台判定；新玩法迭代为让用户免费、免分享先进入课程群，在上课过程中再转发『学习成果海报』到朋友圈，转化更自然——即分享物从『任务海报』升级为『成就/成果海报』。对千问的直接启示：海报内容=用户自己的提问+AI答案预览（成就型），而非赤裸任务卡。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "low"
+  },
+  {
+    "channel": "poster_growth",
+    "doc_type": "case",
+    "title": "微信读书答题闯关『邀请好友得续命卡』（答题类裂变近似案例，搜狐等报道）",
+    "url": "https://www.sohu.com",
+    "content": "站点级URL（搜索摘要获取，精确文章URL未落）。要点：微信读书小程序答题闯关玩法——答错/次数用尽时邀请好友可得续命卡/额外次数，属『消耗品稀缺+邀请补量』模型。与『送咨询次数』奖励直接同构：次数=消耗型虚拟权益，用完时的邀请提示转化率最高。近似案例（摘要级）：掌门1对1借裂变0成本获30万企微用户、LemonBox邀请返现、作业帮3元体验课、某MGM项目70天20万获客。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "low"
+  },
+  {
+    "channel": "poster_growth",
+    "doc_type": "case",
+    "title": "小鹅通分销闭环与『盲盒获客/员工码海报』（小裂变doc+xiaoe-tech帮助体系）",
+    "url": "https://www.xiaoe-tech.com",
+    "content": "站点级URL（搜索摘要获取；小裂变文档在 doc.xiaoliebian.com）。要点：小鹅通知识付费分销=用户（学员）成为推广员→生成带专属二维码的分销海报→好友扫码付费→系统提示佣金到账，后台有裂变数据统计页（优设『四万字拆解小鹅通后台』佐证）；佣金结算依赖微信『商家转账到零钱』能力（商户平台产品中心申请，类目选分销返佣）。小裂变『盲盒获客』同类：分享的海报携带员工码/活动二维码，客户扫码自动推送活动文案+链接。合规对照：一级分销合规，多层级抽佣触发运营规范5.9封号线。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "low"
+  },
+  {
+    "channel": "poster_growth",
+    "doc_type": "case",
+    "title": "诱导分享处罚实例：流利阅读/薄荷阅读『打卡返学费』被处罚（2019）",
+    "url": "UNKNOWN",
+    "content": "精确URL未获取（多方媒体报道级，经搜索摘要交叉佐证）。要点：流利阅读、薄荷阅读等英语学习产品的『打卡返学费』活动（分享朋友圈打卡N天返学费）2019年被微信判定诱导分享处罚（依据《微信外部链接内容管理规范》及小程序运营规范5.1.3诱导分享朋友圈）。判例意义：把『利益（返学费）』与『分享朋友圈动作』绑定的模式即使有真实内容消费也会被处罚——千问设计邀请奖励时，奖励必须绑定在被邀请者的深度互动/付费上，而非分享动作本身。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "low"
+  }
+]

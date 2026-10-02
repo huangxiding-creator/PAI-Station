@@ -2,16 +2,21 @@
   "pages": [
     "pages/ask/ask",
     "pages/pot/pot",
+    "pages/zhiku/zhiku",
     "pages/answer/answer",
     "pages/my/my",
+    "pages/legal/privacy",
     "pages/home/home"
   ],
   "window": {
     "navigationBarTitleText": "总包AI顾问",
     "navigationBarBackgroundColor": "#081a36",
     "navigationBarTextStyle": "white",
-    "backgroundColor": "#f7f4ec"
+    "backgroundColor": "@bgColor",
+    "backgroundTextStyle": "@bgTxtStyle"
   },
+  "darkmode": true,
+  "themeLocation": "theme.json",
   "tabBar": {
     "custom": true,
     "color": "#93acd1",
@@ -21,6 +26,7 @@
     "list": [
       { "pagePath": "pages/ask/ask", "text": "咨询" },
       { "pagePath": "pages/pot/pot", "text": "锅圈" },
+      { "pagePath": "pages/zhiku/zhiku", "text": "智库" },
       { "pagePath": "pages/my/my", "text": "我的" }
     ]
   },

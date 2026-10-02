@@ -1,0 +1,25 @@
+{
+  "product": "WeAppForge 小程序全流程工厂",
+  "generated_at": "2026-09-27T13:40:00Z",
+  "scores": {
+    "feasibility": 0.809,
+    "user_value": 0.85,
+    "monetization": 0.72,
+    "tenx": 0.99,
+    "weighted": 0.849,
+    "verdict": "proceed",
+    "gate": "GATE_PROCEED=0.72"
+  },
+  "evidence": {
+    "feasibility": "maturity_index.py 实跑：51 候选零件 median 68.9/100、22 mature、best 97.6 → derive_feasibility 0.809",
+    "user_value": "量化痛点：skills.sh 安装断层 124×；端到端项目 0-2★ 零落地；GH 发布 action 无一存活；低代码 698-59800元/年共存=付费意愿",
+    "monetization": "试点研报虚拟支付真实收入（企业主体确认）；SaaS 后置：pricing.py 实跑 premium 定位 recommended 22699.5 元/年、anchor 5400、floor 1399.5（n=7 竞品实价）",
+    "tenx": "tenx_delta_index.py 实跑：onboarding_time ours=4h vs baseline=72h → 17.99×（log10=1.255 tenx_qualified）；dev_efficiency 6×；deploy_cost 7×"
+  },
+  "claims_falsifiable": {
+    "onboarding_time": "试点 P1 验收实测计时：一句话需求→我的小程序后台可扫码调试版本 ≤4h（人工触点≤1）",
+    "dev_efficiency": "P3 验收：完整功能单元 ≥3个/人日（基线 0.5，来自手工全流程估测+低代码平台交付周期）",
+    "deploy_cost": "每次发布人工触点 ≤1（基线 7：编码/构建/预览/上传/提审/测试/发布）"
+  },
+  "approval_gate": "已到批准门：等用户 approve / revise / reject 一次决策"
+}

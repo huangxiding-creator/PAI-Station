@@ -1,0 +1,39 @@
+<page-meta page-style="{{themeStyle}}" />
+<view class="page">
+
+  <!-- ══ 蓝图头部：智库 · 知识资产层 ══ -->
+  <view class="hero bp-grid ticks">
+    <view style="height: {{nav.statusBarHeight}}px;"></view>
+    <view class="hero-nav" style="height: {{nav.navHeight}}px"></view>
+
+    <view class="hero-inner">
+      <view class="hero-kicker">KNOWLEDGE VAULT · ZHIKU WIKI</view>
+      <view class="hero-title">智库</view>
+      <view class="hero-sub">总包智库 · 在线知识库——持续建设的结构化知识层，持续更新，随取随用</view>
+
+      <view class="hero-dwg mono">DWG NO. ZK-01 · SCALE 1:1<view class="dim-rule"></view><text class="dim-cap">WIKI</text></view>
+    </view>
+  </view>
+
+  <!-- 四座金库 -->
+  <view class="card ticks rise">
+    <view class="zk-kicker kicker kicker-on-paper">FOUR VAULTS · 四库全通</view>
+    <view class="zk-vault" wx:for="{{vaults}}" wx:key="h">
+      <view class="zk-v-glyph"><text>{{item.g}}</text></view>
+      <view class="zk-v-body">
+        <view class="zk-v-h">{{item.h}}</view>
+        <view class="zk-v-d muted">{{item.d}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 知识库链接卡（v0.7.4 提审合规：低姿态单一入口，不再放二维码/长按识别/引导外部App） -->
+  <view class="card ticks rise">
+    <view class="zk-kicker kicker kicker-on-paper">LINK · 知识库链接</view>
+    <view class="zk-url mono">{{urlHost}}</view>
+    <view class="muted zk-note">知识库为在线文档，链接可复制保存备用</view>
+    <button class="btn-primary zk-copy" hover-class="btn-hover" bindtap="copyUrl">复制知识库链接</button>
+  </view>
+
+  <view class="safe-bottom"></view>
+</view>

@@ -1,3 +1,5 @@
+<page-meta page-style="{{themeStyle}}" />
+
 <view class="page">
 
   <!-- 自绘导航：蓝图带 + 返回 -->
@@ -18,7 +20,13 @@
     </view>
   </view>
 
-  <!-- ══ 工程大脑工作中：绘图仪扫描动画 ══ -->
+  <!-- v0.7.5 深度合成合规：AI 生成内容显著标识（常驻，生成中/正文/追问全状态可见） -->
+  <view class="ai-flag">
+    <view class="ai-flag-badge">AI</view>
+    <view class="ai-flag-text">本回答内容由人工智能（AI）生成，仅供参考，不构成专业意见</view>
+  </view>
+
+  <!-- ══ 总包智库工作中：绘图仪扫描动画 + 流式打字机 ══ -->
   <block wx:if="{{polling}}">
     <view class="card ticks draft-card">
       <view class="draft-stage bp-grid-soft">
@@ -27,11 +35,49 @@
       </view>
       <view class="draft-head">
         <view class="draft-dot"></view>
-        <text class="draft-title">总包AI智库 · 绘制中</text>
+        <text class="draft-title">总包智库 · 绘制中</text>
+        <text class="draft-chars mono" wx:if="{{streamChars > 0}}">已生成 {{streamChars}} 字</text>
       </view>
-      <view class="proc-list">
+      <!-- v0.7.0 打字机：流式增量正文先睹为快（生成中即逐字上屏） -->
+      <view class="type-box" wx:if="{{partialBlocks.length > 0}}">
+        <view class="md md-dim">
+          <block wx:for="{{partialBlocks}}" wx:key="index" wx:for-item="b">
+            <view wx:if="{{b.t === 'h2'}}" class="md-h2">
+              <view class="h2-bar"></view>
+              <text class="md-h2-text"><template is="inl" data="{{segs: b.inl}}" /></text>
+            </view>
+            <view wx:elif="{{b.t === 'h1' || b.t === 'h3'}}" class="md-h3">
+              <text><template is="inl" data="{{segs: b.inl}}" /></text>
+            </view>
+            <view wx:elif="{{b.t === 'p'}}" class="md-p">
+              <text><template is="inl" data="{{segs: b.inl}}" /></text>
+            </view>
+            <view wx:elif="{{b.t === 'ul'}}" class="md-list">
+              <view class="md-li" wx:for="{{b.items}}" wx:key="index" wx:for-item="li">
+                <view class="li-dot"></view>
+                <text class="li-text"><template is="inl" data="{{segs: li}}" /></text>
+              </view>
+            </view>
+            <view wx:elif="{{b.t === 'ol'}}" class="md-list">
+              <view class="md-li" wx:for="{{b.items}}" wx:key="index" wx:for-item="li" wx:for-index="liIdx">
+                <view class="li-num mono">{{b.nums[liIdx]}}</view>
+                <text class="li-text"><template is="inl" data="{{segs: li}}" /></text>
+              </view>
+            </view>
+            <view wx:elif="{{b.t === 'quote'}}" class="md-quote">
+              <text><template is="inl" data="{{segs: b.inl}}" /></text>
+            </view>
+            <view wx:else class="md-p">
+              <text><template is="inl" data="{{segs: b.inl}}" /></text>
+            </view>
+          </block>
+        </view>
+        <view class="type-caret"><view class="caret-bar"></view></view>
+      </view>
+      <view class="proc-list" wx:else>
         <view class="proc-item" wx:for="{{progress}}" wx:key="index">
           <text class="proc-t mono">{{item.t}}s</text>
+          <text class="proc-check">✓</text>
           <text class="proc-x">{{item.text}}</text>
         </view>
         <view class="proc-item proc-current">
@@ -39,7 +85,7 @@
           <text class="proc-x">正在组织专业回答</text>
         </view>
       </view>
-      <view class="muted proc-tip">全程通常 10-60 秒 · 完成后自动展示</view>
+      <view class="muted proc-tip">通常 10-60 秒（高峰期可能排队稍久）· 完成后自动展示</view>
     </view>
   </block>
 
@@ -83,6 +129,21 @@
         <view class="a-meta">
           <text class="meta-chip mono" wx:if="{{fullChars}}">{{fullChars}} 字</text>
           <text class="meta-chip mono" wx:if="{{citations.length > 0}}">{{citations.length}} 条依据</text>
+          <text class="meta-chip mono" wx:if="{{views}}">观看 {{views}}</text>
+          <text class="meta-chip mono" wx:if="{{shares}}">转发 {{shares}}</text>
+        </view>
+      </view>
+
+      <!-- v0.6.0 要点速览：3 条 15 秒读完（生成失败自动隐藏） -->
+      <view class="tldr-card" wx:if="{{tldr.length > 0}}">
+        <view class="tldr-head">
+          <view class="tldr-bar"></view>
+          <text class="tldr-title">要点速览</text>
+          <text class="tldr-cap mono">TL;DR</text>
+        </view>
+        <view class="tldr-item" wx:for="{{tldr}}" wx:key="index">
+          <view class="tldr-idx mono">{{index + 1}}</view>
+          <text class="tldr-text" user-select>{{item}}</text>
         </view>
       </view>
 
@@ -148,64 +209,132 @@
         </block>
       </view>
 
-      <view class="lock-note" wx:if="{{!unlocked}}">
-        <view class="lock-line"></view>
-        <view class="lock-text">以上为预览 · 全文约 {{fullChars}} 字</view>
-      </view>
-
-      <view class="unlock-bar ticks" wx:if="{{!unlocked}}">
-        <view class="unlock-price mono"><text class="unlock-rmb">¥</text>1</view>
-        <view class="unlock-info">
-          <view class="unlock-title">解锁本篇全文</view>
-          <view class="muted">一次解锁 · 永久可看</view>
-        </view>
-        <button class="btn-primary unlock-btn" hover-class="btn-hover" bindtap="onUnlock">解锁</button>
-      </view>
-
-      <!-- 依据来源：图签栏（title block）样式 -->
-      <view class="cite-block" wx:if="{{unlocked && citations.length > 0}}">
-        <view class="cite-title kicker kicker-on-paper">依据来源 · BASIS OF ANSWER</view>
+      <!-- 依据来源：图签栏（title block）样式 · 点条目展开依据解读（用户令 0930 第 11 条） -->
+      <view class="cite-block" wx:if="{{citations.length > 0}}">
+        <view class="cite-title kicker kicker-on-paper">依据来源 · 点开看依据解读</view>
         <view class="cite-tbl">
-          <view class="cite-item" wx:for="{{citations}}" wx:key="n">
+          <view class="cite-item" wx:for="{{citations}}" wx:key="n"
+                data-n="{{item.n}}" bindtap="onCiteTap" hover-class="cite-hover">
             <view class="cite-chip mono">{{item.n}}</view>
             <view class="cite-body">
               <text class="cite-src" user-select>{{item.source}}</text>
               <text class="cite-loc" wx:if="{{item.loc}}">第 {{item.loc}} 条</text>
             </view>
+            <text class="cite-arrow">›</text>
           </view>
         </view>
       </view>
+
+      <!-- v0.7.4 提审合规：AI 生成标识常驻正文卡（AI标识办法） -->
+      <view class="ai-note">内容由 AI 生成 · 仅供参考，不构成专业意见 · 重要事项请咨询具备资质的专业人士</view>
     </view>
 
     <!-- ══ 互动小按钮排（用户令 v0.5.0：精美小按钮）══ -->
-    <view class="card ticks act-card" wx:if="{{unlocked}}">
+    <view class="card ticks act-card">
       <view class="pill-row">
         <view class="pill {{liked ? 'pill-on' : ''}}" bindtap="onLike" hover-class="pill-hover">
           <view class="pill-glyph"><text>{{liked ? '✓' : '👍'}}</text></view>
           <text class="pill-t">{{liked ? '已+1次' : '有用 +1次'}}</text>
         </view>
-        <view class="pill" bindtap="onCopy" hover-class="pill-hover">
-          <view class="pill-glyph"><text>📋</text></view>
-          <text class="pill-t">复制全文</text>
-        </view>
         <view class="pill" bindtap="onExport" hover-class="pill-hover">
           <view class="pill-glyph"><text>📄</text></view>
-          <text class="pill-t">导出 +1次</text>
+          <text class="pill-t">导出</text>
         </view>
         <view class="pill" bindtap="onCriticize" hover-class="pill-hover">
           <view class="pill-glyph"><text>✏️</text></view>
           <text class="pill-t">纠错 +1次</text>
         </view>
-        <button class="pill share-pill" open-type="share" bindtap="onShareTap" hover-class="pill-hover">
+        <button class="pill share-pill" open-type="share" hover-class="pill-hover">
           <view class="pill-glyph"><text>📤</text></view>
-          <text class="pill-t">分享 +1次</text>
+          <text class="pill-t">分享给同行</text>
         </button>
+        <view class="pill" bindtap="onPoster" hover-class="pill-hover">
+          <view class="pill-glyph"><text>🖼️</text></view>
+          <text class="pill-t">生成海报</text>
+        </view>
       </view>
-      <view class="muted act-tip">有用 / 导出 / 纠错（写具体意见）/ 分享 —— 每篇各 +1 次咨询机会 · 明日 0 点清零</view>
+      <view class="muted act-tip">有用 / 纠错（写具体意见）—— 每篇各 +1 次咨询机会 · 明日 0 点清零</view>
+    </view>
+
+    <!-- ══ v0.7.0 共享入锅圈（用户令 0930 第 8 条）：共享赠 1 次 · 可随时取消 ══ -->
+    <view class="card ticks share-band" wx:if="{{canShare}}">
+      <view class="sb-glyph {{shared ? 'sb-glyph-on' : ''}}"><text>{{shared ? '✓' : '锅'}}</text></view>
+      <view class="sb-main">
+        <view class="sb-title">{{shared ? '已共享进锅圈' : '共享进锅圈 · 赠 1 次咨询'}}</view>
+        <view class="muted sb-sub">{{shared ? '同行都能看到本篇问答 · 随时可取消（取消扣 1 次）' : '本篇问答进公共展区帮到同行 · 立即 +1 次咨询机会'}}</view>
+      </view>
+      <view class="sb-btn {{shared ? 'sb-btn-off' : ''}} {{shareBusy ? 'sb-busy' : ''}}"
+            bindtap="{{shared ? 'onShareOff' : 'onShareOn'}}" hover-class="sb-btn-hover">
+        {{shared ? '取消共享' : '共享'}}
+      </view>
+    </view>
+
+    <!-- ══ v0.6.0 追问对话流：基于本篇解答接地免费作答 ══ -->
+    <view class="card ticks fu-card">
+      <view class="fu-head">
+        <view class="fu-badge">追问</view>
+        <view class="fu-head-main">
+          <text class="fu-title">继续追问 · 免费</text>
+          <text class="fu-sub">基于本篇专业解答接地作答 · 深度问题建议发起新的正式咨询</text>
+        </view>
+      </view>
+      <view class="fu-list" wx:if="{{fuList.length > 0}}">
+        <view class="fu-item" wx:for="{{fuList}}" wx:key="id">
+          <view class="fu-q">
+            <view class="fu-q-tag">问</view>
+            <text class="fu-q-text" user-select>{{item.question}}</text>
+          </view>
+          <view class="fu-a" wx:if="{{item.status === 'ready'}}">
+            <view class="fu-a-tag">答</view>
+            <text class="fu-a-text" user-select>{{item.answer}}</text>
+          </view>
+          <view class="fu-a fu-a-pending" wx:elif="{{item.status === 'pending'}}">
+            <view class="fu-dotpulse"></view>
+            <text class="fu-a-text fu-waiting">追问回答生成中…</text>
+          </view>
+          <view class="fu-a fu-a-error" wx:elif="{{item.status === 'error'}}">
+            <text class="fu-a-text">{{item.error_text || '追问失败，请稍后再试'}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="fu-input-row">
+        <input class="fu-input" placeholder="继续追问（免费）" value="{{fuInput}}"
+               bindinput="onFuInput" bindconfirm="onFuSend" confirm-type="send" maxlength="200" />
+        <view class="fu-send {{canSendFu ? '' : 'fu-send-off'}}" bindtap="onFuSend" hover-class="fu-send-hover">发送</view>
+      </view>
+      <view class="muted fu-left" wx:if="{{fuLeftA !== null}}">今日剩余追问：本篇 {{fuLeftA}} 次 · 全部 {{fuLeftG}} 次 · 明日 0 点重置</view>
+      <view class="muted fu-ai-note">追问回答同样由 AI 生成 · 仅供参考</view>
+    </view>
+
+    <!-- ══ v0.6.0 相关问题：从本篇答案长出的下一步牵引 ══ -->
+    <view class="card ticks related-card" wx:if="{{related.length > 0}}">
+      <view class="rel-head">
+        <view class="tldr-bar"></view>
+        <text class="rel-title">继续追问</text>
+        <text class="muted rel-cap">相关问题 · 点按填入提问框</text>
+      </view>
+      <view class="rel-chip" wx:for="{{related}}" wx:key="index" hover-class="rel-chip-hover"
+            bindtap="onRelatedTap" data-q="{{item}}">
+        <text class="rel-chip-q">{{item}}</text>
+        <text class="rel-arrow">→</text>
+      </view>
     </view>
   </block>
 
   <view class="safe-bottom"></view>
+
+  <!-- ══ v0.7.3 授勋动画（用户令）：互动得次 → 徽章+光芒+火花的荣誉时刻 ══ -->
+  <view class="rw-mask" wx:if="{{rewardShow}}" catchtouchmove="noop">
+    <view class="rw-flash"></view>
+    <view class="rw-core">
+      <view class="rw-rays"></view>
+      <view class="rw-medal"><text class="rw-plus">+1</text></view>
+    </view>
+    <view class="rw-title">咨询机会 +1</view>
+    <view class="rw-sub">{{reward}}</view>
+    <view class="rw-sp sp0"></view><view class="rw-sp sp1"></view><view class="rw-sp sp2"></view><view class="rw-sp sp3"></view>
+    <view class="rw-sp sp4"></view><view class="rw-sp sp5"></view><view class="rw-sp sp6"></view><view class="rw-sp sp7"></view>
+  </view>
 </view>
 
 <!-- 行内段渲染模板：加粗/斜体/行内代码/链接，供各类块复用 -->

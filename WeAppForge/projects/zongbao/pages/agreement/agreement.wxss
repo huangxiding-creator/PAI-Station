@@ -1,0 +1,120 @@
+/* agreement.wxss — 用户协议与规则页：三要点卡+七节折叠全文（文案真源 utils/agreement.ts） */
+.agr {
+  height: 100vh;
+}
+.hl {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+.hl-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16rpx;
+}
+.hl-tag {
+  flex-shrink: 0;
+  padding: 4rpx 16rpx;
+  border-radius: 999rpx;
+  background: #1e5eff;
+  color: #fff;
+  font-size: 22rpx;
+}
+.hl-text {
+  flex: 1;
+  font-size: 26rpx;
+  line-height: 1.7;
+  color: #2a2f38;
+}
+.sec-heading {
+  font-size: 30rpx;
+  font-weight: 700;
+  margin-bottom: 8rpx;
+}
+.clause-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 4rpx;
+  border-bottom: 1rpx solid #f0f2f5;
+}
+.clause-head.fold {
+  cursor: pointer;
+}
+.clause-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1f2329;
+}
+.chev {
+  color: #b6bcc4;
+  font-size: 32rpx;
+  transform: rotate(90deg);
+  transition: transform 0.2s;
+}
+.chev.up {
+  transform: rotate(-90deg);
+}
+.clause-body {
+  padding: 8rpx 4rpx 20rpx;
+  border-bottom: 1rpx solid #f0f2f5;
+}
+.agr-p {
+  font-size: 26rpx;
+  line-height: 1.9;
+  color: #2a2f38;
+  margin: 12rpx 0;
+}
+.agr-sub {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #1f2329;
+  margin: 20rpx 0 4rpx;
+}
+.agr-list {
+  margin: 8rpx 0;
+}
+.agr-li {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 12rpx;
+}
+.agr-li .li-dot {
+  width: 10rpx;
+  height: 10rpx;
+  border-radius: 50%;
+  background: #1e5eff;
+  margin-top: 14rpx;
+  flex-shrink: 0;
+}
+.agr-num {
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: 50%;
+  background: #f0f2f5;
+  color: #4e5561;
+  font-size: 22rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 6rpx;
+}
+.li-text {
+  flex: 1;
+  font-size: 26rpx;
+  line-height: 1.8;
+  color: #2a2f38;
+}
+.agr-version {
+  text-align: center;
+  color: #9aa1ab;
+  font-size: 24rpx;
+  padding: 24rpx 0 8rpx;
+}
+.agr-version.sub {
+  color: #b6bcc4;
+  font-size: 22rpx;
+  padding-top: 4rpx;
+  padding-bottom: calc(32rpx + env(safe-area-inset-bottom));
+}

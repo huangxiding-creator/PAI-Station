@@ -1,0 +1,26 @@
+{
+  "name": "weapp-forge",
+  "version": "0.1.0",
+  "private": true,
+  "description": "WeAppForge 小程序锻造厂——七腿流水线（规格化→生成→构建→上传→调试→测试→发布）",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node pipeline/build.mjs",
+    "upload": "node --no-experimental-webstorage pipeline/upload.mjs",
+    "preview": "node --no-experimental-webstorage pipeline/preview.mjs",
+    "smoke": "node pipeline/smoke.mjs",
+    "test": "node --test",
+    "harness:xueyuan": "node work/harness_xueyuan.cjs"
+  },
+  "devDependencies": {
+    "miniprogram-api-typings": "^5.2.3",
+    "miniprogram-automator": "^0.12.1",
+    "@weapp-vite/miniprogram-automator": "^1.2.22",
+    "miniprogram-ci": "^2.1.31",
+    "miniprogram-simulate": "^1.6.2",
+    "typescript": "^5.9.3"
+  }
+}

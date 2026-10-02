@@ -1,0 +1,861 @@
+{
+  "channel": "official_eco",
+  "generated_at": "2026-09-27T13:06:26Z",
+  "docs": [
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "ai-mode-skills（微信小程序 AI 开发模式官方 Skills 工具集）",
+      "url": "https://github.com/wechat-miniprogram/ai-mode-skills",
+      "content": "官方 monorepo，含 wxa-skills-generate（分析源码生成 skills/{name}/ 分包+app.json/project.config.json 集成）、wxa-skills-validate（静态校验 V001~V021 规则→真机执行→渲染截图验证→就地修复）、wxa-skills-eval（端到端评测，暂升级中不开放）三个 skill。把任意小程序改造成可被「小程序 AI」调度的原子接口+原子组件，依赖微信开发者工具 nightly+服务端口开启。",
+      "signals": {
+        "stars": 203,
+        "language": "JavaScript",
+        "updated": "2026-09-25",
+        "notes": "版本 generate/validate 0.3.0；官方 AI 开发模式配套，评测工具升级中"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "ai-mode-demo（WeStoreCafe 点 drink 场景，小微 AI Handoff 模式官方 demo）",
+      "url": "https://github.com/wechat-miniprogram/ai-mode-demo",
+      "content": "官方演示小程序 AI「小微 SubAgent」AI Handoff 接力：对话中调用原子接口返回 handoff→文本回复+小程序卡片→点击卡片按 pagePath 打开接力页→wx.onAgentHandoff(path/query/payload)→接力页 onLoad(query) 完成选品下单支付。适配四件套=mcp.json 的 _meta.ui.pagePath + 接口返回 handoff 字段 + app.js 注册 wx.onAgentHandoff + 接力业务页。需已申请 AI 开发模式+小微 handoff 内测权限的 AppID。",
+      "signals": {
+        "stars": 296,
+        "language": "JavaScript",
+        "updated": "2026-09-22",
+        "notes": "wx.openAgent/wx.navigateBackAgent 当前不可用；原子组件当前不渲染仅保留兼容"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "miniprogram-demo（官方小程序组件/API/云开发示例全集）",
+      "url": "https://github.com/wechat-miniprogram/miniprogram-demo",
+      "content": "官方示例仓库，覆盖小程序组件、API、云开发的完整用法演示，持续高频更新（最近 2026-09-25 仍有提交）。是官方组件正确用法与最新 API 的权威参考实现。",
+      "signals": {
+        "stars": 7243,
+        "language": "JavaScript",
+        "updated": "2026-09-25",
+        "notes": "org 内 stars 第二高（仅次于 Unity 转换器），活跃度极高"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "weui-miniprogram（官方 WeUI 小程序组件库）",
+      "url": "https://github.com/wechat-miniprogram/weui-miniprogram",
+      "content": "微信官方设计团队出品的 WeUI 小程序组件库，TypeScript 编写，扩展库方式一键引入（useExtendedLib）。2026-09 仍在更新，是官方视觉规范的第一来源。",
+      "signals": {
+        "stars": 2429,
+        "language": "TypeScript",
+        "updated": "2026-09-19",
+        "notes": "与 weui-wxss（样式库形态）互补"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "weui-wxss（Tencent org，WeUI 基础样式库）",
+      "url": "https://github.com/Tencent/weui-wxss",
+      "content": "微信官方设计团队出品的同微信原生视觉一致的基础样式库（wxss 源码形态），15k+ stars，位于 Tencent org 而非 wechat-miniprogram org。适合直接复制样式做定制主题。",
+      "signals": {
+        "stars": 15277,
+        "language": "CSS",
+        "updated": "2026-09-25",
+        "notes": "gh api repos/Tencent/weui-wxss 实证未归档"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "api-typings（小程序 API TypeScript 类型定义）",
+      "url": "https://github.com/wechat-miniprogram/api-typings",
+      "content": "官方小程序 API TS 类型定义，npm 包 miniprogram-api-typings 5.2.3，月下载 69.4 万次（本次实测 api.npmjs.org），是 org 内下载量最大的包。2026-09 仍有更新。",
+      "signals": {
+        "stars": 804,
+        "language": "TypeScript",
+        "updated": "2026-09-20",
+        "notes": "npm 月下载 694284；TS 工厂链路必需品"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "miniprogram-simulate（官方自定义组件单测工具集）",
+      "url": "https://github.com/wechat-miniprogram/miniprogram-simulate",
+      "content": "将小程序自定义组件双线程分离运行改为单线程模拟渲染（依赖 j-component），配合 jsdom+nodejs（jest）或真实浏览器（karma）做组件级单元测试。npm 1.6.2（2026-06-29 发布），月下载 7.8 万次。",
+      "signals": {
+        "stars": 536,
+        "language": "JavaScript",
+        "updated": "2026-08-31",
+        "notes": "CI 内组件回归测试官方标准件"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "j-component（simulate 底层的 mock 组件框架）",
+      "url": "https://github.com/wechat-miniprogram/j-component",
+      "content": "a mock miniprogram component framework，miniprogram-simulate 的底层组件模拟框架，npm 1.4.10（2026-06-29），仍在维护。",
+      "signals": {
+        "stars": 43,
+        "language": "JavaScript",
+        "updated": "2026-06-29",
+        "notes": "simulate 依赖项"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "miniprogram-ci-dist（miniprogram-ci 官方发布仓库+changelog）",
+      "url": "https://github.com/wechat-miniprogram/miniprogram-ci-dist",
+      "content": "miniprogram-ci（从微信开发者工具抽离的编译/上传模块）的 GitHub 发布仓库，README 载明：需小程序管理员在公众平台下载代码上传密钥并配置 IP 白名单才能上传/预览；1.0.28 起支持第三方平台开发。changelog 更新至 2.1.47（2026-09-18，升级 babel 修安全问题）。",
+      "signals": {
+        "stars": 0,
+        "language": "JavaScript",
+        "updated": "2026-09-18",
+        "notes": "主仓 miniprogram-ci 原 GitHub 仓库已 404，此为新落位 dist 仓；npm 同步发版"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "wx-server-sdk（小程序云开发服务端 SDK 官方仓）",
+      "url": "https://github.com/wechat-miniprogram/wx-server-sdk",
+      "content": "小程序云 server 端 SDK（云函数内调用数据库/存储/调用），npm wx-server-sdk 4.0.2（2026-07-17 更新），月下载 6.7 万次。GitHub 仓库为新转移落位（stars 尚为 0）。",
+      "signals": {
+        "stars": 0,
+        "language": "JavaScript",
+        "updated": "2026-07-17",
+        "notes": "npm 活跃而 GitHub 冷清，注意以 npm 为准"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "glass-easel（新一代多后端组件框架）",
+      "url": "https://github.com/wechat-miniprogram/glass-easel",
+      "content": "官方 TypeScript 组件框架，Multiple-backend 设计，是 Skyline 时代小程序底层组件框架演进方向，2026-09-26 仍有提交。周边配套：glass-easel-analyzer（Rust LSP）、glass-easel-devtools、glass-easel-i18n、chaining-api-polyfill（让非 glass-easel 页面用链式 API）。",
+      "signals": {
+        "stars": 332,
+        "language": "TypeScript",
+        "updated": "2026-09-26",
+        "notes": "配套 float-pigment（Rust CSS/布局引擎）构成新渲染技术栈"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "float-pigment（Skyline CSS/布局引擎，Rust）",
+      "url": "https://github.com/wechat-miniprogram/float-pigment",
+      "content": "CSS and layout utilities for building user interfaces（Rust 实现），Skyline 渲染管线的样式/布局引擎开源部分，另有 float-pigment-css-analyzer（VSCode 诊断）。2026-08 仍在更新。",
+      "signals": {
+        "stars": 17,
+        "language": "Rust",
+        "updated": "2026-08-25",
+        "notes": "官方 CSS 能力的底层来源；未见官方 Tailwind 集成，社区用 weapp-tailwindcss 方案"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "skyline-skills（Skyline 渲染引擎 Agent Skills）",
+      "url": "https://github.com/wechat-miniprogram/skyline-skills",
+      "content": "官方为编程 Agent 出品的 Skyline 知识技能包，npx skills add wechat-miniprogram/skyline-skills 一键装进项目。7 个 skill：skyline-overview/config/components/wxss/worklet/route/scroll-api，覆盖迁移评估、JSON 配置、组件、样式兼容、worklet 动画、自定义路由转场、滚动 API。",
+      "signals": {
+        "stars": 55,
+        "language": "Markdown",
+        "updated": "2026-09-15",
+        "notes": "官方 Agent Skills 化的先例：把领域知识打包给 coding agent 用"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "skylint（Skyline 迁移检查工具）",
+      "url": "https://github.com/wechat-miniprogram/skylint",
+      "content": "Migration assistant for Skyline miniapp，检测 WebView→Skyline 迁移的兼容性问题，TypeScript，2026-06 更新。",
+      "signals": {
+        "stars": 83,
+        "language": "TypeScript",
+        "updated": "2026-06-18",
+        "notes": "与 awesome-skyline（198★）配套"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "minigame-unity-webgl-transform（Unity→小游戏官方转换器）",
+      "url": "https://github.com/wechat-miniprogram/minigame-unity-webgl-transform",
+      "content": "WeChat Mini Game Unity engine adapter，把 Unity WebGL 项目转成微信小游戏，org 内 stars 最高（3351），2026-08 仍在更新。小游戏侧「代码转换工厂」的官方范本。",
+      "signals": {
+        "stars": 3351,
+        "language": "C",
+        "updated": "2026-08-28",
+        "notes": "另有 tuanjie（团结引擎）transform SDK 188★、minigame-playable 33★"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "computed（自定义组件 computed/watch 扩展）",
+      "url": "https://github.com/wechat-miniprogram/computed",
+      "content": "官方小程序自定义组件 computed/watch 行为扩展，TypeScript，696 stars，2026-09-02 更新。",
+      "signals": {
+        "stars": 696,
+        "language": "TypeScript",
+        "updated": "2026-09-02",
+        "notes": "官方行为增强件，工厂模板可内置"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "recycle-view（长列表回收渲染官方组件）",
+      "url": "https://github.com/wechat-miniprogram/recycle-view",
+      "content": "官方小程序长列表性能组件（recycle-view/recycle-item），641 stars，2026-08 更新，未归档。",
+      "signals": {
+        "stars": 641,
+        "language": "JavaScript",
+        "updated": "2026-08-17",
+        "notes": "已归档的 navigation-bar/slide-view 属 component-plus 旧线"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "threejs-miniprogram（官方 Three.js 适配版）",
+      "url": "https://github.com/wechat-miniprogram/threejs-miniprogram",
+      "content": "WeChat MiniProgram adapted version of Three.js，799 stars，2026-09-25 更新，3D 渲染场景官方适配。",
+      "signals": {
+        "stars": 799,
+        "language": "JavaScript",
+        "updated": "2026-09-25",
+        "notes": "配套 xr-frame（XR 框架）与 xr-frame-cli 工具"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "lottie-miniprogram（官方 Lottie 适配）",
+      "url": "https://github.com/wechat-miniprogram/lottie-miniprogram",
+      "content": "lottie for miniprogram 官方适配版，432 stars，2026-09 更新。工厂产物做动画交付的官方依赖。",
+      "signals": {
+        "stars": 432,
+        "language": "JavaScript",
+        "updated": "2026-09-18",
+        "notes": "npm 亦有 @nutui/lottie-miniprogram 分发"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "mobx-miniprogram-bindings + mobx（官方 MobX 构建版）",
+      "url": "https://github.com/wechat-miniprogram/mobx-miniprogram-bindings",
+      "content": "适用于微信小程序的 MobX 构建版（mobx 仓）与绑定辅助库（bindings，249 stars，2026-09-16 更新）。官方维护的状态管理方案之一。",
+      "signals": {
+        "stars": 249,
+        "language": "TypeScript",
+        "updated": "2026-09-16",
+        "notes": "另一状态管理官方件 miniprogram-api-promise（API promise 化，62★）"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "miniprogram-i18n（官方国际化方案）",
+      "url": "https://github.com/wechat-miniprogram/miniprogram-i18n",
+      "content": "官方小程序 i18n 库（TypeScript），142 stars，2026-05 更新。工厂做多语言产物的官方件。",
+      "signals": {
+        "stars": 142,
+        "language": "TypeScript",
+        "updated": "2026-05-27",
+        "notes": "配套 glass-easel-i18n（Rust）新线"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "miniprogram-elder-transform（适老化自动适配工具）",
+      "url": "https://github.com/wechat-miniprogram/miniprogram-elder-transform",
+      "content": "小程序适老化自动适配工具（TypeScript），47 stars，2026-08 更新。官方合规改造工具。",
+      "signals": {
+        "stars": 47,
+        "language": "TypeScript",
+        "updated": "2026-08-19",
+        "notes": "工厂合规腿可复用"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "miniprogram-offline-demo（弱网/离线官方 demo）",
+      "url": "https://github.com/wechat-miniprogram/miniprogram-offline-demo",
+      "content": "官方小程序弱网/离线方案 demo，13 stars，2025-07 更新。",
+      "signals": {
+        "stars": 13,
+        "language": "JavaScript",
+        "updated": "2025-07-05",
+        "notes": "弱网场景参考实现"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "miniprogram-compat（小程序 JS 执行环境兼容信息）",
+      "url": "https://github.com/wechat-miniprogram/miniprogram-compat",
+      "content": "微信小程序 js 执行环境的兼容信息数据仓，105 stars，2026-09-19 更新。判断语法/API 在各基础库可用性的数据源。",
+      "signals": {
+        "stars": 105,
+        "language": "JavaScript",
+        "updated": "2026-09-19",
+        "notes": "gh api 实测 org 仓库清单在役"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "ios-webkit-debug-proxy-rust（iOS 真机调试代理 Rust 重写版）",
+      "url": "https://github.com/wechat-miniprogram/ios-webkit-debug-proxy-rust",
+      "content": "A DevTools proxy (Chrome Remote Debugging Protocol) for iOS devices，google/ios-webkit-debug-proxy 的 Rust 重写，DevTools 真机调试链路组成部分。",
+      "signals": {
+        "stars": 1,
+        "language": "Rust",
+        "updated": "2026-04-04",
+        "notes": "真机调试底层官方组件"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "wasmsplit-ci / wasmsplit-v2-ci（wasm 分包 CI 支持）",
+      "url": "https://github.com/wechat-miniprogram/wasmsplit-ci",
+      "content": "官方 wasm 拆分 CI 工具（v1/v2 两仓），支撑 Unity 等重 wasm 小游戏的代码分包加载，v2 仓 2026-09-22 更新。",
+      "signals": {
+        "stars": 0,
+        "language": "JavaScript",
+        "updated": "2026-09-22",
+        "notes": "重包体游戏工厂化发布的配套"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "kbone 系列（Vue/React/Preact 多端同构官方方案）",
+      "url": "https://github.com/wechat-miniprogram/kbone-template-vue",
+      "content": "kbone 多端框架官方模板族：vue（353★）/react（144★）/preact 模板+kbone-ui（441★，已归档迁主仓）。以 Web 框架写小程序的多端路线。",
+      "signals": {
+        "stars": 353,
+        "language": "JavaScript",
+        "updated": "2026-09-14",
+        "notes": "kbone-ui/kbone-api 已归档，活跃度一般"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "mpflow（小程序工程化构建工具）",
+      "url": "https://github.com/wechat-miniprogram/mpflow",
+      "content": "官方 org 内的 TypeScript 小程序工程化构建方案（webpack 体系），66 stars，2026-09-17 更新。",
+      "signals": {
+        "stars": 66,
+        "language": "TypeScript",
+        "updated": "2026-09-17",
+        "notes": "非 DevTools 官方主线，生态使用率有限"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "Face2FaceTranslator（面对面翻译，WechatSI 插件官方参考实现）",
+      "url": "https://github.com/Tencent/Face2FaceTranslator",
+      "content": "微信团队官方流式语音翻译小程序（Tencent org，908 stars），基于微信同声传译插件 WechatSI 实现语音识别+文本翻译，是 WechatSI 接口用法的官方开源范本。",
+      "signals": {
+        "stars": 908,
+        "language": "JavaScript",
+        "updated": "2026",
+        "notes": "WechatSI 最佳实践代码来源"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "CloudBase-AI-Toolkit（AI coding 后端一体化层）",
+      "url": "https://github.com/TencentCloudBase/CloudBase-AI-Toolkit",
+      "content": "Backend for AI coding agents on CloudBase：Plugin 装栈、Skills 定规则、MCP 操作数据库/函数/存储并从对话中部署。43+ MCP tools（callCloudApi 白名单 57 服务、deployApp、queryEnv 等），v2.34.x（2026-09）高频迭代，1126 stars 是 CloudBase org 第一仓。",
+      "signals": {
+        "stars": 1126,
+        "language": "TypeScript",
+        "updated": "2026-09-27",
+        "notes": "含 international 站 WorkBuddy 连接器；工厂后端腿直接复用"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "cloudbase-agent-ui（AI 对话 UI 组件）",
+      "url": "https://github.com/TencentCloudBase/cloudbase-agent-ui",
+      "content": "腾讯云开发 Agent UI，微信小程序/React 双端 AI 对话组件（开箱即用聊天界面），96 stars，2026-09-18 更新。工厂产物嵌 AI 对话窗的官方件。",
+      "signals": {
+        "stars": 96,
+        "language": "JavaScript",
+        "updated": "2026-09-18",
+        "notes": "配套 cloudbase-plugin（Open Plugin Spec：MCP Server+Agent Skills 合一分发）"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "TencentCloudBase/skills + cloudbase-skills（官方 Agent Skills 仓）",
+      "url": "https://github.com/TencentCloudBase/skills",
+      "content": "Production Ready Backend Development (CloudBase) Agent Skills（77 stars）与 cloudbase-skills（34 stars，npx skills add tencentcloudbase/cloudbase-skills 安装，装进 .cursor/skills 或 .claude/skills）。云开发官方知识技能包，DevTools 官方文档推荐。",
+      "signals": {
+        "stars": 77,
+        "language": "Markdown",
+        "updated": "2026-09-24",
+        "notes": "官方文档《使用 Skill/MCP 辅助小程序开发》直接引用安装命令"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "awesome-miniprogram-skills（小程序 AI 开发模式 Skills 示例集合）",
+      "url": "https://github.com/TencentCloudBase/awesome-miniprogram-skills",
+      "content": "微信小程序 Skills 示例集合：从简单待办到数据存储、支付、AI 调用，开箱即用，帮小程序快速接入微信小程序 AI 开发模式。40 stars，2026-09-25 更新。",
+      "signals": {
+        "stars": 40,
+        "language": "JavaScript",
+        "updated": "2026-09-25",
+        "notes": "AI 开发模式官方示例库（CloudBase 侧）"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "mp-skills（npx mp-skills，AI 开发模式脚手架）",
+      "url": "https://github.com/TencentCloudBase/mp-skills",
+      "content": "Miniprogram skills tool——npx mp-skills 快速创建 AI 小程序和 Skill，或将现有小程序改造为支持 AI 开发模式，内置 AI 评测校验工具保障 Skill 执行质量。TypeScript，2026-08 更新。",
+      "signals": {
+        "stars": 9,
+        "language": "TypeScript",
+        "updated": "2026-08-28",
+        "notes": "AI 开发模式改造的官方 CLI 工具"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "OpenVibeCoding + OpenAgentKernel（CloudBase vibecoding 模板与服务端 Agent 内核）",
+      "url": "https://github.com/TencentCloudBase/OpenVibeCoding",
+      "content": "Open vibecoding template with cloudbase（180 stars，2026-09-26 更新）；OpenAgentKernel（OAK）为服务端 agent SDK：内置 CloudBase 会话持久化、沙箱、HITL 审批与用户记忆（25 stars）。",
+      "signals": {
+        "stars": 180,
+        "language": "TypeScript",
+        "updated": "2026-09-26",
+        "notes": "官方对「AI 直接生成全栈应用」产品化的两条腿"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "miniprogram-custom-component（官方自定义组件脚手架/说明）",
+      "url": "https://github.com/wechat-miniprogram/miniprogram-custom-component",
+      "content": "官方自定义组件开发脚手架与规范说明，199 stars，2026-09-17 更新。组件工程起点模板。",
+      "signals": {
+        "stars": 199,
+        "language": "JavaScript",
+        "updated": "2026-09-17",
+        "notes": "npm miniprogram-custom-component-version-bin 等配套"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "npm",
+      "title": "miniprogram-ci（官方 CI 编译/上传模块）",
+      "url": "https://www.npmjs.com/package/miniprogram-ci",
+      "content": "官方从微信开发者工具抽离的小程序编译模块，Node API/CLI 支持上传、预览、构建 npm、云函数部署、云托管、sourcemap 获取、多端 APK/iOS 构建。最新 2.1.47（2026-09-18 发版），月下载 7.2 万次，maintainer=wechat-miniprogram 官方。需代码上传密钥+IP 白名单。",
+      "signals": {
+        "stars": null,
+        "language": "JavaScript",
+        "updated": "2026-09-18",
+        "notes": "npm registry 实测；dist-tag latest 显示 2.1.31 但 versions 已到 2.1.47"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "npm",
+      "title": "miniprogram-automator（官方自动化 SDK）",
+      "url": "https://www.npmjs.com/package/miniprogram-automator",
+      "content": "小程序自动化 JS 版 SDK：automator.launch/connect 拉起或连接 DevTools，提供 miniProgram.pageStack/navigateTo、page.$/$$/setData/callMethod、element.tap/input/scroll、mockWxMethod、evaluate、screenshot、terminate 等完整 API。npm 0.12.1（2023-11-07 后未发新版），月下载 5.9 万次，maintainer 官方；GitHub org 仓库已下架（404）。",
+      "signals": {
+        "stars": null,
+        "language": "JavaScript",
+        "updated": "2023-11-07",
+        "notes": "org 仓库 404 但 npm 官方包在役；社区有 @weapp-vite/miniprogram-automator 兼容替代实现"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "npm",
+      "title": "wx-server-sdk（云函数内服务端 SDK）",
+      "url": "https://www.npmjs.com/package/wx-server-sdk",
+      "content": "小程序云开发 server SDK（云函数环境内使用 wx-server-sdk 访问云数据库/存储/云调用），4.0.2（2026-07-17），月下载 6.7 万次，官方维护者。",
+      "signals": {
+        "stars": null,
+        "language": "JavaScript",
+        "updated": "2026-07-17",
+        "notes": "与 @cloudbase/node-sdk（月下载 9.0 万）功能近同、接口前缀不同（wx. vs app）"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "npm",
+      "title": "@cloudbase/node-sdk（云开发 Node 服务端 SDK）",
+      "url": "https://www.npmjs.com/package/@cloudbase/node-sdk",
+      "content": "腾讯云开发 CloudBase Node SDK，数据库/存储/函数/Auth 全能力，月下载 9.0 万次，是 CloudBase 生态下载量最大的官方 SDK。",
+      "signals": {
+        "stars": null,
+        "language": "TypeScript",
+        "updated": "2026",
+        "notes": "npm downloads API 实测 90254/月"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "npm",
+      "title": "@cloudbase/mcp（云函数 2.0 上构建 MCP Server 的官方框架）",
+      "url": "https://www.npmjs.com/package/@cloudbase/mcp",
+      "content": "官方 MCP 构建工具集：StreamableHTTPMCPServerRunner 在云函数 2.0 上几行代码跑 MCP Server（/messages 路由+鉴权+Streamable HTTP Transport），支持 registerTool zod 入参出参。1.0.0-beta.30（2026-09-09），月下载 1539。",
+      "signals": {
+        "stars": null,
+        "language": "TypeScript",
+        "updated": "2026-09-09",
+        "notes": "腾讯 CloudBase 团队维护（maintainers 含 tencent.com 邮箱）"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "npm",
+      "title": "@cloudbase/js-sdk（Web/小程序侧云开发 SDK）",
+      "url": "https://www.npmjs.com/package/@cloudbase/js-sdk",
+      "content": "云开发 JavaScript SDK 3.10.1（2026-09-23 更新），月下载 5.9 万；文档指明小程序端 AI 调用入口为 wx.cloud.extend.AI，Web 端为 @cloudbase/js-sdk。",
+      "signals": {
+        "stars": null,
+        "language": "TypeScript",
+        "updated": "2026-09-23",
+        "notes": "docs.cloudbase.net/ai 官方推荐接入方式"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "npm",
+      "title": "wechat-miniprogram-mcp（社区 MCP，非官方，工具清单最全）",
+      "url": "https://www.npmjs.com/package/wechat-miniprogram-mcp",
+      "content": "第三方（annopick）把微信开发者工具 HTTP API+自动化 API 封装为 MCP：控制组 wechat_control_*（status/open/preview/upload/buildnpm/cleancache/resetfileutils/login/autopreview/close/quit）与自动化组 wechat_auto_*（connect/navigate/page_info/page_data/page_query/element_info/element_action/touch/scroll/screenshot/evaluate/call_wx_method/mock_wx_method/ticket/test_accounts/stop_audits）。基于 miniprogram-automator。",
+      "signals": {
+        "stars": null,
+        "language": "JavaScript",
+        "updated": "2026-06-04",
+        "notes": "非官方！月下载仅 52；价值在于其工具清单=官方两套 API 能力的完整映射表"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.6
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "doc",
+      "title": "官方文档：命令行调用 CLI V2（命令全集）",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/devtools/cli.html",
+      "content": "微信开发者工具命令行 V2：macOS 为 cli、Windows 为 cli.bat（IDE 安装目录）。命令全集：login/islogin/preview（--qr-format base64/terminal/image --qr-output）、auto-preview、upload（--enable-es6/--minify 等编译设置）、build-npm、auto（--auto-port 9420 指定自动化端口、--auto-account 多账号）、auto-replay、cache（清理）、open（--pure-simulator 纯模拟器）、open-other、close、quit、reset-fileutils、cloud（env list/functions list|info|deploy|inc-deploy|download）。前置：设置→安全设置→服务端口开启。",
+      "signals": {
+        "stars": null,
+        "language": null,
+        "updated": "2026-09-27 抓取",
+        "notes": "CLI 与 HTTP 两种接口形态；V2 自 1.02.202003092 起支持"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "doc",
+      "title": "官方文档：HTTP V2 调用（端口 HTTP API）",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/devtools/http.html",
+      "content": "通过 http://127.0.0.1:端口号/v2/* 调用：login（qr-format/qr-output/result-output）、islogin、preview、upload（含 robot 参数）、autopreview、buildnpm、open、close、quit、resetfileutils、cleancache（clean=storage 等），以及云开发管理 /v2/cloud/env/list、/v2/cloud/functions/list|info|deploy 等。V2 支持长时间命令、中英文国际化。",
+      "signals": {
+        "stars": null,
+        "language": null,
+        "updated": "2026-09-27 抓取",
+        "notes": "工厂可用纯 HTTP 编排 DevTools 全流程，无需 CLI 二进制"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "doc",
+      "title": "官方文档：小程序自动化（miniprogram-automator 快速入门）",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/devtools/auto/quick-start.html",
+      "content": "自动化 SDK 全量 API：automator.launch({cliPath,projectPath,port}) / automator.connect({wsEndpoint})；miniProgram.reLaunch/navigateTo/redirectTo/switchTab/navigateBack/pageStack/systemInfo/callWxMethod/mockWxMethod/evaluate/screenshot/terminate；page.$/$$/data/setData/size/scrollTo/callMethod；element.tap/longpress/input/trigger/touchstart/slideTo 等。支持自动化测试窗口 auto-replay 回放。",
+      "signals": {
+        "stars": null,
+        "language": null,
+        "updated": "2026-09-27 抓取",
+        "notes": "真机/模拟器双支持（真机预览后 automator.connect 接入）"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "doc",
+      "title": "官方文档：小程序 AI 开发模式评测指南",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/ai/evaluation-guide.html",
+      "content": "官方 AI 开发模式评测（内测）：评测工具以微信开发者工具插件形式使用，SKILL 声明数量 1~5 个、单 SKILL 评测用例 Intent 需≥50（微信生成+开发者补充）、复杂用例（多意图/多轮）≥30%、实体类型≥5（多样性）；提审后微信团队复测；评分四维度=服务交付/交互体验/场景覆盖/性能质量，每项≥60 分才会被微信 AI 调用。SKILL 本体=mcp.json+原子接口+原子组件+handoff 页；小程序 AI 编译模式要求基础库 3.16.2 及以上。",
+      "signals": {
+        "stars": null,
+        "language": null,
+        "updated": "2026-09-27 抓取",
+        "notes": "AI 产物的官方质量门判据；评测工具升级中（README 同说法互证）"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "doc",
+      "title": "官方文档：使用 Skill / MCP 辅助小程序开发（DevTools 装 MCP 官方路径）",
+      "url": "https://developers.weixin.qq.com/minigame/dev/wxcloud/guide/development-assistant.html",
+      "content": "官方指引两条路：①微信开发者工具 2.0+ 用 Ctrl+Shift+X（macOS Shift+Cmd+X）打开扩展面板→扩展市场装「腾讯云代码助手 CodeBuddy」→CodeBuddy 设置→MCP 市场搜索安装「CloudBase MCP」；②支持 Skill 的 AI IDE 在项目根目录 npx skills add tencentcloudbase/cloudbase-skills（落位 .cursor/skills/.claude/skills）。典型任务：统计新增用户、查 login 云函数报错日志、查绑定环境、创建并部署云函数、设计数据库权限规则。生产/计费/批量操作保留人工确认。",
+      "signals": {
+        "stars": null,
+        "language": null,
+        "updated": "2026-09-27 抓取",
+        "notes": "URL 在 minigame 域段但内容通用（小程序/小游戏共用 wxcloud 文档树）；DevTools 2.0+ 扩展面板=官方 MCP 分发渠道"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.9
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "doc",
+      "title": "官方文档：Skyline 渲染引擎介绍",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/framework/runtime/skyline/introduction.html",
+      "content": "Skyline 是 WebView 之外的新渲染引擎：独立渲染线程负责 Layout/Composite/Paint，AppService 内划出独立上下文跑 JS 逻辑/DOM 树创建，页面间共享资源、无 JSBridge 数据交换开销；WebView 架构代码基本无需改动即可运行；WXS 移入 AppService（部分接口变异步），配套推出 Worklet 机制做高性能动画（比 WXS 更靠近渲染流程）。",
+      "signals": {
+        "stars": null,
+        "language": null,
+        "updated": "2026-09-27 抓取",
+        "notes": "迁移工具 skylint+awesome-skyline+skyline-skills 三件套已开源"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "doc",
+      "title": "官方文档：CloudBase AI 简介（大模型/Agent/Agent UI）",
+      "url": "https://docs.cloudbase.net/ai/introduce",
+      "content": "云开发 AI 提供统一大模型接入与 Agent 开发：直接调用 DeepSeek、混元等大模型（文本生成/流式/工具调用）；LangChain/LangGraph/CrewAI 开发智能体；Agent UI 组件（小程序/React/微搭开箱聊天界面）；多端接入=小程序 wx.cloud.extend.AI、Web @cloudbase/js-sdk、公众号/企微客服；在 Cursor、微信开发者工具等 IDE 直接用 AI 编码（OpenAI/Anthropic 兼容协议）。小程序成长计划送 10 亿 Token 资源包+10 万张生图+6 个月个人版环境。",
+      "signals": {
+        "stars": null,
+        "language": null,
+        "updated": "2026-09-27 抓取",
+        "notes": "控制台→AI→生文模型中开启所需模型"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "plugin",
+      "title": "微信同声传译插件 WechatSI（语音识别/文本翻译/语音合成）",
+      "url": "https://mp.weixin.qq.com/wxopen/pluginbasicprofile?action=intro&appid=wx069ba97219f66d99",
+      "content": "微信智聆语音团队+微信翻译团队+公众平台联合出品的官方插件：provider=wx069ba97219f66d99，app.json plugins.WechatSI 引用（常用 0.3.5），getRecordRecognitionManager() 全局唯一语音识别管理器（流式），另有文本翻译与文字转语音（TTS）接口。官方开源参考实现=GitHub Tencent/Face2FaceTranslator（908 stars）。",
+      "signals": {
+        "stars": 908,
+        "language": "小程序插件",
+        "updated": "2026-09-27 检索",
+        "notes": "在小程序管理后台设置→第三方设置→插件管理搜索添加；2026-05 社区有「搜不到插件」反馈帖（偶发）；旧文档路径 voice.html 已 404"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.7
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "news",
+      "title": "官方动态：基础库 3.16.x 线（3.16.1 更新公告 / 3.16.2 支持 AI 编译）",
+      "url": "https://developers.weixin.qq.com/community/develop/mixflow",
+      "content": "微信开放社区官方公告《社区每周｜小程序基础库 3.16.1 更新》（2026-05-22 发布节奏）确认基础库 3.16 线在役；AI 评测指南（官方文档）明确「小程序 AI 编译模式需基础库 3.16.2 及以上」。DevTools 2.0+ 支持扩展面板装 CodeBuddy/MCP。",
+      "signals": {
+        "stars": null,
+        "language": null,
+        "updated": "2026-05/09",
+        "notes": "release.html 基础库更新日志页当前 404，逐版本明细以社区公告+文档引用为准"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.8
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "mcp",
+      "title": "微信开发者工具内置 MCP 生态位（CodeBuddy 扩展+MCP 市场）",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html",
+      "content": "微信开发者工具 2.0+ 通过扩展面板（Ctrl+Shift+X）内建扩展市场与 MCP 市场：官方路径=装腾讯 CodeBuddy 扩展后在 MCP 市场安装 CloudBase MCP；自动化/控制类第三方 MCP（wechat-miniprogram-mcp、weapp-devtools-mcp 等）均基于官方 HTTP/自动化双 API 封装，需开启设置→安全设置→服务端口。",
+      "signals": {
+        "stars": null,
+        "language": null,
+        "updated": "2026-09-27 检索",
+        "notes": "download.html 为 SPA 动态页，本次未抓到 DevTools 具体版本号（degraded）；「官方出品的 DevTools MCP Server」未在 npm/GitHub 检索到官方包，现役路线=CodeBuddy 内置 CloudBase MCP+社区封装"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.75
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "degraded",
+      "title": "[degraded] miniprogram-automator/miniprogram-ci/minitest GitHub 官方仓下架",
+      "url": "https://github.com/wechat-miniprogram/miniprogram-automator",
+      "content": "gh api 实测：wechat-miniprogram org 下 miniprogram-ci、miniprogram-automator、minitest 仓库均 404（本会话 2026-09-27 实测）；miniprogram-ci 迁至 miniprogram-ci-dist 新仓，miniprogram-automator 仅存 npm 包（repo 字段指向腾讯内部 git.code.oa.com），minitest 框架 GitHub 全无踪迹（org 搜索 0 结果）、官方文档 auto/minitest.html 404、npm 名被第三方 Ruby port 占用。",
+      "signals": {
+        "stars": null,
+        "language": null,
+        "updated": "2026-09-27",
+        "notes": "自动化测试栈现役组合=miniprogram-automator(npm)+miniprogram-simulate；引用资料时勿再链旧 GitHub 地址"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "degraded",
+      "title": "[degraded] 部分官方文档路径失效（release/voice/ai-introduction）",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/framework/release.html",
+      "content": "本次实测 404 的官方文档路径：framework/release.html（基础库更新日志）、framework/platform-ability/voice.html（同声传译旧页）、ai/introduction.html（AI 开发模式总入口）。AI 开发模式现行入口为 ai/evaluation-guide.html+官方仓库 README；同声传译现行入口为 mp 后台插件管理+社区文档。",
+      "signals": {
+        "stars": null,
+        "language": null,
+        "updated": "2026-09-27",
+        "notes": "不编造替代版本号明细；引用时以上述现行入口为准"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.95
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "degraded",
+      "title": "[degraded] DevTools 下载页为 SPA，版本号未能程序化抓取",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html",
+      "content": "download.html 返回 1928 字符壳文档（正文 JS 动态渲染），未取得当前稳定版/Nightly 版本号。已确证事实：DevTools 2.0+ 支持扩展面板（Ctrl+Shift+X）与 MCP 市场（官方文档原文）；ai-mode-skills 要求 DevTools nightly 版本做 AI 开发模式运行时。",
+      "signals": {
+        "stars": null,
+        "language": null,
+        "updated": "2026-09-27",
+        "notes": "后续可用浏览器渲染抓取补齐版本号"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.9
+    },
+    {
+      "channel": "official_eco",
+      "doc_type": "repo",
+      "title": "weui-wxss 补充：微信官方设计团队 UI 库（Tencent org 主仓）",
+      "url": "https://github.com/Tencent/weui",
+      "content": "WeUI 家族在 Tencent org 的主仓群：weui-wxss（15277★，wxss 源码）、weui（Web 版）等。与 wechat-miniprogram/weui-miniprogram（扩展库组件形态）构成官方 UI 双形态。",
+      "signals": {
+        "stars": 15277,
+        "language": "CSS",
+        "updated": "2026-09-25",
+        "notes": "合并参阅 weui-miniprogram 条目"
+      },
+      "retrieved_at": "2026-09-27T13:06:26Z",
+      "credibility": 0.85
+    }
+  ]
+}

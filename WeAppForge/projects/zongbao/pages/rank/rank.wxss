@@ -1,0 +1,194 @@
+/* pages/rank/rank.wxss — 榜单页（navy/amber 品牌色，同卡详情页系） */
+.page {
+  padding: 24rpx 24rpx 48rpx;
+}
+
+.state-hint {
+  text-align: center;
+  color: #6b7178;
+  font-size: 26rpx;
+  padding: 120rpx 40rpx;
+  line-height: 2;
+}
+
+.retry-btn {
+  margin-top: 20rpx;
+  background: #113a66;
+  color: #fff;
+}
+
+.week-chip {
+  display: inline-block;
+  background: #113a66;
+  color: #fff;
+  font-size: 24rpx;
+  border-radius: 24rpx;
+  padding: 8rpx 24rpx;
+  margin-bottom: 20rpx;
+}
+
+.card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 24rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #113a66;
+  margin-bottom: 20rpx;
+}
+
+/* —— 一周故事 —— */
+.story {
+  background: linear-gradient(160deg, #113a66 0%, #1c4d82 100%);
+  color: #fff;
+}
+.story-tag {
+  display: inline-block;
+  background: rgba(240, 169, 59, 0.18);
+  color: #f7cb78;
+  font-size: 22rpx;
+  border-radius: 20rpx;
+  padding: 6rpx 18rpx;
+  margin-bottom: 16rpx;
+}
+.story-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.story-amount {
+  color: #f0a93b;
+  font-size: 44rpx;
+  font-weight: 700;
+  margin: 12rpx 0 4rpx;
+}
+.story-p {
+  font-size: 26rpx;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.88);
+  margin-top: 12rpx;
+}
+.story-cta {
+  margin-top: 20rpx;
+  color: #f7cb78;
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+/* —— 省级热度条 —— */
+.heat-row {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 14rpx 0;
+  border-bottom: 1rpx dashed #e3e7ec;
+}
+.heat-row:last-child {
+  border-bottom: none;
+}
+.heat-rank {
+  width: 44rpx;
+  text-align: center;
+  color: #9aa6b5;
+  font-size: 30rpx;
+  font-weight: 700;
+  font-style: italic;
+}
+.heat-rank.top {
+  color: #f0a93b;
+}
+.heat-main {
+  flex: 1;
+  min-width: 0;
+}
+.heat-line {
+  display: flex;
+  justify-content: space-between;
+}
+.heat-prov {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #2a3542;
+}
+.heat-score {
+  color: #113a66;
+  font-weight: 700;
+  font-size: 28rpx;
+}
+.heat-bar {
+  height: 12rpx;
+  background: #eef0f3;
+  border-radius: 8rpx;
+  margin: 8rpx 0;
+  overflow: hidden;
+}
+.heat-bar-in {
+  height: 100%;
+  background: linear-gradient(90deg, #1c4d82, #f0a93b);
+  border-radius: 8rpx;
+}
+.heat-sub {
+  font-size: 22rpx;
+  color: #9aa6b5;
+}
+
+/* —— 最大单/新业主共用行 —— */
+.deal-row,
+.owner-row {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 18rpx 0;
+  border-bottom: 1rpx dashed #e3e7ec;
+}
+.deal-row:last-child,
+.owner-row:last-child {
+  border-bottom: none;
+}
+.deal-rank {
+  width: 44rpx;
+  text-align: center;
+  color: #9aa6b5;
+  font-size: 30rpx;
+  font-weight: 700;
+  font-style: italic;
+}
+.deal-rank.top {
+  color: #f0a93b;
+}
+.deal-main {
+  flex: 1;
+  min-width: 0;
+}
+.deal-title {
+  font-size: 28rpx;
+  color: #2a3542;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.deal-sub {
+  font-size: 22rpx;
+  color: #9aa6b5;
+  margin-top: 4rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.deal-amount {
+  color: #f0a93b;
+  font-size: 28rpx;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.foot-note {
+  text-align: center;
+  color: #9aa6b5;
+  font-size: 22rpx;
+  padding: 8rpx 0 0;
+}

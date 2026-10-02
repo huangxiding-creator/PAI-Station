@@ -1,0 +1,23 @@
+<view class="chat">
+  <scroll-view class="msgs" scroll-y scroll-into-view="bottom-anchor">
+    <view
+      wx:for="{{messages}}"
+      wx:key="index"
+      class="msg {{item.role === 'user' ? 'mine' : 'bot'}}"
+    >
+      <view class="bubble">{{item.content}}{{item.streaming ? '▍' : ''}}</view>
+    </view>
+    <view id="bottom-anchor" />
+  </scroll-view>
+  <view class="input-bar">
+    <input
+      class="input"
+      value="{{input}}"
+      placeholder="问研报、问商机…"
+      confirm-type="send"
+      bindinput="onInput"
+      bindconfirm="onSend"
+    />
+    <button class="send-btn" size="mini" disabled="{{sending}}" bindtap="onSend">发送</button>
+  </view>
+</view>

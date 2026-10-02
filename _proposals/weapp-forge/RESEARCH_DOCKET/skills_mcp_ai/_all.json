@@ -1,0 +1,496 @@
+{
+  "channel": "skills_mcp_ai",
+  "generated_at": "2026-09-27T21:20:00+08:00",
+  "docs": [
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "repo",
+      "title": "anthropics/skills 官方 Agent Skills 库（无任何小程序条目）",
+      "url": "https://github.com/anthropics/skills",
+      "content": "Anthropic 官方 skills 仓库（178616★），skills/ 目录下仅 19 个技能：docx/pdf/pptx/xlsx、canvas-design、frontend-design、mcp-builder、webapp-testing 等，全部面向通用文档与 Web 场景。无任何微信小程序、weapp、中国生态相关技能。官方层面对小程序开发场景零覆盖，是端到端缺口的第一层证据。",
+      "signals": {"stars": 178616, "price": "免费/MIT", "notes": "skills 目录清单经 gh api 逐项核对"},
+      "retrieved_at": "2026-09-27T21:00:00+08:00",
+      "credibility": 0.95
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "doc",
+      "title": "skills.sh 市场小程序类 skill 安装量断层（最高 1324 vs 通用类 164853）",
+      "url": "https://skills.sh/api/search?q=miniprogram",
+      "content": "skills.sh（Vercel 出品的 Claude skills 市场）搜索 API 实测：miniprogram 词下最高安装的小程序开发 skill 是 gourdbaby/wechat-miniprogram-skill 1324 次；对比同站 webapp-testing 164853、baoyu-post-to-wechat（公众号发帖）34024，量级差 25-124 倍。小程序开发类 skill 存在但全是碎片化低安装单品，无一个端到端流水线型 skill。q=weapp 结果前 16 名几乎全是 webapp 蹭词。小程序搜索无中文高分项。",
+      "signals": {"stars": 0, "price": "免费", "notes": "miniprogram/weapp/wechat/小程序 四词全查；微信官方 skyline 与 wechatpay 组织已上架该市场"},
+      "retrieved_at": "2026-09-27T21:05:00+08:00",
+      "credibility": 0.9
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "skill",
+      "title": "Gourdbaby/wechat-miniprogram-skill（市场安装量第一的小程序 skill）",
+      "url": "https://github.com/Gourdbaby/wechat-miniprogram-skill",
+      "content": "定位『让 AI 像谷歌工程师一样写小程序原生 JS 代码』的规则集型 skill，通过注入工程约束解决双线程架构下 setData 滥用、px/rpx 混用、iOS 日期格式坑、混入 Vue/React 语法等 AI 通病。仅覆盖编码规范单一环节，不含脚手架/编译/预览/上传/审核，无流水线能力。npm 包 wechat-miniprogram-skill，npx add-skill 一键装。GitHub 仅 9★ 但 skills.sh 安装 1324 次居小程序类第一。",
+      "signals": {"stars": 9, "price": "免费/MIT", "notes": "skills.sh installs:1324"},
+      "retrieved_at": "2026-09-27T21:05:00+08:00",
+      "credibility": 0.8
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "skill",
+      "title": "wechat-miniprogram/skyline-skills（微信官方 org 出品的渲染引擎 skills）",
+      "url": "https://github.com/wechat-miniprogram/skyline-skills",
+      "content": "微信小程序官方 GitHub org（wechat-miniprogram）2026-02 推出的 Skyline 渲染引擎 Agent Skills，含 skyline-components/overview/worklet/route/config/wxss/scroll-api 等 8 个知识型 skill，skills.sh 合计安装 831-979 次。本质是文档知识库切片，只解决 Skyline 渲染迁移知识问题，不涉及开发流程自动化。",
+      "signals": {"stars": 55, "price": "免费", "notes": "官方 org；skills.sh 各 skill 安装 831-979"},
+      "retrieved_at": "2026-09-27T21:02:00+08:00",
+      "credibility": 0.9
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "skill",
+      "title": "wechatpay-apiv3/wechatpay-skills（微信支付官方 Skills）",
+      "url": "https://github.com/wechatpay-apiv3/wechatpay-skills",
+      "content": "微信支付官方 2026-03 推出的 AI Agent 技能包，统一入口 skill wechatpay-payment-integration 提供四大能力：产品选型（JSAPI/Native/H5 匹配）、端到端示例代码（含签名/证书/回调验签/敏感字段加解密）、金融专家视角接入质量评估（红黄橙分级扫描）、答疑排障。skills.sh 另有 product-coupon(1158)/basic-payment(898)/medical-insurance-payment(503)/payscore(499) 等分产品 skill。是知识+代码辅助定位，不是支付流水线工具，无 MCP server。",
+      "signals": {"stars": 359, "price": "免费", "notes": "官方出品，2026-09-26 仍在更新；交流群+问卷运营中"},
+      "retrieved_at": "2026-09-27T21:02:00+08:00",
+      "credibility": 0.9
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "skill",
+      "title": "Sun-sunshine06/miniprogram-skills（Codex/Claude 小程序开发技能集）",
+      "url": "https://github.com/Sun-sunshine06/miniprogram-skills",
+      "content": "面向 Codex 与 Claude Code 的微信小程序开发可复用技能集，覆盖小程序开发、DevTools 诊断、脚手架校验。是 GitHub 搜索 claude skill 小程序方向星数最高（25★）的社区项目，但星数绝对值极低，说明该品类尚无头部项目。",
+      "signals": {"stars": 25, "price": "免费", "notes": "小程序开发类社区 skill 星数第一，但仅 25★"},
+      "retrieved_at": "2026-09-27T20:50:00+08:00",
+      "credibility": 0.8
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "skill",
+      "title": "asdyych/wechat-miniprogram-skill",
+      "url": "https://github.com/asdyych/wechat-miniprogram-skill",
+      "content": "Claude Code 用微信小程序开发 skill，16★。定位为小程序开发知识辅助，单环节、无端到端流程。",
+      "signals": {"stars": 16, "price": "免费", "notes": "未逐行核 README"},
+      "retrieved_at": "2026-09-27T20:50:00+08:00",
+      "credibility": 0.7
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "skill",
+      "title": "beeyang0/miniprogram-VirtualPayment（小程序虚拟支付接入 skill）",
+      "url": "https://github.com/beeyang0/miniprogram-VirtualPayment",
+      "content": "微信小程序虚拟支付开发者接入 Skill，覆盖道具直购/代币充值/iOS 自动路由 Apple IAP/签名计算/回调处理/幂等发货。是『支付环节文档型 skill』的典型样本：能把支付接入讲清楚，但依赖开发者已有完整工程，不解决从零到上线。",
+      "signals": {"stars": 21, "price": "免费", "notes": "适配 CodeBuddy/Cursor/Claude"},
+      "retrieved_at": "2026-09-27T20:50:00+08:00",
+      "credibility": 0.75
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "skill",
+      "title": "Hongyi999/miniprogram-skill（从零构建小程序的 skill）",
+      "url": "https://github.com/Hongyi999/miniprogram-skill",
+      "content": "自称『从零构建微信小程序——引导式 setup、AI 代码生成、一条命令部署』的 Claude Code skill。方向最接近端到端，但仅 2★、无社区验证，部署环节实际依赖 miniprogram-ci 手工配置。个人实验性质。",
+      "signals": {"stars": 2, "price": "免费", "notes": "最接近端到端定位的现存 skill，但零影响力"},
+      "retrieved_at": "2026-09-27T20:50:00+08:00",
+      "credibility": 0.6
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "skill",
+      "title": "Billzhouheart/wechat-miniprogram-designUI（官方设计规范 skill）",
+      "url": "https://github.com/Billzhouheart/wechat-miniprogram-designUI",
+      "content": "把微信小程序官方设计规范做成 Claude Code skill：完整颜色体系、暗黑模式、组件规范、审核红线、WeUI 标准。只覆盖设计规范环节。",
+      "signals": {"stars": 5, "price": "免费", "notes": ""},
+      "retrieved_at": "2026-09-27T20:50:00+08:00",
+      "credibility": 0.7
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "skill",
+      "title": "bx33661/miniapp-audit-skills（小程序安全审计 skill）",
+      "url": "https://github.com/bx33661/miniapp-audit-skills",
+      "content": "基于 Agent 的微信小程序安全审计工具包。覆盖『上线前安全检查』单一环节，3★。说明已有玩家意识到审核/红线环节的 AI 化，但都是单点。",
+      "signals": {"stars": 3, "price": "免费", "notes": ""},
+      "retrieved_at": "2026-09-27T20:50:00+08:00",
+      "credibility": 0.7
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "skill",
+      "title": "youxiyin/claude-skill-miniprogram-sop（一段话到上线 SOP skill）",
+      "url": "https://github.com/youxiyin/claude-skill-miniprogram-sop",
+      "content": "『从一段话到可上线的微信小程序标准化制作流水线 · 5 阶段+5 人闸』的 Claude Code skill。命名直接对准端到端愿景，但 0★ 无安装量、无配套工具链，属概念稿。",
+      "signals": {"stars": 0, "price": "免费", "notes": "概念与提案同构，但零落地验证——间接印证需求存在且无人做成"},
+      "retrieved_at": "2026-09-27T20:50:00+08:00",
+      "credibility": 0.55
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "skill",
+      "title": "Zacklinkk/wechat-dev-docs-skill（官方文档 agent 化）",
+      "url": "https://github.com/Zacklinkk/wechat-dev-docs-skill",
+      "content": "把微信小程序/小游戏官方文档做成 agent 可读：完整导航地图+按需 markdown 抓取器。解决 AI 训练语料里小程序知识过时问题，是知识检索环节的单件。",
+      "signals": {"stars": 3, "price": "免费", "notes": ""},
+      "retrieved_at": "2026-09-27T20:50:00+08:00",
+      "credibility": 0.7
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "skill",
+      "title": "mzopedia/develop-wechat-ai-miniprograms（开发-验证-发布 SOP）",
+      "url": "https://github.com/mzopedia/develop-wechat-ai-miniprograms",
+      "content": "Claude Code & Codex 用：构建、验证、发布微信小程序的 SOP skill，含 AI Mode Skills、CloudBase、隐私扫描、分层发布与独立 preflight 检查器。0★，又一个『覆盖到发布环节但无人用』的样本。",
+      "signals": {"stars": 0, "price": "免费", "notes": ""},
+      "retrieved_at": "2026-09-27T20:55:00+08:00",
+      "credibility": 0.6
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "skill",
+      "title": "whinc/super-skills（miniprogram-automation + miniprogram-ci）",
+      "url": "https://github.com/whinc/super-skills",
+      "content": "skills.sh 上两个高安装小程序件：miniprogram-automation(364) 封装 miniprogram-automator 自动化、miniprogram-ci(327) 封装官方 CI 上传。证明编译/自动化/上传各环节都有人做成了零件，但两者分属不同 skill 包、无编排层串联。",
+      "signals": {"stars": 0, "price": "免费", "notes": "skills.sh installs:364/327"},
+      "retrieved_at": "2026-09-27T21:05:00+08:00",
+      "credibility": 0.75
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "skill",
+      "title": "watertian/wechat-devtools-mcp（MCP 与 Skills 双形态，skills.sh 安装 440）",
+      "url": "https://github.com/WaterTian/wechat-devtools-mcp",
+      "content": "『微信开发者工具 MCP & Skills』双形态项目，145★。skills.sh 上 wechat-devtools skill 安装 440 次。已被 glama.ai 收录（92,694 个 MCP server 库中）。社区对『DevTools 操作 agent 化』需求的真实信号。",
+      "signals": {"stars": 145, "price": "免费", "notes": "glama.ai/mcp/servers/@watertian/wechat-devtools-mcp 已收录"},
+      "retrieved_at": "2026-09-27T21:15:00+08:00",
+      "credibility": 0.8
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "skill",
+      "title": "对照组：aiworkskills/wechat-article-skills 公众号全流程 skill 643★",
+      "url": "https://github.com/aiworkskills/wechat-article-skills",
+      "content": "微信公众号 AI 运营助手：选题、写稿、审稿、排版、配图、发布全流程 Skill，支持 Claude Code/Cursor/Codex，643★。对照证明：同为微信生态，『公众号内容生产』已被做成全流程 skill 并获社区认可，而『小程序开发』侧同形态产品最高仅 25★——缺口不是 skill 形态不成立，而是小程序侧无人做出来。",
+      "signals": {"stars": 643, "price": "免费", "notes": "对照样本：同生态内容侧全流程 skill 已成立"},
+      "retrieved_at": "2026-09-27T20:45:00+08:00",
+      "credibility": 0.85
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "skill",
+      "title": "对照组：Wechat-ggGitHub/wechat-claude-code 685★（微信↔Claude Code 桥）",
+      "url": "https://github.com/Wechat-ggGitHub/wechat-claude-code",
+      "content": "从微信里直接和 Claude Code 对话的桥接 skill，685★。再次证明微信生态工具型 skill 有真实需求与获星能力，但全部集中在『通信/内容』侧，开发侧空白。",
+      "signals": {"stars": 685, "price": "免费", "notes": ""},
+      "retrieved_at": "2026-09-27T20:45:00+08:00",
+      "credibility": 0.85
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "skill",
+      "title": "sdaxiji-beep/codex-skills（自然语言建小程序工作区）",
+      "url": "https://github.com/sdaxiji-beep/codex-skills",
+      "content": "Codex skill 工作区：从自然语言构建微信小程序，4★。又一个低影响力个人尝试。",
+      "signals": {"stars": 4, "price": "免费", "notes": ""},
+      "retrieved_at": "2026-09-27T20:55:00+08:00",
+      "credibility": 0.6
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "skill",
+      "title": "jasondu/wechat-miniprogram-dev-skill（CloudBase 方向）",
+      "url": "https://github.com/jasondu/wechat-miniprogram-dev-skill",
+      "content": "结合云开发 CloudBase 的微信小程序开发 Claude Code skill，1★。覆盖小程序+云开发组合场景的单件。",
+      "signals": {"stars": 1, "price": "免费", "notes": ""},
+      "retrieved_at": "2026-09-27T20:50:00+08:00",
+      "credibility": 0.6
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "mcp",
+      "title": "微信官方文档《使用 Skill / MCP 辅助小程序开发》",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/devtools/skill/",
+      "content": "微信官方开发者文档明确给出两条官方路径：方式一在微信开发者工具内装 MCP、方式二装云开发（CloudBase）Skill。官方定位：MCP 负责连接环境与调用工具，Skill 补充小程序/云函数/数据库场景规则；适用场景为分析小程序数据、查云函数日志报错、排查 wx.cloud.callFunction、创建和部署小程序。注意边界：官方推荐组合面向『辅助已有项目开发』，不是从零生成完整产品。原文页面为 SPA，直接抓取失败，内容经 weapp-dev-mcp README 与多方独立引用交叉证实。",
+      "signals": {"stars": 0, "price": "免费", "notes": "官方姿态：拥抱 MCP/Skill 但只做辅助开发环"},
+      "retrieved_at": "2026-09-27T21:10:00+08:00",
+      "credibility": 0.85
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "mcp",
+      "title": "微信官方「微信开发者工具 Skill」公测公告",
+      "url": "https://developers.weixin.qq.com/community/develop/doc/000e4a112a80103ee355ee95361800",
+      "content": "微信官方正式推出「微信开发者工具 Skill」并开启公测，可在 Cursor/Claude 等 AI Agent 环境直接操作开发者工具：打开项目、编译、模拟器、日志排查、预览、上传、云开发。接入两步：升级 DevTools Nightly Electron 2.02.2607032+；终端执行 wechatide 导出 Skill 目录交给 Agent 安装。这是官方对『Agent 操作 DevTools』环节的正式下场——但也只覆盖工具操作环节，不覆盖需求→设计→代码→审核→运营全流程。多个第三方 MCP 项目（yfmeii 等）已挂出『建议迁移到官方 Skill』声明。",
+      "signals": {"stars": 0, "price": "免费", "notes": "公告页直抓失败；由 weapp-dev-mcp README 原文+搜索多源证实。官方已下场=既是威胁也是地基"},
+      "retrieved_at": "2026-09-27T21:10:00+08:00",
+      "credibility": 0.85
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "mcp",
+      "title": "wechat-miniprogram-mcp（npm，个人开发者 annopick）",
+      "url": "https://registry.npmjs.org/wechat-miniprogram-mcp",
+      "content": "连接微信开发者工具的 MCP Server，走 DevTools HTTP 控制 API + automator 自动化 API 两条腿。控制 API：检查工具状态等；自动化 API：页面导航、元素交互(tap/longpress/input/trigger)、触摸、滚动、特殊组件(swipeTo/moveTo/slideTo)、组件数据与 callMethod、登录票据管理、多账号调试、体验评分报告。0.1.0→0.2.0 共 7 版，2026-06 创建后每月小步更新。个人维护（veater@qq.com），非官方。",
+      "signals": {"stars": 0, "price": "免费/npm", "notes": "需 DevTools 开服务端口+CLI/HTTP 调用；自动化需 WECHAT_PROJECT_PATH"},
+      "retrieved_at": "2026-09-27T20:58:00+08:00",
+      "credibility": 0.8
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "mcp",
+      "title": "@yfme/weapp-dev-mcp（175★，社区最热小程序 MCP，官方下场后转推官方 Skill）",
+      "url": "https://github.com/yfmeii/weapp-dev-mcp",
+      "content": "基于 FastMCP + miniprogram-automator 的『playwright-mcp for 小程序』：导航、检查、操作页面。README 顶部现已挂出『官方已下场：建议迁移到微信开发者工具 Skill』，指出官方 Skill 覆盖面更广（项目导入、编译构建、真机预览、上传、云环境），随 Nightly 发布维护。npm 包 @yfme/weapp-dev-mcp，WEAPP_WS_ENDPOINT=ws://localhost:9420。社区 MCP 被官方 Skill 替代的活案例——说明 DevTools 操作层官方会赢，但官方止步于此层。",
+      "signals": {"stars": 175, "price": "免费", "notes": "版本 0.2.x；含 request mock wx 工具"},
+      "retrieved_at": "2026-09-27T21:00:00+08:00",
+      "credibility": 0.85
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "mcp",
+      "title": "jiawei686/wechat-dev-mcp + wechat-dev-skill（调试闭环 MCP+Skill 套件）",
+      "url": "https://github.com/jiawei686/wechat-dev-mcp",
+      "content": "npx wechat-dev-mcp 一句人话让 AI 打开小程序→跳页→点按钮→截图→读日志；兼容 WorkBuddy/Claude Code/Cursor/Cline/Zed。配套 wechat-dev-skill 把 build/devtools/output/networks 四来源报错巡检做成一句话。17★。mcp.so 上该品类仅收录此一个 DevTools MCP。只覆盖调试环节。",
+      "signals": {"stars": 17, "price": "免费/npm", "notes": "mcp.so 搜 miniprogram 仅 2 结果，其一即此"},
+      "retrieved_at": "2026-09-27T21:12:00+08:00",
+      "credibility": 0.8
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "mcp",
+      "title": "微信支付 MCP server：未找到（官方只有 Skills 无 MCP）",
+      "url": "https://github.com/search?q=wechat+pay+mcp&type=repositories",
+      "content": "GitHub 搜 wechat pay mcp 仅 4 条结果且无一为微信支付专用 MCP server（全是个人 README 提及或无关项目）。微信支付官方团队走的是 wechatpay-skills（知识型 skill）路线，未发布支付操作类 MCP（如代下单/退款/查单工具）。『支付执行环节 agent 化』目前只能靠 skill 里的示例代码+人工写码。查无此物本身是端到端拼图缺一角的证据。",
+      "signals": {"stars": 0, "price": "-", "notes": "未找到=缺口证据；wechatpay-apiv3 org 内亦无 mcp repo"},
+      "retrieved_at": "2026-09-27T20:56:00+08:00",
+      "credibility": 0.85
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "mcp",
+      "title": "MCP 聚合站收录现状：mcp.so 搜 miniprogram 仅 2 条",
+      "url": "https://mcp.so/zh/search?q=miniprogram",
+      "content": "mcp.so 搜索 miniprogram 仅 2 个结果：jiawei686/wechat-dev-mcp（8 个月前创建）与 shareAI-lab 的 SSE chatbox（让小程序当 MCP client，非开发工具）。对比 smithery.ai 搜 wechat 有 104 个 server（绝大多数是客服/公众号/聊天记录类），小程序开发向 MCP 在两大聚合站均为个位数收录。小程序开发 MCP 品类在聚合市场近乎不存在。",
+      "signals": {"stars": 0, "price": "-", "notes": "实测搜索；smithery 104 wechat servers 中开发向占比极低"},
+      "retrieved_at": "2026-09-27T21:08:00+08:00",
+      "credibility": 0.85
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "mcp",
+      "title": "TencentCloudBase/CloudBase-AI-Toolkit（腾讯云开发官方 AI 后端层，1126★）",
+      "url": "https://github.com/TencentCloudBase/CloudBase-AI-Toolkit",
+      "content": "腾讯云开发官方出品：Plugin 装技术栈、Skills 引导代码写法、MCP 操作数据库/函数/存储并从对话中部署。v2.34.x（2026-09）持续高频更新，callCloudApi 服务白名单扩到 57 个、deployApp/getBuildLog 端到端打通、新增 PostgreSQL 最佳实践 skill。skills.sh 上其 miniprogram-development(176)/auth-wechat-miniprogram(75) 等 skill 已上架。定位是『小程序的后端一体化』——前端生成与全流程编排不在其边界内。",
+      "signals": {"stars": 1126, "price": "云资源按量计费", "notes": "官方、活跃（2026-09-27 当日仍有 push）；含 .claude-plugin/.cursor-plugin/.codebuddy 多平台适配"},
+      "retrieved_at": "2026-09-27T21:03:00+08:00",
+      "credibility": 0.9
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "mcp",
+      "title": "微信「小程序 AI 开发模式」官方指南（注意：面向终端用户的 Skill 概念）",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/ai/guide.html",
+      "content": "微信官方 2026 年推出的『AI 开发模式』：把小程序业务封装成 AI 可调用的 Skill，用户通过自然语言完成点单/排队/查天气等操作，基于微信客户端运行时与小程序 AI 后端之间的 MCP 协议（四件套）。配套官方 CLI mp-skills（npx 即用：find/add/create/validate/eval）与官方示例库 awesome-miniprogram-skills（order/water/hospital/taxi/travel/shopping 六示例）。关键辨析：这里的 Skill 是『给终端用户用的应用能力』，不是开发者辅助 skill——两个 Skill 概念同名不同物，提案需明确区分。",
+      "signals": {"stars": 0, "price": "免费", "notes": "mp-skills 9★/awesome 库 40★，均官方；内置 wxa-skills-eval 评测与 DeepSeek/GLM/Kimi/MiniMax BYOK"},
+      "retrieved_at": "2026-09-27T21:03:00+08:00",
+      "credibility": 0.9
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "product",
+      "title": "腾讯 CodeBuddy IDE（腾讯系 AI 编程，小程序生态整合最深）",
+      "url": "https://cloud.tencent.com/developer/article/CodeBuddy-gomoku",
+      "content": "腾讯 AI IDE（混元代码模型），与微信/小程序/腾讯云生态深度整合是其对 Cursor/Trae 的差异化点；有 CodeBuddy IDE + CloudBase 全栈实战案例（五子棋在线对战，含云函数配置、界面交互）。Craft 模式从自然语言生成 PRD 与原型，Figma 转代码号称 99.9%。边界：仍是 IDE 形态的辅助编程，面向专业开发者，不是『一句话到可上线小程序』的端到端产品；小程序生成质量与审核/发布环节无自动化承诺。",
+      "signals": {"stars": 0, "price": "免费为主/部分收费未验证", "notes": "国际版需 VPN，国内版功能或有差异"},
+      "retrieved_at": "2026-09-27T21:14:00+08:00",
+      "credibility": 0.75
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "product",
+      "title": "CloudBase AI / CloudBase AI CLI（云开发 AI 原生后端一体化平台）",
+      "url": "https://docs.cloudbase.net",
+      "content": "云开发 AI 提供统一大模型接入与 Agent 开发能力，覆盖小程序/Web/公众号/企微客服场景。CloudBase AI CLI 宣称减少 80% 编码量，可被 CI/CD 调用并一键部署生成代码到云端；CloudBase+MCP 实现『一句话部署』（需求描述→代码生成→云资源部署）。边界：强项是后端与部署，前端小程序 UI 生成、微信审核、类目资质、支付开通等环节不在其自动化范围内。",
+      "signals": {"stars": 0, "price": "云资源按量计费", "notes": "另有 CloudBase Framework（Serverless 前后端一体化部署工具）"},
+      "retrieved_at": "2026-09-27T21:10:00+08:00",
+      "credibility": 0.8
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "product",
+      "title": "百度秒哒 Miaoda（唯一原生支持小程序生成的全民级 AI builder）",
+      "url": "https://cloud.baidu.com/doc/MIAODA/s/pmfnccc1g",
+      "content": "无代码 AI 应用开发平台，可自然语言生成微信小程序（内置小程序支付模板）。两条发布路径：挂到秒哒官方小程序（门槛最低、非独立主体）；接入用户自己的小程序账号（独立主体但需自备账号注册/认证/类目/过审全流程）。免费版每月约 3 个应用，每日 100 点/每月 500 点额度制。评价：小程序生成效果『一般』，复杂业务难实现，厂商锁定明显，生成代码含数据库逻辑建议人工复核。Miaoda 3.0 已扩展到独立 App；官方称 87% 创作者无代码背景。",
+      "signals": {"stars": 0, "price": "免费额度+付费扩容（具体档位未验证）", "notes": "2026-03 发布全球首个 OpenClaw App Builder Skill"},
+      "retrieved_at": "2026-09-27T21:06:00+08:00",
+      "credibility": 0.8
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "product",
+      "title": "v0 / bolt.new / lovable：均不支持微信小程序目标（缺口证据）",
+      "url": "https://zhuanlan.zhihu.com/p/2075271143611811521",
+      "content": "知乎两周实测文明确指出『Bolt 和 Lovable 主要面向海外市场，生成的是 Web 应用』；v0 by Vercel 只出 React/Next.js Web 应用，三巨头均无小程序 export 选项。开发者社区通行 workaround：导出 Web 代码后用 Taro/uni-app 人工转译。海外 AI app builder 集体缺席小程序目标=中国特有平台的全球性工具真空。",
+      "signals": {"stars": 0, "price": "订阅制（与此无关）", "notes": "多方交叉证实：无任何官方小程序 target"},
+      "retrieved_at": "2026-09-27T21:04:00+08:00",
+      "credibility": 0.85
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "product",
+      "title": "即速应用 jisuapp（商业低代码，999 元/年起）",
+      "url": "https://www.jisuapp.cn/",
+      "content": "老牌小程序拖拽式制作平台，100+ 行业模板（展示/预约/商城，支持在线支付），基础版约 999 元/年起，模板类约 3000 元（3 天上线），注册享 7 天试用。非 AI 原生：模板+拖拽范式，AI 仅营销点缀（未验证其 AI 能力深度）。",
+      "signals": {"stars": 0, "price": "≈999 元/年起（2026 行业评测口径，官网实时价未逐项核）", "notes": "低价套餐需注意续费与隐性收费"},
+      "retrieved_at": "2026-09-27T21:07:00+08:00",
+      "credibility": 0.7
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "product",
+      "title": "上线了 sxl.cn（商业低代码，1800-5400 元/年）",
+      "url": "https://www.sxl.cn/",
+      "content": "自助建站起家的小程序/网站制作平台：基础版约 1800 元/年、高级版 3600、电商旗舰版 5400；无交易抽佣、支付费率官方标准、套餐含基础服务器与 CDN。模板化拖拽，非 AI 生成范式。",
+      "signals": {"stars": 0, "price": "≈1800/3600/5400 元/年（2026 评测口径）", "notes": "电商能力上限需另购资源"},
+      "retrieved_at": "2026-09-27T21:07:00+08:00",
+      "credibility": 0.7
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "product",
+      "title": "凡科（fkw.com）小程序（商业低代码，698-5998 元/年）",
+      "url": "https://www.fkw.com/",
+      "content": "自助建站系转型小程序制作：通用/展示类 698-2998 元/年，门店服务类 998-3998，电商交易类 1998-5998；宣称一次制作覆盖 3-6 个流量平台、7-15 天上线。价格亲民但 AI 能力弱于头部定制商，走量走模板。",
+      "signals": {"stars": 0, "price": "≈698-5998 元/年（凡科杰建云口径）", "notes": "另有微信认证费约 300 元/年等平台侧固定成本"},
+      "retrieved_at": "2026-09-27T21:07:00+08:00",
+      "credibility": 0.7
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "product",
+      "title": "微盟/有赞（商城系头部 SaaS，16800-59800 元/年）",
+      "url": "https://www.163.com/dy/article/2026-08-05-top10-miniapp-platforms",
+      "content": "2026-08 评测：微盟起步版年费约 16800 元、进阶 29800、旗舰 59800，交易佣金/短信包/存储另计，行业最高价位带。有赞同为商城系 SaaS（价格未逐项核，标未验证）。二者是『重商城 SaaS』，服务存量商家数字化，非 AI 生成工具，与 AI 原生 builder 不构成直接竞争但占据『电商小程序』支付意愿心智。",
+      "signals": {"stars": 0, "price": "微盟≈16800-59800 元/年；有赞未验证", "notes": "来源为 2026-08 网易号评测，非官网直采"},
+      "retrieved_at": "2026-09-27T21:07:00+08:00",
+      "credibility": 0.65
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "repo",
+      "title": "vibetemplate/miniprogram-generator（uni-app AI 提示词模板库，41★）",
+      "url": "https://github.com/vibetemplate/miniprogram-generator",
+      "content": "专为 Cursor/Claude Code 设计的 uni-app 小程序生成器库：复制标准提示词（读 UNIAPP-SPEC.md→生成 uniapp-config.json→产出 Vue3+TS+Pinia 跨端项目），模板含电商/服务/内容/工具。本质是『高级 prompt + 规范文档』，无工具链闭环（无编译验证/预览/上传自动化），生成质量完全依赖宿主 AI 工具。41★ 为 AI 生成小程序方向最高星开源品。",
+      "signals": {"stars": 41, "price": "免费", "notes": "gh 搜 ai miniprogram generator 仅 1 个实质命中——开源端近乎空白"},
+      "retrieved_at": "2026-09-27T21:01:00+08:00",
+      "credibility": 0.8
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "repo",
+      "title": "zprial/wx-book（仿追书神器小说阅读器小程序，169★）",
+      "url": "https://github.com/zprial/wx-book",
+      "content": "仿追书神器的小说阅读器小程序，169★，是『阅读类小程序』可借鉴零件中星数最高的原生实现。可直接借鉴阅读器 UI/书架/章节加载结构。",
+      "signals": {"stars": 169, "price": "免费", "notes": "内容源合规性需自查"},
+      "retrieved_at": "2026-09-27T21:00:00+08:00",
+      "credibility": 0.8
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "repo",
+      "title": "xifengzhu/holy-reader（小说阅读器小程序，64★）",
+      "url": "https://github.com/xifengzhu/holy-reader",
+      "content": "小说阅读器小程序，API 源自追书神器，64★。第二个阅读类可复用零件。",
+      "signals": {"stars": 64, "price": "免费", "notes": ""},
+      "retrieved_at": "2026-09-27T21:00:00+08:00",
+      "credibility": 0.75
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "repo",
+      "title": "DeekeScript/douyin-novel-story-miniprogram（在线阅读小程序全栈，32★）",
+      "url": "https://github.com/DeekeScript/douyin-novel-story-miniprogram",
+      "content": "抖音端小说/在线阅读小程序（长短篇），Linux+Nginx+Golang+PHP+React+MySQL+Redis 全栈实现。可借鉴其内容管理与付费体系的后端设计（注意是抖音端非微信端）。",
+      "signals": {"stars": 32, "price": "免费", "notes": "抖音小程序而非微信小程序"},
+      "retrieved_at": "2026-09-27T21:00:00+08:00",
+      "credibility": 0.7
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "repo",
+      "title": "lijie90/wechat_CloudDevelop（云开发小说阅读，30★）",
+      "url": "https://github.com/lijie90/wechat_CloudDevelop",
+      "content": "微信小程序云开发实现小说阅读（爬虫取源、无广告），30★。云开发范式下阅读类小程序的最小实现样本，云函数+数据库结构可直接参考。",
+      "signals": {"stars": 30, "price": "免费", "notes": "爬虫取源模式有合规风险，仅参考工程结构"},
+      "retrieved_at": "2026-09-27T21:00:00+08:00",
+      "credibility": 0.7
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "repo",
+      "title": "giteecode/allProject（多行业小程序源码合集，357★）",
+      "url": "https://github.com/giteecode/allProject",
+      "content": "宠物领养/在线教育/考试/医院挂号/电影购票/电商书城/酒店预订/房屋租赁等成套小程序源码合集，357★。证明『现成模板源码』供给充分，AI 工具的增值空间不在代码本身而在需求到上线的全流程自动化。",
+      "signals": {"stars": 357, "price": "免费", "notes": "同类 codegitpro/allProject 41★ 镜像"},
+      "retrieved_at": "2026-09-27T21:00:00+08:00",
+      "credibility": 0.75
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "doc",
+      "title": "novel reader miniprogram 英文向搜索近乎空白",
+      "url": "https://github.com/search?q=novel+reader+miniprogram&type=repositories",
+      "content": "gh 搜 novel reader miniprogram 仅 1 条实质结果（TianyangZhan/NovelDisplayer-WechatMiniProgram，1★）。付费阅读方向仅 xiaobaicai2023 资源付费系统 2 条低星贴关键词仓库。『研报付费阅读小程序』成建制开源品不存在——试点产品需自行组装，同时意味着该细分也无现成竞争者。",
+      "signals": {"stars": 0, "price": "-", "notes": "未找到成建制竞品=试点方向差异化证据"},
+      "retrieved_at": "2026-09-27T21:00:00+08:00",
+      "credibility": 0.85
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "doc",
+      "title": "GitHub wechat mcp 生态画像：105 个 wechat MCP 中开发向不足 5 个",
+      "url": "https://github.com/search?q=wechat+mcp+server&type=repositories&sort=stars",
+      "content": "gh 搜 wechat mcp server 共 105 个仓库，星数前列全部是内容/通信向：文颜排版发布公众号(1325★)、Devnors 数据(410)、AgenticX(235)、微信收发消息(112/109)、企微机器人(103)、公众号文章转 MD(100)。开发向仅 weapp-dev-mcp(175)、wechat-devtools-mcp(145) 两个过百星。微信 MCP 生态的重心在『公众号内容生产与聊天』，小程序开发工具是配角中的配角。",
+      "signals": {"stars": 0, "price": "-", "notes": "排序实测；另见 panxingfeng 等聊天 MCP 多个"},
+      "retrieved_at": "2026-09-27T20:56:00+08:00",
+      "credibility": 0.85
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "repo",
+      "title": "TencentCloudBase/awesome-miniprogram-skills（官方 AI 开发模式示例库）",
+      "url": "https://github.com/TencentCloudBase/awesome-miniprogram-skills",
+      "content": "官方 Skill 示例集合（40★）：order-skill 外卖点餐 4 API、water-tracker 喝水 2 API、hospital 挂号 4 API、taxi 打车、travel 旅行、shopping 购物各 4 API。配套 registry.json 注册表与 mp-skills-handover 交付文档。这些是『把业务封装给终端 AI 调用』的官方范式，可直接作为提案中『AI Mode 适配层』的参考实现。",
+      "signals": {"stars": 40, "price": "免费", "notes": "npx mp-skills add 即装；SKILL-DEV-GUIDE.md 为官方 skill 开发指南"},
+      "retrieved_at": "2026-09-27T21:02:00+08:00",
+      "credibility": 0.9
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "repo",
+      "title": "TencentCloudBase/mp-skills（官方小程序 AI 开发模式 CLI，9★）",
+      "url": "https://github.com/TencentCloudBase/mp-skills",
+      "content": "官方 CLI（npx mp-skills）：find/add/update/remove 跨仓库装 Skill、new 一键脚手架（含 miniprogram/、云函数、示例 Skill）、create --mode agent 用大模型生成合规 Skill、validate/execute/render 静态校验、eval 集成官方 wxa-skills-eval 端到端评测、skills-lock.json 版本锁定。内置 DeepSeek/GLM/Kimi/MiniMax/CloudBase 网关 BYOK。2026-06 创建、2026-08 更新。官方把『Skill 生命周期工程化』做成了 CLI，但管理的是终端用户向 Skill，非开发流程。",
+      "signals": {"stars": 9, "price": "免费", "notes": "Node>=18；GitHub/URL/本地路径多源安装"},
+      "retrieved_at": "2026-09-27T21:02:00+08:00",
+      "credibility": 0.9
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "skill",
+      "title": "shuangying0001-beep/miniprogram-ai-fullstack 等 skills.sh 中文长尾项",
+      "url": "https://skills.sh/api/search?q=%E5%B0%8F%E7%A8%8B%E5%BA%8F",
+      "content": "skills.sh 中文『小程序』搜索前 20：官方 cloudbase(11904 installs)/wechatpay/skyline 系霸榜，社区侧仅 hairyf/skills-uniapp(357)、sonofmagic weapp 系(426/245/212)、oil-oil/draw-ui(448)、tencent-tds kuikly 系(390)等单件。安装量分布再次印证：官方知识件+社区碎片件并存，无编排层。",
+      "signals": {"stars": 0, "price": "免费", "notes": "API 实测"},
+      "retrieved_at": "2026-09-27T21:05:00+08:00",
+      "credibility": 0.85
+    },
+    {
+      "channel": "skills_mcp_ai",
+      "doc_type": "doc",
+      "title": "superpowers marketplace / skillsmp.com：无小程序专用 skill（JS 渲染无法直搜，未找到直接条目）",
+      "url": "https://skillsmp.com/?q=miniprogram",
+      "content": "skillsmp.com（Codex & Claude skills 市场）与 superpowers marketplace 页面均为客户端 JS 渲染，curl 无法取得搜索结果体。在可获取的首页/分类数据中未见 miniprogram/wechat 小程序类目。标注：未验证（无法穿透 JS 渲染），倾向判断为无或极少。",
+      "signals": {"stars": 0, "price": "-", "notes": "诚实标注：技术原因未穿透，不作断言"},
+      "retrieved_at": "2026-09-27T21:08:00+08:00",
+      "credibility": 0.5
+    }
+  ]
+}

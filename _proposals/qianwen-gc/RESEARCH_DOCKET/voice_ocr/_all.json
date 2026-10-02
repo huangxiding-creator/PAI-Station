@@ -1,0 +1,192 @@
+[
+  {
+    "channel": "voice_ocr",
+    "doc_type": "official_doc",
+    "title": "微信开放文档·插件服务/微信同声传译（WechatSI）",
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/platform-capabilities/extended/translator.html",
+    "content": "微信自研插件，提供语音输入/文本翻译/语音合成。插件AppID/provider=wx069ba97219f66d66d99（已核实：官方文档体验入口+插件市场+多篇教程一致；添加路径=微信公众平台→设置→第三方设置→插件管理→搜『微信同声传译』）。【语音识别】requirePlugin('WechatSI').getRecordRecognitionManager()→manager.start({duration:60000,lang:'zh_CN'})，lang支持zh_CN/en_US/zh_HK/sichuanhua；duration默认60000ms、最大60000；onStop回调{result,tempFilePath,duration,fileSize}；onError错误码-30001~-40001；基础库≥1.9.94。注意：流式中间结果回调onRecognize为社区广泛使用但官方文档未列出（社区口径）。【文本翻译】translate接口。【语音合成textToSpeech】{lang:'zh_CN',content}，content≤50字，success返回res.filename=语音URL，3小时过期(expired_time)，错误码-20001~-40001。【免费额度（官方FAQ原表）】语音识别250条/分钟、3万条/天；翻译500次/分钟、10万次/天；语音合成100次/分钟、2万次/天；免费使用，更高额度发邮件wetranslate@tencent.com申请。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "high"
+  },
+  {
+    "channel": "voice_ocr",
+    "doc_type": "official_doc",
+    "title": "微信开放文档·服务端图像处理-OCR接口列表",
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/server/API/img-ocr",
+    "content": "服务端OCR接口全集（走access_token服务端调用，小程序前端不可直调）：通用印刷体识别/cv/ocr/comm（本接口用于识别通用印刷体）；行驶证识别/cv/ocr/driving；银行卡识别/cv/ocr/bankcard；营业执照识别；驾驶证识别；身份证识别。云开发云调用形式为ocr.printedText（通用印刷体）。适用于截图咨询的只有『通用印刷体识别』一条路；证件类接口与本项目无关。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "high"
+  },
+  {
+    "channel": "voice_ocr",
+    "doc_type": "official_doc",
+    "title": "微信开放文档·通用印刷体识别（commocr）",
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/server/API/img-ocr/ocr/api_commocr.html",
+    "content": "截图→文字的微信官方服务端路径。请求体POST img=图片URL（可配合小程序拍照/相册选图完成采集上传识别回链路），返回通用印刷体识别结果。限制：仅服务端调用（access_token），不能小程序前端直调；云开发环境可用云调用ocr.printedText免鉴权。费用：接入微信服务平台计费，历史公网信息为每日免费100次、超出购资源包（本次抓取未复核到计费页原文，页面需登录——额度以微信公众平台-服务市场计费页为准，标注：未复核）。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "high"
+  },
+  {
+    "channel": "voice_ocr",
+    "doc_type": "official_doc",
+    "title": "微信开放文档·RecorderManager 录音管理器",
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/api/media/recorder/RecorderManager.html",
+    "content": "录音咨询链路起点。wx.getRecorderManager()→recorderManager.start({duration:10000,sampleRate:44100,numberOfChannels:1,encodeBitRate:192000,format:'aac',frameSize:50})；onStop回调res.tempFilePath本地临时文件→wx.uploadFile或wx.cloud.uploadFile上传→云端ASR。方法集start/pause/resume/stop/onStart/onPause/onResume/onStop/onFrameRecorded/onInterruptionBegin/onInterruptionEnd。录音权限scope.record首次使用弹窗授权。format枚举含aac/mp3等（官方示例aac；完整枚举以文档为准）。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "high"
+  },
+  {
+    "channel": "voice_ocr",
+    "doc_type": "official_doc",
+    "title": "微信官方OCR插件『OCR支持』（w3cschool镜像文档）",
+    "url": "https://www.w3cschool.cn/weixinapp/weixinapp-zxk938q3.html",
+    "content": "AppID=wx4418e3e031e551be，插件名ocr-plugin，app.json声明\"ocr-plugin\":{version:'3.1.3',provider:'wx4418e3e031e551be'}，页面用组件\"ocr-navigator\":\"plugin://ocr-plugin/ocr-navigator\"（certificateType指定证件类型，含idCard等7种）。关键限制：仅身份证/行驶证/银行卡/驾驶证/营业执照等证件识别，无通用印刷体识别→不适用于工程截图咨询。额度：需在服务平台购买/领取调用次数（有免费额度但按次限制），社区反馈中文识别错误率偏高。结论：截图咨询不走此插件。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "medium"
+  },
+  {
+    "channel": "voice_ocr",
+    "doc_type": "official_doc",
+    "title": "腾讯云开发CloudBase·多模态理解（截图问答/OCR官方场景）",
+    "url": "https://docs.cloudbase.net/ai/model/multimodal",
+    "content": "截图咨询首选路径之一（云开发AI+）。多模态理解=同一次对话接收图片/视频/文件并回答；官方场景明列『截图问答、OCR识别』。当前多模态模型（文档表）：glm-5v-turbo（图片/视频/文件）、qwen3.5-plus、kimi-k2.6、kimi-k2.5、kimi-k2.7-code；deepseek-v4-flash/hy3为纯文本。消息格式OpenAI兼容：content数组内image_url（https直链或data:image/jpeg;base64,单张≤5MB）/video_url/file。小程序调用（官方代码）：wx.cloud.extend.AI.createModel('cloudbase')→model.generateText({data:{model:'glm-5v-turbo',messages:[...]}})；另有CloudBase SDK/OpenAI SDK/cURL三形态；HTTP端点 https://<ENV_ID>.api.tcloudbasegateway.com/v1/ai/cloudbase/chat/completions。费用走CloudBase AI+计费（新用户首月赠100万token；glm-5v-turbo单价：UNKNOWN，以控制台为准）。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "high"
+  },
+  {
+    "channel": "voice_ocr",
+    "doc_type": "official_doc",
+    "title": "腾讯云开发CloudBase·语音能力接入（ASR+TTS）",
+    "url": "https://docs.cloudbase.net/ai/agent/voice",
+    "content": "云开发AI+语音能力（基于腾讯云语音API）：【ASR一句话识别】≤60秒、音频≤3MB，引擎类型16k_zh中文通用/16k_zh_dialect中英粤/16k_zh-medical/16k_en/16k_yue等6种，voiceFormat支持mp3/wav/pcm/m4a/aac等；SDK ai.bot.speechToText({botId,engSerViceType:'16k_zh',voiceFormat:'mp3',url})。【TTS长文本语音合成】文本≤10万字符、异步合成、10种音色（含大模型音色），适合阅读播报；HTTP API POST /v1/aibot/bots/:botId/text-to-speech；SDK ai.bot.textToSpeech({botId,voiceType:1,text})。接入方式：Agent模板bot-config.yaml加voiceSettings:true。计费随腾讯云语音产品（单价UNKNOWN，以腾讯云计费页为准；WechatSI免费TTS额度内更省）。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "high"
+  },
+  {
+    "channel": "voice_ocr",
+    "doc_type": "official_doc",
+    "title": "腾讯云开发CloudBase·HTTP API 文字转语音",
+    "url": "https://docs.cloudbase.net/http-api/ai-bot/text-to-speech",
+    "content": "POST /v1/aibot/bots/:botId/text-to-speech —— 云开发AI Agent的TTS HTTP端点，配合AI Bot使用（botId维度的语音合成），适合服务端/云函数侧生成播报音频后小程序InnerAudioContext播放。（经搜索定位，本次未全文抓取：参数明细以页面为准）",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "medium"
+  },
+  {
+    "channel": "voice_ocr",
+    "doc_type": "official_doc",
+    "title": "腾讯云开发CloudBase·AI+简介（大模型接入总览）",
+    "url": "https://docs.cloudbase.net/ai/introduce",
+    "content": "云开发AI+=统一大模型接入（OpenAI兼容）+Agent开发；小程序侧wx.cloud.extend.AI。模型阵容随版本演进（早期DeepSeek系列/混元系列，当前多模态见/ai/model/multimodal表）。免费资源：新用户首月赠送100万token。另：『小程序成长计划』（ai-inspire-plan）个人版环境免费6个月+AI资源包（docs.cloudbase.net站内搜成长计划）。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "high"
+  },
+  {
+    "channel": "voice_ocr",
+    "doc_type": "repo",
+    "title": "Tencent/Face2FaceTranslator 面对面翻译（微信官方团队WechatSI演示项目）",
+    "url": "https://github.com/Tencent/Face2FaceTranslator",
+    "content": "微信官方团队的开源小程序，WechatSI（微信同声传译插件）的官方参考实现：流式语音识别+翻译+语音合成全流程源码，2026-09仍在更新。接WechatSI时首选抄该仓库结构与最佳实践。",
+    "signals": {"stars": 908, "updated": "2026-09-26"},
+    "retrieved_at": "2026-09-28",
+    "credibility": "high"
+  },
+  {
+    "channel": "voice_ocr",
+    "doc_type": "repo",
+    "title": "JasonLam0990/HeartSound",
+    "url": "https://github.com/JasonLam0990/HeartSound",
+    "content": "微信小程序：心音识别+语音相关功能，使用WechatSI插件（provider wx069ba97219f66d99）做语音识别，可作二级参考实现。",
+    "signals": {"stars": 57},
+    "retrieved_at": "2026-09-28",
+    "credibility": "medium"
+  },
+  {
+    "channel": "voice_ocr",
+    "doc_type": "repo",
+    "title": "Resulte/SpeechProcessMiniProgram",
+    "url": "https://github.com/Resulte/SpeechProcessMiniProgram",
+    "content": "基于微信同声传译插件二次开发：语音识别+语音合成+同声传译三功能完整示例，2026-07有更新，适合快速起步的模板仓库。",
+    "signals": {"stars": 12, "updated": "2026-07-29"},
+    "retrieved_at": "2026-09-28",
+    "credibility": "medium"
+  },
+  {
+    "channel": "voice_ocr",
+    "doc_type": "official_doc",
+    "title": "智谱GLM-4V-Flash 免费视觉理解模型API",
+    "url": "https://open.bigmodel.cn/dev/api/vlm/glm-4v-flash",
+    "content": "智谱官方文档：GLM-4V-Flash为免费图像理解模型API（图像识别/图像问答/视觉推理/VQA/情感分析），支持中英日韩，OpenAI兼容chat/completions+image_url传图（base64或URL）。免费是其核心卖点，属Flash免费系列（GLM-4-Flash文本/GLM-4V-Flash视觉/GLM-Realtime语音）。限制：具体并发/速率限制文档未列（UNKNOWN）；长图/小字工程截图识别率需自测。与本项目laya-server已有GLM免费链经验互补。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "high"
+  },
+  {
+    "channel": "voice_ocr",
+    "doc_type": "official_doc",
+    "title": "腾讯云·语音识别产品文档（RecorderManager→云端ASR替代腿）",
+    "url": "https://cloud.tencent.com/document/product/1093",
+    "content": "录音文件上传后的云端ASR主力选项，三种形态：实时语音识别（流式）、一句话识别（≤60s短音频）、录音文件识别（长音频异步）。与微信解耦，需自建签名/后端代理。免费额度为活动制（不同时期口径1500次一句话/15h实时/30h录音文件等，另有500h/月口径的来源——均为活动期公网信息，当前准确额度UNKNOWN，以腾讯云控制台免费额度页为准）。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "high"
+  },
+  {
+    "channel": "voice_ocr",
+    "doc_type": "forum",
+    "title": "CSDN·微信小程序同声传译（WechatSI）通用接入教程",
+    "url": "https://blog.csdn.net/m0_64705796/article/details/160140765",
+    "content": "完整接入步骤：登录微信公众平台→小程序→设置→第三方设置→插件管理→添加『同声传译』插件（AppID wx069ba97219f66d99）→app.json声明plugins→requirePlugin使用。佐证appid与添加流程（与官方文档互证）。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "medium"
+  },
+  {
+    "channel": "voice_ocr",
+    "doc_type": "forum",
+    "title": "SegmentFault·「微信同声传译」小程序插件介绍",
+    "url": "https://segmentfault.com/a/1190000017084914",
+    "content": "WechatSI能力综述：语音读取识别、文本转语音（TTS）、中英文文本转换，参考官方小程序『面对面翻译』。历史文章，佐证插件三大能力稳定存在多年。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "medium"
+  },
+  {
+    "channel": "voice_ocr",
+    "doc_type": "forum",
+    "title": "微信开放社区·同声传译插件搜索不到/添加失败",
+    "url": "https://developers.weixin.qq.com/community/develop/doc/000020702b0a70d1f915207c96bc00",
+    "content": "开发者反馈在小程序后台搜不到WechatSI插件：社区经验=需已认证小程序主体方可添加第三方插件（未认证主体插件管理受限）。注意：此为社区经验口径，官方文档未明文标注（标注：社区观察，非官方明文）。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "medium"
+  },
+  {
+    "channel": "voice_ocr",
+    "doc_type": "forum",
+    "title": "阿里云开发者社区·微信OCR插件接入实录",
+    "url": "https://developer.aliyun.com/article/1626167",
+    "content": "OCR插件（wx4418e3e031e551be）实操：设置→第三方服务→添加插件→（需购买/领取调用次数额度）→app.json声明ocr-plugin version 3.1.3→ocr-navigator组件certificateType选证件类型。佐证：该插件仅证件识别、按次计费，无通用文字识别。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "medium"
+  },
+  {
+    "channel": "voice_ocr",
+    "doc_type": "forum",
+    "title": "微信开放社区·深度合成类目与《在用证明》实操（多帖汇总）",
+    "url": "https://developers.weixin.qq.com/community/develop/doc",
+    "content": "AI问答小程序类目要求（多帖共识）：『深度合成-AI问答』类目仅限企业主体（个人不可选；有帖称个体工商户执照可行——口径不一，以类目页为准）。资质二选一：自研算法需《互联网信息服务算法备案》（生成合成类）；用第三方模型需服务商《算法备案凭证》（或审批中截图）+合作协议/订单（订单产品名须与备案算法名一致），另需第三方服务《在用证明》（须含小程序主体/appid/订单有效期）。用微信云开发AI能力可由平台生成『在用证明』材料简化（docs.cloudbase.net站内：在用证明）。AI生成内容需显著标识。注：此url为社区文档检索入口，具体帖子以社区搜索『深度合成 在用证明』为准；相关口径另见 fuwu.weixin.qq.com 开发者专区『怎么才算是提供正确的深度合成服务《在用证明》』讨论。",
+    "signals": {},
+    "retrieved_at": "2026-09-28",
+    "credibility": "medium"
+  }
+]

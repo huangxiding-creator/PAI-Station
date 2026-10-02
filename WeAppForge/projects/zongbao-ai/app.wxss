@@ -42,7 +42,7 @@ button { padding-left: 0; padding-right: 0; }
 .bp-grid {
   background-color: var(--navy-0);
   background-image:
-    radial-gradient(120% 90% at 28% 0%, rgba(101, 160, 255, 0.13), transparent 55%),
+    radial-gradient(120% 90% at 28% 0%, rgba(var(--t-glow-rgb), 0.13), transparent 55%),
     linear-gradient(var(--grid) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid) 1px, transparent 1px),
     linear-gradient(var(--grid-soft) 1px, transparent 1px),
@@ -56,16 +56,16 @@ button { padding-left: 0; padding-right: 0; }
   content: '';
   position: absolute; left: 0; top: 0;
   width: 26rpx; height: 26rpx;
-  border-left: 3rpx solid var(--tick, rgba(234, 243, 255, 0.55));
-  border-top: 3rpx solid var(--tick, rgba(234, 243, 255, 0.55));
+  border-left: 3rpx solid var(--tick, rgba(var(--t-ink-rgb), 0.55));
+  border-top: 3rpx solid var(--tick, rgba(var(--t-ink-rgb), 0.55));
   pointer-events: none;
 }
 .ticks::after {
   content: '';
   position: absolute; right: 0; bottom: 0;
   width: 26rpx; height: 26rpx;
-  border-right: 3rpx solid var(--tick, rgba(234, 243, 255, 0.55));
-  border-bottom: 3rpx solid var(--tick, rgba(234, 243, 255, 0.55));
+  border-right: 3rpx solid var(--tick, rgba(var(--t-ink-rgb), 0.55));
+  border-bottom: 3rpx solid var(--tick, rgba(var(--t-ink-rgb), 0.55));
   pointer-events: none;
 }
 
@@ -90,27 +90,27 @@ button { padding-left: 0; padding-right: 0; }
   border-radius: 6rpx;
   padding: 36rpx 32rpx;
   margin: 22rpx 24rpx;
-  box-shadow: 0 2rpx 0 rgba(27, 36, 52, 0.04), 0 10rpx 34rpx rgba(27, 36, 52, 0.07);
-  --tick: rgba(13, 37, 71, 0.35);
+  box-shadow: 0 2rpx 0 rgba(var(--t-pink-rgb), 0.04), 0 10rpx 34rpx rgba(var(--t-pink-rgb), 0.07);
+  --tick: rgba(var(--t-navy2-rgb), 0.35);
 }
 
 /* ── 主 CTA：安全橙工业按钮 ── */
 .btn-primary {
-  background: linear-gradient(180deg, #ffa53f 0%, #ff9432 45%, #f0821a 100%);
-  color: #0a1e3c;
+  background: linear-gradient(180deg, var(--t-accent-soft) 0%, var(--accent) 45%, var(--accent-deep) 100%);
+  color: var(--navy-0);
   border-radius: 10rpx;
   font-size: 32rpx;
   font-weight: 800;
   letter-spacing: 2rpx;
   line-height: 2.4;
-  box-shadow: 0 12rpx 28rpx rgba(255, 148, 50, 0.34), inset 0 2rpx 0 rgba(255, 255, 255, 0.55);
+  box-shadow: 0 12rpx 28rpx rgba(var(--t-accent-rgb), 0.34), inset 0 2rpx 0 rgba(255, 255, 255, 0.55);
 }
 .btn-primary[disabled] {
   background: #d9d2c2;
   color: #8b8474;
   box-shadow: none;
 }
-.btn-hover { transform: scale(0.985); box-shadow: 0 6rpx 14rpx rgba(255, 148, 50, 0.28), inset 0 2rpx 0 rgba(255, 255, 255, 0.4); }
+.btn-hover { transform: scale(0.985); box-shadow: 0 6rpx 14rpx rgba(var(--t-accent-rgb), 0.28), inset 0 2rpx 0 rgba(255, 255, 255, 0.4); }
 
 .muted { color: var(--muted); font-size: 24rpx; }
 
@@ -130,3 +130,32 @@ button { padding-left: 0; padding-right: 0; }
 
 /* 底部安全区（全面屏） */
 .safe-bottom { padding-bottom: calc(env(safe-area-inset-bottom) + 24rpx); }
+
+/* ═══════════════════════════════════════════════════════════════
+   v0.7.0 深色模式「夜航图纸」：蓝图层本就深色，只翻纸面变量与投影；
+   页面内硬编码色由各页 wxss 尾部的 dark 块收口。
+   ═══════════════════════════════════════════════════════════════ */
+@media (prefers-color-scheme: dark) {
+  page {
+    /* 纸面 → 夜航蓝黑 */
+    --paper: #0c1322;
+    --card: #151f35;
+    --ink: #dde6f4;
+    --ink-2: #b6c3da;
+    --muted: #7f8da6;
+    --line: #2c3a55;
+
+    /* 蓝图层压暗一阶（与纸面仍分层） */
+    --navy-0: #060d1c;
+    --navy-1: #0b1830;
+    --navy-2: #122444;
+    --grid: rgba(101, 160, 255, 0.10);
+    --grid-soft: rgba(101, 160, 255, 0.04);
+    --white-ink: #e6efff;
+    --ink-dim: #8ba4c8;
+  }
+  .card {
+    box-shadow: 0 2rpx 0 rgba(0, 0, 0, 0.22), 0 10rpx 34rpx rgba(0, 0, 0, 0.38);
+  }
+  .btn-primary[disabled] { background: #2a3550; color: #6b7890; box-shadow: none; }
+}

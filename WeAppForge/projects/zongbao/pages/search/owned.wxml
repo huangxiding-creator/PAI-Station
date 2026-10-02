@@ -1,0 +1,46 @@
+<view class="osearch" wx:if="{{p1}}">
+  <view class="card">
+    <view class="os-row">
+      <input
+        class="os-input"
+        value="{{q}}"
+        placeholder="检索已购研报的章节内容"
+        confirm-type="search"
+        bindinput="onSearchInput"
+        bindconfirm="onSearch"
+      />
+      <button class="os-btn" size="mini" plain disabled="{{searching}}" bindtap="onSearch">
+        {{searching ? '搜索中' : '搜索'}}
+      </button>
+    </view>
+    <view class="os-hint">检索范围：您已解锁的全部研报（试读章+付费章），命中可直达对应章节。</view>
+  </view>
+
+  <view class="card" wx:if="{{!searched}}">
+    <view class="os-empty">输入关键词（如「商机」「招标」），在您已购的研报章节内定位原文。</view>
+  </view>
+
+  <view class="card" wx:if="{{searched && total === 0 && !searching}}">
+    <view class="os-empty">未在已购研报中找到「{{q}}」相关内容，换个关键词试试。</view>
+  </view>
+
+  <view class="card" wx:if="{{items.length > 0}}">
+    <view class="os-total">共 {{total}} 处命中{{hasMore ? '，已加载 ' + items.length : ''}}</view>
+    <view
+      wx:for="{{items}}"
+      wx:key="index"
+      class="os-item"
+      data-rid="{{item.report_id}}"
+      data-cid="{{item.chapter_id}}"
+      bindtap="onOpenItem"
+    >
+      <view class="os-title">{{item.title}}</view>
+      <view class="os-chapter">{{item.chapter_title}}</view>
+      <view class="os-snippet">{{item.snippet}}</view>
+    </view>
+    <button wx:if="{{hasMore}}" class="os-more" plain disabled="{{loadingMore}}" bindtap="onLoadMore">
+      {{loadingMore ? '加载中…' : '加载更多'}}
+    </button>
+    <view wx:elif="{{searched}}" class="os-done">已全部加载</view>
+  </view>
+</view>

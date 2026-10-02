@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""锅圈播种机：EPC 热点问题 → 工程大脑回答 → 公共锅圈条目。
+"""锅圈播种机：EPC 热点问题 → 总包智库回答 → 公共锅圈条目。
 
 用法（ECS 生产位）：
   PYTHONPATH=/opt/qianwen venv/bin/python pot_seed.py questions.json [积分预算]

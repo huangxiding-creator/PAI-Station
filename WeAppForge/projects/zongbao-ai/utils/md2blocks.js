@@ -1,5 +1,5 @@
 // Markdown → 结构化块渲染器 — 总包AI顾问 v0.2.4
-// 零依赖：把工程大脑返回的 Markdown 解析成 WXML 可直接 wx:for 的块数组，
+// 零依赖：把总包智库返回的 Markdown 解析成 WXML 可直接 wx:for 的块数组，
 // 从此答案页不再裸露 #、**、|---| 等符号，排版由 WXSS 精细控制。
 // 块: {t:'h1'|'h2'|'h3', inl} {t:'p', inl} {t:'quote', inl} {t:'code', text}
 //     {t:'ul', items:[[inl]]} {t:'ol', nums:[], items:[[inl]]} {t:'hr'}

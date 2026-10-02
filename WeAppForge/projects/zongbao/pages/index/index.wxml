@@ -1,0 +1,102 @@
+<view class="mall">
+  <!-- 搜索框：防抖 300ms → /search（三层降级由 layerHint 呈现） -->
+  <view class="search-bar card">
+    <view class="search-icon">🔍</view>
+    <input
+      class="search-input"
+      value="{{query}}"
+      placeholder="搜省份、行业、商机关键词…"
+      confirm-type="search"
+      bindinput="onSearchInput"
+      bindconfirm="onSearchConfirm"
+    />
+    <view wx:if="{{query}}" class="search-clear" bindtap="onClearSearch">✕</view>
+  </view>
+
+  <view wx:if="{{netDown}}" class="net-down">服务维护中，试读内容仍可离线阅读</view>
+
+  <!-- 搜索结果区 -->
+  <block wx:if="{{searching}}">
+    <view class="card" wx:if="{{fallbackHint}}">
+      <view class="fb-title">未找到相关研报，看看大家在读</view>
+      <view class="hot-words" wx:if="{{hotWords.length > 0}}">
+        <text class="hw-chip" wx:for="{{hotWords}}" wx:key="*this" data-word="{{item}}" bindtap="onHotWordTap">{{item}}</text>
+      </view>
+    </view>
+    <view wx:if="{{layerHint}}" class="layer-hint">{{layerHint}}</view>
+    <view wx:if="{{searchItems.length === 0 && !netDown}}" class="empty">换个关键词试试，或从下方榜单逛起</view>
+    <block wx:for="{{searchItems}}" wx:key="id"><template is="report-card" data="{{item: item}}" /></block>
+  </block>
+
+  <!-- 商城列表区 -->
+  <block wx:else>
+    <view class="tabs card">
+      <view class="tab {{tab === 'hot' ? 'on' : ''}}" data-tab="hot" bindtap="onTabTap">阅读榜</view>
+      <view class="tab {{tab === 'new' ? 'on' : ''}}" data-tab="new" bindtap="onTabTap">今日上新</view>
+    </view>
+
+    <!-- 省份入口（P0=省份 chips 行，不做地图）+ 业主类型/行业筛选 -->
+    <scroll-view class="chips" scroll-x enhanced show-scrollbar="{{false}}">
+      <view class="chip {{province === '' ? 'on' : ''}}" data-field="province" data-value="" bindtap="onChipTap">全部省份</view>
+      <view
+        class="chip {{province === item ? 'on' : ''}}"
+        wx:for="{{facets.provinces}}"
+        wx:key="*this"
+        data-field="province"
+        data-value="{{item}}"
+        bindtap="onChipTap"
+      >{{item}}</view>
+    </scroll-view>
+    <scroll-view class="chips" scroll-x enhanced show-scrollbar="{{false}}">
+      <view class="chip {{ownerType === '' ? 'on' : ''}}" data-field="ownerType" data-value="" bindtap="onChipTap">全部业主</view>
+      <view
+        class="chip {{ownerType === item ? 'on' : ''}}"
+        wx:for="{{facets.ownerTypes}}"
+        wx:key="*this"
+        data-field="ownerType"
+        data-value="{{item}}"
+        bindtap="onChipTap"
+      >{{item}}</view>
+    </scroll-view>
+    <scroll-view class="chips" scroll-x enhanced show-scrollbar="{{false}}">
+      <view class="chip {{industry === '' ? 'on' : ''}}" data-field="industry" data-value="" bindtap="onChipTap">全部行业</view>
+      <view
+        class="chip {{industry === item ? 'on' : ''}}"
+        wx:for="{{facets.industries}}"
+        wx:key="*this"
+        data-field="industry"
+        data-value="{{item}}"
+        bindtap="onChipTap"
+      >{{item}}</view>
+    </scroll-view>
+
+    <block wx:for="{{items}}" wx:key="id"><template is="report-card" data="{{item: item}}" /></block>
+
+    <view wx:if="{{items.length === 0 && !netDown}}" class="empty">研报上架中…</view>
+    <view wx:if="{{loading}}" class="list-foot">加载中…</view>
+    <view wx:if="{{!hasMore && items.length > 0 && !loading}}" class="list-foot">已到底啦</view>
+  </block>
+
+  <view class="foot-disclosure">行业研究，非投资建议</view>
+</view>
+
+<!-- 报告卡模板：封面占位+标题+省份/行业标签+价格（分转元在 TS 层完成） -->
+<template name="report-card">
+  <view class="card r-card" data-id="{{item.id}}" bindtap="onOpenReport">
+    <view class="r-cover">
+      <view class="r-cover-block {{item.unlocked ? 'owned' : ''}}">{{item.province || item.industry}}</view>
+      <view wx:if="{{item.unlocked}}" class="r-owned-badge">已解锁</view>
+    </view>
+    <view class="r-body">
+      <view class="r-title">{{item.title}}</view>
+      <view class="r-summary">{{item.summary}}</view>
+      <view class="r-meta">
+        <text wx:if="{{item.province}}" class="tag">{{item.province}}</text>
+        <text wx:if="{{item.industry}}" class="tag">{{item.industry}}</text>
+        <text wx:if="{{item.ownerType}}" class="tag">{{item.ownerType}}</text>
+        <text class="tag trial">试读 {{item.trialChapters}} 章</text>
+        <text class="r-price" wx:if="{{!item.unlocked}}">¥{{item.priceYuan}}</text>
+      </view>
+    </view>
+  </view>
+</template>

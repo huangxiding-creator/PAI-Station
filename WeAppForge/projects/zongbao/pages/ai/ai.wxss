@@ -1,0 +1,47 @@
+.chat {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+.msgs {
+  flex: 1;
+  padding: 24rpx;
+  box-sizing: border-box;
+}
+.msg {
+  display: flex;
+  margin-bottom: 20rpx;
+}
+.msg.mine {
+  justify-content: flex-end;
+}
+.bubble {
+  max-width: 78%;
+  padding: 18rpx 24rpx;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  line-height: 1.6;
+  background: #fff;
+}
+.msg.mine .bubble {
+  background: #1e5eff;
+  color: #fff;
+}
+.input-bar {
+  display: flex;
+  gap: 16rpx;
+  padding: 16rpx 24rpx calc(16rpx + env(safe-area-inset-bottom));
+  background: #fff;
+}
+.input {
+  flex: 1;
+  background: #f0f2f5;
+  border-radius: 999rpx;
+  padding: 14rpx 28rpx;
+  font-size: 28rpx;
+}
+.send-btn {
+  background: #1e5eff;
+  color: #fff;
+  border-radius: 999rpx;
+}

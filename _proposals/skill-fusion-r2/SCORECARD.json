@@ -1,0 +1,34 @@
+{
+  "_template": "SCORECARD.json (IdeaForge / Super-Skill V4.0) — machine-readable gate output",
+  "feasibility": 0.88,
+  "user_value": 0.92,
+  "monetization": 0.62,
+  "tenx": 0.85,
+  "weighted": 0.833,
+  "verdict": "proceed",
+  "weakest_dim": "monetization",
+  "tenx_detail": {
+    "best_axis": "成稿→交付链机器验收覆盖率（断言级）",
+    "multiplier": 10.0,
+    "verdict": "tenx_qualified",
+    "note": "现状 postchain 仅文件级结构校验（断言级覆盖 0%）；提案后 claim 级审计+六值 verdict+内容哈希绑定 ≈100% 可审计。0→1 属跳变，按保守 10× 记。「输入侧工厂×输出侧工作台」缝合在 243 技能深读范围内无仓同时具备。"
+  },
+  "maturity": {
+    "best": "llllllllama-rigorpilot-skills (CI 80/80, result_match/runtime 目录/fingerprint)",
+    "median": 52.0,
+    "mature_count": 3,
+    "note": "成熟仓(≥70)：rigorpilot / ARIS / K-Dense——但三家无一拥有输入侧工厂；输出侧最深件分散在 ARIS(验收契约)/kdense(双账本)/genli(样式)——缝合价值正是来源碎片化。median 为池内 18 仓 LEXICON 分位估计。"
+  },
+  "pricing": {
+    "positioning": "internal",
+    "recommended": 0.0,
+    "anchor": 0.0,
+    "note": "内部能力升级，无定价；间接变现=EPC100 付费研报交付质量+WeAIPO 漏斗成色。BUSINESS_MODEL.md 不适用。"
+  },
+  "rationale": {
+    "feasibility": "全部包均移植已实证机制（ARIS verify_paper_audits.sh 实测/rigorpilot CI 80 绿/genli 模板在用）；4 个直装件免费零 key；接线点全是自有存量形态（conductor tick/gate_ckpt/postchain）——仅 docx→PDF 渲染链需环境实测（WeAIPO 宣传链已有 PDF 渲染先例）",
+    "user_value": "主战场（工程研报）最大质量洞=输出侧无机器验收；按 W1-W22 逐空白给源补位，六值 verdict+STALE 重哈希+渲染门直接封「排版后偷改/占位符出厂/数字无源」三类事故",
+    "monetization": "内部能力升级非独立产品：间接变现=EPC100 付费研报交付质量与口碑+WeAIPO 获客漏斗成色提升；无直接定价故此维诚实压低",
+    "tenx": "见 tenx_detail.note"
+  }
+}

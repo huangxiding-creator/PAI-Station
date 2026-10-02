@@ -1,0 +1,158 @@
+<view class="reader">
+  <!-- 报告头 + 进度 + 目录侧栏入口 -->
+  <view class="card r-head">
+    <view class="r-title">{{reportTitle}}</view>
+    <view class="r-meta">
+      <text wx:if="{{decision}}" class="r-progress">{{decision.readText}}{{unlocked ? ' · 已解锁全文' : ''}}</text>
+      <text wx:if="{{netDown}}" class="r-netdown">服务维护中，试读离线可读</text>
+      <view class="toc-btn" bindtap="onToggleSidebar">目录</view>
+    </view>
+  </view>
+
+  <!-- 当前章正文（md2blocks 块渲染） -->
+  <view class="card chapter">
+    <view class="ch-title">{{activeTitle}}</view>
+
+    <view wx:if="{{activeLoading}}" class="ch-loading">正文加载中…</view>
+
+    <!-- 付费章锁定占位：🔒+章标题+解锁 CTA -->
+    <view wx:elif="{{activeLocked}}" class="ch-locked">
+      <view class="lock-icon">🔒</view>
+      <view class="lock-title">{{activeTitle}}</view>
+      <view class="lock-sub">本章为付费内容</view>
+      <button class="lock-cta {{payGrayed ? 'gray' : ''}}" disabled="{{paying}}" bindtap="onUnlock">
+        {{paying ? '处理中…' : '解锁全文 ¥' + priceYuan}}
+      </button>
+    </view>
+
+    <view wx:else class="md">
+      <block wx:for="{{activeBlocks}}" wx:key="index" wx:for-item="b">
+        <view wx:if="{{b.t === 'h1'}}" class="md-h1">
+          <text user-select><template is="inl" data="{{segs: b.inl}}" /></text>
+        </view>
+        <view wx:elif="{{b.t === 'h2'}}" class="md-h2">
+          <view class="h2-bar"></view>
+          <text class="md-h2-text" user-select><template is="inl" data="{{segs: b.inl}}" /></text>
+        </view>
+        <view wx:elif="{{b.t === 'h3'}}" class="md-h3">
+          <text user-select><template is="inl" data="{{segs: b.inl}}" /></text>
+        </view>
+        <view wx:elif="{{b.t === 'p'}}" class="md-p">
+          <text user-select><template is="inl" data="{{segs: b.inl}}" /></text>
+        </view>
+        <view wx:elif="{{b.t === 'quote'}}" class="md-quote">
+          <text user-select><template is="inl" data="{{segs: b.inl}}" /></text>
+        </view>
+        <view wx:elif="{{b.t === 'hr'}}" class="md-hr"></view>
+        <view wx:elif="{{b.t === 'code'}}" class="md-code-wrap">
+          <scroll-view scroll-x class="md-code-scroll" enhanced show-scrollbar="{{false}}">
+            <text class="md-code" user-select>{{b.text}}</text>
+          </scroll-view>
+        </view>
+        <view wx:elif="{{b.t === 'ul'}}" class="md-list">
+          <view class="md-li" wx:for="{{b.items}}" wx:key="index" wx:for-item="li">
+            <view class="li-dot"></view>
+            <text class="li-text" user-select><template is="inl" data="{{segs: li}}" /></text>
+          </view>
+        </view>
+        <view wx:elif="{{b.t === 'ol'}}" class="md-list">
+          <view class="md-li" wx:for="{{b.items}}" wx:key="index" wx:for-item="li" wx:for-index="liIdx">
+            <view class="li-num">{{b.nums[liIdx]}}</view>
+            <text class="li-text" user-select><template is="inl" data="{{segs: li}}" /></text>
+          </view>
+        </view>
+        <scroll-view wx:elif="{{b.t === 'table'}}" scroll-x class="md-tbl-scroll" enhanced show-scrollbar="{{false}}">
+          <view class="md-tbl">
+            <view class="md-tr md-tr-head">
+              <view class="md-th" wx:for="{{b.head}}" wx:key="index" wx:for-item="cell">
+                <text user-select><template is="inl" data="{{segs: cell}}" /></text>
+              </view>
+            </view>
+            <view class="md-tr" wx:for="{{b.rows}}" wx:key="index" wx:for-item="row">
+              <view class="md-td" wx:for="{{row}}" wx:key="index" wx:for-item="cell">
+                <text user-select><template is="inl" data="{{segs: cell}}" /></text>
+              </view>
+            </view>
+          </view>
+        </scroll-view>
+      </block>
+    </view>
+
+    <!-- 试读末章后插决策卡块（FR-P0-04：试读最后一章末尾出现决策卡） -->
+    <view wx:if="{{decision && !unlocked && activeIdx === lastTrialIdx}}" class="inline-decision">
+      <view class="idc-title">免费试读到这了</view>
+      <view class="idc-row">
+        <view class="idc-item"><view class="idc-num">{{decision.readText}}</view><view class="idc-label">免费试读</view></view>
+        <view class="idc-item"><view class="idc-num">{{decision.remainText}}</view><view class="idc-label">付费部分</view></view>
+      </view>
+      <view class="idc-locked" wx:if="{{decision.lockedCount > 0}}">{{decision.lockedCount}} 条核心结论未解锁</view>
+      <view class="idc-blur" wx:for="{{decision.lockedTitles}}" wx:key="*this">{{item}}</view>
+      <button class="lock-cta {{payGrayed ? 'gray' : ''}}" disabled="{{paying}}" bindtap="onUnlock">
+        {{paying ? '处理中…' : '解锁全文 ¥' + priceYuan}}
+      </button>
+    </view>
+
+    <!-- P1 末章轻入口（试读末章或全文末章：读完各自可见部分时出现）：
+         点赞=当日首赞必得赠阅（结果弹层）；批评=跳详情页表单（须已购+已读，服务端四层闸兜底） -->
+    <view
+      wx:if="{{p1 && (activeIdx === chapters.length - 1 || activeIdx === lastTrialIdx)}}"
+      class="reader-p1-entry"
+    >
+      <view class="rp1-btn like {{liking ? 'busy' : ''}}" bindtap="onReaderLike">{{liking ? '领取中…' : '点赞得赠阅'}}</view>
+      <view class="rp1-btn crit" bindtap="onReaderCriticize">批评评分退款</view>
+    </view>
+  </view>
+
+  <!-- 上一章/下一章 -->
+  <view class="page-nav" wx:if="{{chapters.length > 1}}">
+    <button class="nav-btn" plain disabled="{{activeIdx === 0}}" bindtap="onPrev">上一章</button>
+    <button class="nav-btn primary" plain disabled="{{activeIdx === chapters.length - 1}}" bindtap="onNext">下一章</button>
+  </view>
+
+  <view class="foot-disclosure">{{footerDisclaimer}}</view>
+
+  <!-- 底部解锁栏（未解锁时常驻） -->
+  <view class="unlock-bar" wx:if="{{!unlocked}}">
+    <view class="unlock-price">¥{{priceYuan}} 解锁全文</view>
+    <button class="unlock-btn {{payGrayed ? 'gray' : ''}}" disabled="{{paying}}" bindtap="onUnlock">
+      {{paying ? '处理中…' : '解锁全文'}}
+    </button>
+  </view>
+
+  <!-- 章节列表侧栏 -->
+  <view class="side-mask" wx:if="{{sidebarOpen}}" bindtap="onCloseSidebar"></view>
+  <view class="sidebar {{sidebarOpen ? 'open' : ''}}">
+    <view class="side-head">目录（{{chapters.length}} 章）</view>
+    <scroll-view scroll-y class="side-list">
+      <view
+        wx:for="{{chapters}}"
+        wx:key="id"
+        class="side-item {{activeIdx === index ? 'active' : ''}}"
+        data-index="{{index}}"
+        bindtap="onPickChapter"
+      >
+        <text class="side-name">{{item.isTrial ? '📖' : ''}} {{item.idx}}. {{item.title}}</text>
+        <text wx:if="{{!item.isTrial && !unlocked}}" class="side-lock">🔒</text>
+      </view>
+    </scroll-view>
+  </view>
+</view>
+
+<!-- 行内段渲染模板：加粗/斜体/行内代码/链接 -->
+<template name="inl">
+  <block wx:for="{{segs}}" wx:key="index" wx:for-item="s">
+    <text wx:if="{{s.k === 'b'}}" class="in-b" user-select>{{s.v}}</text>
+    <text wx:elif="{{s.k === 'i'}}" class="in-i" user-select>{{s.v}}</text>
+    <text wx:elif="{{s.k === 'c'}}" class="in-c" user-select>{{s.v}}</text>
+    <text wx:elif="{{s.k === 'l'}}" class="in-l" user-select>{{s.v}}</text>
+    <block wx:else><text user-select>{{s.v}}</text></block>
+  </block>
+</template>
+
+<!-- 支付前披露半屏弹层（T-P0-26：与 detail 页同一真源 utils/agreement.ts） -->
+<import src="../../templates/pay-sheet.wxml" />
+<template is="pay-sheet" data="{{ paySheetOpen, paySheet }}" />
+
+<!-- P1 点赞结果弹层（templates/p1-sheet.wxml like-sheet 共享） -->
+<import src="../../templates/p1-sheet.wxml" />
+<template is="like-sheet" data="{{ likeOpen, liking, likeGift, likeRules }}" />

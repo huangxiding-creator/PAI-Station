@@ -1,0 +1,155 @@
+<view class="me">
+  <view class="tabs card">
+    <view class="tab {{tab === 'owned' ? 'on' : ''}}" data-tab="owned" bindtap="onTabTap">已购（{{owned.length}}）</view>
+    <view class="tab {{tab === 'fav' ? 'on' : ''}}" data-tab="fav" bindtap="onTabTap">收藏（{{favs.length}}）</view>
+    <view wx:if="{{giftTabEnabled}}" class="tab {{tab === 'gift' ? 'on' : ''}}" data-tab="gift" bindtap="onTabTap">赠品架（{{gifts.length}}）</view>
+  </view>
+
+  <view wx:if="{{offline}}" class="offline-hint">服务维护中，已展示本地缓存；恢复后以服务端为准</view>
+  <view wx:if="{{loading && owned.length === 0 && favs.length === 0}}" class="empty-hint">加载中…</view>
+
+  <!-- P1 书券卡（1 券=1 元；攒满 498 券兑任一份报告；账本逐笔可查） -->
+  <view class="card voucher-card" wx:if="{{p1 && voucher}}">
+    <view class="voucher-top">
+      <view class="voucher-balance">
+        <view class="voucher-num">¥{{voucher.balanceYuan}}</view>
+        <view class="voucher-label">书券余额（1 券=1 元，非现金不可提现）</view>
+      </view>
+      <view class="voucher-right">
+        <view class="voucher-progress-text">攒满 ¥498 可兑换任一份研报 · {{voucher.progressPct}}%</view>
+        <view class="voucher-bar"><view class="voucher-bar-in" style="width: {{voucher.progressPct}}%"></view></view>
+        <button class="voucher-redeem {{voucher.canRedeem ? '' : 'off'}}" plain disabled="{{!voucher.canRedeem}}" bindtap="onRedeemOpen">
+          {{voucher.canRedeem ? '用 498 书券兑换研报' : '余额不足 498'}}
+        </button>
+      </view>
+    </view>
+    <view class="voucher-ledger">
+      <view class="ledger-title">书券账本（逐笔）</view>
+      <view class="ledger-item" wx:for="{{voucher.ledger}}" wx:key="id">
+        <text class="ledger-src">{{item.sourceText}} · {{item.statusText}} · {{item.createdAt}}</text>
+        <text class="ledger-amt {{item.neg ? 'neg' : 'pos'}}">{{item.amountYuan}}</text>
+      </view>
+      <view wx:if="{{voucher.ledger.length === 0}}" class="empty-hint">暂无书券记录</view>
+    </view>
+    <view class="about-entry" bindtap="onVoucherRules">
+      <text class="about-entry-name">书券说明</text>
+      <text class="about-entry-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- P1 邀请战绩卡（首触归因；邀满 2 位点亮馆友标记+发 50 书券；仅 1 位时进度可见不发放） -->
+  <view class="card invite-card" wx:if="{{p1 && invite}}">
+    <view class="invite-top">
+      <view class="section-title">邀请战绩</view>
+      <view wx:if="{{invite.unlocked}}" class="buddy-badge">馆友</view>
+    </view>
+    <view class="invite-progress-text">{{invite.progressText}}{{invite.unlocked ? ' · 已得 ' + invite.earnedYuan + ' 书券' : ''}}</view>
+    <view class="invite-bar"><view class="invite-bar-in" style="width: {{invite.newUsers / invite.required * 100}}%"></view></view>
+    <view class="invite-hint">{{invite.hint}}</view>
+    <view class="invitee-list" wx:if="{{invitees.length > 0}}">
+      <view class="invitee-item" wx:for="{{invitees}}" wx:key="uid">
+        <text class="invitee-uid">{{item.uid}}</text>
+        <text class="invitee-status">{{item.statusText}} · {{item.ts}}</text>
+      </view>
+    </view>
+    <view class="about-entry" bindtap="onInviteRules">
+      <text class="about-entry-name">邀请解锁规则</text>
+      <text class="about-entry-arrow">›</text>
+    </view>
+  </view>
+
+  <view class="card" wx:if="{{tab === 'owned'}}">
+    <view class="section-title">已解锁研报（{{owned.length}}）</view>
+    <view
+      wx:for="{{owned}}"
+      wx:key="id"
+      class="owned-item"
+      data-id="{{item.id}}"
+      bindtap="onOpenReport"
+    >
+      <view class="owned-title">{{item.title}}</view>
+      <view class="owned-sub">{{item.source === 'purchase' ? '购买解锁' : (item.source === 'local' ? '本地记录' : (item.source === 'gift' ? '点赞获赠' : (item.source === 'voucher' ? '书券兑换' : (item.source === 'invite' ? '组队获得' : '赠阅'))))}} · 点击阅读</view>
+    </view>
+    <view wx:if="{{!loading && owned.length === 0}}" class="empty-hint">暂无解锁记录，商城试读免费开放</view>
+  </view>
+
+  <view class="card" wx:if="{{tab === 'fav'}}">
+    <view class="section-title">收藏（{{favs.length}}）</view>
+    <view
+      wx:for="{{favs}}"
+      wx:key="id"
+      class="owned-item"
+      data-id="{{item.id}}"
+      bindtap="onOpenReport"
+    >
+      <view class="owned-title">{{item.title}}</view>
+      <view class="owned-sub">点击试读</view>
+    </view>
+    <view wx:if="{{!loading && favs.length === 0}}" class="empty-hint">暂无收藏，去商城逛逛</view>
+  </view>
+
+  <!-- P1 赠品架（点赞获赠/书券兑换的报告直接读） -->
+  <view class="card" wx:if="{{tab === 'gift' && giftTabEnabled}}">
+    <view class="section-title">赠品架（{{gifts.length}}）</view>
+    <view
+      wx:for="{{gifts}}"
+      wx:key="id"
+      class="owned-item"
+      data-id="{{item.id}}"
+      bindtap="onOpenReport"
+    >
+      <view class="owned-title">{{item.title}}</view>
+      <view class="owned-sub">{{item.source === 'gift' ? '点赞获赠' : '书券兑换'}} · 直接阅读</view>
+    </view>
+    <view wx:if="{{!loading && gifts.length === 0}}" class="empty-hint">暂无赠品：详情页点赞，当日首赞必得一份赠阅研报</view>
+  </view>
+
+  <!-- P1 退款记录（/me 扩展字段；书券补偿轨同列） -->
+  <view class="card refund-card" wx:if="{{p1}}">
+    <view class="section-title">退款记录（{{refunds.length}}）{{refundCountText ? ' · ' + refundCountText : ''}}</view>
+    <view class="refund-item" wx:for="{{refunds}}" wx:key="refundId">
+      <view class="refund-line">
+        <text class="refund-title">{{item.title}}</text>
+        <text class="refund-amt">¥{{item.amountYuan}}</text>
+      </view>
+      <view class="refund-sub">{{item.methodText}} · {{item.statusText}} · {{item.createdAt}} · {{item.refundId}}</view>
+    </view>
+    <view wx:if="{{refunds.length === 0}}" class="empty-hint">{{offline ? '服务恢复后展示退款记录' : '暂无退款记录'}}</view>
+  </view>
+
+  <view class="card about">
+    <view class="section-title">关于总包学园</view>
+    <view class="about-text">工程商机研究 · 总包创研院出品。研报试读免费，解锁全文支持持续研究。</view>
+    <view class="about-entry" bindtap="onOpenAgreement">
+      <text class="about-entry-name">用户协议与规则</text>
+      <text class="about-entry-arrow">›</text>
+    </view>
+    <view class="about-text sub">行业研究，非投资建议</view>
+    <view class="ver">v0.3.0</view>
+  </view>
+</view>
+
+<!-- P1 书券兑换弹层（余额 ≥498 时选一份在架研报兑换） -->
+<view class="redeem-mask" wx:if="{{redeemOpen}}" bindtap="onRedeemClose">
+  <view class="redeem-sheet" catchtap="noop">
+    <view class="redeem-title">用 498 书券兑换研报</view>
+    <scroll-view class="redeem-list" scroll-y>
+      <view
+        wx:for="{{redeemList}}"
+        wx:key="id"
+        class="redeem-item {{redeemSelId === item.id ? 'on' : ''}}"
+        data-id="{{item.id}}"
+        bindtap="onRedeemPick"
+      >
+        <view class="redeem-item-title">{{item.title}}</view>
+        <view class="redeem-item-price">¥{{item.priceYuan}}</view>
+      </view>
+    </scroll-view>
+    <view class="redeem-actions">
+      <button class="redeem-btn" plain bindtap="onRedeemClose">取消</button>
+      <button class="redeem-btn primary" disabled="{{redeemSubmitting || !redeemSelId}}" bindtap="onRedeemConfirm">
+        {{redeemSubmitting ? '兑换中…' : '确认兑换'}}
+      </button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,86 @@
+/* styles/pay-sheet.wxss — 支付前披露半屏弹层（templates/pay-sheet.wxml 配套，detail/reader 共享） */
+.pay-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 20, 30, 0.5);
+  z-index: 40;
+  display: flex;
+  align-items: flex-end;
+}
+.pay-sheet {
+  width: 100%;
+  background: #fff;
+  border-radius: 24rpx 24rpx 0 0;
+  padding: 32rpx 32rpx calc(28rpx + env(safe-area-inset-bottom));
+}
+.pay-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 20rpx;
+}
+.pay-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 16rpx;
+  padding: 20rpx 24rpx;
+  background: #f6f7f9;
+  border-radius: 12rpx;
+}
+.pay-price {
+  font-size: 44rpx;
+  font-weight: 700;
+  color: #1e5eff;
+}
+.pay-price-line {
+  flex: 1;
+  font-size: 24rpx;
+  color: #4e5561;
+  line-height: 1.6;
+}
+.pay-li {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 18rpx;
+}
+.pay-li .li-dot {
+  width: 10rpx;
+  height: 10rpx;
+  border-radius: 50%;
+  background: #1e5eff;
+  margin-top: 14rpx;
+  flex-shrink: 0;
+}
+.pay-li .li-text {
+  flex: 1;
+  font-size: 26rpx;
+  line-height: 1.8;
+  color: #2a2f38;
+}
+.pay-refund {
+  margin-top: 24rpx;
+  padding: 16rpx 24rpx;
+  background: #f0f5ff;
+  border-radius: 12rpx;
+  font-size: 24rpx;
+  line-height: 1.7;
+  color: #1e5eff;
+}
+.pay-actions {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 28rpx;
+}
+.pay-btn {
+  flex: 1;
+  font-size: 26rpx;
+  border-radius: 999rpx;
+  color: #1e5eff;
+  border-color: #1e5eff;
+  padding: 4rpx 8rpx;
+}
+.pay-btn.primary {
+  flex: 1.4;
+  background: #1e5eff;
+  color: #fff;
+}

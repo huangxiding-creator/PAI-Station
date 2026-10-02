@@ -1,0 +1,46 @@
+<scroll-view class="agr" scroll-y scroll-into-view="{{anchorId}}" scroll-with-animation>
+  <!-- 页首三要点卡：价格 / 不支持无理由退款 / 批评评分退款通道存在 -->
+  <view class="card hl">
+    <view class="hl-item" wx:for="{{highlights}}" wx:key="tag">
+      <text class="hl-tag">{{item.tag}}</text>
+      <text class="hl-text" user-select>{{item.text}}</text>
+    </view>
+  </view>
+
+  <!-- 八节全文（一/二节条款折叠可展开；clause-invite=情报官体系块锚点） -->
+  <view class="card sec" wx:for="{{sections}}" wx:for-item="section" wx:key="key" id="sec-{{section.key}}">
+    <view class="sec-heading">{{section.heading}}</view>
+    <view wx:for="{{section.clauses}}" wx:for-item="clause" wx:key="id" id="clause-{{clause.id}}">
+      <view
+        wx:if="{{clause.title}}"
+        class="clause-head {{clause.foldable ? 'fold' : ''}}"
+        data-id="{{clause.id}}"
+        bindtap="onToggleClause"
+      >
+        <text class="clause-title" user-select>{{clause.id}} {{clause.title}}</text>
+        <text wx:if="{{clause.foldable}}" class="chev {{expanded[clause.id] ? 'up' : ''}}">›</text>
+      </view>
+      <view wx:if="{{expanded[clause.id] || !clause.foldable}}" class="clause-body">
+        <block wx:for="{{clause.blocks}}" wx:for-item="blk" wx:key="index">
+          <view wx:if="{{blk.kind === 'para'}}" class="agr-p" user-select>{{blk.text}}</view>
+          <view wx:elif="{{blk.kind === 'subhead'}}" class="agr-sub" user-select>{{blk.text}}</view>
+          <view wx:elif="{{blk.kind === 'bullets'}}" class="agr-list">
+            <view class="agr-li" wx:for="{{blk.items}}" wx:for-item="li" wx:key="index">
+              <view class="li-dot"></view>
+              <text class="li-text" user-select>{{li}}</text>
+            </view>
+          </view>
+          <view wx:elif="{{blk.kind === 'numbers'}}" class="agr-list">
+            <view class="agr-li" wx:for="{{blk.items}}" wx:for-item="li" wx:for-index="liIdx" wx:key="index">
+              <view class="agr-num">{{liIdx + 1}}</view>
+              <text class="li-text" user-select>{{li}}</text>
+            </view>
+          </view>
+        </block>
+      </view>
+    </view>
+  </view>
+
+  <view class="agr-version" user-select>{{versionLine}}</view>
+  <view class="agr-version sub" user-select>{{effectiveLine}}</view>
+</scroll-view>

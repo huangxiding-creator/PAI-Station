@@ -1,0 +1,144 @@
+/* pages/cards/detail.wxss — 商机情报卡落地页（变量/间距习惯对齐 pages/detail/detail.wxss） */
+.card-page {
+  padding-bottom: 48rpx;
+}
+
+/* 卡头：标签行 + 标题 + 金额大字 */
+.tagrow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+.tag {
+  font-size: 20rpx;
+  padding: 4rpx 14rpx;
+  border-radius: 999rpx;
+  background: #f0f2f5;
+  color: #4e5561;
+}
+.tag.kw {
+  background: #e8efff;
+  color: #1e5eff;
+}
+.c-title {
+  margin-top: 16rpx;
+  font-size: 34rpx;
+  font-weight: 700;
+  line-height: 1.45;
+}
+.c-amount {
+  margin-top: 12rpx;
+  font-size: 56rpx;
+  font-weight: 800;
+  color: #ff6010;
+}
+
+/* 属性行 */
+.prop-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 24rpx;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #f0f2f5;
+}
+.prop-row:last-child {
+  border-bottom: none;
+}
+.prop-label {
+  flex-shrink: 0;
+  font-size: 26rpx;
+  color: #6b7178;
+}
+.prop-value {
+  flex: 1;
+  font-size: 26rpx;
+  font-weight: 600;
+  text-align: right;
+}
+
+/* 摘要段 */
+.sec-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  margin-bottom: 16rpx;
+}
+.c-summary {
+  font-size: 26rpx;
+  color: #6b7178;
+  line-height: 1.8;
+}
+
+/* 来源报告 CTA 卡 */
+.report-cta {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+}
+.cta-main {
+  flex: 1;
+  min-width: 0;
+}
+.cta-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.cta-sub {
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  color: #6b7178;
+}
+.cta-right {
+  flex-shrink: 0;
+  text-align: right;
+}
+.cta-price {
+  font-size: 36rpx;
+  font-weight: 800;
+  color: #ff6010;
+}
+.cta-btn {
+  display: inline-block;
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  color: #fff;
+  background: #1e5eff;
+  border-radius: 999rpx;
+  padding: 10rpx 24rpx;
+}
+
+/* 分享按钮 */
+.share-btn {
+  margin: 8rpx 24rpx 0;
+  background: #e8efff;
+  color: #1e5eff;
+  font-size: 28rpx;
+  border-radius: 999rpx;
+}
+
+/* 页脚免责一行（与 detail/reader 同款） */
+.foot-disclosure {
+  text-align: center;
+  color: #b6bcc4;
+  font-size: 22rpx;
+  padding: 32rpx 0 8rpx;
+}
+
+/* 状态机：加载/失效兜底 */
+.empty {
+  text-align: center;
+  color: #9aa1ab;
+  padding: 120rpx 40rpx;
+}
+.invalid-hint {
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  color: #b6bcc4;
+}
+.retry-btn {
+  margin-top: 24rpx;
+  color: #1e5eff;
+  border-color: #1e5eff;
+  font-size: 26rpx;
+}

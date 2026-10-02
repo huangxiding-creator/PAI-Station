@@ -1,6 +1,8 @@
 // 我的页 — 总包AI顾问 v0.5.0
 // 打破砂锅（用户令）：配额常显 + 历史记录 + 批量导出全部咨询（Word/PDF/Markdown，引擎生成 b64 落盘）
+// v0.7.3：外观画廊——周换装主题选择（跟随星期 / 锁定七套调色板之一）
 const api = require('../../utils/api');
+const theme = require('../../utils/theme');
 
 Page({
   data: {
@@ -9,7 +11,8 @@ Page({
     loading: true,
     loadError: '',
     nav: { statusBarHeight: 20, navHeight: 44 },
-    sheetNo: ''
+    sheetNo: '',
+    themes: []           // v0.7.3 外观画廊（theme.list()）
   },
 
   onLoad() {
@@ -17,17 +20,42 @@ Page({
     if (app.globalData && app.globalData.nav) {
       this.setData({ nav: app.globalData.nav });
     }
+    theme.apply(this); // v0.7.4 首帧即上主题变量（onShow 仍会再刷，不闪白）
     const now = new Date();
     const pad = (n) => (n < 10 ? '0' + n : '' + n);
     this.setData({ sheetNo: 'GC-' + pad(now.getMonth() + 1) + pad(now.getDate()) });
   },
 
   onShow() {
-    // 自绘 tabBar 选中态（v0.5.0 三页签：问=0 锅=1 我=2）
+    // v0.7.3 周换装：主题刷新 + 画廊激活态重算（跨日回到本页可见轮换效果）
+    theme.apply(this);
+    this.setData({ themes: theme.list() });
+    // 自绘 tabBar 选中态（v0.7.2 四页签：问=0 锅=1 智=2 我=3）
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
-      this.getTabBar().setData({ selected: 2 });
+      this.getTabBar().setData({ selected: 3 });
     }
     this.refresh();
+  },
+
+  // v0.7.3 锁定主题（用户令：用户可调整喜欢的配色）
+  onThemeTap(e) {
+    const key = e.currentTarget.dataset.key || '';
+    if (!key) return;
+    theme.setPref(key);
+    theme.apply(this);
+    this.setData({ themes: theme.list() });
+    wx.vibrateShort({ type: 'light', fail: () => {} });
+    const t = theme.list().find((x) => x.key === key);
+    wx.showToast({ title: '已切换：' + (t ? t.name : key), icon: 'none', duration: 1600 });
+  },
+
+  // v0.7.3 解锁偏好 → 跟随星期自动轮换
+  onThemeAuto() {
+    theme.setPref('');
+    theme.apply(this);
+    this.setData({ themes: theme.list() });
+    wx.vibrateShort({ type: 'light', fail: () => {} });
+    wx.showToast({ title: '已恢复：每周七天自动轮换', icon: 'none', duration: 1600 });
   },
 
   onPullDownRefresh() {
@@ -42,7 +70,6 @@ Page({
           let badgeCls = 'hist-badge';
           if (it.status === 'pending') { badge = '生成中'; badgeCls = 'hist-badge hist-pending'; }
           else if (it.status === 'error') { badge = '未成功·次数已退'; badgeCls = 'hist-badge hist-err'; }
-          else if (!it.unlocked) { badge = '部分预览'; }
           return {
             ...it,
             timeText: this.formatTime(it.created_at),
@@ -86,6 +113,11 @@ Page({
 
   goAsk() {
     wx.switchTab({ url: '/pages/ask/ask' });
+  },
+
+  // v0.7.4 提审合规：用户协议 · 隐私政策
+  goPrivacy() {
+    wx.navigateTo({ url: '/pages/legal/privacy' });
   },
 
   onRetry() {

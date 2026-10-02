@@ -1,0 +1,60 @@
+[
+  {
+    "id": "metaso-contract-001",
+    "title": "秘塔 search-api 现行契约（playground 实证 2026-09-28）",
+    "source_url": "https://metaso.cn/search-api/playground",
+    "doc_type": "api_doc",
+    "credibility": 0.95,
+    "retrieved_at": "2026-09-28",
+    "summary": "chat: POST /api/v1/chat/completions, Bearer, {model:'fast',stream,messages:[{role,content}]}; search: POST /api/v1/search {q,scope:'webpage',includeSummary,size(str),includeRawContent,conciseSnippet}; MCP 支持（modelscope metasota/metaso-search）。旧 legacy q 裸格式已漂移。",
+    "key_facts": {
+      "chat_endpoint": "https://metaso.cn/api/v1/chat/completions",
+      "chat_payload": {"model": "fast", "stream": true, "messages": [{"role": "user", "content": "…"}]},
+      "search_endpoint": "https://metaso.cn/api/v1/search",
+      "auth": "Bearer <key in data/secrets/metaso_api_key_default.txt>"
+    }
+  },
+  {
+    "id": "metaso-contract-002",
+    "title": "积分定价与每次调用成本（dashboard 实证）",
+    "source_url": "https://metaso.cn/search-api/bashboard + /api/dashboard/credit-label",
+    "doc_type": "api_doc",
+    "credibility": 0.95,
+    "retrieved_at": "2026-09-28",
+    "summary": "充值档: 1000点¥10.8(QPM200)/1万点¥99/10万点¥960(QPM1000)/50万点¥4500(QPM2000), 有效期1年。每调用: 全网问答1点(¥0.0108), 文库问答7点, 学术问答6点, 视频问答4点, 播客问答5点, 全网搜索11点, 读取网页20点。",
+    "key_facts": {
+      "qa_web_cost_points": 1,
+      "qa_web_cost_cny": 0.0108,
+      "cogs_vs_1yuan": "1.08%",
+      "gross_margin_android": "~98%"
+    }
+  },
+  {
+    "id": "metaso-contract-003",
+    "title": "积分双池制与账户状态（my-info/get_api_keys 实证）",
+    "source_url": "https://metaso.cn/api/my-info + /api/get_api_keys",
+    "doc_type": "api_doc",
+    "credibility": 0.95,
+    "retrieved_at": "2026-09-28",
+    "summary": "网页每日免费积分(todayFreePoint=100)与API积分(metasoApiCredit)是两个独立池；API积分为0时所有API调用返回{code:5000,系统内部错误}（秒拒）。账户唯一key=Default(id 1149479, lastUse=null从未使用)。用户交底的mk-B69D…key不在本账户（跨账户/幽灵key，其usage=5287）。工程行业大脑专题topicId=8673582927558737920在本账户。",
+    "key_facts": {
+      "api_credit_balance": 0,
+      "block_error": "5000 系统内部错误",
+      "user_given_key_status": "不在本账户，须用户澄清归属",
+      "recharge_minimum": "¥10.8 = 1000点 = 1000次全网问答"
+    }
+  },
+  {
+    "id": "metaso-contract-004",
+    "title": "search-api 无法定向知识库/专题（计费标签全集实证）",
+    "source_url": "https://metaso.cn/api/dashboard/credit-label",
+    "doc_type": "api_doc",
+    "credibility": 0.9,
+    "retrieved_at": "2026-09-28",
+    "summary": "计费标签全集=全网/文库/学术/图片/视频/播客 × 搜索/问答 + 读取网页，无任何专题/知识库/书架项 → search-api 只检索公网源，不能指定用户工程大脑知识库。工程大脑仅网页产品(cookie会话)可用。",
+    "key_facts": {
+      "kb_targeting": "不支持",
+      "implication": "私域知识须自建RAG主引擎；metaso定位=带公网出处的外援腿"
+    }
+  }
+]

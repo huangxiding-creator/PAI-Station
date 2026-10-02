@@ -1,12 +1,12 @@
-/* 自绘 tabBar — 蓝图底 + 图框字标 */
+/* 自绘 tabBar — 蓝图底 + 图框字标（v0.7.3 周换装：全变量化，随主题注入） */
 .bar {
   display: flex;
-  background: #081a36;
+  background: var(--navy-0);
   background-image:
-    linear-gradient(rgba(101, 160, 255, 0.055) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(101, 160, 255, 0.055) 1px, transparent 1px);
+    linear-gradient(rgba(var(--t-glow-rgb), 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--t-glow-rgb), 0.055) 1px, transparent 1px);
   background-size: 32rpx 32rpx;
-  border-top: 2rpx solid rgba(101, 160, 255, 0.28);
+  border-top: 2rpx solid rgba(var(--t-glow-rgb), 0.28);
   padding: 14rpx 0 calc(env(safe-area-inset-bottom) + 10rpx);
 }
 
@@ -23,7 +23,7 @@
   width: 58rpx;
   height: 58rpx;
   border-radius: 8rpx;
-  border: 3rpx solid rgba(147, 172, 209, 0.55);
+  border: 3rpx solid rgba(var(--t-inkdim-rgb), 0.55);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -32,21 +32,21 @@
 .tab-glyph {
   font-size: 28rpx;
   font-weight: 700;
-  color: #93acd1;
+  color: var(--ink-dim);
   transition: color 0.18s ease;
 }
 .tab-t {
   font-size: 20rpx;
   letter-spacing: 4rpx;
-  color: #93acd1;
+  color: var(--ink-dim);
 }
 
 /* 激活：安全橙填充 + 上浮微光 */
 .tab-on .tab-sq {
-  background: linear-gradient(180deg, #ffa53f, #f0821a);
-  border-color: #ff9432;
-  box-shadow: 0 8rpx 20rpx rgba(255, 148, 50, 0.4);
+  background: linear-gradient(180deg, var(--t-accent-soft), var(--accent-deep));
+  border-color: var(--accent);
+  box-shadow: 0 8rpx 20rpx rgba(var(--t-accent-rgb), 0.4);
   transform: translateY(-4rpx);
 }
-.tab-on .tab-glyph { color: #0a1e3c; }
-.tab-on .tab-t { color: #ff9432; font-weight: 700; }
+.tab-on .tab-glyph { color: var(--navy-0); }
+.tab-on .tab-t { color: var(--accent); font-weight: 700; }

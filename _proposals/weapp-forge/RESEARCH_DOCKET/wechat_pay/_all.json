@@ -1,0 +1,276 @@
+{
+  "channel": "wechat_pay",
+  "generated_at": "2026-09-27T21:40:00+08:00",
+  "docs": [
+    {
+      "channel": "wechat_pay",
+      "doc_type": "doc",
+      "title": "小程序支付-产品介绍（微信支付商户文档中心）",
+      "url": "https://pay.weixin.qq.com/docs/merchant/products/mini-program-payment/introduction.html",
+      "content": "微信支付官方对小程序支付的产品定义：用户在微信小程序内发起支付、商户通过 JSAPI 下单完成收款的官方通道。适用场景为小程序内购买实物商品或服务（对应虚拟内容另有虚拟支付通道）。页面属于新版商户文档中心（pay.weixin.qq.com/docs/merchant），同目录含开发接入准备与开发指引章节：商户号申请、appid-mchid 绑定、APIv3 密钥与商户证书配置、统一下单获取 prepay_id、notify_url 异步回调、验签处理。",
+      "signals": {"stars": 0, "notes": "官方产品页，2026-09-27 webReader 抓取成功"},
+      "retrieved_at": "2026-09-27T20:55:00+08:00",
+      "credibility": 0.9
+    },
+    {
+      "channel": "wechat_pay",
+      "doc_type": "doc",
+      "title": "JSAPI 下单（小程序支付 v3 接口）",
+      "url": "https://pay.weixin.qq.com/doc/v3/merchant/4012791856",
+      "content": "小程序支付的核心下单接口文档：后端调 POST /v3/pay/transactions/jsapi，请求体含 appid（小程序）、mchid（商户号）、description、out_trade_no、notify_url、amount.total（单位分）、payer.openid（用户在小程序 appid 下的 openid）；成功返回 prepay_id。请求需用商户私钥做 RSA-SHA256 签名（Authorization 头）；v3 全系 RESTful+JSON，2020-12-25 起取代 v2 XML。2024 年起微信以「微信支付公钥」逐步替代平台证书用于验签（公钥不过期，新商户号默认公钥模式）。",
+      "signals": {"stars": 0, "notes": "官方接口文档，标题「JSAPI 下单_小程序支付|微信支付商户文档中心」已抓取确认"},
+      "retrieved_at": "2026-09-27T21:12:00+08:00",
+      "credibility": 0.9
+    },
+    {
+      "channel": "wechat_pay",
+      "doc_type": "doc",
+      "title": "wx.requestPayment / wx.requestOrderPayment（小程序前端拉起支付）",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/api/payment/wx.requestPayment.html",
+      "content": "小程序前端拉起微信支付的官方 API。五个必填参数：timeStamp（秒级时间戳）、nonceStr（≤32位随机串）、package（值固定为统一下单返回的 prepay_id 拼接格式 prepay_id=***）、signType（v3 固定为 RSA）、paySign（签名）。paySign 签名串为 appId\\n timeStamp\\n nonceStr\\n package\\n 四行文本用商户私钥 RSA-SHA256 签名——由后端算好下发，私钥绝不进前端。success 回调仅代表用户侧拉起流程结束，真实支付状态必须以后端回调（notify）为准。",
+      "signals": {"stars": 0, "notes": "官方 API 文档；参数表经官方文档搜索摘要+多源实战文章交叉佐证"},
+      "retrieved_at": "2026-09-27T21:28:00+08:00",
+      "credibility": 0.9
+    },
+    {
+      "channel": "wechat_pay",
+      "doc_type": "doc",
+      "title": "微信支付 v3 回调通知：验签与 AEAD_AES_256_GCM 解密（商户文档中心通用规则）",
+      "url": "https://pay.weixin.qq.com/docs/merchant/development/interface-rules/paymentnotification.html",
+      "content": "支付结果回调通知官方机制：微信向商户 notify_url POST 通知，HTTP 头携带 Wechatpay-Signature/Wechatpay-Timestamp/Wechatpay-Nonce/Wechatpay-Serial；商户必须用「平台证书或微信支付公钥」（不是商户自己的证书）对 timestamp+nonce+原始请求体验签。验签通过后，业务数据在 resource 字段中，用 APIv3 密钥（32位）以 AES-256-GCM 解密（resource.ciphertext + resource.nonce + resource.associated_data）。解密后须校验订单金额与 out_trade_no 一致性再发货（解锁）；应答 HTTP 200 且 body {code:SUCCESS}，否则微信按衰减频率重试。防重放依赖 Wechatpay-Timestamp 时效校验与订单状态幂等。",
+      "signals": {"stars": 0, "notes": "回调机制在 pay.weixin.qq.com 多个官方文档（从业机构回调、签约状态通知等）反复出现同一套协议；本条 URL 为商户中心通用章节路径，具体 doc id 未逐一验证——机制本身多源官方佐证"},
+      "retrieved_at": "2026-09-27T21:28:00+08:00",
+      "credibility": 0.85
+    },
+    {
+      "channel": "wechat_pay",
+      "doc_type": "doc",
+      "title": "云开发 CloudPay.unifiedOrder（wx-server-sdk 微信支付统一下单）",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/wxcloud/reference-sdk-api/wx-server-sdk/CloudPay/CloudPay.unifiedOrder.html",
+      "content": "微信云开发官方支付封装：云函数内 cloud.cloudPay.unifiedOrder({ body, functionName, ... }) 直接生成 wx.requestPayment 所需参数（返回 payment.timeStamp/nonceStr/package/signType/paySign）。核心差异：免商户证书、免签名计算、免 access_token（云调用私有协议鉴权）；支付回调不走向商户自建 notify_url，而是直接推送到 functionName 参数指定的云函数（回调进云函数的 event.returnMsg）。前提仍是先有商户号：云开发控制台→设置→全局设置→微信支付→添加商户号（需商户号超级管理员授权确认）。",
+      "signals": {"stars": 0, "notes": "官方 SDK 文档页；webReader 多次 5xx 未取到全文，事实由腾讯云/CloudBase 官方最佳实践+开发者实测多源交叉佐证"},
+      "retrieved_at": "2026-09-27T21:12:00+08:00",
+      "credibility": 0.85
+    },
+    {
+      "channel": "wechat_pay",
+      "doc_type": "doc",
+      "title": "微信云托管支付示例 wxcloudrun-pay-nodejs（uniPay 服务商模式）",
+      "url": "https://github.com/TCloudBase/wxcloudrun-pay-nodejs",
+      "content": "腾讯官方云托管（CloudBase Run）微信支付示例仓库，揭示云体系支付的服务商模式实质：部署时 appid 填写「已认证的非个人小程序」，按指引将微信支付商户号授权给小程序后，获得小程序绑定的「子商户号」（服务商模式的特约商户体系）。说明云托管 uniPay/云支付不豁免主体资质——个人主体小程序无法使用；费率按子商户所属行业（通常 0.6% 档）。",
+      "signals": {"stars": 0, "notes": "官方示例仓库 README 步骤；GitHub 直连确认仓库存在"},
+      "retrieved_at": "2026-09-27T21:32:00+08:00",
+      "credibility": 0.85
+    },
+    {
+      "channel": "wechat_pay",
+      "doc_type": "policy",
+      "title": "小程序虚拟支付：个人（官方接入文档，2026-09 新开放）",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/platform-capabilities/business-capabilities/virtual-payment/person.html",
+      "content": "个人主体小程序接入虚拟支付的官方文档。开通条件：个人主体+居民身份证+小程序已完成认证与备案+服务类目含「工具」。限额：单小程序月支付限额 10 万元。费率：Android 等终端 1%（腾讯技术服务费），iOS 12%（含 Apple 佣金）。开通流程：小程序管理后台→支付与交易-虚拟支付→开通（个人资料：身份信息/提现账户/支付管理员，审核约5分钟，扫码签约）；开通后记 3 个关键信息：AppID/OfferID/现网 AppKey（AppKey 只进服务端）。iOS 需额外配置小程序简称并开通苹果 IAP 支付，微信客户端 8.0.68+。技术栈：前端 wx.requestVirtualPayment（mode=short_series_goods 道具直购），signData 用 AppKey 以 HMAC-SHA256 算 paySig、用 sessionKey 算 signature 双签名；发货走 xpay_goods_deliver_notify 推送（wx_order_id 幂等，重试最多15次），query_order 兜底查单（建议每5分钟）；退款 Android 由商户主动退（后台或 refund_order 接口）、iOS 用户向 App Store 申请，180天内退款连手续费一起退；结算 Android T+3、iOS 约45-60天；发票次月5号后。明确不支持需电信业务资质的服务（电子邮件、信息发布平台、信息搜索查询等）。",
+      "signals": {"stars": 0, "notes": "官方文档全文抓取成功；费率 Android 1%/iOS 12% 另经 WebSearch 官方摘要佐证"},
+      "retrieved_at": "2026-09-27T21:05:00+08:00",
+      "credibility": 0.9
+    },
+    {
+      "channel": "wechat_pay",
+      "doc_type": "policy",
+      "title": "iOS 端虚拟支付接入指引（官方）",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/platform-capabilities/business-capabilities/virtual-payment/ios.html",
+      "content": "iOS 端小程序虚拟支付官方接入指引。2018-2025 年 iOS 端小程序虚拟支付被苹果政策封禁（微信 2018 年公告主动下线 iOS 虚拟支付）；2025-11 腾讯与苹果达成小程序分成协议后开放。iOS 端走苹果 IAP（In-App Purchase）通道，需单独在小程序管理后台「支付与交易-虚拟支付」申请并签署《iOS 端虚拟支付服务协议》，配置小程序简称、开通苹果 IAP；微信客户端要求 8.0.68+。技术接入与 Android 共用 wx.requestVirtualPayment 与服务端双签名体系，仅支付通道、费率与结算路径不同（Apple 参与抽成，苹果「小程序合作伙伴计划」抽成降至 15%）。",
+      "signals": {"stars": 0, "notes": "官方文档页抓取到标题与章节结构；细节以 devplan.html 与 person.html 费率页为准"},
+      "retrieved_at": "2026-09-27T21:29:00+08:00",
+      "credibility": 0.85
+    },
+    {
+      "channel": "wechat_pay",
+      "doc_type": "policy",
+      "title": "虚拟支付技术服务费说明（devplan，官方）",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/platform-capabilities/business-capabilities/virtual-payment/devplan.html",
+      "content": "微信官方对小程序虚拟支付技术服务费（费率）的说明页。个人主体费率：Android 等终端 1%、iOS 12%（见 person.html）。企业/个体工商户主体及「小程序合作伙伴计划」的差异化费率（安卓通道费、iOS 苹果佣金比例、合作计划 15% 档）以本页现行说明为准。2026 年 3 月前后微信要求虚拟支付业务完成 iOS/安卓/Windows 全终端统一接入，按期接入可享优惠费率（三方报道：4月1日大限、iOS 15% 优惠档）。",
+      "signals": {"stars": 0, "notes": "URL 经官方搜索结果确认存在；本页全文未抓到，企业档具体数字标注待核实"},
+      "retrieved_at": "2026-09-27T21:29:00+08:00",
+      "credibility": 0.8
+    },
+    {
+      "channel": "wechat_pay",
+      "doc_type": "doc",
+      "title": "小程序虚拟支付回调处理（官方开发指引）",
+      "url": "https://developers.weixin.qq.com/miniprogram/dev/framework/virtual-payment/callback.html",
+      "content": "虚拟支付服务端回调官方处理指引：道具发货推送（xpay_goods_deliver_notify）与代币支付通知均以 XML 推送至商户服务器；iOS 端虚拟支付需单独申请并满足额外条件（详见 iOS 端接入指引）。回调处理要点：wx_order_id 幂等去重、发货前验签、失败重试机制（官方最多重试 15 次）、漏单用 query_order 主动查补。",
+      "signals": {"stars": 0, "notes": "页面存在于官方搜索结果（开发指引/微信生态/微信支付/小程序虚拟支付回调处理）；具体 URL 路径未直抓验证，标注待核实"},
+      "retrieved_at": "2026-09-27T21:20:00+08:00",
+      "credibility": 0.75
+    },
+    {
+      "channel": "wechat_pay",
+      "doc_type": "doc",
+      "title": "微信小程序服务类目（类目与资质官方大表）",
+      "url": "https://developers.weixin.qq.com/miniprogram/product/material/",
+      "content": "小程序服务类目与所需资质的官方权威表。与研报付费阅读直接相关的发现：1) 「商业资讯-研报」类目要求企业/个体工商户主体+《增值电信业务经营许可-信息服务业务（不含互联网信息服务）》(CPN 许可)；2) 「财经类专业评论」类目有资质要求；3) 「出版物（图书/报纸/期刊/电子出版物）」类目需《网络出版服务许可证》+《出版物经营许可证》，「出版物经营」需 ICP+出版物经营许可；4) 「数字内容基础服务/付费内容供应」需 ICP 许可或备案；5) 个人主体可选类目仅约四大类（旅游、工具、体育、教育服务-培训机构除外），没有任何内容阅读类目——个人主体做付费内容阅读在类目层即被卡死，只能以「工具」类目承载虚拟支付。",
+      "signals": {"stars": 0, "notes": "官方类目大表全文抓取成功（含大量类目条目与资质要求）"},
+      "retrieved_at": "2026-09-27T21:27:00+08:00",
+      "credibility": 0.9
+    },
+    {
+      "channel": "wechat_pay",
+      "doc_type": "doc",
+      "title": "微信支付商户号入驻申请材料（商户平台官方指引）",
+      "url": "https://pay.weixin.qq.com/static/applyment_guide/applyment_detail_public.shtml",
+      "content": "申请微信支付商户号（mchid）的官方材料清单：营业执照彩色扫描件、对公银行账户（个体户可用法人对私账户）、法人身份证彩色照片。主体类型仅支持企业、个体工商户、政府/媒体等组织；个人自然人不能直接申请商户号，无营业执照的「小微商户」历史上只能经渠道商/服务商拓展二维码进件（功能受限、以线下场景为主）。小程序主体为个人时无法申请商户号，也无法完成 appid-mchid 绑定授权——这就是个人主体小程序长期无法开通标准微信支付的原因。",
+      "signals": {"stars": 0, "notes": "官方 applyment_guide 页面（另有企业版 applyment_detail_qiye.shtml）；个人限制经多方官方/三方一致佐证"},
+      "retrieved_at": "2026-09-27T21:10:00+08:00",
+      "credibility": 0.9
+    },
+    {
+      "channel": "wechat_pay",
+      "doc_type": "doc",
+      "title": "平台收付通-商户进件类型说明（企业/个体/小微）",
+      "url": "https://pay.weixin.qq.com/doc/v3/partner/4012086921",
+      "content": "微信支付官方对商户进件主体类型的划分：企业（营业执照+对公账户）、个体工商户（营业执照+经营者身份证）、小微/个人卖家（无营业执照、免工商注册，但须经特殊渠道进件且功能受限）。服务商模式下小微商户费率枚举为 0.38%-0.6%，低于普通线上商户常见的 0.6% 档。",
+      "signals": {"stars": 0, "notes": "官方 partner 文档，经搜索结果确认"},
+      "retrieved_at": "2026-09-27T21:10:00+08:00",
+      "credibility": 0.85
+    },
+    {
+      "channel": "wechat_pay",
+      "doc_type": "doc",
+      "title": "优惠费率活动对照表（官方费率文档）",
+      "url": "https://pay.weixin.qq.com/doc/v3/merchant/4012076387",
+      "content": "微信支付官方费率文档：大部分行业标准费率 0.6%（餐饮、娱乐、普通线上零售等）；泛行业优惠费率活动可将特约商户费率降至 0.2%-0.6%（服务商代申请）；跨境电商二级商户 0.4%。官方口径：商户只需承担交易手续费，费率按入驻时选择的所属行业确定（商户平台「手续费计算说明」可查本商户费率）。个人零钱提现 0.1% 与商户收款费率是两回事。虚拟内容走虚拟支付通道时费率另计（Android 1%/iOS 12% 起，个人档），与 0.6% 商户费率体系并行。",
+      "signals": {"stars": 0, "notes": "官方对照表 doc id 4012076387 经搜索确认；0.6% 为行业通行标准档，具体类目以商户平台内查询为准"},
+      "retrieved_at": "2026-09-27T21:25:00+08:00",
+      "credibility": 0.85
+    },
+    {
+      "channel": "wechat_pay",
+      "doc_type": "doc",
+      "title": "小微商户介绍（费率枚举与开通渠道）",
+      "url": "https://pay.weixin.qq.com/core/affiliate/micro_intro",
+      "content": "微信支付官方小微商户介绍页：小微商户=有门店/摊位但无营业执照的个人经营者，交易费率枚举 0.38%/0.39%/0.4%/0.45%/0.48%/0.49%/0.5%/0.55%/0.58%/0.59%/0.6%，需经渠道商拓展码进件，不能在商户平台自主申请。对线上小程序付费阅读场景：小微商户通道以线下收单为主，不适合作为小程序内数字内容售卖的合规路径。",
+      "signals": {"stars": 0, "notes": "官方介绍页经搜索确认；线上适用性为综合判断"},
+      "retrieved_at": "2026-09-27T21:25:00+08:00",
+      "credibility": 0.85
+    },
+    {
+      "channel": "wechat_pay",
+      "doc_type": "doc",
+      "title": "APPID 绑定授权（appid 与 mchid 绑定流程）",
+      "url": "https://pay.weixin.qq.com/static/product/6g4g4c.shtml",
+      "content": "appid（小程序/公众号/APP）与 mchid（商户号）绑定的官方流程：第一步商户平台→产品中心→账号关联（AppID 绑定授权），填入已认证的小程序 AppID，签署《微信支付商户号与 APPID 授权协议》《微信支付联合运营承诺函》；第二步小程序管理后台「微信支付」模块确认授权绑定。一个商户号可绑多个 AppID；mchid 为 10 位数字。小程序 JSAPI 下单时的 payer.openid 必须是「下单 appid」名下的 openid，绑定关系错乱是常见报错原因。",
+      "signals": {"stars": 0, "notes": "流程经官方帮助+多方一致佐证；本条 URL 为商户平台帮助中心路径，具体页面 id 待核实"},
+      "retrieved_at": "2026-09-27T21:31:00+08:00",
+      "credibility": 0.8
+    },
+    {
+      "channel": "wechat_pay",
+      "doc_type": "sdk",
+      "title": "wechatpay-apiv3/wechatpay-java（官方 Java SDK）",
+      "url": "https://github.com/wechatpay-apiv3/wechatpay-java",
+      "content": "微信支付官方 Java SDK（APIv3）：支持 JSAPI/APP/H5/Native 下单、回调通知验签与解密、退款、敏感信息加密、平台证书/微信支付公钥自动轮换。适合后端为 Java/Spring 的团队，是 v3 官方主力语言之一。",
+      "signals": {"stars": 1546, "notes": "GitHub API 2026-09-27 实测：1546 stars，Java，最后 push 2025-04-11，未归档，官方维护"},
+      "retrieved_at": "2026-09-27T21:15:00+08:00",
+      "credibility": 0.9
+    },
+    {
+      "channel": "wechat_pay",
+      "doc_type": "sdk",
+      "title": "wechatpay-apiv3/wechatpay-go（官方 Go SDK）",
+      "url": "https://github.com/wechatpay-apiv3/wechatpay-go",
+      "content": "微信支付官方 Go SDK（APIv3）：downloader 模块自动下载/轮换平台证书与微信支付公钥，core 模块提供请求签名/回调验签/解密，services 覆盖 payments/jsapi、refund 等全套 v3 接口。Go 后端首选。",
+      "signals": {"stars": 1284, "notes": "GitHub API 2026-09-27 实测：1284 stars，Go，最后 push 2025-07-07，未归档，官方维护"},
+      "retrieved_at": "2026-09-27T21:15:00+08:00",
+      "credibility": 0.9
+    },
+    {
+      "channel": "wechat_pay",
+      "doc_type": "sdk",
+      "title": "klover2/wechatpay-node-v3-ts（Node.js/TypeScript 社区主力）",
+      "url": "https://github.com/klover2/wechatpay-node-v3-ts",
+      "content": "微信支付 v3 的 Node/TypeScript 社区 SDK（npm 包 wechatpay-node-v3）：支持 v3 下单（JSAPI/Native/H5/APP）、回调查询、退款、转账、平台证书获取，内置 RSA 签名与 AES-256-GCM 解密。注意：微信支付官方组织（wechatpay-apiv3）没有官方 Node SDK（wechatpay-apiv3/wechatpay-nodejs-sdk 不存在），Node 生态以本库与其 JS 版为事实标准。",
+      "signals": {"stars": 772, "notes": "GitHub API 2026-09-27 实测：772 stars，TypeScript；GitHub 搜索 node wechatpay v3 类目星标第一"},
+      "retrieved_at": "2026-09-27T21:16:00+08:00",
+      "credibility": 0.7
+    },
+    {
+      "channel": "wechat_pay",
+      "doc_type": "sdk",
+      "title": "minibear2021/wechatpayv3（Python v3 社区库）",
+      "url": "https://github.com/minibear2021/wechatpayv3",
+      "content": "Python 微信支付 v3 封装库：微信回调验签、参数签名、敏感信息加密、平台证书自动更新，支持小程序/公众号/APP/H5/Native 支付与退款。对 Python 技术栈（如 FastAPI/Flask 后端）是 v3 直连的轻量选择；活跃维护（2026-09 仍有 push）。",
+      "signals": {"stars": 1338, "notes": "GitHub API 2026-09-27 实测：1338 stars，Python，最后 push 2026-09-11，未归档，活跃"},
+      "retrieved_at": "2026-09-27T21:15:00+08:00",
+      "credibility": 0.7
+    },
+    {
+      "channel": "wechat_pay",
+      "doc_type": "sdk",
+      "title": "wechatpy/wechatpy（Python 微信全家桶，含支付）",
+      "url": "https://github.com/wechatpy/wechatpy",
+      "content": "Python 微信开发全家桶 SDK（原 offu/wechatpy 组织迁移至 wechatpy/wechatpy）：覆盖公众号/小程序/企业微信消息、网页授权、素材及微信支付（v2 XML 体系完整、v3 支持逐步完善，支付部分以 v2 为主——v3 回调验签需自行扩展或配 wechatpayv3 库）。体量大、文档全，适合把支付嵌入更大微信自动化体系的场景。",
+      "signals": {"stars": 4307, "notes": "GitHub API 2026-09-27 实测：4307 stars，Python，最后 push 2026-05-19，未归档；offu 旧地址已 404 迁移"},
+      "retrieved_at": "2026-09-27T21:15:00+08:00",
+      "credibility": 0.7
+    },
+    {
+      "channel": "wechat_pay",
+      "doc_type": "sdk",
+      "title": "w7corp/easywechat（PHP 微信生态最流行 SDK）",
+      "url": "https://github.com/w7corp/easywechat",
+      "content": "PHP 生态星标最高的微信开发框架（原 w7-group 组织，现 w7corp）：模块化覆盖公众号/小程序/开放平台/企业微信/微信支付，支付模块支持 JSAPI 下单、v3 回调验签解密、退款、对账。PHP 后端事实标准。",
+      "signals": {"stars": 10366, "notes": "GitHub API 2026-09-27 实测：10366 stars，PHP，最后 push 2026-08-21，未归档，活跃"},
+      "retrieved_at": "2026-09-27T21:15:00+08:00",
+      "credibility": 0.7
+    },
+    {
+      "channel": "wechat_pay",
+      "doc_type": "sdk",
+      "title": "yansongda/pay（PHP 聚合支付，微信+支付宝）",
+      "url": "https://github.com/yansongda/pay",
+      "content": "PHP 聚合支付库（v3 版架构）：一套 API 同时支持微信支付（含 v3 JSAPI/小程序、回调验签、退款）与支付宝，支持多商户/多应用配置。若未来同时接支付宝（研报付费阅读常见需求），它是 PHP 侧最省事的选择。2026-09 仍活跃维护。",
+      "signals": {"stars": 5371, "notes": "GitHub API 2026-09-27 实测：5371 stars，PHP，最后 push 2026-09-11，未归档，活跃"},
+      "retrieved_at": "2026-09-27T21:15:00+08:00",
+      "credibility": 0.7
+    },
+    {
+      "channel": "wechat_pay",
+      "doc_type": "policy",
+      "title": "2018 微信官方公告：公众号/小程序 iOS 端虚拟支付限制（历史政策起点）",
+      "url": "https://maimai.cn/article/detail?fid=1331576093&efid=2VLwpOctdMS4ktMVa_WnpA",
+      "content": "2018 年微信官方发布《关于规范公众号内虚拟支付行为的公告》：基于 iOS 对开发者的管理规范，微信公众号内暂不支持 iOS 端虚拟支付业务；小程序同步受此约束，iOS 端小程序内的虚拟商品购买（会员、内容解锁等）被下线七年。这催生了「iOS 隐藏支付入口」「引导外部 H5 支付」等规避手法，均属平台明令打击的违规行为。该限制直到 2025-11 腾讯与苹果达成协议后才官方开放（见 iOS 端虚拟支付接入指引）。",
+      "signals": {"stars": 0, "notes": "微信公告原文在 mp.weixin.qq.com 难以直接检索，本条为三方转载（脉脉）；公告存在性多方一致，具体 URL 待核实官方原文"},
+      "retrieved_at": "2026-09-27T21:20:00+08:00",
+      "credibility": 0.6
+    },
+    {
+      "channel": "wechat_pay",
+      "doc_type": "policy",
+      "title": "苹果「小程序合作伙伴计划」与腾讯 15% 分成协议（2025-11）",
+      "url": "https://i.ifeng.com/c/8sY3qQFj1vK",
+      "content": "2025 年 11 月市场确认腾讯与苹果达成小程序分成协议，微信随即在 iOS 端小程序接入虚拟支付；苹果专门推出「小程序合作伙伴计划」（Mini Apps），将小程序纳入 iOS 体系，数字商品收入抽成从 30% 降至 15%（加入计划的开发者）。2024 年上半年腾讯小游戏总收入约 166 亿元、iOS 占比可观，是苹果松口与微信反击筹码的经济背景。对开发者含义：iOS 端虚拟内容终于有官方合规通道，代价是 Apple 佣金（个人档 12%/合作计划 15% 档）。2026 年 3 月前后监管与平台推动全终端统一接入。",
+      "signals": {"stars": 0, "notes": "凤凰网 2026-03-14 报道；15%/12% 数字与微信官方虚拟支付费率页（person.html iOS 12%）互证"},
+      "retrieved_at": "2026-09-27T21:20:00+08:00",
+      "credibility": 0.7
+    },
+    {
+      "channel": "wechat_pay",
+      "doc_type": "article",
+      "title": "个人开发者能开小程序虚拟支付了，先别急着喊「零门槛」（2026-09 分析）",
+      "url": "https://segmentfault.com/a/1320000046840000",
+      "content": "2026 年 9 月微信向个人主体开放小程序虚拟支付后的冷静分析：虚拟支付只解决「用户怎样付款、平台怎样结算」，不自动解决小程序备案、服务类目、内容资质、算法备案、隐私合规与具体业务是否允许个人经营。个人主体虚拟支付仅限「工具」类目、月支付限额 10 万元、不支持信息发布平台等电信业务资质类服务——内容阅读类产品以个人身份上线付费功能的实际门槛依然很高。",
+      "signals": {"stars": 0, "notes": "SegmentFault 2026-09-08 文章；具体文章 URL 猜测失败（404），结论与官方 person.html 条件一致；原文 URL 待核实"},
+      "retrieved_at": "2026-09-27T20:58:00+08:00",
+      "credibility": 0.6
+    },
+    {
+      "channel": "wechat_pay",
+      "doc_type": "article",
+      "title": "云开发+云调用打通微信支付（腾讯云/CloudBase 官方最佳实践）",
+      "url": "https://cloud.tencent.com/developer/article/1790513",
+      "content": "腾讯云官方最佳实践：云函数 makeOrder 收到小程序 wx.cloud.callFunction 调用后，用 wx-server-sdk 的 cloudPay.unifiedOrder 生成订单（无需证书与签名），支付回调直接送云函数；四步完成收款全流程（绑定商户号→下单云函数→支付→回调发货）。适合无自建服务器的轻量团队。注意：该模式仍要求先有微信支付商户号（企业/个体工商户资质），历史上云开发控制台曾提供小微商户在线开通入口，近年能力已向云托管 uniPay 迁移调整（待核实）。",
+      "signals": {"stars": 0, "notes": "腾讯云开发者社区+docs.cloudbase.net 双源；文章 id 为常见转载号，具体 URL 待核实；核心机制与官方 SDK 文档一致"},
+      "retrieved_at": "2026-09-27T21:12:00+08:00",
+      "credibility": 0.7
+    }
+  ]
+}

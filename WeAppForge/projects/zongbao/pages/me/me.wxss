@@ -1,0 +1,352 @@
+/* me.wxss — 我的：已购/收藏/赠品架（P1 上线）+ 书券/情报官卡/退款记录区块 + 书券兑换弹层 */
+.tabs {
+  display: flex;
+  gap: 12rpx;
+  padding: 12rpx 24rpx;
+}
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 14rpx 0;
+  border-radius: 999rpx;
+  font-size: 26rpx;
+  color: #4e5561;
+  background: #f0f2f5;
+}
+.tab.on {
+  background: #1e5eff;
+  color: #fff;
+  font-weight: 600;
+}
+.offline-hint {
+  margin: 0 24rpx 16rpx;
+  padding: 14rpx 24rpx;
+  border-radius: 12rpx;
+  background: #fdf3e7;
+  color: #b25e00;
+  font-size: 24rpx;
+}
+.section-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  margin-bottom: 16rpx;
+}
+.owned-item {
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f0f2f5;
+}
+.owned-item:last-child {
+  border-bottom: none;
+}
+.owned-title {
+  font-size: 28rpx;
+  font-weight: 600;
+}
+.owned-sub {
+  font-size: 22rpx;
+  color: #9aa1ab;
+  margin-top: 6rpx;
+}
+.empty-hint {
+  color: #9aa1ab;
+  font-size: 26rpx;
+  padding: 24rpx 0;
+}
+.about-text {
+  font-size: 26rpx;
+  color: #6b7178;
+  line-height: 1.7;
+}
+.about-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 0;
+  margin-top: 8rpx;
+  border-top: 1rpx solid #f0f2f5;
+  border-bottom: 1rpx solid #f0f2f5;
+}
+.about-entry-name {
+  font-size: 26rpx;
+  color: #1f2329;
+}
+.about-entry-arrow {
+  color: #b6bcc4;
+  font-size: 30rpx;
+}
+.about-text.sub {
+  margin-top: 12rpx;
+  font-size: 22rpx;
+  color: #b6bcc4;
+}
+.ver {
+  margin-top: 12rpx;
+  font-size: 22rpx;
+  color: #9aa1ab;
+}
+
+/* —— P1 书券卡 —— */
+.voucher-top {
+  display: flex;
+  gap: 24rpx;
+  align-items: flex-start;
+}
+.voucher-num {
+  font-size: 44rpx;
+  font-weight: 800;
+  color: #1e5eff;
+}
+.voucher-label {
+  font-size: 20rpx;
+  color: #9aa1ab;
+  margin-top: 4rpx;
+}
+.voucher-right {
+  flex: 1;
+}
+.voucher-progress-text {
+  font-size: 22rpx;
+  color: #6b7178;
+}
+.voucher-bar {
+  height: 12rpx;
+  background: #e4e9f2;
+  border-radius: 999rpx;
+  margin-top: 10rpx;
+  overflow: hidden;
+}
+.voucher-bar-in {
+  height: 100%;
+  background: #1e5eff;
+  border-radius: 999rpx;
+}
+.voucher-redeem {
+  margin-top: 16rpx;
+  font-size: 24rpx;
+  color: #1e5eff;
+  border-color: #1e5eff;
+  border-radius: 999rpx;
+  padding: 2rpx 8rpx;
+}
+.voucher-redeem.off {
+  color: #9aa1ab;
+  border-color: #d5dae2;
+}
+.voucher-ledger {
+  margin-top: 20rpx;
+  border-top: 1rpx solid #f0f2f5;
+  padding-top: 16rpx;
+}
+.ledger-title {
+  font-size: 24rpx;
+  font-weight: 600;
+  margin-bottom: 8rpx;
+}
+.ledger-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10rpx 0;
+  font-size: 22rpx;
+  color: #6b7178;
+}
+.ledger-amt.pos {
+  color: #07c160;
+}
+.ledger-amt.neg {
+  color: #ff6010;
+}
+
+/* —— P1 情报官卡（v1.2：等级徽章+三档梯队） —— */
+.invite-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.invite-badges {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+.buddy-badge {
+  font-size: 20rpx;
+  color: #b25e00;
+  background: #fdf3e7;
+  border-radius: 999rpx;
+  padding: 4rpx 16rpx;
+}
+.level-badge {
+  font-size: 20rpx;
+  color: #9aa1ab;
+  background: #f0f2f5;
+  border-radius: 999rpx;
+  padding: 4rpx 16rpx;
+}
+.level-badge.lv-L1 {
+  color: #1e5eff;
+  background: #f0f5ff;
+}
+.level-badge.lv-L2 {
+  color: #7a3df0;
+  background: #f4eeff;
+}
+.level-badge.lv-L3 {
+  color: #b25e00;
+  background: #fdf3e7;
+}
+.invite-progress-text {
+  font-size: 26rpx;
+  font-weight: 600;
+}
+.invite-bar {
+  height: 12rpx;
+  background: #e4e9f2;
+  border-radius: 999rpx;
+  margin-top: 12rpx;
+  overflow: hidden;
+}
+.invite-bar-in {
+  height: 100%;
+  background: #ff6010;
+  border-radius: 999rpx;
+}
+.invite-ladder {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 14rpx;
+}
+.ladder-step {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  padding: 10rpx 12rpx;
+  border-radius: 10rpx;
+  background: #f5f6f8;
+  color: #9aa1ab;
+  font-size: 20rpx;
+}
+.ladder-step.on {
+  background: #f0f5ff;
+  color: #1e5eff;
+  font-weight: 600;
+}
+.ladder-mark {
+  font-size: 22rpx;
+}
+.ladder-label {
+  flex: 1;
+}
+.ladder-th {
+  color: inherit;
+  opacity: 0.8;
+}
+.invite-hint {
+  font-size: 22rpx;
+  color: #6b7178;
+  line-height: 1.7;
+  margin-top: 10rpx;
+}
+.invitee-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 22rpx;
+  color: #9aa1ab;
+  padding: 8rpx 0;
+}
+
+/* —— P1 退款记录 —— */
+.refund-item {
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #f0f2f5;
+}
+.refund-item:last-child {
+  border-bottom: none;
+}
+.refund-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.refund-title {
+  font-size: 26rpx;
+  font-weight: 600;
+  flex: 1;
+}
+.refund-amt {
+  font-size: 26rpx;
+  color: #ff6010;
+  font-weight: 700;
+}
+.refund-sub {
+  font-size: 20rpx;
+  color: #9aa1ab;
+  margin-top: 6rpx;
+}
+
+/* —— P1 书券兑换弹层 —— */
+.redeem-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 20, 30, 0.5);
+  z-index: 40;
+  display: flex;
+  align-items: flex-end;
+}
+.redeem-sheet {
+  width: 100%;
+  max-height: 70vh;
+  background: #fff;
+  border-radius: 24rpx 24rpx 0 0;
+  padding: 32rpx 32rpx calc(28rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+.redeem-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 16rpx;
+}
+.redeem-list {
+  max-height: 48vh;
+}
+.redeem-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 16rpx;
+  border: 1rpx solid #f0f2f5;
+  border-radius: 12rpx;
+  margin-bottom: 12rpx;
+}
+.redeem-item.on {
+  border-color: #1e5eff;
+  background: #f0f5ff;
+}
+.redeem-item-title {
+  flex: 1;
+  font-size: 26rpx;
+}
+.redeem-item-price {
+  font-size: 24rpx;
+  color: #9aa1ab;
+}
+.redeem-actions {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 16rpx;
+}
+.redeem-btn {
+  flex: 1;
+  font-size: 26rpx;
+  border-radius: 999rpx;
+  color: #1e5eff;
+  border-color: #1e5eff;
+}
+.redeem-btn.primary {
+  flex: 1.4;
+  background: #1e5eff;
+  color: #fff;
+}

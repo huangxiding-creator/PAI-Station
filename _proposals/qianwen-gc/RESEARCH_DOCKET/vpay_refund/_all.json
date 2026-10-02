@@ -1,0 +1,182 @@
+[
+  {
+    "channel": "vpay_refund",
+    "doc_type": "official_doc",
+    "title": "虚拟支付：企业、个体户（主文档：开通条件/结算/iOS/服务器API全表/消息推送）",
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/platform-capabilities/business-capabilities/virtual-payment.html",
+    "content": "官方虚拟支付总纲。适用Android/iOS/鸿蒙/Windows全终端，iOS需微信客户端8.0.68+。开通条件：已认证小程序+主体为企业/事业单位/个体工商户，开通后生成新的微信支付商户号（二级商户号）。结算T+3（订单资金冻结3日后分账）；iOS订单由Apple结算，自然月结束后45-60天结算，扣Apple佣金后划转腾讯再转开发者。交易订单模块可查订单并退款：支付时间180天内退款平台退还手续费，超180天不退手续费。客户端API为wx.requestVirtualPayment，设备路由：Android/鸿蒙/Windows走微信支付，iOS走Apple支付（Apple支付无沙箱仅现网）。iOS下单条件：iOS 15+、微信8.0.68+、最低支付金额1元、仅中国大陆App Store账户。服务器API全表：代币类query_user_balance/currency_pay/cancel_currency_pay(代币支付退款)/present_currency；道具类start_upload_goods/query_upload_goods/start_publish_goods/query_publish_goods；订单类query_order/refund_order(启动订单退款任务)/notify_provide_goods/start_download_order/query_download_order；账单download_bill/download_ios_settlement_bill；资金create_withdraw_order/query_withdraw_order/query_biz_balance；广告金6个；投诉管控get_complaint_list等9个。消息推送7类：xpay_goods_deliver_notify(发货)/xpay_coin_pay_notify(代币支付)/xpay_refund_notify(退款完成)/xpay_complaint_notify(投诉)/xpay_wxpay_callback_notify(风控事件：尽职调查due_diligence与管控流水punishment)/xpay_subscribe_ios_refund_query_notify(iOS退款问询)。退款推送字段含RefundFee(退款金额分)/RetCode/WxRefundId/MchRefundId/RetryTimes(2/4/8/16最多15次)。iOS退款问询机制：Apple支付不支持开发者主动向用户发起退款；用户在App Store申请后Apple发起重复3次问询，开发者应答result_code 0-放过建议退款/1-拦截拒绝退款+evidence必填；连续3次3秒内未应答则平台回「不确定」交Apple裁决。签名：paySig=hmac_sha256(appKey, uri+'&'+post_body)，用户态signature=hmac_sha256(sessionKey, post_body)。iOS额外开通条件：需配置小程序简称（Apple display name要求）。",
+    "signals": {"refund_api": "refund_order+cancel_currency_pay", "ios_settlement": "45-60天", "fee_return_window": "180天", "ios_refund": "开发者不可主动退款仅问询应答", "min_ios": "1元"},
+    "retrieved_at": "2026-09-28",
+    "credibility": 0.9
+  },
+  {
+    "channel": "vpay_refund",
+    "doc_type": "official_doc",
+    "title": "虚拟支付：个人（2026年个人主体开放：月限10万/工具类目/Android 1%/iOS 12%）",
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/platform-capabilities/business-capabilities/virtual-payment/person.html",
+    "content": "个人主体虚拟支付官方接入指引（含Agent自动接入方式：云开发/提示词/SKILL三种）。开通条件：小程序主体为个人、开发者持居民身份证、服务类目含「工具」、已完成认证与备案；限额：全终端月支付限额10万元；不支持需办理电信业务相关资质的服务（电子邮件、语音信箱、储存转发、信息发布平台、信息搜索查询等）。费率：Android等1%（腾讯技术服务费）、iOS 12%（Apple佣金）。开通流程：MP平台【支付与交易-虚拟支付】→开通→填个人资料（身份信息/提现账户/支付管理员）→审核一般5分钟内→扫码签约。开通后记AppID/OfferID/现网AppKey，在【道具管理】创建商品（道具）记道具ID和价格并发布；iOS需配置小程序简称+开通苹果IAP。开发接入：mode固定short_series_goods（道具直购），signData含offerId/buyQuantity/env=0/currencyType=CNY/productId/goodsPrice(分，需与后台道具价格一致)/outTradeNo(必填唯一，如T+时间戳+随机数)/attach。退款结算：Android开发者主动退款（MP后台【虚拟支付→交易订单】操作或refund_order接口，完成后收xpay_refund_notify推送）；iOS开发者无法主动退款，用户向App Store申请由Apple决定，成功收xpay_refund_notify。结算：Android T+3、iOS约45-60天；发票次月5号后申请开上月腾讯技术服务费发票。Agent注意事项：只做道具直购不引入代币；outTradeNo每次重新生成8-32位不能以下划线开头；金额单位全程用分不换算；env固定0。部署清单要求上线后小额真单验证支付→推送→发货→账单金额一致。",
+    "signals": {"individual_entity": true, "monthly_limit": "10万元", "category": "工具", "rate_android": "1%", "rate_ios": "12%", "mode": "short_series_goods固定", "ios_refund": "开发者无法主动退款"},
+    "retrieved_at": "2026-09-28",
+    "credibility": 0.9
+  },
+  {
+    "channel": "vpay_refund",
+    "doc_type": "official_doc",
+    "title": "启动订单退款任务 refund_order（/xpay/refund_order 全参数——部分退款实证）",
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/server/API/VirtualPayment/api_refund_order.html",
+    "content": "虚拟支付现金单退款API（接口英文名refund_order）。POST https://api.weixin.qq.com/xpay/refund_order?access_token=ACCESS_TOKEN&pay_sig=PAY_SIG，仅服务器端调用，不支持云调用，支持第三方平台代调用（权限集id 157）。规则：可对支付时间365天以内的订单发起退款；支付时间180天以内退款平台退还手续费，超过180天不退还手续费；此接口只是启动退款任务，需调用query_order查询退款单状态至「退款完成」才是最终成功。请求体：openid(必填)、order_id(下单时OutTradeNo，与wx_order_id二选一)、wx_order_id(微信侧单号)、refund_order_id(必填，本次退款单号，长度[8,32]，仅字母数字下划线减号)、left_fee(必填，当前单剩余可退金额单位分，通过query_order查到)、refund_fee(必填，本次退款金额单位分，需(0,left_fee]——即支持任意比例部分退款)、biz_meta(必填商家自定义≤1024，query_order原样返回)、refund_reason(必填枚举：0暂无描述/1产品问题影响使用或效果不佳/2售后问题无法满足需求/3意愿问题用户主动退款/4价格问题/5其他原因)、req_from(必填枚举：1人工客服退款/2用户自己发起退款流程/3其它)、env(必填0正式1沙箱)。返回refund_order_id/refund_wx_order_id/pay_order_id/pay_wx_order_id。错误码：268490001 openid错误；268490005订单已经通过cancel_currency_pay退款不支持再退；268490006代币退款/支付操作金额不足；268490013禁止对核销状态的单进行退款；268490014退款操作进行中可同参数重试；268490015频率限制；268490016退款left_fee字段与实际不符须query_order确认。",
+    "signals": {"refund_api_exists": true, "partial_refund": "refund_fee∈(0,left_fee]单位分", "window": "365天", "fee_return": "180天内退手续费", "async": "需query_order轮询", "reason_enum": "0-5", "req_from_enum": "1-3"},
+    "retrieved_at": "2026-09-28",
+    "credibility": 0.9
+  },
+  {
+    "channel": "vpay_refund",
+    "doc_type": "official_doc",
+    "title": "代币支付退款 cancel_currency_pay（/xpay/cancel_currency_pay）",
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/server/API/VirtualPayment/api_cancel_currency_pay.html",
+    "content": "代币支付退款API（接口英文名cancel_currency_pay），为currency_pay（扣减代币）接口的逆操作，用于代币消费场景的退款。POST https://api.weixin.qq.com/xpay/cancel_currency_pay?access_token=ACCESS_TOKEN&signature=SIGNATURE&pay_sig=PAY_SIG（需用户态签名+支付签名双签）。请求体：openid(必填)、env(必填)、user_ip(必填)、pay_order_id(必填，代币支付currency_pay时传的order_id)、order_id(必填，本次退款单的单号)、amount(必填，退款金额)。返回errcode/errmsg/order_id(退款订单号)。错误码含268490006代币退款/支付操作金额不足等。适用场景：用户用代币购买服务后需退款时，把代币退回用户余额（非现金退款）；现金充值单的退款须走refund_order。对总包千问类按次解锁产品：若采用代币模式，批评退赔可退代币（用户余额内循环），现金退原路须refund_order。",
+    "signals": {"coin_refund": true, "cash_refund": "须走refund_order", "dual_signature": "signature+pay_sig"},
+    "retrieved_at": "2026-09-28",
+    "credibility": 0.9
+  },
+  {
+    "channel": "vpay_refund",
+    "doc_type": "official_doc",
+    "title": "查询创建的订单 query_order（/xpay/query_order——left_fee/退款状态/技术服务费字段）",
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/server/API/VirtualPayment/api_query_order.html",
+    "content": "查询虚拟支付现金单API（接口英文名query_order），POST /xpay/query_order带pay_sig签名。请求openid+order_id/wx_order_id+env。返回字段含：status(订单状态枚举0初始化/1创建成功/2已支付待发货/3发货中/4已发货/5订单已经退款/6已关闭/7退款失败/8用户退款完成/9回收广告金完成/10分账回退完成)、order_type(0普通虚拟支付/1普通退款/7苹果iOS支付/8苹果iOS退款)、order_fee(订单金额分)、paid_fee(用户支付金额)、refund_fee(退款单时表示退款金额分)、left_fee(支付单类型时表示此单经过退款还剩余的金额，单位分——部分退款的剩余可退判据)、paid_time、provide_time、biz_meta、biz_type(0短剧)、env_type、token(米大师token)、wx_order_id、channel_order_id(用户微信支付详情页商户单号)、wxpay_order_id(微信支付交易单号)、sett_time(结算时间)、sett_state(0未开始/1结算中/2结算成功/3待结算)、platform_fee_fen(虚拟支付技术服务费分，sett_state=2时返回——可用于每单费率核算)、cps_fee_fen(公众号/视频号平台cps服务费)。作为refund_order的配套：发起退款前先查left_fee，发起后轮询本接口至退款完成。",
+    "signals": {"left_fee": "剩余可退金额分", "refund_status_enum": "5已退款/7退款失败/8用户退款完成", "order_type": "1普通退款/8苹果iOS退款", "platform_fee_fen": "每单技术服务费可见"},
+    "retrieved_at": "2026-09-28",
+    "credibility": 0.9
+  },
+  {
+    "channel": "vpay_refund",
+    "doc_type": "official_doc",
+    "title": "wx.requestVirtualPayment 客户端API（mode枚举/short_series_goods参数/错误码）",
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/api/payment/wx.requestVirtualPayment.html",
+    "content": "发起米大师虚拟支付，基础库2.19.2+，不支持Promise风格与小程序插件。signData以string传递，结构：offerId(必填，mp-支付基础配置offerid)、buyQuantity(必填购买数量)、env(0正式1沙箱默认0)、currencyType(必填，仅CNY)、productId(道具ID，仅mode=short_series_goods时必填)、goodsPrice(道具单价分，仅short_series_goods必填，用于校验与后台道具价格一致，避免展示价与实际价不一致导致投诉)、activitySellingPrice(道具优惠价分，非必填，需与goodsPrice一起传，传入后即实际下单价格——支持优惠券/积分低价下单)、outTradeNo(必填业务订单号，每单号只能用一次，8-32字符，数字大小写字母_-|*@，不能下划线开头)、attach(必填透传，发货通知时透传)。mode合法值：short_series_goods(道具直购)、short_series_coin(代币充值)。paySig支付签名+signature用户态签名必填。错误码：1001参数错误、-1支付失败、-2支付取消、-4风控拦截、-5开通签约结果未知、-15001参数错误、-15002 outTradeNo重复、-15004币种错误、-15005/6签名错误、-15007 session_key过期、-15008二级商户进件未完成、-15010道具productId未发布、-15013 goodsPrice道具价格错误、-15014道具/代币发布未生效(约10分钟)、-15016 signData格式问题、-15017商家涉嫌违规收款功能已被限制、-15018道具/代币审核不通过、-15019商户受限、-15020操作过快、-15021小程序被限频交易。",
+    "signals": {"mode_enum": "short_series_goods|short_series_coin", "goodsPrice_unit": "分", "discount_field": "activitySellingPrice", "risk_error": "-4风控拦截/-15017违规收款受限/-15021限频"},
+    "retrieved_at": "2026-09-28",
+    "credibility": 0.9
+  },
+  {
+    "channel": "vpay_refund",
+    "doc_type": "official_doc",
+    "title": "批量上传道具 start_upload_goods（/xpay/start_upload_goods——道具定价约束）",
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/server/API/VirtualPayment/api_start_upload_goods.html",
+    "content": "道具上传API（接口英文名start_upload_goods），启动批量上传道具任务，一次仅支持上传一个道具，多个道具需分多次请求；配套start_publish_goods发布。POST /xpay/start_upload_goods?access_token&pay_sig。请求体upload_item数组：id(必填道具id，长度(0,20]，仅字母数字下划线减号，中文算一个字符)、name(必填道具名称长度(0,20])、price(必填道具单价单位分，需要大于0——Android端道具无最低金额档位限制，1分亦可定价；但iOS端Apple支付最低支付金额1元)、remark(必填道具备注(0,1024])、item_url(必填道具图片url，仅支持jpg/png等格式)、env。个人主体路径：MP后台【道具管理】创建道具（记道具ID和价格）并发布。对总包千问：可定价100分(1元)的单次解锁道具；道具发布后需等待几分钟到半小时全平台同步，期间下单被COIN_OR_PRODUCT_ID_CREATED_IN_RECENTLY拒绝。",
+    "signals": {"price_rule": "单位分，>0", "id_len": "(0,20]", "publish_delay": "几分钟到半小时"},
+    "retrieved_at": "2026-09-28",
+    "credibility": 0.9
+  },
+  {
+    "channel": "vpay_refund",
+    "doc_type": "official_doc",
+    "title": "技术服务费（官方费率总表：工具类Android当前1%/iOS当前12%，微短剧Android 5%）",
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/platform-capabilities/business-capabilities/virtual-payment/devplan.html",
+    "content": "虚拟支付技术服务费官方费率总览，按行业类目和设备类型划分。一、工具、社交、深度合成、文娱（非微短剧、互动微短剧、网络小说）及其他类目：Android/鸿蒙/Windows主动支付标准费率10%、当前生效费率1%；会员订阅(自动续费)首笔1%(用户纯签约后首笔扣费按优惠1%)、第二笔起恢复标准10%。iOS标准费率17%(含12% Apple佣金)、当前生效费率12%(12%全部为Apple佣金)。二、文娱(微短剧、互动微短剧、网络小说)类目：Android主动支付视频号挂载10%、非视频号挂载(广告等)当前生效5%；会员订阅10%；iOS同17%标准/12%当前生效。要点：当前生效费率1%远低于标准10%，属优惠期费率；iOS 12%全为Apple佣金、腾讯不另收。query_order返回platform_fee_fen可逐单核对实际计费。",
+    "signals": {"android_current_rate": "1%(标准10%)", "ios_current_rate": "12%全为Apple佣金(标准17%)", "microdrama_android": "非视频号挂载5%", "subscription": "首笔1%第二笔起10%", "promo_nature": "当前生效=优惠费率"},
+    "retrieved_at": "2026-09-28",
+    "credibility": 0.9
+  },
+  {
+    "channel": "vpay_refund",
+    "doc_type": "official_doc",
+    "title": "虚拟支付业务运营指南（7形态判定/管控类目/豁免/支付闭环红线）",
+    "url": "https://developers.weixin.qq.com/community/minihome/doc/00002cf077cd4810fee42f4b865c01",
+    "content": "官方运营指南（社区官方帖，更新于2026-09中旬）。核心：小程序内虚拟商品（虚拟代币、解锁功能、订阅内容、付费功能、打赏、购买虚拟礼物等）购买和支付均需接入小程序虚拟支付；不得引导至app、公众号、h5、个人号、网站完成支付（外链规避红线原文）。典型虚拟服务形态七类须全终端接入：一音乐/音频/播客；二电影/剧集/短视频/短剧/综艺；三在线小说/漫画；四在线教育/视频课程；五游戏工具/游戏商城/电竞陪玩；六陌生人交友/相亲社交；七摄影修图/文档编辑等内容生产与处理效率工具场景（帮助用户完成图片美化、AI生成与文档编辑排版等创作工作——AI问答工具类归此形态）。管控：若小程序仅含虚拟类目，平台将关闭该小程序在安卓及其余非iOS系统的普通微信支付能力；实际提供非虚拟业务（实物/线下交易）可按实际经营业务申请其他类目，限制自动解除。混合型服务（虚拟+实物，如在线课程赠教材、AI写真赠冲印照片）将被认定为虚拟支付，建议拆分为两笔交易分别处理。豁免：线上问诊（仅限合法资质医疗机构/医生的实时远程诊疗）及法律咨询（仅限持照律师/律所实时专业咨询）不属于虚拟支付管控范畴。",
+    "signals": {"red_line": "不得引导至app/公众号/h5/个人号/网站支付", "form7_ai": "AI生成工具属典型形态七", "android_normal_pay_closed": "仅虚拟类目则关普通支付", "exemption": "线上问诊/法律咨询豁免", "mixed": "虚拟+实物须拆两笔"},
+    "retrieved_at": "2026-09-28",
+    "credibility": 0.9
+  },
+  {
+    "channel": "vpay_refund",
+    "doc_type": "official_doc",
+    "title": "微信支付v3申请退款（普通商户 /v3/refund/domestic/refunds——标准退款API对照）",
+    "url": "https://pay.weixin.qq.com/doc/v3/merchant/4013071036",
+    "content": "微信支付普通商户标准退款API（更新2025-01-09）。支持商户：【普通商户】。POST /v3/refund/domestic/refunds，域名api.mch.weixin.qq.com。交易完成后一年内（支付成功时间+365天）可将支付金额全部或部分原路退还用户。注意：一笔订单最多支持50次部分退款（多次部分退款更换商户退款单号并间隔1分钟）；重试务必用原商户退款单号避免重复退款资金损失；同一商户号成功调用频率150QPS、失败6QPS；受理成功仅表示退款单受理，结果以退款结果通知与查询退款为准；一个月前的订单退款报频率限制时调整时间用原参数重试。参数：transaction_id与out_trade_no二选一、out_refund_no(商户退款单号≤64字节唯一)、reason(退款原因≤80字节，当订单退款金额小于等于1元且为部分退款时退款原因不会在消息中体现)、notify_url、funds_account(AVAILABLE/UNSETTLED)、amount{refund(必填退款金额最小单位整数不能超原订单支付金额), from[出资账户]}、goods_detail。适用于普通商户直接下单的JSAPI/APP/H5/Native/小程序支付订单。虚拟支付订单走米大师二级商户号体系（access_token+pay_sig签名），官方虚拟支付文档未将本API列为xpay订单退款路径——虚拟支付订单退款须用/xpay/refund_order。",
+    "signals": {"standard_refund_api": true, "partial": "最多50次部分退款", "window": "365天", "qps": "150成功/6失败", "one_yuan_note": "≤1元部分退款不展示退款原因", "xpay_applicability": "官方未文档化支持用于xpay订单"},
+    "retrieved_at": "2026-09-28",
+    "credibility": 0.9
+  },
+  {
+    "channel": "vpay_refund",
+    "doc_type": "official_doc",
+    "title": "使用AI工具快速接入小程序虚拟支付（云开发官方指南——退款/结算/费率/iOS要点汇总）",
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/wxcloudservice/wxcloud/guide/wechatpay/ai-virtualpayl-person",
+    "content": "官方云开发版全链路接入指南（个人与企业均覆盖）。虚拟支付定义：微信针对虚拟商品交易开放的支付能力，面向个人与企业等主体小程序，提供道具直购、发货推送、查单、退款等完整闭环。前提：主体认证（个人/企业/个体户均可）+服务类目覆盖所售虚拟商品类型+认证备案+云开发环境。个人主体开通前注意：服务类目需含「工具」，全终端月支付限额10万元。关键参数：AppID/OfferID/现网AppKey(/沙箱AppKey)。沙箱限制：开发版/体验版真机预览被PAYMENT_ILLEGAL_IN_SANDBOX拦截，真实联调用现网。道具发布后等待几分钟到半小时同步，期间COIN_OR_PRODUCT_ID_CREATED_IN_RECENTLY拒单。iOS支付额外条件：配置小程序简称+开通苹果IAP+微信8.0.68+。7类回调事件清单：xpay_goods_deliver_notify(核心)/xpay_coin_pay_notify/xpay_refund_notify(退款通知：更新订单状态、回收道具)/xpay_complaint_notify/xpay_subscribe_signing_result_notify/xpay_subscribe_pay_fail_notify/xpay_subscribe_ios_refund_query_notify(iOS订阅退款问询「3秒内」响应result_code 0建议退款/1拒绝退款，否则Apple连问3次后标「不确定」)。退款结算费率专节：iOS端虚拟支付走Apple IAP链路资金订单由Apple掌控——Android开发者主动退款调用官方服务端退款接口发起；iOS开发者无法主动退款，用户到App Store→订阅/购买记录申请，Apple审批通过后推送退款事件，回调处理与Android一致(回收道具+更新订单状态)，建议对iOS订单隐藏退款按钮改为提示文案引导用户去App Store申请。费率：Android T+3、1%(腾讯技术服务费)；iOS约45-60天、12%(Apple佣金)；支付时间180天内退款平台退还手续费；发票次月5号后申请上月腾讯技术服务费发票。",
+    "signals": {"closed_loop": true, "ios_hide_refund_button": "官方建议", "callback_events": 7, "sandbox_trap": "PAYMENT_ILLEGAL_IN_SANDBOX", "refund_difference": "Android主动/iOS被动"},
+    "retrieved_at": "2026-09-28",
+    "credibility": 0.9
+  },
+  {
+    "channel": "vpay_refund",
+    "doc_type": "official_doc",
+    "title": "工作流实现微信支付退款场景（云开发工作流——标准微信支付退款通道对照）",
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/wxcloudservice/wxcloud/guide/wechatpay/refund.html",
+    "content": "云开发工作流对接微信支付退款接口指南（针对标准微信支付，非xpay虚拟支付）。步骤：云开发控制台-云函数-新建-工作流，选择「使用微信支付申请退款」模板部署；在「申请退款」节点完成API配置（入参manualTrigger.output）；支付通知回调可配置为另一工作流或HTTP服务URL（可在回调中修改云数据库订单状态）；退款可从小程序端或云函数内发起调用（wx-server-sdk cloud.callFunction，out_refund_no商户内部退款单号、refund退款金额等）。定位说明：该工作流走的是普通商户v3退款体系（凭证+API实例），与虚拟支付（xpay体系，access_token+pay_sig）是两条独立通道；虚拟支付退款在云开发体系下由回调云函数+xpay refund_order实现（参见ai-virtualpayl-person指南），不使用本工作流模板。",
+    "signals": {"standard_channel": "普通商户v3退款", "separate_from_xpay": true},
+    "retrieved_at": "2026-09-28",
+    "credibility": 0.9
+  },
+  {
+    "channel": "vpay_refund",
+    "doc_type": "official_doc",
+    "title": "小程序虚拟支付回调处理（云开发——iOS退款问询3次×3秒机制细节）",
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/wxcloudservice/wxcloud/guide/wechatpay/virtual-payment-callback.html",
+    "content": "虚拟支付消息推送接收部署指南。回调通用结构：ToUserName/FromUserName(固定微信官方openid)/CreateTime/MsgType=event/Event/OpenId/OutTradeNo/Env(0现网1沙箱)。iOS订阅退款问询事件xpay_subscribe_ios_refund_query_notify专属字段：refund_time(问询时间Unix时间戳)/order_time(原订单交易时间)/channel_bill(Apple支付票据号)/bundleid/product_id/p_count(道具/代币数量)/refund_request_reason(用户请求退款原因)/provide_status(发货状态0未发货1已发货2发货中)/pay_order_id。特别说明：Apple会连续发起3次退款问询；开发者必须在3秒内返回响应；如果3次问询均超时未应答，微信将向Apple返回「不确定」，退款决定权完全由Apple处理；开发者响应仅作参考，最终退款决定由Apple做出；Apple最终批准退款后通过xpay_refund_notify事件通知开发者。云函数处理范式：switch(Event)分发7类事件，xpay_refund_notify处理退款，xpay_subscribe_ios_refund_query_notify需3秒内返回特殊格式(result_code+result_info+evidence)。",
+    "signals": {"ios_inquiry": "3次×3秒", "timeout_consequence": "回不确定交Apple裁决", "evidence_required": true},
+    "retrieved_at": "2026-09-28",
+    "credibility": 0.9
+  },
+  {
+    "channel": "vpay_refund",
+    "doc_type": "forum",
+    "title": "微信小程序虚拟支付自动处理投诉与自动退款（第三方工具实操：退款金额可输入至剩余可退）",
+    "url": "https://juejin.cn/post/7663374871138058276",
+    "content": "第三方工具作者「悟空码字」2026-07-18实操文（forum级佐证）。背景：现在不管Android/鸿蒙/Windows还是iOS端，小程序经营虚拟商品不能直接走普通微信支付，必须接入虚拟支付；有订单就有投诉，投诉处理不及时/超时可能受处罚——例如调整结算周期、关闭自动提现等，提交申诉一周才过。工具功能实证：收到虚拟支付投诉单可自动回复；开启自动退款则收到投诉单后自动退款并将投诉单自动改为已处理完成；「提交退款」界面可见该投诉单对应订单金额、实付金额、剩余可退款金额，输入退款金额、选择退款原因和退款来源、提交申请即完成退款，用户收到虚拟支付微信退款到账通知——印证退款金额可自由输入（≤剩余可退金额），refund_reason/refund_from下拉即官方枚举。另含商户管控查询功能（对应xpay/query_punishment_reasons），可了解被管控能力、原因、解脱路径。",
+    "signals": {"partial_refund_practice": "输入退款金额≤剩余可退", "complaint_penalty": "调整结算周期/关闭自动提现", "complaint_auto_refund": "可行"},
+    "retrieved_at": "2026-09-28",
+    "credibility": 0.6
+  },
+  {
+    "channel": "vpay_refund",
+    "doc_type": "forum",
+    "title": "微信开放社区提问：/xpay/refund_order 接口报错（left_fee已确认仍报失效）",
+    "url": "https://developers.weixin.qq.com/community/develop/doc/000000caa5c5f059c2c4678a166400",
+    "content": "开发者社区提问（forum级，正文需JS渲染，要点来自检索摘要）：开发者调用/xpay/refund_order退款接口100%报错，提问者已通过query_order确认订单存在left_fee=300（剩余可退款300分），但退款仍报「失效或不适用于当前情形」类错误。社区相关排障共识：部分退款前必须query_order查最新left_fee；请求的refund_fee不得超过left_fee；订单若已被cancel_currency_pay退过则报268490005；核销状态订单禁退（268490013）；退款进行中须同参数重试（268490014）；有频率限制（268490015）。该帖印证：refund_order存在实操坑（参数/状态校验严格），接入时需以query_order实时数据为准并处理重试。",
+    "signals": {"left_fee_confirmed": 300, "pitfall": "严格校验需query_order实时值", "retry_semantics": "268490014同参数重试"},
+    "retrieved_at": "2026-09-28",
+    "credibility": 0.6
+  },
+  {
+    "channel": "vpay_refund",
+    "doc_type": "news",
+    "title": "Bloomberg: Apple, Tencent Agree to 15% Cut of WeChat Mini App Purchases（iOS虚拟支付破冰协议）",
+    "url": "https://www.bloomberg.com/news/articles/2025-11-13/apple-and-tencent-agree-to-15-fee-on-wechat-mini-game-purchases",
+    "content": "彭博社2025-11-13报道（news级）：腾讯与苹果达成协议，苹果将处理微信小游戏（及小程序）内购支付并抽取15%费用，结束多年博弈。中文媒体跟进（新浪财经2025-11-13/14、网易2025-11-14、凤凰科技2025-11-14、IT之家2025-11-15）：苹果官网推出「小程序合作伙伴计划」(Mini Apps Partner Program)，对中国内地iOS/iPadOS上托管的小程序/小游戏内购，符合条件开发者佣金率从常规30%降至15%；2025-11-14微信官方公告小程序将在iOS端支持接入虚拟支付。注意费率口径演变：2025-11新闻口径为Apple 15%；2026年当前微信官方技术服务费文档口径为iOS当前生效费率12%（12%全部为Apple佣金，标准费率17%含12% Apple佣金）——以官方文档12%为当前生效值，15%为协议公布期口径。此前2017年起iOS小程序虚拟支付被关闭约八年，此次为破冰。",
+    "signals": {"apple_deal_date": "2025-11-13", "news_rate": "15%", "official_current_rate": "12%(2026文档)", "program": "小程序合作伙伴计划"},
+    "retrieved_at": "2026-09-28",
+    "credibility": 0.6
+  },
+  {
+    "channel": "vpay_refund",
+    "doc_type": "news",
+    "title": "火炬树/知乎等：微信小程序开放个人收款（个人主体虚拟支付2026-09落地佐证）",
+    "url": "https://torchtree.com/",
+    "content": "第三方科技媒体报道群（news级，2026-09-01~09-19期间密集出现）：torchtree《微信小程序开放个人收款：虚拟支付的条件、费率与接入要点》(2026-09-03)、知乎专栏「微信终于开放个人虚拟支付了，独立开发者福音」(2026-09-01)、掘金开发者实测上线分享(2026-09-19)、CSDN《2026最新个人小程序虚拟支付完整开通+接入实战教程》。交叉印证官方person.html文档要点：个人开发者无需营业执照即可收取虚拟商品费用；开通条件=个人主体+居民身份证+服务类目含「工具」+认证备案；月支付限额10万元；Android约1%/iOS约12%；后台可配置交易订单、资金管理、代币、道具及OfferID/沙箱等参数。官方文档与多方独立报道一致，可确认个人主体虚拟支付于2026年9月正式落地。",
+    "signals": {"individual_open_date": "2026-09", "no_license_needed": true, "cross_validated": "官方文档+多方报道一致"},
+    "retrieved_at": "2026-09-28",
+    "credibility": 0.6
+  },
+  {
+    "channel": "vpay_refund",
+    "doc_type": "forum",
+    "title": "uni-app uni.requestVirtualPayment 文档（第三方跨端封装对照：米大师/短剧类目历史约束）",
+    "url": "https://uniapp.dcloud.net.cn/api/plugins/virtualPayment.html",
+    "content": "DCloud uni-app官方API文档（forum级第三方）。平台差异：仅微信小程序支持uni.requestVirtualPayment。历史约束：微信规定上架短剧类目的小程序必须使用微信小程序虚拟支付，不可以使用原先的微信支付（2026年已扩展至个人主体工具类目与全形态虚拟商品）。signData结构与微信官方一致：offerId(米大师侧申请的应用id)/buyQuantity/currencyType=CNY/outTradeNo(8-32字符)/attach/productId与goodsPrice(分)仅mode=short_series_goods必填/env(0米大师正式1沙箱)。mode合法值与微信一致：short_series_goods道具直购/short_series_coin代币充值。佐证价值：虚拟支付底层为腾讯米大师(Midas)计费体系，第三方生态已完整适配；代币充值示例buyQuantity为购买代币数量（按代币兑换比例折算金额）。",
+    "signals": {"midas": "米大师体系", "mode_enum_crosscheck": true, "short_series_history": "短剧类目强制虚拟支付起源"},
+    "retrieved_at": "2026-09-28",
+    "credibility": 0.6
+  }
+]

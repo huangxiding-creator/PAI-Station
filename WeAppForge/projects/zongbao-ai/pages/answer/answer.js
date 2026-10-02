@@ -1,9 +1,14 @@
-// 答案页 — 总包AI顾问 v0.5.0
+// 答案页 — 总包AI顾问 v0.6.0
 // Markdown 结构化渲染（md2blocks）；pending 实时进度；ready 渲染全文；error 退次提示
-// v0.5.0（用户九点令）：语音全撤；「总包AI智库专业解答」；五枚精美小按钮（有用/复制/导出/纠错/分享）
+// v0.5.0（用户九点令）：语音全撤；「总包AI智库专业解答」；五枚精美小按钮（有用/导出/纠错/分享）
+// v0.7.3（用户令）：复制全文下线；导出不再赠次（赠次=有用/纠错/分享三动作）
 // 互动赠次：有用/导出/纠错(具体意见)/分享 每篇各 +1 次咨询机会；分享标题=总包AI顾问-免费咨询
+// v0.6.0（100× 弧线，全免费）：要点速览 tldr / 相关问题 chips / 追问对话流（智谱接地）/ 分享海报（引擎 Pillow）
+// v0.7.4 提审合规：AI 生成标识上屏 / 极限词归零 / 依据解读口径 / 分享回流注释中性化
+// v0.7.3（用户令）：观看/转发计数展示；互动得次授勋动画（徽章+光芒+火花+震动）；周换装主题
 const api = require('../../utils/api');
 const md2blocks = require('../../utils/md2blocks');
+const theme = require('../../utils/theme');
 
 Page({
   data: {
@@ -19,8 +24,25 @@ Page({
     blocks: [],           // Markdown 结构化块（渲染用）
     citations: [],
     fullChars: 0,
+    views: 0,             // v0.7.3 观看次数（点开全文即 +1，同人重复看持续累计）
+    shares: 0,            // v0.7.3 转发次数（分享/海报传播即 +1）
     liked: false,
     likeBusy: false,
+    streamChars: 0,       // v0.7.0 流式已生成字数（打字机进度）
+    partialBlocks: [],    // v0.7.0 流式增量正文块（生成中先睹为快）
+    shared: false,        // v0.7.0 已共享进锅圈
+    canShare: false,      // v0.7.0 本人已完成答案 → 可共享
+    shareBusy: false,
+    rewardShow: false,    // v0.7.3 授勋动画开关
+    reward: '',           // 授勋副标（有用/分享/纠错/共享）
+    tldr: [],             // v0.6.0 要点速览（生成失败→隐藏区块）
+    related: [],          // v0.6.0 相关问题 chips
+    fuList: [],           // v0.6.0 追问对话流
+    fuInput: '',
+    canSendFu: false,
+    fuLeftA: null,        // 本篇今日追问剩余
+    fuLeftG: null,        // 全局今日追问剩余
+    posterBusy: false,
     nav: { statusBarHeight: 20, navHeight: 44 }
   },
 
@@ -29,20 +51,42 @@ Page({
     if (app.globalData && app.globalData.nav) {
       this.setData({ nav: app.globalData.nav });
     }
+    theme.apply(this); // v0.7.4 首帧即上主题变量（onShow 仍会再刷，不闪白）
     this.setData({ id: options.id || '' });
     this._pollTimer = null;
     this._tickTimer = null;
+    this._fuTimer = null;
     this._rawText = '';   // 原文留存：复制/导出用（不进 data，避免超长渲染负担）
     this.load();
   },
 
   onUnload() {
     this._stopTimers();
+    if (this._rwTimer) { clearTimeout(this._rwTimer); this._rwTimer = null; }
   },
+
+  // v0.7.3 周换装：每次进入刷新主题（含导航栏染色）
+  onShow() {
+    theme.apply(this);
+  },
+
+  // v0.7.3 授勋动画（用户令）：得次瞬间全屏荣誉时刻——徽章弹出+光芒旋转+火花散射+重震
+  _reward(label) {
+    this.setData({ rewardShow: true, reward: label });
+    wx.vibrateShort({ type: 'heavy', fail: () => {} });
+    if (this._rwTimer) clearTimeout(this._rwTimer);
+    this._rwTimer = setTimeout(() => {
+      this.setData({ rewardShow: false, reward: '' });
+      this._rwTimer = null;
+    }, 2400);
+  },
+
+  noop() {},
 
   _stopTimers() {
     if (this._pollTimer) { clearTimeout(this._pollTimer); this._pollTimer = null; }
     if (this._tickTimer) { clearInterval(this._tickTimer); this._tickTimer = null; }
+    if (this._fuTimer) { clearTimeout(this._fuTimer); this._fuTimer = null; }
   },
 
   _startTick() {
@@ -61,12 +105,15 @@ Page({
     api.answer(id)
       .then((d) => {
         if (d.status === 'pending') {
-          // 工程大脑处理中：播报阶段 + 秒表，2 秒后再来看
+          // 总包智库处理中：流式打字机正文 + 阶段播报 + 秒表，2 秒后再来看
           this.setData({
             loading: false, polling: true,
             question: d.question,
             progress: d.progress || [],
-            elapsed: d.elapsed || 0
+            elapsed: d.elapsed || 0,
+            streamChars: d.stream_chars || 0,
+            partialBlocks: (d.partial && d.partial.length >= 30)
+              ? md2blocks.md2blocks(d.partial) : []
           });
           this._startTick();
           this._pollTimer = setTimeout(() => this.load(), 2000);
@@ -77,18 +124,25 @@ Page({
           this.setData({ loading: false, polling: false, kbError: d.error_text || '引擎处理失败' });
           return;
         }
-        const full = (d.unlocked ? d.answer : d.preview) || '';
+        const full = d.answer || d.preview || '';
         this._rawText = full;
         this.setData({
           loading: false, polling: false,
           question: d.question,
-          unlocked: !!d.unlocked,
+          unlocked: true,
           blocks: md2blocks.md2blocks(full),
           citations: d.citations || [],
           fullChars: d.full_chars || 0,
-          liked: !!d.liked
+          views: d.views || 0,
+          shares: d.shares || 0,
+          liked: !!d.liked,
+          shared: !!d.shared,
+          canShare: !!d.can_share
         });
         wx.setNavigationBarTitle({ title: '回答' });
+        // v0.6.0 免费延伸层：要点速览 + 追问对话（失败各自优雅降级，不挡正文）
+        this._loadDigest();
+        this._loadFollowups();
       })
       .catch((err) => {
         this._stopTimers();
@@ -121,7 +175,7 @@ Page({
       .then((d) => {
         this.setData({ liked: true, likeBusy: false });
         if (d.granted) {
-          wx.showToast({ title: '感谢！+1 次咨询机会', icon: 'none', duration: 2200 });
+          this._reward('「有用」是给同行的掌声');
         } else {
           wx.showToast({ title: '已感谢', icon: 'success' });
         }
@@ -148,7 +202,7 @@ Page({
         api.criticize(this.data.id, text.slice(0, 200))
           .then((d) => {
             if (d.granted) {
-              wx.showToast({ title: '已收到 +1 次咨询机会', icon: 'none', duration: 2200 });
+              this._reward('具体纠错是最珍贵的同行礼遇');
             } else {
               wx.showToast({ title: '已收到，人工复核', icon: 'none' });
             }
@@ -158,28 +212,13 @@ Page({
     });
   },
 
-  // 分享小按钮：点击即赠次（fire-and-forget，不打断系统分享面板）
-  onShareTap() {
-    api.shareReward(this.data.id)
-      .then((d) => {
-        if (d.granted) wx.showToast({ title: '分享 +1 次咨询机会', icon: 'none', duration: 2000 });
-      })
-      .catch(() => { /* 静默：分享动作本身不该被失败打断 */ });
-  },
-
-  onCopy() {
-    const text = this._rawText || '';
-    if (!text) return;
-    wx.setClipboardData({
-      data: text,
-      success: () => wx.showToast({ title: '已复制全文', icon: 'success' })
-    });
-  },
+  // v0.7.6 提审合规：分享按钮回归纯分享（open-type=share 直开系统面板）
+  // 依《小程序平台运营规范》3.2.1 去除「分享 +1 次」利益激励，赠次仅保留有用/纠错等站内真实互动
 
   // ── 导出：Word/PDF 引擎生成（base64 落盘），MD 本地拼 ──
   onExport() {
-    if (!this._rawText || !this.data.unlocked) {
-      wx.showToast({ title: '解锁全文后可导出', icon: 'none' });
+    if (!this._rawText) {
+      wx.showToast({ title: '正文还没就绪', icon: 'none' });
       return;
     }
     wx.showActionSheet({
@@ -223,7 +262,14 @@ Page({
       return;
     }
     api.exportAnswer(this.data.id, fmt)
-      .then((d) => writeAndOffer((d && d.b64) || '', 'base64'))
+      .then((d) => {
+        wx.hideLoading();
+        if (!(d && d.b64)) {
+          wx.showToast({ title: '导出失败，请重试', icon: 'none' });
+          return;
+        }
+        writeAndOffer(d.b64, 'base64');
+      })
       .catch((err) => {
         wx.hideLoading();
         wx.showToast({ title: api.errMsg(err, '导出失败'), icon: 'none' });
@@ -261,77 +307,185 @@ Page({
       });
       lines.push('');
     }
-    lines.push('---', '', '*由 总包AI顾问 · 总包AI智库（背后是顶级总包智库）生成 · 仅供参考，不构成正式法律意见*');
+    lines.push('---', '', '*由 总包AI顾问（AI 检索行业知识库生成）生成 · 仅供参考，不构成正式法律意见*');
     return lines.join('\n');
   },
 
-  onUnlock() {
-    // v0.2.5 虚拟支付：签名腿（服务端出双签名）→ 拉起支付 → 成功回调解锁
-    if (this._payBusy) return;
-    this._payBusy = true;
-    api.paySign(this.data.id)
-      .then((d) => this._requestPay(d))
+  // ══ v0.7.0 共享入锅圈（用户令 0930 第 8 条）：共享赠 1 次 / 取消共享扣 1 次 ══
+
+  // 共享：本人已完成问答 → 公共锅圈展区（免费赠 1 次咨询机会）
+  onShareOn() {
+    if (this.data.shareBusy || this.data.shared) return;
+    this.setData({ shareBusy: true });
+    api.shareOn(this.data.id)
+      .then(() => {
+        this.setData({ shareBusy: false, shared: true });
+        this._reward('共享进锅圈，帮到更多同行');
+      })
       .catch((err) => {
-        this._payBusy = false;
-        if (err && err.statusCode === 503) {
-          // 虚拟支付未开通：诚实降级，引导点赞赠次
-          wx.showModal({
-            title: '支付即将上线',
-            content: '虚拟支付开通前，在历史回答里点「有用 +1」即可再获 1 次全文提问机会。',
-            showCancel: false,
-            confirmText: '知道了'
-          });
-        } else {
-          wx.showToast({ title: api.errMsg(err, '拉起支付失败'), icon: 'none' });
-        }
+        this.setData({ shareBusy: false });
+        wx.showToast({ title: api.errMsg(err, '共享失败'), icon: 'none' });
       });
   },
 
-  _requestPay(d) {
-    if (!wx.requestVirtualPayment) {
-      this._payBusy = false;
-      wx.showModal({
-        title: '需要升级微信',
-        content: '当前微信版本过低，暂不支持虚拟支付。升级后即可 1 元解锁全文。',
-        showCancel: false
-      });
-      return;
-    }
-    wx.requestVirtualPayment({
-      mode: d.mode,
-      signData: d.sign_data,     // 服务端签名字符串必须原样透传
-      paySig: d.pay_sig,
-      signature: d.signature,
-      success: () => {
-        api.unlockPaid(this.data.id, d.out_trade_no || '')
+  // 取消共享：撤出锅圈 + 扣 1 次咨询机会（用户令：明确告知再扣）
+  onShareOff() {
+    if (this.data.shareBusy || !this.data.shared) return;
+    wx.showModal({
+      title: '取消共享',
+      content: '取消后本篇撤出锅圈，同时扣除 1 次咨询机会。确定取消吗？',
+      confirmText: '取消共享',
+      cancelText: '再想想',
+      success: (r) => {
+        if (!r.confirm) return;
+        this.setData({ shareBusy: true });
+        api.shareOff(this.data.id)
           .then(() => {
-            this._payBusy = false;
-            wx.showToast({ title: '已解锁全文', icon: 'success' });
-            this.setData({ loading: true });
-            this.load();
+            this.setData({ shareBusy: false, shared: false });
+            wx.showToast({ title: '已撤出锅圈，扣 1 次咨询机会', icon: 'none', duration: 2400 });
           })
-          .catch(() => {
-            this._payBusy = false;
-            wx.showToast({ title: '已支付，解锁确认稍后自动生效，可重进本页', icon: 'none', duration: 3000 });
+          .catch((err) => {
+            this.setData({ shareBusy: false });
+            wx.showToast({ title: api.errMsg(err, '操作失败'), icon: 'none' });
           });
-      },
-      fail: (res) => {
-        this._payBusy = false;
-        const code = res && res.errCode;
-        if (code === -15007) {
-          // session_key 过期：静默重登（服务端同步新 session_key）后再试一次
-          api.login()
-            .then(() => this.onUnlock())
-            .catch(() => wx.showToast({ title: '请稍后重试', icon: 'none' }));
-        } else if (code === -15005 || code === -15006) {
-          wx.showToast({ title: '签名校验未过，我们已记录', icon: 'none', duration: 2500 });
-        } else if (code === 1 || (res && res.errMsg && res.errMsg.indexOf('cancel') >= 0)) {
-          // 用户取消：静默
-        } else {
-          wx.showToast({ title: '支付未完成', icon: 'none' });
-        }
       }
     });
+  },
+
+  // ══ v0.7.0 依据来源全文展开（用户令 0930 第 11 条）：点条目弹完整条文 ══
+  onCiteTap(e) {
+    const n = e.currentTarget.dataset.n;
+    const c = (this.data.citations || []).find((x) => x.n === n);
+    if (!n || !c) return;
+    wx.showLoading({ title: '依据展开中…', mask: true });
+    api.citationFulltext(this.data.id, n)
+      .then((d) => {
+        wx.hideLoading();
+        wx.showModal({
+          title: '依据 [' + n + '] ' + (c.source || '').slice(0, 12),
+          content: ((d && d.text) || '暂无展开内容') + '\n\n（以上为 AI 整理的依据解读，以官方发布文本为准）',
+          showCancel: false,
+          confirmText: '知道了'
+        });
+      })
+      .catch((err) => {
+        wx.hideLoading();
+        wx.showToast({ title: api.errMsg(err, '展开失败'), icon: 'none', duration: 2200 });
+      });
+  },
+
+  // ══ v0.6.0 免费延伸层（100× 弧线）══
+
+  // 要点速览 + 相关问题：每答案引擎缓存一次；失败→隐藏区块（优雅降级）
+  _loadDigest() {
+    api.digest(this.data.id)
+      .then((d) => this.setData({ tldr: (d && d.tldr) || [], related: (d && d.related) || [] }))
+      .catch(() => this.setData({ tldr: [], related: [] }));
+  },
+
+  _loadFollowups() {
+    api.followups(this.data.id)
+      .then((d) => {
+        const items = (d && d.items) || [];
+        this.setData({ fuList: items });
+        if (items.some((x) => x.status === 'pending')) this._pollFollowups();
+      })
+      .catch(() => { /* 静默：追问区可后补 */ });
+  },
+
+  _pollFollowups() {
+    if (this._fuTimer) return;
+    this._fuTimer = setTimeout(() => {
+      this._fuTimer = null;
+      api.followups(this.data.id)
+        .then((d) => {
+          const items = (d && d.items) || [];
+          this.setData({ fuList: items });
+          if (items.some((x) => x.status === 'pending')) this._pollFollowups();
+        })
+        .catch(() => { /* 轮询失败：不打扰，下次交互自然恢复 */ });
+    }, 2000);
+  },
+
+  onFuInput(e) {
+    const v = (e.detail.value || '');
+    this.setData({ fuInput: v, canSendFu: v.trim().length >= 2 });
+  },
+
+  // 免费追问：发送→本地即时挂 pending 气泡→2s 轮询回答（智谱接地，不烧 KB 积分）
+  onFuSend() {
+    const q = (this.data.fuInput || '').trim();
+    if (q.length < 2) {
+      wx.showToast({ title: '追问至少 2 个字', icon: 'none' });
+      return;
+    }
+    if (this._fuBusy) return;
+    this._fuBusy = true;
+    api.followup(this.data.id, q.slice(0, 200))
+      .then((d) => {
+        this._fuBusy = false;
+        this.setData({
+          fuInput: '', canSendFu: false,
+          fuLeftA: d.left_answer, fuLeftG: d.left_global,
+          fuList: this.data.fuList.concat([{
+            id: d.id, question: q, answer: '', status: 'pending', error_text: ''
+          }])
+        });
+        this._pollFollowups();
+      })
+      .catch((err) => {
+        this._fuBusy = false;
+        wx.showToast({ title: api.errMsg(err, '追问失败'), icon: 'none', duration: 2500 });
+      });
+  },
+
+  // 相关问题 chip → 预填提问框（用户自己按提问，不代花次数）
+  onRelatedTap(e) {
+    const q = (e.currentTarget.dataset.q || '').trim();
+    if (!q) return;
+    wx.setStorageSync('qw_prefill', q);
+    wx.switchTab({ url: '/pages/ask/ask' });
+  },
+
+  // 分享海报：引擎 Pillow 生成（问题+要点+品牌+小程序码）→ 系统图片分享面板
+  onPoster() {
+    if (this.data.posterBusy) return;
+    this.setData({ posterBusy: true });
+    wx.showLoading({ title: '海报生成中…', mask: true });
+    api.poster(this.data.id)
+      .then((d) => new Promise((resolve, reject) => {
+        // 固定文件名（按答案）：重复生成不堆积
+        const path = wx.env.USER_DATA_PATH + '/poster-' + this.data.id + '.png';
+        wx.getFileSystemManager().writeFile({
+          filePath: path,
+          data: (d && d.b64) || '',
+          encoding: 'base64',
+          success: () => resolve(path),
+          fail: () => reject(new Error('本机写入失败'))
+        });
+      }))
+      .then((path) => {
+        wx.hideLoading();
+        this.setData({ posterBusy: false });
+        if (wx.showShareImageMenu) {
+          wx.showShareImageMenu({
+            path,
+            entrancePath: '/pages/ask/ask',   // 分享图携带小程序入口，便于扫码回流
+            fail: () => this._previewPoster(path)
+          });
+        } else {
+          this._previewPoster(path);   // 老基础库：预览菜单可长按转发
+        }
+      })
+      .catch((err) => {
+        wx.hideLoading();
+        this.setData({ posterBusy: false });
+        wx.showToast({ title: api.errMsg(err, '海报生成失败'), icon: 'none' });
+      });
+  },
+
+  _previewPoster(path) {
+    wx.previewImage({ urls: [path], fail: () => wx.showToast({ title: '海报已生成', icon: 'none' }) });
   },
 
   onShareAppMessage() {

@@ -1,0 +1,54 @@
+<!-- pages/cards/detail.wxml — 商机情报卡落地页（情报裂变 2.0）：
+  卡头大字金额+属性行+摘要+来源报告 CTA+分享按钮+免责一行；三态状态机 loading/ready/invalid。
+  渲染纠偏：amount 空串→金额整行隐藏；属性行空值/'-' 已在 js 层过滤（tags 同规整） -->
+<view wx:if="{{status === 'ready' && card}}" class="card-page">
+  <!-- 卡头：标签行 + 标题 + 金额大字 -->
+  <view class="card head">
+    <view class="tagrow" wx:if="{{tags.length > 0}}">
+      <text class="tag {{item.kw ? 'kw' : ''}}" wx:for="{{tags}}" wx:key="text">{{item.text}}</text>
+    </view>
+    <view class="c-title">{{card.title}}</view>
+    <view class="c-amount" wx:if="{{card.amount}}">{{card.amount}}</view>
+  </view>
+
+  <!-- 属性行（owner/stage/window/province/source_chapter 五项，空值与 '-' 行不显示） -->
+  <view class="card props" wx:if="{{props.length > 0}}">
+    <view class="prop-row" wx:for="{{props}}" wx:key="label">
+      <text class="prop-label">{{item.label}}</text>
+      <text class="prop-value">{{item.value}}</text>
+    </view>
+  </view>
+
+  <!-- 摘要段 -->
+  <view class="card">
+    <view class="sec-title">商机摘要</view>
+    <view class="c-summary">{{card.summary}}</view>
+  </view>
+
+  <!-- 来源报告 CTA 卡：跳研报详情（试读/解锁在彼处闭环） -->
+  <view class="card report-cta" wx:if="{{report}}" bindtap="onOpenReport">
+    <view class="cta-main">
+      <view class="cta-title">{{report.title}}</view>
+      <view class="cta-sub">完整商机清单与投标策略 · 试读 {{report.trialChapters}} 章</view>
+    </view>
+    <view class="cta-right">
+      <view class="cta-price">¥{{report.priceYuan}}</view>
+      <view class="cta-btn">查看完整报告</view>
+    </view>
+  </view>
+
+  <!-- 分享这张卡（open-type=share 触发 onShareAppMessage） -->
+  <button class="share-btn" open-type="share">分享这张卡</button>
+
+  <view class="foot-disclosure">{{footerDisclaimer}}</view>
+</view>
+
+<!-- 加载态 -->
+<view wx:elif="{{status === 'loading'}}" class="empty">加载中…</view>
+
+<!-- 失效兜底态：卡片已失效 + 去首页 -->
+<view wx:else class="empty">
+  <view>卡片已失效</view>
+  <view class="invalid-hint">卡片不存在、已下线或链接有误</view>
+  <button class="retry-btn" plain bindtap="onGoHome">去首页</button>
+</view>

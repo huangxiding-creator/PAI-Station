@@ -1,0 +1,210 @@
+/* styles/p1-sheet.wxss — P1 三弹层共享样式（templates/p1-sheet.wxml 配套，detail/reader 共享） */
+.p1-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 20, 30, 0.5);
+  z-index: 40;
+  display: flex;
+  align-items: flex-end;
+}
+.p1-sheet {
+  width: 100%;
+  max-height: 82vh;
+  background: #fff;
+  border-radius: 24rpx 24rpx 0 0;
+  padding: 32rpx 32rpx calc(28rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+.p1-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 16rpx;
+}
+.p1-hint {
+  font-size: 24rpx;
+  color: #6b7178;
+  line-height: 1.7;
+  margin: 8rpx 0 16rpx;
+}
+.p1-actions {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 28rpx;
+}
+.p1-btn {
+  flex: 1;
+  font-size: 26rpx;
+  border-radius: 999rpx;
+  color: #1e5eff;
+  border-color: #1e5eff;
+  padding: 4rpx 8rpx;
+}
+.p1-btn.primary {
+  flex: 1.4;
+  background: #1e5eff;
+  color: #fff;
+}
+.p1-btn.refund {
+  flex: 1.2;
+  background: #ff6010;
+  color: #fff;
+}
+.p1-btn.block {
+  display: block;
+  width: 100%;
+}
+
+/* 点赞结果卡 */
+.like-gift-card {
+  padding: 28rpx 24rpx;
+  background: linear-gradient(150deg, #f0f5ff, #e8efff);
+  border-radius: 16rpx;
+}
+.like-gift-tag {
+  display: inline-block;
+  font-size: 20rpx;
+  color: #07c160;
+  background: #e8f7ef;
+  border-radius: 999rpx;
+  padding: 4rpx 16rpx;
+}
+.like-gift-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  margin-top: 14rpx;
+}
+.like-gift-rule {
+  font-size: 22rpx;
+  color: #4e5561;
+  margin-top: 10rpx;
+}
+.like-rules {
+  margin-top: 20rpx;
+}
+.like-rules-li {
+  font-size: 22rpx;
+  color: #9aa1ab;
+  line-height: 1.8;
+  padding-left: 8rpx;
+}
+
+/* 组队 */
+.team-progress {
+  padding: 20rpx 24rpx;
+  background: #f6f8fd;
+  border-radius: 12rpx;
+}
+.team-progress-text {
+  font-size: 26rpx;
+  font-weight: 600;
+}
+.team-bar {
+  height: 12rpx;
+  background: #e4e9f2;
+  border-radius: 999rpx;
+  margin-top: 16rpx;
+  overflow: hidden;
+}
+.team-bar-in {
+  height: 100%;
+  background: #1e5eff;
+  border-radius: 999rpx;
+}
+.team-id-line {
+  font-size: 22rpx;
+  color: #6b7178;
+  margin-top: 12rpx;
+}
+.team-join-row {
+  display: flex;
+  gap: 16rpx;
+  align-items: center;
+}
+.team-join-row .form-input.join {
+  flex: 1;
+}
+.team-join-row .join-btn {
+  width: 140rpx;
+  flex: none;
+}
+.team-rules {
+  max-height: 240rpx;
+  margin-top: 20rpx;
+}
+.team-rules-li {
+  font-size: 22rpx;
+  color: #9aa1ab;
+  line-height: 1.8;
+  padding-left: 8rpx;
+}
+
+/* 批评 */
+.crit-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 220rpx;
+  background: #f6f7f9;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  font-size: 28rpx;
+}
+.crit-counter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 22rpx;
+  margin-top: 10rpx;
+  color: #b25e00;
+}
+.crit-counter.ok {
+  color: #07c160;
+}
+.crit-counter-hint {
+  color: #9aa1ab;
+}
+.crit-rules {
+  margin-top: 16rpx;
+}
+.crit-rules-li {
+  font-size: 22rpx;
+  color: #6b7178;
+  line-height: 1.8;
+  background: #f6f8fd;
+  border-radius: 8rpx;
+  padding: 10rpx 16rpx;
+  margin-bottom: 8rpx;
+}
+.crit-receipt {
+  padding: 24rpx;
+  background: #f6f8fd;
+  border-radius: 12rpx;
+}
+.crit-receipt-stage {
+  font-size: 28rpx;
+  font-weight: 600;
+  line-height: 1.6;
+}
+.crit-receipt-score {
+  font-size: 26rpx;
+  color: #1e5eff;
+  margin-top: 12rpx;
+  font-weight: 600;
+}
+.crit-receipt-why {
+  font-size: 22rpx;
+  color: #6b7178;
+  line-height: 1.7;
+  margin-top: 10rpx;
+}
+.crit-receipt-refund {
+  font-size: 24rpx;
+  color: #b25e00;
+  background: #fdf3e7;
+  border-radius: 8rpx;
+  padding: 12rpx 16rpx;
+  margin-top: 14rpx;
+  line-height: 1.6;
+}

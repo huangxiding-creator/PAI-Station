@@ -1,0 +1,42 @@
+<page-meta page-style="{{themeStyle}}" />
+
+<view class="page">
+
+  <!-- 自绘导航：蓝图带 + 返回 -->
+  <view class="topnav bp-grid">
+    <view style="height: {{nav.statusBarHeight}}px;"></view>
+    <view class="topnav-row" style="height: {{nav.navHeight}}px">
+      <view class="back-btn" bindtap="goBack" hover-class="back-hover"><text>‹</text></view>
+      <text class="topnav-title">协议与隐私</text>
+      <view class="topnav-cap mono">LEGAL</view>
+    </view>
+  </view>
+
+  <!-- 用户协议 -->
+  <view class="card ticks">
+    <view class="lg-kicker kicker kicker-on-paper">USER AGREEMENT · 用户协议</view>
+    <view class="lg-h">一、服务性质</view>
+    <view class="lg-p">「总包AI顾问」是由 AI 检索行业知识库生成的工程领域信息参考工具，面向建筑工程从业者免费提供问答参考。本工具输出的内容由人工智能生成，仅供参考，不构成专业意见或法律意见；重要事项请咨询具备相应资质的专业人士。</view>
+    <view class="lg-h">二、使用规范</view>
+    <view class="lg-p">您承诺不利用本服务提交违反法律法规或公序良俗的内容。您自愿选择「共享进锅圈」的问答将进入公开展区；共享由您主动发起，可随时取消。平台有权对涉嫌违规的内容采取隐藏、下架等处置措施。</view>
+    <view class="lg-h">三、服务变更</view>
+    <view class="lg-p">本服务为免费公益性质，我们可能根据运营情况调整服务内容、免费额度规则或暂停部分功能，并将以页面公示等适当方式告知。</view>
+  </view>
+
+  <!-- 隐私政策 -->
+  <view class="card ticks">
+    <view class="lg-kicker kicker kicker-on-paper">PRIVACY POLICY · 隐私政策</view>
+    <view class="lg-h">一、我们收集的信息</view>
+    <view class="lg-p">为提供服务，我们在小程序启动时通过微信官方登录接口获取您的微信登录凭证（openid），用于识别账号与咨询额度记账（该凭证不含您的手机号等敏感身份信息）；同时收集：① 您主动提交的问题文本、纠错意见，用于生成与改进回答；② 您自愿共享的问答内容，用于锅圈公开展示。我们不收集您的手机号、位置、通讯录、相册等个人信息。</view>
+    <view class="lg-h">二、信息的使用与存储</view>
+    <view class="lg-p">上述信息存储于我们管理的服务器，仅用于本服务的额度记账、内容生成与展示，不用于任何其他目的，也不会出售或提供给无关第三方。</view>
+    <view class="lg-h">三、剪切板</view>
+    <view class="lg-p">仅当您主动点击「复制知识库链接」等按钮时，我们才会向剪切板写入对应链接文本，不做读取。</view>
+    <view class="lg-h">四、您的权利</view>
+    <view class="lg-p">您可以随时取消共享、删除咨询记录相关内容；如需查询或删除您的账号数据，可通过小程序内「纠错」入口留言，我们将在核实后处理。</view>
+    <view class="lg-h">五、未成年人</view>
+    <view class="lg-p">本服务面向工程行业专业人士，不面向未成年人提供服务。</view>
+  </view>
+
+  <view class="safe-bottom"></view>
+</view>

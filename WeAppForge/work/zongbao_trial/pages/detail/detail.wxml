@@ -1,0 +1,173 @@
+<view class="detail" wx:if="{{view}}">
+  <!-- 报告元数据 + 榜单位 -->
+  <view class="card head">
+    <view class="head-top">
+      <view class="cover-block">{{view.card.province || view.card.industry}}</view>
+      <view class="head-main">
+        <view class="d-title">{{view.card.title}}</view>
+        <view class="d-meta">
+          <text wx:if="{{view.rankBadge}}" class="rank-badge">{{view.rankBadge}}</text>
+          <text class="tag">{{view.card.chapterCount}} 章</text>
+          <text class="tag">试读 {{view.card.trialChapters}} 章</text>
+          <text wx:if="{{view.card.publishedAt}}" class="tag">{{view.card.publishedAt}} 上架</text>
+        </view>
+      </view>
+    </view>
+    <view class="tagrow" wx:if="{{view.card.tags.length > 0}}">
+      <text class="tag kw" wx:for="{{view.card.tags}}" wx:key="*this">{{item}}</text>
+      <text class="tag" wx:if="{{view.card.ownerType}}">{{view.card.ownerType}}</text>
+      <text class="tag" wx:if="{{view.card.industry}}">{{view.card.industry}}</text>
+    </view>
+    <view class="d-summary">{{view.card.summary}}</view>
+  </view>
+
+  <!-- 决策卡（FR-P0-03 全要素） -->
+  <view class="card decision" wx:if="{{decision && !owned}}">
+    <view class="sec-title">继续读，还是解锁全文？</view>
+    <view class="dcd-row">
+      <view class="dcd-item">
+        <view class="dcd-num">{{decision.readText}}</view>
+        <view class="dcd-label">免费试读</view>
+      </view>
+      <view class="dcd-item">
+        <view class="dcd-num">{{decision.remainText}}</view>
+        <view class="dcd-label">付费部分</view>
+      </view>
+    </view>
+    <view class="paywall-note" wx:if="{{decision.paywallNote}}">{{decision.paywallNote}}</view>
+    <view class="locked-title" wx:if="{{decision.lockedCount > 0}}">{{decision.lockedCount}} 条核心结论未解锁</view>
+    <view class="locked-list" wx:if="{{decision.lockedTitles.length > 0}}">
+      <view class="locked-item" wx:for="{{decision.lockedTitles}}" wx:key="*this">{{item}}</view>
+    </view>
+  </view>
+
+  <!-- 目录树（章标题列表；试读章高亮可点） -->
+  <view class="card toc">
+    <view class="sec-title">目录</view>
+    <view
+      wx:for="{{decision.toc}}"
+      wx:key="id"
+      class="toc-item {{item.isTrial ? 'trial' : ''}}"
+      data-idx="{{item.idx}}"
+      data-trial="{{item.isTrial}}"
+      bindtap="onTapToc"
+    >
+      <text class="toc-name">{{item.idx}}. {{item.title}}</text>
+      <text class="toc-flag" wx:if="{{item.isTrial}}">免费试读</text>
+      <text class="toc-lock" wx:else>🔒</text>
+    </view>
+  </view>
+
+  <!-- 预览三件套：关联推荐（同省/同业主/同行业）+ 读者还在看 -->
+  <view class="card triad" wx:if="{{view.related.length > 0 || view.readersAlso.length > 0}}">
+    <view class="sec-title">相关研报</view>
+    <view class="rel-item" wx:for="{{view.related}}" wx:key="id" data-id="{{item.id}}" bindtap="onOpenRelated">
+      <view class="rel-title">{{item.title}}</view>
+      <view class="rel-why" wx:if="{{item.why}}">{{item.why}}</view>
+    </view>
+    <view class="also" wx:if="{{view.readersAlso.length > 0}}">
+      <view class="also-title">读过此报告的人还在看</view>
+      <view class="also-item" wx:for="{{view.readersAlso}}" wx:key="id">{{item.title}}</view>
+    </view>
+  </view>
+
+  <!-- 价格锚（竞品实锤价作参照锚，非本店划线价——REQUIREMENTS 口径） -->
+  <view class="card anchor">
+    <view class="price-row">
+      <view class="price-main"><text class="rmb">¥</text>{{view.card.priceYuan}}</view>
+      <view class="anchor-right">
+        <view class="anchor-copy">{{view.anchorCopy}}</view>
+        <view class="anchor-ref">行业同类研报均价参照 <text class="anchor-strike">¥{{view.anchorYuan}}</text></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 发票入口（P0=收集开票信息）+ 披露三件 + P1 组队/批评入口 -->
+  <view class="card entries">
+    <view class="entry" bindtap="onInvoiceOpen">
+      <text class="entry-name">{{invoiceSaved ? '开票信息已记录' : '需要发票？付款前登记开票信息'}}</text>
+      <text class="entry-arrow">›</text>
+    </view>
+    <view class="entry" wx:if="{{p1}}" bindtap="onTeamOpen">
+      <text class="entry-name">3 人组队 ¥998（全队各得一份）</text>
+      <text class="entry-arrow">›</text>
+    </view>
+    <view class="entry" wx:if="{{p1}}" bindtap="onCritOpen">
+      <text class="entry-name">批评评分退款（认真读完不满意，按分退款）</text>
+      <text class="entry-arrow">›</text>
+    </view>
+    <view class="entry" wx:if="{{p1}}" bindtap="onRefundRules">
+      <text class="entry-name">退款规则（批评评分制）</text>
+      <text class="entry-arrow">›</text>
+    </view>
+    <view class="entry" wx:if="{{p1}}" bindtap="onGiftRules">
+      <text class="entry-name">赠品池规则（每日点赞必得一份）</text>
+      <text class="entry-arrow">›</text>
+    </view>
+  </view>
+
+  <view class="foot-disclosure">{{footerDisclaimer}}</view>
+
+  <!-- 底部操作栏（P1 加点赞：当日首赞必得赠阅） -->
+  <view class="buy-bar">
+    <view class="fav {{favorited ? 'on' : ''}}" bindtap="onFavorite">{{favorited ? '已收藏' : '收藏'}}</view>
+    <view class="fav like {{liking ? 'busy' : ''}}" wx:if="{{p1}}" bindtap="onLike">{{liking ? '领取中…' : '点赞得赠阅'}}</view>
+    <button class="read-btn" plain bindtap="onReadTrial">免费试读</button>
+    <button
+      wx:if="{{!owned}}"
+      class="buy-btn {{payGrayed ? 'gray' : ''}}"
+      disabled="{{paying}}"
+      bindtap="onUnlock"
+    >{{paying ? '处理中…' : '解锁全文 ¥' + view.card.priceYuan}}</button>
+    <button wx:else class="buy-btn owned" bindtap="onReadTrial">已解锁 · 去阅读</button>
+  </view>
+
+  <!-- 发票弹层 -->
+  <view class="mask" wx:if="{{invoiceOpen}}" bindtap="onInvoiceClose">
+    <view class="sheet" catchtap="noop">
+      <view class="sheet-title">开票信息登记</view>
+      <view class="sheet-body">
+        <view class="form-row">发票抬头</view>
+        <input class="form-input" value="{{invoiceTitle}}" placeholder="企业名称或个人姓名" data-field="invoiceTitle" bindinput="onInvoiceInput" />
+        <view class="form-row">税号（选填）</view>
+        <input class="form-input" value="{{invoiceTax}}" placeholder="纳税人识别号" data-field="invoiceTax" bindinput="onInvoiceInput" />
+        <view class="form-hint">解锁成功后凭此信息开具电子发票（开票流程上线前会与您联系确认）。</view>
+      </view>
+      <view class="sheet-actions">
+        <button class="sheet-btn" plain bindtap="onInvoiceClose">取消</button>
+        <button class="sheet-btn primary" bindtap="onInvoiceSave">保存</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 规则弹层（退款/赠品池，NFR-08 断言目标） -->
+  <view class="mask" wx:if="{{rulesOpen}}" bindtap="onRulesClose">
+    <view class="sheet" catchtap="noop">
+      <view class="sheet-title">{{rulesTitle}}</view>
+      <scroll-view class="sheet-body" scroll-y>
+        <view class="rules-text">{{rulesBody}}</view>
+      </scroll-view>
+      <view class="sheet-actions">
+        <button class="sheet-btn" plain bindtap="onCopyRefundUrl" wx:if="{{rulesKind === 'refund'}}">复制完整规则链接</button>
+        <button class="sheet-btn primary" bindtap="onRulesClose">知道了</button>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 加载/错误态 -->
+<view wx:elif="{{loading}}" class="empty">加载中…</view>
+<view wx:else class="empty">
+  <view>{{loadError}}</view>
+  <button class="retry-btn" plain bindtap="load">重新加载</button>
+</view>
+
+<!-- 支付前披露半屏弹层（T-P0-26：2.2 三条逐字披露+退款通道引导；文案真源 utils/agreement.ts） -->
+<import src="../../templates/pay-sheet.wxml" />
+<template is="pay-sheet" data="{{ paySheetOpen, paySheet }}" />
+
+<!-- P1 三弹层（templates/p1-sheet.wxml 共享；点赞赠阅/组队/批评评分退款） -->
+<import src="../../templates/p1-sheet.wxml" />
+<template is="like-sheet" data="{{ likeOpen, liking, likeGift, likeRules }}" />
+<template is="team-sheet" data="{{ teamOpen, team, teamCreating, teamJoinId, teamJoining, teamPriceYuan, teamRules }}" />
+<template is="criticize-sheet" data="{{ critOpen, critContent, critCounter, critRules, critSubmitting, critReceipt }}" />

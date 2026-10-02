@@ -44,7 +44,7 @@
   margin-top: 26rpx;
   font-size: 19rpx;
   letter-spacing: 4rpx;
-  color: rgba(147, 172, 209, 0.5);
+  color: rgba(var(--t-inkdim-rgb), 0.5);
   display: flex;
   align-items: center;
 }
@@ -52,20 +52,20 @@
   flex: 1;
   height: 18rpx;
   margin: 0 20rpx;
-  border-left: 2rpx solid rgba(147, 172, 209, 0.4);
-  border-right: 2rpx solid rgba(147, 172, 209, 0.4);
+  border-left: 2rpx solid rgba(var(--t-inkdim-rgb), 0.4);
+  border-right: 2rpx solid rgba(var(--t-inkdim-rgb), 0.4);
   position: relative;
 }
 .dim-rule::before {
   content: '';
   position: absolute; left: 0; right: 0; top: 8rpx;
-  border-top: 2rpx solid rgba(147, 172, 209, 0.4);
+  border-top: 2rpx solid rgba(var(--t-inkdim-rgb), 0.4);
 }
 .dim-cap {
   font-size: 16rpx;
-  color: rgba(147, 172, 209, 0.45);
+  color: rgba(var(--t-inkdim-rgb), 0.45);
   letter-spacing: 2rpx;
-  border: 2rpx solid rgba(147, 172, 209, 0.35);
+  border: 2rpx solid rgba(var(--t-inkdim-rgb), 0.35);
   border-radius: 4rpx;
   padding: 0 6rpx;
   line-height: 1.5;
@@ -78,9 +78,9 @@
 .pot-no {
   flex-shrink: 0;
   font-size: 21rpx;
-  color: rgba(13, 37, 71, 0.4);
+  color: rgba(var(--t-navy2-rgb), 0.4);
   letter-spacing: 1rpx;
-  border: 2rpx solid rgba(13, 37, 71, 0.18);
+  border: 2rpx solid rgba(var(--t-navy2-rgb), 0.18);
   border-radius: 4rpx;
   padding: 4rpx 8rpx;
   margin-top: 4rpx;
@@ -101,7 +101,7 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
   overflow: hidden;
-  border-left: 6rpx solid rgba(29, 111, 208, 0.35);
+  border-left: 6rpx solid rgba(var(--t-blue-rgb), 0.35);
   padding-left: 18rpx;
 }
 .pot-foot {
@@ -118,7 +118,7 @@
   font-size: 22rpx; color: var(--muted);
 }
 .pot-like-glyph { font-size: 26rpx; line-height: 1; }
-.pot-like-on { color: #d9534f; }
+.pot-like-on { color: var(--t-stamp-hi); }
 .pot-more {
   margin-left: auto;
   font-size: 23rpx;
@@ -132,14 +132,14 @@
   width: 120rpx; height: 120rpx;
   margin: 0 auto;
   border-radius: 50%;
-  border: 4rpx double rgba(13, 37, 71, 0.3);
+  border: 4rpx double rgba(var(--t-navy2-rgb), 0.3);
   display: flex; align-items: center; justify-content: center;
   font-size: 52rpx; font-weight: 800; color: var(--navy-1);
 }
 .pot-empty-title { font-size: 30rpx; font-weight: 700; margin: 26rpx 0 8rpx; letter-spacing: 1rpx; }
 
 /* 骨架屏 */
-.sk { background: linear-gradient(90deg, #ece8db 25%, #f5f2e8 45%, #ece8db 65%); background-size: 400% 100%; animation: shimmer 1.4s ease infinite; border-radius: 6rpx; }
+.sk { background: linear-gradient(90deg, var(--t-paper-dim) 25%, var(--t-paper-hi) 45%, var(--t-paper-dim) 65%); background-size: 400% 100%; animation: shimmer 1.4s ease infinite; border-radius: 6rpx; }
 @keyframes shimmer { from { background-position: 100% 0; } to { background-position: 0 0; } }
 .sk-title { height: 40rpx; width: 60%; }
 .sk-line { height: 30rpx; margin-top: 24rpx; }
@@ -151,3 +151,53 @@
 .retry-btn { margin-top: 30rpx; width: 60%; }
 
 .tip-line { text-align: center; padding: 10rpx 24rpx 0; letter-spacing: 1rpx; font-size: 21rpx; }
+
+/* ══ v0.7.0 深色模式收口 ══ */
+@media (prefers-color-scheme: dark) {
+  .sk { background: linear-gradient(90deg, #232f47 25%, #2c3a55 45%, #232f47 65%); background-size: 400% 100%; }
+  .pot-no { color: rgba(159, 180, 214, 0.5); border-color: rgba(159, 180, 214, 0.25); }
+  .pot-empty-glyph { border-color: rgba(159, 180, 214, 0.4); color: #9fb4d6; }
+}
+
+/* ══ v0.7.4 提审合规：UGC 举报入口 + AI 生成标识 ══ */
+.pot-report {
+  font-size: 20rpx;
+  color: var(--muted-ink, #5a6a7e);
+  padding: 6rpx 12rpx;
+  border: 2rpx solid rgba(var(--t-blue-rgb), 0.25);
+  border-radius: 999rpx;
+}
+.pot-ai-note {
+  margin: 6rpx 0 20rpx;
+  font-size: 20rpx;
+  text-align: center;
+}
+
+/* ══ v0.7.5 深度合成合规：AI 生成显著标识条（页首常驻，深浅主题同显著）══ */
+.ai-flag {
+  margin: 22rpx 24rpx 0;
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  background: rgba(var(--t-accent-rgb), 0.10);
+  border: 2rpx solid rgba(var(--t-accent-rgb), 0.55);
+  border-left: 8rpx solid var(--accent);
+  border-radius: 8rpx;
+  padding: 20rpx 22rpx;
+}
+.ai-flag-badge {
+  flex-shrink: 0;
+  font-size: 21rpx;
+  font-weight: 800;
+  letter-spacing: 2rpx;
+  color: var(--navy-0);
+  background: linear-gradient(180deg, var(--t-accent-soft), var(--accent));
+  border-radius: 6rpx;
+  padding: 6rpx 12rpx;
+}
+.ai-flag-text {
+  font-size: 25rpx;
+  font-weight: 600;
+  line-height: 1.55;
+  color: var(--ink);
+}

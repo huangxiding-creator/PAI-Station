@@ -1,0 +1,149 @@
+[
+ {
+  "findings": [
+   {
+    "fix": "顺序锁死:①(若0.7.1审核单在)版本管理先撤单→②提审0.7.3→③审核通过并全量发布→④config.py:54 本机+ECS 双改 \"release\" 并重启引擎→⑤抽一张旧海报重新生成验证指向。缓存无需清理(store.get_poster 按 env 分键 + wechat.py:108 wxacode 磁盘缓存 key=scene|page|env,切 env 自动重生成,test_api.py:345 已方向无关)。可选加固:app.py:680 的 page 同步改 \"pages/home/home\"(见第4条配方)。",
+    "title": "海报码切 release 有硬前置:必须等 0.7.3「发布」而非「提审」——提前切=全部海报开出旧1.0.7且 ask 页404(0930 同病已犯过一次)",
+    "severity": "blocker",
+    "evidence": "引擎海报码当前参数= services/qianwen-engine/qianwen_engine/app.py:680 `wechat.wxacode_unlimited(f\"s=p&a={aid}\", \"pages/ask/ask\")`,env 取 config.py:54 `POSTER_QR_ENV_VERSION=\"trial\"`(注释明言'发布当日切 release')。RUN_LEDGER.md #71(0930 13:0x)实锤:该值曾被误置 release,海报码开出旧 1.0.7(老页面表只有 {home/home,my/my},#62 07:5x check_path 探针逐页枚举钉死,ask/pot/index 全 41030)→ 旧包无 ask 页即「页面不存在」。memory 里「提审后一行切release」的提法不精确:提审≠发布,审核期间线上仍是 1.0.7,此时切=全量海报404。"
+   },
+   {
+    "fix": "mp控制台→版本管理→开发版本列表找 0.7.3(robot10 上传,1001 13:40)→「选为体验版」→真机删掉「最近使用」里的本小程序(清客户端包缓存)→重扫 qr_trial_v073 →引擎雷达(真DB=/opt/qianwen/data/qianwen/db.sqlite,判据=users/answers 计数对比非时间戳,#64)复核到流量即闭环。develop码(v073d)同根因,钉位修复后若仍败,查「成员管理」里扫码人是否开发者/体验成员(develop码仅项目成员可开,deliver_qr_v070.py:46 自己就预写了'若扫码打不开→设为体验版'的兜底话术)。",
+    "title": "今日双码404根因=体验版钉位不再指向任何含home的包(悬空或回退到0.4.x时代),码参数本身全部排除——修复=控制台一步重钉0.7.3",
+    "severity": "high",
+    "evidence": "排除链:①包内页面=projects/zongbao-ai/app.json 六页含 pages/home/home(0.5.1起持续在包,BOOT-SIM 205/205);②同robot顶替不可能=work/robot_registry.jsonl 钉死 robot2..10 九版九机器人,0.7.3(robot10,1001 13:40)未顶任何记录;③check_path=false 是生成时开关,不影响扫码行为(0929 18:43 ask码+0930 v060b_home码两次真机成功均false);④scene v073/v073d 全在合法字符集且远小于32字符限;⑤width=430 在280-1280合法区,只影响印刷尺寸。反推:home/home 在老release表{home,my}和0.5.1+全部包里都有,要404只能是解析落到了无home的包(仅0.4.2/0.4.3/0.5.0)或钉位悬空硬败;「引擎零流量」与「没打开任何新引擎可达的活包」互证。0929教训(upload_qianwen.mjs:5-7)已证明钉位是全链最脆一环:钉位悬空→全部入口按线上1.0.7老表解析。"
+   },
+   {
+    "fix": "落地面加 scene 解析:home.js onLoad(options) 里 decodeURIComponent(options.scene||'') 解出 a={aid} → reLaunch 到 /pages/answer/answer?id={aid}(对齐 answer.js 的 options.id 键名);ask 页同理补 onLoad(options) 解析。此修必须在下次上包(0.7.4)时带上——切 release 前修好,海报流量才能真正进答案页被引擎雷达看见。",
+    "title": "海报深链链路代码级断裂:scene(s=p&a={aid})被 ask 页和 home 跳板页双双丢弃,海报扫码者永远到不了那篇答案",
+    "severity": "medium",
+    "evidence": "引擎发码 scene=\"s=p&a={aid}\"(app.py:680),但 pages/ask/ask.js:57 `onLoad()` 不接 options、全 pages/**/*.js 无任何 scene/decodeURIComponent 解析(grep 零命中);pages/home/home.js:8-13 同样无视 options,reLaunch 到裸 /pages/ask/ask;pages/answer/answer.js:53 只认 `options.id`(与 scene 里的 `a=` 键名也不一致)。即海报码即使打开成功,深链也静默失效,病毒环'扫码免费看全文'实际只落到首页。"
+   },
+   {
+    "fix": "三层选型:①工程首选 page=pages/home/home(跳板页,落地即reLaunch咨询首页 home.js:9-11,老release与0.5.1+双命中,覆盖一切正常态;今日404属钉位病态,无任何码参数可治,只能控制台修)。②极端保险(连0.4.x钉位都不404)用 pages/my/my——代价是落地'我的'tab、无导流跳转,仅长周期印刷物值得。③generatescheme(URL scheme)劣势:有效期≤30天(永久码另占配额)、微信内网页无法直接拉起(仅外部浏览器/短信场景)、env_version 解析语义与 wxacode 同一套(治不了钉位病)——海报印刷物场景全面劣于 wxacode,不换。终局解=发布0.7.3,让release表变成六页全集,此后一切入口必中。",
+    "title": "「真正永不404」配方:全版本交集唯一页=pages/my/my;工程推荐=home/home跳板;URL scheme 路线不划算",
+    "severity": "medium",
+    "evidence": "历代页面表:线上1.0.7={home,my}(#62枚举);0.4.x/0.5.0={ask,answer,my,pot,无home}(home是0.5.1才加,#62);0.5.1+/0.7.3={ask,pot,zhiku,answer,my,home}(app.json)。交集:my∈所有版本(唯一全交集);home∈1.0.7和0.5.1+但∉0.4.x;ask∈全部开发版但∉1.0.7。"
+   },
+   {
+    "fix": "①release+显式page:开当前线上版(今天=旧1.0.7,发布后=0.7.3)。page∈{home,my}→开旧app(home落地旧首页,零新流量,易误报'坏了');page=ask/pot/zhiku/answer→旧1.0.7无此页=「页面不存在」(海报0930事故形态);check_path=true 时生成即被41030挡住(new页出不了码)——生成时闸,与扫码无关。②release+无page:开线上版默认页,永不404。③trial+显式page+钉位健康:开钉位包(可能落后最新上传,如钉0.6.0时扫v073码开的是0.6.0);page∉钉位包→404(0.4.2钉位+home页=0930事故);一律配 check_path=false。④trial+无page:老表默认home投进钉位包,钉位包无home→404(0930复发主形态)。⑤trial+钉位悬空:全部入口退化为按release老表解析→新页码404、home码开旧app或硬404(今日形态)。⑥trial+非体验成员:权限提示,非404。⑦develop+显式page:开最新开发版(0.7.3),仅项目成员可开;记录被提审/删除/客户端列表滞缓时打不开——三类入口里最不可靠,仅验收用,绝不进印刷物。",
+    "title": "版本解析矩阵(env × page × check_path)——真机打开哪个包、何时报「页面不存在」",
+    "severity": "info",
+    "evidence": "本仓库自有实验钉死的地基:生成时 check_path=true 只按【线上release页面表】校验(ask/pot/zhiku 全41030,即使钉位包有这些页,scheme_fire_030.py:3-5 教训级);扫码时解析目标=env_version 指定的包,显式page须存在于【该包】;无路径入口(后台体验码/最近使用/会话卡)按【线上release老表】解析默认页 home/home 再投进目标包(#51/#62 双重实证)。"
+   }
+  ],
+  "verdict": "【一句话结论】今天双码404的根因不在码参数——page=home/home+check_path=false 本已是本仓库两次真机验证过的最优形态,病根在服务端版本钉位状态:钉位已不落在任何含 home 的包(0.5.1+)上(悬空或回退 0.4.x 时代);唯一修复动作=mp控制台「版本管理→开发版本 0.7.3(robot10,1001 13:40)→选为体验版」+真机删「最近使用」后重扫,引擎雷达(users/answers 计数,真DB=/opt/qianwen/data/qianwen/db.sqlite)复核流量即闭环。\n\n【用户令执行=海报码切正式版,安全配方】切 release 有一个硬前置:0.7.3 必须已「审核通过并全量发布」(提审≠发布,0930 #71 已实锤提前切的后果=海报码开出旧1.0.7、ask页404)。发布后:①改 services/qianwen-engine/qianwen_engine/config.py:54 POSTER_QR_ENV_VERSION=\"trial\"→\"release\"(本机+ECS 双落位+重启);②app.py:680 海报码 page=pages/ask/ask 发布后 release 包含此页可直接沿用,要万无一失同步改 \"pages/home/home\"(老release表也命中);③缓存零手工:poster 缓存按 env 隔离(app.py:662)+wxacode 磁盘缓存 key=scene|page|env(wechat.py:108),切 env 自动失效重生成;④测试已方向无关(test_api.py:345)。另发现海报深链代码级断裂(scene s=p&a={aid} 被 ask.js/home.js 双双丢弃、answer.js 只认 options.id)——切 release 前随 0.7.4 上包修好,病毒环才真正闭环。终局解仍是发布本身:release=0.7.3 后老表{home,my}退役,整类404消失。"
+ },
+ {
+  "findings": [
+   {
+    "title": "逐项审计结论：v0.7.3 主题系统不存在真机页面注册失败风险（七项全过）",
+    "severity": "info",
+    "evidence": "① utils/theme.js 全文（96 行）：模块顶层（L7-22）只有常量对象字面量；全部 wx.* 调用均在函数内且带防御——wx.getStorageSync 在 pref() L25（try/catch）、wx.setStorageSync 在 setPref() L83（try/catch）、wx.setNavigationBarColor 在 apply() L69（if 存在性守卫 + L70 fail 回调）；new Date() 仅在 current() L31；无任何顶层可抛异常代码，真机 require 不可能失败。② 六页 wxml 首行全部是 <page-meta page-style=\"{{themeStyle}}\" /> 且全项目 grep 仅 6 处、全在 line 1（ask/pot/zhiku/answer/my/home），无注释或节点前置。③ 全部 12 个 JS 文件（app.js、custom-tab-bar/index.js、6 页面 js、utils 4 文件）经 V8 vm.compileFunction 真实语法解析全部 OK（括号/逗号闭合无问题）；require 路径全部正确（页面用 ../../utils/theme，tabbar 用 ../utils/theme）；theme.apply(this) 在六页 onShow：answer.js:68、ask.js:70、pot.js:27、zhiku.js:26、my.js:30、home.js:15。④ custom-tab-bar/index.js:4 require 正确、L6-31 Component() 结构完整、L17-19 attached(){this.applyTheme()}，theme.apply 侧 L72-73 对 bar.applyTheme 有存在性守卫。⑤ answer.js _reward(L72-80) 重入安全（L75 先 clearTimeout）、L74 vibrateShort 带 fail；onUnload(L61-64) 清 _rwTimer+_stopTimers 无泄漏；my.js onThemeTap(L40-49)/onThemeAuto(L52-58) 安全（setPref 内部 try/catch，Array.find 作用于 list() 数组）。⑥ app.js/app.wxss 均不引用 theme；app.js L13-20 getSystemInfoSync+getMenuButtonBoundingClientRect 有 try/catch 兜底。⑦ project.config.json:5 libVersion=\"latest\"；特性地板：page-meta 2.9+ / vibrateShort type 2.13+ / lazyCodeLoading 2.11.1+ / darkmode+themeLocation 2.11.0+ / getTabBar 2.6.2+，theme.json 的 @bgColor/@bgTxtStyle 两引用齐备，latest 全覆盖；shareFileMessage/showShareImageMenu 均有 if 守卫（answer.js:278/468）。主包总体积约 200KB（images 仅 4KB）远低于 2MB 墙。",
+    "fix": "无需修复——页面注册失败路径已全部排除。真机「页面不存在」不应再从 v0.7.3 主题代码找原因，转向包下载/版本指向链路（见下条）。"
+   },
+   {
+    "title": "真机「页面不存在/包未打开」的真正风险源：海报码 env_version 指向与线上 1.0.7 旧页面表",
+    "severity": "high",
+    "evidence": "E:/AI-Station/services/qianwen-engine/qianwen_engine/config.py:54 POSTER_QR_ENV_VERSION = \"trial\"（注释明言：发布当日切 release 一行即切；正式版未发布前置 release 会开出旧 1.0.7）。app.py:680 海报小程序码 page=\"pages/ask/ask\"，而 pages/home/home.js:2-4 记载线上老版(1.0.7)页面表只有 home/home 与 my/my——若码按 release 解析（正式版未发布/新用户），pages/ask/ask 不在旧表 → 经典「页面不存在」。trial 码则仅体验成员可开，非成员扫码即「包未打开」（雷达所示形态）。wechat.py:101-117 check_path=False 规避了签发侧校验，但用户侧打开仍按 env_version 落包。",
+    "fix": "顺序铁律：新版提审通过并正式发布后，把 config.py:54 改为 POSTER_QR_ENV_VERSION = \"release\" 并重启引擎（每答案×每 env 版本有缓存，store.get_poster 会自动重生成，app.py:656-662 已有该机制）；发布前保持 trial，且把常用扫码人加进体验成员列表。这正是用户令「海报的码也切到最后的正式版」的落点——须等发布完成再切。"
+   },
+   {
+    "title": "ask.js 两处 wx.vibrateShort 带 type 参数但未挂 fail 回调",
+    "severity": "low",
+    "evidence": "pages/ask/ask.js:151 与 ask.js:196：if (wx.vibrateShort) { try { wx.vibrateShort({ type: 'light' }); } catch (e) {} } —— try/catch 只能接同步抛错；基础库 <2.13.0 时 type 参数不识别走异步 fail，无 fail 回调仅产生控制台告警（不会崩溃、不影响页面注册）。answer.js:74 / my.js:46/56 同类调用均带 fail: () => {}。",
+    "fix": "两处统一补 fail: () => {}，与其余调用对齐：wx.vibrateShort({ type: 'light', fail: () => {} })。纯卫生项，非故障源。"
+   },
+   {
+    "title": "首次渲染闪白：themeStyle 仅在 onShow 注入，首帧 --t-* 变量未定义",
+    "severity": "low",
+    "evidence": "各页 data 无 themeStyle 初值（如 answer.js:13-46 data 块无该字段），变量靠 onShow → theme.apply(this) 的 setData 注入；首帧 page-style=\"\" 时 app.wxss:45 .bp-grid 的 rgba(var(--t-glow-rgb),0.13) 等含 --t-* 的背景层 invalid-at-computed-value 被丢弃，真机慢速首帧可见短暂无主题闪烁。仅视觉问题，非注册/渲染失败。",
+    "fix": "可选优化：在各页 data 中预置 themeStyle: '' 之外，于 onLoad 里同步调用一次 theme.apply(this)（theme.apply 内部全部同步、无顶层 wx 依赖，onLoad 调用安全），或 data 直接给 navy 主题的 styleStr(theme.current()) 初值。"
+   },
+   {
+    "title": "海报码 scene 参数 s=p&a=<aid> 落地页未消费（既有缺口，非 v0.7.3 回归）",
+    "severity": "low",
+    "evidence": "app.py:680 wxacode_unlimited(f\"s=p&a={aid}\", \"pages/ask/ask\")，但 pages/ask/ask.js 的 onLoad(L57-67)/onShow(L69-83) 均未读取 options.scene 并解码跳转——扫海报码的用户落到咨询页而非对应答案页。不影响页面注册，但削弱海报双病毒环设计。",
+    "fix": "ask.js onLoad 增加分支：const sc = decodeURIComponent(options.scene || ''); 匹配 s=p&a= 时 wx.navigateTo('/pages/answer/answer?id='+aid)。"
+   },
+   {
+    "title": "结构合法性备注：answer.wxml 顶层 template 定义位于根节点之后（合法，非风险）",
+    "severity": "info",
+    "evidence": "pages/answer/answer.wxml:330-339 <template name=\"inl\"> 定义在 L3-328 根 <view class=\"page\"> 之后、与 page-meta 并列为第 3 个顶层节点；WXML template 为编译期声明全局提升，前向引用（L41 起多处 is=\"inl\"）在模拟器与真机均有效。",
+    "fix": "无需修改；记录备查，避免误判为结构错误。"
+   },
+   {
+    "title": "发布链基础库口径：libVersion=latest 仅管开发/预览，正式版基础库由小程序后台控制",
+    "severity": "info",
+    "evidence": "project.config.json:5 \"libVersion\": \"latest\" 覆盖预览与体验版（page-meta 2.9+/vibrateShort type 2.13+/lazyCodeLoading 2.11.1+ 全满足）；但正式版的调优基础库版本在 mp 后台「版本管理→基础库」设定，不受本文件控制。",
+    "fix": "提审 0.7.2/0.7.3 时在后台确认最低基础库 ≥ 2.13.0（建议直接用默认最新稳定线），防正式版落到旧库导致 page-meta 静默失效（仅丢主题，不致页面不存在）。"
+   }
+  ],
+  "verdict": "七项审计全部通过：v0.7.3 主题系统在代码层面不存在真机页面注册/渲染失败风险——theme.js 无顶层 wx.* 或可抛异常代码；六页 wxml 的 page-meta 全部为首节点（grep 实证仅 6 处且全在 line 1）；12 个 JS 文件 V8 语法解析全 OK、require 路径全对、theme.apply 全在 onShow；custom-tab-bar Component()/attached 完整；answer.js _reward/_rwTimer/onUnload 与 my.js onThemeTap/onThemeAuto 均安全；app.js/app.wxss 不引用 theme；libVersion=latest 覆盖全部特性地板（page-meta 2.9+/vibrateShort type 2.13+），主包约 200KB 无体积墙。结论：真机「页面不存在（雷达显示包未打开）」不是页面注册失败，指向版本指向链——海报码 env_version=\\\"trial\\\"（config.py:54）只对体验成员开包，且其 page=pages/ask/ask 不在旧 1.0.7 线上页面表；用户令「海报的码切到最后的正式版」必须等新版过审发布后再把 config.py:54 切 \\\"release\\\"（缓存机制会自动重生成全部海报码），顺序不能反。遗留卫生项：ask.js:151/196 补 vibrateShort fail 回调、首帧主题闪烁可在 onLoad 预调 theme.apply、海报码 scene 参数建议在 ask.js 消费。"
+ },
+ {
+  "findings": [
+   {
+    "title": "撤审/提审无 CLI 通道：cli.bat 与 miniprogram-ci 均不支持，唯一程序化路径=第一方服务端 API",
+    "severity": "high",
+    "evidence": "实测 E:/WeChatDevTools/cli.bat -h 命令全集仅 open/login/islogin/preview/auto-preview/upload/build-npm/auto/auto-replay/agent/reset-fileutils/close/quit/cache/engine/open-other/build-ipa/build-apk，无 submit/undocodeaudit；app.asar grep 三 API 名均 0 命中；upload_qianwen.mjs 用 miniprogram-ci 仅 upload。wechat.py:70-92 已有 client_credential 第一方 access_token（appid=wx5cee1574ce45819b，appsecret 读 data/secrets/zongbao_qianwen_mp.secret），且 0930 RUN_LEDGER #149 实证 ECS 出口可取 token 产真码。",
+    "fix": "在 ECS 上（出口 IP 已实证可取 token）用 curl_cffi impersonate=chrome 直调 POST /wxa/get_latest_auditstatus → /wxa/undocodeaudit（撤 0.7.1）→ /wxa/security/submitaudit（提 0.7.3）→ 审过后 /wxa/release；非 0 读 errmsg 分支处理，兜底=mp 控制台手动两键。"
+   },
+   {
+    "title": "提审对象=最新上传的开发版本：提审到发布完成之间必须冻结一切再上传",
+    "severity": "high",
+    "evidence": "upload_qianwen.mjs 0929 教训注释（同 robot 再上传替换记录）+ robot 轮转机制说明多机器人多版本并存；服务端 submitaudit 审的是当前最新开发版本——0.7.3 为 robot10（RUN_LEDGER #78，119443B），任何后续 forge deliver/upload 都会顶掉审核对象。",
+    "fix": "发布 runbook Phase 0 下达上传冻结令：submitaudit 成功起至 release 完成，禁跑 upload_qianwen.mjs/forge deliver；robot_registry.jsonl 末行核对 robot10/0.7.3 仍为最新。"
+   },
+   {
+    "title": "海报码切 release 必须在「0.7.3 全量发布完成之后」——提前切=开出旧线上 1.0.7（0930 已实锤）",
+    "severity": "high",
+    "evidence": "config.py:54 注释明载「0930 修正：正式版未发布前置 release 会开出旧 1.0.7」；RUN_LEDGER #71 当日本机+线上均误置 release 双双回 trial。用户本令「海报的码也切到最后的正式版」= 终态动作。",
+    "fix": "严格时序：提审通过 → /wxa/release 或控制台发布 → 真机确认线上版=0.7.3（周换装主题立辨）→ 才改 config.py:54 trial→release。"
+   },
+   {
+    "title": "海报缓存三层自动失效但惰性重生——切换后须显式验证+可选预热",
+    "severity": "medium",
+    "evidence": "wechat.py:106-111 wxacode 磁盘缓存键=sha256(scene|page|env)，env 变即新键；store.py:742-756 posters 表 PK=aid、env 为列，ON CONFLICT(aid) DO UPDATE 覆盖 env，get_poster(aid,\"release\") 未命中即重生（约 2.3s/份）。",
+    "fix": "重启后验证三层：①ls /opt/qianwen/data/qianwen/wxacode 出现 release 新键文件；②sqlite 查 posters 按 env 分组计数；③端到端取一份海报手机扫码必须打开 0.7.3 正式版 ask 页且 scene 命中该 aid；历史 aid 多时可跑预热脚本批量重生。"
+   },
+   {
+    "title": "锅圈 100 条核对不能走 /api/pot/list——生产已 401 化，须 ECS DB 直查",
+    "severity": "medium",
+    "evidence": "实测 https://api.yrecepc.cn/api/pot/list 与 http://47.120.43.20:8869/api/pot/list 均 HTTP 401（v0.7.3 隐私门收紧后需登录态）；RUN_LEDGER #81 播种进度 13:xx 时 26/100、预计傍晚收满——收满与否未确认。",
+    "fix": "ECS 上 sqlite3 /opt/qianwen/data/qianwen/data 路径的 db.sqlite（真库=/opt/qianwen/data/qianwen/db.sqlite）查 COUNT(*) FROM pot_items=100 且 LENGTH(body)>=350 抽查；前端三页签+200 字预览走模拟器/真机复核。"
+   },
+   {
+    "title": "本机 DevTools CLI 损坏（exit 9）——模拟器冒烟须走 wechat-devtools MCP 而非 cli.bat",
+    "severity": "medium",
+    "evidence": "RUN_LEDGER #64：User Data .cli 握手文件 ENOENT exit 9，IDE 修复挂低优先；0930 v0.7.3 像素级复核（#74-75）走 MCP/模拟器完成。",
+    "fix": "模拟器冒烟用 wechat-devtools MCP（wechat_ide open E:/AI-Station/WeAppForge/projects/zongbao-ai → wechat_navigate 五页 → wechat_screenshot → wechat_inspector 0 异常 0 警告）。"
+   },
+   {
+    "title": "域名添加用 action=add 且勿用 set（覆盖即事故）；月度修改限额共池",
+    "severity": "medium",
+    "evidence": "官方 modify_domain 协议：POST json={action, requestdomain/wsrequestdomain/uploaddomain/downloaddomain/udpdomain}，域名须 HTTPS+ICP 备案（api.yrecepc.cn 双满足），单类上限 200 个、修改操作计入当月额度（约 50 次/月，与控制台手工修改共享）；set 会整体覆盖既有配置。",
+    "fix": "先 action=get 查 requestdomain 是否已含 https://api.yrecepc.cn；缺则 action=add 精准追加单域，再 get 复验；绝不用 set。"
+   },
+   {
+    "title": "管理脚本取 token 会互踢引擎缓存 token；IP 白名单分支已被 ECS 实证排除",
+    "severity": "low",
+    "evidence": "wechat.py:95-98 _invalidate_token 注释「外部新取 token 会让旧 token 5 分钟内失效」；引擎仅 wxacode 路径用 access_token 且带 40001/42001 自愈重试（wechat.py:122-134）；ECS 出口取 token 已在产线跑通（#149 海报真码）。",
+    "fix": "管理 API 调用统一放 ECS 执行；调用序列结束后 systemctl restart qianwen-engine（反正切 release 要重启，顺带清 token 缓存）。若返 40164 则说明控制台开了 IP 白名单，把 ECS 47.120.43.20 加入或控制台直接操作。"
+   },
+   {
+    "title": "0.7.1 审核单状态未知：可能审核中也可能已通过——撤审前先查态分支处理",
+    "severity": "medium",
+    "evidence": "计算任务背景称 0.7.1 在审核队列；但记忆档案另载「剩用户两步=提审 0.7.2」，审核单现状无机器内证据。undocodeaudit 仅对「审核中」单有效，已通过的单不可撤。",
+    "fix": "先 POST /wxa/get_latest_auditstatus：审核中→undocodeaudit 后提 0.7.3；已通过未发布→不可撤也无需撤（不阻塞新提审），切勿误发布 0.7.1；无审核单→直接提审。"
+   },
+   {
+    "title": "真机验收依赖体验版钉位 0.7.3（无 API 可代办，用户一步）",
+    "severity": "medium",
+    "evidence": "RUN_LEDGER #63/#78：体验码钉位一直是用户控制台手工位；qr_trial_v073 已出码（page=home/home 永不404配方）但钉位是否已从旧版换到 0.7.3 未确认。",
+    "fix": "提审前请用户在 mp 后台版本管理将 0.7.3（robot10，119443B）选为体验版，扫 qr_trial_v073 完成十一点令真机验收，再进撤审/提审序列。"
+   }
+  ],
+  "verdict": "0.7.3 发布+海报码切 release 可执行 runbook（按执行顺序；含撤审/提审通道盘点、域名自查、切换链、测试门）。\n\n【通道盘点结论】(1) E:/WeChatDevTools/cli.bat 实测 -h：命令全集=open/login/islogin/preview/auto-preview/upload/build-npm/auto/auto-replay/agent/reset-fileutils/close/quit/cache/engine/open-other/build-ipa/build-apk——无 submit、无撤审；(2) miniprogram-ci（upload_qianwen.mjs 所用）同样只到 upload 为止；(3) 唯一程序化通道=第一方服务端 API，凭证用 wechat.py:70-92 同款 client_credential（appid=wx5cee1574ce45819b + data/secrets/zongbao_qianwen_mp.secret 的 appsecret），ECS 出口取 token 产真码已产线实证（RUN_LEDGER #149），IP 白名单风险已被该实证排除。管理调用统一放 ECS 上跑（curl_cffi impersonate=chrome）。\n\nPhase 0 冻结与基线\nS1 上传冻结令：submitaudit 起至 release 完成，禁跑 upload_qianwen.mjs / forge deliver（提审对象=最新开发版本，再上传即顶掉 0.7.3）。\nS2 核对 robot_registry.jsonl 末行=0.7.3/robot10（119443B）为最新开发版本。\n\nPhase 1 发布前测试门（全绿才进 Phase 2）\nS3 引擎 pytest：cd E:/AI-Station/services/qianwen-engine && python -m pytest -q → 判据 47 passed（台账 #73 基线）。\nS4 BOOT-SIM：python E:/AI-Station/WeAppForge/work/bootsim_v3.py → 判据 205/205（台账 #74 基线）。\nS5 锅圈 100 条核对（生产已 401 化，走 DB）：ECS 上 sqlite3 /opt/qianwen/data/qianwen/db.sqlite \"SELECT COUNT(*) FROM pot_items;\" =100；抽查 \"SELECT COUNT(*) FROM pot_items WHERE LENGTH(body)>=350;\" 应≈100（pot_seed_zhipu 质量门 350 字）；播种 13:xx 时仅 26/100，收满与否必须实测。前端复核=锅圈三页签+200 字预览。\nS6 生产冒烟：https://api.yrecepc.cn 探活 401、quota/digest/citation_ft/poster 腿（带 token 脚本）。\nS7 模拟器冒烟：wechat-devtools MCP（本机 cli.bat 已损坏 exit 9，台账 #64）——open 项目 → 五页 navigate → 截图 → inspector 0 异常 0 警告。\nS8 真机验收：用户后台把 0.7.3 选为体验版（无 API 代办）→ 扫 qr_trial_v073（home/home 永不404配方）验收十一点令功能。\n\nPhase 2 合法域名门（提审前必须完成——release 强校验，体验版可跳不代豁免）\nS9 ECS 上 action=get 自查：POST https://api.weixin.qq.com/wxa/modify_domain?access_token=TOKEN，json={\"action\":\"get\"}，读 requestdomain 是否已含 https://api.yrecepc.cn。\nS10 缺则追加：json={\"action\":\"add\",\"requestdomain\":[\"https://api.yrecepc.cn\"]}（域已 HTTPS+ICP 备案双满足；勿用 set 整体覆盖；修改操作计入当月约 50 次共池额度）→ 复跑 get 验证。\n\nPhase 3 撤审（0.7.1）\nS11 查态：POST /wxa/get_latest_auditstatus?access_token=TOKEN。审核中→S12；已通过未发布→不可撤亦无需撤（不阻塞新提审），切勿误发布 0.7.1；无单→跳 S13。\nS12 撤审：POST /wxa/undocodeaudit?access_token=TOKEN（空 body）→ errcode 0。\n\nPhase 4 提审→发布\nS13 提审：POST /wxa/security/submitaudit?access_token=TOKEN，body item_list 1-5 项，每项 {address:\"pages/ask/ask\", first_id/second_id/first_class/second_class（取控制台已设服务类目，同 0.7.1 提审类目）, title:\"总包AI顾问-免费工程咨询\", tag:\"工具 效率\"}，可带 feedback_info 版本描述；记录返回 auditid。非 0 读 errmsg（40001=token 重取；85086 类=仍有在审单）。\nS14 轮询：POST /wxa/get_auditstatus?access_token=TOKEN json={\"auditid\":...}（status 0=通过 1=审核中 2=失败读 reason）。\nS15 发布：审过后 POST /wxa/release?access_token=TOKEN（或控制台手动发布）→ 线上版=0.7.3 → 真机回归一次线上版（周换装主题立辨新旧）。\n\nPhase 5 海报码切 release（用户本令「海报的码也切到最后的正式版」——仅在 S15 完成后执行，提前切会开出旧 1.0.7，0930 已实锤）\nS16 本机改 E:/AI-Station/services/qianwen-engine/qianwen_engine/config.py:54 \"trial\"→\"release\"，git 定向提交（推送按铁律带百度网盘 bundle 备份）。\nS17 ECS 同切：sed -i 's/^POSTER_QR_ENV_VERSION = \\\"trial\\\"/POSTER_QR_ENV_VERSION = \\\"release\\\"/' /opt/qianwen/services/qianwen-engine/qianwen_engine/config.py → grep 复核 → systemctl restart qianwen-engine → 探针 401=活（顺带清 token 缓存，规避管理脚本互踢）。\nS18 缓存失效验证（三层，全部自动惰性重生，无需手动清）：①磁盘码新键：ls /opt/qianwen/data/qianwen/wxacide 出现 sha256(\\\"s=p&a={aid}|pages/ask/ask|release\\\") 新文件（wechat.py:106-111 env 入键）；②DB：sqlite3 查 posters 按 env 分组——首请求后 env 列翻 release（store.py:750-756 ON CONFLICT(aid) 覆盖）；③端到端：取任一 aid 海报 PNG → 手机扫码必须打开 0.7.3 正式版 pages/ask/ask 且 scene 命中该 aid（新 UI 立辨）。历史答案多可跑预热脚本批量重生（约 2.3s/份）。\n\n风险总览：见 findings（通道唯一性、上传冻结、切 release 时序、缓存惰性、锅圈 401 化走 DB、CLI 损坏走 MCP、add 勿用 set、token 互踢、审核单状态分支、体验版钉位用户步）。\n\nSources: [微信开放社区·提交代码审核 submitAudit](https://developers.weixin.qq.com)、[微信开放社区·设置第三方平台服务器域名 modify_domain](https://developers.weixin.qq.com)、[Think.Admin·小程序审核撤回 undocodeaudit](https://apidoc.gitee.com)、[jacktea/wxproxy·submitaudit 参数示例](https://github.com/jacktea/wxproxy)、[域名修改月度限额参考（掘金/CSDN 转述官方规则）](https://blog.poetries.top)"
+ }
+]

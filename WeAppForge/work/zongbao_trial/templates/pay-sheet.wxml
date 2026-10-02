@@ -1,0 +1,24 @@
+<!-- templates/pay-sheet.wxml — 支付前披露半屏弹层（T-P0-26）：
+     2.2 三条逐字披露 + 价格 ¥498 + 批评评分退款通道引导 + 完整规则入口。
+     数据/文案单一真源 utils/agreement.ts（PAY_SHEET）；事件绑定宿主页方法：
+     onPaySheetClose / onOpenPayRules / onPayAgree。灰置态弹层照常可看规则。 -->
+<template name="pay-sheet">
+  <view wx:if="{{paySheetOpen}}" class="pay-mask" bindtap="onPaySheetClose">
+    <view class="pay-sheet" catchtap="noop">
+      <view class="pay-title">{{paySheet.title}}</view>
+      <view class="pay-price-row">
+        <text class="pay-price">{{paySheet.price}}</text>
+        <text class="pay-price-line">{{paySheet.priceLine}}</text>
+      </view>
+      <view class="pay-li" wx:for="{{paySheet.bullets}}" wx:key="index">
+        <view class="li-dot"></view>
+        <text class="li-text" user-select>{{item}}</text>
+      </view>
+      <view class="pay-refund">{{paySheet.refundLine}}</view>
+      <view class="pay-actions">
+        <button class="pay-btn" plain bindtap="onOpenPayRules">{{paySheet.rulesBtnText}}</button>
+        <button class="pay-btn primary" bindtap="onPayAgree">{{paySheet.agreeBtnText}}</button>
+      </view>
+    </view>
+  </view>
+</template>

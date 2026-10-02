@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>总包AI顾问 v0.3.0 设计预览</title>
+<style>
+/* ═══ 设计令牌（与 app.wxss 同源，rpx÷2=px） ═══ */
+:root {
+  --navy-0:#081a36; --navy-1:#0d2547; --navy-2:#16355f;
+  --grid:rgba(101,160,255,.14); --grid-soft:rgba(101,160,255,.055);
+  --white-ink:#eaf3ff; --ink-dim:#93acd1;
+  --paper:#f7f4ec; --card:#ffffff; --ink:#1b2434; --ink-2:#39445a;
+  --muted:#7a8496; --line:#e6e1d2;
+  --accent:#ff9432; --accent-deep:#e07a0e; --stamp:#c8452b; --draft:#1d6fd0;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#2b2f3a; font-family:-apple-system,"PingFang SC","HarmonyOS Sans SC","MiSans","Microsoft YaHei",sans-serif; display:flex; gap:40px; padding:40px; align-items:flex-start; }
+.phone { width:375px; height:700px; background:var(--paper); overflow:hidden; border-radius:24px; box-shadow:0 24px 60px rgba(0,0,0,.5); position:relative; font-size:14px; color:var(--ink); line-height:1.65; flex-shrink:0; }
+.phone::after { content:attr(data-label); position:absolute; top:-32px; left:0; color:#aab3c5; font-size:13px; letter-spacing:2px; }
+.mono { font-family:"SF Mono",Menlo,Consolas,monospace; font-variant-numeric:tabular-nums; }
+.rise { animation:rise .42s cubic-bezier(.22,.9,.3,1) both; }
+@keyframes rise { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+
+.bp-grid { background-color:var(--navy-0);
+  background-image:radial-gradient(120% 90% at 28% 0%,rgba(101,160,255,.13),transparent 55%),
+    linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px),linear-gradient(var(--grid-soft) 1px,transparent 1px),linear-gradient(90deg,var(--grid-soft) 1px,transparent 1px);
+  background-size:100% 100%,80px 80px,80px 80px,16px 16px,16px 16px; }
+.ticks { position:relative; }
+.ticks::before { content:''; position:absolute; left:0; top:0; width:13px; height:13px; border-left:1.5px solid var(--tick,rgba(234,243,255,.55)); border-top:1.5px solid var(--tick,rgba(234,243,255,.55)); }
+.ticks::after { content:''; position:absolute; right:0; bottom:0; width:13px; height:13px; border-right:1.5px solid var(--tick,rgba(234,243,255,.55)); border-bottom:1.5px solid var(--tick,rgba(234,243,255,.55)); }
+.kicker { font-size:10px; letter-spacing:2.5px; font-weight:600; color:var(--ink-dim); }
+.kicker-on-paper { color:var(--muted); }
+.card { background:var(--card); border-radius:3px; padding:18px 16px; margin:11px 12px; box-shadow:0 1px 0 rgba(27,36,52,.04),0 5px 17px rgba(27,36,52,.07); --tick:rgba(13,37,71,.35); }
+.btn-primary { background:linear-gradient(180deg,#ffa53f,#ff9432 45%,#f0821a); color:#0a1e3c; border-radius:5px; font-size:16px; font-weight:800; letter-spacing:1px; padding:11px 0; text-align:center; box-shadow:0 6px 14px rgba(255,148,50,.34),inset 0 1px 0 rgba(255,255,255,.55); }
+.muted { color:var(--muted); font-size:12px; }
+
+/* ═════════ ASK 页 ═════════ */
+.hero { color:var(--white-ink); padding:0 18px 22px; position:relative; overflow:hidden; }
+.sb { height:20px; } .navrow { height:44px; }
+.hero-kicker { font-size:9.5px; letter-spacing:3.5px; color:var(--ink-dim); font-weight:600; }
+.hero-title { margin-top:7px; font-size:29px; font-weight:800; letter-spacing:3px; text-shadow:0 1px 0 rgba(0,0,0,.25); }
+.hero-sub { margin-top:7px; font-size:12.5px; color:var(--ink-dim); letter-spacing:.5px; line-height:1.7; }
+.hero-inner { position:relative; }
+.hero-inner::after { content:''; position:absolute; right:0; top:4px; width:17px; height:17px;
+  background:linear-gradient(var(--ink-dim),var(--ink-dim)) center/100% 1px no-repeat,linear-gradient(var(--ink-dim),var(--ink-dim)) center/1px 100% no-repeat; opacity:.65; }
+.quota-ticket { margin-top:17px; display:flex; align-items:stretch; background:rgba(8,26,54,.72); border:1px solid rgba(101,160,255,.3); border-radius:4px; padding:10px 14px; }
+.qt-label { font-size:10px; letter-spacing:2px; color:var(--ink-dim); }
+.qt-num { font-size:31px; font-weight:800; color:var(--accent); line-height:1.15; text-shadow:0 0 12px rgba(255,148,50,.35); }
+.qt-left { display:flex; flex-direction:column; justify-content:center; }
+.qt-perf { width:0; margin:3px 15px; border-left:1.5px dashed rgba(101,160,255,.4); }
+.qt-right { display:flex; flex-direction:column; justify-content:center; gap:4px; border-left:1.5px dotted rgba(147,172,209,.35); padding-left:14px; }
+.qt-kv { font-size:12px; color:var(--white-ink); opacity:.9; }
+.qt-dim { opacity:.6; }
+.hero-dwg { margin-top:13px; font-size:9.5px; letter-spacing:2px; color:rgba(147,172,209,.5); display:flex; align-items:center; gap:10px; }
+.dim-rule { flex:1; height:9px; border-left:1px solid rgba(147,172,209,.4); border-right:1px solid rgba(147,172,209,.4); position:relative; }
+.dim-rule::before { content:''; position:absolute; left:0; right:0; top:4px; border-top:1px solid rgba(147,172,209,.4); }
+.dim-rule::after { content:''; position:absolute; left:-2.5px; right:-2.5px; top:4px; height:0; border-top:3px solid transparent; border-bottom:3px solid transparent; background:none; box-shadow:none; }
+.dim-cap { font-size:8px; color:rgba(147,172,209,.45); letter-spacing:1px; border:1px solid rgba(147,172,209,.35); border-radius:2px; padding:0 3px; line-height:1.5; }
+.sheet-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:11px; }
+.sheet-no { font-size:10.5px; color:var(--muted); letter-spacing:1px; }
+.ask-card { padding:15px 15px 9px; }
+.ask-input { width:100%; min-height:100px; font-size:15.5px; line-height:1.75; color:var(--ink); border:none; outline:none; resize:none; background:transparent; font-family:inherit; }
+.ask-ph { color:#b3ad9d; }
+.ask-foot { display:flex; justify-content:space-between; align-items:center; padding-top:7px; border-top:1px dashed var(--line); margin-top:3px; }
+.char-count { font-size:11px; color:var(--muted); }
+.clear-btn { color:var(--draft); font-size:12px; }
+.chips { display:flex; flex-wrap:wrap; gap:9px; }
+.chip { background:transparent; color:var(--navy-1); border:1px dashed rgba(13,37,71,.35); border-radius:3px; padding:6.5px 11px; font-size:12.5px; }
+.bottom-bar { padding:4px 4px 0; margin:12px 12px 0; }
+.tip-line { text-align:center; padding:7px 0 3px; letter-spacing:.5px; }
+.tabbar { position:absolute; bottom:0; left:0; right:0; display:flex; background:#081a36;
+  background-image:linear-gradient(rgba(101,160,255,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(101,160,255,.055) 1px,transparent 1px); background-size:16px 16px;
+  border-top:1px solid rgba(101,160,255,.28); padding:7px 0 5px; }
+.tab { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; }
+.tab-sq { width:29px; height:29px; border-radius:4px; border:1.5px solid rgba(147,172,209,.55); display:flex; align-items:center; justify-content:center; }
+.tab-glyph { font-size:14px; font-weight:700; color:#93acd1; }
+.tab-t { font-size:10px; letter-spacing:2px; color:#93acd1; }
+.tab-on .tab-sq { background:linear-gradient(180deg,#ffa53f,#f0821a); border-color:#ff9432; box-shadow:0 4px 10px rgba(255,148,50,.4); transform:translateY(-2px); }
+.tab-on .tab-glyph { color:#0a1e3c; }
+.tab-on .tab-t { color:#ff9432; font-weight:700; }
+
+/* ═════════ ANSWER 页 ═════════ */
+.topnav-row { display:flex; align-items:center; padding:0 12px; }
+.back-btn { width:30px; height:30px; border-radius:5px; border:1px solid rgba(147,172,209,.5); color:var(--white-ink); font-size:20px; display:flex; align-items:center; justify-content:center; }
+.topnav-title { margin-left:10px; font-size:11px; letter-spacing:3px; color:var(--ink-dim); font-weight:600; }
+.q-band { margin:-1px 12px 11px; border:1px solid rgba(101,160,255,.3); border-radius:4px; color:var(--white-ink); }
+.q-band-inner { padding:13px 14px 15px; border-left:3px solid var(--accent); }
+.q-kicker { font-size:9.5px; letter-spacing:3px; color:var(--ink-dim); font-weight:600; margin-bottom:6px; }
+.q-text { font-size:17px; font-weight:700; line-height:1.55; color:#f4f8ff; text-shadow:0 1px 0 rgba(0,0,0,.22); }
+.a-head { display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; padding-bottom:11px; border-bottom:1px solid var(--line); }
+.a-badge { display:inline-flex; align-items:center; gap:5px; font-size:13px; font-weight:700; color:var(--navy-1); }
+.a-badge-dot { width:7px; height:7px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 3px rgba(255,148,50,.16); }
+.a-meta { display:flex; gap:6px; }
+.meta-chip { font-size:10.5px; color:var(--navy-1); background:#eef2fa; border:1px solid #dde5f2; border-radius:2px; padding:2px 8px; }
+.md-p { font-size:15px; line-height:1.92; color:#252d3d; text-align:justify; margin:0 0 13px; }
+.md-h2 { display:flex; align-items:center; gap:8px; margin:22px 0 10px; }
+.h2-bar { width:6px; height:17px; border-radius:1.5px; background:linear-gradient(180deg,var(--navy-2),var(--navy-0)); box-shadow:2px 0 0 rgba(255,148,50,.75); }
+.md-h2-text { font-size:16.5px; font-weight:800; color:var(--navy-0); }
+.md-li { display:flex; gap:8px; align-items:flex-start; margin-bottom:7px; }
+.li-dot { width:6px; height:6px; border-radius:50%; background:var(--accent); flex-shrink:0; margin-top:10px; box-shadow:0 0 0 2.5px rgba(255,148,50,.14); }
+.li-text { flex:1; font-size:15px; line-height:1.85; color:#252d3d; }
+.md-quote { border-left:3px solid var(--draft); background:#f0f4fb; border-radius:0 4px 4px 0; padding:10px 12px; margin:0 0 13px; font-size:14px; color:var(--ink-2); line-height:1.85; }
+.md-tbl { display:inline-block; min-width:100%; border-radius:3px; overflow:hidden; border:1px solid #dcd7c6; }
+.md-tr { display:flex; }
+.md-tr-head { background:var(--navy-0); }
+.md-th,.md-td { padding:8px 11px; font-size:13px; flex-shrink:0; }
+.md-th { font-weight:700; color:var(--white-ink); }
+.md-td { color:#252d3d; border-top:1px solid #e6e1d2; background:#fffdf8; }
+.md-tr .md-th+.md-th { border-left:1px solid rgba(101,160,255,.3); }
+.md-tr .md-td+.md-td { border-left:1px solid #e6e1d2; }
+.cite-block { margin-top:16px; border-top:1px solid var(--line); padding-top:13px; }
+.cite-tbl { border:1px solid #dcd7c6; border-radius:3px; overflow:hidden; background:#fffdf8; }
+.cite-item { display:flex; gap:8px; padding:8px 10px; }
+.cite-item+.cite-item { border-top:1px dashed #e6e1d2; }
+.cite-chip { flex-shrink:0; min-width:19px; height:19px; border-radius:2px; background:var(--navy-0); color:var(--white-ink); font-size:10.5px; font-weight:700; display:flex; align-items:center; justify-content:center; padding:0 4px; }
+.cite-body { flex:1; font-size:12.5px; color:var(--ink-2); }
+.cite-loc { color:var(--muted); margin-left:5px; }
+.act-row { display:flex; justify-content:space-around; }
+.act { display:flex; flex-direction:column; align-items:center; gap:4px; font-size:11.5px; color:var(--ink-2); }
+.act-icon { font-size:12.5px; font-weight:700; min-width:30px; height:30px; border-radius:2px; background:#eef2fa; color:var(--navy-1); border:1px solid #dde5f2; display:flex; align-items:center; justify-content:center; }
+.act-on { color:var(--accent-deep); }
+.act-on .act-icon { background:#fdf3e4; color:var(--accent-deep); border-color:#f3d5ab; }
+.act-icon-wrap { position:relative; }
+.stamp { position:absolute; left:50%; top:50%; transform:translate(-50%,-52%) rotate(-14deg); border:2px double var(--stamp); border-radius:50%; color:var(--stamp); font-size:11px; font-weight:800; padding:3px 5px; background:rgba(255,252,248,.92); letter-spacing:.5px; }
+.act-tip { text-align:center; margin-top:10px; letter-spacing:.5px; }
+
+/* ═════════ MY 页 ═════════ */
+.head { color:var(--white-ink); padding:0 16px 20px; }
+.head-nav { display:flex; align-items:center; }
+.head-title { font-size:11px; letter-spacing:3px; color:var(--ink-dim); font-weight:600; }
+.head-inner { display:flex; align-items:center; gap:12px; margin-top:5px; }
+.avatar-frame { width:50px; height:50px; border-radius:5px; border:1.5px solid rgba(101,160,255,.55); background:rgba(8,26,54,.6); display:flex; align-items:center; justify-content:center; box-shadow:inset 0 0 0 3px rgba(8,26,54,.8),0 0 12px rgba(101,160,255,.18); }
+.avatar-glyph { font-size:23px; font-weight:800; color:var(--white-ink); }
+.head-info { flex:1; }
+.nick { font-size:16px; font-weight:800; letter-spacing:1px; }
+.head-sub { margin-top:4px; font-size:12px; color:var(--ink-dim); letter-spacing:1px; }
+.head-no { font-size:10px; color:rgba(147,172,209,.6); letter-spacing:1.5px; align-self:flex-start; margin-top:3px; }
+.quota-grid { display:flex; align-items:stretch; }
+.q-item { flex:1; text-align:center; }
+.q-num { font-size:26px; font-weight:800; color:var(--navy-1); line-height:1.2; }
+.q-num-main { color:var(--accent-deep); text-shadow:0 0 10px rgba(255,148,50,.25); }
+.q-label { font-size:10px; letter-spacing:1.5px; color:var(--muted); margin-top:3px; }
+.q-perf { border-left:1.5px dashed var(--line); margin:4px 0; }
+.quota-rule { margin-top:11px; border-top:1px dashed var(--line); padding-top:9px; }
+.hist-item { display:flex; align-items:center; gap:10px; padding:12px 2px; border-bottom:1px dashed var(--line); }
+.hist-item:last-child { border-bottom:none; }
+.hist-no { flex-shrink:0; font-size:10.5px; color:rgba(13,37,71,.4); border:1px solid rgba(13,37,71,.18); border-radius:2px; padding:2px 4px; }
+.hist-main { flex:1; min-width:0; }
+.hist-q { font-size:14.5px; font-weight:600; line-height:1.5; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; }
+.hist-meta { display:flex; align-items:center; gap:8px; margin-top:5px; flex-wrap:wrap; }
+.hist-time { font-size:11px; }
+.hist-badge { font-size:10px; color:#8a5a10; background:#f8efdc; border:1px solid #ecd9b4; border-radius:2px; padding:1px 6px; }
+.hist-liked { color:var(--accent-deep); background:#fdf3e4; border-color:#f3d5ab; }
+.hist-arrow { color:rgba(13,37,71,.3); font-size:17px; }
+</style>
+</head>
+<body>
+
+<!-- ═══ 1 · 提问页 ═══ -->
+<div class="phone" data-label="① 提问页 ASK">
+  <div class="hero bp-grid ticks">
+    <div class="sb"></div><div class="navrow"></div>
+    <div class="hero-inner">
+      <div class="hero-kicker">GENERAL CONTRACTOR · AI ADVISOR</div>
+      <div class="hero-title">总包AI顾问</div>
+      <div class="hero-sub">工程人的随身智库 · 投标 / 资质 / 合同 / EPC，秒级专业解答</div>
+      <div class="quota-ticket">
+        <div class="qt-left"><div class="qt-label">今日可问</div><div class="qt-num mono">3</div></div>
+        <div class="qt-perf"></div>
+        <div class="qt-right"><div class="qt-kv">免费 3 次</div><div class="qt-kv qt-dim">点「有用」可再得次数</div></div>
+      </div>
+      <div class="hero-dwg mono">DWG NO. GC-0929 · SCALE 1:1<span class="dim-rule"></span><span class="dim-cap">SHT 1/1</span></div>
+    </div>
+  </div>
+  <div class="card ticks ask-card rise">
+    <div class="sheet-head"><span class="kicker kicker-on-paper">委托单 · QUESTION SHEET</span><span class="sheet-no mono">NO. GC-0929</span></div>
+    <textarea class="ask-input" rows="3">EPC 招标文件的资质门槛怎么设置？</textarea>
+    <div class="ask-foot"><span class="char-count mono">18/500</span><span class="clear-btn">清空</span></div>
+  </div>
+  <div class="card ticks rise">
+    <div class="sheet-head"><span class="kicker kicker-on-paper">常用问法 · QUICK DRAW</span></div>
+    <div class="chips">
+      <span class="chip">施工总承包特级资质承包范围？</span>
+      <span class="chip">投标保证金最长有效期？</span>
+      <span class="chip">EPC 设计变更费用谁承担？</span>
+      <span class="chip">联合体协议必备条款？</span>
+    </div>
+  </div>
+  <div class="bottom-bar">
+    <div class="btn-primary">立即提问</div>
+    <div class="muted tip-line">免费 3 次/天 · 点「有用」再得 1 次</div>
+  </div>
+  <div class="tabbar">
+    <div class="tab tab-on"><div class="tab-sq"><span class="tab-glyph">问</span></div><span class="tab-t">提问</span></div>
+    <div class="tab"><div class="tab-sq"><span class="tab-glyph">我</span></div><span class="tab-t">我的</span></div>
+  </div>
+</div>
+
+<!-- ═══ 2 · 回答页 ═══ -->
+<div class="phone" data-label="② 回答页 ANSWER">
+  <div class="hero bp-grid" style="padding:0 0 0;">
+    <div class="sb"></div>
+    <div class="topnav-row navrow">
+      <div class="back-btn">‹</div>
+      <span class="topnav-title">回答 · ANSWER</span>
+    </div>
+    <div class="q-band ticks" style="margin:0 12px 0;">
+      <div class="q-band-inner">
+        <div class="q-kicker">问 · QUESTION</div>
+        <div class="q-text">EPC 招标文件的资质门槛怎么设置？</div>
+      </div>
+    </div>
+  </div>
+  <div class="card ticks a-card rise">
+    <div class="a-head">
+      <span class="a-badge"><span class="a-badge-dot"></span>工程大脑 · 专业解答</span>
+      <span class="a-meta"><span class="meta-chip mono">1246 字</span><span class="meta-chip mono">4 条依据</span></span>
+    </div>
+    <div style="margin-top:6px;">
+      <div class="md-p">EPC 招标文件的资质门槛设置，需同时满足《招标投标法》对投标人资格的基本要求与项目实际需要。建议从以下维度设置：</div>
+      <div class="md-h2"><span class="h2-bar"></span><span class="md-h2-text">一、企业资质要求</span></div>
+      <div class="md-li"><span class="li-dot"></span><span class="li-text">施工资质：建筑工程施工总承包<b>一级及以上</b>资质；</span></div>
+      <div class="md-li"><span class="li-dot"></span><span class="li-text">设计资质：工程设计综合甲级或建筑行业甲级资质。</span></div>
+      <div class="md-h2"><span class="h2-bar"></span><span class="md-h2-text">二、业绩与人员门槛</span></div>
+      <div class="md-quote">近五年内至少完成 2 项合同额 5 亿元以上的工程总承包业绩，项目经理须具备一级注册建造师执业资格。</div>
+      <div class="md-tbl"><div class="md-tr md-tr-head"><span class="md-th">维度</span><span class="md-th">最低要求</span></div>
+      <div class="md-tr"><span class="md-td">施工业绩</span><span class="md-td">2 项 ≥5 亿元</span></div>
+      <div class="md-tr"><span class="md-td">项目经理</span><span class="md-td">一级建造师</span></div></div>
+    </div>
+    <div class="cite-block">
+      <div class="kicker kicker-on-paper" style="margin-bottom:8px;">依据来源 · BASIS OF ANSWER</div>
+      <div class="cite-tbl">
+        <div class="cite-item"><span class="cite-chip mono">[1]</span><span class="cite-body">《建设项目工程总承包管理规范》GB/T 50358-2017<span class="cite-loc">第 5.2 条</span></span></div>
+        <div class="cite-item"><span class="cite-chip mono">[2]</span><span class="cite-body">《房屋建筑和市政基础设施项目工程总承包管理办法》建市规〔2019〕12号<span class="cite-loc">第 7 条</span></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="card ticks rise">
+    <div class="act-row">
+      <div class="act act-on"><div class="act-icon-wrap"><span class="act-icon">有用</span><span class="stamp">+1次</span></div><span>已加赠</span></div>
+      <div class="act"><span class="act-icon">复制</span><span>全文</span></div>
+      <div class="act"><span class="act-icon">纠错</span><span>指出问题</span></div>
+      <div class="act"><span class="act-icon">分享</span><span>给同行</span></div>
+    </div>
+    <div class="muted act-tip">点「有用」再得 1 次提问机会（每日上限 3 次）</div>
+  </div>
+</div>
+
+<!-- ═══ 3 · 我的页 ═══ -->
+<div class="phone" data-label="③ 我的页 MY">
+  <div class="head bp-grid ticks">
+    <div class="sb"></div><div class="head-nav navrow"><span class="head-title">工程档案 · FOLDER</span></div>
+    <div class="head-inner">
+      <div class="avatar-frame"><span class="avatar-glyph">工</span></div>
+      <div class="head-info"><div class="nick">总包AI顾问 · 工程人</div><div class="head-sub">工程大脑 · 随身智库</div></div>
+      <span class="head-no mono">NO.GC-0929</span>
+    </div>
+  </div>
+  <div class="card ticks quota-card rise">
+    <div class="sheet-head"><span class="kicker kicker-on-paper">今日额度 · QUOTA</span></div>
+    <div class="quota-grid">
+      <div class="q-item"><div class="q-num mono">2</div><div class="q-label">免费剩余</div></div>
+      <div class="q-perf"></div>
+      <div class="q-item"><div class="q-num mono">1</div><div class="q-label">点赞加赠</div></div>
+      <div class="q-perf"></div>
+      <div class="q-item"><div class="q-num mono q-num-main">3</div><div class="q-label">还可提问</div></div>
+    </div>
+    <div class="muted quota-rule">每天免费 3 次 · 点「有用」每次 +1（每日上限 3 次）</div>
+  </div>
+  <div class="card ticks rise">
+    <div class="sheet-head"><span class="kicker kicker-on-paper">提问图纸 · SHEETS</span></div>
+    <div class="hist-item">
+      <span class="hist-no mono">S-01</span>
+      <div class="hist-main">
+        <div class="hist-q">EPC 招标文件的资质门槛怎么设置？</div>
+        <div class="hist-meta"><span class="muted mono hist-time">今天 12:03</span><span class="hist-badge hist-liked">已点赞</span></div>
+      </div>
+      <span class="hist-arrow">›</span>
+    </div>
+    <div class="hist-item">
+      <span class="hist-no mono">S-02</span>
+      <div class="hist-main">
+        <div class="hist-q">投标保证金最长有效期是多久？超出怎么办？</div>
+        <div class="hist-meta"><span class="muted mono hist-time">昨天 15:41</span></div>
+      </div>
+      <span class="hist-arrow">›</span>
+    </div>
+    <div class="hist-item">
+      <span class="hist-no mono">S-03</span>
+      <div class="hist-main">
+        <div class="hist-q">联合体投标协议要写哪些必备条款？</div>
+        <div class="hist-meta"><span class="muted mono hist-time">09-27 09:12</span><span class="hist-badge">部分预览</span></div>
+      </div>
+      <span class="hist-arrow">›</span>
+    </div>
+  </div>
+  <div class="tabbar">
+    <div class="tab"><div class="tab-sq"><span class="tab-glyph">问</span></div><span class="tab-t">提问</span></div>
+    <div class="tab tab-on"><div class="tab-sq"><span class="tab-glyph">我</span></div><span class="tab-t">我的</span></div>
+  </div>
+</div>
+
+</body>
+</html>

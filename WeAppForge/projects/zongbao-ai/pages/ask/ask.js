@@ -2,12 +2,13 @@
 // v0.5.0（用户九点令）：语音全撤（输入法自带语音）；AI优化提问（免费池改写为递进三小问）；
 // 布局=咨询问题输入框 → [AI优化提问|立即咨询]；常用咨询→示范性问题；免费 6 次/天+四动作赠次
 const api = require('../../utils/api');
+const theme = require('../../utils/theme');
 
 // EPC 总承包热点题库：tag=chip 标签，q=递进三小问全文（点按填入）
 const SAMPLES = [
   {
     tag: 'EPC 计价调价',
-    q: 'EPC 固定总价合同下材料价格大幅上涨，我方还能申请调价吗？法律和示范文本的依据是什么？'
+    q: 'EPC 固定总价合同下材料价格大幅上涨，我方还能申请调价吗？政策和示范文本的依据是什么？'
       + '具体要走什么程序、准备哪些证据，才能把调价真正落地拿到钱？'
   },
   {
@@ -17,8 +18,8 @@ const SAMPLES = [
   },
   {
     tag: '背靠背条款',
-    q: '总包对分包的"背靠背"付款条款现在还有效吗？最新司法口径是怎么认定的、'
-      + '哪些情形下无效？条款无效后按什么规则付款，总包该如何合规设计付款条件管理资金风险？'
+    q: '总包对分包的"背靠背"付款条款现在还有效吗？实务和裁判倾向怎么看、'
+      + '哪些情形下不被支持？条款不被支持后按什么规则付款，总包该如何合规设计付款条件管理资金风险？'
   },
   {
     tag: '联合体投标',
@@ -53,10 +54,18 @@ Page({
     sheetNo: ''        // 图纸编号（咨询单装饰）
   },
 
-  onLoad() {
+  onLoad(options) {
     const app = getApp();
     if (app.globalData && app.globalData.nav) {
       this.setData({ nav: app.globalData.nav });
+    }
+    theme.apply(this); // v0.7.4 首帧即上主题变量（onShow 仍会再刷，不闪白）
+    // v0.7.4 海报深链闭环：海报码 scene "s=p&a={aid}" → 直达本篇答案
+    const sc = decodeURIComponent((options && options.scene) || '');
+    const dm = sc.match(/^s=p&a=(.+)$/);
+    if (dm && dm[1]) {
+      this._posterAid = dm[1];
+      this._gotoPoster();
     }
     // 委托单编号：GC + 月日（GC-0929 风格的制图装饰）
     const now = new Date();
@@ -65,10 +74,31 @@ Page({
     this.silentLogin();
   },
 
+  // v0.7.4 海报深链导航（onLoad 首跳 + onShow 兜底重试；成功即清位，3 次上限防循环）
+  _gotoPoster() {
+    const aid = this._posterAid;
+    if (!aid) return;
+    this._posterTries = (this._posterTries || 0) + 1;
+    if (this._posterTries > 3) { this._posterAid = ''; return; }
+    wx.navigateTo({
+      url: '/pages/answer/answer?id=' + aid,
+      success: () => { this._posterAid = ''; },
+      fail: () => { /* onLoad 期导航偶发被冻结，留待 onShow 重试 */ }
+    });
+  },
+
   onShow() {
+    theme.apply(this);
+    if (this._posterAid) this._gotoPoster(); // v0.7.4 海报深链兜底重试
     // 自绘 tabBar 选中态
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 0 });
+    }
+    // v0.6.0 相关问题 chip 预填（答案页 onRelatedTap 写入；用户自己按提问，不代花次数）
+    const prefill = wx.getStorageSync('qw_prefill');
+    if (prefill) {
+      wx.removeStorageSync('qw_prefill');
+      this.setData({ question: prefill, charCount: prefill.length, canAsk: prefill.trim().length >= 2 });
     }
     // 从答案页返回（可能互动拿了赠次）→ 刷新配额
     if (this.data.loginReady) this.refreshQuota();
@@ -140,7 +170,7 @@ Page({
   onOptimize() {
     const q = (this.data.question || '').trim();
     if (this.data.optimizing || q.length < 2) return;
-    if (wx.vibrateShort) { try { wx.vibrateShort({ type: 'light' }); } catch (e) { /* 老客户端 */ } }
+    if (wx.vibrateShort) { try { wx.vibrateShort({ type: 'light', fail: () => {} }); } catch (e) { /* 老客户端 */ } }
     this.setData({ optimizing: true });
     wx.showLoading({ title: 'AI 优化中…', mask: true });
     api.optimize(q)
@@ -185,11 +215,34 @@ Page({
 
   submitQuestion(q) {
     if (this.data.asking || !q || q.trim().length < 2) return;
-    if (wx.vibrateShort) { try { wx.vibrateShort({ type: 'light' }); } catch (e) { /* 老客户端无触感 */ } }
+    // v0.7.4 提审合规：首次使用前隐私告知（同意一次即记忆，拒绝则不发起登录）
+    if (!wx.getStorageSync('qw_privacy_ok')) {
+      wx.showModal({
+        title: '隐私保护告知',
+        content: '为提供咨询服务，我们将通过微信登录获取您的 openid 用于额度记账，'
+          + '并将您提交的问题与生成的回答存储在服务器；您自愿共享的问答将在「锅圈」公开展示，可随时取消共享。'
+          + '本服务解答内容由人工智能（AI）生成，仅供参考。'
+          + '详见「我的 · 用户协议与隐私政策」。',
+        confirmText: '同意并继续',
+        cancelText: '不同意',
+        success: (r) => {
+          if (!r.confirm) return;
+          wx.setStorageSync('qw_privacy_ok', 1);
+          this._doSubmit(q);
+        }
+      });
+      return;
+    }
+    this._doSubmit(q);
+  },
+
+  _doSubmit(q) {
+    if (this.data.asking || !q || q.trim().length < 2) return;
+    if (wx.vibrateShort) { try { wx.vibrateShort({ type: 'light', fail: () => {} }); } catch (e) { /* 老客户端无触感 */ } }
     this.setData({ asking: true });
     api.ask(q)
       .then((d) => {
-        // v0.2.2 秒回：立即进答案页看实时进度（工程大脑后台跑）
+        // v0.2.2 秒回：立即进答案页看实时进度（总包智库后台跑）
         this.setData({ asking: false, question: '', charCount: 0, canAsk: false });
         if (d.quota) this.applyQuota(d.quota);
         wx.navigateTo({ url: '/pages/answer/answer?id=' + d.id });
@@ -198,10 +251,10 @@ Page({
         this.setData({ asking: false });
         const msg = api.errMsg(err, '咨询失败');
         if (err && err.statusCode === 402) {
-          // 配额用尽：引导互动赚次数（有用/导出/分享/纠错各+1，上不封顶）
+          // 配额用尽：引导互动赚次数（有用/纠错各+1，上不封顶）
           wx.showModal({
             title: '今日次数已用完',
-            content: '打开任意一篇回答，点「有用 / 导出 / 分享 / 纠错」即可各再获 1 次咨询机会（多答多得，不封顶）；明天 0 点恢复 6 次。',
+            content: '打开任意一篇回答，点「有用 / 纠错」即可各再获 1 次咨询机会（多答多得，不封顶）；明天 0 点恢复 6 次。',
             confirmText: '去互动',
             success: (r) => { if (r.confirm) wx.switchTab({ url: '/pages/my/my' }); }
           });

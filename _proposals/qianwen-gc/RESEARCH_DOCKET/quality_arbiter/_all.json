@@ -1,0 +1,295 @@
+[
+  {
+    "channel": "quality_arbiter",
+    "doc_type": "paper",
+    "title": "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena (Zheng et al., NeurIPS 2023)",
+    "url": "https://arxiv.org/abs/2306.05685",
+    "content": "LLM-as-judge 范式奠基论文。核心结论: (1) 强 LLM judge (GPT-4) 与受控人群和众包人类偏好的一致率超过 80%，首次验证 LLM-as-judge 可作为人类评估的可扩展代理; (2) 系统梳理 judge 偏差: 位置偏差(偏好特定答案顺序)、冗长偏差(偏好更长回答)、自我增强偏差(偏好同家族模型输出)、推理能力受限; (3) 缓解手段: 交换位置重判(position swap)、reference-guided judging(给 judge 提供参考答案)。对「批评打分」的启示: 单条评分(pointwise/direct assessment)天然无位置偏差; 批评长度不应作为质量证据(反冗长偏差需写进 rubric); 主观偏好类判断 LLM 可胜任。",
+    "signals": {
+      "agreement_with_human": ">80% (GPT-4)",
+      "biases": ["position", "verbosity", "self-enhancement", "limited_grading_reasoning"],
+      "mitigations": ["position-swap", "reference-guided judging"],
+      "applicability": "pointwise评分无position bias; 主观质量判断LLM胜任"
+    },
+    "retrieved_at": "2026-09-28",
+    "credibility": "high"
+  },
+  {
+    "channel": "quality_arbiter",
+    "doc_type": "paper",
+    "title": "JudgeBench: A Benchmark for Evaluating LLM-based Judges (Tan et al., ICLR 2025)",
+    "url": "https://arxiv.org/abs/2410.12784",
+    "content": "评测 LLM judge 本身可靠性的基准，覆盖 knowledge/reasoning/math/coding 四域、有挑战性的响应对，考察 judge 的事实与逻辑正确性判断。关键发现: 在有挑战性的实例上，judge 模型的判对率大幅下滑，GPT-4o 仅略优于随机猜测; 模型集成(judge ensemble)显著提升判对率。对本机制的启示: (1) 「批评是否真诚/具体」属主观质量类判断，MT-Bench 证据支持 LLM 可行; (2) 但若评估器要判断「AI 答案是否真的错了」(事实/逻辑核验)，单 judge 不可靠，需检索佐证或集成多 judge; (3) 高退款档(全退)判决建议双模型/多模型集成。",
+    "signals": {
+      "key_finding": "GPT-4o on challenging instances only slightly better than random guessing",
+      "ensemble_effect": "judge ensemble significantly improves accuracy",
+      "applicability": "主观类判断可行; 事实核验类单judge不可靠"
+    },
+    "retrieved_at": "2026-09-28",
+    "credibility": "high"
+  },
+  {
+    "channel": "quality_arbiter",
+    "doc_type": "paper",
+    "title": "G-Eval: NLG Evaluation using GPT-4 with Better Human Alignment (Liu et al., EMNLP 2023)",
+    "url": "https://arxiv.org/abs/2303.16634",
+    "content": "LLM 评分工程化的经典范式: (1) form-filling —— 给定评估标准(criteria)，让模型先针对该标准生成 chain-of-thought 评估步骤，再按表单逐项打分; (2) 连续分数技巧 —— 利用输出 token 概率对各分数档加权取期望，得到连续分数而非离散档位，与人类判断相关性显著优于传统方法(对话评估大幅超越以往方法); (3) 官方代码 github.com/nlpyang/geval。直接可复用: 「真诚度0-100%」评分 prompt 应采用 criteria→CoT→表单打分结构; 若 API 暴露 logprob 可得概率加权连续分，否则可用多次采样均值或细粒度量表(如20档)映射。",
+    "signals": {
+      "method": "criteria -> CoT -> form-filling score; token-probability weighted expectation for continuous score",
+      "code": "https://github.com/nlpyang/geval",
+      "applicability": "评分prompt结构直接复用; 连续分数技术路线明确"
+    },
+    "retrieved_at": "2026-09-28",
+    "credibility": "high"
+  },
+  {
+    "channel": "quality_arbiter",
+    "doc_type": "paper",
+    "title": "Prometheus 2: An Open Source Language Model Specialized in Evaluating Other Language Models (Kim et al., 2024)",
+    "url": "https://arxiv.org/abs/2405.01535",
+    "content": "开源专用评审模型(7B 与 8x7B MoE)，证明「小模型+定制 rubric」即可做评审: (1) 支持直接评估(pointwise, 自定义 rubric, 1-5分)与成对比较两种模式; (2) 在所有被测开源评审模型中与人类评审及 GPT-4 judge 的一致性/相关性最高，达到 GPT-4 级评审一致度; (3) 权重全开源(HuggingFace: prometheus-2-8x7b-v2.0)。对本机制的意义: 评分类任务不需要旗舰模型 —— 7B 级专用/调优模型即可胜任，免费 Flash 档 API(GLM-4.7-Flash 等)做批评打分在能力量级上完全够用; 也可自托管 Prometheus 2 作为零成本第二评审腿。",
+    "signals": {
+      "sizes": "7B / 8x7B",
+      "capability": "custom-rubric direct assessment + pairwise; highest correlation with human & GPT-4 among open judges",
+      "weights": "https://huggingface.co (prometheus-2-8x7b-v2.0)",
+      "applicability": "证明小模型可胜任rubric评分; 可自托管做第二评审腿"
+    },
+    "retrieved_at": "2026-09-28",
+    "credibility": "high"
+  },
+  {
+    "channel": "quality_arbiter",
+    "doc_type": "paper",
+    "title": "Reward Hacking in Rubric-Based RL + Rubric Dropout (arXiv 2605.12474 / 2608.11669 / 2606.04923)",
+    "url": "https://arxiv.org/html/2605.12474v1",
+    "content": "rubric-based 奖励体系中的「语言性 reward hacking」研究系列: 被 rubric 评分的对象会学会「字面满足 rubric 措辞而违背其意图」(linguistic reward hacking); 缓解手段包括跨家族 judge panel 评估(训练用单一verifier、评测用异构panel揭穿hacking)、rubric dropout(随机隐藏部分评分项)等。对本机制的直接警示: 用户(或黑产)会通过试探学习「批评里写什么词能拿高分」，一旦评分 rubric 细节泄露或长期不变，就会被针对性刷分 —— 应隐藏 rubric 细节、定期轮换评分 prompt、高分样本用异构第二模型+人工抽检揭穿。",
+    "signals": {
+      "attack": "linguistic reward hacking: satisfy literal rubric wording, violate intent",
+      "defenses": ["cross-family judge panel", "rubric dropout/rotation", "post-hoc detection"],
+      "applicability": "批评打分rubric必须轮换+异构复核, 防用户学习刷分"
+    },
+    "retrieved_at": "2026-09-28",
+    "credibility": "high"
+  },
+  {
+    "channel": "quality_arbiter",
+    "doc_type": "article",
+    "title": "How does our AI agent's credit refund policy work? (Manus Help Center, 2025-12-16)",
+    "url": "https://help.manus.im/en/articles/12992237-how-does-our-ai-agent-s-credit-refund-policy-work",
+    "content": "与本机制最直接的产品先例 —— Manus 官方「AI 审核退款」政策全文: (1) 退款由「专门的 AI agent + Customer Success 团队」审查，追求公平一致; (2) 该审核 AI 获得任务完整执行历史的临时只读权限(steps/tool inputs/outputs/系统日志)，细致比对内部工具文档与平台健康日志判定是否发生 bug; (3) 确认 bug → 自动全额退还积分(自动执行); (4) 明确排除项: 主观不满意(写作风格/设计选择/分析路径)、指令不清、改变主意、外部网站故障、触及任务限制 —— 全不退; (5) 审核需时较长(需分析数千条日志)。核心设计取舍: 锚定「平台过错」这一客观可验证事实做二值判定，而非评估主观满意程度 —— 规避了「真诚度评估」的模糊性，也规避按比例退款被薅的风险。",
+    "signals": {
+      "mode": "AI agent reviews execution logs -> binary fault determination -> automatic full credit refund",
+      "excluded": ["subjective dissatisfaction", "unclear instructions", "external factors", "task limits", "change of mind"],
+      "human_layer": "Customer Success team co-review",
+      "lesson": "锚定客观过错做二值判定; AI审+人工兜底; 全自动执行退款"
+    },
+    "retrieved_at": "2026-09-28",
+    "credibility": "high"
+  },
+  {
+    "channel": "quality_arbiter",
+    "doc_type": "article",
+    "title": "What are the rules for credits consumption? (Manus Help Center)",
+    "url": "https://help.manus.im/en/articles/11711097-what-are-the-rules-for-credits-consumption-and-how-can-i-obtain-them",
+    "content": "Manus 积分消耗规则官方条款: 「因我方技术问题导致失败的任务，已消耗积分全额退还」(We provide a full refund of consumed credits for tasks that fail due to technical issues on our end)。第三方(ReSub 2026)解读: 可退=平台技术问题(经核实); 主观不满意可提交申请但不保证退; 外部网站故障/指令不清/达到任务限制不退。社区口碑(Reddit): 任务明显失败时附任务链接找客服，「10次有9次」能退回积分; 负面教训(Botcrawl/Trustpilot/App Store): 重复扣款退款难、人工客服难触达、流程拖延指控。效果综合: 过错锚定+AI审+高合理通过率 → 口碑整体正面; 客服触达是主要吐槽点。",
+    "signals": {
+      "official_rule": "full credit refund for tasks failing due to technical issues on our end",
+      "community_report": "9/10 reasonable claims honored (Reddit anecdote)",
+      "pain_points": ["hard to reach human support", "delayed refunds", "double-charging complaints"]
+    },
+    "retrieved_at": "2026-09-28",
+    "credibility": "high"
+  },
+  {
+    "channel": "quality_arbiter",
+    "doc_type": "api_doc",
+    "title": "智谱开放平台 速率限制 (docs.bigmodel.cn/cn/api/rate-limit)",
+    "url": "https://docs.bigmodel.cn/cn/api/rate-limit.md",
+    "content": "GLM API 官方限流机制(原文抓取): (1) 限流以「并发请求数」为核心(同一时刻处理中的请求数量)，按模型独立设置、按用户权益等级分层，可在用户中心 rate-limits 页查看自己各模型的实时额度; (2) 高峰期对超限账户限流而非模型不可用; (3) 错误码 1302=触发用户速率限制(建议排队/降并发/提升权益等级), 1305=平台服务过载(建议退避重试); (4) Coding Plan 套餐用户并发与套餐等级相关(Lite<Pro<Max, 低峰期动态上浮)。社区实测(知乎/GitHub issue): glm-4-flash 系免费档并发从新户约 2 起步、存量用户更高，并发勿超 200。工程含义: 免费档做评估器必须做请求队列+1302退避重试+多 key 轮换。",
+    "signals": {
+      "limit_model": "并发制(非RPM/TPM制), 按模型x用户权益等级",
+      "error_codes": {"1302": "user rate limit", "1305": "platform overload"},
+      "free_tier_concurrency": "新户约2并发起(社区实测), 存量更高",
+      "engineering": "需请求队列+退避重试+多key轮换"
+    },
+    "retrieved_at": "2026-09-28",
+    "credibility": "high"
+  },
+  {
+    "channel": "quality_arbiter",
+    "doc_type": "api_doc",
+    "title": "智谱 API 定价表 —— GLM-4.7-Flash 全免费 (docs.bigmodel.cn)",
+    "url": "https://docs.bigmodel.cn/cn/guide/start/pricing.md",
+    "content": "官方定价表原文(2026-09抓取): GLM-4.7-Flash 200K 上下文，输入/输出/缓存命中全部「免费」，是当前智谱全免费档主力(旧 GLM-4.5-Flash 文档已下线被其接替; 更早 glm-4-flash 亦免费)。近邻价位: GLM-4.7-FlashX 0.5/3元每百万tokens、GLM-4-Air-250414 0.5元、GLM-5.3-Flash 0.8/2.8元(1M上下文原生多模态)、GLM-4.5-Air 0.8元。缓存命中价约为输入价 2-5 折。结论: 「批评打分」类短文本任务(输入1-2K tokens+输出300 tokens)用 GLM-4.7-Flash 零成本，量级完全可承受; 若需更强推理的第二腿，GLM-4.7-FlashX 每次评估成本约 0.002 元级别，仍近零。",
+    "signals": {
+      "free_model": "GLM-4.7-Flash (200K ctx, 输入/输出/缓存全免费)",
+      "cheap_upgrade": "GLM-4.7-FlashX 0.5/3 元/百万tokens; GLM-4-Air 0.5元",
+      "deprecated": "GLM-4.5-Flash 文档已下线(2026-01-30), 由4.7-Flash接替",
+      "cost_per_eval": "1-2K in + 300 out ≈ 免费档0成本 / FlashX约0.002元"
+    },
+    "retrieved_at": "2026-09-28",
+    "credibility": "high"
+  },
+  {
+    "channel": "quality_arbiter",
+    "doc_type": "api_doc",
+    "title": "SiliconFlow 硅基流动 Rate Limits 官方文档 (L0 免费档 1000 RPM / 40K TPM)",
+    "url": "https://docs.siliconflow.com/en/userguide/rate-limits/rate-limit-and-upgradation",
+    "content": "官方限流文档原文: (1) 七指标 RPM/RPH/RPD/TPM/TPD/IPM/IPD，任一触顶即限流; (2) 限速定义在用户账户级而非 API key 级，且各模型独立限速互不影响; (3) 免费模型限速固定，付费模型按消费分层: L0(新户) 1000 RPM/40K TPM, L1 1200/60K, L2 2000/80K, L3 4000/160K, L4 8000/500K, L5 10000/2M; 语言模型类现值约 RPM 1000-10000 / TPM 50K-5M; (4) DeepSeek-R1/V3 额外限制 30 RPH，未实名用户再加 100 RPD。免费池含 Qwen/GLM/DeepSeek 等小模型。结论: L0 档 40K TPM 对评分请求(约1.5-2.3K tokens/次)约支撑 17-26 次/分钟、1000次/小时级 —— 日千级评估量足够; 且与智谱构成异构双腿(不同家族模型)，可做交叉评审。",
+    "signals": {
+      "L0": "1000 RPM / 40K TPM (免费档固定)",
+      "scope": "账户级(非key级), 各模型独立",
+      "special": "DeepSeek-R1/V3: +30 RPH; 未实名 +100 RPD",
+      "throughput_estimate": "40K TPM ≈ 17-26次评估/分钟"
+    },
+    "retrieved_at": "2026-09-28",
+    "credibility": "high"
+  },
+  {
+    "channel": "quality_arbiter",
+    "doc_type": "api_doc",
+    "title": "Gemini API 免费档速率(第三方汇总, 官方页 ai.google.dev/gemini-api/docs/rate-limits)",
+    "url": "https://ai.google.dev/gemini-api/docs/rate-limits",
+    "content": "Gemini API 免费档: 限 RPM/TPM/RPD 三指标。第三方多源汇总(数字有出入, 以官方页为准): Flash 档约 10-15 RPM、RPD 250-1500(不同版本/时点报道不一); Flash-Lite 约 15 RPM / 1000-1500 RPD; 2026-04-01 起 Pro 级模型退出免费档, 仅 Flash/Flash-Lite 免费; 免费档数据会被用于训练。结论: 可作 L2 异构复核腿(量小、日百级可承受), 不适合做主评估腿; 另注意国内网络可达性问题。可信度: 中(第三方数字随时间变动, 官方页未能直接抓取原文)。",
+    "signals": {
+      "flash_free": "~10-15 RPM, 250-1500 RPD (第三方口径不一)",
+      "pro_removed": "2026-04-01 起Pro级退出免费档",
+      "caveat": "免费档数据用于训练; 国内可达性存疑",
+      "role": "只够做L2复核腿, 不够做主腿"
+    },
+    "retrieved_at": "2026-09-28",
+    "credibility": "medium"
+  },
+  {
+    "channel": "quality_arbiter",
+    "doc_type": "article",
+    "title": "退货运费险骗保案例集: 大件运费险8个月100万+/12人团伙300万+/3万次理赔 (中新网/广州日报/凤凰网/亿邦动力)",
+    "url": "https://www.jwview.com",
+    "content": "「不满意就赔」类产品被薅羊毛的最重灾先例: (1) 2024-12 曝光: 两人买大件退货运费险(保费18-30元, 单笔赔付可250元), 借亲友身份批量注册网店+支付宝账户, 经『礼品网』虚构交易, 8个月骗保100多万元; (2) 2025-05 江苏汪某等12-13人团伙用100多个网店账号虚构交易骗保300余万; (3) 2025-12 湖南郴州编造虚假退货信息理赔3万多次获利20余万; (4) 行业数据(亿邦动力): 无风控能力的商家 70-80% 优惠券/权益被黑灰产薅走, 重风控商家可降至个位数; (5) 律师: 骗取5万元以上构成犯罪; (6) 恶性循环: 退货率涨→保费『比快递费还贵』→商家关闭运费险→正常用户受害; 风控误伤正常消费者问题并存。根因公式: 赔付金额与真实成本的差价 + 虚构成本极低 = 规模化套利。",
+    "signals": {
+      "cases": ["8个月100万+(大件运费险,虚拟交易)", "12人团伙300万+(100+网店账号)", "3万次理赔20万+(虚假退货信息)"],
+      "industry": "无风控商家70-80%权益被黑产薅走; 重风控降至个位数",
+      "legal": "骗取5万+入刑(保险诈骗罪)",
+      "root_cause": "赔付与成本差价+虚构成本低=必然被套利",
+      "side_effect": "风控误伤正常用户; 保费恶性循环"
+    },
+    "retrieved_at": "2026-09-28",
+    "credibility": "high"
+  },
+  {
+    "channel": "quality_arbiter",
+    "doc_type": "article",
+    "title": "航班延误险南京李某案: 900次理赔300万与『不乘坐不理赔』整改 (36kr/新浪财经 2020)",
+    "url": "https://www.36kr.com/p/770974965505537",
+    "content": "对赌赔付类产品的经典被套利案: 李某(航空服务业背景, 有提前获知航班延误信息的渠道)2015-2019年借用20多个亲友身份, 批量购买高延误率航班机票+延误险但不乘机, 累计理赔近900次、获赔近300万元。争议: 罪与非罪之争激烈(合理利用规则 vs 保险诈骗), 警方后续披露其存在伪造航班延误证明行为(此点法律界共识涉嫌犯罪)。行业整改: 多平台改为『不乘坐不理赔』。教训映射到「批评退款」: (1) 对赌规则必须绑定真实消费/使用行为(必须真实支付并阅读答案才能发起批评退款); (2) 信息优势方(职业羊毛党/黑产)会系统性寻找规则漏洞; (3) 模糊地带(虚构行程)与明确欺诈(伪造证明)要有区分处理与证据留存。",
+    "signals": {
+      "case": "900次理赔/300万, 借20+身份, 信息差套利",
+      "rectification": "不乘坐不理赔",
+      "lessons": ["绑定真实消费行为", "职业套利者必然出现", "区分灰色地带与明确欺诈并留证"]
+    },
+    "retrieved_at": "2026-09-28",
+    "credibility": "high"
+  },
+  {
+    "channel": "quality_arbiter",
+    "doc_type": "article",
+    "title": "美团准时宝: 超时阶梯赔付的『对赌』产品 (网易财经/北京商报/深蓝保)",
+    "url": "https://www.163.com/dy/article/HEV0N2V0553BQJF3.html",
+    "content": "外卖场景按服务表现阶梯赔付的先例: 用户约0.5元购买『准时宝』与平台对赌配送准时性。赔付规则多版本并存: 金额阶梯版(超时即赔2元/10分钟5元/20分钟8元/30分钟12元)、比例阶梯版(延误15分钟赔订单实付30%/30分钟以上赔70%), 赔付入美团余额。争议与教训: (1) 人民网等质疑原本免费的『准时达』变成付费增值(对赌变现); (2) 存在未履约投诉(2025年投诉案例: 应赔70%实付11.99元未履行); (3) 对供给侧(骑手)的严苛超时扣款引发安全与舆论问题, 2024年底美团转向『超时只扣分不扣款』。可借鉴: 连续量(超时时长)→档位化赔付(而非线性连续)是主流做法, 档位公开透明; 履约可信度是产品生命线(未履约投诉直接上热搜)。",
+    "signals": {
+      "tiers_amount": "超时2元/10min5元/20min8元/30min12元",
+      "tiers_ratio": "15min赔实付30%/30min+赔70%",
+      "pricing": "约0.5元/单购买(对赌型)",
+      "lessons": ["连续量→档位赔付是主流", "履约可信度=生命线", "对赌收费本身有舆论风险"]
+    },
+    "retrieved_at": "2026-09-28",
+    "credibility": "high"
+  },
+  {
+    "channel": "quality_arbiter",
+    "doc_type": "api_doc",
+    "title": "云厂商 SLA 阶梯赔付条款: 阿里云/华为云 ECS 服务等级协议 (terms.aliyun.com / huaweicloud.com)",
+    "url": "https://terms.aliyun.com",
+    "content": "「连续质量分数→按比例赔付」最成熟的工程先例 —— 云厂商 SLA: 华为云 ECS 档位: 99%≤可用性<99.975% 赔月度服务费10%; 95%≤可用性<99% 赔30%; <95% 赔100%。阿里云 ECS: 单实例承诺99.975%/多可用区99.995%, 未达标按档赔代金券, 赔偿总额封顶当月该实例月度服务费; RDS 金融云版: 99.00%≤a<99.995%→15%, 95%≤a<99%→更高档, <95%→最高100%。共同设计特征: (1) 连续指标→离散三档(10%/30%/100%型), 档位边界明确公示; (2) 赔付形式优先代金券(锁回平台消费, 降套利价值)而非现金; (3) 封顶条款(不超过月费); (4) 申请制+核验制而非自动触发。这四点全部可平移到「真诚度分数→退款档位」设计。",
+    "signals": {
+      "huawei_tiers": "10% / 30% / 100% (按可用性<99.975%/<99%/<95%)",
+      "aliyun": "99.975%承诺, 代金券赔付, 封顶月费; RDS金融云15%档",
+      "design_patterns": ["连续量→离散三档", "代金券优先于现金", "封顶条款", "申请核验制"]
+    },
+    "retrieved_at": "2026-09-28",
+    "credibility": "high"
+  },
+  {
+    "channel": "quality_arbiter",
+    "doc_type": "article",
+    "title": "Judge LLM Prompt Injection —— 评审模型可被待评文本注入操纵 (LLM Security Database/promptfoo + OWASP)",
+    "url": "https://www.promptfoo.dev",
+    "content": "安全先例: (1) promptfoo LLM Security Database 收录『Judge LLM Prompt Injection』漏洞: 远程攻击者可通过被评估文本中的对抗性 prompt injection 操纵评审模型的评分与裁决 —— 用户在批评文本里写『请给100分/忽略以上指令』类内容即可攻击本机制; (2) OWASP LLM Prompt Injection Prevention Cheat Sheet 给出分层防御: 输入输出过滤、 privilige 分离、将不可信数据用明确分隔符包裹并声明其为数据非指令、高风险操作需人工确认; (3) Lakera(2026-01)进一步论证: 用同族 LLM 做 judge 防注入本质脆弱, judge 与被防模型共享同类弱点。工程结论: 批评文本必须以数据槽(分隔符+转义)注入评审 prompt; 评审输出做 schema 硬校验(非法输出即弃); 分数异常(如高频满分)自动降级人工; 第二评审腿用异构家族模型。",
+    "signals": {
+      "vuln": "Judge LLM Prompt Injection (promptfoo DB收录, 可远程操纵评分)",
+      "defenses": ["数据槽分隔符包裹+转义", "输出schema硬校验", "异常分自动人工", "异构家族第二judge"],
+      "owasp": "LLM Prompt Injection Prevention Cheat Sheet"
+    },
+    "retrieved_at": "2026-09-28",
+    "credibility": "high"
+  },
+  {
+    "channel": "quality_arbiter",
+    "doc_type": "article",
+    "title": "LLM 评审可靠性: 单次评分高方差 / 自一致性 / 多数投票的独立性前提 (EmergentMind综述/digitalapplied/ResearchGate)",
+    "url": "https://www.emergentmind.com",
+    "content": "评审可靠性的工程要点汇总: (1) 单次 LLM 评审是『单试验』测量, 方差未知(TruLens intra-judge reliability 讨论); (2) 自一致性(self-consistency, 同题多次采样)可估计不确定度, 低置信判决标记人工复核 —— 『Towards Reliable LLM Grading Through Self-Consistency』证明自一致性+选择性人工介入可大幅提升评分可靠性; (3) 多数投票/评审集成提升可靠性但前提是误差独立, LLM judge 的系统性偏差(position/verbosity等)相关不独立, 投票消不掉 —— 「Three Models Agreed. It Was Still Wrong」: 三模型一致仍可能集体错; (4) LLMs-as-Judges 综述(2024-12): 单judge部署简单但视角受限且易系统性偏差, 建议 scale+diversify。落地: 评分用低温/固定seed+结构化输出; 高退款档双异构judge; 两judge分差>阈值或任一低置信 → 人工队列; 温度对评分方差的专门研究未检索到(UNKNOWN)。",
+    "signals": {
+      "single_trial": "单次评审方差高, 需多次采样估计置信度",
+      "voting_caveat": "多数投票仅消除独立误差, 系统性相关偏差免疫投票",
+      "best_practice": "self-consistency置信度 + 异构judge + 选择性人工介入",
+      "unknown": "温度→评分方差的专门实证研究未找到"
+    },
+    "retrieved_at": "2026-09-28",
+    "credibility": "medium"
+  },
+  {
+    "channel": "quality_arbiter",
+    "doc_type": "article",
+    "title": "微信小程序账号风控基础: openid/unionid 身份体系 + 活动防刷/设备指纹方案 (腾讯云/顶象)",
+    "url": "https://cloud.tencent.com",
+    "content": "小程序侧防薅羊毛的技术底盘: (1) 身份: openid=单小程序内用户唯一标识(每用户每小程序恒定, 后端可靠获取), unionid=同主体开放平台下跨小程序/公众号关联同一自然人 —— 一人多号可通过unionid归并; 微信未向小程序开放官方设备指纹API, 需用 wx.getSystemInfoSync 等弱信号自聚合成指纹, 或采购腾讯云『活动防刷』(专防电商/O2O促销羊毛党的防刷引擎)或顶象防御云(设备指纹+验证码覆盖小程序, 识别模拟器/刷机/群控); (2) 通用防线: 接口频控、IP动态信誉评分(弃静态黑白名单, 按历史恶意行为/社区举报/蜜罐计算风险信用分)、滑块/短信验证、失信名单; (3) 静态黑白名单已被行业弃用。落地: openid为退款计数主键, unionid归并多号, 弱信号指纹+行为序列(注册即买即退=高危)做风险分, 高风险走人工。",
+    "signals": {
+      "identity": "openid(单应用唯一)+unionid(同主体跨应用归并)",
+      "device": "无官方设备指纹API, 需弱信号自聚合或采购(腾讯云活动防刷/顶象)",
+      "ip": "动态信誉评分取代静态黑白名单",
+      "pattern": "注册即买即退等行为序列=高危特征"
+    },
+    "retrieved_at": "2026-09-28",
+    "credibility": "medium"
+  },
+  {
+    "channel": "quality_arbiter",
+    "doc_type": "api_doc",
+    "title": "微信支付退款能力: V3申请退款API + 部分退款限制 (pay.weixin.qq.com)",
+    "url": "https://pay.weixin.qq.com",
+    "content": "退款执行层的官方能力与约束: (1) V3申请退款接口 https://api.mch.weixin.qq.com/v3/refund/domestic/refunds, 支付成功后一年内可退, 原路退回用户; (2) 支持部分退款: amount.refund<amount.total 即部分退款, 每笔订单部分退款次数≤50次, 每次需唯一 out_refund_no(幂等键); (3) 到账时效: 零钱支付20分钟内到账, 银行卡支付3个工作日后查询; 有退款结果通知回调(成功/关闭/异常); (4) 退款请求有频率限制, 建议查询退避(1分钟起步逐步衰减)。含义: 按比例退款(50%档)在微信支付侧原生支持, 幂等键+回调对账可直接承载自动化退款; 单订单退款次数上限50对本场景(单订单1次批评退款)无压力; 需自建退款频率控制防打爆接口限额。",
+    "signals": {
+      "api": "POST /v3/refund/domestic/refunds",
+      "partial_refund": "支持, ≤50次/单, 需唯一out_refund_no幂等",
+      "latency": "零钱20分钟内/银行卡3工作日",
+      "callback": "退款结果通知(成功/关闭/异常)"
+    },
+    "retrieved_at": "2026-09-28",
+    "credibility": "high"
+  },
+  {
+    "channel": "quality_arbiter",
+    "doc_type": "repo",
+    "title": "awesome-free-llm-api (GitHub) —— bigmodel.cn 免费形态: GLM-4.7-Flash 完全免费仅限速",
+    "url": "https://github.com/peter123023/awesome-free-llm-api",
+    "content": "社区维护的免费 LLM API 清单, 对 bigmodel.cn 的条目: 『永久免费模型(GLM-4.7-Flash 完全免费, 仅速率限制)』; 同页提示免费模型均有速率限制、不要将『永久免费』当作长期保证(参考东复同科技文档: 旧 glm-4.5-flash 文档 2026-01-30 下线)。工程含义: 免费评估腿要预留模型代号漂移的适配层(模型名可配置), 并有付费兜底开关(如 GLM-4.7-FlashX, 单次评估约0.002元)防止免费档限流/下线时评审中断。",
+    "signals": {
+      "bigmodel": "GLM-4.7-Flash 完全免费仅限速",
+      "risk": "免费模型代号会漂移(4.5-Flash已下线), 勿假设永久免费",
+      "mitigation": "模型名可配置+付费兜底开关(FlashX约0.002元/次)"
+    },
+    "retrieved_at": "2026-09-28",
+    "credibility": "medium"
+  }
+]
