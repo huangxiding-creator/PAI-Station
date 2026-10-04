@@ -81,3 +81,20 @@
 | 接线 | epc100_channels.py 主链腿 (try/except 隔离) + named set + manifest named 24→25 通道 (site_endpoints +111=1352) + conductor `net:ebooks` (window=any, 白天令) |
 | 测试 | `test_ebook_library.py` 18 件: 注册表完整性/盗版永不下载/blocklist一致性/CSV状态机/tier1四验证器(fake网)/盗版零探针/账本腿(fake conductor); 全树 **297 passed** |
 | wave2 待打通 | taiwanebook API / 书格+国图古籍策略 / kanripo 选择性 / ideahub 82分卷外链结构 / forgottenbooks 抽样 |
+
+### 打通终局 (补丁轮后, 1004 夜)
+
+首轮 7/60/20/24 → **verified 15 / live 62 / blocked 24 / unreachable 10** (111 全量, 增量合并重测 23+2 站)。
+
+| 补丁 | 根因 | 修后实证 |
+|---|---|---|
+| 古登堡 gz 目录 | 30MB 截断把 zh 低估成 69 | `pg_catalog.csv.gz` 全目录: **zh 441 本** + 样本 epub 落地 |
+| Standard Ebooks OPDS→GitHub | `/feeds/opds` 401 (结构漂移) | org API 面实证 5 repos (轮内限流=live 如实记; 站 200 可浏览) |
+| 好读 WordPress 化 | `?M=hd&P=` 旧路径全死 | `?feed=rss2` RSS 10 条真实书目 (台灣作家全集/鍾理和全集…) |
+| github 探针镜像梯 | GFW 直连抖动 URLError×10 | gh-proxy 前缀回退: 7 仓 unreachable→verified |
+| IDN 域名 | 烟海.中国 unicode host urllib 拒收 | punycode 归一 → live (中国古典学术资源导航) |
+| 增量合并 | only_ids 重测曾整表覆盖 | 保留 88 站旧结果 + 重测 23 站 (报告不再丢全量) |
+
+- **verified 15** = tier1 深验 14 中 12 (programthink/freebook_yimity/doocs/daizhigev20/gutenberg_zh/haodoo/ebook_treasure_chest/fpb_zh/books_free/hacking/fpb/expert_readed/cs_books) + ebook-treasure/weread/smartedu 存量腿; SE 限流窗记 live
+- **unreachable 10 诚实死** = bookplusapp/happydot/epubbooks/b4_seven/yidanshu/tianlang/taiwanebook(CN墙)/readeep/pdfbookshare/jingdianbook — 双梯两轮均败, 不再重试
+- 测试 18→**20 件** (IDN 归一 + 增量合并), 全树 **299 passed**
