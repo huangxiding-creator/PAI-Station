@@ -1,0 +1,1823 @@
+{
+ "stats": {
+  "raw": 140,
+  "batch_dup": 28,
+  "already_in_stack": 0,
+  "low_quality": 17,
+  "malformed": 0,
+  "candidates": 111,
+  "existing": 0,
+  "excluded": 29,
+  "suspect": 25
+ },
+ "candidates": [
+  {
+   "lang": "typescript",
+   "name": "Perplexica (已更名 Vane)",
+   "note": "GitHub API 实证: 37.0k stars / TS / 最近推送 2026-09-01 活跃; 本赛道最著名的开源 Perplexity。README 实证: 隐私优先的自托管答案引擎, SearXNG 元搜索+Ollama 本地 LLM(亦可混搭 OpenAI/Claude/Groq), 带引用来源, Speed/Balanced/Quality 三档模式, web/讨论区/学术分源路由, 图片视频搜索, 域内限定搜索; 架构文档公开在 docs/architecture。取数面: docker-compose 自带 SearXNG, 可全离线本地跑",
+   "practices": [
+    "把所有上游引擎藏在 SearXNG 单一元搜索层后, 引擎增删换血不动主代码且多数引擎免 API key",
+    "三档搜索模式(Speed/Balanced/Quality)+来源类型(web/讨论区/学术)由独立查询 agent 路由, 按意图分发不同检索面",
+    "本地 LLM(Ollama) 与云端模型可按需混搭, 同一管线从离线隐私场景平移到高质量云场景"
+   ],
+   "quality": "high",
+   "type": "repo",
+   "url": "https://github.com/ItzCrazyKns/Vane",
+   "angle": "ai-search"
+  },
+  {
+   "lang": "python",
+   "name": "SearXNG",
+   "note": "GitHub API 实证: 38.0k stars / Python / 推送 2026-10-04 (每日提交); 不追踪的元搜索引擎, Perplexica/Vane、MindSearch 及大量 open-perplexity 项目的底层取数面。官方文档(docs.searxng.org)实证: /search 端点 GET/POST 均可, format=json/csv/rss 输出(需 settings.yml 开启, 否则 403), 参数 q/categories/language/pageno/time_range/safesearch; limiter 文档实证 botdetection 动态限流机制",
+   "practices": [
+    "统一 JSON API (?format=json + q/categories/language/pageno/time_range), 上游引擎更换不影响下游消费者, 是研究工厂多引擎路由的现成聚合层",
+    "内置 limiter/botdetection 插件: Valkey 驱动的动态 IP 限流+link_token+IP 名单, 防公共实例被上游引擎 CAPTCHA 封杀",
+    "每个上游引擎是独立 Python 模块(自带解析器), 新引擎即插即用, 按类目+语言自动路由"
+   ],
+   "quality": "high",
+   "type": "repo",
+   "url": "https://github.com/searxng/searxng",
+   "angle": "ai-search"
+  },
+  {
+   "lang": "typescript",
+   "name": "morphic",
+   "note": "GitHub API 实证: 9.2k stars / TS / 推送 2026-10-04 (当日活跃), Vercel OSS 计划+Trendshift 榜。README 实证: 生成式 UI 答案引擎 — 答案以流式 JSON spec 渲染富组件(带来源图片/网格/标题), 检索商 Tavily/SearXNG/Brave/Exa 四选, Quick/Adaptive 两档模式, 模型选择器动态探测(OpenAI/Anthropic/Google/Ollama/OpenAI 兼容), PostgreSQL 历史, 唯一 URL 分享搜索, Docker 一键。取数面: 多商业检索 API+SearXNG, env 配置切换",
+   "practices": [
+    "生成式 UI: 服务端流式输出 JSON spec(带 schema 校验), 前端按 spec 渲染 React 组件而非纯 markdown, 引用与组件共生",
+    "检索商抽象层: Tavily/SearXNG/Brave/Exa 用环境变量即插即换",
+    "搜索结果唯一 URL 化(可恢复流), 长答案可分享、可断点恢复"
+   ],
+   "quality": "high",
+   "type": "repo",
+   "url": "https://github.com/miurla/morphic",
+   "angle": "ai-search"
+  },
+  {
+   "lang": "python",
+   "name": "Open WebUI",
+   "note": "GitHub API 实证: 154k stars / Python / 推送 2026-10-03, 本赛道部署量事实标准。README 实证: 'Web Search for RAG' 支持 SearXNG/Google PSE/Brave/Kagi/Mojeek/Tavily/serper/DuckDuckGo/SearchApi/SerpApi/Jina/Exa/Sougou 等数十家检索商, 结果直接注入对话; RAG 侧 BM25+向量混合检索+重排+全上下文三模式, 9 种向量库, Tika/Docling/OCR 多抽取引擎。取数面: 业内最全的检索商适配器集合, 开箱即用",
+   "practices": [
+    "数十家检索商统一在一个 web search 抽象后, 搜索结果作为上下文注入对话流再由 LLM 归纳并给引用",
+    "混合检索(BM25+向量)+可换重排器+full-context 三模式可配置, 同一管线兼顾精度与长文档",
+    "存储层全可换(SQLite/PostgreSQL、9 种向量库、S3/GCS/Azure), 检索管线从单机到企业不改代码"
+   ],
+   "quality": "high",
+   "type": "repo",
+   "url": "https://github.com/open-webui/open-webui",
+   "angle": "ai-search"
+  },
+  {
+   "lang": "python",
+   "name": "GPT Researcher",
+   "note": "GitHub API 实证: 29.9k stars / Python / 推送 2026-10-01。README 实证: 自称 first open deep research agent, planner/execution/publisher 三段架构(生成研究问题→并行爬取摘要→汇总成带引用报告), 灵感源自 Plan-and-Solve+RAG 论文, 并行 agent 提速。取数面: 可插拔 retriever(默认 Tavily, 可换 Google/DDG/SearX 等)+爬虫; 交付形态齐全: PyPI 包+Docker+CLI+Claude Skill(npx skills add), 五语 README 含中文",
+   "practices": [
+    "planner(生成子问题)/execution(每子问题并行搜索+即时摘要并记录来源)/publisher(聚合过滤成报告) 三角色分离, 速度与确定性兼得",
+    "每条资源先摘要后带源追踪, 最终报告论断可逐段回溯 URL — 引用溯源做在摘要层而非成文层",
+    "retriever 可插拔(默认 Tavily), 换检索商不动 agent 管线"
+   ],
+   "quality": "high",
+   "type": "repo",
+   "url": "https://github.com/assafelovic/gpt-researcher",
+   "angle": "ai-search"
+  },
+  {
+   "lang": "python",
+   "name": "Khoj",
+   "note": "GitHub API 实证: 37.6k stars / Python / 推送 2026-08-02。README 实证: 个人 AI 应用, '从端上个人 AI 到云端企业 AI 平滑伸缩', 互联网+本地文档(PDF/Notion/Word/org)双轨取数, 自定义 agent(知识+人设+模型+工具), 浏览器/Obsidian/Emacs/桌面/手机/WhatsApp 多端, 自动化研究 newsletter 与智能通知, 自托管+云双形态。取数面: 互联网搜索与私有文档语义检索同会话混合引用",
+   "practices": [
+    "互联网检索与私有文档 RAG 双轨合一: 同一会话同时引用网页与个人知识库, 天然适合研究资料积累",
+    "agent 即配置(自定义知识/人设/模型/工具), 把检索能力封装成可分享可复用的角色",
+    "一套自托管服务端多端复用(Obsidian/Emacs/WhatsApp/网页/桌面), 检索能力随端到人到"
+   ],
+   "quality": "high",
+   "type": "repo",
+   "url": "https://github.com/khoj-ai/khoj",
+   "angle": "ai-search"
+  },
+  {
+   "lang": "python",
+   "name": "STORM / Co-STORM (stanford-oval)",
+   "note": "GitHub API 实证: 31.6k stars / Python / 推送 2025-09-30 (近一年放缓属维护态)。README 实证: 两阶段写维基式长文: pre-writing 做基于多视角(perspective-guided)的提问+模拟专家对话收集参考文献并生成大纲, writing 基于大纲+引用生成全文; Co-STORM 加人机协作话语协议+动态 mind map; 检索模块可换(YouRM 互联网/BingSearch/VectorRM 本地文档)+litellm 统一模型层; 论文 NAACL/EMNLP, 7 万人用过官方 demo。取数面: pip install knowledge-storm, rm.py 检索抽象自带的研报级生成器",
+   "practices": [
+    "把'提出好问题'工程化: 从相似主题已有文章提炼多视角引导提问, 再用模拟专家对话追问, 检索深度显著优于直接 prompt",
+    "检索模块接口化(rm.py: YouRM/Bing/VectorRM 可换)+litellm 统一 LLM 层, 管线组件皆可替换",
+    "大纲先行再成文: pre-writing 产出 outline+参考文献集, writing 逐节引用, 长文引用密度可控"
+   ],
+   "quality": "high",
+   "type": "repo",
+   "url": "https://github.com/stanford-oval/storm",
+   "angle": "ai-search"
+  },
+  {
+   "lang": "typescript",
+   "name": "Open Deep Research (dzhng)",
+   "note": "GitHub API 实证: 19.8k stars / TS / 推送 2026-04-11。README 实证(含 mermaid 流程图): 迭代式 deep research agent, breadth/depth 两参数控制递归, 每轮产出 learnings+directions 滚入下一轮上下文自我修正方向, 最终产出 markdown 报告; 设计目标为保持核心 <500 LoC。取数面: 默认 Firecrawl 搜索+抓取(env 可换 Jina Reader 等), 极简可抄的深研循环范式",
+   "practices": [
+    "breadth×depth 参数化递归: 每轮把新学到的 learnings 与下一步 directions 累积进提示词, 研究方向自我修正",
+    "刻意把核心压在 500 行以内 — '最简可读实现'是设计目标本身, 极易 fork 改造",
+    "检索与正文抽取服务分离(SERP 引擎出链+阅读器出干净正文), 两类供应商独立可换"
+   ],
+   "quality": "high",
+   "type": "repo",
+   "url": "https://github.com/dzhng/deep-research",
+   "angle": "ai-search"
+  },
+  {
+   "lang": "typescript",
+   "name": "Scira (原 MiniPerplx)",
+   "note": "GitHub API+搜索接口实证: 原 scira-ai/scira 已 404, 现居 zaidmukaddam/scira, 11.9k stars / TS / 推送 2026-08-12 活跃。README 实证: 'agentic research platform that plans, retrieves, and cites' — 拆子任务→检索实时源→交叉核对证据→带内联引用的答案(引用可点击回源验证); 技术栈 Vercel AI SDK(流式)+Exa(检索)+Upstash(serverless Redis+限流)。取数面: Exa 语义检索为主, 多检索商可换",
+   "practices": [
+    "serverless Redis(Upstash) 做限流层, 免运维扛公网流量 — 代理型搜索服务的标准解法",
+    "答案内联引用逐条可点击回源, 引用即验证入口",
+    "agentic 规划先行: 问题先拆子任务再检索, 多源交叉核对后才合成答案"
+   ],
+   "quality": "high",
+   "type": "repo",
+   "url": "https://github.com/zaidmukaddam/scira",
+   "angle": "ai-search"
+  },
+  {
+   "lang": "python",
+   "name": "SurfSense",
+   "note": "GitHub API 实证: 16.3k stars / 主语言已标注 Python(自 TS 重写) / 推送 2026-10-04 高活跃, Trendshift 榜。README 实证: 定位'air-gapped 开源 NotebookLM 替代' — 本地文档转简报/deck/报告/学习指南/播客, 主打完全本机运行(2026-10 起托管版日落转本地); 网页内容经浏览器扩展捕获入库。取数面: 本地 RAG 为主+扩展抓页; 对研究工厂的本地资料库腿有参考价值, 但已非网页答案引擎主形态",
+   "quality": "mid",
+   "type": "repo",
+   "url": "https://github.com/MODSetter/SurfSense",
+   "angle": "ai-search"
+  },
+  {
+   "lang": "typescript",
+   "name": "DeepResearch (Jina AI)",
+   "note": "GitHub API 实证: 5.2k stars / TS / 推送 2026-05-01。README 实证: Search→Read→Reason 循环直到找到答案或 token 预算耗尽, 明确不做长文只做'深挖出精准答案', 配套官方 UI(search.jina.ai)+稳定 API+实现指南博文。取数面: 自家 SearXNG 检索+Jina Reader 正文; token 预算即天然成本上限, 值得借鉴的深搜循环经济模型",
+   "quality": "mid",
+   "type": "repo",
+   "url": "https://github.com/jina-ai/node-DeepResearch",
+   "angle": "ai-search"
+  },
+  {
+   "lang": "javascript",
+   "name": "MindSearch (InternLM)",
+   "note": "GitHub API 实证: 6.9k stars / 主语言 JavaScript(后端 Python) / 推送 2025-07-04 (约 15 个月未动, 维护态)。README 实证: 上海 AI Lab 出品'Mimicking Human Minds'深度搜索器, 模拟人类思维分解查询+多查询并发搜索, 论文 arXiv:2407.20183, agent 模块基于 Lagent v0.5 重构优化并发, 有书生·浦语在线 demo。取数面: 需自配外部搜索 API+LLM API; 中文学术圈的检索引用代表作",
+   "quality": "mid",
+   "type": "repo",
+   "url": "https://github.com/InternLM/MindSearch",
+   "angle": "ai-search"
+  },
+  {
+   "lang": "typescript",
+   "name": "LLM Answer Engine (developersdigest)",
+   "note": "GitHub API+搜索实证: 原 dabit3/LLM-AnswerEngine 已迁移, 5.0k stars / TS / 推送 2026-04-29, Trendshift 榜。README 实证: LangChain.JS+Groq(Mixtral)+Brave Search/Serper+OpenAI 的教学级答案引擎, 一次查询返回来源/答案/图片/视频/追问, 配 4 集 YouTube 教程。取数面: Brave+Serper 双搜索 API+KV 缓存; 最小参考实现, 学界与快速原型首选",
+   "quality": "mid",
+   "type": "repo",
+   "url": "https://github.com/developersdigest/llm-answer-engine",
+   "angle": "ai-search"
+  },
+  {
+   "lang": "python",
+   "name": "AnySearch Skill",
+   "note": "GitHub API 实证: 6.4k stars / Python / 推送 2026-09-17 活跃。README 实证: 面向 AI agent 的统一实时检索 skill — 通用网页+垂直领域搜索+并行批量搜索+整页正文抽取; 以 Claude Code/OpenCode/Cursor 等 skill 形态一键安装(~/.claude/skills 等), 中英双语; 需注册其 API key(agent 可自动完成注册)。取数面: 一个 key 打包多引擎的统一搜索 API; '检索渠道装进 agent'的现成形态, 对研究工厂 skill 化改造有直接样板价值",
+   "quality": "mid",
+   "type": "repo",
+   "url": "https://github.com/anysearch-ai/anysearch-skill",
+   "angle": "ai-search"
+  },
+  {
+   "lang": "typescript",
+   "name": "OpenSearch GPT (supermemory)",
+   "note": "GitHub API 实证: 1.3k stars / TS / 推送 2026-10-02 高活跃。README 实证: Supermemory 团队的个性化 Perplexity/SearchGPT 克隆 — '边浏览边学习你的兴趣', supermemory 自动记忆收集+检索, Vercel AI ADK+Next.js+GPT-4o-mini, Cloudflare Pages 部署。取数面: 浏览行为记忆层×网页检索; 规模尚小但'个性化记忆×搜索'方向独特",
+   "quality": "mid",
+   "type": "repo",
+   "url": "https://github.com/supermemoryai/opensearch-ai",
+   "angle": "ai-search"
+  },
+  {
+   "lang": "typescript",
+   "name": "search_with_lepton (Lepton AI)",
+   "note": "GitHub API 实证: 原 search-with-lepton 更名 search_with_lepton, 8.1k stars / TS / 最后推送 2025-12-02 且已 archived(只读)。README 实证: '<500 行代码搭对话式搜索引擎', 内置 LLM+搜索引擎支持, 可分享可缓存的结果, Bing/SearchApi/Serper/Google PSE 可选, Lepton KV 存对话。本赛道祖师级参考实现, 只建议读代码不建议生产",
+   "quality": "low",
+   "type": "repo",
+   "url": "https://github.com/leptonai/search_with_lepton",
+   "angle": "ai-search",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "lang": "python",
+   "name": "free-search-mcp",
+   "note": "GitHub API 实证: 102 stars / Python / 推送 2026-10-04 活跃。README 实证(含输出示例): 免 API key 本地优先 MCP server — 多引擎(DuckDuckGo/Bing/Mojeek/Startpage)智能轮换+Playwright 浏览器回退+SQLite FTS5 结果缓存+面向 LLM 的输出塑形; research() 工具带 depth 参数, 简报头部透明标注引擎/来源数/token 消耗。取数面: 免费引擎直查+浏览器兜底; 对无 key 环境的检索腿有直接抄法价值",
+   "quality": "low",
+   "type": "repo",
+   "url": "https://github.com/sweetcornna/free-search-mcp",
+   "angle": "ai-search",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "name": "modelcontextprotocol/servers (官方参考服务器, 含 fetch)",
+   "url": "https://github.com/modelcontextprotocol/servers",
+   "type": "repo",
+   "lang": "typescript",
+   "note": "MCP官方参考服务器仓, 91004★, 2026-10-04 仍有push(gh api实证); 现存 src/ 下 everything/fetch/filesystem/git/memory/sequentialthinking/time 七件, fetch 工具提供 URL→markdown 直取(非搜索引擎); 第三方API型参考实现(brave search等)已整体迁往 modelcontextprotocol/servers-archived(303★, 2025-05归档, gh api实证); 取数面=通用网页抓取+SSRF防护",
+   "quality": "high",
+   "practices": [
+    "参考实现统一走 npx/uvx 单命令分发, 零克隆安装已是 MCP server 分发事实标准",
+    "把依赖第三方凭据的参考实现拆去 servers-archived, 主仓只留无外部API依赖的核心集, 信任与维护负担最小化",
+    "fetch server 内置 SSRF 防护+重定向/超时控制, 是抓取型 MCP 工具的标准安全基线"
+   ],
+   "angle": "mcp-servers"
+  },
+  {
+   "name": "tavily-ai/tavily-mcp",
+   "url": "https://github.com/tavily-ai/tavily-mcp",
+   "type": "repo",
+   "lang": "typescript",
+   "note": "Tavily官方MCP, 2417★, 2026-09-29 push(gh api实证); 引擎=Tavily搜索API(LLM优化检索); 工具面四件正交: tavily-search/tavily-extract/tavily-map/tavily-crawl(README实证); 提供远程MCP https://mcp.tavily.com/mcp 与本地npm双形态, API key可走URL参数或Bearer头",
+   "quality": "high",
+   "practices": [
+    "远程MCP支持 DEFAULT_PARAMETERS 头(JSON)注入全局默认参数(search_depth/max_results/include_images), 一次配置全工具生效",
+    "search/extract/map/crawl 四工具正交拆分, agent可按浅检索/深抓取分层选择调用",
+    "远程+本地npm同源双形态, 兼顾免安装体验与自托管审计需求"
+   ],
+   "angle": "mcp-servers"
+  },
+  {
+   "name": "exa-labs/exa-mcp-server",
+   "url": "https://github.com/exa-labs/exa-mcp-server",
+   "type": "repo",
+   "lang": "typescript",
+   "note": "Exa官方MCP, 5076★, 2026-10-02 push(gh api实证); 引擎=Exa神经/语义搜索API; 托管端点 https://mcp.exa.ai/mcp 一行接入(README实证), 工具含 web_search_exa/web_fetch 及 deep research 多步agent; Cursor/VS Code/Claude/Codex 一键安装徽章矩阵",
+   "quality": "high",
+   "practices": [
+    "hosted-first 策略: 托管MCP为主+各客户端一键安装徽章, 接入摩擦降到一条URL",
+    "把多跳 deep research 下沉为 server 端 agent 工具, 免去客户端编排多步检索链",
+    "工具集可配置裁剪, 适配不同客户端的工具槽位预算"
+   ],
+   "angle": "mcp-servers"
+  },
+  {
+   "name": "firecrawl/firecrawl-mcp-server",
+   "url": "https://github.com/firecrawl/firecrawl-mcp-server",
+   "type": "repo",
+   "lang": "javascript",
+   "note": "Firecrawl官方MCP, 7552★, 2026-10-03 push(gh api实证); 引擎=Firecrawl抓取/搜索栈; 工具面最宽(全量26件, README实证): firecrawl_search/scrape/crawl/map/extract/interact(浏览器交互)/monitor(定时监控+diff)/credit_usage, 含面向coding agent的开发者索引搜索(GitHub issues/PR/docs); 免key托管端 mcp.firecrawl.dev 限3工具, 搜索专用端限8工具",
+   "quality": "high",
+   "practices": [
+    "工具面分级供给: 全量26/免key 3/搜索专用8 三种profile, 精确适配客户端工具数上限",
+    "firecrawl_search 可挂 scrapeOptions 在同一次调用融合 SERP 结果与正文抓取, 省一跳往返",
+    "env开关裁剪反馈类工具+免key免费层(rate-limited), 拉新与生产两档清晰"
+   ],
+   "angle": "mcp-servers"
+  },
+  {
+   "name": "brave/brave-search-mcp-server",
+   "url": "https://github.com/brave/brave-search-mcp-server",
+   "type": "repo",
+   "lang": "typescript",
+   "note": "Brave官方MCP, 1485★, 2026-10-03 push(gh api实证); 引擎=Brave Search API; 工具面按结果类型拆(README实证): brave_web_search(country/search_lang/count 1-20/offset分页/safesearch)/local/place/image/video/news/LLM context/AI摘要; v2.x起移除图片结果base64只留URL; STDIO+HTTP双transport",
+   "quality": "high",
+   "practices": [
+    "v1→v2 把图片搜索结果的 base64 数据剥离只留URL, 显著降低响应体积与上下文消耗——搜索MCP省token的教科书案例",
+    "每工具独立 input/output schema 文件(src/tools/*/schemas), 输出契约代码化可回归测试",
+    "web/local/image/video/news 按结果类型分工具+细粒度参数(country/safesearch/offset), 单工具响应保持小而精"
+   ],
+   "angle": "mcp-servers"
+  },
+  {
+   "name": "ihor-sokoliuk/mcp-searxng",
+   "url": "https://github.com/ihor-sokoliuk/mcp-searxng",
+   "type": "repo",
+   "lang": "typescript",
+   "note": "SearXNG事实标准MCP(TS线), 1279★, 2026-10-04 push(gh api实证); 引擎=任一自建/可信SearXNG实例(需开JSON API, 聚合Google/Bing/DDG等70+引擎); npm mcp-searxng + Docker isokoliuk/mcp-searxng + HTTP 三形态; GitHub MCP Registry收录, OpenSSF Scorecard徽章在位(README实证)",
+   "quality": "high",
+   "practices": [
+    "npx/Docker/HTTP 三种接线recipe按部署场景文档化, 同一server覆盖本地/容器/远程全形态",
+    "显式信任模型: 要求用户自建或可信实例且开启JSON输出, server不代装元搜索引擎, 职责边界干净",
+    "OpenSSF Scorecard/Best Practices 徽章+MCP Registry 收录, 把供应链可信度做成工程指标"
+   ],
+   "angle": "mcp-servers"
+  },
+  {
+   "name": "Aas-ee/open-webSearch",
+   "url": "https://github.com/Aas-ee/open-webSearch",
+   "type": "repo",
+   "lang": "typescript",
+   "note": "免API key多引擎MCP, 1840★, 2026-09-30 push(gh api实证); 引擎面独一档(README实证): bing/baidu/sogou/csdn/juejin/duckduckgo/exa/brave/startpage/hackernews; 形态=MCP server+CLI+本地daemon三件; 内置HTTP代理配置; 返回结构化title/URL/description; 中文web覆盖(baidu/sogou/csdn/juejin)是最大差异点",
+   "quality": "high",
+   "practices": [
+    "免key引擎池+可配默认引擎与每引擎结果数, 检索渠道零成本冷启动可直接抄",
+    "MCP server/CLI/本地daemon三形态复用同一检索核, 脱离agent也能当命令行搜用",
+    "HTTP代理配置位显式建模, 墙内外受限资源场景按一等公民对待"
+   ],
+   "angle": "mcp-servers"
+  },
+  {
+   "name": "nickclyde/duckduckgo-mcp-server",
+   "url": "https://github.com/nickclyde/duckduckgo-mcp-server",
+   "type": "repo",
+   "lang": "python",
+   "note": "DDG免key搜索MCP, 1519★, 2026-09-04 push(gh api实证), PyPI duckduckgo-mcp-server; 引擎=DuckDuckGo(无key直取); 工具=search+fetch_content(正文智能抽取, README实证); 特色=超长URL折成 ref:// 短token供fetch_content回链省上下文, 搜索与抓取双路内置限流",
+   "quality": "high",
+   "practices": [
+    "超长结果URL折叠为 ref:// 短token、内容抓取工具直接回链token, 搜索型MCP省上下文窗口的巧招",
+    "搜索与抓取双链路都内置rate-limit保护, 免key抓取的防封基线",
+    "uvx单命令分发+PyPI常驻包, Python系MCP分发范本"
+   ],
+   "angle": "mcp-servers"
+  },
+  {
+   "name": "perplexityai/modelcontextprotocol",
+   "url": "https://github.com/perplexityai/modelcontextprotocol",
+   "type": "repo",
+   "lang": "typescript",
+   "note": "Perplexity官方MCP(原ppl-ai), 2552★, 2026-09-25 push(gh api实证); 引擎=Perplexity Search API/Agent API(Sonar系答案型检索, 返回综合答案+引用); 远程MCP https://api.perplexity.ai/mcp + 本地npm @perplexity-ai/mcp-server 双轨; PERPLEXITY_TIMEOUT_MS可调(默认5分钟)适配长research(README实证)",
+   "quality": "high",
+   "practices": [
+    "远程MCP与本地npm包同源双轨, 客户端是否支持remote server两头都兜住",
+    "答案型检索(搜索+推理+引用一体)作为工具面, 与SERP罗列型server形成互补取数面",
+    "超时显式环境变量化且默认放宽到5分钟, 长研究任务不被客户端默认值掐表"
+   ],
+   "angle": "mcp-servers"
+  },
+  {
+   "name": "kagisearch/kagimcp",
+   "url": "https://github.com/kagisearch/kagimcp",
+   "type": "repo",
+   "lang": "python",
+   "note": "Kagi官方MCP, 532★, 2026-07-07 push(gh api实证); 引擎=Kagi API(付费token); 工具=kagi_search_fetch(web/news/video/podcast/image+Kagi lenses自定义)与kagi_extract(页面→markdown); 官方托管 https://mcp.kagi.com/mcp 走Bearer, 本地uvx自托管均可(README实证)",
+   "quality": "mid",
+   "angle": "mcp-servers"
+  },
+  {
+   "name": "serpapi/serpapi-mcp",
+   "url": "https://github.com/serpapi/serpapi-mcp",
+   "type": "repo",
+   "lang": "python",
+   "note": "SerpApi官方MCP, 178★, 2026-09-22 push(gh api实证); 引擎=SerpApi(Google/Bing/Yahoo/DDG/YouTube/eBay等SERP直出); 特色(README实证)=每引擎参数schema以MCP resources下发、markdown响应模式平均省50% token(复杂JSON省90%+)、MCP Apps交互表格UI; 托管 mcp.serpapi.com",
+   "quality": "mid",
+   "angle": "mcp-servers"
+  },
+  {
+   "name": "BochaAI/bocha-search-mcp",
+   "url": "https://github.com/BochaAI/bocha-search-mcp",
+   "type": "repo",
+   "lang": "python",
+   "note": "博查官方MCP(中文AI搜索API), 185★, 最后push 2025-04-14(约18个月无提交, 未超2年红线, gh api实证); 引擎=博查近百亿网页+生态内容源(天气/新闻/百科/医疗/火车票/图片); 工具=Bocha Web Search, freshness参数(oneDay/oneWeek/oneMonth/oneYear/日期区间)+count 1-50(README实证); 中文检索取数面主力选项之一",
+   "quality": "mid",
+   "angle": "mcp-servers"
+  },
+  {
+   "name": "SecretiveShell/MCP-searxng",
+   "url": "https://github.com/SecretiveShell/MCP-searxng",
+   "type": "repo",
+   "lang": "python",
+   "note": "SearXNG的Python系MCP, 130★, 2026-05-29 push(gh api实证); 引擎=SearXNG实例; 工具面极简(单search工具+prompt, README实证), 文档含Docker/Smithery接线, 与TS线ihor版构成双选",
+   "quality": "mid",
+   "angle": "mcp-servers"
+  },
+  {
+   "name": "mrkrsl/web-search-mcp",
+   "url": "https://github.com/mrkrsl/web-search-mcp",
+   "type": "repo",
+   "lang": "typescript",
+   "note": "本地LLM向免key搜索MCP, 1166★, 最后push 2025-08-08(约14个月, 未超2年, gh api实证); 引擎级联(README实证)=Bing(专用Chromium)>Brave(专用Firefox)>DDG(axios)三级回退; 三工具: full-web-search(SERP+并发正文抽取)/get-web-search-summaries(轻量)/单页抽取; 浏览器隔离实例+人类行为模拟+HTTP/2→HTTP/1.1错误回退",
+   "quality": "mid",
+   "angle": "mcp-servers"
+  },
+  {
+   "name": "Evilran/baidu-mcp-server",
+   "url": "https://github.com/Evilran/baidu-mcp-server",
+   "type": "repo",
+   "lang": "python",
+   "note": "百度搜索MCP(社区), 28★, 最后push 2025-10-27(gh api实证); 引擎=百度网页搜索直取(无key); 工具=search+content fetch, 内置限流与LLM友好格式化(README实证); smithery/PyPI可装; 百度取数面参考实现, 规模小",
+   "quality": "low",
+   "angle": "mcp-servers",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "name": "Richard-Weiss/mcp-google-cse",
+   "url": "https://github.com/Richard-Weiss/mcp-google-cse",
+   "type": "repo",
+   "lang": "python",
+   "note": "Google Custom Search Engine官方API的MCP封装, 46★, 最后push 2026-04-09(gh api实证); 引擎=Google CSE JSON API(免费100次/日); 单工具google_search返回title/link/snippet, 支持COUNTRY_REGION/GEOLOCATION/RESULT_LANGUAGE(README实证); README明确建议与mcp-server-fetch链式组合作深搜",
+   "quality": "low",
+   "angle": "mcp-servers",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "name": "punkpeye/awesome-mcp-servers",
+   "url": "https://github.com/punkpeye/awesome-mcp-servers",
+   "type": "list",
+   "lang": "markdown",
+   "note": "MCP服务器最权威清单, 95830★, 2026-09-27 push(gh api实证); 含🔎 Search & Data Extraction专区+按功能的字母序分类树(README grep实证, line 124锚点#search); 每条目标注语言/本地/远程/平台属性; 作搜索类server的发现入口与选型横评底表",
+   "quality": "high",
+   "practices": [
+    "功能分区策展(检索类单独成节)+每条目标注实现语言与本地/远程部署属性, 可直接当选型横评底表",
+    "与glama.ai等registry评分徽章联动, 收录项可跳转第三方交叉验证活跃度"
+   ],
+   "angle": "mcp-servers"
+  },
+  {
+   "lang": "java",
+   "name": "YaCy",
+   "note": "实证: yacy/yacy_search_server(由 yacy_net_search 改名), 4,054 stars, 最后推送 2026-09-23, Java, 未归档。P2P 分布式搜索引擎: 索引分片存于各 peer, 检索时跨 peer 联邦聚合; 也可单机 intranet 模式自用。取数面: 内嵌 Solr 索引 + yacysearch.json 等 HTTP JSON API, 社区在 searchlab.eu。",
+   "practices": [
+    "DHT 式索引分片: 每个 peer 只持有一部分倒排索引(RWI), 查询路由到持份 peer 联邦聚合——联邦搜索在 P2P 层的原生实现",
+    "内嵌 Solr 全文索引: 单 JVM 自带爬虫/索引/检索/管理界面, 零外部依赖即可 intranet 部署",
+    "全部能力走 HTTP API(yacysearch.json 等), 上层聚合器可把一个 YaCy peer 当普通上游引擎接入"
+   ],
+   "quality": "high",
+   "type": "repo",
+   "url": "https://github.com/yacy/yacy_search_server",
+   "angle": "metasearch"
+  },
+  {
+   "lang": "go",
+   "name": "Hister",
+   "note": "实证: 5,876 stars, 最后推送 2026-10-04(日更), Go, AGPL-3.0, hister.org。注意: 非多引擎聚合器, 是 searx 作者 asciimoo 的回归新作——个人全文检索引擎, 索引\"你访问过的网页+本地文件\"。README 实证: 浏览器扩展自动收录、查询语法(字段过滤/短语/通配/取反)、MCP 接口供 AI 助手查询。对研究工厂: 本地弹药库全文检索+MCP 直连的现成方案。",
+   "practices": [
+    "单二进制零配置分发: 各平台单文件内置 web UI, brew/docker/nix 多通道安装, 本地起服务即用",
+    "浏览器扩展边采边索引: 访问即收录, 免独立爬虫调度, 采集面与浏览行为天然同步",
+    "原生 MCP 服务端: AI 助手/agent 可直接检索本地索引, 检索渠道即插即用"
+   ],
+   "quality": "high",
+   "type": "repo",
+   "url": "https://github.com/asciimoo/hister",
+   "angle": "metasearch"
+  },
+  {
+   "lang": "ruby",
+   "name": "DevDocs",
+   "note": "实证: 39,528 stars, 最后推送 2026-10-04, Ruby, 未归档, devdocs.io。多源文档聚合检索(联邦搜索的文档版): 抓取清洗 100+ 官方文档站进统一检索界面, 可全自托管。取数面: 自托管 web 全文检索; lib/docs/scrapers 目录实测 226 个抓取器。",
+   "practices": [
+    "每源一抓取器: lib/docs/scrapers 下 226 个 Ruby scraper + filters 把异构文档站统一为 entries 索引清单——引擎适配层的文档版实现",
+    "检索前移到浏览器: 预构建索引 + lunr.js 客户端检索 + service worker 离线缓存, 服务端查询成本近零",
+    "文档版本化静态分发: 每文档独立元数据与索引文件, 可单独更新与失效缓存"
+   ],
+   "quality": "high",
+   "type": "repo",
+   "url": "https://github.com/freeCodeCamp/devdocs",
+   "angle": "metasearch"
+  },
+  {
+   "lang": "python",
+   "name": "Openverse",
+   "note": "实证: 380 stars(用户在 API 侧, 仓星不高), 最后推送 2026-10-02(日更), Python(monorepo 含 TS 前端), WordPress 基金会官方, openverse.org。开放许可媒体联邦检索: 聚合 Flickr/Wikimedia 等数亿条图片音频为统一检索。取数面: 公开 REST API(api.openverse.org)。仓库顶层实测 catalog/ingestion_server/indexer_worker/api 分层目录。",
+   "practices": [
+    "采集-清洗-入索引-服务分层单仓: catalog(源适配采集)/ingestion_server(去重清洗)/indexer_worker(索引更新)/api(Django 服务)各司其职, docker-compose 本地全栈可起",
+    "数据源适配器模式: 每个媒体源一个 provider adapter 统一摄入, 新源=新增一个适配器, 增量同步可调度",
+    "API 侧隐私与限流内建: 查询日志匿名化不留 IP, API 文档化, 便于第三方聚合接入"
+   ],
+   "quality": "high",
+   "type": "repo",
+   "url": "https://github.com/WordPress/openverse",
+   "angle": "metasearch"
+  },
+  {
+   "lang": "java",
+   "name": "Marginalia Search",
+   "note": "实证: MarginaliaSearch/MarginaliaSearch(由 Marginalia-Search 改名), 2,169 stars, 最后推送 2026-10-02, Java。自述\"Indexing the small, old and weird web\", 非聚合器而是独立索引的另类搜索引擎, 但提供公开 API 可作聚合上游(SearXNG/4get 有其引擎位)。README 实证: 支持白标自托管模式与自有数据爬取/side-load。取数面: 公开 API(非商业免费, 商用另购 license)。",
+   "practices": [
+    "白标双模式: 同一代码既跑公开搜索引擎, 也可换成自有数据(自爬或 side-load)的白标检索后端",
+    "低硬件预算工程: 面向单机消费级 RAM/SSD 设计索引栈, 不依赖数据中心——小硬件跑大索引的路线证明",
+    "run/ 目录一键编排本地环境(setup.sh 拉补充模型数据+分进程部署), 自托管体验工程化"
+   ],
+   "quality": "high",
+   "type": "repo",
+   "url": "https://github.com/MarginaliaSearch/MarginaliaSearch",
+   "angle": "metasearch"
+  },
+  {
+   "lang": "php",
+   "name": "4get",
+   "note": "实证(git.lolcat.ca Gitea API 2026-10-05): full_name=lolcat/4get, 自述\"4get is a proxy search engine that doesn't suck\", updated_at 2026-10-03(活跃), 未归档; 公共实例 4get.ca HTTP 200; 生态有 mcp-4get(PyPI, 2026-08 更新)封装其 JSON API 供 LLM 取数。多引擎代理聚合(网页/图片/视频/新闻), 前端级代理+反指纹设计。GitHub 旧镜像 luuul/4get 已 404, 官方阵地在 Gitea。取数面: 自托管 web + JSON API。",
+   "quality": "mid",
+   "type": "repo",
+   "url": "https://git.lolcat.ca/lolcat/4get",
+   "angle": "metasearch"
+  },
+  {
+   "lang": "php",
+   "name": "LibreY",
+   "note": "实证: 322 stars, 最后推送 2026-06-10, PHP, 未归档。LibreX(hnhx, 已停更)的社区续作: 无 JS 无框架纯 PHP 元搜索, 聚合 Google 等并去广告去跟踪。取数面: 自托管 web 搜索; 规模小但配方极简, 适合当轻量聚合腿。",
+   "quality": "mid",
+   "type": "repo",
+   "url": "https://github.com/Ahwxorg/LibreY",
+   "angle": "metasearch"
+  },
+  {
+   "lang": "php",
+   "name": "MetaGer",
+   "note": "实证(gitlab.metager.de API 2026-10-05): open-source/MetaGer 公开仓, last_activity 2026-10-04(日更), 默认分支 development, 2016 年建仓; metager.org 自述 AGPL 开源(语言 PHP/Laravel 系官网口径, API 无该字段)。德国非营利 SUMA-EV 运营的元搜索, 聚合多引擎+自带成员索引, 近期开发含 AI 助手与 Proxy v2。旧域 gitlab.metager3.de 已不可达。取数面: metager.de 网页/插件(F-Droid 与 Firefox 扩展 2026-09 更新)。",
+   "quality": "mid",
+   "type": "repo",
+   "url": "https://gitlab.metager.de/open-source/MetaGer",
+   "angle": "metasearch"
+  },
+  {
+   "lang": "python",
+   "name": "mwmbl",
+   "note": "实证: 1,869 stars, 最后推送 2026-10-04(日更), Python, mwmbl.org。非聚合器: 非营利、自建索引的开源网页搜索引擎(爬虫+索引+API 一体)。取数面: 公开 API, 可整体自托管。规模小、社区窄, 但持续活跃, 可作聚合上游备选。",
+   "quality": "mid",
+   "type": "repo",
+   "url": "https://github.com/mwmbl/mwmbl",
+   "angle": "metasearch"
+  },
+  {
+   "lang": "python",
+   "name": "searx-space",
+   "note": "实证: 222 stars, 最后推送 2026-10-02, Python, 驱动 searx.space。SearXNG 实例联邦的监控枢纽: 自动化体检全部公共实例(可用性/匿名度/TLS), 产出实例榜单供客户端选优。取数面: searx.space 页面与生成数据; 做多实例轮换采集时是现成的实例健康数据源。",
+   "quality": "mid",
+   "type": "tool",
+   "url": "https://github.com/searxng/searx-space",
+   "angle": "metasearch"
+  },
+  {
+   "lang": "dockerfile",
+   "name": "searxng-docker",
+   "note": "实证: 3,276 stars, 最后推送 2026-03-28, 但 archived=true(2026 起归档)。官方 docker-compose 部署骨架(searxng+caddy+valkey), 是绝大多数自托管实例的起点; 归档后新部署请对照 docs.searxng.org 的 docker 指南。收录理由: 部署配方仍是社区事实参考。",
+   "quality": "mid",
+   "type": "tool",
+   "url": "https://github.com/searxng/searxng-docker",
+   "angle": "metasearch"
+  },
+  {
+   "lang": "python",
+   "name": "Whoogle Search",
+   "note": "实证: 11,570 stars, archived=true; README 置顶\"Whoogle has reached the end of the road — 24 Jul 2026\": Google 已封死全部无 JS 请求 UA, 项目功能死亡, 官宣不再修复。收录仅作反例警示: 无 JS 服务端抓取 Google 的路线已死, 选型勿再押注; 其 requests+bs4 服务端渲染、零前端 JS 的配方只剩历史参考价值。",
+   "quality": "low",
+   "type": "repo",
+   "url": "https://github.com/benbusby/whoogle-search",
+   "angle": "metasearch",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "lang": "python",
+   "name": "searx (原版)",
+   "note": "实证: 13,555 stars(已迁至 searx org), 未归档但 2023-09-07 提交自宣\"Searx is no longer maintained\", 2026-05 仅一条文档提交指向继任方向 hister.org。SearXNG 的直系前身; 谱系收录仅供考据, 实际使用一律 SearXNG。",
+   "quality": "low",
+   "type": "repo",
+   "url": "https://github.com/searx/searx",
+   "angle": "metasearch",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "lang": "python",
+   "name": "WechatSogou",
+   "note": "gh API实证: 6,395 stars, Python, 2026-03-07的push仅删README打赏码, 实质代码冻结于2021(commits实证2021-09依赖bump); pip wechatsogou; 能力=搜狗微信→公众号信息/文章列表/临时链接; 取数面=weixin.sogou.com关键词+账号两路; 中文教程圈事实标准, 搜狗改版后需自行验证; 在役继任者见zjp1997720/ptbsare两条。",
+   "practices": [
+    "把验证码重试次数/代理做成WechatSogouAPI构造参数，反爬细节对调用方透明可调",
+    "README先写死平台数据边界(临时链接须有效期内落盘/每号仅最近10条群发)再讲用法，预期管理范式可直接抄",
+    "返回dict列表+py2/py3双兼容+PyPI直装，接口零学习成本"
+   ],
+   "quality": "high",
+   "type": "repo",
+   "url": "https://github.com/chyroc/WechatSogou",
+   "angle": "zh-search"
+  },
+  {
+   "lang": "python",
+   "name": "ddgs (duckduckgo_search 换代版)",
+   "note": "gh API+README实证: 3,002 stars, Python, push 2026-08-26; 多后端元搜索库; 能力=text/news/images/videos/books/extract统一接口, 自带CLI+FastAPI服务(默认4479)+MCP stdio服务; 取数面=Bing/DDG等多引擎, region=cn-zh+全局代理参数支撑中文检索, 免API key使其成为开源LLM工具链的搜索事实标准。",
+   "practices": [
+    "垂直方法(text()/news()/images())跨后端返回统一字段字典，上层换引擎零改码",
+    "一包多形态: pip extras切换库/CLI/API服务/MCP服务四种交付",
+    "代理优先: CLI与服务层内建全局socks5/http代理参数, 反封禁是一等公民设计"
+   ],
+   "quality": "high",
+   "type": "repo",
+   "url": "https://github.com/deedy5/ddgs",
+   "angle": "zh-search"
+  },
+  {
+   "lang": "typescript",
+   "name": "DailyHotApi",
+   "note": "gh API实证: 4,081 stars, TypeScript, push 2026-03-11; 能力=多平台热榜聚合统一REST API, 支持RSS模式与Vercel部署; 取数面=百度/知乎/微博等热搜榜单; 边界=热搜榜单非SERP结果, 只能当趋势信号渠道用。",
+   "quality": "mid",
+   "type": "service",
+   "url": "https://github.com/imsyy/DailyHotApi",
+   "angle": "zh-search"
+  },
+  {
+   "lang": "python",
+   "name": "python-baidusearch (PyPI baidusearch)",
+   "note": "gh API+PyPI JSON实证: 162 stars, Python, push 2024-11-14, PyPI baidusearch 1.0.3上传时间2024-11-14; 能力=零外部依赖的百度网页SERP抓取(search()返回标题/链接/摘要); 取数面=www.baidu.com/s; MetaGPT/OpenManus社区教程常作百度检索替换件。",
+   "quality": "mid",
+   "type": "repo",
+   "url": "https://github.com/amazingcoderpro/python-baidusearch",
+   "angle": "zh-search"
+  },
+  {
+   "lang": "javascript",
+   "name": "wechat-article-search",
+   "note": "gh API+README实证: 268 stars, JavaScript, push 2026-07-17; 能力=关键词→搜狗微信搜索→1-50篇结构化文章(标题/URL/摘要/时间/公众号名), -r参数把搜狗跳转链解析成mp.weixin.qq.com直链, 唯一npm依赖cheerio; 取数面=weixin.sogou.com; 正源在zjp1997720/zhijian-skills, 支持npx skills一键安装。",
+   "quality": "mid",
+   "type": "tool",
+   "url": "https://github.com/zjp1997720/wechat-article-search",
+   "angle": "zh-search"
+  },
+  {
+   "lang": "python",
+   "name": "baidu-serp-api",
+   "note": "gh API+README实证: 36 stars, Python, push 2025-08-01; pip baidu-serp-api; 能力=BaiduPc/BaiduMobile双端SERP→JSON, 支持date_range时间过滤/pn分页/proxies代理注入与single/pool两种连接模式(README明示为代理轮换优化); 取数面=百度PC+移动两套SERP。",
+   "quality": "low",
+   "type": "repo",
+   "url": "https://github.com/ohblue/baidu-serp-api",
+   "angle": "zh-search",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "lang": "python",
+   "name": "sogou-weixin-mcp-server",
+   "note": "gh API+README实证: 9 stars, Python, push 2026-05-12; 能力=搜狗微信文章搜索封装为MCP工具, 返回标题/摘要/URL/来源/日期结构化字段; uvx --from git+... 一键免克隆运行; 取数面=weixin.sogou.com。",
+   "quality": "low",
+   "type": "tool",
+   "url": "https://github.com/ptbsare/sogou-weixin-mcp-server",
+   "angle": "zh-search",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "lang": "javascript",
+   "name": "aggregate-search-mcp",
+   "note": "gh API+README实证: 3 stars, JavaScript, push 2026-08-08; 能力=百度+必应+搜狗三引擎聚合MCP, 无需API key, 内置缓存/结果去重排序/正文抓取/SERP截图保存; 取数面=三中文引擎SERP直抓, 面向LM Studio等客户端; 星数极小属早期个人项目, 用前自验。",
+   "quality": "low",
+   "type": "tool",
+   "url": "https://github.com/wasd9191/aggregate-search-mcp",
+   "angle": "zh-search",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "lang": "rust",
+   "name": "tarzi",
+   "note": "gh API+README实证: 7 stars, Rust, push 2026-08-05; 能力=API-free多引擎搜索(Bing/Google/DuckDuckGo/Brave/Baidu/Sogou), crates.io+PyPI双发行+Rust/Python双CI(README徽章实证); 取数面=多引擎SERP含百度/搜狗, 面向AI检索场景; 早期小众。",
+   "quality": "low",
+   "type": "repo",
+   "url": "https://github.com/mirasoth/tarzi",
+   "angle": "zh-search",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "name": "awesome-selfhosted (search engines 分类)",
+   "url": "https://github.com/awesome-selfhosted/awesome-selfhosted",
+   "type": "list",
+   "lang": "markdown",
+   "note": "实证: GitHub API 323,883★ (全站最大清单之一), 最近提交 2026-10-04; 其 search-engines 分类页 (awesome-selfhosted.net/tags/search-engines.html, 已抓取) 实测收录 SearXNG ★36824/YaCy ★3837/Whoogle ★11500/Fess ★1126/Meilisearch 等, 每条带许可证+主语言+最近提交日期徽章; 覆盖面=自托管'搜索服务'最全目录, 研究工厂选检索引擎的第一站",
+   "quality": "high",
+   "practices": [
+    "收录门禁机器可查: CONTRIBUTING 写死仅收 OSI 许可+活跃维护项目, bot 定期开 PR 剔除死链与停滞条目",
+    "数据与展示分离: 每个分类自动生成独立 tags 页, 按渠道面垂直下钻, 清单本体保持单文件可 diff",
+    "每条目固定字段 (许可证/语言/星数徽章/演示链接), 清单可被程序化解析直接进渠道注册表"
+   ],
+   "angle": "awesome-lists"
+  },
+  {
+   "name": "edoardottt/awesome-hacker-search-engines",
+   "url": "https://github.com/edoardottt/awesome-hacker-search-engines",
+   "type": "list",
+   "lang": "markdown",
+   "note": "实证: GitHub API 11,251★, 最近提交 2026-10-01; README 原文统计 596 条搜索入口, 按 27 类 taxonomy 组织 (General/Vulnerabilities/Exploits/Code/DNS/Certificates/Leaks/Social Networks/Files/Threat Intelligence/Web History 等), 'search engine' 主题下星数最高的清单; 对研究工厂价值=按情报对象分类的深网/垂直检索面地图 (如 Web History、Files、Domains 类)",
+   "quality": "high",
+   "practices": [
+    "按'情报对象/攻击面'而非字母序切分类, 每条目强制一行用途注释, 定位即查即用",
+    "链接与格式经 awesome-lint/CI 持续校验, 五年保持月度更新节奏 (最近 2026-10-01)"
+   ],
+   "angle": "awesome-lists"
+  },
+  {
+   "name": "felladrin/awesome-ai-web-search",
+   "url": "https://github.com/felladrin/awesome-ai-web-search",
+   "type": "list",
+   "lang": "markdown",
+   "note": "实证: GitHub API 1,465★, 最近提交 2026-10-03; README 原文统计 143 条时间线条目 (2021-04 Khoj → 2026-08), 覆盖 LLM×web search 交叉的开源软件全景, GPT Researcher/STORM/Morphic/Perplexica(Vane)/Scira/MindSearch 等头部项目全部在册; 本条普查多个项目收录的直接出处清单",
+   "quality": "high",
+   "practices": [
+    "以'初始提交时间线'组织并链到每个项目的首个 commit SHA, AI 搜索产品演化谱系可追溯",
+    "每条目附可直接点开的 Demo (多为 HF Space), 试用成本接近零",
+    "开头显式声明三类用例分面 (摘要式搜索/函数调用联网/agent 报告生成), 读者按场景裁剪"
+   ],
+   "angle": "awesome-lists"
+  },
+  {
+   "name": "GitHub topic: search-engine 聚合页",
+   "url": "https://github.com/topics/search-engine?o=desc&s=stars",
+   "type": "list",
+   "lang": "markdown",
+   "note": "实证: web_reader 抓取, 页面标注 6,315 个 public repo, 按星数排序头部为 elasticsearch/meilisearch/searxng/Vane(2026-09 更新)/qdrant/typesense/whoogle 等; 是'聚合页'角度的官方总入口, 适合按 star 榜+更新时间双指标初筛; 无人工策展故评 mid",
+   "quality": "mid",
+   "angle": "awesome-lists"
+  },
+  {
+   "name": "Firecrawl",
+   "url": "https://github.com/firecrawl/firecrawl",
+   "type": "service",
+   "lang": "typescript",
+   "note": "实证: GitHub API 188,593★ (org 已迁 firecrawl/firecrawl), 最近提交 2026-10-04; README 原文确认 POST https://api.firecrawl.dev/v2/search 搜索端点, search→scrape→markdown/structured output 一条链; open core 可自托管; 取数面=SaaS API+自托管 Docker 同语义, 网页搜索+抓取+清洗一体",
+   "quality": "high",
+   "practices": [
+    "/v2/search 搜索→/v2/scrape 抓取→markdown/structured output 一条 REST 链, SDK 与 API 语义一一对应",
+    "open core: 生产 SaaS 与自托管 Docker 同一套端点语义, 云到本地迁移近零改码",
+    "长任务异步化: crawl/batch 走 job+轮询/webhook, 同步接口只留给单页, 限流与重试参数显式暴露"
+   ],
+   "angle": "awesome-lists"
+  },
+  {
+   "name": "Fess",
+   "url": "https://github.com/codelibs/fess",
+   "type": "repo",
+   "lang": "java",
+   "note": "实证: GitHub API 1,138★, 最近提交 2026-10-04 (当日活跃); README 原文: 基于 OpenSearch 的自托管企业/站内搜索服务器, 内置 Web 爬虫, 数据面有 fess-ds-json/fess-ingest-ndjson JSON/NDJSON 管道; awesome-selfhosted 收录 (★1126 2026-10-01); 取数面=内置爬虫+REST/JSON 检索接口, 适合做工厂内网文档检索层",
+   "quality": "mid",
+   "angle": "awesome-lists"
+  },
+  {
+   "name": "Stract",
+   "url": "https://github.com/StractOrg/stract",
+   "type": "repo",
+   "lang": "rust",
+   "note": "实证: GitHub API 2,370★ (org 已由 StractEngine 迁 StractOrg), 最近提交 2025-03-24 (18 个月未推, 未超 2 年线); README 原文: 开源网页搜索引擎, 托管在 stract.com, 面向 tinkerers/developers, 支持 optics DSL 几乎无限定制排序, 建议用托管版、本地搭建见 CONTRIBUTING; Rust 全栈 (抓取+索引+排序); 取数面=stract.com 托站+optics 规则语法; 活跃度转弱, 评 mid",
+   "quality": "mid",
+   "angle": "awesome-lists"
+  },
+  {
+   "name": "Jina Reader (r.jina.ai / s.jina.ai)",
+   "url": "https://github.com/jina-ai/reader",
+   "type": "api",
+   "lang": "typescript",
+   "note": "实证: GitHub API 12,102★, 最近提交 2026-05-22; README 原文: 'Read' 用 https://r.jina.ai/<url> 把任意 URL 转 LLM 友好 markdown (免费用), 'Search' 用 https://s.jina.ai/<query> 搜索转 markdown (2024-05 上线), 本仓是两服务开源分支 (MongoDB SaaS 存储层不含); URL 前缀式接口是检索-取文链路的极简取数面; 4.5 个月未推, 评 mid",
+   "quality": "mid",
+   "angle": "awesome-lists"
+  },
+  {
+   "name": "crawl4ai",
+   "url": "https://github.com/unclecode/crawl4ai",
+   "type": "repo",
+   "lang": "python",
+   "note": "实证: repo页+README webReader抓取, shields 2026-10: ~85k star (GitHub最star爬虫), 最近提交2026-09, 582提交/年, v0.7.x活跃。核心能力: LLM优先的异步爬取框架, AsyncWebCrawler直出LLM友好markdown。取数面: JsonCssExtractionStrategy纯CSS schema抽JSON(零LLM成本)、LLMExtractionStrategy、MarkdownGenerator、CacheMode(本地/Redis/BYPASS)、Pruning/BM25 ContentFilter控token预算、Docker自托管、虚拟时间上下文。",
+   "quality": "high",
+   "practices": [
+    "JsonCssExtractionStrategy 用CSS选择器schema直接抽JSON, 结构化抽取零LLM成本",
+    "CacheMode 显式缓存策略(BYPASS/本地/Redis), 重复抓取不重跑",
+    "Pruning/BM25 ContentFilter 在喂LLM前压缩页面, 控token预算"
+   ],
+   "angle": "agent-crawl"
+  },
+  {
+   "name": "Scrapy",
+   "url": "https://github.com/scrapy/scrapy",
+   "type": "repo",
+   "lang": "python",
+   "note": "实证: raw README.rst webReader抓取 + shields 2026-10: ~65k star, 最近提交今日, 674提交/年。核心能力: 快速高级爬取+抓取框架, 从页面抽结构化数据。取数面: Spider中间件+Item Pipeline分层、内置导出(JSON/CSV/XML)、telnet控制台、限速/重试/去重内建, 配scrapy-playwright可渲染JS页。",
+   "quality": "high",
+   "practices": [
+    "AutoThrottle 按响应延迟自动调节并发, 不用手调速率",
+    "RFPDupeFilter 请求指纹去重, 广度爬取不重复拉同一URL",
+    "下载中间件+Item Pipeline分层, 取数/清洗/落盘解耦可插拔"
+   ],
+   "angle": "agent-crawl"
+  },
+  {
+   "name": "Playwright",
+   "url": "https://github.com/microsoft/playwright",
+   "type": "repo",
+   "lang": "typescript",
+   "note": "实证: 官方文档playwright.dev (actionability/network/trace-viewer页) + shields 2026-10: ~97k star, 最近提交昨日, 2.6k提交/年。核心能力: 单API驱动Chromium/Firefox/WebKit的浏览器自动化, 是多数agent采集编排的底层执行器。取数面: page.route()网络拦截/mock、page.waitForResponse等API、trace viewer事后回放(DOM快照+网络+console)、多context隔离会话。",
+   "quality": "high",
+   "practices": [
+    "actionability自动等待(可见/可点/稳定才操作), 用等待替代sleep根治时序flake",
+    "page.route() 在浏览器层拦截/改写/mock请求, 反爬调试与数据截获一招通吃",
+    "trace viewer 录制DOM快照+网络+日志, 采集失败可离线回放定位"
+   ],
+   "angle": "agent-crawl"
+  },
+  {
+   "name": "Playwright MCP",
+   "url": "https://github.com/microsoft/playwright-mcp",
+   "type": "repo",
+   "lang": "typescript",
+   "note": "实证: repo页webReader抓取, shields 2026-10: ~38k star, 最近提交上周一, 201提交/年。核心能力: 把Playwright包成MCP server, 让任意LLM agent结构化驱动浏览器, 是agent取数腿的标准接线件。取数面: browser_navigate/click/type/snapshot等细粒度工具、a11y树快照(非截图)省token、vision截图模式opt-in、孤立context隔离。",
+   "quality": "high",
+   "practices": [
+    "用a11y树快照而非截图喂LLM, 同等信息量token省一个数量级",
+    "工具按操作粒度细拆(navigate/click/snapshot), LLM按需调用不超载上下文",
+    "默认隔离浏览器context, 每会话干净状态不串cookie"
+   ],
+   "angle": "agent-crawl"
+  },
+  {
+   "name": "Crawlee",
+   "url": "https://github.com/apify/crawlee",
+   "type": "repo",
+   "lang": "typescript",
+   "note": "实证: api.github.com JSON webReader抓取(25,479 star, Apache-2.0, pushed 2026-08, description确认Puppeteer/Playwright/Cheerio/JSDOM/raw HTTP+代理轮换) + shields: ~26k star, 674提交/年。核心能力: 一套代码在raw HTTP/Cheerio/无头浏览器间切换的爬取编排框架(crawlee.dev)。取数面: RequestQueue+AutoscaledPool动态并发、内建代理轮换、请求去重、可插拔storage。",
+   "quality": "high",
+   "practices": [
+    "RequestQueue+AutoscaledPool 按CPU/内存自动伸缩并发, 长跑任务自稳定",
+    "CheerioCrawler/PlaywrightCrawler 同一爬虫类切换, 简单站走HTTP省资源重站才上浏览器",
+    "内建代理轮换与会话管理, 反封锁不靠外部胶水"
+   ],
+   "angle": "agent-crawl"
+  },
+  {
+   "name": "browser-use",
+   "url": "https://github.com/browser-use/browser-use",
+   "type": "repo",
+   "lang": "python",
+   "note": "实证: repo页webReader抓取(Docker一键起内置Chrome+VNC), shields 2026-10: ~117k star, 最近提交昨日, 3.6k提交/年。核心能力: 让LLM agent直接操作浏览器的Python框架, 做agent取数执行腿事实标准之一。取数面: DOM快照+可交互元素索引化喂LLM、多tab管理、cookie/会话保管、自定义动作注册、任何LLM后端可接。",
+   "quality": "high",
+   "practices": [
+    "DOM快照只给可交互元素建索引再喂LLM, 页面信息按需供给控token",
+    "多tab+会话/cookie管理内建, 登录态采集不用自己持久化",
+    "自定义动作注册, 站点级高频操作沉淀为确定性函数减少LLM步数"
+   ],
+   "angle": "agent-crawl"
+  },
+  {
+   "name": "Stagehand",
+   "url": "https://github.com/browserbase/stagehand",
+   "type": "repo",
+   "lang": "typescript",
+   "note": "实证: repo页+README webReader抓取(act/extract/observe原语、缓存、zod schema全确认), shields 2026-10: ~26k star, 最近提交今日, 840提交/年。核心能力: 建在Playwright上的agent页面操作SDK, 自然语言指令→浏览器动作。取数面: page.act()执行指令、page.extract()按zod schema抽结构化数据、page.observe()先列出可执行动作再决策、动作缓存(命中即不再调LLM)、LLM后端任选。",
+   "quality": "high",
+   "practices": [
+    "act/extract/observe三原语把'操作/抽取/探测'显式分层, agent行为可预测",
+    "action命中缓存后直接重放, 相同操作零LLM调用",
+    "extract 用 zod schema 约束输出, 抽取结果直接类型安全入管道"
+   ],
+   "angle": "agent-crawl"
+  },
+  {
+   "name": "MarkItDown",
+   "url": "https://github.com/microsoft/markitdown",
+   "type": "repo",
+   "lang": "python",
+   "note": "实证: repo页+README webReader抓取, shields 2026-10: ~188k star, 最近提交今日, 127提交/年。核心能力: 微软官方文档→Markdown转换器, 检索管线的文档归一化前腿事实标准。取数面: PDF/Word/PPT/Excel/HTML/图片(EXIF+OCR+语音转写)/音频/YouTube字幕/CSV/JSON/XML/ZIP共12+格式, 插件式converter注册(extensions机制), streamlit/docker开箱部署。",
+   "quality": "high",
+   "practices": [
+    "所有格式统一契约输出Markdown, RAG入库只写一次解析逻辑",
+    "插件式转换器注册(register_converter), 新格式扩展不动核心",
+    "CLI一行转换+streamlit图形界面, 非工程角色也能用"
+   ],
+   "angle": "agent-crawl"
+  },
+  {
+   "name": "Docling",
+   "url": "https://github.com/docling-project/docling",
+   "type": "repo",
+   "lang": "python",
+   "note": "实证: repo页+README webReader抓取(IBM出品, DocLayNet布局模型确认), shields 2026-10: ~68k star, 最近提交今日, 879提交/年。核心能力: 文档(PDF/DOCX/PPTX/HTML/图片)→AI就绪数据的解析器, 版面/表格结构理解强于规则方案。取数面: 统一DoclingDocument表达、导出Markdown/HTML/JSON、表格结构与阅读顺序还原、OCR chunking、LangChain/LlamaIndex官方集成。",
+   "quality": "high",
+   "practices": [
+    "DocLayNet布局模型理解版面结构, 扫描件/复杂表格的抽取质量靠模型不靠规则",
+    "统一DoclingDocument中间表示, 多格式进多格式出只维护一条解析链",
+    "与LangChain/LlamaIndex一线框架官方集成, 入检索管道零胶水"
+   ],
+   "angle": "agent-crawl"
+  },
+  {
+   "name": "trafilatura",
+   "url": "https://github.com/adbar/trafilatura",
+   "type": "repo",
+   "lang": "python",
+   "note": "实证: repo页+README webReader抓取, shields 2026-10: ~6.9k star, 最近提交上周五, 70提交/年。核心能力: Python主内容抽取事实标准之一, 算法fallback链(自家+lxml+readability+justext)去噪取正文, 零LLM成本。取数面: 网页正文+元数据抽取、输出TXT/CSV/JSON/XML/Markdown、--precision/--recall两档策略、--parallel多进程批处理、内建爬取与站点地图读取、可当库可当CLI。",
+   "quality": "high",
+   "practices": [
+    "多算法fallback链抽主内容, 不依赖LLM零token成本, 质量不达标自动换引擎",
+    "--precision/--recall 显式换挡: 检索入库求全、正文抽取求精",
+    "CLI原生 --parallel 多进程批处理, 落盘语料批量清洗一条命令"
+   ],
+   "angle": "agent-crawl"
+  },
+  {
+   "name": "Skyvern",
+   "url": "https://github.com/Skyvern-AI/skyvern",
+   "type": "repo",
+   "lang": "python",
+   "note": "实证: shields 2026-10: ~23k star, 最近提交今日, 4k提交/年(极活跃) + WebSearch佐证(LLM+计算机视觉绕过脆弱XPath, 企业级工作流自动化)。核心能力: 视觉+DOM双通道浏览器agent, 靠截图理解页面而非只靠选择器。定mid原因: 主线是表单/工作流自动化, 与本角度'检索前后腿'属相邻能力非核心取数面; 取数面: workflow YAML定义可复用流程、API优先、浏览器状态缓存。",
+   "quality": "mid",
+   "angle": "agent-crawl"
+  },
+  {
+   "name": "ScrapeGraphAI",
+   "url": "https://github.com/ScrapeGraphAI/Scrapegraph-ai",
+   "type": "repo",
+   "lang": "python",
+   "note": "实证: 旧址VinciGit00/Scrapegraph-ai已repo-not-found(改名), 新址经shields 2026-10确认: ~32k star, 最近提交2026-09, 200提交/年 + WebSearch佐证。核心能力: 图驱动的LLM抓取管线(抓取→抽取→清洗节点组成graph), 传Pydantic schema即出结构化结果。定mid原因: 活跃度一般且每页抽取都耗LLM token, 在免费优先管道里只宜当兜底件; 取数面: graph管线编排、本地/任意LLM后端、playwright/selenium渲染集成。",
+   "quality": "mid",
+   "angle": "agent-crawl"
+  },
+  {
+   "name": "mozilla/readability",
+   "url": "https://github.com/mozilla/readability",
+   "type": "repo",
+   "lang": "javascript",
+   "note": "实证: repo页WebSearch直接确认('standalone version of the readability library used for Firefox Reader View', npm @mozilla/readability) + shields 2026-10: ~11k star, 最近提交2026-07, 6提交/年。核心能力: Firefox阅读模式同源算法, DOM→文章正文HTML, 是trafilatura fallback链与众多RAG前处理的底层件。定mid原因: 提交低频但为Firefox持续维护的稳定库; 取数面: isProbablyReaderable可读性预判、parse()出正文/标题/byline, 有readability.rs等Rust移植。",
+   "quality": "mid",
+   "angle": "agent-crawl"
+  },
+  {
+   "name": "scrapy-playwright",
+   "url": "https://github.com/scrapy-plugins/scrapy-playwright",
+   "type": "repo",
+   "lang": "python",
+   "note": "实证: WebSearch确认官方仓库在scrapy-plugins组织(download handler机制+DOWNLOAD_HANDLERS/TWISTED_REACTOR配置+近期issue 2025-08仍在处理) + shields 2026-10: ~1.5k star, 最近提交2026-09, 56提交/年。核心能力: 给Scrapy接入Playwright渲染JS页的下载处理器, 老牌爬虫框架的现代渲染腿。定mid原因: 规模小、单件职责; 取数面: meta={'playwright': True}按请求路由到浏览器、PLAYWRIGHT_BROWSER_TYPE/LAUNCH_OPTIONS、playwright_page_methods页内操作。",
+   "quality": "mid",
+   "angle": "agent-crawl"
+  },
+  {
+   "name": "searx.space 实例目录",
+   "lang": "web",
+   "note": "webReader 实证存活: SearXNG 全球实例目录站，逐实例给 TLS/CSP 评级、当日/周/月/年在线率、延迟与 Google 等逐引擎成功率；机器可读清单在 instances.searx.space/instances.json。作为不自托管时的实例选型器 (本环境直连 curl 被沙箱阻断，以 webReader 访问为准)。",
+   "quality": "mid",
+   "type": "site",
+   "url": "https://searx.space",
+   "angle": "search-api"
+  },
+  {
+   "name": "tavily-python",
+   "lang": "Python",
+   "note": "gh api 实证 1,412 star / push 2026-10-02 / MIT。Tavily 官方 Python SDK (search/extract/crawl)，AI 检索 API 事实标准之一；docs.tavily.com/documentation/api-credits 实证 credits 计费制 (注册赠免费 credits)。底层 API 闭源、SDK 开源，适合作为自研 tavily 兼容层的契约参照。",
+   "quality": "mid",
+   "type": "repo",
+   "url": "https://github.com/tavily-ai/tavily-python",
+   "angle": "search-api"
+  },
+  {
+   "name": "exa-py",
+   "lang": "Python",
+   "note": "gh api 实证 exa-py 234 star / push 2026-10-03 / MIT (姊妹仓 exa-js 132 star 同步活跃)。Exa 官方 SDK: 神经/语义+关键字混合搜索、Contents/Answer/Agent API。docs.exa.ai/reference/pricing 实证按 search/contents/answer/monitors/agent 计费；免费面为第三方评测口径注册赠 $20 额度 (约 2,800 次 search，约 $7/千次) 无需信用卡。",
+   "quality": "mid",
+   "type": "repo",
+   "url": "https://github.com/exa-labs/exa-py",
+   "angle": "search-api"
+  },
+  {
+   "name": "google-search-results-python (SerpApi 官方)",
+   "lang": "Python",
+   "note": "gh api 实证 757 star / push 2026-08-18 / MIT。SerpApi 官方 Python 客户端 (Google/Bing 等 SERP 结构化 JSON)。免费面为第三方比价页多源口径 250 次/月 (旧口径 100/月，官网价页未直访)；账户余量可 GET serpapi.com/account.json 查询，适合做配额自检。",
+   "quality": "mid",
+   "type": "repo",
+   "url": "https://github.com/serpapi/google-search-results-python",
+   "angle": "search-api"
+  },
+  {
+   "name": "google-api-python-client (Custom Search JSON API)",
+   "lang": "Python",
+   "note": "gh api 实证 8,937 star / push 2026-09-30 / Apache-2.0。Google 官方客户端含 Custom Search JSON API。developers.google.com/custom-search/v1/overview (页首更新 2026-02-18) 重大实证: 该 API 将于 2027-01-01 停服且不再接受新客户，免费 100 次/天与 $5/1k 档仅限存量客户——新项目不可再押注 Google CSE。",
+   "quality": "mid",
+   "type": "repo",
+   "url": "https://github.com/googleapis/google-api-python-client",
+   "angle": "search-api"
+  },
+  {
+   "name": "tavily-open (已更名 TrailSearch)",
+   "lang": "Python",
+   "note": "gh api 实证 jianjungki/tavily-open 38 star / push 2026-07-27 / MIT。README 实证已更名 TrailSearch: 自称 Open-source replacement for Tavily, powered by SearXNG and Crawl4AI，提供 Tavily 兼容路由 POST /tavily/search + /tavily/extract；三级路由=本地 SQLite FTS 到 SearXNG 到 Brave (env 开关)，reader_first/http_first/quality_gated 抽取策略，Redis 缓存+FTS 回写+etcd 节点发现。规模小故 low，但是 tavily 开源替代方向最完整的架构蓝本。",
+   "quality": "low",
+   "type": "repo",
+   "url": "https://github.com/jianjungki/tavily-open",
+   "angle": "search-api",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "name": "agent-search",
+   "lang": "Python",
+   "note": "gh api 实证 85 star / push 2026-09-22 / MIT。自述 Self-hosted search API + MCP server for AI agents, bundles SearXNG, zero API keys, one-command deploy——把 SearXNG+HTTP API+MCP 三面打包成一键零 key 搜索服务，适合内网快速起一层取数面。",
+   "quality": "low",
+   "type": "repo",
+   "url": "https://github.com/brcrusoe72/agent-search",
+   "angle": "search-api",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "name": "howdoi",
+   "url": "https://github.com/gleitz/howdoi",
+   "type": "repo",
+   "lang": "python",
+   "note": "gh api 实证: 10840★, 最后 push 2026-09-30(极活跃), pip/brew 可装。命令行即时编程答案工具: 搜索引擎抓取后抽取最高票答案。参数化: -p 答案位置/-n 条数/-e 引擎(google 默认, 可切 bing/duckduckgo 等)/-l 仅链接/-a 全文; 输出: -j 原始 JSON; 配额: 本地答案缓存 + -C 清除, 重复查询零上游请求。取数面=CLI 管道, 适合做'答案抽取型'检索渠道",
+   "quality": "high",
+   "practices": [
+    "引擎抽象可插拔: -e 在 google/bing/duckduckgo/stackoverflow 间热切换, 单引擎反爬时改一个参数即恢复供给",
+    "-j 输出原始 JSON、-p 选第 N 条答案、-n 控制条数, 输出面专为 shell 管道设计",
+    "本地答案缓存配 -C 一键清除, 重复问题不发请求, 天然降低上游配额消耗与封禁概率"
+   ],
+   "angle": "cli-tools"
+  },
+  {
+   "name": "ddgr",
+   "url": "https://github.com/jarun/ddgr",
+   "type": "repo",
+   "lang": "python",
+   "note": "gh api 实证: 3559★, push 2026-08-16(最新 release v2.2 为 2023-12, 之后仍有维护提交)。DuckDuckGo 终端搜索 REPL: omniprompt 导航(n/p 翻页、o 打开结果、d 域名内再搜)。参数化: -n 每页条数/-s 跳过/-w 站点限定/-r 地区; 输出: --json(自动切非交互模式, implies --np), 面向脚本; 配额/出口: -p/--proxy 显式代理 + https_proxy 环境变量双通道, 抓取 html.duckduckgo.com lite 页面不依赖官方 API",
+   "quality": "high",
+   "practices": [
+    "omniprompt REPL 翻页按需拉取(按 n 才取下一页), 交互模型本身就是节流器",
+    "--json 自动切换非交互模式(implies --np), 同一工具同时服务人机交互与脚本取数两个场景",
+    "-p/--proxy 显式代理参数与 https_proxy 环境变量双通道, 出口 IP 管理开箱即用"
+   ],
+   "angle": "cli-tools"
+  },
+  {
+   "name": "s",
+   "url": "https://github.com/zquestz/s",
+   "type": "repo",
+   "lang": "go",
+   "note": "gh api 实证: 2609★, v0.8.1 发布 2026-07-27(活跃)。终端网页搜索启动器(默认引擎 brave): provider/tag 双维引擎注册表, 支持部分名模糊展开; --list-providers/--list-tags 配 -j 可输出 JSON 引擎清单; fish/zsh/bash/powershell 补全一键生成; config.yml 别名层。注意: 它是'构造 URL 开浏览器'型启动器, 不回传搜索结果数据, 对工厂只适合当参数化查询模板与引擎注册表参考, 不能直接做取数管道",
+   "quality": "high",
+   "practices": [
+    "引擎注册表以 provider/tag 双维组织并支持部分名模糊展开, 一条命令可命中一类引擎(如 tech-news 标签全体)",
+    "--list-providers/--list-tags 配 -j 输出 JSON, 引擎清单本身可机读、可版本化, 便于自动生成渠道矩阵",
+    "四 shell 补全脚本一条命令生成 + config.yml 与 shell 别名两层个性化, 覆盖高频查询的零输入成本"
+   ],
+   "angle": "cli-tools"
+  },
+  {
+   "name": "bx (brave-search-cli)",
+   "url": "https://github.com/brave/brave-search-cli",
+   "type": "repo",
+   "lang": "rust",
+   "note": "gh api 实证: brave 官方仓库, 79★, push 2026-09-30(当周活跃), Rust 零依赖单二进制, bash/powershell/npm 三路安装, bx config set-key 管理密钥。子命令: web(原始网页搜索, 支持 site: 等操作符)/news/context(默认: 搜索+抓取+正文抽取一步完成, 输出按 token 预算裁剪, 面向 RAG/LLM grounding)/answers(AI 答案按 JSON 行流式返回); JSON in/out。需在 brave api-dashboard 申请 API key, 配额随账号套餐(免费档以官网为准)",
+   "quality": "high",
+   "practices": [
+    "bx context 用一次 API 调用替代 搜索→抓取→正文抽取 三步, 且输出按 token 预算裁剪, 直接为 RAG 上下文成本设计",
+    "零依赖单二进制 + JSON 进出 + answers 子命令 JSONL 流式返回, agent 与脚本接入零胶水",
+    "web 子命令单独承载 site: 等搜索操作符, 与面向喂模型的 context 路径分层, 接口职责清晰"
+   ],
+   "angle": "cli-tools"
+  },
+  {
+   "name": "so",
+   "url": "https://github.com/samtay/so",
+   "type": "repo",
+   "lang": "rust",
+   "note": "gh api 实证: 1423★, push 2025-06-30(2 年窗口内), 最新 release v0.4.10(2024-08)。Rust TUI 浏览 StackExchange 全网问答: -e 引擎(可走 google)、-s 多站点叠加(stackoverflow/askubuntu/tex…), 问题与答案分层浏览。brew/FreeBSD ports/pkgsrc/AUR/crates.io 多渠道打包。取数面=TUI 交互, 无结构化输出, 适合人工排查技术问题而非管道化取数",
+   "quality": "mid",
+   "angle": "cli-tools"
+  },
+  {
+   "name": "kagi-cli",
+   "url": "https://github.com/Microck/kagi-cli",
+   "type": "repo",
+   "lang": "rust",
+   "note": "gh api 实证: 175★, 2026-03 建仓(年轻), push 2026-09-28(活跃), Rust/MIT。Kagi 全功能终端 CLI: search/quick answers/assistant/translate/summarize/news+smallweb 公共订阅源, 以及付费 API 命令(fastgpt/enrich)。认证三通道(Session Link/API Key/Legacy Token)向导式写入 ~/.config/kagi-cli/config.toml; 面向脚本的 JSON 输出。前提=Kagi 订阅, 属付费渠道, 按免费优先铁律仅列参考",
+   "quality": "mid",
+   "angle": "cli-tools"
+  },
+  {
+   "name": "wiki-tui",
+   "url": "https://github.com/Builditluc/wiki-tui",
+   "type": "repo",
+   "lang": "rust",
+   "note": "gh api 实证: 724★, push 2026-06-25, 已归档(README 明示作者无暇维护并欢迎继任者链接, fork 网络全部 0★ 无实质继任)。维基百科 TUI: 搜索结果预览、文章分层打开(ESC 关层)、目录跳转、语言切换, 底层走 MediaWiki API, cargo/brew 可装。垂直检索渠道样本, 归档状态需自担维护风险",
+   "quality": "mid",
+   "angle": "cli-tools"
+  },
+  {
+   "name": "googler",
+   "url": "https://github.com/jarun/googler",
+   "type": "repo",
+   "lang": "python",
+   "note": "gh api 实证: 6204★, 仓库已归档, 最后 push 2021-11-13, 末版 v4.3.2(2021-01)。历史事实标准的终端 Google 搜索工具: --json/-n/-s/-w/omniprompt 参数化设计是后来者的公共模板。归档后社区反馈因 Google 页面改版基本失效; fork 全网最大仅 41★(oksiquatzel, 2022 停更)——无实质继任, 社区共识替代=同作者 ddgr。收录仅作谱系坐标, 勿直接投产",
+   "quality": "low",
+   "angle": "cli-tools",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "name": "surfraw",
+   "url": "https://gitlab.com/surfraw/Surfraw",
+   "type": "repo",
+   "lang": "shell",
+   "note": "curl 实证 GitLab 上游 HTTP 200; gh api 实证 GitHub 镜像 JNRowe/surfraw(59★, 2025-10-11 仍在同步上游=上游存活)。1998 年起的长寿 shell 搜索框架: ELVI 机制为 100+ 引擎各生成深度链接子命令(sr google xxx / sr wikipedia xxx), 零依赖纯 shell, -dump 可取文本; Debian 长期打包构成事实继任维护。对工厂价值=引擎 URL 模板的历史全集参考, 能力上只做'跳转/取页'不做结构化结果",
+   "quality": "low",
+   "angle": "cli-tools",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "name": "hn-cli",
+   "url": "https://github.com/heartleo/hn-cli",
+   "type": "repo",
+   "lang": "go",
+   "note": "gh api 实证: 51★, push 2026-08-27(活跃), Go。Hacker News TUI: Top/New/Best/Ask/Show 标签浏览, 内置 Algolia 检索(按相关度/时间排序); 同仓附带 Claude Code 插件(plugins/hn, /plugin install hn@hn-cli, 提供 hn_stories/hn_search/正文阅读+摘要工具)与 DeepSeek Harness 插件。小众但与研究工厂的 HN 情报腿直接对口",
+   "quality": "low",
+   "angle": "cli-tools",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "name": "searxng-cli",
+   "url": "https://github.com/Suknna/searxng-cli",
+   "type": "repo",
+   "lang": "go",
+   "note": "gh api+README 实证: 20★, push 2026-03-10, Go, 英文/中文双语 README。面向 LLM agent 的两步检索工具: search(SearXNG 查询→紧凑 Markdown 结果表)+ read(URL→干净正文 markdown/text, 无浏览器自动化); 需自部署或使用公共 SearXNG 实例。小众早期, 但'先搜后读'两段式与上下文紧凑输出设计对自托管 SearXNG 的工厂值得抄",
+   "quality": "low",
+   "angle": "cli-tools",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "name": "MiniSearch",
+   "url": "https://github.com/felladrin/MiniSearch",
+   "type": "repo",
+   "lang": "?",
+   "note": "[audit增补] gh api 实证 600★/push 2026-10-04;作者即普查已引用的 awesome-ai-web-search 维护者,极简自托管网页搜索平台+AI 助手,ai-search 角度直接漏收。",
+   "quality": "mid",
+   "practices": [],
+   "angle": "audit-extra"
+  },
+  {
+   "name": "Onyx(原 Danswer)",
+   "url": "https://github.com/onyx-dot-app/onyx",
+   "type": "repo",
+   "lang": "?",
+   "note": "[audit增补] gh api 实证 32,326★/push 2026-10-04;企业连接器×RAG 的开源 AI 搜索最大件,企业知识检索角度完全空缺。",
+   "quality": "mid",
+   "practices": [],
+   "angle": "audit-extra"
+  },
+  {
+   "name": "Colly",
+   "url": "https://github.com/gocolly/colly",
+   "type": "repo",
+   "lang": "?",
+   "note": "[audit增补] 25,546★/2026-09-28;Go 爬虫框架事实标准,agent-crawl 角度只收了 Python/TS 系漏了 Go 主干。",
+   "quality": "mid",
+   "practices": [],
+   "angle": "audit-extra"
+  },
+  {
+   "name": "Meilisearch",
+   "url": "https://github.com/meilisearch/meilisearch",
+   "type": "repo",
+   "lang": "?",
+   "note": "[audit增补] 59,489★/2026-10-04;自托管站内秒搜引擎,普查仅在 awesome-selfhosted 引文里带过未成条目。",
+   "quality": "mid",
+   "practices": [],
+   "angle": "audit-extra"
+  },
+  {
+   "name": "Typesense",
+   "url": "https://github.com/typesense/typesense",
+   "type": "repo",
+   "lang": "?",
+   "note": "[audit增补] 26,632★/2026-10-02;Algolia 开源替代,站内检索腿另一主干,与 Meilisearch 同角度空白。",
+   "quality": "mid",
+   "practices": [],
+   "angle": "audit-extra"
+  },
+  {
+   "name": "OpenSearch",
+   "url": "https://github.com/opensearch-project/OpenSearch",
+   "type": "repo",
+   "lang": "?",
+   "note": "[audit增补] 13,809★/2026-10-04;Fess 的底座引擎本体——普查收了 Fess 却漏了它。",
+   "quality": "mid",
+   "practices": [],
+   "angle": "audit-extra"
+  },
+  {
+   "name": "OpenGrok",
+   "url": "https://github.com/oracle/opengrok",
+   "type": "repo",
+   "lang": "?",
+   "note": "[audit增补] 4,968★/2026-09-30;老牌源码搜索引擎,代码搜索角度整体空白。",
+   "quality": "mid",
+   "practices": [],
+   "angle": "audit-extra"
+  },
+  {
+   "name": "Zoekt",
+   "url": "https://github.com/sourcegraph/zoekt",
+   "type": "repo",
+   "lang": "?",
+   "note": "[audit增补] 1,949★/2026-09-23;Sourcegraph 御用 trigram 代码检索器,补代码搜索角度。",
+   "quality": "mid",
+   "practices": [],
+   "angle": "audit-extra"
+  },
+  {
+   "name": "FlareSolverr",
+   "url": "https://github.com/FlareSolverr/FlareSolverr",
+   "type": "repo",
+   "lang": "?",
+   "note": "[audit增补] 15,770★/2026-09-27;Cloudflare 绕行代理服务器,搜索采集腿的反封锁使能基础设施。",
+   "quality": "mid",
+   "practices": [],
+   "angle": "audit-extra"
+  },
+  {
+   "name": "changedetection.io",
+   "url": "https://github.com/dgtlmoon/changedetection.io",
+   "type": "repo",
+   "lang": "?",
+   "note": "[audit增补] 34,780★/2026-10-02;网页变化监控与盯哨,搜索结果再访/增量感知角度缺位。",
+   "quality": "mid",
+   "practices": [],
+   "angle": "audit-extra"
+  },
+  {
+   "name": "cc-index-table",
+   "url": "https://github.com/commoncrawl/cc-index-table",
+   "type": "repo",
+   "lang": "?",
+   "note": "[audit增补] 132★/2026-10-01;Common Crawl 列式索引表,Athena/SQL 直查开放网页索引的免爬取取数面。",
+   "quality": "mid",
+   "practices": [],
+   "angle": "audit-extra"
+  },
+  {
+   "name": "wayback-machine-downloader",
+   "url": "https://github.com/hartator/wayback-machine-downloader",
+   "type": "repo",
+   "lang": "?",
+   "note": "[audit增补] 5,954★/最后 push 2024-02(慢速维护);Wayback CDX 批量回捞,网页历史搜索角度代表件。",
+   "quality": "mid",
+   "practices": [],
+   "angle": "audit-extra"
+  },
+  {
+   "name": "paper-qa",
+   "url": "https://github.com/Future-House/paper-qa",
+   "type": "repo",
+   "lang": "?",
+   "note": "[audit增补] 9,310★/2026-09-25;科学文献高精度 RAG 检索问答,学术搜索角度代表。",
+   "quality": "mid",
+   "practices": [],
+   "angle": "audit-extra"
+  },
+  {
+   "name": "arxiv.py",
+   "url": "https://github.com/lukasschwab/arxiv.py",
+   "type": "repo",
+   "lang": "?",
+   "note": "[audit增补] 1,550★/2026-09-01;arXiv API 事实标准 Python 客户端,学术取数腿基础件。",
+   "quality": "mid",
+   "practices": [],
+   "angle": "audit-extra"
+  },
+  {
+   "name": "gallery-dl",
+   "url": "https://github.com/mikf/gallery-dl",
+   "type": "repo",
+   "lang": "?",
+   "note": "[audit增补] 19,944★/2026-10-03;上百媒体站点的搜索提取+批量下载,垂直媒体检索角度代表。",
+   "quality": "mid",
+   "practices": [],
+   "angle": "audit-extra"
+  }
+ ],
+ "watchlist": [
+  {
+   "lang": "typescript",
+   "name": "search_with_lepton (Lepton AI)",
+   "note": "GitHub API 实证: 原 search-with-lepton 更名 search_with_lepton, 8.1k stars / TS / 最后推送 2025-12-02 且已 archived(只读)。README 实证: '<500 行代码搭对话式搜索引擎', 内置 LLM+搜索引擎支持, 可分享可缓存的结果, Bing/SearchApi/Serper/Google PSE 可选, Lepton KV 存对话。本赛道祖师级参考实现, 只建议读代码不建议生产",
+   "quality": "low",
+   "type": "repo",
+   "url": "https://github.com/leptonai/search_with_lepton",
+   "angle": "ai-search",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "lang": "python",
+   "name": "free-search-mcp",
+   "note": "GitHub API 实证: 102 stars / Python / 推送 2026-10-04 活跃。README 实证(含输出示例): 免 API key 本地优先 MCP server — 多引擎(DuckDuckGo/Bing/Mojeek/Startpage)智能轮换+Playwright 浏览器回退+SQLite FTS5 结果缓存+面向 LLM 的输出塑形; research() 工具带 depth 参数, 简报头部透明标注引擎/来源数/token 消耗。取数面: 免费引擎直查+浏览器兜底; 对无 key 环境的检索腿有直接抄法价值",
+   "quality": "low",
+   "type": "repo",
+   "url": "https://github.com/sweetcornna/free-search-mcp",
+   "angle": "ai-search",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "name": "Evilran/baidu-mcp-server",
+   "url": "https://github.com/Evilran/baidu-mcp-server",
+   "type": "repo",
+   "lang": "python",
+   "note": "百度搜索MCP(社区), 28★, 最后push 2025-10-27(gh api实证); 引擎=百度网页搜索直取(无key); 工具=search+content fetch, 内置限流与LLM友好格式化(README实证); smithery/PyPI可装; 百度取数面参考实现, 规模小",
+   "quality": "low",
+   "angle": "mcp-servers",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "name": "Richard-Weiss/mcp-google-cse",
+   "url": "https://github.com/Richard-Weiss/mcp-google-cse",
+   "type": "repo",
+   "lang": "python",
+   "note": "Google Custom Search Engine官方API的MCP封装, 46★, 最后push 2026-04-09(gh api实证); 引擎=Google CSE JSON API(免费100次/日); 单工具google_search返回title/link/snippet, 支持COUNTRY_REGION/GEOLOCATION/RESULT_LANGUAGE(README实证); README明确建议与mcp-server-fetch链式组合作深搜",
+   "quality": "low",
+   "angle": "mcp-servers",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "lang": "python",
+   "name": "Whoogle Search",
+   "note": "实证: 11,570 stars, archived=true; README 置顶\"Whoogle has reached the end of the road — 24 Jul 2026\": Google 已封死全部无 JS 请求 UA, 项目功能死亡, 官宣不再修复。收录仅作反例警示: 无 JS 服务端抓取 Google 的路线已死, 选型勿再押注; 其 requests+bs4 服务端渲染、零前端 JS 的配方只剩历史参考价值。",
+   "quality": "low",
+   "type": "repo",
+   "url": "https://github.com/benbusby/whoogle-search",
+   "angle": "metasearch",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "lang": "python",
+   "name": "searx (原版)",
+   "note": "实证: 13,555 stars(已迁至 searx org), 未归档但 2023-09-07 提交自宣\"Searx is no longer maintained\", 2026-05 仅一条文档提交指向继任方向 hister.org。SearXNG 的直系前身; 谱系收录仅供考据, 实际使用一律 SearXNG。",
+   "quality": "low",
+   "type": "repo",
+   "url": "https://github.com/searx/searx",
+   "angle": "metasearch",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "lang": "python",
+   "name": "baidu-serp-api",
+   "note": "gh API+README实证: 36 stars, Python, push 2025-08-01; pip baidu-serp-api; 能力=BaiduPc/BaiduMobile双端SERP→JSON, 支持date_range时间过滤/pn分页/proxies代理注入与single/pool两种连接模式(README明示为代理轮换优化); 取数面=百度PC+移动两套SERP。",
+   "quality": "low",
+   "type": "repo",
+   "url": "https://github.com/ohblue/baidu-serp-api",
+   "angle": "zh-search",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "lang": "python",
+   "name": "sogou-weixin-mcp-server",
+   "note": "gh API+README实证: 9 stars, Python, push 2026-05-12; 能力=搜狗微信文章搜索封装为MCP工具, 返回标题/摘要/URL/来源/日期结构化字段; uvx --from git+... 一键免克隆运行; 取数面=weixin.sogou.com。",
+   "quality": "low",
+   "type": "tool",
+   "url": "https://github.com/ptbsare/sogou-weixin-mcp-server",
+   "angle": "zh-search",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "lang": "javascript",
+   "name": "aggregate-search-mcp",
+   "note": "gh API+README实证: 3 stars, JavaScript, push 2026-08-08; 能力=百度+必应+搜狗三引擎聚合MCP, 无需API key, 内置缓存/结果去重排序/正文抓取/SERP截图保存; 取数面=三中文引擎SERP直抓, 面向LM Studio等客户端; 星数极小属早期个人项目, 用前自验。",
+   "quality": "low",
+   "type": "tool",
+   "url": "https://github.com/wasd9191/aggregate-search-mcp",
+   "angle": "zh-search",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "lang": "rust",
+   "name": "tarzi",
+   "note": "gh API+README实证: 7 stars, Rust, push 2026-08-05; 能力=API-free多引擎搜索(Bing/Google/DuckDuckGo/Brave/Baidu/Sogou), crates.io+PyPI双发行+Rust/Python双CI(README徽章实证); 取数面=多引擎SERP含百度/搜狗, 面向AI检索场景; 早期小众。",
+   "quality": "low",
+   "type": "repo",
+   "url": "https://github.com/mirasoth/tarzi",
+   "angle": "zh-search",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "name": "tavily-open (已更名 TrailSearch)",
+   "lang": "Python",
+   "note": "gh api 实证 jianjungki/tavily-open 38 star / push 2026-07-27 / MIT。README 实证已更名 TrailSearch: 自称 Open-source replacement for Tavily, powered by SearXNG and Crawl4AI，提供 Tavily 兼容路由 POST /tavily/search + /tavily/extract；三级路由=本地 SQLite FTS 到 SearXNG 到 Brave (env 开关)，reader_first/http_first/quality_gated 抽取策略，Redis 缓存+FTS 回写+etcd 节点发现。规模小故 low，但是 tavily 开源替代方向最完整的架构蓝本。",
+   "quality": "low",
+   "type": "repo",
+   "url": "https://github.com/jianjungki/tavily-open",
+   "angle": "search-api",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "name": "agent-search",
+   "lang": "Python",
+   "note": "gh api 实证 85 star / push 2026-09-22 / MIT。自述 Self-hosted search API + MCP server for AI agents, bundles SearXNG, zero API keys, one-command deploy——把 SearXNG+HTTP API+MCP 三面打包成一键零 key 搜索服务，适合内网快速起一层取数面。",
+   "quality": "low",
+   "type": "repo",
+   "url": "https://github.com/brcrusoe72/agent-search",
+   "angle": "search-api",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "name": "googler",
+   "url": "https://github.com/jarun/googler",
+   "type": "repo",
+   "lang": "python",
+   "note": "gh api 实证: 6204★, 仓库已归档, 最后 push 2021-11-13, 末版 v4.3.2(2021-01)。历史事实标准的终端 Google 搜索工具: --json/-n/-s/-w/omniprompt 参数化设计是后来者的公共模板。归档后社区反馈因 Google 页面改版基本失效; fork 全网最大仅 41★(oksiquatzel, 2022 停更)——无实质继任, 社区共识替代=同作者 ddgr。收录仅作谱系坐标, 勿直接投产",
+   "quality": "low",
+   "angle": "cli-tools",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "name": "surfraw",
+   "url": "https://gitlab.com/surfraw/Surfraw",
+   "type": "repo",
+   "lang": "shell",
+   "note": "curl 实证 GitLab 上游 HTTP 200; gh api 实证 GitHub 镜像 JNRowe/surfraw(59★, 2025-10-11 仍在同步上游=上游存活)。1998 年起的长寿 shell 搜索框架: ELVI 机制为 100+ 引擎各生成深度链接子命令(sr google xxx / sr wikipedia xxx), 零依赖纯 shell, -dump 可取文本; Debian 长期打包构成事实继任维护。对工厂价值=引擎 URL 模板的历史全集参考, 能力上只做'跳转/取页'不做结构化结果",
+   "quality": "low",
+   "angle": "cli-tools",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "name": "hn-cli",
+   "url": "https://github.com/heartleo/hn-cli",
+   "type": "repo",
+   "lang": "go",
+   "note": "gh api 实证: 51★, push 2026-08-27(活跃), Go。Hacker News TUI: Top/New/Best/Ask/Show 标签浏览, 内置 Algolia 检索(按相关度/时间排序); 同仓附带 Claude Code 插件(plugins/hn, /plugin install hn@hn-cli, 提供 hn_stories/hn_search/正文阅读+摘要工具)与 DeepSeek Harness 插件。小众但与研究工厂的 HN 情报腿直接对口",
+   "quality": "low",
+   "angle": "cli-tools",
+   "watchlist": "low@scan → star实证复核"
+  },
+  {
+   "name": "searxng-cli",
+   "url": "https://github.com/Suknna/searxng-cli",
+   "type": "repo",
+   "lang": "go",
+   "note": "gh api+README 实证: 20★, push 2026-03-10, Go, 英文/中文双语 README。面向 LLM agent 的两步检索工具: search(SearXNG 查询→紧凑 Markdown 结果表)+ read(URL→干净正文 markdown/text, 无浏览器自动化); 需自部署或使用公共 SearXNG 实例。小众早期, 但'先搜后读'两段式与上下文紧凑输出设计对自托管 SearXNG 的工厂值得抄",
+   "quality": "low",
+   "angle": "cli-tools",
+   "watchlist": "low@scan → star实证复核"
+  }
+ ],
+ "existing": [],
+ "excluded": [
+  {
+   "lang": "python",
+   "name": "SearXNG",
+   "note": "实证(gh api 2026-10-05): 37,965 stars, 最后推送 2026-10-04(日更), 未归档。多引擎聚合器事实标准, 代理聚合 Google/Bing/DDG/Brave/Qwant/Yandex 等(repo topics 直证)。取数面: /search?format=json|csv|rss 程序化输出; searx/engines/ 目录实测 252 个引擎模块; 200+ 公共实例联邦(searx.space)。",
+   "practices": [
+    "引擎适配层: searx/engines/ 下每引擎一个模块实现统一 request()/response() 钩子, 产出统一 Result 对象(实测 252 个 .py), 新引擎即插即用",
+    "结果融合: 跨引擎结果按引擎权重与归一化评分合并, 同 URL 去重并标注来源引擎集合; JSON/CSV/RSS 三格式输出便于机器取数",
+    "实例联邦+自保: searx.space 自动体检公共实例可用性/匿名度; 内置 limiter 反bot限流与 tracker_url_remover 等链接重写插件, 同时保护上游引擎与用户"
+   ],
+   "quality": "high",
+   "type": "repo",
+   "url": "https://github.com/searxng/searxng",
+   "angle": "metasearch",
+   "gate": "batch_dup",
+   "dup_of": "https://github.com/searxng/searxng"
+  },
+  {
+   "lang": "python",
+   "name": "SearXNG",
+   "note": "gh API实证: 37,965 stars, Python, 最新push 2026-10-04(次日级活跃); engines目录实证含 baidu.py/sogou.py/sogou_wechat.py/sogou_images.py/sogou_videos.py/360search.py/chinaso.py/quark.py 中文引擎模块; 能力=自托管元搜索聚合200+引擎并输出JSON/CSV; 取数面=单实例同时吃百度/搜狗(网页+微信+图片+视频)/360/中国搜索/夸克, 中文引擎聚合的事实标准底座(OpenWebUI/Dify常接)。",
+   "practices": [
+    "每引擎一个Python模块只实现request()/response()两钩子，新增引擎=新文件+settings.yml一段配置，不改框架代码",
+    "内置limiter/botdetection插件对出站查询限速去指纹，出站网络(代理/IPv4)全局可配，降低被百度/搜狗封禁概率",
+    "统一/search API带JSON/CSV/RSS格式参数，天然当自托管搜索API用，LLM应用零适配接入"
+   ],
+   "quality": "high",
+   "type": "service",
+   "url": "https://github.com/searxng/searxng",
+   "angle": "zh-search",
+   "gate": "batch_dup",
+   "dup_of": "https://github.com/searxng/searxng"
+  },
+  {
+   "lang": "typescript",
+   "name": "Vane (原Perplexica)",
+   "note": "gh API实证: 37,012 stars, TypeScript, push 2026-09-01; 原Perplexica改名Vane; 能力=本地优先的AI问答引擎(支持Ollama/云LLM); 检索层走SearXNG, 挂中文引擎配置即可聚合百度/360/搜狗; 取数面=问答级聚合(检索+改写+引用)非裸SERP, 是中文LLM栈最常部署的开源AI搜索层。",
+   "practices": [
+    "检索后端只抽象到SearXNG一层，换/加引擎(百度/360/搜狗)只改SearXNG配置不改本仓代码",
+    "查询先LLM改写再路由到配置的custom web/custom embedded引擎，引擎与嵌入模型按查询类型在设置里绑定",
+    "检索结果先过本地embedding相似度重排再喂LLM生成带引用答案，引用URL随答案返回"
+   ],
+   "quality": "high",
+   "type": "service",
+   "url": "https://github.com/ItzCrazyKns/Vane",
+   "angle": "zh-search",
+   "gate": "batch_dup",
+   "dup_of": "https://github.com/ItzCrazyKns/Vane"
+  },
+  {
+   "lang": "javascript",
+   "name": "MindSearch",
+   "note": "gh API实证: 6,935 stars, JavaScript, push 2025-07-04; 上海AI Lab开源的类Perplexity多agent搜索框架; README实证--search_engine可切(DuckDuckGo/Bing等lagent搜索工具); 取数面=搜索API结果→问题图分解→多查询并发; 注意检索靠外部搜索API而非自爬中文引擎。",
+   "quality": "mid",
+   "type": "repo",
+   "url": "https://github.com/InternLM/MindSearch",
+   "angle": "zh-search",
+   "gate": "batch_dup",
+   "dup_of": "https://github.com/InternLM/MindSearch"
+  },
+  {
+   "lang": "python",
+   "name": "bocha-search-mcp",
+   "note": "gh API实证: 185 stars, Python, push 2025-04-14; 博查官方MCP Server; 能力=中文网页搜索API的MCP封装; 取数面=博查(面向LLM的中文搜索付费API), 走API路线非爬虫。",
+   "quality": "mid",
+   "type": "tool",
+   "url": "https://github.com/BochaAI/bocha-search-mcp",
+   "angle": "zh-search",
+   "gate": "batch_dup",
+   "dup_of": "https://github.com/BochaAI/bocha-search-mcp"
+  },
+  {
+   "lang": "python",
+   "name": "baidu-mcp-server",
+   "note": "gh API实证: 28 stars, Python, push 2025-10-27; 能力=百度网页搜索MCP Server, 附内容抓取与解析; 取数面=baidu SERP+落地页正文, 供agent以MCP直连。",
+   "quality": "low",
+   "type": "tool",
+   "url": "https://github.com/Evilran/baidu-mcp-server",
+   "angle": "zh-search",
+   "gate": "batch_dup",
+   "dup_of": "https://github.com/Evilran/baidu-mcp-server"
+  },
+  {
+   "name": "SearXNG",
+   "url": "https://github.com/searxng/searxng",
+   "type": "repo",
+   "lang": "python",
+   "note": "实证: GitHub API 37,965★, 最近提交 2026-10-04 (当日仍在推); 官方文档 docs.searxng.org/dev/search_api.html (已抓取) 确认 GET/POST /search API; settings.yml 实测内置 360search/baidu/quark/sogou 等中文引擎; 元搜索聚合 200+ 引擎, 自托管后 ?format=json 即统一检索网关 (注意: JSON 输出默认关闭, 需在 search.formats 加 json — WebSearch 多源互证); 取数面=自托管 JSON API, 中文源原生可开",
+   "quality": "high",
+   "practices": [
+    "引擎即插件: settings.yml 注册引擎, 新引擎只需一个 Python 类+YAML 条目, 中文源 (baidu/sogou/360search/quark) 开箱即有",
+    "自托管实例开放 ?format=json 的 GET/POST search API, 一发调用即可当全工厂统一检索网关 (默认关闭需显式放开 formats)",
+    "内置 limiter bot 检测+IP 限流, 多引擎结果加权融合, 单引擎故障自动降级"
+   ],
+   "angle": "awesome-lists",
+   "gate": "batch_dup",
+   "dup_of": "https://github.com/searxng/searxng"
+  },
+  {
+   "name": "Vane (原 Perplexica)",
+   "url": "https://github.com/ItzCrazyKns/Vane",
+   "type": "repo",
+   "lang": "typescript",
+   "note": "实证: GitHub API 37,012★, 最近提交 2026-09-01, 原 Perplexica 更名 (felladrin 清单与官方安装文档双源确认); README 原文: 自托管 AI 应答引擎, 检索层打自托管 SearXNG, LLM 层 Ollama 本地/OpenAI/Claude/Groq 可混配, 答案带引用来源; awesome-ai-web-search 清单同赛道星数最高; 取数面=自托管 Web 应用+可对接的 SearXNG 后端",
+   "quality": "high",
+   "practices": [
+    "检索层可插拔: 默认自托管 SearXNG (JSON API), LLM 层统一 provider 抽象, 全链路可跑在自己硬件上",
+    "答案与引用编号绑定输出, 检索证据链对用户可见",
+    "docker-compose 一把起全家桶, 安装路径收敛为 Docker/非 Docker 两条, 交付摩擦极低"
+   ],
+   "angle": "awesome-lists",
+   "gate": "batch_dup",
+   "dup_of": "https://github.com/ItzCrazyKns/Vane"
+  },
+  {
+   "name": "ddgs (原 duckduckgo_search)",
+   "url": "https://github.com/deedy5/ddgs",
+   "type": "tool",
+   "lang": "python",
+   "note": "实证: GitHub API 3,002★, 最近提交 2026-08-26, 旧名 deedy5/duckduckgo_search 已 301 重定向到本仓; README 原文: 'Dux Distributed Global Search' 元搜索库, text()/images()/videos()/news() 四个取数面, pip install -U ddgs, 另有 [api] FastAPI 服务与 [mcp] MCP server 扩展; Python 侧免费网页检索的事实标准件; 取数面=pip 库/CLI/API server/MCP 四形态",
+   "quality": "high",
+   "practices": [
+    "四面统一签名 (region/safesearch/timelimit), pip 单依赖零配置即用",
+    "同一核心多部署面: 库/CLI/`ddgs[api]` FastAPI/`ddgs[mcp]` MCP server, 直接接进 agent 栈",
+    "backend 参数在多个搜索后端间切换并自动降级, 规避单引擎限流"
+   ],
+   "angle": "awesome-lists",
+   "gate": "batch_dup",
+   "dup_of": "https://github.com/deedy5/ddgs"
+  },
+  {
+   "name": "GPT Researcher",
+   "url": "https://github.com/assafelovic/gpt-researcher",
+   "type": "tool",
+   "lang": "python",
+   "note": "实证: GitHub API 29,916★, 最近提交 2026-10-01; felladrin/awesome-ai-web-search 清单头部常客 (2023-04 起在册); 自主研究 agent: 规划子问题→并行网络检索→抓取源→产出带引用报告; 对研究工厂=开箱的'检索→成稿'参考实现; 取数面=Python 库+CLI+服务端, 报告可出 md/pdf/docx/json",
+   "quality": "high",
+   "practices": [
+    "planner→executor 双代理: 先产子问题清单, 逐题并行检索+抓取, 素材按用途分层写入 (背景/大纲/正文)",
+    "每个结论句带溯源引用, 访问过的源先入 context 仓去重, 引用不靠模型记忆",
+    "报告格式可插拔, 研究深度与并行度全是配置项, 便于嵌进工厂流水线"
+   ],
+   "angle": "awesome-lists",
+   "gate": "batch_dup",
+   "dup_of": "https://github.com/assafelovic/gpt-researcher"
+  },
+  {
+   "name": "Morphic",
+   "url": "https://github.com/miurla/morphic",
+   "type": "repo",
+   "lang": "typescript",
+   "note": "实证: GitHub API 9,154★, 最近提交 2026-10-04 (当日活跃); README 原文: 'Multiple search providers (Tavily, SearXNG, Brave, Exa)' 且 'Docker Compose starts PostgreSQL, Redis, SearXNG, and Morphic automatically. No additional search API key needed'; AI 搜索引擎模板里被 fork 最多的一支; 取数面=自托管 Web 应用, compose 内置 SearXNG 即免 key 起跑",
+   "quality": "high",
+   "practices": [
+    "Docker Compose 内置 SearXNG, 免任何搜索 API key 即可起服务, 云源 (Tavily/Brave/Exa) 只作可切换 provider",
+    "基于 Vercel AI SDK 的 RSC 流式生成 UI: 链接列表与答案并行流式渲染, 首屏即出检索结果",
+    "追问用 embedding 相关性自动续链, 会话内检索记忆免重查"
+   ],
+   "angle": "awesome-lists",
+   "gate": "batch_dup",
+   "dup_of": "https://github.com/miurla/morphic"
+  },
+  {
+   "name": "Scira (原 MiniPerplx)",
+   "url": "https://github.com/zaidmukaddam/scira",
+   "type": "repo",
+   "lang": "typescript",
+   "note": "实证: GitHub API 11,906★, 最近提交 2026-08-12, GitHub topic/search-engine 星数排序页在列; README 原文: 'Web search — Multi-query parallel web search with deduplication using Exa, Firecrawl, Parallel, and Tavily', 另有学术搜索 (Exa/Firecrawl) 与 Vercel AI SDK 栈; 极简 Perplexity 风格前端; 取数面=自托管 Web 应用, 检索聚合模式可抄; 体量活跃但月级未推, 评 mid",
+   "quality": "mid",
+   "angle": "awesome-lists",
+   "gate": "batch_dup",
+   "dup_of": "https://github.com/zaidmukaddam/scira"
+  },
+  {
+   "name": "STORM (stanford-oval)",
+   "url": "https://github.com/stanford-oval/storm",
+   "type": "repo",
+   "lang": "python",
+   "note": "实证: GitHub API 31,571★, 最近提交 2025-09-30 (12 个月未推, 未超 2 年线故收); README 原文: 'Synthesis of Topic Outlines through Retrieval and Multi-perspective Question Asking', 两段式 pre-writing (联网检索收参考文献+生成大纲) → writing (按大纲带引用成文), 含人机协同 Co-STORM; felladrin 清单头部 (2024-04 在册); 取数面=Python 库+CLI (dspy 驱动); 星量顶级但活跃度转弱, 评 mid",
+   "quality": "mid",
+   "angle": "awesome-lists",
+   "gate": "batch_dup",
+   "dup_of": "https://github.com/stanford-oval/storm"
+  },
+  {
+   "name": "MindSearch (InternLM)",
+   "url": "https://github.com/InternLM/MindSearch",
+   "type": "repo",
+   "lang": "javascript",
+   "note": "实证: GitHub API 6,935★, 最近提交 2025-07-04; README 原文: 搜索引擎可切换 DuckDuckGoSearch/BraveSearch/GoogleSearch(Serper)/TencentSearch (含腾讯源, 中文场景友好), agent 模块基于 Lagent v0.5 重构提升并发; 书生浦语系 Simple-Complex 双 agent 搜索框架; 中文 AI 搜索最常被引用的开源实现; 15 个月未推, 评 mid",
+   "quality": "mid",
+   "angle": "awesome-lists",
+   "gate": "batch_dup",
+   "dup_of": "https://github.com/InternLM/MindSearch"
+  },
+  {
+   "name": "YaCy (yacy_search_server)",
+   "url": "https://github.com/yacy/yacy_search_server",
+   "type": "repo",
+   "lang": "java",
+   "note": "实证: GitHub API 4,054★ (仓已由 yacy_search_engine 更名 yacy_search_server), 最近提交 2026-09-23, 26 年长青; README 原文: 分布式 P2P 网页搜索引擎+内网检索一体机, 'HTTP/JSON' API 面 (网页带橙色 API 图标处均有 XML/JSON 版 servlet, 如 yacysearch.json); awesome-selfhosted 收录 (★3837); 取数面=本地节点 JSON servlet+P2P 共享索引",
+   "quality": "mid",
+   "angle": "awesome-lists",
+   "gate": "batch_dup",
+   "dup_of": "https://github.com/yacy/yacy_search_server"
+  },
+  {
+   "name": "Mwmbl",
+   "url": "https://github.com/mwmbl/mwmbl",
+   "type": "repo",
+   "lang": "python",
+   "note": "实证: GitHub API 1,869★, 最近提交 2026-10-04 (当日活跃); README 原文: 非营利开源搜索引擎, 自建社区索引, 爬虫分布式跑在志愿者服务器、索引集中; GitHub topic/search-engine 页在列; 少数真·开放网页索引 (非代理商业引擎); 取数面=mwmbl.org 站内搜索+自建爬虫/索引代码; 规模小, 评 mid",
+   "quality": "mid",
+   "angle": "awesome-lists",
+   "gate": "batch_dup",
+   "dup_of": "https://github.com/mwmbl/mwmbl"
+  },
+  {
+   "name": "firecrawl",
+   "url": "https://github.com/mendableai/firecrawl",
+   "type": "repo",
+   "lang": "typescript",
+   "note": "实证: repo页webReader抓取(AGPL-3.0, scrape/crawl/map/search/extract端点, 批量抓取, actions, 默认遵守robots.txt), shields 2026-10: ~189k star, 最近提交昨日, 2.2k提交/年。核心能力: URL→干净markdown/结构化数据的完整爬取核, 开源可docker自托管, 与托管API共用同一SDK。取数面: /v1/scrape单页、/v1/crawl整站、/v1/map站点URL清单、/v1/extract结构化、actions浏览器交互序列。(star数以shields实时为准, repo页快照存在缓存滞后)",
+   "quality": "high",
+   "practices": [
+    "先 /v1/map 拿站点URL清单再选择性 /v1/scrape, 两段式避免盲爬全站",
+    "onlyMainContent 抽取开关只留正文, 天然适配LLM输入",
+    "开源docker核+托管API同SDK, 起步用托管、规模化自托管零迁移"
+   ],
+   "angle": "agent-crawl",
+   "gate": "batch_dup",
+   "dup_of": "https://github.com/firecrawl/firecrawl"
+  },
+  {
+   "name": "Jina Reader (r.jina.ai / s.jina.ai)",
+   "url": "https://github.com/jina-ai/reader",
+   "type": "api",
+   "lang": "typescript",
+   "note": "实证: GitHub API 12,102★, 最近提交 2026-05-22; README 原文: 'Read' 用 https://r.jina.ai/<url> 把任意 URL 转 LLM 友好 markdown (免费用), 'Search' 用 https://s.jina.ai/<query> 搜索转 markdown (2024-05 上线), 本仓是两服务开源分支 (MongoDB SaaS 存储层不含); URL 前缀式接口是检索-取文链路的极简取数面; 4.5 个月未推, 评 mid",
+   "quality": "mid",
+   "angle": "awesome-lists",
+   "gate": "batch_dup",
+   "dup_of": "https://github.com/jina-ai/reader"
+  },
+  {
+   "name": "ddgs (duckduckgo_search 继任者)",
+   "lang": "Python",
+   "note": "gh api 实证 3,002 star / 最近 push 2026-08-26 / MIT / Python>=3.10。duckduckgo_search 删库后的继任者：无 key 元搜索库，聚合 10 后端 (google/bing/brave/duckduckgo/startpage/yahoo/yandex/mojeek/wikipedia/grokipedia)，取数面 text()/images()/news()/videos()/books()/extract()，CLI 带 JSON 输出，ddgs api 起 FastAPI、ddgs mcp 起 MCP 服务。免费面=全后端零 key，无官方限额承诺但内置 ratelimit/retry 原语。",
+   "practices": [
+    "多后端自动轮换聚合，backend 参数可显式指定单引擎，单引擎封禁时不改代码秒切",
+    "同一个包内置 CLI(JSON 输出)、FastAPI 服务、MCP 服务三种暴露形态，脚本/HTTP/agent 三类调用方零胶水接入",
+    "生成器 API 逐条产出结果+内建限速重试原语，长批量任务内存与节奏天然可控"
+   ],
+   "quality": "high",
+   "type": "repo",
+   "url": "https://github.com/deedy5/ddgs",
+   "angle": "search-api",
+   "gate": "batch_dup",
+   "dup_of": "https://github.com/deedy5/ddgs"
+  },
+  {
+   "name": "SearXNG",
+   "lang": "Python",
+   "note": "gh api 实证 37,965 star / push 2026-10-04 / AGPL-3.0。自托管元搜索聚合 200+ 引擎。docs.searxng.org (2026.9.30 版文档) 实证 JSON API 契约: GET/POST /search，参数 q/categories/language/pageno/time_range/safesearch，format=json 须在 settings.yml 的 search.formats 白名单开启。免费面=自托管零 key 零限额；公共实例常关 JSON 出口且 429 限流，429 即换实例或自托管。",
+   "practices": [
+    "JSON 输出必须在 settings.yml 的 search.formats 白名单显式开启，默认只出 HTML 防公共实例被脚本打死，自托管改一行即开",
+    "内置 botdetection 限流器 (limiter.toml) 与逐引擎健康降级，坏一个引擎不拖垮全局",
+    "docker 一行起服务，engines 声明式逐个开关，取数面按需裁剪"
+   ],
+   "quality": "high",
+   "type": "repo",
+   "url": "https://github.com/searxng/searxng",
+   "angle": "search-api",
+   "gate": "batch_dup",
+   "dup_of": "https://github.com/searxng/searxng"
+  },
+  {
+   "name": "Vane (原 Perplexica)",
+   "lang": "TypeScript",
+   "note": "gh api 实证 ItzCrazyKns/Perplexica 已重定向至 Vane: 37,012 star / push 2026-09-01 / MIT。README 实证: Docker 镜像自带捆绑 SearXNG (含 JSON API)、支持 Ollama 本地+OpenAI/Gemini 云 LLM、本地 embedding 重排、--mode api 起程序化搜索 API，speed/balanced/quality 三档模式。免费面=本地 LLM+捆绑 SearXNG 则全链零 key 零费。",
+   "practices": [
+    "docker compose 把 SearXNG (开 JSON API) 直接捆进栈，一次部署同时获得元搜索底座+AI 问答引擎两件套",
+    "独立 --mode api 把整套 AI 搜索当纯程序化 API 服务跑，不强迫走聊天 UI",
+    "Ollama 本地 LLM+本地 embedding 重排可选，全链路可零 key 零费落地"
+   ],
+   "quality": "high",
+   "type": "repo",
+   "url": "https://github.com/ItzCrazyKns/Vane",
+   "angle": "search-api",
+   "gate": "batch_dup",
+   "dup_of": "https://github.com/ItzCrazyKns/Vane"
+  },
+  {
+   "name": "Jina Reader (r.jina.ai / s.jina.ai)",
+   "lang": "TypeScript",
+   "note": "gh api 实证 12,102 star / push 2026-05-22 / Apache-2.0，官网页脚 Elastic (c) 2026 (已并入 Elastic)。jina.ai/reader 官网实证免费面: r.jina.ai (URL 转 markdown) 无 key 20 RPM，免费 key 500 RPM+新 key 赠 10M tokens；s.jina.ai (搜索) 无 key 不可用、免费 key 100 RPM 且每次固定约 10k tokens；5 分钟响应缓存。",
+   "practices": [
+    "URL 前缀式 API 设计 (r.jina.ai/<任意 URL>)，无 SDK 无注册 curl 即用，集成成本趋零",
+    "无 key 档与免费 key 档分层限流 (20 对 500 RPM)，试用无门槛同时防滥用",
+    "抓取控制全走 HTTP 头 (X-Target-Selector/X-Remove-Selector/X-Timeout/X-Proxy-Url)，URL 保持可缓存"
+   ],
+   "quality": "high",
+   "type": "repo",
+   "url": "https://github.com/jina-ai/reader",
+   "angle": "search-api",
+   "gate": "batch_dup",
+   "dup_of": "https://github.com/jina-ai/reader"
+  },
+  {
+   "name": "Firecrawl",
+   "lang": "TypeScript",
+   "note": "gh api 实证 188,593 star / push 2026-10-04 / AGPL-3.0，OSS 核心可自托管。docs.firecrawl.dev/features/search 实证 /v2/search: web/news/images 三源，类目含 research (PubMed/bioRxiv/medRxiv/arXiv) 与 developer (GitHub issues/PRs/README)，tbs 时间过滤+location，search 与 scrape 一次调用直出清洗 markdown，计费 2 credits/10 结果；search 端点标注 No API key needed to get started (无 key 低限流可用)。",
+   "practices": [
+    "search 端点把搜索与抓取合并为一次调用 (scrapeOptions 内联)，直接返回 markdown，省掉二次请求编排",
+    "Research 索引 (PubMed/bioRxiv/medRxiv/arXiv) 与 Developer 索引 (GitHub issues/PRs/README) 旁路通用网页，学术与代码检索精度高",
+    "AGPL 开源核心可完全自托管，云与内网双轨同一 API 契约"
+   ],
+   "quality": "high",
+   "type": "repo",
+   "url": "https://github.com/firecrawl/firecrawl",
+   "angle": "search-api",
+   "gate": "batch_dup",
+   "dup_of": "https://github.com/firecrawl/firecrawl"
+  },
+  {
+   "name": "brave-search-mcp-server",
+   "lang": "TypeScript",
+   "note": "gh api 实证 1,485 star / push 2026-10-03 / MIT，Brave 官方仓。MCP 封装 web/news/images/videos+LLM Context 端点。brave.com/search/api 官网实证免费面: 免费档每月 $5 额度自动发放 (约 1000 次/月) 但需绑卡防滥用，容量 50qps，REST 以 X-Subscription-Token 调 api.search.brave.com/res/v1/web/search。",
+   "quality": "mid",
+   "type": "repo",
+   "url": "https://github.com/brave/brave-search-mcp-server",
+   "angle": "search-api",
+   "gate": "batch_dup",
+   "dup_of": "https://github.com/brave/brave-search-mcp-server"
+  },
+  {
+   "name": "mwmbl",
+   "lang": "Python",
+   "note": "gh api 实证 1,869 star / push 2026-10-04 / AGPL-3.0。非营利开源搜索引擎 (自带爬虫+索引+完整 Django API 层，repo 内 mwmbl/api.py 实证，非元搜索)，公开实例 mwmbl.org 可直接取数，公益项目无 key 无账单；规模小但工程完整。",
+   "quality": "mid",
+   "type": "repo",
+   "url": "https://github.com/mwmbl/mwmbl",
+   "angle": "search-api",
+   "gate": "batch_dup",
+   "dup_of": "https://github.com/mwmbl/mwmbl"
+  },
+  {
+   "name": "MarginaliaSearch",
+   "lang": "Java",
+   "note": "gh api 实证 2,169 star / push 2026-10-02 / Java。面向小站/老站/非商业长尾网的独立搜索引擎，NLnet 资助。README 实证: 可自托管复刻或白标自有数据，非商用 API 免费 (share-alike)、商用需授权；公共 API 端点近年多次迁移 (api.marginalia.nu 现 302/404，以 repo README 为准)。对长尾旁路检索有差异化价值。",
+   "quality": "mid",
+   "type": "repo",
+   "url": "https://github.com/MarginaliaSearch/MarginaliaSearch",
+   "angle": "search-api",
+   "gate": "batch_dup",
+   "dup_of": "https://github.com/MarginaliaSearch/MarginaliaSearch"
+  },
+  {
+   "name": "Open WebUI (web search 网关层)",
+   "lang": "Python",
+   "note": "gh api 实证 153,953 star / push 2026-10-03。WebSearch 交叉实证其 RAG_WEB_SEARCH_ENGINE 环境变量统一抽象 13+ 搜索 provider (searxng/google_pse/brave/kagi/mojeek/tavily/jina/serper/serply/searchapi/duckduckgo/perplexity/sougou/baidu)+抓取+重排链；作为多引擎搜索网关的成熟参考实现 (docs.openwebui.com 本环境网络故障未直访)。",
+   "quality": "mid",
+   "type": "repo",
+   "url": "https://github.com/open-webui/open-webui",
+   "angle": "search-api",
+   "gate": "batch_dup",
+   "dup_of": "https://github.com/open-webui/open-webui"
+  },
+  {
+   "name": "ddgs (duckduckgo_search 继任)",
+   "url": "https://github.com/deedy5/ddgs",
+   "type": "repo",
+   "lang": "python",
+   "note": "gh api 实证: 3002★, push 2026-08-26。duckduckgo_search 更名继任, 现定位'聚合多搜索服务的 metasearch 库'。text() 等函数参数: max_results/region/safesearch/timelimit/page/backend; 取数面四路: CLI(ddgs 查询、ddgs extract -u URL -f content -o output.json 正文抽取落盘)、python 库、ddgs api 自托管 FastAPI(/search/text|news|images + Swagger 文档)、ddgs mcp(stdio)。代理 socks5/http 与 timeout 是一等参数, 配额靠 max_results+分页细粒度控制",
+   "quality": "high",
+   "practices": [
+    "backend 参数默认 auto 在多个搜索服务间自动轮换, 也可逗号显式指定后备顺序, 单上游被封不断供",
+    "一个核心库铺四种取数面(CLI/python API/自托管 FastAPI 带 Swagger/MCP stdio), 按场景选面接入不必重复封装",
+    "代理(http/https/socks5)与 timeout 作为库级一等参数逐调用可覆盖, 与 max_results/region/timelimit 组成细粒度配额闸"
+   ],
+   "angle": "cli-tools",
+   "gate": "batch_dup",
+   "dup_of": "https://github.com/deedy5/ddgs"
+  },
+  {
+   "name": "langchain-community 统一搜索工具集",
+   "lang": "Python",
+   "note": "langchain 主仓 gh api 实证 147,440 star / push 2026-10-04 / MIT；langchain-community 分仓目录实证 12+ 统一搜索工具模块 (ddg_search/searx_search/brave_search/jina_search/metaphor_search 即 exa/mojeek_search/google_serper/bing_search/searchapi/arxiv 等)，但该分仓已于 2026-06 归档 (archived=true)，现行表面=主仓+官方 partner 包；作为统一接口包一层的工程范式可抄。",
+   "quality": "low",
+   "type": "repo",
+   "url": "https://github.com/langchain-ai/langchain-community",
+   "angle": "search-api",
+   "watchlist": "low@scan → star实证复核",
+   "gate": "audit_suspect",
+   "reason": "条目 URL 指向已归档分仓(gh api: 287★/archived=true/push 2026-06-19),而 note 里 147,440★/日更实证来自 langchain 主仓——一条混两仓,建议拆分或改以主仓为条目。"
+  }
+ ]
+}
