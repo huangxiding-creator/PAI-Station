@@ -45,6 +45,24 @@
 - conductor: pansou→`api:pansou` / chinatextbook→`net:ctb`, 均 heavy 窗, 幂等入队
 - 对抗性审查: 三维(correctness/security/ops)评审+逐条反驳验证 workflow (wf_13816ec8) — 结论见本档追加节
 
-## 追加: 对抗性审查结论
+## 追加: 对抗性审查结论 (wf_13816ec8, 16 agent / 312 工具调用 / 83万 token)
 
-(workflow 完成后回填)
+三维评审 (correctness/security/ops) → 29 发现 → 逐条对抗验证 → **9 实锤 / 4 反驳**，9 处全修 (回归测试 9 件，271→279 全绿):
+
+| # | 级 | 位 | 实锤 | 修法 |
+|---|---|---|---|---|
+| 1 | high | ctb/fetch | safe_name 只取 basename: **310/1905 整书跨版本同名** (数学一年级上册×7 版社), 同批下载静默互踩——报告 3 册实际盘上 1 册还可能引错版本 | 分类学前缀 (学段_学科_版本_年级_书名) + path 短哈希后缀, Windows 非法字符清洗 |
+| 2 | med | pansou/discover | 坏档 (截断 JSON) → `_load` 吞 ValueError 回空骨架 → 下次写盘**静默清空全部链接卡** (只增不删不变韧) | 坏档改名 `.bad` 隔离+抛错拒回写; 同修 chinatextbook/catalog |
+| 3 | med | ctb/cli | throttle 只接 pace 没接 record_ok/failure → **日限/熔断/冷却全部空转** | record_ok/record_failure 接通 + CircuitOpen/DailyLimit 捕获→blocked |
+| 4 | med | pansou/discover | 整轮全败 (failed=4, queried=0) 被记成 empty「真实空」 | failed 计数 + status_from_report: 全败=error |
+| 5 | med | pansou/service | ensure_auth 只认 USER → 缺 JWT_SECRET 半档走通 → 空密钥落上游默认=**可预测时间戳密钥** | 三件套 (USER+PASS+JWT_SECRET) 齐全才认档 |
+| 6 | med | ctb/fetch | safe_name 不洗 Windows 分隔符/绝对名, 上游树路径可越出 out_dir | 并入 #1 清洗 |
+| 7 | high | pansou/service | stop_service 盲 taskkill /T /F 陈 pid → **重启后 pid 复用误杀无辜进程树** | tasklist 验身 (pid 活着且映像=pansou.exe 才杀) |
+| 8 | med | pansou/service | start 无锁 → check-then-act 双起服竞态 | O_EXCL start.lock (站内 CIM 同款范式), finally 释放 |
+| 9 | med | 两边 | 非原子 write_text: 崩在半写=坏档, 叠加 #2 即数据丢失链 | tmp+os.replace 原子写全落位 |
+
+反驳 4 件 (不修): conductor topic 注入 (内部数据非对抗面)、SAFE_PLUGINS 运行时核验 (启动 env 已控)、cmd_fetch 不接熔断 (修 #3 后才可达, 已随修)、分卷断点续传 (v1 重跑可接受, 3s 节流在)。
+
+**另预修 1 件**: fetch_blob timeout 180→600s (raw 直连 CN 105KB/s 实测 47MB 卷需 450s)。
+
+修后实车复烟: 279 全绿 + 停 (pid 验身 taskkill) → 起 (56 频道/5 插件/auth/ok) 周期正常, 目录 15 卡完好。
