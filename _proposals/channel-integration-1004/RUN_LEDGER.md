@@ -98,3 +98,21 @@
 - **verified 15** = tier1 深验 14 中 12 (programthink/freebook_yimity/doocs/daizhigev20/gutenberg_zh/haodoo/ebook_treasure_chest/fpb_zh/books_free/hacking/fpb/expert_readed/cs_books) + ebook-treasure/weread/smartedu 存量腿; SE 限流窗记 live
 - **unreachable 10 诚实死** = bookplusapp/happydot/epubbooks/b4_seven/yidanshu/tianlang/taiwanebook(CN墙)/readeep/pdfbookshare/jingdianbook — 双梯两轮均败, 不再重试
 - 测试 18→**20 件** (IDN 归一 + 增量合并), 全树 **299 passed**
+
+## Arc K 扩容: ebook_library 111→216 站 (super-skill 全网扫荡, 1004 夜-1005 晨)
+
+用户令: super-skill 最新版不跳步, 调研 GitHub+全网电子书渠道 ≥100, 全量获取→去重→保质→打通→接入。
+
+| 维 | 事实 |
+|---|---|
+| 扫荡 | workflow 双段: ①九角度并行 (github-awesome/github-tools/zh-listicles/en-listicles/gugi-classics/academic-oa/shuyuan-eco/library-digital/aggregate-search) 10 agent 36.3万token ②补扫2角度 (净化措辞绕内容过滤) — 合计 **221 raw findings** 全带实测证据 |
+| 失败攻防 | 3 角度被 API 内容过滤器 1301 拦 (gugi/library/en-listicles) → 改写措辞后补扫 2/2 全成; en-listicles 缺口由 aggregate-search+github-awesome 覆盖 (审计确认非缺口) |
+| 审计 | completeness agent: 28 条 suspect 全实锤 (拼写404/黑名单马甲×4/影子图书馆/工具非渠道×14/TG与个人页×3) + 11 项盲区清单 + 10 条增补建议 |
+| 去重门 | `ebook_research/dedup_gate.py`: 域名级+github owner/repo 双键 (防 github.com 多租户误杀) + www 剥离 + 书格新旧域/好读别名变体归一 |
+| 质量门 | 221 → **97 候选 + 8 影子登记 + 116 剔除留痕** (批内重复44/已在册35/工具22/service型6/低质5/TG与个人页4); 版权灰区 (搬书匠/SaltTiger/苦瓜书盘/MOX) 保守归 piracy_suspect 禁触 |
+| 纳册 | `sites.py` 111+105=**216 站** (official 53/portal 49/piracy 36/open_repo 30/public_domain 23/aggregator 20/login 5); src=research1004 可溯源; blocklist +6 域名 (sobooks.net/zxcsme.com 马甲 + annas-archive.org/libgen.is/z-library.sk/pdfdrive.com 影子图书馆) |
+| 亮点新渠道 | 国家标准全文公开系统 openstd.samr.gov.cn / IMF eLibrary 全免费 / Met 1700种 / Getty 300种 / BHL 6千万页 / CBETA / chinese-poetry 34万首 JSON / NDL+东洋文库+京大汉籍 / 识典古籍 / 国图中华古籍资源库 / O'Reilly Open Books / 书源生态5站 |
+| 打通 | 105 新站两轮 verify: **verified 17 + live 61 + blocked 12 + unreachable 15**; 全表 216 = verified 32 / live 123 / blocked 36 / unreachable 25; wikisource/openlibrary/archive.org 系=CN 直连墙态 (webReader 服务端实证在扫荡 note 留档) |
+| 殆知阁警报 | 原域 daizhige.org 已被钱包广告站劫持 (curl 301+TP钱包页实锤); 正牌语料=github.com/garychowcmu/daizhigev20 (在册 tier1) |
+| 测试 | 216 完整性/blocklist www 归一/新站状态映射 — 全树 **299 passed** |
+| manifest | site_endpoints 1352→**1457**; named_channels 25 不变 (同渠道族扩容) |

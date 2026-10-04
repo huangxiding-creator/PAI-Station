@@ -1,0 +1,181 @@
+{
+ "suspect": [
+  {
+   "reason": "确证拼写错误: gh api 实测 404, GitHub 账号名 chevalier 误拼为 chevalian; 正确仓库 wx-chevalier/Awesome-Books-Notes 实测存在",
+   "url": "https://github.com/wx-chevalian/Awesome-Books-Notes"
+  },
+  {
+   "reason": "知轩藏书主域已于 1004 令列入 ResearchFactory-Eng/EPC100/data/domain_blocklist.json(无争议盗版站全渠道禁访), 候选仍重复收录 2 次, 纳册即违反用户黑名单令",
+   "url": "http://www.zxcs.info"
+  },
+  {
+   "reason": "SoBooks 主域同样在 domain_blocklist.json 封禁名单内, 且候选以 https://sobooks.cc 与 http://www.sobooks.cc 两个变体重复出现",
+   "url": "https://sobooks.cc"
+  },
+  {
+   "reason": "SoBooks 换域马甲(与已封禁的 sobooks.cc 同站), 收录等于绕过用户自己设的黑名单; 内容同为版权灰色聚合",
+   "url": "https://sobooks.net"
+  },
+  {
+   "reason": "实测标题为『知轩藏书ME版-校对全本TXT小说下载网』= 已封禁 zxcs.info 的镜像换域站, 属绕黑名单 + 盗版校对本分发",
+   "url": "https://www.zxcsme.com"
+  },
+  {
+   "reason": "影子图书馆(全库盗版聚合), 命中用户 9-23 高风险站点规避令与 1004 盗版封禁原则; 域名被反复查封轮换, 非稳定渠道; 若确有需要须走用户裁决豁免流程留痕",
+   "url": "https://annas-archive.org"
+  },
+  {
+   "reason": "同一影子图书馆的镜像域, 与 .org 重复收录且跨 3 个视角重复出现, 属域名级重复 + 同上高风险",
+   "url": "https://annas-archive.se"
+  },
+  {
+   "reason": "Library Genesis 影子图书馆, 命中高风险规避令; 跨 4 个视角重复收录, 域名随时可能被封",
+   "url": "https://libgen.is"
+  },
+  {
+   "reason": "Z-Library 域名轮换极频繁(.sk 时效无保证)且钓鱼仿冒域泛滥; 影子图书馆命中规避令",
+   "url": "https://z-library.sk"
+  },
+  {
+   "reason": "版权灰色聚合站, 重度广告与诱导下载按钮(爬虫蜜罐高发); 与裸域 pdfdrive.com 重复收录",
+   "url": "https://www.pdfdrive.com"
+  },
+  {
+   "reason": "实测 HTTP 200 但整站是混淆 JS 跳转壳页(title=Redirecting... + window.location.replace 混淆载荷), 疑似停放/跳转壳站, 无可检索的电子书内容",
+   "url": "https://www.78books.com"
+  },
+  {
+   "reason": "电子书管理软件, 工具不提供书籍内容, 明显不是内容渠道",
+   "url": "https://github.com/kovidgoyal/calibre"
+  },
+  {
+   "reason": "自建书库 Web 程序(需自备书籍数据), 工具非渠道",
+   "url": "https://github.com/janeczhu/calibre-web"
+  },
+  {
+   "reason": "跨平台阅读器软件, 工具非渠道",
+   "url": "https://github.com/koodo-reader/koodo-reader"
+  },
+  {
+   "reason": "阅读器软件, 工具非渠道",
+   "url": "https://github.com/readest/readest"
+  },
+  {
+   "reason": "墨水屏设备阅读器系统, 工具非渠道",
+   "url": "https://github.com/koreader/koreader"
+  },
+  {
+   "reason": "自建私有书库程序, 无内容, 非渠道",
+   "url": "https://github.com/talebook/talebook"
+  },
+  {
+   "reason": "legado 的服务器端(自建部署用), 无内容, 非渠道",
+   "url": "https://github.com/hectorqin/reader"
+  },
+  {
+   "reason": "legado 鸿蒙客户端移植(实测存在), 是 App 不是渠道",
+   "url": "https://github.com/mgz0227/legado-Harmony"
+  },
+  {
+   "reason": "legado macOS 客户端移植(实测存在), 是 App 不是渠道",
+   "url": "https://github.com/Kequans/legado-for-mac-pub"
+  },
+  {
+   "reason": "KOReader 本地小说插件(实测存在), 工具非内容渠道",
+   "url": "https://github.com/jnjnnjzch/leko-reader"
+  },
+  {
+   "reason": "书源规则开发用 Chrome 扩展(实测存在), 开发工具非渠道",
+   "url": "https://github.com/z1131392774/legado-source-generator"
+  },
+  {
+   "reason": "需自建索引的搜索引擎程序(实测存在), 公共实例已全部关停, 当作现成渠道不可用",
+   "url": "https://github.com/zu1k/book-searcher"
+  },
+  {
+   "reason": "阅读 App 本体是书源生态锚点而非内容渠道, 且跨 6 个视角重复收录, 去重后保留 1 条即可",
+   "url": "https://github.com/gedoor/legado"
+  },
+  {
+   "reason": "TG 机器人直链, 本机直连与 7890 代理双通道均 000 无法实证存活; bot 非站点渠道, 封号即失效",
+   "url": "https://t.me/sosdbot"
+  },
+  {
+   "reason": "频道 handle 无法实证是否 legado 官方(双通道均 000); TG 频道非可归档站点渠道, 时效无保证",
+   "url": "https://t.me/legado_channels"
+  },
+  {
+   "reason": "个人笔记聚合页(name 字段还带『书源\\订阅』反斜杠格式错误), 作者删库即死链; 且是书源订阅导航而非电子书内容本身",
+   "url": "https://flowus.cn/ycheng"
+  },
+  {
+   "reason": "实测存在, 但自述为『个人收藏书籍列表』: 个人书单(外链清单)非可检索渠道, 链接时效差",
+   "url": "https://github.com/Dujltqzv/Some-Many-Books"
+  }
+ ],
+ "missing_angles": [
+  "有声书视角完全空白: LibriVox(公版有声书总库)等零覆盖",
+  "小语种视角缺口: 韩语零渠道; 德语(Zeno.org)/俄语/西语未扫, 法语只有 Gallica; 日语仅青空文库, 缺国立国会图书馆数字收藏(dl.ndl.go.jp)",
+  "出版社官方免费层未扫: O'Reilly Open Books、Microsoft Press 免费书、Manning/Apress 每周限免、人邮异步社区(epubit)限免区",
+  "官方教材免费层未扫: 国家中小学智慧教育平台电子教材(人教版等官方免费), 与已有 chinatextbook 渠道互补",
+  "OPDS 开放出版分发协议生态未扫: 书源之外的标准取书通道(如 Feedbooks 公版目录、各类 OPDS 目录聚合)",
+  "类型缺口: 漫画/图像书/绘本零覆盖; 乐谱(IMSLP)零覆盖",
+  "博物馆/艺术出版免费层未扫: Met Publications、Getty Virtual Library 等",
+  "国际组织 OA 图书只收了 UNESCO/世行/EU: 漏 OECD iLibrary、IMF eLibrary、National Academies Press",
+  "公共图书馆数字借阅体系未扫: 国图读者卡数据库、上图/杭图电子资源、OverDrive/Libby(需账号, 可先做登记不采集)",
+  "古籍深化盲区: 国学导航、殆知阁(daizhige.org, 实测在役)、哈佛燕京图书馆中文特藏、东洋文库/京都大学汉籍库",
+  "归一去重视角缺失: 同渠道最多跨 6 视角重复(legado×6、XIU2×6、ctext×5、Gutenberg/LibGen×4), 书格出现 new./www./裸域 3 个变体, 下游须做规范域名级去重并逐条比对 domain_blocklist.json"
+ ],
+ "extra_suggestions": [
+  {
+   "name": "Wikibooks",
+   "note": "维基教科书多语种免费教科书库; 清单收了 Wikisource 却漏了 Wikibooks",
+   "url": "https://www.wikibooks.org/"
+  },
+  {
+   "name": "LibriVox",
+   "note": "公版有声书总库, 补有声书零覆盖",
+   "url": "https://librivox.org/"
+  },
+  {
+   "name": "National Academies Press",
+   "note": "美国国家学院出版社, 全部图书免费 PDF 下载(实测 302 正常跳转)",
+   "url": "https://nap.nationalacademies.org/"
+  },
+  {
+   "name": "BookBoon",
+   "note": "广告支持的免费教材与商业电子书(实测 200)",
+   "url": "https://bookboon.com/"
+  },
+  {
+   "name": "FreeTechBooks",
+   "note": "老牌 IT 免费书聚合站, 与已收的 Free Computer Books 同生态(本机网络未达, 站点长期在役)",
+   "url": "https://www.freetechbooks.com/"
+  },
+  {
+   "name": "Project Runeberg",
+   "note": "北欧语言文学数字库(1992 年至今, 实测 200), 补小语种视角",
+   "url": "https://runeberg.org/"
+  },
+  {
+   "name": "Zeno.org",
+   "note": "德语数字化全文大库, 补德语视角",
+   "url": "https://www.zeno.org/"
+  },
+  {
+   "name": "MetPublications",
+   "note": "大都会博物馆官方艺术类图书免费 PDF(实测 429 限流, 站点在役)",
+   "url": "https://www.metmuseum.org/art/metpublications"
+  },
+  {
+   "name": "国立国会图书馆数字收藏 (NDL Digital Collections)",
+   "note": "日本国立国会图书馆数字化收藏, 绝版书公开可读(实测 200), 补日语视角",
+   "url": "https://dl.ndl.go.jp/"
+  },
+  {
+   "name": "O'Reilly Open Books",
+   "note": "O'Reilly 官方免费开放书页(实测 403 反爬, 页面长期存在, 须浏览器级取)",
+   "url": "https://www.oreilly.com/openbook/"
+  }
+ ]
+}
