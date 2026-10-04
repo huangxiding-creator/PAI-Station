@@ -66,3 +66,18 @@
 **另预修 1 件**: fetch_blob timeout 180→600s (raw 直连 CN 105KB/s 实测 47MB 卷需 450s)。
 
 修后实车复烟: 279 全绿 + 停 (pid 验身 taskkill) → 起 (56 频道/5 插件/auth/ok) 周期正常, 目录 15 卡完好。
+
+## 第25渠道 ebook_library (电子书渠道族: 两篇文章111站纳册+打通) — 1004
+
+用户令弧线 (1004 当天三段演化): ①「文章提到的电子书渠道都纳入」→ ②「资源都下载下来」→ **③终版三连令「不是现在下载, 要去测试把渠道打通; 搞通之后注册」**。落位语义 = 打通+注册, 不批量下载。
+
+| 维 | 事实 |
+|---|---|
+| 来源 | 公众号「弗专书馆」两篇 (原文+URL抽取存证 `ebook_sources/`): a1 GitHub高赞书库14条 + a2 免费电子书网站101条, 编号101全验证, 去重后 **111 渠道实体** |
+| 注册表 | `EPC100/collectors/ebook_library/sites.py` 唯一事实源: 7分类 (official 10/public_domain 6/open_repo 14/aggregator 15/portal 38/login_required 4/piracy_suspect 24) + 三态 status (enabled/registered/disabled) |
+| 打通判据 | tier1 深度打通 (14 bulk 源): 目录/清单 API 实拉 + codeload-Range/OPDS/CSV 取数路径实证 + 单样本落地 (最强真判据, `_verify_samples/`); 其余探活+首页语义; 已有专渠道 (ebook-treasure/weread/smartedu) 站活即 verified |
+| 风险线 | 盗版嫌疑 24 站禁触不发一包 (高风险规避 9-23 令); 无争议 4 域名 (zxcs.info/sobooks.cc/oceanofpdf.com/flibusta.is) 入 `domain_blocklist.json` — conductor 出队闸全渠道即生效 |
+| 网络纪律 | 直连→系统代理双梯 (只探测不动网); 全匿名单发 1.2s 节流; IDN (烟海.中国) 直接试错如实记 |
+| 接线 | epc100_channels.py 主链腿 (try/except 隔离) + named set + manifest named 24→25 通道 (site_endpoints +111=1352) + conductor `net:ebooks` (window=any, 白天令) |
+| 测试 | `test_ebook_library.py` 18 件: 注册表完整性/盗版永不下载/blocklist一致性/CSV状态机/tier1四验证器(fake网)/盗版零探针/账本腿(fake conductor); 全树 **297 passed** |
+| wave2 待打通 | taiwanebook API / 书格+国图古籍策略 / kanripo 选择性 / ideahub 82分卷外链结构 / forgottenbooks 抽样 |
