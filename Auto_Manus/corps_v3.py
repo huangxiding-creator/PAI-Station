@@ -127,6 +127,40 @@ def weaipo_busy() -> bool:
         return True
 
 
+# 1003 用户正: WeAIPO 国外网是间歇用 (需要时才用), 心跳=进程活着≠在用网
+# (发文/互动等国内操作也刷心跳). 精确判据用 WeAIPO 侧自报状态文件 (只读):
+WEAIPO_RUN_STATE = Path(r"E:\CPOPC\We-AIPO\data\state\run_state.json")
+WEAIPO_NB_WAVE = Path(r"E:\CPOPC\We-AIPO\data\state\nb_wave.json")
+
+
+def weaipo_net_busy() -> bool:
+    """WeAIPO 正在用国外网? (精细判据, 1003 精细调度令)
+
+    1) run_state.json mode=="rule" — WeAIPO 自报开着代理窗
+       (NB 段用网时自己切 rule, 收工还原 direct; 1003 实证
+       stage=nb_window_end+mode=direct=用网结束)
+    2) nb_wave.json state 非 done / queue>0 — NB 波次生产中
+       (视频生产/下载=真用网; state=done+queue=0=NB 已收工)
+    兜底: 两状态文件都读不到 → 退回心跳判据 (保守).
+    """
+    try:
+        rs = json.loads(WEAIPO_RUN_STATE.read_text(encoding="utf-8"))
+    except Exception:
+        rs = None
+    try:
+        wv = json.loads(WEAIPO_NB_WAVE.read_text(encoding="utf-8"))
+    except Exception:
+        wv = None
+    if rs is None and wv is None:
+        return weaipo_busy()            # 状态文件全失 → 心跳保守
+    if rs and rs.get("mode") == "rule":
+        return True
+    if wv and (str(wv.get("state", "")) not in ("done", "")
+               or int(wv.get("queue") or 0) > 0):
+        return True
+    return False
+
+
 # ---------------------------------------------------------------- clash
 def _clash(path, method="GET", data=None, parse=False):
     hdr = {"Authorization": "Bearer " + lib.CLASH_SECRET,
@@ -435,7 +469,17 @@ def dispatch(page, email: str) -> str | None:
     if region_walled(page):
         log(f"⏭ {email} 派发导航遇区域墙 (边缘态), 跳过")
         return None
-    tree = json.loads(TREE.read_text(encoding="utf-8"))
+    if TREE.is_file():
+        tree = json.loads(TREE.read_text(encoding="utf-8"))
+        tree_owner_path = TREE  # 话题级写回归宿
+    else:
+        # 1003: #50 已交付、_pipeline 已收口清库, 老单树成死路径 (晨窗 8/8
+        # FileNotFoundError 烧号根因). 元数据树退回队列活跃 tree2 (schema
+        # 同构: company/short/topics), 写回也落 tree2 原文件.
+        tree_owner_path, tree = load_active_tree2()
+        if tree is None:
+            log(f"⏭ {email} 无可用树 (legacy TREE 缺失且队列树全空), 跳过")
+            return None
     seed = next_seed()
     if seed is not None:
         prompt = lib.build_prompt(
@@ -497,7 +541,7 @@ def dispatch(page, email: str) -> str | None:
                 t["rounds"] = t.get("rounds", 0) + 1
                 t["last_sid"] = sid
                 t["last_account"] = email
-        _atomic_json(TREE, tree)
+        _atomic_json(tree_owner_path, tree)
     with V3_LOG.open("a", encoding="utf-8") as f:
         f.write(json.dumps({
             "ts": time.strftime("%Y-%m-%dT%H:%M:%S"), "email": email,
@@ -545,6 +589,13 @@ def main() -> int:
     ap.add_argument("--gap-max", type=int, default=25)
     ap.add_argument("--end", default="14:30",
                     help="今日硬停时刻 (自媒 15:00 起跑前收官)")
+    ap.add_argument("--duration", type=int, default=0,
+                    help="班内时长上限(分钟): end=now+N (7×24 多班次模式, "
+                         "0=沿用 --end 单班语义)")
+    ap.add_argument("--max-today", type=int, default=0,
+                    help="当日累计派单上限 (0=只用日帽). 非黄金班传 4 — "
+                         "给 11:00 黄金窗留弹药 (1004 修正: 首夜夜班把 "
+                         "日帽 8 单凌晨耗尽, 黄金窗反无弹)")
     ap.add_argument("--smoke", action="store_true",
                     help="冒烟: 仅 1 号 1 单端到端")
     ap.add_argument("--only", default="",
@@ -552,6 +603,11 @@ def main() -> int:
     ap.add_argument("--prefer", default="",
                     help="节点优先 (名称子串, 冒烟换 IP 用)")
     args = ap.parse_args()
+    end_deadline = 0.0
+    if args.duration > 0:                   # 7×24 多班次: 班内限时
+        # 绝对时刻 (非 HH:MM 时钟) — 1003 实锤: 23:xx 起跑 end 落次日
+        # 00:xx 时, 时钟元组比较 (23,36)>=(0,20) 恒真 → 开跑即硬停
+        end_deadline = time.time() + args.duration * 60
 
     claim_or_exit()
     creds = dict(lib.load_accounts("Manus账号（全部）260922_干净版.txt"))
@@ -566,6 +622,11 @@ def main() -> int:
 
     led = load_ledger()
     cold = load_cooldown()
+    total_today = sum(led["dispatched"].values())
+    if args.max_today and total_today >= args.max_today:
+        log(f"今日已派 {total_today} ≥ 非黄金班上限 {args.max_today}, "
+            f"留弹药给黄金窗, 本班收官")
+        return 0
     todo = [e for e in squad
             if led["dispatched"].get(e, 0) < DAILY_CAP
             and e not in cold]
@@ -579,6 +640,19 @@ def main() -> int:
     if not todo:
         log("今日无事可派, 收官")
         return 0
+
+    # ---- 开窗前 WeAIPO 闲门 (1003 7×24 协调令 + 精细化) ----
+    # 精确判据: WeAIPO 自报在用国外网 (run_state.mode=rule / nb_wave 生产中)
+    # 或 clash 已是 rule (别人的代理窗/残留窗) → 零网络操作干等闲窗,
+    # 最多 15min; 仍忙 = 本班让路收官 (绝不挂 rule 干等, 下班自动再来)
+    gate_from = time.time()
+    while weaipo_net_busy() or get_mode() == "rule":
+        if time.time() - gate_from > 900:
+            log("WeAIPO 在用网持续 >15min, 本班让路不开窗 (下班再来)")
+            return 0
+        log("WeAIPO 国外网占用中, 等闲窗再开窗 (60s 轮询, 有界15min)...")
+        time.sleep(60)
+    log("WeAIPO 不在用国外网, 准予开窗")
 
     # ---- 开窗: rule + 节点验证 (lite probe) ----
     frm = get_mode()
@@ -615,6 +689,8 @@ def main() -> int:
     node_i = cands.index(node)
 
     def past_end() -> bool:
+        if end_deadline:                    # --duration 模式: 绝对时刻
+            return time.time() >= end_deadline
         h, m = map(int, args.end.split(":"))
         now = time.localtime()
         return (now.tm_hour, now.tm_min) >= (h, m)
@@ -624,13 +700,21 @@ def main() -> int:
     try:
         for i, email in enumerate(todo):
             if past_end():
-                log(f"到 {args.end} 硬停 (自媒让路), 剩余明日续")
+                end_lbl = (time.strftime("%H:%M", time.localtime(end_deadline))
+                           if end_deadline else args.end)
+                log(f"到 {end_lbl} 硬停 (班内限时), 剩余下班续")
                 break
-            while weaipo_busy():
-                log("WeAIPO 忙, 暂停等闲窗 (60s 轮询)...")
-                time.sleep(60)
+            wait_from = time.time()
+            while weaipo_net_busy():
                 if past_end():
                     break
+                if time.time() - wait_from > 480:   # 1003 协调令: 有界让路
+                    break
+                log("WeAIPO 在用国外网, 等闲窗 (60s 轮询, 有界8min)...")
+                time.sleep(60)
+            if weaipo_net_busy():
+                log("WeAIPO 用网 >8min, 本班让路收官")
+                break                   # → finally 守卫还原, 下班再来
             if past_end():
                 break
             log(f"[{i + 1}/{len(todo)}] {email} "
@@ -714,9 +798,21 @@ def main() -> int:
     finally:
         cur = get_mode()
         if cur != "direct":
-            set_mode("direct")
-            net_log(cur, "direct", "corps_v3 收官还原")
-            log(f"网络 {cur} → direct (已登记)")
+            if weaipo_net_busy():
+                # 1003 精细化: WeAIPO 已插进来用网 (rule 是它的窗),
+                # 军团不还原 — 断它的窗比违反 restore 纪律伤害更大,
+                # 其守护自己收线. 留痕登记.
+                log("WeAIPO 在用网, mode 不还原 (留其守护收线)")
+                net_log(cur, cur, "corps_v3 收官让网 (WeAIPO 在用)")
+            else:
+                set_mode("direct")
+                net_log(cur, "direct", "corps_v3 收官还原")
+                log(f"网络 {cur} → direct (已登记)")
+        try:                            # 间隙哨兵冷却判据用
+            (ROOT / "data" / "corps_v3_last_end.json").write_text(
+                json.dumps({"ts": time.time()}), encoding="utf-8")
+        except Exception:
+            pass
     log(f"[收官] 发出 {sent} | 跳过 {skipped} | 失败 {failed}"
         + (" | ⛔哨兵停线" if halted else ""))
     return 0

@@ -192,6 +192,11 @@ def make_page(port: int = BROWSER_PORT, profile: str = PROFILE_DIR,
     co.set_argument("--no-first-run")
     co.set_argument("--no-default-browser-check")
     co.set_argument("--start-minimized")   # 0924 不弹窗铁律: 出生即最小化
+    # 1003 用户令 (浏览器全最小化): Chrome 新版常忽略 start-minimized,
+    # 离屏坐标双保险 — 窗口建在屏幕外, 不抢焦点不挡操作; 尺寸保留
+    # 正常值防零尺寸渲染异常
+    co.set_argument("--window-position=-32000,-32000")
+    co.set_argument("--window-size=1280,900")
     return Chromium(co).latest_tab
 
 

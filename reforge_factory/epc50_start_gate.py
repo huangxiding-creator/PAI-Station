@@ -6,7 +6,7 @@
   EPC50-SNEI-AUX  = 辅助池 (分开计量: ima/飞书/v2问答/秘塔; 成稿可引用, 不混入一手)
 
 判据 (用户裁决链):
-  门1 弹药门槛 = 一手+辅助 总有效字数 >= 1000万 (弹药门槛铁律: 只算新增+判有效)
+  门1 弹药门槛 = 一手+辅助 总有效字数 >= 1亿 (1004令; 铁律: 只算新增+判有效)
   门2 PRIMARY  = 极严口径 一手/(一手+辅助) > 50%
   门3 军团额度 = 今日派发打满 (待派0)
 
@@ -30,7 +30,7 @@ CORPS_LOG = Path(r"E:\AI-Station\Auto_Manus\data\epc50_corps_log.jsonl")
 ACCOUNTS = Path(r"E:\AI-Station\Auto_Manus\Manus账号（全部）260922_干净版.txt")
 LOW_FILE = Path(r"E:\AI-Station\Auto_Manus\data\epc50_credits_low.json")
 
-GATE_CHARS = 10_000_000
+GATE_CHARS = 200_000_000  # 1004终版令: 2亿
 GATE_PRIMARY = 0.50
 
 

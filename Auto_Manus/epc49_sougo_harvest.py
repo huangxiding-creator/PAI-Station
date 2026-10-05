@@ -17,7 +17,7 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8",
                               errors="replace")
 sys.path.insert(0, r"E:\AI-Station\reforge_factory")
 
-SRC = Path(r"E:\AI-Station\ResearchFactory-Eng\SouGouWeDown2\output")
+SRC = Path(r"E:\AIResearch\ResearchFactory-Eng\SouGouWeDown2\output")
 OUT = Path(r"E:\AI-Station\ResearchFactory-Eng\ResearchTopics"
            r"\《四川电力设计咨询有限责任公司怎么干EPC总承包？》"
            r"\02 初次网络调研\20_微信文章")

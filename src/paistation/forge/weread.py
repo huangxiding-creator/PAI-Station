@@ -332,7 +332,10 @@ class WeReadClient:
         return books[:count]
 
     def book_info(self, book_id: str) -> dict:
-        return self._get("/web/book/info", bookId=book_id)
+        """勘误（2026-10-05 实测）：/web/book/info 已 -2003（参数格式被
+        wrweb-next 收走）；新端点 GET /api/book/info?bookId= 同字段面，
+        且 deepLink 携带新 v token（书页/阅读页路由用）。"""
+        return self._get("/api/book/info", bookId=book_id)
 
     def chapter_infos(self, book_id: str) -> list:
         """章节目录树（chapterUid/title/level/wordCount）。

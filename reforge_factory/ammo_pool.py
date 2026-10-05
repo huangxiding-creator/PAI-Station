@@ -28,8 +28,10 @@
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import json
+import os
 import re
 import sys
 import time
@@ -40,7 +42,7 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 STATION = Path(r"E:\AI-Station")
 POOL_ROOT = STATION / "ammo_pool"
-AMMO_GATE_CHARS = 10_000_000   # 用户铁律: 1000 万字 (仅有效新增弹药)
+AMMO_GATE_CHARS = 200_000_000  # 1004用户终版令: 门槛 2亿 (NB 2.5亿预算 = 2亿采集 + 0.5亿萃取炼金)
 
 
 # ---------- URL 归一化 (跨引擎去重键) ----------
@@ -73,6 +75,41 @@ def count_chars(text: str) -> int:
 
 
 def read_text_safe(p: Path) -> str:
+    """文本提取 (1004 夜班扩容令: ima公开库/巨潮公告大批 PDF 落盘, 池须能读).
+
+    pdf 走 pypdf 抽取文本 (计字/判相关性都用纯文本, 绝不数二进制垃圾);
+    docx 走 zipfile+document.xml 剥标签 (零依赖); 坏件回空串 → judge 判
+    pending(file_missing 语义) 不静默计数.
+    """
+    suf = p.suffix.lower()
+    if suf == ".pdf":
+        try:
+            from pypdf import PdfReader
+            return "\n".join((pg.extract_text() or "")
+                             for pg in PdfReader(str(p)).pages)
+        except Exception:
+            return ""
+    if suf == ".docx":
+        try:
+            import zipfile
+            with zipfile.ZipFile(str(p)) as z:
+                xml = z.read("word/document.xml").decode("utf-8",
+                                                         errors="ignore")
+            return re.sub(r"<[^>]+>", " ", xml)
+        except Exception:
+            return ""
+    if suf == ".pptx":
+        try:                                  # 1005: 智库课件pptx是肉
+            import zipfile
+            with zipfile.ZipFile(str(p)) as z:
+                parts = sorted(n for n in z.namelist()
+                               if n.startswith("ppt/slides/slide")
+                               and n.endswith(".xml"))
+                xml = " ".join(z.read(n).decode("utf-8", errors="ignore")
+                               for n in parts)
+            return re.sub(r"<[^>]+>", " ", xml)
+        except Exception:
+            return ""
     for enc in ("utf-8", "gbk", "utf-16"):
         try:
             return p.read_text(encoding=enc, errors="ignore")
@@ -106,7 +143,10 @@ def judge_heuristic(text: str, kws: list[str]) -> tuple[str, str]:
     if not kws:
         return "pending", "no_campaign_kws"   # 无判据=不计数 (fail-soft)
     body = text[:8000]
-    if not any(k in head or k in body or k in text[:8000] for k in kws):
+    # 1005 全文窗口: 长 PDF 前置封面/目录/版权页吃掉 8000 字窗口,
+    # 《中建四局EPC全景洞察》59万字核心弹药被误杀实锤 — 全量扫 (in 是
+    # C 级子串搜索, 5万字×19词 ~1ms); 语义兜底见战役腿 semantic_rescue.
+    if not any(k in text for k in kws):
         return "rejected", "off_topic"
     return "valid", "kw_hit+substance_ok"
 
@@ -145,6 +185,97 @@ def _manifest_keys(d: Path) -> set[str]:
             p.read_text(encoding="utf-8").splitlines() if x.strip()}
 
 
+LOCK_STALE_S = 1800          # 锁属主 30min 无进展 = 僵尸, 允许接管
+
+
+@contextlib.contextmanager
+def _pool_lock(d: Path, timeout: float = 600.0):
+    """跨进程池锁 (O_EXCL, 与全站 tasklist+O_EXCL 范式同源).
+
+    1004 事故根治: 白天入账班 (慢 PDF 抽字, 持旧基线数小时) 与夜腿
+    judge 并发写 pool_state → 后写者覆盖先写者 (kw2 +30.2万字账目
+    回退实锤). ingest/judge 的 load→mutate→save 临界区全部串行化;
+    僵尸锁 (属主崩死) 按 mtime 年龄接管, 不死等.
+    """
+    lock = d / "pool.lock"
+    d.mkdir(parents=True, exist_ok=True)
+    t0 = time.time()
+    while True:
+        try:
+            fd = os.open(str(lock), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+            os.write(fd, f"{os.getpid()} {time.strftime('%m-%d %H:%M:%S')}"
+                     .encode("ascii"))
+            os.close(fd)
+            break
+        except FileExistsError:
+            try:
+                age = time.time() - lock.stat().st_mtime
+            except OSError:
+                age = 0.0
+            if age > LOCK_STALE_S:
+                print(f"[pool-lock] 僵尸锁 {age / 60:.0f}min, 接管",
+                      flush=True)
+                lock.unlink(missing_ok=True)
+                continue
+            if time.time() - t0 > timeout:
+                raise TimeoutError("pool lock 等待超时 (600s)")
+            time.sleep(2)
+    try:
+        yield
+    finally:
+        lock.unlink(missing_ok=True)
+
+
+def rebuild(cid: str) -> int:
+    """pool_state 从 manifest 全量重算 (manifest = 唯一真源).
+
+    manifest 是 append + 原子重写, 并发覆盖打不到它; pool_state 是
+    读改写, 任何历史覆盖/手工误改都能在这里自愈. 门槛账三桶
+    (valid/pending/rejected) 与 by_engine/domains 全部按行重算.
+    """
+    d = _camp_dir(cid)
+    mp = d / "manifest.jsonl"
+    if not mp.is_file():
+        print(f"[pool] 无 manifest: {cid}", file=sys.stderr)
+        return 1
+    with _pool_lock(d):
+        rows = [json.loads(x) for x in
+                mp.read_text(encoding="utf-8").splitlines() if x.strip()]
+        s = _load_state(d)
+        by_eng: dict = {}
+        doms: list = []
+        tot = pen = rej = 0
+        it = pit = rit = 0
+        for r in rows:
+            ch, j = r.get("chars", 0), r.get("judge", "pending")
+            if j == "valid":
+                tot += ch
+                it += 1
+                e = r.get("engine", "?")
+                by_eng[e] = by_eng.get(e, 0) + ch
+                host = (urlsplit(r["url_norm"]).netloc
+                        if r.get("url_norm")
+                        else Path(r["source_path"]).stem)
+                if host and host not in doms:
+                    doms.append(host)
+            elif j == "rejected":
+                rej += ch
+                rit += 1
+            else:
+                pen += ch
+                pit += 1
+        ns = {**s, "total_chars": tot, "items": it,
+              "pending_chars": pen, "pending_items": pit,
+              "rejected_chars": rej, "rejected_items": rit,
+              "by_engine": by_eng, "domains": doms[:2000],
+              "last_rebuild": time.strftime("%Y-%m-%d %H:%M")}
+        _save_state(d, ns)
+    print(f"[rebuild] manifest {len(rows)} 条 → 有效 {tot:,}字/{it}件 | "
+          f"待审 {pen:,}字/{pit}件 | 废弃 {rej:,}字/{rit}件 | "
+          f"引擎 {len(by_eng)} 个")
+    return 0
+
+
 def ingest(cid: str, file: str, engine: str, url: str = "",
            cred: str = "unknown", tree: str = "",
            stance: str = "support") -> int:
@@ -160,26 +291,34 @@ def ingest(cid: str, file: str, engine: str, url: str = "",
     if not fp.is_file():
         print(f"[pool] 文件不存在: {file}", file=sys.stderr)
         return 1
+    # 1004 快路: 路径已入池直接跳 — 免得入账班每次重跑都把全部
+    # PDF 重新抽字一遍 (119 件标准 PDF ~10min 纯浪费).
+    mp = d / "manifest.jsonl"
+    if mp.is_file() and any(
+            json.loads(x).get("source_path") == str(fp)
+            for x in mp.read_text(encoding="utf-8").splitlines() if x.strip()):
+        return 0
     text = read_text_safe(fp)
     if len(text) < 50:
         print(f"[pool] 跳过 (太短): {fp.name}")
         return 0
     key = dedup_key(url or None, text)
-    if key in _manifest_keys(d):
-        print(f"[pool] 跳过 (重复): {fp.name}")
-        return 0
-    ch = count_chars(text)
-    row = {"ts": time.strftime("%Y-%m-%dT%H:%M:%S"), "engine": engine,
-           "source_path": str(fp), "url_norm": norm_url(url) if url else "",
-           "chars": ch, "credibility": cred, "dedup_key": key,
-           "judge": "pending", "judge_reason": "", "judge_engine": "",
-           "tree_node": tree, "stance": stance}
-    with (d / "manifest.jsonl").open("a", encoding="utf-8") as f:
-        f.write(json.dumps(row, ensure_ascii=False) + "\n")
-    s = _load_state(d)
-    ns = {**s, "pending_chars": s.get("pending_chars", 0) + ch,
-          "pending_items": s.get("pending_items", 0) + 1}
-    _save_state(d, ns)
+    with _pool_lock(d):
+        if key in _manifest_keys(d):
+            print(f"[pool] 跳过 (重复): {fp.name}")
+            return 0
+        ch = count_chars(text)
+        row = {"ts": time.strftime("%Y-%m-%dT%H:%M:%S"), "engine": engine,
+               "source_path": str(fp), "url_norm": norm_url(url) if url else "",
+               "chars": ch, "credibility": cred, "dedup_key": key,
+               "judge": "pending", "judge_reason": "", "judge_engine": "",
+               "tree_node": tree, "stance": stance}
+        with (d / "manifest.jsonl").open("a", encoding="utf-8") as f:
+            f.write(json.dumps(row, ensure_ascii=False) + "\n")
+        s = _load_state(d)
+        ns = {**s, "pending_chars": s.get("pending_chars", 0) + ch,
+              "pending_items": s.get("pending_items", 0) + 1}
+        _save_state(d, ns)
     print(f"[pool] +待审 {ch:>7,}字 {fp.name[:36]:<36} "
           f"待审判有效后计数 (现待审 {ns['pending_chars']:,})")
     return 0
@@ -187,12 +326,18 @@ def ingest(cid: str, file: str, engine: str, url: str = "",
 
 def judge(cid: str, limit: int = 500) -> int:
     """有效性判断: pending -> valid (入门槛账) / rejected (审计废弃).
-    判据随行写入 manifest; 文件丢失/无课题关键词 -> 保持 pending 不计数."""
+    判据随行写入 manifest; 文件丢失/无课题关键词 -> 保持 pending 不计数.
+    1004: 全程持池锁 (并发写覆盖根治)."""
     d = _camp_dir(cid)
     mp = d / "manifest.jsonl"
     if not mp.is_file():
         print(f"[pool] 无 manifest: {cid}", file=sys.stderr)
         return 1
+    with _pool_lock(d):
+        return _judge_locked(d, mp, limit)
+
+
+def _judge_locked(d: Path, mp: Path, limit: int) -> int:
     s = _load_state(d)
     kws = s.get("kws", [])
     if not kws:
@@ -246,7 +391,7 @@ def judge(cid: str, limit: int = 500) -> int:
     print(f"\n[判断] 启发式@课题关键词({len(kws)}): 有效 {n_valid} 入门槛账 | "
           f"废弃 {n_rej} | 留审 {n_keep} (文件缺失)")
     print(f"[门槛账] 有效弹药 {s['total_chars']:,} 字 "
-          f"({100 * s['total_chars'] / AMMO_GATE_CHARS:.1f}% of 1000万) | "
+          f"({100 * s['total_chars'] / AMMO_GATE_CHARS:.2f}% of 2亿) | "
           f"待审 {s['pending_chars']:,} 字 | 废弃 {s.get('rejected_chars', 0):,} 字")
     return 0
 
@@ -381,7 +526,7 @@ def status(cid: str) -> int:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="弹药池 (千万字弹药工程 F-2)")
-    ap.add_argument("cmd", choices=["init", "ingest", "judge",
+    ap.add_argument("cmd", choices=["init", "ingest", "judge", "rebuild",
                                     "stocktake", "coverage", "status"])
     ap.add_argument("cid", help="campaign_id (如 EPC100-2026Q4)")
     ap.add_argument("--kw", default="", help="课题关键词 (init 配置判断判据)")
@@ -413,6 +558,8 @@ def main() -> int:
                           args.cred, args.tree, args.stance)
         elif args.cmd == "judge":
             return judge(args.cid, args.limit)
+        elif args.cmd == "rebuild":
+            return rebuild(args.cid)
         elif args.cmd == "coverage":
             return coverage(args.cid)
         elif args.cmd == "stocktake":
