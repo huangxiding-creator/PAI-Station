@@ -43,4 +43,5 @@
 
 - [ ] 扫码完成 → whoami 实证 + 转存/列目录首腿实测 → 回填本账
 - [ ] QUARK-1 官方 OAuth 二期工单 (open-api-drive.quark.cn)
-- [ ] conductor 排程签到保活腿 (drive-m sign)
+- [x] 签到保活腿 (1005 落地): `quark_pan/keepalive.py` + schtask `PAIStation-quark-keepalive` 日 09:23 (pythonw 零弹窗, 未授权态退出 0 自动哑跑, 授权后自动生效; 账本 `data/quark/keepalive_log.jsonl`)。原 conductor 工单改判: conductor 为一次性队列非常驻排程, 按持久执行宪法走 OS 级 schtasks
+- 测试 11 条 (9+2 保活), 全套件 326 passed
