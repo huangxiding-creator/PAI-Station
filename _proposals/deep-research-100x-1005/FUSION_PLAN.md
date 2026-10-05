@@ -24,9 +24,9 @@
 - **接线位**：渠道收割件 URL 池过滤入口（pansou/opencli/search_library 共用）。
 - **验收**：单测——单页 DNS 失败→同 host 全清；TTL 过期后放行。
 
-## P1 — 近期工单（登记进 conductor 工单簿，独立会话实施）
+## P1 — 近期工单（登记进 conductor 工单簿，独立会话实施）✅ 1005 全部实施
 
-### FT-3 执行回执账本（RQS 第 22 门的地基）
+### FT-3 执行回执账本（RQS 第 22 门的地基）✅ 已实施
 - **内容**：渠道腿/Jev 腿完成协议加 receipt 字段——cmd 哈希+产出文件
   sha256+行数；RQS 新增回执门（与 own_calculations 并列）。
 - ✏ **审计修正**（DeerFlow lane）：L1 形态是 cmd 哈希+产出文件 sha256，
@@ -34,46 +34,47 @@
 - **对标**：DeerFlow#0 三层验证栈。
 - **验收**：Jev 腿自报「confirmed」无对应回执→门标 UNVERIFIED。
 
-### FT-4 辛迪加转载检测（饱和门独立性升级）
+### FT-4 辛迪加转载检测（饱和门独立性升级）✅ 已实施
 - **内容**：同文检测进 coverage——标题 8-gram 相似+首段 MinHash，跨 host
   命中→标 syndicate_group，同组只算 1 独立源。
 - **对标**：hyperresearch#2（5 份通稿=1 票）。
 - **验收**：构造 3 站转载组，饱和门独立源计数=1。
 
-### FT-5 中文信源权威度数值分层
+### FT-5 中文信源权威度数值分层 ✅ 已实施
 - **内容**：权威度分（部委/官方 9-10，行业协会/官媒 7-8，门户 5，自媒体 3，
   匿名论坛 1-2）进信源资产库字段；GRADE 与权威度正交（A 级官方文件也可能
   是低权威自媒体转载——两维都记）。
 - **对标**：LDR#1 四级打分（中文生态无 OpenAlex，规则分层替代）。
 - **验收**：弹药池 manifest 新增 authority 字段，抽 50 条人工核对≥90% 正确。
 
-### FT-6 实体覆盖账本（检索穷举可证明）
+### FT-6 实体覆盖账本（检索穷举可证明）✅ 已实施
 - **内容**：EEI 展开时记实体类型×已搜组合矩阵；轮末程序化回填未搜组合；
   连续零结果→「减约束词」指令。
 - **对标**：LDR#0（SimpleQA 96.51% 机制）。
 - **验收**：模拟 5 实体课题，回填腿生成的组合零重复、覆盖矩阵无白格。
 
-### FT-7 新鲜度分级表
+### FT-7 新鲜度分级表 ✅ 已实施
 - **内容**：30+ 行领域→max_age_days 映射表进 lint 规则或 rqs_v3；
   V3-VERF 升级——数字句带 days_ago>领域阈值→warn。
 - **对标**：node-DeepResearch#2。
 - **验收**：金融数据句用 13 个月前来源→命中；静态事实句不命中。
 
-### FT-8 quote 逐字对撞门（引用完整性第二阶段）
+### FT-8 quote 逐字对撞门（引用完整性第二阶段）✅ 已实施
 - **内容**：正文引号 span 对源文快照做归一化对撞（标点/空白折叠后），
   失配→warn；撤稿源（blocklist 命中）→error。
 - **对标**：hyperresearch#1。
 - **前置**：存档快照腿（METHODOLOGY 三.2）先行——对撞需要锚定版本。
 - **验收**：构造改写失真引文→命中；逐字引用→不命中。
 
-### FT-9 外部技能入仓扫描门
+### FT-9 外部技能入仓扫描门 ✅ 已实施
 - **内容**：github-to-skill / SuperSkillWeekly 激活前跑确定性扫描——
   frontmatter 结构/禁 eval|exec|os.system/出站域名白名单/curl|bash 检测；
-  内容哈希增量缓存。
+  内容哈希增量缓存。**接线实况**：SuperSkillWeekly stage_s1 技能审计环已接
+  （fail-soft，zh-search-pro 实弹 2 文件 5 MEDIUM 零 HIGH）。
 - **对标**：scientific#2/#3 + DeerFlow SkillScan。
 - **验收**：构造带 curl|bash 的恶意 skill 样本→拦截；干净 skill→零误报。
 
-### FT-10 子进程环境洗刷
+### FT-10 子进程环境洗刷 ✅ 已实施
 - **内容**：`utils/run_scrubbed.py` 公共封装——subprocess 前洗刷
   *KEY*/*SECRET*/*TOKEN*/*PASS*，良性变量（PATH/HOME/LANG）保留。
 - **对标**：DeerFlow env_policy。
@@ -81,7 +82,7 @@
 
 ## P2 — 背板（择机）
 
-### FT-11 RRF 跨源融合候选池
+### FT-11 RRF 跨源融合候选池 ✅ 已实施（从 P2 提前）
 - **内容**：fusion_station——渠道收割件→URL 规范化→加权 RRF（subquery_
   weight×source_weight/(60+rank)）→富集保全去重→provenance 链。
 - **对标**：last30days#0。
@@ -136,5 +137,6 @@
 - [x] BEST_PRACTICES / GAP_REPORT / FUSION_PLAN 三件套
 - [x] report-helper F1-F6 融合（先行交付）
 - [x] P0 两件实施+测试
-- [ ] P1 九件进工单簿
+- [x] P1 九件实施（FT-3~FT-11 全落地+实弹接线）
+- [x] 对抗审计轮（5 维 38 agent → 33 confirmed 修复）
 - [ ] 全案推送+备份

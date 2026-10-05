@@ -13,6 +13,8 @@
 | 1005 午 | **第二波蒸馏收官**: 28 agents/824 tools/220万tok/22min → 20源 187优点 (82h/84m/21l) + 8审计lane (3处修正: DeerFlow回执形态改写/prompt缓存降级/last30days实体接地禁硬门); 判级 8 must_fuse/12 worth_fusing |
 | 1005 午 | **三件套落盘**: BEST_PRACTICES (66条主题化) / GAP_REPORT (十缺口, 强在骨架弱在防自欺最后一公里) / FUSION_PLAN (FT-1~15+审计台账) |
 | 1005 午 | **P0 实施**: FT-1 lib/untrusted.py (围栏+defang, anysearch extract 出口实弹接线✓) + FT-2 collectors/net_hygiene.py (坏主机连坐/TTL 6h); 测试 +12, EPC100 全量 **357 passed** |
+| 1005 晚 | **P1 九件全实施** (用户令「下一批的活全部开始完成」): Workflow 6 并行军团 (FT-4/5/6/9/10/11) + 主线串行 FT-3/7/8 (同文件 rqs_v3_gates.py 十一门→**十四门**: +V3-RCPT 回执门/V3-FRESH 六域新鲜度/V3-QUOTE 引文对撞); FT-3 实弹接线 anysearch verify 腿; FT-9 接线 SuperSkillWeekly stage_s1 (zh-search-pro 实弹 5 MEDIUM 零 HIGH); 三域测试 EPC100 **405**/reforge 16/tools 7 全绿 |
+| 1005 晚 | **对抗审计轮**: 5 维 38 agent → **33 confirmed 0 rejected** (三高危: FT-4 生产空转-ingest 不落 text_head/skill_scan 缓存 fail-open-同字节 README 与 SKILL.md 互吞/fusion 地板量纲失衡-40 碾压 0.164) + 修复军团 5 组并行; 教训=测试全绿≠接线真活, 跨文件契约要集成测试锚 |
 
 ## 第一波关键发现 (sweep1_result.json, 208 池)
 

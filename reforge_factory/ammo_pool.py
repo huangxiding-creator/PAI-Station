@@ -38,6 +38,20 @@ import time
 from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit, parse_qsl
 
+try:                                    # FT-4 辛迪加折叠 (fail-soft)
+    from syndicate import effective_hosts
+except Exception:                       # 缺件不拖垮弹药池, 退回 raw hosts
+    effective_hosts = None
+
+try:                                    # FT-5 信源权威度接线 (fail-soft)
+    sys.path.insert(0, str(             # RF-Eng collectors 表在位则借规则
+        Path(__file__).resolve().parents[1] / "ResearchFactory-Eng"
+        / "EPC100" / "collectors"))
+    from source_authority import authority, grade_authority
+except Exception:                       # 缺件=行缺权威度两键, 不拖垮入池
+    authority = None
+    grade_authority = None
+
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 STATION = Path(r"E:\AI-Station")
@@ -282,7 +296,9 @@ def ingest(cid: str, file: str, engine: str, url: str = "",
     """单条入池: URL 归一 + 去重 + source_engine 标记 + 挂树 (G3).
     入池即 pending, **不计门槛账** — 判有效 (judge) 才计数 (用户铁律).
     tree=EEI id (question_tree.json, 如 Q1-E2); stance=support/against/
-    contradict (对竞争假设的立场 — ACH 对抗场原料)."""
+    contradict (对竞争假设的立场 — ACH 对抗场原料).
+    行落 text_head[:500] (FT-4 辛迪加折叠比对原料 — 缺字段折叠空转) 与
+    authority_score/authority_grade 两键 (FT-5 权威度维, import 缺件时缺键)."""
     d = _camp_dir(cid)
     if not d.is_dir():
         print(f"[pool] 战役池不存在, 先 init {cid}", file=sys.stderr)
@@ -312,7 +328,12 @@ def ingest(cid: str, file: str, engine: str, url: str = "",
                "source_path": str(fp), "url_norm": norm_url(url) if url else "",
                "chars": ch, "credibility": cred, "dedup_key": key,
                "judge": "pending", "judge_reason": "", "judge_engine": "",
-               "tree_node": tree, "stance": stance}
+               "tree_node": tree, "stance": stance,
+               "text_head": text[:500]}   # FT-4: 缺此键辛迪加折叠恒空转
+        if authority is not None:         # FT-5: 权威度两键 (缺件缺键不炸)
+            score = int(authority(url or str(fp)).get("score", 3))
+            row = {**row, "authority_score": score,   # 未分级默认 3 诚实降档
+                   "authority_grade": grade_authority(score)}
         with (d / "manifest.jsonl").open("a", encoding="utf-8") as f:
             f.write(json.dumps(row, ensure_ascii=False) + "\n")
         s = _load_state(d)
@@ -457,6 +478,7 @@ def coverage(cid: str) -> int:
         if r.get("tree_node"):
             by_eei.setdefault(r["tree_node"], []).append(r)
     n_sat = n_gap = 0
+    n_syn = 0                                   # FT-4: 折叠掉的辛迪加组数
     print(f"\n╔═ 覆盖度仪表 (饱和门) ═ {cid} ═ {tree['topic']}")
     for q in tree["subquestions"]:
         eei_flags = []
@@ -464,6 +486,10 @@ def coverage(cid: str) -> int:
             ev = by_eei.get(e["id"], [])
             hosts = {(urlsplit(r["url_norm"]).netloc or
                       Path(r["source_path"]).stem) for r in ev}
+            if effective_hosts is not None:      # FT-4: 同文多站 = 1 票
+                eff = effective_hosts(ev)        # 缺 text_head 的行原样参与
+                n_syn += sum(1 for h in eff if str(h).startswith("syn-"))
+                hosts = eff
             if len(ev) >= 2 and len(hosts) >= 2:
                 e["status"], flag = "saturated", "✓"
                 n_sat += 1
@@ -484,12 +510,14 @@ def coverage(cid: str) -> int:
     sat_pct = 100 * n_sat / max(1, total_eei)
     tree["coverage"] = {"eei_total": total_eei, "saturated": n_sat,
                         "gap": n_gap, "sat_pct": round(sat_pct, 1),
+                        "syndicate_groups": n_syn,
                         "checked": time.strftime("%Y-%m-%d %H:%M")}
     tp.write_text(json.dumps(tree, ensure_ascii=False, indent=1),
                   encoding="utf-8")
     print(f"║")
     print(f"║ 饱和度: {n_sat}/{total_eei} EEI ({sat_pct:.1f}%) | "
           f"缺口 {n_gap} 个 → 下轮定向采集任务源")
+    print(f"║ 辛迪加折叠: {n_syn} 组 (同文多站 = 1 票, 通稿不冒充共识)")
     print(f"║ 报告准入: 字数门 "
           f"({'✅' if json.loads((d / 'pool_state.json').read_text(encoding='utf-8'))['total_chars'] >= AMMO_GATE_CHARS else '⏳ 未过'}) "
           f"∧ 饱和门 ({'✅' if sat_pct >= 80 else f'⏳ {sat_pct:.0f}%<80%'}) "
