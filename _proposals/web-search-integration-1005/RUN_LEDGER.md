@@ -58,10 +58,18 @@
 
 SEARCH-1 SearXNG 自托管 JSON 网关 · SEARCH-2 ref://短token+预算裁剪 · SEARCH-3 本地结果缓存 · SEARCH-4 CSS schema 解析器 · SEARCH-5 learnings→E-OSCAR。优先级排在渠道额度最大化令之后, 按 conductor 节奏排期。
 
-## 验证轮
+## 验证轮 (终态)
 
-- 轮1 (旧码, api 直连限额): 进行中, repo 全 live 属预期
-- 轮2 (补 gh-proxy api 镜像腿后全量重跑): 杜绝跑旧代码铁律, 产出最终 verified/live 分布 → `EPC100/data/search_verify/verify_report.json`
+- 轮1 (旧码, api 直连 60/h 限额): 46 verified / 47 live / 10 registered / 8 unreachable / 8 existing
+- 轮2 (gh-proxy api 镜像腿新码, 104 repo 项增量重跑, 只_ids 合并): **88 verified / 5 live / 15 registered / 3 unreachable / 8 existing**
+- 定点补测 3 项 (topics 页 ptype 修正 site / searx.space 服务面重试): 终态
+  **88 verified / 7 live / 1 unreachable / 15 registered / 8 existing = 119**
+- 镜像腿净转化: 42 项 live→verified; key_required 5 项文档面复测转 registered
+- 唯一 unreachable: `searx_space__searx_space` (searx.space 站点 CN 侧不可达; 其实例目录功能由 github 仓腿 live 兜底)
+- live 7 项全部可解释: gitlab/codeberg 锻造场 3 项 (repo 验证梯 github 专用→单腿 live 属设计) + topics 发现页 + searx-space 仓面 + jina_reader/openverse 单腿
+- star top5 实拉: awesome-selfhosted 323.9k / firecrawl 188.6k / markitdown 188.4k / open-webui 153.9k / browser-use 117.1k
+- 注册表修正一轮: `github.com/topics/search-engine` 误标 repo ptype (api.github.com/repos/topics/... 必 404) → 改 site 探活, gen 脚本重生成 (119 不变)
+- 报告: `EPC100/data/search_verify/verify_report.json` (gitignore 内运行时态, 不入库)
 
 ## 纪律遵守
 

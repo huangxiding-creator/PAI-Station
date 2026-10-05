@@ -126,7 +126,7 @@ MAP = {
     "github.com/edoardottt/awesome-hacker-search-engines": ("awesome_list", 0, {}),
     "github.com/punkpeye/awesome-mcp-servers": ("awesome_list", 0, {}),
     "github.com/awesome-selfhosted/awesome-selfhosted": ("awesome_list", 0, {"note": "search engines 分类段"}),
-    "github.com/topics/search-engine": ("awesome_list", 0, {}),
+    "github.com/topics/search-engine": ("awesome_list", 0, {"ptype": "site", "note": "topics 发现页非仓库 — repo 验证器打 /repos/ 必404, 走 site 探活"}),
     "searx.space": ("awesome_list", 0, {"ptype": "service"}),
     # ---- langchain 社区件 (watchlist 破例收: 统一搜索工具面事实标准)
     "github.com/langchain-ai/langchain-community": ("api_wrapper", 0, {"note": "统一 SearchTools 抽象层 (多引擎适配事实标准)"}),
