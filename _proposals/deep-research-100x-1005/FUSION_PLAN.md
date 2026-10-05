@@ -139,4 +139,4 @@
 - [x] P0 两件实施+测试
 - [x] P1 九件实施（FT-3~FT-11 全落地+实弹接线）
 - [x] 对抗审计轮（5 维 38 agent → 33 confirmed 修复）
-- [ ] 全案推送+备份
+- [x] 全案推送+备份（AI-Station 7e6647d / RF-Eng 5094d2c / Super-Skill 118fb57 三仓 ls-remote==HEAD 实证；百度增量 bundle 三份全上传 1005）

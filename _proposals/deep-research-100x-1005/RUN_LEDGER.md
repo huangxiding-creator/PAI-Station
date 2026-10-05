@@ -15,6 +15,7 @@
 | 1005 午 | **P0 实施**: FT-1 lib/untrusted.py (围栏+defang, anysearch extract 出口实弹接线✓) + FT-2 collectors/net_hygiene.py (坏主机连坐/TTL 6h); 测试 +12, EPC100 全量 **357 passed** |
 | 1005 晚 | **P1 九件全实施** (用户令「下一批的活全部开始完成」): Workflow 6 并行军团 (FT-4/5/6/9/10/11) + 主线串行 FT-3/7/8 (同文件 rqs_v3_gates.py 十一门→**十四门**: +V3-RCPT 回执门/V3-FRESH 六域新鲜度/V3-QUOTE 引文对撞); FT-3 实弹接线 anysearch verify 腿; FT-9 接线 SuperSkillWeekly stage_s1 (zh-search-pro 实弹 5 MEDIUM 零 HIGH); 三域测试 EPC100 **405**/reforge 16/tools 7 全绿 |
 | 1005 晚 | **对抗审计轮**: 5 维 38 agent → **33 confirmed 0 rejected** (三高危: FT-4 生产空转-ingest 不落 text_head/skill_scan 缓存 fail-open-同字节 README 与 SKILL.md 互吞/fusion 地板量纲失衡-40 碾压 0.164) + 修复军团 5 组并行; 教训=测试全绿≠接线真活, 跨文件契约要集成测试锚 |
+| 1005 晚 | **33修全绿+全案交付**: 终回归 EPC100 **432**/reforge **20**/tools **19**; 双仓提交推送 AI-Station **7e6647d** (辛迪加+实体覆盖+skill_scan v2+allowlist 迁 tools/ 平级避 data/ 通配 ignore) / RF-Eng **5094d2c** (RQS 十四门+回执+对撞+权威度+融合池+env洗刷) ls-remote==HEAD 双实证; **Super-Skill 双胞胎坑** (github 3b924bc=gitee 线 V4.1.16 同容异 SHA) rebase 对齐 → **118fb57** 三端齐 (github+gitee+07任务运行时副本, schtasks 实跑路径确认); 百度 bundle 三份全上传 |
 
 ## 第一波关键发现 (sweep1_result.json, 208 池)
 
