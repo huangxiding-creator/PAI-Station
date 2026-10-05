@@ -9,6 +9,10 @@
 | 1005 午 | 令3 report-helper 克隆+首读 (关卡制流水线/体裁路由/引用规则/gotchas 沉淀, 2224行) |
 | 1005 午 | 第二波 Workflow wf_c23838d5: 20顶级源深度蒸馏+8条high级对抗审计 (跑中) |
 | 1005 午 | **report-helper 融合 F1-F6 全落位**: F5 lint_rules +18 条禁套话 (11→29, 负例7中) / F1 rqs_v3 两新门 V3-CITE+V3-QUANT (九门→十一门, 33 passed) / F2-F4 METHODOLOGY.md 第四节 (范围对齐六栏卡/单一来源强制补搜/公司定量四件) / F6 reforge_factory/factory_gotchas.md 开账 (G-001~G-004); EPC100 全量 345 passed |
+| 1005 午 | **推送+备份**: RF-Eng 41ec85f (rqs 两门+lint 纳管) / AI-Station 2f85a5a (案卷+METHODOLOGY 第四节+gotchas); ls-remote==HEAD 双验 ✓; 百度 5/5 (两增量 bundle) |
+| 1005 午 | **第二波蒸馏收官**: 28 agents/824 tools/220万tok/22min → 20源 187优点 (82h/84m/21l) + 8审计lane (3处修正: DeerFlow回执形态改写/prompt缓存降级/last30days实体接地禁硬门); 判级 8 must_fuse/12 worth_fusing |
+| 1005 午 | **三件套落盘**: BEST_PRACTICES (66条主题化) / GAP_REPORT (十缺口, 强在骨架弱在防自欺最后一公里) / FUSION_PLAN (FT-1~15+审计台账) |
+| 1005 午 | **P0 实施**: FT-1 lib/untrusted.py (围栏+defang, anysearch extract 出口实弹接线✓) + FT-2 collectors/net_hygiene.py (坏主机连坐/TTL 6h); 测试 +12, EPC100 全量 **357 passed** |
 
 ## 第一波关键发现 (sweep1_result.json, 208 池)
 

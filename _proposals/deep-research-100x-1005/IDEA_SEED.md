@@ -19,11 +19,11 @@
 
 - [x] 扫荡 ≥100 唯一候选 (第一波 272 raw / 208 unique ✓)
 - [x] anysearch 整合为第 28 渠道 (live 实证, 337 tests)
-- [x] report-helper 优点蒸馏+融合 (F1-F6 全落位: F1 V3-CITE 门+F5 lint 18 条机检化 / F2-F4 METHODOLOGY 第四节 / F6 factory_gotchas.md; EPC100 345 passed)
-- [ ] top 源优点全学清楚 (第二波 20 源深蒸馏)
-- [ ] 对抗审计防编造 (证据核实+增量诚实性)
-- [ ] BEST_PRACTICES + GAP_REPORT + FUSION_PLAN 三件套
-- [ ] 融合实施 (代码/渠道/方法论落位) + 测试 + 推送
+- [x] report-helper 优点蒸馏+融合 (F1-F6 全落位: F1 V3-CITE 门+F5 lint 18 条机检化 / F2-F4 METHODOLOGY 第四节 / F6 factory_gotchas.md)
+- [x] top 源优点全学清楚 (第二波 20 源深蒸馏: 187 优点, 82 high 主题化重组)
+- [x] 对抗审计防编造 (8 lane: 证据核实+增量诚实性, 3 处修正落 FUSION_PLAN 台账)
+- [x] BEST_PRACTICES + GAP_REPORT + FUSION_PLAN 三件套
+- [x] 融合实施 (P0 两件: untrusted 围栏+坏主机连坐, +12 tests → **357 passed**) + 推送
 
 ## 执行框架
 
