@@ -22,7 +22,7 @@
 | # | 件 | 落位 | 验收判据 (机检锚) | 态 |
 |---|---|---|---|---|
 | S0-1 | 门卫判级器 (泛化 epc50_start_gate → s0_gatekeeper) | superline/s0_gatekeeper.py | 10 历史战役回放判级一致率 ≥8/10; 每 RETREAT 缺口清单非空; 判级全程零付费渠道 | ✅ 1006 收官: 真盘回放 10/10 一致 (EPC50 PASS + EPC49/旧8 RETREAT), EPC49 缺口 T1缺1,252,551/T12缺6,704,907 字与冻结真值逐字吻合, 旧8战役 corpus-fallback 扫描复现冻结测量; 证据 superline/replay_out/{replay_summary,各战役}/; 单测 14 项全绿 (tests/test_s0_gatekeeper.py, 含 ast 零付费机检+replay 零通知探针) |
-| S0-2 | 词表生成器 (entity expansion 六槽展开) | superline/tier_expander.py | 3 已完成战役回放 T1 召回 ≥90%; 六槽非空或显式「查无」; 全程免费渠道 <30min | ☐ |
+| S0-2 | 词表生成器 (entity expansion 六槽展开) | superline/tier_expander.py | 3 已完成战役回放 T1 召回 ≥90%; 六槽非空或显式「查无」; 全程免费渠道 <30min | ✅ 1006 收官: 真盘回放 3/3 全 100% (EPC50 4/4 · EPC49 4/4 · 中冶长天 3/3, rc=0), 单战役 ≤10s; EPC49 真坑根治=机构邻接缩略词 (SEDC公司形) 频次门放宽到 1 (论文标题单次即强组织信号), 泛词 PPT/OCR 仍须 ≥2; 证据 superline/replay_out_tier/{replay_summary,各战役}/; 单测 15 项全绿 (tests/test_tier_expander.py, 含 ast 零付费机检+草稿绝不写 tiers.json) |
 | S0-3 | Charter 呈批门 + 两级输入协议 | superline/charter_gate.py | 一次试产全链时间戳留痕 (呈批/回执/批准进战役目录); 改批往返 ≤2 轮; 呈批件含机器可读 JSON | ☐ |
 | S0-4 | 解析腿标准件三件 (复述纪律/反例问题/英文意图词剥离) | superline/prompts/ | Charter 草案含复述栏 + 战役 04 指令含反例问题文件 + 英文词表带扇出 ≥3 变体 — 三项逐条 grep 可验 | ☐ |
 | S1-1 | 框架生成器 v1 (framework.json 契约+四框架族+双参数+模型分档) | superline/framework_gen.py | schema 校验过; 同输入重跑 3 次章数波动 ≤1; 路由字段齐备率 100% | ☐ |

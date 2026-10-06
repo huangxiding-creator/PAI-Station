@@ -1,0 +1,40 @@
+{
+  "schema": "tier_replay_manifest_v1",
+  "frozen": "2026-10-06",
+  "note": "ground_truth.t1 = 该战役实际定稿 T1 词 (判定源=ammo_pool/<cid>/tiers.json 定稿 或 research_config+语料实证, 非模型自评). 词表生成器回放离线确定性: 只走规则链+存量扫描, 绝不触检索腿. bar: 每战役 T1 召回 ≥90%; 六槽非空或显式查无; 全程免费渠道; 单战役 <30min.",
+  "bar": {
+    "min_recall": 0.9
+  },
+  "battles": [
+    {
+      "battle": "EPC50-SNEI",
+      "title": "中石化南京工程有限公司怎么干EPC总承包？",
+      "battle_dir": "E:/AI-Station/ResearchFactory-Eng/ResearchTopics/《中石化南京工程有限公司怎么干EPC总承包？》",
+      "pool": "EPC50-SNEI",
+      "ground_truth": {
+        "t1": ["中石化南京工程", "南京工程有限公司", "SNEI", "中石化南京"],
+        "source": "ammo_pool/EPC50-SNEI/tiers.json 定稿 T1 (2026-10-06 读盘). SNEI 依赖池 manifest 存量 (缩略词频次门), 其余三词规则链覆盖."
+      }
+    },
+    {
+      "battle": "EPC49-SEPDC",
+      "title": "四川电力设计咨询有限责任公司怎么干EPC总承包？",
+      "battle_dir": "E:/AI-Station/ResearchFactory-Eng/ResearchTopics/《四川电力设计咨询有限责任公司怎么干EPC总承包？》",
+      "pool": "EPC49-SEPDC",
+      "ground_truth": {
+        "t1": ["四川电力设计咨询", "四川院", "中电建四川院", "SEDC"],
+        "source": "ammo_pool/EPC49-SEPDC/tiers.json 定稿 T1 (2026-10-06 读盘). 四川院×49/中电建四川院×3/SEDC×7 池 manifest 存量实证 (2026-10-06 grep)."
+      }
+    },
+    {
+      "battle": "中冶长天",
+      "title": "中冶长天国际工程有限责任公司怎么干EPC总承包？",
+      "battle_dir": "E:/AI-Station/ResearchFactory-Eng/ResearchTopics/《中冶长天国际工程有限责任公司怎么干EPC总承包？》",
+      "pool": "",
+      "ground_truth": {
+        "t1": ["中冶长天国际工程有限责任公司", "中冶长天国际工程", "中冶长天"],
+        "source": "research_config.json research_target+short_name + 02/04 语料 中冶长天×1065 (2026-10-06 冻结测量). 无池战役: 规则链三词全覆盖, 存量走战役目录."
+      }
+    }
+  ]
+}
