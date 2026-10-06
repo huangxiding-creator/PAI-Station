@@ -37,23 +37,39 @@ STATE = ROOT / "hold_state.json"
 USN_PAUSE = ROOT / "usn_watch_task.PAUSE"
 
 # 研究域进程指纹（正则，大小写不敏感）。红线排除: WeAIPO 全域 / CPOPC / clash。
+# 1006-10-06 扩: EPC49 夜班腿/裁判文书提取/ZBZK 微信收割/EngOpp 守卫/
+# reforge 工厂/conductor 探针看门狗/opencli 桥/bb-browser 级联/EPC49 池账本路径。
 PROC_PATTERN = (r"epc100|shunt_|corps_v3|epc50_collector|browser_minify|"
-                r"SouGouWeDown2|EngOpp-Mining")
-PROC_EXCLUDE = r"We-AIPO|CPOPC|clash"
+                r"SouGouWeDown2|EngOpp|reforge|conductor|rss_harvest|"
+                r"EPC49|epc49|wenshu|ZBZK|wxchannel|harvester|opencli|"
+                r"sogou|bb-browser|wxy_wave|pooljudge|registry_retry")
+PROC_EXCLUDE = r"We-AIPO|WeAIPO|CPOPC|clash"
 
-# 研究域 schtask 白名单（挂起目标; 23 个=0929 实战全集, 死信任务不列）。
+# 研究域 schtask 白名单（挂起目标; 1006-10-06 全集 41 个 = 0929 23 个
+# 调研收集子集 + 1004 夜班扩容腿。范围=「调研收集」, 蒸馏/简报/基建腿
+# (RQSv3_Distill/WeChatBriefDaily/LayaServerKeepalive/chat|signal-ingest/
+# fusion-refresh/night-report/test-suite) 1006 起移出本表不挂）。
 TASK_WHITELIST = [
-    "AutoManus-CorpsV3", "EngOppRetroDaily",
+    # --- 军团/挖掘 ---
+    "AutoManus-CorpsV3", "AutoManus-CorpsV3-Golden", "AutoManus-CorpsV3-PM",
+    "AutoManus-CorpsV3-Sentinel", "EngOppRetroDaily",
+    "EngOppBrowserGuard", "EngOppCrawlGuard",
+    "AnhuiSupervisor2", "JiangsuSupervisor2", "NJSupervisor2",
+    "ZBZK_WxHarvester",
+    # --- EPC100 工厂/分流/指挥台 (含复活器与看门狗) ---
     "EPC100-AlwaysOn-Keepalive", "EPC100-AlwaysOn-Logon", "EPC100-Shunt-AlwaysOn",
+    "PAIStation-ChannelConductor", "PAIStation-ConductorWatchdog",
+    "PAIStation-ChannelProbe", "PAIStation-rss-harvest",
+    # --- EPC50 腿 ---
     "PAIStation-EPC50-ImaTopup", "PAIStation-EPC50-R50-Resume",
     "PAIStation-EPC50-SougoNight", "PAIStation-EPC50-WereadNight",
     "PAIStation-EPC50-Yield1500", "PAIStation-EPC50-YieldGuard-Keeper",
-    "RQSv3_DistillFDrive",
-    "AnhuiSupervisor2", "JiangsuSupervisor2", "NJSupervisor2",
-    "LayaServerKeepalive", "PAIStation-ChannelConductor",
-    "PAIStation-chat-ingest", "PAIStation-fusion-refresh",
-    "PAIStation-night-report", "PAIStation-signal-ingest",
-    "PAIStation-test-suite", "PAIStation-rss-harvest", "WeChatBriefDaily",
+    # --- EPC49 夜班扩容 (1004 起 11 腿) + 裁判文书 ---
+    "EPC49-Kb-Night", "EPC49-Opencli-Night", "EPC49-PoolJudge-0040",
+    "EPC49-PoolJudge-2137", "EPC49-Registry-Retry",
+    "EPC49-Sougo-Kw1-1003", "EPC49-Sougo-Kw2", "EPC49-Sougo-Kw4",
+    "EPC49-SougoNight-0930", "EPC49-SougoNight-1001", "EPC49_wxy_wave2_retry",
+    "WenshuBT-Extract-EPC49",
 ]
 NO_WINDOW = 0x08000000  # CREATE_NO_WINDOW
 
