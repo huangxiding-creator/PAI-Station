@@ -18,8 +18,12 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from superline import charter_gate as cg          # noqa: E402
 from superline import contracts as C              # noqa: E402
+from superline import tier_expander as TE         # noqa: E402
 
 _TMP = Path(tempfile.mkdtemp(prefix="s03_test_"))
+# 池根隔离: 防 _prior_t2 扫真 ammo_pool 致夹具随真池漂移 (S0-4 同坑)
+TE.POOL_ROOT = _TMP / "ammo_pool"
+TE.POOL_ROOT.mkdir(parents=True, exist_ok=True)
 _T = "《中石化南京工程有限公司怎么干EPC总承包？》"
 _TS = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$")
 
