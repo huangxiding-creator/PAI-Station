@@ -25,7 +25,9 @@ tier 词表映射/渠道组合/证据密度/budget_band 五字段 — contracts 
 from __future__ import annotations
 
 import json
+import re
 import sys
+import time
 from pathlib import Path
 
 _ROOT = str(Path(__file__).resolve().parents[1])
@@ -199,6 +201,87 @@ def generate(charter: dict, scout: dict | None = None) -> dict:
     return fw
 
 
+# ---------- S1-3 回炉环 + 降级 (坏 JSON 硬拒的两条出路) ----------
+MAX_REWORK = 2            # 修复轮硬顶 (第 3 轮不存在 — 降级)
+
+
+def _clean_json_text(s: str) -> str:
+    """r1 清洗: BOM/零宽/全角空格/控制字符/尾逗号 (确定性, 不动语义)."""
+    s = (s.replace('\\ufeff', '').replace('\\u200b', '')
+          .replace('\\u3000', ' '))
+    s = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f]", "", s)
+    return re.sub(r",\s*([}\]])", r"\1", s).strip()
+
+
+def _repair_ladder(raw: bytes) -> list[str | None]:
+    """回炉修梯 (≤1+MAX_REWORK 槽, 恒 3 槽, 死槽=None):
+
+    [r0 原样 (utf-8 严格), r1 清洗 | 编码转真 (utf-8 死→GBK), r2 重读清洗]
+
+    utf-8 严格读死 (GBK 假象) → r1 落 GBK 转真槽; utf-8 活 → r1 落
+    清洗槽, r2 落 errors=replace 抢救性重读再清洗."""
+    cands: list[str | None] = [None] * (1 + MAX_REWORK)
+    try:
+        base = raw.decode("utf-8")
+        cands[0] = base                                  # r0 原样
+        cands[1] = _clean_json_text(base)                # r1 清洗
+        cands[2] = _clean_json_text(                     # r2 替换重读清洗
+            raw.decode("utf-8", errors="replace"))
+    except UnicodeDecodeError:
+        cands[1] = _clean_json_text(                     # r1 编码转真
+            raw.decode("gbk", errors="replace"))
+    return cands
+
+
+def _log_rework(battle_dir: str, kind: str, rounds: int, note: str = "") -> None:
+    """回炉/降级事件留痕 (rework_ledger.jsonl — 变更零静默)."""
+    out = CG._out_dir(battle_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    rec = {"ts": time.strftime("%Y-%m-%dT%H:%M:%S"), "kind": kind,
+           "rounds": rounds, "note": note}
+    with open(out / "rework_ledger.jsonl", "a", encoding="utf-8") as f:
+        f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+
+
+def load_framework(battle_dir: str, charter: dict | None = None
+                   ) -> tuple[dict | None, dict]:
+    """framework.json 载入 + 回炉环. 返回 (fw, meta).
+
+    坏 JSON: 修梯 ≤MAX_REWORK 轮 (meta.mode=reworked); 全轮死降级
+    contracts.default_framework (meta.mode=degraded, warn 留痕) —
+    降级件本身过 validate_framework (兜底不悬空)."""
+    out = CG._out_dir(battle_dir)
+    p = out / "framework.json"
+    if not p.is_file():
+        return None, {"mode": "absent", "rounds": 0}
+    raw = p.read_bytes()
+    fw = None
+    used = 0
+    for i, cand in enumerate(_repair_ladder(raw)):
+        used = i
+        if not cand:                          # 死槽 (该轮修不动)
+            continue
+        try:
+            parsed = json.loads(cand)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(parsed, dict):
+            fw = parsed
+            break
+    if fw is not None:
+        mode = "clean" if used == 0 else "reworked"
+        _log_rework(battle_dir, f"framework:{mode}", used,
+                    f"{used} 修复轮后可解析" if used else "原样可解析")
+        return fw, {"mode": mode, "rounds": used}
+    ch = charter or {}                       # 降级: 兜底默认框架 (charter 供身份)
+    deg = C.default_framework(
+        ch.get("campaign_id") or "REWORK-FALLBACK",
+        ch.get("report_title") or "未知报告 (framework.json 不可解析)")
+    _log_rework(battle_dir, "framework:degraded", used,
+                f"{used} 轮修不动 → 三段兜底 (密度全 low 待侦察补据)")
+    return deg, {"mode": "degraded", "rounds": used}
+
+
 def render(fw: dict, battle_dir: str) -> Path:
     out = CG._out_dir(battle_dir)
     p = out / "framework.json"
@@ -230,6 +313,8 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="S1-1 框架生成器 v1")
     ap.add_argument("--battle-dir", default="")
     ap.add_argument("--scout", default="", help="侦察段 JSON (章题→命中清单)")
+    ap.add_argument("--check-framework", action="store_true",
+                    help="S1-3 回炉环体检: 读 framework.json 走回炉/降级路径")
     args = ap.parse_args(argv)
     print(f"[s1-1] superline {_sl.__version__} 框架生成器 v1 (确定性)")
     try:
@@ -237,6 +322,13 @@ def main(argv: list[str] | None = None) -> int:
     except (PermissionError, ValueError) as e:
         print(f"[s1-1] ✗ {e}", file=sys.stderr)
         return 2
+    if args.check_framework:
+        fw, meta = load_framework(args.battle_dir, ch)
+        errs = C.validate_framework(fw)
+        print(f"[s1-3] framework 载入 mode={meta['mode']} "
+              f"rounds={meta['rounds']} | fingerprint {C.fingerprint(fw)} "
+              f"| 校验错 {len(errs)}")
+        return 0 if errs == [] else 2
     scout = _load_scout(args.scout) if args.scout and Path(args.scout).is_file() else {}
     fw = generate(ch, scout=scout)
     p = render(fw, args.battle_dir)

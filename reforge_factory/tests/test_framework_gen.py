@@ -164,6 +164,46 @@ def test_load_scout_two_shapes():
     assert got["企业基本面"] == ["t | u"]
 
 
+# ------------------------------------------------ S1-3 回炉环 + 降级 (验收: 各触发≥1)
+def test_s13_rework_and_degrade_paths():
+    import json
+    bd = _TMP / "b13"
+    out = bd / "00 研究报告需求"
+    out.mkdir(parents=True, exist_ok=True)
+    ch = _charter()
+    good = json.dumps(FG.generate(ch), ensure_ascii=False, indent=1)
+    # ① 坏 JSON 注入 (尾逗号) → 回炉 r1 清洗修复 (数据零丢失)
+    (out / "framework.json").write_text(good.rstrip()[:-1] + ",}",
+                                        encoding="utf-8")
+    fw, meta = FG.load_framework(str(bd), ch)
+    assert meta["mode"] == "reworked" and meta["rounds"] >= 1
+    assert C.validate_framework(fw) == [] and len(fw["chapters"]) == 15
+    # ② GBK 编码体 → r2 抢救 (utf-8 严格读死)
+    (out / "framework.json").write_bytes(good.encode("gbk"))
+    fw2, meta2 = FG.load_framework(str(bd), ch)
+    assert meta2["mode"] == "reworked"
+    assert C.validate_framework(fw2) == []
+    # ③ 全轮死 → 降级 default_framework (warn 在 + 校验零错 + 账本留痕)
+    (out / "framework.json").write_bytes(b"\x88\xff\x99 not-json \x00")
+    fw3, meta3 = FG.load_framework(str(bd), ch)
+    assert meta3 == {"mode": "degraded", "rounds": FG.MAX_REWORK}
+    assert fw3["generator"] == "default_fallback" and fw3["warn"]
+    assert C.validate_framework(fw3) == []       # 兜底件不悬空
+    ledger = [json.loads(ln) for ln in
+              (out / "rework_ledger.jsonl").read_text(encoding="utf-8")
+              .splitlines() if ln.strip()]
+    kinds = [r["kind"] for r in ledger]
+    assert "framework:reworked" in kinds and "framework:degraded" in kinds
+    # 好件原样 → clean 零修复轮
+    (out / "framework.json").write_text(good, encoding="utf-8")
+    _, meta4 = FG.load_framework(str(bd), ch)
+    assert meta4["mode"] == "clean" and meta4["rounds"] == 0
+    # 缺席 → absent (不臆造)
+    (out / "framework.json").unlink()
+    fw5, meta5 = FG.load_framework(str(bd), ch)
+    assert fw5 is None and meta5["mode"] == "absent"
+
+
 if __name__ == "__main__":
     fns = [v for k, v in sorted(globals().items())
            if k.startswith("test_") and callable(v)]
