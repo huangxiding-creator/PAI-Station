@@ -1,0 +1,1054 @@
+{
+ "campaign": "EPC51-HAISUM",
+ "topic": "中国海诚工程科技股份有限公司怎么干EPC总承包？",
+ "region": "中国海诚",
+ "generated": "2026-10-06 22:26",
+ "engine": "question_bridge v1 (superline 0.1.0)",
+ "provenance": {
+  "schema_in": "manus_outline_v1",
+  "chapters": 15,
+  "note": "企业特定问题入树, 替代 SUBQ_TEMPLATES 模板位",
+  "source": "superline/replay_out_moa/EPC51-HAISUM/00 研究报告需求/framework.json"
+ },
+ "loop_policy": "M3 增量生长: 小批采→即时判挂树→按 coverage 缺口补下批",
+ "ach_rules": {
+  "ranking": "count-I-only",
+  "death": "positive-counter-evidence-only",
+  "report": "all-hypotheses-relative-likelihood",
+  "source": "Heuer Psychology of Intelligence Analysis ch.8 (1999)"
+ },
+ "hypotheses": [
+  {
+   "id": "H1",
+   "text": "中国海诚工程科技股份有限公司怎么干EPC总承包？ 处于扩张周期, 机会大于风险",
+   "prior": 0.4,
+   "status": "alive"
+  },
+  {
+   "id": "H2",
+   "text": "中国海诚工程科技股份有限公司怎么干EPC总承包？ 已过峰值/竞争恶化, 风险大于机会",
+   "prior": 0.3,
+   "status": "alive"
+  },
+  {
+   "id": "H3",
+   "text": "中国海诚工程科技股份有限公司怎么干EPC总承包？ 结构性分化: 细分领域机会与风险并存",
+   "prior": 0.3,
+   "status": "alive"
+  }
+ ],
+ "subquestions": [
+  {
+   "id": "M01-001",
+   "dim": "一家轻工设计院的总承包答卷：本报告如何解剖中国海诚",
+   "chapter_no": 1,
+   "text": "本报告用什么框架回答『海诚怎么干EPC』？",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "M01-001E1",
+     "need": "正面证据: 本报告用什么框架回答『海诚怎么干EPC』 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 本报告用什么框架回答『海诚怎么干EPC』 2025-2026",
+      "中国海诚 中国海诚工程科技股份有限公司 本报告用什么框架回答『海诚怎么干EPC』 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M01-001E2",
+     "need": "反面证据: 本报告用什么框架回答『海诚怎么干EPC』 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 本报告用什么框架回答『海诚怎么干EPC』 风险 纠纷 处罚",
+      "中国海诚 中国海诚工程科技股份有限公司 本报告用什么框架回答『海诚怎么干EPC』 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M01-001E3",
+     "need": "权威口径: 本报告用什么框架回答『海诚怎么干EPC』 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "中国海诚省政府官网",
+      "中国海诚发展和改革委员会",
+      "中国海诚住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "M02-002",
+   "dim": "从轻工部设计院到A股上市平台：中国海诚的双重基因",
+   "chapter_no": 2,
+   "text": "海诚的家底有多厚？设计院基因给EPC业务留下了什么？",
+   "falsifiable": false,
+   "falsify_note": "未见指标/实体词 — 建议点名数字、机构、时间窗",
+   "eeis": [
+    {
+     "id": "M02-002E1",
+     "need": "正面证据: 海诚的家底有多厚设计院基因给EPC业务留 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 海诚的家底有多厚设计院基因给EPC业务留 2025-2026",
+      "中国海诚 中国海诚工程科技股份有限公司 海诚的家底有多厚设计院基因给EPC业务留 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M02-002E2",
+     "need": "反面证据: 海诚的家底有多厚设计院基因给EPC业务留 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 海诚的家底有多厚设计院基因给EPC业务留 风险 纠纷 处罚",
+      "中国海诚 中国海诚工程科技股份有限公司 海诚的家底有多厚设计院基因给EPC业务留 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M02-002E3",
+     "need": "权威口径: 海诚的家底有多厚设计院基因给EPC业务留 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "中国海诚省政府官网",
+      "中国海诚发展和改革委员会",
+      "中国海诚住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "M03-003",
+   "dim": "设计为魂、总承包为翼：「一体化服务」的战略取舍",
+   "chapter_no": 3,
+   "text": "海诚把EPC放在什么战略位置？是真转型还是点缀？",
+   "falsifiable": false,
+   "falsify_note": "未见指标/实体词 — 建议点名数字、机构、时间窗",
+   "eeis": [
+    {
+     "id": "M03-003E1",
+     "need": "正面证据: 海诚把EPC放在什么战略位置是真转型还是 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 海诚把EPC放在什么战略位置是真转型还是 2025-2026",
+      "中国海诚 中国海诚工程科技股份有限公司 海诚把EPC放在什么战略位置是真转型还是 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M03-003E2",
+     "need": "反面证据: 海诚把EPC放在什么战略位置是真转型还是 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 海诚把EPC放在什么战略位置是真转型还是 风险 纠纷 处罚",
+      "中国海诚 中国海诚工程科技股份有限公司 海诚把EPC放在什么战略位置是真转型还是 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M03-003E3",
+     "need": "权威口径: 海诚把EPC放在什么战略位置是真转型还是 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "中国海诚省政府官网",
+      "中国海诚发展和改革委员会",
+      "中国海诚住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "M04-004",
+   "dim": "设计人员与项目经理的边界：组织体系怎么支撑EPC",
+   "chapter_no": 4,
+   "text": "设计院组织惯性下，海诚怎么长出总承包的组织能力？",
+   "falsifiable": false,
+   "falsify_note": "未见指标/实体词 — 建议点名数字、机构、时间窗",
+   "eeis": [
+    {
+     "id": "M04-004E1",
+     "need": "正面证据: 设计院组织惯性下海诚怎么长出总承包的组织 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 设计院组织惯性下海诚怎么长出总承包的组织 2025-2026",
+      "中国海诚 中国海诚工程科技股份有限公司 设计院组织惯性下海诚怎么长出总承包的组织 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M04-004E2",
+     "need": "反面证据: 设计院组织惯性下海诚怎么长出总承包的组织 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 设计院组织惯性下海诚怎么长出总承包的组织 风险 纠纷 处罚",
+      "中国海诚 中国海诚工程科技股份有限公司 设计院组织惯性下海诚怎么长出总承包的组织 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M04-004E3",
+     "need": "权威口径: 设计院组织惯性下海诚怎么长出总承包的组织 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "中国海诚省政府官网",
+      "中国海诚发展和改革委员会",
+      "中国海诚住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "M05-005",
+   "dim": "短工期轻工项目怎么管：PMO与数字化项目管理",
+   "chapter_no": 5,
+   "text": "海诚用什么体系管住轻工项目『快进快出』的节奏？",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "M05-005E1",
+     "need": "正面证据: 海诚用什么体系管住轻工项目『快进快出』的 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 海诚用什么体系管住轻工项目『快进快出』的 2025-2026",
+      "中国海诚 中国海诚工程科技股份有限公司 海诚用什么体系管住轻工项目『快进快出』的 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M05-005E2",
+     "need": "反面证据: 海诚用什么体系管住轻工项目『快进快出』的 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 海诚用什么体系管住轻工项目『快进快出』的 风险 纠纷 处罚",
+      "中国海诚 中国海诚工程科技股份有限公司 海诚用什么体系管住轻工项目『快进快出』的 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M05-005E3",
+     "need": "权威口径: 海诚用什么体系管住轻工项目『快进快出』的 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "中国海诚省政府官网",
+      "中国海诚发展和改革委员会",
+      "中国海诚住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "M06-006",
+   "dim": "设计牵头的真功夫：从图纸到采购施工的一体化接口",
+   "chapter_no": 6,
+   "text": "「设计牵头」在海诚是营销话术还是真实机制？",
+   "falsifiable": false,
+   "falsify_note": "未见指标/实体词 — 建议点名数字、机构、时间窗",
+   "eeis": [
+    {
+     "id": "M06-006E1",
+     "need": "正面证据: 「设计牵头」在海诚是营销话术还是真实机制 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 「设计牵头」在海诚是营销话术还是真实机制 2025-2026",
+      "中国海诚 中国海诚工程科技股份有限公司 「设计牵头」在海诚是营销话术还是真实机制 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M06-006E2",
+     "need": "反面证据: 「设计牵头」在海诚是营销话术还是真实机制 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 「设计牵头」在海诚是营销话术还是真实机制 风险 纠纷 处罚",
+      "中国海诚 中国海诚工程科技股份有限公司 「设计牵头」在海诚是营销话术还是真实机制 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M06-006E3",
+     "need": "权威口径: 「设计牵头」在海诚是营销话术还是真实机制 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "中国海诚省政府官网",
+      "中国海诚发展和改革委员会",
+      "中国海诚住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "M07-007",
+   "dim": "长周期设备不拖后腿：造纸线的采购与供应商分级",
+   "chapter_no": 7,
+   "text": "海诚怎么管住造纸线里最贵最慢的环节？",
+   "falsifiable": false,
+   "falsify_note": "未见指标/实体词 — 建议点名数字、机构、时间窗",
+   "eeis": [
+    {
+     "id": "M07-007E1",
+     "need": "正面证据: 海诚怎么管住造纸线里最贵最慢的环节 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 海诚怎么管住造纸线里最贵最慢的环节 2025-2026",
+      "中国海诚 中国海诚工程科技股份有限公司 海诚怎么管住造纸线里最贵最慢的环节 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M07-007E2",
+     "need": "反面证据: 海诚怎么管住造纸线里最贵最慢的环节 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 海诚怎么管住造纸线里最贵最慢的环节 风险 纠纷 处罚",
+      "中国海诚 中国海诚工程科技股份有限公司 海诚怎么管住造纸线里最贵最慢的环节 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M07-007E3",
+     "need": "权威口径: 海诚怎么管住造纸线里最贵最慢的环节 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "中国海诚省政府官网",
+      "中国海诚发展和改革委员会",
+      "中国海诚住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "M08-008",
+   "dim": "自有施工还是总分包：现场执行力从哪来",
+   "chapter_no": 8,
+   "text": "设计院出身的海诚，施工现场靠谁扛？",
+   "falsifiable": false,
+   "falsify_note": "未见指标/实体词 — 建议点名数字、机构、时间窗",
+   "eeis": [
+    {
+     "id": "M08-008E1",
+     "need": "正面证据: 设计院出身的海诚施工现场靠谁扛 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 设计院出身的海诚施工现场靠谁扛 2025-2026",
+      "中国海诚 中国海诚工程科技股份有限公司 设计院出身的海诚施工现场靠谁扛 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M08-008E2",
+     "need": "反面证据: 设计院出身的海诚施工现场靠谁扛 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 设计院出身的海诚施工现场靠谁扛 风险 纠纷 处罚",
+      "中国海诚 中国海诚工程科技股份有限公司 设计院出身的海诚施工现场靠谁扛 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M08-008E3",
+     "need": "权威口径: 设计院出身的海诚施工现场靠谁扛 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "中国海诚省政府官网",
+      "中国海诚发展和改革委员会",
+      "中国海诚住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "M09-009",
+   "dim": "轻工项目的小业主大风险：合同与履约风控",
+   "chapter_no": 9,
+   "text": "面对分散的轻工业主，海诚怎么守住履约底线？",
+   "falsifiable": false,
+   "falsify_note": "未见指标/实体词 — 建议点名数字、机构、时间窗",
+   "eeis": [
+    {
+     "id": "M09-009E1",
+     "need": "正面证据: 面对分散的轻工业主海诚怎么守住履约底线 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 面对分散的轻工业主海诚怎么守住履约底线 2025-2026",
+      "中国海诚 中国海诚工程科技股份有限公司 面对分散的轻工业主海诚怎么守住履约底线 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M09-009E2",
+     "need": "反面证据: 面对分散的轻工业主海诚怎么守住履约底线 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 面对分散的轻工业主海诚怎么守住履约底线 风险 纠纷 处罚",
+      "中国海诚 中国海诚工程科技股份有限公司 面对分散的轻工业主海诚怎么守住履约底线 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M09-009E3",
+     "need": "权威口径: 面对分散的轻工业主海诚怎么守住履约底线 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "中国海诚省政府官网",
+      "中国海诚发展和改革委员会",
+      "中国海诚住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "M10-010",
+   "dim": "造纸工艺的护城河：核心技术、专利与研发转化",
+   "chapter_no": 10,
+   "text": "海诚的技术壁垒是工艺Know-how还是规模？",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "M10-010E1",
+     "need": "正面证据: 海诚的技术壁垒是工艺Know-how还是 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 海诚的技术壁垒是工艺Know-how还是 2025-2026",
+      "中国海诚 中国海诚工程科技股份有限公司 海诚的技术壁垒是工艺Know-how还是 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M10-010E2",
+     "need": "反面证据: 海诚的技术壁垒是工艺Know-how还是 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 海诚的技术壁垒是工艺Know-how还是 风险 纠纷 处罚",
+      "中国海诚 中国海诚工程科技股份有限公司 海诚的技术壁垒是工艺Know-how还是 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M10-010E3",
+     "need": "权威口径: 海诚的技术壁垒是工艺Know-how还是 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "中国海诚省政府官网",
+      "中国海诚发展和改革委员会",
+      "中国海诚住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "M11-011",
+   "dim": "轻工赛道的拥挤与空隙：海诚对标兄弟设计院与跨界对手",
+   "chapter_no": 11,
+   "text": "海诚在轻工EPC的生态位到底稳不稳？",
+   "falsifiable": false,
+   "falsify_note": "未见指标/实体词 — 建议点名数字、机构、时间窗",
+   "eeis": [
+    {
+     "id": "M11-011E1",
+     "need": "正面证据: 海诚在轻工EPC的生态位到底稳不稳 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 海诚在轻工EPC的生态位到底稳不稳 2025-2026",
+      "中国海诚 中国海诚工程科技股份有限公司 海诚在轻工EPC的生态位到底稳不稳 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M11-011E2",
+     "need": "反面证据: 海诚在轻工EPC的生态位到底稳不稳 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 海诚在轻工EPC的生态位到底稳不稳 风险 纠纷 处罚",
+      "中国海诚 中国海诚工程科技股份有限公司 海诚在轻工EPC的生态位到底稳不稳 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M11-011E3",
+     "need": "权威口径: 海诚在轻工EPC的生态位到底稳不稳 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "中国海诚省政府官网",
+      "中国海诚发展和改革委员会",
+      "中国海诚住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "M12-012",
+   "dim": "一条造纸EPC线的全周期复盘：从报价到二次经营",
+   "chapter_no": 12,
+   "text": "海诚的EPC打法在真实项目上如何展开、得失如何？",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "M12-012E1",
+     "need": "正面证据: 海诚的EPC打法在真实项目上如何展开、得 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 海诚的EPC打法在真实项目上如何展开、得 2025-2026",
+      "中国海诚 中国海诚工程科技股份有限公司 海诚的EPC打法在真实项目上如何展开、得 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M12-012E2",
+     "need": "反面证据: 海诚的EPC打法在真实项目上如何展开、得 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 海诚的EPC打法在真实项目上如何展开、得 风险 纠纷 处罚",
+      "中国海诚 中国海诚工程科技股份有限公司 海诚的EPC打法在真实项目上如何展开、得 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M12-012E3",
+     "need": "权威口径: 海诚的EPC打法在真实项目上如何展开、得 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "中国海诚省政府官网",
+      "中国海诚发展和改革委员会",
+      "中国海诚住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "M13-013",
+   "dim": "裁判文书里的海诚：纠纷判例与教训清单",
+   "chapter_no": 13,
+   "text": "诉讼记录暴露了海诚EPC管理的哪些真实短板？",
+   "falsifiable": false,
+   "falsify_note": "未见指标/实体词 — 建议点名数字、机构、时间窗",
+   "eeis": [
+    {
+     "id": "M13-013E1",
+     "need": "正面证据: 诉讼记录暴露了海诚EPC管理的哪些真实短 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 诉讼记录暴露了海诚EPC管理的哪些真实短 2025-2026",
+      "中国海诚 中国海诚工程科技股份有限公司 诉讼记录暴露了海诚EPC管理的哪些真实短 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M13-013E2",
+     "need": "反面证据: 诉讼记录暴露了海诚EPC管理的哪些真实短 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 诉讼记录暴露了海诚EPC管理的哪些真实短 风险 纠纷 处罚",
+      "中国海诚 中国海诚工程科技股份有限公司 诉讼记录暴露了海诚EPC管理的哪些真实短 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M13-013E3",
+     "need": "权威口径: 诉讼记录暴露了海诚EPC管理的哪些真实短 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "中国海诚省政府官网",
+      "中国海诚发展和改革委员会",
+      "中国海诚住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "M14-014",
+   "dim": "从设计院到工程公司还有几步：能力差距与建设清单",
+   "chapter_no": 14,
+   "text": "海诚离真正的工程公司还差什么、怎么补？",
+   "falsifiable": false,
+   "falsify_note": "未见指标/实体词 — 建议点名数字、机构、时间窗",
+   "eeis": [
+    {
+     "id": "M14-014E1",
+     "need": "正面证据: 海诚离真正的工程公司还差什么、怎么补 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 海诚离真正的工程公司还差什么、怎么补 2025-2026",
+      "中国海诚 中国海诚工程科技股份有限公司 海诚离真正的工程公司还差什么、怎么补 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M14-014E2",
+     "need": "反面证据: 海诚离真正的工程公司还差什么、怎么补 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 海诚离真正的工程公司还差什么、怎么补 风险 纠纷 处罚",
+      "中国海诚 中国海诚工程科技股份有限公司 海诚离真正的工程公司还差什么、怎么补 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M14-014E3",
+     "need": "权威口径: 海诚离真正的工程公司还差什么、怎么补 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "中国海诚省政府官网",
+      "中国海诚发展和改革委员会",
+      "中国海诚住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "M15-015",
+   "dim": "怎么干EPC总承包：海诚答案的十五条判断",
+   "chapter_no": 15,
+   "text": "把全书收敛成可引用、可检验的结论。",
+   "falsifiable": false,
+   "falsify_note": "未见指标/实体词 — 建议点名数字、机构、时间窗",
+   "eeis": [
+    {
+     "id": "M15-015E1",
+     "need": "正面证据: 把全书收敛成可引用、可检验的结论 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "opencli",
+      "rss",
+      "metaso"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 把全书收敛成可引用、可检验的结论 2025-2026",
+      "中国海诚 中国海诚工程科技股份有限公司 把全书收敛成可引用、可检验的结论 官方数据"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M15-015E2",
+     "need": "反面证据: 把全书收敛成可引用、可检验的结论 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "manus_corps",
+      "websearch"
+     ],
+     "queries": [
+      "中国海诚 中国海诚工程科技股份有限公司 把全书收敛成可引用、可检验的结论 风险 纠纷 处罚",
+      "中国海诚 中国海诚工程科技股份有限公司 把全书收敛成可引用、可检验的结论 失败案例 质疑"
+     ],
+     "status": "zero"
+    },
+    {
+     "id": "M15-015E3",
+     "need": "权威口径: 把全书收敛成可引用、可检验的结论 的官方统计/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "中国海诚省政府官网",
+      "中国海诚发展和改革委员会",
+      "中国海诚住房和城乡建设厅"
+     ],
+     "status": "zero"
+    }
+   ]
+  }
+ ],
+ "stats": {
+  "subquestions": 15,
+  "unfalsifiable": 11,
+  "eeis": 45,
+  "queries": 105,
+  "chapters": 15
+ }
+}
