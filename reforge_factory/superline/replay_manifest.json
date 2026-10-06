@@ -1,0 +1,111 @@
+{
+  "schema": "s0_replay_manifest_v1",
+  "frozen": "2026-10-06",
+  "note": "ground_truth.ammo_met = 该战役实际弹药达标与否 (非 delivered; 门时代前交付≠达标). 判定源=tier_report/池账本/战役目录语料, 判级器与真值同源于盘上账本. 旧8战役语料为 02/04 子目录 .md/.txt 的 len(text) 冻结测量 (2026-10-06).",
+  "bar": {
+    "min_consistency": 8,
+    "note": "≥8/10 与 ground truth 一致; 每 RETREAT 缺口非空; 判级全程零付费渠道"
+  },
+  "battles": [
+    {
+      "battle": "EPC50-SNEI",
+      "title": "中石化南京工程有限公司怎么干EPC总承包？",
+      "battle_dir": "E:/AI-Station/ResearchFactory-Eng/ResearchTopics/《中石化南京工程有限公司怎么干EPC总承包？》",
+      "pool": "EPC50-SNEI",
+      "ground_truth": {
+        "ammo_met": true,
+        "source": "tiers.json 在位; tier_report T1=47,640,193 ≥300万 ∧ T1+T2=47,640,193 ≥3000万; conductor.log 每 tick 『EPC50-SNEI 分层门已过, 转产模式』"
+      }
+    },
+    {
+      "battle": "EPC49-SEPDC",
+      "title": "四川电力设计咨询有限责任公司怎么干EPC总承包？",
+      "battle_dir": "E:/AI-Station/ResearchFactory-Eng/ResearchTopics/《四川电力设计咨询有限责任公司怎么干EPC总承包？》",
+      "pool": "EPC49-SEPDC",
+      "ground_truth": {
+        "ammo_met": false,
+        "source": "tier_report T1=1,747,449 <300万 (缺 1,252,551) ∧ T1+T2=23,295,093 <3000万 (缺 6,704,907); router 每 tick 『可用渠道 1 < 3 源, 全派留痕』"
+      }
+    },
+    {
+      "battle": "上海电力设计院",
+      "title": "上海电力设计院有限公司怎么干EPC总承包？",
+      "battle_dir": "E:/AI-Station/ResearchFactory-Eng/ResearchTopics/《上海电力设计院有限公司怎么干EPC总承包？》",
+      "pool": "",
+      "ground_truth": {
+        "ammo_met": false,
+        "source": "无池 (门时代前旧战役); 02/04 语料扫描 1,401,222 字 < 2亿回退门 (2026-10-06 冻结测量)"
+      }
+    },
+    {
+      "battle": "海南电力设计研究院",
+      "title": "中国电建集团海南电力设计研究院有限公司怎么干EPC总承包？",
+      "battle_dir": "E:/AI-Station/ResearchFactory-Eng/ResearchTopics/《中国电建集团海南电力设计研究院有限公司怎么干EPC总承包？》",
+      "pool": "",
+      "ground_truth": {
+        "ammo_met": false,
+        "source": "无池 (门时代前旧战役); 02/04 语料扫描 1,226,682 字 < 2亿回退门 (2026-10-06 冻结测量)"
+      }
+    },
+    {
+      "battle": "中冶长天",
+      "title": "中冶长天国际工程有限责任公司怎么干EPC总承包？",
+      "battle_dir": "E:/AI-Station/ResearchFactory-Eng/ResearchTopics/《中冶长天国际工程有限责任公司怎么干EPC总承包？》",
+      "pool": "",
+      "ground_truth": {
+        "ammo_met": false,
+        "source": "无池 (门时代前旧战役); 02/04 语料扫描 1,975,626 字 < 2亿回退门 (2026-10-06 冻结测量)"
+      }
+    },
+    {
+      "battle": "首钢国际工程",
+      "title": "北京首钢国际工程技术有限公司怎么干EPC总承包？",
+      "battle_dir": "E:/AI-Station/ResearchFactory-Eng/ResearchTopics/《北京首钢国际工程技术有限公司怎么干EPC总承包？》",
+      "pool": "",
+      "ground_truth": {
+        "ammo_met": false,
+        "source": "无池 (门时代前旧战役); 02/04 语料扫描 2,064,653 字 < 2亿回退门 (2026-10-06 冻结测量)"
+      }
+    },
+    {
+      "battle": "中国电子工程设计院",
+      "title": "中国电子工程设计院股份有限公司怎么干EPC总承包？",
+      "battle_dir": "E:/AI-Station/ResearchFactory-Eng/ResearchTopics/《中国电子工程设计院股份有限公司怎么干EPC总承包？》",
+      "pool": "",
+      "ground_truth": {
+        "ammo_met": false,
+        "source": "无池 (门时代前旧战役); 02/04 语料扫描 1,547,782 字 < 2亿回退门 (2026-10-06 冻结测量)"
+      }
+    },
+    {
+      "battle": "赛鼎工程",
+      "title": "赛鼎工程有限公司怎么干EPC总承包？",
+      "battle_dir": "E:/AI-Station/ResearchFactory-Eng/ResearchTopics/《赛鼎工程有限公司怎么干EPC总承包？》",
+      "pool": "",
+      "ground_truth": {
+        "ammo_met": false,
+        "source": "无池 (门时代前旧战役); 02/04 语料扫描 0 字 (目录在而语料空) < 2亿回退门 (2026-10-06 冻结测量)"
+      }
+    },
+    {
+      "battle": "浙大建筑设计院",
+      "title": "浙江大学建筑设计研究院有限公司怎么干EPC总承包？",
+      "battle_dir": "E:/AI-Station/ResearchFactory-Eng/ResearchTopics/《浙江大学建筑设计研究院有限公司怎么干EPC总承包？》",
+      "pool": "",
+      "ground_truth": {
+        "ammo_met": false,
+        "source": "无池 (门时代前旧战役); 02/04 语料扫描 0 字 (目录在而语料空) < 2亿回退门 (2026-10-06 冻结测量)"
+      }
+    },
+    {
+      "battle": "鞍钢工程技术",
+      "title": "鞍钢集团工程技术有限公司怎么干EPC总承包？",
+      "battle_dir": "E:/AI-Station/ResearchFactory-Eng/ResearchTopics/《鞍钢集团工程技术有限公司怎么干EPC总承包？》",
+      "pool": "",
+      "ground_truth": {
+        "ammo_met": false,
+        "source": "无池 (门时代前旧战役); 02/04 语料扫描 1,527,767 字 < 2亿回退门 (2026-10-06 冻结测量)"
+      }
+    }
+  ]
+}
