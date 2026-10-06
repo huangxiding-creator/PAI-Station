@@ -1,4 +1,4 @@
-# superline — 超级生产线 P0 任务板
+# superline — 超级生产线任务板 (P0 ✅ 12/12 · P1 在建)
 
 报告名→顶级研报超级生产线框架 v1 (用户 2026-10-06 全批 P0-P2, 38 增量件).
 总装文档 `_proposals/report-methodology-1006/SUPER_PIPELINE_FRAMEWORK_V1.md`,
@@ -34,5 +34,35 @@
 | S3-2 | 大纲锁定合同化 (outline-as-contract + 章级 4 态状态机) | superline/outline_contract.py | 章态与 manifest/完备门三方一致; 变更零静默 (每次变更 diff 在案, 指纹锚) | ✅ 1006 收官: 4态=gap_scan→collecting→locked(禁改章大纲)→writing(弹药门∧完备门双过交撰写), 只进不退/退=显式unlock钉住(refresh不自动回升否则假降态, 回升须relock+矩阵回饱和); 变更正门唯一=retitle/retier/remove/add 全走apply_edit(变更后框架自过validate硬拒坏变更, 每次尝试含拒落outline_changes.jsonl带指纹before/after); 绕合同手改framework.json→reconcile指纹失配当场检出; 真链EPC50沙盒15章establish 13锁/2采集+三方对账✅(章态↔矩阵↔真完备门)+变更7笔全留痕; promote真拦截实证=ammo门过但当日61渠道完备门裸缺席28→❌拒writing(双门纪律非摆设); 单测6项(建立/零静默/手改检出/只进不退+钉relock/章态失配/双门promote); 证据 superline/replay_out_s32/evidence_s32.md |
 | XC-1 | 完备门键名归一器 (治 7/13 假缺席) | ResearchFactory-Eng conductor/v2 | 复查 13 裸缺席全部为真缺席 (零错位); 完备门四态分布与池账分毫不差; G-005 范式前后快照在案 | ✅ 1006 收官: 13=8 假缺席(池证到场, 池账逐键零漂移)+5 真缺席(工单 XC-1-R1..R5); 四态 33/10/2/13→42/9/7/0, passed False→True; 前后快照 completeness_v2.{before,after}_xc1.{json,md} 在案; 单测 10/10 |
 
-P1 (15) / P2 (11) 见总装文档呈审门分期表; P0 收口后按「已有 05 根基对标
-存量、T1 覆盖厚」原则提试产战役候选名单呈用户选 (批准事项 4 未决项).
+## 试产战役候选 (1006 已盘, 用户令暂缓)
+
+候选盘面 (全 52 战役 × 双池账本 × 05 粗加工存量 × 双门实读): ① EPC50 中石化
+南京 = T1 47.6M/2148 件唯一过弹药门 + P0 链工件全在其身 + r50 定稿金标准,
+缺 05 粗加工/完备门 28 裸缺席; ② 中冶长天 = 05 4243MB/280 件最厚档半成品,
+池从零 (S0-2 词表回放 3/3); ③ EPC49 四川电力 = 05 4055MB + 唯一过完备门
+(XC-1 后 42/9/7/0), T1 薄 1.7M 需补弹. 同型半成品备选 11 家 (中国海诚
+4582MB 最大). 恢复试产时呈用户选.
+
+## P1 15 件 (执行层; 用户 1006 暂缓试产后开工)
+
+执行序 = Wave1 收尾件 → Wave2 S4 执行层 → Wave3 S2 采集面 (最重件殿后).
+
+| # | 件 | 落位 | 验收判据 (机检锚) | 态 |
+|---|---|---|---|---|
+| P1-1 | S1 出口呈审门 (framework 呈批三态复用 S0 通道) | superline/framework_gate.py | framework.json 渲染 md 呈审+机器可读 JSON; 批/改批/豁免三态留痕; 积分制/账号面渠道首次出队前存在 approved framework 记录 (查账函数在位) | ⬜ |
+| P1-2 | S3 贫血章处置协议 (85/15 补扫预算+结构转向梯子) | superline/anemia_protocol.py | 补扫预算执行率可查 (分桶账); ≥2 轮零新增→pivot 记录 + ≥4 轮→升用户裁决各演练一条留痕; 超期告警在案 | ⬜ |
+| P1-3 | S3 先图后文产前门 (图表清单=合同附件) | superline/charts_gate.py | 框架合同附图表清单 (图号/口径/数据源章) 每图口径有源; 至少拦截一次口径不可比退回记录在案 | ⬜ |
+| P1-4 | S4 写作腿双槽提示词三件套 | superline/prompts/writer_prompts.py | SYSTEM 槽=产物合同+Data Integrity 五条; NEXT_STEP 槽=任务卡+计划全景 ✓/→/!; 计数条款「N out of M 章引用已核」三条款逐条 grep 在位 | ⬜ |
+| P1-5 | XC-6 角色→LLM 档位一张表 (含 VL 位) | superline/roles_llm_map.json+checker | 表在役后付费腿调用 100% 有档位依据 (机检: 无表外付费调用); Jev 只占免费做不到的原语位标注 | ⬜ |
+| P1-6 | XC-3 Task Ledger 三段账本 (认知级) | superline/task_ledger.py | 每战役 ledger.json{facts/open/speculation} append-only; 终稿引用句 100% 溯源自 facts 段; 引 speculation 句可判 FAIL (可证伪钩子在位) | ⬜ |
+| P1-7 | S4 章级缺口检测器 gap_extractor | superline/gap_extractor.py | 初稿三触发位 ([待证]/估算推断段/引用源数=1)→补弹任务 JSON 入队; 单源论断 100% 命中 (对照底账); 抽 10 条 query 可派率 ≥80% | ⬜ |
+| P1-8 | S4 反损耗编译门 | superline/compile_gate.py | 合成只准顺序 append 不准改写; 终稿字数 ≥ Σ分章稿 (wc 机检); 压缩性改写可检出 | ⬜ |
+| P1-9 | S4 stuck 双层检测 | superline/stuck_detector.py | 写作腿同文重复 ≥2 判卡死 + 池侧同渠道同词表 2 轮零有效新增 warn; 注入式测试各触发一次且留痕入账本 | ⬜ |
+| P1-10 | S4 写作-采集并发编排 (写 N 采 N+1) | superline/overlap_pipeline.py | gap 任务入池即被下一 tick 领走 (零新组件); 写作空转窗 ≤1 tick; 写作+补弹并行时间窗证据在案 | ⬜ |
+| P1-11 | S2 SearchItem/ToolResult 渠道出口统一+logged 工厂 (XC-5 并入) | superline/channel_tools.py | 包 5 高频免费检索渠道 (zh-search-pro/anysearch/opencli 免费面…); 出口类型统一; _run 级 IO 日志落盘抽 10 次可回放入参出参耗时 | ⬜ |
+| P1-12 | S2 查询内多引擎同步降级层 | superline/search_fallback.py | 免费检索注册表+首选/fallback 链; 模拟首引擎故障同 tick 切换成功 ≥1; 全败 5-10s 只重试 1 轮转 DEFER 无整轮空烧 | ⬜ |
+| P1-13 | S2 星型并行上下文隔离 | superline/star_batch.py | 每子任务全新上下文 ≤8 项分批; API/文件腿并行浏览器腿互斥; 尾项证据 URL 去重后新增占比不衰减 | ⬜ |
+| P1-14 | XC-2 渠道水位周报常态化腿 | tools/ 周度 schtask (OS 级) | 四桶账固化周度产出连续两周零人工; probe 面 3→14; 真缺口清单滚动可对账 | ⬜ |
+| P1-15 | S2 12 真缺口接线+auto_dispatch 扩面 | ResearchFactory-Eng conductor (逐渠道开) | 完备门假缺席清零 (aliases 全量化); 12 渠道逐个 manifest 过账; C 桶 (在册不出粮) 下降可审计; auto_dispatch 逐渠道开不一把梭 | ⬜ |
+
+P2 (11) 见总装文档呈审门分期表.
