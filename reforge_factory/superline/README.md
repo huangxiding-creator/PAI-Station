@@ -66,3 +66,13 @@
 | P1-15 | S2 12 真缺口接线+auto_dispatch 扩面 | ResearchFactory-Eng conductor (逐渠道开) | 完备门假缺席清零 (aliases 全量化); 12 渠道逐个 manifest 过账; C 桶 (在册不出粮) 下降可审计; auto_dispatch 逐渠道开不一把梭 | ⬜ |
 
 P2 (11) 见总装文档呈审门分期表.
+
+## 框架驱动调研接线 (1006 用户令收官 — 新范式旁路件)
+
+报告名 → Manus (v3 目录框架提示词) → `manus_outline_adapter` 摄取
+framework_v1 → 既有链 S1-2/P1-1/S2 章级分档, **替代「报告名→关键词→检索」旧流**。
+提示词 `ResearchFactory-Eng/RefPrompts/生成报告目录框架提示词_v3_框架驱动调研版.md`
++ 摄取件+单测 5/5 + 真链冒烟 EPC51-HAISUM 15 章 272,000 字路由 15/15;
+实坑=benchmark 章标题猜角色误判 → 契约显式 role 字段根治。证据
+`replay_out_moa/{evidence_moa.md, EPC51-HAISUM/}`; Manus 真单点火待用户令
+(收集域暂停中)。
