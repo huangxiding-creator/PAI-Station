@@ -1,0 +1,46 @@
+=== S2-2 预算分档三档 真链证据 (2026-10-06) ===
+--- EPC49 dry-run (真缺口带档派单) ---
+[EPC49-SEPDC] 计划 2 件 (dry)
+  T1/P0 [outline_wide  ] website             501,020字 cmd✓
+  T2/P1 [section_narrow] registry          3,881,962字 cmd✓
+[router v0.1.0-w2] battles=['EPC49-SEPDC'] jobs=2
+--- bands 报表 (全战役, cap_ok=新三档计划≤当期余量) ---
+{
+ "battle": "EPC49-SEPDC",
+ "planned_by_band": {
+  "": 236331500
+ },
+ "legacy_planned_chars": 236331500,
+ "ingested_by_band": {},
+ "budget_remaining": {
+  "T1": 1252551,
+  "T1+T2": 9704907,
+  "T3_cap": 0
+ },
+ "cap_ok": true
+}
+{
+ "battle": "EPC50-SNEI",
+ "planned_by_band": {},
+ "legacy_planned_chars": 0,
+ "ingested_by_band": {},
+ "budget_remaining": {
+  "T1": 0,
+  "T1+T2": 0,
+  "T3_cap": 35581320
+ },
+ "cap_ok": true
+}
+--- 池侧 by_band 分列 (EPC49 真池 tier_report 尾段) ---
+{
+ "t1": 1747449,
+ "t2": 21547644,
+ "t3": 1108766503,
+ "by_band": {
+  "": {
+   "chars": 5088985440,
+   "items": 1065890
+  }
+ },
+ "gate_ok": false
+}

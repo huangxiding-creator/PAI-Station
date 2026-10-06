@@ -66,13 +66,17 @@ AMMO_GATE_CHARS = 200_000_000  # 1004用户终版令: 门槛 2亿 (NB 2.5亿预�
 T1_MIN_CHARS = 3_000_000
 T12_MIN_CHARS = 30_000_000
 T3_CAP_CHARS = 50_000_000
+# S2-2 预算分档三档 (与 S1-1 BAND_BY_ROLE 同词表: 框架期宽面/章级窄面/
+# 补弹); 入池行带档 → tier_report by_band 分列, 消耗分桶可查.
+BUDGET_BANDS = ("outline_wide", "section_narrow", "gap")
 
 
 def tier_report(cid: str) -> dict:
     """分层账 (标题级下界, dedup 后): manifest valid 行 × tiers.json 词表.
 
     返回 t1/t2/t3/t0 字数与件数、t3_capped、gate_chars(合成门槛账) 与
-    gate_ok(分层双门判定). 无 tiers.json 时 tiers_configured=False,
+    gate_ok(分层双门判定); by_band 分列 (S2-2 消耗分桶, ""=存量未归档).
+    无 tiers.json 时 tiers_configured=False,
     调用方应回退旧总量门并提示补词表."""
     d = _camp_dir(cid)
     tp = d / "tiers.json"
@@ -84,6 +88,7 @@ def tier_report(cid: str) -> dict:
     kws = (_load_state(d).get("kws") or []) if (d / "pool_state.json").is_file() else []
     t = {"t1": 0, "t2": 0, "t3": 0, "t0": 0, "n1": 0, "n2": 0, "n3": 0,
          "n0": 0, "tiers_configured": bool(t1k)}
+    by_band: dict[str, dict] = {}
     mp = d / "manifest.jsonl"
     seen: set[str] = set()
     if mp.is_file():
@@ -116,6 +121,11 @@ def tier_report(cid: str) -> dict:
                 tk, nk = "t0", "n0"
             t[tk] += ch
             t[nk] += 1
+            band = r.get("budget_band") or ""
+            b = by_band.setdefault(band, {"chars": 0, "items": 0})
+            b["chars"] += ch
+            b["items"] += 1
+    t["by_band"] = by_band
     t["t3_capped"] = min(t["t3"], T3_CAP_CHARS)
     t["gate_chars"] = t["t1"] + t["t2"] + t["t3_capped"]
     t["gate_ok"] = (t["t1"] >= T1_MIN_CHARS
@@ -416,11 +426,13 @@ def rebuild(cid: str) -> int:
 
 def ingest(cid: str, file: str, engine: str, url: str = "",
            cred: str = "unknown", tree: str = "",
-           stance: str = "support") -> int:
+           stance: str = "support", band: str = "") -> int:
     """单条入池: URL 归一 + 去重 + source_engine 标记 + 挂树 (G3).
     入池即 pending, **不计门槛账** — 判有效 (judge) 才计数 (用户铁律).
     tree=EEI id (question_tree.json, 如 Q1-E2); stance=support/against/
     contradict (对竞争假设的立场 — ACH 对抗场原料).
+    band=预算分档三档 (S2-2: outline_wide/section_narrow/gap; 非法值
+    归 ""=存量未归档) — tier_report by_band 消耗分桶可查.
     行落 text_head[:500] (FT-4 辛迪加折叠比对原料 — 缺字段折叠空转) 与
     authority_score/authority_grade 两键 (FT-5 权威度维, import 缺件时缺键)."""
     d = _camp_dir(cid)
@@ -459,6 +471,7 @@ def ingest(cid: str, file: str, engine: str, url: str = "",
                "chars": ch, "credibility": cred, "dedup_key": key,
                "judge": "pending", "judge_reason": "", "judge_engine": "",
                "tree_node": tree, "stance": stance,
+               "budget_band": band if band in BUDGET_BANDS else "",
                "text_head": text[:500]}   # FT-4: 缺此键辛迪加折叠恒空转
         if authority is not None:         # FT-5: 权威度两键 (缺件缺键不炸)
             score = int(authority(url or str(fp)).get("score", 3))
@@ -717,6 +730,8 @@ def main() -> int:
                     help="对竞争假设的立场 (ACH 原料)")
     ap.add_argument("--file", default="")
     ap.add_argument("--engine", default="own:manual")
+    ap.add_argument("--band", default="", choices=[""] + list(BUDGET_BANDS),
+                    help="预算分档 (S2-2: outline_wide/section_narrow/gap)")
     ap.add_argument("--url", default="")
     ap.add_argument("--cred", default="unknown",
                     choices=["official", "media", "research", "stock", "unknown"])
@@ -735,7 +750,7 @@ def main() -> int:
                 print("--file 必填", file=sys.stderr)
                 return 2
             return ingest(args.cid, args.file, args.engine, args.url,
-                          args.cred, args.tree, args.stance)
+                          args.cred, args.tree, args.stance, args.band)
         elif args.cmd == "judge":
             return judge(args.cid, args.limit)
         elif args.cmd == "rebuild":
