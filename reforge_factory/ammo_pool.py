@@ -52,11 +52,76 @@ except Exception:                       # 缺件=行缺权威度两键, 不拖�
     authority = None
     grade_authority = None
 
-sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if sys.stdout:                           # 1006: pythonw/无控制台时 sys.stdout=None, 无守卫 import 即炸 (conductor router 15 连跳根因)
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 STATION = Path(r"E:\AI-Station")
 POOL_ROOT = STATION / "ammo_pool"
 AMMO_GATE_CHARS = 200_000_000  # 1004用户终版令: 门槛 2亿 (NB 2.5亿预算 = 2亿采集 + 0.5亿萃取炼金)
+# 1005 用户定调 (分层门槛 v3, 接棒旧总量门): 有效资料 = 对当前研究报告
+# 有帮助的资料 — 行业泛词命中不再等同有效. 判据:
+#   T1 报告直接(研究对象本体) ≥ 300万 且 T1+T2(同业对标) ≥ 3000万 才算达标;
+#   T3 行业框架封顶 5000万 计参考; T0 泛命中(标题无课题词)不计入.
+# 词表 = 战役目录 tiers.json {"T1": [...], "T2": [...]}; 分层为标题级下界.
+T1_MIN_CHARS = 3_000_000
+T12_MIN_CHARS = 30_000_000
+T3_CAP_CHARS = 50_000_000
+
+
+def tier_report(cid: str) -> dict:
+    """分层账 (标题级下界, dedup 后): manifest valid 行 × tiers.json 词表.
+
+    返回 t1/t2/t3/t0 字数与件数、t3_capped、gate_chars(合成门槛账) 与
+    gate_ok(分层双门判定). 无 tiers.json 时 tiers_configured=False,
+    调用方应回退旧总量门并提示补词表."""
+    d = _camp_dir(cid)
+    tp = d / "tiers.json"
+    t1k: list[str] = []
+    t2k: list[str] = []
+    if tp.is_file():
+        cfg = json.loads(tp.read_text(encoding="utf-8"))
+        t1k, t2k = cfg.get("T1", []), cfg.get("T2", [])
+    kws = (_load_state(d).get("kws") or []) if (d / "pool_state.json").is_file() else []
+    t = {"t1": 0, "t2": 0, "t3": 0, "t0": 0, "n1": 0, "n2": 0, "n3": 0,
+         "n0": 0, "tiers_configured": bool(t1k)}
+    mp = d / "manifest.jsonl"
+    seen: set[str] = set()
+    if mp.is_file():
+        for line in mp.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                r = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if r.get("judge") != "valid":
+                continue
+            key = r.get("dedup_key") or r.get("url_norm") \
+                or r.get("source_path") or ""
+            if key:
+                if key in seen:          # manifest 行=文件×问题对, 行累加=虚账
+                    continue
+                seen.add(key)
+            title = os.path.basename(r.get("source_path")
+                                     or r.get("url_norm") or "")
+            ch = r.get("chars") or 0
+            if t1k and any(k in title for k in t1k):
+                tk, nk = "t1", "n1"
+            elif t2k and any(k in title for k in t2k):
+                tk, nk = "t2", "n2"
+            elif any(k in title for k in kws):
+                tk, nk = "t3", "n3"
+            else:
+                tk, nk = "t0", "n0"
+            t[tk] += ch
+            t[nk] += 1
+    t["t3_capped"] = min(t["t3"], T3_CAP_CHARS)
+    t["gate_chars"] = t["t1"] + t["t2"] + t["t3_capped"]
+    t["gate_ok"] = (t["t1"] >= T1_MIN_CHARS
+                    and t["t1"] + t["t2"] >= T12_MIN_CHARS)
+    return t
+
 
 
 # ---------- URL 归一化 (跨引擎去重键) ----------
@@ -518,8 +583,13 @@ def coverage(cid: str) -> int:
     print(f"║ 饱和度: {n_sat}/{total_eei} EEI ({sat_pct:.1f}%) | "
           f"缺口 {n_gap} 个 → 下轮定向采集任务源")
     print(f"║ 辛迪加折叠: {n_syn} 组 (同文多站 = 1 票, 通稿不冒充共识)")
-    print(f"║ 报告准入: 字数门 "
-          f"({'✅' if json.loads((d / 'pool_state.json').read_text(encoding='utf-8'))['total_chars'] >= AMMO_GATE_CHARS else '⏳ 未过'}) "
+    tr = tier_report(d.name)
+    char_gate = tr["gate_ok"] if tr["tiers_configured"] else (
+        json.loads((d / "pool_state.json").read_text(encoding="utf-8"))
+        ["total_chars"] >= AMMO_GATE_CHARS)
+    gate_name = "分层门" if tr["tiers_configured"] else "总量门(未配tiers.json)"
+    print(f"║ 报告准入: 字数门[{gate_name}] "
+          f"({'✅' if char_gate else '⏳ 未过'}) "
           f"∧ 饱和门 ({'✅' if sat_pct >= 80 else f'⏳ {sat_pct:.0f}%<80%'}) "
           f"— 双门全过才准成稿")
     return 0
@@ -545,6 +615,21 @@ def status(cid: str) -> int:
     print(f"║   废弃: {s.get('rejected_items', 0):,} 条 / "
           f"{s.get('rejected_chars', 0):,} 字 (off_topic/垃圾/太短)")
     print(f"║   门槛状态: {'✅ 已过门 (可进撰写)' if pct >= 1 else '⏳ 未过门 (有效弹药继续)'}")
+    tr = tier_report(cid)
+    if tr["tiers_configured"]:
+        print(f"║ 分层门槛账 [1005 用户定调: 有效=对当前研究报告有帮助]:")
+        print(f"║   T1 报告直接  {tr['t1']:>12,} 字 ({tr['n1']:,}件) / {T1_MIN_CHARS:,} 门 "
+              f"{'✅' if tr['t1'] >= T1_MIN_CHARS else '⏳'}")
+        t12 = tr['t1'] + tr['t2']
+        print(f"║   T1+T2 对标  {t12:>12,} 字 ({tr['n1']+tr['n2']:,}件) / {T12_MIN_CHARS:,} 门 "
+              f"{'✅' if t12 >= T12_MIN_CHARS else '⏳'}")
+        print(f"║   T3 框架封顶 {tr['t3_capped']:>12,} 字 (raw {tr['t3']:,}) | "
+              f"T0 泛命中 {tr['t0']:,} 字 不计入")
+        print(f"║   合成门槛账  {tr['gate_chars']:>12,} 字 | "
+              f"分层判定: {'✅ 已过分层门' if tr['gate_ok'] else '⏳ 未过分层门'}")
+    else:
+        print(f"║ ⚠️ 未配 tiers.json — 分层门未生效, 仅旧总量门; "
+              f"补词表后自动启用 (工具 tools/ammo_tier_audit.py)")
     print(f"║ 渠道贡献榜 (仅有效弹药):")
     top = max(s["by_engine"].values()) if s["by_engine"] else 1
     for eng, ch in sorted(s["by_engine"].items(), key=lambda x: -x[1])[:8]:
