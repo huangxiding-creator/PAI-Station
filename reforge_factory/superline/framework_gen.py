@@ -216,6 +216,15 @@ def render(fw: dict, battle_dir: str) -> Path:
     return p
 
 
+def _load_scout(path: str) -> dict:
+    """--scout 归一: 裸 {题:[串]} 或 S1-2 scout_v1 包 ({schema,hits}) 皆可."""
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    if isinstance(data, dict) and data.get("schema") == "scout_v1":
+        from superline import scout_inject as SI
+        return SI.to_scout_json(data.get("hits") or {})
+    return data
+
+
 def main(argv: list[str] | None = None) -> int:
     import argparse
     ap = argparse.ArgumentParser(description="S1-1 框架生成器 v1")
@@ -228,9 +237,7 @@ def main(argv: list[str] | None = None) -> int:
     except (PermissionError, ValueError) as e:
         print(f"[s1-1] ✗ {e}", file=sys.stderr)
         return 2
-    scout = {}
-    if args.scout and Path(args.scout).is_file():
-        scout = json.loads(Path(args.scout).read_text(encoding="utf-8"))
+    scout = _load_scout(args.scout) if args.scout and Path(args.scout).is_file() else {}
     fw = generate(ch, scout=scout)
     p = render(fw, args.battle_dir)
     done, total = C.route_completeness(fw)

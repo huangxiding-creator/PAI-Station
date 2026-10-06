@@ -147,6 +147,23 @@ def test_s1_gate_and_hard_refuse():
     assert fam_refused
 
 
+# ------------------------------------------------ --scout 两形态归一 (S1-2 接口)
+def test_load_scout_two_shapes():
+    import json
+    p1 = _TMP / "scout_bare.json"
+    p1.write_text(json.dumps({"企业基本面": ["a", "b"]}, ensure_ascii=False),
+                  encoding="utf-8")
+    assert FG._load_scout(str(p1)) == {"企业基本面": ["a", "b"]}
+    p2 = _TMP / "scout_v1.json"                       # S1-2 scout.json 包形
+    p2.write_text(json.dumps({"schema": "scout_v1", "hits": {
+        "企业基本面": [{"title": "t", "url": "u", "source":
+                       "zh-search-pro", "query": "q"}],
+        "零章": []}}, ensure_ascii=False), encoding="utf-8")
+    got = FG._load_scout(str(p2))
+    assert list(got) == ["企业基本面"]                  # 空命中键剔除
+    assert got["企业基本面"] == ["t | u"]
+
+
 if __name__ == "__main__":
     fns = [v for k, v in sorted(globals().items())
            if k.startswith("test_") and callable(v)]
