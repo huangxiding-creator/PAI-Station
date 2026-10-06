@@ -149,12 +149,6 @@ def _engine_grade(eng: str) -> tuple[str, str]:
         if eng.startswith(prefix):
             return gr_
     return DEFAULT_GRADE
-    return {"dedup_key": row.get("dedup_key", ""),
-            "engine": row.get("engine", ""),
-            "host": host,
-            "credibility": row.get("credibility", ""),
-            "grade": grade,
-            "rule": rule}
 
 
 def grade_rows(rows: list[dict]) -> list[dict]:
