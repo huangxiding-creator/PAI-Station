@@ -230,6 +230,65 @@ def judge_heuristic(text: str, kws: list[str]) -> tuple[str, str]:
     return "valid", "kw_hit+substance_ok"
 
 
+# ---------- S2-1 snippet 不入池硬门 (全量检索 snippet-only 零入池) ----------
+# 保守三规则: 宁可漏 (judge 层兜底) 不可错杀全文. 误杀全文=弹药真损失,
+# 漏放 snippet=审计可见 (snippet-audit 复查).
+_SNIPPET_ENG_MARKS = ("serp", "snippet", "搜索清单", "线索")
+_SERP_LINE = re.compile(r"^#{0,3}\s*\d+[.、)]\s+\S", re.M)
+
+
+def is_snippet_only(text: str, engine: str = "") -> tuple[bool, str]:
+    """全量检索 snippet-only 件判定 (纯规则, 零网络). 返回 (是, 规则名).
+
+    三规则: ①engine 自标 (serp/snippet/搜索清单/线索) ②SERP 面形
+    (前 4000 字 ≥3 编号结果行 ∧ ≥3 URL) ③检索 JSON 原样落盘 ({"hits" 头)."""
+    eng = (engine or "").lower()
+    if any(m in eng for m in _SNIPPET_ENG_MARKS):
+        return True, "engine_marked"
+    if not text:
+        return False, ""
+    head = text[:4000]
+    if head.lstrip().startswith('{"hits"'):
+        return True, "search_json_dump"
+    if len(_SERP_LINE.findall(head)) >= 3 and head.count("http") >= 3:
+        return True, "serp_shape"
+    return False, ""
+
+
+def _gate_log(d: Path, fp: Path, engine: str, rule: str, chars: int) -> None:
+    """硬门拦截留痕 (snippet_gate.jsonl — grep 可证入池记录恒 0)."""
+    rec = {"ts": time.strftime("%Y-%m-%dT%H:%M:%S"), "file": str(fp),
+           "engine": engine, "rule": rule, "chars": chars}
+    with (d / "snippet_gate.jsonl").open("a", encoding="utf-8") as f:
+        f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+
+
+def snippet_audit(cid: str = "") -> dict:
+    """manifest 全行 snippet 形复查 (验收: snippet-only 入池记录 = 0).
+
+    判据=text_head(500字窗)+engine 同规则; 战役缺省=全池扫.
+    返回 {campaign: {"rows": n, "snippet_rows": n, "rules": {…}}}."""
+    roots = ([_camp_dir(cid)] if cid else
+             [p for p in POOL_ROOT.iterdir()
+              if p.is_dir() and (p / "manifest.jsonl").is_file()])
+    out: dict = {}
+    for d in roots:
+        rows, snip, rules = 0, 0, {}
+        for ln in (d / "manifest.jsonl").read_text(
+                encoding="utf-8").splitlines():
+            if not ln.strip():
+                continue
+            rows += 1
+            r = json.loads(ln)
+            hit, rule = is_snippet_only(r.get("text_head", ""),
+                                        r.get("engine", ""))
+            if hit:
+                snip += 1
+                rules[rule] = rules.get(rule, 0) + 1
+        out[d.name] = {"rows": rows, "snippet_rows": snip, "rules": rules}
+    return out
+
+
 # ---------- 池操作 (immutability: 读→新对象→原子写回) ----------
 def _camp_dir(cid: str) -> Path:
     if not re.fullmatch(r"[A-Za-z0-9_\-]{3,40}", cid):
@@ -382,6 +441,12 @@ def ingest(cid: str, file: str, engine: str, url: str = "",
     text = read_text_safe(fp)
     if len(text) < 50:
         print(f"[pool] 跳过 (太短): {fp.name}")
+        return 0
+    snip, rule = is_snippet_only(text, engine)      # S2-1 硬门: 零入池
+    if snip:
+        _gate_log(d, fp, engine, rule, len(text))
+        print(f"[pool] 硬拒 snippet-only ({rule}): {fp.name[:44]} "
+              f"— 全文腿取回后再入池")
         return 0
     key = dedup_key(url or None, text)
     with _pool_lock(d):
@@ -640,8 +705,10 @@ def status(cid: str) -> int:
 def main() -> int:
     ap = argparse.ArgumentParser(description="弹药池 (千万字弹药工程 F-2)")
     ap.add_argument("cmd", choices=["init", "ingest", "judge", "rebuild",
-                                    "stocktake", "coverage", "status"])
-    ap.add_argument("cid", help="campaign_id (如 EPC100-2026Q4)")
+                                    "stocktake", "coverage", "status",
+                                    "snippet-audit"])
+    ap.add_argument("cid", nargs="?", default="",
+                    help="campaign_id (如 EPC100-2026Q4; snippet-audit 可缺省=全池)")
     ap.add_argument("--kw", default="", help="课题关键词 (init 配置判断判据)")
     ap.add_argument("--limit", type=int, default=500, help="judge 批量上限")
     ap.add_argument("--tree", default="", help="挂树 EEI id (如 Q1-E2)")
@@ -680,6 +747,16 @@ def main() -> int:
                 print("--dirs 必填 (可多次)", file=sys.stderr)
                 return 2
             return stocktake(args.cid, args.dirs, args.kw)
+        elif args.cmd == "snippet-audit":
+            rep = snippet_audit(args.cid)
+            total_snip = 0
+            for camp, r in sorted(rep.items()):
+                total_snip += r["snippet_rows"]
+                print(f"[pool] {camp}: {r['rows']} 行, snippet 形 "
+                      f"{r['snippet_rows']} {r['rules'] or ''}")
+            print(f"[pool] snippet-audit 合计 snippet-only 入池记录 "
+                  f"{total_snip} (验收判据 =0)")
+            return 0 if total_snip == 0 else 1
         return status(args.cid)
     except (ValueError, OSError, json.JSONDecodeError) as e:
         print(f"[pool] 错误: {e}", file=sys.stderr)
