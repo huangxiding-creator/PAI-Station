@@ -1,0 +1,5010 @@
+[
+ {
+  "name": "ByteDance DeerFlow 2.0",
+  "url": "https://github.com/bytedance/deer-flow",
+  "what": "字节开源的深度研究框架，LLM+搜索引擎+爬虫+Python 执行，报告可交互式 AI 增强编辑，还能生成播客/幻灯片/网页；2.0 升级为以 Markdown 技能文件定义工作流的 Super Agent 底座（48k+ star）",
+  "signal": "Markdown 技能文件定义工作流+报告生成后多形态衍生物（PPT/播客）的思路，与本厂 super-skill 体系同构",
+  "source": "github",
+  "_key": "bytedance/deer-flow"
+ },
+ {
+  "name": "assafelovic/gpt-researcher",
+  "signal": "「规划→ breadth查询扇出→逐节深挖→综合」的经典子问题分解范式可直接搬进研报工厂",
+  "source": "github",
+  "url": "https://github.com/assafelovic/gpt-researcher",
+  "what": "30k星自主研究代理：规划器生成 breadth 查询集，逐查询 depth 研究并抓取内容，最后按大纲逐节综合成带引用报告；现已出 MCP Server",
+  "_key": "assafelovic/gpt-researcher"
+ },
+ {
+  "name": "Tongyi DeepResearch (Alibaba-NLP/DeepResearch)",
+  "url": "https://github.com/Alibaba-NLP/DeepResearch",
+  "what": "阿里通义实验室开源的 30.5B MoE（激活 3.3B）深度研究智能体模型，号称首个对标 OpenAI DeepResearch 的全开源 Web Agent，附 Agent 构建方法论",
+  "signal": "「专训一个深度研究模型+轨迹数据」路线的标杆，其方法论博客（tongyi-agent.github.io）值得研读",
+  "source": "github",
+  "_key": "alibaba-nlp/deepresearch"
+ },
+ {
+  "name": "dzhng/deep-research",
+  "url": "https://github.com/dzhng/deep-research",
+  "what": "19.7k星：迭代式deep research助手，搜索引擎+网页爬取+LLM推理循环到token预算耗尽，产出带引用综合报告",
+  "signal": "『迭代循环+预算硬顶+学习笔记中间产物』三件套让过程可断点续跑",
+  "source": "github",
+  "_key": "dzhng/deep-research"
+ },
+ {
+  "name": "arc53/DocsGPT",
+  "signal": "私域证据腿的工程化样本（我们的本地文件扫描线可对标）",
+  "source": "github",
+  "url": "https://github.com/arc53/DocsGPT",
+  "what": "18k星私有 AI 平台，内置 Agent Builder、deep research 与文档分析，多模型支持",
+  "_key": "arc53/docsgpt"
+ },
+ {
+  "name": "MiroMindAI/MiroThinker",
+  "signal": "为「研究」任务专门后训练模型的路线证据",
+  "source": "github",
+  "url": "https://github.com/MiroMindAI/MiroThinker",
+  "what": "面向复杂研究与预测任务优化的深度研究 agent/模型系列（8.4k星），HLE/XBench 成绩公开",
+  "_key": "miromindai/mirothinker"
+ },
+ {
+  "name": "zilliztech/deep-searcher",
+  "signal": "「先推理决策再检索」的查询路由思想可增强我们的 tier_router",
+  "source": "github",
+  "url": "https://github.com/zilliztech/deep-searcher",
+  "what": "8.3k星私有数据上的 Deep Research 替代：LLM 先推理再决定查询哪些向量库、何时停止的 Agentic RAG",
+  "_key": "zilliztech/deep-searcher"
+ },
+ {
+  "name": "nickscamara/open-deep-research",
+  "url": "https://github.com/nickscamara/open-deep-research",
+  "what": "OpenAI Deep Research 的开源克隆，改用 Firecrawl extract+search 替代微调 o3 完成等价流程",
+  "signal": "用「抽取即服务」（Firecrawl）替代自建爬虫的取数腿思路",
+  "source": "github",
+  "_key": "nickscamara/open-deep-research"
+ },
+ {
+  "name": "jordan-gibbs/hyperresearch",
+  "url": "https://github.com/jordan-gibbs/hyperresearch",
+  "what": "把Claude Code/Codex变成最强deep research agent：采集/搜索/综合web研究成可发表文档，3.8k星",
+  "signal": "『用CLI agent当研究执行器』与我们Claude Code军团路线完全同构，可对照补强",
+  "source": "github",
+  "_key": "jordan-gibbs/hyperresearch"
+ },
+ {
+  "name": "SkyworkAI/DeepResearchAgent",
+  "signal": "层级化任务分解的多智能体参考架构",
+  "source": "github",
+  "url": "https://github.com/SkyworkAI/DeepResearchAgent",
+  "what": "3.6k星层级多智能体系统：顶层规划 agent 调度多个专门下层 agent 做自动化任务分解，兼做深度研究与通用任务",
+  "_key": "skyworkai/deepresearchagent"
+ },
+ {
+  "name": "OpenDeepResearcher (mshumer)",
+  "url": "https://github.com/mshumer/OpenDeepResearcher",
+  "what": "Matt Shumer 的极简自主研究循环：LLM 生成查询→SERPAPI 搜索→Jina 抓取→LLM 评估页面价值并抽取→判断是否继续搜→生成报告，全程 asyncio 并发+去重",
+  "signal": "单文件讲清迭代研究循环的全部要素（评估-去重-终止条件），适合做教学级参考实现",
+  "source": "github",
+  "_key": "mshumer/opendeepresearcher"
+ },
+ {
+  "name": "open-deep-research (btahir)",
+  "source": "github",
+  "signal": "搜索结果→AI报告的最短路径产品化参考",
+  "url": "https://github.com/btahir/open-deep-research",
+  "what": "2.1k星Gemini Deep Research开源替代：基于搜索结果生成报告的Web应用",
+  "_key": "btahir/open-deep-research"
+ },
+ {
+  "name": "AnotiaWang/deep-research-web-ui",
+  "signal": "「证据核验」作为独立步骤的产品化样本，与我们的 own_calculations 对账同向",
+  "source": "github",
+  "url": "https://github.com/AnotiaWang/deep-research-web-ui",
+  "what": "2.2k星自托管深度研究 agent：规划搜索→阅读真实来源→核验证据→产出带引用报告，多模型商支持",
+  "_key": "anotiawang/deep-research-web-ui"
+ },
+ {
+  "name": "Auto-Deep-Research (HKUDS)",
+  "signal": "'全自动个人研究助理'的产品定位参考：从问题到报告零人工干预的边界在哪",
+  "source": "github",
+  "url": "https://github.com/HKUDS/Auto-Deep-Research",
+  "what": "港大数据智能实验室全自动化个人 AI 研究助理，★1.7k，GAIA 榜实测",
+  "_key": "hkuds/auto-deep-research"
+ },
+ {
+  "name": "WebThinker",
+  "signal": "「边推理边搜索边起草」的 Deep Web Exploration 模块，可借给我们解决官网/深页这类难采信源。",
+  "source": "github",
+  "url": "https://github.com/RUC-NLPIR/WebThinker",
+  "what": "人大深度调研框架：LRM 在推理过程中自主搜索、深挖网页并在推理中起草研究报告（Deep Web Exploration+递归推理）。",
+  "_key": "ruc-nlpir/webthinker"
+ },
+ {
+  "name": "zamalali/DeepGit",
+  "signal": "「深挖优于浅搜」的检索深度策略",
+  "source": "github",
+  "url": "https://github.com/zamalali/DeepGit",
+  "what": "919星：帮你在 GitHub 干草堆里淘金的深度研究 agent（LangGraph）",
+  "_key": "zamalali/deepgit"
+ },
+ {
+  "name": "fdarkaou/open-deep-research",
+  "signal": "精简双手实现，适合当教学样本",
+  "source": "github",
+  "url": "https://github.com/fdarkaou/open-deep-research",
+  "what": "874星 OpenAI/Gemini Deep Research 开源替代，双手键盘操作即可跑",
+  "_key": "fdarkaou/open-deep-research"
+ },
+ {
+  "name": "Awesome-Deep-Research (DavidZWZ)",
+  "signal": "配套综述《从网络搜索到 agentic 深度研究》是方法论文献地图的现成骨架",
+  "source": "github",
+  "url": "https://github.com/DavidZWZ/Awesome-Deep-Research",
+  "what": "★868，配套综述 arXiv 2506.18096《From Web Search towards Agentic Deep Research》的论文/项目清单",
+  "_key": "davidzwz/awesome-deep-research"
+ },
+ {
+  "name": "agents-deep-research (qx-labs)",
+  "signal": "企业云落地形态参考：深度研究 agent 对接组织账号体系与内部数据的接线方式",
+  "source": "github",
+  "url": "https://github.com/qx-labs/agents-deep-research",
+  "what": "基于 OpenAI Agents SDK 的深度研究助手，★793，Azure 兼容",
+  "_key": "qx-labs/agents-deep-research"
+ },
+ {
+  "name": "Tencent/CognitiveKernel-Pro",
+  "signal": "大厂论文级 DR agent，附 arXiv 2508.00414",
+  "source": "github",
+  "url": "https://github.com/Tencent/CognitiveKernel-Pro",
+  "what": "腾讯 AI Lab 深度研究 agent（532星），论文代码同开",
+  "_key": "tencent/cognitivekernel-pro"
+ },
+ {
+  "name": "Nutlope/open-deep-research",
+  "signal": "免费模型生产报告的端到端样本（免费模型优先铁律的同路人）",
+  "source": "github",
+  "url": "https://github.com/Nutlope/open-deep-research",
+  "what": "432星：Together AI 用开源 LLM 生成报告的 Open Deep Research 应用",
+  "_key": "nutlope/open-deep-research"
+ },
+ {
+  "name": "HarshJ23/Deeper-Seeker",
+  "signal": "多步研究-合成-评审三段式的简洁样本",
+  "source": "github",
+  "url": "https://github.com/HarshJ23/Deeper-Seeker",
+  "what": "421星 OpenAI Deep Research 简化开源版：推理+多步研究+合成报告的 agentic 工具",
+  "_key": "harshj23/deeper-seeker"
+ },
+ {
+  "name": "togethercomputer/open_deep_research",
+  "signal": "开源模型厂商的一线参考实现",
+  "source": "github",
+  "url": "https://github.com/togethercomputer/open_deep_research",
+  "what": "375星 Together AI 官方开源 Deep Research 实现",
+  "_key": "togethercomputer/open_deep_research"
+ },
+ {
+  "name": "Hugging Face: Open-source DeepResearch (blog)",
+  "signal": "开源 DR 生态的谱系图与评测方法论（GAIA 基准）",
+  "source": "web",
+  "url": "https://huggingface.co/blog/open-deep-research",
+  "what": "HF 官方博客：解放搜索 agent，梳理 dzhng/assafelovic/nickscamara/jina-ai/mshumer 等开源 DR 实现",
+  "_key": "huggingface.co/blog/open-deep-research"
+ },
+ {
+  "name": "Tongyi DeepResearch blog",
+  "signal": "开源对标闭源 DR 的性能论证方式",
+  "source": "web",
+  "url": "https://tongyi-agent.github.io/blog/introducing-tongyi-deep-research/",
+  "what": "通义深度研究发布博客：首个达到 OpenAI DeepResearch 水平的全开源 Web Agent",
+  "_key": "tongyi-agent.github.io/blog/introducing-tongyi-deep-research"
+ },
+ {
+  "name": "Feynman",
+  "signal": "「读论文+写草稿+引用核验」一体化的小而美样本",
+  "source": "web",
+  "url": "https://www.feynman.is",
+  "what": "开源 AI 研究 agent：读论文、搜网、写研究草稿、规划实验并为研究论断配引用",
+  "_key": "www.feynman.is"
+ },
+ {
+  "name": "langchain-ai/open_deep_research",
+  "signal": "可配置 deep researcher 的标准参考实现（supervisor+research-team 拓扑）",
+  "source": "github",
+  "url": "https://github.com/langchain-ai/open_deep_research",
+  "what": "12.7k星：简单、可配置、全开源的深度研究 agent，支持任意模型商/搜索工具/MCP server，supervisor-子agent 架构+简洁性评估器",
+  "_key": "langchain-ai/open_deep_research"
+ },
+ {
+  "name": "langchain-ai/deepagents",
+  "signal": "「batteries-included」agent harness 设计（ planning tool/backstage/filesystem）与我们工厂件思路同构",
+  "source": "github",
+  "url": "https://github.com/langchain-ai/deepagents",
+  "what": "30k星电池全含 agent 脚手架：规划工具、文件系统、子agent、后台任务，是构建长程研究 agent 的底盘件",
+  "_key": "langchain-ai/deepagents"
+ },
+ {
+  "name": "langchain-ai/local-deep-researcher",
+  "signal": "完全本地免费腿的工程参考（免费模型优先铁律）",
+  "source": "github",
+  "url": "https://github.com/langchain-ai/local-deep-researcher",
+  "what": "9.4k星：Ollama 本地模型驱动的全自动网络研究+报告写作助手（原 ollama-deep-researcher）",
+  "_key": "langchain-ai/local-deep-researcher"
+ },
+ {
+  "name": "The AI Scientist",
+  "signal": "Automated Reviewer 证明了「机器审机器」可行且接近人类水准——审稿 agent 应成为我们出厂前硬门。",
+  "source": "github",
+  "url": "https://github.com/SakanaAI/AI-Scientist",
+  "what": "全自主科研：选题→文献→实验设计→写论文，并内置 Automated Reviewer（接近人类审稿水平），v2 论文通过 ICLR workshop 同行评审。",
+  "_key": "sakanaai/ai-scientist"
+ },
+ {
+  "name": "Agent Laboratory",
+  "signal": "三阶段闸门（文献→实验→成稿）+角色分工，印证我们「调研-生产-审校」分段收口结构。",
+  "source": "github",
+  "url": "https://github.com/SamuelSchmidgall/AgentLaboratory",
+  "what": "AMD/JHU 自主科研系统：文献综述→实验→报告写作三阶段，PhdStudent/Postdoc/ML Engineer 角色协作，支持自主与副驾两模式。",
+  "_key": "samuelschmidgall/agentlaboratory"
+ },
+ {
+  "name": "Jina node-DeepResearch",
+  "url": "https://github.com/jina-ai/node-DeepResearch",
+  "what": "Jina 官方「Keep searching, reading, reasoning」循环实现，宣称零成本复刻 OpenAI Deep Research 的搜索-阅读-推理闭环",
+  "signal": "工程级迭代检索终止策略与预算控制的参考",
+  "source": "github",
+  "_key": "jina-ai/node-deepresearch"
+ },
+ {
+  "name": "AutoSurvey",
+  "signal": "每个可调参数都是我们的质检旋钮：每节引用上限、大纲参考文献量、RAG 篇数——照参数表建我们自己的分节规格。",
+  "source": "github",
+  "url": "https://github.com/AutoSurveys/AutoSurvey",
+  "what": "NeurIPS 2024「LLM 自动写综述」：检索→结构化大纲→并行分节写作+引用校验；可配 section_num/subsection_len/rag_num/outline_reference_num（如每节 50 引、大纲 1500 篇参考）。",
+  "_key": "autosurveys/autosurvey"
+ },
+ {
+  "name": "IAAR-Shanghai/SurveyX",
+  "signal": "「先建领域知识库再写综述」的两段式结构",
+  "source": "github",
+  "url": "https://github.com/IAAR-Shanghai/SurveyX",
+  "what": "学术综述自动化系统：利用 LLM 生成高质量领域相关的 survey 论文（含引用与附录）",
+  "_key": "iaar-shanghai/surveyx"
+ },
+ {
+  "name": "HancCui/IterSurvey_Autosurveyv2",
+  "source": "github",
+  "signal": "迭代式综述=多轮自校准循环，正合证据饱和引擎的迭代哲学",
+  "url": "https://github.com/HancCui/IterSurvey_Autosurveyv2",
+  "what": "IterSurvey：迭代工作流做深度文献综述自动化（AutoSurvey v2）",
+  "_key": "hanccui/itersurvey_autosurveyv2"
+ },
+ {
+  "name": "FlagOpen/SciSage",
+  "signal": "「层级反思」自我修正机制可移植到我们的章级/节级质量门",
+  "source": "github",
+  "url": "https://github.com/FlagOpen/SciSage",
+  "what": "多智能体科学综述生成（智源）：带层级反思机制，附 SurveyScope 基准",
+  "_key": "flagopen/scisage"
+ },
+ {
+  "name": "zi-yue-1129/DATAGEN",
+  "url": "https://github.com/zi-yue-1129/DATAGEN",
+  "what": "AI多agent研究助手：假设生成、数据分析与报告写作全自动化，1.8k星",
+  "signal": "「假设生成前置」的研究报告生产范式",
+  "source": "github",
+  "_key": "zi-yue-1129/datagen"
+ },
+ {
+  "name": "guy-hartstein/company-research-agent",
+  "source": "github",
+  "signal": "逐家公司尽调报告的 LangGraph+Tavily 模板——EPC100 百强榜逐家研报的直接参照系",
+  "url": "https://github.com/guy-hartstein/company-research-agent",
+  "what": "2.3k star；LangGraph+Tavily 多 agent 公司尽调工具，产出深度公司研究报告",
+  "_key": "guy-hartstein/company-research-agent"
+ },
+ {
+  "name": "ruc-datalab/DeepAnalyze",
+  "signal": "「数据分析→一键成报」的自动图表+报告层设计",
+  "source": "github",
+  "url": "https://github.com/ruc-datalab/DeepAnalyze",
+  "what": "4.7k星人大：自动分析大量数据、一键生成专业分析报告的 agentic 数据分析",
+  "_key": "ruc-datalab/deepanalyze"
+ },
+ {
+  "name": "jinsong8/FinRpt",
+  "url": "https://github.com/jinsong8/FinRpt",
+  "what": "AAAI 2026：股票研究报告的数据集+评估系统+LLM多agent生成框架，38星",
+  "signal": "「为研报生产专门配数据集与评估系统」的benchmark思维，对应金标准86",
+  "source": "github",
+  "_key": "jinsong8/finrpt"
+ },
+ {
+  "name": "shiyidege/Financial-Research-Report-Auto-Generation-Agent",
+  "signal": "中文研报「带图表 PDF 成品」的排版终局参考",
+  "source": "github",
+  "url": "https://github.com/shiyidege/Financial-Research-Report-Auto-Generation-Agent",
+  "what": "输入公司名（英伟达/AMD/美光等）自动生成带图表的精美中文 PDF 研报",
+  "_key": "shiyidege/financial-research-report-auto-generation-agent"
+ },
+ {
+  "name": "xiaoyesoso/finscribe",
+  "signal": "研报即服务（Claude Agent SDK 栈）的生产化样本",
+  "source": "github",
+  "url": "https://github.com/xiaoyesoso/finscribe",
+  "what": "基于 Claude Agent SDK 的生产级 AI 金融研报生成服务",
+  "_key": "xiaoyesoso/finscribe"
+ },
+ {
+  "name": "AdamPlatin123/Open-Deep-Research-workflow-on-Dify",
+  "signal": "低代码平台上的「级联搜索→大纲→引用长文」工作流编排参考",
+  "source": "github",
+  "url": "https://github.com/AdamPlatin123/Open-Deep-Research-workflow-on-Dify",
+  "what": "Dify 上的 Deep Research 工作流：级联多源搜索→大纲→带引用长文报告（Awesome-Dify-Workflow 收录）",
+  "_key": "adamplatin123/open-deep-research-workflow-on-dify"
+ },
+ {
+  "name": "mvanhorn/last30days-skill",
+  "signal": "「多社区渠道汇成一个 grounded summary」的 skill 设计范式，与我们渠道网格+技能化双路线完全同频",
+  "source": "github",
+  "url": "https://github.com/mvanhorn/last30days-skill",
+  "what": "63.6k星 agent 技能：跨 Reddit/X/YouTube/HN/Polymarket/全网研究任一话题近30天动态并合成有据摘要",
+  "_key": "mvanhorn/last30days-skill"
+ },
+ {
+  "name": "liangdabiao/Claude-Code-Stock-Deep-Research-Agent",
+  "signal": "8阶段尽调框架+28并行agent+多空平衡——与我们多车道并行研报工厂高度同构，其阶段闸门设计可对标",
+  "source": "github",
+  "url": "https://github.com/liangdabiao/Claude-Code-Stock-Deep-Research-Agent",
+  "what": "基于 Claude Code 的股票深度研究系统：8阶段投资尽调框架、28个并行研究智能体、多空平衡+数据验证",
+  "_key": "liangdabiao/claude-code-stock-deep-research-agent"
+ },
+ {
+  "name": "Socialpranker/deepdive",
+  "signal": "「12阶段+计划-评审闸+claims台账三角对证+异议保留」几乎就是我们 ACH 假设对抗的 skill 化实现，强烈建议精读",
+  "source": "github",
+  "url": "https://github.com/Socialpranker/deepdive",
+  "what": "Claude Code deepdive 技能：12阶段研究管线——计划-评审闸、并行子agent搜索、claims 台账三角对证并保留异议",
+  "_key": "socialpranker/deepdive"
+ },
+ {
+  "name": "krzysztofdudek/ResearcherSkill",
+  "signal": "「单文件技能+隔夜批量实验」的极简分发模式",
+  "source": "github",
+  "url": "https://github.com/krzysztofdudek/ResearcherSkill",
+  "what": "265星：一个文件让 AI 编码 agent 变成科学家，你睡觉时跑 30+ 实验",
+  "_key": "krzysztofdudek/researcherskill"
+ },
+ {
+  "name": "hwfengcs/SDYJ_Multi_Agents",
+  "url": "https://github.com/hwfengcs/SDYJ_Multi_Agents",
+  "what": "LangGraph多agent深度研究系统：任务规划、human-in-the-loop评审、多源检索、证据接地报告生成、全链tracing与可复现评估，50星",
+  "signal": "「HITL评审+tracing+可复现评估」三件套齐备，是本项目想要的完整质控栈",
+  "source": "github",
+  "_key": "hwfengcs/sdyj_multi_agents"
+ },
+ {
+  "name": "sage-research",
+  "signal": "「质量门控检索」(quality-gated retrieval)思路可接进我们的 J1 信源筛，先过质再入池。",
+  "source": "github",
+  "url": "https://github.com/qinyu8028/sage-research",
+  "what": "多 agent 深度调研系统：自主网页/学术搜索+质量门控检索+结构化综合。",
+  "_key": "qinyu8028/sage-research"
+ },
+ {
+  "name": "hanjanghoon/DEER",
+  "signal": "「专家级报告生成」的 benchmark，可外聘做我们研报质量的第三方标尺",
+  "source": "github",
+  "url": "https://github.com/hanjanghoon/DEER",
+  "what": "评估深度研究 agent 专家级报告生成能力的基准",
+  "_key": "hanjanghoon/deer"
+ },
+ {
+  "name": "TVIR (NJU-LINK)",
+  "source": "github",
+  "signal": "文图交错报告的评测基准——报告质量维度的扩展",
+  "url": "https://github.com/NJU-LINK/TVIR",
+  "what": "文本-视觉交错深度研究报告生成：benchmark+多agent框架",
+  "_key": "nju-link/tvir"
+ },
+ {
+  "name": "GPT Researcher official site",
+  "signal": "一手方法论文档（报告定制：focus/outline/lessons 参数化）",
+  "source": "web",
+  "url": "https://gptr.dev",
+  "what": "GPT Researcher 官网：开源自主研究 agent 产深度研报，多源+内联引用，报告可定制聚焦资源/大纲/课程式产出",
+  "_key": "gptr.dev"
+ },
+ {
+  "name": "LangChain blog: Open Deep Research",
+  "signal": "「简洁性评估器」评估产品化思路值得一读",
+  "source": "web",
+  "url": "https://blog.langchain.dev/open-deep-research/",
+  "what": "LangChain 官方博文：如何构建简单可配置的开源 deep researcher（多模型/多搜索工具/MCP），附简洁性评估器思路",
+  "_key": "blog.langchain.dev/open-deep-research"
+ },
+ {
+  "name": "Stanford STORM / Co-STORM",
+  "url": "https://github.com/stanford-oval/storm",
+  "what": "斯坦福 OVAL 实验室的维基式长文生成系统：先从多视角提问检索，草拟大纲后用收集的参考文献精修大纲再写全文，Co-STORM 支持人机协作 discourse 引导研究方向",
+  "signal": "「多视角提问→大纲两阶段精修→带引用成文」的先写提纲流派，直接可移植到研报章节规划",
+  "source": "github",
+  "_key": "stanford-oval/storm"
+ },
+ {
+  "name": "STORM paper (NAACL 2024)",
+  "signal": "方法论原始出处：预写作阶段显式建模",
+  "source": "web",
+  "url": "https://arxiv.org/abs/2402.14205",
+  "what": "《Assisting in Writing Wikipedia-like Articles From Scratch with LLMs》：从零写 grounding 长文，广度深度对标维基条目",
+  "_key": "arxiv.org/abs/2402.14205"
+ },
+ {
+  "name": "Co-STORM paper (EMNLP 2024)",
+  "signal": "「发现未知未知」的协作策展机制，可作我们调研完备门（静默缺席不许收官）的实现路径",
+  "source": "web",
+  "url": "https://arxiv.org/abs/2408.15232",
+  "what": "协作式 STORM：多 agent 与用户圆桌 discourse，动态思维导图组织未覆盖信息，最终生成综合报告",
+  "_key": "arxiv.org/abs/2408.15232"
+ },
+ {
+  "name": "STORM live demo",
+  "signal": "可直接体验的基准产出，用于对比我们报告的广度/深度/结构",
+  "source": "web",
+  "url": "https://storm.genie.stanford.edu/",
+  "what": "STORM 在线原型：输入话题即产维基式全文报告",
+  "_key": "storm.genie.stanford.edu"
+ },
+ {
+  "name": "khoj-ai/khoj",
+  "signal": "「研究+知识库+定时自动化」一体化的自托管形态参考",
+  "source": "github",
+  "url": "https://github.com/khoj-ai/khoj",
+  "what": "37.6k星 AI 第二大脑：自托管，网页/文档问答、自定义 agent、定时自动化、深度研究",
+  "_key": "khoj-ai/khoj"
+ },
+ {
+  "name": "666ghj/BettaFish",
+  "signal": "中文多agent舆情研报的代表作——背景/情绪/预测/决策四层结构可借鉴到我们的行业舆情章",
+  "source": "github",
+  "url": "https://github.com/666ghj/BettaFish",
+  "what": "42.3k星微舆：人人可用的多Agent舆情分析助手——还原舆情原貌、预测走向、辅助决策，零框架依赖从0实现",
+  "_key": "666ghj/bettafish"
+ },
+ {
+  "name": "boluodaixue/paperpilot",
+  "signal": "「递归深研×wiki沉淀×Obsidian」把一次性调研变可生长知识库——正是我们弹药池/金矿的对照设计",
+  "source": "github",
+  "url": "https://github.com/boluodaixue/paperpilot",
+  "what": "LangGraph 个人深度研究系统：递归 Deep Research × LLM Wiki × Obsidian，把一次性研究沉淀为可追溯、可问答、可继续生长的长期知识",
+  "_key": "boluodaixue/paperpilot"
+ },
+ {
+  "name": "baoozak/DeeperResearch",
+  "signal": "「模糊课题自动拆解+agent内部审查自纠错+图表长文」与我们模糊需求→精报的路径完全同题",
+  "source": "github",
+  "url": "https://github.com/baoozak/DeeperResearch",
+  "what": "多智能体协作深度研究系统：宏大模糊课题自动拆解→并行联网搜索→智能体内部审查与自纠错→含严谨数据与文献指向及可视化图表的深度长文",
+  "_key": "baoozak/deeperresearch"
+ },
+ {
+  "name": "DeepResearch Bench (Ayanami0730)",
+  "url": "https://github.com/Ayanami0730/deep_research_bench",
+  "what": "深度研究智能体综合基准：100 道 PhD 级研究任务覆盖 22 领域，附 HF 排行榜，另有 ResearchRubrics 2500+ 专家评分量表",
+  "signal": "现成的研报质量外部评测集，可接入本厂金标准体系做对齐校准",
+  "source": "github",
+  "_key": "ayanami0730/deep_research_bench"
+ },
+ {
+  "name": "texttron/BrowseComp-Plus",
+  "signal": "更公平透明的 DR 评测方法论（ACL 2026）",
+  "source": "github",
+  "url": "https://github.com/texttron/BrowseComp-Plus",
+  "what": "ACL 2026：更公平透明的深度研究 agent 评测基准",
+  "_key": "texttron/browsecomp-plus"
+ },
+ {
+  "name": "vstorm-co/pydantic-deepagents",
+  "signal": "「终端+沙箱+多agent团队」的 Python harness 工程参考",
+  "source": "github",
+  "url": "https://github.com/vstorm-co/pydantic-deepagents",
+  "what": "1.1k星：开源版 Claude Code——终端 AI 助手与背后的 Python 框架（工具调用/沙箱执行/多agent团队）",
+  "_key": "vstorm-co/pydantic-deepagents"
+ },
+ {
+  "name": "Ylang-Labs/open_deep_research_ui",
+  "signal": "给研究管线配可视化前端的捷径",
+  "source": "github",
+  "url": "https://github.com/Ylang-Labs/open_deep_research_ui",
+  "what": "LangGraph Open Deep Research 的开源 UI",
+  "_key": "ylang-labs/open_deep_research_ui"
+ },
+ {
+  "name": "awesome-deep-research-agent (WuizaKaseiyo)",
+  "signal": "开源深度研究项目全景索引——补足 200 家调研清单的现成弹药库",
+  "source": "github",
+  "url": "https://github.com/WuizaKaseiyo/awesome-deep-research-agent",
+  "what": "★638（原 ai-agents-2030），开源深度研究 agent 大全（GPT Researcher/STORM/各分叉等）",
+  "_key": "wuizakaseiyo/awesome-deep-research-agent"
+ },
+ {
+  "name": "lingzhi227/agent-research-skills",
+  "url": "https://github.com/lingzhi227/agent-research-skills",
+  "what": "Claude Code技能：系统性学术文献综述deep-research，381星",
+  "signal": "skill化研究工作流，与本项目技能栈同构可互换",
+  "source": "github",
+  "_key": "lingzhi227/agent-research-skills"
+ },
+ {
+  "name": "brycewang-stanford/lit-review-agent-tools",
+  "signal": "文献综述工具全景索引（含 Claude skills 与 deep research 类）",
+  "source": "github",
+  "url": "https://github.com/brycewang-stanford/lit-review-agent-tools",
+  "what": "最强的开源文献综述 AI-agent 工具策展清单：70+ 工具、11 类（Claude Code skills/deep research 等）",
+  "_key": "brycewang-stanford/lit-review-agent-tools"
+ },
+ {
+  "name": "Zachariah9420/lit-review-skill",
+  "signal": "「引用必须经得起追问」的审计三件套——对我们 GLM 审计五防线是天然补强",
+  "source": "github",
+  "url": "https://github.com/Zachariah9420/lit-review-skill",
+  "what": "文献抓取+引用审计技能：找文献、核验引用真伪与支持度、文献支撑写作，防幻觉引用",
+  "_key": "zachariah9420/lit-review-skill"
+ },
+ {
+  "name": "gallantlab/literature-review-toolkit",
+  "signal": "「结构化流程驱动 agent 走完综述」的模板化方法",
+  "source": "github",
+  "url": "https://github.com/gallantlab/literature-review-toolkit",
+  "what": "话题无关工具包：以结构化流程驱动 LLM agent 完成学术文献综述",
+  "_key": "gallantlab/literature-review-toolkit"
+ },
+ {
+  "name": "jostelzer/grounded",
+  "signal": "「只引同行评审+撤稿筛查」的信源洁癖策略，可加进我们信源分级",
+  "source": "github",
+  "url": "https://github.com/jostelzer/grounded",
+  "what": "只允许经过核验、未撤稿、同行评审引用的科学文献综述写作技能",
+  "_key": "jostelzer/grounded"
+ },
+ {
+  "name": "Awi-24/archivist",
+  "signal": "PRISMA 流程模板（筛选/纳入/排除留痕）对研报证据门流程化的启发",
+  "source": "github",
+  "url": "https://github.com/Awi-24/archivist",
+  "what": "桌面级系统性文献综述 agent：PRISMA 流水线、开放获取全文、本地 LLM（Tauri+Rust+React）",
+  "_key": "awi-24/archivist"
+ },
+ {
+  "name": "rotanakkosal/scholar-agent",
+  "signal": "「每条摘要都过一遍验证」的二次核验模式",
+  "source": "github",
+  "url": "https://github.com/rotanakkosal/scholar-agent",
+  "what": "文献综述管线：搜 Semantic Scholar→结构化表格总结→LLM 逐条验证摘要",
+  "_key": "rotanakkosal/scholar-agent"
+ },
+ {
+  "name": "yma12138/openalex_explorer",
+  "signal": "OpenAlex 学术源技能（检索→筛选→抽取）与我们渠道技能化做法同构",
+  "source": "github",
+  "url": "https://github.com/yma12138/openalex_explorer",
+  "what": "OpenAlex Explorer agent 技能：搜论文→相关性与质量筛查→抽取，LLM 驱动自动文献综述",
+  "_key": "yma12138/openalex_explorer"
+ },
+ {
+  "name": "O0000-code/awesome-academic-skills",
+  "url": "https://github.com/O0000-code/awesome-academic-skills",
+  "what": "按研究生命周期组织的学术agent技能索引，每条注明license与运行时，43星",
+  "signal": "按生命周期组织技能+license合规标注的目录学",
+  "source": "github",
+  "_key": "o0000-code/awesome-academic-skills"
+ },
+ {
+  "name": "foreveryh/langgraph-deep-research",
+  "signal": "LangGraph 深研的标准图结构参考",
+  "source": "github",
+  "url": "https://github.com/foreveryh/langgraph-deep-research",
+  "what": "246星：LangGraph 版深度研究实现",
+  "_key": "foreveryh/langgraph-deep-research"
+ },
+ {
+  "name": "didilili/deepsearch-agents",
+  "signal": "中文最佳实践工程样本（前后端全栈+流式）——对我们中文研报栈直接可参考",
+  "source": "github",
+  "url": "https://github.com/didilili/deepsearch-agents",
+  "what": "259星中文实战项目：深度研搜对话式多智能体（LangGraph+RAGFlow+Tavily+FastAPI+WebSocket）从0到工程化",
+  "_key": "didilili/deepsearch-agents"
+ },
+ {
+  "name": "firecrawl/firesearch",
+  "signal": "「分解复杂查询+答案验证」的搜索质量增强件",
+  "source": "github",
+  "url": "https://github.com/firecrawl/firesearch",
+  "what": "499星 Firecrawl 官方：AI 深度搜索工具——拆解复杂查询、验证答案、给引用",
+  "_key": "firecrawl/firesearch"
+ },
+ {
+  "name": "Oqura-ai/deepdoc",
+  "signal": "本地知识库版 deep research 的检索优化思路",
+  "source": "github",
+  "url": "https://github.com/Oqura-ai/deepdoc",
+  "what": "310星：本地知识库深度研究工具",
+  "_key": "oqura-ai/deepdoc"
+ },
+ {
+  "name": "bernatsampera/event-deep-research",
+  "signal": "「研究产出结构化 JSON」的可计算化路线——研报数据化的一种形态",
+  "source": "github",
+  "url": "https://github.com/bernatsampera/event-deep-research",
+  "what": "255星：LangGraph 多智能体研究历史人物生平并抽取为结构化 JSON 时间线",
+  "_key": "bernatsampera/event-deep-research"
+ },
+ {
+  "name": "tarun7r/deep-research-agent",
+  "signal": "「引用+可信度评分」双维度可信度体系，直接可搬进我们的信源账本",
+  "source": "github",
+  "url": "https://github.com/tarun7r/deep-research-agent",
+  "what": "188星：LangGraph/LangChain 多智能体自主研究系统，产出带可信度评分与引用的报告",
+  "_key": "tarun7r/deep-research-agent"
+ },
+ {
+  "name": "kaymen99/local-rag-researcher-deepseek",
+  "signal": "免费模型研究管线的成套组合参考",
+  "source": "github",
+  "url": "https://github.com/kaymen99/local-rag-researcher-deepseek",
+  "what": "142星：LangGraph+DeepSeek R1+Ollama 本地 RAG 研究 agent",
+  "_key": "kaymen99/local-rag-researcher-deepseek"
+ },
+ {
+  "name": "OpenPipe/open_deep_research_training",
+  "signal": "「研报生产轨迹可被训练与优化」的证明——长期可把我们的黄金样本变成可训练资产",
+  "source": "github",
+  "url": "https://github.com/OpenPipe/open_deep_research_training",
+  "what": "77星 OpenPipe：LangChain Open Deep Research 的 RL 训练配置——深度研究 agent 的轨迹可被强化学习优化",
+  "_key": "openpipe/open_deep_research_training"
+ },
+ {
+  "name": "1612535983/deepresearchagent",
+  "signal": "「可恢复+可审计+证据上下文管理」三件套正是我们双车道接续与审计五防线的同题作",
+  "source": "github",
+  "url": "https://github.com/1612535983/deepresearchagent",
+  "what": "63星：可恢复、可审计的 LangGraph 深度研究 agent——规划研究、搜网、管理证据与上下文、断点续跑",
+  "_key": "1612535983/deepresearchagent"
+ },
+ {
+  "name": "PacoVK/ollama-deep-researcher-ts",
+  "signal": "TS 栈全本地研究循环参考",
+  "source": "github",
+  "url": "https://github.com/PacoVK/ollama-deep-researcher-ts",
+  "what": "57星：全本地网络研究与报告写作助手（TypeScript 版 Ollama Deep Researcher）",
+  "_key": "pacovk/ollama-deep-researcher-ts"
+ },
+ {
+  "name": "ericrisco/deep-js-research",
+  "signal": "多语种版 DR 克隆的本地化处理样本",
+  "source": "github",
+  "url": "https://github.com/ericrisco/deep-js-research",
+  "what": "29星：OpenAI DeepResearch 开源替代（西语），任意主题调查并生成带数据引用的研究文档",
+  "_key": "ericrisco/deep-js-research"
+ },
+ {
+  "name": "imfangs/langgraph4j-deep-researcher",
+  "signal": "Java 生态同款实现，验证图结构可移植性",
+  "source": "github",
+  "url": "https://github.com/imfangs/langgraph4j-deep-researcher",
+  "what": "28星：基于 Langgraph4j 的迭代式深度研究助手（Java）",
+  "_key": "imfangs/langgraph4j-deep-researcher"
+ },
+ {
+  "name": "aws-samples/sample-deep-research-bedrock-agentcore",
+  "signal": "云厂商生产级 DR 参考架构（检查点/托管状态）",
+  "source": "github",
+  "url": "https://github.com/aws-samples/sample-deep-research-bedrock-agentcore",
+  "what": "28星 AWS 官方样例：Bedrock+AgentCore+LangGraph 深度研究 agent",
+  "_key": "aws-samples/sample-deep-research-bedrock-agentcore"
+ },
+ {
+  "name": "kargarisaac/Hekmatica",
+  "signal": "BAML 类型安全 agent 工程化路线",
+  "source": "github",
+  "url": "https://github.com/kargarisaac/Hekmatica",
+  "what": "23星：BAML+LangGraph 的深度研究 agent，产带引用答案",
+  "_key": "kargarisaac/hekmatica"
+ },
+ {
+  "name": "MagicCube/deep-research",
+  "signal": "「研究→综合→报告」三幕剧图结构的教科书实现",
+  "source": "github",
+  "url": "https://github.com/MagicCube/deep-research",
+  "what": "16星：LangChain/LangGraph 复刻 Deep Research（研究-综合-报告三阶段）",
+  "_key": "magiccube/deep-research"
+ },
+ {
+  "name": "pingcy/TongyiDeepResearch-LangGraph",
+  "signal": "把 SOTA agent 思想移植到 LangGraph 的翻译样本",
+  "source": "github",
+  "url": "https://github.com/pingcy/TongyiDeepResearch-LangGraph",
+  "what": "16星：通义深度研究的 LangGraph 复刻",
+  "_key": "pingcy/tongyideepresearch-langgraph"
+ },
+ {
+  "name": "Alex2Yang97/local-full-stack-deep-research",
+  "signal": "全栈本地化+多供应商切换的工程参考",
+  "source": "github",
+  "url": "https://github.com/Alex2Yang97/local-full-stack-deep-research",
+  "what": "15星：FastAPI+LangGraph 全栈本地深度研究应用，多 LLM 商与搜索 API 可切换",
+  "_key": "alex2yang97/local-full-stack-deep-research"
+ },
+ {
+  "name": "w-221/DeepResearchBot",
+  "signal": "「主智能体统筹+多专家并行」企业级拓扑，与我们 conductor+多车道同构",
+  "source": "github",
+  "url": "https://github.com/w-221/DeepResearchBot",
+  "what": "10星：DeepAgents+LangGraph 企业级深度搜索与研究智能体——主agent统筹+多专家子agent并行协作",
+  "_key": "w-221/deepresearchbot"
+ },
+ {
+  "name": "heishen6/GLM_OPEN_DEEP_RESEARCH",
+  "signal": "国产免费模型跑 DR 的落地证据（免费模型优先铁律同盟）",
+  "source": "github",
+  "url": "https://github.com/heishen6/GLM_OPEN_DEEP_RESEARCH",
+  "what": "8星：智谱 GLM-4.5 驱动的可配置研究 agent（LangGraph）",
+  "_key": "heishen6/glm_open_deep_research"
+ },
+ {
+  "name": "iusztinpaul/designing-real-world-ai-agents-workshop",
+  "signal": "「深研agent+写作工作流双 MCP 服务」的模块化拆分教学模式",
+  "source": "github",
+  "url": "https://github.com/iusztinpaul/designing-real-world-ai-agents-workshop",
+  "what": "511星工作坊：从0构建多智能体系统——Deep Research Agent + Writing Workflow 以 MCP server 提供，含代码/讲义",
+  "_key": "iusztinpaul/designing-real-world-ai-agents-workshop"
+ },
+ {
+  "name": "LangChain Academy: Deep Research with LangGraph",
+  "signal": "官方课程里的多智能体研究系统+LangSmith 评估闭环方法论",
+  "source": "web",
+  "url": "https://academy.langchain.com/courses/deep-research-with-langgraph",
+  "what": "LangChain Academy 官方课程：用 LangGraph 构建多智能体深度研究 agent 并用 LangSmith 评估",
+  "_key": "academy.langchain.com/courses/deep-research-with-langgraph"
+ },
+ {
+  "name": "open-deep-research (PyPI)",
+  "signal": "pip 即用的分发形态参考",
+  "source": "web",
+  "url": "https://pypi.org/project/open-deep-research/",
+  "what": "LangChain Open Deep Research 的 PyPI 包，可本地 LangGraph server 启动",
+  "_key": "pypi.org/project/open-deep-research"
+ },
+ {
+  "name": "crewAIInc/crewAI",
+  "source": "github",
+  "signal": "角色制 Crew（researcher+writer+reviewer）是最易落地的研报流水线抽象",
+  "url": "https://github.com/crewAIInc/crewAI",
+  "what": "角色扮演型自主代理编排框架，高层抽象+底层API构建生产级多代理工作流，官方示例含研究并撰写报告的 crew",
+  "_key": "crewaiinc/crewai"
+ },
+ {
+  "name": "microsoft/autogen",
+  "source": "github",
+  "signal": "事件驱动对话式多代理编排是研报团队(研究员/审稿/撰写对话)的成熟骨架",
+  "url": "https://github.com/microsoft/autogen",
+  "what": "微软出品的通用多智能体对话框架（AgentChat/GroupChat/Core 分层），支持研究者代理团队协作产出长文",
+  "_key": "microsoft/autogen"
+ },
+ {
+  "name": "camel-ai/camel",
+  "source": "github",
+  "signal": "角色扮演式无限扩展数据可用于研报训练语料与多视角生成",
+  "url": "https://github.com/camel-ai/camel",
+  "what": "最早的multi-agent框架之一（KAUST），角色扮演代理+真实业务用例库，含大规模数据生成能力",
+  "_key": "camel-ai/camel"
+ },
+ {
+  "name": "LearningCircuit/local-deep-research (LDR)",
+  "url": "https://github.com/LearningCircuit/local-deep-research",
+  "what": "本地优先的深度研究助手：Ollama 本地 LLM+可切换搜索引擎+本地文档检索，产出带规范引用的迭代研究报告，PyPI 可装",
+  "signal": "本地/离线研究模式与本地文档库检索融合的架构，对内网数据腿有直接参考价值",
+  "source": "github",
+  "_key": "learningcircuit/local-deep-research"
+ },
+ {
+  "name": "MiroFlow",
+  "url": "https://github.com/MiroMindAI/MiroFlow",
+  "what": "5+benchmark第一的通用研究工作流WebUI，多provider可插拔，3.1k星",
+  "signal": "工作流内可插拔模型路由（免费/付费分层）的接口设计",
+  "source": "github",
+  "_key": "miromindai/miroflow"
+ },
+ {
+  "name": "u14app/deep-research",
+  "url": "https://github.com/u14app/deep-research",
+  "what": "任意LLM做deep research的轻量实现，支持SSE API和MCP server，4.7k星",
+  "signal": "把研究循环直接暴露成MCP服务的接口设计",
+  "source": "github",
+  "_key": "u14app/deep-research"
+ },
+ {
+  "name": "TIGER-AI-Lab/OpenResearcher",
+  "url": "https://github.com/TIGER-AI-Lab/OpenResearcher",
+  "what": "全开源的长周期深度研究轨迹合成管线，1.25k星",
+  "signal": "把优秀研究过程做成可复用轨迹数据，用于训练/蒸馏研究agent",
+  "source": "github",
+  "_key": "tiger-ai-lab/openresearcher"
+ },
+ {
+  "name": "hoolulu/deep-research",
+  "source": "github",
+  "signal": "与本项目最同构的中文对标：一条命令出券商级研报的 skill 化封装方式与输出规格值得逐条对表",
+  "url": "https://github.com/hoolulu/deep-research",
+  "what": "中文券商级深度调研报告生成 Skill：一条命令十分钟出 broker-grade 深度研报",
+  "_key": "hoolulu/deep-research"
+ },
+ {
+  "name": "Jesseovo/last30days-skill-cn",
+  "source": "github",
+  "signal": "「多平台聚合+有据可查」的时效性报告 skill 形态，与全渠道上阵原则互补",
+  "url": "https://github.com/Jesseovo/last30days-skill-cn",
+  "what": "AI Agent 技能：自动搜索中国互联网 8 大平台近 30 天内容，综合生成有据可查的研究报告",
+  "_key": "jesseovo/last30days-skill-cn"
+ },
+ {
+  "name": "Muuuun/luxas",
+  "url": "https://github.com/Muuuun/luxas",
+  "what": "自治研究同事：「你睡觉时从一个问题到编译成稿」，1.1k星",
+  "signal": "过夜长任务→晨起成稿的无人值守范式，对应夜班扩容",
+  "source": "github",
+  "_key": "muuuun/luxas"
+ },
+ {
+  "name": "OpenNSWM-Lab/FAROS",
+  "url": "https://github.com/OpenNSWM-Lab/FAROS",
+  "what": "蓝图驱动的AutoResearch运行时：从想法生成、实验到论文写作与同行评审的AI研究工作流编排，3k星",
+  "signal": "「蓝图(blueprint)驱动」把研究方法论显式化为可执行规格",
+  "source": "github",
+  "_key": "opennswm-lab/faros"
+ },
+ {
+  "name": "damonwan1/AutoScholarLoop",
+  "url": "https://github.com/damonwan1/AutoScholarLoop",
+  "what": "中科院AI组多agent自动研究环：想法发现→实验执行→证据接地论文写作→质量审计→Web观测，422星",
+  "signal": "证据接地写作+独立质量审计双环，与RQS门同构",
+  "source": "github",
+  "_key": "damonwan1/autoscholarloop"
+ },
+ {
+  "name": "wanshuiyin/ARIS-Anything",
+  "url": "https://github.com/wanshuiyin/ARIS-Anything",
+  "what": "把科研五步环(计划·草稿·对抗评审·迭代·持久化)泛化到尽调/法律/市场调研，54星",
+  "signal": "五步环与本项目「调研不达顶级不生产」元门结构一致，对抗评审位可直接对接ACH",
+  "source": "github",
+  "_key": "wanshuiyin/aris-anything"
+ },
+ {
+  "name": "yogsoth-ai/de-anthropocentric-research-engine",
+  "url": "https://github.com/yogsoth-ai/de-anthropocentric-research-engine",
+  "what": "纯markdown的267技能研究图：51个研究操作由216个单用途步骤组成，可任意组合并显式回溯，504星",
+  "signal": "「方法论=技能图+显式回溯」的纯文本引擎，对应本项目skill化路线",
+  "source": "github",
+  "_key": "yogsoth-ai/de-anthropocentric-research-engine"
+ },
+ {
+  "name": "cpt13-g/build-research-evidence",
+  "url": "https://github.com/cpt13-g/build-research-evidence",
+  "what": "面向AI/CS科研的多skill实验agent：Claim驱动、骨干实验优先、独立结果审计与Evidence Freeze，33星",
+  "signal": "Evidence Freeze(证据冻结)纪律可直接搬进弹药池与own_calculations",
+  "source": "github",
+  "_key": "cpt13-g/build-research-evidence"
+ },
+ {
+  "name": "tonyblu331/research-proof",
+  "url": "https://github.com/tonyblu331/research-proof",
+  "what": "用可证伪证据计划、对抗检查、冻结verifier和证明台账对研究claim压力测试，51星",
+  "signal": "『可证伪性』进研究管线：每个结论配一个能推翻它的检验",
+  "source": "github",
+  "_key": "tonyblu331/research-proof"
+ },
+ {
+  "name": "sami-mag07/claude-skill-research-agent",
+  "url": "https://github.com/sami-mag07/claude-skill-research-agent",
+  "what": "Claude Code研究技能+researcher子agent：单接口多引擎搜索、并行agent波、verify门拦截无逐字引用的引用，41星",
+  "signal": "「无逐字原文不得出引用」的硬门值得落进本项目引用规范（治跨格幻影对）",
+  "source": "github",
+  "_key": "sami-mag07/claude-skill-research-agent"
+ },
+ {
+  "name": "YihongT/CoAutoResearch",
+  "url": "https://github.com/YihongT/CoAutoResearch",
+  "what": "自治调查+递归自我改进+人机协同的开源研究系统，实验可追溯，91星",
+  "signal": "递归自我改进研究管线与证据反馈闭环",
+  "source": "github",
+  "_key": "yihongt/coautoresearch"
+ },
+ {
+  "name": "smileformylove/XScientist",
+  "url": "https://github.com/smileformylove/XScientist",
+  "what": "把想法变成带Git式证据历史的自治研究：可检查、可复现、可回滚，130星",
+  "signal": "证据历史版本化（Git式）保证可回滚可追责",
+  "source": "github",
+  "_key": "smileformylove/xscientist"
+ },
+ {
+  "name": "0xmariowu/Autosearch",
+  "url": "https://github.com/0xmariowu/Autosearch",
+  "what": "面向AI agent的开源深度研究：40渠道、10+中文源，49星",
+  "signal": "多渠道（含中文源）检索腿与渠道账本思路，对应Channel Grid",
+  "source": "github",
+  "_key": "0xmariowu/autosearch"
+ },
+ {
+  "name": "AlekseiUL/hermes-researcher-agent",
+  "url": "https://github.com/AlekseiUL/hermes-researcher-agent",
+  "what": "隐私安全研究员agent：web/GitHub/YouTube/Reddit/文档+来源谱系检查+反例+决策就绪简报，62星",
+  "signal": "「反例+决策简报」的输出形态，强化报告决策可用性",
+  "source": "github",
+  "_key": "alekseiul/hermes-researcher-agent"
+ },
+ {
+  "name": "extracurricular-ai/open-deep-research-with-web-ui",
+  "url": "https://github.com/extracurricular-ai/open-deep-research-with-web-ui",
+  "what": "smolagents构建、过程化架构、MetaSo/DuckDuckGo搜索、Docker部署的深研agent+WebUI，73星",
+  "signal": "过程化（非黑盒）研究架构与中文搜索源接入",
+  "source": "github",
+  "_key": "extracurricular-ai/open-deep-research-with-web-ui"
+ },
+ {
+  "name": "InternScience/SurveyForge",
+  "url": "https://github.com/InternScience/SurveyForge",
+  "what": "ACL 2025主会：自动综述写作的提纲启发式、记忆驱动生成与多维评估，333星",
+  "signal": "「提纲启发式+记忆驱动」两大写作机制+多维评估配套",
+  "source": "github",
+  "_key": "internscience/surveyforge"
+ },
+ {
+  "name": "zjunlp/OmniThink",
+  "source": "github",
+  "signal": "知识密度KD指标+信息池动态检索正是我们弹药池/萃取层的量化升级方向",
+  "url": "https://github.com/zjunlp/OmniThink",
+  "what": "浙大ZJUNLP机器写作框架：模仿学习者认知的慢思考，大纲迭代+信息池持续动态检索，提出知识密度KD指标并显著提升长文质量",
+  "_key": "zjunlp/omnithink"
+ },
+ {
+  "name": "TechnicolorGUO/InteractiveSurvey",
+  "url": "https://github.com/TechnicolorGUO/InteractiveSurvey",
+  "what": "LLM个性化交互式综述论文生成系统，24星",
+  "signal": "用户交互回路嵌入写作管线的形态",
+  "source": "github",
+  "_key": "technicolorguo/interactivesurvey"
+ },
+ {
+  "name": "littlelelephant/literature-review-agent",
+  "url": "https://github.com/littlelelephant/literature-review-agent",
+  "what": "LangGraph agent：文献检索→证据筛选→提纲生成→证据接地综述写作，120星",
+  "signal": "「证据筛选→提纲→接地写作」三段式可直接平移到研报",
+  "source": "github",
+  "_key": "littlelelephant/literature-review-agent"
+ },
+ {
+  "name": "PouriaRouzrokh/LatteReview",
+  "url": "https://github.com/PouriaRouzrokh/LatteReview",
+  "what": "低代码Python包，用AI agent自动化系统文献综述(SLR)流程，122星",
+  "signal": "SLR标准化流程（PRISMA式）的程序化封装",
+  "source": "github",
+  "_key": "pouriarouzrokh/lattereview"
+ },
+ {
+  "name": "lira-workflow/auto-review-writing",
+  "url": "https://github.com/lira-workflow/auto-review-writing",
+  "what": "LiRA：可靠且可读的文献综述生成多agent框架，17星",
+  "signal": "可靠性与可读性双目标分离优化的框架设计",
+  "source": "github",
+  "_key": "lira-workflow/auto-review-writing"
+ },
+ {
+  "name": "JinchengGao-Infty/FWMA",
+  "url": "https://github.com/JinchengGao-Infty/FWMA",
+  "what": "端到端AI文献综述自动化：爬取→筛选→下载→多agent评审→报告生成，58星",
+  "signal": "文献腿与报告腿的接口切分（采集与写作解耦）",
+  "source": "github",
+  "_key": "jinchenggao-infty/fwma"
+ },
+ {
+  "name": "ai-research-skills (WenyuChiou)",
+  "source": "github",
+  "signal": "通用SKILL.md研究工作流目录：综述/设计/项目记忆/写作/跨agent委派的模块划分",
+  "url": "https://github.com/WenyuChiou/ai-research-skills",
+  "what": "304星通用SKILL.md研究工作流目录：文献综述、研究设计、项目记忆、稿件写作、跨agent委派，兼容Claude Code/Codex/Cursor",
+  "_key": "wenyuchiou/ai-research-skills"
+ },
+ {
+  "name": "stephenlzc/AI-Powered-Literature-Review-Skills",
+  "url": "https://github.com/stephenlzc/AI-Powered-Literature-Review-Skills",
+  "what": "AI驱动的系统性学术文献回顾工具：8阶段工作流+Agent Swarm架构，165星",
+  "signal": "8阶段显式工作流拆解（对照本项目七步循环）",
+  "source": "github",
+  "_key": "stephenlzc/ai-powered-literature-review-skills"
+ },
+ {
+  "name": "ShZhao27208/Aut_Sci_Write",
+  "url": "https://github.com/ShZhao27208/Aut_Sci_Write",
+  "what": "学术研究技能套件：WoS/Elsevier/Springer文献检索下载、PDF抽取、图表裁剪、综述写作、Zotero同步、PPT/HTML生成，206星",
+  "signal": "「检索+写作+文献管理+成稿排版」全链技能套件的完整性",
+  "source": "github",
+  "_key": "shzhao27208/aut_sci_write"
+ },
+ {
+  "name": "tririver/arc",
+  "url": "https://github.com/tririver/arc",
+  "what": "理论物理研究副驾ARC：文献综述+想法生成+执行计算的技能与CLI，94星",
+  "signal": "垂直领域深度定制的研究副驾（含计算验证腿）",
+  "source": "github",
+  "_key": "tririver/arc"
+ },
+ {
+  "name": "ResearchClaw (ymx10086)",
+  "source": "github",
+  "signal": "综述/笔记/实验/写作端到端+聊天app集成的个人研究agent产品形态",
+  "url": "https://github.com/ymx10086/ResearchClaw",
+  "what": "313星个人AI研究助手：文献综述、笔记、实验跟踪、论文写作端到端，可接聊天app",
+  "_key": "ymx10086/researchclaw"
+ },
+ {
+  "name": "research-town (ulab-uiuc)",
+  "source": "github",
+  "signal": "多角色社区模拟产论文——角色多样性与互评提升产出的机制",
+  "url": "https://github.com/ulab-uiuc/research-town",
+  "what": "ICML 2025研究社区模拟器：模拟人类研究社区协作产出论文",
+  "_key": "ulab-uiuc/research-town"
+ },
+ {
+  "name": "Omni-Scientist/Awesome-AI-Scientist",
+  "url": "https://github.com/Omni-Scientist/Awesome-AI-Scientist",
+  "what": "AI科学家论文/系统/基准/数据集/开源平台总库，108星",
+  "signal": "顶会全自动科研系统的追踪清单",
+  "source": "github",
+  "_key": "omni-scientist/awesome-ai-scientist"
+ },
+ {
+  "name": "zLanqing/codex-claude-academic-skills",
+  "url": "https://github.com/zLanqing/codex-claude-academic-skills",
+  "what": "面向学术科研的三个Skills：论文阅读报告与学术PPT/Word生成、写作润色审稿回复、MATLAB/Python科学计算与期刊级图表，4.5k星",
+  "signal": "「阅读报告→学术成稿→图表」三技能分工与期刊级图表腿",
+  "source": "github",
+  "_key": "zlanqing/codex-claude-academic-skills"
+ },
+ {
+  "name": "ShaishavMaisuria/research-paper-lifecycle-skills",
+  "url": "https://github.com/ShaishavMaisuria/research-paper-lifecycle-skills",
+  "what": "42个AI agent技能覆盖文献综述、学术写作、引用核验、投稿、答辩、演示全生命周期，51星",
+  "signal": "引用核验独立成技能的做法（对应own_calculations审计）",
+  "source": "github",
+  "_key": "shaishavmaisuria/research-paper-lifecycle-skills"
+ },
+ {
+  "name": "xingtaxueshu/literature-review-skills",
+  "url": "https://github.com/xingtaxueshu/literature-review-skills",
+  "what": "五个开源技能：问题精炼、综述模块、方法对比、矛盾地图、研究缺口发现，31星",
+  "signal": "「矛盾地图+研究缺口」两个分析件可补强研报深度",
+  "source": "github",
+  "_key": "xingtaxueshu/literature-review-skills"
+ },
+ {
+  "name": "virattt/dexter",
+  "url": "https://github.com/virattt/dexter",
+  "what": "自主深度金融研究agent，27.6k星",
+  "signal": "金融证据链研究的agent化标杆（SEC文件深读）",
+  "source": "github",
+  "_key": "virattt/dexter"
+ },
+ {
+  "name": "virattt/ai-financial-agent",
+  "url": "https://github.com/virattt/ai-financial-agent",
+  "what": "投研金融agent，2k星",
+  "signal": "dexter同作者的轻量投研腿参考",
+  "source": "github",
+  "_key": "virattt/ai-financial-agent"
+ },
+ {
+  "name": "xbtlin/ai-berkshire",
+  "url": "https://github.com/xbtlin/ai-berkshire",
+  "what": "AI时代的伯克希尔：基于Claude Code/Codex的价值投资研究框架，巴菲特/芒格/段永平/李录四大师方法论+多agent并行研究，16.6k星",
+  "signal": "「名家方法论显式化为研究框架」与本项目曾鸣章方法论底座同构，直接借鉴其大师模板化",
+  "source": "github",
+  "_key": "xbtlin/ai-berkshire"
+ },
+ {
+  "name": "simonlin1212/TradingAgents-astock",
+  "url": "https://github.com/simonlin1212/TradingAgents-astock",
+  "what": "A股多agent投研框架：适配龙虎榜/游资/解禁等A股数据源，7位分析师基于A股规则辩论决策，3.6k星",
+  "signal": "多空辩论出结论内嵌于报告的对抗机制",
+  "source": "github",
+  "_key": "simonlin1212/tradingagents-astock"
+ },
+ {
+  "name": "agentii-ai/agentii-investment-intelligence",
+  "url": "https://github.com/agentii-ai/agentii-investment-intelligence",
+  "what": "机构级投研Claude技能包：25个技能覆盖SEC文件、XBRL财务、财报日历、DCF/可比/LBO建模与PPT生成，206星",
+  "signal": "机构研报技能包的粒度划分（数据腿/建模腿/成稿腿分技能）",
+  "source": "github",
+  "_key": "agentii-ai/agentii-investment-intelligence"
+ },
+ {
+  "name": "hegeo/Lobster-Research",
+  "url": "https://github.com/hegeo/Lobster-Research",
+  "what": "AI驱动的金融研究报告生成助手（中英双语），53星",
+  "signal": "中文金融研报生成的本土样板",
+  "source": "github",
+  "_key": "hegeo/lobster-research"
+ },
+ {
+  "name": "DreamWalkerXZ/a-share-analyst",
+  "url": "https://github.com/DreamWalkerXZ/a-share-analyst",
+  "what": "A股公司季报点评自动生成工具：输公司名/代码+报告期→采集财务数据→生成专业点评",
+  "signal": "「报告期驱动」的定期研报流水线（对应EPC100百强榜逐家生产）",
+  "source": "github",
+  "_key": "dreamwalkerxz/a-share-analyst"
+ },
+ {
+  "name": "wangr9577-tech/FinPulse",
+  "url": "https://github.com/wangr9577-tech/FinPulse",
+  "what": "LangGraph多agent管线爬28个财经媒体源+LLM逐条打标+35指标择时六边形引擎+合成报告，9星",
+  "signal": "媒体收割腿与指标引擎在报告生成中的合成方式",
+  "source": "github",
+  "_key": "wangr9577-tech/finpulse"
+ },
+ {
+  "name": "flash131307/multi-agent-investment",
+  "url": "https://github.com/flash131307/multi-agent-investment",
+  "what": "3专职agent(ReAct/FinBERT/Plan-and-Solve+RAG)+确定性数学信号融合Decision Hub出买卖决策，207星",
+  "signal": "「LLM出信号、数学模块确定性融合」的收口设计防幻觉",
+  "source": "github",
+  "_key": "flash131307/multi-agent-investment"
+ },
+ {
+  "name": "hancao97/hanai-investment-dsh",
+  "url": "https://github.com/hancao97/hanai-investment-dsh",
+  "what": "本地优先A股研究台：行情面板/估值/四个投资者agent/版本化报告/报告后持续对话，114星",
+  "signal": "报告版本化+成稿后持续追问的交互腿",
+  "source": "github",
+  "_key": "hancao97/hanai-investment-dsh"
+ },
+ {
+  "name": "longsizhuo/openInvest",
+  "url": "https://github.com/longsizhuo/openInvest",
+  "what": "研究级投资决策引擎：隔离多agent委员会、可审计裁决、防未来函数回测、发布阴性结果，87星",
+  "signal": "「阴性结果也发布」的反偏发布纪律（对应waivers留痕）",
+  "source": "github",
+  "_key": "longsizhuo/openinvest"
+ },
+ {
+  "name": "sunhaoxiang/market-research-agent",
+  "url": "https://github.com/sunhaoxiang/market-research-agent",
+  "what": "多agent加密货币与美股研究：计划→并行工具→事实核查→引用报告",
+  "signal": "四步快研管线模板（计划/并行/核查/成稿）",
+  "source": "github",
+  "_key": "sunhaoxiang/market-research-agent"
+ },
+ {
+  "name": "atefbouzid/AI-Investment-Research-Agent",
+  "url": "https://github.com/atefbouzid/AI-Investment-Research-Agent",
+  "what": "DeepSeek等LLM+实时数据管线，3分钟生成LaTeX/PDF股票与金融分析报告，8星",
+  "signal": "「3分钟级」快研时效的工程压缩",
+  "source": "github",
+  "_key": "atefbouzid/ai-investment-research-agent"
+ },
+ {
+  "name": "SahilBacchus/stock-brief",
+  "url": "https://github.com/SahilBacchus/stock-brief",
+  "what": "多agent股票分析框架：编排专职LLM agent合成市场数据、SEC文件、财经新闻为自动股研报告",
+  "signal": "多源融合的专职agent分工样板",
+  "source": "github",
+  "_key": "sahilbacchus/stock-brief"
+ },
+ {
+  "name": "Abhishek-Bhatti/EquityIntelligence",
+  "url": "https://github.com/Abhishek-Bhatti/EquityIntelligence",
+  "what": "输ticker→抓concall纪要与年报→抽取结构化财务→生成研究报告（印度上市公司）",
+  "signal": "「纪要+年报→结构化→成稿」的垂直管线",
+  "source": "github",
+  "_key": "abhishek-bhatti/equityintelligence"
+ },
+ {
+  "name": "byteseek/Mira",
+  "url": "https://github.com/byteseek/Mira",
+  "what": "agent原生投研工作台：证据追踪、可刷新的投资论点（股票/财报/宏观/组合复盘），275星",
+  "signal": "「论点可刷新」而非一次性报告——研报的持续维护形态",
+  "source": "github",
+  "_key": "byteseek/mira"
+ },
+ {
+  "name": "helsome/folio",
+  "url": "https://github.com/helsome/folio",
+  "what": "本地优先AI投研工作台：深度调研、证据化投资论点、组合风险分析、自选股与Pi Agent副驾驶，267星",
+  "signal": "证据化论点作为研报核心组织单元",
+  "source": "github",
+  "_key": "helsome/folio"
+ },
+ {
+  "name": "JohannesJolkkonen/llm-report-generation",
+  "url": "https://github.com/JohannesJolkkonen/llm-report-generation",
+  "what": "React/TypeScript前端+Python FastAPI后端的LLM动态报告生成web应用",
+  "signal": "前后端分离的报告生成产品骨架",
+  "source": "github",
+  "_key": "johannesjolkkonen/llm-report-generation"
+ },
+ {
+  "name": "AdirthaBorgohain/reportAI",
+  "url": "https://github.com/AdirthaBorgohain/reportAI",
+  "what": "通过与AI模型对话驱动生成综合PDF研究报告的Python工具",
+  "signal": "对话式驱动的成稿交互形态",
+  "source": "github",
+  "_key": "adirthaborgohain/reportai"
+ },
+ {
+  "name": "archanags001/AI-Report-Generator",
+  "url": "https://github.com/archanags001/AI-Report-Generator",
+  "what": "AI把原始数据自动转化为带可视化的清晰专业报告，11星",
+  "signal": "数据→图表→报告的图表自动嵌入腿",
+  "source": "github",
+  "_key": "archanags001/ai-report-generator"
+ },
+ {
+  "name": "Deepnar/presentation-forge",
+  "url": "https://github.com/Deepnar/presentation-forge",
+  "what": "自托管AI演示生成器：主题或源进→经研究的可编辑PPTX与报告出，74版式34主题，Docker+BYOK/Ollama，16星",
+  "signal": "「研报+PPT双产出」一条管线两种交付物",
+  "source": "github",
+  "_key": "deepnar/presentation-forge"
+ },
+ {
+  "name": "minhlucvan/notebookmd",
+  "url": "https://github.com/minhlucvan/notebookmd",
+  "what": "「AI agent的笔记本：写Python，得Markdown报告」，10星",
+  "signal": "计算内嵌报告（代码即证据）的形态，契合own_calculations",
+  "source": "github",
+  "_key": "minhlucvan/notebookmd"
+ },
+ {
+  "name": "kylebegeman/dossier",
+  "url": "https://github.com/kylebegeman/dossier",
+  "what": "单一JSON文档模型→精美自包含的HTML档案与Markdown，6星",
+  "signal": "「单一文档模型多格式渲染」的成稿架构（一次写作多端发布）",
+  "source": "github",
+  "_key": "kylebegeman/dossier"
+ },
+ {
+  "name": "pro402/ai-report-generator",
+  "url": "https://github.com/pro402/ai-report-generator",
+  "what": "LLM+自定义搜索API+动态状态图，自动创建报告/简报/博客，10星",
+  "signal": "状态图驱动的多跳报告生成控制流",
+  "source": "github",
+  "_key": "pro402/ai-report-generator"
+ },
+ {
+  "name": "G1r1shCodes/InsightFlow",
+  "url": "https://github.com/G1r1shCodes/InsightFlow",
+  "what": "多agent编排的商业报告生成器：自动化研究、分析与战略建议，9星",
+  "signal": "「战略建议章节」由独立agent产出的结构分工",
+  "source": "github",
+  "_key": "g1r1shcodes/insightflow"
+ },
+ {
+  "name": "THESIS-AGENT/generate-adademic-report",
+  "url": "https://github.com/THESIS-AGENT/generate-adademic-report",
+  "what": "AI学术开题报告与实验设计生成工具：多模型、研究缺口发现、学术诚信，58星",
+  "signal": "「研究缺口发现」作为开题/立项前置腿",
+  "source": "github",
+  "_key": "thesis-agent/generate-adademic-report"
+ },
+ {
+  "name": "yishitys/academic-report-generator-skill",
+  "url": "https://github.com/yishitys/academic-report-generator-skill",
+  "what": "读学术PDF论文并自动生成结构化高质量PDF报告的AI工具，27星",
+  "signal": "PDF→结构化报告的skill封装路径",
+  "source": "github",
+  "_key": "yishitys/academic-report-generator-skill"
+ },
+ {
+  "name": "barnetwang/research_report_generator",
+  "url": "https://github.com/barnetwang/research_report_generator",
+  "what": "基于LLM的深度研究与报告写作自动化应用：复杂主题的调研与成稿流程自动化",
+  "signal": "通用深研成稿参考实现",
+  "source": "github",
+  "_key": "barnetwang/research_report_generator"
+ },
+ {
+  "name": "LinjingBi/reader",
+  "url": "https://github.com/LinjingBi/reader",
+  "what": "LLM研究阅读系统：主题演化、状态机式报告生成工作流、记忆式知识追踪，5星",
+  "signal": "「状态机报告工作流」与本项目类型化管线同构，值得对照状态设计",
+  "source": "github",
+  "_key": "linjingbi/reader"
+ },
+ {
+  "name": "Johnny95420/Report-Summarizer",
+  "url": "https://github.com/Johnny95420/Report-Summarizer",
+  "what": "受LangChain open_deep_research启发、面向领域研究自动化特化：任务定制prompt+重设计写作引擎",
+  "signal": "「用大框架裁剪成垂直专机」的路线（防通用框架水土不服）",
+  "source": "github",
+  "_key": "johnny95420/report-summarizer"
+ },
+ {
+  "name": "unnita1235-code/Research-AI-Agent",
+  "url": "https://github.com/unnita1235-code/Research-AI-Agent",
+  "what": "FastAPI+LangGraph管线：查询生成→Tavily搜索→事实抽取→带引用Markdown报告，可选二遍增强+SQLite任务历史+成稿问答",
+  "signal": "「二遍增强+成稿问答」的后处理腿与持久化历史",
+  "source": "github",
+  "_key": "unnita1235-code/research-ai-agent"
+ },
+ {
+  "name": "phonism/research-weaver",
+  "url": "https://github.com/phonism/research-weaver",
+  "what": "监督者-研究者架构的多agent系统：智能搜索、阅读、跨源综合的迭代深研",
+  "signal": "监督者拆解分派的织网式研究分工",
+  "source": "github",
+  "_key": "phonism/research-weaver"
+ },
+ {
+  "name": "md-hameem/Autonomous-Deep-Research-Agent",
+  "url": "https://github.com/md-hameem/Autonomous-Deep-Research-Agent",
+  "what": "专职agent+并行web搜索+质量受控报告生成的自治研究助理",
+  "signal": "质量门内嵌生成过程（生成中受控而非事后检）",
+  "source": "github",
+  "_key": "md-hameem/autonomous-deep-research-agent"
+ },
+ {
+  "name": "dashaworks/report-skills",
+  "url": "https://github.com/dashaworks/report-skills",
+  "what": "Claude Code/Codex的AI报告技能：agent产研究报告/客户报告/提案/幻灯片，经ReportRoom MCP发布为活页（DocSend替代），12星",
+  "signal": "成稿发布层（活页+MCP）补齐交付链最后一公里",
+  "source": "github",
+  "_key": "dashaworks/report-skills"
+ },
+ {
+  "name": "liangdabiao/amazon-sorftime-research-MCP-skill",
+  "url": "https://github.com/liangdabiao/amazon-sorftime-research-MCP-skill",
+  "what": "亚马逊选品研究skill：Listing全维度穿透分析报告+全品类/关键词/差评/市场调研，接MCP数据源，937星",
+  "signal": "电商垂类「市场调研报告」技能模板（结构化评分+穿透维度）",
+  "source": "github",
+  "_key": "liangdabiao/amazon-sorftime-research-mcp-skill"
+ },
+ {
+  "name": "haomengjiao/report-adapter-skill",
+  "url": "https://github.com/haomengjiao/report-adapter-skill",
+  "what": "证据驱动的Codex技能：依据真实经理反馈诊断并重写中文职场报告",
+  "signal": "「反馈语料驱动改写」可平移到审稿意见库与用户裁决waivers",
+  "source": "github",
+  "_key": "haomengjiao/report-adapter-skill"
+ },
+ {
+  "name": "ceciliading23-art/engineering-course-design-writing",
+  "url": "https://github.com/ceciliading23-art/engineering-course-design-writing",
+  "what": "工程课程设计写作与逐章改写技能：计算感知的Markdown起草",
+  "signal": "「逐章改写+计算感知」防数值漂移（治表行对不齐类缺陷）",
+  "source": "github",
+  "_key": "ceciliading23-art/engineering-course-design-writing"
+ },
+ {
+  "name": "LerpKey/source-grounded-research",
+  "url": "https://github.com/LerpKey/source-grounded-research",
+  "what": "证据优先技能：事实核查、政策研究、市场研究与可审计报告",
+  "signal": "「可审计」作为报告硬属性的追求",
+  "source": "github",
+  "_key": "lerpkey/source-grounded-research"
+ },
+ {
+  "name": "DemchaAV/GraphCompose",
+  "url": "https://github.com/DemchaAV/GraphCompose",
+  "what": "声明式Java结构化文档引擎：自动排版分页、可复用模板主题，渲染印刷级PDF/可编辑PPTX/语义DOCX，114星",
+  "signal": "排版层与内容解耦的声明式成稿（对应后置链排版）",
+  "source": "github",
+  "_key": "demchaav/graphcompose"
+ },
+ {
+  "name": "officecli/officecli",
+  "url": "https://github.com/officecli/officecli",
+  "what": "AI文档生成CLI：从prompt生成可编辑的PPTX/DOCX/XLSX/报告/图片，npm安装，106星",
+  "signal": "成稿CLI化与本项目CLI栈高度契合",
+  "source": "github",
+  "_key": "officecli/officecli"
+ },
+ {
+  "name": "mmonterroca/docxgo",
+  "url": "https://github.com/mmonterroca/docxgo",
+  "what": "纯Go创建编辑Word：流式构建器、模板与邮件合并、主题、表格图片，124星",
+  "signal": "工程级docx成稿库（模板+合并字段机制）",
+  "source": "github",
+  "_key": "mmonterroca/docxgo"
+ },
+ {
+  "name": "dannote/folio",
+  "url": "https://github.com/dannote/folio",
+  "what": "Markdown+Typst出印刷级PDF/SVG/PNG（Elixir实现），92星",
+  "signal": "Typst现代排版腿，可对照md2docx的层级坑",
+  "source": "github",
+  "_key": "dannote/folio"
+ },
+ {
+  "name": "ianustec/openwebui-generate-documents",
+  "url": "https://github.com/ianustec/openwebui-generate-documents",
+  "what": "Open WebUI原生Word生成工具：Markdown/JSON进，封面页、样式表格、标注块、目录出，99星",
+  "signal": "docx样式块规范（封面+TOC+callout）的成稿要素清单",
+  "source": "github",
+  "_key": "ianustec/openwebui-generate-documents"
+ },
+ {
+  "name": "ComPDFKit/compdf-generation",
+  "url": "https://github.com/ComPDFKit/compdf-generation",
+  "what": "开源PDF生成SDK：HTML模板产出合同/发票/报告/证书等商务文档，366星",
+  "signal": "模板化商务PDF生产（模板变量分离）",
+  "source": "github",
+  "_key": "compdfkit/compdf-generation"
+ },
+ {
+  "name": "nexu-io/codex-slides",
+  "url": "https://github.com/nexu-io/codex-slides",
+  "what": "Codex内开源AI幻灯片工作室：图原生每页全画布、并行渲染4-5分钟出10+页，924星",
+  "signal": "并行渲染的快速多页交付（对报告配图/附录批量生成有启发）",
+  "source": "github",
+  "_key": "nexu-io/codex-slides"
+ },
+ {
+  "name": "yuanfangdeshang/2025-WeChat-Annual-Chat-Report-Generator",
+  "url": "https://github.com/yuanfangdeshang/2025-WeChat-Annual-Chat-Report-Generator",
+  "what": "微信聊天记录→精美年度社交纪录片报告：数据可视化、好友默契度、社交人格测试、年度称号，28星",
+  "signal": "「数据故事化+爆点设计」的年度报告传播学",
+  "source": "github",
+  "_key": "yuanfangdeshang/2025-wechat-annual-chat-report-generator"
+ },
+ {
+  "name": "aks-666888/annual-report",
+  "url": "https://github.com/aks-666888/annual-report",
+  "what": "零散材料一键生成可交互HTML年度报告/年终总结，可导出PDF，零依赖单文件",
+  "signal": "零依赖单文件交互年报的轻交付形态",
+  "source": "github",
+  "_key": "aks-666888/annual-report"
+ },
+ {
+  "name": "mengkunsoft/Git-Annual-Report-Generator",
+  "url": "https://github.com/mengkunsoft/Git-Annual-Report-Generator",
+  "what": "Git年度报告生成：支持GitHub/GitLab/Gitee/自建git各类平台",
+  "signal": "多平台git数据聚合出年报的数据腿做法",
+  "source": "github",
+  "_key": "mengkunsoft/git-annual-report-generator"
+ },
+ {
+  "name": "GoldenTurtle327/Wechat-Analysis",
+  "url": "https://github.com/GoldenTurtle327/Wechat-Analysis",
+  "what": "微信聊天年度报告生成器（单文件exe）：自动取key解密、分析、莫奈风HTML报告",
+  "signal": "端到端单二进制交付+美术风格化模板",
+  "source": "github",
+  "_key": "goldenturtle327/wechat-analysis"
+ },
+ {
+  "name": "ishaanchowdhury1/LLM-Annual-Report-Generator",
+  "url": "https://github.com/ishaanchowdhury1/LLM-Annual-Report-Generator",
+  "what": "读样例财务年报抽取其结构→生成完整虚构年报（含图表与PDF输出，GPT-4.1-mini+ReportLab）",
+  "signal": "「从样例学结构」的结构抽取生成法（对照券商真报告逆向模板）",
+  "source": "github",
+  "_key": "ishaanchowdhury1/llm-annual-report-generator"
+ },
+ {
+  "name": "kumarakshat9588-ctrl/annual-report-generator",
+  "url": "https://github.com/kumarakshat9588-ctrl/annual-report-generator",
+  "what": "分析官方来源的公司财务数据与已发布报告，自动生成年报",
+  "signal": "官方源优先的数据取数纪律",
+  "source": "github",
+  "_key": "kumarakshat9588-ctrl/annual-report-generator"
+ },
+ {
+  "name": "HKUSTDial/awesome-data-agents",
+  "url": "https://github.com/HKUSTDial/awesome-data-agents",
+  "what": "数据agent论文持续更新总库（survey伴随repo），768星",
+  "signal": "数据agent前沿的追踪与分类",
+  "source": "github",
+  "_key": "hkustdial/awesome-data-agents"
+ },
+ {
+  "name": "ai-agi/LLMs-Enhanced-Long-Text-Generation-Survey",
+  "url": "https://github.com/ai-agi/LLMs-Enhanced-Long-Text-Generation-Survey",
+  "what": "基于LLM的长文本生成survey仓库，17星",
+  "signal": "长文生成技术分类学（大纲式/检索式/迭代式）用于方法论定位",
+  "source": "github",
+  "_key": "ai-agi/llms-enhanced-long-text-generation-survey"
+ },
+ {
+  "name": "simonlin1212/a-stock-data",
+  "url": "https://github.com/simonlin1212/a-stock-data",
+  "what": "A股全栈数据工具包：行情K线/研报/资金面/新闻/财务/公告等15层87端点34数据源，除iwencai外免Key，10.5k星",
+  "signal": "研报数据腿的免key多源聚合（渠道账本加行）",
+  "source": "github",
+  "_key": "simonlin1212/a-stock-data"
+ },
+ {
+  "name": "hoochanlon/hamulete",
+  "url": "https://github.com/hoochanlon/hamulete",
+  "what": "深度整合全球顶尖学术/金融/教育资源：聚合香橼、摩根、野村等顶级机构深度研报的知识库，9.8k星",
+  "signal": "机构级研报作为金标准语料源（对照学习其结构）",
+  "source": "github",
+  "_key": "hoochanlon/hamulete"
+ },
+ {
+  "name": "tvytlx/ai-agent-deep-dive",
+  "url": "https://github.com/tvytlx/ai-agent-deep-dive",
+  "what": "AI Agent源码深度研究报告系列，5.8k星",
+  "signal": "「源码级深度研究报告」的成品质控对照样本（own_calculations式深度）",
+  "source": "github",
+  "_key": "tvytlx/ai-agent-deep-dive"
+ },
+ {
+  "name": "AMD Enterprise AI — Report Generation Engine 蓝图",
+  "url": "https://enterprise-ai.docs.amd.com/en/latest/solution-blueprints/report-generation-engine/README.html",
+  "what": "四阶段（规划出查询与提纲→检索→写作→汇编）LLM+web研究报告引擎方案蓝图，Streamlit UI+FastAPI后端",
+  "signal": "四阶段蓝图可直接对标本项目管线阶段划分与验收门",
+  "source": "web",
+  "_key": "enterprise-ai.docs.amd.com/en/latest/solution-blueprints/report-generation-engine/README.html"
+ },
+ {
+  "name": "amd-enterprise-ai/solution-blueprints",
+  "url": "https://github.com/amd-enterprise-ai/solution-blueprints",
+  "what": "上述报告生成蓝图的开源repo（Helm可部署的生产级方案集）",
+  "signal": "生产级可部署报告引擎的工程参考（部署与运维面）",
+  "source": "github",
+  "_key": "amd-enterprise-ai/solution-blueprints"
+ },
+ {
+  "name": "Orkes AI & LLM orchestration recipes",
+  "url": "https://orkes.io/content/ai-cookbook/ai-llm-recipes",
+  "what": "Conductor持久执行编排的LLM菜谱集：含LLM生成结构化markdown报告→转可下载PDF的管线，全部带重试/状态持久化/崩溃恢复",
+  "signal": "「持久执行（durable execution）」的报告管线编排，与conductor调度器崩溃恢复需求对口",
+  "source": "web",
+  "_key": "orkes.io/content/ai-cookbook/ai-llm-recipes"
+ },
+ {
+  "name": "Implementing an Automated Report-Generation crewAI Agent (Neo4j/Medium)",
+  "url": "https://medium.com/neo4j/implementing-an-automated-report-generation-agent-fe1c58b1f4cf",
+  "what": "用crewAI多agent流生成行业报告的实战教程，附GitHub代码",
+  "signal": "多agent角色分工写行业报告的实操样板（角色定义与交接物）",
+  "source": "web",
+  "_key": "medium.com/neo4j/implementing-an-automated-report-generation-agent-fe1c58b1f4cf"
+ },
+ {
+  "name": "Bit.ai AI Annual Report Generator",
+  "url": "https://bit.ai",
+  "what": "商业SaaS年报生成器：快速构建专业组织绩效年报（无代码）",
+  "signal": "成品级年报的信息架构对照（章节组织参考）",
+  "source": "web",
+  "_key": "bit.ai"
+ },
+ {
+  "name": "PedroReports (Reddit r/Python)",
+  "url": "https://www.reddit.com/r/Python/comments/1ifqz4j/pedroreportsan_open_source_llm_powered_automated",
+  "what": "开源LLM驱动的自动化数据分析PDF报告工具：任取表格数据集→专业分析报告",
+  "signal": "表格数据→PDF报告的自动化全流程需求画像",
+  "source": "web",
+  "_key": "www.reddit.com/r/Python/comments/1ifqz4j/pedroreportsan_open_source_llm_powered_automated"
+ },
+ {
+  "name": "langchain-ai/langgraph",
+  "source": "github",
+  "signal": "有状态图+durable execution 是长周期研报管线断点续跑的刚需模式",
+  "url": "https://github.com/langchain-ai/langgraph",
+  "what": "有状态图式代理运行时（2026年生产级多代理首选之一，约8.2k+星），durable执行+human-in-the-loop检查点",
+  "_key": "langchain-ai/langgraph"
+ },
+ {
+  "name": "geekan MetaGPT",
+  "url": "https://github.com/geekan/MetaGPT",
+  "what": "多智能体「软件公司」框架（arXiv 2405），流水线范式给不同智能体分角色（PM/工程师），把复杂任务 SOP 化",
+  "signal": "「把 SOP 写进智能体分工」的核心思想正是研报流水线化所需",
+  "source": "github",
+  "_key": "geekan/metagpt"
+ },
+ {
+  "name": "kyegomez/swarms",
+  "source": "github",
+  "signal": "并发编排与可靠性套件值得EPC多腿并发调度借鉴",
+  "url": "https://github.com/kyegomez/swarms",
+  "what": "企业级多代理编排框架，主打可靠、可扩展、自适应的swarm套件",
+  "_key": "kyegomez/swarms"
+ },
+ {
+  "name": "openai/swarm",
+  "source": "github",
+  "signal": "handoff 原语可简化渠道代理间接力（采集→萃取→写作）",
+  "url": "https://github.com/openai/swarm",
+  "what": "OpenAI轻量教育性编排框架（agents+handoffs+routines），已被 OpenAI Agents SDK 继承",
+  "_key": "openai/swarm"
+ },
+ {
+  "name": "kyegomez/awesome-multi-agent-papers",
+  "source": "github",
+  "signal": "多代理研究论文索引，方法论理论补给的入口清单",
+  "url": "https://github.com/kyegomez/awesome-multi-agent-papers",
+  "what": "Swarms团队维护的最佳多代理研究论文awesome清单",
+  "_key": "kyegomez/awesome-multi-agent-papers"
+ },
+ {
+  "name": "modelscope/agentscope",
+  "source": "github",
+  "signal": "细粒度容错控制适合国内网络环境下长任务的鲁棒编排",
+  "url": "https://github.com/modelscope/agentscope",
+  "what": "阿里AgentScope多代理框架，细粒度控制+多模态支持+容错机制",
+  "_key": "modelscope/agentscope"
+ },
+ {
+  "name": "anthropics/claude-agent-sdk-python",
+  "source": "github",
+  "signal": "与我们现有 Claude Code 工作流同构，子代理+MCP工具面可直接复用",
+  "url": "https://github.com/anthropics/claude-agent-sdk-python",
+  "what": "Claude Agent SDK，用子代理+MCP工具构建编排型长任务代理（2026年生产级框架榜单常客）",
+  "_key": "anthropics/claude-agent-sdk-python"
+ },
+ {
+  "name": "smolagents Open Deep Research (HuggingFace)",
+  "source": "github",
+  "signal": "CodeAgent写代码做研究+网页细粒度动作空间（滚动/查找/跳页）",
+  "url": "https://github.com/huggingface/smolagents",
+  "what": "HF官方smolagents库内置Open Deep Research示例：CodeAgent浏览网页搜索-翻页-抽取，GAIA验证集55%",
+  "_key": "huggingface/smolagents"
+ },
+ {
+  "name": "Magentic-One: A Generalist Multi-Agent System (Microsoft Research)",
+  "source": "web",
+  "signal": "Orchestrator+Ledger双循环是长研报任务进度账本的设计蓝本",
+  "url": "https://www.microsoft.com/en-us/research/articles/magentic-one-a-generalist-multi-agent-system-for-solving-complex-tasks",
+  "what": "微软通用多代理系统：编排器维护任务进度账本+信息账本，双循环规划驱动网页/文件任务",
+  "_key": "www.microsoft.com/en-us/research/articles/magentic-one-a-generalist-multi-agent-system-for-solving-complex-tasks"
+ },
+ {
+  "name": "Top 20 GitHub Repositories for AI Agents in 2026 (fungies.io)",
+  "source": "web",
+  "signal": "星标排序的选型基准，避免漏掉头部方案",
+  "url": "https://fungies.io",
+  "what": "按星标排名的AI代理仓库榜单（MetaGPT/LobeHub/CrewAI/AutoGen等）",
+  "_key": "fungies.io"
+ },
+ {
+  "name": "Top 12 Multi-Agent AI Frameworks (is4.ai)",
+  "source": "web",
+  "signal": "stateful编排+检查点模式对研报工厂断点续传直接可抄",
+  "url": "https://is4.ai",
+  "what": "2026年多代理框架横评，指出LangGraph为有状态多代理应用领导者",
+  "_key": "is4.ai"
+ },
+ {
+  "name": "12 Best Multi-Agent Frameworks for Production (AYAutomate)",
+  "source": "web",
+  "signal": "生产视角选型对照表，供我们决定自研vs复用",
+  "url": "https://www.ayautomate.com",
+  "what": "生产环境多代理框架横评（LangGraph/CrewAI/MS Agent Framework/Claude Agent SDK等，含优劣与定价）",
+  "_key": "www.ayautomate.com"
+ },
+ {
+  "name": "The Open-Source AI Agent Frameworks That Deserve More (faun.pub)",
+  "source": "web",
+  "signal": "提醒选型不唯星标论，小而美框架里可能有适合研报场景的零件",
+  "url": "https://faun.pub",
+  "what": "论证星标数是AI框架质量的滞后指标，盘点被低估的开源代理框架",
+  "_key": "faun.pub"
+ },
+ {
+  "name": "12 Best Multi-Agent Research Frameworks on GitHub (awesome-repositories.com)",
+  "source": "web",
+  "signal": "现成的多代理研究框架候选池",
+  "url": "https://awesome-repositories.com/f/artificial-intelligence-ml/multi-agent-research-frameworks",
+  "what": "按相关性/星标/活跃度AI排序的多代理研究框架清单",
+  "_key": "awesome-repositories.com/f/artificial-intelligence-ml/multi-agent-research-frameworks"
+ },
+ {
+  "name": "30 Best AI Agent GitHub Repos (findarepo.com)",
+  "source": "web",
+  "signal": "每日更新的仓库雷达，供持续跟踪新方案",
+  "url": "https://findarepo.com/categories/ai-agents",
+  "what": "按星标每日更新的AI代理仓库榜",
+  "_key": "findarepo.com/categories/ai-agents"
+ },
+ {
+  "name": "langchain-ai/deep_research_from_scratch",
+  "source": "github",
+  "signal": "从零教学版便于我们理解每一步骤再魔改增强",
+  "url": "https://github.com/langchain-ai/deep_research_from_scratch",
+  "what": "从零实现的开源深度研究员，边做边教的极简实现，强调可换模型/搜索/MCP",
+  "_key": "langchain-ai/deep_research_from_scratch"
+ },
+ {
+  "name": "mskim04/OpenDeepResearcher",
+  "source": "github",
+  "signal": "异步迭代式自主研究代理：多引擎交叉+实时URL抽取，可借鉴其异步调度",
+  "url": "https://github.com/mskim04/OpenDeepResearcher",
+  "what": "异步AI研究代理：多搜索引擎+实时内容抽取+推理迭代，产出综合研究报告",
+  "_key": "mskim04/opendeepresearcher"
+ },
+ {
+  "name": "yokingma/SearChat",
+  "source": "github",
+  "signal": "对话式深挖产品的交互形态可作我们研报交互补弹参考",
+  "url": "https://github.com/yokingma/SearChat",
+  "what": "类Perplexity的对话式搜索引擎，具备deep research能力",
+  "_key": "yokingma/searchat"
+ },
+ {
+  "name": "Abhinand-PV/multi-agent_research_pipeline",
+  "source": "github",
+  "signal": "零成本telemetry+自动评估的做法对我们管线的可观测层有直接参考价值",
+  "url": "https://github.com/Abhinand-PV/multi-agent_research_pipeline",
+  "what": "企业级自主研究管线：OpenAI Agents SDK+Groq高速推理，实时RAG+自动评估+零成本telemetry",
+  "_key": "abhinand-pv/multi-agent_research_pipeline"
+ },
+ {
+  "name": "tanishkavyas0603/Multi-agent-research-pipeline",
+  "source": "github",
+  "signal": "search→analyze→write→review四分工是最小可行研报团队配置的证据",
+  "url": "https://github.com/tanishkavyas0603/Multi-agent-research-pipeline",
+  "what": "多代理研究系统：搜索/分析/写作/评审专职代理分工协作生成高质量研究报告",
+  "_key": "tanishkavyas0603/multi-agent-research-pipeline"
+ },
+ {
+  "name": "Edge-Explorer/DeepForge",
+  "source": "github",
+  "signal": "「论文→可运行实现」的深读萃取范式可迁移到研报的数据实证环节",
+  "url": "https://github.com/Edge-Explorer/DeepForge",
+  "what": "深读研究论文→抽取算法→生成可运行实现的多代理自主系统",
+  "_key": "edge-explorer/deepforge"
+ },
+ {
+  "name": "AMD/Agent-Laboratory",
+  "source": "github",
+  "signal": "人机协同分级(co-pilot→auto)的渐进自动化设计契合我们工厂渐进升级路线",
+  "url": "https://github.com/AMD/Agent-Laboratory",
+  "what": "LLM代理当研究助理（arXiv:2501.04227）：文献综述→实验计划→代码与报告生成",
+  "_key": "amd/agent-laboratory"
+ },
+ {
+  "name": "YoujunZhao/Awesome-Auto-Research",
+  "source": "github",
+  "signal": "自动科研系统全景索引，跟踪该领域新作的哨兵清单",
+  "url": "https://github.com/YoujunZhao/Awesome-Auto-Research",
+  "what": "agentic科学发现系统追踪清单（AI-Scientist类自动研究系统大全）",
+  "_key": "youjunzhao/awesome-auto-research"
+ },
+ {
+  "name": "Muszic/daily-research",
+  "source": "github",
+  "signal": "常驻日更情报代理正是EPC情报腿的同行实现，可对标其调度与摘要质量",
+  "url": "https://github.com/Muszic/daily-research",
+  "what": "全自主日更代理：Gemini 2.5 Flash每日侦察-阅读-摘要最新CS论文",
+  "_key": "muszic/daily-research"
+ },
+ {
+  "name": "langchain-ai/open-swe",
+  "source": "github",
+  "signal": "Deep Agents的规划文件系统+子代理范式对任何长任务工厂通用",
+  "url": "https://github.com/langchain-ai/open-swe",
+  "what": "基于LangChain Deep Agents的开源软件工厂：把工程工作变成可复用系统（计划文件+子代理长任务模式）",
+  "_key": "langchain-ai/open-swe"
+ },
+ {
+  "name": "SWARM Research Workflow (swarm-ai.org)",
+  "source": "web",
+  "signal": "递归探索式研究会话的分形结构可借鉴到深度调研的分层下钻",
+  "url": "https://www.swarm-ai.org/guides/research-workflow",
+  "what": "开源多代理框架的研究工作流指南，受DeepResearch^Eco等递归探索架构启发",
+  "_key": "www.swarm-ai.org/guides/research-workflow"
+ },
+ {
+  "name": "AgentFlow Multi-Agent Pipeline Guide",
+  "source": "web",
+  "signal": "DAG并行研究管线的教科书式分层，与我们conductor调度思路同构",
+  "url": "https://gittielabs.github.io/agentflow/guides/multi-agent-pipeline",
+  "what": "DAG工作流构建完整多代理管线的指南：Researcher搜索→Analyst萃取→报告生成→质量评审并行执行",
+  "_key": "gittielabs.github.io/agentflow/guides/multi-agent-pipeline"
+ },
+ {
+  "name": "Deep Research Agents: A Systematic Examination and Roadmap (arXiv:2506.18096)",
+  "source": "web",
+  "signal": "领域系统化地图，可作为我们方法论总纲的对标文献与缺口检查表",
+  "url": "https://arxiv.org/abs/2506.18096",
+  "what": "Deep Research代理系统综述：系统检视LLM+搜索引擎组合的自主研究代理架构与演进路线",
+  "_key": "arxiv.org/abs/2506.18096"
+ },
+ {
+  "name": "Characterizing Deep Research: A Benchmark and Formal... (arXiv:2506.11763)",
+  "source": "web",
+  "signal": "把「好研报」形式化为可测维度，正是我们质量门量化急需的外部标尺",
+  "url": "https://arxiv.org/abs/2506.11763",
+  "what": "Deep research代理的基准与形式化刻画（被引36+），评测维度定义",
+  "_key": "arxiv.org/abs/2506.11763"
+ },
+ {
+  "name": "Hugging Face clones OpenAI's Deep Research in 24 hours (Ars Technica)",
+  "source": "web",
+  "signal": "开源社区对闭源深研产品的快速复刻方法论+基准叙事",
+  "url": "https://arstechnica.com/ai/2025/02/after-24-hour-hackathon-hugging-faces-ai-research-agent-nearly-matches-openais-solution",
+  "what": "报道HF团队24小时hackathon复刻Deep Research并接近原版GAIA成绩的过程",
+  "_key": "arstechnica.com/ai/2025/02/after-24-hour-hackathon-hugging-faces-ai-research-agent-nearly-matches-openais-solution"
+ },
+ {
+  "name": "crewAIInc/crewAI-examples",
+  "source": "github",
+  "signal": "现成的researcher+writer双crew编排代码，直接抄结构",
+  "url": "https://github.com/crewAIInc/crewAI-examples",
+  "what": "CrewAI官方示例库，含「研究并写报告」类双crew营销研究系统等真实样例",
+  "_key": "crewaiinc/crewai-examples"
+ },
+ {
+  "name": "GPT Researcher multi-skills example (docs.gptr.dev)",
+  "source": "web",
+  "signal": "学术多代理范式工业化的先例，与我们「论文方法论→工程管线」路线一致",
+  "url": "https://docs.gptr.dev",
+  "what": "受STORM论文启发的多技能代理团队示例：一组AI代理协作完成选题研究到成文",
+  "_key": "docs.gptr.dev"
+ },
+ {
+  "name": "CrewAI GitHub Search Tool (docs.crewai.com)",
+  "source": "web",
+  "signal": "仓库语义检索工具可用于我们GitHub方法论调研环节的自动化",
+  "url": "https://docs.crewai.com",
+  "what": "CrewAI官方GithubSearchTool文档：GitHub仓库语义检索RAG工具，支撑研究型代理",
+  "_key": "docs.crewai.com"
+ },
+ {
+  "name": "Building a GitHub Repo Summarizer with CrewAI (W&B)",
+  "source": "web",
+  "signal": "「探索→摘要→成文」多代理教程，可复用到我们的项目档案自动生成",
+  "url": "https://wandb.ai",
+  "what": "W&B教程：多代理系统自动探索GitHub仓库、汇总内容并生成文档",
+  "_key": "wandb.ai"
+ },
+ {
+  "name": "10 Best CrewAI Projects (projectpro.io)",
+  "source": "web",
+  "signal": "研报场景的CrewAI项目灵感池",
+  "url": "https://www.projectpro.io",
+  "what": "CrewAI最佳项目清单（2026年5月更新），覆盖研究/写作类编排案例",
+  "_key": "www.projectpro.io"
+ },
+ {
+  "name": "Multi-Agent Research with CrewAI (Scribd)",
+  "source": "web",
+  "signal": "带完整代码的多代理研究工作流教学，低成本的入门参照",
+  "url": "https://www.scribd.com",
+  "what": "多代理研究工作流教程（附GitHub完整代码，2025-02）",
+  "_key": "www.scribd.com"
+ },
+ {
+  "name": "Design Principles of Deep Research (Autofusion, Towards AI)",
+  "source": "web",
+  "signal": "从头部开源库反推设计原则的方法正是本次调研的姿势，其原则清单可直接并入我们总纲",
+  "url": "https://pub.towardsai.net",
+  "what": "对LangChain OpenDeepResearch代码库的设计原则解析：深研代理如何设计、如何用于真实研究场景（2026-02）",
+  "_key": "pub.towardsai.net"
+ },
+ {
+  "name": "AI Agents System Design: LangGraph/AutoGen/CrewAI (techinterview.net)",
+  "source": "web",
+  "signal": "系统设计级拆解研报生成管线，架构语言可直接借用",
+  "url": "https://www.techinterview.net",
+  "what": "系统设计题解：构建生成研究报告的CrewAI管线（2026）",
+  "_key": "www.techinterview.net"
+ },
+ {
+  "name": "LangGraph, CrewAI, and AutoGen: Picking an AI Agent (CoderCops)",
+  "source": "web",
+  "signal": "按场景选引擎的决策框架，防止我们押错编排底座",
+  "url": "https://blog.codercops.com",
+  "what": "三大框架各自真实适用场景辨析（2026-05）：各有其位，无万能框架",
+  "_key": "blog.codercops.com"
+ },
+ {
+  "name": "LangChain vs CrewAI vs AutoGen vs Just Using the API (ClawAgora)",
+  "source": "web",
+  "signal": "「简单任务直连API」的提醒可防止我们的管线过度框架化",
+  "url": "https://www.clawagora.com",
+  "what": "对比文（2026-03）：AutoGen强于复杂对话驱动模式（微软研究背书），简单场景直连API更优",
+  "_key": "www.clawagora.com"
+ },
+ {
+  "name": "AutoGen vs CrewAI for Business (assistants.ae)",
+  "source": "web",
+  "signal": "企业视角的协作vs对话两种编排取向对照",
+  "url": "https://assistants.ae",
+  "what": "两大框架在代理协作与任务编排上的不同取向的商业视角对比",
+  "_key": "assistants.ae"
+ },
+ {
+  "name": "AgentWorks vs CrewAI and AutoGen",
+  "source": "web",
+  "signal": "build vs operate分层视角提醒我们同时要建运维层（监控/评测）而非只建代理",
+  "url": "https://agent-works.ai",
+  "what": "区分「构建」代理系统的库与「运营」代理系统的平台（2026-05）",
+  "_key": "agent-works.ai"
+ },
+ {
+  "name": "Best AI Agent Frameworks 2026 (HeyClaude)",
+  "source": "web",
+  "signal": "编排/多代理/工具使用三维选型速查",
+  "url": "https://heyclau.de",
+  "what": "2026代理框架横评：编排、多代理、工具使用维度",
+  "_key": "heyclau.de"
+ },
+ {
+  "name": "LangChain: open deep researcher announcement",
+  "source": "web",
+  "signal": "官方一手动机文：可配置深研代理的设计初衷与我们多模型多渠道哲学同源",
+  "url": "https://www.langchain.com",
+  "what": "LangChain官方博文（2025-07）：发布简单可配置的开源deep researcher，自带模型/搜索工具/MCP服务器",
+  "_key": "www.langchain.com"
+ },
+ {
+  "name": "How we built our multi-agent research system (Anthropic)",
+  "source": "web",
+  "signal": "一手工程数据：并行子代理换准确率、编排者决策周期、记忆压缩——我们多代理研报架构的第一参照",
+  "url": "https://www.anthropic.com/engineering/built-multi-agent-research-system",
+  "what": "Anthropic工程博文：lead代理（Opus）分解问题并创建专职子代理（Sonnet）并行搜索，多代理token约4倍换研究任务大幅提分（90.2%胜单代理）",
+  "_key": "www.anthropic.com/engineering/built-multi-agent-research-system"
+ },
+ {
+  "name": "How Anthropic Built a Multi-Agent Research System (ByteByteGo)",
+  "source": "web",
+  "signal": "架构图解版便于团队宣讲与复盘",
+  "url": "https://blog.bytebytego.com",
+  "what": "ByteByteGo对Anthropic多代理研究系统架构的图解技术拆解（2025-09）",
+  "_key": "blog.bytebytego.com"
+ },
+ {
+  "name": "Anthropic's multi-agent system overview for CIOs (Constellation Research)",
+  "source": "web",
+  "signal": "成本-收益视角：多代理烧token的预算纪律对我们付费模型铁律是直接印证",
+  "url": "https://www.constellationr.com",
+  "what": "CIO视角分析：多代理准确但token消耗约4倍于聊天（2025-06）",
+  "_key": "www.constellationr.com"
+ },
+ {
+  "name": "Anthropic's Multi-Agent Blueprint: We Validated It in Production (Fountain City)",
+  "source": "web",
+  "signal": "别人踩过的生产坑（哪些模式在真实系统里失效）可帮我们避开同款坑",
+  "url": "https://fountaincity.tech",
+  "what": "生产环境验证Anthropic多代理蓝图（2026-05）：哪些work哪些翻车、如何改造",
+  "_key": "fountaincity.tech"
+ },
+ {
+  "name": "Building a Multi-Agent Research System (ZenML)",
+  "source": "web",
+  "signal": "MLOps视角的扩展性论证补齐我们工程侧论据",
+  "url": "https://www.zenml.io",
+  "what": "案例研究：多代理架构如何突破单代理上限扩展LLM能力",
+  "_key": "www.zenml.io"
+ },
+ {
+  "name": "How Squad runs coordinated AI agents inside your repository (GitHub Blog)",
+  "source": "web",
+  "signal": "仓库原生协同编排：代理工作直接锚定代码库，与我们「方法论入库即生效」的理念同构",
+  "url": "https://github.blog",
+  "what": "GitHub官方博客（2026-03）：仓库原生编排+GitHub Copilot多代理工作流的设计模式",
+  "_key": "github.blog"
+ },
+ {
+  "name": "LangGraph Multi-Agent Supervisor (LangChain Reference)",
+  "source": "web",
+  "signal": "supervisor+handoff官方范式，是我们conductor之上的代理编排层候选",
+  "url": "https://reference.langchain.com",
+  "what": "官方参考：创建supervisor代理编排多个专职代理，工具式handoff通信",
+  "_key": "reference.langchain.com"
+ },
+ {
+  "name": "Workflows and Agents (LangChain Docs)",
+  "source": "web",
+  "signal": "先workflow后agent的判断框架，防止我们为灵活度过度付出不确定性代价",
+  "url": "https://docs.langchain.com",
+  "what": "官方指南：预定义代码路径workflow vs 动态agent架构的模式选择",
+  "_key": "docs.langchain.com"
+ },
+ {
+  "name": "OpenAI Swarm Multi-Agent Orchestration (Splunk)",
+  "source": "web",
+  "signal": "轻量handoff心智模型：小核心+显式交接在渠道腿间同样适用",
+  "url": "https://www.splunk.com/en_us/blog/learn/openai-swarm-framework.html",
+  "what": "OpenAI Swarm框架完全指南：轻量级多代理编排（agents/handoffs/routines）",
+  "_key": "www.splunk.com/en_us/blog/learn/openai-swarm-framework.html"
+ },
+ {
+  "name": "How To Continuously Improve Your LangGraph Multi-Agent Systems (Splunk)",
+  "source": "web",
+  "signal": "跨会话状态持久化+持续改进回路正是我们方法论自进化所缺的一角",
+  "url": "https://www.splunk.com",
+  "what": "create_supervisor编排的持续改进：路由、跨代理交互的状态管理、记忆持久化（2026-08）",
+  "_key": "www.splunk.com"
+ },
+ {
+  "name": "Building Multi-Agent Systems with LangGraph-Supervisor (dev.to)",
+  "source": "web",
+  "signal": "supervisor落地教学，低门槛起步参考",
+  "url": "https://dev.to",
+  "what": "教程：创建supervisor代理编排专职代理（2025-03）",
+  "_key": "dev.to"
+ },
+ {
+  "name": "Build a LangGraph Multi-Agent System in 20 Minutes (LaunchDarkly)",
+  "source": "web",
+  "signal": "快速原型对照：我们管线应保留的RAG检索+多代理协作最小骨架",
+  "url": "https://launchdarkly.com",
+  "what": "20分钟快速搭建多代理系统：多代理工作流+RAG搜索+AgentControl（2025-09）",
+  "_key": "launchdarkly.com"
+ },
+ {
+  "name": "Magentic-One in AutoGen docs",
+  "source": "web",
+  "signal": "官方双账本（任务进度+信息）实现细节，直接抄给我们的任务卡体系",
+  "url": "https://microsoft.github.io/autogen/stable//user-guide/agentchat-user-guide/magentic-one.html",
+  "what": "AutoGen文档中的Magentic-One使用指南：编排器+账本驱动的通用多代理系统",
+  "_key": "microsoft.github.io/autogen/stable//user-guide/agentchat-user-guide/magentic-one.html"
+ },
+ {
+  "name": "langchain-ai/langgraph-supervisor",
+  "source": "github",
+  "signal": "supervisor模式的官方参考实现，代码级可复用",
+  "url": "https://github.com/langchain-ai/langgraph-supervisor",
+  "what": "LangGraph官方supervisor库：用supervisor代理指挥专职代理+工具handoff的参考实现",
+  "_key": "langchain-ai/langgraph-supervisor"
+ },
+ {
+  "name": "AutoSurvey: LLMs Can Automatically Write Surveys (论文)",
+  "source": "web",
+  "signal": "四阶段管线+质量评分器设计可直接映射到我们的工厂阶段门",
+  "url": "https://arxiv.org/abs/2406.10252",
+  "what": "AutoSurvey方法论文：从主题输入到最终综述的四阶段管线，附WSDM 2025发表版",
+  "_key": "arxiv.org/abs/2406.10252"
+ },
+ {
+  "name": "The AI Scientist-v2 (SakanaAI)",
+  "source": "github",
+  "signal": "树搜索式工作流探索+流程内自检，质量门自动化思路可借鉴",
+  "url": "https://github.com/SakanaAI/AI-Scientist-v2",
+  "what": "7.3k星二代：代理树搜索驱动的workshop级自动科研，首篇全AI生成论文被ICLR workshop接收",
+  "_key": "sakanaai/ai-scientist-v2"
+ },
+ {
+  "name": "OpenScholar",
+  "signal": "小模型+强管线打败大模型：6.1% 反超证明'检索增强综合管线'本身是方法论护城河",
+  "source": "github",
+  "url": "https://github.com/AkariAsai/OpenScholar",
+  "what": "45M 论文检索增强 LM，★1.7k，OpenScholar-8B 多文献综合反超 GPT-4o 6.1%，管线给现成 LLM +12%",
+  "_key": "akariasai/openscholar"
+ },
+ {
+  "name": "feynman (Companion-Inc)",
+  "source": "github",
+  "signal": "开源AI研究代理的模块化组合思路",
+  "url": "https://github.com/Companion-Inc/feynman",
+  "what": "9.9k星开源AI研究agent：问题分解→多源检索→综合推理→结构化输出",
+  "_key": "companion-inc/feynman"
+ },
+ {
+  "name": "OpenResearch (alphaXiv)",
+  "source": "github",
+  "signal": "把编码agent改造为研究agent的工具面扩张路径",
+  "url": "https://github.com/alphaXiv/OpenResearch",
+  "what": "6.6k星把编码代理变成研究代理的工具集与工作流",
+  "_key": "alphaxiv/openresearch"
+ },
+ {
+  "name": "OpenDeepResearcher (mshumer)",
+  "source": "github",
+  "signal": "精简依赖的迭代研究循环实现",
+  "url": "https://github.com/mshumber/OpenDeepResearcher",
+  "what": "2.8k星轻量开源深度研究员：搜索-阅读-推理循环产出报告",
+  "_key": "mshumber/opendeepresearcher"
+ },
+ {
+  "name": "Weizhena/Deep-Research-skills",
+  "url": "https://github.com/Weizhena/Deep-Research-skills",
+  "what": "Claude Code/OpenCode/Codex的结构化深度调研skill，human-in-the-loop控制，2.3k星",
+  "signal": "把deep research降维成可安装skill+人工闸门的轻量路线",
+  "source": "github",
+  "_key": "weizhena/deep-research-skills"
+ },
+ {
+  "name": "OpenDeepSearch",
+  "signal": "搜索工具与推理 agent 解耦可分别优化——检索器质量是报告质量的硬上限",
+  "source": "github",
+  "url": "https://github.com/sentient-agi/OpenDeepSearch",
+  "what": "Sentient 开源推理搜索 agent（★3.8k，arXiv 2503.20201），Open Search Tool + Open Reasoning Agent",
+  "_key": "sentient-agi/opendeepsearch"
+ },
+ {
+  "name": "Arbor (RUC-NLPIR)",
+  "source": "github",
+  "signal": "通用自主研究循环（研究+实验+优化自迭代）的设计",
+  "url": "https://github.com/RUC-NLPIR/Arbor",
+  "what": "1.1k星通用自主研究agent：跑实验、做研究、迭代优化的自治循环",
+  "_key": "ruc-nlpir/arbor"
+ },
+ {
+  "name": "AutoResearch (EvoMap)",
+  "source": "github",
+  "signal": "idea到证据的全链托管，证据资产化的口径可借鉴",
+  "url": "https://github.com/EvoMap/AutoResearch",
+  "what": "2.9k星AI/ML研究agent：从idea到paper-ready证据的端到端",
+  "_key": "evomap/autoresearch"
+ },
+ {
+  "name": "SurveyGen (tongbao96)",
+  "source": "github",
+  "signal": "质量感知生成——生成器内建质量约束而非只靠后验评审",
+  "url": "https://github.com/tongbao96/SurveyGen",
+  "what": "EMNLP 2025质量感知科学综述生成（LLM），含数据与代码",
+  "_key": "tongbao96/surveygen"
+ },
+ {
+  "name": "SurveyLens (TechnicolorGUO)",
+  "source": "github",
+  "signal": "综述质量的学科感知评测基准，可作我们的横向评测量具",
+  "url": "https://github.com/TechnicolorGUO/SurveyLens",
+  "what": "自动综述生成的研究学科感知基准（benchmark）",
+  "_key": "technicolorguo/surveylens"
+ },
+ {
+  "name": "SEER (CherYou)",
+  "source": "github",
+  "signal": "递归回溯式多agent编排——失败腿可回滚重查的思路",
+  "url": "https://github.com/CherYou/SEER",
+  "what": "递归回溯多深度研究agent系统的自动综述生成官方实现",
+  "_key": "cheryou/seer"
+ },
+ {
+  "name": "SurveyAgent-HKA (tongbao96)",
+  "source": "github",
+  "signal": "人类知识注入augmentation——领域先验如何进流水线",
+  "url": "https://github.com/tongbao96/code-for-SurveyAgent-HKA",
+  "what": "LLM+人类知识增强的多agent科学综述生成框架",
+  "_key": "tongbao96/code-for-surveyagent-hka"
+ },
+ {
+  "name": "SciReviewGen (tetsu9923)",
+  "source": "github",
+  "signal": "真实人类综述大规模数据集，可做训练/评测金标准源",
+  "url": "https://github.com/tetsu9923/SciReviewGen",
+  "what": "自动文献综述生成大规模数据集官方仓库",
+  "_key": "tetsu9923/scireviewgen"
+ },
+ {
+  "name": "KE-LRG (SemanticInnoLab)",
+  "source": "github",
+  "signal": "知识增强：外部知识库喂给综述生成器减幻觉",
+  "url": "https://github.com/SemanticInnoLab/KE-LRG",
+  "what": "知识增强的文献综述生成",
+  "_key": "semanticinnolab/ke-lrg"
+ },
+ {
+  "name": "DeepSurvey (criscuolosubidu)",
+  "source": "github",
+  "signal": "MapReduce式分片检索+汇总的报告工艺，长综述上下文解法",
+  "url": "https://github.com/criscuolosubidu/DeepSurvey",
+  "what": "多agent自动综述工具：输入主题深度搜索生成综述报告，RAG+MapReduce机制，带前端与鉴权",
+  "_key": "criscuolosubidu/deepsurvey"
+ },
+ {
+  "name": "awesome-literature-review (yzbbds520)",
+  "source": "github",
+  "signal": "分四部分生成+先对齐一次成稿+引用强制可核验+压AI腔——与我们成稿纪律高度同构，可直接抄要求条款",
+  "url": "https://github.com/yzbbds520/awesome-literature-review",
+  "what": "Claude Code文献综述skill：分四部分生成、前期对齐后一次成稿、文献强制可核验、内置压AI腔行文要求，支持Word/LaTeX",
+  "_key": "yzbbds520/awesome-literature-review"
+ },
+ {
+  "name": "Automated_Literature_Review_Generation_Platform (liuchaochao8)",
+  "source": "github",
+  "signal": "八段式综述流水线（检索词扩展→引用格式化→质检）的阶段分解可直接映射",
+  "url": "https://github.com/liuchaochao8/Automated_Literature_Review_Generation_Platform",
+  "what": "8个AI Agent经LangGraph编排的综述平台：检索词扩展→多库发现→分类→信息抽取→关系分析→撰写→引用格式化→质量控制，输出JSON或LaTeX",
+  "_key": "liuchaochao8/automated_literature_review_generation_platform"
+ },
+ {
+  "name": "paper_review_agent (YaeMikopro)",
+  "source": "github",
+  "signal": "中英双语综述产出的prompt与结构模板",
+  "url": "https://github.com/YaeMikopro/paper_review_agent",
+  "what": "DeepSeek+arXiv智能文献综述生成：自动搜索相关论文并生成中英双语综述",
+  "_key": "yaemikopro/paper_review_agent"
+ },
+ {
+  "name": "LitReviewSkill (Zsun79)",
+  "source": "github",
+  "signal": "『广撒网+多轮迭代+查全优先』的检索纪律写成可安装skill",
+  "url": "https://github.com/Zsun79/LitReviewSkill",
+  "what": "可安装的端到端文献综述agent skill：广覆盖迭代式检索降低漏检",
+  "_key": "zsun79/litreviewskill"
+ },
+ {
+  "name": "Auto-Research (Filtain)",
+  "source": "github",
+  "signal": "证据ID+source map+verification artifact+不支持claim阻止导出——与我们金标准/GLM审计防线完全同向，强烈建议吸收",
+  "url": "https://github.com/Filtain/Auto-Research",
+  "what": "自动文献调研多agent工作流：检索→筛选→PDF阅读→证据抽取→综述→引用验证→矛盾检测→QA门禁，结论绑定evidence ID与verification artifact，不支持的claim阻止导出",
+  "_key": "filtain/auto-research"
+ },
+ {
+  "name": "ASReview",
+  "source": "github",
+  "signal": "主动学习筛选省力度（WSS@95）的度量体系——我们筛选腿的量化指标",
+  "url": "https://github.com/asreview/asreview",
+  "what": "1k星系统综述主动学习筛选工具：模拟器+CLI+ELAS界面，学术界事实标准",
+  "_key": "asreview/asreview"
+ },
+ {
+  "name": "revtools (mjwestgate)",
+  "source": "github",
+  "signal": "R生态研究合成的去重/筛选/可视化模块划分",
+  "url": "https://github.com/mjwestgate/revtools",
+  "what": "R语言研究合成工具集：文献去重、筛选、主题归类",
+  "_key": "mjwestgate/revtools"
+ },
+ {
+  "name": "parsifal (vitorfs)",
+  "source": "github",
+  "signal": "经典SR流程管理（协议先行、双人筛选、kappa一致性）的规范",
+  "url": "https://github.com/vitorfs/parsifal",
+  "what": "523星辅助研究者执行系统文献综述的web工具：协议、筛选、PRISMA流程",
+  "_key": "vitorfs/parsifal"
+ },
+ {
+  "name": "opendraft (federicodeponte)",
+  "source": "github",
+  "signal": "引用DOI对学术库『出稿即核验』的确定性校验腿——比LLM自检可靠",
+  "url": "https://github.com/federicodeponte/opendraft",
+  "what": "开源Python引擎写论文/综述草稿，引用DOI自动对 scholarly 数据库核验，导出PDF/Word/LaTeX",
+  "_key": "federicodeponte/opendraft"
+ },
+ {
+  "name": "researchpooler (karpathy)",
+  "source": "github",
+  "signal": "『文献发现自动化』单点做深的产品直觉",
+  "url": "https://github.com/karpathy/researchpooler",
+  "what": "Karpathy出品：自动发现与分析研究论文（相似论文聚类、按数据集找论文）",
+  "_key": "karpathy/researchpooler"
+ },
+ {
+  "name": "openpaper (khoj-ai)",
+  "source": "github",
+  "signal": "研究库+AI综述助手一体化的工作台形态",
+  "url": "https://github.com/khoj-ai/openpaper",
+  "what": "研究库工作台：阅读、标注、理解论文+AI助手执行文献综述",
+  "_key": "khoj-ai/openpaper"
+ },
+ {
+  "name": "LocalCitationNetwork",
+  "source": "github",
+  "signal": "本地引文网络（前向+后向雪球）算法实现，检索腿增强",
+  "url": "https://github.com/LocalCitationNetwork/LocalCitationNetwork.github.io",
+  "what": "用OpenAlex/Semantic Scholar/Crossref元数据构建本地引文网络辅助文献综述与雪球发现",
+  "_key": "localcitationnetwork/localcitationnetwork.github.io"
+ },
+ {
+  "name": "paper-qa (PaperQA2)",
+  "signal": "引文约束生成+诚实披露错误率（~3%）的做法正是我们引文审计线需要的「可量化的不可靠度」纪律。",
+  "source": "github",
+  "url": "https://github.com/Future-House/paper-qa",
+  "what": "Future-House 科学文献 RAG agent：强引文约束的问答与综述，自称超人类文献综合；论文诚实披露约 3% 幻觉率。",
+  "_key": "future-house/paper-qa"
+ },
+ {
+  "name": "llm-for-zotero (yilewang)",
+  "source": "github",
+  "signal": "本地文献库（Zotero）接入研究agent的桥接方案",
+  "url": "https://github.com/yilewang/llm-for-zotero",
+  "what": "3.2k星面向Zotero文献库的开源研究agent系统",
+  "_key": "yilewang/llm-for-zotero"
+ },
+ {
+  "name": "obsidian-reference-map (anoopkcn)",
+  "source": "github",
+  "signal": "引文地图做文献发现与结构洞察的可视化方式",
+  "url": "https://github.com/anoopkcn/obsidian-reference-map",
+  "what": "Obsidian引文与引用地图插件，文献综述与发现（LiteratureMap）",
+  "_key": "anoopkcn/obsidian-reference-map"
+ },
+ {
+  "name": "BERTCSRS (ESA-RadLab)",
+  "source": "github",
+  "signal": "领域外（非医学）SR筛选迁移的做法",
+  "url": "https://github.com/ESA-RadLab/BERTCSRS",
+  "what": "BERT用于复杂系统综述筛选（ESA放射实验室）",
+  "_key": "esa-radlab/bertcsrs"
+ },
+ {
+  "name": "covidence_screening (Aisha630)",
+  "source": "github",
+  "signal": "用UI自动化给商业SR工具挂LLM脑的混合模式",
+  "url": "https://github.com/Aisha630/covidence_screening",
+  "what": "Playwright+Gemini自动化Covidence系统综述筛选",
+  "_key": "aisha630/covidence_screening"
+ },
+ {
+  "name": "systematic-review-screening-assistant (MateusMolina)",
+  "source": "github",
+  "signal": "『自定义纳入标准→LLM逐条评估』的筛选协议化",
+  "url": "https://github.com/MateusMolina/systematic-review-screening-assistant",
+  "what": "LLM按自定义标准评估书目条目，筛查系统综述候选论文",
+  "_key": "mateusmolina/systematic-review-screening-assistant"
+ },
+ {
+  "name": "ai_systematic_review_screening (bquilty25)",
+  "source": "github",
+  "signal": "流行病学SR筛选的LLM工作流代码",
+  "url": "https://github.com/bquilty25/ai_systematic_review_screening",
+  "what": "用LLM做医学系统综述初筛/全文评估的自动化工作流",
+  "_key": "bquilty25/ai_systematic_review_screening"
+ },
+ {
+  "name": "automating-living-systematic-review-screening (IDDO)",
+  "source": "github",
+  "signal": "『活综述』定期增量重筛机制——对应我们研报的持续更新腿",
+  "url": "https://github.com/Infectious-Diseases-Data-Observatory/automating-living-systematic-review-screening",
+  "what": "IDDO疟疾活系统综述的自动分类筛选：判断文章是否纳入活综述",
+  "_key": "infectious-diseases-data-observatory/automating-living-systematic-review-screening"
+ },
+ {
+  "name": "Systematic-review-screening (Chiagoziem2)",
+  "source": "github",
+  "signal": "SYNERGY全集基准+WSS@95指标的开源复现，筛选腿验收量具",
+  "url": "https://github.com/Chiagoziem2/Systematic-review-screening",
+  "what": "主动学习摘要筛选，在全部26个SYNERGY数据集上基准：平均WSS@95=64.1",
+  "_key": "chiagoziem2/systematic-review-screening"
+ },
+ {
+  "name": "sysrev-screening-prioritisation (hscells)",
+  "source": "github",
+  "signal": "筛选优先级排序（先看最可能相关）的排序器思路",
+  "url": "https://github.com/hscells/sysrev-screening-prioritisation",
+  "what": "系统综述筛选优先级排序研究代码",
+  "_key": "hscells/sysrev-screening-prioritisation"
+ },
+ {
+  "name": "systematic-review-pipeline-pharma (putssander)",
+  "source": "github",
+  "signal": "制药行业SR全流程管线的阶段模板",
+  "url": "https://github.com/putssander/systematic-review-pipeline-pharma",
+  "what": "制药领域系统综述筛选流水线",
+  "_key": "putssander/systematic-review-pipeline-pharma"
+ },
+ {
+  "name": "ChatReport (zhiqix)",
+  "source": "github",
+  "signal": "互联网ofAgents式多agent研报编排",
+  "url": "https://github.com/zhiqix/ChatReport",
+  "what": "基于Internet-of-Agents的金融研报生成方法",
+  "_key": "zhiqix/chatreport"
+ },
+ {
+  "name": "FinSight-AI (juanjuandog)",
+  "source": "github",
+  "signal": "版本化报告+自动质量评估——报告即产品线（迭代留版本）的形态",
+  "url": "https://github.com/juanjuandog/FinSight-AI",
+  "what": "AI股票研究agent：韧性工作流+证据RAG+版本化报告+自动质量评估",
+  "_key": "juanjuandog/finsight-ai"
+ },
+ {
+  "name": "Vibe-Research (simonlin1212)",
+  "source": "github",
+  "signal": "个人投研agent的数据/功能分层（资讯雷达/板块/回测）设计",
+  "url": "https://github.com/simonlin1212/Vibe-Research",
+  "what": "A股/美股/港股个人投研agent：每日复盘、资讯雷达、个股数据、板块中心、回测，Codex harness驱动",
+  "_key": "simonlin1212/vibe-research"
+ },
+ {
+  "name": "invest (harrischen)",
+  "source": "github",
+  "signal": "CodeBuddy skill化的投研报告生成模板（中文域）",
+  "url": "https://github.com/harrischen/invest",
+  "what": "A股港股AI投研助手：趋势扫描、产业链分析、基本面/技术分析、研报生成（CodeBuddy Code Skill）",
+  "_key": "harrischen/invest"
+ },
+ {
+  "name": "EquiAnalytica (msw2005)",
+  "source": "github",
+  "signal": "股票研报多agent系统的分析→撰文分工",
+  "url": "https://github.com/msw2005/EquiAnalytica-main",
+  "what": "多agent深度股票分析与自动股票研报生成系统",
+  "_key": "msw2005/equianalytica-main"
+ },
+ {
+  "name": "a17-industry-research-agent (ABSkknnkl)",
+  "source": "github",
+  "signal": "行业研报多agent+人机协同（草稿确认点）编排",
+  "url": "https://github.com/ABSkknnkl/a17-industry-research-agent",
+  "what": "A17多agent行业研报生成+human-in-the-loop系统",
+  "_key": "abskknnkl/a17-industry-research-agent"
+ },
+ {
+  "name": "crystallizer (Node0)",
+  "source": "github",
+  "signal": "『可控长文缩减+高精度长摘要』作为报告生产线后段工序的抽象",
+  "url": "https://github.com/Node0/crystallizer",
+  "what": "可编程研究工具：受控长文缩减、高精度长摘要、研究报告生成与流水线辅助",
+  "_key": "node0/crystallizer"
+ },
+ {
+  "name": "NJUNLP CogGen",
+  "url": "https://github.com/NJUNLP/CogGen",
+  "what": "南大 NLP 实验室 ACL 2026 Findings：认知启发的递归式深度研报生成框架，宏/微双认知循环+参数化占位符实现全局重构与多模态融合，Planner→Writer→Reviewer 三智能体（Google ADK+LiteLLM 编排），开源系统中 SOTA、可比专业分析师",
+  "signal": "「非线性可重构报告生成+评审智能体」是本厂质量门/审计腿最直接的学术级蓝本",
+  "source": "github",
+  "_key": "njunlp/coggen"
+ },
+ {
+  "name": "NVIDIA deep-researcher-agent blueprint",
+  "source": "github",
+  "signal": "大厂企业级深度研究蓝图：企业数据接入+可信产出架构",
+  "url": "https://github.com/NVIDIA-AI-Blueprints/deep-researcher-agent",
+  "what": "NVIDIA官方深度研究agent参考蓝图：接企业数据、推理、产出可信业务洞察",
+  "_key": "nvidia-ai-blueprints/deep-researcher-agent"
+ },
+ {
+  "name": "paper-writing-agent (aidless)",
+  "source": "github",
+  "signal": "确定性校验门+反证fixture+失败模式库+统计量独立重算——与我们RQS难题即标准门思想完全同构，方法论金矿",
+  "url": "https://github.com/aidless/paper-writing-agent",
+  "what": "证据优先论文写作Agent Skill：49个确定性校验门（含反证fixture）+TMLR官方模板+29条失败模式库+统计量独立重算",
+  "_key": "aidless/paper-writing-agent"
+ },
+ {
+  "name": "MLR-Copilot (du-nlp-lab)",
+  "source": "github",
+  "signal": "文献→想法→实验→写作的三阶段copilot分工",
+  "url": "https://github.com/du-nlp-lab/MLR-Copilot",
+  "what": "机器学习研究副驾：文献理解→想法生成→实验实施的LLM三阶段框架",
+  "_key": "du-nlp-lab/mlr-copilot"
+ },
+ {
+  "name": "deep-drafter (simondgoldstein)",
+  "source": "github",
+  "signal": "『brief进、审稿测过的稿出』的验收前置写法",
+  "url": "https://github.com/simondgoldstein/deep-drafter",
+  "what": "Claude Code论文写作agent：一页brief进，经审稿测试的学术草稿出",
+  "_key": "simondgoldstein/deep-drafter"
+ },
+ {
+  "name": "claude-prism (delibae)",
+  "source": "github",
+  "signal": "离线优先+100+科研技能组合的本地写作平台架构",
+  "url": "https://github.com/delibae/claude-prism",
+  "what": "1.8k星Claude驱动的离线优先科研写作工作台：LaTeX+Python+100+本地科学skills",
+  "_key": "delibae/claude-prism"
+ },
+ {
+  "name": "Oleafly",
+  "source": "github",
+  "signal": "研究-写作-编译-验证-出版一条链的本地工作流与Git版本化",
+  "url": "https://github.com/Oleafly/Oleafly",
+  "what": "本地优先AI科研写作与出版工作台：研究/写作/编译/验证/出版，支持LaTeX/Typst/Markdown，Git原生",
+  "_key": "oleafly/oleafly"
+ },
+ {
+  "name": "seele-scholar-agent (onekyuu)",
+  "source": "github",
+  "signal": "大纲→分节起草→评审循环→一致性检查的显式六段流水线",
+  "url": "https://github.com/onekyuu/seele-scholar-agent",
+  "what": "LangGraph学术论文写作agent：文献检索→大纲规划→分节起草→评审循环→一致性检查→参考文献生成",
+  "_key": "onekyuu/seele-scholar-agent"
+ },
+ {
+  "name": "yejin233/research-paper-writing-agent-skill",
+  "source": "github",
+  "signal": "workflow gates+手稿审计的显式门控——与 RQS 十四门同构的守门设计",
+  "url": "https://github.com/yejin233/research-paper-writing-agent-skill",
+  "what": "Codex skill：ML 研究论文写作的多 agent 工作流门控与手稿审计",
+  "_key": "yejin233/research-paper-writing-agent-skill"
+ },
+ {
+  "name": "stats-paper-writing-agent-skills (fuhaoda)",
+  "source": "github",
+  "signal": "统计类论文的写作agent技能集",
+  "url": "https://github.com/fuhaoda/stats-paper-writing-agent-skills",
+  "what": "统计论文写作agent技能包（30星）",
+  "_key": "fuhaoda/stats-paper-writing-agent-skills"
+ },
+ {
+  "name": "nexent-paper-writing-agent (NanAnNuo)",
+  "source": "github",
+  "signal": "硕士论文级长文档生成：图表资产管理+长任务断点续跑",
+  "url": "https://github.com/NanAnNuo/nexent-paper-writing-agent",
+  "what": "基于Nexent的论文写作MCP agent：硕士论文Word输出、图表资产、Docker部署、长任务补丁",
+  "_key": "nanannuo/nexent-paper-writing-agent"
+ },
+ {
+  "name": "AI-Research-Paper-Agent (coralr-1)",
+  "source": "github",
+  "signal": "实验数据→LaTeX全稿的自动化转换链",
+  "url": "https://github.com/coralr-1/AI-Research-Paper-Agent",
+  "what": "AI研究论文agent：实验数据与代码自动转完整LaTeX稿件（Claude 3.5 Sonnet）",
+  "_key": "coralr-1/ai-research-paper-agent"
+ },
+ {
+  "name": "AI-Research-SKILLs (Orchestra-Research)",
+  "source": "github",
+  "signal": "『把研究方法论打包成可安装技能』的大规模实践——skill即方法论的载体",
+  "url": "https://github.com/Orchestra-Research/AI-Research-SKILLs",
+  "what": "13.3k星面向任意AI模型的研究与工程技能开源库，装上即变AI研究agent",
+  "_key": "orchestra-research/ai-research-skills"
+ },
+ {
+  "name": "Agent-Loop-Skills (gaasher)",
+  "source": "github",
+  "signal": "verification-gated循环——每轮迭代过验证门再继续，可移植到我们的精炼循环",
+  "url": "https://github.com/gaasher/Agent-Loop-Skills",
+  "what": "173星开源标准Agent Skills：『循环直到更好』的代理循环（autoresearch/科学写作/数据分析等），全部验证门控",
+  "_key": "gaasher/agent-loop-skills"
+ },
+ {
+  "name": "skill-deslop (stephenturner)",
+  "source": "github",
+  "signal": "去AI腔的确定性文本后处理——低成本提升『人味』的最后一公里",
+  "url": "https://github.com/stephenturner/skill-deslop",
+  "what": "407星科学写作去AI化（De-AI-ify）技能",
+  "_key": "stephenturner/skill-deslop"
+ },
+ {
+  "name": "PaperCash (Jesseovo)",
+  "source": "github",
+  "signal": "2亿论文池+综述+查重预检+降AI率+参考文献管理的一站式skill设计",
+  "url": "https://github.com/Jesseovo/PaperCash",
+  "what": "148星论文全流程AI Skill：2亿+论文检索、综述生成、写作润色、查重预检、降AI率改写、参考文献管理，4源免费",
+  "_key": "jesseovo/papercash"
+ },
+ {
+  "name": "literature-review-system (silk2onion)",
+  "source": "github",
+  "signal": "中文综述平台：检索与生成一体的工程实现",
+  "url": "https://github.com/silk2onion/literature-review-system",
+  "what": "智能文献检索与综述生成平台（27星）",
+  "_key": "silk2onion/literature-review-system"
+ },
+ {
+  "name": "FActScore (shmsw25)",
+  "source": "github",
+  "signal": "原子化事实拆分+逐条对源核验的自动评分——报告事实性硬门的世界标准",
+  "url": "https://github.com/shmsw25/FActScore",
+  "what": "457星EMNLP 2023长文生成事实性细粒度评测：原子事实级精确率打分",
+  "_key": "shmsw25/factscore"
+ },
+ {
+  "name": "hallucination_probes (obalcells)",
+  "source": "github",
+  "signal": "长文生成中的幻觉实体实时探针——成稿后自动幻觉扫描腿",
+  "url": "https://github.com/obalcells/hallucination_probes",
+  "what": "295星长文生成中幻觉实体的实时检测探针",
+  "_key": "obalcells/hallucination_probes"
+ },
+ {
+  "name": "awesome-autoresearch (webfuse-com)",
+  "source": "github",
+  "signal": "自主改进循环系统清单——方法论演进的地图",
+  "url": "https://github.com/webfuse-com/awesome-autoresearch",
+  "what": "2.6k星精选清单：受Karpathy autoresearch启发的自主改进循环与研究agent系统大全",
+  "_key": "webfuse-com/awesome-autoresearch"
+ },
+ {
+  "name": "ResearchPilot-Skills (LMDHQ-0420)",
+  "source": "github",
+  "signal": "方向探索→综述→想法→实验→代码→论文的端到端阶段模板",
+  "url": "https://github.com/LMDHQ-0420/ResearchPilot-Skills",
+  "what": "306星自动学术研究工作流skill：从方向探索、文献综述、想法发展到实验设计、代码实现、论文写作",
+  "_key": "lmdhq-0420/researchpilot-skills"
+ },
+ {
+  "name": "qinyan-academic-skills (LeonChaoX)",
+  "source": "github",
+  "signal": "182个可安装学术技能的目录组织法（按研究域分类）",
+  "url": "https://github.com/LeonChaoX/qinyan-academic-skills",
+  "what": "934星182个可安装AI agent学术研究技能库：文献发现、科学写作、基金、生信、临床、ML、数据分析",
+  "_key": "leonchaox/qinyan-academic-skills"
+ },
+ {
+  "name": "Codex-Academic-Skills (Epsilon617)",
+  "source": "github",
+  "signal": "面向Codex的学术技能清单（写作/综述/评估）参考",
+  "url": "https://github.com/Epsilon617/Codex-Academic-Skills",
+  "what": "185星面向OpenAI Codex的研究导向技能精选：写作、文献综述、评估、研究工作流",
+  "_key": "epsilon617/codex-academic-skills"
+ },
+ {
+  "name": "chatgpt-prompts-for-academic-writing (ahmetbersoz)",
+  "source": "github",
+  "signal": "学术写作prompt大全（头脑风暴/文献综述/研究计划）的prompt资产库",
+  "url": "https://github.com/ahmetbersoz/chatgpt-prompts-for-academic-writing",
+  "what": "4.9k星学术写作ChatGPT提示词集：头脑风暴研究想法、改进语言风格、文献综述、研究计划",
+  "_key": "ahmetbersoz/chatgpt-prompts-for-academic-writing"
+ },
+ {
+  "name": "auto-survey-generation (Canjia-Huang)",
+  "source": "github",
+  "signal": "从个人文献库自动出综述的最小实现",
+  "url": "https://github.com/Canjia-Huang/auto-survey-generation",
+  "what": "从个人文献数据库自动生成survey",
+  "_key": "canjia-huang/auto-survey-generation"
+ },
+ {
+  "name": "THUDM/LongWriter (+AgentWrite)",
+  "url": "https://github.com/THUDM/LongWriter",
+  "what": "清华&智谱：AgentWrite 把超长写作分解为子任务管线，让现有 LLM 稳定输出 2 万字+；LongWriter-6k 数据集（6千条 2k-32k 字 SFT）开源",
+  "signal": "「先规划再分段写」的长文生产线学术验证，训练数据可直接用于强化写作腿",
+  "source": "github",
+  "_key": "thudm/longwriter"
+ },
+ {
+  "name": "THU-KEG/LongWriter-V",
+  "source": "github",
+  "signal": "多模态证据（图表）也能进长文生成闭环，研报图表自动生成可参考其高保真机制",
+  "url": "https://github.com/THU-KEG/LongWriter-V",
+  "what": "ACM MM25；把超长高保真生成能力扩展到视觉-语言模型",
+  "_key": "thu-keg/longwriter-v"
+ },
+ {
+  "name": "aiwaves-cn/RecurrentGPT",
+  "url": "https://github.com/aiwaves-cn/RecurrentGPT",
+  "what": "ETH NeurIPS 2023：用自然语言模拟 LSTM 循环机制——每步生成新段落+下步计划+更新长短记忆，实现任意长度交互式生成且记忆可人工编辑",
+  "signal": "「自然语言记忆状态+可编辑」设计可直接用于研报的跨章一致性台账",
+  "source": "github",
+  "_key": "aiwaves-cn/recurrentgpt"
+ },
+ {
+  "name": "jackaduma/Recurrent-LLM",
+  "source": "github",
+  "signal": "RecurrentGPT 的开源工程化复刻，验证了该记忆架构可脱离官方栈复现",
+  "url": "https://github.com/jackaduma/Recurrent-LLM",
+  "what": "RecurrentGPT 的开源 LLM 实现（AI写小说/AI写作）",
+  "_key": "jackaduma/recurrent-llm"
+ },
+ {
+  "name": "rbedyakin/storm-offline",
+  "source": "github",
+  "signal": "免费模型优先铁律的先例：长文管线本地化的成本控制思路",
+  "url": "https://github.com/rbedyakin/storm-offline",
+  "what": "用本地 LLM 在 STORM 框架里做长文生成",
+  "_key": "rbedyakin/storm-offline"
+ },
+ {
+  "name": "mozhu621/LongGenBench",
+  "source": "github",
+  "signal": "指令遵循×超长输出的评测维度——研报质量门可借其『长文不跑题』考法",
+  "url": "https://github.com/mozhu621/LongGenBench",
+  "what": "LongGenBench：评测长上下文模型超长生成能力的基准（代码+数据）",
+  "_key": "mozhu621/longgenbench"
+ },
+ {
+  "name": "ki-ljl/Awesome-Long-Form-Factuality",
+  "source": "github",
+  "signal": "长文事实性论文索引——GLM审计五防线之外的事实验证方法补给站",
+  "url": "https://github.com/ki-ljl/Awesome-Long-Form-Factuality",
+  "what": "长文事实性（Long-Form Factuality）论文与资源策展清单",
+  "_key": "ki-ljl/awesome-long-form-factuality"
+ },
+ {
+  "name": "Lenguist/long-narrative-generation",
+  "source": "github",
+  "signal": "长叙事研究地图，写章节级长文时的理论查表处",
+  "url": "https://github.com/Lenguist/long-narrative-generation",
+  "what": "长叙事生成研究论文集合",
+  "_key": "lenguist/long-narrative-generation"
+ },
+ {
+  "name": "Ar9av/PaperOrchestra",
+  "source": "github",
+  "signal": "Google 论文的多 agent 论文写作 skill 化复刻——『章节=agent』的编排实证",
+  "url": "https://github.com/Ar9av/PaperOrchestra",
+  "what": "676 star；基于 Google PaperOrchestra 论文实现的自动 AI 研究论文写作器（skill 形态）",
+  "_key": "ar9av/paperorchestra"
+ },
+ {
+  "name": "mintlify/writer",
+  "source": "github",
+  "signal": "3.1k star 的文档写作工程化：大纲驱动的分页生成是长文生产的标准件",
+  "url": "https://github.com/mintlify/writer",
+  "what": "AI 文档写手：按代码库自动生成/更新技术文档",
+  "_key": "mintlify/writer"
+ },
+ {
+  "name": "hyt3136/--LongWriterAgent",
+  "source": "github",
+  "signal": "上下文连续性是长文生产的核心痛点，其 config 化温度/参数调法值得借鉴",
+  "url": "https://github.com/hyt3136/--LongWriterAgent",
+  "what": "基于上下文续写的文案/小说长文本自动化生成系统（可调温度等参数）",
+  "_key": "hyt3136/--longwriteragent"
+ },
+ {
+  "name": "khaledzaky.com — Serverless AI Blog Agent",
+  "source": "web",
+  "signal": "无服务器编排长文管线+人审节点的生产级架构样本",
+  "url": "https://khaledzaky.com",
+  "what": "AWS Step Functions+Bedrock+Lambda 搭建『写作-修订-发布』博客 agent 的深度复盘（2026-02）",
+  "_key": "khaledzaky.com"
+ },
+ {
+  "name": "AgentWrite (OpenReview)",
+  "source": "web",
+  "signal": "分段计划与连贯性控制的原始论文出处，方法论引用源",
+  "url": "https://openreview.net/forum?id=kQ5s9Yh0WI",
+  "what": "AgentWrite 论文：分解超长生成任务让现成 LLM 输出 2 万字以上连贯文本，附 LongBench-Write 评测",
+  "_key": "openreview.net/forum"
+ },
+ {
+  "name": "mshumer/gpt-author",
+  "url": "https://github.com/mshumer/gpt-author",
+  "what": "一句提示生成整本书：标题/大纲/人物/正文自动编排并输出 EPUB，社区有 Claude_Author 大上下文版",
+  "signal": "「书级产物一键直出+成品格式封装」的端到端形态",
+  "source": "github",
+  "_key": "mshumer/gpt-author"
+ },
+ {
+  "name": "NousResearch/autonovel",
+  "source": "github",
+  "signal": "把『写作-修订-排版-配图-配音-成书』做成全流水线，证明长文工厂可以端到端无人值守",
+  "url": "https://github.com/NousResearch/autonovel",
+  "what": "1.6k star；Hermes Agent 驱动的自主小说流水线：从种子创意到印刷级 PDF/ePub，含修订、排版、插图、朗读",
+  "_key": "nousresearch/autonovel"
+ },
+ {
+  "name": "zenstory-ai/oh-story-claudecode",
+  "source": "github",
+  "signal": "『扫榜-拆文-写作-去AI味-封面』五步全流程 skill 化，拆文（逆向优秀范文）环节对研报质量对标极具启发",
+  "url": "https://github.com/zenstory-ai/oh-story-claudecode",
+  "what": "7.3k star；Claude Code/Codex 网文写作 agent skills：扫榜、拆文、写作、去AI味、封面全流程",
+  "_key": "zenstory-ai/oh-story-claudecode"
+ },
+ {
+  "name": "YILING0013/AI_NovelGenerator",
+  "source": "github",
+  "signal": "多章节自动衔接上下文与伏笔管理——长文生产『前后一致性』的工程解",
+  "url": "https://github.com/YILING0013/AI_NovelGenerator",
+  "what": "6.2k star；用 AI 生成多章节长篇小说，自动衔接上下文、伏笔",
+  "_key": "yiling0013/ai_novelgenerator"
+ },
+ {
+  "name": "PenglongHuang/chinese-novelist-skill",
+  "source": "github",
+  "signal": "三层问答前置（用户意图挖掘）+自动校验门的 skill 设计，研报需求澄清阶段可移植",
+  "url": "https://github.com/PenglongHuang/chinese-novelist-skill",
+  "what": "3.3k star；AI 写小说 skill：从零生成 10-50 章完整中文小说，三层问答·创作记忆·悬念钩子·自动校验",
+  "_key": "penglonghuang/chinese-novelist-skill"
+ },
+ {
+  "name": "ExplosiveCoderflome/AI-Novel-Writing-Assistant",
+  "source": "github",
+  "signal": "AI Native 整本生产工作流：世界观/写法引擎/RAG 三件分离的架构切分值得研报借鉴",
+  "url": "https://github.com/ExplosiveCoderflome/AI-Novel-Writing-Assistant",
+  "what": "3.1k star；AI Native 开源长篇小说系统：Agent+世界观+写法引擎+RAG+整本生产工作流，从一句灵感到完整小说",
+  "_key": "explosivecoderflome/ai-novel-writing-assistant"
+ },
+ {
+  "name": "EthanYoQ/AI-Novel-Writer",
+  "source": "github",
+  "signal": "『灵感→世界观→大纲→写作→审稿→修稿』组织成可控流程——审稿修稿独立成环是质量保障关键",
+  "url": "https://github.com/EthanYoQ/AI-Novel-Writer",
+  "what": "1.3k star；AI 小说创作软件：灵感、角色、世界观、大纲、章节写作、审稿和修稿全流程可控，桌面版支持本地/在线模型",
+  "_key": "ethanyoq/ai-novel-writer"
+ },
+ {
+  "name": "RhythmicWave/NovelForge",
+  "source": "github",
+  "signal": "JSON Schema 结构化生成+卡片式上下文引用——把长文拆成可校验的结构化中间产物，直接对齐本项目的模式3表行对",
+  "url": "https://github.com/RhythmicWave/NovelForge",
+  "what": "1.2k star；卡片式 AI 长篇小说创作：基于 JSON Schema 的结构化 AI 生成与上下文引用，可扩展性强",
+  "_key": "rhythmicwave/novelforge"
+ },
+ {
+  "name": "Deng-m1/MaliangAINovalWriter",
+  "source": "github",
+  "signal": "三级大纲+知识图谱一致性+30万字连载——超长连载不崩的两大支柱：层级大纲与一致性图谱",
+  "url": "https://github.com/Deng-m1/MaliangAINovalWriter",
+  "what": "883 star；马良写作：中文网文多智能体创作平台，三级大纲、知识图谱一致性、30万字连载",
+  "_key": "deng-m1/maliangainovalwriter"
+ },
+ {
+  "name": "hughhowey/neo",
+  "source": "github",
+  "signal": "顶级作者亲自定义『作家需要 AI 补什么』——需求侧视角校准研报工厂的产线设计",
+  "url": "https://github.com/hughhowey/neo",
+  "what": "1.3k star；知名小说家 Hugh Howey（ Wool 作者）亲手打造的小说写作工具",
+  "_key": "hughhowey/neo"
+ },
+ {
+  "name": "BlinkDL/AI-Writer",
+  "source": "github",
+  "signal": "中文长文生成的模型侧底座选择参考（成本-质量权衡）",
+  "url": "https://github.com/BlinkDL/AI-Writer",
+  "what": "3.9k star；RWKV 中文小说预训练生成模型（玄幻/言情网文）",
+  "_key": "blinkdl/ai-writer"
+ },
+ {
+  "name": "alfredxw/denova",
+  "source": "github",
+  "signal": "创作平台+RPG 实体的 agent/Skills 双引擎形态——研报工厂的平台化封装样本",
+  "url": "https://github.com/alfredxw/denova",
+  "what": "867 star；AI 创作平台：小说写作+AI 生成 RPG，内置 agents 与 Skills 支持",
+  "_key": "alfredxw/denova"
+ },
+ {
+  "name": "yuanbw2025/storyforge",
+  "source": "github",
+  "signal": "工作台化的人机协同生产界面形态",
+  "url": "https://github.com/yuanbw2025/storyforge",
+  "what": "821 star；故事熔炉 StoryForge——AI 小说创作工作台",
+  "_key": "yuanbw2025/storyforge"
+ },
+ {
+  "name": "heider-x/vela",
+  "source": "github",
+  "signal": "本地 LLM+RAG+BYOK 的隐私优先架构——免费模型优先铁律的同类实现",
+  "url": "https://github.com/heider-x/vela",
+  "what": "577 star；小说写作 AI IDE：本地 LLM+RAG、隐私优先、自带密钥，面向网文作者",
+  "_key": "heider-x/vela"
+ },
+ {
+  "name": "zy-zmc/tianming-novel-ai-writer",
+  "source": "github",
+  "signal": "本项目最该抄的方法论：不靠模型记忆靠每章状态回写+多维事实快照+多道生成门禁，正是跨格幻影对/一致性审计的工程化先例",
+  "url": "https://github.com/zy-zmc/tianming-novel-ai-writer",
+  "what": "436 star；天命：15维事实快照·12类变更声明·6道生成门禁，写到3000章依然连贯，不依赖上下文不靠模型记忆",
+  "_key": "zy-zmc/tianming-novel-ai-writer"
+ },
+ {
+  "name": "adamwlarson/ai-book-writer",
+  "source": "github",
+  "signal": "AutoGen 多 agent 整书生产的实验记录——角色协同的实战坑清单",
+  "url": "https://github.com/adamwlarson/ai-book-writer",
+  "what": "399 star；用 AutoGen 多 agent 实验能否完整写出一本书",
+  "_key": "adamwlarson/ai-book-writer"
+ },
+ {
+  "name": "mikavehns/BookGPT",
+  "source": "github",
+  "signal": "参数化整书生成的早期形态：元数据先行、正文后至",
+  "url": "https://github.com/mikavehns/BookGPT",
+  "what": "351 star；给定参数用 GPT-3 写完整本书",
+  "_key": "mikavehns/bookgpt"
+ },
+ {
+  "name": "guerra2fernando/libriscribe",
+  "source": "github",
+  "signal": "多 agent 角色分工（大纲/角色/文风）覆盖研究论文与商业书——研报体裁的 agent 角色表参考",
+  "url": "https://github.com/guerra2fernando/libriscribe",
+  "what": "119 star；LibriScribe：AI 开源成书系统，多专业 agent 从概念到成品书稿，支持研究论文/商业书/技术文档",
+  "_key": "guerra2fernando/libriscribe"
+ },
+ {
+  "name": "LAY-lgtm/novel-writing-framework",
+  "source": "github",
+  "signal": "500+ 章实战方法论（大纲设计/逐章质控/AI味消除/平台优化/变现）——最接近『顶级方法论』提炼物的中文实战库",
+  "url": "https://github.com/LAY-lgtm/novel-writing-framework",
+  "what": "248 star；AI 辅助长篇网文写作工程化体系：从500+章实战提炼的全流程方法论，覆盖大纲、逐章写作、质控、AI味消除、变现",
+  "_key": "lay-lgtm/novel-writing-framework"
+ },
+ {
+  "name": "dama-cyber/Distilled-Novel-Toolbox",
+  "source": "github",
+  "signal": "写作技能工具箱化（可组合、可蒸馏）的组织方式，对研报 skill 分层有直接参照",
+  "url": "https://github.com/dama-cyber/Distilled-Novel-Toolbox",
+  "what": "190 star；小说写作 skills 工具箱",
+  "_key": "dama-cyber/distilled-novel-toolbox"
+ },
+ {
+  "name": "zy-zmc/tianming-skill",
+  "source": "github",
+  "signal": "模块化提示词工程的 skill 版拆法——方法论沉淀为可复用模块的范本",
+  "url": "https://github.com/zy-zmc/tianming-skill",
+  "what": "149 star；天命 skill：模块化提示词工程系统（Claude Skill 形态的小说写作）",
+  "_key": "zy-zmc/tianming-skill"
+ },
+ {
+  "name": "MangoLion/plotbunni",
+  "source": "github",
+  "signal": "FOSS 写作套件的情节/大纲结构抽象",
+  "url": "https://github.com/MangoLion/plotbunni",
+  "what": "101 star；带 AI 辅助的 FOSS 小说写作套件",
+  "_key": "mangolion/plotbunni"
+ },
+ {
+  "name": "blackzhanzhan/novel_agent",
+  "source": "github",
+  "signal": "Git 原生写作工作台：版本化=每章可回滚可 diff 审计——研报的版本治理可复用",
+  "url": "https://github.com/blackzhanzhan/novel_agent",
+  "what": "90 star；Git 原生 AI 小说写作工作台（Dify agents）",
+  "_key": "blackzhanzhan/novel_agent"
+ },
+ {
+  "name": "teangtang1122/siming-ai",
+  "source": "github",
+  "signal": "本地化打包分发的工程形态",
+  "url": "https://github.com/teangtang1122/siming-ai",
+  "what": "94 star；本地小说写作 AI 工作区，带 Windows 打包启动器",
+  "_key": "teangtang1122/siming-ai"
+ },
+ {
+  "name": "tance-mang/chinese-webnovel-skills",
+  "source": "github",
+  "signal": "23 个细分 skill 的粒度切分示范：把写作拆成原子技能再组合",
+  "url": "https://github.com/tance-mang/chinese-webnovel-skills",
+  "what": "75 star；中文网文写作工具包（23 skills），Claude Code 插件形态",
+  "_key": "tance-mang/chinese-webnovel-skills"
+ },
+ {
+  "name": "zxerai/novelix",
+  "source": "github",
+  "signal": "10-agent 流水线+工作台监控——agent 数量与监控面板的工程平衡点",
+  "url": "https://github.com/zxerai/novelix",
+  "what": "71 star；自主小说写作 AI agent：10-agent 流水线+Studio 网页工作台",
+  "_key": "zxerai/novelix"
+ },
+ {
+  "name": "foocker/mathbook-agent",
+  "source": "github",
+  "signal": "『有成品书在 output』的交付自证文化——研报工厂也应以成品目录说话",
+  "url": "https://github.com/foocker/mathbook-agent",
+  "what": "17 star；自动写数学书，output 目录里有 5 本成品书",
+  "_key": "foocker/mathbook-agent"
+ },
+ {
+  "name": "fjourdren/ralph-book",
+  "source": "github",
+  "signal": "Claude Code 原生 agent 写书的实践（与本项目同栈，坑与技巧直接可抄）",
+  "url": "https://github.com/fjourdren/ralph-book",
+  "what": "基于 Claude Code 的自主写书 agent",
+  "_key": "fjourdren/ralph-book"
+ },
+ {
+  "name": "Kira35s/ZolAI",
+  "source": "github",
+  "signal": "持久记忆分层（风格/圣经/大纲/章节）——研报的 style guide+事实库+大纲三库分离同构",
+  "url": "https://github.com/Kira35s/ZolAI",
+  "what": "写书 agent：编排式 skills+持久记忆（风格、故事圣经、大纲、章节）",
+  "_key": "kira35s/zolai"
+ },
+ {
+  "name": "finertad/Bookify",
+  "source": "github",
+  "signal": "用 Claude Code 原生原语（而非框架）搭 agent 系统的架构路线",
+  "url": "https://github.com/finertad/Bookify",
+  "what": "用 Claude Code 原生原语搭的写书 agentic 系统（WAT 框架）",
+  "_key": "finertad/bookify"
+ },
+ {
+  "name": "deshwalmahesh/book-writer",
+  "source": "github",
+  "signal": "durable checkpoint+人工章节审阅+带引用写作——长文生产的断点续跑与引用纪律标配",
+  "url": "https://github.com/deshwalmahesh/book-writer",
+  "what": "带引用的 UPI 主题写书 agent：LangGraph+人工章节审阅+FastAPI+durable checkpoint",
+  "_key": "deshwalmahesh/book-writer"
+ },
+ {
+  "name": "hamidhusein/book-writing-agent",
+  "source": "github",
+  "signal": "brief→outline→draft→export 的标准四段式流水线骨架",
+  "url": "https://github.com/hamidhusein/book-writing-agent",
+  "what": "写书 agent：AI 辅助 brief、大纲规划、章节起草、导出工具",
+  "_key": "hamidhusein/book-writing-agent"
+ },
+ {
+  "name": "zola-lab/universal-book-creator",
+  "source": "github",
+  "signal": "通用题材写书 skill 的通用化抽象方式",
+  "url": "https://github.com/zola-lab/universal-book-creator",
+  "what": "AI 通用书籍创作 agent skill（QoderWork/OpenClaw 形态）",
+  "_key": "zola-lab/universal-book-creator"
+ },
+ {
+  "name": "zola-lab/book-writing-assistant",
+  "source": "github",
+  "signal": "写书助手 skill 的辅助型（非全自动）形态——人机分工样本",
+  "url": "https://github.com/zola-lab/book-writing-assistant",
+  "what": "AI 写书助手 skill（QoderWork/OpenClaw 形态）",
+  "_key": "zola-lab/book-writing-assistant"
+ },
+ {
+  "name": "ATboy-web/AI_NovelWriter",
+  "source": "github",
+  "signal": "15 题材模板化+5 agent 协作+成本统计——题材模板库与成本看板的组合",
+  "url": "https://github.com/ATboy-web/AI_NovelWriter",
+  "what": "AI 长篇小说创作工坊 v3：15 种题材、5 agent 协作、15 面板工作台、多 AI 服务适配与用量成本统计",
+  "_key": "atboy-web/ai_novelwriter"
+ },
+ {
+  "name": "Jieice/ai-novel-writer",
+  "source": "github",
+  "signal": "『8条铁律风格统一』+AI率检测——风格铁律与检出率量化两条质控腿",
+  "url": "https://github.com/Jieice/ai-novel-writer",
+  "what": "112 star；AI 小说创作系统：项目管理、模板化结构、章节润色、8条铁律风格统一、AI率检测",
+  "_key": "jieice/ai-novel-writer"
+ },
+ {
+  "name": "eliumusk/ai-novel-writer",
+  "source": "github",
+  "signal": "用数据库记录角色/设定属性关系做长文一致性——结构化事实库防漂移",
+  "url": "https://github.com/eliumusk/ai-novel-writer",
+  "what": "87 star；基于 Gemini 的智能小说创作助手，数据库记录小说属性关系支撑长文写作",
+  "_key": "eliumusk/ai-novel-writer"
+ },
+ {
+  "name": "OUBIGFA/De-AI-Prompt-Enhancer-Writer-Booster-SKILL",
+  "source": "github",
+  "signal": "去 AI 味是成稿宣传链的通用痛点，850 star 证明需求刚性——研报终稿可加同类文风层",
+  "url": "https://github.com/OUBIGFA/De-AI-Prompt-Enhancer-Writer-Booster-SKILL",
+  "what": "850 star；去AI味提示词-作家增强 SKILL",
+  "_key": "oubigfa/de-ai-prompt-enhancer-writer-booster-skill"
+ },
+ {
+  "name": "wesleyscholl/book-generator",
+  "url": "https://github.com/wesleyscholl/book-generator",
+  "what": "AI 书籍生成/编辑/发布工具包：大纲、章节、封面，导出 EPUB/PDF 直传 Amazon KDP",
+  "signal": "「生成→编辑→发布→分发」闭环的产品化做法",
+  "source": "github",
+  "_key": "wesleyscholl/book-generator"
+ },
+ {
+  "name": "alexeygrigorev/ai-book-generator",
+  "source": "github",
+  "signal": "plan-then-execute 的成书实现+音频/印刷多产物分发——一份内容多形态分发的思路",
+  "url": "https://github.com/alexeygrigorev/ai-book-generator",
+  "what": "17 star；按描述创建完整书籍：文本+音频朗读+KDP 印刷格式",
+  "_key": "alexeygrigorev/ai-book-generator"
+ },
+ {
+  "name": "SimonWaldherr/AI-Book-Generator",
+  "source": "github",
+  "signal": "『AI 辅助 kickstart 而非全替』的人机边界样本",
+  "url": "https://github.com/SimonWaldherr/AI-Book-Generator",
+  "what": "63 star；用 AI 起步写书流程的 PoC 工具箱",
+  "_key": "simonwaldherr/ai-book-generator"
+ },
+ {
+  "name": "Saifulislamsayem19/AI-Book-Generator",
+  "source": "github",
+  "signal": "多 agent 编排完整故事书生成的全栈实现样本",
+  "url": "https://github.com/Saifulislamsayem19/AI-Book-Generator",
+  "what": "交互式 Web 应用：多 agent 编排生成完整专业级故事/书籍",
+  "_key": "saifulislamsayem19/ai-book-generator"
+ },
+ {
+  "name": "donvito/ai-book-generator-go",
+  "source": "github",
+  "signal": "Firebase Genkit+Go 的多模型路由生成范式——模型层解耦参考",
+  "url": "https://github.com/donvito/ai-book-generator-go",
+  "what": "Go 语言 AI 书籍生成器：Firebase Genkit+OpenRouter 生成任意主题的完整书籍",
+  "_key": "donvito/ai-book-generator-go"
+ },
+ {
+  "name": "verzo777/ai_book_generator_cli",
+  "source": "github",
+  "signal": "CLI 化生成入口的极简形态",
+  "url": "https://github.com/verzo777/ai_book_generator_cli",
+  "what": "AI 书籍生成命令行工具",
+  "_key": "verzo777/ai_book_generator_cli"
+ },
+ {
+  "name": "aejepsen/ebook-llm-on-premise",
+  "source": "github",
+  "signal": "『书+可执行笔记本』复合产物形态——研报可附可复算的 own_calculations 笔记本",
+  "url": "https://github.com/aejepsen/ebook-llm-on-premise",
+  "what": "本地训练 LLM 的书+带注释 Notebook（葡语）",
+  "_key": "aejepsen/ebook-llm-on-premise"
+ },
+ {
+  "name": "fadil013/SilverAI",
+  "source": "github",
+  "signal": "RAG 摄取+LongWriter 生成的 2 万字 handbook 管线——『素材库+长文引擎』两段式",
+  "url": "https://github.com/fadil013/SilverAI",
+  "what": "AI PDF 摄取+RAG 对话+LightRAG+LongWriter 生成 2 万字手册",
+  "_key": "fadil013/silverai"
+ },
+ {
+  "name": "Gauravmittals/handbook-generator",
+  "source": "github",
+  "signal": "从 PDF 语料到 2 万字结构化手册——本项目 NB MD 资料库→研报的直接同构",
+  "url": "https://github.com/Gauravmittals/handbook-generator",
+  "what": "把上传 PDF 转成 2 万字以上结构化手册的 AI 应用（LightRAG）",
+  "_key": "gauravmittals/handbook-generator"
+ },
+ {
+  "name": "Building an AI Book Generator with a Plan-Then-Execute Pipeline (AI Shipping Blog)",
+  "source": "web",
+  "signal": "plan-then-execute 成书全链（含音频与 KDP 印件）的一手工程复盘，配开源仓库",
+  "url": "https://aishippingblog.com/p/building-an-ai-book-generator-with",
+  "what": "长文博客：从细分睡前书项目长成章节+音频+EPUB+KDP 印刷产物的 plan-then-execute 书籍生成系统",
+  "_key": "aishippingblog.com/p/building-an-ai-book-generator-with"
+ },
+ {
+  "name": "AI Book Generator (aibookgenerator.org)",
+  "source": "web",
+  "signal": "outline-first 作为商业产品核心卖点的论证——大纲先行=结构一致性保险",
+  "url": "https://aibookgenerator.org",
+  "what": "outline-first 工作流的 AI 写书产品及其方法论说明",
+  "_key": "aibookgenerator.org"
+ },
+ {
+  "name": "Teneo — Best AI Book Writing Software",
+  "source": "web",
+  "signal": "行业公认管线四步：结构大纲→逐章生成→多遍增强→出版格式化",
+  "url": "https://teneo.io",
+  "what": "综述：LLM 写书典型管线=结构化大纲→逐章生成→多遍质量增强→出版排版",
+  "_key": "teneo.io"
+ },
+ {
+  "name": "bulaev.net — Multi-Agent AI Systems: From Simple Prompts to Complete Books",
+  "source": "web",
+  "signal": "多 agent 从简到繁的编排谱系与 LibriScribe 案例细节",
+  "url": "https://bulaev.net",
+  "what": "多 agent AI 系统从简单提示到成书的实践文章（含 LibriScribe 案例）",
+  "_key": "bulaev.net"
+ },
+ {
+  "name": "eternity4719/HowToLiveBetter",
+  "source": "github",
+  "signal": "43k star 的证据分级长文范式：每条写明成本/收益/证据等级/原始出处——研报 own_calculations+引用源纪律的极致样本",
+  "url": "https://github.com/eternity4719/HowToLiveBetter",
+  "what": "43k star；中文人生指南长文：每条写明成本、收益、证据等级和原始出处，只引期刊论文与官方文件",
+  "_key": "eternity4719/howtolivebetter"
+ },
+ {
+  "name": "hanlulong/econ-writing-skill",
+  "source": "github",
+  "signal": "把 50+ 本写作指南蒸馏进一个写作 agent——『指南蒸馏成 skill』正是本项目方法论沉淀路径",
+  "url": "https://github.com/hanlulong/econ-writing-skill",
+  "what": "642 star；把 AI 助手变成经济学论文写作专家的 Agent Skill（综合 Cochrane 等 50+ 指南）",
+  "_key": "hanlulong/econ-writing-skill"
+ },
+ {
+  "name": "KKKKhazix/khazix-skills",
+  "source": "github",
+  "signal": "头部博主把写作能力沉淀为 agent skill 的中文生态样本",
+  "url": "https://github.com/KKKKhazix/khazix-skills",
+  "what": "21k star；卡兹克开源 AI Skills 合集（含 khazix-writer 等）",
+  "_key": "kkkkhazix/khazix-skills"
+ },
+ {
+  "name": "liwg1995/YuduBid",
+  "source": "github",
+  "signal": "高价值公文/标书体裁的全自动生产线——中文结构化长文工业化的邻域验证",
+  "url": "https://github.com/liwg1995/YuduBid",
+  "what": "281 star；自动编写技术标书、公文、软著、专利、课题申报、论文",
+  "_key": "liwg1995/yudubid"
+ },
+ {
+  "name": "milkoloa/AIBS",
+  "source": "github",
+  "signal": "标书体裁的后端流水线参考",
+  "url": "https://github.com/milkoloa/AIBS",
+  "what": "35 star；自动化写标书后端",
+  "_key": "milkoloa/aibs"
+ },
+ {
+  "name": "EvolvingLMMs-Lab/lmms-lab-writer",
+  "source": "github",
+  "signal": "agentic LaTeX 编辑器形态——终稿排版层 agent 化的样本",
+  "url": "https://github.com/EvolvingLMMs-Lab/lmms-lab-writer",
+  "what": "276 star；Agentic LaTeX Writer：本地优先的 AI 辅助学术写作编辑器",
+  "_key": "evolvinglmms-lab/lmms-lab-writer"
+ },
+ {
+  "name": "CAICAIIs/Auto-Scholar",
+  "source": "github",
+  "signal": "human-in-the-loop 论文准入——对应研报的证据源人工裁决豁免机制",
+  "url": "https://github.com/CAICAIIs/Auto-Scholar",
+  "what": "34 star；人在环的文献综述生成器：输入主题→人工批准论文→生成综述",
+  "_key": "caicaiis/auto-scholar"
+ },
+ {
+  "name": "a554b554/AutoSurveyGPT",
+  "source": "github",
+  "signal": "智能文献调研助手的检索-筛选-综合三段式",
+  "url": "https://github.com/a554b554/AutoSurveyGPT",
+  "what": "156 star；GPT-3.5/4 自动文献调研综述",
+  "_key": "a554b554/autosurveygpt"
+ },
+ {
+  "name": "misbahsy/InsightExpress",
+  "source": "github",
+  "signal": "聚合→生成的 newsletter 管线——周期性简报产品化形态（对 WeChatBriefDaily 有参照）",
+  "url": "https://github.com/misbahsy/InsightExpress",
+  "what": "61 star；聚合文章并生成 newsletter 的 agent（Langflow+NextJS）",
+  "_key": "misbahsy/insightexpress"
+ },
+ {
+  "name": "go9x/newsletter-agent",
+  "source": "github",
+  "signal": "Claude Code 定时自动写作发布的 skill 化样本",
+  "url": "https://github.com/go9x/newsletter-agent",
+  "what": "用 Claude Code 自动化周刊：抓取活动/视频→生成文案→发布",
+  "_key": "go9x/newsletter-agent"
+ },
+ {
+  "name": "Jamailar/Beav",
+  "source": "github",
+  "signal": "采集→素材库→选题→AI写作→自动编排的一体化自媒体工厂（与 WeAIPO 同域对标）",
+  "url": "https://github.com/Jamailar/Beav",
+  "what": "1.8k star；小红书 AI 运营工作台：采集、素材库、选题、AI 写作+图片自动编排全链",
+  "_key": "jamailar/beav"
+ },
+ {
+  "name": "comeonzhj/Auto-Redbook-Skills",
+  "source": "github",
+  "signal": "短内容全自动生产分发的 skill 形态——长短内容工厂的分工参照",
+  "url": "https://github.com/comeonzhj/Auto-Redbook-Skills",
+  "what": "2.3k star；自动撰写小红书笔记、生成图片、自动发布的 Skills",
+  "_key": "comeonzhj/auto-redbook-skills"
+ },
+ {
+  "name": "EBOLABOY/xhs-ai-writer",
+  "source": "github",
+  "signal": "先分析爆款再生成的『拆文-仿写』范式",
+  "url": "https://github.com/EBOLABOY/xhs-ai-writer",
+  "what": "326 star；小红书创作者 AI 工具：分析热门笔记生成爆款文案",
+  "_key": "ebolaboy/xhs-ai-writer"
+ },
+ {
+  "name": "kalidindis/LongWriter-llm",
+  "source": "github",
+  "signal": "vLLM 部署长文模型的工程路径——量产时的吞吐方案",
+  "url": "https://github.com/kalidindis/LongWriter-llm",
+  "what": "LongWriter 部署镜像：vllm_inference.py 一分钟生成 1 万字",
+  "_key": "kalidindis/longwriter-llm"
+ },
+ {
+  "name": "Pavan-Kolachena/LongWriter",
+  "source": "github",
+  "signal": "『先攒长文语料再训模型』的数据路径——长文能力可后天注入",
+  "url": "https://github.com/Pavan-Kolachena/LongWriter",
+  "what": "LongWriter 复现：收集长文样本数据→训练 LLM 写更长文本",
+  "_key": "pavan-kolachena/longwriter"
+ },
+ {
+  "name": "LongWriter 论文 (arXiv:2408.07055)",
+  "source": "web",
+  "signal": "万字输出的理论根基文献",
+  "url": "https://arxiv.org/abs/2408.07055",
+  "what": "LongWriter: Unleashing 10,000+ Word Generation with Large Language Models（AgentWrite+LongBench-Write+DPO）",
+  "_key": "arxiv.org/abs/2408.07055"
+ },
+ {
+  "name": "LongWriter (HuggingFace Papers)",
+  "source": "web",
+  "signal": "社区讨论与后续衍生工作的追踪入口",
+  "url": "https://huggingface.co/papers/2408.07055",
+  "what": "LongWriter 论文页+社区复现讨论",
+  "_key": "huggingface.co/papers/2408.07055"
+ },
+ {
+  "name": "Neurohive — LongWriter 评述",
+  "source": "web",
+  "signal": "俄语技术社区对万字生成框架的独立评测视角",
+  "url": "https://neurohive.io/en/state-of-the-art/longwriter-open-source-framework-for-generating-texts-beyond-10-000-words",
+  "what": "LongWriter 超万字生成开源框架的评述文章",
+  "_key": "neurohive.io/en/state-of-the-art/longwriter-open-source-framework-for-generating-texts-beyond-10-000-words"
+ },
+ {
+  "name": "Generative AI.pub — LongWriter: The Next Frontier",
+  "source": "web",
+  "signal": "万字生成在文章/小说/剧本场景的应用面分析",
+  "url": "https://generativeai.pub/longwriter-the-next-frontier-in-llms-unleashing-10-000-word-generation-f35d90bb1d46",
+  "what": "万字级生成对文章、小说、脚本影响的分析文章",
+  "_key": "generativeai.pub/longwriter-the-next-frontier-in-llms-unleashing-10-000-word-generation-f35d90bb1d46"
+ },
+ {
+  "name": "BrightCoding — Ultra-Long Text Generation with 10,000+ Words",
+  "source": "web",
+  "signal": "万字生成的落地教学样本",
+  "url": "https://www.blog.brightcoding.dev/2025/10/01/ultra-long-text-generation-with-10-000+-words-using-large-language-models",
+  "what": "用 LLM 做万字级超长文本生成的教程与趋势文章",
+  "_key": "www.blog.brightcoding.dev/2025/10/01/ultra-long-text-generation-with-10-000+-words-using-large-language-models"
+ },
+ {
+  "name": "campusx-official/blog-writing-agent",
+  "source": "github",
+  "signal": "LangGraph 博客生成教学样板：节点图清晰适合入门对表",
+  "url": "https://github.com/campusx-official/blog-writing-agent",
+  "what": "57 star；LangGraph 博客写作 agent",
+  "_key": "campusx-official/blog-writing-agent"
+ },
+ {
+  "name": "gidadomusa/substack-agent",
+  "source": "github",
+  "signal": "研究员/编辑/作者三角色内容分工——编辑部模型的极简实现",
+  "url": "https://github.com/gidadomusa/substack-agent",
+  "what": "AI Substack 文章生成 agent：researcher、editor、writer 三角色",
+  "_key": "gidadomusa/substack-agent"
+ },
+ {
+  "name": "ZainSaed/Blog-Writing-Agent",
+  "source": "github",
+  "signal": "路由→研究→计划→并行写作的编排骨架",
+  "url": "https://github.com/ZainSaed/Blog-Writing-Agent",
+  "what": "多 agent LLM 端到端生成技术博文（LangGraph：路由、研究、计划、并行写作）",
+  "_key": "zainsaed/blog-writing-agent"
+ },
+ {
+  "name": "Sanjay-00/Blog-writing-agent",
+  "source": "github",
+  "signal": "多 agent 内容工厂的调度细节（并行 worker+评审）",
+  "url": "https://github.com/Sanjay-00/Blog-writing-agent",
+  "what": "LangGraph 多 agent 内容生成系统：路由、检索、计划、并行 worker 执行",
+  "_key": "sanjay-00/blog-writing-agent"
+ },
+ {
+  "name": "XuanRanL/loamwright-SEO-Skill",
+  "source": "web",
+  "signal": "『研究→写作→事实核查→优化→发布』五步生产级 skill——事实核查独立成步值得照抄",
+  "url": "https://github.com/XuanRanL/loamwright-SEO-Skill",
+  "what": "48 star；Claude Code 生产级 SEO+GEO 内容工厂 skill：研究、写作、事实核查、优化、发布",
+  "_key": "xuanranl/loamwright-seo-skill"
+ },
+ {
+  "name": "coleam00/ai-content-factory",
+  "source": "github",
+  "signal": "『产品目录→人类可读内容』的批量转化工厂——B 端批量长文生产样本",
+  "url": "https://github.com/coleam00/ai-content-factory",
+  "what": "30 star；Archion 自主工厂：把产品目录变成人类可读内容",
+  "_key": "coleam00/ai-content-factory"
+ },
+ {
+  "name": "mikeshu2001/content-factory",
+  "source": "github",
+  "signal": "『显式研究/计划/写作/修订节点+人审』的编辑部工作流——与 saturation engine 的显式分阶段同构",
+  "url": "https://github.com/mikeshu2001/content-factory",
+  "what": "20 star；Markdown 优先、人审把关的多 agent 编辑部工作流（研究/计划/写作/修订显式分阶段）",
+  "_key": "mikeshu2001/content-factory"
+ },
+ {
+  "name": "wilingna/ai-content-pipeline",
+  "source": "github",
+  "signal": "7-agent+3模型编辑部：选题→3分钟成品——多模型互审的廉价质量杠杆",
+  "url": "https://github.com/wilingna/ai-content-pipeline",
+  "what": "13 star；7-agent 内容工厂+3 模型编辑部，从选题到可发布 3 分钟",
+  "_key": "wilingna/ai-content-pipeline"
+ },
+ {
+  "name": "hassancs91/content-factory-starter",
+  "source": "github",
+  "signal": "『一行想法→带证据页面』的证据优先产线设计",
+  "url": "https://github.com/hassancs91/content-factory-starter",
+  "what": "8 star；Claude Code skill：一行想法→侦察→真实实验→发布带证据的页面",
+  "_key": "hassancs91/content-factory-starter"
+ },
+ {
+  "name": "Pangu-Immortal/hunter-ai-content-factory",
+  "source": "github",
+  "signal": "『好文章80%在选题』+AI 价值判断门——上游选题闸与本项目弹药门同构",
+  "url": "https://github.com/Pangu-Immortal/hunter-ai-content-factory",
+  "what": "399 star；24 小时情报系统：从 GitHub Trending/Twitter/HN/Reddit 采集热点，AI 判断值不值得写，自动生成并发布",
+  "_key": "pangu-immortal/hunter-ai-content-factory"
+ },
+ {
+  "name": "pminervini/deep-research-mcp",
+  "source": "github",
+  "signal": "深度研究能力 MCP 服务化——报告生产作为可调用工具的接口形态",
+  "url": "https://github.com/pminervini/deep-research-mcp",
+  "what": "112 star；聚合 OpenAI/Gemini/Tavily 等深度研究的 MCP 服务器",
+  "_key": "pminervini/deep-research-mcp"
+ },
+ {
+  "name": "wheattoast11/openrouter-deep-research-mcp",
+  "source": "github",
+  "signal": "异步 agent 网+流式蜂群的报告生产调度形态",
+  "url": "https://github.com/wheattoast11/openrouter-deep-research-mcp",
+  "what": "55 star；多 agent 研究 MCP 服务器：异步 agent 网或流式蜂群编排",
+  "_key": "wheattoast11/openrouter-deep-research-mcp"
+ },
+ {
+  "name": "HKUDS/AI-Researcher",
+  "url": "https://github.com/HKUDS/AI-Researcher",
+  "what": "NeurIPS2025『AI-Researcher: Autonomous Scientific Innovation』，5.8k星，已有产品化版novix.science",
+  "signal": "从idea到论文全自主的最新学术范式，其文献消化-假设生成工序值得解剖",
+  "source": "github",
+  "_key": "hkuds/ai-researcher"
+ },
+ {
+  "name": "InternLM MindSearch",
+  "url": "https://github.com/InternLM/MindSearch",
+  "what": "上海AI实验室开源的 LLM 多智能体搜索引擎：规划者分解查询+执行者并行搜 300+ 网页，模拟人类思考过程的深度知识探索",
+  "signal": "多智能体分摊长上下文负载（300+页并发消化）的分工设计可借鉴",
+  "source": "github",
+  "_key": "internlm/mindsearch"
+ },
+ {
+  "name": "Paper Orchestra (Google)",
+  "signal": "「实验日志→成稿」的全自动 LaTeX 排版+图表生成+API 引用校验，是成稿后置链（md2docx 腿）的升级方向。",
+  "source": "github",
+  "url": "https://github.com/google-research/paper-orchestra",
+  "what": "谷歌多 agent 框架：把无约束的前写作素材（想法+实验日志）转成可投稿 LaTeX 稿，含文献综合、API 落地引用、自动绘图与概念图。",
+  "_key": "google-research/paper-orchestra"
+ },
+ {
+  "name": "Polaris",
+  "signal": "Voyage「持久化可续跑+人审关卡」正对我们重启接续与人工验收环节；多文件 LaTeX 工程化写作也值得学。",
+  "source": "github",
+  "url": "https://github.com/ZJU-REAL/Polaris",
+  "what": "浙大桌面端自主科研平台：文献调研、多 agent 辩论式想法评审、GPU 实验、多文件 LaTeX 论文写作（VLM 查图）、论文评审；Voyage 支持人审门控的可续跑持久化任务。",
+  "_key": "zju-real/polaris"
+ },
+ {
+  "name": "RepoAgent",
+  "signal": "「全局结构信息→局部生成」的层级文档工艺，可平移到企业/行业研究报告的层级语料组织。",
+  "source": "github",
+  "url": "https://github.com/OpenBMB/RepoAgent",
+  "what": "LLM 驱动的仓库级文档 agent：利用全局结构信息自动生成与维护整个代码库的文档（2024 年首个此类框架）。",
+  "_key": "openbmb/repoagent"
+ },
+ {
+  "name": "ai-doc-gen (Divar)",
+  "signal": "大库并行分块+LLM 综合的工程化文档产线，分块-合成调度细节可借鉴。",
+  "source": "github",
+  "url": "https://github.com/divar-ir/ai-doc-gen",
+  "what": "伊朗 Divar 的多 agent 代码文档生成器：并行分析仓库各部分并用 LLM 综合成完整文档。",
+  "_key": "divar-ir/ai-doc-gen"
+ },
+ {
+  "name": "RaPID",
+  "signal": "规划与信息发现解耦、边写边补检索，适合我们「写到哪缺哪补哪」的定点补弹模式。",
+  "source": "github",
+  "url": "https://github.com/USTC-StarTeam/RaPID",
+  "what": "ACL Findings 2025：检索增强长文生成，规划(planning)与信息发现(information discovery)双轮驱动。",
+  "_key": "ustc-starteam/rapid"
+ },
+ {
+  "name": "Self-Refine",
+  "signal": "同模型自反馈迭代是成本最低的质检腿，可作为我们分节初稿的廉价首道打磨。",
+  "source": "github",
+  "url": "https://github.com/madaan/self-refine",
+  "what": "NeurIPS 2023：同一 LLM 对自己的输出生成反馈再迭代精修，6400+ 引用的经典自精修框架。",
+  "_key": "madaan/self-refine"
+ },
+ {
+  "name": "Reflexion",
+  "signal": "语言化反思+情景记忆缓冲实现「越写越懂上次为何被拒」，可接到我们的失败案例库上做经验回放。",
+  "source": "github",
+  "url": "https://github.com/noahshinn/reflexion",
+  "what": "语言强化学习：把标量奖励转成语言化反思存入情景记忆缓冲，不更新权重实现自我改进。",
+  "_key": "noahshinn/reflexion"
+ },
+ {
+  "name": "Re3",
+  "signal": "「大纲→递归重提示→段落级修订」三层解耦是长文连贯性的经典配方，段落级修订可直接引入。",
+  "source": "github",
+  "url": "https://github.com/yangkevin2/emnlp22-re3-story-generation",
+  "what": "ACL 2022 长故事生成：大纲→递归重提示(reprompting)→段落修订，递归产出数千词连贯长文。",
+  "_key": "yangkevin2/emnlp22-re3-story-generation"
+ },
+ {
+  "name": "DOC (Detailed Outline Control)",
+  "signal": "细节大纲让每段内容可规划可验收，是我们大纲门从「章级」下沉到「段级」的参照。",
+  "source": "github",
+  "url": "https://github.com/yangkevin2/doc-story-generation",
+  "what": "Re3 同作者的升级系统：细节大纲控制+逐段递归生成+修订，更长更可控。",
+  "_key": "yangkevin2/doc-story-generation"
+ },
+ {
+  "name": "Awesome-Story-Generation",
+  "signal": "长文生成学术谱系索引（Re3/DOC/DOME 等），方法论溯源与选型省时入口。",
+  "source": "github",
+  "url": "https://github.com/yingpengma/Awesome-Story-Generation",
+  "what": "故事生成论文/代码策展库，收录 Re3、DOC、DOME 等大纲控制+递归修订的长文生成框架。",
+  "_key": "yingpengma/awesome-story-generation"
+ },
+ {
+  "name": "OWL (camel-ai)",
+  "signal": "Planner 先行+角色对话范式适合多渠道采集的角色化分工（采集员/审核员/录入员）。",
+  "source": "github",
+  "url": "https://github.com/camel-ai/owl",
+  "what": "多 agent 工作流框架（曾登 trending 榜首）：Planner agent 工具使用前先规划，RolePlaying 多角色协作，支持 MCP。",
+  "_key": "camel-ai/owl"
+ },
+ {
+  "name": "MCTSr",
+  "signal": "MCTS+自精修做评估器/审校层：答案空间搜索+迭代自评，可借给我们的判定语言(C5)提判准率。",
+  "source": "github",
+  "url": "https://github.com/naivoder/MCTSr",
+  "what": "蒙特卡洛树搜索自精修：用 MCTS 驱动 LLM 对答案做多轮自我批判与改进，显著提升推理/评估质量。",
+  "_key": "naivoder/mctsr"
+ },
+ {
+  "name": "DeepResearcher (RL)",
+  "signal": "真实环境 RL 训出的「搜-读-写」一体能力，证明端到端调研 agent 可训练，为 judge 层选型提供候选。",
+  "source": "web",
+  "url": "https://arxiv.org/abs/2504.03160",
+  "what": "在真实 web 环境做 RL 训练的深度调研 agent：迭代「推理-搜索-综合」产出报告（arXiv 2504.03160）。",
+  "_key": "arxiv.org/abs/2504.03160"
+ },
+ {
+  "name": "LLM×MapReduce",
+  "signal": "训练免费的分治协议(SIP)+上下文置信度校准，是长文档蒸馏去噪的现成方法，可装备我们的萃取腿。",
+  "source": "web",
+  "url": "https://arxiv.org/abs/2410.09342",
+  "what": "ACL 2025 训练自由分治框架：长文分块→并行 map（结构化信息协议 SIP+上下文置信度校准）→reduce 聚合，PyPI llm-mapreduce。",
+  "_key": "arxiv.org/abs/2410.09342"
+ },
+ {
+  "name": "LLM_MapReduce (Godskid89)",
+  "signal": "免重训练长文处理的工程包， chunk 协议实现可参考。",
+  "source": "github",
+  "url": "https://github.com/Godskid89/LLM_MapReduce",
+  "what": "MapReduce 思想的 Python 包：长文档分块并行处理聚合，无需重训练。",
+  "_key": "godskid89/llm_mapreduce"
+ },
+ {
+  "name": "LLM-MapReduce1 (V2/V3)",
+  "signal": "熵驱动扩缩+卷积聚合极长素材→长文，与我们 NB 库 2.5 亿字萃取-成文的超长上下文难题正对口。",
+  "source": "github",
+  "url": "https://github.com/lzq040722/LLM-MapReduce1",
+  "what": "LLM×MapReduce-V2 测试时扩展：熵驱动卷积式扩展从超长素材生成长文；V3 为交互式深度综述生成 agent 系统。",
+  "_key": "lzq040722/llm-mapreduce1"
+ },
+ {
+  "name": "Perplexica (现名 Vane)",
+  "signal": "自托管引用式答案引擎的检索层设计（SearxNG 聚合）可对照我们的免费检索腿。",
+  "source": "github",
+  "url": "https://github.com/ItzCrazyKns/Vane",
+  "what": "37000 star 的自托管 Perplexity 开源替代：SearxNG 聚合检索+带引用答案引擎（作者已将 Perplexica 更名 Vane）。",
+  "_key": "itzcrazykns/vane"
+ },
+ {
+  "name": "WikiChat",
+  "signal": "「多阶段管线每阶段可控可审计」与事实性优先的设计目标，是我们分节工厂管线的同构样板。",
+  "source": "github",
+  "url": "https://github.com/stanford-oval/WikiChat",
+  "what": "斯坦福七阶段维基接地对话管线：每阶段一次或多次 LLM 调用，显著降低幻觉。",
+  "_key": "stanford-oval/wikichat"
+ },
+ {
+  "name": "CycleResearcher / CycleReviewer",
+  "signal": "「审稿员反馈进训练回路」闭环提稿质，其 reviewer 模拟器的评审维度清单可直接拿来当我们审稿 agent 的评分表。",
+  "source": "github",
+  "url": "https://github.com/zhu-minjun/Researcher",
+  "what": "ICLR 2025 闭环科研：CycleResearcher 生成论文、CycleReviewer 模拟同行评审，迭代偏好训练互相抬升。",
+  "_key": "zhu-minjun/researcher"
+ },
+ {
+  "name": "SEA",
+  "signal": "多维度结构化评审输出（而非单一分数）是我们报告审校 agent 的输出格式参照。",
+  "source": "github",
+  "url": "https://github.com/ecnu-sea/SEA",
+  "what": "EMNLP 2024 Findings 自动论文评审框架：生成全面、结构化的审稿意见。",
+  "_key": "ecnu-sea/sea"
+ },
+ {
+  "name": "open-reviewer",
+  "signal": "「证据驱动+可验证声明」的审稿纪律，可融进我们 GLM 审计五防线做逐条核验。",
+  "source": "github",
+  "url": "https://github.com/AliManjotho/open-reviewer",
+  "what": "自动化多 agent 论文深度评审系统：证据驱动的验证式评审。",
+  "_key": "alimanjotho/open-reviewer"
+ },
+ {
+  "name": "PaperGuru-Benchmark",
+  "signal": "长程任务的第一性记忆原语（长期记忆怎么做最小可用）对我们的跨报告记忆沉淀有直接参考价值。",
+  "source": "github",
+  "url": "https://github.com/AutoTrustAI/PaperGuru-Benchmark",
+  "what": "面向长程 LLM agent 的长期记忆原语，在 PaperBench/SurveyBench 上 SOTA。",
+  "_key": "autotrustai/paperguru-benchmark"
+ },
+ {
+  "name": "FinRobot",
+  "signal": "确定性计算与 LLM 叙述分离+输出契约门+多空辩论 agent——金融研报防幻觉的架构级方案，与我们行业研报线高度同题。",
+  "source": "github",
+  "url": "https://github.com/AI4Finance-Foundation/FinRobot",
+  "what": "开源金融 AI agent 平台：股票研究多 agent 工作流（含 9-agent 流水线、多空辩论 agent）产出股权研究报告，确定性计算与 LLM 叙述分层，输出契约验证+来源追踪。",
+  "_key": "ai4finance-foundation/finrobot"
+ },
+ {
+  "name": "Shyft Claude Equity Research",
+  "signal": "「Claude Code 插件直接产出研报」的形态验证了我们以 Claude Code 为底座的报告工厂路线可行。",
+  "source": "web",
+  "url": "https://shyft.ai",
+  "what": "Claude Code 插件：一键生成华尔街标准的股票研究报告（估值/风险/催化剂全结构）。",
+  "_key": "shyft.ai"
+ },
+ {
+  "name": "SEC-MCP 自主股票研究",
+  "signal": "MCP 化官方数据源+自主 agent 产 Institutional 级报告，是我们「官方信源直连」腿的样板。",
+  "source": "web",
+  "url": "https://skywork.ai",
+  "what": "基于 SEC 数据经 MCP 产出机构级目标公司研究报告（by LuisRincon23）。",
+  "_key": "skywork.ai"
+ },
+ {
+  "name": "Awesome-Agentic-Engineering",
+  "signal": "「AI 科学家」策展节（文献情报/假设生成/实验规划/评估）是方法论素材的再挖掘入口。",
+  "source": "github",
+  "url": "https://github.com/natnew/Awesome-Agentic-Engineering",
+  "what": "agent 工程策展地图，含 Awesome AI Scientists 板块（文献情报、假设生成、实验规划、评估）。",
+  "_key": "natnew/awesome-agentic-engineering"
+ },
+ {
+  "name": "auto-researcher",
+  "signal": "带 UI 的全自动科研 agent 一体化形态，交互呈现方式（过程可视化）可参考。",
+  "source": "github",
+  "url": "https://github.com/openags/auto-researcher",
+  "what": "带 UI 的自主通才科学家系统：AI Scientist/Agent Scientist 形态的自动研究。",
+  "_key": "openags/auto-researcher"
+ },
+ {
+  "name": "claude-novel-writeFlow",
+  "signal": "证明「Claude Code 插件+多 agent 写作管线」模式成熟可用，其大纲-评审-修订编排可整体移植。",
+  "source": "github",
+  "url": "https://github.com/jinmawang/claude-novel-writeFlow",
+  "what": "Claude Code 插件：多 agent 小说写作——头脑风暴大纲、分章写作、评审修订全流程。",
+  "_key": "jinmawang/claude-novel-writeflow"
+ },
+ {
+  "name": "princeton-nlp/ALCE",
+  "url": "https://github.com/princeton-nlp/ALCE",
+  "what": "EMNLP2023 官方实现「让LLM生成带引文文本」，给出引文正确率(citation recall/precision)的标准评测框架",
+  "signal": "引文不能只看有没有，要算 recall+precision 双指标——我们报告的引用质量门可以直接抄这套定义",
+  "source": "github",
+  "_key": "princeton-nlp/alce"
+ },
+ {
+  "name": "ALCE 论文 (Enabling LLMs to Generate Text with Citations)",
+  "url": "https://arxiv.org/abs/2305.14627",
+  "what": "提出带引文生成任务的正式定义、两大指标与基线实验的原始论文",
+  "signal": "把『每个陈述必须可归因到具体来源片段』形式化成可度量任务的起点",
+  "source": "web",
+  "_key": "arxiv.org/abs/2305.14627"
+ },
+ {
+  "name": "OSU-NLP-Group/AttrScore",
+  "url": "https://github.com/OSU-NLP-Group/AttrScore",
+  "what": "用LLM自动评估归因质量(Automatic Evaluation of Attribution)的数据集、模型与代码",
+  "signal": "引文忠实度可用LLM-as-judge自动打分，不必全部人工核——判断层可借鉴其评分协议",
+  "source": "github",
+  "_key": "osu-nlp-group/attrscore"
+ },
+ {
+  "name": "google-research-datasets/Attributed-QA",
+  "url": "https://github.com/google-research-datasets/Attributed-QA",
+  "what": "Google 的归因式问答数据集：答案文本逐句绑定维基证据片段",
+  "signal": "『句子级证据绑定』的标注范式可作我们金标准建设的模板",
+  "source": "github",
+  "_key": "google-research-datasets/attributed-qa"
+ },
+ {
+  "name": "chaitanyamalaviya/ExpertQA",
+  "url": "https://github.com/chaitanyamalaviya/ExpertQA",
+  "what": "专家curated问题+带归因答案的数据集，专家逐条核查归因质量",
+  "signal": "领域专家复核归因的流程设计，对研报『own_calculations』核验层有直接参考价值",
+  "source": "github",
+  "_key": "chaitanyamalaviya/expertqa"
+ },
+ {
+  "name": "pedromussi1/cite-faithfulness",
+  "url": "https://github.com/pedromussi1/cite-faithfulness",
+  "what": "用NLI模型评估引文忠实度(ALCE复现应用于RAG产品)",
+  "signal": "NLI做句-证据一致性判定比纯LLM更便宜可规模化，可做引文门的第二道腿",
+  "source": "github",
+  "_key": "pedromussi1/cite-faithfulness"
+ },
+ {
+  "name": "GooTec/citation-guard",
+  "url": "https://github.com/GooTec/citation-guard",
+  "what": "本地引文忠实度守卫：对带引的科学综合做verify/重新归因/标记，基于3B AttrScore",
+  "signal": "小模型本地跑引文守卫的工程样板——我们可挂在产线后置链上",
+  "source": "github",
+  "_key": "gootec/citation-guard"
+ },
+ {
+  "name": "PennStateLefty/phrase-citation-rag",
+  "url": "https://github.com/PennStateLefty/phrase-citation-rag",
+  "what": "短语级/句级引文RAG原型(Azure AI Search+Document Intelligence)",
+  "signal": "引文粒度做到句子/短语级而非段尾堆脚注，读者可信度完全不同",
+  "source": "github",
+  "_key": "pennstatelefty/phrase-citation-rag"
+ },
+ {
+  "name": "FActScore 论文",
+  "url": "https://arxiv.org/abs/2305.14251",
+  "what": "原子事实分解+检索验证的事实性度量原始论文",
+  "signal": "把『报告可信度』变成可计算百分比的定义方式",
+  "source": "web",
+  "_key": "arxiv.org/abs/2305.14251"
+ },
+ {
+  "name": "yuxiaw/Factcheck-GPT",
+  "url": "https://github.com/yuxiaw/Factcheck-GPT",
+  "what": "对生成式LLM输出做事实核查：claim抽取+问题生成+搜索引擎验证+判定全管线",
+  "signal": "『生成→核查→修正』闭环里检索式核查腿的完整参考实现",
+  "source": "github",
+  "_key": "yuxiaw/factcheck-gpt"
+ },
+ {
+  "name": "Vbj1808/Dokis",
+  "url": "https://github.com/Vbj1808/Dokis",
+  "what": "轻量RAG溯源中间件：不用LLM就验证回复中每个claim是否被检索源支撑",
+  "signal": "溯源校验做成中间件、与生成解耦的架构思路值得抄",
+  "source": "github",
+  "_key": "vbj1808/dokis"
+ },
+ {
+  "name": "ENDEVSOLS/LongTracer",
+  "url": "https://github.com/ENDEVSOLS/LongTracer",
+  "what": "检测LLM幻觉：用STS+NLI混合逐claim对照源文档核验，兼容LangChain",
+  "signal": "混合语义相似度+蕴含判定降低幻觉误报，比单judge更稳",
+  "source": "github",
+  "_key": "endevsols/longtracer"
+ },
+ {
+  "name": "renfei421/ResearchPilot",
+  "url": "https://github.com/renfei421/ResearchPilot",
+  "what": "证据接地的学术研究agent：claim核验+先前工作分析+持久研究工作区",
+  "signal": "研究工作区持久化+claim核验的组合，正是我们'章均引用源+对账'的思路",
+  "source": "github",
+  "_key": "renfei421/researchpilot"
+ },
+ {
+  "name": "alphaparkinc/genpark-hallucination-fact-grounding-checker-skill",
+  "url": "https://github.com/alphaparkinc/genpark-hallucination-fact-grounding-checker-skill",
+  "what": "句级事实接地与幻觉核验引擎skill：LLM claim对照检索文档逐句比对",
+  "signal": "把接地核验做成可安装skill的形态，与我们skill化管线同构",
+  "source": "github",
+  "_key": "alphaparkinc/genpark-hallucination-fact-grounding-checker-skill"
+ },
+ {
+  "name": "sharanyanaresh/solace_ai_capstone",
+  "url": "https://github.com/sharanyanaresh/solace_ai_capstone",
+  "what": "AI生物医学文献综述助手：证据综合+引文接地+溯源感知检索",
+  "signal": "垂直领域『证据综合型报告』的接地管线样板，与研报生产同形",
+  "source": "github",
+  "_key": "sharanyanaresh/solace_ai_capstone"
+ },
+ {
+  "name": "GAIR-NLP/factool",
+  "url": "https://github.com/GAIR-NLP/factool",
+  "what": "FacTool官方实现：对生成式AI输出做事实性检测，claim抽取+工具增强验证(Google搜索/代码解释器)",
+  "signal": "『用外部工具而非仅用LLM』验证事实claim——数字类claim须工具复算的依据",
+  "source": "github",
+  "_key": "gair-nlp/factool"
+ },
+ {
+  "name": "FacTool 论文",
+  "url": "https://arxiv.org/abs/2307.13528",
+  "what": "事实性检测的claim级验证原始论文(工具增强)",
+  "signal": "分类claim类型→选对应验证工具的路由思想",
+  "source": "web",
+  "_key": "arxiv.org/abs/2307.13528"
+ },
+ {
+  "name": "SAFE 论文 (Search-Augmented Factuality Evaluator)",
+  "url": "https://arxiv.org/abs/2403.18802",
+  "what": "Google长文事实性评估器：LLM把回复拆成独立事实→生成检索query→多步推理判定",
+  "signal": "拆claim→生成检索式→多步推理判真伪，比人评还准的自动化范式，可直接做我们事实门",
+  "source": "web",
+  "_key": "arxiv.org/abs/2403.18802"
+ },
+ {
+  "name": "Libr-AI/OpenFactVerification (Loki)",
+  "url": "https://github.com/Libr-AI/OpenFactVerification",
+  "what": "Loki开源事实核查系统：五步管线(claim分解→check-worthiness评估→query生成→证据检索→判定)，1.1k星",
+  "signal": "五步分解是工业级事实核查最清晰的流程图，check-worthiness门可省预算",
+  "source": "github",
+  "_key": "libr-ai/openfactverification"
+ },
+ {
+  "name": "MichSchli/AVeriTeC",
+  "url": "https://github.com/MichSchli/AVeriTeC",
+  "what": "AVeriTeC共享任务基准：给claim找证据+生成结构化判定，学界事实核查标准赛道",
+  "signal": "『证据充分才能下结论』的评测协议，反向可当我们的证据充足门",
+  "source": "github",
+  "_key": "michschli/averitec"
+ },
+ {
+  "name": "ssu-humane/HerO",
+  "url": "https://github.com/ssu-humane/HerO",
+  "what": "基于开源LLM的事实核查管线，AVeriTeC亚军",
+  "signal": "全开源模型栈跑通核查管线，证明免费模型优先路线可行",
+  "source": "github",
+  "_key": "ssu-humane/hero"
+ },
+ {
+  "name": "ssu-humane/HerO2",
+  "url": "https://github.com/ssu-humane/HerO2",
+  "what": "HerO升级版：高效开源LLM事实核查管线(AVeriTeC 2.0亚军)",
+  "signal": "效率优化版展示了如何在预算内裁剪核查步骤",
+  "source": "github",
+  "_key": "ssu-humane/hero2"
+ },
+ {
+  "name": "ssu-humane/VILLAIN",
+  "url": "https://github.com/ssu-humane/VILLAIN",
+  "what": "多agent协作的多模态事实核查管线(AVerImaTeC第一名)",
+  "signal": "多agent分工(检索/推理/裁决)在核查任务上的夺冠配方",
+  "source": "github",
+  "_key": "ssu-humane/villain"
+ },
+ {
+  "name": "filtir/filtir",
+  "url": "https://github.com/filtir/filtir",
+  "what": "AI事实核查管线：输入文本→分解claims→逐条找证据→标注支持/反驳",
+  "signal": "输出形态是『逐条claim标注』而非整体判分，适合做报告内联核验标记",
+  "source": "github",
+  "_key": "filtir/filtir"
+ },
+ {
+  "name": "rshwndsz/veritas",
+  "url": "https://github.com/rshwndsz/veritas",
+  "what": "FEVER ACL'25：端到端异步事实核查管线(postgres+pgvector+outlines结构化输出)",
+  "signal": "异步架构+结构化输出保证核查管线工程稳定性，值得抄的工程底座",
+  "source": "github",
+  "_key": "rshwndsz/veritas"
+ },
+ {
+  "name": "BharathxD/ClaimeAI",
+  "url": "https://github.com/BharathxD/ClaimeAI",
+  "what": "LangGraph事实核查系统：文本拆成可验证claims→与现实世界证据交叉比对",
+  "signal": "LangGraph状态机管核查流程的参考实现",
+  "source": "github",
+  "_key": "bharathxd/claimeai"
+ },
+ {
+  "name": "mbzuai-nlp/fire",
+  "url": "https://github.com/mbzuai-nlp/fire",
+  "what": "轻量agent式原子claim事实核查：迭代检索+验证，显著降LLM调用与成本",
+  "signal": "迭代式『检索→不够再检索』把核查成本打下来，与我们免费优先铁律同向",
+  "source": "github",
+  "_key": "mbzuai-nlp/fire"
+ },
+ {
+  "name": "jadeCurl/HiSS",
+  "url": "https://github.com/jadeCurl/HiSS",
+  "what": "AACL2023新闻claim分层逐步事实核查官方实现",
+  "signal": "分层拆解(粗→细)降低核查复杂度",
+  "source": "github",
+  "_key": "jadecurl/hiss"
+ },
+ {
+  "name": "utaresearch/claimbuster-spotter",
+  "url": "https://github.com/utaresearch/claimbuster-spotter",
+  "what": "UTA ClaimBuster新版：对抗训练transformer发现『值得核查的事实性claim』",
+  "signal": "check-worthiness预筛模型——不是每句都值得花预算核查，先筛后查",
+  "source": "github",
+  "_key": "utaresearch/claimbuster-spotter"
+ },
+ {
+  "name": "Cartus/Automated-Fact-Checking-Resources",
+  "url": "https://github.com/Cartus/Automated-Fact-Checking-Resources",
+  "what": "自动化事实核查领域论文大列表(TACL/EMNLP,580星)",
+  "signal": "方法论文献地图，追新SOTA时从这进",
+  "source": "github",
+  "_key": "cartus/automated-fact-checking-resources"
+ },
+ {
+  "name": "ICTMCG/LLM-for-misinformation-research",
+  "url": "https://github.com/ICTMCG/LLM-for-misinformation-research",
+  "what": "LLM(多模态)虚假信息研究论文列表，332星",
+  "signal": "补充多模态虚假信息检测视角",
+  "source": "github",
+  "_key": "ictmcg/llm-for-misinformation-research"
+ },
+ {
+  "name": "SerhiiKorniienko/bullshit-detector",
+  "url": "https://github.com/SerhiiKorniienko/bullshit-detector",
+  "what": "agent skill：对任何YouTube视频/文章做逐claim核查+给来源+输出0-10可信分",
+  "signal": "『逐claim+来源+单一可信分』的产品化输出形态，152星验证需求",
+  "source": "github",
+  "_key": "serhiikorniienko/bullshit-detector"
+ },
+ {
+  "name": "superwesleyhys-ux/factcircuit",
+  "url": "https://github.com/superwesleyhys-ux/factcircuit",
+  "what": "可审计的claim-证据验证回路：不可变溯源+分阶段检查+有界检索，511星",
+  "signal": "『证据不可变+回路可审计』的设计直接对应我们的对账/审计防线",
+  "source": "github",
+  "_key": "superwesleyhys-ux/factcircuit"
+ },
+ {
+  "name": "meedan/check",
+  "url": "https://github.com/meedan/check",
+  "what": "Meedan Check协作媒体标注平台：团队协作核查工作流的工业化实现",
+  "signal": "人机协作核查的工序设计(分派/标注/复核)可借鉴到我们waiver机制",
+  "source": "github",
+  "_key": "meedan/check"
+ },
+ {
+  "name": "cofacts/rumors-api",
+  "url": "https://github.com/cofacts/rumors-api",
+  "what": "台湾Cofacts谣言查证GraphQL后端：众包fact-check语料+查询服务",
+  "signal": "事实核查知识库的API化运营形态",
+  "source": "github",
+  "_key": "cofacts/rumors-api"
+ },
+ {
+  "name": "drusso98/face-the-facts",
+  "url": "https://github.com/drusso98/face-the-facts",
+  "what": "论文代码：真实场景下评估RAG式事实核查管线",
+  "signal": "『真实分布下』评核查管线的实验设计，防止实验室指标虚高",
+  "source": "github",
+  "_key": "drusso98/face-the-facts"
+ },
+ {
+  "name": "onezion12344/double-check-agent",
+  "url": "https://github.com/onezion12344/double-check-agent",
+  "what": "混合事实核查框架：答前预验证+答后深度审计，融合SIFT/IFCN/CoVe/Fish方法",
+  "signal": "『答前+答后』双闸核查时序设计，和我们的前置门+后置审计同构",
+  "source": "github",
+  "_key": "onezion12344/double-check-agent"
+ },
+ {
+  "name": "gudehhh666/elementcheck",
+  "url": "https://github.com/gudehhh666/elementcheck",
+  "what": "图引导的元素级事实核查管线",
+  "signal": "元素(数字/实体/日期)级核查比句级更细，数字密集型研报尤其需要",
+  "source": "github",
+  "_key": "gudehhh666/elementcheck"
+ },
+ {
+  "name": "CLArg-group/argumentative-llms",
+  "url": "https://github.com/CLArg-group/argumentative-llms",
+  "what": "论文官方代码：论证式LLM做可解释可质疑的claim核查",
+  "signal": "论证图让核查结论可被质疑可辩护——对抗审计的理论底座",
+  "source": "github",
+  "_key": "clarg-group/argumentative-llms"
+ },
+ {
+  "name": "deshwalmahesh/claimify",
+  "url": "https://github.com/deshwalmahesh/claimify",
+  "what": "微软Claimify论文非官方实现：从LLM输出抽取『具体、可验证、去语境化』的claim",
+  "signal": "去语境化claim抽取是核查前置的关键一步：claim必须脱离原文仍含义完整",
+  "source": "github",
+  "_key": "deshwalmahesh/claimify"
+ },
+ {
+  "name": "jamditis/claude-skills-journalism",
+  "url": "https://github.com/jamditis/claude-skills-journalism",
+  "what": "新闻/媒体/学术Claude Code技能包：核查、FOIA、数据新闻、学术写作等，413星",
+  "signal": "把新闻业事实核查纪律(两源原则等)沉淀成skill，方法论可直接搬运",
+  "source": "github",
+  "_key": "jamditis/claude-skills-journalism"
+ },
+ {
+  "name": "STORM 论文",
+  "url": "https://arxiv.org/abs/2402.14207",
+  "what": "STORM原始论文：基于大纲驱动的检索+多视角问答合成维基级文章",
+  "signal": "大纲驱动+多视角两大机制是长文不散架的结构性保证",
+  "source": "web",
+  "_key": "arxiv.org/abs/2402.14207"
+ },
+ {
+  "name": "principia-ai/WriteHERE",
+  "url": "https://github.com/principia-ai/WriteHERE",
+  "what": "开源AI写作系统(976星)：多阶段循环(资料收集-大纲-草稿-编辑-润色)带中间产物可视化",
+  "signal": "写作阶段化+每阶段可检查的中间件设计，解决黑箱一次成文不可控问题",
+  "source": "github",
+  "_key": "principia-ai/writehere"
+ },
+ {
+  "name": "Cinnamon/kotaemon",
+  "url": "https://github.com/Cinnamon/kotaemon",
+  "what": "22k星开源RAG UI：文档QA+引用展示，开发者可自建RAG管线",
+  "signal": "引文在UI层如何呈现(高亮/跳转)的成熟交互范式",
+  "source": "github",
+  "_key": "cinnamon/kotaemon"
+ },
+ {
+  "name": "RAGFlow (infiniflow)",
+  "url": "https://github.com/infiniflow/ragflow",
+  "what": "领先的开源 RAG 引擎：深度文档理解+Agent 能力，为 LLM 构建强上下文层，GitHub 热榜常客",
+  "signal": "研报取数腿的文档解析底座候选（PDF/表格深度解析）",
+  "source": "github",
+  "_key": "infiniflow/ragflow"
+ },
+ {
+  "name": "hkuds/rag-anything",
+  "url": "https://github.com/hkuds/rag-anything",
+  "what": "HKUDS多模态RAG：图表/表格/图片等非文本元素也纳入检索与生成",
+  "signal": "研报中图表证据的RAG化处理路线",
+  "source": "github",
+  "_key": "hkuds/rag-anything"
+ },
+ {
+  "name": "gomate-community/TrustRAG",
+  "url": "https://github.com/gomate-community/TrustRAG",
+  "what": "1.3k星中文TrustRAG框架：可靠输入→可信输出的全链路RAG",
+  "signal": "把『可信』作为框架一级公民(输入清洗+输出校验)的中文栈",
+  "source": "github",
+  "_key": "gomate-community/trustrag"
+ },
+ {
+  "name": "RUC-NLPIR/Search-o1",
+  "url": "https://github.com/RUC-NLPIR/Search-o1",
+  "what": "EMNLP2025：agentic搜索增强大推理模型，推理链中动态检索，1.25k星",
+  "signal": "检索作为推理原语(而非独立步骤)的架构",
+  "source": "github",
+  "_key": "ruc-nlpir/search-o1"
+ },
+ {
+  "name": "RUC-NLPIR/FinSight",
+  "url": "https://github.com/RUC-NLPIR/FinSight",
+  "what": "ACL2026：面向真实世界的金融深度研究——一个ticker一键产出publication-ready研报，274星",
+  "signal": "与我们EPC百强研报最同形的学术系统：金融域+成稿级输出，必读",
+  "source": "github",
+  "_key": "ruc-nlpir/finsight"
+ },
+ {
+  "name": "EvoScientist/EvoScientist",
+  "url": "https://github.com/EvoScientist/EvoScientist",
+  "what": "5k星：自进化AI科学家，vibe research全流程(文献-实验-写作)",
+  "signal": "研究流程自进化/自我修正的机制设计",
+  "source": "github",
+  "_key": "evoscientist/evoscientist"
+ },
+ {
+  "name": "ByteDance-BandAI/ReportBench",
+  "url": "https://github.com/ByteDance-BandAI/ReportBench",
+  "what": "字节出品的报告生成评测基准：评估deep research agent在学术综述任务上的表现",
+  "signal": "给『报告质量』下可计算定义的基准，RQS可直接对齐该维度",
+  "source": "github",
+  "_key": "bytedance-bandai/reportbench"
+ },
+ {
+  "name": "GAIR-NLP/DeepResearcher",
+  "url": "https://github.com/GAIR-NLP/DeepResearcher",
+  "what": "在真实网络环境中用强化学习Scaling深度研究能力，801星",
+  "signal": "RL训练研究agent(而非仅prompt)的路线图",
+  "source": "github",
+  "_key": "gair-nlp/deepresearcher"
+ },
+ {
+  "name": "inclusionAI/PanelWise",
+  "url": "https://github.com/inclusionAI/PanelWise",
+  "what": "自hosted多模型深度研究：多个独立研究agent的结论融合成证据接地的报告",
+  "signal": "『多agent独立研究→交叉融合』可对冲单模型偏差，与我们影子双轨同思想",
+  "source": "github",
+  "_key": "inclusionai/panelwise"
+ },
+ {
+  "name": "jesson-hh/financial-analyst",
+  "url": "https://github.com/jesson-hh/financial-analyst",
+  "what": "观澜·A股研究工作站：24个AI子agent，一条命令约10分钟出深度研报",
+  "signal": "与EPC研究工厂最像的中文A股多agent实现，分工表可直接对照",
+  "source": "github",
+  "_key": "jesson-hh/financial-analyst"
+ },
+ {
+  "name": "OpenRaiser/NanoResearch",
+  "url": "https://github.com/OpenRaiser/NanoResearch",
+  "what": "1.3k星：自治AI研究助理(Nano粉签名风)",
+  "signal": "轻量自治研究循环的极简实现，适合快速试错",
+  "source": "github",
+  "_key": "openraiser/nanoresearch"
+ },
+ {
+  "name": "toustifer/dsh-harvest",
+  "url": "https://github.com/toustifer/dsh-harvest",
+  "what": "DeepSeek Harness原生多平台深度调研流水线插件：scout多源发现/deep_research长篇研报/extract穿透抓取/verify交叉验证/audit可信度审计，可作原生skill一键调度",
+  "signal": "五段式(scout-研报-抓取-verify-audit)与我们conductor管线几乎同构，交叉验证+审计段的中文实现",
+  "source": "github",
+  "_key": "toustifer/dsh-harvest"
+ },
+ {
+  "name": "OpenAI Deep Research 产品页",
+  "url": "https://openai.com/index/introducing-deep-research/",
+  "what": "OpenAI深度研究产品发布页：多步自主检索+综合成带引用报告的产品定义",
+  "signal": "闭源标杆的功能边界定义，对标时知道差距在哪",
+  "source": "web",
+  "_key": "openai.com/index/introducing-deep-research"
+ },
+ {
+  "name": "2akouwu/reverify",
+  "url": "https://github.com/2akouwu/reverify",
+  "what": "1.25k星：让AI不再胡说——AI提出主张，确定性工具裁决，每个claim对照ground truth带证据验证",
+  "signal": "『生成与验证分离+确定性工具裁决』原则，与我们own_calculations思路同源",
+  "source": "github",
+  "_key": "2akouwu/reverify"
+ },
+ {
+  "name": "konoeph/AgentClaimGuard",
+  "url": "https://github.com/konoeph/AgentClaimGuard",
+  "what": "LLM agent claim的证据闸：claim对照证据、工具结果与策略规则验证",
+  "signal": "claim闸做成中间件、策略可配置的工程形态",
+  "source": "github",
+  "_key": "konoeph/agentclaimguard"
+ },
+ {
+  "name": "peace-orefejo/attest",
+  "url": "https://github.com/peace-orefejo/attest",
+  "what": "AI agent的证据接地评估：逐claim对照agent真实工具输出验证",
+  "signal": "『对照工具原始输出』而非对照LLM转述——防转述失真的关键",
+  "source": "github",
+  "_key": "peace-orefejo/attest"
+ },
+ {
+  "name": "recommend-dev/recommend-agentic-trust-layer",
+  "url": "https://github.com/recommend-dev/recommend-agentic-trust-layer",
+  "what": "验证喂给AI agent的上下文(对照web或自有文档)的信任层",
+  "signal": "输入侧信任层：垃圾进垃圾出，先验来源再研究",
+  "source": "github",
+  "_key": "recommend-dev/recommend-agentic-trust-layer"
+ },
+ {
+  "name": "chenhz01/adversarial-research-audit",
+  "url": "https://github.com/chenhz01/adversarial-research-audit",
+  "what": "agentic research的对抗审计层：机械闸捕捉『不说谎地撒谎』的报告——覆盖率算术、citation-gap检测等",
+  "signal": "机械可算的审计项(覆盖率算术/引文缺口)正是我们GLM审计五防线要补的刀",
+  "source": "github",
+  "_key": "chenhz01/adversarial-research-audit"
+ },
+ {
+  "name": "saiharshilk/proof",
+  "url": "https://github.com/saiharshilk/proof",
+  "what": "问一个问题得到已验证报告：AI研究+事实核查+写作agent的活管线",
+  "signal": "研究-核查-写作三agent串联的最小完整闭环",
+  "source": "github",
+  "_key": "saiharshilk/proof"
+ },
+ {
+  "name": "chasen2041maker/GroundGuard",
+  "url": "https://github.com/chasen2041maker/GroundGuard",
+  "what": "工具调用型AI agent的确定性事实闸",
+  "signal": "确定性(非LLM)闸门用于拦截最危险的事实类错误",
+  "source": "github",
+  "_key": "chasen2041maker/groundguard"
+ },
+ {
+  "name": "fabio-rovai/tardygrada",
+  "url": "https://github.com/fabio-rovai/tardygrada",
+  "what": "可信AI agent的可验证运行时：每个claim过8层验证管线才算数，确定性优先",
+  "signal": "多层验证栈的分层设计(每层拦不同错误类型)",
+  "source": "github",
+  "_key": "fabio-rovai/tardygrada"
+ },
+ {
+  "name": "fabio-rovai/brain-in-the-fish",
+  "url": "https://github.com/fabio-rovai/brain-in-the-fish",
+  "what": "给任意文档打分：证明每个claim，88星",
+  "signal": "『文档级claim全证』的评分输出形态",
+  "source": "github",
+  "_key": "fabio-rovai/brain-in-the-fish"
+ },
+ {
+  "name": "alphaparkinc/genpark-realtime-hallucination-fact-checker-verifier-skill",
+  "url": "https://github.com/alphaparkinc/genpark-realtime-hallucination-fact-checker-verifier-skill",
+  "what": "实时幻觉事实核查+一手引文验证器skill",
+  "signal": "『一手来源(primary source)优先』的核验分级思想",
+  "source": "github",
+  "_key": "alphaparkinc/genpark-realtime-hallucination-fact-checker-verifier-skill"
+ },
+ {
+  "name": "alphaparkinc/genpark-deep-research-evidence-synthesis-graph-skill",
+  "url": "https://github.com/alphaparkinc/genpark-deep-research-evidence-synthesis-graph-skill",
+  "what": "深度研究证据综合图+引文验证skill(基于MindSearch)",
+  "signal": "把证据组织成图再验证，比线性笔记更适合交叉引用的研报",
+  "source": "github",
+  "_key": "alphaparkinc/genpark-deep-research-evidence-synthesis-graph-skill"
+ },
+ {
+  "name": "JeonKH81/claude-cove-reference-verifier",
+  "url": "https://github.com/JeonKH81/claude-cove-reference-verifier",
+  "what": "Claude Code skill：用链式验证(CoVe)检测参考文献幻觉",
+  "signal": "引文幻觉(编造文献)专杀工具——研报引用真实性的最后一道门",
+  "source": "github",
+  "_key": "jeonkh81/claude-cove-reference-verifier"
+ },
+ {
+  "name": "TheBoxGuy32/verify-citations",
+  "url": "https://github.com/TheBoxGuy32/verify-citations",
+  "what": "只读引文核查skill：对照Crossref/OpenAlex/Open Library验证参考文献，标记撤稿",
+  "signal": "用学术API批量验引文存在性+撤稿检测，可自动化进我们后置链",
+  "source": "github",
+  "_key": "theboxguy32/verify-citations"
+ },
+ {
+  "name": "Zangir/verifAI",
+  "url": "https://github.com/Zangir/verifAI",
+  "what": "arXiv投稿的客户端AI文本+引文核查：regex检测+Semantic Scholar/CrossRef/OpenAlex验证",
+  "signal": "多学术API交叉验证引文真伪的具体实现配方",
+  "source": "github",
+  "_key": "zangir/verifai"
+ },
+ {
+  "name": "PerryLink/dsh-research-report",
+  "url": "https://github.com/PerryLink/dsh-research-report",
+  "what": "可验证研报引擎：内容寻址证据台账(claim-快照绑定、防篡改)，214星",
+  "signal": "『claim绑定证据快照+内容寻址防篡改』把报告可审计性做到密码学级，方法论含金量高",
+  "source": "github",
+  "_key": "perrylink/dsh-research-report"
+ },
+ {
+  "name": "HadiFrt20/deepresearch",
+  "url": "https://github.com/HadiFrt20/deepresearch",
+  "what": "Claude Code多会话自治研究agent：研究拆解成100+任务、派生子agent、逐项验证",
+  "signal": "任务化拆解+逐项验证的规模化组织方式",
+  "source": "github",
+  "_key": "hadifrt20/deepresearch"
+ },
+ {
+  "name": "Yaogui415/newsflow-oss",
+  "url": "https://github.com/Yaogui415/newsflow-oss",
+  "what": "AI辅助新闻编辑室：事件追踪、证据组织、审批链、更正处理，103星",
+  "signal": "新闻业的更正(correction)工作流——报告发布后错误如何追踪修正",
+  "source": "github",
+  "_key": "yaogui415/newsflow-oss"
+ },
+ {
+  "name": "PyModel/jev-judge-mcp",
+  "url": "https://github.com/PyModel/jev-judge-mcp",
+  "what": "MCP agent的类型化判断工具：verify/screen/find/classify/rerank/decide/compare/extract，90星",
+  "signal": "把判断原语工具化(而非塞prompt)，与我们Jev判断层接线位互补",
+  "source": "github",
+  "_key": "pymodel/jev-judge-mcp"
+ },
+ {
+  "name": "vertti/se-cove-claude-plugin",
+  "url": "https://github.com/vertti/se-cove-claude-plugin",
+  "what": "软件工程版链式验证(CoVe)Claude插件，20星",
+  "signal": "CoVe在Claude生态的落地形态参考",
+  "source": "github",
+  "_key": "vertti/se-cove-claude-plugin"
+ },
+ {
+  "name": "alphaparkinc/genpark-chain-of-verification-cove-skill",
+  "url": "https://github.com/alphaparkinc/genpark-chain-of-verification-cove-skill",
+  "what": "CoVe事实幻觉消减引擎skill：生成独立验证query并复核回答",
+  "signal": "CoVe的skill化封装——独立验证问题是防自证的关键",
+  "source": "github",
+  "_key": "alphaparkinc/genpark-chain-of-verification-cove-skill"
+ },
+ {
+  "name": "CoVe 论文 (Chain-of-Verification)",
+  "url": "https://arxiv.org/abs/2309.11495",
+  "what": "链式验证原始论文：草稿→生成验证问题→独立回答→修订，显著降幻觉",
+  "signal": "四步CoVe是最易落地的生成侧自检协议，可嵌进我们成稿器",
+  "source": "web",
+  "_key": "arxiv.org/abs/2309.11495"
+ },
+ {
+  "name": "farrukhrashid1997/source-credibility",
+  "url": "https://github.com/farrukhrashid1997/source-credibility",
+  "what": "新闻源可信度评分计算模块，供自动事实核查管线使用",
+  "signal": "来源可信度量化进管线(而非拍脑袋)——我们信源权威度评分的同型件",
+  "source": "github",
+  "_key": "farrukhrashid1997/source-credibility"
+ },
+ {
+  "name": "MLT-OSS/FirstData",
+  "url": "https://github.com/MLT-OSS/FirstData",
+  "what": "最全最权威的开源数据源知识库(183星)：结构化的数据源目录",
+  "signal": "权威数据源注册表的现成积累，与我们渠道注册表互补对齐",
+  "source": "github",
+  "_key": "mlt-oss/firstdata"
+ },
+ {
+  "name": "vikast908/WritingAgent",
+  "url": "https://github.com/vikast908/WritingAgent",
+  "what": "写作agent：把主题变成有真实来源支撑、论证真论点的可发表文章/书籍",
+  "signal": "『论证真论点』而非堆事实——研报观点层的生成原则",
+  "source": "github",
+  "_key": "vikast908/writingagent"
+ },
+ {
+  "name": "DRZ-hang/StatMate",
+  "url": "https://github.com/DRZ-hang/StatMate",
+  "what": "证据优先的统计报告skill：可审计统计分析/诊断/出版级图表",
+  "signal": "统计类内容『证据先行+全程可审计』的工序，研报数字段可直接搬",
+  "source": "github",
+  "_key": "drz-hang/statmate"
+ },
+ {
+  "name": "Tongyi DeepResearch 官方博客（开源AI智能体新纪元）",
+  "url": "https://tongyi-agent.github.io/zh/blog/introducing-tongyi-deep-research",
+  "what": "通义 DeepResearch 发布文，系统阐述可落地的深度研究 Agent 构建方法论与 Agentic CPT 训练思路",
+  "signal": "一手方法论来源：研究步骤自主决策（搜索/阅读/分析/综合）的分工设计",
+  "source": "web",
+  "_key": "tongyi-agent.github.io/zh/blog/introducing-tongyi-deep-research"
+ },
+ {
+  "name": "HuggingFace open-deep-research (smolagents 版)",
+  "url": "https://github.com/huggingface/open-deep-research",
+  "what": "HuggingFace 用自家 smolagents（CodeAgent：LLM 写 Python 代码当动作）复刻的 Deep Research，开源可复现",
+  "signal": "CodeAgent 范式（代码即动作）比 JSON 工具调用更灵活，适合复杂检索编排",
+  "source": "github",
+  "_key": "huggingface/open-deep-research"
+ },
+ {
+  "name": "AutoSurveys/AutoSurvey",
+  "url": "https://github.com/AutoSurveys/AutoSurveys",
+  "what": "IJCAI 论文配套系统：给定主题/研究草稿自动检索文献并生成结构化综述（AutoSurveys 组织维护，带 GitHub Actions 自动化）",
+  "signal": "「草稿驱动」的定向综述生成模式，与本项目弹药池→研报的定向补弹逻辑同构",
+  "source": "github",
+  "_key": "autosurveys/autosurveys"
+ },
+ {
+  "name": "AllenAI OpenScholar",
+  "url": "https://github.com/allenai/OpenScholar",
+  "what": "Ai2+UW 的检索增强科学文献综合模型（Nature 2026），4500万篇开放论文中定位相关段落并给出可验证引用，配套评测",
+  "signal": "段落级定位+可验证引用的取数粒度设计值得抄",
+  "source": "github",
+  "_key": "allenai/openscholar"
+ },
+ {
+  "name": "Datawhale hello-agents 第十四章：自动化深度研究智能体",
+  "url": "https://github.com/datawhalechina/hello-agents",
+  "what": "Datawhale 智能体教程的深度研究专章，从零讲透知识密集型自动化研究系统的构建",
+  "signal": "中文教材级的实现拆解，适合新腿快速上手",
+  "source": "github",
+  "_key": "datawhalechina/hello-agents"
+ },
+ {
+  "name": "ModelScope Classroom：Deep Research 万字综述",
+  "url": "https://github.com/modelscope/modelscope-classroom",
+  "what": "万字长文系统梳理 Deep Research 前沿架构，按对 LLM 自主规划能力依赖度分类（静态工作流→自主智能体谱系）",
+  "signal": "最全的架构分类学，可用来给本厂各腿定位与找空白",
+  "source": "github",
+  "_key": "modelscope/modelscope-classroom"
+ },
+ {
+  "name": "FlyAIBox Agent_In_Action",
+  "url": "https://github.com/FlyAIBox/Agent_In_Action",
+  "what": "Agentic AI 开发实战项目，构建自主深度研究智能体：集成搜索引擎+LangGraph 图编排+结构化报告输出",
+  "signal": "LangGraph 图编排研究流程的实战样板",
+  "source": "github",
+  "_key": "flyaibox/agent_in_action"
+ },
+ {
+  "name": "ai-agents-2030/awesome-deep-research-agent",
+  "url": "https://github.com/ai-agents-2030/awesome-deep-research-agent",
+  "what": "arXiv 综述《Deep Research Agents: A Systematic Examination And Roadmap》(2509.0091 系) 官方配套仓库，持续更新",
+  "signal": "系统性路线图文献+代码索引，为方法论定级提供学术支撑",
+  "source": "github",
+  "_key": "ai-agents-2030/awesome-deep-research-agent"
+ },
+ {
+  "name": "scienceaix/deepresearch",
+  "url": "https://github.com/scienceaix/deepresearch",
+  "what": "综述《A Comprehensive Survey of Deep Research: Systems, Methodologies, and Applications》配套 Awesome 清单",
+  "signal": "第二份权威综述索引，交叉核对项目完备性",
+  "source": "github",
+  "_key": "scienceaix/deepresearch"
+ },
+ {
+  "name": "Digital Applied：四款开源深度研究智能体诚实实测",
+  "url": "https://www.digitalapplied.com",
+  "what": "对 GPT Researcher / Open Deep Research / STORM / Local Deep Research 的实测对比：各自擅长场景与每份报告成本",
+  "signal": "现成的成本-能力横评数据，选型时直接引用",
+  "source": "web",
+  "_key": "www.digitalapplied.com"
+ },
+ {
+  "name": "掘金：字节 DeerFlow 2.0 全面解析",
+  "url": "https://juejin.cn/post/7591702898080727055",
+  "what": "DeerFlow 从深度研究助手升级为超级智能体执行底座的演进解析",
+  "signal": "「研究助手→技能化底座」的演进路线参考",
+  "source": "web",
+  "_key": "juejin.cn/post/7591702898080727055"
+ },
+ {
+  "name": "CSDN：GPT-Researcher 实战解析",
+  "url": "https://blog.csdn.net/sinat_28461591/article/details/147939982",
+  "what": "拆解 GPT-Researcher 多智能体协同：多阶段任务划分、搜索链路执行、内容抽取与合成输出、事实验证",
+  "signal": "中文实战视角的机制拆解，含落地踩坑",
+  "source": "web",
+  "_key": "blog.csdn.net/sinat_28461591/article/details/147939982"
+ },
+ {
+  "name": "yunduo0517mht/tianchi_AFAC_AGENT",
+  "url": "https://github.com/yunduo0517mht/tianchi_AFAC_AGENT",
+  "what": "天池 AFAC 比赛作品：基于 AI 大模型的金融研报自动生成系统，多源数据采集→智能数据分析→专业报告生成全流程自动化",
+  "signal": "国内比赛级「数据→研报」全链路样板，含券商风格排版",
+  "source": "github",
+  "_key": "yunduo0517mht/tianchi_afac_agent"
+ },
+ {
+  "name": "li-xiu-qi/financial_research_report",
+  "url": "https://github.com/li-xiu-qi/financial_research_report",
+  "what": "AI 大模型金融多模态研报自动生成系统（同源 AFAC 赛道），支持图表等多模态输出",
+  "signal": "多模态（图表+文本）研报产物形态的工程实现",
+  "source": "github",
+  "_key": "li-xiu-qi/financial_research_report"
+ },
+ {
+  "name": "AI4Finance-Foundation/FinGPT",
+  "url": "https://github.com/AI4Finance-Foundation/FinGPT",
+  "what": "全球首个开源金融大模型项目（18k+ star），监督微调范式，面向市场情绪与金融 NLP",
+  "signal": "领域微调数据配方与情绪分析任务定义可复用",
+  "source": "github",
+  "_key": "ai4finance-foundation/fingpt"
+ },
+ {
+  "name": "TauricResearch/TradingAgents",
+  "url": "https://github.com/TauricResearch/TradingAgents",
+  "what": "多智能体金融交易框架（论文被引 325+）：模拟真实交易公司组织——基本面/情绪/技术分析师+研究员+风控的辩论式决策，10.9万 star",
+  "signal": "「多空辩论+风控否决」的组织化智能体设计，可改造为研报的假设对抗(ACH)腿",
+  "source": "github",
+  "_key": "tauricresearch/tradingagents"
+ },
+ {
+  "name": "ZhuLinsen/daily_stock_analysis",
+  "url": "https://github.com/ZhuLinsen/daily_stock_analysis",
+  "what": "LLM 驱动的多市场（A/港/美股）每日智能分析系统：多源行情+实时新闻+决策看板+自动推送，GitHub Actions 零成本定时运行（5.9k star）",
+  "signal": "「定时任务+零成本云执行+自动推送」的常驻生产模式与本厂军团调度同构",
+  "source": "github",
+  "_key": "zhulinsen/daily_stock_analysis"
+ },
+ {
+  "name": "arvinlovegood/go-stock",
+  "url": "https://github.com/arvinlovegood/go-stock",
+  "what": "基于大语言模型的 AI 股票分析桌面工具（Wails+NaiveUI），聚合行情/ETF/基金数据并 LLM 解读",
+  "signal": "面向终端用户的研报消费端形态参考",
+  "source": "github",
+  "_key": "arvinlovegood/go-stock"
+ },
+ {
+  "name": "dongxnb/gupiao",
+  "url": "https://github.com/dongxnb/gupiao",
+  "what": "基于 TradingAgents 的中文 A 股交易分析系统：多智能体+Docker 部署+专业报告导出，针对 DeepSeek V3 做成本优化",
+  "signal": "国产模型成本优化+中文落地改造的实操案例",
+  "source": "github",
+  "_key": "dongxnb/gupiao"
+ },
+ {
+  "name": "manymore13/report",
+  "url": "https://github.com/manymore13/report",
+  "what": "行业研报聚合工具：每日定时更新，命令行查询/分析/下载券商研报（行业/个股/策略/宏观/晨报），可配合 Cursor、Claude Code、Cline 等 AI Agent 使用",
+  "signal": "「研报语料腿+Claude Code 消费」的衔接方式，与本厂渠道→skill 联动同构",
+  "source": "github",
+  "_key": "manymore13/report"
+ },
+ {
+  "name": "howhow/stock-analyzer",
+  "url": "https://github.com/howhow/stock-analyzer",
+  "what": "开源生产级智能股票分析系统，面向个人投资者和量化开发者",
+  "signal": "生产级（非玩具）系统的稳定性工程参考",
+  "source": "github",
+  "_key": "howhow/stock-analyzer"
+ },
+ {
+  "name": "RKiding/Awesome-finance-skills",
+  "url": "https://github.com/RKiding/Awesome-finance-skills",
+  "what": "开源免费的金融分析 Agent Skills 合集，上手简单",
+  "signal": "金融域技能包的切分粒度与技能描述写法",
+  "source": "github",
+  "_key": "rkiding/awesome-finance-skills"
+ },
+ {
+  "name": "喵喵教主博客：智能研报生成方案",
+  "url": "https://lkz345.github.io/2026/04/30/05-AI%E9%87%8F%E5%8C%96/%E6%99%BA%E8%83%BD%E7%A0%94%E6%8A%A5%E7%94%9F%E6%88%90/",
+  "what": "智能研报生成方案：跨项目数据联动，把舆情系统的报告纳入统一 RAG 知识库，Agent 写研报时同时检索财报与最新市场情绪",
+  "signal": "「多系统产物回流统一 RAG」的弹药池思想，与本厂 own_calculations 引用源机制互补",
+  "source": "web",
+  "_key": "lkz345.github.io/2026/04/30/05-AI%E9%87%8F%E5%8C%96/%E6%99%BA%E8%83%BD%E7%A0%94%E6%8A%A5%E7%94%9F%E6%88%90"
+ },
+ {
+  "name": "知乎：金融AI平台自动写研报",
+  "url": "https://zhuanlan.zhihu.com/p/704444785",
+  "what": "介绍利用 LLM 进行股票预测、财务分析、研报撰写的开源项目生态（FinRobot 等）",
+  "signal": "中文视角的金融研报开源生态导览",
+  "source": "web",
+  "_key": "zhuanlan.zhihu.com/p/704444785"
+ },
+ {
+  "name": "腾讯云：AI 股票系统开源爆火分析",
+  "url": "https://cloud.tencent.com/developer/article/2716664",
+  "what": "解析 daily_stock_analysis 如何自动化完成个股深度研判并推送报告",
+  "signal": "单股深度研判的工序拆解",
+  "source": "web",
+  "_key": "cloud.tencent.com/developer/article/2716664"
+ },
+ {
+  "name": "NocoBase：Top 18 开源 AI Agent 项目盘点",
+  "url": "https://www.nocobase.com/cn/blog/github-open-source-ai-agent-projects",
+  "what": "按 star 盘点 18 个开源 AI Agent 项目（AutoGPT/LangChain/BabyAGI/AgentGPT/GPT Researcher 等），标注各自适用场景",
+  "signal": "选型速查表，覆盖本调研未展开的长尾项目",
+  "source": "web",
+  "_key": "www.nocobase.com/cn/blog/github-open-source-ai-agent-projects"
+ },
+ {
+  "name": "知乎：LangGraph 深度研究报告生成系统",
+  "url": "https://zhuanlan.zhihu.com/p/1929207988394099924",
+  "what": "基于 LangGraph 的智能报告生成系统实操：LLM+搜索引擎+图片处理+版本管理，从主题规划到成文全自动化",
+  "signal": "「研究过程版本管理」这一罕见特性值得纳入研报工厂的可回溯设计",
+  "source": "web",
+  "_key": "zhuanlan.zhihu.com/p/1929207988394099924"
+ },
+ {
+  "name": "AiHubCN/Awesome-Chinese-LLM",
+  "url": "https://github.com/AiHubCN/Awesome-Chinese-LLM",
+  "what": "中文开源大模型资源总集（含姜子牙等国产模型谱系）",
+  "signal": "国产免费模型选型底册，服务免费模型优先铁律",
+  "source": "github",
+  "_key": "aihubcn/awesome-chinese-llm"
+ },
+ {
+  "name": "Shubhamsaboo/awesome-llm-apps",
+  "url": "https://github.com/Shubhamsaboo/awesome-llm-apps",
+  "what": "2.7万星的一站式 AI Agent+RAG 应用合集，覆盖 LangChain 生态多种 agent 应用示例",
+  "signal": "按场景检索现成 agent 蓝本的索引库",
+  "source": "github",
+  "_key": "shubhamsaboo/awesome-llm-apps"
+ },
+ {
+  "name": "langgenius/dify",
+  "url": "https://github.com/langgenius/dify",
+  "what": "开源 LLM 应用开发平台：AI 工作流+RAG 管道+Agent 编排（本机已有私有实例 dify.gcblog.net）",
+  "signal": "已有部署，可作研报流程的可视化编排与灰度试验场",
+  "source": "github",
+  "_key": "langgenius/dify"
+ },
+ {
+  "name": "n8n",
+  "signal": "工作流即 JSON 配方可直接复制（见 awesome-n8n-templates）：顶层方法论值得沉淀成'一份研报=一张可版本化工作流图'",
+  "source": "github",
+  "url": "https://github.com/n8n-io/n8n",
+  "what": "fair-code 工作流自动化平台，★206.7k，原生 AI/LangChain 节点 + 400-1500 集成，大量现成 deep research 模板",
+  "_key": "n8n-io/n8n"
+ },
+ {
+  "name": "LazyLLM/LazyLLM (智源)",
+  "url": "https://github.com/LazyLLM/LazyLLM",
+  "what": "智源开源的 AI 应用开发框架，约 10 行代码构建多 Agent 大模型应用，官方示例含 Deep Research 类应用",
+  "signal": "极简多 Agent 编排 DSL，适合快速搭腿验证",
+  "source": "github",
+  "_key": "lazyllm/lazyllm"
+ },
+ {
+  "name": "LandPPT (sligter)",
+  "url": "https://github.com/sligter/LandPPT",
+  "what": "基于 LLM 的演示文稿生成平台：自动将文档/报告内容转换为专业 PPT，多模型+模板系统",
+  "signal": "研报→PPT 宣传件的下游衍生物腿可复用",
+  "source": "github",
+  "_key": "sligter/landppt"
+ },
+ {
+  "name": "洞见研报",
+  "url": "https://www.djyanbao.com",
+  "what": "行业研究报告聚合下载平台：券商研报/咨询报告/竞对分析，全文关键词检索，PDF/PPT/Word 多格式",
+  "signal": "作为研报成品形态的「对照组」语料库（本厂已有采集渠道）",
+  "source": "web",
+  "_key": "www.djyanbao.com"
+ },
+ {
+  "name": "Kimi：10款 AI 深度研究工具横评",
+  "url": "https://www.kimi.ai",
+  "what": "对 10 款 AI 深度研究工具的横向评测：将复杂问题转化为结构化洞察、从信息收集走向证据决策",
+  "signal": "产品级评测维度（结构化/证据链/时效）可吸收进 RQS 质量门",
+  "source": "web",
+  "_key": "www.kimi.ai"
+ },
+ {
+  "name": "Manus",
+  "url": "https://manus.im",
+  "what": "通用智能体平台，几分钟产出市场研究的全面分析、竞争对手洞察与战略建议（本厂已有 v3 小队试点与77%写增量生长等方法论沉淀）",
+  "signal": "搜索词四维公式与写增量生长方法论已是本厂资产，此处作为对照基准",
+  "source": "web",
+  "_key": "manus.im"
+ },
+ {
+  "name": "apframework：Deep Research 智能研究报告生成平台深度解析",
+  "url": "https://apframework.com",
+  "what": "解析一个基于 LLM 的深度研究报告生成平台：现代化技术栈+多主流 AI 模型集成，几分钟生成全面深入报告",
+  "signal": "独立开发者视角的 Deep Research 平台架构拆解",
+  "source": "web",
+  "_key": "apframework.com"
+ },
+ {
+  "name": "飞书文档：借助 AI 完成行业调研报告的方法论",
+  "url": "https://docs.feishu.cn",
+  "what": "结合 AI 工具与行业调研专业知识，逐步拆解行业调研报告的方法论与技巧",
+  "signal": "人类分析师的行业调研 SOP，是智能体流程设计的领域蓝本",
+  "source": "web",
+  "_key": "docs.feishu.cn"
+ },
+ {
+  "name": "Ultra Lab：GitHub 最新 AI 金融开源项目盘点",
+  "url": "https://ultralab.tw",
+  "what": "盘点 9 个 AI 金融开源项目（TradingAgents 10.9万星居首、ai-hedge-fund 6.4万星等）的架构、限制与实际用途",
+  "signal": "金融腿选型的星标-能力对照表",
+  "source": "web",
+  "_key": "ultralab.tw"
+ },
+ {
+  "name": "WriteHERE（Schmidhuber 团队）",
+  "url": "https://writehere.site",
+  "what": "异质递归规划（arXiv:2503.08275）：把写作动态分解为检索/推理/写作异质子任务，单次生成 4 万字+/100 页专业报告，支持风格一致性控制",
+  "signal": "「递归异质子任务」是长研报生成的最强开源基线，ROMA 元智能体架构亦源于此",
+  "source": "web",
+  "_key": "writehere.site"
+ },
+ {
+  "name": "MaoXiaoYuZ/Long-Novel-GPT",
+  "url": "https://github.com/MaoXiaoYuZ/Long-Novel-GPT",
+  "what": "百万字级中文长文生成器：大纲/章节/正文层次化设计+多窗口并行生成+选中重生成，提示词工程与状态管理维持一致性",
+  "signal": "中文场景久经验证的层次化生产+人机协同修改交互，章节重生成机制可移植",
+  "source": "github",
+  "_key": "maoxiaoyuz/long-novel-gpt"
+ },
+ {
+  "name": "Narcooo/inkos",
+  "url": "https://github.com/Narcooo/inkos",
+  "what": "开源故事创作 AI Agent 系统（约1万星）：规划→写作→审计→修订流水线+长期记忆系统专治「20章后遗忘第1章」，TypeScript+CLI+Studio 工作台，数据本地化",
+  "signal": "「写作-校验-审计-修订」四工位+长期记忆是中文长研报生产线的直接可抄架构",
+  "source": "github",
+  "_key": "narcooo/inkos"
+ },
+ {
+  "name": "Mochocyang/QMAI 青幕AI写作",
+  "url": "https://github.com/Mochocyang/QMAI",
+  "what": "解决长篇四大痛点（遗忘前文/人设漂移/时间线混乱/伏笔丢失）的结构化记忆系统+混合检索引擎",
+  "signal": "结构化记忆 schema 与混合检索的前文召回设计可迁移到研报事实一致性",
+  "source": "github",
+  "_key": "mochocyang/qmai"
+ },
+ {
+  "name": "ZRMYDYCG/Navernass",
+  "url": "https://github.com/ZRMYDYCG/Navernass",
+  "what": "面向创作者的开放写作平台：草稿、AI 辅助、角色工具、大纲与世界书管理全开源",
+  "signal": "「世界书」资料库设计对行业研报的领域知识库建模有启发",
+  "source": "github",
+  "_key": "zrmydycg/navernass"
+ },
+ {
+  "name": "infometa/workbuddyskills：open-novel-writing 技能",
+  "url": "https://github.com/infometa/workbuddyskills/tree/main/skills/open-novel-writing",
+  "what": "中文长篇小说全自动生产技能：世界观→人物→大纲→章节规划→正文（每章3-5千字）→自动质量审查，免 API 可跑",
+  "signal": "以 skill 形式封装长文生产全流程，与本厂 skill 化战略完全同构，可直接试装",
+  "source": "github",
+  "_key": "infometa/workbuddyskills"
+ },
+ {
+  "name": "wordflowlab/novel-writer",
+  "url": "https://github.com/wordflowlab/novel-writer",
+  "what": "受 spec-kit 启发的中文小说写作工具：基于任务清单的章节写作",
+  "signal": "spec（规格）驱动写作的思路与研报的 taskcards 制同源",
+  "source": "github",
+  "_key": "wordflowlab/novel-writer"
+ },
+ {
+  "name": "drxc00/booklyai",
+  "url": "https://github.com/drxc00/booklyai",
+  "what": "基于 GPT-4o 的电子书生成器（Next.js 15+TS+MongoDB）",
+  "signal": "长文产品的现代全栈参考实现",
+  "source": "github",
+  "_key": "drxc00/booklyai"
+ },
+ {
+  "name": "BookGPT（生书AI）方法论",
+  "url": "https://zhuanlan.zhihu.com/p/668724265",
+  "what": "用 GPT 写 100 页小说的七大步骤方法论（质量、连贯性、故事结构保障）",
+  "signal": "经过验证的中文长文生产 SOP，可直接映射为智能体工序",
+  "source": "web",
+  "_key": "zhuanlan.zhihu.com/p/668724265"
+ },
+ {
+  "name": "BookGPT 生书AI 平台",
+  "url": "https://bookgpt.cn",
+  "what": "国内剧本/文案/小说/论文一键生成平台",
+  "signal": "商用产品的交互与交付形态对照",
+  "source": "web",
+  "_key": "bookgpt.cn"
+ },
+ {
+  "name": "ainovel-cli（X-CMD 收录）",
+  "url": "https://cn.x-cmd.com",
+  "what": "Go 编写的多 Agent 长篇小说 CLI：分段推进自动生成最多 500 章，产物落本地目录，作者随时注入修改意见",
+  "signal": "「分段推进+人工随时介入+产物落盘」的半自动常驻生产模式，与军团让路机制兼容",
+  "source": "web",
+  "_key": "cn.x-cmd.com"
+ },
+ {
+  "name": "harry0703/MoneyPrinterTurbo",
+  "url": "https://github.com/harry0703/MoneyPrinterTurbo",
+  "what": "一站式 AI 短视频生成：主题→脚本→素材匹配→字幕→合成，完整自动化内容管线",
+  "signal": "「主题→多形态内容衍生物」的管线设计，对研报→自媒体宣传件有直接借鉴",
+  "source": "github",
+  "_key": "harry0703/moneyprinterturbo"
+ },
+ {
+  "name": "TimeWarpEngineering/alibaba-deep-research（通义镜像）",
+  "url": "https://github.com/TimeWarpEngineering/alibaba-deep-research",
+  "what": "Tongyi DeepResearch 的社区镜像仓库，含模型卡与部署说明",
+  "signal": "镜像渠道备用",
+  "source": "github",
+  "_key": "timewarpengineering/alibaba-deep-research"
+ },
+ {
+  "name": "Apache Airflow",
+  "signal": "DAG即配方：把'生产一份研报'定义成可视化、可重跑、可补数据的有向无环图——比隐式脚本流水线可靠一个量级",
+  "source": "github",
+  "url": "https://github.com/apache/airflow",
+  "what": "工业标准 Python DAG 工作流平台，编写/调度/监控批处理管线，★47.1k",
+  "_key": "apache/airflow"
+ },
+ {
+  "name": "Temporal AI integrations (durable execution)",
+  "signal": "长跑研报最缺的一环：断点续跑、崩溃自动重试、每步可回放——把'跑一半挂了重跑烧钱'变成'从失败步续跑'",
+  "source": "github",
+  "url": "https://github.com/temporalio/ai-integrations",
+  "what": "为 AI agent 提供持久化执行：长时研究工作流崩溃/超时后自动恢复重放，配套 docs.temporal.io/ai",
+  "_key": "temporalio/ai-integrations"
+ },
+ {
+  "name": "Prefect",
+  "signal": "动态流映射：n 个研究任务并行生成动态 DAG，适合'每份研报动态决定调研分支数'的场景",
+  "source": "github",
+  "url": "https://github.com/PrefectHQ/prefect",
+  "what": "Python 原生动态数据流编排器，★24k，运行时动态生成任务图",
+  "_key": "prefecthq/prefect"
+ },
+ {
+  "name": "Dagster",
+  "signal": "研报的中间产物（弹药池/证据库/草稿）应作为一等'资产'登记血缘——出问题时能追溯'这个结论来自哪批素材'",
+  "source": "github",
+  "url": "https://github.com/dagster-io/dagster",
+  "what": "资产导向编排器，★16.2k，软件定义资产+血缘+可观测性，渐被用于 RAG/agent 资产图",
+  "_key": "dagster-io/dagster"
+ },
+ {
+  "name": "Langflow",
+  "signal": "可视化装配生产线：非程序员也能搭报告管线，方法论可以'图'的形式传播复用",
+  "source": "github",
+  "url": "https://github.com/langflow-ai/langflow",
+  "what": "MIT 可视化 agent/RAG 构建器，★155.5k，可部署为 API/MCP 服务器",
+  "_key": "langflow-ai/langflow"
+ },
+ {
+  "name": "MetaGPT",
+  "signal": "'代码=SOP(团队)'：把人类研究 SOP 编码为角色流水线——本项目的 EPC 工厂 SOP 应显式编码成角色+工件契约",
+  "source": "github",
+  "url": "https://github.com/FoundationAgents/MetaGPT",
+  "what": "★70.8k，把人类标准作业流程(SOP)编码进多 agent 角色分工，名言 Code = SOP(Team)",
+  "_key": "foundationagents/metagpt"
+ },
+ {
+  "name": "awesome-n8n-templates (ScraperNode)",
+  "signal": "顶级方法论常以'可导入的工作流 JSON'形式存在——我们的报告配方也可导出为可复制工件",
+  "source": "github",
+  "url": "https://github.com/ScraperNode/awesome-n8n-templates",
+  "what": "精选 n8n 工作流 raw JSON 合集（★80），含研究类流水线模板",
+  "_key": "scrapernode/awesome-n8n-templates"
+ },
+ {
+  "name": "n8n Deep Research Agent → Notion 报告模板",
+  "signal": "端到端闭环范本：调研→引用→成稿→落库一条龙，交付物不止是文本还有结构化知识库",
+  "source": "web",
+  "url": "https://n8n.io/workflows/7160-deep-research-agent-automated-research-and-notion-report-builder",
+  "what": "官方模板：给定主题→多步搜索/抽取/摘要→带引用报告自动写入 Notion",
+  "_key": "n8n.io/workflows/7160-deep-research-agent-automated-research-and-notion-report-builder"
+ },
+ {
+  "name": "n8n + Apify + OpenAI o3 自托管深度研究",
+  "signal": "自托管=数据不出门+成本可控，是商业化 AI 调研服务的自建替代路线",
+  "source": "web",
+  "url": "https://n8n.io/workflows/2878-host-your-own-ai-deep-research-agent-with-n8n-apify-and-openai-o3",
+  "what": "自托管版 OpenAI 深度研究：Apify 搜索采集 + o3 推理生成报告",
+  "_key": "n8n.io/workflows/2878-host-your-own-ai-deep-research-agent-with-n8n-apify-and-openai-o3"
+ },
+ {
+  "name": "trigger.dev deep research agent (Vercel AI SDK)",
+  "signal": "'后台任务化'的深度研究：报告生产作为可监控 job 而非同步阻塞请求",
+  "source": "web",
+  "url": "https://trigger.dev",
+  "what": "全栈深度研究 agent 范例：Vercel AI SDK 流式多步研究生成综合报告（triggerdotdev/trigger.dev ★16.5k 生态内）",
+  "_key": "trigger.dev"
+ },
+ {
+  "name": "Kestra",
+  "signal": "声明式 YAML 管线：报告配方可以用声明式文件表达，git 可 diff 可 review",
+  "source": "github",
+  "url": "https://github.com/kestra-io/kestra",
+  "what": "声明式编排平台，★29.3k，事件驱动+定时流水线，YAML 定义一切",
+  "_key": "kestra-io/kestra"
+ },
+ {
+  "name": "Haystack",
+  "signal": "检索管线组件化+基准评测分离——'评测腿'应是独立于'生产腿'的一等公民",
+  "source": "github",
+  "url": "https://github.com/deepset-ai/haystack",
+  "what": "生产级 LLM/RAG/agent 管线框架，★26.7k，配套 haystack-evaluation 基准仓",
+  "_key": "deepset-ai/haystack"
+ },
+ {
+  "name": "LlamaIndex",
+  "signal": "私有语料(本地弹药池)的摄入/索引/检索标准做法，报告生产的数据底座层",
+  "source": "github",
+  "url": "https://github.com/run-llama/llama_index",
+  "what": "私有数据摄入/索引/RAG 数据框架，★52.4k",
+  "_key": "run-llama/llama_index"
+ },
+ {
+  "name": "DeepEval",
+  "signal": "报告质量门禁的工程形态：忠实度/幻觉指标做成 pytest 式断言进 CI——绿灯才许交付",
+  "source": "github",
+  "url": "https://github.com/confident-ai/deepeval",
+  "what": "pytest 式 LLM 单元测试框架，★18.6k，幻觉/忠实度指标可进 CI/CD",
+  "_key": "confident-ai/deepeval"
+ },
+ {
+  "name": "Ragas",
+  "signal": "faithfulness/answer-relevancy 等标准指标可直接搬为报告质量打分器",
+  "source": "github",
+  "url": "https://github.com/vibrantlabsai/ragas",
+  "what": "RAG 评测指标库，★15.9k（原 explodinggradients），faithfulness/答案相关性等标准度量",
+  "_key": "vibrantlabsai/ragas"
+ },
+ {
+  "name": "Crawl4AI",
+  "signal": "'渐进式爬取+足够即停'的自适应停止判据——正是我们饱和引擎的独立实现佐证",
+  "source": "github",
+  "url": "https://github.com/unclecode/crawl4ai",
+  "what": "LLM 友好异步爬虫，★84.8k，输出干净 markdown，支持判断'信息够了没'的渐进式爬取",
+  "_key": "unclecode/crawl4ai"
+ },
+ {
+  "name": "Flowise",
+  "signal": "把检索管线封装成可嵌入 API——报告工厂的检索能力可以服务化输出给其他系统",
+  "source": "github",
+  "url": "https://github.com/FlowiseAI/Flowise",
+  "what": "拖拽式 LLM/RAG/agent 应用构建器，★55.5k，可 API 化对外服务",
+  "_key": "flowiseai/flowise"
+ },
+ {
+  "name": "Langfuse",
+  "signal": "报告生产全链路 trace：每份成稿可回放'哪次检索哪次推理产出这段'，成本与质量可归因",
+  "source": "github",
+  "url": "https://github.com/langfuse/langfuse",
+  "what": "LLM 工程平台，★35.4k：trace/prompt 管理/评测/成本观测",
+  "_key": "langfuse/langfuse"
+ },
+ {
+  "name": "Agentic RAG 生产指南 (MarsDevs)",
+  "signal": "'何时不该 agentic'的反向清单与成本现实核查——方法论要含边界条件，不是越多 agent 越好",
+  "source": "web",
+  "url": "https://www.marsdevs.com",
+  "what": "生产级 Agentic RAG 指南：五种 agentic 模式、框架选型结论、评测管线、成本现实核查、何时不该上 agentic",
+  "_key": "www.marsdevs.com"
+ },
+ {
+  "name": "Open Deep Research (LangChain)",
+  "signal": "三阶段 scope→research→write + 四条教训（多agent只用于研究/上下文隔离/深度自适应/brief防膨胀）——每条都可直接写进我们方法论文档",
+  "source": "web",
+  "url": "https://blog.langchain.com/open-deep-research/",
+  "what": "LangChain 官方开源深度研究器：Scope(澄清+brief)→Research(supervisor+子agent)→Write(一次性成稿)，自带模型/搜索/MCP",
+  "_key": "blog.langchain.com/open-deep-research"
+ },
+ {
+  "name": "Open Notebook",
+  "signal": "素材库→笔记→成稿的中间层值得产品化：我们的弹药池+萃取层对齐这一形态",
+  "source": "github",
+  "url": "https://github.com/lfnovo/open-notebook",
+  "what": "★39.8k MIT 自托管 NotebookLM 替代：PDF/EPUB/URL/YouTube 摄入 + AI 笔记",
+  "_key": "lfnovo/open-notebook"
+ },
+ {
+  "name": "OpenBB",
+  "signal": "垂直领域'数据平台+AI分析师'分层架构：数据接入层与报告生产层解耦",
+  "source": "github",
+  "url": "https://github.com/openbq-org/OpenBB",
+  "what": "投资研究/AI 分析师开源数据平台，★73.9k（OpenBB-finance 迁至 openbq-org）",
+  "_key": "openbq-org/openbb"
+ },
+ {
+  "name": "open-gemini-deep-research",
+  "signal": "多层研究循环的独立实现样本：层数设计与层间信息压缩是关键变量",
+  "source": "github",
+  "url": "https://github.com/eRuaro/open-gemini-deep-research",
+  "what": "多层 Gemini 研究助手，★241",
+  "_key": "eruaro/open-gemini-deep-research"
+ },
+ {
+  "name": "Four Open-Source Deep Research Agents, Tested Honestly",
+  "signal": "一手实测的失败模式清单——别人的踩坑实录是我们设计质量门的免费输入",
+  "source": "web",
+  "url": "https://digitalapplied.com",
+  "what": "四款开源深度研究 agent 的诚实横评（2026-08）：实测表现、幻觉与引用质量",
+  "_key": "digitalapplied.com"
+ },
+ {
+  "name": "Best Open-Source AI Research Agents in 2026 (Gatsbi)",
+  "signal": "按任务类型选管线而非一个管线打天下：文献综述/深度调研/论文起草各有最优解",
+  "source": "web",
+  "url": "https://blog.gatsbi.com",
+  "what": "2026 年文献综述/深度研究/论文起草类开源 agent 横向对比评测",
+  "_key": "blog.gatsbi.com"
+ },
+ {
+  "name": "karpathy/autoresearch",
+  "signal": "过夜批量实验编排：agent 小队跑通夜→晨间汇总——与我们'白天跑+夜间黄金窗'调度直接同构",
+  "source": "github",
+  "url": "https://github.com/karpathy/autoresearch",
+  "what": "Karpathy 的自动研究工具，★97.4k：agent 小队夜间自动跑数百个单卡 nanochat 训练实验",
+  "_key": "karpathy/autoresearch"
+ },
+ {
+  "name": "awesome-autoresearch (AI4Scientist)",
+  "signal": "工业品+论文+基准三分法清点自动研究全景——我们 200 家调研的目录学模板",
+  "source": "github",
+  "url": "https://github.com/AI4Scientist/awesome-autoresearch",
+  "what": "★165，自动研究全景：工业产品、开源实现、70+ 论文与基准",
+  "_key": "ai4scientist/awesome-autoresearch"
+ },
+ {
+  "name": "awesome-deep-research-prompts (langgptai)",
+  "signal": "顶级闭源工具的提示词配方被逆向整理成库——提示词层方法论可直接吸收",
+  "source": "github",
+  "url": "https://github.com/langgptai/awesome-deep-research-prompts",
+  "what": "★132，OpenAI/Gemini Deep Research、Perplexity Labs 的深度研究提示词合集",
+  "_key": "langgptai/awesome-deep-research-prompts"
+ },
+ {
+  "name": "Building Effective Agents (Anthropic)",
+  "signal": "五模式分类学（编排者-工人/评估者-优化者…）+'从最简单可用起步'原则——我们方法论的架构总纲句法",
+  "source": "web",
+  "url": "https://www.anthropic.com/engineering/building-effective-agents",
+  "what": "Canonical 工程帖（2024-12）：workflows vs agents 边界 + 五种工作流模式分类学",
+  "_key": "www.anthropic.com/engineering/building-effective-agents"
+ },
+ {
+  "name": "WrenAI",
+  "signal": "研报生产线的 BI 数据底座：让 Agent 安全查询企业/行业数据并出图表",
+  "source": "github",
+  "url": "https://github.com/Canner/WrenAI",
+  "what": "开源 GenBI（生成式 BI）Agent 基础设施：治理过的 text-to-SQL + 上下文引擎，自然语言生成可信 SQL/图表/仪表盘，支持 20+ 数据源（17.8k stars，活跃）",
+  "_key": "canner/wrenai",
+  "angle": "business-resweep"
+ },
+ {
+  "name": "Lightdash",
+  "signal": "Agentic BI 路线的开源实现，可作为研报图表/指标层的候选组件",
+  "source": "github",
+  "url": "https://github.com/lightdash/lightdash",
+  "what": "开源 Agentic BI 工具（dbt 原生），以代码速度做分析与报表（6.2k stars，活跃）",
+  "_key": "lightdash/lightdash",
+  "angle": "business-resweep"
+ },
+ {
+  "name": "Metabase",
+  "signal": "其 Metabot 展示了 BI 工具内嵌 NL Agent 的产品形态，可作报表分发层",
+  "source": "github",
+  "url": "https://github.com/metabase/metabase",
+  "what": "老牌开源 BI 与嵌入式分析工具，内置 Metabot 让用户用自然语言生成 SQL、总结图表（49.5k stars）",
+  "_key": "metabase/metabase",
+  "angle": "business-resweep"
+ },
+ {
+  "name": "Apache Superset",
+  "signal": "研报数据可视化与看板层的成熟开源选项",
+  "source": "github",
+  "url": "https://github.com/apache/superset",
+  "what": "Apache 顶级开源数据可视化与探索平台，企业级报表/看板（75k stars）",
+  "_key": "apache/superset",
+  "angle": "business-resweep"
+ },
+ {
+  "name": "Eclipse BIRT",
+  "signal": "像素级排版报告引擎，研报「成稿排版」环节的古典开源方案",
+  "source": "github",
+  "url": "https://github.com/eclipse-birt/birt",
+  "what": "Eclipse 开源报表与数据可视化项目，可嵌入应用的像素级报告设计与生成引擎（548 stars，2026-09 仍维护）",
+  "_key": "eclipse-birt/birt",
+  "angle": "business-resweep"
+ },
+ {
+  "name": "Helical Insight",
+  "signal": "开源 Agentic BI 成品：AI 对话分析+专业报告输出二合一，可自托管",
+  "source": "web",
+  "url": "https://www.helicalinsight.com",
+  "what": "免费开源 BI 平台：AI 对话式分析 + 像素级专业报告 + 仪表盘 + 嵌入 + SSO，官网文档齐全，可下载部署",
+  "_key": "www.helicalinsight.com",
+  "angle": "business-resweep"
+ },
+ {
+  "name": "MCPlato",
+  "signal": "商业侧已验证「调研-成稿」压缩 10 倍工时的产品形态，其 Agent 工作流可作对标",
+  "source": "web",
+  "url": "https://mcplato.com",
+  "what": "桌面 AI Agent 引擎，可调度任务/自动化与团队协作；官方宣称将投研报告生成从 2-3 天压缩到 2-3 小时，产品文档齐全",
+  "_key": "mcplato.com",
+  "angle": "business-resweep"
+ },
+ {
+  "name": "awesome-ai-trading-research",
+  "signal": "生产行业研报的上游论文雷达：跟踪 AI/量化投资研究的最新方法",
+  "source": "github",
+  "url": "https://github.com/ohselab/awesome-ai-trading-research",
+  "what": "OHSE AI Lab 维护的策展清单：系统交易、量化金融与 AI/ML 交易的学术论文列表，按主题分组（2026-09 仍维护）",
+  "_key": "ohselab/awesome-ai-trading-research",
+  "angle": "business-resweep"
+ }
+]
