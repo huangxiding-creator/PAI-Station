@@ -1,0 +1,8 @@
+# 凭据/登录态绝不入库 (红线)
+video_account_state.json
+# 运行时锁
+*.lock
+# 视频产物可由 video_factory.py 确定性再生, 不占仓
+videos/*.mp4
+# 取证截图 (体积大, 诊断会话内消化)
+videos/*.png

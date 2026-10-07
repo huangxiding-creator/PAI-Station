@@ -258,6 +258,16 @@ def test_07c_stale_pages_purged():
     assert not (out / "zz_retired.html").exists()            # 生成集之外的 html 必被清
 
 
+# ------------------------------------------------ ⑩ src 归因埋点 (F5b)
+def test_10_src_attribution_js():
+    """TRACK_JS 必须带 src 归因: URLSearchParams 取 ?src=, 无参时回退
+    document.referrer, extra 由 (x||src) 注入 — 三号QR/文章referrer可分桶."""
+    h = TP.page("t", "b", desc="d", path="x.html")
+    assert "URLSearchParams(location.search).get('src')" in h
+    assert "document.referrer" in h
+    assert "extra:(x||src).slice(0,120)" in h
+
+
 # ------------------------------------------------ ⑧ ast 零网络
 def test_08_ast_no_network():
     for mod in (BS,):

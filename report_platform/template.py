@@ -211,8 +211,9 @@ border:1px solid var(--line);border-radius:10px;padding:11px 14px;margin-bottom:
 TRACK_JS = """
 (function(){
  var sku=document.body.getAttribute('data-sku')||'';
+ var src=new URLSearchParams(location.search).get('src')||document.referrer||'';
  function t(e,x){try{fetch('/api/track',{method:'POST',headers:{'Content-Type':'application/json'},
-  body:JSON.stringify({event:e,sku:sku,extra:x||''})});}catch(_){}}
+  body:JSON.stringify({event:e,sku:sku,extra:(x||src).slice(0,120)})});}catch(_){}}
  t('visit');
  var seen={};window.addEventListener('scroll',function(){
   var d=document.documentElement;var p=(window.scrollY+d.scrollTop)/
