@@ -224,7 +224,7 @@ def build_report(r: dict, cfg: dict, content: Path) -> str:
 <div class="perk"><span class="ck">✓</span><span>买了不满意：按问题分档退款——严重质量问题全额退，
 局部缺陷退 40%，轻微问题退 20%；部分退款不影响阅读。</span></div>
 <div class="perk"><span class="ck">✓</span><span>适合：{r.get('audience', '工程企业战略/市场负责人、总承包公司经营层、行业投资机构')}</span></div>
-<div class="qr-row">{_qr_slot(content, 'wechat', '微信收款')}{_qr_slot(content, 'alipay', '支付宝收款')}</div>
+<div class="qr-row">{_qr_slot(content, 'wechat', '微信收款（企业微信）')}</div>
 <p style="font-size:13px;color:var(--mut)" id="orderNo"></p>
 <div class="flow">
 <div class="st"><b>① 扫码支付</b>金额 {r['price']:,} 元<br>备注订单号</div>

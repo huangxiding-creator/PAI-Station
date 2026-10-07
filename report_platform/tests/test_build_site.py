@@ -141,7 +141,8 @@ def test_06_qr_slots():
     assert (out / "assets" / "qr_wechat.png").read_bytes() == png
     f1 = (out / "f1.html").read_text(encoding="utf-8")
     assert 'src="assets/qr_wechat.png"' in f1
-    assert "收款码待接入" in f1                               # alipay 仍占位
+    assert "收款码待接入" not in f1                           # alipay 不再占位 (1007 令)
+    assert "alipay" not in f1 and "支付宝" not in f1          # 全站只留微信收款
 
 
 # ------------------------------------------------ ⑦ 幂等+content 零触碰
