@@ -104,13 +104,16 @@ def build_index(cfg: dict, content: Path) -> str:
 <div class="badges">{badges}</div>
 <div class="wrap">
 <section id="intro"><h2 class="sec"><em>壹</em>这是一份什么样的报告</h2>
-<div class="sec-sub">每句话的证据可审计 · 单源结论强制标注 · 数字 100% 表锚</div>
-<div class="lede">大多数研报告诉你结论；这份报告同时告诉你——每个结论踩在几条证据上、
-证据是一手还是转载、独立到什么程度、我们自己有多大把握。</div>
+<div class="sec-sub">每个结论标注来源 · 单一来源的结论会明确提醒 · 每个数字查得到出处</div>
+<div class="lede">想摸清一家头部总承包企业的打法，你自己组织调研，
+要么抽调骨干干几个月，要么花数万元请咨询公司。
+这份报告把这件事做完了——而且比大多数咨询报告更硬：
+每个结论踩在几条证据上、证据是官方一手还是转载，全部标明。</div>
 <p style="font-size:14.5px">研究对象是中国石化集团南京工程有限公司（国内炼化工程
 EPC 第一梯队）。全文 {r['words_wan']} 万字级、{len(r['chapters'])} 章体系化拆解：
 股权治理与重组基因、业务版图与战略错位、设计主导型五大体系、概算控造价实务、
-合同履约与分拆模式风险……每章末附可操作清单与执行路线。</p></section>
+合同履约与分拆模式风险……每章末附可操作清单与执行路线——
+看完能对照自查的那种，不是看完就忘的那种。</p></section>
 
 <section id="toc"><h2 class="sec"><em>贰</em>目录大纲</h2>
 <div class="sec-sub">全 {len(r['chapters'])} 章 · 点击展开每章定位</div>
@@ -118,16 +121,18 @@ EPC 第一梯队）。全文 {r['words_wan']} 万字级、{len(r['chapters'])} �
 
 <section id="sample"><h2 class="sec"><em>叁</em>免费试读</h2>
 <div class="sample-card"><h3>{r['sample_label']}</h3>
-<p>执行摘要 + 第 1 章《股权治理与重组基因》前半全文开放，
-读完再决定是否购买完整版。</p>
+<p>报告回答的 10 个关键问题（只列问题，答案在完整版）+ 研究扎实程度的数字 + 第 1 章写法片段。
+看完你会知道两件事：里面确实有好货，以及好货确实锁着。</p>
 <a class="btn" href="sample.html" data-ev="read_sample">开始试读 →</a></div>
 </section>
 {soon_html}
 <section id="buy"><h2 class="sec"><em>伍</em>购买与交付</h2>
 <div class="buy-box"><h3>{r['price_label']} · 即买即得</h3>
 <div class="perk"><span class="ck">✓</span><span>完整版 PDF（{r['words_wan']} 万字 ·
-{len(r['chapters'])} 章）+ 断言账本附录（可信度透明）</span></div>
+{len(r['chapters'])} 章）+ 附录：全部关键结论的来源清单（每个数字都能对回出处）</span></div>
 <div class="perk"><span class="ck">✓</span><span>勘误与更新通道（同版次免费更新）</span></div>
+<div class="perk"><span class="ck">✓</span><span>买了不满意：按问题分档退款——严重质量问题全额退，
+局部缺陷退 40%，轻微问题退 20%；部分退款不影响阅读。</span></div>
 <div class="perk"><span class="ck">✓</span><span>适合：工程企业战略/市场负责人、
 总承包公司经营层、行业投资机构</span></div>
 <div class="qr-row">{_qr_slot(content, 'wechat', '微信收款')}{_qr_slot(content, 'alipay', '支付宝收款')}</div>
@@ -162,8 +167,8 @@ def build_sample(cfg: dict, content: Path) -> str:
 <div class="crumb"><a href="index.html">← 返回详情</a> · {r['sample_label']} · 免费</div>
 <h1>{r['title']}</h1>
 {md_to_html(md)}
-<div class="cta-end"><p>试读到此结束。完整版 {r['words_wan']} 万字 ·
-{len(r['chapters'])} 章 · 断言账本附录</p>
+<div class="cta-end"><p>试读到此结束。10 个问题的答案 · 完整版 {r['words_wan']} 万字 ·
+{len(r['chapters'])} 章 · 每个结论标来源 · 不满意按档退款</p>
 <a class="btn" href="index.html#buy" data-ev="cta_buy">解锁完整版 ¥{r['price']:,} →</a></div>
 </div><div class="pad-bottom"></div>"""
     return page(f"试读 · {r['title']}", body, r["sku"])
@@ -258,7 +263,7 @@ READER_JS = """
     '，原路退回，阅读权保留。感谢帮我们变好。';}
    else if(j.grade&&j.grade.pct>0){m.textContent='✓ 反馈已受理（'+j.grade.severity+
     '档）。'+(j.note||'');}
-   else{m.textContent='✓ 感谢反馈！已进入质量改进飞轮，被采纳将获返券。';}
+   else{m.textContent='✓ 感谢反馈！已进入改进清单，被采纳将获返券。';}
    t('feedback_sent');})
   .catch(function(){document.getElementById('fbMsg').textContent='网络异常';});
  });
@@ -290,7 +295,7 @@ def build_reader(cfg: dict) -> str:
 <a id="pdfBtn" class="btn" style="margin:6px 0 18px">下载完整 PDF</a>
 <div id="doc"></div>
 <section id="feedback"><h2 class="sec"><em>◈</em>质量反馈</h2>
-<div class="sec-sub">真实反馈=现金返还+产品改进 · 虚假核验在案</div>
+<div class="sec-sub">真实的问题，按档退款致谢 · 反馈将核对阅读记录后处理</div>
 <div class="fb-policy"><b>退款政策（按问题精细分档）</b>：
 严重质量问题（内容缺失/严重不符）→全额退 100%；
 局部缺陷（数据错误/过时）→退 40%；轻微问题→退 20%；
@@ -307,7 +312,7 @@ def build_reader(cfg: dict) -> str:
 <select id="fbCat" style="width:100%;padding:12px;border:1px solid var(--line);
  border-radius:10px;font-size:15px;margin-bottom:10px">
 <option value="quality">质量问题（可按档退款）</option>
-<option value="suggest">改进建议（飞轮·返券）</option></select>
+<option value="suggest">改进建议（采纳有奖）</option></select>
 <textarea id="fbText" required rows="4" placeholder="具体问题描述：哪个数字/结论/章节位置有什么问题…" style="width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font-size:15px"></textarea>
 <button class="btn" style="width:100%;margin-top:10px">提交反馈</button>
 <p id="fbMsg" style="font-size:13px;margin-top:8px"></p></form>
