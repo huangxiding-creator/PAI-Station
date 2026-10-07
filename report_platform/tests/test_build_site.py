@@ -78,7 +78,8 @@ def test_03_sample_cta():
     tmp = Path(tempfile.mkdtemp(prefix="rp_test_"))
     c = _content(tmp)
     html = BS.build_sample(json.loads((c / "report.json").read_text(
-        encoding="utf-8")), c)
+        encoding="utf-8"))["reports"][0],
+        json.loads((c / "report.json").read_text(encoding="utf-8")), c)
     assert "返回详情" in html and "解锁完整版 ¥1,999" in html
     assert "<h1>《测试报告》</h1>" in html and "<li>要点甲</li>" in html
 

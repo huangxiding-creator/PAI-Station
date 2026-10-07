@@ -71,8 +71,28 @@ def _qr_slot(img_dir: Path, name: str, label: str) -> str:
     return f'<div class="qr">{inner}<div class="qt">{label}</div></div>'
 
 
+def _nav(cfg: dict, current_sku: str) -> str:
+    """全部报告互链导航条 (多商品架构)."""
+    links = []
+    for x in cfg["reports"]:
+        if x.get("coming_soon"):
+            links.append('<a href="index.html#soon">蓝皮书预售</a>')
+            continue
+        slug = "index.html" if x is cfg["reports"][0] \
+            else f"{x['sku'].lower()}.html"
+        name = x["title"].strip("《》?？").replace("怎么干EPC总承包", "EPC")
+        cls = ' style="color:var(--gold);font-weight:700"' \
+            if x["sku"] == current_sku else ""
+        links.append(f'<a href="{slug}"{cls}>{name}</a>')
+    return ('<div class="wrap" style="padding:10px 20px 0;font-size:13px;'
+            f'color:var(--mut)">总包智库在售报告：{" · ".join(links)}</div>')
+
+
 def build_index(cfg: dict, content: Path) -> str:
-    r = cfg["reports"][0]
+    return build_report(cfg["reports"][0], cfg, content)
+
+
+def build_report(r: dict, cfg: dict, content: Path) -> str:
     soon = next((x for x in cfg["reports"] if x.get("coming_soon")), None)
     badges = "".join(
         f'<div class="badge"><div class="v">{b["v"]}</div>'
@@ -101,6 +121,7 @@ def build_index(cfg: dict, content: Path) -> str:
   <div class="pricebar"><span class="price"><small>¥</small>{r['price']:,}</span>
     <span class="tag">{r['price_label']}</span></div>
 </div></div>
+{_nav(cfg, r['sku'])}
 <div class="badges">{badges}</div>
 <div class="wrap">
 <section id="intro"><h2 class="sec"><em>壹</em>这是一份什么样的报告</h2>
@@ -159,17 +180,18 @@ EPC 第一梯队）。全文 {r['words_wan']} 万字级、{len(r['chapters'])} �
     return page(f"{r['title']} — 总包智库", body, r["sku"])
 
 
-def build_sample(cfg: dict, content: Path) -> str:
-    r = cfg["reports"][0]
+def build_sample(r: dict, cfg: dict, content: Path) -> str:
     md = (content / "sample" / r["sample_file"]).read_text(encoding="utf-8")
+    back = "index.html" if r is cfg["reports"][0] \
+        else f"{r['sku'].lower()}.html"
     body = f"""
 <div class="wrap reader">
-<div class="crumb"><a href="index.html">← 返回详情</a> · {r['sample_label']} · 免费</div>
+<div class="crumb"><a href="{back}">← 返回详情</a> · {r['sample_label']} · 免费</div>
 <h1>{r['title']}</h1>
 {md_to_html(md)}
 <div class="cta-end"><p>试读到此结束。10 个问题的答案 · 完整版 {r['words_wan']} 万字 ·
 {len(r['chapters'])} 章 · 每个结论标来源 · 不满意按档退款</p>
-<a class="btn" href="index.html#buy" data-ev="cta_buy">解锁完整版 ¥{r['price']:,} →</a></div>
+<a class="btn" href="{back}#buy" data-ev="cta_buy">解锁完整版 ¥{r['price']:,} →</a></div>
 </div><div class="pad-bottom"></div>"""
     return page(f"试读 · {r['title']}", body, r["sku"])
 
@@ -330,8 +352,16 @@ def build(content: Path, out: Path) -> dict:
     cfg = json.loads((content / "report.json").read_text(encoding="utf-8"))
     out.mkdir(parents=True, exist_ok=True)
     (out / "assets").mkdir(exist_ok=True)
-    (out / "index.html").write_text(build_index(cfg, content), encoding="utf-8")
-    (out / "sample.html").write_text(build_sample(cfg, content), encoding="utf-8")
+    for i, r in enumerate(cfg["reports"]):
+        if r.get("coming_soon"):
+            continue
+        main = i == 0
+        slug = "index" if main else r["sku"].lower()
+        (out / f"{slug}.html").write_text(build_report(r, cfg, content),
+                                          encoding="utf-8")
+        sname = "sample" if main else f"sample_{r['sku'].lower()}"
+        (out / f"{sname}.html").write_text(build_sample(r, cfg, content),
+                                           encoding="utf-8")
     (out / "admin.html").write_text(build_admin(cfg), encoding="utf-8")
     (out / "reader.html").write_text(build_reader(cfg), encoding="utf-8")
     for name in ("wechat", "alipay"):
