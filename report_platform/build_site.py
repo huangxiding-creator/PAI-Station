@@ -194,6 +194,133 @@ fetch('/api/stats?token='+encodeURIComponent(tk)).then(function(r){return r.json
     return page("数据台 — 总包智库", body)
 
 
+READER_JS = """
+(function(){
+ var Q=new URLSearchParams(location.search);
+ var o=Q.get('o')||'',s=Q.get('s')||'';
+ var gate=document.getElementById('gate'),full=document.getElementById('full');
+ function t(e,x){try{fetch('/api/track',{method:'POST',
+  headers:{'Content-Type':'application/json'},
+  body:JSON.stringify({event:e,sku:window.SKU||'',extra:x||''})});}catch(_){}}
+ function loadFull(no,sig){
+  fetch('/api/reader/content?o='+encodeURIComponent(no)+'&s='+encodeURIComponent(sig))
+  .then(function(r){if(!r.ok){throw 0;}return r.text();})
+  .then(function(html){
+   gate.style.display='none';full.style.display='block';
+   document.getElementById('doc').innerHTML=html;
+   var pd=document.getElementById('pdfBtn');
+   if(pd){pd.href='/api/full.pdf?o='+encodeURIComponent(no)+'&s='+encodeURIComponent(sig);}
+   var sel=document.getElementById('fbChapter'),seen={};
+   var hs=document.querySelectorAll('#doc h2');
+   hs.forEach(function(h,i){
+    var opt=document.createElement('option');opt.textContent=h.textContent;
+    sel.appendChild(opt);
+    (function(ch){var ob=new IntersectionObserver(function(en){
+     if(en[0].isIntersecting&&!seen[ch]){seen[ch]=1;t('read_chapter',ch);}
+    },{rootMargin:'0px 0px -60% 0px'});ob.observe(h);})(h.textContent);
+   });
+   t('reader_open');
+  })
+  .catch(function(){document.getElementById('gateMsg').textContent=
+   '解锁失败：订单未支付或签名失效';});
+ }
+ if(o&&s){loadFull(o,s);}
+ else{
+  var f=document.getElementById('lookupForm');
+  f.addEventListener('submit',function(ev){ev.preventDefault();
+   var no=document.getElementById('luNo').value.trim(),
+       tl=document.getElementById('luTail').value.trim();
+   fetch('/api/order/query?order_no='+encodeURIComponent(no)+'&tail='+encodeURIComponent(tl))
+   .then(function(r){return r.json();})
+   .then(function(j){
+    var m=document.getElementById('gateMsg');
+    if(!j.ok){m.textContent=j.error||'查询失败';return;}
+    if(j.reader_url){location.href=j.reader_url;return;}
+    m.textContent='订单状态：'+j.state+'（支付核对中，稍后再查）';
+   }).catch(function(){document.getElementById('gateMsg').textContent='网络异常';});
+  });
+ }
+ var ff=document.getElementById('fbForm');
+ ff.addEventListener('submit',function(ev){ev.preventDefault();
+  var st=[0,0,0,0,0].map(function(_,i){return document.getElementById('st'+(i+1));});
+  var rating=st.filter(function(el){return el.classList.contains('on');}).length;
+  fetch('/api/feedback',{method:'POST',headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({order_no:o||document.getElementById('luNo').value.trim(),
+    rating:rating,chapter:document.getElementById('fbChapter').value,
+    category:document.getElementById('fbCat').value,
+    content:document.getElementById('fbText').value})})
+  .then(function(r){return r.json();})
+  .then(function(j){var m=document.getElementById('fbMsg');
+   if(!j.ok){m.textContent=j.error||'提交失败';m.style.color='#B3261E';return;}
+   m.style.color='#2E7D32';
+   if(j.refund){m.textContent='✓ 反馈已受理（'+j.grade.severity+'档）。已按 '
+    +j.refund.pct+'% 比例退款 ¥'+(j.refund.fen/100).toFixed(2)+
+    '，原路退回，阅读权保留。感谢帮我们变好。';}
+   else if(j.grade&&j.grade.pct>0){m.textContent='✓ 反馈已受理（'+j.grade.severity+
+    '档）。'+(j.note||'');}
+   else{m.textContent='✓ 感谢反馈！已进入质量改进飞轮，被采纳将获返券。';}
+   t('feedback_sent');})
+  .catch(function(){document.getElementById('fbMsg').textContent='网络异常';});
+ });
+ var stars=[0,0,0,0,0].map(function(_,i){return document.getElementById('st'+(i+1));});
+ stars.forEach(function(el,i){el.addEventListener('click',function(){
+  stars.forEach(function(e2,j){e2.classList.toggle('on',j<=i);});});});
+})();
+"""
+
+
+def build_reader(cfg: dict) -> str:
+    body = f"""
+<div class="wrap reader">
+<div class="crumb"><a href="index.html">← 返回详情</a> · 读者通道</div>
+<div id="gate">
+<h1>读者解锁</h1>
+<p style="font-size:14px;color:var(--mut)">支付成功后凭订单号+支付尾号解锁全文；
+或直接打开支付成功页返回的专属链接。</p>
+<form id="lookupForm" style="margin-top:14px">
+<input id="luNo" required placeholder="订单号" style="width:100%;padding:12px;
+ border:1px solid var(--line);border-radius:10px;font-size:15px;margin-bottom:8px">
+<input id="luTail" required placeholder="支付尾号（后4位）" style="width:100%;padding:12px;
+ border:1px solid var(--line);border-radius:10px;font-size:15px">
+<button class="btn" style="width:100%;margin-top:10px">解锁阅读</button>
+<p id="gateMsg" style="font-size:13px;margin-top:8px"></p></form>
+</div>
+<div id="full" style="display:none">
+<h1>完整版 · 已解锁</h1>
+<a id="pdfBtn" class="btn" style="margin:6px 0 18px">下载完整 PDF</a>
+<div id="doc"></div>
+<section id="feedback"><h2 class="sec"><em>◈</em>质量反馈</h2>
+<div class="sec-sub">真实反馈=现金返还+产品改进 · 虚假核验在案</div>
+<div class="fb-policy"><b>退款政策（按问题精细分档）</b>：
+严重质量问题（内容缺失/严重不符）→全额退 100%；
+局部缺陷（数据错误/过时）→退 40%；轻微问题→退 20%；
+改进建议→不退款，被采纳返券。部分退款不影响阅读权。</div>
+<form id="fbForm" style="margin-top:14px">
+<div class="stars" id="starRow">
+<span class="star" id="st1">★</span><span class="star" id="st2">★</span>
+<span class="star" id="st3">★</span><span class="star" id="st4">★</span>
+<span class="star" id="st5">★</span>
+<span style="font-size:12px;color:var(--mut);margin-left:8px">综合评分</span></div>
+<select id="fbChapter" required style="width:100%;padding:12px;border:1px solid
+ var(--line);border-radius:10px;font-size:15px;margin:10px 0">
+<option value="">问题所在章节（必选·真实定位）</option></select>
+<select id="fbCat" style="width:100%;padding:12px;border:1px solid var(--line);
+ border-radius:10px;font-size:15px;margin-bottom:10px">
+<option value="quality">质量问题（可按档退款）</option>
+<option value="suggest">改进建议（飞轮·返券）</option></select>
+<textarea id="fbText" required rows="4" placeholder="具体问题描述：哪个数字/结论/章节位置有什么问题…" style="width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font-size:15px"></textarea>
+<button class="btn" style="width:100%;margin-top:10px">提交反馈</button>
+<p id="fbMsg" style="font-size:13px;margin-top:8px"></p></form>
+</section>
+</div></div><div class="pad-bottom"></div>"""
+    r = cfg["reports"][0]
+    return page(f"读者通道 · {r['title']}", body, r["sku"],
+                extra_js=READER_JS)
+
+
+
+
+
 def build(content: Path, out: Path) -> dict:
     cfg = json.loads((content / "report.json").read_text(encoding="utf-8"))
     out.mkdir(parents=True, exist_ok=True)
@@ -201,6 +328,7 @@ def build(content: Path, out: Path) -> dict:
     (out / "index.html").write_text(build_index(cfg, content), encoding="utf-8")
     (out / "sample.html").write_text(build_sample(cfg, content), encoding="utf-8")
     (out / "admin.html").write_text(build_admin(cfg), encoding="utf-8")
+    (out / "reader.html").write_text(build_reader(cfg), encoding="utf-8")
     for name in ("wechat", "alipay"):
         src = content / f"qr_{name}.png"
         if src.is_file():

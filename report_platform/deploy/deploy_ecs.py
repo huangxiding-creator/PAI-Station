@@ -114,6 +114,7 @@ set -e
 base64 -d /tmp/rp_in/rp.b64 > /tmp/rp_in/rp.tgz
 tar -xzf /tmp/rp_in/rp.tgz -C /www/
 mkdir -p /www/report_platform/data
+python3 -c 'import qrcode' 2>/dev/null || pip3 install -q qrcode || true
 cat > /etc/systemd/system/report-platform.service <<'UNIT'
 [Unit]
 Description=Report Platform (F5a flagship paid-report H5)

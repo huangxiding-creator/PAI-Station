@@ -118,9 +118,21 @@ def test_06_idempotent_build():
     r2 = BS.build(c, out)
     h2 = (out / "index.html").read_text(encoding="utf-8")
     assert r1["pages"] == r2["pages"] == ["admin.html", "index.html",
-                                          "sample.html"]
+                                          "reader.html", "sample.html"]
     assert h1 == h2                                            # 确定性输出
     assert (c / "report.json").read_text(encoding="utf-8") == snap
+
+
+# ------------------------------------------------ ⑥b reader 页要件
+def test_06b_reader_page():
+    tmp = Path(tempfile.mkdtemp(prefix="rp_test_"))
+    html = BS.build_reader(json.loads((_content(tmp) / "report.json")
+                                      .read_text(encoding="utf-8")))
+    for key in ("读者解锁", "lookupForm", "reader/content", "read_chapter",
+                "fbForm", "退款政策", "质量问题", "改进建议", "fbChapter",
+                "full.pdf", "feedback_sent"):
+        assert key in html, key
+    assert "cdn" not in html.lower() and "http://" not in html   # 零外链
 
 
 # ------------------------------------------------ ⑦ ast 零网络

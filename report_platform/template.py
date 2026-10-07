@@ -133,6 +133,15 @@ color:#fff;padding:26px 22px;text-align:center;margin-top:36px}
 
 /* admin */
 .admin{padding:26px 0 60px}
+.fb-policy{background:#fff;border:1px solid var(--line);border-left:3px solid
+ var(--brass);border-radius:10px;padding:12px 14px;font-size:13px;
+ color:var(--mut);line-height:1.8}
+.fb-policy b{color:var(--ink)}
+.stars{display:flex;align-items:center}
+.star{font-size:30px;color:var(--line);cursor:pointer;margin-right:4px;
+ transition:color .15s}
+.star.on{color:var(--brass)}
+#doc{margin-top:10px}
 table.a{width:100%;border-collapse:collapse;font-size:13px;background:#fff;
 border-radius:10px;overflow:hidden}
 table.a th{background:var(--ink);color:#fff;padding:9px 10px;text-align:left;font-weight:500}
@@ -188,7 +197,7 @@ TRACK_JS = """
 """
 
 
-def page(title: str, body: str, sku: str = "") -> str:
+def page(title: str, body: str, sku: str = "", extra_js: str = "") -> str:
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -201,5 +210,6 @@ def page(title: str, body: str, sku: str = "") -> str:
 <body data-sku="{sku}">
 {body}
 <script>{TRACK_JS}</script>
+<script>{extra_js}</script>
 </body>
 </html>"""
