@@ -249,7 +249,7 @@ TRACK_JS = """
 """
 
 
-SITE_BASE = "http://yrecepc.cn"          # 已备案正式域名 (F5a-6)
+SITE_BASE = "http://report.yrecepc.cn"   # 二级域名正式口 (F5a-8); 顶级域 301 在此
 OG_IMAGE = SITE_BASE + "/assets/og_card.png"
 
 
