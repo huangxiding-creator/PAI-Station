@@ -53,7 +53,7 @@ def main() -> int:
     digest = re.sub(r"\s+", " ", md.split("\n", 2)[1] or title)[:110]
     r = push_draft(title, html, thumb, digest=digest,
                    mode="dry_run" if dry else "publish")
-    (md_path.parent / "r50_push_result.json").write_text(
+    (md_path.parent / (md_path.stem + "_push_result.json")).write_text(
         __import__("json").dumps(r, ensure_ascii=False, indent=2),
         encoding="utf-8")
     print("[push]", r.get("mode"), "ok=", r.get("ok"),
