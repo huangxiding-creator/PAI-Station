@@ -154,6 +154,56 @@ padding:10px 14px;font-size:12.5px}
 footer{padding:30px 0 40px;text-align:center;font-size:12px;color:var(--mut);
 border-top:1px solid var(--line)}
 footer .serif{color:var(--brass);letter-spacing:.2em}
+
+/* 目录页 (catalog) */
+.cat-hero{background:linear-gradient(160deg,var(--ink) 0%,var(--ink2) 100%);
+color:#fff;padding:46px 0 40px;position:relative;overflow:hidden}
+.cat-hero::after{content:"";position:absolute;right:-70px;top:-70px;width:260px;
+height:260px;border:1px solid rgba(176,141,87,.35);border-radius:50%}
+.cat-hero::before{content:"";position:absolute;right:-30px;top:-30px;width:180px;
+height:180px;border:1px solid rgba(176,141,87,.2);border-radius:50%}
+.cat-hero .brand{font-size:12px;letter-spacing:.35em;color:var(--brass2);margin-bottom:20px}
+.cat-hero h1{font-size:26px;line-height:1.45;font-weight:700}
+.cat-hero .sub{margin-top:12px;font-size:14px;color:#C8D4E0}
+.cat-hero .stats{display:flex;gap:26px;margin-top:22px;flex-wrap:wrap}
+.cat-hero .stat b{display:block;font-size:22px;color:var(--brass2);font-weight:700}
+.cat-hero .stat span{font-size:11.5px;color:#9FB0C2;letter-spacing:.05em}
+.feat{background:linear-gradient(150deg,var(--ink),var(--ink2));border-radius:14px;
+color:#fff;padding:22px 18px;margin-bottom:12px;position:relative;overflow:hidden}
+.feat::after{content:"旗舰";position:absolute;right:10px;top:6px;font-family:
+Songti SC,STSong,serif;font-size:44px;color:rgba(176,141,87,.16);font-weight:700}
+.feat h3{font-size:17.5px;line-height:1.5;padding-right:56px}
+.feat .fm{font-size:12.5px;color:#C8D4E0;margin-top:6px;line-height:1.7}
+.feat .fb{display:flex;gap:14px;margin-top:8px;font-size:11.5px;color:#9FB0C2}
+.feat .fb b{color:var(--brass2)}
+.feat .fl{display:flex;align-items:center;justify-content:space-between;margin-top:14px}
+.feat .pr{font-size:20px;color:var(--brass2);font-weight:700}
+.feat .fl a{font-size:13px;color:#fff;text-decoration:none;border:1px solid
+var(--brass);padding:7px 16px;border-radius:99px}
+.feat .fl a.gold{background:var(--brass);font-weight:600}
+.soon-band{border:1px dashed var(--brass);border-radius:12px;padding:14px 16px;
+background:rgba(176,141,87,.05);display:flex;align-items:center;gap:12px;
+justify-content:space-between;margin-bottom:6px}
+.soon-band .st{font-size:13px;color:var(--ink);line-height:1.6}
+.soon-band .st b{font-size:14.5px}
+.soon-band a{font-size:12px;color:var(--brass);white-space:nowrap;
+text-decoration:none;border-bottom:1px solid var(--brass)}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;
+padding:13px 12px 11px;display:flex;flex-direction:column}
+.card .ct{font-size:13.5px;font-weight:600;color:var(--ink);line-height:1.55}
+.card .cm{font-size:11.5px;color:var(--mut);margin-top:6px;line-height:1.6}
+.card .cp{display:flex;align-items:baseline;justify-content:space-between;
+margin-top:auto;padding-top:10px}
+.card .cp .pr{color:var(--brass);font-weight:700;font-size:16px}
+.card .cp .lk{font-size:12px}
+.card .cp .lk a{color:var(--ink);text-decoration:none;border-bottom:1px
+solid var(--brass)}
+.cat-count{font-size:12px;color:var(--mut);float:right;margin-top:4px}
+.toc-flat{display:flex;gap:12px;align-items:baseline;background:#fff;
+border:1px solid var(--line);border-radius:10px;padding:11px 14px;margin-bottom:7px}
+.toc-flat .no{font-family:Songti SC,serif;color:var(--brass);font-size:13px;flex:0 0 30px}
+.toc-flat .t{font-size:14.5px;font-weight:600;color:var(--ink)}
 """
 
 TRACK_JS = """

@@ -252,6 +252,10 @@ class Handler(BaseHTTPRequestHandler):
             return self._static("admin.html")
         if u.path.startswith("/assets/"):
             return self._static(u.path.lstrip("/"))
+        # 多商品通配: /{sku}.html /sample_{sku}.html 等根层静态页 (防穿越已由
+        # _static 的 resolve+startswith 兜底; 子路径一律不在此放行)
+        if u.path.endswith((".html", ".png")) and "/" not in u.path[1:]:
+            return self._static(u.path.lstrip("/"))
         self.send_error(404)
 
     def do_POST(self):
