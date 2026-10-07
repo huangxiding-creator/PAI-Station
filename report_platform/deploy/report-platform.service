@@ -1,0 +1,14 @@
+[Unit]
+Description=Report Platform (F5a flagship paid-report H5)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/www/report_platform
+Environment=RP_ADMIN_TOKEN=%RP_ADMIN_TOKEN%
+ExecStart=/usr/bin/python3 /www/report_platform/server.py --site /www/report_platform/site --db /www/report_platform/data/report_platform.db --port 8885
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
