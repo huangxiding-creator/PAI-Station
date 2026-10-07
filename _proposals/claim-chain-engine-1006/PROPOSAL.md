@@ -143,8 +143,8 @@
 | W2 | 问题桥：Manus outline questions → 树 v2 + ACH 点火 | superline/question_bridge.py（接 manus_outline_adapter） | 每章问题入树且带三腿 EEI；hypotheses ≥3 非空；ach_arena 可跑 | ✅ 1006 收官: 单测 8/8 (含 arena 真跑 exit0); EPC51 真链 15章→15子问题/45三腿EEI/105查询词, question_tree_v2.json 落 replay 工作区 v1 零触碰; 实锤=适配器丢 sub_questions 是断点, --md 路保真/--framework 路降级警示 |
 | W2 | 独立性三键 + 渠道分散度 | reforge_factory/independence_audit.py（sidecar independence.json） | 独立源按三键重算，EPC50 重放单源 EEI 清单 | ✅ 1006 收官: 单测 7/7; EPC50 实弹 有据 492/560 · **单源 99 (20.12%)>20% 触警** · 零据 68; 渠道垄断实锤=同 engine 跨 3 host 3 doc 仍 1 独立源 (旧文档口径 87 → 三键口径 99, 假独立被打回) |
 | W3 | 断言账本（P1-6 升级）+ 第四触发位（P1-7 扩展） | superline/task_ledger.py | 终稿引用句 100% 落账；单源断言 100% 进 gap | ✅ 1006 收官: 单测 9/9; EPC50 真池回放 1561 docs 登记/5 断言全落账 recall 1.0∧precision 1.0 双 PASS/单源 4 条 100% 进 gap_tickets (指纹去重幂等); 回放中 precision 门当场抓住语法示意标记的幽灵引用=门真活实证; 独立性=三键连通分量 join grade_map/independence 同源真账 |
-| W4 | 红队轮（premortem 双门/KAC/ICD 203 双维标注 独立会话）+ 校准账本 | superline/redteam_gate.py + calibration_ledger.jsonl | 每报告 ≥5 条预测入账；premortem 失败原因 100% 映射{缓解\|接受}；关键断言 100% 带 likelihood+confidence（机检分句） | P1 波 |
-| W5 | 数据表先行（P1-3 升级） | superline/charts_gate.py 扩 | 终稿数字 100% 表锚 | P1 波 |
+| W4 | 红队轮（premortem 双门/KAC/ICD 203 双维标注 独立会话）+ 校准账本 | superline/redteam_gate.py + calibration_ledger.jsonl | 每报告 ≥5 条预测入账；premortem 失败原因 100% 映射{缓解\|接受}；关键断言 100% 带 likelihood+confidence（机检分句） | ✅ 1006 收官: 单测 10/10; EPC50 真池双跑——裸启发式首跑 KAC 门真拒 (树v1假设空转=缺口③被门抓住), 补登记簿后四门全 PASS; T0/预测断言 100% 双维标注 (7档硬编码表+置信度三因子自动推导禁手拍+分句禁同句机检); 5 条预测入账 Brier 对账在位 |
+| W5 | 数据表先行（P1-3 升级） | superline/charts_gate.py 扩 | 终稿数字 100% 表锚 | ✅ 1006 收官: 单测 7/7; EPC50 真池回放 2 数字 token 100% 表锚 PASS (登记簿六件套校验+[[T:]]行级锚+无表锚FAIL清单+幽灵文档锚拦截) |
 
 ## 五、边界与纪律（随批继承）
 
