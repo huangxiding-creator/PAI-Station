@@ -1,0 +1,52 @@
+{
+ "cid": "EPC50-SNEI",
+ "generator": "heuristic-local (独立会话缺位兜底)",
+ "gates": {
+  "pre": [
+   {
+    "risk": "单源断言 4/5 出稿后被独立源推翻",
+    "disposition": "缓解",
+    "measure": "gap_tickets 已全量入队补独立第二源; 补不齐句带「单一来源」标注",
+    "reason": "",
+    "evidence": "claim_ledger.json by_state"
+   },
+   {
+    "risk": "预测断言 1 条无验证口径到期对账",
+    "disposition": "缓解",
+    "measure": "全部入 calibration_ledger (≥5 条/报告) 带 Brier 对账",
+    "reason": "",
+    "evidence": "claim_ledger.json 类型=预测"
+   },
+   {
+    "risk": "渠道垄断下「多源」实为同源复读 (增量信息只加信心不加准确)",
+    "disposition": "接受",
+    "measure": "",
+    "reason": "独立性按三键口径已在账本显形, 终稿按独立源数而非文档数表述确定性",
+    "evidence": "independence.json 三键连通分量"
+   }
+  ],
+  "post": [
+   {
+    "risk": "单源断言 4/5 出稿后被独立源推翻",
+    "disposition": "缓解",
+    "measure": "gap_tickets 已全量入队补独立第二源; 补不齐句带「单一来源」标注",
+    "reason": "",
+    "evidence": "claim_ledger.json by_state"
+   },
+   {
+    "risk": "预测断言 1 条无验证口径到期对账",
+    "disposition": "缓解",
+    "measure": "全部入 calibration_ledger (≥5 条/报告) 带 Brier 对账",
+    "reason": "",
+    "evidence": "claim_ledger.json 类型=预测"
+   },
+   {
+    "risk": "渠道垄断下「多源」实为同源复读 (增量信息只加信心不加准确)",
+    "disposition": "接受",
+    "measure": "",
+    "reason": "独立性按三键口径已在账本显形, 终稿按独立源数而非文档数表述确定性",
+    "evidence": "independence.json 三键连通分量"
+   }
+  ]
+ }
+}

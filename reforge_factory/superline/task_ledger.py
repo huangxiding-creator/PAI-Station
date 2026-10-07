@@ -218,6 +218,7 @@ def judge_claim(claim: dict, by_id: dict[str, dict],
         "类型": claim_type(claim["断言"]), "eeis": claim["eeis"],
         "证据ids": list(claim["refs"]), "幽灵引用": ghost,
         "独立性类别": indep, "独立源数": n_ind, "验证态": state,
+        "最优等级": min(grades) if grades else "",
         "确定性": CERTAINTY_BANDS[score], "降级旗标": flags,
         "反证urls": against, "T0": t0,
     }

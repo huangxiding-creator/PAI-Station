@@ -1,0 +1,45 @@
+{
+ "cid": "EPC50-SNEI",
+ "generated": "2026-10-07 10:18",
+ "engine_version": "redteam-v1 (W4-2 断言链引擎)",
+ "icd203_rows": [
+  {
+   "claim_id": "C0001",
+   "断言": "中石化南京工程 2024 年完成新员工入职培训覆盖约 300 人次，形成常态化人才培养机制[[S:D1314]]",
+   "likelihood": "很可能 85-95%",
+   "confidence": "moderate",
+   "口径": "公司官网/年报培训人次表述",
+   "deadline": "2026-12-31",
+   "missing": false
+  },
+  {
+   "claim_id": "C0005",
+   "断言": "预计未来五年公司 EPC 业务的数字化交付占比将超过 60%[[S:D1314]]",
+   "likelihood": "大致均等 35-65%",
+   "confidence": "moderate",
+   "口径": "2027 年公司年报数字化交付占比表述",
+   "deadline": "2027-12-31",
+   "missing": false
+  }
+ ],
+ "gates": {
+  "premortem": {
+   "errors": [],
+   "pass": true
+  },
+  "kac": {
+   "errors": [],
+   "pass": true
+  },
+  "icd203": {
+   "missing_annotations": [],
+   "split_violations": [],
+   "pass": true
+  },
+  "calibration": {
+   "predictions": 5,
+   "pass": true
+  }
+ },
+ "overall_pass": true
+}
