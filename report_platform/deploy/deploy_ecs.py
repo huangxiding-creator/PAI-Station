@@ -34,7 +34,7 @@ CHUNK = 12000
 def _pack() -> bytes:
     buf = io.BytesIO()
     with tarfile.open(fileobj=buf, mode="w:gz") as tf:
-        for rel in ("site", "server.py", "content", "template.py"):
+        for rel in ("site", "server.py", "pay.py", "content", "template.py"):
             p = ROOT / rel
             if p.is_file():
                 tf.add(p, arcname=f"report_platform/{rel}")
@@ -114,7 +114,7 @@ set -e
 base64 -d /tmp/rp_in/rp.b64 > /tmp/rp_in/rp.tgz
 tar -xzf /tmp/rp_in/rp.tgz -C /www/
 mkdir -p /www/report_platform/data
-python3 -c 'import qrcode' 2>/dev/null || pip3 install -q qrcode || true
+python3 -c 'import qrcode' 2>/dev/null || pip3 install -q --break-system-packages qrcode || apt-get install -y -q python3-qrcode >/dev/null 2>&1 || true
 cat > /etc/systemd/system/report-platform.service <<'UNIT'
 [Unit]
 Description=Report Platform (F5a flagship paid-report H5)
