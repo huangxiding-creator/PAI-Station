@@ -87,7 +87,62 @@ python scripts/migrate_sqlite_to_mysql.py /path/to/data/qianwen/db.sqlite
 3. 小程序后台「开发管理 → 服务器域名 → request 合法域名」加入 `https://api.epcschool.top`。
 4. 小程序端 `utils/config.js` 的 API base 切到该域名（WeAppForge 工程内一处配置）。
 
-## 8. 注意事项
+## 8. CLI 通道（部署/查询在役；改环境变量走 manager-node 通道）
+
+本机 `@cloudbase/cli@3.8.5`（`PATH+=/c/Users/91216/AppData/Roaming/npm`，凭证在
+`~/.config/.cloudbase/auth.json`，envId=cloudbase-d2gzke5r0b706b3a3）。控制台免登录，全 CLI 走：
+
+```bash
+# 部署（staging=E:\AI-Station\data\state\qw_deploy_stage_1007：Dockerfile+entrypoint+
+# requirements+qianwen_engine/*.py+fonts/）：灰度问答必喂回车选默认「否」
+printf '\n' | tcb cloudrun deploy -s qianwen-engine --source <staging> --port 8080 \
+  --min-num 1 --max-num 2 \
+  --vpc-config '{"vpcId":"vpc-hv6ji25g","vpcCIDR":"172.17.0.0/16","subnetId":"subnet-ksblbg8p","subnetCIDR":"172.17.0.0/20"}' \
+  --open-access-types PUBLIC,MINIAPP --force --wait
+# 详情（EnvParams 在 data.ServerConfig.EnvParams，JSON 字符串；deploy 不重置它）
+tcb cloudrun detail -s qianwen-engine --json
+# 部署记录（取 RunId）/ 进程日志
+tcb cloudrun record list -s qianwen-engine --json
+tcb cloudrun logs process --run-id <RunId>
+```
+
+### 8a. ★改环境变量/密钥：manager-node 通道（1007 实证在役，唯一活口）
+
+**`tcb run service:config` 在 3.8.5 是结构性死路，勿再试**（源码级实证）：
+①其 options 根本没声明 envId 旗标，`options.envId` 恒 undefined → 必抛「请使用 -e 或
+--envId 指定环境 ID」，旗标放根位置/补丁声明都救不了（InjectParams 不合并）；
+②即使补丁注入 envId，客户端 checkTcbrEnv 会因环境非 tcbr 类型再拒一道。
+CLI 旗标面还有隐藏截断坑：`--envParams` 值按 `split('=')` 无 maxsplit 截断（新版
+`cloudrun deploy` 则压根不暴露 envParams）。
+
+**正解 = `@cloudbase/manager-node` 直调**（新版 cloudrun 家族同一条 API 通道，
+`UpdateCloudRunServer` + DiffConfigItems 稀疏更新——只动传入的键，EnvParams 走
+JSON 字符串通道**无 '=' 截断**，base64 填充不必剥）：
+
+```bash
+# 一次性装机（E:\AI-Station\data\state\mn_client，358 包 ~11s）
+cd /e/AI-Station/data/state/mn_client && npm i @cloudbase/manager-node
+# 更新流程（幂等可复跑，~3.5min 全链）
+#  1) qw_tcb_prep.py  — 重建 staging + data/state/qianwen_tcb_envparams.json
+#     （拉 live EnvParams → 替换 virtual_pay.secret → roundtrip 断言）
+#  2) node update_envparams.js — 凭证读 auth.json 临时密钥（毫秒时间戳判过期），
+#     cloudrun.deploy({serverName, targetPath: staging, deployInfo:{ReleaseType:'FULL'},
+#     serverConfig:{EnvParams: JSON.stringify(全量 env), OpenAccessTypes:['PUBLIC','MINIAPP']}})
+python WeAppForge/work/mp_cancel_logout/qw_tcb_prep.py
+node data/state/mn_client/update_envparams.js
+#  3) 验证三板斧：detail EnvParams 双解 b64 比对本地源 → record list 等 normal+HasTraffic
+#     → https://ai.epcschool.top/api/health（entrypoint set -e，落盘失败容器必崩）
+```
+
+注意：`deploy()` 更新分支**不展开旧配置**，`OpenAccessTypes` 不传会被默认值
+`['OA','PUBLIC','MINIAPP']` 漂移——必须显式钉死；Cpu/Mem/MinNum/MaxNum/Port/VpcConf
+缺省=稀疏 Items 不含=服务端不动（实测零漂移）。
+
+密钥真通道 = `SECRET_FILES_B64` 环境变量（JSON map 文件名→b64，entrypoint 启动落盘
+SECRETS_DIR）——本地源 `E:\AI-Station\data\secrets\`。旧 CLI 通道残件
+`qw_tcb_envupdate.py` 已退役（留档勿用）。
+
+## 9. 注意事项
 
 - **单副本运行**：进度流（打字机/阶段事件）与 KB 串行闸在引擎里是进程内态，云托管先固定
   「实例数=1、弹性伸缩关」；多副本前需先把这两态外置（MySQL/Redis）。

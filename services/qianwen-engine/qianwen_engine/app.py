@@ -468,7 +468,7 @@ class UnlockPaidIn(BaseModel):
 
 @app.post("/api/answer/{aid}/pay_sign")
 def pay_sign(aid: str, request: Request):
-    """签名腿：服务端用 appsecret+session_key 出双签名，客户端原样透传拉起支付。"""
+    """签名腿：服务端用虚拟支付 AppKey(env 定沙箱/现网)+session_key 出双签名，客户端原样透传拉起支付。"""
     openid = _openid(request)
     row = store.get_answer(aid, openid)
     if row is None:
@@ -481,6 +481,10 @@ def pay_sign(aid: str, request: Request):
     if not vp.get("offer_id") or not vp.get("product_id"):
         # 未开通：客户端走优雅降级（引导点赞赠次）
         raise HTTPException(503, "虚拟支付尚未开通")
+    env_val = int(vp.get("env", "0") or 0)
+    app_key = (vp.get("prod_appkey") if env_val == 0 else vp.get("sandbox_appkey")) or ""
+    if not app_key:
+        raise HTTPException(503, "虚拟支付AppKey未配置")
     session_key = store.get_session(openid)
     if not session_key:
         # 401 → 客户端自动静默重登（刷新 session_key）后重试
@@ -501,7 +505,7 @@ def pay_sign(aid: str, request: Request):
         "mode": "short_series_goods",
     }
     body, pay_sig, signature = wechat.virtual_pay_sign(
-        wechat.mp_secret(), session_key, sign_data)
+        app_key, session_key, sign_data)
     return {
         "mode": "short_series_goods",
         "sign_data": body,

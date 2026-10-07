@@ -44,20 +44,27 @@ def code2session(code: str) -> dict:
     return d
 
 
-def virtual_pay_sign(appsecret: str, session_key: str, sign_data: dict) -> tuple[str, str, str]:
-    """wx.requestVirtualPayment 双签名（v0.2.5）。
+def virtual_pay_sign(app_key: str, session_key: str, sign_data: dict | None = None, *,
+                     uri: str = "requestVirtualPayment",
+                     body: str | None = None) -> tuple[str, str, str]:
+    """wx.requestVirtualPayment 双签名（2026-10 官方《签名详解》AppKey 新规格）。
 
-    pay_sig   = HMAC-SHA256(appsecret,   "requestVirtualPayment&" + signData JSON)
-    signature = HMAC-SHA256(session_key, "VirtualPayment&" + signData JSON)
+    pay_sig   = HMAC-SHA256(appKey,      uri + "&" + signData)   ← 旧规格误用 appsecret
+    signature = HMAC-SHA256(session_key, signData)               ← 旧规格多 "VirtualPayment&" 前缀，新规格无
+    appKey 随 env 取沙箱/现网两把（虚拟支付后台-基本配置-基础配置-复制 AppKey）。
     返回 (signData JSON 原文, pay_sig, signature)——客户端必须原样透传 signData 字符串，
-    签名与该字符串逐字节绑定。若真机报 -15005/-15006，按官方《签名详解》核前缀后改此处一处即可。
+    签名与该字符串逐字节绑定。body= 供 /xpay/* 服务端原文直签（官方向量走此入口）。
+    官方向量：appkey="12345" uri=/xpay/query_user_balance
+    body='{"openid": "xxx", "user_ip": "127.0.0.1", "env": 0}'
+    → pay_sig=c37809f2…a4b5 / signature=089d9e8d…2f6c7（tests/test_pay_sign.py §0 锚定）
     """
-    body = json.dumps(sign_data, separators=(",", ":"), ensure_ascii=False)
+    if body is None:
+        body = json.dumps(sign_data or {}, separators=(",", ":"), ensure_ascii=False)
     pay_sig = hmac.new(
-        (appsecret or "").encode(), ("requestVirtualPayment&" + body).encode(), hashlib.sha256
+        (app_key or "").encode(), (uri + "&" + body).encode(), hashlib.sha256
     ).hexdigest()
     signature = hmac.new(
-        (session_key or "").encode(), ("VirtualPayment&" + body).encode(), hashlib.sha256
+        (session_key or "").encode(), body.encode(), hashlib.sha256
     ).hexdigest()
     return body, pay_sig, signature
 
