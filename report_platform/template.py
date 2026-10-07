@@ -6,6 +6,8 @@ frontend-design 规范: 「总包智库」编辑部风——墨蓝×铜金×纸�
 """
 from __future__ import annotations
 
+import html
+
 CSS = """
 :root{--ink:#0F2A43;--ink2:#16385C;--brass:#B08D57;--brass2:#C9A876;
 --paper:#FAF7F2;--text:#2B2B2B;--mut:#7A7264;--line:#E7DFD2;}
@@ -247,14 +249,42 @@ TRACK_JS = """
 """
 
 
-def page(title: str, body: str, sku: str = "", extra_js: str = "") -> str:
+SITE_BASE = "http://yrecepc.cn"          # 已备案正式域名 (F5a-6)
+OG_IMAGE = SITE_BASE + "/assets/og_card.png"
+
+
+def page(title: str, body: str, sku: str = "", extra_js: str = "",
+         desc: str = "", path: str = "", noindex: bool = False) -> str:
+    """desc/path 驱动分享卡 (og:) 与 canonical; noindex 用于 admin 等非买家面.
+
+    title/desc 一律 html.escape(quote=True) — 语料章标题惯例含 ASCII 双引号,
+    不转义则未来某条副题带引号时会截断 meta 属性 (评审 HIGH 项).
+    """
+    e_title = html.escape(title, quote=True)
+    e_desc = html.escape(desc, quote=True)
+    og_url = f"{SITE_BASE}/{path.lstrip('/')}" if path else ""
+    meta = []
+    if desc:
+        meta.append(f'<meta name="description" content="{e_desc}">')
+    meta.append(f'<meta property="og:title" content="{e_title}">')
+    if desc:
+        meta.append(f'<meta property="og:description" content="{e_desc}">')
+    meta.append('<meta property="og:type" content="website">')
+    if og_url:
+        meta.append(f'<meta property="og:url" content="{og_url}">')
+        meta.append(f'<link rel="canonical" href="{og_url}">')
+    meta.append(f'<meta property="og:image" content="{OG_IMAGE}">')
+    if noindex:
+        meta.append('<meta name="robots" content="noindex,nofollow">')
+    meta_html = "\n".join(meta)
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>{title}</title>
+<title>{e_title}</title>
 <meta name="format-detection" content="telephone=no">
+{meta_html}
 <style>{CSS}</style>
 </head>
 <body data-sku="{sku}">

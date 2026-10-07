@@ -155,7 +155,10 @@ def build_catalog(cfg: dict, content: Path) -> str:
 <footer><div class="serif">总包智库</div>研究报告发布平台<br>
 © 2026 · {time.strftime('%Y-%m-%d')} 构建</footer>
 <div class="pad-bottom"></div></div>"""
-    return page("总包智库 — 工程总承包研究报告平台", body)
+    desc = (f"{len(reps)} 份在售研究报告 · 成稿 {total_w:.0f} 万字 · "
+            "全部免费试读 · 不满意按档退款")
+    return page("总包智库 — 工程总承包研究报告平台", body,
+                desc=desc, path="index.html")
 
 
 def build_report(r: dict, cfg: dict, content: Path) -> str:
@@ -245,7 +248,10 @@ def build_report(r: dict, cfg: dict, content: Path) -> str:
 <span class="o">行业同深度咨询 5 万+</span></div>
 <button class="btn" id="buyBtn">立即购买</button></div>
 </div>"""
-    return page(f"{r['title']} — 总包智库", body, r["sku"])
+    desc = (f"{r['subtitle']} · 完整版 {r['words_wan']} 万字 · "
+            f"免费试读 · ¥{r['price']:,}")
+    return page(f"{r['title']} — 总包智库", body, r["sku"],
+                desc=desc, path=f"{r['sku'].lower()}.html")
 
 
 def build_sample(r: dict, cfg: dict, content: Path) -> str:
@@ -261,7 +267,10 @@ def build_sample(r: dict, cfg: dict, content: Path) -> str:
 {len(r['chapters'])} 章 · 不满意按档退款</p>
 <a class="btn" href="{back}#buy" data-ev="cta_buy">解锁完整版 ¥{r['price']:,} →</a></div>
 </div><div class="pad-bottom"></div>"""
-    return page(f"试读 · {r['title']}", body, r["sku"])
+    desc = (f"免费试读 · {r['subtitle']} · 完整版 {r['words_wan']} 万字"
+            f" · 不满意按档退款")
+    return page(f"试读 · {r['title']}", body, r["sku"],
+                desc=desc, path=f"sample_{r['sku'].lower()}.html")
 
 
 def build_admin(cfg: dict) -> str:
@@ -286,7 +295,7 @@ fetch('/api/stats?token='+encodeURIComponent(tk)).then(function(r){return r.json
  '</td><td>'+o.sku+'</td><td>'+o.order_no+'</td><td>'+o.contact+'</td><td>'+o.note+
  '</td><td>'+o.state+'</td></tr>';});});})();
 </script>"""
-    return page("数据台 — 总包智库", body)
+    return page("数据台 — 总包智库", body, noindex=True)   # 不带 path: noindex 页不发 canonical
 
 
 READER_JS = """
@@ -409,8 +418,10 @@ def build_reader(cfg: dict) -> str:
 </section>
 </div></div><div class="pad-bottom"></div>"""
     r = cfg["reports"][0]
-    return page(f"读者通道 — 总包智库", body, r["sku"],
-                extra_js=READER_JS)
+    return page("读者通道 — 总包智库", body, r["sku"],
+                extra_js=READER_JS,
+                desc="已购读者凭订单号解锁完整版阅读与 PDF 下载 · 总包智库",
+                path="reader.html")
 
 
 
@@ -436,10 +447,24 @@ def build(content: Path, out: Path) -> dict:
         src = content / f"qr_{name}.png"
         if src.is_file():
             (out / "assets" / f"qr_{name}.png").write_bytes(src.read_bytes())
+    og = content / "og_card.png"
+    if og.is_file():
+        (out / "assets" / "og_card.png").write_bytes(og.read_bytes())
+    # 下架 SKU 的残留页清场 (评审 MEDIUM: 覆盖式解压永不删旧页, 下架品会带购买钮永挂线上)
+    expected = {"index.html", "admin.html", "reader.html"}
+    for r in cfg["reports"]:
+        if r.get("coming_soon"):
+            continue
+        expected |= {f"{r['sku'].lower()}.html",
+                     f"sample_{r['sku'].lower()}.html"}
+    for f in out.glob("*.html"):
+        if f.name not in expected:
+            f.unlink()
     pages = sorted(p.name for p in out.glob("*.html"))
     return {"pages": pages, "reports": len(cfg["reports"]),
             "qr": [n for n in ("wechat", "alipay")
                    if (out / "assets" / f"qr_{n}.png").is_file()],
+            "og_card": (out / "assets" / "og_card.png").is_file(),
             "built": time.strftime("%Y-%m-%d %H:%M")}
 
 
@@ -450,6 +475,10 @@ def _main(argv: list[str]) -> int:
     ap.add_argument("--out", default=str(root / "site"))
     ns = ap.parse_args(argv)
     r = build(Path(ns.content), Path(ns.out))
+    if not r["og_card"]:
+        print("[site] ! content/og_card.png 缺席 — 全站 og:image 将 404;"
+              " 先跑 tools/gen_og_card.py 再构建 (硬门, 评审 MEDIUM)")
+        return 1
     print(f"[site] pages={r['pages']} reports={r['reports']} qr={r['qr']}")
     return 0
 

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import ast
 import json
+import re
 import struct
 import sys
 import tempfile
@@ -18,6 +19,19 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import build_site as BS   # noqa: E402
+import template as TP     # noqa: E402
+
+
+def _no_foreign_http(html: str) -> None:
+    """绝对 URL 门禁 (F5a-6 域名化后): 只许 yrecepc.cn, 禁 IP/旧域/外链/
+    前缀仿冒 (yrecepc.cn.evil.com) / 大小写绕过 / 协议相对 URL (评审 LOW)."""
+    base = TP.SITE_BASE.lower()
+    urls = re.findall(r'https?://[^"\'<> ]+', html, re.IGNORECASE)
+    bad = [u for u in urls
+           if not (u.lower() == base or u.lower().startswith(base + "/"))]
+    assert not bad, f"非法绝对 URL: {bad}"
+    rel = re.findall(r'["\'(]//[^\s"\'<>)]+', html)
+    assert not rel, f"协议相对 URL: {rel}"
 
 
 def _tiny_png() -> bytes:
@@ -44,7 +58,7 @@ def _content(tmp: Path) -> Path:
          "chapters": [{"id": "ch1", "title": "第一章 甲", "desc": "定位甲"},
                       {"id": "ch2", "title": "第二章 乙", "desc": "定位乙"}]},
         {"sku": "B1", "cat": "ent", "cat_name": "企业全景洞察",
-         "title": "《批量报告》", "subtitle": "3 章拆解某企业的打法",
+         "title": "《批量报告》", "subtitle": "3 章拆解某企业的\"打法\"",
          "price": 698, "price_label": "电子版 ¥698", "words_wan": 8,
          "intro_lede": "批量引导语", "intro": "批量正文介绍",
          "badges": [{"k": "万字成稿", "v": "8"}, {"k": "章", "v": "3"}],
@@ -89,7 +103,8 @@ def test_02_catalog_essentials():
                 "f1.html", "b1.html", "在售研究报告", "蓝皮书预售" if "蓝皮书" in html else "预售",
                 "退款", "免费试读", "详情"):
         assert key in html, key
-    assert "cdn" not in html.lower() and "http://" not in html   # 零外链
+    assert "cdn" not in html.lower()
+    _no_foreign_http(html)                                       # 只许本域绝对 URL
 
 
 # ------------------------------------------------ ③ 详情页
@@ -107,7 +122,8 @@ def test_03_report_pages():
     assert '<details class="toc"' not in bat             # 不出现手风琴行
     assert "第一章 丙" in bat and "批量引导语" in bat
     assert "来源清单" not in bat                          # 批量无附录
-    assert "http://" not in flag and "http://" not in bat
+    _no_foreign_http(flag)
+    _no_foreign_http(bat)
 
 
 # ------------------------------------------------ ④ sample 钩子
@@ -171,7 +187,75 @@ def test_07b_reader_page():
                 "fbForm", "退款政策", "质量问题", "改进建议", "fbChapter",
                 "full.pdf", "feedback_sent"):
         assert key in html, key
-    assert "cdn" not in html.lower() and "http://" not in html   # 零外链
+    assert "cdn" not in html.lower()
+    _no_foreign_http(html)                                       # 只许本域绝对 URL
+
+
+# ------------------------------------------------ ⑨ 分享卡 og: 元标签
+def test_09_og_cards():
+    tmp = Path(tempfile.mkdtemp(prefix="rp_test_"))
+    c = _content(tmp)
+    cfg = json.loads((c / "report.json").read_text(encoding="utf-8"))
+    base = TP.SITE_BASE
+
+    cat = BS.build_catalog(cfg, c)
+    assert f'<meta property="og:url" content="{base}/index.html">' in cat
+    assert f'<link rel="canonical" href="{base}/index.html">' in cat
+    assert 'property="og:image"' in cat and TP.OG_IMAGE in cat
+    assert 'name="description"' in cat and "免费试读" in cat
+    assert 'og:type" content="website' in cat
+
+    rep = BS.build_report(cfg["reports"][0], cfg, c)
+    assert f'content="{base}/f1.html">' in rep
+    assert 'property="og:title" content="《旗舰报告》 — 总包智库"' in rep
+    assert "副题 · 完整版 10 万字" in rep                     # desc 组装
+
+    smp = BS.build_sample(cfg["reports"][1], cfg, c)
+    assert f'content="{base}/sample_b1.html">' in smp
+    assert "免费试读 · " in smp
+
+    rd = BS.build_reader(cfg)
+    assert f'content="{base}/reader.html">' in rd
+
+    adm = BS.build_admin(cfg)
+    assert 'name="robots" content="noindex,nofollow"' in adm  # admin 不进卡不进索引
+    assert 'rel="canonical"' not in adm                       # noindex 页不发 canonical
+    assert 'name="description"' not in adm                    # 空 desc 不发空标签
+
+    # 引号转义 (评审 HIGH): 语料惯例含 ASCII 双引号, 裸引号会截断 meta 属性
+    repb = BS.build_report(cfg["reports"][1], cfg, c)          # B1 副题带"打法"
+    m = re.search(r'property="og:description" content="([^"]*)"', repb)
+    assert m and "&quot;打法&quot;" in m.group(1), m and m.group(1)
+    hq = TP.page('《X》"聚焦"一线', "b", desc='a"b', path="x.html")
+    assert '<meta property="og:title" content="《X》&quot;聚焦&quot;一线">' in hq
+    assert "<title>《X》&quot;聚焦&quot;一线</title>" in hq
+
+    for h in (cat, rep, smp, rd, adm):
+        _no_foreign_http(h)
+        assert TP.OG_IMAGE in h                                  # 全页带卡面图
+
+
+# ------------------------------------------------ ⑨b og_card 资产复制
+def test_09b_og_card_asset():
+    tmp = Path(tempfile.mkdtemp(prefix="rp_test_"))
+    c = _content(tmp)
+    png = _tiny_png()
+    (c / "og_card.png").write_bytes(png)
+    out = tmp / "site"
+    r = BS.build(c, out)
+    assert r["og_card"] is True
+    assert (out / "assets" / "og_card.png").read_bytes() == png
+
+
+# ------------------------------------------------ ⑦c 下架残留页清场
+def test_07c_stale_pages_purged():
+    tmp = Path(tempfile.mkdtemp(prefix="rp_test_"))
+    c = _content(tmp)
+    out = tmp / "site"
+    out.mkdir(parents=True)
+    (out / "zz_retired.html").write_text("stale", encoding="utf-8")
+    BS.build(c, out)
+    assert not (out / "zz_retired.html").exists()            # 生成集之外的 html 必被清
 
 
 # ------------------------------------------------ ⑧ ast 零网络

@@ -23,7 +23,9 @@ from pathlib import Path
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, r"E:\AI-Station\tools")
+sys.path.insert(0, str(ROOT))
 from ecs_qw import run  # noqa: E402
+from template import SITE_BASE  # noqa: E402  域名唯一属主在 template
 
 REGION = "cn-heyuan"
 INSTANCE = "i-f8za6qhv365cwhti5y35"
@@ -31,10 +33,12 @@ PORT = 8885
 CHUNK = 12000
 
 
-def _pack() -> bytes:
+def _pack(site_only: bool = False) -> bytes:
     buf = io.BytesIO()
+    rels = ("site", "template.py") if site_only else (
+        "site", "server.py", "pay.py", "content", "template.py")
     with tarfile.open(fileobj=buf, mode="w:gz") as tf:
-        for rel in ("site", "server.py", "pay.py", "content", "template.py"):
+        for rel in rels:
             p = ROOT / rel
             if p.is_file():
                 tf.add(p, arcname=f"report_platform/{rel}")
@@ -86,15 +90,16 @@ def sg_open() -> str:
     return f"sg {sgid} opened {PORT}"
 
 
-def main(check_only: bool) -> int:
-    blob = _pack()
+def main(check_only: bool, site_only: bool = False) -> int:
+    blob = _pack(site_only)
     b64 = base64.b64encode(blob).decode("ascii")
     print(f"[dep] pack {len(blob)}B → b64 {len(b64)} chars, "
-          f"{(len(b64) + CHUNK - 1) // CHUNK} chunks")
+          f"{(len(b64) + CHUNK - 1) // CHUNK} chunks"
+          + (" (site-only)" if site_only else ""))
     if check_only:
         return 0
     tok = _token()
-    if not tok:
+    if not tok and not site_only:
         print("[dep] ! secret.ini 无 admin_token — admin 台将不可用 (站照常)")
     ec, out = run("mkdir -p /www /tmp/rp_in && rm -f /tmp/rp_in/rp.b64 && "
                   "echo ready")
@@ -109,6 +114,32 @@ def main(check_only: bool) -> int:
             return 1
     print(f"[dep] {((len(b64) + CHUNK - 1) // CHUNK)} 片上传 "
           f"{time.time() - t0:.0f}s")
+    if site_only:
+        # 暂存-验证-换入 (评审 MEDIUM): 解压进 site_new → 验证过了才 mv 换入;
+        # 验证失败=线上仍是旧版; 同目录 mv=原子换, 不再边解压边服务.
+        swap = run(
+            "set -e\n"
+            "base64 -d /tmp/rp_in/rp.b64 > /tmp/rp_in/rp.tgz\n"
+            "cd /www/report_platform\n"
+            "rm -rf site_new && mkdir site_new\n"
+            "tar -xzf /tmp/rp_in/rp.tgz -C site_new --strip-components=2"
+            " report_platform/site\n"
+            "tar -xzf /tmp/rp_in/rp.tgz -C . --strip-components=1"
+            " report_platform/template.py\n"
+            "grep -c 'property=\"og:url\"' site_new/index.html\n"
+            "ls site_new/assets/og_card.png\n"
+            "rm -rf site_old\n"
+            "[ ! -d site ] || mv site site_old\n"
+            "mv site_new site\n"
+            "rm -rf site_old /tmp/rp_in\n"
+            f"curl -s -o /dev/null -w 'local:%{{http_code}}'"
+            f" http://127.0.0.1:{PORT}/\n")
+        print(f"[dep] site-only exit={swap[0]}\n{swap[1].strip()}")
+        if swap[0] != 0:
+            print("[dep] ! 验证失败 — 未换入, 线上仍是旧版; 新包留 /tmp/rp_in 待查")
+            return 1
+        print(f"[dep] 公网验收: {SITE_BASE}/ (或 http://47.120.43.20:{PORT}/)")
+        return 0
     setup = f"""
 set -e
 base64 -d /tmp/rp_in/rp.b64 > /tmp/rp_in/rp.tgz
@@ -149,4 +180,7 @@ curl -s -o /dev/null -w 'local:%{{http_code}}' http://127.0.0.1:{PORT}/
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--check-only", action="store_true")
-    sys.exit(main(ap.parse_args().check_only))
+    ap.add_argument("--site-only", action="store_true",
+                    help="只发 site/+template.py 增量 (静态站, 免重启)")
+    ns = ap.parse_args()
+    sys.exit(main(ns.check_only, ns.site_only))
