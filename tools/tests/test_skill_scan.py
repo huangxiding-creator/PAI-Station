@@ -296,3 +296,89 @@ def test_url_host_charset_stops_at_cjk(tmp_path):
     r2 = _scan(bad, tmp_path)
     assert [(f["severity"], f["rule"]) for f in r2["findings"]] == [
         ("MEDIUM", "domain")]
+
+
+# ------------------------------------------------ 1008 HIGH 豁免 (三重锚定)
+
+def _write_allowlist(tmp_path: Path, exemptions: list) -> Path:
+    """tmp 白名单: 域名面收窄不影响豁免测试, high_exemptions 按 Still 传入."""
+    p = tmp_path / "allow.json"
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(
+        {"domains": ["good.example"], "high_exemptions": exemptions},
+        ensure_ascii=False), encoding="utf-8")
+    return p
+
+
+def test_high_exemption_suppresses(tmp_path):
+    """file+rule+anchor 三重命中 → HIGH 压制."""
+    skill = tmp_path / "exem"
+    _write(skill, "SKILL.md", GOOD_FM)
+    _write(skill, "scripts/lib/x.py",
+           'TMPD=$(mktemp -d)\nrun\nrm -rf "$TMPD"\n')
+    al = _write_allowlist(tmp_path, [
+        {"file": "scripts/lib/x.py", "rule": "rm-rf",
+         "anchor": r"TMPD=\$\(mktemp"}])
+    result = _scan(skill, tmp_path, allowlist_path=al)
+    assert [f for f in result["findings"] if f["rule"] == "rm-rf"] == []
+
+
+def test_high_exemption_anchor_missing_keeps_finding(tmp_path):
+    """锚不在文件 (上游改码移走 mktemp 绑定) → 豁免自动失效, HIGH 复报."""
+    skill = tmp_path / "exem2"
+    _write(skill, "SKILL.md", GOOD_FM)
+    _write(skill, "scripts/lib/x.py", 'Y = "rm -rf /tmp/x"\n')  # 无 mktemp 锚
+    al = _write_allowlist(tmp_path, [
+        {"file": "scripts/lib/x.py", "rule": "rm-rf",
+         "anchor": r"TMPD=\$\(mktemp"}])
+    result = _scan(skill, tmp_path, allowlist_path=al)
+    assert [(f["severity"], f["rule"]) for f in result["findings"]] == [
+        ("HIGH", "rm-rf")]
+
+
+def test_high_exemption_rule_mismatch_keeps_finding(tmp_path):
+    """规则名不匹配 → 不压制 (豁免不跨规则泄漏)."""
+    skill = tmp_path / "exem3"
+    _write(skill, "SKILL.md", GOOD_FM)
+    _write(skill, "scripts/lib/x.py",
+           'X = "TMPD=$(mktemp)"\nY = "rm -rf $TMPD"\n')
+    al = _write_allowlist(tmp_path, [
+        {"file": "scripts/lib/x.py", "rule": "eval",
+         "anchor": r"TMPD=\$\(mktemp"}])
+    result = _scan(skill, tmp_path, allowlist_path=al)
+    assert [(f["severity"], f["rule"]) for f in result["findings"]] == [
+        ("HIGH", "rm-rf")]
+
+
+def test_high_exemption_syntax_false_positive(tmp_path):
+    """syntax 伪报可豁免 (宿主 3.11 语法面对 3.12+ 语法); 真语法错不豁免."""
+    skill = tmp_path / "exem4"
+    _write(skill, "SKILL.md", GOOD_FM)
+    _write(skill, "scripts/lib/hn.py", "def broken(:\n    pass\n")
+    al = _write_allowlist(tmp_path, [
+        {"file": "scripts/lib/hn.py", "rule": "syntax",
+         "anchor": r"def broken\("}])
+    result = _scan(skill, tmp_path, allowlist_path=al)
+    assert [f for f in result["findings"] if f["rule"] == "syntax"] == []
+
+
+def test_exemption_change_invalidates_cache(tmp_path):
+    """豁免表变动 → 指纹变 → 不吃旧缓存还原 finding (沉默不得跨名单回滚)."""
+    import os
+    skill = tmp_path / "exem5"
+    _write(skill, "SKILL.md", GOOD_FM)
+    _write(skill, "scripts/lib/x.py",
+           'X = "TMPD=$(mktemp)"\nY = "rm -rf $TMPD"\n')
+    cache = tmp_path / ".skill_scan_cache.json"
+    al_none = _write_allowlist(tmp_path / "a", [])
+    r1 = skill_scan.scan_skill(skill, cache_path=cache,
+                               allowlist_path=al_none)
+    assert [(f["severity"], f["rule"]) for f in r1["findings"]] == [
+        ("HIGH", "rm-rf")]
+    al_on = _write_allowlist(tmp_path / "b", [
+        {"file": "scripts/lib/x.py", "rule": "rm-rf",
+         "anchor": r"TMPD=\$\(mktemp"}])
+    r2 = skill_scan.scan_skill(skill, cache_path=cache,
+                               allowlist_path=al_on)
+    assert r2["cache_hit"] is False
+    assert [f for f in r2["findings"] if f["rule"] == "rm-rf"] == []

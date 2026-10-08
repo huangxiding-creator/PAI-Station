@@ -11,5 +11,61 @@
     "skills.sh",
     "claude.ai",
     "anthropic.com"
+  ],
+  "high_exemptions": [
+    {
+      "file": "scripts/lib/youtube_yt.py",
+      "rule": "rm-rf",
+      "anchor": "TMPD=\\$\\(mktemp -d\\)",
+      "note": "last30days 上游(1008裁决): ssh 远程 yt-dlp 字幕腿, TMPD=mktemp -d 自建自清临时目录, 不触用户文件系统; 上游移除 mktemp 绑定即锚失效自动复报"
+    },
+    {
+      "file": "scripts/lib/hackernews.py",
+      "rule": "syntax",
+      "anchor": "urlencode\\(\\{",
+      "note": "1008裁决: PEP 701 多行 f-string (3.12+语法), 扫描器宿主 3.11 语法面伪报; Python 3.13.1 ast.parse 实证 OK; 上游引擎硬门>=3.12. 上游改回 3.11 兼容写法即锚失效复报"
+    },
+    {
+      "file": "references/grok-bot-x.md",
+      "rule": "rm-rf",
+      "anchor": "X_POSTS_DIR=\\$\\(mktemp -d",
+      "note": "1008裁决: 文档安全范式演示 (mktemp 自建+trap EXIT 自清, 防攻击者文本逃逸 heredoc), 非执行代码"
+    },
+    {
+      "file": "references/setup-wizard.md",
+      "rule": "curl-bash",
+      "anchor": "x\\.ai/cli/install\\.sh",
+      "note": "1008裁决: 人类操作指引文本 (Grok CLI 安装命令), 技能运行时不执行"
+    },
+    {
+      "file": "scripts/lib/backends.py",
+      "rule": "curl-bash",
+      "anchor": "x\\.ai/cli/install\\.sh",
+      "note": "1008裁决: 报错提示字符串, 非执行路径"
+    },
+    {
+      "file": "scripts/lib/grok_x.py",
+      "rule": "curl-bash",
+      "anchor": "x\\.ai/cli/install\\.sh",
+      "note": "1008裁决: 模块 docstring 安装指引, 非执行路径"
+    },
+    {
+      "file": "scripts/lib/health.py",
+      "rule": "curl-bash",
+      "anchor": "x\\.ai/cli/install\\.sh",
+      "note": "1008裁决: 报错提示字符串(两处), 非执行路径"
+    },
+    {
+      "file": "scripts/lib/prescriptions.py",
+      "rule": "curl-bash",
+      "anchor": "x\\.ai/cli/install\\.sh",
+      "note": "1008裁决: 报错提示字符串, 非执行路径"
+    },
+    {
+      "file": "scripts/lib/render.py",
+      "rule": "syntax",
+      "anchor": "len\\(hashes\\)",
+      "note": "1008裁决: PEP 701 f-string 表达式内反斜杠 (3.12+语法), 3.13 ast.parse 实证 OK, 宿主 3.11 伪报"
+    }
   ]
 }

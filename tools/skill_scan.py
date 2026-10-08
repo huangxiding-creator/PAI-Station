@@ -99,6 +99,40 @@ def load_allowlist(path: Path | None = None) -> list[str]:
     return list(DEFAULT_ALLOWLIST)
 
 
+def load_high_exemptions(path: Path | None = None) -> tuple[tuple[str, str, re.Pattern], ...]:
+    """1008 增: HIGH 级人工裁决豁免表 (file+rule+anchor 三重锚定).
+
+    语义: 命中行所在文件的 rel 以 file 结尾, 规则名全等, 且 anchor 正则在该
+    文件全文命中 → 该 finding 压制. anchor 不匹配 (上游改代码移走锚) 即自动
+    失效重新报警 — 豁免永不因「曾经裁决过」而永久沉默. 格式损坏=空表 (fail-closed).
+    """
+    p = Path(path) if path is not None else ALLOWLIST_PATH
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return ()
+    raw = data.get("high_exemptions") if isinstance(data, dict) else None
+    out: list[tuple[str, str, re.Pattern]] = []
+    if isinstance(raw, list):
+        for item in raw:
+            if (isinstance(item, dict) and isinstance(item.get("file"), str)
+                    and isinstance(item.get("rule"), str)
+                    and isinstance(item.get("anchor"), str)):
+                try:
+                    out.append((item["file"], item["rule"],
+                                re.compile(item["anchor"])))
+                except re.error:
+                    continue
+    return tuple(out)
+
+
+def _high_exempt(rel: str, rule: str, text: str,
+                 exem: tuple[tuple[str, str, re.Pattern], ...]) -> bool:
+    """该 HIGH finding 是否被三重锚定的豁免表压制."""
+    return any(rel.endswith(f) and rule == r and a.search(text)
+               for f, r, a in exem)
+
+
 def _finding(sev: str, rule: str, rel: str, line: int | None,
              detail: str) -> dict:
     return {"severity": sev, "rule": rule, "file": rel, "line": line,
@@ -127,6 +161,16 @@ def _cache_key(raw: bytes, rel: str) -> str:
 def _allowlist_hash(allow: tuple[str, ...]) -> str:
     """B2: 白名单指纹 — 名单一变缓存全失效, 不再按旧名单还原 domain findings."""
     payload = json.dumps(allow, sort_keys=True, ensure_ascii=False)
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def _fingerprint(allow: tuple[str, ...],
+                 exem: tuple[tuple[str, str, re.Pattern], ...]) -> str:
+    """1008: 域名白名单 + HIGH 豁免表联合指纹 — 任一变动缓存全失效
+    (豁免压制了 finding, 名单回滚时不得继续吃旧缓存的沉默)."""
+    exem_raw = sorted((f, r, a.pattern) for f, r, a in exem)
+    payload = json.dumps([sorted(allow), exem_raw], sort_keys=True,
+                         ensure_ascii=False)
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
@@ -190,12 +234,16 @@ def _frontmatter_gaps(text: str) -> list[dict]:
     ]
 
 
-def _syntax_gap(text: str, rel: str) -> list[dict]:
-    """.py 必须 ast.parse 通过 (语法错=HIGH)."""
+def _syntax_gap(text: str, rel: str,
+                exem: tuple[tuple[str, str, re.Pattern], ...] = ()) -> list[dict]:
+    """.py 必须 ast.parse 通过 (语法错=HIGH, 三重锚定豁免可压制 —
+    1008 实战: 宿主 3.11 语法面对 3.12+ 语法的伪报)."""
     try:
         ast.parse(text)
     except (SyntaxError, ValueError) as e:
         line = getattr(e, "lineno", None) or 1
+        if _high_exempt(rel, "syntax", text, exem):
+            return []
         return [_finding("HIGH", "syntax", rel, line, type(e).__name__)]
     return []
 
@@ -205,12 +253,13 @@ def _host_allowed(host: str, allow: tuple[str, ...]) -> bool:
     return any(h == d or h.endswith("." + d) for d in allow)
 
 
-def _scan_text(text: str, rel: str, allow: tuple[str, ...]) -> list[dict]:
-    """禁模式逐行扫描 (HIGH) + 出站域名提取 (白名单外=MEDIUM)."""
+def _scan_text(text: str, rel: str, allow: tuple[str, ...],
+               exem: tuple[tuple[str, str, re.Pattern], ...] = ()) -> list[dict]:
+    """禁模式逐行扫描 (HIGH, 三重锚定豁免可压制) + 出站域名 (白名单外=MEDIUM)."""
     findings = []
     for lineno, line in enumerate(text.splitlines(), 1):
         for rule, rx in DANGER_RULES:
-            if rx.search(line):
+            if rx.search(line) and not _high_exempt(rel, rule, text, exem):
                 findings.append(_finding(
                     "HIGH", rule, rel, lineno, line.strip()))
     for host in dict.fromkeys(h.lower() for h in URL_RE.findall(text)):
@@ -219,18 +268,19 @@ def _scan_text(text: str, rel: str, allow: tuple[str, ...]) -> list[dict]:
     return findings
 
 
-def _scan_bytes(raw: bytes, rel: str, allow: tuple[str, ...]) -> list[dict]:
+def _scan_bytes(raw: bytes, rel: str, allow: tuple[str, ...],
+                exem: tuple[tuple[str, str, re.Pattern], ...] = ()) -> list[dict]:
     """单文件全量扫描: frontmatter(仅 SKILL.md) + 语法(仅 .py)
-    + npm-hook(仅 package.json) + 禁模式 + 域名."""
+    + npm-hook(仅 package.json) + 禁模式(豁免可压制) + 域名."""
     text = raw.decode("utf-8", errors="replace")
     findings: list[dict] = []
     if rel == "SKILL.md":
         findings.extend(_frontmatter_gaps(text))
     if rel.endswith(".py"):
-        findings.extend(_syntax_gap(text, rel))
+        findings.extend(_syntax_gap(text, rel, exem))
     if _is_package_json(rel):
         findings.extend(_npm_hook_gaps(text, rel))
-    findings.extend(_scan_text(text, rel, allow))
+    findings.extend(_scan_text(text, rel, allow, exem))
     return findings
 
 
@@ -272,7 +322,8 @@ def scan_skill(skill_dir, *, cache_path=None, use_cache=True,
         raise FileNotFoundError(f"目录不存在: {root}")
     cpath = Path(cache_path) if cache_path is not None else DEFAULT_CACHE_PATH
     allow = tuple(load_allowlist(allowlist_path))
-    allow_hash = _allowlist_hash(allow)
+    exem = load_high_exemptions(allowlist_path)
+    allow_hash = _fingerprint(allow, exem)
     files = _iter_files(root)
     cache = _load_cache(cpath, allow_hash) if use_cache else {}
     now = time.time()
@@ -297,7 +348,7 @@ def scan_skill(skill_dir, *, cache_path=None, use_cache=True,
             hits += 1
             entries[key] = entry  # 命中保留原 ts (30 天自原扫描起算)
         else:
-            file_findings = _scan_bytes(raw, rel, allow)
+            file_findings = _scan_bytes(raw, rel, allow, exem)
             entries[key] = {
                 "ts": now,  # 存缓存剥掉 file, 还原时按当前 rel 回填
                 "findings": [{k: v for k, v in f.items() if k != "file"}
