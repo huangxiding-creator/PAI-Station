@@ -214,7 +214,8 @@ TRACK_JS = """
  var src=new URLSearchParams(location.search).get('src')||document.referrer||'';
  function t(e,x){try{fetch('/api/track',{method:'POST',headers:{'Content-Type':'application/json'},
   body:JSON.stringify({event:e,sku:sku,extra:(x||src).slice(0,120)})});}catch(_){}}
- t('visit');
+ /* 1008 漏斗去伪: visit 每会话一次 (刷新不再+1, 修双重计数伪影) */
+ try{if(!sessionStorage.getItem('v_'+sku)){sessionStorage.setItem('v_'+sku,'1');t('visit');}}catch(_){t('visit');}
  var seen={};window.addEventListener('scroll',function(){
   var d=document.documentElement;var p=(window.scrollY+d.scrollTop)/
   (d.scrollHeight-window.innerHeight)*100;
@@ -223,8 +224,10 @@ TRACK_JS = """
  document.querySelectorAll('[data-ev]').forEach(function(el){
   el.addEventListener('click',function(){t(el.getAttribute('data-ev'));});});
  var buy=document.getElementById('buyBtn');
+ var _buySent=false;
  if(buy){buy.addEventListener('click',function(){
-  t('click_buy');
+  /* 1008 去伪: 购买意图事件每页只计一次, 滚动行为不受影响 */
+  if(!_buySent){_buySent=true;t('click_buy');}
   var p=document.getElementById('buyPanel');
   if(p){p.scrollIntoView({behavior:'smooth'});}
   var o=document.getElementById('orderNo');
