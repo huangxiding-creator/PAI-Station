@@ -81,7 +81,7 @@ const products = [
     name: '总包智库',
     eyebrow: 'ZONGBA ZHIKU · 四库全通 · LADDER 03',
     title: '总包智库',
-    en: '三年语料沉淀的结构化资产层',
+    en: '十年知识沉淀的结构化资产层',
     posHead: '价值阶梯第三级，越挖越厚。',
     pos: '工程行业的四座金库——每一座都由 7×24 管线三年攒成，别人想抄，先补三年课。',
     features: [
