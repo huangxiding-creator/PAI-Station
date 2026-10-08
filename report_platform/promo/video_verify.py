@@ -7,8 +7,13 @@
 
 用法 (We-AIPO venv python, playwright 在那边):
   E:/CPOPC/We-AIPO/.venv/Scripts/python.exe -X utf8 promo/video_verify.py \
-      --title "全国唯一能总承包整座核电站的公司，凭什么？"
+      --key "设计+施工合并了，为什么"   (描述前缀, 1008 实锤列表只渲染描述)
+  或 --title "标题" (兼容旧用法, 但标题不出现在列表 — 会永远 miss)
 退出码: 0=已发布命中 1=未命中 2=登录态失效
+
+1008 根因实锤: 发表管理列表行的 .post-title 渲染的是视频**描述**文案,
+不是发布页的标题 → 按标题前12字搜索永远 miss → r12 误判失败 → r13
+重复发布. 判定键一律用描述前缀 (--key).
 """
 from __future__ import annotations
 
@@ -29,9 +34,12 @@ LIST_URL = "https://channels.weixin.qq.com/platform/post/list"
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--title", required=True, help="完整标题 (取前12字命中)")
+    ap.add_argument("--key", help="列表判定键 (描述前缀, 优先)")
+    ap.add_argument("--title", help="标题 (兼容旧参数; 列表不渲染标题)")
     ns = ap.parse_args()
-    key = ns.title.strip()[:12]
+    if not ns.key and not ns.title:
+        ap.error("--key (描述前缀) 或 --title 至少给一个")
+    key = (ns.key or ns.title).strip()[:12]
 
     sys.path.insert(0, str(VENDOR_ROOT))
     mod_path = VENDOR_ROOT / "uploader" / "tencent_uploader" / "main.py"
@@ -56,6 +64,12 @@ def main() -> int:
                     or await up.page.locator(".login-qrcode").count() > 0):
                 print(f"[verify] 登录态失效 (url={up.page.url[:60]}) — 须重新导出")
                 return 2
+            shot = PROMO / "videos" / "verify_list.png"
+            try:
+                await up.page.screenshot(path=str(shot), full_page=False)
+                print(f"[verify] 截图: {shot.name}")
+            except Exception as _se:
+                print(f"[verify] 截图失败(忽略): {_se}")
             hit_frames: list[str] = []
             for fr in up.page.frames:
                 try:

@@ -217,24 +217,49 @@ def main() -> int:
                 return None, None
 
             async def _fill_desc(self, text: str) -> None:
-                """v3: 补填描述 (r4 取证: 可选字段全空+三键全灰禁用 —
-                描述/贴图疑为就绪门; emitter 实证其流程显式填描述)."""
+                """v4 (1008 r7 取证: 发布页描述框是 contenteditable div,
+                placeholder「添加描述」— v3 的 textarea 探针全空 → r7 描述
+                空发, 疑风控贡献因素). 探针梯: 带描述 placeholder 的
+                contenteditable → 任意可见 contenteditable (标题是 input,
+                不会误中) → 老 textarea 兜底; 填后回读 innerText 验证,
+                不符换下一探针, 绝不假绿."""
                 if not text:
                     return
                 for fr in self.page.frames:
-                    for sel in ("textarea[placeholder*='描述']",
-                                ".input-editor",
-                                "textarea[placeholder*='介绍']"):
+                    for sel in (
+                            "div[contenteditable='true']"
+                            "[data-placeholder*='描述']",
+                            "div[contenteditable='true']"
+                            "[placeholder*='描述']",
+                            "[contenteditable='true']"
+                            "[aria-label*='描述']",
+                            "div[contenteditable='true']",
+                            ".input-editor",
+                            "textarea[placeholder*='描述']"):
                         try:
                             loc = fr.locator(sel).first
-                            if await loc.count() > 0 and await loc.is_visible():
-                                cur = (await loc.input_value() or "").strip()
-                                if not cur:
-                                    await loc.fill(text)
-                                    print(f"[vup] P3: 已补填描述 {len(text)}字 ✓")
-                                    return
+                            if (await loc.count() == 0
+                                    or not await loc.is_visible()):
+                                continue
+                            cur = (await loc.inner_text() or "").strip()
+                            if cur:          # 已有内容, 不覆盖
+                                continue
+                            await loc.click(timeout=3000)
+                            try:
+                                await loc.fill(text)
+                            except Exception:
+                                await self.page.keyboard.type(text)
+                            await asyncio.sleep(0.5)
+                            got = (await loc.inner_text() or "").strip()
+                            if text[:8] in got:
+                                print(f"[vup] P3: 已补填描述 {len(text)}字 ✓ "
+                                      f"({sel[:44]})")
+                                return
+                            print(f"[vup] P3: {sel[:44]} 回读不符 "
+                                  f"({got[:20]!r}) — 换下探针")
                         except Exception:
                             continue
+                print("[vup] P3: 描述框探针梯全空 — 未填上 (如实上报)")
 
             async def _wait_publish_ready(
                     self, timeout_s: float = 90) -> tuple[bool, str]:
@@ -288,16 +313,115 @@ def main() -> int:
                         await self.page.keyboard.press("Escape")
                     await asyncio.sleep(1)
 
+            async def _rmouse_click(self, loc) -> bool:
+                """真鼠标点击 (emitter _iclick_el 移植: CDP Input 事件;
+                Vue handler 不认无 isTrusted 的 DOM click. Playwright 的
+                page.mouse 即 CDP Input.dispatchMouseEvent, 且 bounding_box
+                已含 iframe 偏移, 与 _iclick_el 的 oX/oY 补偿等价)."""
+                try:
+                    await loc.scroll_into_view_if_needed(timeout=4000)
+                except Exception:
+                    pass
+                try:
+                    bb = await loc.bounding_box()
+                except Exception:
+                    bb = None
+                if bb and bb["width"] > 0 and bb["height"] > 0:
+                    await self.page.mouse.click(
+                        bb["x"] + bb["width"] / 2, bb["y"] + bb["height"] / 2)
+                    print(f"[vup] P3: 真鼠标点击 @{bb['x']:.0f},{bb['y']:.0f}")
+                    return True
+                try:
+                    await loc.click(timeout=5000, force=True)
+                    return True
+                except Exception:
+                    return False
+
+            async def _click_frame_button(self, text: str) -> bool:
+                """emitter _click_frame_button 移植: 遍历主文档+全部iframe,
+                button 优先 (避免SPAN误点) → btn类 div/a/[role=button]/
+                .weui-btn 兜底, 文字含匹配 → 真鼠标点击."""
+                for fr in self.page.frames:
+                    try:
+                        els = fr.locator("button")
+                        for i in range(await els.count()):
+                            el = els.nth(i)
+                            try:
+                                if text in ((await el.inner_text()) or "").strip():
+                                    if await self._rmouse_click(el):
+                                        return True
+                            except Exception:
+                                continue
+                    except Exception:
+                        continue
+                for fr in self.page.frames:
+                    for sel in ("div[class*='btn']", "div[class*='submit']",
+                                "a[class*='btn']", "[role='button']",
+                                ".weui-btn"):
+                        try:
+                            els = fr.locator(sel)
+                            for i in range(await els.count()):
+                                el = els.nth(i)
+                                try:
+                                    if text in ((await el.inner_text())
+                                                or "").strip():
+                                        if await self._rmouse_click(el):
+                                            return True
+                                except Exception:
+                                    continue
+                        except Exception:
+                            continue
+                return False
+
+            async def _declare_original_pre(self) -> None:
+                """v5 (emitter 法移植): 声明原创在点「发表」之前 — 表单区
+                checkbox 流: .declare-original-checkbox → 勾「我已阅读」→
+                点「声明原创」按钮. 找不到 checkbox 整块跳过 (emitter 同款).
+                先声明后发表, 点「发表」后就不会撞「广告分成挽留弹窗」的
+                歧义双键 (r9-r12 五轮取证的主障碍)."""
+                await self._scroll_all_bottom()
+                await asyncio.sleep(1.5)
+                loc = self.page.locator(".declare-original-checkbox").first
+                if await loc.count() == 0:
+                    print("[vup] P3: 无 .declare-original-checkbox — 跳过预声明")
+                    return
+                if not await self._rmouse_click(loc):
+                    print("[vup] P3: 预声明 checkbox 点击失败 — 跳过")
+                    return
+                await asyncio.sleep(2)
+                for sel in (".original-proto-wrapper .ant-checkbox-input",
+                            ".original-proto-wrapper .ant-checkbox-wrapper",
+                            ".original-proto-wrapper input[type=checkbox]",
+                            ".original-proto-wrapper"):
+                    c = self.page.locator(sel).first
+                    if await c.count() > 0 and await self._rmouse_click(c):
+                        break
+                await asyncio.sleep(1.5)
+                if await self._click_frame_button("声明原创"):
+                    print("[vup] P3: 预声明原创完成 ✓ (emitter 法: 发表前)")
+                await asyncio.sleep(2)
+
             async def submit_video(self) -> bool:
-                print("[vup] P3: 发表流程 (补丁v3: 描述补填+就绪轮询+真鼠标+toast时序)")
+                print("[vup] P3: 发表流程 (v5=We-AIPO emitter 法移植)")
+                # v5-0 (用户令1008「借鉴We-AIPO方法」核心件): JS alert/confirm
+                # 自动 accept. Playwright 默认 dismiss 未处理弹窗 = confirm()
+                # 被按「取消」= 发表被平台静默取消 (r9-r12: 弹窗点掉了但视频
+                # 从未上架的头号嫌疑). 等价 emitter 的
+                # Page.handleJavaScriptDialog(accept=True)+auto_handle_alert.
+                def _on_dialog(d):
+                    print(f"[vup] P3: JS原生弹窗({d.type})→accept: "
+                          f"{(d.message or '')[:80]!r}")
+                    asyncio.ensure_future(d.accept())
+                self.page.on("dialog", _on_dialog)
+
                 await self._dismiss_dialogs()
                 await self._scroll_all_bottom()
                 await asyncio.sleep(1.5)
                 # P-贴图闸 lite: 等 8s 让封面帧稳定 (emitter 实锤 上传完成≠贴图就绪)
                 await asyncio.sleep(8)
-                # v3-a: 补填描述 (r4 取证: 三键全灰=禁用态, 疑必填缺失)
+                # v3-a: 补填描述 (r7 取证: 发布页描述框是 contenteditable div)
                 await self._fill_desc(getattr(self, "extra_desc", ""))
-                # v3-b: 就绪轮询 — 键真亮才点, 不再硬点灰键 (r4 教训)
+                # v3-b: 就绪轮询 — 键真亮才点, 不硬点灰键 (r4 教训)
                 ready, info = await self._wait_publish_ready()
                 if not ready:
                     print(f"[vup] P3: {info} — 判失败 (不硬点灰键)")
@@ -305,67 +429,126 @@ def main() -> int:
                         path=str(PROMO / "videos" / "forensics_btn_disabled.png"),
                         full_page=True)
                     return False
-                btn, sel = await self._publish_btn()
-                # v3-c: 真鼠标点击 (emitter _iclick_el 同理: CDP Input 事件,
-                # Vue handler 可能忽略无 isTrusted 的 DOM click)
-                box = await btn.bounding_box()
-                if box:
-                    await self.page.mouse.click(
-                        box["x"] + box["width"] / 2, box["y"] + box["height"] / 2)
-                    print(f"[vup] P3: 已真鼠标点「发表」 ({sel})")
-                else:
-                    await btn.click(timeout=30000)
-                    print(f"[vup] P3: 已DOM点「发表」 ({sel})")
+                # v5-1 (emitter 法): 声明原创在点「发表」之前
+                await self._declare_original_pre()
+                ready2, _ = await self._wait_publish_ready(timeout_s=30)
+                if not ready2:
+                    print("[vup] P3: 预声明后发表键未就绪 — 仍按 emitter 法点击")
+                # v5-2 (emitter 法): 滚底 → 帧遍历找「发表」键真鼠标点击
+                print("[vup] P3: 发表", flush=True)
+                await self._scroll_all_bottom()
+                await asyncio.sleep(1.5)
+                if not await self._click_frame_button("发表"):
+                    btn, sel = await self._publish_btn()
+                    if btn is None:
+                        print("[vup] P3: 定位不到「发表」键 — 判失败")
+                        return False
+                    # v4 (r8): 填描述后页尾键被推出视口 → 滚入+真鼠标
+                    await btn.scroll_into_view_if_needed(timeout=8000)
+                    await asyncio.sleep(0.5)
+                    box = await btn.bounding_box()
+                    if box:
+                        await self.page.mouse.click(
+                            box["x"] + box["width"] / 2,
+                            box["y"] + box["height"] / 2)
+                        print(f"[vup] P3: 已真鼠标点「发表」({sel}) "
+                              f"@y={box['y']:.0f}")
+                    else:
+                        await btn.click(timeout=30000)
+                await asyncio.sleep(2)
                 # v3-d: toast 时序取证 (r4 教训: +2s 单张截图错过易逝 toast)
                 for tag, dt in (("t05", 0.5), ("t15", 1.0), ("t30", 1.5)):
                     await asyncio.sleep(dt)
                     await self.page.screenshot(
                         path=str(PROMO / "videos" / f"forensics_{tag}.png"))
-                # 确认弹窗 (主文档 weui dialog; r2 实锤文案不止两种)
-                dlg = self.page.locator(".weui-desktop-dialog__wrp:visible")
-                if await dlg.count() > 0:
-                    txt = (await dlg.first.inner_text() or "")[:200]
-                    print(f"[vup] P3 弹窗文本: {txt!r}")
-                    await self.page.screenshot(
-                        path=str(PROMO / "videos" / "forensics_dialog.png"))
-                    for t in ("确认发表", "确认发布", "确定", "确认", "知道了"):
-                        cb = self.page.locator(
-                            ".weui-desktop-dialog__wrp:visible"
-                            f" button:has-text('{t}')")
-                        if await cb.count() > 0:
-                            await cb.first.click(timeout=10000)
-                            print(f"[vup] P3: 已点弹窗按钮「{t}」✓")
-                            await asyncio.sleep(3)
+                # v5-3 (emitter 法): 发表后立即试「确认发表」二次确认
+                _confirm_clicked = False
+                for t in ("确认发表", "确认发布"):
+                    if await self._click_frame_button(t):
+                        print(f"[vup] P3: ✓点确认弹窗「{t}」")
+                        _confirm_clicked = True
+                        await asyncio.sleep(2)
+                        break
+                # v5-4 (emitter 法): 30×2s 帧轮询验证 — URL跳转/成功文案/
+                # 失败文案 + weui弹窗清扫(声明原创挽留弹窗) + 延迟确认弹窗
+                _SUCCESS_KW = ("发布成功", "已发布", "提交成功", "发表成功",
+                               "内容已提交", "审核中", "已提交审核", "提交审核")
+                _FAIL_KW = ("上传失败", "格式不支持", "发布失败", "内容违规",
+                            "请重新上传", "视频处理失败", "审核未通过",
+                            "文件过大", "超过限制")
+                confirmed, fail_reason = False, None
+                for i in range(30):
+                    await asyncio.sleep(2)
+                    try:
+                        url = self.page.url or ""
+                        if any(k in url for k in ("manage/video",
+                                                  "manage/content",
+                                                  "post/list")):
+                            confirmed = True
+                            print(f"[vup] P3: ✓确认 URL跳转 ({url[:60]})")
                             break
-                else:
-                    print("[vup] P3: 发表后无弹窗")
-                    await self.page.screenshot(
-                        path=str(PROMO / "videos" / "forensics_after_click.png"))
-                # 终验1: 成功文案 (帧感知)
-                text = await self._frame_text()
-                for kw in ("发表成功", "发布成功", "审核中", "已提交审核",
-                           "提交审核", "内容已提交"):
-                    if kw in text:
-                        print(f"[vup] P3: 成功文案「{kw}」✓")
-                        return True
-                # 终验2: 发表管理列表 (FIX: 须扫 iframe — 列表正文在
-                # micro/content/post/list 帧里, 主文档只有SPA壳)
-                try:
-                    await self.page.goto(
-                        "https://channels.weixin.qq.com/platform/post/list",
-                        timeout=30000, wait_until="domcontentloaded")
-                    await asyncio.sleep(6)
-                    body = await self._frame_text()
-                    if self.title[:12] in body:
-                        print("[vup] P3: 发表管理列表含标题前12字 ✓")
-                        return True
-                    await self.page.screenshot(
-                        path=str(PROMO / "videos" / "forensics_list.png"))
-                    print(f"[vup] P3: 列表未见标题 — 判失败 (不假绿). "
-                          f"帧文尾300字: {body[-300:]!r}")
-                except Exception as exc:
-                    print(f"[vup] P3: 列表验证异常: {exc}")
-                return False
+                        body = await self._frame_text()
+                        hit = next((k for k in _SUCCESS_KW if k in body), None)
+                        if hit:
+                            confirmed = True
+                            print(f"[vup] P3: ✓确认 页面文字({hit})")
+                            break
+                        fail_hit = next((k for k in _FAIL_KW if k in body), None)
+                        if fail_hit:
+                            fail_reason = fail_hit
+                            break
+                        # weui 弹窗清扫 (r9-r12 常客: 广告分成挽留弹窗;
+                        # r11 取证=两独立键, r12 实锤真鼠标点「直接发表」可关)
+                        dlg = self.page.locator(
+                            ".weui-desktop-dialog__wrp:visible")
+                        if await dlg.count() > 0:
+                            txt = (await dlg.first.inner_text() or "")[:150]
+                            print(f"[vup] P3 弹窗文本: {txt!r}")
+                            await self.page.screenshot(path=str(
+                                PROMO / "videos" / f"forensics_dialog{i}.png"))
+                            if await self._click_frame_button("直接发表"):
+                                print("[vup] P3: ✓weui弹窗点「直接发表」")
+                                await asyncio.sleep(2)
+                        # 延迟确认弹窗 (只试一次, emitter 同款)
+                        if not _confirm_clicked and i >= 2:
+                            for t in ("确认发表", "确认发布"):
+                                if await self._click_frame_button(t):
+                                    print(f"[vup] P3: ✓延迟确认弹窗「{t}」")
+                                    _confirm_clicked = True
+                                    await asyncio.sleep(2)
+                                    break
+                    except Exception as exc:
+                        print(f"[vup] P3: 轮询探针异常(忽略): {exc}")
+                if fail_reason:
+                    print(f"[vup] P3: ✗平台拒绝: {fail_reason}")
+                    await self.page.screenshot(path=str(
+                        PROMO / "videos" / "forensics_rejected.png"))
+                    return False
+                if not confirmed:
+                    # FIX-0827b 法 (emitter) + 1008 根因修正: 列表行的
+                    # .post-title 渲染的是**描述**不是标题 (r12 误判→r13
+                    # 重复发布的根因) → 判定键改用描述前12字, 标题兜底.
+                    try:
+                        await self.page.goto(
+                            "https://channels.weixin.qq.com/platform/post/list",
+                            timeout=30000, wait_until="domcontentloaded")
+                        await asyncio.sleep(6)
+                        body = await self._frame_text()
+                        key = (getattr(self, "extra_desc", "")
+                               or self.title).strip()[:12]
+                        if key and key in body:
+                            print(f"[vup] P3: ✓确认 列表核验命中"
+                                  f"(desc键「{key}」)")
+                            confirmed = True
+                        else:
+                            await self.page.screenshot(path=str(
+                                PROMO / "videos" / "forensics_list.png"))
+                            print(f"[vup] P3: 列表未见desc键「{key}」— "
+                                  f"判失败 (不假绿). "
+                                  f"帧文尾300字: {body[-300:]!r}")
+                    except Exception as exc:
+                        print(f"[vup] P3: 列表验证异常: {exc}")
+                return confirmed
 
         up = PatchedUploader(
             title=title,
@@ -376,8 +559,11 @@ def main() -> int:
             category=None,              # 跳过分类选择 (选择器脆, 内容默认即可)
             is_draft=False,
         )
-        # v3: 补填描述文案 (emitter 实证其流程显式填描述; r4 疑其为锁键必填)
-        up.extra_desc = " ".join(f"#{t}" for t in tags) + " 深度研报全文公众号可试读"
+        # v3: 描述文案 — 1008用户令「视频描述可以长一点」: 长文案住 desc,
+        # 短标题只留钩子 (r6实锤: 超字数=发表键锁灰)
+        desc = meta.get("desc", "").strip()
+        up.extra_desc = (desc + " " if desc else "") + \
+            " ".join(f"#{t}" for t in tags)
         ok = asyncio.run(up.main())
         print(f"[vup] main() -> {'成功' if ok else '失败'}: {title[:40]}")
         if ok:
