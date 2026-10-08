@@ -29,7 +29,7 @@ print("COLD CHARS LEFT:", coldleft or "NONE")
 
 # 5) 幕次齐全 + 新金句在位
 print("ACTS:", sorted(set(re.findall(r'ACT 0\d', html))))
-for kw in ["0PC","见面聊","想用、想聊、想合作","先泼三盆冷水","回头客飞轮","四重价值","总包说靠什么立足","三年时间差谁也抄不走","粮草先行十年","我们投的是粮草","LADDER 01","价值阶梯第八级","总包说科技","qrcode-zhiku.png","qrcode-brain-mini.png","shot-leopard.jpg","shot-factory-ui.jpg","shot-aipo.jpg","shot-station.jpg"]:
+for kw in ["0PC","见面聊","想用、想聊、想合作","先泼三盆冷水","回头客飞轮","四重价值","总包说靠什么立足","十年时间差谁也抄不走","粮草先行十年","我们投的是粮草","LADDER 01","价值阶梯第八级","总包说科技","qrcode-zhiku.png","qrcode-brain-mini.png","shot-leopard.jpg","shot-factory-ui.jpg","shot-aipo.jpg","shot-station.jpg"]:
     print("KW [%s]:" % kw, "OK" if kw in html else "MISSING!")
 
 # 6) 图片存在
