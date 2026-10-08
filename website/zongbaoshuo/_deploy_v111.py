@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-"""_deploy_v111.py — 官网 index.html 上 ECS（文案改:三年语料沉淀→十年知识沉淀）.
+"""_deploy_v111.py — 总包说官网 index.html 上 ECS 的通用部署器（读当前文件，幂等可重跑）.
 gzip→b64 分片(15000/片)→云助手落位→远端 md5 校验→备份旧件→原子替换。
-幂等可重跑。双口 8884/8889 同 root /www/ZongBaoShuo，一文件双生效。"""
+双口 8884/8889 同 root /www/ZongBaoShuo，一文件双生效（8884=301→8889）。"""
 import base64
 import gzip
 import hashlib
@@ -16,7 +16,7 @@ REGION = "cn-heyuan"
 INSTANCE = "i-f8za6qhv365cwhti5y35"
 SRC = Path(r"E:\AI-Station\website\zongbaoshuo\index.html")
 DEST = "/www/ZongBaoShuo/index.html"
-NAME = "zbs-v111-deploy"
+NAME = "zbs-deploy"
 
 
 def run(*a, timeout=90):
