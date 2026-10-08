@@ -59,3 +59,30 @@ deploy-hook 自动 `docker exec nginx-1 nginx -s reload`。双层墙: ufw 443 + 
 1. 微信支付商户号五件套 (mchid/appid/api_v3_key/serial_no/private_key_pem) + 公众号 AppSecret
 2. (可选) 支付宝——UI 暂微信独占
 3. 短剧/视频日更飞轮持续引流 (F5c 已上, 自动)
+
+## 1008 傍晚 - 旧站关闭令（四层断，数据保留）
+
+用户三连令：售卖阵地迁小程序（report-miniprogram-1008 战役）→ 旧站关停+端口关闭。
+
+- [x] report-platform.service stop+disable（ECS /www/report_platform 全留，含 data/report_platform.db）
+- [x] /root/dify/docker/nginx/conf.d/yrecepc.conf → yrecepc.conf.disabled-1008 + docker nginx -s reload
+- [x] ufw 8885 v4/v6 双删；SG sgr-f8z6a8hm36rbz0g4gzt4 撤销（22→21 规则）
+- [x] 外网验证：47.120.43.20:8885 与 report.yrecepc.cn 均断；8884/8889/8871/443 等他服未动
+- 回滚四步：systemctl enable --now report-platform.service；mv vhost 改回+reload；ufw allow 8885/tcp；重开 SG 8885
+- 关联弃置：微信支付直连商户申请单 2000002836618453 留档可续（用户令「先不管了」）；收款改虚拟支付轨道
+
+## 1008 夜 - 整合目标二段转向（终局：总包AI顾问 wx5cee，另会话实施）
+
+用户令链：①「把研究报告站点整合到总包AI顾问小程序中。不再整合到总包科技小程序中了」
+②「你暂停整合到总包科技就好，恢复总包科技原来的样子」③「研究报告商城改整合进总包AI顾问，由另外一个会话实施」。
+
+- [x] wxfdb（总包学园，1008 已更名「总包科技」）虚拟支付开通线**弃置于 Step2 表单页**：
+      三绿门全过（已认证/企业/主体完备）+ Step1 协议通过，**零填写零提交零副作用**；
+      复测入口态 = FRESH_NOT_OPENED 原貌；9336 控制台 wxfdb 4 标签全关，只剩 wx5cee 单会话（原状）
+- [x] 控制台零扫码账号切换配方沉淀（隐藏 div[title="切换账号"] JS 直点 → switch_account_dialog
+      → account_item）+ wujie 微前端穿 shadow DOM 工具 vpay_common.py（fresh_page/click_shadow/pierce_dump）
+- [x] 移交文档落盘：`_proposals/report-miniprogram-1008/HANDOFF.md`（另一会话唯一入口：
+      商品目录 content/report.json 66 SKU 价档 498×6/598×27/698×30/1999×2/10000×1、
+      内容件 264MB/130、vpay 在役轨道 offer_id=1450664233、qianwen-engine 四腿、
+      zongbao-ai BASE_URL=ai.epcschool.top、道具分层/iOS 门/发布+切0 三前置等关键设计题）
+- [ ] （wx5cee 整合实施 = 另一会话，本会话到此移交为止）

@@ -75,7 +75,7 @@ def main():
     has_offer = b"offer_id=1450664233" in vp
     has_pid = b"product_id=unlock_once" in vp
     print(f"new vp secret: offer_id={has_offer} product_id={has_pid} "
-          f"sandbox_key={'sandbox_appkey=' in str(rt)} files_n={len(rt)}")
+          f"sandbox_key={b'sandbox_appkey=' in vp} files_n={len(rt)}")
     print(f"envparams json -> {ENVP_OUT}")
     return 0
 
