@@ -115,7 +115,8 @@ def test_03_report_pages():
     flag = BS.build_report(cfg["reports"][0], cfg, c)
     for key in ("867 份", "第一章 甲", "定位甲", "首发 ¥1,999", "开始试读",
                 "sample_f1.html", "立即购买", "提交支付凭证", "data-ev",
-                "来源清单", "旗舰引导语", "全部报告", "toc-body"):
+                "来源清单", "旗舰引导语", "全部报告", "toc-body",
+                "微信支付", "自动解锁", "payWxBtn", "payPanel", "转账登记"):
         assert key in flag, key
     bat = BS.build_report(cfg["reports"][1], cfg, c)
     assert '<div class="toc-flat">' in bat               # 无 desc=平铺目录
@@ -266,6 +267,25 @@ def test_10_src_attribution_js():
     assert "URLSearchParams(location.search).get('src')" in h
     assert "document.referrer" in h
     assert "extra:(x||src).slice(0,120)" in h
+
+
+# ------------------------------------------------ ⑪ 在线支付自动解锁 (F5d)
+def test_11_autopay_js():
+    """PAY_JS 接线: 能力探测/轮询/JSAPI 拉起/降级, 且零外域 URL 零支付渠道
+    泄露 (1007 令全站只留微信收款)."""
+    tmp = Path(tempfile.mkdtemp(prefix="rp_test_"))
+    c = _content(tmp)
+    cfg = json.loads((c / "report.json").read_text(encoding="utf-8"))
+    html = BS.build_report(cfg["reports"][0], cfg, c)
+    for key in ("/api/pay/ready", "/api/pay/create", "/api/pay/status",
+                "/api/pay/jsapi", "wxlogin", "WeixinJSBridge",
+                "getBrandWCPayRequest", "window.RP_PRICE"):
+        assert key in html, key
+    assert "alipay" not in html.lower() and "支付宝" not in html   # 只留微信
+    _no_foreign_http(html)                                          # OAuth 走服务端 302
+    # 备用通道仍完整 (凭证流不因自动支付上线而消失)
+    for key in ("altPay", "orderForm", "orderNo", "提交支付凭证"):
+        assert key in html, key
 
 
 # ------------------------------------------------ ⑧ ast 零网络

@@ -55,8 +55,11 @@ def _tail_card(brand_label: str) -> list[dict]:
     ]
 
 
-# 画面卡: slug → y5 spec (grammar/duration/cues). 主词 ≤6 字 (0.3s 读完),
+# 画面卡: slug → y5 spec (grammar/duration/cues). 主词 ≤6 字 (0.3s 读完,
 # 辅句 ≤14 字 (2 行内), number 页一数一镜头; at=主词砸下那一帧.
+# ⚠ highlight 语法 (y5_kinetic_type.js L34 实证): word 必须出现在 11.9 时点
+# 「当前页」(=10.8 页) 的主词里, 引擎只扫当前页主词, 缺词=console.warn 空拍
+# (1008 ent22/prov07 两片实锤过此坑); key 只染辅句, 须 key∈辅句.
 ARTCARDS: dict[str, dict] = {
     "cnnec_v1": {
         "duration": 16.5,
@@ -98,6 +101,53 @@ ARTCARDS: dict[str, dict] = {
              "sub": "最弱势的人敢不敢说停",
              "data": {"label": "成果", "key": "说停"}},
             {"at": 11.9, "kind": "highlight", "data": {"word": "30章"}},
+            *_tail_card("试读入口"),
+        ],
+    },
+    # 1008 续队: 中建三局 (ENT-22 在稿实锤: 火神山雷神山/三天一层楼/
+    # 铁军执行力/地标制造; number=11.1万字徽章)
+    "ent22_v1": {
+        "duration": 16.5,
+        "cues": [
+            {"at": 0.0, "kind": "title", "text": "火神山",
+             "sub": "雷神山背后的建设铁军", "data": {"label": "深度研报"}},
+            {"at": 2.7, "kind": "point", "text": "三天一层楼",
+             "sub": "深圳速度的起源",
+             "data": {"label": "基因 01", "key": "深圳速度"}},
+            {"at": 5.4, "kind": "number",
+             "sub": "12章拆解中建三局EPC",
+             "data": {"value": 11.1, "decimals": 1, "suffix": " 万字",
+                      "label": "拆解深度"}},
+            {"at": 8.1, "kind": "point", "text": "地标制造机",
+             "sub": "上海环球金融中心·深圳平安",
+             "data": {"label": "业绩", "key": "深圳平安"}},
+            {"at": 10.8, "kind": "point", "text": "铁军执行力",
+             "sub": "急难险重里怎么打胜仗",
+             "data": {"label": "打法 01", "key": "打胜仗"}},
+            {"at": 11.9, "kind": "highlight", "data": {"word": "铁军"}},
+            *_tail_card("试读入口"),
+        ],
+    },
+    # 1008 续队: 湖南省卷 (在售单册字数第一 38.6万字; 454页/20章徽章;
+    # 受众线=页内原文「省内建企/进场央国企/投资机构」)
+    "prov07_v1": {
+        "duration": 16.5,
+        "cues": [
+            {"at": 0.0, "kind": "title", "text": "38.6万字",
+             "sub": "写透一个省的EPC市场", "data": {"label": "省份市场"}},
+            {"at": 2.7, "kind": "point", "text": "机会在哪",
+             "sub": "未来五年怎么走",
+             "data": {"label": "问题 01", "key": "五年"}},
+            {"at": 5.4, "kind": "number",
+             "sub": "湖南EPC全景一册装下",
+             "data": {"value": 454, "suffix": " 页", "label": "体量"}},
+            {"at": 8.1, "kind": "point", "text": "在湖南干工程",
+             "sub": "这份值得看",
+             "data": {"label": "读者", "key": "值得看"}},
+            {"at": 10.8, "kind": "point", "text": "20章拆解",
+             "sub": "机会与打法全图谱",
+             "data": {"label": "结构", "key": "全图谱"}},
+            {"at": 11.9, "kind": "highlight", "data": {"word": "20章"}},
             *_tail_card("试读入口"),
         ],
     },

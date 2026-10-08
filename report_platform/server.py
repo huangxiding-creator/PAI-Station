@@ -12,6 +12,7 @@ ECS 常驻: deploy/report-platform.service (systemd)
 from __future__ import annotations
 
 import argparse
+import hashlib
 import hmac
 import json
 import os
@@ -20,6 +21,7 @@ import sqlite3
 import sys
 import threading
 import time
+import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs, quote as _urlquote
@@ -28,6 +30,9 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 ROOT = Path(__file__).resolve().parent
 ADMIN_TOKEN = os.environ.get("RP_ADMIN_TOKEN", "")
 _LOCK = threading.Lock()
+
+_PT_LOCK = threading.Lock()
+_PT_STORE: dict = {}          # OAuth openid 一次性交接令牌 (10min TTL)
 
 import pay as PAY   # noqa: E402  (支付/反馈/退款/质量飞轮)
 
@@ -182,7 +187,7 @@ class Handler(BaseHTTPRequestHandler):
                                "orders": orders, "quality": pulse,
                                "refunded": rev})
         if u.path == "/api/order/query":
-            no = q.get("order_no", [""])[0][:24]
+            no = q.get("order_no", [""])[0][:40]
             tail = q.get("tail", [""])[0][:4]
             if not (no and tail):
                 return self._json({"ok": False, "error": "参数缺"}, 400)
@@ -200,7 +205,7 @@ class Handler(BaseHTTPRequestHandler):
                                    "reader_url": f"/reader.html?o={no}&s={sig}",
                                    "pdf_url": f"/api/full.pdf?o={no}&s={sig}"})
         if u.path == "/api/reader/content":
-            no = q.get("o", [""])[0][:24]
+            no = q.get("o", [""])[0][:40]
             sig = q.get("s", [""])[0][:64]
             ok, sku = _full_ok(no, sig)
             if not ok:
@@ -210,7 +215,7 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json({"ok": False, "error": "全文未就位"}, 404)
             return self._text_html(html.read_text(encoding="utf-8"))
         if u.path == "/api/full.pdf":
-            no = q.get("o", [""])[0][:24]
+            no = q.get("o", [""])[0][:40]
             sig = q.get("s", [""])[0][:64]
             ok, sku = _full_ok(no, sig)
             if not ok:
@@ -242,6 +247,68 @@ class Handler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(data)
             return
+        if u.path == "/api/pay/ready":                    # 能力探测 (纯布尔)
+            rd = PAY.pay_ready(_sec())
+            w = _sec()["wxpay"]
+            return self._json({"ok": True, "wxpay": rd["wxpay"],
+                               "jsapi": PAY.jsapi_ready(w)})
+        if u.path == "/api/pay/wxlogin":                  # 微信内 → OAuth 302
+            sku = q.get("sku", [""])[0][:32]
+            sec = _sec()
+            w = sec["wxpay"]
+            if not (sku and PAY.jsapi_ready(w)):
+                return self._json({"ok": False, "error": "jsapi 未配置"}, 400)
+            back = f"{sec['notify_base']}/api/pay/wxback?sku={_qesc(sku)}"
+            self.send_response(302)
+            self.send_header("Location",
+                             PAY.wx_oauth_authorize_url(w, back))
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+            return
+        if u.path == "/api/pay/wxback":                   # OAuth 回跳 → pt 交接
+            sku = q.get("sku", [""])[0][:32]
+            code = q.get("code", [""])[0][:64]
+            sec = _sec()
+            w = sec["wxpay"]
+            if not (sku and code and PAY.jsapi_ready(w)):
+                return self._json({"ok": False, "error": "参数缺"}, 400)
+            r = PAY.wx_oauth_code2openid(w, code)
+            if not r["ok"]:
+                return self._json({"ok": False, "error": r["error"]}, 502)
+            pt = uuid.uuid4().hex                          # 一次性交接令牌
+            with _PT_LOCK:
+                _PT_STORE[pt] = {"openid": r["openid"], "sku": sku,
+                                 "exp": time.time() + 600}
+            self.send_response(302)
+            self.send_header("Location",
+                             f"/{sku.lower()}.html?pt={_qesc(pt)}")
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+            return
+        if u.path == "/api/pay/status":                   # 支付轮询 (ck 门禁)
+            no = q.get("order_no", [""])[0][:40]
+            ck = q.get("ck", [""])[0][:48]
+            if not (no and ck):
+                return self._json({"ok": False, "error": "参数缺"}, 400)
+            with _LOCK:
+                con = _db(self.db_path)
+                row = con.execute("SELECT state, sku, access_token, ck_hash "
+                                  "FROM orders WHERE order_no=?",
+                                  (no,)).fetchone()
+                con.close()
+            if not row:
+                return self._json({"ok": False, "error": "订单不存在"})
+            state, sku, tok, ckh = row
+            want = hashlib.sha256(ck.encode()).hexdigest()
+            if not (ckh and hmac.compare_digest(want, ckh)):
+                return self._json({"ok": False, "error": "ck 不符"}, 403)
+            out = {"ok": True, "state": state}
+            if state in _READABLE and tok:
+                sig = _full_sig(no, tok)
+                out["sku"] = sku
+                out["reader_url"] = f"/reader.html?o={no}&s={sig}"
+                out["pdf_url"] = f"/api/full.pdf?o={no}&s={sig}"
+            return self._json(out)
         if u.path in ("/", "/index.html"):
             return self._static("index.html")
         if u.path in ("/sample", "/sample.html"):
@@ -261,8 +328,9 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         u = urlparse(self.path)
         if u.path not in ("/api/track", "/api/order", "/api/pay/create",
-                          "/api/pay/notify/wx", "/api/pay/notify/ali",
-                          "/api/feedback", "/api/refund"):
+                          "/api/pay/jsapi", "/api/pay/notify/wx",
+                          "/api/pay/notify/ali", "/api/feedback",
+                          "/api/refund"):
             return self.send_error(404)
         d = self._read_body()
         if u.path == "/api/track":
@@ -305,24 +373,63 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json({"ok": False, "error": "sku 无效"}, 400)
             no = PAY.new_out_trade_no(sku)
             fen = rpt["price"] * 100
+            ck = uuid.uuid4().hex[:16]                     # 客户端回查密钥
             with _LOCK, _db(self.db_path) as con:
                 con.execute("INSERT INTO orders(created,sku,order_no,contact,"
-                            "note,state) VALUES(?,?,?,?,?,?)",
+                            "note,state,ck_hash) VALUES(?,?,?,?,?,?,?)",
                             (time.strftime("%Y-%m-%d %H:%M:%S"), sku, no,
-                             "auto-pay", channel, "paying"))
+                             "auto-pay", channel, "paying",
+                             hashlib.sha256(ck.encode()).hexdigest()))
                 con.execute("INSERT OR REPLACE INTO pay_amounts(order_no,price) "
                             "VALUES(?,?)", (no, fen))
             if channel == "wxpay":
                 r = PAY.wx_native_order(sec, sec["wxpay"], no, fen,
                                         rpt["title"])
                 if r["ok"]:
-                    return self._json({"ok": True, "order_no": no,
+                    return self._json({"ok": True, "order_no": no, "ck": ck,
                                        "qr_url": "/api/pay/qr?text="
                                        + _qesc(r["code_url"])})
                 return self._json({"ok": False, "error": r["error"]})
             form = PAY.ali_wap_form(sec["alipay"], sec, no,
                                     f"{fen / 100:.2f}", rpt["title"])
-            return self._json({"ok": True, "order_no": no, "form": form})
+            return self._json({"ok": True, "order_no": no, "ck": ck,
+                               "form": form})
+        if u.path == "/api/pay/jsapi":                  # 微信内一键支付
+            sku = str(d.get("sku") or "")[:32]
+            pt = str(d.get("pt") or "")[:48]
+            sec = _sec()
+            w = sec["wxpay"]
+            with _PT_LOCK:
+                ent = _PT_STORE.pop(pt, None)
+            if not ent:
+                return self._json({"ok": False, "error": "会话失效, 请重试"},
+                                  400)
+            if ent["exp"] < time.time() or ent["sku"] != sku:
+                return self._json({"ok": False, "error": "令牌过期/不匹配"},
+                                  400)
+            cfg = json.loads((ROOT / "content" / "report.json")
+                             .read_text(encoding="utf-8"))
+            rpt = next((r for r in cfg["reports"] if r["sku"] == sku), None)
+            if not rpt:
+                return self._json({"ok": False, "error": "sku 无效"}, 400)
+            no = PAY.new_out_trade_no(sku)
+            fen = rpt["price"] * 100
+            ck = uuid.uuid4().hex[:16]
+            r = PAY.wx_jsapi_order(sec, w, no, fen, rpt["title"],
+                                   ent["openid"])
+            if not r["ok"]:
+                return self._json({"ok": False, "error": r["error"]})
+            with _LOCK, _db(self.db_path) as con:
+                con.execute("INSERT INTO orders(created,sku,order_no,contact,"
+                            "note,state,ck_hash) VALUES(?,?,?,?,?,?,?)",
+                            (time.strftime("%Y-%m-%d %H:%M:%S"), sku, no,
+                             "auto-pay", "wxpay-jsapi", "paying",
+                             hashlib.sha256(ck.encode()).hexdigest()))
+                con.execute("INSERT OR REPLACE INTO pay_amounts(order_no,price) "
+                            "VALUES(?,?)", (no, fen))
+            return self._json({"ok": True, "order_no": no, "ck": ck,
+                               "payParams": PAY.wx_jsapi_params(w,
+                                                                r["prepay_id"])})
         if u.path == "/api/pay/notify/wx":               # 微信回调
             body = self._raw_body()
             sec = _sec()
@@ -354,7 +461,7 @@ class Handler(BaseHTTPRequestHandler):
                                   "alipay", params.get("trade_no", ""))
             return self._text("success")
         if u.path == "/api/feedback":                    # 反馈 (取证+比例退款)
-            no = str(d.get("order_no") or "")[:24]
+            no = str(d.get("order_no") or "")[:40]
             rating = int(d.get("rating") or 0)
             chapter = str(d.get("chapter") or "")[:60]
             category = str(d.get("category") or "")[:20]
@@ -398,7 +505,7 @@ class Handler(BaseHTTPRequestHandler):
                                "存在真实阅读记录 (防虚假反馈套利)")
             return self._json(out)
         if u.path == "/api/refund":                      # 主动退款 (同护栏)
-            no = str(d.get("order_no") or "")[:24]
+            no = str(d.get("order_no") or "")[:40]
             reason = str(d.get("reason") or "用户申请退款")[:200]
             pct = int(d.get("pct") or 100)
             with _LOCK, _db(self.db_path) as con:

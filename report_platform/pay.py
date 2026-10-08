@@ -171,6 +171,68 @@ def wx_query(w: dict, out_trade_no: str) -> dict:
     return {"ok": False, "error": f"wx {code}"}
 
 
+# ------------------------------------------------ 微信内一键支付 (JSAPI)
+
+def jsapi_ready(w: dict | None) -> bool:
+    """JSAPI 可用 = 商户五件套齐 + 公众号 oauth_secret 配了."""
+    return bool(w and w.get("_ok") and w.get("oauth_secret"))
+
+
+def wx_oauth_authorize_url(w: dict, redirect_uri: str,
+                           state: str = "rp") -> str:
+    """snsapi_base 静默授权跳转 (服务端 302 用, 前端零外域 URL)."""
+    from urllib.parse import quote
+    return ("https://open.weixin.qq.com/connect/oauth2/authorize"
+            f"?appid={w['appid']}&redirect_uri={quote(redirect_uri, safe='')}"
+            f"&response_type=code&scope=snsapi_base&state={state}"
+            "#wechat_redirect")
+
+
+def wx_oauth_code2openid(w: dict, code: str) -> dict:
+    """OAuth code → openid (公众号侧, 独立域名 api.weixin.qq.com)."""
+    import urllib.request
+    url = ("https://api.weixin.qq.com/sns/oauth2/access_token"
+           f"?appid={w['appid']}&secret={w['oauth_secret']}"
+           f"&code={code}&grant_type=authorization_code")
+    try:
+        with urllib.request.urlopen(url, timeout=10) as r:
+            d = json.loads(r.read().decode("utf-8", "replace"))
+    except Exception as e:                                   # noqa: BLE001
+        return {"ok": False, "error": f"oauth net: {str(e)[:120]}"}
+    if d.get("openid"):
+        return {"ok": True, "openid": d["openid"]}
+    return {"ok": False, "error": f"oauth {d.get('errcode')}: "
+                                  + str(d.get("errmsg", ""))[:120]}
+
+
+def wx_jsapi_order(sec: dict, w: dict, out_trade_no: str,
+                   total_fen: int, desc: str, openid: str) -> dict:
+    """JSAPI 下单 (微信内拉起支付) → {ok, prepay_id?}."""
+    if not sec["notify_base"]:
+        return {"ok": False, "error": "notify_base 未配置 (需 https 域名)"}
+    code, r = _wx_call(w, "POST", "/v3/pay/transactions/jsapi", {
+        "appid": w["appid"], "mchid": w["mchid"],
+        "description": desc[:120], "out_trade_no": out_trade_no,
+        "notify_url": f"{sec['notify_base']}/api/pay/notify/wx",
+        "amount": {"total": total_fen, "currency": "CNY"},
+        "payer": {"openid": openid}})
+    if code == 200 and r.get("prepay_id"):
+        return {"ok": True, "prepay_id": r["prepay_id"]}
+    return {"ok": False, "error": f"wx {code}: "
+                                  + json.dumps(r, ensure_ascii=False)[:200]}
+
+
+def wx_jsapi_params(w: dict, prepay_id: str) -> dict:
+    """prepay_id → WeixinJSBridge.invoke 支付参数 (RSA 签名)."""
+    ts = str(int(time.time()))
+    nonce = uuid.uuid4().hex
+    pkg = f"prepay_id={prepay_id}"
+    msg = f"{w['appid']}\n{ts}\n{nonce}\n{pkg}\n"
+    return {"appId": w["appid"], "timeStamp": ts, "nonceStr": nonce,
+            "package": pkg, "signType": "RSA",
+            "paySign": rsa_sign_sha256(w["private_key_pem"], msg)}
+
+
 def wx_verify_notify(w: dict, headers: dict, body: str,
                      platform_pub_pem: str) -> dict | None:
     """回调验签+解密 → 通知 dict; 失败 None. platform_pub_pem=平台证书公钥."""
@@ -254,13 +316,17 @@ def ensure_columns(db: sqlite3.Connection) -> None:
     """orders 表增列 (旧库兼容, 幂等)."""
     cols = {r[1] for r in db.execute("PRAGMA table_info(orders)")}
     for col, ddl in (("channel", "TEXT"), ("txn_id", "TEXT"),
-                     ("paid_at", "TEXT"), ("access_token", "TEXT")):
+                     ("paid_at", "TEXT"), ("access_token", "TEXT"),
+                     ("ck_hash", "TEXT")):
         if col not in cols:
             db.execute(f"ALTER TABLE orders ADD COLUMN {col} {ddl}")
 
 
 def new_out_trade_no(sku: str) -> str:
-    return f"{sku.replace('-', '')[:10]}{int(time.time() * 100) % 10**12:012d}"
+    """商户单号: sku8 + 随机8 + 时间10 = 26 位 (纯时间序可被枚举套 reader_url,
+    加 8 位随机熵后不可猜; wx 上限 32 位内)."""
+    return (f"{sku.replace('-', '')[:8]}{uuid.uuid4().hex[:8]}"
+            f"{int(time.time() * 100) % 10**10:010d}")
 
 
 def mark_paid(db: sqlite3.Connection, order_no: str, channel: str,
