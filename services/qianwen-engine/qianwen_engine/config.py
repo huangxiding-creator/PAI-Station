@@ -58,9 +58,20 @@ MP_SECRET_FILE = SECRETS_DIR / "zongbao_qianwen_mp.secret"
 WX_APPID = "wx5cee1574ce45819b"
 
 # 虚拟支付（wx.requestVirtualPayment 道具直购 · 企业主体合规通道）
-# 密钥文件三行：offer_id= / product_id= / env=（0 正式 1 沙箱）；后台开通后填写，空=未开通
+# 密钥文件键：offer_id= / product_id= / export_product_id= / env=（0 正式 1 沙箱）/
+# sandbox_appkey= / prod_appkey= / report_product_<价格元>=（报告商城分档道具）；
+# 后台开通后填写，缺=未开通
 VIRTUAL_PAY_FILE = SECRETS_DIR / "virtual_pay.secret"
-UNLOCK_PRICE_FEN = 100        # 解锁价：¥1 = 100 分（goodsPrice 单位=分）
+EXPORT_PRICE_FEN = 10         # 导出价：¥0.1/条（用户令 1008：咨询全免费，仅导出按条收费）
+EXPORT_BATCH_MAX = 99         # 批量导出单笔 buyQuantity 上限（支付单护栏）
+
+# ── v0.9.0 报告商城（用户令 1008：研究报告售卖整合进总包AI顾问）──
+# 内容目录：镜像内 /app/report_content（report.json + full/ + sample/）；
+# 本地/CI 缺省指仓库源目录，tests 走 fixtures 临时目录。
+REPORT_CONTENT_DIR = Path(os.environ.get("REPORT_CONTENT_DIR")
+                          or (REPO / "report_platform" / "content"))
+REPORT_PDF_MAX_BYTES = _env_int("REPORT_PDF_MAX_BYTES", 20 * 1024 * 1024)  # 20MB 手机端可流畅打开的上限
+REPORT_HIDDEN_SKUS: tuple = ()   # 强制隐藏（目录不展示）；整理中（可看不可买）走 PDF 判定
 
 # 产品规则（v0.5.0 用户九点令）
 FREE_PER_DAY = 6            # 每日免费提问（北京时间 00:00 全量清零，不累计）

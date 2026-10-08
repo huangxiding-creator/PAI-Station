@@ -655,30 +655,31 @@ button.share-pill .pill-t { color: var(--ink-2); }
 }
 
 /* ══ v0.7.5 深度合成合规：AI 生成显著标识条（页首常驻，深浅主题同显著）══ */
+/* v0.7.7 拒审 599847679 整改：AI 生成标识升级为显著级（实底警示条+28rpx） */
 .ai-flag {
   margin: 22rpx 24rpx 0;
   display: flex;
   align-items: center;
   gap: 16rpx;
-  background: rgba(var(--t-accent-rgb), 0.10);
-  border: 2rpx solid rgba(var(--t-accent-rgb), 0.55);
-  border-left: 8rpx solid var(--accent);
+  background: var(--t-accent-bg);
+  border: 2rpx solid rgba(var(--t-accent-deep-rgb), 0.65);
+  border-left: 10rpx solid var(--accent-deep);
   border-radius: 8rpx;
-  padding: 20rpx 22rpx;
+  padding: 22rpx 22rpx;
 }
 .ai-flag-badge {
   flex-shrink: 0;
-  font-size: 21rpx;
+  font-size: 26rpx;
   font-weight: 800;
   letter-spacing: 2rpx;
-  color: var(--navy-0);
-  background: linear-gradient(180deg, var(--t-accent-soft), var(--accent));
+  color: #071a39;
+  background: linear-gradient(180deg, #ffd9a8, #ff9432);
   border-radius: 6rpx;
-  padding: 6rpx 12rpx;
+  padding: 6rpx 14rpx;
 }
 .ai-flag-text {
-  font-size: 25rpx;
-  font-weight: 600;
-  line-height: 1.55;
+  font-size: 28rpx;
+  font-weight: 700;
+  line-height: 1.5;
   color: var(--ink);
 }

@@ -48,3 +48,28 @@
 ## 五、纪律提醒（照旧）
 
 WeAIPO 9222 免打扰｜9336 是控制台唯一合法口｜密钥永不进仓（secret.ini/virtual_pay.secret 均 gitignored）｜推送=github-push skill 场景A/B+场景C 百度备份｜数字零造假｜每次收口 GOAL_LEDGER 回填
+
+
+---
+
+## 六、2026-10-08 19:22 实施收官态（承接会话交付）
+
+**已提审**：0.9.0 · ci机器人15 · 2026-10-08 19:22:08 · 审核中（1-7 天，普通队列）。
+体验版已钉 0.9.0（海报码直通商城版）。引擎生产 009 在役（/api/reports 66/64）。
+
+### 过审后发布清单（按序执行，勿跳步）
+1. **先清灰度态**：版本页审核块挂「当前有灰度发布中的版本」横幅——发布 0.9.0 前先
+   getgrayreleaseplan 实查；有计划则控制台 撤销发布/全量发布（1002 后 0.7.6 从未全量发布，
+   横幅疑与其相关；API status=0 与横幅并存，以发布时实弹结果为准）。
+2. 控制台「发布」0.9.0（全量）。
+3. 道具现网发布 ×6：unlock_once / export_once / report_498 / report_598 / report_698 /
+   report_1999（虚拟支付→道具配置→各行「发布」）。
+4. env=1→0（virtual_pay.secret → qw_tcb_prep.py → update_envparams.js 三步）。
+5. POSTER_QR_ENV_VERSION trial→release（服务端 config+云端同步）→ 海报冒烟扫码。
+6. BOOT-SIM 版本收口 + RUN_LEDGER/GOAL_LEDGER + git 定向提交 + github-push + 百度备份 + 企微。
+
+### 遗留工单
+- **TOPIC-06 PDF 重生成**：现 136.6MB（HTML 仅 0.3MB，PDF 生成异常致图件冗余）。
+  重生目标 ≤20MB（去冗余图/降采样）；重生前该 SKU 自动「整理中」（可看不可买），无需改码。
+- 订单中心path 留空先例=0.7.7 两次拒审均未涉此项；若 0.9.0 因此被拒，补订单页
+  （引擎 pay_order/report_unlocks 现成可喂）后重提。

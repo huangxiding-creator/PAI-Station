@@ -47,7 +47,38 @@ def main():
         for p in sorted(FONTS.glob(pat)):
             shutil.copy2(p, STAGE / "fonts" / p.name)
             n_font += 1
-    print(f"staged: {n_py} py, {n_font} fonts, at {STAGE}")
+
+    # [1b] 报告商城内容层：report.json + 64 份可售 PDF（≤20MB，TOPIC-06 超 136MB 排除）
+    #      + 试读 sample/。落 STAGE/report_content/（Dockerfile COPY 到
+    #      /app/report_platform/content = 引擎 REPORT_CONTENT_DIR 缺省路径）
+    import json as _json
+    CONTENT = Path(r"E:\AI-Station\report_platform\content")
+    MAXPDF = 20 * 1024 * 1024
+    rc = STAGE / "report_content"
+    (rc / "full").mkdir(parents=True)
+    (rc / "sample").mkdir(parents=True)
+    shutil.copy2(CONTENT / "report.json", rc / "report.json")
+    reports = _json.loads((CONTENT / "report.json").read_text(encoding="utf-8"))
+    if isinstance(reports, dict) and "reports" in reports:
+        reports = reports["reports"]
+    n_pdf = n_mb = n_skip = 0
+    for r in reports:
+        p = CONTENT / "full" / (r["sku"] + ".pdf")
+        if not p.exists():
+            n_skip += 1
+            continue
+        if p.stat().st_size > MAXPDF:
+            n_skip += 1
+            continue
+        shutil.copy2(p, rc / "full" / p.name)
+        n_pdf += 1
+        n_mb += p.stat().st_size
+    n_smp = 0
+    for p in sorted((CONTENT / "sample").glob("*.md")):
+        shutil.copy2(p, rc / "sample" / p.name)
+        n_smp += 1
+    print(f"staged: {n_py} py, {n_font} fonts, {n_pdf} pdf ({n_mb/1048576:.1f} MB, "
+          f"skip {n_skip}), {n_smp} samples, at {STAGE}")
 
     # [2] 拉当前 EnvParams（fresh）
     raw = tcb("cloudrun", "detail", "-s", "qianwen-engine", "--json")
@@ -74,7 +105,10 @@ def main():
     assert base64.b64decode(rt["virtual_pay.secret"]) == vp, "roundtrip"
     has_offer = b"offer_id=1450664233" in vp
     has_pid = b"product_id=unlock_once" in vp
+    vp_lines = base64.b64decode(rt["virtual_pay.secret"]).decode().splitlines()
+    n_report = sum(1 for l in vp_lines if l.startswith("report_product_"))
     print(f"new vp secret: offer_id={has_offer} product_id={has_pid} "
+          f"report_items={n_report} "
           f"sandbox_key={b'sandbox_appkey=' in vp} files_n={len(rt)}")
     print(f"envparams json -> {ENVP_OUT}")
     return 0

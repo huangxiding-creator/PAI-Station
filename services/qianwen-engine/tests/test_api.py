@@ -96,14 +96,17 @@ def test_like_grants_bonus(client):
 def test_share_and_export_reward(client):
     aid = client.post("/api/ask", json={"question": "问"}).json()["id"]
     _wait_ready(client, aid)
-    r = client.post(f"/api/answer/{aid}/share")
-    assert r.status_code == 200 and r.json()["granted"] is True
-    r2 = client.post(f"/api/answer/{aid}/share")
-    assert r2.status_code == 200 and r2.json()["granted"] is False   # 每答案一次
+    # v0.8.0 审计整改：旧「分享赠次」端点已下线（防诱导分享翻旧账）→ 404 回归锚
+    assert client.post(f"/api/answer/{aid}/share").status_code == 404
+    # v0.8.0 导出收费：未解锁 402 → 付费标记后 200
+    from qianwen_engine import store
+    e402 = client.post(f"/api/answer/{aid}/export", json={"fmt": "docx"})
+    assert e402.status_code == 402
+    assert store.mark_export_paid(aid, "open-t1", "e-test-otn-0001")
     e = client.post(f"/api/answer/{aid}/export", json={"fmt": "docx"})
     assert e.status_code == 200 and e.json()["filename"].endswith(".docx")
-    # v0.7.3（用户令）：导出不再赠次——share 已 +1，导出后 bonus 仍为 1
-    assert client.get("/api/quota").json()["quota"]["bonus_left"] == 1
+    # v0.7.3（用户令）：导出不赠次；v0.7.6 起分享也不赠次——bonus 恒 0
+    assert client.get("/api/quota").json()["quota"]["bonus_left"] == 0
 
 
 def test_shared_pot_privacy(client):
@@ -192,8 +195,11 @@ def test_question_optimize_zhipu(client, monkeypatch):
 def test_export_all(client):
     for q in ("批量导出问题一", "批量导出问题二"):
         client.post("/api/ask", json={"question": q})
-    empty = client.post("/api/answers/export_all", json={"fmt": "md"})
-    assert empty.status_code in (200, 404)   # pending 未完成不计（竞态下可能 404）
+    # v0.8.0 批量导出收费：未全部解锁 402 → 批量标记后放行
+    from qianwen_engine import store
+    locked = client.post("/api/answers/export_all", json={"fmt": "md"})
+    assert locked.status_code in (402, 404)   # pending 未完成不计（竞态下可能 404）
+    store.mark_all_export_paid("open-t1", "b-test-otn-0001")
     md = client.post("/api/answers/export_all", json={"fmt": "md"})
     if md.status_code == 200:
         assert "咨询档案" in md.json()["filename"] and md.json()["filename"].endswith(".md")
@@ -280,7 +286,10 @@ def test_pot_ordering_recency_and_interaction(client):
     old = store.save_pot_answer("老问题三天前", "老答案" * 60, [])
     new = store.save_pot_answer("新问题刚发布", "新答案" * 60, [])
     conn = sqlite3.connect(config.DB_PATH)
-    conn.execute("UPDATE answers SET created_at='2026-09-27 10:00:00' WHERE id=?", (old,))
+    # 时钟陷阱根治（1008）：相对日期（now-3天）替代硬编码绝对日——硬编码日一过，
+    # 「3 天前」变 11 天前，8 赞=8 天反超不了 → 永久红
+    conn.execute(
+        "UPDATE answers SET created_at=datetime('now','localtime','-3 days') WHERE id=?", (old,))
     conn.commit()
     conn.close()
     items = client.get("/api/pot/list").json()["items"]

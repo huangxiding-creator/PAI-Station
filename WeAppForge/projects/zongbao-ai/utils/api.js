@@ -121,5 +121,15 @@ module.exports = {
   // ── v0.7.0（用户十一点令：公益免费）──
   shareOn: (id) => request('POST', '/api/answer/' + id + '/share_on', {}),                   // 共享入锅圈 +1 次
   shareOff: (id) => request('POST', '/api/answer/' + id + '/share_off', {}),                 // 取消共享 -1 次
-  citationFulltext: (id, n) => request('GET', '/api/answer/' + id + '/citations/' + n)       // 依据全文展开
+  citationFulltext: (id, n) => request('GET', '/api/answer/' + id + '/citations/' + n),      // 依据全文展开
+  // ── v0.8.0（用户令 1008：咨询全免费，导出按条收费 ¥0.1，虚拟支付）──
+  exportSign: (id) => request('POST', '/api/answer/' + id + '/export_sign'),                 // 单条导出签名
+  exportAllSign: () => request('POST', '/api/answers/export_all_sign'),                      // 批量导出签名（buyQuantity=未解锁条数）
+  // ── v0.9.0（用户令 1008：研究报告商城整合，按份售卖 ¥498-1999）──
+  reportList: () => request('GET', '/api/reports'),                                          // 报告目录（公开浏览+本人解锁态）
+  reportDetail: (sku) => request('GET', '/api/report/' + sku),                               // 报告详情（章节/试读/适用人群）
+  reportSample: (sku) => request('GET', '/api/report/' + sku + '/sample'),                   // 试读正文
+  reportSign: (sku) => request('POST', '/api/report/' + sku + '/unlock_sign'),               // 报告解锁签名
+  reportPdfUrl: (sku) => BASE_URL + '/api/report/' + sku + '/pdf',                           // PDF 全文（downloadFile 带 Bearer）
+  requestRaw: request                                                                        // pay.js 回调腿用（带 401 重登语义）
 };

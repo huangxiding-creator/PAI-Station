@@ -15,16 +15,33 @@
     </view>
   </view>
 
-  <!-- 四座金库 -->
+  <!-- 四座金库 · 34 分组（v0.8.0 用户令：同步总包智库升级后的全树） -->
   <view class="card ticks rise">
-    <view class="zk-kicker kicker kicker-on-paper">FOUR VAULTS · 四库全通</view>
+    <view class="zk-kicker kicker kicker-on-paper">FOUR VAULTS · 四库 34 分组</view>
     <view class="zk-vault" wx:for="{{vaults}}" wx:key="h">
-      <view class="zk-v-glyph"><text>{{item.g}}</text></view>
-      <view class="zk-v-body">
-        <view class="zk-v-h">{{item.h}}</view>
-        <view class="zk-v-d muted">{{item.d}}</view>
+      <view class="zk-v-head">
+        <view class="zk-v-glyph"><text>{{item.g}}</text></view>
+        <view class="zk-v-body">
+          <view class="zk-v-h">{{item.h}}<text class="zk-v-n mono">{{item.subs.length}}</text></view>
+          <view class="zk-v-d muted">{{item.d}}</view>
+        </view>
+      </view>
+      <view class="zk-subs">
+        <text class="zk-sub" wx:for="{{item.subs}}" wx:for-item="s" wx:key="*this">{{s}}</text>
       </view>
     </view>
+  </view>
+
+  <!-- 诚实库存（持续入库中，可证成口径） -->
+  <view class="card ticks rise">
+    <view class="zk-kicker kicker kicker-on-paper">INVENTORY · 库存盘点</view>
+    <view class="zk-stats">
+      <view class="zk-stat" wx:for="{{stats}}" wx:key="l">
+        <view class="zk-stat-n mono">{{item.n}}</view>
+        <view class="zk-stat-l muted">{{item.l}}</view>
+      </view>
+    </view>
+    <view class="muted zk-note">内容持续迁移入库中，盘点口径与知识库同步更新</view>
   </view>
 
   <!-- 知识库链接卡（v0.7.4 提审合规：低姿态单一入口，不再放二维码/长按识别/引导外部App） -->

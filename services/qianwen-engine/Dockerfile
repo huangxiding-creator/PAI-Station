@@ -20,6 +20,11 @@ RUN apt-get update \
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
+# 研究报告商城内容层（64 份可售 PDF ≈92MB + report.json + 试读 sample/）
+# 放在代码层之前：内容变动少，代码迭代不失效这层缓存（引擎缺省路径
+# REPORT_CONTENT_DIR=/app/report_platform/content 与 REPO=/app 对齐）
+COPY report_content ./report_platform/content
+
 COPY qianwen_engine ./qianwen_engine
 COPY docker-entrypoint.sh ./docker-entrypoint.sh
 # DATA_DIR 默认落 /app/data：字体随镜像带（docx/pdf 导出与海报用），wxacode 缓存运行时可写

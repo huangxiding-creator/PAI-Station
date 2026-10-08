@@ -229,7 +229,7 @@ def _build_docx(sections: list, title: str) -> bytes:
                 para([(f"[{c.get('n', '-')}] {c.get('source', '')}{loc}", False)],
                      size=9.5, color=GRAY, space_after=2)
 
-    para([("由 总包AI顾问（总包智库）生成 · 仅供参考，不构成正式法律意见", False)],
+    para([("由 总包AI顾问（AI 检索行业知识库生成）生成 · 仅供参考，不构成正式法律意见", False)],
          size=8.5, color=GRAY, space_before=16)
 
     buf = io.BytesIO()
@@ -357,7 +357,7 @@ def _build_pdf(sections: list, title: str) -> bytes:
         pdf.ln(2)
 
     pdf.ln(4)
-    _body("由 总包AI顾问（总包智库）生成 · 仅供参考，不构成正式法律意见", size=8.5, color=GRAY)
+    _body("由 总包AI顾问（AI 检索行业知识库生成）生成 · 仅供参考，不构成正式法律意见", size=8.5, color=GRAY)
     return bytes(pdf.output())
 
 
@@ -389,7 +389,7 @@ def _build_md(sections: list, title: str) -> bytes:
                 loc = f"（第 {c.get('loc')} 条）" if c.get("loc") else ""
                 lines.append(f"- [{c.get('n', '-')}] {c.get('source', '')}{loc}")
             lines.append("")
-    lines += ["---", "", "*由 总包AI顾问（总包智库）生成 · 仅供参考，不构成正式法律意见*", ""]
+    lines += ["---", "", "*由 总包AI顾问（AI 检索行业知识库生成）生成 · 仅供参考，不构成正式法律意见*", ""]
     return "\n".join(lines).encode("utf-8")
 
 

@@ -28,20 +28,21 @@ def read(path):
     return open(os.path.join(ROOT, path), encoding="utf-8").read()
 
 
-# 1) app.json 结构：七页（问/锅/智/答/我 + legal 协议隐私 + home 兼容跳板）+ 四页签
+# 1) app.json 结构：九页（问/锅/智/研/答/报/我 + legal + home 兼容跳板）+ 五页签
 app_json = json.load(open(os.path.join(ROOT, "app.json"), encoding="utf-8"))
-check("app.json pages 七页（问/锅/智/答/我+legal+home 兼容）", app_json["pages"] == [
-    "pages/ask/ask", "pages/pot/pot", "pages/zhiku/zhiku", "pages/answer/answer",
+check("app.json pages 九页（问/锅/智/研/答/报/我+legal+home 兼容）", app_json["pages"] == [
+    "pages/ask/ask", "pages/pot/pot", "pages/zhiku/zhiku", "pages/research/research",
+    "pages/report/report", "pages/answer/answer",
     "pages/my/my", "pages/legal/privacy", "pages/home/home"])
 check("app.json 入口页仍是 ask（第一位）", app_json["pages"][0] == "pages/ask/ask")
 check("app.json tabBar.custom=true", app_json["tabBar"].get("custom") is True)
 check("app.json lazyCodeLoading", app_json.get("lazyCodeLoading") == "requiredComponents")
 check("app.json 无插件声明（语音插件撤除）", "plugins" not in app_json or "WechatSI" not in app_json.get("plugins", {}))
 tab_texts = [it["text"] for it in app_json["tabBar"]["list"]]
-check("app.json tabBar 四签=咨询/锅圈/智库/我的", tab_texts == ["咨询", "锅圈", "智库", "我的"])
-check("app.json tab2=智库 tab3=我的（锅圈居中）",
-      app_json["tabBar"]["list"][2]["pagePath"] == "pages/zhiku/zhiku"
-      and app_json["tabBar"]["list"][3]["pagePath"] == "pages/my/my")
+check("app.json tabBar 五签=咨询/锅圈/智库/研究/我的", tab_texts == ["咨询", "锅圈", "智库", "研究", "我的"])
+check("app.json 研究=倒数第二位、我的=末位（用户令 1008）",
+      app_json["tabBar"]["list"][3]["pagePath"] == "pages/research/research"
+      and app_json["tabBar"]["list"][4]["pagePath"] == "pages/my/my")
 
 for p in app_json["pages"]:
     wxml = read(p + ".wxml")
@@ -53,8 +54,9 @@ for p in app_json["pages"]:
         check(f"{p} wxml bindtap:{binder} 在 js 有实现", binder in js, binder)
     check(f"{p} nav 绑定存在", "nav.statusBarHeight" in wxml)
 
-# tab 页选中态：问=0 锅=1 智=2 我=3
-for p, sel in [("pages/ask/ask", 0), ("pages/pot/pot", 1), ("pages/zhiku/zhiku", 2), ("pages/my/my", 3)]:
+# tab 页选中态：问=0 锅=1 智=2 研=3 我=4
+for p, sel in [("pages/ask/ask", 0), ("pages/pot/pot", 1), ("pages/zhiku/zhiku", 2),
+               ("pages/research/research", 3), ("pages/my/my", 4)]:
     js = read(p + ".js")
     check(f"{p} onShow 设置 tabBar selected={sel}", f"selected: {sel}" in js)
 
@@ -151,10 +153,27 @@ check("pot 列表 100 字预览+点开全文", "preview" in pot_wxml and "answer
 check("api potList 客户端", "potList" in api_js)
 check("api optimize 客户端（shareReward 已随分享激励下线）", "optimize" in api_js and "shareReward" not in api_js)
 
-# 版本与定位（v0.7.6）
-check("my 版本标记 v0.7.6", "v0.7.6" in my_wxml)
+# 版本与定位（v0.9.0）
+check("my 版本标记 v0.9.0", "v0.9.0" in my_wxml)
 pkg = json.load(open(os.path.join(ROOT, "package.json"), encoding="utf-8"))
-check("package.json version=0.7.6", pkg["version"] == "0.7.6")
+check("package.json version=0.9.0", pkg["version"] == "0.9.0")
+
+# ══ v0.7.7 拒审 599847679 整改：AI 标识显著级（hero 内嵌 + 三页徽章升级）══
+ask_wxss = open(os.path.join(ROOT, "pages", "ask", "ask.wxss"), encoding="utf-8").read()
+ans_wxss = open(os.path.join(ROOT, "pages", "answer", "answer.wxss"), encoding="utf-8").read()
+check("ask hero 内嵌 AI 显著标识（hero-ai 组件存在）",
+      'class="hero-ai"' in ask_wxml and 'class="hero-ai-badge"' in ask_wxml)
+check("ask hero-ai 位置=hero-title 与 hero-sub 之间（首屏必现）",
+      0 < ask_wxml.find('class="hero-ai"') - ask_wxml.find('class="hero-title"')
+      and ask_wxml.find('class="hero-ai"') < ask_wxml.find('class="hero-sub"'))
+check("ask hero-ai 徽章文案=AI生成+人工智能全称句",
+      ">AI生成</text>" in ask_wxml and "人工智能（AI）生成" in ask_wxml)
+check("ask hero-ai 显著级样式（28rpx 白字+橙边深底药丸）",
+      ".hero-ai-badge" in ask_wxss and "28rpx" in ask_wxss and "#ffffff" in ask_wxss
+      and "rgba(255, 148, 50, 0.9)" in ask_wxss)
+check("answer AI 标识徽章升级=AI生成（显著级 28rpx 实底警示条）",
+      ">AI生成</view>" in ans_wxml and "font-size: 28rpx" in ans_wxss)
+check("pot AI 标识徽章升级=AI生成", ">AI生成</view>" in pot_wxml)
 
 # ══ v0.6.0 100× 弧线全量检查（全免费延伸层：追问/要点/相关/海报/等待）══
 check("answer 要点速览卡（TL;DR 3 条）", "tldr-card" in ans_wxml and "要点速览" in ans_wxml)
@@ -372,11 +391,163 @@ _app_py = open(os.path.join(ENGINE, "qianwen_engine", "app.py"), encoding="utf-8
 check("服务端 msg_sec_check v2 实现", "msg_sec_check" in _wx_py and '"version": "2"' in _wx_py)
 check("share_on 入库前过安检门（fail-closed 503）", "msg_sec_check" in _app_py and "内容未通过安全检测" in _app_py and "503" in _app_py)
 check("服务端 pot 举报端点", "/api/pot/report" in _app_py)
-check("session_key 不再落盘", "save_session" not in _app_py)
+check("session_key 服务端落库供查单签名（不下发客户端）",
+      "save_session" in _app_py and 'sess.get("session_key")' in _app_py
+      and "session_key=\"," not in _app_py)
 
 # E. 分享回流注释中性化 + 等待预期管理
 check("answer 分享回流注释中性（无病毒环措辞）", "携带小程序入口" in ans_js and "病毒" not in ans_js)
 check("answer 等待文案带高峰期预期", "高峰期可能排队稍久" in ans_wxml)
+
+# ══ v0.8.0 用户令 1008（咨询全免费 + 导出 ¥0.1/条 + 智库四库 34 分组同步）══
+pay_js_path = os.path.join(ROOT, "utils", "pay.js")
+pay_js = open(pay_js_path, encoding="utf-8").read() if os.path.exists(pay_js_path) else ""
+check("pay.js 存在（虚拟支付封装）", bool(pay_js))
+check("pay.js iOS 隐藏付费入口（platform!=='ios' 闸）", "_platform !== 'ios'" in pay_js)
+check("pay.js 签名三件套逐字节透传（不重序列化）",
+      "signData: sign.sign_data" in pay_js and "paySig: sign.pay_sig" in pay_js
+      and "signature: sign.signature" in pay_js)
+check("pay.js 静默取消识别（cancel 不误报错）", "silentCancel" in pay_js)
+check("pay.js 503 降级文案（未开通不硬崩）", "statusCode === 503" in pay_js)
+check("api.js v0.8.0 四端点（exportSign/exportAllSign/requestRaw）",
+      "exportSign" in api_js and "exportAllSign" in api_js and "requestRaw" in api_js)
+check("answer 导出付费墙（¥0.1 弹窗+已解锁直通）",
+      "支付 0.1 元" in ans_js and "_exportSheet" in ans_js and "exportPaid" in ans_js)
+check("answer 导出 iOS 闸（payOk=false 时 toast 拒绝）",
+      "payOk: pay.paySupported()" in ans_js and "暂不支持导出" in ans_js)
+check("answer 导出 pill iOS 新付费隐藏+已解锁可见（payOk||exportPaid）",
+      'wx:if="{{payOk || exportPaid}}"' in ans_wxml and "导出 ¥0.1" in ans_wxml)
+check("my 批量导出付费墙（N×0.1 一单付清）",
+      "payExportAll" in my_js and "0.1" in my_js and "_exportAllSheet" in my_js)
+check("my 批量导出入口 iOS 新付费隐藏+全解锁可见（payOk||exportUnpaidAll===0）",
+      'wx:if="{{payOk || exportUnpaidAll === 0}}"' in my_wxml and "¥0.1/条" in my_wxml)
+# 智库 v2：四库 34 分组（5+4+7+18）+ 诚实库存
+_zk_subs = re.findall(r"subs: \[([^\]]+)\]", zk_js)
+_zk_counts = [len(re.findall(r"'", s)) // 2 for s in _zk_subs]
+check("智库页 四库 34 分组（5+4+7+18）", _zk_counts == [5, 4, 7, 18], str(_zk_counts))
+check("智库页 分组抽样（科思顿月度观察/SVIP私房课/政策法规资讯）",
+      "科思顿·工程行业月度观察" in zk_js and "SVIP私房课" in zk_js and "政策法规资讯" in zk_js)
+check("智库页 诚实库存四数（1855/847/906/620）",
+      all(k in zk_js for k in ["1855", "847", "906", "620"]))
+check("智库页 持续入库口径（不吹全量）", "持续迁移入库" in zk_wxml)
+check("智库页 v0.7.4 合规防线仍在（无二维码/长按导流）",
+      "previewQr" not in zk_js and "show-menu-by-longpress" not in zk_wxml)
+# 引擎侧：导出收费闸门 + 旧 1 元解锁下线
+_cfg_py = open(os.path.join(ENGINE, "qianwen_engine", "config.py"), encoding="utf-8").read()
+check("引擎 EXPORT_PRICE_FEN=10（¥0.1/条）", "EXPORT_PRICE_FEN = 10" in _cfg_py)
+check("引擎 EXPORT_BATCH_MAX=99（批量护栏）", "EXPORT_BATCH_MAX = 99" in _cfg_py)
+check("引擎 导出四腿端点（export_sign/export_paid/export_all_sign/export_all_paid）",
+      "/api/answer/{aid}/export_sign" in _app_py and "/api/answer/{aid}/export_paid" in _app_py
+      and "/api/answers/export_all_sign" in _app_py and "/api/answers/export_all_paid" in _app_py)
+check("引擎 导出闸门 402（未解锁不放行）", 'HTTPException(402' in _app_py)
+check("引擎 旧 ¥1 解锁双腿已下线（pay_sign/unlock_paid 零引用）",
+      "def pay_sign" not in _app_py and "def unlock_paid" not in _app_py)
+check("引擎 buyQuantity=未解锁条数（批量计价走数量）", '"buyQuantity": len(unpaid)' in _app_py)
+check("引擎 详情腿下发 export_paid/is_owner", '"export_paid":' in _app_py and '"is_owner":' in _app_py)
+check("引擎 otn 时间戳后缀（跨次唯一）", "_make_otn" in _app_py and "time.time() * 1000" in _app_py)
+
+# ══ v0.8.0 对抗审计整改（paychain+compliance 双审计全量收敛）══
+# 订单核验链：pay_order 表 + 微信查单 + 生产 fail-closed
+check("引擎 pay_order 订单表（otn 主键 dialect 双写）", "create_pay_order" in _app_py)
+_store_py = open(os.path.join(ENGINE, "qianwen_engine", "store.py"), encoding="utf-8").read()
+check("store pay_order 五件（create/get/open/mark_many）",
+      "def create_pay_order" in _store_py and "def get_pay_order" in _store_py
+      and "def open_pay_order" in _store_py and "def mark_order_paid" in _store_py
+      and "def mark_export_paid_many" in _store_py)
+check("wechat.xpay_query_order 查单核验（pay_sig+signature 双签）",
+      "def xpay_query_order" in _wx_py and "XpayError" in _wx_py)
+check("引擎 _verify_order_paid 生产 fail-closed（503 对账中）",
+      "_verify_order_paid" in _app_py and "支付对账中" in _app_py)
+check("引擎 409 已收口三态（单篇已解锁/单篇到账/批量到账）",
+      'HTTPException(409, "本篇导出已解锁")' in _app_py
+      and "支付已到账，本篇导出已解锁" in _app_py
+      and "支付已到账，已解锁" in _app_py)
+check("引擎 未支付订单复用同 otn（HIGH-3 防二次扣款）",
+      "open_pay_order" in _app_py and "复用同一未付订单" in _app_py)
+check("引擎 批量 otn/attach 不含 openid 明文（sha256 锚）",
+      'hashlib.sha256(openid.encode()).hexdigest()[:16]' in _app_py)
+check("引擎 otn 熵补齐（secrets.token_hex）", "secrets.token_hex(2)" in _app_py)
+check("引擎 history 下发 export_unpaid_all（服务端权威计数）", "export_unpaid_all" in _app_py)
+check("引擎 旧分享赠次端点已下线（/share 404 回归锚）",
+      '@app.post("/api/answer/{aid}/share")' not in _app_py
+      and "已下线" in _app_py)
+# 客户端收口语义
+check("pay.js 409 已解锁收口（不二次拉起支付）",
+      "_catchSign" in pay_js and "statusCode === 409" in pay_js)
+check("pay.js 已扣款核验抖断不谎报（reconciling 对账文案）",
+      "reconciling: true" in pay_js and "正在对账" in pay_js)
+check("answer.js reconciling 分支（重取详情自然解锁）",
+      "res.reconciling" in ans_js)
+check("my.js 服务端权威计数 exportUnpaidAll（弹窗金额不吃 20 条截断亏）",
+      "exportUnpaidAll" in my_js and "export_unpaid_all" in my_js)
+check("my.js 单笔 99 条上限引导（超量分批）",
+      "一次最多解锁 99 条" in my_js)
+check("my.js reconciling 分支（刷新不谎报）", "res.reconciling" in my_js)
+check("ask.wxml 赠次口径无分享（诱导分享归零）", "有用/纠错 各+1次" in ask_wxml and "有用/分享/纠错" not in ask_wxml)
+_pv = read("pages/legal/privacy.wxml")
+check("legal 付费导出条款（收费说明+退款口径+iOS 不售）",
+      "导出服务（收费说明）" in _pv and "¥0.1/条" in _pv and "不支持退款" in _pv and "iOS 端不提供" in _pv)
+check("legal 隐私收集含商户订单号③（支付对账）", "商户订单号" in _pv)
+check("legal 服务性质不再宣称免费公益（咨询免费+导出可选付费）",
+      "免费公益" not in _pv and "可选付费服务" in _pv)
+check("zhiku 分享标题去绝对化（无四库全通）", "四库全通" not in zk_js)
+_exp_py = open(os.path.join(ENGINE, "qianwen_engine", "exporter.py"), encoding="utf-8").read()
+check("exporter 三格式尾行 AI 检索口径", _exp_py.count("AI 检索行业知识库生成") >= 3)
+# 服务端回归锚：审计整改测试套件在役
+_tep = os.path.join(ENGINE, "tests", "test_export_pay.py")
+check("test_export_pay.py 在役（订单核验回归 21 用例）",
+      os.path.exists(_tep) and "test_prod_query_outage_fail_closed" in open(_tep, encoding="utf-8").read())
+
+# ══ v0.9.0 用户令 1008（研究报告商城整合：tab 研究 + 目录/详情/试读/购买/PDF 六腿）══
+rs_js = read("pages/research/research.js")
+rs_wxml = read("pages/research/research.wxml")
+rp_js = read("pages/report/report.js")
+rp_wxml = read("pages/report/report.wxml")
+check("研究页四件套存在", all(os.path.exists(os.path.join(ROOT, "pages", p, f"{p}.{e}"))
+      for p in ("research", "report") for e in ("js", "wxml", "wxss", "json")))
+check("自绘 tabBar 五 tab（研=倒数第二）",
+      "pages/research/research" in read("custom-tab-bar/index.js")
+      and read("custom-tab-bar/index.js").find("pages/research/research") < read("custom-tab-bar/index.js").find("pages/my/my"))
+check("研究页 目录腿 api.reportList + 分类筛（含已购）",
+      "reportList" in rs_js and "mine" in rs_js and "flagship" in rs_js)
+check("研究页 整理中口径（可看不可买）", "整理中" in rs_wxml)
+check("研究页 AI 辅助研究口径注脚（可证成）", "AI 辅助研究方法" in rs_wxml)
+check("报告页 详情+试读腿（reportDetail/reportSample）",
+      "reportDetail" in rp_js and "reportSample" in rp_js)
+check("报告页 购买走 pay.payReport（vpay 通道）", "payReport" in rp_js)
+check("报告页 PDF=downloadFile+openDocument（Bearer 头）",
+      "wx.downloadFile" in rp_js and "openDocument" in rp_js and "Authorization" in rp_js)
+check("报告页 iOS 购买入口隐藏（paySupported 闸在 wxml）",
+      "paySupported" in rp_wxml and "iOS 暂不支持应用内购买" in rp_wxml)
+check("报告页 整理中不可买态", "暂未开售" in rp_wxml)
+check("报告页 一次解锁永久阅读口径", "永久阅读" in rp_wxml)
+check("api.js 报告五端点（List/Detail/Sample/Sign/PdfUrl）",
+      all(k in api_js for k in ("reportList", "reportDetail", "reportSample", "reportSign", "reportPdfUrl")))
+check("pay.js payReport（报告解锁腿）", "payReport" in pay_js)
+check("my 页 我的报告书架（reportMine+goReports）", "reportMine" in my_js and "goReports" in my_js and "goReports" in my_wxml)
+check("research 分享标题（总包研究）", "总包研究" in rs_js)
+# 引擎侧：报告商城六腿 + 可售判定 + 订单语义
+_rc_py = open(os.path.join(ENGINE, "qianwen_engine", "report_catalog.py"), encoding="utf-8").read()
+check("引擎 报告六腿端点（reports/detail/sample/unlock_sign/unlock_paid/pdf）",
+      '@app.get("/api/reports")' in _app_py and '@app.get("/api/report/{sku}")' in _app_py
+      and '@app.get("/api/report/{sku}/sample")' in _app_py
+      and '@app.post("/api/report/{sku}/unlock_sign")' in _app_py
+      and '@app.post("/api/report/{sku}/unlock_paid")' in _app_py
+      and '@app.get("/api/report/{sku}/pdf")' in _app_py)
+check("引擎 报告订单 kind='report' aid=sku（复用 pay_order）",
+      '"report"' in _app_py and 'aid=sku' in _app_py)
+check("引擎 价格分档道具 report_product_<元>",
+      "report_product_{" in _app_py and "report_product_" in _cfg_py)
+check("引擎 可售判定=PDF 存在且≤20MB（无货/超大自动整理中）",
+      "REPORT_PDF_MAX_BYTES" in _cfg_py and "REPORT_PDF_MAX_BYTES" in _rc_py)
+check("引擎 目录软鉴权（未登录可浏览）", "_openid_soft" in _app_py)
+check("引擎 PDF 闸门 402（未购不放行）", 'HTTPException(402, "购买后可查看完整报告")' in _app_py)
+check("store report_unlocks（openid×sku 幂等解锁）",
+      "report_unlocks" in _store_py and "def mark_report_paid" in _store_py
+      and "def report_unlocked_skus" in _store_py)
+_trm = os.path.join(ENGINE, "tests", "test_report_mall.py")
+check("test_report_mall.py 在役（商城回归）",
+      os.path.exists(_trm) and "test_unlock_paid_forged_and_cross_user" in open(_trm, encoding="utf-8").read())
 
 fails = [c for c in checks if not c[1]]
 for name, ok, detail in checks:

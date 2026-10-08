@@ -1,0 +1,70 @@
+<page-meta page-style="{{themeStyle}}" />
+<view class="page">
+
+  <!-- ══ 蓝图头部：研究 · 报告商城 ══ -->
+  <view class="hero bp-grid ticks">
+    <view style="height: {{nav.statusBarHeight}}px;"></view>
+    <view class="hero-nav" style="height: {{nav.navHeight}}px"></view>
+
+    <view class="hero-inner">
+      <view class="hero-kicker">REPORT MALL · RESEARCH</view>
+      <view class="hero-title">研究</view>
+      <view class="hero-sub">研究报告商城——EPC 总包领域深度研究报告，按份购买，一次解锁永久阅读</view>
+
+      <view class="hero-dwg mono">DWG NO. RS-01 · SCALE 1:1<view class="dim-rule"></view><text class="dim-cap">{{stats.sellable}} ON SALE</text></view>
+    </view>
+  </view>
+
+  <!-- 分类筛选 -->
+  <view class="rs-filters card ticks">
+    <view
+      class="rs-chip {{active === item.k ? 'rs-chip-on' : ''}}"
+      wx:for="{{filters}}"
+      wx:key="k"
+      data-k="{{item.k}}"
+      bindtap="tapFilter"
+    >{{item.label}}<text wx:if="{{item.k === 'mine' && stats.mine}}" class="rs-chip-n mono">{{stats.mine}}</text></view>
+  </view>
+
+  <!-- 目录列表 -->
+  <view class="card ticks rise" wx:if="{{shown.length}}">
+    <view class="rs-list">
+      <view class="rs-item {{item.unlocked ? 'rs-item-owned' : ''}}" wx:for="{{shown}}" wx:key="sku" data-sku="{{item.sku}}" bindtap="goReport" hover-class="rs-item-hover">
+        <view class="rs-item-top">
+          <view class="rs-cat mono">{{item.cat_name}}</view>
+          <view class="rs-state {{item.unlocked ? 'rs-state-on' : (item.sellable ? '' : 'rs-state-dim')}}">{{item.unlocked ? '已解锁' : (item.sellable ? item.price_label : '整理中')}}</view>
+        </view>
+        <view class="rs-title">{{item.title}}</view>
+        <view class="rs-sub muted">{{item.subtitle}}</view>
+        <view class="rs-item-bot">
+          <view class="rs-badges">
+            <text class="rs-badge" wx:for="{{item.badges}}" wx:for-item="b" wx:key="*this">{{b}}</text>
+          </view>
+          <view class="rs-words mono" wx:if="{{item.words_wan}}">{{item.words_wan}}万字</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空/载入/错误态 -->
+  <view class="card ticks" wx:if="{{!loading && !shown.length && !errMsg}}">
+    <view class="rs-empty">
+      <view class="rs-empty-t">{{active === 'mine' ? '还没有解锁的报告' : '目录整理中'}}</view>
+      <view class="muted">{{active === 'mine' ? '购买后这里就是你的书架' : '稍后再来看看'}}</view>
+    </view>
+  </view>
+  <view class="card ticks" wx:if="{{errMsg}}">
+    <view class="rs-empty">
+      <view class="rs-empty-t">{{errMsg}}</view>
+      <button class="btn-primary rs-retry" hover-class="btn-hover" bindtap="load">重新加载</button>
+    </view>
+  </view>
+  <view class="card ticks" wx:if="{{loading && !shown.length}}">
+    <view class="rs-empty"><view class="muted">目录加载中…</view></view>
+  </view>
+
+  <!-- 合规注脚：AI 生成内容标识（可证成口径） -->
+  <view class="rs-foot muted">报告内容为研究团队基于公开资料与 AI 辅助研究方法产出，购买后支持 PDF 全文阅读；如遇质量问题可联系客服处理</view>
+
+  <view class="safe-bottom"></view>
+</view>

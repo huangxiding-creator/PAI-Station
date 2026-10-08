@@ -86,3 +86,15 @@ deploy-hook 自动 `docker exec nginx-1 nginx -s reload`。双层墙: ufw 443 + 
       内容件 264MB/130、vpay 在役轨道 offer_id=1450664233、qianwen-engine 四腿、
       zongbao-ai BASE_URL=ai.epcschool.top、道具分层/iOS 门/发布+切0 三前置等关键设计题）
 - [ ] （wx5cee 整合实施 = 另一会话，本会话到此移交为止）
+
+## 2026-10-08 · wx5cee 整合实施收官（承接会话执行）
+
+- [x] 引擎商城六腿 + 可售判定（64/66；TOPIC-06 超 20MB、BLUEBOOK 无 PDF 自动「整理中」）
+- [x] 四档 vpay 道具 report_498/598/698/1999 现网建毕（¥1999 上限实测过；secret 四键入账）
+- [x] downloadFile 合法域名 ai.epcschool.top 已在列（实查三组域名均有，零操作）
+- [x] 生产部署 009：内容层 92.3MB 随镜像 + /api/reports 目录腿实弹 66/64 + 双闸门语义全对
+- [x] 客户端 v0.9.0：五签 tab（研究倒数第二）+ 目录/详情/试读/购买/PDF 六腿 + iOS 闸
+- [x] BOOT-SIM 341/341 + 引擎 85/85 + 上传 robot15 + 体验版钉位换 0.9.0
+- [x] **提审 2026-10-08 19:22:08 审核中（普通队列）**——「所有工作全部完成再提审」用户令达成
+- [ ] TOPIC-06 PDF 重生成 ≤20MB（工单；整理中直至重生）
+- [ ] 过审后：发布（先清灰度横幅态）→ 六道具现网发布 → env=1→0 → 海报码 release → 收口链

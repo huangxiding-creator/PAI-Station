@@ -23,11 +23,12 @@ from watch_category import live_token  # noqa: E402
 CMD = sys.argv[1] if len(sys.argv) > 1 else "nav"
 
 VERSION_DESC = (
-    "新增导出：安卓端问答可导出Word/PDF/Markdown，0.1元/条虚拟支付，"
-    "解锁后可反复导出，iOS不展示付费入口；咨询/追问/锅圈/智库全免费。"
-    "测试：咨询页提问出AI解答→回答页追问/要点/依据→安卓点导出按提示支付→"
-    "我的页批量导出。内容均由AI检索知识库生成，三页常驻AI生成标识，"
-    "导出文件附声明。收集openid、提问内容、自愿共享问答、支付订单号。"
+    "新增研究报告商城：研究频道64份工程行业研究报告，目录与试读免费浏览，"
+    "安卓端498-1999元/份虚拟支付解锁后可在小程序内阅读PDF全文（长期有效），"
+    "iOS不展示付费入口；咨询/追问/锅圈/智库仍全免费。"
+    "测试：研究tab浏览目录→点报告看详情与试读→安卓购买解锁后打开PDF。"
+    "内容均由AI检索知识库生成，各内容面常驻AI生成标识。"
+    "收集openid、提问内容、自愿共享问答、支付订单号。"
 )
 
 FIND_BTN = """
@@ -91,13 +92,17 @@ function visDialog(anchor) {
 
 page = attach_or_launch()
 tab = page.latest_tab
-# 钉定 getcodepage 标签（nav 的 tab.get 可能开新页，latest_tab 漂移到首页）
+# 钉页：主表单（get_class）在新标签页打开——有 get_class 必钉它；否则钉 getcodepage
 try:
+    _gc = _cp = None
     for _tid in page.tab_ids:
         _t = page.get_tab(_tid)
-        if _t and "wacodepage/getcodepage" in (_t.url or ""):
-            tab = _t
-            break
+        _u = _t.url or "" if _t else ""
+        if not _gc and "get_class" in _u:
+            _gc = _t
+        if not _cp and "wacodepage/getcodepage" in _u:
+            _cp = _t
+    tab = _gc or _cp or tab
 except Exception:
     pass
 tok = live_token(tab)
@@ -127,7 +132,7 @@ elif CMD == "step1":
 var blk = null;
 var logs = document.querySelectorAll('.code_version_log');
 for (var i = 0; i < logs.length; i++) {
-  if (logs[i].textContent.indexOf('0.8.0') >= 0) { blk = logs[i]; break; }
+  if (logs[i].textContent.indexOf('0.9.0') >= 0) { blk = logs[i]; break; }
 }
 if (!blk) return JSON.stringify({found: false, step: 'block'});
 var btn = findBtn(blk, 1, '提交审核');

@@ -19,17 +19,15 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-# 引擎侧全部表（含运行时惰性建表的 criticisms / pay_log）
+# 引擎侧全部表（criticisms 运行时惰性建表；pay_log/pay_order v0.8.0 起已转正进 _SCHEMA）
 TABLES = ("users", "answers", "mp_session", "rewards", "pot_items",
           "followups", "posters", "pot_reports", "citations_ft",
-          "criticisms", "pay_log")
-# 惰性表的建表文本与 store.save_criticism / store.mark_paid 同源（经 _sql 方言转换）
+          "criticisms", "pay_log", "pay_order")
+# 惰性表建表文本与 store.save_criticism 同源（pay_log 由 store.init 经 _SCHEMA 建）
 _LAZY_DDL = (
     "CREATE TABLE IF NOT EXISTS criticisms"
     "(id INTEGER PRIMARY KEY AUTOINCREMENT, aid TEXT, openid TEXT, text TEXT,"
     " score INTEGER, refund_tier TEXT, created_at TEXT DEFAULT (datetime('now','localtime')))",
-    "CREATE TABLE IF NOT EXISTS pay_log(aid TEXT, openid TEXT, out_trade_no TEXT,"
-    " created_at TEXT DEFAULT (datetime('now','localtime')))",
 )
 _CHUNK = 500
 

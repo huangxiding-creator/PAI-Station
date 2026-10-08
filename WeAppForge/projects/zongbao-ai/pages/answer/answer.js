@@ -9,6 +9,7 @@
 const api = require('../../utils/api');
 const md2blocks = require('../../utils/md2blocks');
 const theme = require('../../utils/theme');
+const pay = require('../../utils/pay');
 
 Page({
   data: {
@@ -43,6 +44,8 @@ Page({
     fuLeftA: null,        // 本篇今日追问剩余
     fuLeftG: null,        // 全局今日追问剩余
     posterBusy: false,
+    exportPaid: false,   // v0.8.0 本篇导出已解锁（¥0.1/条）
+    payOk: true,         // v0.8.0 虚拟支付可用（iOS=false → 隐藏导出入口，虚拟支付铁律）
     nav: { statusBarHeight: 20, navHeight: 44 }
   },
 
@@ -52,7 +55,7 @@ Page({
       this.setData({ nav: app.globalData.nav });
     }
     theme.apply(this); // v0.7.4 首帧即上主题变量（onShow 仍会再刷，不闪白）
-    this.setData({ id: options.id || '' });
+    this.setData({ id: options.id || '', payOk: pay.paySupported() });
     this._pollTimer = null;
     this._tickTimer = null;
     this._fuTimer = null;
@@ -130,6 +133,7 @@ Page({
           loading: false, polling: false,
           question: d.question,
           unlocked: true,
+          exportPaid: !!d.export_paid,   // v0.8.0 详情腿下发
           blocks: md2blocks.md2blocks(full),
           citations: d.citations || [],
           fullChars: d.full_chars || 0,
@@ -216,11 +220,51 @@ Page({
   // 依《小程序平台运营规范》3.2.1 去除「分享 +1 次」利益激励，赠次仅保留有用/纠错等站内真实互动
 
   // ── 导出：Word/PDF 引擎生成（base64 落盘），MD 本地拼 ──
+  // v0.8.0（用户令 1008）：咨询全免费；导出按条收费 ¥0.1（虚拟支付，Android；
+  // iOS 隐藏付费入口——虚拟支付铁律；已解锁内容 iOS 也可导出）。
   onExport() {
     if (!this._rawText) {
       wx.showToast({ title: '正文还没就绪', icon: 'none' });
       return;
     }
+    if (this.data.exportPaid) {
+      this._exportSheet();
+      return;
+    }
+    if (!this.data.payOk) {
+      wx.showToast({ title: '当前系统暂不支持导出，阅读全文不受影响', icon: 'none', duration: 2400 });
+      return;
+    }
+    wx.showModal({
+      title: '导出本篇解答',
+      content: '咨询全程免费，导出文件按 ¥0.1/条 收费（虚拟支付）。解锁后本篇可反复导出 Word/PDF/Markdown。',
+      confirmText: '支付 0.1 元',
+      cancelText: '再想想',
+      success: (r) => {
+        if (!r.confirm) return;
+        if (this._payBusy) return;
+        this._payBusy = true;
+        wx.showLoading({ title: '拉起支付…', mask: true });
+        pay.payExport(this.data.id)
+          .then((res) => {
+            wx.hideLoading();
+            this._payBusy = false;
+            wx.showToast({ title: res.message, icon: 'none', duration: 2000 });
+            if (res.reconciling) {
+              // 已扣款、核验腿抖断：不谎报完成，重取详情（服务端查单补标记后自然解锁）
+              this.load();
+              return;
+            }
+            if (res.ok) {
+              this.setData({ exportPaid: true });
+              this._exportSheet();
+            }
+          });
+      }
+    });
+  },
+
+  _exportSheet() {
     wx.showActionSheet({
       itemList: ['Word 文档 (.docx)', 'PDF 文档 (.pdf)', 'Markdown (.md)'],
       success: (r) => this._exportAs(['docx', 'pdf', 'md'][r.tapIndex]),

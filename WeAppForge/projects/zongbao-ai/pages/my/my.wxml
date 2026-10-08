@@ -123,18 +123,27 @@
       </view>
 
       <!-- 批量导出：全部咨询问答 → Word/PDF/Markdown（v0.7.0 重设计：藏青主视觉+橙色图标块） -->
-      <button class="export-all-btn" hover-class="export-all-hover" bindtap="onExportAll">
+      <!-- v0.8.0 导出收费 ¥0.1/条（iOS 隐藏入口——虚拟支付铁律） -->
+      <button class="export-all-btn" wx:if="{{payOk || exportUnpaidAll === 0}}" hover-class="export-all-hover" bindtap="onExportAll">
         <view class="ea-icon"><text>📦</text></view>
         <view class="ea-main">
           <view class="ea-title">批量导出全部咨询</view>
-          <view class="ea-sub">Word / PDF / Markdown 三格式 · 一键转发同事</view>
+          <view class="ea-sub">Word / PDF / Markdown · ¥0.1/条 · 一键转发同事</view>
         </view>
         <text class="ea-arrow">›</text>
       </button>
     </block>
   </view>
 
-  <view class="muted mono" style="text-align: center; padding: 8rpx 0 0; letter-spacing: 2rpx;">v0.7.6 · 总包AI顾问</view>
+  <!-- 我的报告书架（v0.9.0 报告商城：已购报告入口，tab 研究页=目录） -->
+  <view class="card ticks rise" style="margin-top: 24rpx;" wx:if="{{reportMine >= 0}}">
+    <view class="ap-cell" bindtap="goReports" hover-class="ap-hover">
+      <view class="ap-key">我的报告</view>
+      <view class="muted">{{reportMine}} 份已解锁 · 永久阅读</view>
+    </view>
+  </view>
+
+  <view class="muted mono" style="text-align: center; padding: 8rpx 0 0; letter-spacing: 2rpx;">v0.9.0 · 总包AI顾问</view>
   <view class="legal-row" bindtap="goPrivacy" hover-class="legal-hover">用户协议 · 隐私政策</view>
 
   <view class="safe-bottom"></view>

@@ -69,6 +69,42 @@ def virtual_pay_sign(app_key: str, session_key: str, sign_data: dict | None = No
     return body, pay_sig, signature
 
 
+class XpayError(RuntimeError):
+    """xpay 服务端接口调用失败（网络异常 / errcode≠0 / 响应非 JSON）。
+
+    调用方（支付回调核验腿）fail-closed：生产环境查询失败一律 503 对账中，
+    绝不凭空放行——宁可让用户稍后重试，不给「零支付解锁」留门。"""
+
+
+def xpay_query_order(openid: str, out_trade_no: str, offer_id: str, env: int,
+                     app_key: str, session_key: str) -> dict:
+    """小程序虚拟支付·商户侧查单（POST /xpay/query_order，官方《签名详解》契约）。
+
+    body={openid,out_trade_no,offer_id,env}；双签名与 requestVirtualPayment 同规格：
+    pay_sig=HMAC(AppKey, "/xpay/query_order&"+body)、signature=HMAC(session_key, body)
+    （走 virtual_pay_sign 的 body=/uri= 直签入口）。签名对 body 逐字节绑定，故
+    请求体字段序与签名字符串序必须一致——先序列化再原样展开。
+    成功返回微信侧应答 dict（errcode==0，订单态在 order.status 等字段）；
+    失败抛 XpayError。"""
+    payload = {"openid": openid, "out_trade_no": out_trade_no,
+               "offer_id": offer_id, "env": int(env)}
+    body = json.dumps(payload, separators=(",", ":"), ensure_ascii=False)
+    _, pay_sig, signature = virtual_pay_sign(
+        app_key, session_key, body=body, uri="/xpay/query_order")
+    r = cr.post(
+        "https://api.weixin.qq.com/xpay/query_order?access_token=" + _access_token(),
+        json={**payload, "pay_sig": pay_sig, "signature": signature},
+        impersonate="chrome", timeout=15,
+    )
+    try:
+        d = r.json()
+    except Exception as exc:  # noqa: BLE001
+        raise XpayError(f"query_order 响应非 JSON: HTTP {r.status_code}") from exc
+    if d.get("errcode"):
+        raise XpayError(f"query_order {d.get('errcode')}: {d.get('errmsg')}")
+    return d
+
+
 # ── v0.6.0 海报小程序码（wxacode.getUnlimited：扫码直达 + scene 可归因）──
 _TOKEN_LOCK = threading.Lock()
 _TOKEN_CACHE: dict = {"token": "", "exp": 0.0}

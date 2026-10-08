@@ -85,6 +85,51 @@
 }
 .zk-v-h { font-size: 29rpx; font-weight: 700; color: var(--ink, var(--navy-0)); }
 .zk-v-d { font-size: 23rpx; margin-top: 4rpx; }
+.zk-v-n {
+  margin-left: 12rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+  color: var(--acc, var(--accent));
+}
+.zk-v-head { display: flex; align-items: center; gap: 22rpx; }
+.zk-v-body { flex: 1; }
+
+/* ══ 34 分组标签（v0.8.0）══ */
+.zk-subs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin: 14rpx 0 6rpx 86rpx;
+}
+.zk-sub {
+  font-size: 21rpx;
+  line-height: 1;
+  padding: 12rpx 18rpx;
+  border-radius: 8rpx;
+  border: 2rpx solid var(--line, rgba(var(--t-blue-rgb), 0.25));
+  color: var(--ink, var(--navy-0));
+  background: rgba(var(--t-blue-rgb), 0.06);
+}
+
+/* ══ 库存盘点（v0.8.0 诚实口径）══ */
+.zk-stats {
+  display: flex;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+.zk-stat {
+  flex: 1;
+  text-align: center;
+  padding: 18rpx 0 14rpx;
+  border: 2rpx dashed var(--line, rgba(var(--t-blue-rgb), 0.25));
+  border-radius: 10rpx;
+}
+.zk-stat-n {
+  font-size: 36rpx;
+  font-weight: 800;
+  color: var(--acc, var(--accent));
+}
+.zk-stat-l { font-size: 21rpx; margin-top: 6rpx; }
 
 /* ══ 知识库链接卡（v0.7.4：低姿态单一入口，二维码/长按识别已撤）══ */
 .zk-url {

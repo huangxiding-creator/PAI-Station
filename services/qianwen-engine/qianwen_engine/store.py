@@ -284,6 +284,7 @@ _SCHEMA: tuple = (
         tldr TEXT,
         related TEXT,
         shared INT DEFAULT 0,
+        export_paid INT DEFAULT 0,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         rowid BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
         UNIQUE KEY uk_answers_rowid (rowid),
@@ -373,6 +374,65 @@ _SCHEMA: tuple = (
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (aid, openid)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"""),
+    # v0.8.0 虚拟支付对账流水（导出收费：单条/批量一单一行；幂等插入由调用方保证）
+    ("""CREATE TABLE IF NOT EXISTS pay_log (
+        aid TEXT NOT NULL,
+        openid TEXT NOT NULL,
+        out_trade_no TEXT DEFAULT '',
+        created_at TEXT DEFAULT (datetime('now','localtime'))
+    )""",
+     """CREATE TABLE IF NOT EXISTS pay_log (
+        aid VARCHAR(32) NOT NULL,
+        openid VARCHAR(64) NOT NULL,
+        out_trade_no VARCHAR(64) DEFAULT '',
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        KEY idx_paylog_openid (openid)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"""),
+    # v0.8.0 支付订单表（对抗审查 CRITICAL-2/HIGH-3/MEDIUM-4 根治）：
+    # 签名即落单（otn 主键）；回调腿凭订单 + 微信查单核验才放行；
+    # 批量单快照 aid_list——签名时刻与支付时刻之间新完成的咨询不被顺带解锁。
+    ("""CREATE TABLE IF NOT EXISTS pay_order (
+        out_trade_no TEXT NOT NULL PRIMARY KEY,
+        openid TEXT NOT NULL,
+        kind TEXT NOT NULL,
+        aid TEXT DEFAULT '',
+        aid_list TEXT DEFAULT '',
+        buy_quantity INTEGER NOT NULL,
+        total_fen INTEGER NOT NULL,
+        status TEXT DEFAULT 'signed',
+        created_at TEXT DEFAULT (datetime('now','localtime')),
+        paid_at TEXT DEFAULT ''
+    )""",
+     """CREATE TABLE IF NOT EXISTS pay_order (
+        out_trade_no VARCHAR(64) NOT NULL PRIMARY KEY,
+        openid VARCHAR(64) NOT NULL,
+        kind VARCHAR(8) NOT NULL,
+        aid VARCHAR(32) DEFAULT '',
+        aid_list TEXT,
+        buy_quantity INT NOT NULL,
+        total_fen INT NOT NULL,
+        status VARCHAR(8) DEFAULT 'signed',
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        paid_at DATETIME NULL,
+        rowid BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+        UNIQUE KEY uk_payorder_rowid (rowid),
+        KEY idx_payorder_openid (openid)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"""),
+    # v0.9.0 报告商城解锁（openid × sku 幂等；对账走 pay_order/pay_log）
+    ("""CREATE TABLE IF NOT EXISTS report_unlocks (
+        openid TEXT NOT NULL,
+        sku TEXT NOT NULL,
+        out_trade_no TEXT DEFAULT '',
+        created_at TEXT DEFAULT (datetime('now','localtime')),
+        PRIMARY KEY(openid, sku)
+    )""",
+     """CREATE TABLE IF NOT EXISTS report_unlocks (
+        openid VARCHAR(64) NOT NULL,
+        sku VARCHAR(32) NOT NULL,
+        out_trade_no VARCHAR(64) DEFAULT '',
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY(openid, sku)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"""),
     # v0.7.0 依据来源全文展开（智谱接地生成，按 aid+n 永久缓存）
     ("CREATE TABLE IF NOT EXISTS citations_ft ("
      "aid TEXT NOT NULL, n INTEGER NOT NULL, text TEXT NOT NULL,"
@@ -397,6 +457,8 @@ _ANSWER_UPGRADES: tuple = (
     ("tldr TEXT DEFAULT ''", "tldr TEXT"),
     ("related TEXT DEFAULT ''", "related TEXT"),
     ("shared INTEGER DEFAULT 0", "shared INT DEFAULT 0"),
+    # v0.8.0 用户令 1008：咨询全免费，导出按条收费（¥0.1/条，虚拟支付）
+    ("export_paid INTEGER DEFAULT 0", "export_paid INT DEFAULT 0"),
 )
 _USER_UPGRADES: tuple = (
     ("opt_day TEXT DEFAULT ''", "opt_day VARCHAR(10) DEFAULT ''"),
@@ -701,25 +763,137 @@ def get_session(openid: str) -> str:
         return (row["session_key"] if row else "") or ""
 
 
-def mark_paid(aid: str, openid: str, out_trade_no: str = "") -> bool:
-    """支付成功解锁：幂等（重复回调恒 True）；首次落 pay_log 供对账。"""
+def mark_export_paid(aid: str, openid: str, out_trade_no: str = "") -> bool:
+    """单条导出解锁（¥0.1/条）：幂等（重复回调恒 True）；首次落 pay_log 供对账。
+    v0.8.0 用户令 1008：¥1 整篇解锁已下线，咨询全免费，仅导出按条收费。"""
     init()
     with _LOCK, _db() as c:
-        row = c.execute("SELECT openid, paid FROM answers WHERE id=?", (aid,)).fetchone()
+        row = c.execute("SELECT openid, export_paid FROM answers WHERE id=?", (aid,)).fetchone()
         if row is None or row["openid"] != openid:
             return False
-        otn = (out_trade_no or aid)[:64]
-        if not row["paid"]:
-            c.execute(
-                "UPDATE answers SET unlocked=1, paid=1, out_trade_no=? WHERE id=?", (otn, aid))
-            c.execute(
-                "CREATE TABLE IF NOT EXISTS pay_log(aid TEXT, openid TEXT, out_trade_no TEXT,"
-                " created_at TEXT DEFAULT (datetime('now','localtime')))"
-            )
+        if not row["export_paid"]:
+            c.execute("UPDATE answers SET export_paid=1 WHERE id=?", (aid,))
             c.execute("INSERT INTO pay_log(aid, openid, out_trade_no) VALUES(?,?,?)",
-                      (aid, openid, otn))
-        else:
-            c.execute("UPDATE answers SET unlocked=1 WHERE id=?", (aid,))
+                      (aid, openid, (out_trade_no or aid)[:64]))
+        return True
+
+
+def mark_all_export_paid(openid: str, out_trade_no: str = "") -> int:
+    """[兼容旧测试] 批量导出解锁：本人全部 ready 答案一次性标记（幂等重跑安全）。
+    生产链路 v0.8.0 审计后改走 mark_export_paid_many（快照制，防批量漂移）。"""
+    init()
+    with _LOCK, _db() as c:
+        rows = c.execute(
+            "SELECT id, export_paid FROM answers WHERE openid=? AND status='ready'",
+            (openid,),
+        ).fetchall()
+        n_new = 0
+        for r in rows:
+            if not r["export_paid"]:
+                c.execute("UPDATE answers SET export_paid=1 WHERE id=?", (r["id"],))
+                n_new += 1
+        if n_new:
+            c.execute("INSERT INTO pay_log(aid, openid, out_trade_no) VALUES(?,?,?)",
+                      ("*batch*", openid, (out_trade_no or "*batch*")[:64]))
+        return len(rows)
+
+
+def mark_export_paid_many(openid: str, aids: list, out_trade_no: str = "") -> int:
+    """批量导出解锁（快照制，v0.8.0 审计 MEDIUM-4 根治）：只标记签名时刻快照 ∩ 仍未
+    解锁的条目；快照之外新完成的咨询留给下一单。返回解锁后的总条数（幂等重跑安全；
+    pay_log 仅在真有新解锁时落行）。"""
+    if not aids:
+        return 0
+    init()
+    marks = [(a,) for a in aids]
+    with _LOCK, _db() as c:
+        rows = c.execute(
+            "SELECT id, export_paid FROM answers WHERE openid=? AND status='ready'",
+            (openid,),
+        ).fetchall()
+        want = {r["id"]: r["export_paid"] for r in rows}
+        n_new = 0
+        for a in aids:
+            if a in want and not want[a]:   # 在快照内、本人、ready、未解锁
+                c.execute("UPDATE answers SET export_paid=1 WHERE id=?", (a,))
+                n_new += 1
+        if n_new:
+            c.execute("INSERT INTO pay_log(aid, openid, out_trade_no) VALUES(?,?,?)",
+                      ("*batch*", openid, (out_trade_no or "*batch*")[:64]))
+        return sum(1 for a in aids if a in want)
+
+
+# ── v0.8.0 支付订单（对抗审查 CRITICAL-2/HIGH-3）：签名即落单，回调凭单核验 ──
+def create_pay_order(out_trade_no: str, openid: str, kind: str, aid: str = "",
+                     aid_list: str = "", buy_quantity: int = 1, total_fen: int = 0) -> bool:
+    """签名腿落单（otn 主键防重）；已存在同号单返回 False。"""
+    init()
+    with _LOCK, _db() as c:
+        if c.execute("SELECT 1 FROM pay_order WHERE out_trade_no=?",
+                     (out_trade_no,)).fetchone():
+            return False
+        c.execute(
+            "INSERT INTO pay_order(out_trade_no, openid, kind, aid, aid_list,"
+            " buy_quantity, total_fen) VALUES(?,?,?,?,?,?,?)",
+            ((out_trade_no or "")[:64], openid, kind, (aid or "")[:32],
+             (aid_list or "")[:2000], int(buy_quantity), int(total_fen)))
+        return True
+
+
+def get_pay_order(out_trade_no: str) -> Optional[dict]:
+    init()
+    with _db() as c:
+        row = c.execute(
+            "SELECT * FROM pay_order WHERE out_trade_no=?", (out_trade_no,)).fetchone()
+        return dict(row) if row else None
+
+
+def open_pay_order(openid: str, kind: str, aid: str = "") -> Optional[dict]:
+    """本人最近一张 signed 未付单（同一目标重复发起时复用同一 otn——已付未标记
+    走查单补标记，未付走同一单续付，根治二次扣款；HIGH-3）。"""
+    init()
+    with _db() as c:
+        sql = ("SELECT * FROM pay_order WHERE openid=? AND kind=? AND status='signed'"
+               " AND aid=? ORDER BY rowid DESC LIMIT 1")
+        row = c.execute(sql, (openid, kind, aid or "")).fetchone()
+        return dict(row) if row else None
+
+
+def mark_order_paid(out_trade_no: str) -> bool:
+    """订单转 paid（幂等：仅 signed → paid 真；重复回调/已 paid 返回 False 不重复记账）。"""
+    init()
+    with _LOCK, _db() as c:
+        cur = c.execute(
+            "UPDATE pay_order SET status='paid',"
+            " paid_at=datetime('now','localtime')"
+            " WHERE out_trade_no=? AND status='signed'", (out_trade_no,))
+        return bool(getattr(cur, "rowcount", 0))
+
+
+# ── v0.9.0 报告商城解锁（kind='report'，pay_order.aid 存 sku）──
+def report_unlocked_skus(openid: str) -> set:
+    """本人已解锁报告 sku 集合（目录/详情页标记用）。"""
+    init()
+    with _db() as c:
+        rows = c.execute(
+            "SELECT sku FROM report_unlocks WHERE openid=?", (openid,)).fetchall()
+        return {r["sku"] for r in rows}
+
+
+def mark_report_paid(openid: str, sku: str, out_trade_no: str = "") -> bool:
+    """报告解锁标记（幂等：重复回调恒 True；首次落 pay_log 对账行）。"""
+    init()
+    with _LOCK, _db() as c:
+        row = c.execute(
+            "SELECT 1 FROM report_unlocks WHERE openid=? AND sku=?",
+            (openid, sku)).fetchone()
+        if row is None:
+            c.execute(
+                "INSERT INTO report_unlocks(openid, sku, out_trade_no) VALUES(?,?,?)",
+                (openid, sku, (out_trade_no or sku)[:64]))
+            c.execute(
+                "INSERT INTO pay_log(aid, openid, out_trade_no) VALUES(?,?,?)",
+                (sku, openid, (out_trade_no or sku)[:64]))
         return True
 
 
@@ -728,7 +902,7 @@ def history(openid: str, limit: int = 20) -> list:
     with _db() as c:
         cur = c.execute(
             "SELECT id, question, substr(answer_full,1,60) AS preview, liked, criticized,"
-            " status, unlocked, shared, created_at FROM answers WHERE openid=?"
+            " status, unlocked, shared, export_paid, created_at FROM answers WHERE openid=?"
             " ORDER BY rowid DESC LIMIT ?",
             (openid, limit),
         )

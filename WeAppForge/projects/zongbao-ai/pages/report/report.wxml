@@ -1,0 +1,91 @@
+<page-meta page-style="{{themeStyle}}" />
+<view class="page" wx:if="{{d}}">
+
+  <!-- ══ 蓝图头部：报告题名区 ══ -->
+  <view class="hero bp-grid ticks">
+    <view style="height: {{nav.statusBarHeight}}px;"></view>
+    <view class="rp-nav" style="height: {{nav.navHeight}}px">
+      <view class="rp-back" bindtap="goBack">‹ 返回</view>
+    </view>
+
+    <view class="hero-inner">
+      <view class="hero-kicker">{{d.cat_name}} · REPORT</view>
+      <view class="rp-title">{{d.title}}</view>
+      <view class="hero-sub">{{d.subtitle}}</view>
+
+      <view class="hero-dwg mono">SKU {{d.sku}}<view class="dim-rule"></view><text class="dim-cap" wx:if="{{d.words_wan}}">{{d.words_wan}}万字</text></view>
+    </view>
+  </view>
+
+  <!-- 价格卡 -->
+  <view class="card ticks rise">
+    <view class="rp-price-row">
+      <view class="rp-price {{d.unlocked ? 'rp-price-owned' : ''}}">{{d.unlocked ? '已解锁 · 永久阅读' : (d.sellable ? d.price_label : '整理中 · 暂未开售')}}</view>
+      <view class="rp-badges">
+        <text class="rs-badge" wx:for="{{d.badges}}" wx:key="*this">{{item}}</text>
+      </view>
+    </view>
+
+    <!-- 主行动条：未购=购买（iOS 隐藏），已购=打开 PDF -->
+    <button
+      wx:if="{{d.unlocked}}"
+      class="btn-primary rp-act"
+      hover-class="btn-hover"
+      disabled="{{opening}}"
+      bindtap="openPdf"
+    >{{opening ? '打开中…' : '打开 PDF 全文'}}</button>
+    <button
+      wx:elif="{{d.sellable && paySupported}}"
+      class="btn-primary rp-act"
+      hover-class="btn-hover"
+      disabled="{{buying}}"
+      bindtap="buy"
+    >{{buying ? '拉起支付…' : d.price_label + ' · 购买解锁'}}</button>
+    <view wx:elif="{{d.sellable}}" class="rp-ios-note muted">iOS 暂不支持应用内购买，请在安卓设备上购买后阅读</view>
+    <view wx:else class="rp-ios-note muted">本报告 PDF 整理中，开放购买前可先试读</view>
+
+    <view class="muted rp-note">一次解锁 · 永久阅读 · 内容由研究团队基于公开资料与 AI 辅助研究方法产出</view>
+  </view>
+
+  <!-- 简介 -->
+  <view class="card ticks rise" wx:if="{{d.intro_lede || d.intro}}">
+    <view class="kicker kicker-on-paper rp-kicker">ABOUT · 报告简介</view>
+    <view class="rp-lede" wx:if="{{d.intro_lede}}">{{d.intro_lede}}</view>
+    <view class="rp-intro" wx:if="{{d.intro}}">{{d.intro}}</view>
+  </view>
+
+  <!-- 适用人群 -->
+  <view class="card ticks rise" wx:if="{{d.audience}}">
+    <view class="kicker kicker-on-paper rp-kicker">FOR · 适用人群</view>
+    <view class="rp-intro">{{d.audience}}</view>
+  </view>
+
+  <!-- 章节目录 -->
+  <view class="card ticks rise" wx:if="{{d.chapters.length}}">
+    <view class="kicker kicker-on-paper rp-kicker">CHAPTERS · 章节目录<text class="mono rp-ch-n">{{d.chapters.length}}</text></view>
+    <view class="rp-ch" wx:for="{{d.chapters}}" wx:key="id">
+      <view class="rp-ch-t"><text class="mono rp-ch-id">{{item.id}}</text>{{item.title}}</view>
+      <view class="muted rp-ch-d" wx:if="{{item.desc}}">{{item.desc}}</view>
+    </view>
+  </view>
+
+  <!-- 试读 -->
+  <view class="card ticks rise" wx:if="{{sample}}">
+    <view class="kicker kicker-on-paper rp-kicker">{{d.sample_label || '试读'}} · FREE</view>
+    <view class="rp-sample {{sampleOpen ? '' : 'rp-sample-fold'}}">{{sample}}</view>
+    <view class="rp-sample-more" bindtap="toggleSample">{{sampleOpen ? '收起试读 ▴' : '展开试读 ▾'}}</view>
+  </view>
+
+  <view class="safe-bottom"></view>
+</view>
+
+<!-- 载入/错误态 -->
+<view class="page" wx:else>
+  <view class="card ticks rp-state">
+    <view wx:if="{{loading}}"><view class="muted">报告加载中…</view></view>
+    <view wx:else>
+      <view class="rp-state-t">{{errMsg || '报告不存在'}}</view>
+      <button class="btn-primary rp-act" hover-class="btn-hover" bindtap="goBack">返回目录</button>
+    </view>
+  </view>
+</view>

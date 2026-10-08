@@ -3,6 +3,7 @@
 // v0.7.3：外观画廊——周换装主题选择（跟随星期 / 锁定七套调色板之一）
 const api = require('../../utils/api');
 const theme = require('../../utils/theme');
+const pay = require('../../utils/pay');
 
 Page({
   data: {
@@ -12,7 +13,10 @@ Page({
     loadError: '',
     nav: { statusBarHeight: 20, navHeight: 44 },
     sheetNo: '',
-    themes: []           // v0.7.3 外观画廊（theme.list()）
+    themes: [],          // v0.7.3 外观画廊（theme.list()）
+    payOk: true,         // v0.8.0 虚拟支付可用（iOS=false → 隐藏批量导出付费入口）
+    exportUnpaidAll: -1, // 服务端权威未解锁计数（-1=未知；0 且 iOS 也显示入口=纯导出无需支付）
+    reportMine: -1       // v0.9.0 已购报告计数（-1=未知不显示书架行）
   },
 
   onLoad() {
@@ -21,6 +25,7 @@ Page({
       this.setData({ nav: app.globalData.nav });
     }
     theme.apply(this); // v0.7.4 首帧即上主题变量（onShow 仍会再刷，不闪白）
+    this.setData({ payOk: pay.paySupported() });
     const now = new Date();
     const pad = (n) => (n < 10 ? '0' + n : '' + n);
     this.setData({ sheetNo: 'GC-' + pad(now.getMonth() + 1) + pad(now.getDate()) });
@@ -32,7 +37,7 @@ Page({
     this.setData({ themes: theme.list() });
     // 自绘 tabBar 选中态（v0.7.2 四页签：问=0 锅=1 智=2 我=3）
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
-      this.getTabBar().setData({ selected: 3 });
+      this.getTabBar().setData({ selected: 4 });
     }
     this.refresh();
   },
@@ -80,6 +85,9 @@ Page({
         this.setData({
           quota: d.quota || null,
           items,
+          // 审计 MEDIUM-5：弹窗金额以服务端全量计数为准（items 仅 20 条截断）
+          exportUnpaidAll: (typeof d.export_unpaid_all === 'number')
+            ? d.export_unpaid_all : -1,
           loading: false,
           loadError: ''
         });
@@ -89,6 +97,13 @@ Page({
         this.setData({ loading: false, loadError: api.errMsg(err, '加载失败') });
       })
       .then(() => { if (done) done(); });
+    // v0.9.0 报告商城：已购计数（失败静默——书架入口不阻断我的页）
+    api.reportList()
+      .then((d) => {
+        const mine = ((d && d.reports) || []).filter((r) => r.unlocked).length;
+        this.setData({ reportMine: mine });
+      })
+      .catch(() => {});
   },
 
   // sqlite: "2026-09-28 14:33:21" → 今天 14:33 / 昨天 14:33 / 09-26 14:33
@@ -115,6 +130,11 @@ Page({
     wx.switchTab({ url: '/pages/ask/ask' });
   },
 
+  // v0.9.0 我的报告书架 → 研究页已购筛
+  goReports() {
+    wx.switchTab({ url: '/pages/research/research' });
+  },
+
   // v0.7.4 提审合规：用户协议 · 隐私政策
   goPrivacy() {
     wx.navigateTo({ url: '/pages/legal/privacy' });
@@ -126,8 +146,63 @@ Page({
   },
 
   // ── 批量导出全部咨询（用户令 v0.5.0）：Word/PDF/MD 三选一，引擎聚合生成 ──
+  // v0.8.0（用户令 1008）：导出按条收费 ¥0.1；未解锁条数一单付清（iOS 隐藏入口）
   onExportAll() {
     if (!this.data.items.length) return;
+    // 服务端权威未解锁计数（-1=旧服务端未知时，回退本地 items 估算——仅含近 20 条，保守）
+    const unpaid = this.data.exportUnpaidAll >= 0
+      ? this.data.exportUnpaidAll
+      : this.data.items.filter((it) => it.status === 'ready' && !it.export_paid).length;
+    // 已全部解锁 → 直接导出（iOS 已解锁内容也可导出：铁律只禁「新增付费入口」）
+    if (!unpaid) {
+      this._exportAllSheet();
+      return;
+    }
+    if (!this.data.payOk) {
+      wx.showToast({ title: '当前系统暂不支持导出', icon: 'none' });
+      return;
+    }
+    // 引擎单笔上限 99 条（buyQuantity 上限）：超量引导先单篇解锁（审计 MEDIUM-4）
+    if (unpaid > 99) {
+      wx.showModal({
+        title: '一次最多解锁 99 条',
+        content: '当前未解锁 ' + unpaid + ' 条，超出单笔上限。请先在部分回答页单独解锁，剩余不足 99 条后再来批量导出。',
+        showCancel: false,
+        confirmText: '知道了'
+      });
+      return;
+    }
+    const yuan = (unpaid * 0.1).toFixed(1);
+    wx.showModal({
+      title: '批量导出 ' + unpaid + ' 条',
+      content: '咨询全程免费，导出按 ¥0.1/条：本次 ' + unpaid + ' 条共 ' + yuan + ' 元（一单付清，解锁后可反复导出）。',
+      confirmText: '支付 ' + yuan + ' 元',
+      cancelText: '再想想',
+      success: (r) => {
+        if (!r.confirm) return;
+        if (this._payBusy) return;
+        this._payBusy = true;
+        wx.showLoading({ title: '拉起支付…', mask: true });
+        pay.payExportAll()
+          .then((res) => {
+            wx.hideLoading();
+            this._payBusy = false;
+            wx.showToast({ title: res.message, icon: 'none', duration: 2000 });
+            if (res.reconciling) {
+              // 已扣款、核验腿抖断：不谎报完成，刷新等查单补标记后自然解锁（重按=409 收口）
+              this.refresh();
+              return;
+            }
+            if (res.ok) {
+              this.refresh();
+              this._exportAllSheet();
+            }
+          });
+      }
+    });
+  },
+
+  _exportAllSheet() {
     wx.showActionSheet({
       itemList: ['Word 文档 (.docx)', 'PDF 文档 (.pdf)', 'Markdown (.md)'],
       success: (r) => this._exportAllAs(['docx', 'pdf', 'md'][r.tapIndex]),

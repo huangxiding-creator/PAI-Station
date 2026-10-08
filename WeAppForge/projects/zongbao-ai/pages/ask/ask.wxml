@@ -9,6 +9,11 @@
     <view class="hero-inner">
       <view class="hero-kicker">GENERAL CONTRACTOR · AI ADVISOR</view>
       <view class="hero-title">总包AI顾问</view>
+      <!-- v0.7.7 深度合成合规：AI 生成显著标识（hero 内嵌高对比，拒审 599847679 整改） -->
+      <view class="hero-ai">
+        <text class="hero-ai-badge">AI生成</text>
+        <text class="hero-ai-text">本服务内容由人工智能（AI）生成 · 仅供参考</text>
+      </view>
       <view class="hero-sub">AI 检索行业知识库生成的专业参考 · 总包人的随身工程顾问 / 招投标 / 签约 / 风险 / 造价争议 / 审计 / 合同实务</view>
 
       <!-- 额度票根 -->
@@ -21,7 +26,7 @@
         <view class="qt-right">
           <view class="qt-kv">免费 {{quota.free_left}} 次</view>
           <view class="qt-kv" wx:if="{{quota.bonus_left > 0}}">互动加赠 {{quota.bonus_left}} 次</view>
-          <view class="qt-kv qt-dim" wx:else>有用/分享/纠错 各+1次</view>
+          <view class="qt-kv qt-dim" wx:else>有用/纠错 各+1次</view>
         </view>
       </view>
       <view class="quota-ticket quota-empty" wx:else>
