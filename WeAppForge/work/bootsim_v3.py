@@ -121,9 +121,12 @@ _cta = ask_wxml.find("ask-btn")
 _inp = ask_wxml.find("ask-input")
 check("ask 布局=输入框→按钮排（AI优化左|咨询右）", 0 <= _inp < _opt < _cta, f"{_inp}/{_opt}/{_cta}")
 
-# 第 4 点：免费规则文案（6 次/四动作赠次/0 点清零）
-check("ask 规则文案=6次+四动作+0点清零", "免费 6 次" in ask_wxml and "0 点清零" in ask_wxml)
-check("my 规则文案=6次+四动作+上不封顶", "每天免费 6 次" in my_wxml and "上不封顶" in my_wxml)
+# 第 4 点：免费规则文案（v0.9.6 用户令 1009：免费次数说明文字全域下线，规则本身不变——
+# 引擎 6 次/日照旧；文字只留赠次规则与清零时点）
+check("ask 规则文案=四动作+0点清零（免费次数文字已下线）",
+      "免费 6 次" not in ask_wxml and "0 点清零" in ask_wxml and "有用/纠错" in ask_wxml)
+check("my 规则文案=四动作+上不封顶（免费次数文字已下线）",
+      "每天免费 6 次" not in my_wxml and "上不封顶" in my_wxml and "有用/纠错" in my_wxml)
 
 # 第 5 点：打破砂锅 + 批量导出
 check("my 工程档案→打破砂锅", "打破砂锅 · FOLDER" in my_wxml and "工程档案" not in my_wxml)
@@ -155,9 +158,9 @@ check("api potList 客户端", "potList" in api_js)
 check("api optimize 客户端（shareReward 已随分享激励下线）", "optimize" in api_js and "shareReward" not in api_js)
 
 # 版本与定位（v0.9.0）
-check("my 版本标记 v0.9.5（1009 服务入口行重设计版）", "v0.9.5" in my_wxml)
+check("my 版本标记 v0.9.6（1009 真机根因战版）", "v0.9.6" in my_wxml)
 pkg = json.load(open(os.path.join(ROOT, "package.json"), encoding="utf-8"))
-check("package.json version=0.9.5", pkg["version"] == "0.9.5")
+check("package.json version=0.9.6", pkg["version"] == "0.9.6")
 # 1009 用户令：外观沉底（个性化低频项按用户习惯放设置区，高频额度/记录在前）——顺序即断言
 check("my 布局顺序=额度→记录→书架→外观（外观在咨询记录之后，1009 用户令）",
       my_wxml.find("外观 · APPEARANCE") > my_wxml.find("咨询记录 · RECORDS")
@@ -459,8 +462,8 @@ check("智库页 第三方品牌不展示（科思顿/小鹅通/秘塔/知网镜
       "科思顿" not in _zk_code and "科思顿" not in zk_wxml
       and "小鹅通" not in _zk_code and "秘塔" not in _zk_code and "知网" not in _zk_code
       and "49 分组" in zk_wxml)
-check("智库页 诚实库存四数（1855/847/906/620，v0.9.5 起同源 utils/kbstats.js）",
-      all(k in read("utils/kbstats.js") for k in ["1855", "847", "906", "620"])
+check("智库页 诚实库存四数（9855/847/906/620，v0.9.6 用户令更新首数）",
+      all(k in read("utils/kbstats.js") for k in ["9855", "847", "906", "620"])
       and "kbstats.KB_STATS" in zk_js)
 check("智库页 持续入库口径（不吹全量，v0.9.1 锚=时间线节点）",
       "持续入库中" in zk_wxml and "盘点口径" in zk_wxml and "全量" not in zk_wxml)
@@ -542,8 +545,8 @@ check("研究页四件套存在", all(os.path.exists(os.path.join(ROOT, "pages",
 check("自绘 tabBar 五 tab（研=倒数第二）",
       "pages/research/research" in read("custom-tab-bar/index.js")
       and read("custom-tab-bar/index.js").find("pages/research/research") < read("custom-tab-bar/index.js").find("pages/my/my"))
-check("研究页 目录腿 api.reportList + 分类筛（含已购）",
-      "reportList" in rs_js and "mine" in rs_js and "flagship" in rs_js)
+check("研究页 目录腿 api.reportList + 分类筛（含已购；v0.9.6 旗舰/独家档已下线）",
+      "reportList" in rs_js and "mine" in rs_js and "flagship" not in rs_js and "excl" not in rs_js)
 check("研究页 整理中口径（可看不可买）", "整理中" in rs_wxml)
 check("研究页 AI 辅助研究口径注脚（可证成）", "AI 辅助研究方法" in rs_wxml)
 # ══ v0.9.1 用户令 1008 晚三修（标签空白/试读裸md/AI提示去重）══
@@ -598,9 +601,9 @@ check("zhiku 页 复制触感（vibrateShort）", "vibrateShort" in read("pages/
 _zk_wxml_v2 = read("pages/zhiku/zhiku.wxml")
 _zk_wxss_v2 = read("pages/zhiku/zhiku.wxss")
 _zk_js_v2 = read("pages/zhiku/zhiku.js")
-check("zhiku hero 图签统计带（四数白墨大数字，v0.9.5 起数在 utils/kbstats.js）",
+check("zhiku hero 图签统计带（四数白墨大数字，v0.9.6 起数在 utils/kbstats.js）",
       "zk-hstats" in _zk_wxml_v2 and "zk-hs-n" in _zk_wxml_v2
-      and all(k in read("utils/kbstats.js") for k in ["1855", "847", "906", "620"])
+      and all(k in read("utils/kbstats.js") for k in ["9855", "847", "906", "620"])
       and ".zk-hstats" in _zk_wxss_v2)
 check("zhiku 六库手风琴目录（点击展开+默认首库展开）",
       'bindtap="toggleVault"' in _zk_wxml_v2 and "expanded" in _zk_js_v2
@@ -643,7 +646,7 @@ check("报告页 PDF=downloadFile+openDocument（Bearer 头）",
 check("报告页 iOS 购买入口隐藏（paySupported 闸在 wxml）",
       "paySupported" in rp_wxml and "iOS 暂不支持应用内购买" in rp_wxml)
 check("报告页 整理中不可买态", "暂未开售" in rp_wxml)
-check("报告页 一次解锁永久阅读口径", "永久阅读" in rp_wxml)
+check("报告页 一次解锁永久阅读&下载口径（1009 用户令）", "永久阅读&amp;下载" in rp_wxml)
 check("api.js 报告五端点（List/Detail/Sample/Sign/PdfUrl）",
       all(k in api_js for k in ("reportList", "reportDetail", "reportSample", "reportSign", "reportPdfUrl")))
 check("pay.js payReport（报告解锁腿）", "payReport" in pay_js)
@@ -798,16 +801,17 @@ check("invoice 门槛进度条三件（progressPct计算+wxml+样式）",
 _kb = read("utils/kbstats.js")
 _zhiku_js = read("pages/zhiku/zhiku.js")
 check("L18 信任数同源：utils/kbstats.js 唯一出处 + ask/zhiku 双页接线",
-      os.path.exists("utils/kbstats.js") and "'1855'" in _kb
+      os.path.exists("utils/kbstats.js") and "'9855'" in _kb
       and "kbstats.KB_STATS" in _zhiku_js and "kbStats: kbstats.KB_STATS" in ask_js
       and 'wx:for="{{kbStats}}"' in ask_wxml and "{{item.n}}" in ask_wxml)
 check("L18 信任带 wxml 不再硬编码四数（kb-n 文本位改绑定，599847679 案号不算）",
-      'kb-n mono">1855' not in ask_wxml and 'kb-n mono">847' not in ask_wxml
+      'kb-n mono">9855' not in ask_wxml and 'kb-n mono">847' not in ask_wxml
       and 'kb-n mono">906' not in ask_wxml and 'kb-n mono">620' not in ask_wxml)
-check("L17 隐私告知弹窗唯一出处（showPrivacyModal 单定义+双调用）",
+check("L17 隐私告知弹窗唯一出处（showPrivacyModal 单定义+双调用+文案常量单源）",
       ask_js.count("function showPrivacyModal(") == 1
       and ask_js.count("showPrivacyModal(") == 3  # 定义+gate+submit
-      and ask_js.count("'隐私保护告知'") == 1)
+      and ask_js.count("PRIVACY_CONTENT") >= 3    # 定义+主弹窗+fail兜底重试（同文案）
+      and ask_js.count("'隐私保护告知'") == 2)    # 主弹窗+兜底重试（同 PRIVACY_CONTENT）
 _app_js = read("app.js")
 check("L22 errCount 死仪表已删（app.js 无只写不读计数）",
       "errCount" not in _app_js.replace("删 errCount 死仪表", ""))
@@ -828,6 +832,70 @@ check("U2 _fuBusy 闭源旗标退役（改 data.fuSending 可视位）",
       "_fuBusy" not in read("pages/answer/answer.js") and "fuSending: false" in read("pages/answer/answer.js"))
 check("U1 重试反馈：refreshQuota 二连失败轻提示（_retriedOnce 门，首载仍静默）",
       "_retriedOnce" in ask_js and "服务还没恢复" in ask_js)
+
+# ══ v0.9.6（1009 真机根因战：wx.showModal confirmText ≤4 字硬限 + 遥测地面真值腿 + 文案批次）══
+# 根因：confirmText 超微信 4 字符硬限在真机 showModal 直接静默 fail（devtools 宽松+e2e mock=双盲区）
+# → 隐私门死（额度「–」+免费咨询零反应）+ 导出/批量导出确认死。静态门=全项目 modal 按钮文字逐字校验。
+import re as _re
+_modal_bad = []
+for _dirpath, _dirnames, _filenames in os.walk(os.path.join(ROOT, "pages")):
+    for _fn in _filenames:
+        if not _fn.endswith(".js"):
+            continue
+        _src = open(os.path.join(_dirpath, _fn), encoding="utf-8").read()
+        for _m in _re.finditer(r"(confirmText|cancelText)\s*:\s*'([^']*)'", _src):
+            if len(_m.group(2)) > 4:
+                _modal_bad.append(f"{_fn}:{_m.group(1)}={_m.group(2)}({len(_m.group(2))}字)")
+check("v0.9.6 硬门：全项目 modal 按钮文字 ≤4 字（真机静默 fail 根因的静态防线）",
+      not _modal_bad, "; ".join(_modal_bad[:6]))
+_modal_concat = []
+for _dirpath, _dirnames, _filenames in os.walk(os.path.join(ROOT, "pages")):
+    for _fn in _filenames:
+        if not _fn.endswith(".js"):
+            continue
+        _src = open(os.path.join(_dirpath, _fn), encoding="utf-8").read()
+        if _re.search(r"(confirmText|cancelText)\s*:\s*'[^']*'\s*\+", _src):
+            _modal_concat.append(_fn)
+check("v0.9.6 硬门：modal 按钮文字零拼接（拼接结果长度不可静态判=一律禁止）",
+      not _modal_concat, ",".join(_modal_concat))
+check("v0.9.6 隐私门按钮 ≤4 字（同意/不同意）+fail 兜底重试",
+      "confirmText: '同意'" in ask_js and "cancelText: '不同意'" in ask_js
+      and "ask_privacy_fail" in ask_js and "setTimeout" in ask_js)
+check("v0.9.6 导出/批量导出按钮改「确认支付」（金额在 content）",
+      "confirmText: '确认支付'" in read("pages/answer/answer.js")
+      and "confirmText: '确认支付'" in read("pages/my/my.js")
+      and "支付 0.1 元'" not in read("pages/answer/answer.js")
+      and "'支付 ' + yuan" not in read("pages/my/my.js"))
+
+# 遥测地面真值腿（devtools 全绿+真机失灵双盲区的补位：事件是否真的发生）
+_tel_js = read("utils/telemetry.js")
+check("v0.9.6 telemetry.js 在役（fire-and-forget+永不抛错+匿名 boot id）",
+      "function ping(" in _tel_js and "module.exports" in _tel_js
+      and "/api/telemetry" in _tel_js and "qw_boot" in _tel_js)
+check("v0.9.6 打点接线（app boot + ask 链 + 导出双链 + 购买对照）",
+      "tel.boot()" in read("app.js")
+      and "tel.ping('ask_tap')" in ask_js and "tel.ping('ask_ok'" in ask_js
+      and "tel.ping('ask_fail'" in ask_js and "tel.ping('ask_quota'" in ask_js
+      and "tel.ping('export_tap')" in read("pages/answer/answer.js")
+      and "tel.ping('xall_tap')" in read("pages/my/my.js")
+      and "tel.ping('buy_tap'" in read("pages/report/report.js"))
+check("v0.9.6 引擎遥测端点（POST 上行公开+GET recent 密钥门）",
+      "/api/telemetry" in _app_py and "/api/telemetry/recent" in _app_py
+      and "x-tel-key" in _app_py and "compare_digest" in _app_py
+      and "TELEMETRY_SECRET_FILE" in _app_py
+      and "save_telemetry" in open(os.path.join(ENGINE, "qianwen_engine", "store.py"), encoding="utf-8").read())
+
+# 文案批次（1009 用户令：&下载 / 增票说明 / 旗舰独家下线 / 9855 / 免费次数文字全域下线）
+check("v0.9.6 research hero 口径=永久阅读&下载 + 增票说明行",
+      "永久阅读&amp;下载" in rs_wxml and "增值税专用发票" in rs_wxml
+      and "hero-note" in rs_wxml and ".hero-note" in read("pages/research/research.wxss"))
+check("v0.9.6 旗舰/独家标签全域绝迹（筛档+页面文案）",
+      "flagship" not in rs_js and "excl" not in rs_js
+      and "旗舰" not in rs_wxml and "独家" not in rs_wxml)
+check("v0.9.6 知识条目=9855（kbstats 单源）", "'9855'" in read("utils/kbstats.js"))
+_poster_py = open(os.path.join(ENGINE, "qianwen_engine", "poster.py"), encoding="utf-8").read()
+check("v0.9.6 海报「每天 6 次免费提问」行已删（追问免费行保留）",
+      "每天 6 次免费提问" not in _poster_py and "支持继续追问" in _poster_py)
 
 fails = [c for c in checks if not c[1]]
 for name, ok, detail in checks:

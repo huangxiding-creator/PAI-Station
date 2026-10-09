@@ -41,6 +41,13 @@ INVOICE_THRESHOLD_FEN = _env_int("INVOICE_THRESHOLD_FEN", 20000)            # ¥
 INVOICE_WECOM_WEBHOOK = (os.environ.get("INVOICE_WECOM_WEBHOOK") or "").strip()
 INVOICE_WECOM_WEBHOOK_FILE = SECRETS_DIR / "invoice_wecom_webhook.txt"      # 兜底：密钥文件形态（ECS 挂载）
 
+# ── v0.9.6 真机遥测（1009 真机根因战：devtools 全绿+真机失灵双盲区的地面真值腿）──
+# 客户端匿名事件（boot/ask_load/ask_tap/…）上行 → 落库；读取端 GET /api/telemetry/recent
+# 须 X-Tel-Key == telemetry.secret（运营自看，绝不公开）。公开写端点只收白名单事件名
+# +截断字段，插入侧偶发修剪容量，防灌水膨胀。
+TELEMETRY_SECRET_FILE = SECRETS_DIR / "telemetry.secret"
+TELEMETRY_KEEP_ROWS = _env_int("TELEMETRY_KEEP_ROWS", 20000)               # 表容量上限
+
 # 秘塔总包智库（网页会话线：cookie + meta-token，烧网页积分池）
 KB_SESSION_FILE = SECRETS_DIR / "metaso_kb_session.json"
 KB_TOPIC_ID = "8673582927558737920"                  # 工程行业大脑（总包智库知识库）

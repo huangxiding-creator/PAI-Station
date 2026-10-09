@@ -206,8 +206,8 @@ def build(question: str, bullets: list, qr_png: bytes | None,
     d.rounded_rectangle([56, cy0, W - 56, cy0 + 252], radius=24, fill=NAVY_DEEP)
     _track(d, (104, cy0 + 24), "免费开放 · FREE ACCESS", f_cap, ORANGE, 6)  # 橙 #2（眉标离 CTA 留一口气）
     d.text((104, cy0 + 64), "扫码读完整解答", font=f_cta, fill=WHITE)
-    d.text((104, cy0 + 132), "每天 6 次免费提问", font=f_cta_sub, fill=MIST)
-    d.text((104, cy0 + 166), "支持继续追问 · 同样免费", font=f_cta_sub, fill=MIST)
+    # v0.9.6（用户令 1009）：免费次数宣传行删除（页面/物料全域去免费次数文案，规则本身不变）
+    d.text((104, cy0 + 132), "支持继续追问 · 同样免费", font=f_cta_sub, fill=MIST)
     # v0.9.5（1009 用户令「海报 AI 申明最多一次」）：行动卡区的短版申明删除——
     # 全海报只保留页脚合规全句（含「不构成正式法律意见」，标识位不变不弃合规）
 

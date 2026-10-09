@@ -148,7 +148,7 @@
 <view class="rp-bar" wx:if="{{d && (d.unlocked || (d.sellable && paySupported))}}">
   <view class="rp-bar-info" wx:if="{{!d.unlocked}}">
     <view class="rp-bar-price">{{d.price_label}}</view>
-    <view class="rp-bar-sub muted">一次解锁 · 永久阅读</view>
+    <view class="rp-bar-sub muted">一次解锁 · 永久阅读&amp;下载</view>
   </view>
   <view class="rp-bar-info" wx:if="{{d.unlocked}}">
     <view class="rp-bar-price">已解锁</view>

@@ -6,6 +6,7 @@ const theme = require('../../utils/theme');
 const api = require('../../utils/api');
 const pay = require('../../utils/pay');
 const md2blocks = require('../../utils/md2blocks');
+const tel = require('../../utils/telemetry'); // v0.9.6：购买入口打点（对照组——此链在真机已活）
 
 Page({
   data: {
@@ -85,6 +86,7 @@ Page({
 
   // 购买解锁（Android/开发工具；iOS 入口在 wxml 层已隐藏）
   buy() {
+    tel.ping('buy_tap', { sku: String(this.data.sku || '').slice(0, 24) });
     if (this.data.buying) return;
     if (!pay.paySupported()) {
       wx.showModal({

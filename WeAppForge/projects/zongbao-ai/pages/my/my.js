@@ -4,6 +4,7 @@
 const api = require('../../utils/api');
 const theme = require('../../utils/theme');
 const pay = require('../../utils/pay');
+const tel = require('../../utils/telemetry'); // v0.9.6：真机批量导出链打点
 
 // v0.9.1 修复：navigateTo 防双击——模块级 300ms 节流，连点只放行一次（防 answer/privacy 重复压栈）
 let _navLastAt = 0;
@@ -182,6 +183,7 @@ Page({
   // ── 批量导出全部咨询（用户令 v0.5.0）：Word/PDF/MD 三选一，引擎聚合生成 ──
   // v0.8.0（用户令 1008）：导出按条收费 ¥0.1；未解锁条数一单付清（iOS 隐藏入口）
   onExportAll() {
+    tel.ping('xall_tap');
     if (!this.data.items.length) return;
     // 服务端权威未解锁计数（-1=旧服务端未知时，回退本地 items 估算——仅含近 20 条，保守）
     const unpaid = this.data.exportUnpaidAll >= 0
@@ -207,10 +209,12 @@ Page({
       return;
     }
     const yuan = (unpaid * 0.1).toFixed(1);
+    // v0.9.6（1009 真机根因战）：confirmText 硬限 ≤4 字符——「支付 X 元」7 字符拼接
+    // 在真机 showModal 直接 fail → 批量导出确认弹窗整链静默死。金额在 content，按钮 4 字内。
     wx.showModal({
       title: '批量导出 ' + unpaid + ' 条',
       content: '咨询全程免费，导出按 ¥0.1/条：本次 ' + unpaid + ' 条共 ' + yuan + ' 元（一单付清，解锁后可反复导出）。',
-      confirmText: '支付 ' + yuan + ' 元',
+      confirmText: '确认支付',
       cancelText: '再想想',
       success: (r) => {
         if (!r.confirm) return;
@@ -237,6 +241,7 @@ Page({
             if (String(res.message || '').indexOf('取消') >= 0) {
               wx.showToast({ title: res.message, icon: 'none' });
             } else {
+              tel.ping('xall_fail', { m: String(res.message || '').slice(0, 60) });
               wx.showModal({
                 title: '支付没完成',
                 content: String(res.message || '请稍后重试') + '。可稍后再试；已扣款的金额不会丢（重新进入会自动对账解锁）。',
@@ -247,6 +252,7 @@ Page({
           })
           .catch((err) => {
             // v0.9.4：兜底防假死——此前无 catch，任何异常都会让「拉起支付…」loading 永转 + 按钮废死
+            tel.ping('xall_fail', { m: api.errMsg(err, '').slice(0, 60) });
             wx.hideLoading();
             this._payBusy = false;
             wx.showModal({

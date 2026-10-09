@@ -10,6 +10,7 @@ const api = require('../../utils/api');
 const md2blocks = require('../../utils/md2blocks');
 const theme = require('../../utils/theme');
 const pay = require('../../utils/pay');
+const tel = require('../../utils/telemetry'); // v0.9.6：真机导出链打点
 
 Page({
   data: {
@@ -262,6 +263,7 @@ Page({
   // v0.8.0（用户令 1008）：咨询全免费；导出按条收费 ¥0.1（虚拟支付，Android；
   // iOS 隐藏付费入口——虚拟支付铁律；已解锁内容 iOS 也可导出）。
   onExport() {
+    tel.ping('export_tap');
     if (!this._rawText) {
       wx.showToast({ title: '正文还没就绪', icon: 'none' });
       return;
@@ -274,10 +276,13 @@ Page({
       wx.showToast({ title: '当前系统暂不支持导出，阅读全文不受影响', icon: 'none', duration: 2400 });
       return;
     }
+    // v0.9.6（1009 真机根因战）：confirmText 硬限 ≤4 字符——「支付 0.1 元」8 字符
+    // 在真机 showModal 直接 fail（devtools 宽松不校验）→ 导出确认弹窗整链静默死。
+    // 金额已在 content 里，按钮文字回归 4 字内。
     wx.showModal({
       title: '导出本篇解答',
-      content: '咨询全程免费，导出文件按 ¥0.1/条 收费（虚拟支付）。解锁后本篇可反复导出 Word/PDF/Markdown。',
-      confirmText: '支付 0.1 元',
+      content: '咨询全程免费，导出文件按 ¥0.1/条 收费（虚拟支付），本次支付 0.1 元。解锁后本篇可反复导出 Word/PDF/Markdown。',
+      confirmText: '确认支付',
       cancelText: '再想想',
       success: (r) => {
         if (!r.confirm) return;
@@ -303,6 +308,7 @@ Page({
             if (String(res.message || '').indexOf('取消') >= 0) {
               wx.showToast({ title: res.message, icon: 'none' });
             } else {
+              tel.ping('export_fail', { m: String(res.message || '').slice(0, 60) });
               wx.showModal({
                 title: '支付没完成',
                 content: String(res.message || '请稍后重试') + '。可稍后再试；已扣款的金额不会丢（重新进入会自动对账解锁）。',
@@ -313,6 +319,7 @@ Page({
           })
           .catch((err) => {
             // v0.9.4：兜底防假死（同 my 页修法——loading 永转+按钮废死的根）
+            tel.ping('export_fail', { m: api.errMsg(err, '').slice(0, 60) });
             wx.hideLoading();
             this._payBusy = false;
             wx.showModal({

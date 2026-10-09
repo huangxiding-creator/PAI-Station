@@ -5,14 +5,13 @@ const theme = require('../../utils/theme');
 const api = require('../../utils/api');
 
 // 分类筛（cat 键与目录数据一致；「已购」独立一档）
+// v0.9.6（用户令 1009）：去掉「旗舰」「独家」两档（标签概念整体下线，目录数据同步 recat）
 const FILTERS = [
   { k: 'all', label: '全部' },
   { k: 'mine', label: '已购' },
   { k: 'ent', label: '企业研究' },
   { k: 'prov', label: '区域市场' },
   { k: 'topic', label: '专题研究' },
-  { k: 'flagship', label: '旗舰' },
-  { k: 'excl', label: '独家' },
 ];
 
 Page({

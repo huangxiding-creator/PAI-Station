@@ -257,7 +257,7 @@ await sleep(2200);
     const t = String(await m.text() || '');
     if (t.indexOf('v0.9.') >= 0) { beacon = t.trim(); break; }
   }
-  note('my_version_beacon_095', beacon.indexOf('v0.9.5') >= 0, `beacon="${beacon}"`);
+  note('my_version_beacon_095', beacon.indexOf('v0.9.6') >= 0, `beacon="${beacon}"`);
 
   // v0.9.5：srv-row 服务入口运行时断言（报告书架/开票服务重设计）
   const srvRows = await my.$$('.srv-row');

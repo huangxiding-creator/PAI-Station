@@ -38,6 +38,7 @@ import re
 import secrets
 import threading
 import time
+from typing import Optional
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -1153,3 +1154,52 @@ def invoice_apply(body: InvoiceApplyIn, request: Request):
 @app.get("/api/health")
 def health():
     return {"ok": True}
+
+
+# ── v0.9.6 真机遥测（1009 真机根因战）：匿名执行轨迹上行/读数 ──────────────────
+# 背景：wx.showModal confirmText >4 字符在真机静默 fail（devtools 宽松+e2e mock=双盲区），
+# 三条主链（隐私门/导出/批量导出）死得无声无息。此端点=客户端 fire-and-forget 打点的
+# 地面真值腿：事件是否真的在真机上发生，与弹窗/控制台完全解耦。
+class TelemetryIn(BaseModel):
+    event: str
+    boot: str = ""
+    ver: str = ""
+    extra: Optional[dict] = None
+
+
+_TEL_EVENT_RE = re.compile(r"[a-z0-9_]{1,40}")
+
+
+@app.post("/api/telemetry")
+def telemetry_post(body: TelemetryIn):
+    """匿名打点（公开端点）：只收白名单形态事件名 + 截断字段，不收任何用户内容。"""
+    event = (body.event or "").strip().lower()
+    if not _TEL_EVENT_RE.fullmatch(event):
+        raise HTTPException(422, "bad event")
+    boot = (body.boot or "").strip()[:24]
+    ver = (body.ver or "").strip()[:16]
+    try:
+        extra = json.dumps(body.extra or {}, ensure_ascii=False,
+                           separators=(",", ":"))[:255]
+    except Exception:  # noqa: BLE001 —— extra 序列化失败=丢 extra 不丢事件
+        extra = ""
+    store.save_telemetry(event, boot, ver, extra)
+    return {"ok": True}
+
+
+@app.get("/api/telemetry/recent")
+def telemetry_recent(request: Request, limit: int = 200):
+    """运营读数腿：X-Tel-Key == telemetry.secret 才放行（密钥文件缺失=503 不放行）。"""
+    want = ""
+    try:
+        if config.TELEMETRY_SECRET_FILE.exists():
+            want = config.TELEMETRY_SECRET_FILE.read_text(encoding="utf-8").strip()
+    except Exception:  # noqa: BLE001
+        want = ""
+    if not want:
+        raise HTTPException(503, "telemetry read not configured")
+    got = request.headers.get("x-tel-key") or ""
+    if not secrets.compare_digest(got, want):
+        raise HTTPException(401, "bad tel key")
+    limit = max(1, min(int(limit), 1000))
+    return {"events": store.recent_telemetry(limit)}

@@ -473,6 +473,26 @@ _SCHEMA: tuple = (
         PRIMARY KEY (id),
         KEY idx_invoice_openid (openid)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"""),
+    # v0.9.6 真机遥测（1009 真机根因战）：客户端匿名执行轨迹（事件名+匿名boot+短extra），
+    # 地面真值腿——不依赖弹窗/控制台（wx.showModal 真机静默 fail 的双盲区补位）
+    ("""CREATE TABLE IF NOT EXISTS telemetry_events (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        event TEXT NOT NULL,
+        boot TEXT DEFAULT '',
+        ver TEXT DEFAULT '',
+        extra TEXT DEFAULT '',
+        created_at TEXT DEFAULT (datetime('now','localtime'))
+    )""",
+     """CREATE TABLE IF NOT EXISTS telemetry_events (
+        id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+        event VARCHAR(40) NOT NULL,
+        boot VARCHAR(24) DEFAULT '',
+        ver VARCHAR(16) DEFAULT '',
+        extra VARCHAR(255) DEFAULT '',
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (id),
+        KEY idx_tel_event (event)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"""),
 )
 
 # 增列（老库平滑升级：已存在则忽略）——sqlite 原文 / mysql 变体（TEXT 不可带 DEFAULT）
@@ -1324,3 +1344,32 @@ def create_invoice_app(openid: str, total_fen: int, title: str, tax_no: str,
             " VALUES (?,?,?,?,?,?,?,?)",
             (openid, total_fen, title, tax_no, addr_phone, bank_acct, email, note))
         return bool(getattr(cur, "lastrowid", 0) or getattr(cur, "rowcount", 0))
+
+
+# ── v0.9.6 真机遥测（1009 真机根因战）：匿名执行轨迹落库/读数 ──
+def save_telemetry(event: str, boot: str, ver: str, extra: str) -> bool:
+    """落一条遥测事件；容量护持——每 50 条修剪到 TELEMETRY_KEEP_ROWS
+    （公开写端点防灌水膨胀；修剪失败不伤写入）。"""
+    init()
+    with _LOCK, _db() as c:
+        cur = c.execute(
+            "INSERT INTO telemetry_events (event,boot,ver,extra) VALUES (?,?,?,?)",
+            (event, boot, ver, extra))
+        rid = int(getattr(cur, "lastrowid", 0) or 0)
+        if rid and rid % 50 == 0:
+            try:
+                c.execute("DELETE FROM telemetry_events WHERE id <= ? - ?",
+                          (rid, config.TELEMETRY_KEEP_ROWS))
+            except sqlite3.OperationalError:
+                pass
+        return bool(rid)
+
+
+def recent_telemetry(limit: int = 200) -> list:
+    """最新遥测事件（新→旧；运营读数腿，端点层鉴权）。"""
+    init()
+    with _db() as c:
+        rows = c.execute(
+            "SELECT id,event,boot,ver,extra,created_at"
+            " FROM telemetry_events ORDER BY id DESC LIMIT ?", (limit,)).fetchall()
+        return [dict(r) for r in rows]

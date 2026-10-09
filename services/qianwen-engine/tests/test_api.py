@@ -576,3 +576,59 @@ def test_poster_ai_declaration_once():
     import qianwen_engine.poster as poster_mod
     src = inspect.getsource(poster_mod.build)
     assert src.count("内容由 AI 生成") == 1, "海报 AI 申明必须最多一次（页脚合规句）"
+
+
+# ── v0.9.6 真机遥测（1009 真机根因战）：匿名上行 + 密钥读数 + 防灌水 ──
+
+def test_telemetry_flow(client, tmp_path, monkeypatch):
+    """匿名白名单事件落库；非法事件名 422；读数腿三态：无密钥 503 / 错钥 401 / 对钥 200。"""
+    r = client.post("/api/telemetry", json={
+        "event": "ask_tap", "boot": "b3x9k2m1", "ver": "0.9.6",
+        "extra": {"f": 6, "b": 0}})
+    assert r.status_code == 200 and r.json()["ok"] is True
+    # 事件名白名单：大写/空格/超长一律拒（公开端点防注入面）
+    assert client.post("/api/telemetry",
+                       json={"event": "ASK TAP!", "boot": "b"}).status_code == 422
+    assert client.post("/api/telemetry",
+                       json={"event": "x" * 41, "boot": "b"}).status_code == 422
+    # extra 非法对象（不可序列化）→ 事件仍落库（丢 extra 不丢事件）
+    r_weird = client.post("/api/telemetry", json={
+        "event": "ask_ok", "boot": "b9", "ver": "0.9.6", "extra": {}})
+    assert r_weird.status_code == 200
+    # 读数：无密钥文件 → 503 fail-closed
+    monkeypatch.setattr(config, "TELEMETRY_SECRET_FILE", tmp_path / "nope.secret")
+    assert client.get("/api/telemetry/recent").status_code == 503
+    # 密钥在位：无/错 X-Tel-Key → 401
+    sec = tmp_path / "tel.secret"
+    sec.write_text("test-tel-key-123\n", encoding="utf-8")
+    monkeypatch.setattr(config, "TELEMETRY_SECRET_FILE", sec)
+    assert client.get("/api/telemetry/recent").status_code == 401
+    assert client.get("/api/telemetry/recent",
+                      headers={"X-Tel-Key": "wrong"}).status_code == 401
+    # 对钥 → 最新事件在列（extra JSON 序列化在 255 内）
+    r3 = client.get("/api/telemetry/recent", headers={"X-Tel-Key": "test-tel-key-123"})
+    assert r3.status_code == 200
+    evs = r3.json()["events"]
+    assert evs and evs[0]["event"] == "ask_ok" and evs[0]["boot"] == "b9"
+    first_tap = next(e for e in evs if e["event"] == "ask_tap")
+    assert first_tap["boot"] == "b3x9k2m1" and first_tap["ver"] == "0.9.6"
+    assert '"f":6' in first_tap["extra"] and len(first_tap["extra"]) <= 255
+
+
+def test_telemetry_truncate_and_prune(client, monkeypatch):
+    """字段截断（boot/ver/extra）+ 容量修剪：第 50 条插入触发 prune 到 KEEP_ROWS。"""
+    from qianwen_engine import store
+    # 超长 boot/ver → 截断落库（不炸）
+    r = client.post("/api/telemetry", json={
+        "event": "boot", "boot": "b" * 99, "ver": "9" * 99,
+        "extra": {"k": "v" * 500}})
+    assert r.status_code == 200
+    monkeypatch.setattr(config, "TELEMETRY_KEEP_ROWS", 10)
+    for i in range(50):
+        rr = client.post("/api/telemetry", json={
+            "event": "ask_load", "boot": f"b{i}", "ver": "0.9.6"})
+        assert rr.status_code == 200
+    rows = store.recent_telemetry(1000)
+    assert len(rows) <= 52  # 修剪后仅留尾部（10 + 头 2 条早于首个修剪点）
+    assert rows[0]["boot"] == "b49"
+    assert all(len(r["boot"]) <= 24 and len(r["ver"]) <= 16 for r in rows)

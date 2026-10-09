@@ -107,10 +107,13 @@ def main():
         print(f"!! PROD 模式放行（flag: {flag.read_text(encoding='utf-8').strip()[:60]}）")
     inv = (SECRETS / "invoice_wecom_webhook.txt").read_bytes().strip()
     assert inv.startswith(b"https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key="), "invoice webhook shape"
+    tel = (SECRETS / "telemetry.secret").read_bytes().strip()   # v0.9.6 遥测读数密钥（X-Tel-Key）
+    assert 16 <= len(tel) <= 64 and b" " not in tel, "telemetry secret shape"
     files = json.loads(base64.b64decode(envp["SECRET_FILES_B64"]))
     print("secret files on server:", sorted(files.keys()))
     files["virtual_pay.secret"] = base64.b64encode(vp).decode()
     files["invoice_wecom_webhook.txt"] = base64.b64encode(inv).decode()
+    files["telemetry.secret"] = base64.b64encode(tel).decode()
     envp["SECRET_FILES_B64"] = base64.b64encode(
         json.dumps(files, ensure_ascii=False).encode()).decode()
     ENVP_OUT.write_text(json.dumps(envp, ensure_ascii=False), encoding="utf-8")
@@ -119,6 +122,7 @@ def main():
         json.loads(ENVP_OUT.read_text(encoding="utf-8"))["SECRET_FILES_B64"]))
     assert base64.b64decode(rt["virtual_pay.secret"]) == vp, "roundtrip"
     assert base64.b64decode(rt["invoice_wecom_webhook.txt"]) == inv, "invoice roundtrip"
+    assert base64.b64decode(rt["telemetry.secret"]) == tel, "telemetry roundtrip"
     has_offer = b"offer_id=1450664233" in vp
     has_pid = b"product_id=unlock_once" in vp
     vp_lines = base64.b64decode(rt["virtual_pay.secret"]).decode().splitlines()

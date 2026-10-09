@@ -4,6 +4,7 @@
 const api = require('../../utils/api');
 const theme = require('../../utils/theme');
 const kbstats = require('../../utils/kbstats');
+const tel = require('../../utils/telemetry'); // v0.9.6：真机执行轨迹打点（devtools 全绿+真机失灵双盲区的地面真值腿）
 
 // EPC 总承包热点题库：tag=chip 标签，q=递进三小问全文（点按填入）
 const SAMPLES = [
@@ -45,19 +46,33 @@ const Q_MAX = 500;
 
 // v0.9.5 审计修（L17）：隐私告知弹窗唯一出处——_gateAndLogin 与 submitQuestion 此前各持一份
 // 全文拷贝，文案改动漏一处=合规口径分裂。同意→记忆+回调；拒绝→静默不发登录/不提问。
+// v0.9.6（1009 真机根因战）：confirmText 硬限 ≤4 字符——「同意并继续」6 字在真机
+// showModal 直接 fail（devtools 宽松不校验+e2e mock=双盲区）→ 隐私门整链静默死
+// =额度「–」+免费咨询点了没反应。按钮文字全部 ≤4 字，另加 fail 兜底（默认按钮延迟重试一次）。
+const PRIVACY_CONTENT = '为提供咨询服务，我们将通过微信登录获取您的 openid 用于额度记账，'
+  + '并将您提交的问题与生成的回答存储在服务器；您自愿共享的问答将在「锅圈」公开展示，可随时取消共享。'
+  + '本服务解答内容由人工智能（AI）生成，仅供参考。'
+  + '详见「我的 · 用户协议与隐私政策」。';
+
 function showPrivacyModal(onAgree) {
+  const agree = (r) => {
+    if (!r.confirm) return; // 拒绝：不发登录，不收集任何标识
+    wx.setStorageSync('qw_privacy_ok', 1);
+    if (onAgree) onAgree();
+  };
   wx.showModal({
     title: '隐私保护告知',
-    content: '为提供咨询服务，我们将通过微信登录获取您的 openid 用于额度记账，'
-      + '并将您提交的问题与生成的回答存储在服务器；您自愿共享的问答将在「锅圈」公开展示，可随时取消共享。'
-      + '本服务解答内容由人工智能（AI）生成，仅供参考。'
-      + '详见「我的 · 用户协议与隐私政策」。',
-    confirmText: '同意并继续',
+    content: PRIVACY_CONTENT,
+    confirmText: '同意',
     cancelText: '不同意',
-    success: (r) => {
-      if (!r.confirm) return; // 拒绝：不发登录，不收集任何标识
-      wx.setStorageSync('qw_privacy_ok', 1);
-      if (onAgree) onAgree();
+    success: agree,
+    fail: (err) => {
+      // 兜底：弹窗调用失败（环境异常/onLoad 转场期竞态）→ 延迟 400ms 用默认按钮文字重试一次
+      // （同 PRIVACY_CONTENT=合规口径仍唯一）；失败已打点留痕，绝不静默
+      tel.ping('ask_privacy_fail', { m: String((err && err.errMsg) || '').slice(0, 60) });
+      setTimeout(() => {
+        wx.showModal({ title: '隐私保护告知', content: PRIVACY_CONTENT, success: agree });
+      }, 400);
     }
   });
 }
@@ -106,11 +121,13 @@ Page({
     this.setData({ sheetNo: 'GC-' + pad(now.getMonth() + 1) + pad(now.getDate()) });
     // v0.9.2（1009 审计 HIGH 修复）：隐私告知门前置——同意后才发起登录（wx.login+POST /api/login），
     // 拒绝则不收集 openid、额度票根保持空态；此前 onLoad 无条件 silentLogin、告知却是事后补的。
+    tel.ping('ask_load');
     this._gateAndLogin();
   },
 
   // 隐私门 + 登录：已同意过直接登录；首次先告知（同意→记忆+登录，拒绝→不发登录）
   _gateAndLogin() {
+    tel.ping('ask_gate', { agreed: !!wx.getStorageSync('qw_privacy_ok') });
     if (wx.getStorageSync('qw_privacy_ok')) {
       this.silentLogin();
       return;
@@ -151,10 +168,12 @@ Page({
   silentLogin() {
     api.ensureLogin()
       .then(() => {
+        tel.ping('ask_login_ok');
         this.setData({ loginReady: true });
         this.refreshQuota();
       })
       .catch((err) => {
+        tel.ping('ask_login_fail', { m: api.errMsg(err, '').slice(0, 60) });
         this.setData({ netStatus: 'down' });
         wx.showToast({ title: api.errMsg(err, '登录失败'), icon: 'none' });
       });
@@ -171,8 +190,10 @@ Page({
   refreshQuota() {
     api.quota()
       .then((d) => {
+        const q = d.quota || d;
+        tel.ping('ask_quota', { f: q && q.free_left, b: q && q.bonus_left });
         this.setData({ netStatus: 'ok' });
-        this.applyQuota(d.quota || d);
+        this.applyQuota(q);
       })
       .catch(() => {
         this.setData({ netStatus: 'down' });
@@ -273,6 +294,7 @@ Page({
   },
 
   onSubmit() {
+    tel.ping('ask_tap'); // 真机「点了没反应」判别锚：tap 到没到处理器
     if (this.data.asking) return;
     // v0.9.4（1009 真机实测修复）：主 CTA 恒有反馈——空问提示并聚焦输入框（此前静默 return=「点了没反应」）
     if (!this.data.canAsk) {
@@ -300,6 +322,7 @@ Page({
     this.setData({ asking: true });
     api.ask(q)
       .then((d) => {
+        tel.ping('ask_ok', { id: String(d && d.id || '').slice(0, 16) });
         // v0.2.2 秒回：立即进答案页看实时进度（总包智库后台跑）。
         // v0.9.2（审计 MEDIUM 修复）：清空输入移入 success 回调——偶发导航失败时用户问题不丢，
         // 并弹窗兜底引导从「咨询记录」进入。
@@ -321,6 +344,7 @@ Page({
         });
       })
       .catch((err) => {
+        tel.ping('ask_fail', { code: err && err.statusCode, m: api.errMsg(err, '').slice(0, 60) });
         this.setData({ asking: false });
         const msg = api.errMsg(err, '咨询失败');
         if (err && err.statusCode === 402) {
