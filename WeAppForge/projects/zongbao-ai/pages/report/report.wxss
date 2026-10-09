@@ -88,9 +88,9 @@
 .rp-price {
   font-size: 34rpx;
   font-weight: 800;
-  color: var(--acc, var(--accent));
+  color: var(--accent);
 }
-.rp-price-owned { color: #2f9e63; }
+.rp-price-owned { color: var(--t-ok); }
 .rp-badges { display: flex; flex-wrap: wrap; gap: 10rpx; }
 .rs-badge {
   font-size: 19rpx;
@@ -144,7 +144,7 @@
 .rp-ch-id {
   margin-right: 14rpx;
   font-size: 22rpx;
-  color: var(--acc, var(--accent));
+  color: var(--accent);
 }
 .rp-ch-d { margin-top: 4rpx; font-size: 22rpx; line-height: 1.6; }
 
@@ -160,7 +160,7 @@
   text-align: center;
   font-size: 23rpx;
   font-weight: 700;
-  color: var(--acc, var(--accent));
+  color: var(--accent);
 }
 
 .md-p {
@@ -247,9 +247,11 @@
 .md-tr .md-th + .md-th { border-left: 2rpx solid rgba(var(--t-glow-rgb), 0.3); }
 .md-tr .md-td + .md-td { border-left: 2rpx solid var(--line); }
 
-/* 首块不吃上边距 */
-.rp-sample > block:first-child .md-h1, .rp-sample > block:first-child .md-h2,
-.rp-sample > block:first-child .md-h3, .rp-sample > block:first-child .md-p { margin-top: 0; }
+/* 首块不吃上边距（v0.9.5 审计修：block 编译不成节点，选择器永空——改 view/scroll-view） */
+.rp-sample > view:first-child .md-h1, .rp-sample > view:first-child .md-h2,
+.rp-sample > view:first-child .md-h3, .rp-sample > view:first-child .md-p,
+.rp-sample > scroll-view:first-child .md-h1, .rp-sample > scroll-view:first-child .md-h2,
+.rp-sample > scroll-view:first-child .md-h3, .rp-sample > scroll-view:first-child .md-p { margin-top: 0; }
 
 /* 载入骨架 */
 .rp-skel { margin-top: 26rpx; }
@@ -296,7 +298,7 @@
 .rp-bar-price {
   font-size: 36rpx;
   font-weight: 800;
-  color: var(--acc, var(--accent));
+  color: var(--accent);
   letter-spacing: 1rpx;
 }
 .rp-bar-sub { font-size: 20rpx; margin-top: 2rpx; }
@@ -306,7 +308,7 @@
 .rp-cta {
   margin-top: 22rpx;
   padding: 22rpx 26rpx;
-  border: 2rpx dashed var(--acc, var(--accent));
+  border: 2rpx dashed var(--accent);
   border-radius: 10rpx;
   background: var(--t-paper-hi, rgba(var(--t-accent-rgb), 0.06));
   display: flex;
@@ -320,11 +322,11 @@
 .rp-cta-t {
   font-size: 27rpx;
   font-weight: 800;
-  color: var(--acc, var(--accent));
+  color: var(--accent);
   letter-spacing: 2rpx;
 }
 .rp-cta-arrow {
   font-size: 30rpx;
-  color: var(--acc, var(--accent));
+  color: var(--accent);
   font-weight: 800;
 }

@@ -2,9 +2,10 @@
 .page { padding-bottom: 40rpx; }
 
 /* 页头（蓝图制图风，与各页 head 同语言） */
+/* v0.9.5 审计修：删除自带 background——undefined 变量(--deep/--deep-2)的硬编码回退值
+   把同元素 .bp-grid 的主题蓝图底整个清掉（background 简写重置一切），周换装/obsidian 全脱轨 */
 .head {
-  color: var(--white-ink, #f4f7fb);
-  background: linear-gradient(160deg, var(--deep, #081a36), var(--deep-2, #0d2b52));
+  color: var(--white-ink);
   padding-bottom: 30rpx;
 }
 .head-nav {
@@ -42,21 +43,48 @@
 .inv-f { margin-top: 6rpx; }
 .inv-fi { margin-top: 22rpx; }
 .inv-fl { display: block; font-size: 24rpx; font-weight: 600; margin-bottom: 10rpx; }
-.inv-star { color: #e34d2c; margin-left: 4rpx; }
+.inv-star { color: var(--stamp); margin-left: 4rpx; }
 .inv-in {
   width: 100%; box-sizing: border-box;
   padding: 18rpx 22rpx;
   font-size: 26rpx;
-  background: rgba(127, 152, 184, 0.08);
-  border: 2rpx solid rgba(127, 152, 184, 0.35);
+  background: rgba(var(--t-navy2-rgb), 0.08);
+  border: 2rpx solid rgba(var(--t-navy2-rgb), 0.35);
   border-radius: 10rpx;
 }
-.inv-ph { color: var(--muted-ink, #5a6a7e); }
+.inv-ph { color: var(--muted); }
 .inv-submit { margin-top: 36rpx; width: 100%; }
 
 /* 门槛未到引导卡 */
 .inv-gate { padding: 20rpx 0 10rpx; text-align: center; }
 .inv-gate .muted { margin-top: 10rpx; font-size: 23rpx; line-height: 1.8; }
+/* v0.9.5：门槛进度条（蓝图图纸刻度风格——轨道浅格纹+强调色填充+mono 百分比戳） */
+.inv-progress {
+  position: relative;
+  margin: 26rpx auto 0;
+  width: 78%;
+  height: 20rpx;
+  border: 2rpx solid rgba(var(--t-navy2-rgb), 0.25);
+  border-radius: 10rpx;
+  background:
+    linear-gradient(rgba(var(--t-blue-rgb), 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--t-blue-rgb), 0.07) 1px, transparent 1px);
+  background-size: 10rpx 10rpx;
+  overflow: visible;
+}
+.inv-progress-fill {
+  height: 100%;
+  min-width: 6rpx;
+  border-radius: 9rpx;
+  background: linear-gradient(90deg, var(--t-accent-soft), var(--accent-deep));
+  box-shadow: 0 2rpx 8rpx rgba(var(--t-accent-rgb), 0.45);
+  transition: width 0.6s ease;
+}
+.inv-progress-mark {
+  position: absolute; right: -8rpx; top: -34rpx;
+  font-size: 20rpx; letter-spacing: 1rpx;
+  color: var(--accent-deep);
+}
 .blank-frame {
   width: 120rpx; height: 120rpx; margin: 0 auto;
   border: 2rpx dashed rgba(127, 152, 184, 0.5);

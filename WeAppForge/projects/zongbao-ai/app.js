@@ -23,9 +23,10 @@ App({
     } catch (e) { /* 老客户端兜底默认值 */ }
     this.globalData.nav = { statusBarHeight, navHeight };
   },
-  // App 错误兜底三件套（v0.9.2 审计修复）：静默计数不扰民，绝不让异常白屏
+  // App 错误兜底三件套（v0.9.2 审计修复）：静默吞掉不扰民，绝不让异常白屏
+  // v0.9.5 审计修：删 errCount 死仪表（只写不读的全局计数，无人消费）
   onError() {
-    this.globalData.errCount += 1;
+    /* 吞掉页面级未捕获异常：白屏恐慌比静默更伤 */
   },
   onUnhandledRejection() {
     /* 吞掉未处理 Promise 拒绝：防控制台噪声与白屏恐慌 */
@@ -39,7 +40,6 @@ App({
     });
   },
   globalData: {
-    nav: { statusBarHeight: 20, navHeight: 44 },
-    errCount: 0
+    nav: { statusBarHeight: 20, navHeight: 44 }
   }
 });

@@ -20,7 +20,7 @@
         <view class="rs-hs"><text class="rs-hs-n mono">{{statsReady ? stats.mine : '—'}}</text><text class="rs-hs-l">已解锁</text></view>
       </view>
 
-      <view class="hero-dwg mono">DWG NO. RS-01 · SCALE 1:1<view class="dim-rule"></view><text class="dim-cap">{{stats.sellable}} ON SALE</text></view>
+      <view class="hero-dwg mono">DWG NO. RS-01 · SCALE 1:1<view class="dim-rule"></view><text class="dim-cap">{{statsReady ? stats.sellable : '—'}} ON SALE</text></view>
     </view>
   </view>
 
@@ -47,7 +47,7 @@
         <view class="rs-sub muted">{{item.subtitle}}</view>
         <view class="rs-item-bot">
           <view class="rs-badges">
-            <text class="rs-badge" wx:if="{{index < 3}}" wx:for="{{item.badges}}" wx:for-item="b" wx:key="k">{{b.k}}{{b.v ? ' ' + b.v : ''}}</text>
+            <text class="rs-badge" wx:if="{{bi < 3}}" wx:for="{{item.badges}}" wx:for-item="b" wx:for-index="bi" wx:key="k">{{b.k}}{{b.v ? ' ' + b.v : ''}}</text>
           </view>
           <view class="rs-words mono" wx:if="{{item.words_wan}}">{{item.words_wan}}万字</view>
         </view>

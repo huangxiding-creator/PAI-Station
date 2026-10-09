@@ -155,9 +155,9 @@ check("api potList 客户端", "potList" in api_js)
 check("api optimize 客户端（shareReward 已随分享激励下线）", "optimize" in api_js and "shareReward" not in api_js)
 
 # 版本与定位（v0.9.0）
-check("my 版本标记 v0.9.4（1009 外观移页底+六库同步版）", "v0.9.4" in my_wxml)
+check("my 版本标记 v0.9.5（1009 服务入口行重设计版）", "v0.9.5" in my_wxml)
 pkg = json.load(open(os.path.join(ROOT, "package.json"), encoding="utf-8"))
-check("package.json version=0.9.4", pkg["version"] == "0.9.4")
+check("package.json version=0.9.5", pkg["version"] == "0.9.5")
 # 1009 用户令：外观沉底（个性化低频项按用户习惯放设置区，高频额度/记录在前）——顺序即断言
 check("my 布局顺序=额度→记录→书架→外观（外观在咨询记录之后，1009 用户令）",
       my_wxml.find("外观 · APPEARANCE") > my_wxml.find("咨询记录 · RECORDS")
@@ -459,8 +459,9 @@ check("智库页 第三方品牌不展示（科思顿/小鹅通/秘塔/知网镜
       "科思顿" not in _zk_code and "科思顿" not in zk_wxml
       and "小鹅通" not in _zk_code and "秘塔" not in _zk_code and "知网" not in _zk_code
       and "49 分组" in zk_wxml)
-check("智库页 诚实库存四数（1855/847/906/620）",
-      all(k in zk_js for k in ["1855", "847", "906", "620"]))
+check("智库页 诚实库存四数（1855/847/906/620，v0.9.5 起同源 utils/kbstats.js）",
+      all(k in read("utils/kbstats.js") for k in ["1855", "847", "906", "620"])
+      and "kbstats.KB_STATS" in zk_js)
 check("智库页 持续入库口径（不吹全量，v0.9.1 锚=时间线节点）",
       "持续入库中" in zk_wxml and "盘点口径" in zk_wxml and "全量" not in zk_wxml)
 check("智库页 v0.7.4 合规防线仍在（无二维码/长按导流）",
@@ -597,9 +598,9 @@ check("zhiku 页 复制触感（vibrateShort）", "vibrateShort" in read("pages/
 _zk_wxml_v2 = read("pages/zhiku/zhiku.wxml")
 _zk_wxss_v2 = read("pages/zhiku/zhiku.wxss")
 _zk_js_v2 = read("pages/zhiku/zhiku.js")
-check("zhiku hero 图签统计带（四数白墨大数字，数在 js 数据位）",
+check("zhiku hero 图签统计带（四数白墨大数字，v0.9.5 起数在 utils/kbstats.js）",
       "zk-hstats" in _zk_wxml_v2 and "zk-hs-n" in _zk_wxml_v2
-      and all(k in _zk_js_v2 for k in ["1855", "847", "906", "620"])
+      and all(k in read("utils/kbstats.js") for k in ["1855", "847", "906", "620"])
       and ".zk-hstats" in _zk_wxss_v2)
 check("zhiku 六库手风琴目录（点击展开+默认首库展开）",
       'bindtap="toggleVault"' in _zk_wxml_v2 and "expanded" in _zk_js_v2
@@ -617,9 +618,9 @@ check("tab 栏 按压反馈（hover-class）", 'hover-class="tab-hover"' in read
       and ".tab-hover" in read("custom-tab-bar/index.wxss"))
 
 # ══ v0.9.1 信任与智库背书门（1008 用户令） ══
-check("ask 智库底座信任带（四数可证成=智库页盘点同数）",
-      "kb-strip" in ask_wxml and "1855" in ask_wxml and "847" in ask_wxml
-      and "906" in ask_wxml and "620" in ask_wxml and "kb-cred" in ask_wxml
+check("ask 智库底座信任带（四数可证成=智库页盘点同数，v0.9.5 起 {{kbStats}} 同源绑定）",
+      "kb-strip" in ask_wxml and 'wx:for="{{kbStats}}"' in ask_wxml
+      and "{{item.n}}" in ask_wxml and "kb-cred" in ask_wxml
       and ".kb-strip" in read("pages/ask/ask.wxss"))
 check("ask hero 口径点名总包智库", "专业参考源自「总包智库」" in ask_wxml)
 check("ask 信任承诺=每答附依据来源（answer 页 cite 栏背书）",
@@ -691,7 +692,10 @@ check("report 错误态显式 wx:if={!d}（跨节点 wx:else 误配根除）",
       'wx:if="{{!d}}"' in rp_wxml)
 check("report openPdf success 配对 hideLoading（蒙层不滞留）",
       read("pages/report/report.js").find("hideLoading", read("pages/report/report.js").find("openDocument")) > 0)
-check("report 支付结果 toast 按结果分图标", "icon: r.ok ? 'success' : 'none'" in read("pages/report/report.js"))
+check("report 支付结果三支路（v0.9.5 M5：成功toast/取消轻提示/失败弹窗带原因）",
+      "'已解锁', icon: 'success'" in read("pages/report/report.js")
+      and "支付没完成" in read("pages/report/report.js")
+      and "支付没成功" in read("pages/report/report.js"))
 check("pot 静默刷新失败不吞列表（序号防竞态+有内容只轻提示）",
       "_seq" in pot_js and "刷新失败" in pot_js)
 check("my 额度票根失败态三分支（quotaError）",
@@ -766,6 +770,64 @@ check("引擎 apply 校验（税号15-20/邮箱/403门槛/409重复）",
 _tin = os.path.join(ENGINE, "tests", "test_invoice.py")
 check("test_invoice.py 在役（9 用例含 fail-open）",
       os.path.exists(_tin) and "test_apply_push_failure_fail_open" in open(_tin, encoding="utf-8").read())
+
+# ══ v0.9.5（1009 用户令：「我的」页发票申请/我的报告按钮重设计 + 导出链加固）══
+check("my 服务入口行 srv-row 四件（图标块+主区+副题+箭头）",
+      'class="srv-row"' in my_wxml and 'class="srv-icon"' in my_wxml
+      and 'class="srv-main"' in my_wxml and 'class="srv-arrow"' in my_wxml)
+check("my 报告书架卡头 + srv-row 入口（不再裸用 ap-cell）",
+      "报告书架 · REPORTS" in my_wxml and "我的报告" in my_wxml
+      and my_wxml.find("报告书架 · REPORTS") < my_wxml.find('class="srv-row"'))
+_inv_at = my_wxml.find("开票服务 · INVOICE")
+check("my 开票服务卡头 + srv-row 入口",
+      _inv_at > 0 and "发票申请" in my_wxml[_inv_at:_inv_at + 400]
+      and 'bindtap="goInvoice"' in my_wxml[_inv_at:_inv_at + 400])
+_my_wxss = read("pages/my/my.wxss")
+check("my srv-* 样式族在役（对齐导出按钮/记录行 DNA）",
+      ".srv-row" in _my_wxss and ".srv-icon" in _my_wxss and ".srv-hover" in _my_wxss
+      and ".srv-title" in _my_wxss and ".srv-arrow" in _my_wxss)
+check("my 发票/报告入口不再借用外观格子类（ap-cell 仅存外观画廊两处）",
+      my_wxml.count('class="ap-cell') == 2)
+# v0.9.5：发票门槛进度条（惊喜感打磨——金额可视化）
+check("invoice 门槛进度条三件（progressPct计算+wxml+样式）",
+      "progressPct" in inv_js and "inv-progress" in inv_wxml
+      and ".inv-progress-fill" in read("pages/invoice/invoice.wxss")
+      and "Math.min(100" in inv_js)
+
+# ══ v0.9.5 修复批B（1009 双轴审计 24+6 findings 全收口）══
+_kb = read("utils/kbstats.js")
+_zhiku_js = read("pages/zhiku/zhiku.js")
+check("L18 信任数同源：utils/kbstats.js 唯一出处 + ask/zhiku 双页接线",
+      os.path.exists("utils/kbstats.js") and "'1855'" in _kb
+      and "kbstats.KB_STATS" in _zhiku_js and "kbStats: kbstats.KB_STATS" in ask_js
+      and 'wx:for="{{kbStats}}"' in ask_wxml and "{{item.n}}" in ask_wxml)
+check("L18 信任带 wxml 不再硬编码四数（kb-n 文本位改绑定，599847679 案号不算）",
+      'kb-n mono">1855' not in ask_wxml and 'kb-n mono">847' not in ask_wxml
+      and 'kb-n mono">906' not in ask_wxml and 'kb-n mono">620' not in ask_wxml)
+check("L17 隐私告知弹窗唯一出处（showPrivacyModal 单定义+双调用）",
+      ask_js.count("function showPrivacyModal(") == 1
+      and ask_js.count("showPrivacyModal(") == 3  # 定义+gate+submit
+      and ask_js.count("'隐私保护告知'") == 1)
+_app_js = read("app.js")
+check("L22 errCount 死仪表已删（app.js 无只写不读计数）",
+      "errCount" not in _app_js.replace("删 errCount 死仪表", ""))
+check("L23 theme.apply 只推 themeStyle（themeKey/themeName 死负载已剪）",
+      "page.setData({ themeStyle: styleStr(t) });" in theme_js
+      and "themeKey" not in theme_js.replace("themeKey/themeName 死负载不再随每页 onShow 推送", ""))
+_cfg = json.load(open("project.config.json", encoding="utf-8"))
+check("L24 packOptions 忽略 v095-audit/.vscode（审计材料不进上传包）",
+      any(i.get("value") == "v095-audit" for i in _cfg.get("packOptions", {}).get("ignore", []))
+      and any(i.get("value") == ".vscode" for i in _cfg.get("packOptions", {}).get("ignore", [])))
+_ans_wxml = read("pages/answer/answer.wxml")
+_ans_wxss = read("pages/answer/answer.wxss")
+check("U2 在途视觉：fu-send 发送中态（置灰+文案切换）+ 有用置灰",
+      "fu-send-busy" in _ans_wxml and "{{fuSending ? '发送中' : '发送'}}" in _ans_wxml
+      and ".fu-send-busy" in _ans_wxss
+      and "pill-busy" in _ans_wxml and ".pill-busy" in _ans_wxss)
+check("U2 _fuBusy 闭源旗标退役（改 data.fuSending 可视位）",
+      "_fuBusy" not in read("pages/answer/answer.js") and "fuSending: false" in read("pages/answer/answer.js"))
+check("U1 重试反馈：refreshQuota 二连失败轻提示（_retriedOnce 门，首载仍静默）",
+      "_retriedOnce" in ask_js and "服务还没恢复" in ask_js)
 
 fails = [c for c in checks if not c[1]]
 for name, ok, detail in checks:

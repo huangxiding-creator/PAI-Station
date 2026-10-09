@@ -232,7 +232,7 @@
     <!-- ══ 互动小按钮排（用户令 v0.5.0：精美小按钮）══ -->
     <view class="card ticks act-card">
       <view class="pill-row">
-        <view class="pill {{liked ? 'pill-on' : ''}}" bindtap="onLike" hover-class="pill-hover">
+        <view class="pill {{liked ? 'pill-on' : ''}} {{likeBusy ? 'pill-busy' : ''}}" bindtap="onLike" hover-class="pill-hover">
           <view class="pill-glyph"><text>{{liked ? '✓' : '👍'}}</text></view>
           <text class="pill-t">{{liked ? '已+1次' : '有用 +1次'}}</text>
         </view>
@@ -300,7 +300,7 @@
       <view class="fu-input-row">
         <input class="fu-input" placeholder="继续追问（免费）" value="{{fuInput}}"
                bindinput="onFuInput" bindconfirm="onFuSend" confirm-type="send" maxlength="200" />
-        <view class="fu-send {{canSendFu ? '' : 'fu-send-off'}}" bindtap="onFuSend" hover-class="fu-send-hover">发送</view>
+        <view class="fu-send {{canSendFu ? '' : 'fu-send-off'}} {{fuSending ? 'fu-send-busy' : ''}}" bindtap="onFuSend" hover-class="fu-send-hover">{{fuSending ? '发送中' : '发送'}}</view>
       </view>
       <view class="muted fu-left" wx:if="{{fuLeftA !== null}}">今日剩余追问：本篇 {{fuLeftA}} 次 · 全部 {{fuLeftG}} 次 · 明日 0 点重置</view>
       <view class="muted fu-ai-note">追问回答同样由 AI 生成 · 仅供参考</view>

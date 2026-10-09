@@ -97,6 +97,11 @@
     <view class="inv-gate">
       <view class="blank-frame"><view class="blank-cross"></view></view>
       <view class="empty-text">累计消费满 ¥200 可申请</view>
+      <!-- v0.9.5：门槛进度条（蓝图绘图笔风格，金额可视化一眼清） -->
+      <view class="inv-progress">
+        <view class="inv-progress-fill" style="width: {{progressPct}}%;"></view>
+        <view class="inv-progress-mark mono">{{progressPct}}%</view>
+      </view>
       <view class="muted">当前累计 ¥{{totalYuan}}，还差 ¥{{gapYuan}}。解锁报告或导出咨询档案的金额均计入累计消费。</view>
     </view>
   </view>

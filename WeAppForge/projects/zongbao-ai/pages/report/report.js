@@ -47,7 +47,7 @@ Page({
     api.reportDetail(this.data.sku)
       .then((d) => {
         this.setData({ d, loading: false });
-        wx.setNavigationBarTitle && wx.setNavigationBarTitle({ title: d.title || '报告详情', fail: () => {} });
+        // v0.9.5 审计修（L6）：删除 wx.setNavigationBarTitle——全站 custom 导航栏（死调用）
         if (!this.data.sample) {
           api.reportSample(this.data.sku)
             .then((s) => {
@@ -58,7 +58,13 @@ Page({
         }
       })
       .catch((err) => {
-        this.setData({ loading: false, errMsg: api.errMsg(err, '详情加载失败，请稍后重试') });
+        // v0.9.5 审计修（M4）：静默刷新（购买后/回页 onShow）失败不再无声——
+        // 有内容在屏时 errMsg 卡不会渲染（wx:if={{!d}}），须 toast 告知（对齐 pot.js 先例）
+        if (this.data.d) {
+          wx.showToast({ title: '刷新失败，展示的是稍早内容', icon: 'none', duration: 2200 });
+        } else {
+          this.setData({ loading: false, errMsg: api.errMsg(err, '详情加载失败，请稍后重试') });
+        }
       });
   },
 
@@ -93,13 +99,32 @@ Page({
     pay.payReport(this.data.sku)
       .then((r) => {
         this.setData({ buying: false });
-        // ok:false（取消/失败/降级长文案）走 none，可多行完整可读；success 图标约 7 字上限
-        wx.showToast({ title: r.message || '已解锁', icon: r.ok ? 'success' : 'none' });
-        if (r.ok) this.load(true);
+        if (r.ok) {
+          wx.showToast({ title: '已解锁', icon: 'success' });
+          this.load(true);
+          return;
+        }
+        // v0.9.5 审计修（M5）：与 my/answer 支付链同款——取消=轻提示，失败=大声弹窗
+        // （toast 一闪而过在用户眼里就是「点了没反应」——¥498+ 的单更须说清楚）
+        if (String(r.message || '').indexOf('取消') >= 0) {
+          wx.showToast({ title: r.message, icon: 'none' });
+        } else {
+          wx.showModal({
+            title: '支付没完成',
+            content: String(r.message || '请稍后重试') + '。可稍后再试；已扣款的金额不会丢（重新进入会自动对账解锁）。',
+            showCancel: false,
+            confirmText: '知道了'
+          });
+        }
       })
       .catch((err) => {
         this.setData({ buying: false });
-        wx.showToast({ title: api.errMsg(err, '支付未完成'), icon: 'none' });
+        wx.showModal({
+          title: '支付没成功',
+          content: api.errMsg(err, '网络波动，请稍后重试'),
+          showCancel: false,
+          confirmText: '知道了'
+        });
       });
   },
 

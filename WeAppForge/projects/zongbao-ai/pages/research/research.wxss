@@ -80,8 +80,8 @@
   background: rgba(var(--t-blue-rgb), 0.06);
 }
 .rs-chip-on {
-  border-color: var(--acc, var(--accent));
-  color: var(--acc, var(--accent));
+  border-color: var(--accent);
+  color: var(--accent);
   font-weight: 700;
 }
 .rs-chip-n { margin-left: 8rpx; font-size: 20rpx; }
@@ -107,9 +107,9 @@
 .rs-state {
   font-size: 24rpx;
   font-weight: 800;
-  color: var(--acc, var(--accent));
+  color: var(--accent);
 }
-.rs-state-on { color: #2f9e63; }
+.rs-state-on { color: var(--t-ok); }
 .rs-state-dim { color: var(--muted); font-weight: 600; font-size: 22rpx; }
 .rs-title {
   font-size: 29rpx;
@@ -117,7 +117,7 @@
   color: var(--ink, var(--navy-0));
   line-height: 1.5;
 }
-.rs-item-owned .rs-title { color: var(--acc, var(--accent)); }
+.rs-item-owned .rs-title { color: var(--accent); }
 .rs-sub {
   margin-top: 6rpx;
   font-size: 23rpx;

@@ -3,6 +3,7 @@
 // 布局=咨询问题输入框 → [AI优化提问|立即咨询]；常用咨询→示范性问题；免费 6 次/天+四动作赠次
 const api = require('../../utils/api');
 const theme = require('../../utils/theme');
+const kbstats = require('../../utils/kbstats');
 
 // EPC 总承包热点题库：tag=chip 标签，q=递进三小问全文（点按填入）
 const SAMPLES = [
@@ -42,6 +43,25 @@ const SAMPLES = [
 // setData 路径（预填/AI优化采用/示范题）全部经此截断，保证 data.question 与所见一致。
 const Q_MAX = 500;
 
+// v0.9.5 审计修（L17）：隐私告知弹窗唯一出处——_gateAndLogin 与 submitQuestion 此前各持一份
+// 全文拷贝，文案改动漏一处=合规口径分裂。同意→记忆+回调；拒绝→静默不发登录/不提问。
+function showPrivacyModal(onAgree) {
+  wx.showModal({
+    title: '隐私保护告知',
+    content: '为提供咨询服务，我们将通过微信登录获取您的 openid 用于额度记账，'
+      + '并将您提交的问题与生成的回答存储在服务器；您自愿共享的问答将在「锅圈」公开展示，可随时取消共享。'
+      + '本服务解答内容由人工智能（AI）生成，仅供参考。'
+      + '详见「我的 · 用户协议与隐私政策」。',
+    confirmText: '同意并继续',
+    cancelText: '不同意',
+    success: (r) => {
+      if (!r.confirm) return; // 拒绝：不发登录，不收集任何标识
+      wx.setStorageSync('qw_privacy_ok', 1);
+      if (onAgree) onAgree();
+    }
+  });
+}
+
 Page({
   data: {
     question: '',
@@ -57,6 +77,7 @@ Page({
     loginReady: false,
     netStatus: '',     // ''未知 / 'ok' / 'down'（红卡常驻提示）
     nav: { statusBarHeight: 20, navHeight: 44 },
+    kbStats: kbstats.KB_STATS,  // v0.9.5 审计修（L18）：信任带四数同源 zhiku（utils/kbstats.js）
     sheetNo: ''        // 图纸编号（咨询单装饰）
   },
 
@@ -94,20 +115,7 @@ Page({
       this.silentLogin();
       return;
     }
-    wx.showModal({
-      title: '隐私保护告知',
-      content: '为提供咨询服务，我们将通过微信登录获取您的 openid 用于额度记账，'
-        + '并将您提交的问题与生成的回答存储在服务器；您自愿共享的问答将在「锅圈」公开展示，可随时取消共享。'
-        + '本服务解答内容由人工智能（AI）生成，仅供参考。'
-        + '详见「我的 · 用户协议与隐私政策」。',
-      confirmText: '同意并继续',
-      cancelText: '不同意',
-      success: (r) => {
-        if (!r.confirm) return; // 拒绝：不发登录，不收集任何标识
-        wx.setStorageSync('qw_privacy_ok', 1);
-        this.silentLogin();
-      }
-    });
+    showPrivacyModal(() => this.silentLogin());
   },
 
   // v0.7.4 海报深链导航（onLoad 首跳 + onShow 兜底重试；成功即清位，3 次上限防循环）
@@ -171,6 +179,12 @@ Page({
         // 静默失败：保留缓存/旧值，不打断提问主流程
         const cached = wx.getStorageSync('qw_quota');
         if (cached) this.applyQuota(cached);
+        // v0.9.5 审计修：用户手点「点击重试」仍失败时给一声轻提示（红卡虽在，
+        // 但重试动作本身不许「点了没反应」——服务恢复前明确告知）
+        if (this._retriedOnce) {
+          wx.showToast({ title: '服务还没恢复，请稍后再试', icon: 'none', duration: 2000 });
+        }
+        this._retriedOnce = true;
       });
   },
 
@@ -194,7 +208,8 @@ Page({
       question: v,
       charCount: v.length,
       canAsk: v.trim().length >= 2,  // 与服务端校验同源：非空+有意义
-      askHint: ''
+      askHint: '',
+      qFocus: false   // v0.9.5 审计修：焦点已落输入框即复位——再次空点可重新触发聚焦翻转
     });
   },
 
@@ -273,20 +288,7 @@ Page({
     if (this.data.asking || !q || q.trim().length < 2) return;
     // v0.7.4 提审合规：首次使用前隐私告知（同意一次即记忆，拒绝则不发起登录）
     if (!wx.getStorageSync('qw_privacy_ok')) {
-      wx.showModal({
-        title: '隐私保护告知',
-        content: '为提供咨询服务，我们将通过微信登录获取您的 openid 用于额度记账，'
-          + '并将您提交的问题与生成的回答存储在服务器；您自愿共享的问答将在「锅圈」公开展示，可随时取消共享。'
-          + '本服务解答内容由人工智能（AI）生成，仅供参考。'
-          + '详见「我的 · 用户协议与隐私政策」。',
-        confirmText: '同意并继续',
-        cancelText: '不同意',
-        success: (r) => {
-          if (!r.confirm) return;
-          wx.setStorageSync('qw_privacy_ok', 1);
-          this._doSubmit(q);
-        }
-      });
+      showPrivacyModal(() => this._doSubmit(q));
       return;
     }
     this._doSubmit(q);

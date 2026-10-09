@@ -13,6 +13,7 @@ Page({
     loadError: '',
     totalYuan: '0.00',
     gapYuan: '',
+    progressPct: 0,          // v0.9.5：门槛进度条百分比（0-100 封顶）
     canApply: false,          // 门槛已到 且 无 pending
     pending: null,            // 处理中的申请（有则展示状态卡，不再收新单）
     ...EMPTY,
@@ -38,11 +39,15 @@ Page({
       .then((d) => {
         const pending = (d.applications || []).find((a) => a.status === 'pending') || null;
         const total = d.total_fen || 0;
-        const gap = Math.max(0, (d.threshold_fen || 20000) - total);
+        const threshold = d.threshold_fen || 20000;
+        const gap = Math.max(0, threshold - total);
+        // v0.9.5：门槛进度可视化（惊喜感打磨——¥0→¥200 一眼看清还差多远）
+        const progressPct = Math.max(0, Math.min(100, Math.round((total / threshold) * 100)));
         this.setData({
           loading: false,
           totalYuan: (total / 100).toFixed(2),
           gapYuan: (gap / 100).toFixed(2),
+          progressPct,
           canApply: !!d.can_apply,
           pending,
         });

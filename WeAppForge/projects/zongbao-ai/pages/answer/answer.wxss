@@ -357,6 +357,8 @@
   border-color: var(--navy-0);
   transform: scale(0.96);
 }
+/* v0.9.5 审计修（U2）：在途置灰——慢网点赞等回包期间不再是"点了没反应" */
+.pill-busy { opacity: 0.55; }
 .pill-glyph {
   width: 52rpx; height: 52rpx;
   border-radius: 50%;
@@ -458,7 +460,7 @@ button.share-pill .pill-t { color: var(--ink-2); }
   width: 34rpx; height: 34rpx;
   border-radius: 8rpx;
   background: var(--accent);
-  color: #fff;
+  color: var(--navy-0);
   font-size: 21rpx;
   display: flex; align-items: center; justify-content: center;
 }
@@ -523,6 +525,7 @@ button.share-pill .pill-t { color: var(--ink-2); }
 }
 .fu-send-hover { background: var(--navy-2); }
 .fu-send-off { opacity: 0.4; }
+.fu-send-busy { opacity: 0.55; }  /* v0.9.5 审计修（U2）：发送中置灰（文案同时切「发送中」） */
 .fu-left { margin-top: 14rpx; font-size: 21rpx; text-align: center; letter-spacing: 1rpx; }
 
 /* ══ v0.6.0 相关问题 chips：从本篇答案长出的下一步牵引 ══ */
@@ -613,7 +616,7 @@ button.share-pill .pill-t { color: var(--ink-2); }
   border-top: 2rpx dashed rgba(var(--t-blue-rgb), 0.25);
   font-size: 21rpx;
   letter-spacing: 1rpx;
-  color: var(--muted-ink, #5a6a7e);
+  color: var(--muted);
   text-align: center;
 }
 .fu-ai-note {
@@ -640,8 +643,8 @@ button.share-pill .pill-t { color: var(--ink-2); }
   font-size: 26rpx;
   font-weight: 800;
   letter-spacing: 2rpx;
-  color: #071a39;
-  background: linear-gradient(180deg, #ffd9a8, #ff9432);
+  color: var(--navy-0);
+  background: linear-gradient(180deg, var(--t-accent-soft), var(--accent));
   border-radius: 6rpx;
   padding: 6rpx 14rpx;
 }
@@ -704,9 +707,4 @@ button.share-pill .pill-t { color: var(--ink-2); }
   box-shadow: 0 10rpx 22rpx rgba(var(--t-accent-rgb), 0.32);
 }
 .cite-pop-btn-hover { transform: scale(0.96); }
-@media (prefers-color-scheme: dark) {
-  .cite-pop { background: #141d31; border-color: #33415e; }
-  .cite-pop-title { color: #dbe6f8; }
-  .cite-pop-x { border-color: #3a4763; }
-  .cite-pop-text { color: #cdd8ea; }
-}
+/* v0.9.5 审计修：系统深色硬编码块已删——obsidian 变量统一接管（对齐上方 544 行先例） */

@@ -45,7 +45,7 @@ Page({
     // v0.7.3 周换装：主题刷新 + 画廊激活态重算（跨日回到本页可见轮换效果）
     theme.apply(this);
     this.setData({ themes: theme.list() });
-    // 自绘 tabBar 选中态（v0.7.2 四页签：问=0 锅=1 智=2 我=3）
+    // 自绘 tabBar 选中态（v0.9.0 起五页签：问=0 锅=1 智=2 研=3 我=4）
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 4 });
     }

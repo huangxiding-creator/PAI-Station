@@ -97,9 +97,10 @@ function styleStr(t) {
 }
 
 // 页面接入：onShow 里调用（全 9 页 navigationStyle=custom，无需再染原生导航栏）
+// v0.9.5 审计修：themeKey/themeName 死负载不再随每页 onShow 推送（无任何 wxml 引用）
 function apply(page) {
   const t = effective();
-  page.setData({ themeStyle: styleStr(t), themeKey: t.name ? keyOf(t) : 'navy', themeName: t.name });
+  page.setData({ themeStyle: styleStr(t) });
   bindThemeChange();
   const bar = page.getTabBar && page.getTabBar();
   if (bar && bar.applyTheme) bar.applyTheme();

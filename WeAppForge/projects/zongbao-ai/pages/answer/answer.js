@@ -45,6 +45,7 @@ Page({
     fuList: [],           // v0.6.0 追问对话流
     fuInput: '',
     canSendFu: false,
+    fuSending: false,    // v0.9.5 审计修（U2）：追问在途视觉位（置灰+文案切换，慢网防"点了没反应"）
     fuLeftA: null,        // 本篇今日追问剩余
     fuLeftG: null,        // 全局今日追问剩余
     posterBusy: false,
@@ -115,6 +116,8 @@ Page({
     if (this._pollTimer) { clearTimeout(this._pollTimer); this._pollTimer = null; }
     if (this._tickTimer) { clearInterval(this._tickTimer); this._tickTimer = null; }
     if (this._fuTimer) { clearTimeout(this._fuTimer); this._fuTimer = null; }
+    // v0.9.5 审计修：授勋动画定时器并入——切 tab 中途不再对隐藏页 setData（对齐本页隐藏态纪律）
+    if (this._rwTimer) { clearTimeout(this._rwTimer); this._rwTimer = null; }
   },
 
   _startTick() {
@@ -172,7 +175,7 @@ Page({
           shared: !!d.shared,
           canShare: !!d.can_share
         });
-        wx.setNavigationBarTitle({ title: '回答' });
+        // v0.9.5 审计修：删除 wx.setNavigationBarTitle——全站 custom 导航栏，原生标题栏不存在（死调用）
         // v0.6.0 免费延伸层：要点速览 + 追问对话（失败各自优雅降级，不挡正文）
         this._loadDigest();
         this._loadFollowups();
@@ -550,12 +553,12 @@ Page({
       wx.showToast({ title: '追问至少 2 个字', icon: 'none' });
       return;
     }
-    if (this._fuBusy) return;
-    this._fuBusy = true;
+    if (this.data.fuSending) return;
+    this.setData({ fuSending: true });
     api.followup(this.data.id, q.slice(0, 200))
       .then((d) => {
-        this._fuBusy = false;
         this.setData({
+          fuSending: false,
           fuInput: '', canSendFu: false,
           fuLeftA: d.left_answer, fuLeftG: d.left_global,
           fuList: this.data.fuList.concat([{
@@ -565,7 +568,7 @@ Page({
         this._pollFollowups();
       })
       .catch((err) => {
-        this._fuBusy = false;
+        this.setData({ fuSending: false });
         wx.showToast({ title: api.errMsg(err, '追问失败'), icon: 'none', duration: 2500 });
       });
   },

@@ -3,6 +3,15 @@
 const api = require('../../utils/api');
 const theme = require('../../utils/theme');
 
+// v0.9.5 审计修：列表项导航节流（与 my 页同款防双击压栈）
+let _navLastAt = 0;
+function navToThrottled(url) {
+  const now = Date.now();
+  if (now - _navLastAt < 300) return;
+  _navLastAt = now;
+  wx.navigateTo({ url });
+}
+
 Page({
   data: {
     items: [],   // {id, question, preview, likes, liked, full_chars, views, shares}
@@ -57,7 +66,8 @@ Page({
 
   onItem(e) {
     const id = e.currentTarget.dataset.id;
-    if (id) wx.navigateTo({ url: '/pages/answer/answer?id=' + id });
+    // v0.9.5 审计修：接入 my 页同款 300ms 节流——快速双击不再重复压栈 answer 页
+    if (id) navToThrottled('/pages/answer/answer?id=' + id);
   },
 
   onRetry() {

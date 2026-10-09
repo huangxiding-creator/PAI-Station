@@ -69,14 +69,12 @@
   </view>
 
   <!-- ══ 智库底座信任带（可证成口径：与智库页库存盘点同数；1008 用户令：突出总包智库+强信任）══ -->
+  <!-- v0.9.5 审计修（L18）：四数改 {{kbStats}} 同源渲染（utils/kbstats.js），不再与智库页各自硬编码 -->
   <view class="kb-strip rise" style="animation-delay: 75ms">
-    <view class="kb-cell"><text class="kb-n mono">1855</text><text class="kb-l">知识条目</text></view>
-    <view class="kb-div"></view>
-    <view class="kb-cell"><text class="kb-n mono">847</text><text class="kb-l">电子书</text></view>
-    <view class="kb-div"></view>
-    <view class="kb-cell"><text class="kb-n mono">906</text><text class="kb-l">视频·直播</text></view>
-    <view class="kb-div"></view>
-    <view class="kb-cell"><text class="kb-n mono">620</text><text class="kb-l">图文专栏</text></view>
+    <block wx:for="{{kbStats}}" wx:key="l">
+      <view wx:if="{{index > 0}}" class="kb-div"></view>
+      <view class="kb-cell"><text class="kb-n mono">{{item.n}}</text><text class="kb-l">{{item.l}}</text></view>
+    </block>
   </view>
   <view class="kb-cred muted">智库沉淀自总包之声（2013 年至今公益运行）与总包学园 · 每条回答附依据来源，点开可查证</view>
 
