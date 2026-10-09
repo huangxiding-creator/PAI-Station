@@ -7,6 +7,7 @@ const api = require('../../utils/api');
 const pay = require('../../utils/pay');
 const md2blocks = require('../../utils/md2blocks');
 const tel = require('../../utils/telemetry'); // v0.9.6：购买入口打点（对照组——此链在真机已活）
+const pop = require('../../utils/pop'); // v0.9.7：qw-pop 自绘弹窗（品牌同源重设计，按钮文字摆脱 4 字硬限）
 
 Page({
   data: {
@@ -21,6 +22,8 @@ Page({
     buying: false,
     opening: false,
     paySupported: true, // iOS=false（虚拟支付铁律）
+    popOpen: false,     // v0.9.7 qw-pop 开合镜像（e2e/结构锚 + tabBar 压暗让路）
+    popMode: '',
   },
 
   onLoad(query) {
@@ -84,15 +87,22 @@ Page({
     this.load();
   },
 
+  // v0.9.7 qw-pop：弹窗开合镜像 + 自绘 tabBar 压暗让路（本页非 tab 页，getTabBar 自然跳过）
+  onPopState(e) {
+    pop.onPopState(this, e);
+  },
+
   // 购买解锁（Android/开发工具；iOS 入口在 wxml 层已隐藏）
   buy() {
     tel.ping('buy_tap', { sku: String(this.data.sku || '').slice(0, 24) });
     if (this.data.buying) return;
     if (!pay.paySupported()) {
-      wx.showModal({
+      pop.modal(this, {
+        kicker: '购买 · PURCHASE',
         title: '购买方式',
         content: 'iOS 暂不支持应用内购买，请在安卓设备上完成购买后再阅读。',
         showCancel: false,
+        confirmText: '知道了'
       });
       return;
     }
@@ -111,7 +121,8 @@ Page({
         if (String(r.message || '').indexOf('取消') >= 0) {
           wx.showToast({ title: r.message, icon: 'none' });
         } else {
-          wx.showModal({
+          pop.modal(this, {
+            kicker: '支付 · PAYMENT',
             title: '支付没完成',
             content: String(r.message || '请稍后重试') + '。可稍后再试；已扣款的金额不会丢（重新进入会自动对账解锁）。',
             showCancel: false,
@@ -121,7 +132,8 @@ Page({
       })
       .catch((err) => {
         this.setData({ buying: false });
-        wx.showModal({
+        pop.modal(this, {
+          kicker: '支付 · PAYMENT',
           title: '支付没成功',
           content: api.errMsg(err, '网络波动，请稍后重试'),
           showCancel: false,
@@ -134,7 +146,7 @@ Page({
   openPdf() {
     if (this.data.opening) return;
     this.setData({ opening: true });
-    wx.showLoading({ title: '打开报告中', mask: true });
+    pop.loading(this, '打开报告中');
     wx.downloadFile({
       url: api.reportPdfUrl(this.data.sku),
       header: { Authorization: 'Bearer ' + (api.tokenSync() || '') },
@@ -148,7 +160,7 @@ Page({
           fileType: 'pdf',
           showMenu: true,
           success: () => {
-            wx.hideLoading(); // 与 showLoading 严格配对，防读完 PDF 返回后蒙层滞留
+            pop.hideLoading(this); // 须在 openDocument 之后收口，防读完 PDF 返回后蒙层滞留（审计锚）
             this.setData({ opening: false });
           },
           fail: () => this._pdfFail('本机暂不支持打开 PDF，请升级微信后重试'),
@@ -159,7 +171,7 @@ Page({
   },
 
   _pdfFail(msg) {
-    wx.hideLoading();
+    pop.hideLoading(this);
     this.setData({ opening: false });
     wx.showToast({ title: msg, icon: 'none', duration: 2500 });
   },

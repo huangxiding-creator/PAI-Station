@@ -11,6 +11,7 @@ const md2blocks = require('../../utils/md2blocks');
 const theme = require('../../utils/theme');
 const pay = require('../../utils/pay');
 const tel = require('../../utils/telemetry'); // v0.9.6：真机导出链打点
+const pop = require('../../utils/pop'); // v0.9.7：qw-pop 自绘弹窗（品牌同源重设计，按钮文字摆脱 4 字硬限）
 
 Page({
   data: {
@@ -52,6 +53,8 @@ Page({
     posterBusy: false,
     exportPaid: false,   // v0.8.0 本篇导出已解锁（¥0.1/条）
     payOk: true,         // v0.8.0 虚拟支付可用（iOS=false → 隐藏导出入口，虚拟支付铁律）
+    popOpen: false,      // v0.9.7 qw-pop 开合镜像（e2e/结构锚 + tabBar 压暗让路）
+    popMode: '',
     nav: { statusBarHeight: 20, navHeight: 44 }
   },
 
@@ -112,6 +115,11 @@ Page({
   },
 
   noop() {},
+
+  // v0.9.7 qw-pop：弹窗开合镜像 + 自绘 tabBar 压暗让路（本页非 tab 页，getTabBar 自然跳过）
+  onPopState(e) {
+    pop.onPopState(this, e);
+  },
 
   _stopTimers() {
     if (this._pollTimer) { clearTimeout(this._pollTimer); this._pollTimer = null; }
@@ -227,32 +235,35 @@ Page({
   // v0.7.8 确认提交后置 criticBusy：完成/失败复位，慢网防连开连发
   onCriticize() {
     if (this.data.criticBusy) return;
-    wx.showModal({
+    pop.modal(this, {
+      kicker: '纠错 · CORRECTION',
       title: '指出问题',
       editable: true,
-      placeholderText: '哪里不准确？请写具体意见（必填，可得 +1 次）',
-      success: (r) => {
-        if (!r.confirm) return;
-        const text = (r.content || '').trim();
-        if (!text) {
-          wx.showToast({ title: '写点具体意见才能领次数哦', icon: 'none', duration: 2000 });
-          return;
-        }
-        this.setData({ criticBusy: true });
-        api.criticize(this.data.id, text.slice(0, 200))
-          .then((d) => {
-            this.setData({ criticBusy: false });
-            if (d.granted) {
-              this._reward('具体纠错是最珍贵的同行礼遇');
-            } else {
-              wx.showToast({ title: '已收到，人工复核', icon: 'none' });
-            }
-          })
-          .catch((err) => {
-            this.setData({ criticBusy: false });
-            wx.showToast({ title: api.errMsg(err, '提交失败'), icon: 'none' });
-          });
+      placeholder: '哪里不准确？请写具体意见（必填，可得 +1 次）',
+      confirmText: '提交意见',
+      cancelText: '再想想',
+      maskClosable: false
+    }).then((r) => {
+      if (!r.confirm) return;
+      const text = (r.content || '').trim();
+      if (!text) {
+        wx.showToast({ title: '写点具体意见才能领次数哦', icon: 'none', duration: 2000 });
+        return;
       }
+      this.setData({ criticBusy: true });
+      api.criticize(this.data.id, text.slice(0, 200))
+        .then((d) => {
+          this.setData({ criticBusy: false });
+          if (d.granted) {
+            this._reward('具体纠错是最珍贵的同行礼遇');
+          } else {
+            wx.showToast({ title: '已收到，人工复核', icon: 'none' });
+          }
+        })
+        .catch((err) => {
+          this.setData({ criticBusy: false });
+          wx.showToast({ title: api.errMsg(err, '提交失败'), icon: 'none' });
+        });
     });
   },
 
@@ -276,68 +287,79 @@ Page({
       wx.showToast({ title: '当前系统暂不支持导出，阅读全文不受影响', icon: 'none', duration: 2400 });
       return;
     }
-    // v0.9.6（1009 真机根因战）：confirmText 硬限 ≤4 字符——「支付 0.1 元」8 字符
-    // 在真机 showModal 直接 fail（devtools 宽松不校验）→ 导出确认弹窗整链静默死。
-    // 金额已在 content 里，按钮文字回归 4 字内。
-    wx.showModal({
+    // v0.9.7：qw-pop 自绘弹窗——按钮文字彻底摆脱原生 showModal 4 字符真机硬限
+    //（v0.9.6 根因战的根治形态），金额直接上按钮。
+    pop.modal(this, {
+      kicker: '导出 · EXPORT',
       title: '导出本篇解答',
       content: '咨询全程免费，导出文件按 ¥0.1/条 收费（虚拟支付），本次支付 0.1 元。解锁后本篇可反复导出 Word/PDF/Markdown。',
-      confirmText: '确认支付',
+      confirmText: '支付 0.1 元解锁',
       cancelText: '再想想',
-      success: (r) => {
-        if (!r.confirm) return;
-        if (this._payBusy) return;
-        this._payBusy = true;
-        wx.showLoading({ title: '拉起支付…', mask: true });
-        pay.payExport(this.data.id)
-          .then((res) => {
-            wx.hideLoading();
-            this._payBusy = false;
-            if (res.reconciling) {
-              // 已扣款、核验腿抖断：不谎报完成，重取详情（服务端查单补标记后自然解锁）
-              wx.showToast({ title: res.message, icon: 'none', duration: 2500 });
-              this.load();
-              return;
-            }
-            if (res.ok) {
-              this.setData({ exportPaid: true });
-              this._exportSheet();
-              return;
-            }
-            // v0.9.4：取消=轻提示；其余失败大声弹窗（同 my 批量导出修法）
-            if (String(res.message || '').indexOf('取消') >= 0) {
-              wx.showToast({ title: res.message, icon: 'none' });
-            } else {
-              tel.ping('export_fail', { m: String(res.message || '').slice(0, 60) });
-              wx.showModal({
-                title: '支付没完成',
-                content: String(res.message || '请稍后重试') + '。可稍后再试；已扣款的金额不会丢（重新进入会自动对账解锁）。',
-                showCancel: false,
-                confirmText: '知道了'
-              });
-            }
-          })
-          .catch((err) => {
-            // v0.9.4：兜底防假死（同 my 页修法——loading 永转+按钮废死的根）
-            tel.ping('export_fail', { m: api.errMsg(err, '').slice(0, 60) });
-            wx.hideLoading();
-            this._payBusy = false;
-            wx.showModal({
-              title: '支付没成功',
-              content: api.errMsg(err, '网络波动，请稍后重试'),
+      maskClosable: false
+    }).then((r) => {
+      if (!r.confirm) return;
+      if (this._payBusy) return;
+      this._payBusy = true;
+      pop.loading(this, '拉起支付…');
+      pay.payExport(this.data.id)
+        .then((res) => {
+          pop.hideLoading(this);
+          this._payBusy = false;
+          if (res.reconciling) {
+            // 已扣款、核验腿抖断：不谎报完成，重取详情（服务端查单补标记后自然解锁）
+            wx.showToast({ title: res.message, icon: 'none', duration: 2500 });
+            this.load();
+            return;
+          }
+          if (res.ok) {
+            this.setData({ exportPaid: true });
+            this._exportSheet();
+            return;
+          }
+          // v0.9.4：取消=轻提示；其余失败大声弹窗（同 my 批量导出修法）
+          if (String(res.message || '').indexOf('取消') >= 0) {
+            wx.showToast({ title: res.message, icon: 'none' });
+          } else {
+            tel.ping('export_fail', { m: String(res.message || '').slice(0, 60) });
+            pop.modal(this, {
+              kicker: '支付 · PAYMENT',
+              title: '支付没完成',
+              content: String(res.message || '请稍后重试') + '。可稍后再试；已扣款的金额不会丢（重新进入会自动对账解锁）。',
               showCancel: false,
               confirmText: '知道了'
             });
+          }
+        })
+        .catch((err) => {
+          // v0.9.4：兜底防假死（同 my 页修法——loading 永转+按钮废死的根）
+          tel.ping('export_fail', { m: api.errMsg(err, '').slice(0, 60) });
+          pop.hideLoading(this);
+          this._payBusy = false;
+          pop.modal(this, {
+            kicker: '支付 · PAYMENT',
+            title: '支付没成功',
+            content: api.errMsg(err, '网络波动，请稍后重试'),
+            showCancel: false,
+            confirmText: '知道了'
           });
-      }
+        });
     });
   },
 
+  // v0.9.7：底部图纸盘（qw-pop sheet）——已解锁答案带「永久免费导出」徽标
+  //（1009 用户令：付费一次永久解锁的视觉诚实）
   _exportSheet() {
-    wx.showActionSheet({
-      itemList: ['Word 文档 (.docx)', 'PDF 文档 (.pdf)', 'Markdown (.md)'],
-      success: (r) => this._exportAs(['docx', 'pdf', 'md'][r.tapIndex]),
-      fail: () => { /* 用户取消 */ }
+    pop.sheet(this, {
+      kicker: '导出格式 · EXPORT FORMAT',
+      badge: this.data.exportPaid ? '已解锁 · 永久免费导出' : '',
+      items: [
+        { t: 'Word 文档', sub: '适合打印批注与正式归档', ext: '.docx' },
+        { t: 'PDF 文档', sub: '版式固定，任何设备观感一致', ext: '.pdf' },
+        { t: 'Markdown', sub: '纯文本轻量，可二次编辑', ext: '.md' }
+      ]
+    }).then((i) => {
+      const fmt = ['docx', 'pdf', 'md'][i];
+      if (fmt) this._exportAs(fmt);
     });
   },
 
@@ -352,32 +374,33 @@ Page({
         data,
         encoding,
         success: () => {
-          wx.hideLoading();
-          wx.showModal({
+          pop.hideLoading(this);
+          pop.modal(this, {
+            kicker: '导出 · EXPORT',
             title: '已生成文件',
             content: fname + ' · 可直接微信转发给同事，或预览后另存。',
             confirmText: '微信转发',
             cancelText: '预览',
-            success: (m) => {
-              if (m.confirm) this._shareFile(filePath, fname);
-              else this._previewFile(filePath);
-            }
+            maskClosable: false
+          }).then((m) => {
+            if (m.confirm) this._shareFile(filePath, fname);
+            else this._previewFile(filePath);
           });
         },
         fail: () => {
-          wx.hideLoading();
+          pop.hideLoading(this);
           wx.showToast({ title: '本机写入失败', icon: 'none' });
         }
       });
     };
-    wx.showLoading({ title: '生成中…', mask: true });
+    pop.loading(this, '生成中…');
     if (fmt === 'md') {
       writeAndOffer(this._buildMd(), 'utf8');
       return;
     }
     api.exportAnswer(this.data.id, fmt)
       .then((d) => {
-        wx.hideLoading();
+        pop.hideLoading(this);
         if (!(d && d.b64)) {
           wx.showToast({ title: '导出失败，请重试', icon: 'none' });
           return;
@@ -385,7 +408,7 @@ Page({
         writeAndOffer(d.b64, 'base64');
       })
       .catch((err) => {
-        wx.hideLoading();
+        pop.hideLoading(this);
         wx.showToast({ title: api.errMsg(err, '导出失败'), icon: 'none' });
       });
   },
@@ -445,24 +468,25 @@ Page({
   // 取消共享：撤出锅圈 + 扣 1 次咨询机会（用户令：明确告知再扣）
   onShareOff() {
     if (this.data.shareBusy || !this.data.shared) return;
-    wx.showModal({
+    pop.modal(this, {
+      kicker: '共享 · SHARE',
       title: '取消共享',
       content: '取消后本篇撤出锅圈，同时扣除 1 次咨询机会。确定取消吗？',
       confirmText: '取消共享',
       cancelText: '再想想',
-      success: (r) => {
-        if (!r.confirm) return;
-        this.setData({ shareBusy: true });
-        api.shareOff(this.data.id)
-          .then(() => {
-            this.setData({ shareBusy: false, shared: false });
-            wx.showToast({ title: '已撤出锅圈，扣 1 次咨询机会', icon: 'none', duration: 2400 });
-          })
-          .catch((err) => {
-            this.setData({ shareBusy: false });
-            wx.showToast({ title: api.errMsg(err, '操作失败'), icon: 'none' });
-          });
-      }
+      maskClosable: false
+    }).then((r) => {
+      if (!r.confirm) return;
+      this.setData({ shareBusy: true });
+      api.shareOff(this.data.id)
+        .then(() => {
+          this.setData({ shareBusy: false, shared: false });
+          wx.showToast({ title: '已撤出锅圈，扣 1 次咨询机会', icon: 'none', duration: 2400 });
+        })
+        .catch((err) => {
+          this.setData({ shareBusy: false });
+          wx.showToast({ title: api.errMsg(err, '操作失败'), icon: 'none' });
+        });
     });
   },
 
@@ -472,10 +496,10 @@ Page({
     const n = e.currentTarget.dataset.n;
     const c = (this.data.citations || []).find((x) => x.n === n);
     if (!n || !c) return;
-    wx.showLoading({ title: '依据展开中…', mask: true });
+    pop.loading(this, '依据展开中…');
     api.citationFulltext(this.data.id, n)
       .then((d) => {
-        wx.hideLoading();
+        pop.hideLoading(this);
         this.setData({
           citeShow: true,
           citeTitle: '依据 [' + n + '] ' + (c.source || '').slice(0, 12),
@@ -483,7 +507,7 @@ Page({
         });
       })
       .catch((err) => {
-        wx.hideLoading();
+        pop.hideLoading(this);
         wx.showToast({ title: api.errMsg(err, '展开失败'), icon: 'none', duration: 2200 });
       });
   },
@@ -592,7 +616,7 @@ Page({
   onPoster() {
     if (this.data.posterBusy) return;
     this.setData({ posterBusy: true });
-    wx.showLoading({ title: '海报生成中…', mask: true });
+    pop.loading(this, '海报生成中…');
     api.poster(this.data.id)
       .then((d) => new Promise((resolve, reject) => {
         // 固定文件名（按答案）：重复生成不堆积
@@ -606,7 +630,7 @@ Page({
         });
       }))
       .then((path) => {
-        wx.hideLoading();
+        pop.hideLoading(this);
         this.setData({ posterBusy: false });
         if (wx.showShareImageMenu) {
           wx.showShareImageMenu({
@@ -619,7 +643,7 @@ Page({
         }
       })
       .catch((err) => {
-        wx.hideLoading();
+        pop.hideLoading(this);
         this.setData({ posterBusy: false });
         wx.showToast({ title: api.errMsg(err, '海报生成失败'), icon: 'none' });
       });

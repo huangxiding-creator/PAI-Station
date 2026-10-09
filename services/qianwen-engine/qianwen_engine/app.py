@@ -1022,7 +1022,8 @@ def share_poster(aid: str, request: Request):
     要点优先取缓存 digest，未缓存则现场生成；再失败用预览兜底——海报零失败姿态。"""
     _, row = _visible_ready(request, aid)
     store.bump_shares(aid)   # v0.7.3：海报传播=转发行为，转发数 +1
-    env_v = config.POSTER_QR_ENV_VERSION
+    # v0.9.8：版式版本进缓存键——重设计上线后旧缓存自动失效重生成
+    env_v = f"{config.POSTER_QR_ENV_VERSION}:{poster.LAYOUT_VERSION}"
     cached = store.get_poster(aid, env_v)
     if cached:
         return {"b64": base64.b64encode(cached).decode()}
@@ -1045,10 +1046,13 @@ def share_poster(aid: str, request: Request):
     except Exception as exc:  # noqa: BLE001 — 无码兜底版（搜一搜引导）
         _log.warning("poster 小程序码失败（无码兜底）: %s", exc)
     try:
+        # v0.9.8（用户令 1009）：海报新增约 200 字解答摘录区——取完整解答开头
+        # 连续段落（脱 Markdown），build 内按行优雅截断（末行省略号收口）
         png = poster.build(
             row["question"], bullets, qr,
             meta={"chars": len(row["answer_full"] or ""),
-                  "cites": len(row["citations"] or [])})
+                  "cites": len(row["citations"] or [])},
+            answer=store.strip_md(row["answer_full"] or "")[:240])
     except poster.LayoutError as exc:
         raise HTTPException(503, f"海报服务暂不可用: {exc}") from exc
     except Exception as exc:  # noqa: BLE001

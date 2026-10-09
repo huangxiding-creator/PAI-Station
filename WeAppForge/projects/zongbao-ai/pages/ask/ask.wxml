@@ -119,4 +119,8 @@
     <view class="muted tip-line">有用/纠错各 +1 次（上不封顶）· 北京时间 0 点清零</view>
   </view>
 </view>
+
+<!-- v0.9.7 自绘弹窗系统：modal/loading 模式（onPopState 镜像开合+tabBar 压暗让路） -->
+<qw-pop id="qwpop" bind:popstate="onPopState" />
+
 <!-- bottom-bar 不用 fixed：本页是 tabBar 页，fixed bottom:0 会被 tabBar 盖住吃掉点击 -->

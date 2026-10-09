@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
-"""分享海报（v0.7.4 世界级重设计）：瑞士制图风编辑排版。
+"""分享海报（v0.9.8 转发欲重设计）：瑞士制图风编辑排版 + 解答摘录正文区。
 
-用户令（1001）：「当前生成的海报这个排版，不美观，没有达到世界级的审美。」
-设计语言（工程图纸 × 瑞士网格）：
-  - 一条 1.5px 图纸边框 + 角部对位十字 = 制图身份，代替满版网格噪音
-  - 字阶纪律：问题 Bold 46 主角 / CTA Bold 42 / 正文 Regular 28 / 注记 20
-  - 橙色只出现三次：栏目标度条、行动卡标签、底缘安全条
-  - 留白即层级：短问题自然生成呼吸空间，锚点（要点/行动卡）位置稳定
+用户令（1009）：「海报要让人愿意转发」+「除问题、要点外，显示约 200 字回复内容，
+海报长度可以适当延长」——海报从「广告位」变成「干货本体」：
+  - 新增 解答摘录区：完整解答开头连续段落（约 200 字），前两行加粗导语（报纸
+    lead 段手法），左侧藏青竖线 = 文档引文身份，截断优先停在句末标点（读感完整）
+  - 流式排版：各区块高度按内容实测流动（问题 1-4 行 / 要点 0-3 条 / 摘录
+    7-10 行），画布高随之伸缩（1500-1850），短内容呼吸、长内容不挤
+  - 行动卡瘦身（252→208px）：从版面主角退为收尾配角，内容成为主角
+  - 设计语言不变：图纸边框+角十字 / 双字重字阶纪律 / 橙色仅三处
+    （问题标度条、行动卡眉标、底缘安全条）/ AI 申明仅页脚一处
+  - LAYOUT_VERSION 进海报缓存键（app.py 拼接）：版式改动自动失效旧缓存
   - 双字重 Noto Sans SC（DATA_DIR/fonts pair）；缺 pair 自动退回单字体，
     缺字体仍抛 LayoutError → 503（零失败姿态不变，无码兜底不变）。
 """
@@ -28,9 +32,12 @@ INK = (26, 44, 70)         # 正文墨 #1A2C46
 INK_SOFT = (90, 106, 126)  # #5A6A7E
 MIST = (178, 194, 214)     # 藏青上的注记灰 #B2C2D6
 
-W, H = 750, 1334
+W = 750                    # 画布宽（固定）
 M = 72                     # 版心边距
+H_MIN, H_MAX = 1500, 1850  # 画布高随内容伸缩区间（v0.9.8：摘录区入场；用户令允许加长）
 _QR_SIZE = 160             # 小程序码贴片边长（430 源图缩放，保扫码清晰度）
+
+LAYOUT_VERSION = "v3"      # 版式版本（进 app.py 海报缓存键：改版自动失效旧缓存）
 
 
 class LayoutError(Exception):
@@ -129,9 +136,12 @@ def _font_pair():
 
 
 def build(question: str, bullets: list, qr_png: bytes | None,
-          meta: dict | None = None) -> bytes:
-    """渲染海报 PNG 字节。bullets=要点速览（≤3 条）；qr_png=None → 无码兜底；
-    meta={"chars": 全文字数, "cites": 依据条数} → 中部数据行。"""
+          meta: dict | None = None, answer: str = "") -> bytes:
+    """渲染海报 PNG 字节。bullets=要点速览（≤3 条）；answer=解答摘录（完整解答
+    开头连续段落，约 200 字，空串则整区省略）；qr_png=None → 无码兜底；
+    meta={"chars": 全文字数, "cites": 依据条数} → 数据行。
+    v0.9.8 流式排版：各区高度按内容实测流动，画布高随内容伸缩（H_MIN-H_MAX），
+    行动卡+页脚恒底锚——短内容呼吸留白，长内容不挤压。"""
     try:
         from PIL import Image, ImageDraw
     except ImportError as exc:  # noqa: F401
@@ -141,14 +151,61 @@ def build(question: str, bullets: list, qr_png: bytes | None,
     f_brand = fb(40)
     f_meta_s = fr(20)
     f_label = fr(21)
-    f_q = fb(46)
-    f_bullet = fr(28)
+    f_num_s = fb(20)        # 要点台账序号 01/02/03
+    f_q = fb(44)
+    f_bullet = fr(27)
+    f_bullet_b = fb(27)     # 要点锚词前缀（冒号前加粗——扫读锚点）
+    f_lead = fb(28)           # 摘录导语（前两行加粗——报纸 lead 段手法）
+    f_exc = fr(28)
     f_num = fb(30)
     f_unit = fr(23)
-    f_cta = fb(42)
+    f_cta = fb(40)
     f_cta_sub = fr(23)
     f_cap = fr(20)
     f_foot = fr(19)
+
+    q = question or "工程咨询问题"
+    bl = (bullets or [])[:3]
+    exc_src = (answer or "").strip()
+    m = meta or {}
+
+    # ── 内容实测（先量后排：画布高与各区位置由内容行数决定）──
+    meas = ImageDraw.Draw(Image.new("RGB", (8, 8)))
+    q_all = _wrap(meas, q, f_q, W - M * 2)
+    q_lines = q_all[:4]
+    if len(q_all) > 4:
+        q_lines[-1] = q_lines[-1][:-1] + "…"
+    bl_lines = []
+    for b in bl:
+        b_all = _wrap(meas, b, f_bullet, W - M * 2 - 34)
+        ln = b_all[:2]
+        if len(b_all) > 2:
+            ln[-1] = ln[-1][:-1] + "…"
+        bl_lines.append(ln)
+    exc_all = _wrap(meas, exc_src, f_lead, W - M * 2 - 26) if exc_src else []
+
+    # 底部锚栈：行动卡 208 + 卡→页脚 56 + 页脚文字 26 + 页脚→底框 6 …
+    # 页脚文字 H-56 起（文字底 H-30 < 底框线 H-24 < 橙条 H-8，互不压线）
+    card_h, stack_bottom = 208, 320
+
+    exc_max = 10
+    while True:
+        exc_lines = exc_all[:exc_max]
+        q_bottom = 226 + len(q_lines) * 62
+        y_key = q_bottom + 76              # 问题后大呼吸（hero 让位感）
+        bullets_bottom = y_key + 46 + sum(len(ln) * 46 + 18 for ln in bl_lines)
+        y_exc = (bullets_bottom if bl else q_bottom) + 42   # 要点紧接摘录=干货带
+        exc_bottom = y_exc + 46 + len(exc_lines) * 46
+        anchor = exc_bottom if exc_lines else (bullets_bottom if bl else q_bottom)
+        meta_bottom = anchor + 48 + 40   # 发丝线上松下紧（数据行节奏）
+        need = meta_bottom + 34 + stack_bottom
+        if need <= H_MAX or exc_max <= 7 or not exc_lines:
+            break
+        exc_max -= 1                       # 超高时先减摘录行（底线 7 行保干货）
+    H = max(need, H_MIN)
+    cy0 = H - stack_bottom
+    y_meta = cy0 - 34 - 40                 # 数据行数字基位（与 meta_bottom 对齐）
+    foot_y = H - 56
 
     img = Image.new("RGB", (W, H), PAPER)
     d = ImageDraw.Draw(img)
@@ -164,29 +221,71 @@ def build(question: str, bullets: list, qr_png: bytes | None,
     _today = date.today()
     d.text((W - M - d.textlength(_today.strftime("%Y.%m.%d"), font=f_meta_s), 60),
            _today.strftime("%Y.%m.%d"), font=f_meta_s, fill=INK_SOFT)
-    d.text((W - M - d.textlength("SHT 01 · SCALE 1:1", font=f_meta_s), 86),
-           "SHT 01 · SCALE 1:1", font=f_meta_s, fill=INK_SOFT)
+    d.text((W - M - d.textlength("SHT 01 · FREE ACCESS", font=f_meta_s), 92),
+           "SHT 01 · FREE ACCESS", font=f_meta_s, fill=INK_SOFT)
     d.line([(M, 124), (W - M, 124)], fill=NAVY, width=3)
 
-    # ── 问题主区（主角：Bold 46，最多 4 行）──
-    d.rectangle([M, 172, M + 10, 182], fill=ORANGE)          # 橙 #1（与要点标同构）
+    # ── 问题主区（主角：Bold 44，最多 4 行）──
+    d.rectangle([M, 172, M + 10, 182], fill=ORANGE)          # 橙 #1（与栏目标同构）
     _track(d, (M + 26, 168), "工程咨询 · CONSULTATION", f_label, INK_SOFT, 5)
-    q_end = _block(d, question or "工程咨询问题", f_q, W - M * 2, 4,
-                   (M, 226), NAVY, 66)
+    yy = 226
+    for ln in q_lines:
+        d.text((M, yy), ln, font=f_q, fill=NAVY)
+        yy += 62
 
-    # ── 要点速览（锚点下限 520，短问题自然留白）──
-    y_key = max(q_end + 52, 520)
-    d.rectangle([M, y_key + 8, M + 10, y_key + 18], fill=NAVY)
-    _track(d, (M + 26, y_key), "要点速览 · KEY POINTS", f_label, INK_SOFT, 5)
-    y = y_key + 46
-    for b in (bullets or [])[:3]:
-        d.rectangle([M + 2, y + 15, M + 8, y + 21], fill=NAVY)
-        y = _block(d, b, f_bullet, W - M * 2 - 34, 2, (M + 20, y), INK, 48) + 16
+    # ── 要点速览（台账体：序号 01/02/03 + 行间发丝线；无要点则整区省略）──
+    if bl:
+        d.rectangle([M, y_key + 8, M + 10, y_key + 18], fill=NAVY)
+        _track(d, (M + 26, y_key), "要点速览 · KEY POINTS", f_label, INK_SOFT, 5)
+        yy = y_key + 46
+        for idx, ln in enumerate(bl_lines):
+            d.text((M, yy + 4), f"{idx + 1:02d}", font=f_num_s, fill=NAVY)
+            for sub in ln:
+                # 锚词双字重：冒号前缀（结论：/依据：/操作：）加粗藏青——扫读锚点
+                head, sep, tail = sub.partition("：")
+                if sep and 2 <= len(head) <= 6:
+                    d.text((M + 34, yy), head + sep, font=f_bullet_b, fill=NAVY)
+                    hx = M + 34 + d.textlength(head + sep, font=f_bullet_b)
+                    d.text((hx, yy), tail, font=f_bullet, fill=INK)
+                else:
+                    d.text((M + 34, yy), sub, font=f_bullet, fill=INK)
+                yy += 46
+            yy += 18
+            if idx < len(bl_lines) - 1:
+                d.line([(M, yy - 9), (W - M, yy - 9)], fill=HAIR, width=1)
 
-    # ── 数据行（单行内联排版，代替三格盒子；数字重/单位轻，留白作分隔）──
-    y_meta = min(max(y + 30, 946), 976)
+    # ── 解答摘录（v0.9.8 灵魂区：正文即干货；前两行加粗导语+藏青引文线）──
+    if exc_lines:
+        d.rectangle([M, y_exc + 8, M + 10, y_exc + 18], fill=NAVY)
+        _track(d, (M + 26, y_exc), "解答摘录 · ANSWER EXCERPT", f_label, INK_SOFT, 5)
+        _src_note = "摘自完整解答"
+        d.text((W - M - d.textlength(_src_note, font=f_cap), y_exc),
+               _src_note, font=f_cap, fill=INK_SOFT)
+        shown = exc_lines[:]
+        if len(exc_all) > len(exc_lines):
+            # 截断收口：回退到已展示文本内最后一个句末标点（话说完整=专业严谨，
+            # 不在逗号上吊悬念）；整段无句读才退分句标点；仍无则省略号
+            joined = "".join(shown)
+            cut = max(joined.rfind(p) for p in "。！？")
+            if cut < 4:
+                cut = max(joined.rfind(p) for p in "；：，、")
+            if cut >= 4:
+                shown = _wrap(d, joined[:cut + 1], f_lead, W - M * 2 - 26)
+                if len(shown) > 1 and len(shown[-1]) <= 2:   # 孤字行（「。」独占行）并回上行
+                    shown[-2] += shown[-1]
+                    shown.pop()
+            else:
+                shown[-1] = shown[-1][:-1] + "……"
+        body_top = y_exc + 46
+        d.line([(M, body_top + 8), (M, body_top + len(shown) * 46 - 10)],
+               fill=NAVY, width=3)
+        yy = body_top
+        for i, ln in enumerate(shown):
+            d.text((M + 26, yy), ln, font=(f_lead if i < 2 else f_exc), fill=INK)
+            yy += 46
+
+    # ── 数据行（单行内联排版：数字重/单位轻，留白作分隔）──
     d.line([(M, y_meta - 26), (W - M, y_meta - 26)], fill=HAIR, width=2)
-    m = meta or {}
 
     def _num(v):
         return f"{v:,}" if isinstance(v, int) else str(v or "—")
@@ -201,35 +300,31 @@ def build(question: str, bullets: list, qr_png: bytes | None,
         if not last:
             x += d.textlength(unit, font=f_unit) + 44   # 组间距>词间距，三组各自成块
 
-    # ── 行动卡（藏青大卡 = 版面锚；左文右码，两栏互不越界）──
-    cy0 = 1016
-    d.rounded_rectangle([56, cy0, W - 56, cy0 + 252], radius=24, fill=NAVY_DEEP)
-    _track(d, (104, cy0 + 24), "免费开放 · FREE ACCESS", f_cap, ORANGE, 6)  # 橙 #2（眉标离 CTA 留一口气）
-    d.text((104, cy0 + 64), "扫码读完整解答", font=f_cta, fill=WHITE)
-    # v0.9.6（用户令 1009）：免费次数宣传行删除（页面/物料全域去免费次数文案，规则本身不变）
-    d.text((104, cy0 + 132), "支持继续追问 · 同样免费", font=f_cta_sub, fill=MIST)
-    # v0.9.5（1009 用户令「海报 AI 申明最多一次」）：行动卡区的短版申明删除——
+    # ── 行动卡（藏青收尾卡；左文右码，两栏互不越界）──
+    d.rounded_rectangle([56, cy0, W - 56, cy0 + card_h], radius=24, fill=NAVY_DEEP)
+    _track(d, (104, cy0 + 22), "长按识别 · SCAN TO READ", f_cap, ORANGE, 6)  # 橙 #2
+    d.text((104, cy0 + 56), "扫码读完整解答", font=f_cta, fill=WHITE)
+    # v0.9.6（用户令 1009）：免费次数宣传行不回潮（规则不变，文字全域下线）
+    # v0.9.5（1009 用户令「海报 AI 申明最多一次」）：行动卡短版申明不回潮——
     # 全海报只保留页脚合规全句（含「不构成正式法律意见」，标识位不变不弃合规）
+    d.text((104, cy0 + 120), "支持继续追问 · 同样免费", font=f_cta_sub, fill=MIST)
 
     if qr_png:
         try:
             qr = Image.open(io.BytesIO(qr_png)).convert("RGB")
             qr = qr.resize((_QR_SIZE, _QR_SIZE), Image.LANCZOS)
-            px, py = 454, cy0 + 18
+            px, py = 462, cy0 + 12
             d.rounded_rectangle([px, py, px + _QR_SIZE + 24, py + _QR_SIZE + 24],
                                 radius=14, fill=WHITE)
             img.paste(qr, (px + 12, py + 12))
-            cap = "长按识别"
-            d.text((px + 12 + (_QR_SIZE - d.textlength(cap, font=f_cap)) // 2,
-                    py + _QR_SIZE + 30), cap, font=f_cap, fill=MIST)
         except Exception:  # noqa: BLE001 — 码贴失败不废海报
             qr_png = None
     if not qr_png:
-        d.text((454, cy0 + 84), "微信搜一搜", font=f_cta_sub, fill=WHITE)
-        d.text((454, cy0 + 116), "「总包AI顾问」", font=f_cta_sub, fill=ORANGE)
+        d.text((462, cy0 + 64), "微信搜一搜", font=f_cta_sub, fill=WHITE)
+        d.text((462, cy0 + 96), "「总包AI顾问」", font=f_cta_sub, fill=ORANGE)
 
-    # ── 页脚注记 + 底缘安全橙条（橙 #3；页脚离橙条/边框都留一口气）──
-    d.text((M, 1276), "内容由 AI 生成 · 仅供参考，不构成正式法律意见",
+    # ── 页脚注记 + 底缘安全橙条（橙 #3；页脚文字在底框线内，离橙条留一口气）──
+    d.text((M, foot_y), "内容由 AI 生成 · 仅供参考，不构成正式法律意见",
            font=f_foot, fill=INK_SOFT)
     d.rectangle([0, H - 8, W, H], fill=ORANGE)
 

@@ -2,6 +2,7 @@
 // 锅 = 打破砂锅问到底：EPC 总承包热点难点问题（智库已答），列表显示问题 + 答案前 200 字预览，点开看全文
 const api = require('../../utils/api');
 const theme = require('../../utils/theme');
+const pop = require('../../utils/pop'); // v0.9.7：qw-pop 自绘弹窗（举报入口迁入，按钮文字摆脱 4 字硬限）
 
 // v0.9.5 审计修：列表项导航节流（与 my 页同款防双击压栈）
 let _navLastAt = 0;
@@ -18,7 +19,9 @@ Page({
     loading: true,
     loadError: '',
     nav: { statusBarHeight: 20, navHeight: 44 },
-    sheetNo: ''
+    sheetNo: '',
+    popOpen: false,   // v0.9.7 qw-pop 开合镜像（e2e/结构锚 + tabBar 压暗让路）
+    popMode: ''
   },
 
   onLoad() {
@@ -75,25 +78,34 @@ Page({
     this.refresh();
   },
 
+  // v0.9.7 qw-pop：弹窗开合镜像 + 自绘 tabBar 压暗让路（本页是 tab 页，弹窗期间 tab 压暗不可误触）
+  onPopState(e) {
+    pop.onPopState(this, e);
+  },
+
   // v0.7.4 提审合规：锅圈 UGC 内容举报入口（catchtap 防冒泡进详情）
   onReport(e) {
     const id = e.currentTarget.dataset.id;
     if (!id) return; // v0.9.2：删僵尸变量 q（data-q 取值后从未使用）
-    wx.showModal({
+    // v0.9.7：qw-pop 自绘弹窗——maskClosable:false（合规须显式二选一），按钮文字摆脱 4 字硬限
+    pop.modal(this, {
+      kicker: '举报 · REPORT',
       title: '举报内容',
       editable: true,
-      placeholderText: '请简要描述举报原因（如含不当内容）',
-      success: (r) => {
-        if (!r.confirm) return;
-        const reason = (r.content || '').trim();
-        if (!reason) {
-          wx.showToast({ title: '请填写举报原因', icon: 'none' });
-          return;
-        }
-        api.potReport(id, reason)
-          .then(() => wx.showToast({ title: '已收到举报', icon: 'success' }))
-          .catch((err) => wx.showToast({ title: api.errMsg(err, '提交失败'), icon: 'none' }));
+      placeholder: '请简要描述举报原因（如含不当内容）',
+      confirmText: '提交举报',
+      cancelText: '再想想',
+      maskClosable: false
+    }).then((r) => {
+      if (!r.confirm) return;
+      const reason = (r.content || '').trim();
+      if (!reason) {
+        wx.showToast({ title: '请填写举报原因', icon: 'none' });
+        return;
       }
+      api.potReport(id, reason)
+        .then(() => wx.showToast({ title: '已收到举报', icon: 'success' }))
+        .catch((err) => wx.showToast({ title: api.errMsg(err, '提交失败'), icon: 'none' }));
     });
   }
 });

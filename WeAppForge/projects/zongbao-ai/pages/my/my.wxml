@@ -114,7 +114,9 @@
         <view class="ea-main">
           <view class="ea-title">批量导出全部咨询</view>
           <!-- v0.9.1 修复：iOS(payOk=false)界面不出现价格描述（审核灰区）→ 中性文案；Android 保留价格引导 -->
+          <!-- v0.9.7（1009 用户令：付费一次永久解锁）：全解锁态不显示价格——¥0.1/条 只描述「未解锁条目」 -->
           <view class="ea-sub" wx:if="{{!payOk}}">Word / PDF / Markdown · 导出全部咨询记录 · 一键转发同事</view>
+          <view class="ea-sub" wx:elif="{{exportUnpaidAll === 0}}">已全部解锁 · 可反复导出 · 一键转发同事</view>
           <view class="ea-sub" wx:else>Word / PDF / Markdown · ¥0.1/条 · 一键转发同事</view>
         </view>
         <text class="ea-arrow">›</text>
@@ -179,8 +181,11 @@
     </view>
   </view>
 
-  <view class="muted mono" style="text-align: center; padding: 8rpx 0 0; letter-spacing: 2rpx;">v0.9.6 · 总包AI顾问</view>
+  <view class="muted mono" style="text-align: center; padding: 8rpx 0 0; letter-spacing: 2rpx;">v0.9.7 · 总包AI顾问</view>
   <view class="legal-row" bindtap="goPrivacy" hover-class="legal-hover">用户协议 · 隐私政策</view>
 
   <view class="safe-bottom"></view>
 </view>
+
+<!-- v0.9.7 自绘弹窗系统：modal/sheet/loading 三模式（onPopState 镜像开合+tabBar 让路） -->
+<qw-pop id="qwpop" bind:popstate="onPopState" />

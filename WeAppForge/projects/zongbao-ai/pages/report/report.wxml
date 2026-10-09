@@ -189,6 +189,9 @@
   </view>
 </view>
 
+<!-- v0.9.7 自绘弹窗系统：modal/sheet/loading 三模式（onPopState 镜像开合+tabBar 让路） -->
+<qw-pop id="qwpop" bind:popstate="onPopState" />
+
 <!-- 行内段渲染模板：加粗/斜体/行内代码/链接（与 answer 页同款） -->
 <template name="inl">
   <block wx:for="{{segs}}" wx:key="index" wx:for-item="s">

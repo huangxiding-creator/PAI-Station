@@ -2,6 +2,7 @@
 // 收票邮箱必填；申请单企业微信实时推送运营）
 const api = require('../../utils/api');
 const theme = require('../../utils/theme');
+const pop = require('../../utils/pop'); // v0.9.7：qw-pop 自绘弹窗（按钮文字摆脱 4 字硬限）
 
 const FIELDS = ['title', 'taxNo', 'addrPhone', 'bankAcct', 'email', 'note'];
 const EMPTY = { title: '', taxNo: '', addrPhone: '', bankAcct: '', email: '', note: '' };
@@ -18,6 +19,8 @@ Page({
     pending: null,            // 处理中的申请（有则展示状态卡，不再收新单）
     ...EMPTY,
     submitting: false,
+    popOpen: false,      // v0.9.7 qw-pop 开合镜像（e2e/结构锚 + tabBar 压暗让路）
+    popMode: '',
   },
 
   onLoad() {
@@ -76,6 +79,9 @@ Page({
     }
   },
 
+  // v0.9.7 qw-pop：弹窗开合镜像 + 自绘 tabBar 压暗让路（本页非 tab 页，getTabBar 自然跳过）
+  onPopState(e) { pop.onPopState(this, e); },
+
   // 本地预校验（与服务端同源规则；通过才发请求——省一次往返）
   _validate() {
     const d = this.data;
@@ -104,22 +110,23 @@ Page({
     })
       .then(() => {
         this.setData({ submitting: false });
-        wx.showModal({
+        pop.modal(this, {
+          kicker: '开票 · INVOICE',
           title: '申请已提交',
           content: '发票申请已收到，开票后将发送至您的收票邮箱 ' + d.email.trim() + '。可在本页随时查看处理进度。',
           showCancel: false,
-          confirmText: '好的',
-          success: () => this.load(),
-        });
+          confirmText: '好的'
+        }).then(() => this.load());
       })
       .catch((err) => {
         this.setData({ submitting: false });
         // 403/409 服务端有明确口径，直接展示；其余走统一文案
-        wx.showModal({
+        pop.modal(this, {
+          kicker: '开票 · INVOICE',
           title: '没提交成功',
-          content: api.errMsg(err, '网络波动，请稍后重试'),
+          content: api.errMsg(err, '网络波动，请稍后再重试'),
           showCancel: false,
-          confirmText: '知道了',
+          confirmText: '知道了'
         });
       });
   },

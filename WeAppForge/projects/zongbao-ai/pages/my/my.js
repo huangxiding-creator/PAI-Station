@@ -5,6 +5,7 @@ const api = require('../../utils/api');
 const theme = require('../../utils/theme');
 const pay = require('../../utils/pay');
 const tel = require('../../utils/telemetry'); // v0.9.6：真机批量导出链打点
+const pop = require('../../utils/pop'); // v0.9.7：qw-pop 自绘弹窗（按钮文字摆脱原生 4 字硬限）
 
 // v0.9.1 修复：navigateTo 防双击——模块级 300ms 节流，连点只放行一次（防 answer/privacy 重复压栈）
 let _navLastAt = 0;
@@ -27,7 +28,9 @@ Page({
     themes: [],          // v0.7.3 外观画廊（theme.list()）
     payOk: true,         // v0.8.0 虚拟支付可用（iOS=false → 隐藏批量导出付费入口）
     exportUnpaidAll: -1, // 服务端权威未解锁计数（-1=未知；0 且 iOS 也显示入口=纯导出无需支付）
-    reportMine: -1       // v0.9.0 已购报告计数（-1=未知不显示书架行）
+    reportMine: -1,      // v0.9.0 已购报告计数（-1=未知不显示书架行）
+    popOpen: false,      // v0.9.7 qw-pop 开合镜像（e2e/结构锚 + tabBar 压暗让路）
+    popMode: ''
   },
 
   onLoad() {
@@ -51,6 +54,11 @@ Page({
       this.getTabBar().setData({ selected: 4 });
     }
     this.refresh();
+  },
+
+  // v0.9.7 qw-pop：弹窗开合镜像 + 自绘 tabBar 压暗让路（本页为 tab 页，弹窗期 tab 不可误触）
+  onPopState(e) {
+    pop.onPopState(this, e);
   },
 
   // v0.7.3 锁定主题（用户令：用户可调整喜欢的配色）
@@ -200,7 +208,8 @@ Page({
     }
     // 引擎单笔上限 99 条（buyQuantity 上限）：超量引导先单篇解锁（审计 MEDIUM-4）
     if (unpaid > 99) {
-      wx.showModal({
+      pop.modal(this, {
+        kicker: '导出 · EXPORT',
         title: '一次最多解锁 99 条',
         content: '当前未解锁 ' + unpaid + ' 条，超出单笔上限。请先在部分回答页单独解锁，剩余不足 99 条后再来批量导出。',
         showCancel: false,
@@ -209,75 +218,86 @@ Page({
       return;
     }
     const yuan = (unpaid * 0.1).toFixed(1);
-    // v0.9.6（1009 真机根因战）：confirmText 硬限 ≤4 字符——「支付 X 元」7 字符拼接
-    // 在真机 showModal 直接 fail → 批量导出确认弹窗整链静默死。金额在 content，按钮 4 字内。
-    wx.showModal({
+    // v0.9.7：qw-pop 自绘弹窗——按钮文字彻底摆脱原生 4 字符真机硬限
+    //（v0.9.6 根因战的根治形态），金额直接上按钮。
+    pop.modal(this, {
+      kicker: '导出 · EXPORT',
       title: '批量导出 ' + unpaid + ' 条',
       content: '咨询全程免费，导出按 ¥0.1/条：本次 ' + unpaid + ' 条共 ' + yuan + ' 元（一单付清，解锁后可反复导出）。',
-      confirmText: '确认支付',
+      confirmText: '支付 ' + yuan + ' 元解锁',
       cancelText: '再想想',
-      success: (r) => {
-        if (!r.confirm) return;
-        if (this._payBusy) return;
-        this._payBusy = true;
-        wx.showLoading({ title: '拉起支付…', mask: true });
-        pay.payExportAll()
-          .then((res) => {
-            wx.hideLoading();
-            this._payBusy = false;
-            if (res.reconciling) {
-              // 已扣款、核验腿抖断：不谎报完成，刷新等查单补标记后自然解锁（重按=409 收口）
-              wx.showToast({ title: res.message, icon: 'none', duration: 2500 });
-              this.refresh();
-              return;
-            }
-            if (res.ok) {
-              this.refresh();
-              this._exportAllSheet();
-              return;
-            }
-            // v0.9.4（1009 真机实测修复）：取消=轻提示；其余失败必须大声弹窗带原因——
-            // toast 一闪而过在用户眼里就是「点了没反应/有问题」
-            if (String(res.message || '').indexOf('取消') >= 0) {
-              wx.showToast({ title: res.message, icon: 'none' });
-            } else {
-              tel.ping('xall_fail', { m: String(res.message || '').slice(0, 60) });
-              wx.showModal({
-                title: '支付没完成',
-                content: String(res.message || '请稍后重试') + '。可稍后再试；已扣款的金额不会丢（重新进入会自动对账解锁）。',
-                showCancel: false,
-                confirmText: '知道了'
-              });
-            }
-          })
-          .catch((err) => {
-            // v0.9.4：兜底防假死——此前无 catch，任何异常都会让「拉起支付…」loading 永转 + 按钮废死
-            tel.ping('xall_fail', { m: api.errMsg(err, '').slice(0, 60) });
-            wx.hideLoading();
-            this._payBusy = false;
-            wx.showModal({
-              title: '支付没成功',
-              content: api.errMsg(err, '网络波动，请稍后重试'),
+      maskClosable: false
+    }).then((r) => {
+      if (!r.confirm) return;
+      if (this._payBusy) return;
+      this._payBusy = true;
+      pop.loading(this, '拉起支付…');
+      pay.payExportAll()
+        .then((res) => {
+          pop.hideLoading(this);
+          this._payBusy = false;
+          if (res.reconciling) {
+            // 已扣款、核验腿抖断：不谎报完成，刷新等查单补标记后自然解锁（重按=409 收口）
+            wx.showToast({ title: res.message, icon: 'none', duration: 2500 });
+            this.refresh();
+            return;
+          }
+          if (res.ok) {
+            this.refresh();
+            this._exportAllSheet();
+            return;
+          }
+          // v0.9.4（1009 真机实测修复）：取消=轻提示；其余失败必须大声弹窗带原因——
+          // toast 一闪而过在用户眼里就是「点了没反应/有问题」
+          if (String(res.message || '').indexOf('取消') >= 0) {
+            wx.showToast({ title: res.message, icon: 'none' });
+          } else {
+            tel.ping('xall_fail', { m: String(res.message || '').slice(0, 60) });
+            pop.modal(this, {
+              kicker: '支付 · PAYMENT',
+              title: '支付没完成',
+              content: String(res.message || '请稍后重试') + '。可稍后再试；已扣款的金额不会丢（重新进入会自动对账解锁）。',
               showCancel: false,
               confirmText: '知道了'
             });
+          }
+        })
+        .catch((err) => {
+          // v0.9.4：兜底防假死——此前无 catch，任何异常都会让「拉起支付…」loading 永转 + 按钮废死
+          tel.ping('xall_fail', { m: api.errMsg(err, '').slice(0, 60) });
+          pop.hideLoading(this);
+          this._payBusy = false;
+          pop.modal(this, {
+            kicker: '支付 · PAYMENT',
+            title: '支付没成功',
+            content: api.errMsg(err, '网络波动，请稍后重试'),
+            showCancel: false,
+            confirmText: '知道了'
           });
-      }
+        });
     });
   },
 
+  // v0.9.7：底部图纸盘（qw-pop sheet）——已全部解锁时带「可反复导出」徽标（付费一次永久解锁的视觉诚实）
   _exportAllSheet() {
-    wx.showActionSheet({
-      itemList: ['Word 文档 (.docx)', 'PDF 文档 (.pdf)', 'Markdown (.md)'],
-      success: (r) => this._exportAllAs(['docx', 'pdf', 'md'][r.tapIndex]),
-      fail: () => { /* 用户取消 */ }
+    pop.sheet(this, {
+      kicker: '导出格式 · EXPORT FORMAT',
+      badge: this.data.exportUnpaidAll === 0 ? '已全部解锁 · 可反复导出' : '',
+      items: [
+        { t: 'Word 文档', sub: '适合打印批注与正式归档', ext: '.docx' },
+        { t: 'PDF 文档', sub: '版式固定，任何设备观感一致', ext: '.pdf' },
+        { t: 'Markdown', sub: '纯文本轻量，可二次编辑', ext: '.md' }
+      ]
+    }).then((i) => {
+      const fmt = ['docx', 'pdf', 'md'][i];
+      if (fmt) this._exportAllAs(fmt);
     });
   },
 
   _exportAllAs(fmt) {
     if (this._exporting) return;
     this._exporting = true;
-    wx.showLoading({ title: '汇总生成中…', mask: true });
+    pop.loading(this, '汇总生成中…');
     api.exportAll(fmt)
       .then((d) => {
         const fname = d.filename || ('总包AI顾问-咨询档案.' + fmt);
@@ -287,28 +307,29 @@ Page({
           data: d.b64 || '',
           encoding: 'base64',
           success: () => {
-            wx.hideLoading();
+            pop.hideLoading(this);
             this._exporting = false;
-            wx.showModal({
+            pop.modal(this, {
+              kicker: '导出 · EXPORT',
               title: '全部咨询已汇总',
               content: fname + ' · 可直接微信转发给同事，或预览后另存。',
               confirmText: '微信转发',
               cancelText: '预览',
-              success: (m) => {
-                if (m.confirm) this._shareFile(filePath, fname);
-                else this._previewFile(filePath);
-              }
+              maskClosable: false
+            }).then((m) => {
+              if (m.confirm) this._shareFile(filePath, fname);
+              else this._previewFile(filePath);
             });
           },
           fail: () => {
-            wx.hideLoading();
+            pop.hideLoading(this);
             this._exporting = false;
             wx.showToast({ title: '本机写入失败', icon: 'none' });
           }
         });
       })
       .catch((err) => {
-        wx.hideLoading();
+        pop.hideLoading(this);
         this._exporting = false;
         wx.showToast({ title: api.errMsg(err, '批量导出失败'), icon: 'none', duration: 2500 });
       });

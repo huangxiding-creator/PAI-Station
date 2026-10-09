@@ -368,9 +368,9 @@ def test_poster_env_cache_separation(client, monkeypatch):
     builds = {"n": 0}
     _orig_build = poster_mod.build
 
-    def _count_build(q, b, qr, meta=None):
+    def _count_build(q, b, qr, meta=None, answer=""):
         builds["n"] += 1
-        return _orig_build(q, b, qr, meta)
+        return _orig_build(q, b, qr, meta, answer=answer)
     monkeypatch.setattr(poster_mod, "build", _count_build)
     assert client.get(f"/api/answer/{aid}/poster").status_code == 200
     assert builds["n"] == 1

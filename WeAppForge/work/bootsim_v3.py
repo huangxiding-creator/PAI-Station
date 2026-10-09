@@ -158,9 +158,9 @@ check("api potList 客户端", "potList" in api_js)
 check("api optimize 客户端（shareReward 已随分享激励下线）", "optimize" in api_js and "shareReward" not in api_js)
 
 # 版本与定位（v0.9.0）
-check("my 版本标记 v0.9.6（1009 真机根因战版）", "v0.9.6" in my_wxml)
+check("my 版本标记 v0.9.7（1009 弹窗顶级审美重设计版）", "v0.9.7" in my_wxml)
 pkg = json.load(open(os.path.join(ROOT, "package.json"), encoding="utf-8"))
-check("package.json version=0.9.6", pkg["version"] == "0.9.6")
+check("package.json version=0.9.7", pkg["version"] == "0.9.7")
 # 1009 用户令：外观沉底（个性化低频项按用户习惯放设置区，高频额度/记录在前）——顺序即断言
 check("my 布局顺序=额度→记录→书架→外观（外观在咨询记录之后，1009 用户令）",
       my_wxml.find("外观 · APPEARANCE") > my_wxml.find("咨询记录 · RECORDS")
@@ -807,11 +807,10 @@ check("L18 信任数同源：utils/kbstats.js 唯一出处 + ask/zhiku 双页接
 check("L18 信任带 wxml 不再硬编码四数（kb-n 文本位改绑定，599847679 案号不算）",
       'kb-n mono">9855' not in ask_wxml and 'kb-n mono">847' not in ask_wxml
       and 'kb-n mono">906' not in ask_wxml and 'kb-n mono">620' not in ask_wxml)
-check("L17 隐私告知弹窗唯一出处（showPrivacyModal 单定义+双调用+文案常量单源）",
+check("L17 隐私告知弹窗唯一出处（showPrivacyModal 单定义+双调用+文案常量单源，v0.9.7 自绘形态）",
       ask_js.count("function showPrivacyModal(") == 1
       and ask_js.count("showPrivacyModal(") == 3  # 定义+gate+submit
-      and ask_js.count("PRIVACY_CONTENT") >= 3    # 定义+主弹窗+fail兜底重试（同文案）
-      and ask_js.count("'隐私保护告知'") == 2)    # 主弹窗+兜底重试（同 PRIVACY_CONTENT）
+      and ask_js.count("PRIVACY_CONTENT") >= 2)   # 定义注释+弹窗体（fail 重试腿已随自绘删除）
 _app_js = read("app.js")
 check("L22 errCount 死仪表已删（app.js 无只写不读计数）",
       "errCount" not in _app_js.replace("删 errCount 死仪表", ""))
@@ -833,39 +832,52 @@ check("U2 _fuBusy 闭源旗标退役（改 data.fuSending 可视位）",
 check("U1 重试反馈：refreshQuota 二连失败轻提示（_retriedOnce 门，首载仍静默）",
       "_retriedOnce" in ask_js and "服务还没恢复" in ask_js)
 
-# ══ v0.9.6（1009 真机根因战：wx.showModal confirmText ≤4 字硬限 + 遥测地面真值腿 + 文案批次）══
-# 根因：confirmText 超微信 4 字符硬限在真机 showModal 直接静默 fail（devtools 宽松+e2e mock=双盲区）
-# → 隐私门死（额度「–」+免费咨询零反应）+ 导出/批量导出确认死。静态门=全项目 modal 按钮文字逐字校验。
+# ══ v0.9.6 → v0.9.7（1009 用户令：所有弹窗顶级审美重设计——qw-pop 自绘弹窗系统全站替换）══
+# v0.9.6 曾以「按钮文字 ≤4 字」静态门防真机静默 fail；v0.9.7 自绘组件替换原生弹窗后，
+# 4 字硬限连根拔（按钮可带金额等任意文案），防线升级为「原生弹窗调用全归零」。
 import re as _re
-_modal_bad = []
+_native_pops = []
 for _dirpath, _dirnames, _filenames in os.walk(os.path.join(ROOT, "pages")):
     for _fn in _filenames:
         if not _fn.endswith(".js"):
             continue
         _src = open(os.path.join(_dirpath, _fn), encoding="utf-8").read()
-        for _m in _re.finditer(r"(confirmText|cancelText)\s*:\s*'([^']*)'", _src):
-            if len(_m.group(2)) > 4:
-                _modal_bad.append(f"{_fn}:{_m.group(1)}={_m.group(2)}({len(_m.group(2))}字)")
-check("v0.9.6 硬门：全项目 modal 按钮文字 ≤4 字（真机静默 fail 根因的静态防线）",
-      not _modal_bad, "; ".join(_modal_bad[:6]))
-_modal_concat = []
-for _dirpath, _dirnames, _filenames in os.walk(os.path.join(ROOT, "pages")):
-    for _fn in _filenames:
-        if not _fn.endswith(".js"):
-            continue
-        _src = open(os.path.join(_dirpath, _fn), encoding="utf-8").read()
-        if _re.search(r"(confirmText|cancelText)\s*:\s*'[^']*'\s*\+", _src):
-            _modal_concat.append(_fn)
-check("v0.9.6 硬门：modal 按钮文字零拼接（拼接结果长度不可静态判=一律禁止）",
-      not _modal_concat, ",".join(_modal_concat))
-check("v0.9.6 隐私门按钮 ≤4 字（同意/不同意）+fail 兜底重试",
+        for _api in ("wx.showModal", "wx.showActionSheet", "wx.showLoading", "wx.hideLoading"):
+            if _api in _src:
+                _native_pops.append(f"{_fn}:{_api}")
+check("v0.9.7 硬门：pages 原生弹窗调用全归零（showModal/Sheet/Loading/HideLoading）",
+      not _native_pops, ";".join(_native_pops[:6]))
+check("v0.9.7 qw-pop 组件四件存在（components/qw-pop/）",
+      all(os.path.exists(os.path.join(ROOT, "components", "qw-pop", f"qw-pop.{e}"))
+          for e in ("js", "wxml", "wxss", "json")))
+check("v0.9.7 utils/pop.js 接线助手存在", os.path.exists(os.path.join(ROOT, "utils", "pop.js")))
+_pop_pages = ["pages/ask/ask", "pages/answer/answer", "pages/my/my", "pages/pot/pot",
+              "pages/invoice/invoice", "pages/report/report"]
+for _pg in _pop_pages:
+    _pj = json.load(open(os.path.join(ROOT, _pg + ".json"), encoding="utf-8"))
+    _pw = read(_pg + ".wxml")
+    _ps = read(_pg + ".js")
+    check(f"{_pg} json 注册 qw-pop 组件",
+          _pj.get("usingComponents", {}).get("qw-pop") == "/components/qw-pop/qw-pop")
+    check(f"{_pg} wxml 挂 #qwpop 节点+popstate",
+          '<qw-pop id="qwpop" bind:popstate="onPopState" />' in _pw)
+    check(f"{_pg} js pop 接线（require+onPopState+popOpen 镜像位）",
+          "utils/pop" in _ps and "onPopState(e)" in _ps
+          and "pop.onPopState(this, e)" in _ps and "popOpen: false" in _ps)
+check("v0.9.7 tabBar 弹窗让路（bar-dim 压暗+禁触）",
+      "{{dim ? 'bar-dim' : ''}}" in read("custom-tab-bar/index.wxml")
+      and ".bar-dim" in read("custom-tab-bar/index.wxss")
+      and "pointer-events: none" in read("custom-tab-bar/index.wxss"))
+check("v0.9.7 隐私门自绘（同意/不同意+maskClosable:false+可选中文本）",
       "confirmText: '同意'" in ask_js and "cancelText: '不同意'" in ask_js
-      and "ask_privacy_fail" in ask_js and "setTimeout" in ask_js)
-check("v0.9.6 导出/批量导出按钮改「确认支付」（金额在 content）",
-      "confirmText: '确认支付'" in read("pages/answer/answer.js")
-      and "confirmText: '确认支付'" in read("pages/my/my.js")
-      and "支付 0.1 元'" not in read("pages/answer/answer.js")
-      and "'支付 ' + yuan" not in read("pages/my/my.js"))
+      and "maskClosable: false" in ask_js and "selectable: true" in ask_js)
+check("v0.9.7 导出确认按钮带金额（自绘摆脱 4 字限，价格信号上按钮）",
+      "支付 0.1 元解锁" in read("pages/answer/answer.js") and "'支付 ' + yuan" in my_js)
+check("v0.9.7 pay-once 视觉诚实（my 全解锁副题 + 双导出盘徽标）",
+      "已全部解锁 · 可反复导出" in my_wxml and "已全部解锁 · 可反复导出" in my_js
+      and "已解锁 · 永久免费导出" in read("pages/answer/answer.js"))
+check("v0.9.7 ask 隐私 fail 重试腿已删（自绘组件无静默 fail 路径=根因战终局）",
+      "ask_privacy_fail" not in ask_js)
 
 # 遥测地面真值腿（devtools 全绿+真机失灵双盲区的补位：事件是否真的发生）
 _tel_js = read("utils/telemetry.js")

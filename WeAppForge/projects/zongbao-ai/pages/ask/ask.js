@@ -5,6 +5,7 @@ const api = require('../../utils/api');
 const theme = require('../../utils/theme');
 const kbstats = require('../../utils/kbstats');
 const tel = require('../../utils/telemetry'); // v0.9.6：真机执行轨迹打点（devtools 全绿+真机失灵双盲区的地面真值腿）
+const pop = require('../../utils/pop'); // v0.9.7：qw-pop 自绘弹窗（按钮文字摆脱原生 4 字硬限）
 
 // EPC 总承包热点题库：tag=chip 标签，q=递进三小问全文（点按填入）
 const SAMPLES = [
@@ -46,34 +47,28 @@ const Q_MAX = 500;
 
 // v0.9.5 审计修（L17）：隐私告知弹窗唯一出处——_gateAndLogin 与 submitQuestion 此前各持一份
 // 全文拷贝，文案改动漏一处=合规口径分裂。同意→记忆+回调；拒绝→静默不发登录/不提问。
-// v0.9.6（1009 真机根因战）：confirmText 硬限 ≤4 字符——「同意并继续」6 字在真机
-// showModal 直接 fail（devtools 宽松不校验+e2e mock=双盲区）→ 隐私门整链静默死
-// =额度「–」+免费咨询点了没反应。按钮文字全部 ≤4 字，另加 fail 兜底（默认按钮延迟重试一次）。
+// v0.9.6（1009 真机根因战）：原生 confirmText 硬限 ≤4 字符——「同意并继续」6 字在真机
+// 弹窗调用直接静默 fail（devtools 宽松不校验+e2e mock=双盲区）→ 隐私门整链静默死
+// =额度「–」+免费咨询点了没反应。v0.9.7 根因战终局：换 qw-pop 自绘组件，按钮文字
+// 无长度限制也无静默失败路径，原 400ms 重试腿整段删除（合规口径仍唯一出处）。
 const PRIVACY_CONTENT = '为提供咨询服务，我们将通过微信登录获取您的 openid 用于额度记账，'
   + '并将您提交的问题与生成的回答存储在服务器；您自愿共享的问答将在「锅圈」公开展示，可随时取消共享。'
   + '本服务解答内容由人工智能（AI）生成，仅供参考。'
   + '详见「我的 · 用户协议与隐私政策」。';
 
-function showPrivacyModal(onAgree) {
-  const agree = (r) => {
-    if (!r.confirm) return; // 拒绝：不发登录，不收集任何标识
-    wx.setStorageSync('qw_privacy_ok', 1);
-    if (onAgree) onAgree();
-  };
-  wx.showModal({
+function showPrivacyModal(page, onAgree) {
+  return pop.modal(page, {
+    kicker: '隐私 · PRIVACY',
     title: '隐私保护告知',
     content: PRIVACY_CONTENT,
     confirmText: '同意',
     cancelText: '不同意',
-    success: agree,
-    fail: (err) => {
-      // 兜底：弹窗调用失败（环境异常/onLoad 转场期竞态）→ 延迟 400ms 用默认按钮文字重试一次
-      // （同 PRIVACY_CONTENT=合规口径仍唯一）；失败已打点留痕，绝不静默
-      tel.ping('ask_privacy_fail', { m: String((err && err.errMsg) || '').slice(0, 60) });
-      setTimeout(() => {
-        wx.showModal({ title: '隐私保护告知', content: PRIVACY_CONTENT, success: agree });
-      }, 400);
-    }
+    maskClosable: false,
+    selectable: true
+  }).then((r) => {
+    if (!r.confirm) return; // 拒绝：不发登录，不收集任何标识
+    wx.setStorageSync('qw_privacy_ok', 1);
+    if (onAgree) onAgree();
   });
 }
 
@@ -93,7 +88,9 @@ Page({
     netStatus: '',     // ''未知 / 'ok' / 'down'（红卡常驻提示）
     nav: { statusBarHeight: 20, navHeight: 44 },
     kbStats: kbstats.KB_STATS,  // v0.9.5 审计修（L18）：信任带四数同源 zhiku（utils/kbstats.js）
-    sheetNo: ''        // 图纸编号（咨询单装饰）
+    sheetNo: '',       // 图纸编号（咨询单装饰）
+    popOpen: false,    // v0.9.7 qw-pop 开合镜像（e2e/结构锚 + tabBar 压暗让路）
+    popMode: ''
   },
 
   onLoad(options) {
@@ -132,7 +129,7 @@ Page({
       this.silentLogin();
       return;
     }
-    showPrivacyModal(() => this.silentLogin());
+    showPrivacyModal(this, () => this.silentLogin());
   },
 
   // v0.7.4 海报深链导航（onLoad 首跳 + onShow 兜底重试；成功即清位，3 次上限防循环）
@@ -163,6 +160,11 @@ Page({
     }
     // 从答案页返回（可能互动拿了赠次）→ 刷新配额
     if (this.data.loginReady) this.refreshQuota();
+  },
+
+  // v0.9.7 qw-pop：弹窗开合镜像 + 自绘 tabBar 压暗让路（本页是 tab 页，弹窗期间 tabBar 不可误触）
+  onPopState(e) {
+    pop.onPopState(this, e);
   },
 
   silentLogin() {
@@ -257,10 +259,10 @@ Page({
     }
     if (wx.vibrateShort) { try { wx.vibrateShort({ type: 'light', fail: () => {} }); } catch (e) { /* 老客户端 */ } }
     this.setData({ optimizing: true });
-    wx.showLoading({ title: 'AI 优化中…', mask: true });
+    pop.loading(this, 'AI 优化中…');
     api.optimize(q)
       .then((d) => {
-        wx.hideLoading();
+        pop.hideLoading(this);
         this.setData({ optimizing: false });
         const better = (d.optimized || '').trim();
         if (!better) {
@@ -268,23 +270,24 @@ Page({
           return;
         }
         // 用户令：优化后交给用户过目，采用才替换（不静默改写）
-        wx.showModal({
+        pop.modal(this, {
+          kicker: '优化 · OPTIMIZE',
           title: 'AI 优化后的提问',
           content: better,
           confirmText: '采用',
-          cancelText: '保留原问',
-          success: (r) => {
-            if (r.confirm) {
-              this._fill(better); // v0.9.2：经统一截断入口（优化文本不受 maxlength 约束）
-              wx.showToast({ title: '已填入，可直接咨询', icon: 'none', duration: 1800 });
-            }
+          cancelText: '保留原问'
+        }).then((r) => {
+          if (r.confirm) {
+            this._fill(better); // v0.9.2：经统一截断入口（优化文本不受 maxlength 约束）
+            wx.showToast({ title: '已填入，可直接咨询', icon: 'none', duration: 1800 });
           }
         });
       })
       .catch((err) => {
-        wx.hideLoading();
+        pop.hideLoading(this);
         this.setData({ optimizing: false });
-        wx.showModal({
+        pop.modal(this, {
+          kicker: '优化 · OPTIMIZE',
           title: '优化没成功',
           content: api.errMsg(err, 'AI 优化失败，请稍后再试'),
           showCancel: false,
@@ -310,7 +313,7 @@ Page({
     if (this.data.asking || !q || q.trim().length < 2) return;
     // v0.7.4 提审合规：首次使用前隐私告知（同意一次即记忆，拒绝则不发起登录）
     if (!wx.getStorageSync('qw_privacy_ok')) {
-      showPrivacyModal(() => this._doSubmit(q));
+      showPrivacyModal(this, () => this._doSubmit(q));
       return;
     }
     this._doSubmit(q);
@@ -334,7 +337,8 @@ Page({
           },
           fail: () => {
             this.setData({ asking: false });
-            wx.showModal({
+            pop.modal(this, {
+              kicker: '咨询 · CONSULT',
               title: '回答已生成',
               content: '页面跳转没成功，回答已存入「咨询记录」，从「我的」页可查看。',
               showCancel: false,
@@ -349,15 +353,16 @@ Page({
         const msg = api.errMsg(err, '咨询失败');
         if (err && err.statusCode === 402) {
           // 配额用尽：引导互动赚次数（有用/纠错各+1，上不封顶）
-          wx.showModal({
+          pop.modal(this, {
+            kicker: '额度 · QUOTA',
             title: '今日次数已用完',
             content: '打开任意一篇回答，点「有用 / 纠错」即可各再获 1 次咨询机会（多答多得，不封顶）；明天 0 点恢复 6 次。',
-            confirmText: '去互动',
-            success: (r) => { if (r.confirm) wx.switchTab({ url: '/pages/my/my' }); }
-          });
+            confirmText: '去互动'
+          }).then((r) => { if (r.confirm) wx.switchTab({ url: '/pages/my/my' }); });
         } else {
           // 大声失败：弹窗常驻（toast 一闪而过=用户眼中"没反应"）
-          wx.showModal({
+          pop.modal(this, {
+            kicker: '咨询 · CONSULT',
             title: '咨询没成功',
             content: msg + (err && err.raw ? '\n(' + err.raw.slice(0, 60) + ')' : ''),
             showCancel: false,

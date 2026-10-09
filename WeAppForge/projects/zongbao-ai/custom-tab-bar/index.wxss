@@ -54,3 +54,12 @@
 /* v0.9.1 逐页优化：tab 按压反馈（触达即应答） */
 .tab-hover { opacity: 0.68; }
 .tab-hover .tab-sq { transform: scale(0.92); }
+
+/* v0.9.7 弹窗让路：qw-pop 开启时压暗+禁触（页内遮罩盖不住框架层 tabBar，由本组件自查让路） */
+.bar {
+  transition: opacity 0.22s ease;
+}
+.bar-dim {
+  opacity: 0.4;
+  pointer-events: none;
+}
