@@ -93,6 +93,18 @@ def main():
 
     # [3] 替换 virtual_pay.secret + 注入 invoice_wecom_webhook.txt（v0.9.4 发票企微推送）
     vp = (SECRETS / "virtual_pay.secret").read_bytes()
+    # ★ env=0 防呆闸（1009 根因根治）：今晨 env 被提前切 0 上云（道具未发布+小程序未发布
+    # → 正式环境支付被微信侧直接拒 → 真机「付款解锁调不出收款码」）。env=0 只许在
+    # HANDOFF §六 过审发布链第 4 步（道具现网发布×6 之后）发生——须显式落
+    # data/state/VPAY_PROD_LIVE.flag（内容=发布执行人+日期）才放行，防再次静默提前切换。
+    if b"\nenv=0" in vp or vp.startswith(b"env=0"):
+        flag = Path(r"E:\AI-Station\data\state\VPAY_PROD_LIVE.flag")
+        if not flag.is_file():
+            print("FAIL: virtual_pay.secret 是 env=0（正式环境），但 VPAY_PROD_LIVE.flag 不在。")
+            print("      正式环境前置=过审+小程序发布+道具现网发布×6（HANDOFF §六 第2-3步）。")
+            print("      确在执行发布链：echo '<人>/<日期>' > data/state/VPAY_PROD_LIVE.flag 后重跑。")
+            return 1
+        print(f"!! PROD 模式放行（flag: {flag.read_text(encoding='utf-8').strip()[:60]}）")
     inv = (SECRETS / "invoice_wecom_webhook.txt").read_bytes().strip()
     assert inv.startswith(b"https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key="), "invoice webhook shape"
     files = json.loads(base64.b64decode(envp["SECRET_FILES_B64"]))

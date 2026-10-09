@@ -208,7 +208,8 @@ def build(question: str, bullets: list, qr_png: bytes | None,
     d.text((104, cy0 + 64), "扫码读完整解答", font=f_cta, fill=WHITE)
     d.text((104, cy0 + 132), "每天 6 次免费提问", font=f_cta_sub, fill=MIST)
     d.text((104, cy0 + 166), "支持继续追问 · 同样免费", font=f_cta_sub, fill=MIST)
-    d.text((104, cy0 + 204), "内容由 AI 生成 · 仅供参考", font=f_cap, fill=MIST)
+    # v0.9.5（1009 用户令「海报 AI 申明最多一次」）：行动卡区的短版申明删除——
+    # 全海报只保留页脚合规全句（含「不构成正式法律意见」，标识位不变不弃合规）
 
     if qr_png:
         try:

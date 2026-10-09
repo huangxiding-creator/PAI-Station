@@ -566,3 +566,13 @@ def test_poster_font_missing(client, monkeypatch):
     monkeypatch.setattr(exporter_mod, "_font_path", lambda: None)
     r = client.get(f"/api/answer/{aid}/poster")
     assert r.status_code == 503
+
+
+def test_poster_ai_declaration_once():
+    """1009 用户令「海报 AI 申明最多一次」：build() 内申明句只许出现 1 处
+    （页脚合规全句；行动卡短版已删）。渲染成 PNG 无法 grep 文本，按源级计数断言。"""
+    import inspect
+
+    import qianwen_engine.poster as poster_mod
+    src = inspect.getsource(poster_mod.build)
+    assert src.count("内容由 AI 生成") == 1, "海报 AI 申明必须最多一次（页脚合规句）"

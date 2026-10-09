@@ -222,10 +222,9 @@ await sleep(2200);
 // ══ S4 · 发票页三态（门槛未到=GATE + 表单接线 + 本地预校验）══
 {
   const my = await mp.currentPage();
-  const invCell = await my.$('.ap-cell');
   let entered = null;
-  // 发票入口是最后一张卡的 ap-cell（goReports 也是 ap-cell——按 data 定位兜底）
-  const cells = await my.$$('.ap-cell');
+  // v0.9.5：发票入口重设计为 .srv-row（图标块+标题+副题+箭头）——按文本定位点按
+  const cells = await my.$$('.srv-row');
   for (const c of cells) {
     const t = String(await c.text() || '');
     if (t.includes('发票申请')) { await c.tap(); break; }

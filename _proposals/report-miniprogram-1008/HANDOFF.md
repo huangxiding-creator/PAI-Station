@@ -64,7 +64,7 @@ WeAIPO 9222 免打扰｜9336 是控制台唯一合法口｜密钥永不进仓（
 2. 控制台「发布」0.9.0（全量）。
 3. 道具现网发布 ×6：unlock_once / export_once / report_498 / report_598 / report_698 /
    report_1999（虚拟支付→道具配置→各行「发布」）。
-4. env=1→0（virtual_pay.secret → qw_tcb_prep.py → update_envparams.js 三步）。
+4. env=1→0（virtual_pay.secret → qw_tcb_prep.py → update_envparams.js 三步；**防呆闸**：env=0 须先 echo "执行人/日期" > data/state/VPAY_PROD_LIVE.flag 才放行——1009 事故根因=提前切 0 上云致真机拉不起支付）。
 5. POSTER_QR_ENV_VERSION trial→release（服务端 config+云端同步）→ 海报冒烟扫码。
 6. BOOT-SIM 版本收口 + RUN_LEDGER/GOAL_LEDGER + git 定向提交 + github-push + 百度备份 + 企微。
 
