@@ -287,19 +287,9 @@ Page({
       wx.showToast({ title: '当前系统暂不支持导出，阅读全文不受影响', icon: 'none', duration: 2400 });
       return;
     }
-    // v0.9.7：qw-pop 自绘弹窗——按钮文字彻底摆脱原生 showModal 4 字符真机硬限
-    //（v0.9.6 根因战的根治形态），金额直接上按钮。
-    pop.modal(this, {
-      kicker: '导出 · EXPORT',
-      title: '导出本篇解答',
-      content: '导出文件按 ¥0.1/条 收费（虚拟支付），本次支付 0.1 元。解锁后本篇可反复导出 Word/PDF/Markdown。',
-      confirmText: '支付 0.1 元解锁',
-      cancelText: '再想想',
-      maskClosable: false
-    }).then((r) => {
-      if (!r.confirm) return;
-      if (this._payBusy) return;
-      this._payBusy = true;
+    // v0.9.12（用户令）：支付确认由微信支付面板承担（面板自带金额展示），前置弹窗下线
+    if (this._payBusy) return;
+    this._payBusy = true;
       pop.loading(this, '拉起支付…');
       pay.payExport(this.data.id)
         .then((res) => {
@@ -316,18 +306,9 @@ Page({
             this._exportSheet();
             return;
           }
-          // v0.9.4：取消=轻提示；其余失败大声弹窗（同 my 批量导出修法）
-          if (String(res.message || '').indexOf('取消') >= 0) {
-            wx.showToast({ title: res.message, icon: 'none' });
-          } else {
-            tel.ping('export_fail', { m: String(res.message || '').slice(0, 60) });
-            pop.modal(this, {
-              kicker: '支付 · PAYMENT',
-              title: '支付没完成',
-              content: String(res.message || '请稍后重试') + '。可稍后再试；已扣款的金额不会丢（重新进入会自动对账解锁）。',
-              showCancel: false,
-              confirmText: '知道了'
-            });
+          // v0.9.12（用户令）：未完成支付不弹窗——用户自己知道；取消静默，其余轻提示原因
+          if (String(res.message || '').indexOf('取消') < 0) {
+            wx.showToast({ title: res.message, icon: 'none', duration: 2500 });
           }
         })
         .catch((err) => {
@@ -335,15 +316,9 @@ Page({
           tel.ping('export_fail', { m: api.errMsg(err, '').slice(0, 60) });
           pop.hideLoading(this);
           this._payBusy = false;
-          pop.modal(this, {
-            kicker: '支付 · PAYMENT',
-            title: '支付没成功',
-            content: api.errMsg(err, '网络波动，请稍后重试'),
-            showCancel: false,
-            confirmText: '知道了'
-          });
+          wx.showToast({ title: api.errMsg(err, '网络波动，请稍后重试'), icon: 'none', duration: 2500 });
         });
-    });
+    
   },
 
   // v0.9.7：底部图纸盘（qw-pop sheet）——已解锁答案带「永久导出」徽标（1009 免费字样下线）

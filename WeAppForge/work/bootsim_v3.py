@@ -160,9 +160,9 @@ check("api potList 客户端", "potList" in api_js)
 check("api optimize 客户端（shareReward 已随分享激励下线）", "optimize" in api_js and "shareReward" not in api_js)
 
 # 版本与定位（v0.9.0）
-check("my 版本标记 v0.9.11（1011 提审前审计修四件）", "v0.9.11" in my_wxml)
+check("my 版本标记 v0.9.12（1011 弹窗清理五连令）", "v0.9.12" in my_wxml)
 pkg = json.load(open(os.path.join(ROOT, "package.json"), encoding="utf-8"))
-check("package.json version=0.9.11", pkg["version"] == "0.9.11")
+check("package.json version=0.9.12", pkg["version"] == "0.9.12")
 # 1009 用户令：外观沉底（个性化低频项按用户习惯放设置区，高频额度/记录在前）——顺序即断言
 check("my 布局顺序=额度→记录→书架→外观（外观在咨询记录之后，1009 用户令）",
       my_wxml.find("外观 · APPEARANCE") > my_wxml.find("咨询记录 · RECORDS")
@@ -405,11 +405,11 @@ check("pot 锅圈 AI 标识（页首常驻=ai-flag）", "人工智能（AI）生
 # C. 隐私合规：legal 页 + 首次提问告知 + my 入口
 check("legal 页四件套存在", all(os.path.exists(os.path.join(ROOT, "pages", "legal", f"privacy.{e}")) for e in ("js", "wxml", "wxss", "json")))
 check("legal 页含用户协议+隐私政策双区块", "用户协议" in read("pages/legal/privacy.wxml") and "隐私政策" in read("pages/legal/privacy.wxml") and "openid" in read("pages/legal/privacy.wxml"))
-check("ask 首次提问隐私告知（qw_privacy_ok 门）", "qw_privacy_ok" in ask_js and "隐私保护告知" in ask_js)
-check("ask 冷启动不自动弹隐私告知（1009 用户令：首屏不打断）",
-      "showPrivacyModal(this, () => this.silentLogin())" not in ask_js)
-check("ask 首次提交闸保留隐私告知（合规口径：采集前告知不回退）",
-      "showPrivacyModal(this, () => this._doSubmit(q))" in ask_js)
+check("ask 提交即同意记忆（qw_privacy_ok 门，v0.9.12 提交闸落记忆）", "qw_privacy_ok" in ask_js)
+check("ask 隐私探窗归零（v0.9.12 五连令：弹窗反而引起警觉，告知走常驻内联）",
+      "showPrivacyModal" not in ask_js and "PRIVACY_CONTENT" not in ask_js)
+check("ask.wxml 常驻内联告知（提交即同意+AI 生成口径，协议全文在「我的」页）",
+      "提交即同意用户协议与隐私政策" in ask_wxml and "解答由 AI 生成，仅供参考" in ask_wxml)
 _vis = {p: chr(10).join(l.split("<!--")[0] for l in open(os.path.join(ROOT, p), encoding="utf-8").read().splitlines())
         for p in ("pages/ask/ask.wxml", "pages/my/my.wxml", "pages/answer/answer.wxml")}
 check("免费=引流主口径（1010 用户令：CTA/票根/home 三面回位；my/answer 正文仍零免费）",
@@ -450,8 +450,8 @@ check("pay.js 静默取消识别（cancel 不误报错）", "silentCancel" in pa
 check("pay.js 503 降级文案（未开通不硬崩）", "statusCode === 503" in pay_js)
 check("api.js v0.8.0 四端点（exportSign/exportAllSign/requestRaw）",
       "exportSign" in api_js and "exportAllSign" in api_js and "requestRaw" in api_js)
-check("answer 导出付费墙（¥0.1 弹窗+已解锁直通）",
-      "支付 0.1 元" in ans_js and "_exportSheet" in ans_js and "exportPaid" in ans_js)
+check("answer 导出付费墙（¥0.1 定价+已解锁直通；v0.9.12 前置确认弹窗下线）",
+      "payExport(this.data.id)" in ans_js and "_exportSheet" in ans_js and "exportPaid" in ans_js)
 check("answer 导出 iOS 闸（payOk=false 时 toast 拒绝）",
       "payOk: pay.paySupported()" in ans_js and "暂不支持导出" in ans_js)
 check("answer 导出 pill iOS 新付费隐藏+已解锁可见（payOk||exportPaid）",
@@ -518,8 +518,8 @@ check("引擎 409 已收口三态（单篇已解锁/单篇到账/批量到账）
       'HTTPException(409, "本篇导出已解锁")' in _app_py
       and "支付已到账，本篇导出已解锁" in _app_py
       and "支付已到账，已解锁" in _app_py)
-check("引擎 未支付订单复用同 otn（HIGH-3 防二次扣款）",
-      "open_pay_order" in _app_py and "复用同一未付订单" in _app_py)
+check("引擎 老未付单作废重开（用户令 1009：不复用已取消 otn，防 ORDER_CLOSED）",
+      "open_pay_order" in _app_py and "cancel_pay_order" in _app_py and "作废重开" in _app_py)
 check("引擎 批量 otn/attach 不含 openid 明文（sha256 锚）",
       'hashlib.sha256(openid.encode()).hexdigest()[:16]' in _app_py)
 check("引擎 otn 熵补齐（secrets.token_hex）", "secrets.token_hex(2)" in _app_py)
@@ -665,7 +665,8 @@ check("报告页 PDF=downloadFile+openDocument（Bearer 头）",
 check("报告页 iOS 购买入口隐藏（paySupported 闸在 wxml）",
       "paySupported" in rp_wxml and "iOS 暂不支持应用内购买" in rp_wxml)
 check("报告页 整理中不可买态", "暂未开售" in rp_wxml)
-check("报告页 一次解锁永久阅读&下载口径（1009 用户令）", "永久阅读&amp;下载" in rp_wxml)
+check("报告页 一次解锁永久阅读与下载口径（v0.9.12：&amp; 转义符字面渲染瑕疵根治）",
+      "永久阅读与下载" in rp_wxml and "永久阅读&amp;下载" not in rp_wxml)
 check("api.js 报告五端点（List/Detail/Sample/Sign/PdfUrl）",
       all(k in api_js for k in ("reportList", "reportDetail", "reportSample", "reportSign", "reportPdfUrl")))
 check("pay.js payReport（报告解锁腿）", "payReport" in pay_js)
@@ -706,7 +707,7 @@ check("ask 隐私门前置于登录（onLoad 经 _gateAndLogin，同意才 silen
 check("ask 程序化回填统一截断（_fill 入口 500 上限）",
       "_fill(prefill)" in ask_js and "Q_MAX" in ask_js)
 check("ask 咨询成功清空输入移入 navigateTo success（导航失败问题不丢）",
-      "回答已生成" in ask_js and "success: () => {" in ask_js)
+      "跳转没成功，回答已存「咨询记录」" in ask_js and "success: () => {" in ask_js)
 check("research 重新加载走 retry 包装（tap 事件对象不再误入 load(done)）",
       'bindtap="retry"' in rs_wxml and "retry" in rs_js)
 check("research 首屏数据带不闪 0（statsReady 门控）", "statsReady" in rs_js and "statsReady" in rs_wxml)
@@ -714,10 +715,11 @@ check("report 错误态显式 wx:if={!d}（跨节点 wx:else 误配根除）",
       'wx:if="{{!d}}"' in rp_wxml)
 check("report openPdf success 配对 hideLoading（蒙层不滞留）",
       read("pages/report/report.js").find("hideLoading", read("pages/report/report.js").find("openDocument")) > 0)
-check("report 支付结果三支路（v0.9.5 M5：成功toast/取消轻提示/失败弹窗带原因）",
+check("report 支付结果三支路（v0.9.12：成功toast/取消静默/失败轻提示原因）",
       "'已解锁', icon: 'success'" in read("pages/report/report.js")
-      and "支付没完成" in read("pages/report/report.js")
-      and "支付没成功" in read("pages/report/report.js"))
+      and "支付没完成" not in read("pages/report/report.js")
+      and "支付没成功" not in read("pages/report/report.js")
+      and "indexOf('取消') < 0" in read("pages/report/report.js"))
 check("pot 静默刷新失败不吞列表（序号防竞态+有内容只轻提示）",
       "_seq" in pot_js and "刷新失败" in pot_js)
 check("my 额度票根失败态三分支（quotaError）",
@@ -753,11 +755,13 @@ check("ask onOptimize 同款必反馈（不再静默 return）",
       if "onOptimize() {" in ask_js else False)
 # 修2：批量导出/单篇导出支付链假死根治（loading 永转+_payBusy 卡死）
 check("my 批量导出支付链有 .catch 兜底（假死根除）",
-      "支付没成功" in my_js and my_js.find(".catch((err)", my_js.find("payExportAll()")) > 0)
-check("my 取消=轻提示/失败=大声弹窗（1009 真机实测修）",
-      "indexOf('取消')" in my_js and "支付没完成" in my_js)
-check("answer 单篇导出支付链同款修（.catch+弹窗）",
-      "支付没成功" in ans_js and ans_js.find(".catch((err)", ans_js.find("payExport(this.data.id)")) > 0)
+      my_js.find(".catch((err)", my_js.find("payExportAll()")) > 0
+      and "网络波动，请稍后重试" in my_js)
+check("my 取消静默/失败轻提示（v0.9.12 五连令：未完成支付不弹窗）",
+      "indexOf('取消') < 0" in my_js and "支付没完成" not in my_js and "支付没成功" not in my_js)
+check("answer 单篇导出支付链同款修（.catch+轻提示）",
+      "网络波动，请稍后重试" in ans_js
+      and ans_js.find(".catch((err)", ans_js.find("payExport(this.data.id)")) > 0)
 # 发票功能（1009 用户令：满 ¥200 增值税专用发票 + 收票邮箱必填 + 企微推送）
 check("app.json 注册 invoice 页", "pages/invoice/invoice" in app_json["pages"])
 check("invoice 页四件套存在", all(os.path.exists(os.path.join(ROOT, "pages", "invoice", f"invoice.{e}"))
@@ -826,10 +830,9 @@ check("L18 信任数同源：utils/kbstats.js 唯一出处 + ask/zhiku 双页接
 check("L18 信任带 wxml 不再硬编码四数（kb-n 文本位改绑定，599847679 案号不算）",
       'kb-n mono">9855' not in ask_wxml and 'kb-n mono">847' not in ask_wxml
       and 'kb-n mono">906' not in ask_wxml and 'kb-n mono">620' not in ask_wxml)
-check("L17 隐私告知弹窗唯一出处（v0.9.8：单定义+提交闸唯一调用+文案常量单源）",
-      ask_js.count("function showPrivacyModal(") == 1
-      and ask_js.count("showPrivacyModal(") == 2  # 定义+submit 闸（冷启动自动弹已撤，1009 用户令）
-      and ask_js.count("PRIVACY_CONTENT") >= 2)   # 定义注释+弹窗体（fail 重试腿已随自绘删除）
+check("L17 隐私告知单源（v0.9.12：探窗下线，告知=ask.wxml 内联一行+「我的」协议页）",
+      ask_js.count("showPrivacyModal") == 0 and ask_js.count("PRIVACY_CONTENT") == 0
+      and ask_wxml.count("提交即同意用户协议与隐私政策") == 1)
 _app_js = read("app.js")
 check("L22 errCount 死仪表已删（app.js 无只写不读计数）",
       "errCount" not in _app_js.replace("删 errCount 死仪表", ""))
@@ -912,11 +915,10 @@ check("v0.9.7 tabBar 弹窗让路（bar-dim 压暗+禁触）",
       "{{dim ? 'bar-dim' : ''}}" in read("custom-tab-bar/index.wxml")
       and ".bar-dim" in read("custom-tab-bar/index.wxss")
       and "pointer-events: none" in read("custom-tab-bar/index.wxss"))
-check("v0.9.7 隐私门自绘（同意/不同意+maskClosable:false+可选中文本）",
-      "confirmText: '同意'" in ask_js and "cancelText: '不同意'" in ask_js
-      and "maskClosable: false" in ask_js and "selectable: true" in ask_js)
-check("v0.9.7 导出确认按钮带金额（自绘摆脱 4 字限，价格信号上按钮）",
-      "支付 0.1 元解锁" in read("pages/answer/answer.js") and "'支付 ' + yuan" in my_js)
+check("v0.9.12 导出/购买前置确认弹窗下线（金额确认由微信支付面板承担）",
+      "支付 0.1 元解锁" not in read("pages/answer/answer.js")
+      and "'支付 ' + yuan" not in my_js and "导出本篇解答" not in read("pages/answer/answer.js")
+      and "再想想" not in my_js)
 check("v0.9.8 pay-once 视觉诚实（my 全解锁副题 + 导出盘徽标，免费字样下线）",
       "已全部解锁 · 可反复导出" in my_wxml and "已全部解锁 · 可反复导出" in my_js
       and "已解锁 · 永久导出" in read("pages/answer/answer.js"))
@@ -978,6 +980,36 @@ check("pot 切分类失败回滚 activeCat（chip 高亮与列表内容不再错
       "_renderedCat" in pot_js and "patch.activeCat = this._renderedCat" in pot_js)
 check("ask 首页统计面（同行在用+累计咨询，可证成无极限词）",
       "api.stats()" in ask_js and "累计咨询" in ask_wxml and "位同行在使用" in ask_wxml)
+
+# ── v0.9.12 弹窗清理五连令（1011 用户令：只留非常必要的弹窗，其余全下线）──
+_inv_js_2 = read("pages/invoice/invoice.js")
+_rp_js_3 = read("pages/report/report.js")
+check("ask 三处失败弹窗→轻提示（优化/跳转/咨询失败，弹窗一闪而打断）",
+      "优化没成功" not in ask_js and "AI 优化失败，请稍后再试" in ask_js
+      and "跳转没成功，回答已存「咨询记录」" in ask_js)
+check("ask 保留两类必要弹窗（AI优化过目=用户令 0929 采用才替换；402 配额=去互动 CTA）",
+      "AI 优化后的提问" in ask_js and "今日次数已用完" in ask_js and "去互动" in ask_js)
+check("report iOS 购买方式弹窗→toast（阻断信息轻提示足够）",
+      "购买方式" not in _rp_js_3 and "iOS 暂不支持应用内购买" in _rp_js_3)
+check("answer/my 前置支付确认 unwrap 后支付链语法完整（_payBusy 闸+loading+catch 三件在位）",
+      all(k in ans_js for k in ("if (this._payBusy) return;", "pop.loading(this, '拉起支付…')"))
+      and all(k in my_js for k in ("if (this._payBusy) return;", "pop.loading(this, '拉起支付…')")))
+check("answer/my 取消分支用对回调变量名（res.message，防 r 越界 ReferenceError）",
+      "String(res.message || '').indexOf('取消') < 0" in ans_js
+      and "String(res.message || '').indexOf('取消') < 0" in my_js)
+check("answer 保留三类必要弹窗（纠错 editable=功能输入/取消共享=破坏性确认/文件就绪=转发预览）",
+      all(k in ans_js for k in ("指出问题", "已生成文件", "取消共享")))
+check("my 保留 >99 上限阻断弹窗 + 批量汇总就绪弹窗（阻断性/行动型必要弹窗）",
+      "一次最多解锁 99 条" in my_js and "全部咨询已汇总" in my_js)
+check("invoice 成功/失败弹窗→轻提示（申请提交 toast + this.load 刷新）",
+      "申请已提交，开票后发送至您的邮箱" in _inv_js_2
+      and "没提交成功，请稍后重试" in _inv_js_2
+      and _inv_js_2.find("this.load();", _inv_js_2.find("申请已提交")) > 0)
+check("v0.9.12 五页不必要弹窗标题全局归零（支付没完成/支付没成功/购买方式/申请已提交 modal 态）",
+      all(t not in src for t in ("支付没完成", "支付没成功")
+          for src in (ask_js, _rp_js_3, ans_js, my_js))
+      and "title: '购买方式'" not in _rp_js_3
+      and "title: '没提交成功'" not in _inv_js_2)
 fails = [c for c in checks if not c[1]]
 for name, ok, detail in checks:
     print(("PASS " if ok else "FAIL ") + name + (("  " + detail) if detail and not ok else ""))

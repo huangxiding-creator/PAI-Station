@@ -218,18 +218,8 @@ Page({
       return;
     }
     const yuan = (unpaid * 0.1).toFixed(1);
-    // v0.9.7：qw-pop 自绘弹窗——按钮文字彻底摆脱原生 4 字符真机硬限
-    //（v0.9.6 根因战的根治形态），金额直接上按钮。
-    pop.modal(this, {
-      kicker: '导出 · EXPORT',
-      title: '批量导出 ' + unpaid + ' 条',
-      content: '导出按 ¥0.1/条：本次 ' + unpaid + ' 条共 ' + yuan + ' 元（一单付清，解锁后可反复导出）。',
-      confirmText: '支付 ' + yuan + ' 元解锁',
-      cancelText: '再想想',
-      maskClosable: false
-    }).then((r) => {
-      if (!r.confirm) return;
-      if (this._payBusy) return;
+    // v0.9.12（用户令）：支付确认由微信支付面板承担（面板自带总额展示），前置弹窗下线
+    if (this._payBusy) return;
       this._payBusy = true;
       pop.loading(this, '拉起支付…');
       pay.payExportAll()
@@ -247,19 +237,9 @@ Page({
             this._exportAllSheet();
             return;
           }
-          // v0.9.4（1009 真机实测修复）：取消=轻提示；其余失败必须大声弹窗带原因——
-          // toast 一闪而过在用户眼里就是「点了没反应/有问题」
-          if (String(res.message || '').indexOf('取消') >= 0) {
-            wx.showToast({ title: res.message, icon: 'none' });
-          } else {
-            tel.ping('xall_fail', { m: String(res.message || '').slice(0, 60) });
-            pop.modal(this, {
-              kicker: '支付 · PAYMENT',
-              title: '支付没完成',
-              content: String(res.message || '请稍后重试') + '。可稍后再试；已扣款的金额不会丢（重新进入会自动对账解锁）。',
-              showCancel: false,
-              confirmText: '知道了'
-            });
+          // v0.9.12（用户令）：未完成支付不弹窗——用户自己知道；取消静默，其余轻提示原因
+          if (String(res.message || '').indexOf('取消') < 0) {
+            wx.showToast({ title: res.message, icon: 'none', duration: 2500 });
           }
         })
         .catch((err) => {
@@ -267,15 +247,8 @@ Page({
           tel.ping('xall_fail', { m: api.errMsg(err, '').slice(0, 60) });
           pop.hideLoading(this);
           this._payBusy = false;
-          pop.modal(this, {
-            kicker: '支付 · PAYMENT',
-            title: '支付没成功',
-            content: api.errMsg(err, '网络波动，请稍后重试'),
-            showCancel: false,
-            confirmText: '知道了'
-          });
+          wx.showToast({ title: api.errMsg(err, '网络波动，请稍后重试'), icon: 'none', duration: 2500 });
         });
-    });
   },
 
   // v0.9.7：底部图纸盘（qw-pop sheet）——已全部解锁时带「可反复导出」徽标（付费一次永久解锁的视觉诚实）

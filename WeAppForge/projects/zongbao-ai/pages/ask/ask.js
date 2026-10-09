@@ -45,32 +45,11 @@ const SAMPLES = [
 // setData 路径（预填/AI优化采用/示范题）全部经此截断，保证 data.question 与所见一致。
 const Q_MAX = 500;
 
-// v0.9.5 审计修（L17）：隐私告知弹窗唯一出处——_gateAndLogin 与 submitQuestion 此前各持一份
-// 全文拷贝，文案改动漏一处=合规口径分裂。同意→记忆+回调；拒绝→静默不发登录/不提问。
-// v0.9.6（1009 真机根因战）：原生 confirmText 硬限 ≤4 字符——「同意并继续」6 字在真机
-// 弹窗调用直接静默 fail（devtools 宽松不校验+e2e mock=双盲区）→ 隐私门整链静默死
-// =额度「–」+免费咨询点了没反应。v0.9.7 根因战终局：换 qw-pop 自绘组件，按钮文字
-// 无长度限制也无静默失败路径，原 400ms 重试腿整段删除（合规口径仍唯一出处）。
-const PRIVACY_CONTENT = '为提供咨询服务，我们将通过微信登录获取您的 openid 用于额度记账，'
-  + '并将您提交的问题与生成的回答存储在服务器；您自愿共享的问答将在「锅圈」公开展示，可随时取消共享。'
-  + '本服务解答内容由人工智能（AI）生成，仅供参考。'
-  + '详见「我的 · 用户协议与隐私政策」。';
-
-function showPrivacyModal(page, onAgree) {
-  return pop.modal(page, {
-    kicker: '隐私 · PRIVACY',
-    title: '隐私保护告知',
-    content: PRIVACY_CONTENT,
-    confirmText: '同意',
-    cancelText: '不同意',
-    maskClosable: false,
-    selectable: true
-  }).then((r) => {
-    if (!r.confirm) return; // 拒绝：不发登录，不收集任何标识
-    wx.setStorageSync('qw_privacy_ok', 1);
-    if (onAgree) onAgree();
-  });
-}
+// v0.9.12（用户令 1009 五连）：隐私探窗下线——咨询后弹「采集用户隐私」提醒弹窗属
+// 不必要打扰（反而引起警觉）。告知改为常驻内联小字（ask.wxml CTA 下方：
+// 「提交即同意用户协议与隐私政策 · AI 生成仅供参考」）+「我的」协议页全文，
+// 告知义务不缺位、零打断。首次提交即视为同意（落 qw_privacy_ok 记忆，
+// 供 _gateAndLogin 决定是否静默登录）。
 
 Page({
   data: {
@@ -127,9 +106,8 @@ Page({
     this._gateAndLogin();
   },
 
-  // 隐私门 + 登录：已同意过直接登录
-  // v0.9.8（用户令 1009）：冷启动不自动弹隐私告知（首屏不打断）；
-  // 告知移至首次提交闸 submitQuestion——未同意前仍不收集 openid、不发登录（合规口径不变）
+  // 隐私记忆 + 登录：已提交过（=已同意，v0.9.12 提交即同意口径）直接登录；
+  // 未提交前不收集 openid、不发登录（合规口径不变，告知=CTA 下常驻小字）
   _gateAndLogin() {
     tel.ping('ask_gate', { agreed: !!wx.getStorageSync('qw_privacy_ok') });
     if (wx.getStorageSync('qw_privacy_ok')) {
@@ -291,13 +269,7 @@ Page({
       .catch((err) => {
         pop.hideLoading(this);
         this.setData({ optimizing: false });
-        pop.modal(this, {
-          kicker: '优化 · OPTIMIZE',
-          title: '优化没成功',
-          content: api.errMsg(err, 'AI 优化失败，请稍后再试'),
-          showCancel: false,
-          confirmText: '知道了'
-        });
+        wx.showToast({ title: api.errMsg(err, 'AI 优化失败，请稍后再试'), icon: 'none', duration: 2500 });
       });
   },
 
@@ -316,11 +288,9 @@ Page({
 
   submitQuestion(q) {
     if (this.data.asking || !q || q.trim().length < 2) return;
-    // v0.7.4 提审合规：首次使用前隐私告知（同意一次即记忆，拒绝则不发起登录）
-    if (!wx.getStorageSync('qw_privacy_ok')) {
-      showPrivacyModal(this, () => this._doSubmit(q));
-      return;
-    }
+    // v0.9.12：隐私告知已内联到提交按钮下方常驻小字（协议全文在「我的」页）——
+    // 提交即同意，不再弹窗打断；落记忆供冷启动静默登录判定
+    if (!wx.getStorageSync('qw_privacy_ok')) wx.setStorageSync('qw_privacy_ok', 1);
     this._doSubmit(q);
   },
 
@@ -342,13 +312,7 @@ Page({
           },
           fail: () => {
             this.setData({ asking: false });
-            pop.modal(this, {
-              kicker: '咨询 · CONSULT',
-              title: '回答已生成',
-              content: '页面跳转没成功，回答已存入「咨询记录」，从「我的」页可查看。',
-              showCancel: false,
-              confirmText: '知道了'
-            });
+            wx.showToast({ title: '跳转没成功，回答已存「咨询记录」', icon: 'none', duration: 3000 });
           }
         });
       })
@@ -365,14 +329,8 @@ Page({
             confirmText: '去互动'
           }).then((r) => { if (r.confirm) wx.switchTab({ url: '/pages/my/my' }); });
         } else {
-          // 大声失败：弹窗常驻（toast 一闪而过=用户眼中"没反应"）
-          pop.modal(this, {
-            kicker: '咨询 · CONSULT',
-            title: '咨询没成功',
-            content: msg + (err && err.raw ? '\n(' + err.raw.slice(0, 60) + ')' : ''),
-            showCancel: false,
-            confirmText: '知道了'
-          });
+          // v0.9.12（用户令）：失败不弹窗，轻提示原因
+          wx.showToast({ title: msg, icon: 'none', duration: 2500 });
         }
       });
   }

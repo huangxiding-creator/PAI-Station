@@ -97,13 +97,7 @@ Page({
     tel.ping('buy_tap', { sku: String(this.data.sku || '').slice(0, 24) });
     if (this.data.buying) return;
     if (!pay.paySupported()) {
-      pop.modal(this, {
-        kicker: '购买 · PURCHASE',
-        title: '购买方式',
-        content: 'iOS 暂不支持应用内购买，请在安卓设备上完成购买后再阅读。',
-        showCancel: false,
-        confirmText: '知道了'
-      });
+            wx.showToast({ title: 'iOS 暂不支持应用内购买，请在安卓设备完成购买', icon: 'none', duration: 2500 });
       return;
     }
     wx.vibrateShort({ type: 'light', fail: () => {} });
@@ -118,27 +112,14 @@ Page({
         }
         // v0.9.5 审计修（M5）：与 my/answer 支付链同款——取消=轻提示，失败=大声弹窗
         // （toast 一闪而过在用户眼里就是「点了没反应」——¥498+ 的单更须说清楚）
-        if (String(r.message || '').indexOf('取消') >= 0) {
-          wx.showToast({ title: r.message, icon: 'none' });
-        } else {
-          pop.modal(this, {
-            kicker: '支付 · PAYMENT',
-            title: '支付没完成',
-            content: String(r.message || '请稍后重试') + '。可稍后再试；已扣款的金额不会丢（重新进入会自动对账解锁）。',
-            showCancel: false,
-            confirmText: '知道了'
-          });
+                // v0.9.12（用户令）：未完成支付不弹窗——用户自己知道；取消静默，其余轻提示原因
+        if (String(r.message || '').indexOf('取消') < 0) {
+          wx.showToast({ title: r.message, icon: 'none', duration: 2500 });
         }
       })
       .catch((err) => {
         this.setData({ buying: false });
-        pop.modal(this, {
-          kicker: '支付 · PAYMENT',
-          title: '支付没成功',
-          content: api.errMsg(err, '网络波动，请稍后重试'),
-          showCancel: false,
-          confirmText: '知道了'
-        });
+                wx.showToast({ title: api.errMsg(err, '网络波动，请稍后重试'), icon: 'none', duration: 2500 });
       });
   },
 

@@ -110,24 +110,13 @@ Page({
     })
       .then(() => {
         this.setData({ submitting: false });
-        pop.modal(this, {
-          kicker: '开票 · INVOICE',
-          title: '申请已提交',
-          content: '发票申请已收到，开票后将发送至您的收票邮箱 ' + d.email.trim() + '。可在本页随时查看处理进度。',
-          showCancel: false,
-          confirmText: '好的'
-        }).then(() => this.load());
+        wx.showToast({ title: '申请已提交，开票后发送至您的邮箱', icon: 'success', duration: 2500 });
+        this.load();
       })
       .catch((err) => {
         this.setData({ submitting: false });
         // 403/409 服务端有明确口径，直接展示；其余走统一文案
-        pop.modal(this, {
-          kicker: '开票 · INVOICE',
-          title: '没提交成功',
-          content: api.errMsg(err, '网络波动，请稍后再重试'),
-          showCancel: false,
-          confirmText: '知道了'
-        });
+        wx.showToast({ title: api.errMsg(err, '没提交成功，请稍后重试'), icon: 'none', duration: 2500 });
       });
   },
 });

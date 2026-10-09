@@ -108,6 +108,8 @@
     >{{asking ? '智库检索中…' : '免费咨询'}}</button>
   </view>
   <view class="opt-hint muted" wx:if="{{!optimizing}}">AI优化提问：把您的问题改写成更深入、更究竟的递进式三小问</view>
+  <!-- v0.9.12（用户令）：隐私探窗下线——常驻内联告知替代弹窗（协议全文在「我的」页） -->
+  <view class="opt-hint muted">提交即同意用户协议与隐私政策 · 解答由 AI 生成，仅供参考</view>
 
   <!-- ══ 示范性问题：EPC 热点题库 ══ -->
   <view class="card ticks rise" style="animation-delay: 140ms">
