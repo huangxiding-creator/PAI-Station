@@ -124,7 +124,7 @@
       <view class="a-head">
         <view class="a-badge">
           <view class="a-badge-dot"></view>
-          <text>总包AI智库 · 专业解答</text>
+          <text>AI 检索总包智库 · 专业解答</text>
         </view>
         <view class="a-meta">
           <text class="meta-chip mono" wx:if="{{fullChars}}">{{fullChars}} 字</text>
@@ -334,6 +334,20 @@
     <view class="rw-sub">{{reward}}</view>
     <view class="rw-sp sp0"></view><view class="rw-sp sp1"></view><view class="rw-sp sp2"></view><view class="rw-sp sp3"></view>
     <view class="rw-sp sp4"></view><view class="rw-sp sp5"></view><view class="rw-sp sp6"></view><view class="rw-sp sp7"></view>
+  </view>
+
+  <!-- ══ v0.7.8 依据全文弹层：原生 modal 不可滚（上千字条文被截断，合规敏感）→ 自绘可滚动遮罩 ══ -->
+  <view class="cite-pop-mask" wx:if="{{citeShow}}" catchtouchmove="noop" bindtap="onCiteClose">
+    <view class="cite-pop" catchtap="noop">
+      <view class="cite-pop-head">
+        <text class="cite-pop-title">{{citeTitle}}</text>
+        <view class="cite-pop-x" bindtap="onCiteClose" hover-class="cite-hover"><text>✕</text></view>
+      </view>
+      <scroll-view scroll-y class="cite-pop-scroll" enhanced show-scrollbar="{{false}}">
+        <text class="cite-pop-text" user-select>{{citeText}}</text>
+      </scroll-view>
+      <view class="cite-pop-btn" bindtap="onCiteClose" hover-class="cite-pop-btn-hover">{{citeBtn}}</view>
+    </view>
   </view>
 </view>
 

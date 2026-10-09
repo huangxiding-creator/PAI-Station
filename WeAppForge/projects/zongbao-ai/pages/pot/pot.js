@@ -26,7 +26,7 @@ Page({
 
   onShow() {
     theme.apply(this);
-    // 自绘 tabBar 选中态（v0.5.0 三页签：问=0 锅=1 我=2）
+    // 自绘 tabBar 选中态（v0.9.x 五页签：问=0 锅=1 智=2 研=3 我=4）
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 1 });
     }
@@ -35,11 +35,22 @@ Page({
   },
 
   refresh() {
+    // v0.9.2（1009 补审计 MEDIUM 修复）：请求序号防竞态 + 已有列表时静默失败不吞内容——
+    // 此前 onShow 静默刷新一旦失败会把已渲染的整个列表替换成错误卡；慢的失败响应
+    // 还可能覆盖更新的成功响应。现在：仅首载/空列表才进错误态，有内容时失败只轻提示。
+    const seq = (this._seq = (this._seq || 0) + 1);
     api.potList()
       .then((d) => {
+        if (seq !== this._seq) return; // 过期响应丢弃
         this.setData({ items: d.items || [], loading: false, loadError: '' });
       })
       .catch((err) => {
+        if (seq !== this._seq) return;
+        if ((this.data.items || []).length > 0) {
+          this.setData({ loading: false });
+          wx.showToast({ title: api.errMsg(err, '刷新失败，稍后自动重试'), icon: 'none' });
+          return;
+        }
         this.setData({ loading: false, loadError: api.errMsg(err, '加载失败') });
       });
   },
@@ -57,8 +68,7 @@ Page({
   // v0.7.4 提审合规：锅圈 UGC 内容举报入口（catchtap 防冒泡进详情）
   onReport(e) {
     const id = e.currentTarget.dataset.id;
-    const q = e.currentTarget.dataset.q || '';
-    if (!id) return;
+    if (!id) return; // v0.9.2：删僵尸变量 q（data-q 取值后从未使用）
     wx.showModal({
       title: '举报内容',
       editable: true,

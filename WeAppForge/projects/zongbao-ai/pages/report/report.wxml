@@ -1,5 +1,5 @@
 <page-meta page-style="{{themeStyle}}" />
-<view class="page" wx:if="{{d}}">
+<view class="page {{d.unlocked || (d.sellable && paySupported) ? 'page-has-bar' : ''}}" wx:if="{{d}}">
 
   <!-- ══ 蓝图头部：报告题名区 ══ -->
   <view class="hero bp-grid ticks">
@@ -22,7 +22,7 @@
     <view class="rp-price-row">
       <view class="rp-price {{d.unlocked ? 'rp-price-owned' : ''}}">{{d.unlocked ? '已解锁 · 永久阅读' : (d.sellable ? d.price_label : '整理中 · 暂未开售')}}</view>
       <view class="rp-badges">
-        <text class="rs-badge" wx:for="{{d.badges}}" wx:key="*this">{{item}}</text>
+        <text class="rs-badge" wx:for="{{d.badges}}" wx:key="k">{{item.k}}{{item.v ? ' ' + item.v : ''}}</text>
       </view>
     </view>
 
@@ -44,7 +44,7 @@
     <view wx:elif="{{d.sellable}}" class="rp-ios-note muted">iOS 暂不支持应用内购买，请在安卓设备上购买后阅读</view>
     <view wx:else class="rp-ios-note muted">本报告 PDF 整理中，开放购买前可先试读</view>
 
-    <view class="muted rp-note">一次解锁 · 永久阅读 · 内容由研究团队基于公开资料与 AI 辅助研究方法产出</view>
+    <view class="muted rp-note">一次解锁 · 永久阅读 · PDF 全文阅读与下载保存 · 内容由研究团队基于公开资料与 AI 辅助研究方法产出</view>
   </view>
 
   <!-- 简介 -->
@@ -69,23 +69,133 @@
     </view>
   </view>
 
-  <!-- 试读 -->
-  <view class="card ticks rise" wx:if="{{sample}}">
+  <!-- 试读（md2blocks 结构化渲染：标题/列表/表格/引用排版，裸 Markdown 符号不再出现） -->
+  <view class="card ticks rise" wx:if="{{sampleBlocks.length}}">
     <view class="kicker kicker-on-paper rp-kicker">{{d.sample_label || '试读'}} · FREE</view>
-    <view class="rp-sample {{sampleOpen ? '' : 'rp-sample-fold'}}">{{sample}}</view>
+    <view class="rp-sample {{sampleOpen ? '' : 'rp-sample-fold'}}">
+      <block wx:for="{{sampleBlocks}}" wx:key="index" wx:for-item="b">
+
+        <view wx:if="{{b.t === 'h1'}}" class="md-h1">
+          <text user-select><template is="inl" data="{{segs: b.inl}}" /></text>
+        </view>
+        <view wx:elif="{{b.t === 'h2'}}" class="md-h2">
+          <view class="h2-bar"></view>
+          <text class="md-h2-text" user-select><template is="inl" data="{{segs: b.inl}}" /></text>
+        </view>
+        <view wx:elif="{{b.t === 'h3'}}" class="md-h3">
+          <text user-select><template is="inl" data="{{segs: b.inl}}" /></text>
+        </view>
+
+        <view wx:elif="{{b.t === 'p'}}" class="md-p">
+          <text user-select><template is="inl" data="{{segs: b.inl}}" /></text>
+        </view>
+
+        <view wx:elif="{{b.t === 'quote'}}" class="md-quote">
+          <text user-select><template is="inl" data="{{segs: b.inl}}" /></text>
+        </view>
+
+        <view wx:elif="{{b.t === 'hr'}}" class="md-hr"></view>
+
+        <view wx:elif="{{b.t === 'code'}}" class="md-code-wrap">
+          <scroll-view scroll-x class="md-code-scroll" enhanced show-scrollbar="{{false}}">
+            <text class="md-code" user-select>{{b.text}}</text>
+          </scroll-view>
+        </view>
+
+        <view wx:elif="{{b.t === 'ul'}}" class="md-list">
+          <view class="md-li" wx:for="{{b.items}}" wx:key="index" wx:for-item="li">
+            <view class="li-dot"></view>
+            <text class="li-text" user-select><template is="inl" data="{{segs: li}}" /></text>
+          </view>
+        </view>
+
+        <view wx:elif="{{b.t === 'ol'}}" class="md-list">
+          <view class="md-li" wx:for="{{b.items}}" wx:key="index" wx:for-item="li" wx:for-index="liIdx">
+            <view class="li-num mono">{{b.nums[liIdx]}}</view>
+            <text class="li-text" user-select><template is="inl" data="{{segs: li}}" /></text>
+          </view>
+        </view>
+
+        <scroll-view wx:elif="{{b.t === 'table'}}" scroll-x class="md-tbl-scroll" enhanced show-scrollbar="{{false}}">
+          <view class="md-tbl">
+            <view class="md-tr md-tr-head">
+              <view class="md-th" wx:for="{{b.head}}" wx:key="index" wx:for-item="cell">
+                <text user-select><template is="inl" data="{{segs: cell}}" /></text>
+              </view>
+            </view>
+            <view class="md-tr" wx:for="{{b.rows}}" wx:key="index" wx:for-item="row">
+              <view class="md-td" wx:for="{{row}}" wx:key="index" wx:for-item="cell">
+                <text user-select><template is="inl" data="{{segs: cell}}" /></text>
+              </view>
+            </view>
+          </view>
+        </scroll-view>
+
+      </block>
+    </view>
     <view class="rp-sample-more" bindtap="toggleSample">{{sampleOpen ? '收起试读 ▴' : '展开试读 ▾'}}</view>
+    <!-- 试读尽头 CTA：读完即购（iOS 不渲染购买入口=虚拟支付铁律） -->
+    <view class="rp-cta {{buying ? 'rp-cta-busy' : ''}}" wx:if="{{sampleOpen && d.sellable && !d.unlocked && paySupported}}" bindtap="buy" hover-class="rp-cta-hover">
+      <text class="rp-cta-t">试读到此 · 付费解锁全量阅读与下载</text>
+      <text class="rp-cta-arrow">›</text>
+    </view>
   </view>
 
   <view class="safe-bottom"></view>
 </view>
 
-<!-- 载入/错误态 -->
-<view class="page" wx:else>
+<!-- 吸底行动栏：读完目录/试读后随时可购/可读（iOS 购买入口不渲染=虚拟支付铁律） -->
+<view class="rp-bar" wx:if="{{d && (d.unlocked || (d.sellable && paySupported))}}">
+  <view class="rp-bar-info" wx:if="{{!d.unlocked}}">
+    <view class="rp-bar-price">{{d.price_label}}</view>
+    <view class="rp-bar-sub muted">一次解锁 · 永久阅读</view>
+  </view>
+  <view class="rp-bar-info" wx:if="{{d.unlocked}}">
+    <view class="rp-bar-price">已解锁</view>
+    <view class="rp-bar-sub muted">全量阅读 · 可下载保存</view>
+  </view>
+  <button
+    wx:if="{{d.unlocked}}"
+    class="btn-primary rp-bar-btn"
+    hover-class="btn-hover"
+    disabled="{{opening}}"
+    bindtap="openPdf"
+  >{{opening ? '打开中…' : '打开 PDF 全文'}}</button>
+  <button
+    wx:else
+    class="btn-primary rp-bar-btn"
+    hover-class="btn-hover"
+    disabled="{{buying}}"
+    bindtap="buy"
+  >{{buying ? '拉起支付…' : '购买解锁'}}</button>
+</view>
+
+<!-- 载入/错误态（显式取反，勿用 wx:else：编译器剥注释后会误配吸底栏 rp-bar 的 wx:if） -->
+<view class="page" wx:if="{{!d}}">
   <view class="card ticks rp-state">
-    <view wx:if="{{loading}}"><view class="muted">报告加载中…</view></view>
+    <view wx:if="{{loading}}">
+      <view class="muted">报告加载中…</view>
+      <view class="rp-skel">
+        <view class="rp-skel-l w60"></view><view class="rp-skel-l"></view><view class="rp-skel-l w40"></view>
+      </view>
+    </view>
     <view wx:else>
       <view class="rp-state-t">{{errMsg || '报告不存在'}}</view>
-      <button class="btn-primary rp-act" hover-class="btn-hover" bindtap="goBack">返回目录</button>
+      <view class="rp-state-btns">
+        <button class="btn-primary rp-act" hover-class="btn-hover" bindtap="retry">重试</button>
+        <button class="btn-primary rp-act" hover-class="btn-hover" bindtap="goBack">返回目录</button>
+      </view>
     </view>
   </view>
 </view>
+
+<!-- 行内段渲染模板：加粗/斜体/行内代码/链接（与 answer 页同款） -->
+<template name="inl">
+  <block wx:for="{{segs}}" wx:key="index" wx:for-item="s">
+    <text wx:if="{{s.k === 'b'}}" class="in-b" user-select>{{s.v}}</text>
+    <text wx:elif="{{s.k === 'i'}}" class="in-i" user-select>{{s.v}}</text>
+    <text wx:elif="{{s.k === 'c'}}" class="in-c" user-select>{{s.v}}</text>
+    <text wx:elif="{{s.k === 'l'}}" class="in-l" user-select>{{s.v}}</text>
+    <block wx:else><text user-select>{{s.v}}</text></block>
+  </block>
+</template>

@@ -23,6 +23,7 @@ Page({
     reports: [],
     shown: [],
     stats: { total: 0, sellable: 0, mine: 0 },
+    statsReady: false, // 首次目录到货前 hero 数据带显示占位，不闪 0
     loading: true,
     errMsg: '',
   },
@@ -51,12 +52,16 @@ Page({
     this.setData({ loading: true, errMsg: '' });
     api.reportList()
       .then((d) => {
-        const reports = d.reports || [];
+        // 空 cat_name 客户端展示兜底（如线上 BLUEBOOK-2027）：按 title 前缀定文案，避免分类位空白
+        const reports = (d.reports || []).map((r) => (
+          r.cat_name ? r : { ...r, cat_name: r.title && r.title.indexOf('蓝皮书') === 0 ? '蓝皮书' : '其他' }
+        ));
         const mine = reports.filter((r) => r.unlocked).length;
         const sellable = reports.filter((r) => r.sellable).length;
         this.setData({
           reports,
           stats: { total: reports.length, sellable, mine },
+          statsReady: true,
           loading: false,
         });
         this.applyFilter();
@@ -66,6 +71,11 @@ Page({
         this.setData({ loading: false, errMsg: api.errMsg(err, '目录加载失败，请稍后重试') });
         if (done) done();
       });
+  },
+
+  // 重新加载按钮专用包装：吃掉 tap 事件对象，防止其被误当 done 回调传入 load
+  retry() {
+    this.load();
   },
 
   applyFilter() {

@@ -281,12 +281,46 @@
 .bottom-bar { padding: 8rpx 8rpx 0; margin: 24rpx 24rpx 0; }
 .tip-line { text-align: center; padding: 14rpx 0 6rpx; letter-spacing: 1rpx; font-size: 21rpx; }
 
-/* ══ v0.7.0 深色模式收口 ══ */
-@media (prefers-color-scheme: dark) {
-  .ask-ph { color: #5a6a86; }
-  .sk { background: linear-gradient(90deg, #232f47 25%, #2c3a55 45%, #232f47 65%); background-size: 400% 100%; }
-  .chip { color: #9fb4d6; border-color: rgba(101, 160, 255, 0.35); }
-  .chip-hover { background: #1d2a44; border-color: #33415e; }
-  .net-down { background: #3a2416; border-color: #7a4a22; color: #ffb877; }
-  .quota-ticket { background: rgba(4, 12, 26, 0.72); }
+/* v0.7.0 深色硬编码块已删（v0.9.2 审计修复）：系统深色由 theme.apply 统一注入 obsidian 变量接管 */
+
+/* v0.9.1 逐页优化：清空键按压反馈 */
+.clear-hover { opacity: 0.6; }
+
+/* ══ v0.9.1 信任带：总包智库底座（口径=智库页库存盘点同数，可证成）══ */
+.kb-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22rpx 44rpx 4rpx;
 }
+.kb-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6rpx;
+}
+.kb-n {
+  font-size: 34rpx;
+  font-weight: 800;
+  color: var(--ink, var(--navy-0));
+  letter-spacing: 1rpx;
+}
+.kb-l {
+  font-size: 19rpx;
+  color: var(--muted);
+  letter-spacing: 2rpx;
+}
+.kb-div {
+  width: 2rpx;
+  height: 36rpx;
+  background: var(--line);
+}
+.kb-cred {
+  text-align: center;
+  padding: 8rpx 36rpx 0;
+  font-size: 20rpx;
+  letter-spacing: 1rpx;
+}
+
+/* v0.9.4：未满足条件时的视觉弱化态（按钮仍可点，点击有 toast 反馈） */
+.btn-dim { opacity: 0.55; }

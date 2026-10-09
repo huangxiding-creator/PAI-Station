@@ -1,0 +1,105 @@
+<page-meta page-style="{{themeStyle}}" />
+
+<view class="page">
+
+  <!-- ══ 页头（蓝图制图风）══ -->
+  <view class="head bp-grid ticks">
+    <view style="height: {{nav.statusBarHeight}}px;"></view>
+    <view class="head-nav" style="height: {{nav.navHeight}}px">
+      <text class="head-back" bindtap="goBack">‹</text>
+      <text class="head-title">发票 · INVOICE</text>
+    </view>
+  </view>
+
+  <!-- 累计消费状态带 -->
+  <view class="card ticks inv-stats rise">
+    <view class="sheet-head">
+      <text class="kicker kicker-on-paper">累计消费 · TOTAL</text>
+      <text class="muted">增值税专用发票</text>
+    </view>
+    <block wx:if="{{loading}}">
+      <view class="muted">加载中…</view>
+    </block>
+    <block wx:elif="{{loadError}}">
+      <view class="muted">{{loadError}}</view>
+      <button class="btn-primary mini-retry" hover-class="btn-hover" bindtap="onRetry">重试</button>
+    </block>
+    <block wx:else>
+      <view class="inv-total">
+        <text class="inv-total-n mono">¥{{totalYuan}}</text>
+        <text class="muted inv-total-l">累计已消费（导出+报告解锁）</text>
+      </view>
+      <view class="inv-rule muted">累计满 ¥200 可申请开具增值税专用发票 · 电子专票发送至您的收票邮箱</view>
+    </block>
+  </view>
+
+  <!-- 处理中：状态卡（不再收新单） -->
+  <view class="card ticks rise" wx:if="{{pending}}" style="animation-delay: 60ms">
+    <view class="sheet-head">
+      <text class="kicker kicker-on-paper">申请处理中 · PENDING</text>
+    </view>
+    <view class="inv-pend">
+      <view class="inv-row"><text class="inv-k">抬头</text><text class="inv-v">{{pending.title}}</text></view>
+      <view class="inv-row"><text class="inv-k">税号</text><text class="inv-v mono">{{pending.tax_no}}</text></view>
+      <view class="inv-row"><text class="inv-k">收票邮箱</text><text class="inv-v">{{pending.email}}</text></view>
+      <view class="inv-row"><text class="inv-k">提交时间</text><text class="inv-v">{{pending.created_at}}</text></view>
+    </view>
+    <view class="muted inv-pend-note">开票完成后将以电子专票发送至收票邮箱，届时可再次发起新申请。</view>
+  </view>
+
+  <!-- 申请表单（门槛已达且无待处理） -->
+  <view class="card ticks rise" wx:if="{{!loading && !loadError && canApply && !pending}}" style="animation-delay: 60ms">
+    <view class="sheet-head">
+      <text class="kicker kicker-on-paper">开票信息 · FORM</text>
+      <text class="muted">带 * 为必填</text>
+    </view>
+    <view class="inv-f">
+      <view class="inv-fi">
+        <text class="inv-fl">发票抬头（单位全称）<text class="inv-star">*</text></text>
+        <input class="inv-in" value="{{title}}" data-f="title" bindinput="onField"
+               placeholder="与营业执照一致" placeholder-class="inv-ph" />
+      </view>
+      <view class="inv-fi">
+        <text class="inv-fl">纳税人识别号 <text class="inv-star">*</text></text>
+        <input class="inv-in mono" value="{{taxNo}}" data-f="taxNo" bindinput="onField"
+               placeholder="15-20 位数字或字母" placeholder-class="inv-ph" />
+      </view>
+      <view class="inv-fi">
+        <text class="inv-fl">注册地址 · 电话</text>
+        <input class="inv-in" value="{{addrPhone}}" data-f="addrPhone" bindinput="onField"
+               placeholder="专票票面信息（选填）" placeholder-class="inv-ph" />
+      </view>
+      <view class="inv-fi">
+        <text class="inv-fl">开户银行 · 账号</text>
+        <input class="inv-in" value="{{bankAcct}}" data-f="bankAcct" bindinput="onField"
+               placeholder="专票票面信息（选填）" placeholder-class="inv-ph" />
+      </view>
+      <view class="inv-fi">
+        <text class="inv-fl">收票邮箱 <text class="inv-star">*</text></text>
+        <input class="inv-in" value="{{email}}" data-f="email" bindinput="onField"
+               placeholder="电子专票将发送至此邮箱" placeholder-class="inv-ph" />
+      </view>
+      <view class="inv-fi">
+        <text class="inv-fl">备注</text>
+        <input class="inv-in" value="{{note}}" data-f="note" bindinput="onField"
+               placeholder="如开票内容要求（选填）" placeholder-class="inv-ph" />
+      </view>
+      <button class="btn-primary inv-submit {{submitting ? 'btn-dim' : ''}}" hover-class="btn-hover"
+              disabled="{{submitting}}" bindtap="onSubmit">{{submitting ? '提交中…' : '提交开票申请'}}</button>
+    </view>
+  </view>
+
+  <!-- 门槛未到：引导卡 -->
+  <view class="card ticks rise" wx:if="{{!loading && !loadError && !canApply && !pending}}" style="animation-delay: 60ms">
+    <view class="sheet-head">
+      <text class="kicker kicker-on-paper">申请条件 · GATE</text>
+    </view>
+    <view class="inv-gate">
+      <view class="blank-frame"><view class="blank-cross"></view></view>
+      <view class="empty-text">累计消费满 ¥200 可申请</view>
+      <view class="muted">当前累计 ¥{{totalYuan}}，还差 ¥{{gapYuan}}。解锁报告或导出咨询档案的金额均计入累计消费。</view>
+    </view>
+  </view>
+
+  <view class="safe-bottom"></view>
+</view>

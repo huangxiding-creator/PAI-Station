@@ -5,13 +5,15 @@
 const theme = require('../../utils/theme');
 const api = require('../../utils/api');
 const pay = require('../../utils/pay');
+const md2blocks = require('../../utils/md2blocks');
 
 Page({
   data: {
     nav: { statusBarHeight: 20, navHeight: 44 },
     sku: '',
     d: null,           // 详情（price/badges/chapters/audience/intro...）
-    sample: '',        // 试读正文
+    sample: '',        // 试读原文（md）
+    sampleBlocks: [],  // 试读结构化块（md2blocks，渲染用）
     sampleOpen: false,
     loading: true,
     errMsg: '',
@@ -48,8 +50,11 @@ Page({
         wx.setNavigationBarTitle && wx.setNavigationBarTitle({ title: d.title || '报告详情', fail: () => {} });
         if (!this.data.sample) {
           api.reportSample(this.data.sku)
-            .then((s) => this.setData({ sample: (s && s.text) || '' }))
-            .catch(() => this.setData({ sample: '' })); // 试读整理中（404）静默
+            .then((s) => {
+              const t = (s && s.text) || '';
+              this.setData({ sample: t, sampleBlocks: t ? md2blocks.md2blocks(t) : [] });
+            })
+            .catch(() => this.setData({ sample: '', sampleBlocks: [] })); // 试读整理中（404）静默
         }
       })
       .catch((err) => {
@@ -67,6 +72,11 @@ Page({
     else wx.switchTab({ url: '/pages/research/research' });
   },
 
+  // 错误态重试（包装一层，防 tap 事件对象误入 load 的 quiet 参数）
+  retry() {
+    this.load();
+  },
+
   // 购买解锁（Android/开发工具；iOS 入口在 wxml 层已隐藏）
   buy() {
     if (this.data.buying) return;
@@ -78,11 +88,13 @@ Page({
       });
       return;
     }
+    wx.vibrateShort({ type: 'light', fail: () => {} });
     this.setData({ buying: true });
     pay.payReport(this.data.sku)
       .then((r) => {
         this.setData({ buying: false });
-        wx.showToast({ title: r.message || '已解锁', icon: 'success' });
+        // ok:false（取消/失败/降级长文案）走 none，可多行完整可读；success 图标约 7 字上限
+        wx.showToast({ title: r.message || '已解锁', icon: r.ok ? 'success' : 'none' });
         if (r.ok) this.load(true);
       })
       .catch((err) => {
@@ -108,7 +120,10 @@ Page({
           filePath: res.tempFilePath,
           fileType: 'pdf',
           showMenu: true,
-          success: () => this.setData({ opening: false }),
+          success: () => {
+            wx.hideLoading(); // 与 showLoading 严格配对，防读完 PDF 返回后蒙层滞留
+            this.setData({ opening: false });
+          },
           fail: () => this._pdfFail('本机暂不支持打开 PDF，请升级微信后重试'),
         });
       },

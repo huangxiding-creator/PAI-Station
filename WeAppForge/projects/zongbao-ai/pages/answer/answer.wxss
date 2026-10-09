@@ -541,40 +541,8 @@ button.share-pill .pill-t { color: var(--ink-2); }
 .rel-chip-q { flex: 1; font-size: 26rpx; line-height: 1.5; color: var(--ink); font-weight: 600; }
 .rel-arrow { flex-shrink: 0; color: var(--accent-deep); font-size: 30rpx; font-weight: 700; }
 
-/* ══ v0.7.0 深色模式（夜航图纸：纸面变量在 app.wxss 全局翻转，此处收口硬编码色）══ */
-@media (prefers-color-scheme: dark) {
-  .md-p, .li-text, .md-td { color: #cdd8ea; }
-  .md-quote { background: #1a2740; border-color: #33415e; }
-  .md-tbl { border-color: #33415e; }
-  .md-td { background: #18223a; border-top-color: #2c3a55; }
-  .in-c { background: #26324a; color: #ffb877; }
-  .sk { background: linear-gradient(90deg, #232f47 25%, #2c3a55 45%, #232f47 65%); background-size: 400% 100%; }
-  .draft-stage {
-    background-color: #131d33;
-    background-image:
-      linear-gradient(rgba(101, 160, 255, 0.08) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(101, 160, 255, 0.08) 1px, transparent 1px);
-    background-size: 28rpx 28rpx;
-    border-color: rgba(101, 160, 255, 0.28);
-  }
-  .meta-chip { background: #1d2a44; border-color: #33415e; color: #9fb4d6; }
-  .tldr-card { background: #141d31; border-color: #2c3a55; }
-  .pill { background: #18223a; border-color: #2c3a55; }
-  .pill-glyph { background: #1d2a44; border-color: #33415e; }
-  .pill-on { background: #3a2c14; border-color: #8a5f1e; }
-  .pill-on .pill-glyph { background: #3a2c14; border-color: #8a5f1e; }
-  .draft-chars { background: #3a2c14; border-color: #8a5f1e; color: #ffb877; }
-  .type-box { background: #141d31; border-color: #2c3a55; }
-  .cite-tbl { background: #18223a; border-color: #33415e; }
-  .cite-item + .cite-item { border-top-color: #2c3a55; }
-  .cite-hover { background: #1d2a44; }
-  .sb-btn-off { border-color: #3a4763; }
-  .fu-q-text { background: #3a2c14; border-color: #8a5f1e; }
-  .fu-a-text { background: #1a2740; border-color: #33415e; }
-  .fu-input-row { background: #141d31; border-color: #2c3a55; }
-  .rel-chip-hover { background: #1a2740; }
-  .fu-a-error .fu-a-text { border-color: #5e3030; background: #2c1c1c; color: #e0a8a8; }
-}
+/* v0.7.0 深色硬编码块已删（v0.9.2 审计修复）：系统深色由 theme.apply 统一注入 obsidian 变量接管
+   （.md-p 等浅字色曾与被 page-meta 锁亮的纸面冲突近似不可读——现随 obsidian 变量走一致渲染）*/
 
 /* ══ v0.7.3 授勋动画（用户令）：互动得次 → 徽章+光芒+火花+震动的荣誉时刻 ══ */
 .rw-mask {
@@ -682,4 +650,63 @@ button.share-pill .pill-t { color: var(--ink-2); }
   font-weight: 700;
   line-height: 1.5;
   color: var(--ink);
+}
+
+/* ══ v0.7.8 依据全文弹层（追加）：原生 modal 不可滚 → 自绘可滚动遮罩+scroll-view ══ */
+.cite-pop-mask {
+  position: fixed; left: 0; top: 0; right: 0; bottom: 0;
+  z-index: 998;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(var(--t-deep-rgb), 0.72);
+  padding: 40rpx;
+}
+.cite-pop {
+  width: 100%;
+  max-width: 640rpx;
+  background: var(--t-paper-hi);
+  border: 2rpx solid var(--t-paper-edge);
+  border-top: 6rpx solid var(--accent);
+  border-radius: 14rpx;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.35);
+}
+.cite-pop-head {
+  display: flex; align-items: center; gap: 16rpx;
+  padding: 24rpx 24rpx 16rpx;
+}
+.cite-pop-title {
+  flex: 1; font-size: 28rpx; font-weight: 800; color: var(--navy-0); line-height: 1.45;
+}
+.cite-pop-x {
+  flex-shrink: 0;
+  width: 52rpx; height: 52rpx; border-radius: 10rpx;
+  border: 2rpx solid var(--t-paper-dim);
+  color: var(--muted);
+  font-size: 28rpx;
+  display: flex; align-items: center; justify-content: center;
+  line-height: 1;
+}
+.cite-pop-scroll { max-height: 70vh; padding: 0 24rpx; box-sizing: border-box; }
+.cite-pop-text {
+  display: block;
+  font-size: 26rpx; line-height: 1.9; color: var(--ink-2);
+  text-align: justify;
+  padding-bottom: 8rpx;
+}
+.cite-pop-btn {
+  margin: 16rpx 24rpx 24rpx;
+  height: 76rpx; border-radius: 12rpx;
+  background: linear-gradient(180deg, var(--t-accent-soft) 0%, var(--accent) 45%, var(--accent-deep) 100%);
+  color: var(--navy-0);
+  font-size: 27rpx; font-weight: 800; letter-spacing: 4rpx;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 10rpx 22rpx rgba(var(--t-accent-rgb), 0.32);
+}
+.cite-pop-btn-hover { transform: scale(0.96); }
+@media (prefers-color-scheme: dark) {
+  .cite-pop { background: #141d31; border-color: #33415e; }
+  .cite-pop-title { color: #dbe6f8; }
+  .cite-pop-x { border-color: #3a4763; }
+  .cite-pop-text { color: #cdd8ea; }
 }

@@ -1056,6 +1056,100 @@ def share_poster(aid: str, request: Request):
     return {"b64": base64.b64encode(png).decode()}
 
 
+# ══ v0.9.4 发票（1009 用户令：累计消费满 ¥200 可申请增值税专用发票；申请即企业微信推送运营）══
+class InvoiceApplyIn(BaseModel):
+    title: str
+    tax_no: str
+    email: str
+    addr_phone: str = ""
+    bank_acct: str = ""
+    note: str = ""
+
+
+def _invoice_wecom_push(app_row: dict) -> None:
+    """申请单企业微信推送（fail-open 旁路：推失败只记日志，绝不影响申请落库/返回）。"""
+    import urllib.request
+    try:
+        hook = config.INVOICE_WECOM_WEBHOOK
+        if not hook and config.INVOICE_WECOM_WEBHOOK_FILE.exists():
+            hook = config.INVOICE_WECOM_WEBHOOK_FILE.read_text(encoding="utf-8").strip()
+        if not hook:
+            _log.warning("invoice wecom push skipped: no webhook configured")
+            return
+        content = ("**【发票申请】总包AI顾问**\n"
+                   "> 类型：增值税专用发票\n"
+                   f"> 累计消费：¥{app_row['total_fen'] / 100:.2f}\n"
+                   f"> 抬头：{app_row['title']}\n"
+                   f"> 税号：{app_row['tax_no']}\n"
+                   f"> 地址电话：{app_row.get('addr_phone') or '—'}\n"
+                   f"> 开户行账号：{app_row.get('bank_acct') or '—'}\n"
+                   f"> 收票邮箱：{app_row['email']}\n"
+                   f"> 备注：{app_row.get('note') or '—'}\n"
+                   f"> 时间：{app_row.get('created_at') or ''}")
+        payload = json.dumps({"msgtype": "markdown", "markdown": {"content": content}},
+                             ensure_ascii=True).encode("ascii")
+        req = urllib.request.Request(hook, data=payload,
+                                     headers={"Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            _log.info("invoice wecom push: %s", resp.read()[:120])
+    except Exception as exc:  # noqa: BLE001 —— 推送是旁路，任何失败不阻断申请
+        _log.warning("invoice wecom push failed: %s", exc)
+
+
+@app.get("/api/invoice/status")
+def invoice_status(request: Request):
+    """发票状态：累计已付金额 + 门槛 + 本人申请记录（未登录只看门槛口径）。"""
+    openid = _openid_soft(request)
+    total = store.paid_total_fen(openid) if openid else 0
+    apps = store.invoice_apps(openid) if openid else []
+    return {
+        "total_fen": total,
+        "threshold_fen": config.INVOICE_THRESHOLD_FEN,
+        "can_apply": total >= config.INVOICE_THRESHOLD_FEN
+                     and not any(a["status"] == "pending" for a in apps),
+        "applications": apps,
+    }
+
+
+@app.post("/api/invoice/apply")
+def invoice_apply(body: InvoiceApplyIn, request: Request):
+    """提交开票申请（增值税专用发票）：门槛 ¥200；待处理期间不重复提交；
+    落库后企业微信推送运营（fail-open）。"""
+    openid = _openid(request)   # 开票必须登录（openid 记账归属）
+    title = body.title.strip()
+    tax_no = body.tax_no.strip().upper()
+    email = body.email.strip()
+    addr_phone = body.addr_phone.strip()
+    bank_acct = body.bank_acct.strip()
+    note = body.note.strip()[:200]
+    if not (2 <= len(title) <= 64):
+        raise HTTPException(422, "发票抬头须为 2-64 字")
+    if not re.fullmatch(r"[0-9A-Z]{15,20}", tax_no):
+        raise HTTPException(422, "纳税人识别号须为 15-20 位数字/大写字母")
+    if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
+        raise HTTPException(422, "收票邮箱格式不正确")
+    total = store.paid_total_fen(openid)
+    if total < config.INVOICE_THRESHOLD_FEN:
+        raise HTTPException(
+            403, f"累计消费满 ¥{config.INVOICE_THRESHOLD_FEN // 100} 元可申请发票"
+                 f"（当前 ¥{total / 100:.2f}）")
+    if any(a["status"] == "pending" for a in store.invoice_apps(openid)):
+        raise HTTPException(409, "已有一笔发票申请在处理中，开票完成后可再次申请")
+    if not store.create_invoice_app(openid, total, title, tax_no,
+                                    addr_phone, bank_acct, email, note):
+        raise HTTPException(500, "申请落库失败，请稍后重试")
+    try:
+        _invoice_wecom_push({
+            "total_fen": total, "title": title, "tax_no": tax_no,
+            "addr_phone": addr_phone, "bank_acct": bank_acct, "email": email,
+            "note": note, "created_at": time.strftime("%Y-%m-%d %H:%M:%S"),
+        })
+    except Exception:  # noqa: BLE001 —— 双保险：推送旁路崩溃绝无可能伤申请主流程
+        _log.warning("invoice wecom push crashed at call site", exc_info=True)
+    apps = store.invoice_apps(openid)
+    return {"ok": True, "application": apps[0] if apps else None}
+
+
 @app.get("/api/health")
 def health():
     return {"ok": True}

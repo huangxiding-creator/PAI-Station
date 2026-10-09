@@ -131,5 +131,7 @@ module.exports = {
   reportSample: (sku) => request('GET', '/api/report/' + sku + '/sample'),                   // 试读正文
   reportSign: (sku) => request('POST', '/api/report/' + sku + '/unlock_sign'),               // 报告解锁签名
   reportPdfUrl: (sku) => BASE_URL + '/api/report/' + sku + '/pdf',                           // PDF 全文（downloadFile 带 Bearer）
+  invoiceStatus: () => request('GET', '/api/invoice/status'),                                // 发票：累计消费+门槛+申请记录
+  invoiceApply: (d) => request('POST', '/api/invoice/apply', d),                             // 发票：提交开票申请（≥¥200）
   requestRaw: request                                                                        // pay.js 回调腿用（带 401 重登语义）
 };

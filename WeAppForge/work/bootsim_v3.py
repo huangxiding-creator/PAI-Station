@@ -28,12 +28,12 @@ def read(path):
     return open(os.path.join(ROOT, path), encoding="utf-8").read()
 
 
-# 1) app.json 结构：九页（问/锅/智/研/答/报/我 + legal + home 兼容跳板）+ 五页签
+# 1) app.json 结构：十页（问/锅/智/研/答/报/我 + legal + invoice + home 兼容跳板）+ 五页签
 app_json = json.load(open(os.path.join(ROOT, "app.json"), encoding="utf-8"))
-check("app.json pages 九页（问/锅/智/研/答/报/我+legal+home 兼容）", app_json["pages"] == [
+check("app.json pages 十页（问/锅/智/研/答/报/我+legal+invoice+home 兼容）", app_json["pages"] == [
     "pages/ask/ask", "pages/pot/pot", "pages/zhiku/zhiku", "pages/research/research",
     "pages/report/report", "pages/answer/answer",
-    "pages/my/my", "pages/legal/privacy", "pages/home/home"])
+    "pages/my/my", "pages/legal/privacy", "pages/invoice/invoice", "pages/home/home"])
 check("app.json 入口页仍是 ask（第一位）", app_json["pages"][0] == "pages/ask/ask")
 check("app.json tabBar.custom=true", app_json["tabBar"].get("custom") is True)
 check("app.json lazyCodeLoading", app_json.get("lazyCodeLoading") == "requiredComponents")
@@ -79,8 +79,8 @@ check("智库页 无长按识别导流（show-menu-by-longpress 已撤）", "sho
 check("智库页 QR 图片已出包（减包体+去导流素材）", not os.path.exists(os.path.join(ROOT, "images", "zhiku-qr.png")))
 check("智库页 无「装飞书App/浏览器打开」引导文案", "飞书 App" not in zk_wxml and "手机浏览器" not in zk_wxml)
 check("智库页 分享路径=zhiku", "path: '/pages/zhiku/zhiku'" in zk_js)
-check("智库页 四库介绍（市场/企业/专家/知识）",
-      all(k in zk_js for k in ["市场库", "企业库", "专家库", "知识库"]))
+check("智库页 六库介绍（市场/企业/专家/知识/案例/研报，1009 飞书同步）",
+      all(k in zk_js for k in ["市场库", "企业库", "专家库", "知识库", "案例库", "研报库"]))
 
 # 3) wxml 标签配对粗检
 for p in app_json["pages"]:
@@ -111,10 +111,11 @@ check("wxml 无语音条（voice-bar/speak-btn）", "voice-bar" not in ask_wxml 
 # 第 2 点：示范性问题
 check("ask 常用咨询→示范性问题", "示范性问题 · SAMPLE QUESTIONS" in ask_wxml and "常用咨询" not in ask_wxml)
 
-# 第 3 点：AI优化提问（左）+ 立即咨询（右），按钮在输入框下方
+# 第 3 点：AI优化提问（左）+ 免费咨询（右，1009 用户令突出免费），按钮在输入框下方
 check("ask AI优化提问按钮+实现", 'bindtap="onOptimize"' in ask_wxml and "onOptimize" in ask_js)
 check("ask AI优化采用/保留原问（用户过目）", "采用" in ask_js and "保留原问" in ask_js)
-check("ask 立即咨询 CTA", "立即咨询" in ask_wxml)
+check("ask 免费咨询 CTA（1009 用户令）", "免费咨询" in ask_wxml and "立即咨询" not in ask_wxml)
+check("ask 额度票根=今日免费咨询（免费突出）", "今日免费咨询" in ask_wxml)
 _opt = ask_wxml.find("opt-btn")
 _cta = ask_wxml.find("ask-btn")
 _inp = ask_wxml.find("ask-input")
@@ -131,9 +132,9 @@ check("my 批量导出三格式 ActionSheet", "Word" in my_js and "PDF" in my_js
 check("api exportAll 客户端", "exportAll" in api_js)
 
 # 第 6 点：总包AI智库专业解答（v0.7.0：工程大脑字眼全局统一为总包智库）
-check("answer 工程大脑→总包AI智库", "总包AI智库 · 专业解答" in ans_wxml and "工程大脑 · 专业解答" not in ans_wxml)
+check("answer 工程大脑→总包AI智库", "AI 检索总包智库 · 专业解答" in ans_wxml and "工程大脑 · 专业解答" not in ans_wxml)
 check("answer 绘制中=总包智库（v0.7.0 统一）", "总包智库 · 绘制中" in ans_wxml)
-check("answer 定位=AI 检索行业知识库（可证成口径）", "AI 检索行业知识库" in ask_wxml and "AI 检索行业知识库" in ans_js)
+check("answer 定位=AI 检索总包智库（可证成口径）", "专业参考源自「总包智库」" in ask_wxml and "AI 检索总包智库" in ans_js)
 
 # 第 7 点：精美小按钮（pill 排；v0.7.3 复制全文下线=五钮：有用/导出/纠错/分享/海报）
 check("answer pill-row 五小按钮（复制全文已下线）", "pill-row" in ans_wxml and ans_wxml.count('class="pill-glyph"') == 5)
@@ -154,9 +155,13 @@ check("api potList 客户端", "potList" in api_js)
 check("api optimize 客户端（shareReward 已随分享激励下线）", "optimize" in api_js and "shareReward" not in api_js)
 
 # 版本与定位（v0.9.0）
-check("my 版本标记 v0.9.0", "v0.9.0" in my_wxml)
+check("my 版本标记 v0.9.4（1009 外观移页底+六库同步版）", "v0.9.4" in my_wxml)
 pkg = json.load(open(os.path.join(ROOT, "package.json"), encoding="utf-8"))
-check("package.json version=0.9.0", pkg["version"] == "0.9.0")
+check("package.json version=0.9.4", pkg["version"] == "0.9.4")
+# 1009 用户令：外观沉底（个性化低频项按用户习惯放设置区，高频额度/记录在前）——顺序即断言
+check("my 布局顺序=额度→记录→书架→外观（外观在咨询记录之后，1009 用户令）",
+      my_wxml.find("外观 · APPEARANCE") > my_wxml.find("咨询记录 · RECORDS")
+      and my_wxml.find("外观 · APPEARANCE") > my_wxml.find("我的报告"))
 
 # ══ v0.7.7 拒审 599847679 整改：AI 标识显著级（hero 内嵌 + 三页徽章升级）══
 ask_wxss = open(os.path.join(ROOT, "pages", "ask", "ask.wxss"), encoding="utf-8").read()
@@ -168,6 +173,8 @@ check("ask hero-ai 位置=hero-title 与 hero-sub 之间（首屏必现）",
       and ask_wxml.find('class="hero-ai"') < ask_wxml.find('class="hero-sub"'))
 check("ask hero-ai 徽章文案=AI生成+人工智能全称句",
       ">AI生成</text>" in ask_wxml and "人工智能（AI）生成" in ask_wxml)
+check("ask 一页一处 AI 提示（重复 banner 已拆，hero 药丸唯一）",
+      "ai-flag" not in ask_wxml)
 check("ask hero-ai 显著级样式（28rpx 白字+橙边深底药丸）",
       ".hero-ai-badge" in ask_wxss and "28rpx" in ask_wxss and "#ffffff" in ask_wxss
       and "rgba(255, 148, 50, 0.9)" in ask_wxss)
@@ -249,8 +256,14 @@ check("theme.json 双套色（light/dark bgColor）",
       os.path.exists(os.path.join(ROOT, "theme.json")) and
       json.load(open(os.path.join(ROOT, "theme.json"), encoding="utf-8"))["dark"]["bgColor"] == "#0c1322")
 check("app.wxss 夜航图纸变量翻转块", "prefers-color-scheme: dark" in read("app.wxss") and "--paper: #0c1322" in read("app.wxss"))
+# v0.9.2（1009 审计 HIGH）：四页深色渲染移交主题层（系统 dark→obsidian 注入），
+# 页面级 prefers-color-scheme 硬编码块已删（answer.wxss 仅保留 cite-pop 弹层深色块）
 for _pg in ("pages/answer/answer", "pages/ask/ask", "pages/my/my", "pages/pot/pot"):
-    check(f"{_pg} wxss 深色收口块", "prefers-color-scheme: dark" in read(_pg + ".wxss"))
+    _src = read(_pg + ".wxss")
+    _has_pop = "cite-pop" in _src
+    check(f"{_pg} wxss 无旧式深色硬编码块（深色已由主题层接管）",
+          (not _has_pop and "prefers-color-scheme" not in _src)
+          or (_has_pop and _src.count("prefers-color-scheme") <= 1))
 check("app.json 下拉底色绑主题变量", app_json["window"]["backgroundColor"] == "@bgColor")
 
 # ── 0929 教训级防线（沿用）：「页面不存在」根因=同 robot 再上传顶掉被钉体验版 ──
@@ -308,7 +321,9 @@ check("utils/theme.js 存在", len(theme_js) > 5000)
 check("theme 七套调色板", all(k in theme_js for k in ("navy", "graphite", "pine", "obsidian", "violet", "celadon", "forge")))
 check("theme 星期映射（getDay 轮换）", "getDay" in theme_js and "weekdayLabel" in theme_js)
 check("theme 偏好持久化（setPref/storage）", "setPref" in theme_js and "setStorageSync" in theme_js)
-check("theme 导航栏染色（setNavigationBarColor）", "setNavigationBarColor" in theme_js)
+check("theme 深色感知（系统 dark→obsidian 统一注入，1009 审计 HIGH 修复）",
+      "effective" in theme_js and "onThemeChange" in theme_js and "obsidian" in theme_js
+      and "setNavigationBarColor" not in theme_js)
 for _pg in ("pages/ask/ask", "pages/pot/pot", "pages/zhiku/zhiku", "pages/answer/answer", "pages/my/my",
             "pages/legal/privacy", "pages/home/home"):
     check(f"{_pg} page-meta 注入主题变量", '<page-meta page-style="{{themeStyle}}" />' in read(_pg + ".wxml"))
@@ -366,14 +381,16 @@ for _base, _dirs, _files in os.walk(ROOT):
 check("极限词/敏感增长措辞全局归零（顶级/病毒/裂变）", not _jurisdiction_hits, str(_jurisdiction_hits))
 check("ask hero 无「法务/诉讼」服务范围声明", "法务" not in ask_wxml and "诉讼" not in ask_wxml)
 check("ask hero 无 7×24 时限承诺", "7×24" not in ask_wxml and "7×24" not in my_wxml)
-check("hero 口径=AI 检索行业知识库生成（可证成）",
-      "AI 检索行业知识库" in ask_wxml and "AI 检索行业知识库" in read("pages/home/home.wxml")
-      and "顶级" not in pot_wxml)
+check("hero 口径=AI 生成声明一处不重复（1009 用户令去重）",
+      "本服务内容由人工智能（AI）生成" in ask_wxml and "专业参考源自「总包智库」" in ask_wxml
+      and "AI 检索" not in ask_wxml)
+check("hero 溯源口径在 home 跳板页保留（可证成）",
+      "AI 检索总包智库" in read("pages/home/home.wxml") and "顶级" not in pot_wxml)
 
 # B. AI 生成标识三面（AI标识办法：正文/追问/锅圈公开展示面）
 check("answer 正文卡常驻 AI 生成标识", "内容由 AI 生成" in ans_wxml and "ai-note" in ans_wxml)
 check("answer 追问卡 AI 标识", "追问回答同样由 AI 生成" in ans_wxml)
-check("pot 锅圈 AI 标识（公开展示面）", "内容由 AI 生成" in pot_wxml and "pot-ai-note" in pot_wxml)
+check("pot 锅圈 AI 标识（页首常驻=ai-flag）", "人工智能（AI）生成" in pot_wxml and 'class="ai-flag"' in pot_wxml)
 
 # C. 隐私合规：legal 页 + 首次提问告知 + my 入口
 check("legal 页四件套存在", all(os.path.exists(os.path.join(ROOT, "pages", "legal", f"privacy.{e}")) for e in ("js", "wxml", "wxss", "json")))
@@ -421,15 +438,31 @@ check("my 批量导出付费墙（N×0.1 一单付清）",
       "payExportAll" in my_js and "0.1" in my_js and "_exportAllSheet" in my_js)
 check("my 批量导出入口 iOS 新付费隐藏+全解锁可见（payOk||exportUnpaidAll===0）",
       'wx:if="{{payOk || exportUnpaidAll === 0}}"' in my_wxml and "¥0.1/条" in my_wxml)
-# 智库 v2：四库 34 分组（5+4+7+18）+ 诚实库存
+# 智库 v3（1009 用户令：与飞书一级目录同步）：六库 49 分组（3+4+7+18+13+4，第三方/镜像源/索引链接不展示）+ 诚实库存
+_zk_code = re.sub(r"//[^\n]*", "", zk_js)  # 去注释副本（负断言打代码层，政策注释不误伤）
 _zk_subs = re.findall(r"subs: \[([^\]]+)\]", zk_js)
 _zk_counts = [len(re.findall(r"'", s)) // 2 for s in _zk_subs]
-check("智库页 四库 34 分组（5+4+7+18）", _zk_counts == [5, 4, 7, 18], str(_zk_counts))
-check("智库页 分组抽样（科思顿月度观察/SVIP私房课/政策法规资讯）",
-      "科思顿·工程行业月度观察" in zk_js and "SVIP私房课" in zk_js and "政策法规资讯" in zk_js)
+check("智库页 六库 49 分组（3+4+7+18+13+4，1009 飞书实测树同步）",
+      _zk_counts == [3, 4, 7, 18, 13, 4], str(_zk_counts))
+check("智库页 分组抽样（市场前瞻/SVIP私房课/政策法规资讯/券商研报精选）",
+      "市场前瞻" in zk_js and "SVIP私房课" in zk_js and "政策法规资讯" in zk_js
+      and "券商研报精选" in zk_js)
+check("智库页 案例库 13 卷锚（手册/复盘/国标规范在册）",
+      "《EPC总承包项目经理能力手册》" in zk_js and "GB/T 50358-2017" in zk_js
+      and "《江西丰城电厂三期EPC特大事故沉思录》" in zk_js)
+check("智库页 已下线分组不展示（细分市场研究 1009 飞书侧已撤）",
+      "细分市场研究" not in _zk_code)
+# 用户令 1008：第三方栏目（科思顿等）库里有但不展示（广告/侵权风险）——展示层归零
+# 1009 追随：源库镜像（小鹅通/秘塔）与 🔗 索引链接同样不进展示层；知网镜像串不入包
+# 判据打展示层代码（_zk_code=去注释副本），政策注释可点名品牌而不触发断言
+check("智库页 第三方品牌不展示（科思顿/小鹅通/秘塔/知网镜像出展示层，内容留飞书库）",
+      "科思顿" not in _zk_code and "科思顿" not in zk_wxml
+      and "小鹅通" not in _zk_code and "秘塔" not in _zk_code and "知网" not in _zk_code
+      and "49 分组" in zk_wxml)
 check("智库页 诚实库存四数（1855/847/906/620）",
       all(k in zk_js for k in ["1855", "847", "906", "620"]))
-check("智库页 持续入库口径（不吹全量）", "持续迁移入库" in zk_wxml)
+check("智库页 持续入库口径（不吹全量，v0.9.1 锚=时间线节点）",
+      "持续入库中" in zk_wxml and "盘点口径" in zk_wxml and "全量" not in zk_wxml)
 check("智库页 v0.7.4 合规防线仍在（无二维码/长按导流）",
       "previewQr" not in zk_js and "show-menu-by-longpress" not in zk_wxml)
 # 引擎侧：导出收费闸门 + 旧 1 元解锁下线
@@ -512,6 +545,95 @@ check("研究页 目录腿 api.reportList + 分类筛（含已购）",
       "reportList" in rs_js and "mine" in rs_js and "flagship" in rs_js)
 check("研究页 整理中口径（可看不可买）", "整理中" in rs_wxml)
 check("研究页 AI 辅助研究口径注脚（可证成）", "AI 辅助研究方法" in rs_wxml)
+# ══ v0.9.1 用户令 1008 晚三修（标签空白/试读裸md/AI提示去重）══
+check("研究页 badges 键值渲染（对象直渲染=空白标签根因）",
+      "{{b.k}}" in rs_wxml and 'wx:key="k"' in rs_wxml and "{{b}}" not in rs_wxml)
+check("报告页 badges 键值渲染 {{item.k}}", "{{item.k}}" in rp_wxml)
+_rp_wxss = read("pages/report/report.wxss")
+check("报告页 试读 md2blocks 结构化渲染（裸 md 符号根除）",
+      "md2blocks" in rp_js and "sampleBlocks" in rp_js and "b.t === 'h2'" in rp_wxml
+      and 'template is="inl"' in rp_wxml and ".md-p" in _rp_wxss)
+check("报告页 试读折叠渐隐（max-height+mask 非 line-clamp）",
+      "rp-sample-fold" in _rp_wxss and "-webkit-mask-image" in _rp_wxss)
+check("报告页 载入骨架（防跳版式）", "rp-skel" in rp_wxml and "rp-skel" in _rp_wxss)
+
+# ══ v0.9.1 逐页深度优化门（1008 用户令三标准） ══
+# 变现主杠杆：报告详情页吸底行动栏（读完目录/试读后随时可购）
+_rp_wxml_2 = read("pages/report/report.wxml")
+check("报告页 吸底行动栏（fixed 双 CTA：购买/打开PDF）",
+      'class="rp-bar"' in _rp_wxml_2 and '打开 PDF 全文' in _rp_wxml_2
+      and '购买解锁' in _rp_wxml_2 and 'page-has-bar' in _rp_wxml_2)
+check("报告页 吸底栏 iOS 铁律（栏渲染门=unlocked || (sellable && paySupported)）",
+      "d.unlocked || (d.sellable && paySupported)" in _rp_wxml_2)
+check("报告页 试读尽头 CTA（读完即购，iOS 门控）",
+      'rp-cta' in _rp_wxml_2 and 'sampleOpen && d.sellable && !d.unlocked && paySupported' in _rp_wxml_2)
+_rp_wxss_2 = read("pages/report/report.wxss")
+check("报告页 吸底栏样式（fixed+safe-area+让位 padding）",
+      ".rp-bar {" in _rp_wxss_2 and ".page-has-bar" in _rp_wxss_2
+      and "env(safe-area-inset-bottom)" in _rp_wxss_2)
+_rp_js_2 = read("pages/report/report.js")
+check("报告页 购买触感（vibrateShort）", "vibrateShort" in _rp_js_2)
+# 用户令 1008：付款后解锁全量阅读和下载（openDocument showMenu=阅读器内转发/收藏/保存）
+check("报告页 解锁后可下载（openDocument showMenu=true）",
+      "showMenu: true" in _rp_js_2 and "fileType: 'pdf'" in _rp_js_2)
+check("报告页 付款价值口径（全量阅读+下载保存明示，购前购后都说清）",
+      "全量阅读 · 可下载保存" in _rp_wxml_2 and "下载保存" in _rp_wxml_2
+      and "付费解锁全量阅读与下载" in _rp_wxml_2)
+# 商城目录页：变现数据带 + 载入骨架
+check("研究页 变现数据带（在售/498元起/已解锁，可证成实数）",
+      "rs-hero-stats" in rs_wxml and "¥498" in rs_wxml
+      and "stats.sellable" in rs_wxml and "stats.mine" in rs_wxml)
+check("研究页 载入骨架（微光占位替代裸文本）",
+      "rs-skel-item" in rs_wxml and "rs-skel-wave" in read("pages/research/research.wxss"))
+# 一页一处显眼提示：pot 页只留页首 ai-flag，底部注脚不再重复 AI 生成
+_pot_wxml_2 = read("pages/pot/pot.wxml")
+check("pot 页 一页一处 AI 提示（页首 ai-flag 唯一，底注只留举报指引）",
+      _pot_wxml_2.count('class="ai-flag"') == 1
+      and 'pot-ai-note">发现不当内容可点「举报」</view>' in _pot_wxml_2)
+check("my 页 咨询记录载入骨架", "my-skel-row" in read("pages/my/my.wxml") and "my-skel-wave" in read("pages/my/my.wxss"))
+check("zhiku 页 复制触感（vibrateShort）", "vibrateShort" in read("pages/zhiku/zhiku.js"))
+
+# ══ v0.9.1 智库页重设计门（1008 用户令：智库页设计非常差 → 图纸目录页整页重做） ══
+_zk_wxml_v2 = read("pages/zhiku/zhiku.wxml")
+_zk_wxss_v2 = read("pages/zhiku/zhiku.wxss")
+_zk_js_v2 = read("pages/zhiku/zhiku.js")
+check("zhiku hero 图签统计带（四数白墨大数字，数在 js 数据位）",
+      "zk-hstats" in _zk_wxml_v2 and "zk-hs-n" in _zk_wxml_v2
+      and all(k in _zk_js_v2 for k in ["1855", "847", "906", "620"])
+      and ".zk-hstats" in _zk_wxss_v2)
+check("zhiku 六库手风琴目录（点击展开+默认首库展开）",
+      'bindtap="toggleVault"' in _zk_wxml_v2 and "expanded" in _zk_js_v2
+      and "zk-v-head" in _zk_wxml_v2 and 'hover-class="zk-v-press"' in _zk_wxml_v2)
+check("zhiku 标签墙已除（分组改编号索引行）",
+      "zk-sub" not in _zk_wxml_v2 and "zk-g-row" in _zk_wxml_v2 and "zk-g-idx" in _zk_wxml_v2
+      and "code" in _zk_js_v2)
+check("zhiku 展开动效与箭头旋转（chevron 状态类）",
+      ".zk-chevron" in _zk_wxss_v2 and ".zk-v.open .zk-chevron" in _zk_wxss_v2
+      and "fadeIn" in _zk_wxss_v2)
+check("zhiku 溯源时间线（2013 公益叙事三节点，1009 用户令年份修正）",
+      "zk-tl-item" in _zk_wxml_v2 and "2013" in _zk_wxml_v2
+      and "公益运行至今" in _zk_wxml_v2 and "总包学园" in _zk_wxml_v2)
+check("tab 栏 按压反馈（hover-class）", 'hover-class="tab-hover"' in read("custom-tab-bar/index.wxml")
+      and ".tab-hover" in read("custom-tab-bar/index.wxss"))
+
+# ══ v0.9.1 信任与智库背书门（1008 用户令） ══
+check("ask 智库底座信任带（四数可证成=智库页盘点同数）",
+      "kb-strip" in ask_wxml and "1855" in ask_wxml and "847" in ask_wxml
+      and "906" in ask_wxml and "620" in ask_wxml and "kb-cred" in ask_wxml
+      and ".kb-strip" in read("pages/ask/ask.wxss"))
+check("ask hero 口径点名总包智库", "专业参考源自「总包智库」" in ask_wxml)
+check("ask 信任承诺=每答附依据来源（answer 页 cite 栏背书）",
+      "每条回答附依据来源" in ask_wxml
+      and "依据来源" in read("pages/answer/answer.wxml"))
+check("机构来源叙事（总包之声 2013 公益 + 总包学园，1009 用户令年份修正）",
+      "总包之声" in ask_wxml and "2013 年至今公益运行" in ask_wxml
+      and "总包学园" in ask_wxml and "总包之声" in read("pages/zhiku/zhiku.wxml"))
+check("支付降级文案通用化（报告/导出共用，不再误导为导出专属）",
+      "导出服务开通中" not in read("utils/pay.js"))
+
+check("ask 页 清空键按压反馈", 'hover-class="clear-hover"' in ask_wxml and ".clear-hover" in read("pages/ask/ask.wxss"))
+
+
 check("报告页 详情+试读腿（reportDetail/reportSample）",
       "reportDetail" in rp_js and "reportSample" in rp_js)
 check("报告页 购买走 pay.payReport（vpay 通道）", "payReport" in rp_js)
@@ -548,6 +670,102 @@ check("store report_unlocks（openid×sku 幂等解锁）",
 _trm = os.path.join(ENGINE, "tests", "test_report_mall.py")
 check("test_report_mall.py 在役（商城回归）",
       os.path.exists(_trm) and "test_unlock_paid_forged_and_cross_user" in open(_trm, encoding="utf-8").read())
+
+# ══ v0.9.2（1009 用户令全量审计整改：1 CRITICAL + 5 HIGH + 10 MEDIUM 修复锚）══
+pay_js_v2 = open(pay_js_path, encoding="utf-8").read() if os.path.exists(pay_js_path) else ""
+check("pay.js 回执腿=requestRaw（CRITICAL：api.request 未导出致回执永不送达）",
+      "api.requestRaw(confirmPath.method" in pay_js_v2 and "api.request(" not in pay_js_v2)
+check("pay.js _catchSign 流别兜底文案（报告流不再误显导出已解锁）",
+      "_catchSign(err, '本报告已解锁，可直接阅读')" in pay_js_v2)
+check("ask 隐私门前置于登录（onLoad 经 _gateAndLogin，同意才 silentLogin）",
+      "_gateAndLogin" in ask_js and "this._gateAndLogin();" in ask_js
+      and "qw_privacy_ok" in ask_js)
+check("ask 程序化回填统一截断（_fill 入口 500 上限）",
+      "_fill(prefill)" in ask_js and "Q_MAX" in ask_js)
+check("ask 咨询成功清空输入移入 navigateTo success（导航失败问题不丢）",
+      "回答已生成" in ask_js and "success: () => {" in ask_js)
+check("research 重新加载走 retry 包装（tap 事件对象不再误入 load(done)）",
+      'bindtap="retry"' in rs_wxml and "retry" in rs_js)
+check("research 首屏数据带不闪 0（statsReady 门控）", "statsReady" in rs_js and "statsReady" in rs_wxml)
+check("report 错误态显式 wx:if={!d}（跨节点 wx:else 误配根除）",
+      'wx:if="{{!d}}"' in rp_wxml)
+check("report openPdf success 配对 hideLoading（蒙层不滞留）",
+      read("pages/report/report.js").find("hideLoading", read("pages/report/report.js").find("openDocument")) > 0)
+check("report 支付结果 toast 按结果分图标", "icon: r.ok ? 'success' : 'none'" in read("pages/report/report.js"))
+check("pot 静默刷新失败不吞列表（序号防竞态+有内容只轻提示）",
+      "_seq" in pot_js and "刷新失败" in pot_js)
+check("my 额度票根失败态三分支（quotaError）",
+      "quotaError" in my_js and "quotaError" in my_wxml)
+check("zhiku 复制失败有反馈（fail 回调）",
+      "复制失败" in zk_js)
+check("home 跳板 scene 解码防 URIError（畸形 scene 不死链）",
+      "catch (e)" in home_js and "sc = '';" in home_js)
+# answer 页 v0.9.2 四修（1009 审计 MEDIUM×3 + LOW×3）
+ans_wxml_v2 = read("pages/answer/answer.wxml")
+check("answer 追问轮询退避重排（空 catch 根除，超限收口 error 态）",
+      "_fuFails" in ans_js and "网络波动" in ans_js)
+check("answer 隐藏页停烧（onHide 停定时器+onShow 按需恢复）",
+      "onHide()" in ans_js and "_visible" in ans_js and "_resumeMainPoll" in ans_js)
+check("answer 依据全文改页内可滚弹层（showModal 截断根除）",
+      "citeShow" in ans_js and 'wx:if="{{citeShow}}"' in ans_wxml_v2
+      and "cite-pop-scroll" in read("pages/answer/answer.wxss"))
+check("answer 纠错防重入（criticBusy 闸）", "criticBusy" in ans_js)
+check("answer unlocked 死状态位清零",
+      "unlocked" not in ans_js and "unlocked" not in ans_wxml_v2)
+
+# ══ v0.9.4（1009 用户令：真机实测双 bug 根治 + 发票功能 + 外观沉底）══
+# 修1：免费咨询「点了没反应」根因=disabled 吃掉点击（自定义样式盖掉置灰态）→ 恒可点+必反馈
+check("ask 双按钮撤 disabled（canAsk 弱化只做视觉 btn-dim）",
+      'disabled="{{asking || !canAsk}}"' not in ask_wxml
+      and 'disabled="{{optimizing || !canAsk}}"' not in ask_wxml
+      and "btn-dim" in ask_wxml and ".btn-dim" in ask_wxss)
+check("ask onSubmit 必反馈（空问 toast+聚焦 / 短问提示）",
+      "请先输入您的问题" in ask_js and "问题至少输入 2 个字" in ask_js
+      and "qFocus" in ask_wxml and "askHint" in ask_js)
+check("ask onOptimize 同款必反馈（不再静默 return）",
+      ask_js.find("onOptimize() {") < ask_js.find("请先输入您的问题", ask_js.find("onOptimize() {"))
+      if "onOptimize() {" in ask_js else False)
+# 修2：批量导出/单篇导出支付链假死根治（loading 永转+_payBusy 卡死）
+check("my 批量导出支付链有 .catch 兜底（假死根除）",
+      "支付没成功" in my_js and my_js.find(".catch((err)", my_js.find("payExportAll()")) > 0)
+check("my 取消=轻提示/失败=大声弹窗（1009 真机实测修）",
+      "indexOf('取消')" in my_js and "支付没完成" in my_js)
+check("answer 单篇导出支付链同款修（.catch+弹窗）",
+      "支付没成功" in ans_js and ans_js.find(".catch((err)", ans_js.find("payExport(this.data.id)")) > 0)
+# 发票功能（1009 用户令：满 ¥200 增值税专用发票 + 收票邮箱必填 + 企微推送）
+check("app.json 注册 invoice 页", "pages/invoice/invoice" in app_json["pages"])
+check("invoice 页四件套存在", all(os.path.exists(os.path.join(ROOT, "pages", "invoice", f"invoice.{e}"))
+      for e in ("js", "wxml", "wxss", "json")))
+inv_js = read("pages/invoice/invoice.js")
+inv_wxml = read("pages/invoice/invoice.wxml")
+check("invoice 页 收票邮箱必填（本地预校验+必填星标）",
+      "收票邮箱" in inv_js and "必填" in inv_js and "inv-star" in inv_wxml)
+check("invoice 页 三态（表单/处理中/门槛未到）",
+      "canApply && !pending" in inv_wxml and "GATE" in inv_wxml and "PENDING" in inv_wxml)
+check("api.js 发票双腿（invoiceStatus/invoiceApply）",
+      "invoiceStatus" in api_js and "invoiceApply" in api_js)
+check("my 页发票入口（累计口径+goInvoice）",
+      "发票申请" in my_wxml and "invoiceHint" in my_wxml
+      and "goInvoice" in my_js and "invoiceStatus" in my_js)
+check("legal 隐私收集④发票信息（抬头/税号/邮箱）",
+      "增值税专用发票" in _pv and "收票邮箱" in _pv)
+# 引擎侧发票
+check("引擎 INVOICE_THRESHOLD_FEN=20000（¥200 门槛）",
+      "INVOICE_THRESHOLD_FEN" in _cfg_py and "_env_int(\"INVOICE_THRESHOLD_FEN\", 20000)" in _cfg_py)
+check("引擎 发票双腿端点（status/apply）",
+      '@app.get("/api/invoice/status")' in _app_py and '@app.post("/api/invoice/apply")' in _app_py)
+check("引擎 企微推送 fail-open 双保险（函数内兜底+调用点包裹）",
+      "_invoice_wecom_push" in _app_py and "push crashed at call site" in _app_py)
+check("引擎 企微推送密钥不落仓库（env/密钥文件两形态）",
+      "INVOICE_WECOM_WEBHOOK_FILE" in _cfg_py and "INVOICE_WECOM_WEBHOOK" in _cfg_py)
+check("store invoice_apps 表 + 三函数",
+      "invoice_apps" in _store_py and "def paid_total_fen" in _store_py
+      and "def invoice_apps" in _store_py and "def create_invoice_app" in _store_py)
+check("引擎 apply 校验（税号15-20/邮箱/403门槛/409重复）",
+      "[0-9A-Z]{15,20}" in _app_py and "403" in _app_py and "409" in _app_py)
+_tin = os.path.join(ENGINE, "tests", "test_invoice.py")
+check("test_invoice.py 在役（9 用例含 fail-open）",
+      os.path.exists(_tin) and "test_apply_push_failure_fail_open" in open(_tin, encoding="utf-8").read())
 
 fails = [c for c in checks if not c[1]]
 for name, ok, detail in checks:

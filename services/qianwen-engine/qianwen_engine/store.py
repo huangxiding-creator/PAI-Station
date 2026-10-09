@@ -444,6 +444,35 @@ _SCHEMA: tuple = (
         created_at DOUBLE,
         PRIMARY KEY (aid, n)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"""),
+    # v0.9.4 发票申请（1009 用户令：满 ¥200 可申请增值税专用发票；运营侧企业微信收单）
+    ("""CREATE TABLE IF NOT EXISTS invoice_apps (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        openid TEXT NOT NULL,
+        total_fen INTEGER NOT NULL,
+        title TEXT NOT NULL,
+        tax_no TEXT NOT NULL,
+        addr_phone TEXT DEFAULT '',
+        bank_acct TEXT DEFAULT '',
+        email TEXT NOT NULL,
+        note TEXT DEFAULT '',
+        status TEXT DEFAULT 'pending',
+        created_at TEXT DEFAULT (datetime('now','localtime'))
+    )""",
+     """CREATE TABLE IF NOT EXISTS invoice_apps (
+        id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+        openid VARCHAR(64) NOT NULL,
+        total_fen INT NOT NULL,
+        title VARCHAR(128) NOT NULL,
+        tax_no VARCHAR(32) NOT NULL,
+        addr_phone VARCHAR(255) DEFAULT '',
+        bank_acct VARCHAR(255) DEFAULT '',
+        email VARCHAR(128) NOT NULL,
+        note VARCHAR(512) DEFAULT '',
+        status VARCHAR(16) DEFAULT 'pending',
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (id),
+        KEY idx_invoice_openid (openid)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"""),
 )
 
 # 增列（老库平滑升级：已存在则忽略）——sqlite 原文 / mysql 变体（TEXT 不可带 DEFAULT）
@@ -1261,3 +1290,37 @@ def save_citation_ft(aid: str, n: int, text: str) -> None:
             "INSERT INTO citations_ft(aid, n, text, created_at) VALUES(?,?,?,?)"
             " ON CONFLICT(aid, n) DO UPDATE SET text=excluded.text",
             (aid, n, text, time.time()))
+
+
+# ── v0.9.4 发票（1009 用户令：累计消费满 ¥200 可申请增值税专用发票）──
+def paid_total_fen(openid: str) -> int:
+    """累计已支付金额（分）：pay_order status='paid' 全订单求和（导出+报告）。"""
+    init()
+    with _db() as c:
+        row = c.execute(
+            "SELECT COALESCE(SUM(total_fen),0) AS s FROM pay_order"
+            " WHERE openid=? AND status='paid'", (openid,)).fetchone()
+        return int(row["s"] or 0) if row else 0
+
+
+def invoice_apps(openid: str) -> list:
+    """本人发票申请记录（新→旧）。"""
+    init()
+    with _db() as c:
+        rows = c.execute(
+            "SELECT id,total_fen,title,tax_no,addr_phone,bank_acct,email,note,status,created_at"
+            " FROM invoice_apps WHERE openid=? ORDER BY id DESC", (openid,)).fetchall()
+        return [dict(r) for r in rows]
+
+
+def create_invoice_app(openid: str, total_fen: int, title: str, tax_no: str,
+                       addr_phone: str, bank_acct: str, email: str, note: str) -> bool:
+    """落一条申请单（status='pending'，运营侧开票后人工改状态）。"""
+    init()
+    with _LOCK, _db() as c:
+        cur = c.execute(
+            "INSERT INTO invoice_apps"
+            " (openid,total_fen,title,tax_no,addr_phone,bank_acct,email,note)"
+            " VALUES (?,?,?,?,?,?,?,?)",
+            (openid, total_fen, title, tax_no, addr_phone, bank_acct, email, note))
+        return bool(getattr(cur, "lastrowid", 0) or getattr(cur, "rowcount", 0))

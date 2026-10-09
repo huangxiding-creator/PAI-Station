@@ -12,6 +12,7 @@ REPORT_CONTENT_DIR；PDF 全文在 <dir>/full/<sku>.pdf，试读在 <dir>/sample
 from __future__ import annotations
 
 import json
+import re
 import threading
 from pathlib import Path
 from typing import Optional
@@ -20,6 +21,33 @@ from . import config
 
 _LOCK = threading.Lock()
 _CACHE: dict = {"mtime": 0.0, "reports": [], "by_sku": {}}
+
+# 纯数值徽标（"13.7" / "262"）；"15.6 万字"、"18.3%"、"1600+ 份" 均不匹配。
+_PURE_NUM = re.compile(r"^[0-9]+(?:\.[0-9]+)?$")
+
+
+def _norm_badges(badges) -> list:
+    """徽标 k/v 规范（v0.9.1 语序倒装修复）。
+
+    正本 report.json 与报告平台官网共用：官网模板值先序渲染 <b>{v}</b>{k}
+    （build_site.py「13.7万字成稿」），故 ent/prov/topic/excl 的源数据是
+    v=纯数值、k=单位标签；而小程序目录/详情模板是 {{b.k}} {{b.v}} 标签
+    前序，直接透传会渲染成「万字成稿 13.7 / 章 11」倒装语序。
+
+    规范规则（API 边界统一，源文件不动）：v 为纯数值且 k 非纯数值 →
+    交换为 k=数值 v=单位标签，渲染「13.7 万字成稿」「11 章」；旗舰卷
+    （k=指标名 v=带单位值，如 报告字数/15.6 万字）与非 dict 条目（字符串
+    徽标、缺键）原样透传。幂等：交换后 v 不再是纯数值，不会二次交换。
+    """
+    out = []
+    for b in badges or []:
+        if (isinstance(b, dict) and {"k", "v"} <= b.keys()
+                and _PURE_NUM.match(str(b.get("v") or ""))
+                and not _PURE_NUM.match(str(b.get("k") or ""))):
+            out.append({"k": b["v"], "v": b["k"]})
+        else:
+            out.append(b)
+    return out
 
 
 def _content_dir() -> Path:
@@ -68,7 +96,7 @@ def _item(r: dict) -> dict:
         "price": int(r.get("price") or 0),
         "price_label": r.get("price_label", ""),
         "words_wan": r.get("words_wan"),
-        "badges": r.get("badges") or [],
+        "badges": _norm_badges(r.get("badges")),
         "cat": r.get("cat", ""),
         "cat_name": r.get("cat_name", ""),
         "intro_lede": r.get("intro_lede", ""),

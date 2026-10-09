@@ -3,6 +3,8 @@
 // 语义：默认按星期轮换；storage('theme_pref') 有值则锁定该主题（''=跟随星期）。
 // 用法：页面 onShow 调 theme.apply(this)；wxml 首节点 <page-meta page-style="{{themeStyle}}" />。
 // 注意：page-style 内联变量会同时压过 app.wxss 的亮色默认与暗色 media 块——主题即最终色。
+// v0.9.2 深色感知（审计修复）：系统深色时统一注入 obsidian 变量（亮纸面+暖曜石蓝图，全站一致，
+// 消灭「亮纸面+各页深色硬编码混排」）；pref 照常存储，切回亮色即恢复周轮换/锁定。
 
 const PREF_KEY = 'theme_pref';
 
@@ -35,6 +37,38 @@ function current() {
   return THEMES.navy;
 }
 
+// 系统主题探测：优先 getAppBaseInfo，回退 getSystemInfoSync，再回退 light
+function systemTheme() {
+  try {
+    if (wx.getAppBaseInfo && wx.getAppBaseInfo().theme) return wx.getAppBaseInfo().theme;
+  } catch (e) { /* 老客户端无此 API */ }
+  try {
+    const t = wx.getSystemInfoSync().theme;
+    if (t) return t;
+  } catch (e) { /* 探测失败按亮色处理 */ }
+  return 'light';
+}
+
+// 实际注入主题：系统深色一律曜石（pref 照常存储，切回亮色即恢复）
+function effective() {
+  return systemTheme() === 'dark' ? THEMES.obsidian : current();
+}
+
+// 系统深浅切换热跟随：模块级一次订阅（防重复），对页面栈各页重新注入
+let themeWatchBound = false;
+function bindThemeChange() {
+  if (themeWatchBound || !wx.onThemeChange) return;
+  themeWatchBound = true;
+  try {
+    wx.onThemeChange(function () {
+      try {
+        const pages = getCurrentPages() || [];
+        for (let i = 0; i < pages.length; i++) apply(pages[i]);
+      } catch (e) { /* 页面栈异常静默：下次 onShow 自然刷新 */ }
+    });
+  } catch (e) { /* 订阅失败静默 */ }
+}
+
 function styleStr(t) {
   return [
     /* 蓝图层 */
@@ -62,13 +96,11 @@ function styleStr(t) {
   ].join(';');
 }
 
-// 页面接入：onShow 里调用（含导航栏随主题染色）
+// 页面接入：onShow 里调用（全 9 页 navigationStyle=custom，无需再染原生导航栏）
 function apply(page) {
-  const t = current();
+  const t = effective();
   page.setData({ themeStyle: styleStr(t), themeKey: t.name ? keyOf(t) : 'navy', themeName: t.name });
-  if (wx.setNavigationBarColor) {
-    wx.setNavigationBarColor({ frontColor: '#ffffff', backgroundColor: t.navy1, fail: function () {} });
-  }
+  bindThemeChange();
   const bar = page.getTabBar && page.getTabBar();
   if (bar && bar.applyTheme) bar.applyTheme();
 }
@@ -93,4 +125,4 @@ function list() {
   });
 }
 
-module.exports = { apply: apply, current: current, list: list, setPref: setPref, styleStr: styleStr };
+module.exports = { apply: apply, current: current, effective: effective, list: list, setPref: setPref, styleStr: styleStr };

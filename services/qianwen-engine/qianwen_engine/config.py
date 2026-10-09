@@ -36,6 +36,11 @@ SECRETS_DIR = Path(os.environ.get("SECRETS_DIR") or (REPO / "data" / "secrets"))
 DATA_DIR = Path(os.environ.get("DATA_DIR") or (REPO / "data" / "qianwen"))
 DB_PATH = DATA_DIR / "db.sqlite"
 
+# ── v0.9.4 发票（1009 用户令：累计消费满 ¥200 可申请增值税专用发票；申请即企业微信推送运营）──
+INVOICE_THRESHOLD_FEN = _env_int("INVOICE_THRESHOLD_FEN", 20000)            # ¥200（分）
+INVOICE_WECOM_WEBHOOK = (os.environ.get("INVOICE_WECOM_WEBHOOK") or "").strip()
+INVOICE_WECOM_WEBHOOK_FILE = SECRETS_DIR / "invoice_wecom_webhook.txt"      # 兜底：密钥文件形态（ECS 挂载）
+
 # 秘塔总包智库（网页会话线：cookie + meta-token，烧网页积分池）
 KB_SESSION_FILE = SECRETS_DIR / "metaso_kb_session.json"
 KB_TOPIC_ID = "8673582927558737920"                  # 工程行业大脑（总包智库知识库）

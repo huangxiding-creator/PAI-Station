@@ -114,7 +114,9 @@ button { padding-left: 0; padding-right: 0; }
 
 .muted { color: var(--muted); font-size: 24rpx; }
 
-.sec-title { font-weight: 800; font-size: 30rpx; margin-bottom: 20rpx; color: var(--ink); letter-spacing: 1rpx; }
+/* v0.9.2 死类清理：.sec-title / .fade-in 全项目 wxml 零引用已删；
+   @keyframes fadeIn 保留——zhiku.wxss(.zk-groups) 与 answer.wxss(.proc-item) 的
+   animation 经 app.wxss 全局级联消费它，删了会砍断在用入场动画。 */
 
 /* ── 入场动效：图纸渐次铺开 ── */
 .rise { animation: rise 0.42s cubic-bezier(0.22, 0.9, 0.3, 1) both; }
@@ -122,7 +124,6 @@ button { padding-left: 0; padding-right: 0; }
   from { opacity: 0; transform: translateY(16rpx); }
   to { opacity: 1; transform: none; }
 }
-.fade-in { animation: fadeIn 0.32s ease both; }
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10rpx); }
   to { opacity: 1; transform: none; }

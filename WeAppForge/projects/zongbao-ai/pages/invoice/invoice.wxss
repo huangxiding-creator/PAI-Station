@@ -1,0 +1,75 @@
+/* 发票申请页 — v0.9.4（1009 用户令：满 ¥200 申请增值税专用发票；收票邮箱必填） */
+.page { padding-bottom: 40rpx; }
+
+/* 页头（蓝图制图风，与各页 head 同语言） */
+.head {
+  color: var(--white-ink, #f4f7fb);
+  background: linear-gradient(160deg, var(--deep, #081a36), var(--deep-2, #0d2b52));
+  padding-bottom: 30rpx;
+}
+.head-nav {
+  display: flex; align-items: center;
+  padding: 0 30rpx; position: relative;
+}
+.head-back {
+  width: 64rpx; height: 64rpx;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 52rpx; font-weight: 300;
+  border: 2rpx solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+}
+.head-title {
+  position: absolute; left: 0; right: 0;
+  text-align: center;
+  font-size: 30rpx; font-weight: 700; letter-spacing: 2rpx;
+  pointer-events: none;
+}
+
+/* 累计消费带 */
+.inv-total { display: flex; flex-direction: column; padding: 6rpx 0 2rpx; }
+.inv-total-n { font-size: 64rpx; font-weight: 800; line-height: 1.2; }
+.inv-total-l { font-size: 22rpx; }
+.inv-rule { font-size: 22rpx; line-height: 1.7; margin-top: 10rpx; }
+
+/* 处理中状态卡 */
+.inv-pend { margin-top: 4rpx; }
+.inv-row { display: flex; padding: 8rpx 0; font-size: 24rpx; }
+.inv-k { width: 150rpx; flex-shrink: 0; }
+.inv-v { flex: 1; word-break: break-all; }
+.inv-pend-note { font-size: 22rpx; line-height: 1.7; margin-top: 12rpx; }
+
+/* 表单 */
+.inv-f { margin-top: 6rpx; }
+.inv-fi { margin-top: 22rpx; }
+.inv-fl { display: block; font-size: 24rpx; font-weight: 600; margin-bottom: 10rpx; }
+.inv-star { color: #e34d2c; margin-left: 4rpx; }
+.inv-in {
+  width: 100%; box-sizing: border-box;
+  padding: 18rpx 22rpx;
+  font-size: 26rpx;
+  background: rgba(127, 152, 184, 0.08);
+  border: 2rpx solid rgba(127, 152, 184, 0.35);
+  border-radius: 10rpx;
+}
+.inv-ph { color: var(--muted-ink, #5a6a7e); }
+.inv-submit { margin-top: 36rpx; width: 100%; }
+
+/* 门槛未到引导卡 */
+.inv-gate { padding: 20rpx 0 10rpx; text-align: center; }
+.inv-gate .muted { margin-top: 10rpx; font-size: 23rpx; line-height: 1.8; }
+.blank-frame {
+  width: 120rpx; height: 120rpx; margin: 0 auto;
+  border: 2rpx dashed rgba(127, 152, 184, 0.5);
+  border-radius: 12rpx; position: relative;
+}
+.blank-cross {
+  position: absolute; left: 50%; top: 50%;
+  width: 56rpx; height: 2rpx; margin: -1rpx 0 0 -28rpx;
+  background: rgba(127, 152, 184, 0.5);
+}
+.blank-cross::after {
+  content: ''; position: absolute; left: 50%; top: 50%;
+  width: 2rpx; height: 56rpx; margin: -28rpx 0 0 -1rpx;
+  background: rgba(127, 152, 184, 0.5);
+}
+.empty-text { margin-top: 18rpx; font-size: 27rpx; font-weight: 700; }

@@ -21,13 +21,14 @@ Component({
   },
   methods: {
     applyTheme() {
-      this.setData({ themeStyle: theme.styleStr(theme.current()) });
+      // v0.9.2 深色感知：与 theme.apply 同源取 effective()，系统深色时与页面同走 obsidian
+      this.setData({ themeStyle: theme.styleStr(theme.effective()) });
     },
     switchTo(e) {
       const i = Number(e.currentTarget.dataset.i || 0);
       const item = this.data.list[i];
       if (!item) return;
-      wx.switchTab({ url: item.path });
+      wx.switchTab({ url: item.path, fail() { /* 防 fail 未处理 rejection */ } });
     }
   }
 });

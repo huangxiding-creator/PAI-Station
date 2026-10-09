@@ -152,12 +152,7 @@
 
 .tip-line { text-align: center; padding: 10rpx 24rpx 0; letter-spacing: 1rpx; font-size: 21rpx; }
 
-/* ══ v0.7.0 深色模式收口 ══ */
-@media (prefers-color-scheme: dark) {
-  .sk { background: linear-gradient(90deg, #232f47 25%, #2c3a55 45%, #232f47 65%); background-size: 400% 100%; }
-  .pot-no { color: rgba(159, 180, 214, 0.5); border-color: rgba(159, 180, 214, 0.25); }
-  .pot-empty-glyph { border-color: rgba(159, 180, 214, 0.4); color: #9fb4d6; }
-}
+/* v0.7.0 深色硬编码块已删（v0.9.2 审计修复）：系统深色由 theme.apply 统一注入 obsidian 变量接管 */
 
 /* ══ v0.7.4 提审合规：UGC 举报入口 + AI 生成标识 ══ */
 .pot-report {

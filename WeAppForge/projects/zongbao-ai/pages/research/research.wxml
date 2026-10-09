@@ -11,6 +11,15 @@
       <view class="hero-title">研究</view>
       <view class="hero-sub">研究报告商城——EPC 总包领域深度研究报告，按份购买，一次解锁永久阅读</view>
 
+      <!-- 变现数据带：在售/起价/已解锁（口径=目录 API 实数 + 实价 ¥498 起，可证成） -->
+      <view class="rs-hero-stats">
+        <view class="rs-hs"><text class="rs-hs-n mono">{{statsReady ? stats.sellable : '—'}}</text><text class="rs-hs-l">份在售</text></view>
+        <view class="rs-hs-div"></view>
+        <view class="rs-hs"><text class="rs-hs-n mono">¥498</text><text class="rs-hs-l">起</text></view>
+        <view class="rs-hs-div"></view>
+        <view class="rs-hs"><text class="rs-hs-n mono">{{statsReady ? stats.mine : '—'}}</text><text class="rs-hs-l">已解锁</text></view>
+      </view>
+
       <view class="hero-dwg mono">DWG NO. RS-01 · SCALE 1:1<view class="dim-rule"></view><text class="dim-cap">{{stats.sellable}} ON SALE</text></view>
     </view>
   </view>
@@ -38,7 +47,7 @@
         <view class="rs-sub muted">{{item.subtitle}}</view>
         <view class="rs-item-bot">
           <view class="rs-badges">
-            <text class="rs-badge" wx:for="{{item.badges}}" wx:for-item="b" wx:key="*this">{{b}}</text>
+            <text class="rs-badge" wx:if="{{index < 3}}" wx:for="{{item.badges}}" wx:for-item="b" wx:key="k">{{b.k}}{{b.v ? ' ' + b.v : ''}}</text>
           </view>
           <view class="rs-words mono" wx:if="{{item.words_wan}}">{{item.words_wan}}万字</view>
         </view>
@@ -56,11 +65,21 @@
   <view class="card ticks" wx:if="{{errMsg}}">
     <view class="rs-empty">
       <view class="rs-empty-t">{{errMsg}}</view>
-      <button class="btn-primary rs-retry" hover-class="btn-hover" bindtap="load">重新加载</button>
+      <button class="btn-primary rs-retry" hover-class="btn-hover" bindtap="retry">重新加载</button>
     </view>
   </view>
+  <!-- 载入骨架：与目录卡片同构的微光占位（v0.9.1 逐页优化） -->
   <view class="card ticks" wx:if="{{loading && !shown.length}}">
-    <view class="rs-empty"><view class="muted">目录加载中…</view></view>
+    <view class="rs-skel-item" wx:for="{{[0, 1, 2]}}" wx:key="*this">
+      <view class="rs-skel-l w30"></view>
+      <view class="rs-skel-l w90"></view>
+      <view class="rs-skel-l w60"></view>
+      <view class="rs-skel-chips">
+        <view class="rs-skel-chip"></view>
+        <view class="rs-skel-chip w2"></view>
+        <view class="rs-skel-chip w3"></view>
+      </view>
+    </view>
   </view>
 
   <!-- 合规注脚：AI 生成内容标识（可证成口径） -->

@@ -142,3 +142,20 @@ CREATE TABLE IF NOT EXISTS criticisms (
     refund_tier TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- v0.9.4 发票申请表（1009 用户令：满 ¥200 增值税专用发票；与 store.py _SCHEMA 同步维护）
+CREATE TABLE IF NOT EXISTS invoice_apps (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    openid VARCHAR(64) NOT NULL,
+    total_fen INT NOT NULL,
+    title VARCHAR(128) NOT NULL,
+    tax_no VARCHAR(32) NOT NULL,
+    addr_phone VARCHAR(255) DEFAULT '',
+    bank_acct VARCHAR(255) DEFAULT '',
+    email VARCHAR(128) NOT NULL,
+    note VARCHAR(512) DEFAULT '',
+    status VARCHAR(16) DEFAULT 'pending',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    KEY idx_invoice_openid (openid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

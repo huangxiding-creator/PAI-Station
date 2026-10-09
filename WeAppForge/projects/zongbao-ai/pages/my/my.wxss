@@ -145,31 +145,7 @@
 .ea-sub { font-size: 21rpx; color: var(--ink-dim); margin-top: 4rpx; letter-spacing: 1rpx; }
 .ea-arrow { flex-shrink: 0; color: var(--accent); font-size: 40rpx; font-weight: 700; }
 
-/* ══ v0.7.0 深色模式收口 ══ */
-@media (prefers-color-scheme: dark) {
-  .q-num { color: #9fb4d6; }
-  .hist-no { color: rgba(159, 180, 214, 0.5); border-color: rgba(159, 180, 214, 0.25); }
-  .hist-badge { color: #ffb877; background: #3a2c14; border-color: #8a5f1e; }
-  .hist-liked { color: #ffb877; background: #3a2c14; border-color: #8a5f1e; }
-  .hist-pending { color: #6ea8ff; background: #1a2740; border-color: #33415e; }
-  .hist-err { color: #e08a7a; background: #3a1e1a; border-color: #6e3a30; }
-  .blank-frame {
-    border-color: rgba(159, 180, 214, 0.4);
-    background:
-      linear-gradient(rgba(101, 160, 255, 0.07) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(101, 160, 255, 0.07) 1px, transparent 1px);
-    background-size: 30rpx 30rpx;
-  }
-  .blank-cross { background:
-    linear-gradient(rgba(159, 180, 214, 0.4), rgba(159, 180, 214, 0.4)) center/100% 2rpx no-repeat,
-    linear-gradient(rgba(159, 180, 214, 0.4), rgba(159, 180, 214, 0.4)) center/2rpx 100% no-repeat;
-  }
-  .blank-mark { color: rgba(159, 180, 214, 0.45); }
-  .export-all-btn {
-    background: linear-gradient(135deg, #12274a 0%, #0b1830 55%, #060d1c 100%);
-    box-shadow: 0 12rpx 28rpx rgba(0, 0, 0, 0.45), inset 0 2rpx 0 rgba(101, 160, 255, 0.18);
-  }
-}
+/* v0.7.0 深色硬编码块已删（v0.9.2 审计修复）：系统深色由 theme.apply 统一注入 obsidian 变量接管 */
 
 /* ══ v0.7.3 外观画廊：周换装主题选择（用户令：自动轮换 + 可锁定偏好）══ */
 .ap-hint { font-size: 21rpx; letter-spacing: 1rpx; }
@@ -233,3 +209,31 @@
   text-decoration: underline;
 }
 .legal-hover { opacity: 0.6; }
+
+/* ══ v0.9.1 逐页优化：咨询记录载入骨架（与记录行同构微光占位）══ */
+.my-skel-row {
+  display: flex;
+  gap: 18rpx;
+  align-items: flex-start;
+  padding: 20rpx 0;
+}
+.my-skel-row + .my-skel-row { border-top: 2rpx dashed var(--line); }
+.my-skel-no {
+  width: 52rpx; height: 52rpx; border-radius: 8rpx; flex-shrink: 0;
+  background: linear-gradient(90deg, var(--t-paper-cool, #eee) 25%, var(--t-paper-hi, #f5f5f5) 50%, var(--t-paper-cool, #eee) 75%);
+  background-size: 200% 100%;
+  animation: my-skel-wave 1.4s ease infinite;
+}
+.my-skel-main { flex: 1; }
+.my-skel-l {
+  height: 24rpx; border-radius: 6rpx; margin-bottom: 14rpx;
+  background: linear-gradient(90deg, var(--t-paper-cool, #eee) 25%, var(--t-paper-hi, #f5f5f5) 50%, var(--t-paper-cool, #eee) 75%);
+  background-size: 200% 100%;
+  animation: my-skel-wave 1.4s ease infinite;
+}
+.my-skel-l.w90 { width: 90%; }
+.my-skel-l.w45 { width: 45%; }
+@keyframes my-skel-wave {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

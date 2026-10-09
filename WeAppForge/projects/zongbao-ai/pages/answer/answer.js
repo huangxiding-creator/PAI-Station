@@ -21,14 +21,18 @@ Page({
     elapsed: 0,
     progress: [],
     question: '',
-    unlocked: true,
     blocks: [],           // Markdown 结构化块（渲染用）
     citations: [],
+    citeShow: false,      // v0.7.8 依据全文弹层开关（原生 modal 不可滚 → 页内自绘可滚动）
+    citeTitle: '',
+    citeText: '',
+    citeBtn: '知道了',
     fullChars: 0,
     views: 0,             // v0.7.3 观看次数（点开全文即 +1，同人重复看持续累计）
     shares: 0,            // v0.7.3 转发次数（分享/海报传播即 +1）
     liked: false,
     likeBusy: false,
+    criticBusy: false,    // v0.7.8 纠错提交中（慢网防连开连发）
     streamChars: 0,       // v0.7.0 流式已生成字数（打字机进度）
     partialBlocks: [],    // v0.7.0 流式增量正文块（生成中先睹为快）
     shared: false,        // v0.7.0 已共享进锅圈
@@ -59,6 +63,8 @@ Page({
     this._pollTimer = null;
     this._tickTimer = null;
     this._fuTimer = null;
+    this._fuFails = 0;    // v0.7.8 追问轮询连续失败计数（退避重排用，成功即清零）
+    this._visible = true; // v0.7.8 页面可见位：onHide 置 false，隐藏态不点火/不空烧定时器
     this._rawText = '';   // 原文留存：复制/导出用（不进 data，避免超长渲染负担）
     this.load();
   },
@@ -69,8 +75,27 @@ Page({
   },
 
   // v0.7.3 周换装：每次进入刷新主题（含导航栏染色）
+  // v0.7.8 隐藏期间轮询已停（onHide）：回前台按记录恢复，隐藏页不再空烧
   onShow() {
+    this._visible = true;
     theme.apply(this);
+    if (this._resumeMainPoll) {
+      this._resumeMainPoll = false;
+      this.load();   // pending 分支自带重建秒表 + 2s 轮询；已 ready 则直接渲染
+    }
+    if (this._resumeFuPoll) {
+      this._resumeFuPoll = false;
+      this._fuFails = 0;
+      this._pollFollowups();
+    }
+  },
+
+  // v0.7.8 切 tab/切后台：记录轮询状态后停表停轮询（正文生成中 + 追问 pending 都不空烧）
+  onHide() {
+    this._visible = false;
+    this._resumeMainPoll = !!this.data.polling;
+    this._resumeFuPoll = (this.data.fuList || []).some((x) => x.status === 'pending');
+    this._stopTimers();
   },
 
   // v0.7.3 授勋动画（用户令）：得次瞬间全屏荣誉时刻——徽章弹出+光芒旋转+火花散射+重震
@@ -118,6 +143,11 @@ Page({
             partialBlocks: (d.partial && d.partial.length >= 30)
               ? md2blocks.md2blocks(d.partial) : []
           });
+          if (!this._visible) {
+            // 页面已隐藏（切 tab/后台）：不点火定时器，标记待恢复，onShow 再续跑
+            this._resumeMainPoll = true;
+            return;
+          }
           this._startTick();
           this._pollTimer = setTimeout(() => this.load(), 2000);
           return;
@@ -132,7 +162,6 @@ Page({
         this.setData({
           loading: false, polling: false,
           question: d.question,
-          unlocked: true,
           exportPaid: !!d.export_paid,   // v0.8.0 详情腿下发
           blocks: md2blocks.md2blocks(full),
           citations: d.citations || [],
@@ -191,7 +220,9 @@ Page({
   },
 
   // 用户令 v0.5.0：纠错须写具体意见才奖励 +1 次
+  // v0.7.8 确认提交后置 criticBusy：完成/失败复位，慢网防连开连发
   onCriticize() {
+    if (this.data.criticBusy) return;
     wx.showModal({
       title: '指出问题',
       editable: true,
@@ -203,15 +234,20 @@ Page({
           wx.showToast({ title: '写点具体意见才能领次数哦', icon: 'none', duration: 2000 });
           return;
         }
+        this.setData({ criticBusy: true });
         api.criticize(this.data.id, text.slice(0, 200))
           .then((d) => {
+            this.setData({ criticBusy: false });
             if (d.granted) {
               this._reward('具体纠错是最珍贵的同行礼遇');
             } else {
               wx.showToast({ title: '已收到，人工复核', icon: 'none' });
             }
           })
-          .catch((err) => wx.showToast({ title: api.errMsg(err, '提交失败'), icon: 'none' }));
+          .catch((err) => {
+            this.setData({ criticBusy: false });
+            wx.showToast({ title: api.errMsg(err, '提交失败'), icon: 'none' });
+          });
       }
     });
   },
@@ -249,16 +285,39 @@ Page({
           .then((res) => {
             wx.hideLoading();
             this._payBusy = false;
-            wx.showToast({ title: res.message, icon: 'none', duration: 2000 });
             if (res.reconciling) {
               // 已扣款、核验腿抖断：不谎报完成，重取详情（服务端查单补标记后自然解锁）
+              wx.showToast({ title: res.message, icon: 'none', duration: 2500 });
               this.load();
               return;
             }
             if (res.ok) {
               this.setData({ exportPaid: true });
               this._exportSheet();
+              return;
             }
+            // v0.9.4：取消=轻提示；其余失败大声弹窗（同 my 批量导出修法）
+            if (String(res.message || '').indexOf('取消') >= 0) {
+              wx.showToast({ title: res.message, icon: 'none' });
+            } else {
+              wx.showModal({
+                title: '支付没完成',
+                content: String(res.message || '请稍后重试') + '。可稍后再试；已扣款的金额不会丢（重新进入会自动对账解锁）。',
+                showCancel: false,
+                confirmText: '知道了'
+              });
+            }
+          })
+          .catch((err) => {
+            // v0.9.4：兜底防假死（同 my 页修法——loading 永转+按钮废死的根）
+            wx.hideLoading();
+            this._payBusy = false;
+            wx.showModal({
+              title: '支付没成功',
+              content: api.errMsg(err, '网络波动，请稍后重试'),
+              showCancel: false,
+              confirmText: '知道了'
+            });
           });
       }
     });
@@ -274,7 +333,8 @@ Page({
 
   _exportAs(fmt) {
     const fname = '总包AI顾问-咨询问答-' + String(this.data.id).slice(0, 6) + '.' + fmt;
-    const filePath = wx.env.USER_DATA_PATH + '/export-' + Date.now() + '.' + fmt;
+    // v0.7.8 固定文件名（按答案+格式，writeFile 覆写）：重复导出不堆积（对齐海报腿做法）
+    const filePath = wx.env.USER_DATA_PATH + '/export-' + this.data.id + '.' + fmt;
     const fs = wx.getFileSystemManager();
     const writeAndOffer = (data, encoding) => {
       fs.writeFile({
@@ -351,7 +411,7 @@ Page({
       });
       lines.push('');
     }
-    lines.push('---', '', '*由 总包AI顾问（AI 检索行业知识库生成）生成 · 仅供参考，不构成正式法律意见*');
+    lines.push('---', '', '*由 总包AI顾问（AI 检索总包智库生成）生成 · 仅供参考，不构成正式法律意见*');
     return lines.join('\n');
   },
 
@@ -396,7 +456,8 @@ Page({
     });
   },
 
-  // ══ v0.7.0 依据来源全文展开（用户令 0930 第 11 条）：点条目弹完整条文 ══
+  // ══ v0.7.0 依据来源全文展开（用户令 0930 第 11 条）：点条目展开完整条文 ══
+  // v0.7.8 法规条文动辄上千字，原生 modal 不可滚被截断（合规敏感）→ 改页内自绘可滚动弹层
   onCiteTap(e) {
     const n = e.currentTarget.dataset.n;
     const c = (this.data.citations || []).find((x) => x.n === n);
@@ -405,17 +466,21 @@ Page({
     api.citationFulltext(this.data.id, n)
       .then((d) => {
         wx.hideLoading();
-        wx.showModal({
-          title: '依据 [' + n + '] ' + (c.source || '').slice(0, 12),
-          content: ((d && d.text) || '暂无展开内容') + '\n\n（以上为 AI 整理的依据解读，以官方发布文本为准）',
-          showCancel: false,
-          confirmText: '知道了'
+        this.setData({
+          citeShow: true,
+          citeTitle: '依据 [' + n + '] ' + (c.source || '').slice(0, 12),
+          citeText: ((d && d.text) || '暂无展开内容') + '\n\n（以上为 AI 整理的依据解读，以官方发布文本为准）'
         });
       })
       .catch((err) => {
         wx.hideLoading();
         wx.showToast({ title: api.errMsg(err, '展开失败'), icon: 'none', duration: 2200 });
       });
+  },
+
+  // 依据弹层关闭：清长文省内存（按钮文案 citeBtn 常驻不清）
+  onCiteClose() {
+    this.setData({ citeShow: false, citeTitle: '', citeText: '' });
   },
 
   // ══ v0.6.0 免费延伸层（100× 弧线）══
@@ -437,17 +502,39 @@ Page({
       .catch(() => { /* 静默：追问区可后补 */ });
   },
 
+  // 追问轮询：2s 一拍；网络抖断不再静默放弃——退避 5s 重排，最多 5 次，
+  // 连续超限把 pending 气泡收口为 error 态（复用 fu-a-error 渲染；重进本页即重拉重试）
   _pollFollowups() {
     if (this._fuTimer) return;
+    if (!this._visible) { this._resumeFuPoll = true; return; }   // 隐藏态不空烧：标记待恢复
     this._fuTimer = setTimeout(() => {
       this._fuTimer = null;
       api.followups(this.data.id)
         .then((d) => {
+          this._fuFails = 0;
           const items = (d && d.items) || [];
           this.setData({ fuList: items });
           if (items.some((x) => x.status === 'pending')) this._pollFollowups();
         })
-        .catch(() => { /* 轮询失败：不打扰，下次交互自然恢复 */ });
+        .catch(() => {
+          this._fuFails = (this._fuFails || 0) + 1;
+          if (!this._visible) { this._resumeFuPoll = true; return; }   // 请求期间被切走：不重排，标记待恢复
+          if (this._fuFails < 5) {
+            // 退避重排：失败后 5s 再轮询（_stopTimers 可清理，onUnload/onHide 不漏定时器）
+            this._fuTimer = setTimeout(() => {
+              this._fuTimer = null;
+              this._pollFollowups();
+            }, 5000);
+            return;
+          }
+          // 连续 5 次失败：收口为 error 态，绝不让气泡永久停在「追问回答生成中…」
+          this._fuFails = 0;
+          this.setData({
+            fuList: this.data.fuList.map((x) => (x.status === 'pending'
+              ? { ...x, status: 'error', error_text: '网络波动，稍后重进本页自动重试' }
+              : x))
+          });
+        });
     }, 2000);
   },
 

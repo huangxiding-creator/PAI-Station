@@ -72,13 +72,14 @@
         </view>
         <text class="pot-meta mono">观看 {{item.views}}</text>
         <text class="pot-meta mono">转发 {{item.shares}}</text>
-        <view class="pot-report" catchtap="onReport" data-id="{{item.id}}" data-q="{{item.question}}">举报</view>
+        <view class="pot-report" catchtap="onReport" data-id="{{item.id}}">举报</view>
         <text class="pot-more">看全文 ›</text>
       </view>
     </view>
 
     <view class="muted tip-line">点开任意热点 · 「有用 / 纠错」同样各 +1 次咨询机会</view>
-    <view class="muted pot-ai-note">本展区问答内容由 AI 生成 · 仅供参考 · 发现不当内容可点「举报」</view>
+    <!-- v0.9.1 一页一处显眼提示（1008 用户令）：AI 生成标识仅保留页首 ai-flag，此处只留举报指引 -->
+    <view class="muted pot-ai-note">发现不当内容可点「举报」</view>
   </block>
 
   <view class="safe-bottom"></view>

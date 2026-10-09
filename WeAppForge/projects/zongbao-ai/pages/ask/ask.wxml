@@ -14,12 +14,12 @@
         <text class="hero-ai-badge">AI生成</text>
         <text class="hero-ai-text">本服务内容由人工智能（AI）生成 · 仅供参考</text>
       </view>
-      <view class="hero-sub">AI 检索行业知识库生成的专业参考 · 总包人的随身工程顾问 / 招投标 / 签约 / 风险 / 造价争议 / 审计 / 合同实务</view>
+      <view class="hero-sub">专业参考源自「总包智库」· 总包人的随身工程顾问 / 招投标 / 签约 / 风险 / 造价争议 / 审计 / 合同实务</view>
 
       <!-- 额度票根 -->
       <view class="quota-ticket" wx:if="{{quota}}">
         <view class="qt-left">
-          <view class="qt-label">今日可咨询</view>
+          <view class="qt-label">今日免费咨询</view>
           <view class="qt-num mono">{{quota.total_left}}</view>
         </view>
         <view class="qt-perf"></view>
@@ -30,7 +30,7 @@
         </view>
       </view>
       <view class="quota-ticket quota-empty" wx:else>
-        <view class="qt-label">今日可咨询</view>
+        <view class="qt-label">今日免费咨询</view>
         <view class="qt-num mono">–</view>
       </view>
 
@@ -43,11 +43,7 @@
     <text>⚠ 无法连接服务 · 点击重试，请检查手机网络是否可用</text>
   </view>
 
-  <!-- v0.7.5 深度合成合规：AI 生成内容显著标识（首屏常驻，公告 000ce4a4 要求） -->
-  <view class="ai-flag rise" style="animation-delay: 45ms">
-    <view class="ai-flag-badge">AI</view>
-    <view class="ai-flag-text">本服务内容由人工智能（AI）生成，仅供参考，不构成专业意见</view>
-  </view>
+  <!-- v0.7.5 深度合成合规：AI 标识已并入上方 hero 徽章（一页一处显眼提示，1008 用户令） -->
 
   <!-- ══ 咨询问题单：白图纸面（先写问题） ══ -->
   <view class="card ticks ask-card rise" style="animation-delay: 60ms">
@@ -62,29 +58,44 @@
       placeholder-class="ask-ph"
       maxlength="500"
       bindinput="onInput"
+      focus="{{qFocus}}"
       auto-height
       show-confirm-bar="{{false}}"
     ></textarea>
     <view class="ask-foot">
       <text class="char-count mono">{{charCount}}/500</text>
-      <text class="clear-btn" wx:if="{{charCount > 0}}" bindtap="onClear">清空</text>
+      <text class="clear-btn" wx:if="{{charCount > 0}}" bindtap="onClear" hover-class="clear-hover">清空</text>
     </view>
   </view>
 
-  <!-- ══ 双按钮排：AI优化提问（左）+ 立即咨询（右）——用户令 v0.5.0 ══ -->
+  <!-- ══ 智库底座信任带（可证成口径：与智库页库存盘点同数；1008 用户令：突出总包智库+强信任）══ -->
+  <view class="kb-strip rise" style="animation-delay: 75ms">
+    <view class="kb-cell"><text class="kb-n mono">1855</text><text class="kb-l">知识条目</text></view>
+    <view class="kb-div"></view>
+    <view class="kb-cell"><text class="kb-n mono">847</text><text class="kb-l">电子书</text></view>
+    <view class="kb-div"></view>
+    <view class="kb-cell"><text class="kb-n mono">906</text><text class="kb-l">视频·直播</text></view>
+    <view class="kb-div"></view>
+    <view class="kb-cell"><text class="kb-n mono">620</text><text class="kb-l">图文专栏</text></view>
+  </view>
+  <view class="kb-cred muted">智库沉淀自总包之声（2013 年至今公益运行）与总包学园 · 每条回答附依据来源，点开可查证</view>
+
+  <!-- ══ 双按钮排：AI优化提问（左）+ 免费咨询（右，1009 用户令突出免费）══ -->
+  <!-- v0.9.4（1009 真机实测修复）：撤 disabled——自定义样式盖掉置灰态，"看着能点点了没反应"；
+       改为恒可点+必反馈（空问 toast+聚焦输入框），弱化态只做视觉（btn-dim）不打断点击 -->
   <view class="btn-row rise" style="animation-delay: 90ms">
     <button
-      class="btn-ghost opt-btn"
-      disabled="{{optimizing || !canAsk}}"
+      class="btn-ghost opt-btn {{canAsk ? '' : 'btn-dim'}}"
+      disabled="{{optimizing}}"
       hover-class="btn-hover"
       bindtap="onOptimize"
     >{{optimizing ? 'AI 优化中…' : 'AI优化提问'}}</button>
     <button
-      class="btn-primary ask-btn"
-      disabled="{{asking || !canAsk}}"
+      class="btn-primary ask-btn {{canAsk ? '' : 'btn-dim'}}"
+      disabled="{{asking}}"
       hover-class="btn-hover"
       bindtap="onSubmit"
-    >{{asking ? '智库检索中…' : '立即咨询'}}</button>
+    >{{asking ? '智库检索中…' : '免费咨询'}}</button>
   </view>
   <view class="opt-hint muted" wx:if="{{!optimizing}}">AI优化提问：把您的问题改写成更深入、更究竟的递进式三小问</view>
 

@@ -5,9 +5,19 @@ const api = require('../../utils/api');
 const theme = require('../../utils/theme');
 const pay = require('../../utils/pay');
 
+// v0.9.1 修复：navigateTo 防双击——模块级 300ms 节流，连点只放行一次（防 answer/privacy 重复压栈）
+let _navLastAt = 0;
+function navToThrottled(url) {
+  const now = Date.now();
+  if (now - _navLastAt < 300) return;
+  _navLastAt = now;
+  wx.navigateTo({ url });
+}
+
 Page({
   data: {
     quota: null,
+    quotaError: false,  // v0.9.1 修复：history 失败且无缓存时额度票根显错误态（不再永远「加载中」）
     items: [],          // {id, question, preview, liked, unlocked, created_at, timeText, lockedText}
     loading: true,
     loadError: '',
@@ -89,12 +99,19 @@ Page({
           exportUnpaidAll: (typeof d.export_unpaid_all === 'number')
             ? d.export_unpaid_all : -1,
           loading: false,
-          loadError: ''
+          loadError: '',
+          quotaError: false
         });
         if (d.quota) wx.setStorageSync('qw_quota', d.quota);
       })
       .catch((err) => {
-        this.setData({ loading: false, loadError: api.errMsg(err, '加载失败') });
+        // v0.9.1 修复：额度票根优先读 qw_quota 缓存兜底展示；无缓存才标 quotaError（wxml 走错误分支）
+        const cachedQuota = wx.getStorageSync('qw_quota');
+        this.setData({
+          loading: false,
+          loadError: api.errMsg(err, '加载失败'),
+          ...(cachedQuota ? { quota: cachedQuota } : { quotaError: true })
+        });
       })
       .then(() => { if (done) done(); });
     // v0.9.0 报告商城：已购计数（失败静默——书架入口不阻断我的页）
@@ -102,6 +119,18 @@ Page({
       .then((d) => {
         const mine = ((d && d.reports) || []).filter((r) => r.unlocked).length;
         this.setData({ reportMine: mine });
+      })
+      .catch(() => {});
+    // v0.9.4 发票（1009 用户令）：累计消费+门槛口径（失败静默——入口不阻断）
+    api.invoiceStatus()
+      .then((d) => {
+        const total = ((d.total_fen || 0) / 100).toFixed(2);
+        this.setData({
+          invoiceReady: true,
+          invoiceHint: d.can_apply
+            ? '累计 ¥' + total + ' · 可申请增值税专用发票'
+            : '累计 ¥' + total + ' · 满 ¥200 可申请',
+        });
       })
       .catch(() => {});
   },
@@ -123,7 +152,7 @@ Page({
 
   onItem(e) {
     const id = e.currentTarget.dataset.id;
-    if (id) wx.navigateTo({ url: '/pages/answer/answer?id=' + id });
+    if (id) navToThrottled('/pages/answer/answer?id=' + id);
   },
 
   goAsk() {
@@ -135,13 +164,18 @@ Page({
     wx.switchTab({ url: '/pages/research/research' });
   },
 
+  // v0.9.4 发票申请（1009 用户令：满 ¥200 增值税专用发票）
+  goInvoice() {
+    navToThrottled('/pages/invoice/invoice');
+  },
+
   // v0.7.4 提审合规：用户协议 · 隐私政策
   goPrivacy() {
-    wx.navigateTo({ url: '/pages/legal/privacy' });
+    navToThrottled('/pages/legal/privacy');
   },
 
   onRetry() {
-    this.setData({ loading: true });
+    this.setData({ loading: true, quotaError: false }); // 重试期间额度票根回到「加载中」占位
     this.refresh();
   },
 
@@ -187,16 +221,40 @@ Page({
           .then((res) => {
             wx.hideLoading();
             this._payBusy = false;
-            wx.showToast({ title: res.message, icon: 'none', duration: 2000 });
             if (res.reconciling) {
               // 已扣款、核验腿抖断：不谎报完成，刷新等查单补标记后自然解锁（重按=409 收口）
+              wx.showToast({ title: res.message, icon: 'none', duration: 2500 });
               this.refresh();
               return;
             }
             if (res.ok) {
               this.refresh();
               this._exportAllSheet();
+              return;
             }
+            // v0.9.4（1009 真机实测修复）：取消=轻提示；其余失败必须大声弹窗带原因——
+            // toast 一闪而过在用户眼里就是「点了没反应/有问题」
+            if (String(res.message || '').indexOf('取消') >= 0) {
+              wx.showToast({ title: res.message, icon: 'none' });
+            } else {
+              wx.showModal({
+                title: '支付没完成',
+                content: String(res.message || '请稍后重试') + '。可稍后再试；已扣款的金额不会丢（重新进入会自动对账解锁）。',
+                showCancel: false,
+                confirmText: '知道了'
+              });
+            }
+          })
+          .catch((err) => {
+            // v0.9.4：兜底防假死——此前无 catch，任何异常都会让「拉起支付…」loading 永转 + 按钮废死
+            wx.hideLoading();
+            this._payBusy = false;
+            wx.showModal({
+              title: '支付没成功',
+              content: api.errMsg(err, '网络波动，请稍后重试'),
+              showCancel: false,
+              confirmText: '知道了'
+            });
           });
       }
     });

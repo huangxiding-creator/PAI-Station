@@ -13,7 +13,7 @@ try {
   _platform = '';
 }
 
-const DEGRADE_MSG = '导出服务开通中，敬请期待。咨询与阅读全程免费。';
+const DEGRADE_MSG = '支付服务开通中，敬请期待；已解锁内容不受影响。';
 
 // 虚拟支付是否可用：Android/开发工具 且 基础库支持（iOS 隐藏付费入口——虚拟支付铁律）
 function paySupported() {
@@ -42,7 +42,9 @@ function _requestPay(sign, confirmPath, label) {
       success: () => {
         // 支付成功 → 服务端查单核验+标记（幂等）。核验腿若网络抖断不谎报完成：
         // 微信侧已扣款，服务端重试时查单补标记（409 收口），绝不二次支付。
-        api.request(confirmPath.method, confirmPath.path, { out_trade_no: sign.out_trade_no })
+        // （0.9.2 修复：api 模块只导出 requestRaw，此处原误调 api.request → 支付成功后同步抛 TypeError，
+        //   回执永不送达+页面 loading 卡死——1009 全量审计 CRITICAL。）
+        api.requestRaw(confirmPath.method, confirmPath.path, { out_trade_no: sign.out_trade_no })
           .then((d) => resolve({ ok: true, message: '已解锁' + (label || '导出'), confirm: d }))
           .catch(() => resolve({
             ok: true, reconciling: true,
@@ -51,7 +53,7 @@ function _requestPay(sign, confirmPath, label) {
       },
       fail: (errRes) => {
         const raw = String((errRes && errRes.errMsg) || '');
-        const silentCancel = raw.indexOf('cancel') >= 0 || errRes.errCode === 1;
+        const silentCancel = raw.indexOf('cancel') >= 0 || !!(errRes && errRes.errCode === 1);
         resolve({
           ok: false,
           message: silentCancel ? '已取消支付' : '支付未完成，请稍后重试'
@@ -61,10 +63,11 @@ function _requestPay(sign, confirmPath, label) {
   });
 }
 
-// 签名腿 409 = 服务端判定已解锁（此前已付/支付已到账自动补标记）——直接收口
-function _catchSign(err) {
+// 签名腿 409 = 服务端判定已解锁（此前已付/支付已到账自动补标记）——直接收口。
+// fallback 按流别给文案（0.9.2 修复：报告流共用「导出已解锁」兜底属品类文案错置）。
+function _catchSign(err, fallback) {
   if (err && err.statusCode === 409) {
-    return { ok: true, already: true, message: err.message || '导出已解锁' };
+    return { ok: true, already: true, message: err.message || fallback || '导出已解锁' };
   }
   return payError(err);
 }
@@ -75,7 +78,7 @@ function payExport(answerId) {
     .then((sign) => _requestPay(sign, {
       method: 'POST', path: '/api/answer/' + answerId + '/export_paid'
     }))
-    .catch(_catchSign);
+    .catch((err) => _catchSign(err, '本篇导出已解锁'));
 }
 
 // 批量导出解锁（N × ¥0.1，一单付清）
@@ -84,7 +87,7 @@ function payExportAll() {
     .then((sign) => _requestPay(sign, {
       method: 'POST', path: '/api/answers/export_all_paid'
     }))
-    .catch(_catchSign);
+    .catch((err) => _catchSign(err, '导出已全部解锁'));
 }
 
 // 报告解锁（¥498-1999/份，一次解锁永久阅读；v0.9.0 用户令 1008）
@@ -93,7 +96,7 @@ function payReport(sku) {
     .then((sign) => _requestPay(sign, {
       method: 'POST', path: '/api/report/' + sku + '/unlock_paid'
     }, '本报告'))
-    .catch(_catchSign);
+    .catch((err) => _catchSign(err, '本报告已解锁，可直接阅读'));
 }
 
 module.exports = {

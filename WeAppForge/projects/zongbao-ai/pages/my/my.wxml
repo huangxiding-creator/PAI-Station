@@ -42,45 +42,30 @@
         <view class="q-label">还可咨询</view>
       </view>
     </view>
+    <!-- v0.9.1 修复：三分支——有 quota 正常渲染 / quotaError 显错误+轻量重试(共用 onRetry) / 其余加载中 -->
+    <block wx:elif="{{quotaError}}">
+      <view class="muted">额度加载失败</view>
+      <button class="btn-primary mini-retry" hover-class="btn-hover" bindtap="onRetry">重试</button>
+    </block>
     <view class="muted" wx:else>额度加载中…</view>
     <view class="muted quota-rule">每天免费 6 次 · 有用/纠错（写具体意见）各 +1 次，上不封顶 · 北京时间 0 点清零</view>
   </view>
 
-  <!-- ══ v0.7.3 外观 · 周换装（用户令：七天自动轮换 + 可锁定心仪配色）══ -->
+  <!-- 咨询记录（1009 用户令：外观移页底，记录前置） -->
   <view class="card ticks rise" style="animation-delay: 100ms">
-    <view class="sheet-head">
-      <text class="kicker kicker-on-paper">外观 · APPEARANCE</text>
-      <text class="muted ap-hint">每周七天自动轮换 · 也可锁定</text>
-    </view>
-    <view class="ap-grid">
-      <view class="ap-cell {{item.active ? 'ap-on' : ''}}" wx:for="{{themes}}" wx:key="key"
-            data-key="{{item.key}}" bindtap="onThemeTap" hover-class="ap-hover">
-        <view class="ap-swatch" style="background: {{item.swatchDeep}};">
-          <view class="ap-dot" style="background: {{item.swatchAccent}};"></view>
-          <view class="ap-paper" style="background: {{item.swatchPaper}};"></view>
-        </view>
-        <view class="ap-name">{{item.name}}</view>
-        <view class="muted ap-wd">{{item.weekdayLabel}}</view>
-        <view class="ap-check" wx:if="{{item.active}}">✓</view>
-      </view>
-      <view class="ap-cell" bindtap="onThemeAuto" hover-class="ap-hover">
-        <view class="ap-swatch ap-swatch-auto">
-          <view class="ap-dot" style="background: var(--accent);"></view>
-        </view>
-        <view class="ap-name">跟随星期</view>
-        <view class="muted ap-wd">自动轮换</view>
-      </view>
-    </view>
-  </view>
-
-  <!-- 咨询记录 -->
-  <view class="card ticks rise" style="animation-delay: 140ms">
     <view class="sheet-head">
       <text class="kicker kicker-on-paper">咨询记录 · RECORDS</text>
     </view>
 
     <block wx:if="{{loading}}">
-      <view class="muted center-pad">加载中…</view>
+      <!-- 载入骨架：与记录行同构的微光占位（v0.9.1 逐页优化） -->
+      <view class="my-skel-row" wx:for="{{[0, 1, 2]}}" wx:key="*this">
+        <view class="my-skel-no"></view>
+        <view class="my-skel-main">
+          <view class="my-skel-l w90"></view>
+          <view class="my-skel-l w45"></view>
+        </view>
+      </view>
     </block>
 
     <block wx:elif="{{loadError}}">
@@ -128,7 +113,9 @@
         <view class="ea-icon"><text>📦</text></view>
         <view class="ea-main">
           <view class="ea-title">批量导出全部咨询</view>
-          <view class="ea-sub">Word / PDF / Markdown · ¥0.1/条 · 一键转发同事</view>
+          <!-- v0.9.1 修复：iOS(payOk=false)界面不出现价格描述（审核灰区）→ 中性文案；Android 保留价格引导 -->
+          <view class="ea-sub" wx:if="{{!payOk}}">Word / PDF / Markdown · 导出全部咨询记录 · 一键转发同事</view>
+          <view class="ea-sub" wx:else>Word / PDF / Markdown · ¥0.1/条 · 一键转发同事</view>
         </view>
         <text class="ea-arrow">›</text>
       </button>
@@ -143,7 +130,42 @@
     </view>
   </view>
 
-  <view class="muted mono" style="text-align: center; padding: 8rpx 0 0; letter-spacing: 2rpx;">v0.9.0 · 总包AI顾问</view>
+  <!-- ══ v0.7.3 外观 · 周换装（1009 用户令：移页底设置区——个性化低频项按用户习惯沉底，高频额度/记录在前）══ -->
+  <view class="card ticks rise" style="animation-delay: 180ms">
+    <view class="sheet-head">
+      <text class="kicker kicker-on-paper">外观 · APPEARANCE</text>
+      <text class="muted ap-hint">每周七天自动轮换 · 也可锁定</text>
+    </view>
+    <view class="ap-grid">
+      <view class="ap-cell {{item.active ? 'ap-on' : ''}}" wx:for="{{themes}}" wx:key="key"
+            data-key="{{item.key}}" bindtap="onThemeTap" hover-class="ap-hover">
+        <view class="ap-swatch" style="background: {{item.swatchDeep}};">
+          <view class="ap-dot" style="background: {{item.swatchAccent}};"></view>
+          <view class="ap-paper" style="background: {{item.swatchPaper}};"></view>
+        </view>
+        <view class="ap-name">{{item.name}}</view>
+        <view class="muted ap-wd">{{item.weekdayLabel}}</view>
+        <view class="ap-check" wx:if="{{item.active}}">✓</view>
+      </view>
+      <view class="ap-cell" bindtap="onThemeAuto" hover-class="ap-hover">
+        <view class="ap-swatch ap-swatch-auto">
+          <view class="ap-dot" style="background: var(--accent);"></view>
+        </view>
+        <view class="ap-name">跟随星期</view>
+        <view class="muted ap-wd">自动轮换</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 发票申请（1009 用户令：累计满 ¥200 可申请增值税专用发票；低频服务沉底设置区） -->
+  <view class="card ticks rise" style="animation-delay: 160ms" wx:if="{{invoiceReady}}">
+    <view class="ap-cell" bindtap="goInvoice" hover-class="ap-hover">
+      <view class="ap-key">发票申请</view>
+      <view class="muted">{{invoiceHint}}</view>
+    </view>
+  </view>
+
+  <view class="muted mono" style="text-align: center; padding: 8rpx 0 0; letter-spacing: 2rpx;">v0.9.4 · 总包AI顾问</view>
   <view class="legal-row" bindtap="goPrivacy" hover-class="legal-hover">用户协议 · 隐私政策</view>
 
   <view class="safe-bottom"></view>

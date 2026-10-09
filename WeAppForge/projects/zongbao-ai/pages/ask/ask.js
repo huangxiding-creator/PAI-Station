@@ -38,11 +38,17 @@ const SAMPLES = [
   }
 ];
 
+// v0.9.2（1009 审计 HIGH 修复）：程序化回填统一入口——不受 textarea maxlength=500 截断的
+// setData 路径（预填/AI优化采用/示范题）全部经此截断，保证 data.question 与所见一致。
+const Q_MAX = 500;
+
 Page({
   data: {
     question: '',
     charCount: 0,
     canAsk: false,
+    qFocus: false,   // v0.9.4：空点CTA聚焦输入框
+    askHint: '',    // e2e 可见的反馈状态位（empty/short）
     asking: false,
     optimizing: false,  // AI优化提问进行中
     samples: SAMPLES,
@@ -61,7 +67,13 @@ Page({
     }
     theme.apply(this); // v0.7.4 首帧即上主题变量（onShow 仍会再刷，不闪白）
     // v0.7.4 海报深链闭环：海报码 scene "s=p&a={aid}" → 直达本篇答案
-    const sc = decodeURIComponent((options && options.scene) || '');
+    // v0.9.2：畸形百分号序列防 URIError（与 home 跳板页同型加固）
+    let sc = '';
+    try {
+      sc = decodeURIComponent((options && options.scene) || '');
+    } catch (e) {
+      sc = '';
+    }
     const dm = sc.match(/^s=p&a=(.+)$/);
     if (dm && dm[1]) {
       this._posterAid = dm[1];
@@ -71,7 +83,31 @@ Page({
     const now = new Date();
     const pad = (n) => (n < 10 ? '0' + n : '' + n);
     this.setData({ sheetNo: 'GC-' + pad(now.getMonth() + 1) + pad(now.getDate()) });
-    this.silentLogin();
+    // v0.9.2（1009 审计 HIGH 修复）：隐私告知门前置——同意后才发起登录（wx.login+POST /api/login），
+    // 拒绝则不收集 openid、额度票根保持空态；此前 onLoad 无条件 silentLogin、告知却是事后补的。
+    this._gateAndLogin();
+  },
+
+  // 隐私门 + 登录：已同意过直接登录；首次先告知（同意→记忆+登录，拒绝→不发登录）
+  _gateAndLogin() {
+    if (wx.getStorageSync('qw_privacy_ok')) {
+      this.silentLogin();
+      return;
+    }
+    wx.showModal({
+      title: '隐私保护告知',
+      content: '为提供咨询服务，我们将通过微信登录获取您的 openid 用于额度记账，'
+        + '并将您提交的问题与生成的回答存储在服务器；您自愿共享的问答将在「锅圈」公开展示，可随时取消共享。'
+        + '本服务解答内容由人工智能（AI）生成，仅供参考。'
+        + '详见「我的 · 用户协议与隐私政策」。',
+      confirmText: '同意并继续',
+      cancelText: '不同意',
+      success: (r) => {
+        if (!r.confirm) return; // 拒绝：不发登录，不收集任何标识
+        wx.setStorageSync('qw_privacy_ok', 1);
+        this.silentLogin();
+      }
+    });
   },
 
   // v0.7.4 海报深链导航（onLoad 首跳 + onShow 兜底重试；成功即清位，3 次上限防循环）
@@ -98,7 +134,7 @@ Page({
     const prefill = wx.getStorageSync('qw_prefill');
     if (prefill) {
       wx.removeStorageSync('qw_prefill');
-      this.setData({ question: prefill, charCount: prefill.length, canAsk: prefill.trim().length >= 2 });
+      this._fill(prefill); // v0.9.2：经统一截断入口（服务端生成的相关问题可能超 500 字）
     }
     // 从答案页返回（可能互动拿了赠次）→ 刷新配额
     if (this.data.loginReady) this.refreshQuota();
@@ -146,12 +182,19 @@ Page({
     this.setData({ quota: q, quotaText: parts.join(' · ') });
   },
 
+  // 程序化回填统一入口：截到 500 与 maxlength 同步（v0.9.2，审计 MEDIUM 修复）
+  _fill(v) {
+    const s = String(v || '').slice(0, Q_MAX);
+    this.setData({ question: s, charCount: s.length, canAsk: s.trim().length >= 2 });
+  },
+
   onInput(e) {
     const v = e.detail.value || '';
     this.setData({
       question: v,
       charCount: v.length,
-      canAsk: v.trim().length >= 2   // 与服务端校验同源：非空+有意义
+      canAsk: v.trim().length >= 2,  // 与服务端校验同源：非空+有意义
+      askHint: ''
     });
   },
 
@@ -159,7 +202,7 @@ Page({
     const idx = e.currentTarget.dataset.i;
     const s = this.data.samples[idx];
     if (!s) return;
-    this.setData({ question: s.q, charCount: s.q.length, canAsk: true });
+    this._fill(s.q);
   },
 
   onClear() {
@@ -169,7 +212,13 @@ Page({
   // ── AI优化提问：把用户问题改写成更深入/更清晰/更究竟/更根本的递进式三小问 ──
   onOptimize() {
     const q = (this.data.question || '').trim();
-    if (this.data.optimizing || q.length < 2) return;
+    if (this.data.optimizing) return;
+    // v0.9.4：与主CTA同款必反馈（此前静默 return）
+    if (q.length < 2) {
+      this.setData({ askHint: q ? 'short' : 'empty', qFocus: !q });
+      wx.showToast({ title: q ? '问题至少输入 2 个字' : '请先输入您的问题', icon: 'none' });
+      return;
+    }
     if (wx.vibrateShort) { try { wx.vibrateShort({ type: 'light', fail: () => {} }); } catch (e) { /* 老客户端 */ } }
     this.setData({ optimizing: true });
     wx.showLoading({ title: 'AI 优化中…', mask: true });
@@ -190,7 +239,7 @@ Page({
           cancelText: '保留原问',
           success: (r) => {
             if (r.confirm) {
-              this.setData({ question: better, charCount: better.length, canAsk: true });
+              this._fill(better); // v0.9.2：经统一截断入口（优化文本不受 maxlength 约束）
               wx.showToast({ title: '已填入，可直接咨询', icon: 'none', duration: 1800 });
             }
           }
@@ -209,7 +258,14 @@ Page({
   },
 
   onSubmit() {
-    if (this.data.asking || !this.data.canAsk) return;
+    if (this.data.asking) return;
+    // v0.9.4（1009 真机实测修复）：主 CTA 恒有反馈——空问提示并聚焦输入框（此前静默 return=「点了没反应」）
+    if (!this.data.canAsk) {
+      const q = (this.data.question || '').trim();
+      this.setData({ askHint: q ? 'short' : 'empty', qFocus: !q });
+      wx.showToast({ title: q ? '问题至少输入 2 个字' : '请先输入您的问题', icon: 'none' });
+      return;
+    }
     this.submitQuestion(this.data.question.trim());
   },
 
@@ -242,10 +298,25 @@ Page({
     this.setData({ asking: true });
     api.ask(q)
       .then((d) => {
-        // v0.2.2 秒回：立即进答案页看实时进度（总包智库后台跑）
-        this.setData({ asking: false, question: '', charCount: 0, canAsk: false });
+        // v0.2.2 秒回：立即进答案页看实时进度（总包智库后台跑）。
+        // v0.9.2（审计 MEDIUM 修复）：清空输入移入 success 回调——偶发导航失败时用户问题不丢，
+        // 并弹窗兜底引导从「咨询记录」进入。
         if (d.quota) this.applyQuota(d.quota);
-        wx.navigateTo({ url: '/pages/answer/answer?id=' + d.id });
+        wx.navigateTo({
+          url: '/pages/answer/answer?id=' + d.id,
+          success: () => {
+            this.setData({ asking: false, question: '', charCount: 0, canAsk: false });
+          },
+          fail: () => {
+            this.setData({ asking: false });
+            wx.showModal({
+              title: '回答已生成',
+              content: '页面跳转没成功，回答已存入「咨询记录」，从「我的」页可查看。',
+              showCancel: false,
+              confirmText: '知道了'
+            });
+          }
+        });
       })
       .catch((err) => {
         this.setData({ asking: false });

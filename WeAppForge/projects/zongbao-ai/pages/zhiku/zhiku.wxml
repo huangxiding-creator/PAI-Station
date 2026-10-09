@@ -1,51 +1,79 @@
 <page-meta page-style="{{themeStyle}}" />
 <view class="page">
 
-  <!-- ══ 蓝图头部：智库 · 知识资产层 ══ -->
+  <!-- ══ 蓝图头部：总包智库 · 图签统计带（v0.9.1 重设计） ══ -->
   <view class="hero bp-grid ticks">
     <view style="height: {{nav.statusBarHeight}}px;"></view>
     <view class="hero-nav" style="height: {{nav.navHeight}}px"></view>
 
     <view class="hero-inner">
       <view class="hero-kicker">KNOWLEDGE VAULT · ZHIKU WIKI</view>
-      <view class="hero-title">智库</view>
-      <view class="hero-sub">总包智库 · 在线知识库——持续建设的结构化知识层，持续更新，随取随用</view>
+      <view class="hero-title">总包智库</view>
+      <view class="hero-sub">AI 咨询背后的知识底座 · 每条回答可查证</view>
+
+      <view class="zk-hstats">
+        <view class="zk-hs" wx:for="{{stats}}" wx:key="l">
+          <view class="zk-hs-n mono">{{item.n}}</view>
+          <view class="zk-hs-l">{{item.l}}</view>
+        </view>
+      </view>
 
       <view class="hero-dwg mono">DWG NO. ZK-01 · SCALE 1:1<view class="dim-rule"></view><text class="dim-cap">WIKI</text></view>
     </view>
   </view>
 
-  <!-- 四座金库 · 34 分组（v0.8.0 用户令：同步总包智库升级后的全树） -->
-  <view class="card ticks rise">
-    <view class="zk-kicker kicker kicker-on-paper">FOUR VAULTS · 四库 34 分组</view>
-    <view class="zk-vault" wx:for="{{vaults}}" wx:key="h">
-      <view class="zk-v-head">
+  <!-- ══ 六库图纸目录（手风琴 · 分组编号索引，替代标签墙；第三方栏目不列出；1009 与飞书一级目录同步） ══ -->
+  <view class="card ticks rise" style="animation-delay: 60ms">
+    <view class="zk-kicker kicker kicker-on-paper">DRAWING INDEX · 六库 49 分组</view>
+    <view class="zk-v {{expanded === index ? 'open' : ''}} {{index === vaults.length - 1 ? 'zk-v-last' : ''}}" wx:for="{{vaults}}" wx:key="h">
+      <view class="zk-v-head" hover-class="zk-v-press" hover-stay-time="80" data-i="{{index}}" bindtap="toggleVault">
         <view class="zk-v-glyph"><text>{{item.g}}</text></view>
         <view class="zk-v-body">
-          <view class="zk-v-h">{{item.h}}<text class="zk-v-n mono">{{item.subs.length}}</text></view>
+          <view class="zk-v-h">{{item.h}}<text class="zk-v-n mono">{{item.subs.length}} 组</text></view>
           <view class="zk-v-d muted">{{item.d}}</view>
         </view>
+        <view class="zk-chevron"></view>
       </view>
-      <view class="zk-subs">
-        <text class="zk-sub" wx:for="{{item.subs}}" wx:for-item="s" wx:key="*this">{{s}}</text>
+      <view class="zk-groups" wx:if="{{expanded === index}}">
+        <view class="zk-g-row" wx:for="{{item.subs}}" wx:for-item="s" wx:for-index="gi" wx:key="*this">
+          <text class="zk-g-idx mono">{{item.code}}-{{gi < 9 ? '0' : ''}}{{gi + 1}}</text>
+          <text class="zk-g-name">{{s}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="muted zk-note">六库分组持续建设中 · 以上为自有栏目目录，盘点口径与知识库同步</view>
+  </view>
+
+  <!-- ══ 溯源时间线（机构信任叙事：总包之声 2013 公益 → 总包学园 → 入库中） ══ -->
+  <view class="card ticks rise" style="animation-delay: 120ms">
+    <view class="zk-kicker kicker kicker-on-paper">ORIGIN · 知识溯源</view>
+    <view class="zk-tl">
+      <view class="zk-tl-item">
+        <view class="zk-tl-dot"></view>
+        <view class="zk-tl-body">
+          <view class="zk-tl-t"><text class="zk-tl-year mono">2013</text>总包之声 · 公益运行至今</view>
+          <view class="zk-tl-d muted">工程行业观察与实务内容的长期沉淀</view>
+        </view>
+      </view>
+      <view class="zk-tl-item">
+        <view class="zk-tl-dot"></view>
+        <view class="zk-tl-body">
+          <view class="zk-tl-t">总包学园 · 课程体系</view>
+          <view class="zk-tl-d muted">必修课 / 案例库 / 直播，体系化沉淀</view>
+        </view>
+      </view>
+      <view class="zk-tl-item">
+        <view class="zk-tl-dot zk-tl-dot-acc"></view>
+        <view class="zk-tl-body">
+          <view class="zk-tl-t">总包智库 · 持续入库中</view>
+          <view class="zk-tl-d muted">盘点口径与知识库同步更新</view>
+        </view>
       </view>
     </view>
   </view>
 
-  <!-- 诚实库存（持续入库中，可证成口径） -->
-  <view class="card ticks rise">
-    <view class="zk-kicker kicker kicker-on-paper">INVENTORY · 库存盘点</view>
-    <view class="zk-stats">
-      <view class="zk-stat" wx:for="{{stats}}" wx:key="l">
-        <view class="zk-stat-n mono">{{item.n}}</view>
-        <view class="zk-stat-l muted">{{item.l}}</view>
-      </view>
-    </view>
-    <view class="muted zk-note">内容持续迁移入库中，盘点口径与知识库同步更新</view>
-  </view>
-
-  <!-- 知识库链接卡（v0.7.4 提审合规：低姿态单一入口，不再放二维码/长按识别/引导外部App） -->
-  <view class="card ticks rise">
+  <!-- 知识库链接卡（v0.7.4 提审合规：低姿态单一入口，二维码/长按识别已撤） -->
+  <view class="card ticks rise" style="animation-delay: 180ms">
     <view class="zk-kicker kicker kicker-on-paper">LINK · 知识库链接</view>
     <view class="zk-url mono">{{urlHost}}</view>
     <view class="muted zk-note">知识库为在线文档，链接可复制保存备用</view>

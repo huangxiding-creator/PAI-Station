@@ -91,11 +91,14 @@ def main():
     envp = json.loads(sc["EnvParams"])
     print("env keys:", sorted(envp.keys()))
 
-    # [3] 替换 virtual_pay.secret
+    # [3] 替换 virtual_pay.secret + 注入 invoice_wecom_webhook.txt（v0.9.4 发票企微推送）
     vp = (SECRETS / "virtual_pay.secret").read_bytes()
+    inv = (SECRETS / "invoice_wecom_webhook.txt").read_bytes().strip()
+    assert inv.startswith(b"https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key="), "invoice webhook shape"
     files = json.loads(base64.b64decode(envp["SECRET_FILES_B64"]))
     print("secret files on server:", sorted(files.keys()))
     files["virtual_pay.secret"] = base64.b64encode(vp).decode()
+    files["invoice_wecom_webhook.txt"] = base64.b64encode(inv).decode()
     envp["SECRET_FILES_B64"] = base64.b64encode(
         json.dumps(files, ensure_ascii=False).encode()).decode()
     ENVP_OUT.write_text(json.dumps(envp, ensure_ascii=False), encoding="utf-8")
@@ -103,6 +106,7 @@ def main():
     rt = json.loads(base64.b64decode(
         json.loads(ENVP_OUT.read_text(encoding="utf-8"))["SECRET_FILES_B64"]))
     assert base64.b64decode(rt["virtual_pay.secret"]) == vp, "roundtrip"
+    assert base64.b64decode(rt["invoice_wecom_webhook.txt"]) == inv, "invoice roundtrip"
     has_offer = b"offer_id=1450664233" in vp
     has_pid = b"product_id=unlock_once" in vp
     vp_lines = base64.b64decode(rt["virtual_pay.secret"]).decode().splitlines()
