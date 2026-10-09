@@ -2,7 +2,7 @@
 """off.json 送达工具：本地改下架名单 → 一键送达 ECS 并重启生效（RL 决策③配套运维件）。
 
 用法:
-  python ship_off_json.py            # 送达 projects/zongbao/content/off.json 并重启+验收
+  python ship_off_json.py            # 送达 微信小程序/zongbao/content/off.json 并重启+验收
   python ship_off_json.py <路径>     # 送达指定 off.json
 动作: base64 单片写 /opt/xueyuan/data/content_pkg/off.json → systemctl restart
       → 探针 /health + /catalog total（预期=38-在列数，当前名单 6 → 32）
@@ -62,7 +62,7 @@ def run(script, name):
 
 def main():
     src = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(
-        "E:/AI-Station/WeAppForge/projects/zongbao/content/off.json")
+        "E:/AI-Station/微信小程序/zongbao/content/off.json")
     data = json.loads(src.read_text(encoding="utf-8"))
     offs = [s for s in data.get("off", []) if str(s).strip()]
     b64 = base64.b64encode(src.read_bytes()).decode()

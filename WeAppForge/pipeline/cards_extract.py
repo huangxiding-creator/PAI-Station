@@ -9,7 +9,7 @@
   E: 地市局分类表 序号|商机名称|采购方|.. / 项目/采购名称|主要内容|需求方/采购方式|..
      / 策略建议全量表 项目|商机类型|需求方|来源|可操作性
 产出契约（字段名冻结，交接引擎/卡渲染/前端三方）：
-  projects/zongbao/content/cards/<slug>.json =
+  微信小程序/zongbao/content/cards/<slug>.json =
   {"report_id","generated_at","source":"cards_extract v1",
    "cards":[{"id","title","amount","amount_raw","owner","stage","window",
              "province","source_chapter","summary"}]}
@@ -27,7 +27,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 XY_CONTENT = Path("E:/AI-Station/data/xueyuan/content")            # 母本（chapters_full.json）
-PROJECT_CONTENT = Path("E:/AI-Station/WeAppForge/projects/zongbao/content")
+PROJECT_CONTENT = Path("E:/AI-Station/微信小程序/zongbao/content")
 CARDS_DIR = PROJECT_CONTENT / "cards"
 SOURCE_TAG = "cards_extract v1"
 BIG_TABLE_ROWS = 500      # 全量索引表行数阈值（js 附录C 实测 17104 行）

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """content_pipeline.py — 研报 docx → 小程序内容三件套
 产出：
-  projects/zongbao/content/reports/<id>/chapters.json  （试读章带 html，付费章出空壳防包内泄漏）
-  projects/zongbao/content/catalog.json                （合并更新 chapterCount）
+  微信小程序/zongbao/content/reports/<id>/chapters.json  （试读章带 html，付费章出空壳防包内泄漏）
+  微信小程序/zongbao/content/catalog.json                （合并更新 chapterCount）
   data/pdfs/<id>-trial.pdf / <id>-full.pdf             （Edge headless 双 PDF，openDocument 无页码范围的官方替代）
 用法:
   python content_pipeline.py <docx> <report_id> <title> [--trial N] [--price 990]

@@ -5,7 +5,7 @@ import { createRequire } from 'node:module'
 import { resolve } from 'node:path'
 
 const require = createRequire(import.meta.url)
-const PROJECT = resolve('projects/zongbao')
+const PROJECT = resolve('E:/AI-Station/微信小程序/zongbao')
 
 // wx 全局桩（node 环境无 wx）
 const storage = new Map()

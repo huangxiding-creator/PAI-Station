@@ -7,7 +7,7 @@ import { resolve } from 'node:path'
 import { readFileSync } from 'node:fs'
 
 const require = createRequire(import.meta.url)
-const PROJECT = resolve('projects/zongbao')
+const PROJECT = resolve('E:/AI-Station/微信小程序/zongbao')
 
 // —— wx 全局桩（node 环境无 wx；请求经 stubHandler 应答，全程可观测）——
 const storage = new Map()

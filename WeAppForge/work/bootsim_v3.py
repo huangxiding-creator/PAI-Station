@@ -15,7 +15,7 @@ import os
 import re
 import sys
 
-ROOT = r"E:\AI-Station\WeAppForge\projects\zongbao-ai"
+ROOT = r"E:\AI-Station\微信小程序\zongbao-ai"
 
 checks = []
 

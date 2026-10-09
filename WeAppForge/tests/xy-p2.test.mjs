@@ -8,7 +8,7 @@ import { resolve } from 'node:path'
 import { readFileSync } from 'node:fs'
 
 const require = createRequire(import.meta.url)
-const PROJECT = resolve('projects/zongbao')
+const PROJECT = resolve('E:/AI-Station/微信小程序/zongbao')
 
 const storage = new Map()
 const navs = []

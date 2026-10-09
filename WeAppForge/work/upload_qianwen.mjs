@@ -1,4 +1,4 @@
-// 总包AI顾问 上传器 —— 真身 = projects/zongbao-ai（0929 由 biaoxun 更名，老名永久退役）
+// 总包AI顾问 上传器 —— 真身 = 微信小程序/zongbao-ai（0929 由 biaoxun 更名；1009 迁入 微信小程序/ 应用主目录）
 // 用法: NODE_OPTIONS="--require E:/AI-Station/WeAppForge/work/localstorage-shim.cjs" node work/upload_qianwen.mjs [version] [desc]
 // Node25 坑: corecompiler 子进程 localStorage.getItem 崩 → 必须带上面的 NODE_OPTIONS shim（exit 0 假成功实锤）
 //
@@ -25,7 +25,7 @@ fs.appendFileSync('work/robot_registry.jsonl',
 const project = new ci.Project({
   appid: 'wx5cee1574ce45819b',
   type: 'miniProgram',
-  projectPath: 'projects/zongbao-ai',
+  projectPath: 'E:/AI-Station/微信小程序/zongbao-ai',
   privateKeyPath: 'E:/AI-Station/data/secrets/private.wx5cee1574ce45819b.key',
   ignores: ['node_modules/**/*'],
 });

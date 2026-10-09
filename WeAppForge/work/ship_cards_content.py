@@ -23,7 +23,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 from ecs_deploy_xueyuan import CHUNK, PREFIX, UNIT, ecs_cmd  # noqa: E402
 
-SRC = Path("E:/AI-Station/WeAppForge/projects/zongbao/content/cards")
+SRC = Path("E:/AI-Station/微信小程序/zongbao/content/cards")
 DST_DIR = f"{PREFIX}/data/content_pkg/cards"
 B64 = f"{PREFIX}/xy_cards.b64"
 MARKER = f"{PREFIX}/data/content_pkg/.cards_sha256"

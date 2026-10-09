@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
-const { md2blocks, parseInline } = require('E:/AI-Station/WeAppForge/projects/zongbao/utils/md2blocks.js');
+const { md2blocks, parseInline } = require('E:/AI-Station/微信小程序/zongbao/utils/md2blocks.js');
 
 test('标题分级 h1/h2/h3', () => {
   const b = md2blocks('# 一级\n## 二级\n### 三级\n#### 四级降为 h3');

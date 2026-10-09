@@ -11,7 +11,7 @@
   python batch_up.py                           # 全量/增量（幂等续跑）
   python batch_up.py --force                   # 忽略缓存全部重跑（含 publishedAt 刷新）
   python batch_up.py --verify                  # 验收断言（catalog/占比/空壳/包内零命中/PDF）
-产物：projects/zongbao/content/reports/{slug}/chapters.json（付费章空壳）
+产物：微信小程序/zongbao/content/reports/{slug}/chapters.json（付费章空壳）
       + content/catalog.json（price=49800 分，补 province/industry/ownerType/trialChapterCount）
       + E:/AI-Station/data/xueyuan/pdfs/{slug}/{read,print,trial}.pdf（read 110dpi/print 150dpi ≤10MB）
 """
