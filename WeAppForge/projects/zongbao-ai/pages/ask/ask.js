@@ -1,6 +1,6 @@
 // 咨询页 — 总包AI顾问 v0.5.0
 // v0.5.0（用户九点令）：语音全撤（输入法自带语音）；AI优化提问（免费池改写为递进三小问）；
-// 布局=咨询问题输入框 → [AI优化提问|立即咨询]；常用咨询→示范性问题；免费 6 次/天+四动作赠次
+// 布局=咨询问题输入框 → [AI优化提问|免费咨询]；常用咨询→示范性问题；免费 6 次/天+四动作赠次
 const api = require('../../utils/api');
 const theme = require('../../utils/theme');
 const kbstats = require('../../utils/kbstats');
@@ -88,6 +88,7 @@ Page({
     netStatus: '',     // ''未知 / 'ok' / 'down'（红卡常驻提示）
     nav: { statusBarHeight: 20, navHeight: 44 },
     kbStats: kbstats.KB_STATS,  // v0.9.5 审计修（L18）：信任带四数同源 zhiku（utils/kbstats.js）
+    stats: null,       // v0.9.10 用户令 1010：注册用户/咨询总数（服务端聚合数，失败静默隐藏）
     sheetNo: '',       // 图纸编号（咨询单装饰）
     popOpen: false,    // v0.9.7 qw-pop 开合镜像（e2e/结构锚 + tabBar 压暗让路）
     popMode: ''
@@ -116,6 +117,10 @@ Page({
     const now = new Date();
     const pad = (n) => (n < 10 ? '0' + n : '' + n);
     this.setData({ sheetNo: 'GC-' + pad(now.getMonth() + 1) + pad(now.getDate()) });
+    // v0.9.10 用户令 1010：注册用户/咨询总数（公开聚合数，未登录可看；失败静默不打扰首屏）
+    api.stats()
+      .then((d) => { if (d && d.users > 0) this.setData({ stats: d }); })
+      .catch(() => { /* 信任面缺位不挡主流程 */ });
     // v0.9.2（1009 审计 HIGH 修复）：隐私告知门前置——同意后才发起登录（wx.login+POST /api/login），
     // 拒绝则不收集 openid、额度票根保持空态；此前 onLoad 无条件 silentLogin、告知却是事后补的。
     tel.ping('ask_load');

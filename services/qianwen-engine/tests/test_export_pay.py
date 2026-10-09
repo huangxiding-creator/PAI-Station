@@ -1,0 +1,441 @@
+# -*- coding: utf-8 -*-
+"""v0.8.0 导出收费·对抗审计版（用户令 1008+1008「不容许遗留任何问题」）。
+
+四腿端点 + 订单核验矩阵（审计 CRITICAL-1/2、HIGH-3、MEDIUM-4/5、LOW-6 全锚定）：
+- login 真路径落 session_key（盲区#1：此前 fixture 手工 save_session 替学生答题）
+- 签名即落单 pay_order；同一目标复用同 otn（防二次扣款）+ 已付补标记 409 收口
+- 回调腿凭订单 + 微信查单核验：SUCCESS 放行 / NOTPAY 400 / 生产查不出 503 fail-closed
+  / 沙箱查单不可用信任回调（模拟支付无真实资金）
+- 伪造 otn / 空串 / 他人订单 → 404（盲区#2：零支付解锁死路）
+- 批量快照制：签名后新完成的咨询不被顺带解锁（盲区#3）
+- otn 熵：同毫秒两单不同号（盲区#5 半）；批量锚点=openid 哈希非明文
+- /api/history 权威计数 export_unpaid_all（盲区#6）
+- 仅 pending 用户 export_all_sign → 404（盲区#7）
+- QW_DEV_LOGIN 开发登录无 session_key → 签名腿 401（盲区#8）
+运行：python -m pytest tests/test_export_pay.py -q
+"""
+from __future__ import annotations
+
+import json
+import re
+import sys
+import time
+from pathlib import Path
+
+import pytest
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from qianwen_engine import config, metaso_kb, wechat, zhipu  # noqa: E402
+
+
+def _kb_answer(q):
+    return metaso_kb.KbAnswer(
+        question=q, answer="结论[[书†1]]" + "详" * 300,
+        cid="123456789012345678",
+        url="https://metaso.cn/x",
+        citations=[{"n": 1, "source": "测试规范", "loc": 12}],
+        elapsed_sec=14.0)
+
+
+@pytest.fixture()
+def client(tmp_path, monkeypatch):
+    from fastapi.testclient import TestClient
+    from qianwen_engine import app as app_mod, store
+
+    monkeypatch.setattr(config, "DB_PATH", tmp_path / "t.sqlite")
+    monkeypatch.setattr(config, "DATA_DIR", tmp_path)
+    store._init_done = False
+
+    monkeypatch.setattr(wechat, "code2session",
+                        lambda code: {"openid": f"open-{code}", "unionid": ""})
+    monkeypatch.setattr(wechat, "msg_sec_check", lambda content, openid, scene=2: True)
+    monkeypatch.setattr(metaso_kb, "ask", lambda q, model="fast", sleep=None, on_event=None: _kb_answer(q))
+    monkeypatch.setattr(metaso_kb, "_guard_enter", lambda cost=3: None)
+    monkeypatch.setattr(metaso_kb, "_record", lambda ok: None)
+    monkeypatch.setattr(zhipu, "configured", lambda: False)
+    monkeypatch.setattr(zhipu, "rewrite", lambda prompt: (_ for _ in ()).throw(
+        RuntimeError("测试默认禁用 zhipu")))
+    # 查单腿默认=基础设施不可达（沙箱信任路径）；逐测试用例按需覆写应答
+    monkeypatch.setattr(wechat, "xpay_query_order",
+                        lambda *a, **k: (_ for _ in ()).throw(
+                            wechat.XpayError("test: query infra unavailable")))
+
+    # 虚拟支付配置：tmp secret 文件（export_once 道具 + 沙箱键）
+    secret = tmp_path / "virtual_pay.secret"
+    secret.write_text(
+        "offer_id=1450664233\n"
+        "product_id=unlock_once_legacy\n"
+        "export_product_id=export_once\n"
+        "env=1\n"
+        "sandbox_appkey=test-sandbox-appkey\n"
+        "prod_appkey=test-prod-appkey\n",
+        encoding="utf-8")
+    monkeypatch.setattr(config, "VIRTUAL_PAY_FILE", secret)
+
+    with TestClient(app_mod.app) as c:
+        c.headers.update({"Authorization": "Bearer " + wechat.issue_token("open-t1")})
+        yield c
+    store._init_done = False
+
+
+def _wait_ready(client, aid, tries=100):
+    d = {}
+    for _ in range(tries):
+        d = client.get(f"/api/answer/{aid}").json()
+        if d.get("status") != "pending":
+            return d
+        time.sleep(0.05)
+    return d
+
+
+def _ask_ready(client, q="导出收费测试问题"):
+    aid = client.post("/api/ask", json={"question": q}).json()["id"]
+    _wait_ready(client, aid)
+    return aid
+
+
+def _query(monkeypatch, status):
+    """覆写查单应答：微信侧订单态=status。"""
+    monkeypatch.setattr(wechat, "xpay_query_order",
+                        lambda *a, **k: {"errcode": 0,
+                                         "order": {"status": status}})
+
+
+_OTN_RE = re.compile(r"^[0-9A-Za-z_\-|*@]{8,32}$")
+
+
+def test_login_persists_session_key(client, monkeypatch):
+    """盲区#1（审计 CRITICAL-1 根治锚）：login 真路径必须落 session_key——
+    不落盘=支付签名腿生产 100% 死锁。"""
+    from qianwen_engine import store
+    monkeypatch.delenv("QW_DEV_LOGIN", raising=False)
+    monkeypatch.setattr(wechat, "code2session",
+                        lambda code: {"openid": "open-t9", "session_key": "sk-t9"})
+    r = client.post("/api/login", json={"code": "c9"})
+    assert r.status_code == 200
+    assert store.get_session("open-t9") == "sk-t9"
+    # session_key 绝不出现在任何 API 响应（只住服务端）
+    assert "sk-t9" not in r.text
+
+
+def test_dev_login_without_session_cannot_sign(client, monkeypatch):
+    """盲区#8：QW_DEV_LOGIN 开发登录不落 session_key → 签名腿 401（真实支付
+    必须走真实 login 链路，开发态签不出有效单）。"""
+    monkeypatch.setenv("QW_DEV_LOGIN", "1")
+    r = client.post("/api/login", json={"code": "dev-x"})
+    assert r.status_code == 200
+    aid = _ask_ready(client)
+    assert client.post(f"/api/answer/{aid}/export_sign").status_code == 401
+
+
+def test_detail_carries_export_fields(client):
+    aid = _ask_ready(client)
+    d = client.get(f"/api/answer/{aid}").json()
+    assert d["is_owner"] is True
+    assert d["export_paid"] is False            # 新答案未解锁
+    assert d["unlocked"] is True                # 咨询免费语义不变（v0.7.0 公益令）
+
+
+def test_export_sign_single_creates_order(client):
+    from qianwen_engine import store
+    store.save_session("open-t1", "sess-key-t1")
+    aid = _ask_ready(client)
+    r = client.post(f"/api/answer/{aid}/export_sign")
+    assert r.status_code == 200
+    d = r.json()
+    assert d["mode"] == "short_series_goods"
+    assert d["price_fen"] == config.EXPORT_PRICE_FEN == 10
+    sd = json.loads(d["sign_data"])          # sign_data=紧凑 JSON 串（客户端字节级透传契约）
+    assert sd["buyQuantity"] == 1 and sd["goodsPrice"] == 10
+    assert sd["productId"] == "export_once"      # 导出道具，非旧解锁道具
+    assert sd["env"] == 1 and sd["currencyType"] == "CNY"
+    assert _OTN_RE.match(sd["outTradeNo"]) and not sd["outTradeNo"].startswith("_")
+    assert sd["outTradeNo"].startswith("e")
+    assert d["pay_sig"] and d["signature"]        # 双签名在位
+    # 签名即落单（审计 CRITICAL-2 前置）：订单行 status=signed、金额对
+    o = store.get_pay_order(d["out_trade_no"])
+    assert o and o["kind"] == "single" and o["aid"] == aid
+    assert o["buy_quantity"] == 1 and o["total_fen"] == 10
+    assert o["status"] == "signed"
+
+
+def test_export_sign_gates(client):
+    from qianwen_engine import store
+    store.save_session("open-t1", "sess-key-t1")
+    aid = _ask_ready(client)
+    # 非本人 → 404（虚拟支付绝不为他人内容签名）
+    t2 = {"Authorization": "Bearer " + wechat.issue_token("open-t2")}
+    assert client.post(f"/api/answer/{aid}/export_sign", headers=t2).status_code == 404
+    assert client.post("/api/answer/nope404/export_sign").status_code == 404
+    # 无 session_key → 401（客户端静默重登后重试）
+    store.save_session("open-t1", "")
+    assert client.post(f"/api/answer/{aid}/export_sign").status_code == 401
+    store.save_session("open-t1", "sess-key-t1")
+    # 已解锁 → 409
+    store.mark_export_paid(aid, "open-t1", "e-paid-otn-0001")
+    assert client.post(f"/api/answer/{aid}/export_sign").status_code == 409
+
+
+def test_export_sign_unconfigured(client, tmp_path, monkeypatch):
+    from qianwen_engine import store
+    store.save_session("open-t1", "sess-key-t1")
+    aid = _ask_ready(client)
+    monkeypatch.setattr(config, "VIRTUAL_PAY_FILE", tmp_path / "absent.secret")
+    assert client.post(f"/api/answer/{aid}/export_sign").status_code == 503
+
+
+def test_sign_reuses_open_order_same_otn(client, monkeypatch):
+    """审计 HIGH-3：同一答案重复签名=复用同一未付订单（同 otn，绝不双开单
+    二次扣款）；不同答案各开各单。"""
+    from qianwen_engine import store
+    store.save_session("open-t1", "sess-key-t1")
+    aid = _ask_ready(client)
+    o1 = client.post(f"/api/answer/{aid}/export_sign").json()["out_trade_no"]
+    o2 = client.post(f"/api/answer/{aid}/export_sign").json()["out_trade_no"]
+    assert o1 == o2                                    # 同单复用
+    with store._db() as c:
+        n = c.execute("SELECT COUNT(*) FROM pay_order WHERE kind='single'",
+                      ).fetchone()[0]
+    assert n == 1                                      # 无第二张单
+    aid2 = _ask_ready(client, "另一篇")
+    o3 = client.post(f"/api/answer/{aid2}/export_sign").json()["out_trade_no"]
+    assert o3 != o1                                    # 不同目标不同号
+
+
+def test_otn_entropy_same_millisecond():
+    """审计 LOW-6：同毫秒双开单 otn 必不相同（token_hex 熵）。"""
+    from qianwen_engine import app as app_mod
+    a = app_mod._make_otn("e", "aaaaaaaa")
+    b = app_mod._make_otn("e", "aaaaaaaa")
+    assert a != b and _OTN_RE.match(a) and _OTN_RE.match(b)
+
+
+def test_export_paid_verifies_via_query(client, monkeypatch):
+    """回调腿 happy path：微信查单 SUCCESS → 标记 + 导出放行 + pay_log。"""
+    from qianwen_engine import store
+    store.save_session("open-t1", "sess-key-t1")
+    aid = _ask_ready(client)
+    assert client.post(f"/api/answer/{aid}/export", json={"fmt": "docx"}).status_code == 402
+    otn = client.post(f"/api/answer/{aid}/export_sign").json()["out_trade_no"]
+    _query(monkeypatch, "SUCCESS")
+    r = client.post(f"/api/answer/{aid}/export_paid", json={"out_trade_no": otn})
+    assert r.status_code == 200 and r.json()["export_paid"] is True
+    # 幂等重跑
+    assert client.post(f"/api/answer/{aid}/export_paid",
+                       json={"out_trade_no": otn}).status_code == 200
+    e = client.post(f"/api/answer/{aid}/export", json={"fmt": "docx"})
+    assert e.status_code == 200 and e.json()["filename"].endswith(".docx")
+    assert client.get(f"/api/answer/{aid}").json()["export_paid"] is True
+    with store._db() as c:
+        rows = c.execute("SELECT * FROM pay_log WHERE aid=?", (aid,)).fetchall()
+    assert len(rows) == 1 and rows[0]["out_trade_no"] == otn
+    assert store.get_pay_order(otn)["status"] == "paid"
+
+
+def test_export_paid_forged_otn_rejected(client, monkeypatch):
+    """盲区#2（审计 CRITICAL-2）：零支付解锁死路——伪造/空/他人 otn 一律 404。"""
+    from qianwen_engine import store
+    store.save_session("open-t1", "sess-key-t1")
+    aid = _ask_ready(client)
+    _query(monkeypatch, "SUCCESS")          # 即便查单通配 SUCCESS，无真单也不放行
+    assert client.post(f"/api/answer/{aid}/export_paid",
+                       json={"out_trade_no": "e-forged-00000001"}).status_code == 404
+    assert client.post(f"/api/answer/{aid}/export_paid",
+                       json={"out_trade_no": ""}).status_code == 404
+    # 他人订单 → 404（不越权）
+    t2 = {"Authorization": "Bearer " + wechat.issue_token("open-t2")}
+    otn = client.post(f"/api/answer/{aid}/export_sign").json()["out_trade_no"]
+    assert client.post(f"/api/answer/{aid}/export_paid", headers=t2,
+                       json={"out_trade_no": otn}).status_code == 404
+    # 答案保持未解锁
+    assert client.post(f"/api/answer/{aid}/export", json={"fmt": "docx"}).status_code == 402
+
+
+def test_export_paid_query_unpaid_rejected(client, monkeypatch):
+    """查单明确未付 → 400，不放行。"""
+    from qianwen_engine import store
+    store.save_session("open-t1", "sess-key-t1")
+    aid = _ask_ready(client)
+    otn = client.post(f"/api/answer/{aid}/export_sign").json()["out_trade_no"]
+    _query(monkeypatch, "NOTPAY")
+    r = client.post(f"/api/answer/{aid}/export_paid", json={"out_trade_no": otn})
+    assert r.status_code == 400
+    assert client.post(f"/api/answer/{aid}/export", json={"fmt": "docx"}).status_code == 402
+
+
+def test_prod_query_outage_fail_closed(client, monkeypatch, tmp_path):
+    """生产（env=0）fail-closed：查单失败/状态不明 → 503 对账中，绝不放行。"""
+    from qianwen_engine import store
+    store.save_session("open-t1", "sess-key-t1")
+    aid = _ask_ready(client)
+    otn = client.post(f"/api/answer/{aid}/export_sign").json()["out_trade_no"]
+    prod = tmp_path / "prod.secret"
+    prod.write_text(
+        "offer_id=1450664233\nexport_product_id=export_once\nenv=0\n"
+        "sandbox_appkey=k\nprod_appkey=k\n", encoding="utf-8")
+    monkeypatch.setattr(config, "VIRTUAL_PAY_FILE", prod)
+    # 查单基础设施故障 → 503
+    monkeypatch.setattr(wechat, "xpay_query_order",
+                        lambda *a, **k: (_ for _ in ()).throw(
+                            wechat.XpayError("prod outage")))
+    r = client.post(f"/api/answer/{aid}/export_paid", json={"out_trade_no": otn})
+    assert r.status_code == 503
+    # 陌生订单态（非成功非未付枚举）→ 同样 503 对账中
+    _query(monkeypatch, "WEIRD_STATE")
+    assert client.post(f"/api/answer/{aid}/export_paid",
+                       json={"out_trade_no": otn}).status_code == 503
+    assert client.post(f"/api/answer/{aid}/export", json={"fmt": "docx"}).status_code == 402
+
+
+def test_sandbox_trust_on_query_outage(client, monkeypatch):
+    """沙箱（env=1）查单不可用 → 信任回调（模拟支付无真实资金，env 服务端定，
+    客户端无法自选环境伪造）。"""
+    from qianwen_engine import store
+    store.save_session("open-t1", "sess-key-t1")
+    aid = _ask_ready(client)
+    otn = client.post(f"/api/answer/{aid}/export_sign").json()["out_trade_no"]
+    # fixture 默认：query 抛 XpayError（基础设施不可达）
+    r = client.post(f"/api/answer/{aid}/export_paid", json={"out_trade_no": otn})
+    assert r.status_code == 200 and r.json()["export_paid"] is True
+    assert client.post(f"/api/answer/{aid}/export", json={"fmt": "docx"}).status_code == 200
+
+
+def test_sign_recovery_marks_paid_and_409(client, monkeypatch):
+    """审计 HIGH-3 恢复路径：已扣款未标记（回调断网）→ 用户重试点导出 →
+    签名腿查单发现已付 → 当场补标记 + 409 收口（绝不二次扣款）。"""
+    from qianwen_engine import store
+    store.save_session("open-t1", "sess-key-t1")
+    aid = _ask_ready(client)
+    otn = client.post(f"/api/answer/{aid}/export_sign").json()["out_trade_no"]
+    # 用户已在微信面板完成支付，但 export_paid 回调网络抖断——服务端未标记
+    _query(monkeypatch, "SUCCESS")
+    r = client.post(f"/api/answer/{aid}/export_sign")
+    assert r.status_code == 409 and "已解锁" in r.json()["detail"]
+    assert store.get_pay_order(otn)["status"] == "paid"
+    assert client.post(f"/api/answer/{aid}/export", json={"fmt": "docx"}).status_code == 200
+
+
+def test_export_all_sign_quantity_and_snapshot(client, monkeypatch):
+    from qianwen_engine import store
+    store.save_session("open-t1", "sess-key-t1")
+    aids = [_ask_ready(client, f"批量问题{i}") for i in range(2)]
+    r = client.post("/api/answers/export_all_sign")
+    assert r.status_code == 200
+    d = r.json()
+    assert d["quantity"] == 2 and d["total_fen"] == 20
+    sd = json.loads(d["sign_data"])
+    assert sd["buyQuantity"] == 2 and sd["goodsPrice"] == 10
+    assert _OTN_RE.match(sd["outTradeNo"]) and sd["outTradeNo"].startswith("b")
+    otn = d["out_trade_no"]
+    # 批量锚点不带 openid 明文（审计 WARN：otn 进用户账单详情可见）
+    from qianwen_engine import store as st
+    assert "open-t1" not in otn
+    o = st.get_pay_order(otn)
+    assert o["aid_list"] == ",".join(aids) and o["buy_quantity"] == 2
+    # 盲区#3（审计 MEDIUM-4）：签名后新完成的咨询不入本单
+    _ask_ready(client, "签名后才完成的新咨询")
+    _query(monkeypatch, "SUCCESS")
+    r2 = client.post("/api/answers/export_all_paid", json={"out_trade_no": otn})
+    assert r2.status_code == 200 and r2.json()["export_paid"] == 2
+    assert client.get(f"/api/answer/{aids[0]}").json()["export_paid"] is True
+    # 快照外的新咨询仍未解锁，留给下一单（quantity=1）
+    assert client.post("/api/answers/export_all_sign").json()["quantity"] == 1
+
+
+def test_export_all_sign_reuses_when_snapshot_unchanged(client, monkeypatch):
+    """批量单复用：快照未变=同 otn 续付（防双开单）；快照变了=开新单。"""
+    from qianwen_engine import store
+    store.save_session("open-t1", "sess-key-t1")
+    _ask_ready(client, "复用问题A")
+    o1 = client.post("/api/answers/export_all_sign").json()["out_trade_no"]
+    o2 = client.post("/api/answers/export_all_sign").json()["out_trade_no"]
+    assert o1 == o2
+    _ask_ready(client, "复用问题B")           # 快照变化 → 新单
+    o3 = client.post("/api/answers/export_all_sign").json()["out_trade_no"]
+    assert o3 != o1
+
+
+def test_export_all_sign_limits(client, monkeypatch):
+    from qianwen_engine import store
+    store.save_session("open-t1", "sess-key-t1")
+    monkeypatch.setattr(config, "EXPORT_BATCH_MAX", 2)
+    for i in range(3):
+        _ask_ready(client, f"超限问题{i}")
+    assert client.post("/api/answers/export_all_sign").status_code == 400
+
+
+def test_export_all_paid_and_gate(client, monkeypatch):
+    from qianwen_engine import store
+    store.save_session("open-t1", "sess-key-t1")
+    for i in range(2):
+        _ask_ready(client, f"批量闸门问题{i}")
+    r402 = client.post("/api/answers/export_all", json={"fmt": "md"})
+    assert r402.status_code == 402 and "0.1" in r402.json()["detail"]
+    otn = client.post("/api/answers/export_all_sign").json()["out_trade_no"]
+    _query(monkeypatch, "SUCCESS")
+    r = client.post("/api/answers/export_all_paid", json={"out_trade_no": otn})
+    assert r.status_code == 200 and r.json()["export_paid"] == 2
+    md = client.post("/api/answers/export_all", json={"fmt": "md"})
+    assert md.status_code == 200 and md.json()["filename"].endswith(".md")
+    # 幂等重跑安全
+    assert client.post("/api/answers/export_all_paid",
+                       json={"out_trade_no": otn}).status_code == 200
+    # 伪造批量 otn → 404（盲区#2 批量面）
+    assert client.post("/api/answers/export_all_paid",
+                       json={"out_trade_no": "b-forged-0000001"}).status_code == 404
+    with store._db() as c:
+        n = c.execute(
+            "SELECT COUNT(*) FROM pay_log WHERE openid='open-t1' AND out_trade_no=?",
+            (otn,)).fetchone()[0]
+    assert n == 1
+
+
+def test_history_carries_export_unpaid_all(client, monkeypatch):
+    """盲区#6（审计 MEDIUM-5）：/api/history 附服务端权威未解锁计数
+    （客户端 20 条截断列表不可信）。"""
+    from qianwen_engine import store
+    store.save_session("open-t1", "sess-key-t1")
+    aids = [_ask_ready(client, f"计数问题{i}") for i in range(3)]
+    store.mark_export_paid(aids[0], "open-t1", "e-cnt-otn-0001")
+    d = client.get("/api/history").json()
+    assert d["export_unpaid_all"] == 2
+    _query(monkeypatch, "SUCCESS")
+    otn = client.post("/api/answers/export_all_sign").json()["out_trade_no"]
+    client.post("/api/answers/export_all_paid", json={"out_trade_no": otn})
+    assert client.get("/api/history").json()["export_unpaid_all"] == 0
+
+
+def test_export_all_pending_only_404(client, monkeypatch):
+    """盲区#7：仅有 pending（未完成）答案的用户走批量签名 → 404。"""
+    from qianwen_engine import store
+    store.save_session("open-t1", "sess-key-t1")
+    gate = {"go": False}
+
+    def _slow_ask(q, model="fast", sleep=None, on_event=None):
+        while not gate["go"]:
+            time.sleep(0.02)
+        return _kb_answer(q)
+
+    monkeypatch.setattr(metaso_kb, "ask", _slow_ask)
+    client.post("/api/ask", json={"question": "慢问题"})
+    r = client.post("/api/answers/export_all_sign")
+    assert r.status_code == 404
+    gate["go"] = True
+
+
+def test_export_answer_pot_content_forbidden(client):
+    """锅圈公共内容不提供付费导出：非 owner 访问 → 404（导出=个人咨询档案语义）。"""
+    from qianwen_engine import store
+    store.save_session("open-t1", "sess-key-t1")
+    aid = store.save_pot_answer("锅圈公共问题", "公开答案" * 100, [], sort=1)
+    assert client.post(f"/api/answer/{aid}/export_sign").status_code == 404
+    assert client.post(f"/api/answer/{aid}/export", json={"fmt": "docx"}).status_code == 404
+
+
+def test_legacy_endpoints_gone(client):
+    """用户令 1008：¥1 解锁双腿 + 分享赠次端点已下线——旧端点必须 404（回归锚）。"""
+    aid = _ask_ready(client)
+    assert client.post(f"/api/answer/{aid}/pay_sign").status_code == 404
+    assert client.post(f"/api/answer/{aid}/unlock_paid", json={"out_trade_no": "x"}).status_code == 404
+    assert client.post(f"/api/answer/{aid}/share").status_code == 404

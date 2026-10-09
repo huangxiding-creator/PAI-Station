@@ -45,7 +45,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
-from . import config, exporter, metaso_kb, poster, report_catalog, store, wechat, zhipu
+from . import config, exporter, metaso_kb, poster, potcat, report_catalog, store, wechat, zhipu
 
 _log = logging.getLogger("qianwen.app")
 
@@ -431,11 +431,31 @@ def question_optimize(body: AskIn, request: Request):
     }
 
 
+@app.get("/api/stats")
+def public_stats():
+    """v0.9.10 用户令 1010：首页社会信任面——注册用户总数+咨询总数。
+    公开聚合数（非个人信息，未登录可看）；官方种子账号（POT_OPENID）不计入。"""
+    return store.public_stats()
+
+
 # ── v0.5.0 锅圈：打破砂锅问到底（公共热点问题展区） ──
 @app.get("/api/pot/list")
 def pot_list(request: Request):
+    """v0.9.10 用户令 1009：锅圈分类标签——读时纯函数打标（存量/新增即打即得，
+    规则升级全员自动重标）；cats=全量计数（切筛不清 chips）；?cat= 过滤。"""
     _openid(request)
-    return {"items": store.pot_list()}
+    cat = (request.query_params.get("cat") or "").strip()
+    items = store.pot_list()
+    for it in items:
+        it["cat"] = potcat.classify(it.get("question") or "")
+    cats = []
+    for name, _kws in potcat.CATEGORY_RULES + ((potcat.FALLBACK_CATEGORY, ()),):
+        n = sum(1 for it in items if it["cat"] == name)
+        if n:
+            cats.append({"name": name, "n": n})
+    if cat:
+        items = [it for it in items if it["cat"] == cat]
+    return {"items": items, "cats": cats}
 
 
 @app.get("/api/history")

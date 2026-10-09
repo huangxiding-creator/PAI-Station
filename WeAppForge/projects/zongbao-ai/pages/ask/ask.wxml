@@ -16,10 +16,10 @@
       </view>
       <view class="hero-sub">专业参考源自「总包智库」· 总包人的随身工程顾问 / 招投标 / 签约 / 风险 / 造价争议 / 审计 / 合同实务</view>
 
-      <!-- 额度票根 -->
+      <!-- 额度票根（1010 引流令：免费额度首屏即显示，不等咨询/登录——空态亮静态规则数 6） -->
       <view class="quota-ticket" wx:if="{{quota}}">
         <view class="qt-left">
-          <view class="qt-label">今日咨询额度</view>
+          <view class="qt-label">今日免费额度</view>
           <view class="qt-num mono">{{quota.total_left}}</view>
         </view>
         <view class="qt-perf"></view>
@@ -31,12 +31,13 @@
       </view>
       <view class="quota-ticket quota-empty" wx:else>
         <view class="qt-left">
-          <view class="qt-label">今日咨询额度</view>
-          <view class="qt-num mono">–</view>
+          <view class="qt-label">今日免费额度</view>
+          <view class="qt-num mono">6</view>
         </view>
         <view class="qt-perf"></view>
         <view class="qt-right">
-          <view class="qt-kv qt-dim">发起首次咨询后显示</view>
+          <view class="qt-kv">每日 6 次免费咨询</view>
+          <view class="qt-kv qt-dim">有用/纠错 各+1次 · 0 点重置</view>
         </view>
       </view>
 
@@ -83,8 +84,10 @@
     </block>
   </view>
   <view class="kb-cred muted">智库沉淀自总包之声（2013 年至今公益运行）与总包学园 · 每条回答附依据来源，点开可查证</view>
+  <!-- v0.9.10 用户令 1010：注册用户/咨询总数（服务端聚合数；可证成口径，无极限词） -->
+  <view class="kb-cred muted" wx:if="{{stats}}">已有 {{stats.users}} 位同行在使用 · 累计咨询 {{stats.asks}} 次</view>
 
-  <!-- ══ 双按钮排：AI优化提问（左）+ 立即咨询（右，1009 免费字样下线令）══ -->
+  <!-- ══ 双按钮排：AI优化提问（左）+ 免费咨询（右，1010 引流令：免费回位主打）══ -->
   <!-- v0.9.4（1009 真机实测修复）：撤 disabled——自定义样式盖掉置灰态，"看着能点点了没反应"；
        改为恒可点+必反馈（空问 toast+聚焦输入框），弱化态只做视觉（btn-dim）不打断点击 -->
   <view class="btn-row rise" style="animation-delay: 90ms">
@@ -99,7 +102,7 @@
       disabled="{{asking}}"
       hover-class="btn-hover"
       bindtap="onSubmit"
-    >{{asking ? '智库检索中…' : '立即咨询'}}</button>
+    >{{asking ? '智库检索中…' : '免费咨询'}}</button>
   </view>
   <view class="opt-hint muted" wx:if="{{!optimizing}}">AI优化提问：把您的问题改写成更深入、更究竟的递进式三小问</view>
 

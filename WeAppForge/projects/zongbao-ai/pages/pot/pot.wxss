@@ -196,3 +196,37 @@
   line-height: 1.55;
   color: var(--ink);
 }
+
+/* ══ v0.9.10 分类标签（用户令 1009）：chip 行 + 条目分类标（零写死色，全主题 token）══ */
+.cat-row {
+  white-space: nowrap;
+  padding: 6rpx 36rpx 2rpx;
+}
+.cat-chip {
+  display: inline-block;
+  padding: 10rpx 26rpx;
+  margin-right: 14rpx;
+  font-size: 23rpx;
+  letter-spacing: 1rpx;
+  color: var(--ink-2);
+  border: 2rpx solid var(--line);
+  border-radius: 999rpx;
+  background: var(--t-paper-hi);
+}
+.cat-chip.cat-on {
+  color: var(--ink);
+  border-color: var(--ink);
+  font-weight: 700;
+}
+.cat-hover { opacity: 0.7; }
+.cat-n { font-size: 19rpx; color: var(--muted); }
+.pot-cat {
+  display: inline-block;
+  margin: 2rpx 0 10rpx;
+  padding: 4rpx 16rpx;
+  font-size: 19rpx;
+  letter-spacing: 2rpx;
+  color: var(--muted);
+  border: 2rpx solid var(--line);
+  border-radius: 6rpx;
+}

@@ -111,13 +111,13 @@ check("wxml 无语音条（voice-bar/speak-btn）", "voice-bar" not in ask_wxml 
 # 第 2 点：示范性问题
 check("ask 常用咨询→示范性问题", "示范性问题 · SAMPLE QUESTIONS" in ask_wxml and "常用咨询" not in ask_wxml)
 
-# 第 3 点：AI优化提问（左）+ 立即咨询（右，1009 免费字样下线令），按钮在输入框下方
+# 第 3 点：AI优化提问（左）+ 免费咨询（右，1010 引流令：免费回位主打），按钮在输入框下方
 check("ask AI优化提问按钮+实现", 'bindtap="onOptimize"' in ask_wxml and "onOptimize" in ask_js)
 check("ask AI优化采用/保留原问（用户过目）", "采用" in ask_js and "保留原问" in ask_js)
-check("ask CTA=立即咨询（1009 免费字样下线令）", "免费咨询" not in ask_wxml and "立即咨询" in ask_wxml)
-check("ask 额度票根=今日咨询额度（免费字样下线）", "今日咨询额度" in ask_wxml and "今日免费咨询" not in ask_wxml)
-check("ask 空额度票根带首开提示（隐私新规：未同意不登录，防「额度坏了」误读）",
-      "发起首次咨询后显示" in ask_wxml)
+check("ask CTA=免费咨询（1010 引流令：免费回位主打）", "'免费咨询'}}</button>" in ask_wxml and "立即咨询" not in ask_wxml)
+check("ask 额度票根=今日免费额度（1010 引流令：不等咨询首屏即显）", "今日免费额度" in ask_wxml and "今日咨询额度" not in ask_wxml and "每日 6 次免费咨询" in ask_wxml and "发起首次咨询后显示" not in ask_wxml)
+check("ask 空额度票根亮静态规则数（1010 用户令：不等咨询即显每日 6 次免费；未同意不登录口径不变）",
+      "每日 6 次免费咨询" in ask_wxml and ">6</view>" in ask_wxml)
 _opt = ask_wxml.find("opt-btn")
 _cta = ask_wxml.find("ask-btn")
 _inp = ask_wxml.find("ask-input")
@@ -150,7 +150,7 @@ check("answer 互动二动作文案（有用/纠错，v0.7.6 分享激励下线�
       "有用 / 纠错（写具体意见）" in ans_wxml and "/ 分享" not in ans_wxml and "导出 —— " not in ans_wxml)
 
 # 第 8 点：分享标题
-check("answer 分享标题=总包AI顾问-工程咨询（免费字样下线）", "总包AI顾问-工程咨询" in ans_js and "总包AI顾问-免费咨询" not in ans_js)
+check("answer 分享标题=总包AI顾问-免费咨询（1010 引流令：分享面免费主打）", "总包AI顾问-免费咨询" in ans_js and "总包AI顾问-工程咨询" not in ans_js)
 
 # 第 9 点：锅圈页
 check("pot 四件套存在", all(os.path.exists(os.path.join(ROOT, "pages", "pot", f"pot.{e}")) for e in ("js", "wxml", "wxss", "json")))
@@ -160,9 +160,9 @@ check("api potList 客户端", "potList" in api_js)
 check("api optimize 客户端（shareReward 已随分享激励下线）", "optimize" in api_js and "shareReward" not in api_js)
 
 # 版本与定位（v0.9.0）
-check("my 版本标记 v0.9.9（1009 三令+评审修：qw-pop 双保险+孤字并回守卫+测试补面）", "v0.9.9" in my_wxml)
+check("my 版本标记 v0.9.10（1010 双特性：免费引流回位+锅圈分类标签）", "v0.9.10" in my_wxml)
 pkg = json.load(open(os.path.join(ROOT, "package.json"), encoding="utf-8"))
-check("package.json version=0.9.9", pkg["version"] == "0.9.9")
+check("package.json version=0.9.10", pkg["version"] == "0.9.10")
 # 1009 用户令：外观沉底（个性化低频项按用户习惯放设置区，高频额度/记录在前）——顺序即断言
 check("my 布局顺序=额度→记录→书架→外观（外观在咨询记录之后，1009 用户令）",
       my_wxml.find("外观 · APPEARANCE") > my_wxml.find("咨询记录 · RECORDS")
@@ -412,8 +412,10 @@ check("ask 首次提交闸保留隐私告知（合规口径：采集前告知不
       "showPrivacyModal(this, () => this._doSubmit(q))" in ask_js)
 _vis = {p: chr(10).join(l.split("<!--")[0] for l in open(os.path.join(ROOT, p), encoding="utf-8").read().splitlines())
         for p in ("pages/ask/ask.wxml", "pages/my/my.wxml", "pages/answer/answer.wxml")}
-check("用户可见面免费字样全域下线（1009 用户令：ask/my/answer 正文零免费）",
-      all("免费" not in v for v in _vis.values()))
+check("免费=引流主口径（1010 用户令：CTA/票根/home 三面回位；my/answer 正文仍零免费）",
+      "'免费咨询'}}</button>" in ask_wxml and "每日 6 次免费咨询" in ask_wxml
+      and "免费工程咨询" in read("pages/home/home.wxml")
+      and "免费" not in _vis["pages/my/my.wxml"] and "免费" not in _vis["pages/answer/answer.wxml"])
 check("my 页用户协议·隐私政策入口", "goPrivacy" in my_js and "用户协议 · 隐私政策" in my_wxml)
 
 # D. UGC 合规：锅圈举报入口 + 服务端 msgSecCheck 闸
@@ -953,6 +955,20 @@ check("v0.9.8 海报免费字样全下线（OPEN ACCESS+追问行去免费）",
       and "同样免费" not in _poster_py and "支持继续追问" in _poster_py)
 check("v0.9.8 海报版式缓存键=v4（免费文案改动自动失效旧缓存）", 'LAYOUT_VERSION = "v4"' in _poster_py)
 
+# ══ v0.9.10 用户令 1009/1010：锅圈分类标签 + 首页统计面 ══
+_pot_wxss = read("pages/pot/pot.wxss")
+_pc_py = open(os.path.join(ENGINE, "qianwen_engine", "potcat.py"), encoding="utf-8").read()
+_store_py = open(os.path.join(ENGINE, "qianwen_engine", "store.py"), encoding="utf-8").read()
+check("服务端锅圈分类器（六类+其他，关键词规则序=优先级）", "CATEGORY_RULES" in _pc_py and "FALLBACK_CATEGORY" in _pc_py)
+check("pot/list 端点接线分类+过滤（读时打标零迁移零回填）", "potcat.classify" in _app_py and '"cats"' in _app_py)
+check("pot 页分类 chip 行（onCat 切换+activeCat 状态）", "cat-chip" in pot_wxml and "onCat" in pot_js and "activeCat" in pot_js)
+check("pot 条目分类标 pill（wxml+wxss 双落）", "pot-cat" in pot_wxml and ".pot-cat" in _pot_wxss)
+check("pot chip 零写死色（全主题 token）", "var(--ink-2)" in _pot_wxss and "var(--t-paper-hi)" in _pot_wxss)
+check("api.potList 带分类参数（encodeURIComponent 防中文乱码）", "encodeURIComponent" in api_js and "?cat=" in api_js)
+check("服务端公开统计端点（注册用户+咨询总数，种子不计入）",
+      "public_stats" in _app_py and "POT_OPENID" in _store_py)
+check("ask 首页统计面（同行在用+累计咨询，可证成无极限词）",
+      "api.stats()" in ask_js and "累计咨询" in ask_wxml and "位同行在使用" in ask_wxml)
 fails = [c for c in checks if not c[1]]
 for name, ok, detail in checks:
     print(("PASS " if ok else "FAIL ") + name + (("  " + detail) if detail and not ok else ""))

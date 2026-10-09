@@ -111,7 +111,8 @@ module.exports = {
   // ── v0.5.0（用户九点令）──
   optimize: (question) => request('POST', '/api/question/optimize', { question }),          // AI优化提问
   exportAll: (fmt) => request('POST', '/api/answers/export_all', { fmt }),                  // 批量导出全部咨询
-  potList: () => request('GET', '/api/pot/list'),                                           // 锅圈热点列表
+  potList: (cat) => request('GET', '/api/pot/list' + (cat ? '?cat=' + encodeURIComponent(cat) : '')),  // 锅圈热点列表（v0.9.10 可按分类过滤）
+  stats: () => request('GET', '/api/stats'),                                               // 注册用户/咨询总数（v0.9.10 首页信任面，未登录可看）
   potReport: (id, reason) => request('POST', '/api/pot/report', { aid: id, reason }),      // 锅圈内容举报（UGC 合规）
   // ── v0.6.0（100× 弧线：全免费，智谱接地）──
   followup: (id, question) => request('POST', '/api/answer/' + id + '/followup', { question }), // 免费追问

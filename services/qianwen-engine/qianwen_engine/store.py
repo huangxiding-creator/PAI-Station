@@ -1142,6 +1142,20 @@ def save_pot_report(aid: str, openid: str, reason: str) -> bool:
     return True
 
 
+def public_stats() -> dict:
+    """v0.9.10 用户令 1010：首页社会信任面——注册用户总数+咨询总数（公开聚合数）。
+    官方种子账号（POT_OPENID）两处都不计入：它不是注册用户，其落库也不是用户咨询。"""
+    init()
+    with _db() as c:
+        users = c.execute(
+            "SELECT COUNT(*) AS n FROM users WHERE openid != ?", (config.POT_OPENID,)
+        ).fetchone()["n"]
+        asks = c.execute(
+            "SELECT COUNT(*) AS n FROM answers WHERE openid != ?", (config.POT_OPENID,)
+        ).fetchone()["n"]
+    return {"users": int(users or 0), "asks": int(asks or 0)}
+
+
 def save_pot_answer(question: str, answer_full: str, citations: list,
                     sort: int = 0, elapsed: float = 0.0, via: str = "kb") -> str:
     """锅圈条目落库：answers 行（POT_OPENID · ready · unlocked）+ pot_items 登记。

@@ -644,3 +644,44 @@ def test_telemetry_truncate_and_prune(client, monkeypatch):
     assert len(rows) <= 52  # 修剪后仅留尾部（10 + 头 2 条早于首个修剪点）
     assert rows[0]["boot"] == "b49"
     assert all(len(r["boot"]) <= 24 and len(r["ver"]) <= 16 for r in rows)
+
+
+def test_pot_category_tags_and_filter(client):
+    """v0.9.10 用户令 1009：锅圈分类标签——读时打标（存量即得）+ ?cat= 过滤 + 全量计数。"""
+    from qianwen_engine import potcat, store
+
+    # 分类器单元面：六类首中优先 + 兜底其他
+    assert potcat.classify("EPC 固定总价合同下材料价格大涨，能申请调价吗") == "计价与调价"
+    assert potcat.classify("业主口头设计变更，费用和工期责任怎么索赔") == "索赔与变更"
+    assert potcat.classify("总包对分包的背靠背付款条款现在还有效吗") == "付款与背靠背"
+    assert potcat.classify("竣工结算被拖延，以审计结果为准怎么办") == "结算与审计"
+    assert potcat.classify("EPC 联合体投标资质怎么搭配") == "招投标与联合体"
+    assert potcat.classify("工期延误的责任怎么划分") == "工期与质量"
+    assert potcat.classify("今天天气怎么样") == potcat.FALLBACK_CATEGORY
+    assert potcat.classify("") == potcat.FALLBACK_CATEGORY
+
+    store.save_pot_answer("EPC 固定总价合同下材料价格大涨，能申请调价吗", "解答" * 60, [])
+    store.save_pot_answer("总包对分包的背靠背付款条款现在还有效吗", "解答" * 60, [])
+    store.save_pot_answer("完全无关的闲聊问题", "解答" * 60, [])
+    d = client.get("/api/pot/list").json()
+    cats = {c["name"]: c["n"] for c in d["cats"]}
+    assert cats.get("计价与调价") == 1 and cats.get("付款与背靠背") == 1
+    assert cats.get(potcat.FALLBACK_CATEGORY) == 1
+    assert {it["cat"] for it in d["items"]} == {"计价与调价", "付款与背靠背", "其他"}
+
+    # 过滤：只回该分类；cats 仍是全量计数（前端切筛不清 chips）
+    f = client.get("/api/pot/list", params={"cat": "计价与调价"}).json()
+    assert len(f["items"]) == 1 and f["items"][0]["cat"] == "计价与调价"
+    assert {c["name"]: c["n"] for c in f["cats"]}.get("付款与背靠背") == 1
+    # 未知分类 → 空列表不炸
+    assert client.get("/api/pot/list", params={"cat": "不存在的分类"}).json()["items"] == []
+
+
+def test_public_stats_excludes_seed_account(client):
+    """v0.9.10 用户令 1010：首页统计面——官方种子账号不计入注册用户数/咨询总数。"""
+    from qianwen_engine import store
+
+    store.save_pot_answer("锅圈种子问题", "解答" * 60, [])  # POT_OPENID 落库，两处都不计入
+    s = client.get("/api/stats").json()
+    assert set(s) == {"users", "asks"}
+    assert s["users"] == 0 and s["asks"] == 0  # 空库+一条种子 → 双零（种子被排除）

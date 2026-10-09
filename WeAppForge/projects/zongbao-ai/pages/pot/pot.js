@@ -15,7 +15,9 @@ function navToThrottled(url) {
 
 Page({
   data: {
-    items: [],   // {id, question, preview, likes, liked, full_chars, views, shares}
+    items: [],   // {id, question, preview, likes, liked, full_chars, views, shares, cat}
+    cats: [],    // v0.9.10 分类标签（用户令 1009）：[{name, n}]，服务端按规则序返回非空分类
+    activeCat: '',   // 当前筛选分类（''=全部）
     loading: true,
     loadError: '',
     nav: { statusBarHeight: 20, navHeight: 44 },
@@ -50,11 +52,12 @@ Page({
     // v0.9.2（1009 补审计 MEDIUM 修复）：请求序号防竞态 + 已有列表时静默失败不吞内容——
     // 此前 onShow 静默刷新一旦失败会把已渲染的整个列表替换成错误卡；慢的失败响应
     // 还可能覆盖更新的成功响应。现在：仅首载/空列表才进错误态，有内容时失败只轻提示。
+    // v0.9.10：带分类筛选（activeCat；服务端分类计数恒为全量，切筛不清 chips）。
     const seq = (this._seq = (this._seq || 0) + 1);
-    api.potList()
+    api.potList(this.data.activeCat || '')
       .then((d) => {
         if (seq !== this._seq) return; // 过期响应丢弃
-        this.setData({ items: d.items || [], loading: false, loadError: '' });
+        this.setData({ items: d.items || [], cats: d.cats || [], loading: false, loadError: '' });
       })
       .catch((err) => {
         if (seq !== this._seq) return;
@@ -65,6 +68,14 @@ Page({
         }
         this.setData({ loading: false, loadError: api.errMsg(err, '加载失败') });
       });
+  },
+
+  // v0.9.10 分类标签（用户令 1009）：点 chip 切分类——同分类不重复请求；chips 行常驻
+  onCat(e) {
+    const cat = e.currentTarget.dataset.cat || '';
+    if (cat === (this.data.activeCat || '')) return;
+    this.setData({ activeCat: cat });
+    this.refresh();
   },
 
   onItem(e) {

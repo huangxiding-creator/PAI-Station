@@ -48,7 +48,7 @@ mp.on('console', (msg) => {
 // v0.9.8：冷启动不再自动弹隐私告知——矩阵其余腿先播种「已同意」跑确定性路径（S6 再清掉专测新门）
 await mp.callWxMethod('setStorageSync', 'qw_privacy_ok', 1);
 
-// ══ S1 · 版本信标 v0.9.9（旧实例缓存一票判定锚）══
+// ══ S1 · 版本信标 v0.9.10（旧实例缓存一票判定锚）══
 await mp.switchTab('/pages/my/my');
 await sleep(2200);
 {
@@ -60,7 +60,7 @@ await sleep(2200);
     const t = String(await m.text() || '');
     if (t.indexOf('v0.9.') >= 0) { beacon = t.trim(); break; }
   }
-  note('my_version_beacon_099', beacon.indexOf('v0.9.9') >= 0, `beacon="${beacon}"`);
+  note('my_version_beacon_0910', beacon.indexOf('v0.9.10') >= 0, `beacon="${beacon}"`);
   await shot('s1_my.png');
 
   // ══ S2 · my 批量导出：qw-pop modal 金额按钮（v0.9.6 4 字硬限的终局形态）══
@@ -135,7 +135,7 @@ await sleep(2200);
       const sheetOn = sd.popOpen === true && sd.popMode === 'sheet';
       const badge = await popText(ans, '.qwp-badge');
       note('paid_export_sheet_opens', sheetOn, `popMode=${sd.popMode}`);
-      note('paid_export_badge_payonce', badge === '已解锁 · 永久免费导出', `badge="${badge}"`);
+      note('paid_export_badge_payonce', badge === '已解锁 · 永久导出', `badge="${badge}"`);
       const rows = (await (await ans.$('#qwpop')).$$('.qwp-row'));
       note('paid_export_sheet_three_formats', rows.length === 3, `rows=${rows.length}`);
       await shot('s3_paid_export_sheet.png');
@@ -286,6 +286,44 @@ await sleep(2200);
     note('report_modal_editable', true, 'SKIP: 同上');
     note('report_modal_cancel_closes', true, 'SKIP: 同上');
     note('report_no_new_exception', true, 'SKIP: 同上');
+  }
+}
+
+// ══ S5b · 锅圈分类标签 v0.9.10：chips 渲染 + 切换分类过滤（用户令 1009）══
+{
+  const errBefore = errors.length;
+  await mp.switchTab('/pages/pot/pot');
+  await sleep(2200);
+  const pot = await mp.currentPage();
+  let pd = await dataOf(pot);
+  if ((pd.cats || []).length > 0) {
+    const chips = await pot.$$('.cat-chip');
+    note('pot_cat_chips_rendered', chips.length === pd.cats.length + 1, `chips=${chips.length} cats=${pd.cats.length}`);
+    note('pot_cat_default_all', !!(await pot.$('.cat-chip.cat-on')), 'default=全部 on');
+    if (chips.length > 1) {
+      await chips[1].tap();
+      await sleep(1500);
+      pd = await dataOf(pot);
+      const wantCat = pd.cats[0].name;
+      const allMatch = (pd.items || []).every((it) => it.cat === wantCat);
+      note('pot_cat_filter_applies', pd.activeCat === wantCat && allMatch && (pd.items || []).length > 0,
+        `active=${pd.activeCat} items=${(pd.items || []).length} allMatch=${allMatch}`);
+      const allChip = await pot.$('.cat-chip');
+      await allChip.tap();
+      await sleep(1500);
+      pd = await dataOf(pot);
+      note('pot_cat_back_to_all', !pd.activeCat && (pd.items || []).length >= 1, `items=${(pd.items || []).length}`);
+    } else {
+      note('pot_cat_filter_applies', true, 'SKIP: 仅一个分类（无需切换）');
+      note('pot_cat_back_to_all', true, 'SKIP: 同上');
+    }
+    note('pot_cat_no_new_exception', errors.length === errBefore, `newErr=${errors.length - errBefore}`);
+  } else {
+    note('pot_cat_chips_rendered', true, 'SKIP: 锅圈暂无分类条目（诚实空）');
+    note('pot_cat_default_all', true, 'SKIP: 同上');
+    note('pot_cat_filter_applies', true, 'SKIP: 同上');
+    note('pot_cat_back_to_all', true, 'SKIP: 同上');
+    note('pot_cat_no_new_exception', true, 'SKIP: 同上');
   }
 }
 

@@ -21,6 +21,19 @@
     <view class="ai-flag-text">本展区问答内容由人工智能（AI）生成 · 仅供参考</view>
   </view>
 
+  <!-- v0.9.10 分类标签（用户令 1009）：分类 chip 行——服务端读时打标，存量/新增即打即得 -->
+  <scroll-view class="cat-row" scroll-x wx:if="{{cats.length > 0 && !loading && !loadError}}">
+    <view class="cat-chip {{!activeCat ? 'cat-on' : ''}}" data-cat="" bindtap="onCat" hover-class="cat-hover">全部</view>
+    <view
+      class="cat-chip {{activeCat === item.name ? 'cat-on' : ''}}"
+      wx:for="{{cats}}"
+      wx:key="name"
+      data-cat="{{item.name}}"
+      bindtap="onCat"
+      hover-class="cat-hover"
+    >{{item.name}}<text class="cat-n mono"> {{item.n}}</text></view>
+  </scroll-view>
+
   <!-- 列表 -->
   <block wx:if="{{loading}}">
     <view class="card">
@@ -63,6 +76,7 @@
         <view class="pot-no mono">H-{{index + 1 < 10 ? '0' : ''}}{{index + 1}}</view>
         <view class="pot-q">{{item.question}}</view>
       </view>
+      <view class="pot-cat mono" wx:if="{{item.cat}}">{{item.cat}}</view>
       <view class="pot-preview">{{item.preview}}{{item.preview.length >= 200 ? '…' : ''}}</view>
       <view class="pot-foot">
         <text class="pot-meta mono">{{item.full_chars}} 字全文</text>
