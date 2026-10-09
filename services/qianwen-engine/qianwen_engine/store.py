@@ -1144,14 +1144,17 @@ def save_pot_report(aid: str, openid: str, reason: str) -> bool:
 
 def public_stats() -> dict:
     """v0.9.10 用户令 1010：首页社会信任面——注册用户总数+咨询总数（公开聚合数）。
-    官方种子账号（POT_OPENID）两处都不计入：它不是注册用户，其落库也不是用户咨询。"""
+    官方种子账号（POT_OPENID）两处都不计入：它不是注册用户，其落库也不是用户咨询。
+    v0.9.11 审计修：asks 只数 status='ready'——与 history_all/share_on/can_share 同语义
+    （error 行已退次=咨询未发生；引擎重启孤儿 pending 恒不收敛，混入会虚增公开数）。"""
     init()
     with _db() as c:
         users = c.execute(
             "SELECT COUNT(*) AS n FROM users WHERE openid != ?", (config.POT_OPENID,)
         ).fetchone()["n"]
         asks = c.execute(
-            "SELECT COUNT(*) AS n FROM answers WHERE openid != ?", (config.POT_OPENID,)
+            "SELECT COUNT(*) AS n FROM answers WHERE openid != ? AND status = 'ready'",
+            (config.POT_OPENID,),
         ).fetchone()["n"]
     return {"users": int(users or 0), "asks": int(asks or 0)}
 

@@ -53,16 +53,23 @@ Page({
     // 此前 onShow 静默刷新一旦失败会把已渲染的整个列表替换成错误卡；慢的失败响应
     // 还可能覆盖更新的成功响应。现在：仅首载/空列表才进错误态，有内容时失败只轻提示。
     // v0.9.10：带分类筛选（activeCat；服务端分类计数恒为全量，切筛不清 chips）。
+    // v0.9.11 审计修：成功落列表时记 _renderedCat；切分类请求失败时回滚 activeCat，
+    // 杜绝「chip 亮在新分类、列表还是旧分类内容」的错位态（同分类守卫随之恢复可重试）。
     const seq = (this._seq = (this._seq || 0) + 1);
     api.potList(this.data.activeCat || '')
       .then((d) => {
         if (seq !== this._seq) return; // 过期响应丢弃
+        this._renderedCat = this.data.activeCat || '';
         this.setData({ items: d.items || [], cats: d.cats || [], loading: false, loadError: '' });
       })
       .catch((err) => {
         if (seq !== this._seq) return;
         if ((this.data.items || []).length > 0) {
-          this.setData({ loading: false });
+          const patch = { loading: false };
+          if ((this._renderedCat || '') !== (this.data.activeCat || '')) {
+            patch.activeCat = this._renderedCat || '';   // 高亮回滚到已渲染内容的分类
+          }
+          this.setData(patch);
           wx.showToast({ title: api.errMsg(err, '刷新失败，稍后自动重试'), icon: 'none' });
           return;
         }

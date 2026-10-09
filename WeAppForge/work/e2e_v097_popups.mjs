@@ -48,7 +48,7 @@ mp.on('console', (msg) => {
 // v0.9.8：冷启动不再自动弹隐私告知——矩阵其余腿先播种「已同意」跑确定性路径（S6 再清掉专测新门）
 await mp.callWxMethod('setStorageSync', 'qw_privacy_ok', 1);
 
-// ══ S1 · 版本信标 v0.9.10（旧实例缓存一票判定锚）══
+// ══ S1 · 版本信标 v0.9.11（旧实例缓存一票判定锚）══
 await mp.switchTab('/pages/my/my');
 await sleep(2200);
 {
@@ -60,7 +60,7 @@ await sleep(2200);
     const t = String(await m.text() || '');
     if (t.indexOf('v0.9.') >= 0) { beacon = t.trim(); break; }
   }
-  note('my_version_beacon_0910', beacon.indexOf('v0.9.10') >= 0, `beacon="${beacon}"`);
+  note('my_version_beacon_0911', beacon.indexOf('v0.9.11') >= 0, `beacon="${beacon}"`);
   await shot('s1_my.png');
 
   // ══ S2 · my 批量导出：qw-pop modal 金额按钮（v0.9.6 4 字硬限的终局形态）══
@@ -289,7 +289,7 @@ await sleep(2200);
   }
 }
 
-// ══ S5b · 锅圈分类标签 v0.9.10：chips 渲染 + 切换分类过滤（用户令 1009）══
+// ══ S5b · 锅圈分类标签 v0.9.11：chips 渲染 + 切换分类过滤（用户令 1009）══
 {
   const errBefore = errors.length;
   await mp.switchTab('/pages/pot/pot');

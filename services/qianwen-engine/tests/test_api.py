@@ -685,3 +685,20 @@ def test_public_stats_excludes_seed_account(client):
     s = client.get("/api/stats").json()
     assert set(s) == {"users", "asks"}
     assert s["users"] == 0 and s["asks"] == 0  # 空库+一条种子 → 双零（种子被排除）
+
+
+def test_public_stats_counts_only_ready(client):
+    """v0.9.11 审计修：error 行（已退次=咨询未发生）与孤儿 pending 行（引擎重启恒不收敛）
+    不得计入公开「累计咨询」——公开信任指标只认真实交付的 ready 答案。"""
+    from qianwen_engine import store
+
+    store.quota_left("u-stat")   # 生产路径建用户行（登录/咨询经 _row_user 惰性落册）
+    orphan = store.create_pending("u-stat", "孤儿 pending 问题")       # 模拟引擎重启在途行
+    failed = store.create_pending("u-stat", "失败问题")
+    store.fail_answer(failed, "KB 断路器打开")                          # error 行
+    done = store.create_pending("u-stat", "成功问题")                  # 生产路径：pending→ready
+    store.complete_answer(done, "解答" * 80, [])
+    store.save_pot_answer("种子", "解" * 60, [])                       # 种子 ready 也不计
+    s = client.get("/api/stats").json()
+    assert s["asks"] == 1        # 只有 ready 的用户咨询计入
+    assert s["users"] == 1       # u-stat 一人（种子不计）

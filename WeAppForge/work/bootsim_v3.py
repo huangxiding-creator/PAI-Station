@@ -160,9 +160,9 @@ check("api potList 客户端", "potList" in api_js)
 check("api optimize 客户端（shareReward 已随分享激励下线）", "optimize" in api_js and "shareReward" not in api_js)
 
 # 版本与定位（v0.9.0）
-check("my 版本标记 v0.9.10（1010 双特性：免费引流回位+锅圈分类标签）", "v0.9.10" in my_wxml)
+check("my 版本标记 v0.9.11（1011 提审前审计修四件）", "v0.9.11" in my_wxml)
 pkg = json.load(open(os.path.join(ROOT, "package.json"), encoding="utf-8"))
-check("package.json version=0.9.10", pkg["version"] == "0.9.10")
+check("package.json version=0.9.11", pkg["version"] == "0.9.11")
 # 1009 用户令：外观沉底（个性化低频项按用户习惯放设置区，高频额度/记录在前）——顺序即断言
 check("my 布局顺序=额度→记录→书架→外观（外观在咨询记录之后，1009 用户令）",
       my_wxml.find("外观 · APPEARANCE") > my_wxml.find("咨询记录 · RECORDS")
@@ -967,6 +967,15 @@ check("pot chip 零写死色（全主题 token）", "var(--ink-2)" in _pot_wxss 
 check("api.potList 带分类参数（encodeURIComponent 防中文乱码）", "encodeURIComponent" in api_js and "?cat=" in api_js)
 check("服务端公开统计端点（注册用户+咨询总数，种子不计入）",
       "public_stats" in _app_py and "POT_OPENID" in _store_py)
+# ── v0.9.11 提审前对抗审计四修（12 agents 三镜头+对抗核验，4 CONFIRMED 全修）──
+check("服务端 stats 只数 ready 行（error/孤儿 pending 不虚增公开咨询数）",
+      "AND status = 'ready'" in _store_py)
+check("ask 已登录票根大数字=免费真值 free_left（含赠次 total 不再误标「免费」）",
+      'qt-num mono">{{quota.free_left}}' in ask_wxml
+      and 'qt-num mono">{{quota.total_left}}' not in ask_wxml
+      and "合计可咨询 {{quota.total_left}} 次" in ask_wxml)
+check("pot 切分类失败回滚 activeCat（chip 高亮与列表内容不再错位）",
+      "_renderedCat" in pot_js and "patch.activeCat = this._renderedCat" in pot_js)
 check("ask 首页统计面（同行在用+累计咨询，可证成无极限词）",
       "api.stats()" in ask_js and "累计咨询" in ask_wxml and "位同行在使用" in ask_wxml)
 fails = [c for c in checks if not c[1]]
