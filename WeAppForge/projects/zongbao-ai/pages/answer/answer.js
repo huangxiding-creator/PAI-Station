@@ -2,7 +2,7 @@
 // Markdown 结构化渲染（md2blocks）；pending 实时进度；ready 渲染全文；error 退次提示
 // v0.5.0（用户九点令）：语音全撤；「总包AI智库专业解答」；五枚精美小按钮（有用/导出/纠错/分享）
 // v0.7.3（用户令）：复制全文下线；导出不再赠次（赠次=有用/纠错/分享三动作）
-// 互动赠次：有用/导出/纠错(具体意见)/分享 每篇各 +1 次咨询机会；分享标题=总包AI顾问-免费咨询
+// 互动赠次：有用/导出/纠错(具体意见)/分享 每篇各 +1 次咨询机会；分享标题=总包AI顾问-工程咨询
 // v0.6.0（100× 弧线，全免费）：要点速览 tldr / 相关问题 chips / 追问对话流（智谱接地）/ 分享海报（引擎 Pillow）
 // v0.7.4 提审合规：AI 生成标识上屏 / 极限词归零 / 依据解读口径 / 分享回流注释中性化
 // v0.7.3（用户令）：观看/转发计数展示；互动得次授勋动画（徽章+光芒+火花+震动）；周换装主题
@@ -292,7 +292,7 @@ Page({
     pop.modal(this, {
       kicker: '导出 · EXPORT',
       title: '导出本篇解答',
-      content: '咨询全程免费，导出文件按 ¥0.1/条 收费（虚拟支付），本次支付 0.1 元。解锁后本篇可反复导出 Word/PDF/Markdown。',
+      content: '导出文件按 ¥0.1/条 收费（虚拟支付），本次支付 0.1 元。解锁后本篇可反复导出 Word/PDF/Markdown。',
       confirmText: '支付 0.1 元解锁',
       cancelText: '再想想',
       maskClosable: false
@@ -346,12 +346,12 @@ Page({
     });
   },
 
-  // v0.9.7：底部图纸盘（qw-pop sheet）——已解锁答案带「永久免费导出」徽标
+  // v0.9.7：底部图纸盘（qw-pop sheet）——已解锁答案带「永久导出」徽标（1009 免费字样下线）
   //（1009 用户令：付费一次永久解锁的视觉诚实）
   _exportSheet() {
     pop.sheet(this, {
       kicker: '导出格式 · EXPORT FORMAT',
-      badge: this.data.exportPaid ? '已解锁 · 永久免费导出' : '',
+      badge: this.data.exportPaid ? '已解锁 · 永久导出' : '',
       items: [
         { t: 'Word 文档', sub: '适合打印批注与正式归档', ext: '.docx' },
         { t: 'PDF 文档', sub: '版式固定，任何设备观感一致', ext: '.pdf' },
@@ -654,9 +654,9 @@ Page({
   },
 
   onShareAppMessage() {
-    // 用户令 v0.5.0：分享标题统一为「总包AI顾问-免费咨询」
+    // v0.9.8（用户令 1009 免费字样下线）：分享标题=总包AI顾问-工程咨询
     return {
-      title: '总包AI顾问-免费咨询',
+      title: '总包AI顾问-工程咨询',
       path: '/pages/answer/answer?id=' + this.data.id
     };
   }

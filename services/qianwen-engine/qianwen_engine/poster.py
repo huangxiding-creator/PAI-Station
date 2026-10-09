@@ -37,7 +37,7 @@ M = 72                     # 版心边距
 H_MIN, H_MAX = 1500, 1850  # 画布高随内容伸缩区间（v0.9.8：摘录区入场；用户令允许加长）
 _QR_SIZE = 160             # 小程序码贴片边长（430 源图缩放，保扫码清晰度）
 
-LAYOUT_VERSION = "v3"      # 版式版本（进 app.py 海报缓存键：改版自动失效旧缓存）
+LAYOUT_VERSION = "v4"      # 版式版本（进 app.py 海报缓存键：改版自动失效旧缓存）
 
 
 class LayoutError(Exception):
@@ -221,8 +221,8 @@ def build(question: str, bullets: list, qr_png: bytes | None,
     _today = date.today()
     d.text((W - M - d.textlength(_today.strftime("%Y.%m.%d"), font=f_meta_s), 60),
            _today.strftime("%Y.%m.%d"), font=f_meta_s, fill=INK_SOFT)
-    d.text((W - M - d.textlength("SHT 01 · FREE ACCESS", font=f_meta_s), 92),
-           "SHT 01 · FREE ACCESS", font=f_meta_s, fill=INK_SOFT)
+    d.text((W - M - d.textlength("SHT 01 · OPEN ACCESS", font=f_meta_s), 92),
+           "SHT 01 · OPEN ACCESS", font=f_meta_s, fill=INK_SOFT)
     d.line([(M, 124), (W - M, 124)], fill=NAVY, width=3)
 
     # ── 问题主区（主角：Bold 44，最多 4 行）──
@@ -293,7 +293,7 @@ def build(question: str, bullets: list, qr_png: bytes | None,
     x = M
     for num, unit, last in ((_num(m.get("chars")), " 字全文", False),
                             (_num(m.get("cites")), " 条依据", False),
-                            ("免费", "继续追问", True)):
+                            ("支持", "继续追问", True)):
         d.text((x, y_meta), num, font=f_num, fill=NAVY)
         x += d.textlength(num, font=f_num) + 4
         d.text((x, y_meta + 7), unit, font=f_unit, fill=INK_SOFT)
@@ -307,7 +307,7 @@ def build(question: str, bullets: list, qr_png: bytes | None,
     # v0.9.6（用户令 1009）：免费次数宣传行不回潮（规则不变，文字全域下线）
     # v0.9.5（1009 用户令「海报 AI 申明最多一次」）：行动卡短版申明不回潮——
     # 全海报只保留页脚合规全句（含「不构成正式法律意见」，标识位不变不弃合规）
-    d.text((104, cy0 + 120), "支持继续追问 · 同样免费", font=f_cta_sub, fill=MIST)
+    d.text((104, cy0 + 120), "支持继续追问 · 解答更完整", font=f_cta_sub, fill=MIST)
 
     if qr_png:
         try:

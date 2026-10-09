@@ -122,14 +122,14 @@ Page({
     this._gateAndLogin();
   },
 
-  // 隐私门 + 登录：已同意过直接登录；首次先告知（同意→记忆+登录，拒绝→不发登录）
+  // 隐私门 + 登录：已同意过直接登录
+  // v0.9.8（用户令 1009）：冷启动不自动弹隐私告知（首屏不打断）；
+  // 告知移至首次提交闸 submitQuestion——未同意前仍不收集 openid、不发登录（合规口径不变）
   _gateAndLogin() {
     tel.ping('ask_gate', { agreed: !!wx.getStorageSync('qw_privacy_ok') });
     if (wx.getStorageSync('qw_privacy_ok')) {
       this.silentLogin();
-      return;
     }
-    showPrivacyModal(this, () => this.silentLogin());
   },
 
   // v0.7.4 海报深链导航（onLoad 首跳 + onShow 兜底重试；成功即清位，3 次上限防循环）
@@ -214,7 +214,7 @@ Page({
   applyQuota(q) {
     if (!q || typeof q.total_left !== 'number') return;
     wx.setStorageSync('qw_quota', q);
-    const parts = ['免费 ' + q.free_left + ' 次'];
+    const parts = ['剩余 ' + q.free_left + ' 次'];
     if (q.bonus_left > 0) parts.push('互动加赠 ' + q.bonus_left + ' 次');
     this.setData({ quota: q, quotaText: parts.join(' · ') });
   },

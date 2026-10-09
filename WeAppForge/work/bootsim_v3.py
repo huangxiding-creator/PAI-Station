@@ -111,11 +111,11 @@ check("wxml 无语音条（voice-bar/speak-btn）", "voice-bar" not in ask_wxml 
 # 第 2 点：示范性问题
 check("ask 常用咨询→示范性问题", "示范性问题 · SAMPLE QUESTIONS" in ask_wxml and "常用咨询" not in ask_wxml)
 
-# 第 3 点：AI优化提问（左）+ 免费咨询（右，1009 用户令突出免费），按钮在输入框下方
+# 第 3 点：AI优化提问（左）+ 立即咨询（右，1009 免费字样下线令），按钮在输入框下方
 check("ask AI优化提问按钮+实现", 'bindtap="onOptimize"' in ask_wxml and "onOptimize" in ask_js)
 check("ask AI优化采用/保留原问（用户过目）", "采用" in ask_js and "保留原问" in ask_js)
-check("ask 免费咨询 CTA（1009 用户令）", "免费咨询" in ask_wxml and "立即咨询" not in ask_wxml)
-check("ask 额度票根=今日免费咨询（免费突出）", "今日免费咨询" in ask_wxml)
+check("ask CTA=立即咨询（1009 免费字样下线令）", "免费咨询" not in ask_wxml and "立即咨询" in ask_wxml)
+check("ask 额度票根=今日咨询额度（免费字样下线）", "今日咨询额度" in ask_wxml and "今日免费咨询" not in ask_wxml)
 _opt = ask_wxml.find("opt-btn")
 _cta = ask_wxml.find("ask-btn")
 _inp = ask_wxml.find("ask-input")
@@ -148,7 +148,7 @@ check("answer 互动二动作文案（有用/纠错，v0.7.6 分享激励下线�
       "有用 / 纠错（写具体意见）" in ans_wxml and "/ 分享" not in ans_wxml and "导出 —— " not in ans_wxml)
 
 # 第 8 点：分享标题
-check("answer 分享标题=总包AI顾问-免费咨询", "总包AI顾问-免费咨询" in ans_js)
+check("answer 分享标题=总包AI顾问-工程咨询（免费字样下线）", "总包AI顾问-工程咨询" in ans_js and "总包AI顾问-免费咨询" not in ans_js)
 
 # 第 9 点：锅圈页
 check("pot 四件套存在", all(os.path.exists(os.path.join(ROOT, "pages", "pot", f"pot.{e}")) for e in ("js", "wxml", "wxss", "json")))
@@ -158,9 +158,9 @@ check("api potList 客户端", "potList" in api_js)
 check("api optimize 客户端（shareReward 已随分享激励下线）", "optimize" in api_js and "shareReward" not in api_js)
 
 # 版本与定位（v0.9.0）
-check("my 版本标记 v0.9.7（1009 弹窗顶级审美重设计版）", "v0.9.7" in my_wxml)
+check("my 版本标记 v0.9.8（1009 三令版：隐私不自动弹+免费下线+AI申明唯一化）", "v0.9.8" in my_wxml)
 pkg = json.load(open(os.path.join(ROOT, "package.json"), encoding="utf-8"))
-check("package.json version=0.9.7", pkg["version"] == "0.9.7")
+check("package.json version=0.9.8", pkg["version"] == "0.9.8")
 # 1009 用户令：外观沉底（个性化低频项按用户习惯放设置区，高频额度/记录在前）——顺序即断言
 check("my 布局顺序=额度→记录→书架→外观（外观在咨询记录之后，1009 用户令）",
       my_wxml.find("外观 · APPEARANCE") > my_wxml.find("咨询记录 · RECORDS")
@@ -227,9 +227,9 @@ check("wxml 付费墙 UI 拆除（lock-note/unlock-bar/onUnlock）",
 check("answer 全文恒开（answer 字段直取）", "d.answer || d.preview" in ans_js)
 
 # 第 7 点：快答撤名 + 接着问→继续追问
-check("answer 接着问→继续追问", "接着问" not in ans_wxml and "继续追问 · 免费" in ans_wxml)
+check("answer 接着问→继续追问（免费字样下线）", "接着问" not in ans_wxml and ">继续追问</text>" in ans_wxml and "继续追问 · 免费" not in ans_wxml)
 check("answer 相关问题卡标题=继续追问", 'rel-title">继续追问' in ans_wxml)
-check("answer 追问输入 placeholder=继续追问", 'placeholder="继续追问（免费）"' in ans_wxml)
+check("answer 追问输入 placeholder=继续追问（去免费）", 'placeholder="继续追问"' in ans_wxml and "（免费）" not in ans_wxml)
 
 # 第 8 点：共享入锅圈（+1 次 / 取消扣 1 次）
 check("api shareOn/shareOff 客户端", "shareOn" in api_js and "shareOff" in api_js)
@@ -391,14 +391,26 @@ check("hero 溯源口径在 home 跳板页保留（可证成）",
       "AI 检索总包智库" in read("pages/home/home.wxml") and "顶级" not in pot_wxml)
 
 # B. AI 生成标识三面（AI标识办法：正文/追问/锅圈公开展示面）
-check("answer 正文卡常驻 AI 生成标识", "内容由 AI 生成" in ans_wxml and "ai-note" in ans_wxml)
-check("answer 追问卡 AI 标识", "追问回答同样由 AI 生成" in ans_wxml)
+check("answer 正文态 AI 申明唯一=依据来源下方徽章条（1009 用户令：上移+去重）",
+      'class="ai-flag ai-flag-card"' in ans_wxml and "内容由人工智能（AI）生成" in ans_wxml
+      and ans_wxml.find("cite-block") < ans_wxml.find('class="ai-flag ai-flag-card"'))
+check("answer 生成中页首 AI 条保留（拒审 599847679 整改：流式态可见）",
+      'class="ai-flag" wx:if="{{polling}}"' in ans_wxml)
+check("answer AI 申明去重（追问小注已删+ai-note 退役）", "追问回答同样由 AI 生成" not in ans_wxml and "ai-note" not in ans_wxml)
 check("pot 锅圈 AI 标识（页首常驻=ai-flag）", "人工智能（AI）生成" in pot_wxml and 'class="ai-flag"' in pot_wxml)
 
 # C. 隐私合规：legal 页 + 首次提问告知 + my 入口
 check("legal 页四件套存在", all(os.path.exists(os.path.join(ROOT, "pages", "legal", f"privacy.{e}")) for e in ("js", "wxml", "wxss", "json")))
 check("legal 页含用户协议+隐私政策双区块", "用户协议" in read("pages/legal/privacy.wxml") and "隐私政策" in read("pages/legal/privacy.wxml") and "openid" in read("pages/legal/privacy.wxml"))
 check("ask 首次提问隐私告知（qw_privacy_ok 门）", "qw_privacy_ok" in ask_js and "隐私保护告知" in ask_js)
+check("ask 冷启动不自动弹隐私告知（1009 用户令：首屏不打断）",
+      "showPrivacyModal(this, () => this.silentLogin())" not in ask_js)
+check("ask 首次提交闸保留隐私告知（合规口径：采集前告知不回退）",
+      "showPrivacyModal(this, () => this._doSubmit(q))" in ask_js)
+_vis = {p: chr(10).join(l.split("<!--")[0] for l in open(os.path.join(ROOT, p), encoding="utf-8").read().splitlines())
+        for p in ("pages/ask/ask.wxml", "pages/my/my.wxml", "pages/answer/answer.wxml")}
+check("用户可见面免费字样全域下线（1009 用户令：ask/my/answer 正文零免费）",
+      all("免费" not in v for v in _vis.values()))
 check("my 页用户协议·隐私政策入口", "goPrivacy" in my_js and "用户协议 · 隐私政策" in my_wxml)
 
 # D. UGC 合规：锅圈举报入口 + 服务端 msgSecCheck 闸
@@ -807,9 +819,9 @@ check("L18 信任数同源：utils/kbstats.js 唯一出处 + ask/zhiku 双页接
 check("L18 信任带 wxml 不再硬编码四数（kb-n 文本位改绑定，599847679 案号不算）",
       'kb-n mono">9855' not in ask_wxml and 'kb-n mono">847' not in ask_wxml
       and 'kb-n mono">906' not in ask_wxml and 'kb-n mono">620' not in ask_wxml)
-check("L17 隐私告知弹窗唯一出处（showPrivacyModal 单定义+双调用+文案常量单源，v0.9.7 自绘形态）",
+check("L17 隐私告知弹窗唯一出处（v0.9.8：单定义+提交闸唯一调用+文案常量单源）",
       ask_js.count("function showPrivacyModal(") == 1
-      and ask_js.count("showPrivacyModal(") == 3  # 定义+gate+submit
+      and ask_js.count("showPrivacyModal(") == 2  # 定义+submit 闸（冷启动自动弹已撤，1009 用户令）
       and ask_js.count("PRIVACY_CONTENT") >= 2)   # 定义注释+弹窗体（fail 重试腿已随自绘删除）
 _app_js = read("app.js")
 check("L22 errCount 死仪表已删（app.js 无只写不读计数）",
@@ -873,9 +885,9 @@ check("v0.9.7 隐私门自绘（同意/不同意+maskClosable:false+可选中文
       and "maskClosable: false" in ask_js and "selectable: true" in ask_js)
 check("v0.9.7 导出确认按钮带金额（自绘摆脱 4 字限，价格信号上按钮）",
       "支付 0.1 元解锁" in read("pages/answer/answer.js") and "'支付 ' + yuan" in my_js)
-check("v0.9.7 pay-once 视觉诚实（my 全解锁副题 + 双导出盘徽标）",
+check("v0.9.8 pay-once 视觉诚实（my 全解锁副题 + 导出盘徽标，免费字样下线）",
       "已全部解锁 · 可反复导出" in my_wxml and "已全部解锁 · 可反复导出" in my_js
-      and "已解锁 · 永久免费导出" in read("pages/answer/answer.js"))
+      and "已解锁 · 永久导出" in read("pages/answer/answer.js"))
 check("v0.9.7 ask 隐私 fail 重试腿已删（自绘组件无静默 fail 路径=根因战终局）",
       "ask_privacy_fail" not in ask_js)
 
@@ -906,8 +918,10 @@ check("v0.9.6 旗舰/独家标签全域绝迹（筛档+页面文案）",
       and "旗舰" not in rs_wxml and "独家" not in rs_wxml)
 check("v0.9.6 知识条目=9855（kbstats 单源）", "'9855'" in read("utils/kbstats.js"))
 _poster_py = open(os.path.join(ENGINE, "qianwen_engine", "poster.py"), encoding="utf-8").read()
-check("v0.9.6 海报「每天 6 次免费提问」行已删（追问免费行保留）",
-      "每天 6 次免费提问" not in _poster_py and "支持继续追问" in _poster_py)
+check("v0.9.8 海报免费字样全下线（OPEN ACCESS+追问行去免费）",
+      "每天 6 次免费提问" not in _poster_py and "FREE ACCESS" not in _poster_py
+      and "同样免费" not in _poster_py and "支持继续追问" in _poster_py)
+check("v0.9.8 海报版式缓存键=v4（免费文案改动自动失效旧缓存）", 'LAYOUT_VERSION = "v4"' in _poster_py)
 
 fails = [c for c in checks if not c[1]]
 for name, ok, detail in checks:

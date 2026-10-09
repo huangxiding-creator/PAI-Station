@@ -223,7 +223,7 @@ Page({
     pop.modal(this, {
       kicker: '导出 · EXPORT',
       title: '批量导出 ' + unpaid + ' 条',
-      content: '咨询全程免费，导出按 ¥0.1/条：本次 ' + unpaid + ' 条共 ' + yuan + ' 元（一单付清，解锁后可反复导出）。',
+      content: '导出按 ¥0.1/条：本次 ' + unpaid + ' 条共 ' + yuan + ' 元（一单付清，解锁后可反复导出）。',
       confirmText: '支付 ' + yuan + ' 元解锁',
       cancelText: '再想想',
       maskClosable: false

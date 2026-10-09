@@ -20,8 +20,9 @@
     </view>
   </view>
 
-  <!-- v0.7.7 深度合成合规：AI 生成显著标识强化（拒审 599847679 整改，常驻，生成中/正文/追问全状态可见） -->
-  <view class="ai-flag">
+  <!-- v0.7.7 深度合成合规：显著级标识（拒审 599847679 整改）。v0.9.8（用户令 1009）：
+       生成中态由页首条常驻；正文态唯一申明移至依据来源下方（见 ai-flag-card），不再重复 -->
+  <view class="ai-flag" wx:if="{{polling}}">
     <view class="ai-flag-badge">AI生成</view>
     <view class="ai-flag-text">本回答内容由人工智能（AI）生成，仅供参考，不构成专业意见</view>
   </view>
@@ -225,8 +226,11 @@
         </view>
       </view>
 
-      <!-- v0.7.4 提审合规：AI 生成标识常驻正文卡（AI标识办法） -->
-      <view class="ai-note">内容由 AI 生成 · 仅供参考，不构成专业意见 · 重要事项请咨询具备资质的专业人士</view>
+      <!-- v0.9.8（用户令 1009）：AI 申明唯一化——正文态只在依据来源下方一处，徽章+全句合并（显著级不变）；追问区小注已删 -->
+      <view class="ai-flag ai-flag-card">
+        <view class="ai-flag-badge">AI生成</view>
+        <view class="ai-flag-text">内容由人工智能（AI）生成 · 仅供参考，不构成专业意见 · 重要事项请咨询具备资质的专业人士</view>
+      </view>
     </view>
 
     <!-- ══ 互动小按钮排（用户令 v0.5.0：精美小按钮）══ -->
@@ -274,7 +278,7 @@
       <view class="fu-head">
         <view class="fu-badge">追问</view>
         <view class="fu-head-main">
-          <text class="fu-title">继续追问 · 免费</text>
+          <text class="fu-title">继续追问</text>
           <text class="fu-sub">基于本篇专业解答接地作答 · 深度问题建议发起新的正式咨询</text>
         </view>
       </view>
@@ -298,12 +302,11 @@
         </view>
       </view>
       <view class="fu-input-row">
-        <input class="fu-input" placeholder="继续追问（免费）" value="{{fuInput}}"
+        <input class="fu-input" placeholder="继续追问" value="{{fuInput}}"
                bindinput="onFuInput" bindconfirm="onFuSend" confirm-type="send" maxlength="200" />
         <view class="fu-send {{canSendFu ? '' : 'fu-send-off'}} {{fuSending ? 'fu-send-busy' : ''}}" bindtap="onFuSend" hover-class="fu-send-hover">{{fuSending ? '发送中' : '发送'}}</view>
       </view>
       <view class="muted fu-left" wx:if="{{fuLeftA !== null}}">今日剩余追问：本篇 {{fuLeftA}} 次 · 全部 {{fuLeftG}} 次 · 明日 0 点重置</view>
-      <view class="muted fu-ai-note">追问回答同样由 AI 生成 · 仅供参考</view>
     </view>
 
     <!-- ══ v0.6.0 相关问题：从本篇答案长出的下一步牵引 ══ -->

@@ -19,18 +19,18 @@
       <!-- 额度票根 -->
       <view class="quota-ticket" wx:if="{{quota}}">
         <view class="qt-left">
-          <view class="qt-label">今日免费咨询</view>
+          <view class="qt-label">今日咨询额度</view>
           <view class="qt-num mono">{{quota.total_left}}</view>
         </view>
         <view class="qt-perf"></view>
         <view class="qt-right">
-          <view class="qt-kv">免费 {{quota.free_left}} 次</view>
+          <view class="qt-kv">剩余 {{quota.free_left}} 次</view>
           <view class="qt-kv" wx:if="{{quota.bonus_left > 0}}">互动加赠 {{quota.bonus_left}} 次</view>
           <view class="qt-kv qt-dim" wx:else>有用/纠错 各+1次</view>
         </view>
       </view>
       <view class="quota-ticket quota-empty" wx:else>
-        <view class="qt-label">今日免费咨询</view>
+        <view class="qt-label">今日咨询额度</view>
         <view class="qt-num mono">–</view>
       </view>
 
@@ -78,7 +78,7 @@
   </view>
   <view class="kb-cred muted">智库沉淀自总包之声（2013 年至今公益运行）与总包学园 · 每条回答附依据来源，点开可查证</view>
 
-  <!-- ══ 双按钮排：AI优化提问（左）+ 免费咨询（右，1009 用户令突出免费）══ -->
+  <!-- ══ 双按钮排：AI优化提问（左）+ 立即咨询（右，1009 免费字样下线令）══ -->
   <!-- v0.9.4（1009 真机实测修复）：撤 disabled——自定义样式盖掉置灰态，"看着能点点了没反应"；
        改为恒可点+必反馈（空问 toast+聚焦输入框），弱化态只做视觉（btn-dim）不打断点击 -->
   <view class="btn-row rise" style="animation-delay: 90ms">
@@ -93,7 +93,7 @@
       disabled="{{asking}}"
       hover-class="btn-hover"
       bindtap="onSubmit"
-    >{{asking ? '智库检索中…' : '免费咨询'}}</button>
+    >{{asking ? '智库检索中…' : '立即咨询'}}</button>
   </view>
   <view class="opt-hint muted" wx:if="{{!optimizing}}">AI优化提问：把您的问题改写成更深入、更究竟的递进式三小问</view>
 
