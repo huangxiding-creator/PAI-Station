@@ -13,8 +13,9 @@ const errors = [];
 const consoleErrors = [];
 const results = [];
 const note = (name, ok, detail = '') => {
-  results.push({ name, ok: !!ok, detail });
-  console.log(`${ok ? 'PASS' : 'FAIL'} ${name}${detail ? ' | ' + detail : ''}`);
+  const skipped = String(detail).startsWith('SKIP');
+  results.push({ name, ok: !!ok && !skipped, skipped, detail });
+  console.log(`${skipped ? 'SKIP' : ok ? 'PASS' : 'FAIL'} ${name}${detail ? ' | ' + detail : ''}`);
 };
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const dataOf = async (page) => (await page.data()) || {};
@@ -47,7 +48,7 @@ mp.on('console', (msg) => {
 // v0.9.8：冷启动不再自动弹隐私告知——矩阵其余腿先播种「已同意」跑确定性路径（S6 再清掉专测新门）
 await mp.callWxMethod('setStorageSync', 'qw_privacy_ok', 1);
 
-// ══ S1 · 版本信标 v0.9.8（旧实例缓存一票判定锚）══
+// ══ S1 · 版本信标 v0.9.9（旧实例缓存一票判定锚）══
 await mp.switchTab('/pages/my/my');
 await sleep(2200);
 {
@@ -59,7 +60,7 @@ await sleep(2200);
     const t = String(await m.text() || '');
     if (t.indexOf('v0.9.') >= 0) { beacon = t.trim(); break; }
   }
-  note('my_version_beacon_098', beacon.indexOf('v0.9.8') >= 0, `beacon="${beacon}"`);
+  note('my_version_beacon_099', beacon.indexOf('v0.9.9') >= 0, `beacon="${beacon}"`);
   await shot('s1_my.png');
 
   // ══ S2 · my 批量导出：qw-pop modal 金额按钮（v0.9.6 4 字硬限的终局形态）══
@@ -315,6 +316,16 @@ await sleep(2200);
     `popOpen=${ad.popOpen} popMode=${ad.popMode} kicker="${kickTxt}"`);
   note('privacy_pop_buttons', okTxt === '同意' && cancelTxt === '不同意',
     `ok="${okTxt}" cancel="${cancelTxt}"`);
+  // v0.9.9 评审补面：maskClosable=false 行为锚——点遮罩不得关闭隐私签认单（合规链守卫）
+  const mask = await pop$(ask, '.qwp-mask');
+  if (mask) {
+    await mask.tap();
+    await sleep(500);
+    const dMask = await dataOf(ask);
+    note('privacy_pop_mask_unclosable', dMask.popOpen === true, `popOpen=${dMask.popOpen}`);
+  } else {
+    note('privacy_pop_mask_unclosable', false, '.qwp-mask not found');
+  }
   await shot('s6_privacy_pop.png');
   // [3] 同意 → 关弹窗 → 直接提交进答案页（401 自愈链代发登录）
   const okBtn = await pop$(ask, '.qwp-ok');
@@ -343,9 +354,12 @@ note('zero_exception', errors.length === 0, errors.slice(0, 3).join(' ;; ').slic
 note('zero_console_error', consoleErrors.length === 0,
   consoleErrors.slice(0, 3).join(' ;; ').slice(0, 300));
 
-const failed = results.filter((r) => !r.ok);
-console.log('\n==== E2E v0.9.7 POPUP-MATRIX: ' +
-  `${results.length - failed.length}/${results.length} PASS ====`);
+const failed = results.filter((r) => !r.ok && !r.skipped);
+const skipped = results.filter((r) => r.skipped);
+console.log('\n==== E2E POPUP-MATRIX: ' +
+  `${results.length - failed.length - skipped.length}/${results.length} PASS` +
+  ` (skipped ${skipped.length}) ====`);
+if (skipped.length) console.log('SKIPPED (补面提醒):', skipped.map((r) => r.name).join(', '));
 fs.writeFileSync(RESULT, JSON.stringify({ results, errors, consoleErrors }, null, 2));
 await mp.disconnect();
 process.exit(failed.length ? 1 : 0);

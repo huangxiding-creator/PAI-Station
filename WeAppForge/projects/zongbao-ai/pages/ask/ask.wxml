@@ -30,8 +30,14 @@
         </view>
       </view>
       <view class="quota-ticket quota-empty" wx:else>
-        <view class="qt-label">今日咨询额度</view>
-        <view class="qt-num mono">–</view>
+        <view class="qt-left">
+          <view class="qt-label">今日咨询额度</view>
+          <view class="qt-num mono">–</view>
+        </view>
+        <view class="qt-perf"></view>
+        <view class="qt-right">
+          <view class="qt-kv qt-dim">发起首次咨询后显示</view>
+        </view>
       </view>
 
       <view class="hero-dwg mono">DWG NO. {{sheetNo}} · SCALE 1:1<view class="dim-rule"></view><text class="dim-cap">SHT 1/1</text></view>

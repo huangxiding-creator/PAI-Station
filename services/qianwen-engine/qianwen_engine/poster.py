@@ -272,8 +272,13 @@ def build(question: str, bullets: list, qr_png: bytes | None,
             if cut >= 4:
                 shown = _wrap(d, joined[:cut + 1], f_lead, W - M * 2 - 26)
                 if len(shown) > 1 and len(shown[-1]) <= 2:   # 孤字行（「。」独占行）并回上行
-                    shown[-2] += shown[-1]
-                    shown.pop()
+                    # v0.9.9 评审修：并回后用「实际渲染字体」复测宽度（前两行 f_lead 加粗更宽），
+                    # 超出折行宽度则放弃并回——孤字行可接受，文字探出版心不可接受
+                    _merged = shown[-2] + shown[-1]
+                    _rfont = f_lead if (len(shown) - 2) < 2 else f_exc
+                    if d.textlength(_merged, font=_rfont) <= W - M * 2 - 26:
+                        shown[-2] = _merged
+                        shown.pop()
             else:
                 shown[-1] = shown[-1][:-1] + "……"
         body_top = y_exc + 46

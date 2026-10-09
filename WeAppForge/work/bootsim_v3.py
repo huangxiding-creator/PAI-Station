@@ -116,6 +116,8 @@ check("ask AI优化提问按钮+实现", 'bindtap="onOptimize"' in ask_wxml and 
 check("ask AI优化采用/保留原问（用户过目）", "采用" in ask_js and "保留原问" in ask_js)
 check("ask CTA=立即咨询（1009 免费字样下线令）", "免费咨询" not in ask_wxml and "立即咨询" in ask_wxml)
 check("ask 额度票根=今日咨询额度（免费字样下线）", "今日咨询额度" in ask_wxml and "今日免费咨询" not in ask_wxml)
+check("ask 空额度票根带首开提示（隐私新规：未同意不登录，防「额度坏了」误读）",
+      "发起首次咨询后显示" in ask_wxml)
 _opt = ask_wxml.find("opt-btn")
 _cta = ask_wxml.find("ask-btn")
 _inp = ask_wxml.find("ask-input")
@@ -158,9 +160,9 @@ check("api potList 客户端", "potList" in api_js)
 check("api optimize 客户端（shareReward 已随分享激励下线）", "optimize" in api_js and "shareReward" not in api_js)
 
 # 版本与定位（v0.9.0）
-check("my 版本标记 v0.9.8（1009 三令版：隐私不自动弹+免费下线+AI申明唯一化）", "v0.9.8" in my_wxml)
+check("my 版本标记 v0.9.9（1009 三令+评审修：qw-pop 双保险+孤字并回守卫+测试补面）", "v0.9.9" in my_wxml)
 pkg = json.load(open(os.path.join(ROOT, "package.json"), encoding="utf-8"))
-check("package.json version=0.9.8", pkg["version"] == "0.9.8")
+check("package.json version=0.9.9", pkg["version"] == "0.9.9")
 # 1009 用户令：外观沉底（个性化低频项按用户习惯放设置区，高频额度/记录在前）——顺序即断言
 check("my 布局顺序=额度→记录→书架→外观（外观在咨询记录之后，1009 用户令）",
       my_wxml.find("外观 · APPEARANCE") > my_wxml.find("咨询记录 · RECORDS")
@@ -241,7 +243,8 @@ check("answer.js 捕获 shared/can_share", "d.can_share" in ans_js and "d.shared
 # 第 11 点：依据来源点击展开
 check("api citationFulltext 客户端", "citationFulltext" in api_js)
 check("answer 依据条目可点（onCiteTap）", 'bindtap="onCiteTap"' in ans_wxml and "onCiteTap" in ans_js)
-check("answer 依据弹窗 showModal 全文", "citationFulltext" in ans_js and "知道了" in ans_js)
+check("answer 依据全文=页内 cite-pop 可滚弹层（v0.7.8 根治 showModal 截断；锚换代）",
+      "cite-pop" in ans_wxml and "onCiteClose" in ans_js and "citationFulltext" in ans_js)
 check("answer 依据区引导文案=点开看依据解读", "点开看依据解读" in ans_wxml and "点开看法条全文" not in ans_wxml)
 check("answer 依据弹窗带 AI 整理口径", "AI 整理的依据解读" in ans_js)
 
@@ -421,6 +424,8 @@ ENGINE = r"E:\AI-Station\services\qianwen-engine"
 _wx_py = open(os.path.join(ENGINE, "qianwen_engine", "wechat.py"), encoding="utf-8").read()
 _app_py = open(os.path.join(ENGINE, "qianwen_engine", "app.py"), encoding="utf-8").read()
 check("服务端 msg_sec_check v2 实现", "msg_sec_check" in _wx_py and '"version": "2"' in _wx_py)
+check("海报缓存键含 LAYOUT_VERSION（版式改动自动失效旧缓存）",
+      "LAYOUT_VERSION" in _app_py and "POSTER_QR_ENV_VERSION" in _app_py)
 check("share_on 入库前过安检门（fail-closed 503）", "msg_sec_check" in _app_py and "内容未通过安全检测" in _app_py and "503" in _app_py)
 check("服务端 pot 举报端点", "/api/pot/report" in _app_py)
 check("session_key 服务端落库供查单签名（不下发客户端）",
@@ -843,21 +848,46 @@ check("U2 _fuBusy 闭源旗标退役（改 data.fuSending 可视位）",
       "_fuBusy" not in read("pages/answer/answer.js") and "fuSending: false" in read("pages/answer/answer.js"))
 check("U1 重试反馈：refreshQuota 二连失败轻提示（_retriedOnce 门，首载仍静默）",
       "_retriedOnce" in ask_js and "服务还没恢复" in ask_js)
+# v0.9.9 评审补面：load 模式零覆盖封堵——四页必调 pop.loading 且 hideLoading 收口不欠账
+_qwjs = read("components/qw-pop/qw-pop.js")
+check("qw-pop load 模式在役（4 页各≥1 调用+逐页 hideLoading 收口≥调用数，防蒙层滞留）",
+      all(read(f"pages/{pg}/{pg}.js").count("pop.loading(") >= 1 for pg in ("ask", "answer", "my", "report"))
+      and all(read(f"pages/{pg}/{pg}.js").count("pop.hideLoading(")
+              >= read(f"pages/{pg}/{pg}.js").count("pop.loading(") for pg in ("ask", "answer", "my", "report")))
+# v0.9.9 评审修锚：qw-pop 双保险（旧 Promise 收口 + detached 清退场定时器）
+check("qw-pop 双弹窗防护（旧 Promise 先收口，不再悬挂）",
+      "prev({ confirm: false, cancel: true, content: '' })" in _qwjs and "prev(-1)" in _qwjs)
+check("qw-pop detached 清退场定时器（卸载期不再 setData 报错）",
+      "detached()" in _qwjs and "clearTimeout(this._closeTimer)" in _qwjs)
+# v0.9.9 评审补面：qw-pop 主题军规入硬门（写死色即断主题）
+_qw_wxss = read("components/qw-pop/qw-pop.wxss")
+_theme_js = read("utils/theme.js")
+import re as _re2
+_hex_hits = [m for m in _re2.findall(r"#[0-9a-fA-F]{3,8}", _re2.sub(r"/\*.*?\*/", "", _qw_wxss, flags=_re2.S))]
+check("qw-pop.wxss 零写死色（--t-* 全走主题表）", len(_hex_hits) == 0, f"hex={_hex_hits[:4]}")
+_qw_tokens = set(_re2.findall(r"--t-[a-z0-9-]+", _qw_wxss))
+check("qw-pop.wxss 主题 token 全部有定义（拼错变量名必红）",
+      all(t.replace("--", "--", 1) in _theme_js for t in _qw_tokens), f"missing={sorted(t for t in _qw_tokens if t not in _theme_js)[:4]}")
 
 # ══ v0.9.6 → v0.9.7（1009 用户令：所有弹窗顶级审美重设计——qw-pop 自绘弹窗系统全站替换）══
 # v0.9.6 曾以「按钮文字 ≤4 字」静态门防真机静默 fail；v0.9.7 自绘组件替换原生弹窗后，
 # 4 字硬限连根拔（按钮可带金额等任意文案），防线升级为「原生弹窗调用全归零」。
 import re as _re
 _native_pops = []
-for _dirpath, _dirnames, _filenames in os.walk(os.path.join(ROOT, "pages")):
+# v0.9.9 评审修：扫描面从 pages 扩到全项目（utils/pay.js、components、app.js 曾是盲区）
+for _dirpath, _dirnames, _filenames in os.walk(ROOT):
+    _dirnames[:] = [d for d in _dirnames if d not in ("node_modules", "miniprogram_npm", "v095-audit")]
     for _fn in _filenames:
         if not _fn.endswith(".js"):
             continue
         _src = open(os.path.join(_dirpath, _fn), encoding="utf-8").read()
+        _src = open(os.path.join(_dirpath, _fn), encoding="utf-8").read()
+        _src = _re.sub("/[*].*?[*]/", "", _src, flags=_re.S)
+        _src = _re.sub("//[^\n]*", "", _src)
         for _api in ("wx.showModal", "wx.showActionSheet", "wx.showLoading", "wx.hideLoading"):
-            if _api in _src:
+            if _api + "(" in _src:
                 _native_pops.append(f"{_fn}:{_api}")
-check("v0.9.7 硬门：pages 原生弹窗调用全归零（showModal/Sheet/Loading/HideLoading）",
+check("v0.9.9 硬门：全项目原生弹窗调用全归零（showModal/Sheet/Loading/HideLoading）",
       not _native_pops, ";".join(_native_pops[:6]))
 check("v0.9.7 qw-pop 组件四件存在（components/qw-pop/）",
       all(os.path.exists(os.path.join(ROOT, "components", "qw-pop", f"qw-pop.{e}"))

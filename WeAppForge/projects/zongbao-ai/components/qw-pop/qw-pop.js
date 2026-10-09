@@ -30,6 +30,13 @@ Component({
     loadText: '处理中…',
   },
 
+  lifetimes: {
+    // v0.9.9 评审修：退场动画 210ms 内页面卸载会对已 detach 组件 setData（真机报错噪音）——detached 一并清掉
+    detached() {
+      if (this._closeTimer) { clearTimeout(this._closeTimer); this._closeTimer = null; }
+    },
+  },
+
   methods: {
     noop() { /* catchtouchmove 占位：锁滚动穿透 */ },
 
@@ -47,6 +54,8 @@ Component({
     modal(o) {
       o = o || {};
       return new Promise((resolve) => {
+        // v0.9.9 评审修：弹窗已开时再开（双击可达）→ 旧 Promise 先收口，不再悬挂
+        if (this._resolve) { const prev = this._resolve; this._resolve = null; prev({ confirm: false, cancel: true, content: '' }); }
         this._resolve = resolve;
         this._open({
           mode: 'modal',
@@ -69,6 +78,8 @@ Component({
     sheet(o) {
       o = o || {};
       return new Promise((resolve) => {
+        // v0.9.9 评审修：同 modal——旧 sheet Promise 先收口（取消语义 -1）
+        if (this._resolve) { const prev = this._resolve; this._resolve = null; prev(-1); }
         this._resolve = resolve;
         this._open({
           mode: 'sheet',

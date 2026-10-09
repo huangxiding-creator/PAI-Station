@@ -366,14 +366,20 @@ def test_poster_env_cache_separation(client, monkeypatch):
     monkeypatch.setattr(wechat, "wxacode_unlimited",
                         lambda scene, page, **kw: _fake_qr_png())
     builds = {"n": 0}
+    answers_seen = []
     _orig_build = poster_mod.build
 
     def _count_build(q, b, qr, meta=None, answer=""):
         builds["n"] += 1
+        answers_seen.append(answer)
         return _orig_build(q, b, qr, meta, answer=answer)
     monkeypatch.setattr(poster_mod, "build", _count_build)
     assert client.get(f"/api/answer/{aid}/poster").status_code == 200
     assert builds["n"] == 1
+    # v0.9.9 评审补面：摘录参数真到达 build（灵魂区删参数必须红）——非空/≤240/无 markdown 符号
+    assert answers_seen[0], "answer= 摘录参数未传入 build"
+    assert len(answers_seen[0]) <= 240
+    assert not any(t in answers_seen[0] for t in ("**", "##", "- [", "###"))
     client.get(f"/api/answer/{aid}/poster")
     assert builds["n"] == 1                                  # 默认位缓存命中
     _default_env = config.POSTER_QR_ENV_VERSION               # 方向无关：不假设默认 trial/release
@@ -383,6 +389,12 @@ def test_poster_env_cache_separation(client, monkeypatch):
     assert builds["n"] == 2                                  # env 切换 → 重新生成
     client.get(f"/api/answer/{aid}/poster")
     assert builds["n"] == 2                                  # release 位缓存命中
+    # v0.9.9 评审补面：LAYOUT_VERSION 进缓存键（版式改动自动失效旧缓存的唯一防线）
+    monkeypatch.setattr(poster_mod, "LAYOUT_VERSION", poster_mod.LAYOUT_VERSION + "-test")
+    assert client.get(f"/api/answer/{aid}/poster").status_code == 200
+    assert builds["n"] == 3                                  # 版式版本切换 → 重新生成
+    client.get(f"/api/answer/{aid}/poster")
+    assert builds["n"] == 3                                  # 新版式位缓存命中
 
 
 # ═══════════ v0.6.0 100× 弧线：追问 / digest / 海报（全 mock 智谱，不碰网） ═══════════
