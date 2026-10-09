@@ -5,7 +5,7 @@
 - 目录可售判定：无 PDF（BLUEBOOK 预售类）/ 超大 PDF（TOPIC-06 事故类）→ 整理中
 - 公开浏览（软鉴权）：未登录可看目录/详情/试读，unlocked 恒 false
 - 签名腿：价格分档道具（report_product_<元>）、签名即落单 kind='report' aid=sku、
-  复用同 otn（防二次扣款）、已解锁 409、未配档 503、未售 404
+  老未付单作废重开（用户令 1009：不保留待支付态）、已解锁 409、未配档 503、未售 404
 - 回调腿：查单 SUCCESS 放行 / NOTPAY 400 / 伪造 otn 404 / 他人单 404 /
   幂等重跑；沙箱查单不可用信任回调；生产 fail-closed 503
 - PDF 闸门：未购 402 / 已购 200 application/pdf / 他人已购不越权
@@ -189,18 +189,33 @@ def test_unlock_sign_price_without_product_503(client, tmp_path, monkeypatch):
     assert client.post("/api/report/SKU-A/unlock_sign").status_code == 200   # 498 在
 
 
-def test_sign_reuses_open_order(client):
+def test_sign_cancels_open_order_mints_fresh(client):
+    """用户令 1009（不保留待支付态，想买重新下单）：重复签名=老未付单作废 +
+    新号重开——绝不复用已取消 otn。真机缺陷根因锚：首单取消后微信侧订单已关
+    （ORDER_CLOSED -15012），本地若继续复用同号，支付面板永远拉不起。
+    fixture 查单默认抛 XpayError（查不出）→ 也必须作废重开（fail-safe 新号）。"""
     from qianwen_engine import store
     _sess()
     o1 = client.post("/api/report/SKU-A/unlock_sign").json()["out_trade_no"]
     o2 = client.post("/api/report/SKU-A/unlock_sign").json()["out_trade_no"]
-    assert o1 == o2                                      # 同单复用（防二次扣款）
-    with store._db() as c:
-        n = c.execute("SELECT COUNT(*) FROM pay_order WHERE kind='report'",
-                      ).fetchone()[0]
-    assert n == 1
+    assert o2 != o1                                      # 重新下单必新号
+    assert store.get_pay_order(o1)["status"] == "closed"   # 老单作废
+    assert store.get_pay_order(o2)["status"] == "signed"      # 新单在途
     o3 = client.post("/api/report/SKU-B/unlock_sign").json()["out_trade_no"]
-    assert o3 != o1                                      # 不同报告不同号
+    assert o3 not in (o1, o2)                             # 不同报告不同号
+
+
+def test_unlock_sign_reconciles_paid_old_order(client, monkeypatch):
+    """老单微信侧确已支付（回调丢失）→ 查单补账 + 409 收口（已扣款必解锁，
+    防二次扣款——作废重开仅针对未付单）。"""
+    from qianwen_engine import store
+    _sess()
+    o1 = client.post("/api/report/SKU-A/unlock_sign").json()["out_trade_no"]
+    _query(monkeypatch, "SUCCESS")
+    r = client.post("/api/report/SKU-A/unlock_sign")
+    assert r.status_code == 409 and "已解锁" in r.json()["detail"]
+    assert store.get_pay_order(o1)["status"] == "paid"
+    assert "SKU-A" in store.report_unlocked_skus("open-t1")
 
 
 # ── 回调腿 ──

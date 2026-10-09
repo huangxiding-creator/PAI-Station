@@ -898,14 +898,27 @@ def get_pay_order(out_trade_no: str) -> Optional[dict]:
 
 
 def open_pay_order(openid: str, kind: str, aid: str = "") -> Optional[dict]:
-    """本人最近一张 signed 未付单（同一目标重复发起时复用同一 otn——已付未标记
-    走查单补标记，未付走同一单续付，根治二次扣款；HIGH-3）。"""
+    """本人最近一张 signed 未付单（签名腿补账/作废入口。用户令 1009：未付不
+    保留——先查单补账收口已付单（防二次扣款），其余一律作废重开，绝不复用
+    已取消 otn——复用必 ORDER_CLOSED，支付面板永远拉不起）。"""
     init()
     with _db() as c:
         sql = ("SELECT * FROM pay_order WHERE openid=? AND kind=? AND status='signed'"
                " AND aid=? ORDER BY rowid DESC LIMIT 1")
         row = c.execute(sql, (openid, kind, aid or "")).fetchone()
         return dict(row) if row else None
+
+
+def cancel_pay_order(out_trade_no: str) -> bool:
+    """未付单作废（用户令 1009：不保留待支付态，想买重新下单；仅 signed →
+    closed 真）。微信侧未付单自动过期，无需远程关单。
+    ★status 词元 ≤8 字符（MySQL DDL VARCHAR(8)，'cancelled' 9 字符超长会 500）。"""
+    init()
+    with _LOCK, _db() as c:
+        cur = c.execute(
+            "UPDATE pay_order SET status='closed'"
+            " WHERE out_trade_no=? AND status='signed'", (out_trade_no,))
+        return bool(getattr(cur, "rowcount", 0))
 
 
 def mark_order_paid(out_trade_no: str) -> bool:

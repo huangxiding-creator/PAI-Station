@@ -3,7 +3,7 @@
 
 四腿端点 + 订单核验矩阵（审计 CRITICAL-1/2、HIGH-3、MEDIUM-4/5、LOW-6 全锚定）：
 - login 真路径落 session_key（盲区#1：此前 fixture 手工 save_session 替学生答题）
-- 签名即落单 pay_order；同一目标复用同 otn（防二次扣款）+ 已付补标记 409 收口
+- 签名即落单 pay_order；老未付单作废重开（用户令 1009：不保留待支付态）+ 已付补账 409 收口
 - 回调腿凭订单 + 微信查单核验：SUCCESS 放行 / NOTPAY 400 / 生产查不出 503 fail-closed
   / 沙箱查单不可用信任回调（模拟支付无真实资金）
 - 伪造 otn / 空串 / 他人订单 → 404（盲区#2：零支付解锁死路）
@@ -185,22 +185,21 @@ def test_export_sign_unconfigured(client, tmp_path, monkeypatch):
     assert client.post(f"/api/answer/{aid}/export_sign").status_code == 503
 
 
-def test_sign_reuses_open_order_same_otn(client, monkeypatch):
-    """审计 HIGH-3：同一答案重复签名=复用同一未付订单（同 otn，绝不双开单
-    二次扣款）；不同答案各开各单。"""
+def test_sign_cancels_open_order_new_otn(client, monkeypatch):
+    """用户令 1009（不保留待支付态，想买重新下单）：同一答案重复签名=老未付单
+    作废 + 新号重开——绝不复用已取消 otn（复用必 ORDER_CLOSED，面板拉不起）；
+    不同答案各开各单。"""
     from qianwen_engine import store
     store.save_session("open-t1", "sess-key-t1")
     aid = _ask_ready(client)
     o1 = client.post(f"/api/answer/{aid}/export_sign").json()["out_trade_no"]
     o2 = client.post(f"/api/answer/{aid}/export_sign").json()["out_trade_no"]
-    assert o1 == o2                                    # 同单复用
-    with store._db() as c:
-        n = c.execute("SELECT COUNT(*) FROM pay_order WHERE kind='single'",
-                      ).fetchone()[0]
-    assert n == 1                                      # 无第二张单
+    assert o2 != o1                                    # 重新下单必新号
+    assert store.get_pay_order(o1)["status"] == "closed"
+    assert store.get_pay_order(o2)["status"] == "signed"
     aid2 = _ask_ready(client, "另一篇")
     o3 = client.post(f"/api/answer/{aid2}/export_sign").json()["out_trade_no"]
-    assert o3 != o1                                    # 不同目标不同号
+    assert o3 != o2                                    # 不同目标不同号
 
 
 def test_otn_entropy_same_millisecond():
@@ -209,6 +208,18 @@ def test_otn_entropy_same_millisecond():
     a = app_mod._make_otn("e", "aaaaaaaa")
     b = app_mod._make_otn("e", "aaaaaaaa")
     assert a != b and _OTN_RE.match(a) and _OTN_RE.match(b)
+
+
+def test_pay_order_status_tokens_fit_mysql_varchar8():
+    """方言盲区锚：MySQL pay_order.status 是 VARCHAR(8)——store 源里所有
+    status='…' 词元必须 ≤8 字符（'cancelled' 9 字符曾致生产 500 而 sqlite
+    测试全绿，1009 ORDER_CLOSED 修复战的实锤翻车点）。"""
+    import re
+    from qianwen_engine import store as store_mod
+    src = open(store_mod.__file__, encoding="utf-8").read()
+    toks = set(re.findall(r"status\s*=\s*'(\w+)'", src))
+    assert {"signed", "paid", "closed"} <= toks
+    assert all(len(t) <= 8 for t in toks), sorted(toks)
 
 
 def test_export_paid_verifies_via_query(client, monkeypatch):
@@ -343,17 +354,19 @@ def test_export_all_sign_quantity_and_snapshot(client, monkeypatch):
     assert client.post("/api/answers/export_all_sign").json()["quantity"] == 1
 
 
-def test_export_all_sign_reuses_when_snapshot_unchanged(client, monkeypatch):
-    """批量单复用：快照未变=同 otn 续付（防双开单）；快照变了=开新单。"""
+def test_export_all_sign_cancel_and_fresh(client, monkeypatch):
+    """用户令 1009（不保留待支付态）：批量重复签名=老未付单作废 + 新号重开
+    （快照变与否皆然），已付老单走查单补账 409 收口。"""
     from qianwen_engine import store
     store.save_session("open-t1", "sess-key-t1")
     _ask_ready(client, "复用问题A")
     o1 = client.post("/api/answers/export_all_sign").json()["out_trade_no"]
     o2 = client.post("/api/answers/export_all_sign").json()["out_trade_no"]
-    assert o1 == o2
-    _ask_ready(client, "复用问题B")           # 快照变化 → 新单
+    assert o2 != o1                                   # 重新下单必新号
+    assert store.get_pay_order(o1)["status"] == "closed"
+    _ask_ready(client, "复用问题B")           # 快照变化 → 老单（若有）也作废
     o3 = client.post("/api/answers/export_all_sign").json()["out_trade_no"]
-    assert o3 != o1
+    assert o3 != o2
 
 
 def test_export_all_sign_limits(client, monkeypatch):

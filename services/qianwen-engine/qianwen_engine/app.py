@@ -524,13 +524,25 @@ def _order_status_paid(d: dict) -> tuple:
 
 def _query_paid(openid: str, otn: str, vp: dict, env_val: int,
                 app_key: str, session_key: str) -> bool | None:
-    """微信侧查单 → True已付/False未付/None查不出（复用单与回调核验共用的探测腿）。"""
+    """微信侧查单 → True已付/False未付/None查不出（补账与回调核验共用的探测腿）。"""
     try:
         d = wechat.xpay_query_order(openid, otn, vp["offer_id"],
                                     env_val, app_key, session_key)
     except wechat.XpayError:
         return None
     return _order_status_paid(d)[1]
+
+
+def _order_paid_reconcile(openid: str, open_o: dict, vp: dict, env_val: int,
+                          app_key: str, session_key: str) -> bool:
+    """老 signed 单查单补账：微信侧确已支付 → 本地转 paid 返回 True（调用方补
+    业务标记并 409 收口，防二次扣款）；未付/查不出返回 False。
+    用户令 1009（不保留待支付态）：调用方对 False 单作废重开、下次想买重新下单
+    ——已取消/关闭订单复用同一 otn 必 ORDER_CLOSED(-15012)，支付面板永远拉不起
+    （真机缺陷根因：首单取消后本地库不知情，签名腿一直发死单号）。"""
+    return bool(_query_paid(openid, open_o["out_trade_no"], vp, env_val,
+                            app_key, session_key)
+                and store.mark_order_paid(open_o["out_trade_no"]))
 
 
 def _verify_order_paid(order: dict, openid: str, vp: dict, env_val: int,
@@ -589,8 +601,8 @@ class ExportPaidIn(BaseModel):
 @app.post("/api/answer/{aid}/export_sign")
 def export_sign(aid: str, request: Request):
     """签名腿（单条导出）：仅本人答案；签名即落单，客户端原样透传拉起支付。
-    同一答案重复发起时复用同一未付订单（审计 HIGH-3：根治二次扣款）；
-    若该单微信侧已付成功，当场补标记并以 409 收口（已扣款必解锁）。"""
+    重复发起时老未付单作废重开新号（用户令 1009：不保留待支付态）；
+    若老单微信侧已付成功，当场补标记并以 409 收口（已扣款必解锁，防二次扣款）。"""
     openid = _openid(request)
     row = store.get_answer(aid, openid)
     if row is None:
@@ -603,17 +615,14 @@ def export_sign(aid: str, request: Request):
     env_val, app_key, session_key = _export_pay_env(openid, vp)
     open_o = store.open_pay_order(openid, "single", aid)
     if open_o:
-        # 复用未付单：先探微信侧——已付则补标记收口；未付/查不出则同单续付
-        if _query_paid(openid, open_o["out_trade_no"], vp, env_val,
-                       app_key, session_key) and store.mark_order_paid(
-                           open_o["out_trade_no"]):
+        if _order_paid_reconcile(openid, open_o, vp, env_val,
+                                 app_key, session_key):
             store.mark_export_paid(aid, openid, open_o["out_trade_no"])
             raise HTTPException(409, "支付已到账，本篇导出已解锁")
-        otn = open_o["out_trade_no"]
-    else:
-        otn = _make_otn("e", aid)
-        store.create_pay_order(otn, openid, "single", aid=aid,
-                               buy_quantity=1, total_fen=config.EXPORT_PRICE_FEN)
+        store.cancel_pay_order(open_o["out_trade_no"])
+    otn = _make_otn("e", aid)
+    store.create_pay_order(otn, openid, "single", aid=aid,
+                           buy_quantity=1, total_fen=config.EXPORT_PRICE_FEN)
     sign_data = {
         "offerId": vp["offer_id"],
         "buyQuantity": 1,
@@ -665,7 +674,7 @@ def export_paid(aid: str, body: ExportPaidIn, request: Request):
 def export_all_sign(request: Request):
     """签名腿（批量导出）：buyQuantity=未解锁条数快照，一单付清 N×¥0.1。
     快照落 aid_list（审计 MEDIUM-4：支付存续期新完成的咨询不被顺带解锁）；
-    快照未变时复用同一未付订单（HIGH-3 防二次扣款），已付未标记当场补收口。"""
+    老未付单一律作废重开（用户令 1009：不保留待支付态），已付未标记当场补收口。"""
     openid = _openid(request)
     rows = store.history_all(openid)
     if not rows:
@@ -680,19 +689,18 @@ def export_all_sign(request: Request):
     snapshot = ",".join(r["id"] for r in unpaid)
     open_o = store.open_pay_order(openid, "batch")
     if open_o and (open_o.get("aid_list") or "") == snapshot:
-        if _query_paid(openid, open_o["out_trade_no"], vp, env_val,
-                       app_key, session_key) and store.mark_order_paid(
-                           open_o["out_trade_no"]):
+        if _order_paid_reconcile(openid, open_o, vp, env_val,
+                                 app_key, session_key):
             n = store.mark_export_paid_many(
                 openid, open_o["aid_list"].split(","), open_o["out_trade_no"])
             raise HTTPException(409, f"支付已到账，已解锁 {n} 条导出")
-        otn = open_o["out_trade_no"]
-    else:
-        # 批量锚点用 openid 哈希片段（审计 WARN：otn 进用户账单详情，不留明文）
-        otn = _make_otn("b", hashlib.sha256(openid.encode()).hexdigest()[:16])
-        store.create_pay_order(otn, openid, "batch", aid_list=snapshot,
-                               buy_quantity=len(unpaid),
-                               total_fen=len(unpaid) * config.EXPORT_PRICE_FEN)
+    if open_o:
+        store.cancel_pay_order(open_o["out_trade_no"])
+    # 批量锚点用 openid 哈希片段（审计 WARN：otn 进用户账单详情，不留明文）
+    otn = _make_otn("b", hashlib.sha256(openid.encode()).hexdigest()[:16])
+    store.create_pay_order(otn, openid, "batch", aid_list=snapshot,
+                           buy_quantity=len(unpaid),
+                           total_fen=len(unpaid) * config.EXPORT_PRICE_FEN)
     sign_data = {
         "offerId": vp["offer_id"],
         "buyQuantity": len(unpaid),
@@ -795,8 +803,9 @@ class ReportPaidIn(BaseModel):
 
 @app.post("/api/report/{sku}/unlock_sign")
 def report_unlock_sign(sku: str, request: Request):
-    """签名腿（报告解锁）：仅可售报告；签名即落单，复用同一未付单（防二次
-    扣款）；已付未标记当场查单补收口。道具=价格分档 report_product_<元>。"""
+    """签名腿（报告解锁）：仅可售报告；签名即落单，老未付单作废重开新号
+    （用户令 1009：不保留待支付态，想买重新下单）；已付未标记当场查单补
+    收口（防二次扣款）。道具=价格分档 report_product_<元>。"""
     openid = _openid(request)
     if not report_catalog.sellable(sku):
         raise HTTPException(404, "报告不存在或整理中")
@@ -809,16 +818,14 @@ def report_unlock_sign(sku: str, request: Request):
     env_val, app_key, session_key = _vpay_env(openid, vp)
     open_o = store.open_pay_order(openid, "report", aid=sku)
     if open_o:
-        if _query_paid(openid, open_o["out_trade_no"], vp, env_val,
-                       app_key, session_key) and store.mark_order_paid(
-                           open_o["out_trade_no"]):
+        if _order_paid_reconcile(openid, open_o, vp, env_val,
+                                 app_key, session_key):
             store.mark_report_paid(openid, sku, open_o["out_trade_no"])
             raise HTTPException(409, "支付已到账，本报告已解锁")
-        otn = open_o["out_trade_no"]
-    else:
-        otn = _make_otn("r", sku)
-        store.create_pay_order(otn, openid, "report", aid=sku,
-                               buy_quantity=1, total_fen=price_fen)
+        store.cancel_pay_order(open_o["out_trade_no"])
+    otn = _make_otn("r", sku)
+    store.create_pay_order(otn, openid, "report", aid=sku,
+                           buy_quantity=1, total_fen=price_fen)
     sign_data = {
         "offerId": vp["offer_id"],
         "buyQuantity": 1,
