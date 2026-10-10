@@ -883,6 +883,23 @@ def report_pdf(sku: str, request: Request):
     return FileResponse(p, media_type="application/pdf", filename=f"{sku}.pdf")
 
 
+# ── v0.9.13 虚拟支付道具图（微信道具后台 item_url 引用；公开只读，白名单+防穿越）──
+_GOODS_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$")
+
+
+@app.get("/static/goods/{name}")
+def static_goods(name: str):
+    """道具封面图（static_goods/<name>.jpg）：虚拟支付发布校验会拉取该 URL，必须公网可达。"""
+    if not _GOODS_NAME_RE.match(name or ""):
+        raise HTTPException(404, "not found")
+    base = config.GOODS_STATIC_DIR.resolve()
+    p = (base / (name + ".jpg")).resolve()
+    if p.parent != base or not p.is_file():
+        raise HTTPException(404, "not found")
+    return FileResponse(p, media_type="image/jpeg",
+                        headers={"Cache-Control": "public, max-age=86400"})
+
+
 # ── v0.6.0 100× 弧线（全免费）：追问对话 / 要点速览 / 相关问题 / 分享海报 ──
 # 产品语义：总包智库=正式咨询（唯一烧 KB 位）；以下全部以智谱免费链接地，
 # 以本篇解答全文为上下文作答——贵的答案只买一次，便宜的解释无限次。

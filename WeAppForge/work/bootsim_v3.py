@@ -75,7 +75,8 @@ check("智库页 链接=飞书总包智库知识库", "epctalkk.feishu.cn/wiki/s
 check("智库页 复制链接用 setClipboardData", "wx.setClipboardData" in zk_js)
 # v0.7.4 提审合规：撤二维码/长按识别导流（只留低姿态复制链接）
 check("智库页 无二维码放大导流（previewQr 已撤）", "previewQr" not in zk_js and "previewImage" not in zk_js)
-check("智库页 无长按识别导流（show-menu-by-longpress 已撤）", "show-menu-by-longpress" not in zk_wxml)
+check("智库页 长按识别仅限购买弹窗二维码（v0.9.13 用户令放开；其余内容零长按）",
+      zk_wxml.count("show-menu-by-longpress") == 1 and zk_wxml.count("<image") == 1)
 check("智库页 QR 图片已出包（减包体+去导流素材）", not os.path.exists(os.path.join(ROOT, "images", "zhiku-qr.png")))
 check("智库页 无「装飞书App/浏览器打开」引导文案", "飞书 App" not in zk_wxml and "手机浏览器" not in zk_wxml)
 check("智库页 分享路径=zhiku", "path: '/pages/zhiku/zhiku'" in zk_js)
@@ -115,9 +116,12 @@ check("ask 常用咨询→示范性问题", "示范性问题 · SAMPLE QUESTIONS
 check("ask AI优化提问按钮+实现", 'bindtap="onOptimize"' in ask_wxml and "onOptimize" in ask_js)
 check("ask AI优化采用/保留原问（用户过目）", "采用" in ask_js and "保留原问" in ask_js)
 check("ask CTA=免费咨询（1010 引流令：免费回位主打）", "'免费咨询'}}</button>" in ask_wxml and "立即咨询" not in ask_wxml)
-check("ask 额度票根=今日免费额度（1010 引流令：不等咨询首屏即显）", "今日免费额度" in ask_wxml and "今日咨询额度" not in ask_wxml and "每日 6 次免费咨询" in ask_wxml and "发起首次咨询后显示" not in ask_wxml)
-check("ask 空额度票根亮静态规则数（1010 用户令：不等咨询即显每日 6 次免费；未同意不登录口径不变）",
-      "每日 6 次免费咨询" in ask_wxml and ">6</view>" in ask_wxml)
+check("ask 额度票根=实时总额度大字（v0.9.13 用户令：主位 total_left，每日 6 次定名登录赠送）",
+      "咨询总额度" in ask_wxml and 'qt-num-hero">{{quota.total_left}}' in ask_wxml
+      and "今日登录赠送 {{quota.free_left}} 次" in ask_wxml
+      and "今日免费额度" not in ask_wxml and "发起首次咨询后显示" not in ask_wxml)
+check("ask 空额度票根亮静态规则数（不等咨询即显；未同意不登录口径不变）",
+      "每日登录赠送 6 次" in ask_wxml and 'qt-num-hero">6</view>' in ask_wxml)
 _opt = ask_wxml.find("opt-btn")
 _cta = ask_wxml.find("ask-btn")
 _inp = ask_wxml.find("ask-input")
@@ -160,9 +164,9 @@ check("api potList 客户端", "potList" in api_js)
 check("api optimize 客户端（shareReward 已随分享激励下线）", "optimize" in api_js and "shareReward" not in api_js)
 
 # 版本与定位（v0.9.0）
-check("my 版本标记 v0.9.12（1011 弹窗清理五连令）", "v0.9.12" in my_wxml)
+check("my 版本标记 v0.9.13（1010 三连修：额度/广告/支付根因）", "v0.9.13" in my_wxml)
 pkg = json.load(open(os.path.join(ROOT, "package.json"), encoding="utf-8"))
-check("package.json version=0.9.12", pkg["version"] == "0.9.12")
+check("package.json version=0.9.13", pkg["version"] == "0.9.13")
 # 1009 用户令：外观沉底（个性化低频项按用户习惯放设置区，高频额度/记录在前）——顺序即断言
 check("my 布局顺序=额度→记录→书架→外观（外观在咨询记录之后，1009 用户令）",
       my_wxml.find("外观 · APPEARANCE") > my_wxml.find("咨询记录 · RECORDS")
@@ -273,7 +277,8 @@ for _pg in ("pages/answer/answer", "pages/ask/ask", "pages/my/my", "pages/pot/po
 check("app.json 下拉底色绑主题变量", app_json["window"]["backgroundColor"] == "@bgColor")
 
 # ── 0929 教训级防线（沿用）：「页面不存在」根因=同 robot 再上传顶掉被钉体验版 ──
-WORK = os.path.abspath(os.path.join(ROOT, "..", "..", "work"))
+# 1010 应用主目录迁 微信小程序/ 后 ROOT 层级加深——工具目录固定指 WeAppForge/work（绝对，不再随应用目录推算）
+WORK = r"E:\AI-Station\WeAppForge\work"
 up_mjs = open(os.path.join(WORK, "upload_qianwen.mjs"), encoding="utf-8").read()
 sf_py = open(os.path.join(WORK, "scheme_fire_030.py"), encoding="utf-8").read()
 check("uploader robot 1..30 轮转（防钉位孤儿）", "robot_cursor" in up_mjs and "robot," in up_mjs)
@@ -412,8 +417,8 @@ check("ask.wxml 常驻内联告知（提交即同意+AI 生成口径，协议全
       "提交即同意用户协议与隐私政策" in ask_wxml and "解答由 AI 生成，仅供参考" in ask_wxml)
 _vis = {p: chr(10).join(l.split("<!--")[0] for l in open(os.path.join(ROOT, p), encoding="utf-8").read().splitlines())
         for p in ("pages/ask/ask.wxml", "pages/my/my.wxml", "pages/answer/answer.wxml")}
-check("免费=引流主口径（1010 用户令：CTA/票根/home 三面回位；my/answer 正文仍零免费）",
-      "'免费咨询'}}</button>" in ask_wxml and "每日 6 次免费咨询" in ask_wxml
+check("免费=引流主口径（1010 用户令 CTA/home 回位；v0.9.13 票根改总额度口径；my/answer 正文仍零免费）",
+      "'免费咨询'}}</button>" in ask_wxml and "每日登录赠送 6 次" in ask_wxml
       and "免费工程咨询" in read("pages/home/home.wxml")
       and "免费" not in _vis["pages/my/my.wxml"] and "免费" not in _vis["pages/answer/answer.wxml"])
 check("my 页用户协议·隐私政策入口", "goPrivacy" in my_js and "用户协议 · 隐私政策" in my_wxml)
@@ -486,8 +491,8 @@ check("智库页 诚实库存四数（9855/847/906/620，v0.9.6 用户令更新�
       and "kbstats.KB_STATS" in zk_js)
 check("智库页 持续入库口径（不吹全量，v0.9.1 锚=时间线节点）",
       "持续入库中" in zk_wxml and "盘点口径" in zk_wxml and "全量" not in zk_wxml)
-check("智库页 v0.7.4 合规防线仍在（无二维码/长按导流）",
-      "previewQr" not in zk_js and "show-menu-by-longpress" not in zk_wxml)
+check("智库页 v0.7.4 合规防线收敛（previewQr 导流已撤；v0.9.13 唯一二维码=购买弹窗总包君）",
+      "previewQr" not in zk_js and 'zk-qr-wrap' in zk_wxml and 'src="/images/zongbaojun_qr.jpg"' in zk_wxml)
 # 引擎侧：导出收费闸门 + 旧 1 元解锁下线
 _cfg_py = open(os.path.join(ENGINE, "qianwen_engine", "config.py"), encoding="utf-8").read()
 check("引擎 EXPORT_PRICE_FEN=10（¥0.1/条）", "EXPORT_PRICE_FEN = 10" in _cfg_py)
@@ -824,7 +829,7 @@ check("invoice 门槛进度条三件（progressPct计算+wxml+样式）",
 _kb = read("utils/kbstats.js")
 _zhiku_js = read("pages/zhiku/zhiku.js")
 check("L18 信任数同源：utils/kbstats.js 唯一出处 + ask/zhiku 双页接线",
-      os.path.exists("utils/kbstats.js") and "'9855'" in _kb
+      os.path.exists(os.path.join(ROOT, "utils", "kbstats.js")) and "'9855'" in _kb
       and "kbstats.KB_STATS" in _zhiku_js and "kbStats: kbstats.KB_STATS" in ask_js
       and 'wx:for="{{kbStats}}"' in ask_wxml and "{{item.n}}" in ask_wxml)
 check("L18 信任带 wxml 不再硬编码四数（kb-n 文本位改绑定，599847679 案号不算）",
@@ -839,7 +844,7 @@ check("L22 errCount 死仪表已删（app.js 无只写不读计数）",
 check("L23 theme.apply 只推 themeStyle（themeKey/themeName 死负载已剪）",
       "page.setData({ themeStyle: styleStr(t) });" in theme_js
       and "themeKey" not in theme_js.replace("themeKey/themeName 死负载不再随每页 onShow 推送", ""))
-_cfg = json.load(open("project.config.json", encoding="utf-8"))
+_cfg = json.load(open(os.path.join(ROOT, "project.config.json"), encoding="utf-8"))
 check("L24 packOptions 忽略 v095-audit/.vscode（审计材料不进上传包）",
       any(i.get("value") == "v095-audit" for i in _cfg.get("packOptions", {}).get("ignore", []))
       and any(i.get("value") == ".vscode" for i in _cfg.get("packOptions", {}).get("ignore", [])))
@@ -972,10 +977,10 @@ check("服务端公开统计端点（注册用户+咨询总数，种子不计入
 # ── v0.9.11 提审前对抗审计四修（12 agents 三镜头+对抗核验，4 CONFIRMED 全修）──
 check("服务端 stats 只数 ready 行（error/孤儿 pending 不虚增公开咨询数）",
       "AND status = 'ready'" in _store_py)
-check("ask 已登录票根大数字=免费真值 free_left（含赠次 total 不再误标「免费」）",
-      'qt-num mono">{{quota.free_left}}' in ask_wxml
-      and 'qt-num mono">{{quota.total_left}}' not in ask_wxml
-      and "合计可咨询 {{quota.total_left}} 次" in ask_wxml)
+check("ask 票根大数字命名诚实（v0.9.13 用户令：主位=咨询总额度 total_left，标签不标免费）",
+      'qt-num-hero">{{quota.total_left}}' in ask_wxml
+      and "{{quota.free_left}}" in ask_wxml
+      and "免费额度" not in ask_wxml)
 check("pot 切分类失败回滚 activeCat（chip 高亮与列表内容不再错位）",
       "_renderedCat" in pot_js and "patch.activeCat = this._renderedCat" in pot_js)
 check("ask 首页统计面（同行在用+累计咨询，可证成无极限词）",
@@ -1010,6 +1015,60 @@ check("v0.9.12 五页不必要弹窗标题全局归零（支付没完成/支付�
           for src in (ask_js, _rp_js_3, ans_js, my_js))
       and "title: '购买方式'" not in _rp_js_3
       and "title: '没提交成功'" not in _inv_js_2)
+
+# ══ v0.9.13 三连修（1010 用户令：额度总额度大字 / 智库全库广告+总包君二维码 / 支付根因修）══
+_my_wxss = read("pages/my/my.wxss")
+_zk_wxml = read("pages/zhiku/zhiku.wxml")
+_zk_wxss = read("pages/zhiku/zhiku.wxss")
+_pay_js = read("utils/pay.js")
+_tel_js = read("utils/telemetry.js")
+
+# REQ-001 额度：两页总额度实时大字 + 每日 6 次定名「登录赠送」
+check("my 额度卡=总额度大字主位（quota-hero+qh-num 绑 total_left）",
+      'class="qh-num mono">{{quota.total_left}}' in my_wxml and ".quota-hero" in _my_wxss
+      and ".qh-num" in _my_wxss and "108rpx" in _my_wxss)
+check("my 额度双格=今日登录赠送/互动加赠（free/bonus 分列，不再并称免费）",
+      "今日登录赠送" in my_wxml and "互动加赠" in my_wxml and "{{quota.free_left}}" in my_wxml)
+check("my 规则行=登录赠送口径（v0.9.13 命名统一）",
+      "每日登录赠送 6 次" in my_wxml and "每天免费 6 次" not in my_wxml)
+check("ask 底栏规则行=登录赠送口径（三件全）",
+      "每日登录赠送 6 次" in ask_wxml and "0 点清零" in ask_wxml and "上不封顶" in ask_wxml)
+
+# REQ-002 智库广告：复制按钮下方广告条 + 点触式二维码弹窗
+check("智库广告条在复制按钮下方（zk-ad 出现于 zk-copy 之后）",
+      0 < _zk_wxml.find('class="btn-primary zk-copy"') < _zk_wxml.find('class="zk-ad"'))
+check("智库广告文案=9.8万元购买全库（用户令原文）",
+      "9.8万元" in _zk_wxml and "购买全库" in _zk_wxml and 'bindtap="showBuyModal"' in _zk_wxml)
+check("智库购买弹窗点触式（buyModal 默认关+mask 点关+滚动穿透锁）",
+      "buyModal: false" in _zhiku_js and 'wx:if="{{buyModal}}"' in _zk_wxml
+      and 'bindtap="hideBuyModal"' in _zk_wxml and 'catchtouchmove="noop"' in _zk_wxml)
+check("智库弹窗二维码=总包君（长按可识别，素材在包）",
+      'src="/images/zongbaojun_qr.jpg"' in _zk_wxml
+      and 'show-menu-by-longpress="{{true}}"' in _zk_wxml
+      and os.path.exists(os.path.join(ROOT, "images", "zongbaojun_qr.jpg")))
+check("智库广告触达打点（ad_buy_tap 进遥测，转化面可观测）",
+      "tel.ping('ad_buy_tap')" in _zhiku_js)
+check("智库广告/弹窗样式双落（zk-ad 渐变条+zk-modal 全屏层）",
+      ".zk-ad" in _zk_wxss and ".zk-modal" in _zk_wxss and ".zk-qr" in _zk_wxss)
+
+# REQ-003 支付根因修：pay.js 失败码遥测 + 官方错误码文案映射（env=0/道具现网发布在运维腿）
+check("pay.js 支付失败码打点（pay_fail 带官方 errCode，取消静默不打点）",
+      "tel.ping('pay_fail'" in _pay_js and "if (!silentCancel)" in _pay_js
+      and "code: code" in _pay_js)
+check("pay.js 官方错误码→文案映射（-15010/-15014/-15011/-15020/-15021/-4/-15007/-15013）",
+      "payFailMessage" in _pay_js and all(k in _pay_js for k in (
+          "-15010", "-15014", "-15011", "-15020", "-15021", "-4", "-15007", "-15013")))
+check("pay.js 三流遥测标签可辨（本条导出/全部导出/本报告）",
+      "'本条导出'" in _pay_js and "'全部导出'" in _pay_js and "'本报告'" in _pay_js)
+
+# REQ-003 引擎腿：道具图静态路由（item_url 公开承载）
+check("引擎道具图路由（/static/goods/{name} 白名单+防穿越+长缓存）",
+      '@app.get("/static/goods/{name}")' in _app_py and "_GOODS_NAME_RE" in _app_py
+      and "p.parent != base" in _app_py and "max-age=86400" in _app_py)
+check("引擎道具图素材随包（static_goods/zongbaojun.jpg）",
+      "GOODS_STATIC_DIR" in _app_py
+      and os.path.exists(os.path.join(ENGINE, "qianwen_engine", "static_goods", "zongbaojun.jpg")))
+check("telemetry VER=0.9.13（版本横幅同步）", "var VER = '0.9.13'" in _tel_js)
 fails = [c for c in checks if not c[1]]
 for name, ok, detail in checks:
     print(("PASS " if ok else "FAIL ") + name + (("  " + detail) if detail and not ok else ""))

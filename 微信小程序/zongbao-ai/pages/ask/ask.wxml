@@ -16,30 +16,29 @@
       </view>
       <view class="hero-sub">专业参考源自「总包智库」· 总包人的随身工程顾问 / 招投标 / 签约 / 风险 / 造价争议 / 审计 / 合同实务</view>
 
-      <!-- 额度票根（1010 引流令：免费额度首屏即显示，不等咨询/登录——空态亮静态规则数 6） -->
-      <!-- v0.9.11 审计修：大数字=免费额度真值 free_left（不再用含赠次的 total_left 误标「免费」；
-           赠次单列，合计口径放右侧小字——免费=0 时不出现「免费额度 2」的自相矛盾） -->
+      <!-- 额度票根（1010 引流令：额度首屏即显示，不等咨询/登录——空态亮静态规则数 6） -->
+      <!-- v0.9.13 用户令：大字=实时总额度 total_left（含登录赠送+互动加赠）；每日 6 次定名「登录赠送额度」 -->
       <view class="quota-ticket" wx:if="{{quota}}">
         <view class="qt-left">
-          <view class="qt-label">今日免费额度</view>
-          <view class="qt-num mono">{{quota.free_left}}</view>
+          <view class="qt-label">咨询总额度</view>
+          <view class="qt-num mono qt-num-hero">{{quota.total_left}}</view>
         </view>
         <view class="qt-perf"></view>
         <view class="qt-right">
+          <view class="qt-kv">今日登录赠送 {{quota.free_left}} 次</view>
           <view class="qt-kv" wx:if="{{quota.bonus_left > 0}}">互动加赠 {{quota.bonus_left}} 次</view>
-          <view class="qt-kv" wx:else>有用/纠错 各+1次</view>
-          <view class="qt-kv qt-dim" wx:if="{{quota.bonus_left > 0}}">合计可咨询 {{quota.total_left}} 次</view>
-          <view class="qt-kv qt-dim" wx:else>0 点重置</view>
+          <view class="qt-kv qt-dim" wx:else>有用/纠错 各+1次</view>
+          <view class="qt-kv qt-dim">北京时间 0 点重置</view>
         </view>
       </view>
       <view class="quota-ticket quota-empty" wx:else>
         <view class="qt-left">
-          <view class="qt-label">今日免费额度</view>
-          <view class="qt-num mono">6</view>
+          <view class="qt-label">咨询总额度</view>
+          <view class="qt-num mono qt-num-hero">6</view>
         </view>
         <view class="qt-perf"></view>
         <view class="qt-right">
-          <view class="qt-kv">每日 6 次免费咨询</view>
+          <view class="qt-kv">每日登录赠送 6 次</view>
           <view class="qt-kv qt-dim">有用/纠错 各+1次 · 0 点重置</view>
         </view>
       </view>
@@ -130,7 +129,7 @@
   </view>
 
   <view class="bottom-bar safe-bottom rise" style="animation-delay: 220ms">
-    <view class="muted tip-line">有用/纠错各 +1 次（上不封顶）· 北京时间 0 点清零</view>
+    <view class="muted tip-line">每日登录赠送 6 次 · 有用/纠错各 +1 次（上不封顶）· 北京时间 0 点清零</view>
   </view>
 </view>
 

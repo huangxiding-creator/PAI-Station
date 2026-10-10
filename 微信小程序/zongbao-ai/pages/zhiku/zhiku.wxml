@@ -78,6 +78,37 @@
     <view class="zk-url mono">{{urlHost}}</view>
     <view class="muted zk-note">知识库为在线文档，链接可复制保存备用</view>
     <button class="btn-primary zk-copy" hover-class="btn-hover" bindtap="copyUrl">复制知识库链接</button>
+
+    <!-- v0.9.13 用户令：全库购买广告条（点击弹窗展示总包君二维码，点触式不自动弹出） -->
+    <view class="zk-ad" hover-class="zk-ad-hover" bindtap="showBuyModal">
+      <view class="zk-ad-ribbon mono">LIBRARY<br/>PASS</view>
+      <view class="zk-ad-main">
+        <view class="zk-ad-title"><text class="zk-ad-price mono">9.8万元</text>购买全库</view>
+        <view class="zk-ad-sub">六库资料整体授权 · 一次买断 · 总包君为您办理</view>
+      </view>
+      <view class="zk-ad-cta">扫码<text class="zk-ad-arrow">›</text></view>
+    </view>
+  </view>
+
+  <!-- v0.9.13 全库购买弹窗：总包君二维码（长按可识别） -->
+  <view class="zk-modal" wx:if="{{buyModal}}" catchtouchmove="noop">
+    <view class="zk-mask" bindtap="hideBuyModal"></view>
+    <view class="zk-sheet rise">
+      <view class="zk-sheet-kicker kicker mono">LIBRARY PASS · 全库授权</view>
+      <view class="zk-sheet-title"><text class="mono">9.8万元</text> · 购买全库</view>
+      <view class="zk-sheet-sub muted">六库资料整体授权，一次买断 · 扫码添加总包君咨询办理</view>
+      <view class="zk-qr-wrap ticks">
+        <image
+          class="zk-qr"
+          src="/images/zongbaojun_qr.jpg"
+          mode="aspectFit"
+          show-menu-by-longpress="{{true}}"
+        />
+        <view class="zk-qr-cap mono">ZONGBAO JUN</view>
+      </view>
+      <view class="zk-qr-hint">长按识别二维码 · 联系总包君咨询购买</view>
+      <button class="btn-primary zk-sheet-close" hover-class="btn-hover" bindtap="hideBuyModal">我知道了</button>
+    </view>
   </view>
 
   <view class="safe-bottom"></view>

@@ -39,6 +39,20 @@
   display: flex; justify-content: space-between; align-items: baseline;
   margin-bottom: 22rpx;
 }
+/* v0.9.13 用户令：总额度大字主位（显眼） */
+.quota-hero {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 18rpx 0 22rpx;
+  border-bottom: 2rpx dashed var(--line);
+  margin-bottom: 20rpx;
+}
+.qh-num {
+  font-size: 108rpx; font-weight: 800; line-height: 1.05;
+  color: var(--accent-deep);
+  text-shadow: 0 0 26rpx rgba(var(--t-accent-rgb), 0.28);
+  letter-spacing: 2rpx;
+}
+.qh-label { font-size: 22rpx; letter-spacing: 4rpx; color: var(--muted); margin-top: 10rpx; }
 .quota-grid { display: flex; align-items: stretch; }
 .q-item { flex: 1; text-align: center; }
 .q-num { font-size: 52rpx; font-weight: 800; color: var(--navy-1); line-height: 1.2; }

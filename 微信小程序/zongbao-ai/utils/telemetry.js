@@ -6,7 +6,7 @@
 var BASE_URL = '';
 try { BASE_URL = require('./config').BASE_URL || ''; } catch (e) { BASE_URL = ''; }
 
-var VER = '0.9.6';
+var VER = '0.9.13';
 
 // 匿名 boot id：一次安装生命周期一个（storage 持久，清缓存才换），
 // 形如 b3x9k2m1（b + 时间36进制 + 随机），不含任何可识别个人的信息

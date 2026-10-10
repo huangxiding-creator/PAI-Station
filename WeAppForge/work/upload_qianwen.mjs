@@ -14,12 +14,15 @@ const version = process.argv[2] || '0.2.7';
 const desc = process.argv[3] || '真身修正: 0.2.7';
 
 // ── robot 轮转：cursor 文件记录上次用过的 robot，本次取下一个（1..30 循环）──
-const CURSOR = 'work/robot_cursor.txt';
+// 1010 迁移修：路径锚定脚本自身目录（cwd 相对路径在应用主目录迁移后 ENOENT）
+import { fileURLToPath } from 'node:url';
+const HERE = fileURLToPath(new URL('.', import.meta.url));
+const CURSOR = HERE + 'robot_cursor.txt';
 let last = 1;
 try { last = parseInt(fs.readFileSync(CURSOR, 'utf-8').trim(), 10) || 1; } catch {}
 const robot = (last % 30) + 1;
 fs.writeFileSync(CURSOR, String(robot));
-fs.appendFileSync('work/robot_registry.jsonl',
+fs.appendFileSync(HERE + 'robot_registry.jsonl',
   JSON.stringify({ time: new Date().toISOString(), version, desc, robot }) + '\n');
 
 const project = new ci.Project({
@@ -48,7 +51,7 @@ console.log('UPLOAD_OK', JSON.stringify({
 
 // ── 上传后健康探针：钉位悬空（BROKEN）→ 立刻可见并给出用户唯一修复动作，杜绝静默劣化 ──
 try {
-  const out = execSync('python work/trial_health_probe.py', {
+  const out = execSync(`python "${HERE}trial_health_probe.py"`, {
     encoding: 'utf-8',
     env: { ...process.env, PYTHONIOENCODING: 'utf-8' },
     stdio: ['ignore', 'pipe', 'pipe'],

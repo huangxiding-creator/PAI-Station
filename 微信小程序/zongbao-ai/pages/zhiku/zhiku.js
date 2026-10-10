@@ -3,6 +3,7 @@
 // v0.7.4 提审合规基线保留：撤二维码/长按识别/引导外部App文案（运营规范导流红线），只留低姿态复制链接
 const theme = require('../../utils/theme');
 const kbstats = require('../../utils/kbstats');
+const tel = require('../../utils/telemetry'); // v0.9.13：广告触达打点（运营转化面）
 
 Page({
   data: {
@@ -45,6 +46,7 @@ Page({
     expanded: 0, // 默认展开第一库（点击头部切换，-1=全收起）
     // 诚实库存（可证成口径）：v0.9.5 审计修（L18）改共享出处——与 ask 信任带同源 utils/kbstats.js
     stats: kbstats.KB_STATS,
+    buyModal: false, // v0.9.13：全库购买弹窗（点触式，绝不自动弹出）
   },
 
   onLoad() {
@@ -83,6 +85,17 @@ Page({
       },
     });
   },
+
+  // ── v0.9.13 全库购买广告：点触式弹窗（总包君二维码，长按可识别） ──
+  showBuyModal() {
+    wx.vibrateShort({ type: 'light', fail: () => {} });
+    tel.ping('ad_buy_tap');
+    this.setData({ buyModal: true });
+  },
+  hideBuyModal() {
+    this.setData({ buyModal: false });
+  },
+  noop() {},
 
   onShareAppMessage() {
     return {

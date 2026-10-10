@@ -4,6 +4,7 @@
 // 合规铁律：iOS 不展示任何付费入口（虚拟支付 Android-only；已解锁内容 iOS 可阅读）；
 // 503 未开通走降级文案；409=服务端判定已解锁（含已付补标记），直接收口不再拉起支付。
 const api = require('./api');
+const tel = require('./telemetry'); // v0.9.13：支付失败地面真值腿（官方 errCode 不再被吞）
 
 // 平台探测（缓存一次；getDeviceInfo 优先，老库回退 getSystemInfoSync）
 let _platform = '';
@@ -14,6 +15,18 @@ try {
 }
 
 const DEGRADE_MSG = '支付服务开通中，敬请期待；已解锁内容不受影响。';
+
+// v0.9.13 根因修配套：官方错误码 → 用户可读文案（微信虚拟支付错误码表）
+// errCode 为微信侧 fail 回调透传的官方码；未知码走保底文案，不猜不编。
+function payFailMessage(code) {
+  if (code === -15010 || code === -15014) return '商品暂未上架，请稍后再试';
+  if (code === -15011) return '支付环境升级中，请稍后再试';
+  if (code === -15020 || code === -15021) return '操作过快，请稍后再试';
+  if (code === -4) return '触发安全风控，请稍后再试';
+  if (code === -15007 || code === -15005 || code === -15006) return '登录态已过期，请退出小程序后重试';
+  if (code === -15013) return '商品价格校验失败，请稍后再试';
+  return '支付未完成，请稍后重试';
+}
 
 // 虚拟支付是否可用：Android/开发工具 且 基础库支持（iOS 隐藏付费入口——虚拟支付铁律）
 function paySupported() {
@@ -53,10 +66,16 @@ function _requestPay(sign, confirmPath, label) {
       },
       fail: (errRes) => {
         const raw = String((errRes && errRes.errMsg) || '');
-        const silentCancel = raw.indexOf('cancel') >= 0 || !!(errRes && errRes.errCode === 1);
+        const code = errRes && typeof errRes.errCode === 'number' ? errRes.errCode : null;
+        const silentCancel = raw.indexOf('cancel') >= 0 || code === 1;
+        // v0.9.13：非取消失败必须打点——官方 errCode 是排障地面真值，此前被吞成观测盲区
+        if (!silentCancel) {
+          tel.ping('pay_fail', { label: label || 'export', code: code, msg: raw.slice(0, 120) });
+        }
         resolve({
           ok: false,
-          message: silentCancel ? '已取消支付' : '支付未完成，请稍后重试'
+          code: code,
+          message: silentCancel ? '已取消支付' : payFailMessage(code)
         });
       }
     });
@@ -77,7 +96,7 @@ function payExport(answerId) {
   return api.exportSign(answerId)
     .then((sign) => _requestPay(sign, {
       method: 'POST', path: '/api/answer/' + answerId + '/export_paid'
-    }))
+    }, '本条导出'))
     .catch((err) => _catchSign(err, '本篇导出已解锁'));
 }
 
@@ -86,7 +105,7 @@ function payExportAll() {
   return api.exportAllSign()
     .then((sign) => _requestPay(sign, {
       method: 'POST', path: '/api/answers/export_all_paid'
-    }))
+    }, '全部导出'))
     .catch((err) => _catchSign(err, '导出已全部解锁'));
 }
 

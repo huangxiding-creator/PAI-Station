@@ -35,6 +35,7 @@ PORT = _env_int("PORT", 8080)      # 容器监听端口（云托管注入 PORT�
 SECRETS_DIR = Path(os.environ.get("SECRETS_DIR") or (REPO / "data" / "secrets"))
 DATA_DIR = Path(os.environ.get("DATA_DIR") or (REPO / "data" / "qianwen"))
 DB_PATH = DATA_DIR / "db.sqlite"
+GOODS_STATIC_DIR = PKG / "static_goods"   # v0.9.13 虚拟支付道具图（item_url 公开承载，随镜像走）
 
 # ── v0.9.4 发票（1009 用户令：累计消费满 ¥200 可申请增值税专用发票；申请即企业微信推送运营）──
 INVOICE_THRESHOLD_FEN = _env_int("INVOICE_THRESHOLD_FEN", 20000)            # ¥200（分）

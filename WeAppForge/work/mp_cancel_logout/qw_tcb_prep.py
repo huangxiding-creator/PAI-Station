@@ -42,6 +42,17 @@ def main():
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(p, dst)
         n_py += 1
+    # v0.9.13 道具图（/static/goods/{name} 公开承载，随镜像走；单图 ≤2MB 闸）
+    n_goods = 0
+    goods_src = SRC / "qianwen_engine" / "static_goods"
+    if goods_src.is_dir():
+        dst_goods = pkg / "static_goods"
+        dst_goods.mkdir(parents=True, exist_ok=True)
+        for p in sorted(goods_src.iterdir()):
+            if (p.is_file() and p.suffix.lower() in (".jpg", ".jpeg", ".png")
+                    and p.stat().st_size <= 2 * 1024 * 1024):
+                shutil.copy2(p, dst_goods / p.name)
+                n_goods += 1
     n_font = 0
     for pat in ("NotoSansSC-*.otf", "simhei.ttf"):
         for p in sorted(FONTS.glob(pat)):
@@ -77,7 +88,7 @@ def main():
     for p in sorted((CONTENT / "sample").glob("*.md")):
         shutil.copy2(p, rc / "sample" / p.name)
         n_smp += 1
-    print(f"staged: {n_py} py, {n_font} fonts, {n_pdf} pdf ({n_mb/1048576:.1f} MB, "
+    print(f"staged: {n_py} py, {n_font} fonts, {n_goods} goods-img, {n_pdf} pdf ({n_mb/1048576:.1f} MB, "
           f"skip {n_skip}), {n_smp} samples, at {STAGE}")
 
     # [2] 拉当前 EnvParams（fresh）
