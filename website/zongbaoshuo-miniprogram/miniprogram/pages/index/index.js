@@ -1,9 +1,12 @@
-// 首页: 资产总览 + 八线矩阵 + 四重价值 + 收入引擎 + 联系
+// 首页: 旗舰直达 + 资产总览 + 八线矩阵 + 四重价值 + 收入引擎 + 联系
 const content = require('../../utils/content.js');
+
+const CONSULTANT_APPID = 'wx5cee1574ce45819b';
 
 Page({
   data: {
     hero: content.hero,
+    flagship: content.flagship,
     chips: content.chips,
     dwg: content.dwg,
     marquee: content.marquee,
@@ -20,6 +23,19 @@ Page({
   goProduct(e) {
     const { id } = e.currentTarget.dataset;
     wx.navigateTo({ url: `/pages/product/product?id=${id}` });
+  },
+
+  onFlagship(e) {
+    const { type } = e.currentTarget.dataset;
+    if (type === 'jump') {
+      wx.navigateToMiniProgram({
+        appId: CONSULTANT_APPID,
+        path: 'pages/home/home',
+        fail: () => wx.showToast({ title: '跳转未成功，请重试', icon: 'none' }),
+      });
+    } else {
+      wx.navigateTo({ url: '/pages/product/product?id=aiglasses' });
+    }
   },
 
   previewQr() {
@@ -48,7 +64,7 @@ Page({
 
   onShareAppMessage() {
     return {
-      title: '总包说科技 · 大模型兵马已动，行业粮草先行十年',
+      title: '总包科技 · 大模型兵马已动，行业粮草先行十年',
       path: '/pages/index/index',
     };
   },

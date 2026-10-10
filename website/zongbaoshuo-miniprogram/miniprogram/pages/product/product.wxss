@@ -491,37 +491,129 @@
   line-height: 1.7;
 }
 
-/* 扫码块 */
-.qr-inline {
+/* 跳转 CTA (总包AI顾问) */
+.jump-cta {
   margin-top: 30rpx;
-  display: flex;
-  gap: 22rpx;
-  align-items: center;
-  padding: 22rpx;
-  border: 2rpx dashed var(--line);
+  padding: 26rpx;
+  border: 3rpx solid var(--ink);
+  border-left: 10rpx solid var(--acc);
   border-radius: 10rpx;
+  background: var(--paper2);
+  box-shadow: 8rpx 8rpx 0 rgba(24, 34, 54, 0.18);
 }
 
-.qr-inline .qr-box {
-  flex-shrink: 0;
-  width: 180rpx;
-  height: 180rpx;
-  border: 2rpx solid var(--line);
-  border-radius: 6rpx;
+.jump-hover {
   background: #fff;
+  box-shadow: 8rpx 8rpx 0 rgba(232, 89, 12, 0.35);
 }
 
-.qr-inline .qr-txt .b {
-  font-size: 26rpx;
+.jc-head {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+}
+
+.jc-head .b {
+  font-size: 28rpx;
   font-weight: 800;
   color: var(--ink);
 }
 
-.qr-inline .qr-txt .d {
-  margin-top: 8rpx;
+.jc-head .jc-live {
+  flex-shrink: 0;
+  font-size: 17rpx;
+  font-weight: 800;
+  letter-spacing: 3rpx;
+  color: #fff;
+  background: #0f7b4f;
+  border-radius: 4rpx;
+  padding: 4rpx 10rpx;
+}
+
+.jc-desc {
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  color: var(--mut);
+  line-height: 1.7;
+}
+
+.jc-btn {
+  margin-top: 20rpx;
+  text-align: center;
+  background: var(--acc);
+  color: #fff;
+  font-size: 30rpx;
+  font-weight: 800;
+  letter-spacing: 4rpx;
+  border-radius: 999rpx;
+  padding: 20rpx 0;
+  box-shadow: 5rpx 5rpx 0 rgba(24, 34, 54, 0.22);
+}
+
+.jump-cta:active .jc-btn {
+  background: var(--acc-bright);
+}
+
+/* 获取指南 (顾问眼镜) */
+.guide {
+  margin-top: 30rpx;
+  padding: 24rpx;
+  border: 2rpx dashed var(--blue);
+  border-radius: 10rpx;
+}
+
+.guide-title .b {
+  font-size: 26rpx;
+  font-weight: 800;
+  color: var(--blue-deep);
+}
+
+.gstep {
+  margin-top: 20rpx;
+  display: flex;
+  gap: 18rpx;
+  align-items: flex-start;
+}
+
+.gstep .gno {
+  flex-shrink: 0;
+  width: 56rpx;
+  height: 56rpx;
+  line-height: 56rpx;
+  text-align: center;
+  border: 2rpx solid var(--blue);
+  color: var(--blue-deep);
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  background: #fff;
+}
+
+.gstep .gbody {
+  flex: 1;
+  min-width: 0;
+}
+
+.gstep .gt {
+  display: block;
+  font-size: 25rpx;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.gstep .gd {
+  display: block;
+  margin-top: 4rpx;
   font-size: 21rpx;
   color: var(--mut);
-  line-height: 1.65;
+  line-height: 1.6;
+}
+
+.gnote {
+  margin-top: 20rpx;
+  font-size: 20rpx;
+  color: var(--faint);
+  border-top: 2rpx dashed var(--line);
+  padding-top: 16rpx;
 }
 
 /* 导航行 */

@@ -119,13 +119,27 @@
       <!-- 金句 -->
       <view class="pin-line" wx:if="{{p.pin}}">{{p.pin.pre}}<text class="em">{{p.pin.em}}</text></view>
 
-      <!-- 扫码块 -->
-      <view class="qr-inline" wx:if="{{p.qr}}">
-        <image class="qr-box" src="{{p.qr.src}}" mode="aspectFit" data-src="{{p.qr.src}}" bindtap="previewQr" />
-        <view class="qr-txt">
-          <text class="b">{{p.qr.title}}</text>
-          <view class="d">{{p.qr.desc}}</view>
+      <!-- 跳转 CTA (总包AI顾问) -->
+      <view class="jump-cta" wx:if="{{p.jump}}" bindtap="onJump" hover-class="jump-hover">
+        <view class="jc-head">
+          <text class="jc-live mono">LIVE</text>
+          <text class="b">{{p.jump.title}}</text>
         </view>
+        <view class="jc-desc">{{p.jump.desc}}</view>
+        <view class="jc-btn zh-display">{{p.jump.cta}}</view>
+      </view>
+
+      <!-- 获取指南 (顾问眼镜) -->
+      <view class="guide" wx:if="{{p.guide}}">
+        <view class="guide-title"><text class="b">{{p.guide.title}}</text></view>
+        <view class="gstep" wx:for="{{p.guide.steps}}" wx:key="no">
+          <text class="gno zh-display">{{item.no}}</text>
+          <view class="gbody">
+            <text class="gt">{{item.t}}</text>
+            <text class="gd">{{item.d}}</text>
+          </view>
+        </view>
+        <view class="gnote">{{p.guide.note}}</view>
       </view>
 
       <!-- 标签 -->
@@ -146,5 +160,5 @@
       <text class="nm">{{next.no}} {{next.name}}</text>
     </view>
   </view>
-  <view class="home-hint">长按二维码可识别 · 点击图片可放大</view>
+  <view class="home-hint">点击图片可放大 · 旗舰卡片一键直达</view>
 </view>

@@ -1,4 +1,4 @@
-<!-- 总包说科技 · 首页 (纸张蓝图风 · 移植官网 v10) -->
+<!-- 总包科技 · 首页 (纸张蓝图风 · v1.2.0 旗舰直达) -->
 <view class="page">
 
   <!-- ============ HERO ============ -->
@@ -29,6 +29,19 @@
       <view class="dwg-stamp">{{dwg.stamp}}</view>
     </view>
 
+  </view>
+
+  <!-- ============ 旗舰直达 ============ -->
+  <view class="sec flagship">
+    <text class="eyebrow">{{flagship.eyebrow}}</text>
+    <view class="sec-title zh-display">{{flagship.title}}<text class="em">{{flagship.titleEm}}</text></view>
+    <view class="fcard {{item.type === 'jump' ? 'live' : 'soon'}}" wx:for="{{flagship.cards}}" wx:key="h"
+      data-type="{{item.type}}" bindtap="onFlagship" hover-class="fcard-hover">
+      <view class="ftags"><text class="flive">{{item.live}}</text></view>
+      <view class="fh zh-display">{{item.h}}</view>
+      <view class="fp">{{item.p}}</view>
+      <view class="fcta">{{item.cta}}</view>
+    </view>
   </view>
 
   <!-- ============ 战绩带 ============ -->

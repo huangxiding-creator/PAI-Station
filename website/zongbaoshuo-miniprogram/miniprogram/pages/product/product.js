@@ -1,4 +1,4 @@
-// 产品详情页: ?id=leopard|brain|zhiku|factory|aipo|station|glasses|robot
+// 产品详情页: ?id=consultant|leopard|brain|zhiku|factory|aipo|station|glasses|robot|aiglasses
 const { products, getProduct } = require('../../utils/products.js');
 
 Page({
@@ -16,7 +16,7 @@ Page({
       return;
     }
     const idx = products.findIndex((x) => x.id === p.id);
-    wx.setNavigationBarTitle({ title: `${p.no} ${p.name} · 总包说` });
+    wx.setNavigationBarTitle({ title: `${p.no} ${p.name} · 总包科技` });
     this.setData({
       p,
       prev: idx > 0 ? products[idx - 1] : null,
@@ -40,6 +40,18 @@ Page({
   previewQr(e) {
     const { src } = e.currentTarget.dataset;
     wx.previewImage({ urls: [src] });
+  },
+
+  onJump() {
+    const j = this.data.p && this.data.p.jump;
+    if (!j) {
+      return;
+    }
+    wx.navigateToMiniProgram({
+      appId: j.appId,
+      path: j.path,
+      fail: () => wx.showToast({ title: '跳转未成功，请重试', icon: 'none' }),
+    });
   },
 
   onShareAppMessage() {

@@ -218,6 +218,80 @@
   letter-spacing: 4rpx;
 }
 
+/* ---------- 旗舰直达 ---------- */
+.flagship {
+  padding-top: 44rpx;
+}
+
+.fcard {
+  margin-top: 26rpx;
+  padding: 26rpx;
+  border: 3rpx solid var(--ink);
+  border-radius: 10rpx;
+  background: var(--paper2);
+  box-shadow: 8rpx 8rpx 0 rgba(24, 34, 54, 0.18);
+}
+
+.fcard.live {
+  border-left: 10rpx solid var(--acc);
+}
+
+.fcard.soon {
+  border-left: 10rpx dashed var(--blue);
+}
+
+.fcard-hover {
+  background: #fff;
+  box-shadow: 8rpx 8rpx 0 rgba(232, 89, 12, 0.35);
+}
+
+.ftags {
+  display: flex;
+  align-items: center;
+}
+
+.ftags .flive {
+  font-size: 19rpx;
+  font-weight: 800;
+  padding: 4rpx 12rpx;
+  border-radius: 4rpx;
+  letter-spacing: 2rpx;
+}
+
+.fcard.live .flive {
+  background: #0f7b4f;
+  color: #fff;
+}
+
+.fcard.soon .flive {
+  border: 2rpx solid var(--blue);
+  color: var(--blue-deep);
+}
+
+.fcard .fh {
+  margin-top: 14rpx;
+  font-size: 38rpx;
+  color: var(--ink);
+}
+
+.fcard .fp {
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  color: var(--mut);
+  line-height: 1.7;
+}
+
+.fcard .fcta {
+  margin-top: 18rpx;
+  padding-top: 16rpx;
+  border-top: 2rpx dashed var(--line);
+  text-align: right;
+  font-size: 26rpx;
+  font-weight: 800;
+  color: var(--acc);
+  letter-spacing: 2rpx;
+}
+
 /* ---------- 战绩带 (滚动) ---------- */
 .marquee {
   overflow: hidden;
