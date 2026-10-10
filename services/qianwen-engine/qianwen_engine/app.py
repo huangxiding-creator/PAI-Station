@@ -219,9 +219,10 @@ def answer(aid: str, request: Request):
          "full_chars": len(row["answer_full"]),
          "liked": liked, "criticized": bool(row["criticized"]) if not is_pot else False,
          "is_pot": is_pot,
-         # v0.8.0 导出收费：仅本人答案可付费导出（is_owner + export_paid 驱动客户端付费墙）
+         # v0.8.0 导出收费（¥0.1/条）：is_owner + export_paid 驱动客户端付费墙。
+         # v0.9.14：export_paid 改观看者口径——答主=行级 flag，锅圈观看者=按人记账
          "is_owner": row["openid"] == openid,
-         "export_paid": bool(row["export_paid"]) if "export_paid" in row.keys() else False,
+         "export_paid": _export_unlocked(aid, row, openid),
          "shares": (row["shares"] if "shares" in row.keys() else 0) or 0,
          "shared": bool(row["shared"]) if "shared" in row.keys() else False,
          "can_share": (not is_pot and status == "ready" and bool(row["answer_full"])),
@@ -336,14 +337,15 @@ class ExportIn(BaseModel):
 def export_answer(aid: str, body: ExportIn, request: Request):
     """v0.4.0 导出：Word/PDF 文件（base64 回传）。v0.7.0 公益免费：全文开放。
     v0.7.3（用户令）：导出不再赠次——赠次动作=like/criticize/share 三件。
-    v0.8.0（用户令 1008）：咨询全免费，导出按条收费 ¥0.1——仅本人答案、须已解锁。"""
+    v0.8.0（用户令 1008）：咨询全免费，导出按条收费 ¥0.1——须已解锁。
+    v0.9.14（用户令 1010）：锅圈共享答案同权付费导出（解锁按观看者记账）。"""
     openid = _openid(request)
-    row = store.get_answer(aid, openid)
+    row = store.get_answer_visible(aid, openid)
     if row is None:
         raise HTTPException(404, "答案不存在")
     if row["status"] != "ready":
         raise HTTPException(400, "回答尚未完成，稍后再试")
-    if not (row["export_paid"] if "export_paid" in row.keys() else 0):
+    if not _export_unlocked(aid, row, openid):
         raise HTTPException(402, "导出未解锁（¥0.1/条），请先在导出弹窗完成支付")
     try:
         out = exporter.build((body.fmt or "").strip().lower(), row)
@@ -598,18 +600,34 @@ class ExportPaidIn(BaseModel):
     out_trade_no: str = ""
 
 
+def _export_unlocked(aid: str, row: dict, openid: str) -> bool:
+    """导出解锁判据（观看者维度，v0.9.14 用户令「锅圈也要支持付费导出」）：
+    答主=answers.export_paid 行级 flag（历史/批量口径不变）；
+    锅圈观看者=answer_export_unlocks 按 (openid, aid) 记账，两腿取或。"""
+    return ((row["openid"] == openid and bool(row.get("export_paid")))
+            or store.answer_export_unlocked(openid, aid))
+
+
+def _mark_export_unlocked(aid: str, row: dict, openid: str, otn: str) -> None:
+    """导出解锁记账：答主补行级 flag，人人落按人行（幂等）。"""
+    if row["openid"] == openid:
+        store.mark_export_paid(aid, openid, otn)
+    store.mark_answer_export_paid(openid, aid, otn)
+
+
 @app.post("/api/answer/{aid}/export_sign")
 def export_sign(aid: str, request: Request):
-    """签名腿（单条导出）：仅本人答案；签名即落单，客户端原样透传拉起支付。
+    """签名腿（单条导出）：本人答案 或 锅圈共享答案（v0.9.14 用户令：
+    锅圈也要支持付费导出）；签名即落单，客户端原样透传拉起支付。
     重复发起时老未付单作废重开新号（用户令 1009：不保留待支付态）；
     若老单微信侧已付成功，当场补标记并以 409 收口（已扣款必解锁，防二次扣款）。"""
     openid = _openid(request)
-    row = store.get_answer(aid, openid)
+    row = store.get_answer_visible(aid, openid)
     if row is None:
         raise HTTPException(404, "答案不存在")
     if row["status"] != "ready":
         raise HTTPException(409, "回答尚未完成，暂不可导出")
-    if row.get("export_paid"):
+    if _export_unlocked(aid, row, openid):
         raise HTTPException(409, "本篇导出已解锁")
     vp = _vp_config()
     env_val, app_key, session_key = _export_pay_env(openid, vp)
@@ -617,7 +635,7 @@ def export_sign(aid: str, request: Request):
     if open_o:
         if _order_paid_reconcile(openid, open_o, vp, env_val,
                                  app_key, session_key):
-            store.mark_export_paid(aid, openid, open_o["out_trade_no"])
+            _mark_export_unlocked(aid, row, openid, open_o["out_trade_no"])
             raise HTTPException(409, "支付已到账，本篇导出已解锁")
         store.cancel_pay_order(open_o["out_trade_no"])
     otn = _make_otn("e", aid)
@@ -649,12 +667,13 @@ def export_sign(aid: str, request: Request):
 @app.post("/api/answer/{aid}/export_paid")
 def export_paid(aid: str, body: ExportPaidIn, request: Request):
     """支付成功回调腿（单条导出）：凭服务端订单 + 微信查单核验（审计
-    CRITICAL-2：绝不裸信客户端声称）；核验通过才幂等标记 + pay_log 对账。"""
+    CRITICAL-2：绝不裸信客户端声称）；核验通过才幂等标记 + pay_log 对账。
+    v0.9.14：锅圈观看者同权——解锁按观看者记账（answer_export_unlocks）。"""
     openid = _openid(request)
-    row = store.get_answer(aid, openid)
+    row = store.get_answer_visible(aid, openid)
     if row is None:
         raise HTTPException(404, "答案不存在")
-    if row.get("export_paid"):
+    if _export_unlocked(aid, row, openid):
         return {"export_paid": True}
     otn = (body.out_trade_no or "").strip()
     order = store.get_pay_order(otn) if otn else None
@@ -665,8 +684,7 @@ def export_paid(aid: str, body: ExportPaidIn, request: Request):
     env_val, app_key, session_key = _export_pay_env(openid, vp)
     _verify_order_paid(order, openid, vp, env_val, app_key, session_key)
     store.mark_order_paid(otn)
-    if not store.mark_export_paid(aid, openid, otn):
-        raise HTTPException(404, "答案不存在")
+    _mark_export_unlocked(aid, row, openid, otn)
     return {"export_paid": True}
 
 

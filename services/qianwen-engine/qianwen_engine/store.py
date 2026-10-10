@@ -433,7 +433,22 @@ _SCHEMA: tuple = (
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY(openid, sku)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"""),
-    # v0.7.0 依据来源全文展开（智谱接地生成，按 aid+n 永久缓存）
+    # v0.9.14（用户令 1010「锅圈也要支持付费导出」）：观看者维度导出解锁。
+    # answers.export_paid 只表达答主本人解锁；锅圈共享答案的付费导出按 (openid, aid) 记账。
+    ("""CREATE TABLE IF NOT EXISTS answer_export_unlocks (
+        openid TEXT NOT NULL,
+        aid TEXT NOT NULL,
+        out_trade_no TEXT DEFAULT '',
+        created_at TEXT DEFAULT (datetime('now','localtime')),
+        PRIMARY KEY(openid, aid)
+    )""",
+     """CREATE TABLE IF NOT EXISTS answer_export_unlocks (
+        openid VARCHAR(64) NOT NULL,
+        aid VARCHAR(40) NOT NULL,
+        out_trade_no VARCHAR(64) DEFAULT '',
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY(openid, aid)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"""),
     ("CREATE TABLE IF NOT EXISTS citations_ft ("
      "aid TEXT NOT NULL, n INTEGER NOT NULL, text TEXT NOT NULL,"
      " created_at REAL, PRIMARY KEY(aid, n))",
@@ -824,6 +839,43 @@ def mark_export_paid(aid: str, openid: str, out_trade_no: str = "") -> bool:
             c.execute("UPDATE answers SET export_paid=1 WHERE id=?", (aid,))
             c.execute("INSERT INTO pay_log(aid, openid, out_trade_no) VALUES(?,?,?)",
                       (aid, openid, (out_trade_no or aid)[:64]))
+        return True
+
+
+def answer_export_unlocked(openid: str, aid: str) -> bool:
+    """本人是否已解锁该答案导出（观看者维度）。
+
+    v0.9.14（用户令「锅圈也要支持付费导出」）：锅圈共享答案的导出解锁按
+    (openid, aid) 记账；答主本人仍以 answers.export_paid 行级 flag 为准
+    （历史/批量导出口径不变），两条腿在 app 层取或。"""
+    init()
+    with _db() as c:
+        return c.execute(
+            "SELECT 1 FROM answer_export_unlocks WHERE openid=? AND aid=?",
+            (openid, aid)).fetchone() is not None
+
+
+def mark_answer_export_paid(openid: str, aid: str, out_trade_no: str = "") -> bool:
+    """观看者导出解锁（幂等：重复回调恒 True；首次落 pay_log 对账行）。
+    答主路径先行 mark_export_paid 已落同单对账行——此处查重在落，防双行。"""
+    init()
+    with _LOCK, _db() as c:
+        row = c.execute(
+            "SELECT 1 FROM answer_export_unlocks WHERE openid=? AND aid=?",
+            (openid, aid)).fetchone()
+        if row is None:
+            c.execute(
+                "INSERT INTO answer_export_unlocks(openid, aid, out_trade_no)"
+                " VALUES(?,?,?)",
+                (openid, aid, (out_trade_no or aid)[:64]))
+            otn = (out_trade_no or aid)[:64]
+            seen = c.execute(
+                "SELECT 1 FROM pay_log WHERE aid=? AND openid=? AND out_trade_no=?",
+                (aid, openid, otn)).fetchone()
+            if seen is None:
+                c.execute(
+                    "INSERT INTO pay_log(aid, openid, out_trade_no) VALUES(?,?,?)",
+                    (aid, openid, otn))
         return True
 
 

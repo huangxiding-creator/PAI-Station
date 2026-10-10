@@ -164,9 +164,9 @@ check("api potList 客户端", "potList" in api_js)
 check("api optimize 客户端（shareReward 已随分享激励下线）", "optimize" in api_js and "shareReward" not in api_js)
 
 # 版本与定位（v0.9.0）
-check("my 版本标记 v0.9.13（1010 三连修：额度/广告/支付根因）", "v0.9.13" in my_wxml)
+check("my 版本标记 v0.9.14（1010 锅圈付费导出+广告排版修）", "v0.9.14" in my_wxml)
 pkg = json.load(open(os.path.join(ROOT, "package.json"), encoding="utf-8"))
-check("package.json version=0.9.13", pkg["version"] == "0.9.13")
+check("package.json version=0.9.14", pkg["version"] == "0.9.14")
 # 1009 用户令：外观沉底（个性化低频项按用户习惯放设置区，高频额度/记录在前）——顺序即断言
 check("my 布局顺序=额度→记录→书架→外观（外观在咨询记录之后，1009 用户令）",
       my_wxml.find("外观 · APPEARANCE") > my_wxml.find("咨询记录 · RECORDS")
@@ -1068,7 +1068,40 @@ check("引擎道具图路由（/static/goods/{name} 白名单+防穿越+长缓�
 check("引擎道具图素材随包（static_goods/zongbaojun.jpg）",
       "GOODS_STATIC_DIR" in _app_py
       and os.path.exists(os.path.join(ENGINE, "qianwen_engine", "static_goods", "zongbaojun.jpg")))
-check("telemetry VER=0.9.13（版本横幅同步）", "var VER = '0.9.13'" in _tel_js)
+check("telemetry VER=0.9.14（版本横幅同步）", "var VER = '0.9.14'" in _tel_js)
+
+# ══ v0.9.14（1010 用户令：「锅圈也要支持付费导出」+「9.8万广告排版优化」）══
+# 锅圈付费导出·引擎腿：五道 owner 门全部改观看者口径
+check("引擎 观看者解锁表（answer_export_unlocks 方言对）",
+      "answer_export_unlocks" in _store_py and "def answer_export_unlocked" in _store_py
+      and "def mark_answer_export_paid" in _store_py)
+check("引擎 导出解锁判据=两腿取或（答主行级 flag ∨ 按人行）",
+      "def _export_unlocked" in _app_py and "answer_export_unlocked(openid, aid)" in _app_py
+      and "def _mark_export_unlocked" in _app_py)
+check("引擎 四腿全走可见性门（owner 门 get_answer(aid, openid) 绝迹=回归锚）",
+      _app_py.count("get_answer_visible") >= 8
+      and "store.get_answer(aid, openid)" not in _app_py)
+check("引擎 pay_log 防双行（答主路径同单查重在落）",
+      "SELECT 1 FROM pay_log WHERE aid=? AND openid=? AND out_trade_no=?" in _store_py)
+# 锅圈付费导出·客户端腿：answer 页本就观看者无感（exportPaid 驱动），锚住别回退
+check("客户端 导出 pill=观看者口径（export_paid 驱动+价签自适应）",
+      "exportPaid: !!d.export_paid" in ans_js
+      and "{{payOk || exportPaid}}" in ans_wxml
+      and "导出 ¥0.1" in ans_wxml)
+# 广告条排版三修：徽标中文化/基线对齐/副题缩短+真主题变量
+check("广告条 徽标中文化（全库/授权，LIBRARY 折行溢出源拔除；弹窗宽行 kicker 不受此限）",
+      "全库<br/>授权" in _zk_wxml and "LIBRARY<br/>PASS" not in _zk_wxml)
+check("广告条 价格/动词基线对齐（price+verb 拆分 flex baseline）",
+      'class="zk-ad-price mono"' in _zk_wxml and 'class="zk-ad-verb"' in _zk_wxml
+      and "align-items: baseline" in _zk_wxss)
+check("广告条 副题缩短（截断源拔除：总包君办理语只留弹窗）",
+      "六库整体授权 · 一次买断" in _zk_wxml
+      and "总包君为您办理" not in _zk_wxml and "总包君咨询办理" in _zk_wxml)
+check("广告条 真主题色变量（--accent 幽灵变量根除）",
+      "var(--t-accent" in _zk_wxss and "var(--accent," not in _zk_wxss)
+check("广告条 CTA 胶囊化（扫码咨询+nowrap+圆角边框）",
+      "扫码咨询" in _zk_wxml and "border-radius: 999rpx" in _zk_wxss
+      and "zk-ad-cta" in _zk_wxss)
 fails = [c for c in checks if not c[1]]
 for name, ok, detail in checks:
     print(("PASS " if ok else "FAIL ") + name + (("  " + detail) if detail and not ok else ""))

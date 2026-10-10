@@ -437,13 +437,76 @@ def test_export_all_pending_only_404(client, monkeypatch):
     gate["go"] = True
 
 
-def test_export_answer_pot_content_forbidden(client):
-    """锅圈公共内容不提供付费导出：非 owner 访问 → 404（导出=个人咨询档案语义）。"""
+def test_pot_shared_paid_export_viewer_scoped(client):
+    """v0.9.14（用户令 1010「锅圈也要支持付费导出」）：锅圈官方种子答案——
+    观看者可签名→支付→导出；解锁按 (openid, aid) 记账，别的观看者不受沾光。"""
     from qianwen_engine import store
     store.save_session("open-t1", "sess-key-t1")
     aid = store.save_pot_answer("锅圈公共问题", "公开答案" * 100, [], sort=1)
-    assert client.post(f"/api/answer/{aid}/export_sign").status_code == 404
-    assert client.post(f"/api/answer/{aid}/export", json={"fmt": "docx"}).status_code == 404
+    # 观看者看详情：可见、非 owner、未解锁
+    d = client.get(f"/api/answer/{aid}").json()
+    assert d["is_owner"] is False and d["export_paid"] is False
+    # 签名腿放行（修前=owner 门 404，真机「无法拉起支付」根因）
+    r = client.post(f"/api/answer/{aid}/export_sign")
+    assert r.status_code == 200 and r.json()["price_fen"] == 10
+    otn = r.json()["out_trade_no"]
+    # 支付前导出 → 402
+    assert client.post(f"/api/answer/{aid}/export", json={"fmt": "docx"}).status_code == 402
+    # 沙箱查单不可用 → 信任回调 → 解锁
+    r = client.post(f"/api/answer/{aid}/export_paid", json={"out_trade_no": otn})
+    assert r.status_code == 200 and r.json()["export_paid"] is True
+    e = client.post(f"/api/answer/{aid}/export", json={"fmt": "docx"})
+    assert e.status_code == 200 and e.json()["filename"].endswith(".docx")
+    assert client.get(f"/api/answer/{aid}").json()["export_paid"] is True
+    # 解锁按人记账：观看者2 仍锁（不沾光）
+    t2 = {"Authorization": "Bearer " + wechat.issue_token("open-t2")}
+    d2 = client.get(f"/api/answer/{aid}", headers=t2).json()
+    assert d2["export_paid"] is False
+    # 观看者1 的行级 flag 不被误写（POT_OPENID 才是 owner 行）
+    row = store.get_answer(aid)
+    assert row["export_paid"] == 0
+    assert store.answer_export_unlocked("open-t1", aid) is True
+    assert store.answer_export_unlocked("open-t2", aid) is False
+
+
+def test_user_shared_answer_other_user_can_export(client):
+    """v0.9.14 用户 bug 实弹场景：t1 的答案共享入锅圈 → t2 在锅圈点开导出，
+    付 ¥0.1 后可导出文件；t1 自己的解锁态与 t2 互不干扰。"""
+    from qianwen_engine import store
+    store.save_session("open-t1", "sess-key-t1")
+    store.save_session("open-t2", "sess-key-t2")
+    aid = _ask_ready(client, "要共享进锅圈的咨询")
+    assert client.post(f"/api/answer/{aid}/share_on").status_code == 200
+    # t2 视角：可见、未解锁、可签名、可支付、可导出
+    t2 = {"Authorization": "Bearer " + wechat.issue_token("open-t2")}
+    d = client.get(f"/api/answer/{aid}", headers=t2).json()
+    assert d["export_paid"] is False
+    r = client.post(f"/api/answer/{aid}/export_sign", headers=t2)
+    assert r.status_code == 200
+    otn = r.json()["out_trade_no"]
+    assert client.post(f"/api/answer/{aid}/export_paid", headers=t2,
+                       json={"out_trade_no": otn}).status_code == 200
+    e = client.post(f"/api/answer/{aid}/export", headers=t2, json={"fmt": "md"})
+    assert e.status_code == 200
+    # t1 owner 视角不受沾光：仍按行级 flag（未解锁）
+    assert client.get(f"/api/answer/{aid}").json()["export_paid"] is False
+    # 未共享的第三者答案 → t2 仍 404（隐私门不变）
+    aid3 = _ask_ready(client, "t1 私藏答案不共享")
+    assert client.get(f"/api/answer/{aid3}", headers=t2).status_code == 404
+    assert client.post(f"/api/answer/{aid3}/export_sign", headers=t2).status_code == 404
+
+
+def test_owner_marking_writes_both_legs(client):
+    """答主本人解锁：行级 flag + 按人行双落（幂等），批量/历史口径不变。"""
+    from qianwen_engine import store
+    store.save_session("open-t1", "sess-key-t1")
+    aid = _ask_ready(client)
+    otn = client.post(f"/api/answer/{aid}/export_sign").json()["out_trade_no"]
+    client.post(f"/api/answer/{aid}/export_paid", json={"out_trade_no": otn})
+    assert store.get_answer(aid)["export_paid"] == 1            # 行级（批量腿依赖）
+    assert store.answer_export_unlocked("open-t1", aid) is True  # 按人行（详情腿依赖）
+    # 历史未解锁计数不再把本人已解锁答案计入
+    assert client.get("/api/history").json()["export_unpaid_all"] == 0
 
 
 def test_legacy_endpoints_gone(client):
