@@ -100,7 +100,7 @@ POT_PREVIEW_CHARS = 200     # 锅圈列表答案预览字数（用户令 0930：
 FOLLOWUP_PER_ANSWER_DAILY = 10   # 追问双日限①：每答案每人每日
 FOLLOWUP_GLOBAL_DAILY = 20       # 追问双日限②：每人每日全局（跨答案）
 FOLLOWUP_MAX_CHARS = 200         # 追问长度上限
-POSTER_QR_ENV_VERSION = "trial"   # 海报码指向版本：发布当日切 release 一行即切（0930 修正：正式版未发布前置 release 会开出旧 1.0.7）
+POSTER_QR_ENV_VERSION = "release"   # 海报码指向版本：发布当日切 release 一行即切（0930 修正：正式版未发布前置 release 会开出旧 1.0.7）
 
 # 引擎护栏（账号安全四件套）
 KB_MIN_INTERVAL_SEC = 5     # 节流：两问最小间隔
