@@ -78,6 +78,30 @@ GROUP_PREF = ("手动切换", "漏网之鱼", "Others", "Proxy")
 EXCLUDE_KEY = ("香港", "HK")
 PREF_ORDER = ("美国", "新加坡", "日本", "台湾", "韩国", "SG", "US", "JP")
 
+# ------------------------------------------------ 美东窗口铁律 (1010 用户令)
+# 「军团一定要选择美东晚上11点到次日凌晨7点时间段跑」= America/New_York
+# 23:00–07:00。北京对照: EDT(3月第二个周日~11月第一个周日) 11:00–19:00,
+# EST 12:00–20:00。DST 判定用 UTC 日近似 (切换日边界误差 ≤2h, 只影响
+# 边界日首班, 可接受); 不依赖 tzdata (Windows zoneinfo 需 pip 包).
+import datetime as _dt
+
+
+def et_now() -> "_dt.datetime":
+    utc = _dt.datetime.utcnow()
+
+    def _nth_sunday(month: int, n: int) -> "_dt.date":
+        first_sun = 1 + (6 - _dt.date(utc.year, month, 1).weekday()) % 7
+        return _dt.date(utc.year, month, first_sun + 7 * (n - 1))
+
+    edt = _nth_sunday(3, 2) <= utc.date() < _nth_sunday(11, 1)
+    return utc + _dt.timedelta(hours=-4 if edt else -5)
+
+
+def et_window_open() -> bool:
+    """美东 23:00–07:00 窗内? (铁律, 无覆盖开关 — 唯一例外是本函数测试)"""
+    h = et_now().hour
+    return h >= 23 or h < 7
+
 
 # ---------------------------------------------------------------- 小工具
 def log(msg: str) -> None:
@@ -291,6 +315,14 @@ def pick_squad(creds: dict) -> list:
               "squad": squad}
     _atomic_json(SQUAD_FILE, reason)
     return squad
+
+
+def load_squad() -> list:
+    """读当前名册 (全账号时代名册可 >10 号, 帽随名册规模)."""
+    try:
+        return json.loads(SQUAD_FILE.read_text(encoding="utf-8"))["squad"]
+    except Exception:
+        return []
 
 
 # ---------------------------------------------------------------- 任务
@@ -609,6 +641,11 @@ def main() -> int:
         # 00:xx 时, 时钟元组比较 (23,36)>=(0,20) 恒真 → 开跑即硬停
         end_deadline = time.time() + args.duration * 60
 
+    if not et_window_open():                # 美东窗口铁律 (1010 用户令)
+        log(f"⛔ 美东窗口铁律 ET 23:00–07:00: 现 ET "
+            f"{et_now().strftime('%H:%M')} 窗外, 拒跑")
+        return 0
+
     claim_or_exit()
     creds = dict(lib.load_accounts("Manus账号（全部）260922_干净版.txt"))
     if SQUAD_FILE.is_file():
@@ -689,6 +726,8 @@ def main() -> int:
     node_i = cands.index(node)
 
     def past_end() -> bool:
+        if not et_window_open():            # ET 07:00 窗关 = 绝对硬停
+            return True
         if end_deadline:                    # --duration 模式: 绝对时刻
             return time.time() >= end_deadline
         h, m = map(int, args.end.split(":"))
