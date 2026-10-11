@@ -68,5 +68,12 @@
   manifest(4.2万行) 早已脱钩 → manifest 分代重置疑似既有运维形态，
   存档去向前勿对账。
 - **根治工单**：①找回 41,837 行版本的存档（git show e8ac3e3 可全量恢复
-  到旁档，不动活账）；②查 1006 暂停/1010 恢复链上谁动过 manifest；
-  ③给 ammo_pool 加 manifest 行数骤降守卫（重写前行数 <50% 拒执+告警）。
+  到旁档，不动活账）→ **✅ 1011 已做**（manifest.e8ac3e3.side_restore.jsonl
+  21MB 旁档在档）；②查 1006 暂停/1010 恢复链上谁动过 manifest →
+  **悬案持续**（引擎侧无 'w' 模式截断者；时间戳只能回溯到最后一次重写，
+  采集腿仍在活跃写池，取证窗已冷——真源恢复走 git 旁档即可）；
+  ③给 ammo_pool 加 manifest 行数骤降守卫 → **✅ 1011 已做并实弹验证**：
+  `rebuild` 发现台账件数 > manifest 行数×2 时拒执（rc=2，活账不动，
+  拒执元数据写 pool_state.rebuild-refused.json + state 落
+  manifest_collapse_suspected 旗标）；`judge` 同态只告警不阻断。
+  EPC49 实弹：rebuild rc=2 拒执（1,225,965 件 vs 195 行），F1 正常 rc=0。

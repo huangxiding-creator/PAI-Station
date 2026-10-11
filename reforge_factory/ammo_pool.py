@@ -399,6 +399,29 @@ def rebuild(cid: str) -> int:
         rows = [json.loads(x) for x in
                 mp.read_text(encoding="utf-8").splitlines() if x.strip()]
         s = _load_state(d)
+        # G-014 守卫: 台账件数远大于 manifest 行数 = manifest 疑被外部
+        # 截断/替换 (1011 EPC49 实锤 4.2万行→195行). 此时照常重算会把
+        # 达标账静默塌缩 — 拒执+旁档, 保活账等人工裁决.
+        old_items = (s.get("items", 0) + s.get("pending_items", 0)
+                     + s.get("rejected_items", 0))
+        if old_items and len(rows) < old_items * 0.5:
+            side = d / "pool_state.rebuild-refused.json"
+            _save_state(d, {**s,
+                            "manifest_collapse_suspected": True,
+                            "manifest_rows": len(rows),
+                            "ledger_items": old_items,
+                            "last_rebuild_refused":
+                                time.strftime("%Y-%m-%d %H:%M")})
+            print(f"[rebuild] ⚠ 拒执: 台账 {old_items:,} 件 >> manifest "
+                  f"{len(rows):,} 行 — 疑外部截断 (G-014). 重算结果写 "
+                  f"{side.name} 供对账, 活账未动.", file=sys.stderr)
+            side.write_text(json.dumps(
+                {"refused_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                 "manifest_rows": len(rows), "ledger_items": old_items,
+                 "note": "G-014 守卫拒执; 行级对账走 git 历史旁档 "
+                         "(git show <rev>:ammo_pool/<cid>/manifest.jsonl)"},
+                ensure_ascii=False, indent=1), encoding="utf-8")
+            return 2
         by_eng: dict = {}
         doms: list = []
         tot = pen = rej = 0
@@ -594,6 +617,14 @@ def _judge_locked(d: Path, mp: Path, limit: int) -> int:
         return 2
     rows = [json.loads(x) for x in
             mp.read_text(encoding="utf-8").splitlines() if x.strip()]
+    # G-014 告警: manifest 行数 << 台账件数 = 疑外部截断 — judge 只翻
+    # 现存行字段 (行保全), 但要让操作者看见这个态
+    st_items = (s.get("items", 0) + s.get("pending_items", 0)
+                + s.get("rejected_items", 0))
+    if st_items and len(rows) < st_items * 0.5:
+        print(f"[judge] ⚠ manifest {len(rows):,} 行 << 台账 {st_items:,} 件 "
+              f"— 疑外部截断 (G-014), 本轮只判现存行, 台账不回缩",
+              file=sys.stderr)
     n_valid = n_rej = n_keep = 0
     for row in rows:
         if limit and n_valid + n_rej >= limit:
