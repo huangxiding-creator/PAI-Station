@@ -330,3 +330,62 @@
   color: var(--accent);
   font-weight: 800;
 }
+
+/* ══ v0.9.15 互动三件（用户令 1011）：与答案页 pill 体系同款（视觉同源） ══ */
+.rp-social { padding-bottom: 6rpx; }
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16rpx 14rpx;
+}
+.pill {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 6rpx;
+  min-width: 118rpx;
+  padding: 16rpx 12rpx 12rpx;
+  border-radius: 14rpx;
+  border: 2rpx solid var(--t-paper-dim);
+  background: var(--t-paper-hi);
+  line-height: 1.35;
+}
+.pill-hover {
+  background: var(--navy-0);
+  border-color: var(--navy-0);
+  transform: scale(0.96);
+}
+/* 在途置灰——慢网回包期间不再是"点了没反应" */
+.pill-busy { opacity: 0.55; }
+.pill-glyph {
+  width: 52rpx; height: 52rpx;
+  border-radius: 50%;
+  background: var(--t-paper-cool);
+  border: 2rpx solid var(--t-blue-tint);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26rpx;
+  line-height: 1;
+}
+.pill-t {
+  font-size: 21rpx; color: var(--ink-2);
+  letter-spacing: 1rpx;
+  white-space: nowrap;
+}
+.pill-on {
+  border-color: var(--t-amber-line);
+  background: var(--t-amber-bg);
+}
+.pill-on .pill-glyph {
+  background: var(--t-amber-bg);
+  border-color: var(--t-amber-line);
+}
+.pill-on .pill-t { color: var(--accent-deep); font-weight: 700; }
+.pill-hover .pill-t { color: var(--white-ink); }
+/* 分享 pill 是 button：抹平原生样式 */
+.share-pill {
+  margin: 0;
+  font-size: inherit;
+  font-weight: 400;
+}
+.share-pill::after { border: none; }
+button.share-pill .pill-t { color: var(--ink-2); }
+.act-tip { text-align: center; margin-top: 20rpx; letter-spacing: 1rpx; font-size: 21rpx; }

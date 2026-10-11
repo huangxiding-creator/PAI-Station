@@ -92,6 +92,15 @@ Page({
       this._posterAid = dm[1];
       this._gotoPoster();
     }
+    // v0.9.15 研报海报深链闭环：海报码 scene "s=r&i={sku}" → 直达报告详情页。
+    // 老版本（线上 0.9.12）无此分支 = 扫码留在咨询首页，无害降级不 404。
+    const dr = sc.match(/^s=r&i=(.+)$/);
+    if (dr && dr[1]) {
+      wx.navigateTo({
+        url: '/pages/report/report?sku=' + encodeURIComponent(dr[1]),
+        fail: () => wx.switchTab({ url: '/pages/research/research' }) // 兜底：报告库总目录
+      });
+    }
     // 委托单编号：GC + 月日（GC-0929 风格的制图装饰）
     const now = new Date();
     const pad = (n) => (n < 10 ? '0' + n : '' + n);

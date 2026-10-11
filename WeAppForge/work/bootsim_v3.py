@@ -164,9 +164,9 @@ check("api potList 客户端", "potList" in api_js)
 check("api optimize 客户端（shareReward 已随分享激励下线）", "optimize" in api_js and "shareReward" not in api_js)
 
 # 版本与定位（v0.9.0）
-check("my 版本标记 v0.9.14（1010 锅圈付费导出+广告排版修）", "v0.9.14" in my_wxml)
+check("my 版本标记 v0.9.15（1011 报告互动三件+研报海报）", "v0.9.15" in my_wxml)
 pkg = json.load(open(os.path.join(ROOT, "package.json"), encoding="utf-8"))
-check("package.json version=0.9.14", pkg["version"] == "0.9.14")
+check("package.json version=0.9.15", pkg["version"] == "0.9.15")
 # 1009 用户令：外观沉底（个性化低频项按用户习惯放设置区，高频额度/记录在前）——顺序即断言
 check("my 布局顺序=额度→记录→书架→外观（外观在咨询记录之后，1009 用户令）",
       my_wxml.find("外观 · APPEARANCE") > my_wxml.find("咨询记录 · RECORDS")
@@ -1068,7 +1068,58 @@ check("引擎道具图路由（/static/goods/{name} 白名单+防穿越+长缓�
 check("引擎道具图素材随包（static_goods/zongbaojun.jpg）",
       "GOODS_STATIC_DIR" in _app_py
       and os.path.exists(os.path.join(ENGINE, "qianwen_engine", "static_goods", "zongbaojun.jpg")))
-check("telemetry VER=0.9.14（版本横幅同步）", "var VER = '0.9.14'" in _tel_js)
+check("telemetry VER=0.9.15（版本横幅同步）", "var VER = '0.9.15'" in _tel_js)
+
+# ══ v0.9.15（1011 用户令：报告详情页 有用/分享给同行 赠次 + 研报转化海报）══
+_rp_wxml_3 = read("pages/report/report.wxml")
+_rp_js_3 = read("pages/report/report.js")
+_rp_wxss_3 = read("pages/report/report.wxss")
+_api_js_3 = read("utils/api.js")
+# 互动三件客户端腿：三 pill 在场 + 各自绑定（share=open-type 转发面板）
+check("报告页 互动三 pill（有用/分享给同行/生成海报）",
+      "onUseful" in _rp_wxml_3 and "onShareTap" in _rp_wxml_3 and "onPoster" in _rp_wxml_3
+      and "有用 +1次" in _rp_wxml_3 and "分享给同行" in _rp_wxml_3 and "生成海报" in _rp_wxml_3)
+check("报告页 分享 pill=open-type share（转发面板）+ bindtap 静默赠次",
+      'open-type="share"' in _rp_wxml_3 and 'bindtap="onShareTap"' in _rp_wxml_3)
+check("报告页 shareTap 静默赠次（零 toast 零文案=运营 3.2.1 红线）",
+      "reportShare" in _rp_js_3 and "onShareTap" in _rp_js_3
+      and _rp_js_3.find("showToast", _rp_js_3.find("onShareTap"), _rp_js_3.find("onPoster")) < 0)
+check("报告页 有用 乐观置位+400 终态（有用反馈可见）",
+      "usefulDone" in _rp_js_3 and "statusCode === 400" in _rp_js_3
+      and "已赠 1 次咨询" in _rp_js_3)
+check("报告页 海报=answer 同构（writeFile b64→showShareImageMenu→preview 兜底）",
+      "reportPoster" in _rp_js_3 and "poster-r-" in _rp_js_3
+      and "showShareImageMenu" in _rp_js_3 and "_previewPoster" in _rp_js_3)
+check("报告页 pill 体系样式在位（视觉与答案页同源）",
+      "pill-row" in _rp_wxss_3 and "share-pill::after" in _rp_wxss_3
+      and "pill-on" in _rp_wxss_3 and "act-tip" in _rp_wxss_3)
+# 合规红线：分享动作零诱导（research/report 两页不得出现「分享…赠/得/送」类承诺文案）
+_induce = re.compile(r"分享[^\"'<>]{0,12}(赠|得|送|加)\s*1|分享即(赠|得|送)")
+_act_tip = re.search(r'class="muted act-tip"[^>]*>([^<]+)<', _rp_wxml_3)
+check("报告域 零分享诱导文案（运营 3.2.1；有用可见/分享静默=设计定案）",
+      not _induce.search(_rp_wxml_3) and not _induce.search(read("pages/research/research.wxml"))
+      and _act_tip is not None and "分享" not in _act_tip.group(1))
+# 深链路由：海报码 scene s=r → 报告详情（老版扫码留在咨询首页=无害降级）
+check("ask 海报码路由 s=r→报告详情（含兜底报告库）",
+      "s=r&i=" in ask_js and "/pages/report/report?sku=" in ask_js
+      and "pages/research/research" in ask_js)
+check("api 三件绑定（reportUseful/reportShare/reportPoster）",
+      all(k in _api_js_3 for k in ("reportUseful", "reportShare", "reportPoster")))
+# 引擎腿锚：三端点+海报版式版本进缓存键+REWARD_ACTIONS 扩容
+check("引擎 互动三端点（useful/share/poster）",
+      '@app.post("/api/report/{sku}/useful")' in _app_py
+      and '@app.post("/api/report/{sku}/share")' in _app_py
+      and '@app.get("/api/report/{sku}/poster")' in _app_py)
+check("引擎 REWARD_ACTIONS 含 report_useful/report_share",
+      all(x in _cfg_py for x in ("report_useful", "report_share")))
+check("引擎 海报版式版本进缓存键（REPORT_LAYOUT_VERSION）",
+      "REPORT_LAYOUT_VERSION" in _app_py and ":r{poster.REPORT_LAYOUT_VERSION}" in _app_py)
+_poster_py = open(os.path.join(ENGINE, "qianwen_engine", "poster.py"), encoding="utf-8").read()
+check("引擎 研报海报零价格+试读显眼（build_report 版式铁律：不读价格字段）",
+      "def build_report" in _poster_py and "免费试读" in _poster_py
+      and 'd.get("price' not in _poster_py and "price_label" not in _poster_py.split("def build_report")[1].split('"""')[2])
+check("test_report_social.py 在役（互动三件回归）",
+      os.path.exists(os.path.join(ENGINE, "tests", "test_report_social.py")))
 
 # ══ v0.9.14（1010 用户令：「锅圈也要支持付费导出」+「9.8万广告排版优化」）══
 # 锅圈付费导出·引擎腿：五道 owner 门全部改观看者口径

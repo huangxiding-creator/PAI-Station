@@ -17,6 +17,7 @@
 from __future__ import annotations
 
 import io
+import re
 from datetime import date
 
 from . import config
@@ -38,6 +39,11 @@ H_MIN, H_MAX = 1500, 1850  # 画布高随内容伸缩区间（v0.9.8：摘录区
 _QR_SIZE = 160             # 小程序码贴片边长（430 源图缩放，保扫码清晰度）
 
 LAYOUT_VERSION = "v4"      # 版式版本（进 app.py 海报缓存键：改版自动失效旧缓存）
+
+REPORT_LAYOUT_VERSION = "v1"  # v0.9.15 研报海报版式版本（进 app.py 缓存键）
+
+# 章节标题去冠词（海报已自绘 01/02 台账序号，「第X章」前缀重复且费行宽）
+_CH_PREFIX = re.compile(r"^第[一二三四五六七八九十百0-9]+[章节篇][\s:：、.\-]*")
 
 
 class LayoutError(Exception):
@@ -332,6 +338,213 @@ def build(question: str, bullets: list, qr_png: bytes | None,
     d.text((M, foot_y), "内容由 AI 生成 · 仅供参考，不构成正式法律意见",
            font=f_foot, fill=INK_SOFT)
     d.rectangle([0, H - 8, W, H], fill=ORANGE)
+
+    out = io.BytesIO()
+    img.save(out, format="PNG", optimize=True)
+    return out.getvalue()
+
+
+def build_report(d: dict, qr_png: bytes | None, catalog_count: int = 0) -> bytes:
+    """v0.9.15 研报转化海报（用户令 1011）：与咨询海报同设计语言（图纸边框+角十字+
+    双字重字阶+橙仅三处），目的=吸引用户进小程序试读→促转化。
+
+    铁律（用户令）：①不显示售卖价格（price/price_label 全域缺席——转化靠试读兴趣，
+    不靠价格锚）；②「可免费试读」显眼展示（试读带=版面唯一满宽深色带+橙色药丸）。
+    内容：题名/副题/徽标行/目录亮点（≤4 章·台账体）/数据行/试读带/行动卡+码。
+    d=report_catalog.get_report() 字段；qr_png=None → 无码兜底（搜一搜引导）。
+    """
+    try:
+        from PIL import Image, ImageDraw
+    except ImportError as exc:  # noqa: F401
+        raise LayoutError("服务器未安装 Pillow") from exc
+    fr, fb = _font_pair()
+
+    f_brand = fb(40)
+    f_meta_s = fr(20)
+    f_label = fr(21)
+    f_num_s = fb(20)
+    f_q = fb(44)
+    f_sub = fr(26)
+    f_bullet = fr(27)
+    f_badge = fr(22)
+    f_more = fr(22)
+    f_trial = fb(34)
+    f_trial_sub = fr(23)
+    f_num = fb(30)
+    f_unit = fr(23)
+    f_cta = fb(40)
+    f_cta_sub = fr(23)
+    f_cap = fr(20)
+    f_foot = fr(19)
+
+    title = (d.get("title") or "研究报告").strip()
+    subtitle = (d.get("subtitle") or "").strip()
+    chapters = d.get("chapters") or []
+    words_wan = d.get("words_wan")
+
+    # 徽标行：k v 短令牌 ≤3 个（长徽标不上海报——一行纪律）
+    tokens = []
+    for b in d.get("badges") or []:
+        if isinstance(b, dict) and b.get("k") and b.get("v"):
+            t = f"{b['k']} {b['v']}"
+            if len(t) <= 22:
+                tokens.append(t)
+        if len(tokens) >= 3:
+            break
+    badge_line = " · ".join(tokens)
+
+    meas = ImageDraw.Draw(Image.new("RGB", (8, 8)))
+    t_all = _wrap(meas, title, f_q, W - M * 2)
+    t_lines = t_all[:3]
+    if len(t_all) > 3:
+        t_lines[-1] = t_lines[-1][:-1] + "…"
+    s_lines = _wrap(meas, subtitle, f_sub, W - M * 2)[:2] if subtitle else []
+    if subtitle and len(_wrap(meas, subtitle, f_sub, W - M * 2)) > 2:
+        s_lines[-1] = s_lines[-1][:-1] + "…"
+    ch_lines = []
+    for ch in chapters[:4]:
+        ct = _CH_PREFIX.sub("", (ch.get("title") or "").strip()) or (ch.get("title") or "")
+        ln = _wrap(meas, ct, f_bullet, W - M * 2 - 34)[:2]
+        if len(_wrap(meas, ct, f_bullet, W - M * 2 - 34)) > 2:
+            ln[-1] = ln[-1][:-1] + "…"
+        ch_lines.append(ln or ["—"])
+    more_ch = len(chapters) > 4
+
+    # 底部锚栈与咨询海报同构（行动卡 208 + 页脚呼吸 320）
+    card_h, stack_bottom = 208, 320
+    band_h = 120
+
+    def _need(n_ch: int) -> int:
+        y = 214 + len(t_lines) * 62
+        if s_lines:
+            y += 20 + len(s_lines) * 40
+        if badge_line:
+            y += 44
+        y += 76            # 目录亮点栏目标（徽标/副题后大呼吸）
+        for ln in ch_lines[:n_ch]:
+            y += 46 + len(ln) * 42 + 16
+        if more_ch or n_ch < len(ch_lines):
+            y += 34
+        y += 44 + band_h   # 试读带
+        y += 48 + 40       # 数据行（发丝线上松下紧）
+        return y + 34 + stack_bottom
+
+    n_ch = len(ch_lines)
+    while n_ch > 2 and _need(n_ch) > 1900:
+        n_ch -= 1          # 超高先减章（底线 2 章保深度感）
+    H = max(_need(n_ch), 1500)
+    cy0 = H - stack_bottom
+    foot_y = H - 56
+
+    img = Image.new("RGB", (W, H), PAPER)
+    d2 = ImageDraw.Draw(img)
+
+    # ── 图纸边框 + 角部对位十字（与咨询海报同构）──
+    d2.rectangle([24, 24, W - 24, H - 24], outline=GRID, width=2)
+    for cx, cy in ((24, 24), (W - 24, 24), (24, H - 24), (W - 24, H - 24)):
+        d2.line([(cx - 12, cy), (cx + 12, cy)], fill=INK_SOFT, width=2)
+        d2.line([(cx, cy - 12), (cx, cy + 12)], fill=INK_SOFT, width=2)
+
+    # ── 刊头（工程图纸标题栏语汇）──
+    d2.text((M, 58), "总包AI顾问", font=f_brand, fill=NAVY)
+    _today = date.today()
+    d2.text((W - M - d2.textlength(_today.strftime("%Y.%m.%d"), font=f_meta_s), 60),
+            _today.strftime("%Y.%m.%d"), font=f_meta_s, fill=INK_SOFT)
+    d2.text((W - M - d2.textlength("SHT 01 · RESEARCH", font=f_meta_s), 92),
+            "SHT 01 · RESEARCH", font=f_meta_s, fill=INK_SOFT)
+    d2.line([(M, 124), (W - M, 124)], fill=NAVY, width=3)
+
+    # ── 题名区（主角 Bold 44 ≤3 行）──
+    d2.rectangle([M, 172, M + 10, 182], fill=ORANGE)          # 橙 #1
+    _track(d2, (M + 26, 168), "深度研究 · RESEARCH REPORT", f_label, INK_SOFT, 5)
+    yy = 214
+    for ln in t_lines:
+        d2.text((M, yy), ln, font=f_q, fill=NAVY)
+        yy += 62
+    if s_lines:
+        yy += 20
+        for ln in s_lines:
+            d2.text((M, yy), ln, font=f_sub, fill=INK_SOFT)
+            yy += 40
+    if badge_line:
+        yy += 22
+        d2.line([(M, yy), (W - M, yy)], fill=HAIR, width=1)
+        yy += 22
+        d2.text((M, yy), badge_line, font=f_badge, fill=INK_SOFT)
+        yy += 22
+
+    # ── 目录亮点（台账体：01/02 序号 + 行间发丝线；深度即卖点）──
+    yy += 54
+    d2.rectangle([M, yy + 8, M + 10, yy + 18], fill=NAVY)
+    _track(d2, (M + 26, yy), "目录亮点 · CONTENTS", f_label, INK_SOFT, 5)
+    _n_note = f"共 {len(chapters)} 章"
+    d2.text((W - M - d2.textlength(_n_note, font=f_label), yy), _n_note,
+            font=f_label, fill=INK_SOFT)
+    yy += 46
+    for idx, ln in enumerate(ch_lines[:n_ch]):
+        d2.text((M, yy + 4), f"{idx + 1:02d}", font=f_num_s, fill=NAVY)
+        for sub in ln:
+            d2.text((M + 34, yy), sub, font=f_bullet, fill=INK)
+            yy += 42
+        yy += 16
+        if idx < n_ch - 1:
+            d2.line([(M, yy - 8), (W - M, yy - 8)], fill=HAIR, width=1)
+    if len(chapters) > n_ch:
+        more_txt = f"…… 共 {len(chapters)} 章 · 完整目录在小程序内"
+        d2.text((M, yy), more_txt, font=f_more, fill=INK_SOFT)
+        yy += 34
+
+    # ── 试读带（v0.9.15 用户令：可试读=显眼展示；版面唯一满宽深色带+橙药丸=橙 #2）──
+    ty = yy + 10
+    d2.rounded_rectangle([56, ty, W - 56, ty + band_h], radius=20, fill=NAVY_DEEP)
+    d2.rounded_rectangle([92, ty + 28, 92 + 196, ty + 92], radius=12, fill=ORANGE)
+    _pw = d2.textlength("免费试读", font=f_trial)
+    d2.text((92 + (196 - _pw) / 2, ty + 40), "免费试读", font=f_trial, fill=WHITE)
+    d2.text((324, ty + 28), "试读章节免费开放", font=f_trial, fill=WHITE)
+    d2.text((324, ty + 76), "进入小程序即可阅读", font=f_trial_sub, fill=MIST)
+
+    # ── 数据行（单行内联：数字重/单位轻；第三组把「免费试读」再钉一次）──
+    y_meta = ty + band_h + 48
+    d2.line([(M, y_meta - 26), (W - M, y_meta - 26)], fill=HAIR, width=2)
+
+    def _num(v):
+        return f"{v:,}" if isinstance(v, int) else str(v or "—")
+
+    x = M
+    for num, unit, last in ((_num(words_wan), " 万字全文", False),
+                            (_num(len(chapters)), " 章深度拆解", False),
+                            ("支持", "免费试读", True)):
+        d2.text((x, y_meta), num, font=f_num, fill=NAVY)
+        x += d2.textlength(num, font=f_num) + 4
+        d2.text((x, y_meta + 7), unit, font=f_unit, fill=INK_SOFT)
+        if not last:
+            x += d2.textlength(unit, font=f_unit) + 44
+
+    # ── 行动卡（藏青收尾；左文右码；零价格——转化靠试读兴趣不靠价格锚）──
+    d2.rounded_rectangle([56, cy0, W - 56, cy0 + card_h], radius=24, fill=NAVY_DEEP)
+    _track(d2, (104, cy0 + 22), "长按识别 · SCAN TO READ", f_cap, ORANGE, 6)  # 橙 #3
+    d2.text((104, cy0 + 56), "扫码读报告试读", font=f_cta, fill=WHITE)
+    _lib = f"研究报告库 · {catalog_count} 份深度报告" if catalog_count else "总包AI顾问 · 研究报告库"
+    d2.text((104, cy0 + 120), _lib, font=f_cta_sub, fill=MIST)
+
+    if qr_png:
+        try:
+            qr = Image.open(io.BytesIO(qr_png)).convert("RGB")
+            qr = qr.resize((_QR_SIZE, _QR_SIZE), Image.LANCZOS)
+            px, py = 462, cy0 + 12
+            d2.rounded_rectangle([px, py, px + _QR_SIZE + 24, py + _QR_SIZE + 24],
+                                 radius=14, fill=WHITE)
+            img.paste(qr, (px + 12, py + 12))
+        except Exception:  # noqa: BLE001 — 码贴失败不废海报
+            qr_png = None
+    if not qr_png:
+        d2.text((462, cy0 + 64), "微信搜一搜", font=f_cta_sub, fill=WHITE)
+        d2.text((462, cy0 + 96), "「总包AI顾问」", font=f_cta_sub, fill=ORANGE)
+
+    # ── 页脚注记（AI 辅助研究申明=与详情页同口径）+ 底缘安全橙条 ──
+    d2.text((M, foot_y), "研究团队基于公开资料与 AI 辅助研究方法产出 · 仅供参考",
+            font=f_foot, fill=INK_SOFT)
+    d2.rectangle([0, H - 8, W, H], fill=ORANGE)
 
     out = io.BytesIO()
     img.save(out, format="PNG", optimize=True)

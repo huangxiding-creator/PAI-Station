@@ -901,6 +901,59 @@ def report_pdf(sku: str, request: Request):
     return FileResponse(p, media_type="application/pdf", filename=f"{sku}.pdf")
 
 
+# ══ v0.9.15（用户令 1011）：报告详情页互动三件——有用/分享给同行 赠次 + 研报转化海报 ══
+
+@app.post("/api/report/{sku}/useful")
+def report_useful(sku: str, request: Request):
+    """报告「有用」：真实互动赠次（每报告每人一次，+1 咨询额度；与答案 like 同构）。"""
+    openid = _openid(request)
+    if report_catalog.get_report(sku) is None:
+        raise HTTPException(404, "报告不存在")
+    if not store.grant_reward(openid, f"report:{sku}", "report_useful"):
+        raise HTTPException(400, "已点过有用")
+    return {"granted": True, "quota": store.quota_left(openid)}
+
+
+@app.post("/api/report/{sku}/share")
+def report_share(sku: str, request: Request):
+    """报告「分享给同行」：静默赠次（每报告每人一次）。合规设计（运营规范 3.2.1
+    红线=分享动作不得明示利益）：客户端零诱导文案、不弹获赠提示，仅额度数字自然 +1。"""
+    openid = _openid(request)
+    if report_catalog.get_report(sku) is None:
+        raise HTTPException(404, "报告不存在")
+    granted = store.grant_reward(openid, f"report:{sku}", "report_share")
+    return {"granted": granted, "quota": store.quota_left(openid)}  # 幂等：重复点不报错
+
+
+@app.get("/api/report/{sku}/poster")
+def report_poster(sku: str):
+    """研报转化海报（v0.9.15 用户令：不显示价格·「可免费试读」显眼）：题名/目录亮点/
+    试读带+小程序码；每 sku×env 一次缓存（REPORT_LAYOUT_VERSION 进键，改版自动失效）。
+    公开（漏斗前宽后严，与目录/详情同律）。码 scene "s=r&i={sku}" → ask 路由腿
+    s=r → 报告详情；老版（线上 0.9.12）无 s=r 分支=落咨询首页，无害降级不 404。"""
+    d = report_catalog.get_report(sku)
+    if d is None:
+        raise HTTPException(404, "报告不存在")
+    env_v = f"{config.POSTER_QR_ENV_VERSION}:r{poster.REPORT_LAYOUT_VERSION}"
+    cached = store.get_poster(f"report:{sku}", env_v)
+    if cached:
+        return {"b64": base64.b64encode(cached).decode()}
+    qr = None
+    try:
+        if len(f"s=r&i={sku}") <= 32:
+            qr = wechat.wxacode_unlimited(f"s=r&i={sku}", "pages/ask/ask")
+    except Exception as exc:  # noqa: BLE001 — 无码兜底版（搜一搜引导）
+        _log.warning("report poster 小程序码失败（无码兜底）: %s", exc)
+    try:
+        png = poster.build_report(d, qr, catalog_count=len(report_catalog.catalog()))
+    except poster.LayoutError as exc:
+        raise HTTPException(503, f"海报服务暂不可用: {exc}") from exc
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(500, f"海报生成失败: {exc}") from exc
+    store.save_poster(f"report:{sku}", png, env_v)
+    return {"b64": base64.b64encode(png).decode()}
+
+
 # ── v0.9.13 虚拟支付道具图（微信道具后台 item_url 引用；公开只读，白名单+防穿越）──
 _GOODS_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$")
 

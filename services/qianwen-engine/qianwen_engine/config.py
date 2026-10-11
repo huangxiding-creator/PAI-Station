@@ -88,7 +88,9 @@ REPORT_HIDDEN_SKUS: tuple = ()   # 强制隐藏（目录不展示）；整理中
 
 # 产品规则（v0.5.0 用户九点令）
 FREE_PER_DAY = 6            # 每日免费提问（北京时间 00:00 全量清零，不累计）
-REWARD_ACTIONS = ("like", "share", "criticize")  # 互动赠次动作（v0.7.3 用户令：导出退出赠次；每答案每动作一次，总量不封顶）
+REWARD_ACTIONS = ("like", "share", "criticize",
+                  "report_useful", "report_share")  # 互动赠次动作（v0.7.3 用户令：导出退出赠次；每答案每动作一次，总量不封顶；
+# v0.9.15 用户令 1011：报告详情页「有用/分享给同行」各赠 1 次——aid=report:<sku>，每报告每动作一次；分享赠次静默落账，UI 零诱导文案）
 OPTIMIZE_DAILY_CAP = 10     # AI 优化提问每用户每日次数（护共享 KB 免费池）
 PREVIEW_CHARS = 200         # 免费预览字数
 

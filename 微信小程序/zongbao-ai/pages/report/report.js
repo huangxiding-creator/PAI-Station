@@ -24,6 +24,8 @@ Page({
     paySupported: true, // iOS=false（虚拟支付铁律）
     popOpen: false,     // v0.9.7 qw-pop 开合镜像（e2e/结构锚 + tabBar 压暗让路）
     popMode: '',
+    usefulDone: false,  // v0.9.15 有用已点（乐观置位防双击；400 已点过=终态保持）
+    posterBusy: false,  // v0.9.15 海报生成在途
   },
 
   onLoad(query) {
@@ -155,6 +157,75 @@ Page({
     pop.hideLoading(this);
     this.setData({ opening: false });
     wx.showToast({ title: msg, icon: 'none', duration: 2500 });
+  },
+
+  // ══ v0.9.15（用户令 1011）互动三件：有用 / 分享给同行 / 生成海报 ══
+
+  // 有用：赠 1 次咨询额度（每报告每人一次；与答案页 like 同构，反馈可见）
+  onUseful() {
+    if (this.data.usefulDone) return;
+    tel.ping('report_useful_tap', { sku: String(this.data.sku || '').slice(0, 24) });
+    this.setData({ usefulDone: true }); // 乐观置位防双击；网络失败回滚
+    api.reportUseful(this.data.sku)
+      .then((r) => {
+        if (r && r.quota) wx.setStorageSync('qw_quota', r.quota);
+        wx.showToast({ title: '有用 · 已赠 1 次咨询', icon: 'none', duration: 2200 });
+      })
+      .catch((err) => {
+        const again = err && err.statusCode === 400; // 已点过=终态保持置位
+        if (!again) this.setData({ usefulDone: false });
+        wx.showToast({ title: again ? '已点过有用' : api.errMsg(err, '网络波动，请稍后重试'), icon: 'none', duration: 2000 });
+      });
+  },
+
+  // 分享给同行：静默赠 1 次（运营规范 3.2.1——分享动作零诱导文案、不弹获赠提示，
+  // 仅额度数字自然 +1；服务端幂等，重复分享不报错）。bindtap 先于转发面板触发。
+  onShareTap() {
+    tel.ping('report_share_tap', { sku: String(this.data.sku || '').slice(0, 24) });
+    api.reportShare(this.data.sku)
+      .then((r) => { if (r && r.quota) wx.setStorageSync('qw_quota', r.quota); })
+      .catch(() => {}); // 静默：赠次腿失败绝不打扰分享动作本身
+  },
+
+  // 生成海报：研报转化海报（无价格·试读显眼·扫码直达报告），范式与答案页 onPoster 同构
+  onPoster() {
+    if (this.data.posterBusy) return;
+    this.setData({ posterBusy: true });
+    pop.loading(this, '海报生成中…');
+    api.reportPoster(this.data.sku)
+      .then((d) => new Promise((resolve, reject) => {
+        // 固定文件名（按报告）：重复生成不堆积
+        const path = wx.env.USER_DATA_PATH + '/poster-r-' + this.data.sku + '.png';
+        wx.getFileSystemManager().writeFile({
+          filePath: path,
+          data: (d && d.b64) || '',
+          encoding: 'base64',
+          success: () => resolve(path),
+          fail: () => reject(new Error('本机写入失败'))
+        });
+      }))
+      .then((path) => {
+        pop.hideLoading(this);
+        this.setData({ posterBusy: false });
+        if (wx.showShareImageMenu) {
+          wx.showShareImageMenu({
+            path,
+            entrancePath: '/pages/ask/ask', // 分享图携带小程序入口，海报码回流同页路由
+            fail: () => this._previewPoster(path)
+          });
+        } else {
+          this._previewPoster(path); // 老基础库：预览菜单可长按转发
+        }
+      })
+      .catch((err) => {
+        pop.hideLoading(this);
+        this.setData({ posterBusy: false });
+        wx.showToast({ title: api.errMsg(err, '海报生成失败'), icon: 'none' });
+      });
+  },
+
+  _previewPoster(path) {
+    wx.previewImage({ urls: [path], fail: () => wx.showToast({ title: '海报已生成', icon: 'none' }) });
   },
 
   onShareAppMessage() {

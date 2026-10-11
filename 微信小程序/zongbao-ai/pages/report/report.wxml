@@ -141,6 +141,26 @@
     </view>
   </view>
 
+  <!-- ══ v0.9.15 互动三件（用户令 1011）：有用 / 分享给同行 / 生成海报 ══
+       合规（运营规范 3.2.1）：分享动作零诱导文案——赠次静默落账不提示；有用反馈可见 -->
+  <view class="card ticks rise rp-social" wx:if="{{d}}">
+    <view class="pill-row">
+      <view class="pill {{usefulDone ? 'pill-on' : ''}}" bindtap="onUseful" hover-class="pill-hover">
+        <view class="pill-glyph"><text>{{usefulDone ? '✓' : '👍'}}</text></view>
+        <text class="pill-t">{{usefulDone ? '已点有用' : '有用 +1次'}}</text>
+      </view>
+      <button class="pill share-pill" open-type="share" bindtap="onShareTap" hover-class="pill-hover">
+        <view class="pill-glyph"><text>📤</text></view>
+        <text class="pill-t">分享给同行</text>
+      </button>
+      <view class="pill {{posterBusy ? 'pill-busy' : ''}}" bindtap="onPoster" hover-class="pill-hover">
+        <view class="pill-glyph"><text>{{posterBusy ? '…' : '🖼️'}}</text></view>
+        <text class="pill-t">{{posterBusy ? '生成中…' : '生成海报'}}</text>
+      </view>
+    </view>
+    <view class="muted act-tip">点「有用」赠 1 次咨询机会 · 每份报告限一次</view>
+  </view>
+
   <view class="safe-bottom"></view>
 </view>
 
