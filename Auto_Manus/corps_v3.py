@@ -165,6 +165,9 @@ def weaipo_net_busy() -> bool:
        stage=nb_window_end+mode=direct=用网结束)
     2) nb_wave.json state 非 done / queue>0 — NB 波次生产中
        (视频生产/下载=真用网; state=done+queue=0=NB 已收工)
+       1011 护栏: state=done 且 ts 陈旧(>3h) → queue 视为下轮待发
+       残值非在产, 不判忙 (1010 22:08 波次收工残值 state=done+queue=8
+       烧掉 1011 黄金窗全程+哨兵 11:35-14:35 全部不拉班的实锤病理)
     兜底: 两状态文件都读不到 → 退回心跳判据 (保守).
     """
     try:
@@ -179,10 +182,25 @@ def weaipo_net_busy() -> bool:
         return weaipo_busy()            # 状态文件全失 → 心跳保守
     if rs and rs.get("mode") == "rule":
         return True
-    if wv and (str(wv.get("state", "")) not in ("done", "")
-               or int(wv.get("queue") or 0) > 0):
+    if wv and not _nb_wave_done_stale(wv) and (
+            str(wv.get("state", "")) not in ("done", "")
+            or int(wv.get("queue") or 0) > 0):
         return True
     return False
+
+
+# 1011 残值护栏: 宁让路勿抢网 — 仅 state=done(WeAIPO 自报收工) 且数值 ts
+# 陈旧(>3h) 才放行; done+新鲜 / state 非 done / 无数值 ts 一律维持原判.
+NB_WAVE_STALE_S = 3 * 3600
+
+
+def _nb_wave_done_stale(wv) -> bool:
+    if not wv or str(wv.get("state", "")) != "done":
+        return False
+    ts = wv.get("ts")
+    if not isinstance(ts, (int, float)):
+        return False            # 无法证陈旧 → 保守维持原判
+    return time.time() - float(ts) > NB_WAVE_STALE_S
 
 
 # ---------------------------------------------------------------- clash
