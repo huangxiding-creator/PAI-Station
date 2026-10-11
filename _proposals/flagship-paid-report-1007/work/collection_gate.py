@@ -134,12 +134,16 @@ def _channel_ledger(by_engine: dict) -> list:
             note = "F1 缺口树派单收割 (hook_harvest 自动入池)"
         else:
             contrib = 0
-            note = "存量编译内含其历史贡献; F1 专属补采待开火"
+            note = ("存量编译内含其历史贡献; 跨战役复用已过账"
+                    "（见下方池engine cross: 行）; F1 专属新采待开火")
         rows.append((name, contrib, note))
     for tag, chars in sorted(by_engine.items(), key=lambda x: -x[1]):
-        if tag != "manus:corps":                     # manus 账已挂注册行
-            rows.append((f"[池engine] {tag}", chars,
-                         "存量语料建池入账 (多渠道历史编译)"))
+        if tag == "manus:corps":                     # manus 账已挂注册行
+            continue
+        note = ("跨战役收割件复用入账 (ResearchTopics 研究树, "
+                "同尺 judge+tiers)" if tag.startswith("cross:")
+               else "存量语料建池入账 (多渠道历史编译)")
+        rows.append((f"[池engine] {tag}", chars, note))
     return rows
 
 
@@ -223,14 +227,17 @@ def report(st: dict) -> int:
 {ledger_lines}
 
 ## 3. 分层成色
-- T1 主稿 {p.get('t1_items', '?')} 件全部为我方编译研究报告
-  (credibility=research → GRADE B 权威二手; 原始一手源在其引用链内)
+- T1 主稿构成（按引擎分账, 不一概而论）: stock:corpus 67 件 = 我方
+  编译研究报告（credibility=research → GRADE B 权威二手, 原始一手源
+  在其引用链内）; cross:* 收割件 = 各渠道一手/二手资料, 按渠道
+  cred 定级（gov=policy/standards 类, paper=cnki/academic 类,
+  research=djyanbao 类, 其余 web）, 成稿引用照断言链 S0 门回溯
 - 存量成色: {_grade_hist()}（A=单稿≥8万字可精编）
 - 抽样锚点回查: 3-1 湖南打样章已过 m2_gate2 数字锚点门
   （165 去重锚点 / own_calc×5 / 源内分歧显式披露）— 方法链在位,
   全量章级回查随 M2 量产逐章执行
-- 同题归并纪律: 86 候选 docx → 71 主稿（副本/排版/中间成果 15 件
-  留档不入池, 防版本虚账）
+- 同题归并纪律: 存量建池 86 候选 docx → 71 主稿（副本/排版/中间
+  成果 15 件留档不入池, 防版本虚账）; cross:* 腿内容头去重同防双计
 
 ## 4. 缺口四面覆盖（f1_gap_tree_v2 实况）
 | 面 | 树进度 | 已收割 |
@@ -238,8 +245,9 @@ def report(st: dict) -> int:
 {face_lines}
 
 ## 5. 已知瑕疵与披露
-1. **口径差**: 存量盘点 1,034.8 万 = han+西文词口径; 池账 10,159,246
-   = 去空白全字符口径且剔版本副本 — 两者差异为口径定义, 非丢失。
+1. **口径差**: 存量盘点 1,034.8 万 = han+西文词口径; 存量建池 71 主稿
+   10,159,246 = 去空白全字符口径且剔版本副本 — 两者差异为口径定义,
+   非丢失（cross:* 与军团增量腿与盘点口径无关, 全走池账）。
 2. 存量为**我方自产二手编译品**（B 级）, 非一手官方源; 蓝皮书引用
    数字仍须按断言链 S0 门回溯一手出处（湖南章已示范）。
 3. PDF 未入池（与盘点口径对齐防 docx+pdf 双计）, 留档可查。
@@ -249,6 +257,12 @@ def report(st: dict) -> int:
    不互换。
 6. 渠道完备门: 16 注册渠道中 F1 专属贡献当前仅存量编译+军团两腿,
    其余渠道 F1 专属补采**尚未开火**（首窗后按完备门逐条过账）。
+7. **跨战役复用披露**（1011）: 池内 engine=cross:* 行为 ResearchTopics
+   研究树（EPC49/50 历史战役工作区）收割件的跨战役复用 — 同一把尺
+   （F1 词表 judge + tiers 标题分层）, 内容头去重; 排除法院裁判文书
+   卷宗、用户私有资料、>2MB 合并巨件三类; PAIStation-F1CrossIngest
+   计划任务 30min 增量重跑（幂等）。跨战役素材与 F1 专属新采在
+   池内按 engine 可区分, 不冒充新采。
 """
     DOSSIER.write_text(md, encoding="utf-8")
     st["quality_report"] = str(DOSSIER)

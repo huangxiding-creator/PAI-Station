@@ -40,3 +40,33 @@
 - **防复发约束**：计数类规则一律登记 rqs_v3_gates.py（Python 全文上下文
   引擎），不进 lint_rules.json；两边职责边界=「行级模式→linter，全文
   结构→v3 门」。
+
+## G-005 pool_state 与 manifest 脱钩=门槛账假瘦
+- **症状**（1005 分层门 v3 落地实测）：EPC50-SNEI state 只记 566 件/772 万字
+  （last_judge 停在 09-25），manifest 真账 28,218 件/1.94 亿——分层账
+  dedup 后反而比 state 总账大，一眼暴露。腿侧直写 manifest judge=valid 而
+  state 增量更新被并发覆盖/跳过的老病理再现。
+- **根因**：manifest=唯一真源（append+原子重写打不掉），state=读改写可丢；
+  腿绕过 ingest→judge 链直接落 valid 行时 state 无兜底重算。
+- **防复发约束**：任何门槛判定前先看 state 与 manifest 行数是否同数量级，
+  脱钩即 `rebuild` 自愈（本次实证 566→28,218 收口）；分层门 v3 词表
+  （EPC49-SEPDC/EPC50-SNEI tiers.json）变更一律在本账本留痕：
+  1005 建 T1/T2 首版（EPC49=四川院系9词，EPC50=南京工程系+石化同业18词），
+  判据=T1≥300万 ∧ T1+T2≥3000万，T3 封顶5000万，T0 不计。
+
+## G-014 [1011 登记] EPC49-SEPDC manifest 截断悬案 + 台账地雷（已排雷待根治）
+
+- **现象**：manifest.jsonl 从 HEAD(e8ac3e3) 41,837 行 → 今日 195 行
+  （唯一一批 1011 07:21:31–07:22:06，15 引擎并发入账=一次收渠过账的指纹）；
+  pool_state.json 仍挂 1,066,053 件 / 50.9 亿字 遗产账（wenshu 27.7亿 +
+  lark_zhiku_file 22.4亿 + nb_library 3000万…）。
+- **地雷**：此态下任何人跑 `rebuild`（含 G-005 例行对账）会把台账塌缩到
+  195 行现实（几 MB），EPC49 达标账全灭。**排雷已做**：
+  pool_state.ledger-1011.bak.json 快照在档（1011 07:48）。
+- **bounded 根因未锁定**：judge()/manus_gate()/stock_ingest 的 manifest
+  重写全部行保全；未发现 'w' 模式截断者。state items(106万) 与 HEAD 时
+  manifest(4.2万行) 早已脱钩 → manifest 分代重置疑似既有运维形态，
+  存档去向前勿对账。
+- **根治工单**：①找回 41,837 行版本的存档（git show e8ac3e3 可全量恢复
+  到旁档，不动活账）；②查 1006 暂停/1010 恢复链上谁动过 manifest；
+  ③给 ammo_pool 加 manifest 行数骤降守卫（重写前行数 <50% 拒执+告警）。

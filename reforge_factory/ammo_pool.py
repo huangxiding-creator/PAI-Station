@@ -322,7 +322,16 @@ def _save_state(d: Path, s: dict) -> None:
     tmp = d / "pool_state.tmp"
     tmp.write_text(json.dumps(s, ensure_ascii=False, indent=1),
                    encoding="utf-8")
-    tmp.replace(d / "pool_state.json")
+    # WinError 5 瞬态锁 (AV/索引器扫 pool_state.json) 有界重试 —
+    # 1011 实锤: 无重试时 1.5 万件级长跑被一次瞬态锁整跑打断
+    for i in range(5):
+        try:
+            tmp.replace(d / "pool_state.json")
+            return
+        except PermissionError:
+            if i == 4:
+                raise
+            time.sleep(0.2 * (i + 1))
 
 
 def _manifest_keys(d: Path) -> set[str]:
@@ -486,6 +495,81 @@ def ingest(cid: str, file: str, engine: str, url: str = "",
     print(f"[pool] +待审 {ch:>7,}字 {fp.name[:36]:<36} "
           f"待审判有效后计数 (现待审 {ns['pending_chars']:,})")
     return 0
+
+
+def ingest_files(cid: str, items: list, chunk: int = 400) -> tuple:
+    """批量入池 (1011 cross-ingest 腿): 单条 ingest 每次全量重读
+    manifest + 持锁抽字, 万件级长跑 = O(n²) 且长时间占池锁.
+    本腿分块: 抽字/判 snippet 在**锁外**预做, 每块一次持锁 —
+    manifest 键集读 + 追加 + state 写, 锁占用秒级 (hook_harvest
+    PT5M 落地腿不被堵). 行字段与 ingest() 完全同构 (G3 挂树键/
+    S2-1 snippet 硬拒/FT-4 text_head/待审计数 全保留).
+
+    items: [{"file": 路径, "engine": 源标记, "cred": 可信级}, ...]
+    返回 (入池件数, 跳过件数). 幂等: source_path + dedup_key 双查重."""
+    d = _camp_dir(cid)
+    if not d.is_dir():
+        print(f"[pool] 战役池不存在, 先 init {cid}", file=sys.stderr)
+        return (0, len(items))
+    added = skipped = 0
+    for i in range(0, len(items), chunk):
+        batch = []                                   # 锁外抽字
+        for it in items[i:i + chunk]:
+            fp = Path(it["file"])
+            try:
+                if not fp.is_file():
+                    continue
+                text = read_text_safe(fp)
+            except Exception:
+                continue
+            if len(text) < 50:
+                continue
+            snip, rule = is_snippet_only(text, it["engine"])
+            if snip:
+                _gate_log(d, fp, it["engine"], rule, len(text))
+                continue
+            batch.append((fp, it, text, dedup_key(None, text)))
+        with _pool_lock(d):
+            mp = d / "manifest.jsonl"
+            have: set = set()
+            keys: set = set()
+            if mp.is_file():
+                for x in mp.read_text(encoding="utf-8").splitlines():
+                    if not x.strip():
+                        continue
+                    r = json.loads(x)
+                    have.add(r.get("source_path"))
+                    keys.add(r.get("dedup_key", ""))
+            lines = []
+            for fp, it, text, key in batch:
+                if str(fp) in have or key in keys:
+                    skipped += 1
+                    continue
+                lines.append(json.dumps(
+                    {"ts": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                     "engine": it["engine"], "source_path": str(fp),
+                     "url_norm": "", "chars": count_chars(text),
+                     "credibility": it.get("cred", "unknown"),
+                     "dedup_key": key, "judge": "pending",
+                     "judge_reason": "", "judge_engine": "",
+                     "tree_node": it.get("tree", ""), "stance": "support",
+                     "budget_band": "", "text_head": text[:500]},
+                    ensure_ascii=False))
+                have.add(str(fp))
+                keys.add(key)
+            if lines:
+                with mp.open("a", encoding="utf-8") as f:
+                    f.write("\n".join(lines) + "\n")
+                s = _load_state(d)
+                ns = {**s, "pending_chars": s.get("pending_chars", 0)
+                      + sum(json.loads(x)["chars"] for x in lines),
+                      "pending_items": s.get("pending_items", 0) + len(lines)}
+                _save_state(d, ns)
+                added += len(lines)
+        print(f"[batch] {min(i + chunk, len(items)):>6}/{len(items)} "
+              f"+{len(lines)} (累计跳 {skipped})", flush=True)
+    print(f"[batch] 入池 {added} / 跳过 {skipped}")
+    return (added, skipped)
 
 
 def judge(cid: str, limit: int = 500) -> int:
