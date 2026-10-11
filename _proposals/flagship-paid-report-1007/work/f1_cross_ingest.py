@@ -2,8 +2,9 @@
 """F1 跨战役收割件入池 — 1011 采集域开火第一腿 (渠道完备门过账推进).
 
 把 ResearchTopics 研究树 (EPC49/50 各战役工作区) 里各渠道已收割的
-公开资料 + 课题工作稿, 按 F1-BLUEBOOK 自己的 judge + tiers 过账
-(engine=cross:<渠道> 溯源, dossier §2 渠道账自动过账).
+公开资料 + 课题工作稿, 以及 data/rss_harvest/articles RSS 常年收割面
+(PAIStation-rss-harvest 每日 07:37/19:37 落盘), 按 F1-BLUEBOOK 自己的
+judge + tiers 过账 (engine=cross:<渠道> 溯源, dossier §2 渠道账自动过账).
 
 纪律 (1011 定):
   - 排除 53_裁判文书 (法院卷宗非蓝皮书素材, 单件动辄百 MB);
@@ -32,6 +33,7 @@ import f1_pool_build as fpb                              # noqa: E402
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 CID = "F1-BLUEBOOK"
 ROOTS = [Path(r"E:\AI-Station\ResearchFactory-Eng\ResearchTopics")]
+RSS_ROOT = Path(r"E:\AI-Station\data\rss_harvest\articles")  # 二腿: RSS 常年收割面
 EXCLUDE_DIR = ("53_裁判文书", "01 用户私有", ".git")
 MAX_BYTES = 2_000_000
 EXTS = (".md", ".txt", ".docx")
@@ -39,18 +41,20 @@ CHAN = re.compile(r"_channel_([A-Za-z0-9_]+)")
 CRED = {"policy": "gov", "standards": "gov", "sasac": "gov", "ndrc": "gov",
         "ndrc_pifu": "gov", "nea": "gov", "mohurd": "gov", "stats": "gov",
         "mem_gov": "gov", "mot": "gov", "nnsa": "gov", "cnki": "paper",
-        "academic_en": "paper", "arxiv": "paper", "djyanbao": "research"}
+        "academic_en": "paper", "arxiv": "paper", "djyanbao": "research",
+        "rss": "media"}
 
 
 def iter_files():
-    """walk 研究树 → (file, channel); 排除目录整枝剪掉, 大文件跳过."""
-    for root in ROOTS:
+    """walk 研究树 + RSS 收割面 → (file, channel); 排除目录整枝剪掉, 大文件跳过."""
+    for root in [*ROOTS, RSS_ROOT]:
+        is_rss = root == RSS_ROOT
         for dp, dn, fns in os.walk(root):
             if any(x in dp for x in EXCLUDE_DIR):
                 dn[:] = []                              # 整枝不下降
                 continue
-            m = CHAN.search(dp)
-            ch = m.group(1) if m else "topics"
+            ch = "rss" if is_rss else (
+                m.group(1) if (m := CHAN.search(dp)) else "topics")
             for fn in fns:
                 if fn.startswith("~$") or not fn.endswith(EXTS):
                     continue

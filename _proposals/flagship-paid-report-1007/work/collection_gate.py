@@ -140,9 +140,12 @@ def _channel_ledger(by_engine: dict) -> list:
     for tag, chars in sorted(by_engine.items(), key=lambda x: -x[1]):
         if tag == "manus:corps":                     # manus 账已挂注册行
             continue
-        note = ("跨战役收割件复用入账 (ResearchTopics 研究树, "
-                "同尺 judge+tiers)" if tag.startswith("cross:")
-               else "存量语料建池入账 (多渠道历史编译)")
+        if tag == "cross:rss":
+            note = "跨战役收割件复用入账 (data/rss_harvest RSS 常年收割面, 同尺 judge+tiers)"
+        elif tag.startswith("cross:"):
+            note = "跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers)"
+        else:
+            note = "存量语料建池入账 (多渠道历史编译)"
         rows.append((f"[池engine] {tag}", chars, note))
     return rows
 
@@ -257,12 +260,15 @@ def report(st: dict) -> int:
    不互换。
 6. 渠道完备门: 16 注册渠道中 F1 专属贡献当前仅存量编译+军团两腿,
    其余渠道 F1 专属补采**尚未开火**（首窗后按完备门逐条过账）。
-7. **跨战役复用披露**（1011）: 池内 engine=cross:* 行为 ResearchTopics
-   研究树（EPC49/50 历史战役工作区）收割件的跨战役复用 — 同一把尺
-   （F1 词表 judge + tiers 标题分层）, 内容头去重; 排除法院裁判文书
-   卷宗、用户私有资料、>2MB 合并巨件三类; PAIStation-F1CrossIngest
-   计划任务 30min 增量重跑（幂等）。跨战役素材与 F1 专属新采在
-   池内按 engine 可区分, 不冒充新采。
+7. **跨战役复用披露**（1011 两腿）: 池内 engine=cross:* 行为跨战役
+   复用 — 一腿来自 ResearchTopics 研究树（EPC49/50 历史战役工作区）
+   收割件, 二腿来自 data/rss_harvest/articles（PAIStation-rss-harvest
+   每日 07:37/19:37 的 RSS 常年收割面, engine=cross:rss 单列可区分）。
+   同一把尺（F1 词表 judge + tiers 标题分层）, 内容头去重（两腿重叠
+   14,742 件已自动跳过）; 排除法院裁判文书卷宗、用户私有资料、
+   >2MB 合并巨件三类; PAIStation-F1CrossIngest 计划任务 30min 增量
+   重跑（幂等）。跨战役素材与 F1 专属新采在池内按 engine 可区分,
+   不冒充新采。
 """
     DOSSIER.write_text(md, encoding="utf-8")
     st["quality_report"] = str(DOSSIER)
