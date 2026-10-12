@@ -175,6 +175,28 @@ ARTCARDS: dict[str, dict] = {
             *_tail_card("试读入口"),
         ],
     },
+    # 1012 蓝皮书正式发售: 价签即钩子; highlight 词「可回查」在 10.8 主词内
+    "bluebook_v1": {
+        "duration": 16.5,
+        "cues": [
+            {"at": 0.0, "kind": "title", "text": "卖一万块",
+             "sub": "这本EPC蓝皮书凭什么", "data": {"label": "行业底账"}},
+            {"at": 2.7, "kind": "point", "text": "口径乱",
+             "sub": "金额大·链条长·数字打架",
+             "data": {"label": "病根 01", "key": "数字打架"}},
+            {"at": 5.4, "kind": "number",
+             "sub": "五卷本·74章·50.1万字",
+             "data": {"value": 737, "suffix": " 页成书", "label": "厚度"}},
+            {"at": 8.1, "kind": "point", "text": "逐家开底账",
+             "sub": "28家标杆·17省机会",
+             "data": {"label": "拆解 01", "key": "17省"}},
+            {"at": 10.8, "kind": "point", "text": "字字可回查",
+             "sub": "判断带强度·条条有反证",
+             "data": {"label": "军规", "key": "有反证"}},
+            {"at": 11.9, "kind": "highlight", "data": {"word": "可回查"}},
+            *_tail_card("试读入口"),
+        ],
+    },
 }
 
 
