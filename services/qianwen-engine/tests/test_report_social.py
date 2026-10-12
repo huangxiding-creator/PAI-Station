@@ -192,9 +192,10 @@ def _texts_of_build(d: dict) -> tuple:
 
 
 def test_build_report_layout_doctrine(client):
-    """版式铁律（用户令）：①零价格（¥/price_label 全域缺席）②「免费试读」显眼且
-    **全域仅一次**（1012 用户令去重）③一级目录完整呈现（≤12 章全展示）。
-    直接驱动 build_report + 录制全部 draw.text 字串断言。"""
+    """版式铁律 v3（1012 用户令三改「仍然存在重复」+「顶级审美」）：①零价格
+    ②「免费试读」显眼且全域仅一次（大行动卡橙药丸）③一级目录完整呈现（≤12 章）
+    ④**每个硬数据全域至多一次**（副题剥芯片+徽标行下线+数据秀场唯一统计面）
+    ⑤试读带并入大行动卡（旧带文案退场）。直接驱动 build_record + 录制断言。"""
     from qianwen_engine import report_catalog as rc
 
     png, texts = _texts_of_build(rc.get_report("SKU-A"))
@@ -202,24 +203,29 @@ def test_build_report_layout_doctrine(client):
     joined = "|".join(texts)
     # ① 零价格：货币符与价格数值/标签缺席（498 只可能来自 price）
     assert "¥" not in joined and "498" not in joined
-    # ② 试读显眼且仅一次：橙药丸（fb34 白字）+副行在图，数据行第三组已删（去重）
-    assert "免费试读" in texts                       # 橙药丸（fb34 白字）
-    assert "试读章节免费开放" in texts and "进入小程序即可阅读" in texts
+    # ② 试读显眼且仅一次：大行动卡内橙药丸（fb32 白字）
+    assert "免费试读" in texts
     assert joined.count("免费试读") == 1 and "支持" not in texts
+    # ⑤ 旧试读带文案退场（并入大行动卡，不再两块深色堆叠）
+    assert "试读章节免费开放" not in texts and "进入小程序即可阅读" not in texts
+    # ④ 硬数据全域至多一次：万字/章 只在数据秀场出现（副题芯片已剥、徽标行已下线、
+    #    目录注记不复述章数）
+    assert joined.count("万字") == 1
+    assert "共 5 章" not in joined and "章深度拆解" not in joined and "万字全文" not in joined
     # ③ 一级目录完整：SKU-A 5 章 ≤12 → 全部在图且无省略注记
     for i in (1, 2, 3, 4, 5):
         assert f"拆解{i}" in joined
     assert "完整目录在小程序内" not in joined
-    # 品牌与行动卡在图（转化三件：品牌/试读/扫码）
-    assert "总包AI顾问" in texts and "扫码读报告试读" in texts
+    # 品牌与大行动卡在图（转化三件：品牌/试读/扫码）
+    assert "总包AI顾问" in texts and "扫码读这份报告" in texts
     assert "研究报告库 · 9 份深度报告" in texts       # catalog_count 注入
     # 章去冠词：台账序号 01/02 自绘，「第1章」前缀不重复占行宽
     assert not any(t.startswith("第") for t in texts)
 
 
 def test_build_report_toc_cap_12(client):
-    """一级目录 ≤12 章上限（1012 用户令：最多前 12 章）：SKU-B 14 章 →
-    前 12 章在图、13/14 章缺席、注记「共 14 章·完整目录在小程序内」补位。"""
+    """一级目录 ≤12 章上限：SKU-B 14 章 → 前 12 章在图、13/14 章缺席、注记补位
+    「…… 完整目录在小程序内」（v3：注记不复述「共 N 章」——章数只在数据秀场）。"""
     from qianwen_engine import report_catalog as rc
 
     _, texts = _texts_of_build(rc.get_report("SKU-B"))
@@ -227,4 +233,5 @@ def test_build_report_toc_cap_12(client):
     for i in range(1, 13):
         assert f"章题{i}" in joined, f"第{i}章应在前 12 章呈现"
     assert "章题13" not in joined and "章题14" not in joined
-    assert "共 14 章" in joined and "完整目录在小程序内" in joined
+    assert "完整目录在小程序内" in joined
+    assert "共 14 章" not in joined          # v3 去重④：注记不复述章数

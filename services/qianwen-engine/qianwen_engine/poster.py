@@ -40,7 +40,7 @@ _QR_SIZE = 160             # 小程序码贴片边长（430 源图缩放，保�
 
 LAYOUT_VERSION = "v4"      # 版式版本（进 app.py 海报缓存键：改版自动失效旧缓存）
 
-REPORT_LAYOUT_VERSION = "v2"  # v0.9.16 研报海报版式版本（进 app.py 缓存键；1012 用户令：试读说明去重+一级目录≤12章）
+REPORT_LAYOUT_VERSION = "v3"  # v0.9.16 研报海报版式版本（进 app.py 缓存键；1012 用户令：试读说明去重+一级目录≤12章）
 
 # 章节标题去冠词（海报已自绘 01/02 台账序号，「第X章」前缀重复且费行宽）
 _CH_PREFIX = re.compile(r"^第[一二三四五六七八九十百0-9]+[章节篇][\s:：、.\-]*")
@@ -345,15 +345,19 @@ def build(question: str, bullets: list, qr_png: bytes | None,
 
 
 def build_report(d: dict, qr_png: bytes | None, catalog_count: int = 0) -> bytes:
-    """v0.9.15 研报转化海报（用户令 1011）：与咨询海报同设计语言（图纸边框+角十字+
-    双字重字阶+橙仅三处），目的=吸引用户进小程序试读→促转化。
+    """v3 研报转化海报（1012 用户令三改：「仍然存在重复」+「顶级审美」）。
 
-    铁律（用户令）：①不显示售卖价格（price/price_label 全域缺席——转化靠试读兴趣，
-    不靠价格锚）；②「可免费试读」显眼展示且**全域仅说明一次**（1012 用户令去重：
-    试读带=版面唯一满宽深色带+橙色药丸，数据行不再重复）。
-    内容：题名/副题/徽标行/一级目录（≤12 章台账体，1012 用户令：完整呈现前
-    12 章，超出注记「共 N 章·完整目录在小程序内」）/数据行/试读带/行动卡+码。
-    d=report_catalog.get_report() 字段；qr_png=None → 无码兜底（搜一搜引导）。
+    与咨询海报同设计语言（图纸边框+角十字+双字重字阶+橙克制）。
+    v3 去重铁律（每个硬数据全域至多一次）：
+      ① 副题剥离统计芯片（「N 章」「N.N 万字」正则剔除——统计只归数据秀场）；
+      ② 徽标行整行下线（数字徽标=重复源；定性徽标由副题/目录承载）；
+      ③ 数据秀场=全域唯一统计面（大数字 56pt 台账体：万字 × 章 × 可选第三徽标数）；
+      ④ 目录注记只在截断时出现且不再复述「共 N 章」。
+    v3 版面：题名/副题 → 数据秀场 → 一级目录（≤12 章台账体）→ 大行动卡
+    （试读带并入：橙药丸「免费试读」=全域唯一试读语 + 扫码 CTA + 码，一块深色
+    收尾不再两块堆叠）。
+    铁律（承 v0.9.15）：①零价格（price/price_label 全域缺席）；②「免费试读」
+    显眼且全域仅一次。d=report_catalog.get_report()；qr_png=None → 无码兜底。
     """
     try:
         from PIL import Image, ImageDraw
@@ -368,12 +372,10 @@ def build_report(d: dict, qr_png: bytes | None, catalog_count: int = 0) -> bytes
     f_q = fb(44)
     f_sub = fr(26)
     f_bullet = fr(27)
-    f_badge = fr(22)
     f_more = fr(22)
-    f_trial = fb(34)
-    f_trial_sub = fr(23)
-    f_num = fb(30)
-    f_unit = fr(23)
+    f_hero = fb(56)
+    f_hero_u = fr(22)
+    f_pill = fb(32)
     f_cta = fb(40)
     f_cta_sub = fr(23)
     f_cap = fr(20)
@@ -382,56 +384,83 @@ def build_report(d: dict, qr_png: bytes | None, catalog_count: int = 0) -> bytes
     title = (d.get("title") or "研究报告").strip()
     subtitle = (d.get("subtitle") or "").strip()
     chapters = d.get("chapters") or []
-    # 1012 蓝皮书卷级头行（vol:true）不进海报目录——切片与「共 N 章」计数只认章级条目
+    # 1012 蓝皮书卷级头行（vol:true）不进海报目录——切片与计数只认章级条目
     chapters = [c for c in chapters if not c.get("vol")]
     words_wan = d.get("words_wan")
 
-    # 徽标行：k v 短令牌 ≤3 个（长徽标不上海报——一行纪律）
-    tokens = []
+    # ── v3 去重①：副题剥统计芯片（统计只归数据秀场）──
+    _chip = re.compile(r"\s*[·]?\s*\d+(?:\.\d+)?\s*(?:万字|章)(?=[\s·\u4e00-\u9fff]|$)")
+    prev = None
+    sub_clean = subtitle
+    while prev != sub_clean:
+        prev = sub_clean
+        sub_clean = _chip.sub("", sub_clean)
+    sub_clean = re.sub(r"\s·\s·\s", " · ", sub_clean).strip(" ·　").strip()
+
+    # ── v3 去重③：数据秀场三槽（万字 × 章 × 可选第三徽标数）──
+    def _num(v):
+        return f"{v:,}" if isinstance(v, int) else str(v or "—")
+
+    stats: list = [(_num(words_wan), "万字"), (_num(len(chapters)), "章")]
     for b in d.get("badges") or []:
-        if isinstance(b, dict) and b.get("k") and b.get("v"):
-            t = f"{b['k']} {b['v']}"
-            if len(t) <= 22:
-                tokens.append(t)
-        if len(tokens) >= 3:
+        if not (isinstance(b, dict) and b.get("v")):
+            continue
+        k, v = str(b.get("k") or ""), str(b["v"]).strip()
+        if k in ("章节数", "全书字数", "成书页数", "章数", "字数", "目录"):
+            continue
+        m2 = re.match(r"^(\d{1,5})\s*(.{1,6})$", v)
+        if m2 and not re.search(r"(章|万字|页)$", m2.group(2)):
+            stats.append((m2.group(1), m2.group(2)))
             break
-    badge_line = " · ".join(tokens)
 
     meas = ImageDraw.Draw(Image.new("RGB", (8, 8)))
     t_all = _wrap(meas, title, f_q, W - M * 2)
     t_lines = t_all[:3]
     if len(t_all) > 3:
         t_lines[-1] = t_lines[-1][:-1] + "…"
-    s_lines = _wrap(meas, subtitle, f_sub, W - M * 2)[:2] if subtitle else []
-    if subtitle and len(_wrap(meas, subtitle, f_sub, W - M * 2)) > 2:
+    s_lines = (_wrap(meas, sub_clean, f_sub, W - M * 2)[:2] if sub_clean else [])
+    if sub_clean and len(_wrap(meas, sub_clean, f_sub, W - M * 2)) > 2:
         s_lines[-1] = s_lines[-1][:-1] + "…"
     ch_lines = []
-    for ch in chapters[:12]:  # v0.9.16 用户令：一级目录完整呈现，最多前 12 章
+    _vol_of = {}
+    _cur_vol, _seen_titles = "", {}
+    for _c in d.get("chapters") or []:
+        if _c.get("vol"):
+            _cur_vol = (_c.get("id") or "").strip()
+            continue
+        _vol_of[_c.get("id")] = _cur_vol
+    for ch in chapters[:12]:  # 一级目录完整呈现，最多前 12 章
         ct = _CH_PREFIX.sub("", (ch.get("title") or "").strip()) or (ch.get("title") or "")
+        # 1012 审计修：多卷本同名章（卷一/卷二各有「导论」）扁平并列=观感事故——
+        # 卷别消歧（前缀「卷二·」）；单卷本零影响
+        _v = _vol_of.get(ch.get("id"))
+        if _v and (_seen_titles.get(ct) or ct == "导论"):
+            ct = f"{_v}·{ct}"
+        _seen_titles[ct] = True
         ln = _wrap(meas, ct, f_bullet, W - M * 2 - 34)[:2]
         if len(_wrap(meas, ct, f_bullet, W - M * 2 - 34)) > 2:
             ln[-1] = ln[-1][:-1] + "…"
         ch_lines.append(ln or ["—"])
     more_ch = len(chapters) > 12
 
-    # 底部锚栈与咨询海报同构（行动卡 208 + 页脚呼吸 320）
-    card_h, stack_bottom = 208, 320
-    band_h = 120
+    # 底部锚栈：大行动卡（试读带并入后单块收尾）
+    card_h, stack_bottom = 264, 320
 
     def _need(n_ch: int) -> int:
+        # 与 draw 流程逐位同步（1012 审计修：旧账每行多记 46px→流式布局尾部死区
+        # 560px；现按 draw 实耗重算——题名/副题/秀场140/目录标66/行42n+16/截断34/
+        # 卡呼吸64+卡高/页脚尾130）
         y = 214 + len(t_lines) * 62
         if s_lines:
             y += 20 + len(s_lines) * 40
-        if badge_line:
-            y += 44
-        y += 76            # 目录亮点栏目标（徽标/副题后大呼吸）
+        y += 56 + 84                     # 数据秀场：上呼吸56 + 大数字行高84
+        y += 20 + 46                     # 目录栏目标：呼吸20 + 标行46
         for ln in ch_lines[:n_ch]:
-            y += 46 + len(ln) * 42 + 16
-        if more_ch or n_ch < len(ch_lines):
+            y += len(ln) * 42 + 16       # 台账行（与 draw 逐字同步）
+        if more_ch or n_ch < len(chapters):
             y += 34
-        y += 44 + band_h   # 试读带
-        y += 48 + 40       # 数据行（发丝线上松下紧）
-        return y + 34 + stack_bottom
+        y += 64 + card_h                 # 卡上呼吸 + 大行动卡
+        return y + 130                   # 页脚尾带（卡底→页脚74+页脚区56）
 
     n_ch = len(ch_lines)
     while n_ch > 2 and _need(n_ch) > 3000:
@@ -458,7 +487,7 @@ def build_report(d: dict, qr_png: bytes | None, catalog_count: int = 0) -> bytes
             "SHT 01 · RESEARCH", font=f_meta_s, fill=INK_SOFT)
     d2.line([(M, 124), (W - M, 124)], fill=NAVY, width=3)
 
-    # ── 题名区（主角 Bold 44 ≤3 行）──
+    # ── 题名区（主角 Bold 44 ≤3 行；副题=剥芯片后的身份行）──
     d2.rectangle([M, 172, M + 10, 182], fill=ORANGE)          # 橙 #1
     _track(d2, (M + 26, 168), "深度研究 · RESEARCH REPORT", f_label, INK_SOFT, 5)
     yy = 214
@@ -470,23 +499,28 @@ def build_report(d: dict, qr_png: bytes | None, catalog_count: int = 0) -> bytes
         for ln in s_lines:
             d2.text((M, yy), ln, font=f_sub, fill=INK_SOFT)
             yy += 40
-    if badge_line:
-        yy += 22
-        d2.line([(M, yy), (W - M, yy)], fill=HAIR, width=1)
-        yy += 22
-        d2.text((M, yy), badge_line, font=f_badge, fill=INK_SOFT)
-        yy += 22
 
-    # ── 目录亮点（台账体：01/02 序号 + 行间发丝线；深度即卖点）──
-    yy += 54
+    # ── 数据秀场（v3 全域唯一统计面：大数字 56pt 台账体 + 发丝立柱分隔）──
+    yy += 56
+    hero_y = yy
+    x = M
+    for si, (num, unit) in enumerate(stats):
+        d2.text((x, hero_y), num, font=f_hero, fill=NAVY)
+        nw = d2.textlength(num, font=f_hero)
+        d2.text((x + nw + 10, hero_y + 30), unit, font=f_hero_u, fill=INK_SOFT)
+        x += nw + 10 + d2.textlength(unit, font=f_hero_u)
+        if si < len(stats) - 1:
+            x += 44
+            d2.line([(x - 22, hero_y + 10), (x - 22, hero_y + 52)], fill=HAIR, width=1)
+    yy = hero_y + 84
+
+    # ── 目录亮点（台账体：序号灰阶 + 行间发丝线；注记只在截断时出现且不复述章数）──
+    yy += 20
     d2.rectangle([M, yy + 8, M + 10, yy + 18], fill=NAVY)
     _track(d2, (M + 26, yy), "一级目录 · CONTENTS", f_label, INK_SOFT, 5)
-    _n_note = f"共 {len(chapters)} 章"
-    d2.text((W - M - d2.textlength(_n_note, font=f_label), yy), _n_note,
-            font=f_label, fill=INK_SOFT)
     yy += 46
     for idx, ln in enumerate(ch_lines[:n_ch]):
-        d2.text((M, yy + 4), f"{idx + 1:02d}", font=f_num_s, fill=NAVY)
+        d2.text((M, yy + 4), f"{idx + 1:02d}", font=f_num_s, fill=INK_SOFT)
         for sub in ln:
             d2.text((M + 34, yy), sub, font=f_bullet, fill=INK)
             yy += 42
@@ -494,56 +528,34 @@ def build_report(d: dict, qr_png: bytes | None, catalog_count: int = 0) -> bytes
         if idx < n_ch - 1:
             d2.line([(M, yy - 8), (W - M, yy - 8)], fill=HAIR, width=1)
     if len(chapters) > n_ch:
-        more_txt = f"…… 共 {len(chapters)} 章 · 完整目录在小程序内"
-        d2.text((M, yy), more_txt, font=f_more, fill=INK_SOFT)
+        d2.text((M, yy), "…… 完整目录在小程序内", font=f_more, fill=INK_SOFT)
         yy += 34
 
-    # ── 试读带（v0.9.15 用户令：可试读=显眼展示；版面唯一满宽深色带+橙药丸=橙 #2）──
-    ty = yy + 10
-    d2.rounded_rectangle([56, ty, W - 56, ty + band_h], radius=20, fill=NAVY_DEEP)
-    d2.rounded_rectangle([92, ty + 28, 92 + 196, ty + 92], radius=12, fill=ORANGE)
-    _pw = d2.textlength("免费试读", font=f_trial)
-    d2.text((92 + (196 - _pw) / 2, ty + 40), "免费试读", font=f_trial, fill=WHITE)
-    d2.text((324, ty + 28), "试读章节免费开放", font=f_trial, fill=WHITE)
-    d2.text((324, ty + 76), "进入小程序即可阅读", font=f_trial_sub, fill=MIST)
-
-    # ── 数据行（单行内联：数字重/单位轻；v0.9.16 用户令去重：免费试读仅试读带一处，
-    #    本行只留字数/章数两组硬数据）──
-    y_meta = ty + band_h + 48
-    d2.line([(M, y_meta - 26), (W - M, y_meta - 26)], fill=HAIR, width=2)
-
-    def _num(v):
-        return f"{v:,}" if isinstance(v, int) else str(v or "—")
-
-    x = M
-    for num, unit, last in ((_num(words_wan), " 万字全文", False),
-                            (_num(len(chapters)), " 章深度拆解", True)):
-        d2.text((x, y_meta), num, font=f_num, fill=NAVY)
-        x += d2.textlength(num, font=f_num) + 4
-        d2.text((x, y_meta + 7), unit, font=f_unit, fill=INK_SOFT)
-        if not last:
-            x += d2.textlength(unit, font=f_unit) + 44
-
-    # ── 行动卡（藏青收尾；左文右码；零价格——转化靠试读兴趣不靠价格锚）──
-    d2.rounded_rectangle([56, cy0, W - 56, cy0 + card_h], radius=24, fill=NAVY_DEEP)
-    _track(d2, (104, cy0 + 22), "长按识别 · SCAN TO READ", f_cap, ORANGE, 6)  # 橙 #3
-    d2.text((104, cy0 + 56), "扫码读报告试读", font=f_cta, fill=WHITE)
+    # ── 大行动卡（v3 试读带并入=版面唯一深色块：橙药丸+CTA+码一块收尾；零价格）──
+    yy += 64
+    d2.rounded_rectangle([56, yy, W - 56, yy + card_h], radius=24, fill=NAVY_DEEP)
+    _track(d2, (104, yy + 26), "DEEP RESEARCH LIBRARY", f_cap, ORANGE, 6)  # 橙 #3
+    d2.rectangle([104, yy + 62, 104 + 168, yy + 108], fill=ORANGE)  # 橙 #2（直角=图纸语言）
+    _pw = d2.textlength("免费试读", font=f_pill)
+    d2.text((104 + (168 - _pw) / 2, yy + 70), "免费试读", font=f_pill, fill=WHITE)
+    d2.text((104, yy + 134), "扫码读这份报告", font=f_cta, fill=WHITE)
     _lib = f"研究报告库 · {catalog_count} 份深度报告" if catalog_count else "总包AI顾问 · 研究报告库"
-    d2.text((104, cy0 + 120), _lib, font=f_cta_sub, fill=MIST)
+    d2.text((104, yy + 196), _lib, font=f_cta_sub, fill=MIST)
 
     if qr_png:
         try:
             qr = Image.open(io.BytesIO(qr_png)).convert("RGB")
             qr = qr.resize((_QR_SIZE, _QR_SIZE), Image.LANCZOS)
-            px, py = 462, cy0 + 12
+            px, py = 462, yy + 56
             d2.rounded_rectangle([px, py, px + _QR_SIZE + 24, py + _QR_SIZE + 24],
                                  radius=14, fill=WHITE)
             img.paste(qr, (px + 12, py + 12))
         except Exception:  # noqa: BLE001 — 码贴失败不废海报
             qr_png = None
+    _track(d2, (462, yy + 30), "长按识别 · SCAN", f_cap, MIST, 4)   # 指令贴码：转发场景长按，扫码场景看码即懂
     if not qr_png:
-        d2.text((462, cy0 + 64), "微信搜一搜", font=f_cta_sub, fill=WHITE)
-        d2.text((462, cy0 + 96), "「总包AI顾问」", font=f_cta_sub, fill=ORANGE)
+        d2.text((462, yy + 110), "微信搜一搜", font=f_cta_sub, fill=WHITE)
+        d2.text((462, yy + 142), "「总包AI顾问」", font=f_cta_sub, fill=ORANGE)
 
     # ── 页脚注记（AI 辅助研究申明=与详情页同口径）+ 底缘安全橙条 ──
     d2.text((M, foot_y), "研究团队基于公开资料与 AI 辅助研究方法产出 · 仅供参考",
