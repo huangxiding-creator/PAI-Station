@@ -212,6 +212,19 @@
 <!-- v0.9.7 自绘弹窗系统：qw-pop 自绘弹窗（onPopState 镜像开合+tabBar 让路）（onPopState 镜像开合+tabBar 让路） -->
 <qw-pop id="qwpop" bind:popstate="onPopState" />
 
+<!-- ══ v0.9.16 授勋动画（1012 用户令：有用赠次与答案页统一动画）——徽章+光芒+火花荣誉时刻 ══ -->
+<view class="rw-mask" wx:if="{{rewardShow}}" catchtouchmove="noop">
+  <view class="rw-flash"></view>
+  <view class="rw-core">
+    <view class="rw-rays"></view>
+    <view class="rw-medal"><text class="rw-plus">+1</text></view>
+  </view>
+  <view class="rw-title">咨询机会 +1</view>
+  <view class="rw-sub">{{reward}}</view>
+  <view class="rw-sp sp0"></view><view class="rw-sp sp1"></view><view class="rw-sp sp2"></view><view class="rw-sp sp3"></view>
+  <view class="rw-sp sp4"></view><view class="rw-sp sp5"></view><view class="rw-sp sp6"></view><view class="rw-sp sp7"></view>
+</view>
+
 <!-- 行内段渲染模板：加粗/斜体/行内代码/链接（与 answer 页同款） -->
 <template name="inl">
   <block wx:for="{{segs}}" wx:key="index" wx:for-item="s">

@@ -40,7 +40,7 @@ _QR_SIZE = 160             # 小程序码贴片边长（430 源图缩放，保�
 
 LAYOUT_VERSION = "v4"      # 版式版本（进 app.py 海报缓存键：改版自动失效旧缓存）
 
-REPORT_LAYOUT_VERSION = "v1"  # v0.9.15 研报海报版式版本（进 app.py 缓存键）
+REPORT_LAYOUT_VERSION = "v2"  # v0.9.16 研报海报版式版本（进 app.py 缓存键；1012 用户令：试读说明去重+一级目录≤12章）
 
 # 章节标题去冠词（海报已自绘 01/02 台账序号，「第X章」前缀重复且费行宽）
 _CH_PREFIX = re.compile(r"^第[一二三四五六七八九十百0-9]+[章节篇][\s:：、.\-]*")
@@ -349,8 +349,10 @@ def build_report(d: dict, qr_png: bytes | None, catalog_count: int = 0) -> bytes
     双字重字阶+橙仅三处），目的=吸引用户进小程序试读→促转化。
 
     铁律（用户令）：①不显示售卖价格（price/price_label 全域缺席——转化靠试读兴趣，
-    不靠价格锚）；②「可免费试读」显眼展示（试读带=版面唯一满宽深色带+橙色药丸）。
-    内容：题名/副题/徽标行/目录亮点（≤4 章·台账体）/数据行/试读带/行动卡+码。
+    不靠价格锚）；②「可免费试读」显眼展示且**全域仅说明一次**（1012 用户令去重：
+    试读带=版面唯一满宽深色带+橙色药丸，数据行不再重复）。
+    内容：题名/副题/徽标行/一级目录（≤12 章台账体，1012 用户令：完整呈现前
+    12 章，超出注记「共 N 章·完整目录在小程序内」）/数据行/试读带/行动卡+码。
     d=report_catalog.get_report() 字段；qr_png=None → 无码兜底（搜一搜引导）。
     """
     try:
@@ -402,13 +404,13 @@ def build_report(d: dict, qr_png: bytes | None, catalog_count: int = 0) -> bytes
     if subtitle and len(_wrap(meas, subtitle, f_sub, W - M * 2)) > 2:
         s_lines[-1] = s_lines[-1][:-1] + "…"
     ch_lines = []
-    for ch in chapters[:4]:
+    for ch in chapters[:12]:  # v0.9.16 用户令：一级目录完整呈现，最多前 12 章
         ct = _CH_PREFIX.sub("", (ch.get("title") or "").strip()) or (ch.get("title") or "")
         ln = _wrap(meas, ct, f_bullet, W - M * 2 - 34)[:2]
         if len(_wrap(meas, ct, f_bullet, W - M * 2 - 34)) > 2:
             ln[-1] = ln[-1][:-1] + "…"
         ch_lines.append(ln or ["—"])
-    more_ch = len(chapters) > 4
+    more_ch = len(chapters) > 12
 
     # 底部锚栈与咨询海报同构（行动卡 208 + 页脚呼吸 320）
     card_h, stack_bottom = 208, 320
@@ -430,8 +432,8 @@ def build_report(d: dict, qr_png: bytes | None, catalog_count: int = 0) -> bytes
         return y + 34 + stack_bottom
 
     n_ch = len(ch_lines)
-    while n_ch > 2 and _need(n_ch) > 1900:
-        n_ch -= 1          # 超高先减章（底线 2 章保深度感）
+    while n_ch > 2 and _need(n_ch) > 3000:
+        n_ch -= 1          # 病理超高才减章（底线 2；≤12 章正常排版不会触发）
     H = max(_need(n_ch), 1500)
     cy0 = H - stack_bottom
     foot_y = H - 56
@@ -476,7 +478,7 @@ def build_report(d: dict, qr_png: bytes | None, catalog_count: int = 0) -> bytes
     # ── 目录亮点（台账体：01/02 序号 + 行间发丝线；深度即卖点）──
     yy += 54
     d2.rectangle([M, yy + 8, M + 10, yy + 18], fill=NAVY)
-    _track(d2, (M + 26, yy), "目录亮点 · CONTENTS", f_label, INK_SOFT, 5)
+    _track(d2, (M + 26, yy), "一级目录 · CONTENTS", f_label, INK_SOFT, 5)
     _n_note = f"共 {len(chapters)} 章"
     d2.text((W - M - d2.textlength(_n_note, font=f_label), yy), _n_note,
             font=f_label, fill=INK_SOFT)
@@ -503,7 +505,8 @@ def build_report(d: dict, qr_png: bytes | None, catalog_count: int = 0) -> bytes
     d2.text((324, ty + 28), "试读章节免费开放", font=f_trial, fill=WHITE)
     d2.text((324, ty + 76), "进入小程序即可阅读", font=f_trial_sub, fill=MIST)
 
-    # ── 数据行（单行内联：数字重/单位轻；第三组把「免费试读」再钉一次）──
+    # ── 数据行（单行内联：数字重/单位轻；v0.9.16 用户令去重：免费试读仅试读带一处，
+    #    本行只留字数/章数两组硬数据）──
     y_meta = ty + band_h + 48
     d2.line([(M, y_meta - 26), (W - M, y_meta - 26)], fill=HAIR, width=2)
 
@@ -512,8 +515,7 @@ def build_report(d: dict, qr_png: bytes | None, catalog_count: int = 0) -> bytes
 
     x = M
     for num, unit, last in ((_num(words_wan), " 万字全文", False),
-                            (_num(len(chapters)), " 章深度拆解", False),
-                            ("支持", "免费试读", True)):
+                            (_num(len(chapters)), " 章深度拆解", True)):
         d2.text((x, y_meta), num, font=f_num, fill=NAVY)
         x += d2.textlength(num, font=f_num) + 4
         d2.text((x, y_meta + 7), unit, font=f_unit, fill=INK_SOFT)

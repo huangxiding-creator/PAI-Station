@@ -164,9 +164,9 @@ check("api potList 客户端", "potList" in api_js)
 check("api optimize 客户端（shareReward 已随分享激励下线）", "optimize" in api_js and "shareReward" not in api_js)
 
 # 版本与定位（v0.9.0）
-check("my 版本标记 v0.9.15（1011 报告互动三件+研报海报）", "v0.9.15" in my_wxml)
+check("my 版本标记 v0.9.16（1012 海报目录12章+试读去重+有用赠次统一动画）", "v0.9.16" in my_wxml)
 pkg = json.load(open(os.path.join(ROOT, "package.json"), encoding="utf-8"))
-check("package.json version=0.9.15", pkg["version"] == "0.9.15")
+check("package.json version=0.9.16", pkg["version"] == "0.9.16")
 # 1009 用户令：外观沉底（个性化低频项按用户习惯放设置区，高频额度/记录在前）——顺序即断言
 check("my 布局顺序=额度→记录→书架→外观（外观在咨询记录之后，1009 用户令）",
       my_wxml.find("外观 · APPEARANCE") > my_wxml.find("咨询记录 · RECORDS")
@@ -1068,7 +1068,7 @@ check("引擎道具图路由（/static/goods/{name} 白名单+防穿越+长缓�
 check("引擎道具图素材随包（static_goods/zongbaojun.jpg）",
       "GOODS_STATIC_DIR" in _app_py
       and os.path.exists(os.path.join(ENGINE, "qianwen_engine", "static_goods", "zongbaojun.jpg")))
-check("telemetry VER=0.9.15（版本横幅同步）", "var VER = '0.9.15'" in _tel_js)
+check("telemetry VER=0.9.16（版本横幅同步）", "var VER = '0.9.16'" in _tel_js)
 
 # ══ v0.9.15（1011 用户令：报告详情页 有用/分享给同行 赠次 + 研报转化海报）══
 _rp_wxml_3 = read("pages/report/report.wxml")
@@ -1085,8 +1085,12 @@ check("报告页 shareTap 静默赠次（零 toast 零文案=运营 3.2.1 红线
       "reportShare" in _rp_js_3 and "onShareTap" in _rp_js_3
       and _rp_js_3.find("showToast", _rp_js_3.find("onShareTap"), _rp_js_3.find("onPoster")) < 0)
 check("报告页 有用 乐观置位+400 终态（有用反馈可见）",
-      "usefulDone" in _rp_js_3 and "statusCode === 400" in _rp_js_3
-      and "已赠 1 次咨询" in _rp_js_3)
+      "usefulDone" in _rp_js_3 and "statusCode === 400" in _rp_js_3)
+check("报告页 有用赠次=授勋动画统一（1012 用户令；toast 旧腿已删）",
+      "_reward(" in _rp_js_3 and "rewardShow" in _rp_js_3
+      and "_rwTimer" in _rp_js_3 and "已赠 1 次咨询" not in _rp_js_3
+      and "rw-mask" in _rp_wxml_3 and "rw-medal" in _rp_wxml_3
+      and "rwPop" in _rp_wxss_3 and "@keyframes rwFade" in _rp_wxss_3)
 check("报告页 海报=answer 同构（writeFile b64→showShareImageMenu→preview 兜底）",
       "reportPoster" in _rp_js_3 and "poster-r-" in _rp_js_3
       and "showShareImageMenu" in _rp_js_3 and "_previewPoster" in _rp_js_3)
@@ -1118,6 +1122,13 @@ _poster_py = open(os.path.join(ENGINE, "qianwen_engine", "poster.py"), encoding=
 check("引擎 研报海报零价格+试读显眼（build_report 版式铁律：不读价格字段）",
       "def build_report" in _poster_py and "免费试读" in _poster_py
       and 'd.get("price' not in _poster_py and "price_label" not in _poster_py.split("def build_report")[1].split('"""')[2])
+check("引擎 海报 试读说明去重（1012 用户令：数据行第三组已删，仅试读带一处）",
+      '("支持", "免费试读", True)' not in _poster_py)
+check("引擎 海报 一级目录≤12 章+注记（1012 用户令：完整呈现前 12 章）",
+      "chapters[:12]" in _poster_py and "一级目录 · CONTENTS" in _poster_py
+      and "完整目录在小程序内" in _poster_py)
+check("引擎 海报 版式版本 v2（缓存键 release:rv2 自动失效重生成）",
+      'REPORT_LAYOUT_VERSION = "v2"' in _poster_py)
 check("test_report_social.py 在役（互动三件回归）",
       os.path.exists(os.path.join(ENGINE, "tests", "test_report_social.py")))
 

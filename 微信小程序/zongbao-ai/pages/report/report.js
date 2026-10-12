@@ -26,6 +26,8 @@ Page({
     popMode: '',
     usefulDone: false,  // v0.9.15 有用已点（乐观置位防双击；400 已点过=终态保持）
     posterBusy: false,  // v0.9.15 海报生成在途
+    rewardShow: false,  // v0.9.16 授勋动画开关（与答案页统一）
+    reward: '',         // v0.9.16 授勋动画副题文案
   },
 
   onLoad(query) {
@@ -169,7 +171,8 @@ Page({
     api.reportUseful(this.data.sku)
       .then((r) => {
         if (r && r.quota) wx.setStorageSync('qw_quota', r.quota);
-        wx.showToast({ title: '有用 · 已赠 1 次咨询', icon: 'none', duration: 2200 });
+        // v0.9.16（1012 用户令）：赠次反馈升级为授勋动画——与答案页有用/纠错/共享完全统一
+        this._reward('「有用」是给同行的掌声');
       })
       .catch((err) => {
         const again = err && err.statusCode === 400; // 已点过=终态保持置位
@@ -226,6 +229,23 @@ Page({
 
   _previewPoster(path) {
     wx.previewImage({ urls: [path], fail: () => wx.showToast({ title: '海报已生成', icon: 'none' }) });
+  },
+
+  // ══ v0.9.16 授勋动画（1012 用户令：有用赠次统一动画）——与答案页 _reward 同构逐字移植 ══
+  _reward(label) {
+    this.setData({ rewardShow: true, reward: label });
+    wx.vibrateShort({ type: 'heavy', fail: () => {} });
+    if (this._rwTimer) clearTimeout(this._rwTimer);
+    this._rwTimer = setTimeout(() => {
+      this.setData({ rewardShow: false, reward: '' });
+      this._rwTimer = null;
+    }, 2400);
+  },
+
+  noop() {},
+
+  onUnload() {
+    if (this._rwTimer) { clearTimeout(this._rwTimer); this._rwTimer = null; } // 对齐答案页隐藏态纪律：离页不再对隐藏页 setData
   },
 
   onShareAppMessage() {

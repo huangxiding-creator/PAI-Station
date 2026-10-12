@@ -29,23 +29,37 @@ from qianwen_engine import config, poster, report_catalog, wechat  # noqa: E402
 
 
 def _mk_content(cdir: Path) -> None:
-    """迷你目录：A（可售，含价格/徽标/多章——海报版式的全部素材位）。"""
+    """迷你目录：A（可售，含价格/徽标/5 章——海报版式的全部素材位）；
+    B（14 章——v0.9.16 一级目录 ≤12 章上限的裁切位）。"""
     (cdir / "full").mkdir(parents=True)
     (cdir / "sample").mkdir(parents=True)
     r = {
-        "reports": [{
-            "sku": "SKU-A", "title": "甲报告怎么干EPC", "subtitle": "副题拆解",
-            "price": 498, "price_label": "¥498", "words_wan": 5,
-            "badges": [{"k": "全渠道", "v": "对标"}, {"k": "深度", "v": "14章"}],
-            "cat": "ent", "cat_name": "企业研究",
-            "intro_lede": "导语", "intro": "简介" * 10, "audience": "工程总承包从业者",
-            "chapters": [{"id": i, "title": f"第{i}章 拆解", "desc": "章述"} for i in (1, 2, 3, 4, 5)],
-            "sample_file": "sku-a.md", "sample_label": "试读",
-        }]
+        "reports": [
+            {
+                "sku": "SKU-A", "title": "甲报告怎么干EPC", "subtitle": "副题拆解",
+                "price": 498, "price_label": "¥498", "words_wan": 5,
+                "badges": [{"k": "全渠道", "v": "对标"}, {"k": "深度", "v": "14章"}],
+                "cat": "ent", "cat_name": "企业研究",
+                "intro_lede": "导语", "intro": "简介" * 10, "audience": "工程总承包从业者",
+                "chapters": [{"id": i, "title": f"第{i}章 拆解{i}", "desc": "章述"}
+                             for i in (1, 2, 3, 4, 5)],
+                "sample_file": "sku-a.md", "sample_label": "试读",
+            },
+            {
+                "sku": "SKU-B", "title": "乙报告十四章", "subtitle": "目录裁切位",
+                "price": 598, "price_label": "¥598", "words_wan": 8,
+                "badges": [], "cat": "ent", "cat_name": "企业研究",
+                "intro_lede": "导语", "intro": "简介", "audience": "工程总承包从业者",
+                "chapters": [{"id": i, "title": f"第{i}章 章题{i}", "desc": ""}
+                             for i in range(1, 15)],
+                "sample_file": "sku-b.md", "sample_label": "试读",
+            },
+        ]
     }
     (cdir / "report.json").write_text(json.dumps(r, ensure_ascii=False), encoding="utf-8")
     (cdir / "full" / "SKU-A.pdf").write_bytes(b"%PDF-1.4 " + b"a" * 40)
     (cdir / "sample" / "sku-a.md").write_text("# 试读\n正文", encoding="utf-8")
+    (cdir / "sample" / "sku-b.md").write_text("# 试读\n正文", encoding="utf-8")
 
 
 @pytest.fixture()
@@ -151,13 +165,10 @@ def test_poster_no_qr_fallback_still_200(client, monkeypatch):
     assert base64.b64decode(r.json()["b64"]).startswith(b"\x89PNG")
 
 
-def test_build_report_layout_doctrine(client):
-    """版式铁律（用户令）：①零价格（¥/price_label 全域缺席）②「免费试读」显眼在图。
-    直接驱动 build_report + 录制全部 draw.text 字串断言。"""
+def _texts_of_build(d: dict) -> tuple:
+    """驱动 build_report 并录制全部 draw.text 字串（版式断言的取证腿）。"""
     from PIL import ImageDraw as _draw_mod
-    from qianwen_engine import report_catalog as rc
 
-    d = rc.get_report("SKU-A")
     texts: list = []
     real_draw = _draw_mod.Draw
 
@@ -177,16 +188,43 @@ def test_build_report_layout_doctrine(client):
         png = poster.build_report(d, qr_png=_fake_qr_png(), catalog_count=9)
     finally:
         _draw_mod.Draw = real_draw
+    return png, texts
+
+
+def test_build_report_layout_doctrine(client):
+    """版式铁律（用户令）：①零价格（¥/price_label 全域缺席）②「免费试读」显眼且
+    **全域仅一次**（1012 用户令去重）③一级目录完整呈现（≤12 章全展示）。
+    直接驱动 build_report + 录制全部 draw.text 字串断言。"""
+    from qianwen_engine import report_catalog as rc
+
+    png, texts = _texts_of_build(rc.get_report("SKU-A"))
     assert png.startswith(b"\x89PNG")
     joined = "|".join(texts)
     # ① 零价格：货币符与价格数值/标签缺席（498 只可能来自 price）
     assert "¥" not in joined and "498" not in joined
-    # ② 试读显眼：药丸+副行+数据行三处钉「免费试读」语义
+    # ② 试读显眼且仅一次：橙药丸（fb34 白字）+副行在图，数据行第三组已删（去重）
     assert "免费试读" in texts                       # 橙药丸（fb34 白字）
     assert "试读章节免费开放" in texts and "进入小程序即可阅读" in texts
-    assert "支持" in texts and joined.count("免费试读") >= 2   # 数据行第三组再钉一次
+    assert joined.count("免费试读") == 1 and "支持" not in texts
+    # ③ 一级目录完整：SKU-A 5 章 ≤12 → 全部在图且无省略注记
+    for i in (1, 2, 3, 4, 5):
+        assert f"拆解{i}" in joined
+    assert "完整目录在小程序内" not in joined
     # 品牌与行动卡在图（转化三件：品牌/试读/扫码）
     assert "总包AI顾问" in texts and "扫码读报告试读" in texts
     assert "研究报告库 · 9 份深度报告" in texts       # catalog_count 注入
     # 章去冠词：台账序号 01/02 自绘，「第1章」前缀不重复占行宽
     assert not any(t.startswith("第") for t in texts)
+
+
+def test_build_report_toc_cap_12(client):
+    """一级目录 ≤12 章上限（1012 用户令：最多前 12 章）：SKU-B 14 章 →
+    前 12 章在图、13/14 章缺席、注记「共 14 章·完整目录在小程序内」补位。"""
+    from qianwen_engine import report_catalog as rc
+
+    _, texts = _texts_of_build(rc.get_report("SKU-B"))
+    joined = "|".join(texts)
+    for i in range(1, 13):
+        assert f"章题{i}" in joined, f"第{i}章应在前 12 章呈现"
+    assert "章题13" not in joined and "章题14" not in joined
+    assert "共 14 章" in joined and "完整目录在小程序内" in joined
