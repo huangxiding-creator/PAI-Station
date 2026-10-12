@@ -8,9 +8,9 @@
 
 | 段 | 内容 | 出口门（硬判据） | 在役实件 |
 |----|------|------------------|----------|
-| **S1 调研采集** | 全渠道动员（16+1）：RSS 常年收割 / 跨战役收割 / 搜狗微信 / 秘塔 / zh-search-pro 多引擎 / 军团窗口 / 公开网搜 / 池内相关存量跨切 | **字数门**：T1≥300万 ∧ T1+T2≥3000万（collection_gate 同口径） | ammo_pool + collection_gate + F1CrossIngest(30min) + rss_harvest(07:37/19:37) + 军团窗口 + 搜索 Workflow |
+| **S1 调研采集** | 全渠道动员（16+1）：RSS 常年收割 / 跨战役收割 / 搜狗微信 / 秘塔 / zh-search-pro 多引擎 / 军团窗口 / 公开网搜 / 池内相关存量跨切 | **字数门 v4**（1012 用户提标令）：**T1≥2000万 ∧ T1+T2≥20000万（2亿=预算上限即门）** | ammo_pool + collection_gate + F1CrossIngest(30min) + rss_harvest(07:37/19:37) + 军团窗口 + 搜索 Workflow |
 | **S1.5 成果详报 ⛔人工闸** | 调研成果详细汇报：总量分层账/渠道完备门/分层成色/覆盖面树/已知瑕疵 | **用户明示批准**（approve 落账，如 1011「批准开写」先例） | collection_gate report + QUALITY_DOSSIER |
-| **S2 撰写** | 三态成书法（精编/融合/原创）：抽取 bank→写手并行→机器验收 | m2_gate 字数带 + m2_gate2 锚点数字门 + gate3 互引门 + 主编独立复验零采信自报 | work/m2 全套（extract/gate/gate2/gate3/sweep）+ writer Workflow |
+| **S2 撰写** | 三态成书法（精编/融合/原创）：抽取 bank→写手并行→机器验收 | m2_gate 字数带 + m2_gate2 锚点数字门 + gate3 互引门 + 主编独立复验零采信自报；**成稿总量 ≤10万字**（1012 用户令：约 12-14 章 × 7 千字） | work/m2 全套（extract/gate/gate2/gate3/sweep）+ writer Workflow |
 | **S3 排版** | docx + PDF 成书 | front_gate/G1 结算（按书规模缩放） | tools/report_to_docx + build_docx + build_pdf（Word COM） |
 | **S4 上架** | 目录转正 + 引擎上云 + 价档挂接 | 生产四腿实测（目录/详情/试读/门禁）+ 海报 v3 自动生成 | update_report_json 模式 + qw_tcb_prep + update_envparams + 既有 vpay 档（¥498/598/698/1999/10000——**新报告复用价档，零新道具**） |
 | **S5 宣传文章** | 引流文 → 公众号草稿箱 → autopub 窗口 | promo_guard 九门全过 + draft/get 双验 | push_article（总包之声/总包说/工程行业大脑三号） |

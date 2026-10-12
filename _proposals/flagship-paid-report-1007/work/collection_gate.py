@@ -19,6 +19,7 @@
 """
 import argparse
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -30,12 +31,13 @@ DOSSIER = WORK / "QUALITY_DOSSIER.md"
 F1_INV = WORK / "f1_inventory.json"
 CORPUS = Path(r"F:\新建文件夹\AI总包创新院\总包研报")
 AMMO = Path(r"E:\AI-Station\ammo_pool")
-F1_POOL = AMMO / "F1-BLUEBOOK"
+CID = os.environ.get("AMMO_CID", "F1-BLUEBOOK")   # 1012: 生产线多战役参数化 (EPC-BID26 等)
+F1_POOL = AMMO / CID
 F1_TREE = WORK / "f1_gap_tree_v2.json"
 V3_LOG = Path(r"E:\AI-Station\Auto_Manus\data\epc50_corps_log.jsonl")
 
-BAR = {"t1_min": 3_000_000, "t1t2_min": 30_000_000,
-       "budget_chars": 200_000_000}       # 弹药门 v3 (1005 用户令)
+BAR = {"t1_min": 20_000_000, "t1t2_min": 200_000_000,
+       "budget_chars": 200_000_000}       # 弹药门 v4 (1012 用户提标令: T1≥2000万 ∧ T1+T2≥2亿=预算上限即门)
 
 
 def _load() -> dict:
