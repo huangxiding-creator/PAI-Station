@@ -21,7 +21,8 @@ if sys.stdout:
 PROMO = Path(__file__).resolve().parent
 LEDGER = PROMO / "promo_ledger.jsonl"
 VENV_PY = Path(r"E:\CPOPC\We-AIPO\.venv\Scripts\python.exe")
-QUEUE = ["cnnec_v1_am", "fengcheng_v1_am",
+QUEUE = ["bluebook_v1_am",                      # 1012 蓝皮书发售卡 (渲染+审计已绿, 候视频号登录态)
+         "cnnec_v1_am", "fengcheng_v1_am",
          "ent22_v1_am", "prov07_v1_am"]        # 1008 排队片 (在售双卡视觉审计收官后续尾)
 
 
