@@ -16,7 +16,7 @@
       <view class="rs-hero-stats">
         <view class="rs-hs"><text class="rs-hs-n mono">{{statsReady ? stats.sellable : '—'}}</text><text class="rs-hs-l">份在售</text></view>
         <view class="rs-hs-div"></view>
-        <view class="rs-hs"><text class="rs-hs-n mono">¥498</text><text class="rs-hs-l">起</text></view>
+        <view class="rs-hs"><text class="rs-hs-n mono">¥{{statsReady && stats.pmin ? stats.pmin : '—'}}</text><text class="rs-hs-l">起</text></view>
         <view class="rs-hs-div"></view>
         <view class="rs-hs"><text class="rs-hs-n mono">{{statsReady ? stats.mine : '—'}}</text><text class="rs-hs-l">已解锁</text></view>
       </view>

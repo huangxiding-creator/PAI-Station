@@ -60,10 +60,10 @@
     <view class="rp-intro">{{d.audience}}</view>
   </view>
 
-  <!-- 章节目录 -->
+  <!-- 章节目录（1012 一级目录：卷级头行 vol:true 色带呈现，章行缩进挂其下；单卷本回退平铺） -->
   <view class="card ticks rise" wx:if="{{d.chapters.length}}">
-    <view class="kicker kicker-on-paper rp-kicker">CHAPTERS · 章节目录<text class="mono rp-ch-n">{{d.chapters.length}}</text></view>
-    <view class="rp-ch" wx:for="{{d.chapters}}" wx:key="id">
+    <view class="kicker kicker-on-paper rp-kicker">CHAPTERS · 章节目录<text class="mono rp-ch-n">{{volCount ? volCount + '卷·' : ''}}{{chCount}}</text></view>
+    <view class="rp-ch {{item.vol ? 'rp-ch-vol' : ''}}" wx:for="{{d.chapters}}" wx:key="id">
       <view class="rp-ch-t"><text class="mono rp-ch-id">{{item.id}}</text>{{item.title}}</view>
       <view class="muted rp-ch-d" wx:if="{{item.desc}}">{{item.desc}}</view>
     </view>

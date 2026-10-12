@@ -14,6 +14,8 @@ Page({
     nav: { statusBarHeight: 20, navHeight: 44 },
     sku: '',
     d: null,           // 详情（price/badges/chapters/audience/intro...）
+    volCount: 0,       // 卷级头行数（多卷本>0；0=单卷平铺）
+    chCount: 0,        // 章级条目数（剔除卷头，目录徽标真值）
     sample: '',        // 试读原文（md）
     sampleBlocks: [],  // 试读结构化块（md2blocks，渲染用）
     sampleOpen: false,
@@ -54,7 +56,11 @@ Page({
     if (!quiet) this.setData({ loading: true, errMsg: '' });
     api.reportDetail(this.data.sku)
       .then((d) => {
-        this.setData({ d, loading: false });
+        // 1012 蓝皮书一级目录：卷级头行（vol:true）计卷数，章计数只认章级条目（74 不掺水）
+        const chapters = d.chapters || [];
+        const volCount = chapters.filter((c) => c.vol).length;
+        const chCount = chapters.length - volCount;
+        this.setData({ d, volCount, chCount, loading: false });
         // v0.9.5 审计修（L6）：删除 wx.setNavigationBarTitle——全站 custom 导航栏（死调用）
         if (!this.data.sample) {
           api.reportSample(this.data.sku)

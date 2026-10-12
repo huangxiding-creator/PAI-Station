@@ -382,6 +382,8 @@ def build_report(d: dict, qr_png: bytes | None, catalog_count: int = 0) -> bytes
     title = (d.get("title") or "研究报告").strip()
     subtitle = (d.get("subtitle") or "").strip()
     chapters = d.get("chapters") or []
+    # 1012 蓝皮书卷级头行（vol:true）不进海报目录——切片与「共 N 章」计数只认章级条目
+    chapters = [c for c in chapters if not c.get("vol")]
     words_wan = d.get("words_wan")
 
     # 徽标行：k v 短令牌 ≤3 个（长徽标不上海报——一行纪律）

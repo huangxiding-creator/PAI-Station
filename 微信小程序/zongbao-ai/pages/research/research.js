@@ -57,9 +57,12 @@ Page({
         ));
         const mine = reports.filter((r) => r.unlocked).length;
         const sellable = reports.filter((r) => r.sellable).length;
+        // 1012：起价数据驱动（原写死 ¥498，旗舰 ¥10,000 上架后口径漂移）
+        const prices = reports.filter((r) => r.sellable).map((r) => Number(r.price) || 0);
+        const pmin = prices.length ? Math.min.apply(null, prices) : 0;
         this.setData({
           reports,
-          stats: { total: reports.length, sellable, mine },
+          stats: { total: reports.length, sellable, mine, pmin },
           statsReady: true,
           loading: false,
         });

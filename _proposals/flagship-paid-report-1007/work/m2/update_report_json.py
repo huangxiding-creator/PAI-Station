@@ -20,26 +20,51 @@ DESC_FALLBACK = {
 }
 VOLS = ["vol1", "vol2", "vol3", "vol4", "vol5"]
 
+# 1012 用户令「目录框架不专业，没有一级目录」——卷级头行注入 chapters 首位。
+# id=卷N 徽标 + title=卷名 + desc=章数·页数｜卷问句（与试读件五卷表逐字一致）；
+# vol:true 标记供客户端 0.9.17 分组样式与海报侧过滤（章计数保持 74 不掺水）。
+VOL_HEADERS = {
+    1: ("卷一", "市场全景", "9 章 · 136 页 ｜ 市场有多大、钱往哪流、赚不赚"),
+    2: ("卷二", "标杆企业", "30 章 · 201 页 ｜ 28 家旗舰怎么组织、怎么打牌、账本硬不硬"),
+    3: ("卷三", "区域机会", "18 章 · 186 页 ｜ 去哪个省、门怎么开、进去第一年盯什么"),
+    4: ("卷四", "专题实战", "10 章 · 129 页 ｜ 选定域之后怎么干、在哪一环翻车、怎么拦住"),
+    5: ("卷五", "独家判断", "7 章 · 85 页 ｜ 事实加起来说明什么、接下来会怎样"),
+}
+
 
 def build_chapters():
     chapters = []
-    for v in VOLS:
+    for vi, v in enumerate(VOLS, start=1):
+        vol_no, vol_name, vol_desc = VOL_HEADERS[vi]
+        chapters.append({"id": vol_no, "title": vol_name, "desc": vol_desc, "vol": True})
         files = sorted((BLUE / v).glob("*.md"),
                        key=lambda p: [int(x) for x in re.match(r"(\d+)-(\d+)", p.name).groups()])
         for p in files:
             m = re.match(r"(\d+-\d+)", p.name)
-            title = p.read_text(encoding="utf-8").splitlines()[0].lstrip("# ").strip()
+            raw = p.read_text(encoding="utf-8").splitlines()[0].lstrip("# ").strip()
             cid = m.group(1)
-            desc = title.split("：", 1)[1].strip() if "：" in title else DESC_FALLBACK.get(cid, "")
-            if len(desc) > 42:
-                desc = desc[:40] + "…"
-            chapters.append({"id": cid, "title": title, "desc": desc})
+            # 1012 目录专业化：剥「N-N 」前缀（徽标已示章号，标题不再双份编号）；
+            # 「章名：副题」拆两行——标题=冒号前章名，desc=冒号后副题（无冒号走兜底）
+            m2 = re.match(r"^\d+-\d+\s+(.*)$", raw)
+            body = m2.group(1).strip() if m2 else raw
+            if "：" in body:
+                head, tail = body.split("：", 1)
+                ctitle = head.strip() or body
+                cdesc = tail.strip() or DESC_FALLBACK.get(cid, "")
+            else:
+                ctitle, cdesc = body, DESC_FALLBACK.get(cid, "")
+            if len(cdesc) > 42:
+                cdesc = cdesc[:40] + "…"
+            chapters.append({"id": cid, "title": ctitle, "desc": cdesc})
     return chapters
 
 
 def main():
     chapters = build_chapters()
-    assert len(chapters) == 74, f"章数 {len(chapters)} ≠ 74"
+    real = [c for c in chapters if not c.get("vol")]
+    vols = [c for c in chapters if c.get("vol")]
+    assert len(real) == 74, f"章数 {len(real)} ≠ 74"
+    assert len(vols) == 5, f"卷级头行 {len(vols)} ≠ 5"
 
     entry = {
         "sku": "BLUEBOOK-2027",
@@ -82,7 +107,9 @@ def main():
     # 回读验证：74 章在册、字段齐、其余条目数不变
     back = json.loads(RJ.read_text(encoding="utf-8"))
     b = next(x for x in back["reports"] if x["sku"] == "BLUEBOOK-2027")
-    assert len(back["reports"]) == 66 and len(b["chapters"]) == 74
+    b_real = [c for c in b["chapters"] if not c.get("vol")]
+    b_vols = [c for c in b["chapters"] if c.get("vol")]
+    assert len(back["reports"]) == 66 and len(b_real) == 74 and len(b_vols) == 5
     assert b["price"] == 10000 and b["coming_soon"] is False and b["sample_file"] == "bluebook_sample.md"
     pdf = Path(r"E:\AI-Station\report_platform\content\full\BLUEBOOK-2027.pdf")
     smp = Path(r"E:\AI-Station\report_platform\content\sample\bluebook_sample.md")

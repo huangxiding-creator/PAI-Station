@@ -164,9 +164,9 @@ check("api potList 客户端", "potList" in api_js)
 check("api optimize 客户端（shareReward 已随分享激励下线）", "optimize" in api_js and "shareReward" not in api_js)
 
 # 版本与定位（v0.9.0）
-check("my 版本标记 v0.9.16（1012 海报目录12章+试读去重+有用赠次统一动画）", "v0.9.16" in my_wxml)
+check("my 版本标记 v0.9.17（1012 蓝皮书一级目录：卷级色带+章行缩进+计数剔卷头）", "v0.9.17" in my_wxml)
 pkg = json.load(open(os.path.join(ROOT, "package.json"), encoding="utf-8"))
-check("package.json version=0.9.16", pkg["version"] == "0.9.16")
+check("package.json version=0.9.17", pkg["version"] == "0.9.17")
 # 1009 用户令：外观沉底（个性化低频项按用户习惯放设置区，高频额度/记录在前）——顺序即断言
 check("my 布局顺序=额度→记录→书架→外观（外观在咨询记录之后，1009 用户令）",
       my_wxml.find("外观 · APPEARANCE") > my_wxml.find("咨询记录 · RECORDS")
@@ -1068,7 +1068,7 @@ check("引擎道具图路由（/static/goods/{name} 白名单+防穿越+长缓�
 check("引擎道具图素材随包（static_goods/zongbaojun.jpg）",
       "GOODS_STATIC_DIR" in _app_py
       and os.path.exists(os.path.join(ENGINE, "qianwen_engine", "static_goods", "zongbaojun.jpg")))
-check("telemetry VER=0.9.16（版本横幅同步）", "var VER = '0.9.16'" in _tel_js)
+check("telemetry VER=0.9.17（版本横幅同步）", "var VER = '0.9.17'" in _tel_js)
 
 # ══ v0.9.15（1011 用户令：报告详情页 有用/分享给同行 赠次 + 研报转化海报）══
 _rp_wxml_3 = read("pages/report/report.wxml")
@@ -1164,6 +1164,27 @@ check("广告条 真主题色变量（--accent 幽灵变量根除）",
 check("广告条 CTA 胶囊化（扫码咨询+nowrap+圆角边框）",
       "扫码咨询" in _zk_wxml and "border-radius: 999rpx" in _zk_wxss
       and "zk-ad-cta" in _zk_wxss)
+# ── v0.9.17 蓝皮书一级目录（1012 用户令「目录框架不专业，没有一级目录」）──
+_rep_wxml = read("pages/report/report.wxml")
+_rep_js = read("pages/report/report.js")
+_rep_wxss = read("pages/report/report.wxss")
+_rsh_wxml = read("pages/research/research.wxml")
+_rsh_js = read("pages/research/research.js")
+check("详情页 卷级行条件样式（rp-ch-vol 数据驱动，单卷本回退平铺）",
+      "item.vol ? 'rp-ch-vol' : ''" in _rep_wxml)
+check("详情页 章计数剔卷头（chCount=条目数-卷头数，徽标不掺水）",
+      "chapters.filter((c) => c.vol).length" in _rep_js
+      and "chCount" in _rep_js
+      and 'rp-ch-n">{{d.chapters.length}}</text>' not in _rep_wxml)
+check("详情页 卷头样式在役（色带+实底卷号徽标+章行缩进）",
+      ".rp-ch-vol" in _rep_wxss and "rp-ch-vol + .rp-ch" in _rep_wxss)
+check("研究页 起价数据驱动（¥498 写死根除，stats.pmin 驱动）",
+      "stats.pmin" in _rsh_wxml and ">¥498<" not in _rsh_wxml
+      and "pmin" in _rsh_js)
+check("版本信标 0.9.17（telemetry + my 页脚）",
+      "VER = '0.9.17'" in read("utils/telemetry.js")
+      and "v0.9.17" in read("pages/my/my.wxml"))
+
 fails = [c for c in checks if not c[1]]
 for name, ok, detail in checks:
     print(("PASS " if ok else "FAIL ") + name + (("  " + detail) if detail and not ok else ""))

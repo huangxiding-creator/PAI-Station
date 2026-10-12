@@ -148,6 +148,28 @@
 }
 .rp-ch-d { margin-top: 4rpx; font-size: 22rpx; line-height: 1.6; }
 
+/* 1012 蓝皮书一级目录：卷级头行——通栏浅色带 + 实底卷号徽标 + 加粗卷名 + 章数页数问句副行 */
+.rp-ch-vol {
+  margin-top: 12rpx;
+  padding: 16rpx 14rpx;
+  background: rgba(var(--t-blue-rgb), 0.06);
+  border-radius: 10rpx;
+  border-bottom: 2rpx solid var(--line, rgba(var(--t-blue-rgb), 0.25));
+}
+.rp-ch-vol:first-child { margin-top: 0; }
+.rp-ch-vol .rp-ch-t { font-size: 30rpx; }
+.rp-ch-vol .rp-ch-id {
+  margin-right: 12rpx;
+  padding: 2rpx 12rpx;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+  font-weight: 800;
+  color: #fff;
+  background: var(--accent);
+}
+/* 章行挂卷下：轻微缩进成二级层级（相邻选择器不支持的基库自动降级为平铺，无害） */
+.rp-ch-vol + .rp-ch { padding-left: 24rpx; }
+
 /* ══ 试读（md2blocks 结构化排版系统，同 answer 页纸面） ══ */
 .rp-sample { margin-top: 4rpx; }
 .rp-sample-fold {
