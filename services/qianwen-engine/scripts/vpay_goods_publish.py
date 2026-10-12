@@ -53,6 +53,9 @@ GOODS = [
      "remark": "研究报告解锁，一次解锁永久阅读"},
     {"id": "report_1999", "name": "研究报告解锁-旗舰版", "price": 199900,
      "remark": "研究报告解锁，一次解锁永久阅读"},
+    # 1012 蓝皮书上架：名称与 1011 控制台已建行逐字符一致；备注不带全角括号（672770002 白名单教训）
+    {"id": "report_10000", "name": "研究报告解锁-10000元", "price": 1000000,
+     "remark": "解锁旗舰蓝皮书五卷套装 10000元档，一次解锁永久阅读"},
 ]
 
 
@@ -73,7 +76,8 @@ def build_goods(vp: dict) -> list[dict]:
     """道具 id 与 secret 分档键对账后返回（id 与引擎开单 productId 逐字符一致才放行）。"""
     expect = {"export_product_id": "export_once",
               "report_product_498": "report_498", "report_product_598": "report_598",
-              "report_product_698": "report_698", "report_product_1999": "report_1999"}
+              "report_product_698": "report_698", "report_product_1999": "report_1999",
+              "report_product_10000": "report_10000"}
     for k, gid in expect.items():
         actual = vp.get(k)
         if actual != gid:

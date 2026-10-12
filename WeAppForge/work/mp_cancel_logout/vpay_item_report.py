@@ -17,10 +17,11 @@ from watch_category import live_token  # noqa: E402
 from vpay_item_create import CLICK_WORD, FIND_INPUT_OK, DISPATCH_CHANGE, DUMP, click, cdp_upload  # noqa: E402
 
 PRICE = sys.argv[1] if len(sys.argv) > 1 else ""
-assert PRICE in ("498", "598", "698", "1999"), "usage: vpay_item_report.py 498|598|698|1999"
+assert PRICE in ("498", "598", "698", "1999", "10000"), "usage: vpay_item_report.py 498|598|698|1999|10000"
 PRODUCT_ID = f"report_{PRICE}"
 ITEM_NAME = f"研究报告解锁-{PRICE}元"
-REMARK = f"解锁单份研究报告（{PRICE}元档）"
+REMARK = (f"解锁旗舰蓝皮书五卷套装（{PRICE}元档）" if PRICE == "10000"
+          else f"解锁单份研究报告（{PRICE}元档）")
 SECRET = Path(r"E:\AI-Station\data\secrets\virtual_pay.secret")
 
 FILL_TMPL = r"""
