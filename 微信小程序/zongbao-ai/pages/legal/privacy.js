@@ -26,5 +26,13 @@ Page({
     } else {
       wx.switchTab({ url: '/pages/my/my' });
     }
+  },
+
+  // v0.9.18（用户令 1013 分享全量）：转发给朋友亮灯——工具页导流主入口
+  onShareAppMessage() {
+    return {
+      title: '总包AI顾问-工程人的随身AI顾问',
+      path: '/pages/ask/ask'
+    };
   }
 });

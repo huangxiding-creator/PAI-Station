@@ -342,5 +342,13 @@ Page({
           wx.showToast({ title: msg, icon: 'none', duration: 2500 });
         }
       });
+  },
+
+  // v0.9.18（用户令 1013 分享全量）：转发给朋友亮灯——静态品牌标题，本页即主入口
+  onShareAppMessage() {
+    return {
+      title: '总包AI顾问-工程人的随身AI顾问',
+      path: '/pages/ask/ask'
+    };
   }
 });

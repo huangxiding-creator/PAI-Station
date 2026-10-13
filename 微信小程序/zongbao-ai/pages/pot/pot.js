@@ -125,5 +125,13 @@ Page({
         .then(() => wx.showToast({ title: '已收到举报', icon: 'success' }))
         .catch((err) => wx.showToast({ title: api.errMsg(err, '提交失败'), icon: 'none' }));
     });
+  },
+
+  // v0.9.18（用户令 1013 分享全量）：转发给朋友亮灯——锅圈=智库已答热点问答
+  onShareAppMessage() {
+    return {
+      title: '总包智库 · 工程热点问答',
+      path: '/pages/pot/pot'
+    };
   }
 });

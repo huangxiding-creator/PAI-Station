@@ -1185,6 +1185,53 @@ check("版本信标 0.9.17（telemetry + my 页脚）",
       "VER = '0.9.17'" in read("utils/telemetry.js")
       and "v0.9.17" in read("pages/my/my.wxml"))
 
+# ── v0.9.18（1013 用户令①：分享全量——灰按钮根因=缺 handler，「每一个页面都可以」）──
+# REQ-001.AC1 逐页锚：本轮新补 6 页（ask/home/my/pot/invoice/legal），在役 4 页（answer/report/research/zhiku）
+_share_js = {p: read(p + ".js") for p in app_json["pages"]}
+
+
+def _share_block(js):
+    m = re.search(r"onShareAppMessage\(\)\s*\{(.{0,500}?)\n\s*\}", js, re.S)
+    return m.group(1) if m else ""
+
+
+check("REQ-001.AC1 10 页全量 onShareAppMessage（新补 ask/home/my/pot/invoice/legal + 在役 answer/report/research/zhiku）",
+      all("onShareAppMessage" in js for js in _share_js.values()),
+      ",".join(p for p, js in _share_js.items() if "onShareAppMessage" not in js))
+# REQ-001.AC2 path 逐页枚举：五工具/入口页→主入口 ask；answer/report 携自身参数；research/zhiku/pot 自身路径
+_share_path = {
+    "pages/ask/ask": "/pages/ask/ask", "pages/home/home": "/pages/ask/ask",
+    "pages/my/my": "/pages/ask/ask", "pages/invoice/invoice": "/pages/ask/ask",
+    "pages/legal/privacy": "/pages/ask/ask", "pages/pot/pot": "/pages/pot/pot",
+    "pages/answer/answer": "/pages/answer/answer?id=",
+    "pages/report/report": "/pages/report/report?sku=",
+    "pages/research/research": "/pages/research/research",
+    "pages/zhiku/zhiku": "/pages/zhiku/zhiku"}
+check("REQ-001.AC2 转发 path 逐页枚举（ask/home/my/invoice/legal→主入口；answer/report 携参；research/zhiku/pot 自身）",
+      all(exp in _share_block(_share_js[p]) for p, exp in _share_path.items()),
+      ",".join(p for p, exp in _share_path.items() if exp not in _share_block(_share_js[p])))
+# REQ-001.AC3 标题闭集：新补 6 页 title 字面量须以三个过审品牌前缀之一开头（静态，无诱导承诺）
+_title_re = re.compile(r"onShareAppMessage\(\)\s*\{.{0,200}?title:\s*'([^']+)'", re.S)
+_share_prefix = ("总包AI顾问-", "总包研究 · ", "总包智库 · ")
+
+
+def _share_title(p):
+    m = _title_re.search(_share_js[p])
+    return m.group(1) if m else None
+
+
+_new_share_pages = ("pages/ask/ask", "pages/home/home", "pages/my/my",
+                    "pages/pot/pot", "pages/invoice/invoice", "pages/legal/privacy")
+_bad_title = [p for p in _new_share_pages
+              if not (_share_title(p) and _share_title(p).startswith(_share_prefix))]
+check("REQ-001.AC3 新补 6 页分享标题=品牌闭集前缀（总包AI顾问-/总包研究 · /总包智库 ·）",
+      not _bad_title, ",".join(_bad_title))
+# 诱导词红线：扫描域=onShareAppMessage 返回块本身（「有用 +1次」等非分享文案不在域内，不误伤）
+_induce_share = re.compile(r"(赠|得|送|加)\s*1\s*次?|分享[^\"'\n]{0,12}(赠|得|送|加)")
+_induce_bad = [p for p, js in _share_js.items() if _induce_share.search(_share_block(js))]
+check("REQ-001.AC3 分享返回块零诱导（仅扫 onShareAppMessage 块；不扫「有用 +1次」等非分享文案）",
+      not _induce_bad, ",".join(_induce_bad))
+
 fails = [c for c in checks if not c[1]]
 for name, ok, detail in checks:
     print(("PASS " if ok else "FAIL ") + name + (("  " + detail) if detail and not ok else ""))
