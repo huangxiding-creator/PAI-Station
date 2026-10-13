@@ -1241,9 +1241,10 @@ def _tl_block(js):
     return m.group(1) if m else ""
 
 
+_tl_def_re = re.compile(r"onShareTimeline\s*\(\)\s*\{")
 check("REQ-002.AC1 10 页全量 onShareTimeline（与 onShareAppMessage 同页成对，官方两步门槛第二步）",
-      all("onShareTimeline" in js for js in _share_js.values()),
-      ",".join(p for p, js in _share_js.items() if "onShareTimeline" not in js))
+      all(_tl_def_re.search(js) for js in _share_js.values()),
+      ",".join(p for p, js in _share_js.items() if not _tl_def_re.search(js)))
 # REQ-002.AC2 query 携参策略：仅内容型自洽页 report/answer 携最小参数（朋友圈不支持自定义 path，只影响本页 query）
 _tl_query = {"pages/report/report": "query: 'sku='", "pages/answer/answer": "query: 'id='"}
 check("REQ-002.AC2 内容页 onShareTimeline query 携最小参数（report=sku 镜像转发 path 构造；answer=id 本页实际数据键非 aid）",
@@ -1256,8 +1257,18 @@ check("REQ-002.AC2 其余 8 页 onShareTimeline 严格无 query 键（工具/入
 _tl_induce_bad = [p for p, js in _share_js.items() if _induce_share.search(_tl_block(js))]
 check("REQ-002.AC3 onShareTimeline 返回块零诱导（单页模式红线：无「打开小程序查看完整内容」类承诺）",
       not _tl_induce_bad, ",".join(_tl_induce_bad))
+# T-013 judge 加固：AC3 短语类全源扫荡（js+wxml）——「打开小程序/查看完整内容」类单页模式诱导
+# 文案在任何页面代码出现即红（REQUIREMENTS REQ-002.AC3 明文「全 js 扫荡锚」；当前树零命中实证起步）
+_spm_bad = []
+for _pg in app_json["pages"]:
+    for _ext in (".js", ".wxml"):
+        _src = read(_pg + _ext)
+        if "打开小程序" in _src or "查看完整内容" in _src:
+            _spm_bad.append(_pg + _ext)
+check("REQ-002.AC3 单页模式诱导短语全源扫荡（js+wxml 禁「打开小程序/查看完整内容」）",
+      not _spm_bad, ",".join(_spm_bad))
 # T-011 judge 加固(a) 标题纯度：静态标题页 title 行=纯字面量且无尾部 + 拼接（report 动态拼接 d.title 属设计镜像，除外）
-_tl_pure_re = re.compile(r"title:\s*'([^']+)'\s*(?!\+)")
+_tl_pure_re = re.compile(r"title:\s*'[^']+'\s*(?![^\n]*\+)")
 _pure_pages = [p for p in app_json["pages"] if p != "pages/report/report"]
 _pure_bad = [p for p in _pure_pages
              if not (_tl_pure_re.search(_tl_block(_share_js[p]))
