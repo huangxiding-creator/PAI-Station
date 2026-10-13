@@ -1127,8 +1127,8 @@ check("引擎 海报 试读说明去重（1012 用户令：数据行第三组已
 check("引擎 海报 一级目录≤12 章+注记（1012 用户令：完整呈现前 12 章）",
       "chapters[:12]" in _poster_py and "一级目录 · CONTENTS" in _poster_py
       and "完整目录在小程序内" in _poster_py)
-check("引擎 海报 版式版本 v2（缓存键 release:rv2 自动失效重生成）",
-      'REPORT_LAYOUT_VERSION = "v2"' in _poster_py)
+check("引擎 海报 版式版本 v3（1012 海报v3 已上云031；缓存键 release:rv3 自动失效重生成）",
+      'REPORT_LAYOUT_VERSION = "v3"' in _poster_py)
 check("test_report_social.py 在役（互动三件回归）",
       os.path.exists(os.path.join(ENGINE, "tests", "test_report_social.py")))
 
