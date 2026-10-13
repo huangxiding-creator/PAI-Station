@@ -164,6 +164,39 @@ Page({
     if (id) navToThrottled('/pages/answer/answer?id=' + id);
   },
 
+  // v0.9.18（用户令 1013）：咨询记录行内删除——qw-pop 自绘确认（固定文案「删除后不可恢复」，
+  // 规避原生 modal 4 字按钮限 + 真机静默 fail 旧辙）→ 乐观移除 → 失败回滚+toast，重拉兜底防幽灵行
+  onDeleteItem(e) {
+    const id = e.currentTarget.dataset.id;
+    if (!id) return;
+    tel.ping('record_delete_tap');
+    pop.modal(this, {
+      kicker: '记录 · RECORDS',
+      title: '删除这条咨询记录？',
+      content: '删除后不可恢复',
+      confirmText: '删除',
+      cancelText: '取消',
+      maskClosable: false
+    }).then((r) => {
+      if (!r.confirm) return;
+      this._doDelete(id);
+    });
+  },
+
+  _doDelete(id) {
+    // 乐观移除先行（不等网络，列表即时 -1；删至 0 条由既有 wx:elif 链自然切空态）
+    this.setData({ items: this.data.items.filter((it) => it.id !== id) });
+    api.answerDelete(id)
+      .then(() => {
+        tel.ping('record_delete_ok');
+        this.refresh(); // 静默重拉：列表与服务端终态一致（无幽灵行）
+      })
+      .catch((err) => {
+        wx.showToast({ title: api.errMsg(err, '删除失败，请稍后重试'), icon: 'none', duration: 2500 });
+        this.refresh(); // 失败回滚：以服务端真值重绘，乐观误删行自然归位
+      });
+  },
+
   goAsk() {
     wx.switchTab({ url: '/pages/ask/ask' });
   },

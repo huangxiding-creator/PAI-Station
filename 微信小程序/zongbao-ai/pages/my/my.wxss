@@ -116,6 +116,18 @@
 .hist-meta { display: flex; align-items: center; gap: 16rpx; margin-top: 10rpx; flex-wrap: wrap; }
 .hist-time { font-size: 22rpx; }
 .hist-arrow { color: rgba(var(--t-navy2-rgb), 0.3); font-size: 34rpx; }
+/* v0.9.18（用户令 1013）：行内删钮——弱墨 ✕ 不抢导航主视觉，命中区 64rpx 起步 */
+.hist-del {
+  flex-shrink: 0;
+  width: 64rpx; height: 64rpx;
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(var(--t-navy2-rgb), 0.32); font-size: 30rpx; line-height: 1;
+}
+.hist-del-hover {
+  color: rgba(var(--t-navy2-rgb), 0.7);
+  background: rgba(var(--t-navy2-rgb), 0.06);
+  border-radius: 8rpx;
+}
 .hist-badge {
   font-size: 20rpx; color: var(--t-amber-ink); background: var(--t-amber-bg);
   border: 2rpx solid var(--t-amber-line);

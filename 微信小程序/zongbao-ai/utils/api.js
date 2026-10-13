@@ -138,5 +138,13 @@ module.exports = {
   reportPoster: (sku) => request('GET', '/api/report/' + sku + '/poster'),                   // 研报转化海报 b64
   invoiceStatus: () => request('GET', '/api/invoice/status'),                                // 发票：累计消费+门槛+申请记录
   invoiceApply: (d) => request('POST', '/api/invoice/apply', d),                             // 发票：提交开票申请（≥¥200）
+  // ── v0.9.18（用户令 1013：咨询记录软删）──
+  answerDelete: (aid) => request('DELETE', '/api/answers/' + aid)                            // 软删本人咨询记录（引擎置 deleted=1）
+    .then((r) => (r && r.deleted !== false ? { deleted: true } : r))                         // 2xx → {deleted:true}
+    .catch((err) => {
+      // 404（非本人/不存在/已删）幂等 resolve：前端照常移除该行——列表与服务端终将一致
+      if (err && err.statusCode === 404) return { deleted: false, notFound: true };
+      throw err;                                                                             // 其余照旧 reject——调用方 toast+回滚
+    }),
   requestRaw: request                                                                        // pay.js 回调腿用（带 401 重登语义）
 };

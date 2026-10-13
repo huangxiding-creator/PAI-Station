@@ -1294,6 +1294,34 @@ for _p in app_json["pages"]:
 check("REQ-002 加固 标题闭集=10 页×两 handler 全量（总包AI顾问-/总包研究 · /总包智库 · 前缀闭集）",
       not _brand_bad, ",".join(sorted(set(_brand_bad))))
 
+# ── v0.9.18（1013 用户令②：咨询记录删除——REQ-006 my 页删钮+qw-pop 确认+乐观移除）──
+_my18_js = read("pages/my/my.js")
+_my18_wxml = read("pages/my/my.wxml")
+_api18_js = read("utils/api.js")
+# REQ-006.AC1 结构锚：行内删钮（catchtap 防冒泡触发行导航；导航箭头保留）
+check("REQ-006.AC1 my 记录行删钮在役（hist-del + catchtap=onDeleteItem 携 data-id；箭头保留）",
+      'class="hist-del"' in _my18_wxml and 'catchtap="onDeleteItem"' in _my18_wxml
+      and 'data-id="{{item.id}}"' in _my18_wxml and 'class="hist-arrow"' in _my18_wxml,
+      "hist-del/catchtap/data-id/arrow 缺一")
+# REQ-006.AC1 确认弹窗锚：qw-pop 自绘 + 固定文案（v0.9.6 教训：原生 showModal 真机静默 fail，全页禁用）
+check("REQ-006.AC1 删除确认=qw-pop 自绘（固定文案「删除后不可恢复」；onDeleteItem→_doDelete；无原生 showModal）",
+      "onDeleteItem" in _my18_js and "_doDelete" in _my18_js
+      and "pop.modal" in _my18_js and "删除后不可恢复" in _my18_js
+      and "wx.showModal" not in _my18_js,
+      "handler/pop.modal/固定文案缺一 或 误用 showModal")
+# REQ-006.AC2 遥测锚：record_delete_tap（点删钮）/ record_delete_ok（删成）
+check("REQ-006.AC2 删除链打点（record_delete_tap / record_delete_ok 两事件上链）",
+      "tel.ping('record_delete_tap'" in _my18_js and "tel.ping('record_delete_ok'" in _my18_js)
+# REQ-006 客户端封装锚：answerDelete（API_DESIGN 契约——404 也 resolve notFound，前端照删行）
+check("REQ-006 answerDelete 封装（DELETE /api/answers/{aid}；404 幂等 resolve notFound）",
+      "answerDelete" in _api18_js and "'/api/answers/' + aid" in _api18_js
+      and "statusCode === 404" in _api18_js and "notFound: true" in _api18_js)
+# REQ-006.AC1/AC3 行为锚：乐观移除先行 + then/catch 双腿收口（成功重拉无幽灵行；失败回滚+toast+静默重拉兜底）
+_del18_span = _my18_js[_my18_js.find("onDeleteItem"):]
+check("REQ-006.AC1/AC3 乐观移除+双腿收口（items 过滤先行；ok 重拉、败 toast+refresh 静默重拉）",
+      ".filter((it) => it.id !== id)" in _del18_span and "api.answerDelete" in _del18_span
+      and "this.refresh()" in _del18_span and "wx.showToast" in _del18_span)
+
 fails = [c for c in checks if not c[1]]
 for name, ok, detail in checks:
     print(("PASS " if ok else "FAIL ") + name + (("  " + detail) if detail and not ok else ""))
