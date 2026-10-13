@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS answers (
     related TEXT,
     shared INT DEFAULT 0,
     export_paid INT DEFAULT 0,
+    deleted INT DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     rowid BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     UNIQUE KEY uk_answers_rowid (rowid),
