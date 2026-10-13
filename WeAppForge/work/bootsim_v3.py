@@ -1322,6 +1322,29 @@ check("REQ-006.AC1/AC3 乐观移除+双腿收口（items 过滤先行；ok 重�
       ".filter((it) => it.id !== id)" in _del18_span and "api.answerDelete" in _del18_span
       and "this.refresh()" in _del18_span and "wx.showToast" in _del18_span)
 
+# ══ v0.9.18（1013 用户令 REQ-009：ask 输入框 IME 根治——未点按钮不发送+键盘恒展开）══
+_ask_js_9 = read("pages/ask/ask.js")
+_ask_wxml_9 = read("pages/ask/ask.wxml")
+def _fn_block(src, name):
+    m = re.search(name + r"\((e?)\)\s*\{(.{0,600}?)\n\s*\},", src, re.S)
+    return m.group(2) if m else ""
+_oninput_blk = _fn_block(_ask_js_9, "onInput")
+check("REQ-009.AC1 onInput 零受控重设（不 setData question/qFocus=真机键盘收起根因拔除）",
+      _oninput_blk and "question:" not in _oninput_blk and "qFocus" not in _oninput_blk
+      and "this._q" in _oninput_blk,
+      "onInput 块仍含 question:/qFocus: 或缺实例字段")
+check("REQ-009.AC2 bindfocus 复位（打字期焦点属性零翻转；空点重聚焦语义保留）",
+      'bindfocus="onFocus"' in _ask_wxml_9
+      and _fn_block(_ask_js_9, "onFocus").find("qFocus: false") >= 0,
+      "wxml 缺 bindfocus 或 onFocus 未复位 qFocus")
+check("REQ-009.AC3 现值统一取口 _curQ（发送/优化读实例字段；value 绑定仅程序化回填变化）",
+      "_curQ()" in _ask_js_9 and "_curQ().trim()" in _ask_js_9
+      and "this.data.question.trim()" not in _ask_js_9,
+      "_curQ 缺位或仍有 data.question 直读发送")
+check("REQ-009.AC3 回填/清空双同步（_fill/onClear 同步 this._q 与 data.question）",
+      all(x in _ask_js_9 for x in ("_fill(v)", "this._q = s", "onClear()", "this._q = ''")),
+      "实例字段同步缺位")
+
 fails = [c for c in checks if not c[1]]
 for name, ok, detail in checks:
     print(("PASS " if ok else "FAIL ") + name + (("  " + detail) if detail and not ok else ""))

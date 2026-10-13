@@ -212,20 +212,36 @@ Page({
   },
 
   // 程序化回填统一入口：截到 500 与 maxlength 同步（v0.9.2，审计 MEDIUM 修复）
+  // 程序化回填统一入口：截到 500 与 maxlength 同步（v0.9.2，审计 MEDIUM 修复）
+  // v0.9.18（REQ-009）：回填/清空是 value 绑定唯一变化点——打字期零重设，组合态无扰
   _fill(v) {
     const s = String(v || '').slice(0, Q_MAX);
+    this._q = s;
     this.setData({ question: s, charCount: s.length, canAsk: s.trim().length >= 2 });
   },
 
   onInput(e) {
-    const v = e.detail.value || '';
+    // v0.9.18（1013 用户令 REQ-009）：输入值存实例字段，不再每键 setData question——
+    // 受控值环（value 绑定+每键重设）在真机（含 Windows 端）会反复打断输入法组合态，
+    // 表现为「输入一个字词键盘就被强制最小化」，收起回弹又致误点「免费咨询」误发送。
+    this._q = e.detail.value || '';
     this.setData({
-      question: v,
-      charCount: v.length,
-      canAsk: v.trim().length >= 2,  // 与服务端校验同源：非空+有意义
+      charCount: this._q.length,
+      canAsk: this._q.trim().length >= 2,  // 与服务端校验同源：非空+有意义
       askHint: '',
-      qFocus: false   // v0.9.5 审计修：焦点已落输入框即复位——再次空点可重新触发聚焦翻转
     });
+  },
+
+  onFocus() {
+    // v0.9.18（REQ-009.AC2）：程序化聚焦达成即复位 qFocus——空点提示的「再次聚焦翻转」
+    // 语义保留；复位点从 onInput 移到此处，打字期间焦点属性零翻转（键盘恒展开）。
+    if (this.data.qFocus) this.setData({ qFocus: false });
+  },
+
+  // v0.9.18（REQ-009.AC3）：输入现值统一取口——实例字段优先（打字不进 setData），
+  // data.question 仅在程序化回填/清空时与 value 绑定同步。
+  _curQ() {
+    return typeof this._q === 'string' ? this._q : (this.data.question || '');
   },
 
   onSample(e) {
@@ -236,12 +252,13 @@ Page({
   },
 
   onClear() {
+    this._q = ''; // v0.9.18（REQ-009）：实例字段同步清
     this.setData({ question: '', charCount: 0, canAsk: false });
   },
 
   // ── AI优化提问：把用户问题改写成更深入/更清晰/更究竟/更根本的递进式三小问 ──
   onOptimize() {
-    const q = (this.data.question || '').trim();
+    const q = this._curQ().trim(); // v0.9.18（REQ-009）：实例字段现值
     if (this.data.optimizing) return;
     // v0.9.4：与主CTA同款必反馈（此前静默 return）
     if (q.length < 2) {
@@ -287,12 +304,12 @@ Page({
     if (this.data.asking) return;
     // v0.9.4（1009 真机实测修复）：主 CTA 恒有反馈——空问提示并聚焦输入框（此前静默 return=「点了没反应」）
     if (!this.data.canAsk) {
-      const q = (this.data.question || '').trim();
+      const q = this._curQ().trim(); // v0.9.18（REQ-009）：实例字段现值
       this.setData({ askHint: q ? 'short' : 'empty', qFocus: !q });
       wx.showToast({ title: q ? '问题至少输入 2 个字' : '请先输入您的问题', icon: 'none' });
       return;
     }
-    this.submitQuestion(this.data.question.trim());
+    this.submitQuestion(this._curQ().trim());
   },
 
   submitQuestion(q) {
