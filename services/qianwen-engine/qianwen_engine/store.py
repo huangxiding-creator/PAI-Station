@@ -262,6 +262,7 @@ _SCHEMA: tuple = (
         elapsed_sec REAL DEFAULT 0,
         views INTEGER DEFAULT 0,
         shares INTEGER DEFAULT 0,
+        deleted INTEGER DEFAULT 0,
         created_at TEXT DEFAULT (datetime('now','localtime'))
     )""",
      """CREATE TABLE IF NOT EXISTS answers (
@@ -285,6 +286,7 @@ _SCHEMA: tuple = (
         related TEXT,
         shared INT DEFAULT 0,
         export_paid INT DEFAULT 0,
+        deleted INT DEFAULT 0,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         rowid BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
         UNIQUE KEY uk_answers_rowid (rowid),
@@ -511,7 +513,7 @@ _SCHEMA: tuple = (
 )
 
 # 增列（老库平滑升级：已存在则忽略）——sqlite 原文 / mysql 变体（TEXT 不可带 DEFAULT）
-# 沿革：v0.2.2 error_text / v0.2.5 支付两列 / v0.5.0 优化计数 / v0.6.0 tldr·related / v0.7.0 shared·env
+# 沿革：v0.2.2 error_text / v0.2.5 支付两列 / v0.5.0 优化计数 / v0.6.0 tldr·related / v0.7.0 shared·env / v0.9.17 deleted
 _ANSWER_UPGRADES: tuple = (
     ("error_text TEXT DEFAULT ''", "error_text TEXT"),
     ("out_trade_no TEXT DEFAULT ''", "out_trade_no VARCHAR(64) DEFAULT ''"),
@@ -523,6 +525,8 @@ _ANSWER_UPGRADES: tuple = (
     ("shared INTEGER DEFAULT 0", "shared INT DEFAULT 0"),
     # v0.8.0 用户令 1008：咨询全免费，导出按条收费（¥0.1/条，虚拟支付）
     ("export_paid INTEGER DEFAULT 0", "export_paid INT DEFAULT 0"),
+    # v0.9.17 软删（用户令②）：deleted=1 只动展示与可见性，物理表零删除
+    ("deleted INTEGER DEFAULT 0", "deleted INT DEFAULT 0"),
 )
 _USER_UPGRADES: tuple = (
     ("opt_day TEXT DEFAULT ''", "opt_day VARCHAR(10) DEFAULT ''"),
@@ -704,7 +708,9 @@ def refund_one(openid: str) -> None:
 def get_answer(aid: str, openid: Optional[str] = None) -> Optional[dict]:
     init()
     with _db() as c:
-        row = c.execute("SELECT * FROM answers WHERE id=?", (aid,)).fetchone()
+        # v0.9.17 软删：已删行对本人也 404（get_answer_visible 同门继承此过滤）
+        row = c.execute(
+            "SELECT * FROM answers WHERE id=? AND deleted=0", (aid,)).fetchone()
         if row is None:
             return None
         if openid is not None and row["openid"] != openid:
@@ -731,6 +737,18 @@ def get_answer_visible(aid: str, openid: str) -> Optional[dict]:
     with _db() as c:
         in_pot = c.execute("SELECT 1 FROM pot_items WHERE aid=?", (aid,)).fetchone()
     return row if in_pot else None
+
+
+def delete_answer(aid: str, openid: str) -> bool:
+    """v0.9.17 软删（用户令②）：置 deleted=1，物理表零删除——pay_log/rewards
+    身后财务审计链不动。仅 owner 可删；非 owner/不存在/已删 → False
+    （端点幂等 200 语义由调用方判定：本人已删仍算成功）。"""
+    init()
+    with _LOCK, _db() as c:
+        c.execute(
+            "UPDATE answers SET deleted=1 WHERE id=? AND openid=? AND deleted=0",
+            (aid, openid))
+        return c.total_changes > 0
 
 
 def bump_views(aid: str) -> int:
@@ -1016,7 +1034,8 @@ def history(openid: str, limit: int = 20) -> list:
     with _db() as c:
         cur = c.execute(
             "SELECT id, question, substr(answer_full,1,60) AS preview, liked, criticized,"
-            " status, unlocked, shared, export_paid, created_at FROM answers WHERE openid=?"
+            " status, unlocked, shared, export_paid, created_at FROM answers"
+            " WHERE openid=? AND deleted=0"
             " ORDER BY rowid DESC LIMIT ?",
             (openid, limit),
         )
@@ -1028,7 +1047,7 @@ def history_all(openid: str) -> list:
     init()
     with _db() as c:
         cur = c.execute(
-            "SELECT * FROM answers WHERE openid=? AND status='ready'"
+            "SELECT * FROM answers WHERE openid=? AND status='ready' AND deleted=0"
             " ORDER BY rowid ASC",
             (openid,),
         )
