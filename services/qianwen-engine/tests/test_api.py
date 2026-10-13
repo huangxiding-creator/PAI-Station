@@ -702,3 +702,38 @@ def test_public_stats_counts_only_ready(client):
     s = client.get("/api/stats").json()
     assert s["asks"] == 1        # 只有 ready 的用户咨询计入
     assert s["users"] == 1       # u-stat 一人（种子不计）
+
+
+# ── 1013 /api/pot/seed 写入腿守卫（We-APIO 大脑精华直投锅圈）──
+def test_pot_seed_disabled_without_secret(client):
+    """未配置 POT_SEED_SECRET=503 不放行（telemetry 同款语义）。"""
+    r = client.post("/api/pot/seed", json={"q": "【EPC】t", "a": "x"})
+    assert r.status_code == 503
+
+
+def test_pot_seed_forbidden_wrong_key(client, monkeypatch):
+    monkeypatch.setenv("POT_SEED_SECRET", "s3cret")
+    r = client.post("/api/pot/seed", json={"q": "【EPC】t", "a": "x"},
+                    headers={"X-Seed-Key": "wrong"})
+    assert r.status_code == 403
+
+
+def test_pot_seed_roundtrip_and_idempotent(client, monkeypatch):
+    """正确钥→200落库(via=weaipo)→同题重推→skipped 幂等。"""
+    monkeypatch.setenv("POT_SEED_SECRET", "s3cret")
+    h = {"X-Seed-Key": "s3cret"}
+    r1 = client.post("/api/pot/seed",
+                     json={"q": "【EPC】为什么EPC总价包干两张皮？", "a": "完整回答" * 20,
+                           "sort": 1}, headers=h)
+    assert r1.status_code == 200 and r1.json().get("ok") and r1.json().get("aid")
+    r2 = client.post("/api/pot/seed",
+                     json={"q": "【EPC】为什么EPC总价包干两张皮？", "a": "完整回答" * 20,
+                           "sort": 1}, headers=h)
+    assert r2.status_code == 200 and r2.json().get("skipped") is True
+
+
+def test_pot_seed_bad_payload(client, monkeypatch):
+    monkeypatch.setenv("POT_SEED_SECRET", "s3cret")
+    h = {"X-Seed-Key": "s3cret"}
+    assert client.post("/api/pot/seed", json={"q": "", "a": "x"}, headers=h).status_code == 422
+    assert client.post("/api/pot/seed", json={"q": "q" * 700, "a": "x"}, headers=h).status_code == 422

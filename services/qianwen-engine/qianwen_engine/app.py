@@ -306,6 +306,14 @@ class PotReportIn(BaseModel):
     reason: str
 
 
+class PotSeedIn(BaseModel):
+    """★ 1013 We-APIO 大脑精华写入腿的载荷（q=已带【EPC】前缀标签的完整题，
+    a=完整回答，sort=名次）。"""
+    q: str
+    a: str
+    sort: int = 0
+
+
 @app.post("/api/pot/report")
 def pot_report(body: PotReportIn, request: Request):
     """v0.7.4 提审合规：锅圈 UGC 内容举报入口（每用户每条限一次，无奖励）。"""
@@ -318,6 +326,30 @@ def pot_report(body: PotReportIn, request: Request):
     if not store.save_pot_report((body.aid or "").strip(), openid, reason):
         raise HTTPException(400, "该内容不存在或您已举报过")
     return {"received": True}
+
+
+@app.post("/api/pot/seed")
+def pot_seed(body: PotSeedIn, request: Request):
+    """★ 1013 We-APIO 写入腿：外部内容生产系统把优质问答直投锅圈。
+
+    鉴权：X-Seed-Key == 环境变量 POT_SEED_SECRET（未配置=503 不放行，
+    同 telemetry 运营腿模式）；幂等：同题 pot_exists 跳过（跨日重推安全）；
+    via="weaipo" 标数据来源；分类标签已含在题目前缀（【EPC】等）。"""
+    want = (os.environ.get("POT_SEED_SECRET") or "").strip()
+    got = (request.headers.get("x-seed-key") or "").strip()
+    if not want:
+        raise HTTPException(503, "seed 未启用")
+    if got != want:
+        raise HTTPException(403, "forbidden")
+    q = (body.q or "").strip()
+    a = (body.a or "").strip()
+    if not q or not a or len(q) > 600 or len(a) > 60000:
+        raise HTTPException(422, "bad payload")
+    if store.pot_exists(q):
+        return {"ok": True, "skipped": True}
+    aid = store.save_pot_answer(q, a, citations=[], sort=int(body.sort or 0),
+                                elapsed=0.0, via="weaipo")
+    return {"ok": True, "aid": aid}
 
 
 @app.post("/api/answer/{aid}/share_off")
