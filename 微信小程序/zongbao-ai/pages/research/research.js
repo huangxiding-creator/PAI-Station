@@ -107,4 +107,11 @@ Page({
       path: '/pages/research/research',
     };
   },
+
+  // v0.9.18（用户令 1013 朋友圈亮灯）：两步门槛第二步——同页成对 onShareTimeline；商城页仅标题不携参
+  onShareTimeline() {
+    return {
+      title: '总包研究 · EPC 深度研究报告商城'
+    };
+  },
 });

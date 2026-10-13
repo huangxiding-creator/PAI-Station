@@ -34,5 +34,12 @@ Page({
       title: '总包AI顾问-工程人的随身AI顾问',
       path: '/pages/ask/ask'
     };
+  },
+
+  // v0.9.18（用户令 1013 朋友圈亮灯）：两步门槛第二步——同页成对 onShareTimeline；工具页仅标题不携参
+  onShareTimeline() {
+    return {
+      title: '总包AI顾问-工程人的随身AI顾问'
+    };
   }
 });

@@ -261,4 +261,13 @@ Page({
       path: '/pages/report/report?sku=' + this.data.sku,
     };
   },
+
+  // v0.9.18（用户令 1013 朋友圈亮灯）：两步门槛第二步——朋友圈不支持自定义 path，仅以 query 携 sku 自洽回流（镜像转发 path 构造）
+  onShareTimeline() {
+    const d = this.data.d || {};
+    return {
+      title: d.title ? ('总包研究 · ' + d.title) : '总包研究 · EPC 深度研究报告',
+      query: 'sku=' + this.data.sku
+    };
+  },
 });
