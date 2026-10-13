@@ -133,5 +133,12 @@ Page({
       title: '总包智库 · 工程热点问答',
       path: '/pages/pot/pot'
     };
+  },
+
+  // v0.9.18（用户令 1013 朋友圈亮灯）：两步门槛第二步——同页成对 onShareTimeline；锅圈页仅标题不携参
+  onShareTimeline() {
+    return {
+      title: '总包智库 · 工程热点问答'
+    };
   }
 });

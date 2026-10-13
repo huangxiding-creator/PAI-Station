@@ -634,5 +634,13 @@ Page({
       title: '总包AI顾问-免费咨询',
       path: '/pages/answer/answer?id=' + this.data.id
     };
+  },
+
+  // v0.9.18（用户令 1013 朋友圈亮灯）：两步门槛第二步——朋友圈不支持自定义 path，仅以 query 携 id 自洽回流（本页数据键为 id 非 aid，镜像转发 path 构造）
+  onShareTimeline() {
+    return {
+      title: '总包AI顾问-免费咨询',
+      query: 'id=' + this.data.id
+    };
   }
 });

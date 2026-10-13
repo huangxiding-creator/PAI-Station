@@ -1232,6 +1232,57 @@ _induce_bad = [p for p, js in _share_js.items() if _induce_share.search(_share_b
 check("REQ-001.AC3 分享返回块零诱导（仅扫 onShareAppMessage 块；不扫「有用 +1次」等非分享文案）",
       not _induce_bad, ",".join(_induce_bad))
 
+# ── REQ-002（1013 用户令①续：朋友圈亮灯=两步门槛第二步——onShareTimeline 同页成对，官方 share-timeline 语义）──
+# REQ-002.AC1 逐页锚：10 页全量 onShareTimeline（紧随各页 onShareAppMessage 成对定义）
+
+
+def _tl_block(js):
+    m = re.search(r"onShareTimeline\(\)\s*\{(.{0,500}?)\n\s*\}", js, re.S)
+    return m.group(1) if m else ""
+
+
+check("REQ-002.AC1 10 页全量 onShareTimeline（与 onShareAppMessage 同页成对，官方两步门槛第二步）",
+      all("onShareTimeline" in js for js in _share_js.values()),
+      ",".join(p for p, js in _share_js.items() if "onShareTimeline" not in js))
+# REQ-002.AC2 query 携参策略：仅内容型自洽页 report/answer 携最小参数（朋友圈不支持自定义 path，只影响本页 query）
+_tl_query = {"pages/report/report": "query: 'sku='", "pages/answer/answer": "query: 'id='"}
+check("REQ-002.AC2 内容页 onShareTimeline query 携最小参数（report=sku 镜像转发 path 构造；answer=id 本页实际数据键非 aid）",
+      all(exp in _tl_block(_share_js[p]) for p, exp in _tl_query.items()),
+      ",".join(p for p, exp in _tl_query.items() if exp not in _tl_block(_share_js[p])))
+_tl_noquery = [p for p in app_json["pages"] if p not in _tl_query and "query:" in _tl_block(_share_js[p])]
+check("REQ-002.AC2 其余 8 页 onShareTimeline 严格无 query 键（工具/入口/商城/地图/锅圈页朋友圈不携参）",
+      not _tl_noquery, ",".join(_tl_noquery))
+# REQ-002.AC3 诱导词红线：扫描域扩至 onShareTimeline 返回块（同 REQ-001.AC3 块域技法；单页模式合规红线）
+_tl_induce_bad = [p for p, js in _share_js.items() if _induce_share.search(_tl_block(js))]
+check("REQ-002.AC3 onShareTimeline 返回块零诱导（单页模式红线：无「打开小程序查看完整内容」类承诺）",
+      not _tl_induce_bad, ",".join(_tl_induce_bad))
+# T-011 judge 加固(a) 标题纯度：静态标题页 title 行=纯字面量且无尾部 + 拼接（report 动态拼接 d.title 属设计镜像，除外）
+_tl_pure_re = re.compile(r"title:\s*'([^']+)'\s*(?!\+)")
+_pure_pages = [p for p in app_json["pages"] if p != "pages/report/report"]
+_pure_bad = [p for p in _pure_pages
+             if not (_tl_pure_re.search(_tl_block(_share_js[p]))
+                     and _tl_pure_re.search(_share_block(_share_js[p])))]
+check("REQ-002 加固 静态标题纯字面量（除 report 外 9 页两 handler title 均为 '…' 纯字面量无尾部+拼接）",
+      not _pure_bad, ",".join(_pure_bad))
+# T-011 judge 加固(b) 标题闭集扩全量：10 页 × 两 handler，title 行全部字符串字面量均须以品牌前缀开头
+_title_line_re = re.compile(r"title:\s*([^\n]+)")
+
+
+def _title_literals(block):
+    m = _title_line_re.search(block)
+    return re.findall(r"'([^']+)'", m.group(1)) if m else []
+
+
+_brand_bad = []
+for _p in app_json["pages"]:
+    for _blk in (_share_block(_share_js[_p]), _tl_block(_share_js[_p])):
+        _lits = _title_literals(_blk)
+        if not _lits or not all(l.startswith(_share_prefix) for l in _lits):
+            _brand_bad.append(_p)
+            break
+check("REQ-002 加固 标题闭集=10 页×两 handler 全量（总包AI顾问-/总包研究 · /总包智库 · 前缀闭集）",
+      not _brand_bad, ",".join(sorted(set(_brand_bad))))
+
 fails = [c for c in checks if not c[1]]
 for name, ok, detail in checks:
     print(("PASS " if ok else "FAIL ") + name + (("  " + detail) if detail and not ok else ""))
