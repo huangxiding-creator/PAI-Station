@@ -705,12 +705,16 @@ def refund_one(openid: str) -> None:
             c.execute("UPDATE users SET free_used=free_used-1 WHERE openid=?", (openid,))
 
 
-def get_answer(aid: str, openid: Optional[str] = None) -> Optional[dict]:
+def get_answer(aid: str, openid: Optional[str] = None,
+               include_deleted: bool = False) -> Optional[dict]:
     init()
     with _db() as c:
-        # v0.9.17 软删：已删行对本人也 404（get_answer_visible 同门继承此过滤）
+        # v0.9.17 软删：已删行对本人也 404（get_answer_visible 同门继承此过滤）。
+        # include_deleted=True 仅供删除端点做 owner 幂等判定——已删原行仍可辨主，
+        # 否则本人二次删除会被误判 404（幂等契约要求仍 200）。
+        cond = "" if include_deleted else " AND deleted=0"
         row = c.execute(
-            "SELECT * FROM answers WHERE id=? AND deleted=0", (aid,)).fetchone()
+            "SELECT * FROM answers WHERE id=?" + cond, (aid,)).fetchone()
         if row is None:
             return None
         if openid is not None and row["openid"] != openid:
@@ -1127,7 +1131,9 @@ def pot_remove(aid: str) -> None:
 
 def pot_list() -> list:
     """锅圈列表（v0.7.0 用户令）：200 字纯文本预览；排序=时间最新优先，
-    兼顾互动（每份互动≈半天新鲜度：有用×2 + 共享×1 + 海报×1）。"""
+    兼顾互动（每份互动≈半天新鲜度：有用×2 + 共享×1 + 海报×1）。
+    v0.9.17 锅圈幽灵修：JOIN 门补 a.deleted=0——owner 软删共享答案后即刻撤出
+    公共 feed（修前：列表仍挂其问题+预览而详情 404，详情门已滤而列表漏斗）。"""
     init()
     with _db() as c:
         cur = c.execute(
@@ -1136,7 +1142,7 @@ def pot_list() -> list:
             "  WHERE r.aid=a.id AND r.action='like') AS likes,"
             " a.views, a.shares, a.shared"
             " FROM pot_items p JOIN answers a ON a.id=p.aid"
-            " WHERE a.status='ready' AND a.answer_full != ''"
+            " WHERE a.status='ready' AND a.answer_full != '' AND a.deleted=0"
         )
         rows = [dict(r) for r in cur.fetchall()]
         for r in rows:
