@@ -25,7 +25,7 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 sys.path.insert(0, r"E:\AI-Station\WeAppForge\work\mp_cancel_logout")
 
 PORT = 9336
-WATCH_VER = "0.9.16"  # 本次盯哨的目标提审版本（1012 12:33:14 提审，1012 会话腿改定）
+WATCH_VER = "0.9.18"  # 本次盯哨的目标提审版本（1013 15:45:50 提审，会话腿改定）
 GETCODE = "https://mp.weixin.qq.com/wxamp/wacodepage/getcodepage"
 
 JS_READ_ROW = r"""

@@ -164,9 +164,9 @@ check("api potList 客户端", "potList" in api_js)
 check("api optimize 客户端（shareReward 已随分享激励下线）", "optimize" in api_js and "shareReward" not in api_js)
 
 # 版本与定位（v0.9.0）
-check("my 版本标记 v0.9.17（1012 蓝皮书一级目录：卷级色带+章行缩进+计数剔卷头）", "v0.9.17" in my_wxml)
+check("my 版本标记 v0.9.18（1013 分享全量+记录删除+输入框IME根治）", "v0.9.18" in my_wxml)
 pkg = json.load(open(os.path.join(ROOT, "package.json"), encoding="utf-8"))
-check("package.json version=0.9.17", pkg["version"] == "0.9.17")
+check("package.json version=0.9.18", pkg["version"] == "0.9.18")
 # 1009 用户令：外观沉底（个性化低频项按用户习惯放设置区，高频额度/记录在前）——顺序即断言
 check("my 布局顺序=额度→记录→书架→外观（外观在咨询记录之后，1009 用户令）",
       my_wxml.find("外观 · APPEARANCE") > my_wxml.find("咨询记录 · RECORDS")
@@ -1068,7 +1068,7 @@ check("引擎道具图路由（/static/goods/{name} 白名单+防穿越+长缓�
 check("引擎道具图素材随包（static_goods/zongbaojun.jpg）",
       "GOODS_STATIC_DIR" in _app_py
       and os.path.exists(os.path.join(ENGINE, "qianwen_engine", "static_goods", "zongbaojun.jpg")))
-check("telemetry VER=0.9.17（版本横幅同步）", "var VER = '0.9.17'" in _tel_js)
+check("telemetry VER=0.9.18（版本横幅同步）", "var VER = '0.9.18'" in _tel_js)
 
 # ══ v0.9.15（1011 用户令：报告详情页 有用/分享给同行 赠次 + 研报转化海报）══
 _rp_wxml_3 = read("pages/report/report.wxml")
@@ -1181,9 +1181,9 @@ check("详情页 卷头样式在役（色带+实底卷号徽标+章行缩进）"
 check("研究页 起价数据驱动（¥498 写死根除，stats.pmin 驱动）",
       "stats.pmin" in _rsh_wxml and ">¥498<" not in _rsh_wxml
       and "pmin" in _rsh_js)
-check("版本信标 0.9.17（telemetry + my 页脚）",
-      "VER = '0.9.17'" in read("utils/telemetry.js")
-      and "v0.9.17" in read("pages/my/my.wxml"))
+check("版本信标 0.9.18（telemetry + my 页脚）",
+      "VER = '0.9.18'" in read("utils/telemetry.js")
+      and "v0.9.18" in read("pages/my/my.wxml"))
 
 # ── v0.9.18（1013 用户令①：分享全量——灰按钮根因=缺 handler，「每一个页面都可以」）──
 # REQ-001.AC1 逐页锚：本轮新补 6 页（ask/home/my/pot/invoice/legal），在役 4 页（answer/report/research/zhiku）
