@@ -107,6 +107,8 @@
           </view>
         </view>
         <view class="hist-arrow">›</view>
+        <!-- v0.9.18（用户令 1013）：行内删钮——catchtap 防冒泡触发行导航，箭头保留 -->
+        <view class="hist-del" catchtap="onDeleteItem" data-id="{{item.id}}" hover-class="hist-del-hover">✕</view>
       </view>
 
       <!-- 批量导出：全部咨询问答 → Word/PDF/Markdown（v0.7.0 重设计：藏青主视觉+橙色图标块） -->
