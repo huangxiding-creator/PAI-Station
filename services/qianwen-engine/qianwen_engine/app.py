@@ -26,6 +26,9 @@ v0.7.0（用户十一点令 0930）：
   POST /api/answer/{aid}/share_off  → 取消共享：撤出锅圈 + 扣 1 次咨询
   GET  /api/answer/{aid}/citations/{n} → 依据来源全文展开（智谱接地，aid+n 永久缓存）
   公益免费：付费墙拆除（unlocked 恒真，全文直接下发）
+
+v0.9.17（用户令② 1013：咨询记录删除）：
+  DELETE /api/answers/{aid}          → 软删本人咨询记录（幂等 200；quota/pay_log/rewards 零动）
 """
 from __future__ import annotations
 
@@ -359,6 +362,23 @@ def share_off(aid: str, request: Request):
     if not store.share_off(aid, openid):
         raise HTTPException(400, "本篇当前不在共享状态")
     return {"shared": False, "quota": store.quota_left(openid)}
+
+
+# ── v0.9.17 软删（用户令② 1013）：DELETE /api/answers/{aid} ──
+@app.delete("/api/answers/{aid}")
+def delete_answer(aid: str, request: Request):
+    """软删本人咨询记录（仅置 answers.deleted=1，物理表零删除——身后
+    pay_log/rewards 审计链不动）。
+    - 非 owner/未知 aid → 404（不暴露存在性，与 get_answer 同律）
+    - 已删再删 → 幂等 200：owner 门按 include_deleted 原行判定（get_answer
+      默认已滤 deleted，直接用它会把本人二次删除误判 404）
+    - 锅圈联动：列表侧由 pot_list 的 deleted 过滤兜底（幽灵修），此处零额外动作。"""
+    openid = _openid(request)
+    row = store.get_answer(aid, openid, include_deleted=True)
+    if row is None:
+        raise HTTPException(404, "记录不存在")
+    store.delete_answer(aid, openid)   # 已删时 no-op（False），幂等仍 200
+    return {"deleted": True}
 
 
 class ExportIn(BaseModel):
