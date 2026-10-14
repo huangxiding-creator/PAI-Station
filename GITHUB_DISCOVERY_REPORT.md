@@ -1,65 +1,64 @@
-# GITHUB_DISCOVERY_REPORT — zongbao-ai-v0917（分享启用 + 记录删除）
+# GITHUB_DISCOVERY_REPORT: 直用清单（2026-10-14 重铸版）
 
-> 检索环境注记：本机 web_search/webReader MCP 配额 2026-10-26 前耗尽；WebFetch 域名
-> 策略拦截 developers.weixin.qq.com。官方文档改用 curl 直拉原文（HTTP 200，两页全文
-> 落档后提取），GitHub 侧以可本地验证的仓库与官方源为主——每个来源标注验证状态，
-> 无臆造条目（宪法 C12）。
+> 结论反转声明：上午版「不 clone 整个项目，只复用思路+片段」作废。
+> 本版 = **clone 下来就能跑的直用清单**，全部经 11-agent 对抗验证（stars/license/push
+> 为 api.github.com 当日实测，关键能力附文件:行号证据）。
 
-## 巨人清单（≥3）
+## 一、选定直用件（本引擎实际 clone/部署的仓库）
 
-### 1. 微信官方文档（今日 curl 实拉验证 ✅）
+| # | 仓库 | ★ / License | 角色 | 部署方式 |
+|---|---|---|---|---|
+| 1 | [langbot-app/LangBot](https://github.com/langbot-app/LangBot) | 18,147 / Apache-2.0 | A 栈主干：群值守 AI 问答+插件生态 | Docker compose（仓库自带）；入站限频配置 86400s/3 |
+| 2 | [WeChatPadPro/WeChatPadPro](https://github.com/WeChatPadPro/WeChatPadPro) | 2,642 / **无LICENSE** | A 栈微信通道（iPad 协议） | deploy/docker-compose.yml（mysql8+redis6+ADMIN_KEY）；**存活门前置，可弃组件** |
+| 3 | [zhayujie/CowAgent](https://github.com/zhayujie/CowAgent) | 47,387 / MIT | 合规 1v1 承接腿（官方 iLink 单聊） | 一行脚本/Docker/桌面端；扫码即用 |
+| 4 | [espocrm/espocrm](https://github.com/espocrm/espocrm) + [espocrm-docker](https://github.com/espocrm/espocrm-docker) | 3,486 / AGPL-3.0 | 线索中枢 CRM（自动查重/中文/REST） | 官方 docker 镜像；X-Api-Key + POST /Lead |
+| 5 | [lizhipay/acg-faka](https://github.com/lizhipay/acg-faka) | 5,804 / MIT* | 收款发卡（498 研报自动发货） | *kernel/Plugin.php 专有例外；支付插件实测走单=硬门 |
+| 6 | [wechatpay-apiv3/wechatpay-skills](https://github.com/wechatpay-apiv3/wechatpay-skills) | 364 / MIT | 微信支付官方 AI 技能包（收款腿） | Claude 技能安装；配套官方 SDK 全家 Apache-2.0 |
+| 7 | [fanyuantaier/wechatauto-replica](https://github.com/fanyuantaier/wechatauto-replica) | 440 / Apache-2.0 | B 栈微信 4.x 备用腿（wxauto 兼容 API） | pip（PyPI 1.2.6.1，2026-10-10） |
 
-- `developers.weixin.qq.com/miniprogram/dev/reference/api/Page.html`（63,788B）
-- `developers.weixin.qq.com/miniprogram/dev/framework/open-ability/share-timeline.html`（149,645B）
+**既有本地资产（零新开发直接复用）**：wxrpa（UIA 发送，实战验证）、rion-cli（群消息读取）、
+zbops（auto_responder 限频队列 + proactive 每日推送 + 企微回调）、工程大脑（多供应商 LLM）、
+军团调度（7×24 纪律）。
 
-**采到的硬语义（直接决定 P4/P5 设计）**：
-- 「转发给朋友」亮灯条件 = 页面定义 `onShareAppMessage`；「分享到朋友圈」亮灯条件 =
-  **先**定义 onShareAppMessage **再**定义 `onShareTimeline`（两步门槛）——截图灰按钮
-  根因确证。
-- onShareTimeline 基础库 ≥2.11.3；返回 {title, query, imageUrl}，**不支持自定义 path**；
-  web-view 页不支持发起分享；低版本客户端进升级提示页。
-- **单页模式**：朋友圈打开≠打开小程序，进入场景值 1154 的单页运行态——无登录态
-  （wx.login 不可用）、顶部导航/底部「前往小程序」操作栏固定不可定制、**适用于纯
-  内容展示、不适用于较多交互页**；不得诱导/强制点「打开小程序」，应尽量呈现完整内容；
-  wx.getSystemInfo 的 safeArea 返回整屏。
+## 二、观察名单（备用，暂不部署）
 
-### 2. 本仓过审先例（本地代码验证 ✅——最贴合的"巨人"）
+| 仓库 | ★ / License | 用途 | 启用条件 |
+|---|---|---|---|
+| [1Panel-dev/CordysCRM](https://github.com/1Panel-dev/CordysCRM) | 2,784 / GPLv3+附加 | 中文原生 CRM 备选 | EspoCRM 去重/中文不达预期时 |
+| [rachelos/we-mp-rss](https://github.com/rachelos/we-mp-rss) | 4,909 / 未标准化 | 公众号 RSS 备源 | 多源 RSS 需求出现时（license 需先确认） |
+| [cooderl/wewe-rss](https://github.com/cooderl/wewe-rss) | 9,646 / MIT | 全文 RSS | **已 archived**——用时必须 fork 自维护 |
+| [n8n-io/n8n](https://github.com/n8n-io/n8n) | 207,303 / Sustainable Use | 可视化编排 | 多源内容聚合需求出现时（无官方中文界面） |
+| [binarywang/weixin-java-tools](https://github.com/binarywang/weixin-java-tools) | 33,155 / Apache-2.0 | 公众号 Java SDK | 公众号侧自动分发需求出现时 |
+| [Hello-Mr-Crab/pywechat](https://github.com/Hello-Mr-Crab/pywechat) | 2,016 / LGPL-2.1 | 微信 4.1 UIA | replica 断更时（注意 PyPI `pyweixin` 是占位空包，须从源码装） |
 
-- `pages/answer/answer.js:631` / `report.js:257` / `research.js:104` / `zhiku.js:100`
-  的 onShareAppMessage：七轮过审形态（品牌前缀标题+详情 path 携参+分享标题=品牌名）。
-- 删除功能同构先例：`answer_export_unlocks`/`get_answer_visible` 的 owner 门+可见性门
-  双轨（v0.9.14 锅圈腿）；`_ANSWER_UPGRADES` 列迁移机制（sqlite/mysql 双方言平滑 ALTER）。
-- qw-pop 自绘弹窗系统（v0.9.7，规避原生 modal 4 字按钮硬限）——删除确认弹窗直接复用。
+## 三、排除清单（附原因，防回头重查）
 
-### 3. GitHub 生态仓（今日 api.github.com 逐仓验证 HTTP 200 ✅）
+| 仓库 | 排除原因 |
+|---|---|
+| lich0821/WeChatFerry | 已 archived，锁微信 3.9.12.51，hook 路线终结 |
+| danni-cool/wechatbot-webhook | archived 近两年，通道不可考 |
+| lss233/kirara-ai | 停更约 16 个月，无个微群通道，AGPL |
+| AstrBotDevs/AstrBot | 无个微（hook/UIA/pad）适配器，AGPL+EULA 附加 |
+| Hanson/vbot | 开源部分=已死网页协议，导流收费 API |
+| Qsnh/meedu | **ADDITIONAL_TERMS 禁未授权商业运营**（refuted） |
+| WuKongOpenSource/Wukong-AICRM | 非商业协议，商用需书面授权 |
+| assimon/dujiaoka | archived；替代位=acg-faka |
+| monicahq/monica / suitecrm / chatwoot | 域不符（个人关系 CRM/太重/客服收件箱） |
+| wechatpy/wechatpy | 冻结态（末版 2021），仅打补丁式使用 |
+| ttttmr/WeChat2RSS / wcfLink | 无 license，仅 pattern 参考 |
 
-- `github.com/Tencent/tdesign-miniprogram` — 腾讯官方小程序组件库（Flint 设计体系）；
-  surveyed：本轮零新组件引入，弹窗/交互沿用自研 qw-pop。
-- `github.com/NervJS/taro` — 多端框架（weapp 生态主流）；surveied：本项目原生 WXML，
-  无迁移动机。
-- `github.com/tiangolo/fastapi` — **引擎本体在用框架**（引擎全端点同构先例的出处，
-  DELETE 端点直接写 FastAPI 路由，非引入）。
-- `github.com/wechat-miniprogram/miniprogram-cli` — 官方工具链生态（miniprogram-ci
-  上传通道的上游生态位；本仓 upload_qianwen.mjs 已在役）。
+## 四、Documented Miss（自研胶水的合法性依据）
 
-（候选剔除：weixin/miniprogram-demo 今日 404——组织名已变迁，未列入；无关候选不凑数。）
+全 GitHub 实查（中英关键词：wechat anti-ban/微信风控/限频/拟人化/发卡/CRM 微信对接）：
+1. **发送侧频控+拟人节奏组合件**不存在（LangBot fixwin 是入站侧；zbops 队列是自有件）
+   → 自研 LangBot 全局日 20 插件 ~50 行
+2. **微信信号→CRM Lead 桥**不存在（全球无 OSS CRM 原生接微信生态）
+   → 自研 transformer 100-200 行
+3. **跨群身份归一化去重键**无现成 → P4 设计件
+4. zbops 8440 callback 服务入口不存在于代码 → 自补（main.py L264-276 实证）
 
-### 4. 云开发 CloudBase manager-node（本地 node_modules 验证 ✅）
+## 五、供应链纪律
 
-- `@cloudbase/manager-node` 5.9.0（E:\AI-Station\data\state\mn_client）：TCB 部署通道
-  （028 号部署今日实证在役），删除端点上云走同一条 deploy 管线。
-
-## 结论（缝合怪律一：clone-and-adapt）
-
-得分 ≥80%：**全量克隆本仓过审先例 + 官方文档语义**，无外部依赖引入。新写的只有
-「10 页 × 2 个 handler 的静态文案」「DELETE /api/answers/{aid} 软删端点」「my 页删除
-交互」三块，全部有逐字模板。
-
-## 对 P4 的直接影响（设计约束输入）
-
-1. 每页必须**先有 onShareAppMessage 才能有 onShareTimeline**——两 handler 同页成对。
-2. 内容型页（research/report/answer/zhiku/pot/legal）朋友圈 query 携最小参数；
-   强交互页（ask/home/my/invoice）朋友圈亮灯但不携 query，单页模式走既有无登录态
-   fail-open 降级（quotaError/骨架态已在役），不新建造假内容页。
-3. 朋友圈单页模式文案红线：不写「点击打开小程序查看完整内容」类诱导（运营规范+
-   官方注意事项），页面自然呈现既有内容。
+- docker 镜像固定 digest 拉取（WeChatPadPro/acg-faka）；pip 锁版本
+- PyPI 陷阱：`pyweixin`（owner=n0rmrx，v0.1.0）是占位空包≠pywechat 主线
+- WeChatPadPro v875+ 走付费赞助群分发——存活门实验用免费版即可，不预付

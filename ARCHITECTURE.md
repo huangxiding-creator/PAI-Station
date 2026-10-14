@@ -1,65 +1,95 @@
-# ARCHITECTURE — zongbao-ai-v0917（0.9.17 增量架构）
+# ARCHITECTURE — revenue-engine（双栈组装架构 v1，2026-10-14）
 
-> 本文件=本轮增量架构记录（覆盖 v0.9.13 旧档）。权威设计细则：
-> [KNOWLEDGE_BASE/share-semantics.md](KNOWLEDGE_BASE/share-semantics.md) ·
-> [KNOWLEDGE_BASE/soft-delete-design.md](KNOWLEDGE_BASE/soft-delete-design.md)
+> 旧档已归档：revenue-engine/docs/archive/zongbao-ai-v0917-*.md。
+> 需求基线：REQUIREMENTS.md v2.1（25 REQ）。组件证据：RESEARCH_DIGEST / GITHUB_DISCOVERY_REPORT。
 
-## 系统拓扑（不变量）
+## 1. 系统总图
 
 ```
-微信客户端（10 页，原生 WXML）
-  │  https ai.epcschool.top（downloadFile/request 合法域名）
-  ▼
-FastAPI 引擎（TCB 云托管 qianwen-engine，MySQL，部署号递增）
-  ├─ store.py（_SCHEMA 双方言 + _ANSWER_UPGRADES 逐列 ALTER 迁移）
-  └─ app.py（端点；_openid(request) Bearer 鉴权门）
-外围机械：upload_qianwen.mjs（robot 轮转）/ submit_review_09xx（六段向导）/
-QianwenReviewWatch（住哨，绝不自动发布）
+                    ┌────────── 微信生态 ──────────┐
+                    │  100 值守群   群成员私聊     │
+                    └───┬──────────┬─────────┬───┘
+            收：rion-cli│DB直读     │         │iLink官方(1v1)
+                        │          │收+发    │
+        ┌───────────────┘     A栈收发│iPad协议 │
+        ▼                          ▼         ▼
+  [SignalDetector]          [LangBot]     [CowAgent]
+  [OpportunityEvaluator]     fixwin 入站    1v1承接
+        │                    86400s/3        │
+        │ Lead transformer          │全局日20插件(~50行)
+        ▼                           ▼        ▼
+  ┌──────────────── EspoCRM（线索中枢·MySQL）──────────────┐
+  │  Lead 去重(归一化键) · 评分 · 状态流转 · 原生看板      │
+  └───────┬───────────────────────────────────────────────┘
+          │评分≥70                    │订单事件
+          ▼                           ▼
+  [企微群webhook告警]          [acg-faka 发卡/收款]←─ wechatpay V3(商户号门)
+          │                           │归因胶水(回调→Lead)
+          ▼                           ▼
+      主理人(30min/天)         源消息→Lead→推荐→私聊→订单 全链回溯
+
+  B栈（主号UIA·已实战）：proactive 每日9点推送 ← We-AIPO 产线JSON
+        → auto_responder 队列(日3/全局20/冷却/熔断) → wxrpa Ctrl+Enter
+  外部注入口：8440 FastAPI POST /enqueue（REQ-005）
+  审计总线：全发送路径 → 发送日志盘（REQ-019，CowAgent 豁免限频不豁免审计）
 ```
 
-## 变更面与 ADR
+## 2. 组件与职责
 
-### ADR-1 分享全量启用=纯客户端静态层（零架构影响）
+| 组件 | 实现件（锁定策略） | 职责 | 替换预案 |
+|---|---|---|---|
+| 采集-群 | rion-cli（既有） | 群消息→信号词命中 | wxrpa 读屏兜底 |
+| 信号识别 | zbops SignalDetector（既有骨架） | 商机/求助/采购信号 | — |
+| A 栈 | LangBot @docker（版本锁 release tag） | 值守问答+插件 | 存活门不过→整栈不部署 |
+| 微信通道-A | WeChatPadPro @docker digest 锁 | iPad 协议 | B 栈单栈 |
+| 合规腿 | CowAgent 官方 iLink | 1v1 承接 | 不可替（官方通道） |
+| B 栈队列 | zbops auto_responder（既有） | 限频安全网+发送 | — |
+| 发送-B | wxrpa（既有） | UIA Ctrl+Enter | wechatauto-replica(4.x)/wxautox(购买) |
+| 主动服务 | zbops proactive（既有） | 每日推送+钩子 | — |
+| CRM | EspoCRM @官方镜像 digest 锁 | 线索/评分/流转/看板 | CordysCRM |
+| 告警 | 企微群 webhook | 高价值直达主理人 | — |
+| 收款 | acg-faka + wechatpay V3 | 下单/发货/回调 | 个人码半自动 |
+| 编排 | 军团 schtasks（既有） | 7×24 调度/自愈/让路 | — |
 
-- 10 页补 `onShareAppMessage`（4 页已有同构先例，6 页新增）+ 全量
-  `onShareTimeline`（0→10，首次启用朋友圈能力）。
-- **拒绝项**：集中式 mixin/behavior 注入统一 handler——微信平台按页面注册，分散
-  handler 是平台事实标准；集中注入收益小且偏离原生调试体验。
-- query 政策：内容自洽页携最小参数（report?sku= / answer?id=）；其余页不携。
-  单页模式（1154）无登录态 → 既有 fail-open 骨架（quotaError 态 v0.9.1 在役）。
+**自研胶水全集（≤300 行，REQ-024 P6 门）**：Lead transformer（≤200，含归因回调合并）/
+全局日20插件（~50）/8440 入口（>30）。
 
-### ADR-2 删除=软删（deleted=1），非物删、非前端隐藏
+## 3. 缝合契约（upstream DoD → downstream 入口条件）
 
-- **拒绝物理 DELETE**：pay_log 订单核销、rewards 赠次记账以 aid 外键引用，物删
-  断审计链（发票口径、退款核查受损）。
-- **拒绝仅前端隐藏**：多端不一致（换设备重现）+ 批量导出金额口径
-  （history_all 服务端权威，MEDIUM-5 在案）仍会计入。
-- 可见性门四改点（history / history_all / get_answer / get_answer_visible）
-  见 [soft-delete-design.md](KNOWLEDGE_BASE/soft-delete-design.md)。
+| # | 契约 | 上游交付义务 | 下游入口条件 |
+|---|---|---|---|
+| C1 | 信号→Lead | SignalDetector 输出信号 JSON（wxid/昵称/群/原文/类型/时间，schema 见 API_DESIGN §2） | transformer 收到即 <60s 内 POST EspoCRM，失败重试 3 次落死信 |
+| C2 | 产线→推送 | We-AIPO channels_publish_detail.json 含标题/链接/标签 | proactive 标签匹配命中才入队，md5 去重后经 B 栈队列 |
+| C3 | EspoCRM→告警 | Lead 保存且评分字段就绪 | 评分≥70 触发 webhook，5 分钟内送达 |
+| C4 | 订单→归因 | acg-faka 回调含商品 SKU+购买者标识+订单号 | transformer 将订单事件写回源 Lead（关联字段），前 10 单全量核对 |
+| C5 | 8440 注入 | 外部服务持 API Key | enqueue 消息过安全网（日3/全局20/冷却），超限返回 429 |
+| C6 | 风控互通 | 任一栈 report_risk_signal | 双栈同停（REQ-018/021 同口径），人工核查后恢复 |
 
-### ADR-3 列迁移走 _ANSWER_UPGRADES（拒绝影子表）
+## 4. ADR 索引（revenue-engine/docs/adr/）
 
-- **拒绝 answers_deleted 影子表**：四条查询全部要 LEFT JOIN/UNION 排除影子行，
-  复杂度与遗漏面远大于一列 ALTER；_ANSWER_UPGRADES 机制在役（INT DEFAULT 0，
-  InnoDB 秒级，duplicate column 吞掉幂等）。
-- 四点同步纪律：store.py 两处 CREATE TABLE（新库直建对）+ _ANSWER_UPGRADES
-  （旧库平滑）+ scripts/mysql_schema.sql（部署手册镜像）。
+| ADR | 决策 |
+|---|---|
+| [ADR-001](revenue-engine/docs/adr/ADR-001-dual-stack.md) | 双栈并行（vs 单栈 all-in）——互备 + 风险隔离 |
+| [ADR-002](revenue-engine/docs/adr/ADR-002-membership.md) | 99 会员承接：acg-faka 商品位（meedu 出局：商用授权） |
+| [ADR-003](revenue-engine/docs/adr/ADR-003-n8n-deferred.md) | n8n 后置（与 proactive 重叠+无中文界面），触发条件=多源 RSS 需求 |
+| [ADR-004](revenue-engine/docs/adr/ADR-004-cowagent-exempt.md) | CowAgent 豁免限频（官方通道），强制入审计日志 |
+| [ADR-005](revenue-engine/docs/adr/ADR-005-payment-paths.md) | 收款三态路径（商户号门驱动：V3 直连/个人码/暂缓） |
+| [ADR-006](revenue-engine/docs/adr/ADR-006-group-assets.md) | 群资产归属：重要群主号/可控群主持有，小号仅成员 |
 
-### ADR-4 删除确认=qw-pop 自绘（拒绝原生 modal / ActionSheet）
+## 5. 部署拓扑
 
-- 原生 wx.showModal 真机按钮 ≤4 字静默死（v0.9.6 根因战在案）；ActionSheet 同
-  受限。qw-pop 系统全站在役，确认弹窗文案「删除后不可恢复」。
+- **Windows 主机（既有）**：主号微信桌面端（B 栈 UIA，版本锁定）+ zbops + rion-cli + 军团 schtasks
+- **docker（同机或旁路小主机）**：LangBot + WeChatPadPro(mysql8+redis6) + EspoCRM(+mysql)
+- **磁盘**：发送审计日志独立目录，保留 ≥90 天；EspoCRM 数据每日 mysqldump 进军团备份轨
+- **网络红线**：9222 WeAIPO 免打扰；WeChatPadPro/EspoCraft 端口仅本机回环暴露
 
-## 缝合契约（组件交接）
+## 6. 失效模式表
 
-| 上游 → 下游 | 上游 DoD | 下游入口条件 |
+| 组件死亡 | 系统行为 | 恢复 |
 |---|---|---|
-| 引擎删除端点 → my 页交互 | DELETE 200/404/401 语义定案+pytest 绿 | api.js answerDelete(aid) 封装就位 |
-| store 软删 → 各读腿 | 四可见性门过滤 pytest 绿 | history 响应 schema 不变（deleted 行天然缺席，客户端零解析改动） |
-| 分享 handler → 提审 | BOOT-SIM 逐页锚+诱导词扫荡绿 | 六段向导 fill 前人工核 dump |
-| deleted 列 → TCB 部署 | 本地 sqlite 全测绿 | qw_tcb_prep→mn_client deploy→三板斧 |
-
-## 风险架构呼应
-
-R1（单页模式）/R2（诱导红线）/R5（history_all 漏滤）分别由 REQ-003 e2e、REQ-002.AC3
-扫荡锚、REQ-004.AC3 pytest 承接；R7（在审冲突）由 REQ-008.AC3 提审前置检查承接。
+| 小号被封（A 栈） | REQ-021 分级：风控异常→双栈同停 30min 内→人工核查恢复 B 栈 | 小号池轮换；A 栈停摆不影响 B 栈收入链 |
+| 主号 UIA 失效（微信升级） | B 栈停；A 栈（若在役）接管值守 | 切 replica 备用腿/锁回旧版微信 |
+| EspoCRM 挂 | 信号入死信队列；发送侧照常（限频不依赖 CRM） | docker 重启 + mysqldump 恢复 |
+| acg-faka 支付插件失效 | 收款降级个人码半自动（ADR-005） | 插件修复或官方 SDK 直连 |
+| LLM 供应商耗尽 | 工程大脑轮换下一家；轮换期静默不编造（REQ-011.AC2） | 自动 |
+| 军团让路令 | 全线暂停（让路令暂停≠故障，REQ-022.AC1） | yield_pause_all --resume（用户令） |

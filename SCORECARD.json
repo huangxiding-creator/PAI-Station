@@ -1,38 +1,30 @@
 {
-  "project": "PAI-Station",
-  "version": "1.0",
-  "date": "2026-09-05",
+  "project": "revenue-engine",
+  "date": "2026-10-14",
+  "maturity": "validated-assembly",
+  "method": "三路侦察+11agent对抗验证，8/10 confirmed、1 refuted（meedu 商用授权）、1 重大修正（LangBot 限速器入站侧）",
+  "tenx_delta": {
+    "score": 8.8,
+    "reasoning": "市场三层断裂（执行/分析/闭环）+工程垂直+收入归因三重空白叠加无竞品；本版从自研七件套改为世界级开源件直用组装（LangBot/EspoCRM/acg-faka/微信支付官方件），自研≤300行，工期从7周压至组装节奏4-6周；扣分项：WeChatPadPro 无LICENSE+封号4案（Phase 0 存活门对冲）、收款腿商户号硬前提未确认。"
+  },
+  "pricing": {
+    "model": "self-hosted-zero-marginal-cost",
+    "reasoning": "全部开源件自托管+多供应商免费 LLM 轮换+既有内容弹药库；一次性投入仅小号与备用腿激活码。"
+  },
   "verdict": "proceed",
+  "conditions": [
+    "用户批准本提案（IF3 门）",
+    "Phase 0 四硬门：小号存活实验 2 周 / acg-faka 实测走单 / 企业商户号确认 / 主小号协同策略定稿",
+    "确认产品清单与定价（498 研报/99 会员/顾问大单接单标准）",
+    "A 栈铺量以存活门为前置，门不过则 B 栈单栈运行"
+  ],
   "scores": {
-    "vision": 9.5,
-    "ten_x_delta": 9.0,
-    "feasibility": 9.0,
-    "ecosystem": 9.5,
-    "wealth_potential": 9.0,
-    "overall": 9.2
-  },
-  "gate": {
-    "type": "proposal-approval",
-    "options": ["批准", "修订", "否决"],
-    "on_approve": "enter M0 with real local testing"
-  },
-  "research": {
-    "repos_surveyed": 350,
-    "direct_competitors_deep_dived": ["openhuman", "nanobot", "QwenPaw", "OpenViking"],
-    "components_stitched": 17,
-    "delta_dimensions": 10
-  },
-  "business": {
-    "baseline_revenue": "¥3.4亿/年 @ 400万 DAU × ¥84/年",
-    "primary_lever": "skill_marketplace",
-    "cost_structure": "zero (free models + local + GitHub hosting)"
-  },
-  "constraints": {
-    "models": "Zhipu free chain only (glm-4-flash/glm-4.7-flash/glm-z1-flash/glm-4v-flash)",
-    "browser": "DrissionPage mandatory",
-    "config": "INI files",
-    "security": "read-only outside project dir",
-    "wechat": "pure vision read-only, no hooks",
-    "notify": "WeCom webhook at milestones"
+    "market_gap": 9,
+    "technical_feasibility": 8,
+    "resource_readiness": 9,
+    "monetization_clarity": 9,
+    "competitive_moat": 8,
+    "legal_cleanliness": 7,
+    "overall": 8.4
   }
 }

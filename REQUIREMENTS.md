@@ -1,87 +1,148 @@
-# REQUIREMENTS — zongbao-ai-v0917（总包AI顾问 0.9.17 迭代）
+# REQUIREMENTS: revenue-engine v2（2026-10-14 规格评审修订版）
 
-范围=用户两令（VISION 非目标章节为准）；全部 EARS 形态。
+> 形式：EARS + AC。全局约束：C-1 胶水总量 ≤300 行（P6 硬校验，含归因胶水）；
+> C-2 三级许可证边界；C-3 五轴世界级为验收总纲；C-4 主号只跑 B 栈。
+> 术语统一：主号/B 栈队列（=auto_responder 队列）/值守群（=纳入运营的 100 工程群子集，Phase 0-4 圈定）。
+> 修订记录：v2 按独立规格评审 24 条发现全量修订（BLOCKER×2/MAJOR×11/MINOR×10）。
 
-## 分享全量启用
+## A 族 · Phase 0 硬门
 
-- **REQ-001 [MUST] 当用户在任一页面打开右上角胶囊菜单时，系统应使「转发给朋友」可用（10 页全量定义 onShareAppMessage，品牌化标题+页面路径）**
-  全部 10 个页面（ask/home/my/answer/report/research/zhiku/pot/invoice/legal）
-  均定义 `onShareAppMessage`，返回品牌化标题与页面路径。
-  - REQ-001.AC1 10 页 js 逐一含 onShareAppMessage（BOOT-SIM 逐页锚）。
-  - REQ-001.AC2 转发 path 逐页枚举：ask/home/my/invoice/legal → `/pages/ask/ask`
-    （主入口；home 非 tab 页，tabBar=ask/pot/zhiku/research/my）；report →
-    `report?sku=`、answer → `answer?id=` 携自身参数；research/zhiku/pot → 各自
-    页面路径不带参。
-  - REQ-001.AC3 分享标题=过审品牌形态闭集（「总包AI顾问-…」/「总包研究 · …」/
-    「总包智库 · …」zhiku 在役先例）；诱导词红线扫描范围=onShareAppMessage/
-    onShareTimeline 返回值字符串字面量（禁「分享…赠/得/送/加」类承诺，不扫
-    非分享文案如「有用 +1次」）。
+- REQ-001 [MUST]: 当存活实验运行时，系统应自动采集每日在线状态、掉线/封号事件、
+  进群进度，并按固定判据输出过/不过报告。
+  - REQ-001.AC1 判据（定死）：2 个小号 × 14 天，零封号事件且单号累计在线率 ≥90%
+    = 过；任一小号封号 = 不过，触发 B 栈单栈降级（C 族需求全部转 B 栈实现）
+  - REQ-001.AC2 报告含逐日明细；Phase 0 的 10 群进群与 Phase 2 的 3 天试运行为两次独立验收，不重复计
 
-- **REQ-002 [MUST] 当页面已定义 onShareAppMessage 时，系统应同页成对定义 onShareTimeline 使「分享到朋友圈」可用（官方两步门槛）**
-  - REQ-002.AC1 10 页均含 onShareTimeline（BOOT-SIM 逐页锚）。
-  - REQ-002.AC2 内容型自洽页（report/answer）query 携最小参数；其余页不携参。
-  - REQ-002.AC3 无「点击打开小程序查看完整内容」类诱导文案（官方单页模式
-    注意事项+运营规范红线，BOOT-SIM 全 js 扫荡锚）。
+- REQ-002 [MUST]: 当人工触发一笔 498 元研报实测订单时，系统应完成下单处理、
+  自动发货、全流程留痕（走单门）。
+  - REQ-002.AC1 支付成功且交付物（卡密/链接）正确送达购买者
+  - REQ-002.AC2 失败时输出降级路径 ADR（官方 SDK 直连或人工发货过渡）
 
-- **REQ-003 [MUST] 当朋友圈单页模式（场景值 1154，无登录态）打开任意已分享页面时，系统应不抛未捕获错误并按既有 fail-open 骨架呈现**
-  控制台零 error，按既有 fail-open 骨架呈现。
-  - REQ-003.AC1 e2e 冷启动直达 report?sku=CNNC-EPC 零异常零 console error。
-  - REQ-003.AC2 e2e 先经 dev 登录链创建一条答案取得 aid，再以无登录态冷启动直达
-    answer?id=<该 aid> 零异常（观看者门 404 降级路径，fixture 由 e2e 自建非占位）。
+- REQ-003 [MUST]: 当商户号门结论写入配置时，系统应按结论启用对应收款模式
+  （V3 直连/个人码半自动/暂缓收款），并将路径选择记录为 ADR。
+  - REQ-003.AC1 ADR 落于 revenue-engine/docs/adr/，含结论三选一与依据
 
-## 咨询记录删除
+- REQ-004 [MUST]: 当双栈同时在线时，系统应按定稿协同策略执行问答/推送分工。
+  - REQ-004.AC1 协同策略文档（revenue-engine/docs/）覆盖：问答分工矩阵、内容去重互通、风控信号互通
+  - REQ-004.AC2 同群 10 分钟窗口内 A/B 栈零同类内容重复发送，试运行 3 天全量日志核验
 
-- **REQ-004 [MUST] 当已登录 owner 请求 DELETE /api/answers/{aid} 时，系统应软删（deleted=1）返回 {deleted:true}；非 owner/未知=404；无鉴权=401**
-  owner 判定=行 openid 与 Bearer 解析 openid 一致。
-  - REQ-004.AC1 pytest 本人删除→200；二次删除幂等 200。
-  - REQ-004.AC2 pytest 他人删（用户B）→404；未知 aid→404；无鉴权→401。
-  - REQ-004.AC3 pytest 删除后 history/history_all 均不含该行；
-    get_answer/get_answer_visible 对该 aid 均 None/404。
+## B 族 · B 栈就绪
 
-- **REQ-005 [MUST] 当记录被软删时，系统应保持 pay_log、rewards、quota 全零变化**
-  - REQ-005.AC1 pytest 删除前后 quota_left 相等、pay_log 行数相等、
-    reward_exists 判定不变。
+- REQ-005 [MUST]: 当外部服务需要发起发送时，系统应提供 8440 端口 FastAPI 服务
+  及带鉴权的 POST /enqueue 路由，将消息注入 B 栈队列。
+  - REQ-005.AC1 入队消息受既有安全网约束（同群日3/全局日20/冷却/熔断）
+  - REQ-005.AC2 未授权请求返回 401；服务自启动纳入军团调度
+  - REQ-005.AC3 预算裁决：B 栈全局日 20 耗尽时按优先级 问答 > 推荐 > 推送 执行，
+    未发出的推送顺延次日窗口；A 栈额度独立计算
 
-- **REQ-006 [MUST] 当用户在「我的」页记录行右侧删除钮点删并确认时，系统应乐观移除该行（qw-pop 确认；失败回滚+toast；静默重拉兜底）**
-  确认弹窗固定文案「删除后不可恢复」。
-  - REQ-006.AC1 e2e 真点：hist-item 右侧删除钮 → 确认弹窗（自绘 qw-pop，
-    禁原生 showModal）→ 列表长度 -1；删至 0 条时空态呈现。
-  - REQ-006.AC2 遥测 record_delete_tap / record_delete_ok 事件可于
-    /api/telemetry/recent 查得（事件名过引擎 shape 门，无需引擎改动）。
-  - REQ-006.AC3 删除后重新拉取 history，列表与服务端一致（无幽灵行）。
+- REQ-006 [MUST]: 当商机信号被识别时，系统应经 EspoCRM REST API 自动创建或
+  更新 Lead（wxid、昵称、来源群、触发内容、评分、时间）。
+  - REQ-006.AC1 信号→Lead 入库延迟 <60 秒；EspoCRM 中文界面可检索
+  - REQ-006.AC2 transformer 代码 ≤200 行
 
+- REQ-007 [MUST]: 当同一微信用户跨群产生信号时，系统应按归一化去重键合并至
+  同一 Lead。
+  - REQ-007.AC1 去重键设计（wxid 优先/昵称+群 fallback/手机号合并）经评审定稿
+  - REQ-007.AC2 同人跨群两信号 → 单 Lead 更新（来源群追加）
 
-- **REQ-009 [MUST] 当用户在咨询页输入框输入/修改问题且未点「免费咨询」按钮时，系统应绝不发送咨询请求，且输入法键盘应保持展开（不被强制收起）**
-  - REQ-009.AC1 onInput 不再每键 setData question/qFocus（受控值环=真机 IME 组合态被打断
-    →键盘收起的根因）；输入值存页面实例字段，value 绑定仅程序化回填时变化。
-  - REQ-009.AC2 qFocus 复位移至 bindfocus（聚焦达成即复位，空点重聚焦语义保留）。
-  - REQ-009.AC3 发送唯一入口=onSubmit（免费咨询按钮）；onClear/_fill/onOptimize 同步
-    实例字段与 data.question（清空/回填仍生效）。
-  - REQ-009.AC4 BOOT-SIM 锚：onInput 块不含 question:/qFocus: 的 setData；
-    wxml textarea 带 bindfocus；e2e 打字流零键盘收起（数据面：连续 input 事件
-    qFocus 不翻转）。
+- REQ-008 [MUST]: 当商机评分达到告警阈值（初始值 70，随 REQ-014 阈值表可调）时，系统应在 5 分钟内推送企微群 webhook 告警。
+  - REQ-008.AC1 告警含：谁/哪个群/什么需求/评分/建议动作
+  - REQ-008.AC2 阈值改动留痕
 
-## 交付链
+## C 族 · A 栈（存活门后）
 
-- **REQ-007 [MUST] 当引擎含 deleted 列迁移部署时，系统应双方言幂等升级且生产健康（四点同步+TCB normal+health ok）**
-  - REQ-007.AC1 store.py 两处 CREATE TABLE + _ANSWER_UPGRADES +
-    scripts/mysql_schema.sql 四点同步（pytest 源结构断言——引擎线静态锚）。
-  - REQ-007.AC2 TCB 部署 normal+HasTraffic；生产 /api/health ok；
-    /api/history 冒烟正常。
+- REQ-009 [MUST]: 当存活门（REQ-001）通过时，系统应部署 LangBot+WeChatPadPro
+  并对值守群配置入站限频 86400 秒/3 次。
+  - REQ-009.AC1 第 4 条群消息不获回复（限频实测生效）
+  - REQ-009.AC2 每群仅一条启用限频的流水线（规避 pipeline_uuid 配额放大）
 
-- **REQ-008 [MUST] 当 REQ-001..007 全部 AC 绿时，系统应完成 0.9.18 robot 上传与提审（六段向导、不加急、只一次；基线=0.9.17 已发布，审核位空）**
-  当 REQ-001..007 全部 AC 绿时，系统应完成 0.9.17 robot 上传与提审
-  （六段向导、不加急、只一次）。
-  - REQ-008.AC1 三线全绿（pytest/BOOT-SIM/e2e）计数在案。
-  - REQ-008.AC2 UPLOAD_OK（robot 轮转）+ getcodepage 0.9.18 行=审核中。
-  - REQ-008.AC3 提审前置：getcodepage 复核线上=0.9.17 且审核位空
-    （1013 实况：无在审版本，无撤审风险；若状态有变则等出结果再提）。
+- REQ-010 [MUST]: 当 A 栈当日发送总数（被动回复+主动推送）达到 20 条时，系统应
+  阻止当日后续发送至次日窗口。
+  - REQ-010.AC1 计数覆盖 A 栈全部发送路径（被动回复计入全局 20，不豁免）
+  - REQ-010.AC2 计数器重启不清零（持久化）；同一次发送事件在全局计数器只计一次
+    （fixwin 窗口计数与全局计数为两个独立计数器，不产生同一事件双重累计）
+  - REQ-010.AC3 插件挂载点不可用时，降级路径（主动发送经 B 栈队列统一出站）
+    ADR 记录并实测一次
 
-## 溯源
+## D 族 · 四大商业动词
 
-- REQ-001/002/003 ← 用户令①（截图灰按钮+「每一个页面都可以」）
-- REQ-004/005/006 ← 用户令②（咨询记录删除）
-- REQ-007/008 ← 用户令（部署腾讯云托管+提审）+ 项目铁律
-- REQ-009 ← 用户令（1013：未点按钮不发送+键盘不被强制最小化——受控输入框根因）
-- 页面数口径：10 = app.json 现全集（tabBar=ask/pot/zhiku/research/my，home 非
-  tab）；新增页面随规则继承，无须新 REQ。
+- REQ-011 [MUST]: 当群成员在值守群提出工程问题时，系统应在营业时间（8-21 点，
+  仅约束 B 栈出站）经协同策略（REQ-004）指定的栈及其限频通道生成专业回答并发出。
+  - REQ-011.AC1 回答带可查证出处（规范/标准编号或库内文档链接）率 ≥80%，
+    周抽检 n≥20 条
+  - REQ-011.AC2 知识未命中时诚实告知并引导 1v1，不编造；LLM 供应商额度耗尽时
+    自动轮换（工程大脑既有），轮换期间静默不编造
+
+- REQ-012 [MUST]: 当 We-AIPO 产线产出新文章时，系统应按群画像标签匹配并在每日
+  9-10 点推送窗经 B 栈队列分发，推送附带讨论钩子话术（proactive.py L93-100 既有钩子库）。
+  - REQ-012.AC1 标签命中分发（水利群收水利文）
+  - REQ-012.AC2 同群同内容零重复（md5 去重）；预算耗尽时按 REQ-005.AC3 顺延
+
+- REQ-013 [MUST]: 当 Lead 进入培育流程时，系统应支撑并跟踪四级承接流转：
+  ①群内推荐（触发定义：Lead 评分 ≥50 且当日该群未发过推荐时，经 B 栈队列发一条
+  带出处推荐）→ ②CowAgent 1v1 私聊（人工/AI 承接）→ ③acg-faka 下单（客户动作，
+  系统跟踪）→ ④48 小时未跟进提醒（系统触发）。
+  - REQ-013.AC1 每级状态在 EspoCRM Lead 流转可见
+  - REQ-013.AC2 第①级触发后推荐实际发出且日志可查（3 天试运行期核验 ≥3 例）
+  - REQ-013.AC3 48 小时无人工跟进 → 企微提醒
+
+- REQ-014 [MUST]: 当信号入账时，系统应按 省份×行业×规模×时间窗 计算商机评分并
+  写入 Lead。
+  - REQ-014.AC1 评分公式文档化（revenue-engine/docs/scoring.md，唯一阈值来源）且
+    含完整阈值表：顾问级告警 70（REQ-008）、推荐触发 50（REQ-013①），及调参记录
+  - REQ-014.AC2 EspoCRM 原生列表按评分字段排序可用，零自研界面
+
+## E 族 · 收款与归因
+
+- REQ-015 [MUST]: 当客户支付 498 元时，系统应自动交付研报并关联源 Lead
+  （归因胶水：acg-faka 回调/webhook → EspoCRM Lead 更新，与 transformer 合并实现）。
+  - REQ-015.AC1 订单→Lead 关联正确；以 REQ-002 走单门通过为前提
+
+- REQ-016 [SHOULD]: 当客户购买 99 元月会员时，系统应提供会员交付与续期管理
+  （方案 ADR：acg-faka 商价位或薄自建腿，含 meedu 出局原因）。
+
+- REQ-017 [MUST]: 当订单成交时，系统应能回溯源链路：源消息→Lead→推荐→私聊→订单。
+  - REQ-017.AC1 上线后前 10 单全量回溯；单量不足期间以实际单量全查，≥3 单即出具首份报告
+  - REQ-017.AC2 周报含漏斗各级转化率
+  - （预算守门：归因胶水并入 300 行总量；超支则本条降 SHOULD 并留 ADR 取舍）
+
+## F 族 · 安全与合规
+
+- REQ-018 [MUST]: 当任何发送路径（A 栈、B 栈、8440 API、A 栈插件）执行时，系统应
+  强制经过限频矩阵；CowAgent 官方 iLink 通道豁免限频（零封号风险）但强制入审计日志。
+  - REQ-018.AC1 代码审查确认无未受限频的发送出口（CowAgent 为唯一显式豁免项）
+  - REQ-018.AC2 熔断或风控信号触发时双栈同停（与 REQ-021 同口径）
+
+- REQ-019 [MUST]: 当系统发送任何消息（含 CowAgent 豁免路径）时，应落盘审计日志
+  （时间/群/内容摘要/腿/频率计数快照）。
+  - REQ-019.AC1 日志保留 ≥90 天；周报自动汇总发送量
+
+- REQ-020 [SHOULD]: 当群内出现「退订/安静」类关键词时，系统应静默该群 N 天
+  （默认 7，可配置）。
+  - REQ-020.AC1 静默期内该群零发送（以审计日志核验）
+
+- REQ-021 [MUST]: 当系统检测到账号异常时，应分级处置：普通掉线（非风控）→
+  自愈重连+告警；风控异常/封号 → 30 分钟内（自检测时刻起算）双栈同停（含 B 栈）
+  并告警，经人工核查非协同性风险后按预案恢复 B 栈；UIA 失效时按预案切换 replica
+  备用腿。
+  - REQ-021.AC1 预案文档+一次演练记录（含分级判据）
+  - REQ-021.AC2 双栈同停以发送日志时间戳核验
+
+- REQ-024 [MUST]: 当 P6 任务图生成时，应包含胶水总行数门（≤300 行）与依赖许可证
+  审计（层级② 代码引入即 fail；docker 镜像锁 digest）。
+  - REQ-024.AC1 P6 门在 tasks.json 生成时实际执行且结果留痕
+
+## G 族 · 运营稳定
+
+- REQ-022 [MUST]: 当系统运行时，应无人值守运行并自愈故障（军团调度重启+健康探针）。
+  - REQ-022.AC1 72 小时无人值守试运行零人工介入（试运行窗选在无让路令期间；
+    让路令触发的暂停不计为故障）
+  - REQ-022.AC2 停机时长可计量进周报
+
+- REQ-023 [SHOULD]: 当每日 23:59（本地时间）时，系统应生成运营日报
+  （收入/漏斗/告警/异常/五轴指标当值）。
+  - REQ-023.AC1 日报含五轴世界级指标当前值
+
+- REQ-025 [SHOULD]: 当小号加入新群时，群清单应标注资产归属；重要群由主号或
+  可控群主持有。
+  - REQ-025.AC1 试运行前完成一次群资产归属全量审计（重要群中 A 栈仅为成员非群主）
