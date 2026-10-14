@@ -13,7 +13,7 @@ GLUE_FILES = [
     '私域运营/zbops/zbops/radar/lead_transformer.py',   # <=200 incl dedup/alert/attribution append
     '私域运营/zbops/zbops/radar/service_8440.py',        # 8440 entry + enqueue
     '私域运营/zbops/zbops/radar/followup.py',            # 48h reminder (reuse-first, else counted)
-    '私域运营/zbops/zbops/radar/audit.py',               # audit bus (reuse-first, else counted)
+    '私域运营/zbops/zbops/radar/audit_log.py',          # audit bus (reuse-first, else counted)
 ]
 GLUE_GLOBS = ['revenue-engine/deploy/langbot-plugins/**/*.py']  # global-daily-20 plugin ~50
 

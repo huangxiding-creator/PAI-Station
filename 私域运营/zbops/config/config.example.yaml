@@ -1,0 +1,54 @@
+# zbops 配置模板 —— 复制为 config.yaml 并填入真实值（config.yaml 已 gitignore）
+# 对应 ARCHITECTURE.md §10 开放问题，全部为上线前主理人需拍板项
+
+wecom:
+  corp_id: ""            # 企业ID（管理后台→我的企业）
+  # 智能机器人（P0 主链路，wss 长连接免公网IP）
+  aibot:
+    secret: ""           # 智能机器人 Secret
+    model_name: ""       # 机器人名称（可选，用于日志）
+  # 自建应用（回调通道：欢迎语/客户联系/微信客服，P1 启用）
+  agent:
+    agent_id: ""
+    secret: ""
+  callback:
+    token: ""            # 接收消息 Token
+    encoding_aes_key: "" # 43位 EncodingAESKey
+
+ai:
+  anthropic:
+    key: ""              # Claude（T2 答疑首选）
+    base_url: "https://api.anthropic.com"
+    model: "claude-sonnet-4-5"
+    max_tokens_group: 400
+  zhipu:
+    key: ""              # GLM（T1 意图/摘要 + T2 兜底）
+    base_url: "https://open.bigmodel.cn/api/paas/v4"
+    t1_model: "glm-4-flash"
+    t2_model: "glm-4.6"
+  budget:
+    daily_cents: 2000    # 全局日预算（分）
+    monthly_cents: 40000 # 月预算（分）
+
+guardian:
+  db_path: "C:/zb-ops/data/core.db"
+  runtime_dir: "C:/zb-ops/runtime"     # breaker.on 熔断文件所在
+  log_dir: "C:/zb-ops/logs"
+  quiet_hours: ["22:00", "08:00"]      # 全局静默
+  rates:                               # 唯一频控真源（多层取严）
+    wecom_per_chat_hourly: 6           # 每会话回复/时（官方硬限30/分之下再自限）
+    wecom_global_daily: 200
+    product_mention_per_chat_daily: 1  # 产品提及每群每日
+    product_weekly_ratio: 0.2
+
+kb:
+  sources_dir: ""         # 智库 PDF/MD 目录（总包智库导出）
+  fts_db: "C:/zb-ops/data/kb.db"
+
+personas:
+  system_answer: |
+    你是"总包AI顾问"，为工程建设行业专业人士答疑。
+    规则：1) 所有规范性表述只能基于检索到的资料生成，引用条款必须内联标注"依据GB/T xxx 第x.x.x条"；
+    2) 资料未覆盖的问题如实说明并建议查阅正式版规范；3) 禁止输出报价、资质承诺、法律责任判断；
+    4) 群聊场景默认120字以内，复杂问题先给结论再给依据；5) 不确定就说不确定。
+    6) 被问是否AI时必须承认。
