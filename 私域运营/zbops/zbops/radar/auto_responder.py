@@ -54,6 +54,7 @@ class SafeAutoResponder:
         self._sent_today = 0
         self._sent_date = ""
         self._sent_hashes: set[str] = set()
+        self._dedup_keys: set[str] = set()   # 显式 dedup_key 幂等集（API_DESIGN §1）
         self._chat_daily: dict[str, int] = {}        # chat → 今日发送数
         self._chat_last_sent: dict[str, float] = {}   # chat → 最后发送时间
         self._running = False
@@ -100,14 +101,20 @@ class SafeAutoResponder:
         if time.time() - self._chat_last_sent.get(chat_name, 0) < CHAT_COOLDOWN:
             return False
 
-        # 内容去重
-        if self._is_duplicate(text):
+        # 内容去重（显式 dedup_key 提供时以其为幂等键，否则按正文 md5 前50字）
+        dedup_key = metadata.get("dedup_key")
+        if dedup_key:
+            if dedup_key in self._dedup_keys:
+                return False
+        elif self._is_duplicate(text):
             return False
 
         msg = PendingMessage(chat_name=chat_name, text=text, priority=priority,
                             created_at=time.time(), metadata=metadata or {})
         self.queue.append(msg)
         self.queue.sort(key=lambda m: m.priority)
+        if dedup_key:
+            self._dedup_keys.add(dedup_key)
         return True
 
     def report_risk_signal(self, signal: str):
@@ -148,6 +155,11 @@ class SafeAutoResponder:
 
         msg = self.queue.pop(0)
         if not msg.text:
+            return
+
+        # 发送侧同群冷却复核（T-076：入队侧冷却可能被队列积压绕过）
+        if time.time() - self._chat_last_sent.get(msg.chat_name, 0) < CHAT_COOLDOWN:
+            self.queue.append(msg)   # 冷却未到，压回队尾稍后重试
             return
 
         success = await self._send_via_wxrpa(msg.chat_name, msg.text)
