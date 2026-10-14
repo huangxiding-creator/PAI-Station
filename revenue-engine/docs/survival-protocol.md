@@ -19,11 +19,12 @@
 - 报告随时可出：`py -I revenue-engine/probes/survival_watch.py report`
   → survival_report.md（VERDICT: PASS/FAIL/PENDING + 在线率 + 进群台账）
 
-## 判据（REQ-001.AC1，定死）
+## 判据（REQ-001.AC1，2026-10-14 分级修订：实有小号=1）
 
 | 判 | 条件 |
 |---|---|
-| PASS | D14 满 14 天 且 两号零封号征兆 且 单号在线率 ≥90%（probe_error 不计分母） |
+| 预铺量 PASS | D14 满 14 天 且 在役小号零封号征兆 且 在线率 ≥90%（probe_error 不计分母）→ 仅允许 10 群试运行 |
+| 全量 PASS | 第 2 小号到位补双号 14 天证据 → 铺量至值守群全集 |
 | FAIL | 任一号封号征兆 → A 栈不铺量，C 族需求转 B 栈单栈（ADR-001 降级路径） |
 | PENDING | 未满 14 天时钟继续 |
 
