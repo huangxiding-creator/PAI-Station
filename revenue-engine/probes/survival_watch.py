@@ -17,7 +17,7 @@ import requests
 
 ROOT = Path(__file__).resolve().parents[2]
 DIR = ROOT / "revenue-engine" / "reports" / "survival"
-URL = os.environ.get("RE_WPP_URL", "http://127.0.0.1:8848")
+URL = os.environ.get("RE_WPP_URL", "http://127.0.0.1:1238")
 ACCOUNTS = json.loads((DIR / "accounts.json").read_text(encoding="utf-8")
                       if (DIR / "accounts.json").exists() else "[]")
 BAN_WORDS = ("封", "异常", "被踢", "禁止", "风险")
@@ -27,8 +27,7 @@ def poll_once() -> list[dict]:
     events = []
     for acc in ACCOUNTS:
         try:
-            r = requests.get(f"{URL}/login/GetLoginStatus",
-                             headers={"token": acc["token"]},
+            r = requests.get(f"{URL}/login/GetLoginStatus?key={acc['token']}",
                              timeout=10)
             body = r.json()
             code, text = body.get("Code"), str(body.get("Text", ""))
