@@ -1,0 +1,1247 @@
+{
+  "ts": "2026-10-14T16:47:52+08:00",
+  "require": "tasks",
+  "requirements_file": "E:\\AI-Station\\REQUIREMENTS.md",
+  "reqs": [
+    {
+      "id": "REQ-001",
+      "priority": "MUST",
+      "text": "当存活实验运行时，系统应自动采集每日在线状态、掉线/封号事件、",
+      "line": 10,
+      "is_ac": false,
+      "parent": null,
+      "tasks": [
+        "T-001",
+        "T-011",
+        "T-041"
+      ],
+      "tests": [
+        ".claude/worktrees/agent-a4ed98579baefda64/_t002_staging/tests/test_g1.py",
+        "AIUI-Migrate/tests/factory/test_req_001_ac1_router_structure.py",
+        "AIUI-Migrate/tests/factory/test_req_001_ac2_route_table_hard_gates.py",
+        "AIUI-Migrate/tests/factory/test_req_001_ac3_ops_runbook_fixed_section.py",
+        "AIUI-Migrate/tests/factory/test_req_008_ac2_naming.py",
+        "AIUI-Migrate/tests/test_generator.py",
+        "lingzhu-quant-port/tests/test_anchors.py",
+        "lingzhu-quant-port/tests/test_g1.py",
+        "research/competitors-src/openclaw-main/src/agents/embedded-agent-error-observation.test.ts"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-001.AC1",
+      "priority": "MUST",
+      "text": "判据（定死）：2 个小号 × 14 天，零封号事件且单号累计在线率 ≥90%",
+      "line": 12,
+      "is_ac": true,
+      "parent": "REQ-001",
+      "tasks": [
+        "T-011",
+        "T-041"
+      ],
+      "tests": [
+        ".claude/worktrees/agent-a4ed98579baefda64/_t002_staging/tests/test_g1.py",
+        "AIUI-Migrate/tests/factory/test_req_001_ac1_router_structure.py",
+        "AIUI-Migrate/tests/factory/test_req_008_ac2_naming.py",
+        "lingzhu-quant-port/tests/test_anchors.py",
+        "lingzhu-quant-port/tests/test_g1.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-001.AC2",
+      "priority": "MUST",
+      "text": "报告含逐日明细；Phase 0 的 10 群进群与 Phase 2 的 3 天试运行为两次独立验收，不重复计",
+      "line": 14,
+      "is_ac": true,
+      "parent": "REQ-001",
+      "tasks": [
+        "T-011",
+        "T-041"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_001_ac2_route_table_hard_gates.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-002",
+      "priority": "MUST",
+      "text": "当人工触发一笔 498 元研报实测订单时，系统应完成下单处理、",
+      "line": 16,
+      "is_ac": false,
+      "parent": null,
+      "tasks": [
+        "T-002",
+        "T-013",
+        "T-078",
+        "T-081"
+      ],
+      "tests": [
+        ".claude/worktrees/agent-a4ed98579baefda64/_t002_staging/tests/test_g1.py",
+        "AIUI-Migrate/tests/factory/test_req_002_ac1_junction_single_source.py",
+        "AIUI-Migrate/tests/factory/test_req_002_ac2_registration_visibility.py",
+        "AIUI-Migrate/tests/factory/test_req_008_ac2_naming.py",
+        "AIUI-Migrate/tests/test_generator.py",
+        "lingzhu-quant-port/tests/test_g1.py",
+        "research/competitors-src/openclaw-main/src/agents/embedded-agent-error-observation.test.ts"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-002.AC1",
+      "priority": "MUST",
+      "text": "支付成功且交付物（卡密/链接）正确送达购买者",
+      "line": 18,
+      "is_ac": true,
+      "parent": "REQ-002",
+      "tasks": [
+        "T-013",
+        "T-081"
+      ],
+      "tests": [
+        ".claude/worktrees/agent-a4ed98579baefda64/_t002_staging/tests/test_g1.py",
+        "AIUI-Migrate/tests/factory/test_req_002_ac1_junction_single_source.py",
+        "lingzhu-quant-port/tests/test_g1.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-002.AC2",
+      "priority": "MUST",
+      "text": "失败时输出降级路径 ADR（官方 SDK 直连或人工发货过渡）",
+      "line": 19,
+      "is_ac": true,
+      "parent": "REQ-002",
+      "tasks": [
+        "T-013",
+        "T-078"
+      ],
+      "tests": [
+        ".claude/worktrees/agent-a4ed98579baefda64/_t002_staging/tests/test_g1.py",
+        "AIUI-Migrate/tests/factory/test_req_002_ac2_registration_visibility.py",
+        "AIUI-Migrate/tests/factory/test_req_008_ac2_naming.py",
+        "lingzhu-quant-port/tests/test_g1.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-003",
+      "priority": "MUST",
+      "text": "当商户号门结论写入配置时，系统应按结论启用对应收款模式",
+      "line": 21,
+      "is_ac": false,
+      "parent": null,
+      "tasks": [
+        "T-003",
+        "T-004",
+        "T-005",
+        "T-006",
+        "T-016",
+        "T-042"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_003_ac1_proposal_pipeline.py",
+        "AIUI-Migrate/tests/factory/test_req_003_ac2_banned_words.py",
+        "AIUI-Migrate/tests/test_generator.py",
+        "lingzhu-quant-port/tests/test_anchors.py",
+        "lingzhu-quant-port/tests/test_g2.py",
+        "services/qianwen-engine/tests/test_static_goods.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-003.AC1",
+      "priority": "MUST",
+      "text": "ADR 落于 revenue-engine/docs/adr/，含结论三选一与依据",
+      "line": 23,
+      "is_ac": true,
+      "parent": "REQ-003",
+      "tasks": [
+        "T-016",
+        "T-042"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_003_ac1_proposal_pipeline.py",
+        "lingzhu-quant-port/tests/test_g2.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-004",
+      "priority": "MUST",
+      "text": "当双栈同时在线时，系统应按定稿协同策略执行问答/推送分工。",
+      "line": 25,
+      "is_ac": false,
+      "parent": null,
+      "tasks": [
+        "T-007",
+        "T-009",
+        "T-010",
+        "T-044",
+        "T-065"
+      ],
+      "tests": [
+        ".claude/worktrees/agent-a1176407bc48271a5/services/qianwen-engine/tests/test_delete_answer.py",
+        ".claude/worktrees/agent-a52086cd3347105e3/services/qianwen-engine/tests/test_delete_answer.py",
+        ".claude/worktrees/agent-ac13086da2181fabb/services/qianwen-engine/tests/test_delete_answer.py",
+        ".claude/worktrees/agent-ada60b0d29c4d4d4c/services/qianwen-engine/tests/test_delete_answer.py",
+        "AIUI-Migrate/tests/factory/test_req_004_ac1_gate_zero_write.py",
+        "AIUI-Migrate/tests/factory/test_req_004_ac2_approval_ledger.py",
+        "AIUI-Migrate/tests/factory/test_req_021_ac1_f40_entry_wiring.py",
+        "AIUI-Migrate/tests/test_requirements.py",
+        "lingzhu-quant-port/tests/test_anchors.py",
+        "lingzhu-quant-port/tests/test_g3.py",
+        "lingzhu-quant-port/tests/test_guard.py",
+        "services/qianwen-engine/tests/test_delete_answer.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-004.AC1",
+      "priority": "MUST",
+      "text": "协同策略文档（revenue-engine/docs/）覆盖：问答分工矩阵、内容去重互通、风控信号互通",
+      "line": 26,
+      "is_ac": true,
+      "parent": "REQ-004",
+      "tasks": [
+        "T-010",
+        "T-044"
+      ],
+      "tests": [
+        ".claude/worktrees/agent-a1176407bc48271a5/services/qianwen-engine/tests/test_delete_answer.py",
+        ".claude/worktrees/agent-a52086cd3347105e3/services/qianwen-engine/tests/test_delete_answer.py",
+        ".claude/worktrees/agent-ac13086da2181fabb/services/qianwen-engine/tests/test_delete_answer.py",
+        ".claude/worktrees/agent-ada60b0d29c4d4d4c/services/qianwen-engine/tests/test_delete_answer.py",
+        "AIUI-Migrate/tests/factory/test_req_004_ac1_gate_zero_write.py",
+        "AIUI-Migrate/tests/factory/test_req_021_ac1_f40_entry_wiring.py",
+        "lingzhu-quant-port/tests/test_anchors.py",
+        "lingzhu-quant-port/tests/test_g3.py",
+        "services/qianwen-engine/tests/test_delete_answer.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-004.AC2",
+      "priority": "MUST",
+      "text": "同群 10 分钟窗口内 A/B 栈零同类内容重复发送，试运行 3 天全量日志核验",
+      "line": 27,
+      "is_ac": true,
+      "parent": "REQ-004",
+      "tasks": [
+        "T-007",
+        "T-010",
+        "T-065"
+      ],
+      "tests": [
+        ".claude/worktrees/agent-a52086cd3347105e3/services/qianwen-engine/tests/test_delete_answer.py",
+        ".claude/worktrees/agent-ac13086da2181fabb/services/qianwen-engine/tests/test_delete_answer.py",
+        ".claude/worktrees/agent-ada60b0d29c4d4d4c/services/qianwen-engine/tests/test_delete_answer.py",
+        "AIUI-Migrate/tests/factory/test_req_004_ac2_approval_ledger.py",
+        "lingzhu-quant-port/tests/test_guard.py",
+        "services/qianwen-engine/tests/test_delete_answer.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-005",
+      "priority": "MUST",
+      "text": "当外部服务需要发起发送时，系统应提供 8440 端口 FastAPI 服务",
+      "line": 31,
+      "is_ac": false,
+      "parent": null,
+      "tasks": [
+        "T-008",
+        "T-010",
+        "T-054",
+        "T-075",
+        "T-076"
+      ],
+      "tests": [
+        ".claude/worktrees/agent-a1176407bc48271a5/services/qianwen-engine/tests/test_delete_answer.py",
+        ".claude/worktrees/agent-a52086cd3347105e3/services/qianwen-engine/tests/test_delete_answer.py",
+        ".claude/worktrees/agent-ac13086da2181fabb/services/qianwen-engine/tests/test_delete_answer.py",
+        ".claude/worktrees/agent-ada60b0d29c4d4d4c/services/qianwen-engine/tests/test_delete_answer.py",
+        "AIUI-Migrate/tests/factory/test_req_003_ac1_proposal_pipeline.py",
+        "AIUI-Migrate/tests/factory/test_req_005_ac1_config_frozen.py",
+        "AIUI-Migrate/tests/factory/test_req_005_ac2_manifest_home.py",
+        "AIUI-Migrate/tests/test_requirements.py",
+        "lingzhu-quant-port/tests/test_g4.py",
+        "services/qianwen-engine/tests/test_delete_answer.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-005.AC1",
+      "priority": "MUST",
+      "text": "入队消息受既有安全网约束（同群日3/全局日20/冷却/熔断）",
+      "line": 33,
+      "is_ac": true,
+      "parent": "REQ-005",
+      "tasks": [
+        "T-010",
+        "T-076"
+      ],
+      "tests": [
+        ".claude/worktrees/agent-a1176407bc48271a5/services/qianwen-engine/tests/test_delete_answer.py",
+        ".claude/worktrees/agent-a52086cd3347105e3/services/qianwen-engine/tests/test_delete_answer.py",
+        ".claude/worktrees/agent-ac13086da2181fabb/services/qianwen-engine/tests/test_delete_answer.py",
+        ".claude/worktrees/agent-ada60b0d29c4d4d4c/services/qianwen-engine/tests/test_delete_answer.py",
+        "AIUI-Migrate/tests/factory/test_req_005_ac1_config_frozen.py",
+        "lingzhu-quant-port/tests/test_g4.py",
+        "services/qianwen-engine/tests/test_delete_answer.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-005.AC2",
+      "priority": "MUST",
+      "text": "未授权请求返回 401；服务自启动纳入军团调度",
+      "line": 34,
+      "is_ac": true,
+      "parent": "REQ-005",
+      "tasks": [
+        "T-008",
+        "T-075"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_003_ac1_proposal_pipeline.py",
+        "AIUI-Migrate/tests/factory/test_req_005_ac2_manifest_home.py",
+        "lingzhu-quant-port/tests/test_g4.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-005.AC3",
+      "priority": "MUST",
+      "text": "预算裁决：B 栈全局日 20 耗尽时按优先级 问答 > 推荐 > 推送 执行，",
+      "line": 35,
+      "is_ac": true,
+      "parent": "REQ-005",
+      "tasks": [
+        "T-054"
+      ],
+      "tests": [
+        "lingzhu-quant-port/tests/test_g4.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-006",
+      "priority": "MUST",
+      "text": "当商机信号被识别时，系统应经 EspoCRM REST API 自动创建或",
+      "line": 38,
+      "is_ac": false,
+      "parent": null,
+      "tasks": [
+        "T-015",
+        "T-016",
+        "T-045",
+        "T-050"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_006_ac1_render_idempotent.py",
+        "AIUI-Migrate/tests/factory/test_req_007_ac1_bind_reconcile.py",
+        "AIUI-Migrate/tests/factory/test_req_008_ac2_naming.py",
+        "AIUI-Migrate/tests/test_generator.py",
+        "AIUI-Migrate/tests/test_requirements.py",
+        "lingzhu-quant-port/tests/test_g5.py",
+        "lingzhu-quant-port/tests/test_guard.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-006.AC1",
+      "priority": "MUST",
+      "text": "信号→Lead 入库延迟 <60 秒；EspoCRM 中文界面可检索",
+      "line": 40,
+      "is_ac": true,
+      "parent": "REQ-006",
+      "tasks": [
+        "T-015",
+        "T-016",
+        "T-045",
+        "T-050"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_006_ac1_render_idempotent.py",
+        "AIUI-Migrate/tests/factory/test_req_008_ac2_naming.py",
+        "lingzhu-quant-port/tests/test_g5.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-006.AC2",
+      "priority": "MUST",
+      "text": "transformer 代码 ≤200 行",
+      "line": 41,
+      "is_ac": true,
+      "parent": "REQ-006",
+      "tasks": [
+        "T-015",
+        "T-016",
+        "T-050"
+      ],
+      "tests": [],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-007",
+      "priority": "MUST",
+      "text": "当同一微信用户跨群产生信号时，系统应按归一化去重键合并至",
+      "line": 43,
+      "is_ac": false,
+      "parent": null,
+      "tasks": [
+        "T-014",
+        "T-017",
+        "T-056"
+      ],
+      "tests": [
+        ".claude/worktrees/agent-a1176407bc48271a5/services/qianwen-engine/tests/test_delete_answer.py",
+        ".claude/worktrees/agent-a52086cd3347105e3/services/qianwen-engine/tests/test_delete_answer.py",
+        ".claude/worktrees/agent-ac13086da2181fabb/services/qianwen-engine/tests/test_delete_answer.py",
+        ".claude/worktrees/agent-ada60b0d29c4d4d4c/services/qianwen-engine/tests/test_delete_answer.py",
+        "AIUI-Migrate/tests/factory/test_req_007_ac1_bind_reconcile.py",
+        "AIUI-Migrate/tests/factory/test_req_008_ac2_naming.py",
+        "AIUI-Migrate/tests/factory/test_req_021_ac1_f40_entry_wiring.py",
+        "AIUI-Migrate/tests/factory/test_req_021_ac2_f40_entry_wiring.py",
+        "AIUI-Migrate/tests/test_requirements.py",
+        "lingzhu-quant-port/tests/test_g5.py",
+        "services/qianwen-engine/tests/test_delete_answer.py",
+        "services/qianwen-engine/tests/test_schema_sync.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-007.AC1",
+      "priority": "MUST",
+      "text": "去重键设计（wxid 优先/昵称+群 fallback/手机号合并）经评审定稿",
+      "line": 45,
+      "is_ac": true,
+      "parent": "REQ-007",
+      "tasks": [
+        "T-014",
+        "T-056"
+      ],
+      "tests": [
+        ".claude/worktrees/agent-a1176407bc48271a5/services/qianwen-engine/tests/test_delete_answer.py",
+        ".claude/worktrees/agent-a52086cd3347105e3/services/qianwen-engine/tests/test_delete_answer.py",
+        ".claude/worktrees/agent-ac13086da2181fabb/services/qianwen-engine/tests/test_delete_answer.py",
+        ".claude/worktrees/agent-ada60b0d29c4d4d4c/services/qianwen-engine/tests/test_delete_answer.py",
+        "AIUI-Migrate/tests/factory/test_req_007_ac1_bind_reconcile.py",
+        "AIUI-Migrate/tests/factory/test_req_021_ac1_f40_entry_wiring.py",
+        "AIUI-Migrate/tests/factory/test_req_021_ac2_f40_entry_wiring.py",
+        "services/qianwen-engine/tests/test_delete_answer.py",
+        "services/qianwen-engine/tests/test_schema_sync.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-007.AC2",
+      "priority": "MUST",
+      "text": "同人跨群两信号 → 单 Lead 更新（来源群追加）",
+      "line": 46,
+      "is_ac": true,
+      "parent": "REQ-007",
+      "tasks": [
+        "T-017",
+        "T-056"
+      ],
+      "tests": [
+        "lingzhu-quant-port/tests/test_g5.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-008",
+      "priority": "MUST",
+      "text": "当商机评分达到告警阈值（初始值 70，随 REQ-014 阈值表可调）时，系统应在 5 分钟内推送企微群 webhook 告警。",
+      "line": 48,
+      "is_ac": false,
+      "parent": null,
+      "tasks": [
+        "T-021",
+        "T-057"
+      ],
+      "tests": [
+        ".claude/worktrees/agent-a4ed98579baefda64/_t002_staging/tests/test_g1.py",
+        "AIUI-Migrate/tests/factory/test_req_008_ac1_three_legs.py",
+        "AIUI-Migrate/tests/factory/test_req_008_ac2_naming.py",
+        "AIUI-Migrate/tests/factory/test_req_008_ac3_ensure_stack.py",
+        "AIUI-Migrate/tests/test_requirements.py",
+        "lingzhu-quant-port/tests/test_anchors.py",
+        "lingzhu-quant-port/tests/test_g1.py",
+        "lingzhu-quant-port/tests/test_g2.py",
+        "lingzhu-quant-port/tests/test_g4.py",
+        "lingzhu-quant-port/tests/test_g5.py",
+        "lingzhu-quant-port/tests/test_guard.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-008.AC1",
+      "priority": "MUST",
+      "text": "告警含：谁/哪个群/什么需求/评分/建议动作",
+      "line": 49,
+      "is_ac": true,
+      "parent": "REQ-008",
+      "tasks": [
+        "T-057"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_008_ac1_three_legs.py",
+        "lingzhu-quant-port/tests/test_guard.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-008.AC2",
+      "priority": "MUST",
+      "text": "阈值改动留痕",
+      "line": 50,
+      "is_ac": true,
+      "parent": "REQ-008",
+      "tasks": [
+        "T-057"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_008_ac2_naming.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-009",
+      "priority": "MUST",
+      "text": "当存活门（REQ-001）通过时，系统应部署 LangBot+WeChatPadPro",
+      "line": 54,
+      "is_ac": false,
+      "parent": null,
+      "tasks": [
+        "T-022",
+        "T-062"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_008_ac2_naming.py",
+        "AIUI-Migrate/tests/factory/test_req_009_ac1_enum_dual_source.py",
+        "AIUI-Migrate/tests/factory/test_req_009_ac1_spec_lint.py",
+        "AIUI-Migrate/tests/factory/test_req_009_ac2_cdn_get.py",
+        "AIUI-Migrate/tests/factory/test_req_010_ac3_dryrun.py",
+        "AIUI-Migrate/tests/factory/test_req_010_ac5_precheck.py",
+        "AIUI-Migrate/tests/test_requirements.py",
+        "lingzhu-quant-port/tests/test_writer.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-009.AC1",
+      "priority": "MUST",
+      "text": "第 4 条群消息不获回复（限频实测生效）",
+      "line": 56,
+      "is_ac": true,
+      "parent": "REQ-009",
+      "tasks": [
+        "T-062"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_009_ac1_enum_dual_source.py",
+        "AIUI-Migrate/tests/factory/test_req_009_ac1_spec_lint.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-009.AC2",
+      "priority": "MUST",
+      "text": "每群仅一条启用限频的流水线（规避 pipeline_uuid 配额放大）",
+      "line": 57,
+      "is_ac": true,
+      "parent": "REQ-009",
+      "tasks": [
+        "T-062"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_009_ac2_cdn_get.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-010",
+      "priority": "MUST",
+      "text": "当 A 栈当日发送总数（被动回复+主动推送）达到 20 条时，系统应",
+      "line": 59,
+      "is_ac": false,
+      "parent": null,
+      "tasks": [
+        "T-063",
+        "T-064"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_010_ac1_submit_evidence.py",
+        "AIUI-Migrate/tests/factory/test_req_010_ac1_usage_envelope_uniform.py",
+        "AIUI-Migrate/tests/factory/test_req_010_ac2_verdict_json.py",
+        "AIUI-Migrate/tests/factory/test_req_010_ac3_dryrun.py",
+        "AIUI-Migrate/tests/factory/test_req_010_ac4_readback.py",
+        "AIUI-Migrate/tests/factory/test_req_010_ac5_precheck.py",
+        "AIUI-Migrate/tests/test_requirements.py",
+        "lingzhu-quant-port/tests/test_req_010_ac1_rollback.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-010.AC1",
+      "priority": "MUST",
+      "text": "计数覆盖 A 栈全部发送路径（被动回复计入全局 20，不豁免）",
+      "line": 61,
+      "is_ac": true,
+      "parent": "REQ-010",
+      "tasks": [
+        "T-063"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_010_ac1_submit_evidence.py",
+        "AIUI-Migrate/tests/factory/test_req_010_ac1_usage_envelope_uniform.py",
+        "AIUI-Migrate/tests/factory/test_req_010_ac2_verdict_json.py",
+        "lingzhu-quant-port/tests/test_req_010_ac1_rollback.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-010.AC2",
+      "priority": "MUST",
+      "text": "计数器重启不清零（持久化）；同一次发送事件在全局计数器只计一次",
+      "line": 62,
+      "is_ac": true,
+      "parent": "REQ-010",
+      "tasks": [
+        "T-063"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_010_ac2_verdict_json.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-010.AC3",
+      "priority": "MUST",
+      "text": "插件挂载点不可用时，降级路径（主动发送经 B 栈队列统一出站）",
+      "line": 64,
+      "is_ac": true,
+      "parent": "REQ-010",
+      "tasks": [
+        "T-064"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_010_ac3_dryrun.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-011",
+      "priority": "MUST",
+      "text": "当群成员在值守群提出工程问题时，系统应在营业时间（8-21 点，",
+      "line": 69,
+      "is_ac": false,
+      "parent": null,
+      "tasks": [
+        "T-061"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_008_ac2_naming.py",
+        "AIUI-Migrate/tests/factory/test_req_011_ac1_state_file.py",
+        "AIUI-Migrate/tests/factory/test_req_011_ac2_push_payload.py",
+        "AIUI-Migrate/tests/factory/test_req_011_ac3_silence.py",
+        "AIUI-Migrate/tests/factory/test_req_011_ac4_health.py",
+        "lingzhu-quant-port/tests/test_req_011_ac1_patrol_compare.py",
+        "research/competitors-src/openclaw-main/src/agents/embedded-agent-runner/run/payloads.errors.test.ts",
+        "research/competitors-src/openclaw-main/src/agents/embedded-agent-runner/run/tool-error-warning.test.ts"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-011.AC1",
+      "priority": "MUST",
+      "text": "回答带可查证出处（规范/标准编号或库内文档链接）率 ≥80%，",
+      "line": 71,
+      "is_ac": true,
+      "parent": "REQ-011",
+      "tasks": [
+        "T-061"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_011_ac1_state_file.py",
+        "lingzhu-quant-port/tests/test_req_011_ac1_patrol_compare.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-011.AC2",
+      "priority": "MUST",
+      "text": "知识未命中时诚实告知并引导 1v1，不编造；LLM 供应商额度耗尽时",
+      "line": 73,
+      "is_ac": true,
+      "parent": "REQ-011",
+      "tasks": [
+        "T-061"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_011_ac2_push_payload.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-012",
+      "priority": "MUST",
+      "text": "当 We-AIPO 产线产出新文章时，系统应按群画像标签匹配并在每日",
+      "line": 76,
+      "is_ac": false,
+      "parent": null,
+      "tasks": [
+        "T-068"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_012_ac1_classify_ledger.py",
+        "AIUI-Migrate/tests/factory/test_req_012_ac2_second_reject_stop.py",
+        "AIUI-Migrate/tests/factory/test_req_014_ac1_wizard_doc.py",
+        "AIUI-Migrate/tests/test_requirements.py",
+        "lingzhu-quant-port/tests/test_writer.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-012.AC1",
+      "priority": "MUST",
+      "text": "标签命中分发（水利群收水利文）",
+      "line": 78,
+      "is_ac": true,
+      "parent": "REQ-012",
+      "tasks": [
+        "T-068"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_012_ac1_classify_ledger.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-012.AC2",
+      "priority": "MUST",
+      "text": "同群同内容零重复（md5 去重）；预算耗尽时按 REQ-005.AC3 顺延",
+      "line": 79,
+      "is_ac": true,
+      "parent": "REQ-012",
+      "tasks": [
+        "T-068"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_012_ac2_second_reject_stop.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-013",
+      "priority": "MUST",
+      "text": "当 Lead 进入培育流程时，系统应支撑并跟踪四级承接流转：",
+      "line": 81,
+      "is_ac": false,
+      "parent": null,
+      "tasks": [
+        "T-058",
+        "T-066",
+        "T-067"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_013_ac1_up_flip.py",
+        "AIUI-Migrate/tests/factory/test_req_014_ac1_wizard_doc.py",
+        "AIUI-Migrate/tests/test_requirements.py",
+        "lingzhu-quant-port/tests/test_writer.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-013.AC1",
+      "priority": "MUST",
+      "text": "每级状态在 EspoCRM Lead 流转可见",
+      "line": 85,
+      "is_ac": true,
+      "parent": "REQ-013",
+      "tasks": [
+        "T-058"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_013_ac1_up_flip.py",
+        "lingzhu-quant-port/tests/test_writer.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-013.AC2",
+      "priority": "MUST",
+      "text": "第①级触发后推荐实际发出且日志可查（3 天试运行期核验 ≥3 例）",
+      "line": 86,
+      "is_ac": true,
+      "parent": "REQ-013",
+      "tasks": [
+        "T-066"
+      ],
+      "tests": [],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-013.AC3",
+      "priority": "MUST",
+      "text": "48 小时无人工跟进 → 企微提醒",
+      "line": 87,
+      "is_ac": true,
+      "parent": "REQ-013",
+      "tasks": [
+        "T-067"
+      ],
+      "tests": [],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-014",
+      "priority": "MUST",
+      "text": "当信号入账时，系统应按 省份×行业×规模×时间窗 计算商机评分并",
+      "line": 89,
+      "is_ac": false,
+      "parent": null,
+      "tasks": [
+        "T-045",
+        "T-046"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_012_ac1_classify_ledger.py",
+        "AIUI-Migrate/tests/factory/test_req_014_ac1_cli_exception_face.py",
+        "AIUI-Migrate/tests/factory/test_req_014_ac1_wizard_doc.py",
+        "AIUI-Migrate/tests/test_requirements.py",
+        "lingzhu-quant-port/tests/test_req_014_ac1_acceptance_report.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-014.AC1",
+      "priority": "MUST",
+      "text": "评分公式文档化（revenue-engine/docs/scoring.md，唯一阈值来源）且",
+      "line": 91,
+      "is_ac": true,
+      "parent": "REQ-014",
+      "tasks": [
+        "T-046"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_012_ac1_classify_ledger.py",
+        "AIUI-Migrate/tests/factory/test_req_014_ac1_cli_exception_face.py",
+        "AIUI-Migrate/tests/factory/test_req_014_ac1_wizard_doc.py",
+        "lingzhu-quant-port/tests/test_req_014_ac1_acceptance_report.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-014.AC2",
+      "priority": "MUST",
+      "text": "EspoCRM 原生列表按评分字段排序可用，零自研界面",
+      "line": 93,
+      "is_ac": true,
+      "parent": "REQ-014",
+      "tasks": [
+        "T-045"
+      ],
+      "tests": [],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-015",
+      "priority": "MUST",
+      "text": "当客户支付 498 元时，系统应自动交付研报并关联源 Lead",
+      "line": 97,
+      "is_ac": false,
+      "parent": null,
+      "tasks": [
+        "T-069"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_012_ac1_classify_ledger.py",
+        "AIUI-Migrate/tests/factory/test_req_015_ac1_cli_catchall_envelope.py",
+        "AIUI-Migrate/tests/factory/test_req_015_ac1_drift_gate.py",
+        "AIUI-Migrate/tests/factory/test_req_015_ac1_run_stage_gate_red_evidence_guard.py",
+        "AIUI-Migrate/tests/factory/test_req_021_ac2_create_dedup.py",
+        "AIUI-Migrate/tests/test_generator.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-015.AC1",
+      "priority": "MUST",
+      "text": "订单→Lead 关联正确；以 REQ-002 走单门通过为前提",
+      "line": 99,
+      "is_ac": true,
+      "parent": "REQ-015",
+      "tasks": [
+        "T-069"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_015_ac1_cli_catchall_envelope.py",
+        "AIUI-Migrate/tests/factory/test_req_015_ac1_drift_gate.py",
+        "AIUI-Migrate/tests/factory/test_req_015_ac1_run_stage_gate_red_evidence_guard.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-016",
+      "priority": "SHOULD",
+      "text": "当客户购买 99 元月会员时，系统应提供会员交付与续期管理",
+      "line": 101,
+      "is_ac": false,
+      "parent": null,
+      "tasks": [
+        "T-059"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_016_ac1_write_boundary.py",
+        "AIUI-Migrate/tests/factory/test_req_016_ac2_browser_discipline.py",
+        "AIUI-Migrate/tests/factory/test_req_017_ac2_throttle.py",
+        "AIUI-Migrate/tests/factory/test_req_021_ac3_no_autodelete.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-017",
+      "priority": "MUST",
+      "text": "当订单成交时，系统应能回溯源链路：源消息→Lead→推荐→私聊→订单。",
+      "line": 104,
+      "is_ac": false,
+      "parent": null,
+      "tasks": [
+        "T-072"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_007_ac1_bind_reconcile.py",
+        "AIUI-Migrate/tests/factory/test_req_010_ac4_readback.py",
+        "AIUI-Migrate/tests/factory/test_req_017_ac1_redaction.py",
+        "AIUI-Migrate/tests/factory/test_req_017_ac2_throttle.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-017.AC1",
+      "priority": "MUST",
+      "text": "上线后前 10 单全量回溯；单量不足期间以实际单量全查，≥3 单即出具首份报告",
+      "line": 105,
+      "is_ac": true,
+      "parent": "REQ-017",
+      "tasks": [
+        "T-072"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_017_ac1_redaction.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-017.AC2",
+      "priority": "MUST",
+      "text": "周报含漏斗各级转化率",
+      "line": 106,
+      "is_ac": true,
+      "parent": "REQ-017",
+      "tasks": [
+        "T-072"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_007_ac1_bind_reconcile.py",
+        "AIUI-Migrate/tests/factory/test_req_010_ac4_readback.py",
+        "AIUI-Migrate/tests/factory/test_req_017_ac2_throttle.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-018",
+      "priority": "MUST",
+      "text": "当任何发送路径（A 栈、B 栈、8440 API、A 栈插件）执行时，系统应",
+      "line": 111,
+      "is_ac": false,
+      "parent": null,
+      "tasks": [
+        "T-070"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_011_ac2_push_payload.py",
+        "AIUI-Migrate/tests/factory/test_req_013_ac1_up_flip.py",
+        "AIUI-Migrate/tests/factory/test_req_015_ac1_drift_gate.py",
+        "AIUI-Migrate/tests/factory/test_req_018_ac1_changelog_format.py",
+        "AIUI-Migrate/tests/factory/test_req_018_ac2_adversarial_trace.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-018.AC1",
+      "priority": "MUST",
+      "text": "代码审查确认无未受限频的发送出口（CowAgent 为唯一显式豁免项）",
+      "line": 113,
+      "is_ac": true,
+      "parent": "REQ-018",
+      "tasks": [
+        "T-070"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_018_ac1_changelog_format.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-018.AC2",
+      "priority": "MUST",
+      "text": "熔断或风控信号触发时双栈同停（与 REQ-021 同口径）",
+      "line": 114,
+      "is_ac": true,
+      "parent": "REQ-018",
+      "tasks": [
+        "T-070"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_018_ac2_adversarial_trace.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-019",
+      "priority": "MUST",
+      "text": "当系统发送任何消息（含 CowAgent 豁免路径）时，应落盘审计日志",
+      "line": 116,
+      "is_ac": false,
+      "parent": null,
+      "tasks": [
+        "T-048"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_019_ac2_missing_guidance.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-019.AC1",
+      "priority": "MUST",
+      "text": "日志保留 ≥90 天；周报自动汇总发送量",
+      "line": 118,
+      "is_ac": true,
+      "parent": "REQ-019",
+      "tasks": [
+        "T-048"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_019_ac2_missing_guidance.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-020",
+      "priority": "SHOULD",
+      "text": "当群内出现「退订/安静」类关键词时，系统应静默该群 N 天",
+      "line": 120,
+      "is_ac": false,
+      "parent": null,
+      "tasks": [
+        "T-060"
+      ],
+      "tests": [],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-020.AC1",
+      "priority": "SHOULD",
+      "text": "静默期内该群零发送（以审计日志核验）",
+      "line": 122,
+      "is_ac": true,
+      "parent": "REQ-020",
+      "tasks": [
+        "T-060"
+      ],
+      "tests": [],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-021",
+      "priority": "MUST",
+      "text": "当系统检测到账号异常时，应分级处置：普通掉线（非风控）→",
+      "line": 124,
+      "is_ac": false,
+      "parent": null,
+      "tasks": [
+        "T-071"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_007_ac1_bind_reconcile.py",
+        "AIUI-Migrate/tests/factory/test_req_008_ac2_naming.py",
+        "AIUI-Migrate/tests/factory/test_req_010_ac1_usage_envelope_uniform.py",
+        "AIUI-Migrate/tests/factory/test_req_015_ac1_cli_catchall_envelope.py",
+        "AIUI-Migrate/tests/factory/test_req_016_ac1_write_boundary.py",
+        "AIUI-Migrate/tests/factory/test_req_021_ac1_breakpoint_report.py",
+        "AIUI-Migrate/tests/factory/test_req_021_ac1_f40_entry_wiring.py",
+        "AIUI-Migrate/tests/factory/test_req_021_ac2_create_dedup.py",
+        "AIUI-Migrate/tests/factory/test_req_021_ac2_f40_entry_wiring.py",
+        "AIUI-Migrate/tests/factory/test_req_021_ac3_no_autodelete.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-021.AC1",
+      "priority": "MUST",
+      "text": "预案文档+一次演练记录（含分级判据）",
+      "line": 128,
+      "is_ac": true,
+      "parent": "REQ-021",
+      "tasks": [
+        "T-071"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_021_ac1_breakpoint_report.py",
+        "AIUI-Migrate/tests/factory/test_req_021_ac1_f40_entry_wiring.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-021.AC2",
+      "priority": "MUST",
+      "text": "双栈同停以发送日志时间戳核验",
+      "line": 129,
+      "is_ac": true,
+      "parent": "REQ-021",
+      "tasks": [
+        "T-071"
+      ],
+      "tests": [
+        "AIUI-Migrate/tests/factory/test_req_007_ac1_bind_reconcile.py",
+        "AIUI-Migrate/tests/factory/test_req_021_ac2_create_dedup.py",
+        "AIUI-Migrate/tests/factory/test_req_021_ac2_f40_entry_wiring.py"
+      ],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-024",
+      "priority": "MUST",
+      "text": "当 P6 任务图生成时，应包含胶水总行数门（≤300 行）与依赖许可证",
+      "line": 131,
+      "is_ac": false,
+      "parent": null,
+      "tasks": [
+        "T-040"
+      ],
+      "tests": [],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-024.AC1",
+      "priority": "MUST",
+      "text": "P6 门在 tasks.json 生成时实际执行且结果留痕",
+      "line": 133,
+      "is_ac": true,
+      "parent": "REQ-024",
+      "tasks": [
+        "T-040"
+      ],
+      "tests": [],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-022",
+      "priority": "MUST",
+      "text": "当系统运行时，应无人值守运行并自愈故障（军团调度重启+健康探针）。",
+      "line": 137,
+      "is_ac": false,
+      "parent": null,
+      "tasks": [
+        "T-079",
+        "T-080"
+      ],
+      "tests": [],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-022.AC1",
+      "priority": "MUST",
+      "text": "72 小时无人值守试运行零人工介入（试运行窗选在无让路令期间；",
+      "line": 138,
+      "is_ac": true,
+      "parent": "REQ-022",
+      "tasks": [
+        "T-079"
+      ],
+      "tests": [],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-022.AC2",
+      "priority": "MUST",
+      "text": "停机时长可计量进周报",
+      "line": 140,
+      "is_ac": true,
+      "parent": "REQ-022",
+      "tasks": [
+        "T-080"
+      ],
+      "tests": [],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-023",
+      "priority": "SHOULD",
+      "text": "当每日 23:59（本地时间）时，系统应生成运营日报",
+      "line": 142,
+      "is_ac": false,
+      "parent": null,
+      "tasks": [
+        "T-073"
+      ],
+      "tests": [],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-023.AC1",
+      "priority": "SHOULD",
+      "text": "日报含五轴世界级指标当前值",
+      "line": 144,
+      "is_ac": true,
+      "parent": "REQ-023",
+      "tasks": [
+        "T-073"
+      ],
+      "tests": [],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-025",
+      "priority": "SHOULD",
+      "text": "当小号加入新群时，群清单应标注资产归属；重要群由主号或",
+      "line": 146,
+      "is_ac": false,
+      "parent": null,
+      "tasks": [
+        "T-049"
+      ],
+      "tests": [],
+      "ears_ok": true
+    },
+    {
+      "id": "REQ-025.AC1",
+      "priority": "SHOULD",
+      "text": "试运行前完成一次群资产归属全量审计（重要群中 A 栈仅为成员非群主）",
+      "line": 148,
+      "is_ac": true,
+      "parent": "REQ-025",
+      "tasks": [
+        "T-049"
+      ],
+      "tests": [],
+      "ears_ok": true
+    }
+  ],
+  "orphans": [],
+  "coverage": {
+    "tasks": 1.0,
+    "tests": 0.905,
+    "must_count": 21
+  },
+  "problems": [],
+  "ok": true
+}

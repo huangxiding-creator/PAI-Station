@@ -1,0 +1,30 @@
+{
+  "phase": "P1",
+  "name": "Feasibility Analysis",
+  "passed": true,
+  "static": false,
+  "ts": "2026-10-14T15:08:13+08:00",
+  "checks": [
+    {
+      "type": "file_exists",
+      "severity": "error",
+      "ok": true,
+      "msg": "FEASIBILITY_REPORT.md exists"
+    },
+    {
+      "type": "file_exists",
+      "severity": "error",
+      "ok": true,
+      "msg": "RISK_REGISTER.md exists"
+    },
+    {
+      "type": "regex_number",
+      "severity": "warn",
+      "ok": true,
+      "msg": "value 0.78 (min 0.7)"
+    }
+  ],
+  "errors": 0,
+  "warnings": 0,
+  "skipped": 0
+}

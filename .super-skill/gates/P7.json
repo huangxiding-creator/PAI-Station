@@ -1,0 +1,30 @@
+{
+  "phase": "P7",
+  "name": "Project Initialization",
+  "passed": true,
+  "static": false,
+  "ts": "2026-10-14T16:48:49+08:00",
+  "checks": [
+    {
+      "type": "git_repo",
+      "severity": "error",
+      "ok": true,
+      "msg": "git repository present"
+    },
+    {
+      "type": "state_field",
+      "severity": "error",
+      "ok": true,
+      "msg": "state.config.test_cmd = 'py -I 私域运营/zbops/main.py selftest'"
+    },
+    {
+      "type": "command",
+      "severity": "error",
+      "ok": true,
+      "msg": "`py -I 私域运营/zbops/main.py selftest` exit 0:  | ======================================== | ȫ��ͨ�� [OK]"
+    }
+  ],
+  "errors": 0,
+  "warnings": 0,
+  "skipped": 0
+}

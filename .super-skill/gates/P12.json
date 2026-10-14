@@ -1,0 +1,24 @@
+{
+  "phase": "P12",
+  "name": "Evolution",
+  "passed": true,
+  "static": false,
+  "ts": "2026-10-13T15:55:36+08:00",
+  "checks": [
+    {
+      "type": "file_exists",
+      "severity": "error",
+      "ok": true,
+      "msg": "EVOLUTION_REPORT.md exists"
+    },
+    {
+      "type": "file_exists",
+      "severity": "warn",
+      "ok": false,
+      "msg": ".super-skill/playbook.jsonl missing"
+    }
+  ],
+  "errors": 0,
+  "warnings": 1,
+  "skipped": 0
+}

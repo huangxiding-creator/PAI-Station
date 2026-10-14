@@ -50,3 +50,12 @@ def test_weekly_summary(tmp_path, monkeypatch):
     s = audit_log.weekly_summary()
     assert s["total"] == 4 and s["by_leg"] == {"B": 3, "A": 1}
     assert sum(s["by_day"].values()) == 4
+
+
+def test_weekly_summary_bad_line_tolerant(tmp_path, monkeypatch):
+    monkeypatch.setenv("RE_AUDIT_DIR", str(tmp_path))
+    audit_log.record("B", "g", "t")
+    f = tmp_path / f"audit-{time.strftime('%Y%m%d')}.jsonl"
+    f.write_text(f.read_text(encoding='utf-8') + "{corrupted\n", encoding="utf-8")
+    s = audit_log.weekly_summary()  # 坏行不崩，好行照算
+    assert s["total"] == 1

@@ -42,7 +42,10 @@ def weekly_summary(days: int = 7) -> dict:
         for line in f.read_text(encoding="utf-8").splitlines():
             if not line:
                 continue
-            e = json.loads(line)
+            try:
+                e = json.loads(line)
+            except ValueError:  # 坏行容错：跳过不崩周报
+                continue
             out["total"] += 1
             day = f.stem.replace("audit-", "")
             out["by_day"][day] = out["by_day"].get(day, 0) + 1

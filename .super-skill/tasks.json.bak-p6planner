@@ -1,0 +1,1557 @@
+{
+  "schema_version": "1.0",
+  "tasks": [
+    {
+      "id": "T-001",
+      "title": "客户端-额度UI改版：ask/my 两页总额度大字+登录赠送文案",
+      "covers": [
+        "REQ-001.AC3"
+      ],
+      "after": [],
+      "verify": "node E:/AI-Station/WeAppForge/work/bootsim_v3.py",
+      "files": [
+        "微信小程序/zongbao-ai/pages/my/my.wxml"
+      ],
+      "complexity": 2,
+      "notes": "",
+      "status": "done",
+      "attempts": 0,
+      "claimed_by": "main",
+      "claimed_at": "2026-10-10T12:32:50+08:00",
+      "done_at": "2026-10-10T12:46:57+08:00"
+    },
+    {
+      "id": "T-002",
+      "title": "客户端-智库广告+二维码弹窗",
+      "covers": [
+        "REQ-002.AC4"
+      ],
+      "after": [],
+      "verify": "node E:/AI-Station/WeAppForge/work/bootsim_v3.py",
+      "files": [
+        "微信小程序/zongbao-ai/pages/zhiku/zhiku.js"
+      ],
+      "complexity": 2,
+      "notes": "",
+      "status": "done",
+      "attempts": 0,
+      "claimed_by": "main",
+      "claimed_at": "2026-10-10T12:32:51+08:00",
+      "done_at": "2026-10-10T12:46:57+08:00"
+    },
+    {
+      "id": "T-003",
+      "title": "客户端-pay.js错误码遥测+文案映射",
+      "covers": [
+        "REQ-003.AC4"
+      ],
+      "after": [],
+      "verify": "node E:/AI-Station/WeAppForge/work/bootsim_v3.py",
+      "files": [
+        "微信小程序/zongbao-ai/utils/pay.js"
+      ],
+      "complexity": 2,
+      "notes": "",
+      "status": "done",
+      "attempts": 0,
+      "claimed_by": "main",
+      "claimed_at": "2026-10-10T12:32:51+08:00",
+      "done_at": "2026-10-10T12:46:58+08:00"
+    },
+    {
+      "id": "T-004",
+      "title": "引擎-静态道具图路由+素材",
+      "covers": [
+        "REQ-003.AC3"
+      ],
+      "after": [],
+      "verify": "cd services/qianwen-engine && C:/Users/91216/AppData/Local/Programs/Python/Python311/python.exe -X utf8 -m pytest tests -q",
+      "files": [
+        "services/qianwen-engine/qianwen_engine/app.py"
+      ],
+      "complexity": 2,
+      "notes": "",
+      "status": "done",
+      "attempts": 0,
+      "claimed_by": "main",
+      "claimed_at": "2026-10-10T12:32:52+08:00",
+      "done_at": "2026-10-10T12:46:58+08:00"
+    },
+    {
+      "id": "T-005",
+      "title": "运维-道具现网发布脚本+执行",
+      "covers": [
+        "REQ-003.AC2"
+      ],
+      "after": [],
+      "verify": "C:/Users/91216/AppData/Local/Programs/Python/Python311/python.exe -X utf8 services/qianwen-engine/scripts/vpay_goods_publish.py --state",
+      "files": [
+        "services/qianwen-engine/scripts/vpay_goods_publish.py"
+      ],
+      "complexity": 2,
+      "notes": "",
+      "status": "done",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": "2026-10-10T13:22:17+08:00"
+    },
+    {
+      "id": "T-006",
+      "title": "运维-TCB env=0切换+三板斧验证",
+      "covers": [
+        "REQ-003.AC5"
+      ],
+      "after": [],
+      "verify": "curl -s https://ai.epcschool.top/api/health",
+      "files": [
+        "data/secrets/virtual_pay.secret"
+      ],
+      "complexity": 2,
+      "notes": "",
+      "status": "done",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": "2026-10-10T13:22:17+08:00"
+    },
+    {
+      "id": "T-007",
+      "title": "回归-BOOT-SIM全量门+三线终验",
+      "covers": [
+        "REQ-004.AC2"
+      ],
+      "after": [],
+      "verify": "node E:/AI-Station/WeAppForge/work/bootsim_v3.py",
+      "files": [],
+      "complexity": 2,
+      "notes": "",
+      "status": "done",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": "2026-10-10T13:23:12+08:00"
+    },
+    {
+      "id": "T-008",
+      "title": "交付-robot上传v0.9.13+台账+推送备份",
+      "covers": [
+        "REQ-005.AC2"
+      ],
+      "after": [],
+      "verify": "git -C E:/AI-Station log --oneline -1",
+      "files": [],
+      "complexity": 2,
+      "notes": "[2026-10-10T14:28:36+08:00] v0.9.13上传robot28+台账+commit完成；1010晚追加v0.9.14(锅圈付费导出+广告排版)robot30+PIN OK+码已弹；push+百度备份被用户令「请不要推送仓库，等我指令」暂停，等明示解除",
+      "status": "done",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": "2026-10-10T14:28:36+08:00"
+    },
+    {
+      "id": "T-009",
+      "title": "引擎-软删原语delete_answer+四可见性门+deleted列四点同步",
+      "covers": [
+        "REQ-004.AC3"
+      ],
+      "after": [],
+      "verify": "cd E:/AI-Station/services/qianwen-engine && E:/AI-Station/.venv/Scripts/python.exe -m pytest tests/ -q",
+      "files": [
+        "services/qianwen-engine/qianwen_engine/store.py",
+        "services/qianwen-engine/scripts/mysql_schema.sql",
+        "services/qianwen-engine/tests/test_delete_answer.py"
+      ],
+      "complexity": 5,
+      "notes": "store.py 四读腿(history/history_all/get_answer/get_answer_visible)加 deleted=0；_ANSWER_UPGRADES 追 deleted 双方言列；两处 answers 建表与部署 SQL 镜像同步；tests/test_delete_answer.py 覆盖 REQ-004.AC3 可见性门",
+      "status": "done",
+      "attempts": 0,
+      "claimed_by": "worker-t009",
+      "claimed_at": "2026-10-13T09:00:13+08:00",
+      "done_at": "2026-10-13T13:35:48+08:00"
+    },
+    {
+      "id": "T-010",
+      "title": "引擎-DELETE /api/answers/{aid} 端点（幂等软删零副作用）",
+      "covers": [
+        "REQ-004.AC1",
+        "REQ-004.AC2",
+        "REQ-005.AC1"
+      ],
+      "after": [
+        "T-009"
+      ],
+      "verify": "cd E:/AI-Station/services/qianwen-engine && E:/AI-Station/.venv/Scripts/python.exe -m pytest tests/ -q",
+      "files": [
+        "services/qianwen-engine/qianwen_engine/app.py",
+        "services/qianwen-engine/tests/test_delete_answer.py"
+      ],
+      "complexity": 5,
+      "notes": "app.py 新端点：Bearer 门→owner 门→置 deleted=1 幂等 200 {deleted:true}；他人/未知=404 无凭证=401；quota/pay_log/rewards 零变化用例入 test_delete_answer.py（按 API_DESIGN 契约）",
+      "status": "done",
+      "attempts": 0,
+      "claimed_by": "worker-t010",
+      "claimed_at": "2026-10-13T13:36:31+08:00",
+      "done_at": "2026-10-13T14:06:12+08:00"
+    },
+    {
+      "id": "T-011",
+      "title": "客户端-onShareAppMessage 六页补齐+BOOT-SIM 逐页锚",
+      "covers": [
+        "REQ-001.AC1",
+        "REQ-001.AC2",
+        "REQ-001.AC3"
+      ],
+      "after": [],
+      "verify": "cd E:/AI-Station/WeAppForge/work && PYTHONIOENCODING=utf-8 E:/AI-Station/.venv/Scripts/python.exe bootsim_v3.py",
+      "files": [
+        "微信小程序/zongbao-ai/pages",
+        "WeAppForge/work/bootsim_v3.py"
+      ],
+      "complexity": 5,
+      "notes": "ask/home/my/pot/invoice/legal 六页新增 handler（answer/report/research/zhiku 四页既有先例仅核对）；path 枚举：ask/home/my/invoice/legal→/pages/ask/ask，pot→自身；品牌标题闭集；bootsim_v3.py 加逐页锚+path 枚举锚+标题闭集锚（本次仅扫 onShareAppMessage 字面量）",
+      "status": "done",
+      "attempts": 0,
+      "claimed_by": "worker-t011",
+      "claimed_at": "2026-10-13T13:36:31+08:00",
+      "done_at": "2026-10-13T13:55:34+08:00"
+    },
+    {
+      "id": "T-012",
+      "title": "客户端-onShareTimeline 十页成对+query 政策+诱导词扫荡锚",
+      "covers": [
+        "REQ-002.AC1",
+        "REQ-002.AC2",
+        "REQ-002.AC3",
+        "REQ-001.AC3"
+      ],
+      "after": [
+        "T-011"
+      ],
+      "verify": "cd E:/AI-Station/WeAppForge/work && PYTHONIOENCODING=utf-8 E:/AI-Station/.venv/Scripts/python.exe bootsim_v3.py",
+      "files": [
+        "微信小程序/zongbao-ai/pages",
+        "WeAppForge/work/bootsim_v3.py"
+      ],
+      "complexity": 6,
+      "notes": "10 页成对定义 onShareTimeline（无 path 只 query）；query 政策：report?sku=、answer?id= 携最小参其余不带；bootsim_v3.py 加十页锚+query 政策锚+两 handler 返回值字面量诱导词全 js 扫荡锚（REQ-001.AC3 扫描半在此收口）\n[2026-10-13T08:45:42+08:00] complexity 6>5：缩 covers 与 notes 重建",
+      "status": "dropped",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-013",
+      "title": "客户端-onShareTimeline 十页成对+BOOT-SIM 锚",
+      "covers": [
+        "REQ-002.AC1",
+        "REQ-002.AC2",
+        "REQ-002.AC3"
+      ],
+      "after": [
+        "T-011"
+      ],
+      "verify": "cd E:/AI-Station/WeAppForge/work && PYTHONIOENCODING=utf-8 E:/AI-Station/.venv/Scripts/python.exe bootsim_v3.py",
+      "files": [
+        "微信小程序/zongbao-ai/pages",
+        "WeAppForge/work/bootsim_v3.py"
+      ],
+      "complexity": 5,
+      "notes": "10 页成对定义（无 path 只 query）；query 仅 report?sku=/answer?id= 携参；bootsim 加十页锚+query 锚+两 handler 字面量诱导词扫荡锚（收口 REQ-001.AC3 扫描半）",
+      "status": "done",
+      "attempts": 0,
+      "claimed_by": "worker-t013",
+      "claimed_at": "2026-10-13T13:55:34+08:00",
+      "done_at": "2026-10-13T14:20:52+08:00"
+    },
+    {
+      "id": "T-014",
+      "title": "引擎-四点列同步静态锚测试",
+      "covers": [
+        "REQ-007.AC1"
+      ],
+      "after": [
+        "T-009"
+      ],
+      "verify": "cd E:/AI-Station/services/qianwen-engine && E:/AI-Station/.venv/Scripts/python.exe -m pytest tests/ -q",
+      "files": [
+        "services/qianwen-engine/tests/test_schema_sync.py"
+      ],
+      "complexity": 3,
+      "notes": "pytest 源结构断言：store.py 两处建表+_ANSWER_UPGRADES+部署 SQL 镜像四处均含 deleted 列（引擎线静态锚，锁 REQ-007.AC1）",
+      "status": "done",
+      "attempts": 0,
+      "claimed_by": "session-leg",
+      "claimed_at": "2026-10-13T14:06:12+08:00",
+      "done_at": "2026-10-13T14:08:50+08:00"
+    },
+    {
+      "id": "T-015",
+      "title": "客户端-my 页删除交互+api.js answerDelete",
+      "covers": [
+        "REQ-006.AC1",
+        "REQ-006.AC2"
+      ],
+      "after": [
+        "T-010",
+        "T-013"
+      ],
+      "verify": "cd E:/AI-Station/WeAppForge/work && PYTHONIOENCODING=utf-8 E:/AI-Station/.venv/Scripts/python.exe bootsim_v3.py",
+      "files": [
+        "微信小程序/zongbao-ai/pages/my",
+        "微信小程序/zongbao-ai/utils/api.js",
+        "WeAppForge/work/bootsim_v3.py"
+      ],
+      "complexity": 5,
+      "notes": "hist-item 右侧删钮→qw-pop「删除后不可恢复」→乐观移除/失败回滚+toast/静默重拉兜底；api.js answerDelete(404 也 resolve)；record_delete_tap/ok 打点；bootsim 加结构锚",
+      "status": "done",
+      "attempts": 0,
+      "claimed_by": "worker-t015",
+      "claimed_at": "2026-10-13T14:20:52+08:00",
+      "done_at": "2026-10-13T14:32:43+08:00"
+    },
+    {
+      "id": "T-016",
+      "title": "e2e-零异常冷启+真点删除全链 e2e_v0917.mjs",
+      "covers": [
+        "REQ-003.AC1",
+        "REQ-003.AC2",
+        "REQ-006.AC1",
+        "REQ-006.AC2",
+        "REQ-006.AC3"
+      ],
+      "after": [
+        "T-010",
+        "T-015"
+      ],
+      "verify": "cd E:/AI-Station/WeAppForge/work && node e2e_v0917.mjs",
+      "files": [
+        "WeAppForge/work/e2e_v0917.mjs"
+      ],
+      "complexity": 5,
+      "notes": "仿 e2e_v0916_reward.mjs：冷启 report?sku=CNNC-EPC 零异常；dev 登录链造 aid 后无登录态冷启 answer?id=；真点删钮→qw-pop→列表-1/空态/重拉一致；telemetry/recent 查 record_delete_*。前置：引擎 8870(QW_DEV_LOGIN=1)+devtools 9420",
+      "status": "done",
+      "attempts": 0,
+      "claimed_by": "session-leg",
+      "claimed_at": "2026-10-13T14:32:43+08:00",
+      "done_at": "2026-10-13T15:04:16+08:00"
+    },
+    {
+      "id": "T-017",
+      "title": "部署-TCB 引擎上云+生产冒烟",
+      "covers": [
+        "REQ-007.AC2"
+      ],
+      "after": [
+        "T-009",
+        "T-010",
+        "T-014"
+      ],
+      "verify": "cd E:/AI-Station/WeAppForge/work/mp_cancel_logout && PYTHONIOENCODING=utf-8 E:/AI-Station/.venv/Scripts/python.exe prod_smoke_0917.py",
+      "files": [
+        "WeAppForge/work/mp_cancel_logout/qw_tcb_prep.py",
+        "data/state/mn_client/update_envparams.js",
+        "WeAppForge/work/mp_cancel_logout/prod_smoke_0917.py"
+      ],
+      "complexity": 5,
+      "notes": "qw_tcb_prep→mn_client 部署号递增上云；确认 normal+HasTraffic；prod_smoke_0917.py 断言 /api/health ok+/api/history 200+海报腿不受扰（0 才退出）",
+      "status": "done",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": "2026-10-13T15:46:29+08:00"
+    },
+    {
+      "id": "T-018",
+      "title": "交付-0.9.17 上传+六段提审（先核 0.9.16 出结果）",
+      "covers": [
+        "REQ-008.AC1",
+        "REQ-008.AC2",
+        "REQ-008.AC3"
+      ],
+      "after": [
+        "T-016",
+        "T-017"
+      ],
+      "verify": "cd E:/AI-Station/WeAppForge/work/mp_cancel_logout && PYTHONIOENCODING=utf-8 E:/AI-Station/.venv/Scripts/python.exe submit_confirm_0917.py",
+      "files": [
+        "WeAppForge/work/upload_qianwen.mjs",
+        "WeAppForge/work/mp_cancel_logout/submit_review_0917.py",
+        "WeAppForge/work/mp_cancel_logout/submit_confirm_0917.py"
+      ],
+      "complexity": 6,
+      "notes": "三线全绿计数→robot 轮转上传 UPLOAD_OK→六段向导只一次不加急；提审前住哨核 0.9.16 已出结果（在审则等绝不撤审）；submit_confirm 断言 getcodepage 0.9.17 行=审核中\n[2026-10-13T08:46:29+08:00] complexity 6>5：精简标题与 notes 重建",
+      "status": "dropped",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-019",
+      "title": "交付-0.9.17 上传+六段提审",
+      "covers": [
+        "REQ-008.AC1",
+        "REQ-008.AC2",
+        "REQ-008.AC3"
+      ],
+      "after": [],
+      "verify": "cd E:/AI-Station/WeAppForge/work/mp_cancel_logout && PYTHONIOENCODING=utf-8 E:/AI-Station/.venv/Scripts/python.exe submit_confirm_0917.py",
+      "files": [
+        "WeAppForge/work/upload_qianwen.mjs",
+        "WeAppForge/work/mp_cancel_logout/submit_review_0917.py",
+        "WeAppForge/work/mp_cancel_logout/submit_confirm_0917.py"
+      ],
+      "complexity": 5,
+      "notes": "三线全绿→robot 上传 UPLOAD_OK→六段向导只一次不加急；先核 0.9.16 出结果（绝不撤审）；submit_confirm 断言 0.9.17 行=审核中\n[2026-10-13T08:48:00+08:00] FAIL: 版本号已被 1013 实况更正：线上=0.9.17 已发布，本轮交付=0.9.18（REQ-008 已同步）\n[2026-10-13T15:47:37+08:00] FAIL: 被 T-021 取代（版本基线更正 0.9.18；提审已于 15:45:50 完成）\n[2026-10-13T15:48:21+08:00] FAIL: superseded by T-021 (0.9.18 已提审 15:45:50)",
+      "status": "dropped",
+      "attempts": 3,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-020",
+      "title": "交付-0.9.18 上传+六段提审（基线 0.9.17 已发布，审核位空）",
+      "covers": [
+        "REQ-008.AC1 REQ-008.AC2 REQ-008.AC3"
+      ],
+      "after": [],
+      "verify": "getcodepage 版本行 0.9.18=审核中 + filing 截图在档",
+      "files": [],
+      "complexity": 2,
+      "notes": "superseded by T-021（after 分隔符坏键已清，taskgraph API 通道处置）",
+      "status": "dropped",
+      "attempts": 1,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-021",
+      "title": "交付-0.9.18 上传+六段提审（基线 0.9.17 已发布，审核位空）",
+      "covers": [
+        "REQ-008.AC1 REQ-008.AC2 REQ-008.AC3"
+      ],
+      "after": [
+        "T-016",
+        "T-017"
+      ],
+      "verify": "getcodepage 版本行 0.9.18=审核中 + filing 截图在档",
+      "files": [],
+      "complexity": 2,
+      "notes": "",
+      "status": "done",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": "2026-10-13T15:46:29+08:00"
+    },
+    {
+      "id": "T-022",
+      "title": "客户端-ask 输入框 IME 根治（REQ-009：非受控化+bindfocus 复位+发送唯一入口锚）",
+      "covers": [
+        "REQ-009.AC1 REQ-009.AC2 REQ-009.AC3 REQ-009.AC4"
+      ],
+      "after": [
+        "T-015"
+      ],
+      "verify": "BOOT-SIM 全绿（含新四锚）+ e2e 打字流",
+      "files": [],
+      "complexity": 2,
+      "notes": "",
+      "status": "done",
+      "attempts": 0,
+      "claimed_by": "session-leg",
+      "claimed_at": "2026-10-13T14:47:03+08:00",
+      "done_at": "2026-10-13T15:04:16+08:00"
+    },
+    {
+      "id": "T-023",
+      "title": "商机信号识别器",
+      "covers": [
+        "REQ-003.AC1"
+      ],
+      "after": [],
+      "verify": "py -m pytest tests/test_req_003_ac1.py -q",
+      "files": [],
+      "complexity": 2,
+      "notes": "",
+      "status": "dropped",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-024",
+      "title": "求助信号识别器",
+      "covers": [
+        "REQ-004.AC1"
+      ],
+      "after": [],
+      "verify": "py -m pytest tests/test_req_004_ac1.py -q",
+      "files": [],
+      "complexity": 2,
+      "notes": "",
+      "status": "dropped",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-025",
+      "title": "商机评估引擎",
+      "covers": [
+        "REQ-003.AC2"
+      ],
+      "after": [
+        "T-001"
+      ],
+      "verify": "py -m pytest tests/test_req_003_ac2.py -q",
+      "files": [],
+      "complexity": 2,
+      "notes": "",
+      "status": "dropped",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-026",
+      "title": "商机告警推送",
+      "covers": [
+        "REQ-005.AC1"
+      ],
+      "after": [
+        "T-003"
+      ],
+      "verify": "py -m pytest tests/test_req_005_ac1.py -q",
+      "files": [],
+      "complexity": 2,
+      "notes": "",
+      "status": "dropped",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-027",
+      "title": "文章URL提取+内容获取",
+      "covers": [
+        "REQ-002.AC1"
+      ],
+      "after": [],
+      "verify": "py -m pytest tests/test_req_002_ac1.py -q",
+      "files": [],
+      "complexity": 2,
+      "notes": "",
+      "status": "dropped",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-028",
+      "title": "文章总结生成器",
+      "covers": [
+        "REQ-006.AC1"
+      ],
+      "after": [
+        "T-005"
+      ],
+      "verify": "py -m pytest tests/test_req_006_ac1.py -q",
+      "files": [],
+      "complexity": 2,
+      "notes": "",
+      "status": "dropped",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-029",
+      "title": "AI答疑管线增强",
+      "covers": [
+        "REQ-007.AC1"
+      ],
+      "after": [],
+      "verify": "py -m pytest tests/test_req_007_ac1.py -q",
+      "files": [],
+      "complexity": 2,
+      "notes": "",
+      "status": "dropped",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-030",
+      "title": "内容推荐匹配器",
+      "covers": [
+        "REQ-009.AC1"
+      ],
+      "after": [],
+      "verify": "py -m pytest tests/test_req_009_ac1.py -q",
+      "files": [],
+      "complexity": 2,
+      "notes": "",
+      "status": "dropped",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-031",
+      "title": "线索台账",
+      "covers": [
+        "REQ-010.AC1"
+      ],
+      "after": [
+        "T-001"
+      ],
+      "verify": "py -m pytest tests/test_req_010_ac1.py -q",
+      "files": [],
+      "complexity": 2,
+      "notes": "",
+      "status": "dropped",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-032",
+      "title": "跟进提醒",
+      "covers": [
+        "REQ-011.AC1"
+      ],
+      "after": [
+        "T-010"
+      ],
+      "verify": "py -m pytest tests/test_req_011_ac1.py -q",
+      "files": [],
+      "complexity": 2,
+      "notes": "",
+      "status": "dropped",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-033",
+      "title": "Guardian护栏完善",
+      "covers": [
+        "REQ-014.AC1"
+      ],
+      "after": [],
+      "verify": "py -m pytest tests/test_req_014_ac1.py -q",
+      "files": [],
+      "complexity": 2,
+      "notes": "",
+      "status": "dropped",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-034",
+      "title": "端到端集成测试",
+      "covers": [
+        "REQ-001.AC1"
+      ],
+      "after": [
+        "T-001",
+        "T-005",
+        "T-007",
+        "T-010"
+      ],
+      "verify": "py -m pytest tests/test_e2e.py -q",
+      "files": [],
+      "complexity": 2,
+      "notes": "",
+      "status": "dropped",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-035",
+      "title": "线索台账SQLite",
+      "covers": [
+        "REQ-010"
+      ],
+      "after": [],
+      "verify": "py -m pytest tests/test_lead_ledger.py -q",
+      "files": [],
+      "complexity": 2,
+      "notes": "",
+      "status": "dropped",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-036",
+      "title": "跟进提醒系统",
+      "covers": [
+        "REQ-011"
+      ],
+      "after": [],
+      "verify": "py -m pytest tests/test_followup.py -q",
+      "files": [],
+      "complexity": 2,
+      "notes": "",
+      "status": "dropped",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-037",
+      "title": "Guardian三级审核",
+      "covers": [
+        "REQ-014"
+      ],
+      "after": [],
+      "verify": "py -m pytest tests/test_guardian.py -q",
+      "files": [],
+      "complexity": 2,
+      "notes": "",
+      "status": "dropped",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-038",
+      "title": "熔断器与审计",
+      "covers": [
+        "REQ-015"
+      ],
+      "after": [],
+      "verify": "py -m pytest tests/test_breaker.py -q",
+      "files": [],
+      "complexity": 2,
+      "notes": "",
+      "status": "dropped",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-039",
+      "title": "熔断器完整实现",
+      "covers": [
+        "REQ-015.AC1",
+        "REQ-015.AC2"
+      ],
+      "after": [],
+      "verify": "test breaker response time",
+      "files": [],
+      "complexity": 2,
+      "notes": "",
+      "status": "dropped",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-040",
+      "title": "P6自查：胶水行数门快照+依赖许可证审计清单→glue_audit.md",
+      "covers": [
+        "REQ-024 REQ-024.AC1"
+      ],
+      "after": [],
+      "verify": "py -I revenue-engine/probes/check_glue_audit.py",
+      "files": [
+        ".super-skill/glue_audit.md",
+        "revenue-engine/probes/check_glue_audit.py"
+      ],
+      "complexity": 2,
+      "notes": "P6生成时实际执行并留痕：GLUE_TOTAL行数门(≤300)快照+组件许可证分层清单(层级②代码引入即fail;docker镜像锁digest);测试/探针/docs不计胶水",
+      "status": "done",
+      "attempts": 0,
+      "claimed_by": "agent",
+      "claimed_at": "2026-10-14T16:26:39+08:00",
+      "done_at": "2026-10-14T16:26:42+08:00"
+    },
+    {
+      "id": "T-041",
+      "title": "Phase0-存活门：2小号x14天在线/封号/进群自动采集+判据报告",
+      "covers": [
+        "REQ-001 REQ-001.AC1 REQ-001.AC2"
+      ],
+      "after": [],
+      "verify": "py -I revenue-engine/probes/check_artifact.py survival",
+      "files": [
+        "revenue-engine/reports/survival/",
+        "私域运营/zbops/zbops/radar/passive_monitor.py",
+        "revenue-engine/probes/check_artifact.py"
+      ],
+      "complexity": 3,
+      "notes": "判据定死：2小号x14天零封号且单号累计在线率≥90%=PASS;任一封号=FAIL触发B栈单栈降级ADR。报告含D01..D14逐日明细+10群进群记录(与Phase2 3天试运行独立计)。末行 VERDICT: PASS 或 VERDICT: FAIL",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-042",
+      "title": "Phase0-商户号门：营业执照/企业商户号确认→ADR-005收款模式落定",
+      "covers": [
+        "REQ-003 REQ-003.AC1"
+      ],
+      "after": [],
+      "verify": "py -I revenue-engine/probes/check_artifact.py merchant_adr",
+      "files": [
+        "revenue-engine/docs/adr/ADR-005-payment-paths.md",
+        "revenue-engine/probes/check_artifact.py"
+      ],
+      "complexity": 2,
+      "notes": "ADR-005 写入 CONCLUSION: V3|PERSONAL_QR|DEFERRED 三选一+依据；人工确认步骤+文档核验双段",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-043",
+      "title": "Phase0-走单门：498元研报人工实测订单(下单→自动发货→全流程留痕)",
+      "covers": [
+        "REQ-002 REQ-002.AC1 REQ-002.AC2"
+      ],
+      "after": [
+        "T-043"
+      ],
+      "verify": "py -I revenue-engine/probes/check_artifact.py order_gate",
+      "files": [
+        "revenue-engine/reports/order-gate/",
+        "revenue-engine/probes/check_artifact.py"
+      ],
+      "complexity": 3,
+      "notes": "人工步骤(扫码支付498)+系统核验(交付物送达+订单日志)双段。成功=ORDER_RESULT: DELIVERED；失败=ORDER_RESULT: FAILED+降级ADR引用(官方SDK直连或人工发货)",
+      "status": "dropped",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-044",
+      "title": "Phase0-协同策略定稿：双栈问答分工矩阵/内容去重互通/风控信号互通",
+      "covers": [
+        "REQ-004 REQ-004.AC1"
+      ],
+      "after": [],
+      "verify": "py -I revenue-engine/probes/check_artifact.py collab_doc",
+      "files": [
+        "revenue-engine/docs/collaboration.md",
+        "revenue-engine/probes/check_artifact.py"
+      ],
+      "complexity": 2,
+      "notes": "三节齐备：问答分工矩阵(谁答谁推)+同群10分钟窗去重互通规则+风控信号互通(与REQ-021同口径)",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-045",
+      "title": "EspoCRM docker部署(digest锁)+中文界面+Lead评分字段与原生列表排序",
+      "covers": [
+        "REQ-014.AC2 REQ-006.AC1"
+      ],
+      "after": [],
+      "verify": "py -I revenue-engine/probes/espocrm_probe.py",
+      "files": [
+        "revenue-engine/deploy/docker-compose.espocrm.yml",
+        "revenue-engine/probes/espocrm_probe.py"
+      ],
+      "complexity": 4,
+      "notes": "官方镜像锁digest;X-Api-Key探针:App可达+中文界面+Lead含评分字段+原生列表按评分排序可用(零自研界面);mysqldump纳入军团备份轨",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-046",
+      "title": "商机评分公式+完整阈值表scoring.md(告警70/推荐50唯一来源+调参记录)",
+      "covers": [
+        "REQ-014 REQ-014.AC1"
+      ],
+      "after": [],
+      "verify": "py -I revenue-engine/probes/check_artifact.py scoring_doc",
+      "files": [
+        "revenue-engine/docs/scoring.md",
+        "revenue-engine/probes/check_artifact.py"
+      ],
+      "complexity": 2,
+      "notes": "省份x行业x规模x时间窗四因子公式+完整阈值表(顾问级告警70/推荐触发50)+调参记录节；唯一阈值来源,transformer/告警/推荐都从此读",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-047",
+      "title": "8440 FastAPI入口+POST /enqueue鉴权入队过安全网(401/429/军团自启)",
+      "covers": [
+        "REQ-005 REQ-005.AC1 REQ-005.AC2"
+      ],
+      "after": [],
+      "verify": "py -I -m pytest 私域运营/zbops/tests/test_api_8440.py -q",
+      "files": [
+        "私域运营/zbops/main.py",
+        "私域运营/zbops/zbops/radar/service_8440.py",
+        "私域运营/zbops/tests/test_api_8440.py"
+      ],
+      "complexity": 4,
+      "notes": "写码件(预算>30行计入300行门)：无Key→401;有Key enqueue→消息进auto_responder队列且受日3/全局20/冷却/熔断约束,超限429;schtasks军团自启注册核验；队列/计数器进程归属设计写进代码注释",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-048",
+      "title": "发送审计总线：全路径落盘(时间/群/摘要/腿/计数快照)+90天保留+周报自动汇总",
+      "covers": [
+        "REQ-019 REQ-019.AC1"
+      ],
+      "after": [],
+      "verify": "py -I -m pytest 私域运营/zbops/tests/test_audit_log.py -q",
+      "files": [
+        "私域运营/zbops/zbops/radar/auto_responder.py",
+        "私域运营/zbops/tests/test_audit_log.py"
+      ],
+      "complexity": 3,
+      "notes": "优先复用auto_responder既有日志/军团台账,新增胶水行数计入300行门(reuse-first)；CowAgent豁免限频但强制入审计;保留≥90天;周报汇总发送量",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-049",
+      "title": "群资产归属全量审计：重要群主号/可控群主持有,小号仅成员",
+      "covers": [
+        "REQ-025 REQ-025.AC1"
+      ],
+      "after": [],
+      "verify": "py -I revenue-engine/probes/check_artifact.py group_assets",
+      "files": [
+        "revenue-engine/reports/group-assets/",
+        "revenue-engine/probes/check_artifact.py"
+      ],
+      "complexity": 2,
+      "notes": "SHOULD;试运行前完成;逐群归属列(群主/成员)+AUDIT_DONE标记;重要群中A栈仅为成员非群主",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-050",
+      "title": "Lead transformer主体：信号JSON→EspoCRM Lead入库<60s(≤200行预算)",
+      "covers": [
+        "REQ-006 REQ-006.AC1 REQ-006.AC2"
+      ],
+      "after": [
+        "T-045",
+        "T-046"
+      ],
+      "verify": "py -I -m pytest 私域运营/zbops/tests/test_lead_transformer.py -q",
+      "files": [
+        "私域运营/zbops/zbops/radar/lead_transformer.py",
+        "私域运营/zbops/tests/test_lead_transformer.py"
+      ],
+      "complexity": 5,
+      "notes": "写码件(≤200行含后续去重/告警/归因追加,全程卡预算)；C1契约:收信号JSON即<60s POST EspoCRM,失败重试3次落死信;评分按scoring.md写入Lead",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-051",
+      "title": "跨群归一化去重键定稿+同人跨群合并至单Lead(来源群追加)",
+      "covers": [
+        "REQ-007 REQ-007.AC1 REQ-007.AC2"
+      ],
+      "after": [
+        "T-051"
+      ],
+      "verify": "py -I -m pytest 私域运营/zbops/tests/test_lead_dedup.py -q",
+      "files": [
+        "私域运营/zbops/zbops/radar/lead_transformer.py",
+        "revenue-engine/docs/lead-dedup.md",
+        "私域运营/zbops/tests/test_lead_dedup.py"
+      ],
+      "complexity": 4,
+      "notes": "去重键设计(wxid优先/昵称+群fallback/手机号合并)评审定稿落docs/lead-dedup.md;实测:同人跨群两信号→单Lead更新+来源群追加",
+      "status": "dropped",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-052",
+      "title": "高分告警腿：评分≥70→企微群webhook 5分钟内(谁/群/需求/评分/建议动作)",
+      "covers": [
+        "REQ-008 REQ-008.AC1 REQ-008.AC2"
+      ],
+      "after": [
+        "T-053"
+      ],
+      "verify": "py -I -m pytest 私域运营/zbops/tests/test_alert_webhook.py -q",
+      "files": [
+        "私域运营/zbops/zbops/radar/lead_transformer.py",
+        "私域运营/zbops/tests/test_alert_webhook.py"
+      ],
+      "complexity": 4,
+      "notes": "C3契约:Lead保存且评分就绪→webhook 5分钟送达;五要素齐;阈值只读scoring.md(70),改动留痕=git+scoring.md调参记录;实测发企微测试群",
+      "status": "dropped",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-053",
+      "title": "EspoCRM Lead四级流转配置：群内推荐→1v1私聊→下单→48h跟进状态可见",
+      "covers": [
+        "REQ-013.AC1"
+      ],
+      "after": [
+        "T-045",
+        "T-051"
+      ],
+      "verify": "py -I revenue-engine/probes/espocrm_pipeline_probe.py",
+      "files": [
+        "revenue-engine/probes/espocrm_pipeline_probe.py"
+      ],
+      "complexity": 3,
+      "notes": "EspoCRM原生字段/团队流水线配置(零自研界面);探针驱动一条Lead走完四级状态并断言可见",
+      "status": "dropped",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-054",
+      "title": "8440预算裁决：全局日20耗尽→问答>推荐>推送优先级+未发推送顺延次日窗",
+      "covers": [
+        "REQ-005.AC3"
+      ],
+      "after": [
+        "T-047"
+      ],
+      "verify": "py -I -m pytest 私域运营/zbops/tests/test_budget_arbitration.py -q",
+      "files": [
+        "私域运营/zbops/zbops/radar/service_8440.py",
+        "私域运营/zbops/tests/test_budget_arbitration.py"
+      ],
+      "complexity": 3,
+      "notes": "模拟额度耗尽:三类消息按优先级裁决,推送顺延次日窗口留痕;A栈额度独立计算断言",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-055",
+      "title": "Phase0-走单门：498元研报人工实测订单(下单→自动发货→全流程留痕)",
+      "covers": [
+        "REQ-002 REQ-002.AC1 REQ-002.AC2"
+      ],
+      "after": [
+        "T-042"
+      ],
+      "verify": "py -I revenue-engine/probes/check_artifact.py order_gate",
+      "files": [
+        "revenue-engine/reports/order-gate/",
+        "revenue-engine/probes/check_artifact.py"
+      ],
+      "complexity": 3,
+      "notes": "按商户号门选定收款模式走单;人工步骤(支付498)+系统核验(交付物送达+订单日志)双段。成功=ORDER_RESULT: DELIVERED；失败=ORDER_RESULT: FAILED+降级ADR引用",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-056",
+      "title": "跨群归一化去重键定稿+同人跨群合并至单Lead(来源群追加)",
+      "covers": [
+        "REQ-007 REQ-007.AC1 REQ-007.AC2"
+      ],
+      "after": [
+        "T-050"
+      ],
+      "verify": "py -I -m pytest 私域运营/zbops/tests/test_lead_dedup.py -q",
+      "files": [
+        "私域运营/zbops/zbops/radar/lead_transformer.py",
+        "revenue-engine/docs/lead-dedup.md",
+        "私域运营/zbops/tests/test_lead_dedup.py"
+      ],
+      "complexity": 4,
+      "notes": "去重键(wxid优先/昵称+群fallback/手机号合并)评审定稿落docs/lead-dedup.md;实测同人跨群两信号→单Lead更新+来源群追加;行数并入transformer≤200预算",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-057",
+      "title": "高分告警腿：评分≥70→企微群webhook 5分钟内(谁/群/需求/评分/建议动作)",
+      "covers": [
+        "REQ-008 REQ-008.AC1 REQ-008.AC2"
+      ],
+      "after": [
+        "T-056"
+      ],
+      "verify": "py -I -m pytest 私域运营/zbops/tests/test_alert_webhook.py -q",
+      "files": [
+        "私域运营/zbops/zbops/radar/lead_transformer.py",
+        "私域运营/zbops/tests/test_alert_webhook.py"
+      ],
+      "complexity": 4,
+      "notes": "C3契约:Lead保存且评分就绪→webhook 5分钟送达;五要素齐;阈值只读scoring.md(70),改动留痕;实测发企微测试群;行数并入transformer预算",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-058",
+      "title": "EspoCRM Lead四级流转配置：群内推荐→1v1私聊→下单→48h跟进状态可见",
+      "covers": [
+        "REQ-013.AC1"
+      ],
+      "after": [
+        "T-045",
+        "T-050"
+      ],
+      "verify": "py -I revenue-engine/probes/espocrm_pipeline_probe.py",
+      "files": [
+        "revenue-engine/probes/espocrm_pipeline_probe.py"
+      ],
+      "complexity": 3,
+      "notes": "EspoCRM原生字段/流水线配置零自研界面;探针驱动一条Lead走完四级状态断言可见",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-059",
+      "title": "99元会员承接方案ADR-002落定(acg-faka商品位;meedu出局理由)",
+      "covers": [
+        "REQ-016"
+      ],
+      "after": [
+        "T-042"
+      ],
+      "verify": "py -I revenue-engine/probes/check_artifact.py membership_adr",
+      "files": [
+        "revenue-engine/docs/adr/ADR-002-membership.md",
+        "revenue-engine/probes/check_artifact.py"
+      ],
+      "complexity": 2,
+      "notes": "SHOULD;依据商户号门结论定商品位/薄自建腿;写入 DECISION: 标记;含meedu商用授权出局理由",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-060",
+      "title": "静默群：退订/安静关键词→该群静默7天(审计日志零发送核验)",
+      "covers": [
+        "REQ-020 REQ-020.AC1"
+      ],
+      "after": [
+        "T-047",
+        "T-048"
+      ],
+      "verify": "py -I -m pytest 私域运营/zbops/tests/test_group_mute.py -q",
+      "files": [
+        "私域运营/zbops/zbops/radar/group_policy.py",
+        "私域运营/zbops/tests/test_group_mute.py"
+      ],
+      "complexity": 3,
+      "notes": "SHOULD;优先扩既有group_policy.py;默认7天可配置;静默期内该群enqueue被拒且审计日志核验零发送",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-061",
+      "title": "值守问答试运行+出处率周抽检(n≥20条,≥80%带可查证出处;未命中诚实引导)",
+      "covers": [
+        "REQ-011 REQ-011.AC1 REQ-011.AC2"
+      ],
+      "after": [
+        "T-044",
+        "T-047"
+      ],
+      "verify": "py -I revenue-engine/probes/check_artifact.py qa_sampling",
+      "files": [
+        "revenue-engine/reports/qa-audit/",
+        "revenue-engine/probes/check_artifact.py"
+      ],
+      "complexity": 3,
+      "notes": "按协同策略指定栈执行(若策略分派A栈主答则排在A栈部署后);B栈出站限营业时间8-21点核验;人工抽检+系统核验双段;LLM轮换静默不编造核验;报告末行 OUTCOME: PASS n=xx rate=xx",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-062",
+      "title": "A栈部署：LangBot+WeChatPadPro双docker(锁tag/digest)+值守群fixwin 86400s/3入站限频",
+      "covers": [
+        "REQ-009 REQ-009.AC1 REQ-009.AC2"
+      ],
+      "after": [
+        "T-041",
+        "T-044"
+      ],
+      "verify": "py -I revenue-engine/probes/langbot_probe.py",
+      "files": [
+        "revenue-engine/deploy/docker-compose.astack.yml",
+        "revenue-engine/probes/langbot_probe.py"
+      ],
+      "complexity": 5,
+      "notes": "存活门PASS才部署(FAIL→本任务及A栈链转dropped+B栈单栈降级ADR);实测第4条群消息不获回复;每群仅一条启用限频流水线(AC2);小号进10群",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-063",
+      "title": "A栈全局日20插件(~50行)：全发送路径计数+持久化重启不清零+fixwin独立不双计",
+      "covers": [
+        "REQ-010 REQ-010.AC1 REQ-010.AC2"
+      ],
+      "after": [
+        "T-062"
+      ],
+      "verify": "py -I -m pytest 私域运营/zbops/tests/test_global_cap_plugin.py -q",
+      "files": [
+        "revenue-engine/deploy/langbot-plugins/zbops_global_cap/",
+        "私域运营/zbops/tests/test_global_cap_plugin.py"
+      ],
+      "complexity": 4,
+      "notes": "写码件(~50行计入300行门);被动回复计入全局20不豁免;计数持久化重启不清零;fixwin窗口计数与全局计数独立不双重累计;第21条当日阻止至次日窗",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-064",
+      "title": "插件挂载点不可用降级ADR+一次实测(主动发送经B栈队列统一出站)",
+      "covers": [
+        "REQ-010.AC3"
+      ],
+      "after": [
+        "T-063"
+      ],
+      "verify": "py -I revenue-engine/probes/check_artifact.py plugin_fallback",
+      "files": [
+        "revenue-engine/docs/adr/ADR-007-plugin-fallback.md",
+        "revenue-engine/reports/drills/plugin-fallback.md",
+        "revenue-engine/probes/check_artifact.py"
+      ],
+      "complexity": 3,
+      "notes": "ADR-007记录降级路径+DRILL:一次实测(插件停用→主动发送切B栈队列出站全通)",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-065",
+      "title": "双栈同群10分钟窗零同类重复：3天全量日志核验",
+      "covers": [
+        "REQ-004.AC2"
+      ],
+      "after": [
+        "T-044",
+        "T-048",
+        "T-062"
+      ],
+      "verify": "py -I revenue-engine/probes/dedup_crosscheck.py",
+      "files": [
+        "revenue-engine/probes/dedup_crosscheck.py",
+        "revenue-engine/reports/collab/dedup_3day.md"
+      ],
+      "complexity": 3,
+      "notes": "扫描3天审计日志:同群10分钟窗A/B栈同类内容重复=0;报告末行 DEDUP3D: PASS",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-066",
+      "title": "群内推荐触发腿：评分≥50且当日该群未发→B栈队列带出处推荐(3天≥3例)",
+      "covers": [
+        "REQ-013.AC2"
+      ],
+      "after": [
+        "T-047",
+        "T-056",
+        "T-058"
+      ],
+      "verify": "py -I -m pytest 私域运营/zbops/tests/test_group_recommend.py -q",
+      "files": [
+        "私域运营/zbops/zbops/radar/lead_transformer.py",
+        "私域运营/zbops/zbops/ai/citation.py",
+        "私域运营/zbops/tests/test_group_recommend.py",
+        "revenue-engine/reports/funnel/recommend_3day.md"
+      ],
+      "complexity": 4,
+      "notes": "触发定义按REQ-013①;推荐带可查证出处(复用citation);3天试运行≥3例实际发出且日志可查(报告末行 CASES: n,n≥3);行数入300门",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-067",
+      "title": "48小时未跟进→企微提醒(EspoCRM流转扫描+军团调度)",
+      "covers": [
+        "REQ-013.AC3"
+      ],
+      "after": [
+        "T-058"
+      ],
+      "verify": "py -I -m pytest 私域运营/zbops/tests/test_followup_48h.py -q",
+      "files": [
+        "私域运营/zbops/zbops/radar/followup.py",
+        "私域运营/zbops/tests/test_followup_48h.py"
+      ],
+      "complexity": 3,
+      "notes": "优先EspoCRM原生提醒/军团轨,确需新码计入300行门;造49h前未跟进Lead→扫描→企微webhook提醒+审计留痕",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-068",
+      "title": "文章推送9-10点窗核验：标签命中分发+md5同群零重复+预算耗尽顺延(3天)",
+      "covers": [
+        "REQ-012 REQ-012.AC1 REQ-012.AC2"
+      ],
+      "after": [
+        "T-048",
+        "T-054"
+      ],
+      "verify": "py -I revenue-engine/probes/push_3day_probe.py",
+      "files": [
+        "revenue-engine/probes/push_3day_probe.py",
+        "私域运营/zbops/zbops/radar/proactive.py",
+        "revenue-engine/reports/collab/push_3day.md"
+      ],
+      "complexity": 3,
+      "notes": "proactive既有链路实测核验(不重写)：水利群收水利文;md5同群同内容零重复;预算耗尽按REQ-005.AC3顺延;钩子话术在;报告末行 PUSH3D: PASS",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-069",
+      "title": "归因回调：acg-faka订单webhook→EspoCRM源Lead更新(并入transformer行数预算)",
+      "covers": [
+        "REQ-015 REQ-015.AC1"
+      ],
+      "after": [
+        "T-055",
+        "T-057"
+      ],
+      "verify": "py -I -m pytest 私域运营/zbops/tests/test_attribution.py -q",
+      "files": [
+        "私域运营/zbops/zbops/radar/lead_transformer.py",
+        "私域运营/zbops/tests/test_attribution.py"
+      ],
+      "complexity": 4,
+      "notes": "以走单门通过为前提;C4契约:回调含SKU+购买者标识+订单号→写回源Lead关联字段;transformer总行数仍≤200断言;前10单全量核对启动",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-070",
+      "title": "限频矩阵全覆盖审查：发送出口→限频件映射清单(CowAgent唯一豁免入审计)+熔断双栈同停口径",
+      "covers": [
+        "REQ-018 REQ-018.AC1 REQ-018.AC2"
+      ],
+      "after": [
+        "T-047",
+        "T-048",
+        "T-063"
+      ],
+      "verify": "py -I revenue-engine/probes/check_artifact.py rl_matrix",
+      "files": [
+        "revenue-engine/reviews/rate-limit-matrix.md",
+        "revenue-engine/probes/check_artifact.py"
+      ],
+      "complexity": 3,
+      "notes": "枚举全部发送出口(B栈队列/8440/A栈插件/企微webhook告警/CowAgent)逐一映射限频件;代码审查无未限频出口;熔断/风控信号双栈同停口径与REQ-021一致;清单含 AUDIT:CLEAN 标记",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-071",
+      "title": "账号异常分级预案(掉线自愈/风控30min双栈同停/UIA切replica)+一次演练留痕",
+      "covers": [
+        "REQ-021 REQ-021.AC1 REQ-021.AC2"
+      ],
+      "after": [
+        "T-041",
+        "T-048",
+        "T-062"
+      ],
+      "verify": "py -I revenue-engine/probes/check_artifact.py incident_drill",
+      "files": [
+        "revenue-engine/runbooks/incident-response.md",
+        "revenue-engine/reports/drills/incident-drill.md",
+        "revenue-engine/probes/check_artifact.py"
+      ],
+      "complexity": 3,
+      "notes": "预案含分级判据+演练记录(DRILL:);双栈同停以发送日志时间戳核验(30min内);存活门FAIL则按B栈单栈版落预案",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-072",
+      "title": "收入归因回溯报告：源消息→Lead→推荐→私聊→订单前10单全量+漏斗周报(≥3单首报)",
+      "covers": [
+        "REQ-017 REQ-017.AC1 REQ-017.AC2"
+      ],
+      "after": [
+        "T-061",
+        "T-066",
+        "T-069"
+      ],
+      "verify": "py -I revenue-engine/probes/check_artifact.py attribution_report",
+      "files": [
+        "revenue-engine/reports/attribution/",
+        "revenue-engine/probes/check_artifact.py"
+      ],
+      "complexity": 3,
+      "notes": "上线后前10单全量回溯,单量不足以实际单量全查且≥3单即出首报;报告含 ORDERS: n 与漏斗各级转化率;归因胶水已并入300行门(超支则本REQ降SHOULD留ADR)",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-073",
+      "title": "23:59运营日报：收入/漏斗/告警/异常/五轴指标当值(军团轨复用)",
+      "covers": [
+        "REQ-023 REQ-023.AC1"
+      ],
+      "after": [
+        "T-048"
+      ],
+      "verify": "py -I revenue-engine/probes/check_artifact.py daily_report",
+      "files": [
+        "revenue-engine/reports/daily/",
+        "revenue-engine/probes/check_artifact.py"
+      ],
+      "complexity": 2,
+      "notes": "SHOULD;优先复用军团日报/台账轨(新增码计入300行门);日报含五轴世界级指标当前值+收入+漏斗+告警+异常;末行 DAILY: OK",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    },
+    {
+      "id": "T-074",
+      "title": "72小时无人值守试运行：零人工介入+停机时长计量入周报(让路令豁免)",
+      "covers": [
+        "REQ-022 REQ-022.AC1 REQ-022.AC2"
+      ],
+      "after": [
+        "T-057",
+        "T-066",
+        "T-068",
+        "T-070",
+        "T-071"
+      ],
+      "verify": "py -I revenue-engine/probes/check_artifact.py soak_report",
+      "files": [
+        "revenue-engine/reports/soak/",
+        "revenue-engine/probes/check_artifact.py"
+      ],
+      "complexity": 3,
+      "notes": "核心商业链+安全件在役后开跑;试运行窗避开让路令(让路暂停≠故障);军团健康探针+自愈重启核验;报告含 HUMAN_INTERVENTIONS: 0 与 DOWNTIME: 计量",
+      "status": "pending",
+      "attempts": 0,
+      "claimed_by": null,
+      "claimed_at": null,
+      "done_at": null
+    }
+  ]
+}

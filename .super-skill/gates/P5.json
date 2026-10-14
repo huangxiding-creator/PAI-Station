@@ -1,0 +1,36 @@
+{
+  "phase": "P5",
+  "name": "Architecture & Design",
+  "passed": true,
+  "static": false,
+  "ts": "2026-10-14T16:11:22+08:00",
+  "checks": [
+    {
+      "type": "file_exists",
+      "severity": "error",
+      "ok": true,
+      "msg": "ARCHITECTURE.md exists"
+    },
+    {
+      "type": "min_bytes",
+      "severity": "error",
+      "ok": true,
+      "msg": "ARCHITECTURE.md is 6741 bytes (min 500)"
+    },
+    {
+      "type": "file_exists",
+      "severity": "warn",
+      "ok": true,
+      "msg": "API_DESIGN.md exists"
+    },
+    {
+      "type": "no_marker",
+      "severity": "error",
+      "ok": true,
+      "msg": "no [NEEDS CLARIFICATION]"
+    }
+  ],
+  "errors": 0,
+  "warnings": 0,
+  "skipped": 0
+}

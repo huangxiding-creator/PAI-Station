@@ -1,0 +1,42 @@
+{
+  "phase": "IF3",
+  "name": "Proposal Forge",
+  "passed": true,
+  "static": false,
+  "ts": "2026-10-14T15:06:01+08:00",
+  "checks": [
+    {
+      "type": "file_exists",
+      "severity": "error",
+      "ok": true,
+      "msg": "PROPOSAL.md exists"
+    },
+    {
+      "type": "file_exists",
+      "severity": "error",
+      "ok": true,
+      "msg": "SCORECARD.json exists"
+    },
+    {
+      "type": "json_field",
+      "severity": "error",
+      "ok": true,
+      "msg": "SCORECARD.json:verdict = 'proceed'"
+    },
+    {
+      "type": "file_exists",
+      "severity": "warn",
+      "ok": true,
+      "msg": "BUSINESS_MODEL.md exists"
+    },
+    {
+      "type": "approval",
+      "severity": "error",
+      "ok": true,
+      "msg": "approval 'proposal' granted"
+    }
+  ],
+  "errors": 0,
+  "warnings": 0,
+  "skipped": 0
+}

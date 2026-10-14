@@ -8,11 +8,11 @@
 | 胶水件 | 预算 | 当前行数 | 状态 |
 |---|---|---|---|
 | lead_transformer.py（含去重/告警/归因回调追加） | ≤200 | 0 | 未建（T-050/T-056/T-057/T-066/T-069 逐层追加，全程卡 ≤200） |
-| 8440 入口 service_8440.py（含 /enqueue+鉴权） | ~50 | 33 | ✅ T-075 done（5/5 测试绿） |
+| 8440 入口 service_8440.py（含 /enqueue+鉴权+202/429+防爆破） | ~50 | 48 | ✅ T-075 v2 done（裁判返工：enqueue返回值/202契约/字段透传/锁+单次告警/autostart钩子） |
 | A 栈全局日20插件（langbot-plugins/） | ~50 | 0 | 未建（T-063） |
-| audit_log.py（审计总线，reuse-first 落地） | 0 优先 | 40 | ✅ T-048 done（4/4 测试绿，含 90 天轮转+周报） |
+| audit_log.py（审计总线，reuse-first 落地） | 0 优先 | 43 | ✅ T-048 v2 done（裁判返工：坏行容错；契约命令-I亲测6/6绿） |
 
-GLUE_TOTAL: 73/300 PASS
+GLUE_TOTAL: 91/300 PASS
 
 后续每个写码任务 done 时必须复跑 check_glue_audit.py；任何时刻超 300 → 全线停加码，
 按 REQUIREMENTS 头注执行（REQ-017 降 SHOULD 并留 ADR 取舍）。

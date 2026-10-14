@@ -888,12 +888,12 @@
         "revenue-engine/probes/check_artifact.py"
       ],
       "complexity": 2,
-      "notes": "省份x行业x规模x时间窗四因子公式+完整阈值表(顾问级告警70/推荐触发50)+调参记录节；唯一阈值来源,transformer/告警/推荐都从此读",
+      "notes": "省份x行业x规模x时间窗四因子公式+完整阈值表(顾问级告警70/推荐触发50)+调参记录节；唯一阈值来源,transformer/告警/推荐都从此读\n[2026-10-14T20:42:30+08:00] FAIL: 裁判DISCARD: 压缩式值域实为[60,100]非声称[40,100];阈值50恒真/下限30不可达;§1与JSON双公式矛盾;残留'？'编辑痕迹",
       "status": "done",
-      "attempts": 0,
-      "claimed_by": "worker-T046",
+      "attempts": 1,
+      "claimed_by": null,
       "claimed_at": "2026-10-14T16:49:59+08:00",
-      "done_at": "2026-10-14T20:34:56+08:00"
+      "done_at": "2026-10-14T20:45:03+08:00"
     },
     {
       "id": "T-048",
@@ -908,12 +908,12 @@
         "私域运营/zbops/tests/test_audit_log.py"
       ],
       "complexity": 3,
-      "notes": "优先复用auto_responder既有日志/军团台账,新增胶水行数计入300行门(reuse-first)；CowAgent豁免限频但强制入审计;保留≥90天;周报汇总发送量",
+      "notes": "优先复用auto_responder既有日志/军团台账,新增胶水行数计入300行门(reuse-first)；CowAgent豁免限频但强制入审计;保留≥90天;周报汇总发送量\n[2026-10-14T20:41:48+08:00] FAIL: 裁判DISCARD: verify契约命令(-I)结构性跑不通,绿出自非契约命令;weekly_summary坏行无容错;周报未挂自动腿未声明",
       "status": "done",
-      "attempts": 0,
-      "claimed_by": "worker-T048",
+      "attempts": 1,
+      "claimed_by": null,
       "claimed_at": "2026-10-14T16:49:59+08:00",
-      "done_at": "2026-10-14T20:34:57+08:00"
+      "done_at": "2026-10-14T20:45:03+08:00"
     },
     {
       "id": "T-049",
@@ -1420,12 +1420,12 @@
         "私域运营/zbops/tests/test_api_8440_auth.py"
       ],
       "complexity": 3,
-      "notes": "写码件(计入300行门)；队列/计数器进程归属设计注释；军团自启注册核验进测试",
+      "notes": "写码件(计入300行门)；队列/计数器进程归属设计注释；军团自启注册核验进测试\n[2026-10-14T20:41:48+08:00] FAIL: 裁判DISCARD: enqueue无return致恒queued:false(mock掩盖);dedup_key/source未透传;callback不拉responder循环;schtasks核验缺",
       "status": "done",
-      "attempts": 0,
-      "claimed_by": "worker-T075",
+      "attempts": 1,
+      "claimed_by": null,
       "claimed_at": "2026-10-14T16:49:59+08:00",
-      "done_at": "2026-10-14T20:34:57+08:00"
+      "done_at": "2026-10-14T20:45:03+08:00"
     },
     {
       "id": "T-076",

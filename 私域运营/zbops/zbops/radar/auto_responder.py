@@ -81,33 +81,34 @@ class SafeAutoResponder:
 
     def enqueue(self, chat_name: str, text: str, priority: int = 5,
                 **metadata):
-        """入队（每群日限3条 + 冷却30分钟 + 全局限额）。"""
+        """入队（每群日限3条 + 冷却30分钟 + 全局限额）。返回 True=已入队 / False=被安全网拒绝。"""
         self._reset_counters()
 
         if self._risk_detected:
             log.warning("[风控熔断] 拒绝新消息")
-            return
+            return False
 
         # 全局日限
         if self._sent_today >= self.daily_limit:
-            return
+            return False
 
         # 每群日限 3 条（用户硬约束）
         if self._chat_daily.get(chat_name, 0) >= MAX_PER_CHAT_DAILY:
-            return
+            return False
 
         # 同群冷却 30 分钟
         if time.time() - self._chat_last_sent.get(chat_name, 0) < CHAT_COOLDOWN:
-            return
+            return False
 
         # 内容去重
         if self._is_duplicate(text):
-            return
+            return False
 
         msg = PendingMessage(chat_name=chat_name, text=text, priority=priority,
                             created_at=time.time(), metadata=metadata or {})
         self.queue.append(msg)
         self.queue.sort(key=lambda m: m.priority)
+        return True
 
     def report_risk_signal(self, signal: str):
         """外部报告风控信号。"""

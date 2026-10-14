@@ -1,0 +1,124 @@
+{
+  "schema_version": "1.0",
+  "project": "revenue-engine",
+  "status": "executing",
+  "active_phase": "P8",
+  "gate_mode": true,
+  "phases": {
+    "IF1": {
+      "status": "done",
+      "started_at": "2026-10-14T12:07:47+08:00",
+      "done_at": "2026-10-14T14:24:22+08:00"
+    },
+    "IF2": {
+      "status": "done",
+      "started_at": "2026-10-14T14:24:22+08:00",
+      "done_at": "2026-10-14T14:55:36+08:00"
+    },
+    "IF3": {
+      "status": "done",
+      "started_at": "2026-10-14T14:55:36+08:00",
+      "done_at": "2026-10-14T15:06:01+08:00"
+    },
+    "P0": {
+      "status": "done",
+      "started_at": "2026-10-14T15:06:01+08:00",
+      "done_at": "2026-10-14T15:06:43+08:00"
+    },
+    "P1": {
+      "status": "done",
+      "started_at": "2026-10-14T15:06:43+08:00",
+      "done_at": "2026-10-14T15:08:13+08:00"
+    },
+    "P2": {
+      "status": "done",
+      "started_at": "2026-10-14T15:08:13+08:00",
+      "done_at": "2026-10-14T15:08:50+08:00"
+    },
+    "P2b": {
+      "status": "done",
+      "started_at": "2026-10-14T15:08:50+08:00",
+      "done_at": "2026-10-14T15:09:15+08:00"
+    },
+    "P3": {
+      "status": "done",
+      "started_at": "2026-10-14T15:09:15+08:00",
+      "done_at": "2026-10-14T15:10:45+08:00"
+    },
+    "P4": {
+      "status": "done",
+      "started_at": "2026-10-14T15:10:45+08:00",
+      "done_at": "2026-10-14T16:08:39+08:00"
+    },
+    "P5": {
+      "status": "done",
+      "started_at": "2026-10-14T16:08:39+08:00",
+      "done_at": "2026-10-14T16:11:22+08:00"
+    },
+    "P6": {
+      "status": "done",
+      "started_at": "2026-10-14T16:11:22+08:00",
+      "done_at": "2026-10-14T16:47:52+08:00"
+    },
+    "P7": {
+      "status": "done",
+      "started_at": "2026-10-14T16:47:52+08:00",
+      "done_at": "2026-10-14T16:48:49+08:00"
+    },
+    "P8": {
+      "status": "in_progress",
+      "started_at": "2026-10-14T16:48:49+08:00",
+      "done_at": null
+    },
+    "P9": {
+      "status": "pending",
+      "started_at": null,
+      "done_at": null
+    },
+    "P10": {
+      "status": "pending",
+      "started_at": null,
+      "done_at": null
+    },
+    "P11": {
+      "status": "pending",
+      "started_at": null,
+      "done_at": null
+    },
+    "P12": {
+      "status": "pending",
+      "started_at": null,
+      "done_at": null
+    }
+  },
+  "approvals": {
+    "proposal": {
+      "approved": true,
+      "at": "2026-10-14T15:06:01+08:00",
+      "note": "用户批准开源直用组装版（对话内确认）",
+      "by": "user"
+    },
+    "requirements": {
+      "approved": true,
+      "at": "2026-10-14T16:08:12+08:00",
+      "note": "用户批准 v2.1（对话内确认）",
+      "by": "user"
+    }
+  },
+  "config": {
+    "test_cmd": "py -I 私域运营/zbops/main.py selftest",
+    "tag_phases": true,
+    "requirements_file": "REQUIREMENTS.md"
+  },
+  "budget": {
+    "usd_limit": null,
+    "token_limit": null,
+    "warn_ratio": 0.7
+  },
+  "stop_blocks": 0,
+  "stop_progress_mark": 0,
+  "wait_reason": "",
+  "created_at": "2026-10-14T12:07:47+08:00",
+  "last_updated": "2026-10-14T20:29:15+08:00",
+  "next_action": "Phase P8 Autonomous Development: run sub-skill `autonomous-loop`, produce source code, experiments.tsv, then `ss.py advance`."
+}
