@@ -1,82 +1,45 @@
-# F1 调研搜集质量档案 — 2026-10-11T09:24:59 ｜ 用户验收材料
+# F1 调研搜集质量档案 — 2026-10-15T06:48:23 ｜ 用户验收材料
 
-> 字数门: T1≥3,000,000 ∧ T1+T2≥30,000,000 有效字符（弹药门 v3,
+> 字数门: T1≥20,000,000 ∧ T1+T2≥50,000,000 有效字符（弹药门 v3,
 > tiers.json 判定, 只算新增+judge valid）
-> 实绩: T1=16,730,119 ｜ T2=28,587,219
-> ｜ T1+T2=45,317,338 ｜ **门态 PASS ✅**（距 T1+T2 门差 0 字待采）
+> 实绩: T1=32,951,068 ｜ T2=38,312,333
+> ｜ T1+T2=71,263,401 ｜ **门态 PASS ✅**（距 T1+T2 门差 0 字待采）
 
 ## 1. 总量与分层账
 - 存量语料盘点: 10,347,917 字（han+西文词口径,
   67 目录, A级 46 目录 · B级 19 目录 · C级 1 目录 · D级 1 目录）
-- F1-BLUEBOOK 池（判定后真账）: 有效 108,383,377 字 /
-  34264 件 ｜ 待审 0
-- 分层: T1 16,730,119 (3042件) ｜
-  T2 28,587,219 (11766件) ｜
-  T3 6,292,686（封顶不计门）｜ T0 56,773,353（不计）
+- F1-BLUEBOOK 池（判定后真账）: 有效 28,237,111 字 /
+  5262 件 ｜ 待审 0
+- 分层: T1 32,951,068 (9166件) ｜
+  T2 38,312,333 (10727件) ｜
+  T3 0（封顶不计门）｜ T0 0（不计）
 - 军团 F1 缺口树: 待派 51 / 已派 0 /
   已收 0 / 收割 0 字
 - 池引擎账:
 | engine | 字数 |
 |---|---|
-| cross:rss | 71,697,779 |
-| cross:topics | 12,457,480 |
-| stock:corpus | 10,159,246 |
-| cross:wechat_rss | 2,998,057 |
-| cross:stats | 1,814,544 |
-| cross:bidding | 1,675,402 |
-| cross:policy | 1,607,380 |
-| cross:standards | 1,121,878 |
-| cross:assoc | 604,437 |
-| cross:zhsearchpro | 525,066 |
-| cross:cnki | 495,810 |
-| cross:zzlh | 422,518 |
-| cross:patents | 300,200 |
-| cross:hbba | 271,218 |
-| cross:metaso | 235,647 |
-| cross:cnea | 181,677 |
-| cross:company_info | 173,038 |
-| cross:nafmii | 166,998 |
-| cross:nnsa | 154,179 |
-| cross:video | 150,848 |
-| cross:railway_market | 138,634 |
-| cross:cninfo | 115,527 |
-| cross:deep_crawl | 94,549 |
-| cross:eia | 84,199 |
-| cross:websearch_en | 68,822 |
-| cross:sasac | 64,367 |
-| cross:dangdang | 54,662 |
-| cross:academic_en | 46,345 |
-| cross:weread | 45,767 |
-| cross:nea | 45,232 |
-| cross:luban | 39,849 |
-| cross:chinamoney | 32,479 |
-| cross:mot | 32,268 |
-| cross:mohurd | 29,157 |
-| cross:ggzy | 24,913 |
-| cross:wbproj | 22,412 |
-| cross:damodaran | 21,687 |
-| cross:ndrc_pifu | 20,800 |
-| cross:mem_gov | 19,774 |
-| cross:ndrc | 18,339 |
-| cross:sogou_wechat | 16,235 |
-| cross:financial | 15,159 |
-| cross:sinopec_ec | 14,830 |
-| cross:intl_news | 14,154 |
-| cross:irm | 13,738 |
-| cross:gbstandard | 12,273 |
-| cross:edgar | 9,998 |
-| cross:wb_sanctions | 9,851 |
-| cross:arxiv | 8,975 |
-| cross:earnings_call | 8,319 |
-| cross:procuratorate | 8,144 |
-| cross:ofac | 4,809 |
-| cross:ebook | 3,831 |
-| cross:awards | 3,701 |
-| cross:tcec | 2,755 |
-| cross:mofcom_hzs | 1,173 |
-| cross:wiki_intl | 1,162 |
-| cross:hacker_news | 767 |
-| cross:jzsc | 319 |
+| rss:bid26deep | 7,735,197 |
+| f1deep | 7,079,550 |
+| cross:rss:bidcut | 5,094,237 |
+| rss:wide | 2,536,089 |
+| stock:corpus | 866,370 |
+| search:web | 856,652 |
+| cross:bidding | 821,649 |
+| cross:policy | 818,675 |
+| cross:standards | 457,273 |
+| fulltext:web | 425,437 |
+| rss:bid26direct | 392,583 |
+| f1full:cross:topics | 352,329 |
+| cross:EPC49-SEPDC | 321,227 |
+| cross:wechat_rss:bidcut | 287,368 |
+| manus:corps | 134,796 |
+| f1full:cross:patents | 16,362 |
+| cross:hbba | 14,008 |
+| f1full:cross:weread | 10,935 |
+| f1full:cross:metaso | 10,857 |
+| f1full:cross:dangdang | 4,458 |
+| f1full:cross:academic_en | 539 |
+| f1full:cross:cnki | 520 |
 
 ## 2. 渠道完备门过账（注册表逐条, 静默缺席不许收官）
 | 渠道 | F1 专属贡献(字) | 态/计划 |
@@ -97,65 +60,27 @@
 | 本地文件扫描 | 0 | 存量编译内含其历史贡献; 跨战役复用已过账（见下方池engine cross: 行）; F1 专属新采待开火 |
 | 视频字幕 | 0 | 存量编译内含其历史贡献; 跨战役复用已过账（见下方池engine cross: 行）; F1 专属新采待开火 |
 | QQ邮箱 | 0 | 存量编译内含其历史贡献; 跨战役复用已过账（见下方池engine cross: 行）; F1 专属新采待开火 |
-| [池engine] cross:rss | 71,697,779 | 跨战役收割件复用入账 (data/rss_harvest RSS 常年收割面, 同尺 judge+tiers) |
-| [池engine] cross:topics | 12,457,480 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] stock:corpus | 10,159,246 | 存量语料建池入账 (多渠道历史编译) |
-| [池engine] cross:wechat_rss | 2,998,057 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:stats | 1,814,544 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:bidding | 1,675,402 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:policy | 1,607,380 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:standards | 1,121,878 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:assoc | 604,437 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:zhsearchpro | 525,066 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:cnki | 495,810 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:zzlh | 422,518 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:patents | 300,200 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:hbba | 271,218 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:metaso | 235,647 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:cnea | 181,677 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:company_info | 173,038 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:nafmii | 166,998 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:nnsa | 154,179 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:video | 150,848 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:railway_market | 138,634 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:cninfo | 115,527 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:deep_crawl | 94,549 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:eia | 84,199 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:websearch_en | 68,822 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:sasac | 64,367 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:dangdang | 54,662 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:academic_en | 46,345 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:weread | 45,767 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:nea | 45,232 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:luban | 39,849 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:chinamoney | 32,479 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:mot | 32,268 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:mohurd | 29,157 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:ggzy | 24,913 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:wbproj | 22,412 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:damodaran | 21,687 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:ndrc_pifu | 20,800 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:mem_gov | 19,774 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:ndrc | 18,339 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:sogou_wechat | 16,235 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:financial | 15,159 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:sinopec_ec | 14,830 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:intl_news | 14,154 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:irm | 13,738 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:gbstandard | 12,273 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:edgar | 9,998 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:wb_sanctions | 9,851 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:arxiv | 8,975 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:earnings_call | 8,319 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:procuratorate | 8,144 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:ofac | 4,809 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:ebook | 3,831 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:awards | 3,701 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:tcec | 2,755 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:mofcom_hzs | 1,173 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:wiki_intl | 1,162 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:hacker_news | 767 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] cross:jzsc | 319 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
+| [池engine] rss:bid26deep | 7,735,197 | 存量语料建池入账 (多渠道历史编译) |
+| [池engine] f1deep | 7,079,550 | 存量语料建池入账 (多渠道历史编译) |
+| [池engine] cross:rss:bidcut | 5,094,237 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
+| [池engine] rss:wide | 2,536,089 | 存量语料建池入账 (多渠道历史编译) |
+| [池engine] stock:corpus | 866,370 | 存量语料建池入账 (多渠道历史编译) |
+| [池engine] search:web | 856,652 | 存量语料建池入账 (多渠道历史编译) |
+| [池engine] cross:bidding | 821,649 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
+| [池engine] cross:policy | 818,675 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
+| [池engine] cross:standards | 457,273 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
+| [池engine] fulltext:web | 425,437 | 存量语料建池入账 (多渠道历史编译) |
+| [池engine] rss:bid26direct | 392,583 | 存量语料建池入账 (多渠道历史编译) |
+| [池engine] f1full:cross:topics | 352,329 | 存量语料建池入账 (多渠道历史编译) |
+| [池engine] cross:EPC49-SEPDC | 321,227 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
+| [池engine] cross:wechat_rss:bidcut | 287,368 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
+| [池engine] f1full:cross:patents | 16,362 | 存量语料建池入账 (多渠道历史编译) |
+| [池engine] cross:hbba | 14,008 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
+| [池engine] f1full:cross:weread | 10,935 | 存量语料建池入账 (多渠道历史编译) |
+| [池engine] f1full:cross:metaso | 10,857 | 存量语料建池入账 (多渠道历史编译) |
+| [池engine] f1full:cross:dangdang | 4,458 | 存量语料建池入账 (多渠道历史编译) |
+| [池engine] f1full:cross:academic_en | 539 | 存量语料建池入账 (多渠道历史编译) |
+| [池engine] f1full:cross:cnki | 520 | 存量语料建池入账 (多渠道历史编译) |
 
 ## 3. 分层成色
 - T1 主稿构成（按引擎分账, 不一概而论）: stock:corpus 67 件 = 我方
