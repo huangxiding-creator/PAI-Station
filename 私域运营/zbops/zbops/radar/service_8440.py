@@ -50,9 +50,13 @@ def enqueue(body: EnqueueBody, x_api_key: str | None = Header(None)):
     _check_key(x_api_key)
     ok = responder.enqueue(body.group, body.text, priority=body.priority,
                            dedup_key=body.dedup_key, source=body.source)
-    return JSONResponse(status_code=202 if ok else 429, content={
-        "queued": bool(ok),
-        "position": len(responder.queue) if ok else None})
+    if ok:
+        return JSONResponse(status_code=202,
+                            content={"queued": True,
+                                     "position": len(responder.queue)})
+    return JSONResponse(status_code=429, content={
+        "queued": False, "position": None,
+        "reason": responder.last_reject or "unknown"})
 
 
 @app.on_event("startup")

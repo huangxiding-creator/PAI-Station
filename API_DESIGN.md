@@ -18,7 +18,7 @@ Body:
 }
 Response:
   202 {"queued": true, "position": n}        # 入队成功
-  429 {"reason": "per_chat_daily|global_daily|cooldown"}  # 安全网拒绝（不可绕过）
+  429 {"queued": false, "position": null, "reason": "per_chat_daily|global_daily|cooldown|duplicate|risk_breaker"}  # 安全网拒绝（不可绕过）
   401 {"reason": "bad key"}
   422 {"reason": "schema"}
 ```

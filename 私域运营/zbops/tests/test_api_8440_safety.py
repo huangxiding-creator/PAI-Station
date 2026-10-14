@@ -37,22 +37,26 @@ def test_per_chat_daily_3(client):
     responder._chat_daily["g@chatroom"] = MAX_PER_CHAT_DAILY
     r = _post(client)
     assert r.status_code == 429 and r.json()["queued"] is False
+    assert r.json()["reason"] == "per_chat_daily"   # API_DESIGN reason 枚举
     assert not responder.queue  # 被安全网拦截，未入队
 
 
 def test_global_daily_20(client):
     responder._sent_today = MAX_GLOBAL_DAILY
-    assert _post(client).status_code == 429
+    r = _post(client)
+    assert r.status_code == 429 and r.json()["reason"] == "global_daily"
 
 
 def test_cooldown_window(client):
     responder._chat_last_sent["g@chatroom"] = time.time()
-    assert _post(client).status_code == 429
+    r = _post(client)
+    assert r.status_code == 429 and r.json()["reason"] == "cooldown"
 
 
 def test_risk_breaker(client):
     responder._risk_detected = True
-    assert _post(client).status_code == 429
+    r = _post(client)
+    assert r.status_code == 429 and r.json()["reason"] == "risk_breaker"
 
 
 def test_dedup_key_idempotent(client):
@@ -80,3 +84,27 @@ def test_send_side_cooldown_requeue():
     asyncio.run(responder._process_one())
     assert len(responder.queue) == 1 and responder.queue[0].text == "msg1"  # 压回未发
     assert responder._sent_today == 0                      # 未消耗全局额度
+
+
+def test_double_send_window_closed(monkeypatch):
+    """裁判 S4：同文双入队（无 dedup_key）窗口期双发封堵——发送侧去重复查。"""
+    import asyncio
+    responder.queue.clear()
+    responder._sent_hashes.clear()
+    responder._dedup_keys.clear()
+    responder._chat_daily.clear()
+    responder._chat_last_sent.clear()
+    responder._sent_today = 0
+    responder._risk_detected = False
+    assert responder.enqueue("g1", "same content")
+    assert responder.enqueue("g1", "same content")         # 窗口期两条都入队
+    sent = []
+    async def fake_send(chat, text):
+        sent.append(text)
+        return True
+    monkeypatch.setattr(responder, "_send_via_wxrpa", fake_send)
+    responder._chat_last_sent["g1"] = 0                    # 冷却已过
+    asyncio.run(responder._process_one())
+    asyncio.run(responder._process_one())
+    assert sent.count("same content") == 1                  # 第二条被去重复查丢弃
+    assert responder._sent_today == 1

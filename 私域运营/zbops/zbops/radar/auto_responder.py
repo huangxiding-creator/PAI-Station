@@ -55,6 +55,7 @@ class SafeAutoResponder:
         self._sent_date = ""
         self._sent_hashes: set[str] = set()
         self._dedup_keys: set[str] = set()   # 显式 dedup_key 幂等集（API_DESIGN §1）
+        self.last_reject: str = ""           # 最近一次拒绝原因（429 reason）
         self._chat_daily: dict[str, int] = {}        # chat → 今日发送数
         self._chat_last_sent: dict[str, float] = {}   # chat → 最后发送时间
         self._running = False
@@ -87,26 +88,32 @@ class SafeAutoResponder:
 
         if self._risk_detected:
             log.warning("[风控熔断] 拒绝新消息")
+            self.last_reject = "risk_breaker"
             return False
 
         # 全局日限
         if self._sent_today >= self.daily_limit:
+            self.last_reject = "global_daily"
             return False
 
         # 每群日限 3 条（用户硬约束）
         if self._chat_daily.get(chat_name, 0) >= MAX_PER_CHAT_DAILY:
+            self.last_reject = "per_chat_daily"
             return False
 
         # 同群冷却 30 分钟
         if time.time() - self._chat_last_sent.get(chat_name, 0) < CHAT_COOLDOWN:
+            self.last_reject = "cooldown"
             return False
 
         # 内容去重（显式 dedup_key 提供时以其为幂等键，否则按正文 md5 前50字）
         dedup_key = metadata.get("dedup_key")
         if dedup_key:
             if dedup_key in self._dedup_keys:
+                self.last_reject = "duplicate"
                 return False
         elif self._is_duplicate(text):
+            self.last_reject = "duplicate"
             return False
 
         msg = PendingMessage(chat_name=chat_name, text=text, priority=priority,
@@ -159,7 +166,11 @@ class SafeAutoResponder:
 
         # 发送侧同群冷却复核（T-076：入队侧冷却可能被队列积压绕过）
         if time.time() - self._chat_last_sent.get(msg.chat_name, 0) < CHAT_COOLDOWN:
-            self.queue.append(msg)   # 冷却未到，压回队尾稍后重试
+            self.queue.append(msg)   # 冷却未到，压回队尾稍后重试（外层 sleep 驱动，无忙转）
+            return
+
+        # 发送史去重复查（裁判 S4：同文双入队窗口期双发封堵）
+        if self._is_duplicate(msg.text):
             return
 
         success = await self._send_via_wxrpa(msg.chat_name, msg.text)
