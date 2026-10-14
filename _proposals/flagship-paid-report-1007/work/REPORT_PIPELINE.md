@@ -8,7 +8,7 @@
 
 | 段 | 内容 | 出口门（硬判据） | 在役实件 |
 |----|------|------------------|----------|
-| **S1 调研采集** | 全渠道动员（16+1）：RSS 常年收割 / 跨战役收割 / 搜狗微信 / 秘塔 / zh-search-pro 多引擎 / 军团窗口 / 公开网搜 / 池内相关存量跨切 | **字数门 v4**（1012 用户提标令）：**T1≥2000万 ∧ T1+T2≥20000万（2亿=预算上限即门）** | ammo_pool + collection_gate + F1CrossIngest(30min) + rss_harvest(07:37/19:37) + 军团窗口 + 搜索 Workflow |
+| **S1 调研采集** | 全渠道动员（16+1）：RSS 常年收割 / 跨战役收割 / 搜狗微信 / 秘塔 / zh-search-pro 多引擎 / 军团窗口 / 公开网搜 / 池内相关存量跨切 | **字数门 v4**（1012 用户提标令）：**T1≥2000万 ∧ T1+T2≥5000万（1015 用户调标令 v5）** | ammo_pool + collection_gate + F1CrossIngest(30min) + rss_harvest(07:37/19:37) + 军团窗口 + 搜索 Workflow |
 | **S1.5 成果详报 ⛔人工闸** | 调研成果详细汇报：总量分层账/渠道完备门/分层成色/覆盖面树/已知瑕疵 | **用户明示批准**（approve 落账，如 1011「批准开写」先例） | collection_gate report + QUALITY_DOSSIER |
 | **S2 撰写** | 三态成书法（精编/融合/原创）：抽取 bank→写手并行→机器验收 | m2_gate 字数带 + m2_gate2 锚点数字门 + gate3 互引门 + 主编独立复验零采信自报；**成稿总量 ≤10万字**（1012 用户令：约 12-14 章 × 7 千字） | work/m2 全套（extract/gate/gate2/gate3/sweep）+ writer Workflow |
 | **S3 排版** | docx + PDF 成书 | front_gate/G1 结算（按书规模缩放） | tools/report_to_docx + build_docx + build_pdf（Word COM） |

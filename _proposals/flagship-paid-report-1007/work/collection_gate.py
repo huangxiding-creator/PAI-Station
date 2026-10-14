@@ -36,8 +36,8 @@ F1_POOL = AMMO / CID
 F1_TREE = WORK / "f1_gap_tree_v2.json"
 V3_LOG = Path(r"E:\AI-Station\Auto_Manus\data\epc50_corps_log.jsonl")
 
-BAR = {"t1_min": 20_000_000, "t1t2_min": 200_000_000,
-       "budget_chars": 200_000_000}       # 弹药门 v4 (1012 用户提标令: T1≥2000万 ∧ T1+T2≥2亿=预算上限即门)
+BAR = {"t1_min": 20_000_000, "t1t2_min": 50_000_000,
+       "budget_chars": 200_000_000}       # 弹药门 v5 (1015 用户调标令: T1≥2000万 ∧ T1+T2≥5000万)
 
 
 def _load() -> dict:
