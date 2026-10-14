@@ -15,6 +15,7 @@
 | **S4 上架** | 目录转正 + 引擎上云 + 价档挂接 | 生产四腿实测（目录/详情/试读/门禁）+ 海报 v3 自动生成 | update_report_json 模式 + qw_tcb_prep + update_envparams + 既有 vpay 档（¥498/598/698/1999/10000——**新报告复用价档，零新道具**） |
 | **S5 宣传文章** | 引流文 → 公众号草稿箱 → autopub 窗口 | promo_guard 九门全过 + draft/get 双验 | push_article（总包之声/总包说/工程行业大脑三号） |
 | **S6 宣传视频** | 竖屏卡渲染 → 世界级封面 → 视频号发布 → 只读复核 | qa 门 + 独立审片 + 列表命中验证 | artmotion_factory + gen_cover + video_upload(注意:Playwright栈随CPOPC消失待重建) + video_verify |
+| **S7 通知与推送** | 企微通知（上架+文章+视频链接）+ PDF 文件推送企微 | 全部发布完成 → 通知发出 → RUN_LEDGER 回填 | notify_wecom.py + 企微文件上传 |
 
 ## 状态机
 
@@ -35,3 +36,11 @@
 本机常驻：F1CrossIngest(30min 增量) / rss-harvest(双日窗) / 军团夜窗(Auto_Manus epc49_* 系)
 本会话即时：池内跨切（存量相关件入战役池）+ 搜索 Workflow 多引擎扇出（WebSearch/zh-search-pro 语法）
 待网络窗：搜狗微信批量 / 秘塔专题 / opencli 夜航
+
+
+## 固定发布协议（1015 用户令，每份报告完成后自动执行）
+
+1. **S4 上架**：report.json 添加 SKU → PDF≤20MB → 试读件 → 引擎上云 → 四腿验证 → 价档挂接
+2. **S5 文章×3**：引流文 → 生成二维码 → 推送总包之声+总包说+工程行业大脑草稿箱 → autopub 自动发
+3. **S6 视频×3**：2 个 artmotion 竖屏卡 + 1 个 H3 生成 → gen_cover 世界级封面 → 总包说视频号发布
+4. **S7 通知+推送**：企微通知（含全部链接）→ PDF 文件推送企微 → RUN_LEDGER 回填 → git commit
