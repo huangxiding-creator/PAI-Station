@@ -1,4 +1,4 @@
-# F1 调研搜集质量档案 — 2026-10-15T06:48:23 ｜ 用户验收材料
+# F1 调研搜集质量档案 — 2026-10-15T07:08:13 ｜ 用户验收材料
 
 > 字数门: T1≥20,000,000 ∧ T1+T2≥50,000,000 有效字符（弹药门 v3,
 > tiers.json 判定, 只算新增+judge valid）
@@ -8,8 +8,8 @@
 ## 1. 总量与分层账
 - 存量语料盘点: 10,347,917 字（han+西文词口径,
   67 目录, A级 46 目录 · B级 19 目录 · C级 1 目录 · D级 1 目录）
-- F1-BLUEBOOK 池（判定后真账）: 有效 28,237,111 字 /
-  5262 件 ｜ 待审 0
+- F1-BLUEBOOK 池（判定后真账）: 有效 28,338,760 字 /
+  5279 件 ｜ 待审 0
 - 分层: T1 32,951,068 (9166件) ｜
   T2 38,312,333 (10727件) ｜
   T3 0（封顶不计门）｜ T0 0（不计）
@@ -22,12 +22,12 @@
 | f1deep | 7,079,550 |
 | cross:rss:bidcut | 5,094,237 |
 | rss:wide | 2,536,089 |
+| search:web | 937,352 |
 | stock:corpus | 866,370 |
-| search:web | 856,652 |
 | cross:bidding | 821,649 |
 | cross:policy | 818,675 |
 | cross:standards | 457,273 |
-| fulltext:web | 425,437 |
+| fulltext:web | 446,386 |
 | rss:bid26direct | 392,583 |
 | f1full:cross:topics | 352,329 |
 | cross:EPC49-SEPDC | 321,227 |
@@ -64,12 +64,12 @@
 | [池engine] f1deep | 7,079,550 | 存量语料建池入账 (多渠道历史编译) |
 | [池engine] cross:rss:bidcut | 5,094,237 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
 | [池engine] rss:wide | 2,536,089 | 存量语料建池入账 (多渠道历史编译) |
+| [池engine] search:web | 937,352 | 存量语料建池入账 (多渠道历史编译) |
 | [池engine] stock:corpus | 866,370 | 存量语料建池入账 (多渠道历史编译) |
-| [池engine] search:web | 856,652 | 存量语料建池入账 (多渠道历史编译) |
 | [池engine] cross:bidding | 821,649 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
 | [池engine] cross:policy | 818,675 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
 | [池engine] cross:standards | 457,273 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
-| [池engine] fulltext:web | 425,437 | 存量语料建池入账 (多渠道历史编译) |
+| [池engine] fulltext:web | 446,386 | 存量语料建池入账 (多渠道历史编译) |
 | [池engine] rss:bid26direct | 392,583 | 存量语料建池入账 (多渠道历史编译) |
 | [池engine] f1full:cross:topics | 352,329 | 存量语料建池入账 (多渠道历史编译) |
 | [池engine] cross:EPC49-SEPDC | 321,227 | 跨战役收割件复用入账 (ResearchTopics 研究树, 同尺 judge+tiers) |
