@@ -2,9 +2,9 @@
  "axis": "C",
  "sensor": "channel_matrix",
  "campaign": "EPC-BID26",
- "channels_hit": 9,
+ "channels_hit": 10,
  "channels_total": 31,
- "hit_ratio": 0.2903,
+ "hit_ratio": 0.3226,
  "hit_channels": [
   {
    "id": "manus",
@@ -17,7 +17,7 @@
   {
    "id": "sougo",
    "name": "搜狗微信",
-   "chars": 287368,
+   "chars": 941795,
    "engines": [
     "cross:wechat_rss:bidcut"
    ]
@@ -25,7 +25,7 @@
   {
    "id": "metaso",
    "name": "秘塔学术",
-   "chars": 10857,
+   "chars": 40552,
    "engines": [
     "f1full:cross:metaso"
    ]
@@ -33,7 +33,7 @@
   {
    "id": "website",
    "name": "官网爬虫",
-   "chars": 446386,
+   "chars": 635867,
    "engines": [
     "fulltext:web"
    ]
@@ -47,9 +47,18 @@
    ]
   },
   {
+   "id": "localfiles",
+   "name": "本地文件库",
+   "chars": 94604,
+   "engines": [
+    "localfiles:rss",
+    "localfiles:topics"
+   ]
+  },
+  {
    "id": "websearch",
    "name": "WebSearch",
-   "chars": 937352,
+   "chars": 953669,
    "engines": [
     "search:web"
    ]
@@ -57,7 +66,7 @@
   {
    "id": "cnki",
    "name": "CNKI 论文",
-   "chars": 520,
+   "chars": 2471,
    "engines": [
     "f1full:cross:cnki"
    ]
@@ -73,7 +82,7 @@
   {
    "id": "ebook_library",
    "name": "电子书渠道族(两篇文章111站+Arc K扫荡105站=216站纳册)",
-   "chars": 4458,
+   "chars": 10947,
    "engines": [
     "f1full:cross:dangdang"
    ]
@@ -88,7 +97,6 @@
   "微信本地数据",
   "微信4.x加密库",
   "360浏览器画像",
-  "本地文件库",
   "涉诉检索",
   "政府名录线",
   "E-OSCAR 情报引擎",
@@ -135,10 +143,6 @@
   {
    "id": "browser360",
    "name": "360浏览器画像"
-  },
-  {
-   "id": "localfiles",
-   "name": "本地文件库"
   },
   {
    "id": "court",
@@ -220,7 +224,6 @@
   "微信本地数据",
   "微信4.x加密库",
   "360浏览器画像",
-  "本地文件库",
   "涉诉检索",
   "政府名录线",
   "E-OSCAR 情报引擎",
@@ -253,6 +256,13 @@
     "bidding"
    ]
   },
+  "cross:hbba": {
+   "channels": [],
+   "notes": [],
+   "bases": [
+    "hbba"
+   ]
+  },
   "cross:policy": {
    "channels": [],
    "notes": [],
@@ -265,13 +275,6 @@
    "notes": [],
    "bases": [
     "standards"
-   ]
-  },
-  "cross:hbba": {
-   "channels": [],
-   "notes": [],
-   "bases": [
-    "hbba"
    ]
   },
   "cross:wechat_rss:bidcut": {
@@ -360,6 +363,15 @@
     "topics"
    ]
   },
+  "f1full:cross:academic_en": {
+   "channels": [],
+   "notes": [
+    "学术英文（OpenAlex/S2/arXiv 待建渠 T-015）"
+   ],
+   "bases": [
+    "academic_en"
+   ]
+  },
   "f1full:cross:cnki": {
    "channels": [
     "cnki"
@@ -398,15 +410,6 @@
     "patents"
    ]
   },
-  "f1full:cross:academic_en": {
-   "channels": [],
-   "notes": [
-    "学术英文（OpenAlex/S2/arXiv 待建渠 T-015）"
-   ],
-   "bases": [
-    "academic_en"
-   ]
-  },
   "f1full:cross:weread": {
    "channels": [
     "weread"
@@ -424,6 +427,20 @@
    "bases": [
     "wide"
    ]
+  },
+  "localfiles:rss": {
+   "channels": [
+    "localfiles"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "localfiles:topics": {
+   "channels": [
+    "localfiles"
+   ],
+   "notes": [],
+   "bases": []
   }
  },
  "unmapped_engines": [
@@ -455,5 +472,5 @@
  "manifest": "E:\\AI-Station\\ResearchFactory-Eng\\channel_manifest.json",
  "fail_soft": false,
  "fail_soft_note": "",
- "generated_at": "2026-10-15T16:55:04+08:00"
+ "generated_at": "2026-10-15T21:40:28+08:00"
 }
