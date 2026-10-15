@@ -105,7 +105,8 @@ def _item(r: dict) -> dict:
 
 
 def catalog() -> list:
-    return [_item(r) for r in _load()]
+    # 1015 用户令：最新上架的在最上面（report.json 为追加序，反转即最新优先）
+    return [_item(r) for r in reversed(_load())]
 
 
 def get_report(sku: str) -> Optional[dict]:
