@@ -1,0 +1,103 @@
+{
+ "schema": "pricing-experiment/v1",
+ "sku": "EPC-BID26",
+ "generated": "2026-10-15 12:07",
+ "experiment": {
+  "id": "decoy-good-better-best-v1",
+  "req": "REQ-033 / T-021",
+  "hypothesis": "best 档旁挂同价劣势变体后, best(企业版)档选择率向 84% 基线靠拢 (无诱饵对照 32%)",
+  "baseline": {
+   "with_decoy_best_share_pct": 84,
+   "without_decoy_best_share_pct": 32,
+   "source": "N2_变现外部先例卷.md §18 经济学人订阅诱饵实验 (Dan Ariely《Predictably Irrational》, MIT 学生样本)"
+  },
+  "metrics": {
+   "primary": "best 档选择率 = (tier_best+tier_best_decoy 事件) / 全部 tier_* 选择事件",
+   "per_tier": "各档选择率 = 该档选择事件 / 全部 tier_* 选择事件",
+   "events": [
+    "tier_good",
+    "tier_better",
+    "tier_best",
+    "tier_best_decoy"
+   ]
+  },
+  "anchors_source": "reforge_factory/superline/product_family_gen.py PRICE_ANCHORS (T-017 六层变现面)"
+ },
+ "tiers": {
+  "good": {
+   "key": "good",
+   "name": "单章拆分购",
+   "price_band": "¥199",
+   "format": "单章 PDF + 该章断言账本摘录",
+   "role": "走量档 · 低价锚",
+   "base_price": 199,
+   "price": 199,
+   "ladder": null
+  },
+  "better": {
+   "key": "better",
+   "name": "全本专题报告",
+   "price_band": "¥498-698",
+   "format": "全本 PDF + 断言账本附录 + 更新说明",
+   "role": "主力成交档 · 阶梯价",
+   "base_price": 498,
+   "price": 498,
+   "ladder": {
+    "sold": 0,
+    "base_price": 498,
+    "steps_taken": 0,
+    "current_price": 498,
+    "step_units": 50,
+    "step_pct": 10,
+    "next_price_at": 50,
+    "next_price": 548,
+    "cap": 698,
+    "at_cap": false
+   }
+  },
+  "best": {
+   "key": "best",
+   "name": "企业版",
+   "price_band": "¥1,999-10,000",
+   "format": "多席位授权 + 更新流 + 内训版",
+   "role": "高价锚档 · 诱饵宿主",
+   "base_price": 1999,
+   "price": 1999,
+   "ladder": {
+    "sold": 0,
+    "base_price": 1999,
+    "steps_taken": 0,
+    "current_price": 1999,
+    "step_units": 50,
+    "step_pct": 10,
+    "next_price_at": 50,
+    "next_price": 2199,
+    "cap": 10000,
+    "at_cap": false
+   }
+  }
+ },
+ "decoy": {
+  "key": "best_decoy",
+  "name": "企业版（单人授权 · 无更新流）",
+  "price": 1999,
+  "same_price_with": "best",
+  "mirror": "best",
+  "format": "单席位 PDF 授权（无更新流 · 无内训版 · 无多席位）",
+  "inferior_to": [
+   "同价但仅 1 席位（best = 多席位授权）",
+   "同价但无更新流（best = 含更新流）",
+   "同价但无内训版（best = 含内训版）"
+  ],
+  "role": "同价诱饵变体 —— 使 best 成为占优选项 (decoy effect, N2 §18)"
+ },
+ "ladder": {
+  "sold": 0,
+  "sold_source": "report_platform.db#orders (state IN paid,partial_refunded; 订单库只读实读)",
+  "step_units": 50,
+  "step_pct": 10,
+  "next_price_at": 50,
+  "next_price": 548,
+  "public_notice": "阶梯涨价公示：全本 ¥498 起 · 每售满 50 份上浮 10% · ¥698 封顶 —— 当前已售 0 份，售满 50 份后涨至 ¥548（还差 50 份）。"
+ }
+}
