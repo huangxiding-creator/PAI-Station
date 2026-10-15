@@ -24,7 +24,8 @@ def main() -> int:
     checked = 0
     for no, f in sorted(files.items()):
         text = f.read_text(encoding="utf-8")
-        m = re.search(r"三态[：:]\s*\[([精融原][编合创])\]", text[:800])
+        m = re.search(r"三态[*＊=＝行]{0,3}\s*[：:=＝]?\s*\[([精融原][编合创])\]",
+                      text[:800])
         ctype = m.group(1) if m else "精编"
         refs = sorted({int(a or b) for a, b in REF_RE.findall(text)})
         refs = [r for r in refs if r != no]           # 去自指
