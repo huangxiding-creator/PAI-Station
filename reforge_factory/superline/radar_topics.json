@@ -1,0 +1,46 @@
+{
+  "_meta": {
+    "用途": "需求雷达 v1 候选选题清单 (REQ-030)",
+    "pool": "pool 路径=ammo_pool 真实在役池 (只读), 信号源=pool_state.json by_engine",
+    "persona": "买家画像是 v1 规则表输入 (BUYER_PERSONA_TABLE 键), 分析师配置非实测",
+    "sku_match": "竞争空缺比对词: 与 report_platform/content/report.json 实盘 SKU 标题匹配计数"
+  },
+  "topics": [
+    {
+      "topic": "EPC-BID26 工程总承包招投标合规",
+      "pool": "E:/AI-Station/ammo_pool/EPC-BID26",
+      "persona": "enterprise_bid_team",
+      "sku_match": ["招投标", "招标"]
+    },
+    {
+      "topic": "EPC49 电力/新能源 EPC 企业研究 (四川院系)",
+      "pool": "E:/AI-Station/ammo_pool/EPC49-SEPDC",
+      "persona": "enterprise_strategy",
+      "sku_match": ["核电", "四川电力", "输变电"]
+    },
+    {
+      "topic": "EPC50 中石化南京工程 EPC 总承包",
+      "pool": "E:/AI-Station/ammo_pool/EPC50-SNEI",
+      "persona": "enterprise_strategy",
+      "sku_match": ["南京工程"]
+    },
+    {
+      "topic": "F1 工程总承包产业蓝皮书 (行业全景)",
+      "pool": "E:/AI-Station/ammo_pool/F1-BLUEBOOK",
+      "persona": "enterprise_strategy",
+      "sku_match": ["蓝皮书"]
+    },
+    {
+      "topic": "EPC100 水利水电 EPC 市场研究",
+      "pool": "E:/AI-Station/ammo_pool/EPC100-demo",
+      "persona": "sme_design_institute",
+      "sku_match": ["水利", "水电"]
+    },
+    {
+      "topic": "EPC49-AUX 行业研究方法论辅助件",
+      "pool": "E:/AI-Station/ammo_pool/EPC49-SEPDC-AUX",
+      "persona": "consultant",
+      "sku_match": ["方法论"]
+    }
+  ]
+}
