@@ -33,21 +33,22 @@ ROOTS: list[tuple[str, Path]] = [          # (族标签, 根)
     ("stock", Path(r"F:/新建文件夹/AI总包创新院")),
 ]
 
-# 面 → (文件名/正文头正则, 正面槽 EEI)
-FACETS: dict[str, tuple[str, str]] = {
+# 面 → (文件名/正文头正则, EEI 槽池 — 轮转挂树提升子问覆盖度)
+FACETS: dict[str, tuple[str, tuple[str, ...]]] = {
     "国际对标": ("FIDIC|国际工程|海外工程|国际招标|世行|国际承包|对外承包|国际咨购",
-              "Q23-E1"),
+              ("Q23-E1", "Q24-E1", "Q23-E3", "Q24-E3")),
     "技术方案": ("电子招投标|评标系统|智慧评审|数字化招|智能评标|电子保函|BIM",
-              "Q19-E1"),
+              ("Q19-E1", "Q18-E1", "Q19-E3", "Q20-E1")),
     "渠道生态": ("招标代理|招标平台|采购平台|公共资源交易|招标采购网|交易平台",
-              "Q25-E1"),
+              ("Q25-E1", "Q26-E1", "Q25-E3", "Q26-E3")),
     "组织人事": ("评标专家|招标师|造价工程师|从业资格|注册建造师|招标从业人员",
-              "Q21-E1"),
+              ("Q21-E1", "Q22-E1", "Q21-E3", "Q22-E3")),
 }
+AGAINST_KW = re.compile(r"风险|处罚|违规|串标|围标|纠纷|败诉|事故|失信|通报")
+AGAINST_SLOTS = {"国际对标": "Q23-E2", "技术方案": "Q19-E2",
+                 "渠道生态": "Q25-E2", "组织人事": "Q21-E2"}
 DOMAIN_RE = re.compile(
     r"工程总承包|招投标|招标|投标|EPC|评标|定标|采购|承包")
-FOLLOWUP_EEI = {"国际对标": "Q24-E1",       # 第二槽: 前半批满后同面文件挂此 (海外实践等)
-                "技术方案": "Q18-E1", "渠道生态": "Q26-E1", "组织人事": "Q22-E1"}
 
 MAX_HEAD = 2000
 
@@ -83,7 +84,7 @@ def run(cid: str, per_facet: int = 30, dry: bool = False) -> int:
                 continue
             stats["scanned"] += 1
             name = fp.name
-            for facet, (pat, eei) in FACETS.items():
+            for facet, (pat, slots) in FACETS.items():
                 if facet_n[facet] >= per_facet:
                     continue
                 if not re.search(pat, name):
@@ -99,8 +100,10 @@ def run(cid: str, per_facet: int = 30, dry: bool = False) -> int:
                 if (not re.search(pat, head) or not DOMAIN_RE.search(name + head)):
                     continue                      # 文件名误报 → 正文门挡下
                 stats["text_pass"] += 1
-                slot = (FOLLOWUP_EEI[facet] if facet_n[facet] >= per_facet // 2
-                        else eei)                 # 后半批挂第二槽 (海外实践等)
+                # 槽位轮转: 反证词命中→该面反证位池(以 -E2 结算); 否则轮转支撑/权威槽
+                n = facet_n[facet]
+                slot = (AGAINST_SLOTS[facet] if AGAINST_KW.search(name + head)
+                        else slots[n % len(slots)])
                 batch.append((fp, family, facet, slot))
                 facet_n[facet] += 1
                 break                             # 一件只归一面 (防跨面重复)
