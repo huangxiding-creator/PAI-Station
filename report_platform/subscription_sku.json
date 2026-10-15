@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "doc": "REQ-036 订阅更新流 SKU 骨架 (百倍V3 T-022) — 纯数据件, 只增不改; 权益口径与上架步骤详见 README_SUBSCRIPTION.md",
+  "created_at": "2026-10-15",
+  "task": "T-022",
+  "requirement": "REQ-036.AC1",
+  "status": "skeleton",
+  "unit_note": "price 单位=元, 与 report_platform/content/report.json 同口径; 接支付时 server 侧 fen=price*100 落 pay_amounts",
+  "skus": [
+    {
+      "sku_id": "SUB-ANNUAL-1999",
+      "name": "年度研究订阅",
+      "price": 1999,
+      "price_label": "¥1,999/年",
+      "price_cadence": "annual",
+      "term_days": 365,
+      "renewal": "manual",
+      "value_anchor": "单本蓝皮书 ¥10,000 (BLUEBOOK-2027); 订阅 ¥1,999/年 = 约 1/5 本价得全年产线",
+      "entitlements": {
+        "new_reports_all": {
+          "desc": "订阅期内全站新上架付费报告自动入权益, 无需另购",
+          "scope": "report_platform/content/report.json 全部 reports[].sku (现役示例: BLUEBOOK-2027)"
+        },
+        "revision_stream": {
+          "desc": "所含全部报告的修订版免费更新流",
+          "scope": "同一 sku 的版本修订 (v1.x → v2)"
+        },
+        "member_qa": {
+          "desc": "会员答疑",
+          "scope": "企微会员群 + 报告页留言优先回复, 工作日 48h 响应口径"
+        }
+      },
+      "update_stream": {
+        "source": "新报告上架自动入权益",
+        "trigger": "report_platform 上架链落新报告 (content/report.json 新增 reports[].sku)",
+        "delivery": "随 report-release-protocol 常令发布链推送会员 (企微通知 + PDF 推送)",
+        "floor_cadence": "保底周刊汇总 (report_platform/weekly_north_star.py)"
+      },
+      "referral_tracking": {
+        "url_param": "?ref=",
+        "ledger": "report_platform/funnel_events.jsonl",
+        "field": "ref",
+        "writer": "funnel_query.record(sku, channel, level, ref=...)",
+        "query": "py report_platform/funnel_query.py --sku SUB-ANNUAL-1999 (事件面 ref 经 collect() 可查)",
+        "selftest_ref": "v3-selftest"
+      },
+      "launch_steps": [
+        "1. skus[0] 同层加 \"status\": \"live\" 并由 server 读本骨架渲染订阅落地页",
+        "2. 支付接线: server /api/pay/order 支持 SUB-ANNUAL-1999, fen=1999*100, 回调 mark_paid 后 orders 落账",
+        "3. 权益生效: pay 级事件入 funnel_events.jsonl, 订阅期 365 天自支付日起算, 期内新报告 sku 自动入权益"
+      ]
+    }
+  ]
+}
