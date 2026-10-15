@@ -276,6 +276,100 @@ GRADE_MAP = {"official": "A", "research": "B", "media": "B",
              "unknown": "C"}   # A=官方一手 B=权威二手 C=未验证
 
 
+# ---------- REQ-044 存档快照 (judge valid 同事务内嵌; METHODOLOGY §三.2) ----------
+# Bellingcat OSINT 取证链: 原文被删/被改后引用失锚 → valid 证据同事务落快照.
+#   快照三用途: ①防漂移 (引用锚定哈希版本) ②时效审计 (抓取时间) ③重跑判重 (哈希同=同证据)
+#   分级豁免: A 级官方文件已有本地落盘 → 原文件即快照, 只存指针不复制
+#   容量纪律: 只快照 valid (rejected 不占盘); 全文>2MB 存前 100KB+截断标记
+#   fail-soft (ARCHITECTURE §四): 写失败记 snapshot_pending, 不阻断 judge
+SNAPSHOT_CUTOFF_DEFAULT = "2026-10-15"   # W0 生效日 (权威源 gates.effective_date)
+SNAPSHOT_FULL_LIMIT = 2 * 1024 * 1024    # 2 MiB
+SNAPSHOT_KEEP_BYTES = 100 * 1024         # 100 KiB
+_SNAPSHOT_DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
+
+
+def snapshot_cutoff(gates: dict | None = None) -> str:
+    """快照增量 cutoff = gates.json effective_date (W0 生效日, 决策时现读);
+    坏值/缺键回退内置默认 (T-002R 权威源范式)."""
+    g = gates if gates is not None else gates_loader.load_gates()
+    v = g.get("effective_date")
+    return v if isinstance(v, str) and _SNAPSHOT_DATE.fullmatch(v) \
+        else SNAPSHOT_CUTOFF_DEFAULT
+
+
+def is_snapshot_incremental(ts: str, cutoff: str) -> bool:
+    """增量判定: 日期界严格大于 (行 ts 的日期 > cutoff 日期).
+    生效日当天 = 存量基线豁免 — 2026-10-15 落地的既有 881 条 BID26 valid
+    行不追溯补档 (REQ-044 只管生效日后的增量)."""
+    return bool(ts) and ts[:10] > cutoff
+
+
+def snapshot_valid_row(d: Path, row: dict, text: str) -> dict:
+    """judge valid 同事务快照 (REQ-044) — 返回追加快照字段后的行**副本**.
+
+    内容模式 (默认): snapshots/<sha256前16>/{content.txt, meta.json}
+      - 存判定原文 utf-8; 全文>2MiB 只存前 100KiB+截断标记 (宪法容量纪律)
+      - snapshot_hash = sha256(全文字节) — 锚定全版本, 判重/防漂移不因截断失锚
+    指针模式 (A 级豁免): 官方 grade=A 且原文件在盘 — 原文件即快照,
+      只落 meta.json 零复制; snapshot_hash = sha256(原文件字节),
+      snapshot_url = 原文件绝对路径 (指针)
+    snapshot_url 语义 = 快照体定位符 (内容模式=战役目录内相对路径).
+    幂等: 同哈希快照已在档 → 不重写, 复用首档时间戳 (只增不删).
+    写失败抛异常, 由调用方 (judge) fail-soft 接住记 snapshot_pending.
+    """
+    fp = Path(row.get("source_path", ""))
+    ts_now = time.strftime("%Y-%m-%dT%H:%M:%S")
+    grade_a = (row.get("grade") == "A" or row.get("authority_grade") == "A")
+    if grade_a and fp.is_file():                      # 分级豁免: 原文件即快照
+        raw = fp.read_bytes()
+        digest = hashlib.sha256(raw).hexdigest()
+        meta = {"mode": "pointer", "sha256": digest, "snapshot_ts": ts_now,
+                "source_url": row.get("url_norm", ""),
+                "source_path": str(fp), "full_bytes": len(raw),
+                "stored_bytes": 0, "truncated": False,
+                "campaign": d.name, "engine": row.get("engine", ""),
+                "note": "A 级官方文件本地在盘, 免复制存指针 (宪法分级豁免)"}
+        url = str(fp)
+    else:
+        raw = text.encode("utf-8")
+        digest = hashlib.sha256(raw).hexdigest()
+        truncated = len(raw) > SNAPSHOT_FULL_LIMIT
+        if truncated:                                # 容量纪律: 前 100KiB+截断标记
+            body = (raw[:SNAPSHOT_KEEP_BYTES].decode("utf-8", errors="ignore")
+                    + f"\n\n[SNAPSHOT-TRUNCATED 原文 {len(raw):,}B 超过 "
+                      f"{SNAPSHOT_FULL_LIMIT:,}B, 依宪法容量纪律只存前 "
+                      f"{SNAPSHOT_KEEP_BYTES:,}B; 全文锚定见 sha256]\n")
+        else:
+            body = text
+        meta = {"mode": "content", "sha256": digest, "snapshot_ts": ts_now,
+                "source_url": row.get("url_norm", ""),
+                "source_path": str(fp), "full_bytes": len(raw),
+                "stored_bytes": len(body.encode("utf-8")),
+                "truncated": truncated, "campaign": d.name,
+                "engine": row.get("engine", "")}
+        url = f"snapshots/{digest[:16]}/content.txt"   # 战役目录内相对定位
+    sdir = d / "snapshots" / digest[:16]
+    mfile = sdir / "meta.json"
+    if not mfile.is_file():                           # 幂等: 已在档不重写
+        sdir.mkdir(parents=True, exist_ok=True)
+        if meta["mode"] == "content":
+            (sdir / "content.txt").write_text(body, encoding="utf-8")
+        mfile.write_text(json.dumps(meta, ensure_ascii=False, indent=1),
+                         encoding="utf-8")
+    else:                                             # 复用首档 (快照只增不删)
+        try:
+            first = json.loads(mfile.read_text(encoding="utf-8"))
+            ts_now = first.get("snapshot_ts", ts_now)
+        except (OSError, json.JSONDecodeError):
+            pass
+    out = {**row, "snapshot_hash": digest, "snapshot_ts": ts_now,
+           "snapshot_url": url, "snapshot_mode": meta["mode"]}
+    out.pop("snapshot_pending", None)                 # 补档成功清 fail-soft 标记
+    out.pop("snapshot_error", None)
+    return out
+
+
+
 # ---------- 有效性判断 (R0 启发式 — 免费优先/fail-soft/证据先行) ----------
 _GARBAGE = ("登录后查看", "请输入验证码", "404 Not Found", "403 Forbidden",
             "扫码关注", "访问过于频繁", "页面不存在", "网络出错")
@@ -686,8 +780,24 @@ def _judge_locked(d: Path, mp: Path, limit: int) -> int:
         print(f"[judge] ⚠ manifest {len(rows):,} 行 << 台账 {st_items:,} 件 "
               f"— 疑外部截断 (G-014), 本轮只判现存行, 台账不回缩",
               file=sys.stderr)
+    cutoff = snapshot_cutoff()     # REQ-044: W0 生效日, 决策时现读 gates.json
+    # REQ-044 fail-soft 自愈: 前轮写快照失败 (snapshot_pending) 的增量 valid
+    # 行本轮补档 — 只动快照字段, 判定/账目不动 (只增不删)
+    n_snap_fix = 0
+    for i, row in enumerate(rows):
+        if (row.get("judge") == "valid" and row.get("snapshot_pending")
+                and is_snapshot_incremental(row.get("ts", ""), cutoff)):
+            fp0 = Path(row.get("source_path", ""))
+            if not fp0.is_file():
+                continue
+            try:
+                rows[i] = snapshot_valid_row(d, row, read_text_safe(fp0))
+                n_snap_fix += 1
+            except Exception:
+                pass                # 仍失败 → 保持 pending, 下轮再试 (fail-soft)
     n_valid = n_rej = n_keep = 0
-    for row in rows:
+    n_snap = n_snap_pend = 0
+    for i, row in enumerate(rows):
         if limit and n_valid + n_rej >= limit:
             break
         if row.get("judge", "pending") != "pending":
@@ -705,6 +815,16 @@ def _judge_locked(d: Path, mp: Path, limit: int) -> int:
         ch = row["chars"]
         if verdict == "valid":
             n_valid += 1
+            if is_snapshot_incremental(row.get("ts", ""), cutoff):
+                try:                # REQ-044: 同事务落存档快照 (fail-soft)
+                    row = snapshot_valid_row(d, row, text)
+                    rows[i] = row
+                    n_snap += 1
+                except Exception as exc:   # 写失败不阻断 judge (ARCHITECTURE §四)
+                    row = {**row, "snapshot_pending": True,
+                           "snapshot_error": f"{type(exc).__name__}: {exc}"[:200]}
+                    rows[i] = row
+                    n_snap_pend += 1
             s = {**s, "total_chars": s["total_chars"] + ch,
                  "items": s["items"] + 1,
                  "pending_chars": s["pending_chars"] - ch,
@@ -730,6 +850,8 @@ def _judge_locked(d: Path, mp: Path, limit: int) -> int:
     _save_state(d, {**s, "last_judge": time.strftime("%Y-%m-%d %H:%M")})
     print(f"\n[判断] 启发式@课题关键词({len(kws)}): 有效 {n_valid} 入门槛账 | "
           f"废弃 {n_rej} | 留审 {n_keep} (文件缺失)")
+    print(f"[快照] valid 同事务落档 {n_snap} | 写失败留 pending {n_snap_pend} | "
+          f"补档前轮失败 {n_snap_fix} (REQ-044, 增量=cutoff {cutoff} 后)")
     total_ref = gate_total_chars()   # 决策时现读 gates.json (T-002R)
     print(f"[门槛账] 有效弹药 {s['total_chars']:,} 字 "
           f"({100 * s['total_chars'] / total_ref:.2f}% of 总量参考线) | "
