@@ -27,6 +27,18 @@ _POOL = _TMP / "pool"
 MC.AP.POOL_ROOT = _POOL                           # 池根隔离 (S0-4 教训)
 _CAMP = "TEST-P12"
 
+import pytest  # noqa: E402
+
+
+@pytest.fixture(autouse=True, scope="module")
+def _isolate_pool_root():
+    """运行时根恢复：其他测试文件在收集期亦改 AP.POOL_ROOT（字母序最后者赢），
+    本模块测试前重指回自己的池根，防跨文件状态污染（T-001 修复）。"""
+    _orig = MC.AP.POOL_ROOT
+    MC.AP.POOL_ROOT = _POOL
+    yield
+    MC.AP.POOL_ROOT = _orig
+
 
 def _mk_battle(tag: str, rescan_queued: int = 0) -> Path:
     """夹具战役: ch01 饱和 (10件×3000字) / ch02 贫血 (3件×500字)."""

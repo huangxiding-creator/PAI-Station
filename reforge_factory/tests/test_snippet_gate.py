@@ -20,6 +20,18 @@ AP.POOL_ROOT = _TMP / "ammo_pool"
 _CAMP = "TEST-S21"
 (AP.POOL_ROOT / _CAMP).mkdir(parents=True)
 
+import pytest  # noqa: E402
+
+
+@pytest.fixture(autouse=True, scope="module")
+def _isolate_pool_root():
+    """运行时根恢复：其他测试文件在收集期亦改 AP.POOL_ROOT（字母序最后者赢），
+    本模块测试前重指回自己的池根，防跨文件状态污染（T-001 修复）。"""
+    _orig = AP.POOL_ROOT
+    AP.POOL_ROOT = _TMP / "ammo_pool"
+    yield
+    AP.POOL_ROOT = _orig
+
 _FULL_ARTICLE = ("中石化南京工程有限公司在 EPC 总承包领域深耕多年，"
                  "承接了宁波乙烯等多个大型项目。" * 60)   # ~5k 字全文
 _SERP_DUMP = ("## Search Results\n"
