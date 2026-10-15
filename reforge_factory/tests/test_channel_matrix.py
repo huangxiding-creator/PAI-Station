@@ -251,7 +251,10 @@ _REAL_MANIFEST = cm.DEFAULT_MANIFEST_PATH
                     reason="真实池/渠道清单缺席, 跳过实盘冒烟")
 def test_real_bid26_readonly_smoke():
     r = cm.scan("EPC-BID26")
-    assert r["channels_total"] == 28                    # 实测 named 渠道 28 个
+    # 分母随 manifest 只增演进 (T-015 学术三件套入列 28→31); 断言动态一致而非硬编码
+    manifest_named = cm.load_channels(_REAL_MANIFEST)
+    assert r["channels_total"] == len(manifest_named)
+    assert r["channels_total"] >= 31                   # T-015 后学术三件套在册
     assert r["fail_soft"] is False
-    assert 0 < r["channels_hit"] < 28                   # 传感器非空且非满分(缺口在案)
+    assert 0 < r["channels_hit"] < r["channels_total"]  # 传感器非空且非满分(缺口在案)
     assert "manus" in {c["id"] for c in r["hit_channels"]}   # manus:corps 实盘在池
