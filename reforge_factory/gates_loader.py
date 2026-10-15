@@ -50,7 +50,9 @@ DEFAULTS: dict = {
         "videos_h3_min": 1,
         "upper": "autonomous_by_funnel",
     },
-    "stopping": {"gain_threshold_pct": 2.0, "rounds": 3, "fuse_hours": 72},
+    # gain_threshold 短键 = REQ-041.AC1 口径别名 (值恒同 gain_threshold_pct, T-005 增补)
+    "stopping": {"gain_threshold_pct": 2.0, "gain_threshold": 2.0,
+                 "rounds": 3, "fuse_hours": 72},
     "flags": {                          # REQ-002 三回开旗标, 默认全 false
         "legacy_t12_gate": False,
         "legacy_total_gate": False,
