@@ -98,9 +98,10 @@ def main() -> int:
     title, tags = meta["title"], meta["tags"]
 
     # ---- 预检四件套 ----
-    if _sph_count_today() >= 1:
-        print("[vup] ③日帽: 今日已发 1 条 (sph 日帽=1) — 明天再来")
-        return 1
+    # 1015 用户令：去掉日帽限制，允许多条/日发布
+    # if _sph_count_today() >= 1:
+    #     print("[vup] ③日帽: 今日已发 1 条 (sph 日帽=1) — 明天再来")
+    #     return 1
     recent = _recent_weaipo_video_publish_min()
     if recent is not None and recent < RUNLOG_RECHECK_MIN:
         print(f"[vup] ①让路: We-AIPO {recent:.0f} 分钟内发过视频 — 退出")
