@@ -1,0 +1,31 @@
+{
+ "version": 1,
+ "note": "黄金样板分位数标定位待标；当前值=临时基线（保守启发，基于 3-1-hunan.md 样板章 0.117/0.733/0.297 与合成超标文本 repeat 0.911/0.020、slop堆砌 72.0 校准留安全边距）。后续按 REQ-014 用黄金样板章全量分位数重标。",
+ "metric_notes": {
+  "redundancy_ratio_max": "1-NCD(前半,后半) raw-deflate；高=冗余复制；超标于 > max",
+  "new_ngram_rate_min": "非骨架去重 2/3-gram 类型数 / n-gram token 总数；低=词汇多样性差；超标于 < min",
+  "slop_density_per_kchar_max": "中文slop正则命中/千汉字；超标于 > max（slop_hits 原值随 metrics 报告）"
+ },
+ "thresholds": {
+  "defaults": {
+   "redundancy_ratio_max": 0.65,
+   "new_ngram_rate_min": 0.45,
+   "slop_density_per_kchar_max": 2.0
+  },
+  "精编": {
+   "redundancy_ratio_max": 0.65,
+   "new_ngram_rate_min": 0.40,
+   "slop_density_per_kchar_max": 2.0
+  },
+  "融合": {
+   "redundancy_ratio_max": 0.65,
+   "new_ngram_rate_min": 0.45,
+   "slop_density_per_kchar_max": 2.0
+  },
+  "原创": {
+   "redundancy_ratio_max": 0.60,
+   "new_ngram_rate_min": 0.50,
+   "slop_density_per_kchar_max": 1.5
+  }
+ }
+}
