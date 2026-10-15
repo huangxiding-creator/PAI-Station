@@ -2,9 +2,9 @@
  "axis": "C",
  "sensor": "channel_matrix",
  "campaign": "EPC-BID26",
- "channels_hit": 17,
+ "channels_hit": 18,
  "channels_total": 31,
- "hit_ratio": 0.5484,
+ "hit_ratio": 0.5806,
  "hit_channels": [
   {
    "id": "manus",
@@ -17,7 +17,7 @@
   {
    "id": "sougo",
    "name": "搜狗微信",
-   "chars": 941795,
+   "chars": 967287,
    "engines": [
     "cross:wechat_rss:bidcut"
    ]
@@ -25,7 +25,7 @@
   {
    "id": "metaso",
    "name": "秘塔学术",
-   "chars": 40552,
+   "chars": 48288,
    "engines": [
     "f1full:cross:metaso"
    ]
@@ -33,7 +33,7 @@
   {
    "id": "djyanbao",
    "name": "洞见研报",
-   "chars": 44024,
+   "chars": 66015,
    "engines": [
     "djyanbao:vip"
    ]
@@ -41,7 +41,7 @@
   {
    "id": "website",
    "name": "官网爬虫",
-   "chars": 635867,
+   "chars": 638386,
    "engines": [
     "fulltext:web"
    ]
@@ -123,7 +123,7 @@
   {
    "id": "zh_search_pro",
    "name": "免key中文多引擎检索",
-   "chars": 112001,
+   "chars": 116392,
    "engines": [
     "zh_search_pro:bing_cn"
    ]
@@ -139,10 +139,19 @@
   {
    "id": "anysearch",
    "name": "AnySearch实时搜索(web+垂直域17域+并发批量+网页抽取, 匿名免鉴权)",
-   "chars": 106930,
+   "chars": 389186,
    "engines": [
+    "anysearch:gap",
     "anysearch:web",
     "court:anysearch"
+   ]
+  },
+  {
+   "id": "arxiv",
+   "name": "arXiv 学术API(免key)",
+   "chars": 1654,
+   "engines": [
+    "academic:arxiv"
    ]
   }
  ],
@@ -159,8 +168,7 @@
   "网页搜索项目注册表(8角度扫荡111候选+8本机在册=119项)",
   "夸克网盘账号面(扫码授权+转存四步+列目录+下载直链+签到保活)",
   "OpenAlex 学术API(免key)",
-  "Semantic Scholar 学术API(S2, 免key)",
-  "arXiv 学术API(免key)"
+  "Semantic Scholar 学术API(S2, 免key)"
  ],
  "miss_detail": [
   {
@@ -214,10 +222,6 @@
   {
    "id": "semantic_scholar",
    "name": "Semantic Scholar 学术API(S2, 免key)"
-  },
-  {
-   "id": "arxiv",
-   "name": "arXiv 学术API(免key)"
   }
  ],
  "new_channel_queue": [
@@ -235,8 +239,7 @@
   }
  ],
  "miss_in_queue": [
-  "OpenAlex 学术API(免key)",
-  "arXiv 学术API(免key)"
+  "OpenAlex 学术API(免key)"
  ],
  "miss_not_in_queue": [
   "视频文稿",
@@ -514,6 +517,20 @@
    ],
    "notes": [],
    "bases": []
+  },
+  "academic:arxiv": {
+   "channels": [
+    "arxiv"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "anysearch:gap": {
+   "channels": [
+    "anysearch"
+   ],
+   "notes": [],
+   "bases": []
   }
  },
  "unmapped_engines": [
@@ -545,5 +562,5 @@
  "manifest": "E:\\AI-Station\\ResearchFactory-Eng\\channel_manifest.json",
  "fail_soft": false,
  "fail_soft_note": "",
- "generated_at": "2026-10-15T23:16:59+08:00"
+ "generated_at": "2026-10-16T05:44:30+08:00"
 }

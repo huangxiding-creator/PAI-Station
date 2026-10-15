@@ -35,9 +35,12 @@ def run(cid: str, dry: bool = False) -> int:
         kws = ap._load_state(d).get("kws", [])
         n_flipped_valid = n_keep_rej = n_missing = 0
         for row in rows:
-            if row.get("judge") != "rejected" or \
-                    row.get("judge_reason") != "off_topic":
+            if row.get("judge") != "rejected":
                 continue
+            reason = str(row.get("judge_reason") or "")
+            if reason != "off_topic" and not reason.startswith(
+                    "reland_still_off_topic"):
+                continue                      # 只翻 off_topic 一族 (含复判后仍off的)
             fp = Path(row["source_path"])
             if not fp.is_file():
                 n_missing += 1
