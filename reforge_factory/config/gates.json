@@ -1,0 +1,15 @@
+{
+  "version": 3,
+  "effective_date": "2026-10-15",
+  "t1_min_chars": 10000000,
+  "t12_total_gate": null,
+  "t3_reference_cap_ratio": 1.5,
+  "legacy_total_budget_reference": 200000000,
+  "report_length": {"max": null, "min_chapters": 3, "note": "篇幅自定，密度门主判"},
+  "chapter_band": {"mode": "density", "floor_per_type": {"精编": 3000, "融合": 5000, "原创": 4000}},
+  "completeness_gate": {"required_axes": ["T", "B", "D", "P", "C"], "pass_rule": "all_green_or_waived"},
+  "saturation_gate": {"min_evidence": 2, "min_hosts": 2, "min_pct": 80},
+  "release_protocol": {"articles_min": 3, "videos_min": 3, "videos_h3_min": 1, "upper": "autonomous_by_funnel"},
+  "stopping": {"gain_threshold_pct": 2.0, "rounds": 3, "fuse_hours": 72},
+  "flags": {"legacy_t12_gate": false, "legacy_total_gate": false, "legacy_chapter_band": false}
+}
