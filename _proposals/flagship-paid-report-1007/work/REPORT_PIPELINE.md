@@ -1,3 +1,63 @@
+# 研报生产线章程（REPORT_PIPELINE）v2（1015 用户去限令）
+
+> **版本行：v2（1015 用户去限令）**。本版在 1012 五令章程（v1，全文见文末存档，一字不删）基础上升级：
+> ①新增 **S-1 需求雷达段**（变现前置）与 **S8 变现复盘段**（闭环回写）；②S1 出口门改
+> 「**T1≥1000万 ∧ 完备性门（五轴）∧ 饱和门**」（T1+T2 总门撤、旧 2 亿门撤留产能参考线）；
+> ③S2 撤「成稿≤10万字」上限（**篇幅自定 + 密度门主判 + 章型下限保底**，min_chapters=3）；
+> ④发布链 3+3 改「**协议下限，上限按漏斗数据自主**」；⑤**门参数以 `reforge_factory/config/gates.json` 为唯一权威源**。
+> v1 红线全部继承：数字零造假 / 账本回填 / 密钥不进仓 / 推送冻结令 / S1.5 人工闸 / 删除只认用户当次明示令。
+
+## 产线八段（每段有入口门与出口门，状态机驱动；S1.5 为 S1→S2 之间人工闸）
+
+| 段 | 内容 | 出口门（硬判据） | 在役实件 |
+|----|------|------------------|----------|
+| **S-1 需求雷达**（新增） | 信号采集（自有比地渠道公告量/政策发布日历/公众号留言私信痛点/搜索热度/评论问题）→ 选题评分卡（需求强度×支付能力×竞争空缺×语料复用）→ 选题排序+预期收入区间+产品形态建议 → 喂 charter（体量=建议区间非模板） | 评分卡排序落账 + charter 体量显式且有依据（雷达建议×语料完备性双输入） | reforge_factory/superline/demand_radar.py + radar_scorecards.json + radar_signals.jsonl |
+| **S1 调研采集** | 全渠道动员（16+1）：RSS 常年收割 / 跨战役收割 / 搜狗微信 / 秘塔 / zh-search-pro 多引擎 / 军团窗口 / 公开网搜 / 池内相关存量跨切 | **v2 三重门：T1≥1000万 ∧ 完备性门（五轴 T/B/D/P/C 全绿或显式豁免）∧ 饱和门（≥2源/≥80%）**；T1+T2 总门撤（对标覆盖改 D×B 轴点亮判定，不再字数折算）；旧 2 亿总量门撤（留产能规划参考线非门）；停时=边际信息增益主规则+时长保险丝 | ammo_pool + collection_gate + F1CrossIngest(30min) + rss_harvest(07:37/19:37) + 军团窗口 + 搜索 Workflow + 完备性五轴传感器（entity_timeline / coverage / dimension_matrix / depth_ladder / channel_matrix → completeness_ledger.jsonl） |
+| **S1.5 成果详报 ⛔人工闸**（保留增强） | 呈批件升级三合一：总量分层账 + 完备性热图（五轴 CIdx）+ 变现预测 | **用户明示批准**（approve 落账，如 1011「批准开写」先例）——不变 | collection_gate report + QUALITY_DOSSIER + completeness_ledger.jsonl |
+| **S2 撰写** | 三态成书法（精编/融合/原创）：抽取 bank→写手并行→机器验收；**篇幅/章数/框架自主定**（侦察密度→章预算仅参考不作验收硬门）；过程附录四件套随稿出厂（PRISMA 漏斗/ACH 矩阵/覆盖热图/存证时间戳） | **密度门主判**（DQE 四指标章级接线，超标章打回）+ m2_gate2 锚点数字门 + gate3 互引门 + 主编独立复验零采信自报；**成稿总量上限撤**（1015 去限令，report_length.max=null）；章数下限 min_chapters=3 保底；章字数按章型下限保底（精编 3000/融合 5000/原创 4000，随 gates.json chapter_band.floor_per_type） | work/m2 全套（extract/gate/gate2/gate3/sweep）+ density_thresholds.json + writer Workflow |
+| **S3 排版** | docx + PDF 成书 | front_gate/G1 结算（按书规模缩放；G1 全书字数门由逐产品 charter 声明，章程层不再有普适字数门） | tools/report_to_docx + build_docx + build_pdf（Word COM） |
+| **S4 上架** | 目录转正 + 引擎上云 + 价档挂接（产品族 ≥6 变现面） | 生产四腿实测（目录/详情/试读/门禁）+ 海报 v3 自动生成 | update_report_json 模式 + qw_tcb_prep + update_envparams + 既有 vpay 档（¥498/598/698/1999/10000——**新报告复用价档，零新道具**；单品定价=雷达建议+阶梯实验回填，调价走用户批准） |
+| **S5/S6 宣传**（文章+视频） | 引流文 → 公众号草稿箱 → autopub 窗口；竖屏卡渲染 → 世界级封面 → 视频号发布 → 只读复核 | promo_guard 九门全过 + draft/get 双验；qa 门 + 独立审片 + 列表命中验证；**发布量 3+3=协议下限，上限自主按漏斗**（转化好的内容形态按漏斗数据加发） | push_article（总包之声/总包说/工程行业大脑三号）+ artmotion_factory + gen_cover + video_upload(注意:Playwright栈随CPOPC消失待重建) + video_verify |
+| **S7 通知与推送** | 企微通知（上架+文章+视频链接）+ PDF 文件推送企微 | 全部发布完成 → 通知发出 → RUN_LEDGER 回填 | notify_wecom.py + 企微文件上传 |
+| **S8 变现复盘**（新增） | 漏斗仪表盘（per-SKU×渠道×级：visit→试读完→点购→支付）→ 周报北极星（周收入/转化率/复购率/退款率，对标 6.6% 中位基准）→ **回写选题评分权重与定价建议**（decision_ledger 落账）→ 校准账本 Brier 回填（下一份更聪明） | 漏斗数据回写 ≥1 次落 decision_ledger + 周报产出 + 校准预测到期回验 | report_platform/funnel_query.py + funnel_events.jsonl + weekly/ + decision_ledger |
+
+## 状态机与门参数权威源
+
+- 每产品一行状态：`work/pipeline_state.json` → `[{sku, stage, ts, notes}]`（line 字段随章程版本同步，现为 v2）
+- **门参数唯一权威源：`reforge_factory/config/gates.json`**（v3，2026-10-15）；ammo_pool / epc50_start_gate / collection_gate / contracts 的门参数全部改读它；任何阈值/路由改动走 SEPL（propose→assess→commit/rollback）
+- 推进规则：段出口门全绿才进下段；**S1.5 只认用户原话**（approve --note 落账）
+- 红线继承：数字零造假 / 账本回填 / 密钥不进仓 / 推送冻结令在役（本地 commit 可以）/ 删除只认用户当次明示令
+
+## 在产产品（首批）
+
+1. **EPC-BID26《工程总承包招投标合规指南·2026 版》**（价档 ¥698 专题档）
+   - 底料：A 级存量 176K（《工程总承包招投标合规工作指南》）+ 池内 bidding/policy/hbba/standards 引擎存量 + 全渠道新采
+   - 差异面：合规/法务买家（蓝皮书零重叠）；2026 新规时效性
+2. **EPC-TRAIN《企业 EPC 培训市场深度洞察》**（价档 ¥598，候位）
+   - 底料：A 级存量 391K；买家面=培训机构/企业大学（独一份）
+
+## 全渠道动员清单（S1 开火序）
+
+本机常驻：F1CrossIngest(30min 增量) / rss-harvest(双日窗) / 军团夜窗(Auto_Manus epc49_* 系)
+本会话即时：池内跨切（存量相关件入战役池）+ 搜索 Workflow 多引擎扇出（WebSearch/zh-search-pro 语法）
+待网络窗：搜狗微信批量 / 秘塔专题 / opencli 夜航
+
+
+## 固定发布协议（1015 用户令，每份报告完成后自动执行；v2：3+3=协议下限，上限自主按漏斗）
+
+1. **S4 上架**：report.json 添加 SKU → PDF≤20MB → 试读件 → 引擎上云 → 四腿验证 → 价档挂接
+2. **S5 文章×3**（=协议下限，上限自主按漏斗）：引流文 → 生成二维码 → 推送总包之声+总包说+工程行业大脑草稿箱 → autopub 自动发
+3. **S6 视频×3**（=协议下限，上限自主按漏斗；H3 至少 1 支保留）：2 个 artmotion 竖屏卡 + 1 个 H3 生成 → gen_cover 世界级封面 → 总包说视频号发布
+4. **S7 通知+推送**：企微通知（含全部链接）→ PDF 文件推送企微 → RUN_LEDGER 回填 → git commit
+5. **S8 变现复盘**（v2 新增）：funnel_query 周报 → 选题评分权重与定价建议回写（decision_ledger 落账）→ 转化好的内容形态按漏斗数据加发
+6. **S9 临时文件清理**（v1 协议第 5 步顺延改号，内容不变）：发布链全部完成后，清理本报告生产过程中产生的临时文件（搜索 agent 工作目录/截图/中间产物/SERP 被拒件），列入固定发布链最后一步自动执行（1015 用户令；删除铁律在役——执行时仍只认用户当次明示清单）
+
+---
+
+# v1 存档（1012 五令原版）
+
+> 以下为 1012 五令章程原版全文，一字不删，仅作历史存档；现行有效版本为上方 v2。
+
 # 研报生产线章程（REPORT_PIPELINE）— 1012 用户五令固化
 
 > **用户令链（2026-10-12，五连）**：①继续生产工程总承包研究报告；②所有渠道全部动员全面深度调研；

@@ -1,10 +1,13 @@
 {
- "line": "REPORT_PIPELINE v1 (1012 用户五令)",
+ "line": "REPORT_PIPELINE v2 (1015 用户去限令；门参数唯一权威源=reforge_factory/config/gates.json)",
  "gates": {
-  "S1": "T1>=2000万 ∧ T1+T2>=5000万 (1015 调标令 v5)",
+  "S-1": "需求雷达评分卡 → charter 体量建议区间（显式且有依据）",
+  "S1": "T1>=1000万 ∧ 完备性门(五轴T/B/D/P/C) ∧ 饱和门 (v2；T1+T2总门撤、旧2亿门撤留产能参考线)",
   "S1.5": "调研成果详报 → 用户明示批准（人工硬闸）",
-  "S2": "m2_gate 字数带 + gate2 锚点门 + gate3 互引门 + 主编复验 + 成稿<=10万字(1012令)"
+  "S2": "密度门主判(DQE章级) + gate2 锚点门 + gate3 互引门 + 主编复验 + 成稿上限=null(1015去限令) + min_chapters=3 + 章型下限保底"
  },
+ "report_length": {"max": null, "min_chapters": 3},
+ "notes": "v3 令(1015 去限令)：成稿总量上限撤销置 null(legacy 旗标留档)；S1 总门换 T1>=1000万+完备性门+饱和门；发布 3+3=协议下限上限自主按漏斗；新增 S-1 需求雷达段与 S8 变现复盘段；门参数以 reforge_factory/config/gates.json 为唯一权威源",
  "products": [
   {
    "sku": "EPC-BID26",
@@ -33,5 +36,5 @@
   }
  ],
  "auto_chain": "1014 用户令: 完成一份自动进入下一份全量任务",
- "release_protocol": "1015 用户令: S4上架+S5文章×3公众号+S6视频×3(含H3)+S7企微通知+PDF推送"
+ "release_protocol": "1015 用户令: S4上架+S5文章×3公众号+S6视频×3(含H3)+S7企微通知+PDF推送+S8变现复盘；×3/×3=协议下限，上限自主按漏斗"
 }
