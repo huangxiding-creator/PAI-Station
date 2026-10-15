@@ -279,6 +279,43 @@ class TestChars:
         assert got["chars/POOL-V3/t1_chars"]["match"]
         assert any("POOL-NOT1" in n and "无 t1" in n for n in notes)
 
+    def test_detail_v2_preferred_over_title_and_pinpointed(self, tmp_path):
+        """阶梯1: v2 明细优先于标题级 — 账随明细一致→OK, 植错→NG 定位明细值."""
+        rows = [{"file": "f1", "chars": 100, "tier": "T1",
+                 "caliber": "fulltext_v2", "matched_term": "招标", "ts": "x"},
+                {"file": "f2", "chars": 150, "tier": "T1",
+                 "caliber": "fulltext_v2", "matched_term": "评标", "ts": "x"},
+                {"file": "f3", "chars": 60, "tier": "T2",
+                 "caliber": "fulltext_v2", "matched_term": "合同", "ts": "x"}]
+        _mk_chars_pool(tmp_path, "POOL-V2", t1_chars=250)         # 明细口径 250
+        _wl(tmp_path / "POOL-V2" / "tier_content_detail_v2.jsonl", rows)
+        _mk_chars_pool(tmp_path, "POOL-V2BAD", t1_chars=251)      # 植入错数
+        _wl(tmp_path / "POOL-V2BAD" / "tier_content_detail_v2.jsonl", rows)
+        items, _ = NA.audit_chars(tmp_path, n=5)
+        got = {it["item"]: it for it in items}
+        ok = got["chars/POOL-V2/t1_chars"]
+        # 标题级重算只会得 100 — 复算=250 证明走的是 v2 明细行级加总
+        assert ok["match"] and ok["recomputed_value"] == 250
+        assert "tier_content_detail_v2" in ok["note"]
+        assert "fulltext_v2" in ok["note"]
+        bad = got["chars/POOL-V2BAD/t1_chars"]
+        assert bad["match"] is False and bad["diff"] == 1
+        assert bad["recomputed_value"] == 250
+
+    def test_legacy_detail_reading_a_fallback(self, tmp_path):
+        """阶梯2: 无 v2 明细时按旧明细读法A (拼接行容错+去重-full归位优先)."""
+        d = _mk_chars_pool(tmp_path, "POOL-OLD", t1_chars=170)
+        with (d / "tier_content_detail.jsonl").open("w", encoding="utf-8") as fh:
+            # 两对象物理拼接在一线 (1015 实盘形态): f1 双记取 -full 一遍
+            fh.write('{"tier": "T1", "file": "f1", "chars": 100}'
+                     '{"tier": "T1-full", "file": "f1", "chars": 100}\n')
+            fh.write('{"tier": "T2", "file": "f2", "chars": 50}\n')
+            fh.write('{"tier": "T1", "file": "f3", "chars": 70}\n')
+        items, _ = NA.audit_chars(tmp_path, n=5)
+        it = items[0]
+        assert it["match"] and it["recomputed_value"] == 170      # 100(-full)+70
+        assert "读法A" in it["note"] and "旧明细" in it["note"]
+
 
 # ---------------------------------------------------------- ④ 决策账本 ----------
 class TestDecision:

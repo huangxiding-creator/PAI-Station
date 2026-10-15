@@ -17,11 +17,16 @@
    同口径计数。--db 指向不存在的路径: funnel_query 以 mode=ro 探测该路径,
    永不创建, sqlite 源恒 0 → 对拍口径收敛为「jsonl 单源」。
 ③ 字数类    pool_state.json t1_chars (缺则 tier_gate_v3.t1_chars) vs
-   manifest.jsonl 行级加总独立重推: judge==valid × dedup_key 去重 ×
-   tiers.json T1 词表标题匹配 (ammo_pool.tier_report 生产线口径的平行
-   实现, 即「标题级下界」)。源值出自全文级分层归位的池 (如 EPC-BID26
-   tier_note 自述 1014 归位) 与标题级口径天然有差 → 差异如实列出,
-   note 附溯源 (t1_t2_source / 明细件是否在盘), 供人工判读口径还是错账。
+   明细行级加总优先的复算阶梯 (note 附 caliber 标注):
+   1) tier_content_detail_v2.jsonl 在盘 → 行级加总 (fulltext_v2 全文级
+      口径, reforge_factory/tier_fulltext_reledger.py 落账依据);
+   2) 旧 tier_content_detail.jsonl 在盘 → 读法A (raw_decode 容物理拼接行,
+      去重 -full 归位优先, T1+T1-full 合并 — t1_reconciliation.md §3
+      指定读法);
+   3) 兜底标题级下界: manifest valid × dedup × tiers.json T1 词表标题匹配
+      (ammo_pool.tier_report 生产线口径的平行实现)。
+   源值与复算口径不一致时差异如实列出 (note 附 caliber 与 t1_t2_source
+   溯源), 供人工判读口径还是错账。
 ④ 决策账本类  ammo_pool/<campaign>/decision_ledger.jsonl 行 schema 完整性
    (KB-DECISION-LEDGER-SPEC 12 键位 + decision_type 八枚举 + id D-#### 格式,
    常量平行定义) 与 id 连续性 (D-0001 起无跳号无重复)。
@@ -326,8 +331,74 @@ def audit_funnel(ledger: Path, query_script: Path, absent_db: Path,
 
 
 # ---------- ③ 字数类 --------------------------------------------------------
-def _recompute_t1(pool_dir: Path) -> tuple[int, int]:
-    """manifest 行级加总 (标题级下界口径平行实现) → (t1_chars, t1_items)."""
+DETAIL_V2_NAME = "tier_content_detail_v2.jsonl"
+DETAIL_LEGACY_NAME = "tier_content_detail.jsonl"
+
+
+def _recompute_t1_detail_v2(pool_dir: Path) -> dict | None:
+    """阶梯1: fulltext_v2 新明细行级加总 → {t1, n1, caliber}; 缺件 None."""
+    p = pool_dir / DETAIL_V2_NAME
+    if not p.is_file():
+        return None
+    t1 = n1 = 0
+    rows, bad = _read_jsonl(p)
+    for r in rows:
+        if (isinstance(r, dict) and r.get("tier") == "T1"
+                and isinstance(r.get("chars"), int)
+                and not isinstance(r.get("chars"), bool)):
+            t1 += r["chars"]
+            n1 += 1
+    caliber = f"fulltext_v2 明细行级加总 ({DETAIL_V2_NAME}"
+    if bad:
+        caliber += f", 坏行 {bad} 条跳过"
+    return {"t1": t1, "n1": n1, "caliber": caliber + ")"}
+
+
+def _recompute_t1_legacy_detail(pool_dir: Path) -> dict | None:
+    """阶梯2: 1014 旧明细读法A (t1_reconciliation.md §3 指定).
+
+    raw_decode 容物理拼接行 (1015 实盘形态); 去重时 -full 归位优先,
+    T1+T1-full 合并计 T1, T2 同理; 每唯一文件只计一遍 chars。
+    """
+    p = pool_dir / DETAIL_LEGACY_NAME
+    if not p.is_file():
+        return None
+    text = p.read_text(encoding="utf-8", errors="replace")
+    dec = json.JSONDecoder()
+    recs: list = []
+    i, n = 0, len(text)
+    while i < n:
+        while i < n and text[i] in " \t\r\n":
+            i += 1
+        if i >= n:
+            break
+        try:
+            obj, i = dec.raw_decode(text, i)     # 坏尾: 前段已收, 如实截断
+        except ValueError:
+            break
+        recs.append(obj)
+    best: dict[str, tuple[int, str, int]] = {}   # file → (优先级, 基层, chars)
+    for r in recs:
+        if not isinstance(r, dict):
+            continue
+        tier = str(r.get("tier") or "")
+        f = r.get("file")
+        if tier not in ("T1", "T2", "T1-full", "T2-full") or not f:
+            continue
+        base = tier[:2]
+        pr = 1 if tier.endswith("-full") else 0
+        cur = best.get(f)
+        if cur is None or pr > cur[0]:
+            best[f] = (pr, base, r.get("chars") or 0)
+    t1 = sum(c for pr, b, c in best.values() if b == "T1")
+    n1 = sum(1 for pr, b, c in best.values() if b == "T1")
+    return {"t1": t1, "n1": n1,
+            "caliber": (f"1014旧明细读法A (去重,-full归位优先,T1+T1-full合并, "
+                        f"{len(recs)} 记录/{len(best)} 唯一文件)")}
+
+
+def _recompute_t1_title(pool_dir: Path) -> tuple[int, int]:
+    """阶梯3兜底: manifest 行级加总 (标题级下界平行实现) → (t1_chars, t1_items)."""
     import os
     cfg = _load_json(pool_dir / "tiers.json") or {}
     t1k = cfg.get("T1") if isinstance(cfg, dict) else None
@@ -351,6 +422,19 @@ def _recompute_t1(pool_dir: Path) -> tuple[int, int]:
             t1 += ch
             n1 += 1
     return t1, n1
+
+
+def _recompute_t1_ladder(pool_dir: Path) -> dict:
+    """复算阶梯: v2 明细 → 旧明细读法A → 标题级兜底 (caliber 随行)."""
+    r = _recompute_t1_detail_v2(pool_dir)
+    if r is not None:
+        return r
+    r = _recompute_t1_legacy_detail(pool_dir)
+    if r is not None:
+        return r
+    t1, n1 = _recompute_t1_title(pool_dir)
+    return {"t1": t1, "n1": n1,
+            "caliber": "标题级下界 (manifest×tiers.json 标题匹配)"}
 
 
 def audit_chars(ammo_root: Path, n: int = 5) -> tuple[list[dict], list[str]]:
@@ -377,14 +461,13 @@ def audit_chars(ammo_root: Path, n: int = 5) -> tuple[list[dict], list[str]]:
                          f"均缺), 不入字数抽检")
     for name, src, st in pools[:n]:
         d = ammo_root / name
-        rec, rec_items = _recompute_t1(d)
+        rec = _recompute_t1_ladder(d)
         v3 = st.get("tier_gate_v3") or {}
         prov = str(v3.get("t1_t2_source") or "pool_state.t1_chars 原值")[:80]
-        detail = d / "tier_content_detail.jsonl"
         note = (f"溯源: {prov}; t1_items 源={st.get('t1_items')} vs "
-                f"复算={rec_items}; 全文级明细件在盘={detail.is_file()}")
-        items.append(_item("chars", f"chars/{name}/t1_chars", src, rec,
-                           src == rec, diff=src - rec, note=note))
+                f"复算={rec['n1']}; 复算口径={rec['caliber']}")
+        items.append(_item("chars", f"chars/{name}/t1_chars", src, rec["t1"],
+                           src == rec["t1"], diff=src - rec["t1"], note=note))
     if len(pools) > n:
         notes.append(f"有 t1 账的池共 {len(pools)} 个, 按名序抽前 {n} 个")
     return items, notes
