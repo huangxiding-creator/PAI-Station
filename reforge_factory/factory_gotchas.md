@@ -77,3 +77,15 @@
   拒执元数据写 pool_state.rebuild-refused.json + state 落
   manifest_collapse_suspected 旗标）；`judge` 同态只告警不阻断。
   EPC49 实弹：rebuild rc=2 拒执（1,225,965 件 vs 195 行），F1 正常 rc=0。
+
+## G-015 [1015 登记] pytest 双 -q 隐藏摘要行 → 计数解析必败（v3_sepl_closeout 踩坑）
+
+- **现象**：`py -m pytest reforge_factory/tests -q` 经子进程 capture 后输出止于
+  `[100%]`，无最终「N passed」摘要行——rc=0 全绿却不可计数对账。
+- **根因**：pyproject `[tool.pytest.ini_options] addopts = "-q"` 已有一个 -q，
+  命令行再传 -q 成 -qq（verbosity=-2），pytest 在该级别隐藏最终摘要行。
+- **防复发约束**：子进程跑全量一律不叠 -q（只靠 addopts）；对账件
+  v3_sepl_closeout 已内置守卫 + 单测（test_cmd_no_extra_q）。
+- **同类踩坑（同日）**：共享仓 24-7 并行 worker 下偶发瞬态 collection error
+  （首跑 1 error、26s 后复跑 595 全绿，疑 Windows 文件锁竞态）——审计件对
+  全量实测最多重试一次、两次轨迹全落报告不遮掩（两次皆红即红）。
