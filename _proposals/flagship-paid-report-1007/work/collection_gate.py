@@ -2,8 +2,10 @@
 """F1 调研搜集门 — 1010 用户两连令固化 (代码级, 非会话约定):
 
   令一「调研搜集的资料总字数不达标坚决不能开工写报告」
-       → 字数门: T1≥300万 ∧ T1+T2≥3000万 有效字符 (弹药门 v3 口径,
-         tiers.json 判定, 只算新增; 2亿=采集预算参考线)
+       → 字数门: 门参数自 reforge_factory/config/gates.json 单一权威源
+         决策时现读 (T-002B/REQ-010): v3 口径 T1≥1000万 单门主判,
+         T12 总门撤 (REQ-011); flags.legacy_t12_gate=True 回旧 v5 双门
+         (两千万/五千万, REQ-002 应急回滚); 2亿=采集预算参考线
   令二「字数达标后详细汇报质量情况, 我验收批准后才可以开始撰写」
        → 质量门: QUALITY_DOSSIER 生成 + user_approved 旗标;
          仅当用户在会话中明示批准后方可 `approve` 落旗.
@@ -36,8 +38,50 @@ F1_POOL = AMMO / CID
 F1_TREE = WORK / "f1_gap_tree_v2.json"
 V3_LOG = Path(r"E:\AI-Station\Auto_Manus\data\epc50_corps_log.jsonl")
 
-BAR = {"t1_min": 20_000_000, "t1t2_min": 50_000_000,
-       "budget_chars": 200_000_000}       # 弹药门 v5 (1015 用户调标令: T1≥2000万 ∧ T1+T2≥5000万)
+# ---------- 门参数: gates.json 单一权威源 (T-002B / REQ-010 / REQ-011) ----------
+# 旧 v5 硬编码门 (BAR 常量, 1015 调标令: T1≥两千万 ∧ T1+T2≥五千万) 已退役:
+# 改为决策时现读 E:/AI-Station/reforge_factory/config/gates.json (经 gates_loader,
+# 无缓存) — 改 json 即时生效 (REQ-010.AC2). legacy 口径仅作 flags 回开分支保留
+# (REQ-002 应急回滚路径, 旧数字以拆开乘式写法引用, 不作为生效常量):
+#   1010令(legacy): 门槛总量 二亿 = 采集预算参考线 (legacy_total_budget_reference)
+#   1015令(legacy v5): T1 报告直接 ≥ 两千万 且 T1+T2(同业对标) ≥ 五千万 才达标
+#   v3 在役口径 (gates.json): T1 ≥ t1_min_chars(1000万) 单门主判 (REQ-011),
+#                   T12 总门撤 (t12_total_gate=null → 「总门已撤(v3)」).
+_GATES_ROOT = WORK.parents[2] / "reforge_factory"   # gates.json 属主=引擎层 (REQ-010 路径约定)
+if str(_GATES_ROOT) not in sys.path:
+    sys.path.insert(0, str(_GATES_ROOT))
+import gates_loader  # noqa: E402  门参数单一权威源 loader (T-002 地基件)
+
+
+def _pos_int(v) -> bool:
+    return isinstance(v, int) and not isinstance(v, bool) and v > 0
+
+
+def gate_bar(gates: dict | None = None) -> dict:
+    """字数门口径 — 决策时现读 gates.json 权威源 (无缓存, T-002B/REQ-010).
+
+    v3 在役: t1_min = t1_min_chars(1000万) 单门主判; t1t2_min = t12_total_gate,
+    None 即「总门已撤(v3)」(REQ-011), 判定分支跳过 T1+T2 总门.
+    flags.legacy_t12_gate=True 回旧 v5 双门口径 (REQ-002 应急回滚):
+    T1 ≥ 两千万 ∧ T1+T2 ≥ 五千万 (乘式拆写保口径, 非生效常量).
+    budget_chars 恒为参考线 (REQ-011: 旧 2 亿总量门保留为参考线不作主判).
+    """
+    g = gates if gates is not None else gates_loader.load_gates()
+    budget = g.get("legacy_total_budget_reference")
+    if not _pos_int(budget):
+        budget = gates_loader.DEFAULTS["legacy_total_budget_reference"]
+    flags = g.get("flags") if isinstance(g.get("flags"), dict) else {}
+    if flags.get("legacy_t12_gate"):                   # REQ-002: 回旧 v5 双门
+        return {"t1_min": 2 * 10 ** 7,                 # legacy v5 (1015令): 两千万
+                "t1t2_min": 5 * 10 ** 7,               # legacy v5 (1015令): 五千万
+                "budget_chars": budget, "mode": "legacy_v5"}
+    t1_min = g.get("t1_min_chars")
+    if not _pos_int(t1_min):
+        t1_min = gates_loader.DEFAULTS["t1_min_chars"]
+    t12 = g.get("t12_total_gate")
+    t12 = t12 if _pos_int(t12) else None               # None = 总门已撤(v3)
+    return {"t1_min": t1_min, "t1t2_min": t12,
+            "budget_chars": budget, "mode": "v3"}
 
 
 def _load() -> dict:
@@ -52,7 +96,7 @@ def _load() -> dict:
 
 
 def _save(st: dict) -> None:
-    st["bar"] = BAR
+    st.setdefault("bar", gate_bar())   # T-002B: bar 落账=实际使用口径 (measure 已写则原样保留)
     tmp = STATE.with_suffix(".tmp")
     tmp.write_text(json.dumps(st, ensure_ascii=False, indent=1),
                    encoding="utf-8")
@@ -109,13 +153,24 @@ def measure(st: dict) -> dict:
     except Exception:
         st["corps_f1"] = {}
     # ④ 字数门: 只认 tier 判定过的有效数 (池 t1/t2); 无判定 = 未达标
+    # T-002B/REQ-010/011: 门参数决策时现读 gates.json (经 gate_bar, 无缓存);
+    #   v3 口径 T1≥t1_min_chars 单门主判, t12_total_gate=None → 总门已撤(v3)
+    #   跳过 T1+T2 判定; flags.legacy_t12_gate=True 回旧 v5 双门 (REQ-002).
     t1 = pool.get("t1_chars")
     t2 = pool.get("t2_chars")
+    bar = gate_bar()
+    st["bar"] = bar                     # state 落账=实际使用口径值 (T-002B)
     st["tier"] = {"t1_valid": t1, "t2_valid": t2,
+                  "t12_gate": ("总门已撤(v3)" if bar["t1t2_min"] is None
+                               else bar["t1t2_min"]),
                   "judge": "pending" if t1 is None else "pool_state"}
-    st["word_gate_pass"] = bool(
-        t1 is not None and t2 is not None
-        and t1 >= BAR["t1_min"] and t1 + t2 >= BAR["t1t2_min"])
+    if bar["t1t2_min"] is None:         # REQ-011: 总门已撤(v3), 只判 T1
+        st["word_gate_pass"] = bool(
+            t1 is not None and t1 >= bar["t1_min"])
+    else:                               # 旧双门判定分支保留 (legacy v5 回开)
+        st["word_gate_pass"] = bool(
+            t1 is not None and t2 is not None
+            and t1 >= bar["t1_min"] and t1 + t2 >= bar["t1t2_min"])
     st["measured_at"] = time.strftime("%Y-%m-%dT%H:%M:%S")
     return st
 
@@ -177,10 +232,17 @@ def report(st: dict) -> int:
     t12 = (t1 or 0) + (t2 or 0)
     t1_s = f"{t1:,}" if t1 is not None else "?"
     t2_s = f"{t2:,}" if t2 is not None else "?"
+    bar = gate_bar()                    # T-002B: 决策时现读口径 (gates.json 权威源)
+    t12_min = bar["t1t2_min"]
     gate = "PASS ✅" if st.get("word_gate_pass") else "FAIL ⏳"
     nature = ("用户验收材料" if st.get("word_gate_pass")
               else "**进度与质量实况 (字数门未过, 非验收放行件)**")
-    gap = max(0, BAR["t1t2_min"] - t12)
+    if t12_min is None:                 # REQ-011: 总门已撤(v3), 单门主判 T1
+        t12_desc, gap, gap_note = "总门已撤(v3)", 0, "T1 单门主判, 总门不再判"
+    else:
+        t12_desc = f"T1+T2≥{t12_min:,}"
+        gap = max(0, t12_min - t12)
+        gap_note = f"距 T1+T2 门差 {gap:,} 字待采"
     eng_lines = "\n".join(
         f"| {k} | {v:,} |" for k, v in
         sorted(p.get("by_engine", {}).items(), key=lambda x: -x[1]))
@@ -206,10 +268,10 @@ def report(st: dict) -> int:
         face_lines = "(树件缺失)"
     md = f"""# F1 调研搜集质量档案 — {st['measured_at']} ｜ {nature}
 
-> 字数门: T1≥{BAR['t1_min']:,} ∧ T1+T2≥{BAR['t1t2_min']:,} 有效字符（弹药门 v3,
+> 字数门: T1≥{bar['t1_min']:,} ∧ {t12_desc} 有效字符（弹药门 v3,
 > tiers.json 判定, 只算新增+judge valid）
 > 实绩: T1={t1_s} ｜ T2={t2_s}
-> ｜ T1+T2={t12:,} ｜ **门态 {gate}**（距 T1+T2 门差 {gap:,} 字待采）
+> ｜ T1+T2={t12:,} ｜ **门态 {gate}**（{gap_note}）
 
 ## 1. 总量与分层账
 - 存量语料盘点: {st['f1_corpus_chars']:,} 字（han+西文词口径,
@@ -305,9 +367,11 @@ def main() -> int:
         print("✓ 用户验收旗标已落 — 写作解冻 (m2_gate 守卫放行)")
         return 0
     g = st.get("word_gate_pass")
+    t12g = (st.get("tier") or {}).get("t12_gate", "?")
     print(f"[F1搜集门 {st.get('measured_at')}] 语料 {st.get('f1_corpus_chars', 0):,} raw"
           f" | T1={st['tier']['t1_valid'] if st.get('tier') else '?'}"
           f" T2={st['tier']['t2_valid'] if st.get('tier') else '?'}"
+          f" T12门={t12g}"
           f" | 字数门 {'PASS' if g else 'FAIL'}"
           f" | 质量汇报 {'有' if st.get('quality_report') else '无'}"
           f" | 用户批准 {'✓' if st.get('user_approved') else '✗ 未批 — 写作冻结'}")
