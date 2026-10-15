@@ -57,15 +57,69 @@ if sys.stdout:                           # 1006: pythonw/无控制台时 sys.std
 
 STATION = Path(r"E:\AI-Station")
 POOL_ROOT = STATION / "ammo_pool"
-AMMO_GATE_CHARS = 200_000_000  # 1004用户终版令: 门槛 2亿 (NB 2.5亿预算 = 2亿采集 + 0.5亿萃取炼金)
-# 1005 用户定调 (分层门槛 v3, 接棒旧总量门): 有效资料 = 对当前研究报告
-# 有帮助的资料 — 行业泛词命中不再等同有效. 判据:
-#   T1 报告直接(研究对象本体) ≥ 300万 且 T1+T2(同业对标) ≥ 3000万 才算达标;
-#   T3 行业框架封顶 5000万 计参考; T0 泛命中(标题无课题词)不计入.
+# ---------- 门参数: gates.json 单一权威源 (T-002R / REQ-010 / REQ-011) ----------
+# 旧 v2 硬编码门常量 (AMMO_GATE_CHARS / T1_MIN_CHARS / T12_MIN_CHARS /
+# T3_CAP_CHARS) 已退役: 全部改为决策时现读 reforge_factory/config/gates.json
+# (经 gates_loader, 无缓存) — 改 json 即时生效 (REQ-010.AC2).
+# legacy v2 口径仅作历史注释与 flags 回开分支保留 (REQ-002 应急回滚路径,
+# 旧数字以拆开乘式写法引用, 不作为生效常量):
+#   1004令(legacy): 门槛总量 二亿 (NB 2.5亿预算 = 2亿采集 + 0.5亿萃取炼金)
+#   1005令(legacy): T1 报告直接 ≥ 三百万 且 T1+T2(同业对标) ≥ 三千万 才达标;
+#                   T3 行业框架封顶 五千万 计参考; T0 泛命中(标题无课题词)不计入.
+#   v3 在役口径 (gates.json): T1 ≥ t1_min_chars 单门主判 (REQ-011),
+#                   T12 总门关闭 (t12_total_gate=null), T3 封顶 = ratio×T1实测.
 # 词表 = 战役目录 tiers.json {"T1": [...], "T2": [...]}; 分层为标题级下界.
-T1_MIN_CHARS = 3_000_000
-T12_MIN_CHARS = 30_000_000
-T3_CAP_CHARS = 50_000_000
+import gates_loader  # noqa: E402  门参数单一权威源 loader (T-002 地基件)
+
+
+def _legacy_flags(gates: dict) -> dict:
+    """gates.json flags 三回开旗标 (REQ-002); 形状异常按全关处理."""
+    f = gates.get("flags")
+    return f if isinstance(f, dict) else {}
+
+
+def _pos_int(v) -> bool:
+    return isinstance(v, int) and not isinstance(v, bool) and v > 0
+
+
+def gate_t1_min_chars(gates: dict | None = None) -> int:
+    """T1 报告直接门 — 决策时现读 gates.json; legacy_t12_gate=True 回旧 v2 口径."""
+    g = gates if gates is not None else gates_loader.load_gates()
+    if _legacy_flags(g).get("legacy_t12_gate"):
+        return 3 * 10 ** 6   # legacy v2 口径 (1005令): 三百万
+    v = g.get("t1_min_chars")
+    return v if _pos_int(v) else gates_loader.DEFAULTS["t1_min_chars"]
+
+
+def gate_t12_min_chars(gates: dict | None = None) -> int | None:
+    """T1+T2 总门 — None=门关 (REQ-011); legacy_t12_gate=True 回旧 v2 口径."""
+    g = gates if gates is not None else gates_loader.load_gates()
+    if _legacy_flags(g).get("legacy_t12_gate"):
+        return 30 * 10 ** 6  # legacy v2 口径 (1005令): 三千万
+    v = g.get("t12_total_gate")
+    return v if _pos_int(v) else None
+
+
+def gate_t3_cap_chars(t1_chars: int = 0, gates: dict | None = None) -> int:
+    """T3 框架参考账封顶 = ratio × T1 实测 (KB-GATES-SPEC; 旧硬帽退役,
+    legacy_t12_gate=True 回旧 v2 硬帽口径)."""
+    g = gates if gates is not None else gates_loader.load_gates()
+    if _legacy_flags(g).get("legacy_t12_gate"):
+        return 5 * 10 ** 7   # legacy v2 口径: 硬帽 五千万
+    r = g.get("t3_reference_cap_ratio")
+    if not isinstance(r, (int, float)) or isinstance(r, bool) or r <= 0:
+        r = gates_loader.DEFAULTS["t3_reference_cap_ratio"]
+    return int(r * t1_chars)
+
+
+def gate_total_chars(gates: dict | None = None) -> int:
+    """旧总量门参考线 (REQ-011: 保留为参考线不作主判; legacy_total_gate=True
+    回旧 v2 判据口径) — 未配 tiers.json 时的回退判据与仪表进度基准."""
+    g = gates if gates is not None else gates_loader.load_gates()
+    if _legacy_flags(g).get("legacy_total_gate"):
+        return 2 * 10 ** 8   # legacy v2 口径 (1004令): 二亿
+    v = g.get("legacy_total_budget_reference")
+    return v if _pos_int(v) else gates_loader.DEFAULTS["legacy_total_budget_reference"]
 # S2-2 预算分档三档 (与 S1-1 BAND_BY_ROLE 同词表: 框架期宽面/章级窄面/
 # 补弹); 入池行带档 → tier_report by_band 分列, 消耗分桶可查.
 BUDGET_BANDS = ("outline_wide", "section_narrow", "gap")
@@ -126,10 +180,16 @@ def tier_report(cid: str) -> dict:
             b["chars"] += ch
             b["items"] += 1
     t["by_band"] = by_band
-    t["t3_capped"] = min(t["t3"], T3_CAP_CHARS)
+    gates = gates_loader.load_gates()   # 决策时现读权威源 (无缓存, T-002R)
+    t["t3_capped"] = min(t["t3"], gate_t3_cap_chars(t["t1"], gates))
     t["gate_chars"] = t["t1"] + t["t2"] + t["t3_capped"]
-    t["gate_ok"] = (t["t1"] >= T1_MIN_CHARS
-                    and t["t1"] + t["t2"] >= T12_MIN_CHARS)
+    t1_min = gate_t1_min_chars(gates)
+    t12_min = gate_t12_min_chars(gates)  # None = T12 总门关 (REQ-011)
+    if t12_min is None:
+        t["gate_ok"] = t["t1"] >= t1_min
+    else:
+        t["gate_ok"] = (t["t1"] >= t1_min
+                        and t["t1"] + t["t2"] >= t12_min)
     return t
 
 
@@ -313,7 +373,8 @@ def _load_state(d: Path) -> dict:
     return {"campaign": d.name, "kws": [], "total_chars": 0, "items": 0,
             "pending_chars": 0, "pending_items": 0,
             "rejected_chars": 0, "rejected_items": 0,
-            "by_engine": {}, "domains": [], "gate_chars": AMMO_GATE_CHARS,
+            "by_engine": {}, "domains": [],
+            "gate_chars": gate_total_chars(),   # 决策时现读 gates.json (T-002R)
             "created": time.strftime("%Y-%m-%d %H:%M")}
 
 
@@ -669,8 +730,9 @@ def _judge_locked(d: Path, mp: Path, limit: int) -> int:
     _save_state(d, {**s, "last_judge": time.strftime("%Y-%m-%d %H:%M")})
     print(f"\n[判断] 启发式@课题关键词({len(kws)}): 有效 {n_valid} 入门槛账 | "
           f"废弃 {n_rej} | 留审 {n_keep} (文件缺失)")
+    total_ref = gate_total_chars()   # 决策时现读 gates.json (T-002R)
     print(f"[门槛账] 有效弹药 {s['total_chars']:,} 字 "
-          f"({100 * s['total_chars'] / AMMO_GATE_CHARS:.2f}% of 2亿) | "
+          f"({100 * s['total_chars'] / total_ref:.2f}% of 总量参考线) | "
           f"待审 {s['pending_chars']:,} 字 | 废弃 {s.get('rejected_chars', 0):,} 字")
     return 0
 
@@ -779,7 +841,7 @@ def coverage(cid: str) -> int:
     tr = tier_report(d.name)
     char_gate = tr["gate_ok"] if tr["tiers_configured"] else (
         json.loads((d / "pool_state.json").read_text(encoding="utf-8"))
-        ["total_chars"] >= AMMO_GATE_CHARS)
+        ["total_chars"] >= gate_total_chars())   # 决策时现读 (T-002R)
     gate_name = "分层门" if tr["tiers_configured"] else "总量门(未配tiers.json)"
     print(f"║ 报告准入: 字数门[{gate_name}] "
           f"({'✅' if char_gate else '⏳ 未过'}) "
@@ -795,12 +857,13 @@ def status(cid: str) -> int:
         print(f"[pool] 战役池不存在: {cid}", file=sys.stderr)
         return 1
     s = _load_state(d)
-    pct = min(1.0, s["total_chars"] / AMMO_GATE_CHARS)
+    total_ref = gate_total_chars()   # 决策时现读 gates.json (T-002R)
+    pct = min(1.0, s["total_chars"] / total_ref)
     bar = "█" * int(pct * 30) + "░" * (30 - int(pct * 30))
     print(f"\n╔═ 弹药池仪表 ═ {cid}")
     print(f"║ 课题关键词: {' | '.join(s.get('kws', [])) or '(未配置!)'}")
     print(f"║ 门槛账 [有效新增弹药 — 通过判断才计数, 用户铁律]:")
-    print(f"║   {s['total_chars']:>12,} / {AMMO_GATE_CHARS:,}  "
+    print(f"║   {s['total_chars']:>12,} / {total_ref:,}  "
           f"[{bar}] {pct * 100:.1f}%")
     print(f"║   有效条目: {s['items']:,} | 独立信源域: {len(s['domains']):,}")
     print(f"║   待审: {s.get('pending_items', 0):,} 条 / "
@@ -810,12 +873,17 @@ def status(cid: str) -> int:
     print(f"║   门槛状态: {'✅ 已过门 (可进撰写)' if pct >= 1 else '⏳ 未过门 (有效弹药继续)'}")
     tr = tier_report(cid)
     if tr["tiers_configured"]:
-        print(f"║ 分层门槛账 [1005 用户定调: 有效=对当前研究报告有帮助]:")
-        print(f"║   T1 报告直接  {tr['t1']:>12,} 字 ({tr['n1']:,}件) / {T1_MIN_CHARS:,} 门 "
-              f"{'✅' if tr['t1'] >= T1_MIN_CHARS else '⏳'}")
+        print(f"║ 分层门槛账 [门参数现读 gates.json, T-002R: 有效=对当前研究报告有帮助]:")
+        t1_min = gate_t1_min_chars()   # 决策时现读 (T-002R)
+        print(f"║   T1 报告直接  {tr['t1']:>12,} 字 ({tr['n1']:,}件) / {t1_min:,} 门 "
+              f"{'✅' if tr['t1'] >= t1_min else '⏳'}")
         t12 = tr['t1'] + tr['t2']
-        print(f"║   T1+T2 对标  {t12:>12,} 字 ({tr['n1']+tr['n2']:,}件) / {T12_MIN_CHARS:,} 门 "
-              f"{'✅' if t12 >= T12_MIN_CHARS else '⏳'}")
+        t12_min = gate_t12_min_chars()
+        if t12_min is None:           # T12 总门关 (REQ-011 新口径)
+            print(f"║   T1+T2 对标  {t12:>12,} 字 ({tr['n1']+tr['n2']:,}件) / 总门已关 (v3 口径)")
+        else:
+            print(f"║   T1+T2 对标  {t12:>12,} 字 ({tr['n1']+tr['n2']:,}件) / {t12_min:,} 门 "
+                  f"{'✅' if t12 >= t12_min else '⏳'}")
         print(f"║   T3 框架封顶 {tr['t3_capped']:>12,} 字 (raw {tr['t3']:,}) | "
               f"T0 泛命中 {tr['t0']:,} 字 不计入")
         print(f"║   合成门槛账  {tr['gate_chars']:>12,} 字 | "

@@ -3,8 +3,9 @@
 
 S0 门卫判级/Charter 呈批, S1 框架即路由表, S3 大纲合同锁共用同一套
 常量 + 纯函数校验器 + 指纹. 判定同源纪律 (呈审门批准范围重申):
-  - 弹药门参数一律动态读 ammo_pool (在役权威源, 1005 用户定调), 本模块
-    绝不另立第二套门参数 — gate_defaults() 每次调用实时取值;
+  - 弹药门参数一律动态读 gates.json 权威源 (gates_loader; T-002R 起不再
+    穿 ammo_pool 常量间接层), 本模块绝不另立第二套门参数 — gate_defaults()
+    每次调用实时取值;
   - 校验器只读: 不改入参 (不可变纪律), 不落盘, 不触网, 零 LLM.
 
 契约对象 = dict (JSON 可序列化, 落盘即该阶段唯一事实源):
@@ -26,11 +27,11 @@ import re
 import sys
 from pathlib import Path
 
-try:                                    # 借在役弹药门参数 (判定同源)
-    import ammo_pool
-except ImportError:                     # 子包/脚本形态导入时补根路径 (对齐 ammo_pool 借件惯例)
+try:                                    # T-002R: 门参数直读 gates.json 权威源
+    import gates_loader                 # (不再穿 ammo_pool 常量间接层)
+except ImportError:                     # 子包/脚本形态导入时补根路径 (对齐借件惯例)
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-    import ammo_pool
+    import gates_loader
 
 # ---------- 常量唯一事实源 (值域枚举, 出口结构化, 杜绝路由幻觉) ----------
 
@@ -162,7 +163,7 @@ def validate_charter(charter: dict) -> list[str]:
     gate = charter.get("gate")
     if gate is not None:
         if not isinstance(gate, dict):
-            errs.append("gate 须为 dict (战役级门参数覆盖, 缺省读 ammo_pool)")
+            errs.append("gate 须为 dict (战役级门参数覆盖, 缺省读 gates.json)")
         else:
             for k in ("t1_min_chars", "t12_min_chars", "t3_cap_chars"):
                 v = gate.get(k)
@@ -178,13 +179,44 @@ def charter_ready_for_s1(charter: dict) -> bool:
             and not validate_charter(charter))
 
 
+def _pos_int(v) -> bool:
+    """正整数检查 (bool 不算 — JSON true/false 落 int 子类的坑)."""
+    return isinstance(v, int) and not isinstance(v, bool) and v > 0
+
+
 def gate_defaults() -> dict:
-    """弹药门参数实时快照 (判定同源: 每次调用读 ammo_pool, 不缓存不复立)."""
+    """弹药门参数实时快照 (判定同源: 每次调用直读 gates_loader 权威源,
+    不缓存不复立 — T-002R 迁移: 不再穿 ammo_pool 常量间接层).
+
+    v3 口径 (REQ-011): T12 总门关 (gates t12_total_gate=null) 时 t12_min_chars
+    回落 T1 门为需求基准 (补扫预算基数挂在职役门, anemia_protocol 85/15 分桶);
+    t3_cap_chars 契约层无池实测, 取 ratio × T1 门基准.
+    flags.legacy_t12_gate=True → 三门参数回旧 v2 口径 (REQ-002 回滚路径)."""
+    g = gates_loader.load_gates()
+    flags = g.get("flags")
+    flags = flags if isinstance(flags, dict) else {}
+    if flags.get("legacy_t12_gate"):
+        t1 = 3 * 10 ** 6        # legacy v2 口径: 三百万
+        t12 = 30 * 10 ** 6      # legacy v2 口径: 三千万
+        t3_cap = 5 * 10 ** 7    # legacy v2 口径: 硬帽 五千万
+    else:
+        t1 = g.get("t1_min_chars")
+        if not _pos_int(t1):
+            t1 = gates_loader.DEFAULTS["t1_min_chars"]
+        v12 = g.get("t12_total_gate")
+        t12 = v12 if _pos_int(v12) else t1      # 门关 → 回落 T1 门基准
+        r = g.get("t3_reference_cap_ratio")
+        if not isinstance(r, (int, float)) or isinstance(r, bool) or r <= 0:
+            r = gates_loader.DEFAULTS["t3_reference_cap_ratio"]
+        t3_cap = int(r * t1)
+    total_ref = g.get("legacy_total_budget_reference")
+    if not _pos_int(total_ref):
+        total_ref = gates_loader.DEFAULTS["legacy_total_budget_reference"]
     return {
-        "t1_min_chars": ammo_pool.T1_MIN_CHARS,
-        "t12_min_chars": ammo_pool.T12_MIN_CHARS,
-        "t3_cap_chars": ammo_pool.T3_CAP_CHARS,
-        "fallback_total_chars": ammo_pool.AMMO_GATE_CHARS,  # 旧总量门回退判据
+        "t1_min_chars": t1,
+        "t12_min_chars": t12,
+        "t3_cap_chars": t3_cap,
+        "fallback_total_chars": total_ref,  # 旧总量门回退判据 (参考线)
     }
 
 

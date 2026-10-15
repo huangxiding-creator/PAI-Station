@@ -73,8 +73,10 @@ def test_invalid_rows_skipped(camp):
     assert ap.tier_report("TIERX")["t1"] == 100
 
 
-def test_t3_capped_and_gate_math(camp, monkeypatch):
-    monkeypatch.setattr(ap, "T3_CAP_CHARS", 500)
+def test_t3_capped_and_gate_math(camp, gates_json):
+    # T-002R: T3 封顶改读 gates.json (封顶 = ratio × T1 实测);
+    # ratio 5/3 × T1 实测 300 = 500, 语义等价旧 T3_CAP=500 断言.
+    gates_json(t3_reference_cap_ratio=5 / 3)
     _write(camp, [
         _row("E:/x/行业泛文.pdf", 800),               # T3 超 cap
         _row("E:/x/四川电力a.pdf", 300),              # T1
@@ -84,9 +86,9 @@ def test_t3_capped_and_gate_math(camp, monkeypatch):
     assert t["gate_chars"] == 300 + 500
 
 
-def test_gate_ok_double_gate(camp, monkeypatch):
-    monkeypatch.setattr(ap, "T1_MIN_CHARS", 100)
-    monkeypatch.setattr(ap, "T12_MIN_CHARS", 500)
+def test_gate_ok_double_gate(camp, gates_json):
+    # T-002R: 双门值改由 gates.json 权威源下发 (语义同旧 patch 100/500).
+    gates_json(t1_min_chars=100, t12_total_gate=500)
     _write(camp, [
         _row("E:/x/四川电力a.pdf", 120),              # T1 120 ≥100 但 t1+t2=120 <500
     ], tiers=TIERS)

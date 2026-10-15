@@ -105,13 +105,18 @@ def test_tiered_fail_epc49_frozen_numbers():
                    pool_id="EPC49-SEPDC")
     assert doc["verdict"] == "RETREAT"
     gaps = "\n".join(doc["gaps"])
-    assert "弹药分层门未过: T1=1,747,449 < 3,000,000 (缺 1,252,551 字)" in gaps
-    assert ("弹药分层门未过: T1+T2=23,295,093 < 30,000,000 "
-            "(缺 6,704,907 字)") in gaps
+    # T-002R: v3 口径 (REQ-011) — T1 单门 1000万; T12 回落门 (t1+t2=
+    # 23,295,093 已过) 不再单独设障, 故无 T1+T2 行.
+    assert "弹药分层门未过: T1=1,747,449 < 10,000,000 (缺 8,252,551 字)" in gaps
+    assert "T1+T2=" not in gaps
 
 
-# ------------------------------------------------ ④ T12 单挂 (T1 够 T12 缺)
-def test_tiered_t12_only_fail():
+# ------------------------------------------------ ④ T12 单挂 (legacy 口径回开复现)
+def test_tiered_t12_only_fail(gates_json):
+    # T-002R: v3 口径 T12 门关 (回落 T1 基准, T1 过则 T12 恒过) —
+    # 「T1 够 T12 缺」场景仅存在于 legacy_t12_gate=True 回开口径 (REQ-002).
+    gates_json(flags={"legacy_t12_gate": True, "legacy_total_gate": False,
+                      "legacy_chapter_band": False})
     _pass_fixture()
     sg._tier_report = lambda pid: _tr(5_000_000, 1_000_000)
     doc = sg.judge("测试战役", pool_id="P-OK")
@@ -293,9 +298,11 @@ def test_gate_params_same_source():
     gp = C.gate_defaults()
     assert set(gp) == {"t1_min_chars", "t12_min_chars",
                        "t3_cap_chars", "fallback_total_chars"}
+    # T-002R: v3 口径 (REQ-011) — T12 门关回落 T1 基准; T3 封顶 = ratio(1.5)
+    # × T1 门基准 = 1500万; 总量参考线 2亿 保留.
     assert (gp["t1_min_chars"], gp["t12_min_chars"], gp["t3_cap_chars"],
-            gp["fallback_total_chars"]) == (3_000_000, 30_000_000,
-                                            50_000_000, 200_000_000)
+            gp["fallback_total_chars"]) == (10_000_000, 10_000_000,
+                                            15_000_000, 200_000_000)
     _pass_fixture()
     doc = sg.judge("同源", pool_id="P-OK")
     assert doc["gate_params"] == gp           # doc 快照与 contracts 全等

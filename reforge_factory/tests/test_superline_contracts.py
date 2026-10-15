@@ -113,8 +113,9 @@ def test_charter_ready_for_s1_gate():
     assert C.charter_ready_for_s1(broken) is False   # 有批但校验有错同样不放行
 
 
-def test_gate_defaults_live_from_ammo_pool(monkeypatch):
-    monkeypatch.setattr(ap, "T1_MIN_CHARS", 7)
+def test_gate_defaults_live_from_ammo_pool(gates_json):
+    # T-002R 迁移: gate_defaults 直读 gates.json 权威源 (不再穿 ammo_pool 常量)
+    gates_json(t1_min_chars=7)
     assert C.gate_defaults()["t1_min_chars"] == 7   # 动态同源, 不缓存
 
 
