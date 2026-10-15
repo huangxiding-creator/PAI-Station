@@ -30,8 +30,12 @@ import density_gate as dg                                    # noqa: E402
 
 
 def infer_chapter_type(text: str) -> str:
-    """从章首「三态：[精编]」标记推断章型; 未标注返回 None."""
-    m = re.search(r"三态[：:]\s*\[([精融原][编合创])\]", text[:800])
+    """从章首「三态：[精编]」标记推断章型; 未标注返回 None.
+
+    1015 修宽: 实书章首为粗体/全角变体 (**三态**：[精编] / 三态＝［融合］),
+    旧正则只认半角裸形 → 全部落默认精编 (潜伏 bug, 标定器实测暴露)."""
+    m = re.search(r"三态[*＊=＝行]{0,3}\s*[：:=＝]?\s*[\[［]\s*([精融原][编合创])",
+                  text[:800])
     return m.group(1) if m else None
 
 

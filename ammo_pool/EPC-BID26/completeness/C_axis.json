@@ -3,8 +3,8 @@
  "sensor": "channel_matrix",
  "campaign": "EPC-BID26",
  "channels_hit": 9,
- "channels_total": 28,
- "hit_ratio": 0.3214,
+ "channels_total": 31,
+ "hit_ratio": 0.2903,
  "hit_channels": [
   {
    "id": "manus",
@@ -98,7 +98,10 @@
   "免key中文多引擎检索",
   "网页搜索项目注册表(8角度扫荡111候选+8本机在册=119项)",
   "夸克网盘账号面(扫码授权+转存四步+列目录+下载直链+签到保活)",
-  "AnySearch实时搜索(web+垂直域17域+并发批量+网页抽取, 匿名免鉴权)"
+  "AnySearch实时搜索(web+垂直域17域+并发批量+网页抽取, 匿名免鉴权)",
+  "OpenAlex 学术API(免key)",
+  "Semantic Scholar 学术API(S2, 免key)",
+  "arXiv 学术API(免key)"
  ],
  "miss_detail": [
   {
@@ -176,10 +179,38 @@
   {
    "id": "anysearch",
    "name": "AnySearch实时搜索(web+垂直域17域+并发批量+网页抽取, 匿名免鉴权)"
+  },
+  {
+   "id": "openalex",
+   "name": "OpenAlex 学术API(免key)"
+  },
+  {
+   "id": "semantic_scholar",
+   "name": "Semantic Scholar 学术API(S2, 免key)"
+  },
+  {
+   "id": "arxiv",
+   "name": "arXiv 学术API(免key)"
   }
  ],
- "new_channel_queue": [],
- "miss_in_queue": [],
+ "new_channel_queue": [
+  {
+   "name": "OpenAlex",
+   "sop_step": "T-015 建渠器四步法"
+  },
+  {
+   "name": "Semantic Scholar (S2)",
+   "sop_step": "T-015 建渠器四步法"
+  },
+  {
+   "name": "arXiv",
+   "sop_step": "T-015 建渠器四步法"
+  }
+ ],
+ "miss_in_queue": [
+  "OpenAlex 学术API(免key)",
+  "arXiv 学术API(免key)"
+ ],
  "miss_not_in_queue": [
   "洞见研报",
   "视频文稿",
@@ -199,10 +230,11 @@
   "免key中文多引擎检索",
   "网页搜索项目注册表(8角度扫荡111候选+8本机在册=119项)",
   "夸克网盘账号面(扫码授权+转存四步+列目录+下载直链+签到保活)",
-  "AnySearch实时搜索(web+垂直域17域+并发批量+网页抽取, 匿名免鉴权)"
+  "AnySearch实时搜索(web+垂直域17域+并发批量+网页抽取, 匿名免鉴权)",
+  "Semantic Scholar 学术API(S2, 免key)"
  ],
  "queue_path": "E:\\AI-Station\\ammo_pool\\EPC-BID26\\completeness\\C_axis_queue.json",
- "queue_present": false,
+ "queue_present": true,
  "green": false,
  "engine_map": {
   "stock:corpus": {
@@ -423,5 +455,5 @@
  "manifest": "E:\\AI-Station\\ResearchFactory-Eng\\channel_manifest.json",
  "fail_soft": false,
  "fail_soft_note": "",
- "generated_at": "2026-10-15T11:04:12+08:00"
+ "generated_at": "2026-10-15T16:55:04+08:00"
 }

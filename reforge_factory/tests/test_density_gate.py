@@ -148,8 +148,30 @@ def test_pass_does_not_write_reject_log(tmp_path):
 # ---------------------------------------------------------------- 真章集成
 @pytest.mark.skipif(not BLUEBOOK_HUNAN.exists(), reason="蓝皮书真章不在本机")
 def test_bluebook_golden_chapter_smoke():
-    """黄金样板章 3-1-hunan.md (只读): 三指标可解析且不超标打回."""
+    """黄金样板章 3-1-hunan.md (只读): 指标确定性锚 + 判定与当前阈值表自洽.
+
+    1015 标定后意图更新: 临时基线时代 hunan 全过; P95 分位数标定后 hunan
+    落精编 slop 尾部 (0.2966 > P95 0.22) 属设计内 — 本测不再断言必过,
+    改锚两件: ①三指标历史值逐位复现 (gzip/ngram/slop 确定性); ②verdict
+    与当前阈值表逐规则自洽 (任何重标定下都应成立, 防判定器与表脱钩)."""
     text = BLUEBOOK_HUNAN.read_text(encoding="utf-8")
     v = dg.chapter_verdict(text, "精编", reject_log=False)
-    assert v["verdict"] == "pass", v["failed"]
-    assert v["metrics"]["cjk_chars"] > 3000   # floor 参考: 精编 3000
+    m = v["metrics"]
+    assert m["cjk_chars"] == 6742                    # 确定性锚 (历史值)
+    assert m["redundancy_ratio"] == 0.117
+    assert m["new_ngram_rate"] == 0.7334
+    assert m["slop_density_per_kchar"] == 0.2966
+    # 判定-阈值自洽: 逐规则核对 failed 集与表一致
+    th = v["thresholds_used"]
+    expect_fail = []
+    for mk, rk, op in (("redundancy_ratio", "redundancy_ratio_max", "max"),
+                       ("new_ngram_rate", "new_ngram_rate_min", "min"),
+                       ("slop_density_per_kchar", "slop_density_per_kchar_max", "max")):
+        lim = th.get(rk)
+        if lim is None:
+            continue
+        if (op == "max" and m[mk] > lim) or (op == "min" and m[mk] < lim):
+            expect_fail.append(rk)
+    got_fail = sorted(f["rule"] for f in v["failed"])
+    assert got_fail == sorted(expect_fail)
+    assert v["verdict"] == ("pass" if not expect_fail else "reject")
