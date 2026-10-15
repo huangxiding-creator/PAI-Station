@@ -2,9 +2,9 @@
  "axis": "C",
  "sensor": "channel_matrix",
  "campaign": "EPC-BID26",
- "channels_hit": 15,
+ "channels_hit": 17,
  "channels_total": 31,
- "hit_ratio": 0.4839,
+ "hit_ratio": 0.5484,
  "hit_channels": [
   {
    "id": "manus",
@@ -28,6 +28,14 @@
    "chars": 40552,
    "engines": [
     "f1full:cross:metaso"
+   ]
+  },
+  {
+   "id": "djyanbao",
+   "name": "洞见研报",
+   "chars": 44024,
+   "engines": [
+    "djyanbao:vip"
    ]
   },
   {
@@ -65,7 +73,7 @@
   {
    "id": "localfiles",
    "name": "本地文件库",
-   "chars": 237759,
+   "chars": 363137,
    "engines": [
     "localfiles:rss",
     "localfiles:topics"
@@ -77,6 +85,14 @@
    "chars": 953669,
    "engines": [
     "search:web"
+   ]
+  },
+  {
+   "id": "court",
+   "name": "涉诉检索",
+   "chars": 20453,
+   "engines": [
+    "court:anysearch"
    ]
   },
   {
@@ -123,20 +139,19 @@
   {
    "id": "anysearch",
    "name": "AnySearch实时搜索(web+垂直域17域+并发批量+网页抽取, 匿名免鉴权)",
-   "chars": 86477,
+   "chars": 106930,
    "engines": [
-    "anysearch:web"
+    "anysearch:web",
+    "court:anysearch"
    ]
   }
  ],
  "miss_list": [
-  "洞见研报",
   "视频文稿",
   "ima 知识库",
   "微信本地数据",
   "微信4.x加密库",
   "360浏览器画像",
-  "涉诉检索",
   "E-OSCAR 情报引擎",
   "CLI 化栈",
   "网盘聚合发现",
@@ -148,10 +163,6 @@
   "arXiv 学术API(免key)"
  ],
  "miss_detail": [
-  {
-   "id": "djyanbao",
-   "name": "洞见研报"
-  },
   {
    "id": "video",
    "name": "视频文稿"
@@ -171,10 +182,6 @@
   {
    "id": "browser360",
    "name": "360浏览器画像"
-  },
-  {
-   "id": "court",
-   "name": "涉诉检索"
   },
   {
    "id": "eoscar",
@@ -232,13 +239,11 @@
   "arXiv 学术API(免key)"
  ],
  "miss_not_in_queue": [
-  "洞见研报",
   "视频文稿",
   "ima 知识库",
   "微信本地数据",
   "微信4.x加密库",
   "360浏览器画像",
-  "涉诉检索",
   "E-OSCAR 情报引擎",
   "CLI 化栈",
   "网盘聚合发现",
@@ -494,6 +499,21 @@
    ],
    "notes": [],
    "bases": []
+  },
+  "court:anysearch": {
+   "channels": [
+    "anysearch",
+    "court"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "djyanbao:vip": {
+   "channels": [
+    "djyanbao"
+   ],
+   "notes": [],
+   "bases": []
   }
  },
  "unmapped_engines": [
@@ -525,5 +545,5 @@
  "manifest": "E:\\AI-Station\\ResearchFactory-Eng\\channel_manifest.json",
  "fail_soft": false,
  "fail_soft_note": "",
- "generated_at": "2026-10-15T22:19:43+08:00"
+ "generated_at": "2026-10-15T23:16:59+08:00"
 }

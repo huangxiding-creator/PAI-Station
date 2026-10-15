@@ -49,7 +49,7 @@ sys.path.insert(0, str(RUNNER_DIR))
 import djyanbao_drission as dj                      # noqa: E402
 from DrissionPage import ChromiumOptions, ChromiumPage  # noqa: E402
 
-BASE_URL = "https://www.djyanbao.com/report/search?sort=publish_at&order=DESC"
+BASE_URL = "https://www.djyanbao.com/search?q="          # V2.1.0 改版新检索口 (1015 用户报)
 PROFILE = REPO / "data" / "harvest" / "_djyanbao_profile"
 LOCAL_PORT = 9533                                    # 避开 9222 免打扰口
 SKIP_TYPE_KEYWORDS = dj.SKIP_TYPE_KEYWORDS
@@ -84,14 +84,21 @@ def read_creds() -> tuple[str, str] | None:
     return m_phone.group(1), m_pwd.group(1)
 
 
-def create_page(download_dir: Path) -> ChromiumPage:
-    """离屏有头 Chromium + 持久 profile (登录态复用) + 独立调试口."""
+def create_page(download_dir: Path, visible: bool = False) -> ChromiumPage:
+    """有头 Chromium + 持久 profile (登录态复用) + 独立调试口.
+
+    visible=True: 窗口放主屏 (用户扫码登录用); 默认离屏不打扰。"""
     co = ChromiumOptions()
     co.set_download_path(str(download_dir))
     co.set_pref("download.prompt_for_download", False)
     co.headless(False)                               # djyanbao 需可见渲染
-    co.set_argument("--window-position=-32000,0")    # 离屏=真渲染不打扰用户
-    co.set_argument("--window-size=1280,900")
+    if visible:
+        co.set_argument("--window-position=80,60")
+        co.set_argument("--window-size=1100,860")
+        co.set_argument("--start-maximized")
+    else:
+        co.set_argument("--window-position=-32000,0")  # 离屏=真渲染不打扰用户
+        co.set_argument("--window-size=1280,900")
     co.set_argument("--disable-blink-features=AutomationControlled")
     co.set_argument("--ignore-certificate-errors")
     co.set_user_data_path(str(PROFILE))
@@ -180,6 +187,25 @@ def ensure_login(page, login_wait: int) -> bool:
         return True
     print(f"[djyanbao] 密码登录未成会话; 请用「洞见研报」APP 扫码 "
           f"(等待 {login_wait}s, 非交互运行请 Ctrl-C)...")
+    # 引导到扫码位: 登录弹窗内点「扫码登录/微信/二维码」tab (无则留在原位)
+    try:
+        page.get("https://www.djyanbao.com/index", timeout=25)
+        time.sleep(2)
+        try:
+            page.ele("text:登录", timeout=5).click()
+            time.sleep(1.5)
+        except Exception:
+            pass
+        for t in ("扫码登录", "微信扫码", "二维码登录", "微信登录"):
+            try:
+                page.ele(f"text:{t}", timeout=2).click()
+                print(f"[djyanbao] 已切到 {t} 页")
+                time.sleep(1.5)
+                break
+            except Exception:
+                continue
+    except Exception:
+        pass
     deadline = time.time() + login_wait
     while time.time() < deadline:
         time.sleep(5)
@@ -196,75 +222,94 @@ def face_hit(query: str, text: str) -> bool:
 
 
 def search_cards(page, query: str) -> list:
-    """检索页取原始卡片 (类型门+双重门在 harvest 循环里做)."""
-    page.get(f"{BASE_URL}&q={quote(query)}")
-    try:
-        page.ele("text:下载", timeout=15)
-    except Exception:
-        pass                                          # 渲染慢/无结果, 下行如实报
-    time.sleep(2)
+    """检索页取原始卡片 (V2.1.0 新结构: /search?q= + Tailwind 行卡).
+
+    真卡判据: 行文本含「N页·」报告元数据形 (过滤器行无此形, 实测区分)."""
+    page.get(f"{BASE_URL}{quote(query)}")
+    time.sleep(7)                                     # 列表 API 异步渲染 (ant-spin)
     body = page.ele("tag:body").text or ""
     if "研报加载失败" in body[:400]:
         print(f"  [djyanbao] '{query}' 列表 API 拒载 (需登录/风控)")
         return []
     try:
-        return page.eles('xpath://div[contains(@class,"report-list")]/div',
-                         timeout=5)
+        rows = page.eles(
+            'xpath://div[contains(@class,"py-3") and contains(@class,"border-b")]',
+            timeout=6)
     except Exception:
         return []
+    cards = []
+    for r in rows:
+        try:
+            t = r.text or ""
+        except Exception:
+            continue
+        if re.search(r"\d+页\s*·", t) and len(t) > 40:   # 真卡 (页数·大小 元数据)
+            cards.append(r)
+    return cards
 
 
-def card_detail_url(card) -> str:
-    """从卡片取详情链接 (href 含 detail/infoid/report)."""
+def click_scrape_detail(page, card) -> dict:
+    """V2.1.0 卡片标题是 <button> (React 路由) — 点标题钮进详情, 抓后回.
+
+    新标签页形态防御: 点击后若开了新 tab, 抓完关闭回原页。"""
     try:
-        for a in card.eles("tag:a"):
-            h = a.link_href or ""
-            if any(k in h for k in ("detail", "infoid")) or h.rstrip("/").endswith(
-                    ("/report", "djyanbao.com/report")):
-                return h
-    except Exception:
-        pass
-    return ""
-
-
-def scrape_detail(page, url: str) -> dict:
-    """详情页: 标题(h1) + 摘要/正文可读部分 (body 文本去导航噪声)."""
-    page.get(url)
-    time.sleep(3)
-    title = ""
-    try:
-        h1 = page.ele("tag:h1", timeout=3)
-        title = (h1.text or "").strip() if h1 else ""
-    except Exception:
-        pass
-    body = ""
-    try:
-        body = (page.ele("tag:body").text or "").strip()
-    except Exception:
-        pass
-    # 去首尾导航/页脚噪声: 取「简介/摘要/报告」标记后的主体段
-    m = re.search(r"(简介|摘要|报告信息|正文)", body)
-    if m and m.start() < len(body) // 3:
-        body = body[m.start():]
-    for tail in ("扫码添加客服", "商务合作、企业采购", "© 20", "隐私政策"):
-        i = body.find(tail)
-        if i > 300:
-            body = body[:i]
-            break
-    return {"title": title, "text": body.strip(), "url": url}
+        before_url = page.url
+        title_btn = card.ele(
+            'xpath:.//button[contains(@class,"font-semibold")]', timeout=4)
+        title_btn.click()
+        time.sleep(5.5)                               # SPA 新tab路由换班
+        tab = None
+        target = page
+        try:
+            if page.tabs_count > 1:                   # 新标签页形态 (实测形态)
+                tab = page.get_tab(page.tab_ids[-1])
+                target = tab
+        except Exception as e:
+            print(f"  [djyanbao] tab 接管回退原页: {str(e)[:50]}")
+        time.sleep(1.5)                               # 路由稳定后取终值
+        url = target.url or ""
+        body = ""
+        try:
+            body = (target.ele("tag:body").text or "").strip()
+        except Exception:
+            pass
+        m = re.search(r"(简介|摘要|报告信息|正文)", body)
+        if m and m.start() < len(body) // 3:
+            body = body[m.start():]
+        for tail in ("查看全部内容", "让决策有依据", "关于平台 / ABOUT",
+                     "扫码添加客服", "商务合作、企业采购", "© 20", "隐私政策"):
+            i = body.find(tail)
+            if i > 300:
+                body = body[:i]
+                break
+        title = ""
+        try:
+            h1 = target.ele("tag:h1", timeout=2)
+            title = (h1.text or "").strip() if h1 else ""
+        except Exception:
+            pass
+        if tab is not None:
+            pass                                     # 详情 tab 不关 (防断连), 收尾统一清
+        elif page.url != before_url:
+            page.back()
+            time.sleep(2)
+        return {"title": title, "text": body.strip(), "url": url}
+    except Exception as e:
+        print(f"  [djyanbao] 详情抓取异常: {str(e)[:60]}")
+        return {"title": "", "text": "", "url": ""}
 
 
 def run(cid: str, per_query: int = 3, max_total: int = 12,
-        login_wait: int = 45, dry: bool = False) -> int:
+        login_wait: int = 45, dry: bool = False, visible: bool = False) -> int:
     out_dir = REPO / "data" / "harvest" / "djyanbao" / cid
     out_dir.mkdir(parents=True, exist_ok=True)
-    page = create_page(out_dir)
+    page = create_page(out_dir, visible=visible)
     records: list[dict] = []
     stats = {"queries": 0, "cards": 0, "skip_type": 0, "skip_gate": 0,
              "skip_short": 0, "skip_nolink": 0, "saved": 0}
     seen_titles: set[str] = set()
     try:
-        page.get(BASE_URL, timeout=30)
+        page.get("https://www.djyanbao.com/index", timeout=30)
         time.sleep(2)
         if not ensure_login(page, login_wait):
             print("[djyanbao] BLOCKER: 登录未成会话 (改版后密码流被风控/"
@@ -295,21 +340,17 @@ def run(cid: str, per_query: int = 3, max_total: int = 12,
                     continue
                 if title[:30] in seen_titles:
                     continue
-                url = card_detail_url(card)
-                if not url:
-                    stats["skip_nolink"] += 1
-                    continue
                 seen_titles.add(title[:30])
-                det = scrape_detail(page, url)
+                det = click_scrape_detail(page, card)
                 body = det["text"]
-                if len(body) < 300:                   # 摘要+正文可读部分门槛
+                if not det["url"] or len(body) < 300:   # 摘要+正文可读部分门槛
                     stats["skip_short"] += 1
                     continue
                 fname = re.sub(r"[^\w一-鿿-]+", "_",
-                               det["title"] or title)[:50] + ".md"
+                               title or det["title"])[:50] + ".md"  # 卡片题优先 (h1=站壳名)
                 fp = out_dir / fname
                 md = (f"# {det['title'] or title}\n\n"
-                      f"> 来源: 洞见研报 ({url})\n"
+                      f"> 来源: 洞见研报 ({det['url']})\n"
                       f"> engine: djyanbao:vip | tree: {eei} | cred: research"
                       f" | harvested: {time.strftime('%Y-%m-%d')}\n\n"
                       f"## 检索命中\n\n关键词「{q}」命中卡片: "
@@ -319,7 +360,7 @@ def run(cid: str, per_query: int = 3, max_total: int = 12,
                     print(f"  [dry] {eei} {fname[:52]} ({len(body)}字)")
                 else:
                     fp.write_text(md, encoding="utf-8")
-                    records.append({"file": str(fp), "url": url,
+                    records.append({"file": str(fp), "url": det["url"],
                                     "engine": "djyanbao:vip",
                                     "tree": eei, "cred": "research"})
                 stats["saved"] += 1
@@ -331,6 +372,12 @@ def run(cid: str, per_query: int = 3, max_total: int = 12,
             (out_dir / "records.jsonl").write_text(
                 "\n".join(json.dumps(r, ensure_ascii=False) for r in records),
                 encoding="utf-8")
+        try:
+            while page.tabs_count > 1:          # 收尾清详情 tab (防泄漏)
+                page.get_tab(page.tab_ids[-1]).close()
+                time.sleep(0.5)
+        except Exception:
+            pass
         print(f"[djyanbao] {'DRY' if dry else 'APPLY'}: 查询 {stats['queries']} "
               f"| 卡片 {stats['cards']} | 类型跳 {stats['skip_type']} | "
               f"域门跳 {stats['skip_gate']} | 短文跳 {stats['skip_short']} | "
@@ -350,8 +397,10 @@ def main() -> int:
     ap.add_argument("--max-total", type=int, default=12)
     ap.add_argument("--login-wait", type=int, default=45)
     ap.add_argument("--dry", action="store_true")
+    ap.add_argument("--visible", action="store_true", help="窗口主屏可见 (扫码登录用)")
     ns = ap.parse_args()
-    return run(ns.campaign, ns.per_query, ns.max_total, ns.login_wait, ns.dry)
+    return run(ns.campaign, ns.per_query, ns.max_total, ns.login_wait,
+               ns.dry, ns.visible)
 
 
 if __name__ == "__main__":
