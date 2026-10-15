@@ -277,7 +277,27 @@ def scan(campaign: str, *, pool_root: Path | str | None = None,
     # 队列里写渠道 id 也能对上 (miss 名/id 双口径匹配)
     miss_in_queue = [m["name"] for m in miss_detail
                      if _norm(m["name"]) in queue_keys or _norm(m["id"]) in queue_keys]
-    miss_not_in_queue = [n for n in miss_list if n not in miss_in_queue]
+    # 用户批准豁免 (channel_waivers.json: [{id, reason, approve_ref, ts}]) —
+    # 命中优先 (渠道真点亮则豁免自动失效, 只升不逆); 学术限流类可登记
+    # 临时豁免 (命中即替换, reason 注明自动轮询)
+    waivers: list[dict] = []
+    wpath = root / campaign / "channel_waivers.json"
+    if wpath.is_file():
+        try:
+            waivers = [w for w in json.loads(
+                wpath.read_text(encoding="utf-8"))
+                if isinstance(w, dict) and w.get("id")
+                and str(w.get("approve_ref") or "").strip()]
+        except (json.JSONDecodeError, OSError):
+            waivers = []
+    waived_ids = {_norm(w["id"]) for w in waivers}
+    waived_list, waived_hit = [], []
+    for m in miss_detail:
+        if _norm(m["id"]) in waived_ids or _norm(m["name"]) in waived_ids:
+            (waived_hit if m["id"] in hit_chars else waived_list).append(
+                m["name"])
+    miss_not_in_queue = [n for n in miss_list
+                         if n not in miss_in_queue and n not in waived_list]
     green = (not miss_list) or (not miss_not_in_queue)
 
     approx_notes = sorted({
@@ -300,6 +320,9 @@ def scan(campaign: str, *, pool_root: Path | str | None = None,
         "new_channel_queue": queue,
         "miss_in_queue": miss_in_queue,
         "miss_not_in_queue": miss_not_in_queue,
+        "channel_waivers": waivers,
+        "waived_miss_list": waived_list,               # 未命中且已豁免
+        "waived_but_hit": waived_hit,                  # 豁免后真点亮 (只升不逆实证)
         "queue_path": str(qpath),
         "queue_present": Path(qpath).exists(),
         "green": green,
