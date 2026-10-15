@@ -98,3 +98,11 @@ deploy-hook 自动 `docker exec nginx-1 nginx -s reload`。双层墙: ufw 443 + 
 - [x] **提审 2026-10-08 19:22:08 审核中（普通队列）**——「所有工作全部完成再提审」用户令达成
 - [ ] TOPIC-06 PDF 重生成 ≤20MB（工单；整理中直至重生）
 - [ ] 过审后：发布（先清灰度横幅态）→ 六道具现网发布 → env=1→0 → 海报码 release → 收口链
+
+## ¥100k 冲刺周分解 · 周对账（2026-10-15 起，1015 V3 令）
+
+> 周分解表在 `_proposals/flagship-paid-report-1007/GOAL_LEDGER.md`「¥100k 冲刺周分解（1015 V3 令）」：
+> W1 10-15~10-21 / W2 10-22~10-28 / W3 10-29~11-04 / W4 11-05~11-07（收尾），目标全为 plan 非实绩。
+> 周对账命令 `py reforge_factory/sprint_ledger.py --status`（累计/缺口/剩余天数）；账本（追加式）=
+> `_proposals/flagship-paid-report-1007/work/sprint_ledger.jsonl`（产线侧权威，镜像至百倍V3 计划 work/）。
+> 实绩数据源=本平台订单库对账（report.yrecepc.cn 订单 + 小程序 vpay 订单）；零入账周如实记 0。
