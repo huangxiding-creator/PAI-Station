@@ -143,6 +143,15 @@ def funnel(camp_dir: Path) -> dict:
     other = len(rows) - len(valid) - len(rejected) - len(pending)
     ti = tier_split(valid, tiers_cfg.get("T1") or [], tiers_cfg.get("T2") or [],
                     st.get("kws") or [])
+    # 1016 口径对齐: reledger 全文级账 (pool_state t1_*/t2_* 键) 为权威 —
+    # 在档则覆盖标题级实算 (tier_fulltext_reledger 落账值, 数字零造假同源)
+    if st.get("t1_chars") is not None:
+        ti = {"t1": int(st.get("t1_chars") or 0),
+              "t2": int(st.get("t2_chars") or 0),
+              "t3": ti["t3"], "t0": ti["t0"],
+              "n1": int(st.get("t1_items") or 0),
+              "n2": int(st.get("t2_items") or 0),
+              "n3": ti["n3"], "n0": ti["n0"]}
     return {
         "identified": len(rows),
         "valid": len(valid), "valid_chars": sum(r.get("chars") or 0
