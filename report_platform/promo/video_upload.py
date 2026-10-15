@@ -12,7 +12,7 @@
   ④ 失败/登录失效 → 退出上报, 绝不重试轰炸
 
 用法 (必须用 We-AIPO venv python 跑 — playwright 在那边):
-  E:/CPOPC/We-AIPO/.venv/Scripts/python.exe -X utf8 video_upload.py \
+  F:/We-AIPO/.venv/Scripts/python.exe -X utf8 video_upload.py \
       --slug cnnec_v1 [--go]
 默认 dry-run: 只做预检+参数打印.
 """
@@ -35,7 +35,7 @@ PROMO = Path(__file__).resolve().parent
 STATE_FILE = PROMO / "video_account_state.json"
 LOCK = PROMO / "video_upload.lock"
 LEDGER = PROMO / "promo_ledger.jsonl"
-VENDOR_ROOT = Path(r"E:\CPOPC\We-AIPO\src\vendor\video_autopub")
+VENDOR_ROOT = Path(r"F:\We-AIPO\src\vendor\video_autopub")
 RUNLOG_DIR = Path(r"E:\CPOPC\We-AIPO\data\run_logs")
 RUNLOG_RECHECK_MIN = 45          # We-AIPO 最近发表 → 让路窗口
 

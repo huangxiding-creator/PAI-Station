@@ -150,14 +150,15 @@ def check(md_text: str, html: str, title: str, account: str,
                 f"({int((now-ts)/3600)}h前)")
             break
 
-    # ② 同 SKU 跨号 7 天冷却
+    # ② 同 SKU 同号 7 天冷却（1015 用户令改：跨号分发放行，仅同号不轰炸）
     for r in rows:
         ts = r.get("ts_epoch", 0)
         if (r.get("sku") == sku and sku and r.get("sku")
+                and r.get("account") == account
                 and now - ts < SKU_COOLDOWN_DAYS * 86400):
             reasons.append(
-                f"②SKU冷却中: {sku} 已投 {r.get('account')} "
-                f"({int((now-ts)/86400)}d前, 冷却7d)")
+                f"②SKU同号冷却: {sku} 已投 {r.get('account')} "
+                f"({int((now-ts)/86400)}d前, 同号冷却7d)")
             break
 
     # ③ 每号日帽

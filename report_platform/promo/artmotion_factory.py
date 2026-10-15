@@ -32,7 +32,7 @@ from video_factory import CARDS as META_CARDS  # noqa: E402
 
 OUT_DIR = PROMO / "videos"
 ENGINE = Path(r"E:\AI-Station\_vendors\huashu-art-motion\scripts\engine")
-VENV_PY = Path(r"E:\CPOPC\We-AIPO\.venv\Scripts\python.exe")  # playwright 在这
+VENV_PY = Path(r"F:\We-AIPO\.venv\Scripts\python.exe")  # playwright 在这
 
 # 品牌色 (video_factory 同款): 墨蓝×铜金×纸白 — 每页换底色, 色彩即章节号
 PAL = [["#0F2A43", "#FAF7F2"],   # 墨蓝底 纸白字
@@ -80,6 +80,49 @@ ARTCARDS: dict[str, dict] = {
              "data": {"label": "成果", "key": "15.6万字"}},
             {"at": 11.9, "kind": "highlight", "data": {"word": "14章"}},
             *_tail_card("试读入口"),
+        ],
+    },
+    # 1015 BID26 招投标合规
+    "bid26_v1": {
+        "duration": 16.5,
+        "cues": [
+            {"at": 0.0, "kind": "title", "text": "三份新规",
+             "sub": "2026年1月1日同日施行", "data": {"label": "合规指南"}},
+            {"at": 2.7, "kind": "point", "text": "罚款提至10%",
+             "sub": "围串标从千分之五到百分之十",
+             "data": {"label": "红线 01", "key": "百分之十"}},
+            {"at": 5.4, "kind": "number",
+             "sub": "调研弹药池 · 12章成书",
+             "data": {"value": 2834, "suffix": " 万字", "label": "笨功夫"}},
+            {"at": 8.1, "kind": "point", "text": "98种追责",
+             "sub": "终身问责写入46号令",
+             "data": {"label": "追责 01", "key": "终身"}},
+            {"at": 10.8, "kind": "point", "text": "100+案例",
+             "sub": "处罚决定书全数据可查",
+             "data": {"label": "成果", "key": "全数据"}},
+            {"at": 11.9, "kind": "highlight", "data": {"word": "案例"}},
+            *_tail_card("免费试读"),
+        ],
+    },
+    "bid26_v2": {
+        "duration": 16.5,
+        "cues": [
+            {"at": 0.0, "kind": "title", "text": "83亿违规",
+             "sub": "审计署点名12省", "data": {"label": "审计报告"}},
+            {"at": 2.7, "kind": "point", "text": "120个项目",
+             "sub": "未按规定招标涉83亿",
+             "data": {"label": "审计 01", "key": "83亿"}},
+            {"at": 5.4, "kind": "number",
+             "sub": "2026新规 · 追责情形扩充",
+             "data": {"value": 98, "suffix": " 种", "label": "追责"}},
+            {"at": 8.1, "kind": "point", "text": "ISO 37301",
+             "sub": "合规体系从标准到落地",
+             "data": {"label": "体系 01", "key": "落地"}},
+            {"at": 10.8, "kind": "point", "text": "12章指南",
+             "sub": "2026招投标合规全画清",
+             "data": {"label": "成果", "key": "全画清"}},
+            {"at": 11.9, "kind": "highlight", "data": {"word": "合规"}},
+            *_tail_card("免费试读"),
         ],
     },
     "fengcheng_v1": {
