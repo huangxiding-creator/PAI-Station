@@ -84,6 +84,154 @@ def gate_bar(gates: dict | None = None) -> dict:
             "budget_chars": budget, "mode": "v3"}
 
 
+# ---------- T-003 / REQ-015: 完备性门 + 饱和门 (S1 出门判定, 旁挂函数) ----------
+# 门参数自 gates.json 单一权威源现读 (同 gate_bar 范式, 无缓存):
+#   completeness_gate = {required_axes:[T,B,D,P,C], pass_rule:"all_green_or_waived"}
+#   saturation_gate   = {min_evidence:2, min_hosts:2, min_pct:80}
+# 账本/数据源 (KB-COMPLETENESS-SPEC + ammo_pool.coverage 实测形态):
+#   五轴账本  = ammo_pool/<campaign>/completeness_ledger.jsonl (每轴一节 jsonl)
+#   饱和数据  = ammo_pool/<campaign>/question_tree.json 的 coverage 节
+#               (eei_total/saturated/gap/sat_pct/checked; saturated 计数即
+#                coverage() 逐 EEI 预判「≥2 证据 ∧ ≥2 独立 host」的 EEI 数)
+
+COMPLETE_LEDGER_NAME = "completeness_ledger.jsonl"
+QUESTION_TREE_NAME = "question_tree.json"
+
+
+def _completeness_axes(gates: dict | None = None) -> list:
+    """完备门五轴口径 — gates.json completeness_gate.required_axes 现读."""
+    g = gates if gates is not None else gates_loader.load_gates()
+    cg = g.get("completeness_gate")
+    axes = cg.get("required_axes") if isinstance(cg, dict) else None
+    if not (isinstance(axes, list) and axes
+            and all(isinstance(a, str) and a for a in axes)):
+        axes = gates_loader.DEFAULTS["completeness_gate"]["required_axes"]
+    return list(axes)
+
+
+def read_completeness_ledger(campaign: str, ammo_root=None) -> dict:
+    """读五轴完备账本 ammo_pool/<campaign>/completeness_ledger.jsonl.
+
+    KB-COMPLETENESS-SPEC: 每轴一节 (axis/sensor/green + 各轴负载数据)。
+    fail-soft: 账本不存在/坏行 → 该轴缺记录 (判定时 unknown), 不抛不炸;
+    同轴多行取最后一条 (S1 采集期滚动更新语义, 后行=最新态)。
+    """
+    root = Path(ammo_root) if ammo_root is not None else AMMO
+    p = root / campaign / COMPLETE_LEDGER_NAME
+    records: dict = {}
+    exists = p.is_file()
+    if exists:
+        try:
+            for line in p.read_text(encoding="utf-8").splitlines():
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    rec = json.loads(line)
+                except ValueError:
+                    continue                      # 坏行跳过, 不拖垮门判定
+                if isinstance(rec, dict) and rec.get("axis"):
+                    records[rec["axis"]] = rec
+        except OSError:
+            exists = False
+    return {"exists": exists, "records": records, "path": str(p),
+            "axes_in_ledger": sorted(records)}
+
+
+def completeness_gate_verdict(ledger, gates: dict | None = None) -> dict:
+    """五轴完备门: all_green_or_waived (REQ-015, 缺任一轴即 FAIL).
+
+    每轴门态: green(记录 green==True) / waived(豁免制: 记录含 waived==True,
+    green 可 False) / red(green 显式 False 且未豁免) / unknown(缺轴/账本不
+    存在/记录无 green 字段)。pass = 全部 required_axes 门态 ∈ {green, waived}。
+    """
+    g = gates if gates is not None else gates_loader.load_gates()
+    cg = g.get("completeness_gate")
+    rule = (cg.get("pass_rule") if isinstance(cg, dict) else None) \
+        or gates_loader.DEFAULTS["completeness_gate"]["pass_rule"]
+    records: dict = {}
+    if isinstance(ledger, dict):
+        recs = ledger.get("records")
+        records = recs if isinstance(recs, dict) else ledger  # 兼容裸记录 dict
+    axes = _completeness_axes(g)
+    statuses = {}
+    for ax in axes:
+        rec = records.get(ax)
+        if not isinstance(rec, dict):
+            statuses[ax] = "unknown"              # 缺轴/账本不存在
+        elif rec.get("green") is True:
+            statuses[ax] = "green"
+        elif rec.get("waived") is True:
+            statuses[ax] = "waived"               # 豁免制 (用户明示豁免在案)
+        elif "green" in rec:
+            statuses[ax] = "red"
+        else:
+            statuses[ax] = "unknown"              # 记录在但无 green 判定
+    ok = {"green", "waived"}
+    return {"pass": bool(statuses) and all(s in ok for s in statuses.values()),
+            "pass_rule": rule, "required_axes": axes,
+            "axis_statuses": statuses,
+            "ledger_exists": bool(ledger.get("exists"))
+            if isinstance(ledger, dict) else False,
+            "green_axes": sorted(a for a, s in statuses.items() if s == "green"),
+            "waived_axes": sorted(a for a, s in statuses.items() if s == "waived"),
+            "failing_axes": sorted(a for a, s in statuses.items() if s not in ok)}
+
+
+def saturation_gate_verdict(campaign: str, ammo_root=None,
+                            gates: dict | None = None) -> dict:
+    """饱和门: 每 EEI ≥2 证据 ∧ ≥2 独立 host ∧ 饱和率≥min_pct (REQ-015).
+
+    数据源 = ammo_pool.coverage() 落在 question_tree.json 的 coverage 节
+    (EEI 级「≥min_evidence 证据 ∧ ≥min_hosts 独立 host」判据由 coverage()
+    逐 EEI 预判进 saturated 计数, 本门消费其聚合账)。fail-soft: 树缺/
+    无 coverage 节/坏 JSON → status=unknown 且 pass=False (计入 FAIL 域,
+    数据不可得不虚报 PASS)。
+    """
+    g = gates if gates is not None else gates_loader.load_gates()
+    sg = g.get("saturation_gate")
+    sg = sg if isinstance(sg, dict) else {}
+
+    def _sgnum(k):
+        v = sg.get(k, gates_loader.DEFAULTS["saturation_gate"][k])
+        return (v if isinstance(v, (int, float)) and not isinstance(v, bool)
+                else gates_loader.DEFAULTS["saturation_gate"][k])
+
+    min_ev, min_host, min_pct = (_sgnum("min_evidence"),
+                                 _sgnum("min_hosts"), _sgnum("min_pct"))
+    root = Path(ammo_root) if ammo_root is not None else AMMO
+    tp = root / campaign / QUESTION_TREE_NAME
+    base = {"campaign": campaign, "source": str(tp),
+            "min_evidence": min_ev, "min_hosts": min_host, "min_pct": min_pct,
+            "eei_rule": (f"coverage() 逐EEI预判: >={min_ev}证据 ∧ "
+                         f">={min_host}独立host 计入 saturated")}
+    cov = None
+    if tp.is_file():
+        try:
+            tree = json.loads(tp.read_text(encoding="utf-8"))
+            cov = tree.get("coverage") if isinstance(tree, dict) else None
+        except (OSError, ValueError):
+            cov = None
+    if not isinstance(cov, dict):
+        return {**base, "status": "unknown", "pass": False,
+                "reason": "question_tree.json 无 coverage 节 "
+                          "(先跑 ammo_pool.py coverage <cid> 刷饱和账)"}
+    total, sat_n = cov.get("eei_total"), cov.get("saturated")
+    out = {**base, "eei_total": total, "saturated": sat_n,
+           "gap": cov.get("gap"), "sat_pct": cov.get("sat_pct"),
+           "checked": cov.get("checked")}
+    if (not _pos_int(total)) or (not isinstance(sat_n, int)
+                                 or isinstance(sat_n, bool)):
+        return {**out, "status": "unknown", "pass": False,
+                "reason": "coverage 节 eei_total/saturated 形态不合 (无可判 EEI)"}
+    pct = cov.get("sat_pct")
+    if not isinstance(pct, (int, float)) or isinstance(pct, bool):
+        pct = round(100 * sat_n / max(1, total), 1)   # 同 ammo_pool 口径补算
+        out["sat_pct"] = pct
+    passed = pct >= min_pct
+    return {**out, "status": "pass" if passed else "fail", "pass": bool(passed)}
+
+
 def _load() -> dict:
     try:
         return json.loads(STATE.read_text(encoding="utf-8"))
@@ -171,6 +319,16 @@ def measure(st: dict) -> dict:
         st["word_gate_pass"] = bool(
             t1 is not None and t2 is not None
             and t1 >= bar["t1_min"] and t1 + t2 >= bar["t1t2_min"])
+    # ⑤ 完备性门 ∧ 饱和门 (T-003/REQ-015): S1 出门判定 = 三门串联
+    #    字数门(T1) ∧ completeness(五轴 all_green_or_waived) ∧ saturation
+    #    (EEI ≥2证据∧≥2独立host∧饱和率≥80%) — 逐门态落 state; word_gate_pass
+    #    既有语义不动 (旧字段只增不覆盖), 三门串联总判落新键 s1_gate_pass.
+    comp = completeness_gate_verdict(read_completeness_ledger(CID))
+    satu = saturation_gate_verdict(CID)
+    st["completeness"] = comp
+    st["saturation"] = satu
+    st["s1_gate_pass"] = bool(st.get("word_gate_pass") and comp["pass"]
+                              and satu["pass"])
     st["measured_at"] = time.strftime("%Y-%m-%dT%H:%M:%S")
     return st
 
@@ -375,6 +533,18 @@ def main() -> int:
           f" | 字数门 {'PASS' if g else 'FAIL'}"
           f" | 质量汇报 {'有' if st.get('quality_report') else '无'}"
           f" | 用户批准 {'✓' if st.get('user_approved') else '✗ 未批 — 写作冻结'}")
+    # T-003/REQ-015: S1 出门门态行 (五轴各轴门态 + 饱和门态; 旧 state 无键 → ?)
+    comp, satu = st.get("completeness") or {}, st.get("saturation") or {}
+    ax = comp.get("axis_statuses") or {}
+    ax_s = " ".join(f"{k}:{v}" for k, v in ax.items()) or "?"
+    satu_s = satu.get("status", "?")
+    satu_pct = satu.get("sat_pct", "?")
+    print(f"  S1出门判定: 字数门 {'PASS' if g else 'FAIL'}"
+          f" ∧ 完备性门 {'PASS' if comp.get('pass') else ('?' if not comp else 'FAIL')}"
+          f" [{ax_s}]"
+          f" ∧ 饱和门 {'PASS' if satu.get('pass') else satu_s.upper()}"
+          f" (饱和率 {satu_pct}% ≥ 门 {satu.get('min_pct', '?')}%)"
+          f" → S1 {'PASS' if st.get('s1_gate_pass') else 'FAIL'}")
     return 0
 
 
