@@ -350,6 +350,13 @@ Page({
     noop() {
         // 弹层遮罩点击不关闭（内容须主动确认/关闭）
     },
+    // v1.3.0（1016 用户令）：内容页分享携参——研报短 id 自洽回流
+    onShareAppMessage() {
+        return { title: '总包学园-工程研报随身读', path: '/pages/reader/reader?id=' + this.data.reportId };
+    },
+    onShareTimeline() {
+        return { title: '总包学园-工程研报随身读', query: 'id=' + this.data.reportId };
+    },
 });
 function loadCatalogFirst() {
     try {

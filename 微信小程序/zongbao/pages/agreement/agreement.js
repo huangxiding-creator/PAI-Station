@@ -46,4 +46,11 @@ Page({
             return;
         this.setData({ expanded: { ...this.data.expanded, [id]: !this.data.expanded[id] } });
     },
+    // v1.3.0（1016 用户令）：全页面分享启用——两步门槛成对声明（先转发后朋友圈）
+    onShareAppMessage() {
+        return { title: '总包学园-工程研报随身读', path: '/pages/index/index' };
+    },
+    onShareTimeline() {
+        return { title: '总包学园-工程研报随身读' };
+    },
 });
