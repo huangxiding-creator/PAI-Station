@@ -19,13 +19,17 @@ from superline import demand_radar as R  # noqa: E402
 
 
 def test_weights_sum_to_one():
-    """四维权重与 KB-DEMAND-RADAR-SPEC 逐值同源, 和恰为 1."""
-    assert R.WEIGHTS == {"需求强度": 0.35, "支付能力": 0.20, "竞争空缺": 0.25, "语料复用度": 0.20}
+    """五维权重与规格逐值同源 (V4 第五维 0.10 自需求强度匀出), 和恰为 1."""
+    assert R.WEIGHTS == {"需求强度": 0.25, "支付能力": 0.20, "竞争空缺": 0.25,
+                         "语料复用度": 0.20, "决策紧迫度": 0.10}
     assert sum(R.WEIGHTS.values()) == pytest.approx(1.0)
 
 
 def test_synthetic_signals_known_dscore():
-    """合成信号→已知 DScore: norms 全取 e-1 (log1p=1), 分位=指数倍, 手算闭环."""
+    """合成信号→已知 DScore: norms 全取 e-1 (log1p=1), 分位=指数倍, 手算闭环.
+
+    V4 五维口径: 无四问信号 → 决策紧迫度=0 (fail-soft), 需求强度权重 0.25.
+    """
     E = math.e - 1.0
     norms = {"bidding_volume": E, "policy_pulse": E, "wechat_pain": E, "corpus_chars": E}
     signals = {
@@ -38,11 +42,12 @@ def test_synthetic_signals_known_dscore():
     }
     card = R.score("合成选题", signals, norms=norms)
     strength = 0.45 * 0.5 + 0.45 * 1.0 + 0.10 * 0.25   # = 0.70 (三源在场, 无让权)
-    expected = 0.35 * strength + 0.20 * 0.95 + 0.25 * 1.0 + 0.20 * 0.75  # = 0.835
+    expected = 0.25 * strength + 0.20 * 0.95 + 0.25 * 1.0 + 0.20 * 0.75 + 0.10 * 0.0
     assert card["需求强度"] == pytest.approx(strength, abs=1e-4)
     assert card["支付能力"] == pytest.approx(0.95, abs=1e-4)
     assert card["竞争空缺"] == pytest.approx(1.0, abs=1e-4)
     assert card["语料复用度"] == pytest.approx(0.75, abs=1e-4)
+    assert card["决策紧迫度"] == 0.0                     # 无四问 → 0 不猜
     assert card["DScore"] == pytest.approx(expected, abs=1e-4)
     assert card["signal_coverage"] == 1.0
 
@@ -156,3 +161,75 @@ def test_run_batch_end_to_end(tmp_path):
     assert wechat_rows[0]["meta"]["pain_kw_hits"] == 2            # 命中 怎么办+合规
     assert wechat_rows[0]["value"] == pytest.approx(800 * 1.0)   # 痛点词命中≥2 → 因子1.0
     assert wechat_rows[0]["meta"]["engine_breakdown"]["wechat_pain"] == {"wechat:sogou": 800}
+
+
+# ---------- V4 第五维: decision_hook 决策反推 (REQ-023 / KB-V4-SPEC 高度) ----------
+
+_FOUR_Q = {
+    "read_then_decide": "是否进入某省市场",
+    "decision_deadline": "30分钟",
+    "wrong_cost": "错拍损失可达数亿合同额",
+    "success_criteria": "首年中标率与回款达标",
+    "role": "战略部",
+}
+
+
+def test_decision_hook_complete_answers():
+    """四问全答: urgency>0 (手算=1.0: 亿档代价×30分钟期限), 动词帧非空成句."""
+    dh = R.decision_hook("某省EPC市场进入", _FOUR_Q)
+    # 手算: cost_mag=1.0(亿), deadline=1.0(分钟) → 0.6+0.4=1.0
+    assert dh["decision_urgency"] == pytest.approx(1.0)
+    assert 0.0 < dh["decision_urgency"] <= 1.0
+    # 动词化重述: 主语+期限+决定内容三件齐 (规格例句同构)
+    assert dh["verb_frame"] == "让战略部在30分钟内敢决定是否进入某省市场"
+    assert "战略部" in dh["verb_frame"] and "30分钟" in dh["verb_frame"]
+    # score() 集成: signals["decision"] → 第五维计分+动词帧随卡
+    E = math.e - 1.0
+    card = R.score("决策选题", {
+        "bidding_volume": math.e - 1, "wechat_pain": math.e - 1,
+        "policy_pulse": math.e - 1, "corpus_chars": math.e - 1,
+        "buyer_persona": "enterprise_strategy", "sku_hits": 0,
+        "decision": _FOUR_Q},
+        norms={"bidding_volume": E, "policy_pulse": E, "wechat_pain": E,
+               "corpus_chars": E})
+    assert card["决策紧迫度"] == pytest.approx(1.0)
+    assert card["verb_frame"] == dh["verb_frame"]
+    assert any("decision_hook" in n for n in card["notes"])
+
+
+def test_decision_hook_missing_question_raises():
+    """四问缺任一 → ValueError 退回 (不半猜); 逐字段轮删四问全验."""
+    for drop in R.DECISION_QUESTIONS:
+        broken = {k: v for k, v in _FOUR_Q.items() if k != drop}
+        with pytest.raises(ValueError, match=drop):
+            R.decision_hook("缺问选题", broken)
+    # score() 侧四问不全: fail-soft 0 分 + note 如实报 (不向上抛)
+    card = R.score("半答选题", {"buyer_persona": "consultant", "sku_hits": 0,
+                               "decision": {"read_then_decide": "是否立项",
+                                            "decision_deadline": "本周内"}})
+    assert card["决策紧迫度"] == 0.0 and card["verb_frame"] == ""
+    assert any("四问不全" in n for n in card["notes"])
+
+
+def test_five_dimension_weights_sum_one():
+    """五维权重: 键集含决策紧迫度, 0.10 自需求强度(0.25)匀出, 和=1.0."""
+    assert len(R.WEIGHTS) == 5
+    assert R.WEIGHTS["需求强度"] == pytest.approx(0.25)   # 0.35 - 0.10
+    assert R.WEIGHTS["决策紧迫度"] == pytest.approx(0.10)
+    assert sum(R.WEIGHTS.values()) == pytest.approx(1.0)
+    # DScore 手算闭环: 五维各按权重线性合成 (非四维残和)
+    E = math.e - 1.0
+    q = dict(_FOUR_Q, wrong_cost="错拍代价约百万级", decision_deadline="一个月内")
+    # cost_mag=1.0(百万), deadline=0.5(月) → 0.6*1.0+0.4*0.5=0.8
+    dh = R.decision_hook("权重对拍", q)
+    assert dh["decision_urgency"] == pytest.approx(0.8)
+    card = R.score("五维对拍", {
+        "bidding_volume": math.e ** 0.5 - 1, "wechat_pain": math.e - 1,
+        "policy_pulse": math.e - 1, "corpus_chars": math.e ** 0.75 - 1,
+        "buyer_persona": "enterprise_strategy", "sku_hits": 0, "decision": q},
+        norms={"bidding_volume": E, "policy_pulse": E, "wechat_pain": E,
+               "corpus_chars": E})
+    strength = 0.45 * 0.5 + 0.45 * 1.0 + 0.10 * 1.0
+    expected = (0.25 * strength + 0.20 * 0.95 + 0.25 * 1.0
+                + 0.20 * 0.75 + 0.10 * 0.8)
+    assert card["DScore"] == pytest.approx(expected, abs=1e-4)

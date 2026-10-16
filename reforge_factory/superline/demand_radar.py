@@ -3,7 +3,8 @@
 
 KB-DEMAND-RADAR-SPEC 落地件: 对候选选题出四维评分卡, 原始信号逐条落盘可回放.
 
-    DScore = 0.35·需求强度 + 0.20·支付能力 + 0.25·竞争空缺 + 0.20·语料复用度  (各维 0-1)
+    DScore = 0.25·需求强度 + 0.20·支付能力 + 0.25·竞争空缺 + 0.20·语料复用度
+             + 0.10·决策紧迫度  (各维 0-1; V4 第五维 0.10 自需求强度匀出, 五维和=1)
 
 四维 v1 实现口径 (规格同源, 防伪=原始信号全落 radar_signals.jsonl):
   需求强度  三快源归一化: bidding_volume(0.45) + wechat_pain(0.45) + policy_pulse(0.10),
@@ -43,7 +44,12 @@ REPO_ROOT = SUPERLINE_DIR.parents[1]
 
 # ---------- 常量唯一事实源 ----------
 
-WEIGHTS = {"需求强度": 0.35, "支付能力": 0.20, "竞争空缺": 0.25, "语料复用度": 0.20}
+WEIGHTS = {"需求强度": 0.25, "支付能力": 0.20, "竞争空缺": 0.25,
+           "语料复用度": 0.20, "决策紧迫度": 0.10}
+
+# V4 第五维 (REQ-023 / KB-V4-SPEC 决策反推): 0.10 自需求强度(0.35→0.25)匀出,
+# 五维和恒 1.0; v1 四维口径 (0.35/0.20/0.25/0.20) 见 git 历史, 公式演进只增不改.
+DECISION_DIM = "决策紧迫度"
 
 # 需求强度内部源权重 (规格: 公告量分位+痛点聚类频次为主, 政策窗口为辅)
 DEMAND_SOURCE_WEIGHTS = {"bidding_volume": 0.45, "wechat_pain": 0.45, "policy_pulse": 0.10}
@@ -91,6 +97,76 @@ TOPICS_FILE_DEFAULT = SUPERLINE_DIR / "radar_topics.json"
 SCORECARDS_PATH = SUPERLINE_DIR / "radar_scorecards.json"
 SIGNALS_PATH = SUPERLINE_DIR / "radar_signals.jsonl"
 
+# ---------- 第五维: 决策反推 decision_hook (REQ-023 / KB-V4-SPEC 高度) ----------
+
+#: 四问字段 (缺任一 ValueError 退回, 不猜)
+DECISION_QUESTIONS = ("read_then_decide", "decision_deadline", "wrong_cost",
+                      "success_criteria")
+
+# 错拍代价量级启发表 (v1 规则; 命中即档, 先重后轻)
+COST_MAG_RULES = (
+    (("亿", "千万", "百万", "致命", "生死", "停业", "吊销"), 1.00),
+    (("万", "高", "严重", "赔偿", "违约金"), 0.70),
+)
+COST_MAG_DEFAULT = 0.40          # 有定性描述无量化词 → 保底档
+
+# 决策期限紧迫启发表 (先紧后松)
+DEADLINE_RULES = (
+    (("分钟",), 1.00),
+    (("小时", "当天", "当日", "即时", "立刻"), 0.90),
+    (("本周", "周内", "日内"), 0.80),
+    (("月",), 0.50),
+    (("季", "年"), 0.30),
+)
+DEADLINE_DEFAULT = 0.50
+COST_URGENCY_W = (0.60, 0.40)    # 代价紧迫度 = 0.6·代价量级 + 0.4·期限紧迫
+
+
+def _first_rule(text: str, rules, default: float) -> float:
+    for words, score in rules:
+        if any(w in text for w in words):
+            return score
+    return default
+
+
+def decision_hook(topic: str, buyer_persona: dict) -> dict:
+    """第五维决策反推: 四问 → {decision_urgency 0-1, verb_frame}.
+
+    buyer_persona 四问 (缺任一 ValueError, 退回不猜):
+      read_then_decide    读完拍什么板 (动作句)
+      decision_deadline   何时必须拍 (期限表述)
+      wrong_cost          错拍代价多少 (量化/定性)
+      success_criteria    成功判断标准
+    可选 role 字段: 决策人 (动词帧主语, 缺省「决策人」).
+
+    decision_urgency = 四问完备度 × 代价紧迫度
+      四问完备度   四问全答=1.0 (缺任一已在入口 ValueError 拦下, 不半猜)
+      代价紧迫度   0.6·错拍代价量级 + 0.4·决策期限紧迫 (启发规则表, 同源可回放)
+    verb_frame = 动词化重述句: 「让{role}在{deadline}内敢决定{read_then_decide}」
+    """
+    if not isinstance(buyer_persona, dict):
+        raise ValueError(f"buyer_persona 须为 dict (四问), 得到 {type(buyer_persona).__name__}")
+    missing = [q for q in DECISION_QUESTIONS
+               if not str(buyer_persona.get(q) or "").strip()]
+    if missing:
+        raise ValueError(f"决策四问缺: {','.join(missing)} — 缺任一退回, 不猜")
+
+    completeness = 1.0                                   # 全答=1 (缺已被拦)
+    cost_mag = _first_rule(str(buyer_persona["wrong_cost"]),
+                           COST_MAG_RULES, COST_MAG_DEFAULT)
+    deadline = _first_rule(str(buyer_persona["decision_deadline"]),
+                           DEADLINE_RULES, DEADLINE_DEFAULT)
+    cost_urgency = (COST_URGENCY_W[0] * cost_mag + COST_URGENCY_W[1] * deadline)
+    urgency = round(_clamp01(completeness * cost_urgency), 4)
+
+    role = str(buyer_persona.get("role") or "决策人").strip() or "决策人"
+    verb_frame = (f"让{role}在{str(buyer_persona['decision_deadline']).strip()}"
+                  f"内敢决定{str(buyer_persona['read_then_decide']).strip()}")
+    return {"decision_urgency": urgency, "verb_frame": verb_frame,
+            "cost_urgency": round(cost_urgency, 4),
+            "cost_mag": cost_mag, "deadline_urgency": deadline,
+            "four_q_completeness": completeness, "role": role}
+
 
 # ---------- 纯函数核心 ----------
 
@@ -135,7 +211,8 @@ def score(topic, signals, norms=None, persona_hook=None, competition_hook=None):
 
     topic:   选题名
     signals: {bidding_volume, policy_pulse, wechat_pain, corpus_chars (原始量),
-              buyer_persona (画像键), sku_hits (现有 SKU 命中数)}
+              buyer_persona (画像键), sku_hits (现有 SKU 命中数),
+              decision (V4 可选: 四问 dict → 第五维 decision_hook 反推)}
     norms:   批次基准 {同信号名: 批内最大值}; 缺省=单卡直评(正值满格)
     hook:    persona_hook/competition_hook(topic, signals)->0-1, 返回有效值则整体替换规则表
     返回:    {topic, DScore, 四维分, weights, 覆盖与在场源, notes, signals_ref(None, run 补)}
@@ -178,13 +255,31 @@ def score(topic, signals, norms=None, persona_hook=None, competition_hook=None):
     # -- 语料复用度: 池存量字符分位 --
     reuse = _norm(signals.get("corpus_chars"), norms.get("corpus_chars"))
 
+    # -- 决策紧迫度 (第五维): signals["decision"] 四问 → decision_hook 反推 --
+    # 无四问信号/四问不全 → 0 分 fail-soft + note 如实报 (不猜).
+    decision = signals.get("decision")
+    urgency, verb_frame = 0.0, ""
+    if isinstance(decision, dict) and any(
+            str(decision.get(q) or "").strip() for q in DECISION_QUESTIONS):
+        try:
+            dh = decision_hook(topic, decision)
+            urgency = dh["decision_urgency"]
+            verb_frame = dh["verb_frame"]
+            notes.append("第五维决策紧迫度取 decision_hook 四问反推")
+        except ValueError as e:
+            notes.append(f"决策四问不全({e}), 决策紧迫度=0 (不猜)")
+    else:
+        notes.append("无决策四问信号, 决策紧迫度=0 (v1 只在有买家反推时计分)")
+
     dims = {"需求强度": round(_clamp01(strength), 4), "支付能力": round(_clamp01(pay), 4),
-            "竞争空缺": round(_clamp01(gap), 4), "语料复用度": round(_clamp01(reuse), 4)}
+            "竞争空缺": round(_clamp01(gap), 4), "语料复用度": round(_clamp01(reuse), 4),
+            DECISION_DIM: round(_clamp01(urgency), 4)}
     dscore = round(sum(WEIGHTS[k] * dims[k] for k in WEIGHTS), 4)
     return {
         "topic": topic,
         "DScore": dscore,
         **dims,
+        "verb_frame": verb_frame,
         "weights": dict(WEIGHTS),
         "demand_sources_present": present,
         "demand_sources_missing": missing,
@@ -255,6 +350,8 @@ def run(topics_file, out_dir=None, sku_file=None):
         sku_hits = count_sku_hits(sku_titles, t.get("sku_match") or [])
         raw["buyer_persona"] = t.get("persona")
         raw["sku_hits"] = sku_hits
+        if t.get("decision"):                 # V4: 选题配置可带四问反推 (只增)
+            raw["decision"] = t["decision"]
         collected.append({"cfg": t, "raw": raw, "meta": meta})
 
     # 批次基准 (log1p 分位用): 各信号取批内最大原始值
