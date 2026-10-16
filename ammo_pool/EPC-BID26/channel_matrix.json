@@ -2,9 +2,9 @@
  "axis": "C",
  "sensor": "channel_matrix",
  "campaign": "EPC-BID26",
- "channels_hit": 18,
+ "channels_hit": 19,
  "channels_total": 31,
- "hit_ratio": 0.5806,
+ "hit_ratio": 0.6129,
  "hit_channels": [
   {
    "id": "manus",
@@ -147,6 +147,14 @@
    ]
   },
   {
+   "id": "openalex",
+   "name": "OpenAlex 学术API(免key)",
+   "chars": 16417,
+   "engines": [
+    "academic:openalex"
+   ]
+  },
+  {
    "id": "arxiv",
    "name": "arXiv 学术API(免key)",
    "chars": 1654,
@@ -167,7 +175,6 @@
   "全套教材语料库",
   "网页搜索项目注册表(8角度扫荡111候选+8本机在册=119项)",
   "夸克网盘账号面(扫码授权+转存四步+列目录+下载直链+签到保活)",
-  "OpenAlex 学术API(免key)",
   "Semantic Scholar 学术API(S2, 免key)"
  ],
  "miss_detail": [
@@ -216,10 +223,6 @@
    "name": "夸克网盘账号面(扫码授权+转存四步+列目录+下载直链+签到保活)"
   },
   {
-   "id": "openalex",
-   "name": "OpenAlex 学术API(免key)"
-  },
-  {
    "id": "semantic_scholar",
    "name": "Semantic Scholar 学术API(S2, 免key)"
   }
@@ -238,9 +241,7 @@
    "sop_step": "T-015 建渠器四步法"
   }
  ],
- "miss_in_queue": [
-  "OpenAlex 学术API(免key)"
- ],
+ "miss_in_queue": [],
  "miss_not_in_queue": [],
  "channel_waivers": [
   {
@@ -321,23 +322,9 @@
    "ts": "2026-10-16T06:29:53"
   },
   {
-   "id": "openalex",
-   "name": "OpenAlex学术API",
-   "reason": "临时豁免: 匿名日配额限流 429 (mailto 礼貌池同拒), 无人值守循环自动重试, 命中即替换本豁免",
-   "approve_ref": "用户2026-10-16 批准豁免账号态渠道立即开写 (AskUserQuestion 实答)",
-   "ts": "2026-10-16T06:29:53"
-  },
-  {
    "id": "semantic_scholar",
    "name": "SemanticScholar学术API",
    "reason": "临时豁免: 共享IP匿名限流 429 常态, 循环自动重试, 命中即替换",
-   "approve_ref": "用户2026-10-16 批准豁免账号态渠道立即开写 (AskUserQuestion 实答)",
-   "ts": "2026-10-16T06:29:53"
-  },
-  {
-   "id": "arxiv",
-   "name": "arXiv学术API",
-   "reason": "临时豁免: 端点连接重置, 循环自动重试 (今晨曾通收5件), 命中即替换",
    "approve_ref": "用户2026-10-16 批准豁免账号态渠道立即开写 (AskUserQuestion 实答)",
    "ts": "2026-10-16T06:29:53"
   }
@@ -354,7 +341,6 @@
   "全套教材语料库",
   "网页搜索项目注册表(8角度扫荡111候选+8本机在册=119项)",
   "夸克网盘账号面(扫码授权+转存四步+列目录+下载直链+签到保活)",
-  "OpenAlex 学术API(免key)",
   "Semantic Scholar 学术API(S2, 免key)"
  ],
  "waived_but_hit": [],
@@ -634,6 +620,13 @@
    ],
    "notes": [],
    "bases": []
+  },
+  "academic:openalex": {
+   "channels": [
+    "openalex"
+   ],
+   "notes": [],
+   "bases": []
   }
  },
  "unmapped_engines": [
@@ -665,5 +658,5 @@
  "manifest": "E:\\AI-Station\\ResearchFactory-Eng\\channel_manifest.json",
  "fail_soft": false,
  "fail_soft_note": "",
- "generated_at": "2026-10-16T06:30:04+08:00"
+ "generated_at": "2026-10-16T08:46:16+08:00"
 }
