@@ -21,6 +21,10 @@
 | **S7 通知与推送** | 企微通知（上架+文章+视频链接）+ PDF 文件推送企微 | 全部发布完成 → 通知发出 → RUN_LEDGER 回填 | notify_wecom.py + 企微文件上传 |
 | **S8 变现复盘**（新增） | 漏斗仪表盘（per-SKU×渠道×级：visit→试读完→点购→支付）→ 周报北极星（周收入/转化率/复购率/退款率，对标 6.6% 中位基准）→ **回写选题评分权重与定价建议**（decision_ledger 落账）→ 校准账本 Brier 回填（下一份更聪明） | 漏斗数据回写 ≥1 次落 decision_ledger + 周报产出 + 校准预测到期回验 | report_platform/funnel_query.py + funnel_events.jsonl + weekly/ + decision_ledger |
 
+## 执行驱动固化（1016 用户令：以后报告都这样执行）
+
+**全链八段唯一执行入口 = `tools/report_full_chain.py`**：每份报告从 S-1 到 S8 按同一状态机跑（段序 S-1→S1→S1.5→S2→S3→S4→S5→S6→S7→S8；`--from` 断点续跑、`--stage-only` 单段重跑）。段内调用在役件不造轮子；S1.5 人工闸不豁免；Token 峰谷令在役。BID26（1015-16）与 EPC-TRAIN（1016-）均按此链执行。
+
 ## 成本纪律（1016 用户令·入宪）
 
 **Token 峰谷令**：智谱 Coding 套餐按调用时段计额——**高峰期（周一至周五 14:00-18:00, UTC+8）3 倍消耗，非高峰 1 倍**。因此：
