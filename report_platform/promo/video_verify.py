@@ -28,7 +28,7 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8",
                               errors="replace")
 PROMO = Path(__file__).resolve().parent
 STATE_FILE = PROMO / "video_account_state.json"
-VENDOR_ROOT = Path(r"E:\CPOPC\We-AIPO\src\vendor\video_autopub")
+VENDOR_ROOT = Path(r"F:\We-AIPO\src\vendor\video_autopub")
 LIST_URL = "https://channels.weixin.qq.com/platform/post/list"
 
 
