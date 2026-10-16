@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-"""T-007C / REQ-022.AC1 — D 轴九维矩阵传感器 dimension_matrix 测试.
+"""T-007C / REQ-022.AC1 — D 轴维度矩阵传感器 dimension_matrix 测试.
 
-铁律对拍:
-  1. 九维 7 维有料 / 2 维零命中 → open_gaps=2, 缺格显式降级带 reason="无命中资料";
+铁律对拍 (V4 后出厂基线 = 九维 + 三域包 = 12 维, REQ-024):
+  1. 12 维中 10 维有料 / 2 维零命中 → open_gaps=2, 缺格显式降级带
+     reason="无命中资料";
   2. 一切降级格 100% 带 reason (含 L1 薄料/无 T1 权威信号两类降级);
-  3. register_dimension 自定义维生效 (可扩展域包);
+  3. register_dimension 自定义维生效 (可扩展域包; reset 恢复 12 维基线);
   4. 全维有料 → open_gaps 空 + green=True;
   5. 双产物落盘: REQ-022.AC1 权威件 dimension_matrix.json + 完备性账本件
      completeness/D_axis.json (同载荷);
@@ -26,8 +27,9 @@ GAP_DIMS = ["司法风险", "ESG国际"]
 
 
 def _kw(dim: str) -> str:
-    """取该维词表首个关键词 (与模块词表同源, 防词表演化失配)."""
-    kws = dm.DIMENSION_PACKS[dim]
+    """取该维词表首个关键词 (与模块激活词表同源, 防词表演化失配;
+    三域包在 _EXTRA_DIMENSIONS 故走 _active_dimensions)."""
+    kws = dm._active_dimensions()[dim]
     assert kws, f"维 {dim} 词表为空"
     return kws[0]
 
@@ -59,11 +61,13 @@ def _rich_lines(dim: str, t1: str = "权威甲", engines: tuple[str, str] = ("we
 
 
 NINE = list(dm.DIMENSION_PACKS)
+CROSS3 = list(dm.CROSSDISC_DIMENSIONS)          # V4 三域包 (REQ-024)
+TWELVE = NINE + CROSS3                          # 出厂 12 维基线
 
 
 def test_seven_rich_two_gap_open_gaps_two(tmp_path):
-    """7 维有料 / 2 维零命中: open_gaps=2 且缺格显式降级带理由."""
-    rich = [d for d in NINE if d not in GAP_DIMS]
+    """10 维有料 / 2 维零命中 (12 维基线): open_gaps=2 且缺格显式降级带理由."""
+    rich = [d for d in TWELVE if d not in GAP_DIMS]
     lines: list[dict] = []
     for d in rich:
         lines += _rich_lines(d)
@@ -71,7 +75,7 @@ def test_seven_rich_two_gap_open_gaps_two(tmp_path):
 
     rec = dm.scan("T-CAMP", ammo_root=pool.parent)
 
-    assert set(rec["dims"]) == set(NINE) and len(rec["cells"]) == 9
+    assert set(rec["dims"]) == set(TWELVE) and len(rec["cells"]) == 12
     assert rec["open_gaps"] == GAP_DIMS           # 按 dims 顺序显式列缺格
     assert not rec["green"]
     for d in GAP_DIMS:
@@ -115,12 +119,14 @@ def test_register_dimension_custom_dim(tmp_path):
     try:
         dm.register_dimension("自定义维", ["量子 Leopard"])
         rec = dm.scan("T-CAMP", ammo_root=pool.parent)
-        assert "自定义维" in rec["dims"] and len(rec["cells"]) == 10
+        assert "自定义维" in rec["dims"] and len(rec["cells"]) == 13
         assert rec["cells"]["自定义维"]["hits"] == 2
     finally:
         dm.reset_dimensions()
     rec2 = dm.scan("T-CAMP", ammo_root=pool.parent)
-    assert "自定义维" not in rec2["cells"] and len(rec2["cells"]) == 9
+    # reset 恢复出厂 12 维基线: 会话自定义维清空, 三域包仍在 (REQ-024)
+    assert "自定义维" not in rec2["cells"] and len(rec2["cells"]) == 12
+    assert set(CROSS3) <= set(rec2["dims"])
 
 
 def test_register_dimension_validation():
@@ -132,9 +138,9 @@ def test_register_dimension_validation():
 
 
 def test_all_rich_green(tmp_path):
-    """九维全有料 → open_gaps 空 + green=True, 零降级."""
+    """12 维全有料 → open_gaps 空 + green=True, 零降级."""
     lines: list[dict] = []
-    for d in NINE:
+    for d in TWELVE:
         lines += _rich_lines(d)
     pool = _mk_pool(tmp_path, lines)
     rec = dm.scan("T-CAMP", ammo_root=pool.parent)
@@ -149,7 +155,7 @@ def test_dual_output_files_written(tmp_path):
 
     canon = json.loads((pool / "dimension_matrix.json").read_text(encoding="utf-8"))
     assert canon["axis"] == "D" and canon["sensor"] == "dimension_matrix"
-    assert canon["campaign"] == "T-CAMP" and len(canon["cells"]) == 9
+    assert canon["campaign"] == "T-CAMP" and len(canon["cells"]) == 12
     dg = [c for c in canon["cells"].values() if c.get("downgraded")]
     assert all(c.get("reason") for c in dg)
 

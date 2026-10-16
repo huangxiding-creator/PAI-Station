@@ -7,6 +7,10 @@ REQ-022 [MUST]: 维度矩阵评估按九维域包逐格定深度级，缺格必�
 九维 = 行业 / 政策 / 财务 / 技术 / 组织人事 / 司法风险 / 招投标 / 市场客户 / ESG国际。
 默认词表内置 DIMENSION_PACKS；register_dimension(name, keywords) 可扩展域包。
 
+V4 (REQ-024 / 百倍V4): 出厂即注册三域包 做空审计/法务穿透/调查叙事 —
+九维升十二维 (九维基线 + _EXTRA 三域包)；reset_dimensions 恢复 12 维出厂
+基线。三域方法卡四件套见 reforge_factory/crossdisc/method_cards.py (REQ-025)。
+
 深度级（近似口径，行 tier/源多样性合成）:
   L0  hits==0            → downgraded + reason="无命中资料"，计入 open_gaps
   L1  0<hits<3           → downgraded + reason=未达门槛（薄料，仅记提及）
@@ -116,9 +120,32 @@ def register_dimension(name: str, keywords: list[str]) -> str:
     return name
 
 
+#: V4 三域包词表 (REQ-024): 做空审计 / 法务穿透 / 调查叙事 — 九维升十二维.
+#: 方法卡四件套 (源权威表/独立性键/假设模板/黄金四问) 同名注册在
+#: crossdisc/method_cards.py — 维度包与方法卡同名同域, 指纹可回溯 (REQ-001).
+CROSSDISC_DIMENSIONS: dict[str, list[str]] = {
+    "做空审计": ["关联方", "利益输送", "资金流向", "审计意见", "内控",
+               "红旗", "隐瞒", "伪造", "做空"],
+    "法务穿透": ["股权穿透", "实控人", "代持", "抽逃", "担保链",
+               "诉讼风险", "行政处罚", "司法"],
+    "调查叙事": ["时间线交叉", "信源动机", "利益冲突", "选择性披露", "内幕", "叙事"],
+}
+
+
+def _register_crossdisc_dimensions() -> None:
+    """出厂三域包注册 (REQ-024): 直接调用 register_dimension 统一校验入口."""
+    register_dimension("做空审计", list(CROSSDISC_DIMENSIONS["做空审计"]))
+    register_dimension("法务穿透", list(CROSSDISC_DIMENSIONS["法务穿透"]))
+    register_dimension("调查叙事", list(CROSSDISC_DIMENSIONS["调查叙事"]))
+
+
+_register_crossdisc_dimensions()   # 出厂即 12 维 (九维 + V4 三域包)
+
+
 def reset_dimensions() -> None:
-    """清空 register_dimension 注册的自定义维（测试卫生/会话隔离）."""
+    """清空会话自定义维并恢复出厂基线 (九维 + V4 三域包 = 12 维; 测试卫生)."""
     _EXTRA_DIMENSIONS.clear()
+    _register_crossdisc_dimensions()
 
 
 def _active_dimensions() -> dict[str, list[str]]:
