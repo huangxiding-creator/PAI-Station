@@ -2,9 +2,9 @@
  "axis": "C",
  "sensor": "channel_matrix",
  "campaign": "EPC-BID26",
- "channels_hit": 19,
+ "channels_hit": 20,
  "channels_total": 31,
- "hit_ratio": 0.6129,
+ "hit_ratio": 0.6452,
  "hit_channels": [
   {
    "id": "manus",
@@ -155,6 +155,14 @@
    ]
   },
   {
+   "id": "semantic_scholar",
+   "name": "Semantic Scholar 学术API(S2, 免key)",
+   "chars": 1045,
+   "engines": [
+    "academic:semantic_scholar"
+   ]
+  },
+  {
    "id": "arxiv",
    "name": "arXiv 学术API(免key)",
    "chars": 1654,
@@ -174,8 +182,7 @@
   "网盘聚合发现",
   "全套教材语料库",
   "网页搜索项目注册表(8角度扫荡111候选+8本机在册=119项)",
-  "夸克网盘账号面(扫码授权+转存四步+列目录+下载直链+签到保活)",
-  "Semantic Scholar 学术API(S2, 免key)"
+  "夸克网盘账号面(扫码授权+转存四步+列目录+下载直链+签到保活)"
  ],
  "miss_detail": [
   {
@@ -221,10 +228,6 @@
   {
    "id": "quark_pan",
    "name": "夸克网盘账号面(扫码授权+转存四步+列目录+下载直链+签到保活)"
-  },
-  {
-   "id": "semantic_scholar",
-   "name": "Semantic Scholar 学术API(S2, 免key)"
   }
  ],
  "new_channel_queue": [
@@ -340,8 +343,7 @@
   "网盘聚合发现",
   "全套教材语料库",
   "网页搜索项目注册表(8角度扫荡111候选+8本机在册=119项)",
-  "夸克网盘账号面(扫码授权+转存四步+列目录+下载直链+签到保活)",
-  "Semantic Scholar 学术API(S2, 免key)"
+  "夸克网盘账号面(扫码授权+转存四步+列目录+下载直链+签到保活)"
  ],
  "waived_but_hit": [],
  "queue_path": "E:\\AI-Station\\ammo_pool\\EPC-BID26\\completeness\\C_axis_queue.json",
@@ -627,6 +629,13 @@
    ],
    "notes": [],
    "bases": []
+  },
+  "academic:semantic_scholar": {
+   "channels": [
+    "semantic_scholar"
+   ],
+   "notes": [],
+   "bases": []
   }
  },
  "unmapped_engines": [
@@ -658,5 +667,5 @@
  "manifest": "E:\\AI-Station\\ResearchFactory-Eng\\channel_manifest.json",
  "fail_soft": false,
  "fail_soft_note": "",
- "generated_at": "2026-10-16T12:54:32+08:00"
+ "generated_at": "2026-10-16T20:46:10+08:00"
 }
