@@ -78,4 +78,11 @@ Page({
             return;
         wx.navigateTo({ url: `/pages/reader/reader?id=${rid}&ch=${(0, p2_view_1.chapterIdxOf)(cid)}` });
     },
+    // v1.3.1（1016 用户令「必须是所有页面」）：分享全量补齐
+    onShareAppMessage() {
+        return { title: '总包学园-工程研报随身读', path: '/pages/index/index' };
+    },
+    onShareTimeline() {
+        return { title: '总包学园-工程研报随身读' };
+    },
 });

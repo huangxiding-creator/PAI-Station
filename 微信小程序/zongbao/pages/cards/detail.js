@@ -117,4 +117,12 @@ Page({
             path: `/pages/cards/detail?card_id=${cardId}`,
         };
     },
+    // v1.3.1（1016 用户令）：朋友圈成对补齐（同题携 card_id）
+    onShareTimeline() {
+        const { cardId, card } = this.data;
+        return {
+            title: card ? card.title : '商机情报卡',
+            query: 'card_id=' + cardId,
+        };
+    },
 });

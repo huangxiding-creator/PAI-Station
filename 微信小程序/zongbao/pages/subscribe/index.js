@@ -91,4 +91,11 @@ Page({
             wx.showToast({ title: (0, api_1.errMsg)(err, '取消失败，请重试'), icon: 'none' });
         }
     },
+    // v1.3.1（1016 用户令「必须是所有页面」）：分享全量补齐
+    onShareAppMessage() {
+        return { title: '总包学园-工程研报随身读', path: '/pages/index/index' };
+    },
+    onShareTimeline() {
+        return { title: '总包学园-工程研报随身读' };
+    },
 });

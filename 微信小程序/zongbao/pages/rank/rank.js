@@ -59,4 +59,10 @@ Page({
             path: '/pages/rank/rank',
         };
     },
+    // v1.3.1（1016 用户令）：朋友圈成对补齐（同题无参）
+    onShareTimeline() {
+        return {
+            title: `总包学园商机周榜${this.data.week ? `（${this.data.week}）` : ''}`,
+        };
+    },
 });
