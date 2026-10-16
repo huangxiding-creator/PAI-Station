@@ -35,7 +35,7 @@ REPOS: dict[str, str] = {
     "We-AIPO": r"E:\CPOPC\We-AIPO",
     "Super-Skill": r"E:\AI-Station\07 任务\Super-Skill",
     "lingzhu-quant-port": r"E:\AI-Station\lingzhu-quant-port",
-    "shuigui": r"E:\AI-Station 任务\水利工程施工方案审查AI助手",
+"shuigui": r"E:\AI-Station\07 任务\水利工程施工方案审查AI助手",
 }
 REMOTE_BASE = "/apps/bdpan/repo-backup"
 STATE_FILE = Path(r"E:\AI-Station\tools\repo_backup_state.json")
