@@ -21,6 +21,9 @@ from DrissionPage import Chromium                    # noqa: E402
 from DrissionPage.common import Settings             # noqa: E402
 
 Settings.auto_handle_alert = True
+MAX_DAILY = 1                # 1016 风控令: 日帽1条(原3条)
+PUBLISH_INTERVAL = 86400     # 1016 风控令: 间隔24h(原120s)
+RISK_CONTROL_MARKERS = ("暂时无法使用", "操作过于频繁", "账号异常")
 PROMO = Path(__file__).resolve().parents[1] / "report_platform" / "promo"
 VIDEOS = PROMO / "videos"
 CREATE_URL = "https://channels.weixin.qq.com/platform/post/create"
@@ -65,6 +68,11 @@ def publish_one(tab, video_path: Path, title: str, desc: str) -> bool:
     """复刻 publish_videos_now.publish_one (9222 真机验证形态)."""
     try:
         log("导航发布页…")
+        body_check = tab.ele("tag:body").text or ""
+        for marker in RISK_CONTROL_MARKERS:
+            if marker in body_check:
+                log(f"⚠️ 风控信号: 「{marker}」— 立即熔断, 通知用户手动发布")
+                return False
         tab.get(CREATE_URL, timeout=20)
         time.sleep(6)
         log("上传视频…")
@@ -145,7 +153,7 @@ def main() -> int:
         return 2
     log("✅ 已登录视频号助手")
     n_ok = 0
-    for k, slug in enumerate(ns.slug):
+    for k, slug in enumerate(ns.slug[:MAX_DAILY]):  # 1016 风控令: 日帽
         meta = json.loads((VIDEOS / f"{slug}.json").read_text(encoding="utf-8"))
         mp4 = VIDEOS / f"{slug}.mp4"
         title = meta.get("title", slug)[:30]
@@ -156,9 +164,9 @@ def main() -> int:
             n_ok += 1
             continue
         n_ok += publish_one(tab, mp4, title, desc)
-        if k < len(ns.slug) - 1:
-            log("防封间隔 120s…")
-            time.sleep(120)
+        if k < min(len(ns.slug), MAX_DAILY) - 1:
+            log(f"防风控间隔 {PUBLISH_INTERVAL}s…")
+            time.sleep(min(PUBLISH_INTERVAL, 60))  # 不在实际运行中sleep 24h; 逻辑上日帽限制
     print(f"[pub] 完成 {n_ok}/{len(ns.slug)}")
     return 0 if n_ok == len(ns.slug) else 1
 
