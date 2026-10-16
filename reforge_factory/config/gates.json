@@ -1,7 +1,7 @@
 {
- "version": 5,
+ "version": 6,
  "effective_date": "2026-10-17",
- "t1_min_chars": 10000000,
+ "t1_min_chars": 20000000,
  "t12_total_gate": null,
  "t3_reference_cap_ratio": 1.5,
  "legacy_total_budget_reference": 200000000,
@@ -51,8 +51,8 @@
   "legacy_total_gate": false,
   "legacy_chapter_band": false
  },
- "t1_gate_mode": "reference",
- "note_t1": "1016 用户令: T1 字数不再单独决定调研收尾 — 降级为产能参考线; 收口主判=monetization_readiness (围绕研报变现终极目标)",
+ "t1_gate_mode": "hard",
+ "note_t1": "1017 用户令: T1≥2000万字(硬门) + T1+T2≥5000万字(硬门)",
  "monetization_readiness": {
   "buyable_questions_min": 8,
   "buyable_questions_note": "评分卡买家痛点问题, 报告素材须能实质回答 (素材命中≥8问, 每问≥2源)",
@@ -62,5 +62,7 @@
   "freshness_note": "2026 年内证据占比≥20% (时效=溢价), T轴 2026 年权重",
   "anchor_coverage": "每个拟售章节的证据锚点齐备 (sweep 锚点门前置到采集收口)",
   "wordcount_floor": "字数仅作产能参考线 (t1_min_chars), 不作硬门"
- }
+ },
+ "t12_total_min_chars": 50000000,
+ "t12_gate_mode": "hard"
 }
