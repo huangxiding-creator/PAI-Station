@@ -76,7 +76,16 @@ def acquire_mutex() -> bool:
 
 
 def is_paused() -> bool:
-    return PAUSE_FLAG.exists()
+    """手动 PAUSE 旗标 或 自媒体永动机时段 (14:30-22:00 让路)."""
+    if PAUSE_FLAG.exists():
+        return True
+    # 1017 用户令: 14:30~22:00 给资本/自媒体永动机让路
+    now = datetime.now()
+    if now.hour == 14 and now.minute >= 30:
+        return True
+    if 15 <= now.hour < 22:
+        return True
+    return False
 
 
 def write_heartbeat(status: str, detail: str = "") -> None:
@@ -223,8 +232,9 @@ def main() -> None:
     try:
         while True:
             if is_paused():
-                write_heartbeat("paused")
-                time.sleep(30)
+                reason = "paused_manual" if PAUSE_FLAG.exists() else "paused_autopub_window_1430_2200"
+                write_heartbeat(reason)
+                time.sleep(60)
                 continue
             try:
                 tick()
