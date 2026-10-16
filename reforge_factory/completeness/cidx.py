@@ -23,9 +23,20 @@
             "missing_axes","waived_axes","weights","formula"}。
   每行都带 axis 字段 (REQ-020.AC1 五轴各≥1 条记录的机读口径)。
 
+v2 双版本并行 (V-007 / REQ-030 / 百倍V4, 只增不改 v1 口径):
+  assemble_v2() 六轴版 = T / B / D(十二维) / P(含 L6) / C / BSP(盲区):
+    D覆(v2) = 12 维中无缺格维数/12 (降级维不算缺格; 缺格= open_gaps 或无格)
+    P覆(v2) = Σ(L级×EEI数)/(6×EEI总数), L6 计满 6 分 (v1 永续 /5)
+    BSP覆   = 过五轴门候选数/候选总数 (blindspot_sensor 产物; 缺轴=0)
+    权重 v2: T .20 / B .15 / D .20 / P .20 / C .10 / BSP .15 (和=1.00)
+  v1 与 v2 并行落盘: assemble_v2 一次追加 13 行 (v1 五轴+汇总 6 行
+  version:"v1" + v2 六轴+汇总 7 行 version:"v2") — CIdx 汇总双行对账,
+  BID26=0.4138 历史基线可比不断档 (ADR-3: 双版本并行, 非直接升 v2).
+  账本每行自此带 version 字段 ("v1"/"v2"; 旧行无此字段读作 v1).
+
 CLI:
   py reforge_factory/completeness/cidx.py --campaign EPC-BID26 [--json]
-      [--ammo-root DIR] [--ledger PATH] [--dry-run]
+      [--ammo-root DIR] [--ledger PATH] [--dry-run] [--v2]
 """
 from __future__ import annotations
 
@@ -256,7 +267,7 @@ def assemble(campaign: str, *, pool_root: Path | str | None = None,
             axis_waived[axis] = _is_waived(payload)
         sensor = (payload or {}).get("sensor") if isinstance(payload, dict) else None
         rows.append({
-            "ts": ts, "axis": axis,
+            "ts": ts, "axis": axis, "version": "v1",
             "sensor": sensor or AXIS_SENSORS[axis],
             "score": axis_scores[axis], "green": axis_green[axis],
             "waived": axis_waived[axis], "missing": missing, "note": note,
@@ -268,7 +279,7 @@ def assemble(campaign: str, *, pool_root: Path | str | None = None,
     cidx_v = compute_cidx(axis_scores)
 
     summary = {
-        "ts": ts, "axis": "CIdx", "campaign": campaign,
+        "ts": ts, "axis": "CIdx", "version": "v1", "campaign": campaign,
         "axis_scores": {a: axis_scores[a] for a in AXES},
         "cidx": cidx_v, "all_green": all_green,
         "missing_axes": missing_axes, "waived_axes": waived_axes,
@@ -290,6 +301,173 @@ def assemble(campaign: str, *, pool_root: Path | str | None = None,
     return out
 
 
+# ---------- v2 双版本并行 (V-007 / REQ-030, 只增不改 v1 口径) ----------------
+
+#: 六轴固定顺序 (v2; BSP = blindspot 盲区第六轴)
+AXES_V2 = ("T", "B", "D", "P", "C", "BSP")
+#: v2 权重 (和为 1.00; BSP 从 T/B/C 让重, D/P 保持产线主轴)
+WEIGHTS_V2 = {"T": 0.20, "B": 0.15, "D": 0.20, "P": 0.20, "C": 0.10,
+              "BSP": 0.15}
+FORMULA_V2 = ("0.20·T覆+0.15·B覆+0.20·D覆12维无缺格+0.20·P均深归一6级"
+              "+0.10·C覆+0.15·BSP覆")
+
+#: 轴 → 传感器名 (v2; BSP 轴件 = blindspot_sensor 落盘的 BSP_axis.json)
+AXIS_SENSORS_V2 = dict(AXIS_SENSORS, BSP="blindspot")
+
+#: D 轴 v2 固定十二维 (九维基线 + V4 三域包, dimension_matrix 出厂 12 维)
+D_DIM_TOTAL_V2 = 12
+#: P 轴 v2 深度满分 6 (L6 = ACH 排除链留痕级)
+P_LEVEL_MAX_V2 = 6
+
+
+def score_d_v2(payload: dict) -> float:
+    """D覆(v2) = 12 维中无缺格维数/12.
+
+    无缺格 = 该维不在 open_gaps 且 cells 里有格; 降级维 (薄料 L1) 不算
+    缺格照计 1 (与 v1 的 0.5 降级折算口径分道 — v2 只问缺没缺格)."""
+    if not isinstance(payload, dict):
+        return 0.0
+    dims = payload.get("dims")
+    cells = payload.get("cells")
+    if not isinstance(dims, list) or not dims:
+        dims = list(cells) if isinstance(cells, dict) else []
+        if not dims:
+            return 0.0
+    if not isinstance(cells, dict):
+        return 0.0
+    gaps = payload.get("open_gaps")
+    gaps = {str(g) for g in gaps} if isinstance(gaps, list) else set()
+    covered = sum(1 for d in dims
+                  if str(d) not in gaps and isinstance(cells.get(d), dict))
+    return _r4(covered / D_DIM_TOTAL_V2)
+
+
+def score_p_v2(payload: dict) -> float:
+    """P覆(v2) = Σ(L级×EEI数)/(6×EEI总数), L6 计满 6 分 (v1 永续 /5)."""
+    if not isinstance(payload, dict):
+        return 0.0
+    dist = payload.get("l_dist")
+    total = payload.get("eei_total")
+    if isinstance(dist, dict) and dist:
+        if not isinstance(total, int) or total <= 0:
+            total = sum(v for v in dist.values()
+                        if isinstance(v, (int, float)))
+        if isinstance(total, int) and total > 0:
+            s = 0
+            for lv, n in dist.items():
+                try:
+                    s += int(str(lv)[1:]) * n
+                except (ValueError, TypeError):
+                    continue
+            return _r4(s / (P_LEVEL_MAX_V2 * total))
+    mdn = payload.get("mean_depth_norm")
+    if isinstance(mdn, (int, float)):
+        return _r4(mdn)
+    return 0.0
+
+
+def score_bsp(payload: dict) -> float:
+    """BSP覆 = 过五轴门候选数/候选总数 (缺字段/零候选 → 0, fail-soft)."""
+    if not isinstance(payload, dict):
+        return 0.0
+    passed = payload.get("passed_count")
+    if not isinstance(passed, int) or passed <= 0:
+        return 0.0
+    cands = payload.get("candidates")
+    if isinstance(cands, list):
+        total = len(cands)
+    else:
+        failed = payload.get("failed_count")
+        total = passed + failed if isinstance(failed, int) and failed >= 0 else 0
+    if total <= 0:
+        return 0.0
+    return _r4(min(passed / total, 1.0))
+
+
+SCORERS_V2 = {"T": score_t, "B": score_b, "D": score_d_v2, "P": score_p_v2,
+              "C": score_c, "BSP": score_bsp}
+
+
+def compute_cidx_v2(axis_scores: dict) -> float:
+    """CIdx(v2) = Σ(v2 权重×4dp 分项), 再 4dp. 缺轴按 0 计."""
+    return _r4(sum(WEIGHTS_V2[a] * axis_scores.get(a, 0.0) for a in AXES_V2))
+
+
+def assemble_v2(campaign: str, *, pool_root: Path | str | None = None,
+                ledger_path: Path | str | None = None,
+                write: bool = True) -> dict:
+    """六轴 v2 汇聚 + v1 并行落盘 (REQ-030: 双版本, v1 口径永续保留).
+
+    只增不删: 轴文件只读; 账本 append 追加 13 行 (v1 六行 + v2 七行,
+    每行带 version). 返回 {"v1": v1 汇总行, "v2": v2 汇总行, ...}.
+    """
+    root = Path(pool_root) if pool_root else DEFAULT_AMMO_ROOT
+
+    # v1 五轴: 复用 assemble() 原口径现算 (write=False, 由本函数统一落盘)
+    v1_res = assemble(campaign, pool_root=root, ledger_path=ledger_path,
+                      write=False)
+    v1_rows = list(v1_res["axis_rows"])            # 5 轴行 (已带 version:"v1")
+    v1_summary = {k: v for k, v in v1_res.items()
+                  if k not in ("axis_rows", "ledger")}   # 汇总行 (version:"v1")
+
+    cdir = root / campaign / "completeness"
+    ts = v1_summary.get("ts") or datetime.now().astimezone().isoformat(
+        timespec="seconds")
+
+    axis_scores: dict[str, float] = {}
+    axis_green: dict[str, bool] = {}
+    axis_waived: dict[str, bool] = {}
+    missing_axes: list[str] = []
+    rows: list[dict] = []
+
+    for axis in AXES_V2:
+        payload, note = _load_axis(cdir / f"{axis}_axis.json")
+        missing = payload is None
+        if missing:
+            missing_axes.append(axis)
+            axis_scores[axis] = 0.0
+            axis_green[axis] = False
+            axis_waived[axis] = False
+        else:
+            try:
+                axis_scores[axis] = SCORERS_V2[axis](payload)
+            except Exception:  # 未知结构防御: fail-soft 计 0
+                axis_scores[axis] = 0.0
+            green = payload.get("green") is True if isinstance(payload, dict) else False
+            axis_green[axis] = green
+            axis_waived[axis] = _is_waived(payload)
+        sensor = (payload or {}).get("sensor") if isinstance(payload, dict) else None
+        rows.append({
+            "ts": ts, "axis": axis, "version": "v2",
+            "sensor": sensor or AXIS_SENSORS_V2[axis],
+            "score": axis_scores[axis], "green": axis_green[axis],
+            "waived": axis_waived[axis], "missing": missing, "note": note,
+        })
+
+    waived_axes = [a for a in AXES_V2 if axis_waived[a]]
+    all_green = all(axis_green[a] or axis_waived[a] for a in AXES_V2)
+    summary = {
+        "ts": ts, "axis": "CIdx", "version": "v2", "campaign": campaign,
+        "axis_scores": {a: axis_scores[a] for a in AXES_V2},
+        "cidx": compute_cidx_v2(axis_scores), "all_green": all_green,
+        "missing_axes": missing_axes, "waived_axes": waived_axes,
+        "weights": dict(WEIGHTS_V2), "formula": FORMULA_V2,
+        "dim_total": D_DIM_TOTAL_V2, "p_level_max": P_LEVEL_MAX_V2,
+    }
+
+    ledger = Path(ledger_path) if ledger_path else \
+        root / campaign / "completeness_ledger.jsonl"
+    if write:
+        ledger.parent.mkdir(parents=True, exist_ok=True)
+        with ledger.open("a", encoding="utf-8", newline="\n") as fh:
+            for row in (v1_rows + [v1_summary] + rows + [summary]):
+                fh.write(json.dumps(row, ensure_ascii=False) + "\n")
+
+    return {"campaign": campaign, "ledger": str(ledger) if write else None,
+            "v1": v1_summary, "v2": summary,
+            "v1_axis_rows": v1_rows, "v2_axis_rows": rows}
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(
         description="CIdx 完备度指数 + 五轴账本汇聚 (只读轴件, 只追加账本)")
@@ -298,12 +476,32 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--ledger", default=None, help="completeness_ledger.jsonl 路径覆盖")
     ap.add_argument("--json", action="store_true", help="输出完整 JSON (默认摘要行)")
     ap.add_argument("--dry-run", action="store_true", help="只算不落账本")
+    ap.add_argument("--v2", action="store_true",
+                    help="双版本并行: assemble_v2 六轴 + v1 并行落盘 (REQ-030)")
     args = ap.parse_args(argv)
 
     try:
         out = sys.stdout.reconfigure(encoding="utf-8")
     except Exception:
         pass
+
+    if args.v2:
+        res = assemble_v2(args.campaign, pool_root=args.ammo_root,
+                          ledger_path=args.ledger, write=not args.dry_run)
+        if args.json:
+            print(json.dumps(res, ensure_ascii=False))
+        else:
+            for ver, summ in (("v1", res["v1"]), ("v2", res["v2"])):
+                sc = summ["axis_scores"]
+                parts = " ".join(f"{a}覆={sc[a]:.4f}" for a in sc)
+                print(f"[CIdx{ver}] {args.campaign}: {parts}")
+                print(f"[CIdx{ver}] CIdx={summ['cidx']:.4f}  "
+                      f"all_green={summ['all_green']}  "
+                      f"missing={summ['missing_axes']}  "
+                      f"waived={summ['waived_axes']}")
+            print(f"[CIdx] 账本 {'追加 ' + res['ledger'] if res['ledger'] else '未落盘(dry-run)'}"
+                  f" (v1 五轴 + v2 六轴并行)")
+        return 0
 
     res = assemble(args.campaign, pool_root=args.ammo_root,
                    ledger_path=args.ledger, write=not args.dry_run)

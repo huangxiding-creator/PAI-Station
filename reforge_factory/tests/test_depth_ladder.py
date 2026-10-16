@@ -98,7 +98,7 @@ def test_01_dist_and_denominator():
     r = DL.scan("CAMP-P", root, write=False)
     assert r["eei_total"] == 10
     assert r["l_dist"] == {"L0": 0, "L1": 2, "L2": 3, "L3": 3,
-                           "L4": 1, "L5": 1}
+                           "L4": 1, "L5": 1, "L6": 0}
     assert sum(r["l_dist"].values()) == r["eei_total"]      # 分布=分母
     # 分母对拍: 与树文件实际 EEI 数逐个对账 (REQ-023: 分母=树实际输出数)
     tree = json.loads((camp / "question_tree.json").read_text(encoding="utf-8"))
@@ -165,7 +165,8 @@ def test_04_tree_missing_fail_soft():
         json.dumps(_row("E01"), ensure_ascii=False), encoding="utf-8")
     r = DL.scan("CAMP-P", root, write=True)             # 不抛异常
     assert r["eei_total"] == 0 and r["green"] is False
-    assert r["l_dist"] == {k: 0 for k in ("L0", "L1", "L2", "L3", "L4", "L5")}
+    assert r["l_dist"] == {k: 0 for k in
+                           ("L0", "L1", "L2", "L3", "L4", "L5", "L6")}
     assert any("question_tree" in n for n in r["notes"])
     assert (camp / "completeness" / "P_axis.json").is_file()   # fail-soft 落盘
     assert (camp / "depth_ladder.json").is_file()
@@ -284,6 +285,85 @@ def test_10_ast_no_network():
             mods.add(n.module.split(".")[0])
     assert not (mods & {"urllib", "requests", "httpx", "curl_cffi",
                         "socket"}), f"网络根模块混入: {mods}"
+
+
+# ------------------------------------------------ ⑪-⑬ L6 (V-003 / REQ-020)
+def _write_excl(camp: Path, rows: list[dict]) -> None:
+    (camp / "ach_exclusions.jsonl").write_text(
+        "\n".join(json.dumps(x, ensure_ascii=False) for x in rows),
+        encoding="utf-8")
+
+
+def test_11_l6_with_exclusion_trace():
+    """有排除留痕 → L6: E10 (L5 own_calc) 关联假设 rival_excluded=true
+    且 evidence_ids 绑定 manifest 行 → 升 L6 (L5 基础上, 其余不变)."""
+    root = _tmp_camp()
+    camp = _build_pool(root / "CAMP-P")
+    _write_excl(camp, [                             # E10 行 dedup_key 回挂
+        {"hypothesis": "H2", "verdict": "excluded", "rival_excluded": True,
+         "evidence_ids": ["E10-https://h10.cn/z"],
+         "exclusion_reason": "排除分 -1.0", "ts": "2026-10-16T00:00:00"},
+    ])
+    assert DL.check_l6("CAMP-P", "E10", root) is True
+    r = DL.scan("CAMP-P", root, write=False)
+    assert r["eei_levels"]["E10"] == "L6"
+    assert r["l_dist"] == {"L0": 0, "L1": 2, "L2": 3, "L3": 3,
+                           "L4": 1, "L5": 0, "L6": 1}   # L5→L6 挪桶
+    assert sum(r["l_dist"].values()) == r["eei_total"]
+    assert r["key_eei_ge_l3"] == 4                   # L6 仍 ≥L3, green 不掉
+    assert r["green"] is True
+    assert any("L6" in n for n in r["notes"])
+    # 非 L5 的 EEI 即使命中留痕也不升 (L6 必须在 L5 基础上)
+    assert r["eei_levels"]["E09"] == "L4"
+
+
+def test_12_l5_when_trace_not_bound():
+    """无有效留痕 → 保持 L5 (不升): rival_excluded=false 行 /
+    evidence_ids 空行 — 判据三件套缺一即不判 L6."""
+    # 12a: 留痕在但 rival_excluded=false (仅 supported/inconclusive 行)
+    root = _tmp_camp()
+    camp = _build_pool(root / "CAMP-P")
+    _write_excl(camp, [
+        {"hypothesis": "H2", "verdict": "supported", "rival_excluded": False,
+         "evidence_ids": ["E10-https://h10.cn/z"],
+         "exclusion_reason": "净支持", "ts": "2026-10-16T00:00:00"},
+    ])
+    assert DL.check_l6("CAMP-P", "E10", root) is False
+    r = DL.scan("CAMP-P", root, write=False)
+    assert r["eei_levels"]["E10"] == "L5" and r["l_dist"]["L6"] == 0
+    assert r["l_dist"]["L5"] == 1
+    # 12b: rival_excluded=true 但 evidence_ids 空 (无证据绑定)
+    root2 = _tmp_camp()
+    camp2 = _build_pool(root2 / "CAMP-P")
+    _write_excl(camp2, [
+        {"hypothesis": "H2", "verdict": "excluded", "rival_excluded": True,
+         "evidence_ids": [], "exclusion_reason": "无绑定", "ts": "t"},
+    ])
+    assert DL.check_l6("CAMP-P", "E10", root2) is False
+    assert DL.scan("CAMP-P", root2, write=False)["eei_levels"]["E10"] == "L5"
+
+
+def test_13_l5_when_ach_missing():
+    """ach 缺失 → L5 (fail-soft 不炸): 无 ach_exclusions.jsonl 时
+    L6 桶恒空, L1-L5 原口径不受影响."""
+    root = _tmp_camp()
+    _build_pool(root / "CAMP-P")
+    assert not (root / "CAMP-P" / "ach_exclusions.jsonl").exists()
+    assert DL.check_l6("CAMP-P", "E10", root) is False
+    r = DL.scan("CAMP-P", root, write=False)
+    assert r["eei_levels"]["E10"] == "L5" and r["l_dist"]["L6"] == 0
+    assert r["ach_exclusion_rows"] == 0
+    assert any("ach_exclusions" in n for n in r["notes"])
+    # 坏 JSON 行 fail-soft: 只跳坏行, 好行照常判 L6
+    root2 = _tmp_camp()
+    camp2 = _build_pool(root2 / "CAMP-P")
+    (camp2 / "ach_exclusions.jsonl").write_text(
+        "{bad json\n" + json.dumps({
+            "hypothesis": "H2", "verdict": "excluded", "rival_excluded": True,
+            "evidence_ids": ["E10-https://h10.cn/z"],
+            "exclusion_reason": "x", "ts": "t"}, ensure_ascii=False) + "\n",
+        encoding="utf-8")
+    assert DL.check_l6("CAMP-P", "E10", root2) is True
 
 
 if __name__ == "__main__":

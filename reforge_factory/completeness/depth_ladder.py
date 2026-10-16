@@ -15,8 +15,13 @@
               (EEI stance=against) 已有 ≥1 条有效证据
   L5 own_calc 行源标记含 own_calc/自算 (own_calc 字段 / engine /
               source_path / url_norm / channel)
+  L6 rival排除 L5 基础上 + ach_arena v1 排除链留痕 (ach_exclusions.jsonl:
+              该 EEI 关联的假设 rival_excluded=true 且 evidence_ids 非空;
+              关联 = evidence_ids 经 manifest dedup_key → tree_node 回挂)
+              (V-003 / REQ-020: ACH 排除 + rival 显式排除 + 证据 ID 绑定;
+               无留痕/ach 缺失 → 保持 L5, 降级路径不炸)
 
-每 EEI 取满足的最高级; l_dist={L0,L1..L5} 且 Σ(l_dist)==eei_total.
+每 EEI 取满足的最高级; l_dist={L0,L1..L6} 且 Σ(l_dist)==eei_total.
 
 key_eei (关键 EEI) 判定链: ①树标记 (key/core/关键/核心 位或 tier∈
 {T1,KEY,CORE}) → ②无标记则 tier==T1 的 EEI: 有 ≥1 条 T1 词表标题命中
@@ -61,8 +66,10 @@ CID_RE = re.compile(r"[A-Za-z0-9_\-]{3,40}")
 # (gates.json completeness.P 键接线后替换此引用; 现 0.9 对齐 V3 总纲).
 KEY_EEI_GE_L3_MIN = 0.9
 
-LEVELS = ("L0", "L1", "L2", "L3", "L4", "L5")
+LEVELS = ("L0", "L1", "L2", "L3", "L4", "L5", "L6")
 TREE_NAMES = ("question_tree_v2.json", "question_tree.json")   # v2 优先 v1 兜底
+#: ach_arena v1 排除链留痕文件 (REQ-021 产物, L6 判据源)
+ACH_EXCL_NAME = "ach_exclusions.jsonl"
 
 # 数字×量词 (长词在前防截断) — L2 数据密度检测
 _NUM_QUANT_RE = re.compile(
@@ -112,8 +119,13 @@ def _is_against_row(row: dict) -> bool:
     return any(m in s for m in _AGAINST_MARKS)
 
 
-def eei_level(eei: dict, rows: list[dict]) -> str:
-    """单 EEI 最高深度级 ("L0".."L5") — 纯函数, 不改入参."""
+def eei_level(eei: dict, rows: list[dict],
+              excl_hits: set[str] | None = None) -> str:
+    """单 EEI 最高深度级 ("L0".."L6") — 纯函数, 不改入参.
+
+    L6 (V-003 / REQ-020): L5 基础上该 EEI 命中 ACH 排除链留痕
+    (excl_hits = _excl_eei_hits 算好的 EEI id 集) → L6;
+    无留痕/ach 缺失 (excl_hits 为空) → 保持原 L1-L5 判定不升级."""
     eid = str(eei.get("id") or "")
     ev = [r for r in rows
           if r.get("judge") == "valid" and str(r.get("tree_node") or "") == eid]
@@ -125,7 +137,10 @@ def eei_level(eei: dict, rows: list[dict]) -> str:
           4: any(_is_against_row(r) for r in ev)     # L4 反证: 行级或反证位
           or str(eei.get("stance") or "").lower() in _AGAINST_MARKS,
           5: any(_has_own_calc(r) for r in ev)}
-    return f"L{max(k for k, hit in ok.items() if hit)}"
+    lv = f"L{max(k for k, hit in ok.items() if hit)}"
+    if lv == "L5" and excl_hits and eid in excl_hits:
+        return "L6"                                  # rival 显式排除 + 证据绑定
+    return lv
 
 
 def _tree_marked_key(eei: dict) -> bool:
@@ -166,14 +181,17 @@ def key_eei_set(tree_eeis: list[dict], rows: list[dict],
     return [str(e.get("id")) for e in tree_eeis], "all_fallback"
 
 
-def scan_rows(tree: dict, rows: list[dict],
-              t1_keywords: list[str]) -> dict:
-    """树+池行 → P 轴结果 (纯函数, 不改入参, 无 IO)."""
+def scan_rows(tree: dict, rows: list[dict], t1_keywords: list[str],
+              excl_hits: set[str] | None = None) -> dict:
+    """树+池行 → P 轴结果 (纯函数, 不改入参, 无 IO).
+
+    excl_hits: ACH 排除链留痕命中的 EEI id 集 (None/空 → 不判 L6,
+    即 L1-L5 原口径, 向后兼容)."""
     eeis = [e for q in tree.get("subquestions", []) for e in q.get("eeis", [])]
     dist = {k: 0 for k in LEVELS}
     levels: dict[str, str] = {}
     for e in eeis:
-        lv = eei_level(e, rows)
+        lv = eei_level(e, rows, excl_hits)
         levels[str(e.get("id"))] = lv
         dist[lv] += 1
     total = len(eeis)
@@ -232,6 +250,67 @@ def _load_t1_keywords(pool_dir: Path) -> list[str]:
         return []
 
 
+# ---------- L6 判据: ach_arena v1 排除链留痕 (V-003 / REQ-020, 只增) ----------
+
+def _load_exclusions(pool_dir: Path) -> list[dict]:
+    """读 ach_exclusions.jsonl (ach_arena v1 产物, 只读); 缺/坏 → [] fail-soft."""
+    p = pool_dir / ACH_EXCL_NAME
+    if not p.is_file():
+        return []
+    out: list[dict] = []
+    for line in p.read_text(encoding="utf-8", errors="replace").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            x = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(x, dict):
+            out.append(x)
+    return out
+
+
+def _excl_eei_hits(excl_rows: list[dict], rows: list[dict]) -> set[str]:
+    """排除链行 → 命中留痕的 EEI id 集 (纯函数).
+
+    判据行 = rival_excluded is True 且 evidence_ids 非空 (REQ-020:
+    ACH 排除 + rival 显式排除 + 证据 ID 绑定, 三者齐备才计).
+    关联路径: evidence_ids 是 manifest 行 ID (dedup_key) → 经 manifest 行
+    tree_node 回挂 EEI; evidence_id 直等于某挂树 tree_node 时亦认 (容错)."""
+    ids: set[str] = set()
+    for x in excl_rows:
+        if x.get("rival_excluded") is not True:
+            continue
+        ev = x.get("evidence_ids")
+        if not isinstance(ev, list) or not ev:
+            continue
+        ids.update(str(e) for e in ev if e)
+    if not ids:
+        return set()
+    hits: set[str] = set()
+    for r in rows:
+        tn = str(r.get("tree_node") or "")
+        if not tn:
+            continue
+        dk = str(r.get("dedup_key") or "")
+        if (dk and dk in ids) or tn in ids:
+            hits.add(tn)
+    return hits
+
+
+def check_l6(campaign: str, eei_id: str,
+             pool_root: Path = POOL_ROOT) -> bool:
+    """单 EEI 是否满足 L6 判据: 读 ach_exclusions.jsonl, 该 EEI 关联的
+    假设有 rival_excluded=true 且 evidence_ids 非空的排除行 → True.
+    ach 缺失/无留痕 → False (fail-soft, 不炸)."""
+    pool_dir = Path(pool_root) / campaign
+    excl = _load_exclusions(pool_dir)
+    if not excl:
+        return False
+    return str(eei_id) in _excl_eei_hits(excl, _load_rows(pool_dir))
+
+
 def _atomic_write(p: Path, data: dict) -> None:
     p.parent.mkdir(parents=True, exist_ok=True)
     tmp = p.with_suffix(p.suffix + ".tmp")
@@ -248,14 +327,17 @@ def scan(cid: str, pool_root: Path = POOL_ROOT, write: bool = True) -> dict:
     tree, tree_name = _load_tree(pool_dir)
     rows = _load_rows(pool_dir)
     t1k = _load_t1_keywords(pool_dir)
+    excl = _load_exclusions(pool_dir)               # L6 判据源 (只读, V-003)
+    excl_hits = _excl_eei_hits(excl, rows)
     r = {"axis": "P", "sensor": "depth_ladder", "cid": cid,
          "generated": time.strftime("%Y-%m-%d %H:%M"),
-         "engine_version": "depth_ladder-v1 (T-007D P轴传感器)",
-         "tree_source": tree_name, "threshold": {
+         "engine_version": "depth_ladder-v1.1 (T-007D P轴传感器 + V-003 L6)",
+         "tree_source": tree_name, "ach_exclusion_rows": len(excl),
+         "threshold": {
              "key_eei_ge_l3_min": KEY_EEI_GE_L3_MIN,
              "note": "模块常量, 可随 gates.json 调"},
          "notes": []}
-    r.update(scan_rows(tree, rows, t1k))
+    r.update(scan_rows(tree, rows, t1k, excl_hits=excl_hits))
     if tree_name == "none":
         r["notes"].append("question_tree 缺失: 分母只认树实际 EEI 数故为 0 "
                           "(fail-soft) — 先 question_tree.py generate " + cid)
@@ -264,6 +346,11 @@ def scan(cid: str, pool_root: Path = POOL_ROOT, write: bool = True) -> dict:
                           "P 轴全 L0 — 先挂树再测深度")
     if r["key_eei_source"] == "all_fallback" and r["eei_total"]:
         r["notes"].append("树无关键标记且无 T1 挂钩: key_eei 以全体 EEI 兜底")
+    if tree_name != "none" and r["eei_total"] and not excl:
+        r["notes"].append(f"{ACH_EXCL_NAME} 缺失: L6 不判 (保持 L5 口径) — "
+                          "先 ach_arena.py --campaign " + cid + " --persistent")
+    elif r["l_dist"]["L6"]:
+        r["notes"].append(f"L6 {r['l_dist']['L6']} 个 EEI (ACH 排除链留痕命中)")
     if write:
         _atomic_write(pool_dir / "completeness" / "P_axis.json", r)
         _atomic_write(pool_dir / "depth_ladder.json", r)
