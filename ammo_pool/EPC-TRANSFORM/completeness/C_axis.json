@@ -1,0 +1,580 @@
+{
+ "axis": "C",
+ "sensor": "channel_matrix",
+ "campaign": "EPC-TRANSFORM",
+ "channels_hit": 14,
+ "channels_total": 31,
+ "hit_ratio": 0.4516,
+ "hit_channels": [
+  {
+   "id": "manus",
+   "name": "Manus 军团",
+   "chars": 8540,
+   "engines": [
+    "manus:corps"
+   ]
+  },
+  {
+   "id": "sougo",
+   "name": "搜狗微信",
+   "chars": 30446,
+   "engines": [
+    "cross:wechat_rss:bidcut"
+   ]
+  },
+  {
+   "id": "metaso",
+   "name": "秘塔学术",
+   "chars": 7379,
+   "engines": [
+    "f1full:cross:metaso"
+   ]
+  },
+  {
+   "id": "djyanbao",
+   "name": "洞见研报",
+   "chars": 8587,
+   "engines": [
+    "djyanbao:vip"
+   ]
+  },
+  {
+   "id": "website",
+   "name": "官网爬虫",
+   "chars": 5752,
+   "engines": [
+    "fulltext:web"
+   ]
+  },
+  {
+   "id": "weread",
+   "name": "微信读书",
+   "chars": 15592,
+   "engines": [
+    "kb:weread"
+   ]
+  },
+  {
+   "id": "lark",
+   "name": "飞书语料",
+   "chars": 1229744,
+   "engines": [
+    "feishu_zhiku"
+   ]
+  },
+  {
+   "id": "localfiles",
+   "name": "本地文件库",
+   "chars": 436471,
+   "engines": [
+    "localfiles:rss",
+    "localfiles:topics"
+   ]
+  },
+  {
+   "id": "websearch",
+   "name": "WebSearch",
+   "chars": 47047,
+   "engines": [
+    "search:web",
+    "web:websearch_en"
+   ]
+  },
+  {
+   "id": "court",
+   "name": "涉诉检索",
+   "chars": 403628388,
+   "engines": [
+    "official:wenshu_vol"
+   ]
+  },
+  {
+   "id": "cnki",
+   "name": "CNKI 论文",
+   "chars": 1558,
+   "engines": [
+    "f1full:cross:cnki",
+    "paper:cnki"
+   ]
+  },
+  {
+   "id": "corpus_stores",
+   "name": "存量语料库",
+   "chars": 844990,
+   "engines": [
+    "stock:campaign_上海电力设计",
+    "stock:campaign_中冶长天国际",
+    "stock:campaign_中国电子工程",
+    "stock:campaign_中国电建集团",
+    "stock:campaign_中国能源建设",
+    "stock:campaign_中石化南京工",
+    "stock:campaign_北京首钢国际",
+    "stock:zhiku"
+   ]
+  },
+  {
+   "id": "zh_search_pro",
+   "name": "免key中文多引擎检索",
+   "chars": 113924,
+   "engines": [
+    "web:zhsearchpro"
+   ]
+  },
+  {
+   "id": "anysearch",
+   "name": "AnySearch实时搜索(web+垂直域17域+并发批量+网页抽取, 匿名免鉴权)",
+   "chars": 25967,
+   "engines": [
+    "anysearch:web"
+   ]
+  }
+ ],
+ "miss_list": [
+  "视频文稿",
+  "ima 知识库",
+  "ima 公开知识库",
+  "微信本地数据",
+  "微信4.x加密库",
+  "360浏览器画像",
+  "政府名录线",
+  "E-OSCAR 情报引擎",
+  "CLI 化栈",
+  "网盘聚合发现",
+  "全套教材语料库",
+  "电子书渠道族(两篇文章111站+Arc K扫荡105站=216站纳册)",
+  "网页搜索项目注册表(8角度扫荡111候选+8本机在册=119项)",
+  "夸克网盘账号面(扫码授权+转存四步+列目录+下载直链+签到保活)",
+  "OpenAlex 学术API(免key)",
+  "Semantic Scholar 学术API(S2, 免key)",
+  "arXiv 学术API(免key)"
+ ],
+ "miss_detail": [
+  {
+   "id": "video",
+   "name": "视频文稿"
+  },
+  {
+   "id": "ima",
+   "name": "ima 知识库"
+  },
+  {
+   "id": "ima_public",
+   "name": "ima 公开知识库"
+  },
+  {
+   "id": "wechat_local",
+   "name": "微信本地数据"
+  },
+  {
+   "id": "wechat4",
+   "name": "微信4.x加密库"
+  },
+  {
+   "id": "browser360",
+   "name": "360浏览器画像"
+  },
+  {
+   "id": "govlist",
+   "name": "政府名录线"
+  },
+  {
+   "id": "eoscar",
+   "name": "E-OSCAR 情报引擎"
+  },
+  {
+   "id": "cli_stack",
+   "name": "CLI 化栈"
+  },
+  {
+   "id": "pansou",
+   "name": "网盘聚合发现"
+  },
+  {
+   "id": "chinatextbook",
+   "name": "全套教材语料库"
+  },
+  {
+   "id": "ebook_library",
+   "name": "电子书渠道族(两篇文章111站+Arc K扫荡105站=216站纳册)"
+  },
+  {
+   "id": "search_library",
+   "name": "网页搜索项目注册表(8角度扫荡111候选+8本机在册=119项)"
+  },
+  {
+   "id": "quark_pan",
+   "name": "夸克网盘账号面(扫码授权+转存四步+列目录+下载直链+签到保活)"
+  },
+  {
+   "id": "openalex",
+   "name": "OpenAlex 学术API(免key)"
+  },
+  {
+   "id": "semantic_scholar",
+   "name": "Semantic Scholar 学术API(S2, 免key)"
+  },
+  {
+   "id": "arxiv",
+   "name": "arXiv 学术API(免key)"
+  }
+ ],
+ "new_channel_queue": [],
+ "miss_in_queue": [],
+ "miss_not_in_queue": [
+  "视频文稿",
+  "ima 知识库",
+  "ima 公开知识库",
+  "微信本地数据",
+  "微信4.x加密库",
+  "360浏览器画像",
+  "政府名录线",
+  "E-OSCAR 情报引擎",
+  "CLI 化栈",
+  "网盘聚合发现",
+  "全套教材语料库",
+  "电子书渠道族(两篇文章111站+Arc K扫荡105站=216站纳册)",
+  "网页搜索项目注册表(8角度扫荡111候选+8本机在册=119项)",
+  "夸克网盘账号面(扫码授权+转存四步+列目录+下载直链+签到保活)",
+  "OpenAlex 学术API(免key)",
+  "Semantic Scholar 学术API(S2, 免key)",
+  "arXiv 学术API(免key)"
+ ],
+ "channel_waivers": [],
+ "waived_miss_list": [],
+ "waived_but_hit": [],
+ "queue_path": "E:\\AI-Station\\ammo_pool\\EPC-TRANSFORM\\completeness\\C_axis_queue.json",
+ "queue_present": false,
+ "green": false,
+ "engine_map": {
+  "cross:bidding": {
+   "channels": [],
+   "notes": [],
+   "bases": [
+    "bidding"
+   ]
+  },
+  "cross:policy": {
+   "channels": [],
+   "notes": [],
+   "bases": [
+    "policy"
+   ]
+  },
+  "cross:standards": {
+   "channels": [],
+   "notes": [],
+   "bases": [
+    "standards"
+   ]
+  },
+  "localfiles:rss": {
+   "channels": [
+    "localfiles"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "localfiles:topics": {
+   "channels": [
+    "localfiles"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "cross:wechat_rss:bidcut": {
+   "channels": [
+    "sougo"
+   ],
+   "notes": [
+    "微信生态公众号RSS≈搜狗微信内容面（近似）",
+    "RSS 常年收割（rss_fleet 族，未列 named 渠道）"
+   ],
+   "bases": [
+    "bidcut",
+    "wechat_rss"
+   ]
+  },
+  "cross:rss:bidcut": {
+   "channels": [],
+   "notes": [
+    "RSS 常年收割（rss_fleet 族，未列 named 渠道）",
+    "RSS 常年收割（rss_fleet 族，未列 named 渠道）"
+   ],
+   "bases": [
+    "bidcut",
+    "rss"
+   ]
+  },
+  "fulltext:web": {
+   "channels": [
+    "website"
+   ],
+   "notes": [
+    "网页全文≈官网爬虫面（近似）"
+   ],
+   "bases": []
+  },
+  "rss:bid26direct": {
+   "channels": [],
+   "notes": [
+    "RSS 常年收割（rss_fleet 族，未列 named 渠道）"
+   ],
+   "bases": [
+    "bid26direct"
+   ]
+  },
+  "cross:EPC49-SEPDC": {
+   "channels": [],
+   "notes": [],
+   "bases": [
+    "epc49-sepdc"
+   ]
+  },
+  "rss:bid26deep": {
+   "channels": [],
+   "notes": [
+    "RSS 常年收割（rss_fleet 族，未列 named 渠道）"
+   ],
+   "bases": [
+    "bid26deep"
+   ]
+  },
+  "f1deep": {
+   "channels": [],
+   "notes": [],
+   "bases": []
+  },
+  "search:web": {
+   "channels": [
+    "websearch"
+   ],
+   "notes": [
+    "网页搜索≈WebSearch 面（近似）"
+   ],
+   "bases": []
+  },
+  "f1full:cross:cnki": {
+   "channels": [
+    "cnki"
+   ],
+   "notes": [],
+   "bases": [
+    "cnki"
+   ]
+  },
+  "f1full:cross:metaso": {
+   "channels": [
+    "metaso"
+   ],
+   "notes": [],
+   "bases": [
+    "metaso"
+   ]
+  },
+  "f1full:cross:topics": {
+   "channels": [],
+   "notes": [],
+   "bases": [
+    "topics"
+   ]
+  },
+  "rss:wide": {
+   "channels": [],
+   "notes": [
+    "RSS 常年收割（rss_fleet 族，未列 named 渠道）"
+   ],
+   "bases": [
+    "wide"
+   ]
+  },
+  "djyanbao:vip": {
+   "channels": [
+    "djyanbao"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "70_开放网络": {
+   "channels": [],
+   "notes": [],
+   "bases": []
+  },
+  "official:deepweb": {
+   "channels": [],
+   "notes": [],
+   "bases": []
+  },
+  "manus:corps": {
+   "channels": [
+    "manus"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "web:zhsearchpro": {
+   "channels": [
+    "zh_search_pro"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "web:websearch_en": {
+   "channels": [
+    "websearch"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "paper:cnki": {
+   "channels": [
+    "cnki"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "kb:weread": {
+   "channels": [
+    "weread"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "stock:campaign_上海电力设计": {
+   "channels": [
+    "corpus_stores"
+   ],
+   "notes": [
+    "存量池收割≈存量语料库（近似）"
+   ],
+   "bases": []
+  },
+  "stock:campaign_中冶长天国际": {
+   "channels": [
+    "corpus_stores"
+   ],
+   "notes": [
+    "存量池收割≈存量语料库（近似）"
+   ],
+   "bases": []
+  },
+  "stock:campaign_中国电子工程": {
+   "channels": [
+    "corpus_stores"
+   ],
+   "notes": [
+    "存量池收割≈存量语料库（近似）"
+   ],
+   "bases": []
+  },
+  "stock:campaign_中国电建集团": {
+   "channels": [
+    "corpus_stores"
+   ],
+   "notes": [
+    "存量池收割≈存量语料库（近似）"
+   ],
+   "bases": []
+  },
+  "stock:campaign_中国能源建设": {
+   "channels": [
+    "corpus_stores"
+   ],
+   "notes": [
+    "存量池收割≈存量语料库（近似）"
+   ],
+   "bases": []
+  },
+  "official:wenshu_vol": {
+   "channels": [
+    "court"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "official:sibling": {
+   "channels": [],
+   "notes": [],
+   "bases": []
+  },
+  "stock:campaign_北京首钢国际": {
+   "channels": [
+    "corpus_stores"
+   ],
+   "notes": [
+    "存量池收割≈存量语料库（近似）"
+   ],
+   "bases": []
+  },
+  "feishu_zhiku": {
+   "channels": [
+    "lark"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "stock:campaign_中石化南京工": {
+   "channels": [
+    "corpus_stores"
+   ],
+   "notes": [
+    "存量池收割≈存量语料库（近似）"
+   ],
+   "bases": []
+  },
+  "stock:zhiku": {
+   "channels": [
+    "corpus_stores"
+   ],
+   "notes": [
+    "存量池收割≈存量语料库（近似）"
+   ],
+   "bases": []
+  },
+  "registry:cninfo": {
+   "channels": [],
+   "notes": [],
+   "bases": []
+  },
+  "paper:wenchuanyun": {
+   "channels": [],
+   "notes": [],
+   "bases": []
+  },
+  "anysearch:web": {
+   "channels": [
+    "anysearch"
+   ],
+   "notes": [],
+   "bases": []
+  }
+ },
+ "unmapped_engines": [
+  "70_开放网络",
+  "cross:EPC49-SEPDC",
+  "cross:bidding",
+  "cross:policy",
+  "cross:rss:bidcut",
+  "cross:standards",
+  "f1deep",
+  "f1full:cross:topics",
+  "official:deepweb",
+  "official:sibling",
+  "paper:wenchuanyun",
+  "registry:cninfo",
+  "rss:bid26deep",
+  "rss:bid26direct",
+  "rss:wide"
+ ],
+ "zero_char_engines": [],
+ "approx_notes": [
+  "RSS 常年收割（rss_fleet 族，未列 named 渠道）",
+  "存量池收割≈存量语料库（近似）",
+  "微信生态公众号RSS≈搜狗微信内容面（近似）",
+  "网页全文≈官网爬虫面（近似）",
+  "网页搜索≈WebSearch 面（近似）"
+ ],
+ "manifest": "E:\\AI-Station\\ResearchFactory-Eng\\channel_manifest.json",
+ "fail_soft": false,
+ "fail_soft_note": "",
+ "generated_at": "2026-10-18T07:29:57+08:00"
+}

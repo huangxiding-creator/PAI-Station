@@ -27,8 +27,10 @@ def host_of(r: dict) -> str:
 
 
 def tokens(text: str) -> list[str]:
-    return [w for w in re.split(r"[^一-鿿A-Za-z0-9]+", text)
-            if len(w) >= 2][:12]
+    words = [w for w in re.split(r"[^一-鿿A-Za-z0-9]+", text) if len(w) >= 2]
+    tail = re.sub(r"[^一-鿿]", "", text)[-18:]      # 题干尾部=本题特有词
+    grams = {tail[i:i+2] for i in range(len(tail)-1)}
+    return (words + sorted(grams))[:26]
 
 
 def main() -> int:
@@ -75,7 +77,7 @@ def main() -> int:
                                 str(r.get("source_path") or "")))
                 s = sum(1 for t in toks if t in hay)
                 w = sum(len(t) for t in toks if t in hay)
-                if s >= 1 and w >= 4:
+                if s >= 1 and w >= 2:
                     cand.append((w, i))
             cand.sort(key=lambda x: -x[0])
             for s, i in cand[:ns.per_eei]:
