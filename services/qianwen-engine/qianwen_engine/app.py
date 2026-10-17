@@ -49,6 +49,7 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 from . import config, exporter, metaso_kb, poster, potcat, report_catalog, store, wechat, zhipu
+from .voice_feedback import router as voice_feedback_router
 
 _log = logging.getLogger("qianwen.app")
 
@@ -56,6 +57,7 @@ app = FastAPI(title="qianwen-engine", version="0.4.0")
 app.add_middleware(
     CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]
 )
+app.include_router(voice_feedback_router)
 
 # 串行闸：KB 引擎一次一问（网页会话共享 + 节流铁律）
 _ask_lock = threading.Semaphore(1)
