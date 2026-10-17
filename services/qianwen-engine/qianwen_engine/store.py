@@ -510,6 +510,43 @@ _SCHEMA: tuple = (
         PRIMARY KEY (id),
         KEY idx_tel_event (event)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"""),
+    # v0.9.20 报告对话官（1018 用户令 REQ-002/003/011）：每 (openid,sku,day) 免费问答计数
+    # （新表 CREATE IF NOT EXISTS 即全量；四点同步=此处双方言对 + scripts/mysql_schema.sql）
+    ("""CREATE TABLE IF NOT EXISTS report_asks (
+        openid TEXT NOT NULL,
+        sku TEXT NOT NULL,
+        day VARCHAR(10) NOT NULL,
+        n INTEGER NOT NULL DEFAULT 0,
+        updated_at TEXT DEFAULT (datetime('now','localtime')),
+        PRIMARY KEY (openid, sku, day)
+    )""",
+     """CREATE TABLE IF NOT EXISTS report_asks (
+        openid VARCHAR(64) NOT NULL,
+        sku VARCHAR(64) NOT NULL,
+        day VARCHAR(10) NOT NULL,
+        n INT NOT NULL DEFAULT 0,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (openid, sku, day)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"""),
+    # v0.9.20 提问历史（REQ-011：每次成功 ask 一行；本人倒序）
+    ("""CREATE TABLE IF NOT EXISTS report_ask_log (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        openid TEXT NOT NULL,
+        sku TEXT NOT NULL,
+        q TEXT NOT NULL,
+        conclusion TEXT NOT NULL,
+        created_at TEXT DEFAULT (datetime('now','localtime'))
+    )""",
+     """CREATE TABLE IF NOT EXISTS report_ask_log (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        openid VARCHAR(64) NOT NULL,
+        sku VARCHAR(64) NOT NULL,
+        q TEXT NOT NULL,
+        conclusion TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        KEY idx_ral_openid (openid, created_at DESC)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"""),
+    ("CREATE INDEX IF NOT EXISTS idx_ral_openid ON report_ask_log(openid, created_at DESC)", None),
 )
 
 # 增列（老库平滑升级：已存在则忽略）——sqlite 原文 / mysql 变体（TEXT 不可带 DEFAULT）
@@ -1479,4 +1516,49 @@ def recent_telemetry(limit: int = 200) -> list:
         rows = c.execute(
             "SELECT id,event,boot,ver,extra,created_at"
             " FROM telemetry_events ORDER BY id DESC LIMIT ?", (limit,)).fetchall()
+        return [dict(r) for r in rows]
+
+
+# ── v0.9.20 报告对话官（1018 用户令）：免费问答日限 + 提问历史 ──────────────
+def report_ask_left(openid: str, sku: str, day: str) -> int:
+    """该 (openid,sku,day) 剩余免费问答次数（RQA_DAILY_LIMIT - n，下限 0）。
+    day 由调用方传北京时间日期串（跨日重置=day 键自然换新行，无需清零任务）。"""
+    init()
+    with _db() as c:
+        row = c.execute(
+            "SELECT n FROM report_asks WHERE openid=? AND sku=? AND day=?",
+            (openid, sku, day)).fetchone()
+        used = int((row["n"] if row else 0) or 0)
+        return max(0, config.RQA_DAILY_LIMIT - used)
+
+
+def report_ask_bump(openid: str, sku: str, day: str) -> None:
+    """计数 +1（首问落 n=1 行；upsert 双方言由 _sql() 适配：
+    sqlite ON CONFLICT / mysql ON DUPLICATE KEY，语义 1:1）。"""
+    init()
+    with _LOCK, _db() as c:
+        c.execute(
+            "INSERT INTO report_asks(openid, sku, day, n) VALUES(?,?,?,1)"
+            " ON CONFLICT(openid, sku, day) DO UPDATE SET"
+            " n=n+1, updated_at=datetime('now','localtime')",
+            (openid, sku, day))
+
+
+def log_report_ask(openid: str, sku: str, q: str, conclusion: str) -> None:
+    """提问历史落一行（REQ-011：openid/sku/问题/结论/时间；每次成功 ask 一行）。"""
+    init()
+    with _LOCK, _db() as c:
+        c.execute(
+            "INSERT INTO report_ask_log(openid, sku, q, conclusion) VALUES(?,?,?,?)",
+            (openid, sku, q, conclusion))
+
+
+def report_ask_history(openid: str, limit: int = 20) -> list:
+    """本人报告提问历史（新→旧；title 由调用方从 report_catalog 联查回填）。"""
+    init()
+    with _db() as c:
+        rows = c.execute(
+            "SELECT sku, q, conclusion, created_at FROM report_ask_log"
+            " WHERE openid=? ORDER BY id DESC LIMIT ?",
+            (openid, limit)).fetchall()
         return [dict(r) for r in rows]

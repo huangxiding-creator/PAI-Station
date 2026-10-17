@@ -160,3 +160,24 @@ CREATE TABLE IF NOT EXISTS invoice_apps (
     PRIMARY KEY (id),
     KEY idx_invoice_openid (openid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- v0.9.20 报告对话官（1018 用户令）：免费问答日限计数（与 store.py _SCHEMA 同步维护）
+CREATE TABLE IF NOT EXISTS report_asks (
+    openid VARCHAR(64) NOT NULL,
+    sku VARCHAR(64) NOT NULL,
+    day VARCHAR(10) NOT NULL,
+    n INT NOT NULL DEFAULT 0,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (openid, sku, day)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- v0.9.20 提问历史（REQ-011：每次成功 ask 一行；本人倒序）
+CREATE TABLE IF NOT EXISTS report_ask_log (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    openid VARCHAR(64) NOT NULL,
+    sku VARCHAR(64) NOT NULL,
+    q TEXT NOT NULL,
+    conclusion TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    KEY idx_ral_openid (openid, created_at DESC)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

@@ -45,10 +45,11 @@ from typing import Optional
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
 
-from . import config, exporter, metaso_kb, poster, potcat, report_catalog, store, wechat, zhipu
+from . import (config, exporter, metaso_kb, poster, potcat, report_catalog,
+               report_qa, store, wechat, zhipu)
 from .voice_feedback import router as voice_feedback_router
 
 _log = logging.getLogger("qianwen.app")
@@ -1013,6 +1014,107 @@ def report_poster(sku: str):
         raise HTTPException(500, f"海报生成失败: {exc}") from exc
     store.save_poster(f"report:{sku}", png, env_v)
     return {"b64": base64.b64encode(png).decode()}
+
+
+# ══ v0.9.20（用户令 1018）：报告对话官——免费 3 问/天/sku，分层经济学回答 ══
+# L1 结论免费 / L2 论据挂章号免费 / L3 全文付费（hint 转化条直达购买）。
+# 零造假铁律：检索（report_qa 2-gram 章级）未过门槛 → 固定 no_answer 话术，
+# 绝不调 LLM 编造；限频腿先于 LLM（第 4 问 429 零 token 消耗）。
+class ReportAskIn(BaseModel):
+    q: str
+
+
+_RQA_POINT_RE = re.compile(r"^(?:第(\d+)章|试读摘要)：(.*)")  # 1018 完美化：兼收 ch=0 伪章 + 捕获余文（角标/正文不重复）
+
+
+def _parse_rqa_reply(text: str) -> tuple:
+    """LLM 文本 → (conclusion≤30字, points≤3)。形态解析（answer-policy.md 测试法）：
+    首非空行=结论；「第N章：」开头的行=论据（ch=int 角标，text 保留整行 ≤40 字）。"""
+    conclusion = ""
+    points: list = []
+    for raw_line in (text or "").splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+        # 1018 完美化：markdown 记号剥离（**加星**/`code` 直显气泡的观感缺陷）
+        line = line.replace("*", "").replace("`", "")
+        m = _RQA_POINT_RE.match(line)
+        if m and len(points) < 3:
+            ch = int(m.group(1)) if m.group(1) else 0   # 试读摘要=ch 0
+            text_tail = (m.group(2) or "").strip()
+            points.append({"ch": ch, "text": text_tail[:40]})
+        elif not conclusion:
+            conclusion = line[:30]
+    return conclusion, points
+
+
+@app.post("/api/report/{sku}/ask")
+def report_ask(sku: str, body: ReportAskIn, request: Request):
+    """报告对话官（REQ-001/002）：鉴权 → 404 未知 sku → 400 问题 2-200 字 →
+    429 日限（不调 LLM）→ 检索未命中 no_answer（不调 LLM，仍计次+落历史）→
+    命中走智谱免费链（策略提示词 RQA_PROMPT_SYSTEM）；LLM 失败 503 静默降级
+    （错误进日志，不扣次数不落历史）。策略常量 config.RQA_*（ENV 可覆写）。"""
+    openid = _openid(request)
+    if report_catalog.get_report(sku) is None:
+        raise HTTPException(404, "报告不存在")
+    q = (body.q or "").strip()
+    if len(q) < 2 or len(q) > 200:
+        raise HTTPException(400, "问题需 2-200 字")
+    day = store._today()
+    if store.report_ask_left(openid, sku, day) <= 0:
+        # 429 带 left=0（API_DESIGN 契约体：detail + left 同层，客户端直读）
+        return JSONResponse(
+            status_code=429,
+            content={"detail": f"今日{config.RQA_DAILY_LIMIT}问已用完", "left": 0})
+    chapters, hit = report_qa.retrieve(sku, q)
+    if not hit:
+        best = chapters[0] if chapters else {"no": 0, "title": ""}
+        conclusion = config.RQA_NO_ANSWER
+        hint = (config.RQA_HINT_MISS0 if best["no"] == 0
+                else config.RQA_HINT_MISS.format(no=best["no"], title=best["title"]))
+        store.report_ask_bump(openid, sku, day)      # 未命中也计次（防探测刷）
+        store.log_report_ask(openid, sku, q, conclusion)
+        return {"conclusion": conclusion, "points": [], "hint": hint,
+                "left": store.report_ask_left(openid, sku, day)}
+    report = report_catalog.get_report(sku) or {}
+    system = config.RQA_PROMPT_SYSTEM.format(title=report.get("title") or sku)
+    excerpt = "；".join(
+        (f"试读摘要：{ch['desc']}" if ch["no"] == 0
+         else f"第{ch['no']}章 {ch['title']}：{ch['desc']}") for ch in chapters)
+    try:
+        raw = zhipu.deep_answer(system, f"【章节摘录】{excerpt}\n【问题】{q}",
+                                temperature=0.3, max_tokens=config.RQA_MAX_TOKENS)
+    except Exception as exc:  # noqa: BLE001 — 静默降级：错误进日志，用户侧固定话术
+        _log.warning("report ask zhipu fail sku=%s: %s", sku, exc)
+        raise HTTPException(503, "问答稍后再试") from exc
+    conclusion, points = _parse_rqa_reply(raw)
+    if not conclusion:
+        _log.warning("report ask empty reply sku=%s", sku)
+        raise HTTPException(503, "问答稍后再试")
+    hint = (config.RQA_HINT_FULL0 if chapters[0]["no"] == 0
+            else config.RQA_HINT_FULL.format(no=chapters[0]["no"]))  # 转化条=检索最优章；ch0=试读伪章特例
+    store.report_ask_bump(openid, sku, day)          # 成功才扣次（503 不扣）
+    store.log_report_ask(openid, sku, q, conclusion)
+    return {"conclusion": conclusion, "points": points, "hint": hint,
+            "left": store.report_ask_left(openid, sku, day)}
+
+
+@app.get("/api/report/asks/history")
+def report_asks_history(request: Request):
+    """我的报告提问记录（REQ-011：openid/sku/问题/结论/时间，新→旧；
+    title 由 report_catalog 联查回填，目录缺失回 ''）。"""
+    openid = _openid(request)
+    items = []
+    for r in store.report_ask_history(openid):
+        rep = report_catalog.get_report(r.get("sku") or "") or {}
+        items.append({
+            "sku": r.get("sku") or "",
+            "q": r.get("q") or "",
+            "conclusion": r.get("conclusion") or "",
+            "title": rep.get("title") or "",
+            "created_at": r.get("created_at") or "",
+        })
+    return {"items": items}
 
 
 # ── v0.9.13 虚拟支付道具图（微信道具后台 item_url 引用；公开只读，白名单+防穿越）──

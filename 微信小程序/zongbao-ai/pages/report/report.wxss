@@ -473,3 +473,170 @@ button.share-pill .pill-t { color: var(--ink-2); }
   from { transform: translate(0, 0) scale(1); opacity: 1; }
   to { transform: translate(var(--ex, 0rpx), var(--ey, -160rpx)) scale(var(--es, 0.3)); opacity: 0; }
 }
+
+/* ══ v0.9.20 报告对话官（用户令 1018）：问报告内联对话面板（零购买门槛·日 3 问）══ */
+.rp-ask {
+  margin-top: 22rpx;
+  padding-top: 22rpx;
+  border-top: 2rpx dashed var(--t-paper-dim);
+}
+.rp-ask-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12rpx;
+}
+.rp-ask-left { font-size: 20rpx; color: var(--ink-dim); letter-spacing: 1rpx; }
+
+/* 气泡流：问=右沉藏青，答=左浮纸面 */
+.rp-ask-flow {
+  margin-top: 20rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+.rp-ask-q {
+  align-self: flex-end;
+  max-width: 82%;
+  padding: 14rpx 20rpx;
+  border-radius: 14rpx 14rpx 4rpx 14rpx;
+  background: linear-gradient(135deg, var(--navy-2), var(--navy-0));
+  color: var(--white-ink);
+  font-size: 26rpx;
+  line-height: 1.55;
+  letter-spacing: 1rpx;
+  word-break: break-all;
+}
+.rp-ask-a {
+  align-self: flex-start;
+  max-width: 92%;
+  padding: 18rpx 22rpx;
+  border-radius: 14rpx 14rpx 14rpx 4rpx;
+  background: var(--t-paper-hi);
+  border: 2rpx solid var(--t-paper-dim);
+}
+.rp-ask-loading { font-size: 24rpx; color: var(--ink-dim); letter-spacing: 2rpx; }
+/* L1 结论：粗体首行（敢拍板） */
+.rp-ask-conc {
+  font-size: 28rpx;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.5;
+  letter-spacing: 1rpx;
+}
+/* L2 论据：每条挂「第N章」mono 角标 */
+.rp-ask-pt {
+  display: flex;
+  align-items: flex-start;
+  gap: 12rpx;
+  margin-top: 12rpx;
+}
+.rp-ask-chip {
+  flex-shrink: 0;
+  font-size: 19rpx;
+  letter-spacing: 1rpx;
+  color: var(--accent-deep);
+  background: var(--t-amber-bg);
+  border: 2rpx solid var(--t-amber-line);
+  border-radius: 4rpx;
+  padding: 3rpx 10rpx;
+}
+.rp-ask-pt-t { flex: 1; font-size: 24rpx; color: var(--ink-2); line-height: 1.6; }
+/* L3 转化条：事实陈述零价格诱导（KB answer-policy）+ 购买直达 payOrder */
+.rp-ask-hint {
+  margin-top: 14rpx;
+  padding-top: 12rpx;
+  border-top: 2rpx dashed var(--t-paper-dim);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12rpx;
+}
+.rp-ask-hint-t { flex: 1; font-size: 21rpx; color: var(--ink-dim); line-height: 1.5; }
+.rp-ask-buy {
+  flex-shrink: 0;
+  font-size: 22rpx;
+  font-weight: 700;
+  letter-spacing: 1rpx;
+  color: var(--white-ink);
+  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+  border-radius: 999rpx;
+  padding: 10rpx 24rpx;
+}
+.rp-ask-buy-hover { opacity: 0.8; }
+
+/* 日 3 问用尽态（REQ-008：不发第 4 问） */
+.rp-ask-out {
+  margin-top: 20rpx;
+  padding: 22rpx;
+  border-radius: 12rpx;
+  border: 2rpx dashed var(--t-amber-line);
+  background: var(--t-amber-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14rpx;
+}
+.rp-ask-out-t { font-size: 26rpx; font-weight: 800; color: var(--accent-deep); letter-spacing: 1rpx; }
+.rp-ask-out-btn { margin: 0; width: 100%; }
+
+/* 输入行：🎤 按住说（语音主路）+ 文字永在（插件缺失自动兜底） */
+.rp-ask-row {
+  margin-top: 20rpx;
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+}
+.rp-ask-mic {
+  flex-shrink: 0;
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  background: var(--t-paper-cool);
+  border: 2rpx solid var(--t-blue-tint);
+}
+.rp-ask-mic-hover { transform: scale(0.94); }
+.rp-ask-mic-on {
+  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+  border-color: var(--accent-deep);
+}
+.rp-ask-input {
+  flex: 1;
+  min-width: 0;
+  height: 72rpx;
+  box-sizing: border-box;
+  padding: 0 22rpx;
+  border-radius: 999rpx;
+  background: var(--t-paper-hi);
+  border: 2rpx solid var(--t-paper-dim);
+  font-size: 26rpx;
+  color: var(--ink);
+}
+.rp-ask-send {
+  flex-shrink: 0;
+  height: 72rpx;
+  display: flex;
+  align-items: center;
+  padding: 0 26rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(135deg, var(--navy-2), var(--navy-0));
+  color: var(--white-ink);
+  font-size: 25rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+}
+.rp-ask-send-hover { opacity: 0.82; }
+.rp-ask-send-busy { opacity: 0.55; }
+.rp-ask-mic-tip { text-align: center; margin-top: 10rpx; font-size: 21rpx; letter-spacing: 1rpx; }
+/* AI 标识常驻（合规：AI 生成内容显著标识） */
+.rp-ask-ai {
+  margin-top: 18rpx;
+  text-align: center;
+  font-size: 20rpx;
+  color: var(--ink-dim);
+  letter-spacing: 2rpx;
+}

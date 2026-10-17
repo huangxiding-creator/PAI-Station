@@ -9,6 +9,13 @@ const md2blocks = require('../../utils/md2blocks');
 const tel = require('../../utils/telemetry'); // v0.9.6：购买入口打点（对照组——此链在真机已活）
 const pop = require('../../utils/pop'); // v0.9.7：qw-pop 自绘弹窗（品牌同源重设计，按钮文字摆脱 4 字硬限）
 
+// v0.9.20 语音腿（用户令 1018 REQ-006）：WechatSI 同声传译插件（app.json 已声明，provider 真号在案）。
+// 冻结面决策（KB voice-leg-reuse）：voice-feedback 组件只引用不改动——其录音状态机不外发
+// transcript 事件、也无法承载本页提问，故「问报告」面板自带同款双通道（语音按住说主路 /
+// 文字永在兜底），状态机逐档复刻组件范式（onStart/onRecognize/onStop/onError + 插件缺失文字兜底）。
+let _si = null;
+try { _si = requirePlugin('WechatSI'); } catch (e) { _si = null; }
+
 Page({
   data: {
     nav: { statusBarHeight: 20, navHeight: 44 },
@@ -30,6 +37,14 @@ Page({
     posterBusy: false,  // v0.9.15 海报生成在途
     rewardShow: false,  // v0.9.16 授勋动画开关（与答案页统一）
     reward: '',         // v0.9.16 授勋动画副题文案
+    // ── v0.9.20 报告对话官（用户令 1018）──
+    askOpen: false,      // 问报告面板开合（第四 pill 切换）
+    askInput: '',        // 提问输入（语音转写实时回填同一口）
+    asks: [],            // 气泡流 [{idx, q, conclusion, points, hint, loading}]（先问后答）
+    askLeft: 3,          // 今日剩余提问次数（服务端 left 回填）
+    askExhausted: false, // 日 3 问用尽态（429 → 撤输入行+购买引导，不发第 4 问）
+    askBusy: false,      // 发送防重入
+    askRecording: false, // 语音按住说在录（touchstart/touchend 对）
   },
 
   onLoad(query) {
@@ -237,6 +252,117 @@ Page({
     wx.previewImage({ urls: [path], fail: () => wx.showToast({ title: '海报已生成', icon: 'none' }) });
   },
 
+  // ══ v0.9.20 报告对话官（用户令 1018）：问报告 pill → 内联对话面板（REQ-006..009/011 引擎侧已就绪）══
+
+  // 第四 pill 开合（REQ-006.AC0 用户令：零购买门槛——未购用户同样可见可问；限频只有每 sku 日 3 问）
+  onAskTap() {
+    tel.ping('report_ask_tap', { sku: String(this.data.sku || '').slice(0, 24) });
+    this.setData({ askOpen: !this.data.askOpen });
+  },
+
+  onAskInput(e) {
+    this.setData({ askInput: e.detail.value });
+  },
+
+  // 发送提问（文字腿主路；语音转写已实时回填同一输入口——发送前统一走此口）
+  onAskSend() {
+    const q = String(this.data.askInput || '').trim().slice(0, 200); // 服务端同律裁剪（2≤len≤200）
+    if (this.data.askBusy || this.data.askExhausted) return;         // 防重入 + 日限停发（REQ-008）
+    if (q.length < 2) {
+      wx.showToast({ title: '问题再具体一点（至少 2 个字）', icon: 'none', duration: 1800 });
+      return;
+    }
+    const idx = this._askSeq = (this._askSeq || 0) + 1;
+    this.setData({
+      asks: this.data.asks.concat([{ idx, q, conclusion: '', points: [], hint: '', loading: true }]),
+      askInput: '',
+      askBusy: true,
+    });
+    api.reportAsk(this.data.sku, q)
+      .then((r) => {
+        if (r && r.limited) {
+          // 429：今日 3 问已用完——第 4 问未调 LLM 未计数，撤回在途气泡并切用尽态（REQ-008）
+          this.setData({
+            asks: this.data.asks.filter((a) => a.idx !== idx),
+            askInput: q, // 问题文字奉还输入框（未计数不吞用户输入）
+            askBusy: false,
+            askExhausted: true,
+            askLeft: r.left || 0,
+          });
+          wx.showToast({ title: '今日 3 问已用完，明日再来', icon: 'none', duration: 2200 });
+          return;
+        }
+        // 命中章绑遥测（REQ-004/009：首条论据章号=检索命中面）
+        tel.ping('report_ask_ok', {
+          sku: String(this.data.sku || '').slice(0, 24),
+          ch: (r && r.points && r.points[0] && r.points[0].ch) || 0,
+        });
+        const at = this.data.asks.findIndex((a) => a.idx === idx);
+        this.setData({
+          ['asks[' + at + ']']: {
+            idx, q,
+            conclusion: (r && r.conclusion) || '',
+            points: (r && r.points) || [],
+            hint: (r && r.hint) || '',
+            loading: false,
+          },
+          askBusy: false,
+          askLeft: (r && typeof r.left === 'number') ? r.left : this.data.askLeft,
+          askExhausted: !!(r && r.left === 0),
+        });
+      })
+      .catch((err) => {
+        // 503 软失败：服务端「问答稍后再试」话术直出；问题文字奉还输入框可重发
+        this.setData({
+          asks: this.data.asks.filter((a) => a.idx !== idx),
+          askInput: q,
+          askBusy: false,
+        });
+        wx.showToast({ title: api.errMsg(err, '问答稍后再试'), icon: 'none', duration: 2200 });
+      });
+  },
+
+  // 转化条购买引导（REQ-007.AC2：直达既有 buy 流——paySupported 门/防重入/遥测全复用）
+  onAskBuyTap() {
+    tel.ping('report_ask_buy_tap', { sku: String(this.data.sku || '').slice(0, 24) });
+    this.buy();
+  },
+
+  // 语音按住说（真机 touchstart/touchend 事件对——KB 在案坑；冻结组件同款状态机逐档复刻）
+  onMicStart() {
+    if (this.data.askBusy || this.data.askExhausted) return;
+    if (!_si || !_si.getRecordRecognitionManager) {
+      wx.showToast({ title: '语音未就绪，请直接打字提问', icon: 'none', duration: 2000 }); // 插件缺失文字兜底
+      return;
+    }
+    if (this.data.askRecording) return;
+    if (!this._askSiMgr) {
+      const mgr = _si.getRecordRecognitionManager();
+      mgr.onStart = () => this.setData({ askRecording: true });
+      mgr.onRecognize = (res) => {
+        const t = (res && res.result) || '';
+        if (t) this.setData({ askInput: t }); // 转写实时回填输入口：说完即可发送
+      };
+      mgr.onStop = (res) => {
+        const t = String((res && res.result) || this.data.askInput || '').trim();
+        this.setData({ askRecording: false, askInput: t });
+        if (t.length < 2) wx.showToast({ title: '说的内容有点短，可打字补充再发', icon: 'none', duration: 2000 });
+      };
+      mgr.onError = () => {
+        this.setData({ askRecording: false });
+        wx.showToast({ title: '语音识别失败，请直接打字提问', icon: 'none', duration: 2000 });
+      };
+      this._askSiMgr = mgr;
+    }
+    this._askSiMgr.start({ duration: 60000, lang: 'zh_CN' });
+  },
+
+  onMicEnd() {
+    if (!this.data.askRecording) return;
+    if (this._askSiMgr) this._askSiMgr.stop();
+    this.setData({ askRecording: false });
+  },
+
   // ══ v0.9.16 授勋动画（1012 用户令：有用赠次统一动画）——与答案页 _reward 同构逐字移植 ══
   _reward(label) {
     this.setData({ rewardShow: true, reward: label });
@@ -252,6 +378,7 @@ Page({
 
   onUnload() {
     if (this._rwTimer) { clearTimeout(this._rwTimer); this._rwTimer = null; } // 对齐答案页隐藏态纪律：离页不再对隐藏页 setData
+    if (this.data.askRecording && this._askSiMgr) this._askSiMgr.stop(); // v0.9.20 语音腿：离页停录音
   },
 
   onShareAppMessage() {

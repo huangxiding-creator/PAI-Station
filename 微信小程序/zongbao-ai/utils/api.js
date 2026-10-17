@@ -29,6 +29,8 @@ function rawRequest(method, path, data) {
           const detail = (res.data && res.data.detail) || ('HTTP ' + res.statusCode);
           const e = new Error(detail);
           e.statusCode = res.statusCode;
+          // v0.9.20：非 2xx 载荷里的 left（如 429 日限剩余）随错误带出——调用方可软态处理
+          if (res.data && typeof res.data.left === 'number') e.left = res.data.left;
           reject(e);
         }
       },
@@ -146,5 +148,13 @@ module.exports = {
       if (err && err.statusCode === 404) return { deleted: false, notFound: true };
       throw err;                                                                             // 其余照旧 reject——调用方 toast+回滚
     }),
+  // ── v0.9.20（用户令 1018：报告对话官）──
+  reportAsk: (sku, q) => request('POST', '/api/report/' + sku + '/ask', { q })               // 问报告（日 3 问硬顶；q 服务端裁剪 2≤len≤200）
+    .catch((err) => {
+      // 429 = 今日 3 问用尽：软态非错误——resolve 供面板切「已用完」态不发第 4 问（REQ-008）
+      if (err && err.statusCode === 429) return { limited: true, left: (typeof err.left === 'number') ? err.left : 0 };
+      throw err;                                                                             // 503 软错照旧 reject→toast；401 走既有自动重登链
+    }),
+  reportAskHistory: () => request('GET', '/api/report/asks/history'),                        // 我的报告提问记录（本人倒序 limit=20，title 联查回填）
   requestRaw: request                                                                        // pay.js 回调腿用（带 401 重登语义）
 };

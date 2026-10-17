@@ -288,3 +288,22 @@
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
+
+/* ══ v0.9.20 报告提问记录（用户令 1018 REQ-011）：行=问题摘要+报告名+结论首行（复用 hist-* DNA）══ */
+/* 问题摘要收单行（.hist-q 默认两行，此处收紧） */
+.ask-q { -webkit-line-clamp: 1; }
+.ask-title {
+  margin-top: 6rpx;
+  font-size: 22rpx;
+  font-weight: 700;
+  color: var(--accent-deep);
+  letter-spacing: 1rpx;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1; overflow: hidden;
+}
+.ask-conc {
+  margin-top: 4rpx;
+  font-size: 22rpx;
+  color: var(--ink-dim);
+  line-height: 1.5;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1; overflow: hidden;
+}

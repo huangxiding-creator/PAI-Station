@@ -165,9 +165,9 @@ check("api potList 客户端", "potList" in api_js)
 check("api optimize 客户端（shareReward 已随分享激励下线）", "optimize" in api_js and "shareReward" not in api_js)
 
 # 版本与定位（v0.9.0）
-check("my 版本标记 v0.9.19（1017 锅圈双分区）", "v0.9.19" in my_wxml)
+check("my 版本标记 v0.9.20（1018 报告对话官）", "v0.9.20" in my_wxml)
 pkg = json.load(open(os.path.join(ROOT, "package.json"), encoding="utf-8"))
-check("package.json version=0.9.19", pkg["version"] == "0.9.19")
+check("package.json version=0.9.20", pkg["version"] == "0.9.20")
 # 1009 用户令：外观沉底（个性化低频项按用户习惯放设置区，高频额度/记录在前）——顺序即断言
 check("my 布局顺序=额度→记录→书架→外观（外观在咨询记录之后，1009 用户令）",
       my_wxml.find("外观 · APPEARANCE") > my_wxml.find("咨询记录 · RECORDS")
@@ -1069,7 +1069,7 @@ check("引擎道具图路由（/static/goods/{name} 白名单+防穿越+长缓�
 check("引擎道具图素材随包（static_goods/zongbaojun.jpg）",
       "GOODS_STATIC_DIR" in _app_py
       and os.path.exists(os.path.join(ENGINE, "qianwen_engine", "static_goods", "zongbaojun.jpg")))
-check("telemetry VER=0.9.19（版本横幅同步）", "var VER = '0.9.19'" in _tel_js)
+check("telemetry VER=0.9.20（版本横幅同步）", "var VER = '0.9.20'" in _tel_js)
 
 # ══ v0.9.15（1011 用户令：报告详情页 有用/分享给同行 赠次 + 研报转化海报）══
 _rp_wxml_3 = read("pages/report/report.wxml")
@@ -1182,9 +1182,9 @@ check("详情页 卷头样式在役（色带+实底卷号徽标+章行缩进）"
 check("研究页 起价数据驱动（¥498 写死根除，stats.pmin 驱动）",
       "stats.pmin" in _rsh_wxml and ">¥498<" not in _rsh_wxml
       and "pmin" in _rsh_js)
-check("版本信标 0.9.19（telemetry + my 页脚）",
-      "VER = '0.9.19'" in read("utils/telemetry.js")
-      and "v0.9.19" in read("pages/my/my.wxml"))
+check("版本信标 0.9.20（telemetry + my 页脚）",
+      "VER = '0.9.20'" in read("utils/telemetry.js")
+      and "v0.9.20" in read("pages/my/my.wxml"))
 
 # ── v0.9.18（1013 用户令①：分享全量——灰按钮根因=缺 handler，「每一个页面都可以」）──
 # REQ-001.AC1 逐页锚：本轮新补 6 页（ask/home/my/pot/invoice/legal），在役 4 页（answer/report/research/zhiku）
@@ -1364,6 +1364,68 @@ check("锅圈 旧行为保留（onItem/onReport/liked 全量在两区；单列�
       and "pot-like" in _pot_wxml and "举报" in _pot_wxml)
 check("引擎 双分区端点（latest≤3 纯时间 + hot 热度倒序 + heat 随行 + 兼容字段）",
       os.path.exists(os.path.join(ENGINE, "tests", "test_pot_sections.py")))
+
+# ══ v0.9.20（用户令 1018：报告对话官——问报告 pill+内联面板+我的页提问记录）══
+_rp20_wxml = read("pages/report/report.wxml")
+_rp20_js = read("pages/report/report.js")
+_rp20_wxss = read("pages/report/report.wxss")
+_my20_wxml = read("pages/my/my.wxml")
+_my20_js = read("pages/my/my.js")
+_api20_js = read("utils/api.js")
+
+# REQ-006.AC0（1018 用户新令）：未购用户同样可免费问——pill 绝不挂购买门槛（区块内零 unlocked/paySupported/wx:if）
+_pill_lo = _rp20_wxml.find('bindtap="onAskTap"')
+_pill_hi = _rp20_wxml.find("问报告</text>", _pill_lo)
+check("REQ-006.AC0 问报告 pill 零购买门槛（未购可问；pill 区块无 unlocked/paySupported/wx:if）",
+      _pill_lo > 0 and _pill_hi > _pill_lo
+      and "unlocked" not in _rp20_wxml[_pill_lo:_pill_hi]
+      and "paySupported" not in _rp20_wxml[_pill_lo:_pill_hi]
+      and "wx:if" not in _rp20_wxml[_pill_lo:_pill_hi],
+      f"pill 切片 {_pill_lo}/{_pill_hi} 含购买门槛条件")
+# REQ-006.AC1：第四 pill 在位 + 面板结构四件（气泡流/麦克风/输入框/AI标识）——面板唯一开合门=askOpen
+check("REQ-006.AC1 报告页 第四pill 问报告 + 内联面板（开合门=askOpen 唯一）",
+      'bindtap="onAskTap"' in _rp20_wxml and ">问报告</text>" in _rp20_wxml
+      and 'class="rp-ask" wx:if="{{askOpen}}"' in _rp20_wxml
+      and "onAskTap" in _rp20_js and "askOpen" in _rp20_js)
+# REQ-006 双通道：🎤 按住说=touchstart/touchend 事件对（KB 在案坑）+ WechatSI 状态机（冻结组件同款复刻）+ 文字永在
+check("REQ-006 面板双通道（🎤按住说事件对 + WechatSI 转写回填输入口 + 插件缺失文字兜底）",
+      'bindtouchstart="onMicStart"' in _rp20_wxml and 'bindtouchend="onMicEnd"' in _rp20_wxml
+      and 'class="rp-ask-input"' in _rp20_wxml
+      and "getRecordRecognitionManager" in _rp20_js and "requirePlugin('WechatSI')" in _rp20_js
+      and "语音未就绪，请直接打字提问" in _rp20_js)
+# REQ-007.AC1 气泡三段：结论粗体/论据挂第N章角标（mono chip）/转化条；AI 标识常驻
+check("REQ-007.AC1 气泡三段结构（结论/第N章角标/转化条+购买）+ AI 标识常驻",
+      'class="rp-ask-conc"' in _rp20_wxml and "p.ch === 0 ? '试读' : '第' + p.ch + '章'" in _rp20_wxml
+      and 'class="rp-ask-hint"' in _rp20_wxml and "购买阅读" in _rp20_wxml
+      and "AI 生成 · 仅供参考" in _rp20_wxml
+      and ".rp-ask-conc" in _rp20_wxss and ".rp-ask-chip" in _rp20_wxss)
+# REQ-008.AC1：429 → 用尽态文案+购买引导，不发第 4 问（撤输入行）
+check("REQ-008.AC1 限频用尽态（今日3问已用完文案 + 429 limited 切态停发 + 问题文字奉还）",
+      "今日 3 问已用完，明日再来" in _rp20_wxml
+      and 'bindtap="onAskBuyTap"' in _rp20_wxml
+      and "askExhausted" in _rp20_js and "limited" in _rp20_js
+      and 'wx:if="{{!askExhausted}}"' in _rp20_wxml)
+# REQ-009.AC1 打点三键（绑 sku；ok 绑命中章）
+check("REQ-009.AC1 问报告打点三键（report_ask_tap / report_ask_ok{sku,ch} / report_ask_buy_tap）",
+      "tel.ping('report_ask_tap'" in _rp20_js and "tel.ping('report_ask_ok'" in _rp20_js
+      and "tel.ping('report_ask_buy_tap'" in _rp20_js)
+# REQ-007.AC2 转化条购买=复用既有 buy 流（paySupported 门/防重入/遥测全复用）
+check("REQ-007.AC2 转化条直达购买流（onAskBuyTap→this.buy() 既有链复用）",
+      "onAskBuyTap" in _rp20_js
+      and _rp20_js.find("this.buy()", _rp20_js.find("onAskBuyTap")) > 0)
+# API_DESIGN 客户端封装：reportAsk（429→limited 软态）/ reportAskHistory
+check("api.js 问报告双端点（reportAsk 429→{limited,left} 软态；reportAskHistory 本人倒序）",
+      "reportAsk" in _api20_js and "'/api/report/' + sku + '/ask'" in _api20_js
+      and "statusCode === 429" in _api20_js and "limited: true" in _api20_js
+      and "reportAskHistory" in _api20_js and "'/api/report/asks/history'" in _api20_js)
+# REQ-011.AC2 my 页提问卡：行=问题摘要+报告名+结论首行；空态+去看看；点行直达报告
+check("REQ-011.AC2 my 页 报告提问卡（ASKS 行三要素 + 空态去看看 + 点行携 sku 直达报告）",
+      "报告提问 · ASKS" in _my20_wxml and "还没向报告提问过" in _my20_wxml
+      and "去问报告" not in _my20_wxml
+      and 'bindtap="goReports"' in _my20_wxml and 'bindtap="onAskItem"' in _my20_wxml
+      and 'data-sku="{{item.sku}}"' in _my20_wxml
+      and "onAskItem" in _my20_js and "reportAskHistory" in _my20_js
+      and "'/pages/report/report?sku='" in _my20_js)
 
 fails = [c for c in checks if not c[1]]
 for name, ok, detail in checks:

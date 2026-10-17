@@ -80,7 +80,7 @@ def main():
             json.dump({"at": datetime.now(CST).isoformat(),
                        "row": res.get("row", "")}, f, ensure_ascii=False)
         notify("小程序审核通过",
-               "总包AI顾问 v0.9.18 审核通过！\n"
+               "总包AI顾问 v0.9.20 审核通过！\n"
                "发布六步清单已就位（HANDOFF §六：灰度复查→发布→道具现网×6→env 切换→海报切轨→冒烟），"
                "随时可以执行发布上线。")
     elif verdict == "REJECTED" and prev != "REJECTED":
@@ -88,7 +88,7 @@ def main():
             json.dump({"at": datetime.now(CST).isoformat(),
                        "row": res.get("row", "")}, f, ensure_ascii=False)
         notify("小程序审核被拒",
-               "总包AI顾问 v0.9.18 审核被拒。\n"
+               "总包AI顾问 v0.9.20 审核被拒。\n"
                "原因上 mp 控制台「版本管理」看该版本行详情（截图指引已存 filing/）；"
                "按拒审理由修复后自动重提（拒审→修复→重提循环在案：v0.7.7 先例）。")
 

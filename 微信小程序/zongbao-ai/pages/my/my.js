@@ -29,6 +29,8 @@ Page({
     payOk: true,         // v0.8.0 虚拟支付可用（iOS=false → 隐藏批量导出付费入口）
     exportUnpaidAll: -1, // 服务端权威未解锁计数（-1=未知；0 且 iOS 也显示入口=纯导出无需支付）
     reportMine: -1,      // v0.9.0 已购报告计数（-1=未知不显示书架行）
+    asks: [],            // v0.9.20 报告提问记录（REQ-011：本人倒序 limit=20）
+    asksLoaded: false,   // v0.9.20 首拉完成（含 fail-open 失败静默）后渲染卡
     popOpen: false,      // v0.9.7 qw-pop 开合镜像（e2e/结构锚 + tabBar 压暗让路）
     popMode: ''
   },
@@ -142,6 +144,20 @@ Page({
         });
       })
       .catch(() => {});
+    // v0.9.20 报告提问记录（REQ-011.AC2）：本人倒序，行=问题摘要(≤40字)+报告名+结论首行（fail-open 静默空态）
+    api.reportAskHistory()
+      .then((d) => {
+        const asks = ((d && d.items) || []).map((it, i) => ({
+          idx: i,
+          sku: String(it.sku || ''),
+          qShort: String(it.q || '').slice(0, 40),
+          title: String(it.title || ''),
+          concFirst: String(it.conclusion || '').split('\n')[0].slice(0, 40),
+          timeText: this.formatTime(it.created_at),
+        }));
+        this.setData({ asks, asksLoaded: true });
+      })
+      .catch(() => this.setData({ asks: [], asksLoaded: true })); // fail-open：静默空态不阻断我的页
   },
 
   // sqlite: "2026-09-28 14:33:21" → 今天 14:33 / 昨天 14:33 / 09-26 14:33
@@ -162,6 +178,12 @@ Page({
   onItem(e) {
     const id = e.currentTarget.dataset.id;
     if (id) navToThrottled('/pages/answer/answer?id=' + id);
+  },
+
+  // v0.9.20 报告提问行：点行直达对应报告详情（REQ-011：sku 携参回流）
+  onAskItem(e) {
+    const sku = e.currentTarget.dataset.sku;
+    if (sku) navToThrottled('/pages/report/report?sku=' + sku);
   },
 
   // v0.9.18（用户令 1013）：咨询记录行内删除——qw-pop 自绘确认（固定文案「删除后不可恢复」，

@@ -86,6 +86,22 @@ REPORT_CONTENT_DIR = Path(os.environ.get("REPORT_CONTENT_DIR")
 REPORT_PDF_MAX_BYTES = _env_int("REPORT_PDF_MAX_BYTES", 20 * 1024 * 1024)  # 20MB 手机端可流畅打开的上限
 REPORT_HIDDEN_SKUS: tuple = ()   # 强制隐藏（目录不展示）；整理中（可看不可买）走 PDF 判定
 
+# ── v0.9.20 报告对话官（1018 用户令 REQ-005）：回答策略常量——ENV 可覆写，
+# 运营调策略不发版（system 提示词/门槛/日限全部本块，answer-policy.md 为正本）──
+RQA_DAILY_LIMIT = _env_int("RQA_DAILY_LIMIT", 3)   # 每用户每 sku 每日免费问答（成本硬顶）
+RQA_MIN_HITS = _env_int("RQA_MIN_HITS", 2)         # 检索命中门槛（q 与章目 2-gram 重叠分）
+RQA_MAX_TOKENS = _env_int("RQA_MAX_TOKENS", 200)   # LLM 输出 token 上限（结论+三论据够用）
+RQA_PROMPT_SYSTEM = (os.environ.get("RQA_PROMPT_SYSTEM") or (
+    "你是报告《{title}》的导购员。只依据【章节摘录】回答。"
+    "规则：①首行结论≤30字 ②随后≤3条论据，每条≤40字并以「第N章：」开头"
+    " ③禁止输出摘录原文段落 ④用户深挖（多少钱/怎么操作/完整数据）→固定话术"
+    "「完整拆解在报告第N章」 ⑤摘录未覆盖→「报告里没有直接答案」。"))
+RQA_NO_ANSWER = (os.environ.get("RQA_NO_ANSWER") or "这个问题报告里没有直接答案")
+RQA_HINT_FULL = (os.environ.get("RQA_HINT_FULL") or "完整拆解在报告第{no}章")
+RQA_HINT_FULL0 = (os.environ.get("RQA_HINT_FULL0") or "完整拆解在报告正文")
+RQA_HINT_MISS0 = (os.environ.get("RQA_HINT_MISS0") or "报告试读部分与你的问题最接近")
+RQA_HINT_MISS = (os.environ.get("RQA_HINT_MISS") or "第{no}章讲了最接近的{title}")
+
 # 产品规则（v0.5.0 用户九点令）
 FREE_PER_DAY = 6            # 每日免费提问（北京时间 00:00 全量清零，不累计）
 REWARD_ACTIONS = ("like", "share", "criticize",
