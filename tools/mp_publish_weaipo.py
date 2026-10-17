@@ -57,8 +57,13 @@ def main() -> int:
     if rep is None:
         print(f"[rep] {ns.profile} 管线未跑成 (登录失败/会话启动失败)")
         return 2
-    print(f"[rep] {ns.profile} 完成: published={rep.published} "
-          f"skipped={rep.skipped} failed={rep.failed}")
+    ok = [r for r in (rep.results or ()) if getattr(r, "ok", False)]
+    print(f"[rep] {ns.profile} 完成: ok={len(ok)}/{len(rep.results or ())} "
+          f"triggers={len(rep.triggers or ())}")
+    for r in (rep.results or ()):
+        print("   -", getattr(r, "title", "")[:30],
+              "ok=" + str(getattr(r, "ok", "?")),
+              str(getattr(r, "detail", ""))[:40])
     return 0
 
 
