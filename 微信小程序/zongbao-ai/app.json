@@ -27,13 +27,34 @@
     "backgroundColor": "#081a36",
     "borderStyle": "black",
     "list": [
-      { "pagePath": "pages/ask/ask", "text": "咨询" },
-      { "pagePath": "pages/pot/pot", "text": "锅圈" },
-      { "pagePath": "pages/zhiku/zhiku", "text": "智库" },
-      { "pagePath": "pages/research/research", "text": "研究" },
-      { "pagePath": "pages/my/my", "text": "我的" }
+      {
+        "pagePath": "pages/ask/ask",
+        "text": "咨询"
+      },
+      {
+        "pagePath": "pages/pot/pot",
+        "text": "锅圈"
+      },
+      {
+        "pagePath": "pages/zhiku/zhiku",
+        "text": "智库"
+      },
+      {
+        "pagePath": "pages/research/research",
+        "text": "研究"
+      },
+      {
+        "pagePath": "pages/my/my",
+        "text": "我的"
+      }
     ]
   },
   "lazyCodeLoading": "requiredComponents",
-  "sitemapLocation": "sitemap.json"
+  "sitemapLocation": "sitemap.json",
+  "plugins": {
+    "WechatSI": {
+      "version": "0.3.6",
+      "provider": "wx069ba97219f66d99"
+    }
+  }
 }

@@ -16,6 +16,8 @@ function navToThrottled(url) {
 Page({
   data: {
     items: [],   // {id, question, preview, likes, liked, full_chars, views, shares, cat}
+    latest: [],  // v0.9.19 双分区：最新≤3（纯时间倒序）
+    hot: [],     // v0.9.19 双分区：最热（观看+点赞+转发总和倒序，heat 随行）
     cats: [],    // v0.9.10 分类标签（用户令 1009）：[{name, n}]，服务端按规则序返回非空分类
     activeCat: '',   // 当前筛选分类（''=全部）
     loading: true,
@@ -60,7 +62,15 @@ Page({
       .then((d) => {
         if (seq !== this._seq) return; // 过期响应丢弃
         this._renderedCat = this.data.activeCat || '';
-        this.setData({ items: d.items || [], cats: d.cats || [], loading: false, loadError: '' });
+        // v0.9.19（1017 用户令）：双分区——最新≤3（纯时间）+ 最热（观看+点赞+转发总和倒序）；
+        // 旧服务端（无 latest/hot 字段）客户端兜底同规则计算，两区永不为空错
+        const items = d.items || [];
+        const latest = d.latest || items.slice(0, 3);
+        const hot = d.hot || items.map((it) => ({
+          ...it,
+          heat: (it.views || 0) + (it.likes || 0) + (it.shares || 0),
+        })).sort((a, b) => b.heat - a.heat);
+        this.setData({ items, latest, hot, cats: d.cats || [], loading: false, loadError: '' });
       })
       .catch((err) => {
         if (seq !== this._seq) return;

@@ -511,7 +511,14 @@ def pot_list(request: Request):
             cats.append({"name": name, "n": n})
     if cat:
         items = [it for it in items if it["cat"] == cat]
-    return {"items": items, "cats": cats}
+    # v0.9.19（1017 用户令）：锅圈双分区——最新≤3（纯时间）+ 最热（观看+点赞+转发总和倒序）
+    def _heat(it):
+        return (it.get("views") or 0) + (it.get("likes") or 0) + (it.get("shares") or 0)
+    latest = sorted(items, key=lambda it: it.get("created_at") or "", reverse=True)[:3]
+    hot = sorted(items, key=_heat, reverse=True)
+    for it in hot:
+        it["heat"] = _heat(it)
+    return {"items": items, "cats": cats, "latest": latest, "hot": hot}
 
 
 @app.get("/api/history")

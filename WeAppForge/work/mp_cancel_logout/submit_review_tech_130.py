@@ -29,7 +29,7 @@ return (function(){
   function ownText(e){return Array.prototype.filter.call(e.childNodes,function(n){return n.nodeType===3;}).map(function(n){return n.nodeValue.trim();}).join(' ');}
   var els = document.querySelectorAll('*');
   for (var i=0;i<els.length;i++){
-    if (ownText(els[i]) === '""" + VER + r"""'){
+    if (ownText(els[i]) === '""" + VER + r"""' && (els[i].closest('.code_version_log')||{innerText:''}).innerText.indexOf('审核不通过') < 0){
       var row = els[i];
       for (var d=0; d<8 && row; d++){
         var t = row.innerText || '';
@@ -136,7 +136,7 @@ return (function(){
   function ownText(e){return Array.prototype.filter.call(e.childNodes,function(n){return n.nodeType===3;}).map(function(n){return n.nodeValue.trim();}).join(' ');}
   var els = document.querySelectorAll('*');
   for (var i=0;i<els.length;i++){
-    if (ownText(els[i]) === '""" + VER + r"""'){
+    if (ownText(els[i]) === '""" + VER + r"""' && (els[i].closest('.code_version_log')||{innerText:''}).innerText.indexOf('审核不通过') < 0){
       var row = els[i];
       for (var d=0; d<8 && row; d++){
         var btns = row.querySelectorAll('button.weui-desktop-btn_primary');

@@ -37,7 +37,8 @@ check("app.json pages 十页（问/锅/智/研/答/报/我+legal+invoice+home �
 check("app.json 入口页仍是 ask（第一位）", app_json["pages"][0] == "pages/ask/ask")
 check("app.json tabBar.custom=true", app_json["tabBar"].get("custom") is True)
 check("app.json lazyCodeLoading", app_json.get("lazyCodeLoading") == "requiredComponents")
-check("app.json 无插件声明（语音插件撤除）", "plugins" not in app_json or "WechatSI" not in app_json.get("plugins", {}))
+check("app.json 插件白名单（仅官方同声传译 WechatSI@wx069ba97219f66d99——1017 语音反馈件；其余插件仍禁）",
+      app_json.get("plugins", {}) == {"WechatSI": {"version": "0.3.6", "provider": "wx069ba97219f66d99"}})
 tab_texts = [it["text"] for it in app_json["tabBar"]["list"]]
 check("app.json tabBar 五签=咨询/锅圈/智库/研究/我的", tab_texts == ["咨询", "锅圈", "智库", "研究", "我的"])
 check("app.json 研究=倒数第二位、我的=末位（用户令 1008）",
@@ -164,9 +165,9 @@ check("api potList 客户端", "potList" in api_js)
 check("api optimize 客户端（shareReward 已随分享激励下线）", "optimize" in api_js and "shareReward" not in api_js)
 
 # 版本与定位（v0.9.0）
-check("my 版本标记 v0.9.18（1013 分享全量+记录删除+输入框IME根治）", "v0.9.18" in my_wxml)
+check("my 版本标记 v0.9.19（1017 锅圈双分区）", "v0.9.19" in my_wxml)
 pkg = json.load(open(os.path.join(ROOT, "package.json"), encoding="utf-8"))
-check("package.json version=0.9.18", pkg["version"] == "0.9.18")
+check("package.json version=0.9.19", pkg["version"] == "0.9.19")
 # 1009 用户令：外观沉底（个性化低频项按用户习惯放设置区，高频额度/记录在前）——顺序即断言
 check("my 布局顺序=额度→记录→书架→外观（外观在咨询记录之后，1009 用户令）",
       my_wxml.find("外观 · APPEARANCE") > my_wxml.find("咨询记录 · RECORDS")
@@ -1068,7 +1069,7 @@ check("引擎道具图路由（/static/goods/{name} 白名单+防穿越+长缓�
 check("引擎道具图素材随包（static_goods/zongbaojun.jpg）",
       "GOODS_STATIC_DIR" in _app_py
       and os.path.exists(os.path.join(ENGINE, "qianwen_engine", "static_goods", "zongbaojun.jpg")))
-check("telemetry VER=0.9.18（版本横幅同步）", "var VER = '0.9.18'" in _tel_js)
+check("telemetry VER=0.9.19（版本横幅同步）", "var VER = '0.9.19'" in _tel_js)
 
 # ══ v0.9.15（1011 用户令：报告详情页 有用/分享给同行 赠次 + 研报转化海报）══
 _rp_wxml_3 = read("pages/report/report.wxml")
@@ -1181,9 +1182,9 @@ check("详情页 卷头样式在役（色带+实底卷号徽标+章行缩进）"
 check("研究页 起价数据驱动（¥498 写死根除，stats.pmin 驱动）",
       "stats.pmin" in _rsh_wxml and ">¥498<" not in _rsh_wxml
       and "pmin" in _rsh_js)
-check("版本信标 0.9.18（telemetry + my 页脚）",
-      "VER = '0.9.18'" in read("utils/telemetry.js")
-      and "v0.9.18" in read("pages/my/my.wxml"))
+check("版本信标 0.9.19（telemetry + my 页脚）",
+      "VER = '0.9.19'" in read("utils/telemetry.js")
+      and "v0.9.19" in read("pages/my/my.wxml"))
 
 # ── v0.9.18（1013 用户令①：分享全量——灰按钮根因=缺 handler，「每一个页面都可以」）──
 # REQ-001.AC1 逐页锚：本轮新补 6 页（ask/home/my/pot/invoice/legal），在役 4 页（answer/report/research/zhiku）
@@ -1344,6 +1345,25 @@ check("REQ-009.AC3 现值统一取口 _curQ（发送/优化读实例字段；val
 check("REQ-009.AC3 回填/清空双同步（_fill/onClear 同步 this._q 与 data.question）",
       all(x in _ask_js_9 for x in ("_fill(v)", "this._q = s", "onClear()", "this._q = ''")),
       "实例字段同步缺位")
+
+# ══ v0.9.19（1017 用户令：锅圈双分区——最新≤3+最热互动总热度）══
+_pot_js = read("pages/pot/pot.js")
+_pot_wxml = read("pages/pot/pot.wxml")
+check("锅圈 双分区数据面（latest/hot 进 data；旧服务端客户端兜底同规则）",
+      "latest: []" in _pot_js and "hot: []" in _pot_js
+      and "d.latest || items.slice(0, 3)" in _pot_js
+      and "(it.views || 0) + (it.likes || 0) + (it.shares || 0)" in _pot_js
+      and "b.heat - a.heat" in _pot_js)
+check("锅圈 双分区结构面（两节头+两列表；最新 N- 前缀/最热 H- 前缀+热度药丸）",
+      _pot_wxml.count("pot-sec-title") == 2
+      and "最新咨询 · LATEST" in _pot_wxml and "最热咨询 · HOT" in _pot_wxml
+      and "N-{{index + 1" in _pot_wxml and "H-{{index + 1" in _pot_wxml
+      and "pot-heat" in _pot_wxml and "item.heat > 0" in _pot_wxml)
+check("锅圈 旧行为保留（onItem/onReport/liked 全量在两区；单列表时代 tip 在）",
+      _pot_wxml.count('bindtap="onItem"') == 2 and _pot_wxml.count('catchtap="onReport"') == 2
+      and "pot-like" in _pot_wxml and "举报" in _pot_wxml)
+check("引擎 双分区端点（latest≤3 纯时间 + hot 热度倒序 + heat 随行 + 兼容字段）",
+      os.path.exists(os.path.join(ENGINE, "tests", "test_pot_sections.py")))
 
 fails = [c for c in checks if not c[1]]
 for name, ok, detail in checks:

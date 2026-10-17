@@ -230,3 +230,39 @@
   border: 2rpx solid var(--line);
   border-radius: 6rpx;
 }
+
+/* ══ v0.9.19（1017 用户令）：双分区节头——最新（图纸蓝）/最热（品牌橙），台账语言同源 ══ */
+.pot-sec {
+  display: flex;
+  align-items: baseline;
+  gap: 16rpx;
+  margin: 26rpx 8rpx 14rpx;
+}
+.pot-sec-bar {
+  width: 10rpx; height: 26rpx;
+  background: var(--navy-0);
+  align-self: center;
+}
+.pot-sec-bar-hot { background: var(--accent); }
+.pot-sec-title {
+  font-size: 26rpx; font-weight: 700;
+  letter-spacing: 4rpx;
+  color: var(--ink-1);
+}
+.pot-sec-cap {
+  margin-left: auto;
+  font-size: 20rpx; letter-spacing: 2rpx;
+  color: var(--ink-3);
+}
+.pot-no-new { color: var(--navy-0); }
+.pot-no-hot { color: var(--accent-deep); }
+.pot-heat {
+  flex-shrink: 0;
+  margin-left: auto;
+  padding: 4rpx 14rpx;
+  border: 2rpx solid rgba(var(--t-accent-rgb), 0.45);
+  border-radius: 999rpx;
+  font-size: 21rpx; letter-spacing: 1rpx;
+  color: var(--accent-deep);
+  background: rgba(var(--t-accent-rgb), 0.08);
+}
