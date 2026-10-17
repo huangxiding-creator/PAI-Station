@@ -1,4 +1,4 @@
-# -*- coding: versatile-encoding
+# -*- coding: utf-8
 # -*- coding: utf-8 -*-
 """feedback_new_version_push — 报告优化后自动向反馈者邮箱发送新版 (1017 用户令).
 
@@ -104,28 +104,50 @@ def build_email(report_title: str, feedback: dict, improvements: str,
 
 def send_email(msg: MIMEMultipart, smtp_host: str, smtp_port: int,
                 smtp_user: str, smtp_pass: str) -> bool:
-    """通过SMTP发送邮件."""
+    """通过SMTP发送邮件（465=SSL, 587=STARTTLS）."""
     try:
-        with smtplib.SMTP(smtp_host, smtp_port) as server:
-            server.starttls()
-            server.login(smtp_user, smtp_pass)
-            server.send_message(msg)
-            return True
+        if smtp_port == 465:
+            with smtplib.SMTP_SSL(smtp_host, smtp_port) as server:
+                server.login(smtp_user, smtp_pass)
+                server.send_message(msg)
+        else:
+            with smtplib.SMTP(smtp_host, smtp_port) as server:
+                server.starttls()
+                server.login(smtp_user, smtp_pass)
+                server.send_message(msg)
+        return True
     except Exception as e:
         print(f"  发送失败: {e}")
         return False
 
 
+def load_smtp_config() -> dict:
+    """从 data/secrets/smtp.secret 读取SMTP凭证（gitignored）."""
+    secret = REPO / "data" / "secrets" / "smtp.secret"
+    cfg = {"host": "smtp.qq.com", "port": 465, "user": "", "pass": ""}
+    if secret.exists():
+        for line in secret.read_text(encoding="utf-8"):
+            if "=" in line:
+                k, _, v = line.partition("=")
+                k, v = k.strip(), v.strip()
+                if k == "smtp_host":
+                    cfg["host"] = v
+                elif k == "smtp_port":
+                    cfg["port"] = int(v)
+                elif k == "smtp_user":
+                    cfg["user"] = v
+                elif k == "smtp_pass":
+                    cfg["pass"] = v
+    return cfg
+
+
 def main():
+    smtp_cfg = load_smtp_config()
     ap = argparse.ArgumentParser()
     ap.add_argument("--sku", required=True)
     ap.add_argument("--pdf", required=True)
     ap.add_argument("--improvements", required=True)
     ap.add_argument("--dry", action="store_true")
-    ap.add_argument("--smtp-host", default="smtp.qq.com")
-    ap.add_argument("--smtp-port", type=int, default=587)
-    ap.add_argument("--smtp-user", default="")
-    ap.add_argument("--smtp-pass", default="")
     ns = ap.parse_args()
 
     pdf_path = Path(ns.pdf)
@@ -152,15 +174,15 @@ def main():
             print(f"  [dry] → {e['email']}")
         return
 
-    if not ns.smtp_user or not ns.smtp_pass:
-        print("[push] 缺少SMTP凭证（--smtp-user/--smtp-pass），无法发送")
+    if not smtp_cfg["user"] or not smtp_cfg["pass"]:
+        print("[push] 缺少SMTP凭证（data/secrets/smtp.secret），无法发送")
         return
 
     sent = 0
     for feedback in emails:
         msg = build_email(title, feedback, ns.improvements, pdf_path)
-        if send_email(msg, ns.smtp_host, ns.smtp_port,
-                       ns.smtp_user, ns.smtp_pass):
+        if send_email(msg, smtp_cfg["host"], smtp_cfg["port"],
+                       smtp_cfg["user"], smtp_cfg["pass"]):
             sent += 1
             print(f"  ✅ → {feedback['email']}")
         time.sleep(1)  # 避免被SMTP服务商限流
