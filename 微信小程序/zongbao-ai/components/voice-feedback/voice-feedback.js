@@ -19,6 +19,13 @@ Component({
     recording: false,
     recordTime: 0,
     transcript: '',
+    chips: [
+      { key: '数据有误', on: false },
+      { key: '出处难寻', on: false },
+      { key: '内容太浅', on: false },
+      { key: '观点存疑', on: false },
+      { key: '缺我需要的内容', on: false },
+    ],
     scores: null,
     feedbackId: '',
     refundAmount: 0,
@@ -83,16 +90,25 @@ Component({
       this.setData({ recording: false });
     },
 
+    // ── 一键标签腿 (便捷令: 点一下即可提交) ─────────────────────
+    toggleChip(e) {
+      const k = e.currentTarget.dataset.k;
+      const chips = this.data.chips.map(c =>
+        c.key === k ? { ...c, on: !c.on } : c);
+      this.setData({ chips });
+    },
+
     // ── 文字腿 (主路径, 永远可用) ─────────────────────────────
     onTextInput(e) {
       this.setData({ transcript: e.detail.value });
     },
 
-    // 提交反馈 → 引擎六维评分
+    // 提交反馈 → 引擎六维评分 (标签/文字/语音任一即可)
     submitFeedback() {
       const t = (this.data.transcript || '').trim();
-      if (t.length < 20) {
-        wx.showToast({ title: '反馈内容至少20字', icon: 'none' });
+      const picked = this.data.chips.filter(c => c.on).map(c => c.key);
+      if (t.length < 20 && !picked.length) {
+        wx.showToast({ title: '点一个问题标签，或写满20字', icon: 'none' });
         return;
       }
       this.setData({ loading: true });
@@ -103,7 +119,9 @@ Component({
         data: {
           transcript: t,
           openid: this.data.openid || 'anonymous',
-          channel: this._usedVoice ? 'voice' : 'text',
+          channel: picked.length && t.length < 20 ? 'chips'
+                 : (this._usedVoice ? 'voice' : 'text'),
+          chips: picked,
         },
         success: (res) => {
           if (res.data && res.data.ok) {

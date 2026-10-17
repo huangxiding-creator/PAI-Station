@@ -12,8 +12,17 @@
       <text wx:else class="vf-record-text">按住说话（可再打字补充）</text>
     </view>
 
+    <view class="vf-chips">
+      <text class="vf-chips-label">一键指出问题（可多选，选完直接提交）：</text>
+      <view class="vf-chip-row">
+        <text wx:for="{{chips}}" wx:key="key"
+              class="vf-chip {{item.on ? 'on' : ''}}"
+              data-k="{{item.key}}" bindtap="toggleChip">{{item.key}}</text>
+      </view>
+    </view>
+
     <view class="vf-textarea-box">
-      <textarea class="vf-textarea" placeholder="指出具体章节/数据的问题，或提出改进建议（至少20字）"
+      <textarea class="vf-textarea" placeholder="想多说几句再写这里（选了标签可不填）"
                 value="{{transcript}}" bindinput="onTextInput" maxlength="1000"
                 auto-height disabled="{{loading}}"></textarea>
     </view>
