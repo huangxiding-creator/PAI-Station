@@ -71,9 +71,9 @@ REV_PROMPT = """你是研究报告的修订编辑。以下是读者付费后提�
 ### 逐条回应
 
 （每条格式：
-#### 反馈 {n}（评分 {score}/100 · {category}）
-> {反馈原文截断120字}
-**处置：** {处置类型} —— {具体动作，指明章节}
+#### 反馈 {{n}}（评分 {{score}}/100 · {{category}}）
+> {{反馈原文截断120字}}
+**处置：** {{处置类型}} —— {{具体动作，指明章节}}
 ）"""
 
 
@@ -178,6 +178,7 @@ try{{$d=$w.Documents.Open('{docx}',$false,$true);$d.SaveAs2('{pdf}',17);$d.Close
 
 def sync_emails(items: list[dict]) -> int:
     """引擎侧邮箱 → 本地 emails.jsonl (feedback_new_version_push.py 的读源)."""
+    FB.mkdir(parents=True, exist_ok=True)
     have = set()
     if EMAILS.exists():
         for ln in EMAILS.open(encoding="utf-8"):

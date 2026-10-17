@@ -126,7 +126,7 @@ def load_smtp_config() -> dict:
     secret = REPO / "data" / "secrets" / "smtp.secret"
     cfg = {"host": "smtp.qq.com", "port": 465, "user": "", "pass": ""}
     if secret.exists():
-        for line in secret.read_text(encoding="utf-8"):
+        for line in secret.read_text(encoding="utf-8").splitlines():
             if "=" in line:
                 k, _, v = line.partition("=")
                 k, v = k.strip(), v.strip()
