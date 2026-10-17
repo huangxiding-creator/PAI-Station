@@ -141,6 +141,10 @@
     </view>
   </view>
 
+  <!-- ══ 语音反馈+AI评分+按质退款（1017 用户令）：仅已解锁用户可见 ══ -->
+  <voice-feedback wx:if="{{d.unlocked}}" sku="{{d.sku}}" reportTitle="{{d.title}}"
+                  openid="{{openid || ''}}" />
+
   <!-- ══ v0.9.15 互动三件（用户令 1011）：有用 / 分享给同行 / 生成海报 ══
        合规（运营规范 3.2.1）：分享动作零诱导文案——赠次静默落账不提示；有用反馈可见 -->
   <view class="card ticks rise rp-social" wx:if="{{d}}">
