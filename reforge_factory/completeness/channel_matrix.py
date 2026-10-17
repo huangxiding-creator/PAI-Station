@@ -77,6 +77,9 @@ CHANNEL_ALIASES: dict[str, list[str]] = {
     "search_library": ["search_library"],
     "quark_pan": ["quark_pan", "夸克网盘"],
     "anysearch": ["anysearch"],
+    "openalex": ["openalex"],
+    "semantic_scholar": ["semantic_scholar", "s2"],
+    "arxiv": ["arxiv"],
 }
 
 #: cross:*/rss:* 基名 → 渠道 (None = 有基名语义但无 named 渠道对应, 不硬点亮)。
