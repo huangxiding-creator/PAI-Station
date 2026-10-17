@@ -18,8 +18,8 @@ from pathlib import Path
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 D = Path(__file__).resolve().parents[1] / "_tmp_blind"
 
-RUBRIC = """你是资深行业研究报告评审专家。现有两份匿名研究摘录（X 与 Y），主题相同：
-全球新能源/储能市场的机会与风险分析。请以「需要据此做投资/经营决策的企业决策者」视角严格评审。
+RUBRIC_TMPL = """你是资深行业研究报告评审专家。现有两份匿名研究摘录（X 与 Y），主题相同：
+{topic}。请以「需要据此做投资/经营决策的企业决策者」视角严格评审。
 
 评审纪律（先读完全文再打分）：警惕先入为主——先呈现的文本不构成任何加分理由；
 两份必须逐维度对照后独立打分，禁止因篇幅、格式差异倾向任一方。
@@ -38,6 +38,11 @@ RUBRIC = """你是资深行业研究报告评审专家。现有两份匿名研�
  "winner": "X" 或 "Y" 或 "tie",
  "one_line": "一句话核心理由（<=60字）"}
 """
+
+
+def RUBRIC_Q(xt, yt, first):
+    topic = xt.splitlines()[0].lstrip("# ").replace("（摘录X）", "").replace("（摘录Y）", "").strip()
+    return RUBRIC_TMPL.replace("{topic}", topic)
 
 
 def _env_keys() -> dict:
@@ -72,7 +77,8 @@ def chat(url: str, key: str, model: str, prompt: str, extra_headers: dict | None
 
 def judge(name: str, url: str, key: str, model: str, xt: str, yt: str,
           extra_headers: dict | None = None) -> dict | None:
-    prompt = (RUBRIC + "\n===== 摘录 X =====\n" + xt + "\n\n===== 摘录 Y =====\n" + yt
+    prompt = (RUBRIC_Q(xt, yt, "X") + "\n===== 摘录 X =====\n" + xt
+              + "\n\n===== 摘录 Y =====\n" + yt
               + "\n\n请输出 JSON。")
     try:
         raw = chat(url, key, model, prompt, extra_headers)
@@ -87,7 +93,8 @@ def judge(name: str, url: str, key: str, model: str, xt: str, yt: str,
 
 def judge_rev(name, url, key, model, xt, yt, extra_headers=None):
     """Y 在前 X 在后 — 裁判 JSON 键仍按 X/Y 语义, 由调用方换序喂文本。"""
-    prompt = (RUBRIC + "\n===== 摘录 Y =====\n" + yt + "\n\n===== 摘录 X =====\n" + xt
+    prompt = (RUBRIC_Q(xt, yt, "Y") + "\n===== 摘录 Y =====\n" + yt
+              + "\n\n===== 摘录 X =====\n" + xt
               + "\n\n（注意：先读到的标签是 Y，后读到的是 X，评分键仍按 X/Y 归属各自文本）\n请输出 JSON。")
     try:
         raw = chat(url, key, model, prompt, extra_headers)
@@ -103,8 +110,14 @@ DIMS = ["decision_usefulness", "evidence_credibility", "analytical_depth",
 
 
 def main() -> int:
-    xt = (D / "X.md").read_text(encoding="utf-8")
-    yt = (D / "Y.md").read_text(encoding="utf-8")
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--x", default="X.md")
+    ap.add_argument("--y", default="Y.md")
+    ap.add_argument("--suffix", default="", help="verdict/map 输出后缀 (如 2)")
+    ns = ap.parse_args()
+    xt = (D / ns.x).read_text(encoding="utf-8")
+    yt = (D / ns.y).read_text(encoding="utf-8")
     env = _env_keys()
     zk = _zhipu_keys()
     panel = []
@@ -134,7 +147,7 @@ def main() -> int:
                 results.append({"judge": name, "order": tag, **r})
             time.sleep(2)
 
-    (D / "verdict_raw.json").write_text(
+    (D / f"verdict_raw{ns.suffix}.json").write_text(
         json.dumps(results, ensure_ascii=False, indent=1), encoding="utf-8")
 
     # 汇总
@@ -144,15 +157,14 @@ def main() -> int:
                      for d in DIMS}
         agg[side]["total"] = round(sum(agg[side][d] for d in DIMS), 2)
     wins = {s: sum(1 for r in results if r.get("winner") == s) for s in ("X", "Y", "tie")}
-    mapping = json.loads((D / "mapping.json").read_text(encoding="utf-8"))
-    blind = {"A": "PwC白皮书" if mapping["A"] == "X" else "蓝皮书4-1",
-             "B": "PwC白皮书" if mapping["B"] == "X" else "蓝皮书4-1"}
+    mapping = json.loads((D / f"mapping{ns.suffix}.json").read_text(encoding="utf-8"))
+    blind = {"note": "本仓约定: Y 文件=我方摘录, X 文件=外部对照件",
+             "A_file": mapping.get("A"), "B_file": mapping.get("B")}
     print("\n==== 汇总 (6判) ====")
-    print(json.dumps({"blind_map": blind, "X_is": blind["A"] if mapping["A"] == "X" else blind["B"],
-                      "Y_is": blind["B"] if mapping["B"] == "Y" else blind["A"],
+    print(json.dumps({"blind_map": blind, "X_is": "外部对照件", "Y_is": "我方",
                       "scores": agg, "wins": wins,
                       "reasons": [r.get("one_line", "") for r in results]}, ensure_ascii=False, indent=1))
-    (D / "verdict.json").write_text(
+    (D / f"verdict{ns.suffix}.json").write_text(
         json.dumps({"blind_map": blind, "scores": agg, "wins": wins, "judgments": results},
                    ensure_ascii=False, indent=1), encoding="utf-8")
     return 0
