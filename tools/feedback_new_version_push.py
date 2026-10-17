@@ -79,7 +79,7 @@ def build_email(report_title: str, feedback: dict, improvements: str,
 
 新版报告已附上（PDF），您可以免费下载阅读。
 
-您的退款已按评分比例处理。
+如您此前的反馈评分产生了退款，将按评分比例在 1-3 个工作日原路退回。
 
 如果您对新版仍有意见，欢迎继续提交建议。
 

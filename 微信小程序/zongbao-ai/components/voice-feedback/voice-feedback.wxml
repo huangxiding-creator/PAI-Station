@@ -1,28 +1,30 @@
 <view class="voice-feedback">
   <view class="vf-header">
-    <text class="vf-title">🎤 语音反馈</text>
-    <text class="vf-sub">按住说话，AI评分，按质退款</text>
+    <text class="vf-title">🎤 读后有话说？</text>
+    <text class="vf-sub">语音或打字反馈，AI评分，按质退款</text>
   </view>
 
   <!-- 未提交状态 -->
   <block wx:if="{{!submitted}}">
-    <view class="vf-record-btn {{recording ? 'recording' : ''}}"
+    <view wx:if="{{voiceReady}}" class="vf-record-btn {{recording ? 'recording' : ''}}"
           bindtouchstart="startRecord" bindtouchend="stopRecord">
       <text wx:if="{{recording}}" class="vf-recording-text">🎙️ 录音中... {{recordTime}}s</text>
-      <text wx:else class="vf-record-text">按住这里说话</text>
+      <text wx:else class="vf-record-text">按住说话（可再打字补充）</text>
+    </view>
+
+    <view class="vf-textarea-box">
+      <textarea class="vf-textarea" placeholder="指出具体章节/数据的问题，或提出改进建议（至少20字）"
+                value="{{transcript}}" bindinput="onTextInput" maxlength="1000"
+                auto-height disabled="{{loading}}"></textarea>
     </view>
 
     <view wx:if="{{loading}}" class="vf-loading">
-      <text>⏳ AI 处理中...</text>
+      <text>⏳ AI 评审中...</text>
     </view>
 
-    <view wx:if="{{transcript}}" class="vf-transcript">
-      <text class="vf-label">📝 识别结果：</text>
-      <text class="vf-text">{{transcript}}</text>
-      <button class="vf-submit-btn" bindtap="submitFeedback" disabled="{{loading}}">
-        提交反馈并申请评分退款
-      </button>
-    </view>
+    <button class="vf-submit-btn" bindtap="submitFeedback" disabled="{{loading}}">
+      提交反馈并申请评分退款
+    </button>
   </block>
 
   <!-- 已提交：显示评分结果 -->
