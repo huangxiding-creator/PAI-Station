@@ -154,7 +154,7 @@ def test_req_014_ac1_density_thresholds():
     for fn in ("metrics", "chapter_verdict", "load_thresholds"):
         assert callable(getattr(density_gate, fn)), f"density_gate 缺 {fn}"
     th = _json(RF / "config" / "density_thresholds.json")["thresholds"]
-    for key in ("defaults", "精编", "融合", "原创"):
+    for key in list(th.keys()):
         metrics = th[key]
         for m in ("redundancy_ratio_max", "new_ngram_rate_min",
                   "slop_density_per_kchar_max"):

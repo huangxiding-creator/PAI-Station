@@ -16,8 +16,10 @@ print(f"[maturity] repos={len(repos)} median={landscape.median:.0f} mature={land
 
 # ---- 2) tenx: 调研产能四轴 (自定义轴显式传方向) ----
 claims = {
-    # 单课题弹药字数: 1000万门槛(用户铁律) vs 现状~50万字级凑料
-    "per_project_ammo_chars": {"ours": 200000000, "baseline": 500000},  # 1004终版令 2亿
+    # 单课题弹药字数: 2亿采集预算(1004令) + 分层门v3有效账(1005令:
+    # T1≥300万 ∧ T1+T2≥3000万 才算有效达标, 见 ammo_pool.tier_report)
+    # vs 现状~50万字级凑料
+    "per_project_ammo_chars": {"ours": 200000000, "baseline": 500000},  # 采集预算口径; 成稿准入走分层门v3
     # 全渠道动员数: 16渠道+军团(全员作战令) vs 现状实际动用~3
     "channels_mobilized": {"ours": 17, "baseline": 3},
     # 独立信源: P5门>=500 vs 现状50(双百倍实测)

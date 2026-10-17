@@ -75,9 +75,18 @@ def run(cid: str, dry: bool = False) -> int:
             if not dim or dim not in dim_slots:
                 after[node] += 1
                 continue                    # 树外/异版节点不动
+            against_slots = sorted(dim_against.get(dim, ()))
             if node in dim_against[dim]:
+                # v2: 反证行同维 E2 轮转 (反证内容对同维各子问的反证需求
+                # 同样成立 — 堆积在首子问 E2 是启发式副产物, 非归属真相)
+                if len(against_slots) > 1:
+                    pick = against_slots[cursor[dim + ":x"] % len(against_slots)]
+                    cursor[dim + ":x"] += 1
+                    if pick != node:
+                        moved += 1
+                        node = pick
                 after[node] += 1
-                continue                    # 反证位钉死
+                continue
             is_authority = (str(r.get("credibility")) == "official"
                             or any(m in str(r.get("url_norm") or "")
                                    + str(r.get("engine") or "")
