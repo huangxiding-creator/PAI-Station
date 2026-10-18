@@ -1,0 +1,248 @@
+{
+ "facts": [
+  {
+   "topic": "migration-goal",
+   "fact": "Migration: Aliyun ECS (systemd + local SQLite) → Tencent CloudBase 云托管 (container) + CloudBase MySQL. Zero code fork: DB_KIND env var switches storage driver; unset = sqlite = ECS path stays bit-identical (rollback = just unset DB_KIND).",
+   "source": "E:/AI-Station/services/qianwen-engine/TCB_DEPLOY.md (header + §9)"
+  },
+  {
+   "topic": "prereq-mysql",
+   "fact": "Enable CloudBase MySQL in the SAME env (内网互通, no public-bandwidth cost). Record 内网地址/端口/账号/密码/库名; DB advised utf8mb4. Tables optional: engine first-connect runs CREATE TABLE IF NOT EXISTS self-bootstrap. If pre-creating: import scripts/mysql_schema.sql — must be maintained in sync with store.py _SCHEMA (change tables in BOTH places).",
+   "source": "E:/AI-Station/services/qianwen-engine/TCB_DEPLOY.md §1; scripts/mysql_schema.sql header"
+  },
+  {
+   "topic": "deploy-paths",
+   "fact": "Two deploy routes: A (recommended) 云托管 console direct build — create service (e.g. qianwen-engine, memory 1G+), upload local code / Git with ROOT DIR = services/qianwen-engine/ (Dockerfile there is auto-detected). B: local build + push: docker build -t ccr.ccs.tencentyun.com/<命名空间>/qianwen-engine:v080 . && docker push, then service creation via 镜像拉取.",
+   "source": "E:/AI-Station/services/qianwen-engine/TCB_DEPLOY.md §2"
+  },
+  {
+   "topic": "dockerfile-recipe",
+   "fact": "Dockerfile: FROM python:3.11-slim; ENV PYTHONUNBUFFERED=1 PORT=8080; WORKDIR /app; apt-get install --no-install-recommends fonts-noto-cjk fontconfig (CJK font for poster/export, same /usr/share/fonts/opentype/noto path as ECS); COPY requirements.txt + pip install --no-cache-dir; COPY report_content → ./report_platform/content (content layer placed BEFORE code layer so code iterations don't bust the cache; engine default REPORT_CONTENT_DIR=/app/report_platform/content); COPY qianwen_engine; COPY docker-entrypoint.sh; COPY fonts → ./data/fonts; RUN mkdir -p /app/data/wxacode /app/secrets; useradd --create-home appuser + chown data/secrets + USER appuser (comment: delete those lines if volume permissions are restricted); EXPOSE 8080; ENTRYPOINT [\"sh\",\"/app/docker-entrypoint.sh\"]; CMD [\"sh\",\"-c\",\"exec uvicorn qianwen_engine.app:app --host 0.0.0.0 --port ${PORT:-8080}\"]",
+   "source": "E:/AI-Station/services/qianwen-engine/Dockerfile (all 42 lines)"
+  },
+  {
+   "topic": "image-bake-content",
+   "fact": "Baked into image: 64 sellable report PDFs ≈92MB (Dockerfile comment, v0.9.0 era) + report.json + sample/ trial readings. Current live staging measured 119M total with 64 PDFs in report_content/full. Fonts baked: NotoSansSC-Bold.otf, NotoSansSC-Regular.otf, simhei.ttf → /app/data/fonts. PDF inclusion cap = 20MB per file (REPORT_PDF_MAX_BYTES default 20*1024*1024; TOPIC-06 at >136MB excluded).",
+   "source": "E:/AI-Station/services/qianwen-engine/Dockerfile L23-31; WeAppForge/work/mp_cancel_logout/qw_tcb_prep.py L51-79; qianwen_engine/config.py L85; measured: du of E:/AI-Station/data/state/qw_deploy_stage_1007 (=119M, 64 PDFs) and ls E:/AI-Station/data/qianwen/fonts"
+  },
+  {
+   "topic": "env-vars",
+   "fact": "Env var contract: DB_KIND=mysql required for TCB (unset→sqlite local behavior); MYSQL_HOST required; MYSQL_PORT optional default 3306; MYSQL_USER/MYSQL_PASSWORD/MYSQL_DATABASE required; PORT optional default 8080 (云托管 injects PORT; Dockerfile same default); DATA_DIR advised (fonts/wxacode cache, point at volume e.g. /mnt/qianwen); SECRETS_DIR advised (secret files, e.g. /mnt/secrets); QW_DEV_LOGIN (dev openid direct login) and QW_FAKE_ASK (fake answers, no metaso point burn) are TEST dual-gates — production MUST NOT set them.",
+   "source": "E:/AI-Station/services/qianwen-engine/TCB_DEPLOY.md §3"
+  },
+  {
+   "topic": "secrets-discipline",
+   "fact": "Secret values never enter the image or env vars directly; files sourced from E:\\AI-Station\\data\\secrets\\: zhipu.secret (智谱 free chain: followup/highlights/citation-expand/optimize-question main engine), metaso_kb_session.json (metaso KB web session = formal consult main engine), zongbao_qianwen_mp.secret (miniprogram appsecret: code2session/wxacode/msgSecCheck), qianwen_engine_hmac.key (user token HMAC — MUST persist; loss/rotation = ALL issued tokens invalid = every user logged out), metaso_api_key_user.txt (optional search-api leg), virtual_pay.secret (optional virtual pay). v0.9.4+ adds invoice_wecom_webhook.txt; v0.9.6 adds telemetry.secret (X-Tel-Key for GET /api/telemetry/recent).",
+   "source": "E:/AI-Station/services/qianwen-engine/TCB_DEPLOY.md §4; qianwen_engine/config.py L39-48, L64, L69, L76; WeAppForge/work/mp_cancel_logout/qw_tcb_prep.py L94-111"
+  },
+  {
+   "topic": "secret-transport",
+   "fact": "Real secret channel = SECRET_FILES_B64 env var: JSON map {filename: base64}; docker-entrypoint.sh (set -e) materializes files into $SECRETS_DIR at container start via embedded python; alternative to CFS volume mount (env-var version needs no purchased volume). Live server env keys observed 1007: DATA_DIR, DB_KIND, MYSQL_DATABASE, MYSQL_HOST, MYSQL_PASSWORD, MYSQL_PORT, MYSQL_USER, SECRETS_DIR, SECRET_FILES_B64; 6 secret files on server: metaso_api_key_user.txt, metaso_kb_session.json, qianwen_engine_hmac.key, virtual_pay.secret, zhipu.secret, zongbao_qianwen_mp.secret.",
+   "source": "E:/AI-Station/services/qianwen-engine/docker-entrypoint.sh; TCB_DEPLOY.md §8a; WeAppForge/work/mp_cancel_logout/_prep.log L2-3"
+  },
+  {
+   "topic": "health-port",
+   "fact": "Listens 0.0.0.0:${PORT:-8080} single port; health check path GET /api/health returns {\"ok\": true} (app.py:1185-1187); console 健康检查 fills /api/health; post-deploy verify: curl https://<默认域名>/api/health.",
+   "source": "E:/AI-Station/services/qianwen-engine/TCB_DEPLOY.md §5; qianwen_engine/app.py L1185-1187; Dockerfile L2-4"
+  },
+  {
+   "topic": "data-migration",
+   "fact": "One-shot migration ECS SQLite → CloudBase MySQL: set MYSQL_* env vars then `python scripts/migrate_sqlite_to_mysql.py /path/to/data/qianwen/db.sqlite` (--fresh to TRUNCATE first). Script sets DB_KIND=mysql BEFORE importing store (config reads env at import); opens sqlite read-only via URI mode=ro (never writes source); DDL reuses engine runtime bootstrap (store.init, no drift); 12 tables in order: users, answers, mp_session, rewards, pot_items, followups, posters, pot_reports, citations_ft, criticisms, pay_log, pay_order; criticisms lazy-DDL duplicated in script; inserts follow sqlite rowid order (answers insert order = mysql rowid order, history sort semantics preserved); autoincrement ids (rewards/followups/criticisms) preserved raw; chunked executemany 500 rows; refuses non-empty target tables by default (anti double-load).",
+   "source": "E:/AI-Station/services/qianwen-engine/scripts/migrate_sqlite_to_mysql.py (all 104 lines); TCB_DEPLOY.md §6"
+  },
+  {
+   "topic": "domain-wiring",
+   "fact": "Custom domain: bind api.epcschool.top in 云托管 → 服务设置 → 自定义域名 (CloudBase default HTTPS cert or own); DNS CNAME per console to the service default public domain; add https://api.epcschool.top to miniprogram 后台 开发管理→服务器域名→request 合法域名; switch miniprogram utils/config.js API base (one place in WeAppForge project). NOTE: §8a verification uses https://ai.epcschool.top/api/health — the live verify domain in the doc is ai.epcschool.top while §7 names api.epcschool.top; both appear in the same file.",
+   "source": "E:/AI-Station/services/qianwen-engine/TCB_DEPLOY.md §7 and §8a"
+  },
+  {
+   "topic": "cli-channel",
+   "fact": "CLI runtime facts: @cloudbase/cli 3.8.5, PATH+=/c/Users/91216/AppData/Roaming/npm, credentials at ~/.config/.cloudbase/auth.json, envId=cloudbase-d2gzke5r0b706b3a3, console-login-free. Exact deploy: printf '\\n' | tcb cloudrun deploy -s qianwen-engine --source <staging> --port 8080 --min-num 1 --max-num 2 --vpc-config '{\"vpcId\":\"vpc-hv6ji25g\",\"vpcCIDR\":\"172.17.0.0/16\",\"subnetId\":\"subnet-ksblbg8p\",\"subnetCIDR\":\"172.17.0.0/20\"}' --open-access-types PUBLIC,MINIAPP --force --wait (printf feeds the interactive 灰度部署 prompt to pick default 否 = auto traffic switch). Detail: tcb cloudrun detail -s qianwen-engine --json (EnvParams lives at data.ServerConfig.EnvParams as JSON string; deploy does NOT reset it). Records/logs: tcb cloudrun record list -s qianwen-engine --json (get RunId); tcb cloudrun logs process --run-id <RunId>.",
+   "source": "E:/AI-Station/services/qianwen-engine/TCB_DEPLOY.md §8; WeAppForge/work/mp_cancel_logout/_deploy.log"
+  },
+  {
+   "topic": "manager-node-channel",
+   "fact": "Env-var/secret update channel (only live path): one-time install cd /e/AI-Station/data/state/mn_client && npm i @cloudbase/manager-node (358 packages ~11s). Update flow (~3.5min idempotent): 1) python WeAppForge/work/mp_cancel_logout/qw_tcb_prep.py — rebuilds staging E:\\AI-Station\\data\\state\\qw_deploy_stage_1007 + writes data/state/qianwen_tcb_envparams.json (pulls live EnvParams → replaces virtual_pay.secret → b64 roundtrip assert); 2) node data/state/mn_client/update_envparams.js — manager-node 5.9.0, ENV_ID cloudbase-d2gzke5r0b706b3a3, REGION ap-shanghai, credentials from %USERPROFILE%/.config/.cloudbase/auth.json .credential (tmpSecretId/tmpSecretKey/tmpToken), calls app.cloudrun.deploy({serverName, targetPath: STAGE, deployInfo:{ReleaseType:'FULL'}, serverConfig:{EnvParams: JSON.stringify(envp), OpenAccessTypes:['PUBLIC','MINIAPP'], InstallDependency:true}}); 3) verify trio: detail EnvParams double-decode b64 compare vs local source → record list wait status normal + HasTraffic → https://ai.epcschool.top/api/health.",
+   "source": "E:/AI-Station/services/qianwen-engine/TCB_DEPLOY.md §8a; E:/AI-Station/data/state/mn_client/update_envparams.js (all 61 lines)"
+  },
+  {
+   "topic": "manager-node-sparse-update",
+   "fact": "manager-node deploy() update branch does NOT expand old config: OpenAccessTypes omitted → drifts to default ['OA','PUBLIC','MINIAPP'] — must explicitly pin ['PUBLIC','MINIAPP']. Cpu/Mem/MinNum/MaxNum/Port/VpcConf absent from the sparse DiffConfigItems = server leaves untouched (measured zero drift). EnvParams goes as a JSON string — no argv split('=') truncation, base64 '=' padding need NOT be stripped (unlike CLI).",
+   "source": "E:/AI-Station/services/qianwen-engine/TCB_DEPLOY.md §8a note; update_envparams.js L43-54"
+  },
+  {
+   "topic": "staging-prep",
+   "fact": "qw_tcb_prep.py staging recipe: rmtree+recreate STAGE; copy Dockerfile/docker-entrypoint.sh/requirements.txt; copy every qianwen_engine/**/*.py excluding __pycache__; copy fonts NotoSansSC-*.otf + simhei.ttf; content layer: report.json + every full/<sku>.pdf ≤20MB (missing or oversized → skipped, e.g. TOPIC-06 >136MB) + sample/*.md. Secret assembly: decode live SECRET_FILES_B64, overwrite virtual_pay.secret / invoice_wecom_webhook.txt (assert startswith https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=) / telemetry.secret (assert 16-64 chars, no spaces), re-encode, roundtrip asserts, write data/state/qianwen_tcb_envparams.json (under data/ = never in git). Prints only key names/counts, never values.",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/qw_tcb_prep.py (all 138 lines)"
+  },
+  {
+   "topic": "vpay-env-gate",
+   "fact": "env=0 防呆闸 (1009 root-cause fix): virtual_pay.secret env was switched to 0 (prod) too early while items+miniprogram unpublished → WeChat rejects prod payments → 真机「付款解锁调不出收款码」. qw_tcb_prep.py now hard-aborts if secret contains env=0 unless data/state/VPAY_PROD_LIVE.flag exists (content = publisher/date); env=0 only permitted at HANDOFF §六 release-chain step 4 (after 6 items published live ×6). As of 2026-10-09 the flag file does NOT exist → env=1 sandbox still in effect. offer_id=1450664233 / product_id=unlock_once appear in the secret.",
+   "source": "WeAppForge/work/mp_cancel_logout/qw_tcb_prep.py L96-132; filesystem check: E:/AI-Station/data/state/VPAY_PROD_LIVE.flag absent"
+  },
+  {
+   "topic": "single-replica",
+   "fact": "Must run single replica: progress stream (typewriter/stage events, _PROGRESS) and KB serial gate are in-process state → pin 实例数=1、弹性伸缩关. Multi-replica requires externalizing both states (MySQL/Redis) first.",
+   "source": "E:/AI-Station/services/qianwen-engine/TCB_DEPLOY.md §9; Dockerfile header L8"
+  },
+  {
+   "topic": "mysql-pool",
+   "fact": "MySQL mode pool: _POOL_MAX=4 (write path has separate _LOCK serial, low concurrency, small pool suffices); borrow does conn.ping(reconnect=True) self-heal for container idle disconnects; exception-path connections are discarded not returned; connect params charset=utf8mb4, autocommit=False, connect_timeout=5, read_timeout=60, write_timeout=60, DictCursor. Container idle disconnect/restart auto-recovers, no manual ops.",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/store.py L150-193; TCB_DEPLOY.md §9"
+  },
+  {
+   "topic": "config-container-detection",
+   "fact": "config.py TCB detection is structural: REPO = Path(__file__).resolve().parents[3] (repo root) with IndexError fallback to parents[1] — inside container /app/qianwen_engine/config.py has only 2 parent levels → REPO=/app, so DATA_DIR/SECRETS_DIR defaults land at /app/data, /app/secrets. Env overrides: SECRETS_DIR, DATA_DIR (DB_PATH=DATA_DIR/db.sqlite), REPORT_CONTENT_DIR (default REPO/report_platform/content). No secrets ever in config.py (comment: 本文件不落任何密钥). _env_int tolerates missing/invalid int values (falls back to default).",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/config.py L8-36, L83-84, L15-20"
+  },
+  {
+   "topic": "staging-cloudbaserc",
+   "fact": "staging dir E:/AI-Station/data/state/qw_deploy_stage_1007 contains cloudbaserc.json {\"envId\":\"cloudbase-d2gzke5r0b706b3a3\",\"cloudrun\":{\"name\":\"qianwen-engine\"}} (pins env + service for tcb CLI when run from staging); staging layout: Dockerfile, cloudbaserc.json, docker-entrypoint.sh, fonts/, qianwen_engine/, report_content/, requirements.txt.",
+   "source": "E:/AI-Station/data/state/qw_deploy_stage_1007/cloudbaserc.json + directory listing"
+  },
+  {
+   "topic": "deploy-log-evidence",
+   "fact": "Real deploy log (CLI 3.8.5): interactive prompt '? 是否启用灰度部署？' (否 = auto traffic switch after success); pipeline stages CreateVersion → RunPipeline(notInvolve) → GrayRelease(notInvolve) → ReleaseVersion; success line '✔ 部署成功'; status console URL https://tcb.cloud.tencent.com/dev?envId=cloudbase-d2gzke5r0b706b3a3#/platform-run/service/detail?serverName=qianwen-engine&tabId=deploy.",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/_deploy.log and _deploy2.log"
+  },
+  {
+   "topic": "entrypoint-b64-tolerance",
+   "fact": "docker-entrypoint.sh d64(): b64 values must tolerate stripped '=' padding (CLI service:config xx=a&yy=b parsing truncates at '=', so '=' had to be stripped when passing; entrypoint re-pads: if len(s)%4: s += '='*(-len(s)%4)). Only runs when both SECRET_FILES_B64 and SECRETS_DIR are set; prints 'entrypoint: materialized N secret files into <dir>'.",
+   "source": "E:/AI-Station/services/qianwen-engine/docker-entrypoint.sh L1-31"
+  },
+  {
+   "topic": "envparams-file",
+   "fact": "data/state/qianwen_tcb_envparams.json exists (3406 bytes, last regenerated 2026-10-09 18:45 — consistent with v0.9.6 telemetry.secret addition). Contents not read (contains secrets b64).",
+   "source": "filesystem: E:/AI-Station/data/state/qianwen_tcb_envparams.json"
+  },
+  {
+   "topic": "retired-script",
+   "fact": "qw_tcb_envupdate.py (WeAppForge/work/mp_cancel_logout/) is RETIRED 留档勿用 — it invoked the dead `tcb run service:config` path with SECRET_FILES_B64 '='-stripped. Kept as archive only.",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/qw_tcb_envupdate.py header L1-7"
+  }
+ ],
+ "gotchas": [
+  {
+   "symptom": "`tcb run service:config -s qianwen-engine --envParams ...` always fails with INVALID_PARAM \"请使用 -e 或 --envId 指定环境 ID\" exit_code 3 (stack: throwInvalidParam → checkTcbrEnv → ConfigServiceTcbr.execute), even when -e is passed at root or patched into options",
+   "root_cause": "CLI 3.8.5 structural dead end (source-level verified): ① the command's options never declare an envId flag so options.envId is always undefined (flag at root position or patch-injected both fail; InjectParams does not merge); ② even with envId injected, client checkTcbrEnv rejects non-tcbr envs a second time. Log also shows the command is deprecated: '[已废弃] 此命令将被移除，新版云托管无独立的配置更新命令'",
+   "fix": "Use @cloudbase/manager-node cloudrun.deploy (UpdateCloudRunServer + DiffConfigItems sparse update) with EnvParams as JSON string — see TCB_DEPLOY.md §8a and data/state/mn_client/update_envparams.js. Alternative printed by CLI itself: redeploy via `tcb cloudrun deploy` or edit in console",
+   "source": "E:/AI-Station/services/qianwen-engine/TCB_DEPLOY.md §8a; WeAppForge/work/mp_cancel_logout/_tcb7.log; qw_tcb_envupdate.py header"
+  },
+  {
+   "symptom": "Env var value set via CLI --envParams gets silently truncated at the first '=' inside the value (e.g. base64 padding)",
+   "root_cause": "CLI flag parsing splits KEY=VALUE on '=' without maxsplit; and the new cloudrun deploy does not expose envParams at all",
+   "fix": "manager-node serverConfig.EnvParams JSON-string channel has no '=' truncation — base64 padding need not be stripped; entrypoint also re-pads stripped b64 defensively",
+   "source": "E:/AI-Station/services/qianwen-engine/TCB_DEPLOY.md §8a; docker-entrypoint.sh header"
+  },
+  {
+   "symptom": "After a manager-node deploy(), public/miniapp access types drift — an unwanted 'OA' access type appears",
+   "root_cause": "deploy() update branch does NOT expand/inherit old config; OpenAccessTypes omitted from serverConfig falls back to default ['OA','PUBLIC','MINIAPP']",
+   "fix": "Always explicitly pass OpenAccessTypes:['PUBLIC','MINIAPP'] in serverConfig (other keys absent from sparse Items = server untouched, measured zero drift)",
+   "source": "E:/AI-Station/services/qianwen-engine/TCB_DEPLOY.md §8a note; update_envparams.js L50-51"
+  },
+  {
+   "symptom": "Non-interactive `tcb cloudrun deploy` hangs at '? 是否启用灰度部署？ (Use arrow keys)'",
+   "root_cause": "CLI prompts interactively for gray-release choice even with --wait --force",
+   "fix": "Pipe a newline to accept the default 否 (auto traffic switch after success): printf '\\n' | tcb cloudrun deploy ...",
+   "source": "E:/AI-Station/services/qianwen-engine/TCB_DEPLOY.md §8 (comment on deploy line); _deploy.log L6-8"
+  },
+  {
+   "symptom": "真机「付款解锁调不出收款码」— virtual payment rejected by WeChat side (1009 incident)",
+   "root_cause": "virtual_pay.secret env was flipped to 0 (prod) too early: pay items not yet published live + miniprogram not yet released → prod env payments rejected outright",
+   "fix": "env=0 only allowed during HANDOFF §六 release-chain step 4 (after 过审 + miniprogram release + 6 items published live); qw_tcb_prep.py hard-gates: aborts on env=0 unless data/state/VPAY_PROD_LIVE.flag exists (content = publisher/date). As of 1009 flag absent → sandbox env=1 still live",
+   "source": "WeAppForge/work/mp_cancel_logout/qw_tcb_prep.py L96-107"
+  },
+  {
+   "symptom": "Scaling to multiple replicas would corrupt live behavior (lost/interleaved typewriter progress, KB gate bypass)",
+   "root_cause": "_PROGRESS stream state and KB serial gate are in-process memory (single uvicorn worker)",
+   "fix": "Pin 实例数=1、弹性伸缩关 (deploy uses --min-num 1 --max-num 2 documented; engine comment says fix to 1); externalize both states to MySQL/Redis before multi-replica",
+   "source": "E:/AI-Station/services/qianwen-engine/TCB_DEPLOY.md §9; Dockerfile header L8"
+  },
+  {
+   "symptom": "All users logged out after redeploy/secret change; every issued token rejected",
+   "root_cause": "qianwen_engine_hmac.key (user token HMAC key) lost or rotated — tokens are signed with it",
+   "fix": "Persist the key file (SECRETS_DIR mount or SECRET_FILES_B64 entry); never regenerate casually; rotation = forced logout of all users",
+   "source": "E:/AI-Station/services/qianwen-engine/TCB_DEPLOY.md §4"
+  },
+  {
+   "symptom": "Container sits idle then MySQL queries fail once",
+   "root_cause": "CloudBase MySQL server drops idle connections; container keeps stale pooled conns",
+   "fix": "Already self-healing: _my_borrow does conn.ping(reconnect=True) on every borrow; exception-path connections discarded not returned; pool capped at 4",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/store.py L150-193; TCB_DEPLOY.md §9"
+  },
+  {
+   "symptom": "docx/pdf export or poster endpoints return 503 in a fresh deployment",
+   "root_cause": "Chinese fonts absent — fonts must sit in DATA_DIR/fonts (or image /app/data/fonts): NotoSansSC-Bold/Regular.otf + simhei.ttf; system layer needs fonts-noto-cjk + fontconfig",
+   "fix": "Keep fonts in the baked image layer (Dockerfile COPY fonts ./data/fonts) and/or mount DATA_DIR with fonts/; Q&A main chain is unaffected by missing fonts",
+   "source": "E:/AI-Station/services/qianwen-engine/TCB_DEPLOY.md §4; Dockerfile L16-18, L30-31"
+  },
+  {
+   "symptom": "Migration script aborts: '[abort] 目标库非空（防重复灌数）'",
+   "root_cause": "Intentional guard — any non-empty target table blocks the run to prevent double-loading",
+   "fix": "Confirm truly re-loading, then add --fresh (TRUNCATEs all target tables in reverse TABLES order first)",
+   "source": "E:/AI-Station/services/qianwen-engine/scripts/migrate_sqlite_to_mysql.py L71-79"
+  },
+  {
+   "symptom": "Secret-materialization failure surfaces as container crash loop instead of a soft error",
+   "root_cause": "docker-entrypoint.sh runs `set -e`; the b64/JSON decode is inline — any malformed SECRET_FILES_B64 kills the container (by design, per verify step: 'entrypoint set -e，落盘失败容器必崩' so health check exposes it)",
+   "fix": "Treat /api/health failing after deploy as secret-injection failure; fix the EnvParams JSON/b64 at the source (qw_tcb_prep.py roundtrip asserts prevent this upstream)",
+   "source": "E:/AI-Station/services/qianwen-engine/docker-entrypoint.sh L7; TCB_DEPLOY.md §8a step 3"
+  },
+  {
+   "symptom": "Env vars changed via console/manager-node disappear or seem stale after a CLI deploy",
+   "root_cause": "Actually the opposite is documented: `tcb cloudrun deploy` does NOT reset EnvParams (detail shows EnvParams at data.ServerConfig.EnvParams as JSON string). Stale reads usually mean checking the wrong place or a deploy still in ReleaseVersion phase",
+   "fix": "Read back via `tcb cloudrun detail -s qianwen-engine --json` and parse data.ServerConfig.EnvParams; wait for record list status normal + HasTraffic before verifying",
+   "source": "E:/AI-Station/services/qianwen-engine/TCB_DEPLOY.md §8"
+  },
+  {
+   "symptom": "Schema drift between pre-created MySQL tables and engine runtime tables",
+   "root_cause": "mysql_schema.sql and store.py _SCHEMA are two hand-maintained copies (criticisms additionally lazy-created at runtime by save_criticism)",
+   "fix": "Always change both files together; engine bootstrap CREATE TABLE IF NOT EXISTS will NOT alter existing tables",
+   "source": "E:/AI-Station/services/qianwen-engine/TCB_DEPLOY.md §1; scripts/mysql_schema.sql header"
+  },
+  {
+   "symptom": "Config defaults point to wrong dirs after moving the package in a container",
+   "root_cause": "REPO resolution relies on parents[3] IndexError fallback to parents[1]: valid only for /app/qianwen_engine/config.py layout (2 parent levels)",
+   "fix": "Keep the /app layout or always set DATA_DIR/SECRETS_DIR env vars explicitly (TCB sets them anyway)",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/config.py L8-11"
+  },
+  {
+   "symptom": "Production accidentally answers with fake answers or allows dev openid login",
+   "root_cause": "QW_DEV_LOGIN / QW_FAKE_ASK test gates left set in EnvParams",
+   "fix": "Never set these two in production EnvParams (documented as 测试双闸, 生产不设)",
+   "source": "E:/AI-Station/services/qianwen-engine/TCB_DEPLOY.md §3"
+  }
+ ],
+ "recipes": [
+  {
+   "name": "TCB cloudrun deploy via CLI (code/staging push)",
+   "steps": "1. Rebuild staging: python WeAppForge/work/mp_cancel_logout/qw_tcb_prep.py (creates E:\\AI-Station\\data\\state\\qw_deploy_stage_1007 with Dockerfile + docker-entrypoint.sh + requirements.txt + qianwen_engine/*.py no-pycache + fonts/{NotoSansSC-*.otf,simhei.ttf} + report_content/{report.json, full/*.pdf ≤20MB, sample/*.md} + cloudbaserc.json pinning envId). 2. Deploy with interactive prompt fed a newline: printf '\\n' | tcb cloudrun deploy -s qianwen-engine --source E:\\AI-Station\\data\\state\\qw_deploy_stage_1007 --port 8080 --min-num 1 --max-num 2 --vpc-config '{\"vpcId\":\"vpc-hv6ji25g\",\"vpcCIDR\":\"172.17.0.0/16\",\"subnetId\":\"subnet-ksblbg8p\",\"subnetCIDR\":\"172.17.0.0/20\"}' --open-access-types PUBLIC,MINIAPP --force --wait. 3. Watch pipeline: CreateVersion → ReleaseVersion → '✔ 部署成功'. 4. Logs: tcb cloudrun record list -s qianwen-engine --json → tcb cloudrun logs process --run-id <RunId>. Note: deploy does not reset EnvParams.",
+   "source": "E:/AI-Station/services/qianwen-engine/TCB_DEPLOY.md §8; WeAppForge/work/mp_cancel_logout/qw_tcb_prep.py; _deploy.log"
+  },
+  {
+   "name": "Change env vars / secrets on the live service (manager-node channel, only live path)",
+   "steps": "One-time: cd /e/AI-Station/data/state/mn_client && npm i @cloudbase/manager-node (358 pkgs ~11s). Then per update (~3.5min, idempotent): 1) python WeAppForge/work/mp_cancel_logout/qw_tcb_prep.py — rebuilds staging, pulls live EnvParams via tcb cloudrun detail, splices fresh secret files (virtual_pay.secret with env=0 flag gate, invoice_wecom_webhook.txt, telemetry.secret) into SECRET_FILES_B64, b64 roundtrip asserts, writes data/state/qianwen_tcb_envparams.json. 2) node data/state/mn_client/update_envparams.js — credentials from ~/.config/.cloudbase/auth.json (tmpSecretId/tmpSecretKey/tmpToken), app.cloudrun.deploy({serverName:'qianwen-engine', targetPath: STAGE, deployInfo:{ReleaseType:'FULL'}, serverConfig:{EnvParams: JSON.stringify(envp), OpenAccessTypes:['PUBLIC','MINIAPP'], InstallDependency:true}}), envId cloudbase-d2gzke5r0b706b3a3 region ap-shanghai. 3) Verify trio: (a) detail EnvParams decoded twice and compared to local source; (b) record list wait status normal + HasTraffic; (c) curl https://ai.epcschool.top/api/health → {\"ok\":true}.",
+   "source": "E:/AI-Station/services/qianwen-engine/TCB_DEPLOY.md §8a; E:/AI-Station/data/state/mn_client/update_envparams.js"
+  },
+  {
+   "name": "One-shot data migration ECS SQLite → CloudBase MySQL",
+   "steps": "From a machine that can reach both the sqlite file and target MySQL: cd services/qianwen-engine; export MYSQL_HOST=... MYSQL_PORT=3306 MYSQL_USER=... MYSQL_PASSWORD=... MYSQL_DATABASE=...; python scripts/migrate_sqlite_to_mysql.py /path/to/data/qianwen/db.sqlite (add --fresh to TRUNCATE target tables first; default refuses non-empty targets). Post-checks: users/answers row counts match ECS sqlite; miniprogram login → history list shows old Q&A.",
+   "source": "E:/AI-Station/services/qianwen-engine/TCB_DEPLOY.md §6; scripts/migrate_sqlite_to_mysql.py"
+  },
+  {
+   "name": "Console-first deploy (no local docker)",
+   "steps": "云托管 → create service qianwen-engine (memory 1G+); deploy method 本地代码上传/Git with root directory services/qianwen-engine/ (Dockerfile auto-built: python:3.11-slim + fonts-noto-cjk + requirements.txt + report_content + qianwen_engine). Or route B: docker build -t ccr.ccs.tencentyun.com/<ns>/qianwen-engine:v080 . && docker push, then create service via 镜像拉取. Set env vars per §3 table; health check path /api/health.",
+   "source": "E:/AI-Station/services/qianwen-engine/TCB_DEPLOY.md §2, §3, §5"
+  },
+  {
+   "name": "Custom domain + miniprogram wiring",
+   "steps": "1. 云托管 → 服务设置 → 自定义域名 → bind api.epcschool.top (CloudBase default HTTPS cert or own). 2. Add DNS CNAME per console prompt to the service default public domain. 3. Miniprogram 后台 开发管理 → 服务器域名 → request 合法域名 add https://api.epcschool.top. 4. Flip miniprogram utils/config.js API base to the domain (single config point in WeAppForge project).",
+   "source": "E:/AI-Station/services/qianwen-engine/TCB_DEPLOY.md §7"
+  },
+  {
+   "name": "Rollback to ECS (sqlite) or between DB kinds",
+   "steps": "Rollback = unset DB_KIND (config default 'sqlite' → local/ECS behavior unchanged, same code); ECS legacy link stays bit-identical. mysql mode auto-recovers idle disconnects (borrow ping reconnect), no manual ops. Engine first-connect auto-creates tables (CREATE TABLE IF NOT EXISTS).",
+   "source": "E:/AI-Station/services/qianwen-engine/TCB_DEPLOY.md §9, §1; qianwen_engine/config.py L25"
+  }
+ ]
+}

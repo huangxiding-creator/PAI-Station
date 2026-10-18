@@ -1,0 +1,328 @@
+/**
+ * qw-pop v0.9.7 — 自绘弹窗系统样式
+ * 纪律（与 app.wxss / cite-pop / 海报同源）：
+ *  - 颜色一律 var(--t-*)/var(--navy-*) 系（theme.js 46 变量经 page-meta 继承穿透组件）；
+ *  - 圆角阶梯：微标 4 → 卡 14（弹窗级全站最大）→ sheet 顶角 20（最大容器级）；
+ *  - 安全橙只做结构点睛：弹体顶条 6rpx + 主 CTA 渐变，不泛滥；
+ *  - 入场曲线 cubic-bezier(0.22,0.9,0.3,1)（.rise 同族）；退场 210ms 收短。
+ */
+
+/* ── 遮罩（签认单/图纸盘共用；rgba 三元组随七套主题+深色染色）── */
+.qwp-mask {
+  position: fixed;
+  left: 0; top: 0; right: 0; bottom: 0;
+  z-index: 998;                    /* 与 cite-pop 同层（授勋 999 之上只有 load 1000） */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 56rpx;
+  box-sizing: border-box;
+  background: rgba(var(--t-deep-rgb), 0.72);
+  animation: qwp-fade-in 0.24s ease both;
+}
+.qwp-mask-sheet {
+  align-items: flex-end;           /* 底部盘：贴底升出 */
+  padding: 0;
+}
+
+/* ── 签认单弹体（纸面高光面 + 纸边 + 6rpx 橙顶条 = cite-pop 签名）── */
+.qwp-card {
+  width: 100%;
+  max-width: 640rpx;
+  max-height: 78vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--t-paper-hi);
+  border: 2rpx solid var(--t-paper-edge);
+  border-top: 6rpx solid var(--accent);
+  border-radius: 14rpx;
+  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.35);
+  animation: qwp-rise 0.34s cubic-bezier(0.22, 0.9, 0.3, 1) both;
+}
+.qwp-card-leave {
+  animation: qwp-sink 0.2s ease-in both;
+}
+
+/* 眉标（注记体：20rpx ls5 w600，蓝图注记灰） */
+.qwp-kicker {
+  padding: 30rpx 32rpx 0;
+  font-size: 20rpx;
+  font-weight: 600;
+  letter-spacing: 5rpx;
+  color: var(--ink-dim);
+}
+
+/* 标题（34 w800 最深藏青——版面主角级） */
+.qwp-title {
+  padding: 10rpx 32rpx 0;
+  font-size: 34rpx;
+  font-weight: 800;
+  line-height: 1.45;
+  color: var(--navy-0);
+}
+
+/* 正文（可滚：长合规文本不再被原生 modal 截断——cite-pop 诞生理由的全面化） */
+.qwp-body {
+  max-height: 54vh;
+  padding: 18rpx 32rpx 0;
+  box-sizing: border-box;
+}
+.qwp-text {
+  display: block;
+  font-size: 27rpx;
+  line-height: 1.85;
+  color: var(--ink-2);
+  text-align: justify;
+  padding-bottom: 6rpx;
+}
+
+/* 纠错/举报输入框（纸面冷调内嵌块 + 纸边） */
+.qwp-edit {
+  padding: 20rpx 32rpx 0;
+}
+.qwp-ta {
+  width: 100%;
+  min-height: 150rpx;
+  box-sizing: border-box;
+  padding: 20rpx;
+  background: var(--t-paper-cool);
+  border: 2rpx solid var(--t-paper-edge);
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  line-height: 1.7;
+  color: var(--ink);
+}
+.qwp-ph {
+  color: var(--muted);
+}
+
+/* 按钮排（纸面虚线分割 + 主次双轨；主=橙三段渐变，次=纸边幽灵键） */
+.qwp-btns {
+  display: flex;
+  gap: 20rpx;
+  padding: 28rpx 32rpx 32rpx;
+  margin-top: 24rpx;
+  border-top: 2rpx dashed var(--line);
+}
+.qwp-btn {
+  height: 88rpx;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.qwp-cancel {
+  flex-shrink: 0;
+  min-width: 200rpx;
+  padding: 0 28rpx;
+  background: transparent;
+  border: 2rpx solid var(--t-paper-edge);
+  font-size: 27rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+  color: var(--ink-2);
+  box-sizing: border-box;
+}
+.qwp-ok {
+  flex: 1;
+  background: linear-gradient(180deg, var(--t-accent-soft) 0%, var(--accent) 45%, var(--accent-deep) 100%);
+  font-size: 27rpx;
+  font-weight: 800;
+  letter-spacing: 2rpx;
+  color: var(--navy-0);
+  box-shadow: 0 10rpx 22rpx rgba(var(--t-accent-rgb), 0.32), inset 0 2rpx 0 rgba(255, 255, 255, 0.55);
+}
+.qwp-ok-hover {
+  transform: scale(0.96);
+  box-shadow: 0 6rpx 14rpx rgba(var(--t-accent-rgb), 0.26), inset 0 2rpx 0 rgba(255, 255, 255, 0.4);
+}
+.qwp-ghost-hover {
+  transform: scale(0.97);
+  opacity: 0.75;
+}
+
+/* ── 底部图纸盘 ── */
+.qwp-sheet {
+  width: 100%;
+  background: var(--t-paper-hi);
+  border: 2rpx solid var(--t-paper-edge);
+  border-bottom: none;
+  border-top: 6rpx solid var(--accent);
+  border-radius: 20rpx 20rpx 0 0;
+  box-shadow: 0 -12rpx 44rpx rgba(0, 0, 0, 0.28);
+  animation: qwp-up 0.36s cubic-bezier(0.22, 0.9, 0.3, 1) both;
+}
+.qwp-sheet-leave {
+  animation: qwp-down 0.22s ease-in both;
+}
+.qwp-grab {
+  width: 64rpx;
+  height: 8rpx;
+  border-radius: 4rpx;
+  background: var(--t-paper-dim);
+  margin: 18rpx auto 0;
+}
+.qwp-sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  padding: 18rpx 32rpx 12rpx;
+}
+.qwp-sheet-head .qwp-kicker {
+  padding: 0;
+}
+.qwp-badge {
+  flex-shrink: 0;
+  padding: 8rpx 16rpx;
+  background: var(--t-amber-bg);
+  border: 2rpx solid var(--t-amber-line);
+  border-radius: 6rpx;
+  font-size: 20rpx;
+  font-weight: 700;
+  letter-spacing: 1rpx;
+  color: var(--t-amber-ink);
+}
+.qwp-row {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  padding: 26rpx 32rpx;
+  border-top: 2rpx dashed var(--line);
+  transition: background 0.12s ease, transform 0.12s ease;
+}
+.qwp-row-hover {
+  background: var(--t-paper-cool);
+  transform: scale(0.99);
+}
+.qwp-row-no {
+  flex-shrink: 0;
+  font-size: 24rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+  color: var(--draft);
+  font-family: "SF Mono", Menlo, Consolas, "Courier New", monospace;
+}
+.qwp-row-main {
+  flex: 1;
+  min-width: 0;
+}
+.qwp-row-t {
+  font-size: 29rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+  color: var(--navy-0);
+}
+.qwp-row-sub {
+  margin-top: 4rpx;
+  font-size: 22rpx;
+  color: var(--muted);
+}
+.qwp-row-ext {
+  flex-shrink: 0;
+  padding: 6rpx 14rpx;
+  background: var(--t-blue-tint);
+  border-radius: 4rpx;
+  font-size: 20rpx;
+  color: var(--draft);
+  font-family: "SF Mono", Menlo, Consolas, "Courier New", monospace;
+}
+.qwp-sheet-cancel {
+  height: 88rpx;
+  margin: 20rpx 32rpx 0;
+  border-radius: 12rpx;
+  border: 2rpx solid var(--t-paper-edge);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 27rpx;
+  font-weight: 700;
+  letter-spacing: 4rpx;
+  color: var(--ink-2);
+  transition: transform 0.12s ease;
+}
+.qwp-safe {
+  height: calc(28rpx + env(safe-area-inset-bottom));
+}
+
+/* ── 制图加载（罗盘环 + 十字基准线；最顶层防连点）── */
+.qwp-load-mask {
+  position: fixed;
+  left: 0; top: 0; right: 0; bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--t-deep-rgb), 0.66);
+  animation: qwp-fade-in 0.2s ease both;
+}
+.qwp-load-box {
+  position: relative;
+  width: 240rpx;
+  height: 240rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.qwp-load-cross-h {
+  position: absolute;
+  left: -40rpx;
+  right: -40rpx;
+  top: 50%;
+  height: 2rpx;
+  background: rgba(var(--t-ink-rgb), 0.22);
+}
+.qwp-load-cross-v {
+  position: absolute;
+  top: -40rpx;
+  bottom: -40rpx;
+  left: 50%;
+  width: 2rpx;
+  background: rgba(var(--t-ink-rgb), 0.22);
+}
+.qwp-load-ring {
+  width: 92rpx;
+  height: 92rpx;
+  border-radius: 50%;
+  border: 6rpx solid rgba(var(--t-ink-rgb), 0.16);
+  border-top-color: var(--accent);
+  animation: qwp-spin 0.9s linear infinite;
+}
+.qwp-load-txt {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -76rpx;
+  white-space: nowrap;
+  font-size: 24rpx;
+  font-weight: 600;
+  letter-spacing: 4rpx;
+  color: var(--white-ink);
+}
+
+/* ── 关键帧 ── */
+@keyframes qwp-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes qwp-rise {
+  from { opacity: 0; transform: translateY(40rpx) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes qwp-sink {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translateY(28rpx) scale(0.97); }
+}
+@keyframes qwp-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+@keyframes qwp-down {
+  from { transform: translateY(0); }
+  to { transform: translateY(100%); }
+}
+@keyframes qwp-spin {
+  to { transform: rotate(360deg); }
+}

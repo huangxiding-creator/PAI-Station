@@ -848,13 +848,29 @@ def _report_product(vp: dict, sku: str) -> tuple:
 
 @app.get("/api/reports")
 def reports_list(request: Request):
-    """报告目录（公开浏览）：sellable=false 为整理中（可看不可买）。"""
+    """报告目录（公开浏览）：sellable=false 为整理中（可看不可买）。
+    v0.9.21（1018 用户令）：双分区——latest（发布时间≤3）+ hot（互动总热度倒序）；
+    互动计数随行（views/likes/shares/heat）。"""
     openid = _openid_soft(request)
     unlocked = store.report_unlocked_skus(openid) if openid else set()
-    return {"reports": [
-        {**it, "unlocked": it["sku"] in unlocked}
-        for it in report_catalog.catalog()
-    ]}
+    stats = store.report_stats_all()
+
+    def _heat(sku: str) -> int:
+        s = stats.get(sku) or {}
+        return (s.get("views") or 0) + (s.get("likes") or 0) + (s.get("shares") or 0)
+
+    items = []
+    for it in report_catalog.catalog():
+        sku = it["sku"]
+        s = stats.get(sku) or {}
+        items.append({**it, "unlocked": sku in unlocked,
+                      "views": s.get("views") or 0, "likes": s.get("likes") or 0,
+                      "shares": s.get("shares") or 0, "heat": _heat(sku)})
+    # latest：目录序即维护者的发布序（report.json 数组序=最新优先），取前 3 可售
+    latest = [it for it in items if it.get("sellable")][:3]
+    # hot：热度倒序（零热度报告按目录序排后）
+    hot = sorted(items, key=lambda x: (-x["heat"], items.index(x)))
+    return {"reports": items, "latest": latest, "hot": hot}
 
 
 @app.get("/api/report/{sku}")
@@ -1042,10 +1058,22 @@ def _parse_rqa_reply(text: str) -> tuple:
         if m and len(points) < 3:
             ch = int(m.group(1)) if m.group(1) else 0   # 试读摘要=ch 0
             text_tail = (m.group(2) or "").strip()
-            points.append({"ch": ch, "text": text_tail[:40]})
+            points.append({"ch": ch, "text": text_tail[:80]})  # v0.9.21：论据加长
         elif not conclusion:
-            conclusion = line[:30]
+            conclusion = line[:600]  # v0.9.21：500字诚意回答
     return conclusion, points
+
+
+@app.post("/api/report/{sku}/bump/{field}")
+def report_bump(sku: str, field: str):
+    """报告互动计数（v0.9.21 用户令）：views/likes/shares 自增，返回新值。
+    公开（目录浏览计数无鉴权必要；点赞分享由客户端触发）。"""
+    if field not in ("views", "likes", "shares"):
+        raise HTTPException(400, "field 须为 views/likes/shares")
+    if report_catalog.get_report(sku) is None:
+        raise HTTPException(404, "报告不存在")
+    val = store.report_stats_bump(sku, field)
+    return {"sku": sku, "field": field, "value": val}
 
 
 @app.post("/api/report/{sku}/ask")

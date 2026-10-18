@@ -1,0 +1,144 @@
+<page-meta page-style="{{themeStyle}}" />
+<view class="page">
+
+  <!-- ══ 蓝图头部：锅圈 · 打破砂锅问到底 ══ -->
+  <view class="hero bp-grid ticks">
+    <view style="height: {{nav.statusBarHeight}}px;"></view>
+    <view class="hero-nav" style="height: {{nav.navHeight}}px"></view>
+
+    <view class="hero-inner">
+      <view class="hero-kicker">POT CIRCLE · BREAK THE POT</view>
+      <view class="hero-title">锅圈</view>
+      <view class="hero-sub">打破砂锅问到底 · EPC 总承包热点难点问题逐一拆解答疑</view>
+
+      <view class="hero-dwg mono">DWG NO. {{sheetNo}} · SCALE 1:1<view class="dim-rule"></view><text class="dim-cap">HOT</text></view>
+    </view>
+  </view>
+
+  <!-- v0.7.7 深度合成合规：AI 生成显著标识强化（拒审 599847679 整改，页首常驻） -->
+  <view class="ai-flag">
+    <view class="ai-flag-badge">AI生成</view>
+    <view class="ai-flag-text">本展区问答内容由人工智能（AI）生成 · 仅供参考</view>
+  </view>
+
+  <!-- v0.9.10 分类标签（用户令 1009）：分类 chip 行——服务端读时打标，存量/新增即打即得 -->
+  <scroll-view class="cat-row" scroll-x wx:if="{{cats.length > 0 && !loading && !loadError}}">
+    <view class="cat-chip {{!activeCat ? 'cat-on' : ''}}" data-cat="" bindtap="onCat" hover-class="cat-hover">全部</view>
+    <view
+      class="cat-chip {{activeCat === item.name ? 'cat-on' : ''}}"
+      wx:for="{{cats}}"
+      wx:key="name"
+      data-cat="{{item.name}}"
+      bindtap="onCat"
+      hover-class="cat-hover"
+    >{{item.name}}<text class="cat-n mono"> {{item.n}}</text></view>
+  </scroll-view>
+
+  <!-- 列表 -->
+  <block wx:if="{{loading}}">
+    <view class="card">
+      <view class="sk sk-title"></view>
+    </view>
+    <view class="card">
+      <view class="sk sk-line"></view>
+      <view class="sk sk-line"></view>
+      <view class="sk sk-line short"></view>
+    </view>
+  </block>
+
+  <view class="card ticks err-card" wx:elif="{{loadError}}">
+    <view class="err-kicker kicker kicker-on-paper">ERROR · 加载遇到问题</view>
+    <view class="muted">{{loadError}}</view>
+    <button class="btn-primary retry-btn" hover-class="btn-hover" bindtap="onRetry">重新加载</button>
+  </view>
+
+  <!-- 空态：锅还没热 -->
+  <view class="card ticks" wx:elif="{{items.length === 0}}">
+    <view class="pot-empty">
+      <view class="pot-empty-glyph">锅</view>
+      <view class="pot-empty-title">锅正在升温</view>
+      <view class="muted">智库正在准备 EPC 热点问题解答，稍后再来看看</view>
+    </view>
+  </view>
+
+  <!-- ══ v0.9.19（1017 用户令）：双分区——最新咨询 ≤3 + 最热咨询（互动总热度）══ -->
+  <block wx:else>
+    <!-- 第一区：最新咨询（纯时间，最多 3 条） -->
+    <view class="pot-sec" wx:if="{{latest.length > 0}}">
+      <view class="pot-sec-bar"></view>
+      <text class="pot-sec-title">最新咨询 · LATEST</text>
+      <text class="pot-sec-cap mono">TOP 3</text>
+    </view>
+    <view
+      class="card ticks pot-item rise"
+      wx:for="{{latest}}"
+      wx:key="id"
+      data-id="{{item.id}}"
+      bindtap="onItem"
+      hover-class="pot-hover"
+      style="animation-delay: {{index * 40}}ms"
+    >
+      <view class="pot-head">
+        <view class="pot-no mono pot-no-new">N-{{index + 1 < 10 ? '0' : ''}}{{index + 1}}</view>
+        <view class="pot-q">{{item.question}}</view>
+      </view>
+      <view class="pot-cat mono" wx:if="{{item.cat}}">{{item.cat}}</view>
+      <view class="pot-preview">{{item.preview}}{{item.preview.length >= 200 ? '…' : ''}}</view>
+      <view class="pot-foot">
+        <text class="pot-meta mono">{{item.full_chars}} 字全文</text>
+        <view class="pot-like {{item.liked ? 'pot-like-on' : ''}}">
+          <text class="pot-like-glyph">{{item.liked ? '❤' : '♡'}}</text>
+          <text class="mono">{{item.likes}}</text>
+        </view>
+        <text class="pot-meta mono">观看 {{item.views}}</text>
+        <text class="pot-meta mono">转发 {{item.shares}}</text>
+        <view class="pot-report" catchtap="onReport" data-id="{{item.id}}">举报</view>
+        <text class="pot-more">看全文 ›</text>
+      </view>
+    </view>
+
+    <!-- 第二区：最热咨询（观看+点赞+转发总和倒序） -->
+    <view class="pot-sec pot-sec-hot" wx:if="{{hot.length > 0}}">
+      <view class="pot-sec-bar pot-sec-bar-hot"></view>
+      <text class="pot-sec-title">最热咨询 · HOT</text>
+      <text class="pot-sec-cap mono">观看+点赞+转发</text>
+    </view>
+    <view
+      class="card ticks pot-item rise"
+      wx:for="{{hot}}"
+      wx:key="id"
+      data-id="{{item.id}}"
+      bindtap="onItem"
+      hover-class="pot-hover"
+      style="animation-delay: {{index * 40}}ms"
+    >
+      <view class="pot-head">
+        <view class="pot-no mono pot-no-hot">H-{{index + 1 < 10 ? '0' : ''}}{{index + 1}}</view>
+        <view class="pot-q">{{item.question}}</view>
+        <text class="pot-heat mono" wx:if="{{item.heat > 0}}">🔥{{item.heat}}</text>
+      </view>
+      <view class="pot-cat mono" wx:if="{{item.cat}}">{{item.cat}}</view>
+      <view class="pot-preview">{{item.preview}}{{item.preview.length >= 200 ? '…' : ''}}</view>
+      <view class="pot-foot">
+        <text class="pot-meta mono">{{item.full_chars}} 字全文</text>
+        <view class="pot-like {{item.liked ? 'pot-like-on' : ''}}">
+          <text class="pot-like-glyph">{{item.liked ? '❤' : '♡'}}</text>
+          <text class="mono">{{item.likes}}</text>
+        </view>
+        <text class="pot-meta mono">观看 {{item.views}}</text>
+        <text class="pot-meta mono">转发 {{item.shares}}</text>
+        <view class="pot-report" catchtap="onReport" data-id="{{item.id}}">举报</view>
+        <text class="pot-more">看全文 ›</text>
+      </view>
+    </view>
+
+    <view class="muted tip-line">点开任意热点 · 「有用 / 纠错」同样各 +1 次咨询机会</view>
+    <!-- v0.9.1 一页一处显眼提示（1008 用户令）：AI 生成标识仅保留页首 ai-flag，此处只留举报指引 -->
+    <view class="muted pot-ai-note">发现不当内容可点「举报」</view>
+  </block>
+
+  <view class="safe-bottom"></view>
+</view>
+
+<!-- v0.9.7 自绘弹窗系统：qw-pop 自绘弹窗（onPopState 镜像开合+tabBar 让路）（onPopState 镜像开合+tabBar 让路） -->
+<qw-pop id="qwpop" bind:popstate="onPopState" />

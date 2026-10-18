@@ -1,0 +1,202 @@
+{
+ "facts": [
+  {
+   "topic": "popup-doctrine",
+   "fact": "v0.9.12 弹窗清理五连令（用户令 1009，commit 18db65f）共下线 13 处不必要弹窗：①支付未完成提示→取消静默/失败轻提示 toast；②隐私探窗→ask 页常驻内联一行「提交即同意」；③导出/报告购买前置确认→下线（微信支付面板自带金额，无需再确认）；④开票结果 modal→toast。",
+   "source": "C:/Users/91216/.claude/projects/e--AI-Station/memory/flagship-paid-report-goal.md（1009 v0.9.10→0.9.12 段②）"
+  },
+  {
+   "topic": "popup-doctrine",
+   "fact": "同令保留 8 类必要弹窗，记忆档按名枚举其中 5 类：破坏性确认 / 功能输入 / 文件就绪 / 402 配额 / AI优化过目（优化后交给用户过目、采用才替换）。402 配额弹窗即「阻断性错误须带恢复动作出口」的实证形态。",
+   "source": "C:/Users/91216/.claude/projects/e--AI-Station/memory/flagship-paid-report-goal.md（1009 段②）+ E:/AI-Station/WeAppForge/projects/zongbao-ai/pages/ask/ask.js:255-256,323-330"
+  },
+  {
+   "topic": "missing",
+   "fact": "「保留 8 类必要弹窗」中仅 5 类在所读文件中有名有姓（破坏性确认/功能输入/文件就绪/402 配额/AI优化过目），其余 3 类名称未在 flagship 记忆档与 ask.js 中枚举——写参考文档时要么从 18db65f diff 全量反推，要么照实写「8 类中 5 类已具名」。",
+   "source": "C:/Users/91216/.claude/projects/e--AI-Station/memory/flagship-paid-report-goal.md（1009 段②）"
+  },
+  {
+   "topic": "popup-doctrine",
+   "fact": "三线终验数字：bootsim 517/517 + 服务端 102/102 + e2e 8/8；robot27 上传并钉 0.9.12 体验版。18db65f 实际改动面（git show 实证）：answer.js/ask.js+ask.wxml/invoice.js/my.js+my.wxml/report.js+report.wxml + bootsim_v3.py（+92 行断言）+ 新增 e2e_v092_popdown.mjs（134 行）与 3 张证据截图（s0_my.png/s1_ask_inline.png/s2_my_after_tap.png）。",
+   "source": "C:/Users/91216/.claude/projects/e--AI-Station/memory/flagship-paid-report-goal.md（1009 段②）+ git show 18db65f（repo E:/AI-Station）"
+  },
+  {
+   "topic": "popup-doctrine",
+   "fact": "ask.js 现役弹窗使用模式（保留类的活代码）：pop.modal 用于 402 配额（kicker '额度 · QUOTA'，title '今日次数已用完'，content「打开任意一篇回答，点『有用 / 纠错』即可各再获 1 次咨询机会（多答多得，不封顶）；明天 0 点恢复 6 次。」，confirm→switchTab 到 my 页）；pop.modal 用于 AI优化过目（kicker '优化 · OPTIMIZE'，confirm→_fill(better)+toast「已填入，可直接咨询」）；pop.loading(this,'AI 优化中…')/pop.hideLoading(this) 成对。",
+   "source": "E:/AI-Station/WeAppForge/projects/zongbao-ai/pages/ask/ask.js:245-272,323-330"
+  },
+  {
+   "topic": "popup-doctrine",
+   "fact": "失败路径降级实证：v0.9.12 咨询失败不弹窗，改 wx.showToast({title:msg, icon:'none', duration:2500})（ask.js:332-333 注释原文「v0.9.12（用户令）：失败不弹窗，轻提示原因」）；其余 toast：登录失败/服务还没恢复（仅第二次重试失败才提示，_retriedOnce 防重复打扰）/问题至少输入2个字/AI优化失败 duration 2500/跳转没成功（「回答已存『咨询记录』」给数据去向承诺 duration 3000）/已填入 duration 1800——全部 icon:'none'。",
+   "source": "E:/AI-Station/WeAppForge/projects/zongbao-ai/pages/ask/ask.js:160-193,240,252,265,272,283,315-316,332-333"
+  },
+  {
+   "topic": "popup-doctrine",
+   "fact": "qw-pop 自绘弹窗系统（v0.9.7）：utils/pop.js 导出 {modal, sheet, loading, hideLoading, onPopState}；页面三件接线=①json usingComponents 注册 \"qw-pop\":\"/components/qw-pop/qw-pop\" ②wxml 尾部 <qw-pop id=\"qwpop\" bind:popstate=\"onPopState\"/> ③js onPopState(e){pop.onPopState(this,e)}；onPopState 把开合态镜像进 data（popOpen/popMode，作 e2e/结构锚）并对 tab 页 getTabBar().setData({dim:!!d.open}) 压暗让路（弹窗期间 tabBar 不可误触；非 tab 页 getTabBar 不存在自然跳过）；未接线时 _comp 抛「qw-pop 未接线（页面缺 #qwpop 节点）」。",
+   "source": "E:/AI-Station/WeAppForge/projects/zongbao-ai/utils/pop.js:1-44 + pages/ask/ask.js:72-73,148-151"
+  },
+  {
+   "topic": "popup-doctrine",
+   "fact": "隐私探窗→内联的确切实现（v0.9.12）：ask.js:48-52 注释原文——「隐私探窗下线——咨询后弹『采集用户隐私』提醒弹窗属不必要打扰（反而引起警觉）。告知改为常驻内联小字（ask.wxml CTA 下方）+『我的』协议页全文，告知义务不缺位、零打断。首次提交即视为同意（落 qw_privacy_ok 记忆，供 _gateAndLogin 决定是否静默登录）」；ask.wxml:112 = <view class=\"opt-hint muted\">提交即同意用户协议与隐私政策 · 解答由 AI 生成，仅供参考</view>；ask.js:292-293 提交时 if(!wx.getStorageSync('qw_privacy_ok')) wx.setStorageSync('qw_privacy_ok',1)；ask.js:109-116 _gateAndLogin 只在已同意才 silentLogin（未同意不收集 openid——v0.9.2 告知门前置口径保持不变）。",
+   "source": "E:/AI-Station/WeAppForge/projects/zongbao-ai/pages/ask/ask.js:48-52,103-116,292-293 + pages/ask/ask.wxml:112"
+  },
+  {
+   "topic": "popup-doctrine",
+   "fact": "v0.9.8（commit 13135bb）已先行做过一轮弹窗相关令：「三令版——隐私告知不自动弹+免费字样全域下线+AI申明唯一化」；v0.9.10（commit 4c0086c）「锅圈分类标签+首页统计面+免费引流回位」——「免费」字样经历 下线(0.9.8)→回位(0.9.10) 一个来回，写弹窗/文案 doctrine 时须注明这是两条不同用户令的结果，不是回退 bug。",
+   "source": "git log（repo E:/AI-Station）：13135bb、4c0086c"
+  },
+  {
+   "topic": "already-covered",
+   "fact": "mp-compliance-gates.md 已覆盖八门（新弹窗材料是扩展不是重写）：门0 总原则可证成口径（一切宣传语须能举证；顶级/10年沉淀/7×24 降级为机制描述）；门1 AI生成内容显著标识门（0.7.4 拒审唯一根因，audit_id=599847676，公告 000ce4a4，12 位=10 前端+2 海报逐位审计表）；门2 诱导分享门（运营规范 3.2.1，分享+奖励必拆，赠次只留有用/纠错/共享入锅圈，判据 ans_js.count('this._reward(')==3）；门3 极限词门（广告法9/28条，全包 os.walk 扫禁词集 顶级/病毒/裂变/法务/诉讼/7×24/10年沉淀/工程大脑）；门4 隐私合规门（legal四件套+首次提问告知+my页入口+wx.getPrivacySetting 运行时实证）；门5 UGC内容安全门（msgSecCheck v2 scene=2+前端举报 catchtap+fail-closed 503+session_key 不落盘）；门6 类目与资质门（法务/诉讼字样→按法律咨询类目→需律所资质；降级口径「工程领域信息参考工具」）；门7 提审表单六项核对单+mp控制台自动化三坑；门8 bootsim 断言范式（四型：字面存在/字面反向/全包walk归零/计数判据）。",
+   "source": "C:/Users/91216/.claude/skills/weapp-launch-factory/references/mp-compliance-gates.md（全文，门0-门8）"
+  },
+  {
+   "topic": "compliance-NEW",
+   "fact": "未成年人问卷=本轮新出现的提审步骤（skill 未覆盖）：1009 提审向导新形态全图谱=getcodepage 行内提交审核→须知→安全测试→未成年人问卷（新出现）→继续提交 spawn 新 get_class 标签=主表单（旧 getcodepage 标签全僵尸，必须重扫 tabs；textarea Vue 受控须原生 setter+input 事件）。旧 skill 门7 流程图没有未成年人问卷这一步，且默认主表单与向导同页——新形态主表单开在新标签页。",
+   "source": "C:/Users/91216/.claude/projects/e--AI-Station/memory/flagship-paid-report-goal.md（1009 段③）+ C:/Users/91216/.claude/skills/weapp-launch-factory/references/mp-compliance-gates.md 门7（对比）"
+  },
+  {
+   "topic": "compliance-NEW",
+   "fact": "加急额度已用尽实证：购买加急额度=花钱决策未授权→普通队列即最优。skill 门7 只写「加急只能在提交时选，过后不可补，默认不加急」，未覆盖「额度用尽时购买=须用户花钱授权」这一决策边界。",
+   "source": "C:/Users/91216/.claude/projects/e--AI-Station/memory/flagship-paid-report-goal.md（1009 段③）"
+  },
+  {
+   "topic": "compliance-NEW",
+   "fact": "深度合成类目 interplay（skill 门6 未覆盖的正面面）：门6 只讲「躲法律咨询类目」的负面降级；1008 v0.9.0 报告商城提审实证了正面门——类目深度合成/AI问答绿灯 13:41 先行满足硬门（类目绿灯是提审硬门且可在提交前先行满足）；配套盯哨=schtasks QianwenCatWatch 每 3h（硬腿+绿灯flag+翻转才企微，绿灯才扰民）。",
+   "source": "C:/Users/91216/.claude/projects/e--AI-Station/memory/flagship-paid-report-goal.md（1008 v0.9.0 段「类目深度合成/AI问答绿灯 13:41 先行满足硬门」）+ MEMORY.md 索引 qianwen-gc-proposal 行"
+  },
+  {
+   "topic": "compliance-AI标识-current-state",
+   "fact": "AI标识 12 位表的位 7 机制已变：mp-compliance-gates.md 门1 表位 7=「首次提问隐私弹窗 pages/ask/ask.js:222-225（wx.showModal 隐私保护告知+qw_privacy_ok 门）」；v0.9.12 隐私探窗下线后该触达面改由 ask.wxml:112 CTA 下方常驻内联行承载（「提交即同意用户协议与隐私政策 · 解答由 AI 生成，仅供参考」——一行同时保住隐私告知与 AI 标识两个义务）；qw_privacy_ok 键仍在，语义从「弹窗点同意」变为「首次提交即视为同意」；v0.9.8 另有「AI申明唯一化」令（13135bb），更新门1 表时须按当前代码重 grep 核位。",
+   "source": "C:/Users/91216/.claude/skills/weapp-launch-factory/references/mp-compliance-gates.md 门1位7 + E:/AI-Station/WeAppForge/projects/zongbao-ai/pages/ask/ask.js:48-52,109-116 + git log 13135bb"
+  },
+  {
+   "topic": "case-study-structure",
+   "fact": "case-study-zongbao-ai.md 叙事终点=v0.7.6：1002 09:57:33 robot（总包君）上传 124,008B、BOOT-SIM 241/241、编译 0 错 0 警、10:12:15 提审成功（审核中）。新弧线材料（1008 v0.9.0 商城整合 66 SKU/¥498-1999 vpay、1009 v0.9.8-0.9.12 链）全部未入案例研究——新弧线章节从「1002 v0.7.6 提审成功」接续，中间 v0.8.x-v0.9.7 版本细节只存在于 flagship 记忆档与 git log。",
+   "source": "C:/Users/91216/.claude/skills/weapp-launch-factory/references/case-study-zongbao-ai.md §0/§8/附录A + C:/Users/91216/.claude/projects/e--AI-Station/memory/flagship-paid-report-goal.md"
+  },
+  {
+   "topic": "case-study-structure",
+   "fact": "案例研究现有章节结构（新弧线段应沿用同构）：§0 一页速览表 → §1 想法与调研 → §2 提案与决策（SCORECARD 表）→ §3 架构定型（含可照抄配方块）→ §4 开发迭代节奏（按日波次表：用户令/关键功能/关键坑三列）→ §5 测试门（断言数单调增长表）→ §6 部署上云（域名三切轨史表）→ §7 体验版联调（钉位三次复发链+判据方法箱）→ §8 提审合规 → §9 可复用结论十条金律 → 附录A 版本全表（版本/日期/robot/包大小/断言数/一句话）→ 附录B 坑索引（表象→根因→修法，按域分组）。",
+   "source": "C:/Users/91216/.claude/skills/weapp-launch-factory/references/case-study-zongbao-ai.md（全文结构）"
+  },
+  {
+   "topic": "skill-structure",
+   "fact": "SKILL.md 现状：name=weapp-launch-factory，version 1.0.0（2026-10-02 初版，蒸馏 zongbao-ai 0928-1002 全弧线）；§0 三方分工=super-skill（想法受理/调研/提案引擎）+weapp-forge（工具链操作层）+本 skill（微信域叠加层：合规门/控制台自动化/钉位出码/部署域名链/提审向导/发布切换）；§2 阶段路由表 10 行（阶段9=提审合规→compliance+console 参考，阶段10=发布切换）；§4 Reference 索引 6 文件（case-study-zongbao-ai / mp-compliance-gates / mp-console-automation / trial-pinning-and-qr-recipes / deploy-and-upload-recipes / e2e-harness-recipes）；§6 通用金律十条；§7 发布日一键清单。弹窗 doctrine 在 SKILL.md 与全部 6 个 reference 中均未出现——本轮是净新增材料，天然挂点=阶段 9（提审合规）与 mp-compliance-gates.md 新门。",
+   "source": "C:/Users/91216/.claude/skills/weapp-launch-factory/SKILL.md（全文）"
+  },
+  {
+   "topic": "payment-root-cause",
+   "fact": "同轮产品级修复：支付 ORDER_CLOSED(-15012) 根因=复用已取消订单号；服务端三签名腿（export_sign/export_all_sign/report unlock_sign）改「作废重开新号」：查单补账已付单 409 收口（防二次扣款）→cancel→必铸新 otn；用户裁决原话「没付完的下次重新下单」；commit dc1f487。",
+   "source": "C:/Users/91216/.claude/projects/e--AI-Station/memory/flagship-paid-report-goal.md（1009 段①）"
+  },
+  {
+   "topic": "submission-record",
+   "fact": "2026-10-09 19:26:28 提交成功（版本行「审核中」橙字，截图 review_0912_submitted.png 存档，commit 5529f6e）；提交后加常驻盯哨腿 commit 351770a「提审结果盯哨常驻腿——审核通过/被拒翻转即企微」；v0.9.11 提审前对抗审计四修=cbe1067「公开统计只数真实交付+票根真值+锅圈回滚+测试锚」。",
+   "source": "C:/Users/91216/.claude/projects/e--AI-Station/memory/flagship-paid-report-goal.md（1009 段④）+ git log（repo E:/AI-Station）"
+  },
+  {
+   "topic": "structured-patch-blind-spots",
+   "fact": "结构化补丁三盲区教训（1009 原文）：①helper 写死 r.message 但回调变量是 res（写入侧变量名无关化漏做）；②动态标题（'批量导出 '+n+' 条'）不匹配静态 marker→unwrap 静默跳过；③unwrap 删开符后尾 `});` 成孤儿必须手补删。",
+   "source": "C:/Users/91216/.claude/projects/e--AI-Station/memory/flagship-paid-report-goal.md（1009 段末「结构化补丁三盲区教训」）"
+  },
+  {
+   "topic": "ask.js-aux",
+   "fact": "ask.js 内可见的 v0.9.x 演进标记（新弧线素材）：v0.9.2 统一截断入口 Q_MAX=500（程序化回填 setData 不受 textarea maxlength 截断，1009 审计 HIGH 修复）+ 隐私告知门前置（同意后才发起登录，拒绝则不收集 openid）；v0.9.5 kbstats 信任带四数同源（utils/kbstats.js）；v0.9.7 qw-pop；v0.9.10（用户令 1010）stats=注册用户/咨询总数（服务端聚合数，失败静默隐藏，未登录可看）。",
+   "source": "E:/AI-Station/WeAppForge/projects/zongbao-ai/pages/ask/ask.js:44-46,69-73,99-106,110"
+  }
+ ],
+ "gotchas": [
+  {
+   "symptom": "结构化补丁写入后代码行为不变/写入落空",
+   "root_cause": "helper 写死变量名 r.message，但目标回调的实际变量名是 res——写入侧未做变量名无关化，匹配点对不上",
+   "fix": "结构化补丁的写入侧必须与目标代码实际变量名对齐，或改用变量名无关的锚点匹配",
+   "source": "C:/Users/91216/.claude/projects/e--AI-Station/memory/flagship-paid-report-goal.md（1009 结构化补丁三盲区①）"
+  },
+  {
+   "symptom": "unwrap 操作静默跳过、无任何报错，目标块原样保留",
+   "root_cause": "目标代码标题是动态拼接（'批量导出 '+n+' 条'），补丁 marker 是静态字符串，永远匹配不上→unwrap 静默不执行",
+   "fix": "marker 必须锚定静态稳定文本；含动态段的代码用正则化/分段匹配，且 unwrap 未命中要显式报错而不是静默跳过",
+   "source": "C:/Users/91216/.claude/projects/e--AI-Station/memory/flagship-paid-report-goal.md（1009 结构化补丁三盲区②）"
+  },
+  {
+   "symptom": "unwrap 后页面/模块 JS 语法报错",
+   "root_cause": "unwrap 删除块的开始符号后，块尾的 `});` 成孤儿残留在文件里，括号配对破坏",
+   "fix": "unwrap 删除后必须检查收尾符（`});` 等）残留并手补删——补丁工具不会替你管开符之外的尾巴",
+   "source": "C:/Users/91216/.claude/projects/e--AI-Station/memory/flagship-paid-report-goal.md（1009 结构化补丁三盲区③）"
+  },
+  {
+   "symptom": "提审向导点「继续提交」后主表单「没出现」，旧标签页里怎么找都没有表单",
+   "root_cause": "继续提交会 spawn 新的 get_class 标签页承载主表单；旧 getcodepage 标签全部变僵尸，自动化句柄还停在旧标签",
+   "fix": "继续提交后必须重扫 tabs 抓新标签句柄再操作主表单；主表单 textarea 是 Vue 受控件，须原生 setter+input 事件喂数据",
+   "source": "C:/Users/91216/.claude/projects/e--AI-Station/memory/flagship-paid-report-goal.md（1009 段③提审向导新形态）"
+  },
+  {
+   "symptom": "用户咨询后弹「采集用户隐私」提醒弹窗，用户反而起警觉/流失",
+   "root_cause": "把「告知义务」实现成「打断式弹窗」——义务本身合规，载体选错成了不必要打扰",
+   "fix": "告知改为 CTA 下方常驻内联小字（一行同时承载隐私告知+AI标识）+「我的」协议页全文兜底；首次提交即视为同意（qw_privacy_ok 落记忆），同意前不收集 openid——告知义务不缺位、零打断",
+   "source": "E:/AI-Station/WeAppForge/projects/zongbao-ai/pages/ask/ask.js:48-52,109-116,292-293 + ask.wxml:112"
+  },
+  {
+   "symptom": "用户取消支付后被「支付未完成」弹窗轰炸；导出/买报告前还要先点一遍确认弹窗",
+   "root_cause": "把支付中间态当成需要用户决策的错误对待；前置确认弹窗与微信支付面板自带的金额展示重复",
+   "fix": "支付取消→静默，失败→轻提示 toast（icon:'none'）；导出/报告购买前置确认弹窗全下线（微信支付面板自带金额=天然确认）；开票结果 modal→toast",
+   "source": "C:/Users/91216/.claude/projects/e--AI-Station/memory/flagship-paid-report-goal.md（1009 段②）"
+  },
+  {
+   "symptom": "调用 pop.modal/sheet/loading 直接抛错「qw-pop 未接线（页面缺 #qwpop 节点）」",
+   "root_cause": "页面漏做三件接线之一：json usingComponents 未注册 / wxml 尾部缺 <qw-pop id=\"qwpop\" bind:popstate=\"onPopState\"/> / js 未委托 onPopState",
+   "fix": "按 utils/pop.js 头注释三件接线补齐；onPopState 里统一走 pop.onPopState(this, e) 获得开合镜像+tabBar 压暗",
+   "source": "E:/AI-Station/WeAppForge/projects/zongbao-ai/utils/pop.js:9-15,34-42"
+  },
+  {
+   "symptom": "自绘弹窗开着，用户仍能点到底部 tabBar 切走（tab 页特有）",
+   "root_cause": "自绘弹窗的遮罩盖不住原生 tabBar 区域",
+   "fix": "onPopState 里检测 typeof page.getTabBar === 'function' 时 getTabBar().setData({dim: !!d.open}) 压暗让路；非 tab 页 getTabBar 不存在自然跳过",
+   "source": "E:/AI-Station/WeAppForge/projects/zongbao-ai/utils/pop.js:34-42 + pages/ask/ask.js:148-151"
+  },
+  {
+   "symptom": "支付报 ORDER_CLOSED(-15012)",
+   "root_cause": "复用已取消的订单号下单——三签名腿（export_sign/export_all_sign/report unlock_sign）重新签名时 otn 已被取消",
+   "fix": "作废重开新号：查单补账已付单 409 收口（防二次扣款）→cancel→必铸新 otn；口径=「没付完的下次重新下单」（commit dc1f487）",
+   "source": "C:/Users/91216/.claude/projects/e--AI-Station/memory/flagship-paid-report-goal.md（1009 段①）"
+  }
+ ],
+ "recipes": [
+  {
+   "name": "弹窗保留/下线判定标准（v0.9.12 五连令定式）",
+   "steps": "对每个弹窗问三问：①用户必须决策且有破坏性后果吗（删除/覆盖类）→保留破坏性确认；②是阻断性错误且能引导恢复动作吗（402 配额→引导互动赚次数并给跳转按钮）→保留；③是功能输入或 AI 产物需用户过目吗（AI优化后采用才替换）/文件就绪通知→保留。其余一律降级：中间态/用户取消→静默；失败→wx.showToast(icon:'none', duration 1800-3000)；支付前置确认→删（微信支付面板自带金额）；结果通知 modal→toast；隐私告知→常驻内联小字+协议页全文+首次提交即同意。改完同步追加 bootsim 断言（18db65f 中 bootsim_v3.py +92 行）+新 e2e（e2e_v092_popdown.mjs 8/8）防回退。",
+   "source": "C:/Users/91216/.claude/projects/e--AI-Station/memory/flagship-paid-report-goal.md（1009 段②）+ E:/AI-Station/WeAppForge/projects/zongbao-ai/pages/ask/ask.js + git show 18db65f"
+  },
+  {
+   "name": "隐私探窗→提交即同意改造配方",
+   "steps": "①wxml CTA 下方加常驻行 <view class=\"opt-hint muted\">提交即同意用户协议与隐私政策 · 解答由 AI 生成，仅供参考</view>（一行同时承载隐私告知+AI标识两个合规义务）；②js 提交入口落记忆 if (!wx.getStorageSync('qw_privacy_ok')) wx.setStorageSync('qw_privacy_ok', 1)；③登录门 _gateAndLogin：qw_privacy_ok 存在才 silentLogin，未同意不收集 openid、不发 wx.login；④「我的」协议页保留全文兜底。效果=告知义务不缺位、零打断。",
+   "source": "E:/AI-Station/WeAppForge/projects/zongbao-ai/pages/ask/ask.js:48-52,109-116,292-293 + pages/ask/ask.wxml:112"
+  },
+  {
+   "name": "402 配额弹窗（保留类阻断错误的标准样板）",
+   "steps": "pop.modal(this, { kicker: '额度 · QUOTA', title: '今日次数已用完', content: '打开任意一篇回答，点「有用 / 纠错」即可各再获 1 次咨询机会（多答多得，不封顶）；明天 0 点恢复 6 次。' }).then((r) => { if (r.confirm) wx.switchTab({ url: '/pages/my/my' }); })——阻断性错误弹窗三要素：说明现状+给恢复动作+confirm 直达动作页。",
+   "source": "E:/AI-Station/WeAppForge/projects/zongbao-ai/pages/ask/ask.js:323-330"
+  },
+  {
+   "name": "失败路径轻提示（toast）降级配方",
+   "steps": "一切非阻断失败用 wx.showToast({ title: api.errMsg(err, '<友好默认文案>'), icon: 'none', duration: 1800-3000 })；跳转失败给数据去向承诺（「跳转没成功，回答已存『咨询记录』」duration 3000）；重试类第二次仍失败才提示（_retriedOnce 标记，文案「服务还没恢复，请稍后再试」）防重复打扰；输入校验失败 toast+聚焦（askHint empty/short 状态位供 e2e 锚定）。",
+   "source": "E:/AI-Station/WeAppForge/projects/zongbao-ai/pages/ask/ask.js:160-193,237-241,315-316,332-333"
+  },
+  {
+   "name": "提审向导新形态操作序列（1009 实证版，用于扩 skill 门7）",
+   "steps": "①getcodepage 页行内点提交审核→须知弹窗（checkbox 单击后必验 cb.checked）→安全测试提醒；②未成年人问卷（新步骤，如实作答）；③点「继续提交」后会 spawn 新 get_class 标签页承载主表单——立即重扫 tabs 抓新句柄（旧 getcodepage 标签全僵尸弃用）；④主表单 textarea 用原生 setter+input 事件喂 Vue v-model，counter 与回读一致才算吃进；⑤加急：额度已用尽时购买=花钱决策须用户授权，普通队列即最优；⑥提交成功判据=版本行出现「审核中」橙字+截图存档；⑦提交后可挂盯哨腿（审核通过/被拒翻转即企微，commit 351770a）。",
+   "source": "C:/Users/91216/.claude/projects/e--AI-Station/memory/flagship-paid-report-goal.md（1009 段③④）+ git log 5529f6e/351770a"
+  },
+  {
+   "name": "未付订单作废重开（弹窗清理的服务端同源修复）",
+   "steps": "三签名腿（export_sign/export_all_sign/report unlock_sign）遇已取消订单：查单补账已付单 409 收口（防二次扣款）→cancel→必铸新 otn（绝不复用已取消订单号）；对用户口径=「没付完的下次重新下单」，前端取消静默、失败轻提示 toast。",
+   "source": "C:/Users/91216/.claude/projects/e--AI-Station/memory/flagship-paid-report-goal.md（1009 段①）+ git dc1f487"
+  },
+  {
+   "name": "结构化补丁防三盲区检查单",
+   "steps": "①写入前对齐目标回调的实际变量名（r vs res），或用变量名无关锚点；②marker 不锚动态拼接文本（'批量导出 '+n+' 条' 类），改锚静态稳定串；③unwrap/删除操作后全文检查孤儿收尾符（`});` 等）并手补删；④每个补丁落点有命中回执，未命中显式报错而非静默跳过。",
+   "source": "C:/Users/91216/.claude/projects/e--AI-Station/memory/flagship-paid-report-goal.md（1009 结构化补丁三盲区教训）"
+  }
+ ]
+}

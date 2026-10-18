@@ -1,0 +1,70 @@
+{
+  "log": [
+    {
+      "name": "login_ready",
+      "ok": true,
+      "detail": "quota={\"free_left\":0,\"bonus_left\":7,\"total_left\":7,\"free_per_day\":6}"
+    },
+    {
+      "name": "report_loaded",
+      "ok": true,
+      "detail": "sku=ENT-01 sellable=true unlocked=false paySupported=true buying=false"
+    },
+    {
+      "name": "buy_btn_found",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "trace_captured",
+      "ok": true,
+      "detail": "[{\"kind\":\"http\",\"url\":\"https://ai.epcschool.top/api/report/ENT-01/unlock_sign\",\"status\":200,\"body\":\"{\\\"mode\\\":\\\"short_series_goods\\\",\\\"sign_data\\\":\\\"{\\\\\\\"offerId\\\\\\\":\\\\\\\"1450664233\\\\\\\",\\\\\\\"buyQuantity\\\\\\\":1,\\\\\\\"env\\\\\\\":1,\\\\\\\"currencyType\\\\\\\":\\\\\\\"CNY\\\\\\\",\\\\\\\"productId\\\\\\\":\\\\\\\"report_698\\\\\\\",\\\\\\\"goodsPrice\\\\\\\":69800,\\\\\\\"outTradeNo\\\\\\\":\\\\\\\"rENT-01-05880124a2\\\\\\\",\\\\\\\"attach\\\\\\\":\\\\\\\"d2f6b6ed85398052\\\\\\\",\\\\\\\"mode\\\\\\\":\\\\\\\"short_series_goods\\\\\\\"}\\\",\\\"pay_sig\\\":\\\"a6404b21d3ef0464f26659fae3ca829036a8925d3ed4c64dc81a4a9793d7ee6f\\\",\\\"signature\\\":\\\"5b0bb812b785e6fb7574fdbe848f4e3e6\"},{\"kind\":\"http\",\"url\":\""
+    },
+    {
+      "name": "page_state_after",
+      "ok": true,
+      "detail": "buying=true popOpen=false popMode="
+    }
+  ],
+  "trace": [
+    {
+      "kind": "http",
+      "url": "https://ai.epcschool.top/api/report/ENT-01/unlock_sign",
+      "status": 200,
+      "body": "{\"mode\":\"short_series_goods\",\"sign_data\":\"{\\\"offerId\\\":\\\"1450664233\\\",\\\"buyQuantity\\\":1,\\\"env\\\":1,\\\"currencyType\\\":\\\"CNY\\\",\\\"productId\\\":\\\"report_698\\\",\\\"goodsPrice\\\":69800,\\\"outTradeNo\\\":\\\"rENT-01-05880124a2\\\",\\\"attach\\\":\\\"d2f6b6ed85398052\\\",\\\"mode\\\":\\\"short_series_goods\\\"}\",\"pay_sig\":\"a6404b21d3ef0464f26659fae3ca829036a8925d3ed4c64dc81a4a9793d7ee6f\",\"signature\":\"5b0bb812b785e6fb7574fdbe848f4e3e6"
+    },
+    {
+      "kind": "http",
+      "url": "https://ai.epcschool.top/api/report/ENT-01/unlock_sign",
+      "status": 200,
+      "body": "{\"mode\":\"short_series_goods\",\"sign_data\":\"{\\\"offerId\\\":\\\"1450664233\\\",\\\"buyQuantity\\\":1,\\\"env\\\":1,\\\"currencyType\\\":\\\"CNY\\\",\\\"productId\\\":\\\"report_698\\\",\\\"goodsPrice\\\":69800,\\\"outTradeNo\\\":\\\"rENT-01-05880124a2\\\",\\\"attach\\\":\\\"d2f6b6ed85398052\\\",\\\"mode\\\":\\\"short_series_goods\\\"}\",\"pay_sig\":\"a6404b21d3ef0464f26659fae3ca829036a8925d3ed4c64dc81a4a9793d7ee6f\",\"signature\":\"5b0bb812b785e6fb7574fdbe848f4e3e6"
+    },
+    {
+      "kind": "http",
+      "url": "https://ai.epcschool.top/api/report/ENT-01/unlock_sign",
+      "status": 200,
+      "body": "{\"mode\":\"short_series_goods\",\"sign_data\":\"{\\\"offerId\\\":\\\"1450664233\\\",\\\"buyQuantity\\\":1,\\\"env\\\":1,\\\"currencyType\\\":\\\"CNY\\\",\\\"productId\\\":\\\"report_698\\\",\\\"goodsPrice\\\":69800,\\\"outTradeNo\\\":\\\"rENT-01-05880124a2\\\",\\\"attach\\\":\\\"d2f6b6ed85398052\\\",\\\"mode\\\":\\\"short_series_goods\\\"}\",\"pay_sig\":\"a6404b21d3ef0464f26659fae3ca829036a8925d3ed4c64dc81a4a9793d7ee6f\",\"signature\":\"5b0bb812b785e6fb7574fdbe848f4e3e6"
+    },
+    {
+      "kind": "vpay_call",
+      "hasSignData": true,
+      "mode": "short_series_goods"
+    },
+    {
+      "kind": "vpay_call",
+      "hasSignData": true,
+      "mode": "short_series_goods"
+    },
+    {
+      "kind": "vpay_call",
+      "hasSignData": true,
+      "mode": "short_series_goods"
+    }
+  ],
+  "pageState": {
+    "buying": true,
+    "popOpen": false,
+    "popMode": ""
+  },
+  "errors": []
+}

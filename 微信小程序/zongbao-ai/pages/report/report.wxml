@@ -47,6 +47,78 @@
     <view class="muted rp-note">一次解锁 · 永久阅读 · PDF 全文阅读与下载保存 · 内容由研究团队基于公开资料与 AI 辅助研究方法产出</view>
   </view>
 
+  <!-- ══ v0.9.21 问报告 hero（用户令 1018 升维：小 pill → 大区常驻，置于简介之上；零购买门槛 REQ-006.AC0）══
+       双通道=🎤按住说（WechatSI，冻结组件同款状态机）+ 大字输入区永在（插件缺失自动兜底）；
+       气泡三段（REQ-007）：结论全文可复制/论据挂第N章角标/转化条→购买；每答带互动三钮；AI 标识常驻。 -->
+  <view class="rp-ask-hero bp-grid ticks rise">
+    <view class="rp-ask-hero-head">
+      <view class="rp-ask-hero-mic {{askRecording ? 'rp-ask-hero-mic-on' : ''}}"><text>🎤</text></view>
+      <view class="rp-ask-hero-tt">
+        <view class="rp-ask-hero-title">问报告 · ASK THIS REPORT</view>
+        <view class="rp-ask-hero-sub">直接就这份报告提问，答案引用章节原文</view>
+      </view>
+      <text class="rp-ask-hero-left mono" wx:if="{{!askExhausted}}">今日剩 {{askLeft}} 问</text>
+    </view>
+
+    <!-- 大输入区 + 发送/语音双大钮并排（语音主路/文字永在；日 3 问用尽撤输入行） -->
+    <block wx:if="{{!askExhausted}}">
+      <textarea class="rp-ask-input" value="{{askInput}}" placeholder="问这份报告任何问题..."
+                placeholder-class="rp-ask-hero-ph" maxlength="200" auto-height
+                show-confirm-bar="{{false}}" cursor-spacing="16"
+                bindinput="onAskInput" bindconfirm="onAskSend" />
+      <view class="rp-ask-hero-btns">
+        <view class="rp-ask-hero-voice {{askRecording ? 'rp-ask-hero-voice-on' : ''}}"
+              bindtouchstart="onMicStart" bindtouchend="onMicEnd" bindtouchcancel="onMicEnd"
+              hover-class="rp-ask-hero-btn-hover"><text>🎤 按住说</text></view>
+        <view class="rp-ask-hero-send {{askBusy ? 'rp-ask-hero-send-busy' : ''}}"
+              bindtap="onAskSend" hover-class="rp-ask-hero-btn-hover">{{askBusy ? '回答组织中…' : '发送提问'}}</view>
+      </view>
+      <view class="rp-ask-hero-tip" wx:if="{{askRecording}}">正在听你说 · 松开结束</view>
+    </block>
+
+    <!-- 气泡流：先问后答（结论全文/论据/转化条 + 每答互动三钮） -->
+    <view class="rp-ask-flow" wx:if="{{asks.length}}">
+      <block wx:for="{{asks}}" wx:key="idx" wx:for-item="a">
+        <view class="rp-ask-q">{{a.q}}</view>
+        <view class="rp-ask-a">
+          <view class="rp-ask-loading" wx:if="{{a.loading}}">组织答案中…</view>
+          <block wx:else>
+            <text class="rp-ask-conc" user-select>{{a.conclusion}}</text>
+            <view class="rp-ask-pt" wx:for="{{a.points}}" wx:key="ch" wx:for-item="p">
+              <text class="rp-ask-chip mono">{{p.ch === 0 ? '试读' : '第' + p.ch + '章'}}</text>
+              <text class="rp-ask-pt-t" user-select>{{p.text}}</text>
+            </view>
+            <view class="rp-ask-hint">
+              <text class="rp-ask-hint-t" user-select>{{a.hint}}</text>
+              <view class="rp-ask-buy" wx:if="{{!d.unlocked}}" bindtap="onAskBuyTap" hover-class="rp-ask-buy-hover">购买阅读</view>
+            </view>
+            <!-- v0.9.21 每答互动三钮：点赞/转发计数上链报告本体（bump），海报复用报告转化海报链 -->
+            <view class="rp-ask-acts">
+              <view class="rp-ask-act {{a.liked ? 'rp-ask-act-on' : ''}}" data-idx="{{index}}" bindtap="onAskLike" hover-class="rp-ask-act-hover">
+                <text>{{a.liked ? '✓ 已有用' : '👍 有用 +1'}}</text>
+              </view>
+              <button class="rp-ask-act" open-type="share" data-idx="{{index}}" bindtap="onAskShareTap" hover-class="rp-ask-act-hover">
+                <text>📤 分享</text>
+              </button>
+              <view class="rp-ask-act" data-idx="{{index}}" bindtap="onAskPoster" hover-class="rp-ask-act-hover">
+                <text>🖼️ 生成海报</text>
+              </view>
+            </view>
+          </block>
+        </view>
+      </block>
+    </view>
+
+    <!-- 日 3 问用尽态（REQ-008：撤输入行不发第 4 问；已购者不出现购买引导） -->
+    <view class="rp-ask-out" wx:if="{{askExhausted}}">
+      <view class="rp-ask-out-t">今日 3 问已用完，明日再来</view>
+      <button class="btn-primary rp-ask-out-btn" wx:if="{{!d.unlocked}}" hover-class="btn-hover" bindtap="onAskBuyTap">解锁报告 · 随时翻原文</button>
+    </view>
+
+    <!-- AI 标识常驻（合规：AI 生成内容显著标识） -->
+    <view class="rp-ask-ai">AI 生成 · 仅供参考</view>
+  </view>
+
   <!-- 简介 -->
   <view class="card ticks rise" wx:if="{{d.intro_lede || d.intro}}">
     <view class="kicker kicker-on-paper rp-kicker">ABOUT · 报告简介</view>
@@ -161,64 +233,10 @@
         <view class="pill-glyph"><text>{{posterBusy ? '…' : '🖼️'}}</text></view>
         <text class="pill-t">{{posterBusy ? '生成中…' : '生成海报'}}</text>
       </view>
-      <view class="pill {{askOpen ? 'pill-on' : ''}}" bindtap="onAskTap" hover-class="pill-hover">
-        <view class="pill-glyph"><text>💬</text></view>
-        <text class="pill-t">问报告</text>
-      </view>
     </view>
     <view class="muted act-tip">点「有用」赠 1 次咨询机会 · 每份报告限一次</view>
 
-    <!-- ══ v0.9.20 报告对话官（用户令 1018）：问报告内联对话面板 ══
-         REQ-006.AC0：零购买门槛——未购用户同样可问（限频只有每 sku 日 3 问，引擎侧裁决）；
-         双通道=🎤按住说（WechatSI，冻结组件同款状态机）+ 文字输入永在（插件缺失自动兜底）；
-         气泡三段（REQ-007）：结论粗体/论据挂第N章角标/转化条→购买；AI 标识常驻。 -->
-    <view class="rp-ask" wx:if="{{askOpen}}">
-      <view class="rp-ask-head">
-        <text class="kicker kicker-on-paper">问报告 · ASK</text>
-        <text class="rp-ask-left mono" wx:if="{{!askExhausted}}">今日剩 {{askLeft}} 问</text>
-      </view>
-
-      <!-- 气泡流：先问后答（三段渲染） -->
-      <view class="rp-ask-flow" wx:if="{{asks.length}}">
-        <block wx:for="{{asks}}" wx:key="idx" wx:for-item="a">
-          <view class="rp-ask-q">{{a.q}}</view>
-          <view class="rp-ask-a">
-            <view class="rp-ask-loading" wx:if="{{a.loading}}">组织答案中…</view>
-            <block wx:else>
-              <view class="rp-ask-conc">{{a.conclusion}}</view>
-              <view class="rp-ask-pt" wx:for="{{a.points}}" wx:key="ch" wx:for-item="p">
-                <text class="rp-ask-chip mono">{{p.ch === 0 ? '试读' : '第' + p.ch + '章'}}</text>
-                <text class="rp-ask-pt-t">{{p.text}}</text>
-              </view>
-              <view class="rp-ask-hint">
-                <text class="rp-ask-hint-t">{{a.hint}}</text>
-                <view class="rp-ask-buy" wx:if="{{!d.unlocked}}" bindtap="onAskBuyTap" hover-class="rp-ask-buy-hover">购买阅读</view>
-              </view>
-            </block>
-          </view>
-        </block>
-      </view>
-
-      <!-- 日 3 问用尽态（REQ-008：撤输入行不发第 4 问；已购者不出现购买引导） -->
-      <view class="rp-ask-out" wx:if="{{askExhausted}}">
-        <view class="rp-ask-out-t">今日 3 问已用完，明日再来</view>
-        <button class="btn-primary rp-ask-out-btn" wx:if="{{!d.unlocked}}" hover-class="btn-hover" bindtap="onAskBuyTap">解锁报告 · 随时翻原文</button>
-      </view>
-
-      <!-- 输入行：🎤 按住说 + 文字输入 + 发送（语音主路/文字永在） -->
-      <view class="rp-ask-row" wx:if="{{!askExhausted}}">
-        <view class="rp-ask-mic {{askRecording ? 'rp-ask-mic-on' : ''}}"
-              bindtouchstart="onMicStart" bindtouchend="onMicEnd" bindtouchcancel="onMicEnd"
-              hover-class="rp-ask-mic-hover"><text>🎤</text></view>
-        <input class="rp-ask-input" value="{{askInput}}" placeholder="问这份报告任何问题"
-               maxlength="200" confirm-type="send" bindinput="onAskInput" bindconfirm="onAskSend" />
-        <view class="rp-ask-send {{askBusy ? 'rp-ask-send-busy' : ''}}" bindtap="onAskSend" hover-class="rp-ask-send-hover">{{askBusy ? '…' : '发送'}}</view>
-      </view>
-      <view class="muted rp-ask-mic-tip" wx:if="{{askRecording}}">正在听你说 · 松开结束</view>
-
-      <!-- AI 标识常驻（合规：AI 生成内容显著标识） -->
-      <view class="rp-ask-ai">AI 生成 · 仅供参考</view>
-    </view>
+    <!-- v0.9.21（用户令 1018 升维）：问报告小 pill 已升为页首 hero 大区（见简介上方）——本卡只留互动三件 -->
   </view>
 
   <view class="safe-bottom"></view>

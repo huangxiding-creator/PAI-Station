@@ -1,0 +1,195 @@
+<page-meta page-style="{{themeStyle}}" />
+
+<view class="page">
+
+  <!-- ══ 打破砂锅头：蓝图底（用户令 v0.5.0 更名）══ -->
+  <view class="head bp-grid ticks">
+    <view style="height: {{nav.statusBarHeight}}px;"></view>
+    <view class="head-nav" style="height: {{nav.navHeight}}px">
+      <text class="head-title">打破砂锅 · FOLDER</text>
+    </view>
+
+    <view class="head-inner">
+      <view class="avatar-frame">
+        <text class="avatar-glyph">锅</text>
+      </view>
+      <view class="head-info">
+        <view class="nick">总包AI顾问 · 工程问答</view>
+        <view class="head-sub">打破砂锅问到底 · 我来给您拓思路</view>
+      </view>
+      <view class="head-no mono">NO.{{sheetNo}}</view>
+    </view>
+  </view>
+
+  <!-- 额度票据组：常显，未登录/加载中也占位 -->
+  <!-- v0.9.13 用户令：总额度实时大字主位（含登录赠送+互动加赠）；每日 6 次定名「登录赠送额度」 -->
+  <view class="card ticks quota-card rise" style="animation-delay: 60ms">
+    <view class="sheet-head">
+      <text class="kicker kicker-on-paper">我的额度 · QUOTA</text>
+    </view>
+    <block wx:if="{{quota}}">
+      <view class="quota-hero">
+        <view class="qh-num mono">{{quota.total_left}}</view>
+        <view class="qh-label">咨询总额度 · 现在就能用</view>
+      </view>
+      <view class="quota-grid">
+        <view class="q-item">
+          <view class="q-num mono">{{quota.free_left}}</view>
+          <view class="q-label">今日登录赠送</view>
+        </view>
+        <view class="q-perf"></view>
+        <view class="q-item">
+          <view class="q-num mono">{{quota.bonus_left}}</view>
+          <view class="q-label">互动加赠</view>
+        </view>
+      </view>
+    </block>
+    <!-- v0.9.1 修复：三分支——有 quota 正常渲染 / quotaError 显错误+轻量重试(共用 onRetry) / 其余加载中 -->
+    <block wx:elif="{{quotaError}}">
+      <view class="muted">额度加载失败</view>
+      <button class="btn-primary mini-retry" hover-class="btn-hover" bindtap="onRetry">重试</button>
+    </block>
+    <view class="muted" wx:else>额度加载中…</view>
+    <view class="muted quota-rule">每日登录赠送 6 次 · 有用/纠错（写具体意见）各 +1 次，上不封顶 · 北京时间 0 点清零</view>
+  </view>
+
+  <!-- 咨询记录（1009 用户令：外观移页底，记录前置） -->
+  <view class="card ticks rise" style="animation-delay: 100ms">
+    <view class="sheet-head">
+      <text class="kicker kicker-on-paper">咨询记录 · RECORDS</text>
+    </view>
+
+    <block wx:if="{{loading}}">
+      <!-- 载入骨架：与记录行同构的微光占位（v0.9.1 逐页优化） -->
+      <view class="my-skel-row" wx:for="{{[0, 1, 2]}}" wx:key="*this">
+        <view class="my-skel-no"></view>
+        <view class="my-skel-main">
+          <view class="my-skel-l w90"></view>
+          <view class="my-skel-l w45"></view>
+        </view>
+      </view>
+    </block>
+
+    <block wx:elif="{{loadError}}">
+      <view class="muted center-pad">{{loadError}}</view>
+      <button class="btn-primary mini-retry" hover-class="btn-hover" bindtap="onRetry">重试</button>
+    </block>
+
+    <block wx:elif="{{items.length === 0}}">
+      <!-- 空态：空白图纸 -->
+      <view class="blank-sheet">
+        <view class="blank-frame">
+          <view class="blank-cross"></view>
+          <view class="blank-mark mono">BLANK SHEET</view>
+        </view>
+        <view class="empty-text">还没有咨询记录</view>
+        <view class="muted">第一次咨询，马上试试</view>
+        <button class="btn-primary empty-btn" hover-class="btn-hover" bindtap="goAsk">去咨询</button>
+      </view>
+    </block>
+
+    <block wx:else>
+      <view
+        class="hist-item"
+        wx:for="{{items}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="onItem"
+        hover-class="hist-hover"
+      >
+        <view class="hist-no mono">S-{{index + 1 < 10 ? '0' : ''}}{{index + 1}}</view>
+        <view class="hist-main">
+          <view class="hist-q">{{item.question}}</view>
+          <view class="hist-meta">
+            <text class="muted mono hist-time">{{item.timeText}}</text>
+            <text class="{{item.badgeCls}}" wx:if="{{item.badge}}">{{item.badge}}</text>
+            <text class="hist-badge hist-liked" wx:if="{{item.liked}}">已点赞</text>
+          </view>
+        </view>
+        <view class="hist-arrow">›</view>
+        <!-- v0.9.18（用户令 1013）：行内删钮——catchtap 防冒泡触发行导航，箭头保留 -->
+        <view class="hist-del" catchtap="onDeleteItem" data-id="{{item.id}}" hover-class="hist-del-hover">✕</view>
+      </view>
+
+      <!-- 批量导出：全部咨询问答 → Word/PDF/Markdown（v0.7.0 重设计：藏青主视觉+橙色图标块） -->
+      <!-- v0.8.0 导出收费 ¥0.1/条（iOS 隐藏入口——虚拟支付铁律） -->
+      <button class="export-all-btn" wx:if="{{payOk || exportUnpaidAll === 0}}" hover-class="export-all-hover" bindtap="onExportAll">
+        <view class="ea-icon"><text>📦</text></view>
+        <view class="ea-main">
+          <view class="ea-title">批量导出全部咨询</view>
+          <!-- v0.9.1 修复：iOS(payOk=false)界面不出现价格描述（审核灰区）→ 中性文案；Android 保留价格引导 -->
+          <!-- v0.9.7（1009 用户令：付费一次永久解锁）：全解锁态不显示价格——¥0.1/条 只描述「未解锁条目」 -->
+          <view class="ea-sub" wx:if="{{!payOk}}">Word / PDF / Markdown · 导出全部咨询记录 · 一键转发同事</view>
+          <view class="ea-sub" wx:elif="{{exportUnpaidAll === 0}}">已全部解锁 · 可反复导出 · 一键转发同事</view>
+          <view class="ea-sub" wx:else>Word / PDF / Markdown · ¥0.1/条 · 一键转发同事</view>
+        </view>
+        <text class="ea-arrow">›</text>
+      </button>
+    </block>
+  </view>
+
+  <!-- 我的报告书架（v0.9.0 报告商城：已购报告入口；v0.9.5 入口行重设计对齐动作行 DNA） -->
+  <view class="card ticks rise" style="margin-top: 24rpx;" wx:if="{{reportMine >= 0}}">
+    <view class="sheet-head">
+      <text class="kicker kicker-on-paper">报告书架 · REPORTS</text>
+    </view>
+    <view class="srv-row" bindtap="goReports" hover-class="srv-hover">
+      <view class="srv-icon"><text>📚</text></view>
+      <view class="srv-main">
+        <view class="srv-title">我的报告</view>
+        <view class="srv-sub">{{reportMine}} 份已解锁 · 永久阅读</view>
+      </view>
+      <text class="srv-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- ══ v0.7.3 外观 · 周换装（1009 用户令：移页底设置区——个性化低频项按用户习惯沉底，高频额度/记录在前）══ -->
+  <view class="card ticks rise" style="animation-delay: 180ms">
+    <view class="sheet-head">
+      <text class="kicker kicker-on-paper">外观 · APPEARANCE</text>
+      <text class="muted ap-hint">每周七天自动轮换 · 也可锁定</text>
+    </view>
+    <view class="ap-grid">
+      <view class="ap-cell {{item.active ? 'ap-on' : ''}}" wx:for="{{themes}}" wx:key="key"
+            data-key="{{item.key}}" bindtap="onThemeTap" hover-class="ap-hover">
+        <view class="ap-swatch" style="background: {{item.swatchDeep}};">
+          <view class="ap-dot" style="background: {{item.swatchAccent}};"></view>
+          <view class="ap-paper" style="background: {{item.swatchPaper}};"></view>
+        </view>
+        <view class="ap-name">{{item.name}}</view>
+        <view class="muted ap-wd">{{item.weekdayLabel}}</view>
+        <view class="ap-check" wx:if="{{item.active}}">✓</view>
+      </view>
+      <view class="ap-cell" bindtap="onThemeAuto" hover-class="ap-hover">
+        <view class="ap-swatch ap-swatch-auto">
+          <view class="ap-dot" style="background: var(--accent);"></view>
+        </view>
+        <view class="ap-name">跟随星期</view>
+        <view class="muted ap-wd">自动轮换</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 发票申请（1009 用户令：累计满 ¥200 可申请增值税专用发票；v0.9.5 入口行重设计） -->
+  <view class="card ticks rise" style="animation-delay: 160ms" wx:if="{{invoiceReady}}">
+    <view class="sheet-head">
+      <text class="kicker kicker-on-paper">开票服务 · INVOICE</text>
+    </view>
+    <view class="srv-row" bindtap="goInvoice" hover-class="srv-hover">
+      <view class="srv-icon inv"><text>🧾</text></view>
+      <view class="srv-main">
+        <view class="srv-title">发票申请</view>
+        <view class="srv-sub">{{invoiceHint}}</view>
+      </view>
+      <text class="srv-arrow">›</text>
+    </view>
+  </view>
+
+  <view class="muted mono" style="text-align: center; padding: 8rpx 0 0; letter-spacing: 2rpx;">v0.9.19 · 总包AI顾问</view>
+  <view class="legal-row" bindtap="goPrivacy" hover-class="legal-hover">用户协议 · 隐私政策</view>
+
+  <view class="safe-bottom"></view>
+</view>
+
+<!-- v0.9.7 自绘弹窗系统：modal/sheet/loading 三模式（onPopState 镜像开合+tabBar 让路） -->
+<qw-pop id="qwpop" bind:popstate="onPopState" />

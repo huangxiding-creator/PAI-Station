@@ -25,7 +25,36 @@
     </view>
   </view>
 
-  <!-- 分类筛选 -->
+  <!-- ══ v0.9.21 第一区：最新研报（引擎目录序 TOP 3，不受筛选影响）══ -->
+  <view class="card ticks rise" wx:if="{{latest.length}}">
+    <view class="rs-sec">
+      <view class="rs-sec-bar"></view>
+      <text class="rs-sec-title">最新研报 · LATEST</text>
+      <text class="rs-sec-cap mono">TOP 3</text>
+    </view>
+    <view class="rs-list">
+      <view class="rs-item {{item.unlocked ? 'rs-item-owned' : ''}}" wx:for="{{latest}}" wx:key="sku" data-sku="{{item.sku}}" bindtap="goReport" hover-class="rs-item-hover">
+        <view class="rs-item-top">
+          <view class="rs-item-top-l">
+            <text class="rs-top3 mono">TOP {{index + 1}}</text>
+            <view class="rs-cat mono">{{item.cat_name}}</view>
+          </view>
+          <view class="rs-state {{item.unlocked ? 'rs-state-on' : (item.sellable ? '' : 'rs-state-dim')}}">{{item.unlocked ? '已解锁' : (item.sellable ? item.price_label : '整理中')}}</view>
+        </view>
+        <view class="rs-title">{{item.title}}</view>
+        <view class="rs-sub muted">{{item.subtitle}}</view>
+        <view class="rs-item-bot">
+          <view class="rs-badges">
+            <text class="rs-badge" wx:if="{{bi < 3}}" wx:for="{{item.badges}}" wx:for-item="b" wx:for-index="bi" wx:key="k">{{b.k}}{{b.v ? ' ' + b.v : ''}}</text>
+          </view>
+          <view class="rs-words mono" wx:if="{{item.words_wan}}">{{item.words_wan}}万字</view>
+        </view>
+        <view class="rs-acts mono">观看 {{item.views || 0}} · 点赞 {{item.likes || 0}} · 转发 {{item.shares || 0}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 分类筛选（v0.9.21：只作用于最热区） -->
   <view class="rs-filters card ticks">
     <view
       class="rs-chip {{active === item.k ? 'rs-chip-on' : ''}}"
@@ -36,8 +65,13 @@
     >{{item.label}}<text wx:if="{{item.k === 'mine' && stats.mine}}" class="rs-chip-n mono">{{stats.mine}}</text></view>
   </view>
 
-  <!-- 目录列表 -->
+  <!-- ══ v0.9.21 第二区：最热研报（互动热度倒序=观看+点赞+转发；分类筛子作用域）══ -->
   <view class="card ticks rise" wx:if="{{shown.length}}">
+    <view class="rs-sec">
+      <view class="rs-sec-bar rs-sec-bar-hot"></view>
+      <text class="rs-sec-title">最热研报 · HOT</text>
+      <text class="rs-sec-cap mono">观看+点赞+转发</text>
+    </view>
     <view class="rs-list">
       <view class="rs-item {{item.unlocked ? 'rs-item-owned' : ''}}" wx:for="{{shown}}" wx:key="sku" data-sku="{{item.sku}}" bindtap="goReport" hover-class="rs-item-hover">
         <view class="rs-item-top">
@@ -50,8 +84,12 @@
           <view class="rs-badges">
             <text class="rs-badge" wx:if="{{bi < 3}}" wx:for="{{item.badges}}" wx:for-item="b" wx:for-index="bi" wx:key="k">{{b.k}}{{b.v ? ' ' + b.v : ''}}</text>
           </view>
-          <view class="rs-words mono" wx:if="{{item.words_wan}}">{{item.words_wan}}万字</view>
+          <view class="rs-item-right">
+            <text class="rs-heat mono" wx:if="{{item.heat > 0}}">🔥{{item.heat}}</text>
+            <view class="rs-words mono" wx:if="{{item.words_wan}}">{{item.words_wan}}万字</view>
+          </view>
         </view>
+        <view class="rs-acts mono">观看 {{item.views || 0}} · 点赞 {{item.likes || 0}} · 转发 {{item.shares || 0}}</view>
       </view>
     </view>
   </view>
@@ -59,8 +97,8 @@
   <!-- 空/载入/错误态 -->
   <view class="card ticks" wx:if="{{!loading && !shown.length && !errMsg}}">
     <view class="rs-empty">
-      <view class="rs-empty-t">{{active === 'mine' ? '还没有解锁的报告' : '目录整理中'}}</view>
-      <view class="muted">{{active === 'mine' ? '购买后这里就是你的书架' : '稍后再来看看'}}</view>
+      <view class="rs-empty-t">{{active === 'mine' ? '还没有解锁的报告' : '这个筛选下暂无热门报告'}}</view>
+      <view class="muted">{{active === 'mine' ? '购买后这里就是你的书架' : '换个分类看看，或浏览上方最新研报'}}</view>
     </view>
   </view>
   <view class="card ticks" wx:if="{{errMsg}}">

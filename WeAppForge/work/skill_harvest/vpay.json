@@ -1,0 +1,284 @@
+{
+ "facts": [
+  {
+   "topic": "sign_three_piece",
+   "fact": "双签名官方新规格（2026-10《签名详解》AppKey 制）：pay_sig = HMAC-SHA256(appKey, uri + \"&\" + body)；signature = HMAC-SHA256(session_key, body)。旧规格两处全废：旧规格误用 appsecret 当 pay_sig 密钥、signature 多 \"VirtualPayment&\" 前缀——新规格均无。函数 virtual_pay_sign(app_key, session_key, sign_data, *, uri=\"requestVirtualPayment\", body=None) 返回 (signData JSON 原文, pay_sig, signature)；客户端必须原样透传 signData 字符串，签名与该字符串逐字节绑定；body= 参数供 /xpay/* 服务端原文直签。",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/wechat.py:47-69"
+  },
+  {
+   "topic": "sign_three_piece",
+   "fact": "官方向量锚定（tests §0）：appkey=\"12345\"、session_key=\"9hAb/NEYUlkaMBEsmFgzig==\"、uri=/xpay/query_user_balance、body 原文='{\"openid\": \"xxx\", \"user_ip\": \"127.0.0.1\", \"env\": 0}' → pay_sig=c37809f27c6d7fd1837ad2500a04512b66b34fd793a39a385fade56dca89a4b5、signature=089d9e8dc5d308977360c4b79ec600a93d736802802a807d634192328032f6c7。另 6 组断言：signData 紧凑序列化(separators=(',',':'), ensure_ascii=False)、换 session_key 只动 signature、换 appKey 只动 pay_sig、signData 一字符之差签名必变、中文值不转义(\\u 不出现)。",
+   "source": "E:/AI-Station/services/qianwen-engine/tests/test_pay_sign.py:22-54"
+  },
+  {
+   "topic": "sign_data_fields",
+   "fact": "签名腿 sign_data 九字段（三条业务腿同构）：offerId、buyQuantity、env(0现网/1沙箱)、currencyType=\"CNY\"、productId、goodsPrice(单位分)、outTradeNo、attach=hashlib.sha256(openid).hexdigest()[:16]、mode=\"short_series_goods\"。响应回 {mode, sign_data, pay_sig, signature, out_trade_no, price_fen}(单条/报告)或加 quantity/total_fen(批量)。",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/app.py:626-646, 704-725, 829-849"
+  },
+  {
+   "topic": "otn_generation",
+   "fact": "_make_otn(prefix, anchor)：outTradeNo 合法字符 [0-9A-Za-z_-|*@]、8-32 位、不以下划线开头；anchor 净化取前24字符 + 尾巴=毫秒时间戳 base36 后6位 + secrets.token_hex(2) 4位随机熵（审计 LOW-6：防同毫秒双开单碰撞与尾5位截断复用窗口），整体截 32。前缀：e=单条导出(anchor=aid)、b=批量(anchor=sha256(openid)[:16]，otn 进用户账单详情不留 openid 明文)、r=报告(anchor=sku)。实测形态如 rENT-01-05880124a2。",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/app.py:498-505, 699-700"
+  },
+  {
+   "topic": "query_order",
+   "fact": "商户侧查单 xpay_query_order：POST https://api.weixin.qq.com/xpay/query_order?access_token=…，body={openid, out_trade_no, offer_id, env}，双签名同规格走 virtual_pay_sign 的 body=/uri= 直签入口：pay_sig=HMAC(AppKey, \"/xpay/query_order&\"+body)、signature=HMAC(session_key, body)。关键：先 json.dumps 序列化再原样展开（{**payload, pay_sig, signature}），请求体字段序与签名字符串序必须逐字节一致。errcode≠0 或响应非 JSON → 抛 XpayError。",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/wechat.py:79-105"
+  },
+  {
+   "topic": "query_order_reconciliation",
+   "fact": "查单应答判付枚举 _order_status_paid：在 d.order（若为 dict）里按序取 status/pay_status/order_status/trade_state 第一个非空值大写；SUCCESS/PAYED/PAID→True；NOTPAY/NOT_PAY/CLOSED/PAYERROR/REFUND/USERPAYING→False；字段缺失或陌生枚举→None（对账中 fail-closed 绝不猜）。",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/app.py:508-522"
+  },
+  {
+   "topic": "order_lifecycle",
+   "fact": "pay_order 表（v0.8.0 对抗审查 CRITICAL-2/HIGH-3/MEDIUM-4 根治）：out_trade_no 主键、openid、kind(single/batch/report)、aid(报告腿存 sku)、aid_list(批量快照)、buy_quantity、total_fen、status('signed'→'paid'/'closed')、created_at、paid_at。签名即落单（otn 主键防重）；回调腿凭订单+微信查单核验才放行。SQLite 与 MySQL 双 DDL。",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/store.py:391-420"
+  },
+  {
+   "topic": "order_lifecycle",
+   "fact": "生命周期四函数：create_pay_order（otn 已存在返回 False）；open_pay_order(openid,kind,aid)=本人最近一张 status='signed' 未付单（ORDER BY rowid DESC LIMIT 1）；cancel_pay_order=仅 signed→closed 返真（微信侧未付单自动过期，无需远程关单）；mark_order_paid=仅 signed→paid 返真（幂等，重复回调/已 paid 返 False 不重复记账，同时落 paid_at）。",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/store.py:876-932"
+  },
+  {
+   "topic": "order_lifecycle",
+   "fact": "作废重开语义（用户令 1009：未付不保留）：三条签名腿统一流程=①open_pay_order 查老未付单 ②_order_paid_reconcile 查单补账——微信侧确已支付→mark_order_paid+补业务标记+409 收口（防二次扣款）③未付/查不出→cancel_pay_order 作废 ④必铸新 otn create_pay_order。commit dc1f487a7e17f58cdcc9e7f54b7ffa50af449314 根除 ORDER_CLOSED(-15012)，pytest 102/102（含作废重开/补账收口/伪造otn矩阵新锚）。",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/app.py:536-545, 601-625; git show dc1f487"
+  },
+  {
+   "topic": "order_lifecycle",
+   "fact": "回调核验 _verify_order_paid（审计 CRITICAL-2 绝不裸信客户端）：查单 paid=True→放行；paid=False→400 \"该订单尚未支付成功，请在支付完成后重试\"；查单异常/状态不明：生产(env=0)一律 503 \"支付对账中，请稍后重新点击导出完成解锁\"（fail-closed，不给零支付解锁留门）；沙箱(env=1)查单基础设施不可用时信任回调——沙箱本就是模拟支付无真实资金，且 env 由服务端配置决定，客户端无法自选环境伪造。回调腿还校验订单归属：order.openid==openid 且 kind/aid 匹配，否则 404 支付订单不存在。",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/app.py:548-571, 660-663, 862-865"
+  },
+  {
+   "topic": "prices_and_products",
+   "fact": "价格常量：EXPORT_PRICE_FEN=10（¥0.1/条导出，用户令 1008 咨询全免费仅导出收费；旧 ¥1 整篇解锁 unlock_once 已下线）、EXPORT_BATCH_MAX=99（批量单笔 buyQuantity 护栏，超限 400 \"一次最多解锁 99 条，请分批处理\"）。报告四档 ¥498/¥598/¥698/¥1999，goodsPrice 分值如 69800；报告可售判定在 report_catalog（PDF 存在且 ≤20MB=REPORT_PDF_MAX_BYTES，无货自动落\"整理中\"可看不可买）。",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/config.py:76-85, 84-85; app.py:685-686"
+  },
+  {
+   "topic": "secret_file",
+   "fact": "密钥文件 data/secrets/virtual_pay.secret（VIRTUAL_PAY_FILE），键值行式解析（_vp_config：非 # 注释、含 = 的行 split 一次）。键集：offer_id= / product_id= / export_product_id= / env=(0正式 1沙箱) / sandbox_appkey= / prod_appkey= / report_product_<价格元>=（报告分档道具，如 report_product_698=report_698）；报告商城后 secret 增至 10 键。后台开通后填写，缺=未开通（对应 503）。AppKey 随 env 取双键：env=0→prod_appkey、env=1→sandbox_appkey（虚拟支付后台-基本配置-基础配置-复制 AppKey）。",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/config.py:72-76; app.py:485-495, 574-587"
+  },
+  {
+   "topic": "env_switch",
+   "fact": "env 三验公共腿 _vpay_env：offer_id 缺→503 \"虚拟支付尚未开通\"；app_key 缺→503 \"虚拟支付AppKey未配置\"；session_key 缺（store.get_session 查 mp_session 表）→401 \"登录态需要刷新\"（客户端自动静默重登刷新 session_key 后重试）。导出腿另有 _export_pay_env 先行校验 export_product_id 缺→503 \"导出支付尚未开通\"；报告腿 _report_product 按 report_product_<元> 取档，未配档→503 \"报告支付尚未开通\"。",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/app.py:574-594, 762-766, 814-817; store.py:808-812"
+  },
+  {
+   "topic": "offer_registration",
+   "fact": "offer_id=1450664233（控制台开通虚拟支付后分配，appid wx5cee1574ce45819b）；沙箱 env=1 旗标生产在役（CloudBase 云托管字节级实证），上线前切 0=现网。控制台虚拟支付入口 URL：https://mp.weixin.qq.com/wxamp/subApp/skit?token=…&lang=zh_CN；Step1=勾选\"我已阅读并同意上述条款\"checkbox（点 label span，回读 checked）→\"下一步\"→Step2 商户资料表单。",
+   "source": "C:/Users/91216/.claude/projects/e--AI-Station/memory/qianwen-gc-proposal.md:65; E:/AI-Station/WeAppForge/work/mp_cancel_logout/vpay_step1.py:38-50; vpay_common.py:75; e2e_pay_probe_result.json:32-34"
+  },
+  {
+   "topic": "product_registration",
+   "fact": "道具创建控制台自动化配方（vpay_item_create.py / vpay_item_report.py）：进 skit 页 →点\"基本配置\"→\"道具配置\"→\"添加道具\"→占位符锚定填表（原生 value setter + dispatch input/change 事件，placeholder 前缀：请填写道具ID/请填写道具名称/请填写道具价格/备注仅自己使用）→点\"普通道具\"→\"自定义\"→CDP 图标上传→\"提交审核\"→dump 验证道具行出现（遇\"我知道了\"弹窗先点掉再验）→验证通过后把 product_id 追加进 virtual_pay.secret（幂等：已有行替换否则追加）。已建：export_once ¥0.1 \"导出解锁-单条\"；report_{498,598,698,1999} \"研究报告解锁-{价}元档\"（备注：解锁单份研究报告（{价}元档））。道具开发版本未发布不影响沙箱联调；¥1999 价位实测收无上限拒（memory 原文记录）。",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/vpay_item_create.py:177-230; vpay_item_report.py:58-111; memory/qianwen-gc-proposal.md:67"
+  },
+  {
+   "topic": "product_registration",
+   "fact": "道具编辑器是 wujie 微前端 iframe 子应用，外层 DOM 摸不到——文件上传走 CDP 直灌：Runtime.evaluate 拿 input[type=file] 的 objectId → DOM.requestNode 换 nodeId → DOM.setFileInputFiles(files=[图标绝对路径])，再 dispatch change 事件；表单填写/按钮点击 JS 递归穿透 iframe contentDocument（depth≤3-4）。",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/vpay_item_create.py:53-174; memory/qianwen-gc-proposal.md:65"
+  },
+  {
+   "topic": "client_chain",
+   "fact": "客户端链路（utils/pay.js）：服务端出双签名 → wx.requestVirtualPayment({mode, signData: 服务端签名字符串原样透传(逐字节绑定，不重序列化), paySig, signature}) → success 后 POST 回调端点 {out_trade_no}（服务端查单核验+幂等标记）→ 引擎侧闸门放行。三个流：payExport→POST /api/answer/{aid}/export_paid；payExportAll→POST /api/answers/export_all_paid；payReport→POST /api/report/{sku}/unlock_paid。签名端点分别为 /api/answer/{aid}/export_sign、/api/answers/export_all_sign、/api/report/{sku}/unlock_sign。",
+   "source": "E:/AI-Station/WeAppForge/projects/zongbao-ai/utils/pay.js:1-100; services/qianwen-engine/qianwen_engine/app.py:601,673,728,804,852"
+  },
+  {
+   "topic": "client_chain",
+   "fact": "回调腿网络抖断不谎报完成：success 后 confirm 请求 .catch → resolve({ok:true, reconciling:true, message:'已支付，正在对账；请稍后重新进入完成解锁'})——微信侧已扣款，服务端重试时查单补标记（下次签名腿 409 收口），绝不二次支付。支付 fail 判取消：errMsg 含 'cancel' 或 errCode===1 → '已取消支付'，否则 '支付未完成，请稍后重试'。",
+   "source": "E:/AI-Station/WeAppForge/projects/zongbao-ai/utils/pay.js:42-62"
+  },
+  {
+   "topic": "ios_gating",
+   "fact": "iOS 合规铁律：paySupported() = _platform !== 'ios' && typeof wx.requestVirtualPayment === 'function'（平台探测缓存一次，wx.getDeviceInfo 优先、老库回退 wx.getSystemInfoSync）——iOS 不展示任何付费入口（虚拟支付 Android-only），已解锁内容 iOS 可正常阅读。WXML 门控：report.wxml 购买条/试读CTA均 wx:if 含 paySupported；answer.js payOk=pay.paySupported() 控导出按钮；my.js payOk 控批量导出。",
+   "source": "E:/AI-Station/WeAppForge/projects/zongbao-ai/utils/pay.js:8-25; pages/report/report.wxml:2,38,138,148; pages/answer/answer.js:67; pages/my/my.js:42"
+  },
+  {
+   "topic": "ios_gating",
+   "fact": "错误码语义（pay.js 统一映射）：签名腿/回调 503→降级文案 DEGRADE_MSG '支付服务开通中，敬请期待；已解锁内容不受影响。'；401→'登录态已刷新，请再试一次'；签名腿 409=服务端判定已解锁（此前已付/支付已到账自动补标记）→直接收口 {ok:true, already:true}，fallback 文案按流别给（报告流'本报告已解锁，可直接阅读'，导出流'本篇导出已解锁'/'导出已全部解锁'）。",
+   "source": "E:/AI-Station/WeAppForge/projects/zongbao-ai/utils/pay.js:16,27-32,66-73,76-100"
+  },
+  {
+   "topic": "batch_snapshot",
+   "fact": "批量导出快照制（审计 MEDIUM-4）：export_all_sign 把未解锁条数快照落 aid_list，buyQuantity=快照条数、total_fen=N×10分，一单付清；签名时刻与支付时刻之间新完成的咨询不被顺带解锁（留给下一单）。补账仅当老单 aid_list 与当前快照逐字节相同才走。回调腿 export_all_paid 只解锁订单快照内的条目。mark_export_paid_many 只标记 快照∩本人∩ready∩未解锁，pay_log 仅真有新解锁时落行（批量行 aid='*batch*'）。",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/app.py:673-746; store.py:850-872"
+  },
+  {
+   "topic": "reconcile_tables",
+   "fact": "业务标记幂等：mark_export_paid（answers.export_paid=1，首次落 pay_log(aid,openid,out_trade_no)，重复回调恒 True）；mark_report_paid（report_unlocks 表 PRIMARY KEY(openid,sku) 幂等，首次插行+落 pay_log）；report_unlocked_skus(openid) 返回已解锁 sku 集合供目录/详情页标记。发票腿 paid_total_fen：pay_order status='paid' 全订单 SUM(total_fen)（v0.9.4 满 ¥200=INVOICE_THRESHOLD_FEN 20000分 可申请增值税专用发票）。",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/store.py:815-827, 936-959, 1346-1353; config.py:39-42"
+  },
+  {
+   "topic": "env_flip_procedure",
+   "fact": "env 翻转器 flip_vpay_env_prod.py（沙箱→现网，三处同源零漂移）：①权威源 data/secrets/virtual_pay.secret 的 env 行 ②部署快照 data/state/qianwen_tcb_envparams.json 的 SECRET_FILES_B64 内 virtual_pay.secret（双层 base64：JSON 包→文件值再 base64）③执行 node data/state/mn_client/update_envparams.js（manager-node 通道）。安全带：翻转前 canon/deploy drift 检查（sha8 对比，漂移即停）、两文件 .bak_env1 字节级备份、roundtrip 断言除 env 行外逐字节一致、--check 只读模式。",
+   "source": "E:/AI-Station/WeAppForge/work/flip_vpay_env_prod.py:1-84"
+  },
+  {
+   "topic": "deploy_channel",
+   "fact": "云托管部署/改环境变量唯一活口=@cloudbase/manager-node 5.9.0 cloudrun.deploy（UpdateCloudRunServer 稀疏 DiffConfigItems：只传要改的键，EnvParams 走 JSON 字符串无 '=' 截断，base64 填充不必剥；OpenAccessTypes 必显式钉死 ['PUBLIC','MINIAPP'] 否则漂移成默认带 OA）。tcb run service:config 在 CLI 3.8.5 是结构性死路（options 未声明 envId 旗标→恒 INVALID_PARAM；补丁注入后 checkTcbrEnv 又拒非 tcbr 环境；--envParams 值有 split('=') 截断坑）勿再试。密钥真通道=SECRET_FILES_B64 环境变量（entrypoint set -e 落盘，容器活着=落盘成功铁证）。配方=TCB_DEPLOY.md §8a + data/state/mn_client/update_envparams.js。",
+   "source": "C:/Users/91216/.claude/projects/e--AI-Station/memory/qianwen-gc-proposal.md:65"
+  },
+  {
+   "topic": "e2e_evidence",
+   "fact": "真机复现探针实证（e2e_pay_probe_result.json，1009 \"购买解锁没有拉起支付\"缺陷）：automator(9420) 钩 wx.request+wx.requestVirtualPayment 抓原始回包；unlock_sign 200 回包 sign_data 实形态={\"offerId\":\"1450664233\",\"buyQuantity\":1,\"env\":1,\"currencyType\":\"CNY\",\"productId\":\"report_698\",\"goodsPrice\":69800,\"outTradeNo\":\"rENT-01-05880124a2\",\"attach\":\"d2f6b6ed85398052\",\"mode\":\"short_series_goods\"}；三次重复请求拿到同一个 otn（rENT-01-05880124a2 原样重发三次）+三次 vpay_call 无 vpay_ok/vpay_fail=支付面板没拉起=死单号复用的直接证据（修复前行为）。生产 BASE_URL=https://ai.epcschool.top。",
+   "source": "E:/AI-Station/WeAppForge/work/e2e_pay_probe.mjs:1-104; e2e_pay_probe_result.json:29-70"
+  },
+  {
+   "topic": "health_check",
+   "fact": "部署面 vpay 状态核查 check_vpay_state.py：读 data/state/qianwen_tcb_envparams.json（结构可能是 {env:{…}} 或直接 dict），从 virtual_pay.secret 值里正则提键；对 offer_id/report_product_{498,598,698,1999}/export_product_id 直打印值，prod_appkey/sandbox_appkey 只打 SET(len N, sha256 前8位) 不泄密；env= 行单独打印。另 check_vpay_state2.py/check_vpay_state4.py 为同族变体。",
+   "source": "E:/AI-Station/WeAppForge/work/check_vpay_state.py:1-29"
+  },
+  {
+   "topic": "session_key",
+   "fact": "session_key 来源：login 时 code2session 落 mp_session 表（store.get_session 查回），签名/查单均需；401 触发客户端静默重登刷新。code2session 走 curl_cffi impersonate=\"chrome\" 打 https://api.weixin.qq.com/sns/jscode2session。",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/wechat.py:28-44; store.py:808-812; app.py:583-586"
+  },
+  {
+   "topic": "official_doc_note",
+   "fact": "官方《签名详解》文档页 https://developers.weixin.qq.com/miniprogram/dev/platform-capabilities/business-capabilities/virtual-payment-introduction.html（签名详解章节）为 AppKey 新规格依据；真机报 -15005/-15006 时按官方签名详解校前缀一处（v0.2.5 时代记录：旧规格 pay_sig=appsecret·requestVirtualPayment& 前缀 / signature=session_key·VirtualPayment& 前缀，真机负码即签名规格错的信号）。",
+   "source": "C:/Users/91216/.claude/projects/e--AI-Station/memory/qianwen-gc-proposal.md:21; wechat.py:50-59"
+  },
+  {
+   "topic": "timeline",
+   "fact": "支付弧线时间线：1007夜 服务端五步收官（offer 开通→道具 unlock_once 创建→AppKeys 双键落 secret→pay_sign 官方新规格+官方向量6测→生产上线 env=1 沙箱）；1008 v0.9.0 报告商城（vpay 四道具 report_{498,598,698,1999} 参数化创建+secret 增至10键+19:22:08 提审普通队列）；1009 真机缺陷 ORDER_CLOSED(-15012) 根除（dc1f487）+发票功能。过审后发布序列含：道具现网发布×6→env=1→0→POSTER_QR_ENV_VERSION trial→release（HANDOFF §六）。",
+   "source": "C:/Users/91216/.claude/projects/e--AI-Station/memory/qianwen-gc-proposal.md:65-67"
+  },
+  {
+   "topic": "missing",
+   "fact": "无缺失文件——指定读取的 6 个来源全部在盘：wechat.py、config.py、store.py、pay.js、qianwen-gc-proposal.md、vpay_common.py 及 grep 命中的 57 个 vpay 相关文件均在 E:/AI-Station/WeAppForge/work/ 下。",
+   "source": "Grep 'vpay|requestVirtualPayment|pay_sign|offer' in E:/AI-Station/WeAppForge/work/ (57 hits)"
+  }
+ ],
+ "gotchas": [
+  {
+   "symptom": "用户点\"购买解锁\"支付面板永远拉不起来；e2e 探针显示 unlock_sign 三次 200 回包 outTradeNo 完全相同（rENT-01-05880124a2 死单号重复发），vpay_call 有调用无 success/fail 回调；真机报 ORDER_CLOSED 错误码 -15012。",
+   "root_cause": "用户首单在微信侧取消/过期后本地库不知情（pay_order 仍 status='signed'），签名腿复用已取消 otn——微信侧订单已关，任何同号拉起必 ORDER_CLOSED，面板永远不出。",
+   "fix": "三条签名腿（单篇/批量/报告）统一作废重开：open_pay_order 查老未付单→_order_paid_reconcile 查单补账已付单（409 收口防二次扣款）→其余 cancel_pay_order 作废（仅 signed→closed）→必铸新 otn（毫秒 base36+随机熵）。commit dc1f487。",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/app.py:536-545; store.py:900-921; git show dc1f487; e2e_pay_probe_result.json"
+  },
+  {
+   "symptom": "真机拉起支付报 -15005/-15006 签名错误（v0.2.5 时代首遇）。",
+   "root_cause": "旧签名规格：pay_sig 用 appsecret 当密钥、signature 带 \"VirtualPayment&\" 前缀——2026-10 官方《签名详解》AppKey 新规格两处都不对（签名材料是 appKey 不是 appsecret；无前缀）。",
+   "fix": "按官方新规格：pay_sig=HMAC-SHA256(appKey, uri&body)、signature=HMAC-SHA256(session_key, body)；用官方向量（appkey=12345/body={\"openid\": \"xxx\", \"user_ip\": \"127.0.0.1\", \"env\": 0}→pay_sig=c37809f2…a4b5）锚定 6 测全绿防回归。",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/wechat.py:50-59; tests/test_pay_sign.py:22-28; memory/qianwen-gc-proposal.md:21"
+  },
+  {
+   "symptom": "签名本地验证明明对，微信侧却判签名不符（服务端 /xpay/* 直调场景）。",
+   "root_cause": "签名对 body 逐字节绑定——先签名后重新组 dict 再序列化，字段序变了签名即失效；客户端拿到 sign_data 后 re-JSON 序列化同罪。",
+   "fix": "服务端：先 json.dumps(payload) 成字符串，签名后 {**payload, pay_sig, signature} 原样展开，保字段序一致；客户端：signData 用服务端返回的字符串原样透传，绝不重新序列化。",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/wechat.py:84-97; WeAppForge/projects/zongbao-ai/utils/pay.js:2,39"
+  },
+  {
+   "symptom": "订单状态写 'cancelled' 时 MySQL 生产 500。",
+   "root_cause": "pay_order.status 列 MySQL DDL 是 VARCHAR(8)，'cancelled' 9 字符超长。",
+   "fix": "status 词元全部 ≤8 字符：用 'closed' 不用 'cancelled'（'signed'/'paid'/'closed' 三态）。",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/store.py:912-921; git show dc1f487 (commit body)"
+  },
+  {
+   "symptom": "支付成功后页面 loading 永久卡死、解锁回执永不送达（0.9.2 全量审计 CRITICAL）。",
+   "root_cause": "pay.js 支付 success 回调里误调 api.request——api 模块只导出 requestRaw，同步抛 TypeError，confirm 链路断。",
+   "fix": "改调 api.requestRaw(confirmPath.method, confirmPath.path, {out_trade_no})；并加 .catch 兜底转 reconciling 态文案，不谎报完成也不卡死。",
+   "source": "E:/AI-Station/WeAppForge/projects/zongbao-ai/utils/pay.js:43-52"
+  },
+  {
+   "symptom": "签名腿 409 后客户端仍弹支付或文案错品类（报告流显示\"导出已解锁\"）。",
+   "root_cause": "409=服务端判定已解锁（已付补标记），应直接收口；且共用导出兜底文案属品类错置。",
+   "fix": "_catchSign 捕 409 返回 {ok:true, already:true}，fallback 按流别传（payExport'本篇导出已解锁'/payExportAll'导出已全部解锁'/payReport'本报告已解锁，可直接阅读'）。",
+   "source": "E:/AI-Station/WeAppForge/projects/zongbao-ai/utils/pay.js:66-100"
+  },
+  {
+   "symptom": "iOS 上点付费无反应或审核被拒（虚拟支付 iOS 禁售风险）。",
+   "root_cause": "wx.requestVirtualPayment 是 Android-only 能力，iOS 拉起必失败；且虚拟支付在 iOS 展示付费入口违反平台规则。",
+   "fix": "paySupported() 双门控：_platform !== 'ios' && typeof wx.requestVirtualPayment === 'function'（平台缓存一次，getDeviceInfo 优先/getSystemInfoSync 兜底）；WXML 购买条/CTA wx:if 全挂 paySupported，iOS 只读不买（已解锁内容可阅读），503 走 DEGRADE_MSG。",
+   "source": "E:/AI-Station/WeAppForge/projects/zongbao-ai/utils/pay.js:18-21; pages/report/report.wxml:138,148; pages/answer/answer.js:67"
+  },
+  {
+   "symptom": "生产查单偶发网络抖动时，客户端收到 503 \"支付对账中\"，用户以为没付成功重复支付。",
+   "root_cause": "_verify_order_paid 生产(env=0) fail-closed 设计：查单失败/状态不明一律 503，宁可不放行不给零支付解锁留门。",
+   "fix": "这是特性不是 bug：客户端 503 走降级文案；用户稍后重试时签名腿 _order_paid_reconcile 查单补账→409 收口（已扣款必解锁，绝不二次支付）。沙箱(env=1)查单基础设施不可用才信任回调。",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/app.py:548-571; wechat.py:72-76"
+  },
+  {
+   "symptom": "批量导出支付成功，但支付期间新完成的咨询没被解锁，用户以为漏发。",
+   "root_cause": "快照制（审计 MEDIUM-4 有意为之）：签名时刻把未解锁 aid 列表快照进 aid_list，只解锁快照内条目，防支付存续期新咨询被顺带白送。",
+   "fix": "预期行为：新咨询留给下一单；补账仅当老单 aid_list 与当前快照逐字节相同才走，否则作废重开新快照单。",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/app.py:673-746; store.py:391-393,850-868"
+  },
+  {
+   "symptom": "云托管改 vpay 环境变量：tcb CLI 报 INVALID_PARAM 或注入补丁后被 checkTcbrEnv 拒；--envParams 值含 '=' 被截断。",
+   "root_cause": "tcb run service:config 在 CLI 3.8.5 结构性死路：options 未声明 envId 旗标、checkTcbrEnv 拒非 tcbr 环境、--envParams 走 split('=') 截断。",
+   "fix": "唯一活口=@cloudbase/manager-node 5.9.0 cloudrun.deploy（UpdateCloudRunServer 稀疏 DiffConfigItems，只传要改的键，EnvParams 传 JSON 字符串，OpenAccessTypes 显式钉 ['PUBLIC','MINIAPP']）；配方 data/state/mn_client/update_envparams.js + TCB_DEPLOY.md §8a。",
+   "source": "C:/Users/91216/.claude/projects/e--AI-Station/memory/qianwen-gc-proposal.md:65"
+  },
+  {
+   "symptom": "控制台虚拟支付后台的道具编辑表单填不上、按钮点不到（外层 DOM 查询全空）。",
+   "root_cause": "道具编辑器是 wujie 微前端 iframe 子应用，外层 document 摸不到 iframe 内元素；翻译扩展还会把按钮文本包进 span 导致 text() 匹配失明。",
+   "fix": "JS 递归穿 iframe contentDocument（own-text 精确匹配防翻译扩展干扰）+ 原生 value setter 配 dispatch input/change 喂 Vue；文件上传走 CDP：Runtime.evaluate 取 objectId→DOM.requestNode→DOM.setFileInputFiles 直灌图标。",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/vpay_item_create.py:22-174; memory/qianwen-gc-proposal.md:65"
+  },
+  {
+   "symptom": "本机脚本 curl_cffi impersonate 打 api.weixin.qq.com 报 SSL_ERROR_SYSCALL 被 TLS 掐。",
+   "root_cause": "本机网络环境下 curl_cffi 指纹对微信 API 域被掐（引擎 CloudBase 容器内 curl_cffi impersonate='chrome' 正常，含 xpay/query_order 在内全链在生产工作——这是本机探测腿独有的现象）。",
+   "fix": "本机探测脚本一律用普通 requests 直连；引擎容器内保持 curl_cffi impersonate='chrome'（与 WAF 指纹需求一致）。",
+   "source": "C:/Users/91216/.claude/projects/e--AI-Station/memory/qianwen-gc-proposal.md:63; wechat.py:33-40,94-98"
+  },
+  {
+   "symptom": "secret 改了 env 但生产行为没变（或 canon 与 deploy 漂移）。",
+   "root_cause": "生产配置在部署快照 SECRET_FILES_B64（双层 base64）里，只改权威源文件不重推=零效果；两处不一致=漂移。",
+   "fix": "flip_vpay_env_prod.py 先 drift 检查（canon vs deploy sha8）再同步改两处+备份 .bak_env1+roundtrip 断言只动 env 行，最后 node update_envparams.js 重推；--check 先只读核当前 env。",
+   "source": "E:/AI-Station/WeAppForge/work/flip_vpay_env_prod.py:26-80"
+  },
+  {
+   "symptom": "签名腿抛 401，支付流程中断。",
+   "root_cause": "mp_session 表无该 openid 的 session_key（登录态过期）——session_key 是 signature 的密钥材料，缺了不能签。",
+   "fix": "客户端捕获 401 文案'登录态已刷新，请再试一次'→自动静默重登（code2session 刷新 session_key 落库）后重试签名腿。",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/app.py:583-586; WeAppForge/projects/zongbao-ai/utils/pay.js:30"
+  },
+  {
+   "symptom": "同毫秒并发开单偶发 otn 冲突或旧号尾段复用（审计 LOW-6）。",
+   "root_cause": "otn 尾部熵不足：纯时间戳尾 5 位在并发/同毫秒下有碰撞与截断复用窗口。",
+   "fix": "_make_otn 尾巴=毫秒 base36 后 6 位 + token_hex(2) 4 位随机熵，整体截 32；create_pay_order 以 otn 主键防重兜底（已存在返 False）。",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/app.py:498-505, 876-889"
+  },
+  {
+   "symptom": "批量 otn 里出现 openid 明文（审计 WARN：otn 进用户微信账单详情页可见）。",
+   "root_cause": "单条/报告腿 anchor=aid/sku 天然无个人信息，批量腿若用 openid 做 anchor 会泄漏。",
+   "fix": "批量 anchor=hashlib.sha256(openid.encode()).hexdigest()[:16]；attach 字段统一用 openid 哈希前 16 位。",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/app.py:634,699-700,712,837"
+  }
+ ],
+ "recipes": [
+  {
+   "name": "vpay 支付全链（签名→拉起→回调核验→解锁）",
+   "steps": "1) 客户端进付费点，先 paySupported() 门控（iOS 隐藏入口）。2) POST 签名腿（/api/answer/{aid}/export_sign 或 /api/answers/export_all_sign 或 /api/report/{sku}/unlock_sign）——服务端：鉴 openid→业务前置校验（404/409 已解锁）→_vpay_env 三验（offer_id/app_key/session_key，缺则 503/401）→open_pay_order 查老未付单：有则 _order_paid_reconcile 查单补账（已付→补标记+409 收口防二次扣款；未付→cancel_pay_order 作废）→_make_otn 铸新号+create_pay_order 落单→组 sign_data 九字段{offerId,buyQuantity,env,currencyType:CNY,productId,goodsPrice(分),outTradeNo,attach=sha256(openid)[:16],mode:short_series_goods}→virtual_pay_sign 出 (sign_data原文,pay_sig,signature)。3) 客户端 wx.requestVirtualPayment({mode,signData:原样透传,paySig,signature})。4) success→POST 回调腿{out_trade_no}：校订单归属(openid/kind/aid 匹配否则404)→_verify_order_paid 微信查单核验（prod fail-closed 503/sandbox 信任回调）→mark_order_paid+幂等业务标记(mark_export_paid/mark_export_paid_many/mark_report_paid)+pay_log 对账。5) confirm 网络断→reconciling 文案，下次签名腿 409 收口。",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/app.py:483-871; wechat.py:47-105; WeAppForge/projects/zongbao-ai/utils/pay.js"
+  },
+  {
+   "name": "创建价格分档道具（控制台自动化）",
+   "steps": "python vpay_item_report.py 498|598|698|1999（vpay_item_create.py 的参数化版）：attach_or_launch 带活 token 进 https://mp.weixin.qq.com/wxamp/subApp/skit?token=…&lang=zh_CN→依次点\"基本配置\"→\"道具配置\"→\"添加道具\"（iframe 穿透 own-text 精确匹配 click）→占位符锚定填 道具ID=report_{价}/道具名称=研究报告解锁-{价}元档/价格/备注（原生 setter+input/change 事件）→点\"普通道具\"→\"自定义\"→cdp_upload 图标（Runtime.evaluate objectId→DOM.requestNode→DOM.setFileInputFiles(_goods_icon.png)）→dispatch change→截图→点\"提交审核\"→DUMP 全 iframe 文本验证道具行出现（\"我知道了\"弹窗先点掉重验）→出现则幂等追加 report_product_{价}={id} 进 data/secrets/virtual_pay.secret。export_once 同配方（vpay_item_create.py，价格 0.1，键 export_product_id=）。",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/vpay_item_report.py:58-111; vpay_item_create.py:177-230"
+  },
+  {
+   "name": "env 沙箱→现网翻转（上线收尾步）",
+   "steps": "1) python check_vpay_state.py 或 flip_vpay_env_prod.py --check 只读核当前 env（同时打 offer_id/六 product_id/appkey 存在性 hash）。2) flip_vpay_env_prod.py（无参）：drift 检查 canon vs deploy→备份 .bak_env1→两处同步 env=1→env=0（secret 权威源+qianwen_tcb_envparams.json 的 SECRET_FILES_B64 双层 base64 内嵌件）→roundtrip 断言只动 env 行。3) node data/state/mn_client/update_envparams.js 经 manager-node cloudrun.deploy 推上云托管（OpenAccessTypes 钉 ['PUBLIC','MINIAPP']）。4) 复核：健康探针+一次真单验证走 prod_appkey。配套：道具须先在控制台\"现网发布\"（沙箱道具只在沙箱可见）。",
+   "source": "E:/AI-Station/WeAppForge/work/flip_vpay_env_prod.py:26-84; check_vpay_state.py:1-29; memory/qianwen-gc-proposal.md:65,67"
+  },
+  {
+   "name": "支付缺陷 e2e 复现探针（automator 钩子取证法）",
+   "steps": "e2e_pay_probe.mjs：automator.connect ws://127.0.0.1:9420→S1 真登录等 loginReady+quota→S2 mp.evaluate 装双钩：包 wx.request（unlock_sign/export_sign URL 命中时 complete 里抓 statusCode+body 前400字进 globalData._payTrace）+包 wx.requestVirtualPayment（记 vpay_call/vpay_ok/vpay_fail 原始回包）→S3 navigateTo 报告详情（sku=ENT-01）读 sellable/unlocked/paySupported→S4 真点购买按钮（.rp-bar .btn_primary 等）等12s→回读 _payTrace+页面态写 JSON。判读要点：同 otn 重复出现+有 vpay_call 无 vpay_ok/fail=死单号复用（ORDER_CLOSED 形态）。",
+   "source": "E:/AI-Station/WeAppForge/work/e2e_pay_probe.mjs:1-104; e2e_pay_probe_result.json"
+  },
+  {
+   "name": "未付订单作废重开（签名腿标准前奏，防 -15012）",
+   "steps": "每次签名腿开头执行：open_o = store.open_pay_order(openid, kind, aid)→若无：直接铸新单。若有：_order_paid_reconcile(openid, open_o, vp, env_val, app_key, session_key)——xpay_query_order 查微信侧→_order_status_paid 判 True→mark_order_paid+补业务标记+HTTPException(409,'支付已到账，…已解锁') 收口；False/None→store.cancel_pay_order(作废)→继续 _make_otn 铸新号开新单。铁律：绝不复用已取消 otn（微信侧已关单必 ORDER_CLOSED -15012 面板拉不起）；微信侧未付单自动过期无需远程关单；status 词元 ≤8 字符（MySQL VARCHAR(8)）。",
+   "source": "E:/AI-Station/services/qianwen-engine/qianwen_engine/app.py:536-545,601-625,804-828; store.py:900-921; git show dc1f487"
+  },
+  {
+   "name": "虚拟支付开通五步（服务端就位清单，1007 实录）",
+   "steps": "①控制台开通虚拟支付拿到 offer_id（1450664233）②建道具（wujie iframe+CDP 配方，见上）③AppKeys 双键落 data/secrets/virtual_pay.secret（sandbox_appkey+prod_appkey，后台-基本配置-基础配置-复制 AppKey）④pay_sign 官方新规格+官方向量 6 测锚定（tests/test_pay_sign.py）⑤生产部署 env=1 沙箱旗标字节级实证（flip 工具+manager-node 通道）→沙箱联调全通后按发布序列切 env=0。配套铁律：secret 多键行式不进 git；探测脚本本机用 requests 不用 curl_cffi。",
+   "source": "C:/Users/91216/.claude/projects/e--AI-Station/memory/qianwen-gc-proposal.md:65; tests/test_pay_sign.py"
+  }
+ ]
+}

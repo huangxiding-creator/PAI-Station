@@ -1,0 +1,137 @@
+// 发票申请页 — 总包AI顾问 v0.9.4（用户令 1009：累计消费满 ¥200 可申请增值税专用发票；
+// 收票邮箱必填；申请单企业微信实时推送运营）
+const api = require('../../utils/api');
+const theme = require('../../utils/theme');
+const pop = require('../../utils/pop'); // v0.9.7：qw-pop 自绘弹窗（按钮文字摆脱 4 字硬限）
+
+const FIELDS = ['title', 'taxNo', 'addrPhone', 'bankAcct', 'email', 'note'];
+const EMPTY = { title: '', taxNo: '', addrPhone: '', bankAcct: '', email: '', note: '' };
+
+Page({
+  data: {
+    nav: { statusBarHeight: 20, navHeight: 44 },
+    loading: true,
+    loadError: '',
+    totalYuan: '0.00',
+    gapYuan: '',
+    progressPct: 0,          // v0.9.5：门槛进度条百分比（0-100 封顶）
+    canApply: false,          // 门槛已到 且 无 pending
+    pending: null,            // 处理中的申请（有则展示状态卡，不再收新单）
+    ...EMPTY,
+    submitting: false,
+    popOpen: false,      // v0.9.7 qw-pop 开合镜像（e2e/结构锚 + tabBar 压暗让路）
+    popMode: '',
+  },
+
+  onLoad() {
+    const app = getApp();
+    if (app.globalData && app.globalData.nav) {
+      this.setData({ nav: app.globalData.nav });
+    }
+    theme.apply(this); // 首帧即上主题变量（onShow 仍会再刷，不闪白）
+  },
+
+  onShow() {
+    theme.apply(this);
+    this.load();
+  },
+
+  load() {
+    this.setData({ loading: true, loadError: '' });
+    api.invoiceStatus()
+      .then((d) => {
+        const pending = (d.applications || []).find((a) => a.status === 'pending') || null;
+        const total = d.total_fen || 0;
+        const threshold = d.threshold_fen || 20000;
+        const gap = Math.max(0, threshold - total);
+        // v0.9.5：门槛进度可视化（惊喜感打磨——¥0→¥200 一眼看清还差多远）
+        const progressPct = Math.max(0, Math.min(100, Math.round((total / threshold) * 100)));
+        this.setData({
+          loading: false,
+          totalYuan: (total / 100).toFixed(2),
+          gapYuan: (gap / 100).toFixed(2),
+          progressPct,
+          canApply: !!d.can_apply,
+          pending,
+        });
+      })
+      .catch((err) => {
+        this.setData({ loading: false, loadError: api.errMsg(err, '发票信息加载失败') });
+      });
+  },
+
+  onRetry() {
+    this.load();
+  },
+
+  onField(e) {
+    const f = e.currentTarget.dataset.f;
+    if (FIELDS.indexOf(f) < 0) return;
+    this.setData({ [f]: e.detail.value });
+  },
+
+  goBack() {
+    const pages = getCurrentPages();
+    if (pages.length > 1) {
+      wx.navigateBack();
+    } else {
+      wx.switchTab({ url: '/pages/my/my' });
+    }
+  },
+
+  // v0.9.7 qw-pop：弹窗开合镜像 + 自绘 tabBar 压暗让路（本页非 tab 页，getTabBar 自然跳过）
+  onPopState(e) { pop.onPopState(this, e); },
+
+  // 本地预校验（与服务端同源规则；通过才发请求——省一次往返）
+  _validate() {
+    const d = this.data;
+    if (!d.title.trim() || d.title.trim().length < 2) return '请填写发票抬头（单位全称）';
+    if (!/^[0-9A-Za-z]{15,20}$/.test(d.taxNo.trim())) return '纳税人识别号须为 15-20 位数字或字母';
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email.trim())) return '请填写正确的收票邮箱（必填）';
+    return '';
+  },
+
+  onSubmit() {
+    if (this.data.submitting) return;
+    const msg = this._validate();
+    if (msg) {
+      wx.showToast({ title: msg, icon: 'none' });
+      return;
+    }
+    const d = this.data;
+    this.setData({ submitting: true });
+    api.invoiceApply({
+      title: d.title.trim(),
+      tax_no: d.taxNo.trim(),
+      email: d.email.trim(),
+      addr_phone: d.addrPhone.trim(),
+      bank_acct: d.bankAcct.trim(),
+      note: d.note.trim(),
+    })
+      .then(() => {
+        this.setData({ submitting: false });
+        wx.showToast({ title: '申请已提交，开票后发送至您的邮箱', icon: 'success', duration: 2500 });
+        this.load();
+      })
+      .catch((err) => {
+        this.setData({ submitting: false });
+        // 403/409 服务端有明确口径，直接展示；其余走统一文案
+        wx.showToast({ title: api.errMsg(err, '没提交成功，请稍后重试'), icon: 'none', duration: 2500 });
+      });
+  },
+
+  // v0.9.18（用户令 1013 分享全量）：转发给朋友亮灯——工具页导流主入口
+  onShareAppMessage() {
+    return {
+      title: '总包AI顾问-工程人的随身AI顾问',
+      path: '/pages/ask/ask'
+    };
+  },
+
+  // v0.9.18（用户令 1013 朋友圈亮灯）：两步门槛第二步——同页成对 onShareTimeline；工具页仅标题不携参
+  onShareTimeline() {
+    return {
+      title: '总包AI顾问-工程人的随身AI顾问'
+    };
+  },
+});

@@ -1,0 +1,48 @@
+// 总包AI顾问 — 工程人的10秒专业问答
+var tel = require('./utils/telemetry'); // v0.9.6：启动打点（真机地面真值腿）
+
+App({
+  onLaunch() {
+    tel.boot(); // platform/sdk/ver 一次性上行，区分 iOS/Android/DevTools
+    // 自绘导航度量（v0.3.0 蓝图设计：全页 navigationStyle=custom）
+    // statusBarHeight + 胶囊实测 → 导航行高，WXML 用 px 内联绑定
+    let statusBarHeight = 20;
+    let navHeight = 44;
+    try {
+      const win = wx.getWindowInfo();
+      statusBarHeight = win.statusBarHeight || 20;
+    } catch (e) {
+      /* getWindowInfo 不可用的老客户端回退旧接口 */
+      try {
+        const sys = wx.getSystemInfoSync();
+        statusBarHeight = sys.statusBarHeight || 20;
+      } catch (e2) { /* 再失败用默认值 */ }
+    }
+    try {
+      const cap = wx.getMenuButtonBoundingClientRect();
+      if (cap && cap.height) {
+        navHeight = cap.height + (cap.top - statusBarHeight) * 2;
+      }
+    } catch (e) { /* 老客户端兜底默认值 */ }
+    this.globalData.nav = { statusBarHeight, navHeight };
+  },
+  // App 错误兜底三件套（v0.9.2 审计修复）：静默吞掉不扰民，绝不让异常白屏
+  // v0.9.5 审计修：删 errCount 死仪表（只写不读的全局计数，无人消费）
+  onError() {
+    /* 吞掉页面级未捕获异常：白屏恐慌比静默更伤 */
+  },
+  onUnhandledRejection() {
+    /* 吞掉未处理 Promise 拒绝：防控制台噪声与白屏恐慌 */
+  },
+  onPageNotFound() {
+    wx.reLaunch({
+      url: '/pages/ask/ask',
+      fail() {
+        wx.switchTab({ url: '/pages/ask/ask', fail() { /* 双兜底仍失败则放弃 */ } });
+      }
+    });
+  },
+  globalData: {
+    nav: { statusBarHeight: 20, navHeight: 44 }
+  }
+});

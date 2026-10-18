@@ -292,7 +292,22 @@ _SCHEMA: tuple = (
         UNIQUE KEY uk_answers_rowid (rowid),
         KEY idx_answers_openid (openid, created_at DESC)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"""),
-    ("CREATE INDEX IF NOT EXISTS idx_answers_openid ON answers(openid, created_at DESC)", None),
+        ("CREATE INDEX IF NOT EXISTS idx_answers_openid ON answers(openid, created_at DESC)", None),
+    ("""CREATE TABLE IF NOT EXISTS report_stats (
+        sku TEXT PRIMARY KEY,
+        views INTEGER DEFAULT 0,
+        likes INTEGER DEFAULT 0,
+        shares INTEGER DEFAULT 0,
+        updated_at TEXT DEFAULT (datetime('now','localtime'))
+    )""",
+     """CREATE TABLE IF NOT EXISTS report_stats (
+        sku VARCHAR(64) PRIMARY KEY,
+        views INT DEFAULT 0,
+        likes INT DEFAULT 0,
+        shares INT DEFAULT 0,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"""),
+    ("CREATE INDEX IF NOT EXISTS idx_rstats_sku ON report_stats(sku)", None),
     ("""CREATE TABLE IF NOT EXISTS mp_session (
         openid TEXT PRIMARY KEY,
         session_key TEXT NOT NULL,
@@ -1551,6 +1566,27 @@ def log_report_ask(openid: str, sku: str, q: str, conclusion: str) -> None:
         c.execute(
             "INSERT INTO report_ask_log(openid, sku, q, conclusion) VALUES(?,?,?,?)",
             (openid, sku, q, conclusion))
+
+
+
+def report_stats_bump(sku: str, field: str) -> int:
+    """报告互动计数自增（views/likes/shares），返回新值。新 sku 自动建档。"""
+    assert field in ("views", "likes", "shares"), f"bad field {field}"
+    init()
+    with _LOCK, _db() as c:
+        c.execute("INSERT OR IGNORE INTO report_stats(sku) VALUES(?)", (sku,))
+        c.execute(f"UPDATE report_stats SET {field}={field}+1 WHERE sku=?", (sku,))
+        row = c.execute(f"SELECT {field} FROM report_stats WHERE sku=?", (sku,)).fetchone()
+        return row[field] if row else 0
+
+
+def report_stats_all() -> dict:
+    """全量报告互动计数 {sku: {views,likes,shares}}（目录热度排序用）。"""
+    init()
+    with _db() as c:
+        rows = c.execute("SELECT sku, views, likes, shares FROM report_stats").fetchall()
+        return {r["sku"]: {"views": r["views"], "likes": r["likes"], "shares": r["shares"]}
+                for r in rows}
 
 
 def report_ask_history(openid: str, limit: int = 20) -> list:

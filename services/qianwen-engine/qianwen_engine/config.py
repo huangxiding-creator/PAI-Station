@@ -93,7 +93,7 @@ RQA_MIN_HITS = _env_int("RQA_MIN_HITS", 2)         # 检索命中门槛（q 与�
 RQA_MAX_TOKENS = _env_int("RQA_MAX_TOKENS", 200)   # LLM 输出 token 上限（结论+三论据够用）
 RQA_PROMPT_SYSTEM = (os.environ.get("RQA_PROMPT_SYSTEM") or (
     "你是报告《{title}》的导购员。只依据【章节摘录】回答。"
-    "规则：①首行结论≤30字 ②随后≤3条论据，每条≤40字并以「第N章：」开头"
+    "规则：①首行给一段约500字的诚意结论（直接回答用户问题，有观点有依据） ②随后列出3-5条关键论据要点，每条以「第N章：」开头并给出章节摘要"
     " ③禁止输出摘录原文段落 ④用户深挖（多少钱/怎么操作/完整数据）→固定话术"
     "「完整拆解在报告第N章」 ⑤摘录未覆盖→「报告里没有直接答案」。"))
 RQA_NO_ANSWER = (os.environ.get("RQA_NO_ANSWER") or "这个问题报告里没有直接答案")

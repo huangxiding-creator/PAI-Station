@@ -1,0 +1,687 @@
+============================== RESULT ==============================
+{
+ "libVersion": "project.config.json: \"libVersion\": \"latest\"（未钉死具体版本，也无最低基础库声明；appid wx5cee1574ce45819b）。app.json: \"lazyCodeLoading\": \"requiredComponents\" 已开启；darkmode:true + themeLocation theme.json；tabBar.custom:true（五页签 问/锅/智/研/我）。page-container 与 root-portal 全项目 WXML 0 处使用——站内现成的遮罩全部是页内手写 fixed mask（answer.wxss .rw-mask z-index:999 授勋动画、.cite-pop-mask z-index:998 依据全文自绘弹层=可滚动自绘弹窗先例、report.wxss .rp-bar z-index:50 吸底购买栏）。root-portal 可用性取决于真机实际基础库（\"latest\" 编译按最新，但线上用户基础库分布未知），重建自绘组件若需盖住自绘 tabBar 或跨层弹出须以此为决策点。",
+ "loadings": [
+  {
+   "file": "pages/ask/ask.js",
+   "fn": "onOptimize",
+   "text": "AI 优化中…（mask:true；hideLoading 覆盖：.then 入口 + .catch 双路，全覆盖）"
+  },
+  {
+   "file": "pages/answer/answer.js",
+   "fn": "onExport（支付链）",
+   "text": "拉起支付…（mask:true；hideLoading 覆盖：.then 入口即 hide + .catch，全覆盖；_payBusy 防重入）"
+  },
+  {
+   "file": "pages/answer/answer.js",
+   "fn": "_exportAs（单篇导出）",
+   "text": "生成中…（mask:true；md 路径 writeFile 成/败双 hide；引擎路径 then/catch hide + 再入 writeFile 成/败双 hide，全覆盖）"
+  },
+  {
+   "file": "pages/answer/answer.js",
+   "fn": "onCiteTap（依据全文）",
+   "text": "依据展开中…（mask:true；hideLoading 覆盖：.then + .catch，全覆盖）"
+  },
+  {
+   "file": "pages/answer/answer.js",
+   "fn": "onPoster（分享海报）",
+   "text": "海报生成中…（mask:true；hideLoading 覆盖：写文件 Promise 链成功腿 + .catch，全覆盖；posterBusy 防重入）"
+  },
+  {
+   "file": "pages/my/my.js",
+   "fn": "onExportAll（批量支付链）",
+   "text": "拉起支付…（mask:true；hideLoading 覆盖：.then 入口即 hide + .catch，全覆盖；v0.9.4 修过『无 catch 永转』假死）"
+  },
+  {
+   "file": "pages/my/my.js",
+   "fn": "_exportAllAs（批量导出）",
+   "text": "汇总生成中…（mask:true；writeFile 成/败双 hide + api .catch hide，全覆盖；_exporting 防重入）"
+  },
+  {
+   "file": "pages/report/report.js",
+   "fn": "openPdf（打开 PDF）",
+   "text": "打开报告中…（mask:true；openDocument success hide + _pdfFail 统一收口三路：statusCode≠200 / openDocument fail / downloadFile fail，全覆盖；源码注释明示『与 showLoading 严格配对，防读完 PDF 返回后蒙层滞留』）"
+  }
+ ],
+ "modals": [
+  {
+   "cancel": "不同意",
+   "confirm": "同意",
+   "content": "为提供咨询服务，我们将通过微信登录获取您的 openid 用于额度记账，并将您提交的问题与生成的回答存储在服务器；您自愿共享的问答将在「锅圈」公开展示…",
+   "editable": false,
+   "file": "pages/ask/ask.js",
+   "fn": "showPrivacyModal (helper，被 _gateAndLogin 与 submitQuestion 两处调用)",
+   "nearbyTelemetry": "tel.ping('ask_privacy_fail') 在 fail 回调内",
+   "purpose": "隐私告知门（合规唯一出处）：首次使用先告知，同意→记忆+回调登录/提问；拒绝→静默不发登录",
+   "showCancel": true,
+   "title": "隐私保护告知"
+  },
+  {
+   "cancel": "默认（取消）",
+   "confirm": "默认（确定）",
+   "content": "同 PRIVACY_CONTENT 全文（与主弹窗同源）",
+   "editable": false,
+   "file": "pages/ask/ask.js",
+   "fn": "showPrivacyModal → fail 兜底重试（400ms 后）",
+   "nearbyTelemetry": "tel.ping('ask_privacy_fail', {m: errMsg前60字}) 紧邻其前",
+   "purpose": "主弹窗 fail（环境异常/onLoad 转场竞态）→ 延迟 400ms 用默认按钮文字重试一次，绝不静默死",
+   "showCancel": true,
+   "title": "隐私保护告知"
+  },
+  {
+   "cancel": "保留原问",
+   "confirm": "采用",
+   "content": "优化后的递进三小问全文（变量 better，服务端生成）",
+   "editable": false,
+   "file": "pages/ask/ask.js",
+   "fn": "onOptimize → .then",
+   "nearbyTelemetry": "无",
+   "purpose": "AI 优化结果交用户过目，确认采用才替换原问题（不静默改写）",
+   "showCancel": true,
+   "title": "AI 优化后的提问"
+  },
+  {
+   "cancel": "无",
+   "confirm": "知道了",
+   "content": "api.errMsg(err, 'AI 优化失败，请稍后再试')",
+   "editable": false,
+   "file": "pages/ask/ask.js",
+   "fn": "onOptimize → .catch",
+   "nearbyTelemetry": "无",
+   "purpose": "AI 优化失败大声告知",
+   "showCancel": false,
+   "title": "优化没成功"
+  },
+  {
+   "cancel": "无",
+   "confirm": "知道了",
+   "content": "页面跳转没成功，回答已存入「咨询记录」，从「我的」页可查看。",
+   "editable": false,
+   "file": "pages/ask/ask.js",
+   "fn": "_doSubmit → navigateTo fail",
+   "nearbyTelemetry": "tel.ping('ask_ok') 在同一 .then 上方",
+   "purpose": "进答案页导航失败兜底：告知回答已生成、引导去咨询记录（此时输入已不清空，问题不丢）",
+   "showCancel": false,
+   "title": "回答已生成"
+  },
+  {
+   "cancel": "默认（取消）",
+   "confirm": "去互动",
+   "content": "打开任意一篇回答，点「有用 / 纠错」即可各再获 1 次咨询机会（多答多得，不封顶）；明天 0 点恢复 6 次。",
+   "editable": false,
+   "file": "pages/ask/ask.js",
+   "fn": "_doSubmit → .catch (statusCode 402)",
+   "nearbyTelemetry": "tel.ping('ask_fail') 紧邻上方",
+   "purpose": "免费配额用尽：引导互动赚次数（确认→switchTab 到我的页）",
+   "showCancel": true,
+   "title": "今日次数已用完"
+  },
+  {
+   "cancel": "无",
+   "confirm": "知道了",
+   "content": "api.errMsg(err,'咨询失败') + err.raw 前 60 字",
+   "editable": false,
+   "file": "pages/ask/ask.js",
+   "fn": "_doSubmit → .catch（非 402）",
+   "nearbyTelemetry": "tel.ping('ask_fail', {code,m}) 上方",
+   "purpose": "咨询失败大声弹窗（toast 一闪而过=用户眼中没反应）",
+   "showCancel": false,
+   "title": "咨询没成功"
+  },
+  {
+   "cancel": "默认（取消）",
+   "confirm": "默认（确定）",
+   "content": "（无 content；placeholderText：哪里不准确？请写具体意见（必填，可得 +1 次））",
+   "editable": true,
+   "file": "pages/answer/answer.js",
+   "fn": "onCriticize",
+   "nearbyTelemetry": "无",
+   "purpose": "纠错收集具体意见（必填非空，合格者 +1 次咨询机会/授勋动画）；criticBusy 防连发",
+   "showCancel": true,
+   "title": "指出问题"
+  },
+  {
+   "cancel": "再想想",
+   "confirm": "确认支付",
+   "content": "咨询全程免费，导出文件按 ¥0.1/条 收费（虚拟支付），本次支付 0.1 元。解锁后本篇可反复导出 Word/PDF/Markdown。",
+   "editable": false,
+   "file": "pages/answer/answer.js",
+   "fn": "onExport",
+   "nearbyTelemetry": "tel.ping('export_tap') 函数入口",
+   "purpose": "单篇导出付费确认（¥0.1 虚拟支付，Android；iOS 已在入口前拦）；v0.9.6 修过 confirmText>4字真机 fail",
+   "showCancel": true,
+   "title": "导出本篇解答"
+  },
+  {
+   "cancel": "无",
+   "confirm": "知道了",
+   "content": "res.message + 。可稍后再试；已扣款的金额不会丢（重新进入会自动对账解锁）。",
+   "editable": false,
+   "file": "pages/answer/answer.js",
+   "fn": "onExport → pay.then 非取消失败",
+   "nearbyTelemetry": "tel.ping('export_fail') 紧邻其前",
+   "purpose": "支付失败大声弹窗（用户取消=toast 轻提示不进此分支）",
+   "showCancel": false,
+   "title": "支付没完成"
+  },
+  {
+   "cancel": "无",
+   "confirm": "知道了",
+   "content": "api.errMsg(err, '网络波动，请稍后重试')",
+   "editable": false,
+   "file": "pages/answer/answer.js",
+   "fn": "onExport → pay.catch",
+   "nearbyTelemetry": "tel.ping('export_fail') 紧邻其前",
+   "purpose": "支付异常兜底防假死（hideLoading+弹窗）",
+   "showCancel": false,
+   "title": "支付没成功"
+  },
+  {
+   "cancel": "预览",
+   "confirm": "微信转发",
+   "content": "fname · 可直接微信转发给同事，或预览后另存。",
+   "editable": false,
+   "file": "pages/answer/answer.js",
+   "fn": "_exportAs → writeAndOffer success",
+   "nearbyTelemetry": "无",
+   "purpose": "导出文件落盘成功：微信转发（shareFileMessage）/本机预览二选一",
+   "showCancel": true,
+   "title": "已生成文件"
+  },
+  {
+   "cancel": "再想想",
+   "confirm": "取消共享",
+   "content": "取消后本篇撤出锅圈，同时扣除 1 次咨询机会。确定取消吗？",
+   "editable": false,
+   "file": "pages/answer/answer.js",
+   "fn": "onShareOff",
+   "nearbyTelemetry": "无",
+   "purpose": "撤出锅圈前明确告知会扣 1 次再确认",
+   "showCancel": true,
+   "title": "取消共享"
+  },
+  {
+   "cancel": "无",
+   "confirm": "知道了",
+   "content": "当前未解锁 N 条，超出单笔上限。请先在部分回答页单独解锁，剩余不足 99 条后再来批量导出。",
+   "editable": false,
+   "file": "pages/my/my.js",
+   "fn": "onExportAll（unpaid>99 分支）",
+   "nearbyTelemetry": "tel.ping('xall_tap') 函数入口",
+   "purpose": "超出引擎单笔 buyQuantity 上限 99 条：引导先单篇解锁分批",
+   "showCancel": false,
+   "title": "一次最多解锁 99 条"
+  },
+  {
+   "cancel": "再想想",
+   "confirm": "确认支付",
+   "content": "咨询全程免费，导出按 ¥0.1/条：本次 N 条共 X 元（一单付清，解锁后可反复导出）。",
+   "editable": false,
+   "file": "pages/my/my.js",
+   "fn": "onExportAll（支付确认）",
+   "nearbyTelemetry": "tel.ping('xall_tap') 函数入口",
+   "purpose": "批量导出一单付清确认（金额拼在 content，按钮≤4 字防真机 fail）",
+   "showCancel": true,
+   "title": "批量导出 N 条"
+  },
+  {
+   "cancel": "无",
+   "confirm": "知道了",
+   "content": "res.message + 。可稍后再试；已扣款的金额不会丢（重新进入会自动对账解锁）。",
+   "editable": false,
+   "file": "pages/my/my.js",
+   "fn": "onExportAll → pay.then 非取消失败",
+   "nearbyTelemetry": "tel.ping('xall_fail') 紧邻其前",
+   "purpose": "批量支付失败大声弹窗（取消=toast 轻提示）",
+   "showCancel": false,
+   "title": "支付没完成"
+  },
+  {
+   "cancel": "无",
+   "confirm": "知道了",
+   "content": "api.errMsg(err, '网络波动，请稍后重试')",
+   "editable": false,
+   "file": "pages/my/my.js",
+   "fn": "onExportAll → pay.catch",
+   "nearbyTelemetry": "tel.ping('xall_fail') 上方",
+   "purpose": "批量支付异常兜底防假死（v0.9.4 修过『无 catch loading 永转』）",
+   "showCancel": false,
+   "title": "支付没成功"
+  },
+  {
+   "cancel": "预览",
+   "confirm": "微信转发",
+   "content": "fname · 可直接微信转发给同事，或预览后另存。",
+   "editable": false,
+   "file": "pages/my/my.js",
+   "fn": "_exportAllAs → writeFile success",
+   "nearbyTelemetry": "无",
+   "purpose": "全部咨询汇总导出成功：转发/预览二选一",
+   "showCancel": true,
+   "title": "全部咨询已汇总"
+  },
+  {
+   "cancel": "无",
+   "confirm": "未设置（默认 确定）",
+   "content": "iOS 暂不支持应用内购买，请在安卓设备上完成购买后再阅读。",
+   "editable": false,
+   "file": "pages/report/report.js",
+   "fn": "buy（!paySupported 分支）",
+   "nearbyTelemetry": "tel.ping('buy_tap') 函数入口",
+   "purpose": "iOS 点购买兜底告知（入口本应在 wxml 层隐藏，双保险）",
+   "showCancel": false,
+   "title": "购买方式"
+  },
+  {
+   "cancel": "无",
+   "confirm": "知道了",
+   "content": "r.message + 。可稍后再试；已扣款的金额不会丢（重新进入会自动对账解锁）。",
+   "editable": false,
+   "file": "pages/report/report.js",
+   "fn": "buy → pay.then 非取消失败",
+   "nearbyTelemetry": "tel.ping('buy_tap') 入口（此链真机已活=对照组）",
+   "purpose": "报告购买（¥498-1999）支付失败大声弹窗（取消=toast）",
+   "showCancel": false,
+   "title": "支付没完成"
+  },
+  {
+   "cancel": "无",
+   "confirm": "知道了",
+   "content": "api.errMsg(err, '网络波动，请稍后重试')",
+   "editable": false,
+   "file": "pages/report/report.js",
+   "fn": "buy → pay.catch",
+   "nearbyTelemetry": "无",
+   "purpose": "报告购买异常兜底弹窗",
+   "showCancel": false,
+   "title": "支付没成功"
+  },
+  {
+   "cancel": "无",
+   "confirm": "好的",
+   "content": "发票申请已收到，开票后将发送至您的收票邮箱 xxx。可在本页随时查看处理进度。",
+   "editable": false,
+   "file": "pages/invoice/invoice.js",
+   "fn": "onSubmit → .then",
+   "nearbyTelemetry": "无（invoice 页未接 telemetry）",
+   "purpose": "发票申请成功告知（确认后 this.load() 刷新进度卡）",
+   "showCancel": false,
+   "title": "申请已提交"
+  },
+  {
+   "cancel": "无",
+   "confirm": "知道了",
+   "content": "api.errMsg(err, '网络波动，请稍后重试')（403/409 服务端明确口径直显）",
+   "editable": false,
+   "file": "pages/invoice/invoice.js",
+   "fn": "onSubmit → .catch",
+   "nearbyTelemetry": "无",
+   "purpose": "发票提交失败告知",
+   "showCancel": false,
+   "title": "没提交成功"
+  },
+  {
+   "cancel": "默认（取消）",
+   "confirm": "默认（确定）",
+   "content": "（无 content；placeholderText：请简要描述举报原因（如含不当内容））",
+   "editable": true,
+   "file": "pages/pot/pot.js",
+   "fn": "onReport",
+   "nearbyTelemetry": "无（pot 页未接 telemetry）",
+   "purpose": "锅圈 UGC 举报入口（提审合规，catchtap 防冒泡；非空校验）",
+   "showCancel": true,
+   "title": "举报内容"
+  }
+ ],
+ "sheets": [
+  {
+   "file": "pages/answer/answer.js",
+   "fn": "_exportSheet",
+   "items": "['Word 文档 (.docx)', 'PDF 文档 (.pdf)', 'Markdown (.md)'] → tapIndex 映射 docx/pdf/md",
+   "purpose": "单篇已解锁导出格式三选一（fail 回调=用户取消，静默）"
+  },
+  {
+   "file": "pages/my/my.js",
+   "fn": "_exportAllSheet",
+   "items": "['Word 文档 (.docx)', 'PDF 文档 (.pdf)', 'Markdown (.md)'] → tapIndex 映射 docx/pdf/md",
+   "purpose": "批量导出全部咨询格式三选一（fail=用户取消，静默）"
+  }
+ ],
+ "tabBarNotes": "custom-tab-bar/index.js：Component 结构，data={selected(0-4), themeStyle(内联主题CSS变量串), list[5 tab（问/咨询、锅/锅圈、智/智库、研/研究、我/我的）]}；lifetimes.attached→applyTheme()（theme.effective() 深色感知，v0.9.2 obsidian 同源）；switchTo→wx.switchTab。页面侧 onShow 用 getTabBar().setData({selected:N}) 驱动选中态（ask=0 pot=1 zhiku=2 research=3 my=4）。关键点：①无任何可隐藏状态位（无 hidden/visible 字段，恒渲染）——重建自绘弹窗若要「弹窗时让路/压暗 tabBar」需新增状态位；②wxss 无 position/z-index 声明（.bar 走框架原生 tabBar 层，天然浮在页面内容之上）——页内 fixed 遮罩（z-index 998/999）盖不住它，只有原生 wx.showModal/toast 和 root-portal 能盖；③主题经 themeStyle 内联注入，自绘弹窗组件应复用 theme.styleStr(theme.effective()) 同源配色（周换装+深色）。现有自绘先例：answer 页 citeShow 弹层（fixed mask z-index:998 + scroll-view 可滚动，v0.7.8 因『法规条文上千字原生 modal 不可滚被截断』而自绘）与 rewardShow 授勋全屏动画（z-index:999，2400ms 自灭）——可直接作为审美重建的骨架参考。",
+ "toastCount": 46
+}
+============================== RESULT ==============================
+{
+ "cssVars": [
+  {
+   "dark": "#060d1c；运行时注入覆盖: navy #071a39 / obsidian #272019 (theme.js 用 t.navy1 填 --navy-0)",
+   "light": "#081a36",
+   "name": "--navy-0",
+   "usedFor": "图纸最深底（蓝图层底色、.bp-grid 背景色、主按钮文字色、li-num/cite-chip/md-tr-head 底色）"
+  },
+  {
+   "dark": "#0b1830；运行时: navy #0d2449 / obsidian #342c23 (t.navy2)",
+   "light": "#0d2547",
+   "name": "--navy-1",
+   "usedFor": "图纸渐变中段（md-code-wrap 底、fu-badge/fu-a-tag/fu-send/tldr-bar/h2-bar 渐变端）"
+  },
+  {
+   "dark": "#122444；运行时: navy #16325f / obsidian #453b30 (t.navy3)",
+   "light": "#16355f",
+   "name": "--navy-2",
+   "usedFor": "图纸渐变亮段（export-all-btn 渐变端、h2-bar 渐变端）"
+  },
+  {
+   "dark": "rgba(101, 160, 255, 0.10)；运行时: rgba(glowRgb,0.14) → navy rgba(101,161,251,0.14) / obsidian rgba(251,171,101,0.14)",
+   "light": "rgba(101, 160, 255, 0.14)",
+   "name": "--grid",
+   "usedFor": ".bp-grid 主网格线 160rpx 格"
+  },
+  {
+   "dark": "rgba(101, 160, 255, 0.04)；运行时: rgba(glowRgb,0.055)",
+   "light": "rgba(101, 160, 255, 0.055)",
+   "name": "--grid-soft",
+   "usedFor": ".bp-grid 次网格线 32rpx 格"
+  },
+  {
+   "dark": "#e6efff；运行时: navy #edf4ff / obsidian #fff7ed",
+   "light": "#eaf3ff",
+   "name": "--white-ink",
+   "usedFor": "蓝图层上的白墨文字（hero、q-band、md-th、sb-btn-off 反白场景）"
+  },
+  {
+   "dark": "#8ba4c8；运行时: navy #9cadc9 / obsidian #b9b3ac",
+   "light": "#93acd1",
+   "name": "--ink-dim",
+   "usedFor": "蓝图上的注记灰（kicker、hero-sub、topnav-title、ea-sub；app.json tabBar color 同值 #93acd1）"
+  },
+  {
+   "dark": "#0c1322；运行时: navy #f8f5ed / obsidian #f8f4ed",
+   "light": "#f7f4ec",
+   "name": "--paper",
+   "usedFor": "暖白纸面页底（page background；rp-bar 吸底栏底）"
+  },
+  {
+   "dark": "#151f35；运行时: navy #fdfbf7 (t.paperHi) / obsidian #fdfbf7",
+   "light": "#ffffff",
+   "name": "--card",
+   "usedFor": "纸面卡片底（.card；运行时被 theme 注入为 paperHi）"
+  },
+  {
+   "dark": "#dde6f4；运行时: navy #1a2435 (t.paperInk) / obsidian #2b2824",
+   "light": "#1b2434",
+   "name": "--ink",
+   "usedFor": "纸面正文墨（ai-flag-text、srv-title、tldr-text；运行时映射 t.paperInk）"
+  },
+  {
+   "dark": "#b6c3da；运行时: navy #384457 / obsidian #4c4843",
+   "light": "#39445a",
+   "name": "--ink-2",
+   "usedFor": "纸面次级正文（md-p、cite-pop-text、md-td、pill-t）"
+  },
+  {
+   "dark": "#7f8da6；运行时: navy #798496 / obsidian #8b8783",
+   "light": "#7a8496",
+   "name": "--muted",
+   "usedFor": "纸面辅助灰（.muted、char-count、cite-pop-x、loading-hint）"
+  },
+  {
+   "dark": "#2c3a55；运行时: navy #e6e0d1 / obsidian #e6e0d1 (t.paperLine)",
+   "light": "#e6e1d2",
+   "name": "--line",
+   "usedFor": "纸面发丝线（a-head/rp-bar 分割、hist-item 虚线、md-hr、md-td 边）"
+  },
+  {
+   "dark": "(dark 块不翻转)；运行时: navy #ff9633 / obsidian #ffc233",
+   "light": "#ff9432",
+   "name": "--accent",
+   "usedFor": "安全橙点睛（按钮渐变中段、弹窗顶条、q-band/ai-flag 左条、qt-num、ap-check；tabBar selectedColor 同值 #ff9432）"
+  },
+  {
+   "dark": "(不翻转)；运行时: navy #f98110 / obsidian #f9b310",
+   "light": "#e07a0e",
+   "name": "--accent-deep",
+   "usedFor": "橙渐变深端（按钮渐变 100% 端、hist-liked、rp-ch-id）"
+  },
+  {
+   "dark": "(不翻转)；运行时恒 #c5402b（七套主题同值）",
+   "light": "#c8452b",
+   "name": "--stamp",
+   "usedFor": "图章红（错误态 hist-err；七主题统一 #c5402b）"
+  },
+  {
+   "dark": "(不翻转)；运行时: navy #2164ca / obsidian #ca7021",
+   "light": "#1d6fd0",
+   "name": "--draft",
+   "usedFor": "制图蓝=链接/次按钮描边（opt-btn、clear-btn、cite-arrow、md-quote 左条）"
+  },
+  {
+   "dark": "(不翻转，非 theme 变量)",
+   "light": "#2f9e63",
+   "name": "--t-ok",
+   "usedFor": "v0.9.5 已解锁/成功绿（rp-price-owned）；仅 app.wxss 定义，theme.js 不注入"
+  },
+  {
+   "dark": "obsidian #14110d",
+   "light": "navy #050e1c",
+   "name": "--t-deep",
+   "usedFor": "蓝图最深层（cite-pop-mask 遮罩 rgba(--t-deep-rgb,0.72)、rw-mask 渐变端）— 仅 theme.js 注入"
+  },
+  {
+   "dark": "obsidian #3a3530",
+   "light": "navy #233147",
+   "name": "--t-raise",
+   "usedFor": "蓝图抬升面一级"
+  },
+  {
+   "dark": "obsidian #4f4942",
+   "light": "navy #33435e",
+   "name": "--t-raise2",
+   "usedFor": "蓝图抬升面二级"
+  },
+  {
+   "dark": "obsidian #544f49",
+   "light": "navy #3a4a63",
+   "name": "--t-line",
+   "usedFor": "蓝图层描边线"
+  },
+  {
+   "dark": "obsidian #d1ccc7",
+   "light": "navy #bac8de",
+   "name": "--t-inkdim-hi",
+   "usedFor": "注记灰高光级"
+  },
+  {
+   "dark": "obsidian #928d86",
+   "light": "navy #7887a1",
+   "name": "--t-inkdim-faint",
+   "usedFor": "注记灰弱化级"
+  },
+  {
+   "dark": "obsidian #fbab65（暗色变暖橙辉光）",
+   "light": "navy #65a1fb",
+   "name": "--t-glow",
+   "usedFor": "蓝图辉光主色（头像框/票根描边、bp-grid 顶部纵深光）"
+  },
+  {
+   "dark": "obsidian #f6cfac",
+   "light": "navy #accaf6",
+   "name": "--t-glow-soft",
+   "usedFor": "辉光弱化（proc-item 圆点、md-code 字色）"
+  },
+  {
+   "dark": "obsidian #fdfbf7（暗色仍亮纸）",
+   "light": "navy #fdfbf7",
+   "name": "--t-paper-hi",
+   "usedFor": "纸面高光面=卡内嵌块底（tldr-card/type-box/cite-pop 弹窗本体/pill/fu-input-row/md-td）"
+  },
+  {
+   "dark": "obsidian #ebe6db",
+   "light": "navy #ebe7db",
+   "name": "--t-paper-dim",
+   "usedFor": "纸面暗一阶（骨架波、proc-list 左线、cite-pop-x 描边、type-box/fu-input-row 边）"
+  },
+  {
+   "dark": "obsidian #ddd6c6（七套几乎同值）",
+   "light": "navy #ddd6c6",
+   "name": "--t-paper-edge",
+   "usedFor": "纸面边缘线（cite-tbl/md-tbl 外框、cite-pop 边框、sb-btn-off 描边、in-c 底）"
+  },
+  {
+   "dark": "obsidian #f9f4f0",
+   "light": "navy #f0f4f9",
+   "name": "--t-paper-cool",
+   "usedFor": "冷调纸面（md-quote 底、pill-glyph 底、hist-pending 底）"
+  },
+  {
+   "dark": "obsidian #f3eae2",
+   "light": "navy #e2e9f3",
+   "name": "--t-blue-tint",
+   "usedFor": "制图蓝淡底（meta-chip/pill-glyph 描边、fu-a-text 边）"
+  },
+  {
+   "dark": "obsidian #ffd77a",
+   "light": "navy #ffba7a",
+   "name": "--t-accent-soft",
+   "usedFor": "橙渐变顶段（全部主 CTA 渐变 0% 端、ai-flag-badge/rw-medal 渐变端）"
+  },
+  {
+   "dark": "obsidian #ae8013",
+   "light": "navy #ae5e13",
+   "name": "--t-accent-ink",
+   "usedFor": "橙的墨色（纸面上可读的深橙文字底）"
+  },
+  {
+   "dark": "obsidian #fcf6e8",
+   "light": "navy #fcf2e8",
+   "name": "--t-accent-bg",
+   "usedFor": "橙淡底（answer ai-flag 底、ap-on 底）"
+  },
+  {
+   "dark": "obsidian #faf4e5",
+   "light": "navy #faefe5",
+   "name": "--t-amber-bg",
+   "usedFor": "琥珀警示底（net-down、hist-badge、srv-icon、draft-chars、fu-q-text、pill-on）"
+  },
+  {
+   "dark": "obsidian #f0dfb7",
+   "light": "navy #f0d3b7",
+   "name": "--t-amber-line",
+   "usedFor": "琥珀描边（同上场景的 2rpx 边）"
+  },
+  {
+   "dark": "obsidian #ae8119",
+   "light": "navy #ae6119",
+   "name": "--t-amber-ink",
+   "usedFor": "琥珀墨字（hist-badge 字、in-c 字）"
+  },
+  {
+   "dark": "obsidian #4e3c13",
+   "light": "navy #4e2f13",
+   "name": "--t-amber-deep",
+   "usedFor": "琥珀深端"
+  },
+  {
+   "dark": "obsidian #d86655（七套同值）",
+   "light": "navy #d86655",
+   "name": "--t-stamp-hi",
+   "usedFor": "图章红高光"
+  },
+  {
+   "dark": "obsidian #f2d8d4（七套同值）",
+   "light": "navy #f2d8d4",
+   "name": "--t-stamp-bg",
+   "usedFor": "图章红淡底（fu-a-error、hist-err）"
+  },
+  {
+   "dark": "obsidian #e2afa7",
+   "light": "navy #e2afa7",
+   "name": "--t-stamp-mid",
+   "usedFor": "图章红中阶"
+  },
+  {
+   "dark": "obsidian #64322b",
+   "light": "navy #64322b",
+   "name": "--t-stamp-deep",
+   "usedFor": "图章红深端（错误弹层文字）"
+  },
+  {
+   "dark": "obsidian 255,247,237",
+   "light": "navy 237,244,255",
+   "name": "--t-ink-rgb",
+   "usedFor": "白墨 rgb 三元组（供 rgba() 透明度派生）"
+  },
+  {
+   "dark": "obsidian 251,171,101",
+   "light": "navy 101,161,251",
+   "name": "--t-glow-rgb",
+   "usedFor": "辉光 rgb（描边/光晕派生）"
+  },
+  {
+   "dark": "obsidian 202,112,33",
+   "light": "navy 33,100,202",
+   "name": "--t-blue-rgb",
+   "usedFor": "制图蓝 rgb（ai-note 虚线、rs-badge 回退）"
+  },
+  {
+   "dark": "obsidian 255,194,51",
+   "light": "navy 255,150,51",
+   "name": "--t-accent-rgb",
+   "usedFor": "橙 rgb（按钮投影 rgba(--t-accent-rgb,0.34)、光晕、qt-num text-shadow）"
+  },
+  {
+   "dark": "obsidian 249,179,16",
+   "light": "navy 249,129,16",
+   "name": "--t-accent-deep-rgb",
+   "usedFor": "深橙 rgb（chip-3q 描边、answer ai-flag 边）"
+  },
+  {
+   "dark": "obsidian 174,128,19",
+   "light": "navy 174,94,19",
+   "name": "--t-accent-ink-rgb",
+   "usedFor": "橙墨 rgb（net-down ticks）"
+  },
+  {
+   "dark": "obsidian 39,32,25",
+   "light": "navy 7,26,57",
+   "name": "--t-navy1-rgb",
+   "usedFor": "藏青1 rgb（quota-ticket 底 rgba 0.72、export 投影）"
+  },
+  {
+   "dark": "obsidian 52,44,35",
+   "light": "navy 13,36,73",
+   "name": "--t-navy2-rgb",
+   "usedFor": "藏青2 rgb（chip 虚线、hist-no、blank 系列派生）"
+  },
+  {
+   "dark": "obsidian 20,17,13",
+   "light": "navy 5,14,28",
+   "name": "--t-deep-rgb",
+   "usedFor": "最深底 rgb（弹窗遮罩专用）"
+  },
+  {
+   "dark": "obsidian 58,53,48",
+   "light": "navy 35,49,71",
+   "name": "--t-raise-rgb",
+   "usedFor": "抬升面 rgb"
+  },
+  {
+   "dark": "obsidian 185,179,172",
+   "light": "navy 156,173,201",
+   "name": "--t-inkdim-rgb",
+   "usedFor": "注记灰 rgb（尺寸线、back-btn 边、qt-right 点线）"
+  },
+  {
+   "dark": "obsidian 53,40,26",
+   "light": "navy 26,36,53",
+   "name": "--t-pink-rgb",
+   "usedFor": "纸墨 rgb（.card 投影 rgba(--t-pink-rgb,0.04/0.07)——命名历史遗留，实为 paperInk"
+  }
+ ],
+ "typeScale": "全局基准：page font-size 28rpx / line-height 1.65（app.wxss）；字族 -apple-system,\"PingFang SC\",\"HarmonyOS Sans SC\",\"MiSans\",\"Microsoft YaHei\",sans-serif；等宽 .mono = \"SF Mono\",Menlo,Consolas,\"Courier New\",monospace + tabular-nums。\n\n字号阶梯（rpx → 用途，来源 app.wxss + 四页 wxss 实测全量）：\n16 — dim-cap 尺寸线端标（极小徽标下限）\n17-19 — 微注记/白色 kicker：hero-kicker 19+letter-spacing 7rpx/w600、tldr-cap 19/ls3、hero-dwg 19/ls4、rs-badge 19\n20 — 标签级：.kicker 20/ls5/w600、qt-label、q-label/ls3、hist-badge、rp-bar-sub、fu-ai-note\n21 — pill 标签/行副题：pill-t、srv-sub、ea-sub、act-tip、sheet-no、cite-chip 字号(21)\n22 — 时间戳/法务行：topnav-title 22/ls6、hist-time、legal-row、char-count? (22)、li-num 22、rp-ch-n\n23 — rp-sample-more 23/w700\n24 — .muted 辅助说明统一 24rpx、qt-kv、proc-t、loading-hint\n25 — hero-sub、chip 示范问题、cite-body、net-down、md-code 25、rw-sub、rp-intro\n26 — 表格/代码/弹窗正文：md-th/md-td 26、md-quote 28（注意）、cite-pop-text 26/lh1.9、fu-input/fu-q-text/fu-a-text 26、in-c 26、ai-flag-badge 26/w800\n27 — 弹窗 CTA 字：cite-pop-btn 27/w800/ls4、rp-cta-t 27/w800/ls2、rp-state-t 27/w700、hero-ai-badge 27/w800\n28 — 弹窗标题/卡题：cite-pop-title 28/w800、sb-title 28/w800、fu-title 28/w700、rel-title 28/w800/ls2、tldr-title 28/w700/ls2、md-quote 28、ai-flag-text 28/w700\n29 — 按钮排与行标题：.btn-row 双按钮 29/w700/ls2、hist-q 29/w600、ea-title/srv-title 29/w800/ls2\n30 — 正文级：md-p 30/lh1.92、li-text 30/lh1.85、draft-title 30/w800、empty-text 30/w700\n31 — md-h3 31/w700、ask-input 31/lh1.75\n32 — 主 CTA 字：.btn-primary 32/w800/ls2、nick 32/w800\n33 — md-h2-text 33/w800\n34 — q-text 34/w700/lh1.55、rp-price 34/w800、hist-arrow/ea-icon 34\n36 — md-h1 36/w800/lh1.45、rp-bar-price 36/w800\n40 — rw-title 40/w800/ls4、back-btn 字 40\n44 — rp-title 44/w800/lh1.4\n46 — avatar-glyph 46/w800\n52 — q-num 52/w800（my 额度大数字）\n58 — hero-title 58/w800/ls6（全站最大标题）\n62 — qt-num 62/w800（ask 额度票根大数字，配 accent+光晕）\n\n字重纪律：600=注记/kicker；700=次强调/列表题；800=标题与一切 CTA（主按钮、弹窗标题、弹窗按钮）；900 仅授勋 rw-plus。字距纪律：标签类 ls 3-7rpx，CTA ls 2-4rpx。",
+ "buttonDNA": "全局按钮剥离（app.wxss）：button::after { border: none; } + button { padding-left:0; padding-right:0; }（微信原生灰圈必须剥离）；share-pill 再补 margin:0/font 继承。\n\n主按钮（.btn-primary，app.wxss 全局，ask/my/report 的 .ask-btn/.retry-btn/.empty-btn/.rp-bar-btn 均叠加此类）：\n- background: linear-gradient(180deg, var(--t-accent-soft) 0%, var(--accent) 45%, var(--accent-deep) 100%)  ← 橙三段纵渐变，45% 拐点是品牌签名\n- color: var(--navy-0)（橙底配最深藏青字，不用白字）；border-radius: 10rpx；font-size: 32rpx；font-weight: 800；letter-spacing: 2rpx；line-height: 2.4\n- box-shadow: 0 12rpx 28rpx rgba(var(--t-accent-rgb), 0.34), inset 0 2rpx 0 rgba(255,255,255,0.55)（外投影+顶部内高光=工业按钮立体感）\n- 按压态 hover-class=\"btn-hover\"：transform: scale(0.985); box-shadow 收为 0 6rpx 14rpx rgba(--t-accent-rgb,0.28), inset 0 2rpx 0 rgba(255,255,255,0.4) —— 缩小+投影收短双反馈\n- disabled：#d9d2c2 底 / #8b8474 字 / 无影（dark 块翻为 #2a3550 / #6b7890）；ask 页另有 .btn-dim { opacity: 0.55 } 弱化可点态\n\n次按钮（.opt-btn，ask.wxss）：transparent 底 + color: var(--draft) + border: 3rpx solid var(--draft)（制图蓝实线描边），双按钮排内 flex:1 / line-height:2.35 / 29rpx / w700 / ls2 / radius 8rpx。\n\npill 小按钮（answer.wxss .pill）：竖排图标+文字，min-width:118rpx，padding 16rpx 12rpx 12rpx，radius 14rpx，border 2rpx solid var(--t-paper-dim)，底 var(--t-paper-hi)；pill-glyph 52rpx 圆（底 t-paper-cool+边 t-blue-tint）；按压 .pill-hover：底变 var(--navy-0)、边同色、scale(0.96)、pill-t 变 --white-ink（整体反白）；选中 .pill-on：琥珀系（t-amber-bg/t-amber-line 底边+accent-deep 字）；在途 .pill-busy/.sb-busy/.fu-send-busy { opacity: 0.55 }（v0.9.5 审计统一约定）。\n\n中号 CTA 变体（同橙渐变 DNA 复用）：sb-btn 高72rpx/radius12/26rpx/w800/ls2/影 0 10rpx 22rpx rgba(accent-rgb,0.32)，hover scale(0.96)，off=transparent+2rpx t-paper-edge 边；cite-pop-btn 高76rpx/radius12/27rpx/w800/ls4（弹窗内 ls 加宽到 4），hover scale(0.96)；ai-flag-badge/hero-ai-badge=渐变(180deg, t-accent-soft, accent)+navy-0 字+radius 6-8rpx 小徽章。\n\n藏青主视觉大按钮（.export-all-btn，my.wxss）：linear-gradient(135deg, var(--navy-2) 0%, var(--navy-1) 55%, var(--navy-0) 100%)，白墨字，radius 12rpx，border 2rpx solid rgba(--t-glow-rgb,0.35)，影 0 12rpx 28rpx rgba(--t-navy1-rgb,0.30)+inset 0 2rpx 0 rgba(--t-glow-rgb,0.25)；hover scale(0.985)+影收短；左缀 72rpx 橙渐变图标块(.ea-icon radius12, gradient(180deg,t-accent-soft,accent-deep))。\n\nchip 虚线标签按钮（ask）：border 2rpx dashed rgba(--t-navy2-rgb,0.35)+transparent 底+radius 6rpx；hover 变实心反白（bg navy-0/white-ink 字/border-style:solid/scale 0.97）。fu-send：navy-1 底白墨字 radius10 高64；hover fu-send-hover 变 navy-2。\n\n统一按压语言：scale(0.96~0.985) + 投影收短或反白，从不改变色相；透明度约定 disabled/busy=0.55、轻点=0.6~0.75。",
+ "existingPopupCSS": "先例A：cite-pop 全家（E:\\AI-Station\\WeAppForge\\projects\\zongbao-ai\\pages\\answer\\answer.wxss 659-710 行，v0.7.8 因原生 modal 不可滚合规敏感而自绘）——新弹窗应逐条同源复刻：\n\n.cite-pop-mask { position: fixed; left:0; top:0; right:0; bottom:0; z-index: 998; display:flex; align-items:center; justify-content:center; background: rgba(var(--t-deep-rgb), 0.72); padding: 40rpx; }\n.cite-pop { width:100%; max-width:640rpx; background: var(--t-paper-hi); border: 2rpx solid var(--t-paper-edge); border-top: 6rpx solid var(--accent); border-radius: 14rpx; display:flex; flex-direction:column; overflow:hidden; box-shadow: 0 20rpx 60rpx rgba(0,0,0,0.35); }\n.cite-pop-head { display:flex; align-items:center; gap:16rpx; padding: 24rpx 24rpx 16rpx; }\n.cite-pop-title { flex:1; font-size:28rpx; font-weight:800; color:var(--navy-0); line-height:1.45; }\n.cite-pop-x { flex-shrink:0; width:52rpx; height:52rpx; border-radius:10rpx; border:2rpx solid var(--t-paper-dim); color:var(--muted); font-size:28rpx; display:flex; align-items:center; justify-content:center; line-height:1; }\n.cite-pop-scroll { max-height:70vh; padding:0 24rpx; box-sizing:border-box; }\n.cite-pop-text { display:block; font-size:26rpx; line-height:1.9; color:var(--ink-2); text-align:justify; padding-bottom:8rpx; }\n.cite-pop-btn { margin:16rpx 24rpx 24rpx; height:76rpx; border-radius:12rpx; background:linear-gradient(180deg, var(--t-accent-soft) 0%, var(--accent) 45%, var(--accent-deep) 100%); color:var(--navy-0); font-size:27rpx; font-weight:800; letter-spacing:4rpx; display:flex; align-items:center; justify-content:center; box-shadow:0 10rpx 22rpx rgba(var(--t-accent-rgb), 0.32); }\n.cite-pop-btn-hover { transform: scale(0.96); }\n\nanswer.wxml 结构（339-351 行）：\n<view class=\"cite-pop-mask\" wx:if=\"{{citeShow}}\" catchtouchmove=\"noop\" bindtap=\"onCiteClose\">\n  <view class=\"cite-pop\" catchtap=\"noop\">\n    <view class=\"cite-pop-head\"><text class=\"cite-pop-title\">{{citeTitle}}</text><view class=\"cite-pop-x\" bindtap=\"onCiteClose\" hover-class=\"cite-hover\"><text>✕</text></view></view>\n    <scroll-view scroll-y class=\"cite-pop-scroll\" enhanced show-scrollbar=\"{{false}}\"><text class=\"cite-pop-text\" user-select>{{citeText}}</text></scroll-view>\n    <view class=\"cite-pop-btn\" bindtap=\"onCiteClose\" hover-class=\"cite-pop-btn-hover\">{{citeBtn}}</view>\n  </view>\n</view>\n\n设计要点：① 遮罩用 rgba(--t-deep-rgb,0.72) 随主题染（obsidian 暖黑）；② 弹体=纸面高光面 t-paper-hi + 2rpx 纸边 + 顶缘 6rpx 安全橙条（点睛橙出现在结构边缘）+ 14rpx 大圆角 + 深投影 0 20rpx 60rpx rgba(0,0,0,0.35)；③ 交互三防：遮罩 bindtap 关闭/弹体 catchtap=\"noop\" 拦冒泡/遮罩 catchtouchmove=\"noop\" 锁滚动穿透；④ wx:if 硬切换无过渡动画（现状；升级可复用 app.wxss .rise 入场曲线 cubic-bezier(0.22,0.9,0.3,1) 0.42s）；⑤ 深色处理：无专属 dark 块——v0.9.5 审计后统一由 theme.apply 注入 obsidian 变量接管（同页 710 行注释明示此先例）；⑥ z-index 阶梯：弹窗 998 < 授勋全屏 999 < (无更高)。\n\n先例B：rw-mask 授勋全屏遮罩（answer.wxss 551-610）：fixed 全屏 z-index:999，background: radial-gradient(120% 90% at 50% 42%, rgba(var(--t-navy1-rgb),0.5), rgba(var(--t-deep-rgb),0.82))，rwFade 2.4s 淡入淡出 + rwPop 弹性出场 cubic-bezier(0.18,1.6,0.42,1)+火花 rwFly 变量驱动（--ex/--ey/--es）。",
+ "themeApplyMechanism": "文件 E:\\AI-Station\\WeAppForge\\projects\\zongbao-ai\\utils\\theme.js（v0.7.3 周换装 + v0.9.2 深色感知）。\n\n七套调色板 THEMES（同构字段，每套 ~60 键）：\n- navy「深海蓝图」weekday:1 — deep #050e1c / navy1-3 #071a39→#0d2449→#16325f / glow #65a1fb / accent #ff9633 / paper #f8f5ed（≈现网像素）\n- pine「松烟制图」weekday:2 — deep #061b16 / navy 系绿墨 #08372b/#0e4839/#185d4c / glow #65fbdd / accent #ffa733\n- obsidian「曜石鎏金」weekday:3 — deep #14110d / 暖曜石 #272019/#342c23/#453b30 / glow #fbab65 / accent #ffc233（金）/ 纸面仍暖白 #f8f4ed\n- violet「暮山紫电」weekday:4 — deep #0e071b / #1a0936/#241046/#321a5b / glow #9c65fb / accent #33ddff（青电光）\n- celadon「青瓷官窑」weekday:5 — deep #07171b / #092f36/#103d46/#1a505b / glow #65fbef / accent #ff4433\n- forge「熔炉信号」weekday:6 — deep #180c09 / #31160e/#402016/#542d21 / glow #fba365 / accent #ffcc33\n- graphite「晨雾石墨」weekday:7 — deep #0d1014 / #171d28/#212836/#2e3747 / glow #65abfb / accent #ff6933\n固定不变量：stamp 族七套全同（#c5402b/#d86655/#f2d8d4/#e2afa7/#64322b），纸面族近似同（各套 paper ~#f8f5ed/edf8ed 级微调）。每套另含 14 个 *Rgb 三元组字符串供 rgba() 派生。\n\n机制链路：current() = storage('theme_pref') 锁定（''=跟随）→ 否则 getDay() 映射 weekday 1-7 轮换；effective() = systemTheme()==='dark'（wx.getAppBaseInfo().theme→getSystemInfoSync().theme→'light' 三级回退）? THEMES.obsidian : current()——系统深色一律曜石，pref 照存，切回亮色恢复轮换；apply(page)（每页 onShow 调）= page.setData({ themeStyle: styleStr(t) }) + bindThemeChange()（wx.onThemeChange 模块级一次订阅，对页面栈逐页重 apply 热跟随）+ 透传 page.getTabBar()?.applyTheme() 染自绘 tabBar。\n\n注入格式：styleStr(t) 拼一条 '--navy-0:'+t.navy1+';--navy-1:'+t.navy2+';…' 分号串，页面 wxml 首节点 <page-meta page-style=\"{{themeStyle}}\" /> 内联注入——page-style 内联变量同时压过 app.wxss 亮色默认与 @media(prefers-color-scheme:dark) 块，主题即最终色（这就是各页 dark 硬编码块被删光的原因）。\n\n注入变量全名单（46 个）：蓝图层 --navy-0/--navy-1/--navy-2（注意错位映射：navy-0←navy1, navy-1←navy2, navy-2←navy3）、--t-deep、--t-raise、--t-raise2、--t-line、--grid、--grid-soft、--white-ink、--ink-dim、--t-inkdim-hi、--t-inkdim-faint、--t-glow、--t-glow-soft；纸面层 --paper、--card（←paperHi）、--ink（←paperInk）、--ink-2（←paperInk2）、--muted（←paperMuted）、--line（←paperLine）、--t-paper-hi、--t-paper-dim、--t-paper-edge、--t-paper-cool、--t-blue-tint；点睛 --accent、--t-accent-soft、--accent-deep、--t-accent-ink、--t-accent-bg、--t-amber-bg、--t-amber-line、--t-amber-ink、--t-amber-deep、--stamp、--t-stamp-hi、--t-stamp-bg、--t-stamp-mid、--t-stamp-deep、--draft（←blue）；rgb 三元组 --t-ink-rgb、--t-glow-rgb、--t-blue-rgb、--t-accent-rgb、--t-accent-deep-rgb、--t-accent-ink-rgb、--t-navy1-rgb、--t-navy2-rgb、--t-deep-rgb、--t-raise-rgb、--t-inkdim-rgb、--t-pink-rgb（←paperInkRgb）。--t-ok 是 app.wxss 独有、theme 不注入。新弹窗规则：颜色一律走这些 var(--t-*)，写死色即断主题。",
+ "posterPalette": "文件 E:\\AI-Station\\services\\qianwen-engine\\qianwen_engine\\poster.py（v0.7.4 瑞士制图风，Pillow 渲染 750×1334 PNG）。\n\n顶部调色常量（RGB 元组，逐字）：\nNAVY = (11, 31, 58)        # 藏青 #0B1F3A（品牌字/问题正文/数字/要点标）\nNAVY_DEEP = (7, 22, 42)    # 行动卡深一阶 #07162A\nPAPER = (247, 244, 236)    # 暖白纸 #F7F4EC（全图底）\nORANGE = (240, 122, 40)    # 安全橙 #F07A28（全图仅三处）\nGRID = (219, 228, 238)     # 制图蓝线 #DBE4EE（1.5px 图纸边框 24px 内缩 width=2）\nHAIR = (216, 209, 190)     # 暖发丝线 #D8D1BE（数据行上缘 width=2）\nWHITE = (255, 255, 255)    # 行动卡白字/二维码衬底\nINK = (26, 44, 70)         # 正文墨 #1A2C46（要点正文）\nINK_SOFT = (90, 106, 126)  # #5A6A7E（注记：日期/图签/栏目标签/页脚）\nMIST = (178, 194, 214)     # 藏青上的注记灰 #B2C2D6（行动卡副行/码注记）\n版式常量：W,H=750,1334；M=72 版心边距；_QR_SIZE=160。\n\n「橙色只出现三处」纪律（模块 docstring 明文 + 行内注释编号）：\n橙#1 问题区栏目标度条 d.rectangle([M,172,M+10,182], fill=ORANGE)——10×10px 小方块，与要点速览的 NAVY 标同构；\n橙#2 行动卡眉标 _track(...,\"免费开放 · FREE ACCESS\", f_cap, ORANGE, tracking=6)——藏青大卡上的橙色小字眉标；\n橙#3 底缘安全条 d.rectangle([0,H-8,W,H], fill=ORANGE)——8px 通栏收底。\n（无码兜底分支另有「总包AI顾问」ORANGE 字一处，属降级路径。）设计逻辑：橙=行动信号只做点睛，藏青承担信息主体，留白即层级。\n\n海报字体阶（Noto Sans SC 双字重 Regular/Bold，_font_pair 三级回退）：\nBold 46 f_q 问题主角（≤4 行，行距 66，NAVY）\nBold 42 f_cta CTA「扫码读完整解答」（WHITE，行动卡）\nBold 40 f_brand 品牌「总包AI顾问」（NAVY，刊头）\nBold 30 f_num 数据行数字（NAVY）\nRegular 28 f_bullet 要点正文（INK，≤2 行/条，行距 48，缀 NAVY 小方块 bullet）\nRegular 23 f_unit 单位 / f_cta_sub 行动卡副行（MIST）\nRegular 21 f_label 栏目标签（INK_SOFT，_track 字距 5，如「工程咨询 · CONSULTATION」「要点速览 · KEY POINTS」）\nRegular 20 f_meta_s 图签（日期/SHT 01 · SCALE 1:1）/ f_cap 码注记（橙#2 同款）\nRegular 19 f_foot 页脚合规句「内容由 AI 生成 · 仅供参考，不构成正式法律意见」\n纪律原文：字阶纪律 = 问题 Bold 46 主角 / CTA Bold 42 / 正文 Regular 28 / 注记 20；重字重只给锚点，注记一律 INK_SOFT。",
+ "radiusAndLines": "圆角阶梯（工业直角感=克制，来源 app.wxss+四页）：\n2rpx — caret-bar 光标块（最锐）\n3rpx — h2-bar 章节竖条\n4rpx — 微型徽标/序号块：dim-cap、chip-3q、hist-no、meta-chip、li-num、cite-chip、hist-badge\n6rpx — .card 卡片本体（注释明示「直角工业感」）、chip、in-c 行内码、md-tbl、cite-tbl、net-down、ai-flag-badge、sk 骨块\n8rpx — quota-ticket 票根、q-band、blank-frame、my-skel-no、tldr-idx、fu-q-tag/fu-a-tag、fu-badge、md-quote 右侧圆角（0 8rpx 8rpx 0 左直右圆）、hero-ai、ask 双按钮排(.btn-row)\n10rpx — .btn-primary 主CTA、back-btn、topnav-cap、avatar-frame、type-box、md-code-wrap、rel-chip、ap-cell/ap-swatch、hero-ai、fu-send、cite-pop-x\n12rpx — export-all-btn/ea-icon/srv-icon 大按钮与图标块、sb-btn、cite-pop-btn 弹窗CTA、fu-input-row、fu-q-text 气泡(12 2 12 12)\n14rpx — .pill 互动小按钮、sb-glyph、.cite-pop 弹窗本体（全站最大圆角=弹窗级）\n50% — 一切圆点（draft-dot/li-dot/a-badge-dot/pill-glyph/ap-dot/ap-check）\n规律：内容元素越「容器级」圆角越大 4→6→10→12→14；气泡用非对称圆角（fu-q 12 2 12 12 / fu-a 2 12 12 12）区分问/答。\n\n发丝线/分割线三式：\n实线 2rpx solid var(--line) — a-head 底线、rp-bar 顶线、md-td 上边\n虚线 2rpx dashed var(--line) — ask-foot、hist-item、quota-rule、cite-item+、ai-note、rp-ch（纸面主分割=虚线，制图感）\n点线/票根 — qt-perf 3rpx dashed rgba(--t-glow-rgb,0.4)、qt-right 3rpx dotted rgba(--t-inkdim-rgb,0.35)\nmd-hr 断续线 — height 2rpx, background: repeating-linear-gradient(90deg, var(--line) 0 26rpx, transparent 26rpx 42rpx)\n蓝图层线 — .bp-grid 主网格 160rpx + 次网格 32rpx（--grid/--grid-soft 1px 线）；ticks 图框角标 26rpx L 形 3rpx 边（--tick 变量）；dim-rule 尺寸线（左右 2rpx 端标+通长 2rpx 线，rgba(--t-inkdim-rgb,0.4)）\n结构边缘点睛条（弹窗/特性块签名）：border-top 6rpx solid var(--accent)（cite-pop）；border-left 6rpx solid var(--accent)（q-band-inner/share-band/tldr-card/type-box）；border-left 8rpx solid var(--accent)（md-h1）；border-left 10rpx solid var(--accent-deep)（answer ai-flag）。投影纪律：.card = 0 2rpx 0 rgba(--t-pink-rgb,0.04), 0 10rpx 34rpx rgba(--t-pink-rgb,0.07)（dark 翻 rgba(0,0,0,0.22/0.38)）；弹窗深投影 0 20rpx 60rpx rgba(0,0,0,0.35)。\n\n组件先例补记（project.config.json，E:\\AI-Station\\WeAppForge\\projects\\zongbao-ai\\project.config.json）：packOptions.ignore = [{type:folder, value:\"v095-audit\"},{type:folder,value:\".vscode\"}]；setting = es6/postcss/minified:true, urlCheck:false；无任何 usingComponents 键。app.json 无全局 usingComponents、lazyCodeLoading:\"requiredComponents\"；全项目仅 legal/privacy.json 与 invoice/invoice.json 有空 \"usingComponents\":{}——页面级自定义组件零先例。唯一组件先例=custom-tab-bar/（app.json tabBar.custom:true 约定式目录注册，custom-tab-bar/index.json {\"component\":true}）。结论：新弹窗按项目惯例应走「页面内 wxml+wxss 自绘」（cite-pop 同款），若做成组件将是首个页面级自定义组件。"
+}

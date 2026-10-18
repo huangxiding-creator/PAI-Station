@@ -1,0 +1,426 @@
+{
+ "facts": [
+  {
+   "topic": "bootsim-overview",
+   "fact": "bootsim_v3.py is a 1017-line structural gate for the zongbao-ai miniprogram at ROOT = E:\\AI-Station\\WeAppForge\\projects\\zongbao-ai. It stubs the WeChat environment and statically checks app.json structure, per-page files, user-order compliance, engine-side (server repo) code, and tooling scripts — all offline, no devtools needed. Header docstring doubles as a version changelog of user orders (v0.5.0 用户令 / v0.5.1 教训级 / v0.7.0 用户十一点令 0930 ...).",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:1-18"
+  },
+  {
+   "topic": "bootsim-check-helper",
+   "fact": "Check pattern: `checks = []` module list + `def check(name, cond, detail=\"\"): checks.append((name, bool(cond), detail))` + `def read(path): return open(os.path.join(ROOT, path), encoding=\"utf-8\").read()`. Every file read passes encoding=\"utf-8\" explicitly (never platform default — Windows GBK would mojibake CJK).",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:20-28"
+  },
+  {
+   "topic": "three-line-final-verification (python)",
+   "fact": "Final block is exactly: `fails = [c for c in checks if not c[1]]` then per-check print `(\"PASS \" if ok else \"FAIL \") + name + ((\"  \" + detail) if detail and not ok else \"\")` (detail printed only on FAIL), then summary `print(f\"\\nBOOT-SIM: {len(checks) - len(fails)}/{len(checks)} PASS\")`, then `sys.exit(1 if fails else 0)`.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:1013-1017"
+  },
+  {
+   "topic": "three-line-final-verification (node e2e)",
+   "fact": "e2e .mjs final block: `fs.writeFileSync(RESULT, JSON.stringify({ results, errors }, null, 2))` → `const fails = results.filter((r) => !r.ok)` → `console.log(\"\\nE2E v0.9.12 POPDOWN: X/Y PASS\")` → `await mp.disconnect(); process.exit(fails.length ? 1 : 0)`. Same PASS-only-prints-detail contract via `note(name, ok, detail)` pushing {name, ok, detail} into results.",
+   "source": "E:/AI-Station/WeAppForge/work/e2e_v092_popdown.mjs:15-18,130-134"
+  },
+  {
+   "topic": "demand-as-assertion naming",
+   "fact": "Check names embed the verbatim user order + date so a FAIL identifies which demand regressed, e.g. `check(\"app.json 研究=倒数第二位、我的=末位（用户令 1008）\", ...)`, `check(\"ask CTA=免费咨询（1010 引流令：免费回位主打）\", ...)`. Section banners delimit each order batch: `# ══ 用户九点令 v0.5.0 全量检查 ══`, `# ══ v0.7.0 用户十一点令全量检查（0930）══`, `# ══ v0.8.0 用户令 1008 ══`, `# ══ v0.9.12 弹窗清理五连令（1011 用户令...）──`.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:43,117,163,206,441,984"
+  },
+  {
+   "topic": "assertion-ratchet (never delete old checks)",
+   "fact": "Checks accumulate across versions — v0.5.0 order checks (voice removal, sample questions) are still asserted in the v0.9.12 file alongside v0.9.12 checks. Anchors are swapped, not removed, when semantics change: old string asserted absent AND new string asserted present in the same check (e.g. `\"接着问\" not in ans_wxml and \">继续追问</text>\" in ans_wxml`).",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:94-160,232"
+  },
+  {
+   "topic": "version-anchors",
+   "fact": "Two-sided version anchor must be edited in lockstep: `check(\"my 版本标记 v0.9.12（1011 弹窗清理五连令）\", \"v0.9.12\" in my_wxml)` and `check(\"package.json version=0.9.12\", pkg[\"version\"] == \"0.9.12\")`. The my-page version string is also the e2e beacon proving devtools recompiled disk code.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:162-165; E:/AI-Station/WeAppForge/work/e2e_v092_popdown.mjs:29-42"
+  },
+  {
+   "topic": "app.json-structure-equality",
+   "fact": "Structure is asserted by exact list equality, not membership: `app_json[\"pages\"] == [\"pages/ask/ask\", \"pages/pot/pot\", \"pages/zhiku/zhiku\", \"pages/research/research\", \"pages/report/report\", \"pages/answer/answer\", \"pages/my/my\", \"pages/legal/privacy\", \"pages/invoice/invoice\", \"pages/home/home\"]` (10 pages), tab texts == [\"咨询\", \"锅圈\", \"智库\", \"研究\", \"我的\"], plus entry-page check pages[0]==\"pages/ask/ask\", tabBar.custom is True, lazyCodeLoading==\"requiredComponents\", no WechatSI plugin.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:32-45"
+  },
+  {
+   "topic": "per-page-structural-loop",
+   "fact": "Generic per-page loop over app_json pages: reads p+\".wxml\"/p+\".js\"/p+\".json\", asserts navigationStyle==\"custom\", `\"Page({\" in js` (js Page() 工厂), `\"nav.statusBarHeight\" in wxml` (nav binding), and every `re.findall(r'bindtap=\"(\\w+)\"', wxml)` handler name `in js` (bindtap→implementation binding check).",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:47-55"
+  },
+  {
+   "topic": "wxml-tag-pairing-check",
+   "fact": "Rough WXML well-formedness gate: for tag in [view, block, scroll-view, template], regex counts `opens = len(re.findall(rf\"<{tag}[\\s>]\", wxml))`, `closes = len(re.findall(rf\"</{tag}>\", wxml))`, `selfclosed = len(re.findall(rf\"<{tag}[^>]*/>\", wxml))` and asserts opens == closes + selfclosed.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:86-92"
+  },
+  {
+   "topic": "positional-assertions via find()",
+   "fact": "Layout order is asserted with string index math: ask 布局 check `0 <= _inp < _opt < _cta` (opt-btn/ask-btn/ask-input find positions = 输入框→AI优化左|咨询右); hero-ai badge must sit between hero-title and hero-sub (`0 < find(hero-ai)-find(hero-title) and find(hero-ai) < find(hero-sub)`); my 外观卡 must come after 咨询记录 and 我的报告.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:121-124,166-169,176-178"
+  },
+  {
+   "topic": "counting-assertions",
+   "fact": "Exact-count assertions pin UI inventory: `ans_wxml.count('class=\"pill-glyph\"') == 5` (五小按钮), `ans_js.count(\"this._reward(\") == 3` (赠次只在真实互动), `ask_js.count(\"wx.vibrateShort({ type: 'light', fail: () => {} })\") == 2`, `_pot_wxml_2.count('class=\"ai-flag\"') == 1` (一页一处), `my_wxml.count('class=\"ap-cell') == 2`, per-page `count(\"theme.apply(this)\") >= 2` (onLoad+onShow 双 apply 首帧不闪白).",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:145,318,368,370-372,613-615,816"
+  },
+  {
+   "topic": "load-hideLoading-balance",
+   "fact": "蒙层不滞留 invariant asserted arithmetically: for pages (ask, answer, my, report) `count(\"pop.loading(\") >= 1` AND `count(\"pop.hideLoading(\") >= count(\"pop.loading(\")` per page — every loading shown must have a hideLoading收口.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:856-861"
+  },
+  {
+   "topic": "global-forbidden-word-scans",
+   "fact": "os.walk(ROOT) scans over (js,wxml,wxss,json[,wxs]) collect files containing forbidden strings, wrapped in try/except-continue on read; the check asserts the hit list is empty and prints it as detail. Instances: \"工程大脑\" (renamed to 总包智库), \"总包标讯\"/\"哈萨藏\" (legacy), \"顶级\"/\"病毒\"/\"裂变\" (广告法极限词), \"onCopy\"/\"setClipboardData\" (复制全文下线, zhiku 复制链接除外).",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:211-222,289-300,305-316,376-387"
+  },
+  {
+   "topic": "negative-assertion-comment-stripped-copy",
+   "fact": "Negative assertions that would false-positive on policy comments run against a comment-stripped copy: `_zk_code = re.sub(r\"//[^\\n]*\", \"\", zk_js)` (去注释副本——负断言打代码层，政策注释不误伤). Used so the source may mention removed brands (科思顿/小鹅通/秘塔/知网, 细分市场研究) in comments while display-layer code stays clean.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:464,475-483"
+  },
+  {
+   "topic": "full-project-scan-scope",
+   "fact": "Native-popup zero-tolerance scan walks the whole project (not just pages/) with dirnames filtered: `_dirnames[:] = [d for d in _dirnames if d not in (\"node_modules\", \"miniprogram_npm\", \"v095-audit\")]`, strips both `/* */` and `//` comments via re.sub before searching for `wx.showModal(`/`wx.showActionSheet(`/`wx.showLoading(`/`wx.hideLoading(` — utils/pay.js, components, app.js were formerly blind spots (v0.9.9 fix).",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:880-896"
+  },
+  {
+   "topic": "engine-side-cross-repo-assertions",
+   "fact": "bootsim asserts the SERVER repo too: ENGINE = r\"E:\\AI-Station\\services\\qianwen-engine\"; reads wechat.py, app.py, config.py, store.py, exporter.py, report_catalog.py, potcat.py, poster.py and pins constants and endpoints: `\"EXPORT_PRICE_FEN = 10\" in _cfg_py` (¥0.1/条), `\"EXPORT_BATCH_MAX = 99\"`, `\"_env_int(\\\"INVOICE_THRESHOLD_FEN\\\", 20000)\"` (¥200), `'HTTPException(402' in _app_py` (导出闸门 402), endpoint decorators like `'@app.get(\"/api/reports\")'`, `'@app.post(\"/api/report/{sku}/unlock_sign\")'`, `'@app.get(\"/api/invoice/status\")'`, msg_sec_check v2 (`'\"version\": \"2\"' in _wx_py`), `'LAYOUT_VERSION = \"v4\"' in _poster_py` (海报缓存键换代).",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:425-435,491-503,676-696,783-798,954-958"
+  },
+  {
+   "topic": "tests-in-service-anchors",
+   "fact": "bootsim asserts the pytest suites themselves stay in service via sentinel test names: test_export_pay.py exists and contains \"test_prod_query_outage_fail_closed\" (订单核验回归 21 用例); test_report_mall.py contains \"test_unlock_paid_forged_and_cross_user\"; test_invoice.py contains \"test_apply_push_failure_fail_open\" (9 用例). Deleting or renaming a test turns bootsim red.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:553-555,694-696,796-798"
+  },
+  {
+   "topic": "work-tooling-assertions",
+   "fact": "bootsim also gates sibling tooling under WORK = abspath(ROOT/../../work): upload_qianwen.mjs must contain \"robot_cursor\" and \"robot,\" (robot 1..30 轮转) plus \"trial_health_probe\"/\"TRIAL_HEALTH_AFTER_UPLOAD\" (上传后自动探针); scheme_fire_030.py must contain '\"pages/ask/ask\"' and 'check_path\":false' (码内显式 page).",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:276-281"
+  },
+  {
+   "topic": "theme-token-validation",
+   "fact": "Two-part theme governance check on components/qw-pop/qw-pop.wxss: (1) zero hardcoded colors — `re.findall(r\"#[0-9a-fA-F]{3,8}\", re.sub(r\"/\\*.*?\\*/\", \"\", wxss, flags=re.S))` must be empty; (2) every used token `--t-[a-z0-9-]+` must be defined in utils/theme.js (拼错变量名必红).",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:868-875"
+  },
+  {
+   "topic": "darkmode-conditional-negative",
+   "fact": "Page-level prefers-color-scheme blocks must be gone (moved to theme layer), with a carve-out: `(not _has_pop and \"prefers-color-scheme\" not in _src) or (_has_pop and _src.count(\"prefers-color-scheme\") <= 1)` — answer.wxss keeps exactly one for the cite-pop 弹层. app.json darkmode==True + themeLocation==\"theme.json\" + window.backgroundColor==\"@bgColor\" (下拉底色绑主题变量).",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:259-273"
+  },
+  {
+   "topic": "packoptions-ignore",
+   "fact": "project.config.json packOptions.ignore must contain entries with value \"v095-audit\" and \".vscode\" — audit material must not enter the uploaded package.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:842-845"
+  },
+  {
+   "topic": "automator-connect",
+   "fact": "e2e connects to an already-running devtools automation port: `const mp = await automator.connect({ wsEndpoint: 'ws://127.0.0.1:9420' })` — attach, not launch. Immediately after: `mp.on('exception', (err) => errors.push(...))` builds a global exception ledger; per-step deltas asserted via errBefore = errors.length snapshot.",
+   "source": "E:/AI-Station/WeAppForge/work/e2e_v092_popdown.mjs:22-23,100,116,128"
+  },
+  {
+   "topic": "automator-callWxMethod",
+   "fact": "`await mp.callWxMethod('setStorageSync', 'qw_privacy_ok', 1)` pre-seeds storage so the probe account cold-starts past the privacy gate straight into silent login — state setup without touching the UI.",
+   "source": "E:/AI-Station/WeAppForge/work/e2e_v092_popdown.mjs:46"
+  },
+  {
+   "topic": "automator-page-recipe",
+   "fact": "Page recipe: `await mp.reLaunch('/pages/my/my')` → `await sleep(2200)` settle → `let my = await mp.currentPage()` → `const md = await dataOf(my)` where `dataOf = async (page) => (await page.data()) || {}`. Element queries: `await my.$$('.muted')` (loop, read `await el.text()`), `await my.$('.export-all-btn')`, `await expBtn.tap()` then sleep(1400) before re-reading data.",
+   "source": "E:/AI-Station/WeAppForge/work/e2e_v092_popdown.mjs:20,29-43,65-68,95-103"
+  },
+  {
+   "topic": "data-mirror-assertions popOpen/popMode",
+   "fact": "Popup assertions read the page data mirror, not DOM: confirm-modal detection = `md.popOpen === true && md.popMode === 'modal'`; payment loading = `md.popOpen === true && md.popMode === 'load'`. Cold-start zero-popup check = `ad.popOpen === false`. This mirror exists because each page wires `popOpen: false` state bit + `onPopState(e)` → `pop.onPopState(this, e)` (asserted in bootsim per page), and the wxml mounts `<qw-pop id=\"qwpop\" bind:popstate=\"onPopState\" />`.",
+   "source": "E:/AI-Station/WeAppForge/work/e2e_v092_popdown.mjs:51,105,110-111; E:/AI-Station/WeAppForge/work/bootsim_v3.py:901-913"
+  },
+  {
+   "topic": "evaluate-hooks wx.request",
+   "fact": "HTTP hook inside `await mp.evaluate(() => {...})`: stash `g = getApp().globalData; g._popTrace = []`; wrap `const origReq = wx.request; wx.request = (opt) => {...}` — inside, match `url.indexOf('export_all_sign') >= 0`, wrap `opt.complete` chaining the original (`const oc = opt.complete; opt.complete = (res) => { push({kind:'http', status: res && res.statusCode}); oc && oc(res); }`), and return `origReq.call(wx, opt)` to preserve this-binding.",
+   "source": "E:/AI-Station/WeAppForge/work/e2e_v092_popdown.mjs:70-84"
+  },
+  {
+   "topic": "evaluate-hooks requestVirtualPayment",
+   "fact": "vpay hook: `const origVp = wx.requestVirtualPayment; if (typeof origVp === 'function') { wx.requestVirtualPayment = (opt) => { g._popTrace.push({ kind: 'vpay_call', hasSignData: !!(opt && opt.signData) }); const f = opt.fail; opt.fail = (e) => { push({kind:'vpay_fail', raw: JSON.stringify(e).slice(0,120)}); f && f(e); }; return origVp.call(wx, opt); } }`. Trace is read back later with a second `mp.evaluate(() => (getApp().globalData._popTrace || []))`. Fired-verdict = `payLoading || hitSign || hitVpay` (any one signal suffices).",
+   "source": "E:/AI-Station/WeAppForge/work/e2e_v092_popdown.mjs:85-94,110-115"
+  },
+  {
+   "topic": "screenshot-discipline",
+   "fact": "`const shot = async (name) => { try { await mp.screenshot({ path: SHOT_DIR + String.fromCharCode(92) + name }); } catch (e) { console.log(\"(shot skipped: ...)\") } }` — screenshots are best-effort (never fail the run), path separator built with String.fromCharCode(92) instead of a literal backslash, shots named per step (s0_my.png, s1_ask_inline.png, s2_my_after_tap.png) into a mkdirSync(recursive:true) dir.",
+   "source": "E:/AI-Station/WeAppForge/work/e2e_v092_popdown.mjs:9-11,24-27"
+  },
+  {
+   "topic": "e2e-sandbox-discipline",
+   "fact": "Stated in-file 纪律: 不做真实发票提交（企微推送副作用）; 支付到 vpay 沙箱面板即收（取消路径）. The lingering `popMode === 'load'` after 4s is recorded as a PASS detail 'still loading after 4s (sandbox panel path)' — in devtools sandbox the native pay panel path legitimately leaves loading on; `reLaunch` exits it.",
+   "source": "E:/AI-Station/WeAppForge/work/e2e_v092_popdown.mjs:4-5,117-122"
+  },
+  {
+   "topic": "e2e-result-json-shape",
+   "fact": "On-disk verdict artifact: { results: [{name, ok, detail}, ...8 items], errors: [] }. Real sample details: `beacon=\"v0.9.12 · 总包AI顾问\"`, `popOpen=false popMode=\"\"`, inline consent text \"提交即同意用户协议与隐私政策 · 解答由 AI 生成，仅供参考\", `popOpen=true popMode=\"load\" unpaidAll=21`, trace `[{\"kind\":\"http\",\"status\":200},{\"kind\":\"vpay_call\",\"hasSignData\":true}]`.",
+   "source": "E:/AI-Station/WeAppForge/work/e2e_v092_popdown_result.json:1-45"
+  },
+  {
+   "topic": "test-inventory",
+   "fact": "E:/AI-Station/services/qianwen-engine/tests/ contains 7 test modules + __init__.py: test_metaso_kb.py (metaso_kb 单测, 全部 monkeypatch 传输层零真实调用 — citation split, intro-page判据 K1, ask 全链 mock); test_store.py (store 单测, tmp 库隔离 — v0.5.0: 6 次/天 + 互动赠次 + 锅圈 + 优化计数); test_pay_sign.py (虚拟支付双签名单测, 2026-10 官方 AppKey 新规格, plain-script asserts); test_invoice.py (v0.9.4 发票: ¥200 门槛/软鉴权/403/409/422/企微 fail-open); test_api.py (API 单测 TestClient + mock 引擎/微信 — v0.7.0 流式/共享入锅/锅圈排序/引用展开); test_report_mall.py (v0.9.0 报告商城六腿); test_export_pay.py (v0.8.0 导出收费·对抗审计版).",
+   "source": "E:/AI-Station/services/qianwen-engine/tests/ (glob) + each file docstring"
+  },
+  {
+   "topic": "test_export_pay-docstring",
+   "fact": "Docstring enumerates the audited matrix: login 真路径落 session_key（盲区#1：fixture 手工 save_session 替学生答题）; 签名即落单 pay_order + 老未付单作废重开 + 已付补账 409 收口; 回调腿凭订单+微信查单核验（SUCCESS 放行 / NOTPAY 400 / 生产查不出 503 fail-closed / 沙箱查单不可用信任回调）; 伪造 otn/空串/他人订单→404（盲区#2）; 批量快照制（盲区#3）; otn 熵同毫秒不同号（盲区#5半）; /api/history 权威计数 export_unpaid_all（盲区#6）; 仅 pending 用户 export_all_sign→404（盲区#7）; QW_DEV_LOGIN 无 session_key→签名腿 401（盲区#8）. Run: `python -m pytest tests/test_export_pay.py -q`. Anchors audit findings CRITICAL-1/2, HIGH-3, MEDIUM-4/5, LOW-6.",
+   "source": "E:/AI-Station/services/qianwen-engine/tests/test_export_pay.py:1-16"
+  },
+  {
+   "topic": "pytest-fixture-pattern",
+   "fact": "Canonical engine fixture (test_export_pay/test_api/test_invoice): monkeypatch.setattr(config, \"DB_PATH\", tmp_path/\"t.sqlite\") + DATA_DIR=tmp_path; `store._init_done = False` before AND after yield (module singleton re-init both setup and teardown); monkeypatch transports: wechat.code2session → {openid: f\"open-{code}\"}, wechat.msg_sec_check → True, metaso_kb.ask → fixed KbAnswer, metaso_kb._guard_enter/_record → no-op, zhipu.configured → False and zhipu.rewrite → throw RuntimeError('测试默认禁用 zhipu') (真实 zhipu.secret 存在也不许测试进程碰网络); xpay_query_order default throws wechat.XpayError('test: query infra unavailable') (沙箱信任路径); VIRTUAL_PAY_FILE → tmp secret file with offer_id=1450664233/product ids/env=1/sandbox+prod appkeys; `with TestClient(app_mod.app) as c: c.headers.update({\"Authorization\": \"Bearer \" + wechat.issue_token(\"open-t1\")}); yield c`.",
+   "source": "E:/AI-Station/services/qianwen-engine/tests/test_export_pay.py:41-79; test_api.py:25-52; test_invoice.py:25-42"
+  },
+  {
+   "topic": "pay-sign-official-vectors",
+   "fact": "test_pay_sign.py pins WeChat official vectors end-to-end (module-level asserts, run `python tests/test_pay_sign.py`): virtual_pay_sign('12345', '9hAb/NEYUlkaMBEsmFgzig==', None, uri='/xpay/query_user_balance', body='{\"openid\": \"xxx\", \"user_ip\": \"127.0.0.1\", \"env\": 0}') must give pay_sig 'c37809f27c6d7fd1837ad2500a04512b66b34fd793a39a385fade56dca89a4b5' and signature '089d9e8dc5d308977360c4b79ec600a93d736802802a807d634192328032f6c7'. New spec (2026-10): paySig = HMAC(appKey, \"requestVirtualPayment&\"+body), signature = HMAC(session_key, body) 无前缀; signData must serialize `json.dumps(SIGN_DATA, separators=(\",\", \":\"), ensure_ascii=False)`; 密钥隔离 — 换 session_key 只动 signature, 换 appKey 只动 pay_sig.",
+   "source": "E:/AI-Station/services/qianwen-engine/tests/test_pay_sign.py:22-40"
+  },
+  {
+   "topic": "store-quota-semantics",
+   "fact": "test_store.py pins quota business rules: quota_left('u1') == {total_left: 6, free_left: 6, bonus_left: 0}; six consume_one() True then seventh False (无互动=无赠次); grant_reward is per-answer-per-action (first grant_reward(\"u1\",\"a1\",\"like\") True = +1).",
+   "source": "E:/AI-Station/services/qianwen-engine/tests/test_store.py:23-34"
+  },
+  {
+   "topic": "report-mall-fixture-content",
+   "fact": "test_report_mall.py builds a mini catalog in tmp: A(498 可售) B(1999 可售) NOPDF(598 无pdf→整理中) HUGE(698 超限pdf→整理中), report.json + sample/full dirs; docstring covers 目录可售判定, 公开浏览软鉴权 (未登录 unlocked 恒 false), 签名腿 (report_product_<元> 道具, kind='report' aid=sku, 409 已解锁/503 未配档/404 未售), 回调腿 (SUCCESS 放行/NOTPAY 400/伪造 otn 404/他人单 404/幂等重跑/沙箱信任回调/生产 fail-closed 503), PDF 闸门 (未购 402, 已购 200 application/pdf, 他人已购不越权), 已付补标记恢复路径. Run: python -m pytest tests/test_report_mall.py -q.",
+   "source": "E:/AI-Station/services/qianwen-engine/tests/test_report_mall.py:1-50"
+  },
+  {
+   "topic": "invoice-test-semantics",
+   "fact": "test_invoice.py docstring: status 软鉴权 (未登录只看门槛口径 total=0/can_apply=False); 门槛闸 不足 ¥200 → 403, paid 求和只认 status='paid'（signed 不计）; 必填/格式闸 → 422 (邮箱必填+格式, 税号 15-20 位, 抬头 2-64 字); 重复闸 pending 再申请 → 409; fail-open 企微推送抛异常不阻断申请 (200 照常). Fixture monkeypatches app_mod._invoice_wecom_push default silent; config.INVOICE_THRESHOLD_FEN → 20000.",
+   "source": "E:/AI-Station/services/qianwen-engine/tests/test_invoice.py:1-44"
+  },
+  {
+   "topic": "sys-path-bootstrap",
+   "fact": "Every test module bootstraps imports identically: `sys.path.insert(0, str(Path(__file__).resolve().parents[1]))` before `from qianwen_engine import ...` — tests run from repo root with `python -m pytest tests/<file> -q` without install.",
+   "source": "E:/AI-Station/services/qianwen-engine/tests/test_export_pay.py:27; test_api.py:10; test_invoice.py:20; test_store.py:8; test_metaso_kb.py:11"
+  },
+  {
+   "topic": "encoding-header",
+   "fact": "All Python files start with `# -*- coding: utf-8 -*-`; bootsim and e2e print CJK check names directly to console. No sys.stdout.reconfigure/PYTHONIOENCODING GBK workaround exists in these files — the only GBK-adjacent practice present: explicit encoding=\"utf-8\" on every open() (bootsim) and String.fromCharCode(92) path separators (e2e).",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:1,28; e2e_v092_popdown.mjs:25"
+  },
+  {
+   "topic": "telemetry-ground-truth",
+   "fact": "devtools 全绿+真机失灵双盲区 is answered by utils/telemetry.js: fire-and-forget ping() never throws, anonymous boot id, POST /api/telemetry public + GET /api/telemetry/recent behind x-tel-key (compare_digest) + TELEMETRY_SECRET_FILE. Events wired: tel.boot() in app.js; ask_tap/ask_ok/ask_fail/ask_quota in ask.js; export_tap in answer.js; xall_tap in my.js; buy_tap in report.js.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:928-944"
+  },
+  {
+   "topic": "wxml-no-method-calls",
+   "fact": "WXML template layer must contain zero JS method-call bindings: `check(\"answer WXML 零方法调用绑定（WXML 禁 trim()）\", \".trim()\" not in ans_wxml)` — data transforms happen in js before setData.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:201"
+  },
+  {
+   "topic": "vibrateShort-fail-callback",
+   "fact": "Every wx.vibrateShort call carries a fail callback for base-lib <2.13 compatibility (async fail without callback raises warning): asserted as exact-string count `wx.vibrateShort({ type: 'light', fail: () => {} })` == 2 in ask.js.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:367-368"
+  },
+  {
+   "topic": "qw-pop-mirror-wiring",
+   "fact": "For 6 pages (ask/answer/my/pot/invoice/report), the popup component wiring triple is asserted: page json `usingComponents.qw-pop == \"/components/qw-pop/qw-pop\"`; wxml mounts `<qw-pop id=\"qwpop\" bind:popstate=\"onPopState\" />`; js contains \"utils/pop\" + \"onPopState(e)\" + \"pop.onPopState(this, e)\" + `popOpen: false`. tabBar yields during popups: bar-dim class + pointer-events: none.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:901-917"
+  },
+  {
+   "topic": "home-compat-page",
+   "fact": "pages/home/home is a compatibility trampoline registered in app.json: home.js does reLaunch to '/pages/ask/ask' with a switchTab fallback and parses scene deep-links `s=p&a=` with decodeURIComponent inside try/catch (URIError-safe `sc = '';`); home.wxml keeps `nav.statusBarHeight` placeholder.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:283-288,729-730"
+  },
+  {
+   "topic": "poster-deeplink-retry-cap",
+   "fact": "Poster scene deep-link retry is bounded: ask.js `_posterTries` with `> 3` cap (防循环), `_gotoPoster` jumps to `answer/answer?id=`.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:364-366"
+  },
+  {
+   "topic": "kbstats-single-source",
+   "fact": "Trust numbers are single-sourced in utils/kbstats.js ('9855'/'847'/'906'/'620') and consumed via `kbStats: kbstats.KB_STATS` binding; ask.wxml must NOT hardcode them (`'kb-n mono\">9855' not in ask_wxml`) — same numbers on ask 信任带 and zhiku hero stats.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:623-626,826-832,953"
+  },
+  {
+   "topic": "missing",
+   "fact": "No GBK console reconfigure (sys.stdout.reconfigure/PYTHONIOENCODING) appears in bootsim_v3.py, e2e_v092_popdown.mjs, or the engine tests — GBK fixes referenced in memory live in other files. Also note: line 888-889 of bootsim_v3.py contains a duplicated read of the same file (`_src = open(...).read()` twice) — harmless dead line, not a pattern to copy.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:887-889"
+  }
+ ],
+ "gotchas": [
+  {
+   "symptom": "Trial/体验版 entry shows 页面不存在 (page not found) after re-upload of a new package.",
+   "root_cause": "Same-robot re-upload knocks off the pinned trial version; 线上 1.0.7 老页面表 only had home/home, and no-path entries (体验码/最近使用/会话卡) resolve against the OLD online page table — old table has home/home, new package does not = page does not exist.",
+   "fix": "Three defenses asserted in bootsim: uploader robot 1..30 rotation (robot_cursor in upload_qianwen.mjs); auto health probe after upload (trial_health_probe / TRIAL_HEALTH_AFTER_UPLOAD); package includes pages/home/home trampoline that reLaunches to ask (+switchTab fallback); scheme generator embeds explicit page with check_path:false.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:6-8,275-300"
+  },
+  {
+   "symptom": "Real-device button 点了没反应 (tap does nothing) while devtools looks fine — the free-consult CTA.",
+   "root_cause": "disabled attribute consumed the tap while custom styling visually overrode the greyed-out state, so users see an active-looking dead button.",
+   "fix": "Remove disabled from the two ask buttons entirely; canAsk only weakens visually via btn-dim class; onSubmit/onOptimize always give feedback (empty-question toast + refocus, short-question hint). Asserted: 'disabled=\"{{asking || !canAsk}}\"' not in ask_wxml.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:745-755"
+  },
+  {
+   "symptom": "wx.showModal silently fails on real device (dialog never appears), historically worked around with a 'button text ≤4 chars' static gate.",
+   "root_cause": "Native modal constraints on real devices; the static length gate was a band-aid.",
+   "fix": "v0.9.7 replaced all native popups with the custom qw-pop component — the 4-char limit was uprooted and the defense upgraded to a project-wide scan asserting wx.showModal/showActionSheet/showLoading/wx.hideLoading calls are globally zero (comments stripped, whole project incl. utils/components/app.js).",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:877-896"
+  },
+  {
+   "symptom": "Payment receipt never delivered after vpay success (CRITICAL audit finding).",
+   "root_cause": "pay.js called api.request(...) but api.request was not exported — receipt leg silently referenced a non-existent function.",
+   "fix": "Receipt leg uses api.requestRaw(...); bootsim asserts \"api.requestRaw(confirmPath.method\" in pay.js and \"api.request(\" not in pay.js.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:699-701"
+  },
+  {
+   "symptom": "Second purchase attempt fails with ORDER_CLOSED (-15012).",
+   "root_cause": "Reusing a previously-cancelled otn (待支付态 order) — WeChat rejects closed orders.",
+   "fix": "Engine opens a new pay order for stale unpaid ones (open_pay_order + cancel_pay_order, 作废重开 semantics); bootsim anchors '作废重开' in app.py.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:521-522"
+  },
+  {
+   "symptom": "Citation full-text truncated when opened.",
+   "root_cause": "wx.showModal cannot scroll/fit long text (v0.7.8 根治 showModal 截断).",
+   "fix": "Page-internal scrollable popup layer: cite-pop + citeShow state + cite-pop-scroll wxss; bootsim anchors onCiteTap/onCiteClose/citationFulltext and the scrollable class.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:246-247,737-739"
+  },
+  {
+   "symptom": "Research-page tag chips render as empty/blank badges.",
+   "root_cause": "Badges are objects rendered directly with {{b}} — object-to-string yields blank.",
+   "fix": "Render key/value explicitly {{b.k}} / {{item.k}} with wx:key=\"k\" and never {{b}}; bootsim asserts both forms.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:571-574"
+  },
+  {
+   "symptom": "Error state renders wrongly / wx:else mispaired on report page.",
+   "root_cause": "wx:else across nodes mis-pairs when the if-branch is far away.",
+   "fix": "Explicit standalone error branch wx:if=\"{{!d}}\" instead of relying on wx:else chains.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:714-715"
+  },
+  {
+   "symptom": "Loading overlay never dismisses (蒙层滞留) after openPdf or pop.loading.",
+   "root_cause": "hideLoading calls not paired 1:1 with loading calls across code paths.",
+   "fix": "Arithmetic gate: per page count(pop.hideLoading() >= count(pop.loading(); openPdf hides loading in success callback after openDocument (find-ordering assert); qw-pop detached() lifecycle clears _closeTimer so unmount-time setData cannot error.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:716-717,856-866"
+  },
+  {
+   "symptom": "Concurrent popup corruption — a second popup fires while the first Promise still hangs.",
+   "root_cause": "Old pending Promise never settled when a new popup opens.",
+   "fix": "qw-pop settles the previous promise first: prev({ confirm: false, cancel: true, content: '' }) / prev(-1) before opening new — asserted verbatim in qw-pop.js.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:862-866"
+  },
+  {
+   "symptom": "Negative assertion fails although display layer is clean.",
+   "root_cause": "Forbidden-word scans hit policy comments that legitimately explain the removal (e.g. comment naming the removed brand).",
+   "fix": "Strip comments before scanning (re.sub of // and /* */), keep the raw scan for positive anchors; policy text lives only in comments.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:464,475-483,889-891"
+  },
+  {
+   "symptom": "Native-popup scan passed but forbidden calls remained in production.",
+   "root_cause": "Scan only covered pages/ — utils/pay.js, components/, app.js were blind spots.",
+   "fix": "os.walk the entire project root with dirnames filter (node_modules, miniprogram_npm, v095-audit excluded).",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:882-884"
+  },
+  {
+   "symptom": "e2e asserts stale code — checks pass but the just-written fix is not actually in the simulator.",
+   "root_cause": "devtools had not recompiled the new disk code when automator attached.",
+   "fix": "Step S0 version beacon: scrape my-page .muted elements for text containing 'v0.9.' and require it to equal the target version — beacon mismatch = recompile not picked up, fail early before other steps.",
+   "source": "E:/AI-Station/WeAppForge/work/e2e_v092_popdown.mjs:29-43"
+  },
+  {
+   "symptom": "e2e false-positives on 'popup appeared' when the payment loading legitimately shows.",
+   "root_cause": "Both confirmation modal and payment loading are popups; a single boolean cannot distinguish.",
+   "fix": "popMode discriminates: forbidden = popOpen && popMode==='modal'; allowed = popMode==='load' (支付链 loading，不是确认弹窗); fired-verdict accepts any of loading/sign-200/vpay_call.",
+   "source": "E:/AI-Station/WeAppForge/work/e2e_v092_popdown.mjs:104-115"
+  },
+  {
+   "symptom": "Payment chain hangs forever in e2e (loading spins indefinitely).",
+   "root_cause": "In devtools sandbox the native payment panel path never completes/cancels on its own.",
+   "fix": "Treat 'still loading after 4s' as a PASS detail tagged 'sandbox panel path', then reLaunch to leave the panel; never await sandbox payment completion.",
+   "source": "E:/AI-Station/WeAppForge/work/e2e_v092_popdown.mjs:117-122"
+  },
+  {
+   "symptom": "Test run accidentally triggers real WeCom push or real payment.",
+   "root_cause": "Side-effectful endpoints (invoice apply → 企微推送) and real vpay.",
+   "fix": "In-file discipline: no real invoice submission in e2e; payment stops at the vpay sandbox panel (cancel path). In pytest, _invoice_wecom_push monkeypatched silent by default, per-case capture or explode.",
+   "source": "E:/AI-Station/WeAppForge/work/e2e_v092_popdown.mjs:4-5; E:/AI-Station/services/qianwen-engine/tests/test_invoice.py:36-37"
+  },
+  {
+   "symptom": "Tests pass while real network calls leak (zhipu/secret present on machine).",
+   "root_cause": "Real zhipu.secret existing on the dev machine could make tests hit the network.",
+   "fix": "Fixture forces zhipu.configured → False and zhipu.rewrite → throw RuntimeError('测试默认禁用 zhipu'); metaso transports fully monkeypatched — 零真实调用.",
+   "source": "E:/AI-Station/services/qianwen-engine/tests/test_api.py:42-46; test_metaso_kb.py:2"
+  },
+  {
+   "symptom": "Tests interfere via shared module state (store singleton keeps prior DB).",
+   "root_cause": "store module caches _init_done and the sqlite handle at import time.",
+   "fix": "Set store._init_done = False before entering TestClient AND after yield (teardown), plus per-test DB_PATH/DATA_DIR into tmp_path.",
+   "source": "E:/AI-Station/services/qianwen-engine/tests/test_export_pay.py:46-49,78-79"
+  },
+  {
+   "symptom": "e2e screenshot failure kills the whole run.",
+   "root_cause": "mp.screenshot intermittently unavailable.",
+   "fix": "Every shot wrapped in try/catch with a '(shot skipped)' note — evidence collection is best-effort, verdicts come from data/trace assertions.",
+   "source": "E:/AI-Station/WeAppForge/work/e2e_v092_popdown.mjs:24-27"
+  },
+  {
+   "symptom": "Fixture hand-fed session_key made login-path tests lie (盲区#1).",
+   "root_cause": "Tests called store.save_session directly, bypassing the real login flow that persists session_key.",
+   "fix": "Login goes through the real /api/login leg with code2session monkeypatched — session_key proven to be persisted server-side by the production path; QW_DEV_LOGIN (no session_key) covered as its own 401 case.",
+   "source": "E:/AI-Station/services/qianwen-engine/tests/test_export_pay.py:5,14"
+  },
+  {
+   "symptom": "First frame flashes white on dark-mode devices; page-level dark CSS blocks reappear after refactors.",
+   "root_cause": "Theme applied only in onShow (after first paint) and per-page prefers-color-scheme duplicating theme-layer logic.",
+   "fix": "Double theme.apply(this) per page (onLoad+onShow, count>=2 asserted); dark rendering owned by theme layer — page wxss must contain zero prefers-color-scheme blocks (唯一例外 answer cite-pop ≤1).",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:265-273,369-372"
+  },
+  {
+   "symptom": "Category-chip highlight and list content disagree after a failed category switch on pot page.",
+   "root_cause": "activeCat was set optimistically before fetch; on failure list kept old content but chip moved.",
+   "fix": "Track _renderedCat and roll back `patch.activeCat = this._renderedCat` on failure.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:979-980"
+  },
+  {
+   "symptom": "Exception during payment silently swallowed, chain appears frozen with no error surfaced.",
+   "root_cause": "Missing .catch on the payExportAll/payExport promise chains; empty catch in followup polling; cancel detection using wrong callback variable (r vs res) threw ReferenceError.",
+   "fix": ".catch((err) added after payExportAll()/payExport() (asserted by find-ordering); cancel branch reads String(res.message || '').indexOf('取消') < 0; followup polling has _fuFails backoff with 网络波动 error state instead of empty catch.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:733,756-764,997-999"
+  }
+ ],
+ "recipes": [
+  {
+   "name": "BOOT-SIM structural gate (demand-as-assertion)",
+   "steps": "1. Module-level `checks = []` + `def check(name, cond, detail=\"\")` appending tuples; `def read(path)` joining ROOT with encoding=\"utf-8\". 2. Assert app.json by exact list equality (pages, tabBar texts, entry page, custom, lazyCodeLoading). 3. Loop every page: json navigationStyle, js Page({ factory, nav binding, and every re.findall(r'bindtap=\"(\\w+)\"', wxml) handler must appear in js. 4. WXML tag-pair arithmetic per tag (view/block/scroll-view/template): opens == closes + selfclosed. 5. For each user order (banner comment with date), write checks whose names quote the order; swap anchors on semantic change (old string absent + new string present); never delete old checks — ratchet. 6. Pin UI inventory with exact counts (pill buttons, reward calls, ai-flag once per page, ap-cell count). 7. Positional layout via str.find() ordering chains. 8. Global forbidden-word os.walk scans collecting hits, assert empty, print hit list as detail; use comment-stripped copies for negative assertions. 9. Cross-repo engine assertions: read server files under ENGINE path, pin constants (EXPORT_PRICE_FEN=10) and endpoint decorators verbatim. 10. Assert test suites stay in service via sentinel test names. 11. Finish with the three-line verification: per-check PASS/FAIL print (detail only on FAIL) → `BOOT-SIM: X/Y PASS` summary → sys.exit(1 if fails else 0).",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py"
+  },
+  {
+   "name": "miniprogram-automator e2e (attach + hooks + data mirror)",
+   "steps": "1. `import automator from 'miniprogram-automator'`; mkdir SHOT_DIR recursive; define note()/sleep()/dataOf() helpers and errors ledger. 2. `const mp = await automator.connect({ wsEndpoint: 'ws://127.0.0.1:9420' })` (devtools automation port must already be open); `mp.on('exception', ...)` immediately. 3. Step 0 version beacon: reLaunch my page, sleep ~2200ms, scrape `.muted` texts for the version string — proves disk code reached devtools; bail mindset if mismatch. 4. Pre-seed state via `mp.callWxMethod('setStorageSync', 'qw_privacy_ok', 1)`. 5. Navigate with mp.reLaunch + sleep 2200-2400ms settle; read `await page.data()` for mirror assertions (popOpen/popMode), `page.$`/`page.$$` + el.text()/el.tap() for UI, sleep 1400ms after taps. 6. Install hooks in `mp.evaluate(() => {...})`: wrap wx.request (chain original complete, this-bound origReq.call(wx, opt)) and wx.requestVirtualPayment (record hasSignData, wrap fail) pushing into getApp().globalData._popTrace; read trace with a second evaluate. 7. Best-effort screenshots (try/catch, String.fromCharCode(92) separator, per-step filenames). 8. Assert no-new-exceptions per step via errBefore snapshot; final no_exceptions_total. 9. Write {results, errors} JSON artifact; print `E2E <tag>: X/Y PASS`; `await mp.disconnect(); process.exit(fails.length ? 1 : 0)`. Discipline: no side-effectful submissions; stop payment at sandbox panel (cancel path).",
+   "source": "E:/AI-Station/WeAppForge/work/e2e_v092_popdown.mjs"
+  },
+  {
+   "name": "FastAPI engine pytest fixture (offline, isolated, tamper-proof)",
+   "steps": "1. `sys.path.insert(0, str(Path(__file__).resolve().parents[1]))`. 2. Fixture(tmp_path, monkeypatch): config.DB_PATH = tmp_path/'t.sqlite', config.DATA_DIR = tmp_path, store._init_done = False (again after yield). 3. Monkeypatch all external transports: wechat.code2session, wechat.msg_sec_check → True, metaso_kb.ask → fixed KbAnswer, _guard_enter/_record → no-op, zhipu.configured → False + zhipu.rewrite → throw, wechat.xpay_query_order → throw XpayError (sandbox-trust default, per-case override). 4. Virtual pay config via tmp secret file (offer_id/product ids/env=1/sandbox+prod appkeys) patched into config.VIRTUAL_PAY_FILE. 5. `with TestClient(app) as c: c.headers.update({'Authorization': 'Bearer ' + wechat.issue_token('open-t1')}); yield c`. 6. Drive the REAL login/ask/pay legs through HTTP — never hand-seed session data the production path is supposed to write. 7. Cover the adversarial matrix: forged otn/empty/cross-user → 404, NOTPAY → 400, prod query outage → 503 fail-closed, idempotent replays, snapshot semantics, entropy collisions. Run: `python -m pytest tests/<file> -q`.",
+   "source": "E:/AI-Station/services/qianwen-engine/tests/test_export_pay.py:41-79"
+  },
+  {
+   "name": "Virtual-pay dual-signature verification with official vectors",
+   "steps": "1. Keep a plain-script module (module-level asserts, `python tests/test_pay_sign.py`) so it runs anywhere without pytest. 2. Test 0: pin the official doc vectors end-to-end — known body/uri/keys must produce the exact documented pay_sig and signature hex strings. 3. Test 1: signData must serialize compact (separators=(',',':'), ensure_ascii=False) — byte-identical to what the client transparently passes. 4. Test 2: recompute both HMACs independently per current spec: paySig = HMAC(appKey, 'requestVirtualPayment&' + body), signature = HMAC(session_key, body) 无前缀, both 64-hex. 5. Test 3: key isolation — changing session_key alters only signature; changing appKey alters only pay_sig.",
+   "source": "E:/AI-Station/services/qianwen-engine/tests/test_pay_sign.py:22-40"
+  },
+  {
+   "name": "In-service test anchor (meta-regression)",
+   "steps": "To stop test files from being silently deleted or renamed: bootsim asserts os.path.exists(test file) AND that a distinctive sentinel test name is still present in its source, e.g. 'test_prod_query_outage_fail_closed' in test_export_pay.py (21 用例), 'test_unlock_paid_forged_and_cross_user' in test_report_mall.py, 'test_apply_push_failure_fail_open' in test_invoice.py. Renaming/removing the sentinel turns the structural gate red.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:553-555,694-696,796-798"
+  },
+  {
+   "name": "Theme governance check for component wxss",
+   "steps": "1. Strip block comments: re.sub(r'/\\*.*?\\*/', '', wxss, flags=re.S). 2. Assert zero hex colors: re.findall(r'#[0-9a-fA-F]{3,8}', stripped) must be empty. 3. Collect used tokens set(re.findall(r'--t-[a-z0-9-]+', wxss)) and assert every one is defined in utils/theme.js — typos in variable names turn red.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:868-875"
+  },
+  {
+   "name": "Ground-truth telemetry for the devtools-green/device-dead blind zone",
+   "steps": "1. utils/telemetry.js exports fire-and-forget ping() that never throws, with anonymous boot id, posting to /api/telemetry. 2. Wire events at each funnel step: tel.boot() in app.js; ask_tap/ask_ok/ask_fail/ask_quota; export_tap; xall_tap; buy_tap. 3. Server: POST /api/telemetry public, GET /api/telemetry/recent gated by x-tel-key header (hmac.compare_digest) with secret from TELEMETRY_SECRET_FILE; persistence via store.save_telemetry. 4. bootsim pins all wiring strings so the leg cannot be silently unplugged.",
+   "source": "E:/AI-Station/WeAppForge/work/bootsim_v3.py:928-944"
+  },
+  {
+   "name": "E2E result artifact for later audit",
+   "steps": "fs.writeFileSync(RESULT_PATH, JSON.stringify({ results, errors }, null, 2)) where results = [{name, ok, detail}] from note() calls and errors = the mp exception ledger. Keep result JSON next to a shots directory; each detail carries the observed values (beacon text, popOpen/popMode, trace excerpt) so a failure is diagnosable without re-running.",
+   "source": "E:/AI-Station/WeAppForge/work/e2e_v092_popdown.mjs:130; E:/AI-Station/WeAppForge/work/e2e_v092_popdown_result.json"
+  }
+ ]
+}

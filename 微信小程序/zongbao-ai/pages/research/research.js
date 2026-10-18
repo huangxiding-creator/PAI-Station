@@ -20,6 +20,8 @@ Page({
     filters: FILTERS,
     active: 'all',
     reports: [],
+    latest: [],      // v0.9.21 双分区：最新研报（引擎目录序 TOP 3，不受筛选影响）
+    hot: [],         // v0.9.21 双分区：最热研报（互动热度倒序；分类筛子只作用于此区）
     shown: [],
     stats: { total: 0, sellable: 0, mine: 0 },
     statsReady: false, // 首次目录到货前 hero 数据带显示占位，不闪 0
@@ -52,9 +54,21 @@ Page({
     api.reportList()
       .then((d) => {
         // 空 cat_name 客户端展示兜底（如线上 BLUEBOOK-2027）：按 title 前缀定文案，避免分类位空白
-        const reports = (d.reports || []).map((r) => (
+        const fixCat = (r) => (
           r.cat_name ? r : { ...r, cat_name: r.title && r.title.indexOf('蓝皮书') === 0 ? '蓝皮书' : '其他' }
-        ));
+        );
+        const reports = (d.reports || []).map(fixCat);
+        // v0.9.21 双分区（用户令 1018）：latest=引擎目录序前 3（TOP 3 恒定不受筛选）；
+        // hot=互动热度倒序（heat=views+likes+shares；引擎缺字段时客户端兜底同规则再排序）
+        const withHeat = (r) => ({
+          ...r,
+          heat: (typeof r.heat === 'number') ? r.heat : ((r.views || 0) + (r.likes || 0) + (r.shares || 0)),
+        });
+        const latestSrc = (d.latest || []).length ? d.latest : reports;
+        const latest = latestSrc.slice(0, 3).map(fixCat);
+        const hotSrc = (d.hot || []).length ? d.hot : reports;
+        const hot = hotSrc.map(fixCat).map(withHeat)
+          .sort((a, b) => (b.heat || 0) - (a.heat || 0));
         const mine = reports.filter((r) => r.unlocked).length;
         const sellable = reports.filter((r) => r.sellable).length;
         // 1012：起价数据驱动（原写死 ¥498，旗舰 ¥10,000 上架后口径漂移）
@@ -62,6 +76,8 @@ Page({
         const pmin = prices.length ? Math.min.apply(null, prices) : 0;
         this.setData({
           reports,
+          latest,
+          hot,
           stats: { total: reports.length, sellable, mine, pmin },
           statsReady: true,
           loading: false,
@@ -80,11 +96,12 @@ Page({
     this.load();
   },
 
+  // v0.9.21：分类筛子只作用于最热区（shown=hot 的过滤视图；最新区恒为 TOP 3 不受筛选影响）
   applyFilter() {
-    const { reports, active } = this.data;
-    let shown = reports;
-    if (active === 'mine') shown = reports.filter((r) => r.unlocked);
-    else if (active !== 'all') shown = reports.filter((r) => r.cat === active);
+    const { hot, active } = this.data;
+    let shown = hot;
+    if (active === 'mine') shown = hot.filter((r) => r.unlocked);
+    else if (active !== 'all') shown = hot.filter((r) => r.cat === active);
     this.setData({ shown });
   },
 
@@ -98,6 +115,7 @@ Page({
   goReport(e) {
     const sku = e.currentTarget.dataset.sku;
     if (!sku) return;
+    api.reportBump(sku, 'views').catch(() => {}); // v0.9.21 观看计数 fire-and-forget（不阻导航）
     wx.navigateTo({ url: '/pages/report/report?sku=' + sku });
   },
 

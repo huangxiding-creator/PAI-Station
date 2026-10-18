@@ -37,10 +37,9 @@ Page({
     posterBusy: false,  // v0.9.15 海报生成在途
     rewardShow: false,  // v0.9.16 授勋动画开关（与答案页统一）
     reward: '',         // v0.9.16 授勋动画副题文案
-    // ── v0.9.20 报告对话官（用户令 1018）──
-    askOpen: false,      // 问报告面板开合（第四 pill 切换）
+    // ── v0.9.20 报告对话官（用户令 1018；v0.9.21 小 pill 升 hero 大区常驻）──
     askInput: '',        // 提问输入（语音转写实时回填同一口）
-    asks: [],            // 气泡流 [{idx, q, conclusion, points, hint, loading}]（先问后答）
+    asks: [],            // 气泡流 [{idx, q, conclusion, points, hint, loading, liked}]（先问后答）
     askLeft: 3,          // 今日剩余提问次数（服务端 left 回填）
     askExhausted: false, // 日 3 问用尽态（429 → 撤输入行+购买引导，不发第 4 问）
     askBusy: false,      // 发送防重入
@@ -188,6 +187,7 @@ Page({
   onUseful() {
     if (this.data.usefulDone) return;
     tel.ping('report_useful_tap', { sku: String(this.data.sku || '').slice(0, 24) });
+    api.reportBump(this.data.sku, 'likes').catch(() => {}); // v0.9.21：有用同步报告点赞计数（fire-and-forget）
     this.setData({ usefulDone: true }); // 乐观置位防双击；网络失败回滚
     api.reportUseful(this.data.sku)
       .then((r) => {
@@ -206,6 +206,7 @@ Page({
   // 仅额度数字自然 +1；服务端幂等，重复分享不报错）。bindtap 先于转发面板触发。
   onShareTap() {
     tel.ping('report_share_tap', { sku: String(this.data.sku || '').slice(0, 24) });
+    api.reportBump(this.data.sku, 'shares').catch(() => {}); // v0.9.21：分享同步报告转发计数（静默，不打扰分享动作）
     api.reportShare(this.data.sku)
       .then((r) => { if (r && r.quota) wx.setStorageSync('qw_quota', r.quota); })
       .catch(() => {}); // 静默：赠次腿失败绝不打扰分享动作本身
@@ -252,20 +253,17 @@ Page({
     wx.previewImage({ urls: [path], fail: () => wx.showToast({ title: '海报已生成', icon: 'none' }) });
   },
 
-  // ══ v0.9.20 报告对话官（用户令 1018）：问报告 pill → 内联对话面板（REQ-006..009/011 引擎侧已就绪）══
-
-  // 第四 pill 开合（REQ-006.AC0 用户令：零购买门槛——未购用户同样可见可问；限频只有每 sku 日 3 问）
-  onAskTap() {
-    tel.ping('report_ask_tap', { sku: String(this.data.sku || '').slice(0, 24) });
-    this.setData({ askOpen: !this.data.askOpen });
-  },
+  // ══ v0.9.20 报告对话官（用户令 1018）：问报告 hero 大区常驻（REQ-006..009/011 引擎侧已就绪）══
+  // v0.9.21（令升维）：原第四 pill 开合退役——hero 置于简介之上恒可见，零购买门槛不变（REQ-006.AC0）。
 
   onAskInput(e) {
     this.setData({ askInput: e.detail.value });
   },
 
   // 发送提问（文字腿主路；语音转写已实时回填同一输入口——发送前统一走此口）
+  // v0.9.21：pill 开合退役后 report_ask_tap 打点随发送动作（hero 常驻=意图即提问）
   onAskSend() {
+    tel.ping('report_ask_tap', { sku: String(this.data.sku || '').slice(0, 24) });
     const q = String(this.data.askInput || '').trim().slice(0, 200); // 服务端同律裁剪（2≤len≤200）
     if (this.data.askBusy || this.data.askExhausted) return;         // 防重入 + 日限停发（REQ-008）
     if (q.length < 2) {
@@ -326,6 +324,29 @@ Page({
   onAskBuyTap() {
     tel.ping('report_ask_buy_tap', { sku: String(this.data.sku || '').slice(0, 24) });
     this.buy();
+  },
+
+  // ══ v0.9.21 答案气泡互动三钮（用户令 1018 升维：答案页 pill 语言；计数上链报告本体）══
+
+  // 有用：报告 likes +1（bump 公开计数；每答案一次乐观置位，非交易面失败不回滚）
+  onAskLike(e) {
+    const i = e.currentTarget.dataset.idx;
+    const a = this.data.asks[i];
+    if (!a || a.loading || a.liked) return;
+    tel.ping('report_ask_like', { sku: String(this.data.sku || '').slice(0, 24) });
+    this.setData({ ['asks[' + i + '].liked']: true });
+    api.reportBump(this.data.sku, 'likes').catch(() => {});
+  },
+
+  // 分享：open-type=share 转发面板（bindtap 先于面板触发）；bump shares 静默上链
+  onAskShareTap() {
+    api.reportBump(this.data.sku, 'shares').catch(() => {});
+  },
+
+  // 生成海报：复用 v0.9.15 报告转化海报链（b64→showShareImageMenu→preview 兜底）
+  onAskPoster() {
+    tel.ping('report_ask_poster', { sku: String(this.data.sku || '').slice(0, 24) });
+    this.onPoster();
   },
 
   // 语音按住说（真机 touchstart/touchend 事件对——KB 在案坑；冻结组件同款状态机逐档复刻）

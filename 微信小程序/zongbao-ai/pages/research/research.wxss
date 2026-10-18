@@ -227,3 +227,67 @@
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
+
+/* ══ v0.9.21 双分区（用户令 1018 升维：最新 TOP 3 + 最热互动热度；节头台账语言同 pot-sec）══ */
+.rs-sec {
+  display: flex;
+  align-items: baseline;
+  gap: 16rpx;
+  margin: 6rpx 4rpx 4rpx;
+}
+.rs-sec-bar {
+  width: 10rpx; height: 26rpx;
+  background: var(--navy-0);
+  align-self: center;
+}
+.rs-sec-bar-hot { background: var(--accent); }
+.rs-sec-title {
+  font-size: 26rpx; font-weight: 700;
+  letter-spacing: 4rpx;
+  color: var(--ink-1);
+}
+.rs-sec-cap {
+  margin-left: auto;
+  font-size: 20rpx; letter-spacing: 2rpx;
+  color: var(--ink-3);
+}
+.rs-item-top-l {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  min-width: 0;
+}
+/* 最新区 TOP 徽标（TOP 1..3 逐条排名） */
+.rs-top3 {
+  flex-shrink: 0;
+  font-size: 19rpx;
+  letter-spacing: 1rpx;
+  color: var(--accent-deep);
+  background: var(--t-amber-bg);
+  border: 2rpx solid var(--t-amber-line);
+  border-radius: 6rpx;
+  padding: 3rpx 10rpx;
+}
+.rs-item-right {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  flex-shrink: 0;
+}
+/* 最热区热度药丸（观看+点赞+转发总和，同 pot-heat 语言） */
+.rs-heat {
+  padding: 4rpx 14rpx;
+  border: 2rpx solid rgba(var(--t-accent-rgb), 0.45);
+  border-radius: 999rpx;
+  font-size: 21rpx; letter-spacing: 1rpx;
+  color: var(--accent-deep);
+  background: rgba(var(--t-accent-rgb), 0.08);
+}
+/* 条目互动数据（mono muted 右下；两区同标） */
+.rs-acts {
+  margin-top: 10rpx;
+  text-align: right;
+  font-size: 20rpx;
+  color: var(--muted);
+  letter-spacing: 1rpx;
+}

@@ -1,0 +1,295 @@
+/* 智库页 — v0.9.1 重设计「图纸目录页」：hero 图签统计带 + 四库手风琴目录 + 溯源时间线（复用蓝图语言） */
+.page { padding-bottom: 40rpx; }
+
+/* ══ 蓝图头部（同 pot 页语言）══ */
+.hero {
+  position: relative;
+  color: var(--white-ink);
+  padding: 0 36rpx 44rpx;
+  overflow: hidden;
+}
+.hero-nav { position: relative; }
+.hero-inner { position: relative; animation: rise 0.5s cubic-bezier(0.22, 0.9, 0.3, 1) both; }
+
+.hero-kicker {
+  font-size: 19rpx;
+  letter-spacing: 7rpx;
+  color: var(--ink-dim);
+  font-weight: 600;
+}
+.hero-title {
+  margin-top: 14rpx;
+  font-size: 58rpx;
+  font-weight: 800;
+  letter-spacing: 6rpx;
+  text-shadow: 0 2rpx 0 rgba(0, 0, 0, 0.25);
+}
+.hero-sub {
+  margin-top: 14rpx;
+  font-size: 25rpx;
+  color: var(--ink-dim);
+  letter-spacing: 1rpx;
+  line-height: 1.7;
+}
+.hero-inner::after {
+  content: '';
+  position: absolute; right: 0; top: 8rpx;
+  width: 34rpx; height: 34rpx;
+  background:
+    linear-gradient(var(--ink-dim), var(--ink-dim)) center/100% 2rpx no-repeat,
+    linear-gradient(var(--ink-dim), var(--ink-dim)) center/2rpx 100% no-repeat;
+  opacity: 0.65;
+}
+.hero-dwg {
+  margin-top: 26rpx;
+  font-size: 19rpx;
+  letter-spacing: 4rpx;
+  color: rgba(var(--t-inkdim-rgb), 0.5);
+  display: flex;
+  align-items: center;
+}
+.dim-rule {
+  flex: 1;
+  height: 18rpx;
+  margin: 0 20rpx;
+  border-left: 2rpx solid rgba(var(--t-inkdim-rgb), 0.4);
+  border-right: 2rpx solid rgba(var(--t-inkdim-rgb), 0.4);
+  position: relative;
+}
+.dim-rule::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; top: 50%;
+  border-top: 2rpx solid rgba(var(--t-inkdim-rgb), 0.4);
+}
+.dim-cap { letter-spacing: 4rpx; }
+
+/* ══ hero 图签统计带（白墨大数字，图签 title block 叙事） ══ */
+.zk-hstats {
+  display: flex;
+  margin-top: 34rpx;
+  padding: 20rpx 0;
+  border-top: 2rpx solid rgba(var(--t-glow-rgb), 0.32);
+  border-bottom: 2rpx solid rgba(var(--t-glow-rgb), 0.32);
+}
+.zk-hs { flex: 1; text-align: center; }
+.zk-hs + .zk-hs { border-left: 2rpx solid rgba(var(--t-glow-rgb), 0.2); }
+.zk-hs-n {
+  font-size: 38rpx;
+  font-weight: 800;
+  color: var(--white-ink);
+  line-height: 1.25;
+}
+.zk-hs-l {
+  font-size: 19rpx;
+  color: var(--ink-dim);
+  letter-spacing: 2rpx;
+  margin-top: 2rpx;
+}
+
+/* ══ 四库图纸目录（手风琴） ══ */
+.zk-kicker { margin-bottom: 20rpx; }
+.zk-v { border-bottom: 2rpx dashed var(--line); }
+.zk-v-last { border-bottom: none; }
+.zk-v-head {
+  display: flex;
+  align-items: center;
+  gap: 22rpx;
+  padding: 24rpx 0 20rpx;
+}
+.zk-v-press { opacity: 0.72; }
+.zk-v-glyph {
+  width: 64rpx; height: 64rpx;
+  flex-shrink: 0;
+  border-radius: 10rpx;
+  border: 3rpx solid var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30rpx; font-weight: 800;
+  color: var(--accent);
+  background: rgba(var(--t-accent-rgb), 0.07);
+}
+.zk-v-body { flex: 1; min-width: 0; }
+.zk-v-h { font-size: 29rpx; font-weight: 700; color: var(--ink, var(--navy-0)); }
+.zk-v-d { font-size: 23rpx; margin-top: 4rpx; }
+.zk-v-n {
+  margin-left: 14rpx;
+  font-size: 21rpx;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 1rpx;
+}
+.zk-chevron {
+  width: 14rpx; height: 14rpx;
+  flex-shrink: 0;
+  border-right: 3rpx solid var(--muted);
+  border-bottom: 3rpx solid var(--muted);
+  transform: rotate(-45deg);
+  transition: transform 0.24s ease, border-color 0.24s ease;
+}
+.zk-v.open .zk-chevron {
+  transform: rotate(45deg);
+  border-color: var(--accent);
+}
+
+/* 展开的分组行（图纸目录索引行 MK-01 · EN-02 …） */
+.zk-groups { animation: fadeIn 0.3s ease both; }
+.zk-g-row {
+  display: flex;
+  align-items: center;
+  gap: 18rpx;
+  padding: 15rpx 0 15rpx 86rpx;
+}
+.zk-g-row + .zk-g-row { border-top: 2rpx solid var(--line); }
+.zk-g-idx {
+  font-size: 20rpx;
+  color: var(--muted);
+  letter-spacing: 1rpx;
+  flex-shrink: 0;
+  min-width: 96rpx;
+}
+.zk-g-name { font-size: 26rpx; color: var(--ink); line-height: 1.5; }
+
+/* ══ 溯源时间线 ══ */
+.zk-tl { padding: 4rpx 0 0 6rpx; }
+.zk-tl-item { position: relative; padding: 0 0 30rpx 40rpx; }
+.zk-tl-item:last-child { padding-bottom: 4rpx; }
+.zk-tl-item::before {
+  content: '';
+  position: absolute; left: 9rpx; top: 30rpx; bottom: -4rpx;
+  width: 2rpx;
+  background: var(--line);
+}
+.zk-tl-item:last-child::before { display: none; }
+.zk-tl-dot {
+  position: absolute; left: 2rpx; top: 12rpx;
+  width: 16rpx; height: 16rpx;
+  border-radius: 50%;
+  border: 3rpx solid var(--muted);
+  background: var(--card);
+  box-sizing: border-box;
+}
+.zk-tl-dot-acc {
+  border-color: var(--accent);
+  background: rgba(var(--t-accent-rgb), 0.18);
+}
+.zk-tl-t { font-size: 27rpx; font-weight: 700; color: var(--ink); }
+.zk-tl-year {
+  font-size: 24rpx;
+  color: var(--accent);
+  font-weight: 800;
+  margin-right: 14rpx;
+  letter-spacing: 1rpx;
+}
+.zk-tl-d { font-size: 22rpx; margin-top: 2rpx; }
+
+/* ══ 知识库链接卡（v0.7.4：低姿态单一入口） ══ */
+.zk-url {
+  font-size: 26rpx;
+  color: var(--ink, var(--navy-0));
+  letter-spacing: 1rpx;
+  padding: 14rpx 0 4rpx;
+}
+.zk-copy { margin-top: 26rpx; }
+.zk-note { margin-top: 14rpx; font-size: 21rpx; }
+
+/* ══ 全库购买广告条（v0.9.13 用户令；v0.9.14 排版三修：徽标中文化防溢出/价格动词基线对齐/副题缩短+真主题色变量） ══ */
+.zk-ad {
+  margin-top: 26rpx;
+  display: flex;
+  align-items: center;
+  border-radius: 12rpx;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(var(--t-navy1-rgb), 0.96) 0%, rgba(var(--t-navy2-rgb, var(--t-navy1-rgb)), 0.88) 100%);
+  border: 2rpx solid rgba(var(--t-accent-rgb), 0.45);
+  box-shadow: 0 10rpx 30rpx rgba(var(--t-accent-rgb), 0.18), inset 0 0 40rpx rgba(var(--t-glow-rgb), 0.08);
+}
+.zk-ad-hover { opacity: 0.92; transform: scale(0.995); }
+.zk-ad-ribbon {
+  align-self: stretch;
+  display: flex; align-items: center; justify-content: center;
+  width: 108rpx; min-width: 108rpx;
+  background: rgba(var(--t-accent-rgb), 0.92);
+  color: #fff;
+  font-size: 26rpx; font-weight: 800; letter-spacing: 4rpx;
+  text-align: center; line-height: 1.5;
+  text-shadow: 0 1rpx 4rpx rgba(0, 0, 0, 0.25);
+}
+.zk-ad-main { flex: 1; padding: 20rpx 16rpx 20rpx 24rpx; min-width: 0; }
+.zk-ad-title {
+  display: flex; align-items: baseline;
+  color: #fff; line-height: 1.2;
+}
+.zk-ad-price {
+  font-size: 40rpx; font-weight: 800;
+  color: var(--t-accent, #f6b352);
+  margin-right: 8rpx;
+  text-shadow: 0 0 18rpx rgba(var(--t-accent-rgb), 0.55);
+}
+.zk-ad-verb { font-size: 30rpx; font-weight: 700; letter-spacing: 2rpx; }
+.zk-ad-sub {
+  margin-top: 8rpx;
+  font-size: 22rpx; letter-spacing: 1rpx;
+  color: rgba(255, 255, 255, 0.82);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.zk-ad-cta {
+  display: flex; align-items: center;
+  margin: 0 20rpx;
+  padding: 10rpx 18rpx;
+  border: 2rpx solid rgba(var(--t-accent-rgb), 0.65);
+  border-radius: 999rpx;
+  background: rgba(var(--t-accent-rgb), 0.12);
+  font-size: 22rpx; font-weight: 700; letter-spacing: 1rpx;
+  color: var(--t-accent, #f6b352);
+  white-space: nowrap;
+}
+.zk-ad-arrow { margin-left: 4rpx; font-size: 26rpx; line-height: 1; }
+
+/* ══ v0.9.13 全库购买弹窗 ══ */
+.zk-modal {
+  position: fixed; left: 0; top: 0; right: 0; bottom: 0;
+  z-index: 999;
+  display: flex; align-items: center; justify-content: center;
+}
+.zk-mask {
+  position: absolute; left: 0; top: 0; right: 0; bottom: 0;
+  background: rgba(8, 18, 32, 0.66);
+}
+.zk-sheet {
+  position: relative;
+  width: 600rpx;
+  border-radius: 16rpx;
+  background: var(--paper, #fff);
+  padding: 44rpx 40rpx 40rpx;
+  box-shadow: 0 24rpx 80rpx rgba(0, 0, 0, 0.35);
+  display: flex; flex-direction: column; align-items: center;
+}
+.zk-sheet-kicker { letter-spacing: 4rpx; }
+.zk-sheet-title {
+  margin-top: 14rpx;
+  font-size: 40rpx; font-weight: 800; color: var(--ink, #16324f);
+  letter-spacing: 1rpx;
+}
+.zk-sheet-title .mono { color: var(--accent-deep, #b5730e); margin-right: 6rpx; }
+.zk-sheet-sub { margin-top: 10rpx; font-size: 23rpx; text-align: center; line-height: 1.6; }
+.zk-qr-wrap {
+  margin-top: 30rpx;
+  padding: 22rpx;
+  background: #fff;
+  border: 2rpx solid var(--line, #d8e0e8);
+  border-radius: 12rpx;
+  display: flex; flex-direction: column; align-items: center;
+}
+.zk-qr { width: 420rpx; height: 420rpx; display: block; }
+.zk-qr-cap {
+  margin-top: 14rpx;
+  font-size: 20rpx; letter-spacing: 5rpx;
+  color: var(--muted, #7d8fa3);
+}
+.zk-qr-hint {
+  margin-top: 22rpx;
+  font-size: 25rpx; font-weight: 700;
+  color: var(--accent-deep, #b5730e);
+  letter-spacing: 1rpx;
+}
+.zk-sheet-close { margin-top: 30rpx; width: 100%; }

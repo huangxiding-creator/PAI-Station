@@ -1,0 +1,62 @@
+<!-- qw-pop — 自绘弹窗系统 v0.9.7：modal 签认单 / sheet 底部图纸盘 / load 制图加载 -->
+<view wx:if="{{show}}">
+
+  <!-- ══ 制图加载（wx.showLoading 替代：旋转图纸罗盘 + 十字基准线）══ -->
+  <block wx:if="{{mode === 'load'}}">
+    <view class="qwp-load-mask" catchtouchmove="noop">
+      <view class="qwp-load-box">
+        <view class="qwp-load-cross-h"></view>
+        <view class="qwp-load-cross-v"></view>
+        <view class="qwp-load-ring"></view>
+        <view class="qwp-load-txt">{{loadText}}</view>
+      </view>
+    </view>
+  </block>
+
+  <!-- ══ 签认单（wx.showModal 替代：图纸签认卡，橙顶条签名同 cite-pop）══ -->
+  <block wx:elif="{{mode === 'modal'}}">
+    <view class="qwp-mask" catchtouchmove="noop" bindtap="onMaskTap">
+      <view class="qwp-card {{leaving ? 'qwp-card-leave' : ''}}">
+        <view class="qwp-kicker">{{kicker}}</view>
+        <view class="qwp-title">{{title}}</view>
+        <scroll-view wx:if="{{content}}" scroll-y class="qwp-body" enhanced show-scrollbar="{{false}}">
+          <text class="qwp-text" user-select="{{selectable}}">{{content}}</text>
+        </scroll-view>
+        <view wx:if="{{editable}}" class="qwp-edit">
+          <textarea class="qwp-ta" value="{{inputVal}}" placeholder="{{placeholder}}"
+            placeholder-class="qwp-ph" maxlength="200" auto-height show-confirm-bar="{{false}}"
+            adjust-position cursor-spacing="140" bindinput="onInput"></textarea>
+        </view>
+        <view class="qwp-btns">
+          <view wx:if="{{showCancel}}" class="qwp-btn qwp-cancel" hover-class="qwp-ghost-hover" bindtap="onCancel">{{cancelText}}</view>
+          <view class="qwp-btn qwp-ok" hover-class="qwp-ok-hover" bindtap="onConfirm">{{confirmText}}</view>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- ══ 底部图纸盘（wx.showActionSheet 替代：抓条 + mono 序号行 + 退出键）══ -->
+  <block wx:elif="{{mode === 'sheet'}}">
+    <view class="qwp-mask qwp-mask-sheet" catchtouchmove="noop" bindtap="onCancel">
+      <view class="qwp-sheet {{leaving ? 'qwp-sheet-leave' : ''}}" catchtap="noop">
+        <view class="qwp-grab"></view>
+        <view class="qwp-sheet-head">
+          <text class="qwp-kicker">{{kicker}}</text>
+          <view class="qwp-badge" wx:if="{{badge}}">{{badge}}</view>
+        </view>
+        <view class="qwp-row" wx:for="{{items}}" wx:key="idx" data-i="{{index}}"
+              hover-class="qwp-row-hover" bindtap="onItem">
+          <text class="qwp-row-no">{{index + 1 < 10 ? '0' : ''}}{{index + 1}}</text>
+          <view class="qwp-row-main">
+            <view class="qwp-row-t">{{item.t}}</view>
+            <view class="qwp-row-sub" wx:if="{{item.sub}}">{{item.sub}}</view>
+          </view>
+          <text class="qwp-row-ext" wx:if="{{item.ext}}">{{item.ext}}</text>
+        </view>
+        <view class="qwp-sheet-cancel" hover-class="qwp-ghost-hover" bindtap="onCancel">取消</view>
+        <view class="qwp-safe"></view>
+      </view>
+    </view>
+  </block>
+
+</view>

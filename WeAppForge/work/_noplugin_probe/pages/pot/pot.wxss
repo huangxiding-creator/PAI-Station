@@ -1,0 +1,268 @@
+/* 锅圈页 — v0.5.0 蓝图设计：蓝图头 + 热点问题卡片列表 */
+.page { padding-bottom: 40rpx; }
+
+/* ══ 蓝图头部（同 ask 页语言）══ */
+.hero {
+  position: relative;
+  color: var(--white-ink);
+  padding: 0 36rpx 44rpx;
+  overflow: hidden;
+}
+.hero-nav { position: relative; }
+.hero-inner { position: relative; animation: rise 0.5s cubic-bezier(0.22, 0.9, 0.3, 1) both; }
+
+.hero-kicker {
+  font-size: 19rpx;
+  letter-spacing: 7rpx;
+  color: var(--ink-dim);
+  font-weight: 600;
+}
+.hero-title {
+  margin-top: 14rpx;
+  font-size: 58rpx;
+  font-weight: 800;
+  letter-spacing: 6rpx;
+  text-shadow: 0 2rpx 0 rgba(0, 0, 0, 0.25);
+}
+.hero-sub {
+  margin-top: 14rpx;
+  font-size: 25rpx;
+  color: var(--ink-dim);
+  letter-spacing: 1rpx;
+  line-height: 1.7;
+}
+.hero-inner::after {
+  content: '';
+  position: absolute; right: 0; top: 8rpx;
+  width: 34rpx; height: 34rpx;
+  background:
+    linear-gradient(var(--ink-dim), var(--ink-dim)) center/100% 2rpx no-repeat,
+    linear-gradient(var(--ink-dim), var(--ink-dim)) center/2rpx 100% no-repeat;
+  opacity: 0.65;
+}
+.hero-dwg {
+  margin-top: 26rpx;
+  font-size: 19rpx;
+  letter-spacing: 4rpx;
+  color: rgba(var(--t-inkdim-rgb), 0.5);
+  display: flex;
+  align-items: center;
+}
+.dim-rule {
+  flex: 1;
+  height: 18rpx;
+  margin: 0 20rpx;
+  border-left: 2rpx solid rgba(var(--t-inkdim-rgb), 0.4);
+  border-right: 2rpx solid rgba(var(--t-inkdim-rgb), 0.4);
+  position: relative;
+}
+.dim-rule::before {
+  content: '';
+  position: absolute; left: 0; right: 0; top: 8rpx;
+  border-top: 2rpx solid rgba(var(--t-inkdim-rgb), 0.4);
+}
+.dim-cap {
+  font-size: 16rpx;
+  color: rgba(var(--t-inkdim-rgb), 0.45);
+  letter-spacing: 2rpx;
+  border: 2rpx solid rgba(var(--t-inkdim-rgb), 0.35);
+  border-radius: 4rpx;
+  padding: 0 6rpx;
+  line-height: 1.5;
+}
+
+/* ══ 热点问题卡片 ══ */
+.pot-item { padding: 28rpx 28rpx 22rpx; }
+.pot-hover { transform: scale(0.985); }
+.pot-head { display: flex; gap: 18rpx; align-items: flex-start; }
+.pot-no {
+  flex-shrink: 0;
+  font-size: 21rpx;
+  color: rgba(var(--t-navy2-rgb), 0.4);
+  letter-spacing: 1rpx;
+  border: 2rpx solid rgba(var(--t-navy2-rgb), 0.18);
+  border-radius: 4rpx;
+  padding: 4rpx 8rpx;
+  margin-top: 4rpx;
+}
+.pot-q {
+  flex: 1;
+  font-size: 30rpx;
+  font-weight: 700;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.pot-preview {
+  margin-top: 14rpx;
+  font-size: 26rpx;
+  line-height: 1.7;
+  color: var(--ink-2);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  border-left: 6rpx solid rgba(var(--t-blue-rgb), 0.35);
+  padding-left: 18rpx;
+}
+.pot-foot {
+  display: flex;
+  align-items: center;
+  gap: 22rpx;
+  margin-top: 20rpx;
+  padding-top: 16rpx;
+  border-top: 2rpx dashed var(--line);
+}
+.pot-meta { font-size: 21rpx; color: var(--muted); letter-spacing: 1rpx; }
+.pot-like {
+  display: flex; align-items: center; gap: 8rpx;
+  font-size: 22rpx; color: var(--muted);
+}
+.pot-like-glyph { font-size: 26rpx; line-height: 1; }
+.pot-like-on { color: var(--t-stamp-hi); }
+.pot-more {
+  margin-left: auto;
+  font-size: 23rpx;
+  color: var(--draft);
+  letter-spacing: 1rpx;
+}
+
+/* ══ 空态：锅正在升温 ══ */
+.pot-empty { text-align: center; padding: 60rpx 30rpx; }
+.pot-empty-glyph {
+  width: 120rpx; height: 120rpx;
+  margin: 0 auto;
+  border-radius: 50%;
+  border: 4rpx double rgba(var(--t-navy2-rgb), 0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 52rpx; font-weight: 800; color: var(--navy-1);
+}
+.pot-empty-title { font-size: 30rpx; font-weight: 700; margin: 26rpx 0 8rpx; letter-spacing: 1rpx; }
+
+/* 骨架屏 */
+.sk { background: linear-gradient(90deg, var(--t-paper-dim) 25%, var(--t-paper-hi) 45%, var(--t-paper-dim) 65%); background-size: 400% 100%; animation: shimmer 1.4s ease infinite; border-radius: 6rpx; }
+@keyframes shimmer { from { background-position: 100% 0; } to { background-position: 0 0; } }
+.sk-title { height: 40rpx; width: 60%; }
+.sk-line { height: 30rpx; margin-top: 24rpx; }
+.sk-line.short { width: 55%; }
+
+/* 失败卡 */
+.err-card { text-align: center; padding: 60rpx 32rpx; }
+.err-kicker { display: block; margin-bottom: 14rpx; }
+.retry-btn { margin-top: 30rpx; width: 60%; }
+
+.tip-line { text-align: center; padding: 10rpx 24rpx 0; letter-spacing: 1rpx; font-size: 21rpx; }
+
+/* v0.7.0 深色硬编码块已删（v0.9.2 审计修复）：系统深色由 theme.apply 统一注入 obsidian 变量接管 */
+
+/* ══ v0.7.4 提审合规：UGC 举报入口 + AI 生成标识 ══ */
+.pot-report {
+  font-size: 20rpx;
+  color: var(--muted);
+  padding: 6rpx 12rpx;
+  border: 2rpx solid rgba(var(--t-blue-rgb), 0.25);
+  border-radius: 999rpx;
+}
+.pot-ai-note {
+  margin: 6rpx 0 20rpx;
+  font-size: 20rpx;
+  text-align: center;
+}
+
+/* ══ v0.7.5 深度合成合规：AI 生成显著标识条（页首常驻，深浅主题同显著）══ */
+.ai-flag {
+  margin: 22rpx 24rpx 0;
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  background: rgba(var(--t-accent-rgb), 0.10);
+  border: 2rpx solid rgba(var(--t-accent-rgb), 0.55);
+  border-left: 8rpx solid var(--accent);
+  border-radius: 8rpx;
+  padding: 20rpx 22rpx;
+}
+.ai-flag-badge {
+  flex-shrink: 0;
+  font-size: 21rpx;
+  font-weight: 800;
+  letter-spacing: 2rpx;
+  color: var(--navy-0);
+  background: linear-gradient(180deg, var(--t-accent-soft), var(--accent));
+  border-radius: 6rpx;
+  padding: 6rpx 12rpx;
+}
+.ai-flag-text {
+  font-size: 25rpx;
+  font-weight: 600;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+/* ══ v0.9.10 分类标签（用户令 1009）：chip 行 + 条目分类标（零写死色，全主题 token）══ */
+.cat-row {
+  white-space: nowrap;
+  padding: 6rpx 36rpx 2rpx;
+}
+.cat-chip {
+  display: inline-block;
+  padding: 10rpx 26rpx;
+  margin-right: 14rpx;
+  font-size: 23rpx;
+  letter-spacing: 1rpx;
+  color: var(--ink-2);
+  border: 2rpx solid var(--line);
+  border-radius: 999rpx;
+  background: var(--t-paper-hi);
+}
+.cat-chip.cat-on {
+  color: var(--ink);
+  border-color: var(--ink);
+  font-weight: 700;
+}
+.cat-hover { opacity: 0.7; }
+.cat-n { font-size: 19rpx; color: var(--muted); }
+.pot-cat {
+  display: inline-block;
+  margin: 2rpx 0 10rpx;
+  padding: 4rpx 16rpx;
+  font-size: 19rpx;
+  letter-spacing: 2rpx;
+  color: var(--muted);
+  border: 2rpx solid var(--line);
+  border-radius: 6rpx;
+}
+
+/* ══ v0.9.19（1017 用户令）：双分区节头——最新（图纸蓝）/最热（品牌橙），台账语言同源 ══ */
+.pot-sec {
+  display: flex;
+  align-items: baseline;
+  gap: 16rpx;
+  margin: 26rpx 8rpx 14rpx;
+}
+.pot-sec-bar {
+  width: 10rpx; height: 26rpx;
+  background: var(--navy-0);
+  align-self: center;
+}
+.pot-sec-bar-hot { background: var(--accent); }
+.pot-sec-title {
+  font-size: 26rpx; font-weight: 700;
+  letter-spacing: 4rpx;
+  color: var(--ink-1);
+}
+.pot-sec-cap {
+  margin-left: auto;
+  font-size: 20rpx; letter-spacing: 2rpx;
+  color: var(--ink-3);
+}
+.pot-no-new { color: var(--navy-0); }
+.pot-no-hot { color: var(--accent-deep); }
+.pot-heat {
+  flex-shrink: 0;
+  margin-left: auto;
+  padding: 4rpx 14rpx;
+  border: 2rpx solid rgba(var(--t-accent-rgb), 0.45);
+  border-radius: 999rpx;
+  font-size: 21rpx; letter-spacing: 1rpx;
+  color: var(--accent-deep);
+  background: rgba(var(--t-accent-rgb), 0.08);
+}

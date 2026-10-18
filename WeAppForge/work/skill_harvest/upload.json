@@ -1,0 +1,175 @@
+{
+ "facts": [
+  {
+   "topic": "uploader identity / project true path",
+   "fact": "upload_qianwen.mjs is the 总包AI顾问 uploader. True project = projects/zongbao-ai (renamed from 'biaoxun' on 0929; old name 永久退役 per header comment). ci.Project exact params: appid 'wx5cee1574ce45819b', type 'miniProgram', projectPath 'projects/zongbao-ai', privateKeyPath 'E:/AI-Station/data/secrets/private.wx5cee1574ce45819b.key', ignores ['node_modules/**/*'].",
+   "source": "E:/AI-Station/WeAppForge/work/upload_qianwen.mjs lines 1, 25-31"
+  },
+  {
+   "topic": "upload invocation requirements",
+   "fact": "Exact usage: NODE_OPTIONS=\"--require E:/AI-Station/WeAppForge/work/localstorage-shim.cjs\" node work/upload_qianwen.mjs [version] [desc]. Defaults if args omitted: version '0.2.7', desc '真身修正: 0.2.7'. All relative paths (work/robot_cursor.txt, projects/zongbao-ai, work/robot_registry.jsonl, work/trial_health_probe.py) require cwd = E:/AI-Station/WeAppForge root.",
+   "source": "E:/AI-Station/WeAppForge/work/upload_qianwen.mjs lines 2, 13-14, 17, 22, 28, 51"
+  },
+  {
+   "topic": "robot cursor rotation mechanics",
+   "fact": "Cursor file 'work/robot_cursor.txt' stores last-used robot number. Read with parseInt, on any read error silently fall back to last=1 (bare try/catch). robot = (last % 30) + 1 — i.e. a 1..30 cycle. New robot is written back to the cursor file AND appended as JSONL {time: ISO, version, desc, robot} to 'work/robot_registry.jsonl'.",
+   "source": "E:/AI-Station/WeAppForge/work/upload_qianwen.mjs lines 16-23"
+  },
+  {
+   "topic": "robot rotation WHY (0929 教训级铁律)",
+   "fact": "Re-uploading with the SAME robot REPLACES that robot's dev-version record. If the 体验版 (trial version) is pinned to that record, the pin gets bumped (钉位悬空) and all entries resolve against the released online version 1.0.7's old page table → QR scan shows 「页面不存在」. Hence: rotate robots 1..30 so a pinned record is never replaced by a subsequent upload, plus auto-run the trial health probe after every upload.",
+   "source": "E:/AI-Station/WeAppForge/work/upload_qianwen.mjs lines 5-8"
+  },
+  {
+   "topic": "robot rotation live state (verified on disk 2026-10-09)",
+   "fact": "robot_cursor.txt currently contains 27. Last three registry entries: version 0.9.10 robot 25 (2026-10-09T09:21:54Z, desc 双特性：免费引流回位…+锅圈分类标签+首页统计面), 0.9.11 robot 26 (10:14:50Z, 提审前审计修四件…), 0.9.12 robot 27 (11:19:10Z, 弹窗清理五连令…). Rotation formula confirmed in practice: 25→26→27.",
+   "source": "E:/AI-Station/WeAppForge/work/robot_registry.jsonl (tail) + E:/AI-Station/WeAppForge/work/robot_cursor.txt (verified via ls/tail/cat)"
+  },
+  {
+   "topic": "ci.upload settings",
+   "fact": "Exact upload call: ci.upload({project, version, desc, robot, setting: {es6: true, es7: true, minify: true, autoPrefixWXSS: true}, onProgressUpdate: () => {}}).",
+   "source": "E:/AI-Station/WeAppForge/work/upload_qianwen.mjs lines 33-40"
+  },
+  {
+   "topic": "upload receipt verification",
+   "fact": "Success receipt is the stdout line 'UPLOAD_OK' followed by JSON.stringify({version, robot, subPackageInfo: result.subPackageInfo, pluginInfo: result.pluginInfo}). The two ci result fields verified in the receipt are subPackageInfo and pluginInfo (no raw byte count in the upload receipt; byte length appears only in the QR receipt as len(b)).",
+   "source": "E:/AI-Station/WeAppForge/work/upload_qianwen.mjs lines 42-47"
+  },
+  {
+   "topic": "post-upload health probe wiring",
+   "fact": "After upload, the .mjs runs execSync('python work/trial_health_probe.py') with env PYTHONIOENCODING='utf-8' and stdio ['ignore','pipe','pipe'], greps /SUMMARY: \\S+/ from stdout, prints 'TRIAL_HEALTH_AFTER_UPLOAD: <line>'. If the line includes 'BROKEN' it prints '>>> 需用户一步：版本管理 → 本次上传的开发版本 → 「选为体验版」（无API可代办）'. Probe failure is caught and logged as TRIAL_HEALTH_PROBE_ERROR(不影响上传) with message truncated to 200 chars — upload success is never affected by probe failure.",
+   "source": "E:/AI-Station/WeAppForge/work/upload_qianwen.mjs lines 49-63"
+  },
+  {
+   "topic": "trial pinning flow (user manual step)",
+   "fact": "Pinning the trial version is a manual user action with no API substitute (无API可代办): in the MP console 版本管理, select this upload's 开发版本, click 「选为体验版」. The uploader's job is to (a) protect the pinned record via robot rotation and (b) surface when re-pinning is needed.",
+   "source": "E:/AI-Station/WeAppForge/work/upload_qianwen.mjs line 59"
+  },
+  {
+   "topic": "secret file format",
+   "fact": "Both Python scripts read E:/AI-Station/data/secrets/zongbao_qianwen_mp.secret: key=value lines parsed via dict(l.strip().split('=',1)); keys used are 'appid' and 'appsecret'. File verified on disk: 70 bytes (mtime Sep 28 11:23). Private key file verified: 1679 bytes (Sep 28 11:19).",
+   "source": "E:/AI-Station/WeAppForge/work/scheme_fire_030.py lines 13-14 + E:/AI-Station/WeAppForge/work/trial_health_probe.py lines 19, 25-26 + ls verification"
+  },
+  {
+   "topic": "access token endpoint",
+   "fact": "GET https://api.weixin.qq.com/cgi-bin/token with params {grant_type: 'client_credential', appid, secret}, curl_cffi requests with impersonate='chrome', timeout=30; response .json()['access_token'].",
+   "source": "E:/AI-Station/WeAppForge/work/scheme_fire_030.py lines 15-18 + E:/AI-Station/WeAppForge/work/trial_health_probe.py lines 27-31"
+  },
+  {
+   "topic": "scheme link generation (desktop open)",
+   "fact": "POST https://api.weixin.qq.com/wxa/generatescheme?access_token=<at> with body {\"jump_wxa\": {\"env_version\": \"trial\"}} — labeled 'trial 协议链（桌面拉起）'. post_json helper: JSON body encoded utf-8, Content-Type application/json, impersonate='chrome', timeout=40.",
+   "source": "E:/AI-Station/WeAppForge/work/scheme_fire_030.py lines 21-30"
+  },
+  {
+   "topic": "永不404码 recipe (explicit page + check_path=false)",
+   "fact": "Trial QR via POST https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=<at> with exact body {\"page\":\"pages/ask/ask\",\"scene\":\"v042\",\"check_path\":false,\"env_version\":\"trial\",\"width\":430}, timeout=60. Code carries the page explicitly and check_path=false → new-path resolution, immune to the released 1.0.7 old page table (header NOTE: 本码码内显式 page=pages/ask/ask + check_path=false（新解析，免疫老表）).",
+   "source": "E:/AI-Station/WeAppForge/work/scheme_fire_030.py lines 10, 32-36"
+  },
+  {
+   "topic": "QR response sniffing and receipt",
+   "fact": "Magic-byte detection: b[:4]==b'\\x89PNG' → png; b[:3]==b'\\xff\\xd8\\xff' → jpg; anything else → 'QR_FAIL:' + first 200 bytes. On image: writes E:/AI-Station/WeAppForge/work/qr_trial_042.{kind} and prints 'QR_OK <path> <len(b)> <kind>'. Verified on disk: qr_trial_042.jpg exists.",
+   "source": "E:/AI-Station/WeAppForge/work/scheme_fire_030.py lines 37-44 + ls verification"
+  },
+  {
+   "topic": "check_path=true semantics (0929晚 教训级修正)",
+   "fact": "check_path=true validates ONLY against the released-online-version (1.0.7) published page table. Evidence #19: with the trial pin healthy, the real page pages/ask/ask still returns 41030. So check_path=true can NEVER be a pin-health oracle — the old pre-issue 'hard gate' was permanently false-negative and was scrapped.",
+   "source": "E:/AI-Station/WeAppForge/work/scheme_fire_030.py docstring lines 2-5 + E:/AI-Station/WeAppForge/work/trial_health_probe.py docstring lines 4-8"
+  },
+  {
+   "topic": "pin status has no API oracle",
+   "fact": "wxa/getversion returns 40066 (第三方专属 — third-party-exclusive), so the API layer cannot read the trial pin state at all. True pin verification = user scans the explicit-page QR on a phone (opens when pin healthy) + engine radar check (new traffic in the answers table).",
+   "source": "E:/AI-Station/WeAppForge/work/trial_health_probe.py lines 7, 13, 48, 55"
+  },
+  {
+   "topic": "trial health probe design (channel check only)",
+   "fact": "trial_health_probe.py is a 通道体检 probe (directly runnable AND importable via run()). It probes two pages with POST /wxa/getwxacodeunlimit, body {\"page\": <page>, \"scene\": \"probe\", \"check_path\": True, \"env_version\": \"trial\", \"width\": 280}, timeout=60: RELEASE_PAGE='pages/my/my' (exists in released 1.0.7 table, 神谕实测) and OUR_PAGE='pages/ask/ask' (not in old table → 41030 expected constant). Image detection: b[:3]==\\xff\\xd8\\xff or b[:4]==\\x89PNG; error text = first 120 bytes decoded utf-8/replace. Verdict: 'CHANNEL_OK' if RELEASE_PAGE returns an image, else 'CHANNEL_DOWN'. If OUR_PAGE unexpectedly returns an image it prints '异常:ask竟在老表?'. Summary line format: 'SUMMARY: <verdict> — 钉位无API判据；真判据=手机扫显式page码+引擎雷达新流量'.",
+   "source": "E:/AI-Station/WeAppForge/work/trial_health_probe.py lines 20-21, 34-56"
+  },
+  {
+   "topic": "0929晚 probe rewrite blast radius",
+   "fact": "The original probe's semantics were inverted (原版语义反了，废): it treated 'real page returns image = healthy / 41030 = pin dangling'. Victim damage listed: 出码硬闸误锁整个下午 (code-issue hard gate wrongly locked a whole afternoon), 监视哨假 BROKEN 误报（已删）(watchdog false-BROKEN alerts, deleted), and misleading post-upload probe output.",
+   "source": "E:/AI-Station/WeAppForge/work/trial_health_probe.py docstring lines 4-9"
+  },
+  {
+   "topic": "cross-file inconsistency (observed, files as-is)",
+   "fact": "upload_qianwen.mjs still branches on line.includes('BROKEN') from the probe's SUMMARY, but the rewritten trial_health_probe.py only ever emits CHANNEL_OK or CHANNEL_DOWN — the BROKEN branch (and its '选为体验版' user-fix hint) can never fire from the current probe output. Stale wiring, not a runtime bug in the channel check itself.",
+   "source": "E:/AI-Station/WeAppForge/work/upload_qianwen.mjs lines 56-60 vs E:/AI-Station/WeAppForge/work/trial_health_probe.py line 54"
+  },
+  {
+   "topic": "Node25 localStorage shim mechanics",
+   "fact": "localstorage-shim.cjs (388 bytes, verified on disk): miniprogram-ci's debug.js shouldRunInMainProcess probes localStorage.getItem; on Node 25 the corecompiler CHILD process crashes because a parent-process defineProperty cannot reach the child. NODE_OPTIONS=--require injects the shim into BOTH parent and child. Shim body: try { Object.defineProperty(globalThis, 'localStorage', { get: () => ({ getItem: () => null, setItem: () => {}, removeItem: () => {} }), configurable: true }) } catch {}",
+   "source": "E:/AI-Station/WeAppForge/work/localstorage-shim.cjs lines 1-8 + upload_qianwen.mjs lines 2-3"
+  },
+  {
+   "topic": "missing files",
+   "fact": "None. All three listed files exist and were read in full; companion files referenced by them (localstorage-shim.cjs, robot_cursor.txt, robot_registry.jsonl, private.wx5cee1574ce45819b.key, zongbao_qianwen_mp.secret, qr_trial_042.jpg) all verified present on disk via ls/tail/cat.",
+   "source": "ls verification of E:/AI-Station/WeAppForge/work/ and E:/AI-Station/data/secrets/ (2026-10-09)"
+  }
+ ],
+ "gotchas": [
+  {
+   "symptom": "miniprogram-ci upload on Node 25: corecompiler child process crashes on localStorage.getItem — and worse, can exit 0 as 假成功 (fake success), so a missing receipt is not the only failure mode; success itself can be silent garbage",
+   "root_cause": "miniprogram-ci debug.js shouldRunInMainProcess probes localStorage.getItem; Node 25 lacks it in the spawned corecompiler child process, and a defineProperty patch in the parent process cannot shadow anything in the child",
+   "fix": "Always invoke with NODE_OPTIONS=\"--require E:/AI-Station/WeAppForge/work/localstorage-shim.cjs\" — the CJS shim defines a stub globalThis.localStorage (getItem→null, setItem/removeItem no-ops) and --require injects it into parent AND child processes",
+   "source": "E:/AI-Station/WeAppForge/work/upload_qianwen.mjs lines 2-3 + E:/AI-Station/WeAppForge/work/localstorage-shim.cjs"
+  },
+  {
+   "symptom": "QR scan of the trial code shows 「页面不存在」— recurring after uploads even though pages exist in the uploaded version",
+   "root_cause": "Re-upload with the same robot number REPLACES that robot's dev-version record; if the 体验版 pin points at that record it is bumped (钉位悬空), and every entry then resolves against the released online 1.0.7 old page table where the new pages don't exist",
+   "fix": "Rotate robots 1..30 via work/robot_cursor.txt ((last % 30) + 1, persisted + logged to work/robot_registry.jsonl) so a pinned record is never replaced; after upload, if pin dangles, the only fix is the user's manual step: 版本管理 → 该开发版本 → 「选为体验版」 (no API can do it)",
+   "source": "E:/AI-Station/WeAppForge/work/upload_qianwen.mjs lines 5-8, 59"
+  },
+  {
+   "symptom": "ENOENT / wrong-robot anomalies when running the uploader from any directory other than E:/AI-Station/WeAppForge",
+   "root_cause": "All paths are relative: projectPath 'projects/zongbao-ai', CURSOR 'work/robot_cursor.txt', registry 'work/robot_registry.jsonl', probe 'python work/trial_health_probe.py'. From a wrong cwd, the cursor read ENOENT is silently swallowed by the bare try/catch (falls back to last=1 → robot=2, silently re-burning early robots), while projectPath/writeFileSync/appendFileSync/probe-invocation paths hard-fail with ENOENT",
+   "fix": "Always cd to E:/AI-Station/WeAppForge first — the usage line's 'node work/upload_qianwen.mjs' already encodes this; treat the swallowed-cursor-read fallback as a known blind spot",
+   "source": "E:/AI-Station/WeAppForge/work/upload_qianwen.mjs lines 2, 17-23, 28, 51"
+  },
+  {
+   "symptom": "Post-upload 'TRIAL_HEALTH_PROBE_ERROR' printed after an otherwise successful upload (e.g. ModuleNotFoundError: curl_cffi, or probe script not found)",
+   "root_cause": "The .mjs invokes the probe with bare 'python' (no venv pinning, no -I) — it only works if that interpreter has curl_cffi installed; wrong cwd also makes the relative probe path unresolvable",
+   "fix": "Non-blocking by design: the error is caught, logged with message truncated to 200 chars as TRIAL_HEALTH_PROBE_ERROR(不影响上传), and upload success stands; to get the probe output, ensure bare python has curl_cffi and rerun from WeAppForge root (PYTHONIOENCODING=utf-8 is already set by the caller for Windows console encoding)",
+   "source": "E:/AI-Station/WeAppForge/work/upload_qianwen.mjs lines 50-63 + trial_health_probe.py line 17 (curl_cffi import)"
+  },
+  {
+   "symptom": "Using /wxa/getwxacodeunlimit with check_path=true as a pre-issue health gate: real trial pages (pages/ask/ask) always return 41030 → gate permanently locked (误锁整个下午), watchdog emitted false BROKEN alerts",
+   "root_cause": "check_path=true validates ONLY against the released-online (1.0.7) published page table — trial-only pages fail validation regardless of pin health (evidence #19); pin state itself is unreadable because wxa/getversion returns 40066 (third-party-exclusive)",
+   "fix": "Never gate on check_path. Issue codes with the page baked in + check_path=false (new-path resolution, immune to the old table); the probe was rewritten to channel-check only (pages/my/my in old table = CHANNEL_OK oracle); true pin verification = user phone scan of the explicit-page code + engine radar (new answers-table traffic)",
+   "source": "E:/AI-Station/WeAppForge/work/scheme_fire_030.py docstring + E:/AI-Station/WeAppForge/work/trial_health_probe.py docstring lines 4-13"
+  },
+  {
+   "symptom": "upload_qianwen.mjs never prints the '>>> 需用户一步…选为体验版' hint even when the trial pin is dangling",
+   "root_cause": "The .mjs gates the hint on the probe SUMMARY containing 'BROKEN', but the 0929晚-rewritten probe only emits CHANNEL_OK/CHANNEL_DOWN — the BROKEN branch is dead wiring left over from the deleted false-BROKEN watchdog",
+   "fix": "Treat the hint as vestigial: rely on the documented real pin verification (phone scan + engine radar) and the manual re-pin step when a scan shows 页面不存在",
+   "source": "E:/AI-Station/WeAppForge/work/upload_qianwen.mjs lines 56-60 vs trial_health_probe.py lines 47-56"
+  },
+  {
+   "symptom": "WeChat API calls from these scripts fail with TLS/WAF-style errors if sent with plain requests/curl",
+   "root_cause": "All HTTP calls deliberately use curl_cffi requests with impersonate='chrome' — the WeChat API surface rejects non-browser TLS fingerprints (project-wide TLS-fingerprint lesson applied here)",
+   "fix": "Keep impersonate='chrome' on every call (token GET timeout=30, post_json timeout=40, QR generation timeout=60); do not swap in plain requests",
+   "source": "E:/AI-Station/WeAppForge/work/scheme_fire_030.py lines 15-25, 33-36 + trial_health_probe.py lines 27-31, 37-41"
+  }
+ ],
+ "recipes": [
+  {
+   "name": "Robot-rotating miniprogram-ci upload with receipt + auto probe",
+   "steps": "1) cd E:/AI-Station/WeAppForge (mandatory — all paths relative). 2) Run: NODE_OPTIONS=\"--require E:/AI-Station/WeAppForge/work/localstorage-shim.cjs\" node work/upload_qianwen.mjs <version> <desc> (args optional; defaults 0.2.7 / '真身修正: 0.2.7'). 3) Script reads work/robot_cursor.txt, picks robot=(last%30)+1, writes cursor back, appends {time,version,desc,robot} to work/robot_registry.jsonl. 4) ci.upload with setting {es6:true,es7:true,minify:true,autoPrefixWXSS:true} against appid wx5cee1574ce45819b / projects/zongbao-ai / key E:/AI-Station/data/secrets/private.wx5cee1574ce45819b.key. 5) Verify receipt line 'UPLOAD_OK' JSON contains version, robot, subPackageInfo, pluginInfo. 6) Script auto-runs 'python work/trial_health_probe.py' (PYTHONIOENCODING=utf-8) and echoes TRIAL_HEALTH_AFTER_UPLOAD with the SUMMARY verdict; probe failure never blocks the upload.",
+   "source": "E:/AI-Station/WeAppForge/work/upload_qianwen.mjs (entire)"
+  },
+  {
+   "name": "永不404体验码 (trial QR immune to released-page table) + desktop scheme link",
+   "steps": "1) Parse E:/AI-Station/data/secrets/zongbao_qianwen_mp.secret (key=value lines → appid, appsecret). 2) GET https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=<appid>&secret=<appsecret> with curl_cffi impersonate='chrome', timeout=30 → access_token. 3) (Optional, desktop open) POST /wxa/generatescheme?access_token=<at> body {\"jump_wxa\":{\"env_version\":\"trial\"}}. 4) POST /wxa/getwxacodeunlimit?access_token=<at> body {\"page\":\"pages/ask/ask\",\"scene\":\"v042\",\"check_path\":false,\"env_version\":\"trial\",\"width\":430} timeout=60 — the two load-bearing fields are explicit page + check_path:false (new-path resolution, immune to the online 1.0.7 old page table). 5) Sniff response: b[:4]==\\x89PNG → png, b[:3]==\\xff\\xd8\\xff → jpg, else print QR_FAIL + first 200 bytes. 6) On image, save to E:/AI-Station/WeAppForge/work/qr_trial_042.<kind> and log 'QR_OK <path> <bytes> <kind>'. 7) Verify delivery by phone scan + engine radar (answers-table new traffic) — never by any check_path=true gate.",
+   "source": "E:/AI-Station/WeAppForge/work/scheme_fire_030.py (entire)"
+  },
+  {
+   "name": "Trial channel health probe (channel-only check, no pin oracle)",
+   "steps": "1) Token from the same secret via /cgi-bin/token (impersonate='chrome'). 2) Probe A: POST /wxa/getwxacodeunlimit body {\"page\":\"pages/my/my\",\"scene\":\"probe\",\"check_path\":true,\"env_version\":\"trial\",\"width\":280} — pages/my/my genuinely exists in the released 1.0.7 table (神谕实测), so image response = API channel alive. 3) Probe B: same call with page='pages/ask/ask' — expect 41030 as a constant (page not in the released table; says NOTHING about the trial pin). 4) Verdict: RELEASE_PAGE image → CHANNEL_OK, else CHANNEL_DOWN; printed as 'SUMMARY: <verdict> — 钉位无API判据…'. 5) If probe B returns an image, flag '异常:ask竟在老表?'. Runnable standalone or importable (run() returns the verdict string).",
+   "source": "E:/AI-Station/WeAppForge/work/trial_health_probe.py (entire)"
+  },
+  {
+   "name": "Trial pinning (体验版) flow after upload",
+   "steps": "1) Upload lands as a dev-version record owned by robot N (rotation guarantees N's record is never overwritten by later uploads while pinned). 2) Pinning is USER-ONLY, no API exists (无API可代办): MP console → 版本管理 → the uploaded 开发版本 → 「选为体验版」. 3) Pin health cannot be read via API (wxa/getversion=40066 third-party-exclusive; check_path=true only sees the released table). 4) Real pin verification: user scans a QR whose code carries the page explicitly (check_path=false) — opens if the pin is healthy; corroborate with engine radar (new rows in the answers table). 5) Symptom of a dangling pin after a same-robot overwrite: scans show 「页面不存在」; fix = re-pin via step 2.",
+   "source": "E:/AI-Station/WeAppForge/work/upload_qianwen.mjs lines 5-8, 59 + scheme_fire_030.py docstring + trial_health_probe.py lines 7-13"
+  }
+ ]
+}

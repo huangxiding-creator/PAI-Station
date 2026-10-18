@@ -1,0 +1,328 @@
+/* 提问页 — v0.3.0 蓝图设计 */
+.page { padding-bottom: 260rpx; }
+
+/* ══ 蓝图头部 ══ */
+.hero {
+  position: relative;
+  color: var(--white-ink);
+  padding: 0 36rpx 44rpx;
+  overflow: hidden;
+}
+.hero-nav { position: relative; }
+.hero-inner { position: relative; animation: rise 0.5s cubic-bezier(0.22, 0.9, 0.3, 1) both; }
+
+.hero-kicker {
+  font-size: 19rpx;
+  letter-spacing: 7rpx;
+  color: var(--ink-dim);
+  font-weight: 600;
+}
+.hero-title {
+  margin-top: 14rpx;
+  font-size: 58rpx;
+  font-weight: 800;
+  letter-spacing: 6rpx;
+  text-shadow: 0 2rpx 0 rgba(0, 0, 0, 0.25);
+}
+.hero-sub {
+  margin-top: 14rpx;
+  font-size: 25rpx;
+  color: var(--ink-dim);
+  letter-spacing: 1rpx;
+  line-height: 1.7;
+}
+
+/* 头部右上装饰：绘图十字标 */
+.hero-inner::after {
+  content: '';
+  position: absolute; right: 0; top: 8rpx;
+  width: 34rpx; height: 34rpx;
+  background:
+    linear-gradient(var(--ink-dim), var(--ink-dim)) center/100% 2rpx no-repeat,
+    linear-gradient(var(--ink-dim), var(--ink-dim)) center/2rpx 100% no-repeat;
+  opacity: 0.65;
+}
+
+/* ── 额度票根：撕票线分隔 ── */
+.quota-ticket {
+  margin-top: 34rpx;
+  display: flex;
+  align-items: stretch;
+  background: rgba(var(--t-navy1-rgb), 0.72);
+  border: 2rpx solid rgba(var(--t-glow-rgb), 0.3);
+  border-radius: 8rpx;
+  padding: 20rpx 28rpx;
+}
+.quota-empty { opacity: 0.75; }
+.qt-left { display: flex; flex-direction: column; justify-content: center; }
+.qt-label {
+  font-size: 20rpx; letter-spacing: 4rpx;
+  color: var(--ink-dim);
+}
+.qt-num {
+  font-size: 62rpx; font-weight: 800;
+  color: var(--accent);
+  line-height: 1.15;
+  text-shadow: 0 0 24rpx rgba(var(--t-accent-rgb), 0.35);
+}
+/* v0.9.13 用户令：总额度大字显眼 */
+.qt-num-hero { font-size: 84rpx; letter-spacing: 2rpx; }
+.qt-perf {
+  width: 0;
+  margin: 6rpx 30rpx;
+  border-left: 3rpx dashed rgba(var(--t-glow-rgb), 0.4);
+}
+.qt-right {
+  display: flex; flex-direction: column; justify-content: center; gap: 8rpx;
+  border-left: 3rpx dotted rgba(var(--t-inkdim-rgb), 0.35);
+  padding-left: 28rpx;
+}
+.qt-kv { font-size: 24rpx; color: var(--white-ink); opacity: 0.9; }
+.qt-dim { opacity: 0.6; }
+
+.hero-dwg {
+  margin-top: 26rpx;
+  font-size: 19rpx;
+  letter-spacing: 4rpx;
+  color: rgba(var(--t-inkdim-rgb), 0.5);
+  display: flex;
+  align-items: center;
+}
+/* 工程尺寸线：端标 + 通长线 */
+.dim-rule {
+  flex: 1;
+  height: 18rpx;
+  margin: 0 20rpx;
+  border-left: 2rpx solid rgba(var(--t-inkdim-rgb), 0.4);
+  border-right: 2rpx solid rgba(var(--t-inkdim-rgb), 0.4);
+  position: relative;
+}
+.dim-rule::before {
+  content: '';
+  position: absolute; left: 0; right: 0; top: 8rpx;
+  border-top: 2rpx solid rgba(var(--t-inkdim-rgb), 0.4);
+}
+.dim-cap {
+  font-size: 16rpx;
+  color: rgba(var(--t-inkdim-rgb), 0.45);
+  letter-spacing: 2rpx;
+  border: 2rpx solid rgba(var(--t-inkdim-rgb), 0.35);
+  border-radius: 4rpx;
+  padding: 0 6rpx;
+  line-height: 1.5;
+}
+
+/* ══ 咨询问题单（纸面卡） ══ */
+.sheet-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 22rpx;
+}
+.sheet-no { font-size: 21rpx; color: var(--muted); letter-spacing: 2rpx; }
+
+.ask-card { padding: 30rpx 30rpx 18rpx; }
+.ask-input {
+  width: 100%;
+  min-height: 200rpx;
+  font-size: 31rpx;
+  line-height: 1.75;
+  color: var(--ink);
+}
+.ask-ph { color: var(--muted); }
+.ask-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 14rpx;
+  border-top: 2rpx dashed var(--line);
+  margin-top: 6rpx;
+}
+.char-count { font-size: 22rpx; color: var(--muted); }
+.clear-btn { color: var(--draft); font-size: 24rpx; padding: 6rpx 12rpx; }
+
+/* ══ 双按钮排：AI优化提问（制图蓝描边）+ 免费咨询（安全橙实心） ══ */
+.btn-row {
+  display: flex;
+  gap: 18rpx;
+  margin: 22rpx 24rpx 0;
+}
+.btn-row .opt-btn,
+.btn-row .ask-btn {
+  flex: 1;
+  margin: 0;                 /* 抹掉 button 默认外边距 */
+  line-height: 2.35;
+  font-size: 29rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+  border-radius: 8rpx;
+}
+.opt-btn {
+  background: transparent;
+  color: var(--draft);
+  border: 3rpx solid var(--draft);
+}
+.ask-btn[disabled],
+.opt-btn[disabled] {
+  opacity: 0.55;
+  color: inherit;
+  background-color: inherit;
+}
+.opt-hint {
+  margin: 12rpx 32rpx 0;
+  font-size: 21rpx;
+  text-align: center;
+  letter-spacing: 1rpx;
+}
+
+/* 示范性问题：虚线标注标签 */
+.chips { display: flex; flex-wrap: wrap; gap: 18rpx; }
+.chip {
+  background: transparent;
+  color: var(--navy-1);
+  border: 2rpx dashed rgba(var(--t-navy2-rgb), 0.35);
+  border-radius: 6rpx;
+  padding: 13rpx 20rpx;
+  font-size: 25rpx;
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  transition: all 0.15s;
+}
+.chip-tag { font-weight: 600; }
+.chip-3q {
+  font-size: 17rpx;
+  letter-spacing: 1rpx;
+  color: var(--accent-deep);
+  border: 2rpx solid rgba(var(--t-accent-deep-rgb), 0.4);
+  border-radius: 4rpx;
+  padding: 1rpx 6rpx;
+}
+.chip-hover .chip-3q { color: var(--accent); border-color: rgba(var(--t-accent-rgb), 0.7); }
+.chip-hover {
+  background: var(--navy-0);
+  color: var(--white-ink);
+  border-style: solid;
+  border-color: var(--navy-0);
+  transform: scale(0.97);
+}
+
+/* 连接失败警示卡 */
+.net-down {
+  margin: 22rpx 24rpx 0;
+  background: var(--t-amber-bg);
+  border: 2rpx solid var(--t-amber-line);
+  border-radius: 6rpx;
+  padding: 20rpx 24rpx;
+  color: var(--t-amber-ink);
+  font-size: 25rpx;
+  line-height: 1.6;
+  --tick: rgba(var(--t-accent-ink-rgb), 0.45);
+}
+
+/* ══ v0.7.5 深度合成合规：AI 生成显著标识条（首屏常驻，深浅主题同显著） ══ */
+/* ══ v0.7.7 AI 生成显著标识（hero 内嵌，拒审 599847679 整改）：自包含配色，七套主题全高对比 ══ */
+.hero-ai {
+  display: inline-flex;
+  align-items: center;
+  gap: 14rpx;
+  margin: 20rpx 0 12rpx;
+  padding: 12rpx 20rpx;
+  background: rgba(5, 14, 28, 0.82);
+  border: 2rpx solid rgba(255, 148, 50, 0.9);
+  border-radius: 10rpx;
+}
+.hero-ai-badge {
+  flex-shrink: 0;
+  font-size: 27rpx;
+  font-weight: 800;
+  letter-spacing: 2rpx;
+  color: #071a39;
+  background: linear-gradient(180deg, #ffd9a8, #ff9432);
+  border-radius: 8rpx;
+  padding: 6rpx 16rpx;
+}
+.hero-ai-text {
+  font-size: 28rpx;
+  font-weight: 700;
+  letter-spacing: 1rpx;
+  line-height: 1.4;
+  color: #ffffff;
+  text-shadow: 0 2rpx 8rpx rgba(4, 12, 26, 0.55);
+}
+
+.ai-flag {
+  margin: 22rpx 24rpx 0;
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  background: rgba(var(--t-accent-rgb), 0.10);
+  border: 2rpx solid rgba(var(--t-accent-rgb), 0.55);
+  border-left: 8rpx solid var(--accent);
+  border-radius: 8rpx;
+  padding: 20rpx 22rpx;
+}
+.ai-flag-badge {
+  flex-shrink: 0;
+  font-size: 21rpx;
+  font-weight: 800;
+  letter-spacing: 2rpx;
+  color: var(--navy-0);
+  background: linear-gradient(180deg, var(--t-accent-soft), var(--accent));
+  border-radius: 6rpx;
+  padding: 6rpx 12rpx;
+}
+.ai-flag-text {
+  font-size: 25rpx;
+  font-weight: 600;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+/* 常规文档流（tabBar 页禁 fixed bottom，会被 tabBar 盖住吃点击） */
+.bottom-bar { padding: 8rpx 8rpx 0; margin: 24rpx 24rpx 0; }
+.tip-line { text-align: center; padding: 14rpx 0 6rpx; letter-spacing: 1rpx; font-size: 21rpx; }
+
+/* v0.7.0 深色硬编码块已删（v0.9.2 审计修复）：系统深色由 theme.apply 统一注入 obsidian 变量接管 */
+
+/* v0.9.1 逐页优化：清空键按压反馈 */
+.clear-hover { opacity: 0.6; }
+
+/* ══ v0.9.1 信任带：总包智库底座（口径=智库页库存盘点同数，可证成）══ */
+.kb-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22rpx 44rpx 4rpx;
+}
+.kb-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6rpx;
+}
+.kb-n {
+  font-size: 34rpx;
+  font-weight: 800;
+  color: var(--ink, var(--navy-0));
+  letter-spacing: 1rpx;
+}
+.kb-l {
+  font-size: 19rpx;
+  color: var(--muted);
+  letter-spacing: 2rpx;
+}
+.kb-div {
+  width: 2rpx;
+  height: 36rpx;
+  background: var(--line);
+}
+.kb-cred {
+  text-align: center;
+  padding: 8rpx 36rpx 0;
+  font-size: 20rpx;
+  letter-spacing: 1rpx;
+}
+
+/* v0.9.4：未满足条件时的视觉弱化态（按钮仍可点，点击有 toast 反馈） */
+.btn-dim { opacity: 0.55; }

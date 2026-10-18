@@ -165,9 +165,9 @@ check("api potList 客户端", "potList" in api_js)
 check("api optimize 客户端（shareReward 已随分享激励下线）", "optimize" in api_js and "shareReward" not in api_js)
 
 # 版本与定位（v0.9.0）
-check("my 版本标记 v0.9.20（1018 报告对话官）", "v0.9.20" in my_wxml)
+check("my 版本标记 v0.9.21（1018 报告互动+研究双分区+问报告hero）", "v0.9.21" in my_wxml)
 pkg = json.load(open(os.path.join(ROOT, "package.json"), encoding="utf-8"))
-check("package.json version=0.9.20", pkg["version"] == "0.9.20")
+check("package.json version=0.9.21", pkg["version"] == "0.9.21")
 # 1009 用户令：外观沉底（个性化低频项按用户习惯放设置区，高频额度/记录在前）——顺序即断言
 check("my 布局顺序=额度→记录→书架→外观（外观在咨询记录之后，1009 用户令）",
       my_wxml.find("外观 · APPEARANCE") > my_wxml.find("咨询记录 · RECORDS")
@@ -1069,7 +1069,7 @@ check("引擎道具图路由（/static/goods/{name} 白名单+防穿越+长缓�
 check("引擎道具图素材随包（static_goods/zongbaojun.jpg）",
       "GOODS_STATIC_DIR" in _app_py
       and os.path.exists(os.path.join(ENGINE, "qianwen_engine", "static_goods", "zongbaojun.jpg")))
-check("telemetry VER=0.9.20（版本横幅同步）", "var VER = '0.9.20'" in _tel_js)
+check("telemetry VER=0.9.21（版本横幅同步）", "var VER = '0.9.21'" in _tel_js)
 
 # ══ v0.9.15（1011 用户令：报告详情页 有用/分享给同行 赠次 + 研报转化海报）══
 _rp_wxml_3 = read("pages/report/report.wxml")
@@ -1182,9 +1182,9 @@ check("详情页 卷头样式在役（色带+实底卷号徽标+章行缩进）"
 check("研究页 起价数据驱动（¥498 写死根除，stats.pmin 驱动）",
       "stats.pmin" in _rsh_wxml and ">¥498<" not in _rsh_wxml
       and "pmin" in _rsh_js)
-check("版本信标 0.9.20（telemetry + my 页脚）",
-      "VER = '0.9.20'" in read("utils/telemetry.js")
-      and "v0.9.20" in read("pages/my/my.wxml"))
+check("版本信标 0.9.21（telemetry + my 页脚）",
+      "VER = '0.9.21'" in read("utils/telemetry.js")
+      and "v0.9.21" in read("pages/my/my.wxml"))
 
 # ── v0.9.18（1013 用户令①：分享全量——灰按钮根因=缺 handler，「每一个页面都可以」）──
 # REQ-001.AC1 逐页锚：本轮新补 6 页（ask/home/my/pot/invoice/legal），在役 4 页（answer/report/research/zhiku）
@@ -1373,20 +1373,20 @@ _my20_wxml = read("pages/my/my.wxml")
 _my20_js = read("pages/my/my.js")
 _api20_js = read("utils/api.js")
 
-# REQ-006.AC0（1018 用户新令）：未购用户同样可免费问——pill 绝不挂购买门槛（区块内零 unlocked/paySupported/wx:if）
-_pill_lo = _rp20_wxml.find('bindtap="onAskTap"')
-_pill_hi = _rp20_wxml.find("问报告</text>", _pill_lo)
-check("REQ-006.AC0 问报告 pill 零购买门槛（未购可问；pill 区块无 unlocked/paySupported/wx:if）",
-      _pill_lo > 0 and _pill_hi > _pill_lo
-      and "unlocked" not in _rp20_wxml[_pill_lo:_pill_hi]
-      and "paySupported" not in _rp20_wxml[_pill_lo:_pill_hi]
-      and "wx:if" not in _rp20_wxml[_pill_lo:_pill_hi],
-      f"pill 切片 {_pill_lo}/{_pill_hi} 含购买门槛条件")
-# REQ-006.AC1：第四 pill 在位 + 面板结构四件（气泡流/麦克风/输入框/AI标识）——面板唯一开合门=askOpen
-check("REQ-006.AC1 报告页 第四pill 问报告 + 内联面板（开合门=askOpen 唯一）",
-      'bindtap="onAskTap"' in _rp20_wxml and ">问报告</text>" in _rp20_wxml
-      and 'class="rp-ask" wx:if="{{askOpen}}"' in _rp20_wxml
-      and "onAskTap" in _rp20_js and "askOpen" in _rp20_js)
+# REQ-006.AC0（1018 用户新令；v0.9.21 升维=pill→hero 常驻）：未购用户同样可免费问——
+# hero 提问区（头+大输入+双大钮）绝不挂购买门槛（区块内零 unlocked/paySupported）
+_hero_lo = _rp20_wxml.find('class="rp-ask-hero')
+_hero_hi = _rp20_wxml.find('class="rp-ask-flow"', _hero_lo)
+check("REQ-006.AC0 问报告 hero 零购买门槛（未购可问；hero 输入区块无 unlocked/paySupported 门）",
+      _hero_lo > 0 and _hero_hi > _hero_lo
+      and "unlocked" not in _rp20_wxml[_hero_lo:_hero_hi]
+      and "paySupported" not in _rp20_wxml[_hero_lo:_hero_hi],
+      f"hero 切片 {_hero_lo}/{_hero_hi} 含购买门槛条件")
+# REQ-006.AC1：v0.9.21 小 pill 升 hero 大区常驻（开合门 askOpen/onAskTap 退役；结构=大输入/双大钮/气泡流/AI标识）
+check("REQ-006.AC1 报告页 问报告 hero 常驻（v0.9.21：旧第四 pill 已撤；askOpen 开合退役）",
+      'class="rp-ask-hero' in _rp20_wxml and ">问报告</text>" not in _rp20_wxml
+      and "onAskTap" not in _rp20_wxml and "onAskTap" not in _rp20_js
+      and "askOpen" not in _rp20_js and 'class="rp-ask-input"' in _rp20_wxml)
 # REQ-006 双通道：🎤 按住说=touchstart/touchend 事件对（KB 在案坑）+ WechatSI 状态机（冻结组件同款复刻）+ 文字永在
 check("REQ-006 面板双通道（🎤按住说事件对 + WechatSI 转写回填输入口 + 插件缺失文字兜底）",
       'bindtouchstart="onMicStart"' in _rp20_wxml and 'bindtouchend="onMicEnd"' in _rp20_wxml
@@ -1426,6 +1426,68 @@ check("REQ-011.AC2 my 页 报告提问卡（ASKS 行三要素 + 空态去看看 
       and 'data-sku="{{item.sku}}"' in _my20_wxml
       and "onAskItem" in _my20_js and "reportAskHistory" in _my20_js
       and "'/pages/report/report?sku='" in _my20_js)
+
+
+# ══ v0.9.21（用户令 1018 升维：研究页双分区 + 报告互动计数 bump + 问报告 hero + 答案全文/互动）══
+_rs21_js = read("pages/research/research.js")
+_rs21_wxml = read("pages/research/research.wxml")
+_rs21_wxss = read("pages/research/research.wxss")
+_rp21_wxml = read("pages/report/report.wxml")
+_rp21_js = read("pages/report/report.js")
+_rp21_wxss = read("pages/report/report.wxss")
+_api21_js = read("utils/api.js")
+_tel21_js = read("utils/telemetry.js")
+_my21_wxml = read("pages/my/my.wxml")
+
+check("研究页 双分区数据面（latest≤3 引擎裁决兜底 + hot 热度倒序 + applyFilter 只作用 hot）",
+      "latest: []" in _rs21_js and "hot: []" in _rs21_js
+      and "(d.latest || []).length ? d.latest : reports" in _rs21_js
+      and "(d.hot || []).length ? d.hot : reports" in _rs21_js
+      and "(b.heat || 0) - (a.heat || 0)" in _rs21_js
+      and "const { hot, active } = this.data;" in _rs21_js,
+      "latest/hot 提取、热度排序或筛子作用域缺失")
+check("研究页 双分区节头（最新研报·LATEST TOP 3 + 最热研报·HOT；bar+title+cap 台账语言同 pot-sec）",
+      "最新研报 · LATEST" in _rs21_wxml and "最热研报 · HOT" in _rs21_wxml
+      and _rs21_wxml.count('class="rs-sec-title"') == 2 and "TOP 3" in _rs21_wxml
+      and ".rs-sec-bar" in _rs21_wxss and ".rs-sec-bar-hot" in _rs21_wxss,
+      "节头或节头样式缺失")
+check("研究页 条目互动数据（观看/点赞/转发 mono 右下；最新/最热两区同标）",
+      _rs21_wxml.count("观看 {{item.views || 0}} · 点赞 {{item.likes || 0}} · 转发 {{item.shares || 0}}") == 2
+      and ".rs-acts" in _rs21_wxss,
+      "互动数据行计数!=2 或样式缺失")
+check("研究页 goReport 观看计数（reportBump views fire-and-forget 不阻导航）",
+      "reportBump(sku, 'views')" in _rs21_js,
+      "bump views 未接线")
+check("报告页 问报告 hero 置于简介之上（🎤头+大输入+发送/语音双大钮+剩余额度）",
+      _rp21_wxml.find('class="rp-ask-hero') > 0
+      and _rp21_wxml.find('class="rp-ask-hero') < _rp21_wxml.find("ABOUT · 报告简介")
+      and "问报告 · ASK THIS REPORT" in _rp21_wxml
+      and "今日剩 {{askLeft}} 问" in _rp21_wxml
+      and 'bindtouchstart="onMicStart"' in _rp21_wxml and 'bindtap="onAskSend"' in _rp21_wxml
+      and ".rp-ask-hero" in _rp21_wxss and ".rp-ask-hero-btns" in _rp21_wxss,
+      "hero 位置/结构/样式缺件")
+check("报告页 旧问报告 pill 已撤（rp-social 只剩三 pill：有用/分享/海报）",
+      _rp21_wxml.count('class="pill-glyph"') == 3 and 'bindtap="onAskTap"' not in _rp21_wxml,
+      "pill-glyph 数!=3 或旧绑定残留")
+check("报告页 答案全文渲染（结论/论据/提示 user-select 可复制；无 30 字级显示截断）",
+      '<text class="rp-ask-conc" user-select>' in _rp21_wxml
+      and 'class="rp-ask-pt-t" user-select' in _rp21_wxml
+      and "conclusion.slice" not in _rp21_js and "conclusion.slice" not in _rp21_wxml,
+      "user-select 全文渲染缺失或存在截断")
+check("报告页 答案气泡互动三钮（👍有用bump likes+report_ask_like 打点 / 📤分享bump shares / 🖼️海报复用 onPoster）",
+      'bindtap="onAskLike"' in _rp21_wxml and 'bindtap="onAskShareTap"' in _rp21_wxml
+      and 'bindtap="onAskPoster"' in _rp21_wxml
+      and "tel.ping('report_ask_like'" in _rp21_js
+      and "reportBump(this.data.sku, 'likes')" in _rp21_js
+      and "reportBump(this.data.sku, 'shares')" in _rp21_js
+      and "rp-ask-acts" in _rp21_wxss,
+      "三钮/打点/bump 缺件")
+check("api.js reportBump 端点（POST /api/report/{sku}/bump/{field} 公开计数）",
+      "reportBump" in _api21_js and "'/api/report/' + sku + '/bump/' + field" in _api21_js,
+      "reportBump 封装缺失")
+check("v0.9.21 版本横幅（my 页脚 + telemetry VER 同步 0.9.21）",
+      "v0.9.21" in _my21_wxml and "VER = '0.9.21'" in _tel21_js,
+      "版本横幅不同步")
 
 fails = [c for c in checks if not c[1]]
 for name, ok, detail in checks:

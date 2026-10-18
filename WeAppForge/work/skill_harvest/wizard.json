@@ -1,0 +1,326 @@
+{
+ "facts": [
+  {
+   "topic": "wizard-state-machine",
+   "fact": "Full submit-review wizard flow as documented and implemented: entry = getcodepage (版本管理) page, find the target version row by own-text-node match on the version string (e.g. '0.9.12'), walk up max 8 parent levels to the row containing a `button.weui-desktop-btn_primary` (提交审核), click it inline -> 第1步 须知弹窗 (checkbox two-stage eval + 下一步) -> 第2步 安全测试提醒弹窗 (继续提交) -> 第3步 主表单整页, reached when URL contains `get_class?action=get_class` -> submit button is `<a class=\"btn btn_primary\">` (NOT `<button>`) -> 终验 keywords 已提交审核/提交成功/审核中 in body + version page shows 审核版本 X · 审核中 · timestamp. After submit, a success dialog with 「确定」 appears in the get_class tab; finish step clicks it, reloads getcodepage and verifies the version row shows 审核中.",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/submit_review_0911.py; E:/AI-Station/WeAppForge/work/mp_cancel_logout/wizard_run.py; E:/AI-Station/WeAppForge/work/mp_cancel_logout/finish_review_0912.py; E:/AI-Station/.claude/skills/weapp-launch-factory/references/mp-console-automation.md §5 (lines 124-141)"
+  },
+  {
+   "topic": "wizard-state-machine",
+   "fact": "submit_review_0911.py (misnamed for 0.9.11, actually drives 0.9.12: VER = \"0.9.12\") implements 4 stages only: `recon` (zero-click: appid check + live 体验版 version read + target row dump + dialog dump + screenshot), `open` (click 提交审核 -> 须知 dialog appears, no checkbox), `step1` (check checkbox in one eval, verify cb.checked in a separate eval, click 下一步 via own-text-node), `step2` (click 继续提交 -> sleep 5 -> dump visible textareas with placeholder/length + radios with name/value/label-text/checked + `urlHasGetClass` flag). The docstring documents `fill` (版本描述 + 单选三件 + 加急, stop before submit) and `submit` stages, but the code prints `UNKNOWN_STAGE` and exits 1 for them — fill/submit were executed via wizard_run.py-style stages instead (filing shots wz_fill/wz_commit exist for the 0.9.0 submit at 19:21:48/19:22:10 and wz_* chain reused for later submits).",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/submit_review_0911.py (lines 4-12, 24, 113, 246); E:/AI-Station/WeAppForge/filing/ (cancel_logout_wz_fill_192148.png, cancel_logout_wz_commit_192210.png)"
+  },
+  {
+   "topic": "wizard-state-machine",
+   "fact": "wizard_run.py (0.9.0 one-piece wizard, 1008 实况) stage chain: `nav` (getcodepage, dump `.code_version_log` blocks), `step1` (click 提交审核 inside the version block, then click checkbox), `step1b` (re-verify checkbox checked==true else hard exit, then click 下一步), `step2` (click 继续提交, print new URL), `form` (dump textareas incl. val_head/maxLength, radios, and 订单中心 label context), `fill` (native-setter fill of VERSION_DESC), `commit` (pre-commit snapshot of desc_len + checked radios, then scrollIntoView + click `a.btn_primary` with text 提交审核 in a separate eval, then terminal-keyword check). Iron rules in docstring: 自有文本节点找真按钮; checkbox 勾后必复验; 每步回读 DOM.",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/wizard_run.py (lines 1-13, 118-289)"
+  },
+  {
+   "topic": "missing",
+   "fact": "未成年人问卷 (minor-protection questionnaire) as a wizard step is NOT documented in any file under E:/AI-Station/WeAppForge or the skill references — greps for 未成年人/问卷 only hit privacy-policy WXML/agreement copy, not the wizard. The documented wizard is strictly: 须知 -> 安全测试提醒 -> get_class 主表单 -> 提交 -> 成功弹窗确定. The claimed questionnaire step is unverifiable from files on disk.",
+   "source": "grep across E:/AI-Station/WeAppForge and E:/AI-Station/_proposals (2026-10-09); E:/AI-Station/.claude/skills/weapp-launch-factory/references/mp-console-automation.md §5"
+  },
+  {
+   "topic": "get_class-zombie-tab-trap",
+   "fact": "The main submit form opens in a NEW tab whose URL contains `get_class` (the original getcodepage tab stays open). wizard_run.py pins the tab at startup: iterate page.tab_ids, prefer any tab whose URL contains 'get_class', else the 'wacodepage/getcodepage' tab. finish_review_0912.py separates the two: `gc` = first tab with get_class (holds the success dialog), `codepage` = first tab with getcodepage (holds version rows). submit_review_0911.py reuses the EXISTING getcodepage tab across fill/submit stages so the wizard advances in the same tab (creates a new one via page.new_tab(getcodepage?token=...&lang=zh_CN) + sleep 6 only if absent).",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/wizard_run.py (lines 95-107); E:/AI-Station/WeAppForge/work/mp_cancel_logout/finish_review_0912.py (lines 14-22); E:/AI-Station/WeAppForge/work/mp_cancel_logout/submit_review_0911.py (lines 122-130)"
+  },
+  {
+   "topic": "get_class-zombie-tab-trap",
+   "fact": "Zombie-tab cold-load: in watch_review_browser.py, after `location.reload()` + sleep 9, if the JS read returns NO_ROW and `hasBody` is false (body.innerText length <= 200, i.e. page not rendered), the script sleeps 5 more seconds and re-runs the same read once — comment: 首次 reload 未渲染完（僵尸标签冷加载慢）→ 再读一轮.",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_review_browser.py (lines 96-105)"
+  },
+  {
+   "topic": "textarea-native-setter",
+   "fact": "Exact Vue-controlled textarea fill recipe (wizard_run.py fill stage): locate real textarea by `(placeholder contains '功能') || value.length > 20 || maxLength === 200` (fallback first textarea); then `var setter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set; setter.call(ta, desc); ta.dispatchEvent(new Event('input', {bubbles: true})); ta.dispatchEvent(new Event('change', {bubbles: true}));` — return `{found, len: ta.value.length, head, tail}` as fill evidence. The Chinese text is passed safely by URL-encoding in Python (`urllib.parse.quote`) and `decodeURIComponent(...)` inside the JS.",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/wizard_run.py (lines 222-241)"
+  },
+  {
+   "topic": "textarea-native-setter",
+   "fact": "吃进判据 (accepted-proof): the counter text (e.g. `184/200` from `.counter,.text-counter,.textarea-counter`) must equal the read-back `ta.value.length` — mismatch means Vue never consumed the value, refill required. Hidden JSON draft slot trap: pages hide a JSON-slot textarea; `querySelector('textarea')` first match can hit it — anchor the real one by its placeholder text (ICP-filing form used placeholder containing '请根据实际情况填写').",
+   "source": "E:/AI-Station/.claude/skills/weapp-launch-factory/references/mp-console-automation.md §4/§4b (lines 86-122)"
+  },
+  {
+   "topic": "expedited-quota-reality",
+   "fact": "加急 (expedited review) reality per files: (1) mp-console-automation.md — 审核加急 = 只能在此处选（提交时），提交后无法改（免费加急额度在此用）; (2) mp-compliance-gates.md form table — 加急 | 只能在提交时选，过后不可补 | 默认不加急; (3) submit_audit_api.py API path — 提交审核（常规审核，绝不加急）, i.e. the API resubmit deliberately never expends quota; (4) e2e-harness-recipes.md terminal-check table records 不加急 as one of the six form items.",
+   "source": "E:/AI-Station/.claude/skills/weapp-launch-factory/references/mp-console-automation.md line 137; E:/AI-Station/.claude/skills/weapp-launch-factory/references/mp-compliance-gates.md line 274; E:/AI-Station/WeAppForge/work/mp_cancel_logout/submit_audit_api.py line 66; E:/AI-Station/.claude/skills/weapp-launch-factory/references/e2e-harness-recipes.md line 214"
+  },
+  {
+   "topic": "86000-third-party-only",
+   "fact": "get_latest_auditstatus is a THIRD-PARTY-PLATFORM-ONLY endpoint: a self-developed miniprogram calling it with its own client_credential token gets `errcode 86000 \"should be called only from third party\"` (2026-10-02 实测). The endpoint is GET-only (POST returns 43001). Consequence: self-developed accounts have NO login-free API to read audit status — the only channels are (1) 管理员手机推送 via 微信「公众平台安全助手」 and (2) the console UI version-management page, which is what watch_review_browser.py reads (getcodepage tab reload -> find target version row -> classify status words).",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_review_browser.py (lines 4-8); E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_review_task.py (lines 5-6); E:/AI-Station/.claude/skills/weapp-launch-factory/references/mp-console-automation.md §7 (lines 168-181)"
+  },
+  {
+   "topic": "socket-probe-skip-discipline",
+   "fact": "Browser-leg watcher never cold-starts Chrome: `port_alive(9336)` = `socket.socket(); s.settimeout(1.5); s.connect_ex((\"127.0.0.1\", 9336)) == 0`; if the port is down (e.g. after machine reboot) it prints `{\"verdict\": \"SKIP\", \"detail\": \"9336 not running\"}` and exits 0 silently. When alive it attaches with DrissionPage `ChromiumOptions().set_local_port(9336)` — comment: 只 attach，绝不带 profile 冷启动. SKIP/PENDING/ERROR/AUTH_EXPIRED are all silent; only APPROVED/REJECTED flips notify.",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_review_browser.py (lines 27, 60-63, 74-96)"
+  },
+  {
+   "topic": "review-watcher-classification",
+   "fact": "Row classification keywords (watch_review_browser.py `classify`): APPROVED if row contains any of 审核通过/已发布/线上版本; REJECTED if any of 审核不通过/驳回/审核失败; else PENDING (审核中/已提交审核 流转态). AUTH_EXPIRED if body.innerText contains 登录超时 or 扫码登录. Target version pinned by constant WATCH_VER = \"0.9.12\"; row found via own-text-node match then walk up max 8 parents requiring 10 < len < 600 and containing the version string.",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_review_browser.py (lines 28, 31-71)"
+  },
+  {
+   "topic": "flip-only-notify",
+   "fact": "Both OS-level watcher tasks share one skeleton: run the probe script via subprocess (timeout 120, CREATE_NO_WINDOW), parse the LAST stdout line as JSON (fallback `{verdict: ERROR, detail: tail or exit code}`); load previous verdict from a state JSON (`last_verdict`); notify + write a flag file ONLY on the transition (prev != verdict); persist new verdict back. Category: state=E:/AI-Station/data/state/qianwen_cat_watch_state.json, flag=E:/AI-Station/data/state/mp_category_green.flag, log=E:/AI-Station/data/state/qianwen_cat_watch.log (~1KB/day, no rotation). Review: state=qianwen_review_watch_state.json, flags=mp_review_approved.flag / mp_review_rejected.flag, log=qianwen_review_watch.log. WeCom notify via `python E:/AI-Station/tools/notify_wecom.py <title> <body>` (timeout 60, failure logged not fatal).",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_category_task.py (lines 27-98); E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_review_task.py (lines 26-98)"
+  },
+  {
+   "topic": "watcher-no-blind-actions",
+   "fact": "Watchers never fire irreversible external actions: category watcher GREEN only notifies + sets flag — 重提审本身留给会话腿做 BOOT-SIM+submit_audit，不盲发外向动作; review watcher APPROVED only notifies (body: 发布六步清单已就位（HANDOFF §六：灰度复查→发布→道具现网×6→env 切换→海报切轨→冒烟）) — 发布是外向不可逆动作，绝不由盯哨盲发——APPROVED 只通知，六步清单留给会话腿逐字执行. REJECTED body points to console 版本管理 for the reason and cites the v0.7.7 拒审→修复→重提 loop precedent.",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_category_task.py (lines 12-16); E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_review_task.py (lines 12-16, 78-93)"
+  },
+  {
+   "topic": "session-cron-death-root-cause",
+   "fact": "Why OS-level schtasks: on 1008 the session-level cron (id 890da29a) died with its session — scheduled_tasks.json verified empty, so the category watcher silently missed a whole day. Per the 「指令必须严格持久执行」 doctrine it was moved to OS schtasks (QianwenCatWatch every 3h). QianwenReviewWatch (every 2h) clones the same skeleton.",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_category_task.py (lines 2-7); E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_review_task.py (lines 1-4)"
+  },
+  {
+   "topic": "schtasks-registration-live",
+   "fact": "Live schtasks registry (queried 2026-10-09 via Get-ScheduledTask): QianwenCatWatch — Execute `E:\\AI-Station\\.venv\\Scripts\\pythonw.exe`, Arguments `E:\\AI-Station\\WeAppForge\\work\\mp_cancel_logout\\watch_category_task.py`, trigger MSFT_TaskTimeTrigger interval PT3H starting 2026-10-08T10:41:00, State Ready, LastTaskResult 0. QianwenReviewWatch — Execute `\"C:\\Users\\91216\\AppData\\Local\\Programs\\Python\\Python311\\python.exe\"`, Arguments `...watch_review_task.py`, trigger PT2H starting 2026-10-09T23:23:00, State Ready, LastTaskResult 267011 (0x41303 = task not yet run at query time). Both use pythonw/python with CREATE_NO_WINDOW subprocesses inside to stay popup-free.",
+   "source": "live Get-ScheduledTask query on this machine, cross-referenced with docstrings in E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_category_task.py (line 2) and watch_review_task.py (line 2)"
+  },
+  {
+   "topic": "zero-login-category-api",
+   "fact": "watch_category_api.py (1007 持久化改造，零登录免扫码): GET https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=&secret= (secret parsed from E:/AI-Station/data/secrets/zongbao_qianwen_mp.secret, key=value lines) then GET https://api.weixin.qq.com/wxa/get_category?access_token=... — the official endpoint returns ONLY approved-and-effective categories, so TARGET=(\"深度合成\",\"AI问答\") present in category_list = GREEN, absent = PENDING (审核中 or 驳回 — no login needed to distinguish, since GREEN is the only action-triggering state). Baseline sanity: BASELINE={(\"工具\",\"信息查询\"),(\"资讯\",\"信息资讯\")} must be a subset of live (baseline_ok); missing baseline = anomaly suggesting 注销冻结/审核变动 (browser recheck advised). 1007 browser cross-check confirmed the semantics: browser showed 深度合成>AI问答 审核中 while API returned only the two baseline categories.",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_category_api.py (lines 2-65)"
+  },
+  {
+   "topic": "zero-login-category-api",
+   "fact": "curl_cffi trap on the API domain: curl_cffi with `impersonate` against api.weixin.qq.com gets TLS-killed (SSL_ERROR_SYSCALL); plain `requests` direct connection works — watch_category_api.py and submit_audit_api.py both mandate plain requests (submit_audit_api.py header: 纯 requests（curl_cffi 对 api.weixin.qq.com TLS 必断）).",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_category_api.py (lines 10-12); E:/AI-Station/WeAppForge/work/mp_cancel_logout/submit_audit_api.py (line 4)"
+  },
+  {
+   "topic": "api-resubmit-path",
+   "fact": "submit_audit_api.py = category-green re-submit path (0.7.7 原包): preconditions BOOT-SIM v3 247/247 全绿 + /wxa/get_category 实证 深度合成/AI问答 APPROVED (also gated by state flag mp_category_green.flag existing); flow = GET /wxa/get_latest_auditstatus (confirm no in-flight audit + last failure reason) then POST /wxa/security/submit_audit with item_list of 7 pages mapped to approved categories: pages/ask/ask + pages/answer/answer + pages/pot/pot -> 深度合成/AI问答; pages/zhiku/zhiku -> 资讯/信息资讯; pages/my/my + pages/home/home + pages/legal/privacy -> 工具/信息查询; each item {address, tag, first_class, second_class, third_class:\"\", title}; plus feedback_info. On errcode==0 + audit_id it writes E:/AI-Station/data/state/qianwen_submit_audit_state.json.",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/submit_audit_api.py (lines 1-91)"
+  },
+  {
+   "topic": "submit-form-field-values",
+   "fact": "Main form (get_class) field values that passed: 版本描述 textarea ≤200 chars (0.9.12 DESC asserts len<=200); 测试账号 = 无需登录; 企业微信 = 否; 隐私 = 采集用户隐私 (because openid collected); 订单中心 path 留空 (non-transactional; HANDOFF notes 0.7.7's two rejections never involved the empty order path); 加急 default off. Version-description must-have four: 功能怎么测 / AI标识整改说明 / 收集了什么 / 测试账号说明. The 0.9.12 DESC text: 工程行业AI问答咨询工具, 免费额度+平台统计 visible after WeChat login, AI 流式生成解答 (example question “EPC合同工期延误怎么索赔”), 要点速览/依据来源/继续追问均免费, 文件导出为可选付费, 锅圈=用户自愿共享的公开问答展区带分类标签+内容安全检测+举报入口, 所有AI生成内容均有显著标识（含导出海报）, 仅收集微信openid与提问内容, 无需测试账号.",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/submit_review_0911.py (lines 26-30, 114); E:/AI-Station/.claude/skills/weapp-launch-factory/references/mp-console-automation.md (lines 131-150); E:/AI-Station/_proposals/report-miniprogram-1008/HANDOFF.md (lines 74-75)"
+  },
+  {
+   "topic": "appid-mismatch-guard",
+   "fact": "错号灾难防线 (wrong-account disaster guard) in submit_review_0911.py: before ANY stage action, the getcodepage tab's HTML must contain APPID (wx5cee1574ce45819b); if absent it prints `APPID_MISMATCH（错号灾难防线）: 页面无 <appid>` and exits 1. Login detection: any tab whose URL contains mp.weixin.qq.com AND token=; token extracted with regex `token=(\\d{8,})`.",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/submit_review_0911.py (lines 25, 105-120, 132-135)"
+  },
+  {
+   "topic": "checkbox-two-eval-rule",
+   "fact": "Checkbox iron rule (mp-console-automation.md §3, implemented in submit_review_0911.py step1 / wizard_run.py step1b): clicking a matched input[type=checkbox] whose label is also bound toggles twice if looped — click EXACTLY once in one eval, then in a SEPARATE eval read `.checked` and require true; checkbox-click and 下一步-click must also be two independent evals (same-eval chaining = Vue digest miss, second click wasted — 1002 实锤: dialog did not move until split). wizard_run.py gates on the literal string `'\"checked\":true'` in the verify output and hard-exits otherwise.",
+   "source": "E:/AI-Station/.claude/skills/weapp-launch-factory/references/mp-console-automation.md §3 (lines 66-84); E:/AI-Station/WeAppForge/work/mp_cancel_logout/wizard_run.py (lines 151-181); E:/AI-Station/WeAppForge/work/mp_cancel_logout/submit_review_0911.py (lines 174-199)"
+  },
+  {
+   "topic": "translate-extension-span-trap",
+   "fact": "Button-finding iron rule: never match button text via XPath text() or el.textContent — a browser translate extension wraps text in `<span data-component=\"translate\">`, making the text node no longer a direct child of the button. Recipe (all wizard files): iterate 'span, a, button' (or all '*'), keep elements having their OWN text node (childNodes nodeType===3, trimmed === target word), then `el.closest('button') || el.closest('a')` for the real button, check visibility via `offsetParent !== null`, `scrollIntoView({block:'center'})` then click. Take the deepest hit when multiple wrappers share the wording. Chrome-MCP trusted click on a data-attribute-marked element is more reliable than eval .click() for some Vue listeners.",
+   "source": "E:/AI-Station/.claude/skills/weapp-launch-factory/references/mp-console-automation.md §0/§1 (lines 7-52); E:/AI-Station/WeAppForge/work/mp_cancel_logout/wizard_run.py FIND_BTN (lines 34-63)"
+  },
+  {
+   "topic": "dialog-visibility",
+   "fact": "mp console pre-renders hidden dialogs (display:none nodes still in DOM) — querySelector returns a pile of invisible ones. Visibility criteria: `el.offsetParent !== null` (basic); wizard_run.py visDialog additionally requires computed style display!=none, visibility!=hidden, rect width>60 and height>20, candidate selectors `.weui-dialog, .dialog, .modal, [class*=dialog], [class*=modal], [class*=Dialog]`, optionally anchored by text (e.g. '提交审核的相关须知'), with a fallback: any visible div containing the anchor text with total text length < 3000. submit_review_0911.py JS_DUMP_DIALOG dedupes by className and slices text to 200 chars, also reports the first checkbox state.",
+   "source": "E:/AI-Station/.claude/skills/weapp-launch-factory/references/mp-console-automation.md §2 (lines 54-64); E:/AI-Station/WeAppForge/work/mp_cancel_logout/wizard_run.py (lines 64-90); E:/AI-Station/WeAppForge/work/mp_cancel_logout/submit_review_0911.py (lines 81-102)"
+  },
+  {
+   "topic": "9336-channel-design",
+   "fact": "driver.py channel design: a dedicated Chrome instance on local port 9336 with its own profile E:\\AI-Station\\data\\state\\mp_qr_profile — created because the MCP shared browser was fought over by research legs (hide/show + restarts destroyed tabs, QR page could not survive). attach_or_launch(): ChromiumOptions().set_local_port(9336).set_user_data_path(PROFILE), arguments `--window-size=1100,860` and `--no-first-run`, headful by default (二维码须显示到桌面 — QR must be visible on the user's desktop for scanning); ChromiumPage attaches if running, launches otherwise. State machine for the cancel-logout chain: QR_WAIT / LOGGED_IN / ACT_<n> / RESTORED / NEED_USER / ERROR; every step JSON-printed and persisted to state.json next to the script. 红线: 绝不动控制台其他任何按钮. QR freshness check: html contains neither 已失效 nor 点击刷新; stale -> reload root once. Login-timeout shell detection: '登录超时' in html -> back to QR_WAIT.",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/driver.py (lines 1-53, 65-96)"
+  },
+  {
+   "topic": "token-harvest",
+   "fact": "live_token() pattern (watch_category.py, used by wizard_run.py/submit_v080.py): extract token via regex `token=(\\d{8,})` from the current tab URL; if missing, navigate to https://mp.weixin.qq.com/, sleep 5, re-regex URL + first 30000 chars of html; still empty -> report login_wall with note 须扫码召唤（勿自动重发企微，12h 一条）. watch_review_browser.py harvests token by splitting the logged-tab URL on 'token=' and '&' to open a fresh getcodepage tab.",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_category.py (lines 17-29, 36-41); E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_review_browser.py (lines 85-95)"
+  },
+  {
+   "topic": "six-step-release-checklist",
+   "fact": "HANDOFF §六 过审后发布清单（按序执行，勿跳步）verbatim: (1) 先清灰度态 — 版本页审核块挂「当前有灰度发布中的版本」横幅，发布前先 getgrayreleaseplan 实查；有计划则控制台撤销发布/全量发布（1002 后 0.7.6 从未全量发布，横幅疑与其相关；API status=0 与横幅并存，以发布时实弹结果为准）；(2) 控制台「发布」0.9.0（全量）；(3) 道具现网发布 ×6：unlock_once / export_once / report_498 / report_598 / report_698 / report_1999（虚拟支付→道具配置→各行「发布」）；(4) env=1→0（virtual_pay.secret → qw_tcb_prep.py → update_envparams.js 三步；防呆闸：env=0 须先 echo \"执行人/日期\" > data/state/VPAY_PROD_LIVE.flag 才放行——1009 事故根因=提前切 0 上云致真机拉不起支付）；(5) POSTER_QR_ENV_VERSION trial→release（服务端 config+云端同步）→ 海报冒烟扫码；(6) BOOT-SIM 版本收口 + RUN_LEDGER/GOAL_LEDGER + git 定向提交 + github-push + 百度备份 + 企微。Submitted state: 0.9.0 · ci机器人15 · 2026-10-08 19:22:08 · 审核中（1-7 天，普通队列）；体验版已钉 0.9.0；引擎生产 009 在役（/api/reports 66/64）。Leftovers: TOPIC-06 PDF 重生成（现 136.6MB，HTML 仅 0.3MB，目标 ≤20MB，重生期 SKU 自动「整理中」可看不可买）；订单中心 path 留空先例=0.7.7 两次拒审均未涉此项，若因此被拒补订单页后重提。",
+   "source": "E:/AI-Station/_proposals/report-miniprogram-1008/HANDOFF.md §六 (lines 55-75)"
+  },
+  {
+   "topic": "submit-evidence-chain",
+   "fact": "Evidence/screenshots for the 0.9.12 submit chain on disk: E:/AI-Station/WeAppForge/filing/review_0911_recon.png, review_0911_open.png, review_0911_step1.png, review_0911_step2.png, review_0912_submitted.png; the 0.9.0 wizard chain (same wz_* naming from wizard_run.py shot() prefix cancel_logout_): wz_step1b_191948 → wz_step2_192015 → form_landed_192032 → wz_form_192046/192114 → wz_fill_192148 → wz_commit_192210 → v090_submitted_final_192237 → v090_audit_state_192258 (whole submit from 须知 to submitted ≈ 2.5 minutes). Screenshots land via driver.shot() into WeAppForge/filing/ named `<prefix>_<stage>_<HHMMSS>.png`.",
+   "source": "E:/AI-Station/WeAppForge/filing/ directory listing; E:/AI-Station/WeAppForge/work/mp_cancel_logout/driver.py shot() (lines 99-105)"
+  },
+  {
+   "topic": "0.9.0-version-desc",
+   "fact": "wizard_run.py 0.9.0 VERSION_DESC (report-mall launch, filled via native setter): 新增研究报告商城：研究频道64份工程行业研究报告，目录与试读免费浏览，安卓端498-1999元/份虚拟支付解锁后可在小程序内阅读PDF全文（长期有效），iOS不展示付费入口；咨询/追问/锅圈/智库仍全免费。测试：研究tab浏览目录→点报告看详情与试读→安卓购买解锁后打开PDF。内容均由AI检索知识库生成，各内容面常驻AI生成标识。收集openid、提问内容、自愿共享问答、支付订单号。",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/wizard_run.py (lines 25-32)"
+  },
+  {
+   "topic": "category-watcher-notify-copy",
+   "fact": "Category GREEN notify copy: title 小程序类目绿灯, body 总包AI顾问的类目「深度合成-AI问答」审核通过了！\\n接下来自动走重提审（BOOT-SIM 自检+提交审核），结果另行汇报。 ANOMALY copy: title 小程序类目异常, body 类目盯哨发现基线类目缺失（工具/信息查询、资讯/信息资讯），可能与注销冻结或审核变动有关，建议上控制台复核。 ANOMALY verdict is written into state so a later GREEN still re-triggers notification.",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_category_task.py (lines 83-94)"
+  },
+  {
+   "topic": "review-watcher-notify-copy",
+   "fact": "Review APPROVED notify copy: title 小程序审核通过, body 总包AI顾问 v0.9.12 审核通过！\\n发布六步清单已就位（HANDOFF §六：灰度复查→发布→道具现网×6→env 切换→海报切轨→冒烟），随时可以执行发布上线。 REJECTED copy: title 小程序审核被拒, body 总包AI顾问 v0.9.12 审核被拒。\\n原因上 mp 控制台「版本管理」看该版本行详情（截图指引已存 filing/）；按拒审理由修复后自动重提（拒审→修复→重提循环在案：v0.7.7 先例）。",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_review_task.py (lines 78-93)"
+  }
+ ],
+ "gotchas": [
+  {
+   "symptom": "Category watcher silently stopped for a whole day; no GREEN notification ever fired even after category approval",
+   "root_cause": "Session-level cron (id 890da29a) died with its session — .claude scheduled_tasks.json verified empty; session crons are not durable across session death",
+   "fix": "Move all must-run watchers to OS-level schtasks (QianwenCatWatch PT3H, QianwenReviewWatch PT2H) per the 指令必须严格持久执行 doctrine; session cron only as reminder layer",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_category_task.py (lines 2-7)"
+  },
+  {
+   "symptom": "API audit-status monitor plan dead on arrival: GET /wxa/get_latest_auditstatus returns errcode 86000 \"should be called only from third party\" for the self-developed appid; POST to it returns 43001",
+   "root_cause": "Endpoint is third-party-platform-only; a self-developed miniprogram's own client_credential token can never call it",
+   "fix": "Read audit status from the console UI instead: attach 9336 Chrome, reload the getcodepage tab, own-text-node-find the target version row, classify by status words; mobile push (公众平台安全助手) reaches the admin first anyway",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_review_browser.py (lines 4-8); E:/AI-Station/.claude/skills/weapp-launch-factory/references/mp-console-automation.md §7"
+  },
+  {
+   "symptom": "watch_category_api.py network leg dies with SSL_ERROR_SYSCALL against api.weixin.qq.com when using curl_cffi impersonation",
+   "root_cause": "curl_cffi browser-impersonate TLS fingerprint gets cut by the api.weixin.qq.com endpoint",
+   "fix": "Use plain `requests` with explicit timeouts (20s) for all api.weixin.qq.com calls; any exception is downgraded to verdict ERROR (silent retry next round)",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_category_api.py (lines 10-12, 48-51)"
+  },
+  {
+   "symptom": "Checkbox clicked three times in a loop ends up UNCHECKED; or checkbox+下一步 in one eval leaves the dialog frozen",
+   "root_cause": "Both the input and its label are bound to toggle — one logical click registers as multiple toggles; and same-eval chained clicks miss the Vue digest cycle so the second click is wasted (1002 实锤)",
+   "fix": "Click the checkbox exactly once in eval #1; verify `.checked === true` in a separate eval #2 (hard-exit if false); click 下一步 in eval #3. wizard_run.py literally gates on the string '\"checked\":true' in the verify JSON",
+   "source": "E:/AI-Station/.claude/skills/weapp-launch-factory/references/mp-console-automation.md §3; E:/AI-Station/WeAppForge/work/mp_cancel_logout/wizard_run.py (lines 151-181)"
+  },
+  {
+   "symptom": "Version-description textarea assignment `ta.value = txt` shows no effect: counter stays put, submitted form carries the old value",
+   "root_cause": "Vue v-model listens for input events; setting the value property directly never fires them",
+   "fix": "Native prototype setter + event dispatch: `Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype,'value').set` -> `setter.call(ta, txt)` -> dispatchEvent(new Event('input',{bubbles:true})) and ('change'); proof of ingestion = counter text (e.g. 184/200) equals read-back ta.value.length",
+   "source": "E:/AI-Station/.claude/skills/weapp-launch-factory/references/mp-console-automation.md §4; E:/AI-Station/WeAppForge/work/mp_cancel_logout/wizard_run.py (lines 222-241)"
+  },
+  {
+   "symptom": "Description text poured into a hidden JSON draft-slot textarea; submit then hard-stalls",
+   "root_cause": "mp console pages keep hidden JSON textareas (form draft storage); `querySelector('textarea')` first-match can hit the slot",
+   "fix": "Anchor the real textarea by placeholder content (ICP form: placeholder contains '请根据实际情况填写'; wizard form: placeholder contains '功能' OR value.length>20 OR maxLength===200)",
+   "source": "E:/AI-Station/.claude/skills/weapp-launch-factory/references/mp-console-automation.md §4b; E:/AI-Station/WeAppForge/work/mp_cancel_logout/wizard_run.py (lines 228-232)"
+  },
+  {
+   "symptom": "XPath text() or el.textContent button matching goes blind; matched span clicks do nothing",
+   "root_cause": "Browser translate extension wraps button text in `<span data-component=\"translate\">`, detaching the text node from the button",
+   "fix": "Own-text-node finder: iterate span/a/button(/div/*), keep elements with their own trimmed text node equal to the word, `closest('button')||closest('a')` to the real button, visibility via offsetParent!==null, scrollIntoView then click; prefer deepest hit; Chrome-MCP trusted click beats eval .click() for Vue listeners",
+   "source": "E:/AI-Station/.claude/skills/weapp-launch-factory/references/mp-console-automation.md §0/§1; E:/AI-Station/WeAppForge/work/mp_cancel_logout/wizard_run.py FIND_BTN"
+  },
+  {
+   "symptom": "Dialog handler grabs a pile of invisible dialogs; actions fire against hidden pre-rendered nodes",
+   "root_cause": "mp console pre-renders hidden dialogs (display:none still in DOM)",
+   "fix": "Visibility gate `el.offsetParent !== null`; stricter: computed display/visibility + bounding rect width>60 height>20, plus anchor text (e.g. '提交审核的相关须知') and text-length sanity (<3000 chars)",
+   "source": "E:/AI-Station/.claude/skills/weapp-launch-factory/references/mp-console-automation.md §2; E:/AI-Station/WeAppForge/work/mp_cancel_logout/wizard_run.py visDialog"
+  },
+  {
+   "symptom": "Ancestor-traversal button targeting on the version page clicked the WRONG version's button (选为体验版 incident: hit 0.4.2 historical row, popped a dangerous switch dialog)",
+   "root_cause": "Rows share identical button wording; closest()-upward search from an arbitrary button is not version-scoped",
+   "fix": "Anchor by the target version NUMBER text inside its `.code_version_log` block first, then search for the button scoped to that block; same pattern used for the 提交审核 row (own-text-node version match -> walk up <=8 parents to the row containing the primary button)",
+   "source": "E:/AI-Station/.claude/skills/weapp-launch-factory/references/mp-console-automation.md §0.4/§6; E:/AI-Station/WeAppForge/work/mp_cancel_logout/submit_review_0911.py JS_RECON_ROW"
+  },
+  {
+   "symptom": "Review watcher reads NO_ROW on a freshly reloaded getcodepage tab (body.innerText nearly empty)",
+   "root_cause": "Zombie tab cold-renders slowly after location.reload() in the long-lived 9336 browser",
+   "fix": "sleep 9 after reload; if still NO_ROW with hasBody false, sleep 5 and re-run the identical read once before concluding",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_review_browser.py (lines 96-105)"
+  },
+  {
+   "symptom": "Scheduled watcher would have auto-fired the irreversible release (全量发布) on APPROVED",
+   "root_cause": "Release/publish is an outward irreversible action; an unattended watcher must never trigger it",
+   "fix": "Watchers only notify + write flag files (mp_review_approved.flag / mp_review_rejected.flag / mp_category_green.flag); the six-step release checklist is executed verbatim by a session leg; same discipline for category GREEN (re-submit left to session leg doing BOOT-SIM + submit_audit)",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_review_task.py (lines 12-16); E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_category_task.py (lines 12-16)"
+  },
+  {
+   "symptom": "After switching vpay env=1->0, real phones could not pull up payment",
+   "root_cause": "1009 incident: env switched to 0 and deployed BEFORE the item-publish/prereq chain completed",
+   "fix": "防呆闸 in release step 4: env=0 requires a prior `echo \"执行人/日期\" > data/state/VPAY_PROD_LIVE.flag` (human-attributed go signal) before the virtual_pay.secret -> qw_tcb_prep.py -> update_envparams.js chain runs",
+   "source": "E:/AI-Station/_proposals/report-miniprogram-1008/HANDOFF.md §六 step 4 (line 67)"
+  },
+  {
+   "symptom": "A scheduled watcher could pop a headful Chrome window on the user's desktop at 3am",
+   "root_cause": "DrissionPage ChromiumPage with options would launch a new headful Chrome if 9336 is not running (QR visibility requirement makes the channel headful by design)",
+   "fix": "Socket-probe first: connect_ex to 127.0.0.1:9336 with 1.5s timeout; port down -> verdict SKIP, exit 0 silently; only attach (set_local_port, never set_user_data_path cold start) when the channel is alive",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_review_browser.py (lines 8-9, 60-63, 79-84)"
+  },
+  {
+   "symptom": "Submit wizard could run against the wrong miniprogram account (multiple accounts share the 9336 console)",
+   "root_cause": "Console session can hold several accounts; wrong-appid submit = disaster",
+   "fix": "APPID_MISMATCH guard: assert the target appid string (wx5cee1574ce45819b) appears in the getcodepage tab HTML before any stage; mismatch -> print APPID_MISMATCH（错号灾难防线）+ exit 1",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/submit_review_0911.py (lines 132-135)"
+  },
+  {
+   "symptom": "Expedited review wanted after submission — no way to add it",
+   "root_cause": "加急 is selectable ONLY on the get_class main form at submit time; post-submit it cannot be changed or added; the free expedite quota is consumed at that checkbox",
+   "fix": "Decide expedite BEFORE clicking the submit <a class=\"btn btn_primary\">; default posture in all recorded submits is 不加急 (and API submit_audit path never expedites)",
+   "source": "E:/AI-Station/.claude/skills/weapp-launch-factory/references/mp-console-automation.md line 137; E:/AI-Station/.claude/skills/weapp-launch-factory/references/mp-compliance-gates.md line 274"
+  },
+  {
+   "symptom": "MCP shared-browser automation of the console kept losing the QR/login tabs (hide/show + restarts destroyed tabs)",
+   "root_cause": "Multiple research legs contend for the one MCP-managed browser",
+   "fix": "Dedicated Chrome channel: port 9336 + profile E:\\AI-Station\\data\\state\\mp_qr_profile via ChromiumOptions, headful (QR must be visible on desktop), attach-or-launch; 9336 becomes the console's single legal port (纪律: 9336 是控制台唯一合法口)",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/driver.py (lines 2-6, 43-53); E:/AI-Station/_proposals/report-miniprogram-1008/HANDOFF.md §五"
+  },
+  {
+   "symptom": "Category browser watcher failed after console relogin (hardcoded token)",
+   "root_cause": "Session relogin invalidates the old token — stale hardcoded token was the root cause of missed watch rounds (1006 fix)",
+   "fix": "live_token(): regex token=(\\d{8,}) from live tab URL; fallback navigate to mp root, sleep 5, re-regex URL + first 30000 html chars; still none -> honest login_wall report + 扫码召唤 (WeCom QR-summon throttled to 1 per 12h)",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_category.py (lines 2-6, 17-29, 36-41)"
+  },
+  {
+   "symptom": "Submit-button click missed even after FIND_BTN located it",
+   "root_cause": "The submit control is an `<a class=\"btn btn_primary\"> anchor, not a `<button>`; selectors limited to button tag never match",
+   "fix": "Search `a.btn_primary, a.btn.btn_primary, .btn_primary` filtered by text containing 提交审核 AND visible; scrollIntoView({block:'center'}) in eval #1, actual click in eval #2 (separate evals again); terminal proof = body contains 已提交审核/提交成功/审核中",
+   "source": "E:/AI-Station/.claude/skills/weapp-launch-factory/references/mp-console-automation.md (lines 138-140); E:/AI-Station/WeAppForge/work/mp_cancel_logout/wizard_run.py commit (lines 242-287)"
+  }
+ ],
+ "recipes": [
+  {
+   "name": "Submit-review wizard, one-piece stage chain (wizard_run.py pattern)",
+   "steps": "Preconditions: 9336 Chrome alive + logged-in tab (token in URL), appid verified on page. Run stages IN ORDER, each is one process: `python wizard_run.py nav` (getcodepage?lang=zh_CN&token=<tok>, sleep 6, dump .code_version_log blocks) -> `step1` (in the target version block click 提交审核 via findBtn; then click checkbox once) -> `step1b` (separate eval verify checked==true, hard-exit if not; click 下一步 inside the visible dialog anchored '提交审核的相关须知') -> `step2` (click 继续提交, sleep 5, print URL — get_class param means form reached) -> `form` (dump textareas with placeholder/len/maxLength + radios + 订单中心 labels; human reviews BEFORE filling) -> `fill` (urllib.parse.quote the description; JS: decodeURIComponent -> pick real textarea (placeholder 功能|len>20|maxLength 200) -> HTMLTextAreaElement.prototype value setter -> dispatch input+change bubbles -> report len/head/tail) -> `commit` (pre-commit snapshot desc_len + checked radios; find visible a.btn_primary containing 提交审核; scrollIntoView eval; click in separate eval; sleep 5; assert body hits 已提交审核/提交成功/审核中; screenshot). Tab pinning at startup: prefer get_class tab, else getcodepage.",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/wizard_run.py"
+  },
+  {
+   "name": "Staged 0.9.12 wizard with human gate (submit_review_0911.py + finish_review_0912.py)",
+   "steps": "`python submit_review_0911.py recon` — zero-click: appid check, live 体验版 read, target-row dump, dialog dump, screenshot review_0911_recon.png -> `open` — click 提交审核 (own-text-node '0.9.12' -> walk up <=8 parents -> button.weui-desktop-btn_primary), screenshot -> `step1` — checkbox click eval + verify eval + 下一步 click -> `step2` — click 继续提交, dump form skeleton (NO filling). RED LINE from docstring: fill/submit run as separate stages only after a human has reviewed the fill DOM dump. After manual fill+submit: `python finish_review_0912.py` — in the get_class tab click the success-dialog 确定 (innerText==='确定' && offsetParent!==null -> closest button/a), then reload the getcodepage tab (location.reload(), sleep 8) and verify body contains '0.9.12' + '审核中', extract the version row (own-text-node walk-up, 20<len<600), screenshot review_0912_submitted.png.",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/submit_review_0911.py; E:/AI-Station/WeAppForge/work/mp_cancel_logout/finish_review_0912.py"
+  },
+  {
+   "name": "Zero-login category watcher (API leg + OS task)",
+   "steps": "API leg `watch_category_api.py`: read appid/appsecret from E:/AI-Station/data/secrets/zongbao_qianwen_mp.secret (key=value lines) -> GET api.weixin.qq.com/cgi-bin/token (grant_type=client_credential) -> GET api.weixin.qq.com/wxa/get_category?access_token=... (plain requests, timeout 20) -> live set of (first_class, second_class); print single-line JSON: GREEN if (深度合成,AI问答) in live else PENDING, plus categories + baseline_ok (baseline = 工具/信息查询 + 资讯/信息资讯 subset) ; any exception -> ERROR. Task leg `watch_category_task.py` under schtasks QianwenCatWatch (every 3h, pythonw.exe): subprocess the API leg (CREATE_NO_WINDOW, timeout 120), parse last stdout line; flip-only: GREEN transition -> write data/state/mp_category_green.flag + WeCom notify (tools/notify_wecom.py); baseline missing -> ANOMALY + notify once; persist last_verdict to qianwen_cat_watch_state.json; log to qianwen_cat_watch.log.",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_category_api.py; E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_category_task.py; live Get-ScheduledTask registry"
+  },
+  {
+   "name": "Review-result browser watcher (self-developed accounts)",
+   "steps": "Browser leg `watch_review_browser.py`: socket connect_ex 127.0.0.1:9336 (1.5s) — down -> SKIP; attach ChromiumOptions().set_local_port(9336) only; find getcodepage tab, else harvest token from any mp.weixin.qq.com tab and page.new_tab(GETCODE?token=...&lang=zh_CN) sleep 6; run_js location.reload() + sleep 9; own-text-node find WATCH_VER row (walk up <=8 parents, 10<len<600); auth check first (登录超时/扫码登录 -> AUTH_EXPIRED); classify: 审核通过|已发布|线上版本 -> APPROVED, 审核不通过|驳回|审核失败 -> REJECTED, else PENDING; NO_ROW without body -> sleep 5 re-read once; print single-line JSON. Task leg `watch_review_task.py` under schtasks QianwenReviewWatch (every 2h): same flip-only skeleton — APPROVED transition -> mp_review_approved.flag + WeCom notify quoting the six-step checklist; REJECTED transition -> mp_review_rejected.flag + notify; NEVER auto-releases.",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_review_browser.py; E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_review_task.py"
+  },
+  {
+   "name": "Flip-only notify + flag state machine (shared watcher skeleton)",
+   "steps": "1) run probe via subprocess.run([sys.executable, WATCH], capture_output=True, timeout=120, creationflags=CREATE_NO_WINDOW); 2) json.loads(stdout.splitlines()[-1]) with fallback {verdict: ERROR, detail: tail-or-exitcode}; 3) prev = json.load(STATE).get('last_verdict','') (missing file -> ''); 4) act only on transition: desired terminal state -> write flag file (json {at ISO8601 CST (+08:00), row/categories}) + notify(title, body) via subprocess python tools/notify_wecom.py (timeout 60, notify failure logged, never fatal); anomaly -> distinct verdict so recovery can re-notify; 5) always persist {last_verdict, at} back to STATE; 6) append one log line per run (timestamped, utf-8).",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_category_task.py; E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_review_task.py"
+  },
+  {
+   "name": "Vue-controlled textarea fill (native setter)",
+   "steps": "In page JS: pick the real textarea (placeholder anchor, e.g. contains '功能' for the review form / '请根据实际情况填写' for ICP form; reject hidden JSON slots) -> `var setter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set; setter.call(ta, txt);` -> `ta.dispatchEvent(new Event('input', {bubbles:true})); ta.dispatchEvent(new Event('change', {bubbles:true}));` -> proof: counter element text (184/200) must equal ta.value.length; pass non-ASCII text by urllib.parse.quote on the Python side + decodeURIComponent in JS.",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/wizard_run.py (lines 222-241); E:/AI-Station/.claude/skills/weapp-launch-factory/references/mp-console-automation.md §4"
+  },
+  {
+   "name": "Own-text-node real-button finder (FIND_BTN)",
+   "steps": "function findBtn(doc, depth, word): querySelectorAll('span, a, button, div'); for each el concatenate its OWN child text nodes (nodeType===3); trimmed === word -> real = el.closest('button') || el.closest('a'); recurse into same-document iframes up to depth 3. Visibility = offsetParent !== null (optionally computed style + rect > 60x20). Click protocol: scrollIntoView({block:'center'}) in one eval, click in the NEXT eval; never XPath text(); never chain checkbox+button in one eval.",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/wizard_run.py (lines 34-63); E:/AI-Station/.claude/skills/weapp-launch-factory/references/mp-console-automation.md §1"
+  },
+  {
+   "name": "9336 dedicated console channel (attach-or-launch)",
+   "steps": "from DrissionPage import ChromiumPage, ChromiumOptions; opts = ChromiumOptions(); opts.set_local_port(9336); opts.set_user_data_path(r'E:\\AI-Station\\data\\state\\mp_qr_profile'); opts.set_argument('--window-size=1100,860'); opts.set_argument('--no-first-run'); page = ChromiumPage(addr_or_opts=opts) # attaches if the port is live, launches headful otherwise (QR must be visible on desktop). Find the logged-in tab: URL contains mp.weixin.qq.com AND token=; token = re.search(r'token=(\\d{8,})', url).group(1). Zombie-tab discipline: reuse existing getcodepage/get_class tabs across stages so wizard state survives; screenshot every stage into WeAppForge/filing/. Iron rule: never touch any other console button.",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/driver.py (lines 27-53)"
+  },
+  {
+   "name": "Six-step post-approval release checklist (execute in order, no skipping)",
+   "steps": "1) 清灰度态: query getgrayreleaseplan; if a plan exists, console 撤销发布/全量发布 first (API status=0 can coexist with the gray-release banner — trust live fire result); 2) console 发布 0.9.0 全量; 3) publish 6 vpay items to production: unlock_once / export_once / report_498 / report_598 / report_698 / report_1999 (虚拟支付→道具配置→各行「发布」); 4) env=1->0: virtual_pay.secret -> qw_tcb_prep.py -> update_envparams.js, gated by 防呆闸 `echo \"执行人/日期\" > data/state/VPAY_PROD_LIVE.flag` (1009 incident: early env=0 broke real-phone payment); 5) POSTER_QR_ENV_VERSION trial->release (server config + cloud sync) then poster QR smoke-scan; 6) BOOT-SIM version closeout + RUN_LEDGER/GOAL_LEDGER + targeted git commit + github-push skill + Baidu backup + WeCom report.",
+   "source": "E:/AI-Station/_proposals/report-miniprogram-1008/HANDOFF.md §六 (lines 60-69)"
+  },
+  {
+   "name": "Category-green API re-submit (submit_audit path)",
+   "steps": "Gate on data/state/mp_category_green.flag existing + BOOT-SIM all-green; read appid/appsecret (assert appid == wx5cee1574ce45819b); GET /cgi-bin/token -> GET /wxa/get_latest_auditstatus (print — confirms no in-flight audit and last failure reason) -> POST /wxa/security/submit_audit with json {item_list: [7 pages each {address, tag, first_class, second_class, third_class:'', title} mapped to approved categories], feedback_info: re-submit rationale} (regular queue, NEVER expedited); on errcode==0 + audit_id persist qianwen_submit_audit_state.json. Plain requests only (curl_cffi TLS-dies on api.weixin.qq.com).",
+   "source": "E:/AI-Station/WeAppForge/work/mp_cancel_logout/submit_audit_api.py"
+  },
+  {
+   "name": "schtasks watcher registration (as actually deployed)",
+   "steps": "Deployed config (live-verified): task QianwenCatWatch = `E:\\AI-Station\\.venv\\Scripts\\pythonw.exe E:\\AI-Station\\WeAppForge\\work\\mp_cancel_logout\\watch_category_task.py`, daily time trigger repeating PT3H (start 2026-10-08T10:41:00), LastTaskResult 0; task QianwenReviewWatch = `\"C:\\Users\\91216\\AppData\\Local\\Programs\\Python\\Python311\\python.exe\" E:\\AI-Station\\WeAppForge\\work\\mp_cancel_logout\\watch_review_task.py`, trigger PT2H (start 2026-10-09T23:23:00). pythonw (no console window) preferred for the long-lived leg; inner subprocesses pass CREATE_NO_WINDOW; each task reuses its probe script via subprocess so logic exists in exactly one file.",
+   "source": "live Get-ScheduledTask/Get-ScheduledTaskInfo query 2026-10-09; E:/AI-Station/WeAppForge/work/mp_cancel_logout/watch_category_task.py + watch_review_task.py docstrings"
+  }
+ ]
+}

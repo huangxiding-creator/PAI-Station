@@ -156,5 +156,7 @@ module.exports = {
       throw err;                                                                             // 503 软错照旧 reject→toast；401 走既有自动重登链
     }),
   reportAskHistory: () => request('GET', '/api/report/asks/history'),                        // 我的报告提问记录（本人倒序 limit=20，title 联查回填）
+  // ── v0.9.21（用户令 1018：报告互动计数——公开无鉴权 bump，调用方一律 fire-and-forget）──
+  reportBump: (sku, field) => request('POST', '/api/report/' + sku + '/bump/' + field),      // 观看/点赞/转发 +1（field=views|likes|shares，失败不阻主流程）
   requestRaw: request                                                                        // pay.js 回调腿用（带 401 重登语义）
 };

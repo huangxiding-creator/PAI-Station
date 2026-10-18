@@ -1,0 +1,93 @@
+<view class="voice-feedback">
+  <view class="vf-header">
+    <text class="vf-title">🎤 读后有话说？</text>
+    <text class="vf-sub">语音或打字反馈，AI评分，按质退款</text>
+  </view>
+
+  <!-- 未提交状态 -->
+  <block wx:if="{{!submitted}}">
+    <view wx:if="{{voiceReady}}" class="vf-record-btn {{recording ? 'recording' : ''}}"
+          bindtouchstart="startRecord" bindtouchend="stopRecord">
+      <text wx:if="{{recording}}" class="vf-recording-text">🎙️ 录音中... {{recordTime}}s</text>
+      <text wx:else class="vf-record-text">按住说话（可再打字补充）</text>
+    </view>
+
+    <view class="vf-textarea-box">
+      <textarea class="vf-textarea" placeholder="指出具体章节/数据的问题，或提出改进建议（至少20字）"
+                value="{{transcript}}" bindinput="onTextInput" maxlength="1000"
+                auto-height disabled="{{loading}}"></textarea>
+    </view>
+
+    <view wx:if="{{loading}}" class="vf-loading">
+      <text>⏳ AI 评审中...</text>
+    </view>
+
+    <button class="vf-submit-btn" bindtap="submitFeedback" disabled="{{loading}}">
+      提交反馈并申请评分退款
+    </button>
+  </block>
+
+  <!-- 已提交：显示评分结果 -->
+  <block wx:if="{{submitted && scores}}">
+    <view class="vf-result">
+      <view class="vf-score-circle">
+        <text class="vf-score-num">{{scores.total_score}}</text>
+        <text class="vf-score-label">分</text>
+      </view>
+
+      <view class="vf-refund-box">
+        <text class="vf-refund-amount">退款 ¥{{refundAmount}}</text>
+        <text class="vf-refund-pct">（{{refundPct}}% 退款比例）</text>
+      </view>
+
+      <view class="vf-dimensions">
+        <view class="vf-dim-row">
+          <text class="vf-dim-name">真实性</text>
+          <text class="vf-dim-score">{{scores.authenticity}}/15</text>
+        </view>
+        <view class="vf-dim-row">
+          <text class="vf-dim-name">针对性</text>
+          <text class="vf-dim-score">{{scores.specificity}}/15</text>
+        </view>
+        <view class="vf-dim-row">
+          <text class="vf-dim-name">专业性</text>
+          <text class="vf-dim-score">{{scores.professionalism}}/15</text>
+        </view>
+        <view class="vf-dim-row">
+          <text class="vf-dim-name">证据支持</text>
+          <text class="vf-dim-score">{{scores.evidence_support}}/15</text>
+        </view>
+        <view class="vf-dim-row">
+          <text class="vf-dim-name">可操作性</text>
+          <text class="vf-dim-score">{{scores.actionability}}/20</text>
+        </view>
+        <view class="vf-dim-row">
+          <text class="vf-dim-name">改进价值</text>
+          <text class="vf-dim-score">{{scores.improvement_value}}/20</text>
+        </view>
+      </view>
+
+      <view class="vf-suggestion">
+        <text class="vf-label">💡 改进建议：</text>
+        <text class="vf-text">{{scores.improvement_suggestion}}</text>
+      </view>
+
+      <view class="vf-rationale">
+        <text class="vf-label">📊 评分理由：</text>
+        <text class="vf-text">{{scores.scoring_rationale}}</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- 邮箱收集 -->
+  <view wx:if="{{showEmailBox}}" class="vf-email-box">
+    <text class="vf-email-title">📧 报告优化后免费发送新版到您的邮箱</text>
+    <input class="vf-email-input" placeholder="请输入邮箱地址"
+           value="{{email}}" bindinput="onEmailInput" type="text" />
+    <view class="vf-email-btns">
+      <button class="vf-email-confirm" bindtap="submitEmail">确认邮箱</button>
+      <button class="vf-email-skip" bindtap="skipEmail">跳过</button>
+    </view>
+    <text class="vf-email-note">✓ 不会发送垃圾邮件 · 可随时取消</text>
+  </view>
+</view>
