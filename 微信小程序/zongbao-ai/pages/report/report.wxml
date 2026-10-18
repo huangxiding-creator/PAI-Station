@@ -44,7 +44,7 @@
     <view wx:elif="{{d.sellable}}" class="rp-ios-note muted">iOS 暂不支持应用内购买，请在安卓设备上购买后阅读</view>
     <view wx:else class="rp-ios-note muted">本报告 PDF 整理中，开放购买前可先试读</view>
 
-    <view class="muted rp-note">一次解锁 · 永久阅读 · PDF 全文阅读与下载保存 · 内容由研究团队基于公开资料与 AI 辅助研究方法产出</view>
+    <view class="muted rp-note">一次解锁 · 永久阅读 · PDF 全文阅读与下载保存 · 内容由总包智库研究团队基于公开资料研究产出</view>
   </view>
 
   <!-- ══ v0.9.21 问报告 hero（用户令 1018 升维：小 pill → 大区常驻，置于简介之上；零购买门槛 REQ-006.AC0）══
@@ -115,8 +115,8 @@
       <button class="btn-primary rp-ask-out-btn" wx:if="{{!d.unlocked}}" hover-class="btn-hover" bindtap="onAskBuyTap">解锁报告 · 随时翻原文</button>
     </view>
 
-    <!-- AI 标识常驻（合规：AI 生成内容显著标识） -->
-    <view class="rp-ask-ai">AI 生成 · 仅供参考</view>
+    <!-- 参考声明常驻 -->
+    <view class="rp-ask-ai">内容仅供参考 · 以报告原文为准</view>
   </view>
 
   <!-- 简介 -->
