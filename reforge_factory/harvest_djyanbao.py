@@ -57,22 +57,22 @@ DOMAIN_RE = re.compile(r"招标|投标|评标|工程|EPC|采购|承包|造价|FI
 
 # (检索词, 目标 EEI) — 四面优先, 域词兜底挂 Q1-E1
 PLAN: list[tuple[str, str]] = [
-    ("FIDIC", "Q23-E1"),
-    ("国际工程", "Q24-E1"),
-    ("对外承包工程", "Q24-E1"),
-    ("电子招投标", "Q19-E1"),
-    ("BIM", "Q19-E1"),
-    ("评标", "Q21-E1"),
-    ("招标代理", "Q25-E1"),
-    ("公共资源交易", "Q26-E1"),
-    ("供应链 采购", "Q25-E1"),
-    ("工程总承包", "Q1-E1"),
-    ("建筑央企 战略", "Q9-E2"),
-    ("央企 建筑业 转型", "Q9-E3"),
-    ("工程 超概算 案例", "Q12-E2"),
-    ("建筑企业 毛利率", "Q16-E2"),
-    ("海外工程 亏损", "Q24-E2"),
-    ("招投标", "Q1-E1"),
+    ("工程造价司法鉴定", "Q1-E1"),
+    ("工程价款鉴定", "Q4-E1"),
+    ("司法鉴定 管理", "Q1-E3"),
+    ("结算争议 判例", "Q8-E1"),
+    ("造价鉴定 申请", "Q2-E1"),
+    ("鉴定意见 质证", "Q3-E1"),
+    ("工程纠纷 仲裁", "Q9-E1"),
+    ("不予受理 鉴定", "Q2-E2"),
+    ("重新鉴定 案例", "Q3-E2"),
+    ("施工合同 司法解释二", "Q5-E1"),
+    ("工程款 诉讼", "Q8-E2"),
+    ("鉴定机构 名册", "Q7-E1"),
+    ("造价咨询 行业", "Q6-E1"),
+    ("EPC 结算 风险", "Q10-E1"),
+    ("工程审计 争议", "Q6-E2"),
+    ("施工企业 法务", "Q11-E1"),
 ]
 
 
@@ -397,7 +397,7 @@ def run(cid: str, per_query: int = 3, max_total: int = 12,
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="洞见研报收割腿 (C djyanbao 渠道)")
-    ap.add_argument("--campaign", default="EPC-BID26")
+    ap.add_argument("--campaign", default="EPC-BID26")  # JSFDD: 显式传参
     ap.add_argument("--per-query", type=int, default=3)
     ap.add_argument("--max-total", type=int, default=12)
     ap.add_argument("--login-wait", type=int, default=45)

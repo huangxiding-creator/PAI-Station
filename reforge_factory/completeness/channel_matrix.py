@@ -65,7 +65,7 @@ CHANNEL_ALIASES: dict[str, list[str]] = {
     "localfiles": ["localfiles", "本地文件"],
     "websearch": ["websearch"],
     "court": ["court", "wenshu", "涉诉", "裁判文书"],
-    "cnki": ["cnki", "知网"],
+    "cnki": ["cnki", "知网", "wenchuanyun"],
     "corpus_stores": ["corpus_stores", "存量语料"],
     "govlist": ["govlist", "政府名录", "company_info"],
     "eoscar": ["eoscar", "e-oscar"],

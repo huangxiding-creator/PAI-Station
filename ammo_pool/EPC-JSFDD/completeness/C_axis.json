@@ -1,0 +1,560 @@
+{
+ "axis": "C",
+ "sensor": "channel_matrix",
+ "campaign": "EPC-JSFDD",
+ "channels_hit": 14,
+ "channels_total": 31,
+ "hit_ratio": 0.4516,
+ "hit_channels": [
+  {
+   "id": "sougo",
+   "name": "搜狗微信",
+   "chars": 75805,
+   "engines": [
+    "cross:wechat_rss:bidcut"
+   ]
+  },
+  {
+   "id": "metaso",
+   "name": "秘塔学术",
+   "chars": 1218,
+   "engines": [
+    "f1full:cross:metaso"
+   ]
+  },
+  {
+   "id": "djyanbao",
+   "name": "洞见研报",
+   "chars": 1456,
+   "engines": [
+    "research:djyanbao"
+   ]
+  },
+  {
+   "id": "website",
+   "name": "官网爬虫",
+   "chars": 14322,
+   "engines": [
+    "fulltext:web"
+   ]
+  },
+  {
+   "id": "ima_public",
+   "name": "ima 公开知识库",
+   "chars": 140749,
+   "engines": [
+    "kb:ima_public"
+   ]
+  },
+  {
+   "id": "lark",
+   "name": "飞书语料",
+   "chars": 12351,
+   "engines": [
+    "feishu_zhiku"
+   ]
+  },
+  {
+   "id": "localfiles",
+   "name": "本地文件库",
+   "chars": 2304,
+   "engines": [
+    "localfiles:rss"
+   ]
+  },
+  {
+   "id": "websearch",
+   "name": "WebSearch",
+   "chars": 62342,
+   "engines": [
+    "search:web"
+   ]
+  },
+  {
+   "id": "court",
+   "name": "涉诉检索",
+   "chars": 173711114,
+   "engines": [
+    "wenshu:jsfdd",
+    "wenshu:scan"
+   ]
+  },
+  {
+   "id": "cnki",
+   "name": "CNKI 论文",
+   "chars": 42560,
+   "engines": [
+    "paper:wenchuanyun"
+   ]
+  },
+  {
+   "id": "corpus_stores",
+   "name": "存量语料库",
+   "chars": 39406,
+   "engines": [
+    "stock:campaign_中冶长天国际",
+    "stock:campaign_中国电子工程"
+   ]
+  },
+  {
+   "id": "govlist",
+   "name": "政府名录线",
+   "chars": 8368,
+   "engines": [
+    "registry:govlist"
+   ]
+  },
+  {
+   "id": "zh_search_pro",
+   "name": "免key中文多引擎检索",
+   "chars": 26524,
+   "engines": [
+    "web:zhsearchpro"
+   ]
+  },
+  {
+   "id": "anysearch",
+   "name": "AnySearch实时搜索(web+垂直域17域+并发批量+网页抽取, 匿名免鉴权)",
+   "chars": 11343,
+   "engines": [
+    "anysearch:gap"
+   ]
+  }
+ ],
+ "miss_list": [
+  "Manus 军团",
+  "视频文稿",
+  "ima 知识库",
+  "微信读书",
+  "微信本地数据",
+  "微信4.x加密库",
+  "360浏览器画像",
+  "E-OSCAR 情报引擎",
+  "CLI 化栈",
+  "网盘聚合发现",
+  "全套教材语料库",
+  "电子书渠道族(两篇文章111站+Arc K扫荡105站=216站纳册)",
+  "网页搜索项目注册表(8角度扫荡111候选+8本机在册=119项)",
+  "夸克网盘账号面(扫码授权+转存四步+列目录+下载直链+签到保活)",
+  "OpenAlex 学术API(免key)",
+  "Semantic Scholar 学术API(S2, 免key)",
+  "arXiv 学术API(免key)"
+ ],
+ "miss_detail": [
+  {
+   "id": "manus",
+   "name": "Manus 军团"
+  },
+  {
+   "id": "video",
+   "name": "视频文稿"
+  },
+  {
+   "id": "ima",
+   "name": "ima 知识库"
+  },
+  {
+   "id": "weread",
+   "name": "微信读书"
+  },
+  {
+   "id": "wechat_local",
+   "name": "微信本地数据"
+  },
+  {
+   "id": "wechat4",
+   "name": "微信4.x加密库"
+  },
+  {
+   "id": "browser360",
+   "name": "360浏览器画像"
+  },
+  {
+   "id": "eoscar",
+   "name": "E-OSCAR 情报引擎"
+  },
+  {
+   "id": "cli_stack",
+   "name": "CLI 化栈"
+  },
+  {
+   "id": "pansou",
+   "name": "网盘聚合发现"
+  },
+  {
+   "id": "chinatextbook",
+   "name": "全套教材语料库"
+  },
+  {
+   "id": "ebook_library",
+   "name": "电子书渠道族(两篇文章111站+Arc K扫荡105站=216站纳册)"
+  },
+  {
+   "id": "search_library",
+   "name": "网页搜索项目注册表(8角度扫荡111候选+8本机在册=119项)"
+  },
+  {
+   "id": "quark_pan",
+   "name": "夸克网盘账号面(扫码授权+转存四步+列目录+下载直链+签到保活)"
+  },
+  {
+   "id": "openalex",
+   "name": "OpenAlex 学术API(免key)"
+  },
+  {
+   "id": "semantic_scholar",
+   "name": "Semantic Scholar 学术API(S2, 免key)"
+  },
+  {
+   "id": "arxiv",
+   "name": "arXiv 学术API(免key)"
+  }
+ ],
+ "new_channel_queue": [],
+ "miss_in_queue": [],
+ "miss_not_in_queue": [],
+ "channel_waivers": [
+  {
+   "id": "wechat_local",
+   "name": "微信本地数据",
+   "reason": "账号红线: 聊天记录检索需用户明示授权",
+   "approve_ref": "待用户批准 (1018 世界级门槛自查后呈报)",
+   "ts": "2026-10-18T18:34:09"
+  },
+  {
+   "id": "wechat4",
+   "name": "微信4.x加密库",
+   "reason": "账号红线: 须用户在场 capture_key",
+   "approve_ref": "待用户批准 (1018 世界级门槛自查后呈报)",
+   "ts": "2026-10-18T18:34:09"
+  },
+  {
+   "id": "browser360",
+   "name": "360浏览器画像",
+   "reason": "账号态: 本地画像需专用采集授权",
+   "approve_ref": "待用户批准 (1018 世界级门槛自查后呈报)",
+   "ts": "2026-10-18T18:34:09"
+  },
+  {
+   "id": "quark_pan",
+   "name": "夸克网盘账号面",
+   "reason": "账号态: 需扫码授权+保活",
+   "approve_ref": "待用户批准 (1018 世界级门槛自查后呈报)",
+   "ts": "2026-10-18T18:34:09"
+  },
+  {
+   "id": "ima",
+   "name": "ima 知识库",
+   "reason": "账号态: 私有KB需登录态; 公开侧已点亮(imapublic在列)",
+   "approve_ref": "待用户批准 (1018 世界级门槛自查后呈报)",
+   "ts": "2026-10-18T18:34:09"
+  },
+  {
+   "id": "manus",
+   "name": "Manus 军团",
+   "reason": "账号态: 军团配额优先在役战役(EPC49系)",
+   "approve_ref": "待用户批准 (1018 世界级门槛自查后呈报)",
+   "ts": "2026-10-18T18:34:09"
+  },
+  {
+   "id": "video",
+   "name": "视频文稿",
+   "reason": "账号态: bili cookie未备; 免登录简介<证据门",
+   "approve_ref": "待用户批准 (1018 世界级门槛自查后呈报)",
+   "ts": "2026-10-18T18:34:09"
+  },
+  {
+   "id": "weread",
+   "name": "微信读书",
+   "reason": "账号态: 需登录态; 法题书单边际",
+   "approve_ref": "待用户批准 (1018 世界级门槛自查后呈报)",
+   "ts": "2026-10-18T18:34:09"
+  },
+  {
+   "id": "pansou",
+   "name": "网盘聚合发现",
+   "reason": "账号态: 公开聚合受限",
+   "approve_ref": "待用户批准 (1018 世界级门槛自查后呈报)",
+   "ts": "2026-10-18T18:34:09"
+  },
+  {
+   "id": "eoscar",
+   "name": "E-OSCAR 情报引擎",
+   "reason": "基建位: 外部引擎未接入",
+   "approve_ref": "待用户批准 (1018 世界级门槛自查后呈报)",
+   "ts": "2026-10-18T18:34:09"
+  },
+  {
+   "id": "cli_stack",
+   "name": "CLI 化栈",
+   "reason": "基建位: 工具链能力项",
+   "approve_ref": "待用户批准 (1018 世界级门槛自查后呈报)",
+   "ts": "2026-10-18T18:34:09"
+  },
+  {
+   "id": "search_library",
+   "name": "网页搜索项目注册表",
+   "reason": "基建位: 已由 zhsearchpro/AnySearch 覆盖",
+   "approve_ref": "待用户批准 (1018 世界级门槛自查后呈报)",
+   "ts": "2026-10-18T18:34:09"
+  },
+  {
+   "id": "chinatextbook",
+   "name": "全套教材语料库",
+   "reason": "边际关联: 法题教材面已由论文/判例覆盖",
+   "approve_ref": "待用户批准 (1018 世界级门槛自查后呈报)",
+   "ts": "2026-10-18T18:34:09"
+  },
+  {
+   "id": "ebook_library",
+   "name": "电子书渠道族",
+   "reason": "边际关联: 同上",
+   "approve_ref": "待用户批准 (1018 世界级门槛自查后呈报)",
+   "ts": "2026-10-18T18:34:09"
+  },
+  {
+   "id": "openalex",
+   "name": "OpenAlex 学术API(免key)",
+   "reason": "如实N/A: 中文司法题英文论文判账全拒(62件实测)",
+   "approve_ref": "待用户批准 (1018 世界级门槛自查后呈报)",
+   "ts": "2026-10-18T18:34:09"
+  },
+  {
+   "id": "semantic_scholar",
+   "name": "Semantic Scholar 学术API(S2,免key)",
+   "reason": "如实N/A: 同上+共享IP限流",
+   "approve_ref": "待用户批准 (1018 世界级门槛自查后呈报)",
+   "ts": "2026-10-18T18:34:09"
+  },
+  {
+   "id": "arxiv",
+   "name": "arXiv 学术API(免key)",
+   "reason": "如实N/A: 同上",
+   "approve_ref": "待用户批准 (1018 世界级门槛自查后呈报)",
+   "ts": "2026-10-18T18:34:09"
+  }
+ ],
+ "waived_miss_list": [
+  "Manus 军团",
+  "视频文稿",
+  "ima 知识库",
+  "微信读书",
+  "微信本地数据",
+  "微信4.x加密库",
+  "360浏览器画像",
+  "E-OSCAR 情报引擎",
+  "CLI 化栈",
+  "网盘聚合发现",
+  "全套教材语料库",
+  "电子书渠道族(两篇文章111站+Arc K扫荡105站=216站纳册)",
+  "网页搜索项目注册表(8角度扫荡111候选+8本机在册=119项)",
+  "夸克网盘账号面(扫码授权+转存四步+列目录+下载直链+签到保活)",
+  "OpenAlex 学术API(免key)",
+  "Semantic Scholar 学术API(S2, 免key)",
+  "arXiv 学术API(免key)"
+ ],
+ "waived_but_hit": [],
+ "queue_path": "E:\\AI-Station\\ammo_pool\\EPC-JSFDD\\completeness\\C_axis_queue.json",
+ "queue_present": false,
+ "green": true,
+ "engine_map": {
+  "cross:wechat_rss:bidcut": {
+   "channels": [
+    "sougo"
+   ],
+   "notes": [
+    "微信生态公众号RSS≈搜狗微信内容面（近似）",
+    "RSS 常年收割（rss_fleet 族，未列 named 渠道）"
+   ],
+   "bases": [
+    "bidcut",
+    "wechat_rss"
+   ]
+  },
+  "cross:rss:bidcut": {
+   "channels": [],
+   "notes": [
+    "RSS 常年收割（rss_fleet 族，未列 named 渠道）",
+    "RSS 常年收割（rss_fleet 族，未列 named 渠道）"
+   ],
+   "bases": [
+    "bidcut",
+    "rss"
+   ]
+  },
+  "search:web": {
+   "channels": [
+    "websearch"
+   ],
+   "notes": [
+    "网页搜索≈WebSearch 面（近似）"
+   ],
+   "bases": []
+  },
+  "rss:bid26direct": {
+   "channels": [],
+   "notes": [
+    "RSS 常年收割（rss_fleet 族，未列 named 渠道）"
+   ],
+   "bases": [
+    "bid26direct"
+   ]
+  },
+  "rss:bid26deep": {
+   "channels": [],
+   "notes": [
+    "RSS 常年收割（rss_fleet 族，未列 named 渠道）"
+   ],
+   "bases": [
+    "bid26deep"
+   ]
+  },
+  "f1deep": {
+   "channels": [],
+   "notes": [],
+   "bases": []
+  },
+  "f1full:cross:metaso": {
+   "channels": [
+    "metaso"
+   ],
+   "notes": [],
+   "bases": [
+    "metaso"
+   ]
+  },
+  "f1full:cross:topics": {
+   "channels": [],
+   "notes": [],
+   "bases": [
+    "topics"
+   ]
+  },
+  "fulltext:web": {
+   "channels": [
+    "website"
+   ],
+   "notes": [
+    "网页全文≈官网爬虫面（近似）"
+   ],
+   "bases": []
+  },
+  "rss:wide": {
+   "channels": [],
+   "notes": [
+    "RSS 常年收割（rss_fleet 族，未列 named 渠道）"
+   ],
+   "bases": [
+    "wide"
+   ]
+  },
+  "anysearch:gap": {
+   "channels": [
+    "anysearch"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "wenshu:jsfdd": {
+   "channels": [
+    "court"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "stock:campaign_中冶长天国际": {
+   "channels": [
+    "corpus_stores"
+   ],
+   "notes": [
+    "存量池收割≈存量语料库（近似）"
+   ],
+   "bases": []
+  },
+  "stock:campaign_中国电子工程": {
+   "channels": [
+    "corpus_stores"
+   ],
+   "notes": [
+    "存量池收割≈存量语料库（近似）"
+   ],
+   "bases": []
+  },
+  "feishu_zhiku": {
+   "channels": [
+    "lark"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "wenshu:scan": {
+   "channels": [
+    "court"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "localfiles:rss": {
+   "channels": [
+    "localfiles"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "web:zhsearchpro": {
+   "channels": [
+    "zh_search_pro"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "research:djyanbao": {
+   "channels": [
+    "djyanbao"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "kb:ima_public": {
+   "channels": [
+    "ima_public"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "paper:wenchuanyun": {
+   "channels": [
+    "cnki"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "registry:govlist": {
+   "channels": [
+    "govlist"
+   ],
+   "notes": [],
+   "bases": []
+  }
+ },
+ "unmapped_engines": [
+  "cross:rss:bidcut",
+  "f1deep",
+  "f1full:cross:topics",
+  "rss:bid26deep",
+  "rss:bid26direct",
+  "rss:wide"
+ ],
+ "zero_char_engines": [],
+ "approx_notes": [
+  "RSS 常年收割（rss_fleet 族，未列 named 渠道）",
+  "存量池收割≈存量语料库（近似）",
+  "微信生态公众号RSS≈搜狗微信内容面（近似）",
+  "网页全文≈官网爬虫面（近似）",
+  "网页搜索≈WebSearch 面（近似）"
+ ],
+ "manifest": "E:\\AI-Station\\ResearchFactory-Eng\\channel_manifest.json",
+ "fail_soft": false,
+ "fail_soft_note": "",
+ "generated_at": "2026-10-18T18:34:09+08:00"
+}
