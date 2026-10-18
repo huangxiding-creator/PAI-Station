@@ -22,6 +22,9 @@ TOPICS = REPO / "reforge_factory" / "superline" / "radar_topics.json"
 
 STOP = re.compile(r"注意|可能|正在|你的|这个|这样|可以|我们|他们")
 
+# 用户否决名单 (1018: 「设计院加固图纸争议」主题不好) — 命中即不入候选池
+REJECTED = ("加固图纸",)
+
 
 def norm_topic(quote: str) -> str:
     t = re.sub(r"[，。！？、：；''\"()\[\]0-9]", " ", quote)
@@ -58,6 +61,8 @@ def main() -> int:
     existed = {str(t.get("topic")) for t in topics}
     added = 0
     for t, n in hot:
+        if any(r in t for r in REJECTED):
+            continue
         title = f"微信洞察·{t}"
         if title in existed:
             continue
