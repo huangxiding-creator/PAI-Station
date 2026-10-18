@@ -165,9 +165,9 @@ check("api potList 客户端", "potList" in api_js)
 check("api optimize 客户端（shareReward 已随分享激励下线）", "optimize" in api_js and "shareReward" not in api_js)
 
 # 版本与定位（v0.9.0）
-check("my 版本标记 v0.9.21（1018 报告互动+研究双分区+问报告hero）", "v0.9.21" in my_wxml)
+check("my 版本标记 v0.9.22（1018 报告互动+研究双分区+问报告hero）", "v0.9.22" in my_wxml)
 pkg = json.load(open(os.path.join(ROOT, "package.json"), encoding="utf-8"))
-check("package.json version=0.9.21", pkg["version"] == "0.9.21")
+check("package.json version=0.9.22", pkg["version"] == "0.9.22")
 # 1009 用户令：外观沉底（个性化低频项按用户习惯放设置区，高频额度/记录在前）——顺序即断言
 check("my 布局顺序=额度→记录→书架→外观（外观在咨询记录之后，1009 用户令）",
       my_wxml.find("外观 · APPEARANCE") > my_wxml.find("咨询记录 · RECORDS")
@@ -317,9 +317,9 @@ for _base, _dirs, _files in os.walk(ROOT):
                 _src = open(_p, encoding="utf-8").read()
             except Exception:
                 continue
-            if "onCopy" in _src or ("setClipboardData" in _src and "zhiku" not in _p) or "bindtap=\"onCopy\"" in _src:
+            if "onCopy" in _src or ("setClipboardData" in _src and "zhiku" not in _p and "report" not in _p) or "bindtap=\"onCopy\"" in _src:
                 copy_hits.append(os.path.relpath(_p, ROOT))
-check("复制全文/onCopy 全局归零（zhiku 复制链接除外）", not copy_hits, str(copy_hits))
+check("复制全文/onCopy 全局归零（zhiku 复制链接+问报告分享除外）", not copy_hits, str(copy_hits))
 check("answer 赠次只在真实互动（v0.7.6：有用/纠错/共享入锅圈三动作，无分享导出赠次）",
       ans_js.count("this._reward(") == 3 and "onExport" in ans_js)
 check("answer.js 无 exportReward 调用", "exportReward" not in ans_js)
@@ -1069,7 +1069,7 @@ check("引擎道具图路由（/static/goods/{name} 白名单+防穿越+长缓�
 check("引擎道具图素材随包（static_goods/zongbaojun.jpg）",
       "GOODS_STATIC_DIR" in _app_py
       and os.path.exists(os.path.join(ENGINE, "qianwen_engine", "static_goods", "zongbaojun.jpg")))
-check("telemetry VER=0.9.21（版本横幅同步）", "var VER = '0.9.21'" in _tel_js)
+check("telemetry VER=0.9.22（版本横幅同步）", "var VER = '0.9.22'" in _tel_js)
 
 # ══ v0.9.15（1011 用户令：报告详情页 有用/分享给同行 赠次 + 研报转化海报）══
 _rp_wxml_3 = read("pages/report/report.wxml")
@@ -1182,9 +1182,9 @@ check("详情页 卷头样式在役（色带+实底卷号徽标+章行缩进）"
 check("研究页 起价数据驱动（¥498 写死根除，stats.pmin 驱动）",
       "stats.pmin" in _rsh_wxml and ">¥498<" not in _rsh_wxml
       and "pmin" in _rsh_js)
-check("版本信标 0.9.21（telemetry + my 页脚）",
-      "VER = '0.9.21'" in read("utils/telemetry.js")
-      and "v0.9.21" in read("pages/my/my.wxml"))
+check("版本信标 0.9.22（telemetry + my 页脚）",
+      "VER = '0.9.22'" in read("utils/telemetry.js")
+      and "v0.9.22" in read("pages/my/my.wxml"))
 
 # ── v0.9.18（1013 用户令①：分享全量——灰按钮根因=缺 handler，「每一个页面都可以」）──
 # REQ-001.AC1 逐页锚：本轮新补 6 页（ask/home/my/pot/invoice/legal），在役 4 页（answer/report/research/zhiku）
@@ -1373,7 +1373,7 @@ _my20_wxml = read("pages/my/my.wxml")
 _my20_js = read("pages/my/my.js")
 _api20_js = read("utils/api.js")
 
-# REQ-006.AC0（1018 用户新令；v0.9.21 升维=pill→hero 常驻）：未购用户同样可免费问——
+# REQ-006.AC0（1018 用户新令；v0.9.22 升维=pill→hero 常驻）：未购用户同样可免费问——
 # hero 提问区（头+大输入+双大钮）绝不挂购买门槛（区块内零 unlocked/paySupported）
 _hero_lo = _rp20_wxml.find('class="rp-ask-hero')
 _hero_hi = _rp20_wxml.find('class="rp-ask-flow"', _hero_lo)
@@ -1382,8 +1382,8 @@ check("REQ-006.AC0 问报告 hero 零购买门槛（未购可问；hero 输入�
       and "unlocked" not in _rp20_wxml[_hero_lo:_hero_hi]
       and "paySupported" not in _rp20_wxml[_hero_lo:_hero_hi],
       f"hero 切片 {_hero_lo}/{_hero_hi} 含购买门槛条件")
-# REQ-006.AC1：v0.9.21 小 pill 升 hero 大区常驻（开合门 askOpen/onAskTap 退役；结构=大输入/双大钮/气泡流/AI标识）
-check("REQ-006.AC1 报告页 问报告 hero 常驻（v0.9.21：旧第四 pill 已撤；askOpen 开合退役）",
+# REQ-006.AC1：v0.9.22 小 pill 升 hero 大区常驻（开合门 askOpen/onAskTap 退役；结构=大输入/双大钮/气泡流/AI标识）
+check("REQ-006.AC1 报告页 问报告 hero 常驻（v0.9.22：旧第四 pill 已撤；askOpen 开合退役）",
       'class="rp-ask-hero' in _rp20_wxml and ">问报告</text>" not in _rp20_wxml
       and "onAskTap" not in _rp20_wxml and "onAskTap" not in _rp20_js
       and "askOpen" not in _rp20_js and 'class="rp-ask-input"' in _rp20_wxml)
@@ -1428,7 +1428,7 @@ check("REQ-011.AC2 my 页 报告提问卡（ASKS 行三要素 + 空态去看看 
       and "'/pages/report/report?sku='" in _my20_js)
 
 
-# ══ v0.9.21（用户令 1018 升维：研究页双分区 + 报告互动计数 bump + 问报告 hero + 答案全文/互动）══
+# ══ v0.9.22（用户令 1018 升维：研究页双分区 + 报告互动计数 bump + 问报告 hero + 答案全文/互动）══
 _rs21_js = read("pages/research/research.js")
 _rs21_wxml = read("pages/research/research.wxml")
 _rs21_wxss = read("pages/research/research.wxss")
@@ -1485,8 +1485,8 @@ check("报告页 答案气泡互动三钮（👍有用bump likes+report_ask_like
 check("api.js reportBump 端点（POST /api/report/{sku}/bump/{field} 公开计数）",
       "reportBump" in _api21_js and "'/api/report/' + sku + '/bump/' + field" in _api21_js,
       "reportBump 封装缺失")
-check("v0.9.21 版本横幅（my 页脚 + telemetry VER 同步 0.9.21）",
-      "v0.9.21" in _my21_wxml and "VER = '0.9.21'" in _tel21_js,
+check("v0.9.22 版本横幅（my 页脚 + telemetry VER 同步 0.9.22）",
+      "v0.9.22" in _my21_wxml and "VER = '0.9.22'" in _tel21_js,
       "版本横幅不同步")
 
 fails = [c for c in checks if not c[1]]

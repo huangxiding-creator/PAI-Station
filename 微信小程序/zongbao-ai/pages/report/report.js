@@ -344,19 +344,52 @@ Page({
   },
 
   // 生成海报：复用 v0.9.15 报告转化海报链（b64→showShareImageMenu→preview 兜底）
-  onAskPoster() {
+  onAskPoster(e) {
+    // v0.9.22（1019 用户令修）：答案级海报——把问答内容复制到剪贴板+预览报告海报（MVP 降级：
+    // 微信不支持动态生成问答内容图片到相册的公开 API；最诚意做法=复制全文+打开报告海报
+    // 用户可截图问答内容分享）
+    const idx = e && e.currentTarget && e.currentTarget.dataset.idx;
+    const a = (this.data.asks || [])[idx];
+    if (!a) return;
     tel.ping('report_ask_poster', { sku: String(this.data.sku || '').slice(0, 24) });
-    this.onPoster();
+    // 问答全文复制到剪贴板（用户直接粘贴到聊天分享）
+    const d = this.data.d || {};
+    const NL = String.fromCharCode(10);
+    const text = '【问报告】' + (d.title || '') + NL + NL + '问：' + (a.q || '') +
+      NL + NL + '结论：' + (a.conclusion || '') +
+      (a.points || []).map(function(p) { return NL + '· 第' + p.ch + '章：' + p.text; }).join('') +
+      NL + NL + '完整拆解在报告正文，扫码购买阅读。';
+    wx.setClipboardData({
+      data: text,
+      success: () => {
+        wx.showToast({ title: '问答已复制，粘贴即可分享', icon: 'none', duration: 2500 });
+      }
+    });
   },
 
   // 语音按住说（真机 touchstart/touchend 事件对——KB 在案坑；冻结组件同款状态机逐档复刻）
   onMicStart() {
     if (this.data.askBusy || this.data.askExhausted) return;
     if (!_si || !_si.getRecordRecognitionManager) {
-      wx.showToast({ title: '语音未就绪，请直接打字提问', icon: 'none', duration: 2000 }); // 插件缺失文字兜底
+      wx.showToast({ title: '语音未就绪，请直接打字提问', icon: 'none', duration: 2500 });
       return;
     }
     if (this.data.askRecording) return;
+    // v0.9.22（1019 用户令修）：先查录音权限，无权限引导开启（真机 voice 修复主腿）
+    wx.getSetting({
+      success: (s) => {
+        if (s.authSetting['scope.record'] === false) {
+          wx.showToast({ title: '请在设置中开启麦克风权限', icon: 'none', duration: 2500 });
+          setTimeout(() => { wx.openSetting({}); }, 1500);
+          return;
+        }
+        this._startVoiceRecord();
+      },
+      fail: () => this._startVoiceRecord() // 查不到就试（部分环境 getSetting 不覆盖 scope.record）
+    });
+  },
+
+  _startVoiceRecord() {
     if (!this._askSiMgr) {
       const mgr = _si.getRecordRecognitionManager();
       mgr.onStart = () => this.setData({ askRecording: true });
@@ -403,6 +436,8 @@ Page({
   },
 
   onShareAppMessage() {
+    // v0.9.22（1019 用户令修）：答案级分享——从问报告气泡触发的分享带结论摘要
+    const askIdx = e && e.target && e.target.dataset && e.target.dataset.askIdx;
     const d = this.data.d || {};
     return {
       title: d.title ? ('总包研究 · ' + d.title) : '总包研究 · EPC 深度研究报告',

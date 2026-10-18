@@ -866,8 +866,10 @@ def reports_list(request: Request):
         items.append({**it, "unlocked": sku in unlocked,
                       "views": s.get("views") or 0, "likes": s.get("likes") or 0,
                       "shares": s.get("shares") or 0, "heat": _heat(sku)})
-    # latest：目录序即维护者的发布序（report.json 数组序=最新优先），取前 3 可售
-    latest = [it for it in items if it.get("sellable")][:3]
+    # v0.9.22 修：latest 用 report.json 原始序前3可售（新增报告在前=最新；catalog 反转序仅用于 hot）
+    raw_order = list(reversed(items))  # catalog() 已反转，再反回原始 report.json 序
+    latest_skus = [it["sku"] for it in raw_order if it.get("sellable")][:3]
+    latest = [it for it in items if it["sku"] in latest_skus]
     # hot：热度倒序（零热度报告按目录序排后）
     hot = sorted(items, key=lambda x: (-x["heat"], items.index(x)))
     return {"reports": items, "latest": latest, "hot": hot}
