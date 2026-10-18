@@ -2,7 +2,8 @@
 """v0.9.20 报告对话官（1018 用户令 REQ-001..005 / REQ-011 引擎线）。
 
 POST /api/report/{sku}/ask：检索章级 2-gram 打分 → 命中走智谱免费链（策略提示词），
-未命中固定 no_answer 话术（不调 LLM）；每 (openid,sku,day) RQA_DAILY_LIMIT 问。
+未命中固定 no_answer 话术（不调 LLM）。v0.9.23 统一额度池：咨询+问报告共享
+FREE_PER_DAY=6/日（先免费后赠次）；解锁该报告后无限问（left=999）。
 GET /api/report/asks/history：本人提问记录倒序（title 由目录回填）。
 
 测试法=形态断言（answer-policy.md：LLM 非确定性下只断言形态不比对全文）：
@@ -101,9 +102,9 @@ def test_req_001_ac1_answer_shape(client, monkeypatch):
         assert isinstance(p["ch"], int) and p["ch"] == want_ch
         assert p["text"] == "论据一" or p["text"] == "论据二"   # 1018 完美化：余文（角标/正文不重复）
     assert "第" in d1["hint"] and "章" in d1["hint"]
-    assert d1["left"] == 2                                     # 3-1=2，递减
+    assert d1["left"] == 5                                     # v0.9.23 统一池 6-1=5，递减
     d2 = _ask(client, "变更签证的流程是什么").json()
-    assert d2["left"] == 1
+    assert d2["left"] == 4
 
 
 # ── REQ-001.AC2 检索未命中 → 固定 no_answer 话术，不调 LLM 不编造 ──
@@ -115,7 +116,7 @@ def test_req_001_ac2_no_answer_without_llm(client, monkeypatch):
     assert d["conclusion"] == "这个问题报告里没有直接答案"
     assert d["points"] == []
     assert d["hint"]                                            # 附最接近章节指引
-    assert d["left"] == 2                                       # 未命中也计一次
+    assert d["left"] == 5                                       # 未命中也计一次（防探测刷）
 
 
 # ── REQ-001.AC3 有论据 → hint 固定转化条话术 ──
@@ -126,22 +127,23 @@ def test_req_001_ac3_hint_conversion_wording(client, monkeypatch):
     assert d["hint"] == "完整拆解在报告第5章"                   # 检索最优章=第5章
 
 
-# ── REQ-002.AC1 第 4 问 429（不调 LLM）+ 跨日重置（day 键）──
+# ── REQ-002.AC1 v0.9.23 统一池：第 7 问 429（不调 LLM）+ 跨日重置 ──
 def test_req_002_ac1_daily_limit_and_rollover(client, monkeypatch):
     from qianwen_engine import store
     calls = _mock_zhipu(monkeypatch)
-    for i in range(3):
+    for i in range(config.FREE_PER_DAY):                       # 6 问全部放行
         r = _ask(client, f"变更签证怎么办理{i}")
-        assert r.status_code == 200 and r.json()["left"] == 2 - i
-    r4 = _ask(client, "变更签证怎么办理再问")
-    assert r4.status_code == 429
-    assert r4.json()["detail"] == "今日3问已用完"
-    assert r4.json()["left"] == 0
-    assert calls["n"] == 3                                      # 限频腿零 LLM 调用
-    # 跨日重置：day 键换日 → 计数清零（北京时间 0 点口径同全站）
+        assert r.status_code == 200 and r.json()["left"] == config.FREE_PER_DAY - 1 - i
+    r7 = _ask(client, "变更签证怎么办理再问")
+    assert r7.status_code == 429
+    assert r7.json()["detail"] == "今日6问已用完，分享可再得"
+    assert r7.json()["left"] == 0
+    assert calls["n"] == config.FREE_PER_DAY                   # 限频腿零 LLM 调用
+    # 跨日重置：统一池 day 键换日 → 计数清零（北京时间 0 点口径同全站）
     monkeypatch.setattr(store, "_today", lambda: "2099-01-01")
     r5 = _ask(client, "变更签证怎么办")
-    assert r5.status_code == 200 and r5.json()["left"] == 2 and calls["n"] == 4
+    assert r5.status_code == 200 and r5.json()["left"] == config.FREE_PER_DAY - 1
+    assert calls["n"] == config.FREE_PER_DAY + 1
 
 
 # ── REQ-003.AC1 双方言表幂等自举 + mysql_schema.sql 同步锚 ──
@@ -160,7 +162,7 @@ def test_req_003_ac1_tables_idempotent_and_schema_sync(client):
     assert "report_asks" in sql and "report_ask_log" in sql     # 部署镜像同步
 
 
-# ── REQ-004.AC1 LLM 失败静默降级 503（不扣次数）；成功落历史行 ──
+# ── REQ-004.AC1 LLM 失败静默降级 503（统一池下退款，不扣次数）；成功落历史行 ──
 def test_req_004_ac1_llm_fail_503_and_success_logged(client, monkeypatch):
     from qianwen_engine import zhipu
     def boom(*a, **k):
@@ -169,17 +171,17 @@ def test_req_004_ac1_llm_fail_503_and_success_logged(client, monkeypatch):
     r = _ask(client, "变更签证怎么办理")
     assert r.status_code == 503
     assert r.json()["detail"] == "问答稍后再试"
-    # 503 不消耗次数、不落历史
+    # 503 退款不消耗统一池次数、不落历史
     calls = _mock_zhipu(monkeypatch)
     d = _ask(client, "变更签证怎么办理").json()
-    assert d["left"] == 2 and calls["n"] == 1
+    assert d["left"] == config.FREE_PER_DAY - 1 and calls["n"] == 1
     h = client.get("/api/report/asks/history").json()["items"]
     assert len(h) == 1 and h[0]["conclusion"] == "结论行"       # 成功才有历史行
 
 
-# ── REQ-005.AC1 策略常量可配置：RQA_DAILY_LIMIT 调整即行为变化 ──
+# ── REQ-005.AC1 策略常量可配置：FREE_PER_DAY 调整即行为变化 ──
 def test_req_005_ac1_daily_limit_env_override(client, monkeypatch):
-    monkeypatch.setattr(config, "RQA_DAILY_LIMIT", 1)
+    monkeypatch.setattr(config, "FREE_PER_DAY", 1)
     calls = _mock_zhipu(monkeypatch)
     r1 = _ask(client, "变更签证怎么办理")
     assert r1.status_code == 200 and r1.json()["left"] == 0
@@ -187,6 +189,21 @@ def test_req_005_ac1_daily_limit_env_override(client, monkeypatch):
     assert r2.status_code == 429 and r2.json()["left"] == 0
     assert "今日1问已用完" in r2.json()["detail"]
     assert calls["n"] == 1
+
+
+# ── REQ-006.AC1 v0.9.23 解锁后该报告无限问（left=999，越过免费池）──
+def test_req_006_ac1_unlocked_sku_unlimited(client, monkeypatch):
+    from qianwen_engine import store
+    calls = _mock_zhipu(monkeypatch)
+    store.init()                                                # 建齐 report_unlocks 等表
+    conn = sqlite3.connect(config.DB_PATH)
+    conn.execute("INSERT INTO report_unlocks(openid, sku) VALUES('open-t1','SKU-A')")
+    conn.commit()
+    conn.close()
+    for i in range(config.FREE_PER_DAY + 2):                    # 越过 6/日上限仍放行
+        r = _ask(client, f"变更签证怎么办理{i}")
+        assert r.status_code == 200 and r.json()["left"] == 999
+    assert calls["n"] == config.FREE_PER_DAY + 2
 
 
 # ── REQ-011.AC1 提问历史：本人可见（含 title 回填）、他人不可见、未登录 401 ──

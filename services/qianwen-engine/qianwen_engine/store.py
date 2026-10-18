@@ -746,13 +746,17 @@ def fail_answer(aid: str, err: str) -> bool:
         return c.total_changes > 0
 
 
-def refund_one(openid: str) -> None:
-    """失败退次：consume_one 的逆操作（优先退赠次）。"""
+def refund_one(openid: str, from_bonus: Optional[bool] = None) -> None:
+    """失败退次：consume_one 的逆操作。from_bonus=None 走传统「优先退赠次」
+    （咨询流在用）；报告问答流传精确桶（扣前 free_left 判定），对称回退不串桶。"""
     init()
     with _LOCK, _db() as c:
         row = _row_user(c, openid)
-        if row["bonus_used"] > 0:
-            c.execute("UPDATE users SET bonus_used=bonus_used-1 WHERE openid=?", (openid,))
+        if from_bonus is None:
+            from_bonus = row["bonus_used"] > 0
+        if from_bonus:
+            if row["bonus_used"] > 0:
+                c.execute("UPDATE users SET bonus_used=bonus_used-1 WHERE openid=?", (openid,))
         elif row["free_used"] > 0:
             c.execute("UPDATE users SET free_used=free_used-1 WHERE openid=?", (openid,))
 

@@ -1034,10 +1034,11 @@ def report_poster(sku: str):
     return {"b64": base64.b64encode(png).decode()}
 
 
-# ══ v0.9.20（用户令 1018）：报告对话官——免费 3 问/天/sku，分层经济学回答 ══
+# ══ v0.9.20（用户令 1018）：报告对话官——分层经济学回答；v0.9.23 统一额度池 ══
 # L1 结论免费 / L2 论据挂章号免费 / L3 全文付费（hint 转化条直达购买）。
+# v0.9.23：额度并入统一池（咨询+问报告共享 FREE_PER_DAY=6/日），解锁该报告后无限问（left=999）。
 # 零造假铁律：检索（report_qa 2-gram 章级）未过门槛 → 固定 no_answer 话术，
-# 绝不调 LLM 编造；限频腿先于 LLM（第 4 问 429 零 token 消耗）。
+# 绝不调 LLM 编造；限频腿先于 LLM（池尽 429 零 token 消耗；LLM 失败 503 退款不扣次）。
 class ReportAskIn(BaseModel):
     q: str
 
@@ -1060,9 +1061,9 @@ def _parse_rqa_reply(text: str) -> tuple:
         if m and len(points) < 3:
             ch = int(m.group(1)) if m.group(1) else 0   # 试读摘要=ch 0
             text_tail = (m.group(2) or "").strip()
-            points.append({"ch": ch, "text": text_tail[:80]})  # v0.9.21：论据加长
+            points.append({"ch": ch, "text": text_tail[:120]})  # v0.9.23：论据摘要加长
         elif not conclusion:
-            conclusion = line[:600]  # v0.9.21：500字诚意回答
+            conclusion = line[:1200]  # v0.9.23：1000字诚意回答
     return conclusion, points
 
 
@@ -1080,32 +1081,35 @@ def report_bump(sku: str, field: str):
 
 @app.post("/api/report/{sku}/ask")
 def report_ask(sku: str, body: ReportAskIn, request: Request):
-    """报告对话官（REQ-001/002）：鉴权 → 404 未知 sku → 400 问题 2-200 字 →
-    429 日限（不调 LLM）→ 检索未命中 no_answer（不调 LLM，仍计次+落历史）→
-    命中走智谱免费链（策略提示词 RQA_PROMPT_SYSTEM）；LLM 失败 503 静默降级
-    （错误进日志，不扣次数不落历史）。策略常量 config.RQA_*（ENV 可覆写）。"""
+    """报告对话官 v0.9.23 变现重构：统一额度池（咨询+问报告共享 6/日）+
+    解锁后该报告无限问。鉴权 → 404 → 400 → 429（统一 quota，非解锁态）→
+    检索未命中 no_answer → 命中走智谱（1000字诚意回答）。"""
     openid = _openid(request)
     if report_catalog.get_report(sku) is None:
         raise HTTPException(404, "报告不存在")
+    d_unlocked = sku in store.report_unlocked_skus(openid)
     q = (body.q or "").strip()
     if len(q) < 2 or len(q) > 200:
         raise HTTPException(400, "问题需 2-200 字")
-    day = store._today()
-    if store.report_ask_left(openid, sku, day) <= 0:
-        # 429 带 left=0（API_DESIGN 契约体：detail + left 同层，客户端直读）
+    # v0.9.23：统一额度池（咨询+问报告共享 FREE_PER_DAY=6/日，解锁后无限）
+    unified_left = 999 if d_unlocked else store.quota_left(openid)["total_left"]
+    if unified_left <= 0:
         return JSONResponse(
             status_code=429,
-            content={"detail": f"今日{config.RQA_DAILY_LIMIT}问已用完", "left": 0})
+            content={"detail": f"今日{config.FREE_PER_DAY}问已用完，分享可再得", "left": 0})
+    pre = None
+    if not d_unlocked:
+        pre = store.quota_left(openid)
+        store.consume_one(openid)  # 统一额度池扣次（先免费后赠次，与咨询同一计数器）
     chapters, hit = report_qa.retrieve(sku, q)
     if not hit:
         best = chapters[0] if chapters else {"no": 0, "title": ""}
         conclusion = config.RQA_NO_ANSWER
         hint = (config.RQA_HINT_MISS0 if best["no"] == 0
                 else config.RQA_HINT_MISS.format(no=best["no"], title=best["title"]))
-        store.report_ask_bump(openid, sku, day)      # 未命中也计次（防探测刷）
         store.log_report_ask(openid, sku, q, conclusion)
         return {"conclusion": conclusion, "points": [], "hint": hint,
-                "left": store.report_ask_left(openid, sku, day)}
+                "left": 999 if d_unlocked else store.quota_left(openid)["total_left"]}
     report = report_catalog.get_report(sku) or {}
     system = config.RQA_PROMPT_SYSTEM.format(title=report.get("title") or sku)
     excerpt = "；".join(
@@ -1114,19 +1118,20 @@ def report_ask(sku: str, body: ReportAskIn, request: Request):
     try:
         raw = zhipu.deep_answer(system, f"【章节摘录】{excerpt}\n【问题】{q}",
                                 temperature=0.3, max_tokens=config.RQA_MAX_TOKENS)
+        conclusion, points = _parse_rqa_reply(raw)
     except Exception as exc:  # noqa: BLE001 — 静默降级：错误进日志，用户侧固定话术
         _log.warning("report ask zhipu fail sku=%s: %s", sku, exc)
-        raise HTTPException(503, "问答稍后再试") from exc
-    conclusion, points = _parse_rqa_reply(raw)
-    if not conclusion:
+        conclusion, points = "", []
+    if not conclusion:  # LLM 异常或空解析 → 503 且不扣次（REQ-004 契约）
         _log.warning("report ask empty reply sku=%s", sku)
+        if pre is not None:
+            store.refund_one(openid, from_bonus=pre["free_left"] <= 0)
         raise HTTPException(503, "问答稍后再试")
     hint = (config.RQA_HINT_FULL0 if chapters[0]["no"] == 0
             else config.RQA_HINT_FULL.format(no=chapters[0]["no"]))  # 转化条=检索最优章；ch0=试读伪章特例
-    store.report_ask_bump(openid, sku, day)          # 成功才扣次（503 不扣）
     store.log_report_ask(openid, sku, q, conclusion)
     return {"conclusion": conclusion, "points": points, "hint": hint,
-            "left": store.report_ask_left(openid, sku, day)}
+            "left": 999 if d_unlocked else store.quota_left(openid)["total_left"]}
 
 
 @app.get("/api/report/asks/history")
