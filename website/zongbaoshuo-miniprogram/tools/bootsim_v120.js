@@ -37,7 +37,7 @@ for (const pg of appJson.pages) {
 
 console.log('== [2] package.json ==');
 const pkg = JSON.parse(read(path.join(ROOT, 'package.json')));
-check('version 1.2.0', pkg.version === '1.2.0');
+check('version 1.4.0（1019 展示线复提）', pkg.version === '1.4.0');
 
 console.log('== [3] products.js schema ==');
 delete require.cache[require.resolve(path.join(MP, 'utils/products.js'))];
@@ -54,7 +54,7 @@ const zhiku = products.find((p) => p.id === 'zhiku');
 check('consultant.jump 指向顾问小程序', consultant.jump && consultant.jump.appId === APPID && consultant.jump.path === 'pages/home/home');
 check('consultant 无 qr', !consultant.qr);
 check('aiglasses.guide 三步', aiglasses.guide && aiglasses.guide.steps.length === 3);
-check('aiglasses 审核中口径', /审核中/.test(aiglasses.guide.note));
+check('aiglasses 产品口径（1019 令：零占位措辞——审核中/敬请期待禁现）', !/审核中|敬请期待|即将上架/.test(aiglasses.guide.note + JSON.stringify(aiglasses.tags)));
 check('aiglasses mech 六步', aiglasses.mech && aiglasses.mech.length === 6);
 check('brain 无 qr / 有 jump', !brain.qr && brain.jump && brain.jump.appId === APPID);
 check('zhiku 无 qr / 有 jump', !zhiku.qr && zhiku.jump && zhiku.jump.appId === APPID);
@@ -82,6 +82,7 @@ check('business card1 = 总包AI顾问', content.business.cards[0].h === '总包
 check('business card3 ¥498 起', content.business.cards[2].price === '¥498');
 check('contact qr 仍为总包君', content.contact.qr === '/images/qr-zongbaojun.jpg');
 check('footer 品牌 总包+科技', content.footer.zh + content.footer.zhEm + content.footer.zhTail === '总包科技');
+check('全局零占位口径（1019 令：SOON/审核中/敬请期待/即将上架 全站禁现）', !/SOON|审核中|敬请期待|即将上架/.test(JSON.stringify(content) + JSON.stringify(products)));
 check('dwg 编号 2026-10', content.dwg.no === 'DWG-2026-10');
 check('content 图片存在', fs.existsSync(path.join(MP, content.contact.qr.replace(/^\//, ''))));
 
