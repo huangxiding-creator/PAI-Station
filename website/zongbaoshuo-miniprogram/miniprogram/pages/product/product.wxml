@@ -1,5 +1,11 @@
 <!-- 产品详情页 — 图纸卡式 (sheet) -->
 <view class="page" wx:if="{{p}}">
+  <!-- 朋友圈单页模式顶导条（1019 专业级分享适配） -->
+  <view class="spm-bar" wx:if="{{spm}}">
+    <text class="spm-dot" />
+    <text>朋友圈快速预览 · 点击右上角菜单进入小程序完整体验</text>
+  </view>
+
 
   <!-- 侧栏轨: 序号 + 竖线 + 名 -->
   <view class="sheet">

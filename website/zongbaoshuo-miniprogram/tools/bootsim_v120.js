@@ -37,7 +37,7 @@ for (const pg of appJson.pages) {
 
 console.log('== [2] package.json ==');
 const pkg = JSON.parse(read(path.join(ROOT, 'package.json')));
-check('version 1.4.0（1019 展示线复提）', pkg.version === '1.4.0');
+check('version 1.4.1（1019 专业分享线）', pkg.version === '1.4.1');
 
 console.log('== [3] products.js schema ==');
 delete require.cache[require.resolve(path.join(MP, 'utils/products.js'))];
@@ -144,3 +144,14 @@ if (fail > 0) {
   console.log(failures.map((f) => `  - ${f}`).join('\n'));
   process.exit(1);
 }
+
+// ══ v1.4.1 专业级分享（1019 用户令：全页朋友圈分享+朋友卡专业效果）══
+const idxJs141 = fs.readFileSync(path.join(MP, 'pages/index/index.js'), 'utf-8');
+const prodJs141 = fs.readFileSync(path.join(MP, 'pages/product/product.js'), 'utf-8');
+check('index 双分享 handler（AppMessage+Timeline 成对）', /onShareAppMessage/.test(idxJs141) && /onShareTimeline/.test(idxJs141));
+check('product 双分享 handler（AppMessage+Timeline 成对）', /onShareAppMessage/.test(prodJs141) && /onShareTimeline/.test(prodJs141));
+check('index 朋友圈卡图（imageUrl 品牌图）', /onShareTimeline[\s\S]{0,200}imageUrl:\s*'\/images\//.test(idxJs141));
+check('product 朋友圈携参（query: id 回本产品）', /onShareTimeline[\s\S]{0,220}query:\s*`id=\$\{p\.id\}`/.test(prodJs141));
+check('product 分享卡图三径（image/images/兜底）', /p\.image && p\.image\.src/.test(prodJs141) && /p\.images && p\.images\.length/.test(prodJs141) && /leopard\.jpg'/.test(prodJs141));
+check('朋友圈单页模式适配（两页 scene 1154 检测+顶导条）', /1154/.test(idxJs) && /1154/.test(prodJs) && /spm-bar/.test(fs.readFileSync(path.join(MP, 'pages/index/index.wxml'), 'utf-8')) && /spm-bar/.test(fs.readFileSync(path.join(MP, 'pages/product/product.wxml'), 'utf-8')));
+check('单页模式跳转降级守卫（两页 toast 引导）', /朋友圈预览模式/.test(idxJs141) && /朋友圈预览模式/.test(prodJs141));
