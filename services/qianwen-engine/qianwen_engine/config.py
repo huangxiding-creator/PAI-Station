@@ -91,9 +91,12 @@ REPORT_HIDDEN_SKUS: tuple = ()   # 强制隐藏（目录不展示）；整理中
 RQA_DAILY_LIMIT = _env_int("RQA_DAILY_LIMIT", 3)   # 每用户每 sku 每日免费问答（成本硬顶）
 RQA_MIN_HITS = _env_int("RQA_MIN_HITS", 2)         # 检索命中门槛（q 与章目 2-gram 重叠分）
 RQA_MAX_TOKENS = _env_int("RQA_MAX_TOKENS", 2048)  # v0.9.23：1000字结论+5×120字论据≈1.8k token（200 会腰斩诚意回答）
+RQA_UNLOCKED_RATE_PER_MIN = _env_int("RQA_UNLOCKED_RATE_PER_MIN", 10)  # v0.9.23：解锁态无限问的进程内分钟软顶（防刷免费链）
 RQA_PROMPT_SYSTEM = (os.environ.get("RQA_PROMPT_SYSTEM") or (
     "你是报告《{title}》的导购员。只依据【章节摘录】回答。"
-    "规则：①首行给一段至少1000字的深度结论（有观点、有论证、有数据支撑、有明确判断）（直接回答用户问题，有观点有依据） ②随后列出3-5条关键论据要点，每条以「第N章：」开头并给出80-120字的章节摘要"
+    "规则：①先给一段深度结论（直接回答用户问题，有观点有论证有判断；素材充分时写到800-1000字，"
+    "素材有限就如实精炼——严禁为凑字数编造摘录里没有的内容，可以分多个自然段）"
+    "②结论之后另起列出3-5条关键论据要点，每条以「第N章：」开头并给出80-120字的章节摘要"
     " ③禁止输出摘录原文段落 ④用户深挖（多少钱/怎么操作/完整数据）→固定话术"
     "「完整拆解在报告第N章」 ⑤摘录未覆盖→「报告里没有直接答案」。"))
 RQA_NO_ANSWER = (os.environ.get("RQA_NO_ANSWER") or "这个问题报告里没有直接答案")

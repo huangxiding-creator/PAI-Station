@@ -1043,13 +1043,32 @@ class ReportAskIn(BaseModel):
     q: str
 
 
+# v0.9.23：解锁态无限问的进程内软限速（单副本/单 worker 部署形态下即全局限速；
+# 防 left=999 被脚本刷穿智谱免费链。分钟窗计数，惰性清理）。
+_RQA_RATE: dict = {}
+
+
+def _rqa_rate_ok(openid: str) -> bool:
+    import time as _t
+    now = int(_t.time() // 60)  # 分钟桶
+    hit = _RQA_RATE.get(openid)
+    if hit is None or hit[0] != now:
+        if len(_RQA_RATE) > 10000:            # 惰性清理：防无界增长
+            _RQA_RATE.clear()
+        _RQA_RATE[openid] = (now, 1)
+        return True
+    _RQA_RATE[openid] = (now, hit[1] + 1)
+    return hit[1] + 1 <= config.RQA_UNLOCKED_RATE_PER_MIN
+
+
 _RQA_POINT_RE = re.compile(r"^(?:第(\d+)章|试读摘要)：(.*)")  # 1018 完美化：兼收 ch=0 伪章 + 捕获余文（角标/正文不重复）
 
 
 def _parse_rqa_reply(text: str) -> tuple:
-    """LLM 文本 → (conclusion≤30字, points≤3)。形态解析（answer-policy.md 测试法）：
-    首非空行=结论；「第N章：」开头的行=论据（ch=int 角标，text 保留整行 ≤40 字）。"""
-    conclusion = ""
+    """LLM 文本 → (conclusion, points≤3)。形态解析（answer-policy.md 测试法）：
+    首个「第N章：」行之前的所有非空行=结论（v0.9.23 修复：千字结论常分多段，
+    只取首行会腰斩——现按段累积 join，1200 字封顶）；「第N章：」行=论据。"""
+    concl_lines: list = []
     points: list = []
     for raw_line in (text or "").splitlines():
         line = raw_line.strip()
@@ -1062,8 +1081,9 @@ def _parse_rqa_reply(text: str) -> tuple:
             ch = int(m.group(1)) if m.group(1) else 0   # 试读摘要=ch 0
             text_tail = (m.group(2) or "").strip()
             points.append({"ch": ch, "text": text_tail[:120]})  # v0.9.23：论据摘要加长
-        elif not conclusion:
-            conclusion = line[:1200]  # v0.9.23：1000字诚意回答
+        elif not points:
+            concl_lines.append(line)              # 论据出现前一律结论段
+    conclusion = "\n".join(concl_lines)[:1200]    # v0.9.23：多段累积，千字诚意回答
     return conclusion, points
 
 
@@ -1096,11 +1116,19 @@ def report_ask(sku: str, body: ReportAskIn, request: Request):
     if unified_left <= 0:
         return JSONResponse(
             status_code=429,
-            content={"detail": f"今日{config.FREE_PER_DAY}问已用完，分享可再得", "left": 0})
+            content={"detail": f"今日{config.FREE_PER_DAY}问已用完，明日再来；解锁本报告即可无限问", "left": 0})
+    if d_unlocked and not _rqa_rate_ok(openid):
+        # 解锁态软限速：429 但 left=999（客户端只对 left===0 切用尽态，此处仅 toast 提示）
+        return JSONResponse(
+            status_code=429,
+            content={"detail": "问得太快啦，歇一会儿再问", "left": 999})
     pre = None
     if not d_unlocked:
         pre = store.quota_left(openid)
-        store.consume_one(openid)  # 统一额度池扣次（先免费后赠次，与咨询同一计数器）
+        if not store.consume_one(openid):       # 并发双查兜底：池在 pre 检查后被并发问掏空
+            return JSONResponse(
+                status_code=429,
+                content={"detail": f"今日{config.FREE_PER_DAY}问已用完，明日再来；解锁本报告即可无限问", "left": 0})
     chapters, hit = report_qa.retrieve(sku, q)
     if not hit:
         best = chapters[0] if chapters else {"no": 0, "title": ""}

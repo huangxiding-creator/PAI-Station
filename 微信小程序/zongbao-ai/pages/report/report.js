@@ -40,8 +40,10 @@ Page({
     // ── v0.9.20 报告对话官（用户令 1018；v0.9.21 小 pill 升 hero 大区常驻）──
     askInput: '',        // 提问输入（语音转写实时回填同一口）
     asks: [],            // 气泡流 [{idx, q, conclusion, points, hint, loading, liked}]（先问后答）
-    askLeft: 3,          // 今日剩余提问次数（服务端 left 回填）
-    askExhausted: false, // 日 3 问用尽态（429 → 撤输入行+购买引导，不发第 4 问）
+    askLeft: 6,          // 统一池剩余（v0.9.23：咨询+问报告共享 6/日；服务端 left 回填）
+    askUnlimited: false, // 已解锁本报告 → 无限问（服务端 left=999 哨兵，wxml 切「已解锁·无限问」）
+    askExhausted: false, // 统一池用尽态（429 → 撤输入行+购买引导，不发下一问）
+    askExhaustedMsg: '', // 用尽态服务端文案（v0.9.23：detail 透传；空走 wxml 兜底）
     askBusy: false,      // 发送防重入
     askRecording: false, // 语音按住说在录（touchstart/touchend 对）
   },
@@ -75,6 +77,17 @@ Page({
         const volCount = chapters.filter((c) => c.vol).length;
         const chCount = chapters.length - volCount;
         this.setData({ d, volCount, chCount, loading: false });
+        // v0.9.23：问答区初始态实值化——解锁者直接亮「已解锁·无限问」，未解锁者取统一池真余量
+        if (d && d.unlocked) {
+          this.setData({ askUnlimited: true, askLeft: 999 });
+        } else {
+          api.quota()
+            .then((qt) => {
+              const tl = qt && qt.total_left;
+              if (typeof tl === 'number') this.setData({ askLeft: tl, askExhausted: tl === 0 });
+            })
+            .catch(() => {}); // 静默：取不到就用默认 6，首答后服务端 left 自然校正
+        }
         // v0.9.5 审计修（L6）：删除 wx.setNavigationBarTitle——全站 custom 导航栏（死调用）
         if (!this.data.sample) {
           api.reportSample(this.data.sku)
@@ -208,7 +221,14 @@ Page({
     tel.ping('report_share_tap', { sku: String(this.data.sku || '').slice(0, 24) });
     api.reportBump(this.data.sku, 'shares').catch(() => {}); // v0.9.21：分享同步报告转发计数（静默，不打扰分享动作）
     api.reportShare(this.data.sku)
-      .then((r) => { if (r && r.quota) wx.setStorageSync('qw_quota', r.quota); })
+      .then((r) => {
+        if (r && r.quota) wx.setStorageSync('qw_quota', r.quota);
+        // v0.9.23：分享真赠到次（total_left>0）→ 复活问答输入行（用尽态可被分享解除）
+        const tl = r && r.quota && r.quota.total_left;
+        if (this.data.askExhausted && typeof tl === 'number' && tl > 0) {
+          this.setData({ askExhausted: false, askLeft: tl, askExhaustedMsg: '' });
+        }
+      })
       .catch(() => {}); // 静默：赠次腿失败绝不打扰分享动作本身
   },
 
@@ -279,15 +299,18 @@ Page({
     api.reportAsk(this.data.sku, q)
       .then((r) => {
         if (r && r.limited) {
-          // 429：今日 3 问已用完——第 4 问未调 LLM 未计数，撤回在途气泡并切用尽态（REQ-008）
+          // 429：统一池用尽（v0.9.23 服务端零 LLM 消耗）——撤回在途气泡；仅 left===0 切用尽态
+          // （解锁态软限速 429 带 left=999：只 toast 不锁输入，稍后可继续问）
+          const exhausted = r.left === 0;
           this.setData({
             asks: this.data.asks.filter((a) => a.idx !== idx),
             askInput: q, // 问题文字奉还输入框（未计数不吞用户输入）
             askBusy: false,
-            askExhausted: true,
+            askExhausted: exhausted,
             askLeft: r.left || 0,
+            askExhaustedMsg: r.detail || '',  // v0.9.23：服务端文案直出（今日6问已用完，明日再来；解锁无限问）
           });
-          wx.showToast({ title: '今日 3 问已用完，明日再来', icon: 'none', duration: 2200 });
+          wx.showToast({ title: r.detail || '今日问数已用完，明日再来', icon: 'none', duration: 2200 });
           return;
         }
         // 命中章绑遥测（REQ-004/009：首条论据章号=检索命中面）
@@ -306,6 +329,7 @@ Page({
           },
           askBusy: false,
           askLeft: (r && typeof r.left === 'number') ? r.left : this.data.askLeft,
+          askUnlimited: !!(r && r.left >= 999),  // v0.9.23：解锁哨兵 → 无限问徽标
           askExhausted: !!(r && r.left === 0),
         });
       })
@@ -339,8 +363,18 @@ Page({
   },
 
   // 分享：open-type=share 转发面板（bindtap 先于面板触发）；bump shares 静默上链
+  // v0.9.23：与页头分享同权——reportShare 赠次腿同样静默走（气泡分享不再只计数不赠次）
   onAskShareTap() {
     api.reportBump(this.data.sku, 'shares').catch(() => {});
+    api.reportShare(this.data.sku)
+      .then((r) => {
+        if (r && r.quota) wx.setStorageSync('qw_quota', r.quota);
+        const tl = r && r.quota && r.quota.total_left;
+        if (this.data.askExhausted && typeof tl === 'number' && tl > 0) {
+          this.setData({ askExhausted: false, askLeft: tl, askExhaustedMsg: '' });
+        }
+      })
+      .catch(() => {});
   },
 
   // 生成海报：复用 v0.9.15 报告转化海报链（b64→showShareImageMenu→preview 兜底）

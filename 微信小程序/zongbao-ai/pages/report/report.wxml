@@ -57,7 +57,8 @@
         <view class="rp-ask-hero-title">问报告 · ASK THIS REPORT</view>
         <view class="rp-ask-hero-sub">直接就这份报告提问，答案引用章节原文</view>
       </view>
-      <text class="rp-ask-hero-left mono" wx:if="{{!askExhausted}}">今日剩 {{askLeft}} 问</text>
+      <text class="rp-ask-hero-left mono" wx:if="{{askUnlimited}}">已解锁 · 无限问</text>
+      <text class="rp-ask-hero-left mono" wx:elif="{{!askExhausted}}">今日剩 {{askLeft}} 问</text>
     </view>
 
     <!-- 大输入区 + 发送/语音双大钮并排（语音主路/文字永在；日 3 问用尽撤输入行） -->
@@ -109,9 +110,9 @@
       </block>
     </view>
 
-    <!-- 日 3 问用尽态（REQ-008：撤输入行不发第 4 问；已购者不出现购买引导） -->
+    <!-- 统一池用尽态（REQ-008：撤输入行不发下一问；已购者不出现购买引导） -->
     <view class="rp-ask-out" wx:if="{{askExhausted}}">
-      <view class="rp-ask-out-t">今日 3 问已用完，明日再来</view>
+      <view class="rp-ask-out-t">{{askExhaustedMsg || '今日问数已用完，明日再来'}}</view>
       <button class="btn-primary rp-ask-out-btn" wx:if="{{!d.unlocked}}" hover-class="btn-hover" bindtap="onAskBuyTap">解锁报告 · 随时翻原文</button>
     </view>
 

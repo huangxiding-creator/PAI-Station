@@ -1,0 +1,21 @@
+report ask zhipu fail sku=SKU-RACE: zhipu down
+report ask empty reply sku=SKU-RACE
+FREE_PER_DAY=6  DB=C:\Users\91216\AppData\Local\Temp\qw_rqa_race_cyeynjxd\db.sqlite
+
+== 场景A：并发咨询抢走最后1次后，report_ask 自己的 consume 返回 False ==
+  consume 事件      : [{'competitor': True, 'r1_consume': False}]
+  响应形态          : conclusion='结论如下。' left=0
+  落库 free_used    : 6（仅并发方的1次被记；R1 的满分答案未扣次）
+  判定 A 成立        : True
+
+== 场景B：R1 从未扣次（consume=False），LLM 失败 → refund_one 退掉并发方的 1 次 ==
+  consume 事件      : [{'competitor': True, 'r1_consume': False}]
+  HTTP 状态         : 503（REQ-004 契约 503）
+  refund 调用       : [{'from_bonus': False, 'free_used_before': 6}]（R1 自身 consume=False，无次可退却执行了退次）
+  结算 quota        : {'free_left': 1, 'bonus_left': 0, 'total_left': 1, 'free_per_day': 6} —— 并发方那次成功咨询被白退，0→1
+  判定 B 成立        : True
+
+== 自然竞态扫描（两线程同打 report_ask，闸门→pre→consume 三段独立临界区）==
+  400 轮双线程并发：双过闸双满分 370 轮 / 单方429 30 轮 / 双429 0 轮；『1 次额度出 2 份满分答案』命中 370 轮
+
+结论：确定性注入下 A/B 均成立；自然双线程命中 370/400

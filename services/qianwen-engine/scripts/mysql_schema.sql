@@ -161,7 +161,18 @@ CREATE TABLE IF NOT EXISTS invoice_apps (
     KEY idx_invoice_openid (openid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- v0.9.20 报告对话官（1018 用户令）：免费问答日限计数（与 store.py _SCHEMA 同步维护）
+-- v0.9.0 报告商城解锁（openid × sku 幂等；对账走 pay_order/pay_log）——v0.9.23 审查补镜像
+-- （引擎首连 _SCHEMA 自举会建此表，此处为控制台导入路径的同步镜像）
+CREATE TABLE IF NOT EXISTS report_unlocks (
+    openid VARCHAR(64) NOT NULL,
+    sku VARCHAR(32) NOT NULL,
+    out_trade_no VARCHAR(64) DEFAULT '',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (openid, sku)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- v0.9.20 报告对话官（1018 用户令）：免费问答日限计数（与 store.py _SCHEMA 同步维护；
+-- v0.9.23 起计数迁统一额度池 users.free_used/bonus_*，此表保留历史行不动）
 CREATE TABLE IF NOT EXISTS report_asks (
     openid VARCHAR(64) NOT NULL,
     sku VARCHAR(64) NOT NULL,

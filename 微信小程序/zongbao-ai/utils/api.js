@@ -149,10 +149,14 @@ module.exports = {
       throw err;                                                                             // 其余照旧 reject——调用方 toast+回滚
     }),
   // ── v0.9.20（用户令 1018：报告对话官）──
-  reportAsk: (sku, q) => request('POST', '/api/report/' + sku + '/ask', { q })               // 问报告（日 3 问硬顶；q 服务端裁剪 2≤len≤200）
+  reportAsk: (sku, q) => request('POST', '/api/report/' + sku + '/ask', { q })               // 问报告（v0.9.23 统一池 6/日；q 服务端裁剪 2≤len≤200）
     .catch((err) => {
-      // 429 = 今日 3 问用尽：软态非错误——resolve 供面板切「已用完」态不发第 4 问（REQ-008）
-      if (err && err.statusCode === 429) return { limited: true, left: (typeof err.left === 'number') ? err.left : 0 };
+      // 429 = 统一池用尽：软态非错误——resolve 供面板切「已用完」态（REQ-008）；detail 服务端文案透传（v0.9.23）
+      if (err && err.statusCode === 429) {
+        return { limited: true,
+                 left: (typeof err.left === 'number') ? err.left : 0,
+                 detail: err.detail || '' };
+      }
       throw err;                                                                             // 503 软错照旧 reject→toast；401 走既有自动重登链
     }),
   reportAskHistory: () => request('GET', '/api/report/asks/history'),                        // 我的报告提问记录（本人倒序 limit=20，title 联查回填）

@@ -69,6 +69,7 @@ def client(tmp_path, monkeypatch):
     store._init_done = False
     monkeypatch.setattr(wechat, "code2session",
                         lambda code: {"openid": f"open-{code}", "unionid": ""})
+    app_mod._RQA_RATE.clear()                                   # v0.9.23：限速字典隔离（防串测）
     with TestClient(app_mod.app) as c:
         c.headers.update({"Authorization": "Bearer " + wechat.issue_token("open-t1")})
         yield c
@@ -127,6 +128,25 @@ def test_req_001_ac3_hint_conversion_wording(client, monkeypatch):
     assert d["hint"] == "完整拆解在报告第5章"                   # 检索最优章=第5章
 
 
+# ── REQ-001.AC4 v0.9.23 多段结论累积（千字回答分自然段不再腰斩）──
+def test_req_001_ac4_multiparagraph_conclusion(client, monkeypatch):
+    _mock_zhipu(monkeypatch, "第一段结论。\n第二段论证展开。\n第三段给出判断。\n第5章：要点一")
+    d = _ask(client, "变更签证怎么办理").json()
+    assert d["conclusion"] == "第一段结论。\n第二段论证展开。\n第三段给出判断。"   # 三段全保留（join \n）
+    assert len(d["points"]) == 1
+
+
+# ── REQ-002.AC2 v0.9.23 并发双查兜底：consume_one 返回 False → 429（不调 LLM）──
+def test_req_002_ac2_consume_false_race_guard(client, monkeypatch):
+    from qianwen_engine import app as app_mod, store
+    calls = _mock_zhipu(monkeypatch)
+    monkeypatch.setattr(store, "consume_one", lambda openid: False)   # 模拟池被并发问掏空
+    r = _ask(client, "变更签证怎么办理")
+    assert r.status_code == 429
+    assert r.json()["left"] == 0
+    assert calls["n"] == 0                                       # 兜底腿零 LLM 消耗
+
+
 # ── REQ-002.AC1 v0.9.23 统一池：第 7 问 429（不调 LLM）+ 跨日重置 ──
 def test_req_002_ac1_daily_limit_and_rollover(client, monkeypatch):
     from qianwen_engine import store
@@ -136,7 +156,7 @@ def test_req_002_ac1_daily_limit_and_rollover(client, monkeypatch):
         assert r.status_code == 200 and r.json()["left"] == config.FREE_PER_DAY - 1 - i
     r7 = _ask(client, "变更签证怎么办理再问")
     assert r7.status_code == 429
-    assert r7.json()["detail"] == "今日6问已用完，分享可再得"
+    assert r7.json()["detail"] == "今日6问已用完，明日再来；解锁本报告即可无限问"
     assert r7.json()["left"] == 0
     assert calls["n"] == config.FREE_PER_DAY                   # 限频腿零 LLM 调用
     # 跨日重置：统一池 day 键换日 → 计数清零（北京时间 0 点口径同全站）
@@ -160,6 +180,7 @@ def test_req_003_ac1_tables_idempotent_and_schema_sync(client):
     assert {"report_asks", "report_ask_log"} <= names
     sql = (ENGINE / "scripts" / "mysql_schema.sql").read_text(encoding="utf-8")
     assert "report_asks" in sql and "report_ask_log" in sql     # 部署镜像同步
+    assert "report_unlocks" in sql                              # v0.9.23：解锁表镜像（审查补）
 
 
 # ── REQ-004.AC1 LLM 失败静默降级 503（统一池下退款，不扣次数）；成功落历史行 ──
