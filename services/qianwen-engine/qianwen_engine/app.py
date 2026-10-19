@@ -1062,6 +1062,7 @@ def _rqa_rate_ok(openid: str) -> bool:
 
 
 _RQA_POINT_RE = re.compile(r"^(?:第(\d+)章|试读摘要)：(.*)")  # 1018 完美化：兼收 ch=0 伪章 + 捕获余文（角标/正文不重复）
+_RQA_TRANS_RE = re.compile(r"^(关键)?(论据|要点|论据要点|关键论据)[:：]?\s*$")  # v0.9.23：结论尾转场行剥离
 
 
 def _parse_rqa_reply(text: str) -> tuple:
@@ -1084,6 +1085,9 @@ def _parse_rqa_reply(text: str) -> tuple:
         elif not points:
             concl_lines.append(line)              # 论据出现前一律结论段
     conclusion = "\n".join(concl_lines)[:1200]    # v0.9.23：多段累积，千字诚意回答
+    # 尾部转场行（「关键论据要点：」等论据区引导语）不属结论，剥掉
+    while conclusion and _RQA_TRANS_RE.match(conclusion.rsplit("\n", 1)[-1]):
+        conclusion = conclusion.rsplit("\n", 1)[0].rstrip()
     return conclusion, points
 
 

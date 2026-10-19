@@ -17,45 +17,15 @@
     </view>
   </view>
 
-  <!-- 价格卡 -->
-  <view class="card ticks rise">
-    <view class="rp-price-row">
-      <view class="rp-price {{d.unlocked ? 'rp-price-owned' : ''}}">{{d.unlocked ? '已解锁 · 永久阅读' : (d.sellable ? d.price_label : '整理中 · 暂未开售')}}</view>
-      <view class="rp-badges">
-        <text class="rs-badge" wx:for="{{d.badges}}" wx:key="k">{{item.k}}{{item.v ? ' ' + item.v : ''}}</text>
-      </view>
-    </view>
-
-    <!-- 主行动条：未购=购买（iOS 隐藏），已购=打开 PDF -->
-    <button
-      wx:if="{{d.unlocked}}"
-      class="btn-primary rp-act"
-      hover-class="btn-hover"
-      disabled="{{opening}}"
-      bindtap="openPdf"
-    >{{opening ? '打开中…' : '打开 PDF 全文'}}</button>
-    <button
-      wx:elif="{{d.sellable && paySupported}}"
-      class="btn-primary rp-act"
-      hover-class="btn-hover"
-      disabled="{{buying}}"
-      bindtap="buy"
-    >{{buying ? '拉起支付…' : d.price_label + ' · 购买解锁'}}</button>
-    <view wx:elif="{{d.sellable}}" class="rp-ios-note muted">iOS 暂不支持应用内购买，请在安卓设备上购买后阅读</view>
-    <view wx:else class="rp-ios-note muted">本报告 PDF 整理中，开放购买前可先试读</view>
-
-    <view class="muted rp-note">一次解锁 · 永久阅读 · PDF 全文阅读与下载保存 · 内容由总包智库研究团队基于公开资料研究产出</view>
-  </view>
-
   <!-- ══ v0.9.21 问报告 hero（用户令 1018 升维：小 pill → 大区常驻，置于简介之上；零购买门槛 REQ-006.AC0）══
        双通道=🎤按住说（WechatSI，冻结组件同款状态机）+ 大字输入区永在（插件缺失自动兜底）；
        气泡三段（REQ-007）：结论全文可复制/论据挂第N章角标/转化条→购买；每答带互动三钮；AI 标识常驻。 -->
-  <view class="rp-ask-hero bp-grid ticks rise">
+  <view class="rp-ask-hero bp-grid ticks rise" id="askHero">
     <view class="rp-ask-hero-head">
       <view class="rp-ask-hero-mic {{askRecording ? 'rp-ask-hero-mic-on' : ''}}"><text>🎤</text></view>
       <view class="rp-ask-hero-tt">
-        <view class="rp-ask-hero-title">问报告 · ASK THIS REPORT</view>
-        <view class="rp-ask-hero-sub">直接就这份报告提问，答案引用章节原文</view>
+        <view class="rp-ask-hero-title">免费问报告 · ASK FREE</view>
+        <view class="rp-ask-hero-sub">每日 6 问免费，语音或打字，答案引用章节原文</view>
       </view>
       <text class="rp-ask-hero-left mono" wx:if="{{askUnlimited}}">已解锁 · 无限问</text>
       <text class="rp-ask-hero-left mono" wx:elif="{{!askExhausted}}">今日剩 {{askLeft}} 问</text>
@@ -91,7 +61,7 @@
             </view>
             <view class="rp-ask-hint">
               <text class="rp-ask-hint-t" user-select>{{a.hint}}</text>
-              <view class="rp-ask-buy" wx:if="{{!d.unlocked}}" bindtap="onAskBuyTap" hover-class="rp-ask-buy-hover">购买阅读</view>
+              <view class="rp-ask-buy" wx:if="{{!d.unlocked}}" bindtap="onAskBuyTap" hover-class="rp-ask-buy-hover">购买下载完整报告</view>
             </view>
             <!-- v0.9.21 每答互动三钮：点赞/转发计数上链报告本体（bump），海报复用报告转化海报链 -->
             <view class="rp-ask-acts">
@@ -120,6 +90,35 @@
     <view class="rp-ask-ai">内容仅供参考 · 以报告原文为准</view>
   </view>
 
+  <!-- 免费价值卡（1019 用户令：大力宣传免费，购买只在真需要时出现） -->
+  <view class="card ticks rise">
+    <view class="rp-price-row">
+      <view class="rp-price {{d.unlocked ? 'rp-price-owned' : ''}}">{{d.unlocked ? '已解锁 · 永久阅读' : (d.sellable ? '免费读 · 免费问' : '整理中 · 暂未开放')}}</view>
+      <view class="rp-badges">
+        <text class="rs-badge" wx:for="{{d.badges}}" wx:key="k">{{item.k}}{{item.v ? ' ' + item.v : ''}}</text>
+      </view>
+    </view>
+
+    <!-- 主行动条：未购=购买（iOS 隐藏），已购=打开 PDF -->
+    <button
+      wx:if="{{d.unlocked}}"
+      class="btn-primary rp-act"
+      hover-class="btn-hover"
+      disabled="{{opening}}"
+      bindtap="openPdf"
+    >{{opening ? '打开中…' : '打开 PDF 全文'}}</button>
+    <view
+      wx:elif="{{d.sellable}}"
+      class="btn-primary rp-act"
+      hover-class="btn-hover"
+      bindtap="goSample"
+    >免费试读 · 展开样章</view>
+    <view wx:elif="{{d.sellable}}" class="rp-ios-note muted">iOS 可免费试读与免费问，全文解锁请洽客服</view>
+    <view wx:else class="rp-ios-note muted">本报告 PDF 整理中，开放购买前可先试读</view>
+
+    <view class="muted rp-note">免费试读 · 每日免费问 · 需要全文 PDF 时再解锁 · 内容由总包智库研究团队基于公开资料研究产出</view>
+  </view>
+
   <!-- 简介 -->
   <view class="card ticks rise" wx:if="{{d.intro_lede || d.intro}}">
     <view class="kicker kicker-on-paper rp-kicker">ABOUT · 报告简介</view>
@@ -143,7 +142,7 @@
   </view>
 
   <!-- 试读（md2blocks 结构化渲染：标题/列表/表格/引用排版，裸 Markdown 符号不再出现） -->
-  <view class="card ticks rise" wx:if="{{sampleBlocks.length}}">
+  <view class="card ticks rise" wx:if="{{sampleBlocks.length}}" id="sampleCard">
     <view class="kicker kicker-on-paper rp-kicker">{{d.sample_label || '试读'}} · FREE</view>
     <view class="rp-sample {{sampleOpen ? '' : 'rp-sample-fold'}}">
       <block wx:for="{{sampleBlocks}}" wx:key="index" wx:for-item="b">
@@ -243,11 +242,11 @@
   <view class="safe-bottom"></view>
 </view>
 
-<!-- 吸底行动栏：读完目录/试读后随时可购/可读（iOS 购买入口不渲染=虚拟支付铁律） -->
+<!-- 吸底行动栏（1019 用户令改免费锚点）：未购=去免费问；已购=打开 PDF（购买只在问答用尽/深挖提示/试读尽头三处真需要时刻出现） -->
 <view class="rp-bar" wx:if="{{d && (d.unlocked || (d.sellable && paySupported))}}">
   <view class="rp-bar-info" wx:if="{{!d.unlocked}}">
-    <view class="rp-bar-price">{{d.price_label}}</view>
-    <view class="rp-bar-sub muted">一次解锁 · 永久阅读与下载</view>
+    <view class="rp-bar-price">免费问报告</view>
+    <view class="rp-bar-sub muted">今日剩 {{askLeft}} 问 · 语音打字都行</view>
   </view>
   <view class="rp-bar-info" wx:if="{{d.unlocked}}">
     <view class="rp-bar-price">已解锁</view>
@@ -260,13 +259,12 @@
     disabled="{{opening}}"
     bindtap="openPdf"
   >{{opening ? '打开中…' : '打开 PDF 全文'}}</button>
-  <button
+  <view
     wx:else
     class="btn-primary rp-bar-btn"
     hover-class="btn-hover"
-    disabled="{{buying}}"
-    bindtap="buy"
-  >{{buying ? '拉起支付…' : '购买解锁'}}</button>
+    bindtap="goAsk"
+  >🎤 去问报告</view>
 </view>
 
 <!-- 载入/错误态（显式取反，勿用 wx:else：编译器剥注释后会误配吸底栏 rp-bar 的 wx:if） -->

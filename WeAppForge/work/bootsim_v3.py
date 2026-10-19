@@ -165,9 +165,9 @@ check("api potList 客户端", "potList" in api_js)
 check("api optimize 客户端（shareReward 已随分享激励下线）", "optimize" in api_js and "shareReward" not in api_js)
 
 # 版本与定位（v0.9.0）
-check("my 版本标记 v0.9.22（1018 报告互动+研究双分区+问报告hero）", "v0.9.22" in my_wxml)
+check("my 版本标记 v0.9.24（1019 免费优先改版+统一池）", "v0.9.24" in my_wxml)
 pkg = json.load(open(os.path.join(ROOT, "package.json"), encoding="utf-8"))
-check("package.json version=0.9.22", pkg["version"] == "0.9.22")
+check("package.json version=0.9.24", pkg["version"] == "0.9.24")
 # 1009 用户令：外观沉底（个性化低频项按用户习惯放设置区，高频额度/记录在前）——顺序即断言
 check("my 布局顺序=额度→记录→书架→外观（外观在咨询记录之后，1009 用户令）",
       my_wxml.find("外观 · APPEARANCE") > my_wxml.find("咨询记录 · RECORDS")
@@ -573,7 +573,8 @@ check("自绘 tabBar 五 tab（研=倒数第二）",
 check("研究页 目录腿 api.reportList + 分类筛（含已购；v0.9.6 旗舰/独家档已下线）",
       "reportList" in rs_js and "mine" in rs_js and "flagship" not in rs_js and "excl" not in rs_js)
 check("研究页 整理中口径（可看不可买）", "整理中" in rs_wxml)
-check("研究页 AI 辅助研究口径注脚（可证成）", "AI 辅助研究方法" in rs_wxml)
+check("研究页 零 AI 表述铁律（1018 用户令：AI辅助/AI生成零出现）",
+      "AI 辅助研究方法" not in rs_wxml and "AI 生成" not in rs_wxml)
 # ══ v0.9.1 用户令 1008 晚三修（标签空白/试读裸md/AI提示去重）══
 check("研究页 badges 键值渲染（对象直渲染=空白标签根因）",
       "{{b.k}}" in rs_wxml and 'wx:key="k"' in rs_wxml and "{{b}}" not in rs_wxml)
@@ -586,12 +587,24 @@ check("报告页 试读折叠渐隐（max-height+mask 非 line-clamp）",
       "rp-sample-fold" in _rp_wxss and "-webkit-mask-image" in _rp_wxss)
 check("报告页 载入骨架（防跳版式）", "rp-skel" in rp_wxml and "rp-skel" in _rp_wxss)
 
-# ══ v0.9.1 逐页深度优化门（1008 用户令三标准） ══
-# 变现主杠杆：报告详情页吸底行动栏（读完目录/试读后随时可购）
+# ══ v0.9.1 逐页深度优化门（1008 用户令三标准；1019 用户令改免费优先） ══
+# 1019 用户令：大力宣传免费问报告，页面级不吆喝购买——吸底栏未购=去免费问
 _rp_wxml_2 = read("pages/report/report.wxml")
-check("报告页 吸底行动栏（fixed 双 CTA：购买/打开PDF）",
+check("报告页 吸底行动栏（1019 免费锚点版：未购=去问报告 / 已购=打开PDF）",
       'class="rp-bar"' in _rp_wxml_2 and '打开 PDF 全文' in _rp_wxml_2
-      and '购买解锁' in _rp_wxml_2 and 'page-has-bar' in _rp_wxml_2)
+      and '去问报告' in _rp_wxml_2 and 'page-has-bar' in _rp_wxml_2)
+check("报告页 免费优先铁律（页级零售卖：rp-bar 无价格无购买解锁）",
+      'rp-bar-price">{{d.price_label}}' not in _rp_wxml_2
+      and "rp-bar-btn\"...购买解锁" not in _rp_wxml_2)
+check("报告页 免费问 hero 头牌（首卡=ASK FREE + 每日6问免费 + 已解锁/今日剩计数）",
+      '免费问报告 · ASK FREE' in _rp_wxml_2 and '每日 6 问免费' in _rp_wxml_2
+      and '已解锁 · 无限问' in _rp_wxml_2 and '今日剩 {{askLeft}} 问' in _rp_wxml_2)
+check("报告页 免费价值卡（免费读·免费问 + 免费试读CTA，非iOS购买钮）",
+      '免费读 · 免费问' in _rp_wxml_2 and '免费试读 · 展开样章' in _rp_wxml_2
+      and 'bindtap="goSample"' in _rp_wxml_2)
+check("报告页 购买只在真需要时刻（用尽态/深挖hint/试读尽头三处，页面级不出）",
+      'rp-ask-out-btn' in _rp_wxml_2 and 'rp-cta' in _rp_wxml_2
+      and 'sampleOpen && d.sellable && !d.unlocked && paySupported' in _rp_wxml_2)
 check("报告页 吸底栏 iOS 铁律（栏渲染门=unlocked || (sellable && paySupported)）",
       "d.unlocked || (d.sellable && paySupported)" in _rp_wxml_2)
 check("报告页 试读尽头 CTA（读完即购，iOS 门控）",
@@ -668,11 +681,11 @@ check("报告页 详情+试读腿（reportDetail/reportSample）",
 check("报告页 购买走 pay.payReport（vpay 通道）", "payReport" in rp_js)
 check("报告页 PDF=downloadFile+openDocument（Bearer 头）",
       "wx.downloadFile" in rp_js and "openDocument" in rp_js and "Authorization" in rp_js)
-check("报告页 iOS 购买入口隐藏（paySupported 闸在 wxml）",
-      "paySupported" in rp_wxml and "iOS 暂不支持应用内购买" in rp_wxml)
-check("报告页 整理中不可买态", "暂未开售" in rp_wxml)
-check("报告页 一次解锁永久阅读与下载口径（v0.9.12：&amp; 转义符字面渲染瑕疵根治）",
-      "永久阅读与下载" in rp_wxml and "永久阅读&amp;下载" not in rp_wxml)
+check("报告页 iOS 免费导向（1019：卡CTA=免费试读无购买闸；iOS 注脚无购买诱导）",
+      "paySupported" in rp_wxml and "iOS 可免费试读与免费问" in rp_wxml)
+check("报告页 整理中不可买态", "暂未开放" in rp_wxml)
+check("报告页 免费优先口径（1019 用户令：免费试读/每日免费问/需要时再解锁）",
+      "免费试读 · 每日免费问 · 需要全文 PDF 时再解锁" in rp_wxml)
 check("api.js 报告五端点（List/Detail/Sample/Sign/PdfUrl）",
       all(k in api_js for k in ("reportList", "reportDetail", "reportSample", "reportSign", "reportPdfUrl")))
 check("pay.js payReport（报告解锁腿）", "payReport" in pay_js)
@@ -1069,7 +1082,7 @@ check("引擎道具图路由（/static/goods/{name} 白名单+防穿越+长缓�
 check("引擎道具图素材随包（static_goods/zongbaojun.jpg）",
       "GOODS_STATIC_DIR" in _app_py
       and os.path.exists(os.path.join(ENGINE, "qianwen_engine", "static_goods", "zongbaojun.jpg")))
-check("telemetry VER=0.9.22（版本横幅同步）", "var VER = '0.9.22'" in _tel_js)
+check("telemetry VER=0.9.24（版本横幅同步）", "var VER = '0.9.24'" in _tel_js)
 
 # ══ v0.9.15（1011 用户令：报告详情页 有用/分享给同行 赠次 + 研报转化海报）══
 _rp_wxml_3 = read("pages/report/report.wxml")
@@ -1182,9 +1195,9 @@ check("详情页 卷头样式在役（色带+实底卷号徽标+章行缩进）"
 check("研究页 起价数据驱动（¥498 写死根除，stats.pmin 驱动）",
       "stats.pmin" in _rsh_wxml and ">¥498<" not in _rsh_wxml
       and "pmin" in _rsh_js)
-check("版本信标 0.9.22（telemetry + my 页脚）",
-      "VER = '0.9.22'" in read("utils/telemetry.js")
-      and "v0.9.22" in read("pages/my/my.wxml"))
+check("版本信标 0.9.24（telemetry + my 页脚）",
+      "VER = '0.9.24'" in read("utils/telemetry.js")
+      and "v0.9.24" in read("pages/my/my.wxml"))
 
 # ── v0.9.18（1013 用户令①：分享全量——灰按钮根因=缺 handler，「每一个页面都可以」）──
 # REQ-001.AC1 逐页锚：本轮新补 6 页（ask/home/my/pot/invoice/legal），在役 4 页（answer/report/research/zhiku）
@@ -1396,12 +1409,12 @@ check("REQ-006 面板双通道（🎤按住说事件对 + WechatSI 转写回填�
 # REQ-007.AC1 气泡三段：结论粗体/论据挂第N章角标（mono chip）/转化条；AI 标识常驻
 check("REQ-007.AC1 气泡三段结构（结论/第N章角标/转化条+购买）+ AI 标识常驻",
       'class="rp-ask-conc"' in _rp20_wxml and "p.ch === 0 ? '试读' : '第' + p.ch + '章'" in _rp20_wxml
-      and 'class="rp-ask-hint"' in _rp20_wxml and "购买阅读" in _rp20_wxml
-      and "AI 生成 · 仅供参考" in _rp20_wxml
+      and 'class="rp-ask-hint"' in _rp20_wxml and "购买下载完整报告" in _rp20_wxml
+      and "内容仅供参考 · 以报告原文为准" in _rp20_wxml
       and ".rp-ask-conc" in _rp20_wxss and ".rp-ask-chip" in _rp20_wxss)
 # REQ-008.AC1：429 → 用尽态文案+购买引导，不发第 4 问（撤输入行）
-check("REQ-008.AC1 限频用尽态（今日3问已用完文案 + 429 limited 切态停发 + 问题文字奉还）",
-      "今日 3 问已用完，明日再来" in _rp20_wxml
+check("REQ-008.AC1 限频用尽态（v0.9.23：服务端文案透传+兜底 + 429 limited 切态停发 + 问题文字奉还）",
+      "今日问数已用完，明日再来" in _rp20_wxml and "askExhaustedMsg" in _rp20_wxml
       and 'bindtap="onAskBuyTap"' in _rp20_wxml
       and "askExhausted" in _rp20_js and "limited" in _rp20_js
       and 'wx:if="{{!askExhausted}}"' in _rp20_wxml)
@@ -1461,7 +1474,7 @@ check("研究页 goReport 观看计数（reportBump views fire-and-forget 不阻
 check("报告页 问报告 hero 置于简介之上（🎤头+大输入+发送/语音双大钮+剩余额度）",
       _rp21_wxml.find('class="rp-ask-hero') > 0
       and _rp21_wxml.find('class="rp-ask-hero') < _rp21_wxml.find("ABOUT · 报告简介")
-      and "问报告 · ASK THIS REPORT" in _rp21_wxml
+      and "免费问报告 · ASK FREE" in _rp21_wxml and "每日 6 问免费" in _rp21_wxml
       and "今日剩 {{askLeft}} 问" in _rp21_wxml
       and 'bindtouchstart="onMicStart"' in _rp21_wxml and 'bindtap="onAskSend"' in _rp21_wxml
       and ".rp-ask-hero" in _rp21_wxss and ".rp-ask-hero-btns" in _rp21_wxss,
@@ -1485,8 +1498,8 @@ check("报告页 答案气泡互动三钮（👍有用bump likes+report_ask_like
 check("api.js reportBump 端点（POST /api/report/{sku}/bump/{field} 公开计数）",
       "reportBump" in _api21_js and "'/api/report/' + sku + '/bump/' + field" in _api21_js,
       "reportBump 封装缺失")
-check("v0.9.22 版本横幅（my 页脚 + telemetry VER 同步 0.9.22）",
-      "v0.9.22" in _my21_wxml and "VER = '0.9.22'" in _tel21_js,
+check("v0.9.24 版本横幅（my 页脚 + telemetry VER 同步 0.9.24）",
+      "v0.9.24" in _my21_wxml and "VER = '0.9.24'" in _tel21_js,
       "版本横幅不同步")
 
 fails = [c for c in checks if not c[1]]

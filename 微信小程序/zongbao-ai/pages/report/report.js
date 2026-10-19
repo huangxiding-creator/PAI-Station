@@ -217,6 +217,19 @@ Page({
 
   // 分享给同行：静默赠 1 次（运营规范 3.2.1——分享动作零诱导文案、不弹获赠提示，
   // 仅额度数字自然 +1；服务端幂等，重复分享不报错）。bindtap 先于转发面板触发。
+  // 1019 用户令「大力宣传免费问」：吸底栏/价值卡 → 滚到问答区，聚焦输入
+  goAsk() {
+    wx.pageScrollTo({ selector: '#askHero', duration: 300 });
+    tel.ping('free_ask_cta', { sku: String(this.data.sku || '').slice(0, 24) });
+  },
+
+  // 免费价值卡 CTA：滚到试读区并自动展开（折叠态）
+  goSample() {
+    wx.pageScrollTo({ selector: '#sampleCard', duration: 300 });
+    if (!this.data.sampleOpen) this.toggleSample();
+    tel.ping('free_sample_cta', { sku: String(this.data.sku || '').slice(0, 24) });
+  },
+
   onShareTap() {
     tel.ping('report_share_tap', { sku: String(this.data.sku || '').slice(0, 24) });
     api.reportBump(this.data.sku, 'shares').catch(() => {}); // v0.9.21：分享同步报告转发计数（静默，不打扰分享动作）

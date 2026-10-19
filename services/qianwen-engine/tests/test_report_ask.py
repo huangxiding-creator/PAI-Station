@@ -136,6 +136,14 @@ def test_req_001_ac4_multiparagraph_conclusion(client, monkeypatch):
     assert len(d["points"]) == 1
 
 
+# ── REQ-001.AC5 v0.9.23 结论尾转场行剥离（「关键论据要点：」不混入结论）──
+def test_req_001_ac5_transition_line_stripped(client, monkeypatch):
+    _mock_zhipu(monkeypatch, "结论正文。\n关键论据要点：\n第5章：要点一")
+    d = _ask(client, "变更签证怎么办理").json()
+    assert d["conclusion"] == "结论正文。"                       # 转场行被剥
+    assert len(d["points"]) == 1
+
+
 # ── REQ-002.AC2 v0.9.23 并发双查兜底：consume_one 返回 False → 429（不调 LLM）──
 def test_req_002_ac2_consume_false_race_guard(client, monkeypatch):
     from qianwen_engine import app as app_mod, store

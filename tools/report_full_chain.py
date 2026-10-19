@@ -89,6 +89,8 @@ def run_stage(stage: str, ns) -> None:
         sh(PY + ["tools/mp_list_report.py", "--sku", sku], "小程序上架(总包AI顾问)")
         sh(PY + ["tools/metaso_brain_upload.py", "--cfid", "8676827961374429184",
                  "--sid", "8673582927558737920", "--file", ns.merged], "秘塔工程大脑入库")
+        sh(PY + ["tools/feishu_wiki_upload.py", "--sku", sku,
+                 "--title", f"《{ns.topic}》"], "飞书总包智库研报库入库", must=False)
     elif stage == "S5":
         print("[S5] 文章×3 (标题定式「发布| 报告全名称」): push_article → freepublish/管线 (三号)")
     elif stage == "S6":
