@@ -58,6 +58,7 @@ CHANNEL_ALIASES: dict[str, list[str]] = {
     "ima": ["ima"],
     "ima_public": ["ima_public"],
     "ima_plaza": ["ima_plaza", "ima广场"],
+    "samr": ["samr", "std.samr", "国标公开系统"],
     "weread": ["weread", "微信读书"],
     "lark": ["lark", "feishu", "飞书"],
     "wechat_local": ["wechat_local", "微信本地"],
