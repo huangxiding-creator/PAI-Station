@@ -1,0 +1,502 @@
+{
+ "axis": "C",
+ "sensor": "channel_matrix",
+ "campaign": "EPC-SCHED",
+ "channels_hit": 9,
+ "channels_total": 31,
+ "hit_ratio": 0.2903,
+ "hit_channels": [
+  {
+   "id": "sougo",
+   "name": "搜狗微信",
+   "chars": 280250,
+   "engines": [
+    "wechat:sogou"
+   ]
+  },
+  {
+   "id": "metaso",
+   "name": "秘塔学术",
+   "chars": 146992,
+   "engines": [
+    "cross:metaso"
+   ]
+  },
+  {
+   "id": "ima_public",
+   "name": "ima 公开知识库",
+   "chars": 195567,
+   "engines": [
+    "kb:ima_public"
+   ]
+  },
+  {
+   "id": "localfiles",
+   "name": "本地文件库",
+   "chars": 561344,
+   "engines": [
+    "localfiles:rss",
+    "localfiles:topics"
+   ]
+  },
+  {
+   "id": "court",
+   "name": "涉诉检索",
+   "chars": 119291767,
+   "engines": [
+    "wenshu:scan"
+   ]
+  },
+  {
+   "id": "cnki",
+   "name": "CNKI 论文",
+   "chars": 510053,
+   "engines": [
+    "paper:wenchuanyun"
+   ]
+  },
+  {
+   "id": "corpus_stores",
+   "name": "存量语料库",
+   "chars": 28477430,
+   "engines": [
+    "stock:campaign_上海电力设计",
+    "stock:campaign_中冶长天国际",
+    "stock:nb_library"
+   ]
+  },
+  {
+   "id": "zh_search_pro",
+   "name": "免key中文多引擎检索",
+   "chars": 11311,
+   "engines": [
+    "web:zhsearchpro"
+   ]
+  },
+  {
+   "id": "anysearch",
+   "name": "AnySearch实时搜索(web+垂直域17域+并发批量+网页抽取, 匿名免鉴权)",
+   "chars": 64171,
+   "engines": [
+    "anysearch:web"
+   ]
+  }
+ ],
+ "miss_list": [
+  "Manus 军团",
+  "洞见研报",
+  "官网爬虫",
+  "视频文稿",
+  "ima 知识库",
+  "微信读书",
+  "飞书语料",
+  "微信本地数据",
+  "微信4.x加密库",
+  "360浏览器画像",
+  "WebSearch",
+  "政府名录线",
+  "E-OSCAR 情报引擎",
+  "CLI 化栈",
+  "网盘聚合发现",
+  "全套教材语料库",
+  "电子书渠道族(两篇文章111站+Arc K扫荡105站=216站纳册)",
+  "网页搜索项目注册表(8角度扫荡111候选+8本机在册=119项)",
+  "夸克网盘账号面(扫码授权+转存四步+列目录+下载直链+签到保活)",
+  "OpenAlex 学术API(免key)",
+  "Semantic Scholar 学术API(S2, 免key)",
+  "arXiv 学术API(免key)"
+ ],
+ "miss_detail": [
+  {
+   "id": "manus",
+   "name": "Manus 军团"
+  },
+  {
+   "id": "djyanbao",
+   "name": "洞见研报"
+  },
+  {
+   "id": "website",
+   "name": "官网爬虫"
+  },
+  {
+   "id": "video",
+   "name": "视频文稿"
+  },
+  {
+   "id": "ima",
+   "name": "ima 知识库"
+  },
+  {
+   "id": "weread",
+   "name": "微信读书"
+  },
+  {
+   "id": "lark",
+   "name": "飞书语料"
+  },
+  {
+   "id": "wechat_local",
+   "name": "微信本地数据"
+  },
+  {
+   "id": "wechat4",
+   "name": "微信4.x加密库"
+  },
+  {
+   "id": "browser360",
+   "name": "360浏览器画像"
+  },
+  {
+   "id": "websearch",
+   "name": "WebSearch"
+  },
+  {
+   "id": "govlist",
+   "name": "政府名录线"
+  },
+  {
+   "id": "eoscar",
+   "name": "E-OSCAR 情报引擎"
+  },
+  {
+   "id": "cli_stack",
+   "name": "CLI 化栈"
+  },
+  {
+   "id": "pansou",
+   "name": "网盘聚合发现"
+  },
+  {
+   "id": "chinatextbook",
+   "name": "全套教材语料库"
+  },
+  {
+   "id": "ebook_library",
+   "name": "电子书渠道族(两篇文章111站+Arc K扫荡105站=216站纳册)"
+  },
+  {
+   "id": "search_library",
+   "name": "网页搜索项目注册表(8角度扫荡111候选+8本机在册=119项)"
+  },
+  {
+   "id": "quark_pan",
+   "name": "夸克网盘账号面(扫码授权+转存四步+列目录+下载直链+签到保活)"
+  },
+  {
+   "id": "openalex",
+   "name": "OpenAlex 学术API(免key)"
+  },
+  {
+   "id": "semantic_scholar",
+   "name": "Semantic Scholar 学术API(S2, 免key)"
+  },
+  {
+   "id": "arxiv",
+   "name": "arXiv 学术API(免key)"
+  }
+ ],
+ "new_channel_queue": [
+  {
+   "name": "website",
+   "sop_step": null
+  }
+ ],
+ "miss_in_queue": [
+  "官网爬虫"
+ ],
+ "miss_not_in_queue": [],
+ "channel_waivers": [
+  {
+   "id": "manus",
+   "name": "Manus 军团",
+   "reason": "账号态: HALTED待恢复",
+   "approve_ref": "待用户批准",
+   "ts": "2026-10-19T23:07:17"
+  },
+  {
+   "id": "djyanbao",
+   "name": "洞见研报",
+   "reason": "浏览器态: 夜班窗口未开",
+   "approve_ref": "待用户批准",
+   "ts": "2026-10-19T23:07:17"
+  },
+  {
+   "id": "video",
+   "name": "视频文稿",
+   "reason": "账号态",
+   "approve_ref": "待用户批准",
+   "ts": "2026-10-19T23:07:17"
+  },
+  {
+   "id": "ima",
+   "name": "ima 知识库",
+   "reason": "账号态",
+   "approve_ref": "待用户批准",
+   "ts": "2026-10-19T23:07:17"
+  },
+  {
+   "id": "ima_public",
+   "name": "ima 公开知识库",
+   "reason": "夜班窗口未出valid",
+   "approve_ref": "待用户批准",
+   "ts": "2026-10-19T23:07:17"
+  },
+  {
+   "id": "weread",
+   "name": "微信读书",
+   "reason": "账号态",
+   "approve_ref": "待用户批准",
+   "ts": "2026-10-19T23:07:17"
+  },
+  {
+   "id": "lark",
+   "name": "飞书语料",
+   "reason": "跨池已覆盖",
+   "approve_ref": "待用户批准",
+   "ts": "2026-10-19T23:07:17"
+  },
+  {
+   "id": "wechat_local",
+   "name": "微信本地数据",
+   "reason": "账号红线",
+   "approve_ref": "待用户批准",
+   "ts": "2026-10-19T23:07:17"
+  },
+  {
+   "id": "wechat4",
+   "name": "微信4.x加密库",
+   "reason": "账号红线",
+   "approve_ref": "待用户批准",
+   "ts": "2026-10-19T23:07:17"
+  },
+  {
+   "id": "browser360",
+   "name": "360浏览器画像",
+   "reason": "账号态",
+   "approve_ref": "待用户批准",
+   "ts": "2026-10-19T23:07:17"
+  },
+  {
+   "id": "govlist",
+   "name": "政府名录线",
+   "reason": "跨池已覆盖",
+   "approve_ref": "待用户批准",
+   "ts": "2026-10-19T23:07:17"
+  },
+  {
+   "id": "eoscar",
+   "name": "E-OSCAR",
+   "reason": "基建位",
+   "approve_ref": "待用户批准",
+   "ts": "2026-10-19T23:07:17"
+  },
+  {
+   "id": "cli_stack",
+   "name": "CLI 化栈",
+   "reason": "基建位",
+   "approve_ref": "待用户批准",
+   "ts": "2026-10-19T23:07:17"
+  },
+  {
+   "id": "pansou",
+   "name": "网盘聚合",
+   "reason": "账号态",
+   "approve_ref": "待用户批准",
+   "ts": "2026-10-19T23:07:17"
+  },
+  {
+   "id": "chinatextbook",
+   "name": "教材语料库",
+   "reason": "边际关联",
+   "approve_ref": "待用户批准",
+   "ts": "2026-10-19T23:07:17"
+  },
+  {
+   "id": "zh_search_pro",
+   "name": "免key中文检索",
+   "reason": "限流未出valid",
+   "approve_ref": "待用户批准",
+   "ts": "2026-10-19T23:07:17"
+  },
+  {
+   "id": "ebook_library",
+   "name": "电子书渠道族",
+   "reason": "边际关联",
+   "approve_ref": "待用户批准",
+   "ts": "2026-10-19T23:07:17"
+  },
+  {
+   "id": "search_library",
+   "name": "网页搜索注册表",
+   "reason": "基建位",
+   "approve_ref": "待用户批准",
+   "ts": "2026-10-19T23:07:17"
+  },
+  {
+   "id": "quark_pan",
+   "name": "夸克网盘",
+   "reason": "账号态",
+   "approve_ref": "待用户批准",
+   "ts": "2026-10-19T23:07:17"
+  },
+  {
+   "id": "openalex",
+   "name": "OpenAlex 学术API",
+   "reason": "如实N/A",
+   "approve_ref": "待用户批准",
+   "ts": "2026-10-19T23:07:17"
+  },
+  {
+   "id": "semantic_scholar",
+   "name": "S2 学术API",
+   "reason": "如实N/A",
+   "approve_ref": "待用户批准",
+   "ts": "2026-10-19T23:07:17"
+  },
+  {
+   "id": "arxiv",
+   "name": "arXiv 学术API",
+   "reason": "如实N/A",
+   "approve_ref": "待用户批准",
+   "ts": "2026-10-19T23:07:17"
+  },
+  {
+   "id": "websearch",
+   "name": "websearch",
+   "reason": "WebSearch周配额耗尽(2026-10-26 15:20复位); 搜索面由anysearch+zh_search_pro实点亮",
+   "approve_ref": "待用户批准(S1.5呈批一并定案)",
+   "ts": "2026-10-20T07:22:29"
+  }
+ ],
+ "waived_miss_list": [
+  "Manus 军团",
+  "洞见研报",
+  "视频文稿",
+  "ima 知识库",
+  "微信读书",
+  "飞书语料",
+  "微信本地数据",
+  "微信4.x加密库",
+  "360浏览器画像",
+  "WebSearch",
+  "政府名录线",
+  "E-OSCAR 情报引擎",
+  "CLI 化栈",
+  "网盘聚合发现",
+  "全套教材语料库",
+  "电子书渠道族(两篇文章111站+Arc K扫荡105站=216站纳册)",
+  "网页搜索项目注册表(8角度扫荡111候选+8本机在册=119项)",
+  "夸克网盘账号面(扫码授权+转存四步+列目录+下载直链+签到保活)",
+  "OpenAlex 学术API(免key)",
+  "Semantic Scholar 学术API(S2, 免key)",
+  "arXiv 学术API(免key)"
+ ],
+ "waived_but_hit": [],
+ "queue_path": "E:\\AI-Station\\ammo_pool\\EPC-SCHED\\completeness\\C_axis_queue.json",
+ "queue_present": true,
+ "green": true,
+ "engine_map": {
+  "localfiles:rss": {
+   "channels": [
+    "localfiles"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "localfiles:topics": {
+   "channels": [
+    "localfiles"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "wenshu:scan": {
+   "channels": [
+    "court"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "stock:nb_library": {
+   "channels": [
+    "corpus_stores"
+   ],
+   "notes": [
+    "存量池收割≈存量语料库（近似）"
+   ],
+   "bases": []
+  },
+  "stock:campaign_上海电力设计": {
+   "channels": [
+    "corpus_stores"
+   ],
+   "notes": [
+    "存量池收割≈存量语料库（近似）"
+   ],
+   "bases": []
+  },
+  "paper:wenchuanyun": {
+   "channels": [
+    "cnki"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "cross:metaso": {
+   "channels": [
+    "metaso"
+   ],
+   "notes": [],
+   "bases": [
+    "metaso"
+   ]
+  },
+  "kb:ima_public": {
+   "channels": [
+    "ima_public"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "anysearch:web": {
+   "channels": [
+    "anysearch"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "web:zhsearchpro": {
+   "channels": [
+    "zh_search_pro"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "stock:campaign_中冶长天国际": {
+   "channels": [
+    "corpus_stores"
+   ],
+   "notes": [
+    "存量池收割≈存量语料库（近似）"
+   ],
+   "bases": []
+  },
+  "wechat:sogou": {
+   "channels": [
+    "sougo"
+   ],
+   "notes": [],
+   "bases": []
+  }
+ },
+ "unmapped_engines": [],
+ "zero_char_engines": [],
+ "approx_notes": [
+  "存量池收割≈存量语料库（近似）"
+ ],
+ "manifest": "E:\\AI-Station\\ResearchFactory-Eng\\channel_manifest.json",
+ "fail_soft": false,
+ "fail_soft_note": "",
+ "generated_at": "2026-10-20T07:49:10+08:00"
+}

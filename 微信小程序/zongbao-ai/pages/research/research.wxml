@@ -7,10 +7,11 @@
     <view class="hero-nav" style="height: {{nav.navHeight}}px"></view>
 
     <view class="hero-inner">
-      <view class="hero-kicker">REPORT MALL · RESEARCH</view>
-      <view class="hero-title">研究</view>
-      <view class="hero-sub">研究报告商城——EPC 总包领域深度研究报告，按份购买，一次解锁永久阅读&amp;下载</view>
-      <view class="hero-note">可开增值税专用发票（消费满 ¥200 可开具）</view>
+      <view class="hero-kicker">ASK THE REPORT · RESEARCH</view>
+      <view class="hero-title">问报告</view>
+      <view class="hero-sub">提问，即是最深的阅读。{{statsReady ? stats.sellable : '—'}} 份深度研究，每日 6 问免费，句句有出处</view>
+      <view class="rs-ask-cta" bindtap="onAskReport" hover-class="rs-ask-cta-hover">立即问报告 · 前 6 问免费</view>
+      <view class="hero-note">商城在下——每份开放试读，一次解锁，永久阅读与下载 · 满 ¥200 可开增值税专用发票</view>
 
       <!-- 变现数据带：在售/起价/已解锁（口径=目录 API 实数 + 实价 ¥498 起，可证成） -->
       <view class="rs-hero-stats">
@@ -122,7 +123,7 @@
   </view>
 
   <!-- 合规注脚 -->
-  <view class="rs-foot muted">报告内容为总包智库研究团队基于公开资料研究产出，购买后支持 PDF 全文阅读；如遇质量问题可联系客服处理</view>
+  <view class="rs-foot muted">每一份报告，都是研究团队从公开资料里逐项核实出来的。买后随时读、随时下载；有任何问题，客服都在</view>
 
   <view class="safe-bottom"></view>
 </view>

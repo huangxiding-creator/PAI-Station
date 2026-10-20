@@ -50,7 +50,7 @@
       <button class="btn-primary mini-retry" hover-class="btn-hover" bindtap="onRetry">重试</button>
     </block>
     <view class="muted" wx:else>额度加载中…</view>
-    <view class="muted quota-rule">每日登录赠送 6 次 · 有用/纠错（写具体意见）各 +1 次，上不封顶 · 北京时间 0 点清零</view>
+    <view class="muted quota-rule">每日 6 次免费咨询，日日更新；一条认真的反馈，即是更多次数</view>
   </view>
 
   <!-- 咨询记录（1009 用户令：外观移页底，记录前置） -->
@@ -83,7 +83,7 @@
           <view class="blank-mark mono">BLANK SHEET</view>
         </view>
         <view class="empty-text">还没有咨询记录</view>
-        <view class="muted">第一次咨询，马上试试</view>
+        <view class="muted">顾问已就位，静候第一问</view>
         <button class="btn-primary empty-btn" hover-class="btn-hover" bindtap="goAsk">去咨询</button>
       </view>
     </block>
@@ -119,9 +119,9 @@
           <view class="ea-title">批量导出全部咨询</view>
           <!-- v0.9.1 修复：iOS(payOk=false)界面不出现价格描述（审核灰区）→ 中性文案；Android 保留价格引导 -->
           <!-- v0.9.7（1009 用户令：付费一次永久解锁）：全解锁态不显示价格——¥0.1/条 只描述「未解锁条目」 -->
-          <view class="ea-sub" wx:if="{{!payOk}}">Word / PDF / Markdown · 导出全部咨询记录 · 一键转发同事</view>
+          <view class="ea-sub" wx:if="{{!payOk}}">您的每次提问，都是可分享的专业洞察——三种格式，一键致同事</view>
           <view class="ea-sub" wx:elif="{{exportUnpaidAll === 0}}">已全部解锁 · 可反复导出 · 一键转发同事</view>
-          <view class="ea-sub" wx:else>Word / PDF / Markdown · ¥0.1/条 · 一键转发同事</view>
+          <view class="ea-sub" wx:else>Word / PDF / Markdown · ¥0.1/条 · 转给需要的人</view>
         </view>
         <text class="ea-arrow">›</text>
       </button>
@@ -217,7 +217,7 @@
     </view>
   </view>
 
-  <view class="muted mono" style="text-align: center; padding: 8rpx 0 0; letter-spacing: 2rpx;">v0.9.24 · 总包AI顾问</view>
+  <view class="muted mono" style="text-align: center; padding: 8rpx 0 0; letter-spacing: 2rpx;">v0.9.25 · 总包AI顾问</view>
   <view class="legal-row" bindtap="goPrivacy" hover-class="legal-hover">用户协议 · 隐私政策</view>
 
   <view class="safe-bottom"></view>

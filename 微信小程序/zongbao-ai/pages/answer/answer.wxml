@@ -86,7 +86,7 @@
           <text class="proc-x">正在组织专业回答</text>
         </view>
       </view>
-      <view class="muted proc-tip">通常 10-60 秒（高峰期可能排队稍久）· 完成后自动展示</view>
+      <view class="muted proc-tip">好答案，值得等待——一两分钟后，自动呈现</view>
     </view>
   </block>
 
@@ -112,9 +112,9 @@
 
   <!-- 引擎处理失败（次数已退） -->
   <view class="card ticks err-card" wx:elif="{{kbError}}">
-    <view class="err-kicker kicker kicker-on-paper">REJECTED · 这次没有回答成功</view>
+    <view class="err-kicker kicker kicker-on-paper">这次没答好</view>
     <view class="muted">{{kbError}}</view>
-    <view class="muted refund-note">提问次数已自动退回</view>
+    <view class="muted refund-note">提问次数已如数奉还</view>
     <button class="btn-primary retry-btn" hover-class="btn-hover" bindtap="goAsk">重新咨询</button>
   </view>
 
@@ -125,7 +125,7 @@
       <view class="a-head">
         <view class="a-badge">
           <view class="a-badge-dot"></view>
-          <text>AI 检索总包智库 · 专业解答</text>
+          <text>AI 查遍总包智库 · 专业解答</text>
         </view>
         <view class="a-meta">
           <text class="meta-chip mono" wx:if="{{fullChars}}">{{fullChars}} 字</text>
@@ -140,7 +140,7 @@
         <view class="tldr-head">
           <view class="tldr-bar"></view>
           <text class="tldr-title">要点速览</text>
-          <text class="tldr-cap mono">TL;DR</text>
+          <text class="tldr-cap mono">一分钟看懂</text>
         </view>
         <view class="tldr-item" wx:for="{{tldr}}" wx:key="index">
           <view class="tldr-idx mono">{{index + 1}}</view>
@@ -229,7 +229,7 @@
       <!-- v0.9.8（用户令 1009）：AI 申明唯一化——正文态只在依据来源下方一处，徽章+全句合并（显著级不变）；追问区小注已删 -->
       <view class="ai-flag ai-flag-card">
         <view class="ai-flag-badge">AI生成</view>
-        <view class="ai-flag-text">内容由人工智能（AI）生成 · 仅供参考，不构成专业意见 · 重要事项请咨询具备资质的专业人士</view>
+        <view class="ai-flag-text">分享洞察，亦是专业名片 · 内容由人工智能（AI）生成，仅供参考，重要事项请咨询具备资质的专业人士</view>
       </view>
     </view>
 

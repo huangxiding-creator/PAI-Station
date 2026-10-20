@@ -1,0 +1,27 @@
+[sched-wxy-v1] SCHED 文献云腿启动 2026-10-20 06:44:29 (无头, 10 词)
+[wxy] 词文件已换 (10 词), 原词表 15 行 跑完还原
+[wxy] 词文件已还原
+[wxy] rc=0 | 新增 PDF 33 件 (65MB) → _channel_wenchuanyun/ | 日志 epcsched_wxy_run_1020_0644.log
+Traceback (most recent call last):
+  File "E:\AI-Station\Auto_Manus\epcsched_wxy_leg.py", line 110, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "E:\AI-Station\Auto_Manus\epcsched_wxy_leg.py", line 100, in main
+    r = ap.ingest("EPC-SCHED", str(f), "paper:wenchuanyun", "",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\AI-Station\reforge_factory\ammo_pool.py", line 636, in ingest
+    if mp.is_file() and any(
+                        ^^^^
+  File "E:\AI-Station\reforge_factory\ammo_pool.py", line 637, in <genexpr>
+    json.loads(x).get("source_path") == str(fp)
+    ^^^^^^^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python311\Lib\json\__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python311\Lib\json\decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python311\Lib\json\decoder.py", line 353, in raw_decode
+    obj, end = self.scan_once(s, idx)
+               ^^^^^^^^^^^^^^^^^^^^^^
+json.decoder.JSONDecodeError: Unterminated string starting at: line 1 column 419 (char 418)

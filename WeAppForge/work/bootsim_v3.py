@@ -121,8 +121,8 @@ check("ask 额度票根=实时总额度大字（v0.9.13 用户令：主位 total
       "咨询总额度" in ask_wxml and 'qt-num-hero">{{quota.total_left}}' in ask_wxml
       and "今日登录赠送 {{quota.free_left}} 次" in ask_wxml
       and "今日免费额度" not in ask_wxml and "发起首次咨询后显示" not in ask_wxml)
-check("ask 空额度票根亮静态规则数（不等咨询即显；未同意不登录口径不变）",
-      "每日登录赠送 6 次" in ask_wxml and 'qt-num-hero">6</view>' in ask_wxml)
+check("ask 空额度票根亮静态规则数（1020 用户价值口径；未同意不登录口径不变）",
+      "每天 6 次免费咨询" in ask_wxml and 'qt-num-hero">6</view>' in ask_wxml)
 _opt = ask_wxml.find("opt-btn")
 _cta = ask_wxml.find("ask-btn")
 _inp = ask_wxml.find("ask-input")
@@ -130,10 +130,10 @@ check("ask 布局=输入框→按钮排（AI优化左|咨询右）", 0 <= _inp <
 
 # 第 4 点：免费规则文案（v0.9.6 用户令 1009：免费次数说明文字全域下线，规则本身不变——
 # 引擎 6 次/日照旧；文字只留赠次规则与清零时点）
-check("ask 规则文案=四动作+0点清零（免费次数文字已下线）",
-      "免费 6 次" not in ask_wxml and "0 点清零" in ask_wxml and "有用/纠错" in ask_wxml)
-check("my 规则文案=四动作+上不封顶（免费次数文字已下线）",
-      "每天免费 6 次" not in my_wxml and "上不封顶" in my_wxml and "有用/纠错" in my_wxml)
+check("ask 规则文案=1020 凝练口径（机制黑话下线）",
+      "0 点清零" not in ask_wxml and "北京时间" not in ask_wxml and "您的反馈，即是额度" in ask_wxml)
+check("my 规则文案=1020 高级感+社交货币（日日更新/洞察可分享）",
+      "日日更新" in my_wxml and "可分享的专业洞察" in my_wxml)
 
 # 第 5 点：打破砂锅 + 批量导出
 check("my 工程档案→打破砂锅", "打破砂锅 · FOLDER" in my_wxml and "工程档案" not in my_wxml)
@@ -142,9 +142,9 @@ check("my 批量导出三格式 ActionSheet", "Word" in my_js and "PDF" in my_js
 check("api exportAll 客户端", "exportAll" in api_js)
 
 # 第 6 点：总包AI智库专业解答（v0.7.0：工程大脑字眼全局统一为总包智库）
-check("answer 工程大脑→总包AI智库", "AI 检索总包智库 · 专业解答" in ans_wxml and "工程大脑 · 专业解答" not in ans_wxml)
+check("answer 工程大脑→总包AI智库（1020 高级感：查遍）", "AI 查遍总包智库 · 专业解答" in ans_wxml)
 check("answer 绘制中=总包智库（v0.7.0 统一）", "总包智库 · 绘制中" in ans_wxml)
-check("answer 定位=AI 检索总包智库（可证成口径）", "专业参考源自「总包智库」" in ask_wxml and "AI 检索总包智库" in ans_js)
+check("answer 定位=总包智库（1020：溯源副题）", "皆有可溯源的答案" in ask_wxml and "AI 检索总包智库" in ans_js)
 
 # 第 7 点：精美小按钮（pill 排；v0.7.3 复制全文下线=五钮：有用/导出/纠错/分享/海报）
 check("answer pill-row 五小按钮（复制全文已下线）", "pill-row" in ans_wxml and ans_wxml.count('class="pill-glyph"') == 5)
@@ -165,9 +165,9 @@ check("api potList 客户端", "potList" in api_js)
 check("api optimize 客户端（shareReward 已随分享激励下线）", "optimize" in api_js and "shareReward" not in api_js)
 
 # 版本与定位（v0.9.0）
-check("my 版本标记 v0.9.24（1019 免费优先改版+统一池）", "v0.9.24" in my_wxml)
+check("my 版本标记 v0.9.25（1019 免费优先改版+统一池）", "v0.9.25" in my_wxml)
 pkg = json.load(open(os.path.join(ROOT, "package.json"), encoding="utf-8"))
-check("package.json version=0.9.24", pkg["version"] == "0.9.24")
+check("package.json version=0.9.25", pkg["version"] == "0.9.25")
 # 1009 用户令：外观沉底（个性化低频项按用户习惯放设置区，高频额度/记录在前）——顺序即断言
 check("my 布局顺序=额度→记录→书架→外观（外观在咨询记录之后，1009 用户令）",
       my_wxml.find("外观 · APPEARANCE") > my_wxml.find("咨询记录 · RECORDS")
@@ -393,11 +393,11 @@ for _base, _dirs, _files in os.walk(ROOT):
 check("极限词/敏感增长措辞全局归零（顶级/病毒/裂变）", not _jurisdiction_hits, str(_jurisdiction_hits))
 check("ask hero 无「法务/诉讼」服务范围声明", "法务" not in ask_wxml and "诉讼" not in ask_wxml)
 check("ask hero 无 7×24 时限承诺", "7×24" not in ask_wxml and "7×24" not in my_wxml)
-check("hero 口径=AI 生成声明一处不重复（1009 用户令去重）",
-      "本服务内容由人工智能（AI）生成" in ask_wxml and "专业参考源自「总包智库」" in ask_wxml
+check("hero 口径=AI 生成声明一处不重复（1009 去重；1020 高级副题）",
+      "本服务内容由人工智能（AI）生成" in ask_wxml and "皆有可溯源的答案" in ask_wxml
       and "AI 检索" not in ask_wxml)
-check("hero 溯源口径在 home 跳板页保留（可证成）",
-      "AI 检索总包智库" in read("pages/home/home.wxml") and "顶级" not in pot_wxml)
+check("hero 溯源口径在 home 跳板页保留（1020：查遍+有出处）",
+      "AI 查遍总包智库" in read("pages/home/home.wxml") and "顶级" not in pot_wxml)
 
 # B. AI 生成标识三面（AI标识办法：正文/追问/锅圈公开展示面）
 check("answer 正文态 AI 申明唯一=依据来源下方徽章条（1009 用户令：上移+去重）",
@@ -418,10 +418,10 @@ check("ask.wxml 常驻内联告知（提交即同意+AI 生成口径，协议全
       "提交即同意用户协议与隐私政策" in ask_wxml and "解答由 AI 生成，仅供参考" in ask_wxml)
 _vis = {p: chr(10).join(l.split("<!--")[0] for l in open(os.path.join(ROOT, p), encoding="utf-8").read().splitlines())
         for p in ("pages/ask/ask.wxml", "pages/my/my.wxml", "pages/answer/answer.wxml")}
-check("免费=引流主口径（1010 用户令 CTA/home 回位；v0.9.13 票根改总额度口径；my/answer 正文仍零免费）",
-      "'免费咨询'}}</button>" in ask_wxml and "每日登录赠送 6 次" in ask_wxml
-      and "免费工程咨询" in read("pages/home/home.wxml")
-      and "免费" not in _vis["pages/my/my.wxml"] and "免费" not in _vis["pages/answer/answer.wxml"])
+check("免费=引流主口径（1020：三页一致免费话术，旧零免费禁令废止）",
+      "'免费咨询'}}</button>" in ask_wxml and "每天 6 次免费咨询" in ask_wxml
+      and "免费工程咨询" in read("pages/home/home.wxml") and "智库查证中" in ask_wxml
+      and "免费咨询" in _vis["pages/my/my.wxml"])
 check("my 页用户协议·隐私政策入口", "goPrivacy" in my_js and "用户协议 · 隐私政策" in my_wxml)
 
 # D. UGC 合规：锅圈举报入口 + 服务端 msgSecCheck 闸
@@ -442,7 +442,7 @@ check("session_key 服务端落库供查单签名（不下发客户端）",
 
 # E. 分享回流注释中性化 + 等待预期管理
 check("answer 分享回流注释中性（无病毒环措辞）", "携带小程序入口" in ans_js and "病毒" not in ans_js)
-check("answer 等待文案带高峰期预期", "高峰期可能排队稍久" in ans_wxml)
+check("answer 等待文案=1020 高级感（好答案，值得等待）", "好答案，值得等待" in ans_wxml)
 
 # ══ v0.8.0 用户令 1008（咨询全免费 + 导出 ¥0.1/条 + 智库四库 34 分组同步）══
 pay_js_path = os.path.join(ROOT, "utils", "pay.js")
@@ -490,8 +490,8 @@ check("智库页 第三方品牌不展示（科思顿/小鹅通/秘塔/知网镜
 check("智库页 诚实库存四数（9855/847/906/620，v0.9.6 用户令更新首数）",
       all(k in read("utils/kbstats.js") for k in ["9855", "847", "906", "620"])
       and "kbstats.KB_STATS" in zk_js)
-check("智库页 持续入库口径（不吹全量，v0.9.1 锚=时间线节点）",
-      "持续入库中" in zk_wxml and "盘点口径" in zk_wxml and "全量" not in zk_wxml)
+check("智库页 持续入库口径（1020 去内部术语）",
+      "持续入库中" in zk_wxml and "盘点口径" not in zk_wxml and "同步更新" in zk_wxml)
 check("智库页 v0.7.4 合规防线收敛（previewQr 导流已撤；v0.9.13 唯一二维码=购买弹窗总包君）",
       "previewQr" not in zk_js and 'zk-qr-wrap' in zk_wxml and 'src="/images/zongbaojun_qr.jpg"' in zk_wxml)
 # 引擎侧：导出收费闸门 + 旧 1 元解锁下线
@@ -545,7 +545,7 @@ check("my.js 服务端权威计数 exportUnpaidAll（弹窗金额不吃 20 条�
 check("my.js 单笔 99 条上限引导（超量分批）",
       "一次最多解锁 99 条" in my_js)
 check("my.js reconciling 分支（刷新不谎报）", "res.reconciling" in my_js)
-check("ask.wxml 赠次口径无分享（诱导分享归零）", "有用/纠错 各+1次" in ask_wxml and "有用/分享/纠错" not in ask_wxml)
+check("ask.wxml 赠次口径无分享（诱导分享归零；1020=反馈即额度）", "您的反馈，即是额度" in ask_wxml and "有用/分享/纠错" not in ask_wxml)
 _pv = read("pages/legal/privacy.wxml")
 check("legal 付费导出条款（收费说明+退款口径+iOS 不售）",
       "导出服务（收费说明）" in _pv and "¥0.1/条" in _pv and "不支持退款" in _pv and "iOS 端不提供" in _pv)
@@ -596,7 +596,7 @@ check("报告页 吸底行动栏（1019 免费锚点版：未购=去问报告 / 
 check("报告页 免费优先铁律（页级零售卖：rp-bar 无价格无购买解锁）",
       'rp-bar-price">{{d.price_label}}' not in _rp_wxml_2
       and "rp-bar-btn\"...购买解锁" not in _rp_wxml_2)
-check("报告页 免费问 hero 头牌（首卡=ASK FREE + 每日6问免费 + 已解锁/今日剩计数）",
+check("报告页 免费问 hero 头牌（1020 高级版：每个答案皆有出处）",
       '免费问报告 · ASK FREE' in _rp_wxml_2 and '每日 6 问免费' in _rp_wxml_2
       and '已解锁 · 无限问' in _rp_wxml_2 and '今日剩 {{askLeft}} 问' in _rp_wxml_2)
 check("报告页 免费价值卡（免费读·免费问 + 免费试读CTA，非iOS购买钮）",
@@ -618,9 +618,8 @@ check("报告页 购买触感（vibrateShort）", "vibrateShort" in _rp_js_2)
 # 用户令 1008：付款后解锁全量阅读和下载（openDocument showMenu=阅读器内转发/收藏/保存）
 check("报告页 解锁后可下载（openDocument showMenu=true）",
       "showMenu: true" in _rp_js_2 and "fileType: 'pdf'" in _rp_js_2)
-check("报告页 付款价值口径（全量阅读+下载保存明示，购前购后都说清）",
-      "全量阅读 · 可下载保存" in _rp_wxml_2 and "下载保存" in _rp_wxml_2
-      and "付费解锁全量阅读与下载" in _rp_wxml_2)
+check("报告页 付款价值口径（1020 高级版：试读至此全文展开）",
+      "全量阅读 · 可下载保存" in _rp_wxml_2 and "试读至此，全文由此展开" in _rp_wxml_2)
 # 商城目录页：变现数据带 + 载入骨架
 check("研究页 变现数据带（在售/498元起/已解锁，可证成实数）",
       "rs-hero-stats" in rs_wxml and "¥498" in rs_wxml
@@ -654,7 +653,7 @@ check("zhiku 展开动效与箭头旋转（chevron 状态类）",
       and "fadeIn" in _zk_wxss_v2)
 check("zhiku 溯源时间线（2013 公益叙事三节点，1009 用户令年份修正）",
       "zk-tl-item" in _zk_wxml_v2 and "2013" in _zk_wxml_v2
-      and "公益运行至今" in _zk_wxml_v2 and "总包学园" in _zk_wxml_v2)
+      and "公益十二年" in _zk_wxml_v2 and "总包学园" in _zk_wxml_v2)
 check("tab 栏 按压反馈（hover-class）", 'hover-class="tab-hover"' in read("custom-tab-bar/index.wxml")
       and ".tab-hover" in read("custom-tab-bar/index.wxss"))
 
@@ -663,7 +662,7 @@ check("ask 智库底座信任带（四数可证成=智库页盘点同数，v0.9.
       "kb-strip" in ask_wxml and 'wx:for="{{kbStats}}"' in ask_wxml
       and "{{item.n}}" in ask_wxml and "kb-cred" in ask_wxml
       and ".kb-strip" in read("pages/ask/ask.wxss"))
-check("ask hero 口径点名总包智库", "专业参考源自「总包智库」" in ask_wxml)
+check("ask hero 口径点名总包智库（1020：工程路上遇到的难题）", "皆有可溯源的答案" in ask_wxml)
 check("ask 信任承诺=每答附依据来源（answer 页 cite 栏背书）",
       "每条回答附依据来源" in ask_wxml
       and "依据来源" in read("pages/answer/answer.wxml"))
@@ -684,8 +683,8 @@ check("报告页 PDF=downloadFile+openDocument（Bearer 头）",
 check("报告页 iOS 免费导向（1019：卡CTA=免费试读无购买闸；iOS 注脚无购买诱导）",
       "paySupported" in rp_wxml and "iOS 可免费试读与免费问" in rp_wxml)
 check("报告页 整理中不可买态", "暂未开放" in rp_wxml)
-check("报告页 免费优先口径（1019 用户令：免费试读/每日免费问/需要时再解锁）",
-      "免费试读 · 每日免费问 · 需要全文 PDF 时再解锁" in rp_wxml)
+check("报告页 免费优先口径（1020 高级版：值不值得您说了算）",
+      "值不值得，您说了算" in rp_wxml)
 check("api.js 报告五端点（List/Detail/Sample/Sign/PdfUrl）",
       all(k in api_js for k in ("reportList", "reportDetail", "reportSample", "reportSign", "reportPdfUrl")))
 check("pay.js payReport（报告解锁腿）", "payReport" in pay_js)
@@ -963,8 +962,8 @@ check("v0.9.6 引擎遥测端点（POST 上行公开+GET recent 密钥门）",
       and "save_telemetry" in open(os.path.join(ENGINE, "qianwen_engine", "store.py"), encoding="utf-8").read())
 
 # 文案批次（1009 用户令：&下载 / 增票说明 / 旗舰独家下线 / 9855 / 免费次数文字全域下线）
-check("v0.9.6 research hero 口径=永久阅读&下载 + 增票说明行",
-      "永久阅读&amp;下载" in rs_wxml and "增值税专用发票" in rs_wxml
+check("1020 research hero=问报告主角（提问即是最深的阅读）+ 永久读下 + 增票行",
+      "提问，即是最深的阅读" in rs_wxml and "永久阅读与下载" in rs_wxml and "增值税专用发票" in rs_wxml
       and "hero-note" in rs_wxml and ".hero-note" in read("pages/research/research.wxss"))
 check("v0.9.6 旗舰/独家标签全域绝迹（筛档+页面文案）",
       "flagship" not in rs_js and "excl" not in rs_js
@@ -1043,10 +1042,10 @@ check("my 额度卡=总额度大字主位（quota-hero+qh-num 绑 total_left）"
       and ".qh-num" in _my_wxss and "108rpx" in _my_wxss)
 check("my 额度双格=今日登录赠送/互动加赠（free/bonus 分列，不再并称免费）",
       "今日登录赠送" in my_wxml and "互动加赠" in my_wxml and "{{quota.free_left}}" in my_wxml)
-check("my 规则行=登录赠送口径（v0.9.13 命名统一）",
-      "每日登录赠送 6 次" in my_wxml and "每天免费 6 次" not in my_wxml)
-check("ask 底栏规则行=登录赠送口径（三件全）",
-      "每日登录赠送 6 次" in ask_wxml and "0 点清零" in ask_wxml and "上不封顶" in ask_wxml)
+check("my 规则行=1020 高级感（日日更新+即是更多次数）",
+      "日日更新" in my_wxml and "每天免费 6 次" not in my_wxml)
+check("ask 底栏规则行=1020 高级口径（皆可换得+即是额度）",
+      "每日 6 次免费咨询" in ask_wxml and "皆可换得更多次数" in ask_wxml and "您的反馈，即是额度" in ask_wxml)
 
 # REQ-002 智库广告：复制按钮下方广告条 + 点触式二维码弹窗
 check("智库广告条在复制按钮下方（zk-ad 出现于 zk-copy 之后）",
@@ -1082,7 +1081,7 @@ check("引擎道具图路由（/static/goods/{name} 白名单+防穿越+长缓�
 check("引擎道具图素材随包（static_goods/zongbaojun.jpg）",
       "GOODS_STATIC_DIR" in _app_py
       and os.path.exists(os.path.join(ENGINE, "qianwen_engine", "static_goods", "zongbaojun.jpg")))
-check("telemetry VER=0.9.24（版本横幅同步）", "var VER = '0.9.24'" in _tel_js)
+check("telemetry VER=0.9.25（版本横幅同步）", "var VER = '0.9.25'" in _tel_js)
 
 # ══ v0.9.15（1011 用户令：报告详情页 有用/分享给同行 赠次 + 研报转化海报）══
 _rp_wxml_3 = read("pages/report/report.wxml")
@@ -1195,9 +1194,9 @@ check("详情页 卷头样式在役（色带+实底卷号徽标+章行缩进）"
 check("研究页 起价数据驱动（¥498 写死根除，stats.pmin 驱动）",
       "stats.pmin" in _rsh_wxml and ">¥498<" not in _rsh_wxml
       and "pmin" in _rsh_js)
-check("版本信标 0.9.24（telemetry + my 页脚）",
-      "VER = '0.9.24'" in read("utils/telemetry.js")
-      and "v0.9.24" in read("pages/my/my.wxml"))
+check("版本信标 0.9.25（telemetry + my 页脚）",
+      "VER = '0.9.25'" in read("utils/telemetry.js")
+      and "v0.9.25" in read("pages/my/my.wxml"))
 
 # ── v0.9.18（1013 用户令①：分享全量——灰按钮根因=缺 handler，「每一个页面都可以」）──
 # REQ-001.AC1 逐页锚：本轮新补 6 页（ask/home/my/pot/invoice/legal），在役 4 页（answer/report/research/zhiku）
@@ -1498,8 +1497,8 @@ check("报告页 答案气泡互动三钮（👍有用bump likes+report_ask_like
 check("api.js reportBump 端点（POST /api/report/{sku}/bump/{field} 公开计数）",
       "reportBump" in _api21_js and "'/api/report/' + sku + '/bump/' + field" in _api21_js,
       "reportBump 封装缺失")
-check("v0.9.24 版本横幅（my 页脚 + telemetry VER 同步 0.9.24）",
-      "v0.9.24" in _my21_wxml and "VER = '0.9.24'" in _tel21_js,
+check("v0.9.25 版本横幅（my 页脚 + telemetry VER 同步 0.9.25）",
+      "v0.9.25" in _my21_wxml and "VER = '0.9.25'" in _tel21_js,
       "版本横幅不同步")
 
 fails = [c for c in checks if not c[1]]

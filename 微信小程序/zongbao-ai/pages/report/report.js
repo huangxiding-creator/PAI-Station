@@ -49,6 +49,12 @@ Page({
   },
 
   onLoad(query) {
+    // 1020：研究页「问报告」主角 CTA 直跳带 focus=ask——自动滚到提问区
+    if (query && query.focus === 'ask') {
+      setTimeout(() => {
+        wx.pageScrollTo({ selector: '#askHero', duration: 300 });
+      }, 1200);
+    }
     const app = getApp();
     if (app.globalData && app.globalData.nav) {
       this.setData({ nav: app.globalData.nav });

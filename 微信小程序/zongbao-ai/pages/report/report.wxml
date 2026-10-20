@@ -25,7 +25,7 @@
       <view class="rp-ask-hero-mic {{askRecording ? 'rp-ask-hero-mic-on' : ''}}"><text>🎤</text></view>
       <view class="rp-ask-hero-tt">
         <view class="rp-ask-hero-title">免费问报告 · ASK FREE</view>
-        <view class="rp-ask-hero-sub">每日 6 问免费，语音或打字，答案引用章节原文</view>
+        <view class="rp-ask-hero-sub">每日 6 问免费，语音或文字皆可——每个答案，皆有出处</view>
       </view>
       <text class="rp-ask-hero-left mono" wx:if="{{askUnlimited}}">已解锁 · 无限问</text>
       <text class="rp-ask-hero-left mono" wx:elif="{{!askExhausted}}">今日剩 {{askLeft}} 问</text>
@@ -116,7 +116,7 @@
     <view wx:elif="{{d.sellable}}" class="rp-ios-note muted">iOS 可免费试读与免费问，全文解锁请洽客服</view>
     <view wx:else class="rp-ios-note muted">本报告 PDF 整理中，开放购买前可先试读</view>
 
-    <view class="muted rp-note">免费试读 · 每日免费问 · 需要全文 PDF 时再解锁 · 内容由总包智库研究团队基于公开资料研究产出</view>
+    <view class="muted rp-note">先试读、先提问，值不值得，您说了算——每一页，皆出自总包智库对公开资料的逐项核实</view>
   </view>
 
   <!-- 简介 -->
@@ -208,7 +208,7 @@
     <view class="rp-sample-more" bindtap="toggleSample">{{sampleOpen ? '收起试读 ▴' : '展开试读 ▾'}}</view>
     <!-- 试读尽头 CTA：读完即购（iOS 不渲染购买入口=虚拟支付铁律） -->
     <view class="rp-cta {{buying ? 'rp-cta-busy' : ''}}" wx:if="{{sampleOpen && d.sellable && !d.unlocked && paySupported}}" bindtap="buy" hover-class="rp-cta-hover">
-      <text class="rp-cta-t">试读到此 · 付费解锁全量阅读与下载</text>
+      <text class="rp-cta-t">试读至此，全文由此展开</text>
       <text class="rp-cta-arrow">›</text>
     </view>
   </view>

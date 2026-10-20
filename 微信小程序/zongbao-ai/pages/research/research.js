@@ -119,6 +119,16 @@ Page({
     wx.navigateTo({ url: '/pages/report/report?sku=' + sku });
   },
 
+  onAskReport() {
+    // 1020 用户令：问报告=研究页主角——直跳最新在售报告并自动聚焦提问区
+    const first = (this.data.latest && this.data.latest[0]) || (this.data.items && this.data.items[0]);
+    if (!first) {
+      wx.showToast({ title: '报告加载中，稍候再试', icon: 'none' });
+      return;
+    }
+    wx.navigateTo({ url: '/pages/report/report?sku=' + first.sku + '&focus=ask' });
+  },
+
   onShareAppMessage() {
     return {
       title: '总包研究 · EPC 深度研究报告商城',
