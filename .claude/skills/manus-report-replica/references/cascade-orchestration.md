@@ -97,3 +97,27 @@ const results = await parallel('N章独立研究与写作', () => chapters.map(c
 | sandbox 文件系统 | 仓库内 reports/<课题>/ 目录 |
 | effort_level | 子代理 effort 参数 / 模型选择 |
 | cascadeJobDelivered | 子代理完成通知收集 |
+
+## 六、workflow-composer 权威契约（沙箱技能原文提炼）
+
+**触发门槛**: 每条目都需非平凡独立推理/研究/浏览才算数——条数本身不够。
+先自问「这能否写成单脚本循环？」能=写脚本有界并发，不开子代理。
+- 5+ 独立可比条目 → 用编排；**10+ → 必 fan-out**
+- 禁用: 短名单/一问题多侧面/几次搜索能完/天然串行紧耦合/同命令多参数
+
+**分解契约**:
+1. **一物一 agent**——绝不把多条目捆进一个子代理
+2. **父代理不做事条研究**——只编排（Bad: 父先研究再分发）
+3. 每个子代理一个清晰有界主题 + 完全自含 prompt
+4. 可比条目共享同一结构化输出 schema（组级 {schema}）
+5. parallel 组保序 → 输出映射回输入
+6. 单条失败不弃全局——收集成功件+记录失败件
+
+**Map/Collect/Reduce 契约**（终稿需跨条综合时）:
+- Map: 每条一 agent（parallel 组）→ Collect: 留成功+记失败 →
+  Reduce: **恰好一个** reducer agent 综合全部结构化结果 →
+  Return: reducer 输出+文件路径；父只确认文件存在并交付，不重研究
+
+**MCP 并发契约**: 有状态任务并行用 sandbox:'isolated'；产文件代理给
+确定性独立输出路径；parent-only 操作留父层；工具缺失=报告阻塞，
+**绝不伪造完成/挪用他件产物**。
