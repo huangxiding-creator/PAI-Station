@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
-"""sched_nblm_run — SCHED NotebookLM 产线编排器 (1020用户产线).
+"""sched_nblm_run — SCHED NotebookLM 产线编排器 (1021 生产固化版).
 
-通道三件套内置: 美国02出口(Clash API) + 工厂auth + 代理env。
-相A 框架: 建笔记本→上传00_框架笔记本源→工厂v2.0框架词→存 nblm_out/00_框架.md
-相B 章节: --chapters 逐章建本→上传→v3.0章词→存 nblm_out/chNN_初稿.md
+安全宪法（用户令）:
+- 用这个网络出口就要持续用——禁止切换出口/国家
+- 更换国家有风险——会触发 Google 风控可能封号
+- NB 在云端运行不用管
+
+通道管理: sched_nblm_conn.py --check 先确认可达再运行本脚本。
 状态: nblm_state.json (笔记本id/已传源/会话) 幂等续跑。
 用法: py -X utf8 sched_nblm_run.py [--phase framework|chapters] [--chapters 1,2]
 """
@@ -17,7 +20,7 @@ import sys
 import time
 import urllib.request
 from pathlib import Path
-from urllib.parse import quote
+from urllib.parse import quote  # noqa: F401 (安全保留,不删)
 
 # ---- 通道三件套(先于 notebooklm 导入) ----
 os.environ.setdefault("HTTP_PROXY", "http://127.0.0.1:7890")
@@ -61,7 +64,7 @@ def save_state(st: dict) -> None:
 
 async def get_client():
     from notebooklm import NotebookLMClient
-    return NotebookLMClient.from_storage()
+    return NotebookLMClient.from_storage(timeout=120.0)
 
 
 async def ensure_notebook(client, st: dict, key: str, title: str) -> str:
@@ -175,42 +178,51 @@ async def phase_chapters(st: dict, nums: list[int]) -> None:
         for ch in chs:
             if ch["no"] not in nums:
                 continue
-            key = f"ch{ch['no']:02d}"
-            out = OUT / f"ch{ch['no']:02d}_初稿.md"
-            if out.is_file() and out.stat().st_size > 20000:
-                print(f"[skip] {key} 已有稿({out.stat().st_size:,}B)")
-                continue
-            nb_id = await ensure_notebook(
-                client, st, key,
-                f"SCHED-工期报告-第{ch['no']}章-{ch['title'][:12]}")
-            d = UPLOAD / f"ch{ch['no']:02d}_笔记本"
-            await upload_dir(client, nb_id, d, key)
-            print(f"[nb] {key} 生成章稿…")
-            res = await ask_retry(client, nb_id, chapter_prompt(ch))
-            parts = [res.answer]
-            conv = res.conversation_id
-            for k in range(2):          # 两次「继续」拿后半部
-                await asyncio.sleep(4)
-                try:
-                    r2 = await ask_retry(
-                        client, nb_id,
-                        "继续，按同样要求输出本章后续部分(约5000字)，"
-                        "句末继续标注来源编号。完稿时附《源引用对照》清单。",
-                        conv=conv)
-                    parts.append(r2.answer)
-                    conv = r2.conversation_id or conv
-                except Exception as e:  # noqa: BLE001
-                    print(f"[!] {key} 续写{k+1} 失败: {e}")
-                    break
-            out.write_text("\n\n".join(parts), encoding="utf-8")
-            st.setdefault("chapters", {})[str(ch["no"])] = {
-                "conversation_id": conv,
-                "ts": time.strftime("%F %T")}
-            save_state(st)
-            total = sum(len(p) for p in parts)
-            print(f"[✅] 第{ch['no']}章初稿 {total:,}字 "
-                  f"({len(parts)}段) → {out.name}")
-            await asyncio.sleep(5)
+            try:
+                await gen_one(client, st, ch)
+            except Exception as e:  # noqa: BLE001
+                print(f"[!!] 第{ch['no']}章整体失败({type(e).__name__}: "
+                      f"{str(e)[:100]})——跳过续跑下一章")
+                await asyncio.sleep(30)
+
+
+async def gen_one(client, st: dict, ch: dict) -> None:
+    key = f"ch{ch['no']:02d}"
+    out = OUT / f"ch{ch['no']:02d}_初稿.md"
+    if out.is_file() and out.stat().st_size > 20000:
+        print(f"[skip] {key} 已有稿({out.stat().st_size:,}B)")
+        return
+    nb_id = await ensure_notebook(
+        client, st, key,
+        f"SCHED-工期报告-第{ch['no']}章-{ch['title'][:12]}")
+    d = UPLOAD / f"ch{ch['no']:02d}_笔记本"
+    await upload_dir(client, nb_id, d, key)
+    print(f"[nb] {key} 生成章稿…")
+    res = await ask_retry(client, nb_id, chapter_prompt(ch))
+    parts = [res.answer]
+    conv = res.conversation_id
+    for k in range(2):          # 两次「继续」拿后半部
+        await asyncio.sleep(4)
+        try:
+            r2 = await ask_retry(
+                client, nb_id,
+                "继续，按同样要求输出本章后续部分(约5000字)，"
+                "句末继续标注来源编号。完稿时附《源引用对照》清单。",
+                conv=conv)
+            parts.append(r2.answer)
+            conv = r2.conversation_id or conv
+        except Exception as e:  # noqa: BLE001
+            print(f"[!] {key} 续写{k+1} 失败: {e}")
+            break
+    out.write_text("\n\n".join(parts), encoding="utf-8")
+    st.setdefault("chapters", {})[str(ch["no"])] = {
+        "conversation_id": conv,
+        "ts": time.strftime("%F %T")}
+    save_state(st)
+    total = sum(len(p) for p in parts)
+    print(f"[✅] 第{ch['no']}章初稿 {total:,}字 "
+          f"({len(parts)}段) → {out.name}")
+    await asyncio.sleep(5)
 
 
 async def main() -> int:
@@ -219,9 +231,24 @@ async def main() -> int:
     ap.add_argument("--phase", default="framework",
                     choices=["framework", "chapters"])
     ap.add_argument("--chapters", default="")
+    ap.add_argument("--skip-check", action="store_true",
+                     help="跳过通道可达性检查(不推荐)")
     ns = ap.parse_args()
-    clash_put("默认节点", OK_NODE)          # 通道保证
-    time.sleep(2)
+
+    # 安全宪法: 先检测NB可达，不可达则退出（不切换出口）
+    if not ns.skip_check:
+        import subprocess as _sp
+        r = _sp.run(
+            [sys.executable, "-X", "utf8",
+             str(Path(__file__).parent / "sched_nblm_conn.py"), "--check"],
+            capture_output=True, text=True, timeout=30)
+        if r.returncode != 0:
+            print(r.stdout)
+            print("[!] NB 不可达，按安全纪律不切换出口。退出。")
+            return 1
+        print("[通道] ✅ NB 可达，开始生产")
+
+    # 注意: 不再调用 clash_put 切换节点——安全纪律: 锁定当前出口
     st = load_state()
     if ns.phase == "framework":
         await phase_framework(st)
