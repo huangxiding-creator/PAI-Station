@@ -36,7 +36,33 @@
 
 见 search-engineering.md 末节（原文全录）。
 
-## technical-writing（待回收）
+## 沙箱内置技能库（heist 全量回收 · 34 件 SKILL.md 原文在案）
 
-deep-research 指定写终稿时 MUST 遵循的写作规范技能；heist 任务回收中，
-拿到后补录本文件。
+位置: `逆向工程/manus-reverse/live/sandbox_skills/_x/<name>/SKILL.md`
+
+**报告链相关**: office-documents(docx/xlsx 生产+核验教义, OfficeCLI+LibreOffice) ·
+office · deep-research · data-analysis · slides · builtin-llm-models ·
+manus-api · manus-config · manus-tasks · handoff · triggers ·
+automation-and-scheduling · persistent-computing · imagegen ·
+image-processing · read-special-images · music-prompter · tts-prompter ·
+trip · game-asset-catalog · finance-pro-playbooks · tailscale-network ·
+data-api · data-backup-restoration · gws-best-practices · skill-creator …
+
+**任务开场必读三规范的真身** = office-documents / office / deep-research
+（Live 事件流前三个 text_editor 读取即此三件）。
+
+## technical-writing 状态（heist 实证 2026-10-21）
+
+**不在沙箱默认技能目录**（清单实证 + 交付中多个 0B SKILL.md 二次确证）。
+deep-research 引用路径 `/home/ubuntu/skills/technical-writing/SKILL.md` 属
+按需注入——报告写作任务触发时由服务端挂载。
+复刻启示：写作规范作为「按需挂载层」而非常驻——我们的等价物即本 skill 的
+quality-checklist.md + 产线文风纪律。
+
+## 沙箱基础设施实证（heist 副产）
+
+- 沙箱供应商: **e2b**（sandbox_id 形如 imzi…-e2b-prod-aws-ap-southeast-1）
+- 文件交付链: 沙箱文件 → sessionFile/<sid>/sandbox/<key> →
+  FileService/SignUrl(module=PRE_SIGN_MODULE_SESSION_FILE) → S3 预签
+  （upload 型口径; 稳定下载走会话页文件卡片）
+- fileOperationPromotion 事件携带 filePath（交付即事件）

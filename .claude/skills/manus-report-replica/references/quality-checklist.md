@@ -54,3 +54,15 @@ print(f'{tot:>8,}  TOTAL(CJK)')"
 
 对照原始要求 → 发现重复/遗漏/排版/字数问题 → **自动修正并直接更新原文件**
 （不建新版本文件）→ 重新实测字数 → 全过才交付。
+
+## 质检产物化（Live v2 实证 · Manus 自产机检 JSON）
+
+质检不只是行为，**落为可机读产物**（Manus 交付 质量检查报告.json）：
+```json
+{"chapters": 12, "total_chars": 129757,
+ "structure_exists": true, "merged_exists": true, "docx_exists": true,
+ "forbidden_terms": [],                       // 禁词扫描结果数组(空=过)
+ "chapter_char_counts": {"01.md": 10023, "…": "…"}}   // 逐章实测
+```
+复刻件同构：交付目录必含 `质量检查报告.json` 五项机检
+（章数/总字数实测/结构在/合并在/禁词零），外加我方 CJK 独立复测数。

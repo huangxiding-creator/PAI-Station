@@ -1,7 +1,10 @@
 # Manus 研究报告生成全链方法论 PLAYBOOK（三源合流版）
 
 > 三源: S1 桌面端 asar 静态逆向 | S2 网页端 Live 实测 | S3 存量语料统计 (870 会话/26372 工具调用)
-> 每条断言标注 [S1/S2/S3] 出处。版本: 2026-10-21 v1（Live 完成后升 v2）
+> 每条断言标注 [S1/S2/S3] 出处。版本: 2026-10-21 **v2（Live 全链闭环版）**
+> v2 增量: 十二章报告全程 Live 实证收尾——终稿 359KB/10.3万CJK汉字(超目标2倍)、
+> Manus 自产机器质检报告、交付事件序列、journal 断点重放全程复证。成品在
+> `live/9DCD48BZUH8msRx6TPCfxC/deliver/`（12章+终稿md/docx+质检json+结构md）
 
 ## 〇、引擎总览（三句话）
 
@@ -155,10 +158,37 @@ slides / suggestion
 manifest(内容特征清单) → 确定性 planner 脚本 → 冻结计划 → 最小编译预检
 → 按计划执行; 上下文只装计划不装目录。—— 复刻件的路由层设计蓝图。
 
-## 十、待 Live 补全（v2 增量）
+## 十、Live 全链闭环实证（v2 收官 · 2026-10-21 00:46）
 
-- [ ] 十二章全部交付后的合并/结构文件生成/终稿事件流
-- [ ] 最终质检事件细节 (L6 live 证据)
-- [ ] docx 转制与 fileOperationPromotion 交付形态
-- [ ] technical-writing SKILL.md 原文 (heist 在途)
-- [ ] 沙箱内置技能库清单+全包 (heist 在途)
+**任务**: 《中国水利水电工程EPC总承包风险管理研究报告》12章×≥4500字
+sid=9DCD48BZUH8msRx6TPCfxC，全程 60 分钟（含一次积分死亡+journal 续跑）。
+
+**全链时间线（事件流实测）**:
+```
+23:46 下发 → 读3份内部规范 → mcp server.list/tool.search → 12章分解宣告
+23:48 workflow/run 12并行子代理 → tool:agent 等待
+23:59 积分烧尽停止 (300→0, 12并行≈300积分/13min)
+00:00 积分刷新 → 00:07 点「继续」→ journal 重放 (1-2章免重跑)
+00:10-00:31 cascadeJobDelivered 逐章交付 (3,4,5…)
+00:31 全章齐 → 合并全文/生成DOCX/最终质检
+00:40 禁词扫描(待补充/TODO/占位=0) → 重复段落检查 → 结构完整性核验
+00:45 交付叙事 → cascadeTaskClock close → fileOperationPromotion
+```
+
+**成品实测（数字零造假·我方独立复核）**:
+- 12 章文件 26-33KB/章, CJK 实测 101,709 汉字; 终稿合并 102,937 汉字
+  (Manus 自报 129,757 字符=含标点口径; 目标≥5万汉字 → **超标 2 倍**)
+- 每章 7,388-9,417 CJK (Manus 自检 9,656-12,626 字符/章, 全部>硬条款)
+- **Manus 自产质检报告 (质量检查报告.json, 机器可读)**:
+  {chapters:12, total_chars:129757, structure_exists:true, merged_exists:true,
+   docx_exists:true, forbidden_terms:[], chapter_char_counts:{逐章}}
+  → 质检即代码: 结构/合并/docx/禁词/逐章字数五项机检, 非口头自检
+- 六配件全在 (严正声明/摘要/研究方法/报告价值/推荐序/术语表)
+- docx 191KB 出版级转制
+
+**复刻要义增补**:
+1. **质检产物化**: QC 结果落 JSON 文件（可机读可复核）而非聊天叙述
+2. **journal 续跑零浪费**: 完成章免重跑 = 积分经济学关键
+3. **沙箱技能按需挂载**: technical-writing 不在默认沙箱（0B 文件实证）,
+   服务端按任务类型注入; 复刻件等价物 = 本项目产线纪律文件
+4. **沙箱=e2b** (AWS ap-southeast-1); 文件交付经 manuscdn 直链可编程全取
