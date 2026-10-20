@@ -13,7 +13,7 @@ def find_tab(kw):
         t = page.browser.get_tab(tid)
         if kw in (t.url or ''):
             return t
-DESC = '工程行业企业产品与服务展示小程序。展示总包科技八条产品线与旗舰产品总包AI顾问（可跳转体验）；纯展示内容，无需登录，不采集用户信息。'
+DESC = '工程行业企业产品与服务展示小程序。本次更新：页面语言全面打磨，表述更凝练友好；全部分享功能完善。纯展示内容，无需登录，不采集用户信息。'
 gt = find_tab('getcodepage')
 
 # 1) 点 1.4.0 行提交审核
@@ -21,7 +21,7 @@ r = gt.run_js("return (function(){" + VIS + """
   function ownText(e){return Array.prototype.filter.call(e.childNodes,function(n){return n.nodeType===3;}).map(function(n){return n.nodeValue.trim();}).join(' ');}
   var els=document.querySelectorAll('*');
   for (var i=0;i<els.length;i++){
-    if (ownText(els[i])==='1.4.1'){
+    if (ownText(els[i])==='1.4.2'){
       var row=els[i];
       for (var d=0;d<8 && row;d++){
         if ((row.innerText||'').indexOf('提交审核')>=0){
