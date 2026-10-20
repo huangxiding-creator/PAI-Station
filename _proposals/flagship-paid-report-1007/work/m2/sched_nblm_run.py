@@ -84,10 +84,22 @@ async def upload_dir(client, nb_id: str, d: Path, tag: str) -> int:
         title = f.stem[:80]
         if title in exist:
             continue
-        await client.sources.add_file(nb_id, f, title=title)
-        n += 1
-        print(f"[up] {tag} ← {f.name[:60]}")
-        await asyncio.sleep(2)
+        ok = False
+        for att in range(3):          # 上传三重试(网络抖动防护)
+            try:
+                await client.sources.add_file(nb_id, f, title=title)
+                ok = True
+                break
+            except Exception as e:  # noqa: BLE001
+                print(f"[up!] {f.name[:40]} 第{att+1}次: "
+                      f"{type(e).__name__} {str(e)[:60]}")
+                await asyncio.sleep(20 * (att + 1))
+        if ok:
+            n += 1
+            print(f"[up] {tag} ← {f.name[:60]}")
+            await asyncio.sleep(4)
+        else:
+            print(f"[skip] {f.name[:40]} 三次失败, 跳过")
     # 轮询直至全部源就绪
     for _ in range(120):
         srcs = await client.sources.list(nb_id)
@@ -140,6 +152,23 @@ async def phase_framework(st: dict) -> None:
               f"({len(res.answer):,}字)")
 
 
+async def ask_retry(client, nb_id: str, question: str, conv=None,
+                    attempts: int = 3):
+    last = None
+    for i in range(attempts):
+        try:
+            if conv:
+                return await client.chat.ask(
+                    nb_id, question, conversation_id=conv)
+            return await client.chat.ask(nb_id, question)
+        except Exception as e:  # noqa: BLE001
+            last = e
+            print(f"[retry] ask 第{i+1}次失败: {type(e).__name__} "
+                  f"{str(e)[:80]}")
+            await asyncio.sleep(15 * (i + 1))
+    raise last
+
+
 async def phase_chapters(st: dict, nums: list[int]) -> None:
     chs = json.loads((SCHED / "chapters.json").read_text(encoding="utf-8"))
     async with await get_client() as client:
@@ -147,28 +176,32 @@ async def phase_chapters(st: dict, nums: list[int]) -> None:
             if ch["no"] not in nums:
                 continue
             key = f"ch{ch['no']:02d}"
+            out = OUT / f"ch{ch['no']:02d}_初稿.md"
+            if out.is_file() and out.stat().st_size > 20000:
+                print(f"[skip] {key} 已有稿({out.stat().st_size:,}B)")
+                continue
             nb_id = await ensure_notebook(
                 client, st, key,
                 f"SCHED-工期报告-第{ch['no']}章-{ch['title'][:12]}")
             d = UPLOAD / f"ch{ch['no']:02d}_笔记本"
             await upload_dir(client, nb_id, d, key)
             print(f"[nb] {key} 生成章稿…")
-            res = await client.chat.ask(nb_id, chapter_prompt(ch))
+            res = await ask_retry(client, nb_id, chapter_prompt(ch))
             parts = [res.answer]
             conv = res.conversation_id
             for k in range(2):          # 两次「继续」拿后半部
                 await asyncio.sleep(4)
                 try:
-                    r2 = await client.chat.ask(
-                        nb_id, "继续，按同样要求输出本章后续部分(约5000字)，"
-                               "句末继续标注来源编号。",
-                        conversation_id=conv)
+                    r2 = await ask_retry(
+                        client, nb_id,
+                        "继续，按同样要求输出本章后续部分(约5000字)，"
+                        "句末继续标注来源编号。完稿时附《源引用对照》清单。",
+                        conv=conv)
                     parts.append(r2.answer)
                     conv = r2.conversation_id or conv
                 except Exception as e:  # noqa: BLE001
                     print(f"[!] {key} 续写{k+1} 失败: {e}")
                     break
-            out = OUT / f"ch{ch['no']:02d}_初稿.md"
             out.write_text("\n\n".join(parts), encoding="utf-8")
             st.setdefault("chapters", {})[str(ch["no"])] = {
                 "conversation_id": conv,
