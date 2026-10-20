@@ -1,0 +1,14 @@
+# 大件本地留痕不入库 (asar_extracted 可由 scripts/asar_extract.py 从本地 Msix 确定性重导)
+asar_extracted/
+live_capture.log
+live_resume.log
+mini_heist.log
+# 轮询快照大且冗余; 收尾时复制终版为 final_v2.json 入库
+live/*/v2_[0-9]*.json
+live/9DCD48BZUH8msRx6TPCfxC/v2_*.json
+live/Yc9wV29j7LQmBS9Onr7Bsm/v2_*.json
+# 技能包原件大文件按需入库 (SKILL.md 文本入库, .skill 二进制与 __MACOSX 不入)
+live/skills/_pkg/*/*.skill
+live/skills/_pkg/*/_pkg/
+live/skills/*/*.json
+live/skills/_pkg/*/__MACOSX/
