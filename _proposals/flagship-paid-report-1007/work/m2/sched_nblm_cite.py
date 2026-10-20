@@ -65,7 +65,7 @@ def main() -> int:
     ap.add_argument("--chapters", default="")
     ap.add_argument("--rewrite", action="store_true")
     ns = ap.parse_args()
-    clash_put("默认节点", "🇺🇸 美国 02")
+    # 安全纪律(87ba2cab6同款固化): 锁定当前出口, 不切换节点/国家
     time.sleep(2)
     nums = [int(x) for x in ns.chapters.split(",") if x.strip()] \
         or list(range(1, 13))

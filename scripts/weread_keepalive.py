@@ -51,9 +51,27 @@ def save_state(s: dict) -> None:
 def wecom_notify(text: str) -> None:
     """企微直达授权人 (个人 OAuth aibot 通道, 已实测). 失败仅日志不阻断."""
     try:
-        subprocess.run(["wecom-cli", "message", "aibot", "send",
-                        "--text", text],
-                       capture_output=True, timeout=60)
+        # ★ 1020修: wecom-cli不在PATH(WinError2实锤8天死讯零送达)——
+        #   改绝对路径 wecom_cli.py; 兜底F:/We-AIPO/.env webhook直调。
+        import subprocess as _sp
+        _cli = r"E:/AI-Station/tools/wecom_cli.py"
+        if os.path.exists(_cli):
+            _sp.run([sys.executable, "-X", "utf8", _cli, "message",
+                     "aibot", "send", "--text", text],
+                    capture_output=True, timeout=60)
+        else:
+            import urllib.request as _u
+            _env = r"F:/We-AIPO/.env"
+            _url = ""
+            for _ln in io.open(_env, encoding="utf-8"):
+                if _ln.startswith("WECOM_WEBHOOK_URL="):
+                    _url = _ln.split("=", 1)[1].strip(); break
+            if _url:
+                _req = _u.Request(
+                    _url, data=json.dumps(
+                        {"msgtype": "text", "text": {"content": text}}
+                    ).encode(), headers={"Content-Type": "application/json"})
+                _u.urlopen(_req, timeout=15)
     except Exception as e:                     # noqa: BLE001 — 通知尽力而为
         print(f"[keepalive] 企微通知失败: {e}", flush=True)
 
@@ -94,16 +112,29 @@ def main() -> int:
         save_state(s)
         return 0
 
-    # 探活失败 → renew 抢救
+    # ★ 1020风控根修(用户令「与微信读书安全交互」): -2013死透后连续多日
+    #   每日定时renew=每日固定失败登录尝试=风控触发器(1020排查实锤: 连续
+    #   8+天 -2013循环正是账号反复被风控的元凶)。熔断: 死透计数连续>=2
+    #   → 今日不再renew, 只低频探测(每日探活1次零凭据请求), 人工扫码后
+    #   探活自然复活(死透计数清零)。
+    _dead_n = int(s.get("dead_streak", 0))
+    if _dead_n >= 2:
+        print(f"[keepalive] 死透熔断中(streak={_dead_n})——今日零renew零凭据请求"
+              "(防风控: 每日失败登录=触发器), 静候人工扫码", flush=True)
+        _dead(s, "死透熔断(零请求)")
+        return 1
+    # 探活失败 → renew 抢救(仅死透早期最多2次)
     try:
         if cli.renew():
             s["last_renew"] = now
             s["dead"] = s["notified"] = False
+            s["dead_streak"] = 0
             print("[keepalive] 死→活 | renew 抢救成功", flush=True)
             save_state(s)
             return 0
     except Exception as e:                     # noqa: BLE001
         print(f"[keepalive] renew 抢救异常: {e}", flush=True)
+    s["dead_streak"] = _dead_n + 1
     _dead(s, "renew 无效 (-2013 死透)")
     return 1
 
