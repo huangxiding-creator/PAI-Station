@@ -37,7 +37,7 @@ for (const pg of appJson.pages) {
 
 console.log('== [2] package.json ==');
 const pkg = JSON.parse(read(path.join(ROOT, 'package.json')));
-check('version 1.4.1（1019 专业分享线）', pkg.version === '1.4.1');
+check('version 1.4.2（1020 语言升维）', pkg.version === '1.4.2');
 
 console.log('== [3] products.js schema ==');
 delete require.cache[require.resolve(path.join(MP, 'utils/products.js'))];
