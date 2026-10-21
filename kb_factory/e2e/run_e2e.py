@@ -252,6 +252,7 @@ def main(argv=None) -> int:
             "## 降级注记",
             "",
             f"- {meta_note}" if meta_mode != "live" else "- 无降级：真网络真灌全程贯通。",
+            "- 交付腿 degraded_not_delivered 为设计内结果（E2E 环境 KB_WECOM_NOTIFY=0 静默 + SMTP 缺配）——生产环境两项就位后即为 email 直投；详见 ledger result 分级（ok/ok_wecom_fallback/degraded_not_delivered）。",
             "",
         ]
         (PKG_DIR / "E2E_REPORT.md").write_text("\n".join(lines), encoding="utf-8", newline="")

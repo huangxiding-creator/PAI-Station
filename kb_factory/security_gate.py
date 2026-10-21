@@ -95,8 +95,7 @@ def check_credentials(tracked_files: list) -> CheckResult:
                            f"发布面命中凭据形态 {len(hits)} 件: {', '.join(hits[:5])}")
     note = f"；站内非发布面另见 {outside} 个凭据形态文件名（skill 文档/探针脚本等，不属本门管辖，清理须用户令）" if outside else ""
     return CheckResult("1", "凭据零入仓", "PASS",
-                       "发布面（kb_factory+小程序）git ls-files 零命中"
-                       "（_credentials 下仅 .gitkeep/chain.jsonl 空占位，已核验）" + note)
+                       "发布面（kb_factory+小程序）git ls-files 零命中（占位文件以 ls-files 结果为准，字节数未核）" + note)
 
 
 # ---------------------------------------------------------------- ② 零删除红线
