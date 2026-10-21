@@ -1,0 +1,433 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://formatting.example.com/format-spec-schema.json",
+  "title": "试卷格式规范 Schema",
+  "description": "定义试卷各内容要素的排版格式。LLM 根据用户需求生成此格式的 JSON，再由格式化引擎执行。",
+  "type": "object",
+  "properties": {
+    "page": {
+      "type": "object",
+      "description": "页面设置（可选，不填则使用原文档设置）",
+      "properties": {
+        "size": {
+          "type": "string",
+          "enum": [
+            "A0","A1","A2","A3","A4","A5","A6","A7","A8","A9","A10",
+            "B0(ISO)","B1(ISO)","B2(ISO)","B3(ISO)","B4(ISO)","B5(ISO)","B6(ISO)","B7(ISO)","B8(ISO)","B9(ISO)","B10(ISO)",
+            "B0(JIS)","B1(JIS)","B2(JIS)","B3(JIS)","B4(JIS)","B5(JIS)","B6(JIS)","B7(JIS)","B8(JIS)","B9(JIS)","B10(JIS)",
+            "C0","C1","C2","C3","C4","C5","C6","C7","C8","C9","C10",
+            "letter","legal",
+            "1开","2开","4开","8开","16开","32开","64开"
+          ],
+          "description": "预设纸张大小。覆盖 ISO 216 A/B 系列、ISO 269 C 系列、JIS P 0138 B 系列、中国开本（基于正度 787×1092 全开）、美制 letter/legal。A 系列和 C 系列无歧义，B 系列必须带 (ISO) 或 (JIS) 后缀以区分，开本用『开』后缀。与 customSize 互斥，同时存在时 customSize 优先"
+        },
+        "orientation": {
+          "type": "string",
+          "enum": ["portrait", "landscape"],
+          "default": "portrait",
+          "description": "页面方向：纵向(portrait) / 横向(landscape)。与 size 或 customSize 配合使用"
+        },
+        "customSize": {
+          "type": "object",
+          "description": "自定义页面尺寸。与 size 互斥，同时存在时 customSize 优先",
+          "properties": {
+            "width": { "$ref": "#/definitions/lengthWithUnit", "description": "页面宽度" },
+            "height": { "$ref": "#/definitions/lengthWithUnit", "description": "页面高度" }
+          },
+          "required": ["width", "height"]
+        },
+        "margins": {
+          "type": "object",
+          "description": "页边距设置，每项均为带单位的长度值",
+          "properties": {
+            "top": { "$ref": "#/definitions/lengthWithUnit", "description": "上边距" },
+            "bottom": { "$ref": "#/definitions/lengthWithUnit", "description": "下边距" },
+            "left": { "$ref": "#/definitions/lengthWithUnit", "description": "左边距" },
+            "right": { "$ref": "#/definitions/lengthWithUnit", "description": "右边距" },
+            "header": { "$ref": "#/definitions/lengthWithUnit", "description": "页眉距边界" },
+            "footer": { "$ref": "#/definitions/lengthWithUnit", "description": "页脚距边界" },
+            "gutter": { "$ref": "#/definitions/lengthWithUnit", "description": "装订线宽度" }
+          }
+        },
+        "columns": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "description": "简写：直接指定栏数（等宽，默认栏间距）"
+            },
+            {
+              "type": "object",
+              "description": "完整分栏设置",
+              "properties": {
+                "count": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "default": 1,
+                  "description": "栏数，1 表示不分栏"
+                },
+                "space": {
+                  "$ref": "#/definitions/lengthWithUnit",
+                  "description": "栏间距（等宽分栏时生效）"
+                },
+                "equalWidth": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "是否等宽分栏。为 false 时需通过 columnDefs 指定每栏宽度"
+                },
+                "separator": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "是否显示分栏分隔线"
+                },
+                "columnDefs": {
+                  "type": "array",
+                  "description": "不等宽分栏时各栏的定义（equalWidth 为 false 时使用）",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "width": { "$ref": "#/definitions/lengthWithUnit", "description": "栏宽" },
+                      "space": { "$ref": "#/definitions/lengthWithUnit", "description": "该栏右侧间距" }
+                    },
+                    "required": ["width"]
+                  }
+                }
+              },
+              "required": ["count"]
+            }
+          ],
+          "description": "分栏设置。可以直接写栏数（如 2），或用对象详细配置"
+        }
+      }
+    },
+    "styles": {
+      "type": "object",
+      "description": "命名样式库。每个样式定义一个可复用的格式片段，元素可通过 baseStyle 引用。",
+      "required": ["base"],
+      "additionalProperties": {
+        "$ref": "#/definitions/styleDef"
+      }
+    },
+    "elements": {
+      "type": "object",
+      "description": "各内容要素的格式定义。每个元素可引用 styles 中的命名样式（baseStyle），并用自身属性覆盖。",
+      "properties": {
+        "metadata": {
+          "type": "object",
+          "description": "卷头信息类元素的格式定义",
+          "properties": {
+            "examName": { "$ref": "#/definitions/elementDef", "description": "试卷主标题" },
+            "subject": { "$ref": "#/definitions/elementDef", "description": "试卷副标题/科目名" },
+            "securityLevel": { "$ref": "#/definitions/elementDef", "description": "密级说明" },
+            "beforeActivation": { "$ref": "#/definitions/elementDef", "description": "启用前标识" },
+            "paperStructure": { "$ref": "#/definitions/elementDef", "description": "试卷结构描述" },
+            "examNature": { "$ref": "#/definitions/elementDef", "description": "考试性质" },
+            "organization": { "$ref": "#/definitions/elementDef", "description": "命题/联考单位" },
+            "examDateTime": { "$ref": "#/definitions/elementDef", "description": "考试日期" },
+            "duration": { "$ref": "#/definitions/elementDef", "description": "考试时长" },
+            "totalScore": { "$ref": "#/definitions/elementDef", "description": "满分说明" },
+            "studentName": { "$ref": "#/definitions/elementDef", "description": "考生姓名填写区" },
+            "admissionNumber": { "$ref": "#/definitions/elementDef", "description": "准考证号" },
+            "seatInfo": { "$ref": "#/definitions/elementDef", "description": "座位信息" },
+            "absenceMark": { "$ref": "#/definitions/elementDef", "description": "缺考标记" },
+            "barcodeArea": { "$ref": "#/definitions/elementDef", "description": "条形码区域" },
+            "sealLine": { "$ref": "#/definitions/elementDef", "description": "密封线" },
+            "referenceMaterial": { "$ref": "#/definitions/elementDef", "description": "参考资料" },
+            "instructions": {
+              "type": "object",
+              "description": "注意事项",
+              "properties": {
+                "title": { "$ref": "#/definitions/elementDef", "description": "注意事项标题" },
+                "items": { "$ref": "#/definitions/elementDef", "description": "注意事项列表项" }
+              }
+            },
+            "answerRequirements": { "$ref": "#/definitions/elementDef", "description": "答题要求" },
+            "integrityStatement": { "$ref": "#/definitions/elementDef", "description": "诚信承诺" },
+            "otherInfo": { "$ref": "#/definitions/elementDef", "description": "其他信息" }
+          }
+        },
+        "volume": {
+          "type": "object",
+          "description": "卷节点上的字段格式",
+          "properties": {
+            "title": { "$ref": "#/definitions/elementDef", "description": "卷标题（如'第Ⅰ卷（选择题）'）" },
+            "note": { "$ref": "#/definitions/elementDef", "description": "卷说明/备注" }
+          }
+        },
+        "section": {
+          "type": "object",
+          "description": "大题节点上的字段格式",
+          "properties": {
+            "title": { "$ref": "#/definitions/elementDef", "description": "大题标题（如'一、选择题'）" },
+            "note": { "$ref": "#/definitions/elementDef", "description": "大题说明/备注" }
+          }
+        },
+        "question": {
+          "type": "object",
+          "description": "题目节点上的字段格式",
+          "properties": {
+            "title": { "$ref": "#/definitions/elementDef", "description": "题目题干，包含题号和题目正文。ind 属性的 firstLineChars/hangingChars/leftChars 单位均为字符×100，按理科/文科可能有不同缩进规则" }
+          }
+        },
+        "subQuestion": {
+          "type": "object",
+          "description": "子问题节点上的字段格式",
+          "properties": {
+            "title": { "$ref": "#/definitions/elementDef", "description": "子问题题干，如 (1)(2) 或 ①②③" },
+            "groupLabel": { "$ref": "#/definitions/elementDef", "description": "主题分组标题，如【乙烷制乙烯】" }
+          }
+        },
+        "option": {
+          "type": "object",
+          "description": "选择题选项格式",
+          "properties": {
+            "baseStyle": { "$ref": "#/definitions/refOrStyleDef" },
+            "rPr": { "$ref": "#/definitions/rPrDef" },
+            "pPr": { "$ref": "#/definitions/pPrDef" },
+            "tabs": {
+              "type": "array",
+              "items": { "type": "number" },
+              "description": "制表位位置数组，单位：字符（引擎按元素字号自动转换为 twips）。间接控制选项的排列方式，比如提供4个制表位，意味着一行最多4个选项，如果选项超过4个，则换行。不提供或者只提供1个，一行最多一个选项"
+            },
+            "resetFormat": { "$ref": "#/definitions/resetFormatDef" }
+          },
+          "required": ["tabs"]
+        },
+        "material": {
+          "type": "object",
+          "description": "材料内部各子元素的格式",
+          "properties": {
+            "heading": { "$ref": "#/definitions/elementDef", "description": "材料标题/标号" },
+            "body": { "$ref": "#/definitions/elementDef", "description": "材料正文" },
+            "source": { "$ref": "#/definitions/elementDef", "description": "出处标注" },
+            "author": { "$ref": "#/definitions/elementDef", "description": "作者署名" },
+            "annotations": { "$ref": "#/definitions/elementDef", "description": "注释" },
+            "images": { "$ref": "#/definitions/elementDef", "description": "材料内配图" }
+          }
+        },
+        "image": {
+          "type": "object",
+          "description": "配图格式化规则",
+          "properties": {
+            "standaloneAlign": { "type": "string", "enum": ["center", "left", "right"], "description": "独立配图段落的对齐方式" },
+            "calculationAlign": { "type": "string", "enum": ["center", "left", "right"], "description": "计算/解答题配图的对齐方式（不填则跟随 standaloneAlign）" },
+            "gapFromText": { "type": "number", "description": "配图与周围文字的间距，单位 pt" }
+          }
+        },
+        "table": {
+          "type": "object",
+          "description": "表格格式化",
+          "properties": {
+            "alignment": { "type": "string", "enum": ["center", "left", "right"], "description": "表格在页面中的水平对齐方式" },
+            "width": { "type": "string", "enum": ["auto", "100%", "keep"], "description": "'auto' = 内容自适应（清除所有固定宽度），'100%' = 填满页面宽度，'keep' = 保留原文档宽度设置不做修改" },
+            "cellPadding": {
+              "type": "object",
+              "description": "表格单元格内边距，单位 twips（1pt=20twips）",
+              "properties": {
+                "top": { "type": "number", "description": "上内边距 (twips)" },
+                "bottom": { "type": "number", "description": "下内边距 (twips)" },
+                "left": { "type": "number", "description": "左内边距 (twips，如5pt=100)" },
+                "right": { "type": "number", "description": "右内边距 (twips，如5pt=100)" }
+              }
+            },
+            "clearCellMargins": { "type": "boolean", "default": true, "description": "是否清除行级和单元格级的边距覆盖（设为 false 则保留原文档中单元格自定义的边距）" }
+          }
+        },
+        "scoreTable": {
+          "type": "object",
+          "description": "计分表格式化",
+          "properties": {
+            "rPr": { "$ref": "#/definitions/rPrDef", "description": "计分表单元格的字符属性" },
+            "paragraphAlign": { "type": "string", "enum": ["center", "left", "right"] },
+            "verticalAlign": { "type": "string", "enum": ["center", "top", "bottom"] }
+          }
+        }
+      }
+    },
+    "phases": {
+      "type": "object",
+      "description": "阶段开关，控制引擎执行哪些处理步骤。默认全部为 true。",
+      "properties": {
+        "applyBaseStyle": { "type": "boolean", "description": "应用文档基础样式（创建样式、清除段落格式）" },
+        "applyElementFormats": { "type": "boolean", "description": "统一应用各要素的段属性（pPr）和字属性（rPr）" },
+        "specialFormat": { "type": "boolean", "description": "特殊格式处理（如诗词正文居中对齐）" },
+        "adjustImages": { "type": "boolean", "description": "配图位置调整" },
+        "rearrangeOptions": { "type": "boolean", "description": "选择题选项重排" },
+        "applyNumbering": { "type": "boolean", "description": "字符编号转自动编号" },
+        "formatTables": { "type": "boolean", "description": "表格格式调整" },
+        "addSectionBreaks": { "type": "boolean", "description": "答案与解析区域分页" },
+        "cleanSpaces": { "type": "boolean", "description": "删除缩进空格" }
+      }
+    }
+  },
+  "definitions": {
+    "lengthWithUnit": {
+      "type": "object",
+      "description": "带单位的长度值",
+      "properties": {
+        "value": { "type": "number", "description": "数值" },
+        "unit": {
+          "type": "string",
+          "enum": ["pt", "cm", "mm", "in"],
+          "description": "单位：磅(pt)、厘米(cm)、毫米(mm)、英寸(in)"
+        }
+      },
+      "required": ["value", "unit"]
+    },
+    "fontDef": {
+      "type": "object",
+      "description": "字体定义",
+      "properties": {
+        "eastAsia": { "type": "string", "description": "中文字体名，如'宋体'、'黑体'、'楷体'" },
+        "ascii": { "type": "string", "description": "西文字体名，如'Times New Roman'、'Arial'" },
+        "hAnsi": { "type": "string", "description": "高 ANSI 字体，不填则与 ascii 相同" }
+      }
+    },
+    "rPrDef": {
+      "type": "object",
+      "description": "字符属性（Run Properties）",
+      "properties": {
+        "rFonts": { "$ref": "#/definitions/fontDef", "description": "字体设置" },
+        "sz": { "type": "number", "description": "字号（半磅值）。五号=21, 小四=24, 小三=30, 三号=32" },
+        "b": { "type": "boolean", "description": "粗体" },
+        "i": { "type": "boolean", "description": "斜体" },
+        "color": { "type": "string", "description": "字体颜色，6位十六进制，如 '000000'" }
+      }
+    },
+    "pPrDef": {
+      "type": "object",
+      "description": "段落属性（Paragraph Properties）",
+      "properties": {
+        "jc": { "type": "string", "enum": ["left", "center", "right", "both", "distribute"], "description": "水平对齐" },
+        "ind": {
+          "type": "object",
+          "description": "缩进，使用 OOXML 字符单位（字符×100）",
+          "properties": {
+            "firstLineChars": { "type": "number", "description": "首行缩进（字符×100，如2字符=200）" },
+            "hangingChars": { "type": "number", "description": "悬挂缩进（字符×100，如1.5字符=150）" },
+            "leftChars": { "type": "number", "description": "文本前缩进（字符×100，如1.5字符=150）" }
+          }
+        },
+        "spacing": {
+          "type": "object",
+          "description": "间距（行距 + 段前段后），使用 OOXML 原生单位",
+          "properties": {
+            "lineRule": { "type": "string", "enum": ["auto", "exact", "atLeast"], "description": "行距规则" },
+            "line": { "type": "number", "description": "行距值（OOXML 原生单位）：auto时为240分之一（单倍=240, 1.5倍=360, 双倍=480），exact/atLeast时为twips（14pt=280）" },
+            "before": { "type": "number", "description": "段前间距（twips，1pt=20twips，如12pt=240）" },
+            "after": { "type": "number", "description": "段后间距（twips，1pt=20twips，如6pt=120）" }
+          }
+        },
+        "tabs": {
+          "type": "array",
+          "description": "制表位列表（单位：字符）。这是 spec 中唯一需要引擎转换的属性：引擎根据元素字号自动转换为 OOXML twips，公式为 pos(twips) = 字符数 × 字号(pt) × 20。例如 1.5 字符在五号字(10.5pt)下 = 1.5 × 10.5 × 20 = 315 twips",
+          "items": {
+            "oneOf": [
+              { "type": "number", "description": "字符位置（如 1.5 表示 1.5 个字符宽度），默认左对齐" },
+              {
+                "type": "object",
+                "properties": {
+                  "pos": { "type": "number", "description": "字符位置（如 1.5 表示 1.5 个字符宽度）" },
+                  "val": { "type": "string", "enum": ["left", "center", "right", "decimal"], "description": "对齐方式，默认 left" },
+                  "leader": { "type": "string", "enum": ["none", "dot", "hyphen", "underscore", "heavy", "middleDot"], "description": "前导符" }
+                },
+                "required": ["pos"]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "resetFormatDef": {
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": ["auto", "none", "all"],
+          "description": "'auto' = 根据目标样式定义自动推断清除范围（只清除样式中声明的属性）；'none' = 不清除；'all' = 全部清除（等价于 {pPr:'all', rPr:'all'}）"
+        },
+        {
+          "type": "object",
+          "description": "精确控制模式：分别指定 pPr 和 rPr 的清除范围。会与继承的 resetFormat 合并（取并集），可通过 exclude 排除不需要的属性",
+          "properties": {
+            "auto": {
+              "type": "boolean",
+              "description": "启用 auto+显式混合模式。为 true 时先按 auto 模式（沿 baseStyle 链解析样式声明的属性），再与本对象中的 pPr/rPr 取并集合并。可搭配 exclude 排除不需要的属性"
+            },
+            "pPr": {
+              "oneOf": [
+                { "type": "string", "enum": ["all"] },
+                { "type": "array", "items": { "type": "string", "enum": ["jc", "ind", "spacing", "numPr", "pBdr", "shd", "tabs", "keepNext", "keepLines", "pageBreakBefore", "contextualSpacing", "snapToGrid", "rPr"] } }
+              ],
+              "description": "'all' 清空整个 pPr（自动保留 numPr），数组只删除指定属性。'rPr' 指段落标记字符格式（w:pPr 内的 w:rPr 子元素）"
+            },
+            "rPr": {
+              "oneOf": [
+                { "type": "string", "enum": ["all"] },
+                { "type": "array", "items": { "type": "string", "enum": ["rFonts", "sz", "szCs", "b", "bCs", "i", "iCs", "color", "u", "strike", "highlight", "vertAlign", "spacing", "kern", "caps", "smallCaps"] } }
+              ],
+              "description": "'all' 清空所有 Run 的 rPr，数组只删除指定属性"
+            },
+            "exclude": {
+              "type": "object",
+              "description": "从合并后的清除范围中排除指定属性（不执行清除）",
+              "properties": {
+                "pPr": {
+                  "type": "array",
+                  "items": { "type": "string", "enum": ["jc", "ind", "spacing", "numPr", "pBdr", "shd", "tabs", "keepNext", "keepLines", "pageBreakBefore", "contextualSpacing", "snapToGrid"] },
+                  "description": "排除的段落属性名（不执行清除）"
+                },
+                "rPr": {
+                  "type": "array",
+                  "items": { "type": "string", "enum": ["rFonts", "sz", "szCs", "b", "bCs", "i", "iCs", "color", "u", "strike", "highlight", "vertAlign", "spacing", "kern", "caps", "smallCaps"] },
+                  "description": "排除的字符属性名（不执行清除）"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "description": "声明该要素在应用格式前需要重置的格式范围。未声明时：若 baseStyle 有 wordStyleName 则默认 'auto'，否则不清除"
+    },
+    "styleDef": {
+      "type": "object",
+      "description": "命名样式定义。可声明 resetFormat 使引用此样式的元素自动继承格式清理策略",
+      "properties": {
+        "baseStyle": { "$ref": "#/definitions/refOrStyleDef", "description": "引用的基础样式名" },
+        "rPr": { "$ref": "#/definitions/rPrDef" },
+        "pPr": { "$ref": "#/definitions/pPrDef" },
+        "wordStyleName": { "type": "string", "description": "声明后会创建对应的 Word 命名样式。元素引用此样式时自动以 pStyle 方式应用" },
+        "resetFormat": { "$ref": "#/definitions/resetFormatDef" }
+      }
+    },
+    "refOrStyleDef": {
+      "type": "string",
+      "description": "引用 styles 中的命名样式名（如 'base'、'titleLarge'）。样式必须在 styles 对象中预先定义"
+    },
+    "elementDef": {
+      "type": "object",
+      "description": "元素格式定义。baseStyle 指向 styles 中的命名样式：若该样式有 wordStyleName 则自动作为 pStyle 引用，元素自身的 rPr/pPr 作为 inline 覆盖。未声明 resetFormat 时，引擎沿 baseStyle 链向上查找样式上的 resetFormat 或 wordStyleName，找到后按对应策略清除格式",
+      "properties": {
+        "baseStyle": { "$ref": "#/definitions/refOrStyleDef", "description": "引用的基础样式名。若该样式有 wordStyleName 则自动使用 Word 样式引用" },
+        "rPr": { "$ref": "#/definitions/rPrDef" },
+        "pPr": { "$ref": "#/definitions/pPrDef" },
+        "resetFormat": { "$ref": "#/definitions/resetFormatDef" },
+        "firstParagraph": {
+          "type": "object",
+          "description": "首段的格式覆盖。pPr/rPr 完全替换元素默认的 pPr/rPr（不合并），但 baseStyle 仍然生效。单段落时视为首段",
+          "properties": {
+            "pPr": { "$ref": "#/definitions/pPrDef" },
+            "rPr": { "$ref": "#/definitions/rPrDef" }
+          }
+        },
+        "lastParagraph": {
+          "type": "object",
+          "description": "尾段的格式覆盖。pPr/rPr 完全替换元素默认的 pPr/rPr（不合并），但 baseStyle 仍然生效。单段落时尾段规则不生效",
+          "properties": {
+            "pPr": { "$ref": "#/definitions/pPrDef" },
+            "rPr": { "$ref": "#/definitions/rPrDef" }
+          }
+        }
+      }
+    }
+  }
+}

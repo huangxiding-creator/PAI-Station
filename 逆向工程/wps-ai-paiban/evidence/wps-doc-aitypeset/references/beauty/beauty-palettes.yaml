@@ -1,0 +1,84 @@
+# 仅定义各 theme 的 role → color；
+# 全量美化统一样式名（import_element_styles 写入，batch_apply_paragraph_style 挂接）
+# 自动主题仅三套：official-black、steel-blue、personal-navy。
+# derived-from-doc / user-specified-color 是用户明确要求时的动态例外，不作为自动默认主题。
+
+styleNames:
+  title: "美化文档标题"
+  heading-1: "美化标题 1"
+  heading-1-center: "美化标题 1（居中）"
+  heading-2: "美化标题 2"
+  heading-3: "美化标题 3"
+  heading-4: "美化标题 4"
+  body: "美化正文"
+  addressees: "美化主送对象"
+  list-item: "美化列表项"
+  blockquote: "美化引用说明"
+  caption: "美化图表标题"
+  footer-like: "美化尾注"
+  footer-like-lead: "美化尾注（首行）"
+  appendix-title: "美化附录标题"
+  page-header-footer: "美化页眉页脚"
+
+themes:
+  official-black:
+    roles:
+      title:       { color: "#000000" }
+      heading-1:   { color: "#000000" }
+      heading-1-center: { color: "#000000" }
+      heading-2:   { color: "#000000" }
+      heading-3:   { color: "#000000" }
+      heading-4:   { color: "#000000" }
+      body:        { color: "#000000" }
+      addressees:  { color: "#000000" }
+      list-item:   { color: "#000000" }
+      blockquote:  { color: "#666666" }
+      caption:     { color: "#666666" }
+      footer-like: { color: "#000000" }
+      footer-like-lead: { color: "#000000" }
+      appendix-title: { color: "#000000" }
+      page-header-footer: { color: "#666666" }
+
+  steel-blue:
+    roles:
+      title:       { color: "#2F5D7C" }
+      heading-1:   { color: "#2F5D7C" }
+      heading-1-center: { color: "#2F5D7C" }
+      heading-2:   { color: "#2F5D7C" }
+      heading-3:   { color: "#334155" }
+      heading-4:   { color: "#334155" }
+      body:        { color: "#111111" }
+      addressees:  { color: "#111111" }
+      list-item:   { color: "#111111" }
+      blockquote:  { color: "#667085" }
+      caption:     { color: "#667085" }
+      footer-like: { color: "#111111" }
+      footer-like-lead: { color: "#111111" }
+      appendix-title: { color: "#2F5D7C" }
+      page-header-footer: { color: "#667085" }
+
+  personal-navy:
+    roles:
+      title:       { color: "#24324F" }
+      heading-1:   { color: "#24324F" }
+      heading-1-center: { color: "#24324F" }
+      heading-2:   { color: "#24324F" }
+      heading-3:   { color: "#42506B" }
+      heading-4:   { color: "#42506B" }
+      body:        { color: "#111111" }
+      addressees:  { color: "#111111" }
+      list-item:   { color: "#111111" }
+      blockquote:  { color: "#666666" }
+      caption:     { color: "#666666" }
+      footer-like: { color: "#111111" }
+      footer-like-lead: { color: "#111111" }
+      appendix-title: { color: "#24324F" }
+      page-header-footer: { color: "#666666" }
+
+  derived-from-doc:
+    # 仅用户明确要求“保留原配色/按原文档配色”时启用。
+    # roles 由 themeAssessment 动态填充；正文、主送对象、列表正文仍须保持黑色。
+
+  user-specified-color:
+    # 仅用户明确指定具体颜色时启用。
+    # 指定色只能作为 title / heading-* / appendix-title 等强调色；body/addressees/list-item 必须黑色。

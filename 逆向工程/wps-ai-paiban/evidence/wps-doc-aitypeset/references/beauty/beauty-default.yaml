@@ -1,0 +1,179 @@
+# 美观模式默认样式（beauty mode）
+# strict 模式下不得自动应用本文件
+# full 模式下字号/行距/字体可被 beauty-type-scales.yaml 覆盖，见 beauty-theme-select.md
+# 默认基线采用通用正式文档体系：正文小四宋体，首页大标题为 WPS 内置宋体加粗。
+
+roles:
+  title:
+    fontFamily: 宋体
+    latinFont: Times New Roman
+    fontSize: 18pt
+    bold: true
+    textAlign: center
+    lineHeight: 1.35
+    textIndent: "0"
+    marginTop: 0pt
+    marginBottom: 8pt
+
+  heading-1:
+    fontFamily: 黑体
+    latinFont: Times New Roman
+    fontSize: 14pt
+    bold: false
+    textAlign: left
+    lineHeight: 1.35
+    textIndent: "0"
+    marginTop: 6pt
+    marginBottom: 3pt
+
+  heading-1-center:
+    fontFamily: 黑体
+    latinFont: Times New Roman
+    fontSize: 14pt
+    bold: false
+    textAlign: center
+    lineHeight: 1.35
+    textIndent: "0"
+    marginTop: 6pt
+    marginBottom: 3pt
+
+  heading-2:
+    fontFamily: 宋体
+    latinFont: Times New Roman
+    fontSize: 13pt
+    bold: true
+    textAlign: left
+    lineHeight: 1.35
+    textIndent: "0"
+    marginTop: 5pt
+    marginBottom: 2pt
+
+  heading-3:
+    fontFamily: 宋体
+    latinFont: Times New Roman
+    fontSize: 12pt
+    bold: true
+    textAlign: left
+    lineHeight: 1.35
+    textIndent: "0"
+    marginTop: 3pt
+    marginBottom: 1pt
+
+  heading-4:
+    fontFamily: 宋体
+    latinFont: Times New Roman
+    fontSize: 12pt
+    bold: true
+    textAlign: left
+    lineHeight: 1.35
+    textIndent: "0"
+    marginTop: 2pt
+    marginBottom: 1pt
+
+  body:
+    fontFamily: 宋体
+    latinFont: Times New Roman
+    fontSize: 12pt
+    bold: false
+    textAlign: justify
+    textIndent: 2em
+    lineHeight: 1.35
+    marginTop: 0pt
+    marginBottom: 0pt
+
+  # 主送对象 / 汇报·讲话稿称呼语：顶格，字体字号同 body（见 structure-reconciliation §称呼语特别说明）
+  addressees:
+    fontFamily: 宋体
+    latinFont: Times New Roman
+    fontSize: 12pt
+    bold: false
+    textAlign: left
+    textIndent: "0"
+    lineHeight: 1.35
+    marginTop: 0pt
+    marginBottom: 0pt
+
+  list-item:
+    fontFamily: 宋体
+    latinFont: Times New Roman
+    fontSize: 12pt
+    textAlign: left
+    textIndent: "0"
+    lineHeight: 1.35
+    marginTop: 0pt
+    marginBottom: 0pt
+
+  blockquote:
+    fontFamily: 宋体
+    latinFont: Times New Roman
+    fontSize: 12pt
+    textAlign: left
+    textIndent: 2em
+    lineHeight: 1.35
+    marginTop: 3pt
+    marginBottom: 3pt
+
+  caption:
+    fontFamily: 宋体
+    latinFont: Times New Roman
+    fontSize: 10.5pt
+    textAlign: center
+    textIndent: "0"
+
+  footer-like:
+    fontFamily: 宋体
+    latinFont: Times New Roman
+    fontSize: 12pt
+    textAlign: right
+    textIndent: "0"
+    lineHeight: 1.35
+    marginTop: 0pt
+    marginBottom: 0pt
+
+  # 落款首行：与正文之间较大段前距（见 structure-reconciliation §落款特别说明）
+  footer-like-lead:
+    fontFamily: 宋体
+    latinFont: Times New Roman
+    fontSize: 12pt
+    textAlign: right
+    textIndent: "0"
+    lineHeight: 1.35
+    marginTop: 16pt
+    marginBottom: 0pt
+
+  appendix-title:
+    fontFamily: 黑体
+    latinFont: Times New Roman
+    fontSize: 14pt
+    bold: false
+    textAlign: left
+    lineHeight: 1.35
+    textIndent: "0"
+    marginTop: 6pt
+    marginBottom: 3pt
+
+  page-header-footer:
+    fontFamily: 宋体
+    latinFont: Times New Roman
+    fontSize: 10.5pt
+    textAlign: center
+    textIndent: "0"
+
+structure:
+  collapseConsecutiveEmpty: true
+  maxConsecutiveEmpty: 1
+  keepSectionGap: true
+  stripFullWidthLeadingSpaces: true
+  normalizeLeadingWhitespace: true
+  widowOrphanControl: true
+
+# 执行前若 inline style 阻碍覆盖
+clearInlineBeforeApply: true
+
+# oplist 换算（写入 import_element_styles 时）：
+# fontSize Npt → rPr.sz: N（number，磅）；fontFamily → rPr.rFonts.eastAsia；latinFont → rPr.rFonts.ascii
+# marginTop/marginBottom Npt → spacing.before/after: "Npt"
+# textIndent 2em @当前字号 → ind.firstLine: "2ch"；textAlign center → pPr.jc: center
+# 首行缩进2字符，必须使用"2ch"让引擎按字体字段计算，禁止手动换算成pt
+# 行距与间距：12pt 正文默认 lineHeight 1.35；标题段前/段后按小四正文比例收紧，避免保留三号正文时期的松散空白
+# 字体分工：黑体统一不加粗；其他字体(如宋体)，在标题(含title 和 heading-1~4)加粗，body不加粗。

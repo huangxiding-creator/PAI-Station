@@ -1,0 +1,89 @@
+# 美观模式字号配套（beauty-full 专用）
+# 覆盖 fontSize / lineHeight / defaultFont / fontFamily / latinFont（按配套可选）
+# 其余排版属性（对齐、缩进、间距等）来自 beauty-default.yaml
+# strict / incremental 不得自动应用本文件
+#
+# 自动主题只保留三套字号，均以正文小四 12pt 为基础：
+#   official-document → 通用正式默认，宋体正文，首页大标题宋体加粗
+#   modern-steel      → 现代方案，微软雅黑正文，首页大标题宋体加粗
+#   personal-navy     → 个人记录，宋体正文，首页大标题宋体加粗
+# 默认配套（未命中选 scale 规则时使用）
+defaultScaleId: official-document
+
+scales:
+  official-document:
+    page:
+      defaultFont: 宋体
+      defaultSize: 12pt
+      lineHeight: 1.35
+      latinFont: Times New Roman
+    roles:
+      title:       { fontSize: 18pt, fontFamily: 宋体, latinFont: Times New Roman, bold: true }
+      heading-1:   { fontSize: 14pt, fontFamily: 黑体, latinFont: Times New Roman, bold: false }
+      heading-1-center: { fontSize: 14pt, fontFamily: 黑体, latinFont: Times New Roman, bold: false }
+      heading-2:   { fontSize: 13pt, fontFamily: 宋体, latinFont: Times New Roman, bold: true }
+      heading-3:   { fontSize: 12pt, fontFamily: 宋体, latinFont: Times New Roman, bold: true }
+      heading-4:   { fontSize: 12pt, fontFamily: 宋体, latinFont: Times New Roman, bold: true }
+      body:        { fontSize: 12pt, lineHeight: 1.35, fontFamily: 宋体, latinFont: Times New Roman }
+      addressees:  { fontSize: 12pt, lineHeight: 1.35, fontFamily: 宋体, latinFont: Times New Roman }
+      list-item:   { fontSize: 12pt, lineHeight: 1.35, fontFamily: 宋体, latinFont: Times New Roman }
+      blockquote:  { fontSize: 12pt, lineHeight: 1.35, fontFamily: 宋体, latinFont: Times New Roman }
+      caption:     { fontSize: 10.5pt, fontFamily: 宋体, latinFont: Times New Roman }
+      footer-like: { fontSize: 12pt, lineHeight: 1.35, fontFamily: 宋体, latinFont: Times New Roman }
+      footer-like-lead: { fontSize: 12pt, lineHeight: 1.35, fontFamily: 宋体, latinFont: Times New Roman }
+      appendix-title: { fontSize: 14pt, fontFamily: 黑体, latinFont: Times New Roman, bold: true }
+      page-header-footer: { fontSize: 10.5pt, fontFamily: 宋体, latinFont: Times New Roman }
+
+  modern-steel:
+    page:
+      defaultFont: 微软雅黑
+      defaultSize: 12pt
+      lineHeight: 1.35
+      latinFont: Times New Roman
+    roles:
+      title:       { fontSize: 18pt, fontFamily: 宋体, latinFont: Times New Roman, bold: true }
+      heading-1:   { fontSize: 14pt, fontFamily: 黑体, latinFont: Times New Roman, bold: false }
+      heading-1-center: { fontSize: 14pt, fontFamily: 黑体, latinFont: Times New Roman, bold: false }
+      heading-2:   { fontSize: 13pt, fontFamily: 黑体, latinFont: Times New Roman, bold: false }
+      heading-3:   { fontSize: 12pt, fontFamily: 微软雅黑, latinFont: Times New Roman, bold: true }
+      heading-4:   { fontSize: 12pt, fontFamily: 微软雅黑, latinFont: Times New Roman, bold: true }
+      body:        { fontSize: 12pt, lineHeight: 1.35, fontFamily: 微软雅黑, latinFont: Times New Roman }
+      addressees:  { fontSize: 12pt, lineHeight: 1.35, fontFamily: 微软雅黑, latinFont: Times New Roman }
+      list-item:   { fontSize: 12pt, lineHeight: 1.35, fontFamily: 微软雅黑, latinFont: Times New Roman }
+      blockquote:  { fontSize: 12pt, lineHeight: 1.35, fontFamily: 微软雅黑, latinFont: Times New Roman }
+      caption:     { fontSize: 10.5pt, fontFamily: 微软雅黑, latinFont: Times New Roman }
+      footer-like: { fontSize: 12pt, lineHeight: 1.35, fontFamily: 微软雅黑, latinFont: Times New Roman }
+      footer-like-lead: { fontSize: 12pt, lineHeight: 1.35, fontFamily: 微软雅黑, latinFont: Times New Roman }
+      appendix-title: { fontSize: 14pt, fontFamily: 黑体, latinFont: Times New Roman, bold: true }
+      page-header-footer: { fontSize: 10.5pt, fontFamily: 微软雅黑, latinFont: Times New Roman }
+
+  personal-navy:
+    page:
+      defaultFont: 宋体
+      defaultSize: 12pt
+      lineHeight: 1.35
+      latinFont: Times New Roman
+    roles:
+      title:       { fontSize: 18pt, fontFamily: 宋体, latinFont: Times New Roman, bold: true }
+      heading-1:   { fontSize: 14pt, fontFamily: 黑体, latinFont: Times New Roman, bold: false }
+      heading-1-center: { fontSize: 14pt, fontFamily: 黑体, latinFont: Times New Roman, bold: false }
+      heading-2:   { fontSize: 13pt, fontFamily: 宋体, latinFont: Times New Roman, bold: true }
+      heading-3:   { fontSize: 12pt, fontFamily: 宋体, latinFont: Times New Roman, bold: true }
+      heading-4:   { fontSize: 12pt, fontFamily: 宋体, latinFont: Times New Roman, bold: true }
+      body:        { fontSize: 12pt, lineHeight: 1.35, fontFamily: 宋体, latinFont: Times New Roman }
+      addressees:  { fontSize: 12pt, lineHeight: 1.35, fontFamily: 宋体, latinFont: Times New Roman }
+      list-item:   { fontSize: 12pt, lineHeight: 1.35, fontFamily: 宋体, latinFont: Times New Roman }
+      blockquote:  { fontSize: 12pt, lineHeight: 1.35, fontFamily: 宋体, latinFont: Times New Roman }
+      caption:     { fontSize: 10.5pt, fontFamily: 宋体, latinFont: Times New Roman }
+      footer-like: { fontSize: 12pt, lineHeight: 1.35, fontFamily: 宋体, latinFont: Times New Roman }
+      footer-like-lead: { fontSize: 12pt, lineHeight: 1.35, fontFamily: 宋体, latinFont: Times New Roman }
+      appendix-title: { fontSize: 14pt, fontFamily: 黑体, latinFont: Times New Roman, bold: true }
+      page-header-footer: { fontSize: 10.5pt, fontFamily: 宋体, latinFont: Times New Roman }
+
+# 与配色主题默认配对。derived/user-specified 是配色例外，字号仍回到三套之一。
+themeScalePairs:
+  official-black: official-document
+  steel-blue: modern-steel
+  personal-navy: personal-navy
+  derived-from-doc: official-document
+  user-specified-color: official-document

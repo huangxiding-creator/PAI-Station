@@ -1,0 +1,46 @@
+{
+  "meta": {
+    "specFormat": "user-entered-format-requirements"
+  },
+  "ops": [
+    {
+      "action": {
+        "type": "import_element_styles",
+        "element_style_rules": [
+          {
+            "element": "paragraph",
+            "style_name": "_Strict_abs_title",
+            "pPr": {
+              "jc": "center"
+            },
+            "rPr": {
+              "rFonts": {
+                "eastAsia": "黑体"
+              },
+              "sz": 16,
+              "b": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "action": {
+        "type": "batch_apply_paragraph_style",
+        "format_rule": {
+          "rules": [
+            {
+              "source": {
+                "tag": "abs_title"
+              },
+              "target": {
+                "element": "paragraph",
+                "style_name": "_Strict_abs_title"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

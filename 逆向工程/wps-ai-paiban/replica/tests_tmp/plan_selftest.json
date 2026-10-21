@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "specFormat": "user-entered-format-requirements",
+    "version": "selftest"
+  },
+  "oplist": [
+    {
+      "op": "batch_set_paragraph_props",
+      "action": {
+        "type": "batch_set_paragraph_props",
+        "format_rule": {
+          "rules": [
+            {
+              "source": {
+                "tag": "catalog_h1"
+              },
+              "pPr": {
+                "jc": "center",
+                "spacing": {
+                  "before": 12,
+                  "after": 6,
+                  "line": 20,
+                  "lineRule": "exact"
+                }
+              },
+              "rPr": {
+                "rFonts": {
+                  "eastAsia": "黑体"
+                },
+                "sz": 16
+              }
+            },
+            {
+              "source": {
+                "tag": "main_text"
+              },
+              "pPr": {
+                "jc": "both",
+                "spacing": {
+                  "line": "1.5x"
+                },
+                "ind": {
+                  "firstLine": "2ch"
+                }
+              },
+              "rPr": {
+                "rFonts": {
+                  "eastAsia": "宋体"
+                },
+                "sz": 22
+              }
+            }
+          ]
+        }
+      },
+      "reason": "selftest strict-props"
+    }
+  ]
+}

@@ -1,0 +1,335 @@
+{
+  "schemaVersion": "1.0",
+  "name": "standard-arts",
+  "description": "标准试卷排版格式（文科）。适用于语文、英语、政治、历史、地理、文科综合等科目。",
+  "styles": {
+    "base": {
+      "wordStyleName": "试卷正文",
+      "resetFormat": { "auto": true, "pPr": ["ind", "rPr"] },
+      "rPr": {
+        "rFonts": { "eastAsia": "宋体", "ascii": "Times New Roman", "hAnsi": "Times New Roman" },
+        "sz": 21,
+        "color": "000000"
+      },
+      "pPr": {
+        "spacing": { "lineRule": "auto", "line": 360 },
+        "jc": "left"
+      }
+    },
+    "titleLarge": {
+      "baseStyle": "base",
+      "rPr": {
+        "rFonts": { "eastAsia": "黑体", "ascii": "Times New Roman", "hAnsi": "Times New Roman" },
+        "sz": 36,
+        "b": true
+      },
+      "pPr": {
+        "jc": "center",
+        "spacing": { "lineRule": "auto", "line": 360 }
+      },
+      "wordStyleName": "试卷标题 1"
+    },
+    "titleMedium": {
+      "baseStyle": "base",
+      "rPr": {
+        "rFonts": { "eastAsia": "黑体", "ascii": "Times New Roman", "hAnsi": "Times New Roman" },
+        "sz": 36
+      },
+      "pPr": {
+        "jc": "center"
+      },
+      "wordStyleName": "试卷标题 2"
+    },
+    "titleSmall": {
+      "baseStyle": "base",
+      "rPr": {
+        "rFonts": { "eastAsia": "黑体", "ascii": "Times New Roman", "hAnsi": "Times New Roman" },
+        "sz": 21
+      },
+      "pPr": {
+        "spacing": { "lineRule": "auto", "line": 360 }
+      },
+      "wordStyleName": "试卷标题 3"
+    },
+    "subTitle": {
+      "baseStyle": "base",
+      "rPr": {
+        "rFonts": { "eastAsia": "黑体", "ascii": "Times New Roman", "hAnsi": "Times New Roman" },
+        "sz": 30
+      },
+      "pPr": {
+        "jc": "center"
+      }
+    },
+    "infoText": {
+      "baseStyle": "base",
+      "rPr": {
+        "rFonts": { "eastAsia": "宋体", "ascii": "Times New Roman", "hAnsi": "Times New Roman" },
+        "sz": 24
+      },
+      "pPr": {
+        "jc": "left"
+      }
+    },
+    "infoCenter": {
+      "baseStyle": "base",
+      "rPr": {
+        "rFonts": { "eastAsia": "宋体", "ascii": "Times New Roman", "hAnsi": "Times New Roman" },
+        "sz": 24
+      },
+      "pPr": {
+        "jc": "center"
+      }
+    },
+    "studentInfo": {
+      "baseStyle": "base",
+      "rPr": {
+        "sz": 24
+      },
+      "pPr": {
+        "jc": "center"
+      }
+    },
+    "sealLineStyle": {
+      "baseStyle": "base",
+      "rPr": {
+        "rFonts": { "eastAsia": "黑体" },
+        "sz": 21,
+        "b": true
+      },
+      "pPr": {
+        "jc": "center"
+      }
+    },
+    "boldSmall": {
+      "baseStyle": "base",
+      "rPr": {
+        "rFonts": { "eastAsia": "黑体" },
+        "sz": 21,
+        "b": true
+      }
+    },
+    "materialFont": {
+      "baseStyle": "base",
+      "rPr": {
+        "rFonts": { "eastAsia": "楷体", "ascii": "Times New Roman", "hAnsi": "Times New Roman" },
+        "sz": 21
+      }
+    }
+  },
+  "elements": {
+    "metadata": {
+      "examName": {
+        "baseStyle": "titleLarge"
+      },
+      "subject": {
+        "baseStyle": "subTitle"
+      },
+      "securityLevel": {
+        "baseStyle": "boldSmall"
+      },
+      "beforeActivation": {
+        "baseStyle": "boldSmall"
+      },
+      "paperStructure": {
+        "baseStyle": "infoText"
+      },
+      "examNature": {
+        "baseStyle": "infoText"
+      },
+      "organization": {
+        "baseStyle": "infoCenter"
+      },
+      "examDateTime": {
+        "baseStyle": "infoCenter"
+      },
+      "duration": {
+        "baseStyle": "infoCenter"
+      },
+      "totalScore": {
+        "baseStyle": "infoCenter"
+      },
+      "studentName": {
+        "baseStyle": "studentInfo"
+      },
+      "admissionNumber": {
+        "baseStyle": "studentInfo"
+      },
+      "seatInfo": {
+        "baseStyle": "studentInfo"
+      },
+      "absenceMark": {
+        "baseStyle": "studentInfo"
+      },
+      "barcodeArea": {
+        "baseStyle": "studentInfo"
+      },
+      "sealLine": {
+        "baseStyle": "sealLineStyle"
+      },
+      "referenceMaterial": {
+        "baseStyle": "infoText"
+      },
+      "instructions": {
+        "title": {
+          "baseStyle": "boldSmall",
+          "resetFormat": "all"
+        },
+        "items": {
+          "baseStyle": "base",
+          "resetFormat": "all"
+        }
+      },
+      "answerRequirements": {
+        "baseStyle": "infoText"
+      },
+      "integrityStatement": {
+        "baseStyle": "infoText"
+      }
+    },
+    "volume": {
+      "title": {
+        "baseStyle": "titleMedium",
+        "resetFormat": "all"
+      },
+      "note": {
+        "baseStyle": "base",
+        "resetFormat": "all"
+      }
+    },
+    "section": {
+      "title": {
+        "baseStyle": "titleSmall",
+        "resetFormat": "all",
+        "pPr": {
+          "spacing": { "before": 240, "after": 120 }
+        }
+      },
+      "note": {
+        "baseStyle": "base",
+        "resetFormat": "all"
+      }
+    },
+    "question": {
+      "title": {
+        "baseStyle": "base",
+        "resetFormat": { "auto": true, "pPr": ["ind"], "rPr": ["b"] },
+        "pPr": {
+          "tabs": [1.5]
+        }
+      }
+    },
+    "subQuestion": {
+      "title": {
+        "baseStyle": "base",
+        "resetFormat": { "auto": true, "pPr": ["ind"], "rPr": ["b"] },
+        "pPr": {
+          "ind": { "leftChars": 150 }
+        }
+      },
+      "groupLabel": {
+        "baseStyle": "base",
+        "pPr": {
+          "jc": "left"
+        }
+      }
+    },
+    "option": {
+      "baseStyle": "base",
+      "tabs": [0, 10, 20, 30],
+      "resetFormat": { "auto": true, "pPr": ["ind"], "rPr": ["b"] }
+    },
+    "material": {
+      "heading": {
+        "baseStyle": "materialFont",
+        "pPr": { "jc": "center" },
+        "rPr": { "b": true }
+      },
+      "body": {
+        "baseStyle": "materialFont",
+        "pPr": {
+          "jc": "left",
+          "ind": { "firstLineChars": 200 }
+        }
+      },
+      "source": {
+        "baseStyle": "materialFont",
+        "pPr": { "jc": "right" }
+      },
+      "author": {
+        "baseStyle": "materialFont",
+        "pPr": { "jc": "center" }
+      },
+      "annotations": {
+        "baseStyle": "materialFont",
+        "pPr": {
+          "jc": "left",
+          "ind": { "firstLineChars": 200 }
+        }
+      },
+      "images": {
+        "baseStyle": "materialFont",
+        "pPr": { "jc": "center" }
+      },
+      "salutation": {
+        "baseStyle": "materialFont",
+        "pPr": { "jc": "left" }
+      },
+      "greeting": {
+        "baseStyle": "materialFont",
+        "pPr": {
+          "jc": "left",
+          "ind": { "firstLineChars": 200 }
+        }
+      },
+      "closingPrefix": {
+        "baseStyle": "materialFont",
+        "pPr": {
+          "jc": "left",
+          "ind": { "firstLineChars": 200 }
+        }
+      },
+      "closingSuffix": {
+        "baseStyle": "materialFont",
+        "pPr": { "jc": "left" }
+      },
+      "signature": {
+        "baseStyle": "materialFont",
+        "pPr": { "jc": "right" }
+      },
+      "date": {
+        "baseStyle": "materialFont",
+        "pPr": { "jc": "right" }
+      }
+    },
+    "image": {
+      "standaloneAlign": "center",
+      "calculationAlign": "right",
+      "gapFromText": 6
+    },
+    "table": {
+      "alignment": "center",
+      "width": "auto",
+      "cellPadding": { "top": 0, "bottom": 0, "left": 100, "right": 100 }
+    },
+    "scoreTable": {
+      "rPr": {
+        "rFonts": { "eastAsia": "宋体", "ascii": "Times New Roman", "hAnsi": "Times New Roman" },
+        "sz": 21
+      },
+      "paragraphAlign": "center",
+      "verticalAlign": "center"
+    }
+  },
+  "phases": {
+    "applyBaseStyle": true,
+    "applyElementFormats": true,
+    "specialFormat": true,
+    "adjustImages": true,
+    "rearrangeOptions": true,
+    "applyNumbering": true,
+    "formatTables": true,
+    "addSectionBreaks": true,
+    "cleanSpaces": true
+  }
+}

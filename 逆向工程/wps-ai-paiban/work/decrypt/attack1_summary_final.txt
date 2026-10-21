@@ -1,0 +1,56 @@
+WPS AI PAIBAN TEMPLATE CONTAINER - ENCODING-LAYER ATTACK (attack1) FINAL SUMMARY
+verdict: PARTIAL (encoding layer fully stripped; cipher layer not broken; decryptor located in native DLL)
+
+SAMPLES (under .../12.1.0.28802/office6/addons/kwpsaitypeset/mui/zh_CN/):
+- presettemplates/official : 35008 B, magic A (225f8didjBaA)
+- presettemplates/thesis/standard/nationalstandard : 39084 B, magic A
+- publictemplates/public_official_template : 172012 B, magic B (ACE4ksmg7AJf)
+- customtemplates/bid : 55980 B, magic A
+NOTE: these sample paths are FILES not directories. More A-containers exist on disk:
+presettemplates/{bid,contract,general,thesis}, customtemplates/{bid,contract,general,official,thesis}.
+The 12.1.0.28505 tree mirrors 28802. Earlier task assumption of plain-base64 body was wrong for naive
+validation only because of a str-vs-int charset bug in run 1; fix3a proved bodies are valid base64.
+
+FORMAT (established):
+file = magic(12B ascii) + base64 text body (single stream, strip whitespace)
+base64.b64decode(validate=True) succeeds for all four:
+- official           blob 26247 B  entropy 7.994  mod16=7
+- nationalstandard   blob 29303 B  entropy 7.994  mod16=7
+- public_official    blob 128999 B entropy 7.998  mod16=7
+- bid                blob 41975 B  entropy 7.996  mod16=7
+ALL blob lengths are 3 mod 4 (7 mod 16): consistent with inner 3B header + 4-byte-word aligned body
+(XXTEA-style word crypto); NOT AES-CBC/ECB block aligned.
+
+A vs B STRUCTURE COMPARISON (task step 4):
+- all three A blobs share identical first 39 bytes:
+  c6 74 28 c7 b6 39 e6 fe 47 eb d9 2a 9b 9c a3 2f 71 84 52 92 1c 24 04 86 5f 45 3d d4 2e fe 03 1a 36 ff 6f 11 a9 4e 87
+  first divergence at offset 39 in every A-vs-A pair.
+- B blob differs from every A blob from byte 0; A^B head is the SAME constant for all pairs:
+  e4 88 6d 01 9f ad 82 87 a6 94 78 be 28 55 f9 5a c7 27 1e 4c 98 d6 13 6a
+- inference: deterministic cipher with static key+keystream per magic family; the A family encrypts a
+  fixed 39-byte plaintext header; NO per-file IV/nonce. Keystream reuse across all A containers ->
+  crib-dragging surface (ciphertext XOR ciphertext = plaintext XOR plaintext beyond offset 39).
+
+ATTACKS EXECUTED (all NEGATIVE beyond the encoding layer):
+1. single-byte XOR 0x01-0xFF full scan (container sigs + strict UTF-8 CJK check): none
+2. cyclic XOR with 14 keys (both magics, wps, WPS, kingsoft, kwpsaitypeset, aitypeset, typeset,
+   template, official, md5(A), md5(B), sha256(A), sha256(B)): none
+3. zlib / gzip / raw-deflate detect+decompress at offsets 0/3/7/11/15: none
+4. RC4 with the same 14 keys: none
+5. XXTEA decrypt (offsets 3/7/11/15 x 9 keys incl magic-pad16, md5 variants, zero key): none
+6. multilayer base64: not present
+7. plaintext marker scan ([Content_Types].xml, word/document.xml, docProps, PK, Microsoft, WPS):
+   zero occurrences in every blob and every transform output
+NOTE: run-1 attack1_report.json contains one readable=True hit (xorkey 225f8didjBaA on the raw body of
+public_official_template). DISPROVEN as false positive: 0x49 ^ 0x32 = 0x7b produced a single { at
+offset 0 while head printable ratio was 0.699 with cjk=0; the XORed body is binary noise.
+
+EXTRA RECON:
+- no js/html/htm/xml/json anywhere under office6/addons references either magic string
+- the kwpsaitypeset addon ships native code only: kwpsaitypeset.dll 4582904 B + mui/res/theme
+  -> the template reader/decryptor is inside kwpsaitypeset.dll (next lever: strings/xref the DLL
+  around the magic constants; RE toolchain, not encoding layer)
+
+VERDICT RATIONALE: breakthrough would require readable template content - none recovered;
+dead-end is wrong because the encoding layer is fully stripped and the container structure plus the
+keystream-reuse weakness are established; PARTIAL = format structure clear, encryption unbroken.
