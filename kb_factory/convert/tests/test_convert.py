@@ -6,6 +6,8 @@
 from __future__ import annotations
 
 import re
+import subprocess
+import sys
 import zipfile
 from pathlib import Path, PurePosixPath
 
@@ -20,8 +22,8 @@ from kb_factory.convert.md_convert import (
 )
 from kb_factory.convert.tests.make_fixture import DOCX1_BODY, DOCX2_BODY, LIB_NAME, build_fixture
 
-# 占位/导入说明文案禁词（纪律：零渠道名零技术词）
-FORBIDDEN_WORDS = ["逆向", "渠道", "爬虫", "收割", "镜像", "逆向工程"]
+# 占位/导入说明文案禁词（纪律：零渠道名零技术词；守门词表只许扩不许收窄）
+FORBIDDEN_WORDS = ["逆向", "渠道", "爬虫", "收割", "镜像", "逆向工程", "ima"]
 
 
 @pytest.fixture()
@@ -195,11 +197,11 @@ def test_req_w8_import_pack_structure(pkg: Path):
 
 
 def test_req_w8_import_guide_three_steps(pkg: Path):
-    """如何导入.txt：ima/Coze/通用三节，各含 建库→按目录上传→开问 三步，零禁词。"""
+    """如何导入.txt：知识库类App/Coze/通用三节，各含 建库→按目录上传→开问 三步，零禁词。"""
     zip_path = make_import_pack(pkg)
     with zipfile.ZipFile(zip_path) as zf:
         guide = zf.read("如何导入.txt").decode("utf-8")
-    for section in ("ima", "Coze", "通用"):
+    for section in ("主流AI知识库应用", "Coze", "知识库类App"):
         assert section in guide
     for step in ("建库", "按目录上传", "开问"):
         assert step in guide
@@ -218,3 +220,46 @@ def test_req_w8_convert_and_import_coexist(pkg: Path):
     after = sorted(p.relative_to(pkg).as_posix() for p in pkg.rglob("*"))
     assert before == after  # 源包零改动
     assert dst.is_dir() and zip_path.is_file()
+
+
+# ---------- 撞名兜底与 CLI 真入口 ----------
+
+def test_req_w8_name_collision_dedup(tmp_path: Path):
+    """规范化撞名：'A B.md' 与 'A_B.md' 同目录 → dst 产出 _2 兜底，两者俱在。"""
+    pkg = tmp_path / "撞名包"
+    pkg.mkdir()
+    (pkg / "A B.md").write_text("# 甲\n", encoding="utf-8")
+    (pkg / "A_B.md").write_text("# 乙\n", encoding="utf-8")
+    (pkg / "A  C.md").write_text("# 丙\n", encoding="utf-8")
+    dst = convert_package(pkg)
+    names = sorted(f.name for f in dst.glob("*.md"))
+    assert "A_B.md" in names and "A_B_2.md" in names and "A_C.md" in names
+    assert "# 甲" in (dst / "A_B.md").read_text("utf-8")
+    assert "# 乙" in (dst / "A_B_2.md").read_text("utf-8")
+
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+
+
+def test_req_w8_cli_subprocess_md_rc0(pkg: Path):
+    """CLI 真入口（judge 堵点）：subprocess 跑 py -m kb_factory.convert --md，rc=0 且产物落地。"""
+    r = subprocess.run(
+        [sys.executable, "-X", "utf8", "-m", "kb_factory.convert", "--md", str(pkg)],
+        cwd=REPO_ROOT, capture_output=True, text=True, timeout=300,
+    )
+    assert r.returncode == 0, f"rc={r.returncode}\nstdout={r.stdout}\nstderr={r.stderr}"
+    dst = pkg.parent / f"{pkg.name}_md"
+    assert (dst / "转换报告.md").is_file()
+
+
+def test_req_w8_cli_missing_dir_friendly_exit2(tmp_path: Path):
+    """CLI 对不存在目录：友好报错 + 退出码 2，不裸 traceback。"""
+    r = subprocess.run(
+        [sys.executable, "-X", "utf8", "-m", "kb_factory.convert",
+         "--md", str(tmp_path / "不存在的包")],
+        cwd=REPO_ROOT, capture_output=True, text=True, timeout=60,
+    )
+    assert r.returncode == 2
+    combined = r.stdout + r.stderr
+    assert "目录不存在" in combined
+    assert "Traceback" not in combined

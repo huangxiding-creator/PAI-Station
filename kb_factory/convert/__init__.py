@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import argparse
 import sys
-from pathlib import Path
 
 from kb_factory.convert.import_pack import HOW_TO_NAME, OVERVIEW_NAME, make_import_pack
 from kb_factory.convert.md_convert import REPORT_NAME, convert_package
@@ -39,12 +38,18 @@ def main(argv: list[str] | None = None) -> int:
         parser.print_help()
         return 2
     if args.md:
-        src = Path(args.md)
-        dst = convert_package(src, args.dst)
+        try:
+            dst = convert_package(args.md, args.dst)
+        except FileNotFoundError as e:
+            print(f"错误：{e}（请用 --md 指向交付包目录）", file=sys.stderr)
+            return 2
         print(f"Markdown 版已生成: {dst}（报告: {dst / REPORT_NAME}）")
     if args.import_src:
-        src = Path(args.import_src)
-        zip_path = make_import_pack(src, args.dst)
+        try:
+            zip_path = make_import_pack(args.import_src, args.dst)
+        except FileNotFoundError as e:
+            print(f"错误：{e}（请用 --import 指向交付包目录）", file=sys.stderr)
+            return 2
         print(f"随身导入包已生成: {zip_path}（含 {HOW_TO_NAME} / {OVERVIEW_NAME}）")
     return 0
 

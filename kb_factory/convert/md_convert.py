@@ -164,8 +164,14 @@ def convert_package(src_dir: str | Path, dst_dir: str | Path | None = None) -> P
             s = Path(dirpath) / fn
             rel = s.relative_to(src).as_posix()
             d = dst / rel_dir / dst_relpath(fn)
-            if d.exists():  # 规范化撞名兜底
-                d = d.with_name(f"{d.stem}_2{d.suffix}")
+            if d.exists():  # 规范化撞名兜底：_2/_3/… 直到不撞（上限 99）
+                for i in range(2, 100):
+                    cand = d.with_name(f"{d.stem}_{i}{d.suffix}")
+                    if not cand.exists():
+                        d = cand
+                        break
+                else:
+                    raise RuntimeError(f"撞名超上限（99）: {rel} -> {d.name}")
             ext = s.suffix.lower()
             if ext in CONVERTED_EXTS:
                 if pandoc is None:
