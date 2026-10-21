@@ -1,0 +1,176 @@
+{
+ "order": {
+  "id": "SMOKE-1022-001",
+  "need_text": "水利安全知识库（W7 冒烟样例）",
+  "blueprint_ref": "E:\\AI-Station\\.claude\\worktrees\\agent-ac348b55ff657a4f0\\kb_factory\\fulfillment\\samples\\smoke\\blueprint\\mini_bp.json",
+  "email": "buyer@example.com",
+  "version_selection": "original",
+  "price": "0.01",
+  "paid_at": "2026-10-22T12:00:00",
+  "status": "paid"
+ },
+ "kb": {
+  "name": "水利安全知识库W7冒烟",
+  "domain": "水利安全",
+  "blueprint_ref": "E:\\AI-Station\\.claude\\worktrees\\agent-ac348b55ff657a4f0\\kb_factory\\fulfillment\\samples\\smoke\\blueprint\\mini_bp.json",
+  "generated_at": "2026-10-22T01:43:18",
+  "version_selection": "original"
+ },
+ "stats": {
+  "slots": 8,
+  "delivered": 4,
+  "guide": 4,
+  "delivered_bytes": 4244,
+  "corpus_items": 4,
+  "elapsed_s": 0.02,
+  "zip_bytes": 6658
+ },
+ "channels": [
+  {
+   "name": "local",
+   "badge": "self_owned",
+   "perm": "green",
+   "on": true,
+   "reason": "",
+   "note": "本地绿源：09 发布 自产研报 + mosaico 知识件，复制直取"
+  },
+  {
+   "name": "wenku",
+   "badge": "wenku_vip",
+   "perm": "yellow",
+   "on": false,
+   "reason": "默认OFF（黄源双闸：KB_WENKU_FETCH=1 且 secret 在位才启用）",
+   "note": ""
+  },
+  {
+   "name": "ima",
+   "badge": "ima_public",
+   "perm": "green",
+   "on": false,
+   "reason": "登录态失效（v1 降级，KB_IMA_FETCH=1 可重启用）",
+   "note": ""
+  },
+  {
+   "name": "gb",
+   "badge": "gb_free",
+   "perm": "green",
+   "on": false,
+   "reason": "由 std-samr-gb 技能执行，v1 手动批处理（产出获取指引条目）",
+   "note": ""
+  }
+ ],
+ "files": [
+  {
+   "slot": "自产研报_core_001.pdf",
+   "slot_title": "中国水电市场研究报告2026",
+   "path": "水利安全知识库W7冒烟/RB-06/01/中国水电市场研究报告2026.pdf",
+   "dir": "RB-06/01/",
+   "status": "delivered",
+   "badge": "self_owned",
+   "perm": "green",
+   "source_url": null,
+   "sha256": "1a17904919b95c8b50ceccca46a67485b2058a96a4e01b507fe68140d79cb33f",
+   "source_path": "E:\\AI-Station\\.claude\\worktrees\\agent-ac348b55ff657a4f0\\kb_factory\\fulfillment\\samples\\smoke\\corpus\\reports\\中国水电市场研究报告2026.pdf",
+   "size_bytes": 2048,
+   "advice": null
+  },
+  {
+   "slot": "自产研报_core_002.pdf",
+   "slot_title": "水利水电EPC总承包实战指南",
+   "path": "水利安全知识库W7冒烟/RB-06/01/水利水电EPC总承包实战指南.pdf",
+   "dir": "RB-06/01/",
+   "status": "delivered",
+   "badge": "green_free",
+   "perm": "green",
+   "source_url": null,
+   "sha256": "bc5bad8f44c1ccb15ffee35ce1a23eaff6dd023c88f15034c15338f508aedc47",
+   "source_path": "E:\\AI-Station\\.claude\\worktrees\\agent-ac348b55ff657a4f0\\kb_factory\\fulfillment\\samples\\smoke\\corpus\\reports\\水利水电EPC总承包实战指南.pdf",
+   "size_bytes": 2048,
+   "advice": null
+  },
+  {
+   "slot": "自产研报_core_003.pdf",
+   "slot_title": "独家行业白皮书占位件",
+   "path": null,
+   "dir": "RB-06/01/",
+   "status": "guide",
+   "badge": "green_free",
+   "perm": "green",
+   "source_url": null,
+   "sha256": null,
+   "source_path": null,
+   "size_bytes": null,
+   "advice": "已列入扩源计划"
+  },
+  {
+   "slot": "安全知识件_core_001.md",
+   "slot_title": "重大事故隐患判定导则",
+   "path": "水利安全知识库W7冒烟/RB-06/02/重大事故隐患判定导则.md",
+   "dir": "RB-06/02/",
+   "status": "delivered",
+   "badge": "self_owned",
+   "perm": "green",
+   "source_url": null,
+   "sha256": "8e9fbc3b09ddf4fa4ddbaee5e0264962aca573f694e6d472998f44db650659e4",
+   "source_path": "E:\\AI-Station\\.claude\\worktrees\\agent-ac348b55ff657a4f0\\kb_factory\\fulfillment\\samples\\smoke\\corpus\\knowledge\\重大事故隐患判定导则.md",
+   "size_bytes": 74,
+   "advice": null
+  },
+  {
+   "slot": "安全知识件_core_002.md",
+   "slot_title": "施工安全监督检查要点",
+   "path": "水利安全知识库W7冒烟/RB-06/02/施工安全监督检查要点.md",
+   "dir": "RB-06/02/",
+   "status": "delivered",
+   "badge": "self_owned",
+   "perm": "green",
+   "source_url": null,
+   "sha256": "e3b414f16289cb28e889819569fc0b9a0f3a13f656a30838a9800463fbc666f6",
+   "source_path": "E:\\AI-Station\\.claude\\worktrees\\agent-ac348b55ff657a4f0\\kb_factory\\fulfillment\\samples\\smoke\\corpus\\knowledge\\施工安全监督检查要点.md",
+   "size_bytes": 74,
+   "advice": null
+  },
+  {
+   "slot": "安全知识件_core_003.md",
+   "slot_title": "六项机制实施指南要点",
+   "path": null,
+   "dir": "RB-06/02/",
+   "status": "guide",
+   "badge": "ima_public",
+   "perm": "green",
+   "source_url": null,
+   "sha256": null,
+   "source_path": null,
+   "size_bytes": null,
+   "advice": "ima 渠道登录态失效已降级，已列入扩源计划"
+  },
+  {
+   "slot": "安全知识件_core_004.pdf",
+   "slot_title": "GB防洪标准汇编占位件",
+   "path": null,
+   "dir": "RB-06/02/",
+   "status": "guide",
+   "badge": "gb_free",
+   "perm": "green",
+   "source_url": null,
+   "sha256": null,
+   "source_path": null,
+   "size_bytes": null,
+   "advice": "国标件：由 std-samr-gb 技能执行（v1 手动批处理），已列入获取指引"
+  },
+  {
+   "slot": "安全知识件_core_005.pdf",
+   "slot_title": "文库黄源资料占位件",
+   "path": null,
+   "dir": "RB-06/02/",
+   "status": "guide",
+   "badge": "wenku_vip",
+   "perm": "yellow",
+   "source_url": null,
+   "sha256": null,
+   "source_path": null,
+   "size_bytes": null,
+   "advice": "需文库会员，可在文库搜索该标题"
+  }
+ ]
+}
