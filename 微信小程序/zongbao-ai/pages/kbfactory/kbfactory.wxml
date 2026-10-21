@@ -180,6 +180,7 @@
       <view class="kf-k kicker kicker-on-paper">ORDER · 整库订单</view>
       <view class="kf-ord-done-t">已支付 · 履约中</view>
       <view class="muted kf-ord-done-d">整理完成后将发送至 {{ordDoneEmail}}，请留意查收（含资料清单与取件方式）。本页暂不支持进度查询，交付以邮箱送达为准。</view>
+      <view class="muted kf-ord-done-d" wx:if="{{ordQueuedLocal}}">当前订单已安全保存，交付服务开通后将自动提交并邮件通知您，无需重复支付。</view>
       <button class="btn-primary kf-ord-go" hover-class="btn-hover" bindtap="onOrdClose">好的</button>
     </block>
   </view>

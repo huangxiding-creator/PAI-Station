@@ -297,9 +297,13 @@ Page({
           return;
         }
         // 支付成功 → 履约单提交（服务端配套待部署；失败落本地订单箱排队，不丢单）
-        kbp.submitOrder(payload).then(() => {
-          this.setData({ ordBusy: false, ordDone: true, ordDoneEmail: email });
+        kbp.submitOrder(payload).then((r2) => {
+          const queuedLocal = !!(r2 && r2.queued_local); // judge-W1修复：本地箱排队须如实告知
+          this.setData({ ordBusy: false, ordDone: true, ordDoneEmail: email, ordQueuedLocal: queuedLocal });
           wx.vibrateShort({ type: 'medium', fail: () => {} });
+          if (queuedLocal) {
+            wx.showToast({ title: '订单已保存，服务开通后自动提交', icon: 'none', duration: 3000 });
+          }
         });
       })
       .catch((err) => {
