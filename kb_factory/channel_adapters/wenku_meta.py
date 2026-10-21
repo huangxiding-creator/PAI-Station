@@ -65,7 +65,7 @@ def _to_meta(x: dict) -> FileMeta:
     vip = x.get("sellType") in _VIP_SELL
     return FileMeta(
         title=_strip_em(x.get("title")),
-        fmt=_FMT.get(x.get("fileType"), str(x.get("fileType"))),
+        fmt=_FMT.get(x.get("fileType"), "bin"),  # 未知fileType→bin（judge警告修复：不再透传裸数字）
         pages=x.get("pageNum"),
         badge="wenku_vip" if vip else "green_free",
         perm="yellow" if vip else "green",

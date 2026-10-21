@@ -27,12 +27,19 @@ FALLBACK_MIME = {"ppt": "application/vnd.ms-powerpoint", "txt": "text/plain",
                  "kb": "application/octet-stream"}
 
 _NUM_PREFIX = re.compile(
-    r"^\s*(?:\d{1,3}\s*[.、)）\-：:]|\d{1,2}\s(?=\S)|[（(][一二三四五六七八九十\d]{1,3}[)）])\s*")
+    r"^\s*(?:\d{1,3}\s*[.、)）\-：:]|\d{1,2}\s(?=\S)|[（(][一二三四五六七八九十\d]{1,3}[)）]"
+    r"|第[一二三四五六七八九十百\d]{1,4}[章节讲单元部分]"
+    r"|[一二三四五六七八九十]{1,3}[、.．])\s*")
 
 
 def strip_numbering(name: str) -> str:
-    """L2 标题去编号前缀（'01 工程总承包'→'工程总承包'；剥空则原样返回）。"""
-    stripped = _NUM_PREFIX.sub("", name or "").strip()
+    """L2 标题去编号前缀（'01 工程总承包'/'第三章 施工安全'/'一、造价管理'→去前缀；剥空则原样返回）。"""
+    stripped = name or ""
+    for _ in range(3):  # 叠层前缀（'01 第三章 …'）最多剥三层
+        new = _NUM_PREFIX.sub("", stripped).strip()
+        if new == stripped:
+            break
+        stripped = new
     return stripped or (name or "").strip()
 
 
