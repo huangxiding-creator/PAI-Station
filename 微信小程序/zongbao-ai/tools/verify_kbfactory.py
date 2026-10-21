@@ -15,6 +15,11 @@ import re
 import shutil
 import subprocess
 import sys
+import sys as _sys
+try:
+    _sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]  # zongbao-ai/
