@@ -105,8 +105,11 @@ def _item(r: dict) -> dict:
 
 
 def catalog() -> list:
-    # 1015 用户令：最新上架的在最上面（report.json 为追加序，反转即最新优先）
-    return [_item(r) for r in reversed(_load())]
+    # 1021 根修（实锤反转 bug）：report.json 维护约定=新在头（mp_list_report 上架腿写头位，
+    # canonical 与 staging 实测均 DSIM[0] 新在前）。旧 reversed() 是 1015「追加序」时代假设，
+    # 与现数据相反——反转后新报告垫底，latest=前3 永远取到最老三册。
+    # 文件序即最新优先，不再反转。
+    return [_item(r) for r in _load()]
 
 
 def get_report(sku: str) -> Optional[dict]:

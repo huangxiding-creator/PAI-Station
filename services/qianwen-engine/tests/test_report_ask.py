@@ -293,3 +293,15 @@ def test_perfect_no_prefix_duplication(client, monkeypatch):
     for p in d["points"]:
         assert not p["text"].startswith("第")
 
+
+
+# ── 1021 根修回归锚：catalog 文件序=最新优先（新在头，禁止反转）──
+def test_catalog_order_new_first(client):
+    from qianwen_engine import report_catalog
+    cat = report_catalog.catalog()
+    assert cat, "catalog 非空"
+    first = cat[0]["sku"]
+    raw = report_catalog._load()
+    assert first == raw[0].get("sku"), (
+        "catalog() 必须保持 report.json 文件序（新在头约定）；"
+        "若此断言挂了=有人又加了反转")
