@@ -866,12 +866,12 @@ def reports_list(request: Request):
         items.append({**it, "unlocked": sku in unlocked,
                       "views": s.get("views") or 0, "likes": s.get("likes") or 0,
                       "shares": s.get("shares") or 0, "heat": _heat(sku)})
-    # v0.9.22（1021 二次实锤维持原判，v0.9.22c 草案废弃）：report.json 现约定=新在头，
-    # catalog()=reversed(文件序)=旧→新；latest 取 reversed(items)（=文件序=最新优先）前3可售。
-    # 旧注释「追加序」已过时，但代码方向经 DSIM/SLSD 两轮线上验证正确，勿再翻转。
-    raw_order = list(reversed(items))  # catalog() 已反转，再反回 report.json 原始序（最新优先）
-    latest_skus = [it["sku"] for it in raw_order if it.get("sellable")][:3]
-    latest = [it for it in raw_order if it["sku"] in latest_skus]
+    # v0.9.22d 终版（1021 用户令=上架时间倒序前三）：catalog() 已按 listed_at 倒序
+    # （1021 根修去反转），items 即最新优先——latest 直接取前3可售，禁止任何二次反转。
+    # （历史教训：另一会话基于「catalog=reversed」假设补过 reversed(items)，与时间序
+    # 叠加变升序取到最老三册——双会话改同函数必须对齐 catalog 语义再动 latest。）
+    latest_skus = [it["sku"] for it in items if it.get("sellable")][:3]
+    latest = [it for it in items if it["sku"] in latest_skus]
     # hot：热度倒序（零热度报告按目录序排后）
     hot = sorted(items, key=lambda x: (-x["heat"], items.index(x)))
     return {"reports": items, "latest": latest, "hot": hot}

@@ -101,15 +101,17 @@ def _item(r: dict) -> dict:
         "cat_name": r.get("cat_name", ""),
         "intro_lede": r.get("intro_lede", ""),
         "sellable": _sellable(r),
+        "listed_at": r.get("listed_at", ""),
     }
 
 
 def catalog() -> list:
-    # 1021 根修（实锤反转 bug）：report.json 维护约定=新在头（mp_list_report 上架腿写头位，
-    # canonical 与 staging 实测均 DSIM[0] 新在前）。旧 reversed() 是 1015「追加序」时代假设，
-    # 与现数据相反——反转后新报告垫底，latest=前3 永远取到最老三册。
-    # 文件序即最新优先，不再反转。
-    return [_item(r) for r in _load()]
+    # 1021 用户令（终版）：最新研报=「上架时间倒序」——listed_at 为真值（上架腿写入；
+    # 存量 75 份由 git 历史回填：PDF 全文入 content/full 的提交时刻=可售上架时刻）。
+    # 稳定排序：无 listed_at 的条目垫底并保持文件相对序；旧 reversed() 反转 bug 已除。
+    items = [_item(r) for r in _load()]
+    items.sort(key=lambda it: it.get("listed_at") or "", reverse=True)
+    return items
 
 
 def get_report(sku: str) -> Optional[dict]:

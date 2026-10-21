@@ -40,6 +40,19 @@ def sync_content(sku: str) -> list[Path]:
     rc = STAGE / "report_content"
     rc.mkdir(parents=True, exist_ok=True)
     copied = []
+    # 1021 用户令：上架时间戳自动盖章——目标 sku 条目缺 listed_at 时以当下时刻回写
+    # canonical 与 stage 两份（引擎按 listed_at 倒序排最新研报；缺戳条目垫底）。
+    import json as _json
+    import datetime as _dt
+    _rj = CONTENT / "report.json"
+    _d = _json.loads(_rj.read_text(encoding="utf-8"))
+    _wrap = isinstance(_d, dict)
+    _items = _d.get("reports") if _wrap else _d
+    _hit = next((it for it in _items if it.get("sku") == sku), None)
+    if _hit is not None and not _hit.get("listed_at"):
+        _hit["listed_at"] = _dt.datetime.now().strftime("%Y-%m-%d %H:%M")
+        _rj.write_text(_json.dumps(_d, ensure_ascii=False, indent=1), encoding="utf-8")
+        print(f"[stamp] listed_at={_hit['listed_at']} -> {sku}")
     for rel in ("report.json",):
         dst = rc / rel
         dst.write_bytes((CONTENT / rel).read_bytes())

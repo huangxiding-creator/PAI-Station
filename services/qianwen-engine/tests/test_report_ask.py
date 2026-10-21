@@ -295,13 +295,12 @@ def test_perfect_no_prefix_duplication(client, monkeypatch):
 
 
 
-# ── 1021 根修回归锚：catalog 文件序=最新优先（新在头，禁止反转）──
-def test_catalog_order_new_first(client):
+# ── 1021 终版回归锚：catalog 按 listed_at 上架时间严格倒序（无时间戳垫底）──
+def test_catalog_order_listed_at_desc(client):
     from qianwen_engine import report_catalog
     cat = report_catalog.catalog()
     assert cat, "catalog 非空"
-    first = cat[0]["sku"]
-    raw = report_catalog._load()
-    assert first == raw[0].get("sku"), (
-        "catalog() 必须保持 report.json 文件序（新在头约定）；"
-        "若此断言挂了=有人又加了反转")
+    ts = [it.get("listed_at") or "" for it in cat]
+    stamped = [t for t in ts if t]
+    assert stamped == sorted(stamped, reverse=True), (
+        "catalog() 必须按 listed_at 倒序（上架时间序）；若挂=排序被改动")
