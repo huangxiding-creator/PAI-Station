@@ -20,9 +20,9 @@
    "id": "T3",
    "wbs": "A",
    "title": "出厂固件原样 build 通过",
-   "status": "in_progress",
+   "status": "done",
    "dep": "T1",
-   "note": "v6.1三连坑已破(CRLF/镜像/依赖序); 现卡idf版本, master装配中"
+   "note": "IDF v6.2(master@7b9cc1ac)+D5分区+D6 mcpwm补丁 → 7件bin全出(edge_agent 6.5MB/system 3.4MB含九技能+人设+知识)"
   },
   {
    "id": "T4",
@@ -63,8 +63,9 @@
    "id": "T9",
    "wbs": "C",
    "title": "资产预烧+build 出bin",
-   "status": "blocked",
-   "dep": "T3"
+   "status": "done",
+   "dep": "T3",
+   "note": "资产预烧+build=同一步(转换器写入.recovery→IDF打包system.bin); firmware_out/ 7件齐备"
   },
   {
    "id": "T10",
