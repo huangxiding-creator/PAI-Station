@@ -201,20 +201,30 @@ async def gen_one(client, st: dict, ch: dict) -> None:
     res = await ask_retry(client, nb_id, chapter_prompt(ch))
     parts = [res.answer]
     conv = res.conversation_id
-    for k in range(2):          # 两次「继续」拿后半部
+    # 1021 修复: 续写分段指向不同内容, 防两次「继续」重复输出同一后半
+    # (ch01-12 实测: 无指向的「输出后续部分」会让第二次续写重发 4.x 节双版)
+    followups = [
+        "继续，输出本章后半部分剩余小节(约5000字)——只写前次未输出的小节，"
+        "禁止重复任何已出现的小节标题与内容，句末继续标注来源编号。",
+        "本章正文已完成。现在只输出《源引用对照》清单：逐条列出本章引用的"
+        "编号→源资料名→对应内容摘要(每条一行)，并附本章术语速查。"
+        "不要重复任何正文小节。",
+    ]
+    for k in range(2):          # 两次续写: 后半剩余小节 → 源引用对照清单
         await asyncio.sleep(4)
         try:
-            r2 = await ask_retry(
-                client, nb_id,
-                "继续，按同样要求输出本章后续部分(约5000字)，"
-                "句末继续标注来源编号。完稿时附《源引用对照》清单。",
-                conv=conv)
+            r2 = await ask_retry(client, nb_id, followups[k], conv=conv)
             parts.append(r2.answer)
             conv = r2.conversation_id or conv
         except Exception as e:  # noqa: BLE001
             print(f"[!] {key} 续写{k+1} 失败: {e}")
             break
-    out.write_text("\n\n".join(parts), encoding="utf-8")
+    parts_joined = "\n\n".join(parts)
+    # 1021 汲取令: 防空覆盖守卫 (Manus live event[89] 蓝本) — 短稿禁入成品
+    from m2_write_guard import write_if_long
+    if not write_if_long(out, parts_joined, min_chars=3000, relative=True):
+        print(f"[!!] 第{ch['no']}章稿被守卫拦截(疑似空/截断), 不落盘")
+        return
     st.setdefault("chapters", {})[str(ch["no"])] = {
         "conversation_id": conv,
         "ts": time.strftime("%F %T")}
