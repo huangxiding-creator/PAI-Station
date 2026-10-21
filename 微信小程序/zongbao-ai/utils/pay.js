@@ -1,4 +1,4 @@
-// utils/pay.js — 虚拟支付封装（v0.8.0 导出 ¥0.1/条；v0.9.0 报告商城 ¥498-1999/份）
+// utils/pay.js — 虚拟支付封装（v0.8.0 导出 ¥0.1/条；v0.9.0 报告商城 ¥498-1999/份；v0.9.14 KB-FACTORY 蓝图/整库）
 // 链路：服务端出双签名 → wx.requestVirtualPayment 原样透传（sign_data 为签名字符串，逐字节绑定，不重序列化）
 // → 成功后回调服务端标记（订单+微信查单核验）→ 引擎侧闸门放行。
 // 合规铁律：iOS 不展示任何付费入口（虚拟支付 Android-only；已解锁内容 iOS 可阅读）；
@@ -118,11 +118,39 @@ function payReport(sku) {
     .catch((err) => _catchSign(err, '本报告已解锁，可直接阅读'));
 }
 
+// ── v0.9.14 W6 KB-FACTORY：知识库工厂两单据（复用导出/商城既有语义；服务端配套待部署）──
+// 蓝图导出（¥0.1/张，单据类型 blueprint_export）——同 payExport 三段链：签名→支付→查单核验
+function payBlueprintExport(digest) {
+  return api.kbBlueprintSign(digest)
+    .then((sign) => _requestPay(sign, {
+      method: 'POST', path: '/api/kb/blueprint_paid'
+    }, '蓝图导出'))
+    .catch((err) => _catchSign(err, '本张蓝图导出已解锁'));
+}
+
+// 整库订单（动态金额，单据类型 kb_order）——金额由服务端按蓝图摘要复算（勿信客户端）；
+// payload 四键 {need_text, blueprint:{domain,files,gb,total,version_sha}, email, version}
+function payKbOrder(payload) {
+  return api.kbOrderSign(payload)
+    .then((sign) => _requestPay(sign, {
+      method: 'POST', path: '/api/kb/order_paid'
+    }, '整库订单'))
+    .catch((err) => _catchSign(err, '本单已支付，订单已受理'));
+}
+
+// 整库履约单提交（支付成功后的收尾腿；【服务端配套待部署】——失败由 kbfactory_pay 落本地订单箱排队）
+function submitKbOrder(payload) {
+  return api.kbOrderSubmit(payload);
+}
+
 module.exports = {
   paySupported,
   platform,
   payExport,
   payExportAll,
   payReport,
+  payBlueprintExport,
+  payKbOrder,
+  submitKbOrder,
   degradeMessage: () => DEGRADE_MSG
 };

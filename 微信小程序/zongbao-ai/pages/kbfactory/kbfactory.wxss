@@ -330,3 +330,133 @@
 .kf-f-meta { font-size: 20rpx; margin-top: 2rpx; }
 .kf-more { font-size: 20rpx; padding-top: 10rpx; }
 .kf-note { margin-top: 20rpx; font-size: 20rpx; line-height: 1.6; padding-top: 16rpx; }
+
+/* ══ W6 报价卡按钮排（带走整库行；导出/分享卡样式沿用上方既有 kf-export/kf-poster）══ */
+.kf-buy { margin-top: 26rpx; }
+
+/* ══ W6 整库订单确认层（遮罩+抽屉；v1 状态页同层切换）══ */
+.kf-ord-mask {
+  position: fixed;
+  left: 0; right: 0; top: 0; bottom: 0;
+  background: rgba(10, 14, 24, 0.55);
+  z-index: 900;
+  animation: fadeIn 0.24s ease both;
+}
+.kf-ord {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 901;
+  background: var(--paper);
+  border-radius: 28rpx 28rpx 0 0;
+  padding: 34rpx 34rpx calc(30rpx + env(safe-area-inset-bottom));
+  max-height: 82vh;
+  overflow-y: auto;
+  animation: kfOrdUp 0.3s cubic-bezier(0.22, 0.9, 0.3, 1) both;
+}
+@keyframes kfOrdUp {
+  from { transform: translateY(48rpx); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.kf-ord-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20rpx;
+  margin-bottom: 22rpx;
+}
+.kf-ord-title {
+  margin-top: 8rpx;
+  font-size: 32rpx;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: 1rpx;
+}
+.kf-ord-x {
+  width: 56rpx; height: 56rpx;
+  display: flex; align-items: center; justify-content: center;
+  border: 2rpx solid var(--line);
+  border-radius: 50%;
+  color: var(--muted);
+  font-size: 28rpx;
+  flex-shrink: 0;
+}
+
+/* 三版本单选行 */
+.kf-ov {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 22rpx 20rpx;
+  border: 2rpx solid var(--line);
+  border-radius: 12rpx;
+  background: var(--white, #fff);
+  margin-bottom: 14rpx;
+}
+.kf-ov.on {
+  border-color: var(--accent);
+  background: rgba(var(--t-accent-rgb), 0.06);
+}
+.kf-ov-radio {
+  width: 30rpx; height: 30rpx;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 3rpx solid var(--muted);
+  position: relative;
+}
+.kf-ov.on .kf-ov-radio { border-color: var(--accent); }
+.kf-ov.on .kf-ov-radio::after {
+  content: '';
+  position: absolute;
+  left: 5rpx; top: 5rpx;
+  width: 14rpx; height: 14rpx;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.kf-ov-body { flex: 1; min-width: 0; }
+.kf-ov-name { font-size: 28rpx; font-weight: 700; color: var(--ink); }
+.kf-ov-note { font-size: 21rpx; margin-top: 4rpx; }
+.kf-ov-amt {
+  flex-shrink: 0;
+  font-size: 30rpx;
+  font-weight: 800;
+  color: var(--accent-deep);
+}
+
+/* 邮箱 */
+.kf-ord-mail { margin: 24rpx 0 8rpx; }
+.kf-ord-label { font-size: 23rpx; font-weight: 700; color: var(--ink-2); margin-bottom: 12rpx; }
+.kf-ord-input {
+  border: 2rpx solid var(--line);
+  border-radius: 10rpx;
+  background: var(--white, #fff);
+  padding: 20rpx 22rpx;
+  font-size: 28rpx;
+  color: var(--ink);
+}
+.kf-ord-input.err { border-color: #d05448; }
+.kf-ord-err { margin-top: 8rpx; font-size: 21rpx; color: #d05448; }
+
+/* 合规三句 */
+.kf-ord-law {
+  margin: 18rpx 0 24rpx;
+  padding: 18rpx 20rpx;
+  border: 2rpx dashed var(--line);
+  border-radius: 10rpx;
+}
+.kf-law {
+  font-size: 21rpx;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.kf-ord-go { margin-top: 4rpx; }
+
+/* 状态页：履约中（v1 无进度轮询，文案注明）*/
+.kf-ord-done-t {
+  margin-top: 6rpx;
+  font-size: 40rpx;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: 2rpx;
+}
+.kf-ord-done-d { margin: 18rpx 0 30rpx; font-size: 24rpx; line-height: 1.8; }

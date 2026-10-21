@@ -94,8 +94,9 @@
         <view class="kf-pr"><text class="kf-pr-t">轻便阅读版（Markdown）</text><text class="mono">¥{{mdPrice}}</text></view>
         <view class="kf-pr"><text class="kf-pr-t">随身知识库导入包</text><text class="mono">+¥{{bp.quote.import_add}}</text></view>
       </view>
-      <button class="btn-primary kf-export" hover-class="btn-hover" bindtap="onExport">导出蓝图 ¥0.1</button>
-      <button class="kf-poster" hover-class="kf-poster-hover" bindtap="onPoster">生成分享海报</button>
+      <button class="btn-primary kf-buy" hover-class="btn-hover" wx:if="{{paySupported}}" bindtap="onBuyLibrary">📦 带走整库 ¥{{bp.quote.total}} 起</button>
+      <button class="btn-primary kf-export" hover-class="btn-hover" wx:if="{{paySupported}}" disabled="{{exporting}}" bindtap="onExport">导出蓝图 ¥0.1</button>
+      <button class="kf-poster" hover-class="kf-poster-hover" disabled="{{exporting}}" bindtap="onPoster">生成分享卡</button>
     </view>
 
     <!-- 三级目录树 -->
@@ -135,7 +136,55 @@
     </view>
   </block>
 
-  <!-- v0.9.7 自绘弹窗系统：支付/海报占位（M5 接通） -->
+  <!-- ══ W6 整库订单确认层：三版本单选+邮箱必填+合规三句 → 支付 → 履约中状态页（v1 无进度轮询）══ -->
+  <view class="kf-ord-mask" wx:if="{{ordOpen}}" bindtap="onOrdClose"></view>
+  <view class="kf-ord" wx:if="{{ordOpen}}">
+    <block wx:if="{{!ordDone}}">
+      <view class="kf-ord-head">
+        <view class="kf-ord-head-body">
+          <view class="kf-k kicker kicker-on-paper">ORDER · 带走整库</view>
+          <view class="kf-ord-title">确认订单 · {{bp.domain}}</view>
+        </view>
+        <view class="kf-ord-x" hover-class="kf-press" hover-stay-time="80" bindtap="onOrdClose">✕</view>
+      </view>
+
+      <view class="kf-ov {{ordVersion === item.key ? 'on' : ''}}" wx:for="{{ordVersions}}" wx:key="key"
+        hover-class="kf-press" hover-stay-time="80" data-v="{{item.key}}" bindtap="onOrdPick">
+        <view class="kf-ov-radio"></view>
+        <view class="kf-ov-body">
+          <view class="kf-ov-name">{{item.name}}</view>
+          <view class="muted kf-ov-note">{{item.note}}</view>
+        </view>
+        <view class="kf-ov-amt mono">¥{{item.amount}}</view>
+      </view>
+
+      <view class="kf-ord-mail">
+        <view class="kf-ord-label">接收邮箱（必填）</view>
+        <input class="kf-ord-input {{ordEmailErr ? 'err' : ''}}" value="{{ordEmail}}"
+          placeholder="name@site.com" placeholder-class="kf-ph" bindinput="onOrdEmail" />
+        <view class="kf-ord-err" wx:if="{{ordEmailErr}}">{{ordEmailErr}}</view>
+      </view>
+
+      <view class="kf-ord-law">
+        <view class="kf-law">· 资料来源合规：全部为公开资料、会员资料与行业公开标准，件件有来路</view>
+        <view class="kf-law">· 交付方式：整理完成后经邮箱与网盘双通道送达</view>
+        <view class="kf-law">· 服务承诺：支付后 2 小时内完成整理并发送至您的邮箱</view>
+      </view>
+
+      <button class="btn-primary kf-ord-go" hover-class="btn-hover" disabled="{{ordBusy}}" bindtap="onOrdPay">
+        {{ordBusy ? '正在支付…' : '支付 ¥' + ordAmount + ' · 带走整库'}}
+      </button>
+    </block>
+
+    <block wx:else>
+      <view class="kf-k kicker kicker-on-paper">ORDER · 整库订单</view>
+      <view class="kf-ord-done-t">已支付 · 履约中</view>
+      <view class="muted kf-ord-done-d">整理完成后将发送至 {{ordDoneEmail}}，请留意查收（含资料清单与取件方式）。本页暂不支持进度查询，交付以邮箱送达为准。</view>
+      <button class="btn-primary kf-ord-go" hover-class="btn-hover" bindtap="onOrdClose">好的</button>
+    </block>
+  </view>
+
+  <!-- v0.9.7 自绘弹窗系统：加载/轻提示（W6 导出与海报链在用） -->
   <qw-pop id="qwpop" bind:popstate="onPopState" />
 
   <view class="safe-bottom"></view>
