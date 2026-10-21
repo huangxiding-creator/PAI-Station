@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 750px; height: 1334px; font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+         background: linear-gradient(160deg, #0d2b4e 0%, #123a5f 45%, #0d1f33 100%);
+         color: #e8f1fa; overflow: hidden; position: relative; }
+  .glow { position: absolute; width: 560px; height: 560px; border-radius: 50%;
+          background: radial-gradient(circle, rgba(48,168,216,.22) 0%, transparent 65%);
+          top: -160px; right: -140px; }
+  .glow2 { position: absolute; width: 420px; height: 420px; border-radius: 50%;
+           background: radial-gradient(circle, rgba(24,120,216,.18) 0%, transparent 60%);
+           bottom: -100px; left: -120px; }
+  .wrap { position: relative; padding: 74px 64px; height: 100%; display: flex; flex-direction: column; }
+  .brand { font-size: 24px; color: #7cc4ff; letter-spacing: 3px; }
+  .hero { margin-top: 100px; }
+  .hero .big { font-size: 96px; font-weight: 800; line-height: 1.16;
+               background: linear-gradient(100deg, #ffffff 20%, #7cc4ff 60%, #30a8d8);
+               -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero .sub { font-size: 40px; color: #bcd6ee; margin-top: 18px; letter-spacing: 2px; }
+  .divider { width: 88px; height: 6px; border-radius: 3px; margin: 52px 0;
+             background: linear-gradient(90deg, #1878D8, #30A8D8); }
+  .points { display: flex; flex-direction: column; gap: 30px; }
+  .pt { display: flex; align-items: flex-start; gap: 18px; }
+  .pt .n { min-width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center;
+           justify-content: center; font-weight: 700; font-size: 22px;
+           background: linear-gradient(135deg, rgba(24,120,216,.35), rgba(48,168,216,.25));
+           border: 1px solid rgba(124,196,255,.35); color: #7cc4ff; }
+  .pt .t { font-size: 31px; line-height: 1.45; }
+  .pt .t b { color: #ffd66b; font-weight: 700; }
+  .case { margin-top: auto; background: rgba(18,58,98,.55); border: 1px solid rgba(29,74,115,.8);
+          border-radius: 20px; padding: 26px 30px; backdrop-filter: blur(6px); }
+  .case .row { display: flex; justify-content: space-between; font-size: 25px; padding: 7px 0; }
+  .case .row span:last-child { color: #7cc4ff; font-weight: 600; }
+  .foot { margin-top: 30px; display: flex; justify-content: space-between; align-items: flex-end; }
+  .price { font-size: 46px; font-weight: 800; color: #ffd66b; }
+  .price small { font-size: 24px; color: #bcd6ee; font-weight: 400; }
+  .site { font-size: 27px; color: #7cc4ff; text-align: right; line-height: 1.5; }
+  .copy { position: absolute; bottom: 26px; left: 0; right: 0; text-align: center;
+          font-size: 19px; color: #5f7d99; }
+</style>
+</head>
+<body>
+  <div class="glow"></div><div class="glow2"></div>
+  <div class="wrap">
+    <div class="brand">黄河总包 · 出品</div>
+    <div class="hero">
+      <div class="big">资料进<br>策划出</div>
+      <div class="sub">水利总包策划官</div>
+    </div>
+    <div class="divider"></div>
+    <div class="points">
+      <div class="pt"><div class="n">1</div><div class="t"><b>35分钟</b>出双文件初稿（人工两周）</div></div>
+      <div class="pt"><div class="n">2</div><div class="t"><b>550处依据</b>逐条可溯源</div></div>
+      <div class="pt"><div class="n">3</div><div class="t">大屏协同 · <b>Word修订模式</b>定稿</div></div>
+    </div>
+    <div class="case">
+      <div class="row"><span>某引水枢纽EPC实测</span><span>76MB前期资料</span></div>
+      <div class="row"><span>成稿</span><span>17.8万字 · 双文件</span></div>
+      <div class="row"><span>实测数据核验</span><span>七项逐条对表</span></div>
+    </div>
+    <div class="foot">
+      <div class="price">¥2980<small> /项目 首发价</small></div>
+      <div class="site">47.120.43.20:8095<br>即刻体验</div>
+    </div>
+  </div>
+  <div class="copy">© 黄河总包 · 水利工程项目管理策划AI助手</div>
+</body>
+</html>

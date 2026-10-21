@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { width:720px; height:1280px; overflow:hidden; position:relative;
+         font-family:"PingFang SC","Microsoft YaHei",sans-serif; color:#e8f1fa;
+         background:linear-gradient(160deg,#0d2b4e,#123a5f 50%,#0d1f33); }
+  .scene { position:absolute; inset:0; display:flex; flex-direction:column;
+           justify-content:center; align-items:center; text-align:center; padding:0 60px;
+           opacity:0; animation:fadeIn .8s forwards; }
+  .s1 { animation-delay:.2s; } .s2 { animation-delay:4.2s; } .s3 { animation-delay:8.2s; }
+  .s4 { animation-delay:12.2s; } .s5 { animation-delay:16.2s; } .s6 { animation-delay:20.2s; }
+  @keyframes fadeIn { 0%{opacity:0;transform:translateY(30px)} 12%{opacity:1;transform:none}
+                      88%{opacity:1} 100%{opacity:0} }
+  .kicker { font-size:30px; color:#7cc4ff; letter-spacing:6px; margin-bottom:38px; }
+  .huge { font-size:110px; font-weight:800; line-height:1.15;
+          background:linear-gradient(100deg,#fff,#7cc4ff); -webkit-background-clip:text;
+          -webkit-text-fill-color:transparent; }
+  .mid { font-size:66px; font-weight:700; line-height:1.3; }
+  .mid b { color:#ffd66b; }
+  .num { font-size:190px; font-weight:800; color:#ffd66b; line-height:1;
+         text-shadow:0 0 80px rgba(255,214,107,.35); }
+  .numlab { font-size:42px; color:#bcd6ee; margin-top:24px; }
+  .brand { font-size:56px; font-weight:800; color:#7cc4ff; }
+  .site { font-size:40px; color:#e8f1fa; margin-top:26px; }
+  .price { font-size:64px; font-weight:800; color:#ffd66b; margin-top:20px; }
+  .copy { position:absolute; bottom:40px; width:100%; text-align:center; font-size:22px; color:#5f7d99; }
+  .bar { width:520px; height:10px; border-radius:5px; margin-top:46px; overflow:hidden;
+         background:rgba(124,196,255,.15); }
+  .bar i { display:block; height:100%; border-radius:5px;
+           background:linear-gradient(90deg,#1878D8,#30A8D8); }
+  .s2 .bar i { width:35%; } .s3 .bar i { width:60%; } .s4 .bar i { width:88%; }
+</style>
+</head>
+<body>
+  <div class="scene s1">
+    <div class="kicker">中标第1天 · 倒计时15天</div>
+    <div class="huge">项目管理策划<br>谁来写？</div>
+  </div>
+  <div class="scene s2">
+    <div class="kicker">黄河总包 出品</div>
+    <div class="brand">水利总包策划官</div>
+    <div class="mid" style="margin-top:40px">前期资料整个拖进去</div>
+    <div class="bar"><i></i></div>
+  </div>
+  <div class="scene s3">
+    <div class="num">35<span style="font-size:80px">分钟</span></div>
+    <div class="numlab">17.8万字双文件初稿<br>《项目管理计划》+《项目实施计划》</div>
+  </div>
+  <div class="scene s4">
+    <div class="num">550<span style="font-size:80px">处</span></div>
+    <div class="numlab">依据角标逐条可溯源<br>初设参数 × 十年实测气象逐项对表</div>
+  </div>
+  <div class="scene s5">
+    <div class="mid">会议室大屏讨论<br>语音意见当场落稿</div>
+    <div class="mid" style="margin-top:30px"><b>Word修订模式</b>逐条接受</div>
+  </div>
+  <div class="scene s6">
+    <div class="brand">水利总包策划官</div>
+    <div class="site">47.120.43.20:8095</div>
+    <div class="price">首发 ¥2980/项目</div>
+  </div>
+  <div class="copy">© 黄河总包 · 水利工程项目管理策划AI助手</div>
+</body>
+</html>
