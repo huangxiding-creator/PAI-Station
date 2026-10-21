@@ -57,7 +57,7 @@ def sensors(campaign: str) -> bool:
     for cmd, desc in (
         (PY + ["reforge_factory/completeness/entity_timeline.py", "--campaign", campaign], "T 轴"),
         (PY + ["reforge_factory/completeness/coverage_facets.py", "scan", campaign], "B 轴"),
-        (PY + ["reforge_factory/completeness/dimension_matrix.py", "scan", campaign], "D 轴"),
+        (PY + ["reforge_factory/completeness/dimension_matrix.py", campaign], "D 轴"),
         (PY + ["reforge_factory/completeness/depth_ladder.py", "--campaign", campaign], "P 轴"),
         (PY + ["reforge_factory/completeness/channel_matrix.py", campaign], "C 轴"),
         (PY + ["reforge_factory/completeness/cidx.py", "--campaign", campaign], "CIdx 组装"),
@@ -84,7 +84,7 @@ def run_stage(stage: str, ns) -> None:
         print("[S2] 写手军团: Workflow (12 章并行+密度自检) → 补锚军团 → sweep 终扫 → gate3 (人工/Workflow 触发)")
     elif stage == "S3":
         m2 = REPO / "_proposals" / "flagship-paid-report-1007" / "work" / "m2" / c.lower().replace("-", "")
-        print("[S3] merge → report_to_docx → Word COM PDF (在役 m2 装配件)")
+        print("[S3] merge → report_to_docx → report_paiban(WPS排版复刻:专业排版为上架前置门,1021令) → Word COM PDF")
     elif stage == "S4":
         sh(PY + ["tools/mp_list_report.py", "--sku", sku], "小程序上架(总包AI顾问)")
         sh(PY + ["tools/metaso_brain_upload.py", "--cfid", "8676827961374429184",
