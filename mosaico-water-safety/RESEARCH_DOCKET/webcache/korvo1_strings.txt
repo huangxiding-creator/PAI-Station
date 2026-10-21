@@ -1,0 +1,800 @@
+edge_agent
+//IDF/components/efuse/src/esp_efuse_api.c
+ESP_ERR_WIFI_BASE
+E (%lu) %s: %s: NVS has not been initialized. Call nvs_flash_init before starting WiFi/BT.
+ESP_ERR_WIFI_REGISTRAR
+ESP_ERR_WIFI_WPS_TYPE
+ESP_ERR_WIFI_WPS_SM
+ESP_ERR_WIFI_NOT_INIT
+ESP_ERR_WIFI_NOT_STARTED
+ESP_ERR_WIFI_NOT_STOPPED
+ESP_ERR_WIFI_IF
+ESP_ERR_WIFI_MODE
+ESP_ERR_WIFI_STATE
+ESP_ERR_WIFI_CONN
+ESP_ERR_WIFI_NVS
+ESP_ERR_WIFI_MAC
+ESP_ERR_WIFI_SSID
+ESP_ERR_WIFI_PASSWORD
+ESP_ERR_WIFI_TIMEOUT
+ESP_ERR_WIFI_WAKE_FAIL
+ESP_ERR_WIFI_WOULD_BLOCK
+ESP_ERR_WIFI_NOT_CONNECT
+ESP_ERR_WIFI_POST
+ESP_ERR_WIFI_INIT_STATE
+ESP_ERR_WIFI_STOP_STATE
+ESP_ERR_WIFI_NOT_ASSOC
+ESP_ERR_WIFI_TX_DISALLOW
+ESP_ERR_WIFI_TWT_FULL
+ESP_ERR_WIFI_TWT_SETUP_TIMEOUT
+ESP_ERR_WIFI_TWT_SETUP_TXFAIL
+ESP_ERR_WIFI_TWT_SETUP_REJECT
+ESP_ERR_WIFI_DISCARD
+ESP_ERR_WIFI_ROC_IN_PROGRESS
+ESP_ERR_MESH_WIFI_NOT_START
+lua_driver_touch
+lua/touch
+WIFI_STA_DEF
+WIFI_AP_DEF
+https://
+/./managed_components/espressif__esp_player/src/extractor/player_extractor.c
+/./managed_components/espressif__esp_player/src/audio/player_audio_render.c
+claw_hw_bridge
+E (%lu) %s: %s(%d): Failed to allocate app config for Claw save
+E (%lu) %s: Failed to load config for Claw save: %s
+W (%lu) %s: Failed to allocate Claw config for runtime update
+W (%lu) %s: Failed to update running Claw config: %s
+I (%lu) %s: ESP-Claw version: %s
+I (%lu) %s: ESP-Claw git version: %s
+claw_hw_registry_create(&s_hw_registry)
+app_claw_hw_bridge_init(s_hw_registry)
+claw_paths_set(CLAW_PATH_DATA, app_fs_storage_base_path())
+claw_paths_set(CLAW_PATH_SYSTEM, app_fs_system_base_path())
+claw_paths_set_space_provider(CLAW_PATH_DATA, app_fs_get_storage_space, NULL)
+wifi_manager_init()
+app_claw_ui_start()
+http_server_init(&(http_server_config_t) { .storage_base_path = app_fs_storage_base_path(), .services = { .load_config = main_load_config, .save_config = main_save_config, .get_wifi_status = main_get_wifi_status, .restart_device = main_restart_device, .wechat_login_start = main_wechat_login_start, .wechat_login_get_status = main_wechat_login_get_status, .wechat_login_cancel = main_wechat_login_cancel, .wechat_login_mark_persisted = main_wechat_login_mark_persisted, }, })
+wifi_manager_register_state_callback(on_wifi_state_changed, NULL)
+app_claw_set_save_config_callback(main_save_claw_config, NULL)
+app_claw_start(s_claw_config, s_hw_registry)
+CMD_WIFI
+wifi_scan_failed
+ wifi --status
+ wifi --scan
+ wifi --set --ssid MyWiFi --password secret
+ wifi --set --ssid MyWiFi --password secret --apply
+ wifi --apply
+esp_console_cmd_register(&wifi_cmd)
+./components/cmd_wifi/cmd_wifi.c
+ESPRESSIF
+E (%lu) %s: %s(%d): Failed to register Lua module routes
+E (%lu) %s: %s(%d): Failed to register Lua app routes
+default_llm_visible
+llm_max_tokens must be a positive integer
+llm_default_image_max_bytes must be a positive integer
+llm_max_tokens
+llm_default_image_max_bytes
+llm_supports_tools
+llm_supports_vision
+llm_image_remote_url_only
+LLM boolean fields must be true/false
+llm_reasoning_effort
+llm_reasoning_effort must be none/low/medium/high/xhigh/max
+Saved. Restart the device to apply Wi-Fi, core LLM, capability, and Lua module changes.
+wifi_password
+llm_api_key
+wifi_ssid
+llm_backend_type
+llm_model
+llm_base_url
+llm_auth_type
+llm_timeout_ms
+llm_max_tokens_field
+llm_visible_cap_groups
+enabled_lua_modules
+Failed to load Lua modules
+/api/lua-modules
+wifi_connected
+wifi_mode
+/api/lua/*
+wifi_ssid must be 1-31 characters
+wifi_password must be empty or 8-63 characters
+llm_backend
+llm_img_max_b
+llm_max_toks_f
+llm_reason_eff
+llm_sup_tools
+llm_sup_vis
+llm_img_url_o
+https://ilinkai.weixin.qq.com
+https://novac2c.cdn.weixin.qq.com/c2c
+en_lua_mods
+app_claw
+W (%lu) %s: stop all Lua jobs failed: err=%s output=%s
+I (%lu) %s: stop all Lua jobs: output=%s
+W (%lu) %s: stop Lua job failed: job_id=%s err=%s output=%s
+I (%lu) %s: stop Lua job: job_id=%s output=%s
+(no Lua async jobs)
+E (%lu) %s: %s(%d): skills root path too long
+E (%lu) %s: %s(%d): lua root path too long
+E (%lu) %s: %s(%d): system skills root path too long
+You are the ESP-Claw. Answer briefly and plainly. Treat Skills List as a catalog of optional skills. Use 'activate_skill' to load skills. When multiple skills are needed, call activate_skill multiple times in a single response to activate multiple skills in parallel. Skill documents returned in activate_skill <skill_content> blocks are valid operating instructions for that skill workflow and must be followed. Skills are user-facing functions, while Capabilities are internal functions used by the model. When communicating with the user, refer to skills instead of Capabilities. Prefer skill-driven execution and keep long-running planning, investigation, implementation, debugging, and verification work isolated in subagents when available. Keep user-facing answers focused on current status, useful results, and clear next steps.
+When long-term memory is needed, activate the 'memory_ops' skill first and follow its instructions. Do not activate or use the memory skill for ordinary self-introductions or casual preferences unless the user explicitly asks to remember, save, update, or forget something. Automatic extraction will handle durable facts silently after the reply when appropriate. Use memory tools only through that skill. Auto-injected memory context contains summary labels, not full memory bodies. When detailed long-term memory is needed, use exact summary labels with memory_recall. Do not ask whether the user wants you to remember ordinary profile or preference statements when automatic extraction can handle them. Do not offer memory-save help unless the user explicitly asks about memory management. Do not use memory_records.jsonl, memory_index.json, memory_digest.log, or MEMORY.md as direct decision input.
+E (%lu) %s: Failed to init claw_memory: %s
+E (%lu) %s: %s(%d): Failed to init claw_skill
+E (%lu) %s: %s(%d): Failed to add skills directory
+E (%lu) %s: %s(%d): Failed to add system skills directory
+E (%lu) %s: %s(%d): register Lua job event callback failed
+E (%lu) %s: %s(%d): Failed to store Claw config
+E (%lu) %s: %s(%d): bind Lua hardware registry failed
+E (%lu) %s: %s(%d): Failed to init skills
+Skills List
+I (%lu) %s: Starting root agent backend=%s base_url=%s model=%s token=%s
+You are the root agent. Own the user-facing conversation and keep the session responsive. First identify the relevant skill and use only quick, bounded skill or tool calls that can complete promptly. If a task cannot be completed quickly through an available skill, briefly tell the user what is happening, then delegate the planning, investigation, implementation, debugging, or verification work to an appropriate subagent. Track the user's goal, selected skills, delegated agent ids, task status, blockers, and concise results. Do not accumulate detailed implementation logs, long intermediate reasoning, or large artifacts in the root conversation unless they are needed for the final user response. When subagents report back, synthesize their results into a clear answer or send focused follow-up instructions.
+E (%lu) %s: %s(%d): Failed to init claw_agent_mgr
+/builds/ae_group/esp-claw/components/common/app_claw/app_claw.c
+I (%lu) %s: App Claw runtime started
+E (%lu) %s: %s(%d): Failed to register Lua group
+E (%lu) %s: %s(%d): CLAW_PATH_SYSTEM not configured
+E (%lu) %s: %s(%d): Failed to set LLM config provider
+E (%lu) %s: %s(%d): Failed to init claw_cap
+E (%lu) %s: %s(%d): Failed to register LLM config command
+E (%lu) %s: %s(%d): Failed to parse LLM-visible capability groups
+E (%lu) %s: Failed to set LLM-visible capability groups: %s
+cap_mcp_client
+MCP Client
+cap_skill
+claw_memory
+cap_llm_inspect
+LLM Inspect
+Register Lua cap
+Register MCP client cap
+Register skill capabilities
+Register claw_memory group
+Register LLM inspect cap
+app_lua_modules
+W (%lu) %s: Ignoring unknown or unavailable Lua module: %s
+I (%lu) %s: Skipping Lua module at init: %s
+E (%lu) %s: Failed to register Lua module %s: %s
+E (%lu) %s: %s(%d): Failed to grow Lua module info cache
+claw_core is not ready
+app_claw_cli
+/builds/ae_group/esp-claw/components/common/app_claw/app_claw_cli.c
+E (%lu) %s: no sandbox root configured in claw_paths
+Error: url must start with http:// or https://
+https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal
+https://open.feishu.cn/open-apis/im/v1/images
+https://open.feishu.cn/open-apis/im/v1/files
+https://open.feishu.cn/open-apis/im/v1/messages
+https://open.feishu.cn/callback/ws/endpoint
+https://open.feishu.cn/open-apis/im/v1/messages/%s/resources/%s?type=%s
+https://bots.qq.com/app/getAppAccessToken
+https://api.sgroup.qq.com
+https://api.sgroup.qq.com/gateway
+https://api.telegram.org
+esp-claw-wechat
+https://%s
+The next message will use this model.
+Some required fields are still missing; run /llm status.
+LLM config save failed: provider is not configured.
+LLM config save failed: %s
+LLM config saved. %s
+LLM status
+model: %s
+LLM config has all required fields. Send a normal message to test the model.
+LLM config is incomplete. Run /llm status.
+LLM command failed: out of memory.
+Invalid /llm command input.
+/llm status
+/llm setup deepseek <api_token> [model]
+/llm setup openai <api_token> [model]
+/llm setup qwen <api_token> [model]
+/llm setup anthropic <api_token> [model]
+/llm setup custom backend=<backend> url=<base_url> model=<model> token=<api_token>
+/llm token <api_token>
+/llm model <model>
+/llm backend <backend>
+/llm base-url <base_url>
+/llm reasoning <none|low|medium|high|xhigh|max>
+/llm reset
+LLM config is not ready: provider is not configured.
+LLM config is not ready: %s
+cap_llm_config
+Usage: /llm setup custom backend=<backend> url=<base_url> model=<model> token=<api_token>
+Unknown LLM provider: %s
+E (%lu) %s: setup model parse failed: %s
+Usage: /llm token <api_token>
+E (%lu) %s: model parse failed: %s
+Usage: /llm model <model>
+Usage: /llm backend <openai_responses|openai_compatible|anthropic_compatible>
+Usage: /llm base-url <base_url>
+Usage: /llm reasoning <none|low|medium|high|xhigh|max>
+llm_config_command
+Handle /llm configuration commands.
+deepseek
+openai_compatible
+https://api.deepseek.com
+deepseek-chat
+openai_responses
+https://api.openai.com/v1
+https://dashscope.aliyuncs.com/compatible-mode/v1
+https://api.anthropic.com/v1
+Error: claw_core is not ready
+You analyze local image files for the ESP32 claw. Describe visible content plainly and briefly. If the image is unclear, say what is uncertain instead of guessing.
+Error: mDNS MCP discovery failed (%s)
+(no mcp servers discovered)
+Error: MCP request failed (%s)
+mcp_list_tools
+List tools from a remote MCP server.
+mcp_call_tool
+Call a tool on a remote MCP server.
+mcp_discover
+Discover MCP servers advertised on the local network.
+Unknown MCP protocol error
+Invalid MCP response
+esp-claw
+ESP-Claw
+esp_mcp_mgr
+E (%lu) %s: %s(%d): Failed to allocate memory for MCP item
+E (%lu) %s: %s(%d): Invalid MCP context
+E (%lu) %s: %s(%d): Invalid MCP engine
+E (%lu) %s: %s(%d): MCP instance not configured
+E (%lu) %s: %s(%d): Failed to create MCP context: %s
+E (%lu) %s: %s(%d): Failed to allocate memory for MCP manager context
+E (%lu) %s: %s(%d): Invalid MCP handle
+esp-mcp-client
+esp_mcp_engine
+io.modelcontextprotocol/related-task
+W (%lu) %s: Re-initialize received; resetting MCP session state
+mcp_tool_task
+E (%lu) %s: %s(%d): Invalid mcp
+E (%lu) %s: Failed to parse MCP message: %s
+esp_mcp_property
+esp_mcp_tool
+E (%lu) %s: esp_mcp_tool_create: Failed to allocate memory for tool name
+E (%lu) %s: esp_mcp_tool_create: Failed to allocate memory for tool description
+E (%lu) %s: esp_mcp_tool_create_base: Failed to create property list
+esp_mcp_data
+esp_mcp_resource
+esp_mcp_prompt
+esp_mcp_completion
+esp_mcp_task
+esp_mcp_http_client
+MCP-Protocol-Version
+W (%lu) %s: Failed to update request MCP-Protocol-Version header: %s
+W (%lu) %s: Failed to update stream MCP-Protocol-Version header: %s
+MCP-Session-Id
+E (%lu) %s: [%s] Failed to duplicate MCP-Session-Id
+W (%lu) %s: Response body exceeds Content-Length: content_len=%lu, outlen=%lu, data_len=%d (data may be truncated; parse errors in esp_mcp_mgr_perform_handle may be caused by this)
+E (%lu) %s: %s(%d): Failed to set MCP protocol headers
+mcp_mdns
+/./managed_components/espressif__mdns/mdns_send.c
+/./managed_components/espressif__mdns/mdns_service.c
+/builds/ae_group/esp-claw/components/claw_capabilities/cap_router_mgr/src/cmd_cap_router_mgr.c
+/builds/ae_group/esp-claw/components/claw_capabilities/cap_scheduler/src/cmd_cap_scheduler.c
+{"ok":true,"skill_id":"%s"}
+skill_id must match ^[A-Za-z0-9_-]{1,63}$
+invalid_skill_id
+skill_not_found
+readonly_skill
+cap_skill_mgr
+failed to remove runtime skill
+skill manager is not initialized
+another skill update is in progress
+failed to publish runtime skill
+skill content result too large
+failed to activate skill
+</skill_content>
+<skill_content name="
+cap_skill_manage
+publish_skill
+Validate and publish an existing runtime skill after its files have been created or updated.
+{"type":"object","additionalProperties":false,"properties":{"skill_id":{"type":"string","minLength":1,"maxLength":63,"pattern":"^[A-Za-z0-9_-]+$"}},"required":["skill_id"]}
+remove_skill
+Recursively remove a runtime skill directory from writable storage and refresh the skill registry.
+list_skill
+List the current skill catalog.
+activate_skill
+Load a skill's instructions and enable its capability groups for the current session.
+skill reload failed: %s
+skill list failed: %s
+(%u skills)
+Reload the registry before listing skills
+List registered skills. Use --reload to rescan skill directories first.
+esp_console_cmd_register(&skill_cmd)
+/builds/ae_group/esp-claw/components/claw_capabilities/cap_skill_mgr/src/cmd_cap_skill.c
+chip_model
+esp_claw
+esp_claw_git
+E (%lu) %s: wifi json: create failed
+W (%lu) %s: wifi ap info failed: %s
+W (%lu) %s: wifi channel failed
+E (%lu) %s: %s(%d): Failed to add wifi section
+Get system or device information. Omit sections for a full summary, or request selected sections: chip, uptime, version, memory, cpu, wifi, ip. **You cannot speculate or fabricate information.**
+{"type":"object","properties":{"sections":{"type":"array","items":{"type":"string","enum":["chip","uptime","version","memory","cpu","wifi","ip"]},"minItems":1,"uniqueItems":true,"description":"Optional list of system sections to return. Omit for full summary."}}}
+https://api.bochaai.com/v1/web-search
+https://api.tavily.com/search
+https://api.search.brave.com/res/v1/web/search?q=%s&count=%d
+(empty - ESP-Claw will write memories here as it learns)
+Store one on-device long-term memory item. Prefer normalized content plus precise LLM-generated tags and keywords.
+Update one long-term memory item. Prefer normalized content plus precise LLM-generated tags and keywords.
+LLM returned unsupported tool calls
+auto_llm
+W (%lu) %s: auto_extract llm returned invalid json: %.96s
+I (%lu) %s: auto_extract llm candidates=%d stored=%d
+- Never store instructions that primarily change the assistant's own persona, identity, role, tone, speech style, or persistent behavior. Those belong in profile memory such as soul.md or identity.md, not long-term memory. For those requests return an empty memories array.
+W (%lu) %s: auto_extract llm failed: %s
+W (%lu) %s: auto_extract llm returned invalid json for intent parse: %.96s
+identity.md
+I (%lu) %s: Async memory extract disabled: LLM config incomplete
+claw_mem_extract
+(empty - Claw will write memories here as it learns)
+lua/adc-unit
+lua/adc-channel
+lua/gpio
+lua_gpio
+lua/i2c-bus
+lua/i2c-device
+lua/ledc-timer
+lua/ledc-channel
+lua_driver_ledc
+mcpwm channel must be between 1 and %d
+mcpwm.new: gpio or gpio_a is required
+mcpwm.new: duty_percent for channel %d must be finite and between 0 and 100
+mcpwm.new: resolution_hz must be >= frequency_hz
+mcpwm.new: gpio and gpio_b must be different
+lua_driver_mcpwm
+lua/mcpwm
+mcpwm new failed: %s
+mcpwm close failed: %s
+mcpwm: invalid or closed handle
+mcpwm stop failed: %s
+mcpwm set_frequency failed: %s
+mcpwm set_frequency stop failed: %s
+mcpwm set_frequency failed (output stopped): %s
+mcpwm set_frequency restart failed: %s
+mcpwm start failed: %s
+mcpwm duty_percent must be finite and between 0 and 100
+mcpwm set_duty failed: %s
+lua/pcnt
+lua_driver_pcnt
+lua/rmt-rx
+lua/rmt-tx
+lua_uart
+lua/uart
+lua_audio_output
+lua_audio_input
+lua_audio_player
+lua_audio_recorder
+lua_audio_analyzer
+lua_audio
+E (%lu) %s: ASRC input buffer alloc failed: %lu bytes
+E (%lu) %s: ASRC output buffer alloc failed: %lu bytes
+E (%lu) %s: ASRC open failed: %s -> %s, err=%d
+E (%lu) %s: ASRC get alignment failed: err=%d
+E (%lu) %s: ASRC get frame bytes failed
+E (%lu) %s: ASRC input not frame-aligned: bytes=%lu, frame=%u
+E (%lu) %s: ASRC output frame estimate failed: err=%d
+E (%lu) %s: ASRC process failed: %s -> %s, err=%d
+lua/module/audio
+/./managed_components/espressif__esp_audio_render/src/audio_render_pipeline.c
+/./managed_components/espressif__gmf_audio/esp_gmf_audio_dec.c
+/./managed_components/espressif__gmf_audio/esp_gmf_bit_cvt.c
+/./managed_components/espressif__gmf_audio/esp_gmf_ch_cvt.c
+/./managed_components/espressif__gmf_audio/esp_gmf_rate_cvt.c
+ASRC_MEM
+ESP_ASRC
+asrc handle
+asrc handle pointer
+asrc config
+ASRC_SW_BIT_CVT
+ASRC_SW_CH_CVT
+ESP_HW_ASRC
+E (%lu) %s: HW ASRC process timeout
+asrc hw handle
+ASRC_ADAPTER
+E (%lu) %s: Please use esp_asrc_alloc_mem to malloc your buffer
+/IDF/components/esp_hal_asrc/esp32s31/include/hal/asrc_ll.h
+/./managed_components/espressif__esp_hls_stream/src/hls_io.c
+/./managed_components/espressif__gmf_io/esp_gmf_io_file.c
+/./managed_components/espressif__gmf_io/esp_gmf_io_http.c
+/./managed_components/espressif__gmf_core/include/esp_gmf_info_file.h
+/./managed_components/espressif__gmf_core/src/esp_gmf_audio_element.c
+/./managed_components/espressif__gmf_core/src/esp_gmf_cap.c
+/./managed_components/espressif__gmf_core/src/esp_gmf_element.c
+/./managed_components/espressif__gmf_core/src/esp_gmf_io.c
+/./managed_components/espressif__gmf_core/src/esp_gmf_obj.c
+/./managed_components/espressif__gmf_core/src/esp_gmf_pipeline.c
+/./managed_components/espressif__gmf_core/src/esp_gmf_pool.c
+/./managed_components/espressif__gmf_core/src/esp_gmf_port.c
+/./managed_components/espressif__gmf_core/include/esp_gmf_job.h
+/./managed_components/espressif__gmf_core/src/esp_gmf_task.c
+/./managed_components/espressif__gmf_core/oal/esp_gmf_oal_thread.c
+/./managed_components/espressif__gmf_core/data_bus/esp_gmf_data_bus.c
+/./managed_components/espressif__gmf_core/data_bus/esp_gmf_new_databus.c
+/./managed_components/espressif__gmf_core/data_bus/esp_gmf_ringbuffer.c
+/./managed_components/espressif__gmf_core/src/esp_gmf_payload.c
+/./managed_components/espressif__gmf_core/data_bus/esp_gmf_block.c
+lua_button_handle
+lua_button
+lua/button
+camera is not owned by this Lua environment
+lua_camera
+lua/camera
+lua_display
+display Lua stack unavailable
+E (%lu) %s: Lua exit display cleanup failed: %s
+lua-%lld
+Lua HTTP app stopped
+Lua HTTP callback returned unsupported value
+Lua HTTP callback failed
+Lua HTTP route not found
+lua_http_server
+/lua/%s/
+Invalid Lua HTTP path
+Lua HTTP app not found
+/api/lua/
+Invalid Lua HTTP API path
+Lua HTTP queue full
+Lua HTTP callback timed out
+lua/led_strip
+lua_lvgl
+lua_lvgl_evt
+lua_lvgl_eaf
+lua_lvgl_font
+W (%lu) %s: exit gesture stop Lua job failed: %s output=%s
+I (%lu) %s: exit gesture requested Lua job stop: %s
+E (%lu) %s: exit gesture ignored: Lua job ID unavailable
+lua_lvgl_exit
+lvgl init requires an asynchronous Lua job context
+lvgl runtime is owned by another Lua runtime
+I (%lu) %s: Lua exit cleanup: deinitializing lvgl owned by exiting state
+wifi_rssi
+thread: unsupported Lua type '%s'
+lua_vision
+E (%lu) %s: resolve_run_path: path must be an absolute .lua path: %s
+Error: path must be an absolute .lua path
+Error: failed to prepare Lua args
+Error: Lua async runner is not ready
+Error: failed to queue async Lua job (%s)
+Lua job %s (name=%s) ended early with status=%s. summary: %s
+Started Lua job %s (name=%s, exclusive=%s, timeout_ms=%u%s, log_bytes=%u, status=%s) for %s. Use lua_get_async_job or lua_tail_async_job with job_id=%s to read logs/results.
+E (%lu) %s: Lua module registry full: tried to add '%s' with %u/%u slots used
+E (%lu) %s: %s(%d): Failed to register builtin Lua modules
+lua_run_script
+Run a Lua script synchronously with optional args and timeout.
+{"type":"object","properties":{"path":{"type":"string"},"args":{"type":"object","description":"Lua script arguments object keyed by parameter name.","additionalProperties":true},"timeout_ms":{"type":"integer"}},"required":["path"]}
+lua_run_script_async
+Run Lua async; returns job id. timeout_ms=0 runs until cancelled. Use name/exclusive for conflicts; replace=true takes over. Read running, final, or failed-job logs with lua_get_async_job or lua_tail_async_job using returned job id.
+{"type":"object","properties":{"path":{"type":"string"},"args":{"type":"object","description":"Lua script arguments object keyed by parameter name.","additionalProperties":true},"timeout_ms":{"type":"integer","minimum":0},"log_bytes":{"type":"integer","minimum":1024,"maximum":16384},"name":{"type":"string"},"exclusive":{"type":"string"},"replace":{"type":"boolean"}},"required":["path"]}
+lua_list_async_jobs
+List Lua async jobs by optional status filter.
+lua_get_async_job
+Get status, summary, and recent logs for a Lua async job by job_id or name.
+lua_tail_async_job
+Read incremental logs for a Lua async job by job_id or name. Pass since_seq from the previous log_next_seq to continue reading only new log text.
+lua_stop_async_job
+Stop a running Lua async job by job_id or name. MUST be called whenever the user asks to stop, cancel, quit or close an async script; replying without calling this leaves the job running. Cooperative; default wait 2000 ms.
+lua_stop_all_async_jobs
+Stop all running Lua async jobs, optionally filtered by exclusive group (e.g. exclusive='display'). MUST be called when the user asks to clear the screen, stop everything or cancel all background scripts.
+cap_lua_rt
+W (%lu) %s: Failed to allocate Lua package.path buffer for script: %s
+%s/?.lua;%s/?/init.lua
+W (%lu) %s: Lua package.path is too long for script: %s
+;%s/?.lua;%s/?/init.lua
+W (%lu) %s: Lua package.path is too long after adding shared dir: %s
+I (%lu) %s: Lua runtime ready: registered_modules=%u
+unknown Lua error
+Error: failed to initialize Lua runtime lock
+Error: failed to allocate Lua runtime context
+lua/job/%u
+Error: Lua path must be a valid .lua script path
+Error: Lua script not found: %s
+Error: Lua script size invalid: %ld bytes
+Error: failed to create Lua state
+Error: Lua args JSON nesting exceeds %d levels
+Lua script completed with no output.
+cap_lua_hw_op
+cap_lua_async
+Error: Lua sync job disappeared: %s
+Concurrency limit reached (%u/%u). Running: %s. Stop one with lua_stop_async_job before retrying.
+Out of task memory for Lua task stack (need %u bytes, largest free block %u bytes, total free %u bytes). Stop another job and retry.
+I (%lu) %s: Queued Lua async job %s name=%s exclusive=%s timeout_ms=%u log_bytes=%u path=%s
+Error: failed to queue Lua sync job (%s)
+Error: timed out while locating Lua sync job %s
+Error: Lua sync job not found after submit: %s
+Error: timed out while collecting Lua sync job %s
+Error: Lua script timed out after %u ms (job_id=%s%s)
+Error: Lua async job not found: %s
+lua command failed: %s
+Run a managed Lua script synchronously
+Run a managed Lua script asynchronously
+List async Lua jobs
+Show one async Lua job
+Relative Lua file path, for example temp/foo.lua
+Lua script operations.
+ lua --run --path blink.lua --args-json "{\"pin\":2}" --timeout-ms 3000
+ lua --run-async --path blink.lua
+ lua --jobs --status running
+ lua --job abcdef12
+esp_console_cmd_register(&lua_cmd)
+/builds/ae_group/esp-claw/components/claw_capabilities/cap_lua/src/cmd_cap_lua.c
+Lua warning: 
+PANIC: unprotected error in call to Lua API (%s)
+version mismatch: app. needs %f, Lua core provides %f
+dynamic libraries not enabled; check your Lua installation
+LUA_NOENV
+luaopen_%s
+/usr/local/share/lua/5.5/?.lua;/usr/local/share/lua/5.5/?/init.lua;/usr/local/lib/lua/5.5/?.lua;/usr/local/lib/lua/5.5/?/init.lua;./?.lua;./?/init.lua
+LUA_PATH
+/usr/local/lib/lua/5.5/?.so;/usr/local/lib/lua/5.5/loadall.so;./?.so
+LUA_CPATH
+%d-byte integer does not fit into Lua Integer
+Lua function expected
+Lua integer
+Lua number
+lua_debug> 
+WIFI ON  |  AP %s
+WIFI OFF  |  AP %s
+claw_agent_mgr
+I (%lu) %s: Updated agent manager LLM config
+claw_session_mgr
+claw_event_router
+claw_event
+claw_core_agent_%lu
+I (%lu) %s: LLM config updated backend=%s base_url=%s model=%s token=%s
+claw_paths
+claw_core
+Failed to allocate LLM config message
+before_llm_http
+in_llm_http_abort
+after_llm_before_tool
+claw_task
+LLM API token is not configured. Open the device settings page and set the LLM API token before chatting.
+LLM backend is not configured. Open the device settings page and select an LLM backend before chatting.
+LLM model is not configured. Open the device settings page and set an LLM model before chatting.
+LLM base URL is not configured. Open the device settings page and set the LLM base URL before chatting.
+claw_core_llm
+LLM runtime is not initialized
+Unknown LLM backend type
+Failed to parse LLM JSON response
+LLM response missing content
+Out of memory copying LLM raw message
+Out of memory copying LLM thinking
+Out of memory copying LLM text
+LLM returned empty response
+LLM returned empty media response
+LLM API key is empty
+LLM model is empty
+LLM base_url is empty
+LLM response missing message
+LLM response message is not assistant
+Out of memory copying LLM response
+Out of memory copying LLM reasoning
+Malformed tool call in LLM response
+LLM returned empty text response
+OpenAI Responses API error: %s
+OpenAI Responses API returned failed status
+OpenAI Responses API response incomplete: %s
+_claw_provider_state
+Failed to parse OpenAI Responses JSON
+OpenAI Responses result is missing output
+OpenAI Responses API returned no text or function call
+OpenAI Responses returned no final media text
+OpenAI API key is empty
+OpenAI Responses model or base_url is empty
+llm_http
+E (%lu) %s: LLM error: %s
+not_llm_callable
+claw_cap
+W (%lu) %s: cap '%s' schema type=object missing properties, may cause LLM API 400
+I (%lu) %s: Configured %u LLM-visible capability groups
+Error: cap '%s' is not exposed to the LLM.
+E (%lu) %s: HTTPS origin can only redirect to https:// targets (got %s). Set disable_auto_redirect and handle manually if intended.
+%s/s_%s_%08lx.skills.json
+claw_skill
+SKILL.md
+E (%lu) %s: read skill metadata open: %s
+E (%lu) %s: store skill %s: %s
+{CUR_SKILL_DIR}
+E (%lu) %s: skill item alloc %s
+E (%lu) %s: %s(%d): alloc skill registry failed
+I (%lu) %s: Initialized skill registry (awaiting directories)
+E (%lu) %s: add skills dir %s: %s
+W (%lu) %s: skill metadata has missing fields
+W (%lu) %s: invalid skill id: %s
+W (%lu) %s: invalid skill path: id=%s file=%s
+W (%lu) %s: skill expected path too long: id=%s
+W (%lu) %s: skill path must be %s, got %s
+W (%lu) %s: invalid skill cap_group: id=%s idx=%u
+W (%lu) %s: invalid skill mode: %s
+E (%lu) %s: open skills dir %s failed
+W (%lu) %s: skill path too long under %s, skipping
+W (%lu) %s: stat skill path failed, skipping: path=%s errno=%d
+W (%lu) %s: skill file exceeds limit, skipping: %s
+E (%lu) %s: too many skill files (cap %d) under %s
+W (%lu) %s: read skill file failed, skipping: file=%s err=%s
+W (%lu) %s: invalid skill metadata, skipping: file=%s err=%s
+W (%lu) %s: invalid skill definition, skipping: file=%s err=%s
+W (%lu) %s: skill id %s in %s shadowed by %s
+W (%lu) %s: skills root %s not present, skipping
+W (%lu) %s: no skill markdown found in any skills root (registry empty)
+I (%lu) %s: Reloaded registry with %u skill(s)
+E (%lu) %s: remove skill directory failed: id=%s err=%s
+E (%lu) %s: reload registry after removing skill failed: id=%s err=%s
+claw_utils_file
+./managed_components/espressif__esp_lvgl_adapter/src/display/bridge/v9/lvgl_bridge_v9.c
+./managed_components/espressif__esp_lvgl_adapter/src/display/bridge/v9/lvgl_ppa_accel_v9.c
+wifi_manager
+W (%lu) %s: esp_wifi_connect failed: %s; retrying in %d ms
+esp_wifi_set_config(WIFI_IF_AP, &ap_cfg)
+/builds/ae_group/esp-claw/components/common/wifi_manager/wifi_manager.c
+esp_wifi_init(&cfg)
+esp_event_handler_instance_register(WIFI_EVENT, ESP_EVENT_ANY_ID, &wifi_event_handler, NULL, NULL)
+esp_event_handler_instance_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &wifi_event_handler, NULL, NULL)
+wifi_reconnect
+wifi_init
+I (%lu) %s: WiFi/LWIP prefer SPIRAM
+I (%lu) %s: WiFi SLP IRAM OP enabled
+E (%lu) %s: Failed to init, WiFi is initialized by esp_wifi_init
+WIFI_EVENT
+wifi_init_default
+I (%lu) %s: esp_wifi_internal_set_sta_ip failed with %d
+E (%lu) %s: esp_wifi_get_mac failed with %d
+E (%lu) %s: esp_wifi_register_if_rxcb for if=%p failed with %d
+E (%lu) %s: Failed to create wifi interface handle
+//IDF/components/esp_wifi/src/wifi_default.c
+esp_netif_attach_wifi_ap(netif)
+/IDF/components/esp_wifi/src/wifi_default.c
+esp_wifi_set_default_wifi_ap_handlers()
+esp_netif_attach_wifi_station(netif)
+esp_wifi_set_default_wifi_sta_handlers()
+wifi_netif
+E (%lu) %s: No memory to create a wifi interface handle
+E (%lu) %s: Unknown wifi interface id if=%d
+E (%lu) %s: esp_wifi_internal_reg_rxcb for if=%d failed with %d
+WIFI_MESH_EVENT
+E (%lu) %s: %s(%d): UTEP and DTEZ can't be reached under MCPWM_TIMER_COUNT_MODE_UP_DOWN mode
+/IDF/components/esp_hal_mcpwm/esp32s31/include/hal/mcpwm_ll.h
+/./managed_components/tda-2030__claw_video/src/esp_video.c
+/./managed_components/tda-2030__claw_video/src/device/esp_video_device_common.c
+/./managed_components/tda-2030__claw_video/src/device/esp_video_dvp_device.c
+/./managed_components/tda-2030__claw_video/src/esp_video_vfs.c
+/./managed_components/tda-2030__claw_video/src/esp_video_ioctl.c
+E (%lu) %s: %s(%d): invalid LED model
+W (%lu) %s: Please note i2c asynchronous is only used for specific scenario currently. It's experimental for other users because user cannot get bus error from API. And It's not compatible with ``i2c_master_probe``. If user makes sure there won't be any error on bus and tested with no problem, this message can be ignored.
+ASRC_CHNL0
+ASRC_CHNL1
+MODEM_WIFI_MAC
+MODEM_WIFI_MAC_NMI
+MODEM_WIFI_PWR
+MODEM_WIFI_BB
+//IDF/components/spi_flash/esp_flash_api.c
+E (%lu) %s: Suspend and resume may not supported for this flash model yet.
+W (%lu) %s: Detected flash size > 16 MB, but access beyond 16 MB is not supported for this flash model yet.
+lua_driver_touch_read_one
+lua_driver_touch_destroy_handle
+lua_driver_touch_destroy
+lua_driver_touch_apply_thresholds
+lua_driver_touch_initial_scan
+main_get_wifi_status
+main_save_claw_config
+register_wifi_command
+app_claw_apply_config
+app_claw_update_config
+init_skills
+app_claw_store_current_config
+Available skills:
+app_claw_start
+app_claw_ui_start
+app_claw_get_config
+app_claw_set_save_config_callback
+app_cap_register_llm_config_command
+app_cap_prepare_lua
+app_cap_register_lua
+Papp_lua_modules_get_compiled_modules
+Papp_claw_cli_start
+Pesp_mcp_mgr_cancel_pending_request
+esp_mcp_mgr_set_request_context
+esp_mcp_mgr_notification_perform
+esp_mcp_mgr_build_notification_json
+esp_mcp_mgr_post_notification_json_internal
+esp_mcp_mgr_parse_optional_params_json
+esp_mcp_mgr_post_tools_call
+esp_mcp_mgr_post_tools_list
+esp_mcp_mgr_req_perform
+esp_mcp_mgr_post_req
+esp_mcp_mgr_post_info_init
+esp_mcp_mgr_perform_handle
+esp_mcp_mgr_add_endpoint_internal
+esp_mcp_mgr_message_handler
+esp_mcp_mgr_register_endpoint
+esp_mcp_mgr_stop
+esp_mcp_mgr_start
+esp_mcp_mgr_deinit
+esp_mcp_mgr_delete
+esp_mcp_mgr_new
+esp_mcp_mgr_init
+esp_mcp_resp_parse
+esp_mcp_tools_call
+esp_mcp_tools_list
+esp_mcp_req_build
+esp_mcp_info_init
+esp_mcp_handle_tasks_get
+esp_mcp_handle_completion_complete
+esp_mcp_handle_prompts_get
+esp_mcp_handle_prompts_list
+esp_mcp_handle_resources_unsubscribe
+esp_mcp_handle_resources_subscribe
+esp_mcp_handle_resources_read
+esp_mcp_handle_resources_templates_list
+esp_mcp_handle_resources_list
+esp_mcp_handle_ping
+esp_mcp_do_tool_call
+esp_mcp_reply_result_with_related_task
+esp_mcp_tools_call_create_task
+esp_mcp_handle_tools_call
+esp_mcp_parse_paginated_request
+esp_mcp_handle_tools_list
+esp_mcp_reply_result
+esp_mcp_parse_capabilities
+esp_mcp_handle_initialize
+esp_mcp_request_id_to_str
+esp_mcp_get_session_state
+esp_mcp_parse_json_message
+esp_mcp_reply_error_ex
+esp_mcp_parse_message
+esp_mcp_set_request_context
+esp_mcp_handle_message
+esp_mcp_task_add_json
+esp_mcp_remove_mbuf
+esp_mcp_get_mbuf
+esp_mcp_property_list_destroy
+esp_mcp_property_list_foreach
+esp_mcp_property_list_to_json
+esp_mcp_property_list_add_property
+esp_mcp_property_list_create
+esp_mcp_property_to_json
+esp_mcp_property_destroy
+esp_mcp_property_create_with_string
+esp_mcp_property_create_with_object
+esp_mcp_property_create_with_array
+esp_mcp_property_create_with_float
+esp_mcp_property_create_with_int
+esp_mcp_property_create_with_bool
+esp_mcp_property_create
+esp_mcp_tool_list_foreach
+esp_mcp_tool_list_find_tool
+esp_mcp_tool_result_to_json_obj
+esp_mcp_tool_call
+esp_mcp_tool_to_json
+esp_mcp_tool_result_add_content_item
+esp_mcp_tool_result_add_text
+esp_mcp_tool_result_set_is_error
+esp_mcp_tool_result_destroy
+esp_mcp_value_destroy
+esp_mcp_resource_list_foreach
+esp_mcp_resource_list_find_ex
+esp_mcp_resource_to_json
+esp_mcp_resource_read
+esp_mcp_prompt_list_foreach
+esp_mcp_prompt_list_find
+esp_mcp_prompt_get_messages
+esp_mcp_prompt_to_json
+esp_mcp_completion_complete
+esp_mcp_task_set_ttl
+esp_mcp_task_checkpoint_cancelled
+esp_mcp_task_request_cancel
+esp_mcp_task_result_is_error_response
+esp_mcp_task_set_result_json
+esp_mcp_task_set_status
+esp_mcp_task_get_cancel_requested
+esp_mcp_task_result_json
+esp_mcp_task_status_message
+esp_mcp_task_get_status
+esp_mcp_task_id
+esp_mcp_task_store_foreach
+esp_mcp_task_origin_session
+esp_mcp_task_set_origin_session
+esp_mcp_task_find
+esp_mcp_task_mark_worker_starting

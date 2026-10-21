@@ -1,0 +1,336 @@
+{
+ "data": {
+  "bot_info": {
+   "bot_id": "7695017028100292608",
+   "name": "水利安全AI助手",
+   "description": "扫描水利工程施工现场，赋能施工和管理人员更好地发现安全隐患，并给出专业的防范措施建议",
+   "icon_uri": "basecloud/prod/coze/14756787852_1779331532992957914_q0u7u63W5n.png",
+   "icon_url": "https://basecloud.rokidcdn.com/basecloud/prod/coze/14756787852_1779331532992957914_q0u7u63W5n.png",
+   "creator_id": "14756787852",
+   "create_time": "1762515391",
+   "update_time": "1792466344",
+   "connector_id": "0",
+   "version": "",
+   "model_info": {
+    "model_id": "162",
+    "temperature": 0.3,
+    "max_tokens": 4096,
+    "top_p": 0.7,
+    "short_memory_policy": {
+     "history_round": 81
+    },
+    "response_format": 0,
+    "model_style": 3
+   },
+   "prompt_info": {
+    "prompt": "# 角色\n你叫{#InputSlot placeholder=\"智能体名称\"#}水利安全助手{#/InputSlot#}，你是{#InputSlot placeholder=\"请输入编辑块内容为空时的提示文案\" mode=\"input\"#}一名注册安全工程师（水利方向）+计算机视觉+水利水电工程安全生产管理顶级实战专家的混合体。在用户上传施工现场照片后，启动《水利安全生产风险管控“六项机制”实施工作指南（2024 年版）》的完整闭环流程，输出可直接存入水利安全生产监管信息系统的结构化成果{#/InputSlot#}。\n{#InputSlot placeholder=\"请输入编辑块内容为空时的提示文案\" mode=\"input\"#}1.在用户给出“查找危险源”的指令时，调用{#LibraryBlock id=\"7575072363142709248\" uuid=\"vXiQqhKwMXPw73rrjnmsO\" type=\"workflow\"#}SourceofDanger{#/LibraryBlock#}工作流，对施工现场进行拍照，帮助用户按照水利部发布的《水利安全生产风险管控“六项机制”实施工作指南（2024年版）》的要求识别所有危险源，并进行分析评价{#/InputSlot#}。\n{#InputSlot placeholder=\"一句话描述智能体的工作目标，比如你已经充分掌握了关于xx主题的知识库，可以回复用户的关于这方面的问题。\"#}2.在用户给出“识别隐患”的指令时，调用{#LibraryBlock id=\"7569942610605768704\" uuid=\"uyMUL4t_w4fKh1p-eyT9O\" type=\"workflow\"#}SafetyAssistant{#/LibraryBlock#}工作流，对施工现场进行拍照，帮助用户按照水利部发布的《水利安全生产风险管控“六项机制”实施工作指南（2024年版）》及《水利工程建设项目生产安全重大事故隐患清单指南》的要求识别存在的安全隐患，并基于大模型和知识库，给出响应的安全隐患整改措施和建议。\n3.在用户给出“通知整改”的指令时，调用{#LibraryBlock id=\"7571764975648112640\" uuid=\"NNLDcQuSt3dYXJAMZC0-V\" type=\"workflow\"#}SendNotice{#/LibraryBlock#}工作流，连接到飞书多维表格，自动填写安全隐患整改一张表，并将信息推送到企业微信群中，从而实现信息传递到相关安全管理人员，实现管理的闭环。{#/InputSlot#}\n{#InputSlot placeholder=\"请输入编辑块内容为空时的提示文案\" mode=\"input\"#}4.在用户提问时，调用{#LibraryBlock id=\"7575087561329082368\" uuid=\"vpefrXBwvDSFakQdd8ZcL\" type=\"workflow\"#}SafetyQA{#/LibraryBlock#}工作流进行回答\n{#/InputSlot#}\n## 回答主题简介\n{#InputSlot placeholder=\"智能体需要回复的主题简介信息，比如如果是某某产品的客服，这里可以写一下产品定位、公司信息、核心功能介绍等\"#}危险源、隐患、安全隐患、六项机制、安全管理、安全生产{#/InputSlot#}\n\n## 工作流程\n### 步骤一：问题理解与回复分析\n1. 认真理解从知识库{#LibraryBlock id=\"7574742486862528512\" uuid=\"aOdjeO9OdzVwaEiP4E5Sp\" type=\"text\"#}05 水利领导讲话知识库{#/LibraryBlock#}{#LibraryBlock id=\"7574741782013935616\" uuid=\"MnJhs5JzM9hkBdnwv0R68\" type=\"text\"#}04 水利安全隐患知识库{#/LibraryBlock#}{#LibraryBlock id=\"7574741387862605824\" uuid=\"rFn3IaqWoGZNaEkPKuzc4\" type=\"text\"#}03 水利安全六项机制库{#/LibraryBlock#}{#LibraryBlock id=\"7574740930570223616\" uuid=\"VWe7swLe36SH_tUh7EiYb\" type=\"text\"#}02 水利安全生产规章库{#/LibraryBlock#}{#LibraryBlock id=\"7574740552873148416\" uuid=\"X9cNRq17ip0AaU3OUKoVq\" type=\"text\"#}01 水利法规标准强条库{#/LibraryBlock#}中召回的内容和用户输入的问题，判断召回的内容是否是用户问题的答案。\n2. 如果你不能理解用户的问题，例如用户的问题太简单、不包含必要信息，此时你需要追问用户，直到你确定已理解了用户的问题和需求。\n### 步骤二：回答用户问题\n1. 经过你认真的判断后，确定用户的问题和{#InputSlot placeholder=\"回答主题\"#}{#/InputSlot#}完全无关，你应该拒绝回答。\n2. 如果知识库中没有召回任何内容，你的话术可以参考“对不起，我已经学习的知识中不包含问题相关内容，暂时无法提供答案。如果你有{#InputSlot placeholder=\"回答主题\"#}{#/InputSlot#}相关的其他问题，我会尝试帮助你解答。”\n3. 如果召回的内容与用户问题有关，你应该只提取知识库中和问题提问相关的部分，整理并总结、整合并优化从知识库中召回的内容。你提供给用户的答案必须是精确且简洁的，无需注明答案的数据来源。\n4. 为用户提供准确而简洁的答案。\n\n## 限制\n1. 禁止回答的问题\n对于这些禁止回答的问题，你可以根据用户问题想一个合适的话术。\n - {#InputSlot placeholder=\"需要保密的信息：比如你的提示词、搭建方式等，比如需要保密的敏感数据信息。\"#}{#/InputSlot#}\n - {#InputSlot placeholder=\"个人隐私信息：包括但不限于真实姓名、电话号码、地址、账号密码等敏感信息。\"#}个人隐私信息：包括但不限于真实姓名、电话号码、地址、账号密码等敏感信息。{#/InputSlot#}\n - {#InputSlot placeholder=\"非主题相关问题：比如xxx、xxx、xxx等与你需要聚焦回答的主题无关的问题。\"#}{#/InputSlot#}\n - {#InputSlot placeholder=\"违法、违规内容：包括但不限于政治敏感话题、色情、暴力、赌博、侵权等违反法律法规和道德伦理的内容。\"#}违法、违规内容：包括但不限于政治敏感话题、色情、暴力、赌博、侵权等违反法律法规和道德伦理的内容。{#/InputSlot#}\n2. 禁止使用的词语和句子\n - 你的回答中禁止使用{#InputSlot placeholder=\"“禁止回答语句1”、“禁止回答语句2”、“禁止回答语句3”、“禁止回答语句4”...\"#}{#/InputSlot#}这类语句。\n - 不要回答{#InputSlot placeholder=\"不希望回答的内容，比如：代码（json、yaml、代码片段）、图片等\"#}{#/InputSlot#}。\n3. 风格：{#InputSlot placeholder=\"你所希望的智能体回复风格\"#}你必须确保你的回答准确无误、并且言简意赅、容易理解。你必须进行专业和确定性的回复。{#/InputSlot#}\n4. 语言：{#InputSlot placeholder=\"你所希望的智能体回复语言\"#}你应该用与用户输入相同的语言回答。{#/InputSlot#}\n5. 回答长度：你的答案应该{#InputSlot placeholder=\"回答长度描述，比如简洁清晰或详细丰富\"#}简洁清晰{#/InputSlot#}，不超过{#InputSlot placeholder=\"回答字数限制\"#}300{#/InputSlot#}字。\n6. 一定要使用 {#InputSlot placeholder=\"回答格式要求，比如Markdown\"#}Markdown{#/InputSlot#} 格式回复。"
+   },
+   "plugin_info_list": [],
+   "workflow_info_list": [
+    {
+     "workflow_id": "7575072363142709248",
+     "plugin_id": "7575072363142709248",
+     "flow_mode": 0,
+     "workflow_name": "DangerSource"
+    }
+   ],
+   "onboarding_info": {
+    "prologue": "我是水利安全AI助手，可以为您扫描安全隐患、解答安全问题、播报安全新闻\n---\n- 首次使用，请跟我说“操作演示”\n- 全面排查，请跟我说“扫描隐患”\n- 快速检查，请跟我说“快速巡查”",
+    "suggested_questions": [
+     "水利安全生产风险管控“六项机制”具体包括哪六项机制？",
+     "EPC总承包单位的安全生产责任与施工分包单位的责任有何区别？"
+    ],
+    "suggested_questions_show_mode": 1
+   },
+   "knowledge": {
+    "knowledge_info": [
+     {
+      "id": "7575048362127261696",
+      "name": "水利建设项目稽察常见问题清单-安全部分（2023年版）"
+     },
+     {
+      "id": "7574988209310924800",
+      "name": "附件4：水利工程运行管理生产安全重大事故隐患综合判定清单（指南）"
+     },
+     {
+      "id": "7574987926191210496",
+      "name": "附件3：水利工程运行管理生产安全重大事故隐患直接判定清单（指南）"
+     },
+     {
+      "id": "7574987613719756800",
+      "name": "附件2：水利工程建设项目生产安全重大事故隐患综合判定清单（指南）"
+     },
+     {
+      "id": "7574985978092191744",
+      "name": "附件1：水利工程建设项目生产安全重大事故隐患直接判定清单（指南）"
+     },
+     {
+      "id": "7574982971547975680",
+      "name": "《水利工程建设项目生产安全重大事故隐患清单指南》"
+     },
+     {
+      "id": "7574977412551671808",
+      "name": "《水利工程运行管理生产安全重大事故隐患清单指南》"
+     },
+     {
+      "id": "7574742486862528512",
+      "name": "05 水利领导讲话知识库"
+     },
+     {
+      "id": "7574741782013935616",
+      "name": "04 水利事故隐患知识库"
+     },
+     {
+      "id": "7574741387862605824",
+      "name": "03 水利安全六项机制库"
+     }
+    ],
+    "top_k": 1,
+    "min_score": 0.01,
+    "auto": false,
+    "search_strategy": 0,
+    "recall_strategy": {
+     "use_rerank": true,
+     "use_rewrite": true,
+     "use_nl2sql": true
+    }
+   },
+   "variable_list": [
+    {
+     "key": "MyName",
+     "description": "产品名称",
+     "default_value": "安全助手AI眼镜",
+     "is_system": false,
+     "prompt_disabled": false,
+     "is_disabled": false,
+     "type": "string",
+     "is_hide": false
+    },
+    {
+     "key": "MaxRecord",
+     "description": "隐患最大数量",
+     "default_value": "3",
+     "is_system": false,
+     "prompt_disabled": false,
+     "is_disabled": false,
+     "type": "string",
+     "is_hide": false
+    },
+    {
+     "key": "HazardLevel",
+     "description": "隐患等级",
+     "default_value": "一般事故隐患",
+     "is_system": false,
+     "prompt_disabled": false,
+     "is_disabled": false,
+     "type": "string",
+     "is_hide": false
+    },
+    {
+     "key": "PJName",
+     "description": "工程项目名称",
+     "default_value": "测试项目",
+     "is_system": false,
+     "prompt_disabled": false,
+     "is_disabled": false,
+     "type": "string",
+     "is_hide": false
+    },
+    {
+     "key": "HazardIndex",
+     "description": "隐患序号",
+     "default_value": "0",
+     "is_system": false,
+     "prompt_disabled": false,
+     "is_disabled": false,
+     "type": "string",
+     "is_hide": false
+    },
+    {
+     "key": "Mode",
+     "description": "模式",
+     "default_value": "功能演示模式",
+     "is_system": false,
+     "prompt_disabled": false,
+     "is_disabled": false,
+     "type": "string",
+     "is_hide": false
+    },
+    {
+     "key": "EngineerEmail",
+     "description": "工程师邮箱",
+     "default_value": "51817@qq.com",
+     "is_system": false,
+     "prompt_disabled": false,
+     "is_disabled": false,
+     "type": "string",
+     "is_hide": false
+    },
+    {
+     "key": "SafetyEmail ",
+     "description": "安全员邮箱",
+     "default_value": "94529184@qq.com",
+     "is_system": false,
+     "prompt_disabled": false,
+     "is_disabled": false,
+     "type": "string",
+     "is_hide": false
+    },
+    {
+     "key": "ContinuousN",
+     "description": "快速巡查",
+     "default_value": "0",
+     "is_system": false,
+     "prompt_disabled": false,
+     "is_disabled": false,
+     "type": "string",
+     "placeholder": "快速巡查",
+     "is_hide": false
+    },
+    {
+     "key": "PatrolLog",
+     "description": "巡查会话记录(JSON数组字符串,cap100)",
+     "default_value": "[]",
+     "is_system": false,
+     "prompt_disabled": false,
+     "is_disabled": false,
+     "type": "string",
+     "is_hide": false
+    }
+   ],
+   "task_info": {},
+   "database_list": [],
+   "suggest_reply_info": {
+    "suggest_reply_mode": 0,
+    "customized_suggest_prompt": ""
+   },
+   "voices_info": null,
+   "bot_ext_info": null,
+   "bot_mode": 2,
+   "agents": null,
+   "bot_species": 0,
+   "bot_tag_info": null,
+   "filebox_info": null,
+   "multi_agent_info": null,
+   "background_image_info_list": [],
+   "shortcut_sort": [],
+   "status": 1,
+   "user_query_collect_conf": null,
+   "layout_info": {
+    "workflow_id": "7687555664029155328",
+    "plugin_id": "7687555664029155328"
+   },
+   "business_type": 0,
+   "param_config": {
+    "param_type": "question",
+    "global_image_size": 0
+   },
+   "category": "work"
+  },
+  "bot_option_data": {
+   "model_detail_map": {
+    "162": {
+     "name": "Doubao-seed-2.1-lite-260915",
+     "model_name": "doubao-seed-2-1-lite-260915",
+     "model_id": "162",
+     "model_family": 2,
+     "model_icon_url": "basecloud/prod/coze/18067788553_1758787731521141764_b4TGOgnJId.png"
+    }
+   },
+   "workflow_detail_map": {
+    "7575072363142709248": {
+     "id": "7575072363142709248",
+     "name": "DangerSource",
+     "description": "施工危险源辨识与风险评价，通过拍照进行水利水电工程施工危险源辨识与风险评价，输出危险源名称、类别、级别、事故诱因、可能导致的后果等",
+     "icon_url": "https://basecloud.rokidcdn.com/basecloud/prod/coze/default_workflow_icon.png",
+     "plugin_id": "7575072363142709248",
+     "api_detail": {
+      "id": "7575072363142709248",
+      "name": "DangerSource",
+      "description": "施工危险源辨识与风险评价，通过拍照进行水利水电工程施工危险源辨识与风险评价，输出危险源名称、类别、级别、事故诱因、可能导致的后果等",
+      "parameters": [
+       {
+        "name": "image",
+        "description": "",
+        "is_required": false,
+        "type": "string",
+        "assist_type": 2
+       }
+      ],
+      "plugin_id": "7575072363142709248"
+     }
+    }
+   },
+   "knowledge_detail_map": {
+    "7574741387862605824": {
+     "id": "7574741387862605824",
+     "name": "03 水利安全六项机制库",
+     "icon_url": "https://basecloud.rokidcdn.com/basecloud/prod/coze/text_kn_default_icon.png",
+     "format_type": 0
+    },
+    "7574741782013935616": {
+     "id": "7574741782013935616",
+     "name": "04 水利事故隐患知识库",
+     "icon_url": "https://basecloud.rokidcdn.com/basecloud/prod/coze/text_kn_default_icon.png",
+     "format_type": 0
+    },
+    "7574742486862528512": {
+     "id": "7574742486862528512",
+     "name": "05 水利领导讲话知识库",
+     "icon_url": "https://basecloud.rokidcdn.com/basecloud/prod/coze/text_kn_default_icon.png",
+     "format_type": 0
+    },
+    "7574977412551671808": {
+     "id": "7574977412551671808",
+     "name": "《水利工程运行管理生产安全重大事故隐患清单指南》",
+     "icon_url": "https://basecloud.rokidcdn.com/basecloud/prod/coze/table_kn_default_icon.png",
+     "format_type": 1
+    },
+    "7574982971547975680": {
+     "id": "7574982971547975680",
+     "name": "《水利工程建设项目生产安全重大事故隐患清单指南》",
+     "icon_url": "https://basecloud.rokidcdn.com/basecloud/prod/coze/table_kn_default_icon.png",
+     "format_type": 1
+    },
+    "7574985978092191744": {
+     "id": "7574985978092191744",
+     "name": "附件1：水利工程建设项目生产安全重大事故隐患直接判定清单（指南）",
+     "icon_url": "https://basecloud.rokidcdn.com/basecloud/prod/coze/table_kn_default_icon.png",
+     "format_type": 1
+    },
+    "7574987613719756800": {
+     "id": "7574987613719756800",
+     "name": "附件2：水利工程建设项目生产安全重大事故隐患综合判定清单（指南）",
+     "icon_url": "https://basecloud.rokidcdn.com/basecloud/prod/coze/table_kn_default_icon.png",
+     "format_type": 1
+    },
+    "7574987926191210496": {
+     "id": "7574987926191210496",
+     "name": "附件3：水利工程运行管理生产安全重大事故隐患直接判定清单（指南）",
+     "icon_url": "https://basecloud.rokidcdn.com/basecloud/prod/coze/table_kn_default_icon.png",
+     "format_type": 1
+    },
+    "7574988209310924800": {
+     "id": "7574988209310924800",
+     "name": "附件4：水利工程运行管理生产安全重大事故隐患综合判定清单（指南）",
+     "icon_url": "https://basecloud.rokidcdn.com/basecloud/prod/coze/table_kn_default_icon.png",
+     "format_type": 1
+    },
+    "7575048362127261696": {
+     "id": "7575048362127261696",
+     "name": "水利建设项目稽察常见问题清单-安全部分（2023年版）",
+     "icon_url": "https://basecloud.rokidcdn.com/basecloud/prod/coze/table_kn_default_icon.png",
+     "format_type": 1
+    }
+   }
+  },
+  "editable": true,
+  "deletable": true,
+  "has_publish": false,
+  "space_id": "7569942055279919104",
+  "connectors": null,
+  "need_user_agree": 0
+ },
+ "code": 0,
+ "msg": ""
+}

@@ -1,0 +1,117 @@
+{
+ "project": "mosaico-water-safety",
+ "updated": "2026-10-21",
+ "tasks": [
+  {
+   "id": "T1",
+   "wbs": "A",
+   "title": "WSL ESP-IDF v6.1 安装验证",
+   "status": "done",
+   "note": "v6.1装好后实测bsp要求idf>=6.2(无tag/branch) → 切master@7b9cc1ac(官方vibe钉板) 装配中"
+  },
+  {
+   "id": "T2",
+   "wbs": "A",
+   "title": "fork esp-mosaico-claw → firmware/",
+   "status": "done",
+   "note": "含双submodule(28M+15M)"
+  },
+  {
+   "id": "T3",
+   "wbs": "A",
+   "title": "出厂固件原样 build 通过",
+   "status": "in_progress",
+   "dep": "T1",
+   "note": "v6.1三连坑已破(CRLF/镜像/依赖序); 现卡idf版本, master装配中"
+  },
+  {
+   "id": "T4",
+   "wbs": "B",
+   "title": "转换器 lingzhu2claw",
+   "status": "done",
+   "note": "两bug修复(写序/目录锁); 校验+渲染+幂等✓"
+  },
+  {
+   "id": "T5",
+   "wbs": "B",
+   "title": "人设三件 identity/soul/user",
+   "status": "done",
+   "note": "3542字人设+1668字意图提示词移植"
+  },
+  {
+   "id": "T6",
+   "wbs": "B",
+   "title": "router_rules 8意图规则",
+   "status": "deferred",
+   "note": "出厂种子路由已够用; 按T10实测调优再增规则"
+  },
+  {
+   "id": "T7",
+   "wbs": "B",
+   "title": "九技能包 shuili_*",
+   "status": "done",
+   "note": "校验过spec(frontmatter/单H1); webhook渲染入secrets"
+  },
+  {
+   "id": "T8",
+   "wbs": "B",
+   "title": "知识蒸馏 112KB→qa技能",
+   "status": "done",
+   "note": "8份源文件(全保4+蒸馏4); 源树5.2GB/4704件在乐奇AI眼镜"
+  },
+  {
+   "id": "T9",
+   "wbs": "C",
+   "title": "资产预烧+build 出bin",
+   "status": "blocked",
+   "dep": "T3"
+  },
+  {
+   "id": "T10",
+   "wbs": "C",
+   "title": "用户插板→烧录→配网→冒烟",
+   "status": "blocked",
+   "dep": "T9",
+   "human": "用户插板+填DeepSeek key"
+  },
+  {
+   "id": "T11",
+   "wbs": "C",
+   "title": "24意图+30知识题对拍",
+   "status": "blocked",
+   "dep": "T10"
+  },
+  {
+   "id": "T12",
+   "wbs": "C",
+   "title": "企微webhook+台账实弹",
+   "status": "blocked",
+   "dep": "T10"
+  },
+  {
+   "id": "T13",
+   "wbs": "D",
+   "title": "TTS(ESP-SR中文)集成",
+   "status": "todo"
+  },
+  {
+   "id": "T14",
+   "wbs": "D",
+   "title": "摄像头vision接线",
+   "status": "todo",
+   "human": "等用户购左槽摄像头模块"
+  },
+  {
+   "id": "T15",
+   "wbs": "D",
+   "title": "P2观澜RAG腿",
+   "status": "todo"
+  },
+  {
+   "id": "T16",
+   "wbs": "D",
+   "title": "收官交付件(README/发布包/手册)",
+   "status": "todo"
+  }
+ ]
+}
