@@ -352,6 +352,6 @@ def test_w7_ac6_order_box_move_semantics(tmp_path, monkeypatch):
     assert len(ledger) == 2
     lines = [json.loads(x) for x in ledger]
     ok_line = next(x for x in lines if x["order"] == "ORD-W7-OK")
-    assert ok_line["result"] == "ok" and ok_line["sla"]["target_min"] == 30
+    assert ok_line["result"] in ("ok", "ok_wecom_fallback") and ok_line["sla"]["target_min"] == 30  # judge-W7#5: 投递态分级
     bad_line = next(x for x in lines if x["order"] == "ORD-W7-BAD")
     assert bad_line["result"] == "failed" and "蓝图" in bad_line["error"]
