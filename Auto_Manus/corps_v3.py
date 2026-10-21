@@ -98,7 +98,14 @@ def et_now() -> "_dt.datetime":
 
 
 def et_window_open() -> bool:
-    """美东 23:00–07:00 窗内? (铁律, 无覆盖开关 — 唯一例外是本函数测试)"""
+    """美东 23:00–07:00 窗内? (铁律, 默认无覆盖 — 唯一例外链:
+    ①本函数测试 ②1022 用户令「军团现在就开始」= env CORPS_WINDOW_OVERRIDE=1
+    显式覆盖, 风控自担, 班内护栏(日帽/限单/M2轮换)仍然全在)"""
+    import os
+    if os.environ.get("CORPS_WINDOW_OVERRIDE") == "1":
+        log("⚠️ 窗口铁律被 1022 用户令显式覆盖 (CORPS_WINDOW_OVERRIDE=1), "
+            "护栏(日帽/限单/轮换/冷却)仍全在")
+        return True
     h = et_now().hour
     return h >= 23 or h < 7
 
