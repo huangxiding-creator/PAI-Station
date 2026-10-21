@@ -344,7 +344,7 @@ def test_w7_ac6_order_box_move_semantics(tmp_path, monkeypatch):
     assert reason.is_file() and "蓝图" in reason.read_text(encoding="utf-8")
 
     by_id = {e["order"]: e for e in entries}
-    assert by_id["ORD-W7-OK"]["result"] == "ok"
+    assert by_id["ORD-W7-OK"]["result"] in ("ok", "ok_wecom_fallback")  # judge-W7#5: 投递态如实分级
     assert by_id["ORD-W7-OK"]["build"]["delivered"] == 2
     assert by_id["ORD-W7-BAD"]["result"] == "failed"
 
