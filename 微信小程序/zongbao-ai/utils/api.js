@@ -162,5 +162,11 @@ module.exports = {
   reportAskHistory: () => request('GET', '/api/report/asks/history'),                        // 我的报告提问记录（本人倒序 limit=20，title 联查回填）
   // ── v0.9.21（用户令 1018：报告互动计数——公开无鉴权 bump，调用方一律 fire-and-forget）──
   reportBump: (sku, field) => request('POST', '/api/report/' + sku + '/bump/' + field),      // 观看/点赞/转发 +1（field=views|likes|shares，失败不阻主流程）
+  // ── W6 KB-FACTORY（知识库工厂；单据类型 blueprint_export=¥0.1 / kb_order=动态金额）──
+  // 【服务端配套待部署】以下三接口上线前：签名腿 404/503 → pay 统一降级文案（不误导用户）；
+  // 履约单提交腿失败 → kbfactory_pay 落本地订单箱排队（不丢单）。
+  kbBlueprintSign: (p) => request('POST', '/api/kb/blueprint_sign', p),                      // 蓝图导出签名（p={need_text, blueprint:{domain,files,gb,total,version_sha}}）
+  kbOrderSign: (p) => request('POST', '/api/kb/order_sign', p),                              // 整库订单签名（p=四键 payload；动态金额=服务端按 blueprint 摘要+version 复算，勿信客户端）
+  kbOrderSubmit: (p) => request('POST', '/api/kb/order', p),                                 // 整库履约单提交（支付成功后；邮箱+网盘双通道交付，SLA 2 小时）
   requestRaw: request                                                                        // pay.js 回调腿用（带 401 重登语义）
 };
