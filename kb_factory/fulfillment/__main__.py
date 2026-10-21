@@ -54,9 +54,17 @@ def process_one(order_path, inbox: OrderInbox, *, base_dir=None, corpus=None) ->
         missing = [c["reason"] for c in build.manifest["channels"] if not c["on"]]
         if d.mode != "email":
             missing.append(d.detail)
+        # judge-W7#5修复：result 如实反映投递态，静默未发不再记 "ok"
+        d_ok = bool(getattr(d, "ok", d.mode == "email"))
+        if d_ok and d.mode == "email":
+            result = "ok"
+        elif d_ok:
+            result = "ok_wecom_fallback"
+        else:
+            result = "degraded_not_delivered"
         entry = {
             "ts": time.strftime("%Y-%m-%dT%H:%M:%S"), "order": order.id,
-            "elapsed_s": round(time.perf_counter() - t0, 3), "result": "ok",
+            "elapsed_s": round(time.perf_counter() - t0, 3), "result": result,
             "build": {"kb": build.kb_name, "slots": build.stats["slots"],
                       "delivered": build.stats["delivered"], "guide": build.stats["guide"],
                       "zip": build.zip_path, "zip_kb": build.stats.get("zip_bytes", 0)},

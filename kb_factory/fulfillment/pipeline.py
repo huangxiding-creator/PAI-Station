@@ -182,11 +182,14 @@ def run(order, *, base_dir=None, corpus: LocalCorpus | None = None,
             for sd in sub_dirs:
                 sd_dir = l1_dir / sd["name"]
                 sd_dir.mkdir(parents=True, exist_ok=True)
+                sd_rows = []  # judge-W7#1修复：分拆目录各自记行、各写各的 _INDEX
                 for slot in sd.get("files", []):
-                    rows.append(_process_slot(slot, sd, sd_dir, kb_root, corpus,
-                                              file_entries, guide_rows))
-            (sd_dir / "_INDEX.md").write_text(
-                _render_l2_index(l2, l1, rows), encoding="utf-8")
+                    r = _process_slot(slot, sd, sd_dir, kb_root, corpus,
+                                      file_entries, guide_rows)
+                    sd_rows.append(r)
+                    rows.append(r)
+                (sd_dir / "_INDEX.md").write_text(
+                    _render_l2_index(l2, l1, sd_rows), encoding="utf-8")
             l2_rows_by_l1[id(l1)][id(l2)] = rows
         l1_dir.joinpath("_INDEX.md").write_text(
             _render_l1_index(l1, l2_rows_by_l1[id(l1)]), encoding="utf-8")
