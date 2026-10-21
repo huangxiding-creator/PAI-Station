@@ -26,8 +26,8 @@ class ImaMetaAdapter(ChannelAdapter):
                  audit=None):
         self.replica_dir = replica_dir
         if limiter is None:
-            limiter = RateLimiter(min_interval=2.0, daily_limit=200, name="ima")
-        self.limiter = limiter  # 复刻件检索无自带节流，用温和默认（2s/日200）
+            limiter = RateLimiter(min_interval=3.0, daily_limit=200, name="ima")
+        self.limiter = limiter  # 复刻件检索无自带节流；3s 间隔（安全门下限，日 200）
         self.audit = audit
         self._reason = ""
         self._mod = None

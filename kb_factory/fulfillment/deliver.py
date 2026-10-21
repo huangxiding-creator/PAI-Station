@@ -83,19 +83,19 @@ def _wecom_notify(title: str, text: str, cmd: list | None = None) -> bool:
 
 
 def send_email(cfg: dict, to: str, subject: str, body: str,
-               attachment: Path | None = None) -> bool:
-    """真发件腿（smtplib，SSL 优先）。失败返回 False，不抛出。"""
+               attachments: list | None = None) -> bool:
+    """真发件腿（smtplib，SSL 优先；多附件随件）。失败返回 False，不抛出。"""
     msg = MIMEMultipart()
     msg["Subject"] = subject
     msg["From"] = formataddr((SENDER_NAME, cfg.get("sender") or cfg["user"]))
     msg["To"] = to
     msg.attach(MIMEText(body, "plain", "utf-8"))
     try:
-        if attachment is not None:
-            with open(attachment, "rb") as f:
+        for att in attachments or []:
+            with open(att, "rb") as f:
                 part = MIMEApplication(f.read())
             part.add_header("Content-Disposition", "attachment",
-                            filename=attachment.name)
+                            filename=Path(att).name)
             msg.attach(part)
         cls = smtplib.SMTP_SSL if cfg.get("ssl", True) else smtplib.SMTP
         with cls(cfg["host"], cfg["port"], timeout=60) as s:
@@ -107,37 +107,43 @@ def send_email(cfg: dict, to: str, subject: str, body: str,
 
 
 def deliver(order, zip_path, *, cfg: dict | None = None,
-            smtp_secret=None, notify=None) -> DeliveryResult:
-    """投递主链：配置缺→企微降级；>50MB→网盘占位；正常→附件发件。绝不抛出。"""
+            smtp_secret=None, notify=None, extras: list = ()) -> DeliveryResult:
+    """投递主链：配置缺→企微降级；合计>50MB→网盘占位；正常→随件发（原包+所选版本件）。
+    extras=W10 所选版本产物（markdown 版 zip/导入包 zip），绝不抛出。"""
     if notify is None:  # 调用时解析，便于测试打桩
         notify = _wecom_notify
     zp = Path(zip_path)
+    paths = [zp] + [Path(e) for e in extras if Path(e).is_file()]
     if cfg is None:
         cfg = load_smtp_config(smtp_secret)
     if cfg is None:
-        text = f"{order.id}|{order.email}|{zp}"
+        text = f"{order.id}|{order.email}|{'|'.join(str(p) for p in paths)}"
         notified = notify("KB交付待发", text)
         return DeliveryResult(
             "wecom_fallback",
             f"smtp.secret.ini 未配置→包留 outbox 待人工发；企微通知{'已发' if notified else '未发出(需人工检查/发送)'}：{text}",
             ok=notified)
 
-    size = zp.stat().st_size if zp.is_file() else 0
+    size = sum(p.stat().st_size for p in paths if p.is_file())
     if size > ATTACH_LIMIT:
         body = (f"您的知识库交付包已生成（{size / 1048576:.1f}MB，超邮箱附件 50MB 上限）。\n"
                 f"网盘链接生成后将另行发送；订单号 {order.id}。\n"
                 f"（占位说明：大包走网盘通道，链接待回填）")
         sent = send_email(cfg, order.email, f"【知识库交付·网盘】{order.id}", body)
-        notify("KB大包待转网盘", f"{order.id}|{order.email}|{zp}|{size // 1048576}MB|人工转存百度网盘后回填链接")
+        notify("KB大包待转网盘",
+               f"{order.id}|{order.email}|{'|'.join(str(p) for p in paths)}|{size // 1048576}MB|人工转存百度网盘后回填链接")
         return DeliveryResult("netdisk_pending",
                               f"包 {size // 1048576}MB>50MB→只发网盘占位说明；邮件{'已发' if sent else '发送失败'}；待企微人工转存百度网盘回填链接",
                               ok=sent)
 
     body = (f"您好，您的知识库交付包见附件。\n订单号：{order.id}\n"
-            f"包内含：知识库目录树、每目录 _INDEX.md、manifest.json、获取指引清单、使用与来源说明。\n"
-            f"总包智库研究团队")
-    if send_email(cfg, order.email, f"【知识库交付】{order.id}", body, attachment=zp):
-        return DeliveryResult("email", f"附件已发至 {order.email}（{size // 1024}KB）")
+            f"包内含：知识库目录树、每目录 _INDEX.md、manifest.json、获取指引清单、使用与来源说明。\n")
+    if len(paths) > 1:  # W10：所选版本件随件列出（markdown 版/随身导入包）
+        body += "随附版本件：" + "、".join(p.name for p in paths[1:]) + "\n"
+    body += f"总包智库研究团队"
+    if send_email(cfg, order.email, f"【知识库交付】{order.id}", body, attachments=paths):
+        return DeliveryResult("email",
+                              f"附件已发至 {order.email}（{len(paths)} 件 / {size // 1024}KB）")
     # SMTP 在位但发信失败：降级企微，包留 outbox
     text = f"{order.id}|{order.email}|{zp}"
     notified = notify("KB交付待发", text)

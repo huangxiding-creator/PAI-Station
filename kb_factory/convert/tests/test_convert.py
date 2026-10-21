@@ -16,14 +16,12 @@ import pytest
 from kb_factory.convert.import_pack import make_import_pack
 from kb_factory.convert.md_convert import (
     CONVERTED_MARK,
+    FORBIDDEN_WORDS,  # 禁词表单一事实源（security_gate 同源引用；只许扩不许收窄）
     PLACEHOLDER_MARK,
     convert_package,
     dst_relpath,
 )
 from kb_factory.convert.tests.make_fixture import DOCX1_BODY, DOCX2_BODY, LIB_NAME, build_fixture
-
-# 占位/导入说明文案禁词（纪律：零渠道名零技术词；守门词表只许扩不许收窄）
-FORBIDDEN_WORDS = ["逆向", "渠道", "爬虫", "收割", "镜像", "逆向工程", "ima"]
 
 
 @pytest.fixture()

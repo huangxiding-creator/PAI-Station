@@ -49,7 +49,10 @@ def process_one(order_path, inbox: OrderInbox, *, base_dir=None, corpus=None) ->
 
     try:
         build = pipeline.run(order, base_dir=base, corpus=corpus)
-        d = deliver.deliver(order, build.zip_path)
+        vs = build.manifest.get("versions") or {}
+        # W10：所选版本的产物 zip 随件投递（markdown 版/导入包与原包一起发）
+        extras = [vs[k]["zip"] for k in ("markdown", "import_pack") if k in vs]
+        d = deliver.deliver(order, build.zip_path, extras=extras)
         inbox.complete(path)
         missing = [c["reason"] for c in build.manifest["channels"] if not c["on"]]
         if d.mode != "email":
@@ -69,6 +72,8 @@ def process_one(order_path, inbox: OrderInbox, *, base_dir=None, corpus=None) ->
                       "delivered": build.stats["delivered"], "guide": build.stats["guide"],
                       "zip": build.zip_path, "zip_kb": build.stats.get("zip_bytes", 0)},
             "deliver": {"mode": d.mode, "detail": d.detail},
+            "versions": {k: {"path": v.get("zip") or v.get("dir"), "files": v.get("files")}
+                         for k, v in vs.items() if k != "selection"},
             "sla": {"target_min": SLA_TARGET_MIN, "promise_min": SLA_PROMISE_MIN,
                     "elapsed_min": round((time.perf_counter() - t0) / 60, 2),
                     "within_target": (time.perf_counter() - t0) <= SLA_TARGET_MIN * 60},

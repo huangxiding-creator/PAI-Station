@@ -7,11 +7,35 @@
 """
 import json
 import os
+import re
 import time
 from dataclasses import dataclass, asdict, fields
 from pathlib import Path
 
 VERSIONS = ("original", "markdown", "ima_pack")
+
+# W10：selection 词法（单值或组合）；组合写法 markdown+import_pack（分隔符 + ， 、 ; / 空白皆可）
+_SEL_ALIASES = {
+    "original": "original",
+    "md": "markdown", "markdown": "markdown",
+    "import_pack": "import_pack", "ima_pack": "import_pack",  # ima_pack=随身导入包别名
+    "import": "import_pack",  # 组合简写（如 md+import）
+}
+_SEL_SPLIT = re.compile(r"[+,，、;；/\s]+")
+
+
+def parse_selections(s: str) -> set:
+    """解析 version_selection → 规范集合；组合时原包恒在（全都要）。越界即抛 ValueError。"""
+    parts = [p for p in _SEL_SPLIT.split((s or "").strip()) if p]
+    if not parts:
+        raise ValueError("version_selection 不能为空")
+    unknown = sorted({p for p in parts if p not in _SEL_ALIASES})
+    if unknown:
+        raise ValueError(
+            f"version_selection 越界: {'/'.join(unknown)}（可用 original/markdown/import_pack|ima_pack，组合用 + 连接）")
+    sel = {_SEL_ALIASES[p] for p in parts}
+    sel.add("original")  # 原包永远随单：组合=在原包之上叠加，不是替换
+    return sel
 
 
 @dataclass
@@ -33,8 +57,7 @@ class Order:
             raise ValueError(f"订单 {self.id} 缺少合法 email")
         if not self.blueprint_ref:
             raise ValueError(f"订单 {self.id} 缺少 blueprint_ref")
-        if self.version_selection not in VERSIONS:
-            raise ValueError(f"订单 {self.id} version_selection 越界: {self.version_selection}")
+        parse_selections(self.version_selection)  # W10：单值/组合/别名统一过此门，越界即拒
 
     @classmethod
     def from_dict(cls, d: dict) -> "Order":

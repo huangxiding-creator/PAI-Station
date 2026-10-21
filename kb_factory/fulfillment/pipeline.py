@@ -11,17 +11,24 @@
 纪律：数字零造假——缺什么如实标什么；任何分支不删除文件。
 """
 import json
+import re
 import shutil
 import time
 import zipfile
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from ..convert.import_pack import make_import_pack
+from ..convert.md_convert import REPORT_NAME, convert_package
+from .order import parse_selections
 from .sources_local import LocalCorpus
 from .sources_registry import advice_for, manifest_channels, registry
 
 MODULE_DIR = Path(__file__).resolve().parent
 GREEN_LOCAL_BADGES = {"self_owned", "green_free"}  # 优先本地直取
+
+# 转换报告末行机器可读汇总（W8 契约）：成功转换 X｜原样复制 Y｜占位 Z｜合计 T
+_REPORT_SUMMARY_RE = re.compile(r"成功转换 (\d+)｜原样复制 (\d+)｜占位 (\d+)｜合计 (\d+)")
 
 
 @dataclass
@@ -147,6 +154,50 @@ def _render_readme(kb_name: str, order, stats: dict, channels: list) -> str:
     ])
 
 
+def _zip_tree(root: Path, zip_path: Path) -> Path:
+    """把 root 目录树打包为 zip（相对路径=root 内位置），返回 zip 路径。"""
+    with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as z:
+        for p in sorted(root.rglob("*")):
+            if p.is_file():
+                z.write(p, p.relative_to(root).as_posix())
+    return zip_path
+
+
+def _assemble_versions(order, *, base: Path, kb_root: Path, order_dir: Path) -> dict:
+    """W10 发货腿：按 version_selection 组装各版本产物（原包恒在；组合全都要）。
+
+    - markdown：convert_package 产 MD 版目录 + zip（转换报告随附，计数取报告末行实测值）
+    - import_pack：make_import_pack 产导入包 zip，与原包并列 outbox（库名命名）
+    - 全部产物落 outbox 层，不入 order_dir（原包 zip 保持纯净）
+    manifest.versions 记录各版本产物路径与计数——数字零造假：MD 计数=转换报告末行，
+    导入包计数=zip 实测条数，原包计数=order_dir 实测文件数。
+    """
+    sel = parse_selections(order.version_selection)
+    outbox = base / "outbox"
+    versions = {"selection": order.version_selection,
+                "original": {"zip": str(outbox / f"{order.id}.zip"),
+                             "files": sum(1 for p in order_dir.rglob("*") if p.is_file())}}
+    if "markdown" in sel:
+        md_dir = outbox / f"{order.id}_md"
+        dst = convert_package(kb_root, dst_dir=md_dir)
+        report = dst / REPORT_NAME
+        m = _REPORT_SUMMARY_RE.search(report.read_text(encoding="utf-8"))
+        if not m:
+            raise RuntimeError(f"转换报告缺机器可读汇总行: {report}")
+        conv, copied, ph, total = (int(x) for x in m.groups())
+        md_zip = _zip_tree(dst, outbox / f"{order.id}_md.zip")
+        versions["markdown"] = {
+            "dir": str(dst), "zip": str(md_zip), "report": str(report),
+            "files": total, "converted": conv, "copied": copied,
+            "placeholders": ph, "total": total}
+    if "import_pack" in sel:
+        iz = make_import_pack(kb_root, out_dir=outbox)
+        with zipfile.ZipFile(iz) as z:
+            n_import = len(z.namelist())
+        versions["import_pack"] = {"zip": str(iz), "files": n_import}
+    return versions
+
+
 def run(order, *, base_dir=None, corpus: LocalCorpus | None = None,
         channels: dict | None = None) -> BuildResult:
     """履约主链：蓝图→建树→绿源复制→INDEX/清单/manifest→zip。"""
@@ -215,6 +266,12 @@ def run(order, *, base_dir=None, corpus: LocalCorpus | None = None,
         "channels": channels_list,
         "files": file_entries,
     }
+    (kb_root / "manifest.json").write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=1), encoding="utf-8")
+
+    # W10 发货腿：按 version_selection 组装 MD 版/导入包（产物落 outbox，先于打包计入 manifest）
+    manifest["versions"] = _assemble_versions(order, base=base, kb_root=kb_root,
+                                              order_dir=order_dir)
     (kb_root / "manifest.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=1), encoding="utf-8")
 

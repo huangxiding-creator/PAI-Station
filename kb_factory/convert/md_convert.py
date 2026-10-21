@@ -29,6 +29,10 @@ PANDOC_TIMEOUT = 120  # 秒
 PLACEHOLDER_MARK = "<!-- kb-convert: placeholder -->"
 CONVERTED_MARK = "<!-- kb-convert: markdown -->"
 
+# 占位/导入说明文案禁词（纪律：零渠道名零技术词；守门词表只许扩不许收窄；
+# security_gate 与 convert 测试同源引用此表——单一事实源）
+FORBIDDEN_WORDS = ["逆向", "渠道", "爬虫", "收割", "镜像", "逆向工程", "ima"]
+
 CONVERTED_EXTS = {".docx", ".doc"}          # 尝试真转换（doc 失败→占位）
 PLACEHOLDER_EXTS = {".pdf", ".xls", ".xlsx", ".ppt", ".pptx"}  # v1 一律占位
 
@@ -73,21 +77,21 @@ def dst_relpath(src_name: str) -> str:
 
 
 def _run_pandoc(pandoc: str, src: Path, dst: Path) -> tuple[bool, str]:
-    """调用 pandoc 转单文件。返回 (成功?, 原因)；成功时在产物首行加转换标记。"""
+    """调用 pandoc 转单文件。返回 (成功?, 原因)；成功时在产物首行加转换标记。
+
+    零删除红线：失败分支不 unlink（调用方随即用占位文件覆盖写 dst，无残留必要）。
+    """
     cmd = [pandoc, str(src), "-t", "gfm", "--wrap=none", "-o", str(dst)]
     try:
         r = subprocess.run(cmd, capture_output=True, timeout=PANDOC_TIMEOUT)  # 只读调用源文件
     except subprocess.TimeoutExpired:
-        dst.unlink(missing_ok=True)
         return False, "转换超时，已保留占位"
     except OSError:
-        dst.unlink(missing_ok=True)
         return False, "转换工具不可用，已保留占位"
     if r.returncode == 0 and dst.is_file() and dst.stat().st_size > 0:
         body = dst.read_text("utf-8", errors="replace")
         dst.write_text(f"{CONVERTED_MARK}\n{body}", encoding="utf-8", newline="")
         return True, "已转为 Markdown"
-    dst.unlink(missing_ok=True)
     return False, f"自动转换失败（退出码 {r.returncode}），已保留占位"
 
 
