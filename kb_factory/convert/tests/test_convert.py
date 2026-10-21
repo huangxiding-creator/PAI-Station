@@ -246,6 +246,7 @@ def test_req_w8_cli_subprocess_md_rc0(pkg: Path):
     r = subprocess.run(
         [sys.executable, "-X", "utf8", "-m", "kb_factory.convert", "--md", str(pkg)],
         cwd=REPO_ROOT, capture_output=True, text=True, timeout=300,
+        encoding="utf-8", errors="replace",  # 同上：父进程解码显式utf-8
     )
     assert r.returncode == 0, f"rc={r.returncode}\nstdout={r.stdout}\nstderr={r.stderr}"
     dst = pkg.parent / f"{pkg.name}_md"
@@ -258,6 +259,7 @@ def test_req_w8_cli_missing_dir_friendly_exit2(tmp_path: Path):
         [sys.executable, "-X", "utf8", "-m", "kb_factory.convert",
          "--md", str(tmp_path / "不存在的包")],
         cwd=REPO_ROOT, capture_output=True, text=True, timeout=60,
+        encoding="utf-8", errors="replace",  # 父进程按utf-8解码（GBK控制台下text=True默认GBK会绞碎中文断言）
     )
     assert r.returncode == 2
     combined = r.stdout + r.stderr
