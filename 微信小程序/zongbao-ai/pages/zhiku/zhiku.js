@@ -86,6 +86,12 @@ Page({
     });
   },
 
+  // KB-FACTORY 入口（1021 W4）：一句话免费设计知识库 → 蓝图页
+  goKbFactory() {
+    wx.vibrateShort({ type: 'light', fail: () => {} });
+    wx.navigateTo({ url: '/pages/kbfactory/kbfactory' });
+  },
+
   // ── v0.9.13 全库购买广告：点触式弹窗（总包君二维码，长按可识别） ──
   showBuyModal() {
     wx.vibrateShort({ type: 'light', fail: () => {} });

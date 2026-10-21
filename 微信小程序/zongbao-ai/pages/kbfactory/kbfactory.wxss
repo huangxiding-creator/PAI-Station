@@ -1,0 +1,332 @@
+/* 知识库工厂页 — W4 v1：蓝图语言同源（hero 图签/卡片/折叠树复用 zhiku 范式，全局类见 app.wxss） */
+.page { padding-bottom: 40rpx; }
+
+/* ══ 蓝图头部（同 zhiku 页语言）══ */
+.hero {
+  position: relative;
+  color: var(--white-ink);
+  padding: 0 36rpx 44rpx;
+  overflow: hidden;
+}
+.hero-nav { position: relative; }
+.hero-inner { position: relative; animation: rise 0.5s cubic-bezier(0.22, 0.9, 0.3, 1) both; }
+.hero-kicker { font-size: 19rpx; letter-spacing: 7rpx; color: var(--ink-dim); font-weight: 600; }
+.hero-title {
+  margin-top: 14rpx;
+  font-size: 58rpx;
+  font-weight: 800;
+  letter-spacing: 6rpx;
+  text-shadow: 0 2rpx 0 rgba(0, 0, 0, 0.25);
+}
+.hero-sub { margin-top: 14rpx; font-size: 25rpx; color: var(--ink-dim); letter-spacing: 1rpx; line-height: 1.7; }
+.hero-inner::after {
+  content: '';
+  position: absolute; right: 0; top: 8rpx;
+  width: 34rpx; height: 34rpx;
+  background:
+    linear-gradient(var(--ink-dim), var(--ink-dim)) center/100% 2rpx no-repeat,
+    linear-gradient(var(--ink-dim), var(--ink-dim)) center/2rpx 100% no-repeat;
+  opacity: 0.65;
+}
+.hero-dwg {
+  margin-top: 26rpx;
+  font-size: 19rpx;
+  letter-spacing: 4rpx;
+  color: rgba(var(--t-inkdim-rgb), 0.5);
+  display: flex;
+  align-items: center;
+}
+.dim-rule {
+  flex: 1;
+  height: 18rpx;
+  margin: 0 20rpx;
+  border-left: 2rpx solid rgba(var(--t-inkdim-rgb), 0.4);
+  border-right: 2rpx solid rgba(var(--t-inkdim-rgb), 0.4);
+  position: relative;
+}
+.dim-rule::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; top: 50%;
+  border-top: 2rpx solid rgba(var(--t-inkdim-rgb), 0.4);
+}
+.dim-cap { letter-spacing: 4rpx; }
+
+/* ══ 输入区 ══ */
+.kf-k { margin-bottom: 20rpx; }
+.kf-ta-wrap {
+  display: flex;
+  align-items: flex-end;
+  gap: 18rpx;
+  padding: 20rpx 22rpx;
+  border: 2rpx solid var(--line);
+  border-radius: 10rpx;
+  background: var(--paper);
+}
+.kf-ta { flex: 1; min-height: 96rpx; font-size: 28rpx; line-height: 1.6; color: var(--ink); }
+.kf-ph { color: var(--muted); }
+.kf-mic {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 96rpx;
+  padding: 12rpx 0;
+  border: 2rpx solid rgba(var(--t-accent-rgb), 0.55);
+  border-radius: 10rpx;
+  background: rgba(var(--t-accent-rgb), 0.08);
+}
+.kf-mic-hover { opacity: 0.75; }
+.kf-mic.on {
+  border-color: var(--stamp);
+  background: rgba(195, 69, 43, 0.1);
+}
+.kf-mic-g { font-size: 34rpx; line-height: 1.1; }
+.kf-mic-t { margin-top: 4rpx; font-size: 19rpx; color: var(--muted); letter-spacing: 1rpx; }
+.kf-go { margin-top: 26rpx; }
+.kf-hint { margin-top: 14rpx; font-size: 21rpx; text-align: center; }
+
+/* ══ 施工直播（八阶段）══ */
+.kf-stage {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 16rpx 0;
+  opacity: 0.45;
+  transition: opacity 0.24s ease;
+}
+.kf-stage + .kf-stage { border-top: 2rpx solid var(--line); }
+.kf-stage.run, .kf-stage.ok { opacity: 1; }
+.kf-stage-dot {
+  width: 44rpx; height: 44rpx;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 8rpx;
+  border: 2rpx solid var(--muted);
+  font-size: 22rpx;
+  color: var(--muted);
+}
+.kf-stage.run .kf-stage-dot {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(var(--t-accent-rgb), 0.08);
+}
+.kf-stage.ok .kf-stage-dot {
+  border-color: var(--t-ok, #2f9e63);
+  color: #fff;
+  background: var(--t-ok, #2f9e63);
+}
+.kf-stage-body { flex: 1; min-width: 0; }
+.kf-stage-name { font-size: 27rpx; font-weight: 700; color: var(--ink); }
+.kf-stage-line { font-size: 22rpx; margin-top: 2rpx; }
+.kf-stage-state {
+  flex-shrink: 0;
+  font-size: 22rpx;
+  letter-spacing: 2rpx;
+  color: var(--muted);
+}
+.kf-stage.run .kf-stage-state { color: var(--accent); }
+.kf-stage.ok .kf-stage-state { color: var(--t-ok, #2f9e63); font-weight: 700; }
+
+/* ══ 统计带 ══ */
+.kf-domain {
+  font-size: 30rpx;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: 1rpx;
+}
+.kf-mode {
+  margin-left: 14rpx;
+  font-size: 20rpx;
+  font-weight: 600;
+  color: var(--accent-deep);
+  border: 2rpx solid rgba(var(--t-accent-rgb), 0.5);
+  border-radius: 6rpx;
+  padding: 2rpx 10rpx;
+  letter-spacing: 1rpx;
+}
+.kf-stats {
+  display: flex;
+  margin-top: 22rpx;
+  padding: 20rpx 0;
+  border-top: 2rpx dashed var(--line);
+  border-bottom: 2rpx dashed var(--line);
+}
+.kf-stat { flex: 1; text-align: center; }
+.kf-stat + .kf-stat { border-left: 2rpx solid var(--line); }
+.kf-stat-n { font-size: 38rpx; font-weight: 800; color: var(--ink); line-height: 1.25; }
+.kf-stat-l { font-size: 19rpx; letter-spacing: 2rpx; margin-top: 2rpx; }
+
+/* ══ 配比仪表盘 ══ */
+.kf-bar {
+  display: flex;
+  height: 22rpx;
+  border-radius: 6rpx;
+  overflow: hidden;
+  border: 2rpx solid var(--line);
+}
+.kf-seg-core { background: var(--accent); }
+.kf-seg-field { background: var(--draft, #1d6fd0); }
+.kf-seg-guide { background: var(--t-ok, #2f9e63); }
+.kf-ratio-legend { display: flex; margin-top: 18rpx; }
+.kf-rl {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  font-size: 21rpx;
+  color: var(--muted);
+}
+.kf-rl .mono { font-weight: 700; color: var(--ink); }
+.kf-dot { width: 14rpx; height: 14rpx; border-radius: 4rpx; flex-shrink: 0; }
+.kf-dot-core { background: var(--accent); }
+.kf-dot-field { background: var(--draft, #1d6fd0); }
+.kf-dot-guide { background: var(--t-ok, #2f9e63); }
+
+/* ══ 报价卡 ══ */
+.kf-total {
+  font-size: 64rpx;
+  font-weight: 800;
+  color: var(--accent-deep);
+  letter-spacing: 2rpx;
+  line-height: 1.2;
+  text-shadow: 0 0 24rpx rgba(var(--t-accent-rgb), 0.25);
+}
+.kf-total-sub { margin-top: 6rpx; font-size: 21rpx; }
+.kf-price-rows { margin-top: 22rpx; border-top: 2rpx dashed var(--line); }
+.kf-pr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16rpx 0;
+  font-size: 26rpx;
+  color: var(--ink);
+}
+.kf-pr + .kf-pr { border-top: 2rpx solid var(--line); }
+.kf-pr-t { color: var(--ink-2); }
+.kf-pr .mono { font-weight: 700; }
+.kf-export { margin-top: 26rpx; }
+.kf-poster {
+  margin-top: 18rpx;
+  border: 2rpx solid rgba(var(--t-accent-rgb), 0.55);
+  border-radius: 10rpx;
+  background: rgba(var(--t-accent-rgb), 0.06);
+  color: var(--accent-deep);
+  font-size: 30rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+  line-height: 2.4;
+}
+.kf-poster-hover { opacity: 0.78; }
+
+/* ══ 三级目录树（L1 折叠 → L2 折叠 → 文件清单）══ */
+.kf-l1 { border-bottom: 2rpx dashed var(--line); }
+.kf-l1-head {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 24rpx 0 18rpx;
+}
+.kf-press { opacity: 0.72; }
+.kf-l1-code {
+  width: 60rpx; height: 60rpx;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 10rpx;
+  border: 3rpx solid var(--accent);
+  color: var(--accent);
+  font-size: 26rpx; font-weight: 800;
+  background: rgba(var(--t-accent-rgb), 0.07);
+}
+.kf-l1-body { flex: 1; min-width: 0; }
+.kf-l1-h { font-size: 29rpx; font-weight: 700; color: var(--ink); }
+.kf-l1-n {
+  margin-left: 14rpx;
+  font-size: 21rpx;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 1rpx;
+}
+.kf-l1-d {
+  font-size: 22rpx;
+  margin-top: 4rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.kf-chevron {
+  width: 14rpx; height: 14rpx;
+  flex-shrink: 0;
+  border-right: 3rpx solid var(--muted);
+  border-bottom: 3rpx solid var(--muted);
+  transform: rotate(-45deg);
+  transition: transform 0.24s ease, border-color 0.24s ease;
+}
+.kf-l1.open .kf-chevron { transform: rotate(45deg); border-color: var(--accent); }
+.kf-chevron-sm { width: 10rpx; height: 10rpx; border-width: 2rpx; }
+.kf-l2.open .kf-chevron-sm { transform: rotate(45deg); border-color: var(--accent); }
+
+.kf-l2-wrap { animation: fadeIn 0.3s ease both; }
+.kf-l2 { padding-left: 80rpx; }
+.kf-l2-head {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  padding: 14rpx 0;
+}
+.kf-l2 + .kf-l2 { border-top: 2rpx solid var(--line); }
+.kf-l2-idx { font-size: 19rpx; color: var(--muted); flex-shrink: 0; }
+.kf-l2-name {
+  flex: 1;
+  font-size: 25rpx;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.kf-l2-n { font-size: 20rpx; color: var(--muted); flex-shrink: 0; }
+
+.kf-files { animation: fadeIn 0.3s ease both; padding: 4rpx 0 16rpx 34rpx; }
+.kf-file {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  padding: 10rpx 0;
+}
+.kf-file + .kf-file { border-top: 2rpx solid var(--line); }
+.kf-ext {
+  flex-shrink: 0;
+  min-width: 72rpx;
+  text-align: center;
+  font-size: 18rpx;
+  font-weight: 700;
+  letter-spacing: 1rpx;
+  border-radius: 6rpx;
+  padding: 4rpx 8rpx;
+  border: 2rpx solid rgba(var(--t-accent-rgb), 0.5);
+  color: var(--accent-deep);
+  background: rgba(var(--t-accent-rgb), 0.08);
+}
+.kf-ext-field {
+  border-color: rgba(var(--t-blue-rgb), 0.5);
+  color: var(--draft, #1d6fd0);
+  background: rgba(var(--t-blue-rgb), 0.08);
+}
+.kf-ext-guide {
+  border-color: rgba(47, 158, 99, 0.5);
+  color: var(--t-ok, #2f9e63);
+  background: rgba(47, 158, 99, 0.08);
+}
+.kf-f-body { flex: 1; min-width: 0; }
+.kf-f-name {
+  font-size: 23rpx;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.kf-f-meta { font-size: 20rpx; margin-top: 2rpx; }
+.kf-more { font-size: 20rpx; padding-top: 10rpx; }
+.kf-note { margin-top: 20rpx; font-size: 20rpx; line-height: 1.6; padding-top: 16rpx; }

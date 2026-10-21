@@ -1,0 +1,142 @@
+<page-meta page-style="{{themeStyle}}" />
+<view class="page">
+
+  <!-- ══ 蓝图头部：知识库工厂 ══ -->
+  <view class="hero bp-grid ticks">
+    <view style="height: {{nav.statusBarHeight}}px;"></view>
+    <view class="hero-nav" style="height: {{nav.navHeight}}px"></view>
+
+    <view class="hero-inner">
+      <view class="hero-kicker">KB-FACTORY · KNOWLEDGE BLUEPRINT</view>
+      <view class="hero-title">知识库工厂</view>
+      <view class="hero-sub">一句话，免费设计你的专业知识库 · 免费看蓝图</view>
+
+      <view class="hero-dwg mono">DWG NO. KBF-01 · SCALE 1:1<view class="dim-rule"></view><text class="dim-cap">FACTORY</text></view>
+    </view>
+  </view>
+
+  <!-- ══ 输入区：一句话说需要 ══ -->
+  <view class="card ticks rise" style="animation-delay: 30ms">
+    <view class="kf-k kicker kicker-on-paper">INPUT · 说出你的需要</view>
+    <view class="kf-ta-wrap">
+      <textarea class="kf-ta" value="{{needText}}" maxlength="120" auto-height
+        placeholder="例如：给水利EPC项目团队建一个施工知识库"
+        placeholder-class="kf-ph" bindinput="onNeedInput" disabled="{{building}}" />
+      <view class="kf-mic {{recording ? 'on' : ''}}" hover-class="kf-mic-hover"
+        hover-stay-time="80" bindtouchstart="onMicStart" bindtouchend="onMicEnd" bindtap="noop">
+        <text class="kf-mic-g">{{recording ? '·' : '🎙'}}</text>
+        <text class="kf-mic-t">{{recording ? '松手' : '按住说'}}</text>
+      </view>
+    </view>
+    <button class="btn-primary kf-go" hover-class="btn-hover" bindtap="onGenerate" disabled="{{building}}">🖨️ 免费设计知识库</button>
+    <view class="muted kf-hint">免费看完整蓝图 · 满意再带走</view>
+  </view>
+
+  <!-- ══ 施工直播：八阶段逐段推进 ══ -->
+  <view class="card ticks rise" wx:if="{{building || built}}" style="animation-delay: 60ms">
+    <view class="kf-k kicker kicker-on-paper">LIVE · 施工直播</view>
+    <view class="kf-stage {{item.state === 'ok' ? 'ok' : ''}} {{item.state === 'run' ? 'run' : ''}}"
+      wx:for="{{stages}}" wx:key="name">
+      <view class="kf-stage-dot mono">{{index + 1}}</view>
+      <view class="kf-stage-body">
+        <view class="kf-stage-name">{{item.name}}</view>
+        <view class="muted kf-stage-line">{{item.line}}{{item.count ? ' · ' + item.count : ''}}</view>
+      </view>
+      <view class="kf-stage-state mono">{{item.state === 'ok' ? 'OK' : (item.state === 'run' ? '···' : '')}}</view>
+    </view>
+  </view>
+
+  <!-- ══ 蓝图渲染 ══ -->
+  <block wx:if="{{bp}}">
+
+    <!-- 顶部统计带 -->
+    <view class="card ticks rise" style="animation-delay: 90ms">
+      <view class="kf-k kicker kicker-on-paper">STATS · 图签统计带</view>
+      <view class="kf-domain">{{bp.domain}}<text class="kf-mode mono">{{bp.tree.mode === 'six_domains' ? '六域骨架' : '通用骨架'}}</text></view>
+      <view class="kf-stats">
+        <view class="kf-stat">
+          <view class="kf-stat-n mono">{{bp.stats.files}}</view>
+          <view class="kf-stat-l muted">总文件数</view>
+        </view>
+        <view class="kf-stat">
+          <view class="kf-stat-n mono">{{bp.stats.gb}}</view>
+          <view class="kf-stat-l muted">总GB</view>
+        </view>
+        <view class="kf-stat">
+          <view class="kf-stat-n mono">{{bp.stats.dir_count}}</view>
+          <view class="kf-stat-l muted">目录数</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 配比仪表盘 -->
+    <view class="card ticks rise" style="animation-delay: 120ms">
+      <view class="kf-k kicker kicker-on-paper">RATIO · 配比仪表盘</view>
+      <view class="kf-bar">
+        <view class="kf-seg kf-seg-core" style="width: {{bp.ratio.core}}%;"></view>
+        <view class="kf-seg kf-seg-field" style="width: {{bp.ratio.field}}%;"></view>
+        <view class="kf-seg kf-seg-guide" style="width: {{bp.ratio.guide}}%;"></view>
+      </view>
+      <view class="kf-ratio-legend">
+        <view class="kf-rl"><view class="kf-dot kf-dot-core"></view>核心主干<text class="mono">{{bp.ratio.core}}%</text></view>
+        <view class="kf-rl"><view class="kf-dot kf-dot-field"></view>领域补充<text class="mono">{{bp.ratio.field}}%</text></view>
+        <view class="kf-rl"><view class="kf-dot kf-dot-guide"></view>导读合成<text class="mono">{{bp.ratio.guide}}%</text></view>
+      </view>
+    </view>
+
+    <!-- 报价卡 -->
+    <view class="card ticks rise" style="animation-delay: 150ms">
+      <view class="kf-k kicker kicker-on-paper">QUOTE · 动态报价</view>
+      <view class="kf-total mono">¥{{bp.quote.total}}</view>
+      <view class="muted kf-total-sub">按 {{bp.stats.gb}}GB 实测体积计价 · 基础 ¥{{bp.quote.base}} + 每GB ¥{{bp.quote.per_gb}}</view>
+      <view class="kf-price-rows">
+        <view class="kf-pr"><text class="kf-pr-t">原文件版</text><text class="mono">¥{{bp.quote.total}}</text></view>
+        <view class="kf-pr"><text class="kf-pr-t">轻便阅读版（Markdown）</text><text class="mono">¥{{mdPrice}}</text></view>
+        <view class="kf-pr"><text class="kf-pr-t">随身知识库导入包</text><text class="mono">+¥{{bp.quote.import_add}}</text></view>
+      </view>
+      <button class="btn-primary kf-export" hover-class="btn-hover" bindtap="onExport">导出蓝图 ¥0.1</button>
+      <button class="kf-poster" hover-class="kf-poster-hover" bindtap="onPoster">生成分享海报</button>
+    </view>
+
+    <!-- 三级目录树 -->
+    <view class="card ticks rise" style="animation-delay: 180ms">
+      <view class="kf-k kicker kicker-on-paper">TREE · 三级编目树</view>
+      <view class="kf-l1 {{item.open ? 'open' : ''}}" wx:for="{{tree}}" wx:for-item="l1" wx:for-index="i1" wx:key="code">
+        <view class="kf-l1-head" hover-class="kf-press" hover-stay-time="80" data-i="{{i1}}" bindtap="toggleL1">
+          <view class="kf-l1-code mono">{{l1.code}}</view>
+          <view class="kf-l1-body">
+            <view class="kf-l1-h">{{l1.name}}<text class="kf-l1-n mono">{{l1.l2_count}} 组</text></view>
+            <view class="muted kf-l1-d">{{l1.theme}}</view>
+          </view>
+          <view class="kf-chevron"></view>
+        </view>
+        <view class="kf-l2-wrap" wx:if="{{l1.open}}">
+          <view class="kf-l2 {{l2.open ? 'open' : ''}}" wx:for="{{l1.l2}}" wx:for-item="l2" wx:for-index="i2" wx:key="code">
+            <view class="kf-l2-head" hover-class="kf-press" hover-stay-time="80" data-i="{{i1}}" data-j="{{i2}}" bindtap="toggleL2">
+              <text class="kf-l2-idx mono">{{l2.code}}</text>
+              <text class="kf-l2-name">{{l2.name}}</text>
+              <text class="kf-l2-n mono">{{l2.file_count}} 件</text>
+              <view class="kf-chevron kf-chevron-sm"></view>
+            </view>
+            <view class="kf-files" wx:if="{{l2.open}}">
+              <view class="kf-file" wx:for="{{l2.files}}" wx:for-item="f" wx:key="name">
+                <text class="kf-ext mono kf-ext-{{f.tier}}">{{f.ext}}</text>
+                <view class="kf-f-body">
+                  <view class="kf-f-name">{{f.name}}</view>
+                  <view class="muted kf-f-meta">{{f.icon}} {{f.src}} · {{f.size}} · {{f.perm}}</view>
+                </view>
+              </view>
+              <view class="muted kf-more" wx:if="{{l2.file_count > l2.files.length}}">另有 {{l2.file_count - l2.files.length}} 件同主题文件，蓝图导出后可见</view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="muted kf-note">{{sampleNote}}</view>
+    </view>
+  </block>
+
+  <!-- v0.9.7 自绘弹窗系统：支付/海报占位（M5 接通） -->
+  <qw-pop id="qwpop" bind:popstate="onPopState" />
+
+  <view class="safe-bottom"></view>
+</view>
