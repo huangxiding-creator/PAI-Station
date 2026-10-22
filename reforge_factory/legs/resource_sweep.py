@@ -20,10 +20,11 @@ REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "reforge_factory"))
 from ammo_pool import ingest_files  # noqa: E402
 
+import re  # noqa: E402
+
 KW = re.compile(r"海外|出海|国际工程|一带一路|FIDIC|对外承包|国际电力|"
                 r"[Ii]nternational|overseas|FIDIC|[Tt]urnkey|国别|境外",
                 )
-import re  # noqa: E402
 
 ROOTS = [
     ("04智库", REPO / "04 智库"),
