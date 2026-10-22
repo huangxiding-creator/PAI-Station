@@ -105,6 +105,36 @@ def load_bridge_config() -> tuple:
     return engine_url.rstrip("/"), bridge_key
 
 
+def _recompute_fen(bp: dict, version: str) -> int:
+    """按蓝图真值复算 A 档价（fen）：base 2900 + gb*200；含 md ×1.5；含 import +1900（可组合）。缺数据返 0。"""
+    try:
+        gb = float((bp.get("stats") or {}).get("gb") or 0)
+        fen = 2900 + gb * 200
+        v = (version or "original").lower()
+        if "md" in v or "markdown" in v:
+            fen = round(fen * 1.5)
+        if "import" in v or "ima_pack" in v:
+            fen += 1900
+        return int(round(fen))
+    except Exception:
+        return 0
+
+
+def _wecom_alert(otn: str, got_fen: int, expect_fen: int) -> None:
+    """篡价疑似告警（KB_WECOM_NOTIFY=0 静默，与 deliver 同闸；凭据零涉）。"""
+    if str(os.environ.get("KB_WECOM_NOTIFY", "1")).strip() == "0":
+        return
+    try:
+        import subprocess
+        subprocess.run(
+            ["py", "-X", "utf8", str(Path(__file__).resolve().parents[2] / "tools" / "notify_approval_wecom.py"),
+             "KB篡价疑警（已拦截不发）",
+             f"订单 {otn} 云端价 {got_fen}fen ≠ 蓝图真值 {expect_fen}fen，已不ack留云端待人工核"],
+            timeout=15, capture_output=True)
+    except Exception:
+        pass  # 告警腿失败不阻断主链（拦截本身已生效）
+
+
 # ── 拉取主链 ──────────────────────────────────────────────────────────────
 
 class BridgeError(RuntimeError):
@@ -155,6 +185,21 @@ def pull_once(base_dir, engine_url: str = "", bridge_key: str = "",
                                     .get("version_sha") or "", bp_dir)
         if bp_path is None:
             summary["unresolved"].append(otn)   # 不 ack：留云端下轮重拉
+            continue
+        # judge-W11#1 封门：云端 total_fen 必须与 sha 对应蓝图的服务端复算价一致
+        # （引擎侧 gb 系客户端自报——攻击面=低价摘要下单大库；本地按蓝图真值复核，不符不ack+告警）
+        try:
+            with open(bp_path, encoding="utf-8") as f:
+                bp_truth = json.load(f)
+            expect_fen = _recompute_fen(bp_truth, (o.get("version") or "original"))
+            got_fen = int(o.get("total_fen") or 0)
+            if expect_fen and abs(got_fen - expect_fen) > 50:
+                summary.setdefault("price_mismatch", []).append(
+                    {"otn": otn, "cloud_fen": got_fen, "truth_fen": expect_fen})
+                _wecom_alert(otn, got_fen, expect_fen)
+                continue   # 不写单不ack：留云端待人工/下轮处置，绝不低价发大库
+        except Exception as e:
+            summary["unresolved"].append(f"{otn}:verify_exc:{type(e).__name__}")
             continue
         total_fen = int(o.get("total_fen") or 0)
         order = {
