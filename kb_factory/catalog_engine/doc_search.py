@@ -51,6 +51,7 @@ def search_wenku_docs(domain_info: dict, max_queries: int = 10) -> list[DocFile]
                     badge=m.badge or "green_free",
                     perm=m.perm or "green",
                     url=getattr(m, "source_url", None),
+                    doc_id=(getattr(m, "extra", None) or {}).get("doc_id"),  # wenku docID
                 ))
         time.sleep(0.1)  # adapter 内建频控
 
@@ -86,6 +87,7 @@ def search_ima_docs(domain_info: dict) -> list[DocFile]:
                 fmt=m.fmt or "kb",
                 badge=m.badge or "ima_public",
                 perm=m.perm or "green",
+                doc_id=(getattr(m, "extra", None) or {}).get("kb_id"),  # ima kb_id
             ))
     except Exception:
         pass
@@ -117,6 +119,7 @@ def search_local_corpus(domain_info: dict) -> list[DocFile]:
                     size_kb=int(p.stat().st_size / 1024),
                     badge="self_owned",
                     perm="green",
+                    doc_id=name,  # 本地文件名即标识（在盘可点验）
                 ))
         for p in root.rglob("*.md"):
             name = p.stem
@@ -128,6 +131,7 @@ def search_local_corpus(domain_info: dict) -> list[DocFile]:
                     size_kb=int(p.stat().st_size / 1024),
                     badge="self_owned",
                     perm="green",
+                    doc_id=name,  # 本地文件名即标识（在盘可点验）
                 ))
     return docs
 
