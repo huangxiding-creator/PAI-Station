@@ -75,12 +75,20 @@ def _clean_name(s: str) -> str:
     return _EXT_RE.sub("", s)
 
 
+def _field(doc, key, default=None):
+    """取文档字段：dict 按键、对象按属性（DocFile 等 v2 文档）两界通吃。"""
+    if isinstance(doc, dict):
+        return doc.get(key, default)
+    return getattr(doc, key, default)
+
+
 def _doc_name(doc) -> str:
     """文档名称类字段（不做正文匹配，只供分型/命名）。"""
     if isinstance(doc, str):
         return _clean_name(doc)
     return " ".join(
-        _clean_name(doc[k]) for k in _NAME_KEYS if isinstance(doc.get(k), str) and doc[k]
+        _clean_name(v) for k in _NAME_KEYS
+        if isinstance(v := _field(doc, k), str) and v
     )
 
 
@@ -90,7 +98,7 @@ def _doc_text(doc) -> str:
         return doc
     parts = [_doc_name(doc)]
     for k in _TEXT_KEYS:
-        v = doc.get(k)
+        v = _field(doc, k)
         if isinstance(v, str) and v:
             parts.append(v[:2000])
     return " ".join(parts)
@@ -100,8 +108,8 @@ def _doc_type(doc) -> str | None:
     if isinstance(doc, str):
         return None
     for k in _TYPE_KEYS:
-        v = doc.get(k)
-        if isinstance(v, str) and v:
+        v = _field(doc, k)
+        if isinstance(v, str) and v and v != "其他":
             return v
     return None
 
