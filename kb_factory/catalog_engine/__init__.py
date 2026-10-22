@@ -13,7 +13,7 @@ v2 模块：document_engine(文件驱动) + doc_search(多源检索) +
 确定性纪律：全流程无随机源、无时钟依赖；同输入必同输出。
 """
 from .engine import build_blueprint, validate_need, ENGINE_VERSION
-from . import taxonomy, blueprint, metadata
+from . import taxonomy, blueprint, metadata, document_engine, structure_miner
 
 __all__ = ["build_blueprint", "validate_need", "ENGINE_VERSION",
-           "taxonomy", "blueprint", "metadata"]
+           "taxonomy", "blueprint", "metadata", "document_engine", "structure_miner"]
