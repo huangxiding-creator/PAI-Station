@@ -63,7 +63,7 @@ LEDGER = ROOT / "data" / "dispatch_ledger.json"
 PROFILES = ROOT / "data" / "profiles_v3"
 LOCK = ROOT / "data" / "corps_v3.lock"
 CHANGELOG = Path(r"E:\AI-Station\data\state\network_changelog.jsonl")
-WEAIPO_HEARTBEAT = Path(r"E:\CPOPC\We-AIPO\data\state\production_heartbeat")
+WEAIPO_HEARTBEAT = Path(r"F:\We-AIPO\data\state\production_heartbeat")
 WEAIPO_STALE_S = 600
 MIN_CREDITS = 60
 DAILY_CAP = 1
@@ -76,7 +76,9 @@ VARIANTS = [
 ]
 GROUP_PREF = ("手动切换", "漏网之鱼", "Others", "Proxy")
 EXCLUDE_KEY = ("香港", "HK")
-PREF_ORDER = ("美国", "新加坡", "日本", "台湾", "韩国", "SG", "US", "JP")
+# 1022 用户宪法修订: ①风控窗废止(时间随时启动) ②节点轮换废止——
+# Clash 出口锁定单一国家不切换 (沿 NB 安全宪法: 之前的出口=美国, 美国 02 优先)
+PREF_ORDER = ("美国 02", "美国", "US")
 
 # ------------------------------------------------ 美东窗口铁律 (1010 用户令)
 # 「军团一定要选择美东晚上11点到次日凌晨7点时间段跑」= America/New_York
@@ -98,16 +100,10 @@ def et_now() -> "_dt.datetime":
 
 
 def et_window_open() -> bool:
-    """美东 23:00–07:00 窗内? (铁律, 默认无覆盖 — 唯一例外链:
-    ①本函数测试 ②1022 用户令「军团现在就开始」= env CORPS_WINDOW_OVERRIDE=1
-    显式覆盖, 风控自担, 班内护栏(日帽/限单/M2轮换)仍然全在)"""
-    import os
-    if os.environ.get("CORPS_WINDOW_OVERRIDE") == "1":
-        log("⚠️ 窗口铁律被 1022 用户令显式覆盖 (CORPS_WINDOW_OVERRIDE=1), "
-            "护栏(日帽/限单/轮换/冷却)仍全在")
-        return True
-    h = et_now().hour
-    return h >= 23 or h < 7
+    """1022 用户宪法修订: 美东风控窗废止, 时间随时启动。
+    替代铁律 = Clash 出口锁定单一国家不切换 (PREF_ORDER 已锁美国)。
+    (1010 窗口令被 1022 令明示取代; 历史注释留档)"""
+    return True
 
 
 # ---------------------------------------------------------------- 小工具
@@ -160,8 +156,8 @@ def weaipo_busy() -> bool:
 
 # 1003 用户正: WeAIPO 国外网是间歇用 (需要时才用), 心跳=进程活着≠在用网
 # (发文/互动等国内操作也刷心跳). 精确判据用 WeAIPO 侧自报状态文件 (只读):
-WEAIPO_RUN_STATE = Path(r"E:\CPOPC\We-AIPO\data\state\run_state.json")
-WEAIPO_NB_WAVE = Path(r"E:\CPOPC\We-AIPO\data\state\nb_wave.json")
+WEAIPO_RUN_STATE = Path(r"F:\We-AIPO\data\state\run_state.json")
+WEAIPO_NB_WAVE = Path(r"F:\We-AIPO\data\state\nb_wave.json")
 
 
 def weaipo_net_busy() -> bool:
