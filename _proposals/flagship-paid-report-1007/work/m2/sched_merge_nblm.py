@@ -12,10 +12,37 @@ import re
 import sys
 from pathlib import Path
 
+REPO = Path(__file__).resolve().parents[2]
 M2 = Path(__file__).resolve().parent
 SCHED = M2 / "sched"
 OUT = SCHED / "nblm_out"
 CJK_GATE = 200_000
+
+
+def finalize(book_md: Path) -> int:
+    """1022 宪法令: 合并完成后必须专业排版 — 自动串 docx→排版→PDF 全链.
+    md → report_to_docx → docx_paiban(通用件, 研报预设) → Word COM PDF."""
+    import subprocess
+    docx = book_md.with_suffix(".docx")
+    r1 = subprocess.run(
+        [sys.executable, "-X", "utf8",
+         str(REPO / "tools" / "report_to_docx.py"), str(book_md), str(docx)],
+        capture_output=True, text=True, encoding="utf-8",
+        errors="replace", timeout=1800)
+    if r1.returncode != 0 or not docx.exists():
+        print(f"[finalize] ✗ docx 生成失败: {(r1.stderr or '')[-200:]}")
+        return 1
+    print(f"[finalize] docx ✓ {docx.stat().st_size:,}B")
+    r2 = subprocess.run(
+        [sys.executable, "-X", "utf8",
+         str(REPO / "tools" / "docx_paiban.py"), str(docx),
+         "--out", str(book_md.with_name(book_md.stem + "_排版版.docx")),
+         "--pdf"],
+        capture_output=True, text=True, encoding="utf-8",
+        errors="replace", timeout=3600)
+    tail = (r2.stdout or "")[-300:]
+    print(("[finalize] " + ("✓ " if r2.returncode == 0 else "✗ ")) + tail)
+    return 0 if r2.returncode == 0 else 2
 
 
 def main() -> int:
@@ -47,6 +74,14 @@ def main() -> int:
     if missing:
         status += f" | interim缺章{missing}"
     print(f"[merge] {dst.name} 落盘 {dst.stat().st_size:,}B | 全书CJK {cjk:,} {status}")
+    if missing:
+        return 1
+    # 1022 宪法令: 合并完成→专业排版硬门 (过 CJK 门后自动全链)
+    if '--no-finalize' not in sys.argv:
+        rc = finalize(dst)
+        if rc != 0:
+            print('[merge] ⚠️ 排版链未全绿 — 成书在但排版门未过, 勿上架')
+            return 3
     return 0
 
 
