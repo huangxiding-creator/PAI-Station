@@ -20,6 +20,10 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SMTP_SECRET_DEFAULT = REPO_ROOT / "07 任务" / "自动建库Agent" / "_credentials" / "smtp.secret.ini"
+
+# 测试保留域（RFC 2606/6761 子集 + 常见测试域名）——deliver 层硬护栏，防真发（1022 退信事故）
+_RESERVED_DOMAINS = frozenset({"example.com", "example.org", "example.net",
+                               "test.com", "test", "invalid", "localhost"})
 WECOM_NOTIFY_SCRIPT = REPO_ROOT / "tools" / "notify_approval_wecom.py"
 ATTACH_LIMIT = 50 * 1024 * 1024   # 邮箱附件上限 50MB
 SENDER_NAME = "总包智库知识库交付"
@@ -116,6 +120,12 @@ def deliver(order, zip_path, *, cfg: dict | None = None,
     paths = [zp] + [Path(e) for e in extras if Path(e).is_file()]
     if cfg is None:
         cfg = load_smtp_config(smtp_secret)
+    # 保留域护栏（1022 退信事故根修）：example.com 等测试保留域一律禁真发——
+    # 无论配置是否在位，测试地址只允许企微降级路（KB_SMTP_ALLOW_RESERVED=1 显式豁免）
+    _reserved = (order.email or "").lower().rsplit("@", 1)[-1] in _RESERVED_DOMAINS \
+        and os.environ.get("KB_SMTP_ALLOW_RESERVED", "0") != "1"
+    if _reserved:
+        cfg = None
     if cfg is None:
         text = f"{order.id}|{order.email}|{'|'.join(str(p) for p in paths)}"
         notified = notify("KB交付待发", text)

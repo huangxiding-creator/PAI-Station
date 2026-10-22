@@ -90,7 +90,8 @@ def make_order(tmp: Path, bp_path: Path, order_id: str = "ORD-W7-001") -> Path:
     p = od / f"{order_id}.json"
     p.write_text(json.dumps({
         "id": order_id, "need_text": "水利水电EPC 知识库", "blueprint_ref": str(bp_path),
-        "email": "buyer@example.com", "version_selection": "original",
+        # 非 RFC2606 保留域（保留域已被 deliver 硬护栏拦→wecom，ac5 需走 SMTP 可用路）
+        "email": "buyer@demo-buyer.cn", "version_selection": "original",
         "price": "199.00", "paid_at": "2026-10-22T10:00:00", "status": "paid",
     }, ensure_ascii=False), encoding="utf-8")
     return p
@@ -244,6 +245,7 @@ def test_w7_ac4_smtp_missing_wecom_fallback(tmp_path, monkeypatch):
     zip_path.write_bytes(b"PK-fake")
 
     calls = []
+    monkeypatch.setenv("KB_WECOM_NOTIFY", "1")   # conftest 全局静默=0，此测要验降级真走企微
     monkeypatch.setattr(subprocess, "run", lambda cmd, **kw: calls.append(cmd) or _FakeProc(0))
     res = deliver.deliver(order, zip_path,
                           smtp_secret=str(tmp_path / "missing.secret"))
