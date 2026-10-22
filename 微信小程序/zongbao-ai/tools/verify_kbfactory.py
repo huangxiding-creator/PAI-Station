@@ -182,6 +182,22 @@ if node:
     out = (r.stdout or "").strip().splitlines()
     check("W6 支付/订单冒烟 node 全绿", r.returncode == 0, out[-1] if out else "")
 
+# ── 9. v2 document_driven 渲染适配（模式检测·真实检索徽章·超越层配比条）──
+kbwxss = (ROOT / PAGE / "kbfactory.wxss").read_text(encoding="utf-8")
+check("v2 模式检测（页面 js+wxml 认得 document_driven）",
+      "document_driven" in kbjs and "document_driven" in kbwxml)
+check("v2 文件徽章 真实检索/占位（wxml 文案+wxss 徽章样式）",
+      "✓ 真实检索" in kbwxml and "○ 占位" in kbwxml
+      and ".kf-real" in kbwxss and ".kf-real.on" in kbwxss)
+mrs = re.search(r"_buildRatioSegs\(bp\)\s*\{[\s\S]*?\n  \}", kbjs)
+check("v2 配比按超越层名渲染（ratioSegs 派生·剔除 core/field/guide 兼容键）",
+      bool(mrs) and "document_driven" in mrs.group(0)
+      and all(k in mrs.group(0) for k in ("core", "field", "guide"))
+      and re.search(r'wx:for="\{\{ratioSegs\}\}"', kbwxml) is not None)
+check("v2 超越层第四段配色 + L1 名称/描述渲染锚",
+      "kf-seg-plus" in kbwxss and "kf-dot-plus" in kbwxss
+      and "{{l1.name}}" in kbwxml and "{{l1.theme}}" in kbwxml)
+
 # ── 收口 ──
 fails = RESULTS.count(False)
 print(("ALL PASS (%d/%d checks) · W4+W6 DoD 绿" % (len(RESULTS) - fails, len(RESULTS))) if not fails

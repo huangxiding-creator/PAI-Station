@@ -1,6 +1,8 @@
 // 知识库工厂页 — KB-FACTORY W4 v1 + W6 支付/导出/整库下单
 // 链路：输入(文字/语音) → utils/kbfactory_service.generate（v1 本地真样本+八阶段模拟，M6 接后端）
 // → 蓝图渲染（三级树折叠 · 配比三段条 · 动态报价）
+//   v2 document_driven 蓝图：tree.l1=超越层（名称+描述）、文件带 real 真实检索标记、
+//   配比键=超越层名（core/field/guide 为兼容键）——同页双模式自适应，v1 渲染不变。
 // → W6：导出蓝图 ¥0.1（pay 解锁→离屏 canvas 绘长图→存相册/预览）· 免费分享卡（各平台可看）
 //        · 带走整库（确认层三版本单选+邮箱校验+合规三句 → kb_order 支付 → 履约单提交/本地订单箱 → 履约中状态页）。
 // 合规铁律：iOS 隐藏一切付费入口（paySupported 双门：js 守卫+wxml wx:if），导出件本身各平台可看。
@@ -25,6 +27,7 @@ Page({
     stages: [],   // 八阶段施工直播
     bp: null,     // 蓝图样本（service 层视图）
     tree: [],     // 三级树渲染模型（open 折叠态）
+    ratioSegs: [],  // 配比条渲染模型：v1 三段(core/field/guide)｜v2 按超越层名 N 段
     mdPrice: '',  // Markdown 版价（×1.5，实测计算非手填）
     sampleNote: '', // 样本截断注明（演示数据与全量真值的边界，如实展示）
     paySupported: true, // W6：iOS=false → 隐藏付费入口（虚拟支付铁律，双门之一）
@@ -69,7 +72,7 @@ Page({
     }
     if (this.data.building) return;
     this.setData({
-      building: true, built: false, bp: null, tree: [], mdPrice: '',
+      building: true, built: false, bp: null, tree: [], ratioSegs: [], mdPrice: '',
       stages: kbf.STAGES.map((s) => ({ name: s.name, line: s.line, count: '', state: '' })),
     });
     kbf.generate(t, (st) => {
@@ -82,6 +85,7 @@ Page({
       this.setData({
         building: false, built: true, bp: bp,
         tree: this._buildTree(bp),
+        ratioSegs: this._buildRatioSegs(bp),
         mdPrice: this._round1(bp.quote.total * bp.quote.md_factor),
         sampleNote: (bp._sample && bp._sample.note) || '',
       });
@@ -107,6 +111,23 @@ Page({
         files: l2.files || [], open: false,
       })),
     }));
+  },
+
+  // 配比条渲染模型：v2 document_driven 时键=超越层名（合规底线/技术标准/操作实务/参考工具，
+  // core/field/guide 为 enrich 兼容键须剔除），按层名渲染 N 段；v1 仍为三段固定档
+  _buildRatioSegs(bp) {
+    const r = bp.ratio || {};
+    if (bp.tree && bp.tree.mode === 'document_driven') {
+      const CLS = ['core', 'field', 'guide', 'plus'];
+      return Object.keys(r)
+        .filter((k) => k !== 'core' && k !== 'field' && k !== 'guide')
+        .map((k, i) => ({ name: k, pct: r[k] || 0, cls: CLS[i] || 'plus' }));
+    }
+    return [
+      { name: '核心主干', pct: r.core || 0, cls: 'core' },
+      { name: '领域补充', pct: r.field || 0, cls: 'field' },
+      { name: '导读合成', pct: r.guide || 0, cls: 'guide' },
+    ];
   },
 
   toggleL1(e) {

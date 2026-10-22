@@ -185,6 +185,9 @@
 .kf-dot-field { background: var(--draft, #1d6fd0); }
 .kf-dot-guide { background: var(--t-ok, #2f9e63); }
 
+/* ══ v2 document_driven：超越层第四段配色 + 真实检索/占位徽章 ══ */
+.kf-seg-plus, .kf-dot-plus { background: var(--t-amber-deep, #b7791f); }
+
 /* ══ 报价卡 ══ */
 .kf-total {
   font-size: 64rpx;
@@ -328,6 +331,22 @@
   text-overflow: ellipsis;
 }
 .kf-f-meta { font-size: 20rpx; margin-top: 2rpx; }
+/* v2 文件徽章：✓ 真实检索（绿描边）/ ○ 占位（灰描边）；v1 无 real 字段不渲染 */
+.kf-real {
+  flex-shrink: 0;
+  font-size: 18rpx;
+  font-weight: 700;
+  letter-spacing: 1rpx;
+  border-radius: 6rpx;
+  padding: 4rpx 10rpx;
+  border: 2rpx solid var(--line);
+  color: var(--muted);
+}
+.kf-real.on {
+  border-color: rgba(47, 158, 99, 0.5);
+  color: var(--t-ok, #2f9e63);
+  background: rgba(47, 158, 99, 0.08);
+}
 .kf-more { font-size: 20rpx; padding-top: 10rpx; }
 .kf-note { margin-top: 20rpx; font-size: 20rpx; line-height: 1.6; padding-top: 16rpx; }
 

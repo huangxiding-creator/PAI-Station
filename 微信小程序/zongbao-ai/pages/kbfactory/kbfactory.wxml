@@ -52,7 +52,7 @@
     <!-- 顶部统计带 -->
     <view class="card ticks rise" style="animation-delay: 90ms">
       <view class="kf-k kicker kicker-on-paper">STATS · 图签统计带</view>
-      <view class="kf-domain">{{bp.domain}}<text class="kf-mode mono">{{bp.tree.mode === 'six_domains' ? '六域骨架' : '通用骨架'}}</text></view>
+      <view class="kf-domain">{{bp.domain}}<text class="kf-mode mono">{{bp.tree.mode === 'document_driven' ? '真实文件' : (bp.tree.mode === 'six_domains' ? '六域骨架' : '通用骨架')}}</text></view>
       <view class="kf-stats">
         <view class="kf-stat">
           <view class="kf-stat-n mono">{{bp.stats.files}}</view>
@@ -69,18 +69,17 @@
       </view>
     </view>
 
-    <!-- 配比仪表盘 -->
+    <!-- 配比仪表盘（v2 document_driven：按超越层名 N 段；v1：三段固定档） -->
     <view class="card ticks rise" style="animation-delay: 120ms">
       <view class="kf-k kicker kicker-on-paper">RATIO · 配比仪表盘</view>
       <view class="kf-bar">
-        <view class="kf-seg kf-seg-core" style="width: {{bp.ratio.core}}%;"></view>
-        <view class="kf-seg kf-seg-field" style="width: {{bp.ratio.field}}%;"></view>
-        <view class="kf-seg kf-seg-guide" style="width: {{bp.ratio.guide}}%;"></view>
+        <view class="kf-seg kf-seg-{{item.cls}}" style="width: {{item.pct}}%;"
+          wx:for="{{ratioSegs}}" wx:key="name"></view>
       </view>
       <view class="kf-ratio-legend">
-        <view class="kf-rl"><view class="kf-dot kf-dot-core"></view>核心主干<text class="mono">{{bp.ratio.core}}%</text></view>
-        <view class="kf-rl"><view class="kf-dot kf-dot-field"></view>领域补充<text class="mono">{{bp.ratio.field}}%</text></view>
-        <view class="kf-rl"><view class="kf-dot kf-dot-guide"></view>导读合成<text class="mono">{{bp.ratio.guide}}%</text></view>
+        <view class="kf-rl" wx:for="{{ratioSegs}}" wx:key="name">
+          <view class="kf-dot kf-dot-{{item.cls}}"></view>{{item.name}}<text class="mono">{{item.pct}}%</text>
+        </view>
       </view>
     </view>
 
@@ -126,6 +125,9 @@
                   <view class="kf-f-name">{{f.name}}</view>
                   <view class="muted kf-f-meta">{{f.icon}} {{f.src}} · {{f.size}} · {{f.perm}}</view>
                 </view>
+                <!-- v2 document_driven：real 真实检索标记徽章（v1 无此字段不显示） -->
+                <text wx:if="{{f.real === true || f.real === false}}"
+                  class="kf-real {{f.real ? 'on' : ''}}">{{f.real ? '✓ 真实检索' : '○ 占位'}}</text>
               </view>
               <view class="muted kf-more" wx:if="{{l2.file_count > l2.files.length}}">另有 {{l2.file_count - l2.files.length}} 件同主题文件，蓝图导出后可见</view>
             </view>
