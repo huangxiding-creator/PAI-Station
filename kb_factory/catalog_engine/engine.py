@@ -20,6 +20,7 @@ import json
 
 from . import blueprint as bp
 from . import taxonomy
+from .lint import lint_blueprint
 from .metadata import (BADGES, EXT_BYTES, PERM_BY_BADGE, badge_for_index, make_slot,
                        pick_ext, sanitize_filename)
 
@@ -68,13 +69,26 @@ def build_blueprint(raw_need: dict, mode: str = "document_driven") -> dict:
     """蓝图生成入口——mode 选择引擎：
     - document_driven: 检索真实法规/标准 → 从文件体系提炼框架（1022 用户令）
     - taxonomy: 通用分类法扇出（v1 原始模式，fallback）
+
+    生成后自动过反模式 lint 发布门（P0 #10）：结果入 provenance.lint 供决策，
+    lint 失败不阻止输出，overall_pass=False 时打印警告。
     """
     if mode == "document_driven":
         bp = _try_document_driven(raw_need)
         if bp is not None:
-            return bp
+            return _attach_lint(bp)
         # 降级：检索不足 → fallback 到 taxonomy
-    return _build_blueprint_taxonomy(raw_need)
+    return _attach_lint(_build_blueprint_taxonomy(raw_need))
+
+
+def _attach_lint(bp: dict) -> dict:
+    """反模式 lint 发布门：结果记入 provenance.lint（确定性，不阻断输出）。"""
+    report = lint_blueprint(bp)
+    bp["provenance"]["lint"] = {"passed": report.passed, "failed": report.failed,
+                                "warnings": report.warnings, "overall_pass": report.overall_pass}
+    if not report.overall_pass:
+        print(f"[lint] 警告: 蓝图反模式 lint 未全过 — {report.summary}")
+    return bp
 
 
 def _try_document_driven(raw_need: dict) -> Optional[dict]:
