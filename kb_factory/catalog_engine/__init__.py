@@ -10,7 +10,11 @@
 禁止 random/randomize 无种子使用。
 """
 from .engine import build_blueprint, validate_need, ENGINE_VERSION
-from . import taxonomy, blueprint, metadata
+from .evidence import (Evidence, anchor_file, evidence_from_doc, validate_evidence,
+                       render_evidence_appendix)
+from . import taxonomy, blueprint, metadata, evidence
 
 __all__ = ["build_blueprint", "validate_need", "ENGINE_VERSION",
-           "taxonomy", "blueprint", "metadata"]
+           "Evidence", "anchor_file", "evidence_from_doc", "validate_evidence",
+           "render_evidence_appendix",
+           "taxonomy", "blueprint", "metadata", "evidence"]
