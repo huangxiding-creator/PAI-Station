@@ -1,0 +1,716 @@
+{
+  "demo": false,
+  "product": "水利安全AI眼镜 · 发现隐患、预判风险",
+  "style": "repo",
+  "width": 1080,
+  "height": 1920,
+  "fps": 30,
+  "duration": 50.0,
+  "repo": "E:\\AI-Station\\leqi-dashboard",
+  "audioRequired": true,
+  "sfxRequired": true,
+  "typography": {
+    "mode": "bilingual",
+    "zhFont": "PingFang SC / Microsoft YaHei",
+    "enFont": "Segoe UI / Consolas (tabular-nums for readouts)",
+    "zhStyle": "sans-serif"
+  },
+  "shots": [
+    {
+      "id": "open",
+      "start": 0.0,
+      "end": 5.87,
+      "type": "brand-open",
+      "headline": "发现隐患、预判风险",
+      "headlineEn": "DISCOVER HAZARDS · PREDICT RISKS",
+      "plainExplanation": "打开水利安全AI眼镜的官网首页，产品形象与宣传口号同时出现，告诉观众这支片子讲什么。",
+      "description": "以 AI 眼镜为第一视角终端，测出数值、判出结论、引出条款",
+      "descriptionAt": 2.6,
+      "claim": false,
+      "component": "public/site/index.html（官网真实页面 iframe）",
+      "actions": [
+        {
+          "id": "o1-waterline",
+          "at": 0.2,
+          "description": "深水蓝舞台底部水位线升起",
+          "soundRequired": true
+        },
+        {
+          "id": "o2-hero-in",
+          "at": 0.6,
+          "description": "官网 hero 页缓入（缩放 1.05→1.0）",
+          "soundRequired": true
+        },
+        {
+          "id": "o3-title-reveal",
+          "at": 2.6,
+          "description": "片标题「发现隐患 / 预判风险」逐字入场",
+          "soundRequired": false
+        },
+        {
+          "id": "o4-chips-in",
+          "at": 4.6,
+          "description": "知识库三枚指标 chips 弹入",
+          "soundRequired": true
+        }
+      ]
+    },
+    {
+      "id": "claims",
+      "start": 5.87,
+      "end": 11.74,
+      "type": "metrics",
+      "headline": "五项硬指标",
+      "headlineEn": "HARD METRICS",
+      "plainExplanation": "三块指标卡依次出现，数字从零滚到实测值：识别准确率、巡检耗时、单台成本，每条都标了出处。",
+      "description": "官网实测发布值 · 每个数字都有出处",
+      "descriptionAt": 0.4,
+      "claim": true,
+      "source": [
+        "file:../src/site_index.html"
+      ],
+      "component": "film-layer typography（数据取自官网 VALUE 01/02/04 原文）",
+      "actions": [
+        {
+          "id": "c1-num1-land",
+          "at": 1.6,
+          "description": "96.5% 识别准确率滚动落定",
+          "soundRequired": true
+        },
+        {
+          "id": "c2-num2-land",
+          "at": 3.1,
+          "description": "巡检 4-6h→1-1.5h 滚动落定",
+          "soundRequired": true
+        },
+        {
+          "id": "c3-num3-land",
+          "at": 4.6,
+          "description": "单台成本 16000→3000 元下滚落定",
+          "soundRequired": true
+        }
+      ]
+    },
+    {
+      "id": "scan",
+      "start": 11.74,
+      "end": 18.26,
+      "type": "field-demo",
+      "headline": "扫描隐患",
+      "headlineEn": "SCAN FOR HAZARDS",
+      "plainExplanation": "戴上眼镜看现场：语音说「扫描隐患」，快门一闪，屏幕上从地面到作业面拉出一条测距线，报出 2.31 米正负 0.08。",
+      "description": "第一视角扫描 · 参考物锚定定量测距",
+      "descriptionAt": 1.3,
+      "claim": true,
+      "source": [
+        "file:../src/site_index.html"
+      ],
+      "component": "public/material/scene_write.jpg（产品实拍现场）+ 测距 HUD（SVG）",
+      "actions": [
+        {
+          "id": "s1-crosshair",
+          "at": 0.7,
+          "description": "第一视角十字准星出现",
+          "soundRequired": true
+        },
+        {
+          "id": "s2-voice-bubble",
+          "at": 1.3,
+          "description": "语音指令气泡「扫描隐患」弹出",
+          "soundRequired": true
+        },
+        {
+          "id": "s3-shutter",
+          "at": 2.0,
+          "description": "AI 相机快门框闪动",
+          "soundRequired": true
+        },
+        {
+          "id": "s4-line-draw",
+          "at": 2.8,
+          "description": "测量线从地面锚点拉到作业面",
+          "soundRequired": true
+        },
+        {
+          "id": "s5-value-land",
+          "at": 4.4,
+          "description": "测量值 2.31m±0.08 等宽落定（全片±σ母题）",
+          "soundRequired": true
+        }
+      ]
+    },
+    {
+      "id": "verdict",
+      "start": 18.26,
+      "end": 24.78,
+      "type": "verdict",
+      "headline": "三态判定",
+      "headlineEn": "THREE-STATE VERDICT",
+      "plainExplanation": "把 2.0 米的规范阈值线和测量区间画在同一把尺上：区间整体越线，判「不符合」，依据条款卡片随即弹出。",
+      "description": "测量区间整体越过阈值 → 判「不符合」，条款依据同步弹出",
+      "descriptionAt": 2.2,
+      "claim": true,
+      "source": [
+        "file:../src/site_index.html"
+      ],
+      "component": "阈值比对轴（SVG）+ 条款卡（SL 398-2007 官网政策依据节）",
+      "actions": [
+        {
+          "id": "v1-threshold-draw",
+          "at": 0.4,
+          "description": "2.0m 规范阈值虚线画出",
+          "soundRequired": true
+        },
+        {
+          "id": "v2-band-in",
+          "at": 1.1,
+          "description": "测量区间带 [2.23,2.39] 滑入比对",
+          "soundRequired": false
+        },
+        {
+          "id": "v3-verdict-card",
+          "at": 2.2,
+          "description": "橙色判定卡「不符合·构成高处作业」弹入",
+          "soundRequired": true
+        },
+        {
+          "id": "v4-clause-card",
+          "at": 3.4,
+          "description": "条款卡 SL 398-2007 从线端弹出",
+          "soundRequired": true
+        },
+        {
+          "id": "v5-chip1",
+          "at": 4.6,
+          "description": "「量化判定写入台账」chip 弹出",
+          "soundRequired": true
+        },
+        {
+          "id": "v6-chip2",
+          "at": 4.9,
+          "description": "「企微推送 3 分钟闭环」chip 弹出",
+          "soundRequired": true
+        }
+      ]
+    },
+    {
+      "id": "loop",
+      "start": 24.78,
+      "end": 30.65,
+      "type": "mechanism",
+      "headline": "六项机制 · 一键闭环",
+      "headlineEn": "SIX MECHANISMS · ONE LOOP",
+      "plainExplanation": "查找、研判、预警、防范、处置、责任六个环节围成一圈逐个点亮，中间是智能体的真实界面，说明一条指令跑完全流程。",
+      "description": "水利安全生产风险管控「六项机制」全程免转录",
+      "descriptionAt": 0.2,
+      "claim": true,
+      "source": [
+        "file:../src/site_index.html"
+      ],
+      "component": "public/material/agent/智能体首界面.jpg（真实界面）+ 六边形环（SVG）",
+      "actions": [
+        {
+          "id": "l1-node1",
+          "at": 0.8,
+          "description": "节点「查找」点亮",
+          "soundRequired": true
+        },
+        {
+          "id": "l2-node2",
+          "at": 1.3,
+          "description": "节点「研判」点亮",
+          "soundRequired": true
+        },
+        {
+          "id": "l3-node3",
+          "at": 1.8,
+          "description": "节点「预警」点亮",
+          "soundRequired": true
+        },
+        {
+          "id": "l4-node4",
+          "at": 2.3,
+          "description": "节点「防范」点亮",
+          "soundRequired": true
+        },
+        {
+          "id": "l5-node5",
+          "at": 2.8,
+          "description": "节点「处置」点亮",
+          "soundRequired": true
+        },
+        {
+          "id": "l6-node6",
+          "at": 3.3,
+          "description": "节点「责任」点亮",
+          "soundRequired": true
+        },
+        {
+          "id": "l7-ring-close",
+          "at": 4.2,
+          "description": "环线闭合，光束扫过",
+          "soundRequired": true
+        }
+      ]
+    },
+    {
+      "id": "hub",
+      "start": 30.65,
+      "end": 36.52,
+      "type": "dashboard",
+      "headline": "数据后台 · 观澜",
+      "headlineEn": "GUANLAN CONSOLE",
+      "plainExplanation": "切到管理视角：观澜后台总览实拍屏先亮全貌，再推近放大，在册危险源、隐患数、整改时长的真实数字逐一滚出。",
+      "description": "一线每一次扫描，都汇入观澜后台",
+      "descriptionAt": 1.2,
+      "claim": true,
+      "source": [
+        "file:../material/console/overview.png"
+      ],
+      "component": "public/material/console/overview.png（观澜总览 2026-10-22 实拍）",
+      "actions": [
+        {
+          "id": "h1-establish",
+          "at": 0.0,
+          "description": "观澜总览实拍屏建立镜头",
+          "soundRequired": false
+        },
+        {
+          "id": "h2-kpi-push",
+          "at": 1.0,
+          "description": "推近 KPI 区",
+          "soundRequired": false
+        },
+        {
+          "id": "h3-kpi1-land",
+          "at": 3.7,
+          "description": "在册危险源 302 滚动落定",
+          "soundRequired": true
+        },
+        {
+          "id": "h4-kpi2-land",
+          "at": 4.1,
+          "description": "一般事故隐患 1418 滚动落定",
+          "soundRequired": true
+        },
+        {
+          "id": "h5-kpi3-land",
+          "at": 4.5,
+          "description": "重大事故隐患 309 滚动落定",
+          "soundRequired": true
+        },
+        {
+          "id": "h6-map-pulse",
+          "at": 3.8,
+          "description": "全国项目地图脉动光点",
+          "soundRequired": false
+        }
+      ]
+    },
+    {
+      "id": "predict",
+      "start": 36.52,
+      "end": 43.7,
+      "type": "predict",
+      "headline": "预判风险",
+      "headlineEn": "PREDICT THE RISK",
+      "plainExplanation": "后台的 AI 智脑给出下周隐患预测：130 宗正负 25，同样的±σ 写法呼应眼镜端的测量；趋势图从左到右擦出十二个月的真实态势。",
+      "description": "GLM 实时生成的风险预测 · ±σ 写法与眼镜端同源",
+      "descriptionAt": 0.4,
+      "claim": true,
+      "source": [
+        "file:../material/console/ai.png"
+      ],
+      "component": "public/material/console/ai.png + trend.png（观澜实拍）",
+      "actions": [
+        {
+          "id": "p1-push",
+          "at": 0.0,
+          "description": "AI 智脑屏推近风险预测卡",
+          "soundRequired": false
+        },
+        {
+          "id": "p2-predict-land",
+          "at": 1.5,
+          "description": "预测值 130±25 宗落定（母题音复现）",
+          "soundRequired": true
+        },
+        {
+          "id": "p3-trend-wipe",
+          "at": 2.9,
+          "description": "12 个月隐患态势实拍图从左擦出",
+          "soundRequired": true
+        },
+        {
+          "id": "p4-root-cause",
+          "at": 4.8,
+          "description": "根因分析 TOP 卡点亮",
+          "soundRequired": true
+        }
+      ]
+    },
+    {
+      "id": "close",
+      "start": 43.7,
+      "end": 50.0,
+      "type": "brand-close",
+      "headline": "水利安全AI眼镜",
+      "headlineEn": "WATER-SAFETY AI GLASSES",
+      "plainExplanation": "产品图回到画面中央，口号再读一遍，列出适用的六个高危行业，留下预约方式收尾。",
+      "description": "V3.0 定量测距分析版 · 实机演示预约：微信 w51817",
+      "descriptionAt": 0.6,
+      "claim": false,
+      "component": "public/site/hero_main.png + LOGO.png（产品图原件）",
+      "actions": [
+        {
+          "id": "e1-logo-in",
+          "at": 0.6,
+          "description": "LOGO 与产品图回归（呼应首帧构图）",
+          "soundRequired": false
+        },
+        {
+          "id": "e2-success-hit",
+          "at": 0.8,
+          "description": "尾段落定音",
+          "soundRequired": true
+        },
+        {
+          "id": "e3-beam-sweep",
+          "at": 2.6,
+          "description": "光束扫过标题",
+          "soundRequired": true
+        },
+        {
+          "id": "e4-chips-in",
+          "at": 3.2,
+          "description": "六大高危行业 chips 弹入",
+          "soundRequired": true
+        },
+        {
+          "id": "e5-contact-in",
+          "at": 4.4,
+          "description": "预约信息行入",
+          "soundRequired": true
+        },
+        {
+          "id": "e6-end-lock",
+          "at": 5.4,
+          "description": "尾帧锁定（第二封面）",
+          "soundRequired": false
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "ducking": {
+      "enabled": true
+    },
+    "music": {
+      "file": "assets/music.wav",
+      "gain": 0.62
+    },
+    "beatGrid": {
+      "bpm": 92,
+      "start": 0.0
+    },
+    "cues": [
+      {
+        "at": 0.065,
+        "actionId": "o1-waterline",
+        "file": "assets/sfx/sweep.wav",
+        "gain": 0.55,
+        "role": "sfx",
+        "kind": "sweep",
+        "syncOffset": 0.135
+      },
+      {
+        "at": 0.529,
+        "actionId": "o2-hero-in",
+        "file": "assets/sfx/whoosh.wav",
+        "gain": 0.6,
+        "role": "sfx",
+        "kind": "whoosh",
+        "syncOffset": 0.071
+      },
+      {
+        "at": 4.599,
+        "actionId": "o4-chips-in",
+        "file": "assets/sfx/pop.wav",
+        "gain": 0.7,
+        "role": "sfx",
+        "kind": "pop",
+        "syncOffset": 0.001
+      },
+      {
+        "at": 7.469,
+        "actionId": "c1-num1-land",
+        "file": "assets/sfx/click.wav",
+        "gain": 0.8,
+        "role": "sfx",
+        "kind": "click",
+        "syncOffset": 0.001
+      },
+      {
+        "at": 8.969,
+        "actionId": "c2-num2-land",
+        "file": "assets/sfx/click.wav",
+        "gain": 0.8,
+        "role": "sfx",
+        "kind": "click",
+        "syncOffset": 0.001
+      },
+      {
+        "at": 10.469,
+        "actionId": "c3-num3-land",
+        "file": "assets/sfx/click.wav",
+        "gain": 0.8,
+        "role": "sfx",
+        "kind": "click",
+        "syncOffset": 0.001
+      },
+      {
+        "at": 12.439,
+        "actionId": "s1-crosshair",
+        "file": "assets/sfx/click-alt.wav",
+        "gain": 0.65,
+        "role": "sfx",
+        "kind": "click",
+        "syncOffset": 0.001
+      },
+      {
+        "at": 13.039,
+        "actionId": "s2-voice-bubble",
+        "file": "assets/sfx/pop.wav",
+        "gain": 0.75,
+        "role": "sfx",
+        "kind": "pop",
+        "syncOffset": 0.001
+      },
+      {
+        "at": 13.605,
+        "actionId": "s3-shutter",
+        "file": "assets/sfx/sweep.wav",
+        "gain": 0.85,
+        "role": "sfx",
+        "kind": "sweep",
+        "syncOffset": 0.135
+      },
+      {
+        "at": 14.469,
+        "actionId": "s4-line-draw",
+        "file": "assets/sfx/whoosh.wav",
+        "gain": 0.7,
+        "role": "sfx",
+        "kind": "whoosh",
+        "syncOffset": 0.071
+      },
+      {
+        "at": 16.138,
+        "actionId": "s5-value-land",
+        "file": "assets/sfx/ding-dong.wav",
+        "gain": 0.9,
+        "role": "sfx",
+        "kind": "ding-dong",
+        "syncOffset": 0.002
+      },
+      {
+        "at": 18.589,
+        "actionId": "v1-threshold-draw",
+        "file": "assets/sfx/whoosh.wav",
+        "gain": 0.65,
+        "role": "sfx",
+        "kind": "whoosh",
+        "syncOffset": 0.071
+      },
+      {
+        "at": 20.458,
+        "actionId": "v3-verdict-card",
+        "file": "assets/sfx/error.wav",
+        "gain": 0.8,
+        "role": "sfx",
+        "kind": "error",
+        "syncOffset": 0.002
+      },
+      {
+        "at": 21.659,
+        "actionId": "v4-clause-card",
+        "file": "assets/sfx/pop.wav",
+        "gain": 0.8,
+        "role": "sfx",
+        "kind": "pop",
+        "syncOffset": 0.001
+      },
+      {
+        "at": 22.859,
+        "actionId": "v5-chip1",
+        "file": "assets/sfx/click.wav",
+        "gain": 0.75,
+        "role": "sfx",
+        "kind": "click",
+        "syncOffset": 0.001
+      },
+      {
+        "at": 23.159,
+        "actionId": "v6-chip2",
+        "file": "assets/sfx/click.wav",
+        "gain": 0.75,
+        "role": "sfx",
+        "kind": "click",
+        "syncOffset": 0.001
+      },
+      {
+        "at": 25.579,
+        "actionId": "l1-node1",
+        "file": "assets/sfx/click-alt.wav",
+        "gain": 0.7,
+        "role": "sfx",
+        "kind": "click",
+        "syncOffset": 0.001
+      },
+      {
+        "at": 26.079,
+        "actionId": "l2-node2",
+        "file": "assets/sfx/click-alt.wav",
+        "gain": 0.7,
+        "role": "sfx",
+        "kind": "click",
+        "syncOffset": 0.001
+      },
+      {
+        "at": 26.579,
+        "actionId": "l3-node3",
+        "file": "assets/sfx/click-alt.wav",
+        "gain": 0.7,
+        "role": "sfx",
+        "kind": "click",
+        "syncOffset": 0.001
+      },
+      {
+        "at": 27.079,
+        "actionId": "l4-node4",
+        "file": "assets/sfx/click-alt.wav",
+        "gain": 0.7,
+        "role": "sfx",
+        "kind": "click",
+        "syncOffset": 0.001
+      },
+      {
+        "at": 27.579,
+        "actionId": "l5-node5",
+        "file": "assets/sfx/click-alt.wav",
+        "gain": 0.7,
+        "role": "sfx",
+        "kind": "click",
+        "syncOffset": 0.001
+      },
+      {
+        "at": 28.079,
+        "actionId": "l6-node6",
+        "file": "assets/sfx/click-alt.wav",
+        "gain": 0.7,
+        "role": "sfx",
+        "kind": "click",
+        "syncOffset": 0.001
+      },
+      {
+        "at": 28.977,
+        "actionId": "l7-ring-close",
+        "file": "assets/sfx/resolve.wav",
+        "gain": 0.8,
+        "role": "sfx",
+        "kind": "resolve",
+        "syncOffset": 0.003
+      },
+      {
+        "at": 34.349,
+        "actionId": "h3-kpi1-land",
+        "file": "assets/sfx/click.wav",
+        "gain": 0.8,
+        "role": "sfx",
+        "kind": "click",
+        "syncOffset": 0.001
+      },
+      {
+        "at": 34.749,
+        "actionId": "h4-kpi2-land",
+        "file": "assets/sfx/click.wav",
+        "gain": 0.8,
+        "role": "sfx",
+        "kind": "click",
+        "syncOffset": 0.001
+      },
+      {
+        "at": 35.149,
+        "actionId": "h5-kpi3-land",
+        "file": "assets/sfx/click.wav",
+        "gain": 0.8,
+        "role": "sfx",
+        "kind": "click",
+        "syncOffset": 0.001
+      },
+      {
+        "at": 38.018,
+        "actionId": "p2-predict-land",
+        "file": "assets/sfx/ding-dong.wav",
+        "gain": 0.9,
+        "role": "sfx",
+        "kind": "ding-dong",
+        "syncOffset": 0.002
+      },
+      {
+        "at": 39.285,
+        "actionId": "p3-trend-wipe",
+        "file": "assets/sfx/sweep.wav",
+        "gain": 0.7,
+        "role": "sfx",
+        "kind": "sweep",
+        "syncOffset": 0.135
+      },
+      {
+        "at": 41.319,
+        "actionId": "p4-root-cause",
+        "file": "assets/sfx/click.wav",
+        "gain": 0.75,
+        "role": "sfx",
+        "kind": "click",
+        "syncOffset": 0.001
+      },
+      {
+        "at": 44.497,
+        "actionId": "e2-success-hit",
+        "file": "assets/sfx/success.wav",
+        "gain": 0.8,
+        "role": "sfx",
+        "kind": "success",
+        "syncOffset": 0.003
+      },
+      {
+        "at": 46.165,
+        "actionId": "e3-beam-sweep",
+        "file": "assets/sfx/sweep.wav",
+        "gain": 0.65,
+        "role": "sfx",
+        "kind": "sweep",
+        "syncOffset": 0.135
+      },
+      {
+        "at": 46.899,
+        "actionId": "e4-chips-in",
+        "file": "assets/sfx/pop.wav",
+        "gain": 0.7,
+        "role": "sfx",
+        "kind": "pop",
+        "syncOffset": 0.001
+      },
+      {
+        "at": 48.099,
+        "actionId": "e5-contact-in",
+        "file": "assets/sfx/click.wav",
+        "gain": 0.7,
+        "role": "sfx",
+        "kind": "click",
+        "syncOffset": 0.001
+      }
+    ]
+  }
+}

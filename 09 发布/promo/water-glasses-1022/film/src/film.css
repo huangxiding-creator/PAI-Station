@@ -1,0 +1,143 @@
+/* ============================================================
+   《发现隐患、预判风险》画面规范 — 见 DIRECTION.md §4
+   1080×1920 · 深水蓝舞台 · 工程仪表排版
+   ============================================================ */
+* { box-sizing: border-box; }
+html, body { margin: 0; background: #000; }
+#film {
+  position: relative; width: 1080px; height: 1920px; overflow: hidden;
+  color: #eaf4fb;
+  font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+  background: linear-gradient(180deg, #061a2e 0%, #082238 46%, #0a2440 100%);
+}
+/* the film clock owns motion: freeze CSS transitions/animations so any frame renders in isolation */
+#film *, #film *::before, #film *::after { transition: none !important; animation-duration: 0s !important; animation-delay: 0s !important; }
+.shot { position: absolute; inset: 0; overflow: hidden; opacity: 0; visibility: hidden; }
+.split { display: inline-block; white-space: pre-wrap; }
+.split .u { display: inline-block; }
+
+/* ---- 排版阶梯 ---- */
+.kicker {
+  font-family: "Segoe UI", "PingFang SC", sans-serif;
+  font-size: 30px; font-weight: 600; letter-spacing: .30em;
+  color: #7fc8e8; text-transform: uppercase;
+}
+.h-title { font-size: 150px; font-weight: 700; line-height: 1.16; color: #f4fafe; letter-spacing: .015em; }
+.h-sub { font-size: 40px; font-weight: 500; color: #bfe0f2; }
+.caption {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  max-width: 940px; padding: 18px 34px;
+  font-size: 34px; line-height: 1.5; text-align: center; color: #dceefb;
+  background: rgba(8, 35, 62, .66); border: 1px solid rgba(72, 192, 216, .28);
+  border-radius: 18px; backdrop-filter: blur(6px);
+  white-space: normal;
+}
+.num { font-family: Consolas, "Segoe UI", monospace; font-variant-numeric: tabular-nums; }
+.tag {
+  display: inline-block; padding: 10px 22px; border-radius: 999px;
+  font-size: 27px; font-weight: 500; color: #cfe8f8;
+  border: 1px solid rgba(72, 192, 216, .45); background: rgba(24, 120, 216, .14);
+}
+
+/* ---- 水位线画布 ---- */
+.waterline { position: absolute; left: 0; bottom: 0; width: 1080px; height: 300px; pointer-events: none; }
+
+/* ---- 官网 iframe 上镜 ---- */
+.site-frame { position: absolute; inset: 0; border: 0; width: 1080px; height: 1920px; background: #061a2e; }
+.stage-scrim {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 760px; pointer-events: none;
+  background: linear-gradient(180deg, rgba(6, 26, 46, 0) 0%, rgba(6, 26, 46, .55) 42%, #061a2e 92%);
+}
+
+/* ---- 指标卡（claims）---- */
+.metric-card {
+  width: 950px; padding: 40px 52px; border-radius: 22px;
+  background: linear-gradient(160deg, rgba(17, 79, 122, .38), rgba(10, 36, 64, .55));
+  border: 1px solid rgba(72, 192, 216, .25);
+  box-shadow: 0 24px 60px rgba(3, 14, 26, .45);
+  display: flex; align-items: center; gap: 44px;
+}
+.metric-num { font-size: 120px; font-weight: 700; color: #ffffff; line-height: 1; }
+.metric-unit { font-size: 52px; font-weight: 600; color: #9fd6f2; }
+.metric-from { font-size: 40px; color: #5f8cab; text-decoration: line-through rgba(95, 140, 171, .0); }
+.metric-arrow { font-size: 46px; color: #48c0d8; font-weight: 600; }
+.metric-label { font-size: 38px; font-weight: 600; color: #e8f4fd; margin-bottom: 12px; }
+.metric-src { font-size: 25px; color: #7396ad; line-height: 1.4; }
+
+/* ---- 第一视角 HUD（scan）---- */
+.pov-vignette {
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 78% 62% at 50% 46%, rgba(0, 0, 0, 0) 58%, rgba(4, 14, 26, .62) 100%);
+}
+.reticle { position: absolute; width: 34px; height: 34px; border: 3px solid rgba(72, 192, 216, .9); }
+.voice-bubble {
+  display: inline-flex; align-items: center; gap: 18px;
+  padding: 20px 34px; border-radius: 999px;
+  background: rgba(8, 35, 62, .78); border: 1px solid rgba(72, 192, 216, .5);
+  font-size: 40px; font-weight: 600; color: #eaf6ff;
+  backdrop-filter: blur(6px);
+}
+.voice-dot { width: 14px; height: 14px; border-radius: 50%; background: #f0a878; box-shadow: 0 0 14px rgba(240, 168, 120, .9); }
+.readout-card {
+  padding: 30px 38px; border-radius: 16px;
+  background: rgba(6, 24, 44, .82); border: 1px solid rgba(72, 192, 216, .55);
+  backdrop-filter: blur(8px); box-shadow: 0 18px 50px rgba(2, 10, 20, .5);
+}
+.readout-value { font-size: 92px; font-weight: 700; color: #ffffff; line-height: 1; }
+.readout-sigma { font-size: 44px; color: #48c0d8; font-weight: 600; }
+.readout-label { font-size: 27px; color: #8fb8d2; margin-top: 14px; letter-spacing: .06em; }
+
+/* ---- 判定/条款卡（verdict）---- */
+.verdict-card {
+  width: 900px; border-radius: 18px; overflow: hidden;
+  background: rgba(8, 35, 62, .82); border: 1px solid rgba(240, 168, 120, .55);
+  backdrop-filter: blur(8px); box-shadow: 0 22px 60px rgba(2, 10, 20, .55);
+}
+.verdict-head { padding: 26px 40px; background: linear-gradient(90deg, rgba(240, 168, 120, .95), rgba(232, 143, 86, .95)); color: #10233c; display: flex; align-items: baseline; gap: 22px; }
+.verdict-head .zh { font-size: 56px; font-weight: 800; }
+.verdict-head .en { font-size: 26px; font-weight: 700; letter-spacing: .12em; opacity: .78; }
+.verdict-body { padding: 26px 40px 30px; font-size: 33px; line-height: 1.55; color: #e4f1fb; }
+.clause-card {
+  width: 900px; padding: 30px 40px; border-radius: 14px; text-align: left;
+  background: rgba(6, 24, 44, .85); border: 1px solid rgba(127, 200, 232, .35);
+  border-left: 6px solid #f0a878; backdrop-filter: blur(8px);
+}
+.clause-no { font-family: Consolas, monospace; font-size: 34px; font-weight: 700; color: #ffd9b8; letter-spacing: .04em; }
+.clause-name { font-size: 34px; font-weight: 600; color: #eaf4fb; margin-top: 10px; }
+.clause-note { font-size: 25px; color: #8fb8d2; margin-top: 12px; }
+
+/* ---- 六项机制环（loop）---- */
+.loop-node circle { fill: #0c2c48; stroke: rgba(72, 192, 216, .55); stroke-width: 3; }
+.loop-node text { font-size: 40px; font-weight: 700; fill: #9cc4dd; }
+.loop-node .idx { font-family: Consolas, monospace; font-size: 22px; fill: #5f8cab; letter-spacing: .08em; }
+
+/* ---- 实拍屏上镜（hub/predict）---- */
+.shot-frame {
+  position: absolute; border-radius: 18px; overflow: hidden;
+  border: 1px solid rgba(72, 192, 216, .35);
+  box-shadow: 0 30px 80px rgba(2, 10, 20, .6);
+  background: #0a1628;
+}
+.shot-frame img { display: block; position: absolute; max-width: none; }
+.shot-tag {
+  position: absolute; left: 0; top: 0; padding: 8px 20px;
+  font-family: Consolas, monospace; font-size: 22px; color: #0a1628;
+  background: #48c0d8; border-radius: 0 0 12px 0; letter-spacing: .08em; z-index: 3;
+}
+.kpi-big { font-size: 104px; font-weight: 700; color: #fff; line-height: 1; }
+.kpi-label { font-size: 32px; color: #a8d2ec; margin-top: 12px; }
+
+/* ---- 品牌尾板（close）---- */
+.brand-glass {
+  border-radius: 26px; overflow: hidden;
+  border: 1px solid rgba(72, 192, 216, .4);
+  box-shadow: 0 40px 100px rgba(2, 12, 24, .65), 0 0 0 10px rgba(72, 192, 216, .06);
+}
+.beam {
+  position: absolute; top: 0; bottom: 0; width: 200px; pointer-events: none;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(213, 240, 255, .5) 50%, rgba(255,255,255,0) 100%);
+  filter: blur(2px); transform: skewX(-12deg);
+}
+
+/* 首帧海报层 */
+#poster { position: absolute; inset: 0; width: 1080px; height: 1920px; z-index: 99; }
