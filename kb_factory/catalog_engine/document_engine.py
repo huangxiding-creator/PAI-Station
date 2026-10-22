@@ -11,6 +11,7 @@ import re
 from dataclasses import dataclass, field
 from typing import Optional
 
+from .evidence import anchor_file, evidence_from_doc
 from .metadata import make_slot, sanitize_filename
 
 # ── 领域关键词提取 ─────────────────────────────────────────────────────────
@@ -69,6 +70,7 @@ class DocFile:
     url: Optional[str] = None
     doc_type: str = "其他"         # 由 classify_doc 决定
     size_kb: int = 500             # 估算
+    doc_id: Optional[str] = None   # 渠道标识（wenku docID / GB标准号 / 本地名），证据锚定用
 
 
 def classify_doc(title: str) -> str:
@@ -159,15 +161,19 @@ def build_tree_from_docs(docs: list[DocFile], domain: str) -> list:
                 ext = d.fmt if d.fmt else "pdf"
                 if not fname.endswith(f".{ext}"):
                     fname = f"{fname}.{ext}"
-                l2["files"].append({
+                slot = {
                     "name": fname,
                     "fmt": ext,
                     "size_kb": d.size_kb,
                     "badge": d.badge,
                     "perm": d.perm,
                     "url": d.url,
+                    "doc_id": d.doc_id,   # 渠道标识（wenku docID 等）
+                    "source": d.source,   # 溯源渠道，anchor_file 提取用
                     "real": True,  # 标记为真实检索结果（非占位）
-                })
+                }
+                # P0 #6 证据锚定：每个真实文件槽必带 evidence（无证据即拒收）
+                l2["files"].append(anchor_file(slot, evidence_from_doc(d)))
             l1["l2"].append(l2)
 
         if l1["l2"]:
