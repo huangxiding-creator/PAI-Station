@@ -50,6 +50,12 @@ py -3 tools/verify_kbfactory.py     # 43 项自检（ALL PASS 才走上传）
 - 载体：腾讯云 CloudBase——与总包AI顾问后端同环境。容器部署手册在役：
   `services/qianwen-engine/TCB_DEPLOY.md`（云托管+CloudBase MySQL；五端点并入该服务，
   新增 `/api/kb/*` 路由 + 订单表写 inbox 目录）。
+- **W11 已落地（1022）**：五端点+履约桥已并入引擎并部署 ai.epcschool.top（订单状态机
+  pending→paid→accepted→pulled；`accepted`=`confirmed` 受理态，回执键 `{accepted:true}`）。
+  本地履约云拉：`py -3 -m kb_factory.fulfillment --cloud-pull --base DIR`（凭据 env
+  `KB_ENGINE_URL`/`KB_BRIDGE_KEY` 或 `data/secrets/kb_bridge.key`；`--watch` + env
+  `KB_CLOUD_POLL=1` 时每 300s 自动并入）。新表 `kb_orders`/`kb_blueprint_unlocks` 两处
+  同步（store.py `_SCHEMA` + scripts/mysql_schema.sql）。
 - 一键部署链：站在役 `deploy_refresh.cmd`（TCB 密钥已存 secret，未入仓；重部署不需扫码）。
 - 履约体（`kb_factory.fulfillment --watch`）建议同容器常驻或独立小机；`inbox/outbox/ledger`
   目录挂持久卷。
@@ -90,4 +96,7 @@ SLA：目标 30 分钟 / 承诺 2 小时（ledger 留痕 `within_target`）。Wi
 2. **网盘回填**：>50MB 大包的百度网盘转存+链接回填机制（v1 人工，确认是否自动化）。
 3. **ima 复活**：扫码恢复登录态（`KB_IMA_FETCH=1` 重启用）；按令不硬闯。
 4. **wenku 黄源放行令**：`KB_WENKU_FETCH=1` + wenku secret 在位才启用（默认 OFF）。
-5. **服务端五端点部署+小程序提审**：TCB 云托管并线上（§2），DevTools 上传审核（§1）。
+5. **kb_goods 道具发布**：虚拟支付后台建/发布 kb_goods（¥1 短剧商品）后，在
+   `data/secrets/virtual_pay.secret` 增行 `kb_product_id=kb_goods` 并重走部署链——
+   未配置期间 `/api/kb/order_sign` 恒 503 诚实降级（蓝图导出腿复用已现网 export_once，
+   不受影响）。小程序提审（§1）照常可走。

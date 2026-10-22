@@ -5,22 +5,27 @@
   py -3 -m kb_factory.fulfillment --once              # 扫一轮 inbox/
   py -3 -m kb_factory.fulfillment --watch             # 轮询 60s，Ctrl-C 停
   py -3 -m kb_factory.fulfillment --once --base DIR   # 指定产线目录（冒烟用）
+  py -3 -m kb_factory.fulfillment --cloud-pull --base DIR   # W11：云端拉桥单轮
+  py -3 -m kb_factory.fulfillment --watch + env KB_CLOUD_POLL=1    # watch 并入云拉（300s/轮）
 
 run-ledger：fulfillment/ledger.jsonl（订单/耗时/结果/缺配原因）。
 铁律：任何分支绝不删除文件（failed 也只移动）。
 """
 import argparse
 import json
+import os
 import sys
 import time
 from pathlib import Path
 
 from . import deliver, pipeline
+from .cloud_pull import BridgeError, pull_once
 from .order import Order, OrderInbox
 
 MODULE_DIR = Path(__file__).resolve().parent
 SLA_TARGET_MIN = 30    # 目标 30 分钟
 SLA_PROMISE_MIN = 120  # 承诺 2 小时
+CLOUD_POLL_SEC = 300   # W11 云拉桥轮询间隔（env KB_CLOUD_POLL=1 时并入 --watch）
 
 
 def _ledger_path(base_dir) -> Path:
@@ -100,6 +105,16 @@ def run_once(base_dir=None, corpus=None) -> list:
             for p in inbox.pending()]
 
 
+def _cloud_pull_quiet(base_dir) -> None:
+    """云拉一轮（watch 模式内嵌）：桥不可用如实打点，不崩主轮询。"""
+    try:
+        s = pull_once(base_dir)
+        if s["pulled"] or s["unresolved"]:
+            print("[cloud-pull] " + json.dumps(s, ensure_ascii=False), flush=True)
+    except BridgeError as e:
+        print(f"[cloud-pull] {e}", flush=True)
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="kb_factory.fulfillment",
                                  description="KB-FACTORY W7 履约流水线")
@@ -107,8 +122,19 @@ def main(argv=None) -> int:
     ap.add_argument("--watch", action="store_true", help="轮询 inbox（默认 60s，Ctrl-C 停）")
     ap.add_argument("--interval", type=int, default=60, help="watch 轮询秒数（默认 60）")
     ap.add_argument("--base", default=None, help="产线目录（默认 kb_factory/fulfillment/）")
+    ap.add_argument("--cloud-pull", action="store_true", dest="cloud_pull",
+                    help="W11：从引擎履约桥拉一轮 accepted 订单写 inbox 后退出"
+                         "（凭据 env KB_ENGINE_URL/KB_BRIDGE_KEY）")
     args = ap.parse_args(argv)
 
+    if args.cloud_pull:
+        try:
+            s = pull_once(args.base)
+        except BridgeError as e:
+            print(f"[cloud-pull] FAIL {e}", file=sys.stderr)
+            return 1
+        print("[cloud-pull] " + json.dumps(s, ensure_ascii=False))
+        return 0
     if not (args.once or args.watch):
         ap.print_help()
         return 2
@@ -117,11 +143,17 @@ def main(argv=None) -> int:
         for e in entries:
             print(json.dumps(e, ensure_ascii=False))
         return 0
-    # --watch：付费触发履约，SLA 目标 30 分钟 → 60s 轮询
-    print(f"[watch] base={args.base or MODULE_DIR} interval={args.interval}s，Ctrl-C 停",
-          flush=True)
+    # --watch：付费触发履约，SLA 目标 30 分钟 → 60s 轮询；
+    # env KB_CLOUD_POLL=1 时并入云端拉桥（默认每 300s 一轮）
+    cloud_poll = (os.environ.get("KB_CLOUD_POLL") or "").strip() == "1"
+    print(f"[watch] base={args.base or MODULE_DIR} interval={args.interval}s，Ctrl-C 停"
+          + (f"，cloud-pull 每 {CLOUD_POLL_SEC}s" if cloud_poll else ""), flush=True)
+    last_pull = 0.0
     try:
         while True:
+            if cloud_poll and time.time() - last_pull >= CLOUD_POLL_SEC:
+                _cloud_pull_quiet(args.base)
+                last_pull = time.time()
             for e in run_once(args.base):
                 print(json.dumps(e, ensure_ascii=False), flush=True)
             time.sleep(max(5, args.interval))

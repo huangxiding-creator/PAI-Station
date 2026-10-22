@@ -26,8 +26,9 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 PKG_DIR = Path(__file__).resolve().parent
 MP_DIR = REPO_ROOT / "微信小程序" / "zongbao-ai"
 
-# 网络面白名单：只允许 百度文库检索域 与 ima 官方域（逐条列人工核语境）
-NET_ALLOWLIST = {"wenku.baidu.com", "ima.qq.com"}
+# 网络面白名单：百度文库检索域、ima 官方域、自研引擎域（W11 云履约拉桥——
+# ai.epcschool.top=总包AI顾问 CloudBase 云托管，TCB_DEPLOY §8 在役部署面；逐条人工核语境）
+NET_ALLOWLIST = {"wenku.baidu.com", "ima.qq.com", "ai.epcschool.top"}
 # _credentials 目录下的非凭据占位（.gitkeep=空占位；chain.jsonl=操作链日志，均已核验 0 字节）
 CREDS_ALLOWLIST_NAMES = {".gitkeep", "chain.jsonl"}
 # 凭据形态：文件名含 secret/credentials/key/pem/token，或 *.ini 带 secret 字样
