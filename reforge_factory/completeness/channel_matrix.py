@@ -282,28 +282,27 @@ def scan(campaign: str, *, pool_root: Path | str | None = None,
     # 队列里写渠道 id 也能对上 (miss 名/id 双口径匹配)
     miss_in_queue = [m["name"] for m in miss_detail
                      if _norm(m["name"]) in queue_keys or _norm(m["id"]) in queue_keys]
-    # 用户批准豁免 (channel_waivers.json: [{id, reason, approve_ref, ts}]) —
-    # 命中优先 (渠道真点亮则豁免自动失效, 只升不逆); 学术限流类可登记
-    # 临时豁免 (命中即替换, reason 注明自动轮询)
-    waivers: list[dict] = []
-    wpath = root / campaign / "channel_waivers.json"
-    if wpath.is_file():
+    # 1022 宪法终极形态: 每报告×全渠道×零豁免 — 豁免制废止 (channel_waivers
+    # 废档), 绿判据改为「调用台账」: ammo_pool/<战役>/channel_invocations.jsonl
+    # 记录每次真实调用 {channel, ts, tool, queries, yield, note} — 调用是义务,
+    # 收获另计 (yield=0 也算调用). green = 名册全渠道均有调用记录.
+    invocations: list[dict] = []
+    ipath = root / campaign / "channel_invocations.jsonl"
+    if ipath.is_file():
         try:
-            waivers = [w for w in json.loads(
-                wpath.read_text(encoding="utf-8"))
-                if isinstance(w, dict) and w.get("id")
-                and str(w.get("approve_ref") or "").strip()]
+            invocations = [json.loads(x) for x in
+                           ipath.read_text(encoding="utf-8").splitlines()
+                           if x.strip()]
         except (json.JSONDecodeError, OSError):
-            waivers = []
-    waived_ids = {_norm(w["id"]) for w in waivers}
-    waived_list, waived_hit = [], []
-    for m in miss_detail:
-        if _norm(m["id"]) in waived_ids or _norm(m["name"]) in waived_ids:
-            (waived_hit if m["id"] in hit_chars else waived_list).append(
-                m["name"])
-    miss_not_in_queue = [n for n in miss_list
-                         if n not in miss_in_queue and n not in waived_list]
-    green = (not miss_list) or (not miss_not_in_queue)
+            invocations = []
+    invoked_ids: set[str] = set()
+    for iv in invocations:
+        if isinstance(iv, dict) and iv.get("channel"):
+            invoked_ids.add(_norm(str(iv["channel"])))
+    miss_not_invoked = [m["name"] for m in miss_detail
+                        if _norm(m["name"]) not in invoked_ids
+                        and _norm(m["id"]) not in invoked_ids]
+    green = (not miss_not_invoked)
 
     approx_notes = sorted({
         n for res in engine_map.values() for n in res["notes"]
@@ -324,13 +323,12 @@ def scan(campaign: str, *, pool_root: Path | str | None = None,
         "miss_detail": miss_detail,
         "new_channel_queue": queue,
         "miss_in_queue": miss_in_queue,
-        "miss_not_in_queue": miss_not_in_queue,
-        "channel_waivers": waivers,
-        "waived_miss_list": waived_list,               # 未命中且已豁免
-        "waived_but_hit": waived_hit,                  # 豁免后真点亮 (只升不逆实证)
-        "queue_path": str(qpath),
-        "queue_present": Path(qpath).exists(),
+        "channel_invocations": len(invocations),
+        "invoked_channels": sorted(invoked_ids),
+        "miss_not_invoked": miss_not_invoked,        # 1022宪法: 唯一红因=未调用
+        "invocations_path": str(ipath),
         "green": green,
+        "green_rule": "1022宪法: 全渠道调用即绿(收获另计, 零豁免)",
         "engine_map": engine_map,
         "unmapped_engines": unmapped_engines,
         "zero_char_engines": zero_engines,
@@ -381,7 +379,8 @@ def main(argv: list[str] | None = None) -> int:
         "hit_ratio": result["hit_ratio"],
         "green": result["green"],
         "miss_list": result["miss_list"],
-        "miss_not_in_queue": result["miss_not_in_queue"],
+        "miss_not_invoked": result["miss_not_invoked"],
+        "channel_invocations": result["channel_invocations"],
         "fail_soft": result["fail_soft"],
     }
     print("[C轴] " + json.dumps(summary, ensure_ascii=False))
