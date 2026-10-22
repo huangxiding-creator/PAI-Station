@@ -77,7 +77,7 @@ rows, fails = [], []
 for i, seed in enumerate(SEEDS, 1):
     t0 = time.time()
     try:
-        bp = build_blueprint(dict(seed))
+        bp = build_blueprint(dict(seed), mode="document_driven")
         filled, throttled = enrich_guarded(bp, i)
         slug = seed["domain"].replace("知识库", "").replace("库", "")[:10]
         out = os.path.join(OUT, f"{i:02d}_{slug}.json")

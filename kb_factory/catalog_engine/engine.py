@@ -3,15 +3,18 @@
 
 确定性纪律：无随机源、无时钟；同输入必同输出。
 需要抖动时以 sha256(规范化输入) 为种子（本版未使用抖动，接口已备：need_hash8）。
-
-规模计划（size_hint → L1 数 / 每 L1 的 L2 数 / 每 L2 槽数）：
-    small  10/10/10 = 1,000 槽
-    medium 12/12/12 = 1,728 槽
-    large  16/14/14 = 3,136 槽
-    huge   20/10/250 = 50,000 槽（专为触发 >200 分拆律的验收档）
-phi-1 配比（core/field/guide，和恒 100）：small 50/35/15 · medium 55/35/10 · large|huge 58/34/8。
-报价（A 档，已批准）：base 29.0 + gb×2.0；md_factor/ima_add 为后续阶段修饰参数，不入本式。
 """
+from __future__ import annotations
+
+from typing import Optional
+
+# 规模计划（size_hint → L1 数 / 每 L1 的 L2 数 / 每 L2 槽数）：
+#     small  10/10/10 = 1,000 槽
+#     medium 12/12/12 = 1,728 槽
+#     large  16/14/14 = 3,136 槽
+#     huge   20/10/250 = 50,000 槽
+# phi-1 配比：small 50/35/15 · medium 55/35/10 · large|huge 58/34/8
+# 报价（A 档）：base 29.0 + gb×2.0
 import hashlib
 import json
 
@@ -61,7 +64,39 @@ def need_hash8(need: dict) -> str:
     return hashlib.sha256(blob.encode("utf-8")).hexdigest()[:8]
 
 
-def build_blueprint(raw_need: dict) -> dict:
+def build_blueprint(raw_need: dict, mode: str = "document_driven") -> dict:
+    """蓝图生成入口——mode 选择引擎：
+    - document_driven: 检索真实法规/标准 → 从文件体系提炼框架（1022 用户令）
+    - taxonomy: 通用分类法扇出（v1 原始模式，fallback）
+    """
+    if mode == "document_driven":
+        bp = _try_document_driven(raw_need)
+        if bp is not None:
+            return bp
+        # 降级：检索不足 → fallback 到 taxonomy
+    return _build_blueprint_taxonomy(raw_need)
+
+
+def _try_document_driven(raw_need: dict) -> Optional[dict]:
+    """文件驱动模式：检索真实文件 → 提炼框架。检索不足返回 None（降级）。"""
+    try:
+        from .doc_search import search_all_sources
+        from .document_engine import build_blueprint_document_driven
+    except ImportError:
+        return None
+
+    docs = search_all_sources(raw_need)
+    if len(docs) < 10:  # 少于 10 件真实文件 → 降级到 taxonomy
+        return None
+
+    bp = build_blueprint_document_driven(raw_need, docs)
+    bp["provenance"]["fallback_from"] = None
+    bp["provenance"]["doc_count"] = len(docs)
+    return bp
+
+
+def _build_blueprint_taxonomy(raw_need: dict) -> dict:
+    """原 taxonomy 模式（v1 逻辑保持不变）。"""
     need = validate_need(raw_need)
     plan = SIZE_PLANS[need["size_hint"]]
     ratio = RATIO_BY_SIZE[need["size_hint"]]
