@@ -27,7 +27,18 @@ os.environ.setdefault("HTTP_PROXY", "http://127.0.0.1:7890")
 os.environ.setdefault("HTTPS_PROXY", "http://127.0.0.1:7890")
 
 M2 = Path(__file__).resolve().parent
-SCHED = M2 / "sched"
+# 1022 宪法第七条: 各章初稿必须 NotebookLM 撰写 → 管线通用化(任意战役)
+# --campaign-dir <目录>: 该目录需含 chapters.json + nblm_upload/chNN_笔记本/
+# 缺省 = 原 SCHED 目录(向后兼容)
+import os as _os
+_sched_dir = _os.environ.get("NBLM_SCHED_DIR", "")
+if "--campaign-dir" in sys.argv:
+    SCHED = Path(sys.argv[sys.argv.index("--campaign-dir") + 1]).resolve()
+    sys.argv.remove("--campaign-dir"); sys.argv.remove(str(SCHED))
+elif _sched_dir:
+    SCHED = Path(_sched_dir).resolve()
+else:
+    SCHED = M2 / "sched"
 UPLOAD = SCHED / "nblm_upload"
 OUT = SCHED / "nblm_out"
 STATE_P = SCHED / "nblm_state.json"
