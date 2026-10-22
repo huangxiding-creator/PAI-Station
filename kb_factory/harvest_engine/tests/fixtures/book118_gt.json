@@ -1,0 +1,148 @@
+{
+ "protocol": "FR3.AC2 取样协议（REQ 硬一致性③修复）：每份 fixture=标题+首页可见文本前 2 个≥4 字词，人工誊录一次（容错=0 精确匹配，空白归一口径=匹配前移除全部空白字符，字符级零容差）；验收=pypdfium2 抽 searchable PDF 文字层，3/3 命中（标题+词1+词2）=该份过。",
+ "transcription_evidence": "2026-10-22 T33 worker 人工誊录：①首页图 render/ocr.ocr_image 行集辅助选词（book118_gt_pages/_ocr_lines.json 留档）；②验收同链（build_image_pdf 像素拼→make_pdf_ocr_searchable 150dpi→pypdfium2 文字层）实测文本（book118_gt_pages/_chain_probe/_chain_layers.json 留档）；双证一致且避开水印区伪识别行尾（如 膶/瑥瑩浥/㐀翺）后人工确认誊录，词真实可见。",
+ "fixtures": [
+  {
+   "doc_id": "6115103231005025",
+   "shtm_url": "https://max.book118.com/html/2022/1214/6115103231005025.shtm",
+   "form": "免费档 preview=3 actual=7（T19/T23 主档）",
+   "title": "大一新生入学军训心得体会",
+   "words": [
+    "大一新生",
+    "第一门课程"
+   ],
+   "first_page_image": "book118_gt_pages/6115103231005025/0001.gif",
+   "sampled": "2026-10-22"
+  },
+  {
+   "doc_id": "5110103104004213",
+   "shtm_url": "https://max.book118.com/html/2022/0414/5110103104004213.shtm",
+   "form": "收费档 preview=62 actual=124（T19/T23 主档）",
+   "title": "南阳煤机设备项目申请报告",
+   "words": [
+    "泓域咨询",
+    "南阳煤机设备项目"
+   ],
+   "first_page_image": "book118_gt_pages/5110103104004213/0001.gif",
+   "title_note": "站方 shtm title=煤炭设备项目投标报告（煤炭参考）.docx 系运营改名，首页可见封面标题=南阳煤机设备项目申请报告（行1+行2 跨行，空白归一后连续）；誊录取首页可见口径",
+   "sampled": "2026-10-22"
+  },
+  {
+   "doc_id": "5123021331010032",
+   "shtm_url": "https://max.book118.com/html/2022/1214/5123021331010032.shtm",
+   "form": "全预览档 preview=22 actual=22（T19 fixtures 留档推荐档，_probe_t19_shtm_playwright.html 同目录链接）",
+   "title": "幼师年度个人总结简短模板",
+   "words": [
+    "幼师年度个人总结简短",
+    "时光飞逝"
+   ],
+   "first_page_image": "book118_gt_pages/5123021331010032/0001.gif",
+   "title_note": "首页页眉行=2022 幼师年度个人总结简短模板，标题取去年份前缀的可见标题",
+   "sampled": "2026-10-22"
+  },
+  {
+   "doc_id": "5141041331010032",
+   "shtm_url": "https://max.book118.com/html/2022/1214/5141041331010032.shtm",
+   "form": "全预览档 preview=9 actual=9（T37 选件）",
+   "title": "年度工作总结模板",
+   "words": [
+    "岗位年度工作总结",
+    "切身感受"
+   ],
+   "title_note": "首页页眉行=2022年度工作总结模板，标题取去年份前缀的可见标题（T33 5123 同口径）；词取 i=2 行中主词与 i=9 行中词，避开行尾",
+   "sampled": "2026-10-23",
+   "first_page_image": "book118_gt_pages/5141041331010032/0001.gif"
+  },
+  {
+   "doc_id": "7062125153011162",
+   "shtm_url": "https://max.book118.com/html/2021/0922/7062125153011162.shtm",
+   "form": "全预览档 preview=2 actual=2（T37 选件，/free 免费专区）",
+   "title": "餐饮行业可行性分析报告",
+   "words": [
+    "经济增长",
+    "营养健康"
+   ],
+   "title_note": "首页首行标题 score=1.0；词取 i=2/i=9 行中主词，避开行尾",
+   "sampled": "2026-10-23",
+   "first_page_image": "book118_gt_pages/7062125153011162/0001.gif"
+  },
+  {
+   "doc_id": "5140213331010032",
+   "shtm_url": "https://max.book118.com/html/2022/1214/5140213331010032.shtm",
+   "form": "收费档 preview=7 actual=14（T37 选件）",
+   "title": "护理实习心得体会",
+   "words": [
+    "临床护理实习",
+    "操作技术"
+   ],
+   "title_note": "首页页眉行=2023年护理实习心得体会【7篇】，标题取去年份/篇数后缀的可见标题；词取 i=2/i=9 行中主词（i=9 行内 理论知识和操作技术脱节 同行连续）",
+   "sampled": "2026-10-23",
+   "first_page_image": "book118_gt_pages/5140213331010032/0001.gif"
+  },
+  {
+   "doc_id": "6115120231005025",
+   "shtm_url": "https://max.book118.com/html/2022/1214/6115120231005025.shtm",
+   "form": "全预览档 preview=4 actual=4（T37 选件）",
+   "title": "水泥稳定碎石施工技术",
+   "words": [
+    "工程质量",
+    "监理工程师"
+   ],
+   "title_note": "首页首行标题 score=1.0；词取 i=4/i=16 行中主词；i=22 行尾水印行（一一文章来源网络…行尾比0.94）避让",
+   "sampled": "2026-10-23",
+   "first_page_image": "book118_gt_pages/6115120231005025/0001.gif"
+  },
+  {
+   "doc_id": "5241203321013333",
+   "shtm_url": "https://max.book118.com/html/2021/0922/5241203321013333.shtm",
+   "form": "全预览档 preview=3 actual=3（T37 选件，/free 免费专区）",
+   "title": "时事政治热点必考考点",
+   "words": [
+    "政府工作报告",
+    "能源结构调整"
+   ],
+   "title_note": "首页标题跨行（2026年时事政治热点必考考点及完整答/案(全国通用版)），标题取去年份/后缀的行内可见核心；词取 i=4/i=10 行中主词",
+   "sampled": "2026-10-23",
+   "first_page_image": "book118_gt_pages/5241203321013333/0001.gif"
+  },
+  {
+   "doc_id": "5142332331010032",
+   "shtm_url": "https://max.book118.com/html/2022/1214/5142332331010032.shtm",
+   "form": "收费档 preview=6 actual=13（T37 选件）",
+   "title": "公司年终工作总结",
+   "words": [
+    "公司产品",
+    "工作情况"
+   ],
+   "title_note": "首页页眉行=2022年公司年终工作总结1500字模板4篇，标题取去年份/字数/篇数后缀的可见核心；词取 i=8/i=2 行中主词",
+   "sampled": "2026-10-23",
+   "first_page_image": "book118_gt_pages/5142332331010032/0001.gif"
+  },
+  {
+   "doc_id": "6105013231005025",
+   "shtm_url": "https://max.book118.com/html/2022/1214/6105013231005025.shtm",
+   "form": "全预览档 preview=18 actual=18（T37 选件，放宽 12→18 页档补免费位）",
+   "title": "部门年度工作总结",
+   "words": [
+    "财务管理工作",
+    "会计凭证"
+   ],
+   "title_note": "首页页眉行=2022部门年度工作总结优秀5篇，标题取去年份/篇数后缀的可见核心；词取 i=7/i=10 行中主词（避开 i=19+ 行尾水印区）",
+   "sampled": "2026-10-23",
+   "first_page_image": "book118_gt_pages/6105013231005025/0001.gif"
+  },
+  {
+   "doc_id": "5133230331010032",
+   "shtm_url": "https://max.book118.com/html/2022/1214/5133230331010032.shtm",
+   "form": "收费档 preview=6 actual=12（T37 选件）",
+   "title": "有关系主任述职报告",
+   "words": [
+    "化学工程系",
+    "规范管理"
+   ],
+   "title_note": "首页首行标题 score=1.0；词1 取 i=2 行首主词（材料与化学工程系）；词2 取 i=7 行中主词（转移到提升内涵，规范管理）",
+   "sampled": "2026-10-23",
+   "first_page_image": "book118_gt_pages/5133230331010032/0001.gif"
+  }
+ ]
+}
