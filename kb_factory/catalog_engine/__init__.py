@@ -10,7 +10,7 @@
 禁止 random/randomize 无种子使用。
 """
 from .engine import build_blueprint, validate_need, ENGINE_VERSION
-from . import taxonomy, blueprint, metadata
+from . import taxonomy, blueprint, metadata, document_engine, structure_miner
 
 __all__ = ["build_blueprint", "validate_need", "ENGINE_VERSION",
-           "taxonomy", "blueprint", "metadata"]
+           "taxonomy", "blueprint", "metadata", "document_engine", "structure_miner"]
