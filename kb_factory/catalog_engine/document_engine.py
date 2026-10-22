@@ -197,10 +197,20 @@ def build_blueprint_document_driven(need: dict, docs: list[DocFile]) -> dict:
     l1_count = len(tree)
     l2_count = sum(len(l1["l2"]) for l1 in tree)
 
-    # 配比（文件驱动模式按超越层自然分布，不硬编 phi-1）
+    # 配比（文件驱动模式按超越层自然分布 + 兼容 enrich.py 的 core/field/guide 键）
     layer_counts = {l1["name"]: sum(len(l2["files"]) for l2 in l1["l2"]) for l1 in tree}
     total = max(total_files, 1)
     ratio = {k: round(v * 100 // total) for k, v in layer_counts.items()}
+    # 兼容键：enrich.py 的 tier_counts 期望 core/field/guide 三键
+    # 映射：合规底线+技术标准→core（权威内容），操作实务→field（实践内容），参考工具→guide（辅助内容）
+    _compat_map = {"合规底线": "core", "技术标准": "core", "操作实务": "field", "参考工具": "guide"}
+    _compat = {}
+    for layer_name, cnt in layer_counts.items():
+        compat_key = _compat_map.get(layer_name, "guide")
+        _compat[compat_key] = _compat.get(compat_key, 0) + cnt
+    _compat_total = max(sum(_compat.values()), 1)
+    for k in ("core", "field", "guide"):
+        ratio[k] = round(_compat.get(k, 0) * 100 // _compat_total)
 
     # 报价（A 档）
     quote = {
