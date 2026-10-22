@@ -20,9 +20,11 @@
 //   };
 //   const USE_REMOTE = true;
 
-const SAMPLE_FILES = {
-  water: 'pages/kbfactory/samples/sample_water.json',
-  law: 'pages/kbfactory/samples/sample_law.json',
+// 包内样本走 require 的 .js 包装模块（json require 工具链不收；FSM readFile 对包文件
+// permission denied——1022 DevTools 双杀实测，js 模块是唯一全环境通吃读法）
+const SAMPLES = {
+  water: require('../pages/kbfactory/samples/sample_water.js'),
+  law: require('../pages/kbfactory/samples/sample_law.js'),
 };
 
 const REMOTE_ADAPTER = null; // M6 接后端时注入（见上注），保持 null 即本地样本演示
@@ -49,21 +51,12 @@ function pickSampleKey(text) {
   return Math.random() < 0.5 ? 'water' : 'law';
 }
 
-// 读包内样本（代码包文件路径，相对项目根；任何环境读不出都收口成友好错误）
+// 取包内样本（require 静态加载，同步可得；缺键收口成友好错误）
 function readSample(key) {
   return new Promise((resolve, reject) => {
-    let fs = null;
-    try { fs = wx.getFileSystemManager(); } catch (e) { fs = null; }
-    if (!fs) { reject({ message: '本地样本暂不可读，请稍后再试' }); return; }
-    fs.readFile({
-      filePath: SAMPLE_FILES[key],
-      encoding: 'utf-8',
-      success: (res) => {
-        try { resolve(JSON.parse(res.data)); }
-        catch (e) { reject({ message: '样本解析失败，请稍后再试' }); }
-      },
-      fail: () => reject({ message: '样本加载失败，请稍后再试' }),
-    });
+    const bp = SAMPLES[key];
+    if (bp && bp.stats && bp.quote) resolve(bp);
+    else reject({ message: '样本加载失败，请稍后再试' });
   });
 }
 

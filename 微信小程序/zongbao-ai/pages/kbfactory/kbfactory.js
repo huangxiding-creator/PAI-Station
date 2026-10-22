@@ -88,7 +88,7 @@ Page({
       wx.vibrateShort({ type: 'light', fail: () => {} });
     }).catch((err) => {
       if (this._dead) return;
-      this.setData({ building: false });
+      this.setData({ building: false, genErr: (err && err.message) || '生成失败' });  // 调试字段(e2e取证用)
       wx.showToast({ title: (err && err.message) || '生成失败，请重试', icon: 'none' });
     });
   },
