@@ -139,13 +139,13 @@ ENGINE_TOKEN_FILE = SECRETS_DIR / "qianwen_engine_hmac.key"
 # ── v0.9.24 KB-FACTORY（W11 用户令 1022：知识库工厂五端点+云端履约桥+TCB 部署）──
 # 蓝图导出=一次性小额解锁（¥0.1 恒价）；整库订单=按蓝图摘要服务端复算动态价
 # （客户端 total 仅对账用，复算差>50fen 拒单防篡价——硬门）。
-# 支付载体=虚拟支付短剧商品：kb_goods 道具单价 ¥1，buyQuantity=金额(分)/100。
+# 支付载体=虚拟支付短剧商品：复用 export_product_id（¥0.1/个），buyQuantity=金额(分)/unit_fen。
 KB_BLUEPRINT_PRICE_FEN = 10     # 蓝图导出恒 ¥0.1（A 档硬编码；客户端声明不符即 400）
 KB_ORDER_BASE_FEN = 2900        # 整库底价 ¥29（引擎 A 档报价同源）
 KB_ORDER_PER_GB_FEN = 200       # 每 GB +¥2
 KB_ORDER_MD_FACTOR = 1.5        # 轻便阅读版 ×1.5
 KB_ORDER_IMPORT_ADD_FEN = 1900  # 随身导入包 +¥19
 KB_ORDER_PRICE_TOL_FEN = 50     # 服务端复算 vs 客户端声明容忍差（fen；超出=400 防篡价）
-KB_GOODS_UNIT_FEN = 100         # kb_goods 道具单价 ¥1（buyQuantity=total_fen/100）
+KB_GOODS_UNIT_FEN = 10          # 复用 export_product_id ¥0.1/个（1022：免建新道具，buyQuantity=total_fen/10）
 KB_ORDER_MAX_QUANTITY = 100000  # buyQuantity 护栏（微信短剧商品数量上限）
 KB_BRIDGE_KEY_FILE = SECRETS_DIR / "kb_bridge.key"   # 履约桥机对机共享密钥（缺文件=503 如实）
