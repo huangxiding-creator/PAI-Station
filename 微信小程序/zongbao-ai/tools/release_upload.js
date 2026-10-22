@@ -4,7 +4,7 @@
 const path = require('path');
 const ci = require('miniprogram-ci');
 
-const APPID = 'wxfdb55b184756e89e';
+const APPID = 'wx5cee1574ce45819b';  // zongbao-ai（总包AI顾问）——wxfdb 是展示线小程序勿混
 const PROJECT_PATH = path.resolve(__dirname, '..');           // zongbao-ai 根（project.config.json 所在）
 const KEY_PATH = path.resolve(__dirname, '..', '..', '..', 'data', 'secrets', `private.${APPID}.key`);
 const VERSION = process.argv[2] || '1.0.0';
