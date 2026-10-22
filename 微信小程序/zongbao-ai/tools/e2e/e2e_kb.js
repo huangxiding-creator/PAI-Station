@@ -85,7 +85,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     await sleep(300);
     const go = await page.$('.kf-go');
     rec('输入+生成按钮就绪', !!go);
-    await page.callMethod('onGenerate');  // 直调稳于 tap（tap 事件链受过渡态干扰）
+    await go.tap();  // callMethod 在 v2 后报 Uncaught（方法在原型上但 automator 找不到）；tap 事件链经 W4 实证稳定
     // 施工直播 8 阶段（样本路由 water）→ 轮询 bp 就绪
     let bp = null;
     for (let i = 0; i < 90; i++) {
