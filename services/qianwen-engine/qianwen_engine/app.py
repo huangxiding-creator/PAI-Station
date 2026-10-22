@@ -1554,3 +1554,319 @@ def telemetry_recent(request: Request, limit: int = 200):
         raise HTTPException(401, "bad tel key")
     limit = max(1, min(int(limit), 1000))
     return {"events": store.recent_telemetry(limit)}
+
+
+# ══ v0.9.24 KB-FACTORY（W11 用户令 1022：知识库工厂五端点+云端履约桥）══
+# 链路逐行镜像既有虚拟支付先例（导出/报告商城）：签名即落单 → 客户端
+# wx.requestVirtualPayment 透传 → 回调腿凭单+微信查单核验（fail-closed）。
+# 蓝图导出（¥0.1 恒价，复用 export_product_id 道具）；整库订单（动态价=
+# 服务端按蓝图摘要复算，kb_goods 道具 ¥1×buyQuantity）。
+# 履约桥 = 机对机端点（X-KB-Bridge 共享密钥，不走用户 token）：
+# 云端 confirmed(accepted) 单 → 本地 fulfillment inbox。
+
+_KB_VERSIONS = ("original", "md", "import")
+_KB_SHA_RE = re.compile(r"[0-9a-f]{4,32}")
+_KB_EMAIL_RE = re.compile(r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+$")
+# pay_order.kind 是 VARCHAR(8)（1009 生产实锤：超长词元 MySQL 500）：两单据词元钉死
+KB_KIND_BLUEPRINT = "kb_bp"
+KB_KIND_ORDER = "kb_order"
+
+
+class KbBlueprintSignIn(BaseModel):
+    version_sha: str = ""
+    price_fen_expected: int = 0
+
+
+class KbPaidIn(BaseModel):
+    out_trade_no: str = ""
+
+
+class KbOrderIn(BaseModel):
+    """整库订单四键 payload（签名腿与履约收尾腿同构，与 kbfactory_pay.js 对齐）。"""
+    blueprint: dict = {}
+    email: str = ""
+    version: str = "original"
+    need_text: str = ""
+
+
+class KbAckIn(BaseModel):
+    otn: str = ""
+
+
+def _kb_digest(body: KbOrderIn) -> dict:
+    """蓝图摘要校验（五键 {domain,files,gb,total,version_sha}）；非法即 400。"""
+    bp = body.blueprint or {}
+    sha = str(bp.get("version_sha") or "").strip().lower()
+    try:
+        files = int(bp.get("files") or 0)
+        gb = float(bp.get("gb") or 0.0)
+        total = float(bp.get("total") or 0.0)
+    except (TypeError, ValueError) as exc:
+        raise HTTPException(400, "蓝图摘要字段非法") from exc
+    domain = str(bp.get("domain") or "").strip()
+    if (not sha or not _KB_SHA_RE.fullmatch(sha) or gb < 0
+            or total < 0 or files < 0 or not domain):
+        raise HTTPException(400, "蓝图摘要字段非法")
+    return {"domain": domain[:64], "files": files, "gb": gb,
+            "total": total, "version_sha": sha}
+
+
+def _kb_price_fen(digest: dict, version: str) -> tuple:
+    """服务端复算价（硬门：客户端 total 仅对账，差>50fen 拒单防篡价）。
+    base=2900+gb×200（fen 四舍五入）；md=×1.5 四舍五入；import=+1900。
+    支付粒度=kb_goods 道具 ¥1×buyQuantity → 金额对齐整元（四舍五入）。
+    返回 (charge_fen, buy_quantity)。"""
+    base = int(config.KB_ORDER_BASE_FEN
+               + digest["gb"] * config.KB_ORDER_PER_GB_FEN + 0.5)
+    declared = int(digest["total"] * 100 + 0.5)
+    if abs(base - declared) > config.KB_ORDER_PRICE_TOL_FEN:
+        raise HTTPException(400, "订单金额与蓝图报价不符，请重新确认后下单")
+    if version == "md":
+        fen = int(base * config.KB_ORDER_MD_FACTOR + 0.5)
+    elif version == "import":
+        fen = base + config.KB_ORDER_IMPORT_ADD_FEN
+    else:
+        fen = base
+    charge = int(fen / config.KB_GOODS_UNIT_FEN + 0.5) * config.KB_GOODS_UNIT_FEN
+    qty = charge // config.KB_GOODS_UNIT_FEN
+    if qty < 1 or qty > config.KB_ORDER_MAX_QUANTITY:
+        raise HTTPException(400, "订单金额超出可支付范围")
+    return charge, qty
+
+
+def _kb_email_valid(email: str) -> str:
+    e = (email or "").strip()
+    if not e or not _KB_EMAIL_RE.fullmatch(e) or len(e) > 128:
+        raise HTTPException(400, "交付邮箱不合法")
+    return e
+
+
+@app.post("/api/kb/blueprint_sign")
+def kb_blueprint_sign(body: KbBlueprintSignIn, request: Request):
+    """签名腿（蓝图导出 ¥0.1）：A 档硬编码校验（expected≠10 拒 400）；
+    复用 export_once 道具（¥0.1 已现网）；kind=kb_bp、aid=version_sha；
+    老未付单作废重开 + 已付补账 409 收口（同导出/报告先例）。"""
+    openid = _openid(request)
+    sha = (body.version_sha or "").strip().lower()
+    if not _KB_SHA_RE.fullmatch(sha):
+        raise HTTPException(400, "蓝图摘要非法")
+    if int(body.price_fen_expected or 0) != config.KB_BLUEPRINT_PRICE_FEN:
+        raise HTTPException(400, "蓝图导出价格校验失败")
+    if store.kb_blueprint_unlocked(openid, sha):
+        raise HTTPException(409, "本张蓝图导出已解锁")
+    vp = _vp_config()
+    env_val, app_key, session_key = _export_pay_env(openid, vp)
+    open_o = store.open_pay_order(openid, KB_KIND_BLUEPRINT, aid=sha)
+    if open_o:
+        if _order_paid_reconcile(openid, open_o, vp, env_val,
+                                 app_key, session_key):
+            store.mark_kb_blueprint_paid(openid, sha, open_o["out_trade_no"])
+            raise HTTPException(409, "支付已到账，本张蓝图导出已解锁")
+        store.cancel_pay_order(open_o["out_trade_no"])
+    otn = _make_otn("p", sha)
+    store.create_pay_order(otn, openid, KB_KIND_BLUEPRINT, aid=sha,
+                           buy_quantity=1, total_fen=config.KB_BLUEPRINT_PRICE_FEN)
+    sign_data = {
+        "offerId": vp["offer_id"],
+        "buyQuantity": 1,
+        "env": env_val,
+        "currencyType": "CNY",
+        "productId": vp["export_product_id"],
+        "goodsPrice": config.KB_BLUEPRINT_PRICE_FEN,
+        "outTradeNo": otn,
+        "attach": hashlib.sha256(openid.encode()).hexdigest()[:16],
+        "mode": "short_series_goods",
+    }
+    body_s, pay_sig, signature = wechat.virtual_pay_sign(
+        app_key, session_key, sign_data)
+    return {
+        "mode": "short_series_goods",
+        "sign_data": body_s,
+        "pay_sig": pay_sig,
+        "signature": signature,
+        "out_trade_no": otn,
+        "price_fen": config.KB_BLUEPRINT_PRICE_FEN,
+    }
+
+
+@app.post("/api/kb/blueprint_paid")
+def kb_blueprint_paid(body: KbPaidIn, request: Request):
+    """回调腿（蓝图导出）：凭服务端订单 + 微信查单核验（fail-closed），
+    核验通过才幂等标记解锁 + pay_log 对账；重复回调收口 True。"""
+    openid = _openid(request)
+    otn = (body.out_trade_no or "").strip()
+    order = store.get_pay_order(otn) if otn else None
+    if (order is None or order["openid"] != openid
+            or order["kind"] != KB_KIND_BLUEPRINT):
+        raise HTTPException(404, "支付订单不存在")
+    sha = order["aid"]   # version_sha 从订单行取，不裸信客户端
+    if store.kb_blueprint_unlocked(openid, sha):
+        return {"blueprint_paid": True}
+    vp = _vp_config()
+    env_val, app_key, session_key = _export_pay_env(openid, vp)
+    _verify_order_paid(order, openid, vp, env_val, app_key, session_key)
+    store.mark_order_paid(otn)
+    store.mark_kb_blueprint_paid(openid, sha, otn)
+    return {"blueprint_paid": True}
+
+
+@app.post("/api/kb/order_sign")
+def kb_order_sign(body: KbOrderIn, request: Request):
+    """签名腿（整库订单，动态价）：服务端按蓝图摘要+version 复算金额
+    （客户端 total 差>50fen 拒 400 防篡价）；kb_goods 道具 ¥1×buyQuantity；
+    落 kb_orders（status=pending，含 email/version/need_text/蓝图摘要）；
+    老未付单作废重开 + 已付补账收口（先例同构）。"""
+    openid = _openid(request)
+    version = (body.version or "").strip().lower()
+    if version not in _KB_VERSIONS:
+        raise HTTPException(400, "交付版本非法")
+    email = _kb_email_valid(body.email)
+    digest = _kb_digest(body)
+    charge_fen, qty = _kb_price_fen(digest, version)
+    vp = _vp_config()
+    pid = vp.get("kb_product_id") or ""
+    if not pid:
+        raise HTTPException(503, "整库订单支付尚未开通")
+    env_val, app_key, session_key = _vpay_env(openid, vp)
+    sha = digest["version_sha"]
+    open_o = store.open_pay_order(openid, KB_KIND_ORDER, aid=sha)
+    if open_o:
+        if _order_paid_reconcile(openid, open_o, vp, env_val,
+                                 app_key, session_key):
+            store.mark_kb_order_paid(open_o["out_trade_no"])
+            raise HTTPException(409, "支付已到账，本单已受理")
+        store.cancel_pay_order(open_o["out_trade_no"])
+    otn = _make_otn("o", sha)
+    store.create_pay_order(otn, openid, KB_KIND_ORDER, aid=sha,
+                           buy_quantity=qty, total_fen=charge_fen)
+    store.create_kb_order(otn, openid, sha, email, version,
+                          (body.need_text or "").strip(),
+                          json.dumps(digest, ensure_ascii=False,
+                                     separators=(",", ":")),
+                          qty, charge_fen)
+    sign_data = {
+        "offerId": vp["offer_id"],
+        "buyQuantity": qty,
+        "env": env_val,
+        "currencyType": "CNY",
+        "productId": pid,
+        "goodsPrice": config.KB_GOODS_UNIT_FEN,
+        "outTradeNo": otn,
+        "attach": hashlib.sha256(openid.encode()).hexdigest()[:16],
+        "mode": "short_series_goods",
+    }
+    body_s, pay_sig, signature = wechat.virtual_pay_sign(
+        app_key, session_key, sign_data)
+    return {
+        "mode": "short_series_goods",
+        "sign_data": body_s,
+        "pay_sig": pay_sig,
+        "signature": signature,
+        "out_trade_no": otn,
+        "price_fen": charge_fen,
+        "buy_quantity": qty,
+    }
+
+
+@app.post("/api/kb/order_paid")
+def kb_order_paid(body: KbPaidIn, request: Request):
+    """回调腿（整库订单）：查单核验 → pay_order 转 paid + kb_orders 转 paid；
+    重复回调幂等收口。"""
+    openid = _openid(request)
+    otn = (body.out_trade_no or "").strip()
+    order = store.get_pay_order(otn) if otn else None
+    if (order is None or order["openid"] != openid
+            or order["kind"] != KB_KIND_ORDER):
+        raise HTTPException(404, "支付订单不存在")
+    ko = store.get_kb_order(otn)
+    if ko is not None and ko["status"] != "pending":
+        return {"order_paid": True}
+    vp = _vp_config()
+    env_val, app_key, session_key = _vpay_env(openid, vp)
+    _verify_order_paid(order, openid, vp, env_val, app_key, session_key)
+    store.mark_order_paid(otn)
+    store.mark_kb_order_paid(otn)
+    return {"order_paid": True}
+
+
+@app.post("/api/kb/order")
+def kb_order_submit(body: KbOrderIn, request: Request):
+    """履约单提交腿（支付成功后收尾）：email 必填校验 → 补 email/need_text
+    → status=accepted（幂等）。pending 单当场查单补账（回调断网恢复路径）；
+    仍未付 → 402。小程序侧失败落本地订单箱排队，不丢单。"""
+    openid = _openid(request)
+    version = (body.version or "").strip().lower()
+    if version not in _KB_VERSIONS:
+        raise HTTPException(400, "交付版本非法")
+    email = _kb_email_valid(body.email)
+    digest = _kb_digest(body)
+    ko = store.latest_kb_order(openid, digest["version_sha"], version)
+    if ko is None:
+        raise HTTPException(404, "整库订单不存在，请先完成支付")
+    if ko["status"] == "pending":
+        vp = _vp_config()
+        env_val, app_key, session_key = _vpay_env(openid, vp)
+        po = store.get_pay_order(ko["otn"])
+        if (po is None or not _order_paid_reconcile(openid, po, vp, env_val,
+                                                    app_key, session_key)):
+            raise HTTPException(402, "订单尚未支付成功，请完成支付后提交")
+        store.mark_kb_order_paid(ko["otn"])
+    if not store.confirm_kb_order(ko["otn"], email,
+                                  (body.need_text or "").strip()):
+        raise HTTPException(409, "订单状态不允许提交履约详情")
+    return {"accepted": True, "out_trade_no": ko["otn"]}
+
+
+# ── 履约桥（机对机）：云端订单 → 本地 fulfillment inbox ──────────────────
+# 认证 = X-KB-Bridge 头携带 SECRETS_DIR/kb_bridge.key 文件内容（密钥文件
+# 不存在 → 503 如实）；不走用户 token（_openid 不调用——引擎鉴权是
+# 端点内显式调用而非全局中间件，桥端点天然豁免）。
+
+def _kb_bridge_auth(request: Request) -> None:
+    want = ""
+    try:
+        if config.KB_BRIDGE_KEY_FILE.exists():
+            want = config.KB_BRIDGE_KEY_FILE.read_text(encoding="utf-8").strip()
+    except Exception:  # noqa: BLE001 —— 读失败视同未配置
+        want = ""
+    if not want:
+        raise HTTPException(503, "履约桥密钥未配置")
+    got = request.headers.get("x-kb-bridge") or ""
+    if not got or not secrets.compare_digest(got, want):
+        raise HTTPException(401, "履约桥认证失败")
+
+
+@app.get("/api/kb/orders/pending")
+def kb_orders_pending(request: Request, after: str = ""):
+    """履约桥拉取腿：accepted 且未 pulled 订单（脱敏出履约所需字段，
+    不含 openid/session 类身份数据）；after=confirmed_at 游标可选。"""
+    _kb_bridge_auth(request)
+    rows = store.kb_orders_accepted_unpulled(after=(after or "").strip())
+    out = []
+    for r in rows:
+        try:
+            bp = json.loads(r.get("blueprint_json") or "{}")
+        except ValueError:
+            bp = {}
+        out.append({
+            "otn": r["otn"], "blueprint": bp, "email": r["email"],
+            "version": r["version_sel"], "need_text": r.get("need_text") or "",
+            "total_fen": r["total_fen"], "buy_quantity": r["buy_quantity"],
+            "confirmed_at": r.get("confirmed_at") or "",
+        })
+    return {"orders": out}
+
+
+@app.post("/api/kb/orders/ack")
+def kb_orders_ack(body: KbAckIn, request: Request):
+    """履约桥回执腿：{otn} 标 pulled（幂等；未受理订单 404）。"""
+    _kb_bridge_auth(request)
+    otn = (body.otn or "").strip()
+    if not otn or not store.ack_kb_order_pulled(otn):
+        row = store.get_kb_order(otn) if otn else None
+        if row is None:
+            raise HTTPException(404, "订单不存在")
+        if row["status"] == "pulled":
+            return {"acknowledged": True}
+        raise HTTPException(409, "订单尚未确认受理")
+    return {"acknowledged": True}

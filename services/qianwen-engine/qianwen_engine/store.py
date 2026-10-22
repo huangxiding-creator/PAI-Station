@@ -562,6 +562,60 @@ _SCHEMA: tuple = (
         KEY idx_ral_openid (openid, created_at DESC)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"""),
     ("CREATE INDEX IF NOT EXISTS idx_ral_openid ON report_ask_log(openid, created_at DESC)", None),
+    # v0.9.24 KB-FACTORY（W11 用户令 1022）：知识库工厂两单据——
+    # 蓝图导出解锁（openid × version_sha 幂等，结构同 report_unlocks）；
+    # 整库订单业务表（支付腿复用 pay_order kind='kb_order'，本表承载履约四元组
+    # email/version/need_text/蓝图摘要与机对机状态机 pending→paid→accepted→pulled）
+    ("""CREATE TABLE IF NOT EXISTS kb_blueprint_unlocks (
+        openid TEXT NOT NULL,
+        version_sha TEXT NOT NULL,
+        out_trade_no TEXT DEFAULT '',
+        created_at TEXT DEFAULT (datetime('now','localtime')),
+        PRIMARY KEY(openid, version_sha)
+    )""",
+     """CREATE TABLE IF NOT EXISTS kb_blueprint_unlocks (
+        openid VARCHAR(64) NOT NULL,
+        version_sha VARCHAR(32) NOT NULL,
+        out_trade_no VARCHAR(64) DEFAULT '',
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (openid, version_sha)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"""),
+    ("""CREATE TABLE IF NOT EXISTS kb_orders (
+        otn TEXT NOT NULL PRIMARY KEY,
+        openid TEXT NOT NULL,
+        version_sha TEXT NOT NULL,
+        email TEXT NOT NULL,
+        version_sel TEXT NOT NULL,
+        need_text TEXT DEFAULT '',
+        blueprint_json TEXT NOT NULL,
+        buy_quantity INTEGER NOT NULL,
+        total_fen INTEGER NOT NULL,
+        status TEXT DEFAULT 'pending',
+        created_at TEXT DEFAULT (datetime('now','localtime')),
+        paid_at TEXT DEFAULT '',
+        confirmed_at TEXT DEFAULT '',
+        pulled_at TEXT DEFAULT ''
+    )""",
+     """CREATE TABLE IF NOT EXISTS kb_orders (
+        otn VARCHAR(64) NOT NULL PRIMARY KEY,
+        openid VARCHAR(64) NOT NULL,
+        version_sha VARCHAR(32) NOT NULL,
+        email VARCHAR(128) NOT NULL,
+        version_sel VARCHAR(16) NOT NULL,
+        need_text TEXT,
+        blueprint_json TEXT NOT NULL,
+        buy_quantity INT NOT NULL,
+        total_fen INT NOT NULL,
+        status VARCHAR(16) DEFAULT 'pending',
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        paid_at DATETIME NULL,
+        confirmed_at DATETIME NULL,
+        pulled_at DATETIME NULL,
+        rowid BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+        UNIQUE KEY uk_kborders_rowid (rowid),
+        KEY idx_kborders_openid (openid),
+        KEY idx_kborders_status (status)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"""),
 )
 
 # 增列（老库平滑升级：已存在则忽略）——sqlite 原文 / mysql 变体（TEXT 不可带 DEFAULT）
@@ -1087,6 +1141,142 @@ def mark_report_paid(openid: str, sku: str, out_trade_no: str = "") -> bool:
                 "INSERT INTO pay_log(aid, openid, out_trade_no) VALUES(?,?,?)",
                 (sku, openid, (out_trade_no or sku)[:64]))
         return True
+
+
+# ── v0.9.24 KB-FACTORY（W11）：蓝图解锁 + 整库订单业务表 ──
+
+def kb_blueprint_unlocked(openid: str, version_sha: str) -> bool:
+    """本人是否已解锁该蓝图导出（openid × version_sha 幂等）。"""
+    init()
+    with _db() as c:
+        return c.execute(
+            "SELECT 1 FROM kb_blueprint_unlocks WHERE openid=? AND version_sha=?",
+            (openid, version_sha)).fetchone() is not None
+
+
+def mark_kb_blueprint_paid(openid: str, version_sha: str,
+                           out_trade_no: str = "") -> bool:
+    """蓝图导出解锁标记（幂等：重复回调恒 True；首次落 pay_log 对账行）。"""
+    init()
+    with _LOCK, _db() as c:
+        row = c.execute(
+            "SELECT 1 FROM kb_blueprint_unlocks WHERE openid=? AND version_sha=?",
+            (openid, version_sha)).fetchone()
+        if row is None:
+            c.execute(
+                "INSERT INTO kb_blueprint_unlocks(openid, version_sha, out_trade_no)"
+                " VALUES(?,?,?)",
+                (openid, version_sha, (out_trade_no or version_sha)[:64]))
+            c.execute(
+                "INSERT INTO pay_log(aid, openid, out_trade_no) VALUES(?,?,?)",
+                (f"kb:{version_sha}"[:32], openid, (out_trade_no or version_sha)[:64]))
+        return True
+
+
+def create_kb_order(otn: str, openid: str, version_sha: str, email: str,
+                    version_sel: str, need_text: str, blueprint_json: str,
+                    buy_quantity: int, total_fen: int) -> bool:
+    """整库订单落库（签名腿，status=pending；otn 主键防重，已存在返回 False）。"""
+    init()
+    with _LOCK, _db() as c:
+        if c.execute("SELECT 1 FROM kb_orders WHERE otn=?",
+                     (otn,)).fetchone():
+            return False
+        c.execute(
+            "INSERT INTO kb_orders(otn, openid, version_sha, email, version_sel,"
+            " need_text, blueprint_json, buy_quantity, total_fen)"
+            " VALUES(?,?,?,?,?,?,?,?,?)",
+            ((otn or "")[:64], openid, (version_sha or "")[:32],
+             (email or "")[:128], (version_sel or "")[:16],
+             (need_text or "")[:500], blueprint_json,
+             int(buy_quantity), int(total_fen)))
+        return True
+
+
+def get_kb_order(otn: str) -> Optional[dict]:
+    init()
+    with _db() as c:
+        row = c.execute("SELECT * FROM kb_orders WHERE otn=?",
+                        (otn,)).fetchone()
+        return dict(row) if row else None
+
+
+def latest_kb_order(openid: str, version_sha: str,
+                    version_sel: str = "") -> Optional[dict]:
+    """本人 × 蓝图（×版本可选）最近一张整库订单（履约收尾腿按摘要定位）。"""
+    init()
+    with _db() as c:
+        if version_sel:
+            row = c.execute(
+                "SELECT * FROM kb_orders WHERE openid=? AND version_sha=?"
+                " AND version_sel=? ORDER BY rowid DESC LIMIT 1",
+                (openid, version_sha, version_sel)).fetchone()
+        else:
+            row = c.execute(
+                "SELECT * FROM kb_orders WHERE openid=? AND version_sha=?"
+                " ORDER BY rowid DESC LIMIT 1",
+                (openid, version_sha)).fetchone()
+        return dict(row) if row else None
+
+
+def mark_kb_order_paid(otn: str) -> bool:
+    """整库订单 pending → paid（幂等：已 paid 恒 True）。"""
+    init()
+    with _LOCK, _db() as c:
+        c.execute(
+            "UPDATE kb_orders SET status='paid',"
+            " paid_at=COALESCE(NULLIF(paid_at,''), datetime('now','localtime'))"
+            " WHERE otn=? AND status='pending'", (otn,))
+        row = c.execute("SELECT 1 FROM kb_orders WHERE otn=? AND status='paid'",
+                        (otn,)).fetchone()
+        return row is not None
+
+
+def confirm_kb_order(otn: str, email: str, need_text: str) -> bool:
+    """履约详情收尾（幂等）：paid/accepted → accepted，补 email/need_text。
+    （status 词元 ≤8 字符锚：'confirmed' 9 字符会被 VARCHAR(8) 全局锚拦下，
+    取 'accepted'=受理，与 API 回执键 {accepted:true} 同词。）"""
+    init()
+    with _LOCK, _db() as c:
+        row = c.execute("SELECT status FROM kb_orders WHERE otn=?",
+                        (otn,)).fetchone()
+        if row is None or row["status"] not in ("paid", "accepted"):
+            return False
+        c.execute(
+            "UPDATE kb_orders SET email=?, need_text=?, status='accepted',"
+            " confirmed_at=COALESCE(NULLIF(confirmed_at,''),"
+            " datetime('now','localtime')) WHERE otn=?",
+            ((email or "")[:128], (need_text or "")[:500], otn))
+        return True
+
+
+def kb_orders_accepted_unpulled(after: str = "") -> list:
+    """履约桥拉取面：accepted（=已确认受理）且未 pulled（after 可选游标）。"""
+    init()
+    with _db() as c:
+        if after:
+            rows = c.execute(
+                "SELECT * FROM kb_orders WHERE status='accepted'"
+                " AND confirmed_at>? ORDER BY rowid ASC",
+                (after,)).fetchall()
+        else:
+            rows = c.execute(
+                "SELECT * FROM kb_orders WHERE status='accepted'"
+                " ORDER BY rowid ASC").fetchall()
+        return [dict(r) for r in rows]
+
+
+def ack_kb_order_pulled(otn: str) -> bool:
+    """履约桥回执：accepted → pulled（幂等：已 pulled 恒 True）。"""
+    init()
+    with _LOCK, _db() as c:
+        c.execute(
+            "UPDATE kb_orders SET status='pulled',"
+            " pulled_at=COALESCE(NULLIF(pulled_at,''), datetime('now','localtime'))"
+            " WHERE otn=? AND status='accepted'", (otn,))
+        row = c.execute("SELECT 1 FROM kb_orders WHERE otn=? AND status='pulled'",
+                        (otn,)).fetchone()
+        return row is not None
 
 
 def history(openid: str, limit: int = 20) -> list:

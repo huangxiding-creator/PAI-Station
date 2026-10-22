@@ -57,7 +57,8 @@ docker push ccr.ccs.tencentyun.com/<命名空间>/qianwen-engine:v080
 | `zongbao_qianwen_mp.secret` | 小程序 appsecret（code2session / 小程序码 / msgSecCheck） |
 | `qianwen_engine_hmac.key` | **用户 token HMAC 密钥——必须持久化**：丢失/轮换=全体已发 token 失效，用户被登出 |
 | `metaso_api_key_user.txt` | 可选：search-api 外援腿 |
-| `virtual_pay.secret` | 可选：虚拟支付（当前免费模式未启用） |
+| `virtual_pay.secret` | 可选：虚拟支付（键含 `kb_product_id`=kb_goods 道具 ¥1，KB-FACTORY 整库订单动态价=单价×buyQuantity） |
+| `kb_bridge.key` | 可选：KB-FACTORY 履约桥共享密钥（机对机 `X-KB-Bridge` 头；`GET /api/kb/orders/pending`+`POST /api/kb/orders/ack`，缺文件=503 如实；本地履约机同钥 `E:\AI-Station\data\secrets\kb_bridge.key`） |
 
 另需把 `data/qianwen/fonts/`（NotoSansSC 双字重 otf/ttf）放入 `DATA_DIR/fonts/`（docx/pdf 导出与海报的中文字体；无字体时导出/海报接口返回 503，问答主链不受影响）。
 
@@ -141,6 +142,13 @@ node data/state/mn_client/update_envparams.js
 密钥真通道 = `SECRET_FILES_B64` 环境变量（JSON map 文件名→b64，entrypoint 启动落盘
 SECRETS_DIR）——本地源 `E:\AI-Station\data\secrets\`。旧 CLI 通道残件
 `qw_tcb_envupdate.py` 已退役（留档勿用）。
+
+**staging 源 CRLF 陷阱（1022 W11 实锤）**：从 git worktree（`core.autocrlf=true`）
+拷贝 staging 时，`docker-entrypoint.sh` 检出为 CRLF——容器启动即
+`set: Illegal option -`（`set -e\r`）崩循环，构建却全绿。staging 拷贝必须
+归一 CRLF→LF（`read_bytes().replace(b"\r\n", b"\n")`，entrypoint/Dockerfile/
+requirements/*.py 全量）；主仓 `E:\AI-Station\services\` 检出为 LF 无此患，
+仅 worktree/git 新克隆路径需要。
 
 ## 9. 注意事项
 

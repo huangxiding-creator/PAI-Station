@@ -192,3 +192,36 @@ CREATE TABLE IF NOT EXISTS report_ask_log (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     KEY idx_ral_openid (openid, created_at DESC)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- v0.9.24 KB-FACTORY（W11 用户令 1022）：蓝图导出解锁（openid × version_sha 幂等；
+-- 与 store.py _SCHEMA 同步维护——TCB_DEPLOY 纪律：改表两处一起改）
+CREATE TABLE IF NOT EXISTS kb_blueprint_unlocks (
+    openid VARCHAR(64) NOT NULL,
+    version_sha VARCHAR(32) NOT NULL,
+    out_trade_no VARCHAR(64) DEFAULT '',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (openid, version_sha)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- v0.9.24 KB-FACTORY：整库订单业务表（支付腿复用 pay_order kind='kb_order'；
+-- 机对机状态机 pending→paid→accepted→pulled；词元 ≤8 字符对齐 VARCHAR(8) 全局锚）
+CREATE TABLE IF NOT EXISTS kb_orders (
+    otn VARCHAR(64) NOT NULL PRIMARY KEY,
+    openid VARCHAR(64) NOT NULL,
+    version_sha VARCHAR(32) NOT NULL,
+    email VARCHAR(128) NOT NULL,
+    version_sel VARCHAR(16) NOT NULL,
+    need_text TEXT,
+    blueprint_json TEXT NOT NULL,
+    buy_quantity INT NOT NULL,
+    total_fen INT NOT NULL,
+    status VARCHAR(16) DEFAULT 'pending',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    paid_at DATETIME NULL,
+    confirmed_at DATETIME NULL,
+    pulled_at DATETIME NULL,
+    rowid BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    UNIQUE KEY uk_kborders_rowid (rowid),
+    KEY idx_kborders_openid (openid),
+    KEY idx_kborders_status (status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
