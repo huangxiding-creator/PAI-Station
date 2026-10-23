@@ -54,7 +54,7 @@ def clash_ports() -> list[int]:
     """
     import re as _re
     import subprocess as _sp
-    ports: list[int] = [15198, 29069, 11845, 20225]
+    ports: list[int] = [48898, 15198, 29069, 11845, 20225]  # 1023: 用户态内核口优先
     try:
         cfg = Path.home() / ".config" / "clash" / "config.yaml"
         ports += [int(q) for q in _re.findall(
