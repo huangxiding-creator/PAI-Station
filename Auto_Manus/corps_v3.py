@@ -702,7 +702,7 @@ def main() -> int:
     # 或 clash 已是 rule (别人的代理窗/残留窗) → 零网络操作干等闲窗,
     # 最多 15min; 仍忙 = 本班让路收官 (绝不挂 rule 干等, 下班自动再来)
     gate_from = time.time()
-    while weaipo_net_busy() or get_mode() == "rule":
+    while weaipo_net_busy():
         if time.time() - gate_from > 900:
             log("WeAIPO 在用网持续 >15min, 本班让路不开窗 (下班再来)")
             return 0
