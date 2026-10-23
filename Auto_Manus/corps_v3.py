@@ -163,15 +163,12 @@ WEAIPO_NB_WAVE = Path(r"F:\We-AIPO\data\state\nb_wave.json")
 def weaipo_net_busy() -> bool:
     """WeAIPO 正在用国外网? (精细判据, 1003 精细调度令)
 
-    1) run_state.json mode=="rule" — WeAIPO 自报开着代理窗
-       (NB 段用网时自己切 rule, 收工还原 direct; 1003 实证
-       stage=nb_window_end+mode=direct=用网结束)
+    1023 用户纠偏: 永动机值守进程≠NB环节 — 让路只让真NB.
+    判据收窄:
+    1) run_state mode=="rule" 且 stage 含 "nb" — 仅当两者同时满足
+       (仅 mode=rule 不够: 永动机非NB段也可能用rule代理)
     2) nb_wave.json state 非 done / queue>0 — NB 波次生产中
-       (视频生产/下载=真用网; state=done+queue=0=NB 已收工)
-       1011 护栏: state=done 且 ts 陈旧(>3h) → queue 视为下轮待发
-       残值非在产, 不判忙 (1010 22:08 波次收工残值 state=done+queue=8
-       烧掉 1011 黄金窗全程+哨兵 11:35-14:35 全部不拉班的实锤病理)
-    兜底: 两状态文件都读不到 → 退回心跳判据 (保守).
+       (1011 护栏: done+ts>3h = 陈旧残值不判忙)
     """
     try:
         rs = json.loads(WEAIPO_RUN_STATE.read_text(encoding="utf-8"))
@@ -182,8 +179,9 @@ def weaipo_net_busy() -> bool:
     except Exception:
         wv = None
     if rs is None and wv is None:
-        return weaipo_busy()            # 状态文件全失 → 心跳保守
-    if rs and rs.get("mode") == "rule":
+        return False           # 状态全失 → 不让(1023: 宁可跑也不错让)
+    # 1023 收窄: 仅 stage 含 nb 且 mode=rule 才算真 NB 用网
+    if rs and rs.get("mode") == "rule" and "nb" in str(rs.get("stage", "")):
         return True
     if wv and not _nb_wave_done_stale(wv) and (
             str(wv.get("state", "")) not in ("done", "")
