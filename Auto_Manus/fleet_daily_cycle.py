@@ -85,11 +85,29 @@ def brief_for(credits: int, tree_q: dict) -> str:
             f"多渠道交叉。只做资料搜集与罗列，不做分析论述。")
 
 
+def net_guard() -> bool:
+    """1023 用户令: 管理好网络再进行 Manus 操作 — 班前三件套预检."""
+    r = subprocess.run(
+        [sys.executable, "-X", "utf8",
+         str(ROOT / "clash_net_manager.py"), "check"],
+        capture_output=True, text=True, encoding="utf-8",
+        errors="replace", timeout=120, cwd=str(ROOT))
+    out = r.stdout or ""
+    for ln in out.splitlines():
+        ln = ln.strip()
+        if ln:
+            print(f"  {ln}", flush=True)
+    return r.returncode == 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--hours", type=float, default=24.0)
     ap.add_argument("--dry", action="store_true")
     ns = ap.parse_args()
+    if not net_guard():
+        print("[cycle] ⛔ 网络三件套未全绿, 禁战 (1023 用户令)", flush=True)
+        return 1
     emails = squad_emails()
     print(f"[cycle] 舰队 {len(emails)} 号 | 窗口 {ns.hours}h | "
           f"全用节奏 ≈ 每 {ns.hours * 60 / max(len(emails), 1):.1f} 分钟一号",
