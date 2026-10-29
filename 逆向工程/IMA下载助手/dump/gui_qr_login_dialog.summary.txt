@@ -1,0 +1,107 @@
+===== gui/qr_login_dialog.pyc =====
+DOCSTRING: 二维码登录对话框
+
+[<module>] args=() names=('__doc__', 'threading', 'PySide6.QtWidgets', 'QDialog', 'QVBoxLayout', 'QLabel', 'QPushButton', 'QMessageBox', 'PySide6.QtCore', 'Qt', 'QThread', 'Signal', 'PySide6.QtGui', 'QPixmap', 'services.login_service', 'WeChatQRLogin', 'utils', 'set_window_icon', 'set', '_active_login_workers', '_retain_worker_until_finished', 'LoginStatusWorker', 'QRLoginDialog')
+  CONST '二维码登录对话框'
+  CONST 0
+  CONST None
+  CONST ('QDialog', 'QVBoxLayout', 'QLabel', 'QPushButton', 'QMessageBox')
+  CONST ('Qt', 'QThread', 'Signal')
+  CONST ('QPixmap')
+  CONST ('WeChatQRLogin')
+  CONST ('set_window_icon')
+  CONST 'LoginStatusWorker'
+  CONST 'QRLoginDialog'
+
+  [_retain_worker_until_finished] args=('worker',) names=('_active_login_workers', 'add', 'finished', 'connect')
+    CONST 'Keep a cancelled worker alive until its current request returns.'
+    CONST None
+
+    [_retain_worker_until_finished.<locals>.<lambda>] args=() names=('_active_login_workers', 'discard')
+      CONST None
+
+  [LoginStatusWorker] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', '__doc__', 'Signal', 'str', 'status_changed', '__init__', 'run', 'stop', '__static_attributes__', '__classcell__')
+    CONST 'LoginStatusWorker'
+    CONST 20
+    CONST '后台轮询登录状态的Worker'
+    CONST ('_stop_event', 'login_client')
+
+    [LoginStatusWorker.__init__] args=('self', 'login_client') names=('super', '__init__', 'login_client', 'threading', 'Event', '_stop_event')
+      CONST None
+
+    [LoginStatusWorker.run] args=('self',) names=('_stop_event', 'is_set', 'login_client', 'check_scan_status', 'status_changed', 'emit')
+      CONST '在后台线程中检查登录状态'
+      CONST ('success', 'expired', 'error')
+      CONST None
+
+    [LoginStatusWorker.stop] args=('self',) names=('_stop_event', 'set')
+      CONST '停止轮询'
+      CONST None
+
+  [QRLoginDialog] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', '__init__', 'init_ui', 'load_qr_code', 'on_status_changed', 'refresh_qr_code', '_stop_status_worker', 'closeEvent', 'reject', '__static_attributes__', '__classcell__')
+    CONST 'QRLoginDialog'
+    CONST 48
+    CONST ('login_client', 'qr_label', 'refresh_btn', 'status_label', 'status_worker')
+    CONST (None)
+
+    [QRLoginDialog.__init__] args=('self', 'parent') names=('super', '__init__', 'setWindowTitle', 'setModal', 'setMinimumSize', 'set_window_icon', 'WeChatQRLogin', 'login_client', 'status_worker', 'init_ui', 'load_qr_code')
+      CONST None
+      CONST '微信扫码登录'
+      CONST True
+      CONST 400
+      CONST 500
+
+    [QRLoginDialog.init_ui] args=('self',) names=('QVBoxLayout', 'setSpacing', 'setContentsMargins', 'QLabel', 'setAlignment', 'Qt', 'AlignCenter', 'setStyleSheet', 'addWidget', 'qr_label', 'setMinimumSize', 'status_label', 'QPushButton', 'refresh_btn', 'clicked', 'connect', 'refresh_qr_code')
+      CONST None
+      CONST 20
+      CONST 30
+      CONST '请使用微信扫描二维码进行登录'
+      CONST 'font-size: 16px; color: #333; font-weight: bold;'
+      CONST 300
+      CONST 'border: 1px solid #ddd; background: white;'
+      CONST '正在加载二维码...'
+      CONST 'font-size: 14px; color: #666;'
+      CONST '刷新二维码'
+      CONST '\n            QPushButton {\n                min-height: 36px;\n                padding: 8px 20px;\n                border-radius: 4px;\n                font-size: 14px;\n                background-color: #2196F3;\n                color: white;\n                font-weight: bold;\n            }\n            QPushButton:hover {\n                background-color: #1976D2;\n            }\n        '
+
+    [QRLoginDialog.load_qr_code] args=('self',) names=('status_label', 'setText', 'refresh_btn', 'setEnabled', 'login_client', 'get_qr_uuid', 'get_qr_code_image', 'QPixmap', 'loadFromData', 'scaled', 'Qt', 'KeepAspectRatio', 'SmoothTransformation', 'qr_label', 'setPixmap', 'LoginStatusWorker', 'status_worker', 'status_changed', 'connect', 'on_status_changed', 'start')
+      CONST '加载二维码'
+      CONST '正在加载二维码...'
+      CONST False
+      CONST '获取二维码失败，请点击刷新重试'
+      CONST True
+      CONST None
+      CONST '加载二维码失败，请点击刷新重试'
+      CONST 280
+      CONST '请使用微信扫描二维码'
+
+    [QRLoginDialog.on_status_changed] args=('self', 'status') names=('status_label', 'setText', 'refresh_btn', 'setEnabled', 'login_client', 'login', 'accept', 'QMessageBox', 'critical')
+      CONST '处理状态变化（在主线程中执行）'
+      CONST 'success'
+      CONST '扫码成功，正在登录...'
+      CONST False
+      CONST '失败'
+      CONST '登录失败，请刷新二维码重试'
+      CONST True
+      CONST 'expired'
+      CONST '二维码已失效，请点击刷新'
+      CONST 'error'
+      CONST '网络错误，请点击刷新重试'
+      CONST None
+
+    [QRLoginDialog.refresh_qr_code] args=('self',) names=('_stop_status_worker', 'qr_label', 'clear', 'WeChatQRLogin', 'login_client', 'load_qr_code')
+      CONST '刷新二维码'
+      CONST None
+
+    [QRLoginDialog._stop_status_worker] args=('self',) names=('status_worker', 'isRunning', 'stop', 'status_changed', 'disconnect', 'on_status_changed', 'RuntimeError', 'TypeError', '_retain_worker_until_finished')
+      CONST 'Request cancellation without blocking the GUI thread.'
+      CONST None
+
+    [QRLoginDialog.closeEvent] args=('self', 'event') names=('_stop_status_worker', 'accept')
+      CONST '关闭对话框时停止轮询'
+      CONST None
+
+    [QRLoginDialog.reject] args=('self',) names=('_stop_status_worker', 'super', 'reject')
+      CONST 'Handle Esc and programmatic cancellation like the title-bar close.'
+      CONST None
+

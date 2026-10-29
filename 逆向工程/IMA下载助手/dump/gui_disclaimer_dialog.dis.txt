@@ -1,0 +1,518 @@
+===== gui/disclaimer_dialog.pyc =====
+
+# CODE <module>  args=()
+  0           RESUME                   0
+
+  1           LOAD_CONST               0 ('启动时显示的重要声明对话框。')
+              STORE_NAME               0 (__doc__)
+
+  2           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (('QDialog', 'QVBoxLayout', 'QHBoxLayout', 'QLabel', 'QPushButton', 'QTextBrowser', 'QFrame'))
+              IMPORT_NAME              1 (PySide6.QtWidgets)
+              IMPORT_FROM              2 (QDialog)
+              STORE_NAME               2 (QDialog)
+              IMPORT_FROM              3 (QVBoxLayout)
+              STORE_NAME               3 (QVBoxLayout)
+              IMPORT_FROM              4 (QHBoxLayout)
+              STORE_NAME               4 (QHBoxLayout)
+              IMPORT_FROM              5 (QLabel)
+              STORE_NAME               5 (QLabel)
+              IMPORT_FROM              6 (QPushButton)
+              STORE_NAME               6 (QPushButton)
+              IMPORT_FROM              7 (QTextBrowser)
+              STORE_NAME               7 (QTextBrowser)
+              IMPORT_FROM              8 (QFrame)
+              STORE_NAME               8 (QFrame)
+              POP_TOP
+
+ 11           LOAD_CONST               1 (0)
+              LOAD_CONST               3 (('Qt',))
+              IMPORT_NAME              9 (PySide6.QtCore)
+              IMPORT_FROM             10 (Qt)
+              STORE_NAME              10 (Qt)
+              POP_TOP
+
+ 12           LOAD_CONST               1 (0)
+              LOAD_CONST               4 (('set_window_icon',))
+              IMPORT_NAME             11 (utils)
+              IMPORT_FROM             12 (set_window_icon)
+              STORE_NAME              12 (set_window_icon)
+              POP_TOP
+
+ 15           LOAD_BUILD_CLASS
+              PUSH_NULL
+              LOAD_CONST               5 (<code object DisclaimerDialog at 0x000001DD462FB430, file "gui\disclaimer_dialog.py", line 15>)
+              MAKE_FUNCTION
+              LOAD_CONST               6 ('DisclaimerDialog')
+              LOAD_NAME                2 (QDialog)
+              CALL                     3
+              STORE_NAME              13 (DisclaimerDialog)
+              RETURN_CONST             7 (None)
+
+## CODE DisclaimerDialog  args=()
+  --           MAKE_CELL                0 (__class__)
+
+  15           RESUME                   0
+               LOAD_NAME                0 (__name__)
+               STORE_NAME               1 (__module__)
+               LOAD_CONST               0 ('DisclaimerDialog')
+               STORE_NAME               2 (__qualname__)
+               LOAD_CONST               1 (15)
+               STORE_NAME               3 (__firstlineno__)
+
+  16           LOAD_CONST               6 ((None,))
+               LOAD_FAST                0 (__class__)
+               BUILD_TUPLE              1
+               LOAD_CONST               2 (<code object __init__ at 0x000001DD4639C220, file "gui\disclaimer_dialog.py", line 16>)
+               MAKE_FUNCTION
+               SET_FUNCTION_ATTRIBUTE   8 (closure)
+               SET_FUNCTION_ATTRIBUTE   1 (defaults)
+               STORE_NAME               4 (__init__)
+
+  26           LOAD_CONST               3 (<code object _init_ui at 0x000001DD463BB740, file "gui\disclaimer_dialog.py", line 26>)
+               MAKE_FUNCTION
+               STORE_NAME               5 (_init_ui)
+
+ 193           LOAD_CONST               4 (<code object reject at 0x000001DD462F8630, file "gui\disclaimer_dialog.py", line 193>)
+               MAKE_FUNCTION
+               STORE_NAME               6 (reject)
+               LOAD_CONST               5 (())
+               STORE_NAME               7 (__static_attributes__)
+               LOAD_FAST                0 (__class__)
+               COPY                     1
+               STORE_NAME               8 (__classcell__)
+               RETURN_VALUE
+
+### CODE DisclaimerDialog.__init__  args=('self', 'parent')
+  --           COPY_FREE_VARS           1
+
+  16           RESUME                   0
+
+  17           LOAD_GLOBAL              0 (super)
+               LOAD_DEREF               2 (__class__)
+               LOAD_FAST                0 (self)
+               LOAD_SUPER_ATTR          5 (__init__ + NULL|self)
+               LOAD_FAST                1 (parent)
+               CALL                     1
+               POP_TOP
+
+  18           LOAD_FAST                0 (self)
+               LOAD_ATTR                5 (setWindowTitle + NULL|self)
+               LOAD_CONST               1 ('重要声明')
+               CALL                     1
+               POP_TOP
+
+  19           LOAD_FAST                0 (self)
+               LOAD_ATTR                7 (setModal + NULL|self)
+               LOAD_CONST               2 (True)
+               CALL                     1
+               POP_TOP
+
+  20           LOAD_FAST                0 (self)
+               LOAD_ATTR                9 (setFixedSize + NULL|self)
+               LOAD_CONST               3 (680)
+               LOAD_CONST               4 (520)
+               CALL                     2
+               POP_TOP
+
+  21           LOAD_FAST                0 (self)
+               LOAD_ATTR               11 (setWindowFlags + NULL|self)
+               LOAD_GLOBAL             12 (Qt)
+               LOAD_ATTR               14 (Dialog)
+               LOAD_GLOBAL             12 (Qt)
+               LOAD_ATTR               16 (WindowTitleHint)
+               BINARY_OP                7 (|)
+               LOAD_GLOBAL             12 (Qt)
+               LOAD_ATTR               18 (CustomizeWindowHint)
+               BINARY_OP                7 (|)
+               CALL                     1
+               POP_TOP
+
+  23           LOAD_GLOBAL             21 (set_window_icon + NULL)
+               LOAD_FAST                0 (self)
+               CALL                     1
+               POP_TOP
+
+  24           LOAD_FAST                0 (self)
+               LOAD_ATTR               23 (_init_ui + NULL|self)
+               CALL                     0
+               POP_TOP
+               RETURN_CONST             0 (None)
+
+### CODE DisclaimerDialog._init_ui  args=('self',)
+ 26           RESUME                   0
+
+ 27           LOAD_FAST                0 (self)
+              LOAD_ATTR                1 (setObjectName + NULL|self)
+              LOAD_CONST               1 ('disclaimerDialog')
+              CALL                     1
+              POP_TOP
+
+ 28           LOAD_FAST                0 (self)
+              LOAD_ATTR                3 (setStyleSheet + NULL|self)
+              LOAD_CONST               2 ('\n            QDialog#disclaimerDialog {\n                background: #F4F6F8;\n            }\n            QFrame#headerPanel, QFrame#contentPanel {\n                background: #FFFFFF;\n                border: 1px solid #DDE2E7;\n                border-radius: 6px;\n            }\n            QLabel#warningMark {\n                min-width: 42px;\n                max-width: 42px;\n                min-height: 42px;\n                max-height: 42px;\n                color: #8A5708;\n                background: #FFF3D6;\n                border: 1px solid #E8C77C;\n                border-radius: 5px;\n                font-size: 22px;\n                font-weight: 700;\n            }\n            QLabel#dialogTitle {\n                color: #20242A;\n                font-size: 20px;\n                font-weight: 700;\n            }\n            QLabel#dialogSubtitle {\n                color: #68717D;\n                font-size: 12px;\n            }\n            QLabel#sectionLabel {\n                color: #303640;\n                font-size: 13px;\n                font-weight: 600;\n            }\n            QTextBrowser#statementContent {\n                color: #303640;\n                background: transparent;\n                border: none;\n                font-size: 14px;\n            }\n            QFrame#noticePanel {\n                background: #FFF8E8;\n                border: 1px solid #EBD39B;\n                border-radius: 5px;\n            }\n            QLabel#noticeText {\n                color: #714B0C;\n                font-size: 12px;\n            }\n            QPushButton {\n                min-height: 40px;\n                padding: 0 20px;\n                border-radius: 5px;\n                font-size: 13px;\n                font-weight: 500;\n            }\n            QPushButton#exitButton {\n                color: #505966;\n                background: #FFFFFF;\n                border: 1px solid #C9D0D8;\n            }\n            QPushButton#exitButton:hover {\n                color: #A93535;\n                background: #FFF7F7;\n                border-color: #D9A3A3;\n            }\n            QPushButton#agreeButton {\n                color: #FFFFFF;\n                background: #236B5E;\n                border: 1px solid #236B5E;\n                font-weight: 600;\n            }\n            QPushButton#agreeButton:hover {\n                background: #1D5B50;\n                border-color: #1D5B50;\n            }\n            QPushButton:focus {\n                border: 2px solid #2F7D6D;\n            }\n        ')
+              CALL                     1
+              POP_TOP
+
+110           LOAD_GLOBAL              5 (QVBoxLayout + NULL)
+              LOAD_FAST                0 (self)
+              CALL                     1
+              STORE_FAST               1 (root_layout)
+
+111           LOAD_FAST                1 (root_layout)
+              LOAD_ATTR                7 (setContentsMargins + NULL|self)
+              LOAD_CONST               3 (20)
+              LOAD_CONST               3 (20)
+              LOAD_CONST               3 (20)
+              LOAD_CONST               4 (18)
+              CALL                     4
+              POP_TOP
+
+112           LOAD_FAST                1 (root_layout)
+              LOAD_ATTR                9 (setSpacing + NULL|self)
+              LOAD_CONST               5 (12)
+              CALL                     1
+              POP_TOP
+
+114           LOAD_GLOBAL             11 (QFrame + NULL)
+              CALL                     0
+              STORE_FAST               2 (header_panel)
+
+115           LOAD_FAST                2 (header_panel)
+              LOAD_ATTR                1 (setObjectName + NULL|self)
+              LOAD_CONST               6 ('headerPanel')
+              CALL                     1
+              POP_TOP
+
+116           LOAD_GLOBAL             13 (QHBoxLayout + NULL)
+              LOAD_FAST                2 (header_panel)
+              CALL                     1
+              STORE_FAST               3 (header_layout)
+
+117           LOAD_FAST                3 (header_layout)
+              LOAD_ATTR                7 (setContentsMargins + NULL|self)
+              LOAD_CONST               4 (18)
+              LOAD_CONST               7 (15)
+              LOAD_CONST               4 (18)
+              LOAD_CONST               7 (15)
+              CALL                     4
+              POP_TOP
+
+118           LOAD_FAST                3 (header_layout)
+              LOAD_ATTR                9 (setSpacing + NULL|self)
+              LOAD_CONST               8 (13)
+              CALL                     1
+              POP_TOP
+
+120           LOAD_GLOBAL             15 (QLabel + NULL)
+              LOAD_CONST               9 ('!')
+              CALL                     1
+              STORE_FAST               4 (warning_mark)
+
+121           LOAD_FAST                4 (warning_mark)
+              LOAD_ATTR                1 (setObjectName + NULL|self)
+              LOAD_CONST              10 ('warningMark')
+              CALL                     1
+              POP_TOP
+
+122           LOAD_FAST                4 (warning_mark)
+              LOAD_ATTR               17 (setAlignment + NULL|self)
+              LOAD_GLOBAL             18 (Qt)
+              LOAD_ATTR               20 (AlignCenter)
+              CALL                     1
+              POP_TOP
+
+123           LOAD_FAST                3 (header_layout)
+              LOAD_ATTR               23 (addWidget + NULL|self)
+              LOAD_FAST                4 (warning_mark)
+              CALL                     1
+              POP_TOP
+
+125           LOAD_GLOBAL              5 (QVBoxLayout + NULL)
+              CALL                     0
+              STORE_FAST               5 (heading_layout)
+
+126           LOAD_FAST                5 (heading_layout)
+              LOAD_ATTR                9 (setSpacing + NULL|self)
+              LOAD_CONST              11 (2)
+              CALL                     1
+              POP_TOP
+
+127           LOAD_GLOBAL             15 (QLabel + NULL)
+              LOAD_CONST              12 ('使用前请阅读重要声明')
+              CALL                     1
+              STORE_FAST               6 (title_label)
+
+128           LOAD_FAST                6 (title_label)
+              LOAD_ATTR                1 (setObjectName + NULL|self)
+              LOAD_CONST              13 ('dialogTitle')
+              CALL                     1
+              POP_TOP
+
+129           LOAD_GLOBAL             15 (QLabel + NULL)
+              LOAD_CONST              14 ('本声明涉及工具用途、合规要求与使用责任')
+              CALL                     1
+              STORE_FAST               7 (subtitle_label)
+
+130           LOAD_FAST                7 (subtitle_label)
+              LOAD_ATTR                1 (setObjectName + NULL|self)
+              LOAD_CONST              15 ('dialogSubtitle')
+              CALL                     1
+              POP_TOP
+
+131           LOAD_FAST                5 (heading_layout)
+              LOAD_ATTR               23 (addWidget + NULL|self)
+              LOAD_FAST                6 (title_label)
+              CALL                     1
+              POP_TOP
+
+132           LOAD_FAST                5 (heading_layout)
+              LOAD_ATTR               23 (addWidget + NULL|self)
+              LOAD_FAST                7 (subtitle_label)
+              CALL                     1
+              POP_TOP
+
+133           LOAD_FAST                3 (header_layout)
+              LOAD_ATTR               25 (addLayout + NULL|self)
+              LOAD_FAST                5 (heading_layout)
+              LOAD_CONST              16 (1)
+              CALL                     2
+              POP_TOP
+
+134           LOAD_FAST                1 (root_layout)
+              LOAD_ATTR               23 (addWidget + NULL|self)
+              LOAD_FAST                2 (header_panel)
+              CALL                     1
+              POP_TOP
+
+136           LOAD_GLOBAL             11 (QFrame + NULL)
+              CALL                     0
+              STORE_FAST               8 (content_panel)
+
+137           LOAD_FAST                8 (content_panel)
+              LOAD_ATTR                1 (setObjectName + NULL|self)
+              LOAD_CONST              17 ('contentPanel')
+              CALL                     1
+              POP_TOP
+
+138           LOAD_GLOBAL              5 (QVBoxLayout + NULL)
+              LOAD_FAST                8 (content_panel)
+              CALL                     1
+              STORE_FAST               9 (content_layout)
+
+139           LOAD_FAST                9 (content_layout)
+              LOAD_ATTR                7 (setContentsMargins + NULL|self)
+              LOAD_CONST               3 (20)
+              LOAD_CONST              18 (16)
+              LOAD_CONST               3 (20)
+              LOAD_CONST              18 (16)
+              CALL                     4
+              POP_TOP
+
+140           LOAD_FAST                9 (content_layout)
+              LOAD_ATTR                9 (setSpacing + NULL|self)
+              LOAD_CONST              19 (8)
+              CALL                     1
+              POP_TOP
+
+142           LOAD_GLOBAL             15 (QLabel + NULL)
+              LOAD_CONST              20 ('声明内容')
+              CALL                     1
+              STORE_FAST              10 (section_label)
+
+143           LOAD_FAST               10 (section_label)
+              LOAD_ATTR                1 (setObjectName + NULL|self)
+              LOAD_CONST              21 ('sectionLabel')
+              CALL                     1
+              POP_TOP
+
+144           LOAD_FAST                9 (content_layout)
+              LOAD_ATTR               23 (addWidget + NULL|self)
+              LOAD_FAST               10 (section_label)
+              CALL                     1
+              POP_TOP
+
+146           LOAD_GLOBAL             27 (QTextBrowser + NULL)
+              CALL                     0
+              STORE_FAST              11 (content_text)
+
+147           LOAD_FAST               11 (content_text)
+              LOAD_ATTR                1 (setObjectName + NULL|self)
+              LOAD_CONST              22 ('statementContent')
+              CALL                     1
+              POP_TOP
+
+148           LOAD_FAST               11 (content_text)
+              LOAD_ATTR               29 (setReadOnly + NULL|self)
+              LOAD_CONST              23 (True)
+              CALL                     1
+              POP_TOP
+
+149           LOAD_FAST               11 (content_text)
+              LOAD_ATTR               31 (setHtml + NULL|self)
+              LOAD_CONST              24 ('\n            <div style="line-height: 1.75;">\n                <p><b>1. 使用范围</b><br>\n                本工具仅供个人学习及技术研究使用。</p>\n\n                <p><b>2. 合规要求</b><br>\n                请务必在法律法规及相关平台规则允许的范围内操作，\n                严禁将本工具用于商业牟利、未经授权的数据获取或其他侵权行为。</p>\n\n                <p><b>3. 责任承担</b><br>\n                用户应自行判断具体使用行为的合法性与合规性；\n                因违规操作产生的一切后果由用户本人承担。</p>\n            </div>\n        ')
+              CALL                     1
+              POP_TOP
+
+163           LOAD_FAST                9 (content_layout)
+              LOAD_ATTR               23 (addWidget + NULL|self)
+              LOAD_FAST               11 (content_text)
+              LOAD_CONST              16 (1)
+              CALL                     2
+              POP_TOP
+
+165           LOAD_GLOBAL             11 (QFrame + NULL)
+              CALL                     0
+              STORE_FAST              12 (notice_panel)
+
+166           LOAD_FAST               12 (notice_panel)
+              LOAD_ATTR                1 (setObjectName + NULL|self)
+              LOAD_CONST              25 ('noticePanel')
+              CALL                     1
+              POP_TOP
+
+167           LOAD_GLOBAL             13 (QHBoxLayout + NULL)
+              LOAD_FAST               12 (notice_panel)
+              CALL                     1
+              STORE_FAST              13 (notice_layout)
+
+168           LOAD_FAST               13 (notice_layout)
+              LOAD_ATTR                7 (setContentsMargins + NULL|self)
+              LOAD_CONST               5 (12)
+              LOAD_CONST              26 (9)
+              LOAD_CONST               5 (12)
+              LOAD_CONST              26 (9)
+              CALL                     4
+              POP_TOP
+
+169           LOAD_GLOBAL             15 (QLabel + NULL)
+              LOAD_CONST              27 ('继续使用即表示您已阅读、理解并同意上述声明。')
+              CALL                     1
+              STORE_FAST              14 (notice_text)
+
+170           LOAD_FAST               14 (notice_text)
+              LOAD_ATTR                1 (setObjectName + NULL|self)
+              LOAD_CONST              28 ('noticeText')
+              CALL                     1
+              POP_TOP
+
+171           LOAD_FAST               13 (notice_layout)
+              LOAD_ATTR               23 (addWidget + NULL|self)
+              LOAD_FAST               14 (notice_text)
+              CALL                     1
+              POP_TOP
+
+172           LOAD_FAST                9 (content_layout)
+              LOAD_ATTR               23 (addWidget + NULL|self)
+              LOAD_FAST               12 (notice_panel)
+              CALL                     1
+              POP_TOP
+
+173           LOAD_FAST                1 (root_layout)
+              LOAD_ATTR               23 (addWidget + NULL|self)
+              LOAD_FAST                8 (content_panel)
+              LOAD_CONST              16 (1)
+              CALL                     2
+              POP_TOP
+
+175           LOAD_GLOBAL             13 (QHBoxLayout + NULL)
+              CALL                     0
+              STORE_FAST              15 (button_layout)
+
+176           LOAD_FAST               15 (button_layout)
+              LOAD_ATTR                7 (setContentsMargins + NULL|self)
+              LOAD_CONST              29 (0)
+              LOAD_CONST              11 (2)
+              LOAD_CONST              29 (0)
+              LOAD_CONST              29 (0)
+              CALL                     4
+              POP_TOP
+
+177           LOAD_FAST               15 (button_layout)
+              LOAD_ATTR                9 (setSpacing + NULL|self)
+              LOAD_CONST              30 (10)
+              CALL                     1
+              POP_TOP
+
+178           LOAD_FAST               15 (button_layout)
+              LOAD_ATTR               33 (addStretch + NULL|self)
+              CALL                     0
+              POP_TOP
+
+180           LOAD_GLOBAL             35 (QPushButton + NULL)
+              LOAD_CONST              31 ('不同意并退出')
+              CALL                     1
+              STORE_FAST              16 (exit_btn)
+
+181           LOAD_FAST               16 (exit_btn)
+              LOAD_ATTR                1 (setObjectName + NULL|self)
+              LOAD_CONST              32 ('exitButton')
+              CALL                     1
+              POP_TOP
+
+182           LOAD_FAST               16 (exit_btn)
+              LOAD_ATTR               36 (clicked)
+              LOAD_ATTR               39 (connect + NULL|self)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               40 (reject)
+              CALL                     1
+              POP_TOP
+
+183           LOAD_FAST               15 (button_layout)
+              LOAD_ATTR               23 (addWidget + NULL|self)
+              LOAD_FAST               16 (exit_btn)
+              CALL                     1
+              POP_TOP
+
+185           LOAD_GLOBAL             35 (QPushButton + NULL)
+              LOAD_CONST              33 ('已阅读并同意')
+              CALL                     1
+              STORE_FAST              17 (agree_btn)
+
+186           LOAD_FAST               17 (agree_btn)
+              LOAD_ATTR                1 (setObjectName + NULL|self)
+              LOAD_CONST              34 ('agreeButton')
+              CALL                     1
+              POP_TOP
+
+187           LOAD_FAST               17 (agree_btn)
+              LOAD_ATTR               43 (setDefault + NULL|self)
+              LOAD_CONST              23 (True)
+              CALL                     1
+              POP_TOP
+
+188           LOAD_FAST               17 (agree_btn)
+              LOAD_ATTR               36 (clicked)
+              LOAD_ATTR               39 (connect + NULL|self)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               44 (accept)
+              CALL                     1
+              POP_TOP
+
+189           LOAD_FAST               15 (button_layout)
+              LOAD_ATTR               23 (addWidget + NULL|self)
+              LOAD_FAST               17 (agree_btn)
+              CALL                     1
+              POP_TOP
+
+191           LOAD_FAST                1 (root_layout)
+              LOAD_ATTR               25 (addLayout + NULL|self)
+              LOAD_FAST               15 (button_layout)
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+### CODE DisclaimerDialog.reject  args=('self',)
+193           RESUME                   0
+
+195           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (None)
+              IMPORT_NAME              0 (sys)
+              STORE_FAST               1 (sys)
+
+197           LOAD_FAST                1 (sys)
+              LOAD_ATTR                3 (exit + NULL|self)
+              LOAD_CONST               1 (0)
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             2 (None)

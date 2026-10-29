@@ -1,0 +1,733 @@
+===== services/login_service.pyc =====
+
+# CODE <module>  args=()
+  0           RESUME                   0
+
+  1           LOAD_CONST               0 ('IMA登录模块 - 微信扫码登录')
+              STORE_NAME               0 (__doc__)
+
+  2           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (None)
+              IMPORT_NAME              1 (requests)
+              STORE_NAME               1 (requests)
+
+  3           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (None)
+              IMPORT_NAME              2 (re)
+              STORE_NAME               2 (re)
+
+  4           LOAD_CONST               1 (0)
+              LOAD_CONST               3 (('set_cookie',))
+              IMPORT_NAME              3 (core.config)
+              IMPORT_FROM              4 (set_cookie)
+              STORE_NAME               4 (set_cookie)
+              POP_TOP
+
+  5           LOAD_CONST               1 (0)
+              LOAD_CONST               4 (('calculate_bkn',))
+              IMPORT_NAME              5 (utils.bkn)
+              IMPORT_FROM              6 (calculate_bkn)
+              STORE_NAME               6 (calculate_bkn)
+              POP_TOP
+
+  6           LOAD_BUILD_CLASS
+              PUSH_NULL
+              LOAD_CONST               5 (<code object WeChatQRLogin at 0x000001DD4631C7A0, file "services\login_service.py", line 6>)
+              MAKE_FUNCTION
+              LOAD_CONST               6 ('WeChatQRLogin')
+              CALL                     2
+              STORE_NAME               7 (WeChatQRLogin)
+              RETURN_CONST             2 (None)
+
+## CODE WeChatQRLogin  args=()
+  6           RESUME                   0
+              LOAD_NAME                0 (__name__)
+              STORE_NAME               1 (__module__)
+              LOAD_CONST               0 ('WeChatQRLogin')
+              STORE_NAME               2 (__qualname__)
+              LOAD_CONST               1 (6)
+              STORE_NAME               3 (__firstlineno__)
+
+  7           LOAD_CONST               2 (<code object __init__ at 0x000001DD46157C90, file "services\login_service.py", line 7>)
+              MAKE_FUNCTION
+              STORE_NAME               4 (__init__)
+
+ 34           LOAD_CONST               3 (<code object get_qr_uuid at 0x000001DD45F6D160, file "services\login_service.py", line 34>)
+              MAKE_FUNCTION
+              STORE_NAME               5 (get_qr_uuid)
+
+ 60           LOAD_CONST               4 (<code object get_qr_code_image at 0x000001DD4614E700, file "services\login_service.py", line 60>)
+              MAKE_FUNCTION
+              STORE_NAME               6 (get_qr_code_image)
+
+ 73           LOAD_CONST              10 (((3, 2),))
+              LOAD_CONST               5 (<code object check_scan_status at 0x000001DD465F99D0, file "services\login_service.py", line 73>)
+              MAKE_FUNCTION
+              SET_FUNCTION_ATTRIBUTE   1 (defaults)
+              STORE_NAME               7 (check_scan_status)
+
+117           LOAD_CONST               6 (<code object generate_ima_cookie at 0x000001DD4650C030, file "services\login_service.py", line 117>)
+              MAKE_FUNCTION
+              STORE_NAME               8 (generate_ima_cookie)
+
+133           LOAD_CONST               7 (<code object login at 0x000001DD46428C90, file "services\login_service.py", line 133>)
+              MAKE_FUNCTION
+              STORE_NAME               9 (login)
+              LOAD_CONST               8 (('appid', 'auth_appid', 'fixed_cookie_fields', 'guid', 'headers', 'qimei36', 'redirect_uri', 'uuid', 'wx_code'))
+              STORE_NAME              10 (__static_attributes__)
+              RETURN_CONST             9 (None)
+
+### CODE WeChatQRLogin.__init__  args=('self',)
+  7           RESUME                   0
+
+  8           LOAD_CONST               1 ('wx0d63f5de059f1d52')
+              LOAD_FAST                0 (self)
+              STORE_ATTR               0 (appid)
+
+  9           LOAD_CONST               2 ('https://ima.qq.com/login/#/qr-code-scanned/')
+              LOAD_FAST                0 (self)
+              STORE_ATTR               1 (redirect_uri)
+
+ 10           LOAD_CONST               1 ('wx0d63f5de059f1d52')
+              LOAD_FAST                0 (self)
+              STORE_ATTR               2 (auth_appid)
+
+ 11           LOAD_CONST               3 ('guid-ca2055bffb9236ba0dea970403000002519701')
+              LOAD_FAST                0 (self)
+              STORE_ATTR               3 (guid)
+
+ 12           LOAD_CONST               4 ('ca2055bffb9236ba0dea970403000002519701')
+              LOAD_FAST                0 (self)
+              STORE_ATTR               4 (qimei36)
+
+ 16           LOAD_CONST               3 ('guid-ca2055bffb9236ba0dea970403000002519701')
+
+ 17           LOAD_CONST               4 ('ca2055bffb9236ba0dea970403000002519701')
+
+ 18           LOAD_CONST               5 ('2')
+
+ 19           LOAD_CONST               6 ('256002')
+
+ 20           LOAD_CONST               7 ('2.2.4.4069')
+
+ 21           LOAD_CONST               8 ('idcTokenImatokenBindSocial')
+
+ 22           LOAD_CONST               9 ('PR=IMA&PP=com.tencent.imaios&PPVN=2.2.4.4069&PL=IOS&RL=440.0*956.0&MO=iPhone18,2&OS=18.2&DN=iPhone18,2')
+
+ 15           LOAD_CONST              10 (('IMA-GUID', 'IMA-Q36', 'UID-TYPE', 'CLIENT-TYPE', 'APP-VERSION', 'IMA-TOKEN-TYPE', 'IMA-IUA'))
+              BUILD_CONST_KEY_MAP      7
+              LOAD_FAST                0 (self)
+              STORE_ATTR               5 (fixed_cookie_fields)
+
+ 26           LOAD_CONST              11 ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36')
+
+ 27           LOAD_CONST              12 ('text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8')
+
+ 28           LOAD_CONST              13 ('zh-CN,zh;q=0.9')
+
+ 25           LOAD_CONST              14 (('User-Agent', 'Accept', 'Accept-Language'))
+              BUILD_CONST_KEY_MAP      3
+              LOAD_FAST                0 (self)
+              STORE_ATTR               6 (headers)
+
+ 31           LOAD_CONST               0 (None)
+              LOAD_FAST                0 (self)
+              STORE_ATTR               7 (uuid)
+
+ 32           LOAD_CONST               0 (None)
+              LOAD_FAST                0 (self)
+              STORE_ATTR               8 (wx_code)
+              RETURN_CONST             0 (None)
+
+### CODE WeChatQRLogin.get_qr_uuid  args=('self',)
+  34           RESUME                   0
+
+  36           LOAD_CONST               1 ('https://open.weixin.qq.com/connect/qrconnect')
+               STORE_FAST               1 (url)
+
+  38           LOAD_FAST                0 (self)
+               LOAD_ATTR                0 (appid)
+
+  39           LOAD_CONST               2 ('snsapi_login')
+
+  40           LOAD_FAST                0 (self)
+               LOAD_ATTR                2 (redirect_uri)
+
+  41           LOAD_CONST               3 ('')
+
+  42           LOAD_CONST               4 ('jssdk')
+
+  43           LOAD_CONST               5 ('true')
+
+  44           LOAD_CONST               6 ('dark')
+
+  45           LOAD_CONST               7 ('1')
+
+  37           LOAD_CONST               8 (('appid', 'scope', 'redirect_uri', 'state', 'login_type', 'self_redirect', 'style', 'stylelite'))
+               BUILD_CONST_KEY_MAP      8
+               STORE_FAST               2 (params)
+
+  48           NOP
+
+  49   L1:     LOAD_GLOBAL              4 (requests)
+               LOAD_ATTR                6 (get)
+               PUSH_NULL
+               LOAD_FAST_LOAD_FAST     18 (url, params)
+               LOAD_FAST                0 (self)
+               LOAD_ATTR                8 (headers)
+               LOAD_CONST               9 (10)
+               LOAD_CONST              10 (('params', 'headers', 'timeout'))
+               CALL_KW                  4
+               STORE_FAST               3 (response)
+
+  50           LOAD_FAST                3 (response)
+               LOAD_ATTR               11 (raise_for_status + NULL|self)
+               CALL                     0
+               POP_TOP
+
+  52           LOAD_GLOBAL             12 (re)
+               LOAD_ATTR               14 (search)
+               PUSH_NULL
+               LOAD_CONST              11 ('/connect/qrcode/([^"]+)')
+               LOAD_FAST                3 (response)
+               LOAD_ATTR               16 (text)
+               CALL                     2
+               STORE_FAST               4 (match)
+
+  53           LOAD_FAST                4 (match)
+               TO_BOOL
+               POP_JUMP_IF_FALSE       34 (to L3)
+
+  54           LOAD_FAST                4 (match)
+               LOAD_ATTR               19 (group + NULL|self)
+               LOAD_CONST              12 (1)
+               CALL                     1
+               LOAD_FAST                0 (self)
+               STORE_ATTR              10 (uuid)
+
+  55           LOAD_FAST                0 (self)
+               LOAD_ATTR               20 (uuid)
+       L2:     RETURN_VALUE
+
+  56   L3:     RETURN_CONST            13 (None)
+
+  --   L4:     PUSH_EXC_INFO
+
+  57           LOAD_GLOBAL             22 (Exception)
+               CHECK_EXC_MATCH
+               POP_JUMP_IF_FALSE        3 (to L6)
+               POP_TOP
+
+  58   L5:     POP_EXCEPT
+               RETURN_CONST            13 (None)
+
+  57   L6:     RERAISE                  0
+
+  --   L7:     COPY                     3
+               POP_EXCEPT
+               RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L4 [0]
+  L4 to L5 -> L7 [1] lasti
+  L6 to L7 -> L7 [1] lasti
+
+### CODE WeChatQRLogin.get_qr_code_image  args=('self',)
+  60           RESUME                   0
+
+  62           LOAD_FAST                0 (self)
+               LOAD_ATTR                0 (uuid)
+               TO_BOOL
+               POP_JUMP_IF_TRUE         1 (to L1)
+
+  63           RETURN_CONST             1 (None)
+
+  65   L1:     LOAD_CONST               2 ('https://open.weixin.qq.com/connect/qrcode/')
+               LOAD_FAST                0 (self)
+               LOAD_ATTR                0 (uuid)
+               FORMAT_SIMPLE
+               BUILD_STRING             2
+               STORE_FAST               1 (url)
+
+  66           NOP
+
+  67   L2:     LOAD_GLOBAL              2 (requests)
+               LOAD_ATTR                4 (get)
+               PUSH_NULL
+               LOAD_FAST_LOAD_FAST     16 (url, self)
+               LOAD_ATTR                6 (headers)
+               LOAD_CONST               3 (10)
+               LOAD_CONST               4 (('headers', 'timeout'))
+               CALL_KW                  3
+               STORE_FAST               2 (response)
+
+  68           LOAD_FAST                2 (response)
+               LOAD_ATTR                9 (raise_for_status + NULL|self)
+               CALL                     0
+               POP_TOP
+
+  69           LOAD_FAST                2 (response)
+               LOAD_ATTR               10 (content)
+       L3:     RETURN_VALUE
+
+  --   L4:     PUSH_EXC_INFO
+
+  70           LOAD_GLOBAL             12 (Exception)
+               CHECK_EXC_MATCH
+               POP_JUMP_IF_FALSE        3 (to L6)
+               POP_TOP
+
+  71   L5:     POP_EXCEPT
+               RETURN_CONST             1 (None)
+
+  70   L6:     RERAISE                  0
+
+  --   L7:     COPY                     3
+               POP_EXCEPT
+               RERAISE                  1
+ExceptionTable:
+  L2 to L3 -> L4 [0]
+  L4 to L5 -> L7 [1] lasti
+  L6 to L7 -> L7 [1] lasti
+
+### CODE WeChatQRLogin.check_scan_status  args=('self', 'timeout')
+  73            RESUME                   0
+
+  75            LOAD_FAST                0 (self)
+                LOAD_ATTR                0 (uuid)
+                TO_BOOL
+                POP_JUMP_IF_TRUE         1 (to L1)
+
+  76            RETURN_CONST             1 (None)
+
+  78    L1:     LOAD_CONST               2 ('https://lp.open.weixin.qq.com/connect/l/qrconnect')
+                STORE_FAST               2 (url)
+
+  81            LOAD_FAST                0 (self)
+                LOAD_ATTR                2 (headers)
+                LOAD_CONST               3 ('User-Agent')
+                BINARY_SUBSCR
+
+  82            LOAD_CONST               4 ('*/*')
+
+  83            LOAD_CONST               5 ('https://open.weixin.qq.com/')
+
+  80            LOAD_CONST               6 (('User-Agent', 'Accept', 'Referer'))
+                BUILD_CONST_KEY_MAP      3
+                STORE_FAST               3 (headers)
+
+  86            NOP
+
+  87    L2:     LOAD_CONST               7 ('uuid')
+                LOAD_FAST                0 (self)
+                LOAD_ATTR                0 (uuid)
+                BUILD_MAP                1
+                STORE_FAST               4 (params)
+
+  89            LOAD_GLOBAL              4 (requests)
+                LOAD_ATTR                6 (get)
+                PUSH_NULL
+
+  90            LOAD_FAST                2 (url)
+
+  91            LOAD_FAST                4 (params)
+
+  92            LOAD_FAST                3 (headers)
+
+  93            LOAD_FAST                1 (timeout)
+
+  89            LOAD_CONST               8 (('params', 'headers', 'timeout'))
+                CALL_KW                  4
+                STORE_FAST               5 (response)
+
+  95            LOAD_FAST                5 (response)
+                LOAD_ATTR                9 (raise_for_status + NULL|self)
+                CALL                     0
+                POP_TOP
+
+  97            LOAD_GLOBAL             10 (re)
+                LOAD_ATTR               12 (search)
+                PUSH_NULL
+                LOAD_CONST               9 ('window\\.wx_errcode=(\\d+)')
+                LOAD_FAST                5 (response)
+                LOAD_ATTR               14 (text)
+                CALL                     2
+                STORE_FAST               6 (errcode_match)
+
+  98            LOAD_GLOBAL             10 (re)
+                LOAD_ATTR               12 (search)
+                PUSH_NULL
+                LOAD_CONST              10 ("window\\.wx_code='([^']*)'")
+                LOAD_FAST                5 (response)
+                LOAD_ATTR               14 (text)
+                CALL                     2
+                STORE_FAST               7 (code_match)
+
+ 100            LOAD_FAST                6 (errcode_match)
+                TO_BOOL
+                POP_JUMP_IF_FALSE       68 (to L9)
+
+ 101            LOAD_FAST                6 (errcode_match)
+                LOAD_ATTR               17 (group + NULL|self)
+                LOAD_CONST              11 (1)
+                CALL                     1
+                STORE_FAST               8 (errcode)
+
+ 102            LOAD_FAST                8 (errcode)
+                LOAD_CONST              12 ('405')
+                COMPARE_OP              88 (bool(==))
+                POP_JUMP_IF_FALSE       30 (to L4)
+                LOAD_FAST                7 (code_match)
+                TO_BOOL
+                POP_JUMP_IF_FALSE       23 (to L4)
+
+ 103            LOAD_FAST                7 (code_match)
+                LOAD_ATTR               17 (group + NULL|self)
+                LOAD_CONST              11 (1)
+                CALL                     1
+                LOAD_FAST                0 (self)
+                STORE_ATTR               9 (wx_code)
+
+ 104    L3:     RETURN_CONST            13 ('success')
+
+ 105    L4:     LOAD_FAST                8 (errcode)
+                LOAD_CONST              14 (('408', '404'))
+                CONTAINS_OP              0
+                POP_JUMP_IF_FALSE        1 (to L6)
+
+ 106    L5:     RETURN_CONST            15 ('waiting')
+
+ 107    L6:     LOAD_FAST                8 (errcode)
+                LOAD_CONST              16 ('403')
+                COMPARE_OP              88 (bool(==))
+                POP_JUMP_IF_FALSE        1 (to L8)
+
+ 108    L7:     RETURN_CONST            17 ('expired')
+
+ 110    L8:     RETURN_CONST            15 ('waiting')
+
+ 111    L9:     RETURN_CONST            15 ('waiting')
+
+  --   L10:     PUSH_EXC_INFO
+
+ 112            LOAD_GLOBAL              4 (requests)
+                LOAD_ATTR               20 (exceptions)
+                LOAD_ATTR               22 (Timeout)
+                CHECK_EXC_MATCH
+                POP_JUMP_IF_FALSE        3 (to L12)
+                POP_TOP
+
+ 114   L11:     POP_EXCEPT
+                RETURN_CONST            15 ('waiting')
+
+ 115   L12:     LOAD_GLOBAL              4 (requests)
+                LOAD_ATTR               20 (exceptions)
+                LOAD_ATTR               24 (RequestException)
+                CHECK_EXC_MATCH
+                POP_JUMP_IF_FALSE        3 (to L14)
+                POP_TOP
+
+ 116   L13:     POP_EXCEPT
+                RETURN_CONST            18 ('error')
+
+ 115   L14:     RERAISE                  0
+
+  --   L15:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+ExceptionTable:
+  L2 to L3 -> L10 [0]
+  L4 to L5 -> L10 [0]
+  L6 to L7 -> L10 [0]
+  L10 to L11 -> L15 [1] lasti
+  L12 to L13 -> L15 [1] lasti
+  L14 to L15 -> L15 [1] lasti
+
+### CODE WeChatQRLogin.generate_ima_cookie  args=('self', 'user_id', 'token', 'refresh_token')
+117           RESUME                   0
+
+120           LOAD_CONST               1 ('IMA-GUID=')
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (fixed_cookie_fields)
+              LOAD_CONST               2 ('IMA-GUID')
+              BINARY_SUBSCR
+              FORMAT_SIMPLE
+              BUILD_STRING             2
+
+121           LOAD_CONST               3 ('IMA-Q36=')
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (fixed_cookie_fields)
+              LOAD_CONST               4 ('IMA-Q36')
+              BINARY_SUBSCR
+              FORMAT_SIMPLE
+              BUILD_STRING             2
+
+122           LOAD_CONST               5 ('IMA-UID=')
+              LOAD_FAST                1 (user_id)
+              FORMAT_SIMPLE
+              BUILD_STRING             2
+
+123           LOAD_CONST               6 ('IMA-TOKEN=')
+              LOAD_FAST                2 (token)
+              FORMAT_SIMPLE
+              BUILD_STRING             2
+
+124           LOAD_CONST               7 ('UID-TYPE=')
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (fixed_cookie_fields)
+              LOAD_CONST               8 ('UID-TYPE')
+              BINARY_SUBSCR
+              FORMAT_SIMPLE
+              BUILD_STRING             2
+
+125           LOAD_CONST               9 ('CLIENT-TYPE=')
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (fixed_cookie_fields)
+              LOAD_CONST              10 ('CLIENT-TYPE')
+              BINARY_SUBSCR
+              FORMAT_SIMPLE
+              BUILD_STRING             2
+
+126           LOAD_CONST              11 ('APP-VERSION=')
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (fixed_cookie_fields)
+              LOAD_CONST              12 ('APP-VERSION')
+              BINARY_SUBSCR
+              FORMAT_SIMPLE
+              BUILD_STRING             2
+
+127           LOAD_CONST              13 ('IMA-TOKEN-TYPE=')
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (fixed_cookie_fields)
+              LOAD_CONST              14 ('IMA-TOKEN-TYPE')
+              BINARY_SUBSCR
+              FORMAT_SIMPLE
+              BUILD_STRING             2
+
+128           LOAD_CONST              15 ('IMA-IUA=')
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (fixed_cookie_fields)
+              LOAD_CONST              16 ('IMA-IUA')
+              BINARY_SUBSCR
+              FORMAT_SIMPLE
+              BUILD_STRING             2
+
+129           LOAD_CONST              17 ('IMA-REFRESH-TOKEN=')
+              LOAD_FAST                3 (refresh_token)
+              FORMAT_SIMPLE
+              BUILD_STRING             2
+
+119           BUILD_LIST              10
+              STORE_FAST               4 (cookie_parts)
+
+131           LOAD_CONST              18 (';')
+              LOAD_ATTR                3 (join + NULL|self)
+              LOAD_FAST                4 (cookie_parts)
+              CALL                     1
+              RETURN_VALUE
+
+### CODE WeChatQRLogin.login  args=('self',)
+ 133            RESUME                   0
+
+ 135            LOAD_FAST                0 (self)
+                LOAD_ATTR                0 (wx_code)
+                TO_BOOL
+                POP_JUMP_IF_TRUE         1 (to L1)
+
+ 136            RETURN_CONST             1 ((False, '未获取到扫码授权码'))
+
+ 138    L1:     LOAD_CONST               2 ('https://ima.qq.com/cgi-bin/auth_login/login')
+                STORE_FAST               1 (url)
+
+ 141            LOAD_FAST                0 (self)
+                LOAD_ATTR                2 (headers)
+                LOAD_CONST               3 ('User-Agent')
+                BINARY_SUBSCR
+
+ 142            LOAD_CONST               4 ('application/json')
+
+ 143            LOAD_CONST               5 ('*/*')
+
+ 144            LOAD_CONST               6 ('https://ima.qq.com')
+
+ 145            LOAD_CONST               7 ('https://ima.qq.com/')
+
+ 140            LOAD_CONST               8 (('User-Agent', 'Content-Type', 'Accept', 'Origin', 'Referer'))
+                BUILD_CONST_KEY_MAP      5
+                STORE_FAST               2 (headers)
+
+ 149            LOAD_CONST               9 (2)
+
+ 150            LOAD_FAST                0 (self)
+                LOAD_ATTR                0 (wx_code)
+
+ 151            LOAD_FAST                0 (self)
+                LOAD_ATTR                4 (auth_appid)
+
+ 153            LOAD_FAST                0 (self)
+                LOAD_ATTR                6 (guid)
+
+ 154            LOAD_CONST              10 (4)
+
+ 155            LOAD_FAST                0 (self)
+                LOAD_ATTR                8 (qimei36)
+
+ 152            LOAD_CONST              11 (('guid', 'platform', 'qimei36'))
+                BUILD_CONST_KEY_MAP      3
+
+ 148            LOAD_CONST              12 (('account_type', 'code', 'auth_appid', 'client_info'))
+                BUILD_CONST_KEY_MAP      4
+                STORE_FAST               3 (payload)
+
+ 159            NOP
+
+ 160    L2:     LOAD_GLOBAL             10 (requests)
+                LOAD_ATTR               12 (post)
+                PUSH_NULL
+                LOAD_FAST_LOAD_FAST     19 (url, payload)
+                LOAD_FAST                2 (headers)
+                LOAD_CONST              13 (15)
+                LOAD_CONST              14 (('json', 'headers', 'timeout'))
+                CALL_KW                  4
+                STORE_FAST               4 (response)
+
+ 161            LOAD_FAST                4 (response)
+                LOAD_ATTR               15 (raise_for_status + NULL|self)
+                CALL                     0
+                POP_TOP
+
+ 163            LOAD_FAST                4 (response)
+                LOAD_ATTR               17 (json + NULL|self)
+                CALL                     0
+                STORE_FAST               5 (result)
+
+ 164            LOAD_FAST                5 (result)
+                LOAD_ATTR               19 (get + NULL|self)
+                LOAD_CONST              15 ('code')
+                CALL                     1
+                LOAD_CONST              16 (0)
+                COMPARE_OP              88 (bool(==))
+                POP_JUMP_IF_FALSE      159 (to L4)
+
+ 165            LOAD_FAST                5 (result)
+                LOAD_ATTR               19 (get + NULL|self)
+                LOAD_CONST              17 ('token')
+                CALL                     1
+                STORE_FAST               6 (token)
+
+ 166            LOAD_FAST                5 (result)
+                LOAD_ATTR               19 (get + NULL|self)
+                LOAD_CONST              18 ('refresh_token')
+                CALL                     1
+                STORE_FAST               7 (refresh_token)
+
+ 167            LOAD_FAST                5 (result)
+                LOAD_ATTR               19 (get + NULL|self)
+                LOAD_CONST              19 ('user_id')
+                CALL                     1
+                STORE_FAST               8 (user_id)
+
+ 168            LOAD_GLOBAL             21 (int + NULL)
+                LOAD_FAST                5 (result)
+                LOAD_ATTR               19 (get + NULL|self)
+                LOAD_CONST              20 ('token_valid_time')
+                LOAD_CONST              21 (7200)
+                CALL                     2
+                CALL                     1
+                STORE_FAST               9 (token_valid_time)
+
+ 169            LOAD_GLOBAL             21 (int + NULL)
+                LOAD_FAST                5 (result)
+                LOAD_ATTR               19 (get + NULL|self)
+                LOAD_CONST              22 ('refresh_token_valid_time')
+                LOAD_CONST              23 (2592000)
+                CALL                     2
+                CALL                     1
+                STORE_FAST              10 (refresh_token_valid_time)
+
+ 172            LOAD_GLOBAL             23 (calculate_bkn + NULL)
+                LOAD_FAST                6 (token)
+                CALL                     1
+                STORE_FAST              11 (bkn)
+
+ 175            LOAD_FAST                0 (self)
+                LOAD_ATTR               25 (generate_ima_cookie + NULL|self)
+                LOAD_FAST_LOAD_FAST    134 (user_id, token)
+                LOAD_FAST                7 (refresh_token)
+                CALL                     3
+                STORE_FAST              12 (ima_cookie)
+
+ 178            LOAD_GLOBAL             27 (set_cookie + NULL)
+
+ 179            LOAD_GLOBAL             29 (str + NULL)
+                LOAD_FAST               11 (bkn)
+                CALL                     1
+
+ 180            LOAD_FAST               12 (ima_cookie)
+
+ 181            LOAD_FAST                8 (user_id)
+
+ 182            LOAD_FAST                6 (token)
+
+ 183            LOAD_FAST                7 (refresh_token)
+
+ 184            LOAD_FAST                9 (token_valid_time)
+
+ 185            LOAD_FAST               10 (refresh_token_valid_time)
+
+ 178            LOAD_CONST              24 (('user_id', 'token', 'refresh_token', 'token_valid_time', 'refresh_token_valid_time'))
+                CALL_KW                  7
+                POP_TOP
+
+ 188    L3:     RETURN_CONST            25 ((True, '登录成功'))
+
+ 190    L4:     LOAD_CONST              26 (False)
+                LOAD_CONST              27 ('登录失败: ')
+                LOAD_FAST                5 (result)
+                LOAD_ATTR               19 (get + NULL|self)
+                LOAD_CONST              28 ('msg')
+                LOAD_CONST              29 ('未知错误')
+                CALL                     2
+                FORMAT_SIMPLE
+                BUILD_STRING             2
+                BUILD_TUPLE              2
+        L5:     RETURN_VALUE
+
+  --    L6:     PUSH_EXC_INFO
+
+ 191            LOAD_GLOBAL             30 (Exception)
+                CHECK_EXC_MATCH
+                POP_JUMP_IF_FALSE       26 (to L11)
+                STORE_FAST              13 (e)
+
+ 192    L7:     LOAD_CONST              26 (False)
+                LOAD_CONST              30 ('登录请求失败: ')
+                LOAD_GLOBAL             29 (str + NULL)
+                LOAD_FAST               13 (e)
+                CALL                     1
+                FORMAT_SIMPLE
+                BUILD_STRING             2
+                BUILD_TUPLE              2
+        L8:     SWAP                     2
+        L9:     POP_EXCEPT
+                LOAD_CONST              31 (None)
+                STORE_FAST              13 (e)
+                DELETE_FAST             13 (e)
+                RETURN_VALUE
+
+  --   L10:     LOAD_CONST              31 (None)
+                STORE_FAST              13 (e)
+                DELETE_FAST             13 (e)
+                RERAISE                  1
+
+ 191   L11:     RERAISE                  0
+
+  --   L12:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+ExceptionTable:
+  L2 to L3 -> L6 [0]
+  L4 to L5 -> L6 [0]
+  L6 to L7 -> L12 [1] lasti
+  L7 to L8 -> L10 [1] lasti
+  L8 to L9 -> L12 [1] lasti
+  L10 to L12 -> L12 [1] lasti

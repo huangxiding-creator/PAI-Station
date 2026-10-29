@@ -1,0 +1,82 @@
+===== gui/tag_mixin.pyc =====
+DOCSTRING: 标签功能 Mixin
+
+[<module>] args=() names=('__doc__', 'PySide6.QtWidgets', 'QListWidgetItem', 'QWidget', 'QHBoxLayout', 'QLabel', 'QSizePolicy', 'PySide6.QtCore', 'Qt', 'gui.workers.workers', 'FetchTagsWorker', 'TagMixin')
+  CONST '标签功能 Mixin'
+  CONST 0
+  CONST ('QListWidgetItem', 'QWidget', 'QHBoxLayout', 'QLabel', 'QSizePolicy')
+  CONST ('Qt')
+  CONST ('FetchTagsWorker')
+  CONST 'TagMixin'
+  CONST None
+
+  [TagMixin] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', '__doc__', '_TAG_COLORS', '_on_kb_changed', '_fetch_tags', '_fetch_more_tags', '_on_first_tags_loaded', '_on_more_tags_loaded', '_on_tags_error', '_on_tag_selection_changed', '_create_tag_widget', '__static_attributes__')
+    CONST 'TagMixin'
+    CONST 7
+    CONST '鏍囩\ue137鍔熻兘锛屼緵 MainWindow 缁ф壙'
+    CONST (('#E3F2FD', '#1565C0'), ('#E8F5E9', '#2E7D32'), ('#FFF3E0', '#E65100'), ('#F3E5F5', '#7B1FA2'), ('#FFEBEE', '#C62828'), ('#E0F7FA', '#00695C'), ('#FFF8E1', '#F57F17'), ('#FCE4EC', '#AD1457'))
+    CONST ('_current_tag_kb_id', '_tag_fetch_worker', '_tag_is_end', '_tag_loading', '_tag_next_cursor', 'current_tags', 'selected_tags')
+    CONST None
+
+    [TagMixin._on_kb_changed] args=('self', 'index') names=('kb_selector', 'currentData', 'tag_list_widget', 'clear', 'tag_selector', 'setEnabled', 'setEditText', 'setPlaceholderText', 'current_tags', 'selected_tags', '_tag_next_cursor', '_tag_is_end', '_current_tag_kb_id', '_fetch_tags')
+      CONST '鐭ヨ瘑搴撻€夋嫨鍙樺寲鏃讹紝鍔犺浇璇ョ煡璇嗗簱鐨勬爣绛?'
+      CONST False
+      CONST ''
+      CONST '选择标签（可选）'
+      CONST True
+      CONST None
+
+    [TagMixin._fetch_tags] args=('self', 'kb_id') names=('tag_list_widget', 'clear', 'tag_selector', 'setEditText', 'setEnabled', 'selected_tags', 'current_tags', '_tag_next_cursor', '_tag_is_end', '_tag_loading', '_current_tag_kb_id', '_tag_fetch_worker', 'isRunning', 'quit', 'wait', 'FetchTagsWorker', 'finished', 'connect', '_on_first_tags_loaded', 'error', '_on_tags_error', 'start')
+      CONST '寮傛\ue11e鑾峰彇鐭ヨ瘑搴撴爣绛撅紙棣栨壒鍔犺浇锛?'
+      CONST ''
+      CONST False
+      CONST True
+      CONST 2000
+      CONST 20
+      CONST ('limit')
+      CONST None
+
+    [TagMixin._fetch_more_tags] args=('self',) names=('_tag_loading', '_tag_is_end', '_current_tag_kb_id', '_tag_fetch_worker', 'isRunning', 'quit', 'wait', 'FetchTagsWorker', '_tag_next_cursor', 'finished', 'connect', '_on_more_tags_loaded', 'error', '_on_tags_error', 'start')
+      CONST '鍔犺浇鏇村\ue63f鏍囩\ue137锛堟噿鍔犺浇锛?'
+      CONST None
+      CONST True
+      CONST 2000
+      CONST 20
+      CONST ('limit')
+
+    [TagMixin._on_first_tags_loaded] args=('self', 'tags', 'next_cursor', 'is_end') names=('_tag_loading', '_tag_next_cursor', '_tag_is_end', 'list', 'current_tags', 'QListWidgetItem', 'setFlags', 'flags', 'Qt', 'ItemIsUserCheckable', 'setCheckState', 'Unchecked', 'tag_list_widget', 'addItem', 'tag_selector', 'setEnabled', 'bool', 'setPlaceholderText')
+      CONST '棣栨壒鏍囩\ue137鍔犺浇瀹屾垚'
+      CONST False
+      CONST '无可用标签'
+      CONST None
+
+    [TagMixin._on_more_tags_loaded] args=('self', 'tags', 'next_cursor', 'is_end') names=('_tag_loading', '_tag_next_cursor', '_tag_is_end', 'current_tags', 'extend', 'tag_list_widget', 'blockSignals', 'QListWidgetItem', 'setFlags', 'flags', 'Qt', 'ItemIsUserCheckable', 'setCheckState', 'Unchecked', 'addItem')
+      CONST '鏇村\ue63f鏍囩\ue137鍔犺浇瀹屾垚锛堣拷鍔犲埌鍒楄〃锛?'
+      CONST False
+      CONST True
+      CONST None
+
+    [TagMixin._on_tags_error] args=('self', 'msg') names=('_tag_loading', 'tag_list_widget', 'clear', 'tag_selector', 'setPlaceholderText', 'setEnabled')
+      CONST '鏍囩\ue137鍔犺浇澶辫触'
+      CONST False
+      CONST '标签加载失败'
+      CONST None
+
+    [TagMixin._on_tag_selection_changed] args=('self', 'item') names=('selected_tags', 'range', 'tag_list_widget', 'count', 'item', 'checkState', 'Qt', 'Checked', 'append', 'text', 'tag_selector', 'setEditText', 'len', 'setPlaceholderText')
+      CONST '鏍囩\ue137鍕鹃€夌姸鎬佸彉鍖?'
+      CONST '已选 '
+      CONST ' 个标签'
+      CONST ''
+      CONST '选择标签（可选）'
+      CONST None
+
+    [TagMixin._create_tag_widget] args=('self', 'tags') names=('QWidget', 'QHBoxLayout', 'setContentsMargins', 'setSpacing', 'enumerate', '_TAG_COLORS', 'len', 'QLabel', 'setStyleSheet', 'setSizePolicy', 'QSizePolicy', 'Policy', 'Fixed', 'addWidget', 'addStretch')
+      CONST '鍒涘缓鏍囩\ue137灞曠ずwidget锛屾瘡涓\ue045爣绛句竴涓\ue044僵鑹插渾瑙抣abel'
+      CONST None
+      CONST 0
+      CONST 2
+      CONST 4
+      CONST 'background-color: '
+      CONST '; color: '
+      CONST '; border-radius: 8px; padding: 1px 6px; font-size: 11px;'
+

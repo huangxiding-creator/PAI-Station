@@ -1,0 +1,331 @@
+@@@ off=2431500
+ logId=${
+t
+}
+, executed=${
+e
+}
+`):console.error(`【上报特定任务】HTTP ${
+s.status
+}
+: ${
+await s.text()
+}
+`)
+}
+catch(r){
+console.error("【上报特定任务】请求失败:",r)
+}
+
+}
+,shouldStopContext=t=>t.isAborted()||!t.isCurrentRun(),markCompletedResponseReplyRpa=(t,e)=>{
+if(e==="whatsapp"||getCurrentReplyMode()!=="auto")return;
+const r=getOwningRunId(t,"response");
+!r||rxEngine.currentScope("response")?.runId!==r||markPostReplyMessageCheckPending(e)
+}
+,runTaskRecipe=async(t,e,r,n)=>{
+const a=n?.skipDisplay??!1,s=()=>shouldStopContext(t);
+let i=null,o="fail",d;
+try{
+if(t.throwIfAborted(),!e||!Array.isArray(e)||e.length===0)return{
+success:!1,error:"没有可执行的actions"
+}
+;
+const u=getCurrentAppType();
+if(isGenericImRuntime()&&r&&r.length>0)return{
+success:!1,error:"当前通用 IM 模式只支持回复当前会话或切换未读会话，不支持搜索指定联系人"
+}
+;
+r&&Array.isArray(r)&&r.length>0&&(i=traceLogger.beginForcedScope("target_name_send",{
+appType:u,extra:{
+source:n?.source,traceId:n?.traceId,responseRunId:getOwningRunId(t,"response"),executionRunId:t.runId,executionScope:t.scope,targetNames:r,actionCount:e.length,forceSearchTarget:n?.forceSearchTarget===!0,enableSearchTargetPostcheck:n?.enableSearchTargetPostcheck===!0
+}
+
+}
+)),streamingState.isStreaming&&streamingState.currentType==="thinking"&&(console.log("【executeSendTask】检测到正在思考，先完成流式消息"),await finishStreamMessage(!1,t),await t.delay(100));
+const l=filterActionsByAppType(e,u);
+if(l.length!==e.length&&console.log(`【executeSendTask】已过滤 ${
+e.length-l.length
+}
+ 个不支持的 action`),l.length===0)return{
+success:!1,error:isGenericImRuntime()?"当前通用 IM 模式只支持文字回复":"没有当前应用可执行的 action"
+}
+;
+const f=async h=>{
+for(const[p,m]of l.entries()){
+if(s()){
+console.log("【executeSendTask】收到停止信号，停止发送剩余消息");
+break
+}
+if(t.throwIfAborted(),m.action==="text"&&m.data){
+if(console.log("【executeSendTask】发送文字消息:",m.data),a||displayMessage("keyboard",m.data,"发送："),await sendMessageRPA(m.data,u,t)&&markCompletedResponseReplyRpa(t,u),s())break
+}
+else if(m.action==="text_prompt"&&m.data){
+console.log("【executeSendTask】检测到 text_prompt 类型，开始流式发送:",m.data);
+const{
+user:_,system:v
+}
+=parsePromptData(
+@@@ off=2433500
+m.data);
+a||displayMessage("thinking",_);
+try{
+await sendStreamingPromptMessage(_,u,t,v),console.log("【executeSendTask】流式发送完成")
+}
+catch($){
+if(isExecutionAbortError($)){
+console.log("【executeSendTask】流式发送被中断");
+break
+}
+console.error("【executeSendTask】流式发送失败:",$)
+}
+if(s())break
+}
+else if(m.action==="vision_prompt"){
+console.log("【executeSendTask】检测到 vision_prompt 类型，开始执行视觉检查"),a||displayMessage("action","执行视觉检查...","checking");
+const{
+user:_,system:v
+}
+=parsePromptData(m.data||"");
+try{
+const $=await processVisionPrompt(u,t,_,v);
+if($.success)console.log("【executeSendTask】视觉检查通过");
+else if(console.error("【executeSendTask】视觉检查失败:",$.error),$.error==="任务已中断")break
+}
+catch($){
+if(isExecutionAbortError($)){
+console.log("【executeSendTask】视觉检查被中断");
+break
+}
+console.error("【executeSendTask】视觉检查异常:",$)
+}
+if(s())break;
+await t.delay(200)
+}
+else if(m.action==="image"&&m.data){
+console.log("【executeSendTask】发送图片消息:",m.data),a||displayMessage("keyboard","发送图片","");
+let _=!1;
+try{
+t.throwIfAborted(),_=await sendImageRPA(m.data,u,t)
+}
+catch(v){
+if(isExecutionAbortError(v))break;
+console.error("【executeSendTask】发送图片失败:",v)
+}
+finally{
+n?.source==="simple_task"&&replayLogger.logSimpleTaskImage({
+traceId:n.traceId,imageUrl:m.data,imageBuffer:getCachedImageBuffer(m.data),sent:_,actionIndex:p,targetName:h
+}
+)
+}
+if(s())break
+}
+else if(m.action==="weixin_favorites"&&m.data){
+console.log("【executeSendTask】发送收藏夹内容:",m.data),a||displayMessage("keyboard","发送收藏夹内容","");
+try{
+t.throwIfAborted();
+const _=await performCompleteCollectionFlow(m.data,u,t);
+_.success?isBeijingSubwayProject()&&(console.log("【beijing_subway】收藏夹发送完成，等待 5 秒..."),await t.delay(5e3)):console.error("【executeSendTask】发送收藏夹内容失败:",_.error||"未知错误")
+}
+catch(_){
+if(isExecutionAbortError(_))break;
+console.error("【executeSendTask】发送收藏夹内容失败:",_)
+}
+if(s())break
+}
+
+}
+
+}
+;
+if(r&&Array.isArray(r)&&r.length>0){
+console.log("【executeSendTask】检测到 target_names，将为每个目标执行actions");
+for(const[h,p]of r.entries()){
+if(s()){
+console.log("【executeSendTask】收到停止信号，停止后续目标");
+break
+}
+if(traceLogger.log("target_name_send","target
+@@@ off=2435500
+_start",{
+extra:{
+source:n?.source,traceId:n?.traceId,targetName:p,targetIndex:h,targetCount:r.length,previousTarget:engineState.currentConversationTarget
+}
+
+}
+),p&&(n?.forceSearchTarget||p!==engineState.currentConversationTarget)){
+if(console.log("【executeSendTask切换对话】从",engineState.currentConversationTarget,"切换到",p,n?.forceSearchTarget?"（强制搜索）":""),u!=="whatsapp"){
+const v=await searchUserRPA(p,u,{
+enableOcrPrecheck:!1,enableOcrPostcheck:n?.enableSearchTargetPostcheck===!0,isGroupChat:void 0,shouldStop:s
+}
+);
+if(t.throwIfAborted(),console.log("【executeSendTask】搜索用户结果:",v),v&&"interrupted"in v&&v.interrupted)return console.log("【executeSendTask切换对话】searchUserRPA 被中断，停止执行"),o="interrupted",d="任务已中断",traceLogger.log("target_name_send","target_search_interrupted",{
+result:"interrupted",extra:{
+source:n?.source,traceId:n?.traceId,targetName:p,targetIndex:h
+}
+
+}
+),{
+success:!1,error:"任务已中断"
+}
+;
+if(!v||!v.success)return console.log("【executeSendTask切换对话】searchUserRPA 搜索失败，停止发送"),o="fail",d=`搜索用户失败: ${
+p
+}
+`,traceLogger.log("target_name_send","target_search_failed",{
+result:"fail",error:v?.error||d,extra:{
+source:n?.source,traceId:n?.traceId,targetName:p,targetIndex:h
+}
+
+}
+),{
+success:!1,error:`搜索用户失败: ${
+p
+}
+`
+}
+;
+console.log("【executeSendTask切换对话】searchUserRPA 执行成功"),traceLogger.log("target_name_send","target_search_succeeded",{
+result:"success",extra:{
+source:n?.source,traceId:n?.traceId,targetName:p,targetIndex:h
+}
+
+}
+)
+}
+else console.log("【executeSendTask】WhatsApp 模式，跳过 target_names 搜索");
+engineState.currentConversationTarget=p
+}
+const _=l.length;
+if(a||displayMessage("action",`开始向「${
+p
+}
+」发送消息（共 ${
+_
+}
+ 条）`,"sending"),traceLogger.log("target_name_send","actions_start",{
+extra:{
+source:n?.source,traceId:n?.traceId,targetName:p,targetIndex:h,actionCount:_,currentConversationTarget:engineState.currentConversationTarget
+}
+
+}
+),await f(p),traceLogger.log("target_name_send","actions_complete",{
+result:s()?"interrupted":"success",extra:{
+source:n?.source,traceId:n?.traceId,targetName:p,targetIndex:h,actionCount:_,currentConversationTar
+@@@ off=2437500
+get:engineState.currentConversationTarget
+}
+
+}
+),s()){
+console.log("【executeSendTask】收到停止信号，停止后续目标");
+break
+}
+
+}
+
+}
+else await f();
+return s()?(console.log("【executeSendTask】任务执行被中断"),o="interrupted",d="任务已中断",{
+success:!1,error:"任务已中断"
+}
+):(console.log("【executeSendTask】任务执行完成"),o="success",{
+success:!0
+}
+)
+}
+catch(u){
+return isExecutionAbortError(u)?(console.log("【executeSendTask】任务执行被中断"),o="interrupted",d="任务已中断",{
+success:!1,error:"任务已中断"
+}
+):(console.error("【executeSendTask】执行失败:",u),o="fail",d=u instanceof Error?u.message:String(u),{
+success:!1,error:d
+}
+)
+}
+finally{
+traceLogger.endForcedScope(i,{
+result:o,error:d,extra:{
+source:n?.source,traceId:n?.traceId,responseRunId:getOwningRunId(t,"response"),executionRunId:t.runId,targetNames:r,currentConversationTarget:engineState.currentConversationTarget
+}
+
+}
+)
+}
+
+}
+,executeSendTask=async(t,e,r)=>{
+if(!r?.ctx)throw new Error("executeSendTask requires an owning ExecutionContext");
+return runTaskRecipe(r.ctx,t,e,r)
+}
+,processSendTaskNowAction=async(t,e)=>{
+const r=typeof t.__resolve=="function"?t.__resolve:null;
+if(!e||e.scope!=="task"){
+r?r({
+success:!1,error:"固定任务缺少独立执行上下文"
+}
+):engineState.isProcessingSendTaskNow=!1;
+return
+}
+let n=!1;
+try{
+if(e.throwIfAborted(),n=workflowCoordinator.snapshot().lifecycle==="running"&&engineState.isEngineActive&&rxEngine.isRunning(),n&&rxEngine.setPhase(EnginePhase.EXECUTING),!await checkRobotPermissions()){
+r?.({
+success:!1,error:"没有必要的权限"
+}
+);
+return
+}
+e.throwIfAborted();
+const s=await executeSendTask(t.actions||[],t.target_names,{
+...t.options||{
+
+}
+,ctx:e,source:"SEND_TASK_NOW"
+}
+);
+r?.(s)
+}
+catch(a){
+isExecutionAbortError(a)?r?.({
+success:!1,error:"任务已中断"
+}
+):(console.error("【立即发送】独立任务执行失败:",a),r?.({
+success:!1,error:a instanceof Error?a.message:String(a)
+}
+))
+}
+finally{
+rxEngine.currentScope("task")?.runId===e.runId&&rxEngine.completeScope("task","send_task_now_completed",e.runId),n&&workflowCoordinator.snapshot().lifecycle==="running"&&rxEngine.phase$.value.phase===EnginePhase.EXECUTING&&rxEngine.resumeAfterExecution({
+instant:!0
+}
+)
+}
+
+}
+;
+let activeStreamBuffer=n
+@@@ off=2439500
+ull,activeTraceId,activeStreamActionType=null;
+const beginResponseRequest=t=>{
+const e=rxEngine.startScope("response",t);
+return console.log(`【SSE】start source=${
+t
+}
+ run=${
+e.runId
+}
+`),e
+}
+,resetActiveStreamTransport=()=>{
+activeStreamBuffer?.complete(),activeStreamBuffer=null,activeTraceId=void 0,activeStreamActionType=null
+}
+,resetStreamingPresentation=()=>{
+!streamingState.isStreaming&&!streamingState.currentType&&!streamingState.currentTraceId||(streamingState.isStreaming=!1,streamingState.currentType=null,streamingState.currentTraceId=null,streamingState.accumulatedContent="",streamingState.fullKeyboardText="",streamingState.streamStartTime=0,streamingState.chatHistoryId=null,setCurrentMessage(null),broadcastMessages(null))
+}
+,settleResponseScope=(t,e,r)=>{
+const n=rxEngine.currentScope("response");
+return!n||r&&r!==n.runId?null:rxEngine.abortScope("response",e,n.runId)?n:null
+}
+,abortActiveResponseRequest=(t,e)=>settleResponseScope("aborted",t,e),handleResponseScopeLifecycle=t=>{
+if(t.scope!=="resp

@@ -1,0 +1,25 @@
+===== utils/time_parser.pyc =====
+DOCSTRING: 时间字符串解析工具
+
+[<module>] args=() names=('__doc__', 'datetime', 'timedelta', 'parse_time_wording')
+  CONST '时间字符串解析工具'
+  CONST 0
+  CONST ('datetime', 'timedelta')
+  CONST None
+
+  [parse_time_wording] args=('time_str',) names=('strip', 'datetime', 'now', 'timedelta', 'split', 'len', 'int', 'replace', 'year', 'ValueError', 'IndexError')
+    CONST '\n解析不规范的时间字符串为datetime对象\n\n支持格式：\n- "25/12/11" → 2025年12月11日\n- "2/26" → 当前年份2月26日\n- "昨天" → 昨天日期\n- "06:47" → 今天06:47\n- "-" 或空 → None\n\nArgs:\n    time_str: 时间字符串\n\nReturns:\n    datetime对象，解析失败返回None\n'
+    CONST '-'
+    CONST None
+    CONST '昨天'
+    CONST 1
+    CONST ('days')
+    CONST ':'
+    CONST '/'
+    CONST 2
+    CONST 0
+    CONST ('hour', 'minute', 'second', 'microsecond')
+    CONST 3
+    CONST 100
+    CONST 2000
+

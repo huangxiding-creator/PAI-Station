@@ -1,0 +1,549 @@
+---
+title: "我用25个日常场景测评GPT新模型o3，结果惊呆了！"
+source: "https://waytoagi.feishu.cn/wiki/ExilwbF6EiYxsGkPTFwcPNeNnIb"
+wiki_root: "https://waytoagi.feishu.cn/wiki/QPe5w5g7UisbEkkow8XcDmOpn8e"
+date: 2026-05-14
+tags:
+  - 飞书知识库
+  - waytoagi
+---
+
+# 我用25个日常场景测评GPT新模型o3，结果惊呆了！
+> **作者：小歪**
+
+在 2025 年 4 月 16 日公布的官方博客中，OpenAI 将 **o3** 定位为迄今最强的“思考型”模型
+
+它不仅继承了 o‑系列长链路推理优势
+
+还首次获得了对所有 ChatGPT 内置工具的自主调用能力
+
+并把图像直接纳入推理链，实现“边看边想”
+
+同时配套更高效的 **o4‑mini**。
+
+总之，o3 把“会思考的代理”从概念推向实用，兼顾更深推理、真多模态和全工具自治
+
+为研究者与高端生产力提供了前所未有的自动化可能。
+
+# 如何使用
+
+打开GPT官网
+
+[https://chatgpt.com/](https://chatgpt.com/)
+
+选择3o模型
+
+![Feishu Docs - Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/v2/cover/M5QfbydqRoTMnGxLqSEcO7jHnAb/?fallback_source=1&height=1280&mount_node_token=JqUDdszEno98UKxOIXKcJC0TnNd&mount_point=docx_image&policy=equal&width=1280)
+
+下面按**功能特性**、**多场景测评**两大板块深入解读 o3。
+
+# 功能特性
+
+## 1 总体定位与设计目标
+
+- **定位**：OpenAI 称 o3 是“我们发布过最聪明、最能干的模型”，在编程、数学、科学推理和视觉理解等多维评测上均大幅领先 o1 系列。
+- **设计思路**：团队将大规模强化学习（RL）与工具使用能力结合，允许模型在回答前“多想一会儿”，并在需要时自行调用搜索、Python、文件分析、图像生成等模块。
+
+## 2 核心推理能力升级
+
+### 2.1 长链推理与错误率
+
+- 在外部专家评测中，o3 在真实世界难题上的重大错误比 o1 减少 20 %。
+
+### 2.2 大规模 RL‑思考曲线
+
+- OpenAI 发现 RL 同样遵循“更多算力=更好性能”的扩展规律：在与 o1 相同推理时延与成本下，o3 仍能保持更高得分；若继续放宽思考步数，表现还会进一步攀升。
+
+## 3 “思考型”多模态：图像即思维节点
+
+- **视觉链路**：o3 能把上传的白板照片、教材示意图或手绘草图直接注入推理链，可对模糊、翻转或欠曝光图像进行旋转、缩放、裁剪等操作，再继续计算。
+- **场景示例**：官方演示中，研究员仅用手机拍摄一张十年前的物理海报，o3 即独立解析复杂示意图并指出缺失的实验结论。
+
+## 4 Agentic Tool Use：自主连用多工具
+
+- o3 在一次回答中可 **链式调用** 多个工具：先搜索最新数据，再写 Python 生成图表，甚至再生成配套说明图片，整个流程通常在一分钟内完成。
+- 训练方式：通过 RL 让模型学会“何时用什么工具”而非死记硬背指令，内部记录显示针对极难任务时单次会话可触发数百次工具调用。
+
+## 5 性能‑成本与兄弟型号
+
+- **成本曲线**：在 2025 年 AIME 竞赛上，相同预算下 o3 的表现全面超越 o1，而体积更小的 o4‑mini 在高并发场景下更具优势。
+- **运行开销**：独立机构 ARC‑AGI 估算，“o3‑high” 级别解一道 ARC‑AGI 题的算力费用可能达 3 万美元级别，凸显前沿模型的资源需求。
+
+## 6 安全与对齐
+
+- OpenAI 为 o3/ o4‑mini **重构了安全训练数据**，增加生物风险、恶意软件和越狱场景的拒绝示例，在内部拒绝基准中表现领先。
+- 同时引入基于“可解释安全说明”的推理 LLM 监控器，红队测试中对生物风险对话的拦截率≈ 99 %。
+- OpenAI 根据新《Preparedness Framework》评估，确认两款模型在生物、网络安全和自我改进三条能力线均低于“High”阈值。
+
+## 7 开发者生态：Codex CLI 与 API
+
+- **Codex CLI**：官方同步开源一款终端智能代理，可在本地调用 o3 完成代码导航、截图分析等任务，且开放 100 万美元 API 额度资助社区项目。
+- **API 支持**：o3、o4‑mini 已通过 Chat Completions 与 Responses API 上线；后者可保留函数调用周边推理 token，并即将内建搜索、文件解析和代码解释。
+
+## 8 面向用户的可用性与套餐
+
+- ChatGPT Plus/Pro/Team 今日起在模型选择器中见到 o3、o4‑mini(‑high)；一周后开放给 Enterprise 与 Edu。普通免费用户可在输入框选择“Think”试用 o4‑mini。
+- 预计数周后推出 **o3‑pro**，提供更高并发和完整工具支持。
+
+# 多场景测评
+
+*测试结果图如遇文字看不清，可点击图片看大图*
+
+## **一、 基础视觉识别与描述 (Basic Recognition & Description)**
+
+**目标:** 测试模型识别物体、场景、文字、属性等基本能力。
+
+### **物体识别**
+
+上传一张包含多种常见物品的图片，要求列出所有识别到的物品。
+
+```
+Code blockPlain Text列出照片中所有识别到的物品
+```
+
+左边为测试图，右边为测试结果
+
+![Feishu Docs - Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/preview/UrDobhQ9OoZxslxLUV5cwzC5nxb/?preview_type=16)
+
+34%
+
+66%
+
+![Feishu Docs - Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/preview/UrDobhQ9OoZxslxLUV5cwzC5nxb/?preview_type=16)
+
+34%
+
+![Feishu Docs - Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/preview/UrDobhQ9OoZxslxLUV5cwzC5nxb/?preview_type=16)
+
+66%
+
+### **场景描述**
+
+上传一张风景照（海滩、森林、城市街道），要求详细描述场景内容、氛围和可能的时间（白天/黄昏/夜晚）。
+
+```
+Code blockPlain Text
+```
+
+![Feishu Docs - Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/preview/UrDobhQ9OoZxslxLUV5cwzC5nxb/?preview_type=16)
+
+34%
+
+66%
+
+![Feishu Docs - Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/preview/UrDobhQ9OoZxslxLUV5cwzC5nxb/?preview_type=16)
+
+34%
+
+66%
+
+```
+Code blockPlain Text详细描述照片中场景内容、氛围和可能的时间(白天/黄昏/夜晚)
+```
+
+![Feishu Docs - Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/preview/JEIobUMlioekklxMmbzccHDtn8e/?preview_type=16)
+
+37%
+
+63%
+
+![Feishu Docs - Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/preview/JEIobUMlioekklxMmbzccHDtn8e/?preview_type=16)
+
+37%
+
+![Feishu Docs - Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/preview/JEIobUMlioekklxMmbzccHDtn8e/?preview_type=16)
+
+63%
+
+### **文字识别 (OCR)**
+
+1. 上传清晰的印刷体标志、菜单、文件截图，要求提取所有文字。
+```
+Code blockPlain Text提取照片中的所有文字，用表格的形式列出来
+```
+
+左边为测试图，右边的两张图为测试结果
+
+![Feishu Docs - Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/preview/KrZzbjiuHo5UJpxh1lrcUyo0n8f/?preview_type=16)
+
+22%
+
+34%
+
+45%
+
+![Feishu Docs - Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/preview/KrZzbjiuHo5UJpxh1lrcUyo0n8f/?preview_type=16)
+
+22%
+
+![Feishu Docs - Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/preview/KrZzbjiuHo5UJpxh1lrcUyo0n8f/?preview_type=16)
+
+45%
+
+![Feishu Docs - Image](blob://https://waytoagi.feishu.cn/744e3175-e404-428d-8538-b32ffe7412fa)
+
+1. 上传手写笔记图片，测试识别率。
+```
+Code blockPlain Text提取这张票据上的所有文字
+```
+
+67%
+
+33%
+
+67%
+
+33%
+
+1. 上传包含倾斜、弯曲或部分遮挡文字的图片，测试鲁棒性。
+```
+Code blockPlain Text提取这个罐子包装上的所有文字
+```
+
+44%
+
+56%
+
+44%
+
+56%
+
+### **属性识别**
+
+上传一张服装图片，询问颜色、材质、风格
+
+```
+Code blockPlain Text我是服装行业商家，看下模特穿的这件衣服，帮我列出服装的颜色、材质、风格等详细信息
+```
+
+55%
+
+45%
+
+55%
+
+### **人脸与情绪**
+
+上传包含人物的图片，询问人数、大致年龄段、可见的情绪。 *（注意：模型可能会对名人或者某些情绪有限制）*
+
+```
+Code blockPlain Text仔细看下这张照片中有几个人、大致年龄段以及人物的可见情绪，然后综合分析下这是一个什么场景
+```
+
+上面为测试图，下面两张图为测试结果
+
+47%
+
+53%
+
+47%
+
+53%
+
+### **地标识别**
+
+上传著名地标建筑图片，询问地标名称和所在城市/国家。
+
+```
+Code blockPlain Text识别这是哪个城市的什么地标建筑，并给出它的详细介绍
+```
+
+左边为测试图，右边两张图为测试结果
+
+![Feishu Docs - Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/preview/WcYdbdQRloWVgjx1aKWcq6LNn2P/?preview_type=16)
+
+23%
+
+45%
+
+32%
+
+![Feishu Docs - Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/preview/WcYdbdQRloWVgjx1aKWcq6LNn2P/?preview_type=16)
+
+23%
+
+![Feishu Docs - Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/preview/WcYdbdQRloWVgjx1aKWcq6LNn2P/?preview_type=16)
+
+32%
+
+### **抽象描述**
+
+上传一张非具象的艺术画作，让模型尝试描述其色彩、构图和可能传达的感觉。
+
+```
+Code blockPlain Text作为一个画作鉴赏家，详细描述下这个画作的色彩、构图和可能传达的意思
+```
+
+28%
+
+31%
+
+41%
+
+28%
+
+31%
+
+41%
+
+### **“我画你猜”**
+
+上传一张简单的手绘涂鸦，让模型猜测画的是什么
+
+```
+Code blockPlain Text看下这张照片上画的是什么
+```
+
+36%
+
+64%
+
+36%
+
+64%
+
+## **二、 深入分析与推理 (In-depth Analysis & Reasoning)**
+
+**目标:** 测试模型理解图像内容、上下文、关系并进行逻辑推理的能力。
+
+### **图表解读**
+
+上传简单的条形图、饼图、折线图，要求解释图表数据、趋势和结论。
+
+```
+Code blockPlain Text帮我深入分析下这个图表
+```
+
+上面为测试图，下面四张图为测试结果
+
+24%
+
+22%
+
+34%
+
+20%
+
+24%
+
+20%
+
+### **关系理解**
+
+上传一张多人互动的图片（如会议、聚餐），询问人物之间的可能关系和正在进行的活动。
+
+```
+Code blockPlain Text看下照片中的一群人正在进行什么活动，人物之间的关系是怎样的
+```
+
+43%
+
+57%
+
+43%
+
+57%
+
+### **意图推断**
+
+上传一张某人正在做某事的图片（如修理东西、烹饪），询问此人的目的或下一步可能做什么。
+
+```
+Code blockPlain Text照片中的人正在做什么，他的目的或下一步可能做什么
+```
+
+57%
+
+43%
+
+### **异常检测**
+
+上传一张包含“不合常理”元素的图片，询问图片中有什么不寻常的地方。
+
+```
+Code blockPlain Text照片中有什么不寻常、不合理的地方，并分析下造成这种不合理的可能原因
+```
+
+29%
+
+37%
+
+35%
+
+29%
+
+35%
+
+### **功能理解**
+
+上传一张工具或设备的图片，询问其用途和基本操作方法。
+
+```
+Code blockPlain Text请描述下照片中地上的物体是什么，它的用途和基本操作方法是什么
+```
+
+41%
+
+59%
+
+59%
+
+### **情境合规性**
+
+上传一张穿着特定服装的人在特定场合的图片，询问这种穿着是否适合该场合，为什么。
+
+```
+Code blockPlain Text照片中的女生的穿着是否符合她所在的场景，说明原因
+```
+
+40%
+
+60%
+
+40%
+
+60%
+
+### **代码截图理解**
+
+上传一段代码的截图，要求解释代码的功能或指出可能的错误。
+
+```
+Code blockPlain Text这段代码是用来干嘛的
+```
+
+### **讲故事**
+
+上传一张富有情节感的图片，让模型根据图片编一个简短的故事。
+
+```
+Code blockPlain Text根据这张照片里画的内容，编写一个故事
+```
+
+45%
+
+55%
+
+### **看图写自媒体文案**
+
+#### 朋友圈
+
+```
+Code blockPlain Text根据这张图写一段语言朴实、富有生活气息的朋友圈文案
+```
+
+#### 小红书
+
+```
+Code blockPlain Text根据这张图写一篇吸睛的小红书笔记
+```
+
+### **反推图片提示词**
+
+上传一张图片，然后让模型反推图片的提示词
+
+```
+Code blockPlain Text仔细查看这张图片，反推出这张图的详细绘图提示词，给我提供用来放在midjourney上用的英文版绘图提示词，以及中文版提示词
+```
+
+### 计数/比较
+
+**具体细节定位:** 询问特定物体的位置。
+
+**计数:** 一张包含多个同类物体的图片。
+
+**比较:** 在一张图中包含两个相似物品，询问它们的异同点。
+
+```
+Code blockPlain Text这张照片里总共有多少艘红色的船，左边的两艘船和右边的船有什么区别。另外，照片中有几个人。
+```
+
+![Feishu Docs - Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/preview/HxigbphX6o5XdSx1kdIcJRD6nfb/?preview_type=16)
+
+38%
+
+62%
+
+![Feishu Docs - Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/preview/HxigbphX6o5XdSx1kdIcJRD6nfb/?preview_type=16)
+
+38%
+
+![Feishu Docs - Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/preview/HxigbphX6o5XdSx1kdIcJRD6nfb/?preview_type=16)
+
+62%
+
+### **旅行规划**
+
+上传某个目的地的风景照，结合你的兴趣（如历史、美食、户外），让模型推荐当地的活动和景点。
+
+```
+Code blockPlain Text请识别这个景点，并帮我规划一天的游览路线，包括周边2-3个值得一去的地方、当地美食推荐和交通建议
+```
+
+![Feishu Docs - Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/preview/WEsEb8uHVo7h2HxI8LOc6sgknAc/?preview_type=16)
+
+25%
+
+35%
+
+40%
+
+![Feishu Docs - Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/preview/WEsEb8uHVo7h2HxI8LOc6sgknAc/?preview_type=16)
+
+25%
+
+![Feishu Docs - Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/preview/WEsEb8uHVo7h2HxI8LOc6sgknAc/?preview_type=16)
+
+### **教育辅导**
+
+上传答题的图片，让模型检查对错，或者解释题目并给出解题思路。
+
+```
+Code blockPlain Text仔细查看这张照片，帮我检查下里面的题目是否都回答正确，如果有不正确的请给我正确的答案，另外，给我提供每道题的考点以及解题思路
+```
+
+上面为测试图，下面三张图为测试结果
+
+35%
+
+38%
+
+26%
+
+26%
+
+### 医疗问题咨询
+
+上传一个有健康问题的照片，让模型提供初步的健康问题识别和护理建议，同时强调严重情况下需求医疗专业人士帮助
+
+```
+Code blockPlain Text判断下这是几级烧伤，提供初步烧伤程度识别，并提供就医和护理建议
+```
+
+35%
+
+35%
+
+31%
+
+# 总结
+
+经过这些测试场景的全面体验，o3确实展现出了与前代模型显著不同的能力水平。
+
+它不再只是一个被动的问答工具，而是成长为能够"看"、"想"和"做"的全能助手。
+
+无论是识别手写笔记的细节，解读复杂图表背后的数据故事，还是将随手拍摄的照片转化为创意灵感，o3都表现出了令人印象深刻的理解力和适应性。
+
+当然，它并非完美无缺，在某些专业领域的判断上仍需人类专家的把关，复杂视觉任务偶尔也会出现误判。
+
+但不可否认的是，o3代表了AI助手向真正"实用工具"迈出的重要一步。
+
+它不再是科技爱好者的新奇玩具，而是能够切实提升学习效率、工作产出和生活品质的数字伙伴。
+
+在AI飞速发展的今天，o3向我们展示了技术如何以更自然、更贴心的方式融入日常生活。
+
+无论你是学生、职场人士、创意工作者还是普通消费者，
+
+这些测试场景都证明了一点：未来的AI不仅是能力的提升，更是体验的革新。
+
+而这，才是真正改变我们生活方式的关键。

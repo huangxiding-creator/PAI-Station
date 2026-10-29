@@ -120,9 +120,84 @@ def _parse(page_html: str, parser: str, base: str):
     return out
 
 
+import importlib.util as _ilu
+
+_LEDGER_ENV = "RF_API_INVOCATION_LEDGER"
+
+def _invocation(query, n):
+    """台账记账 (env 门控, 缺省零副作用): API 路径成功记一行 api_replica。"""
+    import os as _os
+    if not _os.environ.get(_LEDGER_ENV):
+        return
+    try:
+        for anc in Path(__file__).resolve().parents:
+            bridge = (anc / "reforge_factory" / "legs"
+                      / "api_replica_bridge.py")
+            if bridge.is_file():
+                break
+        else:
+            return
+        spec = _ilu.spec_from_file_location("api_replica_bridge", bridge)
+        mod = _ilu.module_from_spec(spec)
+        sys.modules[spec.name] = mod
+        spec.loader.exec_module(mod)
+        mod.append_invocation(
+            "sougo",
+            "api_replica:sogou_weixin_api(四段GET链: 预热+检索+/link解析+真链)",
+            query, f"{n}条 mp.weixin 真链",
+            note="1024 API优先令: zh-search-pro sogou_weixin 引擎切复刻件;")
+    except Exception as e:
+        print(f"[sogou_weixin] 台账记失败: {type(e).__name__}", file=sys.stderr)
+
+
+def _sogou_weixin_api_first(query: str, top: int, proxy: str | None,
+                            blocklist: list | None):
+    """1024 API优先令: 搜狗微信引擎先走复刻件 sogou_weixin_api (四段GET链,
+    纯HTTP零浏览器, curl_cffi 抗TLS指纹) — 检索 + /link 解析出 mp.weixin 真链。
+    返回 list[{title,url}] (真链, 免跳转壳); 复刻件抛错/零命中 → None,
+    调用方降级下方原 HTTP 解析路径 (原样保留)。"""
+    replica = None
+    for anc in Path(__file__).resolve().parents:
+        cand = anc / "逆向工程" / "sogou-weixin-reverse" / "replica" / "sogou_weixin_api.py"
+        if cand.is_file():
+            replica = cand
+            break
+    if replica is None:
+        print("[sogou_weixin] api_replica 缺件 → 原HTTP路径", file=sys.stderr)
+        return None
+    try:
+        spec = _ilu.spec_from_file_location("sogou_weixin_api_replica", replica)
+        mod = _ilu.module_from_spec(spec)
+        sys.modules[spec.name] = mod
+        spec.loader.exec_module(mod)
+        api = mod.SogouWeixinAPI(proxy=proxy, verbose=False)
+        hits = api.search(query)
+        out, seen = [], set()
+
+        for h in hits[:top]:
+            u = api.resolve(h.link_url)          # 短时效签名链, 立即用
+            host = _host(u)
+            if u in seen or any(b in host for b in (blocklist or [])):
+                continue
+            seen.add(u)
+            out.append({"title": h.title[:120], "url": u,
+                        "account": h.account, "publish_time": h.publish_time})
+        if out:
+            _invocation(query, len(out))
+        return out if out else None
+    except Exception as e:                      # antispider/墙/网错 — 如实降级
+        print(f"[sogou_weixin] api_replica 未成({type(e).__name__}: {str(e)[:90]})"
+              " → 原HTTP路径", file=sys.stderr)
+        return None
+
+
 def search_engine(key: str, query: str, top: int, extra: str = "",
                   proxy: str | None = None, blocklist: list | None = None) -> list:
     """单引擎检索; 任何失败→[]并打印原因(错误处理纪律, 不静默)."""
+    if key == "sogou_weixin":                       # 1024 API优先: 复刻件四段GET链
+        hits = _sogou_weixin_api_first(query, top, proxy, blocklist)
+        if hits is not None:
+            return hits[:top]
     url_tpl, parser, base = ENGINES[key]
     url = url_tpl.format(q=quote_plus(query), extra=extra)
     # Referer 用各引擎自家基址(跨域referer如带bing头打百度疑似触发验证墙)

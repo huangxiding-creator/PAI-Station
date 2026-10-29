@@ -1,0 +1,1518 @@
+===== gui/auto_update_mixin.pyc =====
+
+# CODE <module>  args=()
+  0           RESUME                   0
+
+  1           LOAD_CONST               0 ('自动更新调度与日志 Mixin')
+              STORE_NAME               0 (__doc__)
+
+  2           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (('QDialog',))
+              IMPORT_NAME              1 (PySide6.QtWidgets)
+              IMPORT_FROM              2 (QDialog)
+              STORE_NAME               2 (QDialog)
+              POP_TOP
+
+  3           LOAD_CONST               1 (0)
+              LOAD_CONST               3 (('QTimer',))
+              IMPORT_NAME              3 (PySide6.QtCore)
+              IMPORT_FROM              4 (QTimer)
+              STORE_NAME               4 (QTimer)
+              POP_TOP
+
+  4           LOAD_CONST               1 (0)
+              LOAD_CONST               4 (('AutoUpdateWorker',))
+              IMPORT_NAME              5 (gui.workers.workers)
+              IMPORT_FROM              6 (AutoUpdateWorker)
+              STORE_NAME               6 (AutoUpdateWorker)
+              POP_TOP
+
+  5           LOAD_CONST               1 (0)
+              LOAD_CONST               5 (('IncrementalUpdateDialog', 'TaskManagerDialog'))
+              IMPORT_NAME              7 (gui.incremental_download_dialog)
+              IMPORT_FROM              8 (IncrementalUpdateDialog)
+              STORE_NAME               8 (IncrementalUpdateDialog)
+              IMPORT_FROM              9 (TaskManagerDialog)
+              STORE_NAME               9 (TaskManagerDialog)
+              POP_TOP
+
+  6           LOAD_CONST               1 (0)
+              LOAD_CONST               6 (('add_task', 'get_enabled_tasks', 'update_task'))
+              IMPORT_NAME             10 (data.database)
+              IMPORT_FROM             11 (add_task)
+              STORE_NAME              11 (add_task)
+              IMPORT_FROM             12 (get_enabled_tasks)
+              STORE_NAME              12 (get_enabled_tasks)
+              IMPORT_FROM             13 (update_task)
+              STORE_NAME              13 (update_task)
+              POP_TOP
+
+  7           LOAD_CONST               1 (0)
+              LOAD_CONST               7 (('datetime', 'timedelta'))
+              IMPORT_NAME             14 (datetime)
+              IMPORT_FROM             14 (datetime)
+              STORE_NAME              14 (datetime)
+              IMPORT_FROM             15 (timedelta)
+              STORE_NAME              15 (timedelta)
+              POP_TOP
+
+  8           LOAD_CONST               1 (0)
+              LOAD_CONST               8 (None)
+              IMPORT_NAME             16 (time)
+              STORE_NAME              16 (time)
+
+  9           LOAD_CONST               1 (0)
+              LOAD_CONST               9 (('Config',))
+              IMPORT_NAME             17 (config)
+              IMPORT_FROM             18 (Config)
+              STORE_NAME              18 (Config)
+              POP_TOP
+
+ 12           LOAD_BUILD_CLASS
+              PUSH_NULL
+              LOAD_CONST              10 (<code object AutoUpdateMixin at 0x000001DD46295070, file "gui\auto_update_mixin.py", line 12>)
+              MAKE_FUNCTION
+              LOAD_CONST              11 ('AutoUpdateMixin')
+              CALL                     2
+              STORE_NAME              19 (AutoUpdateMixin)
+              RETURN_CONST             8 (None)
+
+## CODE AutoUpdateMixin  args=()
+ 12           RESUME                   0
+              LOAD_NAME                0 (__name__)
+              STORE_NAME               1 (__module__)
+              LOAD_CONST               0 ('AutoUpdateMixin')
+              STORE_NAME               2 (__qualname__)
+              LOAD_CONST               1 (12)
+              STORE_NAME               3 (__firstlineno__)
+
+ 13           LOAD_CONST               2 ('自动更新调度与日志功能，供 MainWindow 继承')
+              STORE_NAME               4 (__doc__)
+
+ 15           LOAD_CONST              17 (('info',))
+              LOAD_CONST               3 (<code object add_log at 0x000001DD465F2BC0, file "gui\auto_update_mixin.py", line 15>)
+              MAKE_FUNCTION
+              SET_FUNCTION_ATTRIBUTE   1 (defaults)
+              STORE_NAME               5 (add_log)
+
+ 55           LOAD_CONST               4 (<code object toggle_log at 0x000001DD465F9890, file "gui\auto_update_mixin.py", line 55>)
+              MAKE_FUNCTION
+              STORE_NAME               6 (toggle_log)
+
+ 68           LOAD_CONST               5 (<code object show_task_manager_dialog at 0x000001DD463CF190, file "gui\auto_update_mixin.py", line 68>)
+              MAKE_FUNCTION
+              STORE_NAME               7 (show_task_manager_dialog)
+
+ 83           LOAD_CONST              18 (('', ''))
+              LOAD_CONST               6 (<code object _submit_update_task at 0x000001DD463CF6D0, file "gui\auto_update_mixin.py", line 83>)
+              MAKE_FUNCTION
+              SET_FUNCTION_ATTRIBUTE   1 (defaults)
+              STORE_NAME               8 (_submit_update_task)
+
+135           LOAD_CONST               7 (<code object start_auto_update_timer at 0x000001DD463CFA30, file "gui\auto_update_mixin.py", line 135>)
+              MAKE_FUNCTION
+              STORE_NAME               9 (start_auto_update_timer)
+
+147           LOAD_CONST              19 (('',))
+              LOAD_CONST               8 (<code object _update_indicator_style at 0x000001DD465F48D0, file "gui\auto_update_mixin.py", line 147>)
+              MAKE_FUNCTION
+              SET_FUNCTION_ATTRIBUTE   1 (defaults)
+              STORE_NAME              10 (_update_indicator_style)
+
+172           LOAD_CONST               9 (<code object _get_next_update_display at 0x000001DD46341D60, file "gui\auto_update_mixin.py", line 172>)
+              MAKE_FUNCTION
+              STORE_NAME              11 (_get_next_update_display)
+
+203           LOAD_CONST              10 (<code object _refresh_indicator at 0x000001DD4612AB50, file "gui\auto_update_mixin.py", line 203>)
+              MAKE_FUNCTION
+              STORE_NAME              12 (_refresh_indicator)
+
+214           LOAD_CONST              11 (<code object _check_all_tasks at 0x000001DD465F4DA0, file "gui\auto_update_mixin.py", line 214>)
+              MAKE_FUNCTION
+              STORE_NAME              13 (_check_all_tasks)
+
+246           LOAD_CONST              12 (<code object _start_task at 0x000001DD463BB970, file "gui\auto_update_mixin.py", line 246>)
+              MAKE_FUNCTION
+              STORE_NAME              14 (_start_task)
+
+292           LOAD_CONST              20 ((True,))
+              LOAD_CONST              13 (<code object _on_task_finished at 0x000001DD45ED1AC0, file "gui\auto_update_mixin.py", line 292>)
+              MAKE_FUNCTION
+              SET_FUNCTION_ATTRIBUTE   1 (defaults)
+              STORE_NAME              15 (_on_task_finished)
+
+311           LOAD_CONST              20 ((True,))
+              LOAD_CONST              14 (<code object _on_task_error at 0x000001DD46340EC0, file "gui\auto_update_mixin.py", line 311>)
+              MAKE_FUNCTION
+              SET_FUNCTION_ATTRIBUTE   1 (defaults)
+              STORE_NAME              16 (_on_task_error)
+              LOAD_CONST              15 (('_indicator_timer', '_log_expanded', '_task_manager_dialog', 'auto_update_timer'))
+              STORE_NAME              17 (__static_attributes__)
+              RETURN_CONST            16 (None)
+
+### CODE AutoUpdateMixin.add_log  args=('self', 'msg', 'log_type')
+  15            RESUME                   0
+
+  18            LOAD_CONST               1 ('#4CAF50')
+
+  19            LOAD_CONST               2 ('#F44336')
+
+  20            LOAD_CONST               3 ('#FF9800')
+
+  21            LOAD_CONST               4 ('#2196F3')
+
+  22            LOAD_CONST               5 ('#9C27B0')
+
+  17            LOAD_CONST               6 (('success', 'error', 'warning', 'info', 'download'))
+                BUILD_CONST_KEY_MAP      5
+                STORE_FAST               3 (colors)
+
+  25            LOAD_CONST               7 ('✓')
+
+  26            LOAD_CONST               8 ('✗')
+
+  27            LOAD_CONST               9 ('⚠')
+
+  28            LOAD_CONST              10 ('ℹ')
+
+  29            LOAD_CONST              11 ('↓')
+
+  24            LOAD_CONST               6 (('success', 'error', 'warning', 'info', 'download'))
+                BUILD_CONST_KEY_MAP      5
+                STORE_FAST               4 (symbols)
+
+  31            LOAD_FAST                3 (colors)
+                LOAD_ATTR                1 (get + NULL|self)
+                LOAD_FAST                2 (log_type)
+                LOAD_CONST              12 ('#666')
+                CALL                     2
+                STORE_FAST               5 (color)
+
+  32            LOAD_FAST                4 (symbols)
+                LOAD_ATTR                1 (get + NULL|self)
+                LOAD_FAST                2 (log_type)
+                LOAD_CONST              13 ('•')
+                CALL                     2
+                STORE_FAST               6 (symbol)
+
+  34            LOAD_FAST                1 (msg)
+                LOAD_ATTR                3 (startswith + NULL|self)
+                LOAD_CONST              14 ('正在下载:')
+                CALL                     1
+                TO_BOOL
+                POP_JUMP_IF_FALSE        1 (to L1)
+
+  35            RETURN_CONST            15 (None)
+
+  36    L1:     LOAD_FAST                1 (msg)
+                LOAD_ATTR                3 (startswith + NULL|self)
+                LOAD_CONST              16 (('✓ [', '✗ [', '⊘ ['))
+                CALL                     1
+                TO_BOOL
+                POP_JUMP_IF_FALSE        5 (to L2)
+
+  37            LOAD_FAST                1 (msg)
+                LOAD_CONST              17 (2)
+                LOAD_CONST              15 (None)
+                BINARY_SLICE
+                STORE_FAST               1 (msg)
+
+  39    L2:     LOAD_GLOBAL              4 (datetime)
+                LOAD_ATTR                6 (now)
+                PUSH_NULL
+                CALL                     0
+                LOAD_ATTR                9 (strftime + NULL|self)
+                LOAD_CONST              18 ('%Y-%m-%d %H:%M:%S')
+                CALL                     1
+                STORE_FAST               7 (timestamp)
+
+  42            LOAD_CONST              19 ('<span style="color: #888;">[')
+                LOAD_FAST                7 (timestamp)
+                FORMAT_SIMPLE
+                LOAD_CONST              20 (']</span> <span style="color: ')
+
+  43            LOAD_FAST                5 (color)
+                FORMAT_SIMPLE
+                LOAD_CONST              21 ('; font-weight: bold;">')
+                LOAD_FAST                6 (symbol)
+                FORMAT_SIMPLE
+                LOAD_CONST              22 ('</span> <span style="color: ')
+
+  44            LOAD_FAST                5 (color)
+                FORMAT_SIMPLE
+                LOAD_CONST              23 (';">')
+                LOAD_FAST                1 (msg)
+                FORMAT_SIMPLE
+                LOAD_CONST              24 ('</span>')
+
+  42            BUILD_STRING            11
+
+  41            STORE_FAST               8 (html_msg)
+
+  46            LOAD_FAST                0 (self)
+                LOAD_ATTR               10 (log)
+                LOAD_ATTR               13 (append + NULL|self)
+                LOAD_FAST                8 (html_msg)
+                CALL                     1
+                POP_TOP
+
+  48            LOAD_CONST              25 ('[')
+                LOAD_FAST                7 (timestamp)
+                FORMAT_SIMPLE
+                LOAD_CONST              26 ('] ')
+                LOAD_FAST                6 (symbol)
+                FORMAT_SIMPLE
+                LOAD_CONST              27 (' ')
+                LOAD_FAST                1 (msg)
+                FORMAT_SIMPLE
+                LOAD_CONST              28 ('\n')
+                BUILD_STRING             7
+                STORE_FAST               9 (text_msg)
+
+  49            NOP
+
+  50    L3:     LOAD_GLOBAL             15 (open + NULL)
+                LOAD_GLOBAL             16 (Config)
+                LOAD_ATTR               18 (get_log_file_path)
+                PUSH_NULL
+                CALL                     0
+                LOAD_CONST              29 ('a')
+                LOAD_CONST              30 ('utf-8')
+                LOAD_CONST              31 (('encoding',))
+                CALL_KW                  3
+                BEFORE_WITH
+        L4:     STORE_FAST              10 (f)
+
+  51            LOAD_FAST               10 (f)
+                LOAD_ATTR               21 (write + NULL|self)
+                LOAD_FAST                9 (text_msg)
+                CALL                     1
+                POP_TOP
+
+  50    L5:     LOAD_CONST              15 (None)
+                LOAD_CONST              15 (None)
+                LOAD_CONST              15 (None)
+                CALL                     2
+                POP_TOP
+        L6:     RETURN_CONST            15 (None)
+        L7:     PUSH_EXC_INFO
+                WITH_EXCEPT_START
+                TO_BOOL
+                POP_JUMP_IF_TRUE         1 (to L8)
+                RERAISE                  2
+        L8:     POP_TOP
+        L9:     POP_EXCEPT
+                POP_TOP
+                POP_TOP
+       L10:     RETURN_CONST            15 (None)
+
+  --   L11:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+       L12:     PUSH_EXC_INFO
+
+  52            LOAD_GLOBAL             22 (Exception)
+                CHECK_EXC_MATCH
+                POP_JUMP_IF_FALSE        3 (to L14)
+                POP_TOP
+
+  53   L13:     POP_EXCEPT
+                RETURN_CONST            15 (None)
+
+  52   L14:     RERAISE                  0
+
+  --   L15:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+ExceptionTable:
+  L3 to L4 -> L12 [0]
+  L4 to L5 -> L7 [1] lasti
+  L5 to L6 -> L12 [0]
+  L7 to L9 -> L11 [3] lasti
+  L9 to L10 -> L12 [0]
+  L11 to L12 -> L12 [0]
+  L12 to L13 -> L15 [1] lasti
+  L14 to L15 -> L15 [1] lasti
+
+### CODE AutoUpdateMixin.toggle_log  args=('self',)
+ 55           RESUME                   0
+
+ 57           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_log_expanded)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       89 (to L1)
+
+ 58           LOAD_FAST                0 (self)
+              LOAD_ATTR                2 (log)
+              LOAD_ATTR                5 (setMaximumHeight + NULL|self)
+              LOAD_CONST               1 (0)
+              CALL                     1
+              POP_TOP
+
+ 59           LOAD_FAST                0 (self)
+              LOAD_ATTR                2 (log)
+              LOAD_ATTR                7 (setVisible + NULL|self)
+              LOAD_CONST               2 (False)
+              CALL                     1
+              POP_TOP
+
+ 60           LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (log_toggle_btn)
+              LOAD_ATTR               11 (setText + NULL|self)
+              LOAD_CONST               3 ('展开')
+              CALL                     1
+              POP_TOP
+
+ 61           LOAD_CONST               2 (False)
+              LOAD_FAST                0 (self)
+              STORE_ATTR               0 (_log_expanded)
+              RETURN_CONST             7 (None)
+
+ 63   L1:     LOAD_FAST                0 (self)
+              LOAD_ATTR                2 (log)
+              LOAD_ATTR                5 (setMaximumHeight + NULL|self)
+              LOAD_CONST               4 (120)
+              CALL                     1
+              POP_TOP
+
+ 64           LOAD_FAST                0 (self)
+              LOAD_ATTR                2 (log)
+              LOAD_ATTR                7 (setVisible + NULL|self)
+              LOAD_CONST               5 (True)
+              CALL                     1
+              POP_TOP
+
+ 65           LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (log_toggle_btn)
+              LOAD_ATTR               11 (setText + NULL|self)
+              LOAD_CONST               6 ('折叠')
+              CALL                     1
+              POP_TOP
+
+ 66           LOAD_CONST               5 (True)
+              LOAD_FAST                0 (self)
+              STORE_ATTR               0 (_log_expanded)
+              RETURN_CONST             7 (None)
+
+### CODE AutoUpdateMixin.show_task_manager_dialog  args=('self',)
+ 68           RESUME                   0
+
+ 70           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (('QMessageBox',))
+              IMPORT_NAME              0 (PySide6.QtWidgets)
+              IMPORT_FROM              1 (QMessageBox)
+              STORE_FAST               1 (QMessageBox)
+              POP_TOP
+
+ 72           LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (current_kb_list)
+              TO_BOOL
+              POP_JUMP_IF_TRUE        20 (to L1)
+
+ 73           LOAD_FAST                1 (QMessageBox)
+              LOAD_ATTR                7 (warning + NULL|self)
+              LOAD_FAST                0 (self)
+              LOAD_CONST               3 ('提示')
+              LOAD_CONST               4 ('请先加载知识库列表')
+              CALL                     3
+              POP_TOP
+
+ 74           RETURN_CONST             5 (None)
+
+ 76   L1:     LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (_task_manager_dialog)
+              POP_JUMP_IF_NOT_NONE    74 (to L2)
+
+ 77           LOAD_GLOBAL             11 (TaskManagerDialog + NULL)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (current_kb_list)
+              LOAD_FAST                0 (self)
+              CALL                     2
+              LOAD_FAST                0 (self)
+              STORE_ATTR               4 (_task_manager_dialog)
+
+ 78           LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (_task_manager_dialog)
+              LOAD_ATTR               12 (tasks_changed)
+              LOAD_ATTR               15 (connect + NULL|self)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               16 (_refresh_indicator)
+              CALL                     1
+              POP_TOP
+
+ 79   L2:     LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (_task_manager_dialog)
+              LOAD_ATTR               19 (show + NULL|self)
+              CALL                     0
+              POP_TOP
+
+ 80           LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (_task_manager_dialog)
+              LOAD_ATTR               21 (raise_ + NULL|self)
+              CALL                     0
+              POP_TOP
+
+ 81           LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (_task_manager_dialog)
+              LOAD_ATTR               23 (activateWindow + NULL|self)
+              CALL                     0
+              POP_TOP
+              RETURN_CONST             5 (None)
+
+### CODE AutoUpdateMixin._submit_update_task  args=('self', 'kb_id', 'kb_name', 'folder_id', 'folder_name')
+ 83            RESUME                   0
+
+ 92            LOAD_GLOBAL              1 (IncrementalUpdateDialog + NULL)
+
+ 93            LOAD_FAST                1 (kb_id)
+
+ 94            LOAD_FAST                2 (kb_name)
+
+ 95            LOAD_FAST                3 (folder_id)
+
+ 96            LOAD_FAST                4 (folder_name)
+
+ 97            LOAD_FAST                0 (self)
+
+ 92            LOAD_CONST               1 (('kb_id', 'kb_name', 'folder_id', 'folder_name', 'parent'))
+               CALL_KW                  5
+               STORE_FAST               5 (dialog)
+
+100            LOAD_FAST                5 (dialog)
+               LOAD_ATTR                3 (exec + NULL|self)
+               CALL                     0
+               LOAD_GLOBAL              4 (QDialog)
+               LOAD_ATTR                6 (Accepted)
+               COMPARE_OP             119 (bool(!=))
+               POP_JUMP_IF_FALSE        1 (to L1)
+
+101            RETURN_CONST             2 (None)
+
+103    L1:     LOAD_FAST                5 (dialog)
+               LOAD_ATTR                9 (get_selected_datetime + NULL|self)
+               CALL                     0
+               STORE_FAST               6 (start_dt)
+
+104            LOAD_FAST                5 (dialog)
+               LOAD_ATTR               11 (get_is_loop + NULL|self)
+               CALL                     0
+               STORE_FAST               7 (is_loop)
+
+105            LOAD_FAST                7 (is_loop)
+               TO_BOOL
+               POP_JUMP_IF_FALSE       16 (to L2)
+               LOAD_FAST                5 (dialog)
+               LOAD_ATTR               13 (get_interval_hours + NULL|self)
+               CALL                     0
+               JUMP_FORWARD             1 (to L3)
+       L2:     LOAD_CONST               3 (0)
+       L3:     STORE_FAST               8 (interval)
+
+107            LOAD_GLOBAL             15 (add_task + NULL)
+
+108            LOAD_FAST                1 (kb_id)
+
+109            LOAD_FAST                2 (kb_name)
+
+110            LOAD_GLOBAL             17 (int + NULL)
+               LOAD_FAST                6 (start_dt)
+               LOAD_ATTR               19 (timestamp + NULL|self)
+               CALL                     0
+               CALL                     1
+
+111            LOAD_FAST                8 (interval)
+
+112            LOAD_FAST                3 (folder_id)
+
+113            LOAD_FAST                4 (folder_name)
+
+107            LOAD_CONST               4 (('folder_id', 'folder_name'))
+               CALL_KW                  6
+               STORE_FAST               9 (task_id)
+
+116            LOAD_FAST                4 (folder_name)
+               TO_BOOL
+               POP_JUMP_IF_FALSE        6 (to L4)
+               LOAD_CONST               5 ('「')
+               LOAD_FAST                4 (folder_name)
+               FORMAT_SIMPLE
+               LOAD_CONST               6 ('」')
+               BUILD_STRING             3
+               JUMP_FORWARD             5 (to L5)
+       L4:     LOAD_CONST               5 ('「')
+               LOAD_FAST                2 (kb_name)
+               FORMAT_SIMPLE
+               LOAD_CONST               6 ('」')
+               BUILD_STRING             3
+       L5:     STORE_FAST              10 (scope_text)
+
+117            LOAD_FAST                7 (is_loop)
+               TO_BOOL
+               POP_JUMP_IF_FALSE        6 (to L6)
+               LOAD_CONST               7 ('循环（每')
+               LOAD_FAST                8 (interval)
+               FORMAT_SIMPLE
+               LOAD_CONST               8 ('小时）')
+               BUILD_STRING             3
+               JUMP_FORWARD             1 (to L7)
+       L6:     LOAD_CONST               9 ('单次')
+       L7:     STORE_FAST              11 (mode_text)
+
+118            LOAD_FAST                0 (self)
+               LOAD_ATTR               21 (add_log + NULL|self)
+
+119            LOAD_CONST              10 ('已提交')
+               LOAD_FAST               11 (mode_text)
+               FORMAT_SIMPLE
+               LOAD_CONST              11 ('更新任务：')
+               LOAD_FAST               10 (scope_text)
+               FORMAT_SIMPLE
+               LOAD_CONST              12 ('，起始时间 ')
+
+120            LOAD_FAST                6 (start_dt)
+               LOAD_ATTR               23 (strftime + NULL|self)
+               LOAD_CONST              13 ('%Y-%m-%d %H:%M')
+               CALL                     1
+               FORMAT_SIMPLE
+
+119            BUILD_STRING             6
+
+121            LOAD_CONST              14 ('success')
+
+118            CALL                     2
+               POP_TOP
+
+124            LOAD_FAST                0 (self)
+               LOAD_ATTR               24 (_task_manager_dialog)
+               TO_BOOL
+               POP_JUMP_IF_FALSE       26 (to L8)
+
+125            LOAD_FAST                0 (self)
+               LOAD_ATTR               24 (_task_manager_dialog)
+               LOAD_ATTR               27 (refresh_table + NULL|self)
+               CALL                     0
+               POP_TOP
+
+126    L8:     LOAD_FAST                0 (self)
+               LOAD_ATTR               29 (_refresh_indicator + NULL|self)
+               CALL                     0
+               POP_TOP
+
+128            LOAD_FAST                7 (is_loop)
+               TO_BOOL
+               POP_JUMP_IF_TRUE        40 (to L10)
+
+129            LOAD_CONST               3 (0)
+               LOAD_CONST              15 (('get_task_by_id',))
+               IMPORT_NAME             15 (data.database)
+               IMPORT_FROM             16 (get_task_by_id)
+               STORE_FAST              12 (get_task_by_id)
+               POP_TOP
+
+131            LOAD_FAST               12 (get_task_by_id)
+               PUSH_NULL
+               LOAD_FAST                9 (task_id)
+               CALL                     1
+               STORE_FAST              13 (task)
+
+132            LOAD_FAST               13 (task)
+               TO_BOOL
+               POP_JUMP_IF_FALSE       18 (to L9)
+
+133            LOAD_FAST                0 (self)
+               LOAD_ATTR               35 (_start_task + NULL|self)
+               LOAD_FAST               13 (task)
+               CALL                     1
+               POP_TOP
+               RETURN_CONST             2 (None)
+
+132    L9:     RETURN_CONST             2 (None)
+
+128   L10:     RETURN_CONST             2 (None)
+
+### CODE AutoUpdateMixin.start_auto_update_timer  args=('self',)
+135           RESUME                   0
+
+137           LOAD_GLOBAL              1 (QTimer + NULL)
+              LOAD_FAST                0 (self)
+              CALL                     1
+              LOAD_FAST                0 (self)
+              STORE_ATTR               1 (auto_update_timer)
+
+138           LOAD_FAST                0 (self)
+              LOAD_ATTR                2 (auto_update_timer)
+              LOAD_ATTR                4 (timeout)
+              LOAD_ATTR                7 (connect + NULL|self)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (_check_all_tasks)
+              CALL                     1
+              POP_TOP
+
+139           LOAD_FAST                0 (self)
+              LOAD_ATTR                2 (auto_update_timer)
+              LOAD_ATTR               11 (start + NULL|self)
+              LOAD_CONST               1 (60000)
+              CALL                     1
+              POP_TOP
+
+141           LOAD_GLOBAL              1 (QTimer + NULL)
+              LOAD_FAST                0 (self)
+              CALL                     1
+              LOAD_FAST                0 (self)
+              STORE_ATTR               6 (_indicator_timer)
+
+142           LOAD_FAST                0 (self)
+              LOAD_ATTR               12 (_indicator_timer)
+              LOAD_ATTR                4 (timeout)
+              LOAD_ATTR                7 (connect + NULL|self)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               14 (_refresh_indicator)
+              CALL                     1
+              POP_TOP
+
+143           LOAD_FAST                0 (self)
+              LOAD_ATTR               12 (_indicator_timer)
+              LOAD_ATTR               11 (start + NULL|self)
+              LOAD_CONST               1 (60000)
+              CALL                     1
+              POP_TOP
+
+145           LOAD_FAST                0 (self)
+              LOAD_ATTR               15 (_refresh_indicator + NULL|self)
+              CALL                     0
+              POP_TOP
+              RETURN_CONST             2 (None)
+
+### CODE AutoUpdateMixin._update_indicator_style  args=('self', 'state', 'detail')
+147           RESUME                   0
+
+152           LOAD_FAST                1 (state)
+              LOAD_CONST               1 ('running')
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE       85 (to L1)
+
+153           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (auto_update_indicator)
+              LOAD_ATTR                3 (setText + NULL|self)
+              LOAD_CONST               2 ('● 更新中')
+              LOAD_FAST                2 (detail)
+              FORMAT_SIMPLE
+              BUILD_STRING             2
+              CALL                     1
+              POP_TOP
+
+154           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (auto_update_indicator)
+              LOAD_ATTR                5 (setStyleSheet + NULL|self)
+
+155           LOAD_CONST               3 ('color: #147A55; font-size: 12px; padding: 5px 8px;background: #EAF7F1; border: 1px solid #B9E4D2;border-radius: 4px; font-weight: 600;')
+
+154           CALL                     1
+              POP_TOP
+
+159           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (auto_update_indicator)
+              LOAD_ATTR                7 (setVisible + NULL|self)
+              LOAD_CONST               4 (True)
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             9 (None)
+
+160   L1:     LOAD_FAST                1 (state)
+              LOAD_CONST               5 ('idle')
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE      101 (to L2)
+
+161           LOAD_FAST                0 (self)
+              LOAD_ATTR                9 (_get_next_update_display + NULL|self)
+              CALL                     0
+              STORE_FAST               3 (next_text)
+
+162           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (auto_update_indicator)
+              LOAD_ATTR                3 (setText + NULL|self)
+              LOAD_CONST               6 ('● 下次更新：')
+              LOAD_FAST                3 (next_text)
+              FORMAT_SIMPLE
+              BUILD_STRING             2
+              CALL                     1
+              POP_TOP
+
+163           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (auto_update_indicator)
+              LOAD_ATTR                5 (setStyleSheet + NULL|self)
+
+164           LOAD_CONST               7 ('color: #4F5966; font-size: 12px; padding: 5px 8px;background: #EEF1F4; border: 1px solid #DDE2E7;border-radius: 4px;')
+
+163           CALL                     1
+              POP_TOP
+
+168           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (auto_update_indicator)
+              LOAD_ATTR                7 (setVisible + NULL|self)
+              LOAD_CONST               4 (True)
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             9 (None)
+
+170   L2:     LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (auto_update_indicator)
+              LOAD_ATTR                7 (setVisible + NULL|self)
+              LOAD_CONST               8 (False)
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             9 (None)
+
+### CODE AutoUpdateMixin._get_next_update_display  args=('self',)
+172            RESUME                   0
+
+174            LOAD_GLOBAL              1 (get_enabled_tasks + NULL)
+               CALL                     0
+               STORE_FAST               1 (tasks)
+
+175            LOAD_FAST                1 (tasks)
+               TO_BOOL
+               POP_JUMP_IF_TRUE         1 (to L1)
+
+176            RETURN_CONST             1 ('无')
+
+178    L1:     LOAD_GLOBAL              3 (int + NULL)
+               LOAD_GLOBAL              4 (time)
+               LOAD_ATTR                4 (time)
+               PUSH_NULL
+               CALL                     0
+               CALL                     1
+               STORE_FAST               2 (now)
+
+179            LOAD_CONST               2 (None)
+               STORE_FAST               3 (soonest)
+
+180            LOAD_FAST                1 (tasks)
+               GET_ITER
+       L2:     FOR_ITER                97 (to L9)
+               STORE_FAST               4 (task)
+
+181            LOAD_FAST                4 (task)
+               LOAD_CONST               3 ('interval_hours')
+               BINARY_SUBSCR
+               LOAD_CONST               4 (0)
+               COMPARE_OP              58 (bool(<=))
+               POP_JUMP_IF_FALSE        2 (to L3)
+
+182            JUMP_BACKWARD           14 (to L2)
+
+183    L3:     LOAD_FAST                4 (task)
+               LOAD_ATTR                7 (get + NULL|self)
+               LOAD_CONST               5 ('last_run')
+               LOAD_CONST               4 (0)
+               CALL                     2
+               STORE_FAST               5 (last_run)
+
+184            LOAD_FAST                5 (last_run)
+               LOAD_CONST               4 (0)
+               COMPARE_OP              88 (bool(==))
+               POP_JUMP_IF_FALSE       28 (to L5)
+
+185            LOAD_FAST                4 (task)
+               LOAD_ATTR                7 (get + NULL|self)
+               LOAD_CONST               6 ('start_time')
+               LOAD_FAST                2 (now)
+               CALL                     2
+               STORE_FAST               6 (next_ts)
+
+186            LOAD_FAST_LOAD_FAST     98 (next_ts, now)
+               COMPARE_OP              58 (bool(<=))
+               POP_JUMP_IF_FALSE        4 (to L4)
+
+187            LOAD_FAST                2 (now)
+               STORE_FAST               3 (soonest)
+
+188            POP_TOP
+               JUMP_FORWARD            36 (to L10)
+
+186    L4:     JUMP_FORWARD            10 (to L6)
+
+190    L5:     LOAD_FAST_LOAD_FAST     84 (last_run, task)
+               LOAD_CONST               3 ('interval_hours')
+               BINARY_SUBSCR
+               LOAD_CONST               7 (3600)
+               BINARY_OP                5 (*)
+               BINARY_OP                0 (+)
+               STORE_FAST               6 (next_ts)
+
+191    L6:     LOAD_FAST_LOAD_FAST     98 (next_ts, now)
+               COMPARE_OP              58 (bool(<=))
+               POP_JUMP_IF_FALSE        4 (to L7)
+
+192            LOAD_FAST                2 (now)
+               STORE_FAST               3 (soonest)
+
+193            POP_TOP
+               JUMP_FORWARD            16 (to L10)
+
+194    L7:     LOAD_FAST                3 (soonest)
+               POP_JUMP_IF_NONE         7 (to L8)
+               LOAD_FAST_LOAD_FAST     99 (next_ts, soonest)
+               COMPARE_OP              18 (bool(<))
+               POP_JUMP_IF_TRUE         2 (to L8)
+               JUMP_BACKWARD           95 (to L2)
+
+195    L8:     LOAD_FAST                6 (next_ts)
+               STORE_FAST               3 (soonest)
+               JUMP_BACKWARD           99 (to L2)
+
+180    L9:     END_FOR
+               POP_TOP
+
+197   L10:     LOAD_FAST                3 (soonest)
+               POP_JUMP_IF_NOT_NONE     1 (to L11)
+
+198            RETURN_CONST             1 ('无')
+
+199   L11:     LOAD_FAST_LOAD_FAST     50 (soonest, now)
+               COMPARE_OP              58 (bool(<=))
+               POP_JUMP_IF_FALSE        1 (to L12)
+
+200            RETURN_CONST             8 ('即将执行')
+
+201   L12:     LOAD_GLOBAL              8 (datetime)
+               LOAD_ATTR               10 (fromtimestamp)
+               PUSH_NULL
+               LOAD_FAST                3 (soonest)
+               CALL                     1
+               LOAD_ATTR               13 (strftime + NULL|self)
+               LOAD_CONST               9 ('%H:%M')
+               CALL                     1
+               RETURN_VALUE
+
+### CODE AutoUpdateMixin._refresh_indicator  args=('self',)
+203           RESUME                   0
+
+205           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_running_task_ids)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       66 (to L1)
+
+206           LOAD_GLOBAL              3 (len + NULL)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_running_task_ids)
+              CALL                     1
+              STORE_FAST               1 (count)
+
+207           LOAD_GLOBAL              3 (len + NULL)
+              LOAD_GLOBAL              5 (get_enabled_tasks + NULL)
+              CALL                     0
+              CALL                     1
+              STORE_FAST               2 (total)
+
+208           LOAD_FAST                0 (self)
+              LOAD_ATTR                7 (_update_indicator_style + NULL|self)
+              LOAD_CONST               1 ('running')
+              LOAD_CONST               2 (' (')
+              LOAD_FAST                1 (count)
+              FORMAT_SIMPLE
+              LOAD_CONST               3 ('/')
+              LOAD_FAST                2 (total)
+              FORMAT_SIMPLE
+              LOAD_CONST               4 (')')
+              BUILD_STRING             5
+              CALL                     2
+              POP_TOP
+              RETURN_CONST             7 (None)
+
+209   L1:     LOAD_GLOBAL              5 (get_enabled_tasks + NULL)
+              CALL                     0
+              TO_BOOL
+              POP_JUMP_IF_FALSE       18 (to L2)
+
+210           LOAD_FAST                0 (self)
+              LOAD_ATTR                7 (_update_indicator_style + NULL|self)
+              LOAD_CONST               5 ('idle')
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             7 (None)
+
+212   L2:     LOAD_FAST                0 (self)
+              LOAD_ATTR                7 (_update_indicator_style + NULL|self)
+              LOAD_CONST               6 ('off')
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             7 (None)
+
+### CODE AutoUpdateMixin._check_all_tasks  args=('self',)
+214           RESUME                   0
+
+216           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (download_worker)
+              POP_JUMP_IF_NONE        32 (to L1)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (download_worker)
+              LOAD_ATTR                3 (isRunning + NULL|self)
+              CALL                     0
+              TO_BOOL
+              POP_JUMP_IF_FALSE        1 (to L1)
+
+217           RETURN_CONST             1 (None)
+
+219   L1:     LOAD_CONST               2 (0)
+              LOAD_CONST               3 (('get_cookie',))
+              IMPORT_NAME              2 (core.config)
+              IMPORT_FROM              3 (get_cookie)
+              STORE_FAST               1 (get_cookie)
+              POP_TOP
+
+221           LOAD_FAST                1 (get_cookie)
+              PUSH_NULL
+              CALL                     0
+              STORE_FAST               2 (cache)
+
+222           LOAD_FAST                2 (cache)
+              LOAD_ATTR                9 (get + NULL|self)
+              LOAD_CONST               4 ('cookie')
+              CALL                     1
+              TO_BOOL
+              POP_JUMP_IF_TRUE         1 (to L2)
+
+223           RETURN_CONST             1 (None)
+
+225   L2:     LOAD_GLOBAL             11 (get_enabled_tasks + NULL)
+              CALL                     0
+              STORE_FAST               3 (tasks)
+
+226           LOAD_FAST                3 (tasks)
+              GET_ITER
+      L3:     FOR_ITER               153 (to L8)
+              STORE_FAST               4 (task)
+
+227           LOAD_FAST                4 (task)
+              LOAD_CONST               5 ('id')
+              BINARY_SUBSCR
+              STORE_FAST               5 (task_id)
+
+228           LOAD_FAST_LOAD_FAST     80 (task_id, self)
+              LOAD_ATTR               12 (_running_task_ids)
+              CONTAINS_OP              0
+              POP_JUMP_IF_FALSE        2 (to L4)
+
+229           JUMP_BACKWARD           25 (to L3)
+
+231   L4:     LOAD_FAST                4 (task)
+              LOAD_CONST               6 ('interval_hours')
+              BINARY_SUBSCR
+              LOAD_CONST               2 (0)
+              COMPARE_OP              58 (bool(<=))
+              POP_JUMP_IF_FALSE        2 (to L5)
+
+232           JUMP_BACKWARD           36 (to L3)
+
+234   L5:     LOAD_GLOBAL             15 (int + NULL)
+              LOAD_GLOBAL             16 (time)
+              LOAD_ATTR               16 (time)
+              PUSH_NULL
+              CALL                     0
+              CALL                     1
+              STORE_FAST               6 (now)
+
+235           LOAD_FAST                4 (task)
+              LOAD_ATTR                9 (get + NULL|self)
+              LOAD_CONST               7 ('last_run')
+              LOAD_CONST               2 (0)
+              CALL                     2
+              STORE_FAST               7 (last_run)
+
+237           LOAD_FAST                7 (last_run)
+              LOAD_CONST               2 (0)
+              COMPARE_OP             148 (bool(>))
+              POP_JUMP_IF_FALSE       16 (to L6)
+
+238           LOAD_FAST_LOAD_FAST    103 (now, last_run)
+              BINARY_OP               10 (-)
+              LOAD_FAST                4 (task)
+              LOAD_CONST               6 ('interval_hours')
+              BINARY_SUBSCR
+              LOAD_CONST               8 (3600)
+              BINARY_OP                5 (*)
+              COMPARE_OP              18 (bool(<))
+              POP_JUMP_IF_FALSE        2 (to L6)
+
+240           JUMP_BACKWARD          106 (to L3)
+
+241   L6:     LOAD_FAST                7 (last_run)
+              LOAD_CONST               2 (0)
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE       24 (to L7)
+              LOAD_FAST                4 (task)
+              LOAD_ATTR                9 (get + NULL|self)
+              LOAD_CONST               9 ('start_time')
+              LOAD_CONST               2 (0)
+              CALL                     2
+              LOAD_FAST                6 (now)
+              COMPARE_OP             148 (bool(>))
+              POP_JUMP_IF_FALSE        2 (to L7)
+
+242           JUMP_BACKWARD          136 (to L3)
+
+244   L7:     LOAD_FAST                0 (self)
+              LOAD_ATTR               19 (_start_task + NULL|self)
+              LOAD_FAST                4 (task)
+              CALL                     1
+              POP_TOP
+              JUMP_BACKWARD          155 (to L3)
+
+226   L8:     END_FOR
+              POP_TOP
+              RETURN_CONST             1 (None)
+
+### CODE AutoUpdateMixin._start_task  args=('self', 'task')
+  --            MAKE_CELL                0 (self)
+                MAKE_CELL                9 (is_loop)
+                MAKE_CELL               10 (task_id)
+
+ 246            RESUME                   0
+
+ 248            LOAD_FAST                1 (task)
+                LOAD_CONST               1 ('id')
+                BINARY_SUBSCR
+                STORE_DEREF             10 (task_id)
+
+ 250            LOAD_FAST                1 (task)
+                LOAD_ATTR                1 (get + NULL|self)
+                LOAD_CONST               2 ('last_cutoff')
+                LOAD_CONST               3 (0)
+                CALL                     2
+                LOAD_CONST               3 (0)
+                COMPARE_OP             148 (bool(>))
+                POP_JUMP_IF_FALSE       26 (to L1)
+
+ 251            LOAD_GLOBAL              2 (datetime)
+                LOAD_ATTR                4 (fromtimestamp)
+                PUSH_NULL
+                LOAD_FAST                1 (task)
+                LOAD_CONST               2 ('last_cutoff')
+                BINARY_SUBSCR
+                CALL                     1
+                STORE_FAST               2 (cutoff)
+                JUMP_FORWARD            79 (to L3)
+
+ 252    L1:     LOAD_FAST                1 (task)
+                LOAD_ATTR                1 (get + NULL|self)
+                LOAD_CONST               4 ('start_time')
+                LOAD_CONST               3 (0)
+                CALL                     2
+                LOAD_CONST               3 (0)
+                COMPARE_OP             148 (bool(>))
+                POP_JUMP_IF_FALSE       26 (to L2)
+
+ 253            LOAD_GLOBAL              2 (datetime)
+                LOAD_ATTR                4 (fromtimestamp)
+                PUSH_NULL
+                LOAD_FAST                1 (task)
+                LOAD_CONST               4 ('start_time')
+                BINARY_SUBSCR
+                CALL                     1
+                STORE_FAST               2 (cutoff)
+                JUMP_FORWARD            31 (to L3)
+
+ 255    L2:     LOAD_GLOBAL              2 (datetime)
+                LOAD_ATTR                6 (now)
+                PUSH_NULL
+                CALL                     0
+                LOAD_GLOBAL              9 (timedelta + NULL)
+                LOAD_CONST               5 (1)
+                LOAD_CONST               6 (('hours',))
+                CALL_KW                  1
+                BINARY_OP               10 (-)
+                STORE_FAST               2 (cutoff)
+
+ 257    L3:     LOAD_CONST               7 (None)
+                STORE_FAST               3 (kb_data)
+
+ 258            LOAD_DEREF               0 (self)
+                LOAD_ATTR               10 (current_kb_list)
+                GET_ITER
+        L4:     FOR_ITER                19 (to L6)
+                STORE_FAST               4 (kb)
+
+ 259            LOAD_FAST                4 (kb)
+                LOAD_CONST               1 ('id')
+                BINARY_SUBSCR
+                LOAD_FAST                1 (task)
+                LOAD_CONST               8 ('kb_id')
+                BINARY_SUBSCR
+                COMPARE_OP              88 (bool(==))
+                POP_JUMP_IF_TRUE         2 (to L5)
+                JUMP_BACKWARD           17 (to L4)
+
+ 260    L5:     LOAD_FAST                4 (kb)
+                STORE_FAST               3 (kb_data)
+
+ 261            POP_TOP
+                JUMP_FORWARD             2 (to L7)
+
+ 258    L6:     END_FOR
+                POP_TOP
+
+ 262    L7:     LOAD_FAST                3 (kb_data)
+                TO_BOOL
+                POP_JUMP_IF_TRUE         1 (to L8)
+
+ 263            RETURN_CONST             7 (None)
+
+ 265    L8:     LOAD_FAST                1 (task)
+                LOAD_ATTR                1 (get + NULL|self)
+                LOAD_CONST               9 ('folder_id')
+                LOAD_CONST              10 ('')
+                CALL                     2
+                STORE_FAST               5 (folder_id)
+
+ 266            LOAD_FAST                1 (task)
+                LOAD_ATTR                1 (get + NULL|self)
+                LOAD_CONST              11 ('folder_name')
+                LOAD_CONST              10 ('')
+                CALL                     2
+                STORE_FAST               6 (folder_name)
+
+ 267            LOAD_FAST                6 (folder_name)
+                TO_BOOL
+                POP_JUMP_IF_FALSE        6 (to L9)
+                LOAD_CONST              12 ('「')
+                LOAD_FAST                6 (folder_name)
+                FORMAT_SIMPLE
+                LOAD_CONST              13 ('」')
+                BUILD_STRING             3
+                JUMP_FORWARD             8 (to L10)
+        L9:     LOAD_CONST              12 ('「')
+                LOAD_FAST                1 (task)
+                LOAD_CONST              14 ('kb_name')
+                BINARY_SUBSCR
+                FORMAT_SIMPLE
+                LOAD_CONST              13 ('」')
+                BUILD_STRING             3
+       L10:     STORE_FAST               7 (scope_text)
+
+ 269            LOAD_DEREF               0 (self)
+                LOAD_ATTR               12 (_running_task_ids)
+                LOAD_ATTR               15 (add + NULL|self)
+                LOAD_DEREF              10 (task_id)
+                CALL                     1
+                POP_TOP
+
+ 270            LOAD_DEREF               0 (self)
+                LOAD_ATTR               17 (add_log + NULL|self)
+                LOAD_CONST              15 ('自动更新')
+                LOAD_FAST                7 (scope_text)
+                FORMAT_SIMPLE
+                LOAD_CONST              16 ('开始')
+                BUILD_STRING             3
+                LOAD_CONST              17 ('info')
+                CALL                     2
+                POP_TOP
+
+ 272            LOAD_GLOBAL             19 (AutoUpdateWorker + NULL)
+                LOAD_FAST                3 (kb_data)
+                BUILD_LIST               1
+                LOAD_FAST_LOAD_FAST     37 (cutoff, folder_id)
+                LOAD_CONST              18 (('folder_id',))
+                CALL_KW                  3
+                STORE_FAST               8 (worker)
+
+ 273            LOAD_FAST                8 (worker)
+                LOAD_ATTR               20 (progress)
+                LOAD_ATTR               23 (connect + NULL|self)
+                LOAD_DEREF               0 (self)
+                LOAD_ATTR               24 (on_download_progress)
+                CALL                     1
+                POP_TOP
+
+ 274            LOAD_FAST                8 (worker)
+                LOAD_ATTR               26 (file_discovered)
+                LOAD_ATTR               23 (connect + NULL|self)
+                LOAD_DEREF               0 (self)
+                LOAD_ATTR               28 (on_file_discovered)
+                CALL                     1
+                POP_TOP
+
+ 275            LOAD_FAST                8 (worker)
+                LOAD_ATTR               30 (scan_progress)
+                LOAD_ATTR               23 (connect + NULL|self)
+                LOAD_DEREF               0 (self)
+                LOAD_ATTR               32 (on_scan_progress)
+                CALL                     1
+                POP_TOP
+
+ 276            LOAD_FAST                8 (worker)
+                LOAD_ATTR               34 (kb_started)
+                LOAD_ATTR               23 (connect + NULL|self)
+
+ 277            LOAD_FAST                0 (self)
+                BUILD_TUPLE              1
+                LOAD_CONST              19 (<code object <lambda> at 0x000001DD462F8630, file "gui\auto_update_mixin.py", line 277>)
+                MAKE_FUNCTION
+                SET_FUNCTION_ATTRIBUTE   8 (closure)
+
+ 276            CALL                     1
+                POP_TOP
+
+ 279            LOAD_FAST                8 (worker)
+                LOAD_ATTR               36 (kb_finished)
+                LOAD_ATTR               23 (connect + NULL|self)
+
+ 280            LOAD_FAST                0 (self)
+                BUILD_TUPLE              1
+                LOAD_CONST              20 (<code object <lambda> at 0x000001DD462FAF30, file "gui\auto_update_mixin.py", line 280>)
+                MAKE_FUNCTION
+                SET_FUNCTION_ATTRIBUTE   8 (closure)
+
+ 279            CALL                     1
+                POP_TOP
+
+ 283            LOAD_FAST                1 (task)
+                LOAD_CONST              21 ('interval_hours')
+                BINARY_SUBSCR
+                LOAD_CONST               3 (0)
+                COMPARE_OP             132 (>)
+                STORE_DEREF              9 (is_loop)
+
+ 284            LOAD_FAST                8 (worker)
+                LOAD_ATTR               38 (finished)
+                LOAD_ATTR               23 (connect + NULL|self)
+                LOAD_FAST                9 (is_loop)
+                LOAD_FAST                0 (self)
+                LOAD_FAST               10 (task_id)
+                BUILD_TUPLE              3
+                LOAD_CONST              22 (<code object <lambda> at 0x000001DD4627E880, file "gui\auto_update_mixin.py", line 284>)
+                MAKE_FUNCTION
+                SET_FUNCTION_ATTRIBUTE   8 (closure)
+                CALL                     1
+                POP_TOP
+
+ 285            LOAD_FAST                8 (worker)
+                LOAD_DEREF               0 (self)
+                LOAD_ATTR               40 (_running_task_workers)
+                LOAD_DEREF              10 (task_id)
+                STORE_SUBSCR
+
+ 286            LOAD_FAST                8 (worker)
+                LOAD_ATTR               43 (start + NULL|self)
+                CALL                     0
+                POP_TOP
+
+ 288            LOAD_DEREF               0 (self)
+                LOAD_ATTR               45 (_refresh_indicator + NULL|self)
+                CALL                     0
+                POP_TOP
+
+ 289            LOAD_DEREF               0 (self)
+                LOAD_ATTR               46 (_task_manager_dialog)
+                TO_BOOL
+                POP_JUMP_IF_FALSE       27 (to L11)
+
+ 290            LOAD_DEREF               0 (self)
+                LOAD_ATTR               46 (_task_manager_dialog)
+                LOAD_ATTR               49 (refresh_table + NULL|self)
+                CALL                     0
+                POP_TOP
+                RETURN_CONST             7 (None)
+
+ 289   L11:     RETURN_CONST             7 (None)
+
+#### CODE AutoUpdateMixin._start_task.<locals>.<lambda>  args=('name',)
+  --           COPY_FREE_VARS           1
+
+ 277           RESUME                   0
+               LOAD_DEREF               1 (self)
+               LOAD_ATTR                1 (add_log + NULL|self)
+               LOAD_CONST               1 ('更新：开始扫描「')
+               LOAD_FAST                0 (name)
+               FORMAT_SIMPLE
+               LOAD_CONST               2 ('」')
+               BUILD_STRING             3
+               LOAD_CONST               3 ('info')
+               CALL                     2
+               RETURN_VALUE
+
+#### CODE AutoUpdateMixin._start_task.<locals>.<lambda>  args=('name', 'count')
+  --           COPY_FREE_VARS           1
+
+ 280           RESUME                   0
+               LOAD_DEREF               2 (self)
+               LOAD_ATTR                1 (add_log + NULL|self)
+               LOAD_CONST               1 ('更新：「')
+               LOAD_FAST                0 (name)
+               FORMAT_SIMPLE
+               LOAD_CONST               2 ('」完成')
+               BUILD_STRING             3
+               LOAD_CONST               3 ('success')
+               CALL                     2
+               RETURN_VALUE
+
+#### CODE AutoUpdateMixin._start_task.<locals>.<lambda>  args=()
+  --           COPY_FREE_VARS           3
+
+ 284           RESUME                   0
+               LOAD_DEREF               1 (self)
+               LOAD_ATTR                1 (_on_task_finished + NULL|self)
+               LOAD_DEREF               2 (task_id)
+               LOAD_DEREF               0 (is_loop)
+               CALL                     2
+               RETURN_VALUE
+
+### CODE AutoUpdateMixin._on_task_finished  args=('self', 'task_id', 'is_loop')
+292           RESUME                   0
+
+294           LOAD_GLOBAL              1 (int + NULL)
+              LOAD_GLOBAL              2 (time)
+              LOAD_ATTR                2 (time)
+              PUSH_NULL
+              CALL                     0
+              CALL                     1
+              STORE_FAST               3 (now)
+
+295           LOAD_FAST                2 (is_loop)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       11 (to L1)
+
+296           LOAD_GLOBAL              5 (update_task + NULL)
+              LOAD_FAST_LOAD_FAST     19 (task_id, now)
+              LOAD_FAST                3 (now)
+              LOAD_CONST               1 (('last_run', 'last_cutoff'))
+              CALL_KW                  3
+              POP_TOP
+              JUMP_FORWARD            11 (to L2)
+
+298   L1:     LOAD_GLOBAL              5 (update_task + NULL)
+              LOAD_FAST_LOAD_FAST     19 (task_id, now)
+              LOAD_FAST                3 (now)
+              LOAD_CONST               2 (0)
+              LOAD_CONST               3 (('last_run', 'last_cutoff', 'enabled'))
+              CALL_KW                  4
+              POP_TOP
+
+299   L2:     LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (_running_task_ids)
+              LOAD_ATTR                9 (discard + NULL|self)
+              LOAD_FAST                1 (task_id)
+              CALL                     1
+              POP_TOP
+
+300           LOAD_FAST                0 (self)
+              LOAD_ATTR               10 (_running_task_workers)
+              LOAD_ATTR               13 (pop + NULL|self)
+              LOAD_FAST                1 (task_id)
+              LOAD_CONST               4 (None)
+              CALL                     2
+              POP_TOP
+
+301           LOAD_FAST                0 (self)
+              LOAD_ATTR               15 (update_license_info + NULL|self)
+              CALL                     0
+              POP_TOP
+
+302           LOAD_FAST                0 (self)
+              LOAD_ATTR               17 (add_log + NULL|self)
+              LOAD_CONST               5 ('自动更新任务完成')
+              LOAD_CONST               6 ('success')
+              CALL                     2
+              POP_TOP
+
+303           LOAD_FAST                0 (self)
+              LOAD_ATTR               19 (_refresh_indicator + NULL|self)
+              CALL                     0
+              POP_TOP
+
+304           LOAD_FAST                0 (self)
+              LOAD_ATTR               20 (_task_manager_dialog)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       26 (to L3)
+
+305           LOAD_FAST                0 (self)
+              LOAD_ATTR               20 (_task_manager_dialog)
+              LOAD_ATTR               23 (refresh_table + NULL|self)
+              CALL                     0
+              POP_TOP
+
+307   L3:     LOAD_CONST               2 (0)
+              LOAD_CONST               7 (('close_session',))
+              IMPORT_NAME             12 (services.ima_service)
+              IMPORT_FROM             13 (close_session)
+              STORE_FAST               4 (close_session)
+              POP_TOP
+
+309           LOAD_FAST                4 (close_session)
+              PUSH_NULL
+              CALL                     0
+              POP_TOP
+              RETURN_CONST             4 (None)
+
+### CODE AutoUpdateMixin._on_task_error  args=('self', 'task_id', 'msg', 'is_loop')
+311           RESUME                   0
+
+313           LOAD_FAST                3 (is_loop)
+              TO_BOOL
+              POP_JUMP_IF_TRUE        41 (to L1)
+
+314           LOAD_GLOBAL              1 (int + NULL)
+              LOAD_GLOBAL              2 (time)
+              LOAD_ATTR                2 (time)
+              PUSH_NULL
+              CALL                     0
+              CALL                     1
+              STORE_FAST               4 (now)
+
+315           LOAD_GLOBAL              5 (update_task + NULL)
+              LOAD_FAST_LOAD_FAST     20 (task_id, now)
+              LOAD_FAST                4 (now)
+              LOAD_CONST               1 (0)
+              LOAD_CONST               2 (('last_run', 'last_cutoff', 'enabled'))
+              CALL_KW                  4
+              POP_TOP
+
+316   L1:     LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (_running_task_ids)
+              LOAD_ATTR                9 (discard + NULL|self)
+              LOAD_FAST                1 (task_id)
+              CALL                     1
+              POP_TOP
+
+317           LOAD_FAST                0 (self)
+              LOAD_ATTR               10 (_running_task_workers)
+              LOAD_ATTR               13 (pop + NULL|self)
+              LOAD_FAST                1 (task_id)
+              LOAD_CONST               3 (None)
+              CALL                     2
+              POP_TOP
+
+318           LOAD_FAST                0 (self)
+              LOAD_ATTR               15 (update_license_info + NULL|self)
+              CALL                     0
+              POP_TOP
+
+319           LOAD_FAST                0 (self)
+              LOAD_ATTR               17 (add_log + NULL|self)
+              LOAD_CONST               4 ('自动更新任务中断（')
+              LOAD_FAST                2 (msg)
+              FORMAT_SIMPLE
+              LOAD_CONST               5 ('）')
+              BUILD_STRING             3
+              LOAD_CONST               6 ('error')
+              CALL                     2
+              POP_TOP
+
+320           LOAD_FAST                0 (self)
+              LOAD_ATTR               19 (_refresh_indicator + NULL|self)
+              CALL                     0
+              POP_TOP
+
+321           LOAD_FAST                0 (self)
+              LOAD_ATTR               20 (_task_manager_dialog)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       27 (to L2)
+
+322           LOAD_FAST                0 (self)
+              LOAD_ATTR               20 (_task_manager_dialog)
+              LOAD_ATTR               23 (refresh_table + NULL|self)
+              CALL                     0
+              POP_TOP
+              RETURN_CONST             3 (None)
+
+321   L2:     RETURN_CONST             3 (None)

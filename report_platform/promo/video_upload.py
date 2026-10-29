@@ -423,7 +423,8 @@ def main() -> int:
                 # v3-a: 补填描述 (r7 取证: 发布页描述框是 contenteditable div)
                 await self._fill_desc(getattr(self, "extra_desc", ""))
                 # v3-b: 就绪轮询 — 键真亮才点, 不硬点灰键 (r4 教训)
-                ready, info = await self._wait_publish_ready()
+                # 1027: 90s→240s (4-7MB am/hm 片平台转码常超 90s; jiage_v1_am 实证 90s 未就绪非风控)
+                ready, info = await self._wait_publish_ready(timeout_s=240)
                 if not ready:
                     print(f"[vup] P3: {info} — 判失败 (不硬点灰键)")
                     await self.page.screenshot(

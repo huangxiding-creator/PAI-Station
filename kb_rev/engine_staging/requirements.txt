@@ -1,0 +1,11 @@
+# 总包千问引擎依赖清单（按代码实际 import 钉住；Dockerfile 构建用）
+# 网络 HTTP 一律 curl_cffi（chrome TLS 指纹），无 httpx/requests 依赖
+fastapi>=0.110,<1.0        # app.py API 框架
+uvicorn>=0.29,<1.0         # 服务进程（Dockerfile CMD）
+pydantic>=2.6,<3.0         # app.py 请求体模型
+curl_cffi>=0.7,<0.9        # metaso_kb / session / wechat（impersonate="chrome"）
+PyMySQL>=1.1,<2.0          # store.py DB_KIND=mysql（CloudBase MySQL 线）
+Pillow>=10.0,<12.0         # poster.py 海报渲染（惰性 import）
+fonttools>=4.50,<5.0       # poster._ttc_pair ttc 双字重定位（惰性 import）
+python-docx>=1.1,<2.0      # exporter docx 导出（惰性 import）
+fpdf2>=2.7,<3.0            # exporter pdf 导出（惰性 import）

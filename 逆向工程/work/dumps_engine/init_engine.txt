@@ -1,0 +1,71 @@
+@@@ off=2459700
+ed"))
+}
+else{
+const p=markWorkflowReady("quiescent");
+if(!p.accepted)throw new Error(`workflow ready failed: ${
+p.reason
+}
+`);
+workflowCoordinator.snapshot().runningSchedule||rxEngine.setPhase(EnginePhase.POLLING),t.sendToRenderer("SCREENSHOT_TAKEN",""),s("no_auto_task_paused")
+}
+return acquirePauseHotkey("agent"),s("handler_return"),!0
+}
+catch(i){
+return console.error("【START_SCREENSHOT】启动失败:",i),releasePauseHotkey("agent"),engineState.isEngineActive=!1,rxEngine.stopAllActions(),clearTargetRuntime(),i instanceof ExternalHidUnavailableError?{
+success:!1,action:"external_hid_unavailable",error:i.reason
+}
+:!1
+}
+
+}
+),t.ipc.handle("STOP_SCREENSHOT",()=>{
+try{
+return cleanupResources(),!0
+}
+catch(e){
+return console.error("停止微信助手时发生错误:",e),!1
+}
+
+}
+),t.ipc.handle("GET_REPLAY_SESSIONS",()=>replayLogger.getSessions()),t.ipc.handle("GET_REPLAY_TIMELINE",(e,r)=>replayLogger.getTimeline(r)),t.ipc.handle("GET_REPLAY_ENABLED",()=>replayLogger.isEnabled()),t.ipc.handle("SET_REPLAY_ENABLED",(e,r)=>(replayLogger.setEnabled(r),r)),t.ipc.handle("CLEAR_REPLAY_SESSIONS",()=>replayLogger.clearAllSessions())
+}
+function initEngine(){
+registerEngineHandlers(),console.log("[Biz Engine] 引擎初始化完成")
+}
+function buildLoginQRCodeRequestBody(){
+return{
+source:"agent"
+}
+
+}
+function buildQRCodeLoginRequestBody(t,e){
+const r={
+nonce:t
+}
+,n=e?.trim();
+return n&&(r.invite_code=n),r
+}
+const DIAGNOSTIC_IPC_CHANNELS={
+captureWechatWindow:"TEST_CAPTURE_WECHAT_WINDOW_WITH_CORE",completeCollectionFlow:"TEST_COMPLETE_COLLECTION_FLOW",detectWhatsAppInput:"TEST_DETECT_WHATSAPP_PRODUCTION_INPUT",detectWhatsAppLayout:"TEST_DETECT_WHATSAPP_LAYOUT",detectGenericImLayout:"TEST_DETECT_GENERIC_IM_LAYOUT",detectWechatLayout:"TEST_VISION_DETECT_WECHAT_LAYOUT",detectWechatMessages:"TEST_DETECT_WECHAT_MESSAGES",searchWechatUser:"TEST_SEARCH_USER_RPA"
+}
+,clampNormalized=t=>Math.max(0,Math.min(1e3,t)),normalizedBox=(t,e,r)=>!r||!r.every(Number.isFinite)?null:{
+kind:"box",label:t,color:e,bbox:r.map(clampNormalized)
+}
+,normalizedPoint=(t,e,r)=>!r||!r.every(Number.isFinite)?null:{
+
+@@@ off=2461700
+kind:"point",label:t,color:e,point:r.map(clampNormalized)
+}
+,pixelBox=(t,e,r,n,a)=>!r||!n||!a||n<=1||a<=1?null:normalizedBox(t,e,[r[0]/n*1e3,r[1]/a*1e3,r[2]/n*1e3,r[3]/a*1e3]),logicalBox=(t,e,r,n)=>!r||n.width<=1||n.height<=1?null:normalizedBox(t,e,[r.x/n.width*1e3,r.y/n.height*1e3,(r.x+r.width)/n.width*1e3,(r.y+r.height)/n.height*1e3]),logicalPoint=(t,e,r,n)=>!r||n.width<=1||n.height<=1?null:{
+kind:"point",label:t,color:e,point:[clampNormalized(r.x/n.width*1e3),clampNormalized(r.y/n.height*1e3)]
+}
+,presentAnnotations=t=>t.filter(e=>e!==null);
+function buildWechatLayoutAnnotations(t){
+const e=presentAnnotations([normalizedBox("搜索框","#fa8c16",t.searchInputArea?.bbox),t.chatEntranceArea?.bbox?normalizedBox("聊天入口","#fadb14",t.chatEntranceArea.bbox):normalizedPoint("聊天入口","#fadb14",t.chatEntranceArea?.point),normalizedBox("标题区","#13c2c2",t.headerArea?.bbox),normalizedBox("ChatMain","#ff4d4f",t.chatMainArea?.bbox),pixelBox("输入区","#eb2f96",t.messageInputArea?.bbox,t.imageWidth,t.imageHeight)]),r=presentAnnotations((t.dialogues||[]).map((s,i)=>pixelBox(`Dialogue-${
+i+1
+}
+`,"#722ed1",s,t.imageWidth,t.imageHeight))),n=presentAnnotations((t.dialogueRedDots||[]).map((s,i)=>pixelBox(`红点-${
+i+1
+}
+`,"#f5222d",s,t.imageWidth,t.imageHeight))),a=presentAnnotations([...(t.leftMessages||[]).map((s,i)=>pixelBox(

@@ -1,0 +1,33 @@
+===== core/settings.pyc =====
+DOCSTRING: 应用设置管理（使用数据库存储）
+
+此模块保持向后兼容，现在使用SQLite数据库而非JSON文件存储设置
+
+
+[<module>] args=() names=('__doc__', 'os', 'config', 'Config', 'data.database', 'get_user_setting', 'set_user_setting', 'get_all_user_settings', '_settings', '_resolve_download_dir', 'load_settings', 'save_settings', 'get_setting')
+  CONST '应用设置管理（使用数据库存储）\n\n此模块保持向后兼容，现在使用SQLite数据库而非JSON文件存储设置\n'
+  CONST 0
+  CONST None
+  CONST ('Config')
+  CONST ('get_user_setting', 'set_user_setting', 'get_all_user_settings')
+  CONST (None)
+
+  [_resolve_download_dir] args=('path', 'fallback') names=('Config', 'get_default_download_dir', 'os', 'path', 'isabs', 'join', 'get_base_dir', 'makedirs', 'OSError')
+    CONST '确保下载目录为绝对路径并存在'
+    CONST True
+    CONST ('exist_ok')
+
+  [load_settings] args=() names=('get_all_user_settings', '_settings', '_resolve_download_dir', 'set_user_setting')
+    CONST '加载设置（从数据库）'
+    CONST 'download_dir'
+    CONST None
+
+  [save_settings] args=('settings',) names=('items', '_resolve_download_dir', 'set_user_setting', '_settings')
+    CONST '保存设置（到数据库）'
+    CONST 'download_dir'
+    CONST None
+
+  [get_setting] args=('key', 'default') names=('_settings', 'get_user_setting', '_resolve_download_dir')
+    CONST '获取单个设置'
+    CONST 'download_dir'
+

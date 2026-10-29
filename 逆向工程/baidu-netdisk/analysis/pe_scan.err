@@ -1,0 +1,10 @@
+﻿python : E:\AI-Station\���򹤳�\baidu-netdisk\analysis\scripts\pe_scan.py:77: DeprecationWarning: datetime.datetime.utcfr
+omtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent date
+times in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
+At line:1 char:406
++ ... \analysis"; python -I "$S\scripts\pe_scan.py" "$R\Bull140U.dll" "$R\k ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (E:\AI-Station\�... datetime.UTC).:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  out["timestamp"] = "%d (%s)" % (ts, datetime.datetime.utcfromtimestamp(ts).isoformat())

@@ -5,6 +5,8 @@ DoD/AC 对应（测试名前缀 test_w5_ 供追溯矩阵引用）：
   ac1 FileMeta 字段与 catalog_engine 槽位对齐；audit.jsonl 统一审计（零造假）
   ac2 RateLimiter：间隔+日上限熔断+连续错误熔断+日切重置
   ac3 wenku_meta：syncmrecall 配方包装（映射/翻页/限流/熔断/重试1次），假响应注入
+  x5  wenku 真翻页用例（5x 池扩容）：limit=36 跨 3 满页聚合/短页终止/
+      页间 RateLimiter 间隔/limit≤12 单页零漂移
   ac4 ima_meta：复刻件包装，无凭据/登录失效→available=False 且 metadata 返回[]（不崩溃）
   ac5 enrich：phi-1 配比回填真实 FileMeta 替换占位名、fmt 偏好匹配、去重、
      provenance {channel, filled, placeholder_kept} 计数、dry 零请求
@@ -296,6 +298,64 @@ class TestW5Ac3WenkuMeta(WenkuMetaTestBase):
         self.assertEqual(p["requests"][0]["sceneID"], "PCSearch")
         self.assertEqual(p["requests"][0]["params"],
                          {"word": "水利工程", "pn": 3, "noCacheMembershipCard": True})
+
+
+# ---------------- x5 wenku 真翻页（5x 池扩容：limit>12 跨页聚合到 36） ----------------
+
+class TestX5WenkuTruePagination(WenkuMetaTestBase):
+    """5x 战役翻页用例（mock 零网络）：syncmrecall 每页硬限 12 条——limit=36 由
+    适配器内部 pn=1,2,3 循环翻页聚合收满（v2.5 起在役行为钉死），页间频控走
+    既有 RateLimiter 正常间隔，短页后终止不野翻；limit≤12 单页路径零漂移。"""
+
+    def _mount(self, script):
+        def fake_fetch(query, pn, timeout):
+            self.fetches.append(pn)
+            return script.get(pn, wenku_page([]))
+        wenku_meta._fetch = fake_fetch
+        self.addCleanup(setattr, wenku_meta, "_fetch", wenku_meta._urllib_fetch)
+
+    def test_x5_three_full_pages_reach_36(self):
+        # 两页以上聚合：3 满页×12=36（limit>12 才需要翻页的任务主路径）
+        script = {pn: wenku_page([wenku_item((pn - 1) * 12 + i) for i in range(12)])
+                  for pn in (1, 2, 3)}
+        self._mount(script)
+        metas = self.adapter(ndview=False).metadata("水利工程", 36)
+        self.assertEqual(len(metas), 36)                   # 36=3×12 跨页收满
+        self.assertEqual(self.fetches, [1, 2, 3])          # pn 递增恰三枪
+        self.assertEqual([m.extra["doc_id"] for m in metas[:2]], ["doc0000", "doc0001"])
+        self.assertEqual(metas[11].extra["doc_id"], "doc0011")   # 第 1 页末
+        self.assertEqual(metas[12].extra["doc_id"], "doc0012")   # 第 2 页首（页序拼合）
+        self.assertEqual(metas[-1].extra["doc_id"], "doc0035")   # 页序零乱序
+
+    def test_x5_short_page_terminates(self):
+        # 短页（5<12）即尾页：聚合全收 17 条后一枪空页确认即止，无第 4 页野翻
+        script = {1: wenku_page([wenku_item(i) for i in range(12)]),
+                  2: wenku_page([wenku_item(100 + i) for i in range(5)])}
+        self._mount(script)
+        metas = self.adapter(ndview=False).metadata("水利工程", 36)
+        self.assertEqual(len(metas), 17)                   # 12+5 全收（不弃真数据）
+        self.assertEqual(self.fetches, [1, 2, 3])          # 空页确认后停
+        self.assertTrue(all(isinstance(m, FileMeta) for m in metas))
+
+    def test_x5_page_fetches_respect_rate_limiter_interval(self):
+        # 翻页间隔：同一次 metadata 内 3 页=3 额度、页间恰睡 min_interval（假钟零真等）
+        clk = fake_clock()
+        lim = RateLimiter(min_interval=3.0, daily_limit=500, name="wk-x5",
+                          clock=clk, sleep=clk.sleep, today=lambda: "d1")
+        script = {pn: wenku_page([wenku_item((pn - 1) * 12 + i) for i in range(12)])
+                  for pn in (1, 2, 3)}
+        self._mount(script)
+        a = wenku_meta.WenkuMetaAdapter(limiter=lim, ndview=False)
+        self.assertEqual(len(a.metadata("水利工程", 36)), 36)
+        self.assertAlmostEqual(clk.t, 1000.0 + 3.0 * 2)    # 3 页=2 次页间隔
+        self.assertEqual(lim.status()["count_today"], 3)   # 翻页计入正常额度（日上限守恒）
+
+    def test_x5_limit_le_12_single_page_byte_stable(self):
+        # limit≤12 单页路径逐字节不变：满页 12 条=恰一枪 pn=1，零翻页
+        self._mount({1: wenku_page([wenku_item(i) for i in range(12)])})
+        metas = self.adapter(ndview=False).metadata("水利工程", 12)
+        self.assertEqual(len(metas), 12)
+        self.assertEqual(self.fetches, [1])
 
 
 # ---------------- ac4 ima_meta ----------------

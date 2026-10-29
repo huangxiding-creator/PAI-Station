@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Expires" content="0" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Cache-control" content="no-cache" />
+    <meta http-equiv="Cache" content="no-cache" />
+    <title>自动回复规则</title>
+    <link rel="stylesheet" href="./css/_layout.css?v=1684976400" />
+    <link rel="stylesheet" href="./css/_strategy.css?v=1684976400" />
+    <link rel="stylesheet" href="./assets/css/element-ui.css" />
+    <script src="./assets/js/vue@2.js"></script>
+    <script src="./assets/js/element-ui.js"></script>
+    <script src="./assets/js/jquery.min.js"></script>
+  </head>
+
+  <body>
+    <div id="app" class="layout-form bgcolor-1">
+      <div class="form-title relative">
+        <span>{{ formType === "1" ? "新增" : "修改" }}自动回复规则</span>
+        <div class="icon-close absolute" @click="onCancelForm">
+          <img src="./assets/img/close-1.png" alt="关闭" />
+        </div>
+      </div>
+      <div class="form-body">
+        <el-form
+          ref="ruleForm"
+          label-width="90px"
+          label-position="right"
+          size="medium"
+          :model="ruleForm"
+          :rules="rules"
+        >
+          <el-form-item label="规则名称 :" prop="ruleName">
+            <el-input
+              v-model="ruleForm.ruleName"
+              placeholder="请输入规则名称"
+              id="ruleName"
+              @input="ruleForm.ruleName=ruleForm.ruleName.replace(
+                /[^\a-\z\A-\Z0-9\u4E00-\u9FA5\.\,\?\<\>\。\，\-\——\=\;\@\！\!\+\$]/g,
+                ''
+              )"
+            />
+          </el-form-item>
+
+          <el-form-item label="规则类型 :" prop="ruleType">
+            <el-select
+              v-model="ruleForm.ruleType"
+              placeholder="请选择规则类型"
+              style="width: 100%"
+              id="ruleType"
+            >
+              <el-option
+                v-for="item in ruleTypeOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="关键词 :" v-show="ruleForm.ruleType !== '5'">
+            <div class="flex flex-wrap">
+              <div
+                v-for="(tags, index) of ruleForm.ruleTagsOptions"
+                :key="tags.id"
+                class="form-tags mr-1 relative"
+              >
+                <el-input
+                  v-if="tags.inputVisible"
+                  v-model="tags.inputValue"
+                  ref="tagInput"
+                  size="small"
+                  maxlength="50"
+                  @keyup.enter.native="handleInputConfirm('edit', index, tags.inputValue)"
+                  @blur="handleInputConfirm('edit', index, tags.inputValue)"
+                ></el-input>
+                <el-tooltip v-else effect="dark" :content="tags.content" placement="top">
+                  <div
+                    class="form-tags-item radius-1 text-ellipsis pl-1 pr-1 wh-full border-1 cursor-pointer"
+                    @click="onEditInput(index, tags.content)"
+                  >
+                    {{ tags.content }}
+                  </div>
+                </el-tooltip>
+                <div class="absolute tags-icon" v-show="!tags.inputVisible">
+                  <i class="el-icon-close" @click="handleTagsClose"></i>
+                </div>
+              </div>
+              <div>
+                <el-input
+                  class="input-new-tag"
+                  v-if="saveInputVisible"
+                  v-model="saveInputValue"
+                  ref="saveTagInput"
+                  size="small"
+                  placeholder="请输入关键词"
+                  maxlength="50"
+                  @keyup.enter.native="handleInputConfirm('save')"
+                  @blur="handleInputConfirm('save')"
+                ></el-input>
+                <el-button
+                  v-else
+                  class="radius-1"
+                  size="small"
+                  v-show="getTagesLength"
+                  @click="onShowInput"
+                >
+                  +新增关键词
+                </el-button>
+              </div>
+            </div>
+          </el-form-item>
+
+          <el-form-item label="回复内容 :" prop="replyTextVal">
+            <span class="f12">可设置多条回复内容，触发自动回复规则时系统随机回复1条</span>
+            <el-input v-model="ruleForm.replyTextVal" v-show="false" id="replyTextVal"></el-input>
+
+            <div>
+              <div v-if="replyVisible">
+                <div
+                  class="flex mb-1"
+                  v-for="(item, index) of ruleForm.ruleReplyList"
+                  :key="item.id"
+                >
+                  <div
+                    class="text-ellipsis reply-text px-1 radius-1"
+                    @click="onEditReply(index, item)"
+                  >
+                    <span v-html="item.textVal"></span>
+                  </div>
+                  <div class="flex reply-icon justify-around">
+                    <div v-if="ruleForm.ruleReplyList.length < 30">
+                      <i class="el-icon-plus" @click="onAddReply"></i>
+                    </div>
+                    <div>
+                      <i class="el-icon-minus" @click="onDelReply(index)"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div v-else class="relative" :class="{'zIndex2': isFace}">
+                <div
+                  contenteditable="true"
+                  id="contenteditable"
+                  class="expression-input"
+                  ref="replyInput"
+                  @blur="onBlurTextarea"
+                  @focus="onFocusTextarea"
+                  @keydown="onKeydownWord($event)"
+                  @paste="onPasteTextarea($event)"
+                ></div>
+
+                <div class="flex justify-between items-center relative">
+                  <img
+                    class="cursor-pointer imgFace"
+                    src="./assets/img/face.png"
+                    alt="表情"
+                    width="20px"
+                    height="20px"
+                    @click="onShowFace"
+                  />
+                  <div class="triangle absolute" v-show="isFace"></div>
+                  <div class="pt-1 flex">
+                    <!-- <div class="f12">回复内容最大为300字&nbsp;&nbsp;</div> -->
+                    <el-button size="mini" @click="onCanceReply">取消</el-button>
+                    <el-button
+                      type="primary"
+                      size="mini"
+                      @click="onSaveReply"
+                      class="border-3 bgcolor-2"
+                    >
+                      添加
+                    </el-button>
+                  </div>
+                </div>
+                <transition name="el-fade-in">
+                  <div class="reply-face absolute radius-1 flex flow-wrap" v-show="isFace">
+                    <div v-for="item of face_list" :key="item.id" class="imgFace">
+                      <img
+                        class="cursor-pointer imgFace"
+                        :src="item.icon"
+                        :alt="item.code"
+                        :title="item.text"
+                        @click.stop="onSetFace(item)"
+                      />
+                    </div>
+                  </div>
+                </transition>
+              </div>
+            </div>
+          </el-form-item>
+
+          <el-form-item label="回复时间 :" prop="replyTimeVal">
+            <el-radio-group
+              v-model="ruleForm.replyTimeVal"
+              class="pt-2"
+              @change="onChangeReplyDate"
+            >
+              <div>
+                <el-radio label="1">立即发送</el-radio>
+              </div>
+              <div class="pt-1">
+                <el-radio label="2">
+                  延迟
+                  <el-input
+                    v-model="ruleForm.replySecoed"
+                    style="width: 50px"
+                    maxlength="5"
+                    size="mini"
+                    @input="ruleForm.replySecoed=ruleForm.replySecoed.replace(/[^\d]/g,'')"
+                  ></el-input>
+                  分钟&nbsp;后发送
+                </el-radio>
+              </div>
+              <div class="pt-1">
+                <el-radio label="3">
+                  定时发送
+                  <el-select
+                    v-model="ruleForm.replyHour"
+                    placeholder="选择时"
+                    style="width: 90px"
+                    size="mini"
+                    @visible-change="onChangeReplyHour(event)"
+                  >
+                    <el-option
+                      v-for="item in replyHourList"
+                      :key="item"
+                      :label="item"
+                      :value="item"
+                    ></el-option>
+                  </el-select>
+                  <span>时</span>
+                  <el-select
+                    v-model="ruleForm.replyMinute"
+                    placeholder="选择分"
+                    style="width: 90px"
+                    size="mini"
+                    @visible-change="onChangeReplyHour(event)"
+                  >
+                    <el-option
+                      v-for="item in replyMinuteList"
+                      :key="item"
+                      :label="item"
+                      :value="item"
+                    ></el-option>
+                  </el-select>
+                  <span>分</span>
+                </el-radio>
+              </div>
+            </el-radio-group>
+          </el-form-item>
+
+          <el-form-item label="应用范围 :" prop="replyRangeVal">
+            <el-radio-group class="pt-2" v-model="ruleForm.replyRangeVal" @change="onChangeScope">
+              <div>
+                <el-radio label="1">所有账号的所有作品</el-radio>
+              </div>
+              <div class="pt-1">
+                <el-radio label="2">指定账号的所有作品</el-radio>
+              </div>
+              <div class="pt-1">
+                <el-radio label="3">自定义</el-radio>
+              </div>
+            </el-radio-group>
+          </el-form-item>
+
+          <el-form-item label="选择账号 :">
+            <div
+              v-if="ruleForm.dy_account_id && ruleForm.replyRangeVal !== '1'"
+              class="flex items-center border-2 radius-1"
+              @click="onSelectAccont"
+            >
+              <div class="w50 pl-1" style="min-width: 45px">
+                <img
+                  :src="ruleForm.dy_account_avatar"
+                  alt=""
+                  width="28px"
+                  height="28px"
+                  class="radius-2 border-1"
+                />
+              </div>
+              <div class="text-ellipsis px-1 cursor-default" style="width: auto">
+                {{ ruleForm.dy_account }}
+              </div>
+            </div>
+            <el-button
+              icon="el-icon-plus"
+              :disabled="getAccountDisabled"
+              @click="onSelectAccont"
+              v-else
+            >
+              {{ accountText }}
+            </el-button>
+          </el-form-item>
+
+          <el-form-item label="选择作品 :">
+            <el-button
+              icon="el-icon-plus"
+              :disabled="getWorksDisabled"
+              @click="onSelectWorks"
+              v-if="!getDyWorks"
+            >
+              {{ worksText }}
+            </el-button>
+            <div
+              v-else
+              class="border-2 radius-1 px-1 text-ellipsis cursor-default"
+              @click="onSelectWorks"
+            >
+              <span v-for="(i, index) of ruleForm.dy_works" :key="index">@{{ i }}@,</span>
+            </div>
+          </el-form-item>
+
+          <el-form-item label="启用/关闭 :">
+            <el-switch
+              v-model="ruleForm.ruleStatus"
+              active-text="已启用"
+              inactive-text="已关闭"
+              active-color="#13ce66"
+              inactive-color="#A2A2A3"
+            ></el-switch>
+          </el-form-item>
+        </el-form>
+
+        <div class="flex sbumit-button justify-end">
+          <el-button size="medium" @click="onCancelForm" :disabled="isButton">取消</el-button>
+          <el-button
+            type="primary"
+            size="medium"
+            @click="onSubmitForm"
+            class="border-3 bgcolor-2"
+            :disabled="isButton"
+          >
+            生成规则
+          </el-button>
+        </div>
+      </div>
+    </div>
+
+    <script src="./js/api.js?v=1684976400"></script>
+    <script src="./js/utils.js?v=1684976400"></script>
+    <script src="./js/request.js?v=1684976400"></script>
+
+    <script>
+      const app = new Vue({
+        el: "#app",
+        data() {
+          return {
+            formType: "1",
+            ruleForm: {
+              ruleName: "",
+              ruleType: "1",
+              ruleTagsOptions: [],
+              replyTextVal: "1",
+              ruleReplyList: [],
+              replyTimeVal: "",
+              replyHour: "",
+              replyMinute: "",
+              replySecoed: "",
+              replyRangeVal: "",
+              dy_account: "",
+              dy_account_id: "",
+              dy_account_avatar: "",
+              dy_works: "",
+              dy_works_id: "",
+              ruleStatus: true
+            },
+            rules: {
+              ruleName: [{ required: true, message: "请输入规则名称", trigger: "blur" }],
+              replyTextVal: [
+                {
+                  required: true,
+                  message: " "
+                }
+              ],
+              ruleType: [{ required: true, message: "请选择规则类型", trigger: "blur" }],
+              replyTimeVal: [{ required: true, message: "请选择回复时间", trigger: "blur" }],
+              replyRangeVal: [{ required: true, message: "请选择应用范围", trigger: "blur" }]
+            },
+            ruleTypeOptions: [
+              {
+                label: "包含任一关键词",
+                value: "1"
+              },
+              {
+                label: "同时包含所有关键词",
+                value: "2"
+              },
+              {
+                label: "不含任一关键词",
+                value: "3"
+              },
+              {
+                label: "精确匹配关键词",
+                value: "4"
+              },
+              {
+                label: "收到评论即回复",
+                value: "5"
+              }
+            ],
+
+            saveInputVisible: false,
+            saveInputValue: "",
+            textareaVal: "",
+            isFace: false,
+            replyVisible: false,
+            replyHourList: hour_list,
+            replyMinuteList: minute_lisst,
+            accountText: "选择账号",
+            worksText: "选择作品",
+            isButton: false,
+            replyEdit: {
+              isEdit: false,
+              index: null
+            }
+          }
+        },
+
+        computed: {
+          getTagesLength() {
+            return this.ruleForm.ruleTagsOptions.length >= 20 ? false : true
+          },
+          getAccountDisabled() {
+            return !this.ruleForm.replyRangeVal || this.ruleForm.replyRangeVal === "1"
+              ? true
+              : false
+          },
+          getWorksDisabled() {
+            let isSelect =
+              this.ruleForm.replyRangeVal === "3" &&
+              this.ruleForm.dy_account_id &&
+              this.ruleForm.dy_account_id !== "0"
+            return !isSelect
+          },
+          getDyWorks() {
+            return this.ruleForm.replyRangeVal === "3" && this.ruleForm.dy_works_id ? true : false
+          }
+        },
+
+        created() {
+          interface.getQueryString()
+          window.setRelpyAccount = this.onSetAccount
+          window.setRelpyWorks = this.onSetWorks
+          window.setStrategyInfo = this.onSetStrategyInfo
+        },
+
+        methods: {
+          onChangeReplyHour(event) {
+            event.preventDefault()
+            event.stopPropagation()
+          },
+
+          // 初始化设置表单类型和数据
+          onSetStrategyInfo(v) {
+            this.formType = v.strategyType
+            this.onResetData(v.strategyForm)
+          },
+
+          // 初始化回复时间
+          onChangeReplyDate(v) {
+            this.ruleForm.replySecoed = ""
+            this.ruleForm.replyHour = ""
+            this.ruleForm.replyMinute = ""
+          },
+
+          // 初始化表单数据
+          onResetData(v) {
+            this.onChangeScope(v.scope ? String(v.scope) : "")
+            this.ruleForm = {
+              ruleName: v.rule_name || "",
+              ruleType: v.rule_type ? String(v.rule_type) : "1",
+              ruleTagsOptions: [],
+              replyTextVal: "1",
+              ruleReplyList: [],
+              replyTimeVal: v.reply_type ? String(v.reply_type) : "",
+              replyHour: v.reply_type === 3 ? v.reply_time.split(":")[0] : "",
+              replyMinute: v.reply_type === 3 ? v.reply_time.split(":")[1] : "",
+              replySecoed: v.reply_type === 2 ? v.reply_time : "",
+              replyRangeVal: v.scope ? String(v.scope) : "",
+              ruleStatus: v.status === 1 ? true : false,
+              dy_account_avatar: v.dy_account_avatar || "",
+              dy_account: v.dy_account || "",
+              dy_account_id: v.dy_account_id || "",
+              dy_works: v.dy_works ? v.dy_works.map(value => value.title) : "",
+              dy_works_id: v.dy_works ? v.dy_works.map(value => value.id) : ""
+            }
+            if (v.rule_keyword) {
+              v.rule_keyword.forEach(el => {
+                let node = {
+                  content: el,
+                  inputValue: "",
+                  inputVisible: false,
+                  id: this.ruleForm.ruleTagsOptions.length + 1
+                }
+                this.ruleForm.ruleTagsOptions.push(node)
+              })
+            }
+            if (v.reply_content) {
+              v.reply_content.forEach(el => {
+                let contentVal = el
+                let textReg = /\[(.+?)\]/g
+                let reg_list = contentVal.match(textReg) || []
+                reg_list.forEach(el => {
+                  let item = face_list.find(node => {
+                    return node.code === el
+                  })
+                  contentVal = contentVal.replace(el, function () {
+                    if (item) {
+                      let code = ""
+                      if (item.code[0] === "[") {
+                        code = item.code.substring(1, item.code.length - 1)
+                      } else {
+                        code = item.code
+                      }
+                      let img1 = `<img src="${item.icon}" title="${code}" alt="${code}" width="24px" height="24px" style="display: inline-block;" />`
+                      return img1
+                    } else {
+                      return el
+                    }
+                  })
+                })
+                let node = {
+                  text: el,
+                  textVal: contentVal,
+                  id: this.ruleForm.ruleReplyList.length + 1
+                }
+                this.ruleForm.ruleReplyList.push(node)
+              })
+            }
+            this.replyVisible = this.ruleForm.ruleReplyList.length ? true : false
+          },
+
+          // 显示关键词输入框
+          onShowInput() {
+            this.saveInputVisible = true
+            this.$nextTick(_ => {
+              this.$refs.saveTagInput.$refs.input.focus()
+            })
+          },
+
+          // 新增|修改 关键词
+          handleInputConfirm(type, index, inputValue) {
+            if (type === "save") {
+              let val = this.saveInputValue.replace(
+                /[^\a-\z\A-\Z0-9\u4E00-\u9FA5\.\,\?\<\>\。\，\-\——\=\;\@\！\!\+\$]/g,
+                ""
+              )
+              if (val && val.length <= 50) {
+                this.saveInputVisible = false
+                this.ruleForm.ruleTagsOptions.push({
+                  content: this.saveInputValue,
+                  inputValue: "",
+                  inputVisible: false,
+                  id: this.ruleForm.ruleTagsOptions.length + 1
+                })
+                this.saveInputValue = ""
+              } else {
+                this.saveInputVisible = false
+                this.saveInputValue = ""
+              }
+            } else {
+              let val = inputValue.replace(
+                /[^\a-\z\A-\Z0-9\u4E00-\u9FA5\.\,\?\<\>\。\，\-\——\=\;\@\！\!\+\$]/g,
+                ""
+              )
+              if (val && val.length <= 50) {
+                this.$set(this.ruleForm.ruleTagsOptions[index], `content`, inputValue)
+              }
+              this.$set(this.ruleForm.ruleTagsOptions[index], `inputVisible`, false)
+            }
+          },
+
+          // 删除关键词
+          handleTagsClose(i) {
+            this.ruleForm.ruleTagsOptions.splice(this.ruleForm.ruleTagsOptions.indexOf(i), 1)
+          },
+
+          // 点击修改关键词
+          onEditInput(index, val) {
+            this.ruleForm.ruleTagsOptions.forEach((element, i) => {
+              element.inputVisible = false
+              if (i === index) {
+                element.inputValue = val
+                element.inputVisible = true
+              }
+            })
+            this.$nextTick(() => {
+              this.$refs.tagInput[0].$refs.input.focus()
+            })
+          },
+
+          // 添加回复内容
+          onSaveReply() {
+            let val = this.textareaVal.replace(
+              /[^\a-\z\A-\Z0-9\u4E00-\u9FA5\.\,\?\<\>\。\，\-\——\=\;\@\！\!\[\]\+\$]/g,
+              ""
+            )
+            if (val) {
+              if (val.length <= 300) {
+                if (this.replyEdit.isEdit) {
+                  let info = this.ruleForm.ruleReplyList[this.replyEdit.index]
+                  info.text = this.textareaVal
+                  info.textVal = $("#contenteditable").html()
+                } else {
+                  this.ruleForm.ruleReplyList.push({
+                    text: this.textareaVal,
+                    textVal: $("#contenteditable").html(),
+                    id: this.ruleForm.ruleReplyList.length + 1
+                  })
+                }
+                this.replyVisible = true
+              } else {
+                this.$message({
+                  message: "内容长度不得超过300字，当前长度为" + "：" + val.length,
+                  type: "warning"
+                })
+              }
+            } else {
+              this.$message({
+                message: "内容为空或含有特殊符号，请重新输入。",
+                type: "warning"
+              })
+            }
+            this.isFace = false
+          },
+
+          // 点击取消回复内容输入
+          onCanceReply() {
+            this.replyEdit.isEdit = false
+            if (this.ruleForm.ruleReplyList.length >= 1) {
+              this.replyVisible = true
+            }
+            this.textareaVal = ""
+            $(".expression-input").html("")
+            this.isFace = false
+          },
+
+          // 新增显示回复内容
+          onAddReply() {
+            this.textareaVal = ""
+            this.replyVisible = false
+            this.$nextTick(() => {
+              this.$refs.replyInput.focus()
+            })
+          },
+
+          // 修改回复内容
+          onEditReply(index, v) {
+            this.replyEdit.isEdit = true
+            this.replyEdit.index = index
+            this.textareaVal = v.text
+            // let content = v.text;
+            // let textReg = /\[(.+?)\]/g;
+            // let list = content.match(textReg) || [];
+            // list.forEach(el => {
+            //   let item = face_list.find(node => {
+            //     return node.code === el;
+            //   });
+
+            //   content = content.replace(el, function () {
+            //     if (item) {
+            //       let code = "";
+            //       if (item.code[0] === "[") {
+            //         code = item.code.substring(1, item.code.length - 1);
+            //       } else {
+            //         code = item.code;
+            //       }
+            //       let img1 = `<img src="${item.icon}" title="${code}"" alt="${code}" width="24px" height="24px" style="display: inline-block;" />`;
+            //       return img1;
+            //     } else {
+            //       return el;
+            //     }
+            //   });
+            // });
+            this.replyVisible = false
+            this.$nextTick(() => {
+              this.$refs.replyInput.innerHTML = v.textVal
+              this.$refs.replyInput.focus()
+              const input = $(".expression-input")[0]
+              let selection = window.getSelection()
+              selection.selectAllChildren(input)
+              selection.collapseToEnd()
+            })
+          },
+
+          // 删除回复内容
+          onDelReply(i) {
+            this.replyEdit.isEdit = false
+            this.textareaVal = ""
+            this.ruleForm.ruleReplyList.splice(i, 1)
+            this.replyVisible = this.ruleForm.ruleReplyList.length === 0 ? false : true
+          },
+
+          // 显示表情选择框
+          onShowFace() {
+            this.isFace = !this.isFace
+            if (this.isFace) {
+              this.$refs.replyInput.focus()
+              let _this = this
+              document.onclick = function (event) {
+                let cla = event.target
+                let is = $(cla).hasClass("imgFace")
+                if (!is && _this.isFace) {
+                  _this.isFace = false
+                  document.onclick = null
+                }
+              }
+            } else {
+              document.onclick = null
+            }
+          },
+
+          // 设置表情到输入框中
+          onSetFace(item) {
+            this.$refs.replyInput.focus()
+            let img2 = new Image()
+            img2.src = item.icon
+            img2.title = item.text
+            img2.alt = item.text
+            img2.width = 20
+            img2.height = 20
+            img2.style = "display: inline-block;font-size: 0px;"
+            if (window.getSelection) {
+              let img1 = `<img src="${item.icon}" title=${item.text} alt=${item.text} width="24px" height="24px" style="display: inline-block;" />`
+              let caretOffset = 0
+              const sel = window.getSelection()
+              if (sel.rangeCount > 0) {
+                let range = sel.getRangeAt(0)
+                range.deleteContents()
+                // 插入内容到指定位置
+                let el = document.createElement("div")
+                el.innerHTML = img1
+                let frag = document.createDocumentFragment()
+                let node = el.firstChild
+                let lastNode = frag.appendChild(node)
+                range.insertNode(frag)
+                range.collapse(false)
+                // let contentRange = range.cloneRange();
+                // contentRange.collapse(false);
+                // sel.removeAllRanges();
+                // sel.addRange(contentRange);
+              }
+            } else if ("selection" in document) {
+              document.selection.createRange().pasteHTML(img2)
+            }
+          },
+
+          // 获取焦点时
+          onFocusTextarea() {
+            // const input = $(".expression-input")[0];
+            // let selection = window.getSelection();
+            // selection.selectAllChildren(input);
+            // selection.collapseToEnd();
+          },
+
+          // 失去焦点时
+          onBlurTextarea() {
+            let imgReg = /<img.*?(?:>|\/>)/gi
+            let inputVal = $("#contenteditable")
+              .html()
+              .replace(/&nbsp;/g, " ")
+            let list = $("#contenteditable").html().match(imgReg) || []
+            if (list.length) {
+              list.forEach(el => {
+                let code = ""
+                if ($(el).attr("title")[0] === "[") {
+                  code = $(el).attr("title")
+                } else {
+                  code = "[" + $(el).attr("title") + "]"
+                }
+                inputVal = inputVal.replace(/<img.*?(?:>|\/>)/i, code)
+              })
+            }
+            this.textareaVal = inputVal
+          },
+
+          // 判断禁止回车
+          onKeydownWord(event) {
+            if (event.keyCode === 13) {
+              event.preventDefault()
+            }
+          },
+
+          // 编辑框粘贴时清除所有样式
+          onPasteTextarea(e) {
+            e.preventDefault()
+            let text
+            let clp = (e.originalEvent || e).clipboardData
+            if (clp === undefined || clp === null) {
+              text = window.clipboardData.getData("text") || ""
+              if (text !== "") {
+                if (window.getSelection) {
+                  let newNode = document.createElement("span")
+                  newNode.innerHTML = text
+                  window.getSelection().getRangeAt(0).insertNode(newNode)
+                } else {
+                  document.selection.createRange().pasteHTML(text)
+                }
+              }
+            } else {
+              text = clp.getData("text/plain") || ""
+              if (text !== "") {
+                document.execCommand("insertText", false, text)
+              }
+            }
+          },
+
+          // 切换应用范围
+          onChangeScope(v) {
+            if (v === "1") {
+              this.accountText = "所有账号"
+              this.ruleForm.dy_account = "all"
+              this.ruleForm.dy_account_id = "0"
+              this.worksText = "所有作品"
+              this.ruleForm.dy_works = "所有账号的所有作品"
+              this.ruleForm.dy_works_id = "all"
+            }
+            if (v === "2") {
+              this.accountText = "选择账号"
+              this.ruleForm.dy_account = ""
+              this.ruleForm.dy_account_id = ""
+              this.worksText = "所有作品"
+              this.ruleForm.dy_works = "指定账号的所有作品"
+              this.ruleForm.dy_works_id = "this_all"
+            }
+            if (v === "3") {
+              this.accountText = "选择账号"
+              this.ruleForm.dy_account = ""
+              this.ruleForm.dy_account_id = ""
+              this.worksText = "选择作品"
+              this.ruleForm.dy_works = ""
+              this.ruleForm.dy_works_id = ""
+            }
+          },
+
+          // 点击跳转客户端设置选择账号
+          onSelectAccont() {
+            if (this.ruleForm.replyRangeVal !== "1") {
+              interface.selectEmpowerAccount("2", "")
+            }
+          },
+
+          // 设置账号信息
+          onSetAccount(v) {
+            this.ruleForm.dy_account = v.name
+            this.ruleForm.dy_account_id = v.id
+            this.ruleForm.dy_account_avatar = v.avatar
+            this.ruleForm.dy_works = ""
+            this.ruleForm.dy_works_id = ""
+          },
+
+          // 点击跳转客户端设置选择作品
+          onSelectWorks() {
+            if (this.ruleForm.replyRangeVal === "3" && this.ruleForm.dy_account_id) {
+              interface.selectAccountVideo("2", this.ruleForm.dy_account_id, [])
+            }
+          },
+
+          // 设置作品信息
+          onSetWorks(v) {
+            let list = v
+            this.ruleForm.dy_works = list.map(value => value.title)
+            this.ruleForm.dy_works_id = list.map(value => value.id)
+          },
+
+          // 取消表单
+          onCancelForm() {
+            this.$refs["ruleForm"].resetFields()
+            interface.cancelStrategy(this.formType)
+          },
+
+          // 提交表单数据
+          onSubmitForm: debounce(function () {
+            this.$refs["ruleForm"].validate(valid => {
+              if (valid) {
+                let isL = 0
+                let isV = true
+                if (this.ruleForm.ruleType !== "5") {
+                  if (this.ruleForm.ruleTagsOptions.length) {
+                    isL++
+                    isV = true
+                  } else {
+                    this.$message({
+                      message: "请新建关键词",
+                      type: "warning"
+                    })
+                    isV = false
+                    return
+                  }
+                }
+                if (this.ruleForm.ruleReplyList.length) {
+                  isL++
+                  isV = true
+                } else {
+                  this.$message({
+                    message: "请设置回复内容",
+                    type: "warning"
+                  })
+                  isV = false
+                  return
+                }
+
+                if (this.ruleForm.replyTimeVal) {
+                  if (this.ruleForm.replyTimeVal === "2" && !this.ruleForm.replySecoed) {
+                    this.$message({
+                      message: "请设置延迟分钟",
+                      type: "warning"
+                    })
+                    isV = false
+                    return
+                  }
+                  if (
+                    this.ruleForm.replyTimeVal === "3" &&
+                    !this.ruleForm.replyHour &&
+                    !this.ruleForm.replyMinute
+                  ) {
+                    this.$message({
+                      message: "请设置定时小时和分钟",
+                      type: "warning"
+                    })
+                    isV = false
+                    return
+                  }
+
+                  isL++
+                  isV = true
+                }
+
+                if (this.ruleForm.replyRangeVal) {
+                  if (this.ruleForm.replyRangeVal !== "1" && !this.ruleForm.dy_account_id) {
+                    this.$message({
+                      message: "请选择账号",
+                      type: "warning"
+                    })
+                    isV = false
+                    return
+                  }
+                  if (this.ruleForm.replyRangeVal === "3" && !this.ruleForm.dy_works_id) {
+                    this.$message({
+                      message: "请选择作品",
+                      type: "warning"
+                    })
+                    isV = false
+                    return
+                  }
+                  isL++
+                  isV = true
+                }
+                if (isV) {
+                  this.isButton = true
+                  let ruleKeyword = this.ruleForm.ruleTagsOptions.map(value => value.content)
+                  let replyContent = this.ruleForm.ruleReplyList.map(value => value.text)
+
+                  let replyTime = ""
+                  if (this.ruleForm.replyTimeVal === "1") {
+                    replyTime = "0"
+                  }
+                  if (this.ruleForm.replyTimeVal === "2") {
+                    replyTime = this.ruleForm.replySecoed
+                  }
+                  if (this.ruleForm.replyTimeVal === "3") {
+                    replyTime = this.ruleForm.replyHour + ":" + this.ruleForm.replyMinute
+                  }
+                  let data = {
+                    rule_name: this.ruleForm.ruleName,
+                    rule_type: Number(this.ruleForm.ruleType),
+                    rule_keyword: JSON.stringify(ruleKeyword),
+                    reply_content: JSON.stringify(replyContent),
+                    reply_type: Number(this.ruleForm.replyTimeVal),
+                    reply_time: replyTime,
+                    scope: Number(this.ruleForm.replyRangeVal),
+                    dy_account: this.ruleForm.dy_account,
+                    dy_account_id: this.ruleForm.dy_account_id,
+                    dy_account_avatar: this.ruleForm.dy_account_avatar,
+                    dy_works:
+                      this.ruleForm.replyRangeVal === "3"
+                        ? JSON.stringify(this.ruleForm.dy_works)
+                        : JSON.stringify([]),
+                    dy_works_id:
+                      this.ruleForm.replyRangeVal === "3"
+                        ? JSON.stringify(this.ruleForm.dy_works_id)
+                        : JSON.stringify([]),
+                    status: this.ruleForm.ruleStatus ? 1 : 2
+                  }
+                  let _this = this
+                  let jsonPolicyInfo = data
+                  if (_this.formType === "1") {
+                    api.strategyForm.addStrategyRules(jsonPolicyInfo, "", function (result) {
+                      if (result.code === "200") {
+                        _this.$message({
+                          message: "操作成功！",
+                          type: "success"
+                        })
+                        jsonPolicyInfo.id = result.data
+                        interface.submitStrategy(_this.formType, JSON.stringify(jsonPolicyInfo))
+                      } else {
+                        let msg = result.msg || "网络波动，请稍后再试。"
+                        _this.$message({
+                          message: msg,
+                          type: "warning"
+                        })
+                      }
+                    })
+                  } else {
+                    jsonPolicyInfo.id = initialization.strategy_info.strategyForm.id
+                    api.strategyForm.editStrategyRules(jsonPolicyInfo, "", function (result) {
+                      if (result.code === "200") {
+                        _this.$message({
+                          message: "操作成功！",
+                          type: "success"
+                        })
+                        interface.submitStrategy(_this.formType, JSON.stringify(jsonPolicyInfo))
+                      } else {
+                        let msg = result.msg || "网络波动，请稍后再试。"
+                        _this.$message({
+                          message: msg,
+                          type: "warning"
+                        })
+                      }
+                    })
+                  }
+                  this.isButton = false
+                }
+              }
+            })
+          }, 500)
+        }
+      })
+    </script>
+  </body>
+</html>

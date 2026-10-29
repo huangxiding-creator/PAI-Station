@@ -23,3 +23,10 @@
 - [x] WI-004 收口：双端口私有协议，无未授权 HTTP 面；keystream 复用弱点入账
 - [x] PentAGI 2.2.0-ce 全栈上线 https://localhost:8443（WSL RE-Ubuntu docker，GLM+embedding-3 供能，DNS 三层根治）
 - [x] 复刻件九轨道回归全绿（beauty 21/21 + 六预设 + from_sample 往返 + oplist_verify 三态）
+
+## 2026-10-22 四役（全部完成令）
+- [x] 密码学勘误：CBC 固定IV泄露=相等预言机（非 XOR 泄露），报告 §9.1 已修正
+- [x] IV 取证：17 变体全灭，块1 前16B=KSOLITE 内部派生 IV（zip 雕刻无损）
+- [ ] KSOLITE 全量 Ghidra：11.4MB 超 330s 超时上限（provider_timeout），需分片/更长时限 → WI-007
+- [x] PentAGI API 驱动打通：admin/admin(bcrypt候选表破解)+改密+GraphQL createAssistant 正道（REST 建flow不注册Controller）；scraper/kali 工作镜像补拉中
+- [x] WSL 空闲回收根因：Windows 侧 sleep infinity 保活会话已挂；运维手册增补 5 条 API 驱动要点

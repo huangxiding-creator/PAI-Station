@@ -1,0 +1,144 @@
+===== gui/main_window.pyc =====
+DOCSTRING: 主窗口
+
+[<module>] args=() names=('__doc__', 'PySide6.QtWidgets', 'QMainWindow', 'QWidget', 'QVBoxLayout', 'QHBoxLayout', 'QPushButton', 'QTreeWidget', 'QTextEdit', 'QProgressBar', 'QLabel', 'QLineEdit', 'QComboBox', 'QFrame', 'QListWidget', 'QSizePolicy', 'PySide6.QtCore', 'Qt', 'QByteArray', 'QTimer', 'core.settings', 'get_setting', 'save_settings', 'config', 'VERSION', 'gui.context_menu_mixin', 'ContextMenuMixin', 'gui.kb_tree_mixin', 'KbTreeMixin', 'gui.search_mixin', 'SearchMixin', 'gui.tag_mixin', 'TagMixin', 'gui.download_mixin', 'DownloadMixin', 'gui.auth_mixin', 'AuthMixin', 'gui.auto_update_mixin', 'AutoUpdateMixin', 'MainWindow')
+  CONST '主窗口'
+  CONST 0
+  CONST ('QMainWindow', 'QWidget', 'QVBoxLayout', 'QHBoxLayout', 'QPushButton', 'QTreeWidget', 'QTextEdit', 'QProgressBar', 'QLabel', 'QLineEdit', 'QComboBox', 'QFrame', 'QListWidget', 'QSizePolicy')
+  CONST ('Qt', 'QByteArray', 'QTimer')
+  CONST ('get_setting', 'save_settings')
+  CONST ('VERSION')
+  CONST ('ContextMenuMixin')
+  CONST ('KbTreeMixin')
+  CONST ('SearchMixin')
+  CONST ('TagMixin')
+  CONST ('DownloadMixin')
+  CONST ('AuthMixin')
+  CONST ('AutoUpdateMixin')
+  CONST 'MainWindow'
+  CONST None
+
+  [MainWindow] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', '__init__', '_restore_window_state', 'eventFilter', '_check_tag_scroll_load', 'closeEvent', '_make_separator', 'init_ui', '__static_attributes__', '__classcell__')
+    CONST 'MainWindow'
+    CONST 30
+    CONST ('_current_tag_kb_id', '_download_start_bytes', '_download_start_time', '_license_authorized', '_log_expanded', '_running_task_ids', '_running_task_workers', '_tag_fetch_worker', '_tag_filter_installed', '_tag_is_end', '_tag_loading', '_tag_next_cursor', '_tag_scroll_timer', '_task_manager_dialog', 'auto_update_indicator', 'auto_update_timer', 'clear_search_btn', 'current_kb_list', 'current_tags', 'download_worker', 'folder_worker', 'help_btn', 'is_paused', 'is_stopped', 'kb_selector', 'license_label', 'load_btn', 'log', 'log_toggle_btn', 'login_btn', 'logout_btn', 'pause_btn', 'progress', 'progress_detail', 'progress_panel', 'renew_btn', 'search_btn', 'search_input', 'search_mode', 'search_next_cursor', 'search_worker', 'selected_tags', 'settings_btn', 'stop_btn', 'tag_list_widget', 'tag_selector', 'token_refresh_timer', 'tree', 'update_btn', 'version_label')
+
+    [MainWindow.__init__] args=('self',) names=('super', '__init__', 'setWindowTitle', 'setMinimumSize', 'utils', 'set_window_icon', 'folder_worker', 'download_worker', 'token_refresh_timer', 'search_worker', 'search_mode', 'current_kb_list', 'search_next_cursor', 'current_tags', 'selected_tags', '_tag_fetch_worker', '_tag_next_cursor', '_tag_is_end', '_tag_loading', '_current_tag_kb_id', 'auto_update_timer', '_running_task_workers', 'set', '_running_task_ids', '_task_manager_dialog', '_license_authorized', '_init_icons', 'init_ui', '_restore_window_state', 'check_authorization', 'start_token_refresh_timer', 'start_auto_update_timer')
+      CONST None
+      CONST '效率助手'
+      CONST 1200
+      CONST 840
+      CONST 0
+      CONST ('set_window_icon')
+      CONST False
+      CONST ''
+      CONST True
+
+    [MainWindow._restore_window_state] args=('self',) names=('get_setting', 'restoreGeometry', 'QByteArray', 'fromHex', 'encode', 'log', 'setMaximumHeight', 'setVisible', 'log_toggle_btn', 'setText', '_log_expanded')
+      CONST '鎭㈠\ue632绐楀彛浣嶇疆鍜屾棩蹇楁姌鍙犵姸鎬?'
+      CONST 'window_geometry'
+      CONST ''
+      CONST 'log_collapsed'
+      CONST False
+      CONST 0
+      CONST '展开'
+      CONST None
+
+    [MainWindow.eventFilter] args=('self', 'obj', 'event') names=('PySide6.QtCore', 'QEvent', 'PySide6.QtGui', 'QMouseEvent', 'hasattr', 'tag_list_widget', 'viewport', 'type', 'Type', 'MouseButtonRelease', 'isinstance', 'position', 'toPoint', 'itemAt', 'flags', 'Qt', 'ItemIsUserCheckable', 'checkState', 'Checked', 'Unchecked', 'blockSignals', 'setCheckState', '_on_tag_selection_changed', 'super', 'eventFilter')
+      CONST '浜嬩欢杩囨护鍣\ue7d2細鎷︽埅鏍囩\ue137鍒楄〃鐨勯紶鏍囩偣鍑伙紝鎵嬪姩鍒囨崲checkbox'
+      CONST 0
+      CONST ('QEvent')
+      CONST ('QMouseEvent')
+      CONST '_tag_filter_installed'
+      CONST True
+      CONST False
+
+    [MainWindow._check_tag_scroll_load] args=('self',) names=('_tag_loading', '_tag_is_end', 'tag_list_widget', 'verticalScrollBar', 'value', 'maximum', '_fetch_more_tags')
+      CONST '妫€鏌ユ粴鍔ㄦ潯鏄\ue21a惁鍒板簳锛岃Е鍙戝姞杞芥洿澶氭爣绛?'
+      CONST None
+      CONST 2
+
+    [MainWindow.closeEvent] args=('self', 'event') names=('save_settings', 'saveGeometry', 'toHex', 'data', 'decode', '_log_expanded', 'getattr', 'stop', 'list', '_running_task_workers', 'items', 'quit', 'wait', 'clear', '_running_task_ids', 'isRunning', 'hasattr', 'services.ima_service', 'close_session', 'Exception', 'accept')
+      CONST '鍏抽棴绐楀彛鏃朵繚瀛樼姸鎬佸苟娓呯悊鎵€鏈夌嚎绋嬪拰瀹氭椂鍣?'
+      CONST ('window_geometry', 'log_collapsed')
+      CONST ('token_refresh_timer', 'auto_update_timer', '_indicator_timer', '_tag_scroll_timer')
+      CONST None
+      CONST 2000
+      CONST ('worker', 'folder_worker', 'download_worker', 'search_worker', '_tag_fetch_worker')
+      CONST 'stop'
+      CONST 0
+      CONST ('close_session')
+
+    [MainWindow._make_separator] args=('self',) names=('QFrame', 'setFrameShape', 'VLine', 'setFixedHeight')
+      CONST '鍒涘缓鍨傜洿鍒嗛殧绾?'
+      CONST 24
+
+    [MainWindow.init_ui] args=('self',) names=('QWidget', 'setObjectName', 'setCentralWidget', 'QVBoxLayout', 'setContentsMargins', 'setSpacing', 'QFrame', 'QHBoxLayout', 'setLayout', 'QLabel', 'addWidget', 'addLayout', 'QPushButton', 'login_btn', 'setProperty', 'clicked', 'connect', 'login_ima', 'logout_btn', 'logout_ima', 'setVisible', '_make_separator', 'load_btn', 'load_knowledge_bases', 'update_btn', 'show_task_manager_dialog', 'setEnabled', 'auto_update_indicator', 'settings_btn', 'show_settings_dialog', 'renew_btn', 'show_renew_dialog', 'help_btn', 'show_help_dialog', 'update_login_status', 'addStretch', 'license_label', 'VERSION', 'version_label', 'QLineEdit', 'search_input', 'setPlaceholderText', 'setMinimumWidth', 'setSizePolicy', 'QSizePolicy', 'Expanding', 'Fixed', 'returnPressed', 'on_search_clicked', 'QComboBox', 'kb_selector', 'setMaximumWidth', 'setSizeAdjustPolicy', 'AdjustToContents', 'currentIndexChanged', '_on_kb_changed', 'tag_selector', 'QListWidget', 'tag_list_widget', 'setSelectionMode', 'NoSelection', 'setModel', 'model', 'setView', 'setEditable', 'lineEdit', 'setReadOnly', 'viewport', 'installEventFilter', '_tag_filter_installed', 'itemChanged', '_on_tag_selection_changed', 'QTimer', '_tag_scroll_timer', 'setSingleShot', 'setInterval', 'timeout', '_check_tag_scroll_load', 'verticalScrollBar', 'valueChanged', 'search_btn', 'clear_search_btn', 'on_clear_search', 'QTreeWidget', 'tree', 'setHeaderLabels', 'setColumnWidth', 'ExtendedSelection', 'setAlternatingRowColors', 'setUniformRowHeights', 'setRootIsDecorated', 'setContextMenuPolicy', 'Qt', 'CustomContextMenu', 'customContextMenuRequested', 'show_context_menu', 'itemExpanded', 'on_item_expanded', 'itemClicked', 'on_tree_item_clicked', 'QProgressBar', 'progress', 'setFormat', 'progress_detail', 'pause_btn', 'pause_download', 'stop_btn', 'stop_download', 'progress_panel', 'Preferred', 'Maximum', 'log_toggle_btn', 'toggle_log', 'QTextEdit', 'log', 'setMaximumHeight', '_log_expanded', 'is_paused', 'is_stopped', '_download_start_time', '_download_start_bytes')
+      CONST None
+      CONST 'appCentral'
+      CONST 16
+      CONST 14
+      CONST 10
+      CONST 'topBar'
+      CONST 8
+      CONST 0
+      CONST 'IMA 效率助手'
+      CONST 'appTitle'
+      CONST '知识库文件管理与同步'
+      CONST 'appSubtitle'
+      CONST '登录'
+      CONST 'variant'
+      CONST 'primary'
+      CONST '退出登录'
+      CONST 'danger'
+      CONST False
+      CONST '加载知识库'
+      CONST '任务管理'
+      CONST '下载设置'
+      CONST '延长授权'
+      CONST '使用说明'
+      CONST '授权信息加载中...'
+      CONST 'licenseBadge'
+      CONST 'V'
+      CONST 'versionLabel'
+      CONST 'filterBar'
+      CONST 12
+      CONST '文件筛选'
+      CONST 'sectionTitle'
+      CONST '输入关键词搜索文件...'
+      CONST 220
+      CONST 210
+      CONST 280
+      CONST 170
+      CONST 240
+      CONST '选择标签（可选）'
+      CONST True
+      CONST 300
+      CONST '搜索'
+      CONST '返回列表'
+      CONST 'ghost'
+      CONST 'fileTree'
+      CONST ('名称', '类型', '大小', '更新时间', '权限', '简介')
+      CONST 350
+      CONST 1
+      CONST 80
+      CONST 2
+      CONST 150
+      CONST 3
+      CONST 120
+      CONST 4
+      CONST 'progressPanel'
+      CONST 9
+      CONST '下载进度'
+      CONST '%v/%m - %p%'
+      CONST 'mutedLabel'
+      CONST '暂停'
+      CONST '停止'
+      CONST 'logPanel'
+      CONST 6
+      CONST '运行日志'
+      CONST '折叠'
+
+      [MainWindow.init_ui.<locals>.<lambda>] args=() names=('_tag_scroll_timer', 'start')
+        CONST None
+

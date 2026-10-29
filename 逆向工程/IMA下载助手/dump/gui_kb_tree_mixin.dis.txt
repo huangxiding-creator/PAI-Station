@@ -1,0 +1,2185 @@
+===== gui/kb_tree_mixin.pyc =====
+
+# CODE <module>  args=()
+  0           RESUME                   0
+
+  1           LOAD_CONST               0 ('知识库树操作 Mixin')
+              STORE_NAME               0 (__doc__)
+
+  2           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (('QTreeWidgetItem', 'QApplication'))
+              IMPORT_NAME              1 (PySide6.QtWidgets)
+              IMPORT_FROM              2 (QTreeWidgetItem)
+              STORE_NAME               2 (QTreeWidgetItem)
+              IMPORT_FROM              3 (QApplication)
+              STORE_NAME               3 (QApplication)
+              POP_TOP
+
+  3           LOAD_CONST               1 (0)
+              LOAD_CONST               3 (('Qt', 'QByteArray'))
+              IMPORT_NAME              4 (PySide6.QtCore)
+              IMPORT_FROM              5 (Qt)
+              STORE_NAME               5 (Qt)
+              IMPORT_FROM              6 (QByteArray)
+              STORE_NAME               6 (QByteArray)
+              POP_TOP
+
+  4           LOAD_CONST               1 (0)
+              LOAD_CONST               4 (('QColor', 'QPixmap', 'QIcon'))
+              IMPORT_NAME              7 (PySide6.QtGui)
+              IMPORT_FROM              8 (QColor)
+              STORE_NAME               8 (QColor)
+              IMPORT_FROM              9 (QPixmap)
+              STORE_NAME               9 (QPixmap)
+              IMPORT_FROM             10 (QIcon)
+              STORE_NAME              10 (QIcon)
+              POP_TOP
+
+  5           LOAD_CONST               1 (0)
+              LOAD_CONST               5 (('LoadKnowledgeBasesWorker', 'LoadFolderWorker'))
+              IMPORT_NAME             11 (gui.workers.workers)
+              IMPORT_FROM             12 (LoadKnowledgeBasesWorker)
+              STORE_NAME              12 (LoadKnowledgeBasesWorker)
+              IMPORT_FROM             13 (LoadFolderWorker)
+              STORE_NAME              13 (LoadFolderWorker)
+              POP_TOP
+
+  6           LOAD_CONST               1 (0)
+              LOAD_CONST               6 (None)
+              IMPORT_NAME             14 (os)
+              STORE_NAME              14 (os)
+
+  7           LOAD_CONST               1 (0)
+              LOAD_CONST               6 (None)
+              IMPORT_NAME             15 (sys)
+              STORE_NAME              15 (sys)
+
+  8           LOAD_CONST               1 (0)
+              LOAD_CONST               6 (None)
+              IMPORT_NAME             16 (json)
+              STORE_NAME              16 (json)
+
+  9           LOAD_CONST               1 (0)
+              LOAD_CONST               6 (None)
+              IMPORT_NAME             17 (base64)
+              STORE_NAME              17 (base64)
+
+ 12           LOAD_BUILD_CLASS
+              PUSH_NULL
+              LOAD_CONST               7 (<code object KbTreeMixin at 0x000001DD46156B50, file "gui\kb_tree_mixin.py", line 12>)
+              MAKE_FUNCTION
+              LOAD_CONST               8 ('KbTreeMixin')
+              CALL                     2
+              STORE_NAME              18 (KbTreeMixin)
+              RETURN_CONST             6 (None)
+
+## CODE KbTreeMixin  args=()
+ 12           RESUME                   0
+              LOAD_NAME                0 (__name__)
+              STORE_NAME               1 (__module__)
+              LOAD_CONST               0 ('KbTreeMixin')
+              STORE_NAME               2 (__qualname__)
+              LOAD_CONST               1 (12)
+              STORE_NAME               3 (__firstlineno__)
+
+ 13           LOAD_CONST               2 ('鐭ヨ瘑搴撴爲鎿嶄綔鍔熻兘锛屼緵 MainWindow 缁ф壙')
+              STORE_NAME               4 (__doc__)
+
+ 15           LOAD_CONST               3 (<code object _init_icons at 0x000001DD46409430, file "gui\kb_tree_mixin.py", line 15>)
+              MAKE_FUNCTION
+              STORE_NAME               5 (_init_icons)
+
+ 37           LOAD_NAME                6 (staticmethod)
+
+ 38           LOAD_CONST               4 (<code object _format_size at 0x000001DD460E3730, file "gui\kb_tree_mixin.py", line 37>)
+              MAKE_FUNCTION
+
+ 37           CALL                     0
+
+ 38           STORE_NAME               7 (_format_size)
+
+ 51           LOAD_CONST               5 (<code object _get_file_icon at 0x000001DD46409880, file "gui\kb_tree_mixin.py", line 51>)
+              MAKE_FUNCTION
+              STORE_NAME               8 (_get_file_icon)
+
+ 78           LOAD_CONST               6 (<code object load_icon_from_url at 0x000001DD463BBA20, file "gui\kb_tree_mixin.py", line 78>)
+              MAKE_FUNCTION
+              STORE_NAME               9 (load_icon_from_url)
+
+ 99           LOAD_CONST               7 (<code object get_default_icon at 0x000001DD4627E970, file "gui\kb_tree_mixin.py", line 99>)
+              MAKE_FUNCTION
+              STORE_NAME              10 (get_default_icon)
+
+103           LOAD_CONST               8 (<code object load_knowledge_bases at 0x000001DD463BBCD0, file "gui\kb_tree_mixin.py", line 103>)
+              MAKE_FUNCTION
+              STORE_NAME              11 (load_knowledge_bases)
+
+117           LOAD_CONST               9 (<code object on_kb_list_ready at 0x000001DD463BC090, file "gui\kb_tree_mixin.py", line 117>)
+              MAKE_FUNCTION
+              STORE_NAME              12 (on_kb_list_ready)
+
+132           LOAD_CONST              10 (<code object on_kb_icon_loaded at 0x000001DD4636B970, file "gui\kb_tree_mixin.py", line 132>)
+              MAKE_FUNCTION
+              STORE_NAME              13 (on_kb_icon_loaded)
+
+142           LOAD_CONST              11 (<code object on_kb_file_count_loaded at 0x000001DD46411EC0, file "gui\kb_tree_mixin.py", line 142>)
+              MAKE_FUNCTION
+              STORE_NAME              14 (on_kb_file_count_loaded)
+
+152           LOAD_CONST              12 (<code object on_kb_loaded at 0x000001DD461271B0, file "gui\kb_tree_mixin.py", line 152>)
+              MAKE_FUNCTION
+              STORE_NAME              15 (on_kb_loaded)
+
+158           LOAD_CONST              13 (<code object populate_kb_tree at 0x000001DD4642E4E0, file "gui\kb_tree_mixin.py", line 158>)
+              MAKE_FUNCTION
+              STORE_NAME              16 (populate_kb_tree)
+
+198           LOAD_CONST              14 (<code object on_item_expanded at 0x000001DD4633D000, file "gui\kb_tree_mixin.py", line 198>)
+              MAKE_FUNCTION
+              STORE_NAME              17 (on_item_expanded)
+
+217           LOAD_CONST              15 (<code object on_tree_item_clicked at 0x000001DD4633E490, file "gui\kb_tree_mixin.py", line 217>)
+              MAKE_FUNCTION
+              STORE_NAME              18 (on_tree_item_clicked)
+
+241           LOAD_CONST              16 (<code object get_kb_name at 0x000001DD46157C90, file "gui\kb_tree_mixin.py", line 241>)
+              MAKE_FUNCTION
+              STORE_NAME              19 (get_kb_name)
+
+249           LOAD_CONST              17 (<code object get_kb_forbid_access at 0x000001DD462CB230, file "gui\kb_tree_mixin.py", line 249>)
+              MAKE_FUNCTION
+              STORE_NAME              20 (get_kb_forbid_access)
+
+258           LOAD_CONST              18 (<code object get_access_status_display at 0x000001DD462965B0, file "gui\kb_tree_mixin.py", line 258>)
+              MAKE_FUNCTION
+              STORE_NAME              21 (get_access_status_display)
+
+273           NOP
+
+274           NOP
+
+267           LOAD_CONST              24 ((3, None))
+              LOAD_CONST              20 (<code object load_folder at 0x000001DD4642E910, file "gui\kb_tree_mixin.py", line 267>)
+              MAKE_FUNCTION
+              SET_FUNCTION_ATTRIBUTE   1 (defaults)
+              STORE_NAME              22 (load_folder)
+
+304           NOP
+
+305           NOP
+
+297           LOAD_CONST              25 (('', False))
+              LOAD_CONST              21 (<code object on_folder_loaded at 0x000001DD465FDD10, file "gui\kb_tree_mixin.py", line 297>)
+              MAKE_FUNCTION
+              SET_FUNCTION_ATTRIBUTE   1 (defaults)
+              STORE_NAME              23 (on_folder_loaded)
+
+418           LOAD_CONST              22 (<code object on_folder_error at 0x000001DD462A3510, file "gui\kb_tree_mixin.py", line 418>)
+              MAKE_FUNCTION
+              STORE_NAME              24 (on_folder_error)
+              LOAD_CONST              23 (('_default_icon', '_icon_map', 'current_kb_list', 'folder_worker', 'worker'))
+              STORE_NAME              25 (__static_attributes__)
+              RETURN_CONST            19 (None)
+
+### CODE KbTreeMixin._init_icons  args=('self',)
+  15            RESUME                   0
+
+  17            LOAD_GLOBAL              1 (getattr + NULL)
+                LOAD_GLOBAL              2 (sys)
+                LOAD_CONST               1 ('frozen')
+                LOAD_CONST               2 (False)
+                CALL                     3
+                TO_BOOL
+                POP_JUMP_IF_FALSE       17 (to L1)
+
+  18            LOAD_GLOBAL              2 (sys)
+                LOAD_ATTR                4 (_MEIPASS)
+                STORE_FAST               1 (base_path)
+                JUMP_FORWARD            64 (to L2)
+
+  20    L1:     LOAD_GLOBAL              6 (os)
+                LOAD_ATTR                8 (path)
+                LOAD_ATTR               11 (dirname + NULL|self)
+                LOAD_GLOBAL              6 (os)
+                LOAD_ATTR                8 (path)
+                LOAD_ATTR               11 (dirname + NULL|self)
+                LOAD_GLOBAL             12 (__file__)
+                CALL                     1
+                CALL                     1
+                STORE_FAST               1 (base_path)
+
+  21    L2:     LOAD_GLOBAL              6 (os)
+                LOAD_ATTR                8 (path)
+                LOAD_ATTR               15 (join + NULL|self)
+                LOAD_FAST                1 (base_path)
+                LOAD_CONST               3 ('resources')
+                LOAD_CONST               4 ('icons.json')
+                CALL                     3
+                STORE_FAST               2 (icons_path)
+
+  22            LOAD_GLOBAL             17 (open + NULL)
+                LOAD_FAST                2 (icons_path)
+                LOAD_CONST               5 ('r')
+                LOAD_CONST               6 ('utf-8')
+                LOAD_CONST               7 (('encoding',))
+                CALL_KW                  3
+                BEFORE_WITH
+        L3:     STORE_FAST               3 (f)
+
+  23            LOAD_GLOBAL             18 (json)
+                LOAD_ATTR               20 (load)
+                PUSH_NULL
+                LOAD_FAST                3 (f)
+                CALL                     1
+                STORE_FAST               4 (icon_data)
+
+  22    L4:     LOAD_CONST               8 (None)
+                LOAD_CONST               8 (None)
+                LOAD_CONST               8 (None)
+                CALL                     2
+                POP_TOP
+
+  24    L5:     BUILD_MAP                0
+                LOAD_FAST                0 (self)
+                STORE_ATTR              11 (_icon_map)
+
+  25            LOAD_GLOBAL             25 (QIcon + NULL)
+                CALL                     0
+                LOAD_FAST                0 (self)
+                STORE_ATTR              13 (_default_icon)
+
+  26            LOAD_FAST_CHECK          4 (icon_data)
+                LOAD_ATTR               29 (items + NULL|self)
+                CALL                     0
+                GET_ITER
+        L6:     FOR_ITER               207 (to L8)
+                UNPACK_SEQUENCE          2
+                STORE_FAST_STORE_FAST   86 (key, b64)
+
+  27            LOAD_GLOBAL             30 (base64)
+                LOAD_ATTR               32 (b64decode)
+                PUSH_NULL
+                LOAD_FAST                6 (b64)
+                CALL                     1
+                STORE_FAST               7 (data)
+
+  28            LOAD_GLOBAL             35 (QPixmap + NULL)
+                CALL                     0
+                STORE_FAST               8 (pixmap)
+
+  29            LOAD_FAST                8 (pixmap)
+                LOAD_ATTR               37 (loadFromData + NULL|self)
+                LOAD_GLOBAL             39 (QByteArray + NULL)
+                LOAD_FAST                7 (data)
+                CALL                     1
+                CALL                     1
+                POP_TOP
+
+  30            LOAD_FAST                5 (key)
+                LOAD_CONST               9 ('kb')
+                COMPARE_OP              88 (bool(==))
+                POP_JUMP_IF_FALSE       66 (to L7)
+
+  31            LOAD_FAST                8 (pixmap)
+                LOAD_ATTR               41 (scaled + NULL|self)
+                LOAD_CONST              10 (32)
+                LOAD_CONST              10 (32)
+                LOAD_GLOBAL             42 (Qt)
+                LOAD_ATTR               44 (KeepAspectRatio)
+                LOAD_GLOBAL             42 (Qt)
+                LOAD_ATTR               46 (SmoothTransformation)
+                CALL                     4
+                STORE_FAST               8 (pixmap)
+
+  32            LOAD_GLOBAL             25 (QIcon + NULL)
+                LOAD_FAST                8 (pixmap)
+                CALL                     1
+                LOAD_FAST                0 (self)
+                STORE_ATTR              13 (_default_icon)
+                JUMP_BACKWARD          135 (to L6)
+
+  34    L7:     LOAD_FAST                8 (pixmap)
+                LOAD_ATTR               41 (scaled + NULL|self)
+                LOAD_CONST              11 (20)
+                LOAD_CONST              11 (20)
+                LOAD_GLOBAL             42 (Qt)
+                LOAD_ATTR               44 (KeepAspectRatio)
+                LOAD_GLOBAL             42 (Qt)
+                LOAD_ATTR               46 (SmoothTransformation)
+                CALL                     4
+                STORE_FAST               8 (pixmap)
+
+  35            LOAD_GLOBAL             25 (QIcon + NULL)
+                LOAD_FAST                8 (pixmap)
+                CALL                     1
+                LOAD_FAST                0 (self)
+                LOAD_ATTR               22 (_icon_map)
+                LOAD_FAST                5 (key)
+                STORE_SUBSCR
+                JUMP_BACKWARD          209 (to L6)
+
+  26    L8:     END_FOR
+                POP_TOP
+                RETURN_CONST             8 (None)
+
+  22    L9:     PUSH_EXC_INFO
+                WITH_EXCEPT_START
+                TO_BOOL
+                POP_JUMP_IF_TRUE         1 (to L10)
+                RERAISE                  2
+       L10:     POP_TOP
+       L11:     POP_EXCEPT
+                POP_TOP
+                POP_TOP
+                EXTENDED_ARG             1
+                JUMP_BACKWARD_NO_INTERRUPT 265 (to L5)
+
+  --   L12:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+ExceptionTable:
+  L3 to L4 -> L9 [1] lasti
+  L9 to L11 -> L12 [3] lasti
+
+### CODE KbTreeMixin._format_size  args=('size_bytes',)
+ 37           RESUME                   0
+
+ 40           LOAD_GLOBAL              1 (int + NULL)
+              LOAD_FAST                0 (size_bytes)
+              CALL                     1
+              STORE_FAST               0 (size_bytes)
+
+ 41           LOAD_FAST                0 (size_bytes)
+              LOAD_CONST               1 (1073741824)
+              COMPARE_OP             188 (bool(>=))
+              POP_JUMP_IF_FALSE        9 (to L1)
+
+ 42           LOAD_FAST                0 (size_bytes)
+              LOAD_CONST               1 (1073741824)
+              BINARY_OP               11 (/)
+              LOAD_CONST               2 ('.2f')
+              FORMAT_WITH_SPEC
+              LOAD_CONST               3 ('GB')
+              BUILD_STRING             2
+              RETURN_VALUE
+
+ 43   L1:     LOAD_FAST                0 (size_bytes)
+              LOAD_CONST               4 (1048576)
+              COMPARE_OP             188 (bool(>=))
+              POP_JUMP_IF_FALSE        9 (to L2)
+
+ 44           LOAD_FAST                0 (size_bytes)
+              LOAD_CONST               4 (1048576)
+              BINARY_OP               11 (/)
+              LOAD_CONST               5 ('.1f')
+              FORMAT_WITH_SPEC
+              LOAD_CONST               6 ('MB')
+              BUILD_STRING             2
+              RETURN_VALUE
+
+ 45   L2:     LOAD_FAST                0 (size_bytes)
+              LOAD_CONST               7 (1024)
+              COMPARE_OP             188 (bool(>=))
+              POP_JUMP_IF_FALSE        9 (to L3)
+
+ 46           LOAD_FAST                0 (size_bytes)
+              LOAD_CONST               7 (1024)
+              BINARY_OP               11 (/)
+              LOAD_CONST               5 ('.1f')
+              FORMAT_WITH_SPEC
+              LOAD_CONST               8 ('KB')
+              BUILD_STRING             2
+              RETURN_VALUE
+
+ 47   L3:     LOAD_FAST                0 (size_bytes)
+              LOAD_CONST               9 (0)
+              COMPARE_OP             148 (bool(>))
+              POP_JUMP_IF_FALSE        5 (to L4)
+
+ 48           LOAD_FAST                0 (size_bytes)
+              FORMAT_SIMPLE
+              LOAD_CONST              10 ('B')
+              BUILD_STRING             2
+              RETURN_VALUE
+
+ 49   L4:     RETURN_CONST            11 ('-')
+
+### CODE KbTreeMixin._get_file_icon  args=('self', 'type_name')
+ 51            RESUME                   0
+
+ 53            LOAD_FAST                1 (type_name)
+               TO_BOOL
+               POP_JUMP_IF_TRUE        27 (to L1)
+
+ 54            LOAD_FAST                0 (self)
+               LOAD_ATTR                0 (_icon_map)
+               LOAD_ATTR                3 (get + NULL|self)
+               LOAD_CONST               1 ('txt')
+               CALL                     1
+               RETURN_VALUE
+
+ 55    L1:     LOAD_FAST                1 (type_name)
+               LOAD_ATTR                5 (lower + NULL|self)
+               CALL                     0
+               STORE_FAST               2 (name)
+
+ 56            LOAD_CONST               2 ('文件夹')
+               LOAD_FAST                2 (name)
+               CONTAINS_OP              0
+               POP_JUMP_IF_TRUE         6 (to L2)
+               LOAD_CONST               3 ('folder')
+               LOAD_FAST                2 (name)
+               CONTAINS_OP              0
+               POP_JUMP_IF_FALSE       15 (to L3)
+
+ 57    L2:     LOAD_FAST                0 (self)
+               LOAD_ATTR                0 (_icon_map)
+               LOAD_CONST               3 ('folder')
+               BINARY_SUBSCR
+               RETURN_VALUE
+
+ 58    L3:     LOAD_CONST               4 ('pdf')
+               LOAD_FAST                2 (name)
+               CONTAINS_OP              0
+               POP_JUMP_IF_FALSE       15 (to L4)
+
+ 59            LOAD_FAST                0 (self)
+               LOAD_ATTR                0 (_icon_map)
+               LOAD_CONST               4 ('pdf')
+               BINARY_SUBSCR
+               RETURN_VALUE
+
+ 60    L4:     LOAD_CONST               5 ('word')
+               LOAD_FAST                2 (name)
+               CONTAINS_OP              0
+               POP_JUMP_IF_TRUE         6 (to L5)
+               LOAD_CONST               6 ('doc')
+               LOAD_FAST                2 (name)
+               CONTAINS_OP              0
+               POP_JUMP_IF_FALSE       15 (to L6)
+
+ 61    L5:     LOAD_FAST                0 (self)
+               LOAD_ATTR                0 (_icon_map)
+               LOAD_CONST               5 ('word')
+               BINARY_SUBSCR
+               RETURN_VALUE
+
+ 62    L6:     LOAD_CONST               7 ('excel')
+               LOAD_FAST                2 (name)
+               CONTAINS_OP              0
+               POP_JUMP_IF_TRUE        12 (to L7)
+               LOAD_CONST               8 ('表格')
+               LOAD_FAST                2 (name)
+               CONTAINS_OP              0
+               POP_JUMP_IF_TRUE         6 (to L7)
+               LOAD_CONST               9 ('sheet')
+               LOAD_FAST                2 (name)
+               CONTAINS_OP              0
+               POP_JUMP_IF_FALSE       15 (to L8)
+
+ 63    L7:     LOAD_FAST                0 (self)
+               LOAD_ATTR                0 (_icon_map)
+               LOAD_CONST               7 ('excel')
+               BINARY_SUBSCR
+               RETURN_VALUE
+
+ 64    L8:     LOAD_CONST              10 ('ppt')
+               LOAD_FAST                2 (name)
+               CONTAINS_OP              0
+               POP_JUMP_IF_TRUE        12 (to L9)
+               LOAD_CONST              11 ('演示')
+               LOAD_FAST                2 (name)
+               CONTAINS_OP              0
+               POP_JUMP_IF_TRUE         6 (to L9)
+               LOAD_CONST              12 ('presentation')
+               LOAD_FAST                2 (name)
+               CONTAINS_OP              0
+               POP_JUMP_IF_FALSE       15 (to L10)
+
+ 65    L9:     LOAD_FAST                0 (self)
+               LOAD_ATTR                0 (_icon_map)
+               LOAD_CONST              10 ('ppt')
+               BINARY_SUBSCR
+               RETURN_VALUE
+
+ 66   L10:     LOAD_CONST              13 ('音频')
+               LOAD_FAST                2 (name)
+               CONTAINS_OP              0
+               POP_JUMP_IF_TRUE        12 (to L11)
+               LOAD_CONST              14 ('audio')
+               LOAD_FAST                2 (name)
+               CONTAINS_OP              0
+               POP_JUMP_IF_TRUE         6 (to L11)
+               LOAD_CONST              15 ('音乐')
+               LOAD_FAST                2 (name)
+               CONTAINS_OP              0
+               POP_JUMP_IF_FALSE       15 (to L12)
+
+ 67   L11:     LOAD_FAST                0 (self)
+               LOAD_ATTR                0 (_icon_map)
+               LOAD_CONST              14 ('audio')
+               BINARY_SUBSCR
+               RETURN_VALUE
+
+ 68   L12:     LOAD_CONST              16 ('图片')
+               LOAD_FAST                2 (name)
+               CONTAINS_OP              0
+               POP_JUMP_IF_TRUE        12 (to L13)
+               LOAD_CONST              17 ('image')
+               LOAD_FAST                2 (name)
+               CONTAINS_OP              0
+               POP_JUMP_IF_TRUE         6 (to L13)
+               LOAD_CONST              18 ('photo')
+               LOAD_FAST                2 (name)
+               CONTAINS_OP              0
+               POP_JUMP_IF_FALSE       15 (to L14)
+
+ 69   L13:     LOAD_FAST                0 (self)
+               LOAD_ATTR                0 (_icon_map)
+               LOAD_CONST              17 ('image')
+               BINARY_SUBSCR
+               RETURN_VALUE
+
+ 70   L14:     LOAD_CONST              19 ('笔记')
+               LOAD_FAST                2 (name)
+               CONTAINS_OP              0
+               POP_JUMP_IF_TRUE         6 (to L15)
+               LOAD_CONST              20 ('note')
+               LOAD_FAST                2 (name)
+               CONTAINS_OP              0
+               POP_JUMP_IF_FALSE       15 (to L16)
+
+ 71   L15:     LOAD_FAST                0 (self)
+               LOAD_ATTR                0 (_icon_map)
+               LOAD_CONST              20 ('note')
+               BINARY_SUBSCR
+               RETURN_VALUE
+
+ 72   L16:     LOAD_CONST              21 ('网址')
+               LOAD_FAST                2 (name)
+               CONTAINS_OP              0
+               POP_JUMP_IF_TRUE        18 (to L17)
+               LOAD_CONST              22 ('url')
+               LOAD_FAST                2 (name)
+               CONTAINS_OP              0
+               POP_JUMP_IF_TRUE        12 (to L17)
+               LOAD_CONST              23 ('链接')
+               LOAD_FAST                2 (name)
+               CONTAINS_OP              0
+               POP_JUMP_IF_TRUE         6 (to L17)
+               LOAD_CONST              24 ('网页')
+               LOAD_FAST                2 (name)
+               CONTAINS_OP              0
+               POP_JUMP_IF_FALSE       15 (to L18)
+
+ 73   L17:     LOAD_FAST                0 (self)
+               LOAD_ATTR                0 (_icon_map)
+               LOAD_CONST              22 ('url')
+               BINARY_SUBSCR
+               RETURN_VALUE
+
+ 74   L18:     LOAD_CONST              25 ('md')
+               LOAD_FAST                2 (name)
+               CONTAINS_OP              0
+               POP_JUMP_IF_TRUE         6 (to L19)
+               LOAD_CONST              26 ('markdown')
+               LOAD_FAST                2 (name)
+               CONTAINS_OP              0
+               POP_JUMP_IF_FALSE       15 (to L20)
+
+ 75   L19:     LOAD_FAST                0 (self)
+               LOAD_ATTR                0 (_icon_map)
+               LOAD_CONST              25 ('md')
+               BINARY_SUBSCR
+               RETURN_VALUE
+
+ 76   L20:     LOAD_FAST                0 (self)
+               LOAD_ATTR                0 (_icon_map)
+               LOAD_ATTR                3 (get + NULL|self)
+               LOAD_CONST               1 ('txt')
+               CALL                     1
+               RETURN_VALUE
+
+### CODE KbTreeMixin.load_icon_from_url  args=('self', 'url')
+  78           RESUME                   0
+
+  80           LOAD_FAST                1 (url)
+               TO_BOOL
+               POP_JUMP_IF_TRUE        16 (to L1)
+
+  81           LOAD_FAST                0 (self)
+               LOAD_ATTR                1 (get_default_icon + NULL|self)
+               CALL                     0
+               RETURN_VALUE
+
+  83   L1:     LOAD_CONST               1 (0)
+               LOAD_CONST               2 (None)
+               IMPORT_NAME              1 (requests)
+               STORE_FAST               2 (requests)
+
+  85           NOP
+
+  86   L2:     LOAD_FAST                2 (requests)
+               LOAD_ATTR                5 (get + NULL|self)
+               LOAD_FAST                1 (url)
+               LOAD_CONST               3 (2)
+               LOAD_CONST               4 (('timeout',))
+               CALL_KW                  2
+               STORE_FAST               3 (response)
+
+  87           LOAD_FAST                3 (response)
+               LOAD_ATTR                6 (status_code)
+               LOAD_CONST               5 (200)
+               COMPARE_OP              88 (bool(==))
+               POP_JUMP_IF_FALSE      131 (to L4)
+
+  88           LOAD_GLOBAL              9 (QPixmap + NULL)
+               CALL                     0
+               STORE_FAST               4 (pixmap)
+
+  89           LOAD_FAST                4 (pixmap)
+               LOAD_ATTR               11 (loadFromData + NULL|self)
+               LOAD_GLOBAL             13 (QByteArray + NULL)
+               LOAD_FAST                3 (response)
+               LOAD_ATTR               14 (content)
+               CALL                     1
+               CALL                     1
+               TO_BOOL
+               POP_JUMP_IF_FALSE       80 (to L4)
+
+  90           LOAD_FAST                4 (pixmap)
+               LOAD_ATTR               17 (isNull + NULL|self)
+               CALL                     0
+               TO_BOOL
+               POP_JUMP_IF_TRUE        59 (to L4)
+
+  91           LOAD_FAST                4 (pixmap)
+               LOAD_ATTR               19 (scaled + NULL|self)
+
+  92           LOAD_CONST               6 (32)
+               LOAD_CONST               6 (32)
+               LOAD_GLOBAL             20 (Qt)
+               LOAD_ATTR               22 (KeepAspectRatio)
+               LOAD_GLOBAL             20 (Qt)
+               LOAD_ATTR               24 (SmoothTransformation)
+
+  91           CALL                     4
+               STORE_FAST               4 (pixmap)
+
+  94           LOAD_GLOBAL             27 (QIcon + NULL)
+               LOAD_FAST                4 (pixmap)
+               CALL                     1
+       L3:     RETURN_VALUE
+
+  97   L4:     LOAD_FAST                0 (self)
+               LOAD_ATTR                1 (get_default_icon + NULL|self)
+               CALL                     0
+               RETURN_VALUE
+
+  --   L5:     PUSH_EXC_INFO
+
+  95           LOAD_GLOBAL             28 (Exception)
+               CHECK_EXC_MATCH
+               POP_JUMP_IF_FALSE       19 (to L7)
+               POP_TOP
+
+  96           LOAD_FAST                0 (self)
+               LOAD_ATTR                1 (get_default_icon + NULL|self)
+               CALL                     0
+               SWAP                     2
+       L6:     POP_EXCEPT
+               RETURN_VALUE
+
+  95   L7:     RERAISE                  0
+
+  --   L8:     COPY                     3
+               POP_EXCEPT
+               RERAISE                  1
+ExceptionTable:
+  L2 to L3 -> L5 [0]
+  L5 to L6 -> L8 [1] lasti
+  L7 to L8 -> L8 [1] lasti
+
+### CODE KbTreeMixin.get_default_icon  args=('self',)
+ 99           RESUME                   0
+
+101           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_default_icon)
+              RETURN_VALUE
+
+### CODE KbTreeMixin.load_knowledge_bases  args=('self',)
+103           RESUME                   0
+
+104           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (load_btn)
+              LOAD_ATTR                3 (setEnabled + NULL|self)
+              LOAD_CONST               1 (False)
+              CALL                     1
+              POP_TOP
+
+105           LOAD_FAST                0 (self)
+              LOAD_ATTR                5 (add_log + NULL|self)
+              LOAD_CONST               2 ('正在加载知识库...')
+              LOAD_CONST               3 ('info')
+              CALL                     2
+              POP_TOP
+
+107           LOAD_GLOBAL              7 (LoadKnowledgeBasesWorker + NULL)
+              CALL                     0
+              LOAD_FAST                0 (self)
+              STORE_ATTR               4 (worker)
+
+109           LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (worker)
+              LOAD_ATTR               10 (list_ready)
+              LOAD_ATTR               13 (connect + NULL|self)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               14 (on_kb_list_ready)
+              CALL                     1
+              POP_TOP
+
+110           LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (worker)
+              LOAD_ATTR               16 (icon_loaded)
+              LOAD_ATTR               13 (connect + NULL|self)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               18 (on_kb_icon_loaded)
+              CALL                     1
+              POP_TOP
+
+111           LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (worker)
+              LOAD_ATTR               20 (file_count_loaded)
+              LOAD_ATTR               13 (connect + NULL|self)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               22 (on_kb_file_count_loaded)
+              CALL                     1
+              POP_TOP
+
+112           LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (worker)
+              LOAD_ATTR               24 (finished)
+              LOAD_ATTR               13 (connect + NULL|self)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               26 (on_kb_loaded)
+              CALL                     1
+              POP_TOP
+
+113           LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (worker)
+              LOAD_ATTR               28 (error)
+              LOAD_ATTR               13 (connect + NULL|self)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               30 (on_error)
+              CALL                     1
+              POP_TOP
+
+114           LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (worker)
+              LOAD_ATTR               32 (auth_expired)
+              LOAD_ATTR               13 (connect + NULL|self)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               34 (on_auth_expired)
+              CALL                     1
+              POP_TOP
+
+115           LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (worker)
+              LOAD_ATTR               37 (start + NULL|self)
+              CALL                     0
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+### CODE KbTreeMixin.on_kb_list_ready  args=('self', 'data')
+117           RESUME                   0
+
+119           LOAD_FAST_LOAD_FAST     16 (data, self)
+              STORE_ATTR               0 (current_kb_list)
+
+120           LOAD_FAST                0 (self)
+              LOAD_ATTR                3 (populate_kb_tree + NULL|self)
+              LOAD_FAST                1 (data)
+              CALL                     1
+              POP_TOP
+
+121           LOAD_FAST                0 (self)
+              LOAD_ATTR                5 (add_log + NULL|self)
+              LOAD_CONST               1 ('已加载 ')
+              LOAD_GLOBAL              7 (len + NULL)
+              LOAD_FAST                1 (data)
+              CALL                     1
+              FORMAT_SIMPLE
+              LOAD_CONST               2 (' 个知识库，正在获取图标和文件数...')
+              BUILD_STRING             3
+              LOAD_CONST               3 ('info')
+              CALL                     2
+              POP_TOP
+
+123           LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (kb_selector)
+              LOAD_ATTR               11 (clear + NULL|self)
+              CALL                     0
+              POP_TOP
+
+124           LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (kb_selector)
+              LOAD_ATTR               13 (addItem + NULL|self)
+              LOAD_CONST               4 ('请选择知识库')
+              LOAD_CONST               5 (None)
+              CALL                     2
+              POP_TOP
+
+125           LOAD_FAST                1 (data)
+              GET_ITER
+      L1:     FOR_ITER                37 (to L2)
+              STORE_FAST               2 (kb)
+
+126           LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (kb_selector)
+              LOAD_ATTR               13 (addItem + NULL|self)
+              LOAD_FAST                2 (kb)
+              LOAD_CONST               6 ('name')
+              BINARY_SUBSCR
+              LOAD_FAST                2 (kb)
+              LOAD_CONST               7 ('id')
+              BINARY_SUBSCR
+              CALL                     2
+              POP_TOP
+              JUMP_BACKWARD           39 (to L1)
+
+125   L2:     END_FOR
+              POP_TOP
+
+127           LOAD_FAST                0 (self)
+              LOAD_ATTR               14 (search_input)
+              LOAD_ATTR               17 (setEnabled + NULL|self)
+              LOAD_CONST               8 (True)
+              CALL                     1
+              POP_TOP
+
+128           LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (kb_selector)
+              LOAD_ATTR               17 (setEnabled + NULL|self)
+              LOAD_CONST               8 (True)
+              CALL                     1
+              POP_TOP
+
+129           LOAD_FAST                0 (self)
+              LOAD_ATTR               18 (search_btn)
+              LOAD_ATTR               17 (setEnabled + NULL|self)
+              LOAD_CONST               8 (True)
+              CALL                     1
+              POP_TOP
+
+130           LOAD_FAST                0 (self)
+              LOAD_ATTR               20 (clear_search_btn)
+              LOAD_ATTR               23 (setVisible + NULL|self)
+              LOAD_CONST               9 (False)
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             5 (None)
+
+### CODE KbTreeMixin.on_kb_icon_loaded  args=('self', 'kb_id', 'icon')
+132           RESUME                   0
+
+134           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (tree)
+              LOAD_ATTR                3 (invisibleRootItem + NULL|self)
+              CALL                     0
+              STORE_FAST               3 (root)
+
+135           LOAD_GLOBAL              5 (range + NULL)
+              LOAD_FAST                3 (root)
+              LOAD_ATTR                7 (childCount + NULL|self)
+              CALL                     0
+              CALL                     1
+              GET_ITER
+      L1:     FOR_ITER               102 (to L4)
+              STORE_FAST               4 (i)
+
+136           LOAD_FAST                3 (root)
+              LOAD_ATTR                9 (child + NULL|self)
+              LOAD_FAST                4 (i)
+              CALL                     1
+              STORE_FAST               5 (item)
+
+137           LOAD_FAST                5 (item)
+              LOAD_ATTR               11 (data + NULL|self)
+              LOAD_CONST               1 (1)
+              LOAD_GLOBAL             12 (Qt)
+              LOAD_ATTR               14 (UserRole)
+              CALL                     2
+              STORE_FAST               6 (data)
+
+138           LOAD_FAST                6 (data)
+              TO_BOOL
+              POP_JUMP_IF_TRUE         2 (to L2)
+              JUMP_BACKWARD           61 (to L1)
+      L2:     LOAD_FAST                6 (data)
+              LOAD_ATTR               17 (get + NULL|self)
+              LOAD_CONST               2 ('id')
+              CALL                     1
+              LOAD_FAST                1 (kb_id)
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_TRUE         2 (to L3)
+              JUMP_BACKWARD           84 (to L1)
+
+139   L3:     LOAD_FAST                5 (item)
+              LOAD_ATTR               19 (setIcon + NULL|self)
+              LOAD_CONST               3 (0)
+              LOAD_FAST                2 (icon)
+              CALL                     2
+              POP_TOP
+
+140           POP_TOP
+              RETURN_CONST             4 (None)
+
+135   L4:     END_FOR
+              POP_TOP
+              RETURN_CONST             4 (None)
+
+### CODE KbTreeMixin.on_kb_file_count_loaded  args=('self', 'kb_id', 'count')
+142           RESUME                   0
+
+144           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (tree)
+              LOAD_ATTR                3 (invisibleRootItem + NULL|self)
+              CALL                     0
+              STORE_FAST               3 (root)
+
+145           LOAD_GLOBAL              5 (range + NULL)
+              LOAD_FAST                3 (root)
+              LOAD_ATTR                7 (childCount + NULL|self)
+              CALL                     0
+              CALL                     1
+              GET_ITER
+      L1:     FOR_ITER               123 (to L4)
+              STORE_FAST               4 (i)
+
+146           LOAD_FAST                3 (root)
+              LOAD_ATTR                9 (child + NULL|self)
+              LOAD_FAST                4 (i)
+              CALL                     1
+              STORE_FAST               5 (item)
+
+147           LOAD_FAST                5 (item)
+              LOAD_ATTR               11 (data + NULL|self)
+              LOAD_CONST               1 (1)
+              LOAD_GLOBAL             12 (Qt)
+              LOAD_ATTR               14 (UserRole)
+              CALL                     2
+              STORE_FAST               6 (data)
+
+148           LOAD_FAST                6 (data)
+              TO_BOOL
+              POP_JUMP_IF_TRUE         2 (to L2)
+              JUMP_BACKWARD           61 (to L1)
+      L2:     LOAD_FAST                6 (data)
+              LOAD_ATTR               17 (get + NULL|self)
+              LOAD_CONST               2 ('id')
+              CALL                     1
+              LOAD_FAST                1 (kb_id)
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_TRUE         2 (to L3)
+              JUMP_BACKWARD           84 (to L1)
+
+149   L3:     LOAD_FAST                5 (item)
+              LOAD_ATTR               19 (setText + NULL|self)
+              LOAD_CONST               3 (2)
+              LOAD_FAST                5 (item)
+              LOAD_ATTR               21 (text + NULL|self)
+              LOAD_CONST               3 (2)
+              CALL                     1
+              FORMAT_SIMPLE
+              LOAD_CONST               4 (', ')
+              LOAD_FAST                2 (count)
+              FORMAT_SIMPLE
+              LOAD_CONST               5 (' 个文件')
+              BUILD_STRING             4
+              CALL                     2
+              POP_TOP
+
+150           POP_TOP
+              RETURN_CONST             6 (None)
+
+145   L4:     END_FOR
+              POP_TOP
+              RETURN_CONST             6 (None)
+
+### CODE KbTreeMixin.on_kb_loaded  args=('self', 'data')
+152           RESUME                   0
+
+154           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (load_btn)
+              LOAD_ATTR                3 (setEnabled + NULL|self)
+              LOAD_CONST               1 (True)
+              CALL                     1
+              POP_TOP
+
+155           LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (update_btn)
+              LOAD_ATTR                3 (setEnabled + NULL|self)
+              LOAD_CONST               1 (True)
+              CALL                     1
+              POP_TOP
+
+156           LOAD_FAST                0 (self)
+              LOAD_ATTR                7 (add_log + NULL|self)
+              LOAD_CONST               2 ('加载完成，共 ')
+              LOAD_GLOBAL              9 (len + NULL)
+              LOAD_FAST                1 (data)
+              CALL                     1
+              FORMAT_SIMPLE
+              LOAD_CONST               3 (' 个知识库')
+              BUILD_STRING             3
+              LOAD_CONST               4 ('success')
+              CALL                     2
+              POP_TOP
+              RETURN_CONST             5 (None)
+
+### CODE KbTreeMixin.populate_kb_tree  args=('self', 'data')
+158           RESUME                   0
+
+160           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (tree)
+              LOAD_ATTR                3 (setUpdatesEnabled + NULL|self)
+              LOAD_CONST               1 (False)
+              CALL                     1
+              POP_TOP
+
+161           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (tree)
+              LOAD_ATTR                5 (clear + NULL|self)
+              CALL                     0
+              POP_TOP
+
+163           BUILD_LIST               0
+              STORE_FAST               2 (items)
+
+165           LOAD_FAST                1 (data)
+              GET_ITER
+      L1:     EXTENDED_ARG             1
+              FOR_ITER               312 (to L2)
+              STORE_FAST               3 (kb)
+
+166           LOAD_FAST                0 (self)
+              LOAD_ATTR                7 (_format_size + NULL|self)
+              LOAD_FAST                3 (kb)
+              LOAD_CONST               2 ('size')
+              BINARY_SUBSCR
+              CALL                     1
+              STORE_FAST               4 (size_str)
+
+167           LOAD_FAST                3 (kb)
+              LOAD_ATTR                9 (get + NULL|self)
+              LOAD_CONST               3 ('update_time')
+              LOAD_CONST               4 ('-')
+              CALL                     2
+              STORE_FAST               5 (update_time)
+
+168           LOAD_FAST                3 (kb)
+              LOAD_ATTR                9 (get + NULL|self)
+              LOAD_CONST               5 ('description')
+              LOAD_CONST               6 ('')
+              CALL                     2
+              LOAD_ATTR               11 (replace + NULL|self)
+              LOAD_CONST               7 ('\n')
+              LOAD_CONST               8 (' ')
+              CALL                     2
+              LOAD_ATTR               11 (replace + NULL|self)
+              LOAD_CONST               9 ('\r')
+              LOAD_CONST               8 (' ')
+              CALL                     2
+              STORE_FAST               6 (description)
+
+170           LOAD_FAST                3 (kb)
+              LOAD_ATTR                9 (get + NULL|self)
+              LOAD_CONST              10 ('visible_export_status')
+              LOAD_CONST              11 (3)
+              CALL                     2
+              STORE_FAST               7 (visible_export_status)
+
+171           LOAD_FAST                0 (self)
+              LOAD_ATTR               13 (get_access_status_display + NULL|self)
+              LOAD_FAST                7 (visible_export_status)
+              CALL                     1
+              UNPACK_SEQUENCE          2
+              STORE_FAST_STORE_FAST  137 (status_text, status_color)
+
+173           LOAD_GLOBAL             15 (QTreeWidgetItem + NULL)
+
+174           LOAD_FAST                3 (kb)
+              LOAD_CONST              12 ('name')
+              BINARY_SUBSCR
+
+175           LOAD_CONST              13 ('知识库')
+
+176           LOAD_FAST                4 (size_str)
+
+177           LOAD_FAST                5 (update_time)
+
+178           LOAD_FAST                8 (status_text)
+
+179           LOAD_FAST                6 (description)
+
+173           BUILD_LIST               6
+              CALL                     1
+              STORE_FAST              10 (item)
+
+181           LOAD_FAST               10 (item)
+              LOAD_ATTR               17 (setIcon + NULL|self)
+              LOAD_CONST              14 (0)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               19 (load_icon_from_url + NULL|self)
+              LOAD_FAST                3 (kb)
+              LOAD_ATTR                9 (get + NULL|self)
+              LOAD_CONST              15 ('cover_url')
+              LOAD_CONST               6 ('')
+              CALL                     2
+              CALL                     1
+              CALL                     2
+              POP_TOP
+
+182           LOAD_FAST               10 (item)
+              LOAD_ATTR               21 (setForeground + NULL|self)
+              LOAD_CONST              16 (4)
+              LOAD_FAST                9 (status_color)
+              CALL                     2
+              POP_TOP
+
+184           LOAD_FAST               10 (item)
+              LOAD_ATTR               23 (setData + NULL|self)
+              LOAD_CONST              17 (1)
+              LOAD_GLOBAL             24 (Qt)
+              LOAD_ATTR               26 (UserRole)
+
+185           LOAD_CONST              18 ('kb')
+
+186           LOAD_FAST                3 (kb)
+              LOAD_CONST              19 ('id')
+              BINARY_SUBSCR
+
+187           LOAD_FAST                3 (kb)
+              LOAD_CONST              12 ('name')
+              BINARY_SUBSCR
+
+188           LOAD_FAST                3 (kb)
+              LOAD_CONST              12 ('name')
+              BINARY_SUBSCR
+
+189           LOAD_FAST                7 (visible_export_status)
+
+184           LOAD_CONST              20 (('type', 'id', 'name', 'full_path', 'visible_export_status'))
+              BUILD_CONST_KEY_MAP      5
+              CALL                     3
+              POP_TOP
+
+192           LOAD_FAST               10 (item)
+              LOAD_ATTR               29 (setChildIndicatorPolicy + NULL|self)
+              LOAD_GLOBAL             14 (QTreeWidgetItem)
+              LOAD_ATTR               30 (ShowIndicator)
+              CALL                     1
+              POP_TOP
+
+193           LOAD_FAST                2 (items)
+              LOAD_ATTR               33 (append + NULL|self)
+              LOAD_FAST               10 (item)
+              CALL                     1
+              POP_TOP
+              EXTENDED_ARG             1
+              JUMP_BACKWARD          315 (to L1)
+
+165   L2:     END_FOR
+              POP_TOP
+
+195           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (tree)
+              LOAD_ATTR               35 (addTopLevelItems + NULL|self)
+              LOAD_FAST                2 (items)
+              CALL                     1
+              POP_TOP
+
+196           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (tree)
+              LOAD_ATTR                3 (setUpdatesEnabled + NULL|self)
+              LOAD_CONST              21 (True)
+              CALL                     1
+              POP_TOP
+              RETURN_CONST            22 (None)
+
+### CODE KbTreeMixin.on_item_expanded  args=('self', 'item')
+198           RESUME                   0
+
+199           LOAD_FAST                1 (item)
+              LOAD_ATTR                1 (data + NULL|self)
+              LOAD_CONST               1 (0)
+              LOAD_GLOBAL              2 (Qt)
+              LOAD_ATTR                4 (UserRole)
+              LOAD_CONST               2 (1)
+              BINARY_OP                0 (+)
+              CALL                     2
+              LOAD_CONST               3 ('loaded')
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE        1 (to L1)
+
+200           RETURN_CONST             0 (None)
+
+202   L1:     LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (folder_worker)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       49 (to L2)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (folder_worker)
+              LOAD_ATTR                9 (isRunning + NULL|self)
+              CALL                     0
+              TO_BOOL
+              POP_JUMP_IF_FALSE       18 (to L2)
+
+203           LOAD_FAST                1 (item)
+              LOAD_ATTR               11 (setExpanded + NULL|self)
+              LOAD_CONST               4 (False)
+              CALL                     1
+              POP_TOP
+
+204           RETURN_CONST             0 (None)
+
+206   L2:     LOAD_FAST                1 (item)
+              LOAD_ATTR                1 (data + NULL|self)
+              LOAD_CONST               2 (1)
+              LOAD_GLOBAL              2 (Qt)
+              LOAD_ATTR                4 (UserRole)
+              CALL                     2
+              STORE_FAST               2 (data)
+
+207           LOAD_FAST                2 (data)
+              LOAD_CONST               5 ('type')
+              BINARY_SUBSCR
+              LOAD_CONST               6 ('kb')
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE       48 (to L3)
+
+208           LOAD_FAST                2 (data)
+              LOAD_ATTR               13 (get + NULL|self)
+              LOAD_CONST               7 ('visible_export_status')
+              LOAD_CONST               8 (3)
+              CALL                     2
+              STORE_FAST               3 (visible_export_status)
+
+209           LOAD_FAST                0 (self)
+              LOAD_ATTR               15 (load_folder + NULL|self)
+              LOAD_FAST_LOAD_FAST     18 (item, data)
+              LOAD_CONST               9 ('id')
+              BINARY_SUBSCR
+              LOAD_FAST                2 (data)
+              LOAD_CONST               9 ('id')
+              BINARY_SUBSCR
+              LOAD_FAST                2 (data)
+              LOAD_CONST              10 ('name')
+              BINARY_SUBSCR
+              LOAD_FAST                3 (visible_export_status)
+              CALL                     5
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+210   L3:     LOAD_FAST                2 (data)
+              LOAD_CONST               5 ('type')
+              BINARY_SUBSCR
+              LOAD_CONST              11 ('folder')
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE       61 (to L4)
+
+211           LOAD_FAST                0 (self)
+              LOAD_ATTR               17 (get_kb_name + NULL|self)
+              LOAD_FAST                1 (item)
+              CALL                     1
+              STORE_FAST               4 (kb_name)
+
+212           LOAD_FAST                2 (data)
+              LOAD_ATTR               13 (get + NULL|self)
+              LOAD_CONST               7 ('visible_export_status')
+              LOAD_CONST               8 (3)
+              CALL                     2
+              STORE_FAST               3 (visible_export_status)
+
+213           LOAD_FAST                0 (self)
+              LOAD_ATTR               15 (load_folder + NULL|self)
+
+214           LOAD_FAST_LOAD_FAST     18 (item, data)
+              LOAD_CONST              12 ('kb_id')
+              BINARY_SUBSCR
+              LOAD_FAST                2 (data)
+              LOAD_CONST              13 ('folder_id')
+              BINARY_SUBSCR
+              LOAD_FAST_LOAD_FAST     67 (kb_name, visible_export_status)
+
+213           CALL                     5
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+210   L4:     RETURN_CONST             0 (None)
+
+### CODE KbTreeMixin.on_tree_item_clicked  args=('self', 'item', 'column')
+217           RESUME                   0
+
+219           LOAD_FAST                1 (item)
+              LOAD_ATTR                1 (data + NULL|self)
+              LOAD_CONST               1 (1)
+              LOAD_GLOBAL              2 (Qt)
+              LOAD_ATTR                4 (UserRole)
+              CALL                     2
+              STORE_FAST               3 (data)
+
+220           LOAD_FAST                3 (data)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       21 (to L1)
+              LOAD_FAST                3 (data)
+              LOAD_ATTR                7 (get + NULL|self)
+              LOAD_CONST               2 ('type')
+              CALL                     1
+              LOAD_CONST               3 ('load_more')
+              COMPARE_OP             119 (bool(!=))
+              POP_JUMP_IF_FALSE        1 (to L2)
+
+221   L1:     RETURN_CONST             4 (None)
+
+223   L2:     LOAD_FAST                1 (item)
+              LOAD_ATTR                9 (parent + NULL|self)
+              CALL                     0
+              STORE_FAST               4 (parent)
+
+224           LOAD_FAST                4 (parent)
+              TO_BOOL
+              POP_JUMP_IF_TRUE         1 (to L3)
+
+225           RETURN_CONST             4 (None)
+
+227   L3:     LOAD_FAST                4 (parent)
+              LOAD_ATTR                1 (data + NULL|self)
+              LOAD_CONST               5 (0)
+              LOAD_GLOBAL              2 (Qt)
+              LOAD_ATTR                4 (UserRole)
+              LOAD_CONST               6 (2)
+              BINARY_OP                0 (+)
+              CALL                     2
+              STORE_FAST               5 (next_cursor)
+
+228           LOAD_FAST                5 (next_cursor)
+              TO_BOOL
+              POP_JUMP_IF_TRUE         1 (to L4)
+
+229           RETURN_CONST             4 (None)
+
+231   L4:     LOAD_FAST                4 (parent)
+              LOAD_ATTR                1 (data + NULL|self)
+              LOAD_CONST               1 (1)
+              LOAD_GLOBAL              2 (Qt)
+              LOAD_ATTR                4 (UserRole)
+              CALL                     2
+              STORE_FAST               6 (parent_data)
+
+232           LOAD_FAST                3 (data)
+              LOAD_ATTR                7 (get + NULL|self)
+              LOAD_CONST               7 ('kb_id')
+              CALL                     1
+              STORE_FAST               7 (kb_id)
+
+233           LOAD_FAST                3 (data)
+              LOAD_ATTR                7 (get + NULL|self)
+              LOAD_CONST               8 ('folder_id')
+              LOAD_FAST                7 (kb_id)
+              CALL                     2
+              STORE_FAST               8 (folder_id)
+
+234           LOAD_FAST                3 (data)
+              LOAD_ATTR                7 (get + NULL|self)
+              LOAD_CONST               9 ('kb_name')
+              LOAD_CONST              10 ('')
+              CALL                     2
+              STORE_FAST               9 (kb_name)
+
+235           LOAD_FAST                3 (data)
+              LOAD_ATTR                7 (get + NULL|self)
+              LOAD_CONST              11 ('visible_export_status')
+              LOAD_CONST              12 (3)
+              CALL                     2
+              STORE_FAST              10 (status)
+
+237           LOAD_FAST                4 (parent)
+              LOAD_ATTR               11 (removeChild + NULL|self)
+              LOAD_FAST                1 (item)
+              CALL                     1
+              POP_TOP
+
+239           LOAD_FAST                0 (self)
+              LOAD_ATTR               13 (load_folder + NULL|self)
+              LOAD_FAST_LOAD_FAST     71 (parent, kb_id)
+              LOAD_FAST_LOAD_FAST    137 (folder_id, kb_name)
+              LOAD_FAST_LOAD_FAST    165 (status, next_cursor)
+              LOAD_CONST              13 (('cursor',))
+              CALL_KW                  6
+              POP_TOP
+              RETURN_CONST             4 (None)
+
+### CODE KbTreeMixin.get_kb_name  args=('self', 'item')
+241           RESUME                   0
+
+242           LOAD_FAST                1 (item)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       71 (to L3)
+
+243   L1:     LOAD_FAST                1 (item)
+              LOAD_ATTR                1 (data + NULL|self)
+              LOAD_CONST               1 (1)
+              LOAD_GLOBAL              2 (Qt)
+              LOAD_ATTR                4 (UserRole)
+              CALL                     2
+              STORE_FAST               2 (data)
+
+244           LOAD_FAST                2 (data)
+              LOAD_CONST               2 ('type')
+              BINARY_SUBSCR
+              LOAD_CONST               3 ('kb')
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE        5 (to L2)
+
+245           LOAD_FAST                2 (data)
+              LOAD_CONST               4 ('name')
+              BINARY_SUBSCR
+              RETURN_VALUE
+
+246   L2:     LOAD_FAST                1 (item)
+              LOAD_ATTR                7 (parent + NULL|self)
+              CALL                     0
+              STORE_FAST               1 (item)
+
+242           LOAD_FAST                1 (item)
+              TO_BOOL
+              POP_JUMP_IF_FALSE        2 (to L3)
+              JUMP_BACKWARD           71 (to L1)
+
+247   L3:     RETURN_CONST             5 ('')
+
+### CODE KbTreeMixin.get_kb_forbid_access  args=('self', 'item')
+249           RESUME                   0
+
+251           LOAD_FAST                1 (item)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       87 (to L3)
+
+252   L1:     LOAD_FAST                1 (item)
+              LOAD_ATTR                1 (data + NULL|self)
+              LOAD_CONST               1 (1)
+              LOAD_GLOBAL              2 (Qt)
+              LOAD_ATTR                4 (UserRole)
+              CALL                     2
+              STORE_FAST               2 (data)
+
+253           LOAD_FAST                2 (data)
+              LOAD_CONST               2 ('type')
+              BINARY_SUBSCR
+              LOAD_CONST               3 ('kb')
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE       21 (to L2)
+
+254           LOAD_FAST                2 (data)
+              LOAD_ATTR                7 (get + NULL|self)
+              LOAD_CONST               4 ('visible_export_status')
+              LOAD_CONST               5 (3)
+              CALL                     2
+              LOAD_CONST               1 (1)
+              COMPARE_OP              72 (==)
+              RETURN_VALUE
+
+255   L2:     LOAD_FAST                1 (item)
+              LOAD_ATTR                9 (parent + NULL|self)
+              CALL                     0
+              STORE_FAST               1 (item)
+
+251           LOAD_FAST                1 (item)
+              TO_BOOL
+              POP_JUMP_IF_FALSE        2 (to L3)
+              JUMP_BACKWARD           87 (to L1)
+
+256   L3:     RETURN_CONST             6 (False)
+
+### CODE KbTreeMixin.get_access_status_display  args=('self', 'status_code')
+258           RESUME                   0
+
+261           LOAD_CONST               1 ('不可查看')
+              LOAD_GLOBAL              1 (QColor + NULL)
+              LOAD_CONST               2 ('#d32f2f')
+              CALL                     1
+              BUILD_TUPLE              2
+
+262           LOAD_CONST               3 ('可查看、不可导出')
+              LOAD_GLOBAL              1 (QColor + NULL)
+              LOAD_CONST               4 ('#FF9800')
+              CALL                     1
+              BUILD_TUPLE              2
+
+263           LOAD_CONST               5 ('可查看、可导出')
+              LOAD_GLOBAL              1 (QColor + NULL)
+              LOAD_CONST               6 ('#4CAF50')
+              CALL                     1
+              BUILD_TUPLE              2
+
+260           LOAD_CONST               7 ((1, 2, 3))
+              BUILD_CONST_KEY_MAP      3
+              STORE_FAST               2 (mapping)
+
+265           LOAD_FAST                2 (mapping)
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_FAST_LOAD_FAST     18 (status_code, mapping)
+              LOAD_CONST               8 (3)
+              BINARY_SUBSCR
+              CALL                     2
+              RETURN_VALUE
+
+### CODE KbTreeMixin.load_folder  args=('self', 'parent_item', 'kb_id', 'folder_id', 'kb_name', 'visible_export_status', 'cursor')
+  --           MAKE_CELL                0 (self)
+               MAKE_CELL                1 (parent_item)
+               MAKE_CELL                2 (kb_id)
+               MAKE_CELL                4 (kb_name)
+               MAKE_CELL                5 (visible_export_status)
+
+ 267           RESUME                   0
+
+ 276           LOAD_DEREF               0 (self)
+               LOAD_ATTR                0 (folder_worker)
+               TO_BOOL
+               POP_JUMP_IF_FALSE       32 (to L1)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR                0 (folder_worker)
+               LOAD_ATTR                3 (isRunning + NULL|self)
+               CALL                     0
+               TO_BOOL
+               POP_JUMP_IF_FALSE        1 (to L1)
+
+ 277           RETURN_CONST             0 (None)
+
+ 279   L1:     LOAD_DEREF               1 (parent_item)
+               LOAD_ATTR                5 (setText + NULL|self)
+               LOAD_CONST               1 (4)
+               LOAD_CONST               2 ('加载中...')
+               CALL                     2
+               POP_TOP
+
+ 281           LOAD_GLOBAL              7 (LoadFolderWorker + NULL)
+               LOAD_DEREF               2 (kb_id)
+               LOAD_FAST_LOAD_FAST     54 (folder_id, cursor)
+               CALL                     3
+               LOAD_DEREF               0 (self)
+               STORE_ATTR               0 (folder_worker)
+
+ 282           LOAD_DEREF               0 (self)
+               LOAD_ATTR                0 (folder_worker)
+               LOAD_ATTR                8 (progress)
+               LOAD_ATTR               11 (connect + NULL|self)
+               LOAD_FAST                1 (parent_item)
+               BUILD_TUPLE              1
+               LOAD_CONST               3 (<code object <lambda> at 0x000001DD4627DC50, file "gui\kb_tree_mixin.py", line 282>)
+               MAKE_FUNCTION
+               SET_FUNCTION_ATTRIBUTE   8 (closure)
+               CALL                     1
+               POP_TOP
+
+ 283           LOAD_DEREF               0 (self)
+               LOAD_ATTR                0 (folder_worker)
+               LOAD_ATTR               12 (finished)
+               LOAD_ATTR               11 (connect + NULL|self)
+
+ 284           LOAD_FAST                2 (kb_id)
+               LOAD_FAST                4 (kb_name)
+               LOAD_FAST                1 (parent_item)
+               LOAD_FAST                0 (self)
+               LOAD_FAST                5 (visible_export_status)
+               BUILD_TUPLE              5
+               LOAD_CONST               4 (<code object <lambda> at 0x000001DD462F9430, file "gui\kb_tree_mixin.py", line 284>)
+               MAKE_FUNCTION
+               SET_FUNCTION_ATTRIBUTE   8 (closure)
+
+ 283           CALL                     1
+               POP_TOP
+
+ 294           LOAD_DEREF               0 (self)
+               LOAD_ATTR                0 (folder_worker)
+               LOAD_ATTR               14 (error)
+               LOAD_ATTR               11 (connect + NULL|self)
+               LOAD_FAST                1 (parent_item)
+               LOAD_FAST                0 (self)
+               BUILD_TUPLE              2
+               LOAD_CONST               5 (<code object <lambda> at 0x000001DD4627EA60, file "gui\kb_tree_mixin.py", line 294>)
+               MAKE_FUNCTION
+               SET_FUNCTION_ATTRIBUTE   8 (closure)
+               CALL                     1
+               POP_TOP
+
+ 295           LOAD_DEREF               0 (self)
+               LOAD_ATTR                0 (folder_worker)
+               LOAD_ATTR               17 (start + NULL|self)
+               CALL                     0
+               POP_TOP
+               RETURN_CONST             0 (None)
+
+#### CODE KbTreeMixin.load_folder.<locals>.<lambda>  args=('msg',)
+  --           COPY_FREE_VARS           1
+
+ 282           RESUME                   0
+               LOAD_DEREF               1 (parent_item)
+               LOAD_ATTR                1 (setText + NULL|self)
+               LOAD_CONST               1 (4)
+               LOAD_FAST                0 (msg)
+               CALL                     2
+               RETURN_VALUE
+
+#### CODE KbTreeMixin.load_folder.<locals>.<lambda>  args=('content', 'next_cursor', 'has_more')
+  --           COPY_FREE_VARS           5
+
+ 284           RESUME                   0
+               LOAD_DEREF               6 (self)
+               LOAD_ATTR                1 (on_folder_loaded + NULL|self)
+
+ 285           LOAD_DEREF               5 (parent_item)
+
+ 286           LOAD_DEREF               3 (kb_id)
+
+ 287           LOAD_DEREF               4 (kb_name)
+
+ 288           LOAD_DEREF               7 (visible_export_status)
+
+ 289           LOAD_FAST                0 (content)
+
+ 290           LOAD_FAST                1 (next_cursor)
+
+ 291           LOAD_FAST                2 (has_more)
+
+ 284           CALL                     7
+               RETURN_VALUE
+
+#### CODE KbTreeMixin.load_folder.<locals>.<lambda>  args=('err',)
+  --           COPY_FREE_VARS           2
+
+ 294           RESUME                   0
+               LOAD_DEREF               2 (self)
+               LOAD_ATTR                1 (on_folder_error + NULL|self)
+               LOAD_DEREF               1 (parent_item)
+               LOAD_FAST                0 (err)
+               CALL                     2
+               RETURN_VALUE
+
+### CODE KbTreeMixin.on_folder_loaded  args=('self', 'parent_item', 'kb_id', 'kb_name', 'visible_export_status', 'content', 'next_cursor', 'has_more')
+297            RESUME                   0
+
+307            LOAD_FAST                1 (parent_item)
+               LOAD_ATTR                1 (data + NULL|self)
+               LOAD_CONST               1 (1)
+               LOAD_GLOBAL              2 (Qt)
+               LOAD_ATTR                4 (UserRole)
+               CALL                     2
+               STORE_FAST               8 (parent_data)
+
+308            LOAD_FAST                8 (parent_data)
+               TO_BOOL
+               POP_JUMP_IF_FALSE       18 (to L1)
+               LOAD_FAST                8 (parent_data)
+               LOAD_ATTR                7 (get + NULL|self)
+               LOAD_CONST               2 ('full_path')
+               LOAD_FAST                3 (kb_name)
+               CALL                     2
+               JUMP_FORWARD             1 (to L2)
+       L1:     LOAD_FAST                3 (kb_name)
+       L2:     STORE_FAST               9 (parent_path)
+
+310            LOAD_FAST                0 (self)
+               LOAD_ATTR                8 (tree)
+               LOAD_ATTR               11 (setUpdatesEnabled + NULL|self)
+               LOAD_CONST               3 (False)
+               CALL                     1
+               POP_TOP
+
+312            LOAD_FAST                0 (self)
+               LOAD_ATTR               13 (get_access_status_display + NULL|self)
+               LOAD_FAST                4 (visible_export_status)
+               CALL                     1
+               UNPACK_SEQUENCE          2
+               STORE_FAST_STORE_FAST  171 (status, status_color)
+
+314            BUILD_LIST               0
+               STORE_FAST              12 (children)
+
+316            LOAD_FAST                5 (content)
+               LOAD_ATTR                7 (get + NULL|self)
+               LOAD_CONST               4 ('folders')
+               BUILD_LIST               0
+               CALL                     2
+               GET_ITER
+       L3:     FOR_ITER               197 (to L4)
+               STORE_FAST              13 (folder)
+
+317            LOAD_FAST               13 (folder)
+               LOAD_ATTR                7 (get + NULL|self)
+               LOAD_CONST               5 ('update_time')
+               LOAD_CONST               6 ('-')
+               CALL                     2
+               STORE_FAST              14 (update_time)
+
+319            LOAD_GLOBAL             15 (QTreeWidgetItem + NULL)
+
+320            LOAD_FAST               13 (folder)
+               LOAD_CONST               7 ('name')
+               BINARY_SUBSCR
+
+321            LOAD_CONST               8 ('文件夹')
+
+322            LOAD_CONST               6 ('-')
+
+323            LOAD_FAST               14 (update_time)
+
+324            LOAD_FAST               10 (status)
+
+325            LOAD_CONST               9 ('')
+
+319            BUILD_LIST               6
+               CALL                     1
+               STORE_FAST              15 (child)
+
+327            LOAD_FAST               15 (child)
+               LOAD_ATTR               17 (setIcon + NULL|self)
+               LOAD_CONST              10 (0)
+               LOAD_FAST                0 (self)
+               LOAD_ATTR               19 (_get_file_icon + NULL|self)
+               LOAD_CONST               8 ('文件夹')
+               CALL                     1
+               CALL                     2
+               POP_TOP
+
+328            LOAD_FAST               15 (child)
+               LOAD_ATTR               21 (setForeground + NULL|self)
+               LOAD_CONST              11 (4)
+               LOAD_FAST               11 (status_color)
+               CALL                     2
+               POP_TOP
+
+329            LOAD_FAST                9 (parent_path)
+               FORMAT_SIMPLE
+               LOAD_CONST              12 ('/')
+               LOAD_FAST               13 (folder)
+               LOAD_CONST               7 ('name')
+               BINARY_SUBSCR
+               FORMAT_SIMPLE
+               BUILD_STRING             3
+               STORE_FAST              16 (folder_full_path)
+
+330            LOAD_FAST               15 (child)
+               LOAD_ATTR               23 (setData + NULL|self)
+               LOAD_CONST               1 (1)
+               LOAD_GLOBAL              2 (Qt)
+               LOAD_ATTR                4 (UserRole)
+
+331            LOAD_CONST              13 ('folder')
+
+332            LOAD_FAST                2 (kb_id)
+
+333            LOAD_FAST                3 (kb_name)
+
+334            LOAD_FAST               13 (folder)
+               LOAD_CONST              14 ('folder_id')
+               BINARY_SUBSCR
+
+335            LOAD_FAST               13 (folder)
+               LOAD_CONST               7 ('name')
+               BINARY_SUBSCR
+
+336            LOAD_FAST               16 (folder_full_path)
+
+337            LOAD_FAST                4 (visible_export_status)
+
+330            LOAD_CONST              15 (('type', 'kb_id', 'kb_name', 'folder_id', 'name', 'full_path', 'visible_export_status'))
+               BUILD_CONST_KEY_MAP      7
+               CALL                     3
+               POP_TOP
+
+340            LOAD_FAST               15 (child)
+               LOAD_ATTR               25 (setChildIndicatorPolicy + NULL|self)
+               LOAD_GLOBAL             14 (QTreeWidgetItem)
+               LOAD_ATTR               26 (ShowIndicator)
+               CALL                     1
+               POP_TOP
+
+341            LOAD_FAST               12 (children)
+               LOAD_ATTR               29 (append + NULL|self)
+               LOAD_FAST               15 (child)
+               CALL                     1
+               POP_TOP
+               JUMP_BACKWARD          199 (to L3)
+
+316    L4:     END_FOR
+               POP_TOP
+
+343            LOAD_FAST                5 (content)
+               LOAD_ATTR                7 (get + NULL|self)
+               LOAD_CONST              16 ('files')
+               BUILD_LIST               0
+               CALL                     2
+               GET_ITER
+       L5:     EXTENDED_ARG             1
+               FOR_ITER               393 (to L7)
+               STORE_FAST              17 (file)
+
+344            LOAD_FAST                0 (self)
+               LOAD_ATTR               31 (_format_size + NULL|self)
+               LOAD_FAST               17 (file)
+               LOAD_ATTR                7 (get + NULL|self)
+               LOAD_CONST              17 ('file_size')
+               LOAD_CONST              10 (0)
+               CALL                     2
+               CALL                     1
+               STORE_FAST              18 (size_str)
+
+345            LOAD_FAST               17 (file)
+               LOAD_ATTR                7 (get + NULL|self)
+               LOAD_CONST              18 ('media_type_info')
+               BUILD_MAP                0
+               CALL                     2
+               LOAD_ATTR                7 (get + NULL|self)
+               LOAD_CONST               7 ('name')
+               LOAD_CONST              19 ('文件')
+               CALL                     2
+               STORE_FAST              19 (type_name)
+
+346            LOAD_FAST               17 (file)
+               LOAD_ATTR                7 (get + NULL|self)
+               LOAD_CONST               5 ('update_time')
+               LOAD_CONST               6 ('-')
+               CALL                     2
+               STORE_FAST              14 (update_time)
+
+348            LOAD_FAST               17 (file)
+               LOAD_ATTR                7 (get + NULL|self)
+               LOAD_CONST              20 ('access_status')
+               LOAD_CONST              21 (3)
+               CALL                     2
+               STORE_FAST              20 (file_access_status)
+
+349            LOAD_FAST                0 (self)
+               LOAD_ATTR               13 (get_access_status_display + NULL|self)
+               LOAD_FAST               20 (file_access_status)
+               CALL                     1
+               UNPACK_SEQUENCE          2
+               STORE_FAST              21 (file_status)
+               STORE_FAST              22 (file_status_color)
+
+351            LOAD_FAST               17 (file)
+               LOAD_ATTR                7 (get + NULL|self)
+               LOAD_CONST              22 ('tags')
+               BUILD_LIST               0
+               CALL                     2
+               STORE_FAST              23 (tags)
+
+352            LOAD_GLOBAL             15 (QTreeWidgetItem + NULL)
+
+353            LOAD_FAST               17 (file)
+               LOAD_CONST              23 ('title')
+               BINARY_SUBSCR
+
+354            LOAD_FAST               19 (type_name)
+
+355            LOAD_FAST               18 (size_str)
+
+356            LOAD_FAST               14 (update_time)
+
+357            LOAD_FAST               21 (file_status)
+
+358            LOAD_CONST               9 ('')
+
+352            BUILD_LIST               6
+               CALL                     1
+               STORE_FAST              15 (child)
+
+360            LOAD_FAST               15 (child)
+               LOAD_ATTR               17 (setIcon + NULL|self)
+               LOAD_CONST              10 (0)
+               LOAD_FAST                0 (self)
+               LOAD_ATTR               19 (_get_file_icon + NULL|self)
+               LOAD_FAST               19 (type_name)
+               CALL                     1
+               CALL                     2
+               POP_TOP
+
+361            LOAD_FAST               15 (child)
+               LOAD_ATTR               21 (setForeground + NULL|self)
+               LOAD_CONST              11 (4)
+               LOAD_FAST               22 (file_status_color)
+               CALL                     2
+               POP_TOP
+
+362            LOAD_FAST               23 (tags)
+               TO_BOOL
+               POP_JUMP_IF_FALSE       33 (to L6)
+
+363            LOAD_FAST               15 (child)
+               LOAD_ATTR               23 (setData + NULL|self)
+               LOAD_CONST              24 (5)
+               LOAD_GLOBAL              2 (Qt)
+               LOAD_ATTR                4 (UserRole)
+               LOAD_FAST               23 (tags)
+               CALL                     3
+               POP_TOP
+
+365    L6:     LOAD_FAST               15 (child)
+               LOAD_ATTR               23 (setData + NULL|self)
+               LOAD_CONST               1 (1)
+               LOAD_GLOBAL              2 (Qt)
+               LOAD_ATTR                4 (UserRole)
+
+366            LOAD_CONST              25 ('file')
+
+367            LOAD_FAST                2 (kb_id)
+
+368            LOAD_FAST                3 (kb_name)
+
+369            LOAD_FAST                9 (parent_path)
+
+370            LOAD_FAST               17 (file)
+               LOAD_CONST              26 ('media_id')
+               BINARY_SUBSCR
+
+371            LOAD_FAST               17 (file)
+               LOAD_CONST              27 ('media_type')
+               BINARY_SUBSCR
+
+373            LOAD_CONST               7 ('name')
+               LOAD_FAST               17 (file)
+               LOAD_ATTR                7 (get + NULL|self)
+               LOAD_CONST              18 ('media_type_info')
+               BUILD_MAP                0
+               CALL                     2
+               LOAD_ATTR                7 (get + NULL|self)
+               LOAD_CONST               7 ('name')
+               LOAD_CONST              19 ('文件')
+               CALL                     2
+
+372            BUILD_MAP                1
+
+375            LOAD_FAST               17 (file)
+               LOAD_CONST              23 ('title')
+               BINARY_SUBSCR
+
+376            LOAD_FAST               17 (file)
+               LOAD_ATTR                7 (get + NULL|self)
+               LOAD_CONST              17 ('file_size')
+               LOAD_CONST              10 (0)
+               CALL                     2
+
+377            LOAD_FAST               17 (file)
+               LOAD_ATTR                7 (get + NULL|self)
+               LOAD_CONST               5 ('update_time')
+               LOAD_CONST              10 (0)
+               CALL                     2
+
+378            LOAD_FAST               20 (file_access_status)
+
+365            LOAD_CONST              28 (('type', 'kb_id', 'kb_name', 'full_path', 'media_id', 'media_type', 'media_type_info', 'title', 'file_size', 'update_time', 'access_status'))
+               BUILD_CONST_KEY_MAP     11
+               CALL                     3
+               POP_TOP
+
+381            LOAD_FAST               12 (children)
+               LOAD_ATTR               29 (append + NULL|self)
+               LOAD_FAST               15 (child)
+               CALL                     1
+               POP_TOP
+               EXTENDED_ARG             1
+               JUMP_BACKWARD          396 (to L5)
+
+343    L7:     END_FOR
+               POP_TOP
+
+383            LOAD_FAST                7 (has_more)
+               TO_BOOL
+               POP_JUMP_IF_FALSE      219 (to L9)
+               LOAD_FAST                6 (next_cursor)
+               TO_BOOL
+               POP_JUMP_IF_FALSE      212 (to L9)
+
+384            LOAD_GLOBAL             15 (QTreeWidgetItem + NULL)
+               BUILD_LIST               0
+               LOAD_CONST              29 (('加载更多...', '', '', '', '', ''))
+               LIST_EXTEND              1
+               CALL                     1
+               STORE_FAST              24 (more_item)
+
+385            LOAD_FAST               24 (more_item)
+               LOAD_ATTR               21 (setForeground + NULL|self)
+               LOAD_CONST              10 (0)
+               LOAD_GLOBAL             33 (QColor + NULL)
+               LOAD_CONST              30 ('#2196F3')
+               CALL                     1
+               CALL                     2
+               POP_TOP
+
+387            LOAD_FAST                1 (parent_item)
+               LOAD_ATTR                1 (data + NULL|self)
+               LOAD_CONST               1 (1)
+               LOAD_GLOBAL              2 (Qt)
+               LOAD_ATTR                4 (UserRole)
+               CALL                     2
+               STORE_FAST              25 (parent_data_for_id)
+
+388            LOAD_FAST                2 (kb_id)
+               STORE_FAST              26 (current_folder_id)
+
+389            LOAD_FAST               25 (parent_data_for_id)
+               TO_BOOL
+               POP_JUMP_IF_FALSE       39 (to L8)
+               LOAD_FAST               25 (parent_data_for_id)
+               LOAD_ATTR                7 (get + NULL|self)
+               LOAD_CONST              31 ('type')
+               CALL                     1
+               LOAD_CONST              13 ('folder')
+               COMPARE_OP              88 (bool(==))
+               POP_JUMP_IF_FALSE       18 (to L8)
+
+390            LOAD_FAST               25 (parent_data_for_id)
+               LOAD_ATTR                7 (get + NULL|self)
+               LOAD_CONST              14 ('folder_id')
+               LOAD_FAST                2 (kb_id)
+               CALL                     2
+               STORE_FAST              26 (current_folder_id)
+
+391    L8:     LOAD_FAST               24 (more_item)
+               LOAD_ATTR               23 (setData + NULL|self)
+               LOAD_CONST               1 (1)
+               LOAD_GLOBAL              2 (Qt)
+               LOAD_ATTR                4 (UserRole)
+
+392            LOAD_CONST              32 ('load_more')
+
+393            LOAD_FAST                2 (kb_id)
+
+394            LOAD_FAST                3 (kb_name)
+
+395            LOAD_FAST               26 (current_folder_id)
+
+396            LOAD_FAST                4 (visible_export_status)
+
+391            LOAD_CONST              33 (('type', 'kb_id', 'kb_name', 'folder_id', 'visible_export_status'))
+               BUILD_CONST_KEY_MAP      5
+               CALL                     3
+               POP_TOP
+
+399            LOAD_FAST               12 (children)
+               LOAD_ATTR               29 (append + NULL|self)
+               LOAD_FAST               24 (more_item)
+               CALL                     1
+               POP_TOP
+
+401            LOAD_FAST                1 (parent_item)
+               LOAD_ATTR               23 (setData + NULL|self)
+               LOAD_CONST              10 (0)
+               LOAD_GLOBAL              2 (Qt)
+               LOAD_ATTR                4 (UserRole)
+               LOAD_CONST              34 (2)
+               BINARY_OP                0 (+)
+               LOAD_FAST                6 (next_cursor)
+               CALL                     3
+               POP_TOP
+
+403    L9:     LOAD_FAST                1 (parent_item)
+               LOAD_ATTR               35 (addChildren + NULL|self)
+               LOAD_FAST               12 (children)
+               CALL                     1
+               POP_TOP
+
+405            LOAD_FAST               12 (children)
+               GET_ITER
+      L10:     FOR_ITER               123 (to L12)
+               STORE_FAST              15 (child)
+
+406            LOAD_FAST               15 (child)
+               LOAD_ATTR                1 (data + NULL|self)
+               LOAD_CONST              24 (5)
+               LOAD_GLOBAL              2 (Qt)
+               LOAD_ATTR                4 (UserRole)
+               CALL                     2
+               STORE_FAST              23 (tags)
+
+407            LOAD_FAST               23 (tags)
+               TO_BOOL
+               POP_JUMP_IF_TRUE         2 (to L11)
+               JUMP_BACKWARD           44 (to L10)
+
+408   L11:     LOAD_FAST                0 (self)
+               LOAD_ATTR               37 (_create_tag_widget + NULL|self)
+               LOAD_FAST               23 (tags)
+               CALL                     1
+               STORE_FAST              27 (tag_widget)
+
+409            LOAD_FAST                0 (self)
+               LOAD_ATTR                8 (tree)
+               LOAD_ATTR               39 (setItemWidget + NULL|self)
+               LOAD_FAST               15 (child)
+               LOAD_CONST              24 (5)
+               LOAD_FAST               27 (tag_widget)
+               CALL                     3
+               POP_TOP
+
+410            LOAD_FAST               15 (child)
+               LOAD_ATTR               23 (setData + NULL|self)
+               LOAD_CONST              24 (5)
+               LOAD_GLOBAL              2 (Qt)
+               LOAD_ATTR                4 (UserRole)
+               LOAD_CONST               0 (None)
+               CALL                     3
+               POP_TOP
+               JUMP_BACKWARD          125 (to L10)
+
+405   L12:     END_FOR
+               POP_TOP
+
+412            LOAD_FAST                1 (parent_item)
+               LOAD_ATTR               23 (setData + NULL|self)
+               LOAD_CONST              10 (0)
+               LOAD_GLOBAL              2 (Qt)
+               LOAD_ATTR                4 (UserRole)
+               LOAD_CONST               1 (1)
+               BINARY_OP                0 (+)
+               LOAD_CONST              35 ('loaded')
+               CALL                     3
+               POP_TOP
+
+414            LOAD_FAST                0 (self)
+               LOAD_ATTR                8 (tree)
+               LOAD_ATTR               11 (setUpdatesEnabled + NULL|self)
+               LOAD_CONST              36 (True)
+               CALL                     1
+               POP_TOP
+
+416            LOAD_FAST                1 (parent_item)
+               LOAD_ATTR               41 (setText + NULL|self)
+               LOAD_CONST              11 (4)
+               LOAD_FAST               10 (status)
+               CALL                     2
+               POP_TOP
+               RETURN_CONST             0 (None)
+
+### CODE KbTreeMixin.on_folder_error  args=('self', 'parent_item', 'error')
+418           RESUME                   0
+
+419           LOAD_FAST                1 (parent_item)
+              LOAD_ATTR                1 (setText + NULL|self)
+              LOAD_CONST               1 (4)
+              LOAD_CONST               2 ('加载失败')
+              CALL                     2
+              POP_TOP
+
+420           LOAD_FAST                0 (self)
+              LOAD_ATTR                3 (add_log + NULL|self)
+              LOAD_CONST               3 ('加载失败：')
+              LOAD_FAST                2 (error)
+              FORMAT_SIMPLE
+              BUILD_STRING             2
+              LOAD_CONST               4 ('error')
+              CALL                     2
+              POP_TOP
+              RETURN_CONST             0 (None)

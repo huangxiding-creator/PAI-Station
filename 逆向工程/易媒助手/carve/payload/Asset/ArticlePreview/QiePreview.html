@@ -1,0 +1,40 @@
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html;charset=utf-8">
+        <meta name="renderer" content="webkit">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui">
+        <title></title>
+        <link href="FrameBase.css" rel="Stylesheet" type="text/css" />
+        <link href="QieFrame.css" rel="Stylesheet" type="text/css" />
+    </head>
+    <body>
+        <div id="container">
+            <div id="title">
+            </div>
+            <div id="account">
+                <div id="account_img">
+                    <img />
+                </div>
+                <div id="account_name">
+                </div>
+                <div id="preview_time"> 
+                </div>
+            </div>
+            <div id="content">
+            </div>
+        </div>
+        <script src="ArticlePreview.js"></script>
+        <script type="text/javascript">
+            function test() {
+                return;
+                var title = "场均出场46分钟砍41";
+                var content = "<h1>efkowef</h1><blockquote><p>fewfewfewf</p></blockquote>";
+                var account = "疯狂早茶";
+                var author = "一颗南星";
+                var head = "C:/Users/zhangjx/AppData/Roaming/WEMedia/usericon/{0D3CFF5C-3BD5-429B-BCC5-3EC309435DB3}.png";
+                ArticlePreview.setContent(title, content, account, author, head, "qie");
+            }
+            window.addEventListener("load", test, false);
+        </script>
+    </body>
+</html>

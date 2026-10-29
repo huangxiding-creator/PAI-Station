@@ -1,0 +1,81 @@
+/* ********************重置样式 reset******************** */
+@charset "utf-8";
+
+*,
+*::before,
+*::after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --fontFace: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --el-color-primary: #4e6ef2;
+  --el-button-hover-border-color: #4e6ef2;
+  --el-color-primary-light-3: #4e6ef2;
+  --el-color-primary-light-7: #4e6ef2;
+}
+
+html,
+body {
+  height: 100%;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", Tahoma, Arial, sans-serif,
+    var(--fontFace);
+  text-rendering: auto;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #000;
+  background-color: #fff;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: normal;
+}
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+img {
+  border: 0;
+  vertical-align: middle;
+}
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+a {
+  color: #4e6ef2;
+  text-decoration: none;
+  outline: none;
+}
+a:hover,
+a:focus {
+  color: #74777b;
+}
+li {
+  list-style: none;
+}
+
+.el-table .el-table__inner-wrapper::before {
+  display: none;
+}

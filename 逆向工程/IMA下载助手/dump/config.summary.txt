@@ -1,0 +1,78 @@
+===== config.pyc =====
+DOCSTRING: 
+IMA Client 配置文件
+
+客户端只应保存公开配置和服务端验签公钥，不得保存共享秘密。
+
+
+[<module>] args=() names=('__doc__', 'os', 'pathlib', 'Path', 'Config', 'config', 'BASE_URL', 'VERSION', 'BUILD_DATE')
+  CONST '\nIMA Client 配置文件\n\n客户端只应保存公开配置和服务端验签公钥，不得保存共享秘密。\n'
+  CONST 0
+  CONST None
+  CONST ('Path')
+  CONST 'Config'
+
+  [Config] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', '__doc__', 'BASE_URL', 'API_ENDPOINTS', 'LICENSE_FILE', 'SERVER_PUBLIC_KEY', 'DB_FILE', 'VERSION', 'BUILD_DATE', 'DEFAULT_DOWNLOAD_DIR', 'DOWNLOAD_DELAY_MIN', 'DOWNLOAD_DELAY_MAX', 'REQUEST_TIMEOUT', 'MAX_RETRIES', 'TOKEN_VALID_TIME', 'REFRESH_TOKEN_VALID_TIME', 'TOKEN_REFRESH_ADVANCE', 'classmethod', 'get_api_url', 'get_base_dir', 'get_license_file_path', 'get_db_file_path', 'get_log_file_path', 'get_crash_log_file_path', 'get_default_download_dir', '__static_attributes__')
+    CONST 'Config'
+    CONST 10
+    CONST '应用配置类'
+    CONST 'https://imaima.iepose.cn'
+    CONST '/api/v1/activate'
+    CONST '/api/v1/verify'
+    CONST '/api/v1/quota/issue_token'
+    CONST '/api/v1/quota/refund'
+    CONST '/api/v1/renew'
+    CONST '/api/version/check'
+    CONST ('activate', 'verify', 'quota_issue', 'quota_refund', 'renew', 'version_check')
+    CONST 'license.enc'
+    CONST '-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAL7EUTOqGayZQ2QYFZwoaUh+aVNrQ7pblqRCqVvPBoZA=\n-----END PUBLIC KEY-----'
+    CONST 'download.db'
+    CONST '1.7.1'
+    CONST '2026-06-04'
+    CONST 'download'
+    CONST 1
+    CONST 3
+    CONST 15
+    CONST 7200
+    CONST 2592000
+    CONST 300
+    CONST ()
+    CONST None
+
+    [Config.get_api_url] args=('cls', 'endpoint') names=('API_ENDPOINTS', 'get', 'BASE_URL')
+      CONST '获取完整的API URL\n\nArgs:\n    endpoint: API端点名称 (activate, verify, quota_issue, renew, version_check)\n\nReturns:\n    str: 完整的API URL\n'
+      CONST '/api/'
+
+    [Config.get_base_dir] args=('cls',) names=('sys', 'getattr', 'platform', 'Path', 'home', 'os', 'makedirs', 'str', 'environ', 'get', 'path', 'expanduser', 'join', 'dirname', 'abspath', '__file__')
+      CONST '获取应用基础目录\n\nReturns:\n    str: 应用基础目录路径\n'
+      CONST 0
+      CONST None
+      CONST 'frozen'
+      CONST False
+      CONST 'darwin'
+      CONST 'imahelper'
+      CONST True
+      CONST ('exist_ok')
+      CONST 'APPDATA'
+      CONST '~'
+
+    [Config.get_license_file_path] args=('cls',) names=('os', 'path', 'join', 'get_base_dir', 'LICENSE_FILE')
+      CONST '获取授权文件完整路径\n\nReturns:\n    str: 授权文件路径\n'
+
+    [Config.get_db_file_path] args=('cls',) names=('os', 'path', 'join', 'get_base_dir', 'DB_FILE')
+      CONST '获取数据库文件完整路径\n\nReturns:\n    str: 数据库文件路径\n'
+
+    [Config.get_log_file_path] args=('cls',) names=('os', 'path', 'join', 'get_base_dir')
+      CONST None
+      CONST 'log.txt'
+
+    [Config.get_crash_log_file_path] args=('cls',) names=('os', 'path', 'join', 'get_base_dir')
+      CONST None
+      CONST 'crash.log'
+
+    [Config.get_default_download_dir] args=('cls',) names=('DEFAULT_DOWNLOAD_DIR', 'os', 'path', 'isabs', 'join', 'get_base_dir', 'makedirs')
+      CONST '获取解析后的默认下载目录'
+      CONST 'download'
+      CONST True
+      CONST ('exist_ok')
+

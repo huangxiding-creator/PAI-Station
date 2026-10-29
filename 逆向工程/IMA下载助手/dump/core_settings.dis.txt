@@ -1,0 +1,281 @@
+===== core/settings.pyc =====
+
+# CODE <module>  args=()
+  0           RESUME                   0
+
+  1           LOAD_CONST               0 ('应用设置管理（使用数据库存储）\n\n此模块保持向后兼容，现在使用SQLite数据库而非JSON文件存储设置\n')
+              STORE_NAME               0 (__doc__)
+
+  5           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (None)
+              IMPORT_NAME              1 (os)
+              STORE_NAME               1 (os)
+
+  7           LOAD_CONST               1 (0)
+              LOAD_CONST               3 (('Config',))
+              IMPORT_NAME              2 (config)
+              IMPORT_FROM              3 (Config)
+              STORE_NAME               3 (Config)
+              POP_TOP
+
+  8           LOAD_CONST               1 (0)
+              LOAD_CONST               4 (('get_user_setting', 'set_user_setting', 'get_all_user_settings'))
+              IMPORT_NAME              4 (data.database)
+              IMPORT_FROM              5 (get_user_setting)
+              STORE_NAME               5 (get_user_setting)
+              IMPORT_FROM              6 (set_user_setting)
+              STORE_NAME               6 (set_user_setting)
+              IMPORT_FROM              7 (get_all_user_settings)
+              STORE_NAME               7 (get_all_user_settings)
+              POP_TOP
+
+ 10           BUILD_MAP                0
+              STORE_GLOBAL             8 (_settings)
+
+ 13           LOAD_CONST               9 ((None,))
+              LOAD_CONST               5 (<code object _resolve_download_dir at 0x000001DD45F6CF60, file "core\settings.py", line 13>)
+              MAKE_FUNCTION
+              SET_FUNCTION_ATTRIBUTE   1 (defaults)
+              STORE_NAME               9 (_resolve_download_dir)
+
+ 29           LOAD_CONST               6 (<code object load_settings at 0x000001DD462CB3C0, file "core\settings.py", line 29>)
+              MAKE_FUNCTION
+              STORE_NAME              10 (load_settings)
+
+ 43           LOAD_CONST               7 (<code object save_settings at 0x000001DD460D7600, file "core\settings.py", line 43>)
+              MAKE_FUNCTION
+              STORE_NAME              11 (save_settings)
+
+ 51           LOAD_CONST               9 ((None,))
+              LOAD_CONST               8 (<code object get_setting at 0x000001DD462961F0, file "core\settings.py", line 51>)
+              MAKE_FUNCTION
+              SET_FUNCTION_ATTRIBUTE   1 (defaults)
+              STORE_NAME              12 (get_setting)
+
+ 64           LOAD_NAME               10 (load_settings)
+              PUSH_NULL
+              CALL                     0
+              POP_TOP
+              RETURN_CONST             2 (None)
+
+## CODE _resolve_download_dir  args=('path', 'fallback')
+  13           RESUME                   0
+
+  15           LOAD_FAST                0 (path)
+               COPY                     1
+               TO_BOOL
+               POP_JUMP_IF_TRUE        30 (to L1)
+               POP_TOP
+               LOAD_FAST                1 (fallback)
+               COPY                     1
+               TO_BOOL
+               POP_JUMP_IF_TRUE        21 (to L1)
+               POP_TOP
+               LOAD_GLOBAL              0 (Config)
+               LOAD_ATTR                2 (get_default_download_dir)
+               PUSH_NULL
+               CALL                     0
+       L1:     STORE_FAST               2 (base)
+
+  16           LOAD_FAST                2 (base)
+               TO_BOOL
+               POP_JUMP_IF_TRUE        21 (to L2)
+
+  17           LOAD_GLOBAL              0 (Config)
+               LOAD_ATTR                2 (get_default_download_dir)
+               PUSH_NULL
+               CALL                     0
+               STORE_FAST               2 (base)
+
+  18   L2:     LOAD_GLOBAL              4 (os)
+               LOAD_ATTR                6 (path)
+               LOAD_ATTR                9 (isabs + NULL|self)
+               LOAD_FAST                2 (base)
+               CALL                     1
+               TO_BOOL
+               POP_JUMP_IF_TRUE        51 (to L3)
+
+  19           LOAD_GLOBAL              4 (os)
+               LOAD_ATTR                6 (path)
+               LOAD_ATTR               11 (join + NULL|self)
+               LOAD_GLOBAL              0 (Config)
+               LOAD_ATTR               12 (get_base_dir)
+               PUSH_NULL
+               CALL                     0
+               LOAD_FAST                2 (base)
+               CALL                     2
+               STORE_FAST               2 (base)
+
+  20   L3:     NOP
+
+  21   L4:     LOAD_GLOBAL              4 (os)
+               LOAD_ATTR               14 (makedirs)
+               PUSH_NULL
+               LOAD_FAST                2 (base)
+               LOAD_CONST               1 (True)
+               LOAD_CONST               2 (('exist_ok',))
+               CALL_KW                  2
+               POP_TOP
+
+  22           LOAD_FAST                2 (base)
+       L5:     RETURN_VALUE
+
+  --   L6:     PUSH_EXC_INFO
+
+  23           LOAD_GLOBAL             16 (OSError)
+               CHECK_EXC_MATCH
+               POP_JUMP_IF_FALSE       47 (to L8)
+               POP_TOP
+
+  24           LOAD_GLOBAL              0 (Config)
+               LOAD_ATTR                2 (get_default_download_dir)
+               PUSH_NULL
+               CALL                     0
+               STORE_FAST               3 (default_dir)
+
+  25           LOAD_GLOBAL              4 (os)
+               LOAD_ATTR               14 (makedirs)
+               PUSH_NULL
+               LOAD_FAST                3 (default_dir)
+               LOAD_CONST               1 (True)
+               LOAD_CONST               2 (('exist_ok',))
+               CALL_KW                  2
+               POP_TOP
+
+  26           LOAD_FAST                3 (default_dir)
+               SWAP                     2
+       L7:     POP_EXCEPT
+               RETURN_VALUE
+
+  23   L8:     RERAISE                  0
+
+  --   L9:     COPY                     3
+               POP_EXCEPT
+               RERAISE                  1
+ExceptionTable:
+  L4 to L5 -> L6 [0]
+  L6 to L7 -> L9 [1] lasti
+  L8 to L9 -> L9 [1] lasti
+
+## CODE load_settings  args=()
+ 29           RESUME                   0
+
+ 33           LOAD_GLOBAL              1 (get_all_user_settings + NULL)
+              CALL                     0
+              STORE_GLOBAL             1 (_settings)
+
+ 34           LOAD_CONST               1 ('download_dir')
+              LOAD_GLOBAL              2 (_settings)
+              CONTAINS_OP              0
+              POP_JUMP_IF_FALSE       52 (to L2)
+
+ 35           LOAD_GLOBAL              2 (_settings)
+              LOAD_CONST               1 ('download_dir')
+              BINARY_SUBSCR
+              STORE_FAST               0 (saved_dir)
+
+ 36           LOAD_GLOBAL              5 (_resolve_download_dir + NULL)
+              LOAD_FAST                0 (saved_dir)
+              CALL                     1
+              STORE_FAST               1 (resolved_dir)
+
+ 37           LOAD_FAST                1 (resolved_dir)
+              LOAD_GLOBAL              2 (_settings)
+              LOAD_CONST               1 ('download_dir')
+              STORE_SUBSCR
+
+ 38           LOAD_FAST_LOAD_FAST     16 (resolved_dir, saved_dir)
+              COMPARE_OP             119 (bool(!=))
+              POP_JUMP_IF_FALSE       12 (to L1)
+
+ 39           LOAD_GLOBAL              7 (set_user_setting + NULL)
+              LOAD_CONST               1 ('download_dir')
+              LOAD_FAST                1 (resolved_dir)
+              CALL                     2
+              POP_TOP
+
+ 42   L1:     LOAD_GLOBAL              2 (_settings)
+              RETURN_VALUE
+
+ 41   L2:     LOAD_GLOBAL              5 (_resolve_download_dir + NULL)
+              LOAD_CONST               2 (None)
+              CALL                     1
+              LOAD_GLOBAL              2 (_settings)
+              LOAD_CONST               1 ('download_dir')
+              STORE_SUBSCR
+
+ 42           LOAD_GLOBAL              2 (_settings)
+              RETURN_VALUE
+
+## CODE save_settings  args=('settings',)
+ 43           RESUME                   0
+
+ 46           LOAD_FAST                0 (settings)
+              LOAD_ATTR                1 (items + NULL|self)
+              CALL                     0
+              GET_ITER
+      L1:     FOR_ITER                44 (to L4)
+              UNPACK_SEQUENCE          2
+              STORE_FAST_STORE_FAST   18 (key, value)
+
+ 47           LOAD_FAST                1 (key)
+              LOAD_CONST               1 ('download_dir')
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE       11 (to L2)
+              LOAD_GLOBAL              3 (_resolve_download_dir + NULL)
+              LOAD_FAST                2 (value)
+              CALL                     1
+              JUMP_FORWARD             1 (to L3)
+      L2:     LOAD_FAST                2 (value)
+      L3:     STORE_FAST               3 (normalized)
+
+ 48           LOAD_GLOBAL              5 (set_user_setting + NULL)
+              LOAD_FAST_LOAD_FAST     19 (key, normalized)
+              CALL                     2
+              POP_TOP
+
+ 49           LOAD_FAST                3 (normalized)
+              LOAD_GLOBAL              6 (_settings)
+              LOAD_FAST                1 (key)
+              STORE_SUBSCR
+              JUMP_BACKWARD           46 (to L1)
+
+ 46   L4:     END_FOR
+              POP_TOP
+              RETURN_CONST             2 (None)
+
+## CODE get_setting  args=('key', 'default')
+ 51           RESUME                   0
+
+ 54           LOAD_FAST                0 (key)
+              LOAD_GLOBAL              0 (_settings)
+              CONTAINS_OP              0
+              POP_JUMP_IF_FALSE        9 (to L1)
+
+ 55           LOAD_GLOBAL              0 (_settings)
+              LOAD_FAST                0 (key)
+              BINARY_SUBSCR
+              RETURN_VALUE
+
+ 57   L1:     LOAD_GLOBAL              3 (get_user_setting + NULL)
+              LOAD_FAST_LOAD_FAST      1 (key, default)
+              CALL                     2
+              STORE_FAST               2 (value)
+
+ 58           LOAD_FAST                0 (key)
+              LOAD_CONST               1 ('download_dir')
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE       11 (to L2)
+
+ 59           LOAD_GLOBAL              5 (_resolve_download_dir + NULL)
+              LOAD_FAST_LOAD_FAST     33 (value, default)
+              CALL                     2
+              STORE_FAST               2 (value)
+
+ 60   L2:     LOAD_FAST                2 (value)
+              LOAD_GLOBAL              0 (_settings)
+              LOAD_FAST                0 (key)
+              STORE_SUBSCR
+
+ 61           LOAD_FAST                2 (value)
+              RETURN_VALUE

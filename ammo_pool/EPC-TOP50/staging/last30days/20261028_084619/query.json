@@ -1,0 +1,109 @@
+{
+ "artifacts": {
+  "corpus_in_export": false,
+  "grounding": [],
+  "hiring_signals_mode": false,
+  "plan_source": "deterministic",
+  "pre_research_flags_present": false,
+  "resolved": {
+   "context": "",
+   "entity": "中石油系与中石化系能源化工集团军 风险 争议 问题",
+   "github_repos": [],
+   "github_user": "",
+   "subreddits": [],
+   "trustpilot_domain": "",
+   "x_handle": ""
+  }
+ },
+ "clusters": [],
+ "errors_by_source": {
+  "polymarket": "URL Error: timed out; URL Error: timed out",
+  "reddit": "URL Error: timed out"
+ },
+ "freshness_verdicts": [],
+ "generated_at": "2026-10-28T01:05:07.043036+00:00",
+ "items_by_source": {
+  "github": [],
+  "hackernews": [],
+  "polymarket": [],
+  "reddit": []
+ },
+ "library_context": [],
+ "provider_runtime": {
+  "planner_model": "deterministic",
+  "reasoning_provider": "local",
+  "rerank_model": "local-score"
+ },
+ "query_plan": {
+  "cluster_mode": "none",
+  "freshness_mode": "evergreen_ok",
+  "intent": "concept",
+  "notes": [
+   "fallback-plan"
+  ],
+  "raw_topic": "中石油系与中石化系能源化工集团军 风险 争议 问题",
+  "source_weights": {
+   "github": 0.25,
+   "hackernews": 0.25,
+   "polymarket": 0.25,
+   "reddit": 0.25
+  },
+  "subqueries": [
+   {
+    "label": "primary",
+    "ranking_query": "What recent evidence from the last 30 days is most relevant to 中石油系与中石化系能源化工集团军 风险 争议 问题?",
+    "search_query": "中石油系与中石化系能源化工集团军 风险 争议 问题",
+    "sources": [
+     "reddit",
+     "hackernews",
+     "github",
+     "polymarket"
+    ],
+    "weight": 1.0
+   }
+  ]
+ },
+ "range_from": "2026-09-28",
+ "range_to": "2026-10-28",
+ "ranked_candidates": [],
+ "source_status": {
+  "github": {
+   "at": "2026-10-28T01:05:05.409242Z",
+   "attempted": true,
+   "items_returned": 0,
+   "source": "github",
+   "state": "no-results"
+  },
+  "hackernews": {
+   "at": "2026-10-28T01:05:05.409483Z",
+   "attempted": true,
+   "items_returned": 0,
+   "source": "hackernews",
+   "state": "no-results"
+  },
+  "polymarket": {
+   "at": "2026-10-28T01:05:05.409380Z",
+   "attempted": true,
+   "detail": "URL Error: timed out; URL Error: timed out",
+   "fix_hint": "doctor",
+   "items_returned": 0,
+   "source": "polymarket",
+   "state": "timeout"
+  },
+  "reddit": {
+   "at": "2026-10-28T01:05:05.409581Z",
+   "attempted": true,
+   "detail": "URL Error: timed out",
+   "fix_hint": "doctor",
+   "items_returned": 0,
+   "source": "reddit",
+   "state": "timeout"
+  }
+ },
+ "topic": "中石油系与中石化系能源化工集团军 风险 争议 问题",
+ "warnings": [
+  "No candidates survived retrieval and ranking.",
+  "Evidence is thin for this topic.",
+  "Some sources failed: polymarket, reddit"
+ ]
+}

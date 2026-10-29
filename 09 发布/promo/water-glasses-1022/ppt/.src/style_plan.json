@@ -1,0 +1,51 @@
+{
+  "archetype": "工程仪表 × 销售大片（深水蓝暗场，与官网/宣传片同一品牌语言）",
+  "theme": "deep-water-console",
+  "palette": {
+    "paper": "#061A2E",
+    "ink": "#EAF4FB",
+    "primary": "#1878D8",
+    "accent": "#F0A878",
+    "support": "#48C0D8",
+    "muted": "#7FA3BD",
+    "line": "rgba(72,192,216,0.28)",
+    "card": "#0B2A46"
+  },
+  "fonts": {
+    "display": "\"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+    "body": "\"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+    "numeric": "Consolas, \"Microsoft YaHei\", monospace"
+  },
+  "voice": "克制的工程自信：短句、数字说话、不用感叹号、不用营销空话",
+  "preferred_layouts": ["cover-hero", "split-scene", "statement-product", "table", "big-numbers", "console-duo", "chart-split", "quadrant", "list-image", "cta"],
+  "preferred_charts": ["横向条形对比（成本）", "对数尺度规模条（知识资产）"],
+  "required_content_blocks": ["痛点对比", "三硬数字", "传统模式对比表", "核心功能罗列", "四壁垒", "知识产权合规表述", "行动号召"],
+  "image_style": "真实产品照片与线上后台实拍，不做合成图；图片带细线边框与深色投影，像被固定在仪表台上",
+  "tone": "confident",
+  "weight": "bold-display-regular-body",
+  "density": "medium-low（每页一个说服目标，留白即权威）",
+  "layout_plan": [
+    { "id": "cover", "layout": "cover-hero" },
+    { "id": "pain", "layout": "split-scene" },
+    { "id": "shift", "layout": "statement-product" },
+    { "id": "proof", "layout": "hud-flow" },
+    { "id": "compare", "layout": "table" },
+    { "id": "value-frontline", "layout": "big-numbers" },
+    { "id": "value-manager", "layout": "console-duo" },
+    { "id": "value-market", "layout": "chart-split" },
+    { "id": "value-industry", "layout": "policy-structure" },
+    { "id": "functions", "layout": "list-image" },
+    { "id": "moat-overview", "layout": "quadrant" },
+    { "id": "moat-ranging", "layout": "algo-deep" },
+    { "id": "moat-knowledge", "layout": "chart-numbers" },
+    { "id": "ip-trust", "layout": "trust-list" },
+    { "id": "close", "layout": "cta" }
+  ],
+  "lockups": [
+    "左文右图：左侧 52% 文字段（标题+要点），右侧满高图片带细边框",
+    "全幅图+底部渐变遮罩：标题坐遮罩上，左下对齐"
+  ],
+  "css_variables": {
+    ":root": "--paper:#061A2E; --ink:#EAF4FB; --primary:#1878D8; --support:#48C0D8; --accent:#F0A878; --muted:#7FA3BD; --line:rgba(72,192,216,0.28); --card:#0B2A46; --font-display:\"Microsoft YaHei\",\"PingFang SC\",sans-serif; --font-body:\"Microsoft YaHei\",\"PingFang SC\",sans-serif; --font-num:Consolas,\"Microsoft YaHei\",monospace;"
+  }
+}

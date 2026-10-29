@@ -1,0 +1,177 @@
+{
+ "all_book118": [
+  {
+   "url": "https://static.book118.com/user_center_v1/static/home/common/css/common.css?v=7.3.0.20250926",
+   "status": 200,
+   "body_head": "@charset \"UTF-8\";\n*{margin:0;padding:0;box-sizing: content-box;}\nbody{min-width: 1200px;}\nbody,textarea{font-family:MicrosoftYaHei,arial,helvetica,sans-serif;font-size:14px}\nbody{background-color: #F2F5F9;}\nh1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}\na{color:#666;text-decoration:none;cursor: pointer;}\na:active,a:hover{outline:0}\nb,strong{font-weight:600}\nli{list-style:none}\ntable{border-c"
+  },
+  {
+   "url": "https://static.book118.com/user_center_v1/static/home/base/css/detail.css?v=7.3.0.20260114",
+   "status": 200,
+   "body_head": "#header{\n    position: relative;\n    background-color: #2878FF;\n}\n#header_fixed{\n    position: fixed;\n    top: 0;\n    background-color: #fff;\n    border-bottom: 1px solid #ddd;\n}\n#header_fixed .msg{display: none;}\n.header{\n    z-index: 99;\n    width: 100%;height: 68px;\n}\n.header .logo{\n    float: left;\n    padding: 14px 0;\n    width: 152px;height: 40px;\n}\n.header .logo a{\n    display: block;\n    o"
+  },
+  {
+   "url": "https://static.book118.com/user_center_v1/static/home/detail/css/detail.css?v=7.3.0.20251021",
+   "status": 200,
+   "body_head": "#header_fixed .search{\r\n    width: 840px;\r\n    margin: 0 0 0 6px;\r\n}\r\n#header_fixed .search .search-group{\r\n    width: 835px;\r\n}\r\n#header_fixed .search .search-group span {\r\n    float: left;\r\n    margin: 0 44px 0 0;\r\n}\r\n#header_fixed .search .search-group span a {\r\n    display: inline-block;*zoom:1;_display:inline;\r\n    height: 40px;\r\n    line-height: 40px;\r\n    margin: 0 14px;\r\n    font-size: 16p"
+  },
+  {
+   "url": "https://static.book118.com/user_center_v1/static/plugin/jquery/jquery.min.js",
+   "status": 200,
+   "body_head": "/*! jQuery v1.8.3 jquery.com | jquery.org/license */\n(function(e,t){function _(e){var t=M[e]={};return v.each(e.split(y),function(e,n){t[n]=!0}),t}function H(e,n,r){if(r===t&&e.nodeType===1){var i=\"data-\"+n.replace(P,\"-$1\").toLowerCase();r=e.getAttribute(i);if(typeof r==\"string\"){try{r=r===\"true\"?!0:r===\"false\"?!1:r===\"null\"?null:+r+\"\"===r?+r:D.test(r)?v.parseJSON(r):r}catch(s){}v.data(e,n,r)}else"
+  },
+  {
+   "url": "https://static.book118.com/user_center_v1/static/home/common/images/icon/format.png?v=20210325",
+   "status": 200,
+   "body_head": ""
+  },
+  {
+   "url": "https://static.book118.com/user_center_v1/static/home/common/images/loading.gif",
+   "status": 200,
+   "body_head": ""
+  },
+  {
+   "url": "https://static.book118.com/user_center_v1/static/plugin/layer/layer.js",
+   "status": 200,
+   "body_head": "/*! layer-v3.1.1 Web弹层组件 MIT License  http://layer.layui.com/  By 贤心 */\n ;!function(e,t){\"use strict\";var i,n,a=e.layui&&layui.define,o={getPath:function(){var e=document.currentScript?document.currentScript.src:function(){for(var e,t=document.scripts,i=t.length-1,n=i;n>0;n--)if(\"interactive\"===t[n].readyState){e=t[n].src;break}return e||t[i].src}();return e.substring(0,e.lastIndexOf(\"/\")+1)}(),co"
+  },
+  {
+   "url": "https://static.book118.com/open/static/webpreview/webpreview.js?v=7.3.0.20201110",
+   "status": 200,
+   "body_head": "if(!Array.prototype.indexOf){\n    Array.prototype.indexOf = function(obj,start){\n        for(var index=(start || 0), j = this.length; index < j;index ++ ){\n            if(this[index]===obj){\n                return index;\n            }\n        }\n        return -1;\n    }\n}\n;(function (root,$,PATH) {\n    root.WebPreview = {\n        /**\n         * 基础数据配置\n         * @param Base.pick: 主节点\n         * @pa"
+  },
+  {
+   "url": "https://static.book118.com/user_center_v1/static/util/js/util.js?v=7.3.0.20250923",
+   "status": 200,
+   "body_head": "var util = {\n\tcallback: {},\n\tfiles: {\n\t\tjs: [],\n\t\tcss: []\n\t},\n\tversion: '1.0.0',\n\tgetIeVersion: function() {\n\t\tvar userAgent = navigator.userAgent,\n\t\t\treIE = new RegExp(\"MSIE (\\\\d+\\\\.\\\\d+);\"),\n\t\t\tie_version = 0;\n\t\tif (userAgent.indexOf('compatible') > -1 && userAgent.indexOf('MSIE') > -1) {\n\t\t\treIE.test(userAgent);\n\t\t\tie_version = parseFloat(RegExp[\"$1\"]);\n\t\t}else if (userAgent.indexOf('Trident') "
+  },
+  {
+   "url": "https://static.book118.com/user_center_v1/static/home/detail/js/detail.js?v=7.3.0.20260924",
+   "status": 200,
+   "body_head": "var detail = {\n    init: function(){\n        var that = this;\n        owa.push(['setGlobalEventProperty','aid', base.detail.aid]);\n        that.reduce_re();\n        that.title();\n        that.intro();\n        that.preview();\n        that.auth();\n        that.activity();\n        that.userMessage();\n        that.comment();\n        that.recommend();\n        that.downloadTips();\n        that.count();\n"
+  },
+  {
+   "url": "https://static.book118.com/user_center_v1/static/home/common/js/common.js?v=7.3.0.20260914",
+   "status": 200,
+   "body_head": "var header = {\n    init: function () {\n        var that = this;\n        that.drop();\n        that.logo();\n        that.nav();\n        that.menu();\n        if( base.spider == 0 ){\n            setTimeout(function(){\n                that.fixed();       \n            },500);\n        }\n        that.compare();\n        if(typeof weixin_upload_status != 'undefined' && weixin_upload_status>0) {\n            "
+  },
+  {
+   "url": "https://static.book118.com/open/wd.js?fb04f36f1e0ee36c30fab46eec18d62f&v=7.3.0.2.0.0.4",
+   "status": 200,
+   "body_head": "var split;\r\nsplit = split || function (undef) {\r\n    var nativeSplit = String.prototype.split,\r\n        compliantExecNpcg = /()??/.exec(\"\")[1] === undef,\r\n        self;\r\n    self = function (str, separator, limit) {\r\n        if (Object.prototype.toString.call(separator) !== \"[object RegExp]\") {\r\n            return nativeSplit.call(str, separator, limit);\r\n        }\r\n        var output = [],\r\n     "
+  },
+  {
+   "url": "https://static.book118.com/user_center_v1/static/plugin/layer/theme/default/layer.css?v=3.1.1",
+   "status": 200,
+   "body_head": ".layui-layer-imgbar,.layui-layer-imgtit a,.layui-layer-tab .layui-layer-title span,.layui-layer-title {\n    text-overflow: ellipsis;\n    white-space: nowrap\n}\n\nhtml #layuicss-layer {\n    display: none;\n    position: absolute;\n    width: 1989px\n}\n\n.layui-layer,.layui-layer-shade {\n    position: fixed;\n    pointer-events: auto\n}\n\n.layui-layer-shade {\n    top: 0;\n    left: 0;\n    width: 100%;\n    hei"
+  },
+  {
+   "url": "https://static.book118.com/user_center_v1/static/home/detail/font/icon-detail/iconfont.woff",
+   "status": 200,
+   "body_head": ""
+  },
+  {
+   "url": "https://static.book118.com/user_center_v1/static/home/detail/font/icon-guarantee/iconfont.woff",
+   "status": 200,
+   "body_head": ""
+  },
+  {
+   "url": "https://static.book118.com/user_center_v1/static/home/base/font/icon-header/iconfont.woff",
+   "status": 200,
+   "body_head": ""
+  },
+  {
+   "url": "https://static.book118.com/user_center_v1/static/home/detail/js/preview.pic.js?v=1.0.020251225",
+   "status": 200,
+   "body_head": "\r\nvar PREVIEW_PAGE = { \r\n        actual: base.detail.preview.pic.actual_page, \r\n        preview: base.detail.preview.pic.preview_page\r\n    },\r\n    PREVIEW_THEME = 'default',\r\n    PREVIEW_ONLYREAD = '',\r\n    PREVIEW_MARK_FLAG = 1,\r\n    PREVIEW_TEST_CONVERSION_READPAGE = parseInt('0'), //限定页数\r\n    PREVIEW_DATA = { \r\n        project_id: 1, //1:max站\r\n        aid: base.detail.preview.pic.aid,\r\n        "
+  },
+  {
+   "url": "https://static.book118.com/user_center_v1/static/lib/images/loading.gif",
+   "status": 200,
+   "body_head": ""
+  },
+  {
+   "url": "https://static.book118.com/open/static/webpreview/theme/default/webpreview.css?v=2023.07.17",
+   "status": 200,
+   "body_head": ".webpreview-item{\n    position: relative;\n    font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif;\n    text-align: center;\n}\n.webpreview-item .loading{\n    position: relative;\n    width: 100%; height: 600px;\n    background: url(loading.gif) no-repeat center center;\n}\n.webpreview-item .loading span{\n    position: absolute;\n    top: 50%;left: 50%;\n    margin: 40px 0 0 -110px;\n    display: bl"
+  },
+  {
+   "url": "https://static.book118.com/open/static/webpreview/theme/default/loading.gif",
+   "status": 200,
+   "body_head": ""
+  },
+  {
+   "url": "https://max.book118.com/user_center_v1/detail/View/getViewLabel.html?aid=6115103231005025&t=8996781c247cede6c40127d29ea9f34e",
+   "status": 200,
+   "body_head": "{\"code\":0,\"data\":[],\"message\":\"error\"}"
+  },
+  {
+   "url": "https://api.book118.com//ycl/Recommend/getData?callback=jQuery183028310747174022954_1792639524192&aid=6115103231005025&t=8996781c247cede6c40127d29ea9f34e&_=1792639524445",
+   "status": 200,
+   "body_head": "jQuery183028310747174022954_1792639524192({\"code\":200,\"message\":\"\",\"data\":[{\"aid\":\"8125111134007100\",\"date\":\"2025-06-18\",\"vip_type\":1,\"url\":\"\\/html\\/2025\\/0618\\/8125111134007100.shtm\",\"title\":\"大一新生入学军训心得体会范本.doc\",\"doc_score\":\"3.5\",\"pagenumber\":\"3\",\"filetype\":\"doc\",\"click\":\"12\",\"litpic\":\"https:\\/\\/img.book118.com\\/sr2\\/M00\\/38\\/1E\\/wKh2E2hSdjiAffETAABPahlMKw0798_146x206.png\"},{\"aid\":\"61000300210111"
+  },
+  {
+   "url": "https://max.book118.com/index.php?m=Ajax&a=docHits&aid=6115103231005025",
+   "status": 200,
+   "body_head": "0"
+  },
+  {
+   "url": "https://static.book118.com/user_center_v1/static/home/detail/font/icon-start/iconfont.woff",
+   "status": 200,
+   "body_head": ""
+  },
+  {
+   "url": "https://openapi.book118.com/getPreview.html?&project_id=1&aid=517914739&t=8996781c247cede6c40127d29ea9f34e&view_token=mF72t6fHpxRnXBHR99i@Z5UtaQ9xHhHo6fIXDiC_2nuLcO_EAaNAwcPpDnBAPyQ=&page=1&callback=j",
+   "status": 200,
+   "body_head": "jQuery183028310747174022954_1792639524193({\"status\":200,\"message\":\"ok\",\"data\":{\"1\":\"\\/\\/view-cache.book118.com\\/view25\\/M03\\/34\\/1B\\/wKh2HWOhhYiALNupAADZMax2XZA891.png\",\"2\":\"\\/\\/view-cache.book118.com\\/view27\\/M02\\/2A\\/26\\/view_1_Q7QREWT6n6WYkr65WgyJO_izOCkZYbrJlnJX7055IxY=.png?v=20231026\",\"3\":\"\\/\\/view-cache.book118.com\\/view26\\/M02\\/2A\\/1D\\/wKh2EmOhhYaAMH2GAADhcHKbQDY376.png\"},\"pages\":{\"preview\""
+  },
+  {
+   "url": "https://static.book118.com/open/static/statistics/read.js?v=1.0.07.3.0.20231128",
+   "status": 200,
+   "body_head": "var read_stat_config = {\n\tkey: 'LOCAL_PUSH_DATA',\n\tgetStorage: function () {\n\t\tvar local = localStorage.getItem(read_stat_config.key);\n\t\treturn local ? JSON.parse(local) : [];\n\t},\n\tm: location.host.indexOf('m.book118.com') > -1 || location.host.indexOf('mpub.book118.com') > -1 || location.host.indexOf('m-dev.book118.com') > -1,\n\tenv: ['max.book118.com', 'm.book118.com'].indexOf(location.host) > -1"
+  },
+  {
+   "url": "https://e-s.book118.com/modules/base/js/owa.tracker-combined-min.js?v=1.0.020200902",
+   "status": 200,
+   "body_head": "if(!this.JSON){this.JSON={}}(function(){function f(n){return n<10?\"0\"+n:n}if(typeof Date.prototype.toJSON!==\"function\"){Date.prototype.toJSON=function(key){return isFinite(this.valueOf())?this.getUTCFullYear()+\"-\"+f(this.getUTCMonth()+1)+\"-\"+f(this.getUTCDate())+\"T\"+f(this.getUTCHours())+\":\"+f(this.getUTCMinutes())+\":\"+f(this.getUTCSeconds())+\"Z\":null};String.prototype.toJSON=Number.prototype.toJS"
+  },
+  {
+   "url": "https://max.book118.com/user_center_v1/detail/Viewrecommendation/showRecommend.html?aid=6115103231005025&project=1&t=8996781c247cede6c40127d29ea9f34e&order=1",
+   "status": 200,
+   "body_head": "{\"code\":200,\"data\":{\"data\":[{\"title\":\"大一新生入学军训心得体会\",\"url\":\"\\/search.html?q=大一新生入学军训心得体会\",\"show_keyword\":\"大一新生入学军训心得体会\",\"show_title\":\"大一新生入学军训心得体会\"},{\"title\":\"大一新生军训的心得体会\",\"url\":\"\\/search.html?q=大一新生军训的心得体会\",\"show_keyword\":\"大一新生军训的心得体会\",\"show_title\":\"大一新生军训的心得体会\"},{\"title\":\"大一新生军训心得体会\",\"url\":\"\\/search.html?q=大一新生军训心得体会\",\"show_keyword\":\"大一新生军训心得体会\",\"show_title\":\"大一新生军训心得体会\"},{\"title\":\"新生入学军训的心得体会\",\""
+  },
+  {
+   "url": "https://api.book118.com/applet/browse/getReadTimeConfig?callback=jQuery183028310747174022954_1792639524193&_=1792639524684",
+   "status": 200,
+   "body_head": "jQuery183028310747174022954_1792639524193({\"code\":200,\"message\":\"获取成功\",\"data\":{\"time\":5,\"maxTime\":1800,\"lastTime\":1792639524}});"
+  },
+  {
+   "url": "https://view-cache.book118.com/view27/M02/2A/26/view_1_Q7QREWT6n6WYkr65WgyJO_izOCkZYbrJlnJX7055IxY=.png?v=20231026",
+   "status": 200,
+   "body_head": ""
+  },
+  {
+   "url": "https://static.book118.com/user_center_v1/static/home/sidebar/css/index.css?v=1.0.020250711",
+   "status": 200,
+   "body_head": "#sidebar {\n    z-index: 90;\n    position: fixed;\n    bottom: 60px;right: 50%;\n    width: 70px; min-height: 374px;\n    margin: 0 -740px 0 0;\n}\n#sidebar .sidebar-vip {\n    width: 88px;height: 98px;\n    margin: 0 0 0 -9px;\n}\n#sidebar .sidebar-vip>a {\n    display: block;\n    overflow: hidden;\n    animation: shake-time 2s ease 6;\n}\n#sidebar .sidebar-vip a img {\n    width: 88px;height: 88px;\n}\n#sidebar "
+  },
+  {
+   "url": "https://static.book118.com/user_center_v1/static/home/sidebar/js/index.js?v=1.0.020260914",
+   "status": 200,
+   "body_head": "var sidebar = {\n    sI:'',\n    mold: '',\n    init: function (mold) {\n        var that = this;\n        if (typeof SIDEBAR_INIT == 'undefined' || SIDEBAR_INIT === true) {\n            that.mold = typeof mold != 'undefined' ? mold : '';\n            that.layout();\n        }\n    },\n    layout: function () { //渲染\n        var that = this,\n            c = '<div id=\"sidebar\">' +\n                    '<div cl"
+  },
+  {
+   "url": "https://max.book118.com/user_center_v1/detail/Viewrecommendation/showRecommend.html?aid=6115103231005025&project=1&t=8996781c247cede6c40127d29ea9f34e&order=3",
+   "status": 200,
+   "body_head": "{\"code\":200,\"data\":{\"data\":{\"title\":\"知识库\",\"litpic\":\"\\/\\/img.book118.com\\/sr2\\/M01\\/05\\/0A\\/wKh2E2oXvfaAUCTkAADC3v2mHpY235.jpg\",\"url\":\"https:\\/\\/www.maxknow.cn\\/html\\/advertisement.html?channel=max&scene=customer\"},\"key\":\"pic\",\"explain\":\"知识库\",\"order\":3,\"total\":8},\"message\":\"ok\"}"
+  }
+ ],
+ "nav_raw_len": 47463,
+ "raw_has_517914739": true,
+ "raw_has_view_token": true,
+ "raw_has_getPreview": false,
+ "raw_has_preview_data": false,
+ "raw_has_PREVIEW_DATA": false,
+ "aid_context": "",
+ "view_token_context": ""
+}

@@ -1,0 +1,55 @@
+{
+  "$schema_note": "P0-5 (1028) 免费盯梢配置 — changedetection.io watcher 模型 (Apache-2.0 开源同构): url+recheck_interval+变更回调. 全站零浏览器铁律 → 用 monitor_runner.py 纯 HTTP 轮询实现 (无常驻进程, 幂等, 状态只增); 如后续需 JS 渲染源可换 changedetection.io 本体 (wheel 0.60.10 pip 可装, 本机无 docker, 装机评估在案). 所有 URL 1028 实测可达 (数字零造假): HTTP 200 直连.",
+  "engine": "changedetection_monitor",
+  "state_file": "E:/AI-Station/reforge_factory/monitor_state.json",
+  "events_log": "E:/AI-Station/reforge_factory/monitor_events.jsonl",
+  "channel_invocations_ledger": "E:/AI-Station/reforge_factory/channel_invocations.jsonl",
+  "wecom_notify_tool": "E:/AI-Station/tools/notify_approval_wecom.py",
+  "proxy_mode": "auto",
+  "callback_on_change": [
+    "channel_invocations_append",
+    "wecom_notify"
+  ],
+  "watchers": [
+    {
+      "id": "stdsamr_gb_list_shuili",
+      "name": "国家标准全文公开系统-水利类新发布列表(搜索结果页)",
+      "url": "https://openstd.samr.gov.cn/bzgk/gb/std_list?p.p1=0&p.p90=circulation_date&p.p91=desc&p.p2=%E6%B0%B4%E5%88%A9",
+      "tags": ["标准定额", "stdsamr"],
+      "recheck_interval_minutes": 720,
+      "note": "1028实测 HTTP 200 direct 55,558字节; std-samr 技能同源站"
+    },
+    {
+      "id": "mohurd_gzdt",
+      "name": "住建部-工作动态列表页",
+      "url": "https://www.mohurd.gov.cn/xinwen/gzdt/",
+      "tags": ["住建部", "政策动态"],
+      "recheck_interval_minutes": 720,
+      "note": "1028实测 HTTP 200 direct 6,227字节; /gongkai/zhengce/ 路径纯HTTP被拒(0), 此路径放行"
+    },
+    {
+      "id": "ceca_org_cn",
+      "name": "中国建设工程造价管理协会-首页(造价行业官方)",
+      "url": "http://www.ceca.org.cn/",
+      "tags": ["造价", "行业协会"],
+      "recheck_interval_minutes": 1440,
+      "note": "1028实测 HTTP 200 direct 3,710字节"
+    },
+    {
+      "id": "stdsamr_home",
+      "name": "国家标准全文公开系统-首页",
+      "url": "https://openstd.samr.gov.cn/bzgk/gb/index",
+      "tags": ["标准定额", "stdsamr"],
+      "recheck_interval_minutes": 1440,
+      "note": "1028实测 HTTP 200 direct 95,403字节"
+    },
+    {
+      "id": "guangxi_cost_station",
+      "name": "广西建设工程造价管理站-省级造价站代表源",
+      "url": "https://www.gxzj.com.cn/",
+      "tags": ["造价", "省站"],
+      "recheck_interval_minutes": 1440,
+      "note": "1028实测 HTTP 200 direct 2,609字节; 江苏 jscost.cn 仅578字节壳页弃用, 北京404弃用, mwr/广东住建厅纯HTTP 0 弃用 — 如实记录. 1028落地当日实证: 首页轮播元素分钟级变化会触发高频告警 (10分钟内一次真实变更落账), 生产挂cron前建议为本源加 include_regex 收窄正文区"
+    }
+  ]
+}

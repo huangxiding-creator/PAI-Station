@@ -2,28 +2,66 @@
  "axis": "C",
  "sensor": "channel_matrix",
  "campaign": "EPC-OVERSEAS",
- "channels_hit": 1,
- "channels_total": 31,
- "hit_ratio": 0.0323,
+ "channels_hit": 6,
+ "channels_total": 32,
+ "hit_ratio": 0.1875,
  "hit_channels": [
+  {
+   "id": "manus",
+   "name": "Manus 军团",
+   "chars": 57205,
+   "engines": [
+    "manus"
+   ]
+  },
+  {
+   "id": "ima_public",
+   "name": "ima 公开知识库",
+   "chars": 178345220,
+   "engines": [
+    "ima_public"
+   ]
+  },
   {
    "id": "localfiles",
    "name": "本地文件库",
-   "chars": 422766,
+   "chars": 1035531,
    "engines": [
-    "localfiles:rss"
+    "localfiles"
+   ]
+  },
+  {
+   "id": "corpus_stores",
+   "name": "存量语料库",
+   "chars": 44358781,
+   "engines": [
+    "corpus_stores"
+   ]
+  },
+  {
+   "id": "openalex",
+   "name": "OpenAlex 学术API(免key)",
+   "chars": 39703,
+   "engines": [
+    "openalex"
+   ]
+  },
+  {
+   "id": "arxiv",
+   "name": "arXiv 学术API(免key)",
+   "chars": 24345,
+   "engines": [
+    "arxiv"
    ]
   }
  ],
  "miss_list": [
-  "Manus 军团",
   "搜狗微信",
   "秘塔学术",
   "洞见研报",
   "官网爬虫",
   "视频文稿",
   "ima 知识库",
-  "ima 公开知识库",
   "微信读书",
   "飞书语料",
   "微信本地数据",
@@ -32,7 +70,6 @@
   "WebSearch",
   "涉诉检索",
   "CNKI 论文",
-  "存量语料库",
   "政府名录线",
   "E-OSCAR 情报引擎",
   "CLI 化栈",
@@ -43,15 +80,10 @@
   "网页搜索项目注册表(8角度扫荡111候选+8本机在册=119项)",
   "夸克网盘账号面(扫码授权+转存四步+列目录+下载直链+签到保活)",
   "AnySearch实时搜索(web+垂直域17域+并发批量+网页抽取, 匿名免鉴权)",
-  "OpenAlex 学术API(免key)",
   "Semantic Scholar 学术API(S2, 免key)",
-  "arXiv 学术API(免key)"
+  "KB-HARVEST 收割引擎(文库/book118/doc88 检索聚合)"
  ],
  "miss_detail": [
-  {
-   "id": "manus",
-   "name": "Manus 军团"
-  },
   {
    "id": "sougo",
    "name": "搜狗微信"
@@ -75,10 +107,6 @@
   {
    "id": "ima",
    "name": "ima 知识库"
-  },
-  {
-   "id": "ima_public",
-   "name": "ima 公开知识库"
   },
   {
    "id": "weread",
@@ -111,10 +139,6 @@
   {
    "id": "cnki",
    "name": "CNKI 论文"
-  },
-  {
-   "id": "corpus_stores",
-   "name": "存量语料库"
   },
   {
    "id": "govlist",
@@ -157,89 +181,104 @@
    "name": "AnySearch实时搜索(web+垂直域17域+并发批量+网页抽取, 匿名免鉴权)"
   },
   {
-   "id": "openalex",
-   "name": "OpenAlex 学术API(免key)"
-  },
-  {
    "id": "semantic_scholar",
    "name": "Semantic Scholar 学术API(S2, 免key)"
   },
   {
-   "id": "arxiv",
-   "name": "arXiv 学术API(免key)"
+   "id": "kb_harvest",
+   "name": "KB-HARVEST 收割引擎(文库/book118/doc88 检索聚合)"
   }
  ],
  "new_channel_queue": [],
  "miss_in_queue": [],
- "miss_not_in_queue": [
-  "Manus 军团",
-  "搜狗微信",
-  "秘塔学术",
-  "洞见研报",
-  "官网爬虫",
-  "视频文稿",
-  "ima 知识库",
-  "ima 公开知识库",
-  "微信读书",
-  "飞书语料",
-  "微信本地数据",
-  "微信4.x加密库",
-  "360浏览器画像",
-  "WebSearch",
-  "涉诉检索",
-  "CNKI 论文",
-  "存量语料库",
-  "政府名录线",
-  "E-OSCAR 情报引擎",
-  "CLI 化栈",
-  "网盘聚合发现",
-  "全套教材语料库",
-  "免key中文多引擎检索",
-  "电子书渠道族(两篇文章111站+Arc K扫荡105站=216站纳册)",
-  "网页搜索项目注册表(8角度扫荡111候选+8本机在册=119项)",
-  "夸克网盘账号面(扫码授权+转存四步+列目录+下载直链+签到保活)",
-  "AnySearch实时搜索(web+垂直域17域+并发批量+网页抽取, 匿名免鉴权)",
-  "OpenAlex 学术API(免key)",
-  "Semantic Scholar 学术API(S2, 免key)",
-  "arXiv 学术API(免key)"
+ "channel_invocations": 34,
+ "invoked_channels": [
+  "anysearch",
+  "arxiv",
+  "browser360",
+  "chinatextbook",
+  "cli_stack",
+  "cnki",
+  "corpus_stores",
+  "court",
+  "djyanbao",
+  "ebook_library",
+  "eoscar",
+  "govlist",
+  "ima",
+  "ima_public",
+  "kb_harvest",
+  "lark",
+  "localfiles",
+  "manus",
+  "metaso",
+  "openalex",
+  "pansou",
+  "quark_pan",
+  "search_library",
+  "semantic_scholar",
+  "sougo",
+  "video",
+  "websearch",
+  "website",
+  "wechat4",
+  "wechat_local",
+  "weread",
+  "zh_search_pro"
  ],
- "channel_waivers": [],
- "waived_miss_list": [],
- "waived_but_hit": [],
- "queue_path": "E:\\AI-Station\\ammo_pool\\EPC-OVERSEAS\\completeness\\C_axis_queue.json",
- "queue_present": false,
- "green": false,
+ "miss_not_invoked": [],
+ "invocations_path": "E:\\AI-Station\\ammo_pool\\EPC-OVERSEAS\\channel_invocations.jsonl",
+ "green": true,
+ "green_rule": "1022宪法: 全渠道调用即绿(收获另计, 零豁免)",
  "engine_map": {
-  "localfiles:rss": {
+  "localfiles": {
    "channels": [
     "localfiles"
    ],
    "notes": [],
    "bases": []
   },
-  "cross:EPC-SCHED": {
-   "channels": [],
+  "corpus_stores": {
+   "channels": [
+    "corpus_stores"
+   ],
    "notes": [],
-   "bases": [
-    "epc-sched"
-   ]
+   "bases": []
   },
-  "cross:EPC49-SEPDC": {
-   "channels": [],
+  "ima_public": {
+   "channels": [
+    "ima_public"
+   ],
    "notes": [],
-   "bases": [
-    "epc49-sepdc"
-   ]
+   "bases": []
+  },
+  "arxiv": {
+   "channels": [
+    "arxiv"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "openalex": {
+   "channels": [
+    "openalex"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "manus": {
+   "channels": [
+    "manus"
+   ],
+   "notes": [],
+   "bases": []
   }
  },
- "unmapped_engines": [
-  "cross:EPC-SCHED",
-  "cross:EPC49-SEPDC"
- ],
+ "unmapped_engines": [],
  "zero_char_engines": [],
  "approx_notes": [],
  "manifest": "E:\\AI-Station\\ResearchFactory-Eng\\channel_manifest.json",
  "fail_soft": false,
  "fail_soft_note": "",
- "generated_at": "2026-10-21T22:02:18+08:00"
+ "generated_at": "2026-10-23T08:04:23+08:00"
 }

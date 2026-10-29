@@ -1,0 +1,134 @@
+===== services/login_service.pyc =====
+DOCSTRING: IMA登录模块 - 微信扫码登录
+
+[<module>] args=() names=('__doc__', 'requests', 're', 'core.config', 'set_cookie', 'utils.bkn', 'calculate_bkn', 'WeChatQRLogin')
+  CONST 'IMA登录模块 - 微信扫码登录'
+  CONST 0
+  CONST None
+  CONST ('set_cookie')
+  CONST ('calculate_bkn')
+  CONST 'WeChatQRLogin'
+
+  [WeChatQRLogin] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', '__init__', 'get_qr_uuid', 'get_qr_code_image', 'check_scan_status', 'generate_ima_cookie', 'login', '__static_attributes__')
+    CONST 'WeChatQRLogin'
+    CONST 6
+    CONST ('appid', 'auth_appid', 'fixed_cookie_fields', 'guid', 'headers', 'qimei36', 'redirect_uri', 'uuid', 'wx_code')
+    CONST None
+    CONST ((3, 2))
+
+    [WeChatQRLogin.__init__] args=('self',) names=('appid', 'redirect_uri', 'auth_appid', 'guid', 'qimei36', 'fixed_cookie_fields', 'headers', 'uuid', 'wx_code')
+      CONST None
+      CONST 'wx0d63f5de059f1d52'
+      CONST 'https://ima.qq.com/login/#/qr-code-scanned/'
+      CONST 'guid-ca2055bffb9236ba0dea970403000002519701'
+      CONST 'ca2055bffb9236ba0dea970403000002519701'
+      CONST '2'
+      CONST '256002'
+      CONST '2.2.4.4069'
+      CONST 'idcTokenImatokenBindSocial'
+      CONST 'PR=IMA&PP=com.tencent.imaios&PPVN=2.2.4.4069&PL=IOS&RL=440.0*956.0&MO=iPhone18,2&OS=18.2&DN=iPhone18,2'
+      CONST ('IMA-GUID', 'IMA-Q36', 'UID-TYPE', 'CLIENT-TYPE', 'APP-VERSION', 'IMA-TOKEN-TYPE', 'IMA-IUA')
+      CONST 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
+      CONST 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+      CONST 'zh-CN,zh;q=0.9'
+      CONST ('User-Agent', 'Accept', 'Accept-Language')
+
+    [WeChatQRLogin.get_qr_uuid] args=('self',) names=('appid', 'redirect_uri', 'requests', 'get', 'headers', 'raise_for_status', 're', 'search', 'text', 'group', 'uuid', 'Exception')
+      CONST '获取二维码UUID'
+      CONST 'https://open.weixin.qq.com/connect/qrconnect'
+      CONST 'snsapi_login'
+      CONST ''
+      CONST 'jssdk'
+      CONST 'true'
+      CONST 'dark'
+      CONST '1'
+      CONST ('appid', 'scope', 'redirect_uri', 'state', 'login_type', 'self_redirect', 'style', 'stylelite')
+      CONST 10
+      CONST ('params', 'headers', 'timeout')
+      CONST '/connect/qrcode/([^"]+)'
+      CONST 1
+      CONST None
+
+    [WeChatQRLogin.get_qr_code_image] args=('self',) names=('uuid', 'requests', 'get', 'headers', 'raise_for_status', 'content', 'Exception')
+      CONST '获取二维码图片数据'
+      CONST None
+      CONST 'https://open.weixin.qq.com/connect/qrcode/'
+      CONST 10
+      CONST ('headers', 'timeout')
+
+    [WeChatQRLogin.check_scan_status] args=('self', 'timeout') names=('uuid', 'headers', 'requests', 'get', 'raise_for_status', 're', 'search', 'text', 'group', 'wx_code', 'exceptions', 'Timeout', 'RequestException')
+      CONST '检查扫码状态（单次检查）'
+      CONST None
+      CONST 'https://lp.open.weixin.qq.com/connect/l/qrconnect'
+      CONST 'User-Agent'
+      CONST '*/*'
+      CONST 'https://open.weixin.qq.com/'
+      CONST ('User-Agent', 'Accept', 'Referer')
+      CONST 'uuid'
+      CONST ('params', 'headers', 'timeout')
+      CONST 'window\\.wx_errcode=(\\d+)'
+      CONST "window\\.wx_code='([^']*)'"
+      CONST 1
+      CONST '405'
+      CONST 'success'
+      CONST ('408', '404')
+      CONST 'waiting'
+      CONST '403'
+      CONST 'expired'
+      CONST 'error'
+
+    [WeChatQRLogin.generate_ima_cookie] args=('self', 'user_id', 'token', 'refresh_token') names=('fixed_cookie_fields', 'join')
+      CONST '生成 x-ima-cookie 字段'
+      CONST 'IMA-GUID='
+      CONST 'IMA-GUID'
+      CONST 'IMA-Q36='
+      CONST 'IMA-Q36'
+      CONST 'IMA-UID='
+      CONST 'IMA-TOKEN='
+      CONST 'UID-TYPE='
+      CONST 'UID-TYPE'
+      CONST 'CLIENT-TYPE='
+      CONST 'CLIENT-TYPE'
+      CONST 'APP-VERSION='
+      CONST 'APP-VERSION'
+      CONST 'IMA-TOKEN-TYPE='
+      CONST 'IMA-TOKEN-TYPE'
+      CONST 'IMA-IUA='
+      CONST 'IMA-IUA'
+      CONST 'IMA-REFRESH-TOKEN='
+      CONST ';'
+
+    [WeChatQRLogin.login] args=('self',) names=('wx_code', 'headers', 'auth_appid', 'guid', 'qimei36', 'requests', 'post', 'raise_for_status', 'json', 'get', 'int', 'calculate_bkn', 'generate_ima_cookie', 'set_cookie', 'str', 'Exception')
+      CONST '执行登录请求'
+      CONST (False, '未获取到扫码授权码')
+      CONST 'https://ima.qq.com/cgi-bin/auth_login/login'
+      CONST 'User-Agent'
+      CONST 'application/json'
+      CONST '*/*'
+      CONST 'https://ima.qq.com'
+      CONST 'https://ima.qq.com/'
+      CONST ('User-Agent', 'Content-Type', 'Accept', 'Origin', 'Referer')
+      CONST 2
+      CONST 4
+      CONST ('guid', 'platform', 'qimei36')
+      CONST ('account_type', 'code', 'auth_appid', 'client_info')
+      CONST 15
+      CONST ('json', 'headers', 'timeout')
+      CONST 'code'
+      CONST 0
+      CONST 'token'
+      CONST 'refresh_token'
+      CONST 'user_id'
+      CONST 'token_valid_time'
+      CONST 7200
+      CONST 'refresh_token_valid_time'
+      CONST 2592000
+      CONST ('user_id', 'token', 'refresh_token', 'token_valid_time', 'refresh_token_valid_time')
+      CONST (True, '登录成功')
+      CONST False
+      CONST '登录失败: '
+      CONST 'msg'
+      CONST '未知错误'
+      CONST '登录请求失败: '
+      CONST None
+

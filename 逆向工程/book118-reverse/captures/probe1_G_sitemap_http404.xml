@@ -1,0 +1,140 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xn="http://www.renren.com/2009/xnml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>很抱歉，您访问的页面已被外星人劫走了</title>
+    <link href="/statics/book118/css/common.css" rel="stylesheet" type="text/css" />
+    <link href="/statics/book118/css/404.css" rel="stylesheet" type="text/css" />
+    <!-- /公共js引用 开始 -->
+    <script language="javascript" type="text/javascript" src="/statics/js/jquery-1.7.1.min.js"></script>
+    <script language="javascript" type="text/javascript" src="/statics/js2/book118ajax2.js"></script>
+    <script language="javascript" type="text/javascript">
+        var search_url = '';
+        function CheckLogin(){
+            var taget_obj = document.getElementById('_userlogin');
+            myajax = new Book118Ajax(taget_obj,false,false,'','','');
+            myajax.SendGet2("/index.php?m=Ajax&a=userStat");
+            book118XHTTP = null;
+        }
+        jQuery().ready(function(){
+            CheckLogin();
+        });
+        var DOCHITSFALSE = 1;
+    </script>
+</head>
+<body>
+<script language="javascript" type="text/javascript" src="/statics/js/jquery.cookie.js"></script>
+<div id="head_k">
+    <div class="headBox">
+        <div class="logo_k" id="logo_common"><a href="/"><img src="/statics/book118/images/doc_logo.gif" alt="logo"/></a></div>
+        <div class="quick_link" id="_userlogin"> <a href="/index.php?g=User&m=Index&a=login">登录</a> <a href="/index.php?g=User&a=register">注册</a> <a href="/help.html" target="_blank">常见问题</a> </div>
+        <ul id="nav">
+            <li><a href="/" class="on"><span>首页</span></a></li>
+            <li><a href='/html/docs/' ><span>浏览文档</span></a></li>
+            <li><a href="/topics/list.html" ><span>文档专题</span></a></li>
+            <li><a href="/index.php?g=User&m=Document&a=sold"><span>我的文档</span></a></li>
+            <li class="upload"><a href="/index.php?g=User&m=Upload&a=index"><span>我要上传</span></a></li>
+        </ul>
+    </div>
+</div>
+<div id="main" style="background-image:url('//file-1.book118.com/sr1/M00/0A/26/wKh2Alz3W2-IZKzTAAB7R3nTZkwAAdzrwHho84AAHtf608.jpg')">
+    <form action="/index.php" method="GET" target="_blank">
+        <div class="searchBox" id="searchBox">
+            <div class="searchNew">
+                <div class="searchbar">
+                    <input type="hidden" name="m" value="Search">
+                    <input type="hidden" name="a" value="index">
+                    <input id="topsearch" type="text" maxlength="100" class="listTopDefault" name="q" autocomplete="off">
+                    <input type="hidden" name="s" value="4705696648556193051">
+                    <input type="hidden" name="p" value="1">
+                    <input type="hidden" class="doctitle" value="">
+                    <input type="submit" class="btn" value="搜索">
+                    <a href="/member/search-hot-p1.html" style="margin-left:20px" title="关键词搜索排行榜，用户最想要的文档">搜索风云</a>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script language="javascript" type="text/javascript" src="/statics/js/jquery.bigautocomplete.js"></script>
+    <script>
+        (function() {
+            var url_ = "/index.php?m=Search&a=suggest";
+            $("#topsearch").bigAutocomplete({url: url_});
+            $('#searchBox').parent().attr({'action': '/index.php?m=Search&a=index', 'method': 'get'});
+        })();
+    </script>
+    <script type="text/javascript">
+        (function () {
+            $('#searchBox').parent().attr('target','_blank');
+            // console.log($('#searchBox').parent());
+        })();
+    </script>
+    <div class="tip">
+        <p>很抱歉，您访问的页面已被外星人劫走了...</p>
+        <div class="btn">
+            <a href="javascript:history.go(-1);" title="返回上一页">返回上一页</a>
+        </div>
+    </div>
+</div>
+
+
+<!-- /foot 开始 -->
+<div id="foot_k">
+    <div class="container">
+        <div class="site-link">
+            <dl>
+                <dt>版权处理</dt>
+                <dd><a href="/html/bqsm.html" title="版权声明">版权声明</a></dd>
+                <dd><a href="/html/qqcl.html" title="侵权处理">侵权处理</a></dd>
+                <dd><a href="/html/mzsm.html" title="免责声明">免责声明</a></dd>
+                <dd><a href="/tort-letter.html" title="致被侵权者一封信">致被侵权者一封信</a></dd>
+                <dd><a href="/html/wzxy.html" title="网站诺言">网站诺言</a></dd>
+            </dl>
+            <dl>
+                <dt>使用帮助</dt>
+                <dd><a href="/html/fwtk.html" title="用户服务条款">用户服务条款</a></dd>
+                <dd><a href="/html/ysbh.html" title="用户隐私保护">用户隐私保护</a></dd>
+                <dd><a href="/help3.html" title="上传下载">上传下载</a></dd>
+                <dd><a href="/help1.html" title="投稿赚钱">投稿赚钱</a></dd>
+                <dd><a href="/html/yhxy.html" title="用户协议">用户协议</a></dd>
+            </dl>
+            <dl>
+                <dt><a href="/college/" title="文赚学院">文赚学院</a></dt>
+                <dd><a href="/college/category1.html" title="文赚入门">文赚入门</a></dd>
+                <dd><a href="/college/category4.html" title="工具技巧">工具技巧</a></dd>
+                <dd><a href="/college/category5.html" title="官方表态">官方表态</a></dd>
+                <dd><a href="/college/category13.html" title="文档分析">文档分析</a></dd>
+                <dd><a href="https://max.book118.com/college/category8/article343" title="广告合作" target="_blank">广告合作</a></dd>
+            </dl>
+            <dl>
+                <dt>关于</dt>
+                <dd><a href="/about.html" title="关于网站">关于网站</a></dd>
+                <dd><a href="/help4.html" title="联系我们">联系我们</a></dd>
+                <dd><a href="/html/qywh.html" title="企业文化">企业文化</a></dd>
+                <dd><a href="/html/gsys.html" title="公司优势">公司优势</a></dd>
+            </dl>
+            <dl>
+                <dt>更多</dt>
+                <dd><a target="_blank" href="https://www.banyiyi.com/copyright.html" title="版权登记">版权登记</a></dd>
+                <dd><a target="_blank" href="https://www.banyiyi.com/blockchain.html" title="文档区块链">文档区块链</a></dd>
+                <dd><a href="javascript:;" title="原创频道">原创频道</a></dd>
+                <dd><a href="javascript:;" title="机构文档">机构文档</a></dd>
+                <dd><a href="https://max.book118.com/college/category9/article424" title="内容整治报告">内容整治报告</a></dd>
+            </dl>
+            <dl class="wechat">
+                <dt><img src="/Public/book118/js/AssocWeixin/code.png" alt="微信扫码关注"></dt>
+                <dd>关注微信公众号</dd>
+            </dl>
+        </div>
+        <p class="desc">“原创力文档”前称为“文档投稿赚钱网”，本站为“文档C2C交易模式”，即用户上传的文档直接卖给(下载)用户，本站只是中间服务平台，本站所有文档下载所得的收益归上传人(含作者)所有【成交的100%(原创)】。原创力文档是网络服务平台方，若您的权利被侵害，侵权专属<a target="_blank" href="https://work.weixin.qq.com/kfid/kfc4a3e69774a2375e1" title="客服微信">客服微信</a> 电话：19940600175 欢迎举报，上传者QQ群:126814092</p>
+        <div class="copyright">
+            <div class="certificate">
+                <p>工信部备案号：<a href=http://www.beian.miit.gov.cn target=_blank>蜀ICP备08101938号-1</a> 经营许可证：<a href="/jyxkz.html" target=_blank>川B2-20180569</a> <a href="/yyzz.html" target=_blank>营业执照</a> <a href="/html/cbwxkz.html" target=_blank>出版物经营许可证</a> <img src=/statics/images/beian.png>公安局备案号：51011502000106 </p>
+                <p>&copy; 2010-2020 max.book118.com 原创力文档. All Rights Reserved 四川文动网络科技有限公司</p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /foot 结束-->
+</body>
+</html>

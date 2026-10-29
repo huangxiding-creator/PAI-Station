@@ -1,0 +1,255 @@
+@@@ off=2385100
+e({
+platform:process.platform,backendMode:n
+}
+);
+console.log(`【输入】mode=${
+s
+}
+ app=${
+t
+}
+ backend=${
+n
+}
+ platform=${
+process.platform
+}
+`);
+let i=!1,o=!0,d=!1;
+const u=new AbortController,l=()=>{
+u.signal.aborted||u.abort()
+}
+,f=()=>l();
+e?.signal.addEventListener("abort",f,{
+once:!0
+}
+);
+const h=async $=>{
+if(!$?.force&&i)return!0;
+const g=process.platform==="win32"?await prepareWindowsWeChatInput(t,m):await prepareMacWeChatInput(t,m,{
+wakeTextSystem:$?.wakeTextSystem??!1
+}
+);
+return g&&(i=!0),!!g
+}
+;
+let p=!1;
+const m=()=>p||!!e?.isAborted()||(e?!e.isCurrentRun():!1),_=()=>{
+p=!0,l()
+}
+;
+stopKeyboardPipeline=_;
+const v=$=>{
+d||(replayLogger.logRpaInput($),d=!0)
+}
+;
+keyboardSubscription=keyboardCommand$.pipe(operatorsExports.takeUntil(cjsExports.merge(rxEngine.engineStop$,rxEngine.streamStop$).pipe(operatorsExports.tap(()=>{
+p=!0,l()
+}
+))),operatorsExports.concatMap(async $=>{
+if(!(m()||getCurrentReplyMode()!=="auto")&&$.type!=="text"&&($.type==="trunk_reply"||$.type==="end")){
+const w=$.content;
+if(w.trim().length===0)return;
+v($.type==="trunk_reply"?"trunk_reply":"end");
+let S=!1;
+if(s==="typewriter"){
+if(!o){
+console.warn("【RxJS管道】本次打字机流已失败，跳过后续物理输入");
+return
+}
+if(rxEngine.setPhase(EnginePhase.EXECUTING),!await h({
+wakeTextSystem:!0
+}
+)){
+o=!1,console.warn("【RxJS管道】打字机准备输入框失败，本段不会发送");
+return
+}
+if(!await typeMacTextTypewriter(w,m,u.signal)){
+o=!1,console.warn("【RxJS管道】Helper 未完整完成打字机输入，本段不会发送");
+return
+}
+S=!0
+}
+else{
+if(rxEngine.setPhase(EnginePhase.EXECUTING),!await h({
+wakeTextSystem:!1
+}
+)){
+console.warn("【RxJS管道】准备输入框失败，跳过粘贴发送");
+return
+}
+if(!await pasteTextViaClipboard(w,{
+ctx:e||void 0,action:"both",skipRestore:!0,logPrefix:"【RxJS管道输入】"
+}
+)){
+console.warn("【RxJS管道】粘贴失败，跳过发送");
+return
+}
+if(S=!0,i=!0,m())return
+}
+if($.type==="trunk_reply"){
+if(S){
+if(!await sendMacMessage(t,m)){
+o=!1,console.warn("【RxJS管道】发送按键执行失败，停止本次 keyboard 流的后续物理输入");
+return
+}
+
+}
+else{
+console.warn("【RxJS管道】输入未准备完成，跳过发送按键");
+return
+}
+if(m())return;
+t!=="whatsapp"&&markPostReplyMessageCheckPending(t),i=!1,o=!0,d=!1
+}
+
+}
+
+}
+),operatorsExports.finalize(()=>{
+e?.signal.removeEventListener("abort
+@@@ off=2387100
+",f),stopKeyboardPipeline===_&&(stopKeyboardPipeline=null),r()
+}
+)).subscribe({
+error:$=>{
+isExecutionAbortError($)||console.error("Keyboard Pipeline Error:",$)
+}
+
+}
+)
+}
+,streamingState={
+isStreaming:!1,currentType:null,currentTraceId:null,accumulatedContent:"",fullKeyboardText:"",streamStartTime:0,chatHistoryId:null
+}
+,handleMacKeyboardInput=async(t,e,r=!1,n)=>{
+const a=getCurrentAppType();
+if(!streamingState.isStreaming||streamingState.currentType!=="keyboard"){
+streamingState.isStreaming&&await finishStreamMessage(!1,n),streamingState.isStreaming=!0,streamingState.currentType="keyboard",streamingState.accumulatedContent="",streamingState.fullKeyboardText="";
+const i={
+type:"keyboard",content:"",chat_history_id:streamingState.chatHistoryId??void 0
+}
+;
+setCurrentMessage(i),messageList.push(i),setupKeyboardStream(a,n)
+}
+const s=t.data||"";
+if(streamingState.accumulatedContent+=s,streamingState.fullKeyboardText+=s,currentMessage&&(currentMessage.content=streamingState.accumulatedContent,broadcastMessages()),keyboardCommand$&&!keyboardCommand$.closed&&keyboardCommand$.next({
+type:"text",data:s
+}
+),r||e)if(streamingState.accumulatedContent.trim().length>0&&(keyboardCommand$&&!keyboardCommand$.closed&&keyboardCommand$.next({
+type:"trunk_reply",content:streamingState.accumulatedContent
+}
+),streamingState.accumulatedContent=""),e)await finishStreamMessage(e,n);
+else{
+n?await n.delay(800):await randomDelay(800);
+const i={
+type:"keyboard",content:"",chat_history_id:streamingState.chatHistoryId??void 0
+}
+;
+setCurrentMessage(i),messageList.push(i)
+}
+
+}
+,handleMiniProgramSend=async(t,e)=>{
+const r=getCurrentAppType();
+try{
+console.log("【小程序发送】开始处理:",t.data);
+const a=await(async()=>{
+const s=await takeWeChatScreenshot({
+wechatType:r
+}
+);
+if(!s.success)return{
+success:!1,error:`截图失败: ${
+s.error
+}
+`
+}
+;
+if(console.log("【小程序发送】开始目标检测"),!s.screenshot)return{
+success:!1,error:"截图数据为空"
+}
+;
+const i=await detectWechatCollectBtn(s.screenshot);
+return i.success?{
+success:!0,screenshotBase64:s.screenshot,bbox:i.bbox,score:i.score
+}
+:{
+success:!1,error:i
+@@@ off=2389100
+.error
+}
+
+}
+)();
+if(!a.success){
+console.error("【小程序发送】目标检测失败:",a.error);
+return
+}
+console.log("【小程序发送】目标检测成功:",a.bbox),console.log("【小程序发送】功能待实现，当前数据:",t.data),e&&checkQueueAfterAction()
+}
+catch(n){
+console.error("【小程序发送】处理失败:",n)
+}
+
+}
+,handleStreamMessage=async(t,e,r,n,a)=>{
+if(!streamingState.isStreaming||streamingState.currentType!==t){
+streamingState.isStreaming&&await finishStreamMessage(!1,a);
+let s=!1;
+if(t==="thinking"&&n){
+const i=messageList[messageList.length-1];
+i&&i.type===t&&i.trace_id===n&&(s=!0,setCurrentMessage(i))
+}
+if(streamingState.isStreaming=!0,streamingState.currentType=t,streamingState.currentTraceId=n||null,s&&currentMessage)streamingState.accumulatedContent=currentMessage.content?currentMessage.content+`
+`:"",streamingState.streamStartTime=currentMessage.startTime||Date.now();
+else{
+streamingState.accumulatedContent="",streamingState.streamStartTime=Date.now();
+const i={
+type:t,content:"",trace_id:n,startTime:streamingState.streamStartTime
+}
+;
+setCurrentMessage(i),messageList.push(i)
+}
+streamingState.fullKeyboardText=""
+}
+streamingState.accumulatedContent+=e,t==="keyboard"&&(streamingState.fullKeyboardText+=e),currentMessage&&(currentMessage.content=streamingState.accumulatedContent,broadcastMessages()),r&&await finishStreamMessage(r,a)
+}
+,resumeNextLoop=async t=>{
+if(!engineState.isEngineActive){
+console.log("【resumeNextLoop】引擎已停止，忽略晚到恢复请求");
+return
+}
+const e=getCurrentAppType(),r=hasPostReplyMessageCheckPending(),n=resolvePollingResumeInstant({
+requestedInstant:!!t?.instant,postReplyCheckPending:r
+}
+);
+if(debugLog("【resumeNextLoop】恢复截图，路由到 RxEngine",{
+currentAppType:e,currentPhase:rxEngine.phase$.value.phase,requestedInstant:!!t?.instant,effectiveInstant:n,postReplyCheckPending:r,responseRunId:t?.responseRunId
+}
+),t?.responseRunId){
+const a=rxEngine.currentScope("response")?.runId;
+a===t.responseRunId?(chatSseResponseLifecycle.requestPollingResume(t.responseRunId,{
+instant:n
+}
+),rxEngine.resumeAfterExecution()):a?debugLog("【resumeNextLoop】忽略旧 response 的恢复请求",{
+requestedResponseRunId:t.respon
+@@@ off=2391100
+seRunId,activeResponseRunId:a,reason:t.reason
+}
+):rxEngine.resumeAfterExecution({
+instant:n
+}
+);
+return
+}
+rxEngine.resumeAfterExecution({
+instant:n
+}
+)
+}
+,finishStreamMessage=async(t=!1,e)=>{
+const r=getCurrentReplyMode();
+if(debugLog("\x1B[35m【DEBUG finishStreamMessage】isEnd:",t,"streamingState.isStreaming:",streamingState.isStreaming,"\x1B[0m"),!streamingState.isStreaming){
+debugLog("\x1B[31m【DEBUG finishStream

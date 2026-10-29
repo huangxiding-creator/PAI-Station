@@ -1,0 +1,685 @@
+{
+  "results": [
+    {
+      "step": "d0",
+      "errno": 0,
+      "summary": "doctor verdict=ok 8针=8 指纹漂移=0 漂移项=1 (8发, 16.1s)",
+      "ok": true,
+      "main": 8,
+      "mirror": 0,
+      "data": 0,
+      "data_bytes": 0
+    },
+    {
+      "step": "m1",
+      "errno": 0,
+      "summary": "mirror pass1: 扫描29文件/5112199B 上传26/26(5112199B) 空文件跳过3 建目录4段 215.88s",
+      "ok": true,
+      "main": 0,
+      "mirror": 58,
+      "data": 26,
+      "data_bytes": 5112199
+    },
+    {
+      "step": "m2",
+      "errno": 0,
+      "summary": "mirror pass2: **增量=0 上传** 未变26 补账0 远端多余0 md5重哈希3 4.62s",
+      "ok": false,
+      "main": 0,
+      "mirror": 3,
+      "data": 0,
+      "data_bytes": 0
+    },
+    {
+      "step": "a1",
+      "errno": 0,
+      "summary": "share-create /API复刻测试_1029/mirror_test/BDPAN_WHOAMI_1029.txt → shareid=65048642201 link=https://pan.baidu.com/s/1ZpyACqpC9zn_jtFT228H9A 提取码=<masked len=4> 发数=1/2",
+      "ok": true,
+      "main": 1,
+      "mirror": 0,
+      "data": 0,
+      "data_bytes": 0
+    },
+    {
+      "step": "b1",
+      "errno": "?",
+      "summary": "transfer /API复刻测试_1029/mirror_test/BDPAN_WHOAMI_1029.txt → /API复刻测试_1029/transfer_in fsids=0 rc=1 err=bdn: [errno=2] 参数错误",
+      "ok": false,
+      "main": 3,
+      "mirror": 0,
+      "data": 0,
+      "data_bytes": 0
+    },
+    {
+      "step": "b2",
+      "errno": 0,
+      "summary": "ls 复核 transfer_in: 0 项 命中=False ([])",
+      "ok": false,
+      "main": 0,
+      "mirror": 0,
+      "data": 0,
+      "data_bytes": 0
+    },
+    {
+      "step": "a2",
+      "errno": 0,
+      "summary": "share-cancel 65048642201 rc=0",
+      "ok": true,
+      "main": 0,
+      "mirror": 0,
+      "data": 0,
+      "data_bytes": 0
+    },
+    {
+      "step": "a3",
+      "errno": 0,
+      "summary": "shares 复核 shareid=65048642201: 消失或翻位=True (残留0条)",
+      "ok": true,
+      "main": 1,
+      "mirror": 0,
+      "data": 0,
+      "data_bytes": 0
+    }
+  ],
+  "main_control": 15,
+  "cli_control": 2,
+  "mirror_control": 61,
+  "mirror_data_requests": 52,
+  "mirror_bytes": 5112199,
+  "request_log": [
+    {
+      "method": "GET",
+      "path": "/api/loginStatus",
+      "http": 200,
+      "errno": 0,
+      "ms": 4998.7,
+      "attempt": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/quota",
+      "http": 200,
+      "errno": 0,
+      "ms": 1204.6,
+      "attempt": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/list",
+      "http": 200,
+      "errno": 0,
+      "ms": 1330.8,
+      "attempt": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/filemetas",
+      "http": 200,
+      "errno": 0,
+      "ms": 767.2,
+      "attempt": 1
+    },
+    {
+      "method": "GET",
+      "path": "/share/record",
+      "http": 200,
+      "errno": 0,
+      "ms": 1253.8,
+      "attempt": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/recycle/list",
+      "http": 200,
+      "errno": 0,
+      "ms": 890.0,
+      "attempt": 1
+    },
+    {
+      "method": "GET",
+      "path": "d.pcs.baidu.com/rest/2.0/pcs/file",
+      "http": 200,
+      "errno": 0,
+      "ms": 3095.8,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/precreate",
+      "http": 200,
+      "errno": 2,
+      "ms": 506.6,
+      "attempt": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/list",
+      "http": 200,
+      "errno": -9,
+      "ms": 521.2,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": -8,
+      "ms": 1310.9,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 648.1,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 931.0,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 1525.9,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/precreate",
+      "http": 200,
+      "errno": 0,
+      "ms": 2199.9,
+      "attempt": 1
+    },
+    {
+      "method": "GET",
+      "path": "d.pcs.baidu.com/rest/2.0/pcs/file",
+      "http": 200,
+      "errno": 0,
+      "ms": 2657.9,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 2889.2,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/precreate",
+      "http": 200,
+      "errno": 0,
+      "ms": 546.4,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 2642.0,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/precreate",
+      "http": 200,
+      "errno": 0,
+      "ms": 28874.3,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 842.0,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/precreate",
+      "http": 200,
+      "errno": 0,
+      "ms": 1196.5,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 897.7,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/precreate",
+      "http": 200,
+      "errno": 0,
+      "ms": 1532.4,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 8612.3,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/precreate",
+      "http": 200,
+      "errno": 0,
+      "ms": 1414.7,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 919.2,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/precreate",
+      "http": 200,
+      "errno": 0,
+      "ms": 1101.0,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 1159.5,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/precreate",
+      "http": 200,
+      "errno": 0,
+      "ms": 1152.9,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 2707.5,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/precreate",
+      "http": 200,
+      "errno": 0,
+      "ms": 2147.5,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 1235.5,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/precreate",
+      "http": 200,
+      "errno": 0,
+      "ms": 1431.2,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 1633.6,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/precreate",
+      "http": 200,
+      "errno": 0,
+      "ms": 1366.6,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 2960.7,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/precreate",
+      "http": 200,
+      "errno": 0,
+      "ms": 1177.8,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 5300.3,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/precreate",
+      "http": 200,
+      "errno": 0,
+      "ms": 2816.8,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 2058.2,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/precreate",
+      "http": 200,
+      "errno": 0,
+      "ms": 2786.5,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 2477.8,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/precreate",
+      "http": 200,
+      "errno": 0,
+      "ms": 2026.2,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 1682.5,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/precreate",
+      "http": 200,
+      "errno": 0,
+      "ms": 1421.2,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 1804.1,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/precreate",
+      "http": 200,
+      "errno": 0,
+      "ms": 858.4,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 848.1,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/precreate",
+      "http": 200,
+      "errno": 0,
+      "ms": 589.4,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 2704.8,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/precreate",
+      "http": 200,
+      "errno": 0,
+      "ms": 552.4,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 2966.2,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/precreate",
+      "http": 200,
+      "errno": 0,
+      "ms": 542.6,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 3469.5,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/precreate",
+      "http": 200,
+      "errno": 0,
+      "ms": 3212.5,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 5619.9,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/precreate",
+      "http": 200,
+      "errno": 0,
+      "ms": 706.9,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 1876.8,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/precreate",
+      "http": 200,
+      "errno": 0,
+      "ms": 1705.5,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 1067.2,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/precreate",
+      "http": 200,
+      "errno": 0,
+      "ms": 1326.5,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 1169.9,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/precreate",
+      "http": 200,
+      "errno": 0,
+      "ms": 583.2,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 1540.2,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/precreate",
+      "http": 200,
+      "errno": 0,
+      "ms": 825.7,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 819.0,
+      "attempt": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/list",
+      "http": 200,
+      "errno": 0,
+      "ms": 553.2,
+      "attempt": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/list",
+      "http": 200,
+      "errno": 0,
+      "ms": 546.3,
+      "attempt": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/list",
+      "http": 200,
+      "errno": 0,
+      "ms": 942.2,
+      "attempt": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/list",
+      "http": 200,
+      "errno": 0,
+      "ms": 1285.1,
+      "attempt": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/create",
+      "http": 200,
+      "errno": 0,
+      "ms": 1905.8,
+      "attempt": 1
+    },
+    {
+      "method": "GET",
+      "path": "/share/record",
+      "http": 200,
+      "errno": 0,
+      "ms": 1197.0,
+      "attempt": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/list",
+      "http": 200,
+      "errno": 0,
+      "ms": 624.2,
+      "attempt": 1
+    },
+    {
+      "method": "GET",
+      "path": "/share/record",
+      "http": 200,
+      "errno": 0,
+      "ms": 841.1,
+      "attempt": 1
+    }
+  ],
+  "share_create_sends": 1,
+  "transfer_calls": 1
+}

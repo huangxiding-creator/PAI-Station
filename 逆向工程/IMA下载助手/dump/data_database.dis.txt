@@ -1,0 +1,3441 @@
+===== data/database.pyc =====
+
+# CODE <module>  args=()
+  0           RESUME                   0
+
+  1           LOAD_CONST               0 ('文件下载记录数据库模块')
+              STORE_NAME               0 (__doc__)
+
+  2           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (None)
+              IMPORT_NAME              1 (base64)
+              STORE_NAME               1 (base64)
+
+  3           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (None)
+              IMPORT_NAME              2 (ctypes)
+              STORE_NAME               2 (ctypes)
+
+  4           LOAD_CONST               1 (0)
+              LOAD_CONST               3 (('wintypes',))
+              IMPORT_NAME              2 (ctypes)
+              IMPORT_FROM              3 (wintypes)
+              STORE_NAME               3 (wintypes)
+              POP_TOP
+
+  5           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (None)
+              IMPORT_NAME              4 (sqlite3)
+              STORE_NAME               4 (sqlite3)
+
+  6           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (None)
+              IMPORT_NAME              5 (hashlib)
+              STORE_NAME               5 (hashlib)
+
+  7           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (None)
+              IMPORT_NAME              6 (os)
+              STORE_NAME               6 (os)
+
+  8           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (None)
+              IMPORT_NAME              7 (json)
+              STORE_NAME               7 (json)
+
+  9           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (None)
+              IMPORT_NAME              8 (sys)
+              STORE_NAME               8 (sys)
+
+ 10           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (None)
+              IMPORT_NAME              9 (threading)
+              STORE_NAME               9 (threading)
+
+ 11           LOAD_CONST               1 (0)
+              LOAD_CONST               4 (('contextmanager',))
+              IMPORT_NAME             10 (contextlib)
+              IMPORT_FROM             11 (contextmanager)
+              STORE_NAME              11 (contextmanager)
+              POP_TOP
+
+ 13           LOAD_CONST               1 (0)
+              LOAD_CONST               5 (('Config',))
+              IMPORT_NAME             12 (config)
+              IMPORT_FROM             13 (Config)
+              STORE_NAME              13 (Config)
+              POP_TOP
+
+ 16           LOAD_CONST               6 ('dpapi:v1:')
+              STORE_NAME              14 (DPAPI_PREFIX)
+
+ 17           LOAD_CONST               7 (b'ima-helper-login-credentials-v1')
+              STORE_NAME              15 (DPAPI_ENTROPY)
+
+ 18           LOAD_CONST               8 (1)
+              STORE_NAME              16 (CRYPTPROTECT_UI_FORBIDDEN)
+
+ 19           LOAD_CONST               2 (None)
+              STORE_GLOBAL            17 (_credential_cache)
+
+ 20           LOAD_NAME                9 (threading)
+              LOAD_ATTR               36 (RLock)
+              PUSH_NULL
+              CALL                     0
+              STORE_NAME              19 (_credential_cache_lock)
+
+ 23           LOAD_BUILD_CLASS
+              PUSH_NULL
+              LOAD_CONST               9 (<code object CredentialProtectionError at 0x000001DD462BBC90, file "data\database.py", line 23>)
+              MAKE_FUNCTION
+              LOAD_CONST              10 ('CredentialProtectionError')
+              LOAD_NAME               20 (RuntimeError)
+              CALL                     3
+              STORE_NAME              21 (CredentialProtectionError)
+
+ 27           LOAD_BUILD_CLASS
+              PUSH_NULL
+              LOAD_CONST              11 (<code object _DataBlob at 0x000001DD462965B0, file "data\database.py", line 27>)
+              MAKE_FUNCTION
+              LOAD_CONST              12 ('_DataBlob')
+              LOAD_NAME                2 (ctypes)
+              LOAD_ATTR               44 (Structure)
+              CALL                     3
+              STORE_NAME              23 (_DataBlob)
+
+ 34           LOAD_CONST              13 (<code object _to_blob at 0x000001DD460DDBD0, file "data\database.py", line 34>)
+              MAKE_FUNCTION
+              STORE_NAME              24 (_to_blob)
+
+ 43           LOAD_CONST              14 (<code object _dpapi_transform at 0x000001DD466037E0, file "data\database.py", line 43>)
+              MAKE_FUNCTION
+              STORE_NAME              25 (_dpapi_transform)
+
+109           LOAD_CONST              15 (<code object _copy_credentials at 0x000001DD462FBD30, file "data\database.py", line 109>)
+              MAKE_FUNCTION
+              STORE_NAME              26 (_copy_credentials)
+
+113           LOAD_CONST              16 (<code object _set_credential_cache at 0x000001DD4614BDF0, file "data\database.py", line 113>)
+              MAKE_FUNCTION
+              STORE_NAME              27 (_set_credential_cache)
+
+119           LOAD_CONST              17 (<code object clear_credential_cache at 0x000001DD4627D980, file "data\database.py", line 119>)
+              MAKE_FUNCTION
+              STORE_NAME              28 (clear_credential_cache)
+
+123           LOAD_CONST              18 (<code object _dpapi_protect at 0x000001DD462BBE50, file "data\database.py", line 123>)
+              MAKE_FUNCTION
+              STORE_NAME              29 (_dpapi_protect)
+
+127           LOAD_CONST              19 (<code object _dpapi_unprotect at 0x000001DD462BBD70, file "data\database.py", line 127>)
+              MAKE_FUNCTION
+              STORE_NAME              30 (_dpapi_unprotect)
+
+131           LOAD_CONST              20 (<code object _protect_credential at 0x000001DD46125FB0, file "data\database.py", line 131>)
+              MAKE_FUNCTION
+              STORE_NAME              31 (_protect_credential)
+
+137           LOAD_CONST              21 (<code object _unprotect_credential at 0x000001DD46411EC0, file "data\database.py", line 137>)
+              MAKE_FUNCTION
+              STORE_NAME              32 (_unprotect_credential)
+
+155           LOAD_CONST              22 (<code object _protected_credential_values at 0x000001DD462FBE30, file "data\database.py", line 155>)
+              MAKE_FUNCTION
+              STORE_NAME              33 (_protected_credential_values)
+
+162           LOAD_CONST              23 (<code object get_db_file at 0x000001DD460D7360, file "data\database.py", line 162>)
+              MAKE_FUNCTION
+              STORE_NAME              34 (get_db_file)
+
+170           LOAD_NAME               11 (contextmanager)
+
+171           LOAD_CONST              24 (<code object get_db at 0x000001DD462CB550, file "data\database.py", line 170>)
+              MAKE_FUNCTION
+
+170           CALL                     0
+
+171           STORE_NAME              35 (get_db)
+
+180           LOAD_CONST              25 (<code object init_db at 0x000001DD46429FF0, file "data\database.py", line 180>)
+              MAKE_FUNCTION
+              STORE_NAME              36 (init_db)
+
+280           NOP
+
+281           NOP
+
+280           LOAD_CONST              47 ((None, None, None, 7200, 2592000))
+              LOAD_CONST              26 (<code object save_login_credentials at 0x000001DD45FB53D0, file "data\database.py", line 280>)
+              MAKE_FUNCTION
+              SET_FUNCTION_ATTRIBUTE   1 (defaults)
+              STORE_NAME              37 (save_login_credentials)
+
+335           LOAD_CONST              27 (<code object get_login_credentials at 0x000001DD463CF640, file "data\database.py", line 335>)
+              MAKE_FUNCTION
+              STORE_NAME              38 (get_login_credentials)
+
+388           LOAD_CONST              28 (<code object clear_login_credentials at 0x000001DD46156FA0, file "data\database.py", line 388>)
+              MAKE_FUNCTION
+              STORE_NAME              39 (clear_login_credentials)
+
+395           LOAD_CONST              29 (<code object check_file_exists at 0x000001DD460CBC30, file "data\database.py", line 395>)
+              MAKE_FUNCTION
+              STORE_NAME              40 (check_file_exists)
+
+412           LOAD_CONST              30 (<code object save_download_record at 0x000001DD460DDA30, file "data\database.py", line 412>)
+              MAKE_FUNCTION
+              STORE_NAME              41 (save_download_record)
+
+423           LOAD_CONST              31 (<code object save_download_records_batch at 0x000001DD460CB830, file "data\database.py", line 423>)
+              MAKE_FUNCTION
+              STORE_NAME              42 (save_download_records_batch)
+
+439           LOAD_CONST              32 (<code object is_token_expired at 0x000001DD460D7750, file "data\database.py", line 439>)
+              MAKE_FUNCTION
+              STORE_NAME              43 (is_token_expired)
+
+459           LOAD_CONST              33 (<code object is_refresh_token_expired at 0x000001DD46295070, file "data\database.py", line 459>)
+              MAKE_FUNCTION
+              STORE_NAME              44 (is_refresh_token_expired)
+
+473           LOAD_CONST              48 ((None,))
+              LOAD_CONST              34 (<code object update_token at 0x000001DD463BB740, file "data\database.py", line 473>)
+              MAKE_FUNCTION
+              SET_FUNCTION_ATTRIBUTE   1 (defaults)
+              STORE_NAME              45 (update_token)
+
+522           LOAD_CONST              35 (<code object _init_default_settings at 0x000001DD46413300, file "data\database.py", line 522>)
+              MAKE_FUNCTION
+              STORE_NAME              46 (_init_default_settings)
+
+555           LOAD_CONST              48 ((None,))
+              LOAD_CONST              36 (<code object get_user_setting at 0x000001DD463BB9C0, file "data\database.py", line 555>)
+              MAKE_FUNCTION
+              SET_FUNCTION_ATTRIBUTE   1 (defaults)
+              STORE_NAME              47 (get_user_setting)
+
+590           LOAD_CONST              37 (<code object set_user_setting at 0x000001DD4633E490, file "data\database.py", line 590>)
+              MAKE_FUNCTION
+              STORE_NAME              48 (set_user_setting)
+
+623           LOAD_CONST              38 (<code object get_all_user_settings at 0x000001DD463BBEE0, file "data\database.py", line 623>)
+              MAKE_FUNCTION
+              STORE_NAME              49 (get_all_user_settings)
+
+653           LOAD_CONST              39 (<code object delete_user_setting at 0x000001DD463142F0, file "data\database.py", line 653>)
+              MAKE_FUNCTION
+              STORE_NAME              50 (delete_user_setting)
+
+665           LOAD_CONST              40 (<code object _migrate_auto_update_settings at 0x000001DD4642E590, file "data\database.py", line 665>)
+              MAKE_FUNCTION
+              STORE_NAME              51 (_migrate_auto_update_settings)
+
+726           LOAD_CONST              49 (('', ''))
+              LOAD_CONST              41 (<code object add_task at 0x000001DD460BE9E0, file "data\database.py", line 726>)
+              MAKE_FUNCTION
+              SET_FUNCTION_ATTRIBUTE   1 (defaults)
+              STORE_NAME              52 (add_task)
+
+738           LOAD_CONST              42 (<code object get_all_tasks at 0x000001DD460DDF10, file "data\database.py", line 738>)
+              MAKE_FUNCTION
+              STORE_NAME              53 (get_all_tasks)
+
+744           LOAD_CONST              43 (<code object get_enabled_tasks at 0x000001DD460DE0B0, file "data\database.py", line 744>)
+              MAKE_FUNCTION
+              STORE_NAME              54 (get_enabled_tasks)
+
+752           LOAD_CONST              44 (<code object get_task_by_id at 0x000001DD461271B0, file "data\database.py", line 752>)
+              MAKE_FUNCTION
+              STORE_NAME              55 (get_task_by_id)
+
+760           LOAD_CONST              45 (<code object update_task at 0x000001DD4642EA80, file "data\database.py", line 760>)
+              MAKE_FUNCTION
+              STORE_NAME              56 (update_task)
+
+774           LOAD_CONST              46 (<code object delete_task at 0x000001DD46314450, file "data\database.py", line 774>)
+              MAKE_FUNCTION
+              STORE_NAME              57 (delete_task)
+
+781           LOAD_NAME               36 (init_db)
+              PUSH_NULL
+              CALL                     0
+              POP_TOP
+              RETURN_CONST             2 (None)
+
+## CODE CredentialProtectionError  args=()
+ 23           RESUME                   0
+              LOAD_NAME                0 (__name__)
+              STORE_NAME               1 (__module__)
+              LOAD_CONST               0 ('CredentialProtectionError')
+              STORE_NAME               2 (__qualname__)
+              LOAD_CONST               1 (23)
+              STORE_NAME               3 (__firstlineno__)
+
+ 24           LOAD_CONST               2 ('登录凭证无法通过操作系统安全存储保护。')
+              STORE_NAME               4 (__doc__)
+              LOAD_CONST               3 (())
+              STORE_NAME               5 (__static_attributes__)
+              RETURN_CONST             4 (None)
+
+## CODE _DataBlob  args=()
+ 27           RESUME                   0
+              LOAD_NAME                0 (__name__)
+              STORE_NAME               1 (__module__)
+              LOAD_CONST               0 ('_DataBlob')
+              STORE_NAME               2 (__qualname__)
+              LOAD_CONST               1 (27)
+              STORE_NAME               3 (__firstlineno__)
+
+ 29           LOAD_CONST               2 ('cbData')
+              LOAD_NAME                4 (wintypes)
+              LOAD_ATTR               10 (DWORD)
+              BUILD_TUPLE              2
+
+ 30           LOAD_CONST               3 ('pbData')
+              LOAD_NAME                6 (ctypes)
+              LOAD_ATTR               14 (POINTER)
+              PUSH_NULL
+              LOAD_NAME                6 (ctypes)
+              LOAD_ATTR               16 (c_ubyte)
+              CALL                     1
+              BUILD_TUPLE              2
+
+ 28           BUILD_LIST               2
+              STORE_NAME               9 (_fields_)
+              LOAD_CONST               4 (())
+              STORE_NAME              10 (__static_attributes__)
+              RETURN_CONST             5 (None)
+
+## CODE _to_blob  args=('value',)
+ 34           RESUME                   0
+
+ 35           LOAD_GLOBAL              0 (ctypes)
+              LOAD_ATTR                2 (create_string_buffer)
+              PUSH_NULL
+              LOAD_FAST                0 (value)
+              CALL                     1
+              STORE_FAST               1 (buffer)
+
+ 36           LOAD_GLOBAL              5 (_DataBlob + NULL)
+
+ 37           LOAD_GLOBAL              7 (len + NULL)
+              LOAD_FAST                0 (value)
+              CALL                     1
+
+ 38           LOAD_GLOBAL              0 (ctypes)
+              LOAD_ATTR                8 (cast)
+              PUSH_NULL
+              LOAD_FAST                1 (buffer)
+              LOAD_GLOBAL              0 (ctypes)
+              LOAD_ATTR               10 (POINTER)
+              PUSH_NULL
+              LOAD_GLOBAL              0 (ctypes)
+              LOAD_ATTR               12 (c_ubyte)
+              CALL                     1
+              CALL                     2
+
+ 36           CALL                     2
+              STORE_FAST               2 (blob)
+
+ 40           LOAD_FAST_LOAD_FAST     33 (blob, buffer)
+              BUILD_TUPLE              2
+              RETURN_VALUE
+
+## CODE _dpapi_transform  args=('value', 'protect')
+  43           RESUME                   0
+
+  44           LOAD_GLOBAL              0 (sys)
+               LOAD_ATTR                2 (platform)
+               LOAD_CONST               1 ('win32')
+               COMPARE_OP             119 (bool(!=))
+               POP_JUMP_IF_FALSE       11 (to L1)
+
+  45           LOAD_GLOBAL              5 (CredentialProtectionError + NULL)
+               LOAD_CONST               2 ('Windows DPAPI 仅可在 Windows 上使用')
+               CALL                     1
+               RAISE_VARARGS            1
+
+  47   L1:     LOAD_GLOBAL              7 (_to_blob + NULL)
+               LOAD_FAST                0 (value)
+               CALL                     1
+               UNPACK_SEQUENCE          2
+               STORE_FAST_STORE_FAST   35 (input_blob, input_buffer)
+
+  48           LOAD_GLOBAL              7 (_to_blob + NULL)
+               LOAD_GLOBAL              8 (DPAPI_ENTROPY)
+               CALL                     1
+               UNPACK_SEQUENCE          2
+               STORE_FAST_STORE_FAST   69 (entropy_blob, entropy_buffer)
+
+  49           LOAD_GLOBAL             11 (_DataBlob + NULL)
+               CALL                     0
+               STORE_FAST               6 (output_blob)
+
+  50           LOAD_GLOBAL             12 (ctypes)
+               LOAD_ATTR               14 (WinDLL)
+               PUSH_NULL
+               LOAD_CONST               3 ('crypt32')
+               LOAD_CONST               4 (True)
+               LOAD_CONST               5 (('use_last_error',))
+               CALL_KW                  2
+               STORE_FAST               7 (crypt32)
+
+  51           LOAD_GLOBAL             12 (ctypes)
+               LOAD_ATTR               14 (WinDLL)
+               PUSH_NULL
+               LOAD_CONST               6 ('kernel32')
+               LOAD_CONST               4 (True)
+               LOAD_CONST               5 (('use_last_error',))
+               CALL_KW                  2
+               STORE_FAST               8 (kernel32)
+
+  53           LOAD_FAST                1 (protect)
+               TO_BOOL
+               POP_JUMP_IF_FALSE      228 (to L2)
+
+  54           LOAD_FAST                7 (crypt32)
+               LOAD_ATTR               16 (CryptProtectData)
+               STORE_FAST               9 (function)
+
+  56           LOAD_GLOBAL             12 (ctypes)
+               LOAD_ATTR               18 (POINTER)
+               PUSH_NULL
+               LOAD_GLOBAL             10 (_DataBlob)
+               CALL                     1
+
+  57           LOAD_GLOBAL             12 (ctypes)
+               LOAD_ATTR               20 (c_wchar_p)
+
+  58           LOAD_GLOBAL             12 (ctypes)
+               LOAD_ATTR               18 (POINTER)
+               PUSH_NULL
+               LOAD_GLOBAL             10 (_DataBlob)
+               CALL                     1
+
+  59           LOAD_GLOBAL             12 (ctypes)
+               LOAD_ATTR               22 (c_void_p)
+
+  60           LOAD_GLOBAL             12 (ctypes)
+               LOAD_ATTR               22 (c_void_p)
+
+  61           LOAD_GLOBAL             24 (wintypes)
+               LOAD_ATTR               26 (DWORD)
+
+  62           LOAD_GLOBAL             12 (ctypes)
+               LOAD_ATTR               18 (POINTER)
+               PUSH_NULL
+               LOAD_GLOBAL             10 (_DataBlob)
+               CALL                     1
+
+  55           BUILD_LIST               7
+               LOAD_FAST                9 (function)
+               STORE_ATTR              14 (argtypes)
+
+  65           LOAD_GLOBAL             12 (ctypes)
+               LOAD_ATTR               30 (byref)
+               PUSH_NULL
+               LOAD_FAST                2 (input_blob)
+               CALL                     1
+
+  66           LOAD_CONST               7 ('IMA login credential')
+
+  67           LOAD_GLOBAL             12 (ctypes)
+               LOAD_ATTR               30 (byref)
+               PUSH_NULL
+               LOAD_FAST                4 (entropy_blob)
+               CALL                     1
+
+  68           LOAD_CONST               0 (None)
+
+  69           LOAD_CONST               0 (None)
+
+  70           LOAD_GLOBAL             32 (CRYPTPROTECT_UI_FORBIDDEN)
+
+  71           LOAD_GLOBAL             12 (ctypes)
+               LOAD_ATTR               30 (byref)
+               PUSH_NULL
+               LOAD_FAST                6 (output_blob)
+               CALL                     1
+
+  64           BUILD_TUPLE              7
+               STORE_FAST              10 (arguments)
+               JUMP_FORWARD           227 (to L3)
+
+  74   L2:     LOAD_FAST                7 (crypt32)
+               LOAD_ATTR               34 (CryptUnprotectData)
+               STORE_FAST               9 (function)
+
+  76           LOAD_GLOBAL             12 (ctypes)
+               LOAD_ATTR               18 (POINTER)
+               PUSH_NULL
+               LOAD_GLOBAL             10 (_DataBlob)
+               CALL                     1
+
+  77           LOAD_GLOBAL             12 (ctypes)
+               LOAD_ATTR               22 (c_void_p)
+
+  78           LOAD_GLOBAL             12 (ctypes)
+               LOAD_ATTR               18 (POINTER)
+               PUSH_NULL
+               LOAD_GLOBAL             10 (_DataBlob)
+               CALL                     1
+
+  79           LOAD_GLOBAL             12 (ctypes)
+               LOAD_ATTR               22 (c_void_p)
+
+  80           LOAD_GLOBAL             12 (ctypes)
+               LOAD_ATTR               22 (c_void_p)
+
+  81           LOAD_GLOBAL             24 (wintypes)
+               LOAD_ATTR               26 (DWORD)
+
+  82           LOAD_GLOBAL             12 (ctypes)
+               LOAD_ATTR               18 (POINTER)
+               PUSH_NULL
+               LOAD_GLOBAL             10 (_DataBlob)
+               CALL                     1
+
+  75           BUILD_LIST               7
+               LOAD_FAST                9 (function)
+               STORE_ATTR              14 (argtypes)
+
+  85           LOAD_GLOBAL             12 (ctypes)
+               LOAD_ATTR               30 (byref)
+               PUSH_NULL
+               LOAD_FAST                2 (input_blob)
+               CALL                     1
+
+  86           LOAD_CONST               0 (None)
+
+  87           LOAD_GLOBAL             12 (ctypes)
+               LOAD_ATTR               30 (byref)
+               PUSH_NULL
+               LOAD_FAST                4 (entropy_blob)
+               CALL                     1
+
+  88           LOAD_CONST               0 (None)
+
+  89           LOAD_CONST               0 (None)
+
+  90           LOAD_GLOBAL             32 (CRYPTPROTECT_UI_FORBIDDEN)
+
+  91           LOAD_GLOBAL             12 (ctypes)
+               LOAD_ATTR               30 (byref)
+               PUSH_NULL
+               LOAD_FAST                6 (output_blob)
+               CALL                     1
+
+  84           BUILD_TUPLE              7
+               STORE_FAST              10 (arguments)
+
+  94   L3:     LOAD_GLOBAL             24 (wintypes)
+               LOAD_ATTR               36 (BOOL)
+               LOAD_FAST                9 (function)
+               STORE_ATTR              19 (restype)
+
+  95           LOAD_GLOBAL             12 (ctypes)
+               LOAD_ATTR               22 (c_void_p)
+               BUILD_LIST               1
+               LOAD_FAST                8 (kernel32)
+               LOAD_ATTR               40 (LocalFree)
+               STORE_ATTR              14 (argtypes)
+
+  96           LOAD_GLOBAL             12 (ctypes)
+               LOAD_ATTR               22 (c_void_p)
+               LOAD_FAST                8 (kernel32)
+               LOAD_ATTR               40 (LocalFree)
+               STORE_ATTR              19 (restype)
+
+  97           LOAD_FAST                9 (function)
+               PUSH_NULL
+               LOAD_FAST               10 (arguments)
+               CALL_FUNCTION_EX         0
+               TO_BOOL
+               POP_JUMP_IF_TRUE        36 (to L4)
+
+  98           LOAD_GLOBAL             12 (ctypes)
+               LOAD_ATTR               42 (get_last_error)
+               PUSH_NULL
+               CALL                     0
+               STORE_FAST              11 (error_code)
+
+  99           LOAD_GLOBAL              5 (CredentialProtectionError + NULL)
+
+ 100           LOAD_CONST               8 ('Windows DPAPI 操作失败（错误码 ')
+               LOAD_FAST               11 (error_code)
+               FORMAT_SIMPLE
+               LOAD_CONST               9 ('）')
+               BUILD_STRING             3
+
+  99           CALL                     1
+               RAISE_VARARGS            1
+
+ 102   L4:     NOP
+
+ 103   L5:     LOAD_GLOBAL             12 (ctypes)
+               LOAD_ATTR               44 (string_at)
+               PUSH_NULL
+               LOAD_FAST                6 (output_blob)
+               LOAD_ATTR               46 (pbData)
+               LOAD_FAST                6 (output_blob)
+               LOAD_ATTR               48 (cbData)
+               CALL                     2
+
+ 105   L6:     LOAD_FAST                8 (kernel32)
+               LOAD_ATTR               41 (LocalFree + NULL|self)
+               LOAD_FAST                6 (output_blob)
+               LOAD_ATTR               46 (pbData)
+               CALL                     1
+               POP_TOP
+
+ 106           DELETE_FAST              3 (input_buffer)
+               DELETE_FAST              5 (entropy_buffer)
+               RETURN_VALUE
+
+  --   L7:     PUSH_EXC_INFO
+
+ 105           LOAD_FAST                8 (kernel32)
+               LOAD_ATTR               41 (LocalFree + NULL|self)
+               LOAD_FAST                6 (output_blob)
+               LOAD_ATTR               46 (pbData)
+               CALL                     1
+               POP_TOP
+
+ 106           DELETE_FAST              3 (input_buffer)
+               DELETE_FAST              5 (entropy_buffer)
+               RERAISE                  0
+
+  --   L8:     COPY                     3
+               POP_EXCEPT
+               RERAISE                  1
+ExceptionTable:
+  L5 to L6 -> L7 [0]
+  L7 to L8 -> L8 [1] lasti
+
+## CODE _copy_credentials  args=('credentials',)
+109           RESUME                   0
+
+110           LOAD_FAST                0 (credentials)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       11 (to L1)
+              LOAD_GLOBAL              1 (dict + NULL)
+              LOAD_FAST                0 (credentials)
+              CALL                     1
+              RETURN_VALUE
+      L1:     LOAD_CONST               0 (None)
+              RETURN_VALUE
+
+## CODE _set_credential_cache  args=('credentials',)
+ 113           RESUME                   0
+
+ 115           LOAD_GLOBAL              0 (_credential_cache_lock)
+               BEFORE_WITH
+       L1:     POP_TOP
+
+ 116           LOAD_GLOBAL              3 (_copy_credentials + NULL)
+               LOAD_FAST                0 (credentials)
+               CALL                     1
+               STORE_GLOBAL             2 (_credential_cache)
+
+ 115   L2:     LOAD_CONST               0 (None)
+               LOAD_CONST               0 (None)
+               LOAD_CONST               0 (None)
+               CALL                     2
+               POP_TOP
+               RETURN_CONST             0 (None)
+       L3:     PUSH_EXC_INFO
+               WITH_EXCEPT_START
+               TO_BOOL
+               POP_JUMP_IF_TRUE         1 (to L4)
+               RERAISE                  2
+       L4:     POP_TOP
+       L5:     POP_EXCEPT
+               POP_TOP
+               POP_TOP
+               RETURN_CONST             0 (None)
+
+  --   L6:     COPY                     3
+               POP_EXCEPT
+               RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L3 [1] lasti
+  L3 to L5 -> L6 [3] lasti
+
+## CODE clear_credential_cache  args=()
+119           RESUME                   0
+
+120           LOAD_GLOBAL              1 (_set_credential_cache + NULL)
+              LOAD_CONST               0 (None)
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+## CODE _dpapi_protect  args=('value',)
+123           RESUME                   0
+
+124           LOAD_GLOBAL              1 (_dpapi_transform + NULL)
+              LOAD_FAST                0 (value)
+              LOAD_CONST               1 (True)
+              LOAD_CONST               2 (('protect',))
+              CALL_KW                  2
+              RETURN_VALUE
+
+## CODE _dpapi_unprotect  args=('value',)
+127           RESUME                   0
+
+128           LOAD_GLOBAL              1 (_dpapi_transform + NULL)
+              LOAD_FAST                0 (value)
+              LOAD_CONST               1 (False)
+              LOAD_CONST               2 (('protect',))
+              CALL_KW                  2
+              RETURN_VALUE
+
+## CODE _protect_credential  args=('value',)
+131           RESUME                   0
+
+132           LOAD_GLOBAL              1 (str + NULL)
+              LOAD_FAST                0 (value)
+              COPY                     1
+              TO_BOOL
+              POP_JUMP_IF_TRUE         2 (to L1)
+              POP_TOP
+              LOAD_CONST               1 ('')
+      L1:     CALL                     1
+              LOAD_ATTR                3 (encode + NULL|self)
+              LOAD_CONST               2 ('utf-8')
+              CALL                     1
+              STORE_FAST               1 (plaintext)
+
+133           LOAD_GLOBAL              5 (_dpapi_protect + NULL)
+              LOAD_FAST                1 (plaintext)
+              CALL                     1
+              STORE_FAST               2 (protected)
+
+134           LOAD_GLOBAL              6 (DPAPI_PREFIX)
+              LOAD_GLOBAL              8 (base64)
+              LOAD_ATTR               10 (b64encode)
+              PUSH_NULL
+              LOAD_FAST                2 (protected)
+              CALL                     1
+              LOAD_ATTR               13 (decode + NULL|self)
+              LOAD_CONST               3 ('ascii')
+              CALL                     1
+              BINARY_OP                0 (+)
+              RETURN_VALUE
+
+## CODE _unprotect_credential  args=('value',)
+ 137            RESUME                   0
+
+ 138            LOAD_GLOBAL              1 (isinstance + NULL)
+                LOAD_FAST                0 (value)
+                LOAD_GLOBAL              2 (str)
+                CALL                     2
+                TO_BOOL
+                POP_JUMP_IF_TRUE        11 (to L1)
+
+ 139            LOAD_GLOBAL              5 (CredentialProtectionError + NULL)
+                LOAD_CONST               1 ('数据库中的登录凭证格式无效')
+                CALL                     1
+                RAISE_VARARGS            1
+
+ 140    L1:     LOAD_FAST                0 (value)
+                LOAD_ATTR                7 (startswith + NULL|self)
+                LOAD_GLOBAL              8 (DPAPI_PREFIX)
+                CALL                     1
+                TO_BOOL
+                POP_JUMP_IF_TRUE         4 (to L2)
+
+ 141            LOAD_FAST                0 (value)
+                LOAD_CONST               2 (True)
+                BUILD_TUPLE              2
+                RETURN_VALUE
+
+ 142    L2:     NOP
+
+ 143    L3:     LOAD_GLOBAL             10 (base64)
+                LOAD_ATTR               12 (b64decode)
+                PUSH_NULL
+
+ 144            LOAD_FAST                0 (value)
+                LOAD_GLOBAL             15 (len + NULL)
+                LOAD_GLOBAL              8 (DPAPI_PREFIX)
+                CALL                     1
+                LOAD_CONST               0 (None)
+                BINARY_SLICE
+
+ 145            LOAD_CONST               2 (True)
+
+ 143            LOAD_CONST               3 (('validate',))
+                CALL_KW                  2
+                STORE_FAST               1 (protected)
+
+ 147            LOAD_GLOBAL             17 (_dpapi_unprotect + NULL)
+                LOAD_FAST                1 (protected)
+                CALL                     1
+                LOAD_ATTR               19 (decode + NULL|self)
+                LOAD_CONST               4 ('utf-8')
+                CALL                     1
+                STORE_FAST               2 (plaintext)
+
+ 148            LOAD_FAST                2 (plaintext)
+                LOAD_CONST               5 (False)
+                BUILD_TUPLE              2
+        L4:     RETURN_VALUE
+
+  --    L5:     PUSH_EXC_INFO
+
+ 149            LOAD_GLOBAL             20 (Exception)
+                CHECK_EXC_MATCH
+                POP_JUMP_IF_FALSE       39 (to L9)
+                STORE_FAST               3 (exc)
+
+ 150    L6:     LOAD_GLOBAL              1 (isinstance + NULL)
+                LOAD_FAST                3 (exc)
+                LOAD_GLOBAL              4 (CredentialProtectionError)
+                CALL                     2
+                TO_BOOL
+                POP_JUMP_IF_FALSE        1 (to L7)
+
+ 151            RAISE_VARARGS            0
+
+ 152    L7:     LOAD_GLOBAL              5 (CredentialProtectionError + NULL)
+                LOAD_CONST               6 ('登录凭证解密失败')
+                CALL                     1
+                LOAD_FAST                3 (exc)
+                RAISE_VARARGS            2
+
+  --    L8:     LOAD_CONST               0 (None)
+                STORE_FAST               3 (exc)
+                DELETE_FAST              3 (exc)
+                RERAISE                  1
+
+ 149    L9:     RERAISE                  0
+
+  --   L10:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+ExceptionTable:
+  L3 to L4 -> L5 [0]
+  L5 to L6 -> L10 [1] lasti
+  L6 to L8 -> L8 [1] lasti
+  L8 to L10 -> L10 [1] lasti
+
+## CODE _protected_credential_values  args=('user_id', 'token', 'refresh_token', 'bkn', 'cookie')
+155           RESUME                   0
+
+156           LOAD_GLOBAL              1 (tuple + NULL)
+              LOAD_CONST               1 (<code object <genexpr> at 0x000001DD462F9430, file "data\database.py", line 156>)
+              MAKE_FUNCTION
+
+158           LOAD_FAST_LOAD_FAST      1 (user_id, token)
+              LOAD_FAST_LOAD_FAST     35 (refresh_token, bkn)
+              LOAD_FAST                4 (cookie)
+              BUILD_TUPLE              5
+              GET_ITER
+
+156           CALL                     0
+              CALL                     1
+              RETURN_VALUE
+
+### CODE _protected_credential_values.<locals>.<genexpr>  args=('.0',)
+ 156           RETURN_GENERATOR
+               POP_TOP
+       L1:     RESUME                   0
+               LOAD_FAST                0 (.0)
+
+ 158           GET_ITER
+       L2:     FOR_ITER                16 (to L3)
+               STORE_FAST               1 (value)
+
+ 157           LOAD_GLOBAL              1 (_protect_credential + NULL)
+               LOAD_FAST                1 (value)
+               CALL                     1
+               YIELD_VALUE              0
+               RESUME                   5
+               POP_TOP
+               JUMP_BACKWARD           18 (to L2)
+
+ 158   L3:     END_FOR
+               POP_TOP
+               RETURN_CONST             0 (None)
+
+  --   L4:     CALL_INTRINSIC_1         3 (INTRINSIC_STOPITERATION_ERROR)
+               RERAISE                  1
+ExceptionTable:
+  L1 to L4 -> L4 [0] lasti
+
+## CODE get_db_file  args=()
+ 162           RESUME                   0
+
+ 164           NOP
+
+ 165   L1:     LOAD_CONST               1 (0)
+               LOAD_CONST               2 (('get_config_manager',))
+               IMPORT_NAME              0 (core.config_manager)
+               IMPORT_FROM              1 (get_config_manager)
+               STORE_FAST               0 (get_config_manager)
+               POP_TOP
+
+ 166           LOAD_FAST                0 (get_config_manager)
+               PUSH_NULL
+               CALL                     0
+               LOAD_ATTR                4 (db_file)
+       L2:     RETURN_VALUE
+
+  --   L3:     PUSH_EXC_INFO
+
+ 167           LOAD_GLOBAL              6 (Exception)
+               CHECK_EXC_MATCH
+               POP_JUMP_IF_FALSE       24 (to L5)
+               POP_TOP
+
+ 168           LOAD_GLOBAL              8 (Config)
+               LOAD_ATTR               10 (get_db_file_path)
+               PUSH_NULL
+               CALL                     0
+               SWAP                     2
+       L4:     POP_EXCEPT
+               RETURN_VALUE
+
+ 167   L5:     RERAISE                  0
+
+  --   L6:     COPY                     3
+               POP_EXCEPT
+               RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L3 [0]
+  L3 to L4 -> L6 [1] lasti
+  L5 to L6 -> L6 [1] lasti
+
+## CODE get_db  args=()
+ 170           RETURN_GENERATOR
+               POP_TOP
+       L1:     RESUME                   0
+
+ 173           LOAD_GLOBAL              0 (sqlite3)
+               LOAD_ATTR                2 (connect)
+               PUSH_NULL
+               LOAD_GLOBAL              5 (get_db_file + NULL)
+               CALL                     0
+               CALL                     1
+               STORE_FAST               0 (conn)
+
+ 174           LOAD_GLOBAL              0 (sqlite3)
+               LOAD_ATTR                6 (Row)
+               LOAD_FAST                0 (conn)
+               STORE_ATTR               4 (row_factory)
+
+ 175   L2:     NOP
+
+ 176   L3:     LOAD_FAST                0 (conn)
+               YIELD_VALUE              0
+               RESUME                   1
+               POP_TOP
+
+ 178   L4:     LOAD_FAST                0 (conn)
+               LOAD_ATTR               11 (close + NULL|self)
+               CALL                     0
+               POP_TOP
+               RETURN_CONST             1 (None)
+
+  --   L5:     PUSH_EXC_INFO
+
+ 178           LOAD_FAST                0 (conn)
+               LOAD_ATTR               11 (close + NULL|self)
+               CALL                     0
+               POP_TOP
+               RERAISE                  0
+
+  --   L6:     COPY                     3
+               POP_EXCEPT
+               RERAISE                  1
+       L7:     CALL_INTRINSIC_1         3 (INTRINSIC_STOPITERATION_ERROR)
+               RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L7 [0] lasti
+  L3 to L4 -> L5 [0]
+  L4 to L5 -> L7 [0] lasti
+  L5 to L6 -> L6 [1] lasti
+  L6 to L7 -> L7 [0] lasti
+
+## CODE init_db  args=()
+ 180            RESUME                   0
+
+ 182            LOAD_GLOBAL              1 (get_db + NULL)
+                CALL                     0
+                BEFORE_WITH
+        L1:     STORE_FAST               0 (conn)
+
+ 184            LOAD_FAST                0 (conn)
+                LOAD_ATTR                3 (execute + NULL|self)
+                LOAD_CONST               1 ('\n            CREATE TABLE IF NOT EXISTS download_records (\n                media_id TEXT PRIMARY KEY,\n                file_name TEXT NOT NULL,\n                file_size INTEGER,\n                update_time INTEGER,\n                local_path TEXT,\n                download_time INTEGER\n            )\n        ')
+                CALL                     1
+                POP_TOP
+
+ 196            LOAD_FAST                0 (conn)
+                LOAD_ATTR                3 (execute + NULL|self)
+                LOAD_CONST               2 ('\n            CREATE TABLE IF NOT EXISTS login_credentials (\n                id INTEGER PRIMARY KEY,\n                user_id TEXT NOT NULL,\n                token TEXT NOT NULL,\n                refresh_token TEXT NOT NULL,\n                bkn TEXT NOT NULL,\n                cookie TEXT NOT NULL,\n                token_expire_time INTEGER NOT NULL,\n                refresh_token_expire_time INTEGER NOT NULL,\n                token_valid_time INTEGER NOT NULL,\n                refresh_token_valid_time INTEGER NOT NULL,\n                timestamp INTEGER NOT NULL\n            )\n        ')
+                CALL                     1
+                POP_TOP
+
+ 213            LOAD_FAST                0 (conn)
+                LOAD_ATTR                3 (execute + NULL|self)
+                LOAD_CONST               3 ('\n            CREATE TABLE IF NOT EXISTS user_settings (\n                key TEXT PRIMARY KEY,\n                value TEXT NOT NULL,\n                value_type TEXT NOT NULL,\n                updated_at INTEGER NOT NULL\n            )\n        ')
+                CALL                     1
+                POP_TOP
+
+ 223            LOAD_FAST                0 (conn)
+                LOAD_ATTR                3 (execute + NULL|self)
+                LOAD_CONST               4 ("\n            CREATE TABLE IF NOT EXISTS update_tasks (\n                id INTEGER PRIMARY KEY AUTOINCREMENT,\n                kb_id TEXT NOT NULL,\n                kb_name TEXT NOT NULL,\n                folder_id TEXT NOT NULL DEFAULT '',\n                folder_name TEXT NOT NULL DEFAULT '',\n                start_time INTEGER NOT NULL,\n                interval_hours INTEGER NOT NULL DEFAULT 1,\n                enabled INTEGER NOT NULL DEFAULT 1,\n                last_run INTEGER NOT NULL DEFAULT 0,\n                last_cutoff INTEGER NOT NULL DEFAULT 0,\n                created_at INTEGER NOT NULL\n            )\n        ")
+                CALL                     1
+                POP_TOP
+
+ 239            LOAD_FAST                0 (conn)
+                LOAD_ATTR                5 (commit + NULL|self)
+                CALL                     0
+                POP_TOP
+
+ 242    L2:     NOP
+
+ 243    L3:     LOAD_FAST                0 (conn)
+                LOAD_ATTR                3 (execute + NULL|self)
+                LOAD_CONST               5 ('PRAGMA table_info(update_tasks)')
+                CALL                     1
+                STORE_FAST               1 (cursor)
+
+ 244            LOAD_FAST                1 (cursor)
+                LOAD_ATTR                7 (fetchall + NULL|self)
+                CALL                     0
+                GET_ITER
+                LOAD_FAST_AND_CLEAR      2 (row)
+                SWAP                     2
+        L4:     BUILD_LIST               0
+                SWAP                     2
+                GET_ITER
+        L5:     FOR_ITER                 7 (to L6)
+                STORE_FAST_LOAD_FAST    34 (row, row)
+                LOAD_CONST               6 (1)
+                BINARY_SUBSCR
+                LIST_APPEND              2
+                JUMP_BACKWARD            9 (to L5)
+        L6:     END_FOR
+                POP_TOP
+        L7:     STORE_FAST               3 (columns)
+                STORE_FAST               2 (row)
+
+ 245            LOAD_CONST               7 ('folder_id')
+                LOAD_FAST                3 (columns)
+                CONTAINS_OP              1
+                POP_JUMP_IF_FALSE       50 (to L8)
+
+ 246            LOAD_FAST                0 (conn)
+                LOAD_ATTR                3 (execute + NULL|self)
+                LOAD_CONST               8 ("ALTER TABLE update_tasks ADD COLUMN folder_id TEXT NOT NULL DEFAULT ''")
+                CALL                     1
+                POP_TOP
+
+ 247            LOAD_FAST                0 (conn)
+                LOAD_ATTR                3 (execute + NULL|self)
+                LOAD_CONST               9 ("ALTER TABLE update_tasks ADD COLUMN folder_name TEXT NOT NULL DEFAULT ''")
+                CALL                     1
+                POP_TOP
+
+ 248            LOAD_FAST                0 (conn)
+                LOAD_ATTR                5 (commit + NULL|self)
+                CALL                     0
+                POP_TOP
+
+ 252    L8:     NOP
+
+ 253    L9:     LOAD_FAST                0 (conn)
+                LOAD_ATTR                3 (execute + NULL|self)
+                LOAD_CONST              10 ('PRAGMA table_info(login_credentials)')
+                CALL                     1
+                STORE_FAST               1 (cursor)
+
+ 254            LOAD_FAST                1 (cursor)
+                LOAD_ATTR                7 (fetchall + NULL|self)
+                CALL                     0
+                GET_ITER
+                LOAD_FAST_AND_CLEAR      2 (row)
+                SWAP                     2
+       L10:     BUILD_LIST               0
+                SWAP                     2
+                GET_ITER
+       L11:     FOR_ITER                 7 (to L12)
+                STORE_FAST_LOAD_FAST    34 (row, row)
+                LOAD_CONST               6 (1)
+                BINARY_SUBSCR
+                LIST_APPEND              2
+                JUMP_BACKWARD            9 (to L11)
+       L12:     END_FOR
+                POP_TOP
+       L13:     STORE_FAST               3 (columns)
+                STORE_FAST               2 (row)
+
+ 255            LOAD_CONST              11 ('user_id')
+                LOAD_FAST                3 (columns)
+                CONTAINS_OP              1
+                POP_JUMP_IF_FALSE       50 (to L14)
+
+ 257            LOAD_FAST                0 (conn)
+                LOAD_ATTR                3 (execute + NULL|self)
+                LOAD_CONST              12 ('DROP TABLE IF EXISTS login_credentials')
+                CALL                     1
+                POP_TOP
+
+ 258            LOAD_FAST                0 (conn)
+                LOAD_ATTR                3 (execute + NULL|self)
+                LOAD_CONST              13 ('\n                    CREATE TABLE login_credentials (\n                        id INTEGER PRIMARY KEY,\n                        user_id TEXT NOT NULL,\n                        token TEXT NOT NULL,\n                        refresh_token TEXT NOT NULL,\n                        bkn TEXT NOT NULL,\n                        cookie TEXT NOT NULL,\n                        token_expire_time INTEGER NOT NULL,\n                        refresh_token_expire_time INTEGER NOT NULL,\n                        token_valid_time INTEGER NOT NULL,\n                        refresh_token_valid_time INTEGER NOT NULL,\n                        timestamp INTEGER NOT NULL\n                    )\n                ')
+                CALL                     1
+                POP_TOP
+
+ 273            LOAD_FAST                0 (conn)
+                LOAD_ATTR                5 (commit + NULL|self)
+                CALL                     0
+                POP_TOP
+
+ 278   L14:     LOAD_GLOBAL             11 (_init_default_settings + NULL)
+                LOAD_FAST                0 (conn)
+                CALL                     1
+                POP_TOP
+
+ 182   L15:     LOAD_CONST              14 (None)
+                LOAD_CONST              14 (None)
+                LOAD_CONST              14 (None)
+                CALL                     2
+                POP_TOP
+                RETURN_CONST            14 (None)
+
+  --   L16:     SWAP                     2
+                POP_TOP
+
+ 244            SWAP                     2
+                STORE_FAST               2 (row)
+                RERAISE                  0
+
+  --   L17:     PUSH_EXC_INFO
+
+ 249            LOAD_GLOBAL              8 (Exception)
+                CHECK_EXC_MATCH
+                POP_JUMP_IF_FALSE        3 (to L19)
+                POP_TOP
+
+ 250   L18:     POP_EXCEPT
+                JUMP_BACKWARD_NO_INTERRUPT 145 (to L8)
+
+ 249   L19:     RERAISE                  0
+
+  --   L20:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+       L21:     SWAP                     2
+                POP_TOP
+
+ 254            SWAP                     2
+                STORE_FAST               2 (row)
+                RERAISE                  0
+
+  --   L22:     PUSH_EXC_INFO
+
+ 274            LOAD_GLOBAL              8 (Exception)
+                CHECK_EXC_MATCH
+                POP_JUMP_IF_FALSE        3 (to L24)
+                POP_TOP
+
+ 275   L23:     POP_EXCEPT
+                JUMP_BACKWARD_NO_INTERRUPT 58 (to L14)
+
+ 274   L24:     RERAISE                  0
+
+  --   L25:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+
+ 182   L26:     PUSH_EXC_INFO
+                WITH_EXCEPT_START
+                TO_BOOL
+                POP_JUMP_IF_TRUE         1 (to L27)
+                RERAISE                  2
+       L27:     POP_TOP
+       L28:     POP_EXCEPT
+                POP_TOP
+                POP_TOP
+                RETURN_CONST            14 (None)
+
+  --   L29:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L26 [1] lasti
+  L3 to L4 -> L17 [1]
+  L4 to L7 -> L16 [3]
+  L7 to L8 -> L17 [1]
+  L9 to L10 -> L22 [1]
+  L10 to L13 -> L21 [3]
+  L13 to L14 -> L22 [1]
+  L14 to L15 -> L26 [1] lasti
+  L16 to L17 -> L17 [1]
+  L17 to L18 -> L20 [2] lasti
+  L18 to L19 -> L26 [1] lasti
+  L19 to L20 -> L20 [2] lasti
+  L20 to L21 -> L26 [1] lasti
+  L21 to L22 -> L22 [1]
+  L22 to L23 -> L25 [2] lasti
+  L23 to L24 -> L26 [1] lasti
+  L24 to L25 -> L25 [2] lasti
+  L25 to L26 -> L26 [1] lasti
+  L26 to L28 -> L29 [3] lasti
+
+## CODE save_login_credentials  args=('bkn', 'cookie', 'user_id', 'token', 'refresh_token', 'token_valid_time', 'refresh_token_valid_time')
+ 280           RESUME                   0
+
+ 293           LOAD_CONST               1 (0)
+               LOAD_CONST               2 (None)
+               IMPORT_NAME              0 (time)
+               STORE_FAST               7 (time)
+
+ 294           LOAD_GLOBAL              3 (int + NULL)
+               LOAD_FAST                7 (time)
+               LOAD_ATTR                1 (time + NULL|self)
+               CALL                     0
+               CALL                     1
+               STORE_FAST               8 (current_time)
+
+ 295           LOAD_GLOBAL              5 (_protected_credential_values + NULL)
+
+ 296           LOAD_FAST                2 (user_id)
+
+ 297           LOAD_FAST                3 (token)
+
+ 298           LOAD_FAST                4 (refresh_token)
+
+ 299           LOAD_FAST                0 (bkn)
+
+ 300           LOAD_FAST                1 (cookie)
+
+ 295           CALL                     5
+               STORE_FAST               9 (protected_values)
+
+ 303           LOAD_GLOBAL              7 (get_db + NULL)
+               CALL                     0
+               BEFORE_WITH
+       L1:     STORE_FAST              10 (conn)
+
+ 305           LOAD_FAST               10 (conn)
+               LOAD_ATTR                9 (execute + NULL|self)
+               LOAD_CONST               3 ('DELETE FROM login_credentials')
+               CALL                     1
+               POP_TOP
+
+ 307           LOAD_FAST               10 (conn)
+               LOAD_ATTR                9 (execute + NULL|self)
+               LOAD_CONST               4 ('\n            INSERT INTO login_credentials\n            (id, user_id, token, refresh_token, bkn, cookie,\n             token_expire_time, refresh_token_expire_time,\n             token_valid_time, refresh_token_valid_time, timestamp)\n            VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)\n        ')
+
+ 313           BUILD_LIST               0
+
+ 314           LOAD_FAST                9 (protected_values)
+
+ 313           LIST_EXTEND              1
+
+ 315           LOAD_FAST_LOAD_FAST    133 (current_time, token_valid_time)
+               BINARY_OP                0 (+)
+
+ 313           LIST_APPEND              1
+
+ 316           LOAD_FAST_LOAD_FAST    134 (current_time, refresh_token_valid_time)
+               BINARY_OP                0 (+)
+
+ 313           LIST_APPEND              1
+
+ 317           LOAD_FAST                5 (token_valid_time)
+
+ 313           LIST_APPEND              1
+
+ 318           LOAD_FAST                6 (refresh_token_valid_time)
+
+ 313           LIST_APPEND              1
+
+ 319           LOAD_FAST                8 (current_time)
+
+ 313           LIST_APPEND              1
+               CALL_INTRINSIC_1         6 (INTRINSIC_LIST_TO_TUPLE)
+
+ 307           CALL                     2
+               POP_TOP
+
+ 321           LOAD_FAST               10 (conn)
+               LOAD_ATTR               11 (commit + NULL|self)
+               CALL                     0
+               POP_TOP
+
+ 303   L2:     LOAD_CONST               2 (None)
+               LOAD_CONST               2 (None)
+               LOAD_CONST               2 (None)
+               CALL                     2
+               POP_TOP
+
+ 322   L3:     LOAD_GLOBAL             13 (_set_credential_cache + NULL)
+
+ 323           LOAD_FAST                2 (user_id)
+
+ 324           LOAD_FAST                3 (token)
+
+ 325           LOAD_FAST                4 (refresh_token)
+
+ 326           LOAD_FAST                0 (bkn)
+
+ 327           LOAD_FAST                1 (cookie)
+
+ 328           LOAD_FAST_LOAD_FAST    133 (current_time, token_valid_time)
+               BINARY_OP                0 (+)
+
+ 329           LOAD_FAST_LOAD_FAST    134 (current_time, refresh_token_valid_time)
+               BINARY_OP                0 (+)
+
+ 330           LOAD_FAST                5 (token_valid_time)
+
+ 331           LOAD_FAST                6 (refresh_token_valid_time)
+
+ 332           LOAD_FAST                8 (current_time)
+
+ 322           LOAD_CONST               5 (('user_id', 'token', 'refresh_token', 'bkn', 'cookie', 'token_expire_time', 'refresh_token_expire_time', 'token_valid_time', 'refresh_token_valid_time', 'timestamp'))
+               BUILD_CONST_KEY_MAP     10
+               CALL                     1
+               POP_TOP
+               RETURN_CONST             2 (None)
+
+ 303   L4:     PUSH_EXC_INFO
+               WITH_EXCEPT_START
+               TO_BOOL
+               POP_JUMP_IF_TRUE         1 (to L5)
+               RERAISE                  2
+       L5:     POP_TOP
+       L6:     POP_EXCEPT
+               POP_TOP
+               POP_TOP
+               JUMP_BACKWARD_NO_INTERRUPT 41 (to L3)
+
+  --   L7:     COPY                     3
+               POP_EXCEPT
+               RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L4 [1] lasti
+  L4 to L6 -> L7 [3] lasti
+
+## CODE get_login_credentials  args=()
+  --            MAKE_CELL                8 (credentials)
+
+ 335            RESUME                   0
+
+ 337            LOAD_GLOBAL              0 (_credential_cache_lock)
+                BEFORE_WITH
+        L1:     POP_TOP
+
+ 338            LOAD_GLOBAL              2 (_credential_cache)
+                TO_BOOL
+                POP_JUMP_IF_FALSE       24 (to L3)
+
+ 339            LOAD_GLOBAL              5 (_copy_credentials + NULL)
+                LOAD_GLOBAL              2 (_credential_cache)
+                CALL                     1
+
+ 337    L2:     SWAP                     2
+                LOAD_CONST               1 (None)
+                LOAD_CONST               1 (None)
+                LOAD_CONST               1 (None)
+                CALL                     2
+                POP_TOP
+                RETURN_VALUE
+
+ 338    L3:     NOP
+
+ 337            LOAD_CONST               1 (None)
+                LOAD_CONST               1 (None)
+                LOAD_CONST               1 (None)
+                CALL                     2
+                POP_TOP
+
+ 341    L4:     LOAD_GLOBAL              7 (get_db + NULL)
+                CALL                     0
+                BEFORE_WITH
+        L5:     STORE_FAST               0 (conn)
+
+ 342            LOAD_FAST                0 (conn)
+                LOAD_ATTR                9 (execute + NULL|self)
+                LOAD_CONST               2 ('\n            SELECT user_id, token, refresh_token, bkn, cookie,\n                   token_expire_time, refresh_token_expire_time,\n                   token_valid_time, refresh_token_valid_time, timestamp\n            FROM login_credentials WHERE id=1\n        ')
+                CALL                     1
+
+ 347            LOAD_ATTR               11 (fetchone + NULL|self)
+                CALL                     0
+
+ 342            STORE_FAST               1 (row)
+
+ 348            LOAD_FAST                1 (row)
+                TO_BOOL
+                POP_JUMP_IF_FALSE      162 (to L11)
+
+ 349            LOAD_CONST               3 (('user_id', 'token', 'refresh_token', 'bkn', 'cookie'))
+                STORE_FAST               2 (credential_fields)
+
+ 356            BUILD_MAP                0
+                STORE_DEREF              8 (credentials)
+
+ 357            LOAD_CONST               4 (False)
+                STORE_FAST               3 (needs_migration)
+
+ 358            LOAD_FAST                2 (credential_fields)
+                GET_ITER
+        L6:     FOR_ITER                33 (to L8)
+                STORE_FAST               4 (field)
+
+ 359            LOAD_GLOBAL             13 (_unprotect_credential + NULL)
+
+ 360            LOAD_FAST_LOAD_FAST     20 (row, field)
+                BINARY_SUBSCR
+
+ 359            CALL                     1
+                UNPACK_SEQUENCE          2
+                LOAD_DEREF               8 (credentials)
+                LOAD_FAST                4 (field)
+                STORE_SUBSCR
+                STORE_FAST               5 (legacy_plaintext)
+
+ 362            LOAD_FAST                3 (needs_migration)
+                COPY                     1
+                TO_BOOL
+                POP_JUMP_IF_TRUE         2 (to L7)
+                POP_TOP
+                LOAD_FAST                5 (legacy_plaintext)
+        L7:     STORE_FAST               3 (needs_migration)
+                JUMP_BACKWARD           35 (to L6)
+
+ 358    L8:     END_FOR
+                POP_TOP
+
+ 364            LOAD_FAST                3 (needs_migration)
+                TO_BOOL
+                POP_JUMP_IF_FALSE       52 (to L9)
+
+ 365            LOAD_GLOBAL             15 (_protected_credential_values + NULL)
+
+ 366            LOAD_FAST                8 (credentials)
+                BUILD_TUPLE              1
+                LOAD_CONST               5 (<code object <genexpr> at 0x000001DD462FBB30, file "data\database.py", line 366>)
+                MAKE_FUNCTION
+                SET_FUNCTION_ATTRIBUTE   8 (closure)
+                LOAD_FAST                2 (credential_fields)
+                GET_ITER
+                CALL                     0
+
+ 365            CALL_FUNCTION_EX         0
+                STORE_FAST               6 (protected_values)
+
+ 368            LOAD_FAST                0 (conn)
+                LOAD_ATTR                9 (execute + NULL|self)
+                LOAD_CONST               6 ('\n                    UPDATE login_credentials\n                    SET user_id = ?, token = ?, refresh_token = ?, bkn = ?, cookie = ?\n                    WHERE id = 1\n                ')
+
+ 372            LOAD_FAST                6 (protected_values)
+
+ 368            CALL                     2
+                POP_TOP
+
+ 373            LOAD_FAST                0 (conn)
+                LOAD_ATTR               17 (commit + NULL|self)
+                CALL                     0
+                POP_TOP
+
+ 375    L9:     BUILD_MAP                0
+
+ 376            LOAD_DEREF               8 (credentials)
+
+ 375            DICT_UPDATE              1
+
+ 377            LOAD_FAST                1 (row)
+                LOAD_CONST               7 ('token_expire_time')
+                BINARY_SUBSCR
+
+ 378            LOAD_FAST                1 (row)
+                LOAD_CONST               8 ('refresh_token_expire_time')
+                BINARY_SUBSCR
+
+ 379            LOAD_FAST                1 (row)
+                LOAD_CONST               9 ('token_valid_time')
+                BINARY_SUBSCR
+
+ 380            LOAD_FAST                1 (row)
+                LOAD_CONST              10 ('refresh_token_valid_time')
+                BINARY_SUBSCR
+
+ 381            LOAD_FAST                1 (row)
+                LOAD_CONST              11 ('timestamp')
+                BINARY_SUBSCR
+
+ 375            LOAD_CONST              12 (('token_expire_time', 'refresh_token_expire_time', 'token_valid_time', 'refresh_token_valid_time', 'timestamp'))
+                BUILD_CONST_KEY_MAP      5
+                DICT_UPDATE              1
+                STORE_FAST               7 (result)
+
+ 383            LOAD_GLOBAL             19 (_set_credential_cache + NULL)
+                LOAD_FAST                7 (result)
+                CALL                     1
+                POP_TOP
+
+ 384            LOAD_GLOBAL              5 (_copy_credentials + NULL)
+                LOAD_FAST                7 (result)
+                CALL                     1
+
+ 341   L10:     SWAP                     2
+                LOAD_CONST               1 (None)
+                LOAD_CONST               1 (None)
+                LOAD_CONST               1 (None)
+                CALL                     2
+                POP_TOP
+                RETURN_VALUE
+
+ 385   L11:     NOP
+
+ 341   L12:     LOAD_CONST               1 (None)
+                LOAD_CONST               1 (None)
+                LOAD_CONST               1 (None)
+                CALL                     2
+                POP_TOP
+                RETURN_CONST             1 (None)
+
+ 337   L13:     PUSH_EXC_INFO
+                WITH_EXCEPT_START
+                TO_BOOL
+                POP_JUMP_IF_TRUE         1 (to L14)
+                RERAISE                  2
+       L14:     POP_TOP
+       L15:     POP_EXCEPT
+                POP_TOP
+                POP_TOP
+                JUMP_BACKWARD_NO_INTERRUPT 235 (to L4)
+
+  --   L16:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+
+ 341   L17:     PUSH_EXC_INFO
+                WITH_EXCEPT_START
+                TO_BOOL
+                POP_JUMP_IF_TRUE         1 (to L18)
+                RERAISE                  2
+       L18:     POP_TOP
+       L19:     POP_EXCEPT
+                POP_TOP
+                POP_TOP
+                RETURN_CONST             1 (None)
+
+  --   L20:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L13 [1] lasti
+  L5 to L10 -> L17 [1] lasti
+  L11 to L12 -> L17 [1] lasti
+  L13 to L15 -> L16 [3] lasti
+  L17 to L19 -> L20 [3] lasti
+
+### CODE get_login_credentials.<locals>.<genexpr>  args=('.0',)
+  --           COPY_FREE_VARS           1
+
+ 366           RETURN_GENERATOR
+               POP_TOP
+       L1:     RESUME                   0
+               LOAD_FAST                0 (.0)
+               GET_ITER
+       L2:     FOR_ITER                10 (to L3)
+               STORE_FAST               1 (field)
+               LOAD_DEREF               2 (credentials)
+               LOAD_FAST                1 (field)
+               BINARY_SUBSCR
+               YIELD_VALUE              0
+               RESUME                   5
+               POP_TOP
+               JUMP_BACKWARD           12 (to L2)
+       L3:     END_FOR
+               POP_TOP
+               RETURN_CONST             0 (None)
+
+  --   L4:     CALL_INTRINSIC_1         3 (INTRINSIC_STOPITERATION_ERROR)
+               RERAISE                  1
+ExceptionTable:
+  L1 to L4 -> L4 [0] lasti
+
+## CODE clear_login_credentials  args=()
+ 388           RESUME                   0
+
+ 390           LOAD_GLOBAL              1 (get_db + NULL)
+               CALL                     0
+               BEFORE_WITH
+       L1:     STORE_FAST               0 (conn)
+
+ 391           LOAD_FAST                0 (conn)
+               LOAD_ATTR                3 (execute + NULL|self)
+               LOAD_CONST               1 ('DELETE FROM login_credentials')
+               CALL                     1
+               POP_TOP
+
+ 392           LOAD_FAST                0 (conn)
+               LOAD_ATTR                5 (commit + NULL|self)
+               CALL                     0
+               POP_TOP
+
+ 390   L2:     LOAD_CONST               2 (None)
+               LOAD_CONST               2 (None)
+               LOAD_CONST               2 (None)
+               CALL                     2
+               POP_TOP
+
+ 393   L3:     LOAD_GLOBAL              7 (clear_credential_cache + NULL)
+               CALL                     0
+               POP_TOP
+               RETURN_CONST             2 (None)
+
+ 390   L4:     PUSH_EXC_INFO
+               WITH_EXCEPT_START
+               TO_BOOL
+               POP_JUMP_IF_TRUE         1 (to L5)
+               RERAISE                  2
+       L5:     POP_TOP
+       L6:     POP_EXCEPT
+               POP_TOP
+               POP_TOP
+               JUMP_BACKWARD_NO_INTERRUPT 25 (to L3)
+
+  --   L7:     COPY                     3
+               POP_EXCEPT
+               RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L4 [1] lasti
+  L4 to L6 -> L7 [3] lasti
+
+## CODE check_file_exists  args=('media_id', 'file_size', 'update_time')
+ 395            RESUME                   0
+
+ 397            LOAD_GLOBAL              1 (get_db + NULL)
+                CALL                     0
+                BEFORE_WITH
+        L1:     STORE_FAST               3 (conn)
+
+ 398            LOAD_FAST                3 (conn)
+                LOAD_ATTR                3 (execute + NULL|self)
+
+ 399            LOAD_CONST               1 ('SELECT * FROM download_records WHERE media_id=?')
+                LOAD_FAST                0 (media_id)
+                BUILD_TUPLE              1
+
+ 398            CALL                     2
+
+ 400            LOAD_ATTR                5 (fetchone + NULL|self)
+                CALL                     0
+
+ 398            STORE_FAST               4 (row)
+
+ 402            LOAD_FAST                4 (row)
+                TO_BOOL
+                POP_JUMP_IF_TRUE        10 (to L3)
+
+ 403            NOP
+
+ 397    L2:     LOAD_CONST               2 (None)
+                LOAD_CONST               2 (None)
+                LOAD_CONST               2 (None)
+                CALL                     2
+                POP_TOP
+                RETURN_CONST             3 (False)
+
+ 405    L3:     LOAD_GLOBAL              6 (os)
+                LOAD_ATTR                8 (path)
+                LOAD_ATTR               11 (exists + NULL|self)
+                LOAD_FAST                4 (row)
+                LOAD_CONST               4 ('local_path')
+                BINARY_SUBSCR
+                CALL                     1
+                TO_BOOL
+                POP_JUMP_IF_FALSE       28 (to L5)
+
+ 406            LOAD_FAST                4 (row)
+                LOAD_CONST               5 ('file_size')
+                BINARY_SUBSCR
+                LOAD_FAST                1 (file_size)
+                COMPARE_OP              88 (bool(==))
+                POP_JUMP_IF_FALSE       19 (to L5)
+
+ 407            LOAD_FAST                4 (row)
+                LOAD_CONST               6 ('update_time')
+                BINARY_SUBSCR
+                LOAD_FAST                2 (update_time)
+                COMPARE_OP              88 (bool(==))
+                POP_JUMP_IF_FALSE       10 (to L5)
+
+ 408            NOP
+
+ 397    L4:     LOAD_CONST               2 (None)
+                LOAD_CONST               2 (None)
+                LOAD_CONST               2 (None)
+                CALL                     2
+                POP_TOP
+                RETURN_CONST             7 (True)
+
+ 410    L5:     NOP
+
+ 397    L6:     LOAD_CONST               2 (None)
+                LOAD_CONST               2 (None)
+                LOAD_CONST               2 (None)
+                CALL                     2
+                POP_TOP
+                RETURN_CONST             3 (False)
+        L7:     PUSH_EXC_INFO
+                WITH_EXCEPT_START
+                TO_BOOL
+                POP_JUMP_IF_TRUE         1 (to L8)
+                RERAISE                  2
+        L8:     POP_TOP
+        L9:     POP_EXCEPT
+                POP_TOP
+                POP_TOP
+                RETURN_CONST             2 (None)
+
+  --   L10:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L7 [1] lasti
+  L3 to L4 -> L7 [1] lasti
+  L5 to L6 -> L7 [1] lasti
+  L7 to L9 -> L10 [3] lasti
+
+## CODE save_download_record  args=('media_id', 'file_name', 'file_size', 'update_time', 'local_path')
+ 412           RESUME                   0
+
+ 414           LOAD_CONST               1 (0)
+               LOAD_CONST               2 (None)
+               IMPORT_NAME              0 (time)
+               STORE_FAST               5 (time)
+
+ 415           LOAD_GLOBAL              3 (get_db + NULL)
+               CALL                     0
+               BEFORE_WITH
+       L1:     STORE_FAST               6 (conn)
+
+ 416           LOAD_FAST                6 (conn)
+               LOAD_ATTR                5 (execute + NULL|self)
+               LOAD_CONST               3 ('\n            INSERT OR REPLACE INTO download_records\n            (media_id, file_name, file_size, update_time, local_path, download_time)\n            VALUES (?, ?, ?, ?, ?, ?)\n        ')
+
+ 420           LOAD_FAST_LOAD_FAST      1 (media_id, file_name)
+               LOAD_FAST_LOAD_FAST     35 (file_size, update_time)
+               LOAD_FAST                4 (local_path)
+               LOAD_GLOBAL              7 (int + NULL)
+               LOAD_FAST                5 (time)
+               LOAD_ATTR                1 (time + NULL|self)
+               CALL                     0
+               CALL                     1
+               BUILD_TUPLE              6
+
+ 416           CALL                     2
+               POP_TOP
+
+ 421           LOAD_FAST                6 (conn)
+               LOAD_ATTR                9 (commit + NULL|self)
+               CALL                     0
+               POP_TOP
+
+ 415   L2:     LOAD_CONST               2 (None)
+               LOAD_CONST               2 (None)
+               LOAD_CONST               2 (None)
+               CALL                     2
+               POP_TOP
+               RETURN_CONST             2 (None)
+       L3:     PUSH_EXC_INFO
+               WITH_EXCEPT_START
+               TO_BOOL
+               POP_JUMP_IF_TRUE         1 (to L4)
+               RERAISE                  2
+       L4:     POP_TOP
+       L5:     POP_EXCEPT
+               POP_TOP
+               POP_TOP
+               RETURN_CONST             2 (None)
+
+  --   L6:     COPY                     3
+               POP_EXCEPT
+               RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L3 [1] lasti
+  L3 to L5 -> L6 [3] lasti
+
+## CODE save_download_records_batch  args=('records',)
+ 423            RESUME                   0
+
+ 425            LOAD_CONST               1 (0)
+                LOAD_CONST               2 (None)
+                IMPORT_NAME              0 (time)
+                STORE_FAST               1 (time)
+
+ 426            LOAD_FAST                0 (records)
+                TO_BOOL
+                POP_JUMP_IF_TRUE         1 (to L1)
+
+ 427            RETURN_CONST             2 (None)
+
+ 429    L1:     LOAD_GLOBAL              3 (get_db + NULL)
+                CALL                     0
+                BEFORE_WITH
+        L2:     STORE_FAST               2 (conn)
+
+ 430            LOAD_GLOBAL              5 (int + NULL)
+                LOAD_FAST                1 (time)
+                LOAD_ATTR                1 (time + NULL|self)
+                CALL                     0
+                CALL                     1
+                STORE_FAST               3 (current_time)
+
+ 431            LOAD_FAST                2 (conn)
+                LOAD_ATTR                7 (executemany + NULL|self)
+                LOAD_CONST               3 ('\n            INSERT OR REPLACE INTO download_records\n            (media_id, file_name, file_size, update_time, local_path, download_time)\n            VALUES (?, ?, ?, ?, ?, ?)\n        ')
+
+ 436            LOAD_FAST                0 (records)
+                GET_ITER
+
+ 435            LOAD_FAST_AND_CLEAR      4 (r)
+                SWAP                     2
+        L3:     BUILD_LIST               0
+                SWAP                     2
+
+ 436            GET_ITER
+        L4:     FOR_ITER                26 (to L5)
+                STORE_FAST               4 (r)
+
+ 435            LOAD_FAST                4 (r)
+                LOAD_CONST               4 ('media_id')
+                BINARY_SUBSCR
+                LOAD_FAST                4 (r)
+                LOAD_CONST               5 ('file_name')
+                BINARY_SUBSCR
+                LOAD_FAST                4 (r)
+                LOAD_CONST               6 ('file_size')
+                BINARY_SUBSCR
+                LOAD_FAST                4 (r)
+                LOAD_CONST               7 ('update_time')
+                BINARY_SUBSCR
+
+ 436            LOAD_FAST                4 (r)
+                LOAD_CONST               8 ('local_path')
+                BINARY_SUBSCR
+                LOAD_FAST                3 (current_time)
+
+ 435            BUILD_TUPLE              6
+                LIST_APPEND              2
+                JUMP_BACKWARD           28 (to L4)
+
+ 436    L5:     END_FOR
+                POP_TOP
+
+ 435    L6:     SWAP                     2
+                STORE_FAST               4 (r)
+
+ 431            CALL                     2
+                POP_TOP
+
+ 437            LOAD_FAST                2 (conn)
+                LOAD_ATTR                9 (commit + NULL|self)
+                CALL                     0
+                POP_TOP
+
+ 429    L7:     LOAD_CONST               2 (None)
+                LOAD_CONST               2 (None)
+                LOAD_CONST               2 (None)
+                CALL                     2
+                POP_TOP
+                RETURN_CONST             2 (None)
+
+  --    L8:     SWAP                     2
+                POP_TOP
+
+ 435            SWAP                     2
+                STORE_FAST               4 (r)
+                RERAISE                  0
+
+ 429    L9:     PUSH_EXC_INFO
+                WITH_EXCEPT_START
+                TO_BOOL
+                POP_JUMP_IF_TRUE         1 (to L10)
+                RERAISE                  2
+       L10:     POP_TOP
+       L11:     POP_EXCEPT
+                POP_TOP
+                POP_TOP
+                RETURN_CONST             2 (None)
+
+  --   L12:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+ExceptionTable:
+  L2 to L3 -> L9 [1] lasti
+  L3 to L6 -> L8 [6]
+  L6 to L7 -> L9 [1] lasti
+  L8 to L9 -> L9 [1] lasti
+  L9 to L11 -> L12 [3] lasti
+
+## CODE is_token_expired  args=()
+439           RESUME                   0
+
+448           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (None)
+              IMPORT_NAME              0 (time)
+              STORE_FAST               0 (time)
+
+449           LOAD_GLOBAL              3 (get_login_credentials + NULL)
+              CALL                     0
+              STORE_FAST               1 (creds)
+
+450           LOAD_FAST                1 (creds)
+              TO_BOOL
+              POP_JUMP_IF_TRUE         1 (to L1)
+
+451           RETURN_CONST             3 ((True, 0))
+
+453   L1:     LOAD_GLOBAL              5 (int + NULL)
+              LOAD_FAST                0 (time)
+              LOAD_ATTR                1 (time + NULL|self)
+              CALL                     0
+              CALL                     1
+              STORE_FAST               2 (current_time)
+
+454           LOAD_FAST                1 (creds)
+              LOAD_CONST               4 ('token_expire_time')
+              BINARY_SUBSCR
+              LOAD_FAST                2 (current_time)
+              BINARY_OP               10 (-)
+              STORE_FAST               3 (time_remaining)
+
+456           LOAD_FAST                3 (time_remaining)
+              LOAD_CONST               5 (300)
+              COMPARE_OP              42 (<=)
+              LOAD_FAST                3 (time_remaining)
+              BUILD_TUPLE              2
+              RETURN_VALUE
+
+## CODE is_refresh_token_expired  args=()
+459           RESUME                   0
+
+465           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (None)
+              IMPORT_NAME              0 (time)
+              STORE_FAST               0 (time)
+
+466           LOAD_GLOBAL              3 (get_login_credentials + NULL)
+              CALL                     0
+              STORE_FAST               1 (creds)
+
+467           LOAD_FAST                1 (creds)
+              TO_BOOL
+              POP_JUMP_IF_TRUE         1 (to L1)
+
+468           RETURN_CONST             3 (True)
+
+470   L1:     LOAD_GLOBAL              5 (int + NULL)
+              LOAD_FAST                0 (time)
+              LOAD_ATTR                1 (time + NULL|self)
+              CALL                     0
+              CALL                     1
+              STORE_FAST               2 (current_time)
+
+471           LOAD_FAST_LOAD_FAST     33 (current_time, creds)
+              LOAD_CONST               4 ('refresh_token_expire_time')
+              BINARY_SUBSCR
+              COMPARE_OP             172 (>=)
+              RETURN_VALUE
+
+## CODE update_token  args=('new_token', 'new_bkn', 'new_cookie', 'token_valid_time')
+ 473           RESUME                   0
+
+ 482           LOAD_CONST               1 (0)
+               LOAD_CONST               2 (None)
+               IMPORT_NAME              0 (time)
+               STORE_FAST               4 (time)
+
+ 483           LOAD_GLOBAL              3 (get_login_credentials + NULL)
+               CALL                     0
+               STORE_FAST               5 (creds)
+
+ 484           LOAD_FAST                5 (creds)
+               TO_BOOL
+               POP_JUMP_IF_TRUE         1 (to L1)
+
+ 485           RETURN_CONST             3 (False)
+
+ 488   L1:     LOAD_FAST                3 (token_valid_time)
+               POP_JUMP_IF_NOT_NONE     5 (to L2)
+
+ 489           LOAD_FAST                5 (creds)
+               LOAD_CONST               4 ('token_valid_time')
+               BINARY_SUBSCR
+               STORE_FAST               3 (token_valid_time)
+
+ 491   L2:     LOAD_GLOBAL              5 (int + NULL)
+               LOAD_FAST                4 (time)
+               LOAD_ATTR                1 (time + NULL|self)
+               CALL                     0
+               CALL                     1
+               STORE_FAST               6 (current_time)
+
+ 492           LOAD_GLOBAL              7 (_protect_credential + NULL)
+               LOAD_FAST                0 (new_token)
+               CALL                     1
+               STORE_FAST               7 (protected_token)
+
+ 493           LOAD_GLOBAL              7 (_protect_credential + NULL)
+               LOAD_FAST                1 (new_bkn)
+               CALL                     1
+               STORE_FAST               8 (protected_bkn)
+
+ 494           LOAD_GLOBAL              7 (_protect_credential + NULL)
+               LOAD_FAST                2 (new_cookie)
+               CALL                     1
+               STORE_FAST               9 (protected_cookie)
+
+ 495           LOAD_GLOBAL              9 (get_db + NULL)
+               CALL                     0
+               BEFORE_WITH
+       L3:     STORE_FAST              10 (conn)
+
+ 496           LOAD_FAST               10 (conn)
+               LOAD_ATTR               11 (execute + NULL|self)
+               LOAD_CONST               5 ('\n            UPDATE login_credentials\n            SET token = ?, bkn = ?, cookie = ?,\n                token_valid_time = ?, token_expire_time = ?, timestamp = ?\n            WHERE id = 1\n        ')
+
+ 502           LOAD_FAST                7 (protected_token)
+
+ 503           LOAD_FAST                8 (protected_bkn)
+
+ 504           LOAD_FAST                9 (protected_cookie)
+
+ 505           LOAD_FAST                3 (token_valid_time)
+
+ 506           LOAD_FAST_LOAD_FAST     99 (current_time, token_valid_time)
+               BINARY_OP                0 (+)
+
+ 507           LOAD_FAST                6 (current_time)
+
+ 501           BUILD_TUPLE              6
+
+ 496           CALL                     2
+               POP_TOP
+
+ 509           LOAD_FAST               10 (conn)
+               LOAD_ATTR               13 (commit + NULL|self)
+               CALL                     0
+               POP_TOP
+
+ 495   L4:     LOAD_CONST               2 (None)
+               LOAD_CONST               2 (None)
+               LOAD_CONST               2 (None)
+               CALL                     2
+               POP_TOP
+
+ 510   L5:     LOAD_GLOBAL             15 (dict + NULL)
+               LOAD_FAST                5 (creds)
+               CALL                     1
+               STORE_FAST              11 (updated)
+
+ 511           LOAD_FAST               11 (updated)
+               LOAD_ATTR               17 (update + NULL|self)
+
+ 512           LOAD_FAST                0 (new_token)
+
+ 513           LOAD_FAST                1 (new_bkn)
+
+ 514           LOAD_FAST                2 (new_cookie)
+
+ 515           LOAD_FAST                3 (token_valid_time)
+
+ 516           LOAD_FAST_LOAD_FAST     99 (current_time, token_valid_time)
+               BINARY_OP                0 (+)
+
+ 517           LOAD_FAST                6 (current_time)
+
+ 511           LOAD_CONST               6 (('token', 'bkn', 'cookie', 'token_valid_time', 'token_expire_time', 'timestamp'))
+               BUILD_CONST_KEY_MAP      6
+               CALL                     1
+               POP_TOP
+
+ 519           LOAD_GLOBAL             19 (_set_credential_cache + NULL)
+               LOAD_FAST               11 (updated)
+               CALL                     1
+               POP_TOP
+
+ 520           RETURN_CONST             7 (True)
+
+ 495   L6:     PUSH_EXC_INFO
+               WITH_EXCEPT_START
+               TO_BOOL
+               POP_JUMP_IF_TRUE         1 (to L7)
+               RERAISE                  2
+       L7:     POP_TOP
+       L8:     POP_EXCEPT
+               POP_TOP
+               POP_TOP
+               JUMP_BACKWARD_NO_INTERRUPT 63 (to L5)
+
+  --   L9:     COPY                     3
+               POP_EXCEPT
+               RERAISE                  1
+ExceptionTable:
+  L3 to L4 -> L6 [1] lasti
+  L6 to L8 -> L9 [3] lasti
+
+## CODE _init_default_settings  args=('conn',)
+522           RESUME                   0
+
+524           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (None)
+              IMPORT_NAME              0 (time)
+              STORE_FAST               1 (time)
+
+525           LOAD_GLOBAL              2 (Config)
+              LOAD_ATTR                4 (get_default_download_dir)
+              PUSH_NULL
+              CALL                     0
+              STORE_FAST               2 (default_download_dir)
+
+528           LOAD_CONST               3 (('false', 'bool'))
+
+529           LOAD_CONST               4 (('1', 'int'))
+
+530           LOAD_CONST               5 (('3', 'int'))
+
+531           LOAD_FAST                2 (default_download_dir)
+              LOAD_CONST               6 ('str')
+              BUILD_TUPLE              2
+
+532           LOAD_CONST               3 (('false', 'bool'))
+
+533           LOAD_CONST               4 (('1', 'int'))
+
+534           LOAD_CONST               7 (('[]', 'json'))
+
+535           LOAD_CONST               8 (('0', 'int'))
+
+536           LOAD_CONST               8 (('0', 'int'))
+
+537           LOAD_CONST               8 (('0', 'int'))
+
+527           LOAD_CONST               9 (('enable_download_delay', 'delay_min', 'delay_max', 'download_dir', 'auto_update_enabled', 'auto_update_interval_hours', 'auto_update_kb_ids', 'auto_update_last_run', 'auto_update_last_cutoff', 'auto_update_start_time'))
+              BUILD_CONST_KEY_MAP     10
+              STORE_FAST               3 (defaults)
+
+540           LOAD_FAST                3 (defaults)
+              LOAD_ATTR                7 (items + NULL|self)
+              CALL                     0
+              GET_ITER
+      L1:     FOR_ITER                94 (to L3)
+              UNPACK_SEQUENCE          2
+              STORE_FAST               4 (key)
+              UNPACK_SEQUENCE          2
+              STORE_FAST_STORE_FAST   86 (value, value_type)
+
+542           LOAD_FAST                0 (conn)
+              LOAD_ATTR                9 (execute + NULL|self)
+
+543           LOAD_CONST              10 ('SELECT 1 FROM user_settings WHERE key=?')
+              LOAD_FAST                4 (key)
+              BUILD_TUPLE              1
+
+542           CALL                     2
+
+544           LOAD_ATTR               11 (fetchone + NULL|self)
+              CALL                     0
+
+542           STORE_FAST               7 (existing)
+
+546           LOAD_FAST                7 (existing)
+              TO_BOOL
+              POP_JUMP_IF_FALSE        2 (to L2)
+              JUMP_BACKWARD           50 (to L1)
+
+547   L2:     LOAD_FAST                0 (conn)
+              LOAD_ATTR                9 (execute + NULL|self)
+              LOAD_CONST              11 ('\n                INSERT INTO user_settings (key, value, value_type, updated_at)\n                VALUES (?, ?, ?, ?)\n            ')
+
+550           LOAD_FAST_LOAD_FAST     69 (key, value)
+              LOAD_FAST                6 (value_type)
+              LOAD_GLOBAL             13 (int + NULL)
+              LOAD_FAST                1 (time)
+              LOAD_ATTR                1 (time + NULL|self)
+              CALL                     0
+              CALL                     1
+              BUILD_TUPLE              4
+
+547           CALL                     2
+              POP_TOP
+              JUMP_BACKWARD           96 (to L1)
+
+540   L3:     END_FOR
+              POP_TOP
+
+551           LOAD_FAST                0 (conn)
+              LOAD_ATTR               15 (commit + NULL|self)
+              CALL                     0
+              POP_TOP
+
+554           LOAD_GLOBAL             17 (_migrate_auto_update_settings + NULL)
+              LOAD_FAST                0 (conn)
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             2 (None)
+
+## CODE get_user_setting  args=('key', 'default')
+ 555            RESUME                   0
+
+ 565            LOAD_GLOBAL              1 (get_db + NULL)
+                CALL                     0
+                BEFORE_WITH
+        L1:     STORE_FAST               2 (conn)
+
+ 566            LOAD_FAST                2 (conn)
+                LOAD_ATTR                3 (execute + NULL|self)
+
+ 567            LOAD_CONST               1 ('SELECT value, value_type FROM user_settings WHERE key=?')
+                LOAD_FAST                0 (key)
+                BUILD_TUPLE              1
+
+ 566            CALL                     2
+
+ 568            LOAD_ATTR                5 (fetchone + NULL|self)
+                CALL                     0
+
+ 566            STORE_FAST               3 (row)
+
+ 570            LOAD_FAST                3 (row)
+                TO_BOOL
+                POP_JUMP_IF_TRUE        11 (to L3)
+
+ 571            LOAD_FAST                1 (default)
+
+ 565    L2:     SWAP                     2
+                LOAD_CONST               2 (None)
+                LOAD_CONST               2 (None)
+                LOAD_CONST               2 (None)
+                CALL                     2
+                POP_TOP
+                RETURN_VALUE
+
+ 573    L3:     LOAD_FAST                3 (row)
+                LOAD_CONST               3 ('value')
+                BINARY_SUBSCR
+                LOAD_FAST                3 (row)
+                LOAD_CONST               4 ('value_type')
+                BINARY_SUBSCR
+                STORE_FAST_STORE_FAST   84 (value_type, value)
+
+ 575    L4:     NOP
+
+ 576    L5:     LOAD_FAST                5 (value_type)
+                LOAD_CONST               5 ('bool')
+                COMPARE_OP              88 (bool(==))
+                POP_JUMP_IF_FALSE       28 (to L7)
+
+ 577            LOAD_FAST                4 (value)
+                LOAD_ATTR                7 (lower + NULL|self)
+                CALL                     0
+                LOAD_CONST               6 (('true', '1', 'yes'))
+                CONTAINS_OP              0
+
+ 565    L6:     SWAP                     2
+                LOAD_CONST               2 (None)
+                LOAD_CONST               2 (None)
+                LOAD_CONST               2 (None)
+                CALL                     2
+                POP_TOP
+                RETURN_VALUE
+
+ 578    L7:     LOAD_FAST                5 (value_type)
+                LOAD_CONST               7 ('int')
+                COMPARE_OP              88 (bool(==))
+                POP_JUMP_IF_FALSE       20 (to L9)
+
+ 579            LOAD_GLOBAL              9 (int + NULL)
+                LOAD_FAST                4 (value)
+                CALL                     1
+
+ 565    L8:     SWAP                     2
+                LOAD_CONST               2 (None)
+                LOAD_CONST               2 (None)
+                LOAD_CONST               2 (None)
+                CALL                     2
+                POP_TOP
+                RETURN_VALUE
+
+ 580    L9:     LOAD_FAST                5 (value_type)
+                LOAD_CONST               8 ('float')
+                COMPARE_OP              88 (bool(==))
+                POP_JUMP_IF_FALSE       20 (to L11)
+
+ 581            LOAD_GLOBAL             11 (float + NULL)
+                LOAD_FAST                4 (value)
+                CALL                     1
+
+ 565   L10:     SWAP                     2
+                LOAD_CONST               2 (None)
+                LOAD_CONST               2 (None)
+                LOAD_CONST               2 (None)
+                CALL                     2
+                POP_TOP
+                RETURN_VALUE
+
+ 582   L11:     LOAD_FAST                5 (value_type)
+                LOAD_CONST               9 ('json')
+                COMPARE_OP              88 (bool(==))
+                POP_JUMP_IF_FALSE       31 (to L13)
+
+ 583            LOAD_GLOBAL             12 (json)
+                LOAD_ATTR               14 (loads)
+                PUSH_NULL
+                LOAD_FAST                4 (value)
+                CALL                     1
+
+ 565   L12:     SWAP                     2
+                LOAD_CONST               2 (None)
+                LOAD_CONST               2 (None)
+                LOAD_CONST               2 (None)
+                CALL                     2
+                POP_TOP
+                RETURN_VALUE
+
+ 585   L13:     LOAD_FAST                4 (value)
+
+ 565   L14:     SWAP                     2
+                LOAD_CONST               2 (None)
+                LOAD_CONST               2 (None)
+                LOAD_CONST               2 (None)
+                CALL                     2
+                POP_TOP
+                RETURN_VALUE
+
+  --   L15:     PUSH_EXC_INFO
+
+ 586            LOAD_GLOBAL             16 (Exception)
+                CHECK_EXC_MATCH
+                POP_JUMP_IF_FALSE       14 (to L18)
+                POP_TOP
+
+ 587            LOAD_FAST                1 (default)
+                SWAP                     2
+       L16:     POP_EXCEPT
+
+ 565   L17:     SWAP                     2
+                LOAD_CONST               2 (None)
+                LOAD_CONST               2 (None)
+                LOAD_CONST               2 (None)
+                CALL                     2
+                POP_TOP
+                RETURN_VALUE
+
+ 586   L18:     RERAISE                  0
+
+  --   L19:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+
+ 565   L20:     PUSH_EXC_INFO
+                WITH_EXCEPT_START
+                TO_BOOL
+                POP_JUMP_IF_TRUE         1 (to L21)
+                RERAISE                  2
+       L21:     POP_TOP
+       L22:     POP_EXCEPT
+                POP_TOP
+                POP_TOP
+                RETURN_CONST             2 (None)
+
+  --   L23:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L20 [1] lasti
+  L3 to L4 -> L20 [1] lasti
+  L5 to L6 -> L15 [1]
+  L7 to L8 -> L15 [1]
+  L9 to L10 -> L15 [1]
+  L11 to L12 -> L15 [1]
+  L13 to L14 -> L15 [1]
+  L15 to L16 -> L19 [2] lasti
+  L16 to L17 -> L20 [1] lasti
+  L18 to L19 -> L19 [2] lasti
+  L19 to L20 -> L20 [1] lasti
+  L20 to L22 -> L23 [3] lasti
+
+## CODE set_user_setting  args=('key', 'value')
+ 590            RESUME                   0
+
+ 597            LOAD_CONST               1 (0)
+                LOAD_CONST               2 (None)
+                IMPORT_NAME              0 (time)
+                STORE_FAST               2 (time)
+
+ 600            LOAD_GLOBAL              3 (isinstance + NULL)
+                LOAD_FAST                1 (value)
+                LOAD_GLOBAL              4 (bool)
+                CALL                     2
+                TO_BOOL
+                POP_JUMP_IF_FALSE       14 (to L3)
+
+ 601            LOAD_FAST                1 (value)
+                TO_BOOL
+                POP_JUMP_IF_FALSE        2 (to L1)
+                LOAD_CONST               3 ('true')
+                JUMP_FORWARD             1 (to L2)
+        L1:     LOAD_CONST               4 ('false')
+        L2:     STORE_FAST               3 (value_str)
+
+ 602            LOAD_CONST               5 ('bool')
+                STORE_FAST               4 (value_type)
+                JUMP_FORWARD           134 (to L7)
+
+ 603    L3:     LOAD_GLOBAL              3 (isinstance + NULL)
+                LOAD_FAST                1 (value)
+                LOAD_GLOBAL              6 (int)
+                CALL                     2
+                TO_BOOL
+                POP_JUMP_IF_FALSE       14 (to L4)
+
+ 604            LOAD_GLOBAL              9 (str + NULL)
+                LOAD_FAST                1 (value)
+                CALL                     1
+                STORE_FAST               3 (value_str)
+
+ 605            LOAD_CONST               6 ('int')
+                STORE_FAST               4 (value_type)
+                JUMP_FORWARD            99 (to L7)
+
+ 606    L4:     LOAD_GLOBAL              3 (isinstance + NULL)
+                LOAD_FAST                1 (value)
+                LOAD_GLOBAL             10 (float)
+                CALL                     2
+                TO_BOOL
+                POP_JUMP_IF_FALSE       14 (to L5)
+
+ 607            LOAD_GLOBAL              9 (str + NULL)
+                LOAD_FAST                1 (value)
+                CALL                     1
+                STORE_FAST               3 (value_str)
+
+ 608            LOAD_CONST               7 ('float')
+                STORE_FAST               4 (value_type)
+                JUMP_FORWARD            64 (to L7)
+
+ 609    L5:     LOAD_GLOBAL              3 (isinstance + NULL)
+                LOAD_FAST                1 (value)
+                LOAD_GLOBAL             12 (dict)
+                LOAD_GLOBAL             14 (list)
+                BUILD_TUPLE              2
+                CALL                     2
+                TO_BOOL
+                POP_JUMP_IF_FALSE       24 (to L6)
+
+ 610            LOAD_GLOBAL             16 (json)
+                LOAD_ATTR               18 (dumps)
+                PUSH_NULL
+                LOAD_FAST                1 (value)
+                LOAD_CONST               8 (False)
+                LOAD_CONST               9 (('ensure_ascii',))
+                CALL_KW                  2
+                STORE_FAST               3 (value_str)
+
+ 611            LOAD_CONST              10 ('json')
+                STORE_FAST               4 (value_type)
+                JUMP_FORWARD            13 (to L7)
+
+ 613    L6:     LOAD_GLOBAL              9 (str + NULL)
+                LOAD_FAST                1 (value)
+                CALL                     1
+                STORE_FAST               3 (value_str)
+
+ 614            LOAD_CONST              11 ('str')
+                STORE_FAST               4 (value_type)
+
+ 616    L7:     LOAD_GLOBAL             21 (get_db + NULL)
+                CALL                     0
+                BEFORE_WITH
+        L8:     STORE_FAST               5 (conn)
+
+ 617            LOAD_FAST                5 (conn)
+                LOAD_ATTR               23 (execute + NULL|self)
+                LOAD_CONST              12 ('\n            INSERT OR REPLACE INTO user_settings (key, value, value_type, updated_at)\n            VALUES (?, ?, ?, ?)\n        ')
+
+ 620            LOAD_FAST_LOAD_FAST      3 (key, value_str)
+                LOAD_FAST                4 (value_type)
+                LOAD_GLOBAL              7 (int + NULL)
+                LOAD_FAST                2 (time)
+                LOAD_ATTR                1 (time + NULL|self)
+                CALL                     0
+                CALL                     1
+                BUILD_TUPLE              4
+
+ 617            CALL                     2
+                POP_TOP
+
+ 621            LOAD_FAST                5 (conn)
+                LOAD_ATTR               25 (commit + NULL|self)
+                CALL                     0
+                POP_TOP
+
+ 616    L9:     LOAD_CONST               2 (None)
+                LOAD_CONST               2 (None)
+                LOAD_CONST               2 (None)
+                CALL                     2
+                POP_TOP
+                RETURN_CONST             2 (None)
+       L10:     PUSH_EXC_INFO
+                WITH_EXCEPT_START
+                TO_BOOL
+                POP_JUMP_IF_TRUE         1 (to L11)
+                RERAISE                  2
+       L11:     POP_TOP
+       L12:     POP_EXCEPT
+                POP_TOP
+                POP_TOP
+                RETURN_CONST             2 (None)
+
+  --   L13:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+ExceptionTable:
+  L8 to L9 -> L10 [1] lasti
+  L10 to L12 -> L13 [3] lasti
+
+## CODE get_all_user_settings  args=()
+ 623            RESUME                   0
+
+ 629            LOAD_GLOBAL              1 (get_db + NULL)
+                CALL                     0
+                BEFORE_WITH
+        L1:     STORE_FAST               0 (conn)
+
+ 630            LOAD_FAST                0 (conn)
+                LOAD_ATTR                3 (execute + NULL|self)
+                LOAD_CONST               1 ('SELECT key, value, value_type FROM user_settings')
+                CALL                     1
+                LOAD_ATTR                5 (fetchall + NULL|self)
+                CALL                     0
+                STORE_FAST               1 (rows)
+
+ 632            BUILD_MAP                0
+                STORE_FAST               2 (settings)
+
+ 633            LOAD_FAST                1 (rows)
+                GET_ITER
+        L2:     FOR_ITER               125 (to L14)
+                STORE_FAST               3 (row)
+
+ 634            LOAD_FAST                3 (row)
+                LOAD_CONST               2 ('key')
+                BINARY_SUBSCR
+                LOAD_FAST                3 (row)
+                LOAD_CONST               3 ('value')
+                BINARY_SUBSCR
+                LOAD_FAST                3 (row)
+                LOAD_CONST               4 ('value_type')
+                BINARY_SUBSCR
+                STORE_FAST_STORE_FAST  101 (value_type, value)
+                STORE_FAST               4 (key)
+
+ 636    L3:     NOP
+
+ 637    L4:     LOAD_FAST                6 (value_type)
+                LOAD_CONST               5 ('bool')
+                COMPARE_OP              88 (bool(==))
+                POP_JUMP_IF_FALSE       23 (to L6)
+
+ 638            LOAD_FAST                5 (value)
+                LOAD_ATTR                7 (lower + NULL|self)
+                CALL                     0
+                LOAD_CONST               6 (('true', '1', 'yes'))
+                CONTAINS_OP              0
+                LOAD_FAST_LOAD_FAST     36 (settings, key)
+                STORE_SUBSCR
+        L5:     JUMP_BACKWARD           47 (to L2)
+
+ 639    L6:     LOAD_FAST                6 (value_type)
+                LOAD_CONST               7 ('int')
+                COMPARE_OP              88 (bool(==))
+                POP_JUMP_IF_FALSE       15 (to L8)
+
+ 640            LOAD_GLOBAL              9 (int + NULL)
+                LOAD_FAST                5 (value)
+                CALL                     1
+                LOAD_FAST_LOAD_FAST     36 (settings, key)
+                STORE_SUBSCR
+        L7:     JUMP_BACKWARD           68 (to L2)
+
+ 641    L8:     LOAD_FAST                6 (value_type)
+                LOAD_CONST               8 ('float')
+                COMPARE_OP              88 (bool(==))
+                POP_JUMP_IF_FALSE       15 (to L10)
+
+ 642            LOAD_GLOBAL             11 (float + NULL)
+                LOAD_FAST                5 (value)
+                CALL                     1
+                LOAD_FAST_LOAD_FAST     36 (settings, key)
+                STORE_SUBSCR
+        L9:     JUMP_BACKWARD           89 (to L2)
+
+ 643   L10:     LOAD_FAST                6 (value_type)
+                LOAD_CONST               9 ('json')
+                COMPARE_OP              88 (bool(==))
+                POP_JUMP_IF_FALSE       26 (to L12)
+
+ 644            LOAD_GLOBAL             12 (json)
+                LOAD_ATTR               14 (loads)
+                PUSH_NULL
+                LOAD_FAST                5 (value)
+                CALL                     1
+                LOAD_FAST_LOAD_FAST     36 (settings, key)
+                STORE_SUBSCR
+       L11:     JUMP_BACKWARD          121 (to L2)
+
+ 646   L12:     LOAD_FAST_LOAD_FAST     82 (value, settings)
+                LOAD_FAST                4 (key)
+                STORE_SUBSCR
+       L13:     JUMP_BACKWARD          127 (to L2)
+
+ 633   L14:     END_FOR
+                POP_TOP
+
+ 650            LOAD_FAST                2 (settings)
+
+ 629   L15:     SWAP                     2
+                LOAD_CONST              10 (None)
+                LOAD_CONST              10 (None)
+                LOAD_CONST              10 (None)
+                CALL                     2
+                POP_TOP
+                RETURN_VALUE
+
+  --   L16:     PUSH_EXC_INFO
+
+ 647            LOAD_GLOBAL             16 (Exception)
+                CHECK_EXC_MATCH
+                POP_JUMP_IF_FALSE        8 (to L18)
+                POP_TOP
+
+ 648            LOAD_FAST_LOAD_FAST     82 (value, settings)
+                LOAD_FAST                4 (key)
+                STORE_SUBSCR
+       L17:     POP_EXCEPT
+                JUMP_BACKWARD          157 (to L2)
+
+ 647   L18:     RERAISE                  0
+
+  --   L19:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+
+ 629   L20:     PUSH_EXC_INFO
+                WITH_EXCEPT_START
+                TO_BOOL
+                POP_JUMP_IF_TRUE         1 (to L21)
+                RERAISE                  2
+       L21:     POP_TOP
+       L22:     POP_EXCEPT
+                POP_TOP
+                POP_TOP
+                RETURN_CONST            10 (None)
+
+  --   L23:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+ExceptionTable:
+  L1 to L3 -> L20 [1] lasti
+  L4 to L5 -> L16 [2]
+  L5 to L6 -> L20 [1] lasti
+  L6 to L7 -> L16 [2]
+  L7 to L8 -> L20 [1] lasti
+  L8 to L9 -> L16 [2]
+  L9 to L10 -> L20 [1] lasti
+  L10 to L11 -> L16 [2]
+  L11 to L12 -> L20 [1] lasti
+  L12 to L13 -> L16 [2]
+  L13 to L15 -> L20 [1] lasti
+  L16 to L17 -> L19 [3] lasti
+  L17 to L18 -> L20 [1] lasti
+  L18 to L19 -> L19 [3] lasti
+  L19 to L20 -> L20 [1] lasti
+  L20 to L22 -> L23 [3] lasti
+
+## CODE delete_user_setting  args=('key',)
+ 653           RESUME                   0
+
+ 659           LOAD_GLOBAL              1 (get_db + NULL)
+               CALL                     0
+               BEFORE_WITH
+       L1:     STORE_FAST               1 (conn)
+
+ 660           LOAD_FAST                1 (conn)
+               LOAD_ATTR                3 (execute + NULL|self)
+               LOAD_CONST               1 ('DELETE FROM user_settings WHERE key=?')
+               LOAD_FAST                0 (key)
+               BUILD_TUPLE              1
+               CALL                     2
+               POP_TOP
+
+ 661           LOAD_FAST                1 (conn)
+               LOAD_ATTR                5 (commit + NULL|self)
+               CALL                     0
+               POP_TOP
+
+ 659   L2:     LOAD_CONST               2 (None)
+               LOAD_CONST               2 (None)
+               LOAD_CONST               2 (None)
+               CALL                     2
+               POP_TOP
+               RETURN_CONST             2 (None)
+       L3:     PUSH_EXC_INFO
+               WITH_EXCEPT_START
+               TO_BOOL
+               POP_JUMP_IF_TRUE         1 (to L4)
+               RERAISE                  2
+       L4:     POP_TOP
+       L5:     POP_EXCEPT
+               POP_TOP
+               POP_TOP
+               RETURN_CONST             2 (None)
+
+  --   L6:     COPY                     3
+               POP_EXCEPT
+               RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L3 [1] lasti
+  L3 to L5 -> L6 [3] lasti
+
+## CODE _migrate_auto_update_settings  args=('conn',)
+ 665            RESUME                   0
+
+ 667            NOP
+
+ 668    L1:     LOAD_FAST                0 (conn)
+                LOAD_ATTR                1 (execute + NULL|self)
+
+ 669            LOAD_CONST               1 ('SELECT COUNT(*) as cnt FROM update_tasks')
+
+ 668            CALL                     1
+
+ 670            LOAD_ATTR                3 (fetchone + NULL|self)
+                CALL                     0
+
+ 668            STORE_FAST               1 (existing)
+
+ 671            LOAD_FAST                1 (existing)
+                TO_BOOL
+                POP_JUMP_IF_FALSE       10 (to L3)
+                LOAD_FAST                1 (existing)
+                LOAD_CONST               2 ('cnt')
+                BINARY_SUBSCR
+                LOAD_CONST               3 (0)
+                COMPARE_OP             148 (bool(>))
+                POP_JUMP_IF_FALSE        1 (to L3)
+
+ 672    L2:     RETURN_CONST             4 (None)
+
+ 673    L3:     LOAD_FAST                0 (conn)
+                LOAD_ATTR                1 (execute + NULL|self)
+
+ 674            LOAD_CONST               5 ("SELECT value FROM user_settings WHERE key='auto_update_enabled'")
+
+ 673            CALL                     1
+
+ 675            LOAD_ATTR                3 (fetchone + NULL|self)
+                CALL                     0
+
+ 673            STORE_FAST               2 (enabled_row)
+
+ 676            LOAD_FAST                2 (enabled_row)
+                TO_BOOL
+                POP_JUMP_IF_FALSE       23 (to L4)
+                LOAD_FAST                2 (enabled_row)
+                LOAD_CONST               6 ('value')
+                BINARY_SUBSCR
+                LOAD_ATTR                5 (lower + NULL|self)
+                CALL                     0
+                LOAD_CONST               7 ('true')
+                COMPARE_OP             119 (bool(!=))
+                POP_JUMP_IF_FALSE        1 (to L5)
+
+ 677    L4:     RETURN_CONST             4 (None)
+
+ 678    L5:     LOAD_FAST                0 (conn)
+                LOAD_ATTR                1 (execute + NULL|self)
+
+ 679            LOAD_CONST               8 ("SELECT value FROM user_settings WHERE key='auto_update_kb_ids'")
+
+ 678            CALL                     1
+
+ 680            LOAD_ATTR                3 (fetchone + NULL|self)
+                CALL                     0
+
+ 678            STORE_FAST               3 (kb_ids_row)
+
+ 681            LOAD_FAST                0 (conn)
+                LOAD_ATTR                1 (execute + NULL|self)
+
+ 682            LOAD_CONST               9 ("SELECT value FROM user_settings WHERE key='auto_update_interval_hours'")
+
+ 681            CALL                     1
+
+ 683            LOAD_ATTR                3 (fetchone + NULL|self)
+                CALL                     0
+
+ 681            STORE_FAST               4 (interval_row)
+
+ 684            LOAD_FAST                0 (conn)
+                LOAD_ATTR                1 (execute + NULL|self)
+
+ 685            LOAD_CONST              10 ("SELECT value FROM user_settings WHERE key='auto_update_start_time'")
+
+ 684            CALL                     1
+
+ 686            LOAD_ATTR                3 (fetchone + NULL|self)
+                CALL                     0
+
+ 684            STORE_FAST               5 (start_row)
+
+ 687            LOAD_FAST                0 (conn)
+                LOAD_ATTR                1 (execute + NULL|self)
+
+ 688            LOAD_CONST              11 ("SELECT value FROM user_settings WHERE key='auto_update_last_run'")
+
+ 687            CALL                     1
+
+ 689            LOAD_ATTR                3 (fetchone + NULL|self)
+                CALL                     0
+
+ 687            STORE_FAST               6 (last_run_row)
+
+ 690            LOAD_FAST                0 (conn)
+                LOAD_ATTR                1 (execute + NULL|self)
+
+ 691            LOAD_CONST              12 ("SELECT value FROM user_settings WHERE key='auto_update_last_cutoff'")
+
+ 690            CALL                     1
+
+ 692            LOAD_ATTR                3 (fetchone + NULL|self)
+                CALL                     0
+
+ 690            STORE_FAST               7 (last_cutoff_row)
+
+ 693            LOAD_CONST               3 (0)
+                LOAD_CONST               4 (None)
+                IMPORT_NAME              3 (json)
+                STORE_FAST               8 (json)
+
+ 694            LOAD_CONST               3 (0)
+                LOAD_CONST               4 (None)
+                IMPORT_NAME              4 (time)
+                STORE_FAST               9 (time)
+
+ 695            LOAD_FAST                3 (kb_ids_row)
+                TO_BOOL
+                POP_JUMP_IF_FALSE       21 (to L6)
+                LOAD_FAST                8 (json)
+                LOAD_ATTR               10 (loads)
+                PUSH_NULL
+                LOAD_FAST                3 (kb_ids_row)
+                LOAD_CONST               6 ('value')
+                BINARY_SUBSCR
+                CALL                     1
+                JUMP_FORWARD             1 (to L7)
+        L6:     BUILD_LIST               0
+        L7:     STORE_FAST              10 (kb_ids)
+
+ 696            LOAD_FAST                4 (interval_row)
+                TO_BOOL
+                POP_JUMP_IF_FALSE       14 (to L8)
+                LOAD_GLOBAL             13 (int + NULL)
+                LOAD_FAST                4 (interval_row)
+                LOAD_CONST               6 ('value')
+                BINARY_SUBSCR
+                CALL                     1
+                JUMP_FORWARD             1 (to L9)
+        L8:     LOAD_CONST              13 (1)
+        L9:     STORE_FAST              11 (interval)
+
+ 697            LOAD_FAST                5 (start_row)
+                TO_BOOL
+                POP_JUMP_IF_FALSE       14 (to L10)
+                LOAD_GLOBAL             13 (int + NULL)
+                LOAD_FAST                5 (start_row)
+                LOAD_CONST               6 ('value')
+                BINARY_SUBSCR
+                CALL                     1
+                JUMP_FORWARD             1 (to L11)
+       L10:     LOAD_CONST               3 (0)
+       L11:     STORE_FAST              12 (start_time)
+
+ 698            LOAD_FAST                6 (last_run_row)
+                TO_BOOL
+                POP_JUMP_IF_FALSE       14 (to L12)
+                LOAD_GLOBAL             13 (int + NULL)
+                LOAD_FAST                6 (last_run_row)
+                LOAD_CONST               6 ('value')
+                BINARY_SUBSCR
+                CALL                     1
+                JUMP_FORWARD             1 (to L13)
+       L12:     LOAD_CONST               3 (0)
+       L13:     STORE_FAST              13 (last_run)
+
+ 699            LOAD_FAST                7 (last_cutoff_row)
+                TO_BOOL
+                POP_JUMP_IF_FALSE       14 (to L14)
+                LOAD_GLOBAL             13 (int + NULL)
+                LOAD_FAST                7 (last_cutoff_row)
+                LOAD_CONST               6 ('value')
+                BINARY_SUBSCR
+                CALL                     1
+                JUMP_FORWARD             1 (to L15)
+       L14:     LOAD_CONST               3 (0)
+       L15:     STORE_FAST              14 (last_cutoff)
+
+ 701            LOAD_FAST               10 (kb_ids)
+                TO_BOOL
+                POP_JUMP_IF_TRUE         1 (to L17)
+
+ 702   L16:     RETURN_CONST             4 (None)
+
+ 704   L17:     LOAD_GLOBAL             13 (int + NULL)
+                LOAD_FAST                9 (time)
+                LOAD_ATTR                9 (time + NULL|self)
+                CALL                     0
+                CALL                     1
+                STORE_FAST              15 (current_time)
+
+ 705            LOAD_FAST               10 (kb_ids)
+                GET_ITER
+       L18:     FOR_ITER                26 (to L19)
+                STORE_FAST              16 (kb_id)
+
+ 707            LOAD_FAST                0 (conn)
+                LOAD_ATTR                1 (execute + NULL|self)
+                LOAD_CONST              14 ('\n                INSERT INTO update_tasks\n                (kb_id, kb_name, start_time, interval_hours, enabled, last_run, last_cutoff, created_at)\n                VALUES (?, ?, ?, ?, 1, ?, ?, ?)\n            ')
+
+ 711            LOAD_FAST               16 (kb_id)
+                LOAD_FAST               16 (kb_id)
+                LOAD_FAST_LOAD_FAST    203 (start_time, interval)
+                LOAD_FAST_LOAD_FAST    222 (last_run, last_cutoff)
+                LOAD_FAST               15 (current_time)
+                BUILD_TUPLE              7
+
+ 707            CALL                     2
+                POP_TOP
+                JUMP_BACKWARD           28 (to L18)
+
+ 705   L19:     END_FOR
+                POP_TOP
+
+ 714            LOAD_CONST              15 (('auto_update_enabled', 'auto_update_kb_ids', 'auto_update_interval_hours', 'auto_update_start_time', 'auto_update_last_run', 'auto_update_last_cutoff'))
+                GET_ITER
+       L20:     FOR_ITER                22 (to L21)
+                STORE_FAST              17 (key)
+
+ 719            LOAD_FAST                0 (conn)
+                LOAD_ATTR                1 (execute + NULL|self)
+                LOAD_CONST              16 ('DELETE FROM user_settings WHERE key=?')
+                LOAD_FAST               17 (key)
+                BUILD_TUPLE              1
+                CALL                     2
+                POP_TOP
+                JUMP_BACKWARD           24 (to L20)
+
+ 714   L21:     END_FOR
+                POP_TOP
+
+ 721            LOAD_FAST                0 (conn)
+                LOAD_ATTR               15 (commit + NULL|self)
+                CALL                     0
+                POP_TOP
+       L22:     RETURN_CONST             4 (None)
+
+  --   L23:     PUSH_EXC_INFO
+
+ 722            LOAD_GLOBAL             16 (Exception)
+                CHECK_EXC_MATCH
+                POP_JUMP_IF_FALSE        3 (to L25)
+                POP_TOP
+
+ 723   L24:     POP_EXCEPT
+                RETURN_CONST             4 (None)
+
+ 722   L25:     RERAISE                  0
+
+  --   L26:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L23 [0]
+  L3 to L4 -> L23 [0]
+  L5 to L16 -> L23 [0]
+  L17 to L22 -> L23 [0]
+  L23 to L24 -> L26 [1] lasti
+  L25 to L26 -> L26 [1] lasti
+
+## CODE add_task  args=('kb_id', 'kb_name', 'start_time', 'interval_hours', 'folder_id', 'folder_name')
+ 726           RESUME                   0
+
+ 728           LOAD_CONST               1 (0)
+               LOAD_CONST               2 (None)
+               IMPORT_NAME              0 (time)
+               STORE_FAST               6 (time)
+
+ 729           LOAD_GLOBAL              3 (get_db + NULL)
+               CALL                     0
+               BEFORE_WITH
+       L1:     STORE_FAST               7 (conn)
+
+ 730           LOAD_FAST                7 (conn)
+               LOAD_ATTR                5 (execute + NULL|self)
+               LOAD_CONST               3 ('\n            INSERT INTO update_tasks\n            (kb_id, kb_name, folder_id, folder_name, start_time, interval_hours, enabled, last_run, last_cutoff, created_at)\n            VALUES (?, ?, ?, ?, ?, ?, 1, 0, 0, ?)\n        ')
+
+ 734           LOAD_FAST_LOAD_FAST      1 (kb_id, kb_name)
+               LOAD_FAST_LOAD_FAST     69 (folder_id, folder_name)
+               LOAD_GLOBAL              7 (int + NULL)
+               LOAD_FAST                2 (start_time)
+               CALL                     1
+               LOAD_FAST                3 (interval_hours)
+               LOAD_GLOBAL              7 (int + NULL)
+               LOAD_FAST                6 (time)
+               LOAD_ATTR                1 (time + NULL|self)
+               CALL                     0
+               CALL                     1
+               BUILD_TUPLE              7
+
+ 730           CALL                     2
+               STORE_FAST               8 (cursor)
+
+ 735           LOAD_FAST                7 (conn)
+               LOAD_ATTR                9 (commit + NULL|self)
+               CALL                     0
+               POP_TOP
+
+ 736           LOAD_FAST                8 (cursor)
+               LOAD_ATTR               10 (lastrowid)
+
+ 729   L2:     SWAP                     2
+               LOAD_CONST               2 (None)
+               LOAD_CONST               2 (None)
+               LOAD_CONST               2 (None)
+               CALL                     2
+               POP_TOP
+               RETURN_VALUE
+       L3:     PUSH_EXC_INFO
+               WITH_EXCEPT_START
+               TO_BOOL
+               POP_JUMP_IF_TRUE         1 (to L4)
+               RERAISE                  2
+       L4:     POP_TOP
+       L5:     POP_EXCEPT
+               POP_TOP
+               POP_TOP
+               RETURN_CONST             2 (None)
+
+  --   L6:     COPY                     3
+               POP_EXCEPT
+               RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L3 [1] lasti
+  L3 to L5 -> L6 [3] lasti
+
+## CODE get_all_tasks  args=()
+ 738            RESUME                   0
+
+ 740            LOAD_GLOBAL              1 (get_db + NULL)
+                CALL                     0
+                BEFORE_WITH
+        L1:     STORE_FAST               0 (conn)
+
+ 741            LOAD_FAST                0 (conn)
+                LOAD_ATTR                3 (execute + NULL|self)
+                LOAD_CONST               1 ('SELECT * FROM update_tasks ORDER BY created_at DESC')
+                CALL                     1
+                LOAD_ATTR                5 (fetchall + NULL|self)
+                CALL                     0
+                STORE_FAST               1 (rows)
+
+ 742            LOAD_FAST                1 (rows)
+                GET_ITER
+                LOAD_FAST_AND_CLEAR      2 (row)
+                SWAP                     2
+        L2:     BUILD_LIST               0
+                SWAP                     2
+                GET_ITER
+        L3:     FOR_ITER                14 (to L4)
+                STORE_FAST               2 (row)
+                LOAD_GLOBAL              7 (dict + NULL)
+                LOAD_FAST                2 (row)
+                CALL                     1
+                LIST_APPEND              2
+                JUMP_BACKWARD           16 (to L3)
+        L4:     END_FOR
+                POP_TOP
+        L5:     SWAP                     2
+                STORE_FAST               2 (row)
+
+ 740    L6:     SWAP                     2
+                LOAD_CONST               2 (None)
+                LOAD_CONST               2 (None)
+                LOAD_CONST               2 (None)
+                CALL                     2
+                POP_TOP
+                RETURN_VALUE
+
+  --    L7:     SWAP                     2
+                POP_TOP
+
+ 742            SWAP                     2
+                STORE_FAST               2 (row)
+                RERAISE                  0
+
+ 740    L8:     PUSH_EXC_INFO
+                WITH_EXCEPT_START
+                TO_BOOL
+                POP_JUMP_IF_TRUE         1 (to L9)
+                RERAISE                  2
+        L9:     POP_TOP
+       L10:     POP_EXCEPT
+                POP_TOP
+                POP_TOP
+                RETURN_CONST             2 (None)
+
+  --   L11:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L8 [1] lasti
+  L2 to L5 -> L7 [3]
+  L5 to L6 -> L8 [1] lasti
+  L7 to L8 -> L8 [1] lasti
+  L8 to L10 -> L11 [3] lasti
+
+## CODE get_enabled_tasks  args=()
+ 744            RESUME                   0
+
+ 746            LOAD_GLOBAL              1 (get_db + NULL)
+                CALL                     0
+                BEFORE_WITH
+        L1:     STORE_FAST               0 (conn)
+
+ 747            LOAD_FAST                0 (conn)
+                LOAD_ATTR                3 (execute + NULL|self)
+
+ 748            LOAD_CONST               1 ('SELECT * FROM update_tasks WHERE enabled=1 ORDER BY created_at DESC')
+
+ 747            CALL                     1
+
+ 749            LOAD_ATTR                5 (fetchall + NULL|self)
+                CALL                     0
+
+ 747            STORE_FAST               1 (rows)
+
+ 750            LOAD_FAST                1 (rows)
+                GET_ITER
+                LOAD_FAST_AND_CLEAR      2 (row)
+                SWAP                     2
+        L2:     BUILD_LIST               0
+                SWAP                     2
+                GET_ITER
+        L3:     FOR_ITER                14 (to L4)
+                STORE_FAST               2 (row)
+                LOAD_GLOBAL              7 (dict + NULL)
+                LOAD_FAST                2 (row)
+                CALL                     1
+                LIST_APPEND              2
+                JUMP_BACKWARD           16 (to L3)
+        L4:     END_FOR
+                POP_TOP
+        L5:     SWAP                     2
+                STORE_FAST               2 (row)
+
+ 746    L6:     SWAP                     2
+                LOAD_CONST               2 (None)
+                LOAD_CONST               2 (None)
+                LOAD_CONST               2 (None)
+                CALL                     2
+                POP_TOP
+                RETURN_VALUE
+
+  --    L7:     SWAP                     2
+                POP_TOP
+
+ 750            SWAP                     2
+                STORE_FAST               2 (row)
+                RERAISE                  0
+
+ 746    L8:     PUSH_EXC_INFO
+                WITH_EXCEPT_START
+                TO_BOOL
+                POP_JUMP_IF_TRUE         1 (to L9)
+                RERAISE                  2
+        L9:     POP_TOP
+       L10:     POP_EXCEPT
+                POP_TOP
+                POP_TOP
+                RETURN_CONST             2 (None)
+
+  --   L11:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L8 [1] lasti
+  L2 to L5 -> L7 [3]
+  L5 to L6 -> L8 [1] lasti
+  L7 to L8 -> L8 [1] lasti
+  L8 to L10 -> L11 [3] lasti
+
+## CODE get_task_by_id  args=('task_id',)
+ 752           RESUME                   0
+
+ 754           LOAD_GLOBAL              1 (get_db + NULL)
+               CALL                     0
+               BEFORE_WITH
+       L1:     STORE_FAST               1 (conn)
+
+ 755           LOAD_FAST                1 (conn)
+               LOAD_ATTR                3 (execute + NULL|self)
+
+ 756           LOAD_CONST               1 ('SELECT * FROM update_tasks WHERE id=?')
+               LOAD_FAST                0 (task_id)
+               BUILD_TUPLE              1
+
+ 755           CALL                     2
+
+ 757           LOAD_ATTR                5 (fetchone + NULL|self)
+               CALL                     0
+
+ 755           STORE_FAST               2 (row)
+
+ 758           LOAD_FAST                2 (row)
+               TO_BOOL
+               POP_JUMP_IF_FALSE       11 (to L2)
+               LOAD_GLOBAL              7 (dict + NULL)
+               LOAD_FAST                2 (row)
+               CALL                     1
+               JUMP_FORWARD             1 (to L3)
+       L2:     LOAD_CONST               2 (None)
+
+ 754   L3:     SWAP                     2
+               LOAD_CONST               2 (None)
+               LOAD_CONST               2 (None)
+               LOAD_CONST               2 (None)
+               CALL                     2
+               POP_TOP
+               RETURN_VALUE
+       L4:     PUSH_EXC_INFO
+               WITH_EXCEPT_START
+               TO_BOOL
+               POP_JUMP_IF_TRUE         1 (to L5)
+               RERAISE                  2
+       L5:     POP_TOP
+       L6:     POP_EXCEPT
+               POP_TOP
+               POP_TOP
+               RETURN_CONST             2 (None)
+
+  --   L7:     COPY                     3
+               POP_EXCEPT
+               RERAISE                  1
+ExceptionTable:
+  L1 to L3 -> L4 [1] lasti
+  L4 to L6 -> L7 [3] lasti
+
+## CODE update_task  args=('task_id',)
+ 760            RESUME                   0
+
+ 762            LOAD_FAST                1 (kwargs)
+                TO_BOOL
+                POP_JUMP_IF_TRUE         1 (to L1)
+
+ 763            RETURN_CONST             1 (None)
+
+ 764    L1:     BUILD_SET                0
+                LOAD_CONST               2 (frozenset({'last_run', 'start_time', 'last_cutoff', 'kb_name', 'interval_hours', 'enabled', 'folder_name', 'folder_id'}))
+                SET_UPDATE               1
+                STORE_FAST               2 (allowed)
+
+ 765            LOAD_FAST                1 (kwargs)
+                LOAD_ATTR                1 (items + NULL|self)
+                CALL                     0
+                GET_ITER
+                LOAD_FAST_AND_CLEAR      3 (k)
+                LOAD_FAST_AND_CLEAR      4 (v)
+                SWAP                     3
+        L2:     BUILD_MAP                0
+                SWAP                     2
+                GET_ITER
+        L3:     FOR_ITER                14 (to L6)
+                UNPACK_SEQUENCE          2
+                STORE_FAST_STORE_FAST   52 (k, v)
+                LOAD_FAST_LOAD_FAST     50 (k, allowed)
+                CONTAINS_OP              0
+        L4:     POP_JUMP_IF_TRUE         2 (to L5)
+                JUMP_BACKWARD           12 (to L3)
+        L5:     LOAD_FAST_LOAD_FAST     52 (k, v)
+                MAP_ADD                  2
+                JUMP_BACKWARD           16 (to L3)
+        L6:     END_FOR
+                POP_TOP
+        L7:     STORE_FAST               5 (fields)
+                STORE_FAST               3 (k)
+                STORE_FAST               4 (v)
+
+ 766            LOAD_FAST                5 (fields)
+                TO_BOOL
+                POP_JUMP_IF_TRUE         1 (to L8)
+
+ 767            RETURN_CONST             1 (None)
+
+ 768    L8:     LOAD_CONST               3 (', ')
+                LOAD_ATTR                3 (join + NULL|self)
+                LOAD_CONST               4 (<code object <genexpr> at 0x000001DD462FB730, file "data\database.py", line 768>)
+                MAKE_FUNCTION
+                LOAD_FAST                5 (fields)
+                GET_ITER
+                CALL                     0
+                CALL                     1
+                STORE_FAST               6 (set_clause)
+
+ 769            LOAD_GLOBAL              5 (list + NULL)
+                LOAD_FAST                5 (fields)
+                LOAD_ATTR                7 (values + NULL|self)
+                CALL                     0
+                CALL                     1
+                LOAD_FAST                0 (task_id)
+                BUILD_LIST               1
+                BINARY_OP                0 (+)
+                STORE_FAST               7 (values)
+
+ 770            LOAD_GLOBAL              9 (get_db + NULL)
+                CALL                     0
+                BEFORE_WITH
+        L9:     STORE_FAST               8 (conn)
+
+ 771            LOAD_FAST                8 (conn)
+                LOAD_ATTR               11 (execute + NULL|self)
+                LOAD_CONST               5 ('UPDATE update_tasks SET ')
+                LOAD_FAST                6 (set_clause)
+                FORMAT_SIMPLE
+                LOAD_CONST               6 (' WHERE id=?')
+                BUILD_STRING             3
+                LOAD_FAST                7 (values)
+                CALL                     2
+                POP_TOP
+
+ 772            LOAD_FAST                8 (conn)
+                LOAD_ATTR               13 (commit + NULL|self)
+                CALL                     0
+                POP_TOP
+
+ 770   L10:     LOAD_CONST               1 (None)
+                LOAD_CONST               1 (None)
+                LOAD_CONST               1 (None)
+                CALL                     2
+                POP_TOP
+                RETURN_CONST             1 (None)
+
+  --   L11:     SWAP                     2
+                POP_TOP
+
+ 765            SWAP                     3
+                STORE_FAST               4 (v)
+                STORE_FAST               3 (k)
+                RERAISE                  0
+
+ 770   L12:     PUSH_EXC_INFO
+                WITH_EXCEPT_START
+                TO_BOOL
+                POP_JUMP_IF_TRUE         1 (to L13)
+                RERAISE                  2
+       L13:     POP_TOP
+       L14:     POP_EXCEPT
+                POP_TOP
+                POP_TOP
+                RETURN_CONST             1 (None)
+
+  --   L15:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+ExceptionTable:
+  L2 to L4 -> L11 [3]
+  L5 to L7 -> L11 [3]
+  L9 to L10 -> L12 [1] lasti
+  L12 to L14 -> L15 [3] lasti
+
+### CODE update_task.<locals>.<genexpr>  args=('.0',)
+ 768           RETURN_GENERATOR
+               POP_TOP
+       L1:     RESUME                   0
+               LOAD_FAST                0 (.0)
+               GET_ITER
+       L2:     FOR_ITER                 9 (to L3)
+               STORE_FAST_LOAD_FAST    17 (k, k)
+               FORMAT_SIMPLE
+               LOAD_CONST               0 ('=?')
+               BUILD_STRING             2
+               YIELD_VALUE              0
+               RESUME                   5
+               POP_TOP
+               JUMP_BACKWARD           11 (to L2)
+       L3:     END_FOR
+               POP_TOP
+               RETURN_CONST             1 (None)
+
+  --   L4:     CALL_INTRINSIC_1         3 (INTRINSIC_STOPITERATION_ERROR)
+               RERAISE                  1
+ExceptionTable:
+  L1 to L4 -> L4 [0] lasti
+
+## CODE delete_task  args=('task_id',)
+ 774           RESUME                   0
+
+ 776           LOAD_GLOBAL              1 (get_db + NULL)
+               CALL                     0
+               BEFORE_WITH
+       L1:     STORE_FAST               1 (conn)
+
+ 777           LOAD_FAST                1 (conn)
+               LOAD_ATTR                3 (execute + NULL|self)
+               LOAD_CONST               1 ('DELETE FROM update_tasks WHERE id=?')
+               LOAD_FAST                0 (task_id)
+               BUILD_TUPLE              1
+               CALL                     2
+               POP_TOP
+
+ 778           LOAD_FAST                1 (conn)
+               LOAD_ATTR                5 (commit + NULL|self)
+               CALL                     0
+               POP_TOP
+
+ 776   L2:     LOAD_CONST               2 (None)
+               LOAD_CONST               2 (None)
+               LOAD_CONST               2 (None)
+               CALL                     2
+               POP_TOP
+               RETURN_CONST             2 (None)
+       L3:     PUSH_EXC_INFO
+               WITH_EXCEPT_START
+               TO_BOOL
+               POP_JUMP_IF_TRUE         1 (to L4)
+               RERAISE                  2
+       L4:     POP_TOP
+       L5:     POP_EXCEPT
+               POP_TOP
+               POP_TOP
+               RETURN_CONST             2 (None)
+
+  --   L6:     COPY                     3
+               POP_EXCEPT
+               RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L3 [1] lasti
+  L3 to L5 -> L6 [3] lasti

@@ -1,0 +1,108 @@
+===== gui/download_mixin.pyc =====
+DOCSTRING: 下载功能 Mixin
+
+[<module>] args=() names=('__doc__', 'PySide6.QtWidgets', 'QMessageBox', 'PySide6.QtCore', 'Qt', 'gui.workers.workers', 'StreamDownloadWorker', 'DownloadMixin')
+  CONST '下载功能 Mixin'
+  CONST 0
+  CONST ('QMessageBox')
+  CONST ('Qt')
+  CONST ('StreamDownloadWorker')
+  CONST 'DownloadMixin'
+  CONST None
+
+  [DownloadMixin] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', '__doc__', 'download_selected', 'pause_download', 'stop_download', 'on_download_progress', 'on_file_discovered', 'on_scan_progress', 'on_download_finished', 'on_error', '__static_attributes__')
+    CONST 'DownloadMixin'
+    CONST 7
+    CONST '下载功能，供 MainWindow 继承'
+    CONST ('download_worker', 'is_paused', 'is_stopped')
+    CONST None
+
+    [DownloadMixin.download_selected] args=('self',) names=('tree', 'selectedItems', 'QMessageBox', 'warning', 'data', 'Qt', 'UserRole', 'get', 'add_log', 'progress_panel', 'setVisible', 'progress', 'progress_detail', 'setText', 'pause_btn', 'stop_btn', 'setMaximum', 'setValue', 'is_paused', 'is_stopped', 'dict', 'StreamDownloadWorker', 'download_worker', 'connect', 'on_download_progress', 'file_discovered', 'on_file_discovered', 'scan_progress', 'on_scan_progress', 'quota_error', 'on_error', 'quota_updated', 'update_license_info', 'finished', 'on_download_finished', 'start')
+      CONST None
+      CONST '提示'
+      CONST '请选择要下载的项目'
+      CONST 1
+      CONST 'type'
+      CONST 'kb'
+      CONST 'visible_export_status'
+      CONST 3
+      CONST '权限不足'
+      CONST '该知识库不可导出'
+      CONST 'folder'
+      CONST '该文件夹不可导出'
+      CONST 'file'
+      CONST 'access_status'
+      CONST '该文件不可导出'
+      CONST '正在扫描文件列表，请稍候...'
+      CONST 'info'
+      CONST True
+      CONST '正在扫描，已发现 0 个文件'
+      CONST 100
+      CONST 0
+      CONST False
+
+    [DownloadMixin.pause_download] args=('self',) names=('download_worker', 'is_paused', 'resume', 'pause_btn', 'setText', 'add_log', 'pause')
+      CONST '暂停/继续下载'
+      CONST '暂停'
+      CONST False
+      CONST '继续下载'
+      CONST 'info'
+      CONST '继续'
+      CONST True
+      CONST '已暂停'
+      CONST 'warning'
+      CONST None
+
+    [DownloadMixin.stop_download] args=('self',) names=('download_worker', 'stop', 'is_stopped', 'add_log')
+      CONST '停止下载'
+      CONST True
+      CONST '已停止下载'
+      CONST 'error'
+      CONST None
+
+    [DownloadMixin.on_download_progress] args=('self', 'current', 'total', 'msg') names=('max', 'min', 'int', 'progress', 'setMaximum', 'setValue', 'progress_detail', 'setVisible', 'setText', 'startswith', 'add_log')
+      CONST None
+      CONST 1
+      CONST 100
+      CONST True
+      CONST '/'
+      CONST ' · '
+      CONST '%'
+      CONST '✓'
+      CONST 'success'
+      CONST '⊘'
+      CONST 'warning'
+      CONST '✗'
+      CONST 'error'
+      CONST 'download'
+
+    [DownloadMixin.on_file_discovered] args=('self', 'total_count') names=('max', 'progress', 'setMaximum', 'progress_detail', 'setVisible', 'setText')
+      CONST '当发现新文件时更新进度条最大值'
+      CONST 1
+      CONST True
+      CONST '正在扫描，已发现 '
+      CONST ' 个文件'
+      CONST None
+
+    [DownloadMixin.on_scan_progress] args=('self', 'msg') names=('progress_detail', 'setVisible', 'startswith', 'setText', 'add_log')
+      CONST '显示扫描进度'
+      CONST True
+      CONST '正在扫描'
+      CONST 'info'
+      CONST None
+
+    [DownloadMixin.on_download_finished] args=('self',) names=('progress_panel', 'setVisible', 'progress', 'progress_detail', 'clear', 'pause_btn', 'stop_btn', 'update_license_info', 'add_log', 'services.ima_service', 'close_session', 'download_worker', 'deleteLater')
+      CONST None
+      CONST False
+      CONST '所有文件下载完成'
+      CONST 'success'
+      CONST 0
+      CONST ('close_session')
+
+    [DownloadMixin.on_error] args=('self', 'msg') names=('load_btn', 'setEnabled', 'add_log', 'QMessageBox', 'critical')
+      CONST None
+      CONST True
+      CONST '错误: '
+      CONST 'error'
+      CONST '错误'
+

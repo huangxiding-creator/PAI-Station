@@ -1,0 +1,91 @@
+===== utils/bkn.pyc =====
+
+# CODE <module>  args=()
+  0           RESUME                   0
+
+  1           LOAD_CONST               0 ('BKN 计算工具')
+              STORE_NAME               0 (__doc__)
+
+  2           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (None)
+              IMPORT_NAME              1 (time)
+              STORE_NAME               1 (time)
+
+  5           LOAD_CONST               3 (<code object calculate_bkn at 0x00000229D86A78A0, file "utils\bkn.py", line 5>)
+              MAKE_FUNCTION
+              STORE_NAME               2 (calculate_bkn)
+
+ 23           LOAD_CONST               4 (<code object get_timestamp at 0x00000229D87F2340, file "utils\bkn.py", line 23>)
+              MAKE_FUNCTION
+              STORE_NAME               3 (get_timestamp)
+              RETURN_CONST             2 (None)
+
+## CODE calculate_bkn  args=('token',)
+   5            RESUME                   0
+
+  10            NOP
+
+  11    L1:     LOAD_FAST                0 (token)
+                TO_BOOL
+                POP_JUMP_IF_TRUE         1 (to L3)
+
+  12    L2:     RETURN_CONST             1 (0)
+
+  14    L3:     LOAD_CONST               2 (5381)
+                STORE_FAST               1 (hash_value)
+
+  15            LOAD_FAST                0 (token)
+                GET_ITER
+        L4:     FOR_ITER                22 (to L5)
+                STORE_FAST               2 (char)
+
+  16            LOAD_FAST_LOAD_FAST     17 (hash_value, hash_value)
+                LOAD_CONST               3 (5)
+                BINARY_OP                3 (<<)
+                LOAD_GLOBAL              1 (ord + NULL)
+                LOAD_FAST                2 (char)
+                CALL                     1
+                BINARY_OP                0 (+)
+                BINARY_OP               13 (+=)
+                STORE_FAST               1 (hash_value)
+                JUMP_BACKWARD           24 (to L4)
+
+  15    L5:     END_FOR
+                POP_TOP
+
+  17            LOAD_FAST                1 (hash_value)
+                LOAD_CONST               4 (2147483647)
+                BINARY_OP                1 (&)
+        L6:     RETURN_VALUE
+
+  --    L7:     PUSH_EXC_INFO
+
+  19            LOAD_GLOBAL              2 (Exception)
+                CHECK_EXC_MATCH
+                POP_JUMP_IF_FALSE        3 (to L9)
+                POP_TOP
+
+  20    L8:     POP_EXCEPT
+                RETURN_CONST             1 (0)
+
+  19    L9:     RERAISE                  0
+
+  --   L10:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L7 [0]
+  L3 to L6 -> L7 [0]
+  L7 to L8 -> L10 [1] lasti
+  L9 to L10 -> L10 [1] lasti
+
+## CODE get_timestamp  args=()
+ 23           RESUME                   0
+
+ 25           LOAD_GLOBAL              1 (int + NULL)
+              LOAD_GLOBAL              2 (time)
+              LOAD_ATTR                2 (time)
+              PUSH_NULL
+              CALL                     0
+              CALL                     1
+              RETURN_VALUE

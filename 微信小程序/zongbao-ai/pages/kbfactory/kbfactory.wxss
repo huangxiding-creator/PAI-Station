@@ -87,6 +87,24 @@
 .kf-go { margin-top: 26rpx; }
 .kf-hint { margin-top: 14rpx; font-size: 21rpx; text-align: center; }
 
+/* ══ 蓝图深度三档（标准版/专业版/旗舰版）：分段选择，边界/纸面语言同输入区 ══ */
+.kf-depth { display: flex; gap: 14rpx; margin-top: 22rpx; }
+.kf-depth-item {
+  flex: 1;
+  padding: 16rpx 8rpx;
+  border: 2rpx solid var(--line);
+  border-radius: 10rpx;
+  background: var(--paper);
+  text-align: center;
+}
+.kf-depth-item.on {
+  border-color: rgba(var(--t-accent-rgb), 0.55);
+  background: rgba(var(--t-accent-rgb), 0.08);
+}
+.kf-depth-name { font-size: 26rpx; font-weight: 700; color: var(--ink); }
+.kf-depth-item.on .kf-depth-name { color: var(--accent); }
+.kf-depth-note { font-size: 19rpx; margin-top: 4rpx; }
+
 /* ══ 施工直播（八阶段）══ */
 .kf-stage {
   display: flex;
@@ -184,6 +202,9 @@
 .kf-dot-core { background: var(--accent); }
 .kf-dot-field { background: var(--draft, #1d6fd0); }
 .kf-dot-guide { background: var(--t-ok, #2f9e63); }
+
+/* ══ v2 document_driven：超越层第四段配色 + 真实检索/占位徽章 ══ */
+.kf-seg-plus, .kf-dot-plus { background: var(--t-amber-deep, #b7791f); }
 
 /* ══ 报价卡 ══ */
 .kf-total {
@@ -328,6 +349,22 @@
   text-overflow: ellipsis;
 }
 .kf-f-meta { font-size: 20rpx; margin-top: 2rpx; }
+/* v2 文件徽章：✓ 真实检索（绿描边）/ ○ 占位（灰描边）；v1 无 real 字段不渲染 */
+.kf-real {
+  flex-shrink: 0;
+  font-size: 18rpx;
+  font-weight: 700;
+  letter-spacing: 1rpx;
+  border-radius: 6rpx;
+  padding: 4rpx 10rpx;
+  border: 2rpx solid var(--line);
+  color: var(--muted);
+}
+.kf-real.on {
+  border-color: rgba(47, 158, 99, 0.5);
+  color: var(--t-ok, #2f9e63);
+  background: rgba(47, 158, 99, 0.08);
+}
 .kf-more { font-size: 20rpx; padding-top: 10rpx; }
 .kf-note { margin-top: 20rpx; font-size: 20rpx; line-height: 1.6; padding-top: 16rpx; }
 
@@ -460,3 +497,81 @@
   letter-spacing: 2rpx;
 }
 .kf-ord-done-d { margin: 18rpx 0 30rpx; font-size: 24rpx; line-height: 1.8; }
+
+/* ══ 收口波A：对比锚 · 价值徽标行 · 三视图 tab · 平铺组 · 预览入口 ══ */
+/* 报价卡对比锚（市场事实表述，muted 小字对齐 total-sub） */
+.kf-anchor { margin-top: 10rpx; font-size: 21rpx; }
+
+/* 价值徽标行：四实测计数徽章（真实文件/文件总数/GB/来源） */
+.kf-value {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-top: 18rpx;
+}
+.kf-vb {
+  display: flex;
+  align-items: baseline;
+  gap: 8rpx;
+  padding: 6rpx 14rpx;
+  border: 2rpx solid rgba(var(--t-accent-rgb), 0.35);
+  border-radius: 8rpx;
+  background: rgba(var(--t-accent-rgb), 0.05);
+}
+.kf-vb-n { font-size: 26rpx; font-weight: 800; color: var(--accent-deep); }
+.kf-vb-l { font-size: 19rpx; letter-spacing: 1rpx; }
+
+/* 三视图 tab（主题/阶段/类型）：分段选择，边界语言同深度三档 */
+.kf-vtabs { display: flex; gap: 12rpx; margin: -6rpx 0 20rpx; }
+.kf-vtab {
+  flex: 1;
+  text-align: center;
+  padding: 12rpx 0;
+  border: 2rpx solid var(--line);
+  border-radius: 10rpx;
+  background: var(--paper);
+  font-size: 25rpx;
+  font-weight: 700;
+  color: var(--ink-2);
+}
+.kf-vtab.on {
+  border-color: rgba(var(--t-accent-rgb), 0.55);
+  background: rgba(var(--t-accent-rgb), 0.08);
+  color: var(--accent-deep);
+}
+
+/* 阶段/类型视图平铺组：单层列表（组头+文件行，文件行复用 kf-files/kf-file 既有样式） */
+.kf-vg { border-bottom: 2rpx dashed var(--line); }
+.kf-vg:last-of-type { border-bottom: none; }
+.kf-vg-head {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  padding: 18rpx 0;
+}
+.kf-vg-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 26rpx;
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.kf-vg .kf-chevron-sm { flex-shrink: 0; }
+.kf-vg.open .kf-chevron-sm { transform: rotate(45deg); border-color: var(--accent); }
+
+/* 预览站点按钮（免费入口；蓝色系与付费主按钮区隔） */
+.kf-preview {
+  margin-top: 18rpx;
+  border: 2rpx solid rgba(var(--t-blue-rgb), 0.5);
+  border-radius: 10rpx;
+  background: rgba(var(--t-blue-rgb), 0.06);
+  color: var(--draft, #1d6fd0);
+  font-size: 30rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+  line-height: 2.4;
+}
+.kf-preview-hover { opacity: 0.78; }

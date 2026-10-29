@@ -1,0 +1,106 @@
+===== gui/dialogs/common_dialogs.pyc =====
+DOCSTRING: 通用对话框：设置、使用说明、续费、激活
+
+[<module>] args=() names=('__doc__', 'PySide6.QtWidgets', 'QDialog', 'QVBoxLayout', 'QHBoxLayout', 'QLabel', 'QPushButton', 'QLineEdit', 'QCheckBox', 'QComboBox', 'QFileDialog', 'QMessageBox', 'QTextBrowser', 'os', 'show_settings_dialog', 'show_help_dialog', 'show_renew_dialog', 'show_activation_dialog')
+  CONST '通用对话框：设置、使用说明、续费、激活'
+  CONST 0
+  CONST ('QDialog', 'QVBoxLayout', 'QHBoxLayout', 'QLabel', 'QPushButton', 'QLineEdit', 'QCheckBox', 'QComboBox', 'QFileDialog', 'QMessageBox', 'QTextBrowser')
+  CONST None
+  CONST (None)
+
+  [show_settings_dialog] args=('parent',) names=('core.settings', 'get_setting', 'save_settings', 'QDialog', 'setWindowTitle', 'setModal', 'setMinimumWidth', 'QVBoxLayout', 'QCheckBox', 'setChecked', 'addWidget', 'QHBoxLayout', 'QLabel', 'QComboBox', 'addItem', 'setCurrentIndex', 'addStretch', 'addLayout', 'QLineEdit', 'setText', 'setReadOnly', 'QPushButton', 'setMaximumWidth', 'clicked', 'connect', 'reject', 'exec')
+    CONST '显示设置对话框'
+    CONST 0
+    CONST ('get_setting', 'save_settings')
+    CONST '设置'
+    CONST True
+    CONST 500
+    CONST '下载文件后随机延迟 (1-3秒)'
+    CONST 'enable_download_delay'
+    CONST False
+    CONST '笔记保存格式:'
+    CONST 'Markdown'
+    CONST 'md'
+    CONST 'HTML'
+    CONST 'html'
+    CONST 'note_format'
+    CONST 1
+    CONST '下载目录:'
+    CONST 'download_dir'
+    CONST 'download'
+    CONST '选择...'
+    CONST 80
+    CONST '打开目录'
+    CONST '保存'
+    CONST '取消'
+    CONST None
+
+    [show_settings_dialog.<locals>.choose_dir] args=() names=('text', 'os', 'path', 'isabs', 'abspath', 'QFileDialog', 'getExistingDirectory', 'setText')
+      CONST None
+      CONST '选择下载目录'
+
+    [show_settings_dialog.<locals>.open_dir] args=() names=('subprocess', 'platform', 'text', 'os', 'path', 'isabs', 'abspath', 'makedirs', 'system', 'startfile', 'Popen')
+      CONST None
+      CONST 0
+      CONST True
+      CONST ('exist_ok')
+      CONST 'Windows'
+      CONST 'Darwin'
+      CONST 'open'
+      CONST 'xdg-open'
+
+    [show_settings_dialog.<locals>.on_save] args=() names=('isChecked', 'currentData', 'text', 'QMessageBox', 'information', 'accept')
+      CONST None
+      CONST ('enable_download_delay', 'note_format', 'download_dir')
+      CONST '成功'
+      CONST '设置已保存'
+
+  [show_help_dialog] args=('parent',) names=('QDialog', 'setWindowTitle', 'setModal', 'setMinimumSize', 'QVBoxLayout', 'QTextBrowser', 'setOpenExternalLinks', 'setHtml', 'addWidget', 'QPushButton', 'clicked', 'connect', 'accept', 'exec')
+    CONST '显示使用说明对话框'
+    CONST '使用说明'
+    CONST True
+    CONST 700
+    CONST 500
+    CONST '\n    <h2>效率助手使用说明</h2>\n\n    <h3>1. 登录</h3>\n    <p>点击"登录"按钮，使用手机扫描二维码完成登录。登录成功后会自动保存凭证，下次启动自动登录。</p>\n\n    <h3>2. 加载知识库</h3>\n    <p>点击"加载知识库"按钮，系统会加载您有权访问的所有知识库列表。</p>\n\n    <h3>3. 浏览文件</h3>\n    <p>点击知识库前的展开图标，可以查看知识库内的文件夹和文件结构。支持多级文件夹展开。</p>\n\n    <h3>4. 下载文件</h3>\n    <p>右键点击知识库、文件夹或文件，在菜单中选择下载。支持多选（Ctrl/Shift键）后右键批量下载。</p>\n    <p>下载的文件默认保存到：macOS 为 ~/imahelper/download，Windows 为 %APPDATA%\\imahelper\\download。可在"下载设置"中修改。</p>\n\n    <h3>5. 增量更新</h3>\n    <p>右键知识库选择"增量更新"，可提交单次或定时循环更新任务。</p>\n    <p>点击"更新任务管理"按钮可查看所有任务状态，支持启用/停用和删除。</p>\n\n    <h3>6. 搜索文件</h3>\n    <p>从下拉框选择知识库，输入关键词后点击"搜索"按钮，可以快速查找文件。搜索结果可直接选中下载。</p>\n\n    <h3>7. 设置</h3>\n    <p>点击"下载设置"按钮可以配置：</p>\n    <ul>\n    <li>下载延迟：开启后每个文件下载完成会随机延迟1-3秒</li>\n    <li>笔记保存格式：Markdown 或 HTML</li>\n    <li>下载目录：自定义文件保存位置</li>\n    </ul>\n\n    <h3>8. 延长授权</h3>\n    <p>点击"延长授权"按钮，输入卡密可以累加配额和延长使用时长。</p>\n\n    <h3>注意事项</h3>\n    <ul>\n    <li>已下载的文件不会重复下载</li>\n    <li>网址和公众号文章会保存为Excel文件</li>\n    <li>笔记和报告会转换为HTML格式保存</li>\n    <li>下载过程中可以暂停或停止</li>\n    </ul>\n    '
+    CONST '关闭'
+    CONST None
+
+  [show_renew_dialog] args=('parent', 'on_success') names=('core.auth', 'renew_license', 'QDialog', 'setWindowTitle', 'setModal', 'QVBoxLayout', 'addWidget', 'QLabel', 'QLineEdit', 'QHBoxLayout', 'QPushButton', 'addLayout', 'clicked', 'connect', 'reject', 'exec')
+    CONST '显示续费对话框'
+    CONST 0
+    CONST ('renew_license')
+    CONST '卡密续费'
+    CONST True
+    CONST '输入新卡密累加配额和时长:'
+    CONST '续费'
+    CONST '取消'
+    CONST None
+
+    [show_renew_dialog.<locals>.on_renew] args=() names=('text', 'strip', 'QMessageBox', 'warning', 'information', 'accept', 'critical')
+      CONST None
+      CONST '提示'
+      CONST '请输入卡密'
+      CONST '成功'
+      CONST '失败'
+
+  [show_activation_dialog] args=('parent', 'on_success') names=('core.auth', 'activate_license', 'QDialog', 'setWindowTitle', 'setModal', 'QVBoxLayout', 'addWidget', 'QLabel', 'QLineEdit', 'QHBoxLayout', 'QPushButton', 'addLayout', 'clicked', 'connect', 'reject', 'exec', 'Accepted', 'sys', 'exit')
+    CONST '显示激活对话框，返回是否激活成功（关闭窗口返回 False）'
+    CONST 0
+    CONST ('activate_license')
+    CONST '软件激活'
+    CONST True
+    CONST '请输入激活卡密:'
+    CONST '激活'
+    CONST '退出'
+    CONST None
+
+    [show_activation_dialog.<locals>.on_activate] args=() names=('text', 'strip', 'QMessageBox', 'warning', 'core.auth', 'verify_license', 'core.config', 'load_cookie_from_cache', 'information', 'accept', 'critical')
+      CONST None
+      CONST '提示'
+      CONST '请输入卡密'
+      CONST 0
+      CONST ('verify_license')
+      CONST ('load_cookie_from_cache')
+      CONST '成功'
+      CONST '失败'
+

@@ -1,0 +1,93 @@
+#title {
+    margin-top: 15px;
+    font-size: 20px;
+}
+
+#account {
+    margin-top: 20px;
+    position: relative;
+}
+
+#account_name {
+    position: absolute;
+    font-size: 12px;
+    top: 0;
+    left: 40px;
+}
+
+#preview_time {
+    position: absolute;
+    font-size: 10px;
+    top: 15px;
+    left: 40px;
+    color: #666666;
+}
+
+blockquote, span.bjh-blockquote {
+    margin: 18px 0 5px;
+    padding: 6px 0 20px 30px;
+    color: #989898;
+    background-color: #fff;
+    position: relative;
+    line-height: 30px;
+}
+
+strong, bold, span.bjh-strong, span.bjh-bold {
+    font-weight: 700;
+}
+
+h1 {
+    position: relative;
+    font-size: 18px;
+    line-height: 26px;
+    padding-left: 11px;
+    font-weight: bold;
+    margin: 1em 0;
+}
+
+h1::after {
+    content: '';
+    width: 3px;
+    height: 17px;
+    position: absolute;
+    left: 0;
+    top: 5px;
+    background: #3c76ff;
+}
+
+
+blockquote:before {
+    content: '';
+    background-image: url('download.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    display: inline-block;
+    left: 0;
+    top: 12px;
+}
+
+#content>h1 {
+    font-size: 16px;
+    margin: 1em 0;
+}
+
+body pre,body code{
+    font-size:12px;
+    line-height:1.5em;
+    padding:10px;
+    margin:15px 0;
+    display:block;
+    background:#F0F0F0;
+    -webkit-border-radius:3px;
+    -moz-border-radius:3px;
+    border-radius:3px;
+    font-family:monaco,Consolas,"Liberation Mono",Courier,monospace;
+    white-space:pre;
+    word-wrap:break-word;
+    overflow-x:auto
+}
+
+

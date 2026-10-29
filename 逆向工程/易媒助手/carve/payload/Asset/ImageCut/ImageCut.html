@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/normalize.css" />
+		<link rel="stylesheet" type="text/css" href="css/default.css" />
+		<link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="dist/cropper.css" rel="stylesheet" />
+		<link href="css/main.css" rel="stylesheet" />
+		<!--[if IE]>
+			<script src="http://libs.useso.com/js/html5shiv/3.7/html5shiv.min.js"></script>
+		<![endif]-->
+	</head>
+	<body style="text-align: center">
+		<div
+			class="container"
+			style="margin: 20px auto; position: relative; width: 880px"
+		>
+			<div class="row" style="width: 880px">
+				<div class="col-md-9" style="width: 550px">
+					<!-- <h3 class="page-header">Demo:</h3> -->
+					<div class="img-container" style="width: 550px">
+						<img id="cut-img" src="" />
+					</div>
+				</div>
+				<div class="col-md-3" style="position: absolute; top: 0; left: 570px">
+					<!-- <h3 class="page-header">Preview:</h3> -->
+					<div class="docs-preview clearfix">
+						<div class="img-preview preview-lg"></div>
+					</div>
+
+					<div class="tabs-wrap"></div>
+				</div>
+			</div>
+		</div>
+		<!-- Alert -->
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/bootstrap.min.js"></script>
+		<script src="dist/cropper.js"></script>
+		<script src="main.js"></script>
+		<script type="text/javascript">
+			var tabsData = [
+				{
+					name: "自定义",
+					value: ""
+				},
+				{
+					name: "16:9",
+					value: 16 / 9
+				},
+				{
+					name: "9:16",
+					value: 9 / 16
+				},
+				{
+					name: "1:1",
+					value: 1 / 1
+				},
+				{
+					name: "4:3",
+					value: 4 / 3
+				},
+				{
+					name: "3:4",
+					value: 3 / 4
+				}
+			]
+
+			$(function () {
+				function CreateTabsEl() {
+					let tabsCont = []
+					let ratioInx = window.localStorage.getItem("cutRatio") || 0
+					console.log(ratioInx)
+					tabsData.forEach((item, index) => {
+						tabsCont.push(`
+							<div class="tabs-item ${index === Number(ratioInx) ? "active" : ""}">
+								${item.name}
+							</div>
+						`)
+					})
+
+					$(".tabs-wrap").html(tabsCont)
+				}
+				CreateTabsEl()
+
+				$(".tabs-item").on("click", function () {
+					let inx = $(this).index()
+					$(".tabs-item").removeClass("active")
+					$(".tabs-item").eq(inx).addClass("active")
+
+					window.localStorage.setItem("cutRatio", inx)
+
+					$("#cut-img").cropper("setAspectRatio", tabsData[inx].value)
+					CreateSizeEl()
+				})
+			})
+
+			var ImgCut = {
+				init: function (imgUrl, flag) {
+					this.flag = flag
+					if (!this.flag) this.flag = ""
+					this.imgUrl = imgUrl
+					$("#cut-img").attr("src", imgUrl)
+					InitImgCut(16 / 11)
+				},
+
+				init2: function (imgUrl, flag) {
+					this.flag = flag
+					if (!this.flag) this.flag = ""
+					this.imgUrl = imgUrl
+					$("#cut-img").attr("src", imgUrl)
+					let ratioInx = window.localStorage.getItem("cutRatio") || 0
+					InitImgCut(tabsData[ratioInx].value)
+				},
+
+				getCutImgData: function () {
+					var cropData = $("#cut-img").cropper("getData")
+					var str = JSON.stringify(cropData)
+					window.JsGetCutImgData(this.imgUrl, this.flag, str)
+				}
+			}
+			function setImgSrc() {
+				$("#cut-img").attr("src", "assets/img/picture-2.jpg")
+
+				let ratioInx = window.localStorage.getItem("cutRatio") || 0
+
+				InitImgCut(tabsData[ratioInx].value)
+				// setTimeout(ImgCut.getCutImgData, 0)
+			}
+			// window.addEventListener("load", setImgSrc, false)
+		</script>
+	</body>
+</html>

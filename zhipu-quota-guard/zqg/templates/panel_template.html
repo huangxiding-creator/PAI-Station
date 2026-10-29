@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZQG 配额守卫 · 状态面板</title>
+<style>
+  :root {
+    --bg: #0d1117; --card: #161b22; --line: #30363d;
+    --fg: #e6edf3; --dim: #8b949e;
+    --ok: #3fb950; --warn: #d29922; --danger: #f85149; --accent: #58a6ff;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--bg); color: var(--fg);
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    padding: 24px; max-width: 1080px; margin: 0 auto;
+  }
+  header { display: flex; justify-content: space-between; align-items: baseline;
+           border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+  header h1 { font-size: 1.3rem; }
+  header .meta { color: var(--dim); font-size: .8rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+          gap: 16px; margin-top: 20px; }
+  .card { background: var(--card); border: 1px solid var(--line);
+          border-radius: 10px; padding: 18px; }
+  .card h2 { font-size: .85rem; color: var(--dim); font-weight: normal;
+             margin-bottom: 10px; }
+  .big { font-size: 3rem; font-weight: 700; line-height: 1.1; }
+  .big.ok { color: var(--ok); } .big.warn { color: var(--warn); }
+  .big.danger { color: var(--danger); }
+  .sub { color: var(--dim); font-size: .85rem; margin-top: 8px; line-height: 1.7; }
+  .sub b { color: var(--fg); font-weight: 600; }
+  .bar { height: 10px; background: var(--line); border-radius: 5px;
+         margin-top: 14px; overflow: hidden; }
+  .bar > div { height: 100%; background: var(--accent); }
+  .bar > div.warn { background: var(--warn); }
+  .bar > div.danger { background: var(--danger); }
+  .verdict { display: inline-block; padding: 2px 10px; border-radius: 12px;
+             font-size: .8rem; margin-top: 10px; }
+  .verdict.danger { background: rgba(248, 81, 73, .15); color: var(--danger); }
+  .verdict.ok { background: rgba(63, 185, 80, .15); color: var(--ok); }
+  .verdict.dim { background: rgba(139, 148, 158, .15); color: var(--dim); }
+  table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); }
+  th { color: var(--dim); font-weight: normal; }
+  td.kind { color: var(--accent); white-space: nowrap; }
+  td.payload { color: var(--dim); word-break: break-all; }
+  footer { color: var(--dim); font-size: .75rem; margin-top: 20px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>ZQG 配额守卫 · 状态面板</h1>
+  <div class="meta">生成于 __GENERATED_AT__ · 每 60s 自刷新</div>
+</header>
+
+<section class="grid">
+  <div class="card">
+    <h2>当前水位（5h 窗）</h2>
+    <div class="big __PCT_LEVEL__">__PCT__<span style="font-size:1.2rem">%</span></div>
+    <div class="bar"><div class="__PCT_LEVEL__" style="width:__PCT_BAR__%"></div></div>
+    <div class="sub">真身站 <b>__PROVIDER__</b> · 余量 <b>__REMAINING__</b><br>
+      数据年龄 <b>__STALE_MIN__</b> 分钟前</div>
+  </div>
+
+  <div class="card">
+    <h2>自然刷新 / 烧穿线</h2>
+    <div class="big">__COUNTDOWN_MIN__<span style="font-size:1.2rem"> 分</span></div>
+    <div class="sub">下次自然刷新 <b>__NEXT_RESET__</b><br>
+      预测烧穿 <b>__EXHAUST_AT__</b></div>
+    <div class="verdict __BURN_LEVEL__">__BURN_VERDICT__</div>
+  </div>
+
+  <div class="card">
+    <h2>重置卡库存 / 卡预算</h2>
+    <div class="big">__FIVE_HOUR__<span style="font-size:1.2rem"> 张 5h</span></div>
+    <div class="sub">周卡 <b>__WEEKLY__</b> 张 · 卡预算 <b>__BUDGET__</b> 张<br>
+      最近过期 <b>__NEAREST_EXPIRY__</b></div>
+  </div>
+
+  <div class="card">
+    <h2>近 7 日重置</h2>
+    <div class="big">__RESETS_7D__<span style="font-size:1.2rem"> 次</span></div>
+    <div class="sub">最近决策 <b>__ACTION__</b><br>选卡 <b>__CARD_TO_USE__</b></div>
+  </div>
+</section>
+
+<section class="card" style="margin-top:16px">
+  <h2>最近动作（账本尾 20 条）</h2>
+  <table>
+    <thead><tr><th>时间</th><th>类型</th><th>内容</th></tr></thead>
+    <tbody>
+__EVENTS_ROWS__
+    </tbody>
+  </table>
+</section>
+
+<footer>决策：__REASON__<br>数据源：run-ledger 唯一事实源 · 单文件零外链</footer>
+
+<script>
+window.PANEL_DATA = __VM_JSON__;
+setTimeout(function () { location.reload(); }, 60000);
+</script>
+</body>
+</html>

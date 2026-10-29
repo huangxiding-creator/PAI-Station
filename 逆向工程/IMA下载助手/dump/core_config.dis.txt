@@ -1,0 +1,301 @@
+===== core/config.pyc =====
+
+# CODE <module>  args=()
+  0           RESUME                   0
+
+  1           LOAD_CONST               0 ('统一配置管理模块（兼容层）\n\n此模块保持向后兼容，所有函数委托给 core.config_manager\n')
+              STORE_NAME               0 (__doc__)
+
+  5           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (('get_config_manager',))
+              IMPORT_NAME              1 (core.config_manager)
+              IMPORT_FROM              2 (get_config_manager)
+              STORE_NAME               2 (get_config_manager)
+              POP_TOP
+
+  8           BUILD_MAP                0
+              STORE_GLOBAL             3 (HEADERS)
+
+  9           LOAD_CONST               3 ('download')
+              STORE_NAME               4 (DOWNLOAD_DIR)
+
+ 11           LOAD_CONST               4 (<code object _get_config at 0x000001DD4650C2D0, file "core\config.py", line 11>)
+              MAKE_FUNCTION
+              STORE_NAME               5 (_get_config)
+
+ 15           NOP
+
+ 16           NOP
+
+ 15           LOAD_CONST              19 ((None, None, None, 7200, 2592000))
+              LOAD_CONST               6 (<code object set_cookie at 0x000001DD46125CB0, file "core\config.py", line 15>)
+              MAKE_FUNCTION
+              SET_FUNCTION_ATTRIBUTE   1 (defaults)
+              STORE_NAME               6 (set_cookie)
+
+ 43           LOAD_CONST               7 (<code object load_cookie_from_cache at 0x000001DD462961F0, file "core\config.py", line 43>)
+              MAKE_FUNCTION
+              STORE_NAME               7 (load_cookie_from_cache)
+
+ 51           LOAD_CONST               8 (<code object get_cookie at 0x000001DD462FB730, file "core\config.py", line 51>)
+              MAKE_FUNCTION
+              STORE_NAME               8 (get_cookie)
+
+ 55           LOAD_CONST               9 (<code object set_config_pack at 0x000001DD46514030, file "core\config.py", line 55>)
+              MAKE_FUNCTION
+              STORE_NAME               9 (set_config_pack)
+
+ 59           LOAD_CONST              10 (<code object get_config at 0x000001DD46514130, file "core\config.py", line 59>)
+              MAKE_FUNCTION
+              STORE_NAME              10 (get_config)
+
+ 63           LOAD_CONST              11 (<code object get_base_url at 0x000001DD46514230, file "core\config.py", line 63>)
+              MAKE_FUNCTION
+              STORE_NAME              11 (get_base_url)
+
+ 67           LOAD_CONST              12 (<code object get_endpoint_url at 0x000001DD46514330, file "core\config.py", line 67>)
+              MAKE_FUNCTION
+              STORE_NAME              12 (get_endpoint_url)
+
+ 71           LOAD_CONST              13 (<code object get_endpoint_method at 0x000001DD46514430, file "core\config.py", line 71>)
+              MAKE_FUNCTION
+              STORE_NAME              13 (get_endpoint_method)
+
+ 75           LOAD_CONST              14 (<code object get_timeout at 0x000001DD46514530, file "core\config.py", line 75>)
+              MAKE_FUNCTION
+              STORE_NAME              14 (get_timeout)
+
+ 79           LOAD_CONST              15 (<code object get_retry_config at 0x000001DD46514630, file "core\config.py", line 79>)
+              MAKE_FUNCTION
+              STORE_NAME              15 (get_retry_config)
+
+ 83           LOAD_CONST              16 (<code object get_wechat_api_url at 0x000001DD46514730, file "core\config.py", line 83>)
+              MAKE_FUNCTION
+              STORE_NAME              16 (get_wechat_api_url)
+
+ 87           LOAD_CONST              20 ((None, None))
+              LOAD_CONST              17 (<code object build_headers_with_cookie at 0x000001DD46514830, file "core\config.py", line 87>)
+              MAKE_FUNCTION
+              SET_FUNCTION_ATTRIBUTE   1 (defaults)
+              STORE_NAME              17 (build_headers_with_cookie)
+
+ 91           LOAD_CONST              18 (<code object get_app_cookie_fields at 0x000001DD46514930, file "core\config.py", line 91>)
+              MAKE_FUNCTION
+              STORE_NAME              18 (get_app_cookie_fields)
+              RETURN_CONST             5 (None)
+
+## CODE _get_config  args=()
+ 11           RESUME                   0
+
+ 13           LOAD_GLOBAL              1 (get_config_manager + NULL)
+              CALL                     0
+              RETURN_VALUE
+
+## CODE set_cookie  args=('bkn', 'cookie_value', 'user_id', 'token', 'refresh_token', 'token_valid_time', 'refresh_token_valid_time')
+  15           RESUME                   0
+
+  18           LOAD_CONST               1 (0)
+               LOAD_CONST               2 (('save_login_credentials',))
+               IMPORT_NAME              0 (data.database)
+               IMPORT_FROM              1 (save_login_credentials)
+               STORE_FAST               7 (save_login_credentials)
+               POP_TOP
+
+  20           LOAD_FAST                7 (save_login_credentials)
+               PUSH_NULL
+
+  21           LOAD_FAST                0 (bkn)
+
+  22           LOAD_FAST                1 (cookie_value)
+
+  23           LOAD_FAST                2 (user_id)
+
+  24           LOAD_FAST                3 (token)
+
+  25           LOAD_FAST                4 (refresh_token)
+
+  26           LOAD_FAST                5 (token_valid_time)
+
+  27           LOAD_FAST                6 (refresh_token_valid_time)
+
+  20           CALL                     7
+               POP_TOP
+
+  29           LOAD_GLOBAL              5 (_get_config + NULL)
+               CALL                     0
+               STORE_FAST               8 (manager)
+
+  30           NOP
+
+  31   L1:     LOAD_FAST                8 (manager)
+               LOAD_ATTR                7 (build_headers_with_cookie + NULL|self)
+               LOAD_FAST_LOAD_FAST      1 (bkn, cookie_value)
+               CALL                     2
+               STORE_FAST               9 (headers)
+
+  40   L2:     LOAD_FAST                8 (manager)
+               LOAD_ATTR               11 (set_headers + NULL|self)
+               LOAD_FAST                9 (headers)
+               CALL                     1
+               POP_TOP
+
+  41           RETURN_CONST             7 (True)
+
+  --   L3:     PUSH_EXC_INFO
+
+  32           LOAD_GLOBAL              8 (RuntimeError)
+               CHECK_EXC_MATCH
+               POP_JUMP_IF_FALSE       11 (to L5)
+               POP_TOP
+
+  34           LOAD_CONST               3 ('*/*')
+
+  35           LOAD_CONST               4 ('application/json')
+
+  36           LOAD_FAST                0 (bkn)
+
+  37           LOAD_FAST                1 (cookie_value)
+
+  38           LOAD_CONST               5 ('ima/4032 CFNetwork/3860.300.31 Darwin/25.2.0')
+
+  33           LOAD_CONST               6 (('Accept', 'Content-Type', 'X-Ima-Bkn', 'X-Ima-Cookie', 'User-Agent'))
+               BUILD_CONST_KEY_MAP      5
+               STORE_FAST               9 (headers)
+       L4:     POP_EXCEPT
+               JUMP_BACKWARD_NO_INTERRUPT 38 (to L2)
+
+  32   L5:     RERAISE                  0
+
+  --   L6:     COPY                     3
+               POP_EXCEPT
+               RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L3 [0]
+  L3 to L4 -> L6 [1] lasti
+  L5 to L6 -> L6 [1] lasti
+
+## CODE load_cookie_from_cache  args=()
+ 43           RESUME                   0
+
+ 45           LOAD_GLOBAL              1 (_get_config + NULL)
+              CALL                     0
+              LOAD_ATTR                3 (load_cookie_from_cache + NULL|self)
+              CALL                     0
+              STORE_FAST               0 (result)
+
+ 46           LOAD_FAST                0 (result)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       24 (to L1)
+
+ 48           LOAD_GLOBAL              1 (_get_config + NULL)
+              CALL                     0
+              LOAD_ATTR                5 (get_headers + NULL|self)
+              CALL                     0
+              STORE_GLOBAL             3 (HEADERS)
+
+ 49   L1:     LOAD_FAST                0 (result)
+              RETURN_VALUE
+
+## CODE get_cookie  args=()
+ 51           RESUME                   0
+
+ 53           LOAD_GLOBAL              1 (_get_config + NULL)
+              CALL                     0
+              LOAD_ATTR                3 (get_cookie + NULL|self)
+              CALL                     0
+              RETURN_VALUE
+
+## CODE set_config_pack  args=('config_pack',)
+ 55           RESUME                   0
+
+ 57           LOAD_GLOBAL              1 (_get_config + NULL)
+              CALL                     0
+              LOAD_ATTR                3 (set_config_pack + NULL|self)
+              LOAD_FAST                0 (config_pack)
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             1 (None)
+
+## CODE get_config  args=()
+ 59           RESUME                   0
+
+ 61           LOAD_GLOBAL              1 (_get_config + NULL)
+              CALL                     0
+              LOAD_ATTR                3 (get_config_pack + NULL|self)
+              CALL                     0
+              RETURN_VALUE
+
+## CODE get_base_url  args=()
+ 63           RESUME                   0
+
+ 65           LOAD_GLOBAL              1 (_get_config + NULL)
+              CALL                     0
+              LOAD_ATTR                3 (get_ima_base_url + NULL|self)
+              CALL                     0
+              RETURN_VALUE
+
+## CODE get_endpoint_url  args=('endpoint_name',)
+ 67           RESUME                   0
+
+ 69           LOAD_GLOBAL              1 (_get_config + NULL)
+              CALL                     0
+              LOAD_ATTR                3 (get_endpoint_url + NULL|self)
+              LOAD_FAST                0 (endpoint_name)
+              CALL                     1
+              RETURN_VALUE
+
+## CODE get_endpoint_method  args=('endpoint_name',)
+ 71           RESUME                   0
+
+ 73           LOAD_GLOBAL              1 (_get_config + NULL)
+              CALL                     0
+              LOAD_ATTR                3 (get_endpoint_method + NULL|self)
+              LOAD_FAST                0 (endpoint_name)
+              CALL                     1
+              RETURN_VALUE
+
+## CODE get_timeout  args=()
+ 75           RESUME                   0
+
+ 77           LOAD_GLOBAL              1 (_get_config + NULL)
+              CALL                     0
+              LOAD_ATTR                3 (get_timeout + NULL|self)
+              CALL                     0
+              RETURN_VALUE
+
+## CODE get_retry_config  args=()
+ 79           RESUME                   0
+
+ 81           LOAD_GLOBAL              1 (_get_config + NULL)
+              CALL                     0
+              LOAD_ATTR                3 (get_retry_config + NULL|self)
+              CALL                     0
+              RETURN_VALUE
+
+## CODE get_wechat_api_url  args=()
+ 83           RESUME                   0
+
+ 85           LOAD_GLOBAL              1 (_get_config + NULL)
+              CALL                     0
+              LOAD_ATTR                3 (get_wechat_api_url + NULL|self)
+              CALL                     0
+              RETURN_VALUE
+
+## CODE build_headers_with_cookie  args=('cookie_bkn', 'cookie_value')
+ 87           RESUME                   0
+
+ 89           LOAD_GLOBAL              1 (_get_config + NULL)
+              CALL                     0
+              LOAD_ATTR                3 (build_headers_with_cookie + NULL|self)
+              LOAD_FAST_LOAD_FAST      1 (cookie_bkn, cookie_value)
+              CALL                     2
+              RETURN_VALUE
+
+## CODE get_app_cookie_fields  args=()
+ 91           RESUME                   0
+
+ 93           LOAD_GLOBAL              1 (_get_config + NULL)
+              CALL                     0
+              LOAD_ATTR                3 (get_app_cookie_fields + NULL|self)
+              CALL                     0
+              RETURN_VALUE

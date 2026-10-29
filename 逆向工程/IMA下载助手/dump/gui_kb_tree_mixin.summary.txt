@@ -1,0 +1,279 @@
+===== gui/kb_tree_mixin.pyc =====
+DOCSTRING: 知识库树操作 Mixin
+
+[<module>] args=() names=('__doc__', 'PySide6.QtWidgets', 'QTreeWidgetItem', 'QApplication', 'PySide6.QtCore', 'Qt', 'QByteArray', 'PySide6.QtGui', 'QColor', 'QPixmap', 'QIcon', 'gui.workers.workers', 'LoadKnowledgeBasesWorker', 'LoadFolderWorker', 'os', 'sys', 'json', 'base64', 'KbTreeMixin')
+  CONST '知识库树操作 Mixin'
+  CONST 0
+  CONST ('QTreeWidgetItem', 'QApplication')
+  CONST ('Qt', 'QByteArray')
+  CONST ('QColor', 'QPixmap', 'QIcon')
+  CONST ('LoadKnowledgeBasesWorker', 'LoadFolderWorker')
+  CONST None
+  CONST 'KbTreeMixin'
+
+  [KbTreeMixin] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', '__doc__', '_init_icons', 'staticmethod', '_format_size', '_get_file_icon', 'load_icon_from_url', 'get_default_icon', 'load_knowledge_bases', 'on_kb_list_ready', 'on_kb_icon_loaded', 'on_kb_file_count_loaded', 'on_kb_loaded', 'populate_kb_tree', 'on_item_expanded', 'on_tree_item_clicked', 'get_kb_name', 'get_kb_forbid_access', 'get_access_status_display', 'load_folder', 'on_folder_loaded', 'on_folder_error', '__static_attributes__')
+    CONST 'KbTreeMixin'
+    CONST 12
+    CONST '鐭ヨ瘑搴撴爲鎿嶄綔鍔熻兘锛屼緵 MainWindow 缁ф壙'
+    CONST None
+    CONST ('_default_icon', '_icon_map', 'current_kb_list', 'folder_worker', 'worker')
+    CONST (3, None)
+    CONST ('', False)
+
+    [KbTreeMixin._init_icons] args=('self',) names=('getattr', 'sys', '_MEIPASS', 'os', 'path', 'dirname', '__file__', 'join', 'open', 'json', 'load', '_icon_map', 'QIcon', '_default_icon', 'items', 'base64', 'b64decode', 'QPixmap', 'loadFromData', 'QByteArray', 'scaled', 'Qt', 'KeepAspectRatio', 'SmoothTransformation')
+      CONST '鍒濆\ue750鍖栨枃浠剁被鍨嬪浘鏍囷紙浠?resources/icons.json 鍔犺浇锛?'
+      CONST 'frozen'
+      CONST False
+      CONST 'resources'
+      CONST 'icons.json'
+      CONST 'r'
+      CONST 'utf-8'
+      CONST ('encoding')
+      CONST None
+      CONST 'kb'
+      CONST 32
+      CONST 20
+
+    [KbTreeMixin._format_size] args=('size_bytes',) names=('int',)
+      CONST '灏嗗瓧鑺傛暟鏍煎紡鍖栦负鍙\ue21d\ue1f0瀛楃\ue0c1涓?'
+      CONST 1073741824
+      CONST '.2f'
+      CONST 'GB'
+      CONST 1048576
+      CONST '.1f'
+      CONST 'MB'
+      CONST 1024
+      CONST 'KB'
+      CONST 0
+      CONST 'B'
+      CONST '-'
+
+    [KbTreeMixin._get_file_icon] args=('self', 'type_name') names=('_icon_map', 'get', 'lower')
+      CONST '鏍规嵁鏂囦欢绫诲瀷鍚嶇О杩斿洖瀵瑰簲鍥炬爣'
+      CONST 'txt'
+      CONST '文件夹'
+      CONST 'folder'
+      CONST 'pdf'
+      CONST 'word'
+      CONST 'doc'
+      CONST 'excel'
+      CONST '表格'
+      CONST 'sheet'
+      CONST 'ppt'
+      CONST '演示'
+      CONST 'presentation'
+      CONST '音频'
+      CONST 'audio'
+      CONST '音乐'
+      CONST '图片'
+      CONST 'image'
+      CONST 'photo'
+      CONST '笔记'
+      CONST 'note'
+      CONST '网址'
+      CONST 'url'
+      CONST '链接'
+      CONST '网页'
+      CONST 'md'
+      CONST 'markdown'
+
+    [KbTreeMixin.load_icon_from_url] args=('self', 'url') names=('get_default_icon', 'requests', 'get', 'status_code', 'QPixmap', 'loadFromData', 'QByteArray', 'content', 'isNull', 'scaled', 'Qt', 'KeepAspectRatio', 'SmoothTransformation', 'QIcon', 'Exception')
+      CONST '浠嶶RL鍔犺浇鍥炬爣'
+      CONST 0
+      CONST None
+      CONST 2
+      CONST ('timeout')
+      CONST 200
+      CONST 32
+
+    [KbTreeMixin.get_default_icon] args=('self',) names=('_default_icon',)
+      CONST '鑾峰彇榛樿\ue17b鐭ヨ瘑搴撳浘鏍?'
+
+    [KbTreeMixin.load_knowledge_bases] args=('self',) names=('load_btn', 'setEnabled', 'add_log', 'LoadKnowledgeBasesWorker', 'worker', 'list_ready', 'connect', 'on_kb_list_ready', 'icon_loaded', 'on_kb_icon_loaded', 'file_count_loaded', 'on_kb_file_count_loaded', 'finished', 'on_kb_loaded', 'error', 'on_error', 'auth_expired', 'on_auth_expired', 'start')
+      CONST None
+      CONST False
+      CONST '正在加载知识库...'
+      CONST 'info'
+
+    [KbTreeMixin.on_kb_list_ready] args=('self', 'data') names=('current_kb_list', 'populate_kb_tree', 'add_log', 'len', 'kb_selector', 'clear', 'addItem', 'search_input', 'setEnabled', 'search_btn', 'clear_search_btn', 'setVisible')
+      CONST '绗\ue0ff竴闃舵\ue18c锛氬垪琛ㄥ氨缁\ue04e紝绔嬪嵆娓叉煋锛屽浘鏍囩敤榛樿\ue17b锛屾枃浠舵暟鏄剧ず鍔犺浇涓?'
+      CONST '已加载 '
+      CONST ' 个知识库，正在获取图标和文件数...'
+      CONST 'info'
+      CONST '请选择知识库'
+      CONST None
+      CONST 'name'
+      CONST 'id'
+      CONST True
+      CONST False
+
+    [KbTreeMixin.on_kb_icon_loaded] args=('self', 'kb_id', 'icon') names=('tree', 'invisibleRootItem', 'range', 'childCount', 'child', 'data', 'Qt', 'UserRole', 'get', 'setIcon')
+      CONST '绗\ue0ff簩闃舵\ue18c锛氬崟涓\ue044浘鏍囧氨缁\ue04e紝鎵惧埌瀵瑰簲 item 鏇挎崲鍥炬爣'
+      CONST 1
+      CONST 'id'
+      CONST 0
+      CONST None
+
+    [KbTreeMixin.on_kb_file_count_loaded] args=('self', 'kb_id', 'count') names=('tree', 'invisibleRootItem', 'range', 'childCount', 'child', 'data', 'Qt', 'UserRole', 'get', 'setText', 'text')
+      CONST '绗\ue0ff簩闃舵\ue18c锛氬崟涓\ue045枃浠舵暟灏辩华锛屾壘鍒板\ue1ee搴?item 鏇存柊鍚嶇О鍒?'
+      CONST 1
+      CONST 'id'
+      CONST 2
+      CONST ', '
+      CONST ' 个文件'
+      CONST None
+
+    [KbTreeMixin.on_kb_loaded] args=('self', 'data') names=('load_btn', 'setEnabled', 'update_btn', 'add_log', 'len')
+      CONST '鍏ㄩ儴鍔犺浇瀹屾垚锛堝浘鏍囧拰鏂囦欢鏁板潎宸插紓姝ユ洿鏂帮級锛屽惎鐢ㄦ搷浣滄寜閽?'
+      CONST True
+      CONST '加载完成，共 '
+      CONST ' 个知识库'
+      CONST 'success'
+      CONST None
+
+    [KbTreeMixin.populate_kb_tree] args=('self', 'data') names=('tree', 'setUpdatesEnabled', 'clear', '_format_size', 'get', 'replace', 'get_access_status_display', 'QTreeWidgetItem', 'setIcon', 'load_icon_from_url', 'setForeground', 'setData', 'Qt', 'UserRole', 'setChildIndicatorPolicy', 'ShowIndicator', 'append', 'addTopLevelItems')
+      CONST '鏍规嵁缂撳瓨鏁版嵁娓叉煋鐭ヨ瘑搴撳垪琛?'
+      CONST False
+      CONST 'size'
+      CONST 'update_time'
+      CONST '-'
+      CONST 'description'
+      CONST ''
+      CONST '\n'
+      CONST ' '
+      CONST '\r'
+      CONST 'visible_export_status'
+      CONST 3
+      CONST 'name'
+      CONST '知识库'
+      CONST 0
+      CONST 'cover_url'
+      CONST 4
+      CONST 1
+      CONST 'kb'
+      CONST 'id'
+      CONST ('type', 'id', 'name', 'full_path', 'visible_export_status')
+      CONST True
+      CONST None
+
+    [KbTreeMixin.on_item_expanded] args=('self', 'item') names=('data', 'Qt', 'UserRole', 'folder_worker', 'isRunning', 'setExpanded', 'get', 'load_folder', 'get_kb_name')
+      CONST None
+      CONST 0
+      CONST 1
+      CONST 'loaded'
+      CONST False
+      CONST 'type'
+      CONST 'kb'
+      CONST 'visible_export_status'
+      CONST 3
+      CONST 'id'
+      CONST 'name'
+      CONST 'folder'
+      CONST 'kb_id'
+      CONST 'folder_id'
+
+    [KbTreeMixin.on_tree_item_clicked] args=('self', 'item', 'column') names=('data', 'Qt', 'UserRole', 'get', 'parent', 'removeChild', 'load_folder')
+      CONST '澶勭悊"鍔犺浇鏇村\ue63f"鐐瑰嚮'
+      CONST 1
+      CONST 'type'
+      CONST 'load_more'
+      CONST None
+      CONST 0
+      CONST 2
+      CONST 'kb_id'
+      CONST 'folder_id'
+      CONST 'kb_name'
+      CONST ''
+      CONST 'visible_export_status'
+      CONST 3
+      CONST ('cursor')
+
+    [KbTreeMixin.get_kb_name] args=('self', 'item') names=('data', 'Qt', 'UserRole', 'parent')
+      CONST None
+      CONST 1
+      CONST 'type'
+      CONST 'kb'
+      CONST 'name'
+      CONST ''
+
+    [KbTreeMixin.get_kb_forbid_access] args=('self', 'item') names=('data', 'Qt', 'UserRole', 'get', 'parent')
+      CONST '鑾峰彇鐭ヨ瘑搴撶殑鏉冮檺鐘舵€?'
+      CONST 1
+      CONST 'type'
+      CONST 'kb'
+      CONST 'visible_export_status'
+      CONST 3
+      CONST False
+
+    [KbTreeMixin.get_access_status_display] args=('self', 'status_code') names=('QColor', 'get')
+      CONST '鏍规嵁 access_status 杩斿洖鐘舵€佹枃妗堝強棰滆壊'
+      CONST '不可查看'
+      CONST '#d32f2f'
+      CONST '可查看、不可导出'
+      CONST '#FF9800'
+      CONST '可查看、可导出'
+      CONST '#4CAF50'
+      CONST (1, 2, 3)
+      CONST 3
+
+    [KbTreeMixin.load_folder] args=('self', 'parent_item', 'kb_id', 'folder_id', 'kb_name', 'visible_export_status', 'cursor') names=('folder_worker', 'isRunning', 'setText', 'LoadFolderWorker', 'progress', 'connect', 'finished', 'error', 'start')
+      CONST None
+      CONST 4
+      CONST '加载中...'
+
+      [KbTreeMixin.load_folder.<locals>.<lambda>] args=('msg',) names=('setText',)
+        CONST None
+        CONST 4
+
+      [KbTreeMixin.load_folder.<locals>.<lambda>] args=('content', 'next_cursor', 'has_more') names=('on_folder_loaded',)
+        CONST None
+
+      [KbTreeMixin.load_folder.<locals>.<lambda>] args=('err',) names=('on_folder_error',)
+        CONST None
+
+    [KbTreeMixin.on_folder_loaded] args=('self', 'parent_item', 'kb_id', 'kb_name', 'visible_export_status', 'content', 'next_cursor', 'has_more') names=('data', 'Qt', 'UserRole', 'get', 'tree', 'setUpdatesEnabled', 'get_access_status_display', 'QTreeWidgetItem', 'setIcon', '_get_file_icon', 'setForeground', 'setData', 'setChildIndicatorPolicy', 'ShowIndicator', 'append', '_format_size', 'QColor', 'addChildren', '_create_tag_widget', 'setItemWidget', 'setText')
+      CONST None
+      CONST 1
+      CONST 'full_path'
+      CONST False
+      CONST 'folders'
+      CONST 'update_time'
+      CONST '-'
+      CONST 'name'
+      CONST '文件夹'
+      CONST ''
+      CONST 0
+      CONST 4
+      CONST '/'
+      CONST 'folder'
+      CONST 'folder_id'
+      CONST ('type', 'kb_id', 'kb_name', 'folder_id', 'name', 'full_path', 'visible_export_status')
+      CONST 'files'
+      CONST 'file_size'
+      CONST 'media_type_info'
+      CONST '文件'
+      CONST 'access_status'
+      CONST 3
+      CONST 'tags'
+      CONST 'title'
+      CONST 5
+      CONST 'file'
+      CONST 'media_id'
+      CONST 'media_type'
+      CONST ('type', 'kb_id', 'kb_name', 'full_path', 'media_id', 'media_type', 'media_type_info', 'title', 'file_size', 'update_time', 'access_status')
+      CONST ('加载更多...', '', '', '', '', '')
+      CONST '#2196F3'
+      CONST 'type'
+      CONST 'load_more'
+      CONST ('type', 'kb_id', 'kb_name', 'folder_id', 'visible_export_status')
+      CONST 2
+      CONST 'loaded'
+      CONST True
+
+    [KbTreeMixin.on_folder_error] args=('self', 'parent_item', 'error') names=('setText', 'add_log')
+      CONST None
+      CONST 4
+      CONST '加载失败'
+      CONST '加载失败：'
+      CONST 'error'
+

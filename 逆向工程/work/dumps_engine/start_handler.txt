@@ -1,0 +1,86 @@
+@@@ off=2456050
+:rxEngine.phase$.value.phase
+}
+)),t.ipc.handle("START_SCREENSHOT",async(e,r=isWhatsAppBuild()?"whatsapp":"personal")=>{
+const n=performance.now(),a=[],s=i=>{
+a.push([i,performance.now()-n])
+}
+;
+s("handler_enter");
+try{
+if(rxEngine.isRunning())return!1;
+const i=await validateTargetRuntimeForStart();
+if(s("validateTargetRuntime"),!i.ok)return{
+success:!1,action:i.action,error:i.message
+}
+;
+const o=i.profile,d=i.appType;
+if(o?(activateTargetRuntime(o),console.log("【START_SCREENSHOT】使用本次选择的目标窗口:",{
+requestedAppType:r,automationAppType:d,backendAppType:o.backendAppType,detectorVersion:o.detectorVersion,captureSurface:o.captureSurface,captureSelection:o.captureSelection,platform:o.platform,target:o.target
+}
+)):(clearTargetRuntime(),console.log("【START_SCREENSHOT】使用传统应用自动找窗:",{
+requestedAppType:r,automationAppType:d
+}
+)),!startWorkflowRun().accepted)return clearTargetRuntime(),!1;
+resetScreenshotObservationState("START_SCREENSHOT"),engineState.isEngineActive=!0,rxEngine.startScope("engine","START_SCREENSHOT"),rxEngine.setPhase(EnginePhase.STARTING),replayLogger.startSession(d);
+const l=await getWindowInfo(d,!1);
+if(s("getWindowInfo"),!l){
+engineState.isEngineActive=!1,rxEngine.abortScope("engine","start_window_not_found"),rxEngine.setPhase(EnginePhase.STOPPED),clearTargetRuntime();
+const p=d==="personal"?"微信":d==="enterprise"?"企业微信":"WhatsApp";
+return{
+success:!1,action:"target_window_unavailable",error:o?.captureSurface==="browser-content"&&o.captureSelection?"所选目标窗口或保存的网页操作区域当前不可用，请恢复窗口或重新选择并调整范围":o?"所选目标窗口当前不可用，请恢复窗口或重新选择后重试":`未找到${
+p
+}
+窗口，请打开并保持窗口可见后重试`
+}
+
+}
+const f=await autoSelectInputBackendForStart();
+s("autoSelectInputBackendForStart"),console.log(`【输入后端】selected mode=${
+f.mode
+}
+ kind=${
+f.kind||"none"
+}
+ reason=${
+f.reason||"ready"
+}
+`);
+let h=!1;
+try{
+const p=await getAllTasksDirect();
+s("getAllTasksDirect"),h=(p?.body?.items||[]).some(_=>(_?.type==="auto"||_?.type==="workflow")&&_?.status==="open")
+}
+catch{
+s("getAllTasksDirect_error"),h=!1
+}
+if(traceLogger.startSession(d),s("traceLogger_init"),messageList.splice(
+@@@ off=2458050
+0,messageList.length),setCurrentMessage(null),broadcastMessages(null),displayMessage("thinking","智能识别中"),IS_MAC$1){
+const p=await checkActiveWinPermissions();
+if(s("checkActiveWinPermissions"),!p)return engineState.isEngineActive=!1,rxEngine.stopAllActions(),clearTargetRuntime(),!1;
+const m=await checkRobotPermissions();
+if(s("checkRobotPermissions"),!m)return engineState.isEngineActive=!1,rxEngine.stopAllActions(),clearTargetRuntime(),!1
+}
+if(o?.captureSurface==="browser-content"){
+const p=await ensureSelectedBrowserWindowFocused();
+if(s("focusSelectedBrowserWindow"),!p)return engineState.isEngineActive=!1,rxEngine.stopAllActions(),clearTargetRuntime(),{
+success:!1,action:"target_window_focus_failed",error:"无法将所选浏览器窗口置于前台，请恢复窗口或重新选择后再启动"
+}
+
+}
+if(setCurrentAppType(d),engineState.currentConversationTarget=null,engineState.lastActionTime=Date.now(),clearWhatsAppLayoutCache(),engineState.isWhatsAppInited=!1,debugLog("【START_SCREENSHOT】已重置 WhatsApp 探测状态"),s("state_reset"),streamingState.isStreaming=!1,streamingState.currentType=null,streamingState.accumulatedContent="",streamingState.fullKeyboardText="",startWsStatusLogger(),isGenericImRuntime()||(getScheduleReconnectController().start(),s("scheduleTask_ws_background")),h){
+s("chat_sse_ready");
+const p=markWorkflowReady("protected");
+if(!p.accepted)throw new Error(`workflow ready failed: ${
+p.reason
+}
+`);
+resolveAutoTaskStartupStrategy(d)==="capture-current-chat"?(rxEngine.setPhase(EnginePhase.CAPTURING_CURRENT_CHAT),takeScreenshot("upload"),s("takeScreenshot_fired")):(console.log("【START_SCREENSHOT】WhatsApp 模式，先执行未读初始化..."),rxEngine.setPhase(EnginePhase.POLLING,{
+instant:!0
+}
+),s("whatsapp_init_fired"))
+}
+else{
+const p=markWorkflowReady("quiescent");
+if(!p.acce

@@ -1,0 +1,1192 @@
+{
+ "kind": "fibo_module_seed",
+ "module": "CAE",
+ "module_zh": "企业行为与事件",
+ "module_en": "Corporate Actions and Events",
+ "note": "任务命名 CA，FIBO 2026Q3 实际模块码为 CAE（企业行为与事件）；企业法人本体在 BE/LegalEntities",
+ "source": {
+  "repo": "EDMCouncil/fibo",
+  "tag": "master_2026Q3",
+  "license": "MIT",
+  "license_copyright": "Copyright (c) 2020 Enterprise Data Management Council",
+  "url": "https://github.com/EDMCouncil/fibo/tree/master_2026Q3",
+  "tarball_sha256": "48a1690255df0fb161d624a6e12fb529f4e4f38c73ac8cfbe1ed81e913625e27"
+ },
+ "stats": {
+  "classes": 78,
+  "zh_mapped": 4,
+  "zh_rate": 0.0513,
+  "roots": 4,
+  "max_depth": 5,
+  "multi_parent_classes": 3,
+  "derived_labels": 0,
+  "external_parent_edges_dropped": 6
+ },
+ "concepts": [
+  {
+   "id": "Action",
+   "en": "action",
+   "label_source": "rdfs:label",
+   "zh": "行为",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/CorporateActions/Action",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "Occurrence",
+   "parents": [
+    "Occurrence"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "ActionClassificationScheme",
+   "en": "action classification scheme",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/CorporateActions/ActionClassificationScheme",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ActionClassifier",
+   "en": "action classifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/CorporateActions/ActionClassifier",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "OccurrenceKind",
+   "parents": [
+    "OccurrenceKind"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "ActionGroup",
+   "en": "action group",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/GLEIF-CorporateActionIndividuals/ActionGroup",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ActionStatus",
+   "en": "action status",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/CorporateActions/ActionStatus",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "LifecycleStatus",
+   "parents": [
+    "LifecycleStatus"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "BondDefaultAction",
+   "en": "bond default event",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/BondDefaultAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "MandatoryCorporateAction",
+   "parents": [
+    "MandatoryCorporateAction",
+    "ObligationDefault"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "BonusIssue",
+   "en": "bonus issue",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/BonusIssue",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "MandatoryCorporateAction",
+   "parents": [
+    "MandatoryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "BonusRightsIssue",
+   "en": "bonus rights issue",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/BonusRightsIssue",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "IntermediateSecuritiesDistribution",
+   "parents": [
+    "IntermediateSecuritiesDistribution"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "BonusSharePlanDistribution",
+   "en": "bonus share plan distribution",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/BonusSharePlanDistribution",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "CapitalDistribution",
+   "parents": [
+    "CapitalDistribution"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "BusinessStrategyClassifier",
+   "en": "business strategy classifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/CorporateActions/BusinessStrategyClassifier",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "ActionClassifier",
+   "parents": [
+    "ActionClassifier"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CallOnIntermediateSecurities",
+   "en": "call on intermediate securities",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/CallOnIntermediateSecurities",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "MandatoryWithChoiceCorporateAction",
+   "parents": [
+    "MandatoryWithChoiceCorporateAction"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "CancellationOfShares",
+   "en": "cancellation of shares",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/CancellationOfShares",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "CorporateAction",
+   "parents": [
+    "CorporateAction"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "CapitalDistribution",
+   "en": "capital distribution",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/CapitalDistribution",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "VoluntaryCorporateAction",
+   "parents": [
+    "VoluntaryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "CapitalGainsDistribution",
+   "en": "capital gains distribution",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/CapitalGainsDistribution",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "VoluntaryCorporateAction",
+   "parents": [
+    "VoluntaryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "CashDividendAction",
+   "en": "cash dividend action",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/CashDividendAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "MandatoryCorporateAction",
+   "parents": [
+    "MandatoryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "ChangeAction",
+   "en": "change action",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/CorporateActions/ChangeAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "MandatoryCorporateAction",
+   "parents": [
+    "MandatoryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "ChangeOfSecurityTradingStatusEvent",
+   "en": "change of security trading status event",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/ChangeOfSecurityTradingStatusEvent",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "CorporateChangeOfStatusEvent",
+   "parents": [
+    "CorporateChangeOfStatusEvent"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "ChangeToSmallestNegotiableUnit",
+   "en": "change to smallest negotiable unit",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/ChangeToSmallestNegotiableUnit",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "CorporateAction",
+   "parents": [
+    "CorporateAction"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "ClassAction",
+   "en": "class action",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/CorporateActions/ClassAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "VoluntaryCorporateAction",
+   "parents": [
+    "VoluntaryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "ConsentSolicitation",
+   "en": "consent solicitation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/CorporateActions/ConsentSolicitation",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "VoluntaryCorporateAction",
+   "parents": [
+    "VoluntaryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "ConversionAction",
+   "en": "conversion action",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/ConversionAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "VoluntaryCorporateAction",
+   "parents": [
+    "VoluntaryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "ConversionSuspensionAction",
+   "en": "conversion suspension action",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/ConversionSuspensionAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "CorporateAction",
+   "parents": [
+    "CorporateAction"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "CorporateAction",
+   "en": "corporate action",
+   "label_source": "rdfs:label",
+   "zh": "公司行为",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/CorporateActions/CorporateAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "Action",
+   "parents": [
+    "Action"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CorporateActionObligation",
+   "en": "corporate action obligation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/CorporateActionObligation",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "CorporateAction",
+   "parents": [
+    "CorporateAction",
+    "Duty"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "CorporateActionPaymentObligation",
+   "en": "corporate action payment obligation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/CorporateActionPaymentObligation",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "CorporateActionObligation",
+   "parents": [
+    "CorporateActionObligation"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "CorporateActionSecuritiesDeliveryObligation",
+   "en": "corporate action securities delivery obligation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/CorporateActionSecuritiesDeliveryObligation",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "CorporateActionObligation",
+   "parents": [
+    "CorporateActionObligation"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "CorporateChangeOfStatusEvent",
+   "en": "corporate change of status event",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/CorporateChangeOfStatusEvent",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "CorporateAction",
+   "parents": [
+    "CorporateAction",
+    "LifecycleEvent"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "CouponStrip",
+   "en": "coupon strip",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/CouponStrip",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "CorporateAction",
+   "parents": [
+    "CorporateAction"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "DecreaseInValueAction",
+   "en": "decrease in value action",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/DecreaseInValueAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "MandatoryCorporateAction",
+   "parents": [
+    "MandatoryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "DisclosureAction",
+   "en": "disclosure action",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/CorporateActions/DisclosureAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "VoluntaryCorporateAction",
+   "parents": [
+    "VoluntaryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "Divestiture",
+   "en": "divestiture",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/CorporateActions/Divestiture",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "MandatoryCorporateAction",
+   "parents": [
+    "MandatoryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "DividendOptionAction",
+   "en": "dividend option action",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/DividendOptionAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "MandatoryWithChoiceCorporateAction",
+   "parents": [
+    "MandatoryWithChoiceCorporateAction"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "DividendReinvestmentAction",
+   "en": "dividend reinvestment action",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/DividendReinvestmentAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "MandatoryWithChoiceCorporateAction",
+   "parents": [
+    "MandatoryWithChoiceCorporateAction"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "Drawing",
+   "en": "drawing",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/Drawing",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "MandatoryCorporateAction",
+   "parents": [
+    "MandatoryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "DutchAuction",
+   "en": "dutch auction",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/DutchAuction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "VoluntaryCorporateAction",
+   "parents": [
+    "VoluntaryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "ExchangeAction",
+   "en": "exchange action",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/ExchangeAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "CorporateAction",
+   "parents": [
+    "CorporateAction"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "FormalOffer",
+   "en": "formal offer",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/FormalOffer",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "VoluntaryCorporateAction",
+   "parents": [
+    "VoluntaryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "FullCallEarlyRedemptionAction",
+   "en": "full call early redemption action",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/FullCallEarlyRedemptionAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "MandatoryCorporateAction",
+   "parents": [
+    "MandatoryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "IncomeOrientedClassifier",
+   "en": "income-oriented classifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/CorporateActions/IncomeOrientedClassifier",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "ActionClassifier",
+   "parents": [
+    "ActionClassifier"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "InterestPaymentAction",
+   "en": "interest payment action",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/InterestPaymentAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "MandatoryCorporateAction",
+   "parents": [
+    "MandatoryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "InterestPaymentInKind",
+   "en": "interest payment in kind",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/InterestPaymentInKind",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "InterestPaymentAction",
+   "parents": [
+    "InterestPaymentAction"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "InterestPaymentWithPrincipal",
+   "en": "interest payment with principal",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/InterestPaymentWithPrincipal",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "InterestPaymentAction",
+   "parents": [
+    "InterestPaymentAction"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "InterestRateAdjustment",
+   "en": "interest rate adjustment",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/InterestRateAdjustment",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "MandatoryCorporateAction",
+   "parents": [
+    "MandatoryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "IntermediateSecuritiesDistribution",
+   "en": "intermediate securities distribution",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/IntermediateSecuritiesDistribution",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "MandatoryCorporateAction",
+   "parents": [
+    "MandatoryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "LegalFormChange",
+   "en": "legal form change",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/CorporateActions/LegalFormChange",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "MandatoryCorporateAction",
+   "parents": [
+    "MandatoryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "Liquidation",
+   "en": "liquidation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/CorporateActions/Liquidation",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "Divestiture",
+   "parents": [
+    "Divestiture"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "ListingStatusDelistingMessage",
+   "en": "listing status delisting message",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/ListingStatusDelistingMessage",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "MandatoryCorporateAction",
+   "en": "mandatory corporate action",
+   "label_source": "rdfs:label",
+   "zh": "强制性公司行为",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/CorporateActions/MandatoryCorporateAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "CorporateAction",
+   "parents": [
+    "CorporateAction"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "MandatoryWithChoiceCorporateAction",
+   "en": "mandatory with choice corporate action",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/CorporateActions/MandatoryWithChoiceCorporateAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "MandatoryCorporateAction",
+   "parents": [
+    "MandatoryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "MarketAction",
+   "en": "market action",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/CorporateActions/MarketAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "Action",
+   "parents": [
+    "Action"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "MergerAcquisition",
+   "en": "merger / acquisition",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/CorporateActions/MergerAcquisition",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "MandatoryCorporateAction",
+   "parents": [
+    "MandatoryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "Notification",
+   "en": "notification",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/CorporateActions/Notification",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "MandatoryCorporateAction",
+   "parents": [
+    "MandatoryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "OddLotOffer",
+   "en": "odd lot offer",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/OddLotOffer",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "VoluntaryCorporateAction",
+   "parents": [
+    "VoluntaryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "OrganizationAddressChange",
+   "en": "organization address change",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/CorporateActions/OrganizationAddressChange",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "Notification",
+   "parents": [
+    "Notification"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "OrganizationNameChange",
+   "en": "organization name change",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/CorporateActions/OrganizationNameChange",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "Notification",
+   "parents": [
+    "Notification"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "PariPassuAction",
+   "en": "pari-passu action",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/PariPassuAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "MandatoryCorporateAction",
+   "parents": [
+    "MandatoryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "PartialRedemptionWithReductionOfNominalValueAction",
+   "en": "partial redemption with reduction of nominal value action",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/PartialRedemptionWithReductionOfNominalValueAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "CorporateAction",
+   "parents": [
+    "CorporateAction"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "PartialRedemptionWithoutReductionOfNominalValueAction",
+   "en": "partial redemption without reduction of nominal value action",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/PartialRedemptionWithoutReductionOfNominalValueAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "CorporateAction",
+   "parents": [
+    "CorporateAction"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "PostMergerSecuritiesExchange",
+   "en": "post-merger securities exchange",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/PostMergerSecuritiesExchange",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "CorporateAction",
+   "parents": [
+    "CorporateAction"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "PriorityIssue",
+   "en": "priority issue",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/CorporateActions/PriorityIssue",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "VoluntaryCorporateAction",
+   "parents": [
+    "VoluntaryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "PutRedemptionAction",
+   "en": "put redemption action",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/PutRedemptionAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "VoluntaryCorporateAction",
+   "parents": [
+    "VoluntaryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "RedemptionAtMaturityAction",
+   "en": "redemption at maturity action",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/RedemptionAtMaturityAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "MandatoryCorporateAction",
+   "parents": [
+    "MandatoryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "RedenominationAction",
+   "en": "redenomination action",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/RedenominationAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "MandatoryCorporateAction",
+   "parents": [
+    "MandatoryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "RegulatoryAction",
+   "en": "regulatory action",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/CorporateActions/RegulatoryAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "Action",
+   "parents": [
+    "Action"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "RepurchaseOffer",
+   "en": "repurchase offer",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/RepurchaseOffer",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "VoluntaryCorporateAction",
+   "parents": [
+    "VoluntaryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "ReverseStockSplit",
+   "en": "reverse stock split",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/ReverseStockSplit",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "MandatoryCorporateAction",
+   "parents": [
+    "MandatoryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "RightsExerciseEvent",
+   "en": "rights exercise event",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/RightsExerciseEvent",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "CorporateAction",
+   "parents": [
+    "CorporateAction"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "SharesPremiumDividendAction",
+   "en": "shares premium dividend action",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/SharesPremiumDividendAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "MandatoryWithChoiceCorporateAction",
+   "parents": [
+    "MandatoryWithChoiceCorporateAction"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "SpinOff",
+   "en": "spin off",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/CorporateActions/SpinOff",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "Divestiture",
+   "parents": [
+    "Divestiture"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "StockDividendAction",
+   "en": "stock dividend action",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/StockDividendAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "MandatoryCorporateAction",
+   "parents": [
+    "MandatoryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "StockSplit",
+   "en": "stock split",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/StockSplit",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "MandatoryCorporateAction",
+   "parents": [
+    "MandatoryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "TenderOffer",
+   "en": "tender offer",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/TenderOffer",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "VoluntaryCorporateAction",
+   "parents": [
+    "VoluntaryCorporateAction"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "TradingStatusActiveMessage",
+   "en": "trading status active message",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/TradingStatusActiveMessage",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "TradingStatusMessage",
+   "parents": [
+    "TradingStatusMessage"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "TradingStatusMessage",
+   "en": "trading status message",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/TradingStatusMessage",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "TradingStatusSuspendedMessage",
+   "en": "trading status suspended message",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/TradingStatusSuspendedMessage",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "TradingStatusMessage",
+   "parents": [
+    "TradingStatusMessage"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "VoluntaryCorporateAction",
+   "en": "voluntary corporate action",
+   "label_source": "rdfs:label",
+   "zh": "自愿性公司行为",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/CorporateActions/VoluntaryCorporateAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "CorporateAction",
+   "parents": [
+    "CorporateAction"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "WarrantExerciseAction",
+   "en": "warrant exercise action",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/WarrantExerciseAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "CorporateAction",
+   "parents": [
+    "CorporateAction"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "WorthlessSecurityAction",
+   "en": "worthless security action",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/CAE/CorporateEvents/SecurityRelatedCorporateActions/WorthlessSecurityAction",
+   "module": "CAE",
+   "subdomain": "CorporateEvents",
+   "parent": "MandatoryCorporateAction",
+   "parents": [
+    "MandatoryCorporateAction"
+   ],
+   "depth": 4
+  }
+ ]
+}

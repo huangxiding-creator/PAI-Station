@@ -179,15 +179,16 @@ def test_kb_blueprint_paid_sandbox_trust_on_query_fail(client):
 def test_kb_order_sign_recomputes_price(client):
     from qianwen_engine import store
     _session()
-    # unit_fen=10 (1022复用export_product_id ¥0.1): 3166→3170(317×10), 4749→4750, 5066→5070
-    for ver, fen, qty in (("original", 3170, 317), ("md", 4750, 475),
-                          ("import", 5070, 507)):
+    # kb_goods ¥1道具: 3166→3200(32×100), 4749→4700, 5066→5100
+    for ver, fen, qty in (("original", 3200, 32), ("md", 4700, 47),
+                          ("import", 5100, 51)):
         r = client.post("/api/kb/order_sign", json=_order_payload(version=ver))
         assert r.status_code == 200, (ver, r.text)
         d = r.json()
         assert d["price_fen"] == fen and d["buy_quantity"] == qty
         sd = json.loads(d["sign_data"])
-        assert sd["goodsPrice"] == 10 and sd["buyQuantity"] == qty  # ¥0.1×qty
+        assert sd["productId"] == "kb_goods"
+        assert sd["goodsPrice"] == 100 and sd["buyQuantity"] == qty
         ko = store.get_kb_order(d["out_trade_no"])
         assert ko["status"] == "pending" and ko["version_sel"] == ver
         assert ko["email"] == "buyer@example.com"
@@ -331,7 +332,7 @@ def test_kb_bridge_pending_desensitized_and_ack(client, monkeypatch):
     assert len(orders) == 1
     o = orders[0]
     assert o["otn"] == otn and o["email"] == "b@ex.com"
-    assert o["version"] == "original" and o["total_fen"] == 3170  # 1022: unit=10 复用export
+    assert o["version"] == "original" and o["total_fen"] == 3200  # kb_goods ¥1×32
     assert o["blueprint"]["version_sha"] == SHA and o["confirmed_at"]
     assert "openid" not in o and "blueprint_json" not in o   # 脱敏：无身份字段
     # ack → pulled → 二次拉取为空；ack 幂等

@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Window caption="0,0,0,28" size="420,174" showshadow="true" shadowimage="public/border.png" shadowcorner="10,9,10,13">
+	<Font name="微软雅黑" size="12" default="true" />
+	<Font name="微软雅黑" size="14" />
+	<Font name="微软雅黑" size="12" />
+	<Font name="微软雅黑" size="18" bold="true" />
+  	<VerticalLayout bkcolor="#FFFFFFFF" >
+ 		<HorizontalLayout height="36">
+		  <Control />
+		  <Button name="CloseButton" padding="0,5,0,0" width="20" height="20" bkimage="public/close_black.png"/>
+		  <Control width="5" />
+		</HorizontalLayout>
+		<Label name="lbl_title" height="20" padding="30,0,30,0" textcolor="#FF2C2C2C" font="3" align="center" valign="center"/>
+		<Control heigt="6"/>
+		<Text name="MsgInfo_Text" padding="30,0,30,0" width="360" height="22" font="0" textcolor="0xff5e5e5e" align="center" />
+		<Control heigt="22"/>
+		<HorizontalLayout height="32" >
+			<Control />
+			<Button name="Cancel_Button" xmltext="Global/1" font="0" width="120" height="30" textcolor="0xff9f9f9f" hottextcolor="0xff6358ed" pushedtextcolor="0xff6358ed" normalimage="file='public/b01.png' source='0,0,30,32' corner='10,10,10,10'" hotimage="file='public/b01.png' source='0,32,30,64' corner='10,10,10,10'" pushedimage="file='public/b01.png' source='0,32,30,64' corner='10,10,10,10'"/>
+			<Control name="ctl_space" width="20"/>
+			<Button name="OK_Button" xmltext="Global/0" font="0" width="120" height="30" textcolor="0xffffffff" normalimage="file='public/b02.png' source='0,0,30,32' corner='10,10,10,10'" hotimage="file='public/b02.png' source='0,32,30,64' corner='10,10,10,10'" pushedimage="file='public/b02.png' source='0,32,30,64' corner='10,10,10,10'"/>
+			<Control />
+		</HorizontalLayout>		
+		<Control heigt="36"/>
+  	</VerticalLayout>	
+</Window>

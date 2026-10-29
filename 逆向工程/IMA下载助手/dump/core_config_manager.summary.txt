@@ -1,0 +1,193 @@
+===== core/config_manager.pyc =====
+DOCSTRING: 统一配置管理模块
+
+配置层次：
+1. 静态配置 - config.py 文件中的配置（系统配置）
+2. 用户设置 - SQLite数据库中的设置（可在运行时修改）
+3. 运行时配置 - 内存中的配置包（从服务器下发）
+
+
+[<module>] args=() names=('__doc__', 'os', 'sys', 'pathlib', 'Path', 'ConfigManager', '_config_manager', 'get_config_manager', 'get_config')
+  CONST '统一配置管理模块\n\n配置层次：\n1. 静态配置 - config.py 文件中的配置（系统配置）\n2. 用户设置 - SQLite数据库中的设置（可在运行时修改）\n3. 运行时配置 - 内存中的配置包（从服务器下发）\n'
+  CONST 0
+  CONST None
+  CONST ('Path')
+  CONST 'ConfigManager'
+
+  [ConfigManager] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', '__doc__', '__init__', '_load_config', 'property', '_config', 'base_url', 'get_api_url', 'license_file', 'server_public_key_pem', 'db_file', 'version', 'build_date', 'default_download_dir', 'download_delay_min', 'download_delay_max', 'request_timeout', 'max_retries', 'token_valid_time', 'refresh_token_valid_time', 'token_refresh_advance', 'get_user_setting', 'set_user_setting', 'get_all_user_settings', 'set_config_pack', 'get_config_pack', 'get_ima_base_url', 'get_endpoint_url', 'get_endpoint_method', 'get_timeout', 'get_retry_config', 'get_wechat_api_url', 'get_app_cookie_fields', 'set_headers', 'get_headers', 'build_headers_with_cookie', 'set_cookie', 'load_cookie_from_cache', 'get_cookie', '__static_attributes__')
+    CONST 'ConfigManager'
+    CONST 13
+    CONST '统一配置管理器'
+    CONST None
+    CONST ('_config_class', '_config_pack', '_headers')
+    CONST (None)
+    CONST (None, None)
+    CONST (None, None, None, 7200, 2592000)
+
+    [ConfigManager.__init__] args=('self',) names=('_config_class', '_config_pack', '_headers', '_load_config')
+      CONST None
+
+    [ConfigManager._load_config] args=('self',) names=('config', 'Config', '_config_class', 'ImportError')
+      CONST '加载配置类'
+      CONST 0
+      CONST ('Config')
+      CONST '无法加载配置文件 config.py: '
+      CONST None
+
+    [ConfigManager._config] args=('self',) names=('_config_class', '_load_config')
+      CONST '获取配置类'
+
+    [ConfigManager.base_url] args=('self',) names=('_config', 'BASE_URL')
+      CONST '服务器基础URL'
+
+    [ConfigManager.get_api_url] args=('self', 'endpoint') names=('_config', 'get_api_url')
+      CONST '获取完整的API URL\n\nArgs:\n    endpoint: API端点名称 (activate, verify, quota_issue, renew, version_check)\n'
+
+    [ConfigManager.license_file] args=('self',) names=('_config', 'get_license_file_path')
+      CONST '授权文件路径'
+
+    [ConfigManager.server_public_key_pem] args=('self',) names=('_config', 'SERVER_PUBLIC_KEY', 'strip')
+      CONST '服务端ED25519公钥'
+
+    [ConfigManager.db_file] args=('self',) names=('_config', 'get_db_file_path')
+      CONST '数据库文件路径'
+
+    [ConfigManager.version] args=('self',) names=('_config', 'VERSION')
+      CONST '应用版本号'
+
+    [ConfigManager.build_date] args=('self',) names=('_config', 'BUILD_DATE')
+      CONST '构建日期'
+
+    [ConfigManager.default_download_dir] args=('self',) names=('_config', 'get_default_download_dir')
+      CONST '默认下载目录'
+
+    [ConfigManager.download_delay_min] args=('self',) names=('_config', 'DOWNLOAD_DELAY_MIN')
+      CONST '最小下载延迟（秒）'
+
+    [ConfigManager.download_delay_max] args=('self',) names=('_config', 'DOWNLOAD_DELAY_MAX')
+      CONST '最大下载延迟（秒）'
+
+    [ConfigManager.request_timeout] args=('self',) names=('_config', 'REQUEST_TIMEOUT')
+      CONST '请求超时时间（秒）'
+
+    [ConfigManager.max_retries] args=('self',) names=('_config', 'MAX_RETRIES')
+      CONST '最大重试次数'
+
+    [ConfigManager.token_valid_time] args=('self',) names=('_config', 'TOKEN_VALID_TIME')
+      CONST 'Token有效期（秒）'
+
+    [ConfigManager.refresh_token_valid_time] args=('self',) names=('_config', 'REFRESH_TOKEN_VALID_TIME')
+      CONST 'Refresh Token有效期（秒）'
+
+    [ConfigManager.token_refresh_advance] args=('self',) names=('_config', 'TOKEN_REFRESH_ADVANCE')
+      CONST 'Token提前刷新时间（秒）'
+
+    [ConfigManager.get_user_setting] args=('self', 'key', 'default') names=('data.database', 'get_user_setting', 'Exception')
+      CONST '获取用户设置\n\nArgs:\n    key: 设置键名\n    default: 默认值\n'
+      CONST 0
+      CONST ('get_user_setting')
+
+    [ConfigManager.set_user_setting] args=('self', 'key', 'value') names=('data.database', 'set_user_setting', 'Exception')
+      CONST '保存用户设置\n\nArgs:\n    key: 设置键名\n    value: 设置值\n'
+      CONST 0
+      CONST ('set_user_setting')
+      CONST True
+      CONST False
+
+    [ConfigManager.get_all_user_settings] args=('self',) names=('data.database', 'get_all_user_settings', 'Exception')
+      CONST '获取所有用户设置'
+      CONST 0
+      CONST ('get_all_user_settings')
+
+    [ConfigManager.set_config_pack] args=('self', 'config_pack') names=('_config_pack',)
+      CONST '设置配置包（从服务器下发）'
+      CONST None
+
+    [ConfigManager.get_config_pack] args=('self',) names=('_config_pack', 'RuntimeError')
+      CONST '获取配置包'
+      CONST '配置包未加载，请先完成授权验证'
+
+    [ConfigManager.get_ima_base_url] args=('self',) names=('get_config_pack', 'get')
+      CONST '获取IMA基础URL（从配置包）'
+      CONST 'base_url'
+      CONST 'ima_base_url'
+
+    [ConfigManager.get_endpoint_url] args=('self', 'endpoint_name') names=('get_config_pack', 'get', 'get_ima_base_url')
+      CONST '获取IMA接口URL（从配置包），endpoint不存在时返回None'
+      CONST 'endpoints'
+      CONST None
+      CONST 'path'
+      CONST ''
+
+    [ConfigManager.get_endpoint_method] args=('self', 'endpoint_name') names=('get_config_pack', 'get', 'upper')
+      CONST '获取IMA接口HTTP方法（从配置包），默认POST'
+      CONST 'endpoints'
+      CONST 'method'
+      CONST 'POST'
+
+    [ConfigManager.get_timeout] args=('self',) names=('get_config_pack', 'get')
+      CONST '获取超时配置（从配置包）'
+      CONST 'timeout'
+      CONST 'connect'
+      CONST 15
+      CONST 'read'
+      CONST 90
+
+    [ConfigManager.get_retry_config] args=('self',) names=('get_config_pack', 'get')
+      CONST '获取重试配置（从配置包）'
+      CONST 'retry'
+
+    [ConfigManager.get_wechat_api_url] args=('self',) names=('get_config_pack', 'get')
+      CONST '获取微信API URL（从配置包）'
+      CONST 'wechat_api_url'
+
+    [ConfigManager.get_app_cookie_fields] args=('self',) names=('get_config_pack', 'get')
+      CONST '获取App Cookie固定字段（从配置包）'
+      CONST 'app_cookie_fields'
+
+    [ConfigManager.set_headers] args=('self', 'headers') names=('_headers',)
+      CONST '设置请求头'
+      CONST None
+
+    [ConfigManager.get_headers] args=('self',) names=('_headers',)
+      CONST '获取请求头'
+
+    [ConfigManager.build_headers_with_cookie] args=('self', 'cookie_bkn', 'cookie_value') names=('get_config_pack', 'get', 'copy', 'setdefault')
+      CONST '构建请求头'
+      CONST 'headers_template'
+      CONST 'From_browser_ima'
+      CONST '1'
+      CONST 'X-Ima-Bkn'
+      CONST 'X-Ima-Cookie'
+
+    [ConfigManager.set_cookie] args=('self', 'bkn', 'cookie_value', 'user_id', 'token', 'refresh_token', 'token_valid_time', 'refresh_token_valid_time') names=('data.database', 'save_login_credentials', 'Exception', 'build_headers_with_cookie', '_headers')
+      CONST '设置Cookie并保存到数据库'
+      CONST 0
+      CONST ('save_login_credentials')
+      CONST None
+
+    [ConfigManager.load_cookie_from_cache] args=('self',) names=('data.database', 'get_login_credentials', 'services.token_refresh_service', 'check_and_refresh_token', 'build_headers_with_cookie', '_headers', 'RuntimeError', 'Exception')
+      CONST '从数据库加载Cookie，并自动刷新过期的token'
+      CONST 0
+      CONST ('get_login_credentials')
+      CONST ('check_and_refresh_token')
+      CONST False
+      CONST 'bkn'
+      CONST 'cookie'
+      CONST '*/*'
+      CONST 'application/json'
+      CONST 'ima/4032 CFNetwork/3860.300.31 Darwin/25.2.0'
+      CONST ('Accept', 'Content-Type', 'X-Ima-Bkn', 'X-Ima-Cookie', 'User-Agent')
+      CONST True
+
+    [ConfigManager.get_cookie] args=('self',) names=('data.database', 'get_login_credentials', 'Exception')
+      CONST '获取Cookie缓存'
+      CONST 0
+      CONST ('get_login_credentials')
+
+  [get_config_manager] args=() names=('_config_manager', 'ConfigManager')
+    CONST '获取配置管理器单例'
+
+  [get_config] args=() names=('get_config_manager',)
+    CONST '获取配置管理器'
+

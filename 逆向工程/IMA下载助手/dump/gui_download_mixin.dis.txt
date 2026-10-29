@@ -1,0 +1,788 @@
+===== gui/download_mixin.pyc =====
+
+# CODE <module>  args=()
+  0           RESUME                   0
+
+  1           LOAD_CONST               0 ('下载功能 Mixin')
+              STORE_NAME               0 (__doc__)
+
+  2           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (('QMessageBox',))
+              IMPORT_NAME              1 (PySide6.QtWidgets)
+              IMPORT_FROM              2 (QMessageBox)
+              STORE_NAME               2 (QMessageBox)
+              POP_TOP
+
+  3           LOAD_CONST               1 (0)
+              LOAD_CONST               3 (('Qt',))
+              IMPORT_NAME              3 (PySide6.QtCore)
+              IMPORT_FROM              4 (Qt)
+              STORE_NAME               4 (Qt)
+              POP_TOP
+
+  4           LOAD_CONST               1 (0)
+              LOAD_CONST               4 (('StreamDownloadWorker',))
+              IMPORT_NAME              5 (gui.workers.workers)
+              IMPORT_FROM              6 (StreamDownloadWorker)
+              STORE_NAME               6 (StreamDownloadWorker)
+              POP_TOP
+
+  7           LOAD_BUILD_CLASS
+              PUSH_NULL
+              LOAD_CONST               5 (<code object DownloadMixin at 0x000001DD4631C9C0, file "gui\download_mixin.py", line 7>)
+              MAKE_FUNCTION
+              LOAD_CONST               6 ('DownloadMixin')
+              CALL                     2
+              STORE_NAME               7 (DownloadMixin)
+              RETURN_CONST             7 (None)
+
+## CODE DownloadMixin  args=()
+  7           RESUME                   0
+              LOAD_NAME                0 (__name__)
+              STORE_NAME               1 (__module__)
+              LOAD_CONST               0 ('DownloadMixin')
+              STORE_NAME               2 (__qualname__)
+              LOAD_CONST               1 (7)
+              STORE_NAME               3 (__firstlineno__)
+
+  8           LOAD_CONST               2 ('下载功能，供 MainWindow 继承')
+              STORE_NAME               4 (__doc__)
+
+ 10           LOAD_CONST               3 (<code object download_selected at 0x000001DD463CF190, file "gui\download_mixin.py", line 10>)
+              MAKE_FUNCTION
+              STORE_NAME               5 (download_selected)
+
+ 59           LOAD_CONST               4 (<code object pause_download at 0x000001DD46368000, file "gui\download_mixin.py", line 59>)
+              MAKE_FUNCTION
+              STORE_NAME               6 (pause_download)
+
+ 73           LOAD_CONST               5 (<code object stop_download at 0x000001DD460E3E10, file "gui\download_mixin.py", line 73>)
+              MAKE_FUNCTION
+              STORE_NAME               7 (stop_download)
+
+ 80           LOAD_CONST               6 (<code object on_download_progress at 0x000001DD463CF9B0, file "gui\download_mixin.py", line 80>)
+              MAKE_FUNCTION
+              STORE_NAME               8 (on_download_progress)
+
+ 97           LOAD_CONST               7 (<code object on_file_discovered at 0x000001DD462CB550, file "gui\download_mixin.py", line 97>)
+              MAKE_FUNCTION
+              STORE_NAME               9 (on_file_discovered)
+
+104           LOAD_CONST               8 (<code object on_scan_progress at 0x000001DD462CB3C0, file "gui\download_mixin.py", line 104>)
+              MAKE_FUNCTION
+              STORE_NAME              10 (on_scan_progress)
+
+111           LOAD_CONST               9 (<code object on_download_finished at 0x000001DD463BB740, file "gui\download_mixin.py", line 111>)
+              MAKE_FUNCTION
+              STORE_NAME              11 (on_download_finished)
+
+127           LOAD_CONST              10 (<code object on_error at 0x000001DD460E2D90, file "gui\download_mixin.py", line 127>)
+              MAKE_FUNCTION
+              STORE_NAME              12 (on_error)
+              LOAD_CONST              11 (('download_worker', 'is_paused', 'is_stopped'))
+              STORE_NAME              13 (__static_attributes__)
+              RETURN_CONST            12 (None)
+
+### CODE DownloadMixin.download_selected  args=('self',)
+  10            RESUME                   0
+
+  11            LOAD_FAST                0 (self)
+                LOAD_ATTR                0 (tree)
+                LOAD_ATTR                3 (selectedItems + NULL|self)
+                CALL                     0
+                STORE_FAST               1 (items)
+
+  12            LOAD_FAST                1 (items)
+                TO_BOOL
+                POP_JUMP_IF_TRUE        25 (to L1)
+
+  13            LOAD_GLOBAL              4 (QMessageBox)
+                LOAD_ATTR                6 (warning)
+                PUSH_NULL
+                LOAD_FAST                0 (self)
+                LOAD_CONST               1 ('提示')
+                LOAD_CONST               2 ('请选择要下载的项目')
+                CALL                     3
+                POP_TOP
+
+  14            RETURN_CONST             0 (None)
+
+  16    L1:     LOAD_FAST                1 (items)
+                GET_ITER
+        L2:     FOR_ITER               226 (to L9)
+                STORE_FAST               2 (item)
+
+  17            LOAD_FAST                2 (item)
+                LOAD_ATTR                9 (data + NULL|self)
+                LOAD_CONST               3 (1)
+                LOAD_GLOBAL             10 (Qt)
+                LOAD_ATTR               12 (UserRole)
+                CALL                     2
+                STORE_FAST               3 (data)
+
+  18            LOAD_FAST                3 (data)
+                LOAD_ATTR               15 (get + NULL|self)
+                LOAD_CONST               4 ('type')
+                CALL                     1
+                STORE_FAST               4 (item_type)
+
+  20            LOAD_FAST                4 (item_type)
+                LOAD_CONST               5 ('kb')
+                COMPARE_OP              88 (bool(==))
+                POP_JUMP_IF_FALSE       52 (to L4)
+
+  21            LOAD_FAST                3 (data)
+                LOAD_ATTR               15 (get + NULL|self)
+                LOAD_CONST               6 ('visible_export_status')
+                LOAD_CONST               7 (3)
+                CALL                     2
+                STORE_FAST               5 (visible_export_status)
+
+  22            LOAD_FAST                5 (visible_export_status)
+                LOAD_CONST               3 (1)
+                COMPARE_OP              88 (bool(==))
+                POP_JUMP_IF_FALSE       26 (to L3)
+
+  23            LOAD_GLOBAL              4 (QMessageBox)
+                LOAD_ATTR                6 (warning)
+                PUSH_NULL
+                LOAD_FAST                0 (self)
+                LOAD_CONST               8 ('权限不足')
+                LOAD_CONST               9 ('该知识库不可导出')
+                CALL                     3
+                POP_TOP
+
+  24            POP_TOP
+                RETURN_CONST             0 (None)
+
+  22    L3:     JUMP_BACKWARD          110 (to L2)
+
+  25    L4:     LOAD_FAST                4 (item_type)
+                LOAD_CONST              10 ('folder')
+                COMPARE_OP              88 (bool(==))
+                POP_JUMP_IF_FALSE       52 (to L6)
+
+  26            LOAD_FAST                3 (data)
+                LOAD_ATTR               15 (get + NULL|self)
+                LOAD_CONST               6 ('visible_export_status')
+                LOAD_CONST               7 (3)
+                CALL                     2
+                STORE_FAST               5 (visible_export_status)
+
+  27            LOAD_FAST                5 (visible_export_status)
+                LOAD_CONST               3 (1)
+                COMPARE_OP              88 (bool(==))
+                POP_JUMP_IF_FALSE       26 (to L5)
+
+  28            LOAD_GLOBAL              4 (QMessageBox)
+                LOAD_ATTR                6 (warning)
+                PUSH_NULL
+                LOAD_FAST                0 (self)
+                LOAD_CONST               8 ('权限不足')
+                LOAD_CONST              11 ('该文件夹不可导出')
+                CALL                     3
+                POP_TOP
+
+  29            POP_TOP
+                RETURN_CONST             0 (None)
+
+  27    L5:     JUMP_BACKWARD          168 (to L2)
+
+  30    L6:     LOAD_FAST                4 (item_type)
+                LOAD_CONST              12 ('file')
+                COMPARE_OP              88 (bool(==))
+                POP_JUMP_IF_TRUE         2 (to L7)
+                JUMP_BACKWARD          176 (to L2)
+
+  31    L7:     LOAD_FAST                3 (data)
+                LOAD_ATTR               15 (get + NULL|self)
+                LOAD_CONST              13 ('access_status')
+                LOAD_CONST               7 (3)
+                CALL                     2
+                STORE_FAST               6 (access_status)
+
+  32            LOAD_FAST                6 (access_status)
+                LOAD_CONST               3 (1)
+                COMPARE_OP              88 (bool(==))
+                POP_JUMP_IF_TRUE         2 (to L8)
+                JUMP_BACKWARD          202 (to L2)
+
+  33    L8:     LOAD_GLOBAL              4 (QMessageBox)
+                LOAD_ATTR                6 (warning)
+                PUSH_NULL
+                LOAD_FAST                0 (self)
+                LOAD_CONST               8 ('权限不足')
+                LOAD_CONST              14 ('该文件不可导出')
+                CALL                     3
+                POP_TOP
+
+  34            POP_TOP
+                RETURN_CONST             0 (None)
+
+  16    L9:     END_FOR
+                POP_TOP
+
+  36            LOAD_FAST                0 (self)
+                LOAD_ATTR               17 (add_log + NULL|self)
+                LOAD_CONST              15 ('正在扫描文件列表，请稍候...')
+                LOAD_CONST              16 ('info')
+                CALL                     2
+                POP_TOP
+
+  38            LOAD_FAST                0 (self)
+                LOAD_ATTR               18 (progress_panel)
+                LOAD_ATTR               21 (setVisible + NULL|self)
+                LOAD_CONST              17 (True)
+                CALL                     1
+                POP_TOP
+
+  39            LOAD_FAST                0 (self)
+                LOAD_ATTR               22 (progress)
+                LOAD_ATTR               21 (setVisible + NULL|self)
+                LOAD_CONST              17 (True)
+                CALL                     1
+                POP_TOP
+
+  40            LOAD_FAST                0 (self)
+                LOAD_ATTR               24 (progress_detail)
+                LOAD_ATTR               21 (setVisible + NULL|self)
+                LOAD_CONST              17 (True)
+                CALL                     1
+                POP_TOP
+
+  41            LOAD_FAST                0 (self)
+                LOAD_ATTR               24 (progress_detail)
+                LOAD_ATTR               27 (setText + NULL|self)
+                LOAD_CONST              18 ('正在扫描，已发现 0 个文件')
+                CALL                     1
+                POP_TOP
+
+  42            LOAD_FAST                0 (self)
+                LOAD_ATTR               28 (pause_btn)
+                LOAD_ATTR               21 (setVisible + NULL|self)
+                LOAD_CONST              17 (True)
+                CALL                     1
+                POP_TOP
+
+  43            LOAD_FAST                0 (self)
+                LOAD_ATTR               30 (stop_btn)
+                LOAD_ATTR               21 (setVisible + NULL|self)
+                LOAD_CONST              17 (True)
+                CALL                     1
+                POP_TOP
+
+  44            LOAD_FAST                0 (self)
+                LOAD_ATTR               22 (progress)
+                LOAD_ATTR               33 (setMaximum + NULL|self)
+                LOAD_CONST              19 (100)
+                CALL                     1
+                POP_TOP
+
+  45            LOAD_FAST                0 (self)
+                LOAD_ATTR               22 (progress)
+                LOAD_ATTR               35 (setValue + NULL|self)
+                LOAD_CONST              20 (0)
+                CALL                     1
+                POP_TOP
+
+  46            LOAD_CONST              21 (False)
+                LOAD_FAST                0 (self)
+                STORE_ATTR              18 (is_paused)
+
+  47            LOAD_CONST              21 (False)
+                LOAD_FAST                0 (self)
+                STORE_ATTR              19 (is_stopped)
+
+  49            LOAD_FAST                1 (items)
+                GET_ITER
+                LOAD_FAST_AND_CLEAR      2 (item)
+                SWAP                     2
+       L10:     BUILD_LIST               0
+                SWAP                     2
+                GET_ITER
+       L11:     FOR_ITER                53 (to L13)
+                STORE_FAST               2 (item)
+                LOAD_GLOBAL             41 (dict + NULL)
+                LOAD_FAST                2 (item)
+                LOAD_ATTR                9 (data + NULL|self)
+                LOAD_CONST               3 (1)
+                LOAD_GLOBAL             10 (Qt)
+                LOAD_ATTR               12 (UserRole)
+                CALL                     2
+                COPY                     1
+                TO_BOOL
+                POP_JUMP_IF_TRUE         2 (to L12)
+                POP_TOP
+                BUILD_MAP                0
+       L12:     CALL                     1
+                LIST_APPEND              2
+                JUMP_BACKWARD           55 (to L11)
+       L13:     END_FOR
+                POP_TOP
+       L14:     STORE_FAST               7 (selected_payloads)
+                STORE_FAST               2 (item)
+
+  50            LOAD_GLOBAL             43 (StreamDownloadWorker + NULL)
+                LOAD_FAST                7 (selected_payloads)
+                CALL                     1
+                LOAD_FAST                0 (self)
+                STORE_ATTR              22 (download_worker)
+
+  51            LOAD_FAST                0 (self)
+                LOAD_ATTR               44 (download_worker)
+                LOAD_ATTR               22 (progress)
+                LOAD_ATTR               47 (connect + NULL|self)
+                LOAD_FAST                0 (self)
+                LOAD_ATTR               48 (on_download_progress)
+                CALL                     1
+                POP_TOP
+
+  52            LOAD_FAST                0 (self)
+                LOAD_ATTR               44 (download_worker)
+                LOAD_ATTR               50 (file_discovered)
+                LOAD_ATTR               47 (connect + NULL|self)
+                LOAD_FAST                0 (self)
+                LOAD_ATTR               52 (on_file_discovered)
+                CALL                     1
+                POP_TOP
+
+  53            LOAD_FAST                0 (self)
+                LOAD_ATTR               44 (download_worker)
+                LOAD_ATTR               54 (scan_progress)
+                LOAD_ATTR               47 (connect + NULL|self)
+                LOAD_FAST                0 (self)
+                LOAD_ATTR               56 (on_scan_progress)
+                CALL                     1
+                POP_TOP
+
+  54            LOAD_FAST                0 (self)
+                LOAD_ATTR               44 (download_worker)
+                LOAD_ATTR               58 (quota_error)
+                LOAD_ATTR               47 (connect + NULL|self)
+                LOAD_FAST                0 (self)
+                LOAD_ATTR               60 (on_error)
+                CALL                     1
+                POP_TOP
+
+  55            LOAD_FAST                0 (self)
+                LOAD_ATTR               44 (download_worker)
+                LOAD_ATTR               62 (quota_updated)
+                LOAD_ATTR               47 (connect + NULL|self)
+                LOAD_FAST                0 (self)
+                LOAD_ATTR               64 (update_license_info)
+                CALL                     1
+                POP_TOP
+
+  56            LOAD_FAST                0 (self)
+                LOAD_ATTR               44 (download_worker)
+                LOAD_ATTR               66 (finished)
+                LOAD_ATTR               47 (connect + NULL|self)
+                LOAD_FAST                0 (self)
+                LOAD_ATTR               68 (on_download_finished)
+                CALL                     1
+                POP_TOP
+
+  57            LOAD_FAST                0 (self)
+                LOAD_ATTR               44 (download_worker)
+                LOAD_ATTR               71 (start + NULL|self)
+                CALL                     0
+                POP_TOP
+                RETURN_CONST             0 (None)
+
+  --   L15:     SWAP                     2
+                POP_TOP
+
+  49            SWAP                     2
+                STORE_FAST               2 (item)
+                RERAISE                  0
+ExceptionTable:
+  L10 to L14 -> L15 [2]
+
+### CODE DownloadMixin.pause_download  args=('self',)
+ 59           RESUME                   0
+
+ 61           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (download_worker)
+              TO_BOOL
+              POP_JUMP_IF_FALSE      175 (to L2)
+
+ 62           LOAD_FAST                0 (self)
+              LOAD_ATTR                2 (is_paused)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       79 (to L1)
+
+ 63           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (download_worker)
+              LOAD_ATTR                5 (resume + NULL|self)
+              CALL                     0
+              POP_TOP
+
+ 64           LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (pause_btn)
+              LOAD_ATTR                9 (setText + NULL|self)
+              LOAD_CONST               1 ('暂停')
+              CALL                     1
+              POP_TOP
+
+ 65           LOAD_CONST               2 (False)
+              LOAD_FAST                0 (self)
+              STORE_ATTR               1 (is_paused)
+
+ 66           LOAD_FAST                0 (self)
+              LOAD_ATTR               11 (add_log + NULL|self)
+              LOAD_CONST               3 ('继续下载')
+              LOAD_CONST               4 ('info')
+              CALL                     2
+              POP_TOP
+              RETURN_CONST             9 (None)
+
+ 68   L1:     LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (download_worker)
+              LOAD_ATTR               13 (pause + NULL|self)
+              CALL                     0
+              POP_TOP
+
+ 69           LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (pause_btn)
+              LOAD_ATTR                9 (setText + NULL|self)
+              LOAD_CONST               5 ('继续')
+              CALL                     1
+              POP_TOP
+
+ 70           LOAD_CONST               6 (True)
+              LOAD_FAST                0 (self)
+              STORE_ATTR               1 (is_paused)
+
+ 71           LOAD_FAST                0 (self)
+              LOAD_ATTR               11 (add_log + NULL|self)
+              LOAD_CONST               7 ('已暂停')
+              LOAD_CONST               8 ('warning')
+              CALL                     2
+              POP_TOP
+              RETURN_CONST             9 (None)
+
+ 61   L2:     RETURN_CONST             9 (None)
+
+### CODE DownloadMixin.stop_download  args=('self',)
+ 73           RESUME                   0
+
+ 75           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (download_worker)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       52 (to L1)
+
+ 76           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (download_worker)
+              LOAD_ATTR                3 (stop + NULL|self)
+              CALL                     0
+              POP_TOP
+
+ 77           LOAD_CONST               1 (True)
+              LOAD_FAST                0 (self)
+              STORE_ATTR               2 (is_stopped)
+
+ 78           LOAD_FAST                0 (self)
+              LOAD_ATTR                7 (add_log + NULL|self)
+              LOAD_CONST               2 ('已停止下载')
+              LOAD_CONST               3 ('error')
+              CALL                     2
+              POP_TOP
+              RETURN_CONST             4 (None)
+
+ 75   L1:     RETURN_CONST             4 (None)
+
+### CODE DownloadMixin.on_download_progress  args=('self', 'current', 'total', 'msg')
+ 80           RESUME                   0
+
+ 81           LOAD_GLOBAL              1 (max + NULL)
+              LOAD_FAST                2 (total)
+              LOAD_CONST               1 (1)
+              CALL                     2
+              STORE_FAST               2 (total)
+
+ 82           LOAD_GLOBAL              3 (min + NULL)
+              LOAD_FAST_LOAD_FAST     18 (current, total)
+              CALL                     2
+              STORE_FAST               1 (current)
+
+ 83           LOAD_GLOBAL              5 (int + NULL)
+              LOAD_FAST                1 (current)
+              LOAD_CONST               2 (100)
+              BINARY_OP                5 (*)
+              LOAD_FAST                2 (total)
+              BINARY_OP               11 (/)
+              CALL                     1
+              STORE_FAST               4 (percent)
+
+ 84           LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (progress)
+              LOAD_ATTR                9 (setMaximum + NULL|self)
+              LOAD_FAST                2 (total)
+              CALL                     1
+              POP_TOP
+
+ 85           LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (progress)
+              LOAD_ATTR               11 (setValue + NULL|self)
+              LOAD_FAST                1 (current)
+              CALL                     1
+              POP_TOP
+
+ 86           LOAD_FAST                0 (self)
+              LOAD_ATTR               12 (progress_detail)
+              LOAD_ATTR               15 (setVisible + NULL|self)
+              LOAD_CONST               3 (True)
+              CALL                     1
+              POP_TOP
+
+ 87           LOAD_FAST                0 (self)
+              LOAD_ATTR               12 (progress_detail)
+              LOAD_ATTR               17 (setText + NULL|self)
+              LOAD_FAST                1 (current)
+              FORMAT_SIMPLE
+              LOAD_CONST               4 ('/')
+              LOAD_FAST                2 (total)
+              FORMAT_SIMPLE
+              LOAD_CONST               5 (' · ')
+              LOAD_FAST                4 (percent)
+              FORMAT_SIMPLE
+              LOAD_CONST               6 ('%')
+              BUILD_STRING             6
+              CALL                     1
+              POP_TOP
+
+ 88           LOAD_FAST                3 (msg)
+              LOAD_ATTR               19 (startswith + NULL|self)
+              LOAD_CONST               7 ('✓')
+              CALL                     1
+              TO_BOOL
+              POP_JUMP_IF_FALSE       19 (to L1)
+
+ 89           LOAD_FAST                0 (self)
+              LOAD_ATTR               21 (add_log + NULL|self)
+              LOAD_FAST                3 (msg)
+              LOAD_CONST               8 ('success')
+              CALL                     2
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+ 90   L1:     LOAD_FAST                3 (msg)
+              LOAD_ATTR               19 (startswith + NULL|self)
+              LOAD_CONST               9 ('⊘')
+              CALL                     1
+              TO_BOOL
+              POP_JUMP_IF_FALSE       19 (to L2)
+
+ 91           LOAD_FAST                0 (self)
+              LOAD_ATTR               21 (add_log + NULL|self)
+              LOAD_FAST                3 (msg)
+              LOAD_CONST              10 ('warning')
+              CALL                     2
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+ 92   L2:     LOAD_FAST                3 (msg)
+              LOAD_ATTR               19 (startswith + NULL|self)
+              LOAD_CONST              11 ('✗')
+              CALL                     1
+              TO_BOOL
+              POP_JUMP_IF_FALSE       19 (to L3)
+
+ 93           LOAD_FAST                0 (self)
+              LOAD_ATTR               21 (add_log + NULL|self)
+              LOAD_FAST                3 (msg)
+              LOAD_CONST              12 ('error')
+              CALL                     2
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+ 95   L3:     LOAD_FAST                0 (self)
+              LOAD_ATTR               21 (add_log + NULL|self)
+              LOAD_FAST                3 (msg)
+              LOAD_CONST              13 ('download')
+              CALL                     2
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+### CODE DownloadMixin.on_file_discovered  args=('self', 'total_count')
+ 97           RESUME                   0
+
+ 99           LOAD_GLOBAL              1 (max + NULL)
+              LOAD_FAST                1 (total_count)
+              LOAD_CONST               1 (1)
+              CALL                     2
+              STORE_FAST               1 (total_count)
+
+100           LOAD_FAST                0 (self)
+              LOAD_ATTR                2 (progress)
+              LOAD_ATTR                5 (setMaximum + NULL|self)
+              LOAD_FAST                1 (total_count)
+              CALL                     1
+              POP_TOP
+
+101           LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (progress_detail)
+              LOAD_ATTR                9 (setVisible + NULL|self)
+              LOAD_CONST               2 (True)
+              CALL                     1
+              POP_TOP
+
+102           LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (progress_detail)
+              LOAD_ATTR               11 (setText + NULL|self)
+              LOAD_CONST               3 ('正在扫描，已发现 ')
+              LOAD_FAST                1 (total_count)
+              FORMAT_SIMPLE
+              LOAD_CONST               4 (' 个文件')
+              BUILD_STRING             3
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             5 (None)
+
+### CODE DownloadMixin.on_scan_progress  args=('self', 'msg')
+104           RESUME                   0
+
+106           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (progress_detail)
+              LOAD_ATTR                3 (setVisible + NULL|self)
+              LOAD_CONST               1 (True)
+              CALL                     1
+              POP_TOP
+
+107           LOAD_FAST                1 (msg)
+              LOAD_ATTR                5 (startswith + NULL|self)
+              LOAD_CONST               2 ('正在扫描')
+              CALL                     1
+              TO_BOOL
+              POP_JUMP_IF_FALSE       27 (to L1)
+
+108           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (progress_detail)
+              LOAD_ATTR                7 (setText + NULL|self)
+              LOAD_FAST                1 (msg)
+              CALL                     1
+              POP_TOP
+
+109   L1:     LOAD_FAST                0 (self)
+              LOAD_ATTR                9 (add_log + NULL|self)
+              LOAD_FAST                1 (msg)
+              LOAD_CONST               3 ('info')
+              CALL                     2
+              POP_TOP
+              RETURN_CONST             4 (None)
+
+### CODE DownloadMixin.on_download_finished  args=('self',)
+111           RESUME                   0
+
+112           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (progress_panel)
+              LOAD_ATTR                3 (setVisible + NULL|self)
+              LOAD_CONST               1 (False)
+              CALL                     1
+              POP_TOP
+
+113           LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (progress)
+              LOAD_ATTR                3 (setVisible + NULL|self)
+              LOAD_CONST               1 (False)
+              CALL                     1
+              POP_TOP
+
+114           LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (progress_detail)
+              LOAD_ATTR                3 (setVisible + NULL|self)
+              LOAD_CONST               1 (False)
+              CALL                     1
+              POP_TOP
+
+115           LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (progress_detail)
+              LOAD_ATTR                9 (clear + NULL|self)
+              CALL                     0
+              POP_TOP
+
+116           LOAD_FAST                0 (self)
+              LOAD_ATTR               10 (pause_btn)
+              LOAD_ATTR                3 (setVisible + NULL|self)
+              LOAD_CONST               1 (False)
+              CALL                     1
+              POP_TOP
+
+117           LOAD_FAST                0 (self)
+              LOAD_ATTR               12 (stop_btn)
+              LOAD_ATTR                3 (setVisible + NULL|self)
+              LOAD_CONST               1 (False)
+              CALL                     1
+              POP_TOP
+
+118           LOAD_FAST                0 (self)
+              LOAD_ATTR               15 (update_license_info + NULL|self)
+              CALL                     0
+              POP_TOP
+
+119           LOAD_FAST                0 (self)
+              LOAD_ATTR               17 (add_log + NULL|self)
+              LOAD_CONST               2 ('所有文件下载完成')
+              LOAD_CONST               3 ('success')
+              CALL                     2
+              POP_TOP
+
+121           LOAD_CONST               4 (0)
+              LOAD_CONST               5 (('close_session',))
+              IMPORT_NAME              9 (services.ima_service)
+              IMPORT_FROM             10 (close_session)
+              STORE_FAST               1 (close_session)
+              POP_TOP
+
+122           LOAD_FAST                1 (close_session)
+              PUSH_NULL
+              CALL                     0
+              POP_TOP
+
+123           LOAD_FAST                0 (self)
+              LOAD_ATTR               22 (download_worker)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       34 (to L1)
+
+124           LOAD_FAST                0 (self)
+              LOAD_ATTR               22 (download_worker)
+              LOAD_ATTR               25 (deleteLater + NULL|self)
+              CALL                     0
+              POP_TOP
+
+125           LOAD_CONST               0 (None)
+              LOAD_FAST                0 (self)
+              STORE_ATTR              11 (download_worker)
+              RETURN_CONST             0 (None)
+
+123   L1:     RETURN_CONST             0 (None)
+
+### CODE DownloadMixin.on_error  args=('self', 'msg')
+127           RESUME                   0
+
+128           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (load_btn)
+              LOAD_ATTR                3 (setEnabled + NULL|self)
+              LOAD_CONST               1 (True)
+              CALL                     1
+              POP_TOP
+
+129           LOAD_FAST                0 (self)
+              LOAD_ATTR                5 (add_log + NULL|self)
+              LOAD_CONST               2 ('错误: ')
+              LOAD_FAST                1 (msg)
+              FORMAT_SIMPLE
+              BUILD_STRING             2
+              LOAD_CONST               3 ('error')
+              CALL                     2
+              POP_TOP
+
+130           LOAD_GLOBAL              6 (QMessageBox)
+              LOAD_ATTR                8 (critical)
+              PUSH_NULL
+              LOAD_FAST                0 (self)
+              LOAD_CONST               4 ('错误')
+              LOAD_FAST                1 (msg)
+              CALL                     3
+              POP_TOP
+              RETURN_CONST             0 (None)

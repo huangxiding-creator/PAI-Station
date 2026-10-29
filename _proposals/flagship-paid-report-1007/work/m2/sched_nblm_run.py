@@ -23,8 +23,9 @@ from pathlib import Path
 from urllib.parse import quote  # noqa: F401 (安全保留,不删)
 
 # ---- 通道三件套(先于 notebooklm 导入) ----
-os.environ.setdefault("HTTP_PROXY", "http://127.0.0.1:7890")
-os.environ.setdefault("HTTPS_PROXY", "http://127.0.0.1:7890")
+_px = 'http://127.0.0.1:7892'   # 1022: 用户态内核(美国02锁定); 系统服务7890僵尸态
+os.environ.setdefault("HTTP_PROXY", _px)
+os.environ.setdefault("HTTPS_PROXY", _px)
 
 M2 = Path(__file__).resolve().parent
 # 1022 宪法第七条: 各章初稿必须 NotebookLM 撰写 → 管线通用化(任意战役)
@@ -126,7 +127,18 @@ async def upload_dir(client, nb_id: str, d: Path, tag: str) -> int:
 
 
 def framework_prompt() -> str:
+    # P2-3 STORM 多视角前置 (1028): 框架笔记本目录有 00_多视角问题框架.md
+    # (storm_perspectives.py 产物) 时自动前置其问题块; 文件缺席=零行为变化。
+    storm = ""
+    sf = OUT / "00_多视角问题框架.md"
+    if sf.is_file():
+        block = sf.read_text(encoding="utf-8", errors="replace").strip()
+        head = block[:2600] + ("\n(超长截断)" if len(block) > 2600 else "")
+        storm = head + "\n\n---\n\n"
+        print(f"[storm] 框架 Phase 0 前置多视角问题块: {sf} "
+              f"({len(block):,}字)")
     return (
+        storm +
         "你是工程建设行业战略咨询总监。基于本笔记本全部资料，为"
         "《工程工期管理与延误索赔实战指南·2026版》设计12章目录框架。"
         "读者是中国施工企业的项目经理、商务、造价与法务人员。要求："

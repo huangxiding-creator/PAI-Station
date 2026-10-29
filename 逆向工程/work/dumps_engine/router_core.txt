@@ -1,0 +1,121 @@
+@@@ off=2394300
+essages(null)
+}
+,checkQueueAfterAction=()=>{
+engineState.lastActionTime=Date.now()
+}
+;
+class KeyboardHandler{
+async execute(e,r,n,a){
+const s=getCurrentReplyMode(),i=getCurrentAppType(),o=getActionExecutionContext(e);
+if(debugLog(`【输入消息】准备输入消息, currentReplyMode=${
+s
+}
+`),e.chat_history_id!=null&&(streamingState.chatHistoryId=e.chat_history_id),i==="whatsapp"){
+o?.throwIfAborted();
+const d=await getMessageInputArea(i);
+if(o?.throwIfAborted(),!d){
+console.error("【keyboard】WhatsApp 模式：未检测到 messageInputArea，无法输入"),await a.resumeNextLoop({
+instant:!0
+}
+);
+return
+}
+console.log("【keyboard】WhatsApp 模式：messageInputArea 已就绪")
+}
+if(e.chunk$)return new Promise((d,u)=>{
+e.chunk$.pipe(operatorsExports.concatMap(async l=>{
+o?.throwIfAborted(),await handleMacKeyboardInput(l,!!l.is_end,!!l.is_trunk_reply,o)
+}
+)).subscribe({
+complete:()=>{
+debugLog("Main RPA 宏流键盘输入处理完结"),d()
+}
+,error:l=>u(l)
+}
+)
+}
+);
+await handleMacKeyboardInput(e,r,!!e.is_trunk_reply,o),debugLog("Main RPA 处理单点键盘输入",{
+isEnd:r,data:e.data
+}
+)
+}
+
+}
+class ThinkingHandler{
+async execute(e,r,n,a){
+const s=e.originalAction||e.action,i=s==="model-thinking"?"模型深度思考":"思考中",o=getActionExecutionContext(e);
+if(debugLog(`【${
+i
+}
+】开始处理:`,e.data),e.chunk$)return new Promise((d,u)=>{
+e.chunk$.pipe(operatorsExports.concatMap(async l=>{
+o?.throwIfAborted(),l.is_end&&l.chat_history_id!=null&&(streamingState.chatHistoryId=l.chat_history_id),await handleStreamMessage(s,l.data||"",!!l.is_end,l.trace_id,o)
+}
+)).subscribe({
+complete:()=>{
+debugLog(`【${
+i
+}
+】宏流处理完结`),d()
+}
+,error:l=>u(l)
+}
+)
+}
+);
+r&&e.chat_history_id!=null&&(streamingState.chatHistoryId=e.chat_history_id),o?.throwIfAborted(),await handleStreamMessage(s,e.data||"",r,n,o)
+}
+
+}
+class WhatsAppHandler{
+async execute(e,r,n,a){
+const s=getCurrentAppType(),i=engineState.isWhatsAppInited,o=getActionExecutionContext(e),d=(u="idle")=>{
+a.finishUnreadCheck(u)||rxEngine.setPhase(EnginePhase.POLLING)
+}
+;
+if(e.action==="whatsapp_receivemessage"){
+if(rxEngine.phase$.value.phase!==EnginePhase.SWITCHING_UNREAD){
+console.log("【whatsapp_receivemessage】当前不在 SWITCHING_UNRE
+@@@ off=2396300
+AD，丢弃晚到轮询任务",{
+phase:rxEngine.phase$.value.phase
+}
+);
+return
+}
+console.log("【whatsapp_receivemessage】废弃，重定向到 whatsapp_next_step"),rxEngine.enqueueAction({
+action:"whatsapp_next_step",data:null,skip_current_diff:e.skip_current_diff,__workflowUnreadCheck:e.__workflowUnreadCheck,__workflowGeneration:e.__workflowGeneration
+}
+,o);
+return
+}
+if(rxEngine.phase$.value.phase!==EnginePhase.SWITCHING_UNREAD){
+console.log("【whatsapp_next_step】当前不在 SWITCHING_UNREAD，丢弃晚到轮询任务",{
+phase:rxEngine.phase$.value.phase
+}
+);
+return
+}
+console.log("【whatsapp_next_step】执行，当前 isWhatsAppInited:",i);
+try{
+if(o?.throwIfAborted(),i){
+if(console.log("【whatsapp_next_step】已初始化，执行循环..."),e.skip_current_diff===!0)console.log("【whatsapp_next_step】schedule drain 完成，跳过当前窗口 diff");
+else{
+const h=await checkChatDiffForAssistMode(s);
+if(o?.throwIfAborted(),!h.hasBaseline){
+console.log("【whatsapp_next_step】首次无 baseline，直接上传"),await a.takeScreenshot("upload");
+return
+}
+if(h.shouldUpload){
+console.log("【whatsapp_next_step】当前窗口有变化，上传截图"),await a.takeScreenshot("upload",h.uploadFrame);
+return
+}
+
+}
+if(console.log("【whatsapp_next_step】到达安全边界，准备检查未读绿圈"),a.yieldToScheduleAtUnreadBoundary())return;
+if(getWhatsAppLayoutCache()?.currentFilter!=="unread"){
+console.log("【whatsapp_next_step】切换到 unread 筛选"),o?.throwIfAborted();
+const h=await clickUnreadButton(o||void 0);
+if(o

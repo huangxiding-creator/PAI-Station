@@ -1,0 +1,678 @@
+---
+title: "Claude Code 功能与快捷键完全指南（2026.4 更新）"
+source: "https://waytoagi.feishu.cn/wiki/VQOTwfmoJiBb78kLvw7coUqNnTe"
+wiki_root: "https://waytoagi.feishu.cn/wiki/QPe5w5g7UisbEkkow8XcDmOpn8e"
+date: 2026-05-14
+tags:
+  - 飞书知识库
+  - waytoagi
+---
+
+# Claude Code 功能与快捷键完全指南（2026.4 更新）
+## 关于本指南
+
+本指南覆盖 Claude Code v2.1（Opus 4.6）的**全部核心功能**、**键盘快捷键**、**斜杠命令**与**最新特性**，帮助你快速上手这款 AI 编程助手。
+
+## ⌨️ 键盘快捷键
+
+### 核心控制
+
+快捷键
+
+功能
+
+说明
+
+Ctrl + C
+
+取消
+
+取消当前输入或中断正在生成的回复
+
+Ctrl + D
+
+退出
+
+退出 Claude Code 会话
+
+Ctrl + L
+
+清屏
+
+清除输入并重绘屏幕
+
+Ctrl + O
+
+对话记录
+
+切换对话记录查看器（Transcript）
+
+Ctrl + R
+
+历史搜索
+
+反向搜索历史命令
+
+Ctrl + T
+
+任务列表
+
+切换任务列表面板
+
+Ctrl + V
+
+粘贴图片
+
+粘贴剪贴板中的图片
+
+Ctrl + G
+
+外部编辑器
+
+用外部编辑器打开当前输入
+
+Ctrl + B
+
+后台运行
+
+将当前任务放入后台（tmux 需按两次）
+
+### 模式切换
+
+Esc + Esc
+
+回退 / 总结
+
+回退到上一步或总结当前对话
+
+Shift + Tab
+
+切换权限
+
+循环切换权限模式（default → auto → plan…）
+
+⌥ + P
+
+切换模型
+
+在 Opus / Sonnet / Haiku 之间切换
+
+⌥ + T
+
+深度思考
+
+开关 Extended Thinking 模式
+
+⌥ + O
+
+快速模式
+
+切换 Fast 模式（同模型加速输出）
+
+### 文本编辑
+
+Ctrl + A
+
+移动光标到行首
+
+Ctrl + E
+
+移动光标到行尾
+
+Ctrl + K
+
+删除到行尾
+
+Ctrl + U
+
+删除到行首
+
+Ctrl + W
+
+删除前一个单词
+
+Ctrl + Y
+
+粘贴已删除的文本
+
+Alt + B
+
+光标前移一个单词
+
+Alt + F
+
+光标后移一个单词
+
+### 特殊输入
+
+@
+
+文件路径自动补全
+
+! + 命令
+
+直接运行 Shell 命令
+
+/
+
+唤出斜杠命令 / 技能菜单
+
+长按 Space
+
+按住说话——语音输入
+
+\\ + Enter
+
+输入换行（所有终端通用）
+
+Shift + Enter
+
+输入换行（iTerm2/WezTerm/Ghostty/Kitty）
+
+## 🧩 核心功能
+
+### 智能体编程
+
+多轮对话式编码，Claude 自主推理、使用工具、生成代码并自我修正，支持跨文件操作。
+
+### 深度思考（Extended Thinking）
+
+为复杂任务提供深层推理能力，可通过 ⌥ + T 开关或 /effort 设置 5 级推理力度：
+
+力度
+
+low
+
+极速回复，适合简单问答
+
+medium
+
+平衡速度与质量
+
+high
+
+默认模式
+
+xhigh
+
+深度推理
+
+max
+
+最大思考预算
+
+### 多文件编辑
+
+- **Read**：读取任意文件内容
+- **Edit**：精确 diff 编辑
+- **Write**：创建新文件
+- **Glob**：模式匹配搜索文件
+- **Grep**：正则表达式内容搜索
+
+### Git 集成
+
+内置完整 Git 工作流：分支管理、提交、PR 创建、代码审查、diff 查看。
+
+### MCP 协议
+
+Model Context Protocol 连接外部服务——数据库、Slack、GitHub、浏览器自动化等 100+ 服务。
+
+### 子智能体（Subagents）
+
+并行启动独立上下文的子智能体，处理复杂任务不互相干扰。支持 Agent 团队协作。
+
+### 会话管理
+
+- **恢复**：按 ID 或名称恢复历史会话
+- **分支**：创建对话分支
+- **检查点**：回退到任意历史状态
+- **自动压缩**：上下文接近上限时智能总结
+
+### 权限与安全
+
+模式
+
+default
+
+默认模式，关键操作需确认
+
+acceptEdits
+
+自动接受文件编辑
+
+plan
+
+仅分析不执行
+
+auto
+
+分类器自动判断
+
+dontAsk
+
+全部自动执行
+
+### Hooks 钩子
+
+基于事件的自动化：SessionStart、PreToolUse、PostToolUse 等事件触发自定义脚本。
+
+### IDE 集成
+
+支持 VS Code、JetBrains 全系列（IntelliJ/PyCharm/WebStorm 等）、桌面端应用、Web 端。
+
+### 1M 上下文窗口
+
+百万 token 上下文，Opus 4.6 在 Max/Team/Enterprise 计划上默认开启。
+
+## / 斜杠命令大全
+
+### 会话与工作流
+
+命令
+
+/clear
+
+清空上下文，开始全新对话
+
+/resume
+
+按 ID 或名称恢复历史会话
+
+/branch
+
+创建当前对话的分支副本
+
+/rename
+
+重命名当前会话
+
+/rewind
+
+回退到之前的对话状态
+
+/compact
+
+压缩上下文释放空间
+
+/recap
+
+生成当前对话的一句话总结
+
+### 代码与开发
+
+/review
+
+本地审查 Pull Request 代码
+
+/ultrareview
+
+云端多智能体深度代码审查
+
+/diff
+
+交互式查看未提交的代码变更
+
+/security-review
+
+分析变更中的安全漏洞
+
+/batch
+
+并行编排大规模代码修改
+
+/autofix-pr
+
+自动监听 PR 并修复 CI 失败
+
+### 模型与配置
+
+/model
+
+选择或切换 AI 模型
+
+/effort
+
+设置推理力度（low ~ max）
+
+/fast
+
+切换快速模式
+
+/config
+
+打开设置界面
+
+/theme
+
+更换配色主题
+
+### 工具与集成
+
+/mcp
+
+管理 MCP 服务器连接与 OAuth
+
+/skills
+
+列出所有可用技能
+
+/agents
+
+管理智能体配置
+
+/plugin
+
+管理 Claude Code 插件
+
+/hooks
+
+查看事件钩子配置
+
+/ide
+
+管理 IDE 集成状态
+
+/keybindings
+
+打开快捷键配置文件
+
+/chrome
+
+配置 Chrome 集成
+
+### 权限
+
+/permissions
+
+管理 allow / ask / deny 规则
+
+/add-dir
+
+添加工作目录白名单
+
+/sandbox
+
+切换沙盒模式
+
+### 规划与自动化
+
+/plan
+
+进入计划模式
+
+/ultraplan
+
+云端规划 + 浏览器审查 + 远程执行
+
+/loop
+
+定时循环执行提示词
+
+/schedule
+
+创建定时任务 / 例行程序
+
+### 初始化与认证
+
+/init
+
+初始化项目 CLAUDE.md 文件
+
+/login
+
+登录 Anthropic 账号
+
+/logout
+
+退出登录
+
+/setup-bedrock
+
+配置 Amazon Bedrock
+
+/setup-vertex
+
+配置 Google Vertex AI
+
+/install-github-app
+
+安装 Claude GitHub Actions
+
+/install-slack-app
+
+安装 Claude Slack 应用
+
+### 信息查看
+
+/help
+
+显示帮助与可用命令
+
+/cost
+
+查看 token 用量统计
+
+/context
+
+可视化上下文占用
+
+/status
+
+查看版本、模型、连接状态
+
+/stats
+
+使用量可视化与连续天数
+
+/usage
+
+查看计划用量与速率限制
+
+/doctor
+
+诊断安装问题（按 f 修复）
+
+/release-notes
+
+查看版本更新日志
+
+/powerup
+
+交互式功能教学
+
+### 实用工具
+
+/copy
+
+复制最后回复到剪贴板
+
+/export
+
+导出对话为纯文本
+
+/btw
+
+问个不影响主对话的快速问题
+
+/voice
+
+切换语音输入
+
+/desktop
+
+在桌面端继续当前会话
+
+/teleport
+
+将 Web 会话拉入终端
+
+/mobile
+
+显示移动端 QR 码
+
+/remote-control
+
+开启远程控制
+
+## 🖥 CLI 常用参数
+
+参数
+
+示例
+
+\-p "prompt"
+
+非交互模式，打印后退出
+
+claude -p "解释代码"
+
+\-c
+
+继续最近一次对话
+
+claude -c
+
+\-r <session>
+
+恢复指定会话
+
+claude -r "auth"
+
+\-w <name>
+
+隔离 worktree 启动
+
+claude -w feat-auth
+
+\--model <m>
+
+指定模型
+
+claude --model sonnet
+
+\--effort <level>
+
+推理力度
+
+claude --effort max
+
+\--remote
+
+创建 Web 远程会话
+
+claude --remote "Fix"
+
+\--output-format json
+
+JSON 输出
+
+管道集成
+
+\--max-turns N
+
+限制交互轮数
+
+claude -p "..." --max-turns 5
+
+\--permission-mode
+
+指定权限模式
+
+claude --permission-mode auto
+
+## 🆕 2025-2026 新功能亮点
+
+以下是 Claude Code 近期新增的重大功能更新
+
+### /ultrareview
+
+云端多智能体并行代码审查，Pro/Max 用户每天 3 次免费
+
+### Effort 力度滑块
+
+5 级推理力度调节——从极速到极致思考
+
+### 远程控制
+
+CLI ↔ claude.ai/code 双向同步，推送通知
+
+50%
+
+### Agent 团队
+
+多个独立智能体会话协同工作，权限继承
+
+### 插件系统
+
+可安装扩展，支持内联定义与市场分发
+
+### Fast 模式
+
+同模型快速输出，写代码效率大幅提升
+
+50%
+
+### /ultrareview
+
+云端多智能体并行代码审查，Pro/Max 用户每天 3 次免费
+
+### Effort 力度滑块
+
+5 级推理力度调节——从极速到极致思考
+
+### 远程控制
+
+CLI ↔ claude.ai/code 双向同步，推送通知
+
+50%
+
+云端多智能体并行代码审查，Pro/Max 用户每天 3 次免费
+
+### Effort 力度滑块
+
+5 级推理力度调节——从极速到极致思考
+
+### 远程控制
+
+CLI ↔ claude.ai/code 双向同步，推送通知
+
+### Agent 团队
+
+多个独立智能体会话协同工作，权限继承
+
+### 插件系统
+
+可安装扩展，支持内联定义与市场分发
+
+### Fast 模式
+
+同模型快速输出，写代码效率大幅提升
+
+50%
+
+### Agent 团队
+
+多个独立智能体会话协同工作，权限继承
+
+### 插件系统
+
+可安装扩展，支持内联定义与市场分发
+
+### Fast 模式
+
+同模型快速输出，写代码效率大幅提升
+
+### 更多新特性
+
+- **PowerShell 工具**：Windows 平台支持
+- **/powerup**：交互式功能教学课程
+- **/team-onboarding**：为团队新成员生成入门指南
+- **图片粘贴**：Ctrl+V 直接粘贴剪贴板图片
+- **MCP Elicitation**：MCP 服务器可请求结构化输入
+- **自动 Recap**：离开 75+ 分钟后回来自动总结
+- **会话颜色编码**：/color 区分不同会话
+- **性能优化**：Write 工具提速 60%，会话恢复提速 45%
+
+**文档版本**：2026年4月更新 · Claude Code v2.1 · Opus 4.6
+
+**HTML 版本**：包含可爱 SVG 插图与动画效果的完整指南（桌面 HTML 文件）

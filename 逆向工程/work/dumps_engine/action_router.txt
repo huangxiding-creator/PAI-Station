@@ -1,0 +1,73 @@
+@@@ off=2408200
+Array(d)?e.log_id:d.log_id??e.log_id;
+o=typeof f=="number"?f:void 0,o!=null&&console.log("【simple_task】检测到 log_id:",o);
+const h=l&&l.length>0?await resolveSimpleTaskTargetPostcheckPolicy(d):{
+enabled:!1,reason:"no_target_names"
+}
+;
+console.log("【simple_task】target_name 后验策略:",h);
+const p=await a.executeSendTask(u,l,{
+source:"simple_task",traceId:n,forceSearchTarget:!0,enableSearchTargetPostcheck:h.enabled
+}
+),m=p.success?"任务执行完成":`任务失败: ${
+p.error
+}
+`;
+replayLogger.logSimpleTaskResult(n,{
+success:p.success,error:p.error,message:m
+}
+,o),displayMessage("action",m,p.success?"complete":"error"),o!=null&&await a.reportTaskLogStatus(o,p.success?1:0)
+}
+catch(d){
+console.error("【simple_task】解析或执行失败:",d);
+const u=d instanceof Error?d.message:String(d);
+replayLogger.logSimpleTaskResult(n,{
+success:!1,error:u,message:`simple_task 执行异常: ${
+u
+}
+`
+}
+,o),displayMessage("action",`simple_task 执行异常: ${
+u
+}
+`,"error"),o!=null&&await a.reportTaskLogStatus(o,0)
+}
+r?await a.resumeNextLoop({
+instant:!0
+}
+):rxEngine.phase$.value.phase===EnginePhase.EXECUTING&&rxEngine.resumeAfterExecution();
+break
+}
+case"error":{
+if(console.log("【错误】",e.data),e.data==="login_required"){
+console.log("【登录已失效】"),handleAuthInvalidation("登录已失效");
+try{
+a.cleanupResources()
+}
+catch(o){
+console.error("【登录已失效】停止服务失败:",o)
+}
+
+}
+else s==="whatsapp"&&e.data==="未识别到图片信息"?(console.log("【WhatsApp error】未识别到图片信息，推送 whatsapp_next_step"),rxEngine.enqueueAction({
+action:"whatsapp_next_step",data:null
+}
+)):e.data==="未识别到图片信息"?await a.resumeNextLoop({
+instant:!0
+}
+):getBridge().sendToRenderer("ACTION_ERROR",e.data);
+break
+}
+default:{
+this.legacyProcessor?await this.legacyProcessor(e):console.warn("[MiscHandler] ⚠️ 未知或未被接管的 action:",e.action);
+break
+}
+
+}
+
+}
+
+}
+class ActionRouter{
+handlers={
+keyboard:new KeyboardHandler,stream_macro_keyboard:new KeyboardHandler,thinking:new ThinkingHandler,"model-thinking":new ThinkingHandler,stream_macro_thinking:new ThinkingHandler,"stream_macro_model-thinking":new ThinkingHandler,whatsapp_next_step:new WhatsAppHandler,whatsapp_receivemessage:new WhatsAppHandler,v

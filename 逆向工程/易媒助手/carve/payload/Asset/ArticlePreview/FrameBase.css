@@ -1,0 +1,78 @@
+@charset "utf-8";
+* {
+    margin:0;
+    padding:0;
+}
+
+body {
+    font-family: helvetica,Arial,"Hiragino Sans GB","Microsoft YaHei",simsun;
+    font-size:16px;
+    line-height:1.5;
+}
+
+::-webkit-scrollbar  
+{  
+    width: 5px;  
+    height: 5px;  
+    background-color: #E3E6EB;  
+} 
+
+::-webkit-scrollbar-track  
+{  
+    border-radius: 20px;  
+    background-color: #E3E6EB;  
+}
+
+::-webkit-scrollbar-thumb  
+{  
+    border-radius: 20px;   
+    background-color: #A3A9B4;  
+}     
+
+#container {
+    width: 242px;
+    padding:0 15px;
+}
+
+#title {
+    word-wrap: break-word;
+    cursor: text;
+}
+
+#content {
+    word-wrap: break-word;
+    cursor: text;
+}
+
+#account_img img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+
+#content>p {
+    line-height: 1.5;
+    margin: 1em 0;
+    display:block;
+    text-align:justify
+}
+
+#content img {
+    max-width: 100%;
+    display: block;
+    clear: both;
+    margin: 0 auto;
+}
+
+a {
+    color: RGB(90, 118, 158);
+    text-decoration:none;
+    border:0;
+    outline:0
+}
+
+a:active {
+    border:0;
+    outline:0
+}

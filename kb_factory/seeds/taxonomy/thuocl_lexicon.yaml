@@ -1,0 +1,199 @@
+version: 1.0.0
+updated: '2026-10-25'
+kind: taxonomy_seed_v1
+sources:
+- name: Shopify/product-taxonomy
+  url: https://github.com/Shopify/product-taxonomy
+  license: MIT
+  role: 制式蓝本
+- name: thunlp/THUOCL
+  url: https://github.com/thunlp/THUOCL
+  license: MIT
+  role: 领域词表上游（11 域；词数据本体仍在 seeds/thuocl/<域>.json，本件只迁摘要索引）
+- name: seeds/thuocl/_summary.json
+  built_at: '2026-10-25T02:26:06+00:00'
+  role: 摘要真源（迁移 before 侧；built_at 原样固化供 loader 复原）
+tree:
+  type: root
+  id: thuocl
+  name: THUOCL 领域词表
+  groups_total: 49
+  map_valid_pct: 100
+  children:
+  - type: domain
+    id: IT
+    name: 信息科技
+    word_count: 15999
+    skipped_lines: 0
+    dropped_df_le1: 0
+    raw_file: THUOCL_IT.txt
+    raw_sha256: e8cd42c9f5559735fa3bfb91515cbe051f991efd4a803038a1d5c0da85af3526
+    mapped_groups:
+    - AI技术与应用
+  - type: domain
+    id: animal
+    name: 动物
+    word_count: 3553
+    skipped_lines: 0
+    dropped_df_le1: 13734
+    raw_file: THUOCL_animal.txt
+    raw_sha256: bcdc95a32fe713d4bc32957ae26174e3b464908e318e821c9abb295e90249145
+    mapped_groups:
+    - 综合资料
+  - type: domain
+    id: caijing
+    name: 财经
+    word_count: 3830
+    skipped_lines: 0
+    dropped_df_le1: 0
+    raw_file: THUOCL_caijing.txt
+    raw_sha256: 68e63d2009e59c6f388eeaa789d19b6a681657de3e8e56cc3479b21cd8548542
+    mapped_groups:
+    - 券商研报精选
+    - 公司公告与年报
+  - type: domain
+    id: car
+    name: 汽车
+    word_count: 1752
+    skipped_lines: 0
+    dropped_df_le1: 0
+    raw_file: THUOCL_car.txt
+    raw_sha256: 58ffd756b89e8574852bc72c254276a1d7fa8821342eb3cbf3be73ca33ab921c
+    mapped_groups:
+    - 工程总承包
+  - type: domain
+    id: chengyu
+    name: 成语
+    word_count: 8519
+    skipped_lines: 0
+    dropped_df_le1: 0
+    raw_file: THUOCL_chengyu.txt
+    raw_sha256: c339d5d6e37d4f8ecdcb82f2a02b7fdfc66796f0a5215155f2aff8a77e89a7eb
+    mapped_groups:
+    - 综合资料
+  - type: domain
+    id: diming
+    name: 地名
+    word_count: 44802
+    skipped_lines: 2
+    dropped_df_le1: 0
+    raw_file: THUOCL_diming.txt
+    raw_sha256: ca5574399da5750a2c36dc373f36e31a66ed1f8a4b21646df6ca44ec0b888d89
+    mapped_groups:
+    - 区域市场报告
+  - type: domain
+    id: food
+    name: 食品
+    word_count: 8973
+    skipped_lines: 1
+    dropped_df_le1: 0
+    raw_file: THUOCL_food.txt
+    raw_sha256: 084caa96ad4f976720003e9420097ba7cb5ddbb17f9f8c8f76bc4b8e0cc777fd
+    mapped_groups:
+    - 综合资料
+  - type: domain
+    id: law
+    name: 法律
+    word_count: 9895
+    skipped_lines: 1
+    dropped_df_le1: 0
+    raw_file: THUOCL_law.txt
+    raw_sha256: 8ef1a5f41052ac95dedde88b167c5031a43b3e0211bf128b6125736cc76ef7b2
+    mapped_groups:
+    - 政策法规资讯
+  - type: domain
+    id: lishimingren
+    name: 历史名人
+    word_count: 13658
+    skipped_lines: 0
+    dropped_df_le1: 0
+    raw_file: THUOCL_lishimingren.txt
+    raw_sha256: d0e5094016e6db8c55d363dc022f48f7b1753cf6d07e216f63cf522ce8e53605
+    mapped_groups:
+    - 专家百人档案
+    - 标杆专访
+  - type: domain
+    id: medical
+    name: 医学
+    word_count: 18749
+    skipped_lines: 0
+    dropped_df_le1: 0
+    raw_file: THUOCL_medical.txt
+    raw_sha256: a01f39f1677af0b6a620bbc68bf293e8e436f06248b74adb625cd61d9ad7bbcd
+    mapped_groups:
+    - 学术论文
+  - type: domain
+    id: poem
+    name: 唐诗宋词
+    word_count: 13703
+    skipped_lines: 0
+    dropped_df_le1: 0
+    raw_file: THUOCL_poem.txt
+    raw_sha256: f7045571f57114a3a70d2eaaeec8f991897d536be808f93161709f1289c8108c
+    mapped_groups:
+    - 综合资料
+attributes:
+  root:
+    id:
+      type: string
+      required: true
+      pattern: ^[a-z][a-z0-9_]*$
+    name:
+      type: string
+      required: true
+    groups_total:
+      type: integer
+      required: true
+      min: 0
+      desc: 六库分组总数（对账用，源自 _summary.json 同名字段）
+    map_valid_pct:
+      type: integer
+      required: true
+      min: 0
+  domain:
+    id:
+      type: string
+      required: true
+      pattern: ^[A-Za-z][A-Za-z0-9_]*$
+    name:
+      type: string
+      required: true
+      vocab: domain_names
+    word_count:
+      type: integer
+      required: true
+      min: 0
+    skipped_lines:
+      type: integer
+      required: true
+      min: 0
+    dropped_df_le1:
+      type: integer
+      required: true
+      min: 0
+    raw_file:
+      type: string
+      required: true
+      pattern: ^THUOCL_[A-Za-z]+\.txt$
+    raw_sha256:
+      type: string
+      required: true
+      pattern: ^[0-9a-f]{64}$
+    mapped_groups:
+      type: array
+      required: true
+      vocab_ref: engineering_epc.yaml:values.group_names
+      desc: 就近映射目标分组名（受控引用六库 49 分组词表）
+values:
+  domain_names:
+  - 信息科技
+  - 动物
+  - 财经
+  - 汽车
+  - 成语
+  - 地名
+  - 食品
+  - 法律
+  - 历史名人
+  - 医学
+  - 唐诗宋词

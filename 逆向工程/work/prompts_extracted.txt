@@ -1,0 +1,59 @@
+====================================================================================================
+【一】显式 prompt 赋值（>50字符）
+====================================================================================================
+
+--- question_param @2285158 ---
+只有当左上角搜索输入框已经获得焦点，并且它正下方已经出现搜索浮层时，返回1；否则返回0。只返回数字1或0。
+
+====================================================================================================
+【二】vision_query / sendCompletionRequest 调用上下文
+====================================================================================================
+
+--- visionQuery @2312525 ---
+nversationGeometryFrameId:s.conversationGeometryFrameId,capturedAt:n.capturedAt,screenshotBase64:n.screenshotBase64,bounds:n.bounds,scaleFactor:n.scaleFactor,imageWidth:i.width,imageHeight:i.height}},visionQuery=async({imageBase64:t,question:e,prompt:r},n,a)=>{const s="doubao/doubao-seed-2-0-lite-260428";return console.log(`[visionQuery] 🔥 使用模型: ${s}`),await sendCompletionRequest({imageBase64:t,prompt:r,question:e,model:s},n,a?()=>shouldStopInput(a):void 0)},sendStreamingPromptMessage=async(t,e,r,n)=>{try{if(shouldStopInput(r))throw console.log("【流式发送】收到停止信号，取消发送"),new Error("任务已中断");if(IS_MAC
+
+--- visionQuery @2312652 ---
+unds,scaleFactor:n.scaleFactor,imageWidth:i.width,imageHeight:i.height}},visionQuery=async({imageBase64:t,question:e,prompt:r},n,a)=>{const s="doubao/doubao-seed-2-0-lite-260428";return console.log(`[visionQuery] 🔥 使用模型: ${s}`),await sendCompletionRequest({imageBase64:t,prompt:r,question:e,model:s},n,a?()=>shouldStopInput(a):void 0)},sendStreamingPromptMessage=async(t,e,r,n)=>{try{if(shouldStopInput(r))throw console.log("【流式发送】收到停止信号，取消发送"),new Error("任务已中断");if(IS_MAC$2){let a="";try{a=(await sendCompletionRequest({question:t,prompt:n,isChat:!1,model:"doubao/doubao-seed-1-6-251015"},void 0,r?
+
+--- visionQuery @2315383 ---
+taURL().replace(/^data:image\/\w+;base64,/,"");if(shouldStopInput(e))return console.log("【vision_prompt】收到停止信号，中断视觉检查"),{success:!1,error:"任务已中断"};console.log("【vision_prompt】发送视觉查询请求");const f=await visionQuery({imageBase64:l,question:a,prompt:n},p=>{console.log("【vision_prompt】收到SSE事件:",p)},e);if(shouldStopInput(e))return console.log("【vision_prompt】收到停止信号，中断视觉检查"),{success:!1,error:"任务已中断"};const h=f.accumulatedText.split(`\n`)[0].trim().replace(/[<>]/g,"");if(console.log("【vision_prompt】检查结果:",h),h==="是")return console.log("【vision_prompt】条件满足，返回成功"),{success:!0};if(h==="否"){if(console.log
+
+--- sendCompletionRequest @2164634 ---
+ft"),console.log("【点击】点击完成"),!0}catch(r){return isExecutionAbortError(r)||r instanceof Error&&r.message==="任务已中断"?(console.log("【点击】收到停止信号，取消点击"),!1):(console.error("【点击】执行失败:",r),!1)}}async function sendCompletionRequest({imageBase64:t,question:e,prompt:r,timeoutMs:n=15e3,isChat:a,model:s,extra:i},o,d){const u=store$3.get("token");if(!u)throw new Error("未找到token，请先登录");if(getAccountEntitlementSnapshot().quotaStatus==="blocked")throw getBridge().sendToRenderer("ACTION_ERROR","count_limit"),new QuotaExceededError;const l=new AbortController,f=setTimeout(()=>{try{l.abort("timeout")}catch{}},n);i
+
+--- sendCompletionRequest @2169749 ---
+ounds,scaleFactor:r.scaleFactor,screenshotType:"window"})}},parseCollectBoolean=t=>{const e=t.trim();return e==="1"?!0:e==="0"?!1:null},askCollectBoolean=async(t,e,r)=>{const{accumulatedText:n}=await sendCompletionRequest({imageBase64:t,question:e,prompt:"",model:DEFAULT_VISION_MODEL,timeoutMs:3e4},void 0,stopPredicate(r));return throwIfStoppedInput$1(r),{value:parseCollectBoolean(n),rawText:n}},collectShotDebugInfo=t=>t?{success:!0,screenshot:t.screenshotBase64,bounds:t.bounds,scaleFactor:t.scaleFactor,imageSize:t.imageSize}:void 0,reportCollectFailure=async({stage:t,error:e,appType:r,evidenc
+
+--- sendCompletionRequest @2266989 ---
+/g,"").trim().toLowerCase(),n=r(t),a=r(e);return n===a||n.includes(a)||a.includes(n)},extractTextFromImage=async t=>{try{const e=t.indexOf("base64,"),r=e!==-1?t.slice(e+7):t,{accumulatedText:n}=await sendCompletionRequest({imageBase64:r,question:"提取首行文字",prompt:""});return{success:!0,text:(n||"").replace(/[\(（]\d+[\)）]/g,"").trim()}}catch(e){return{success:!1,error:e?.message||String(e)}}},getHeaderOcrText=async(t,e)=>{const r=e||(()=>{}),n=await getWechatLayout(t,{capabilities:LAYOUT_CAPABILITY_PROFILES.targetPostcheck});if(!n.headerArea)return null;let a;try{const s=await getWechatWindowInfo
+
+--- sendStreamingPromptMessage @2312788 ---
+nst s="doubao/doubao-seed-2-0-lite-260428";return console.log(`[visionQuery] 🔥 使用模型: ${s}`),await sendCompletionRequest({imageBase64:t,prompt:r,question:e,model:s},n,a?()=>shouldStopInput(a):void 0)},sendStreamingPromptMessage=async(t,e,r,n)=>{try{if(shouldStopInput(r))throw console.log("【流式发送】收到停止信号，取消发送"),new Error("任务已中断");if(IS_MAC$2){let a="";try{a=(await sendCompletionRequest({question:t,prompt:n,isChat:!1,model:"doubao/doubao-seed-1-6-251015"},void 0,r?()=>shouldStopInput(r):void 0)).accumulatedText}catch(d){throw shouldStopInput(r)?new Error("任务已中断"):d}if(throwIfStoppedInput(r),!a)retu
+
+--- sendStreamingPromptMessage @2407806 ---
+{isEnd:r,data:e.data});break}case"text_prompt":{console.log("【MiscHandler】检测到 text_prompt 类型，开始流式发送:",e.data);const{user:o,system:d}=parsePromptData(e.data||"");displayMessage("thinking",o);try{await sendStreamingPromptMessage(o,s,i||void 0,d),console.log("【MiscHandler】流式发送完成")}catch(u){if(isExecutionAbortError(u))break;console.error("【MiscHandler】流式发送失败:",u)}break}case"simple_task":{rxEngine.setPhase(EnginePhase.EXECUTING),console.log("【simple_task】收到简单任务:",e.data);let o;try{const d=JSON.parse(e.data),u=Array.isArray(d)?d:d.actions||[],l=Array.isArray(d)?void 0:d.target_names,f=Array.isArray(
+
+--- sendStreamingPromptMessage @2433550 ---
+ak}else if(m.action==="text_prompt"&&m.data){console.log("【executeSendTask】检测到 text_prompt 类型，开始流式发送:",m.data);const{user:_,system:v}=parsePromptData(m.data);a||displayMessage("thinking",_);try{await sendStreamingPromptMessage(_,u,t,v),console.log("【executeSendTask】流式发送完成")}catch($){if(isExecutionAbortError($)){console.log("【executeSendTask】流式发送被中断");break}console.error("【executeSendTask】流式发送失败:",$)}if(s())break}else if(m.action==="vision_prompt"){console.log("【executeSendTask】检测到 vision_prompt 类型，开始执行视觉检查"),a||displayMessage("action","执行视觉检查...","checking");const{user:_,system:v}=parsePromptD
+
+--- handleMacKeyboardInput @2387409 ---
+$)||console.error("Keyboard Pipeline Error:",$)}})},streamingState={isStreaming:!1,currentType:null,currentTraceId:null,accumulatedContent:"",fullKeyboardText:"",streamStartTime:0,chatHistoryId:null},handleMacKeyboardInput=async(t,e,r=!1,n)=>{const a=getCurrentAppType();if(!streamingState.isStreaming||streamingState.currentType!=="keyboard"){streamingState.isStreaming&&await finishStreamMessage(!1,n),streamingState.isStreaming=!0,streamingState.currentType="keyboard",streamingState.accumulatedContent="",streamingState.fullKeyboardText="";const i={type:"keyboard",content:"",chat_history_id:stre
+
+--- handleMacKeyboardInput @2395018 ---
+Loop({instant:!0});return}console.log("【keyboard】WhatsApp 模式：messageInputArea 已就绪")}if(e.chunk$)return new Promise((d,u)=>{e.chunk$.pipe(operatorsExports.concatMap(async l=>{o?.throwIfAborted(),await handleMacKeyboardInput(l,!!l.is_end,!!l.is_trunk_reply,o)})).subscribe({complete:()=>{debugLog("Main RPA 宏流键盘输入处理完结"),d()},error:l=>u(l)})});await handleMacKeyboardInput(e,r,!!e.is_trunk_reply,o),debugLog("Main RPA 处理单点键盘输入",{isEnd:r,data:e.data})}}class ThinkingHandler{async execute(e,r,n,a){const s=e.originalAction||e.action,i=s==="model-thinking"?"模型深度思考":"思考中",o=getActionExecutionContext(e);if
+
+--- handleMacKeyboardInput @2395165 ---
+xports.concatMap(async l=>{o?.throwIfAborted(),await handleMacKeyboardInput(l,!!l.is_end,!!l.is_trunk_reply,o)})).subscribe({complete:()=>{debugLog("Main RPA 宏流键盘输入处理完结"),d()},error:l=>u(l)})});await handleMacKeyboardInput(e,r,!!e.is_trunk_reply,o),debugLog("Main RPA 处理单点键盘输入",{isEnd:r,data:e.data})}}class ThinkingHandler{async execute(e,r,n,a){const s=e.originalAction||e.action,i=s==="model-thinking"?"模型深度思考":"思考中",o=getActionExecutionContext(e);if(debugLog(`【${i}】开始处理:`,e.data),e.chunk$)return new Promise((d,u)=>{e.chunk$.pipe(operatorsExports.concatMap(async l=>{o?.throwIfAborted(),l.is_end
+
+--- processVisionPrompt @2314416 ---
+ut(r)?new Error("任务已中断"):o}if(i||shouldStopInput(r))throw new Error("任务已中断");s&&await sendMessageRPA(s,e,r)}}catch(a){throw a instanceof Error&&a.message==="任务已中断"||console.error("【流式发送】发送失败:",a),a}},processVisionPrompt=async(t,e,r,n)=>{const a=r||"判断是否同时满足以下三个条件？有居左的包含【帮忙砍一刀】请求的发言，有居左的标题包含【砍一刀】小程序卡片，最后一条不是右侧绿泡泡消息。仅返回<是|否>",s=5,i=2e4;for(let o=1;o<=s;o++){if(shouldStopInput(e))return console.log("【vision_prompt】收到停止信号，中断视觉检查"),{success:!1,error:"任务已中断"};try{console.log(`【vision_prompt】第 ${o} 次尝试检查条件`);const d=await captureChatMainArea(t);if(shouldStopInput(e))return console.log("【vision_prompt
+
+--- processVisionPrompt @2401213 ---
+(e.action==="vision_prompt"){console.log("【VisionHandler】检测到 vision_prompt 类型，开始执行视觉检查"),displayMessage("action","执行视觉检查...","checking");try{const{user:o,system:d}=parsePromptData(e.data||""),u=await processVisionPrompt(s,i||(()=>!rxEngine.isRunning()),o,d);u.success?(console.log("【VisionHandler】视觉检查通过"),displayMessage("action","视觉检查通过","complete")):(console.error("【VisionHandler】视觉检查失败:",u.error),displayMessage("action",`视觉检查失败: ${u.error||"未知错误"}`,"error"))}catch(o){if(isExecutionAbortError(o))return;console.error("【VisionHandler】视觉检查异常:",o),displayMessage("action",`视觉检查异常: ${o instanceof Er
+
+--- processVisionPrompt @2433984 ---
+="vision_prompt"){console.log("【executeSendTask】检测到 vision_prompt 类型，开始执行视觉检查"),a||displayMessage("action","执行视觉检查...","checking");const{user:_,system:v}=parsePromptData(m.data||"");try{const $=await processVisionPrompt(u,t,_,v);if($.success)console.log("【executeSendTask】视觉检查通过");else if(console.error("【executeSendTask】视觉检查失败:",$.error),$.error==="任务已中断")break}catch($){if(isExecutionAbortError($)){console.log("【executeSendTask】视觉检查被中断");break}console.error("【executeSendTask】视觉检查异常:",$)}if(s())break;await t.delay(200)}else if(m.action==="image"&&m.data){console.log("【executeSendTask】发送图片消息:",m.
+
+====================================================================================================
+【三】AI 决策流程中的中文指令文本
+====================================================================================================

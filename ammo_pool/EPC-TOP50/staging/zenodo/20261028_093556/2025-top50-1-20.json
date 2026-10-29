@@ -1,0 +1,1648 @@
+{
+ "hits": {
+  "hits": [
+   {
+    "created": "2024-09-22T05:45:30.211314+00:00",
+    "modified": "2024-09-22T05:45:30.498941+00:00",
+    "id": 13824717,
+    "conceptrecid": "13824716",
+    "doi": "10.5281/zenodo.13824717",
+    "conceptdoi": "10.5281/zenodo.13824716",
+    "doi_url": "https://doi.org/10.5281/zenodo.13824717",
+    "metadata": {
+     "title": "Datasets used in a Transformer network for image inversion of multi-dimensional nonuniform aperture synthesis radiometers",
+     "doi": "10.5281/zenodo.13824717",
+     "publication_date": "2024-09-22",
+     "description": "<p><span>该数据集于 2023 年 11 月在中南大学生成,并通过 matlab 仿真软件进行仿真和收集。主要用于图像重建网络的训练和测试。</span>该数据集由原始场景亮度数据、能见度数据和一维、二维和三维非均匀天线阵列图像重建的能见度函数对应的频域采样点位置数据,以及使用其他一些常规方法进行图像重建获得的亮度数据组成。此外,为了验证所提方法的有效性,在工作频率为 33.5 Ghz 的原型 8 元一维非均匀天线阵列上进行了室内实验,并生成了测量数据集。</p>\n<p>具体来说,名为 Tb_in、V2_noise、T3_AAF 和 T2_idft 的四个仿真数据集存储在名为 1d 的 zip 包中。</p>\n<p>Tb_IN_1d存储了一维非均匀天线对应的原始场景亮温数据,该数据选自西北工业大学制作的遥感影像场景分类公共数据集。</p>\n<p>V2_noise存储了包含各种误差的能见度函数值,主要是通过将原始场景亮温图像输入到运行在接收频率为 33.5 GHz 的非均匀积分孔径辐射计模拟程序中得到的。</p>\n<p>T2_idft 和 T3_AAF 分别是使用逆离散傅里叶变换和阵列因子形成方法进行图像重建获得的明亮温度数据。这两组数据都可用于后续的比较实验。</p>\n<p>名为 Tb_IN_2d、Tb_out_2d、VS_2d 和 VS_P_2d 的四个数据集存储在名为 2d 的 zip 包中。</p>\n<p>Tb_IN_2d内部存储的是二维非均匀天线对应的原始场景亮温数据,该数据选自西北工业大学制作的遥感影像场景分类公共数据集。</p>\n<p>VS_2d为二维非均匀天线阵列对应的能见度函数值,主要是将原始场景亮温图像输入到接收频率为 33.5 GHz 的非均匀集成孔径辐射计模拟程序中得到的。</p>\n<p>VS_P_2d存储了二维非均匀天线阵列的能见度函数对应的频域采样点位置,该值主要通过计算能见度函数值得到。</p>\n<p>Tb_out_2d文件存储了使用传统方法进行图像重建得到的亮温值,该数据也用于后续与所提方法获得的数据的比较实验。</p>\n<p>名为 Tb_IN_3d、Tb_out_3d、VS_3d 和 VS_P_3d 的四个数据集存储在名为 3d 的 zip 包中。</p>\n<p>Tb_IN_3d内部存储的是 3D 非均匀天线对应的原始场景亮温数据,该数据选自西北工业大学制作的遥感图像场景分类公共数据集。</p>\n<p>VS_3d是三维非均匀天线阵列对应的能见度函数值,是将原始场景亮温图像输入到接收频率为 33.5 GHz 的非均匀积分孔径辐射计仿真程序中得到的。</p>\n<p>VS_P_3d存储了三维非均匀天线阵列的能见度函数对应的频域采样点位置,该位置是通过计算能见度函数值得到的。</p>\n<p>Tb_out_3d文件存储了使用常规方法进行图像重建得到的亮温值,该数据也用于后续与所提方法获得的数据的比较实验。</p>\n<p>名为 Array2_R、Array3_R、V2_noise 和 Tb_out 的四个数据集存储在名为 8mm8 channel 的 zip 包中。</p>\n<p>存储在 Array2_R 和 Array3_R 中的是系统在不同位置测量的目标点源的相关矩阵,矩阵中元素的值反映了测试点对目标点源的检测能力。根据此相关矩阵,可以计算可见性值。</p>\n<p>存储在 V2_noise 内部的是包含各种误差的测量可见性函数的样本。对这些数据进行实验主要是为了验证所提方法的有效性。</p>\n<p>存储在 Tb_out 中的是使用测试数据集获得的亮温结果数据,用于测试训练的网络。</p>",
+     "access_right": "open",
+     "creators": [
+      {
+       "name": "xiao, chengwang",
+       "affiliation": null
+      },
+      {
+       "name": "li, jiaxin",
+       "affiliation": null
+      },
+      {
+       "name": "dong, jian",
+       "affiliation": null
+      }
+     ],
+     "references": [
+      "Cheng, G., Han, J., and Lu, X.: Remote sensing image scene classification: Benchmark and state of the art, Proceedings of the IEEE, 105(10), 1865–1883. doi:10.1109/JPROC.2017.2675998, 2017.",
+      "Cheng, G., Xie, X., Han, J., Guo, L., and Xia, G. S.: Remote sensing image scene classification meets deep learning: Challenges, methods, benchmarks, and opportunities, IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing, 13, 3735–3756, doi:10.1109/JSTARS.2020.3005403, 2020.",
+      "Chen, L., Ma, W., Wang, Y., and Zhou, H.: Array factor forming with regularization for aperture synthesis radiometric imaging with an irregularly distributed array, IEEE Geoscience and Remote Sensing Letters, 17(1), 97–101. doi:10.1109/LGRS.2019.2914926, 2019."
+     ],
+     "resource_type": {
+      "title": "Dataset",
+      "type": "dataset"
+     },
+     "license": {
+      "id": "cc-by-4.0"
+     },
+     "grants": [
+      {
+       "code": "42306203",
+       "internal_id": "01h0zpd94::42306203",
+       "funder": {
+        "name": "National Natural Science Foundation of China"
+       },
+       "title": "the National Natural Science Foundation of China"
+      },
+      {
+       "code": "61801521",
+       "internal_id": "01h0zpd94::61801521",
+       "funder": {
+        "name": "National Natural Science Foundation of China"
+       },
+       "title": "the National Natural Science Foundation of China"
+      },
+      {
+       "code": "61971450",
+       "internal_id": "01h0zpd94::61971450",
+       "funder": {
+        "name": "National Natural Science Foundation of China"
+       },
+       "title": "the National Natural Science Foundation of China"
+      },
+      {
+       "code": "2022JJ30052",
+       "internal_id": "01h0zpd94::2022JJ30052",
+       "funder": {
+        "name": "National Natural Science Foundation of China"
+       },
+       "title": "the Natural Science Foundation of Hunan Province"
+      },
+      {
+       "code": "2023JJ40775",
+       "internal_id": "01h0zpd94::2023JJ40775",
+       "funder": {
+        "name": "National Natural Science Foundation of China"
+       },
+       "title": "the Natural Science Foundation of Hunan Province"
+      }
+     ],
+     "relations": {
+      "version": [
+       {
+        "index": 0,
+        "is_last": true,
+        "parent": {
+         "pid_type": "recid",
+         "pid_value": "13824716"
+        }
+       }
+      ]
+     }
+    },
+    "title": "Datasets used in a Transformer network for image inversion of multi-dimensional nonuniform aperture synthesis radiometers",
+    "links": {
+     "self": "https://zenodo.org/api/records/13824717",
+     "self_html": "https://zenodo.org/records/13824717",
+     "preview_html": "https://zenodo.org/records/13824717?preview=1",
+     "doi": "https://doi.org/10.5281/zenodo.13824717",
+     "self_doi": "https://doi.org/10.5281/zenodo.13824717",
+     "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.13824717",
+     "reserve_doi": "https://zenodo.org/api/records/13824717/draft/pids/doi",
+     "parent": "https://zenodo.org/api/records/13824716",
+     "parent_html": "https://zenodo.org/records/13824716",
+     "parent_doi": "https://doi.org/10.5281/zenodo.13824716",
+     "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.13824716",
+     "self_iiif_manifest": "https://zenodo.org/api/iiif/record:13824717/manifest",
+     "self_iiif_sequence": "https://zenodo.org/api/iiif/record:13824717/sequence/default",
+     "files": "https://zenodo.org/api/records/13824717/files",
+     "media_files": "https://zenodo.org/api/records/13824717/media-files",
+     "latest": "https://zenodo.org/api/records/13824717/versions/latest",
+     "latest_html": "https://zenodo.org/records/13824717/latest",
+     "versions": "https://zenodo.org/api/records/13824717/versions",
+     "draft": "https://zenodo.org/api/records/13824717/draft",
+     "access_links": "https://zenodo.org/api/records/13824717/access/links",
+     "access_grants": "https://zenodo.org/api/records/13824717/access/grants",
+     "access_users": "https://zenodo.org/api/records/13824717/access/users",
+     "access_request": "https://zenodo.org/api/records/13824717/access/request",
+     "access": "https://zenodo.org/api/records/13824717/access",
+     "communities": "https://zenodo.org/api/records/13824717/communities",
+     "communities-suggestions": "https://zenodo.org/api/records/13824717/communities-suggestions",
+     "request_deletion": "https://zenodo.org/api/records/13824717/request-deletion",
+     "file_modification": "https://zenodo.org/api/records/13824717/file-modification",
+     "quota_increase": "https://zenodo.org/api/records/13824717/quota-increase",
+     "requests": "https://zenodo.org/api/records/13824717/requests"
+    },
+    "updated": "2024-09-22T05:45:30.498941+00:00",
+    "recid": "13824717",
+    "revision": 4,
+    "files": [
+     {
+      "id": "65171f8b-2e73-4e95-9423-500d5391eca1",
+      "key": "1d.zip",
+      "size": 466126160,
+      "checksum": "md5:985994c0aea3949fdd62ed03c9976623",
+      "links": {
+       "self": "https://zenodo.org/api/records/13824717/files/1d.zip/content"
+      }
+     },
+     {
+      "id": "59847476-bb90-42a3-9cec-730ec9136a32",
+      "key": "2d.zip",
+      "size": 2001998533,
+      "checksum": "md5:094c0c11b68f02c7555a86ae588dba9b",
+      "links": {
+       "self": "https://zenodo.org/api/records/13824717/files/2d.zip/content"
+      }
+     },
+     {
+      "id": "45177679-eba5-479f-b3a7-955cfc56f29b",
+      "key": "8mm 8-channel experiment.zip",
+      "size": 131768912,
+      "checksum": "md5:5ea92ad01d707dfb9bd8a6e7e5376080",
+      "links": {
+       "self": "https://zenodo.org/api/records/13824717/files/8mm%208-channel%20experiment.zip/content"
+      }
+     },
+     {
+      "id": "ae047635-d633-4810-8196-b45c30b7dd2c",
+      "key": "3d.zip",
+      "size": 1605660869,
+      "checksum": "md5:5f8a7d76bebf7842ab7f392085bc8ddc",
+      "links": {
+       "self": "https://zenodo.org/api/records/13824717/files/3d.zip/content"
+      }
+     }
+    ],
+    "swh": null,
+    "owners": [
+     {
+      "id": "1192508"
+     }
+    ],
+    "status": "published",
+    "stats": {
+     "downloads": 58,
+     "unique_downloads": 43,
+     "views": 203,
+     "unique_views": 199,
+     "version_downloads": 58,
+     "version_unique_downloads": 43,
+     "version_unique_views": 199,
+     "version_views": 203
+    },
+    "state": "done",
+    "submitted": true
+   },
+   {
+    "created": "2026-10-20T08:09:55.570292+00:00",
+    "modified": "2026-10-20T08:09:55.830409+00:00",
+    "id": 23493067,
+    "conceptrecid": "23493066",
+    "doi": "10.5281/zenodo.23493067",
+    "conceptdoi": "10.5281/zenodo.23493066",
+    "doi_url": "https://doi.org/10.5281/zenodo.23493067",
+    "metadata": {
+     "title": "金融与商业世界全景",
+     "doi": "10.5281/zenodo.23493067",
+     "publication_date": "2026-10-20",
+     "description": "<p>《金融与商业世界全景》由格雷斯顿的备忘录(Greystone&rsquo;s Memo)整理,从资本流动与经济运行出发,串联金融市场、机构分工、企业经营、业务流程与职业路径,旨在为读者建立理解金融与商业世界的系统性知识框架。机构名单为代表性整理,不构成统一的行业排行榜。</p>\n<p>Compiled by Greystone&rsquo;s Memo, <em>The Landscape of Finance and Business</em> takes capital flows and the functioning of the economy as its starting point, connecting financial markets, institutional roles, business operations, workflows, and career paths. It aims to provide readers with a systematic framework for understanding the world of finance and business. The institutions listed are representative examples and do not constitute a unified industry ranking.</p>",
+     "access_right": "open",
+     "creators": [
+      {
+       "name": "Xu, Zhisheng",
+       "affiliation": null
+      },
+      {
+       "name": "Greystone's Memo",
+       "affiliation": null
+      }
+     ],
+     "keywords": [
+      "Finance",
+      "Financial markets",
+      "Financial institutions",
+      "Corporate finance",
+      "Business operations",
+      "Career development"
+     ],
+     "language": "cmn",
+     "resource_type": {
+      "title": "Report",
+      "type": "publication",
+      "subtype": "report"
+     },
+     "license": {
+      "id": "cc-by-4.0"
+     },
+     "relations": {
+      "version": [
+       {
+        "index": 0,
+        "is_last": true,
+        "parent": {
+         "pid_type": "recid",
+         "pid_value": "23493066"
+        }
+       }
+      ]
+     }
+    },
+    "title": "金融与商业世界全景",
+    "links": {
+     "self": "https://zenodo.org/api/records/23493067",
+     "self_html": "https://zenodo.org/records/23493067",
+     "preview_html": "https://zenodo.org/records/23493067?preview=1",
+     "doi": "https://doi.org/10.5281/zenodo.23493067",
+     "self_doi": "https://doi.org/10.5281/zenodo.23493067",
+     "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.23493067",
+     "reserve_doi": "https://zenodo.org/api/records/23493067/draft/pids/doi",
+     "parent": "https://zenodo.org/api/records/23493066",
+     "parent_html": "https://zenodo.org/records/23493066",
+     "parent_doi": "https://doi.org/10.5281/zenodo.23493066",
+     "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.23493066",
+     "self_iiif_manifest": "https://zenodo.org/api/iiif/record:23493067/manifest",
+     "self_iiif_sequence": "https://zenodo.org/api/iiif/record:23493067/sequence/default",
+     "files": "https://zenodo.org/api/records/23493067/files",
+     "media_files": "https://zenodo.org/api/records/23493067/media-files",
+     "thumbnails": {
+      "10": "https://zenodo.org/api/iiif/record:23493067:%E9%87%91%E8%9E%8D%E4%B8%8E%E5%95%86%E4%B8%9A%E4%B8%96%E7%95%8C%E5%85%A8%E6%99%AF_GS.pdf/full/%5E10,/0/default.jpg",
+      "50": "https://zenodo.org/api/iiif/record:23493067:%E9%87%91%E8%9E%8D%E4%B8%8E%E5%95%86%E4%B8%9A%E4%B8%96%E7%95%8C%E5%85%A8%E6%99%AF_GS.pdf/full/%5E50,/0/default.jpg",
+      "100": "https://zenodo.org/api/iiif/record:23493067:%E9%87%91%E8%9E%8D%E4%B8%8E%E5%95%86%E4%B8%9A%E4%B8%96%E7%95%8C%E5%85%A8%E6%99%AF_GS.pdf/full/%5E100,/0/default.jpg",
+      "250": "https://zenodo.org/api/iiif/record:23493067:%E9%87%91%E8%9E%8D%E4%B8%8E%E5%95%86%E4%B8%9A%E4%B8%96%E7%95%8C%E5%85%A8%E6%99%AF_GS.pdf/full/%5E250,/0/default.jpg",
+      "750": "https://zenodo.org/api/iiif/record:23493067:%E9%87%91%E8%9E%8D%E4%B8%8E%E5%95%86%E4%B8%9A%E4%B8%96%E7%95%8C%E5%85%A8%E6%99%AF_GS.pdf/full/%5E750,/0/default.jpg",
+      "1200": "https://zenodo.org/api/iiif/record:23493067:%E9%87%91%E8%9E%8D%E4%B8%8E%E5%95%86%E4%B8%9A%E4%B8%96%E7%95%8C%E5%85%A8%E6%99%AF_GS.pdf/full/%5E1200,/0/default.jpg"
+     },
+     "latest": "https://zenodo.org/api/records/23493067/versions/latest",
+     "latest_html": "https://zenodo.org/records/23493067/latest",
+     "versions": "https://zenodo.org/api/records/23493067/versions",
+     "draft": "https://zenodo.org/api/records/23493067/draft",
+     "access_links": "https://zenodo.org/api/records/23493067/access/links",
+     "access_grants": "https://zenodo.org/api/records/23493067/access/grants",
+     "access_users": "https://zenodo.org/api/records/23493067/access/users",
+     "access_request": "https://zenodo.org/api/records/23493067/access/request",
+     "access": "https://zenodo.org/api/records/23493067/access",
+     "communities": "https://zenodo.org/api/records/23493067/communities",
+     "communities-suggestions": "https://zenodo.org/api/records/23493067/communities-suggestions",
+     "request_deletion": "https://zenodo.org/api/records/23493067/request-deletion",
+     "file_modification": "https://zenodo.org/api/records/23493067/file-modification",
+     "quota_increase": "https://zenodo.org/api/records/23493067/quota-increase",
+     "requests": "https://zenodo.org/api/records/23493067/requests"
+    },
+    "updated": "2026-10-20T08:09:55.830409+00:00",
+    "recid": "23493067",
+    "revision": 4,
+    "files": [
+     {
+      "id": "410d41a4-6f98-49e0-8660-b9004f14e6b9",
+      "key": "金融与商业世界全景_GS.pdf",
+      "size": 4404730,
+      "checksum": "md5:229c1188dfbf2af5750fbd14c9f5cadd",
+      "links": {
+       "self": "https://zenodo.org/api/records/23493067/files/%E9%87%91%E8%9E%8D%E4%B8%8E%E5%95%86%E4%B8%9A%E4%B8%96%E7%95%8C%E5%85%A8%E6%99%AF_GS.pdf/content"
+      }
+     }
+    ],
+    "swh": null,
+    "owners": [
+     {
+      "id": "1952929"
+     }
+    ],
+    "status": "published",
+    "stats": {
+     "downloads": 12,
+     "unique_downloads": 7,
+     "views": 47,
+     "unique_views": 23,
+     "version_downloads": 12,
+     "version_unique_downloads": 7,
+     "version_unique_views": 23,
+     "version_views": 47
+    },
+    "state": "done",
+    "submitted": true
+   },
+   {
+    "created": "2026-05-21T01:51:00.148529+00:00",
+    "modified": "2026-05-21T01:51:00.886347+00:00",
+    "id": 20319551,
+    "conceptrecid": "20319550",
+    "doi": "10.5281/zenodo.20319551",
+    "conceptdoi": "10.5281/zenodo.20319550",
+    "doi_url": "https://doi.org/10.5281/zenodo.20319551",
+    "metadata": {
+     "title": "量子竞争策略:经典完全竞争与垄断竞争理论的量子重构与一般化拓展(Quantum Competition Strategy: Quantum Reconstruction and Generalized Expansion of Classical Perfect Competition and Monopolistic Competition Theory)",
+     "doi": "10.5281/zenodo.20319551",
+     "publication_date": "2026-05-21",
+     "description": "<p class=\"MsoNormal\"><strong><span>摘</span></strong><strong>&nbsp;</strong><strong><span>要</span></strong><strong><span>:</span></strong><span>经典产业组织理论建立在牛顿机械世界观、完全理性、静态均衡、状态唯一与观测中立的强本体论假设之上,将市场结构划分为完全竞争、垄断竞争、寡头垄断与完全垄断四种彼此割裂、非此即彼的确定形态,并假定企业在任一时刻只采取唯一、静态、最优的竞争行为。这一框架长期无法解释现实市场中普遍存在的竞争与默契合谋共存、价格战与价格稳定交替、企业行为非连续跃迁、同类企业策略高度异质与观测信号引发市场集体转向等特征事实,</span><span>陷入</span><span>&ldquo;竞争&mdash;合谋二分悖论&rdquo;&ldquo;静态均衡与动态现实的冲突&rdquo;以及&ldquo;结构&mdash;行为&mdash;绩效线性因果关系失效&rdquo;等理论困境。</span><strong><span>本文严格立足于企业策略互动的本体逻辑,规避物理隐喻类比,引入量子叠加、量子相干、行为纠缠、观测</span></strong><span><strong>&mdash;坍缩与量子信息熵构造公理体系,对经典完全竞争、垄断竞争与寡头竞争理论进行统一重构,提出一般性的量子竞争策略(Quantum Competitive Strategy, QCS)理论。</strong>本文严格证明,完全竞争、垄断竞争、古诺均衡、伯特兰均衡、默契合谋、价格战与串谋垄断,均是量子竞争策略在特定叠加、相干与坍缩条件下的退化特例;通过推导量子利润函数、量子竞争指数与动态演化规律,系统阐释竞争状态叠加、预期相干共振、企业行为纠缠、观测坍缩与熵驱动演化五大核心作用机制。结合全球航空业价格战、OPEC石油合谋与中国家电行业竞争等典型历史场景开展理论推演,结果表明:量子竞争策略能够统一解释所有现实竞争异象,</span><span>彻底破解</span><span>&ldquo;竞争&mdash;合谋二分悖论&rdquo;</span><span>。本研究完善了现代产业组织理论的基础公理体系,为战略管理、反垄断政策与市场监管提供全新的基础性分析范式。</span></p>\n<p class=\"MsoNormal\"><strong><span>关键词</span></strong><span>:量子竞争策略;完全竞争;垄断竞争;默契合谋;叠加态;观测</span><span>&mdash;坍缩;量子产业组织</span></p>",
+     "access_right": "open",
+     "creators": [
+      {
+       "name": "Zhao, Huilin",
+       "affiliation": null
+      }
+     ],
+     "keywords": [
+      "量子经济学概论"
+     ],
+     "version": "1",
+     "resource_type": {
+      "title": "Preprint",
+      "type": "publication",
+      "subtype": "preprint"
+     },
+     "license": {
+      "id": "cc-by-4.0"
+     },
+     "communities": [
+      {
+       "id": "zhaohuilin"
+      }
+     ],
+     "relations": {
+      "version": [
+       {
+        "index": 0,
+        "is_last": true,
+        "parent": {
+         "pid_type": "recid",
+         "pid_value": "20319550"
+        }
+       }
+      ]
+     }
+    },
+    "title": "量子竞争策略:经典完全竞争与垄断竞争理论的量子重构与一般化拓展(Quantum Competition Strategy: Quantum Reconstruction and Generalized Expansion of Classical Perfect Competition and Monopolistic Competition Theory)",
+    "links": {
+     "self": "https://zenodo.org/api/records/20319551",
+     "self_html": "https://zenodo.org/records/20319551",
+     "preview_html": "https://zenodo.org/records/20319551?preview=1",
+     "doi": "https://doi.org/10.5281/zenodo.20319551",
+     "self_doi": "https://doi.org/10.5281/zenodo.20319551",
+     "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.20319551",
+     "reserve_doi": "https://zenodo.org/api/records/20319551/draft/pids/doi",
+     "parent": "https://zenodo.org/api/records/20319550",
+     "parent_html": "https://zenodo.org/records/20319550",
+     "parent_doi": "https://doi.org/10.5281/zenodo.20319550",
+     "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.20319550",
+     "self_iiif_manifest": "https://zenodo.org/api/iiif/record:20319551/manifest",
+     "self_iiif_sequence": "https://zenodo.org/api/iiif/record:20319551/sequence/default",
+     "files": "https://zenodo.org/api/records/20319551/files",
+     "media_files": "https://zenodo.org/api/records/20319551/media-files",
+     "thumbnails": {
+      "10": "https://zenodo.org/api/iiif/record:20319551:%E9%87%8F%E5%AD%90%E7%AB%9E%E4%BA%89%E7%AD%96%E7%95%A5%EF%BC%9A%E7%BB%8F%E5%85%B8%E5%AE%8C%E5%85%A8%E7%AB%9E%E4%BA%89%E4%B8%8E%E5%9E%84%E6%96%AD%E7%AB%9E%E4%BA%89%E7%90%86%E8%AE%BA%E7%9A%84%E9%87%8F%E5%AD%90%E9%87%8D%E6%9E%84%E4%B8%8E%E4%B8%80%E8%88%AC%E5%8C%96%E6%8B%93%E5%B1%95.pdf/full/%5E10,/0/default.jpg",
+      "50": "https://zenodo.org/api/iiif/record:20319551:%E9%87%8F%E5%AD%90%E7%AB%9E%E4%BA%89%E7%AD%96%E7%95%A5%EF%BC%9A%E7%BB%8F%E5%85%B8%E5%AE%8C%E5%85%A8%E7%AB%9E%E4%BA%89%E4%B8%8E%E5%9E%84%E6%96%AD%E7%AB%9E%E4%BA%89%E7%90%86%E8%AE%BA%E7%9A%84%E9%87%8F%E5%AD%90%E9%87%8D%E6%9E%84%E4%B8%8E%E4%B8%80%E8%88%AC%E5%8C%96%E6%8B%93%E5%B1%95.pdf/full/%5E50,/0/default.jpg",
+      "100": "https://zenodo.org/api/iiif/record:20319551:%E9%87%8F%E5%AD%90%E7%AB%9E%E4%BA%89%E7%AD%96%E7%95%A5%EF%BC%9A%E7%BB%8F%E5%85%B8%E5%AE%8C%E5%85%A8%E7%AB%9E%E4%BA%89%E4%B8%8E%E5%9E%84%E6%96%AD%E7%AB%9E%E4%BA%89%E7%90%86%E8%AE%BA%E7%9A%84%E9%87%8F%E5%AD%90%E9%87%8D%E6%9E%84%E4%B8%8E%E4%B8%80%E8%88%AC%E5%8C%96%E6%8B%93%E5%B1%95.pdf/full/%5E100,/0/default.jpg",
+      "250": "https://zenodo.org/api/iiif/record:20319551:%E9%87%8F%E5%AD%90%E7%AB%9E%E4%BA%89%E7%AD%96%E7%95%A5%EF%BC%9A%E7%BB%8F%E5%85%B8%E5%AE%8C%E5%85%A8%E7%AB%9E%E4%BA%89%E4%B8%8E%E5%9E%84%E6%96%AD%E7%AB%9E%E4%BA%89%E7%90%86%E8%AE%BA%E7%9A%84%E9%87%8F%E5%AD%90%E9%87%8D%E6%9E%84%E4%B8%8E%E4%B8%80%E8%88%AC%E5%8C%96%E6%8B%93%E5%B1%95.pdf/full/%5E250,/0/default.jpg",
+      "750": "https://zenodo.org/api/iiif/record:20319551:%E9%87%8F%E5%AD%90%E7%AB%9E%E4%BA%89%E7%AD%96%E7%95%A5%EF%BC%9A%E7%BB%8F%E5%85%B8%E5%AE%8C%E5%85%A8%E7%AB%9E%E4%BA%89%E4%B8%8E%E5%9E%84%E6%96%AD%E7%AB%9E%E4%BA%89%E7%90%86%E8%AE%BA%E7%9A%84%E9%87%8F%E5%AD%90%E9%87%8D%E6%9E%84%E4%B8%8E%E4%B8%80%E8%88%AC%E5%8C%96%E6%8B%93%E5%B1%95.pdf/full/%5E750,/0/default.jpg",
+      "1200": "https://zenodo.org/api/iiif/record:20319551:%E9%87%8F%E5%AD%90%E7%AB%9E%E4%BA%89%E7%AD%96%E7%95%A5%EF%BC%9A%E7%BB%8F%E5%85%B8%E5%AE%8C%E5%85%A8%E7%AB%9E%E4%BA%89%E4%B8%8E%E5%9E%84%E6%96%AD%E7%AB%9E%E4%BA%89%E7%90%86%E8%AE%BA%E7%9A%84%E9%87%8F%E5%AD%90%E9%87%8D%E6%9E%84%E4%B8%8E%E4%B8%80%E8%88%AC%E5%8C%96%E6%8B%93%E5%B1%95.pdf/full/%5E1200,/0/default.jpg"
+     },
+     "latest": "https://zenodo.org/api/records/20319551/versions/latest",
+     "latest_html": "https://zenodo.org/records/20319551/latest",
+     "versions": "https://zenodo.org/api/records/20319551/versions",
+     "draft": "https://zenodo.org/api/records/20319551/draft",
+     "access_links": "https://zenodo.org/api/records/20319551/access/links",
+     "access_grants": "https://zenodo.org/api/records/20319551/access/grants",
+     "access_users": "https://zenodo.org/api/records/20319551/access/users",
+     "access_request": "https://zenodo.org/api/records/20319551/access/request",
+     "access": "https://zenodo.org/api/records/20319551/access",
+     "communities": "https://zenodo.org/api/records/20319551/communities",
+     "communities-suggestions": "https://zenodo.org/api/records/20319551/communities-suggestions",
+     "request_deletion": "https://zenodo.org/api/records/20319551/request-deletion",
+     "file_modification": "https://zenodo.org/api/records/20319551/file-modification",
+     "quota_increase": "https://zenodo.org/api/records/20319551/quota-increase",
+     "requests": "https://zenodo.org/api/records/20319551/requests"
+    },
+    "updated": "2026-05-21T01:51:00.886347+00:00",
+    "recid": "20319551",
+    "revision": 4,
+    "files": [
+     {
+      "id": "cff09d05-39c5-4225-b67e-e48cbaf10ff8",
+      "key": "量子竞争策略：经典完全竞争与垄断竞争理论的量子重构与一般化拓展.pdf",
+      "size": 1371124,
+      "checksum": "md5:83dbecb1e8d4e17451dc1f1fa2183770",
+      "links": {
+       "self": "https://zenodo.org/api/records/20319551/files/%E9%87%8F%E5%AD%90%E7%AB%9E%E4%BA%89%E7%AD%96%E7%95%A5%EF%BC%9A%E7%BB%8F%E5%85%B8%E5%AE%8C%E5%85%A8%E7%AB%9E%E4%BA%89%E4%B8%8E%E5%9E%84%E6%96%AD%E7%AB%9E%E4%BA%89%E7%90%86%E8%AE%BA%E7%9A%84%E9%87%8F%E5%AD%90%E9%87%8D%E6%9E%84%E4%B8%8E%E4%B8%80%E8%88%AC%E5%8C%96%E6%8B%93%E5%B1%95.pdf/content"
+      }
+     }
+    ],
+    "swh": null,
+    "owners": [
+     {
+      "id": "1631996"
+     }
+    ],
+    "status": "published",
+    "stats": {
+     "downloads": 30,
+     "unique_downloads": 25,
+     "views": 34,
+     "unique_views": 34,
+     "version_downloads": 30,
+     "version_unique_downloads": 25,
+     "version_unique_views": 34,
+     "version_views": 34
+    },
+    "state": "done",
+    "submitted": true
+   },
+   {
+    "created": "2022-09-23T17:24:36.225198+00:00",
+    "modified": "2024-07-16T02:00:31.679616+00:00",
+    "id": 7108810,
+    "conceptrecid": "7108809",
+    "doi": "10.5281/zenodo.7108810",
+    "conceptdoi": "10.5281/zenodo.7108809",
+    "doi_url": "https://doi.org/10.5281/zenodo.7108810",
+    "metadata": {
+     "title": "全球数字营销电子书",
+     "doi": "10.5281/zenodo.7108810",
+     "publication_date": "2022-09-23",
+     "description": "<p>数字市场 营销提供了一个在全球范围内寻找客户的绝佳机会,而无需 在另一个国家进行实体营销。</p>\n\n<p>这本书可能会帮助企业发现出口的机会,并从全球化中获益。</p>\n\n<p>在数字 营销的基础上,全球销售不仅适用于大型企业,也适用于小型初创企业和中 型企业。 数字市场营销既适用于服务的全球推广,也适用于商品的全球推广。 对两种类型的业务都进行了讨论。</p>\n\n<p>全球商业领域的快速发展也特别进行了讨论:信息技术、教育技术、 在线媒体、专业商业服务。</p>\n\n<p>另一个新问题是社交媒体在世界各地的作用越来越大,这对全球商业 关系非常有帮助。</p>\n\n<p>这本书为您提供了实用的工具,这将帮助您:</p>\n\n<p>选择最适合的国外目标市场;</p>\n\n<p>制定全球销售和市场营销策略;</p>\n\n<p>计算新的国际项目的盈亏平衡点和投资回报率;</p>\n\n<p>在众多的数字营销工具中进行选择,制定自己的数字营销策略;</p>\n\n<p>进行出口市场营销调研; 发展您的国际网站。</p>",
+     "access_right": "open",
+     "creators": [
+      {
+       "name": "Vasily Kashkin",
+       "affiliation": "http://www.kashkin.com.cn/"
+      }
+     ],
+     "keywords": [
+      "global marketing",
+      "international marketing",
+      "digital marketing"
+     ],
+     "language": "zho",
+     "resource_type": {
+      "title": "Book",
+      "type": "publication",
+      "subtype": "book"
+     },
+     "license": {
+      "id": "cc-by-4.0"
+     },
+     "relations": {
+      "version": [
+       {
+        "index": 0,
+        "is_last": true,
+        "parent": {
+         "pid_type": "recid",
+         "pid_value": "7108809"
+        }
+       }
+      ]
+     }
+    },
+    "title": "全球数字营销电子书",
+    "links": {
+     "self": "https://zenodo.org/api/records/7108810",
+     "self_html": "https://zenodo.org/records/7108810",
+     "preview_html": "https://zenodo.org/records/7108810?preview=1",
+     "doi": "https://doi.org/10.5281/zenodo.7108810",
+     "self_doi": "https://doi.org/10.5281/zenodo.7108810",
+     "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.7108810",
+     "reserve_doi": "https://zenodo.org/api/records/7108810/draft/pids/doi",
+     "parent": "https://zenodo.org/api/records/7108809",
+     "parent_html": "https://zenodo.org/records/7108809",
+     "parent_doi": "https://doi.org/10.5281/zenodo.7108809",
+     "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.7108809",
+     "self_iiif_manifest": "https://zenodo.org/api/iiif/record:7108810/manifest",
+     "self_iiif_sequence": "https://zenodo.org/api/iiif/record:7108810/sequence/default",
+     "files": "https://zenodo.org/api/records/7108810/files",
+     "media_files": "https://zenodo.org/api/records/7108810/media-files",
+     "thumbnails": {
+      "10": "https://zenodo.org/api/iiif/record:7108810:%E5%85%A8%E7%90%83%E6%95%B0%E5%AD%97%E8%90%A5%E9%94%80%E7%94%B5%E5%AD%90%E4%B9%A6.pdf/full/%5E10,/0/default.jpg",
+      "50": "https://zenodo.org/api/iiif/record:7108810:%E5%85%A8%E7%90%83%E6%95%B0%E5%AD%97%E8%90%A5%E9%94%80%E7%94%B5%E5%AD%90%E4%B9%A6.pdf/full/%5E50,/0/default.jpg",
+      "100": "https://zenodo.org/api/iiif/record:7108810:%E5%85%A8%E7%90%83%E6%95%B0%E5%AD%97%E8%90%A5%E9%94%80%E7%94%B5%E5%AD%90%E4%B9%A6.pdf/full/%5E100,/0/default.jpg",
+      "250": "https://zenodo.org/api/iiif/record:7108810:%E5%85%A8%E7%90%83%E6%95%B0%E5%AD%97%E8%90%A5%E9%94%80%E7%94%B5%E5%AD%90%E4%B9%A6.pdf/full/%5E250,/0/default.jpg",
+      "750": "https://zenodo.org/api/iiif/record:7108810:%E5%85%A8%E7%90%83%E6%95%B0%E5%AD%97%E8%90%A5%E9%94%80%E7%94%B5%E5%AD%90%E4%B9%A6.pdf/full/%5E750,/0/default.jpg",
+      "1200": "https://zenodo.org/api/iiif/record:7108810:%E5%85%A8%E7%90%83%E6%95%B0%E5%AD%97%E8%90%A5%E9%94%80%E7%94%B5%E5%AD%90%E4%B9%A6.pdf/full/%5E1200,/0/default.jpg"
+     },
+     "latest": "https://zenodo.org/api/records/7108810/versions/latest",
+     "latest_html": "https://zenodo.org/records/7108810/latest",
+     "versions": "https://zenodo.org/api/records/7108810/versions",
+     "draft": "https://zenodo.org/api/records/7108810/draft",
+     "access_links": "https://zenodo.org/api/records/7108810/access/links",
+     "access_grants": "https://zenodo.org/api/records/7108810/access/grants",
+     "access_users": "https://zenodo.org/api/records/7108810/access/users",
+     "access_request": "https://zenodo.org/api/records/7108810/access/request",
+     "access": "https://zenodo.org/api/records/7108810/access",
+     "communities": "https://zenodo.org/api/records/7108810/communities",
+     "communities-suggestions": "https://zenodo.org/api/records/7108810/communities-suggestions",
+     "request_deletion": "https://zenodo.org/api/records/7108810/request-deletion",
+     "file_modification": "https://zenodo.org/api/records/7108810/file-modification",
+     "quota_increase": "https://zenodo.org/api/records/7108810/quota-increase",
+     "requests": "https://zenodo.org/api/records/7108810/requests"
+    },
+    "updated": "2024-07-16T02:00:31.679616+00:00",
+    "recid": "7108810",
+    "revision": 5,
+    "files": [
+     {
+      "id": "d0cc0adb-e7bb-41a2-83f0-ad4de49d558c",
+      "key": "全球数字营销电子书.pdf",
+      "size": 4048361,
+      "checksum": "md5:fd7ec9667a6f48f47adf45e420b395bb",
+      "links": {
+       "self": "https://zenodo.org/api/records/7108810/files/%E5%85%A8%E7%90%83%E6%95%B0%E5%AD%97%E8%90%A5%E9%94%80%E7%94%B5%E5%AD%90%E4%B9%A6.pdf/content"
+      }
+     }
+    ],
+    "swh": null,
+    "owners": [
+     {
+      "id": "413690"
+     }
+    ],
+    "status": "published",
+    "stats": {
+     "downloads": 137,
+     "unique_downloads": 129,
+     "views": 145,
+     "unique_views": 132,
+     "version_downloads": 137,
+     "version_unique_downloads": 129,
+     "version_unique_views": 132,
+     "version_views": 145
+    },
+    "state": "done",
+    "submitted": true
+   },
+   {
+    "created": "2026-10-21T03:26:27.472183+00:00",
+    "modified": "2026-10-21T06:07:54.089378+00:00",
+    "id": 23524080,
+    "conceptrecid": "23487337",
+    "doi": "10.5281/zenodo.23524080",
+    "conceptdoi": "10.5281/zenodo.23487337",
+    "doi_url": "https://doi.org/10.5281/zenodo.23524080",
+    "metadata": {
+     "title": "Reproducibility package for \"Reassessing Height-Resolved Recurrent Encoding for Ultra-Short-Term Wind Power Forecasting\"",
+     "doi": "10.5281/zenodo.23524080",
+     "publication_date": "2026-10-21",
+     "description": "<div>\n<div>\n<div>本包可用于公开代码与论文汇总结果,不包含企业原始数据及逐样本真实值。请先读 README.md 与 docs/REPRODUCIBILITY_LIMITS.md。</div>\n<br>\n<div>运行 'python code/verify_aggregate.py' 可复算 42 项配对种子检验及两组独立 Holm 校正。运行 'python code/test_protocol.py' 检查统计及因果/时间逻辑。纯人工示例位于 synthetic_demo,不是原始数据,也不是论文结果。</div>\n<br>\n<div><span>原始样本受限,因此不能仅凭本包独立复现全部图表、日块区间和逐样本核验。</span></div>\n</div>\n</div>",
+     "access_right": "open",
+     "creators": [
+      {
+       "name": "Zhou",
+       "affiliation": null
+      },
+      {
+       "name": "He",
+       "affiliation": null
+      },
+      {
+       "name": "Wang",
+       "affiliation": null
+      },
+      {
+       "name": "Dong",
+       "affiliation": null
+      }
+     ],
+     "resource_type": {
+      "title": "Software",
+      "type": "software"
+     },
+     "license": {
+      "id": "cc-by-4.0"
+     },
+     "relations": {
+      "version": [
+       {
+        "index": 1,
+        "is_last": true,
+        "parent": {
+         "pid_type": "recid",
+         "pid_value": "23487337"
+        }
+       }
+      ]
+     }
+    },
+    "title": "Reproducibility package for \"Reassessing Height-Resolved Recurrent Encoding for Ultra-Short-Term Wind Power Forecasting\"",
+    "links": {
+     "self": "https://zenodo.org/api/records/23524080",
+     "self_html": "https://zenodo.org/records/23524080",
+     "preview_html": "https://zenodo.org/records/23524080?preview=1",
+     "doi": "https://doi.org/10.5281/zenodo.23524080",
+     "self_doi": "https://doi.org/10.5281/zenodo.23524080",
+     "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.23524080",
+     "reserve_doi": "https://zenodo.org/api/records/23524080/draft/pids/doi",
+     "parent": "https://zenodo.org/api/records/23487337",
+     "parent_html": "https://zenodo.org/records/23487337",
+     "parent_doi": "https://doi.org/10.5281/zenodo.23487337",
+     "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.23487337",
+     "self_iiif_manifest": "https://zenodo.org/api/iiif/record:23524080/manifest",
+     "self_iiif_sequence": "https://zenodo.org/api/iiif/record:23524080/sequence/default",
+     "files": "https://zenodo.org/api/records/23524080/files",
+     "media_files": "https://zenodo.org/api/records/23524080/media-files",
+     "latest": "https://zenodo.org/api/records/23524080/versions/latest",
+     "latest_html": "https://zenodo.org/records/23524080/latest",
+     "versions": "https://zenodo.org/api/records/23524080/versions",
+     "draft": "https://zenodo.org/api/records/23524080/draft",
+     "access_links": "https://zenodo.org/api/records/23524080/access/links",
+     "access_grants": "https://zenodo.org/api/records/23524080/access/grants",
+     "access_users": "https://zenodo.org/api/records/23524080/access/users",
+     "access_request": "https://zenodo.org/api/records/23524080/access/request",
+     "access": "https://zenodo.org/api/records/23524080/access",
+     "communities": "https://zenodo.org/api/records/23524080/communities",
+     "communities-suggestions": "https://zenodo.org/api/records/23524080/communities-suggestions",
+     "request_deletion": "https://zenodo.org/api/records/23524080/request-deletion",
+     "file_modification": "https://zenodo.org/api/records/23524080/file-modification",
+     "quota_increase": "https://zenodo.org/api/records/23524080/quota-increase",
+     "requests": "https://zenodo.org/api/records/23524080/requests"
+    },
+    "updated": "2026-10-21T06:07:54.089378+00:00",
+    "recid": "23524080",
+    "revision": 6,
+    "files": [
+     {
+      "id": "3eb93785-87f9-4e97-bfb6-9e802635a460",
+      "key": "PLMH-public-v1.0.zip",
+      "size": 584783,
+      "checksum": "md5:fa640b4cf731b957c3087cef021ec3c4",
+      "links": {
+       "self": "https://zenodo.org/api/records/23524080/files/PLMH-public-v1.0.zip/content"
+      }
+     }
+    ],
+    "swh": null,
+    "owners": [
+     {
+      "id": "1952401"
+     }
+    ],
+    "status": "published",
+    "stats": {
+     "downloads": 2,
+     "unique_downloads": 2,
+     "views": 23,
+     "unique_views": 17,
+     "version_downloads": 1,
+     "version_unique_downloads": 1,
+     "version_unique_views": 11,
+     "version_views": 14
+    },
+    "state": "done",
+    "submitted": true
+   },
+   {
+    "created": "2026-06-03T14:19:02.533264+00:00",
+    "modified": "2026-06-03T14:19:02.737263+00:00",
+    "id": 20528860,
+    "conceptrecid": "20528859",
+    "doi": "10.5281/zenodo.20528860",
+    "conceptdoi": "10.5281/zenodo.20528859",
+    "doi_url": "https://doi.org/10.5281/zenodo.20528860",
+    "metadata": {
+     "title": "Survey_data_on_digital_usage_barriers_among_older_adults_in_third_and_fourth_tier_cities_China_2026",
+     "doi": "10.5281/zenodo.20528860",
+     "publication_date": "2026-06-03",
+     "description": "<div>\n<div>该数据集支持正在进行的同行评审研究文章<em>《识别老年数字用户的异质障碍画像</em>》。该数据集包含来自中国地级三线和四线城市关于老年人(&ge;55岁)数字接入障碍的问卷调查数据,实地工作时间为2025年10月至2026年3月。采用分层配额抽样策略,共收到<strong>705份有效问卷回复</strong>。</div>\n</div>\n<div>\n<div>问卷涵盖五个核心维度:人口特征、数字设备拥有率、九类数字使用障碍(包括视力障碍、繁琐操作流程、过高设备成本等)、对适龄数字设计的需求以及非正式的社会支持网络。所有原始个人信息均已完全匿名化。该数据集以 Microsoft Excel(.xlsx)格式提供,附有详尽的代码手册,详细说明所有变量的定义和编码规则。</div>\n</div>",
+     "access_right": "open",
+     "creators": [
+      {
+       "name": "Zhao, Shutong",
+       "affiliation": "Suqian University",
+       "orcid": "0009-0007-3787-6910"
+      },
+      {
+       "name": "Li, Shunmin",
+       "affiliation": "Suqian University",
+       "orcid": "0009-0000-7692-7951"
+      },
+      {
+       "name": "Gu, Sunxin",
+       "affiliation": "Suqian University"
+      },
+      {
+       "name": "Zhang, Qijia",
+       "affiliation": "Suqian University"
+      },
+      {
+       "name": "Sheng, Ye",
+       "affiliation": "Suqian University"
+      }
+     ],
+     "contributors": [
+      {
+       "name": "Zhao, Shutong",
+       "affiliation": "Suqian University",
+       "type": "ContactPerson"
+      },
+      {
+       "name": "Li, Shunmin",
+       "affiliation": "Suqian University",
+       "type": "ProjectManager",
+       "orcid": "0009-0000-7692-7951"
+      },
+      {
+       "name": "Gu, Sunxin",
+       "affiliation": "Suqian University",
+       "type": "ProjectMember"
+      },
+      {
+       "name": "Zhang, Qijia",
+       "affiliation": "Suqian University",
+       "type": "ProjectMember"
+      },
+      {
+       "name": "Sheng, Ye",
+       "affiliation": "Suqian University",
+       "type": "ProjectMember"
+      }
+     ],
+     "dates": [
+      {
+       "type": "submitted"
+      }
+     ],
+     "language": "eng",
+     "resource_type": {
+      "title": "Dataset",
+      "type": "dataset"
+     },
+     "license": {
+      "id": "cc-by-4.0"
+     },
+     "relations": {
+      "version": [
+       {
+        "index": 0,
+        "is_last": true,
+        "parent": {
+         "pid_type": "recid",
+         "pid_value": "20528859"
+        }
+       }
+      ]
+     }
+    },
+    "title": "Survey_data_on_digital_usage_barriers_among_older_adults_in_third_and_fourth_tier_cities_China_2026",
+    "links": {
+     "self": "https://zenodo.org/api/records/20528860",
+     "self_html": "https://zenodo.org/records/20528860",
+     "preview_html": "https://zenodo.org/records/20528860?preview=1",
+     "doi": "https://doi.org/10.5281/zenodo.20528860",
+     "self_doi": "https://doi.org/10.5281/zenodo.20528860",
+     "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.20528860",
+     "reserve_doi": "https://zenodo.org/api/records/20528860/draft/pids/doi",
+     "parent": "https://zenodo.org/api/records/20528859",
+     "parent_html": "https://zenodo.org/records/20528859",
+     "parent_doi": "https://doi.org/10.5281/zenodo.20528859",
+     "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.20528859",
+     "self_iiif_manifest": "https://zenodo.org/api/iiif/record:20528860/manifest",
+     "self_iiif_sequence": "https://zenodo.org/api/iiif/record:20528860/sequence/default",
+     "files": "https://zenodo.org/api/records/20528860/files",
+     "media_files": "https://zenodo.org/api/records/20528860/media-files",
+     "latest": "https://zenodo.org/api/records/20528860/versions/latest",
+     "latest_html": "https://zenodo.org/records/20528860/latest",
+     "versions": "https://zenodo.org/api/records/20528860/versions",
+     "draft": "https://zenodo.org/api/records/20528860/draft",
+     "access_links": "https://zenodo.org/api/records/20528860/access/links",
+     "access_grants": "https://zenodo.org/api/records/20528860/access/grants",
+     "access_users": "https://zenodo.org/api/records/20528860/access/users",
+     "access_request": "https://zenodo.org/api/records/20528860/access/request",
+     "access": "https://zenodo.org/api/records/20528860/access",
+     "communities": "https://zenodo.org/api/records/20528860/communities",
+     "communities-suggestions": "https://zenodo.org/api/records/20528860/communities-suggestions",
+     "request_deletion": "https://zenodo.org/api/records/20528860/request-deletion",
+     "file_modification": "https://zenodo.org/api/records/20528860/file-modification",
+     "quota_increase": "https://zenodo.org/api/records/20528860/quota-increase",
+     "requests": "https://zenodo.org/api/records/20528860/requests"
+    },
+    "updated": "2026-06-03T14:19:02.737263+00:00",
+    "recid": "20528860",
+    "revision": 4,
+    "files": [
+     {
+      "id": "76b19eda-eeab-4642-ab68-423eef6e5f79",
+      "key": "349579646_按文本_老年人数字生活适用性与智能化产品适老化设计需求研究_710_710.xlsx",
+      "size": 170004,
+      "checksum": "md5:9e2f738868fcb6404eba241fd6b98ae1",
+      "links": {
+       "self": "https://zenodo.org/api/records/20528860/files/349579646_%E6%8C%89%E6%96%87%E6%9C%AC_%E8%80%81%E5%B9%B4%E4%BA%BA%E6%95%B0%E5%AD%97%E7%94%9F%E6%B4%BB%E9%80%82%E7%94%A8%E6%80%A7%E4%B8%8E%E6%99%BA%E8%83%BD%E5%8C%96%E4%BA%A7%E5%93%81%E9%80%82%E8%80%81%E5%8C%96%E8%AE%BE%E8%AE%A1%E9%9C%80%E6%B1%82%E7%A0%94%E7%A9%B6_710_710.xlsx/content"
+      }
+     }
+    ],
+    "swh": null,
+    "owners": [
+     {
+      "id": "1673270"
+     }
+    ],
+    "status": "published",
+    "stats": {
+     "downloads": 170,
+     "unique_downloads": 86,
+     "views": 112,
+     "unique_views": 109,
+     "version_downloads": 170,
+     "version_unique_downloads": 86,
+     "version_unique_views": 109,
+     "version_views": 112
+    },
+    "state": "done",
+    "submitted": true
+   },
+   {
+    "created": "2026-06-03T13:33:14.403909+00:00",
+    "modified": "2026-06-03T13:39:01.491304+00:00",
+    "id": 20523901,
+    "conceptrecid": "20523900",
+    "doi": "10.57760/sciencedb.38234",
+    "doi_url": "https://doi.org/10.57760/sciencedb.38234",
+    "metadata": {
+     "title": "Survey_data_on_digital_usage_barriers_among_older_adults_in_third_and_fourth_tier_cities_China_2026",
+     "doi": "10.57760/sciencedb.38234",
+     "publication_date": "2026-06-03",
+     "description": "<div>\n<div>该数据集支持正在进行的同行评审研究文章<em>《识别老年数字用户的异质障碍画像</em>》。该数据集包含来自中国地级三线和四线城市关于老年人(&ge;55岁)数字接入障碍的问卷调查数据,实地工作时间为2025年10月至2026年3月。采用分层配额抽样策略,共收到<strong>705份有效问卷回复</strong>。</div>\n</div>\n<div>\n<div>问卷涵盖五个核心维度:人口特征、数字设备拥有率、九类数字使用障碍(包括视力障碍、繁琐操作流程、过高设备成本等)、对适龄数字设计的需求以及非正式的社会支持网络。所有原始个人信息均已完全匿名化。该数据集以 Microsoft Excel(.xlsx)格式提供,附有详尽的代码手册,详细说明所有变量的定义和编码规则。</div>\n</div>",
+     "access_right": "open",
+     "creators": [
+      {
+       "name": "Zhao, Shutong",
+       "affiliation": "Suqian University",
+       "orcid": "0009-0007-3787-6910"
+      }
+     ],
+     "contributors": [
+      {
+       "name": "Zhao, Shutong",
+       "affiliation": "Suqian University",
+       "type": "ContactPerson"
+      },
+      {
+       "name": "Li, Shunmin",
+       "affiliation": "Suqian University",
+       "type": "ProjectManager",
+       "orcid": "0009-0000-7692-7951"
+      },
+      {
+       "name": "Gu, Sunxin",
+       "affiliation": "Suqian University",
+       "type": "ProjectMember"
+      },
+      {
+       "name": "Zhang, Qijia",
+       "affiliation": "Suqian University",
+       "type": "ProjectMember"
+      },
+      {
+       "name": "Sheng, Ye",
+       "affiliation": "Suqian University",
+       "type": "ProjectMember"
+      }
+     ],
+     "dates": [
+      {
+       "type": "submitted"
+      }
+     ],
+     "language": "eng",
+     "resource_type": {
+      "title": "Dataset",
+      "type": "dataset"
+     },
+     "license": {
+      "id": "apache2.0"
+     },
+     "relations": {
+      "version": [
+       {
+        "index": 0,
+        "is_last": true,
+        "parent": {
+         "pid_type": "recid",
+         "pid_value": "20523900"
+        }
+       }
+      ]
+     }
+    },
+    "title": "Survey_data_on_digital_usage_barriers_among_older_adults_in_third_and_fourth_tier_cities_China_2026",
+    "links": {
+     "self": "https://zenodo.org/api/records/20523901",
+     "self_html": "https://zenodo.org/records/20523901",
+     "preview_html": "https://zenodo.org/records/20523901?preview=1",
+     "doi": "https://doi.org/10.57760/sciencedb.38234",
+     "self_doi": "https://doi.org/10.57760/sciencedb.38234",
+     "self_doi_html": "https://zenodo.org/doi/10.57760/sciencedb.38234",
+     "reserve_doi": "https://zenodo.org/api/records/20523901/draft/pids/doi",
+     "parent": "https://zenodo.org/api/records/20523900",
+     "parent_html": "https://zenodo.org/records/20523900",
+     "self_iiif_manifest": "https://zenodo.org/api/iiif/record:20523901/manifest",
+     "self_iiif_sequence": "https://zenodo.org/api/iiif/record:20523901/sequence/default",
+     "files": "https://zenodo.org/api/records/20523901/files",
+     "media_files": "https://zenodo.org/api/records/20523901/media-files",
+     "latest": "https://zenodo.org/api/records/20523901/versions/latest",
+     "latest_html": "https://zenodo.org/records/20523901/latest",
+     "versions": "https://zenodo.org/api/records/20523901/versions",
+     "draft": "https://zenodo.org/api/records/20523901/draft",
+     "access_links": "https://zenodo.org/api/records/20523901/access/links",
+     "access_grants": "https://zenodo.org/api/records/20523901/access/grants",
+     "access_users": "https://zenodo.org/api/records/20523901/access/users",
+     "access_request": "https://zenodo.org/api/records/20523901/access/request",
+     "access": "https://zenodo.org/api/records/20523901/access",
+     "communities": "https://zenodo.org/api/records/20523901/communities",
+     "communities-suggestions": "https://zenodo.org/api/records/20523901/communities-suggestions",
+     "request_deletion": "https://zenodo.org/api/records/20523901/request-deletion",
+     "file_modification": "https://zenodo.org/api/records/20523901/file-modification",
+     "quota_increase": "https://zenodo.org/api/records/20523901/quota-increase",
+     "requests": "https://zenodo.org/api/records/20523901/requests"
+    },
+    "updated": "2026-06-03T13:39:01.491304+00:00",
+    "recid": "20523901",
+    "revision": 6,
+    "files": [
+     {
+      "id": "86a6bd5c-fe09-4627-9995-21c6426f9d0b",
+      "key": "349579646_按文本_老年人数字生活适用性与智能化产品适老化设计需求研究_710_710.xlsx",
+      "size": 170004,
+      "checksum": "md5:9e2f738868fcb6404eba241fd6b98ae1",
+      "links": {
+       "self": "https://zenodo.org/api/records/20523901/files/349579646_%E6%8C%89%E6%96%87%E6%9C%AC_%E8%80%81%E5%B9%B4%E4%BA%BA%E6%95%B0%E5%AD%97%E7%94%9F%E6%B4%BB%E9%80%82%E7%94%A8%E6%80%A7%E4%B8%8E%E6%99%BA%E8%83%BD%E5%8C%96%E4%BA%A7%E5%93%81%E9%80%82%E8%80%81%E5%8C%96%E8%AE%BE%E8%AE%A1%E9%9C%80%E6%B1%82%E7%A0%94%E7%A9%B6_710_710.xlsx/content"
+      }
+     }
+    ],
+    "swh": null,
+    "owners": [
+     {
+      "id": "1673270"
+     }
+    ],
+    "status": "published",
+    "stats": {
+     "downloads": 152,
+     "unique_downloads": 72,
+     "views": 80,
+     "unique_views": 76,
+     "version_downloads": 152,
+     "version_unique_downloads": 72,
+     "version_unique_views": 76,
+     "version_views": 80
+    },
+    "state": "done",
+    "submitted": true
+   },
+   {
+    "created": "2020-03-03T10:05:48.354757+00:00",
+    "modified": "2020-03-03T19:20:53.797470+00:00",
+    "id": 3695019,
+    "conceptrecid": "3695018",
+    "doi": "10.5281/zenodo.3695019",
+    "conceptdoi": "10.5281/zenodo.3695018",
+    "doi_url": "https://doi.org/10.5281/zenodo.3695019",
+    "metadata": {
+     "title": "谵妄预测模型前期工作相关材料",
+     "doi": "10.5281/zenodo.3695019",
+     "publication_date": "2020-03-03",
+     "description": "<p>文档展示研究者前期工作情况:</p>\n\n<p>1.原始数据: 按照纳入和排除条件筛选出应用于谵妄机器学习模型建模的患者原始数据。文件中的数据量占总数据的66%。</p>\n\n<p>2.多重插补数据:对原始数据中缺失值变量按照不同算法建模集成学习后插补的最终数据。文件中的数据量占总数据的66%。</p>\n\n<p>3.前期工作基础补充材料:文件中包含6个部分,包括:&nbsp;1). 用于建模的患者临床信息表,&nbsp;2). 患者基线表, 3). 数据中缺失值汇总表, 4). 患者既往史汇总表, 5). 患者评估前接收的医疗干预汇总表, 6). 前期建模的模型特征变量重要性排序表。&nbsp;</p>",
+     "access_right": "open",
+     "creators": [
+      {
+       "name": "胡安民",
+       "affiliation": null,
+       "orcid": "0000-0002-6507-6423"
+      }
+     ],
+     "keywords": [
+      "谵妄",
+      "危重患者",
+      "机器学习",
+      "预测模型"
+     ],
+     "language": "cmn",
+     "resource_type": {
+      "title": "Dataset",
+      "type": "dataset"
+     },
+     "license": {
+      "id": "cc-by-4.0"
+     },
+     "relations": {
+      "version": [
+       {
+        "index": 0,
+        "is_last": true,
+        "parent": {
+         "pid_type": "recid",
+         "pid_value": "3695018"
+        }
+       }
+      ]
+     }
+    },
+    "title": "谵妄预测模型前期工作相关材料",
+    "links": {
+     "self": "https://zenodo.org/api/records/3695019",
+     "self_html": "https://zenodo.org/records/3695019",
+     "preview_html": "https://zenodo.org/records/3695019?preview=1",
+     "doi": "https://doi.org/10.5281/zenodo.3695019",
+     "self_doi": "https://doi.org/10.5281/zenodo.3695019",
+     "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.3695019",
+     "reserve_doi": "https://zenodo.org/api/records/3695019/draft/pids/doi",
+     "parent": "https://zenodo.org/api/records/3695018",
+     "parent_html": "https://zenodo.org/records/3695018",
+     "parent_doi": "https://doi.org/10.5281/zenodo.3695018",
+     "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.3695018",
+     "self_iiif_manifest": "https://zenodo.org/api/iiif/record:3695019/manifest",
+     "self_iiif_sequence": "https://zenodo.org/api/iiif/record:3695019/sequence/default",
+     "files": "https://zenodo.org/api/records/3695019/files",
+     "media_files": "https://zenodo.org/api/records/3695019/media-files",
+     "latest": "https://zenodo.org/api/records/3695019/versions/latest",
+     "latest_html": "https://zenodo.org/records/3695019/latest",
+     "versions": "https://zenodo.org/api/records/3695019/versions",
+     "draft": "https://zenodo.org/api/records/3695019/draft",
+     "access_links": "https://zenodo.org/api/records/3695019/access/links",
+     "access_grants": "https://zenodo.org/api/records/3695019/access/grants",
+     "access_users": "https://zenodo.org/api/records/3695019/access/users",
+     "access_request": "https://zenodo.org/api/records/3695019/access/request",
+     "access": "https://zenodo.org/api/records/3695019/access",
+     "communities": "https://zenodo.org/api/records/3695019/communities",
+     "communities-suggestions": "https://zenodo.org/api/records/3695019/communities-suggestions",
+     "request_deletion": "https://zenodo.org/api/records/3695019/request-deletion",
+     "file_modification": "https://zenodo.org/api/records/3695019/file-modification",
+     "quota_increase": "https://zenodo.org/api/records/3695019/quota-increase",
+     "requests": "https://zenodo.org/api/records/3695019/requests"
+    },
+    "updated": "2020-03-03T19:20:53.797470+00:00",
+    "recid": "3695019",
+    "revision": 3,
+    "files": [
+     {
+      "id": "764ac982-2aa8-4533-823e-5e0a4ec2e2d3",
+      "key": "3.前期工作基础补充材料.docx",
+      "size": 39068,
+      "checksum": "md5:c5c8cc85bd25a64cf0e367170e9b7fe9",
+      "links": {
+       "self": "https://zenodo.org/api/records/3695019/files/3.%E5%89%8D%E6%9C%9F%E5%B7%A5%E4%BD%9C%E5%9F%BA%E7%A1%80%E8%A1%A5%E5%85%85%E6%9D%90%E6%96%99.docx/content"
+      }
+     },
+     {
+      "id": "a15d54a6-c734-47e0-b68a-714229bbf39a",
+      "key": "2.多重插补数据.csv",
+      "size": 3228094,
+      "checksum": "md5:235209d45a8e8c374fc52ddc28ca976e",
+      "links": {
+       "self": "https://zenodo.org/api/records/3695019/files/2.%E5%A4%9A%E9%87%8D%E6%8F%92%E8%A1%A5%E6%95%B0%E6%8D%AE.csv/content"
+      }
+     },
+     {
+      "id": "8096409d-b9c1-42b5-bffd-f8966b1594b6",
+      "key": "1.原始数据.csv",
+      "size": 3549990,
+      "checksum": "md5:7c1237d91be893d29e1539fec4354775",
+      "links": {
+       "self": "https://zenodo.org/api/records/3695019/files/1.%E5%8E%9F%E5%A7%8B%E6%95%B0%E6%8D%AE.csv/content"
+      }
+     }
+    ],
+    "swh": null,
+    "owners": [
+     {
+      "id": "81871"
+     }
+    ],
+    "status": "published",
+    "stats": {
+     "downloads": 137,
+     "unique_downloads": 122,
+     "views": 296,
+     "unique_views": 280,
+     "version_downloads": 137,
+     "version_unique_downloads": 122,
+     "version_unique_views": 280,
+     "version_views": 296
+    },
+    "state": "done",
+    "submitted": true
+   }
+  ],
+  "total": 1673896
+ },
+ "aggregations": {
+  "publication_date": {
+   "buckets": [
+    {
+     "key": "2000",
+     "doc_count": 2927,
+     "label": "2000",
+     "is_selected": false
+    },
+    {
+     "key": "2001",
+     "doc_count": 5402,
+     "label": "2001",
+     "is_selected": false
+    },
+    {
+     "key": "2002",
+     "doc_count": 4561,
+     "label": "2002",
+     "is_selected": false
+    },
+    {
+     "key": "2003",
+     "doc_count": 7975,
+     "label": "2003",
+     "is_selected": false
+    },
+    {
+     "key": "2004",
+     "doc_count": 9525,
+     "label": "2004",
+     "is_selected": false
+    },
+    {
+     "key": "2005",
+     "doc_count": 19061,
+     "label": "2005",
+     "is_selected": false
+    },
+    {
+     "key": "2006",
+     "doc_count": 14438,
+     "label": "2006",
+     "is_selected": false
+    },
+    {
+     "key": "2007",
+     "doc_count": 19381,
+     "label": "2007",
+     "is_selected": false
+    },
+    {
+     "key": "2008",
+     "doc_count": 22390,
+     "label": "2008",
+     "is_selected": false
+    },
+    {
+     "key": "2009",
+     "doc_count": 26318,
+     "label": "2009",
+     "is_selected": false
+    },
+    {
+     "key": "2010",
+     "doc_count": 29189,
+     "label": "2010",
+     "is_selected": false
+    },
+    {
+     "key": "2011",
+     "doc_count": 34026,
+     "label": "2011",
+     "is_selected": false
+    },
+    {
+     "key": "2012",
+     "doc_count": 36914,
+     "label": "2012",
+     "is_selected": false
+    },
+    {
+     "key": "2013",
+     "doc_count": 40651,
+     "label": "2013",
+     "is_selected": false
+    },
+    {
+     "key": "2014",
+     "doc_count": 49969,
+     "label": "2014",
+     "is_selected": false
+    },
+    {
+     "key": "2015",
+     "doc_count": 52396,
+     "label": "2015",
+     "is_selected": false
+    },
+    {
+     "key": "2016",
+     "doc_count": 63821,
+     "label": "2016",
+     "is_selected": false
+    },
+    {
+     "key": "2017",
+     "doc_count": 67769,
+     "label": "2017",
+     "is_selected": false
+    },
+    {
+     "key": "2018",
+     "doc_count": 73143,
+     "label": "2018",
+     "is_selected": false
+    },
+    {
+     "key": "2019",
+     "doc_count": 69385,
+     "label": "2019",
+     "is_selected": false
+    },
+    {
+     "key": "2020",
+     "doc_count": 84833,
+     "label": "2020",
+     "is_selected": false
+    },
+    {
+     "key": "2021",
+     "doc_count": 95555,
+     "label": "2021",
+     "is_selected": false
+    },
+    {
+     "key": "2022",
+     "doc_count": 95001,
+     "label": "2022",
+     "is_selected": false
+    },
+    {
+     "key": "2023",
+     "doc_count": 111808,
+     "label": "2023",
+     "is_selected": false
+    },
+    {
+     "key": "2024",
+     "doc_count": 128235,
+     "label": "2024",
+     "is_selected": false
+    },
+    {
+     "key": "2025",
+     "doc_count": 237053,
+     "label": "2025",
+     "is_selected": false
+    },
+    {
+     "key": "2026",
+     "doc_count": 236430,
+     "label": "2026",
+     "is_selected": false
+    }
+   ],
+   "label": "Publication date"
+  },
+  "access_status": {
+   "buckets": [
+    {
+     "key": "open",
+     "doc_count": 1596691,
+     "label": "Open",
+     "is_selected": false
+    },
+    {
+     "key": "restricted",
+     "doc_count": 75681,
+     "label": "Restricted",
+     "is_selected": false
+    },
+    {
+     "key": "embargoed",
+     "doc_count": 1524,
+     "label": "Embargoed",
+     "is_selected": false
+    }
+   ],
+   "label": "Access status"
+  },
+  "resource_type": {
+   "buckets": [
+    {
+     "key": "publication",
+     "doc_count": 1038172,
+     "label": "Publication",
+     "is_selected": false,
+     "inner": {
+      "buckets": [
+       {
+        "key": "publication-taxonomictreatment",
+        "doc_count": 518690,
+        "label": "Taxonomic treatment",
+        "is_selected": false
+       },
+       {
+        "key": "publication-article",
+        "doc_count": 332915,
+        "label": "Journal article",
+        "is_selected": false
+       },
+       {
+        "key": "publication-preprint",
+        "doc_count": 44223,
+        "label": "Preprint",
+        "is_selected": false
+       },
+       {
+        "key": "publication-conferencepaper",
+        "doc_count": 30750,
+        "label": "Conference paper",
+        "is_selected": false
+       },
+       {
+        "key": "publication-book",
+        "doc_count": 25382,
+        "label": "Book",
+        "is_selected": false
+       },
+       {
+        "key": "publication-section",
+        "doc_count": 13382,
+        "label": "Book chapter",
+        "is_selected": false
+       },
+       {
+        "key": "publication-report",
+        "doc_count": 13178,
+        "label": "Report",
+        "is_selected": false
+       },
+       {
+        "key": "publication-other",
+        "doc_count": 7777,
+        "label": "Other",
+        "is_selected": false
+       },
+       {
+        "key": "publication-journal",
+        "doc_count": 6511,
+        "label": "Journal",
+        "is_selected": false
+       },
+       {
+        "key": "publication-workingpaper",
+        "doc_count": 5222,
+        "label": "Working paper",
+        "is_selected": false
+       }
+      ]
+     }
+    },
+    {
+     "key": "image",
+     "doc_count": 486801,
+     "label": "Image",
+     "is_selected": false,
+     "inner": {
+      "buckets": [
+       {
+        "key": "image-figure",
+        "doc_count": 483019,
+        "label": "Figure",
+        "is_selected": false
+       },
+       {
+        "key": "image-photo",
+        "doc_count": 1472,
+        "label": "Photo",
+        "is_selected": false
+       },
+       {
+        "key": "image-diagram",
+        "doc_count": 614,
+        "label": "Diagram",
+        "is_selected": false
+       },
+       {
+        "key": "image-other",
+        "doc_count": 430,
+        "label": "Other",
+        "is_selected": false
+       },
+       {
+        "key": "image-drawing",
+        "doc_count": 272,
+        "label": "Drawing",
+        "is_selected": false
+       },
+       {
+        "key": "image-plot",
+        "doc_count": 98,
+        "label": "Plot",
+        "is_selected": false
+       }
+      ]
+     }
+    },
+    {
+     "key": "dataset",
+     "doc_count": 106330,
+     "label": "Dataset",
+     "is_selected": false,
+     "inner": {
+      "buckets": []
+     }
+    },
+    {
+     "key": "software",
+     "doc_count": 16161,
+     "label": "Software",
+     "is_selected": false,
+     "inner": {
+      "buckets": [
+       {
+        "key": "software-computationalnotebook",
+        "doc_count": 720,
+        "label": "Computational notebook",
+        "is_selected": false
+       }
+      ]
+     }
+    },
+    {
+     "key": "presentation",
+     "doc_count": 8215,
+     "label": "Presentation",
+     "is_selected": false,
+     "inner": {
+      "buckets": []
+     }
+    },
+    {
+     "key": "other",
+     "doc_count": 5555,
+     "label": "Other",
+     "is_selected": false,
+     "inner": {
+      "buckets": []
+     }
+    },
+    {
+     "key": "poster",
+     "doc_count": 3628,
+     "label": "Poster",
+     "is_selected": false,
+     "inner": {
+      "buckets": []
+     }
+    },
+    {
+     "key": "lesson",
+     "doc_count": 2265,
+     "label": "Lesson",
+     "is_selected": false,
+     "inner": {
+      "buckets": []
+     }
+    },
+    {
+     "key": "physicalobject",
+     "doc_count": 2090,
+     "label": "Physical object",
+     "is_selected": false,
+     "inner": {
+      "buckets": []
+     }
+    },
+    {
+     "key": "video",
+     "doc_count": 2031,
+     "label": "Video/Audio",
+     "is_selected": false,
+     "inner": {
+      "buckets": []
+     }
+    }
+   ],
+   "label": "Resource types"
+  },
+  "subject": {
+   "buckets": [
+    {
+     "key": "Biodiversity",
+     "doc_count": 1062436,
+     "label": "Biodiversity",
+     "is_selected": false
+    },
+    {
+     "key": "Taxonomy",
+     "doc_count": 1056061,
+     "label": "Taxonomy",
+     "is_selected": false
+    },
+    {
+     "key": "Animalia",
+     "doc_count": 823337,
+     "label": "Animalia",
+     "is_selected": false
+    },
+    {
+     "key": "Arthropoda",
+     "doc_count": 625986,
+     "label": "Arthropoda",
+     "is_selected": false
+    },
+    {
+     "key": "Insecta",
+     "doc_count": 452722,
+     "label": "Insecta",
+     "is_selected": false
+    },
+    {
+     "key": "Coleoptera",
+     "doc_count": 128157,
+     "label": "Coleoptera",
+     "is_selected": false
+    },
+    {
+     "key": "Chordata",
+     "doc_count": 109052,
+     "label": "Chordata",
+     "is_selected": false
+    },
+    {
+     "key": "Arachnida",
+     "doc_count": 96789,
+     "label": "Arachnida",
+     "is_selected": false
+    },
+    {
+     "key": "Hymenoptera",
+     "doc_count": 93832,
+     "label": "Hymenoptera",
+     "is_selected": false
+    },
+    {
+     "key": "Diptera",
+     "doc_count": 71797,
+     "label": "Diptera",
+     "is_selected": false
+    }
+   ],
+   "label": "Subjects"
+  },
+  "file_type": {
+   "buckets": [
+    {
+     "key": "html",
+     "doc_count": 531998,
+     "label": "HTML",
+     "is_selected": false
+    },
+    {
+     "key": "pdf",
+     "doc_count": 465324,
+     "label": "PDF",
+     "is_selected": false
+    },
+    {
+     "key": "png",
+     "doc_count": 433265,
+     "label": "PNG",
+     "is_selected": false
+    },
+    {
+     "key": "jpg",
+     "doc_count": 65483,
+     "label": "JPG",
+     "is_selected": false
+    },
+    {
+     "key": "zip",
+     "doc_count": 46033,
+     "label": "ZIP",
+     "is_selected": false
+    },
+    {
+     "key": "docx",
+     "doc_count": 19792,
+     "label": "DOCX",
+     "is_selected": false
+    },
+    {
+     "key": "txt",
+     "doc_count": 19054,
+     "label": "TXT",
+     "is_selected": false
+    },
+    {
+     "key": "csv",
+     "doc_count": 15119,
+     "label": "CSV",
+     "is_selected": false
+    },
+    {
+     "key": "xlsx",
+     "doc_count": 13923,
+     "label": "XLSX",
+     "is_selected": false
+    },
+    {
+     "key": "md",
+     "doc_count": 11689,
+     "label": "MD",
+     "is_selected": false
+    }
+   ],
+   "label": "File type"
+  }
+ },
+ "links": {
+  "self": "https://zenodo.org/api/records?page=1&q=2025+%E5%B7%A5%E7%A8%8B%E6%80%BB%E6%89%BF%E5%8C%85%E8%90%A5%E4%B8%9A%E9%A2%9DTOP50+%E5%A4%B4%E9%83%A8%E6%A1%A31-20%E5%90%8D%E4%BC%81%E4%B8%9A%E7%94%BB%E5%83%8F%E4%B8%8E%E7%AB%9E%E4%BA%89%E5%A3%81%E5%9E%92+%E6%8E%92%E5%90%8D+%E8%90%A5%E6%94%B6+%E6%95%B0%E6%8D%AE&size=8&sort=bestmatch",
+  "next": "https://zenodo.org/api/records?page=2&q=2025+%E5%B7%A5%E7%A8%8B%E6%80%BB%E6%89%BF%E5%8C%85%E8%90%A5%E4%B8%9A%E9%A2%9DTOP50+%E5%A4%B4%E9%83%A8%E6%A1%A31-20%E5%90%8D%E4%BC%81%E4%B8%9A%E7%94%BB%E5%83%8F%E4%B8%8E%E7%AB%9E%E4%BA%89%E5%A3%81%E5%9E%92+%E6%8E%92%E5%90%8D+%E8%90%A5%E6%94%B6+%E6%95%B0%E6%8D%AE&size=8&sort=bestmatch"
+ }
+}

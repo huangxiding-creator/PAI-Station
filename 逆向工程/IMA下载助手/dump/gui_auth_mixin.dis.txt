@@ -1,0 +1,1164 @@
+===== gui/auth_mixin.pyc =====
+
+# CODE <module>  args=()
+  0           RESUME                   0
+
+  1           LOAD_CONST               0 ('登录/授权/Token管理 Mixin')
+              STORE_NAME               0 (__doc__)
+
+  2           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (('QDialog', 'QMessageBox'))
+              IMPORT_NAME              1 (PySide6.QtWidgets)
+              IMPORT_FROM              2 (QDialog)
+              STORE_NAME               2 (QDialog)
+              IMPORT_FROM              3 (QMessageBox)
+              STORE_NAME               3 (QMessageBox)
+              POP_TOP
+
+  3           LOAD_CONST               1 (0)
+              LOAD_CONST               3 (('Qt',))
+              IMPORT_NAME              4 (PySide6.QtCore)
+              IMPORT_FROM              5 (Qt)
+              STORE_NAME               5 (Qt)
+              POP_TOP
+
+  4           LOAD_CONST               1 (0)
+              LOAD_CONST               4 (('QRLoginDialog',))
+              IMPORT_NAME              6 (gui.qr_login_dialog)
+              IMPORT_FROM              7 (QRLoginDialog)
+              STORE_NAME               7 (QRLoginDialog)
+              POP_TOP
+
+  5           LOAD_CONST               1 (0)
+              LOAD_CONST               5 (('show_settings_dialog', 'show_help_dialog', 'show_renew_dialog', 'show_activation_dialog'))
+              IMPORT_NAME              8 (gui.dialogs.common_dialogs)
+              IMPORT_FROM              9 (show_settings_dialog)
+              STORE_NAME               9 (show_settings_dialog)
+              IMPORT_FROM             10 (show_help_dialog)
+              STORE_NAME              10 (show_help_dialog)
+              IMPORT_FROM             11 (show_renew_dialog)
+              STORE_NAME              11 (show_renew_dialog)
+              IMPORT_FROM             12 (show_activation_dialog)
+              STORE_NAME              12 (show_activation_dialog)
+              POP_TOP
+
+  6           LOAD_CONST               1 (0)
+              LOAD_CONST               6 (('check_license',))
+              IMPORT_NAME             13 (core.auth)
+              IMPORT_FROM             14 (check_license)
+              STORE_NAME              14 (check_license)
+              POP_TOP
+
+  7           LOAD_CONST               1 (0)
+              LOAD_CONST               7 (None)
+              IMPORT_NAME             15 (time)
+              STORE_NAME              15 (time)
+
+ 10           LOAD_BUILD_CLASS
+              PUSH_NULL
+              LOAD_CONST               8 (<code object AuthMixin at 0x000001DD462FC880, file "gui\auth_mixin.py", line 10>)
+              MAKE_FUNCTION
+              LOAD_CONST               9 ('AuthMixin')
+              CALL                     2
+              STORE_NAME              16 (AuthMixin)
+              RETURN_CONST             7 (None)
+
+## CODE AuthMixin  args=()
+ 10           RESUME                   0
+              LOAD_NAME                0 (__name__)
+              STORE_NAME               1 (__module__)
+              LOAD_CONST               0 ('AuthMixin')
+              STORE_NAME               2 (__qualname__)
+              LOAD_CONST               1 (10)
+              STORE_NAME               3 (__firstlineno__)
+
+ 11           LOAD_CONST               2 ('登录/授权/Token管理功能，供 MainWindow 继承')
+              STORE_NAME               4 (__doc__)
+
+ 13           LOAD_CONST               3 (<code object login_ima at 0x000001DD460DDA30, file "gui\auth_mixin.py", line 13>)
+              MAKE_FUNCTION
+              STORE_NAME               5 (login_ima)
+
+ 24           LOAD_CONST               4 (<code object logout_ima at 0x000001DD45ED1FE0, file "gui\auth_mixin.py", line 24>)
+              MAKE_FUNCTION
+              STORE_NAME               6 (logout_ima)
+
+ 43           LOAD_CONST               5 (<code object update_login_status at 0x000001DD46603B30, file "gui\auth_mixin.py", line 43>)
+              MAKE_FUNCTION
+              STORE_NAME               7 (update_login_status)
+
+ 58           LOAD_CONST               6 (<code object check_authorization at 0x000001DD4633D2F0, file "gui\auth_mixin.py", line 58>)
+              MAKE_FUNCTION
+              STORE_NAME               8 (check_authorization)
+
+ 85           LOAD_CONST               7 (<code object check_ima_login_status at 0x000001DD464098B0, file "gui\auth_mixin.py", line 85>)
+              MAKE_FUNCTION
+              STORE_NAME               9 (check_ima_login_status)
+
+146           LOAD_CONST               8 (<code object start_token_refresh_timer at 0x000001DD462CB550, file "gui\auth_mixin.py", line 146>)
+              MAKE_FUNCTION
+              STORE_NAME              10 (start_token_refresh_timer)
+
+155           LOAD_CONST               9 (<code object auto_refresh_token at 0x000001DD46341D60, file "gui\auth_mixin.py", line 155>)
+              MAKE_FUNCTION
+              STORE_NAME              11 (auto_refresh_token)
+
+189           LOAD_CONST              10 (<code object on_auth_expired at 0x000001DD462CB230, file "gui\auth_mixin.py", line 189>)
+              MAKE_FUNCTION
+              STORE_NAME              12 (on_auth_expired)
+
+203           LOAD_CONST              11 (<code object update_license_info at 0x000001DD46368000, file "gui\auth_mixin.py", line 203>)
+              MAKE_FUNCTION
+              STORE_NAME              13 (update_license_info)
+
+219           LOAD_CONST              12 (<code object show_renew_dialog at 0x000001DD4627EF10, file "gui\auth_mixin.py", line 219>)
+              MAKE_FUNCTION
+              STORE_NAME              14 (show_renew_dialog)
+
+222           LOAD_CONST              13 (<code object show_activation_dialog at 0x000001DD4627E970, file "gui\auth_mixin.py", line 222>)
+              MAKE_FUNCTION
+              STORE_NAME              15 (show_activation_dialog)
+
+231           LOAD_CONST              14 (<code object show_settings_dialog at 0x000001DD4627D6B0, file "gui\auth_mixin.py", line 231>)
+              MAKE_FUNCTION
+              STORE_NAME              16 (show_settings_dialog)
+
+234           LOAD_CONST              15 (<code object show_help_dialog at 0x000001DD4627EA60, file "gui\auth_mixin.py", line 234>)
+              MAKE_FUNCTION
+              STORE_NAME              17 (show_help_dialog)
+              LOAD_CONST              16 (('_license_authorized', 'token_refresh_timer'))
+              STORE_NAME              18 (__static_attributes__)
+              RETURN_CONST            17 (None)
+
+### CODE AuthMixin.login_ima  args=('self',)
+ 13           RESUME                   0
+
+ 15           LOAD_GLOBAL              1 (QRLoginDialog + NULL)
+              LOAD_FAST                0 (self)
+              CALL                     1
+              STORE_FAST               1 (dialog)
+
+ 16           LOAD_FAST                1 (dialog)
+              LOAD_ATTR                3 (exec + NULL|self)
+              CALL                     0
+              STORE_FAST               2 (result)
+
+ 18           LOAD_FAST                2 (result)
+              LOAD_GLOBAL              4 (QDialog)
+              LOAD_ATTR                6 (Accepted)
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE       35 (to L1)
+
+ 19           LOAD_FAST                0 (self)
+              LOAD_ATTR                9 (add_log + NULL|self)
+              LOAD_CONST               1 ('登录成功')
+              LOAD_CONST               2 ('success')
+              CALL                     2
+              POP_TOP
+
+ 20           LOAD_FAST                0 (self)
+              LOAD_ATTR               11 (update_login_status + NULL|self)
+              CALL                     0
+              POP_TOP
+              RETURN_CONST             5 (None)
+
+ 22   L1:     LOAD_FAST                0 (self)
+              LOAD_ATTR                9 (add_log + NULL|self)
+              LOAD_CONST               3 ('登录已取消')
+              LOAD_CONST               4 ('warning')
+              CALL                     2
+              POP_TOP
+              RETURN_CONST             5 (None)
+
+### CODE AuthMixin.logout_ima  args=('self',)
+ 24           RESUME                   0
+
+ 26           LOAD_GLOBAL              0 (QMessageBox)
+              LOAD_ATTR                2 (question)
+              PUSH_NULL
+
+ 27           LOAD_FAST                0 (self)
+
+ 28           LOAD_CONST               1 ('确认退出')
+
+ 29           LOAD_CONST               2 ('确定要退出当前登录吗？退出后需要重新扫码登录。')
+
+ 30           LOAD_GLOBAL              0 (QMessageBox)
+              LOAD_ATTR                4 (Yes)
+              LOAD_GLOBAL              0 (QMessageBox)
+              LOAD_ATTR                6 (No)
+              BINARY_OP                7 (|)
+
+ 26           CALL                     4
+              STORE_FAST               1 (reply)
+
+ 33           LOAD_FAST                1 (reply)
+              LOAD_GLOBAL              0 (QMessageBox)
+              LOAD_ATTR                4 (Yes)
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE      143 (to L1)
+
+ 34           LOAD_CONST               3 (0)
+              LOAD_CONST               4 (('clear_login_credentials',))
+              IMPORT_NAME              4 (data.database)
+              IMPORT_FROM              5 (clear_login_credentials)
+              STORE_FAST               2 (clear_login_credentials)
+              POP_TOP
+
+ 35           LOAD_FAST                2 (clear_login_credentials)
+              PUSH_NULL
+              CALL                     0
+              POP_TOP
+
+ 36           LOAD_FAST                0 (self)
+              LOAD_ATTR               13 (update_login_status + NULL|self)
+              CALL                     0
+              POP_TOP
+
+ 37           LOAD_FAST                0 (self)
+              LOAD_ATTR               14 (tree)
+              LOAD_ATTR               17 (clear + NULL|self)
+              CALL                     0
+              POP_TOP
+
+ 38           LOAD_FAST                0 (self)
+              LOAD_ATTR               18 (_running_task_ids)
+              LOAD_ATTR               17 (clear + NULL|self)
+              CALL                     0
+              POP_TOP
+
+ 39           LOAD_FAST                0 (self)
+              LOAD_ATTR               20 (_running_task_workers)
+              LOAD_ATTR               17 (clear + NULL|self)
+              CALL                     0
+              POP_TOP
+
+ 40           LOAD_FAST                0 (self)
+              LOAD_ATTR               23 (_update_indicator_style + NULL|self)
+              LOAD_CONST               5 ('off')
+              CALL                     1
+              POP_TOP
+
+ 41           LOAD_FAST                0 (self)
+              LOAD_ATTR               25 (add_log + NULL|self)
+              LOAD_CONST               6 ('已退出登录')
+              LOAD_CONST               7 ('warning')
+              CALL                     2
+              POP_TOP
+              RETURN_CONST             8 (None)
+
+ 33   L1:     RETURN_CONST             8 (None)
+
+### CODE AuthMixin.update_login_status  args=('self',)
+ 43           RESUME                   0
+
+ 45           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (('get_cookie',))
+              IMPORT_NAME              0 (core.config)
+              IMPORT_FROM              1 (get_cookie)
+              STORE_FAST               1 (get_cookie)
+              POP_TOP
+
+ 46           LOAD_FAST                1 (get_cookie)
+              PUSH_NULL
+              CALL                     0
+              STORE_FAST               2 (cache)
+
+ 48           LOAD_FAST                2 (cache)
+              LOAD_ATTR                5 (get + NULL|self)
+              LOAD_CONST               3 ('cookie')
+              CALL                     1
+              TO_BOOL
+              POP_JUMP_IF_FALSE      101 (to L1)
+
+ 49           LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (login_btn)
+              LOAD_ATTR                9 (setVisible + NULL|self)
+              LOAD_CONST               4 (False)
+              CALL                     1
+              POP_TOP
+
+ 50           LOAD_FAST                0 (self)
+              LOAD_ATTR               10 (logout_btn)
+              LOAD_ATTR                9 (setVisible + NULL|self)
+              LOAD_CONST               5 (True)
+              CALL                     1
+              POP_TOP
+
+ 51           LOAD_FAST                0 (self)
+              LOAD_ATTR               12 (load_btn)
+              LOAD_ATTR               15 (setEnabled + NULL|self)
+              LOAD_GLOBAL             17 (bool + NULL)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               18 (_license_authorized)
+              CALL                     1
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             7 (None)
+
+ 53   L1:     LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (login_btn)
+              LOAD_ATTR                9 (setVisible + NULL|self)
+              LOAD_CONST               5 (True)
+              CALL                     1
+              POP_TOP
+
+ 54           LOAD_FAST                0 (self)
+              LOAD_ATTR               10 (logout_btn)
+              LOAD_ATTR                9 (setVisible + NULL|self)
+              LOAD_CONST               4 (False)
+              CALL                     1
+              POP_TOP
+
+ 55           LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (login_btn)
+              LOAD_ATTR               21 (setText + NULL|self)
+              LOAD_CONST               6 ('登录')
+              CALL                     1
+              POP_TOP
+
+ 56           LOAD_FAST                0 (self)
+              LOAD_ATTR               12 (load_btn)
+              LOAD_ATTR               15 (setEnabled + NULL|self)
+              LOAD_CONST               4 (False)
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             7 (None)
+
+### CODE AuthMixin.check_authorization  args=('self',)
+ 58           RESUME                   0
+
+ 61           LOAD_GLOBAL              1 (check_license + NULL)
+              CALL                     0
+              UNPACK_SEQUENCE          2
+              STORE_FAST_STORE_FAST   18 (success, msg)
+
+ 62           LOAD_GLOBAL              3 (bool + NULL)
+              LOAD_FAST                1 (success)
+              CALL                     1
+              LOAD_FAST                0 (self)
+              STORE_ATTR               2 (_license_authorized)
+
+ 63           LOAD_FAST                1 (success)
+              TO_BOOL
+              POP_JUMP_IF_TRUE       164 (to L3)
+
+ 65           LOAD_CONST               1 ('网络')
+              LOAD_FAST                2 (msg)
+              CONTAINS_OP              0
+              POP_JUMP_IF_TRUE        12 (to L1)
+              LOAD_CONST               2 ('超时')
+              LOAD_FAST                2 (msg)
+              CONTAINS_OP              0
+              POP_JUMP_IF_TRUE         6 (to L1)
+              LOAD_CONST               3 ('连接')
+              LOAD_FAST                2 (msg)
+              CONTAINS_OP              0
+              POP_JUMP_IF_FALSE       76 (to L2)
+
+ 66   L1:     LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (license_label)
+              LOAD_ATTR                9 (setText + NULL|self)
+              LOAD_CONST               4 ('网络连接问题')
+              CALL                     1
+              POP_TOP
+
+ 67           LOAD_CONST               5 (0)
+              LOAD_CONST               6 (('set_widget_property',))
+              IMPORT_NAME              5 (gui.theme)
+              IMPORT_FROM              6 (set_widget_property)
+              STORE_FAST               3 (set_widget_property)
+              POP_TOP
+
+ 68           LOAD_FAST                3 (set_widget_property)
+              PUSH_NULL
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (license_label)
+              LOAD_CONST               7 ('status')
+              LOAD_CONST               8 ('warning')
+              CALL                     3
+              POP_TOP
+
+ 69           LOAD_FAST                0 (self)
+              LOAD_ATTR               15 (add_log + NULL|self)
+              LOAD_CONST               9 ('⚠️ ')
+              LOAD_FAST                2 (msg)
+              FORMAT_SIMPLE
+              LOAD_CONST              10 ('，请检查网络连接')
+              BUILD_STRING             3
+              LOAD_CONST               8 ('warning')
+              CALL                     2
+              POP_TOP
+              JUMP_FORWARD           104 (to L4)
+
+ 71   L2:     LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (license_label)
+              LOAD_ATTR                9 (setText + NULL|self)
+              LOAD_CONST              11 ('未授权')
+              CALL                     1
+              POP_TOP
+
+ 72           LOAD_CONST               5 (0)
+              LOAD_CONST               6 (('set_widget_property',))
+              IMPORT_NAME              5 (gui.theme)
+              IMPORT_FROM              6 (set_widget_property)
+              STORE_FAST               3 (set_widget_property)
+              POP_TOP
+
+ 73           LOAD_FAST                3 (set_widget_property)
+              PUSH_NULL
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (license_label)
+              LOAD_CONST               7 ('status')
+              LOAD_CONST               8 ('warning')
+              CALL                     3
+              POP_TOP
+
+ 74           LOAD_FAST                0 (self)
+              LOAD_ATTR               17 (show_activation_dialog + NULL|self)
+              CALL                     0
+              POP_TOP
+              JUMP_FORWARD            34 (to L4)
+
+ 76   L3:     LOAD_FAST                0 (self)
+              LOAD_ATTR               19 (update_license_info + NULL|self)
+              CALL                     0
+              POP_TOP
+
+ 77           LOAD_FAST                0 (self)
+              LOAD_ATTR               15 (add_log + NULL|self)
+              LOAD_FAST                2 (msg)
+              LOAD_CONST              12 ('success')
+              CALL                     2
+              POP_TOP
+
+ 79   L4:     LOAD_FAST                0 (self)
+              LOAD_ATTR               21 (update_login_status + NULL|self)
+              CALL                     0
+              POP_TOP
+
+ 80           LOAD_FAST                0 (self)
+              LOAD_ATTR               23 (check_ima_login_status + NULL|self)
+              CALL                     0
+              POP_TOP
+              RETURN_CONST            13 (None)
+
+### CODE AuthMixin.check_ima_login_status  args=('self',)
+  85            RESUME                   0
+
+  87            LOAD_CONST               1 (0)
+                LOAD_CONST               2 (('get_login_credentials',))
+                IMPORT_NAME              0 (data.database)
+                IMPORT_FROM              1 (get_login_credentials)
+                STORE_FAST               1 (get_login_credentials)
+                POP_TOP
+
+  88            LOAD_CONST               1 (0)
+                LOAD_CONST               3 (('check_and_refresh_token',))
+                IMPORT_NAME              2 (services.token_refresh_service)
+                IMPORT_FROM              3 (check_and_refresh_token)
+                STORE_FAST               2 (check_and_refresh_token)
+                POP_TOP
+
+  90            LOAD_FAST                1 (get_login_credentials)
+                PUSH_NULL
+                CALL                     0
+                STORE_FAST               3 (creds)
+
+  91            LOAD_FAST                3 (creds)
+                TO_BOOL
+                POP_JUMP_IF_TRUE        17 (to L1)
+
+  92            LOAD_FAST                0 (self)
+                LOAD_ATTR                9 (update_login_status + NULL|self)
+                CALL                     0
+                POP_TOP
+
+  93            RETURN_CONST             4 (None)
+
+  95    L1:     NOP
+
+  96    L2:     LOAD_FAST                2 (check_and_refresh_token)
+                PUSH_NULL
+                CALL                     0
+                UNPACK_SEQUENCE          3
+                STORE_FAST_STORE_FAST   69 (need_refresh, success)
+                STORE_FAST               6 (message)
+
+  97            LOAD_FAST                4 (need_refresh)
+                TO_BOOL
+                POP_JUMP_IF_FALSE      141 (to L7)
+                LOAD_FAST                5 (success)
+                TO_BOOL
+                POP_JUMP_IF_TRUE       134 (to L7)
+
+  99            LOAD_CONST               5 ('网络')
+                LOAD_FAST                6 (message)
+                CONTAINS_OP              0
+                POP_JUMP_IF_TRUE        32 (to L3)
+
+ 100            LOAD_CONST               6 ('连接')
+                LOAD_FAST                6 (message)
+                CONTAINS_OP              0
+                POP_JUMP_IF_TRUE        26 (to L3)
+
+ 101            LOAD_CONST               7 ('超时')
+                LOAD_FAST                6 (message)
+                CONTAINS_OP              0
+                POP_JUMP_IF_TRUE        20 (to L3)
+
+ 102            LOAD_CONST               8 ('resolve')
+                LOAD_FAST                6 (message)
+                LOAD_ATTR               11 (lower + NULL|self)
+                CALL                     0
+                CONTAINS_OP              0
+                POP_JUMP_IF_FALSE       48 (to L5)
+
+ 104    L3:     LOAD_CONST               1 (0)
+                LOAD_CONST               9 (('load_cookie_from_cache',))
+                IMPORT_NAME              6 (core.config)
+                IMPORT_FROM              7 (load_cookie_from_cache)
+                STORE_FAST               7 (load_cookie_from_cache)
+                POP_TOP
+
+ 105            LOAD_FAST                7 (load_cookie_from_cache)
+                PUSH_NULL
+                CALL                     0
+                POP_TOP
+
+ 106            LOAD_FAST                0 (self)
+                LOAD_ATTR                9 (update_login_status + NULL|self)
+                CALL                     0
+                POP_TOP
+
+ 107            LOAD_FAST                0 (self)
+                LOAD_ATTR               17 (add_log + NULL|self)
+                LOAD_CONST              10 ('⚠️ 网络连接问题，Token刷新失败，将在网络恢复后自动重试')
+                LOAD_CONST              11 ('warning')
+                CALL                     2
+                POP_TOP
+        L4:     JUMP_FORWARD           129 (to L11)
+
+ 109    L5:     LOAD_CONST               1 (0)
+                LOAD_CONST              12 (('clear_login_credentials',))
+                IMPORT_NAME              0 (data.database)
+                IMPORT_FROM              9 (clear_login_credentials)
+                STORE_FAST               8 (clear_login_credentials)
+                POP_TOP
+
+ 110            LOAD_FAST                8 (clear_login_credentials)
+                PUSH_NULL
+                CALL                     0
+                POP_TOP
+
+ 111            LOAD_FAST                0 (self)
+                LOAD_ATTR                9 (update_login_status + NULL|self)
+                CALL                     0
+                POP_TOP
+
+ 112            LOAD_FAST                0 (self)
+                LOAD_ATTR               17 (add_log + NULL|self)
+                LOAD_CONST              13 ('登录凭证已过期，请重新登录')
+                LOAD_CONST              11 ('warning')
+                CALL                     2
+                POP_TOP
+        L6:     JUMP_FORWARD            81 (to L11)
+
+ 114    L7:     LOAD_CONST               1 (0)
+                LOAD_CONST               9 (('load_cookie_from_cache',))
+                IMPORT_NAME              6 (core.config)
+                IMPORT_FROM              7 (load_cookie_from_cache)
+                STORE_FAST               7 (load_cookie_from_cache)
+                POP_TOP
+
+ 115            LOAD_FAST                7 (load_cookie_from_cache)
+                PUSH_NULL
+                CALL                     0
+                POP_TOP
+
+ 116            LOAD_FAST                0 (self)
+                LOAD_ATTR                9 (update_login_status + NULL|self)
+                CALL                     0
+                POP_TOP
+
+ 117            LOAD_FAST                4 (need_refresh)
+                TO_BOOL
+                POP_JUMP_IF_FALSE       26 (to L9)
+                LOAD_FAST                5 (success)
+                TO_BOOL
+                POP_JUMP_IF_FALSE       19 (to L9)
+
+ 118            LOAD_FAST                0 (self)
+                LOAD_ATTR               17 (add_log + NULL|self)
+                LOAD_CONST              14 ('登录凭证已自动刷新')
+                LOAD_CONST              15 ('success')
+                CALL                     2
+                POP_TOP
+        L8:     JUMP_FORWARD            19 (to L11)
+
+ 120    L9:     LOAD_FAST                0 (self)
+                LOAD_ATTR               17 (add_log + NULL|self)
+                LOAD_CONST              16 ('已自动登录')
+                LOAD_CONST              15 ('success')
+                CALL                     2
+                POP_TOP
+       L10:     NOP
+
+ 139   L11:     LOAD_CONST               1 (0)
+                LOAD_CONST              20 (('get_cookie',))
+                IMPORT_NAME              6 (core.config)
+                IMPORT_FROM             12 (get_cookie)
+                STORE_FAST              11 (get_cookie)
+                POP_TOP
+
+ 140            LOAD_FAST               11 (get_cookie)
+                PUSH_NULL
+                CALL                     0
+                STORE_FAST              12 (cache)
+
+ 141            LOAD_FAST                0 (self)
+                LOAD_ATTR               26 (_license_authorized)
+                TO_BOOL
+                POP_JUMP_IF_FALSE       58 (to L14)
+                LOAD_FAST               12 (cache)
+                LOAD_ATTR               29 (get + NULL|self)
+                LOAD_CONST              21 ('cookie')
+                CALL                     1
+                TO_BOOL
+                POP_JUMP_IF_FALSE       35 (to L13)
+                LOAD_FAST                0 (self)
+                LOAD_ATTR               30 (current_kb_list)
+                TO_BOOL
+                POP_JUMP_IF_TRUE        17 (to L12)
+
+ 142            LOAD_FAST                0 (self)
+                LOAD_ATTR               33 (load_knowledge_bases + NULL|self)
+                CALL                     0
+                POP_TOP
+                RETURN_CONST             4 (None)
+
+ 141   L12:     RETURN_CONST             4 (None)
+       L13:     RETURN_CONST             4 (None)
+       L14:     RETURN_CONST             4 (None)
+
+  --   L15:     PUSH_EXC_INFO
+
+ 121            LOAD_GLOBAL             20 (Exception)
+                CHECK_EXC_MATCH
+                POP_JUMP_IF_FALSE      167 (to L22)
+                STORE_FAST               9 (e)
+
+ 122   L16:     LOAD_GLOBAL             23 (str + NULL)
+                LOAD_FAST                9 (e)
+                CALL                     1
+                STORE_FAST              10 (error_msg)
+
+ 124            LOAD_CONST               5 ('网络')
+                LOAD_FAST               10 (error_msg)
+                CONTAINS_OP              0
+                POP_JUMP_IF_TRUE        32 (to L17)
+
+ 125            LOAD_CONST               6 ('连接')
+                LOAD_FAST               10 (error_msg)
+                CONTAINS_OP              0
+                POP_JUMP_IF_TRUE        26 (to L17)
+
+ 126            LOAD_CONST               7 ('超时')
+                LOAD_FAST               10 (error_msg)
+                CONTAINS_OP              0
+                POP_JUMP_IF_TRUE        20 (to L17)
+
+ 127            LOAD_CONST               8 ('resolve')
+                LOAD_FAST               10 (error_msg)
+                LOAD_ATTR               11 (lower + NULL|self)
+                CALL                     0
+                CONTAINS_OP              0
+                POP_JUMP_IF_FALSE       48 (to L18)
+
+ 129   L17:     LOAD_CONST               1 (0)
+                LOAD_CONST               9 (('load_cookie_from_cache',))
+                IMPORT_NAME              6 (core.config)
+                IMPORT_FROM              7 (load_cookie_from_cache)
+                STORE_FAST               7 (load_cookie_from_cache)
+                POP_TOP
+
+ 130            LOAD_FAST                7 (load_cookie_from_cache)
+                PUSH_NULL
+                CALL                     0
+                POP_TOP
+
+ 131            LOAD_FAST                0 (self)
+                LOAD_ATTR                9 (update_login_status + NULL|self)
+                CALL                     0
+                POP_TOP
+
+ 132            LOAD_FAST                0 (self)
+                LOAD_ATTR               17 (add_log + NULL|self)
+                LOAD_CONST              17 ('⚠️ 网络连接问题，将在网络恢复后自动重试')
+                LOAD_CONST              11 ('warning')
+                CALL                     2
+                POP_TOP
+                JUMP_FORWARD            13 (to L19)
+
+ 134   L18:     LOAD_CONST               1 (0)
+                LOAD_CONST              12 (('clear_login_credentials',))
+                IMPORT_NAME              0 (data.database)
+                IMPORT_FROM              9 (clear_login_credentials)
+                STORE_FAST               8 (clear_login_credentials)
+                POP_TOP
+
+ 135            LOAD_FAST                8 (clear_login_credentials)
+                PUSH_NULL
+                CALL                     0
+                POP_TOP
+
+ 136   L19:     LOAD_FAST                0 (self)
+                LOAD_ATTR                9 (update_login_status + NULL|self)
+                CALL                     0
+                POP_TOP
+
+ 137            LOAD_FAST                0 (self)
+                LOAD_ATTR               17 (add_log + NULL|self)
+                LOAD_CONST              18 ('登录状态检查失败: ')
+                LOAD_GLOBAL             23 (str + NULL)
+                LOAD_FAST                9 (e)
+                CALL                     1
+                FORMAT_SIMPLE
+                BUILD_STRING             2
+                LOAD_CONST              19 ('error')
+                CALL                     2
+                POP_TOP
+       L20:     POP_EXCEPT
+                LOAD_CONST               4 (None)
+                STORE_FAST               9 (e)
+                DELETE_FAST              9 (e)
+                EXTENDED_ARG             1
+                JUMP_BACKWARD_NO_INTERRUPT 261 (to L11)
+
+  --   L21:     LOAD_CONST               4 (None)
+                STORE_FAST               9 (e)
+                DELETE_FAST              9 (e)
+                RERAISE                  1
+
+ 121   L22:     RERAISE                  0
+
+  --   L23:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+ExceptionTable:
+  L2 to L4 -> L15 [0]
+  L5 to L6 -> L15 [0]
+  L7 to L8 -> L15 [0]
+  L9 to L10 -> L15 [0]
+  L15 to L16 -> L23 [1] lasti
+  L16 to L20 -> L21 [1] lasti
+  L21 to L23 -> L23 [1] lasti
+
+### CODE AuthMixin.start_token_refresh_timer  args=('self',)
+146           RESUME                   0
+
+148           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (('QTimer',))
+              IMPORT_NAME              0 (PySide6.QtCore)
+              IMPORT_FROM              1 (QTimer)
+              STORE_FAST               1 (QTimer)
+              POP_TOP
+
+150           LOAD_FAST                1 (QTimer)
+              PUSH_NULL
+              LOAD_FAST                0 (self)
+              CALL                     1
+              LOAD_FAST                0 (self)
+              STORE_ATTR               2 (token_refresh_timer)
+
+151           LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (token_refresh_timer)
+              LOAD_ATTR                6 (timeout)
+              LOAD_ATTR                9 (connect + NULL|self)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               10 (auto_refresh_token)
+              CALL                     1
+              POP_TOP
+
+152           LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (token_refresh_timer)
+              LOAD_ATTR               13 (start + NULL|self)
+              LOAD_CONST               3 (300000)
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             4 (None)
+
+### CODE AuthMixin.auto_refresh_token  args=('self',)
+155           RESUME                   0
+
+157           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (('get_login_credentials', 'is_token_expired'))
+              IMPORT_NAME              0 (data.database)
+              IMPORT_FROM              1 (get_login_credentials)
+              STORE_FAST               1 (get_login_credentials)
+              IMPORT_FROM              2 (is_token_expired)
+              STORE_FAST               2 (is_token_expired)
+              POP_TOP
+
+158           LOAD_CONST               1 (0)
+              LOAD_CONST               3 (('refresh_access_token',))
+              IMPORT_NAME              3 (services.token_refresh_service)
+              IMPORT_FROM              4 (refresh_access_token)
+              STORE_FAST               3 (refresh_access_token)
+              POP_TOP
+
+159           LOAD_CONST               1 (0)
+              LOAD_CONST               4 (('load_cookie_from_cache',))
+              IMPORT_NAME              5 (core.config)
+              IMPORT_FROM              6 (load_cookie_from_cache)
+              STORE_FAST               4 (load_cookie_from_cache)
+              POP_TOP
+
+161           LOAD_FAST                1 (get_login_credentials)
+              PUSH_NULL
+              CALL                     0
+              STORE_FAST               5 (creds)
+
+162           LOAD_FAST                5 (creds)
+              TO_BOOL
+              POP_JUMP_IF_TRUE         1 (to L1)
+
+163           RETURN_CONST             5 (None)
+
+165   L1:     LOAD_FAST                2 (is_token_expired)
+              PUSH_NULL
+              CALL                     0
+              UNPACK_SEQUENCE          2
+              STORE_FAST_STORE_FAST  103 (expired, time_remaining)
+
+167           LOAD_FAST                6 (expired)
+              TO_BOOL
+              POP_JUMP_IF_FALSE      151 (to L5)
+
+168           LOAD_FAST                3 (refresh_access_token)
+              PUSH_NULL
+              CALL                     0
+              UNPACK_SEQUENCE          3
+              STORE_FAST_STORE_FAST  137 (success, message)
+              STORE_FAST              10 (_)
+
+169           LOAD_FAST                8 (success)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       26 (to L2)
+
+171           LOAD_FAST                4 (load_cookie_from_cache)
+              PUSH_NULL
+              CALL                     0
+              POP_TOP
+
+172           LOAD_FAST                0 (self)
+              LOAD_ATTR               15 (add_log + NULL|self)
+              LOAD_CONST               6 ('登录凭证已自动刷新')
+              LOAD_CONST               7 ('success')
+              CALL                     2
+              POP_TOP
+              RETURN_CONST             5 (None)
+
+174   L2:     LOAD_CONST               8 ('网络')
+              LOAD_FAST                9 (message)
+              CONTAINS_OP              0
+              POP_JUMP_IF_TRUE        32 (to L3)
+
+175           LOAD_CONST               9 ('连接')
+              LOAD_FAST                9 (message)
+              CONTAINS_OP              0
+              POP_JUMP_IF_TRUE        26 (to L3)
+
+176           LOAD_CONST              10 ('超时')
+              LOAD_FAST                9 (message)
+              CONTAINS_OP              0
+              POP_JUMP_IF_TRUE        20 (to L3)
+
+177           LOAD_CONST              11 ('resolve')
+              LOAD_FAST                9 (message)
+              LOAD_ATTR               17 (lower + NULL|self)
+              CALL                     0
+              CONTAINS_OP              0
+              POP_JUMP_IF_FALSE       19 (to L4)
+
+179   L3:     LOAD_FAST                0 (self)
+              LOAD_ATTR               15 (add_log + NULL|self)
+              LOAD_CONST              12 ('⚠️ 网络连接问题，Token刷新失败，将在下次定时检查时重试')
+              LOAD_CONST              13 ('warning')
+              CALL                     2
+              POP_TOP
+              RETURN_CONST             5 (None)
+
+181   L4:     LOAD_CONST               1 (0)
+              LOAD_CONST              14 (('clear_login_credentials',))
+              IMPORT_NAME              0 (data.database)
+              IMPORT_FROM              9 (clear_login_credentials)
+              STORE_FAST              11 (clear_login_credentials)
+              POP_TOP
+
+182           LOAD_FAST               11 (clear_login_credentials)
+              PUSH_NULL
+              CALL                     0
+              POP_TOP
+
+183           LOAD_FAST                0 (self)
+              LOAD_ATTR               21 (update_login_status + NULL|self)
+              CALL                     0
+              POP_TOP
+
+184           LOAD_FAST                0 (self)
+              LOAD_ATTR               15 (add_log + NULL|self)
+              LOAD_CONST              15 ('✗ Token刷新失败: ')
+              LOAD_FAST                9 (message)
+              FORMAT_SIMPLE
+              BUILD_STRING             2
+              LOAD_CONST              16 ('error')
+              CALL                     2
+              POP_TOP
+              RETURN_CONST             5 (None)
+
+167   L5:     RETURN_CONST             5 (None)
+
+### CODE AuthMixin.on_auth_expired  args=('self',)
+189           RESUME                   0
+
+191           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (load_btn)
+              LOAD_ATTR                3 (setEnabled + NULL|self)
+              LOAD_CONST               1 (False)
+              CALL                     1
+              POP_TOP
+
+192           LOAD_FAST                0 (self)
+              LOAD_ATTR                5 (add_log + NULL|self)
+              LOAD_CONST               2 ('登录凭证已过期')
+              LOAD_CONST               3 ('error')
+              CALL                     2
+              POP_TOP
+
+194           LOAD_CONST               4 (0)
+              LOAD_CONST               5 (('clear_login_credentials',))
+              IMPORT_NAME              3 (data.database)
+              IMPORT_FROM              4 (clear_login_credentials)
+              STORE_FAST               1 (clear_login_credentials)
+              POP_TOP
+
+195           LOAD_FAST                1 (clear_login_credentials)
+              PUSH_NULL
+              CALL                     0
+              POP_TOP
+
+197           LOAD_FAST                0 (self)
+              LOAD_ATTR               11 (update_login_status + NULL|self)
+              CALL                     0
+              POP_TOP
+
+199           LOAD_GLOBAL             12 (QMessageBox)
+              LOAD_ATTR               14 (warning)
+              PUSH_NULL
+              LOAD_FAST                0 (self)
+              LOAD_CONST               6 ('凭证过期')
+              LOAD_CONST               7 ('登录凭证已过期，请重新登录IMA！')
+              CALL                     3
+              POP_TOP
+              RETURN_CONST             8 (None)
+
+### CODE AuthMixin.update_license_info  args=('self',)
+203           RESUME                   0
+
+205           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (('load_local_cache',))
+              IMPORT_NAME              0 (core.auth)
+              IMPORT_FROM              1 (load_local_cache)
+              STORE_FAST               1 (load_local_cache)
+              POP_TOP
+
+206           LOAD_FAST                1 (load_local_cache)
+              PUSH_NULL
+              CALL                     0
+              STORE_FAST               2 (cache)
+
+207           LOAD_FAST                2 (cache)
+              TO_BOOL
+              POP_JUMP_IF_FALSE      155 (to L1)
+
+208           LOAD_FAST                2 (cache)
+              LOAD_ATTR                5 (get + NULL|self)
+              LOAD_CONST               3 ('expire_at')
+              LOAD_CONST               1 (0)
+              CALL                     2
+              STORE_FAST               3 (expire_at)
+
+209           LOAD_GLOBAL              6 (time)
+              LOAD_ATTR                8 (strftime)
+              PUSH_NULL
+              LOAD_CONST               4 ('%Y-%m-%d')
+              LOAD_GLOBAL              6 (time)
+              LOAD_ATTR               10 (localtime)
+              PUSH_NULL
+              LOAD_FAST                3 (expire_at)
+              CALL                     1
+              CALL                     2
+              STORE_FAST               4 (expire_date)
+
+210           LOAD_FAST                2 (cache)
+              LOAD_ATTR                5 (get + NULL|self)
+              LOAD_CONST               5 ('cached_remaining')
+              LOAD_FAST                2 (cache)
+              LOAD_ATTR                5 (get + NULL|self)
+              LOAD_CONST               6 ('remaining')
+              LOAD_CONST               1 (0)
+              CALL                     2
+              CALL                     2
+              STORE_FAST               5 (remaining)
+
+211           LOAD_FAST                0 (self)
+              LOAD_ATTR               12 (license_label)
+              LOAD_ATTR               15 (setText + NULL|self)
+              LOAD_CONST               7 ('到期: ')
+              LOAD_FAST                4 (expire_date)
+              FORMAT_SIMPLE
+              LOAD_CONST               8 (' ｜ 剩余额度: ')
+              LOAD_FAST                5 (remaining)
+              FORMAT_SIMPLE
+              BUILD_STRING             4
+              CALL                     1
+              POP_TOP
+
+212           LOAD_CONST               1 (0)
+              LOAD_CONST               9 (('set_widget_property',))
+              IMPORT_NAME              8 (gui.theme)
+              IMPORT_FROM              9 (set_widget_property)
+              STORE_FAST               6 (set_widget_property)
+              POP_TOP
+
+213           LOAD_FAST                6 (set_widget_property)
+              PUSH_NULL
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               12 (license_label)
+              LOAD_CONST              10 ('status')
+              LOAD_CONST              11 ('active')
+              CALL                     3
+              POP_TOP
+              RETURN_CONST            14 (None)
+
+215   L1:     LOAD_FAST                0 (self)
+              LOAD_ATTR               12 (license_label)
+              LOAD_ATTR               15 (setText + NULL|self)
+              LOAD_CONST              12 ('未授权')
+              CALL                     1
+              POP_TOP
+
+216           LOAD_CONST               1 (0)
+              LOAD_CONST               9 (('set_widget_property',))
+              IMPORT_NAME              8 (gui.theme)
+              IMPORT_FROM              9 (set_widget_property)
+              STORE_FAST               6 (set_widget_property)
+              POP_TOP
+
+217           LOAD_FAST                6 (set_widget_property)
+              PUSH_NULL
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               12 (license_label)
+              LOAD_CONST              10 ('status')
+              LOAD_CONST              13 ('warning')
+              CALL                     3
+              POP_TOP
+              RETURN_CONST            14 (None)
+
+### CODE AuthMixin.show_renew_dialog  args=('self',)
+  --           MAKE_CELL                0 (self)
+
+ 219           RESUME                   0
+
+ 220           LOAD_GLOBAL              1 (show_renew_dialog + NULL)
+               LOAD_DEREF               0 (self)
+               LOAD_FAST                0 (self)
+               BUILD_TUPLE              1
+               LOAD_CONST               1 (<code object <lambda> at 0x000001DD46291790, file "gui\auth_mixin.py", line 220>)
+               MAKE_FUNCTION
+               SET_FUNCTION_ATTRIBUTE   8 (closure)
+               LOAD_CONST               2 (('on_success',))
+               CALL_KW                  2
+               POP_TOP
+               RETURN_CONST             0 (None)
+
+#### CODE AuthMixin.show_renew_dialog.<locals>.<lambda>  args=()
+  --           COPY_FREE_VARS           1
+
+ 220           RESUME                   0
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR                1 (update_license_info + NULL|self)
+               CALL                     0
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR                3 (add_log + NULL|self)
+               LOAD_CONST               1 ('续费成功')
+               LOAD_CONST               2 ('success')
+               CALL                     2
+               BUILD_TUPLE              2
+               RETURN_VALUE
+
+### CODE AuthMixin.show_activation_dialog  args=('self',)
+  --           MAKE_CELL                0 (self)
+
+ 222           RESUME                   0
+
+ 223           LOAD_FAST                0 (self)
+               BUILD_TUPLE              1
+               LOAD_CONST               1 (<code object on_success at 0x000001DD462961F0, file "gui\auth_mixin.py", line 223>)
+               MAKE_FUNCTION
+               SET_FUNCTION_ATTRIBUTE   8 (closure)
+               STORE_FAST               1 (on_success)
+
+ 229           LOAD_GLOBAL              1 (show_activation_dialog + NULL)
+               LOAD_DEREF               0 (self)
+               LOAD_FAST                1 (on_success)
+               LOAD_CONST               2 (('on_success',))
+               CALL_KW                  2
+               POP_TOP
+               RETURN_CONST             0 (None)
+
+#### CODE AuthMixin.show_activation_dialog.<locals>.on_success  args=()
+  --           COPY_FREE_VARS           1
+
+ 223           RESUME                   0
+
+ 224           LOAD_CONST               1 (True)
+               LOAD_DEREF               0 (self)
+               STORE_ATTR               0 (_license_authorized)
+
+ 225           LOAD_DEREF               0 (self)
+               LOAD_ATTR                3 (update_license_info + NULL|self)
+               CALL                     0
+               POP_TOP
+
+ 226           LOAD_DEREF               0 (self)
+               LOAD_ATTR                5 (update_login_status + NULL|self)
+               CALL                     0
+               POP_TOP
+
+ 227           LOAD_DEREF               0 (self)
+               LOAD_ATTR                7 (add_log + NULL|self)
+               LOAD_CONST               2 ('授权激活成功')
+               LOAD_CONST               3 ('success')
+               CALL                     2
+               POP_TOP
+               RETURN_CONST             0 (None)
+
+### CODE AuthMixin.show_settings_dialog  args=('self',)
+231           RESUME                   0
+
+232           LOAD_GLOBAL              1 (show_settings_dialog + NULL)
+              LOAD_FAST                0 (self)
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+### CODE AuthMixin.show_help_dialog  args=('self',)
+234           RESUME                   0
+
+235           LOAD_GLOBAL              1 (show_help_dialog + NULL)
+              LOAD_FAST                0 (self)
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             0 (None)

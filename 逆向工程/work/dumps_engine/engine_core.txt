@@ -1,0 +1,873 @@
+@@@ off=605000
+ct.defineProperty(t,"shareReplay",{
+enumerable:!0,get:function(){
+return me.shareReplay
+}
+
+}
+);
+var Ae=requireSingle();
+Object.defineProperty(t,"single",{
+enumerable:!0,get:function(){
+return Ae.single
+}
+
+}
+);
+var Qe=requireSkip();
+Object.defineProperty(t,"skip",{
+enumerable:!0,get:function(){
+return Qe.skip
+}
+
+}
+);
+var ze=requireSkipLast();
+Object.defineProperty(t,"skipLast",{
+enumerable:!0,get:function(){
+return ze.skipLast
+}
+
+}
+);
+var Ge=requireSkipUntil();
+Object.defineProperty(t,"skipUntil",{
+enumerable:!0,get:function(){
+return Ge.skipUntil
+}
+
+}
+);
+var et=requireSkipWhile();
+Object.defineProperty(t,"skipWhile",{
+enumerable:!0,get:function(){
+return et.skipWhile
+}
+
+}
+);
+var pt=requireStartWith();
+Object.defineProperty(t,"startWith",{
+enumerable:!0,get:function(){
+return pt.startWith
+}
+
+}
+);
+var it=requireSubscribeOn();
+Object.defineProperty(t,"subscribeOn",{
+enumerable:!0,get:function(){
+return it.subscribeOn
+}
+
+}
+);
+var nt=requireSwitchAll();
+Object.defineProperty(t,"switchAll",{
+enumerable:!0,get:function(){
+return nt.switchAll
+}
+
+}
+);
+var He=requireSwitchMap();
+Object.defineProperty(t,"switchMap",{
+enumerable:!0,get:function(){
+return He.switchMap
+}
+
+}
+);
+var dt=requireSwitchMapTo();
+Object.defineProperty(t,"switchMapTo",{
+enumerable:!0,get:function(){
+return dt.switchMapTo
+}
+
+}
+);
+var mt=requireSwitchScan();
+Object.defineProperty(t,"switchScan",{
+enumerable:!0,get:function(){
+return mt.switchScan
+}
+
+}
+);
+var yt=requireTake();
+Object.defineProperty(t,"take",{
+enumerable:!0,get:function(){
+return yt.take
+}
+
+}
+);
+var _t=requireTakeLast();
+Object.defineProperty(t,"takeLast",{
+enumerable:!0,get:function(){
+return _t.takeLast
+}
+
+}
+);
+var lt=requireTakeUntil();
+Object.defineProperty(t,"takeUntil",{
+enumerable:!0,get:function(){
+return lt.takeUntil
+}
+
+}
+);
+var ft=requireTakeWhile();
+Object.defineProperty(t,"takeWhile",{
+enumerable:!0,get:function(){
+return ft.takeWhile
+}
+
+}
+);
+var ht=requireTap();
+Object.defineProperty(t,"tap",{
+enumerable:!0,get:function(){
+return ht.tap
+}
+
+}
+);
+var ot=requireThrottle();
+Object.defineProperty(t,"throttle",{
+enumerable:!0,get:function(){
+return ot.throttle
+}
+
+}
+);
+var ct=
+@@@ off=607000
+requireThrottleTime();
+Object.defineProperty(t,"throttleTime",{
+enumerable:!0,get:function(){
+return ct.throttleTime
+}
+
+}
+);
+var $t=requireThrowIfEmpty();
+Object.defineProperty(t,"throwIfEmpty",{
+enumerable:!0,get:function(){
+return $t.throwIfEmpty
+}
+
+}
+);
+var Dt=requireTimeInterval();
+Object.defineProperty(t,"timeInterval",{
+enumerable:!0,get:function(){
+return Dt.timeInterval
+}
+
+}
+);
+var Ut=requireTimeout();
+Object.defineProperty(t,"timeout",{
+enumerable:!0,get:function(){
+return Ut.timeout
+}
+
+}
+);
+var Wt=requireTimeoutWith();
+Object.defineProperty(t,"timeoutWith",{
+enumerable:!0,get:function(){
+return Wt.timeoutWith
+}
+
+}
+);
+var Vt=requireTimestamp();
+Object.defineProperty(t,"timestamp",{
+enumerable:!0,get:function(){
+return Vt.timestamp
+}
+
+}
+);
+var zt=requireToArray();
+Object.defineProperty(t,"toArray",{
+enumerable:!0,get:function(){
+return zt.toArray
+}
+
+}
+);
+var jt=requireWindow();
+Object.defineProperty(t,"window",{
+enumerable:!0,get:function(){
+return jt.window
+}
+
+}
+);
+var Ft=requireWindowCount();
+Object.defineProperty(t,"windowCount",{
+enumerable:!0,get:function(){
+return Ft.windowCount
+}
+
+}
+);
+var xt=requireWindowTime();
+Object.defineProperty(t,"windowTime",{
+enumerable:!0,get:function(){
+return xt.windowTime
+}
+
+}
+);
+var sr=requireWindowToggle();
+Object.defineProperty(t,"windowToggle",{
+enumerable:!0,get:function(){
+return sr.windowToggle
+}
+
+}
+);
+var ir=requireWindowWhen();
+Object.defineProperty(t,"windowWhen",{
+enumerable:!0,get:function(){
+return ir.windowWhen
+}
+
+}
+);
+var or=requireWithLatestFrom();
+Object.defineProperty(t,"withLatestFrom",{
+enumerable:!0,get:function(){
+return or.withLatestFrom
+}
+
+}
+);
+var dr=requireZip();
+Object.defineProperty(t,"zip",{
+enumerable:!0,get:function(){
+return dr.zip
+}
+
+}
+);
+var Gt=requireZipAll();
+Object.defineProperty(t,"zipAll",{
+enumerable:!0,get:function(){
+return Gt.zipAll
+}
+
+}
+);
+var tr=requireZipWith();
+Object.defineProperty(t,"zipWith",{
+enumerable:!0,get:function(){
+return tr.zipWith
+}
+
+}
+)
+}
+)(operators)),operators
+}
+var operatorsExports=requireOperators();
+class ExecutionAbortError extends Error{
+constructor(e="任务已中断"){
+super(e),this.name="Execu
+@@@ off=609000
+tionAbortError"
+}
+
+}
+const ACTION_CONTEXT_KEY="__executionContext",isRecord$2=t=>typeof t=="object"&&t!==null,createRunId=t=>`${
+t
+}
+:${
+Date.now().toString(36)
+}
+:${
+Math.random().toString(36).slice(2,10)
+}
+`;
+class ExecutionContextManager{
+contexts=new Map;
+start(e,r,n){
+this.abort(e,`replace:${
+r||e
+}
+`);
+const a=new AbortController,s=createRunId(e),i=Date.now(),o={
+runId:s,scope:e,signal:a.signal,startedAt:i,source:r,parent:n,throwIfAborted:()=>{
+if(a.signal.aborted||!o.isCurrentRun())throw new ExecutionAbortError
+}
+,isAborted:()=>a.signal.aborted,isCurrentRun:()=>this.contexts.get(e)?.ctx.runId===s,delay:d=>new Promise((u,l)=>{
+if(a.signal.aborted||!o.isCurrentRun()){
+l(new ExecutionAbortError);
+return
+}
+const f=setTimeout(()=>{
+if(a.signal.removeEventListener("abort",h),!o.isCurrentRun()){
+l(new ExecutionAbortError);
+return
+}
+u()
+}
+,d),h=()=>{
+clearTimeout(f),l(new ExecutionAbortError)
+}
+;
+a.signal.addEventListener("abort",h,{
+once:!0
+}
+)
+}
+)
+}
+;
+return this.contexts.set(e,{
+controller:a,ctx:o
+}
+),o
+}
+current(e){
+return this.contexts.get(e)?.ctx||null
+}
+currentContexts(){
+return Array.from(this.contexts.values(),({
+ctx:e
+}
+)=>e)
+}
+currentForAction(e){
+if(!isRecord$2(e))return null;
+const r=e[ACTION_CONTEXT_KEY];
+if(isRecord$2(r)&&typeof r.runId=="string")return r;
+const n=e.action||e.msg_type;
+return n==="send_task_now"?this.current("task"):n==="task_executing"||n==="task_init"?this.current("schedule"):typeof n=="string"&&n.startsWith("stream_macro_")?this.current("stream")||this.current("response"):n==="whatsapp_next_step"||n==="whatsapp_receivemessage"||n==="check_enterprise_diff"||n==="receivemessage"?this.current("polling")||this.current("engine"):this.current("response")||this.current("schedule")||this.current("engine")
+}
+attach(e,r){
+return!e||!r||Object.defineProperty(e,ACTION_CONTEXT_KEY,{
+value:r,enumerable:!1,configurable:!0
+}
+),e
+}
+complete(e,r){
+const n=this.contexts.get(e);
+return!n||r&&n.ctx.runId!==r?null:(this.contexts.delete(e),n.ctx)
+}
+abort(e,r,n){
+return this.abortOne(e,r,n)
+}
+abortAll(e){
+const r=[];
+for(const n of Array.f
+@@@ off=611000
+rom(this.contexts.keys())){
+const a=this.abortOne(n,e);
+a&&r.push(a)
+}
+return r
+}
+abortOne(e,r,n){
+const a=this.contexts.get(e);
+return!a||n&&a.ctx.runId!==n?null:(a.controller.signal.aborted||a.controller.abort(r),this.contexts.delete(e),a.ctx)
+}
+
+}
+const getOwningRunId=(t,e)=>{
+if(t){
+if(t.scope===e)return t.runId;
+if(t.parent?.scope===e)return t.parent.runId
+}
+
+}
+,executionContextManager=new ExecutionContextManager,getActionExecutionContext=t=>executionContextManager.currentForAction(t),isExecutionAbortError=t=>t instanceof ExecutionAbortError||t instanceof Error&&(t.name==="ExecutionAbortError"||t.message==="任务已中断");
+var EnginePhase=(t=>(t.STOPPED="STOPPED",t.STARTING="STARTING",t.CAPTURING_CURRENT_CHAT="CAPTURING_CURRENT_CHAT",t.POLLING="POLLING",t.SWITCHING_UNREAD="SWITCHING_UNREAD",t.RESPONSE_ACTIVE="RESPONSE_ACTIVE",t.EXECUTING="EXECUTING",t))(EnginePhase||{
+
+}
+);
+const DEFAULT_RESPONSE_TIMEOUT_MS=25e3,isEngineAction=t=>typeof t=="object"&&t!==null,getActionName=t=>typeof t.action=="string"?t.action:typeof t.msg_type=="string"?t.msg_type:Array.isArray(t.actions)?"批量指令集":"unknown";
+class RxEngine{
+phase$=new cjsExports.BehaviorSubject({
+phase:"STOPPED",instant:!1
+}
+);
+chunkHeartbeat$=new cjsExports.Subject;
+responseTimeout$=new cjsExports.Subject;
+engineStop$=new cjsExports.Subject;
+taskStop$=new cjsExports.Subject;
+pollingStop$=new cjsExports.Subject;
+responseStop$=new cjsExports.Subject;
+streamStop$=new cjsExports.Subject;
+scheduleStop$=new cjsExports.Subject;
+scopeLifecycle$=new cjsExports.Subject;
+stopSignal$=new cjsExports.Subject;
+pollingHandler=null;
+getPollingInitialDelay=()=>5e3;
+actionHandler=null;
+contexts;
+getResponseTimeoutMs;
+onResponseTimeout;
+scheduler;
+logger;
+subscriptions=new cjsExports.Subscription;
+actionQueue$=new cjsExports.Subject;
+queueGeneration=0;
+activeActionContext=null;
+activeActionGeneration=null;
+deferredScopeCompletions=new Map;
+deferredResumeRequest=null;
+constructor(e={
+
+}
+){
+this.contexts=e.contexts||executionContextManager,this.getResponseTimeoutMs=e.getResponseTimeoutMs||(()=>DEF
+@@@ off=613000
+AULT_RESPONSE_TIMEOUT_MS),this.onResponseTimeout=e.onResponseTimeout||(()=>{
+
+}
+),this.scheduler=e.scheduler||cjsExports.asyncScheduler,this.logger=e.logger||console,this.initHeartbeat(),this.initActionPipeline()
+}
+initHeartbeat(){
+const e=this.phase$.pipe(operatorsExports.switchMap(r=>{
+const n=r.phase;
+if(n==="STOPPED"||n==="STARTING"||n==="CAPTURING_CURRENT_CHAT"||n==="EXECUTING"||n==="SWITCHING_UNREAD")return cjsExports.EMPTY;
+if(n==="POLLING"){
+const a=r.instant?Math.round(300+Math.random()*400):this.getPollingInitialDelay();
+return cjsExports.timer(a,5e3,this.scheduler).pipe(operatorsExports.exhaustMap(async()=>{
+if(this.pollingHandler)try{
+await this.pollingHandler()
+}
+catch(s){
+this.logger.error("[RxEngine] 轮询探测逻辑发生异常:",s)
+}
+
+}
+))
+}
+return n==="RESPONSE_ACTIVE"?this.chunkHeartbeat$.pipe(operatorsExports.startWith(void 0),operatorsExports.switchMap(()=>cjsExports.timer(this.getResponseTimeoutMs(),this.scheduler)),operatorsExports.tap(()=>{
+const a=this.getResponseTimeoutMs();
+this.logger.warn(`[RxEngine] ⚠️ ${
+n
+}
+ ${
+Math.round(a/1e3)
+}
+秒未收到新块脉冲，断气超时！强制回收，退回为 POLLING 状态等待下一轮`);
+try{
+this.onResponseTimeout()
+}
+catch(s){
+this.logger.error("[RxEngine] 响应超时回调执行失败:",s)
+}
+this.responseTimeout$.next(),this.abortScope("response","response_timeout"),this.abortScope("stream","response_timeout"),this.setPhase("POLLING")
+}
+)):cjsExports.EMPTY
+}
+)).subscribe();
+this.subscriptions.add(e)
+}
+initActionPipeline(){
+const e=this.actionQueue$.pipe(operatorsExports.concatMap(({
+action:n,generation:a
+}
+)=>cjsExports.defer(()=>{
+if(a!==this.queueGeneration)return this.logger.log(`[RxEngine] 🗑️ 丢弃旧队列代际任务: ${
+getActionName(n)
+}
+ (${
+a
+}
+ -> ${
+this.queueGeneration
+}
+)`),cjsExports.EMPTY;
+if(!this.actionHandler)return this.logger.warn("[RxEngine] ⚠️ actionHandler 未挂载，强行丢弃队列任务:",n),cjsExports.EMPTY;
+const s=this.contexts.currentForAction(n);
+return this.activeActionContext=s,this.activeActionGeneration=a,cjsExports.defer(()=>cjsExports.from(this.actionHandler(n))).pipe(operatorsExports.catchError(i=>(this.logger.error("[RxEngine] ❌ actionHandle
+@@@ off=615000
+r 发生未捕获异常，忽略当前任务，但履带不宕机:",i),cjsExports.EMPTY)),operatorsExports.finalize(()=>this.finalizeActionContext(s,a)))
+}
+))).subscribe();
+this.subscriptions.add(e);
+const r=this.stopSignal$.pipe(operatorsExports.tap(()=>{
+this.queueGeneration+=1,this.deferredScopeCompletions.clear(),this.deferredResumeRequest=null,this.logger.log(`[RxEngine] 🛑 收到全局 stopSignal，待执行任务已失效 (generation=${
+this.queueGeneration
+}
+)`)
+}
+)).subscribe();
+this.subscriptions.add(r)
+}
+setPhase(e,r){
+const n=this.phase$.value.phase;
+return n==="STOPPED"&&e!=="STOPPED"&&e!=="STARTING"?(this.logger.warn(`[RxEngine] 🚫 忽略非法 Phase Resurrection: STOPPED -> ${
+e
+}
+ (instant: ${
+r?.instant||!1
+}
+)`),!1):this.activeActionContext&&n==="EXECUTING"&&(e==="POLLING"||e==="RESPONSE_ACTIVE")?(this.deferResumeAfterActiveAction({
+instant:r?.instant,fallbackPhase:e==="POLLING"?"POLLING":void 0
+}
+),this.logger.warn(`[RxEngine] 🛡️ 延迟非法的 action 中 phase 跳转: EXECUTING -> ${
+e
+}
+`),!1):n===e&&!r?.instant?!1:(this.logger.log(`[RxEngine] ♻️ Phase Transition: ${
+n
+}
+ -> ${
+e
+}
+ (instant: ${
+r?.instant||!1
+}
+)`),this.phase$.next({
+phase:e,instant:r?.instant||!1
+}
+),!0)
+}
+heartbeat(){
+this.chunkHeartbeat$.next()
+}
+enqueueAction(e,r){
+return!isEngineAction(e)||!e.action&&!e.msg_type&&!e.actions?!1:(this.contexts.attach(e,r||this.resolveActionContext(e)),this.logger.log(`[RxEngine] 📦 enqueueAction 收到指令: ${
+getActionName(e)
+}
+`),this.actionQueue$.next({
+action:e,generation:this.queueGeneration
+}
+),!0)
+}
+stopAllActions(e){
+this.abortScope("engine","stop_all_actions"),this.setPhase(e?.phase||"STOPPED")
+}
+clearQueuedActions(){
+this.stopSignal$.next()
+}
+startScope(e,r,n){
+const a=`replace:${
+r||e
+}
+`;
+if(e==="engine"&&this.contexts.currentContexts().length>0)this.abortScope("engine",a);
+else{
+const o=this.contexts.current(e);
+if(o){
+const d=this.contexts.abort(e,a,o.runId);
+d&&(this.emitScopeLifecycle("aborted",d,a),this.getOwnStopSubject(e).next())
+}
+
+}
+const s=n?.parent?{
+scope:n.parent.scope,runId:n.parent.runId
+}
+:void 0,i=this.contexts.start(e,r,s);
+return this.emitScopeLifecycle("started",i),i
+}
+getOrStartChildS
+@@@ off=617000
+cope(e,r,n){
+const a=this.currentScope(e);
+return a&&a.parent?.scope===n.scope&&a.parent.runId===n.runId?a:this.startScope(e,r,{
+parent:n
+}
+)
+}
+currentScope(e){
+return this.contexts.current(e)
+}
+completeScope(e,r,n){
+const a=this.contexts.complete(e,n);
+return a?(this.emitScopeLifecycle("completed",a,r),!0):!1
+}
+completeScopeAfterAction(e,r,n,a){
+const s=a?.resume!==!1;
+if(this.currentScope(e)?.runId!==n)return s&&this.resumeAfterExecution({
+instant:a?.instant
+}
+),!1;
+if(this.actionOwnsRun(this.activeActionContext,n))return this.deferredScopeCompletions.set(`${
+e
+}
+:${
+n
+}
+`,{
+scope:e,reason:r,runId:n,instant:!!a?.instant,resume:s,generation:this.activeActionGeneration??this.queueGeneration
+}
+),!0;
+const i=this.completeScope(e,r,n);
+return s&&this.resumeAfterExecution({
+instant:a?.instant
+}
+),i
+}
+abortScope(e,r,n){
+const a=r||`${
+e
+}
+_stop`;
+if(e==="engine"){
+const i=this.contexts.abortAll(r||"engine_stop");
+for(const o of i)this.emitScopeLifecycle("aborted",o,r||"engine_stop");
+return this.engineStop$.next(),this.taskStop$.next(),this.pollingStop$.next(),this.responseStop$.next(),this.streamStop$.next(),this.scheduleStop$.next(),this.stopSignal$.next(),i.length>0
+}
+const s=this.contexts.abort(e,a,n);
+return s&&this.emitScopeLifecycle("aborted",s,a),(s||!n)&&this.getOwnStopSubject(e).next(),!!s
+}
+resumeAfterExecution(e){
+return this.activeActionContext?(this.deferResumeAfterActiveAction(e),this.phase$.value.phase):this.applyResumeAfterExecution(e)
+}
+applyResumeAfterExecution(e){
+if(!this.isRunning())return"STOPPED";
+const r=e?.fallbackPhase,n=r!==void 0&&r!=="STOPPED"&&r!=="EXECUTING"&&r!=="RESPONSE_ACTIVE",a=this.currentScope("response")?"RESPONSE_ACTIVE":n?r:"POLLING";
+return this.setPhase(a,e),a
+}
+getActionContext(e){
+return this.contexts.currentForAction(e)
+}
+isTaskStopped(){
+return this.phase$.value.phase==="STOPPED"
+}
+isRunning(){
+return this.phase$.value.phase!=="STOPPED"
+}
+destroy(){
+this.setPhase("STOPPED"),this.abortScope("engine","destroy"),this.subscriptions.unsubscribe()
+}
+resolveActionContext(e){
+const r=this.contexts.cu
+@@@ off=619000
+rrentForAction(e);
+if(r)return r;
+const n=this.inferActionScope(e);
+return this.contexts.current(n)||this.startScope(n,"enqueue_action")
+}
+inferActionScope(e){
+const r=getActionName(e);
+return r==="task_executing"||r==="task_init"?"schedule":r==="send_task_now"?"task":typeof r=="string"&&r.startsWith("stream_macro_")?"stream":r==="whatsapp_next_step"||r==="whatsapp_receivemessage"||r==="check_enterprise_diff"||r==="receivemessage"?"polling":this.contexts.current("response")?"response":"engine"
+}
+getOwnStopSubject(e){
+return e==="task"?this.taskStop$:e==="polling"?this.pollingStop$:e==="response"?this.responseStop$:e==="stream"?this.streamStop$:e==="schedule"?this.scheduleStop$:this.engineStop$
+}
+emitScopeLifecycle(e,r,n){
+this.scopeLifecycle$.next({
+type:e,scope:r.scope,runId:r.runId,source:r.source,reason:n
+}
+)
+}
+actionOwnsRun(e,r){
+return!!(e&&(e.runId===r||e.parent?.runId===r))
+}
+deferResumeAfterActiveAction(e){
+const r=this.activeActionGeneration??this.queueGeneration,n=this.deferredResumeRequest?.generation===r?this.deferredResumeRequest:null;
+this.deferredResumeRequest={
+generation:r,instant:!!(n?.instant||e?.instant),fallbackPhase:e?.fallbackPhase??n?.fallbackPhase
+}
+
+}
+finalizeActionContext(e,r){
+this.activeActionContext?.runId===e?.runId&&(this.activeActionContext=null),this.activeActionGeneration===r&&(this.activeActionGeneration=null);
+const n=r===this.queueGeneration;
+let a=!1,s=!1,i=!1;
+for(const[u,l]of this.deferredScopeCompletions)this.deferredScopeCompletions.delete(u),!(!n||l.generation!==r)&&(this.completeScope(l.scope,l.reason,l.runId),a||=l.resume,s||=!l.resume,l.resume&&(i||=l.instant));
+const o=this.deferredResumeRequest;
+this.deferredResumeRequest=null;
+const d=n&&o?.generation===r;
+!s&&(a||d)&&this.applyResumeAfterExecution({
+instant:!!(i||o?.instant),fallbackPhase:o?.fallbackPhase
+}
+)
+}
+
+}
+const rxEngine=new RxEngine({
+getResponseTimeoutMs,onResponseTimeout:()=>replayLogger.logResponseTimeout(),logger:{
+log:debugLog,warn:console.warn,error:console.error
+}
+
+}
+),checkActiveWinPermissions=asy
+@@@ off=621000
+nc()=>{
+try{
+return await getBridge().activeWin.getOpenWindows(),debugLog("【权限检查】录屏权限检查成功"),!0
+}
+catch(t){
+return console.error("【权限检查】录屏权限检查失败：",t),!1
+}
+
+}
+;
+let robotPermissionCache=null,robotPermissionCacheTime=0;
+const ROBOT_PERMISSION_TTL=5e3,checkRobotPermissions=async()=>{
+if(!currentInputRequiresAccessibilityPermission())return debugLog("【权限检查】当前输入后端为外部 HID，跳过辅助功能权限检查"),!0;
+const t=Date.now();
+if(robotPermissionCache!==null&&t-robotPermissionCacheTime<ROBOT_PERMISSION_TTL)return robotPermissionCache;
+try{
+return await getBridge().robot.getMousePos(),debugLog("【权限检查】辅助功能权限检查成功"),robotPermissionCache=!0,robotPermissionCacheTime=t,!0
+}
+catch(e){
+return console.error("【权限检查】辅助功能权限检查失败：",e),robotPermissionCache=!1,robotPermissionCacheTime=t,!1
+}
+
+}
+,checkScreenRecordingPermissionSilently=()=>{
+try{
+if(process.platform==="darwin"){
+const t=getBridge().systemPreferences.getMediaAccessStatus("screen");
+return debugLog("【权限检查】录屏权限状态:",t),t==="granted"
+}
+return!0
+}
+catch(t){
+return console.error("【权限检查】检查录屏权限失败:",t),!1
+}
+
+}
+,checkAccessibilityPermission=()=>{
+try{
+if(!currentInputRequiresAccessibilityPermission())return debugLog("【权限检查】当前输入后端为外部 HID，无需辅助功能权限"),!0;
+if(process.platform==="darwin"){
+const t=getBridge().systemPreferences.isTrustedAccessibilityClient(!1);
+return debugLog("【权限检查】辅助功能权限状态:",t),t
+}
+return!0
+}
+catch(t){
+return console.error("【权限检查】检查辅助功能权限失败:",t),!1
+}
+
+}
+,checkAllPermissions=async()=>{
+const t=checkScreenRecordingPermissionSilently(),e=checkAccessibilityPermission();
+return debugLog("【权限检查】完整权限状态:",{
+screenRecording:t,accessibility:e
+}
+),{
+screenRecording:t,accessibility:e
+}
+
+}
+,openSystemPreferences=async t=>{
+try{
+if(process.platform!=="darwin"){
+console.log("【权限设置】非 macOS 平台，跳过打开系统设置");
+return
+}
+let e;
+if(t==="screenRecording")e="x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture";
+else if(t==="accessibility")e="x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility";
+else throw new Error(`未知的权限类型: ${
+t
+}
+`);
+console.log(`【权限设置】打开系统设置: ${
+t
+}
+ -> ${
+e
+}
+`),await getBri
+@@@ off=623000
+dge().shell.openExternal(e)
+}
+catch(e){
+throw console.error("【权限设置】打开系统设置失败:",e),e
+}
+
+}
+;
+var HeaderTypes;
+(function(t){
+t[t.BITMAP_INFO_HEADER=40]="BITMAP_INFO_HEADER",t[t.BITMAP_V2_INFO_HEADER=52]="BITMAP_V2_INFO_HEADER",t[t.BITMAP_V3_INFO_HEADER=56]="BITMAP_V3_INFO_HEADER",t[t.BITMAP_V4_HEADER=108]="BITMAP_V4_HEADER",t[t.BITMAP_V5_HEADER=124]="BITMAP_V5_HEADER"
+}
+)(HeaderTypes||(HeaderTypes={
+
+}
+));
+const HeaderTypes$1=HeaderTypes;
+function maskColor(t,e,r,n){
+const a=~t+1&t,s=~e+1&e,i=~r+1&r,o=~n+1&n,d=t/a+1,u=e/s+1,l=r/i+1,f=n/o+1;
+return{
+shiftRed:h=>(h&t)/a*256/d,shiftGreen:h=>(h&e)/s*256/u,shiftBlue:h=>(h&r)/i*256/l,shiftAlpha:n!==0?h=>(h&n)/o*256/f:()=>255
+}
+
+}
+var BmpCompression;
+(function(t){
+t[t.NONE=0]="NONE",t[t.BI_RLE8=1]="BI_RLE8",t[t.BI_RLE4=2]="BI_RLE4",t[t.BI_BIT_FIELDS=3]="BI_BIT_FIELDS",t[t.BI_ALPHA_BIT_FIELDS=6]="BI_ALPHA_BIT_FIELDS"
+}
+)(BmpCompression||(BmpCompression={
+
+}
+));
+class BmpDecoder{
+flag;
+fileSize;
+reserved1;
+reserved2;
+offset;
+headerSize;
+width;
+height;
+planes;
+bitPP;
+compression;
+rawSize;
+hr;
+vr;
+colors;
+importantColors;
+palette;
+data;
+maskRed;
+maskGreen;
+maskBlue;
+maskAlpha;
+toRGBA;
+pos;
+bottomUp;
+buffer;
+locRed;
+locGreen;
+locBlue;
+locAlpha;
+shiftRed;
+shiftGreen;
+shiftBlue;
+shiftAlpha;
+constructor(e,{
+toRGBA:r
+}
+={
+toRGBA:!1
+}
+){
+if(this.buffer=e,this.toRGBA=!!r,this.pos=0,this.bottomUp=!0,this.flag=this.buffer.toString("utf-8",0,this.pos+=2),this.flag!=="BM")throw new Error("Invalid BMP File");
+this.locRed=this.toRGBA?0:3,this.locGreen=this.toRGBA?1:2,this.locBlue=this.toRGBA?2:1,this.locAlpha=this.toRGBA?3:0,this.parseHeader(),this.parseRGBA()
+}
+parseHeader(){
+if(this.fileSize=this.readUInt32LE(),this.reserved1=this.buffer.readUInt16LE(this.pos),this.pos+=2,this.reserved2=this.buffer.readUInt16LE(this.pos),this.pos+=2,this.offset=this.readUInt32LE(),this.headerSize=this.readUInt32LE(),!(this.headerSize in HeaderTypes$1))throw new Error(`Unsupported BMP header size ${
+this.headerSize
+}
+`);
+if(this.width=this.readUInt32LE(),this.height=this.readUInt32LE(),this.height=this.height>2147483647?this.height-4294967
+@@@ off=625000
+296:this.height,this.planes=this.buffer.readUInt16LE(this.pos),this.pos+=2,this.bitPP=this.buffer.readUInt16LE(this.pos),this.pos+=2,this.compression=this.readUInt32LE(),this.rawSize=this.readUInt32LE(),this.hr=this.readUInt32LE(),this.vr=this.readUInt32LE(),this.colors=this.readUInt32LE(),this.importantColors=this.readUInt32LE(),this.bitPP===32?(this.maskAlpha=0,this.maskRed=16711680,this.maskGreen=65280,this.maskBlue=255):this.bitPP===16&&(this.maskAlpha=0,this.maskRed=31744,
+this.maskGreen=992,this.maskBlue=31),(this.headerSize>HeaderTypes$1.BITMAP_INFO_HEADER||this.compression===BmpCompression.BI_BIT_FIELDS||this.compression===BmpCompression.BI_ALPHA_BIT_FIELDS)&&(this.maskRed=this.readUInt32LE(),this.maskGreen=this.readUInt32LE(),this.maskBlue=this.readUInt32LE()),(this.headerSize>HeaderTypes$1.BITMAP_V2_INFO_HEADER||this.compression===BmpCompression.BI_ALPHA_BIT_FIELDS)&&(this.maskAlpha=this.readUInt32LE()),
+this.headerSize>HeaderTypes$1.BITMAP_V3_INFO_HEADER&&(this.pos+=HeaderTypes$1.BITMAP_V4_HEADER-HeaderTypes$1.BITMAP_V3_INFO_HEADER),this.headerSize>HeaderTypes$1.BITMAP_V4_HEADER&&(this.pos+=HeaderTypes$1.BITMAP_V5_HEADER-HeaderTypes$1.BITMAP_V4_HEADER),this.bitPP<=8||this.colors>0){
+const r=this.colors===0?1<<this.bitPP:this.colors;
+this.palette=new Array(r);
+for(let n=0;
+n<r;
+n++){
+const a=this.buffer.readUInt8(this.pos++),s=this.buffer.readUInt8(this.pos++),i=this.buffer.readUInt8(this.pos++),o=this.buffer.readUInt8(this.pos++);
+this.palette[n]={
+red:i,green:s,blue:a,quad:

@@ -3,6 +3,12 @@ var tel = require('./utils/telemetry'); // v0.9.6：启动打点（真机地面�
 
 App({
   onLaunch() {
+    // 小程序·云能力初始化（知识库工厂实时编目腿）：冷启动最早处；
+    // 未开通/老基础库失败静默——service 层自动回落本地样本，绝不动主链
+    if (wx.cloud) {
+      try { wx.cloud.init({ env: wx.cloud.DYNAMIC_CURRENT_ENV, traceUser: false }); }
+      catch (e) { /* 已初始化或环境缺失：吞掉，实时腿走兜底 */ }
+    }
     tel.boot(); // platform/sdk/ver 一次性上行，区分 iOS/Android/DevTools
     // 自绘导航度量（v0.3.0 蓝图设计：全页 navigationStyle=custom）
     // statusBarHeight + 胶囊实测 → 导航行高，WXML 用 px 内联绑定

@@ -1,0 +1,28 @@
+{
+  "repo": "NanmiCoder/MediaCrawler",
+  "url": "https://github.com/NanmiCoder/MediaCrawler",
+  "stars": 67192,
+  "license": "NOASSERTION(自定义非标准许可证,含非商用限制)",
+  "pushed_at": "2026-10-15",
+  "archived": false,
+  "language": "Python",
+  "forks": 12835,
+  "desc": "小红书/抖音/快手/B站/微博/贴吧/知乎 7平台爬虫与评论采集",
+  "platforms": [
+    "小红书",
+    "抖音",
+    "快手",
+    "B站",
+    "微博",
+    "贴吧",
+    "知乎"
+  ],
+  "publish_types": "N/A(采集不发布)",
+  "tech_stack": "Playwright + CDP模式(连接用户已有Chrome,127.0.0.1:9222,复用已有登录态降风控;可关CDP回标准Playwright)",
+  "account_mgmt": "登录态缓存:扫码/cookie登录后Playwright browser_data持久化;多账号在Pro闭源版才有(开源版单账号)",
+  "signature": "核心思路:无需JS逆向,在保留登录态的浏览器上下文里用JS表达式现取签名参数(x-s/x-t等);不开源硬逆向的X-Bogus/a_bogus实现",
+  "value_for_us": "多平台cookie/登录态管理模式+签名参数浏览器内获取模式可直接借鉴(与易媒助手SQLite cookie隔离对照);CDP端口默认9222注意与WeAIPO免打扰红线冲突",
+  "maintenance": "非常活跃(2026-10-15)",
+  "adoption": "pattern-only(非商用许可,不可抄代码入闭源产品)",
+  "source": "gh api+README实测 2026-10-19"
+}

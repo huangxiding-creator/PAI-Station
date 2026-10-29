@@ -1,0 +1,126 @@
+@@@ off=2090800
+?:\.exe)?($|[\s/\\])/,/google chrome/,/com\.google\.chrome/,/(^|[\s/\\])msedge(?:\.exe)?($|[\s/\\])/,/microsoft edge/,/com\.microsoft\.edgemac/],GENERIC_PLATFORM_PATTERNS={
+xiaohongshu:[/小红书/,/xiaohongshu/,/rednote/],tiktok:[/tiktok/],boss:[/boss\s*直聘/,/boss\s*zhipin/,/zhipin/,/kanzhun/],qianniu:[/千牛/,/qianniu/,/ali\s*workbench/,/aliworkbench/]
+}
+,isSupportedBrowser=t=>{
+const e=normalizeIdentity(`${
+t.appName
+}
+
+${
+t.appPath
+}
+
+${
+t.bundleIdentifier||""
+}
+`);
+return BROWSER_PATTERNS.some(r=>r.test(e))
+}
+,inferGenericImPlatform=t=>{
+const e=normalizeIdentity(`${
+t.appName
+}
+
+${
+t.appPath
+}
+
+${
+t.bundleIdentifier||""
+}
+
+${
+t.title
+}
+`);
+for(const r of Object.keys(GENERIC_PLATFORM_PATTERNS))if(GENERIC_PLATFORM_PATTERNS[r].some(n=>n.test(e)))return r;
+return null
+}
+,targetIdentity=t=>({
+id:t.id,nativeWindowId:t.nativeWindowId,processId:t.processId,appName:t.appName,appPath:t.appPath,bundleIdentifier:t.bundleIdentifier,title:t.title
+}
+),resolveTargetRuntimeProfile=t=>{
+if(t.appType){
+const a=t.appType==="personal"?"wechat":t.appType==="enterprise"?"wecom":"whatsapp";
+return{
+ok:!0,profile:{
+mode:"legacy",automationAppType:t.appType,backendAppType:a,detectorVersion:"legacy",captureSurface:"window",platform:null,target:targetIdentity(t)
+}
+
+}
+
+}
+const e=inferGenericImPlatform(t),r=isSupportedBrowser(t);
+return{
+ok:!0,profile:{
+mode:"generic-im",automationAppType:"personal",backendAppType:r?"browser":t.appName.trim()||"unknown",detectorVersion:"v2",captureSurface:r?"browser-content":"window",platform:e,target:targetIdentity(t)
+}
+
+}
+
+}
+,detectorRequestFields=t=>t?t.detectorVersion==="v2"?{
+app_type:t.backendAppType,detector_version:"v2"
+}
+:{
+app_type:t.backendAppType
+}
+:{
+app_type:"wechat"
+}
+,resolveRuntimeSendShortcutMode=t=>t?.captureSurface==="browser-content"?"single-enter":"compatible",GENERIC_RUNTIME_ACTIONS=new Set(["keyboard","stream_macro_keyboard","thinking","model-thinking","stream_macro_thinking","stream_macro_model-thinking","text_prompt","simple_task","stop-reply","qps-limit","error","image_received","receivemessage"]),isGen
+@@@ off=2092800
+ericRuntimeActionAllowed=t=>typeof t=="string"&&GENERIC_RUNTIME_ACTIONS.has(t),IS_WINDOWS$7=process.platform==="win32",IS_MAC$4=process.platform==="darwin",OVERLAY_LOAD_TIMEOUT_MS=15e3,SELECTION_CANCEL_ACCELERATOR="Escape",TARGET_WINDOW_STARTUP_PREFERENCE_STORE_KEY="target_window_startup_preference_v1",targetWindowStore=createAppStore();
+let activeSession=null,currentTarget=null,targetSelectionRevision=0,endingSession=!1;
+const targetWindowShortcutDefinition=resolveTargetWindowShortcutDefinition(process.platform);
+let targetWindowShortcutRegistered=!1;
+function createDeferred(){
+let t=()=>{
+
+}
+;
+return{
+promise:new Promise(r=>{
+t=r
+}
+),resolve:t
+}
+
+}
+function errorMessage$1(t){
+return t instanceof Error?t.message:String(t)
+}
+function getTargetWindowShortcutState(){
+return targetWindowShortcutDefinition?{
+...targetWindowShortcutDefinition,registered:targetWindowShortcutRegistered
+}
+:null
+}
+function registerTargetWindowShortcut(){
+if(!(!targetWindowShortcutDefinition||targetWindowShortcutRegistered))try{
+targetWindowShortcutRegistered=getBridge().globalShortcut.register(targetWindowShortcutDefinition.accelerator,()=>{
+try{
+getBridge().sendToRenderer(TARGET_WINDOW_SELECTION_CHANNELS.shortcutPressed)
+}
+catch(t){
+console.warn("[TargetWindowSelection] 转发目标窗口快捷键失败:",errorMessage$1(t))
+}
+
+}
+),targetWindowShortcutRegistered||console.warn("[TargetWindowSelection] 目标窗口快捷键注册失败:",targetWindowShortcutDefinition.accelerator)
+}
+catch(t){
+targetWindowShortcutRegistered=!1,console.warn("[TargetWindowSelection] 目标窗口快捷键注册异常:",errorMessage$1(t))
+}
+
+}
+function unregisterTargetWindowShortcut(){
+if(!(!targetWindowShortcutDefinition||!targetWindowShortcutRegistered))try{
+getBridge().globalShortcut.unregister(targetWindowShortcutDefinition.accelerator)
+}
+catch(t){
+console.warn("[TargetWindowSelection] 目标窗口快捷键注销异常:",errorMessage$1(t))
+}
+finally{
+t

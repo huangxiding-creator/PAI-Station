@@ -1,53 +1,77 @@
 {
- "measured_at": "2026-10-15T16:39:07",
+ "measured_at": "2026-10-26T01:25:32",
  "f1_corpus_chars": 10347917,
  "f1_pool": {
   "exists": true,
-  "total_chars": 9165931,
-  "items": 2023,
-  "pending_chars": 0,
-  "t1_chars": 8943199,
-  "t2_chars": 187886,
-  "t3_chars": 0,
+  "total_chars": 67211643,
+  "items": 5045,
+  "pending_chars": 130720,
+  "t1_chars": 57880004,
+  "t2_chars": 1258706,
+  "t3_chars": 758760,
   "t0_chars": 0,
-  "t1_items": 1971,
-  "t2_items": 44,
+  "t1_items": 4376,
+  "t2_items": 386,
   "gate_chars": 200000000,
   "by_engine": {
-   "stock:corpus": 850333,
-   "f1train": 124511,
-   "rss:train": 1537988,
-   "search:web": 81379,
-   "rss:trainwide": 6571720
+   "crosspool:EPC-BID26": 5786119,
+   "crosspool:EPC-CONTRACT": 1567004,
+   "corpus_stores": 15987845,
+   "metaso_kb": 44772,
+   "sogou_wechat": 126150,
+   "court:anysearch": 94700,
+   "metaso": 1209,
+   "govlist:court": 18317,
+   "anysearch:web": 140960,
+   "ima_public": 13160739,
+   "browser360": 1160,
+   "weread": 504156,
+   "zh_search_pro": 60781,
+   "localfiles:rss": 33558,
+   "localfiles": 24308537,
+   "manus": 1510,
+   "govlist": 317163,
+   "last30days": 18058,
+   "wechat4x": 3673646,
+   "book118": 20388,
+   "doc88": 13175,
+   "court": 76669,
+   "chinca": 185511,
+   "stdsamr": 986453,
+   "kb_harvest:wenku": 49212,
+   "djyanbao": 385,
+   "dangdang": 26748,
+   "google_news_rss": 4854,
+   "wikidata": 1864
   },
-  "last_tier_persist": "2026-10-15 16:22"
+  "last_tier_persist": "2026-10-26 00:02"
  },
  "corps_f1": {
-  "pending": 51,
-  "dispatched": 0,
+  "pending": 45,
+  "dispatched": 6,
   "done": 0,
   "harvested_chars": 0
  },
  "tier": {
-  "t1_valid": 8943199,
-  "t2_valid": 187886,
+  "t1_valid": 57880004,
+  "t2_valid": 1258706,
   "t12_gate": "总门已撤(v3)",
   "judge": "pool_state"
  },
- "word_gate_pass": false,
+ "word_gate_pass": true,
  "quality_report": "E:\\AI-Station\\_proposals\\flagship-paid-report-1007\\work\\QUALITY_DOSSIER.md",
  "user_approved": true,
  "approved_at": "2026-10-15T07:49:09",
  "approved_note": "批准开写",
  "bar": {
-  "t1_min": 10000000,
+  "t1_min": 20000000,
   "t1t2_min": null,
   "budget_chars": 200000000,
   "mode": "v3"
  },
  "f1_corpus_dirs": 67,
  "completeness": {
-  "pass": false,
+  "pass": true,
   "pass_rule": "all_green_or_waived",
   "required_axes": [
    "T",
@@ -57,33 +81,38 @@
    "C"
   ],
   "axis_statuses": {
-   "T": "unknown",
-   "B": "unknown",
-   "D": "unknown",
-   "P": "unknown",
-   "C": "unknown"
+   "T": "green",
+   "B": "waived",
+   "D": "green",
+   "P": "green",
+   "C": "green"
   },
-  "ledger_exists": false,
-  "green_axes": [],
-  "waived_axes": [],
-  "failing_axes": [
-   "B",
+  "ledger_exists": true,
+  "green_axes": [
    "C",
    "D",
    "P",
    "T"
-  ]
+  ],
+  "waived_axes": [
+   "B"
+  ],
+  "failing_axes": []
  },
  "saturation": {
-  "campaign": "EPC-TRAIN",
-  "source": "E:\\AI-Station\\ammo_pool\\EPC-TRAIN\\question_tree.json",
+  "campaign": "EPC-JIAGE",
+  "source": "E:\\AI-Station\\ammo_pool\\EPC-JIAGE\\question_tree.json",
   "min_evidence": 2,
   "min_hosts": 2,
   "min_pct": 80,
   "eei_rule": "coverage() 逐EEI预判: >=2证据 ∧ >=2独立host 计入 saturated",
-  "status": "unknown",
-  "pass": false,
-  "reason": "question_tree.json 无 coverage 节 (先跑 ammo_pool.py coverage <cid> 刷饱和账)"
+  "eei_total": 78,
+  "saturated": 70,
+  "gap": 8,
+  "sat_pct": 89.7,
+  "checked": "2026-10-25 23:59",
+  "status": "pass",
+  "pass": true
  },
- "s1_gate_pass": false
+ "s1_gate_pass": true
 }

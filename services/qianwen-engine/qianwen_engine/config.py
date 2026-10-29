@@ -146,6 +146,6 @@ KB_ORDER_PER_GB_FEN = 200       # 每 GB +¥2
 KB_ORDER_MD_FACTOR = 1.5        # 轻便阅读版 ×1.5
 KB_ORDER_IMPORT_ADD_FEN = 1900  # 随身导入包 +¥19
 KB_ORDER_PRICE_TOL_FEN = 50     # 服务端复算 vs 客户端声明容忍差（fen；超出=400 防篡价）
-KB_GOODS_UNIT_FEN = 10          # 复用 export_product_id ¥0.1/个（1022：免建新道具，buyQuantity=total_fen/10）
+KB_GOODS_UNIT_FEN = 100         # kb_goods 道具单价 ¥1（buyQuantity=total_fen/100）
 KB_ORDER_MAX_QUANTITY = 100000  # buyQuantity 护栏（微信短剧商品数量上限）
 KB_BRIDGE_KEY_FILE = SECRETS_DIR / "kb_bridge.key"   # 履约桥机对机共享密钥（缺文件=503 如实）

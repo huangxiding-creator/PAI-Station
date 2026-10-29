@@ -1,0 +1,57 @@
+@@@ off=2403898
+class MiscHandler{
+legacyProcessor=null;
+async execute(e,r,n,a){
+const s=getCurrentAppType(),i=getActionExecutionContext(e);
+switch(e.action!=="qps-limit"&&qpsRetryCount>0&&(console.log(`【qps-limit】收到非限流 action (${
+e.action
+}
+)，重置重试计数 (之前: ${
+qpsRetryCount
+}
+)`),qpsRetryCount=0),e.action){
+case"stop-reply":{
+i?.throwIfAborted(),console.log("【stop_reply】AI 判定无需回复，恢复下一轮循环",{
+currentPhase:rxEngine.phase$.value.phase,isStreaming:streamingState.isStreaming
+}
+),streamingState.isStreaming&&await finishStreamMessage(!1,i),e.data&&displayMessage("action",e.data),await a.resumeNextLoop({
+instant:!0
+}
+);
+break
+}
+case"image_received":{
+console.log("【图片接收】",e.data);
+break
+}
+case"qps-limit":{
+qpsRetryCount++,console.log(`【qps-limit】QPS限流，第 ${
+qpsRetryCount
+}
+/${
+QPS_MAX_RETRIES
+}
+ 次重试`),e.data&&displayMessage("thinking",e.data),qpsRetryCount>=QPS_MAX_RETRIES?(console.log("【qps-limit】达到最大重试次数，恢复下一轮循环"),qpsRetryCount=0,streamingState.isStreaming&&await finishStreamMessage(!1,i),await a.resumeNextLoop({
+instant:!0
+}
+)):(console.log(`【qps-limit】等待 ${
+QPS_RETRY_DELAY/1e3
+}
+ 秒后重新上传截图...`),i?await i.delay(QPS_RETRY_DELAY):await new Promise(o=>setTimeout(o,QPS_RETRY_DELAY)),i?.throwIfAborted(),await a.takeScreenshot("upload"));
+break
+}
+case"receivemessage":{
+if(console.log("【TRACE】MiscHandler 进入 receivemessage case"),rxEngine.phase$.value.phase!==EnginePhase.SWITCHING_UNREAD){
+console.log("【receivemessage】当前不在 SWITCHING_UNREAD，丢弃晚到轮询任务",{
+phase:rxEngine.phase$.value.phase
+}
+);
+break
+}
+const o=e.skip_current_diff===!0;
+if(getCurrentReplyMode()==="assist"&&!o){
+console.log("【receivemessage】辅助模式，立即检查聊天区域差异");
+try{
+i?.throwIfAborted();
+const d=await checkChatDiffForAssistMode(s);
+if(i?.throwIfAborted(),d.shouldUpload)console.log("【receivemessage】辅助模式检测到

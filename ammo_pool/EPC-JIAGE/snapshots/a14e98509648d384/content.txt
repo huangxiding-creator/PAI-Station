@@ -1,0 +1,308 @@
+---
+title: "万涂幻象：经理点个同意车就来了，用飞书多维表格打车是种什么体验"
+source: "https://waytoagi.feishu.cn/wiki/RS5IwhuOpiEhbfkuTF2czYewntg"
+wiki_root: "https://waytoagi.feishu.cn/wiki/QPe5w5g7UisbEkkow8XcDmOpn8e"
+date: 2026-05-14
+tags:
+  - 飞书知识库
+  - waytoagi
+---
+
+# 万涂幻象：经理点个同意车就来了，用飞书多维表格打车是种什么体验
+> 公众号原文链接：[https://mp.weixin.qq.com/s/wf7H8V-6yWP58rRi0EuKXQ](https://mp.weixin.qq.com/s/wf7H8V-6yWP58rRi0EuKXQ)
+
+哈喽，我是祥瑞，一个AI圈子里天天玩儿多维表格的
+
+不知道你们有没有过那种，看着满桌子发票想把头撞在键盘上的时刻
+
+反正我有
+
+这事儿得从我上一份工作说起
+
+那时我还在车企的焊装车间做PLC调试
+
+听着挺高大上，其实每天都在和火花、噪音还有永远调不完的程序打交道
+
+![Feishu Docs - Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/v2/cover/Gz6gbkmkko2qVUxcxnncVh1pn4e/?fallback_source=1&height=1280&mount_node_token=ZvwfdDL45olRyBxFCAOcbFO7ngh&mount_point=docx_image&policy=equal&width=1280)
+
+项目前期赶进度，那是真的忙
+
+每天往返现场和宿舍，打车成了家常便饭
+
+有时候一天好几趟，一个月下来手机里全是行程单
+
+最崩溃的不是加班，而是月底报销
+
+我要把那一堆乱七八糟的行程对着考勤表
+
+一张张贴发票，填单子，稍微填错一个数就得被打回来重做
+
+![Feishu Docs - Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/v2/cover/FT72bFqhgoIJzhxsxCccyv1Ingh/?fallback_source=1&height=1280&mount_node_token=Xmjudu6flowEmYxjqiwcFGRfnrd&mount_point=docx_image&policy=equal&width=1280)
+
+那会儿我就在想，咱们的车都能实现自动造车了
+
+怎么处理这些杂事儿还得靠人肉填表
+
+咱现在不是天天玩儿多维表格嘛
+
+还记得之前咱们聊过
+
+在群里一句话就能自动建表的那波操作吗
+
+我就琢磨
+
+既然建表都能言出法随
+
+那打车报销这种让人头秃的琐事
+
+肯定也能让AI顺手给办了
+
+于是我就搞了这么一套**自动化方案**
+
+核心架构其实非常清晰，甚至可以说有点简单粗暴
+
+我用的是飞书多维表格作为地基
+
+核心大脑就是之前提过的那个多维表格里的**AI Agent节点**
+
+![Feishu Docs - Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/v2/cover/VUSGbepk0oruySx4lrMcLiWNnqe/?fallback_source=1&height=1280&mount_node_token=ZrlgdkH8Ao9JvmxjtllcBBy9noc&mount_point=docx_image&policy=equal&width=1280)
+
+而让这个大脑能去外面跑腿的，是滴滴出行的MCP
+
+效果怎么样呢
+
+简单说就是：**员工点一下，审批完自动叫车，晚上自动算账**
+
+别看运行失败那么多次，是真的踩了很多坑，下面给大家详细说说是怎么配置的
+
+完全不用人脑子去记那些鸡毛蒜皮
+
+而且这里面藏着一个让兄弟们最爽的细节
+
+大家再也不用自己先掏腰包垫钱了
+
+以前打车，那是真金白银先从自己微信里出去
+
+月底还得求爷爷告奶奶等着财务打款
+
+![Feishu Docs - Image](blob://https://waytoagi.feishu.cn/2caac873-18ad-4798-a98b-7f1c30e6d57d)
+
+![Feishu Docs - Image](blob://https://waytoagi.feishu.cn/3cab834e-c1d4-4cde-a994-feaba9788bdf)
+
+现在这套系统可以直接用公司的账户，但是还得看公司愿不愿意这样干
+
+行程一结束，直接扣公司的预存账户
+
+咱们只管坐车，钱的事儿系统自己和公司结算
+
+咱们先看看**地基**怎么打
+
+其实只需要在多维表格里建三张表就能搞定
+
+第一张是**项目现场信息表**
+
+这里就是导航的A点和B点
+
+你需要把项目现场的坐标和员工宿舍的地址都填进去
+
+这相当于给AI一张地图，让它知道大家都在哪儿活动
+
+做过现场调试的兄弟都懂
+
+咱们经常是这个项目干两三天
+
+![Feishu Docs - Image](blob://https://waytoagi.feishu.cn/4d011150-bd82-41e8-b0aa-4a51f8b28905)
+
+![Feishu Docs - Image](blob://https://waytoagi.feishu.cn/238ced36-43c8-4027-9136-cdc65f4ffb69)
+
+转头就得拎着电脑去下一个场子救火
+
+所以专门建这张表 就是为了应对这种频繁变动的节奏 不用每次都重新输地址，选一下就行
+
+第二张是**现场人员信息表**
+
+这是白名单
+
+把员工的**姓名**和的**手机号**放进去，这样滴滴司机就可以给你打电话了
+
+这里有个细节要注意
+
+手机号必须是**纯数字**，也可以直接用**电话号**字段因为Agent要靠这个号码去滴滴那边摇人
+
+第三张是**用车调度信息表**
+
+这也是所有数据的汇总中心
+
+但对于干活的兄弟们来说，他们甚至都不用看这张表
+
+我直接建了一个极简的**用车申请表单视图**
+
+![Feishu Docs - Image](blob://https://waytoagi.feishu.cn/bab48e1b-cc4e-4854-a8b0-814ba46a0a81)
+
+![Feishu Docs - Image](blob://https://waytoagi.feishu.cn/c18a76c0-4150-468e-ab54-7ceb7073a3ac)
+
+![Feishu Docs - Image](blob://https://waytoagi.feishu.cn/0e0de632-c5d5-47e8-a914-06121ba69717)
+
+大家手机上扫码点开，界面特别干净
+
+选一下自己的名字，点一下是**去现场**还是**回住所**
+
+再选个车型，点提交就完事
+
+这背后的逻辑其实特别像咱们写PLC程序
+
+那个表单的提交按钮，就是一个**启动信号**
+
+信号一给到，后台的自动化流程立马接管
+
+当**添加新记录**时 就会触发工作流，然后就像走梯形图一样，进入那个**条件判断**环节
+
+它会判断你刚刚填的行程类型是不是**去现场**
+
+![Feishu Docs - Image](blob://https://waytoagi.feishu.cn/52353c28-5269-40bc-9f8f-565fd25e7a29)
+
+如果是，它就发送去现场的消息，把那个带按钮的审批卡片
+
+直接推送到项目经理那里
+
+上面写着谁要走、去哪儿、坐快车还是特惠
+
+经理点个同意，系统状态就自动变更为已同意
+
+背后的逻辑也是通过工作流实现的
+
+以前用车申请得追着经理签字
+
+现在我在工作流那里把交互逻辑都配置好了
+
+**如图所示**，我在消息卡片里埋了两个按钮
+
+一个是同意，一个是驳回
+
+并设置了一个很简单的触发动作，只要经理手指一点**同意，**系统后台就会自动把这条记录的审批状态修改为**已同意**
+
+重头戏来了，就是那个会思考的**AI Agent节点**
+
+这也是这套方案最性感的地方
+
+普通的自动化只能按死板的规则跑
+
+但我在工作流里加了个Agent节点，并挂载了**滴滴出行MCP**
+
+![Feishu Docs - Image](blob://https://waytoagi.feishu.cn/bb9bc081-f318-4bd4-9d35-4e8b12091cae)
+
+![Feishu Docs - Image](blob://https://waytoagi.feishu.cn/ebf2d77b-ade4-4e6d-9226-f56ec30d80fc)
+
+![Feishu Docs - Image](blob://https://waytoagi.feishu.cn/eb73264a-1e04-4bc3-8ee2-47a93246e080)
+
+![Feishu Docs - Image](blob://https://waytoagi.feishu.cn/bda5c23d-c70c-44a7-baab-3c2247721a03)
+
+![Feishu Docs - Image](blob://https://waytoagi.feishu.cn/04c46cee-7bda-4789-a11e-891af00713e3)
+
+当审批通过，记录被修改的那一刻，真正的**派单工作流**就触发了
+
+这里我没有把压力全扔给AI，而是用了一个**条件判断（If/Else）节点**来做分流
+
+![Feishu Docs - Image](blob://https://waytoagi.feishu.cn/2b03d76e-046a-4c9b-835c-f937a2823fb8)
+
+**第一条：去现场**
+
+如果流程判断出你的行程类型是**去现场**
+
+它就会走左边的分支，自动把你的**住所**塞进Agent的**起点**参数，把**现场**塞进**终点**参数
+
+![Feishu Docs - Image](blob://https://waytoagi.feishu.cn/22e1e0d7-c516-47bd-98f9-ac0cc0133033)
+
+**第二条：回住所**
+
+如果判断结果是否定的（也就是不满足“去现场”这个条件）
+
+流程就会自动切换到右边，把**起点和终点瞬间反转** 起点变成了现场，终点变成了住所
+
+![Feishu Docs - Image](blob://https://waytoagi.feishu.cn/6e4a864c-5e6a-4756-b780-1129327f980f)
+
+这样一来，Agent根本不需要去猜你要去哪
+
+![Feishu Docs - Image](blob://https://waytoagi.feishu.cn/1accf0b9-a7fd-40e3-b6cb-427144e3c7c6)
+
+![Feishu Docs - Image](blob://https://waytoagi.feishu.cn/7eb70c7e-9f6c-448d-ab33-7fc377bc585a)
+
+它只需要拿着流程喂给它的精准坐标，去调用**滴滴出行MCP**
+
+你想坐特惠它就帮你找便宜的，你想坐快车它就找快的
+
+![Feishu Docs - Image](blob://https://waytoagi.feishu.cn/82684b9f-7a4f-490d-963c-3bf981b35d59)
+
+最妙的是它还能处理财务闭环
+
+我设了个定时任务，每天晚上八点
+
+![Feishu Docs - Image](blob://https://waytoagi.feishu.cn/d718f85e-89da-40a0-87b6-94e9c10b95a3)
+
+那个结算Agent节点就会像个勤劳的小会计一样爬起来
+
+通过**MCP接口**去滴滴那边查每一笔订单的状态
+
+如果订单完成了，它就把实际费用抓回来填进表里 如果取消了，就自动归零
+
+哪怕你以前完全没写过代码 照着我下面整理好的这个提示词抄作业 也能让Agent跑得飞快
+
+**派单Agent的配置逻辑是这样的**
+
+它的角色就是个智能调度员，你要告诉它，先用地图工具去查精准坐标，然后根据我们选的车型和用车类型去找最匹配的那个ID，最后调用下单接口，记得把那个**call\_car\_phone**参数填对，也就是那个电话号码，不然司机找不到人
+
+**结算Agent就更简单了**
+
+它的任务就是查单，看到实际金额状态是为空，就把钱数记下来，这一步虽然简单，但它是把咱们从贴发票地狱里救出来的关键
+
+Agent的数据会调用**多维表格MCP**写入相关的数据表中
+
+![Feishu Docs - Image](blob://https://waytoagi.feishu.cn/abc780b8-9062-4ce2-84eb-56326433e436)
+
+这一套下来 我再也不用月底对着一堆票据抓狂了
+
+团队的小伙伴也能把心思花在更重要的调试工作上
+
+毕竟咱们的大脑是用来解决复杂问题的
+
+不是用来做加减法的
+
+## 写在最后
+
+其实，Agent 的玩法远不止打个车这么简单
+
+这就好比你给多维表格装上了一个会思考的大脑
+
+又给它配了一堆能伸向互联网的机械手
+
+现在的飞书云文档、高德地图、Jina 搜索都有了 MCP
+
+你可以让它每天早上自动搜罗全网的行业热点
+
+写成一份带观点的早报推送到群里
+
+也可以让它根据你的预算和偏好
+
+一键生成带天气预报的旅行路书
+
+我们正在从**设计死板的流程**进化到**雇佣会变通的数字员工**
+
+这个滴滴的案例，只是我抛出来的一块砖
+
+希望能引出大家手里的玉
+
+技术这东西，归根结底是为了让咱们可以省些力气
+
+哪怕只是省去了贴发票的那两个小时
+
+哪怕只是省去了让员工垫资的那几百块钱
+
+那也是咱们从繁琐工作中抢回来的自由
+
+如果这篇文章里的某个点，或者某个流程
+
+让你觉得“哎，这不就是我遇到的那个疙瘩吗” 或者你在搭建应用时遇到了卡顿，想找个说得上话的地方聊聊，欢迎来我的世界坐坐
+
+觉得有用的话，点个在看也是一种支持，回见
+
+关注我，下一篇实战见~

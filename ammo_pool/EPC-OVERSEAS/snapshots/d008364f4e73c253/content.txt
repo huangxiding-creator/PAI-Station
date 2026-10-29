@@ -1,0 +1,93 @@
+# Trip.com hotels checkout
+
+This is a bundled reference of the `trip` skill for completing the selected booking. Follow `trip` for search and booking choices, and the current payment skill selected by `trip` and the runtime for payment authorization. Read this reference only when entering the selected product’s booking page.
+
+Default to the English interface unless the user requests another language; verify it after regional redirects. Language does not change market, currency or local time. Do not switch the site language mid-checkout.
+
+For an Addon-selected property, open its returned link and keep its verified identity and stay; do not restart city-wide discovery.
+
+## Continue from the selected result
+
+Open the selected Trip result’s link unchanged, or continue from the matching Trip.com page already supplied or open. Keep the selected property, dates, guests, rooms and currency. Do not restart discovery on the website. New searches, including date ranges and replacement properties or flights, use the Trip Addon under `trip`.
+
+## Select and continue
+
+Keep the selected room and stay. Do not audit cancellation, breakfast, payment terms or fee breakdowns, compare other rates, or open policy dialogs during checkout. Use the displayed information to preserve explicit user requirements; do not silently substitute a different room. The user reviews the final booking and payable amount in the payment confirmation.
+
+## Checkout
+
+Complete the current Trip.com hotel checkout: fill the details → click the booking button once.
+
+Help the user finish booking quickly. Keep the selected hotel, room and stay. Make routine decisions from the page and available information without repeated confirmation, and do not stop after filling the form. Do not restart hotel search while the selected option is available; use the replacement flow below if it is sold out. Skip optional requests and paid extras.
+
+Collect only missing required guest/contact details and continue filling. When the final payable amount is displayed, send the booking summary and amount/currency immediately for the user to review under the payment flow in `trip`; do not wait to research terms. Reuse an existing authorization for the same unchanged booking and finish without another confirmation.
+
+### If sold out
+
+If Trip explicitly reports sold out, use an available similar room in the same hotel, otherwise find one nearby alternative through Trip. Keep dates, guests and explicit requirements. Carry the proposed replacement, displayed total and differences into the single final payment confirmation; do not submit it before the user accepts that booking. An empty/loading room list is not proof of sold out.
+
+### 1. Fill known email and required details
+
+Reuse the supplied booking email; otherwise use an already known preferred email or ask for the missing address with the other required fields. Fill `input[name="email"]` or `input[autocomplete="email"]` and continue. Do not offer optional sign-in or wait for a verification code. Dismiss an obstructing sign-in prompt using `#bbz_accounts_component_sdk_close` or `#ibu_login_close`; otherwise ignore it. Handle sign-in only if the user explicitly requests it or Trip requires it to proceed.
+
+Inspect the full checkout form and collect what the page actually requires. Reuse details supplied by the user, already filled on the page or available through authorized tools. Ask for the missing required details together, not just the usual fields below:
+
+- Guest family name and given name, entered separately and matching the check-in identity document.
+- Contact email; reuse it once supplied.
+- Phone number and international dialing code.
+- Guest nationality / country or region when required by the page. Do not infer nationality from the dialing code, site region or suggested shortcuts.
+- For the user-card flow only, if there is no saved card, obtain card number, cardholder name, expiry and CVV together in that order. If a usable card is already available, obtain only the CVV needed for payment.
+- Any other required details shown on the page, identified by required markers, `required` / `aria-required` or validation messages. Do not ask for optional fields. If new required fields appear later, request only the remaining missing details.
+
+Choose the payment-information branch from the cards available in the current payment area; do not wait for sign-in to discover saved cards. Collect details through the current runtime's forms or tools. Do not write card details to logs or files.
+
+### 2. Fill guest and contact details
+
+After email, fill the other required details. Locate fields by their meaning and DOM attributes, not their left-to-right position, `aria-label` or text in a particular language.
+
+| Detail | Locator hints |
+| --- | --- |
+| Family name | `.surname input` within the current guest section, or `input[name="lastName"]` when present |
+| Given name | `.givenName input` within the current guest section, or `input[name="firstName"]` when present |
+| Email | `input[name="email"]` or `input[autocomplete="email"]` |
+| Phone | `input#phoneNumber` or `input[name="phoneNumber"]` |
+| International dialing code | `.country-select` within the phone section; its expanded list is `#rs-country-list`. Select the supplied dialing code |
+| Nationality / country or region, when required | `#region-selector [role="combobox"]`; after expanding, search using `input.search-input` within `#region-selector` and select the matching `li.list-item` |
+
+The observed family-name and given-name inputs have empty `name` attributes and `autocomplete="off"`; distinguish them by their `.surname` / `.givenName` containers. Do not put the full name into the family-name field. Fill missing details or correct values that do not match the user's information; do not blindly keep the site region's default dialing code.
+
+The observed nationality control has no form `name`. It is a custom dropdown inside `id="region-selector"`, not a native `select`. Its list also uses `#rs-country-list`, so scope it to `#region-selector` to avoid operating the phone's dialing-code list. Select the actual option matching the supplied nationality and check the displayed selection. A suggested quick selection is not user information.
+
+### 3. Use a saved card when available; otherwise fill a new card
+
+Inspect payment methods within `[data-testid="payment-selection-card"]`. Use the user's specified card; otherwise keep the selected usable card. If none is selected, choose a usable saved card.
+
+- Saved-card buttons match `button[data-testid^="select-item-box-"]`, excluding the new-card button. Read each card identifier from the current page rather than hardcoding its suffix.
+- The new-card button is `button[data-testid="select-item-box-newCard"]`.
+- For a saved card, obtain and fill the CVV required by the page. Do not request its existing card number, cardholder name or expiry again.
+- If no usable saved card is available, select a new card and obtain all the following details together.
+
+| Detail | Locator hints |
+| --- | --- |
+| Card number | `input#card_no` |
+| Cardholder name | `input#card_holder` |
+| Expiry | `input#validity` or `input[autocomplete="cc-exp"]`, using the format required by the current input |
+| CVV | `input#verify_no`, following the current input's requirements |
+
+Use the current visible, editable inputs. Card number, cardholder name and CVV may lack standard `cc-*` autocomplete attributes; use the observed IDs rather than skipping these fields. Use the current runtime's supported card-filling method and pass temporary references unchanged to the corresponding native fill tools.
+
+### 4. Book once, dismiss the sign-in dialog and read the result
+
+Once guest, contact and payment details are complete with no related required-field errors, click the booking button once without waiting for optional sign-in or email verification or asking again whether to book. The observed booking control is within `[data-test-id="bookPage-payButton"]`; operate the actual clickable `button`, not both its outer container and the inner button.
+
+After submission, the Trip.com URL path `/hotels/ctorderdetail` with a nonempty `orderid` parameter identifies the order details page, for example `https://hk.trip.com/hotels/ctorderdetail?orderid=<order-id>`. This applies across Trip.com regional domains. Keep the actual redirected URL rather than constructing an order link.
+
+The order details page may show an invitation to sign in. Try closing it once using `#ibu_login_close`, the X at the top right of the visible dialog. If that fails or it remains, continue with the observable order details and return the current screenshot under `trip`’s screenshot fallback; do not retry closing it before capture. Do not click the sign-in button or request an email code at this stage. Do not rely on dialog wording, dynamic classes or `aria-label`. If no dialog appears, read the order directly.
+
+Read the order number, payment status and booking status. The URL identifies the page only; use the displayed status to establish payment and confirmation. Complete any required bank verification through the current verification flow. Report processing or uncertain states accurately; if a response times out or is unclear, inspect the current order status rather than clicking the booking button again.
+
+These DOM attributes are locator hints, not eligibility gates. If the page structure changes, inspect the current controls and continue the same steps using the actual page. Do not use `aria-label` or switch site language just to match wording in this manual.
+
+### Report
+
+Report the property, stay, rooms/guests, displayed amount/currency and observed order status; do not fetch extra terms just for the report. Pending confirmation is not confirmed.

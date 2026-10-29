@@ -49,7 +49,7 @@ def run(script: str, timeout: int = 600) -> tuple[int, str]:
         time.sleep(6)
         d = _aliyun('ecs', 'DescribeInvocations', '--RegionId', REGION, '--InvokeId', inv)
         st = d['Invocations']['Invocation'][0]
-        if st.get('InvocationStatus') in ('Finished', 'Failed', 'Cancelled'):
+        if st.get('InvocationStatus') in ('Success', 'Finished', 'Failed', 'Cancelled'):
             break
     rec = _aliyun('ecs', 'DescribeInvocationResults', '--RegionId', REGION, '--InvokeId', inv)
     r = rec['Invocation']['InvocationResults']['InvocationResult'][0]

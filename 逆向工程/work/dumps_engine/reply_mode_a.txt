@@ -1,0 +1,40 @@
+@@@ off=2475900
+NSHOT_SAVE_CONFIG.enabled,maxFiles:SCREENSHOT_SAVE_CONFIG.maxFiles,saveInterval:SCREENSHOT_SAVE_CONFIG.saveInterval
+}
+),setCurrentAppType=t=>{
+currentAppType=t
+}
+,getPersistedAppType=()=>{
+if(isWhatsAppBuild())return"whatsapp";
+const t=store.get("appType");
+return typeof t=="string"&&isValidAppType(t)?t:"personal"
+}
+,getCurrentAppType=()=>(currentAppType===null&&(currentAppType=getPersistedAppType()),currentAppType),setCurrentReplyMode=t=>{
+currentReplyMode=t
+}
+,getCurrentReplyMode=()=>(currentReplyMode===null&&(currentReplyMode=store.get("reply_mode")||"auto",console.log(`【🔍诊断 getCurrentReplyMode】首次调用，从 store 初始化: ${
+currentReplyMode
+}
+`)),currentReplyMode),WECHAT_QRCODE_URL="https://mp.weixin.qq.com/cgi-bin/showqrcode",AGENTIC_ONBOARDING_STORE_PREFIX="agentic_settings_onboarding_seen:";
+function encodeAgenticStoreKeyPart(t){
+return Buffer.from(t,"utf8").toString("base64").replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/g,"")
+}
+function getAgenticOnboardingStoreKey(){
+const t=store.get("user"),r=(typeof t?.email=="string"&&t.email.trim()?t.email:typeof t?.username=="string"?t.username:"").trim().toLowerCase(),n=r?encodeAgenticStoreKeyPart(r):"anonymous";
+return`${
+AGENTIC_ONBOARDING_STORE_PREFIX
+}
+${
+n
+}
+`
+}
+const DEFAULT_AGENT_TYPES=[{
+alias:"极速",name:"极速模式",value:"speed",key:"fast"
+}
+,{
+alias:"深思",name:"深思模式",value:"think",key:"deep"
+}
+];
+let agentTypePollFailCount=0,agentTypePollInterval=null;
+const fetchAge

@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "defaultMode": "bypassPermissions",
+    "allow": ["Bash", "Read", "Write", "Edit", "Glob", "Grep", "WebSearch", "WebFetch", "Skill", "NotebookEdit"],
+    "ask": [],
+    "deny": ["Bash(rm -rf *)", "Bash(rm -r *)", "Bash(rmdir *)", "Bash(del *)", "Bash(del /*)", "Bash(Remove-Item *)", "Bash(Remove-Item*)", "Bash(git push*)", "Bash(git push *)"]
+  },
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "enableAllProjectMcpServers": true
+}

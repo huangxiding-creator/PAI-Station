@@ -8,13 +8,14 @@ enrich_blueprint(bp, adapters, per_topic=12)：对每个 L2 主题组，用 L2 �
 placeholder_kept。绝不增加下载行为（本模块零网络腿，网络全在 adapter 内）。
 
 CLI：py -3 -m kb_factory.channel_adapters.enrich <bp.json> -o out.json [--dry]
-     [--per-topic N] [--max-topics N] [--no-ima]
+     [--per-topic N] [--max-topics N] [--no-ima] [--evidence]
 """
 import argparse
 import json
 import re
 import sys
 
+from kb_factory.catalog_engine import cataloging
 from kb_factory.catalog_engine.blueprint import TIERS, tier_counts
 from kb_factory.catalog_engine.metadata import EXT_MIME, RIGHTS_BY_PERM, sanitize_filename
 from kb_factory.channel_adapters.base import (AuditLog, CircuitOpenError, RateLimitExceeded,
@@ -84,16 +85,23 @@ def _group_slots(l2: dict) -> list:
 
 
 def _iter_groups(bp: dict):
+    """遍历 (L1, L2) 对——四件套编目需 L1 上下文（中图法映射/档位推断）。"""
     for l1 in bp.get("tree", {}).get("l1", []):
         for l2 in l1.get("l2", []):
-            yield l2
+            yield l1, l2
 
 
-def _fill_group(slots: list, pool: list, ratio: dict, channels: dict):
-    """按配比回填一组槽位。pool=[(FileMeta, channel)]（已去重）；返回本组填充数。"""
+def _fill_group(slots: list, pool: list, ratio: dict, channels: dict,
+                l1: dict | None = None, l2: dict | None = None, need_dict: dict | None = None):
+    """按配比回填一组槽位。pool=[(FileMeta, channel)]（已去重）；返回本组填充数。
+    回填即编目：四件套（clc_no/净题名/提要/受控标签）随真实 FileMeta 入库。
+    （参数名 need_dict 避让函数内既有局部变量 need=档位配额。）"""
     k = min(len(pool), len(slots))
     budgets = dict(tier_counts(k, ratio))
-    by_tier = {t: [i for i, s in enumerate(slots) if s.get("tier") == t] for t in TIERS}
+    # v2 document_driven 槽无 tier/ext 键：tier 按超越层名映射（cataloging._slot_tier
+    # 同款口径，与 catalog_entry 落标同源；v1 槽自带 tier 原样直用不受扰）
+    by_tier = {t: [i for i, s in enumerate(slots)
+                   if cataloging._slot_tier(s, l1) == t] for t in TIERS}
     for t in TIERS:  # 某档槽不足 → 按档序级联挪额，保总数=k
         if budgets[t] > len(by_tier[t]):
             leftover = budgets[t] - len(by_tier[t])
@@ -111,10 +119,12 @@ def _fill_group(slots: list, pool: list, ratio: dict, channels: dict):
             if need <= 0 or not pool:
                 break
             slot = slots[idx]
+            slot_ext = slot.get("ext") or ext_for(slot.get("fmt", ""))  # v2 槽无 ext 取 fmt
             pick = next((j for j, (m, _) in enumerate(pool)
-                         if fmt_matches(slot.get("ext", ""), m.fmt)), 0)  # fmt 偏好优先，否则保序
+                         if fmt_matches(slot_ext, m.fmt)), 0)  # fmt 偏好优先，否则保序
             meta, ch = pool.pop(pick)
             apply_meta(slot, meta, ch)
+            cataloging.catalog_entry(slot, l1, l2, need_dict, meta=meta, channel=ch)
             channels[ch]["filled"] += 1
             need -= 1
             filled += 1
@@ -123,11 +133,14 @@ def _fill_group(slots: list, pool: list, ratio: dict, channels: dict):
 
 def enrich_blueprint(bp: dict, adapters: list, per_topic: int = 12, max_topics: int | None = None,
                      audit: AuditLog | None = None) -> dict:
-    """就地回填并返回蓝图（同 dict，无拷贝）。provenance 增 channel_enrichment 计数。"""
+    """就地回填并返回蓝图（同 dict，无拷贝）。provenance 增 channel_enrichment 计数；
+    有渠道命中时增 hit_counts（L2 组名 → 各 adapter 返回 FileMeta 条数之和，
+    供 adjust_structure 证据回流加权；同名组跨 L1 合并计数）。"""
     ratio = bp["ratio"]
     channels = {a.channel: {"requests": 0, "results": 0, "filled": 0} for a in adapters}
     unavailable, filled_total, kept_total, groups_queried = {}, 0, 0, 0
-    for l2 in _iter_groups(bp):
+    hit_counts = {}  # L2 组名 → 本组各 adapter 返回 FileMeta 条数之和（原始事实）
+    for l1, l2 in _iter_groups(bp):
         slots = _group_slots(l2)
         if not slots:
             continue
@@ -135,6 +148,8 @@ def enrich_blueprint(bp: dict, adapters: list, per_topic: int = 12, max_topics: 
             continue
         groups_queried += 1
         query = strip_numbering(l2.get("name", ""))
+        gname = l2.get("name", "")
+        hit_counts.setdefault(gname, 0)
         pool, seen = [], set()
         for a in adapters:
             if not a.available():
@@ -147,11 +162,13 @@ def enrich_blueprint(bp: dict, adapters: list, per_topic: int = 12, max_topics: 
                 continue
             channels[a.channel]["requests"] += 1
             channels[a.channel]["results"] += len(metas)
+            hit_counts[gname] += len(metas)
             for m in metas:
                 if m.title and m.title not in seen:
                     seen.add(m.title)
                     pool.append((m, a.channel))
-        filled = _fill_group(slots, pool, ratio, channels)
+        filled = _fill_group(slots, pool, ratio, channels, l1=l1, l2=l2,
+                             need_dict=bp.get("need") or {})
         filled_total += filled
         kept_total += len(slots) - filled
         if audit is not None:
@@ -166,8 +183,13 @@ def enrich_blueprint(bp: dict, adapters: list, per_topic: int = 12, max_topics: 
         "filled": filled_total,
         "placeholder_kept": kept_total,
     }
+    # 证据回流：per-L2 命中数；全零（无 adapter 数据）→ 字段缺省，既有输出逐字节不变
+    if any(v > 0 for v in hit_counts.values()):
+        bp["provenance"]["hit_counts"] = hit_counts
     ch_txt = ",".join(f"{c}:{v['filled']}" for c, v in channels.items())
-    bp["provenance"]["stage_log"].append(
+    # setdefault：document_driven 蓝图 provenance 无 stage_log（既有隐性坑，
+    # 网络命中≥10件触发 KeyError），补空表承接 S8 行，taxonomy 蓝图行为不变
+    bp["provenance"].setdefault("stage_log", []).append(
         f"S8 渠道元数据回填: groups={groups_queried} filled={filled_total} "
         f"placeholder_kept={kept_total} channels[{ch_txt}] unavailable={list(unavailable)}")
     return bp
@@ -177,7 +199,7 @@ def plan_dry(bp: dict, adapters: list, per_topic: int = 12,
              max_topics: int | None = None) -> dict:
     """dry 计划：将要查询的词与预算，零请求、零改动。"""
     queries = []
-    for l2 in _iter_groups(bp):
+    for _l1, l2 in _iter_groups(bp):
         if not _group_slots(l2):
             continue
         if max_topics is not None and len(queries) >= max_topics:
@@ -192,9 +214,20 @@ def plan_dry(bp: dict, adapters: list, per_topic: int = 12,
 
 
 def build_default_adapters(audit):
+    from kb_factory.channel_adapters.djyanbao_meta import DjyanbaoAdapter
+    from kb_factory.channel_adapters.doc88_meta import Doc88Adapter
     from kb_factory.channel_adapters.ima_meta import ImaMetaAdapter
     from kb_factory.channel_adapters.wenku_meta import WenkuMetaAdapter
-    return [WenkuMetaAdapter(audit=audit), ImaMetaAdapter(audit=audit)]
+    adapters = [
+        WenkuMetaAdapter(audit=audit),
+        ImaMetaAdapter(audit=audit),
+        DjyanbaoAdapter(audit=audit),   # 1024 P0：洞见研报题录
+        Doc88Adapter(audit=audit),      # 1024 P0：工程范本文档题录
+    ]
+    if not __import__("os").environ.get("KB_NO_CHINCA"):  # chinca 5s 频控较重，env 可关
+        from kb_factory.channel_adapters.chinca_meta import ChincaAdapter
+        adapters.append(ChincaAdapter(audit=audit))   # 1024 P0：对外承包工程统计
+    return adapters
 
 
 def main(argv=None) -> int:
@@ -206,6 +239,8 @@ def main(argv=None) -> int:
     ap.add_argument("--per-topic", type=int, default=12)
     ap.add_argument("--max-topics", type=int, default=None, help="只回填前 N 个 L2 组")
     ap.add_argument("--no-ima", action="store_true", help="只用文库渠道")
+    ap.add_argument("--evidence", action="store_true",
+                    help="回填后按 provenance.hit_counts 自动调结构（hot>=8 ×1.5 / cold<=2 ×0.7）")
     args = ap.parse_args(argv)
 
     with open(args.blueprint, encoding="utf-8") as f:
@@ -225,6 +260,16 @@ def main(argv=None) -> int:
         ap.error("--out 必填（或用 --dry）")
     enrich_blueprint(bp, adapters, per_topic=args.per_topic, max_topics=args.max_topics,
                      audit=audit)
+    if args.evidence:
+        from kb_factory.catalog_engine.engine import adjust_structure  # 惰性导入（引擎零网络）
+        hits = bp["provenance"].get("hit_counts")
+        if hits:
+            adjust_structure(bp, hits)
+            ew = bp["provenance"].get("evidence_weighting", {})
+            print(f"[evidence] 结构加权: grew={ew.get('groups_grew', 0)} "
+                  f"shrunk={ew.get('groups_shrunk', 0)} ratio={bp['ratio']}")
+        else:
+            print("[evidence] 无命中数据（hit_counts 缺省），跳过结构加权")
     with open(args.out, "w", encoding="utf-8") as f:
         json.dump(bp, f, ensure_ascii=False, indent=1)
     prov = bp["provenance"]["channel_enrichment"]

@@ -1,0 +1,129 @@
+===== gui/theme.pyc =====
+
+# CODE <module>  args=()
+  0           RESUME                   0
+
+  1           LOAD_CONST               0 ('Application-wide visual theme helpers.')
+              STORE_NAME               0 (__doc__)
+
+  3           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (None)
+              IMPORT_NAME              1 (os)
+              STORE_NAME               1 (os)
+
+  5           LOAD_CONST               3 ('\nQWidget {\n    color: #20242A;\n    font-size: 13px;\n}\n\nQMainWindow, QDialog {\n    background: #F4F6F8;\n}\n\nQWidget#appCentral {\n    background: #F4F6F8;\n}\n\nQFrame#topBar {\n    background: #FFFFFF;\n    border-bottom: 1px solid #DDE2E7;\n}\n\nQLabel#appTitle {\n    color: #171A1F;\n    font-size: 20px;\n    font-weight: 700;\n}\n\nQLabel#appSubtitle {\n    color: #707782;\n    font-size: 12px;\n}\n\nQLabel#sectionTitle {\n    color: #303640;\n    font-size: 13px;\n    font-weight: 600;\n}\n\nQLabel#mutedLabel {\n    color: #707782;\n    font-size: 12px;\n}\n\nQLabel#licenseBadge {\n    color: #4F5966;\n    background: #EEF1F4;\n    border: 1px solid #DDE2E7;\n    border-radius: 4px;\n    padding: 5px 9px;\n    font-size: 12px;\n}\n\nQLabel#licenseBadge[status="active"] {\n    color: #147A55;\n    background: #EAF7F1;\n    border-color: #B9E4D2;\n    font-weight: 600;\n}\n\nQLabel#licenseBadge[status="warning"] {\n    color: #9A5A09;\n    background: #FFF5E5;\n    border-color: #F0D49C;\n}\n\nQLabel#versionLabel {\n    color: #89919C;\n    font-size: 11px;\n}\n\nQFrame#filterBar, QFrame#progressPanel, QFrame#logPanel {\n    background: #FFFFFF;\n    border: 1px solid #DDE2E7;\n    border-radius: 6px;\n}\n\nQPushButton {\n    min-height: 34px;\n    padding: 0 13px;\n    color: #303640;\n    background: #FFFFFF;\n    border: 1px solid #C9D0D8;\n    border-radius: 5px;\n    font-weight: 500;\n}\n\nQPushButton:hover {\n    background: #F5F7F9;\n    border-color: #AEB7C2;\n}\n\nQPushButton:pressed {\n    background: #E9EDF1;\n}\n\nQPushButton:focus {\n    border: 2px solid #2F7D6D;\n}\n\nQPushButton:disabled {\n    color: #A1A8B1;\n    background: #F1F3F5;\n    border-color: #E0E4E8;\n}\n\nQPushButton[variant="primary"] {\n    color: #FFFFFF;\n    background: #236B5E;\n    border-color: #236B5E;\n    font-weight: 600;\n}\n\nQPushButton[variant="primary"]:hover {\n    background: #1D5B50;\n    border-color: #1D5B50;\n}\n\nQPushButton[variant="danger"] {\n    color: #B63838;\n    background: #FFF7F7;\n    border-color: #E8BABA;\n}\n\nQPushButton[variant="danger"]:hover {\n    background: #FCEBEB;\n    border-color: #D99B9B;\n}\n\nQPushButton[variant="ghost"] {\n    min-height: 28px;\n    padding: 0 7px;\n    color: #5D6672;\n    background: transparent;\n    border-color: transparent;\n}\n\nQPushButton[variant="ghost"]:hover {\n    color: #20242A;\n    background: #EEF1F4;\n}\n\nQLineEdit, QComboBox, QSpinBox, QDateTimeEdit {\n    min-height: 34px;\n    padding: 0 10px;\n    color: #20242A;\n    background: #FFFFFF;\n    border: 1px solid #C9D0D8;\n    border-radius: 5px;\n    selection-background-color: #236B5E;\n}\n\nQLineEdit:hover, QComboBox:hover, QSpinBox:hover, QDateTimeEdit:hover {\n    border-color: #AEB7C2;\n}\n\nQLineEdit:focus, QComboBox:focus, QSpinBox:focus, QDateTimeEdit:focus {\n    border: 2px solid #2F7D6D;\n}\n\nQLineEdit:disabled, QComboBox:disabled {\n    color: #A1A8B1;\n    background: #F1F3F5;\n    border-color: #E0E4E8;\n}\n\nQComboBox::drop-down {\n    width: 28px;\n    border: none;\n}\n\nQTreeWidget, QTableWidget, QListWidget, QTextEdit {\n    color: #252A31;\n    background: #FFFFFF;\n    border: 1px solid #D6DCE2;\n    border-radius: 6px;\n    alternate-background-color: #F8F9FA;\n    outline: none;\n}\n\nQTreeWidget::item, QTableWidget::item, QListWidget::item {\n    min-height: 32px;\n    padding: 3px 6px;\n}\n\nQTreeWidget::item:hover, QTableWidget::item:hover, QListWidget::item:hover {\n    background: #EDF4F2;\n}\n\nQTreeWidget::item:selected, QTableWidget::item:selected, QListWidget::item:selected {\n    color: #173B34;\n    background: #DCECE8;\n}\n\nQHeaderView::section {\n    min-height: 36px;\n    padding: 0 9px;\n    color: #505966;\n    background: #F1F3F5;\n    border: none;\n    border-right: 1px solid #DDE2E7;\n    border-bottom: 1px solid #D6DCE2;\n    font-weight: 600;\n}\n\nQProgressBar {\n    min-height: 9px;\n    max-height: 9px;\n    color: transparent;\n    background: #E4E8EC;\n    border: none;\n    border-radius: 4px;\n}\n\nQProgressBar::chunk {\n    background: #2F7D6D;\n    border-radius: 4px;\n}\n\nQScrollBar:vertical {\n    width: 10px;\n    margin: 2px;\n    background: transparent;\n}\n\nQScrollBar::handle:vertical {\n    min-height: 28px;\n    background: #C5CBD2;\n    border-radius: 4px;\n}\n\nQScrollBar::handle:vertical:hover {\n    background: #AAB2BC;\n}\n\nQScrollBar::add-line:vertical, QScrollBar::sub-line:vertical,\nQScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {\n    height: 0;\n    background: transparent;\n}\n\nQMenu {\n    padding: 5px;\n    background: #FFFFFF;\n    border: 1px solid #D6DCE2;\n}\n\nQMenu::item {\n    min-height: 28px;\n    padding: 2px 24px 2px 10px;\n    border-radius: 4px;\n}\n\nQMenu::item:selected {\n    background: #E5F0ED;\n}\n\nQToolTip {\n    color: #FFFFFF;\n    background: #303640;\n    border: none;\n    padding: 5px 7px;\n}\n')
+              STORE_NAME               2 (APP_STYLESHEET)
+
+268           LOAD_CONST               4 (<code object set_widget_property at 0x000001DD46126BB0, file "gui\theme.py", line 268>)
+              MAKE_FUNCTION
+              STORE_NAME               3 (set_widget_property)
+
+277           LOAD_CONST               5 (<code object apply_app_theme at 0x000001DD46368000, file "gui\theme.py", line 277>)
+              MAKE_FUNCTION
+              STORE_NAME               4 (apply_app_theme)
+              RETURN_CONST             2 (None)
+
+## CODE set_widget_property  args=('widget', 'name', 'value')
+268           RESUME                   0
+
+270           LOAD_FAST                0 (widget)
+              LOAD_ATTR                1 (setProperty + NULL|self)
+              LOAD_FAST_LOAD_FAST     18 (name, value)
+              CALL                     2
+              POP_TOP
+
+271           LOAD_FAST                0 (widget)
+              LOAD_ATTR                3 (style + NULL|self)
+              CALL                     0
+              STORE_FAST               3 (style)
+
+272           LOAD_FAST                3 (style)
+              LOAD_ATTR                5 (unpolish + NULL|self)
+              LOAD_FAST                0 (widget)
+              CALL                     1
+              POP_TOP
+
+273           LOAD_FAST                3 (style)
+              LOAD_ATTR                7 (polish + NULL|self)
+              LOAD_FAST                0 (widget)
+              CALL                     1
+              POP_TOP
+
+274           LOAD_FAST                0 (widget)
+              LOAD_ATTR                9 (update + NULL|self)
+              CALL                     0
+              POP_TOP
+              RETURN_CONST             1 (None)
+
+## CODE apply_app_theme  args=('app',)
+277           RESUME                   0
+
+279           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (('QFont', 'QFontDatabase'))
+              IMPORT_NAME              0 (PySide6.QtGui)
+              IMPORT_FROM              1 (QFont)
+              STORE_FAST               1 (QFont)
+              IMPORT_FROM              2 (QFontDatabase)
+              STORE_FAST               2 (QFontDatabase)
+              POP_TOP
+
+281           LOAD_GLOBAL              6 (os)
+              LOAD_ATTR                8 (path)
+              LOAD_ATTR               11 (join + NULL|self)
+
+282           LOAD_GLOBAL              6 (os)
+              LOAD_ATTR               12 (environ)
+              LOAD_ATTR               15 (get + NULL|self)
+              LOAD_CONST               3 ('WINDIR')
+              LOAD_CONST               4 ('C:\\Windows')
+              CALL                     2
+
+283           LOAD_CONST               5 ('Fonts')
+
+284           LOAD_CONST               6 ('msyh.ttc')
+
+281           CALL                     3
+              STORE_FAST               3 (font_path)
+
+286           LOAD_GLOBAL              6 (os)
+              LOAD_ATTR                8 (path)
+              LOAD_ATTR               17 (exists + NULL|self)
+              LOAD_FAST                3 (font_path)
+              CALL                     1
+              TO_BOOL
+              POP_JUMP_IF_FALSE       68 (to L1)
+
+287           LOAD_FAST                2 (QFontDatabase)
+              LOAD_ATTR               19 (addApplicationFont + NULL|self)
+              LOAD_FAST                3 (font_path)
+              CALL                     1
+              STORE_FAST               4 (font_id)
+
+288           LOAD_FAST                2 (QFontDatabase)
+              LOAD_ATTR               21 (applicationFontFamilies + NULL|self)
+              LOAD_FAST                4 (font_id)
+              CALL                     1
+              STORE_FAST               5 (families)
+
+289           LOAD_FAST                5 (families)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       27 (to L1)
+
+290           LOAD_FAST                0 (app)
+              LOAD_ATTR               23 (setFont + NULL|self)
+              LOAD_FAST                1 (QFont)
+              PUSH_NULL
+              LOAD_FAST                5 (families)
+              LOAD_CONST               1 (0)
+              BINARY_SUBSCR
+              LOAD_CONST               7 (9)
+              CALL                     2
+              CALL                     1
+              POP_TOP
+
+291   L1:     LOAD_FAST                0 (app)
+              LOAD_ATTR               25 (setStyleSheet + NULL|self)
+              LOAD_GLOBAL             26 (APP_STYLESHEET)
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             8 (None)

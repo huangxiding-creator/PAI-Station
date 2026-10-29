@@ -1,0 +1,66 @@
+@@@ off=2540200
+.set("operation_mode",d),!0)),getBridge().ipc.handle("GET_DISCORD_INVITE_URL",()=>store.get("discord_invite_url")),getBridge().ipc.handle("GET_AGENT_TYPES",()=>store.get("agent_types",DEFAULT_AGENT_TYPES)),getBridge().ipc.handle("SET_AGENT_TYPE",(o,d)=>(store.set("agent_type",d),!0)),getBridge().ipc.handle("GET_AGENT_TYPE",()=>store.get("agent_type","speed")),getBridge().ipc.handle("GET_REPLY_MODE",()=>store.get("reply_mode","auto")),getBridge().ipc.handle("SET_REPLY_MODE",(o,
+d)=>(console.log(`【🔍诊断 SET_REPLY_MODE】收到模式切换请求: ${
+d
+}
+, 之前的模式: ${
+getCurrentReplyMode()
+}
+`),store.set("reply_mode",d),setCurrentReplyMode(d),console.log(`【🔍诊断 SET_REPLY_MODE】模式切换完成, 当前内存中的模式: ${
+getCurrentReplyMode()
+}
+`),!0)),initializeDiagnosticHandlers(),getBridge().ipc.handle("GET_PROMPT_TEMPLATES",async(o,d="cn")=>{
+try{
+const u=store.get("token");
+if(!u)throw new Error("登录已过期，请重新登录");
+const l=`/prompt/records?language=${
+d
+}
+`;
+return await apiRequest(l,{
+method:"GET",headers:{
+Authorization:`JWT ${
+u
+}
+`
+}
+,apiScope:"v1"
+}
+)
+}
+catch(u){
+throw console.error("获取任务提示词模板失败:",u),u
+}
+
+}
+),getBridge().ipc.handle("OPTIMIZE_PROMPT",async(o,d)=>{
+try{
+const u=store.get("token");
+if(!u)throw new Error("登录已过期，请重新登录");
+return await apiRequest("/prompt/optimize",{
+method:"POST",headers:{
+"Content-Type":"application/json",Authorization:`JWT ${
+u
+}
+`
+}
+,body:JSON.stringify(d),apiScope:"v2"
+}
+)
+}
+catch(u){
+throw console.error("优化任务提示词失败:",u),u
+}
+
+}
+),getBridge().ipc.handle("CHECK_PERMISSIONS",async()=>{
+try{
+const o=await checkAllPermissions();
+return debugLog("【IPC】检查权限完成:",o),o
+}
+catch(o){
+return console.error("【IPC】检查权限失败:",o),{
+screenRecording:!1,accessibility:!1
+}
+
+}

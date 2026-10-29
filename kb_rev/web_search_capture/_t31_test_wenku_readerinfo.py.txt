@@ -1,0 +1,80 @@
+test_wenku_readerinfo.py:207:     assert out.tri_cap_seen is False and out.wall_status is None
+test_wenku_readerinfo.py:208:     assert out.title_raw == "免费施工方案-百度文库" and out.title_clean == "免费施工方案"
+test_wenku_readerinfo.py:209:     assert sorted(out.html_urls_pages) == list(range(1, 9))
+test_wenku_readerinfo.py:210:     assert out.reader_info["htmlUrls"][0] == _img_url(1)  # readerInfo 原样保留（T26 三型分派吃它）
+test_wenku_readerinfo.py:211:     lines = _audit_lines(tmp_path / "audit.jsonl")
+test_wenku_readerinfo.py:212:     assert [l["event"] for l in lines] == ["readerinfo_init"]
+test_wenku_readerinfo.py:213:     assert lines[0]["count"] == 8 and lines[0]["status"] == "ok"
+---
+test_wenku_readerinfo.py:382: # ---------------- 段2/段3 契约：T18 已锁契约保持 + T22 readerInfo 腿接驳 ----------------
+test_wenku_readerinfo.py:383: 
+test_wenku_readerinfo.py:384: def test_fr2_2_plan_and_fetch_ladder_wiring(tmp_path):
+test_wenku_readerinfo.py:385:     """T18 锁定契约保持（无 docId → NotImplementedError 消息钉 T22/T26/T31/T35）+ T22 腿接驳：
+test_wenku_readerinfo.py:386:     有 docId 时 plan 出 HarvestPlan；fetch_ladder 跑完 readerInfo 腿后仍抛 T26/T31/T35
+test_wenku_readerinfo.py:387:     （三型重组归后继），采集结果落 adapter.last_reader_info。"""
+test_wenku_readerinfo.py:388:     adapter = _adapter(tmp_path)
+---
+test_wenku_readerinfo.py:383: 
+test_wenku_readerinfo.py:384: def test_fr2_2_plan_and_fetch_ladder_wiring(tmp_path):
+test_wenku_readerinfo.py:385:     """T18 锁定契约保持（无 docId → NotImplementedError 消息钉 T22/T26/T31/T35）+ T22 腿接驳：
+test_wenku_readerinfo.py:386:     有 docId 时 plan 出 HarvestPlan；fetch_ladder 跑完 readerInfo 腿后仍抛 T26/T31/T35
+test_wenku_readerinfo.py:387:     （三型重组归后继），采集结果落 adapter.last_reader_info。"""
+test_wenku_readerinfo.py:388:     adapter = _adapter(tmp_path)
+test_wenku_readerinfo.py:389:     bare = FileMeta(title="骨架样例", fmt="doc")
+---
+test_wenku_readerinfo.py:387:     （三型重组归后继），采集结果落 adapter.last_reader_info。"""
+test_wenku_readerinfo.py:388:     adapter = _adapter(tmp_path)
+test_wenku_readerinfo.py:389:     bare = FileMeta(title="骨架样例", fmt="doc")
+test_wenku_readerinfo.py:390:     with pytest.raises(NotImplementedError, match="T22"):
+test_wenku_readerinfo.py:391:         adapter.plan(bare)
+test_wenku_readerinfo.py:392:     with pytest.raises(NotImplementedError, match=r"T26/T31/T35"):
+test_wenku_readerinfo.py:393:         adapter.fetch_ladder(HarvestPlan(meta=bare))  # 零网络（无 docId 即抛）
+---
+test_wenku_readerinfo.py:389:     bare = FileMeta(title="骨架样例", fmt="doc")
+test_wenku_readerinfo.py:390:     with pytest.raises(NotImplementedError, match="T22"):
+test_wenku_readerinfo.py:391:         adapter.plan(bare)
+test_wenku_readerinfo.py:392:     with pytest.raises(NotImplementedError, match=r"T26/T31/T35"):
+test_wenku_readerinfo.py:393:         adapter.fetch_ladder(HarvestPlan(meta=bare))  # 零网络（无 docId 即抛）
+test_wenku_readerinfo.py:394:     meta = _meta_free()
+test_wenku_readerinfo.py:395:     plan = adapter.plan(meta)
+---
+test_wenku_readerinfo.py:398: 
+test_wenku_readerinfo.py:399:     ri = {"showPage": 8, "page": 8, "htmlUrls": [_img_url(i) for i in range(1, 9)]}
+test_wenku_readerinfo.py:400:     fetch, _ = _fetch_html_spy(_ndview_html({"title": "免费施工方案-百度文库", "readerInfo": ri}))
+test_wenku_readerinfo.py:401:     with pytest.raises(NotImplementedError, match=r"T26/T31/T35"):
+test_wenku_readerinfo.py:402:         adapter.fetch_ladder(plan, fetch_html=fetch)  # 免费件：腿完成，重组留 T26/T31/T35
+test_wenku_readerinfo.py:403:     bundle = adapter.last_reader_info
+test_wenku_readerinfo.py:404:     assert bundle.doc_id == DOC_ID and bundle.stop_kind == "not_needed"
+---
+test_wenku_readerinfo.py:399:     ri = {"showPage": 8, "page": 8, "htmlUrls": [_img_url(i) for i in range(1, 9)]}
+test_wenku_readerinfo.py:400:     fetch, _ = _fetch_html_spy(_ndview_html({"title": "免费施工方案-百度文库", "readerInfo": ri}))
+test_wenku_readerinfo.py:401:     with pytest.raises(NotImplementedError, match=r"T26/T31/T35"):
+test_wenku_readerinfo.py:402:         adapter.fetch_ladder(plan, fetch_html=fetch)  # 免费件：腿完成，重组留 T26/T31/T35
+test_wenku_readerinfo.py:403:     bundle = adapter.last_reader_info
+test_wenku_readerinfo.py:404:     assert bundle.doc_id == DOC_ID and bundle.stop_kind == "not_needed"
+test_wenku_readerinfo.py:405:     assert bundle.coverage == "8/8" and bundle.show_page == 8
+---
+test_wenku_readerinfo.py:403:     bundle = adapter.last_reader_info
+test_wenku_readerinfo.py:404:     assert bundle.doc_id == DOC_ID and bundle.stop_kind == "not_needed"
+test_wenku_readerinfo.py:405:     assert bundle.coverage == "8/8" and bundle.show_page == 8
+test_wenku_readerinfo.py:406:     with pytest.raises(NotImplementedError, match=r"T26/T31/T35"):  # verify 未动（T26/T31/T35 契约）
+test_wenku_readerinfo.py:407:         adapter.verify(LadderResult(ok=True))
+test_wenku_readerinfo.py:408: 
+test_wenku_readerinfo.py:409: 
+---
+test_wenku_readerinfo.py:462:     try:
+test_wenku_readerinfo.py:463:         plan = adapter.plan(meta)
+test_wenku_readerinfo.py:464:         before = len(_audit_lines(_LIVE_AUDIT))
+test_wenku_readerinfo.py:465:         with pytest.raises(NotImplementedError, match=r"T26/T31/T35"):
+test_wenku_readerinfo.py:466:             adapter.fetch_ladder(plan, signer=signer)  # readerInfo 腿实弹；重组属 T26/T31/T35
+test_wenku_readerinfo.py:467:         bundle = adapter.last_reader_info
+test_wenku_readerinfo.py:468:         # ① 初始 readerInfo 实测事实（数字零造假）
+---
+test_wenku_readerinfo.py:463:         plan = adapter.plan(meta)
+test_wenku_readerinfo.py:464:         before = len(_audit_lines(_LIVE_AUDIT))
+test_wenku_readerinfo.py:465:         with pytest.raises(NotImplementedError, match=r"T26/T31/T35"):
+test_wenku_readerinfo.py:466:             adapter.fetch_ladder(plan, signer=signer)  # readerInfo 腿实弹；重组属 T26/T31/T35
+test_wenku_readerinfo.py:467:         bundle = adapter.last_reader_info
+test_wenku_readerinfo.py:468:         # ① 初始 readerInfo 实测事实（数字零造假）
+test_wenku_readerinfo.py:469:         assert bundle.doc_id == doc_id and bundle.page >= 1 and bundle.show_page >= 1
+---

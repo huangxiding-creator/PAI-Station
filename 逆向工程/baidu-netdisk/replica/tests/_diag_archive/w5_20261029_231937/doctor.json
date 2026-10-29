@@ -1,0 +1,146 @@
+{
+  "generated_at": "2026-10-29 23:19:37",
+  "checks": {
+    "credentials": {
+      "status": "ok",
+      "errno": 0,
+      "ms": 4998.8,
+      "requests": 0,
+      "username": "pyeyeye",
+      "uk": 587408217,
+      "vip_level": 8,
+      "roundtrip_ms": 4998.8
+    },
+    "quota": {
+      "status": "ok",
+      "errno": 0,
+      "ms": 1204.7,
+      "requests": 0,
+      "total": 18806265924806,
+      "used": 14104165659517,
+      "free": 4702100265289
+    },
+    "read_probe_ls_root": {
+      "status": "ok",
+      "errno": 0,
+      "ms": 1626.7,
+      "requests": 0,
+      "entries": 18
+    },
+    "filemetas": {
+      "status": "ok",
+      "errno": 0,
+      "ms": 936.3,
+      "requests": 0
+    },
+    "share_record": {
+      "status": "ok",
+      "errno": 0,
+      "ms": 1987.2,
+      "requests": 0,
+      "count": 43
+    },
+    "recycle_list": {
+      "status": "ok",
+      "errno": 0,
+      "ms": 1137.0,
+      "requests": 0,
+      "count": 10
+    },
+    "locateupload": {
+      "status": "ok",
+      "errno": 0,
+      "ms": 3705.8,
+      "requests": 0,
+      "servers": 8
+    },
+    "precreate_gate": {
+      "status": "ok",
+      "errno": 2,
+      "requests": 8,
+      "ms": 506.7
+    }
+  },
+  "fingerprints": [
+    {
+      "probe": "loginStatus 字段族",
+      "status": "ok",
+      "expect": [
+        "login_info"
+      ],
+      "missing": [],
+      "sub_missing": []
+    },
+    {
+      "probe": "api/quota 字段族",
+      "status": "ok",
+      "expect": [
+        "total",
+        "used"
+      ],
+      "missing": [],
+      "sub_missing": []
+    },
+    {
+      "probe": "api/list 字段族",
+      "status": "ok",
+      "expect": [
+        "list",
+        "guid_info"
+      ],
+      "missing": [],
+      "sub_missing": []
+    },
+    {
+      "probe": "api/filemetas 字段族",
+      "status": "ok",
+      "expect": [
+        "info"
+      ],
+      "missing": [],
+      "sub_missing": []
+    },
+    {
+      "probe": "share/record 字段族",
+      "status": "ok",
+      "expect": [
+        "list"
+      ],
+      "missing": [],
+      "sub_missing": []
+    },
+    {
+      "probe": "api/recycle/list 字段族",
+      "status": "ok",
+      "expect": [
+        "list"
+      ],
+      "missing": [],
+      "sub_missing": []
+    },
+    {
+      "probe": "locateupload 字段族",
+      "status": "ok",
+      "expect": [
+        "servers"
+      ],
+      "missing": [],
+      "sub_missing": []
+    }
+  ],
+  "drift": [
+    {
+      "probe": "read_probe_ls_root",
+      "kind": "root_count_changed",
+      "entries": 18,
+      "baseline": 17
+    }
+  ],
+  "verdict": "ok",
+  "requests_sent": 8,
+  "requests_total_session": 8,
+  "circuit_open": false,
+  "baseline": {
+    "root_entries": 17
+  }
+}

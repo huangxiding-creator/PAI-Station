@@ -110,11 +110,13 @@ def run(cid: str, json_out: Path | None = None) -> int:
     tmp.write_text(json.dumps(snap, ensure_ascii=False, indent=1),
                    encoding="utf-8")
     tmp.replace(out)
+    # 修 1028: 生成器表达式跨行入 f-string = Py3.11 语法错 — 提前求值
+    ax_marks = "".join(a if v["green"] or v["waived"] else a.lower()
+                       for a, v in axes["axes"].items())
     print(f"[gate] {cid}: T1 {'✅' if t1_pass else '⏳'} "
           f"({t1['t1_chars']:,}/{gates['t1_min_chars']:,}) | 完备性 "
           f"{'✅' if axes['all_green_or_waived'] else '⏳'} "
-          f"({''.join(a if v['green'] or v['waived'] else a.lower()
-                      for a, v in axes['axes'].items())}) | 饱和 "
+          f"({ax_marks}) | 饱和 "
           f"{'✅' if satu['green'] else '⏳'} "
           f"({satu['saturated_eeis']}/{satu['total_eeis']}="
           f"{satu['pct']:.0%}/80%)")

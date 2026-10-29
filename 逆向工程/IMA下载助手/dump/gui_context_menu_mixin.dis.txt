@@ -1,0 +1,793 @@
+===== gui/context_menu_mixin.pyc =====
+
+# CODE <module>  args=()
+  0           RESUME                   0
+
+  1           LOAD_CONST               0 ('右键上下文菜单 Mixin')
+              STORE_NAME               0 (__doc__)
+
+  2           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (('QMenu', 'QApplication', 'QMessageBox'))
+              IMPORT_NAME              1 (PySide6.QtWidgets)
+              IMPORT_FROM              2 (QMenu)
+              STORE_NAME               2 (QMenu)
+              IMPORT_FROM              3 (QApplication)
+              STORE_NAME               3 (QApplication)
+              IMPORT_FROM              4 (QMessageBox)
+              STORE_NAME               4 (QMessageBox)
+              POP_TOP
+
+  3           LOAD_CONST               1 (0)
+              LOAD_CONST               3 (('Qt',))
+              IMPORT_NAME              5 (PySide6.QtCore)
+              IMPORT_FROM              6 (Qt)
+              STORE_NAME               6 (Qt)
+              POP_TOP
+
+  6           LOAD_BUILD_CLASS
+              PUSH_NULL
+              LOAD_CONST               4 (<code object ContextMenuMixin at 0x000001DD4627AE30, file "gui\context_menu_mixin.py", line 6>)
+              MAKE_FUNCTION
+              LOAD_CONST               5 ('ContextMenuMixin')
+              CALL                     2
+              STORE_NAME               7 (ContextMenuMixin)
+              RETURN_CONST             6 (None)
+
+## CODE ContextMenuMixin  args=()
+  6           RESUME                   0
+              LOAD_NAME                0 (__name__)
+              STORE_NAME               1 (__module__)
+              LOAD_CONST               0 ('ContextMenuMixin')
+              STORE_NAME               2 (__qualname__)
+              LOAD_CONST               1 (6)
+              STORE_NAME               3 (__firstlineno__)
+
+  7           LOAD_CONST               2 ('右键上下文菜单功能，供 MainWindow 继承')
+              STORE_NAME               4 (__doc__)
+
+  9           LOAD_CONST               3 (<code object show_context_menu at 0x000001DD45F6CF60, file "gui\context_menu_mixin.py", line 9>)
+              MAKE_FUNCTION
+              STORE_NAME               5 (show_context_menu)
+
+ 29           LOAD_CONST               4 (<code object _show_kb_menu at 0x000001DD465F6530, file "gui\context_menu_mixin.py", line 29>)
+              MAKE_FUNCTION
+              STORE_NAME               6 (_show_kb_menu)
+
+ 62           LOAD_CONST               5 (<code object _show_folder_menu at 0x000001DD45F8C190, file "gui\context_menu_mixin.py", line 62>)
+              MAKE_FUNCTION
+              STORE_NAME               7 (_show_folder_menu)
+
+ 92           LOAD_CONST               6 (<code object _show_file_menu at 0x000001DD46603BD0, file "gui\context_menu_mixin.py", line 92>)
+              MAKE_FUNCTION
+              STORE_NAME               8 (_show_file_menu)
+
+119           LOAD_CONST               7 (<code object _show_multi_menu at 0x000001DD465F9A30, file "gui\context_menu_mixin.py", line 119>)
+              MAKE_FUNCTION
+              STORE_NAME               9 (_show_multi_menu)
+              LOAD_CONST               8 (())
+              STORE_NAME              10 (__static_attributes__)
+              RETURN_CONST             9 (None)
+
+### CODE ContextMenuMixin.show_context_menu  args=('self', 'pos')
+  9           RESUME                   0
+
+ 11           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (tree)
+              LOAD_ATTR                3 (itemAt + NULL|self)
+              LOAD_FAST                1 (pos)
+              CALL                     1
+              STORE_FAST               2 (item)
+
+ 12           LOAD_FAST                2 (item)
+              TO_BOOL
+              POP_JUMP_IF_TRUE         1 (to L1)
+
+ 13           RETURN_CONST             1 (None)
+
+ 14   L1:     LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (tree)
+              LOAD_ATTR                5 (selectedItems + NULL|self)
+              CALL                     0
+              STORE_FAST               3 (items)
+
+ 15           LOAD_GLOBAL              7 (len + NULL)
+              LOAD_FAST                3 (items)
+              CALL                     1
+              LOAD_CONST               2 (1)
+              COMPARE_OP             148 (bool(>))
+              POP_JUMP_IF_FALSE       18 (to L2)
+
+ 16           LOAD_FAST                0 (self)
+              LOAD_ATTR                9 (_show_multi_menu + NULL|self)
+              LOAD_FAST_LOAD_FAST     49 (items, pos)
+              CALL                     2
+              POP_TOP
+
+ 17           RETURN_CONST             1 (None)
+
+ 18   L2:     LOAD_FAST                2 (item)
+              LOAD_ATTR               11 (data + NULL|self)
+              LOAD_CONST               2 (1)
+              LOAD_GLOBAL             12 (Qt)
+              LOAD_ATTR               14 (UserRole)
+              CALL                     2
+              STORE_FAST               4 (data)
+
+ 19           LOAD_FAST                4 (data)
+              TO_BOOL
+              POP_JUMP_IF_TRUE         1 (to L3)
+
+ 20           RETURN_CONST             1 (None)
+
+ 21   L3:     LOAD_FAST                4 (data)
+              LOAD_ATTR               17 (get + NULL|self)
+              LOAD_CONST               3 ('type')
+              CALL                     1
+              STORE_FAST               5 (item_type)
+
+ 22           LOAD_FAST                5 (item_type)
+              LOAD_CONST               4 ('kb')
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE       19 (to L4)
+
+ 23           LOAD_FAST                0 (self)
+              LOAD_ATTR               19 (_show_kb_menu + NULL|self)
+              LOAD_FAST_LOAD_FAST     36 (item, data)
+              LOAD_FAST                1 (pos)
+              CALL                     3
+              POP_TOP
+              RETURN_CONST             1 (None)
+
+ 24   L4:     LOAD_FAST                5 (item_type)
+              LOAD_CONST               5 ('folder')
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE       19 (to L5)
+
+ 25           LOAD_FAST                0 (self)
+              LOAD_ATTR               21 (_show_folder_menu + NULL|self)
+              LOAD_FAST_LOAD_FAST     36 (item, data)
+              LOAD_FAST                1 (pos)
+              CALL                     3
+              POP_TOP
+              RETURN_CONST             1 (None)
+
+ 26   L5:     LOAD_FAST                5 (item_type)
+              LOAD_CONST               6 ('file')
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE       19 (to L6)
+
+ 27           LOAD_FAST                0 (self)
+              LOAD_ATTR               23 (_show_file_menu + NULL|self)
+              LOAD_FAST_LOAD_FAST     36 (item, data)
+              LOAD_FAST                1 (pos)
+              CALL                     3
+              POP_TOP
+              RETURN_CONST             1 (None)
+
+ 26   L6:     RETURN_CONST             1 (None)
+
+### CODE ContextMenuMixin._show_kb_menu  args=('self', 'item', 'data', 'pos')
+ 29           RESUME                   0
+
+ 30           LOAD_FAST                2 (data)
+              LOAD_ATTR                1 (get + NULL|self)
+              LOAD_CONST               1 ('visible_export_status')
+              LOAD_CONST               2 (3)
+              CALL                     2
+              STORE_FAST               4 (visible_export_status)
+
+ 31           LOAD_FAST                4 (visible_export_status)
+              LOAD_CONST               3 (1)
+              COMPARE_OP              72 (==)
+              STORE_FAST               5 (is_forbidden)
+
+ 33           LOAD_GLOBAL              3 (QMenu + NULL)
+              LOAD_FAST                0 (self)
+              CALL                     1
+              STORE_FAST               6 (menu)
+
+ 34           LOAD_FAST                6 (menu)
+              LOAD_ATTR                5 (addAction + NULL|self)
+              LOAD_CONST               4 ('下载全部文件')
+              CALL                     1
+              STORE_FAST               7 (act1)
+
+ 35           LOAD_FAST                6 (menu)
+              LOAD_ATTR                5 (addAction + NULL|self)
+              LOAD_CONST               5 ('新建更新任务')
+              CALL                     1
+              STORE_FAST               8 (act2)
+
+ 36           LOAD_FAST                5 (is_forbidden)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       34 (to L1)
+
+ 37           LOAD_FAST                7 (act1)
+              LOAD_ATTR                7 (setEnabled + NULL|self)
+              LOAD_CONST               6 (False)
+              CALL                     1
+              POP_TOP
+
+ 38           LOAD_FAST                8 (act2)
+              LOAD_ATTR                7 (setEnabled + NULL|self)
+              LOAD_CONST               6 (False)
+              CALL                     1
+              POP_TOP
+
+ 39   L1:     LOAD_FAST                6 (menu)
+              LOAD_ATTR                9 (addSeparator + NULL|self)
+              CALL                     0
+              POP_TOP
+
+ 40           LOAD_FAST                6 (menu)
+              LOAD_ATTR                5 (addAction + NULL|self)
+              LOAD_CONST               7 ('复制名称')
+              CALL                     1
+              STORE_FAST               9 (act4)
+
+ 41           LOAD_FAST                6 (menu)
+              LOAD_ATTR                5 (addAction + NULL|self)
+              LOAD_CONST               8 ('刷新')
+              CALL                     1
+              STORE_FAST              10 (act5)
+
+ 42           LOAD_FAST                6 (menu)
+              LOAD_ATTR               11 (exec_ + NULL|self)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               12 (tree)
+              LOAD_ATTR               15 (viewport + NULL|self)
+              CALL                     0
+              LOAD_ATTR               17 (mapToGlobal + NULL|self)
+              LOAD_FAST                3 (pos)
+              CALL                     1
+              CALL                     1
+              STORE_FAST              11 (action)
+
+ 43           LOAD_FAST               11 (action)
+              TO_BOOL
+              POP_JUMP_IF_TRUE         1 (to L2)
+
+ 44           RETURN_CONST             0 (None)
+
+ 45   L2:     LOAD_FAST_LOAD_FAST    183 (action, act1)
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE       60 (to L3)
+
+ 46           LOAD_FAST                0 (self)
+              LOAD_ATTR               12 (tree)
+              LOAD_ATTR               19 (clearSelection + NULL|self)
+              CALL                     0
+              POP_TOP
+
+ 47           LOAD_FAST                1 (item)
+              LOAD_ATTR               21 (setSelected + NULL|self)
+              LOAD_CONST               9 (True)
+              CALL                     1
+              POP_TOP
+
+ 48           LOAD_FAST                0 (self)
+              LOAD_ATTR               23 (download_selected + NULL|self)
+              CALL                     0
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+ 49   L3:     LOAD_FAST_LOAD_FAST    184 (action, act2)
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE       50 (to L4)
+
+ 50           LOAD_FAST                0 (self)
+              LOAD_ATTR               25 (_submit_update_task + NULL|self)
+
+ 51           LOAD_FAST                2 (data)
+              LOAD_ATTR                1 (get + NULL|self)
+              LOAD_CONST              10 ('id')
+              CALL                     1
+              LOAD_FAST                2 (data)
+              LOAD_ATTR                1 (get + NULL|self)
+              LOAD_CONST              11 ('name')
+              LOAD_CONST              12 ('')
+              CALL                     2
+
+ 52           LOAD_CONST              12 ('')
+              LOAD_CONST              12 ('')
+
+ 50           LOAD_CONST              13 (('kb_id', 'kb_name', 'folder_id', 'folder_name'))
+              CALL_KW                  4
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+ 54   L4:     LOAD_FAST_LOAD_FAST    185 (action, act4)
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE       53 (to L5)
+
+ 55           LOAD_GLOBAL             26 (QApplication)
+              LOAD_ATTR               28 (clipboard)
+              PUSH_NULL
+              CALL                     0
+              LOAD_ATTR               31 (setText + NULL|self)
+              LOAD_FAST                2 (data)
+              LOAD_ATTR                1 (get + NULL|self)
+              LOAD_CONST              11 ('name')
+              LOAD_CONST              12 ('')
+              CALL                     2
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+ 56   L5:     LOAD_FAST_LOAD_FAST    186 (action, act5)
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE      134 (to L6)
+
+ 57           LOAD_FAST                1 (item)
+              LOAD_ATTR               33 (takeChildren + NULL|self)
+              CALL                     0
+              POP_TOP
+
+ 58           LOAD_FAST                1 (item)
+              LOAD_ATTR               35 (setData + NULL|self)
+              LOAD_CONST              14 (0)
+              LOAD_GLOBAL             36 (Qt)
+              LOAD_ATTR               38 (UserRole)
+              LOAD_CONST               3 (1)
+              BINARY_OP                0 (+)
+              LOAD_CONST               0 (None)
+              CALL                     3
+              POP_TOP
+
+ 59           LOAD_FAST                1 (item)
+              LOAD_ATTR               35 (setData + NULL|self)
+              LOAD_CONST              14 (0)
+              LOAD_GLOBAL             36 (Qt)
+              LOAD_ATTR               38 (UserRole)
+              LOAD_CONST              15 (2)
+              BINARY_OP                0 (+)
+              LOAD_CONST               0 (None)
+              CALL                     3
+              POP_TOP
+
+ 60           LOAD_FAST                0 (self)
+              LOAD_ATTR               41 (load_folder + NULL|self)
+              LOAD_FAST_LOAD_FAST     18 (item, data)
+              LOAD_CONST              10 ('id')
+              BINARY_SUBSCR
+              LOAD_FAST                2 (data)
+              LOAD_CONST              10 ('id')
+              BINARY_SUBSCR
+              LOAD_FAST                2 (data)
+              LOAD_CONST              11 ('name')
+              BINARY_SUBSCR
+              LOAD_FAST                2 (data)
+              LOAD_ATTR                1 (get + NULL|self)
+              LOAD_CONST               1 ('visible_export_status')
+              LOAD_CONST               2 (3)
+              CALL                     2
+              CALL                     5
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+ 56   L6:     RETURN_CONST             0 (None)
+
+### CODE ContextMenuMixin._show_folder_menu  args=('self', 'item', 'data', 'pos')
+ 62           RESUME                   0
+
+ 63           LOAD_FAST                2 (data)
+              LOAD_ATTR                1 (get + NULL|self)
+              LOAD_CONST               1 ('visible_export_status')
+              LOAD_CONST               2 (3)
+              CALL                     2
+              STORE_FAST               4 (visible_export_status)
+
+ 64           LOAD_FAST                4 (visible_export_status)
+              LOAD_CONST               3 (1)
+              COMPARE_OP              72 (==)
+              STORE_FAST               5 (is_forbidden)
+
+ 66           LOAD_GLOBAL              3 (QMenu + NULL)
+              LOAD_FAST                0 (self)
+              CALL                     1
+              STORE_FAST               6 (menu)
+
+ 67           LOAD_FAST                6 (menu)
+              LOAD_ATTR                5 (addAction + NULL|self)
+              LOAD_CONST               4 ('下载此文件夹')
+              CALL                     1
+              STORE_FAST               7 (act1)
+
+ 68           LOAD_FAST                6 (menu)
+              LOAD_ATTR                5 (addAction + NULL|self)
+              LOAD_CONST               5 ('新建更新任务')
+              CALL                     1
+              STORE_FAST               8 (act2)
+
+ 69           LOAD_FAST                5 (is_forbidden)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       34 (to L1)
+
+ 70           LOAD_FAST                7 (act1)
+              LOAD_ATTR                7 (setEnabled + NULL|self)
+              LOAD_CONST               6 (False)
+              CALL                     1
+              POP_TOP
+
+ 71           LOAD_FAST                8 (act2)
+              LOAD_ATTR                7 (setEnabled + NULL|self)
+              LOAD_CONST               6 (False)
+              CALL                     1
+              POP_TOP
+
+ 72   L1:     LOAD_FAST                6 (menu)
+              LOAD_ATTR                9 (addSeparator + NULL|self)
+              CALL                     0
+              POP_TOP
+
+ 73           LOAD_FAST                6 (menu)
+              LOAD_ATTR                5 (addAction + NULL|self)
+              LOAD_CONST               7 ('复制名称')
+              CALL                     1
+              STORE_FAST               9 (act3)
+
+ 74           LOAD_FAST                6 (menu)
+              LOAD_ATTR                5 (addAction + NULL|self)
+              LOAD_CONST               8 ('复制路径')
+              CALL                     1
+              STORE_FAST              10 (act4)
+
+ 75           LOAD_FAST                6 (menu)
+              LOAD_ATTR               11 (exec_ + NULL|self)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               12 (tree)
+              LOAD_ATTR               15 (viewport + NULL|self)
+              CALL                     0
+              LOAD_ATTR               17 (mapToGlobal + NULL|self)
+              LOAD_FAST                3 (pos)
+              CALL                     1
+              CALL                     1
+              STORE_FAST              11 (action)
+
+ 76           LOAD_FAST               11 (action)
+              TO_BOOL
+              POP_JUMP_IF_TRUE         1 (to L2)
+
+ 77           RETURN_CONST             0 (None)
+
+ 78   L2:     LOAD_FAST_LOAD_FAST    183 (action, act1)
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE       60 (to L3)
+
+ 79           LOAD_FAST                0 (self)
+              LOAD_ATTR               12 (tree)
+              LOAD_ATTR               19 (clearSelection + NULL|self)
+              CALL                     0
+              POP_TOP
+
+ 80           LOAD_FAST                1 (item)
+              LOAD_ATTR               21 (setSelected + NULL|self)
+              LOAD_CONST               9 (True)
+              CALL                     1
+              POP_TOP
+
+ 81           LOAD_FAST                0 (self)
+              LOAD_ATTR               23 (download_selected + NULL|self)
+              CALL                     0
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+ 82   L3:     LOAD_FAST_LOAD_FAST    184 (action, act2)
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE       82 (to L4)
+
+ 83           LOAD_FAST                0 (self)
+              LOAD_ATTR               25 (_submit_update_task + NULL|self)
+
+ 84           LOAD_FAST                2 (data)
+              LOAD_ATTR                1 (get + NULL|self)
+              LOAD_CONST              10 ('kb_id')
+              CALL                     1
+              LOAD_FAST                2 (data)
+              LOAD_ATTR                1 (get + NULL|self)
+              LOAD_CONST              11 ('kb_name')
+              LOAD_CONST              12 ('')
+              CALL                     2
+
+ 85           LOAD_FAST                2 (data)
+              LOAD_ATTR                1 (get + NULL|self)
+              LOAD_CONST              13 ('folder_id')
+              LOAD_CONST              12 ('')
+              CALL                     2
+              LOAD_FAST                2 (data)
+              LOAD_ATTR                1 (get + NULL|self)
+              LOAD_CONST              14 ('name')
+              LOAD_CONST              12 ('')
+              CALL                     2
+
+ 83           LOAD_CONST              15 (('kb_id', 'kb_name', 'folder_id', 'folder_name'))
+              CALL_KW                  4
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+ 87   L4:     LOAD_FAST_LOAD_FAST    185 (action, act3)
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE       53 (to L5)
+
+ 88           LOAD_GLOBAL             26 (QApplication)
+              LOAD_ATTR               28 (clipboard)
+              PUSH_NULL
+              CALL                     0
+              LOAD_ATTR               31 (setText + NULL|self)
+              LOAD_FAST                2 (data)
+              LOAD_ATTR                1 (get + NULL|self)
+              LOAD_CONST              14 ('name')
+              LOAD_CONST              12 ('')
+              CALL                     2
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+ 89   L5:     LOAD_FAST_LOAD_FAST    186 (action, act4)
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE       53 (to L6)
+
+ 90           LOAD_GLOBAL             26 (QApplication)
+              LOAD_ATTR               28 (clipboard)
+              PUSH_NULL
+              CALL                     0
+              LOAD_ATTR               31 (setText + NULL|self)
+              LOAD_FAST                2 (data)
+              LOAD_ATTR                1 (get + NULL|self)
+              LOAD_CONST              16 ('full_path')
+              LOAD_CONST              12 ('')
+              CALL                     2
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+ 89   L6:     RETURN_CONST             0 (None)
+
+### CODE ContextMenuMixin._show_file_menu  args=('self', 'item', 'data', 'pos')
+ 92           RESUME                   0
+
+ 93           LOAD_GLOBAL              1 (QMenu + NULL)
+              LOAD_FAST                0 (self)
+              CALL                     1
+              STORE_FAST               4 (menu)
+
+ 94           LOAD_FAST                4 (menu)
+              LOAD_ATTR                3 (addAction + NULL|self)
+              LOAD_CONST               1 ('下载此文件')
+              CALL                     1
+              STORE_FAST               5 (act1)
+
+ 95           LOAD_FAST                4 (menu)
+              LOAD_ATTR                5 (addSeparator + NULL|self)
+              CALL                     0
+              POP_TOP
+
+ 96           LOAD_FAST                4 (menu)
+              LOAD_ATTR                3 (addAction + NULL|self)
+              LOAD_CONST               2 ('复制文件名')
+              CALL                     1
+              STORE_FAST               6 (act2)
+
+ 97           LOAD_FAST                4 (menu)
+              LOAD_ATTR                3 (addAction + NULL|self)
+              LOAD_CONST               3 ('查看详情')
+              CALL                     1
+              STORE_FAST               7 (act3)
+
+ 98           LOAD_FAST                4 (menu)
+              LOAD_ATTR                7 (exec_ + NULL|self)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (tree)
+              LOAD_ATTR               11 (viewport + NULL|self)
+              CALL                     0
+              LOAD_ATTR               13 (mapToGlobal + NULL|self)
+              LOAD_FAST                3 (pos)
+              CALL                     1
+              CALL                     1
+              STORE_FAST               8 (action)
+
+ 99           LOAD_FAST                8 (action)
+              TO_BOOL
+              POP_JUMP_IF_TRUE         1 (to L1)
+
+100           RETURN_CONST             0 (None)
+
+101   L1:     LOAD_FAST_LOAD_FAST    133 (action, act1)
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE       60 (to L2)
+
+102           LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (tree)
+              LOAD_ATTR               15 (clearSelection + NULL|self)
+              CALL                     0
+              POP_TOP
+
+103           LOAD_FAST                1 (item)
+              LOAD_ATTR               17 (setSelected + NULL|self)
+              LOAD_CONST               4 (True)
+              CALL                     1
+              POP_TOP
+
+104           LOAD_FAST                0 (self)
+              LOAD_ATTR               19 (download_selected + NULL|self)
+              CALL                     0
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+105   L2:     LOAD_FAST_LOAD_FAST    134 (action, act2)
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE       53 (to L3)
+
+106           LOAD_GLOBAL             20 (QApplication)
+              LOAD_ATTR               22 (clipboard)
+              PUSH_NULL
+              CALL                     0
+              LOAD_ATTR               25 (setText + NULL|self)
+              LOAD_FAST                2 (data)
+              LOAD_ATTR               27 (get + NULL|self)
+              LOAD_CONST               5 ('title')
+              LOAD_CONST               6 ('')
+              CALL                     2
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+107   L3:     LOAD_FAST_LOAD_FAST    135 (action, act3)
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE      208 (to L4)
+
+109           LOAD_CONST               7 ('名称: ')
+              LOAD_FAST                2 (data)
+              LOAD_ATTR               27 (get + NULL|self)
+              LOAD_CONST               5 ('title')
+              LOAD_FAST                2 (data)
+              LOAD_ATTR               27 (get + NULL|self)
+              LOAD_CONST               8 ('name')
+              LOAD_CONST               9 ('-')
+              CALL                     2
+              CALL                     2
+              FORMAT_SIMPLE
+
+110           LOAD_CONST              10 ('\n类型: ')
+              LOAD_FAST                2 (data)
+              LOAD_ATTR               27 (get + NULL|self)
+              LOAD_CONST              11 ('media_type_info')
+              BUILD_MAP                0
+              CALL                     2
+              LOAD_ATTR               27 (get + NULL|self)
+              LOAD_CONST               8 ('name')
+              LOAD_FAST                2 (data)
+              LOAD_ATTR               27 (get + NULL|self)
+              LOAD_CONST              12 ('type')
+              LOAD_CONST               9 ('-')
+              CALL                     2
+              CALL                     2
+              FORMAT_SIMPLE
+
+111           LOAD_CONST              13 ('\n文件ID: ')
+              LOAD_FAST                2 (data)
+              LOAD_ATTR               27 (get + NULL|self)
+              LOAD_CONST              14 ('media_id')
+              LOAD_CONST               9 ('-')
+              CALL                     2
+              FORMAT_SIMPLE
+
+112           LOAD_CONST              15 ('\n知识库ID: ')
+              LOAD_FAST                2 (data)
+              LOAD_ATTR               27 (get + NULL|self)
+              LOAD_CONST              16 ('kb_id')
+              LOAD_CONST               9 ('-')
+              CALL                     2
+              FORMAT_SIMPLE
+
+113           LOAD_CONST              17 ('\n大小: ')
+              LOAD_FAST                2 (data)
+              LOAD_ATTR               27 (get + NULL|self)
+              LOAD_CONST              18 ('file_size')
+              LOAD_CONST               9 ('-')
+              CALL                     2
+              FORMAT_SIMPLE
+
+114           LOAD_CONST              19 ('\n更新时间: ')
+              LOAD_FAST                2 (data)
+              LOAD_ATTR               27 (get + NULL|self)
+              LOAD_CONST              20 ('update_time')
+              LOAD_CONST               9 ('-')
+              CALL                     2
+              FORMAT_SIMPLE
+
+115           LOAD_CONST              21 ('\n路径: ')
+              LOAD_FAST                2 (data)
+              LOAD_ATTR               27 (get + NULL|self)
+              LOAD_CONST              22 ('full_path')
+              LOAD_CONST               9 ('-')
+              CALL                     2
+              FORMAT_SIMPLE
+
+109           BUILD_STRING            14
+
+108           STORE_FAST               9 (info)
+
+117           LOAD_GLOBAL             28 (QMessageBox)
+              LOAD_ATTR               30 (information)
+              PUSH_NULL
+              LOAD_FAST                0 (self)
+              LOAD_CONST              23 ('文件详情')
+              LOAD_FAST                9 (info)
+              CALL                     3
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+107   L4:     RETURN_CONST             0 (None)
+
+### CODE ContextMenuMixin._show_multi_menu  args=('self', 'items', 'pos')
+119           RESUME                   0
+
+120           LOAD_GLOBAL              1 (QMenu + NULL)
+              LOAD_FAST                0 (self)
+              CALL                     1
+              STORE_FAST               3 (menu)
+
+121           LOAD_FAST                3 (menu)
+              LOAD_ATTR                3 (addAction + NULL|self)
+              LOAD_CONST               1 ('下载选中项 (')
+              LOAD_GLOBAL              5 (len + NULL)
+              LOAD_FAST                1 (items)
+              CALL                     1
+              FORMAT_SIMPLE
+              LOAD_CONST               2 (')')
+              BUILD_STRING             3
+              CALL                     1
+              STORE_FAST               4 (act1)
+
+122           LOAD_FAST                3 (menu)
+              LOAD_ATTR                7 (addSeparator + NULL|self)
+              CALL                     0
+              POP_TOP
+
+123           LOAD_FAST                3 (menu)
+              LOAD_ATTR                3 (addAction + NULL|self)
+              LOAD_CONST               3 ('取消选择')
+              CALL                     1
+              STORE_FAST               5 (act3)
+
+124           LOAD_FAST                3 (menu)
+              LOAD_ATTR                9 (exec_ + NULL|self)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               10 (tree)
+              LOAD_ATTR               13 (viewport + NULL|self)
+              CALL                     0
+              LOAD_ATTR               15 (mapToGlobal + NULL|self)
+              LOAD_FAST                2 (pos)
+              CALL                     1
+              CALL                     1
+              STORE_FAST               6 (action)
+
+125           LOAD_FAST                6 (action)
+              TO_BOOL
+              POP_JUMP_IF_TRUE         1 (to L1)
+
+126           RETURN_CONST             0 (None)
+
+127   L1:     LOAD_FAST_LOAD_FAST    100 (action, act1)
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE       17 (to L2)
+
+128           LOAD_FAST                0 (self)
+              LOAD_ATTR               17 (download_selected + NULL|self)
+              CALL                     0
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+129   L2:     LOAD_FAST_LOAD_FAST    101 (action, act3)
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE       27 (to L3)
+
+130           LOAD_FAST                0 (self)
+              LOAD_ATTR               10 (tree)
+              LOAD_ATTR               19 (clearSelection + NULL|self)
+              CALL                     0
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+129   L3:     RETURN_CONST             0 (None)

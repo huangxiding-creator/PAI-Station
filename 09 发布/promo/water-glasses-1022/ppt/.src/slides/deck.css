@@ -1,0 +1,87 @@
+:root {
+  --paper: #061A2E;
+  --ink: #EAF4FB;
+  --primary: #1878D8;
+  --support: #48C0D8;
+  --accent: #F0A878;
+  --muted: #7FA3BD;
+  --line: rgba(72, 192, 216, 0.28);
+  --card: #0B2A46;
+  --font-display: "Microsoft YaHei", "PingFang SC", sans-serif;
+  --font-body: "Microsoft YaHei", "PingFang SC", sans-serif;
+  --font-num: Consolas, "Microsoft YaHei", monospace;
+}
+
+* { box-sizing: border-box; print-color-adjust: exact; }
+@page { size: 13.333in 7.5in; margin: 0; }
+
+body { margin: 0; background: var(--paper); }
+.slide {
+  position: relative;
+  width: 13.333in; height: 7.5in; overflow: hidden;
+  page-break-after: always;
+  background: linear-gradient(160deg, #061A2E 0%, #082238 55%, #0A2440 100%);
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+
+/* ---- 共享排版（无大写、无字距、无药丸） ---- */
+.kicker { font-size: 15pt; font-weight: 600; color: var(--support); }
+.slide-title { font-family: var(--font-display); font-size: 40pt; font-weight: 700; line-height: 1.18; color: var(--ink); }
+.slide-lead { font-size: 17pt; line-height: 1.6; color: color-mix(in srgb, var(--ink) 78%, transparent); }
+.num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+.rule { height: 1px; background: var(--line); }
+
+/* ---- 两个 lockup ---- */
+.split { display: grid; grid-template-columns: 52% 48%; height: 100%; }
+.split .text-col { padding: 0.9in 0.55in 0.75in 0.8in; display: flex; flex-direction: column; }
+.split .img-col { position: relative; padding: 0.55in 0.7in 0.55in 0; }
+.frame {
+  position: relative; height: 100%; border-radius: 10px; overflow: hidden;
+  border: 1px solid var(--line);
+  box-shadow: 0 18px 50px rgba(2, 10, 20, 0.55);
+}
+.frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.fullbleed { position: absolute; inset: 0; }
+.fullbleed img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.fullbleed .scrim {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(6, 26, 46, 0.15) 30%, rgba(6, 26, 46, 0.88) 82%);
+}
+.cover-copy { position: absolute; left: 0.8in; right: 0.8in; bottom: 0.75in; }
+.cover-title { font-family: var(--font-display); font-size: 64pt; font-weight: 700; line-height: 1.1; color: #fff; }
+.cover-sub { font-size: 26pt; font-weight: 500; color: color-mix(in srgb, var(--ink) 85%, transparent); margin-top: 0.18in; }
+
+/* ---- 数据表 ---- */
+.cmp { width: 100%; border-collapse: collapse; font-size: 15.5pt; }
+.cmp th { text-align: left; font-size: 14pt; font-weight: 600; color: var(--muted); padding: 0.09in 0.14in; border-bottom: 1.5px solid var(--line); }
+.cmp td { padding: 0.115in 0.14in; border-bottom: 1px solid color-mix(in srgb, var(--line) 55%, transparent); vertical-align: top; line-height: 1.45; }
+.cmp td.dim { color: var(--muted); }
+.cmp td.hl { color: var(--support); font-weight: 600; }
+.cmp td .num { font-weight: 700; color: var(--ink); }
+
+/* ---- 大数字 ---- */
+.bignum { font-family: var(--font-num); font-weight: 700; color: var(--ink); line-height: 0.95; }
+.bignum .unit { font-size: 0.42em; color: var(--support); font-weight: 600; }
+.bignum-label { font-size: 16pt; color: color-mix(in srgb, var(--ink) 80%, transparent); line-height: 1.5; margin-top: 0.12in; }
+.bignum-src { font-size: 11pt; color: var(--muted); margin-top: 0.06in; }
+
+/* ---- 列表（功能罗列用，无药丸无徽章） ---- */
+.plist { display: grid; grid-template-columns: 1fr 1fr; gap: 0.16in 0.45in; }
+.pitem { display: flex; gap: 0.16in; align-items: baseline; padding: 0.055in 0; border-bottom: 1px solid color-mix(in srgb, var(--line) 45%, transparent); }
+.pitem .idx { font-family: var(--font-num); font-size: 13pt; color: var(--support); font-weight: 700; }
+.pitem .name { font-size: 16.5pt; font-weight: 600; color: var(--ink); white-space: nowrap; }
+.pitem .desc { font-size: 12.5pt; color: var(--muted); line-height: 1.45; }
+
+/* ---- 四象限 ---- */
+.quad { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 0.22in; height: 4.9in; }
+.qcard { background: color-mix(in srgb, var(--card) 82%, transparent); border: 1px solid var(--line); border-radius: 10px; padding: 0.26in 0.3in; }
+.qcard .qn { font-family: var(--font-num); font-size: 14pt; color: var(--accent); font-weight: 700; }
+.qcard .qt { font-size: 21pt; font-weight: 700; color: var(--ink); margin-top: 0.06in; }
+.qcard .qd { font-size: 13.5pt; color: color-mix(in srgb, var(--ink) 72%, transparent); line-height: 1.55; margin-top: 0.1in; }
+
+/* ---- 流程链 ---- */
+.flow { display: flex; align-items: center; gap: 0.14in; }
+.fstep { font-size: 14.5pt; font-weight: 600; color: var(--ink); }
+.farrow { color: var(--support); font-size: 15pt; }

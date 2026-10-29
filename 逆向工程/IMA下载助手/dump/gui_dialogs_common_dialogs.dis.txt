@@ -1,0 +1,1047 @@
+===== gui/dialogs/common_dialogs.pyc =====
+
+# CODE <module>  args=()
+  0           RESUME                   0
+
+  1           LOAD_CONST               0 ('通用对话框：设置、使用说明、续费、激活')
+              STORE_NAME               0 (__doc__)
+
+  2           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (('QDialog', 'QVBoxLayout', 'QHBoxLayout', 'QLabel', 'QPushButton', 'QLineEdit', 'QCheckBox', 'QComboBox', 'QFileDialog', 'QMessageBox', 'QTextBrowser'))
+              IMPORT_NAME              1 (PySide6.QtWidgets)
+              IMPORT_FROM              2 (QDialog)
+              STORE_NAME               2 (QDialog)
+              IMPORT_FROM              3 (QVBoxLayout)
+              STORE_NAME               3 (QVBoxLayout)
+              IMPORT_FROM              4 (QHBoxLayout)
+              STORE_NAME               4 (QHBoxLayout)
+              IMPORT_FROM              5 (QLabel)
+              STORE_NAME               5 (QLabel)
+              IMPORT_FROM              6 (QPushButton)
+              STORE_NAME               6 (QPushButton)
+              IMPORT_FROM              7 (QLineEdit)
+              STORE_NAME               7 (QLineEdit)
+              IMPORT_FROM              8 (QCheckBox)
+              STORE_NAME               8 (QCheckBox)
+              IMPORT_FROM              9 (QComboBox)
+              STORE_NAME               9 (QComboBox)
+              IMPORT_FROM             10 (QFileDialog)
+              STORE_NAME              10 (QFileDialog)
+              IMPORT_FROM             11 (QMessageBox)
+              STORE_NAME              11 (QMessageBox)
+              IMPORT_FROM             12 (QTextBrowser)
+              STORE_NAME              12 (QTextBrowser)
+              POP_TOP
+
+  5           LOAD_CONST               1 (0)
+              LOAD_CONST               3 (None)
+              IMPORT_NAME             13 (os)
+              STORE_NAME              13 (os)
+
+  8           LOAD_CONST               4 (<code object show_settings_dialog at 0x000001DD466037E0, file "gui\dialogs\common_dialogs.py", line 8>)
+              MAKE_FUNCTION
+              STORE_NAME              14 (show_settings_dialog)
+
+ 94           LOAD_CONST               5 (<code object show_help_dialog at 0x000001DD45ED2790, file "gui\dialogs\common_dialogs.py", line 94>)
+              MAKE_FUNCTION
+              STORE_NAME              15 (show_help_dialog)
+
+154           LOAD_CONST               8 ((None,))
+              LOAD_CONST               6 (<code object show_renew_dialog at 0x000001DD46409430, file "gui\dialogs\common_dialogs.py", line 154>)
+              MAKE_FUNCTION
+              SET_FUNCTION_ATTRIBUTE   1 (defaults)
+              STORE_NAME              16 (show_renew_dialog)
+
+193           LOAD_CONST               8 ((None,))
+              LOAD_CONST               7 (<code object show_activation_dialog at 0x000001DD46347120, file "gui\dialogs\common_dialogs.py", line 193>)
+              MAKE_FUNCTION
+              SET_FUNCTION_ATTRIBUTE   1 (defaults)
+              STORE_NAME              17 (show_activation_dialog)
+              RETURN_CONST             3 (None)
+
+## CODE show_settings_dialog  args=('parent',)
+  --           MAKE_CELL               16 (delay_checkbox)
+               MAKE_CELL               17 (dialog)
+               MAKE_CELL               18 (dir_input)
+               MAKE_CELL               19 (note_format_combo)
+               MAKE_CELL               20 (save_settings)
+
+   8           RESUME                   0
+
+  10           LOAD_CONST               1 (0)
+               LOAD_CONST               2 (('get_setting', 'save_settings'))
+               IMPORT_NAME              0 (core.settings)
+               IMPORT_FROM              1 (get_setting)
+               STORE_FAST               1 (get_setting)
+               IMPORT_FROM              2 (save_settings)
+               STORE_DEREF             20 (save_settings)
+               POP_TOP
+
+  12           LOAD_GLOBAL              7 (QDialog + NULL)
+               LOAD_FAST                0 (parent)
+               CALL                     1
+               STORE_DEREF             17 (dialog)
+
+  13           LOAD_DEREF              17 (dialog)
+               LOAD_ATTR                9 (setWindowTitle + NULL|self)
+               LOAD_CONST               3 ('设置')
+               CALL                     1
+               POP_TOP
+
+  14           LOAD_DEREF              17 (dialog)
+               LOAD_ATTR               11 (setModal + NULL|self)
+               LOAD_CONST               4 (True)
+               CALL                     1
+               POP_TOP
+
+  15           LOAD_DEREF              17 (dialog)
+               LOAD_ATTR               13 (setMinimumWidth + NULL|self)
+               LOAD_CONST               5 (500)
+               CALL                     1
+               POP_TOP
+
+  16           LOAD_GLOBAL             15 (QVBoxLayout + NULL)
+               LOAD_DEREF              17 (dialog)
+               CALL                     1
+               STORE_FAST               2 (layout)
+
+  18           LOAD_GLOBAL             17 (QCheckBox + NULL)
+               LOAD_CONST               6 ('下载文件后随机延迟 (1-3秒)')
+               CALL                     1
+               STORE_DEREF             16 (delay_checkbox)
+
+  19           LOAD_DEREF              16 (delay_checkbox)
+               LOAD_ATTR               19 (setChecked + NULL|self)
+               LOAD_FAST                1 (get_setting)
+               PUSH_NULL
+               LOAD_CONST               7 ('enable_download_delay')
+               LOAD_CONST               8 (False)
+               CALL                     2
+               CALL                     1
+               POP_TOP
+
+  20           LOAD_FAST                2 (layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_DEREF              16 (delay_checkbox)
+               CALL                     1
+               POP_TOP
+
+  22           LOAD_GLOBAL             23 (QHBoxLayout + NULL)
+               CALL                     0
+               STORE_FAST               3 (note_format_layout)
+
+  23           LOAD_GLOBAL             25 (QLabel + NULL)
+               LOAD_CONST               9 ('笔记保存格式:')
+               CALL                     1
+               STORE_FAST               4 (note_format_label)
+
+  24           LOAD_GLOBAL             27 (QComboBox + NULL)
+               CALL                     0
+               STORE_DEREF             19 (note_format_combo)
+
+  25           LOAD_DEREF              19 (note_format_combo)
+               LOAD_ATTR               29 (addItem + NULL|self)
+               LOAD_CONST              10 ('Markdown')
+               LOAD_CONST              11 ('md')
+               CALL                     2
+               POP_TOP
+
+  26           LOAD_DEREF              19 (note_format_combo)
+               LOAD_ATTR               29 (addItem + NULL|self)
+               LOAD_CONST              12 ('HTML')
+               LOAD_CONST              13 ('html')
+               CALL                     2
+               POP_TOP
+
+  27           LOAD_FAST                1 (get_setting)
+               PUSH_NULL
+               LOAD_CONST              14 ('note_format')
+               LOAD_CONST              11 ('md')
+               CALL                     2
+               STORE_FAST               5 (current_format)
+
+  28           LOAD_DEREF              19 (note_format_combo)
+               LOAD_ATTR               31 (setCurrentIndex + NULL|self)
+               LOAD_FAST                5 (current_format)
+               LOAD_CONST              11 ('md')
+               COMPARE_OP              88 (bool(==))
+               POP_JUMP_IF_FALSE        2 (to L1)
+               LOAD_CONST               1 (0)
+               JUMP_FORWARD             1 (to L2)
+       L1:     LOAD_CONST              15 (1)
+       L2:     CALL                     1
+               POP_TOP
+
+  29           LOAD_FAST                3 (note_format_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_FAST                4 (note_format_label)
+               CALL                     1
+               POP_TOP
+
+  30           LOAD_FAST                3 (note_format_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_DEREF              19 (note_format_combo)
+               CALL                     1
+               POP_TOP
+
+  31           LOAD_FAST                3 (note_format_layout)
+               LOAD_ATTR               33 (addStretch + NULL|self)
+               CALL                     0
+               POP_TOP
+
+  32           LOAD_FAST                2 (layout)
+               LOAD_ATTR               35 (addLayout + NULL|self)
+               LOAD_FAST                3 (note_format_layout)
+               CALL                     1
+               POP_TOP
+
+  34           LOAD_GLOBAL             23 (QHBoxLayout + NULL)
+               CALL                     0
+               STORE_FAST               6 (dir_layout)
+
+  35           LOAD_GLOBAL             25 (QLabel + NULL)
+               LOAD_CONST              16 ('下载目录:')
+               CALL                     1
+               STORE_FAST               7 (dir_label)
+
+  36           LOAD_GLOBAL             37 (QLineEdit + NULL)
+               CALL                     0
+               STORE_DEREF             18 (dir_input)
+
+  37           LOAD_DEREF              18 (dir_input)
+               LOAD_ATTR               39 (setText + NULL|self)
+               LOAD_FAST                1 (get_setting)
+               PUSH_NULL
+               LOAD_CONST              17 ('download_dir')
+               LOAD_CONST              18 ('download')
+               CALL                     2
+               CALL                     1
+               POP_TOP
+
+  38           LOAD_DEREF              18 (dir_input)
+               LOAD_ATTR               41 (setReadOnly + NULL|self)
+               LOAD_CONST               4 (True)
+               CALL                     1
+               POP_TOP
+
+  39           LOAD_GLOBAL             43 (QPushButton + NULL)
+               LOAD_CONST              19 ('选择...')
+               CALL                     1
+               STORE_FAST               8 (dir_btn)
+
+  40           LOAD_FAST                8 (dir_btn)
+               LOAD_ATTR               45 (setMaximumWidth + NULL|self)
+               LOAD_CONST              20 (80)
+               CALL                     1
+               POP_TOP
+
+  41           LOAD_GLOBAL             43 (QPushButton + NULL)
+               LOAD_CONST              21 ('打开目录')
+               CALL                     1
+               STORE_FAST               9 (open_dir_btn)
+
+  42           LOAD_FAST                9 (open_dir_btn)
+               LOAD_ATTR               45 (setMaximumWidth + NULL|self)
+               LOAD_CONST              20 (80)
+               CALL                     1
+               POP_TOP
+
+  43           LOAD_FAST                6 (dir_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_FAST                7 (dir_label)
+               CALL                     1
+               POP_TOP
+
+  44           LOAD_FAST                6 (dir_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_DEREF              18 (dir_input)
+               CALL                     1
+               POP_TOP
+
+  45           LOAD_FAST                6 (dir_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_FAST                8 (dir_btn)
+               CALL                     1
+               POP_TOP
+
+  46           LOAD_FAST                6 (dir_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_FAST                9 (open_dir_btn)
+               CALL                     1
+               POP_TOP
+
+  47           LOAD_FAST                2 (layout)
+               LOAD_ATTR               35 (addLayout + NULL|self)
+               LOAD_FAST                6 (dir_layout)
+               CALL                     1
+               POP_TOP
+
+  49           LOAD_FAST               17 (dialog)
+               LOAD_FAST               18 (dir_input)
+               BUILD_TUPLE              2
+               LOAD_CONST              22 (<code object choose_dir at 0x000001DD4612A1F0, file "gui\dialogs\common_dialogs.py", line 49>)
+               MAKE_FUNCTION
+               SET_FUNCTION_ATTRIBUTE   8 (closure)
+               STORE_FAST              10 (choose_dir)
+
+  57           LOAD_FAST               18 (dir_input)
+               BUILD_TUPLE              1
+               LOAD_CONST              23 (<code object open_dir at 0x000001DD45ED2270, file "gui\dialogs\common_dialogs.py", line 57>)
+               MAKE_FUNCTION
+               SET_FUNCTION_ATTRIBUTE   8 (closure)
+               STORE_FAST              11 (open_dir)
+
+  71           LOAD_FAST                8 (dir_btn)
+               LOAD_ATTR               46 (clicked)
+               LOAD_ATTR               49 (connect + NULL|self)
+               LOAD_FAST               10 (choose_dir)
+               CALL                     1
+               POP_TOP
+
+  72           LOAD_FAST                9 (open_dir_btn)
+               LOAD_ATTR               46 (clicked)
+               LOAD_ATTR               49 (connect + NULL|self)
+               LOAD_FAST               11 (open_dir)
+               CALL                     1
+               POP_TOP
+
+  74           LOAD_GLOBAL             23 (QHBoxLayout + NULL)
+               CALL                     0
+               STORE_FAST              12 (btn_layout)
+
+  75           LOAD_GLOBAL             43 (QPushButton + NULL)
+               LOAD_CONST              24 ('保存')
+               CALL                     1
+               STORE_FAST              13 (save_btn)
+
+  76           LOAD_GLOBAL             43 (QPushButton + NULL)
+               LOAD_CONST              25 ('取消')
+               CALL                     1
+               STORE_FAST              14 (cancel_btn)
+
+  77           LOAD_FAST               12 (btn_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_FAST               13 (save_btn)
+               CALL                     1
+               POP_TOP
+
+  78           LOAD_FAST               12 (btn_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_FAST               14 (cancel_btn)
+               CALL                     1
+               POP_TOP
+
+  79           LOAD_FAST                2 (layout)
+               LOAD_ATTR               35 (addLayout + NULL|self)
+               LOAD_FAST               12 (btn_layout)
+               CALL                     1
+               POP_TOP
+
+  80           LOAD_FAST               16 (delay_checkbox)
+               LOAD_FAST               17 (dialog)
+               LOAD_FAST               18 (dir_input)
+               LOAD_FAST               19 (note_format_combo)
+               LOAD_FAST               20 (save_settings)
+               BUILD_TUPLE              5
+               LOAD_CONST              26 (<code object on_save at 0x000001DD462CB3C0, file "gui\dialogs\common_dialogs.py", line 80>)
+               MAKE_FUNCTION
+               SET_FUNCTION_ATTRIBUTE   8 (closure)
+               STORE_FAST              15 (on_save)
+
+  89           LOAD_FAST               13 (save_btn)
+               LOAD_ATTR               46 (clicked)
+               LOAD_ATTR               49 (connect + NULL|self)
+               LOAD_FAST               15 (on_save)
+               CALL                     1
+               POP_TOP
+
+  90           LOAD_FAST               14 (cancel_btn)
+               LOAD_ATTR               46 (clicked)
+               LOAD_ATTR               49 (connect + NULL|self)
+               LOAD_DEREF              17 (dialog)
+               LOAD_ATTR               50 (reject)
+               CALL                     1
+               POP_TOP
+
+  91           LOAD_DEREF              17 (dialog)
+               LOAD_ATTR               53 (exec + NULL|self)
+               CALL                     0
+               POP_TOP
+               RETURN_CONST            27 (None)
+
+### CODE show_settings_dialog.<locals>.choose_dir  args=()
+  --           COPY_FREE_VARS           2
+
+  49           RESUME                   0
+
+  50           LOAD_DEREF               3 (dir_input)
+               LOAD_ATTR                1 (text + NULL|self)
+               CALL                     0
+               STORE_FAST               0 (current_dir)
+
+  51           LOAD_GLOBAL              2 (os)
+               LOAD_ATTR                4 (path)
+               LOAD_ATTR                7 (isabs + NULL|self)
+               LOAD_FAST                0 (current_dir)
+               CALL                     1
+               TO_BOOL
+               POP_JUMP_IF_TRUE        31 (to L1)
+
+  52           LOAD_GLOBAL              2 (os)
+               LOAD_ATTR                4 (path)
+               LOAD_ATTR                9 (abspath + NULL|self)
+               LOAD_FAST                0 (current_dir)
+               CALL                     1
+               STORE_FAST               0 (current_dir)
+
+  53   L1:     LOAD_GLOBAL             10 (QFileDialog)
+               LOAD_ATTR               12 (getExistingDirectory)
+               PUSH_NULL
+               LOAD_DEREF               2 (dialog)
+               LOAD_CONST               1 ('选择下载目录')
+               LOAD_FAST                0 (current_dir)
+               CALL                     3
+               STORE_FAST               1 (directory)
+
+  54           LOAD_FAST                1 (directory)
+               TO_BOOL
+               POP_JUMP_IF_FALSE       18 (to L2)
+
+  55           LOAD_DEREF               3 (dir_input)
+               LOAD_ATTR               15 (setText + NULL|self)
+               LOAD_FAST                1 (directory)
+               CALL                     1
+               POP_TOP
+               RETURN_CONST             0 (None)
+
+  54   L2:     RETURN_CONST             0 (None)
+
+### CODE show_settings_dialog.<locals>.open_dir  args=()
+  --           COPY_FREE_VARS           1
+
+  57           RESUME                   0
+
+  58           LOAD_CONST               1 (0)
+               LOAD_CONST               0 (None)
+               IMPORT_NAME              0 (subprocess)
+               STORE_FAST               0 (subprocess)
+
+  59           LOAD_CONST               1 (0)
+               LOAD_CONST               0 (None)
+               IMPORT_NAME              1 (platform)
+               STORE_FAST               1 (platform)
+
+  60           LOAD_DEREF               3 (dir_input)
+               LOAD_ATTR                5 (text + NULL|self)
+               CALL                     0
+               STORE_FAST               2 (current_dir)
+
+  61           LOAD_GLOBAL              6 (os)
+               LOAD_ATTR                8 (path)
+               LOAD_ATTR               11 (isabs + NULL|self)
+               LOAD_FAST                2 (current_dir)
+               CALL                     1
+               TO_BOOL
+               POP_JUMP_IF_TRUE        31 (to L1)
+
+  62           LOAD_GLOBAL              6 (os)
+               LOAD_ATTR                8 (path)
+               LOAD_ATTR               13 (abspath + NULL|self)
+               LOAD_FAST                2 (current_dir)
+               CALL                     1
+               STORE_FAST               2 (current_dir)
+
+  63   L1:     LOAD_GLOBAL              6 (os)
+               LOAD_ATTR               14 (makedirs)
+               PUSH_NULL
+               LOAD_FAST                2 (current_dir)
+               LOAD_CONST               2 (True)
+               LOAD_CONST               3 (('exist_ok',))
+               CALL_KW                  2
+               POP_TOP
+
+  64           LOAD_FAST                1 (platform)
+               LOAD_ATTR               17 (system + NULL|self)
+               CALL                     0
+               LOAD_CONST               4 ('Windows')
+               COMPARE_OP              88 (bool(==))
+               POP_JUMP_IF_FALSE       23 (to L2)
+
+  65           LOAD_GLOBAL              6 (os)
+               LOAD_ATTR               18 (startfile)
+               PUSH_NULL
+               LOAD_FAST                2 (current_dir)
+               CALL                     1
+               POP_TOP
+               RETURN_CONST             0 (None)
+
+  66   L2:     LOAD_FAST                1 (platform)
+               LOAD_ATTR               17 (system + NULL|self)
+               CALL                     0
+               LOAD_CONST               5 ('Darwin')
+               COMPARE_OP              88 (bool(==))
+               POP_JUMP_IF_FALSE       20 (to L3)
+
+  67           LOAD_FAST                0 (subprocess)
+               LOAD_ATTR               21 (Popen + NULL|self)
+               LOAD_CONST               6 ('open')
+               LOAD_FAST                2 (current_dir)
+               BUILD_LIST               2
+               CALL                     1
+               POP_TOP
+               RETURN_CONST             0 (None)
+
+  69   L3:     LOAD_FAST                0 (subprocess)
+               LOAD_ATTR               21 (Popen + NULL|self)
+               LOAD_CONST               7 ('xdg-open')
+               LOAD_FAST                2 (current_dir)
+               BUILD_LIST               2
+               CALL                     1
+               POP_TOP
+               RETURN_CONST             0 (None)
+
+### CODE show_settings_dialog.<locals>.on_save  args=()
+  --           COPY_FREE_VARS           5
+
+  80           RESUME                   0
+
+  81           LOAD_DEREF               4 (save_settings)
+               PUSH_NULL
+
+  82           LOAD_DEREF               0 (delay_checkbox)
+               LOAD_ATTR                1 (isChecked + NULL|self)
+               CALL                     0
+
+  83           LOAD_DEREF               3 (note_format_combo)
+               LOAD_ATTR                3 (currentData + NULL|self)
+               CALL                     0
+
+  84           LOAD_DEREF               2 (dir_input)
+               LOAD_ATTR                5 (text + NULL|self)
+               CALL                     0
+
+  81           LOAD_CONST               1 (('enable_download_delay', 'note_format', 'download_dir'))
+               BUILD_CONST_KEY_MAP      3
+               CALL                     1
+               POP_TOP
+
+  86           LOAD_GLOBAL              6 (QMessageBox)
+               LOAD_ATTR                8 (information)
+               PUSH_NULL
+               LOAD_DEREF               1 (dialog)
+               LOAD_CONST               2 ('成功')
+               LOAD_CONST               3 ('设置已保存')
+               CALL                     3
+               POP_TOP
+
+  87           LOAD_DEREF               1 (dialog)
+               LOAD_ATTR               11 (accept + NULL|self)
+               CALL                     0
+               POP_TOP
+               RETURN_CONST             0 (None)
+
+## CODE show_help_dialog  args=('parent',)
+ 94           RESUME                   0
+
+ 96           LOAD_GLOBAL              1 (QDialog + NULL)
+              LOAD_FAST                0 (parent)
+              CALL                     1
+              STORE_FAST               1 (dialog)
+
+ 97           LOAD_FAST                1 (dialog)
+              LOAD_ATTR                3 (setWindowTitle + NULL|self)
+              LOAD_CONST               1 ('使用说明')
+              CALL                     1
+              POP_TOP
+
+ 98           LOAD_FAST                1 (dialog)
+              LOAD_ATTR                5 (setModal + NULL|self)
+              LOAD_CONST               2 (True)
+              CALL                     1
+              POP_TOP
+
+ 99           LOAD_FAST                1 (dialog)
+              LOAD_ATTR                7 (setMinimumSize + NULL|self)
+              LOAD_CONST               3 (700)
+              LOAD_CONST               4 (500)
+              CALL                     2
+              POP_TOP
+
+100           LOAD_GLOBAL              9 (QVBoxLayout + NULL)
+              LOAD_FAST                1 (dialog)
+              CALL                     1
+              STORE_FAST               2 (layout)
+
+102           LOAD_GLOBAL             11 (QTextBrowser + NULL)
+              CALL                     0
+              STORE_FAST               3 (text_browser)
+
+103           LOAD_FAST                3 (text_browser)
+              LOAD_ATTR               13 (setOpenExternalLinks + NULL|self)
+              LOAD_CONST               2 (True)
+              CALL                     1
+              POP_TOP
+
+104           LOAD_FAST                3 (text_browser)
+              LOAD_ATTR               15 (setHtml + NULL|self)
+              LOAD_CONST               5 ('\n    <h2>效率助手使用说明</h2>\n\n    <h3>1. 登录</h3>\n    <p>点击"登录"按钮，使用手机扫描二维码完成登录。登录成功后会自动保存凭证，下次启动自动登录。</p>\n\n    <h3>2. 加载知识库</h3>\n    <p>点击"加载知识库"按钮，系统会加载您有权访问的所有知识库列表。</p>\n\n    <h3>3. 浏览文件</h3>\n    <p>点击知识库前的展开图标，可以查看知识库内的文件夹和文件结构。支持多级文件夹展开。</p>\n\n    <h3>4. 下载文件</h3>\n    <p>右键点击知识库、文件夹或文件，在菜单中选择下载。支持多选（Ctrl/Shift键）后右键批量下载。</p>\n    <p>下载的文件默认保存到：macOS 为 ~/imahelper/download，Windows 为 %APPDATA%\\imahelper\\download。可在"下载设置"中修改。</p>\n\n    <h3>5. 增量更新</h3>\n    <p>右键知识库选择"增量更新"，可提交单次或定时循环更新任务。</p>\n    <p>点击"更新任务管理"按钮可查看所有任务状态，支持启用/停用和删除。</p>\n\n    <h3>6. 搜索文件</h3>\n    <p>从下拉框选择知识库，输入关键词后点击"搜索"按钮，可以快速查找文件。搜索结果可直接选中下载。</p>\n\n    <h3>7. 设置</h3>\n    <p>点击"下载设置"按钮可以配置：</p>\n    <ul>\n    <li>下载延迟：开启后每个文件下载完成会随机延迟1-3秒</li>\n    <li>笔记保存格式：Markdown 或 HTML</li>\n    <li>下载目录：自定义文件保存位置</li>\n    </ul>\n\n    <h3>8. 延长授权</h3>\n    <p>点击"延长授权"按钮，输入卡密可以累加配额和延长使用时长。</p>\n\n    <h3>注意事项</h3>\n    <ul>\n    <li>已下载的文件不会重复下载</li>\n    <li>网址和公众号文章会保存为Excel文件</li>\n    <li>笔记和报告会转换为HTML格式保存</li>\n    <li>下载过程中可以暂停或停止</li>\n    </ul>\n    ')
+              CALL                     1
+              POP_TOP
+
+146           LOAD_FAST                2 (layout)
+              LOAD_ATTR               17 (addWidget + NULL|self)
+              LOAD_FAST                3 (text_browser)
+              CALL                     1
+              POP_TOP
+
+148           LOAD_GLOBAL             19 (QPushButton + NULL)
+              LOAD_CONST               6 ('关闭')
+              CALL                     1
+              STORE_FAST               4 (close_btn)
+
+149           LOAD_FAST                4 (close_btn)
+              LOAD_ATTR               20 (clicked)
+              LOAD_ATTR               23 (connect + NULL|self)
+              LOAD_FAST                1 (dialog)
+              LOAD_ATTR               24 (accept)
+              CALL                     1
+              POP_TOP
+
+150           LOAD_FAST                2 (layout)
+              LOAD_ATTR               17 (addWidget + NULL|self)
+              LOAD_FAST                4 (close_btn)
+              CALL                     1
+              POP_TOP
+
+151           LOAD_FAST                1 (dialog)
+              LOAD_ATTR               27 (exec + NULL|self)
+              CALL                     0
+              POP_TOP
+              RETURN_CONST             7 (None)
+
+## CODE show_renew_dialog  args=('parent', 'on_success')
+  --           MAKE_CELL                1 (on_success)
+               MAKE_CELL                7 (card_input)
+               MAKE_CELL                8 (dialog)
+               MAKE_CELL                9 (renew_license)
+
+ 154           RESUME                   0
+
+ 156           LOAD_CONST               1 (0)
+               LOAD_CONST               2 (('renew_license',))
+               IMPORT_NAME              0 (core.auth)
+               IMPORT_FROM              1 (renew_license)
+               STORE_DEREF              9 (renew_license)
+               POP_TOP
+
+ 158           LOAD_GLOBAL              5 (QDialog + NULL)
+               LOAD_FAST                0 (parent)
+               CALL                     1
+               STORE_DEREF              8 (dialog)
+
+ 159           LOAD_DEREF               8 (dialog)
+               LOAD_ATTR                7 (setWindowTitle + NULL|self)
+               LOAD_CONST               3 ('卡密续费')
+               CALL                     1
+               POP_TOP
+
+ 160           LOAD_DEREF               8 (dialog)
+               LOAD_ATTR                9 (setModal + NULL|self)
+               LOAD_CONST               4 (True)
+               CALL                     1
+               POP_TOP
+
+ 161           LOAD_GLOBAL             11 (QVBoxLayout + NULL)
+               LOAD_DEREF               8 (dialog)
+               CALL                     1
+               STORE_FAST               2 (layout)
+
+ 163           LOAD_FAST                2 (layout)
+               LOAD_ATTR               13 (addWidget + NULL|self)
+               LOAD_GLOBAL             15 (QLabel + NULL)
+               LOAD_CONST               5 ('输入新卡密累加配额和时长:')
+               CALL                     1
+               CALL                     1
+               POP_TOP
+
+ 164           LOAD_GLOBAL             17 (QLineEdit + NULL)
+               CALL                     0
+               STORE_DEREF              7 (card_input)
+
+ 165           LOAD_FAST                2 (layout)
+               LOAD_ATTR               13 (addWidget + NULL|self)
+               LOAD_DEREF               7 (card_input)
+               CALL                     1
+               POP_TOP
+
+ 167           LOAD_GLOBAL             19 (QHBoxLayout + NULL)
+               CALL                     0
+               STORE_FAST               3 (btn_layout)
+
+ 168           LOAD_GLOBAL             21 (QPushButton + NULL)
+               LOAD_CONST               6 ('续费')
+               CALL                     1
+               STORE_FAST               4 (renew_btn)
+
+ 169           LOAD_GLOBAL             21 (QPushButton + NULL)
+               LOAD_CONST               7 ('取消')
+               CALL                     1
+               STORE_FAST               5 (cancel_btn)
+
+ 170           LOAD_FAST                3 (btn_layout)
+               LOAD_ATTR               13 (addWidget + NULL|self)
+               LOAD_FAST                4 (renew_btn)
+               CALL                     1
+               POP_TOP
+
+ 171           LOAD_FAST                3 (btn_layout)
+               LOAD_ATTR               13 (addWidget + NULL|self)
+               LOAD_FAST                5 (cancel_btn)
+               CALL                     1
+               POP_TOP
+
+ 172           LOAD_FAST                2 (layout)
+               LOAD_ATTR               23 (addLayout + NULL|self)
+               LOAD_FAST                3 (btn_layout)
+               CALL                     1
+               POP_TOP
+
+ 174           LOAD_FAST                7 (card_input)
+               LOAD_FAST                8 (dialog)
+               LOAD_FAST                1 (on_success)
+               LOAD_FAST                9 (renew_license)
+               BUILD_TUPLE              4
+               LOAD_CONST               8 (<code object on_renew at 0x000001DD4639C660, file "gui\dialogs\common_dialogs.py", line 174>)
+               MAKE_FUNCTION
+               SET_FUNCTION_ATTRIBUTE   8 (closure)
+               STORE_FAST               6 (on_renew)
+
+ 188           LOAD_FAST                4 (renew_btn)
+               LOAD_ATTR               24 (clicked)
+               LOAD_ATTR               27 (connect + NULL|self)
+               LOAD_FAST                6 (on_renew)
+               CALL                     1
+               POP_TOP
+
+ 189           LOAD_FAST                5 (cancel_btn)
+               LOAD_ATTR               24 (clicked)
+               LOAD_ATTR               27 (connect + NULL|self)
+               LOAD_DEREF               8 (dialog)
+               LOAD_ATTR               28 (reject)
+               CALL                     1
+               POP_TOP
+
+ 190           LOAD_DEREF               8 (dialog)
+               LOAD_ATTR               31 (exec + NULL|self)
+               CALL                     0
+               POP_TOP
+               RETURN_CONST             9 (None)
+
+### CODE show_renew_dialog.<locals>.on_renew  args=()
+  --           COPY_FREE_VARS           4
+
+ 174           RESUME                   0
+
+ 175           LOAD_DEREF               3 (card_input)
+               LOAD_ATTR                1 (text + NULL|self)
+               CALL                     0
+               LOAD_ATTR                3 (strip + NULL|self)
+               CALL                     0
+               STORE_FAST               0 (card_key)
+
+ 176           LOAD_FAST                0 (card_key)
+               TO_BOOL
+               POP_JUMP_IF_TRUE        25 (to L1)
+
+ 177           LOAD_GLOBAL              4 (QMessageBox)
+               LOAD_ATTR                6 (warning)
+               PUSH_NULL
+               LOAD_DEREF               4 (dialog)
+               LOAD_CONST               1 ('提示')
+               LOAD_CONST               2 ('请输入卡密')
+               CALL                     3
+               POP_TOP
+
+ 178           RETURN_CONST             0 (None)
+
+ 179   L1:     LOAD_DEREF               6 (renew_license)
+               PUSH_NULL
+               LOAD_FAST                0 (card_key)
+               CALL                     1
+               UNPACK_SEQUENCE          2
+               STORE_FAST_STORE_FAST   18 (success, msg)
+
+ 180           LOAD_FAST                1 (success)
+               TO_BOOL
+               POP_JUMP_IF_FALSE       56 (to L3)
+
+ 181           LOAD_GLOBAL              4 (QMessageBox)
+               LOAD_ATTR                8 (information)
+               PUSH_NULL
+               LOAD_DEREF               4 (dialog)
+               LOAD_CONST               3 ('成功')
+               LOAD_FAST                2 (msg)
+               CALL                     3
+               POP_TOP
+
+ 182           LOAD_DEREF               4 (dialog)
+               LOAD_ATTR               11 (accept + NULL|self)
+               CALL                     0
+               POP_TOP
+
+ 183           LOAD_DEREF               5 (on_success)
+               TO_BOOL
+               POP_JUMP_IF_FALSE        8 (to L2)
+
+ 184           LOAD_DEREF               5 (on_success)
+               PUSH_NULL
+               CALL                     0
+               POP_TOP
+               RETURN_CONST             0 (None)
+
+ 183   L2:     RETURN_CONST             0 (None)
+
+ 186   L3:     LOAD_GLOBAL              4 (QMessageBox)
+               LOAD_ATTR               12 (critical)
+               PUSH_NULL
+               LOAD_DEREF               4 (dialog)
+               LOAD_CONST               4 ('失败')
+               LOAD_FAST                2 (msg)
+               CALL                     3
+               POP_TOP
+               RETURN_CONST             0 (None)
+
+## CODE show_activation_dialog  args=('parent', 'on_success')
+  --           MAKE_CELL                1 (on_success)
+               MAKE_CELL                9 (activate_license)
+               MAKE_CELL               10 (card_input)
+               MAKE_CELL               11 (dialog)
+
+ 193           RESUME                   0
+
+ 195           LOAD_CONST               1 (0)
+               LOAD_CONST               2 (('activate_license',))
+               IMPORT_NAME              0 (core.auth)
+               IMPORT_FROM              1 (activate_license)
+               STORE_DEREF              9 (activate_license)
+               POP_TOP
+
+ 197           LOAD_GLOBAL              5 (QDialog + NULL)
+               LOAD_FAST                0 (parent)
+               CALL                     1
+               STORE_DEREF             11 (dialog)
+
+ 198           LOAD_DEREF              11 (dialog)
+               LOAD_ATTR                7 (setWindowTitle + NULL|self)
+               LOAD_CONST               3 ('软件激活')
+               CALL                     1
+               POP_TOP
+
+ 199           LOAD_DEREF              11 (dialog)
+               LOAD_ATTR                9 (setModal + NULL|self)
+               LOAD_CONST               4 (True)
+               CALL                     1
+               POP_TOP
+
+ 200           LOAD_GLOBAL             11 (QVBoxLayout + NULL)
+               LOAD_DEREF              11 (dialog)
+               CALL                     1
+               STORE_FAST               2 (layout)
+
+ 202           LOAD_FAST                2 (layout)
+               LOAD_ATTR               13 (addWidget + NULL|self)
+               LOAD_GLOBAL             15 (QLabel + NULL)
+               LOAD_CONST               5 ('请输入激活卡密:')
+               CALL                     1
+               CALL                     1
+               POP_TOP
+
+ 203           LOAD_GLOBAL             17 (QLineEdit + NULL)
+               CALL                     0
+               STORE_DEREF             10 (card_input)
+
+ 204           LOAD_FAST                2 (layout)
+               LOAD_ATTR               13 (addWidget + NULL|self)
+               LOAD_DEREF              10 (card_input)
+               CALL                     1
+               POP_TOP
+
+ 206           LOAD_GLOBAL             19 (QHBoxLayout + NULL)
+               CALL                     0
+               STORE_FAST               3 (btn_layout)
+
+ 207           LOAD_GLOBAL             21 (QPushButton + NULL)
+               LOAD_CONST               6 ('激活')
+               CALL                     1
+               STORE_FAST               4 (activate_btn)
+
+ 208           LOAD_GLOBAL             21 (QPushButton + NULL)
+               LOAD_CONST               7 ('退出')
+               CALL                     1
+               STORE_FAST               5 (cancel_btn)
+
+ 209           LOAD_FAST                3 (btn_layout)
+               LOAD_ATTR               13 (addWidget + NULL|self)
+               LOAD_FAST                4 (activate_btn)
+               CALL                     1
+               POP_TOP
+
+ 210           LOAD_FAST                3 (btn_layout)
+               LOAD_ATTR               13 (addWidget + NULL|self)
+               LOAD_FAST                5 (cancel_btn)
+               CALL                     1
+               POP_TOP
+
+ 211           LOAD_FAST                2 (layout)
+               LOAD_ATTR               23 (addLayout + NULL|self)
+               LOAD_FAST                3 (btn_layout)
+               CALL                     1
+               POP_TOP
+
+ 213           LOAD_FAST                9 (activate_license)
+               LOAD_FAST               10 (card_input)
+               LOAD_FAST               11 (dialog)
+               LOAD_FAST                1 (on_success)
+               BUILD_TUPLE              4
+               LOAD_CONST               8 (<code object on_activate at 0x000001DD45FB53D0, file "gui\dialogs\common_dialogs.py", line 213>)
+               MAKE_FUNCTION
+               SET_FUNCTION_ATTRIBUTE   8 (closure)
+               STORE_FAST               6 (on_activate)
+
+ 231           LOAD_FAST                4 (activate_btn)
+               LOAD_ATTR               24 (clicked)
+               LOAD_ATTR               27 (connect + NULL|self)
+               LOAD_FAST                6 (on_activate)
+               CALL                     1
+               POP_TOP
+
+ 232           LOAD_FAST                5 (cancel_btn)
+               LOAD_ATTR               24 (clicked)
+               LOAD_ATTR               27 (connect + NULL|self)
+               LOAD_DEREF              11 (dialog)
+               LOAD_ATTR               28 (reject)
+               CALL                     1
+               POP_TOP
+
+ 234           LOAD_DEREF              11 (dialog)
+               LOAD_ATTR               31 (exec + NULL|self)
+               CALL                     0
+               STORE_FAST               7 (result)
+
+ 235           LOAD_FAST                7 (result)
+               LOAD_GLOBAL              4 (QDialog)
+               LOAD_ATTR               32 (Accepted)
+               COMPARE_OP             119 (bool(!=))
+               POP_JUMP_IF_FALSE       22 (to L1)
+
+ 236           LOAD_CONST               1 (0)
+               LOAD_CONST               9 (None)
+               IMPORT_NAME             17 (sys)
+               STORE_FAST               8 (sys)
+
+ 237           LOAD_FAST                8 (sys)
+               LOAD_ATTR               37 (exit + NULL|self)
+               LOAD_CONST               1 (0)
+               CALL                     1
+               POP_TOP
+               RETURN_CONST             9 (None)
+
+ 235   L1:     RETURN_CONST             9 (None)
+
+### CODE show_activation_dialog.<locals>.on_activate  args=()
+  --           COPY_FREE_VARS           4
+
+ 213           RESUME                   0
+
+ 214           LOAD_DEREF               6 (card_input)
+               LOAD_ATTR                1 (text + NULL|self)
+               CALL                     0
+               LOAD_ATTR                3 (strip + NULL|self)
+               CALL                     0
+               STORE_FAST               0 (card_key)
+
+ 215           LOAD_FAST                0 (card_key)
+               TO_BOOL
+               POP_JUMP_IF_TRUE        25 (to L1)
+
+ 216           LOAD_GLOBAL              4 (QMessageBox)
+               LOAD_ATTR                6 (warning)
+               PUSH_NULL
+               LOAD_DEREF               7 (dialog)
+               LOAD_CONST               1 ('提示')
+               LOAD_CONST               2 ('请输入卡密')
+               CALL                     3
+               POP_TOP
+
+ 217           RETURN_CONST             0 (None)
+
+ 218   L1:     LOAD_DEREF               5 (activate_license)
+               PUSH_NULL
+               LOAD_FAST                0 (card_key)
+               CALL                     1
+               UNPACK_SEQUENCE          2
+               STORE_FAST_STORE_FAST   18 (success, msg)
+
+ 219           LOAD_FAST                1 (success)
+               TO_BOOL
+               POP_JUMP_IF_FALSE       82 (to L3)
+
+ 220           LOAD_CONST               3 (0)
+               LOAD_CONST               4 (('verify_license',))
+               IMPORT_NAME              4 (core.auth)
+               IMPORT_FROM              5 (verify_license)
+               STORE_FAST               3 (verify_license)
+               POP_TOP
+
+ 221           LOAD_FAST                3 (verify_license)
+               PUSH_NULL
+               CALL                     0
+               POP_TOP
+
+ 222           LOAD_CONST               3 (0)
+               LOAD_CONST               5 (('load_cookie_from_cache',))
+               IMPORT_NAME              6 (core.config)
+               IMPORT_FROM              7 (load_cookie_from_cache)
+               STORE_FAST               4 (load_cookie_from_cache)
+               POP_TOP
+
+ 223           LOAD_FAST                4 (load_cookie_from_cache)
+               PUSH_NULL
+               CALL                     0
+               POP_TOP
+
+ 224           LOAD_GLOBAL              4 (QMessageBox)
+               LOAD_ATTR               16 (information)
+               PUSH_NULL
+               LOAD_DEREF               7 (dialog)
+               LOAD_CONST               6 ('成功')
+               LOAD_FAST                2 (msg)
+               CALL                     3
+               POP_TOP
+
+ 225           LOAD_DEREF               7 (dialog)
+               LOAD_ATTR               19 (accept + NULL|self)
+               CALL                     0
+               POP_TOP
+
+ 226           LOAD_DEREF               8 (on_success)
+               TO_BOOL
+               POP_JUMP_IF_FALSE        8 (to L2)
+
+ 227           LOAD_DEREF               8 (on_success)
+               PUSH_NULL
+               CALL                     0
+               POP_TOP
+               RETURN_CONST             0 (None)
+
+ 226   L2:     RETURN_CONST             0 (None)
+
+ 229   L3:     LOAD_GLOBAL              4 (QMessageBox)
+               LOAD_ATTR               20 (critical)
+               PUSH_NULL
+               LOAD_DEREF               7 (dialog)
+               LOAD_CONST               7 ('失败')
+               LOAD_FAST                2 (msg)
+               CALL                     3
+               POP_TOP
+               RETURN_CONST             0 (None)

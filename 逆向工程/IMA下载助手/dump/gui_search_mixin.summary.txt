@@ -1,0 +1,100 @@
+===== gui/search_mixin.pyc =====
+DOCSTRING: 搜索功能 Mixin
+
+[<module>] args=() names=('__doc__', 'PySide6.QtWidgets', 'QTreeWidgetItem', 'QMessageBox', 'PySide6.QtCore', 'Qt', 'PySide6.QtGui', 'QColor', 'gui.workers.workers', 'SearchKnowledgeWorker', 'SearchMixin')
+  CONST '搜索功能 Mixin'
+  CONST 0
+  CONST ('QTreeWidgetItem', 'QMessageBox')
+  CONST ('Qt')
+  CONST ('QColor')
+  CONST ('SearchKnowledgeWorker')
+  CONST 'SearchMixin'
+  CONST None
+
+  [SearchMixin] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', '__doc__', 'on_search_clicked', 'on_search_finished', 'on_search_error', 'on_clear_search', 'convert_search_result_to_tree_item', '__static_attributes__')
+    CONST 'SearchMixin'
+    CONST 8
+    CONST '鎼滅储鍔熻兘锛屼緵 MainWindow 缁ф壙'
+    CONST ('search_mode', 'search_next_cursor', 'search_worker', 'selected_tags')
+    CONST None
+
+    [SearchMixin.on_search_clicked] args=('self',) names=('search_input', 'text', 'strip', 'selected_tags', 'QMessageBox', 'warning', 'kb_selector', 'currentData', 'currentText', 'search_mode', 'search_btn', 'setEnabled', 'tag_selector', 'add_log', 'SearchKnowledgeWorker', 'search_worker', 'finished', 'connect', 'error', 'on_search_error', 'start')
+      CONST '瑙﹀彂鎼滅储'
+      CONST '提示'
+      CONST '请输入关键词或选择标签'
+      CONST None
+      CONST '请选择要搜索的知识库'
+      CONST 2
+      CONST 'tags'
+      CONST ('filter_type', 'tags_filter')
+      CONST True
+      CONST False
+      CONST '正在搜索：'
+      CONST '正在按标签筛选'
+      CONST 'info'
+      CONST ('filters')
+
+      [SearchMixin.on_search_clicked.<locals>.<lambda>] args=('results', 'is_end', 'cursor') names=('on_search_finished',)
+        CONST None
+
+    [SearchMixin.on_search_finished] args=('self', 'results', 'is_end', 'next_cursor', 'kb_id', 'kb_name') names=('search_btn', 'setEnabled', 'search_input', 'kb_selector', 'tag_selector', 'search_next_cursor', 'tree', 'clear', 'add_log', 'clear_search_btn', 'setVisible', 'setUpdatesEnabled', 'convert_search_result_to_tree_item', 'append', 'addTopLevelItems', 'data', 'Qt', 'UserRole', 'get', '_create_tag_widget', 'setItemWidget', 'len')
+      CONST '澶勭悊鎼滅储缁撴灉'
+      CONST True
+      CONST '未找到匹配的文件'
+      CONST 'warning'
+      CONST None
+      CONST False
+      CONST 1
+      CONST 'tags'
+      CONST 5
+      CONST '找到 '
+      CONST ' 个文件'
+      CONST 'success'
+
+    [SearchMixin.on_search_error] args=('self', 'error_msg') names=('search_btn', 'setEnabled', 'search_input', 'kb_selector', 'tag_selector', 'add_log', 'QMessageBox', 'warning')
+      CONST '澶勭悊鎼滅储閿欒\ue1e4'
+      CONST True
+      CONST '搜索失败：'
+      CONST 'error'
+      CONST '搜索失败'
+      CONST None
+
+    [SearchMixin.on_clear_search] args=('self',) names=('search_mode', 'current_kb_list', 'populate_kb_tree', 'search_input', 'clear', 'search_next_cursor', 'clear_search_btn', 'setVisible', 'kb_selector', 'setEnabled', 'search_btn', 'tag_selector', 'range', 'tag_list_widget', 'count', 'item', 'setCheckState', 'Qt', 'Unchecked', 'selected_tags', 'setEditText', 'setPlaceholderText', 'add_log')
+      CONST '娓呴櫎鎼滅储缁撴灉锛屾仮澶嶅師濮嬫爲褰㈢粨鏋?'
+      CONST None
+      CONST False
+      CONST ''
+      CONST True
+      CONST '选择标签（可选）'
+      CONST '已返回知识库列表'
+      CONST 'info'
+
+    [SearchMixin.convert_search_result_to_tree_item] args=('self', 'search_result', 'kb_id', 'kb_name') names=('re', 'get', 'int', '_format_size', 'sub', 'get_access_status_display', 'QTreeWidgetItem', 'setIcon', '_get_file_icon', 'setForeground', 'setData', 'Qt', 'UserRole')
+      CONST '灏嗘悳绱㈢粨鏋滆浆鎹\ue76d负鏍戝舰鎺т欢椤?'
+      CONST 0
+      CONST None
+      CONST 'knowledge'
+      CONST 'media_id'
+      CONST ''
+      CONST 'title'
+      CONST 'file_size'
+      CONST 'media_type'
+      CONST 'media_type_info'
+      CONST 'time_wording'
+      CONST '-'
+      CONST 'parent_folder_name'
+      CONST 'highlight_content'
+      CONST '<[^>]+>'
+      CONST 100
+      CONST 'tags'
+      CONST 'access_status'
+      CONST 3
+      CONST 'name'
+      CONST '文件'
+      CONST 4
+      CONST 1
+      CONST 'file'
+      CONST '/'
+      CONST 'update_time'
+      CONST ('type', 'kb_id', 'kb_name', 'media_id', 'media_type', 'media_type_info', 'title', 'full_path', 'file_size', 'update_time', 'access_status', 'forbid_access', 'tags')
+

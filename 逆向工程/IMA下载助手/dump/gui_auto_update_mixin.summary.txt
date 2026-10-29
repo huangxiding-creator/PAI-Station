@@ -1,0 +1,204 @@
+===== gui/auto_update_mixin.pyc =====
+DOCSTRING: 自动更新调度与日志 Mixin
+
+[<module>] args=() names=('__doc__', 'PySide6.QtWidgets', 'QDialog', 'PySide6.QtCore', 'QTimer', 'gui.workers.workers', 'AutoUpdateWorker', 'gui.incremental_download_dialog', 'IncrementalUpdateDialog', 'TaskManagerDialog', 'data.database', 'add_task', 'get_enabled_tasks', 'update_task', 'datetime', 'timedelta', 'time', 'config', 'Config', 'AutoUpdateMixin')
+  CONST '自动更新调度与日志 Mixin'
+  CONST 0
+  CONST ('QDialog')
+  CONST ('QTimer')
+  CONST ('AutoUpdateWorker')
+  CONST ('IncrementalUpdateDialog', 'TaskManagerDialog')
+  CONST ('add_task', 'get_enabled_tasks', 'update_task')
+  CONST ('datetime', 'timedelta')
+  CONST None
+  CONST ('Config')
+  CONST 'AutoUpdateMixin'
+
+  [AutoUpdateMixin] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', '__doc__', 'add_log', 'toggle_log', 'show_task_manager_dialog', '_submit_update_task', 'start_auto_update_timer', '_update_indicator_style', '_get_next_update_display', '_refresh_indicator', '_check_all_tasks', '_start_task', '_on_task_finished', '_on_task_error', '__static_attributes__')
+    CONST 'AutoUpdateMixin'
+    CONST 12
+    CONST '自动更新调度与日志功能，供 MainWindow 继承'
+    CONST ('_indicator_timer', '_log_expanded', '_task_manager_dialog', 'auto_update_timer')
+    CONST None
+    CONST ('info')
+    CONST ('', '')
+    CONST ('')
+    CONST (True)
+
+    [AutoUpdateMixin.add_log] args=('self', 'msg', 'log_type') names=('get', 'startswith', 'datetime', 'now', 'strftime', 'log', 'append', 'open', 'Config', 'get_log_file_path', 'write', 'Exception')
+      CONST '添加带颜色、符号和时间戳的日志，并写入文件'
+      CONST '#4CAF50'
+      CONST '#F44336'
+      CONST '#FF9800'
+      CONST '#2196F3'
+      CONST '#9C27B0'
+      CONST ('success', 'error', 'warning', 'info', 'download')
+      CONST '✓'
+      CONST '✗'
+      CONST '⚠'
+      CONST 'ℹ'
+      CONST '↓'
+      CONST '#666'
+      CONST '•'
+      CONST '正在下载:'
+      CONST None
+      CONST ('✓ [', '✗ [', '⊘ [')
+      CONST 2
+      CONST '%Y-%m-%d %H:%M:%S'
+      CONST '<span style="color: #888;">['
+      CONST ']</span> <span style="color: '
+      CONST '; font-weight: bold;">'
+      CONST '</span> <span style="color: '
+      CONST ';">'
+      CONST '</span>'
+      CONST '['
+      CONST '] '
+      CONST ' '
+      CONST '\n'
+      CONST 'a'
+      CONST 'utf-8'
+      CONST ('encoding')
+
+    [AutoUpdateMixin.toggle_log] args=('self',) names=('_log_expanded', 'log', 'setMaximumHeight', 'setVisible', 'log_toggle_btn', 'setText')
+      CONST '折叠/展开日志区'
+      CONST 0
+      CONST False
+      CONST '展开'
+      CONST 120
+      CONST True
+      CONST '折叠'
+      CONST None
+
+    [AutoUpdateMixin.show_task_manager_dialog] args=('self',) names=('PySide6.QtWidgets', 'QMessageBox', 'current_kb_list', 'warning', '_task_manager_dialog', 'TaskManagerDialog', 'tasks_changed', 'connect', '_refresh_indicator', 'show', 'raise_', 'activateWindow')
+      CONST '打开任务管理窗口'
+      CONST 0
+      CONST ('QMessageBox')
+      CONST '提示'
+      CONST '请先加载知识库列表'
+      CONST None
+
+    [AutoUpdateMixin._submit_update_task] args=('self', 'kb_id', 'kb_name', 'folder_id', 'folder_name') names=('IncrementalUpdateDialog', 'exec', 'QDialog', 'Accepted', 'get_selected_datetime', 'get_is_loop', 'get_interval_hours', 'add_task', 'int', 'timestamp', 'add_log', 'strftime', '_task_manager_dialog', 'refresh_table', '_refresh_indicator', 'data.database', 'get_task_by_id', '_start_task')
+      CONST '提交增量更新任务（右键菜单入口）\n\nArgs:\n    kb_id: 知识库ID\n    kb_name: 知识库名称\n    folder_id: 文件夹ID，空表示整个知识库\n    folder_name: 文件夹名称，空表示整个知识库\n'
+      CONST ('kb_id', 'kb_name', 'folder_id', 'folder_name', 'parent')
+      CONST None
+      CONST 0
+      CONST ('folder_id', 'folder_name')
+      CONST '「'
+      CONST '」'
+      CONST '循环（每'
+      CONST '小时）'
+      CONST '单次'
+      CONST '已提交'
+      CONST '更新任务：'
+      CONST '，起始时间 '
+      CONST '%Y-%m-%d %H:%M'
+      CONST 'success'
+      CONST ('get_task_by_id')
+
+    [AutoUpdateMixin.start_auto_update_timer] args=('self',) names=('QTimer', 'auto_update_timer', 'timeout', 'connect', '_check_all_tasks', 'start', '_indicator_timer', '_refresh_indicator')
+      CONST '启动任务调度定时器（每60秒检查）和指示灯刷新'
+      CONST 60000
+      CONST None
+
+    [AutoUpdateMixin._update_indicator_style] args=('self', 'state', 'detail') names=('auto_update_indicator', 'setText', 'setStyleSheet', 'setVisible', '_get_next_update_display')
+      CONST "更新自动更新指示灯样式\nstate: 'running' | 'idle' | 'off'\ndetail: 额外信息（如运行中的任务数）\n"
+      CONST 'running'
+      CONST '● 更新中'
+      CONST 'color: #147A55; font-size: 12px; padding: 5px 8px;background: #EAF7F1; border: 1px solid #B9E4D2;border-radius: 4px; font-weight: 600;'
+      CONST True
+      CONST 'idle'
+      CONST '● 下次更新：'
+      CONST 'color: #4F5966; font-size: 12px; padding: 5px 8px;background: #EEF1F4; border: 1px solid #DDE2E7;border-radius: 4px;'
+      CONST False
+      CONST None
+
+    [AutoUpdateMixin._get_next_update_display] args=('self',) names=('get_enabled_tasks', 'int', 'time', 'get', 'datetime', 'fromtimestamp', 'strftime')
+      CONST '计算最近一个任务的下次触发时间'
+      CONST '无'
+      CONST None
+      CONST 'interval_hours'
+      CONST 0
+      CONST 'last_run'
+      CONST 'start_time'
+      CONST 3600
+      CONST '即将执行'
+      CONST '%H:%M'
+
+    [AutoUpdateMixin._refresh_indicator] args=('self',) names=('_running_task_ids', 'len', 'get_enabled_tasks', '_update_indicator_style')
+      CONST '刷新指示灯状态'
+      CONST 'running'
+      CONST ' ('
+      CONST '/'
+      CONST ')'
+      CONST 'idle'
+      CONST 'off'
+      CONST None
+
+    [AutoUpdateMixin._check_all_tasks] args=('self',) names=('download_worker', 'isRunning', 'core.config', 'get_cookie', 'get', 'get_enabled_tasks', '_running_task_ids', 'int', 'time', '_start_task')
+      CONST '定时检查所有启用的任务，到时间的就启动'
+      CONST None
+      CONST 0
+      CONST ('get_cookie')
+      CONST 'cookie'
+      CONST 'id'
+      CONST 'interval_hours'
+      CONST 'last_run'
+      CONST 3600
+      CONST 'start_time'
+
+    [AutoUpdateMixin._start_task] args=('self', 'task') names=('get', 'datetime', 'fromtimestamp', 'now', 'timedelta', 'current_kb_list', '_running_task_ids', 'add', 'add_log', 'AutoUpdateWorker', 'progress', 'connect', 'on_download_progress', 'file_discovered', 'on_file_discovered', 'scan_progress', 'on_scan_progress', 'kb_started', 'kb_finished', 'finished', '_running_task_workers', 'start', '_refresh_indicator', '_task_manager_dialog', 'refresh_table')
+      CONST '启动单个任务'
+      CONST 'id'
+      CONST 'last_cutoff'
+      CONST 0
+      CONST 'start_time'
+      CONST 1
+      CONST ('hours')
+      CONST None
+      CONST 'kb_id'
+      CONST 'folder_id'
+      CONST ''
+      CONST 'folder_name'
+      CONST '「'
+      CONST '」'
+      CONST 'kb_name'
+      CONST '自动更新'
+      CONST '开始'
+      CONST 'info'
+      CONST ('folder_id')
+      CONST 'interval_hours'
+
+      [AutoUpdateMixin._start_task.<locals>.<lambda>] args=('name',) names=('add_log',)
+        CONST None
+        CONST '更新：开始扫描「'
+        CONST '」'
+        CONST 'info'
+
+      [AutoUpdateMixin._start_task.<locals>.<lambda>] args=('name', 'count') names=('add_log',)
+        CONST None
+        CONST '更新：「'
+        CONST '」完成'
+        CONST 'success'
+
+      [AutoUpdateMixin._start_task.<locals>.<lambda>] args=() names=('_on_task_finished',)
+        CONST None
+
+    [AutoUpdateMixin._on_task_finished] args=('self', 'task_id', 'is_loop') names=('int', 'time', 'update_task', '_running_task_ids', 'discard', '_running_task_workers', 'pop', 'update_license_info', 'add_log', '_refresh_indicator', '_task_manager_dialog', 'refresh_table', 'services.ima_service', 'close_session')
+      CONST '单个任务完成'
+      CONST ('last_run', 'last_cutoff')
+      CONST 0
+      CONST ('last_run', 'last_cutoff', 'enabled')
+      CONST None
+      CONST '自动更新任务完成'
+      CONST 'success'
+      CONST ('close_session')
+
+    [AutoUpdateMixin._on_task_error] args=('self', 'task_id', 'msg', 'is_loop') names=('int', 'time', 'update_task', '_running_task_ids', 'discard', '_running_task_workers', 'pop', 'update_license_info', 'add_log', '_refresh_indicator', '_task_manager_dialog', 'refresh_table')
+      CONST '单个任务出错（配额不足等）'
+      CONST 0
+      CONST ('last_run', 'last_cutoff', 'enabled')
+      CONST None
+      CONST '自动更新任务中断（'
+      CONST '）'
+      CONST 'error'
+

@@ -1,0 +1,65 @@
+@@@ off=2391450
+isStreaming){
+debugLog("\x1B[31m【DEBUG finishStreamMessage】streamingState.isStreaming 是 false，直接返回！\x1B[0m");
+return
+}
+const n=streamingState.currentType,a=streamingState.accumulatedContent,s=getOwningRunId(e,"response"),i=!!s&&rxEngine.currentScope("response")?.runId===s;
+debugLog(`【🔍诊断 finishStreamMessage】messageType=${
+n
+}
+, hasContent=${
+!!a
+}
+, currentReplyMode=${
+r
+}
+, 将委托RxJS队列发尾包`),n==="keyboard"?(a.trim().length>0&&r==="auto"&&keyboardCommand$&&!keyboardCommand$.closed&&keyboardCommand$.next({
+type:"trunk_reply",content:a
+}
+),await waitForPipeline(),checkQueueAfterAction()):(n==="thinking"||n==="model-thinking")&&(currentMessage&&streamingState.streamStartTime>0&&(currentMessage.duration=Math.floor((Date.now()-streamingState.streamStartTime)/1e3)),checkQueueAfterAction()),t?n==="keyboard"?(debugLog("\x1B[32m【finishStreamMessage】keyboard is_end=true，调用 resumeNextLoop\x1B[0m"),i&&await resumeNextLoop({
+responseRunId:s,reason:"keyboard_stream_completed"
+}
+)):["不需要继续回复","不需要回复","无需回复"].some(u=>a.includes(u))?(console.log('\\x1b[32m【finishStreamMessage】thinking is_end=true，检测到"无需回复"关键词，直接调用 resumeNextLoop\\x1b[0m'),i&&await resumeNextLoop({
+responseRunId:s,reason:"thinking_no_reply_completed"
+}
+)):engineState.isEngineActive?i?(rxEngine.resumeAfterExecution(),debugLog("【恢复截图】thinking 类型 is_end=true，保持 RESPONSE_ACTIVE 等待后续 action")):console.log("【finishStreamMessage】当前上下文不拥有 common response，仅清理流式展示状态"):console.log("【finishStreamMessage】引擎已停止，忽略晚到 RESPONSE_ACTIVE 恢复"):engineState.isEngineActive?i?rxEngine.resumeAfterExecution():console.log("【finishStreamMessage】当前上下文不拥有 common response，不改变 RxEngine phase"):console.log("【finishStreamMessage】引擎已停止，忽略晚到 response 恢复"),
+streamingState.isStreaming=!1,streamingState.currentType=null,streamingState.currentTraceId=null,traceLogger.isActive()&&traceLogger.log("ai_response",n==="keyboard"?"final_text":"thinking",{
+result:"success",extra:{
+messageType:n,fullText:n==="keyboard"&&streamingState.fullKeyboardText||a,targetName:currentMessage?.targetName||"
+@@@ off=2393450
+",chatType:currentMessage?.chatType||"",isEnd:t,duration:streamingState.streamStartTime>0?Math.floor((Date.now()-streamingState.streamStartTime)/1e3):void 0
+}
+
+}
+),streamingState.accumulatedContent="",streamingState.fullKeyboardText="",streamingState.streamStartTime=0,streamingState.chatHistoryId!=null&&currentMessage?(debugLog(`【反馈】finishStreamMessage 将 chat_history_id=${
+streamingState.chatHistoryId
+}
+ 写入 messageList 消息, currentMessage.type=${
+currentMessage.type
+}
+`),currentMessage.chat_history_id=streamingState.chatHistoryId,debugLog(`【反馈】写入后验证: currentMessage.chat_history_id=${
+currentMessage.chat_history_id
+}
+`)):debugLog(`【反馈】finishStreamMessage 未写入 chat_history_id: streamingState.chatHistoryId=${
+streamingState.chatHistoryId
+}
+, currentMessage=${
+currentMessage?"exists":"null"
+}
+`),streamingState.chatHistoryId=null,setCurrentMessage(null),broadcastMessages(null)
+}
+,checkQueueAfterAction=()=>{
+engineState.lastActionTime=Date.now()
+}
+;
+class KeyboardHandler{
+async execute(e,r,n,a){
+const s=getCurrentReplyMode(),i=getCurrentAppType(),o=getActionExecutionContext(e);
+if(debugLog(`【输入消息】准备输入消息, currentReplyMode=${
+s
+}
+`),e.chat_history_id!=null&&(streamingState.chatHistoryId=e.chat_history_id),i==="whatsapp"){
+o?.throwIfAborted();
+const d=await getMessageInputArea(i);
+if(o?.throwIfAborted(),!d){
+console.error("【

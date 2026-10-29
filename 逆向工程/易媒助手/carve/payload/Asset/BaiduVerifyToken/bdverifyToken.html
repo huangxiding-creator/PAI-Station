@@ -1,0 +1,16 @@
+<html>
+	<head>
+	<script type="text/javascript" src="verifyToken.js"></script>
+	</head>
+	<body>
+		<script type="text/javascript">
+			function verify(a,b,c,flag) {
+				var res = R(a, b, c);
+				if (!flag)
+					flag = '';
+				window.JsBaiduVerifyToken(res, flag);
+			}
+		
+		</script>
+	</body>
+</html>

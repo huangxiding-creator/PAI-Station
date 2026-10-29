@@ -33,8 +33,31 @@ sys.path.insert(0, str(PKG_PARENT))
 
 from qianwen_engine import config, wechat  # noqa: E402
 from curl_cffi import requests as cr  # noqa: E402
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-ITEM_URL = "https://ai.epcschool.top/static/goods/zongbaojun.jpg"
+# ── 猴补丁：wechat._access_token() 内部 curl_cffi SSL 断连 → 换 urllib 载运 ──
+# 关键：用与引擎完全相同的 cgi-bin/token GET 端点（非 stable_token——权限面不同！）
+import urllib.request as _ur, json as _j, urllib.parse as _up
+def _patched_access_token():
+    sf = config.REPO / "data" / "secrets" / "zongbao_qianwen_mp.secret"
+    appid = config.WX_APPID
+    appsecret = ""
+    for l in sf.read_text(encoding="utf-8").splitlines():
+        if l.strip().startswith("appsecret"):
+            appsecret = l.split("=", 1)[1].strip()
+    qs = _up.urlencode({"grant_type": "client_credential",
+                        "appid": appid, "secret": appsecret})
+    with _ur.urlopen(f"https://api.weixin.qq.com/cgi-bin/token?{qs}", timeout=20) as r:
+        d = _j.loads(r.read())
+    tok = d.get("access_token") or ""
+    if not tok:
+        raise RuntimeError(f"token {d.get('errcode')}: {d.get('errmsg')}")
+    return tok
+wechat._access_token = _patched_access_token
+# ── 猴补丁完 ──
+
+ITEM_URL = "https://res.wx.qq.com/a/wx_fsp/assets/favicon.ico"  # 微信CDN必达（原static/goods/ 404致上传静默失败→publish 268490002，1022实锤）
 STATE_FILE = config.REPO / "data" / "state" / "vpay_goods_publish.json"
 API_BASE = "https://api.weixin.qq.com"
 
@@ -56,6 +79,9 @@ GOODS = [
     # 1012 蓝皮书上架：名称与 1011 控制台已建行逐字符一致；备注不带全角括号（672770002 白名单教训）
     {"id": "report_10000", "name": "研究报告解锁-10000元", "price": 1000000,
      "remark": "解锁旗舰蓝皮书五卷套装 10000元档，一次解锁永久阅读"},
+    # 1022 知识库工厂：整库动态价（¥1道具×buyQuantity=金额分/100）
+    {"id": "kb_goods", "name": "知识库整库交付", "price": 100,
+     "remark": "专业知识库整库交付，按容量计价"},
 ]
 
 
@@ -77,7 +103,8 @@ def build_goods(vp: dict) -> list[dict]:
     expect = {"export_product_id": "export_once",
               "report_product_498": "report_498", "report_product_598": "report_598",
               "report_product_698": "report_698", "report_product_1999": "report_1999",
-              "report_product_10000": "report_10000"}
+              "report_product_10000": "report_10000",
+              "kb_product_id": "kb_goods"}
     for k, gid in expect.items():
         actual = vp.get(k)
         if actual != gid:
@@ -100,17 +127,19 @@ def call_xpay(method_uri: str, payload: dict, env: int, app_key: str,
     body = json.dumps(payload, separators=(",", ":"), ensure_ascii=False)
     _, pay_sig, _ = wechat.virtual_pay_sign(app_key, "", body=body, uri=method_uri)
     for attempt in range(retry_rate_limit + 1):
-        r = cr.post(
-            f"{API_BASE}{method_uri}",
-            params={"access_token": wechat._access_token(), "pay_sig": pay_sig},
+        # 1022: curl_cffi post 也 SSL 断——改 urllib 载运（签名/体原样）
+        import urllib.request as _ur2, urllib.parse as _up2
+        qs = _up2.urlencode({"access_token": wechat._access_token(), "pay_sig": pay_sig})
+        _req = _ur2.Request(
+            f"{API_BASE}{method_uri}?{qs}",
             data=body.encode("utf-8"),
-            headers={"Content-Type": "application/json"},
-            impersonate="chrome", timeout=20,
-        )
+            headers={"Content-Type": "application/json"}, method="POST")
         try:
-            d = r.json()
-        except Exception:  # noqa: BLE001
-            sys.exit(f"FATAL: {method_uri} 响应非 JSON（HTTP {r.status_code}）: {r.text[:200]}")
+            with _ur2.urlopen(_req, timeout=30) as _resp:
+                d = _j.loads(_resp.read())
+        except Exception as _e:
+            print(f"  urllib exc: {_e}")
+            d = {"errcode": -1, "errmsg": str(_e)[:100]}
         if d.get("errcode") == 268490015 and attempt < retry_rate_limit:
             wait = 15 * (attempt + 1)
             print(f"     限频，{wait}s 后重试（{attempt + 1}/{retry_rate_limit}）")
@@ -213,11 +242,15 @@ def main() -> int:
             return 2
 
     # 3) 逐道具发布（发布任务串行：268490012=上一批量运行中→长等待重试）
+    # 1022 debug: publish 268490002 → 试补 offer_id + env 字符串化
     acked: list[str] = []
+    offer_id = vp_secret().get("offer_id") or ""
     for g in goods:
         for attempt in range(11):
-            d = call_xpay("/xpay/start_publish_goods",
-                          {"publish_item": [{"id": g["id"]}], "env": env}, env, app_key)
+            pub_body = {"publish_item": [{"id": g["id"]}], "env": str(env)}
+            if offer_id:
+                pub_body["offer_id"] = offer_id
+            d = call_xpay("/xpay/start_publish_goods", pub_body, env, app_key)
             print(f"publish {g['id']}: {json.dumps(d, ensure_ascii=False)}")
             if d.get("errcode") == 268490012 and attempt < 10:
                 print(f"     批量任务运行中，60s 后重试（{attempt + 1}/10）")

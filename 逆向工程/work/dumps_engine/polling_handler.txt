@@ -1,0 +1,89 @@
+@@@ off=2423850
+ing:hasPostReplyMessageCheckPending()
+}
+)
+}
+;
+rxEngine.pollingHandler=async()=>{
+if(!rxEngine.isRunning()||!engineState.isEngineActive||rxEngine.phase$.value.phase!==EnginePhase.POLLING||!protectCommonWorkflow("polling_tick"))return;
+const t=rxEngine.startScope("polling","polling_tick"),e=getCurrentAppType(),r=getCurrentReplyMode(),n=a=>{
+if(rxEngine.phase$.value.phase!==EnginePhase.POLLING){
+console.log("【轮询】当前已不在 POLLING，丢弃轮询 action:",a?.action||a?.msg_type);
+return
+}
+rxEngine.setPhase(EnginePhase.SWITCHING_UNREAD),rxEngine.enqueueAction(a,t)
+}
+;
+n(e==="whatsapp"?{
+action:"whatsapp_next_step",data:null
+}
+:r==="assist"?{
+action:"receivemessage",data:null
+}
+:{
+action:"receivemessage",data:null
+}
+)
+}
+;
+function getDisplayVersion(){
+try{
+const t=path__namespace.join(getBridge().app.getPath("userData"),"hot-versions.json"),e=JSON.parse(fs__namespace.readFileSync(t,"utf-8"));
+if(e.displayVersion)return e.displayVersion
+}
+catch{
+
+}
+return getBridge().app.getVersion()
+}
+let _scheduleTask=null,_scheduleReconnectController=null,_activeChatRequest=null;
+function getScheduleTask(){
+if(!_scheduleTask){
+const t=getWsTaskUrl();
+_scheduleTask=new MessageManager(t,"定时任务",{
+onOpen:()=>{
+const e={
+msg_type:"task_init",token:store$1.get("token")
+}
+;
+_scheduleTask.sendMessage(e)
+}
+,onMessage:e=>{
+if(console.log("【定时任务接收】收到新任务:",e),reportQuotaError(e,"runtime_chat")){
+getBridge().sendToRenderer("ACTION_ERROR","count_limit");
+return
+}
+e&&(receiveWorkflowSchedule(e)||console.log("【定时任务接收】当前 workflow 不接收任务，已丢弃:",{
+lifecycle:workflowCoordinator.snapshot().lifecycle
+}
+))
+}
+,onClose:()=>{
+getScheduleReconnectController().handleDisconnect()
+}
+
+}
+,getPpeRequestHeaders(t))
+}
+return _scheduleTask
+}
+function getScheduleReconnectController(){
+return _scheduleReconnectController||(_scheduleReconnectController=new WebSocketReconnectController({
+getManager:getScheduleTask,shouldReconnect:()=>engineState.isEngineActive&&rxEngine.isRunning(),retryDelayMs:5e3,connectTimeoutMs:3e4,onLog:t=>WsStatusLogger.log(`定时任务 WebSocket ${
+t
+}
+`)
+}
+)),_scheduleReconnectController
+}
+const hand
+@@@ off=2425850
+leIncomingChatSseMessage=(t,e)=>{
+if(e.signal.aborted||!e.isCurrentRun()||_activeChatRequest?.runId!==e.runId){
+console.log("【SSE分发】忽略已结束请求的晚到消息:",{
+responseRunId:e.runId,activeResponseRunId:_activeChatRequest?.runId,action:t.action||t.msg_type
+}
+);
+return
+}
+if(reportQuotaError(t,"runtime_chat")&&getBridge().sendToRenderer("ACTION_ERROR","count_limit"),rxEngine.phase$.value.phase===EnginePhase.RESPONSE_AC

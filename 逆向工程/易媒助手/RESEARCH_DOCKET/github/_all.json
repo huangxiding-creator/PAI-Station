@@ -1,0 +1,256 @@
+{
+  "generated": "2026-10-19",
+  "task": "一键多平台发布系统(中文自媒体20+平台/多账号cookie/图文+视频)开源底座调研",
+  "method": "gh api GitHub REST + README 实测核实,全部数据一手实测无手填",
+  "summary_table": [
+    {
+      "rank": 1,
+      "repo": "DevilJie/social-auto-upload-web-ui",
+      "name": "千帆云递 QianFan Sync",
+      "stars": 318,
+      "license": "MIT",
+      "pushed_at": "2026-10-19",
+      "platforms": 19,
+      "platform_list": "小红书/视频号/抖音/快手/B站/百家号/TikTok/YouTube/腾讯视频/爱奇艺/微博/支付宝/今日头条/知乎/CSDN/VIVO/微信公众号/淘宝光合/京东京麦",
+      "publish_types": "基于social-auto-upload的web-ui优化重构(活跃UI继任者)",
+      "tech_stack": "Python+Playwright+Web UI",
+      "account_mgmt": "待核验",
+      "signature": "",
+      "maintenance": "非常活跃(当天推送)",
+      "fit": 92,
+      "adoption": "reuse-主底座",
+      "url": "https://github.com/DevilJie/social-auto-upload-web-ui"
+    },
+    {
+      "rank": 2,
+      "repo": "dreammis/social-auto-upload",
+      "name": "",
+      "stars": 15619,
+      "license": "MIT",
+      "pushed_at": "2026-09-02",
+      "platforms": 11,
+      "platform_list": "抖音/Bilibili/小红书/快手/视频号/百家号/支付宝生活号/微博/虎扑/TikTok/YouTube",
+      "publish_types": "视频全平台; 图文仅抖音/小红书/快手; 定时发布多数平台",
+      "tech_stack": "Playwright浏览器自动化 + Bilibili走biliup协议库; 自带sau CLI与AI skills",
+      "account_mgmt": "Playwright storage_state JSON + xhs的accounts.ini多账号配置 + SQLite(db/)",
+      "signature": "B站走biliup协议上传; 无X-Bogus/a_bogus类签名逆向",
+      "maintenance": "活跃(2026-09推送)",
+      "fit": 90,
+      "adoption": "reuse-上游模块池",
+      "url": "https://github.com/dreammis/social-auto-upload"
+    },
+    {
+      "rank": 3,
+      "repo": "biliup/biliup",
+      "name": "",
+      "stars": 5517,
+      "license": "MIT",
+      "pushed_at": "2026-10-18",
+      "platforms": 1,
+      "platform_list": "Bilibili",
+      "publish_types": "视频投稿(协议直连,非浏览器)",
+      "tech_stack": "Rust(biliup-rs CLI)+Python包; B站投稿协议含登录(扫码/密码/cookie)",
+      "account_mgmt": "多种登录方式,cookie持久化",
+      "signature": "内置B站投稿协议与认证(wbi签名等)",
+      "maintenance": "非常活跃(2026-10-18推送)",
+      "fit": 85,
+      "adoption": "reuse-B站协议适配器",
+      "url": "https://github.com/biliup/biliup"
+    },
+    {
+      "rank": 4,
+      "repo": "iamzifei/wechat-article-publisher-skill",
+      "name": "",
+      "stars": 157,
+      "license": "MIT",
+      "pushed_at": "2026-08-12",
+      "platforms": 1,
+      "platform_list": "微信公众号",
+      "publish_types": "图文(草稿箱,不自动群发)",
+      "tech_stack": "官方API直连:Python解析Markdown/HTML→结构化(title/content/images)→微信草稿API;图片自动传素材库;无浏览器自动化",
+      "account_mgmt": "微信公众号官方API凭证(AppSecret等)",
+      "signature": "官方API无需签名逆向",
+      "maintenance": "活跃(2026-08)",
+      "fit": 85,
+      "adoption": "reuse-公众号图文官方API蓝本",
+      "url": "https://github.com/iamzifei/wechat-article-publisher-skill"
+    },
+    {
+      "rank": 5,
+      "repo": "hanliang97/MatrixMedia",
+      "name": "矩媒 MatrixMedia",
+      "stars": 992,
+      "license": "GPL-2.0",
+      "pushed_at": "2026-10-17",
+      "platforms": 8,
+      "platform_list": "",
+      "publish_types": "视频(CLI 8平台全自动化)+publish-article子命令(图文,范围待查docs/cli.md)",
+      "tech_stack": "Vue+Electron+Puppeteer; GUI+CLI(argv含cli无头)+HTTP API(POST 127.0.0.1:30088/publish)+内置MCP Server",
+      "account_mgmt": "Electron session partition persist:<手机号><平台> 隔离,CLI与GUI共用; CLI扫码登录仅抖音+视频号,其余平台需GUI先登录一次",
+      "signature": "未见协议签名逆向,走浏览器自动化",
+      "maintenance": "非常活跃(2026-10-17推送)",
+      "fit": 65,
+      "adoption": "pattern-only(GPL-2.0传染)",
+      "url": "https://github.com/hanliang97/MatrixMedia"
+    },
+    {
+      "rank": 6,
+      "repo": "pywinauto/pywinauto",
+      "name": "",
+      "stars": 6218,
+      "license": "BSD-3-Clause",
+      "pushed_at": "2026-10-15",
+      "platforms": 0,
+      "platform_list": "任意Windows桌面应用(含易媒助手CEF壳)",
+      "publish_types": "取决于被驱动软件",
+      "tech_stack": "Win32 API+UI Automation;配合inspect识别控件",
+      "account_mgmt": "由被驱动软件自管(易媒助手SQLite)",
+      "signature": "N/A(不走协议)",
+      "maintenance": "活跃(2026-10-15)",
+      "fit": 72,
+      "adoption": "reuse-驱动易媒助手兜底",
+      "url": "https://github.com/pywinauto/pywinauto"
+    },
+    {
+      "rank": 7,
+      "repo": "kebenxiaoming/matrix",
+      "name": "",
+      "stars": 969,
+      "license": "Apache-2.0",
+      "pushed_at": "2025-12-27",
+      "platforms": 4,
+      "platform_list": "抖音/视频号/小红书/快手",
+      "publish_types": "仅视频",
+      "tech_stack": "Python3+Playwright; Redis存登录态队列+MySQL存发布队列+supervisor守护; 小红书登录依赖本地xhs-api服务(app2024.py)计算x-s/x-t签名",
+      "account_mgmt": "cookie文件管理+MySQL/Redis账号队列,可多账号(user_queue_login按类型排队登录)",
+      "signature": "内置小红书x-s/x-t签名服务(xhs-api目录,本地flask)",
+      "maintenance": "半休眠(约10个月未推)",
+      "fit": 60,
+      "adoption": "reuse(Apache,参考xhs签名服务)",
+      "url": "https://github.com/kebenxiaoming/matrix"
+    },
+    {
+      "rank": 8,
+      "repo": "NanmiCoder/MediaCrawler",
+      "name": "",
+      "stars": 67192,
+      "license": "NOASSERTION(自定义非标准许可证,含非商用限制)",
+      "pushed_at": "2026-10-15",
+      "platforms": 7,
+      "platform_list": "小红书/抖音/快手/B站/微博/贴吧/知乎",
+      "publish_types": "N/A(采集不发布)",
+      "tech_stack": "Playwright + CDP模式(连接用户已有Chrome,127.0.0.1:9222,复用已有登录态降风控;可关CDP回标准Playwright)",
+      "account_mgmt": "登录态缓存:扫码/cookie登录后Playwright browser_data持久化;多账号在Pro闭源版才有(开源版单账号)",
+      "signature": "核心思路:无需JS逆向,在保留登录态的浏览器上下文里用JS表达式现取签名参数(x-s/x-t等);不开源硬逆向的X-Bogus/a_bogus实现",
+      "maintenance": "非常活跃(2026-10-15)",
+      "fit": 55,
+      "adoption": "pattern-only(非商用许可)",
+      "url": "https://github.com/NanmiCoder/MediaCrawler"
+    },
+    {
+      "rank": 9,
+      "repo": "BACNext/BACNext",
+      "name": "",
+      "stars": 200,
+      "license": null,
+      "pushed_at": "2026-08-17",
+      "platforms": 1,
+      "platform_list": "Bilibili",
+      "publish_types": "N/A(API文档)",
+      "tech_stack": "Markdown文档",
+      "account_mgmt": "",
+      "signature": "",
+      "maintenance": "社区接力,非官方",
+      "fit": 20,
+      "adoption": "pattern-only同源法律风险",
+      "url": "https://github.com/BACNext/BACNext"
+    },
+    {
+      "rank": 10,
+      "repo": "SocialSisterYi/bilibili-API-collect",
+      "name": "",
+      "stars": 20163,
+      "license": null,
+      "pushed_at": "2026-01-30",
+      "platforms": 1,
+      "platform_list": "",
+      "publish_types": "N/A(纯API文档库,非发布工具)",
+      "tech_stack": "Markdown文档",
+      "account_mgmt": "",
+      "signature": "",
+      "maintenance": "死亡(律师函后停更)",
+      "fit": 15,
+      "adoption": "不采用(法律风险情报)",
+      "url": "https://github.com/SocialSisterYi/bilibili-API-collect"
+    },
+    {
+      "rank": 11,
+      "repo": "cml227/Wanmeiyifa",
+      "name": "",
+      "stars": 45,
+      "license": null,
+      "pushed_at": "2023-11-28",
+      "platforms": 0,
+      "platform_list": "R/E/A/D/M/E/宣/称/多/平/台/,/未/逐/一/核/实",
+      "publish_types": "万媒易发:AI驱动多平台多账号管理神器(README自述)",
+      "tech_stack": "未核实",
+      "account_mgmt": "未核实",
+      "signature": "",
+      "maintenance": "死亡(2023-11停更近3年)",
+      "fit": 15,
+      "adoption": "不采用(无许可+停更)",
+      "url": "https://github.com/cml227/Wanmeiyifa"
+    }
+  ],
+  "dead_or_missing": [
+    {
+      "repo": "lecepin/WeChatVideoUploader",
+      "finding": "404。原视频号Playwright上传明星项目已消失,作者仓库列表已无此项目(2026-10-19实测)。其能力以social-auto-upload的tencent_uploader模块存活"
+    },
+    {
+      "repo": "uvan-x/media-platform-upload",
+      "finding": "404,uvan-x账号已注销。活跃UI继任=DevilJie/social-auto-upload-web-ui"
+    },
+    {
+      "user": "ovtenkf",
+      "finding": "用户不存在(404),任务清单中ovtenkf/other无法核实"
+    },
+    {
+      "repo": "any-publish",
+      "finding": "GitHub无同名开源仓(gh search --match name实测)"
+    },
+    {
+      "repo": "BearCarryBack(月伴/苏轼)",
+      "finding": "GitHub无同名开源仓,疑为闭源商业工具(UNVERIFIED)"
+    }
+  ],
+  "recommendation": {
+    "main_base": [
+      "主底座: DevilJie/social-auto-upload-web-ui (千帆云递, MIT, 19平台, Flask+Vue3+SQLite+Playwright+MCP, 2026-10-19当天活跃)",
+      "理由: 平台覆盖最广(19个,含知乎/头条/公众号/CSDN), 图文+图集+视频+定时+任务队列+失败重试+账号标签体系, 数据全本地(SQLite+cookies目录), MIT可闭源商用",
+      "次要底座/模块池: dreammis/social-auto-upload (15.6k stars, MIT) 的 uploader/ 12平台模块 + sau CLI + skills, 作为选择器修复的上游回流源"
+    ],
+    "adapter_strategy": [
+      "B站: biliup (MIT, 协议直连投稿, 2026-10-18仍活跃) 作为协议适配器",
+      "微信公众号图文: iamzifei/wechat-article-publisher-skill 模式 = 官方API草稿箱(最安全,无风控,无浏览器)",
+      "视频号/抖音/快手/小红书等: Playwright浏览器自动化适配器(千帆云递/upstream现成)",
+      "小红书签名(x-s/x-t)如走协议: 参考kebenxiaoming/matrix内置xhs-api本地服务 或 MediaCrawler浏览器上下文取参模式"
+    ],
+    "self_build_gaps": [
+      "搜狐号/网易号/企鹅号/一点资讯等长尾图文平台: 开源界空白, 需自研Playwright适配器",
+      "微博图文: 现成实现仅视频, 图文需自研",
+      "知乎/头条图文形态: 需对千帆云递实测确认后定",
+      "多账号矩阵调度: 现成项目均为单机单账号视角, 矩阵编排(账号池+队列+调度面板)需自研, 可参考kebenxiaoming的MySQL+Redis+supervisor队列模式与MatrixMedia的persist:<手机号><平台> session隔离"
+    ],
+    "fallback": [
+      "pywinauto(BSD-3, UIA)驱动易媒助手桌面客户端, 复用其20+平台覆盖与SQLite cookie资产, 作为长尾平台兜底通道(与已逆向成果衔接)"
+    ]
+  },
+  "risks": [
+    "法律: B站2026-01-28对bilibili-API-collect发律师函(指控系统性收集传播非公开API/调用逻辑/认证机制), 原仓停更删文档。协议直连+签名逆向路线已被平台武装维权, 优先官方API+浏览器自动化",
+    "仓库猝死: WeChatVideoUploader/uvan-x已404。平台投诉可瞬间杀死依赖仓库。选定底座后立即fork+本地镜像+离线vendor, 选择器资产自持",
+    "选择器易碎: 平台改版即失效(kebenxiaoming README自认需自行维护css选择器)。需选择器集中配置+截图AI校验+热修机制",
+    "许可证红线: MediaCrawler(非商用)/MatrixMedia(GPL-2.0)/bilibili-API-collect(无许可)不可抄码进入闭源产品线; 千帆云递与upstream与biliup均为MIT可放心",
+    "账号风控: 多账号同机同指纹易触发风控。对策=千帆云递CloakBrowser隐身/MatrixMedia按账号session partition/MediaCrawler CDP复用真人浏览器。注意MediaCrawler CDP默认9222端口与WeAIPO浏览器免打扰红线冲突, 复用必须改端口或独立profile"
+  ]
+}

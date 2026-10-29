@@ -92,7 +92,8 @@ def main():
           f"skip {n_skip}), {n_smp} samples, at {STAGE}")
 
     # [2] 拉当前 EnvParams（fresh）
-    raw = tcb("cloudrun", "detail", "-s", "qianwen-engine", "--json")
+    raw = tcb("cloudrun", "detail", "-s", "qianwen-engine",
+              "-e", "cloudbase-d2gzke5r0b706b3a3", "--json")
     j = raw[raw.find("{"): raw.rfind("}") + 1]
     detail = json.loads(j)
     sc = (detail.get("data") or {}).get("ServerConfig")

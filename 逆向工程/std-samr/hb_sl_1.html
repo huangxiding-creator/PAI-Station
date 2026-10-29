@@ -1,0 +1,568 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+		<title>全国标准信息公共服务平台</title>
+		<link rel="stylesheet" href="/statics/lib/layui/css/layui.css" />
+		<link rel="stylesheet" href="/statics/lib/font-awesome/4.7.0/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="/statics/lib/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css" />
+		<link rel="stylesheet" href="/statics/lib/bootstrap-table/bootstrap-table.min.css">
+		<link rel="stylesheet" href="/statics/portal/css/index.css" type="text/css" />
+		<link rel="stylesheet" href="/statics/lib/filtermore/filtermore.min.css" type="text/css" />
+		<!--[if lt IE 9]>
+	      <script src="/statics/lib/bootstrap/3.3.7/html5shiv.min.js"></script>
+	      <script src="/statics/lib/bootstrap/3.3.7/respond.min.js"></script>
+	    <![endif]-->
+		<link rel="stylesheet" type="text/css" href="/statics/lib/pace/pace-theme-flash.min.css"/>
+		<script src="/statics/lib/pace/pace.min.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+			var _hmt = _hmt || [];
+			(function() {
+				var hm = document.createElement("script");
+				hm.src = "https://hm.baidu.com/hm.js?bc6f61eace617162b31b982f796830e6";
+				var s = document.getElementsByTagName("script")[0];
+				s.parentNode.insertBefore(hm, s);
+			})();
+			function addCSS(cssText){
+				var style = document.createElement('style'),  //创建一个style元素
+						head = document.head || document.getElementsByTagName('head')[0]; //获取head元素
+				var textNode = document.createTextNode(cssText);
+				style.appendChild(textNode);
+				head.appendChild(style);
+			}
+			addCSS('#demo{ height: 30px; background:#f00;}');
+			var userAgent = window.navigator.userAgent;
+			if(userAgent.indexOf("HBuilderX")>-1||userAgent.indexOf("uni-app")>-1){
+				addCSS('#top-bg,#zjxmt,#footer-area{display:none;}');
+			}
+		</script>
+	</head>
+
+	<body>
+		<div id="top-area" style="background:url(/statics/hb/bgrep.jpg) top repeat-x;width:100%;background-color: #187ed0;">
+			<div class="container">
+				<div class="row" style="overflow: visible;">
+					<div id="top-bg" class="col-sm-12" style="overflow: visible;width:100%;font-family: arial,tahoma,'Microsoft Yahei','\5b8b\4f53',sans-serif;z-index:2;">
+						<img class="hidden-xs" src="/statics/hb/bgrep.gif" style="position:absolute;right:-180px;top:0;height:100%;z-index:-1;">
+						<img class="hidden-xs" src="/statics/hb/logonew.png" style="z-index:2;">
+
+						<div style="padding:5px 0;padding-right:30px;" class="visible-xs">
+							<button class=" navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+								<span class="sr-only">Toggle navigation</span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+							</button>
+							<a style="color:white;padding:15px 0;" href="https://std.samr.gov.cn/" class="navbar-brand">
+								<img style="display:inline-block;margin-right:10px;margin-top:-5px;" width="30px" src="/statics/hb/shareLogo.png">
+								全国标准信息公共服务平台
+							</a>
+							<div style="clear:both;"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="nav-menu">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-12">
+						<ul>
+							<li data-href="https://std.samr.gov.cn/">
+								首页
+							</li>
+							<li data-href="/">
+								行业标准
+							</li>
+							<li data-href="/stdList">
+								标准查询
+							</li>
+							<li data-href="/rnList">
+								月报查询
+							</li>
+							<li data-href="/snList">
+								标准公告查询
+							</li>
+							<li data-href="/help">
+								帮助中心
+							</li>
+							<li data-href="/admin" style="width:auto;float:right;padding:0 10px;" id="enter">
+								行业标准备案用户登录入口
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div style="clear:both;"></div>
+		</div>
+
+		<style>
+			.catalog .catalog-inner{border-top:0; border-bottom:0;}
+			.basicInfo-right{width:480px !important;}
+			.basicInfo-right dd{width:360px !important;}
+			.layui-layer-suggest .layui-layer-title {background: #3786dc;font-size: 20px;line-height: 50px;text-align: center;color: #fff;}  .layui-layer-suggest .layui-layer-close {transform: rotate(0deg);transition: transform .5s ease-in-out;transform-origin: 75% 50%;cursor: pointer;font-weight: 800;font-size: 26px;color: white;}  .layui-layer-suggest .layui-layer-close:hover{transform: rotate(180deg);}  .layui-layer-suggest .layui-layer-btn{text-align: center;border-top: rgba(214,214,214,0.75) 2px dashed;}  .layui-layer-suggest button{background-color: #3786dc;}
+			.sidebar {
+				position: fixed;
+				top: 0px;
+				width: 36px;
+				height: 100%;
+				overflow: visible;
+				display:none;
+				z-index: 9;
+			}
+			.sidebar-left {
+				left: 50%;
+			}
+			.sidebar-right {
+				right: 50%;
+			}
+			@media (min-width: 768px) {
+				.sidebar-left {
+					margin-left: -395px;
+					display: inline;
+				}
+				.sidebar-right {
+					margin-right: -395px;
+					display: inline;
+				}
+			}
+			@media (min-width: 992px) {
+				.sidebar-left {
+					margin-left: -505px;
+					display: inline;
+				}
+				.sidebar-right {
+					margin-right:-505px;
+					display: inline;
+				}
+			}
+			@media (min-width: 1200px){
+				.sidebar-left {
+					margin-left: -604px;
+					display: inline;
+				}
+				.sidebar-right {
+					margin-right:-604px;
+					display: inline;
+				}
+			}
+			.sidebar-tabs {
+				position: absolute;
+				top: 30%;
+				left: 0px;
+				width: 35px;
+				font-size: 45px;
+				overflow: visible;
+			}
+			.sidebar-left .sidebar-tabs{
+				left: initial;
+				right: 10px;
+			}
+			.tab-ico{
+				margin-left: 1px;
+				position: relative;
+				cursor: pointer;
+				display: inline-block;
+			}
+			.tab-text{
+				width: 105px;
+				height: 25px;
+				font-size: 14px;
+				line-height: 25px;
+				color: #FFF;
+				text-align: center;
+				font-family: "微软雅黑";
+				position: absolute;
+				right: 35px;
+				top: 0px;
+				background-color: #7A6E6E;
+				border-radius: 10px;
+				font-style: normal;
+				cursor: pointer;
+				display:none;
+			}
+			.sidebar-btn:hover .tab-text{
+				display:inline-block;
+			}
+			.sidebar-btn{
+				position:relative;
+				overflow: visible;
+				background-color: #4c9cda;
+				transition: all .3s ease;
+				-o-transition: all .3s ease;
+				-moz-transition: all .3s ease;
+				-webkit-transition: all .3s ease;
+				box-shadow: 0 5px 5px rgba(146,146,146,.5);
+				margin-top: 10px;
+				font-size: 16px;
+				text-align:center;
+				color:white;
+				font-family: arial,tahoma,'Microsoft Yahei','\5b8b\4f53',sans-serif;
+				cursor:pointer;
+			}
+			.sidebar-left .sidebar-btn{
+				box-shadow: 3px 5px 5px rgba(146,146,146,.5);
+				border-radius: 18px;
+				padding: 10px 5px;
+				font-size: 14px;
+			}
+			.sidebar-btn:first-child{
+				margin-top: 0;
+			}
+			.sidebar-btn:hover{
+				background-color: #2da3ff;
+			}
+			.sidebar-btn:hover .infoCode{
+				display: inline-block;
+			}
+			.sidebar-btn.openpdf, .sidebar-btn.openhdbpdf {
+				background-color: #ff9532;
+			}
+			.sidebar-btn.openvideo {
+				background-color: #4c9cda;
+			}
+			.sidebar-btn.pub_review {
+				background-color: #33af7b;
+			}
+			.sidebar-btn.openpdf:hover, .sidebar-btn.openhdbpdf:hover {
+				background-color: #ff7b00;
+			}
+			.sidebar-btn.openvideo:hover {
+				background-color: #2da3ff;
+			}
+			.sidebar-btn.pub_review:hover {
+				background-color: #00df81;
+			}
+		</style>
+		<div class="container main-body">
+			<div class="sidebar sidebar-left">
+				<div class="sidebar-tabs">
+					<a target="_blank" href="/portal/online/3c59d8bb13d42434b45c00d56a9780200c626a6e136af351bc79a9db05ceeff0" title="点击查看标准全文" style="text-decoration-line: none;">
+						<div class="sidebar-btn openpdf">
+							<span class="tab-ico glyphicon glyphicon-file" style="margin-bottom:5px;"></span>
+							<span>查看文本</span>
+						</div>
+					</a>
+					<div class="sidebar-btn pub_review" petype="IMPL" pid="1004940" onclick="openSuggestionDialog('3c59d8bb13d42434b45c00d56a9780200c626a6e136af351bc79a9db05ceeff0')">
+						<span class="tab-ico glyphicon glyphicon-edit" style="margin-bottom:5px;"></span>
+						<span>意见建议</span>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div style="width:100%;min-height:800px;background: #fff;border: 1px solid #e5e5e5;padding:0 20px;position:relative;overflow:visible;">
+						<div class="page-header" style="margin-top:20px;">
+							<h4 style="font-family: arial,tahoma,'Microsoft Yahei','\5b8b\4f53',sans-serif;">水文测站代码编制导则</h4>
+							<h5 style="font-family: arial,tahoma,'Microsoft Yahei','\5b8b\4f53',sans-serif;color:gray;margin-top:5px;"></h5>
+							<div style="font-size:16px;margin-top:5px">
+								<b>SL 502-2010（2025年版）</b>
+								<span class="s-status label label-info">水利</span>
+								<span class="s-status label label-primary">
+											现行
+								</span>
+							</div>
+						</div>
+						
+						<div class="catalog" style="margin: 0;">
+							<div class="catalog-inner">
+								<h2 class="catalog-title">目录</h2>
+								<div class="catalog-list">
+									<ol>
+									</ol>
+									<ol>
+									</ol>
+									<ol>
+									</ol>
+								</div>
+							</div>
+						</div>
+						<div class="para-title">
+							<h2 class="title-text">标准状态</h2>
+						</div>
+						<div class="timeline">
+							<div class="events-wrapper">
+								<div class="events" style="width: 100%;">
+									<ol>
+										<li>
+											<a href="#" style="left:16.5%;">发布<span class="hidden-xs">于&nbsp;2010-11-10</span>
+											</a>
+										</li>
+										<li>
+											<a href="#" style="left:40%;">
+												即将实施
+											</a>
+										</li>
+										<li>
+											<a href="#" style="left:55%;">实施<span class="hidden-xs">于&nbsp;2011-02-10</span>
+											</a>
+										</li>
+										<li>
+											<a href="#" style="left:78.5%;">废止											</a>
+										</li>
+									</ol>
+									<span class="filling-line" aria-hidden="true"></span>
+								</div>
+							</div>
+						</div>
+						<div class="para-title">
+							<h2 class="title-text">基础信息</h2>
+						</div>
+						<div class="basic-info cmn-clearfix">
+
+							<dl class="basicInfo-block basicInfo-left">
+
+								<dt class="basicInfo-item name">标准号</dt>
+								<dd class="basicInfo-item value">SL 502-2010（2025年版）</dd>
+
+								<dt class="basicInfo-item name">发布日期</dt>
+								<dd class="basicInfo-item value">
+										2010-11-10
+								</dd>
+
+								<dt class="basicInfo-item name">实施日期</dt>
+								<dd class="basicInfo-item value">
+										2011-02-10
+									</dd>
+								
+								<dt class="basicInfo-item name">制修订</dt>
+								<dd class="basicInfo-item value">修订</dd>
+									<dt class="basicInfo-item name">代替标准</dt>
+									<dd class="basicInfo-item value">SL 502-2010
+										
+									</dd>
+
+							</dl>
+							<dl class="basicInfo-block basicInfo-right">
+
+								<dt class="basicInfo-item name">中国标准分类号</dt>
+								<dd class="basicInfo-item value">A24</dd>
+
+								<dt class="basicInfo-item name">国际标准分类号</dt>
+								<dd class="basicInfo-item value">35.04</dd>
+
+
+								<dt class="basicInfo-item name">批准发布部门</dt>
+								<dd class="basicInfo-item value">水利部</dd>
+
+								<dt class="basicInfo-item name">行业分类</dt>
+								<dd class="basicInfo-item value">水利、环境和公共设施管理业</dd>
+								
+								<dt class="basicInfo-item name">标准类别</dt>
+								<dd class="basicInfo-item value">基础标准</dd>
+
+							</dl>
+							<dl style="clear:both;"></dl>
+						</div>
+						
+						<div class="para-title">
+							<h2 class="title-text">备案信息</h2>
+						</div>
+						<p>备案号：104704-2026</p>
+						<p>备案日期：2026-05-11</p>
+						<p>备案月报：
+							<a href='/rnDetail/65600f0db4467a20d27a2db729392104844384554af755502cb6e1bf6a2dc457' target='_blank'>2026年第5号(总第313号)</a>
+						</p>
+
+						<div class="para-title">
+							<h2 class="title-text">起草单位</h2>
+						</div>
+						<p> </p>
+
+						<div class="para-title">
+							<h2 class="title-text">起草人</h2>
+						</div>
+						<p> </p>
+
+						
+					</div>
+				</div>
+			</div>
+		</div>
+
+<div class="footer-body" id="footer-area" style="background-color: #0566ab;font-family: arial,tahoma,'Microsoft Yahei','\5b8b\4f53',sans-serif;">
+			<div class="container">
+				<div class="row" style="padding:15px 0;">
+					<div class="col-sm-5 col-xs-6">
+						<ul style="list-style:none;">
+							<li style="margin: 10px 0px;">
+								<h6 style="color:white;font-weight: bold;line-height: 1.1;font-size: 14px;">版权所有 侵权必究</h6></li>
+							<li style="margin: 2px 0px;color:#bec8ce;">主管：国家标准化管理委员会</li>
+							<li style="margin: 2px 0px;color:#bec8ce;">主办：国家市场监督管理总局国家标准技术审评中心</li>
+							<li style="margin: 2px 0px;color:#bec8ce;">技术支持：北京中标赛宇科技有限公司</li>
+							<li style="margin: 2px 0px;color:#bec8ce;">支持电话：13261900266</li>
+						</ul>
+					</div>
+					<div class="col-sm-4 col-xs-6">
+						<ul style="list-style:none;">
+							<li style="margin: 10px 0px">
+								<h6 style="color:white;font-weight: bold;line-height: 1.1;font-size: 14px;">友情链接</h6></li>
+							<li style="margin: 2px 0px;color:#bec8ce;">
+								<a style="color:#bec8ce;" href="http://www.sac.gov.cn/" target="_blank">国家标准化管理委员会</a>
+							</li>
+							<li style="margin: 2px 0px;color:#bec8ce;">
+								<a style="color:#bec8ce;" href="https://www.qybz.org.cn/" target="_blank">企业标准信息公共服务平台</a>
+							</li>
+							<li style="margin: 2px 0px;color:#bec8ce;">
+								<a style="color:#bec8ce;" href="http://www.ttbz.org.cn/" target="_blank">全国团体标准信息平台</a>
+							</li>
+						</ul>
+					</div>
+					<div class="col-sm-3 hidden-xs" style="text-align:center;">
+						<img src="/statics/hb/ewm.jpg" style="height: 128px;" />
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="/statics/lib/jquery1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="/statics/lib/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="/statics/lib/filtermore/filtermore.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="/statics/lib/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="/statics/lib/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="/statics/lib/layui/layui.all.js"></script>
+		<script src="/statics/portal/js/uni-webview-js@0.0.3/index.js"></script>
+		<script type="text/javascript">
+			$(function() {
+				$('[data-href]').bind('click',function(){
+					location.href = $(this).data('href');
+				});
+				$('.navbar-toggle').click(function(){
+					$('.nav-menu').toggleClass("nav-menu-show");
+				});
+			})
+			function timestampToTime(timestamp, full) {
+				if(!(timestamp))return '-';
+		        var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+		        var Y = date.getFullYear() + '-';
+		        var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+		        var D = date.getDate()<10?'0'+date.getDate():date.getDate();
+		        var h=m=s='';
+		        if(full){
+			        h = date.getHours() + ':';
+			        m = date.getMinutes() + ':';
+			        s = date.getSeconds();
+		        }
+		        return Y+M+D+h+m+s;
+		    }
+		    var portal={
+		    	showNav: function(index){
+		    		$('.nav_in').removeClass('nav_in');
+					$('.nav-menu li:eq('+index+')').addClass('nav_in');
+		    	}
+		    }
+
+			var isAppPlus=false;
+			document.addEventListener('UniAppJSBridgeReady', function() {
+				uni.webView.getEnv(function(res) {
+					console.log('当前环境：' + JSON.stringify(res));
+					if(res.plus||(res.h5&&(userAgent.indexOf("HBuilderX")>-1||userAgent.indexOf("uni-app")>-1))){
+						isAppPlus = true;
+						$(document).on("click", "a", function (event) {
+							event.preventDefault()
+							var href = $(this).attr('href');
+							if(href!=null&&href!=''){
+								uni.navigateTo({
+									url: '/pages/outter/outter?title=国标通-信息查询&src='+location.protocol+'//'+location.host+href
+								});
+								event.stopPropagation();
+								return false;
+							}
+						});
+					}
+				});
+			});
+		</script>
+	</body>
+
+</html><script type="text/javascript">
+	portal.showNav(2);
+	$(function() {
+		//drawQrCode();
+		
+		var ind = 0;
+
+		$('.para-title h2').each(function(){
+			var $cache= $(this);
+			$(this).attr('id','link'+ind);
+			var $li = $('<li class="level1"><span class="index">'+(ind+1)+'</span><span class="text"><a>'+$(this).text()+'</a></span></li>');
+			$li.click(function(){
+				var hh = $cache.offset().top;
+				$('html,body').stop().animate({'scrollTop':hh}, 500);
+			});
+			$('.catalog-list ol:eq('+parseInt(ind++/4)+')').append($li);
+		});
+		
+		$('[data-toggle="tooltip"]').tooltip();		
+		
+		setTimeline();
+	});
+	var STATE='现行';
+	var date='2011-02-10'
+	var STATE_IND=0;
+	function setTimeline(){
+		if(STATE=='现行' && new Date(date) > new Date()) {
+			STATE_IND = 1;
+		}else if(STATE=='现行' && new Date(date) <= new Date()) {
+			STATE_IND = 2;
+		}
+		else if(STATE=='废止') {
+			STATE_IND = 3;
+		}
+
+		$('.timeline .events li a').each(function(index){
+			if(index>=STATE_IND){
+				$(this).addClass('selected');
+				cll = $(this).offset().left+$(this).width()/2;
+				return false;
+			} else {
+				$(this).addClass('older-event');
+			}
+		});
+		cll -= $('.timeline .events ol').offset().left;
+		$('.timeline .filling-line ').css('transform','scaleX('+(cll/$('.timeline .events ol').width())+')');
+	}
+	function drawQrCode(){
+		new QRCode(document.getElementById("qrcode"), {
+			text: location.href,
+			width: 100,
+			height: 100,
+			colorDark : "#000000",
+			colorLight : "#ffffff",
+			correctLevel : QRCode.CorrectLevel.H
+		});
+	}
+	function alertNotOpenReason(){
+		var reason = ''
+		if(isNull(reason)){
+			reason='无'
+		}
+		layer.alert(reason, {
+			icon: 'layui-icon-face-surprised',
+			skin: 'layer-ext-moon' ,
+			title: '不公开理由'
+		})
+	}
+	function isNull(obj){
+		if(obj==null||obj==""||obj==undefined){
+			return true;
+		}
+		return false;
+	}
+	function openSuggestionDialog(code){
+		layer.open({
+			title:'标准实施反馈',
+			type: 2,
+			skin:"layui-layer-suggest",
+			shade: [0.9, '#FFF'],
+			anim: 5,
+			scrollbar: false,
+			area: ['780px', '98%'],
+			content: 'https://hbba.sacinfo.org.cn/sif/portal/hdReview?stdType=HB&id='+code
+		})
+	}
+</script>

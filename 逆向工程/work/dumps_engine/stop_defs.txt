@@ -1,0 +1,99 @@
+@@@ off=2157600
+op:r,width:n,height:a
+}
+=t.cropPx;
+if(![e,r,n,a].every(Number.isInteger)||e<0||r<0||n<=0||a<=0||e+n>t.widthPx||r+a>t.heightPx)throw new Error("Grounding crop_px 超出 frame 范围")
+}
+
+}
+,getImagePixelSize=t=>{
+const e=t.startsWith("data:")?t:`data:image/png;
+base64,${
+t
+}
+`,r=getBridge().nativeImage.createFromDataURL(e),n=r.getSize();
+if(r.isEmpty()||!isPositiveInteger(n.width)||!isPositiveInteger(n.height))throw new Error("无法读取 Grounding 图片像素尺寸");
+return n
+}
+;
+async function resolveGrounding({
+operation:t,frame:e,params:r,shouldStop:n
+}
+){
+if(validateFrame(e),n?.())throw new Error("任务已中断");
+const a=store$4.get("token");
+if(!a)throw new Error("未找到token，请先登录");
+const s=e.id||nextGroundingFrameID(),i=new AbortController;
+let o;
+const d=setTimeout(()=>{
+o="timeout",i.abort("timeout")
+}
+,GROUNDING_REQUEST_TIMEOUT_MS),u=n?setInterval(()=>{
+n()&&(o="stopped",i.abort("任务已中断"))
+}
+,50):void 0;
+try{
+const l=await ppeFetch(getShiflowV1Url("/sees/grounding/resolve"),{
+method:"POST",headers:{
+Authorization:`JWT ${
+a
+}
+`,Accept:"application/json","Content-Type":"application/json"
+}
+,body:JSON.stringify({
+operation:t,frame:{
+id:s,image_base64:normalizeBase64$2(e.imageBase64),width_px:e.widthPx,height_px:e.heightPx,...e.cropPx?{
+crop_px:{
+left:e.cropPx.left,top:e.cropPx.top,width:e.cropPx.width,height:e.cropPx.height
+}
+
+}
+:{
+
+}
+
+}
+,...r?{
+params:{
+...r.isGroupChat!==void 0?{
+is_group_chat:r.isGroupChat
+}
+:{
+
+}
+
+}
+
+}
+:{
+
+}
+
+}
+),signal:i.signal
+}
+);
+if(!l.ok)throw new Error(`Grounding 请求失败: ${
+l.status
+}
+`);
+const f=await l.json();
+if(f.code!==0||!f.body)throw new Error(f.msg||"Grounding 服务未返回结果");
+const h=f.body;
+if(h.operation!==t||h.frame_id!==s||h.coordinate_space!=="frame_pixels"||h.frame_width_px!==e.widthPx||h.frame_height_px!==e.heightPx)throw new Error("Grounding 响应与请求 frame 不匹配");
+if(n?.())throw new Error("任务已中断");
+return h
+}
+catch(l){
+throw o==="stopped"?new Error("任务已中断"):o==="timeout"?new Error("Grounding 请求超时"):l
+}
+finally{
+clearTimeout(d),u&&clearInterval(u)
+}
+
+}
+const WECHAT_COLLECT_BTN_BASE64="data:image/png;
+base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAA+CAYAAACbQR1vAAAAA
+@@@ off=2159600
+XNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAQKADAAQAAAABAAAAPgAAAAAAsxweAAAGjUlEQVRoBe1aaUhUXxQ/aqatIlqBpEX0IfKTgtBHg3LJzA0hwkoTFRckkzIDzSVtASt3QYU2wUrJNFKTkiJFyA99Sf2gRSaY0Ea24vbvd+q+3sjM/GfemxmDeQdm3n333XvOub937r3nnPsc3r9/v0B2TI52PHYeugaAZgF2joA2BezcAEizAM0C7BwBbQrYuQFoi6A2BZZiCvyKQOnkyZPk6+vLv1OnThHqloIcbBkOz8zM0LVr16iuro6+ffumM95Vq1ZRSkoKHTp0iJydnXWeWfPGZgD09vbSuXPnaGJiQhoPBgsCKII2btzI1rFz505RZdWr1QF4/fo1FRUV0cDAgDSQkJAQOnHiBG3YsIHrpqam6Pz589Td3S
+212bFjBxUUFJC3t7dUZ42C1QD4/v07VVdX040bNwimD9qyZQuD4efnp3csz5494+cvX77k58uXL6e4uDhKS0ujFStW6O2jttLiACwsLFBbWxtdvnyZ3r17x/qtWbOG0tPT6cCBA+Tk5GRU57m5OWpqaqKamhqanp7mtuvWraOsrCzat28fOTg4GO1v7kOLAvDixQsqLCwkXEFQNioqio4dO0bu7u5m6fbx40cqKytjMAEqCLvG6dOn+WoWMyONLQIAtjAo297eTpZWFmDm5+fTyMgIDwOgRkZGUnZ2ttmg6sNBFQCY29evX+dt7evXr8zfw8ODzRVKWspcAWprayuVl5fThw8fWM7q1aspNTWV14hly5bpG5tJdYoB+Pz5Mx05coSGh4clQdjWsGBhzluDILO2tlZn29y+fTtduXKF4EcoIcWuMN6GGPymTZuoo6ODcnJyrDZ4DG7t2rUs4+7duwR/ATQ0NESVlZVcVvKnGICuri5JH

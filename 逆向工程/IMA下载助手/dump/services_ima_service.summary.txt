@@ -1,0 +1,728 @@
+===== services/ima_service.pyc =====
+DOCSTRING: 
+IMA知识库服务模块
+提供知识库结构获取、文件下载等功能
+
+
+[<module>] args=() names=('__doc__', 'os', 're', 'time', 'unicodedata', 'requests', 'requests.adapters', 'HTTPAdapter', 'json', 'base64', 'hashlib', 'urllib.parse', 'urlparse', 'markdown', 'core.config', 'get_endpoint_url', 'get_endpoint_method', 'get_timeout', 'get_retry_config', 'get_wechat_api_url', 'compile', '_SPECIAL_CHARS_RE', 'threading', 'local', '_thread_local', 'get_optimized_session', 'close_session', '_get_headers', '_get_retry_params', 'sanitize_filename', 'fs_path', 'file_exists', 'make_dirs', 'make_request_with_retry', 'decode_cursor', 'should_paginate', 'get_knowledge_base_list', 'get_knowledge_list', 'get_file_count', 'search_knowledge', 'get_tag_view', 'extract_folders_and_files', 'get_folder_content', 'get_all_files_recursive', 'get_media_url', 'get_note_content', 'get_report_content', 'ImaNoteMdParser', 'ImaNoteMaser', 'parse_note_content_to_html', 'parse_note_content_to_md', 'parse_report_to_html', 'download_file', 'download_single_file', 'download_normal_file', 'download_url_file', 'download_note_file', 'download_report_file')
+  CONST '\nIMA知识库服务模块\n提供知识库结构获取、文件下载等功能\n'
+  CONST 0
+  CONST None
+  CONST ('HTTPAdapter')
+  CONST ('urlparse')
+  CONST ('get_endpoint_url', 'get_endpoint_method', 'get_timeout', 'get_retry_config', 'get_wechat_api_url')
+  CONST '[🀀-\U0001ffff✂-➿①-⓿☀-⛿⬀-⯿️\u200b-\u200d\ufeff]'
+  CONST 'ImaNoteMdParser'
+  CONST 'ImaNoteMaser'
+  CONST ('POST', None, None, None, None, None, False, True)
+  CONST ('50', None)
+  CONST ('', 0, None)
+  CONST ('', 50)
+  CONST ('50')
+  CONST ('')
+  CONST (None)
+  CONST (None, None, 0, 0)
+  CONST ('html')
+
+  [get_optimized_session] args=() names=('hasattr', '_thread_local', 'session', 'requests', 'Session', 'HTTPAdapter', 'mount', 'verify')
+    CONST '获取优化的 requests Session（带连接池，线程独立）'
+    CONST 'session'
+    CONST 10
+    CONST 20
+    CONST 0
+    CONST False
+    CONST ('pool_connections', 'pool_maxsize', 'max_retries', 'pool_block')
+    CONST 'http://'
+    CONST 'https://'
+    CONST True
+
+  [close_session] args=() names=('hasattr', '_thread_local', 'session', 'close')
+    CONST '关闭并释放当前线程的 Session（下载完成后调用以释放内存）'
+    CONST 'session'
+    CONST None
+
+  [_get_headers] args=() names=('core.config_manager', 'get_config_manager', 'data.database', 'get_login_credentials', 'RuntimeError', 'build_headers_with_cookie')
+    CONST '动态获取最新的HEADERS'
+    CONST 0
+    CONST ('get_config_manager')
+    CONST ('get_login_credentials')
+    CONST '未登录IMA，请先扫码登录'
+    CONST 'bkn'
+    CONST 'cookie'
+
+  [_get_retry_params] args=() names=('get_retry_config', 'get')
+    CONST '获取重试参数（内部辅助函数）'
+    CONST 'max_retries'
+    CONST 3
+    CONST 'delay'
+    CONST 2
+
+  [sanitize_filename] args=('filename',) names=('join', '_SPECIAL_CHARS_RE', 'sub', 're', 'strip')
+    CONST '\n清理文件名/目录名中的非法字符，同时支持 Windows 和 macOS。\n\n过滤内容：\n- 换行符、回车符、制表符等控制字符\n- Emoji 和特殊 Unicode 符号（如 ⓿❶❷ 等圈数字、图案符号）\n- Windows/macOS 非法文件名字符（\\ / : * ? " < > |）\n- 首尾空格和点号\n\nArgs:\n    filename: 原始文件名或目录名\n\nReturns:\n    清理后的安全文件名/目录名\n'
+    CONST 'untitled'
+    CONST ''
+    CONST '[\\\\/:*?"<>|：""《》？｜＊]'
+    CONST '_'
+    CONST '\\s+'
+    CONST ' '
+    CONST '. '
+
+    [sanitize_filename.<locals>.<genexpr>] args=('.0',) names=('unicodedata', 'category')
+      CONST ('Cc', 'Cf')
+      CONST ' '
+      CONST None
+
+  [fs_path] args=('path',) names=('os', 'name', 'path', 'abspath', 'startswith')
+    CONST 'Return a Windows long-path safe version for local filesystem calls.'
+    CONST 'nt'
+    CONST '\\\\?\\'
+    CONST '\\\\'
+    CONST '\\\\?\\UNC\\'
+    CONST 2
+    CONST None
+
+  [file_exists] args=('path',) names=('os', 'path', 'exists', 'fs_path')
+    CONST None
+
+  [make_dirs] args=('path',) names=('os', 'makedirs', 'fs_path')
+    CONST None
+    CONST True
+    CONST ('exist_ok')
+
+  [make_request_with_retry] args=('url', 'method', 'json_data', 'headers', 'timeout', 'max_retries', 'retry_delay', 'stream', 'raise_for_status') names=('time', 'core.config', 'load_cookie_from_cache', 'get_retry_config', 'get', 'get_timeout', '_get_headers', 'get_optimized_session', 'range', 'upper', 'post', 'raise_for_status', 'requests', 'exceptions', 'Timeout', 'sleep', 'ConnectionError', 'RequestException', 'Exception')
+    CONST '带重试机制的请求函数（使用连接池优化）'
+    CONST 0
+    CONST None
+    CONST ('load_cookie_from_cache')
+    CONST 'max_retries'
+    CONST 2
+    CONST 'delay'
+    CONST 1
+    CONST 'POST'
+    CONST ('headers', 'json', 'timeout', 'stream')
+    CONST ('headers', 'timeout', 'stream')
+
+  [decode_cursor] args=('cursor',) names=('base64', 'b64decode', 'len', 'Exception')
+    CONST '解码next_cursor'
+    CONST 2
+    CONST 0
+    CONST 8
+    CONST 1
+    CONST None
+
+  [should_paginate] args=('next_cursor', 'limit') names=('decode_cursor', 'int')
+    CONST '判断是否需要翻页'
+    CONST False
+
+  [get_knowledge_base_list] args=() names=('get_endpoint_url', 'get_endpoint_method', 'make_request_with_retry', 'json', 'JSONDecodeError', 'Exception')
+    CONST '获取用户的所有知识库列表'
+    CONST 'get_knowledge_base_list'
+    CONST 'params'
+    CONST 1
+    CONST '49'
+    CONST ('type', 'limit')
+    CONST 2
+    CONST 3
+    CONST ('method', 'json_data')
+    CONST None
+
+  [get_knowledge_list] args=('knowledge_base_id', 'folder_id', 'limit', 'cursor') names=('get_endpoint_url', 'get_endpoint_method', 'make_request_with_retry', 'json', 'JSONDecodeError', 'Exception')
+    CONST '获取知识库列表'
+    CONST 'get_knowledge_list'
+    CONST ('limit', 'knowledge_base_id', 'folder_id')
+    CONST 'cursor'
+    CONST ('method', 'json_data')
+    CONST None
+
+  [get_file_count] args=('knowledge_base_id',) names=('get_knowledge_list', 'get', 'int')
+    CONST '获取知识库文件总数'
+    CONST '1'
+    CONST ('limit')
+    CONST 'code'
+    CONST 0
+    CONST 'total_size'
+
+  [search_knowledge] args=('knowledge_base_id', 'query', 'cursor', 'policy', 'filters') names=('get_endpoint_url', 'get_endpoint_method', 'make_request_with_retry', 'json', 'Exception')
+    CONST '搜索知识库文件'
+    CONST 'search_knowledge'
+    CONST False
+    CONST ('cursor', 'query', 'knowledge_base_id', 'compared_knowledge_base_id', 'policy', 'forbid_default_cover')
+    CONST 'filters'
+    CONST (5, 20)
+    CONST 2
+    CONST ('method', 'json_data', 'timeout', 'max_retries')
+    CONST None
+
+  [get_tag_view] args=('knowledge_base_id', 'cursor', 'limit') names=('get_endpoint_url', 'get_endpoint_method', 'make_request_with_retry', 'json', 'Exception')
+    CONST '获取知识库标签列表（游标分页）'
+    CONST 'get_tag_view'
+    CONST None
+    CONST ('knowledge_base_id', 'cursor', 'limit')
+    CONST (5, 15)
+    CONST 2
+    CONST ('method', 'json_data', 'timeout', 'max_retries')
+
+  [extract_folders_and_files] args=('knowledge_list',) names=('get', 'replace', 'strip', 'append')
+    CONST '从knowledge_list中提取文件夹和文件信息'
+    CONST 'media_type'
+    CONST 'media_type_info'
+    CONST 'name'
+    CONST ''
+    CONST 99
+    CONST '文件夹'
+    CONST 'folder_info'
+    CONST 'time_wording'
+    CONST '更新'
+    CONST '-'
+    CONST 'folder_id'
+    CONST 'media_id'
+    CONST 'title'
+    CONST 'file_number'
+    CONST '0'
+    CONST 'folder_number'
+    CONST 'parent_folder_id'
+    CONST 'folder'
+    CONST ('folder_id', 'name', 'file_number', 'folder_number', 'parent_folder_id', 'update_time', 'type')
+    CONST 'file_size'
+    CONST 'access_status'
+    CONST 3
+    CONST 'tags'
+    CONST 'file'
+    CONST ('media_id', 'title', 'media_type', 'media_type_info', 'file_size', 'update_time', 'parent_folder_id', 'access_status', 'tags', 'type')
+
+  [get_folder_content] args=('knowledge_base_id', 'folder_id', 'limit') names=('get_knowledge_list', 'get', 'extract_folders_and_files', 'extend', 'should_paginate')
+    CONST '\n获取单层文件夹内容（不递归）\n返回格式：{\n    "folders": [...],\n    "files": [...]\n}\n'
+    CONST None
+    CONST 'code'
+    CONST 0
+    CONST 'knowledge_list'
+    CONST 'next_cursor'
+    CONST 'is_end'
+    CONST False
+    CONST ('folders', 'files')
+
+  [get_all_files_recursive] args=('knowledge_base_id', 'folder_id', 'current_path') names=('get_folder_content', 'get', 'copy', 'append', 'get_all_files_recursive', 'extend')
+    CONST '\n递归获取文件夹下的所有文件\n返回格式：[\n    {\n        "media_id": "xxx",\n        "title": "文件名",\n        "media_type": 2,\n        "media_type_info": {...},\n        "path": "文件夹路径"\n    }\n]\n'
+    CONST 'files'
+    CONST 'path'
+    CONST 'folders'
+    CONST '/'
+    CONST 'name'
+    CONST 'folder_id'
+
+  [get_media_url] args=('media_id', 'knowledge_base_id') names=('get_endpoint_url', 'get_endpoint_method', 'make_request_with_retry', 'json', 'get', 'replace', 'Exception')
+    CONST '获取文件的下载URL和headers（优化版：减少超时时间）'
+    CONST 'get_media'
+    CONST ('media_id', 'knowledge_base_id')
+    CONST (5, 15)
+    CONST 2
+    CONST ('method', 'json_data', 'timeout', 'max_retries')
+    CONST (None, None, None)
+    CONST 'code'
+    CONST 0
+    CONST 'jump_url_info'
+    CONST 'url'
+    CONST ''
+    CONST '\\u0026'
+    CONST '&'
+    CONST 'headers'
+    CONST 'title'
+    CONST 'unknown'
+
+  [get_note_content] args=('docid', 'knowledge_id') names=('get_endpoint_url', 'get_endpoint_method', 'make_request_with_retry', 'status_code', 'text', 'replace', 'json', 'Exception', 'str', 'get', 'items', 'split')
+    CONST '获取note类型文件的内容（优化版）'
+    CONST 'get_share_know_doc'
+    CONST (None, None, '接口配置缺失: get_share_know_doc')
+    CONST True
+    CONST False
+    CONST ('op_attach', 'op_basic', 'op_content', 'op_resource', 'disable_cover')
+    CONST ('docid', 'op', 'knowledge_id')
+    CONST (5, 20)
+    CONST 2
+    CONST ('method', 'json_data', 'timeout', 'max_retries', 'raise_for_status')
+    CONST None
+    CONST (None, None, '请求失败或超时')
+    CONST 400
+    CONST 200
+    CONST '\n'
+    CONST ' '
+    CONST '\r'
+    CONST 'HTTP '
+    CONST '响应不是有效JSON: '
+    CONST 'code'
+    CONST 0
+    CONST 'doc_info'
+    CONST 'content_info'
+    CONST 'content'
+    CONST ''
+    CONST (None, None, '接口返回成功但正文为空')
+    CONST 'basic_info'
+    CONST 'title'
+    CONST 'untitled'
+    CONST 'doc_link'
+    CONST 'link_map'
+    CONST '?'
+    CONST 'message'
+    CONST 'msg'
+    CONST 'error_msg'
+    CONST '未知错误'
+    CONST '接口返回失败 code='
+    CONST ', message='
+    CONST '异常: '
+
+  [get_report_content] args=('report_id', 'knowledge_base_id') names=('get_endpoint_url', 'get_endpoint_method', 'make_request_with_retry', 'json', 'get', 'Exception')
+    CONST '获取IMA报告内容（优化版）'
+    CONST 'get_task_report'
+    CONST 'report_id'
+    CONST (5, 20)
+    CONST 2
+    CONST ('method', 'json_data', 'timeout', 'max_retries')
+    CONST (None, None)
+    CONST 'code'
+    CONST 0
+    CONST 'title'
+    CONST 'untitled'
+    CONST 'format_answer'
+    CONST 'block_list'
+
+  [ImaNoteMdParser] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', '__doc__', '__init__', 'parse_nodes', 'parse_cursor_side', 'parse_image', 'parse_paragraph', 'parse_heading', 'parse_blockquote', 'parse_code_block', 'parse_table', 'parse_children', 'parse_text', '__static_attributes__')
+    CONST 'ImaNoteMdParser'
+    CONST 608
+    CONST 'IMA笔记Markdown解析器'
+    CONST None
+    CONST ('json_data', 'link_map')
+    CONST (None)
+
+    [ImaNoteMdParser.__init__] args=('self', 'json_data', 'link_map') names=('json_data', 'link_map')
+      CONST None
+
+    [ImaNoteMdParser.parse_nodes] args=('self', 'nodes') names=('get', 'append', 'parse_cursor_side', 'parse_paragraph', 'parse_heading', 'int', 'parse_image', 'parse_blockquote', 'parse_code_block', 'parse_table', 'parse_text', 'join', 'strip')
+      CONST None
+      CONST 'type'
+      CONST 'text'
+      CONST 'cursor-side'
+      CONST 'p'
+      CONST ('h1', 'h2', 'h3', 'h4')
+      CONST 1
+      CONST 'cloud_image'
+      CONST 'blockquote'
+      CONST 'code_block'
+      CONST 'table'
+      CONST '\n\n'
+
+    [ImaNoteMdParser.parse_cursor_side] args=('self', 'node') names=('get', 'append', 'parse_image', 'join')
+      CONST None
+      CONST 'children'
+      CONST 'type'
+      CONST 'cloud_image'
+      CONST '\n'
+
+    [ImaNoteMdParser.parse_image] args=('self', 'node') names=('get', 'link_map', 'split')
+      CONST None
+      CONST 'url'
+      CONST ''
+      CONST '?'
+      CONST 0
+      CONST '![图片]('
+      CONST ')'
+
+    [ImaNoteMdParser.parse_paragraph] args=('self', 'node') names=('get', 'parse_children', 'strip')
+      CONST None
+      CONST 'children'
+      CONST ''
+
+    [ImaNoteMdParser.parse_heading] args=('self', 'node', 'level') names=('get', 'parse_children')
+      CONST None
+      CONST 'children'
+      CONST '#'
+      CONST ' '
+
+    [ImaNoteMdParser.parse_blockquote] args=('self', 'node') names=('get', 'parse_nodes', 'split', 'join')
+      CONST None
+      CONST 'children'
+      CONST '\n'
+      CONST '> '
+
+    [ImaNoteMdParser.parse_code_block] args=('self', 'node') names=('get', 'join', 'append')
+      CONST None
+      CONST 'children'
+      CONST 'type'
+      CONST 'code_line'
+      CONST ''
+      CONST 'text'
+      CONST '\n'
+      CONST '```\n'
+      CONST '\n```'
+
+    [ImaNoteMdParser.parse_table] args=('self', 'node') names=('get', 'parse_nodes', 'replace', 'append', 'join', 'len')
+      CONST None
+      CONST 'children'
+      CONST 'type'
+      CONST 'tr'
+      CONST '\n'
+      CONST ' '
+      CONST ''
+      CONST '| '
+      CONST ' | '
+      CONST 0
+      CONST ' |'
+      CONST '---'
+      CONST 1
+
+    [ImaNoteMdParser.parse_children] args=('self', 'children') names=('get', 'parse_children', 'append', 'parse_text', 'parse_image', 'parse_paragraph', 'join')
+      CONST None
+      CONST 'type'
+      CONST 'a'
+      CONST 'url'
+      CONST ''
+      CONST 'children'
+      CONST '['
+      CONST ']('
+      CONST ')'
+      CONST 'text'
+      CONST 'cloud_image'
+      CONST 'p'
+
+    [ImaNoteMdParser.parse_text] args=('self', 'node') names=('get',)
+      CONST None
+      CONST 'text'
+      CONST ''
+      CONST 'bold'
+      CONST '**'
+      CONST 'italic'
+      CONST '*'
+      CONST 'strikethrough'
+      CONST '~~'
+
+  [ImaNoteMaser] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', '__doc__', '__init__', 'parse_nodes', 'parse_cursor_side', 'parse_image', 'parse_paragraph', 'parse_heading', 'parse_blockquote', 'parse_code_block', 'parse_table', 'parse_children', 'parse_text', '__static_attributes__')
+    CONST 'ImaNoteMaser'
+    CONST 733
+    CONST 'IMA笔记解析器'
+    CONST None
+    CONST ('json_data', 'link_map')
+    CONST (None)
+
+    [ImaNoteMaser.__init__] args=('self', 'json_data', 'link_map') names=('json_data', 'link_map')
+      CONST None
+
+    [ImaNoteMaser.parse_nodes] args=('self', 'nodes') names=('get', 'append', 'parse_cursor_side', 'parse_paragraph', 'parse_heading', 'int', 'parse_image', 'parse_blockquote', 'parse_code_block', 'parse_table', 'parse_text', 'join')
+      CONST None
+      CONST 'type'
+      CONST 'text'
+      CONST 'cursor-side'
+      CONST 'p'
+      CONST ('h1', 'h2', 'h3', 'h4')
+      CONST 1
+      CONST 'cloud_image'
+      CONST 'blockquote'
+      CONST 'code_block'
+      CONST 'table'
+      CONST '\n'
+
+    [ImaNoteMaser.parse_cursor_side] args=('self', 'node') names=('get', 'parse_image')
+      CONST None
+      CONST 'children'
+      CONST '<div class="image-container">\n'
+      CONST 'type'
+      CONST 'cloud_image'
+      CONST '</div>'
+
+    [ImaNoteMaser.parse_image] args=('self', 'node') names=('get', 'link_map', 'split', 'replace')
+      CONST None
+      CONST 'url'
+      CONST ''
+      CONST 'width'
+      CONST 'height'
+      CONST '?'
+      CONST 0
+      CONST '"'
+      CONST '&quot;'
+      CONST '<'
+      CONST '&lt;'
+      CONST '>'
+      CONST '&gt;'
+      CONST '  <img src="'
+      CONST '" '
+      CONST 'width="'
+      CONST 'height="'
+      CONST 'alt="图片" />'
+
+    [ImaNoteMaser.parse_paragraph] args=('self', 'node') names=('get', 'parse_children', 'strip')
+      CONST None
+      CONST 'children'
+      CONST '<p>&nbsp;</p>'
+      CONST '<p>'
+      CONST '</p>'
+
+    [ImaNoteMaser.parse_heading] args=('self', 'node', 'level') names=('get', 'parse_children')
+      CONST None
+      CONST 'children'
+      CONST '<h'
+      CONST '>'
+      CONST '</h'
+
+    [ImaNoteMaser.parse_blockquote] args=('self', 'node') names=('get', 'parse_nodes')
+      CONST None
+      CONST 'children'
+      CONST '<blockquote>'
+      CONST '</blockquote>'
+
+    [ImaNoteMaser.parse_code_block] args=('self', 'node') names=('get', 'join', 'append', 'html', 'escape')
+      CONST None
+      CONST 'children'
+      CONST 'type'
+      CONST 'code_line'
+      CONST ''
+      CONST 'text'
+      CONST '\n'
+      CONST 0
+      CONST ('escape')
+      CONST '<pre><code>'
+      CONST '</code></pre>'
+
+    [ImaNoteMaser.parse_table] args=('self', 'node') names=('get', 'append', 'parse_nodes', 'join')
+      CONST None
+      CONST 'children'
+      CONST '<table>'
+      CONST 'type'
+      CONST 'tr'
+      CONST '<tr>'
+      CONST 'td'
+      CONST '<'
+      CONST '>'
+      CONST '</'
+      CONST '</tr>'
+      CONST '</table>'
+      CONST '\n'
+
+    [ImaNoteMaser.parse_children] args=('self', 'children') names=('get', 'replace', 'parse_children', 'append', 'parse_text', 'parse_image', 'parse_paragraph', 'join')
+      CONST None
+      CONST 'type'
+      CONST 'a'
+      CONST 'url'
+      CONST ''
+      CONST '"'
+      CONST '&quot;'
+      CONST '<'
+      CONST '&lt;'
+      CONST '>'
+      CONST '&gt;'
+      CONST 'children'
+      CONST '<a href="'
+      CONST '" target="_blank">'
+      CONST '</a>'
+      CONST 'text'
+      CONST 'cloud_image'
+      CONST 'p'
+
+    [ImaNoteMaser.parse_text] args=('self', 'node') names=('get', 'html', 'escape')
+      CONST None
+      CONST 'text'
+      CONST ''
+      CONST 0
+      CONST ('escape')
+      CONST 'bold'
+      CONST '<strong>'
+      CONST '</strong>'
+      CONST 'italic'
+      CONST '<em>'
+      CONST '</em>'
+      CONST 'underline'
+      CONST '<u>'
+      CONST '</u>'
+      CONST 'strikethrough'
+      CONST '<del>'
+      CONST '</del>'
+
+  [parse_note_content_to_html] args=('content_json', 'title', 'link_map') names=('json', 'loads', 'ImaNoteMaser', 'parse_nodes', 'append', 'extend', 'join', 'Exception', 'html', 'escape')
+    CONST '将note的JSON内容转换为HTML格式'
+    CONST '<!DOCTYPE html>'
+    CONST '<html lang="zh-CN">'
+    CONST '<head>'
+    CONST '<meta charset="UTF-8">'
+    CONST '<meta name="viewport" content="width=device-width, initial-scale=1.0">'
+    CONST '<title>'
+    CONST '</title>'
+    CONST '<style>'
+    CONST 'body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Microsoft YaHei",sans-serif;line-height:1.6;max-width:800px;margin:0 auto;padding:20px;color:#333}'
+    CONST 'h1,h2,h3,h4{color:#2c3e50;margin-top:1.5em;margin-bottom:0.5em}'
+    CONST 'h1{font-size:2em;border-bottom:2px solid #3498db;padding-bottom:0.3em}'
+    CONST 'img{max-width:100%;height:auto;display:block;margin:1em auto;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.1)}'
+    CONST 'a{color:#3498db;text-decoration:none;border-bottom:1px solid #3498db}'
+    CONST 'blockquote{border-left:4px solid #3498db;margin:1em 0;padding:10px 15px;color:#666;background:#f8f9fa;border-radius:4px}'
+    CONST 'code{background:#f4f4f4;padding:2px 6px;border-radius:3px;font-family:"Courier New",Consolas,monospace;font-size:0.9em}'
+    CONST 'pre{background:#f4f4f4;padding:1em;border-radius:5px;overflow-x:auto;border:1px solid #ddd}'
+    CONST 'pre code{background:none;padding:0}'
+    CONST 'table{border-collapse:collapse;width:100%;margin:1em 0}'
+    CONST 'th,td{border:1px solid #ddd;padding:8px;text-align:left}'
+    CONST 'th{background-color:#f2f2f2;font-weight:bold}'
+    CONST '</style>'
+    CONST '</head>'
+    CONST '<body>'
+    CONST '<h1>'
+    CONST '</h1>'
+    CONST '</body>'
+    CONST '</html>'
+    CONST '\n'
+    CONST 0
+    CONST ('escape')
+    CONST '<html><body><h1>'
+    CONST '</h1><pre>'
+    CONST '</pre></body></html>'
+
+  [parse_note_content_to_md] args=('content_json', 'title', 'link_map') names=('json', 'loads', 'ImaNoteMdParser', 'parse_nodes', 'Exception')
+    CONST '将note的JSON内容转换为Markdown格式'
+    CONST '# '
+    CONST '\n\n'
+    CONST '\n\n```json\n'
+    CONST '\n```'
+
+  [parse_report_to_html] args=('title', 'block_list') names=('json', 'loads', 'get', 'append', 'Exception', 'join', 're', 'split', 'enumerate', 'strip', 'startswith', 'len', 'markdown', 'Markdown', 'convert', 'str')
+    CONST '将IMA报告的block_list转换为HTML格式（渲染markdown）'
+    CONST 'Type'
+    CONST 'message'
+    CONST 'Data'
+    CONST 'Text'
+    CONST ''
+    CONST '\n\n'
+    CONST 0
+    CONST None
+    CONST '\n'
+    CONST '|'
+    CONST False
+    CONST -1
+    CONST 1
+    CONST ('extra', 'sane_lists', 'smarty')
+    CONST ('extensions')
+    CONST '<!DOCTYPE html>\n<html lang="zh-CN">\n<head>\n    <meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n    <title>'
+    CONST '</title>\n    <style>\n        body {\n            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Microsoft YaHei", sans-serif;\n            line-height: 1.8;\n            max-width: 900px;\n            margin: 0 auto;\n            padding: 40px 20px;\n            color: #333;\n            background: #f9f9f9;\n        }\n        .content {\n            background: white;\n            padding: 40px;\n            border-radius: 8px;\n            box-shadow: 0 2px 8px rgba(0,0,0,0.1);\n        }\n        h1 {\n            color: #2c3e50;\n            border-bottom: 3px solid #667eea;\n            padding-bottom: 10px;\n            margin-bottom: 30px;\n        }\n        h2 {\n            color: #34495e;\n            margin-top: 2em;\n            margin-bottom: 1em;\n            border-bottom: 2px solid #e0e0e0;\n            padding-bottom: 8px;\n        }\n        h3 {\n            color: #555;\n            margin-top: 1.5em;\n            margin-bottom: 0.8em;\n        }\n        p {\n            margin: 1em 0;\n            text-align: justify;\n        }\n        code {\n            background: #f4f4f4;\n            padding: 2px 6px;\n            border-radius: 3px;\n            font-family: "Consolas", "Monaco", "Courier New", monospace;\n            font-size: 0.9em;\n            color: #e83e8c;\n        }\n        pre {\n            background: #2d2d2d;\n            color: #f8f8f2;\n            padding: 1.5em;\n            border-radius: 6px;\n            overflow-x: auto;\n            line-height: 1.5;\n        }\n        pre code {\n            background: none;\n            padding: 0;\n            color: inherit;\n            font-size: 0.95em;\n        }\n        blockquote {\n            border-left: 4px solid #667eea;\n            margin: 1.5em 0;\n            padding: 0.5em 1em;\n            background: #f8f9fa;\n            color: #555;\n        }\n        table {\n            border-collapse: collapse;\n            width: 100%;\n            margin: 2em 0;\n            box-shadow: 0 2px 4px rgba(0,0,0,0.1);\n            overflow: hidden;\n            border-radius: 8px;\n        }\n        thead {\n            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n        }\n        th {\n            border: none;\n            padding: 14px 16px;\n            text-align: left;\n            color: white;\n            font-weight: 600;\n            text-transform: uppercase;\n            font-size: 0.9em;\n            letter-spacing: 0.5px;\n        }\n        td {\n            border: 1px solid #e0e0e0;\n            padding: 12px 16px;\n            text-align: left;\n        }\n        tbody tr {\n            transition: background-color 0.2s;\n        }\n        tbody tr:nth-child(odd) {\n            background: #ffffff;\n        }\n        tbody tr:nth-child(even) {\n            background: #f8f9fa;\n        }\n        tbody tr:hover {\n            background: #e3f2fd;\n        }\n        ul, ol {\n            margin: 1em 0;\n            padding-left: 2em;\n        }\n        li {\n            margin: 0.5em 0;\n        }\n        a {\n            color: #667eea;\n            text-decoration: none;\n        }\n        a:hover {\n            text-decoration: underline;\n        }\n        img {\n            max-width: 100%;\n            height: auto;\n            border-radius: 4px;\n            margin: 1em 0;\n        }\n    </style>\n</head>\n<body>\n    <div class="content">\n        <h1>'
+    CONST '</h1>\n        '
+    CONST '\n    </div>\n</body>\n</html>'
+    CONST '<html><body><h1>'
+    CONST '</h1><p>解析报告内容失败: '
+    CONST '</p></body></html>'
+
+  [download_file] args=('jump_url', 'custom_headers', 'save_path') names=('time', 'get_optimized_session', 'range', 'items', 'get', 'raise_for_status', 'make_dirs', 'os', 'path', 'dirname', 'Exception', 'str', 'open', 'fs_path', 'iter_content', 'write', 'sleep')
+    CONST '下载文件到指定路径（优化版：使用连接池，更大的chunk_size）\n返回: (success: bool, error_msg: str)\n'
+    CONST 0
+    CONST None
+    CONST 2
+    CONST 1
+    CONST '*/*'
+    CONST 'zh-CN,zh-Hans;q=0.9'
+    CONST 'ima/4032 CFNetwork/3860.300.31 Darwin/25.2.0'
+    CONST ('Accept', 'Accept-Language', 'User-Agent')
+    CONST (10, 30)
+    CONST True
+    CONST ('headers', 'timeout', 'stream')
+    CONST False
+    CONST '创建目录失败: '
+    CONST 'wb'
+    CONST 262144
+    CONST ('chunk_size')
+    CONST (True, '')
+    CONST (False, '下载失败')
+
+  [download_single_file] args=('media_id', 'knowledge_base_id', 'save_dir', 'media_type', 'media_type_info', 'file_size', 'update_time') names=('get_media_url', 'sanitize_filename', 're', 'urllib.parse', 'urlparse', 'unquote', 'path', 'search', 'group', 'endswith', 'split', 'isalnum', 'get', 'core.settings', 'get_setting', 'download_note_file', 'download_report_file', 'download_url_file', 'download_normal_file', 'Exception', 'traceback', 'str', 'format_exc')
+    CONST '\n下载单个文件（支持普通文件、笔记、IMA报告、网址、公众号文章）\n返回: (success, message, file_path)\n'
+    CONST (False, '获取下载URL失败', None)
+    CONST 'unknown'
+    CONST 0
+    CONST None
+    CONST ('urlparse', 'unquote')
+    CONST '\\.([a-zA-Z0-9]+)(?:\\?|$)'
+    CONST '.'
+    CONST 1
+    CONST ''
+    CONST -1
+    CONST 'name'
+    CONST 11
+    CONST '笔记'
+    CONST ('get_setting')
+    CONST 'note_format'
+    CONST 'md'
+    CONST 2
+    CONST 'ima 报告'
+    CONST '网址'
+    CONST '腾讯新闻'
+    CONST 6
+    CONST '公众号'
+    CONST '异常: '
+    CONST '\n'
+    CONST False
+
+  [download_normal_file] args=('jump_url', 'custom_headers', 'save_dir', 'filename') names=('os', 'path', 'join', 'file_exists', 'download_file')
+    CONST '下载普通文件'
+    CONST True
+    CONST '文件已存在'
+    CONST '下载成功'
+    CONST False
+    CONST '下载失败: '
+    CONST None
+
+  [download_url_file] args=('jump_url', 'save_dir', 'filename') names=('html', 'escape', 'lower', 'endswith', 'os', 'path', 'join', 'file_exists', 'make_dirs', 'dirname', 'open', 'fs_path', 'write', 'Exception', 'str')
+    CONST '保存网址为可打开的 HTML 跳转文件。'
+    CONST 0
+    CONST ('escape')
+    CONST '.html'
+    CONST True
+    CONST '文件已存在'
+    CONST ('quote')
+    CONST None
+    CONST -5
+    CONST '网址'
+    CONST False
+    CONST '<!doctype html>\n<html lang="zh-CN">\n<head>\n  <meta charset="utf-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1">\n  <meta http-equiv="refresh" content="0; url='
+    CONST '">\n  <title>'
+    CONST '</title>\n  <style>\n    body {\n      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;\n      line-height: 1.6;\n      max-width: 760px;\n      margin: 48px auto;\n      padding: 0 20px;\n      color: #222;\n    }\n    a { color: #1565c0; word-break: break-all; }\n  </style>\n</head>\n<body>\n  <h1>'
+    CONST '</h1>\n  <p>正在打开原始网址。如果没有自动跳转，请点击下面的链接：</p>\n  <p><a href="'
+    CONST '" target="_blank" rel="noopener noreferrer">'
+    CONST '</a></p>\n</body>\n</html>\n'
+    CONST 'w'
+    CONST 'utf-8'
+    CONST ('encoding')
+    CONST '下载成功'
+    CONST '保存网址HTML失败: '
+
+  [download_note_file] args=('media_id', 'knowledge_base_id', 'save_dir', 'jump_url', 'filename', 'note_format') names=('urllib.parse', 'urlparse', 'parse_qs', 'query', 'get', 'Exception', 'str', 'endswith', 'os', 'path', 'join', 'file_exists', 'get_note_content', 'isinstance', 'sanitize_filename', 'parse_note_content_to_md', 'parse_note_content_to_html', 'make_dirs', 'dirname', 'open', 'fs_path', 'write')
+    CONST "下载笔记文件（转换为HTML或Markdown）\n\nArgs:\n    note_format: 'html' 或 'md'，默认为 'html'\n"
+    CONST 0
+    CONST ('urlparse', 'parse_qs')
+    CONST 'docid'
+    CONST None
+    CONST (False, '无法提取docid', None)
+    CONST False
+    CONST '解析jump_url失败: '
+    CONST 'md'
+    CONST '.md'
+    CONST '.html'
+    CONST True
+    CONST '文件已存在'
+    CONST '未知原因'
+    CONST '获取note内容失败: '
+    CONST '创建目录失败: '
+    CONST 'w'
+    CONST 'utf-8'
+    CONST ('encoding')
+    CONST '下载成功'
+    CONST '保存文件失败: '
+
+  [download_report_file] args=('jump_url', 'knowledge_base_id', 'save_dir', 'filename') names=('urllib.parse', 'urlparse', 'parse_qs', 'query', 'get', 'Exception', 'str', 'get_report_content', 'parse_report_to_html', 'endswith', 'os', 'path', 'join', 'file_exists', 'make_dirs', 'dirname', 'open', 'fs_path', 'write')
+    CONST '下载IMA报告文件（转换为HTML）'
+    CONST 0
+    CONST ('urlparse', 'parse_qs')
+    CONST 'reportId'
+    CONST None
+    CONST (False, '无法提取reportId', None)
+    CONST False
+    CONST '解析jump_url失败: '
+    CONST (False, '获取报告内容失败', None)
+    CONST '.html'
+    CONST True
+    CONST '文件已存在'
+    CONST 'w'
+    CONST 'utf-8'
+    CONST ('encoding')
+    CONST '下载成功'
+    CONST '保存文件失败: '
+

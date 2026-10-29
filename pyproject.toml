@@ -46,6 +46,7 @@ where = ["src"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
+markers = ["live: 实弹用例=真实网络(KB_HARVEST_SKIP_LIVE=1 跳过)"]
 
 [tool.ruff]
 line-length = 100

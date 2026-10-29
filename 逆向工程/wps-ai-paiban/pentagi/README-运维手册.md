@@ -50,3 +50,15 @@ PentAGI 在本战役中承担「安全体检 AI 团队」角色：对已测绘�
 - `make_env.py` — .env 生成器（密钥猎取+随机化，掩码输出）
 - `deploy.sh` / `deploy2.sh` / `deploy3.sh` — 三役部署脚本（含 DNS 修复与重试逻辑）
 - `fix_embedding.sh` — embedding 补配
+- `first_flow2.sh` — GraphQL 驱动 assistant（正道：`createAssistant(flowId:0, modelProvider, input, useAgents, resourceIds)`，
+  一发同时建 flow+assistant 并注册内存 Controller）
+- `pull_workers.sh` — 拉 scraper/kali 工作镜像（agent 沙箱必需）
+- `check_done.sh` / `check_worker.sh` / `diag_restart.sh` — 状态/日志/重启诊断三件套
+
+## API 驱动要点（1022 实测）
+
+1. 默认账号 `admin@pentagi.com` / `admin`（bcrypt 破解候选表命中，`crack_admin.py` 已留档）；首登即改密（口令已随机化存 `/root/pentagi/.adminpw`）
+2. 登录 `POST /api/v1/auth/login`（JSON: mail/password）→ cookie 会话；GraphQL 端点 `POST /api/v1/graphql`
+3. **REST `/flows/` 建的 flow 不会注册内存 Controller**（`callAssistant` 报 not found）——必须走 GraphQL `createAssistant`；`callAssistant(flowId, assistantId, input, useAgents, resourceIds)` 用于追问
+4. GraphQL 参数名是 **camelCase**（flowId/assistantId/resourceIds），写成 flowID/assistantID 会 422
+5. WSL 保活：Windows 侧后台挂 `wsl -d RE-Ubuntu -e sleep infinity`，否则 WSL 空闲回收连 docker 一起杀（表现为容器「每几分钟重启」）

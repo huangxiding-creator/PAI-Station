@@ -1,0 +1,1771 @@
+{
+ "campaign": "EPC-JIAGE",
+ "topic": "工程计价依据与市场价基准实战研究报告",
+ "region": "全国",
+ "generated": "2026-10-25 10:44",
+ "engine": "v0-heuristic 计价域十维定制 (EPC-JIAGE S1; 军团参谋网络恢复后升级 — M4)",
+ "context_pack": {
+  "pool_items": 0,
+  "pool_valid_chars": 0,
+  "pool_kws": [
+   "计价依据",
+   "定额",
+   "信息价",
+   "市场价基准",
+   "投标报价",
+   "结算核对",
+   "合同解除结算",
+   "工程量清单",
+   "综合单价",
+   "造价鉴定",
+   "定额测定",
+   "造价管理",
+   "人工单价",
+   "材料价",
+   "机械台班",
+   "全费用单价",
+   "清单计价",
+   "定额计价",
+   "造价咨询",
+   "竣工结算",
+   "工程变更计价",
+   "签证计价",
+   "争议鉴定",
+   "概算",
+   "预算",
+   "招标控制价"
+  ],
+  "note": "存量仅防重扫参考; 门槛只算本次新增有效弹药 (用户铁律)"
+ },
+ "loop_policy": "M3 增量生长: 小批采→即时判挂树→按 coverage 缺口补下批",
+ "hypotheses": [
+  {
+   "id": "H1",
+   "text": "工程计价依据与市场价基准实战研究报告: 计价依据体系趋于稳定, 按图索骥即可规避主要风险",
+   "prior": 0.35
+  },
+  {
+   "id": "H2",
+   "text": "工程计价依据与市场价基准实战研究报告: 定额信息价体系与市场实际持续脱节, 争议与结算风险大于确定性",
+   "prior": 0.35
+  },
+  {
+   "id": "H3",
+   "text": "工程计价依据与市场价基准实战研究报告: 结构性分化: 规范依据确定性高, 市场价基准与解除结算端风险集中",
+   "prior": 0.3
+  }
+ ],
+ "subquestions": [
+  {
+   "id": "Q1",
+   "dim": "政策法规与定额体系",
+   "text": "全国 工程计价依据与市场价基准实战研究报告 主管部门与监管框架",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q1-E1",
+     "need": "正面证据: 主管部门与监管框架 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "std_samr",
+      "rss"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 主管部门与监管框架 2025-2026",
+      "工程计价依据 市场价基准 主管部门与监管框架 实务 方法"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q1-E2",
+     "need": "反面证据: 主管部门与监管框架 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "websearch",
+      "metaso"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 主管部门与监管框架 风险 纠纷 争议",
+      "工程计价依据 市场价基准 主管部门与监管框架 问题 教训 质疑"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q1-E3",
+     "need": "权威口径: 主管部门与监管框架 的官方文件/规范/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "std_samr",
+      "opencli"
+     ],
+     "queries": [
+      "住房和城乡建设部 标准定额司 计价依据 政策",
+      "建设工程造价管理办法 住建部",
+      "省住房和城乡建设厅 造价管理总站"
+     ],
+     "status": "single"
+    }
+   ]
+  },
+  {
+   "id": "Q2",
+   "dim": "政策法规与定额体系",
+   "text": "工程计价依据与市场价基准实战研究报告 造价管理制度体系与政策文件沿革",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q2-E1",
+     "need": "正面证据: 造价管理制度体系与政策文件沿革 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "std_samr",
+      "rss"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 造价管理制度体系与政策文件沿革 2025-2026",
+      "工程计价依据 市场价基准 造价管理制度体系与政策文件沿革 实务 方法"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q2-E2",
+     "need": "反面证据: 造价管理制度体系与政策文件沿革 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "websearch",
+      "metaso"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 造价管理制度体系与政策文件沿革 风险 纠纷 争议",
+      "工程计价依据 市场价基准 造价管理制度体系与政策文件沿革 问题 教训 质疑"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q2-E3",
+     "need": "权威口径: 造价管理制度体系与政策文件沿革 的官方文件/规范/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "std_samr",
+      "opencli"
+     ],
+     "queries": [
+      "住房和城乡建设部 标准定额司 计价依据 政策",
+      "建设工程造价管理办法 住建部",
+      "省住房和城乡建设厅 造价管理总站"
+     ],
+     "status": "saturated"
+    }
+   ]
+  },
+  {
+   "id": "Q3",
+   "dim": "政策法规与定额体系",
+   "text": "工程计价依据与市场价基准实战研究报告 定额体系构成与发布管理制度",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q3-E1",
+     "need": "正面证据: 定额体系构成与发布管理制度 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "std_samr",
+      "rss"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 定额体系构成与发布管理制度 2025-2026",
+      "工程计价依据 市场价基准 定额体系构成与发布管理制度 实务 方法"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q3-E2",
+     "need": "反面证据: 定额体系构成与发布管理制度 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "websearch",
+      "metaso"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 定额体系构成与发布管理制度 风险 纠纷 争议",
+      "工程计价依据 市场价基准 定额体系构成与发布管理制度 问题 教训 质疑"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q3-E3",
+     "need": "权威口径: 定额体系构成与发布管理制度 的官方文件/规范/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "std_samr",
+      "opencli"
+     ],
+     "queries": [
+      "住房和城乡建设部 标准定额司 计价依据 政策",
+      "建设工程造价管理办法 住建部",
+      "省住房和城乡建设厅 造价管理总站"
+     ],
+     "status": "saturated"
+    }
+   ]
+  },
+  {
+   "id": "Q4",
+   "dim": "计价依据与定额测定",
+   "text": "工程计价依据与市场价基准实战研究报告 预算定额测定方法与编制规程的技术标准",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q4-E1",
+     "need": "正面证据: 预算定额测定方法与编制规程的技术标准 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "metaso",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 预算定额测定方法与编制规程的技术标准 2025-2026",
+      "工程计价依据 市场价基准 预算定额测定方法与编制规程的技术标准 实务 方法"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q4-E2",
+     "need": "反面证据: 预算定额测定方法与编制规程的技术标准 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "websearch",
+      "manus_corps"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 预算定额测定方法与编制规程的技术标准 风险 纠纷 争议",
+      "工程计价依据 市场价基准 预算定额测定方法与编制规程的技术标准 问题 教训 质疑"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q4-E3",
+     "need": "权威口径: 预算定额测定方法与编制规程的技术标准 的官方文件/规范/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "std_samr",
+      "ebook"
+     ],
+     "queries": [
+      "住建部 建设工程定额 编制规程",
+      "全国统一建筑工程基础定额",
+      "标准定额研究所 定额测定"
+     ],
+     "status": "saturated"
+    }
+   ]
+  },
+  {
+   "id": "Q5",
+   "dim": "计价依据与定额测定",
+   "text": "工程计价依据与市场价基准实战研究报告 人工材料机械消耗量定额水平数据与调整机制",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q5-E1",
+     "need": "正面证据: 人工材料机械消耗量定额水平数据与调整机制 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "metaso",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 人工材料机械消耗量定额水平数据与调整机制 2025-2026",
+      "工程计价依据 市场价基准 人工材料机械消耗量定额水平数据与调整机制 实务 方法"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q5-E2",
+     "need": "反面证据: 人工材料机械消耗量定额水平数据与调整机制 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "websearch",
+      "manus_corps"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 人工材料机械消耗量定额水平数据与调整机制 风险 纠纷 争议",
+      "工程计价依据 市场价基准 人工材料机械消耗量定额水平数据与调整机制 问题 教训 质疑"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q5-E3",
+     "need": "权威口径: 人工材料机械消耗量定额水平数据与调整机制 的官方文件/规范/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "std_samr",
+      "ebook"
+     ],
+     "queries": [
+      "住建部 建设工程定额 编制规程",
+      "全国统一建筑工程基础定额",
+      "标准定额研究所 定额测定"
+     ],
+     "status": "single"
+    }
+   ]
+  },
+  {
+   "id": "Q6",
+   "dim": "计价依据与定额测定",
+   "text": "工程计价依据与市场价基准实战研究报告 企业定额建设现状与标杆案例",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q6-E1",
+     "need": "正面证据: 企业定额建设现状与标杆案例 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "metaso",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 企业定额建设现状与标杆案例 2025-2026",
+      "工程计价依据 市场价基准 企业定额建设现状与标杆案例 实务 方法"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q6-E2",
+     "need": "反面证据: 企业定额建设现状与标杆案例 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "websearch",
+      "manus_corps"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 企业定额建设现状与标杆案例 风险 纠纷 争议",
+      "工程计价依据 市场价基准 企业定额建设现状与标杆案例 问题 教训 质疑"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q6-E3",
+     "need": "权威口径: 企业定额建设现状与标杆案例 的官方文件/规范/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "std_samr",
+      "ebook"
+     ],
+     "queries": [
+      "住建部 建设工程定额 编制规程",
+      "全国统一建筑工程基础定额",
+      "标准定额研究所 定额测定"
+     ],
+     "status": "single"
+    }
+   ]
+  },
+  {
+   "id": "Q7",
+   "dim": "信息价与市场价基准",
+   "text": "工程计价依据与市场价基准实战研究报告 信息价发布机制与各省造价管理机构",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q7-E1",
+     "need": "正面证据: 信息价发布机制与各省造价管理机构 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "wenku",
+      "metaso",
+      "opencli"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 信息价发布机制与各省造价管理机构 2025-2026",
+      "工程计价依据 市场价基准 信息价发布机制与各省造价管理机构 实务 方法"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q7-E2",
+     "need": "反面证据: 信息价发布机制与各省造价管理机构 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "websearch"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 信息价发布机制与各省造价管理机构 风险 纠纷 争议",
+      "工程计价依据 市场价基准 信息价发布机制与各省造价管理机构 问题 教训 质疑"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q7-E3",
+     "need": "权威口径: 信息价发布机制与各省造价管理机构 的官方文件/规范/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "websearch",
+      "opencli"
+     ],
+     "queries": [
+      "省建设工程造价管理总站 信息价 2025-2026",
+      "中国建设工程造价管理协会 造价指数",
+      "住房和城乡建设部 工程造价指标"
+     ],
+     "status": "saturated"
+    }
+   ]
+  },
+  {
+   "id": "Q8",
+   "dim": "信息价与市场价基准",
+   "text": "工程计价依据与市场价基准实战研究报告 信息价与市场价差异口径及计价采用规则",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q8-E1",
+     "need": "正面证据: 信息价与市场价差异口径及计价采用规则 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "wenku",
+      "metaso",
+      "opencli"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 信息价与市场价差异口径及计价采用规则 2025-2026",
+      "工程计价依据 市场价基准 信息价与市场价差异口径及计价采用规则 实务 方法"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q8-E2",
+     "need": "反面证据: 信息价与市场价差异口径及计价采用规则 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "websearch"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 信息价与市场价差异口径及计价采用规则 风险 纠纷 争议",
+      "工程计价依据 市场价基准 信息价与市场价差异口径及计价采用规则 问题 教训 质疑"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q8-E3",
+     "need": "权威口径: 信息价与市场价差异口径及计价采用规则 的官方文件/规范/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "websearch",
+      "opencli"
+     ],
+     "queries": [
+      "省建设工程造价管理总站 信息价 2025-2026",
+      "中国建设工程造价管理协会 造价指数",
+      "住房和城乡建设部 工程造价指标"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "Q9",
+   "dim": "信息价与市场价基准",
+   "text": "工程计价依据与市场价基准实战研究报告 造价指数发布数据与材料价差调整规则",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q9-E1",
+     "need": "正面证据: 造价指数发布数据与材料价差调整规则 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "wenku",
+      "metaso",
+      "opencli"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 造价指数发布数据与材料价差调整规则 2025-2026",
+      "工程计价依据 市场价基准 造价指数发布数据与材料价差调整规则 实务 方法"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q9-E2",
+     "need": "反面证据: 造价指数发布数据与材料价差调整规则 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "websearch"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 造价指数发布数据与材料价差调整规则 风险 纠纷 争议",
+      "工程计价依据 市场价基准 造价指数发布数据与材料价差调整规则 问题 教训 质疑"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q9-E3",
+     "need": "权威口径: 造价指数发布数据与材料价差调整规则 的官方文件/规范/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "websearch",
+      "opencli"
+     ],
+     "queries": [
+      "省建设工程造价管理总站 信息价 2025-2026",
+      "中国建设工程造价管理协会 造价指数",
+      "住房和城乡建设部 工程造价指标"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "Q10",
+   "dim": "投标编制实务",
+   "text": "工程计价依据与市场价基准实战研究报告 招标控制价编制规则与复核争议案例",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q10-E1",
+     "need": "正面证据: 招标控制价编制规则与复核争议案例 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "wenku",
+      "metaso",
+      "sogou_wechat"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 招标控制价编制规则与复核争议案例 2025-2026",
+      "工程计价依据 市场价基准 招标控制价编制规则与复核争议案例 实务 方法"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q10-E2",
+     "need": "反面证据: 招标控制价编制规则与复核争议案例 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "websearch"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 招标控制价编制规则与复核争议案例 风险 纠纷 争议",
+      "工程计价依据 市场价基准 招标控制价编制规则与复核争议案例 问题 教训 质疑"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q10-E3",
+     "need": "权威口径: 招标控制价编制规则与复核争议案例 的官方文件/规范/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "chinca"
+     ],
+     "queries": [
+      "建设工程工程量清单计价规范 GB50500",
+      "住建部 招标控制价 编制 规定",
+      "标准施工招标文件 住房和城乡建设部"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "Q11",
+   "dim": "投标编制实务",
+   "text": "工程计价依据与市场价基准实战研究报告 投标报价编制模式与不平衡报价风险案例",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q11-E1",
+     "need": "正面证据: 投标报价编制模式与不平衡报价风险案例 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "wenku",
+      "metaso",
+      "sogou_wechat"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 投标报价编制模式与不平衡报价风险案例 2025-2026",
+      "工程计价依据 市场价基准 投标报价编制模式与不平衡报价风险案例 实务 方法"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q11-E2",
+     "need": "反面证据: 投标报价编制模式与不平衡报价风险案例 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "websearch"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 投标报价编制模式与不平衡报价风险案例 风险 纠纷 争议",
+      "工程计价依据 市场价基准 投标报价编制模式与不平衡报价风险案例 问题 教训 质疑"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q11-E3",
+     "need": "权威口径: 投标报价编制模式与不平衡报价风险案例 的官方文件/规范/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "chinca"
+     ],
+     "queries": [
+      "建设工程工程量清单计价规范 GB50500",
+      "住建部 招标控制价 编制 规定",
+      "标准施工招标文件 住房和城乡建设部"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "Q12",
+   "dim": "投标编制实务",
+   "text": "工程计价依据与市场价基准实战研究报告 综合单价组价规则与全费用单价模式",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q12-E1",
+     "need": "正面证据: 综合单价组价规则与全费用单价模式 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "wenku",
+      "metaso",
+      "sogou_wechat"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 综合单价组价规则与全费用单价模式 2025-2026",
+      "工程计价依据 市场价基准 综合单价组价规则与全费用单价模式 实务 方法"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q12-E2",
+     "need": "反面证据: 综合单价组价规则与全费用单价模式 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "websearch"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 综合单价组价规则与全费用单价模式 风险 纠纷 争议",
+      "工程计价依据 市场价基准 综合单价组价规则与全费用单价模式 问题 教训 质疑"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q12-E3",
+     "need": "权威口径: 综合单价组价规则与全费用单价模式 的官方文件/规范/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "chinca"
+     ],
+     "queries": [
+      "建设工程工程量清单计价规范 GB50500",
+      "住建部 招标控制价 编制 规定",
+      "标准施工招标文件 住房和城乡建设部"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "Q13",
+   "dim": "结算核对实务",
+   "text": "工程计价依据与市场价基准实战研究报告 竣工结算编审规则与量价费核对要点",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q13-E1",
+     "need": "正面证据: 竣工结算编审规则与量价费核对要点 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "wenku",
+      "metaso",
+      "sogou_wechat"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 竣工结算编审规则与量价费核对要点 2025-2026",
+      "工程计价依据 市场价基准 竣工结算编审规则与量价费核对要点 实务 方法"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q13-E2",
+     "need": "反面证据: 竣工结算编审规则与量价费核对要点 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "websearch"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 竣工结算编审规则与量价费核对要点 风险 纠纷 争议",
+      "工程计价依据 市场价基准 竣工结算编审规则与量价费核对要点 问题 教训 质疑"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q13-E3",
+     "need": "权威口径: 竣工结算编审规则与量价费核对要点 的官方文件/规范/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "court",
+      "cnki"
+     ],
+     "queries": [
+      "建设工程价款结算暂行办法 财政部 建设部",
+      "竣工结算 财政投资评审 规定",
+      "住建部 工程价款结算 政策"
+     ],
+     "status": "saturated"
+    }
+   ]
+  },
+  {
+   "id": "Q14",
+   "dim": "结算核对实务",
+   "text": "工程计价依据与市场价基准实战研究报告 签证与变更计价规则及审核口径",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q14-E1",
+     "need": "正面证据: 签证与变更计价规则及审核口径 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "wenku",
+      "metaso",
+      "sogou_wechat"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 签证与变更计价规则及审核口径 2025-2026",
+      "工程计价依据 市场价基准 签证与变更计价规则及审核口径 实务 方法"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q14-E2",
+     "need": "反面证据: 签证与变更计价规则及审核口径 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "websearch"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 签证与变更计价规则及审核口径 风险 纠纷 争议",
+      "工程计价依据 市场价基准 签证与变更计价规则及审核口径 问题 教训 质疑"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q14-E3",
+     "need": "权威口径: 签证与变更计价规则及审核口径 的官方文件/规范/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "court",
+      "cnki"
+     ],
+     "queries": [
+      "建设工程价款结算暂行办法 财政部 建设部",
+      "竣工结算 财政投资评审 规定",
+      "住建部 工程价款结算 政策"
+     ],
+     "status": "single"
+    }
+   ]
+  },
+  {
+   "id": "Q15",
+   "dim": "合同解除结算",
+   "text": "工程计价依据与市场价基准实战研究报告 合同解除情形与已完工程量结算规则",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q15-E1",
+     "need": "正面证据: 合同解除情形与已完工程量结算规则 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "court",
+      "cnki",
+      "sogou_wechat"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 合同解除情形与已完工程量结算规则 2025-2026",
+      "工程计价依据 市场价基准 合同解除情形与已完工程量结算规则 实务 方法"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q15-E2",
+     "need": "反面证据: 合同解除情形与已完工程量结算规则 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "websearch",
+      "sogou_wechat"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 合同解除情形与已完工程量结算规则 风险 纠纷 争议",
+      "工程计价依据 市场价基准 合同解除情形与已完工程量结算规则 问题 教训 质疑"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q15-E3",
+     "need": "权威口径: 合同解除情形与已完工程量结算规则 的官方文件/规范/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "court",
+      "govlist",
+      "opencli"
+     ],
+     "queries": [
+      "最高人民法院 建设工程施工合同司法解释",
+      "民法典 建设工程合同 解除 结算",
+      "合同解除 已完工程 结算 规定"
+     ],
+     "status": "saturated"
+    }
+   ]
+  },
+  {
+   "id": "Q16",
+   "dim": "合同解除结算",
+   "text": "工程计价依据与市场价基准实战研究报告 合同解除后损失赔偿与结算争议判例",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q16-E1",
+     "need": "正面证据: 合同解除后损失赔偿与结算争议判例 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "court",
+      "cnki",
+      "sogou_wechat"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 合同解除后损失赔偿与结算争议判例 2025-2026",
+      "工程计价依据 市场价基准 合同解除后损失赔偿与结算争议判例 实务 方法"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q16-E2",
+     "need": "反面证据: 合同解除后损失赔偿与结算争议判例 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "websearch",
+      "sogou_wechat"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 合同解除后损失赔偿与结算争议判例 风险 纠纷 争议",
+      "工程计价依据 市场价基准 合同解除后损失赔偿与结算争议判例 问题 教训 质疑"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q16-E3",
+     "need": "权威口径: 合同解除后损失赔偿与结算争议判例 的官方文件/规范/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "court",
+      "govlist",
+      "opencli"
+     ],
+     "queries": [
+      "最高人民法院 建设工程施工合同司法解释",
+      "民法典 建设工程合同 解除 结算",
+      "合同解除 已完工程 结算 规定"
+     ],
+     "status": "saturated"
+    }
+   ]
+  },
+  {
+   "id": "Q17",
+   "dim": "造价鉴定与争议",
+   "text": "工程计价依据与市场价基准实战研究报告 造价鉴定程序规范与鉴定机构管理",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q17-E1",
+     "need": "正面证据: 造价鉴定程序规范与鉴定机构管理 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "court",
+      "cnki",
+      "metaso"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 造价鉴定程序规范与鉴定机构管理 2025-2026",
+      "工程计价依据 市场价基准 造价鉴定程序规范与鉴定机构管理 实务 方法"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q17-E2",
+     "need": "反面证据: 造价鉴定程序规范与鉴定机构管理 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "websearch"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 造价鉴定程序规范与鉴定机构管理 风险 纠纷 争议",
+      "工程计价依据 市场价基准 造价鉴定程序规范与鉴定机构管理 问题 教训 质疑"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q17-E3",
+     "need": "权威口径: 造价鉴定程序规范与鉴定机构管理 的官方文件/规范/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "court",
+      "govlist",
+      "opencli"
+     ],
+     "queries": [
+      "建设工程造价鉴定规范 GB/T 51262-2017",
+      "最高人民法院 造价鉴定 规定",
+      "全国法院 建设工程施工合同纠纷 司法解释二"
+     ],
+     "status": "saturated"
+    }
+   ]
+  },
+  {
+   "id": "Q18",
+   "dim": "造价鉴定与争议",
+   "text": "工程计价依据与市场价基准实战研究报告 计价争议类型与司法解释口径",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q18-E1",
+     "need": "正面证据: 计价争议类型与司法解释口径 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "court",
+      "cnki",
+      "metaso"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 计价争议类型与司法解释口径 2025-2026",
+      "工程计价依据 市场价基准 计价争议类型与司法解释口径 实务 方法"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q18-E2",
+     "need": "反面证据: 计价争议类型与司法解释口径 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "websearch"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 计价争议类型与司法解释口径 风险 纠纷 争议",
+      "工程计价依据 市场价基准 计价争议类型与司法解释口径 问题 教训 质疑"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q18-E3",
+     "need": "权威口径: 计价争议类型与司法解释口径 的官方文件/规范/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "court",
+      "govlist",
+      "opencli"
+     ],
+     "queries": [
+      "建设工程造价鉴定规范 GB/T 51262-2017",
+      "最高人民法院 造价鉴定 规定",
+      "全国法院 建设工程施工合同纠纷 司法解释二"
+     ],
+     "status": "single"
+    }
+   ]
+  },
+  {
+   "id": "Q19",
+   "dim": "造价鉴定与争议",
+   "text": "工程计价依据与市场价基准实战研究报告 造价争议典型判例与裁判规则",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q19-E1",
+     "need": "正面证据: 造价争议典型判例与裁判规则 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "court",
+      "cnki",
+      "metaso"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 造价争议典型判例与裁判规则 2025-2026",
+      "工程计价依据 市场价基准 造价争议典型判例与裁判规则 实务 方法"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q19-E2",
+     "need": "反面证据: 造价争议典型判例与裁判规则 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "websearch"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 造价争议典型判例与裁判规则 风险 纠纷 争议",
+      "工程计价依据 市场价基准 造价争议典型判例与裁判规则 问题 教训 质疑"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q19-E3",
+     "need": "权威口径: 造价争议典型判例与裁判规则 的官方文件/规范/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "court",
+      "govlist",
+      "opencli"
+     ],
+     "queries": [
+      "建设工程造价鉴定规范 GB/T 51262-2017",
+      "最高人民法院 造价鉴定 规定",
+      "全国法院 建设工程施工合同纠纷 司法解释二"
+     ],
+     "status": "saturated"
+    }
+   ]
+  },
+  {
+   "id": "Q20",
+   "dim": "清单与定额计价模式",
+   "text": "工程计价依据与市场价基准实战研究报告 工程量清单计价规范体系与版本沿革",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q20-E1",
+     "need": "正面证据: 工程量清单计价规范体系与版本沿革 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "std_samr",
+      "metaso",
+      "wenku"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 工程量清单计价规范体系与版本沿革 2025-2026",
+      "工程计价依据 市场价基准 工程量清单计价规范体系与版本沿革 实务 方法"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q20-E2",
+     "need": "反面证据: 工程量清单计价规范体系与版本沿革 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "websearch"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 工程量清单计价规范体系与版本沿革 风险 纠纷 争议",
+      "工程计价依据 市场价基准 工程量清单计价规范体系与版本沿革 问题 教训 质疑"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q20-E3",
+     "need": "权威口径: 工程量清单计价规范体系与版本沿革 的官方文件/规范/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "std_samr",
+      "govlist",
+      "opencli"
+     ],
+     "queries": [
+      "GB 50500-2013 建设工程工程量清单计价规范",
+      "住房和城乡建设部 计价规范 公告",
+      "工程量清单计价规范 修订 2024"
+     ],
+     "status": "saturated"
+    }
+   ]
+  },
+  {
+   "id": "Q21",
+   "dim": "清单与定额计价模式",
+   "text": "工程计价依据与市场价基准实战研究报告 定额计价与清单计价模式差异及适用边界",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q21-E1",
+     "need": "正面证据: 定额计价与清单计价模式差异及适用边界 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "std_samr",
+      "metaso",
+      "wenku"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 定额计价与清单计价模式差异及适用边界 2025-2026",
+      "工程计价依据 市场价基准 定额计价与清单计价模式差异及适用边界 实务 方法"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q21-E2",
+     "need": "反面证据: 定额计价与清单计价模式差异及适用边界 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "websearch"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 定额计价与清单计价模式差异及适用边界 风险 纠纷 争议",
+      "工程计价依据 市场价基准 定额计价与清单计价模式差异及适用边界 问题 教训 质疑"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q21-E3",
+     "need": "权威口径: 定额计价与清单计价模式差异及适用边界 的官方文件/规范/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "std_samr",
+      "govlist",
+      "opencli"
+     ],
+     "queries": [
+      "GB 50500-2013 建设工程工程量清单计价规范",
+      "住房和城乡建设部 计价规范 公告",
+      "工程量清单计价规范 修订 2024"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "Q22",
+   "dim": "清单与定额计价模式",
+   "text": "工程计价依据与市场价基准实战研究报告 估算概算预算结算全过程计价链条与控制规则",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q22-E1",
+     "need": "正面证据: 估算概算预算结算全过程计价链条与控制规则 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "std_samr",
+      "metaso",
+      "wenku"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 估算概算预算结算全过程计价链条与控制规则 2025-2026",
+      "工程计价依据 市场价基准 估算概算预算结算全过程计价链条与控制规则 实务 方法"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q22-E2",
+     "need": "反面证据: 估算概算预算结算全过程计价链条与控制规则 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "websearch"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 估算概算预算结算全过程计价链条与控制规则 风险 纠纷 争议",
+      "工程计价依据 市场价基准 估算概算预算结算全过程计价链条与控制规则 问题 教训 质疑"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q22-E3",
+     "need": "权威口径: 估算概算预算结算全过程计价链条与控制规则 的官方文件/规范/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "std_samr",
+      "govlist",
+      "opencli"
+     ],
+     "queries": [
+      "GB 50500-2013 建设工程工程量清单计价规范",
+      "住房和城乡建设部 计价规范 公告",
+      "工程量清单计价规范 修订 2024"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "Q23",
+   "dim": "造价咨询与职业",
+   "text": "工程计价依据与市场价基准实战研究报告 造价工程师执业制度与咨询资质改革",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q23-E1",
+     "need": "正面证据: 造价工程师执业制度与咨询资质改革 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "metaso",
+      "sogou_wechat",
+      "dangdang"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 造价工程师执业制度与咨询资质改革 2025-2026",
+      "工程计价依据 市场价基准 造价工程师执业制度与咨询资质改革 实务 方法"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q23-E2",
+     "need": "反面证据: 造价工程师执业制度与咨询资质改革 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "websearch"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 造价工程师执业制度与咨询资质改革 风险 纠纷 争议",
+      "工程计价依据 市场价基准 造价工程师执业制度与咨询资质改革 问题 教训 质疑"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q23-E3",
+     "need": "权威口径: 造价工程师执业制度与咨询资质改革 的官方文件/规范/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "造价工程师职业资格制度 规定 人社部",
+      "工程造价咨询企业 资质 取消 政策",
+      "中国建设工程造价管理协会 收费 指导"
+     ],
+     "status": "saturated"
+    }
+   ]
+  },
+  {
+   "id": "Q24",
+   "dim": "造价咨询与职业",
+   "text": "工程计价依据与市场价基准实战研究报告 造价咨询企业排名与收费模式",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q24-E1",
+     "need": "正面证据: 造价咨询企业排名与收费模式 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "metaso",
+      "sogou_wechat",
+      "dangdang"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 造价咨询企业排名与收费模式 2025-2026",
+      "工程计价依据 市场价基准 造价咨询企业排名与收费模式 实务 方法"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q24-E2",
+     "need": "反面证据: 造价咨询企业排名与收费模式 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "websearch"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 造价咨询企业排名与收费模式 风险 纠纷 争议",
+      "工程计价依据 市场价基准 造价咨询企业排名与收费模式 问题 教训 质疑"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q24-E3",
+     "need": "权威口径: 造价咨询企业排名与收费模式 的官方文件/规范/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "cnki",
+      "opencli"
+     ],
+     "queries": [
+      "造价工程师职业资格制度 规定 人社部",
+      "工程造价咨询企业 资质 取消 政策",
+      "中国建设工程造价管理协会 收费 指导"
+     ],
+     "status": "saturated"
+    }
+   ]
+  },
+  {
+   "id": "Q25",
+   "dim": "数据源与工具生态",
+   "text": "工程计价依据与市场价基准实战研究报告 造价信息数据源与发布平台清单",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q25-E1",
+     "need": "正面证据: 造价信息数据源与发布平台清单 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "websearch",
+      "metaso",
+      "chinca"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 造价信息数据源与发布平台清单 2025-2026",
+      "工程计价依据 市场价基准 造价信息数据源与发布平台清单 实务 方法"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q25-E2",
+     "need": "反面证据: 造价信息数据源与发布平台清单 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "websearch"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 造价信息数据源与发布平台清单 风险 纠纷 争议",
+      "工程计价依据 市场价基准 造价信息数据源与发布平台清单 问题 教训 质疑"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q25-E3",
+     "need": "权威口径: 造价信息数据源与发布平台清单 的官方文件/规范/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "opencli",
+      "rss"
+     ],
+     "queries": [
+      "住房和城乡建设部 工程造价 信息平台",
+      "省造价信息 网刊 发布",
+      "中国建设工程造价管理协会 数据"
+     ],
+     "status": "zero"
+    }
+   ]
+  },
+  {
+   "id": "Q26",
+   "dim": "数据源与工具生态",
+   "text": "工程计价依据与市场价基准实战研究报告 计价软件工具生态与数字化平台格局",
+   "falsifiable": true,
+   "falsify_note": "含可验证指标/实体词, 证据可回答亦可反驳",
+   "eeis": [
+    {
+     "id": "Q26-E1",
+     "need": "正面证据: 计价软件工具生态与数字化平台格局 的数据/清单/案例",
+     "grades": [
+      "A",
+      "B"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "websearch",
+      "metaso",
+      "chinca"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 计价软件工具生态与数字化平台格局 2025-2026",
+      "工程计价依据 市场价基准 计价软件工具生态与数字化平台格局 实务 方法"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q26-E2",
+     "need": "反面证据: 计价软件工具生态与数字化平台格局 的风险/反例/对立观点",
+     "grades": [
+      "B",
+      "C"
+     ],
+     "stance": "against",
+     "channels_hint": [
+      "sogou_wechat",
+      "websearch"
+     ],
+     "queries": [
+      "全国 工程计价依据 市场价基准 计价软件工具生态与数字化平台格局 风险 纠纷 争议",
+      "工程计价依据 市场价基准 计价软件工具生态与数字化平台格局 问题 教训 质疑"
+     ],
+     "status": "saturated"
+    },
+    {
+     "id": "Q26-E3",
+     "need": "权威口径: 计价软件工具生态与数字化平台格局 的官方文件/规范/公报原文",
+     "grades": [
+      "A"
+     ],
+     "stance": "support",
+     "channels_hint": [
+      "govlist",
+      "opencli",
+      "rss"
+     ],
+     "queries": [
+      "住房和城乡建设部 工程造价 信息平台",
+      "省造价信息 网刊 发布",
+      "中国建设工程造价管理协会 数据"
+     ],
+     "status": "zero"
+    }
+   ]
+  }
+ ],
+ "stats": {
+  "subquestions": 26,
+  "unfalsifiable": 0,
+  "eeis": 78,
+  "queries": 182
+ },
+ "note_scenario": "三场景骨架: 投标编制实务(Q10-Q12)/结算核对实务(Q13-Q14)/合同解除结算(Q15-Q16) 各成 dim 组; 七源调研与四自查门见 EXEC-计价依据研报-S1S5.md S1",
+ "coverage": {
+  "eei_total": 78,
+  "saturated": 64,
+  "gap": 14,
+  "sat_pct": 82.1,
+  "syndicate_groups": 5,
+  "checked": "2026-10-25 21:53"
+ }
+}

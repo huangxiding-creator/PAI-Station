@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="知网空间,文献,期刊,硕士,论文,博士,论文,会议,报纸,年鉴,专利,成果,标准,参考文献,图片,学术,研究,报告,文章,专业检索,下载,职称" />
+    <meta name="description" content="知网空间，是中国知网（CNKI）旗下的专业学术搜索平台，资源囊括了期刊、博士论文、硕士论文、工具书、专利、标准、学术图片、科技成果、知网书等资源，提高一框式快捷搜索与高级搜索等专业检索功能，提供在线阅读与下载服务。" />
+    <title>综合搜索_知网空间</title>
+    <link rel="icon" href="https://cnki.com.cn/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="https://cnki.com.cn/favicon.ico" type="image/x-icon" />
+    <link href="/content/public.css" rel="stylesheet"/>
+    <link href="/content/home.css" rel="stylesheet"/>
+    <link href="/content/result.css" rel="stylesheet"/>
+    <script src="/scripts/jquery-1.8.2.min.js"></script>
+    <script src="/scripts/layer/layer.js"></script>
+    <script src="/scripts/datetimepicker/WdatePicker.js"></script>
+    <script src="/scripts/jquery.cookie.js"></script>
+    <script src="/scripts/main.js"></script>
+    <script src="/scripts/msgbox.js"></script>
+    <script src="/scripts/echarts/source/echarts-min.js?v=012416"></script>
+    <style>
+        .bk-box .bk-box a img { vertical-align: middle; max-width: 100px; max-height: 100px; width: expression(this.width > 100 && this.width / 100 >= this.height / 100 ? 100 : true); height: expression(this.height > 100 && this.width / 100 < this.height / 100 ? 100 : true); }
+        .head-fen .search-item .result-nav { background-position: 546px 25px; }
+        .head-fen .search-item .result-nav a { padding: 0 6px; }
+        /*头部种类样式*/
+        .filtrate .itemm { z-index: 1; }
+        /*.yj-ewm {
+            margin-top: -30px;
+            margin-left: 117px;
+        }*/
+        .head-fen .search-item .choose .selectwrap .select .kj{float:left;border:none 0;width:460px;padding-left:6px;height:36px;line-height:36px;font-size:14px}
+        .head-fen .search-item .choose .selectwrap .select{width:606px}
+        .head-fen .search-item .choose .selectwrap .selectadvance {width: 502px}
+        .askBox{position:absolute;right:3px;top:7px;padding:2px 10px;border-left:1px solid #CCCCCC;cursor:pointer;z-index:2;}
+        .askBox span{color:#008AFF;font-size:14px;float:left;line-height:21px;margin-left:5px}
+        .askBox .askBoxImgHover{display:none}
+        .askBox:hover{background-color:#008AFF;color:white;top:3px;border-left:0;border-radius:4px;padding:6px 10px}
+        .askBox:hover .askBoxImg{display:none}
+        .askBox:hover .askBoxImgHover{display:block}
+        .askBox:hover span{color:white}
+        .askBox img{display:block;float:left}
+        .searchBtn{position:absolute;top:10px;right:86px;cursor:pointer;z-index:2;}
+    </style>
+</head>
+<body class="springBg">
+<a id="closeSpringBg" href="javascript:void(0)" class="closeSpringBg"></a>
+<!--head-->
+<div class="head-wrap">
+    <div class="head-fen clearfix">
+        <div class="head-logo left">
+            <a href="//www.cnki.com.cn/" target="_blank">
+                <img src="/images/home/logo.png" height="40" />
+            </a>
+        </div>
+        <div class="search-item left">
+            <div id="QuickSearch" class="clearfix choose  positionR" style="position:relative;">
+                <div class="xiugai clearfix">
+                    <div class="btn" id="btn">
+                        <a class="add" href="javascript:void(0)"></a>
+                    </div>
+                    <div class="selectwrap" id="selectwrap">
+                        <div class="select">
+                            <input id="textSearchKey" class="left kj MulSerchKey" type="text" name="content" autocomplete="off" value="" maxlength="100" />
+
+                            <!--提示词显示区域-->
+                            <div class="history">
+                            </div>
+                        </div>
+                        <div href="javascript:void(0)" onclick="QuickSearch()" id="search" class="searchBtn">
+                            <img src="/images/ai/ai01.png" alt="">
+                        </div>
+                        <div class="askBox clearfix" href="javascript:void(0)" onclick="aiSearch()">
+                            <img class="askBoxImg" src="/images/ai/ai02.png" alt="">
+                            <img class="askBoxImgHover" src="/images/ai/ai03.png" alt="">
+                            <span>问答</span>
+                        </div>
+                    </div>
+                    <a href="https://pb.cnki.net" class="newtype" style="position: absolute;left: 150px;bottom: -9px;color: #2b87f8;font-family: 'Microsoft Yahei';font-size: 12px;" target="_blank">智能排版 &gt;&gt;</a>
+                    <a href="https://cx.cnki.net/" class="newtype" style="position: absolute;left: 64px;bottom: -9px;color: #2b87f8;font-family: 'Microsoft Yahei';font-size: 12px;" target="_blank">个人查重 &gt;&gt;</a>
+                </div>
+            </div>
+            <div id="MultiTermSearch" class="clearfix choose displayN positionR">
+                <div class="xiugai clearfix word5">
+                    <div class="btn" id="btn">
+                        <a class="remove displayN" onclick="removeSearchboxItems(this)" href="javascript:void(0)"></a>
+                        <a class="add" onclick="addMulitySearchboxItems(this)" href="javascript:void(0)"></a>
+                    </div>
+                    <div class="selectwrap" id="selectwrap">
+                        <div class="select selectadvance ">
+                            <p class="item" data-code="theme"> 主&nbsp;&nbsp;题 </p>
+                            <input name="theme" class="left MulSerchKey" autocomplete="off" type="text" value="" style="" maxlength="100" />
+                            <a class="positionA sweep" href="javascript:void(0)" style="display:block;"></a>
+                            <!--提示词显示区域-->
+                            <div class="history advance">
+                            </div>
+                            <div class="yearwrap displayN">
+                                <div class="fromwrap left positionR">
+                                    <i class="left">从</i>
+                                    <p class="p from right positionR">
+                                        <b>不&nbsp;&nbsp;限</b>
+                                        <span class="positionA"></span>
+                                    </p>
+                                    <ul class="fromlist positionA displayN">
+                                        <li>不&nbsp;&nbsp;限</li>
+                                        <li>1915年</li>
+                                        <li>1949年</li>
+                                        <li>1979年</li>
+                                    </ul>
+                                </div>
+                                <div class="towrap left positionR">
+                                    <i class="left">到</i>
+                                    <p class="p to right positionR">
+                                        <b>不&nbsp;&nbsp;限</b>
+                                        <span class="positionA"></span>
+                                    </p>
+                                    <ul class="tolist positionA displayN">
+                                        <li class="ndy">不&nbsp;&nbsp;限</li>
+                                        <li>1979年</li>
+                                        <li>1949年</li>
+                                        <li>1915年</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <ul class="itemlist">
+                                <li val="content">全&nbsp;&nbsp;文</li>
+                                <li val="theme">主&nbsp;&nbsp;题</li>
+                                <li val="title">篇&nbsp;&nbsp;名</li>
+                                <li val="keywd">关键词</li>
+                                <li val="author">作&nbsp;&nbsp;者</li>
+                                <li val="unit">作者单位</li>
+                                <li val="summary">摘&nbsp;&nbsp;要</li>
+                                <li val="reference">参考文献</li>
+                                <li val="searchfund">基&nbsp;&nbsp;金</li>
+                                <li val="originate">文献来源</li>
+                                <li val="publishtime" class="fbsj">发表时间</li>
+                                <li val="mapnumber">中图分类号</li>
+                            </ul>
+                        </div>
+                        <div class="searchwrap positionA ">
+                            <a class="search" href="javascript:void(0)" id="search" onclick="Search()">搜索</a>
+                            <a href="javascript:void(0)" style="right:-65px;padding-bottom:8px;" class="positionA gj kuaijie">快捷搜索</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!--高级搜索页面布局模板  程序不对该内容修改-->
+            <div id="searchHtmlTemplate" class="displayN">
+                <div class="xiugai clearfix word5">
+                    <div class="btn" id="btn">
+                        <a class="remove DISPALYITEM" onclick="removeSearchboxItems(this)" href="javascript:void(0)"></a>
+                        <a class="add" onclick="addMulitySearchboxItems(this)" href="javascript:void(0)"></a>
+                    </div>
+                    <div class="selectwrap" id="selectwrap">
+                        <div class="select selectadvance">
+                            <p class="item">全&nbsp;&nbsp;文</p>
+                            <input class="left MulSerchKey" name="" type="text" autocomplete="off" value="" maxlength="100" />
+                            <a class="positionA sweep" href="javascript:void(0)" style="display:none;"></a>
+                            <!--提示词显示区域-->
+                            <div class="history advance">
+                            </div>
+                            <div class="yearwrap displayN">
+                                <div class="fromwrap left positionR">
+                                    <i class="left">从</i><p class="p from right positionR"><b>不&nbsp;&nbsp;限</b><span class="positionA"></span></p>
+
+                                    <ul class="fromlist positionA">
+                                        <li>不&nbsp;&nbsp;限</li>
+                                        <li>1915年</li>
+                                        <li>1949年</li>
+                                        <li>1979年</li>
+                                    </ul>
+                                </div>
+                                <div class="towrap left positionR">
+                                    <i class="left">到</i><p class="p to right positionR"><b>不&nbsp;&nbsp;限</b><span class="positionA"></span></p>
+
+                                    <ul class="tolist positionA">
+                                        <li class="ndy">不&nbsp;&nbsp;限</li>
+                                        <li>1979年</li>
+                                        <li>1949年</li>
+                                        <li>1915年</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <ul class="itemlist">
+                                <li val="content">全&nbsp;&nbsp;文</li>
+                                <li val="theme">主&nbsp;&nbsp;题</li>
+                                <li val="title">篇&nbsp;&nbsp;名</li>
+                                <li val="keywd">关键词</li>
+                                <li val="author">作&nbsp;&nbsp;者</li>
+                                <li val="unit">作者单位</li>
+                                <li val="summary">摘&nbsp;&nbsp;要</li>
+                                <li val="reference">参考文献</li>
+                                <li val="searchfund">基&nbsp;&nbsp;金</li>
+                                <li val="originate">文献来源</li>
+                                <li val="publishtime" class="fbsj">发表时间</li>
+                                <li val="mapnumber">中图分类号</li>
+                            </ul>
+                        </div>
+                        <div class="searchwrap positionA">
+                            <a class="search" href="javascript:void(0)" id="search" onclick="Search()">搜索</a>
+                            <a href="javascript:void(0)" style="right:-65px;padding-bottom:8px;" class="positionA gj">快捷搜索</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="headfen-right right positionR" id="login-head">
+            <span class="sz left"><a style="cursor:pointer;">设置</a></span>
+            <ul class="positionA">
+                <li class="jiao positionA"></li>
+                <li id="ShutDownHistory" onclick="shutDownHistory()">关闭历史记录</li>
+                <li id="OpenHistory" onclick="openHistory()">打开历史纪录</li>
+                <li onclick="clearHistory()">清除历史记录</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script src="/scripts/searchArticle.js"></script>
+
+<!--content-->
+<div id="PageContent">
+    <input type="hidden" name="name" id="ArticleType" value="0" />
+    <input type="hidden" name="ScholarUrl" id="ScholarUrl" value="//search.cnki.com.cn/scholar/Result?AcefuthorFilter=" />
+    <input type="hidden" name="InstitutionUrl" id="InstitutionUrl" value="//search.cnki.com.cn/Institution/Index?Organization=" />
+    <input type="hidden" name="DomainSearch" value="//search.cnki.com.cn">
+    <!--0 学科  1 作者 2 机构,3 导师  4 搜索结果页(search/result)-->
+    <input type="hidden" id="source" value="4" />
+    <input type="hidden" id="ScholarCode" value="cnki," />
+    <div class="resault-cont clearfix">
+        <div class="cont-left left cont-left-wide" style="overflow:hidden;">
+            <div class="filtrate-wrap">
+                <div class="filtrate">
+                    <div class="ti">筛选：</div>
+                    <div class="itemm" data-field="Type" style="z-index:1;">
+                        <span class="see1">文献类型</span>
+                        <span class="see2">文献类型</span>
+                    </div>
+                    <div class="line1"></div>
+                    <div class="itemm" data-field="Subject" style="z-index:1;">
+                        <span class="see1">学科分类</span>
+                        <span class="see2">学科分类</span>
+                    </div>
+                    <div class="line1"></div>
+                    <div class="itemm" data-field="Year" style="z-index:1;">
+                        <span class="see1">发表年度</span>
+                        <span class="see2">发表年度</span>
+                    </div>
+                    <div class="line1"></div>
+                    <div class="itemm" data-field="AcefuthorFilter" style="z-index:1;">
+                        <span class="see1">作者</span>
+                        <span class="see2">作者</span>
+                    </div>
+                    <div class="line1"></div>
+                    <div class="itemm" data-field="Organization" style="z-index:1;">
+                        <span class="see1">机构</span>
+                        <span class="see2">机构</span>
+                    </div>
+                    <div class="line1"></div>
+                    <div class="itemm" data-field="Fund" style="z-index:1;">
+                        <span class="see1">基金</span>
+                        <span class="see2">基金</span>
+                    </div>
+                    <div class="line1"></div>
+                    <div class="itemm" data-field="Level" style="z-index:1;">
+                        <span class="see1">研究层次</span>
+                        <span class="see2">研究层次</span>
+                    </div>
+                </div>
+            </div>
+            <div id="filter_Type" class="pop2 pop2-wide clearfix positionR" style="display: none;">
+            </div>
+            <div id="filter_Subject" class="pop2 pop2-wide clearfix positionR" style="display: none;">
+            </div>
+            <div id="filter_Year" class="pop2 pop2-wide clearfix positionR" style="display: none;">
+            </div>
+            <div id="filter_AcefuthorFilter" class="pop2 pop2-wide clearfix positionR" style="display: none;">
+            </div>
+            <div id="filter_Organization" class="pop2 pop2-wide clearfix positionR" style="display: none;">
+            </div>
+            <div id="filter_Fund" class="pop2 pop2-wide clearfix positionR" style="display: none;">
+            </div>
+            <div id="filter_Level" class="pop2 pop2-wide clearfix positionR" style="display: none;">
+            </div>
+            <div class="yx clearfix" style="display:none">
+                <span class="bt left">已选：</span>
+            </div>
+            <div class="px clearfix">
+                <span class="bt left">排序：</span>
+                <div class="rank left">
+                    <p>按相关度排序</p>
+                    <ul>
+                        <li><a href="javascript:void(0)" onclick="Order(1);">按相关度排序</a></li>
+                        <li><a href="javascript:void(0)" onclick="Order(2);">按发表时间排序</a></li>
+                        <li><a href="javascript:void(0)" onclick="Order(3);">按下载次数排序</a></li>
+                        <li><a href="javascript:void(0)" onclick="Order(4);">按被引次数排序</a></li>
+                    </ul>
+                    <input type="hidden" id="orderNum" value="1" />
+                </div>
+                <div class="mode left clearfix">
+                    <span class="bt left">显示：</span>
+                    <a onclick="Showzyxz();" id="amodelsmmary" class="lb left" title="摘要显示" style="cursor:pointer;"></a>
+                    <a onclick="Showli(); " id="amodellist" class="zyxz left" title="列表显示" style="cursor:pointer;"></a>
+                </div>
+                <div class="mode left clearfix" style="margin:6px 0 6px 20px;">
+                    <a href="https://aiplus.cnki.net/sumup/professionalSumup" title="文献综述" target="_blank" style="color:blue;">文献综述</a>
+                </div>
+                <div class="count right">CNKI为你找到相关结果<i id="totalcount"></i>条</div>
+            </div>
+            <input type="hidden" id="showType" name="name" value="0" />
+            <input type="hidden" id="hidCurrentPage" value="1" />
+            <input type="hidden" id="hidTotalPageCount" value="1" />
+            <div class="re-list">
+                <div class="list-item" id="divLoadingTip" style="margin: 0 auto 25px auto; display:block;" align="center"><img src="/images/result/loading.gif" alt="加载中..." title="加载中..." style="width:328px; height:126px;" /></div>
+                <div id="crfd_result" style="display:none;"></div>
+                <div class="lplist">
+                    <div id="lplistAD"></div>
+                </div>
+                <div id="article_result">
+                </div>
+                <div class="list-item book" id="pinde_result" style="display: none;"></div>
+            </div>
+            <div id="recommandWordsTable" class="xgss"></div>
+            <div class="page"></div>
+        </div>
+        <div class="cont-right right new-right-width322 jg-r-m" style="padding-top:0; padding-bottom:15px;">
+            <div style="margin:0 10px 0 0;">
+                <script>document.write("<script type='text/javascript' src='/scripts/ad_common2.js?adpot=SpaceSearchResultRightBottom&t=" + Date.now() + "'><\/script>");</script>
+            </div>
+            <div style="clear:both;"></div>
+            <div style="margin:10px 0;" id="rightadspotcontainer"></div>
+            <div style="clear:both;"></div>
+            <div id="translate_result" style="display:none;"></div>
+            <div class="xgqk">
+                <!-- 结果页趋势图-->
+                <h1 class="positionR" name="c_qst">学术研究指数分析(近十年)<span class="positionA xiangq"><a style="cursor:pointer;" id="trendDetail">详情&gt;&gt;</a></span></h1>
+                <div class="zsfx clearfix" name="c_qst">
+                    <div class="zsfx-qh-ban ">
+                        <ul id="tabzhishu">
+                            <li class="choosed qh-bian" style="cursor:pointer;" trendtype="0">发文趋势</li>
+                        </ul>
+                    </div>
+                    <div class="zsfx-qh-con">
+                        <div style="width:280px; height:200px;" id="trendEchart"></div>
+                    </div>
+                </div>
+                <div class="hei-bg" style="display:none;  height:100%;width:100%;top:0px;left:0px;position:fixed;z-index:1001;overflow-y:auto" id="bigTrendDiv">
+                    <div class="tck-bg positionR">
+                        <a href="javascript:void(0);" name="chartsClose" class="btn-closed positionA"> </a>
+                        <div class="tck-tit positionR">
+                            <span class="tit01" style="line-height:normal;">学术研究指数分析</span>
+                            <span class="tit02">cnki</span>
+                            <div class="tck-logo positionA"></div>
+                        </div>
+                        <div class="cl"></div>
+                        <div class="tck-kuang">
+                            <div class="tck-qh-ban">
+                                <ul class="l-qhban">
+                                    <li class="rd-active" trendtype="0" style="cursor:pointer">发文趋势</li>
+                                </ul>
+                                <div class="r-chaxun">
+                                    <span class="cx-font">From</span>
+                                    <span>
+                        <input name="trendTimeBegin" id="trendTimeBegin" type="text" class="shuru" onclick="WdatePicker({dateFmt:'yyyy',
+                    isShowToday:true})" readonly="readonly">
+                    </span>
+                                    <span class="cx-font">To</span>
+                                    <span>
+                        <input name="trendTimeEnd" id="trendTimeEnd" type="text" class="shuru" onclick="WdatePicker({dateFmt:'yyyy',
+                    isShowToday:true})" readonly="readonly">
+                    </span>
+                                    <span><a style="cursor:pointer;" class="btn-cx" id="trendSearch">查询</a></span>
+                                </div>
+                            </div>
+                            <div class="cl"></div>
+                            <div class="tck-qh-con">
+                                <div class="cl"></div>
+                                <div class="fw-tab" id="bigTrendChart" style="width:707px; height:258px;"></div>
+                                <div class="xkrd-tab positionR">
+                                    <span class="rd-arrow positionA"></span>
+                                    <table width="774" border="0" cellspacing="0" cellpadding="0">
+                                        <tbody id="trendBody">
+                                        <tr class="tab-top">
+                                            <td width="435">题名(按相关度排序,默认前十条)</td>
+                                            <td width="135">作者</td>
+                                            <td>年/期</td>
+                                            <td>下载</td>
+                                            <td>被引</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cl"></div>
+            </div>
+            <div class="ad">
+                <a href="https://book.cnki.net" target="_blank" title="知网书店 专业精品图书严选平台" style="width:290px;"><img src="/images/ad/shudian.jpg" width="289" height="204" alt="知网书店 专业精品图书严选平台"></a>
+            </div>
+        </div>
+    </div>
+</div>
+<!--footer-->
+<div class="foot-wrap">
+    <div class="footer-fen">
+        <a href="//www.cnki.net/gycnki/gycnki.htm" target="_blank" title="关于CNKI">关于CNKI</a>|
+        <a target="_blank" href="https://help.cnki.net" title="用户反馈">用户反馈</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;© 2016-2026 《中国学术期刊（光盘版）》电子杂志社有限公司&nbsp;京ICP证040431号&nbsp;<a target="_blank" href="https://piccache.cnki.net/index/images/gb/416.jpg" style="color:#a3a3a3">网络出版服务许可证网出证(京)字第416号</a>&nbsp;<a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802020460" style="color:#a3a3a3">京公网安备 11010802020460 号</a>
+    </div>
+</div>
+<div id="dscroll">
+    <div class="top-icon top-widthmax">
+        <a href="https://help.cnki.net" target="_blank" class="feedback">用户反馈</a>
+        <div class="to-top" style="display: none;">
+            <a href="javascript:void(0)" class="top1" style="display: block;" onclick="window.scroll(0, 0);"></a>
+            <a href="javascript:void(0)" class="top2" style="display: none;" onclick="window.scroll(0, 0);"></a>
+        </div>
+        <script>
+            $(".to-top").hover(
+                function () {
+                    $(this).children(".top1").css({ "display": "none" })
+                    $(this).children(".top2").css({ "display": "block" })
+                },
+                function () {
+                    $(this).children(".top2").css({ "display": "none" })
+                    $(this).children(".top1").css({ "display": "block" })
+                })
+        </script>
+    </div>
+</div>
+<!--top icon-->
+<div class="top-icon" id="nodeScroll" style="display:none;">
+    <a style="cursor:pointer;" onclick="window.scroll(0, 0);" class="btn1"></a>
+    <a href="//www.cnki.com.cn/hqqw.html" target="_blank" class="btn2"></a>
+    <a href="https://help.cnki.net" target="_blank" class="btn3">用户反馈</a>
+</div>
+<script>
+    var searchParam = {  "searchType" : "QuickSearch",  "reference" : null,  "type" : null,  "content" : "EPC",  "year" : null,  "level" : null,  "title" : null,  "order" : null,  "subject" : null,  "theme" : "",  "page" : 1,  "articleType" : "0",  "summary" : null,  "author" : null,  "ztCode" : null,  "originate" : null,  "publishTime" : null,  "excludeField" : null,  "pykm" : null,  "unitCode" : null,  "pageType" : 0,  "keyWd" : null,  "unit" : null,  "mapNumber" : null,  "fund" : null,  "publishTimeBegin" : null,  "publishTimeEnd" : null,  "periods" : null,  "acefuthorFilter" : null,  "organization" : null,  "elite" : null,  "specialityCode" : null,  "reSearch" : null,  "searchFund" : null,  "imgID" : null,  "qkbdhxf" : null,  "qksci" : null,  "qkei" : null,  "qkcssci" : null,  "boss" : null,  "firstBoss" : null,  "catalog" : null,  "speciality" : null,  "meettingName" : null,  "meettingCatalogName" : null};
+    // console.log(searchParam);
+    searchBoxItemFuns.initSearchBoxArea(searchParam);
+</script>
+<script src="/scripts/search.js?v=1"></script>
+<script src="/scripts/searchCjfd.js"></script>
+<script>
+    searchConditionPara.DoMainSearch = "";
+    searchData.XuewenServerUrl = "//xuewen.cnki.net";
+    searchData.CorpusServerUrl = "//bianke.cnki.net";
+    searchData.MallServerUrl = "//mall.cnki.net";
+    var channelType = "0";
+    $(document).ready(function () {
+        literatureSearch();//顶部搜索框事件
+        $(".select input").live("keyup mousedown propertychange", function () {
+            var val = $(this).val();
+            //console.log(val);
+            if (val.length > 0) {
+                $(this).parent().children(".sweep").show();
+            }
+            else {
+                $(this).parent().children(".sweep").hide();
+            }
+        });
+        $(".sweep").live("click", function () {
+            $(this).parent().children("input[type='text']").val("");
+            $(this).hide();
+        });
+
+        $("#closeSpringBg").click(function () {
+            $("body").removeClass("springBg");
+        });
+        var cnkinode = $("#cnkinode").val();
+        if (cnkinode && cnkinode == "cnkinode") {
+            $("#dscroll").hide();
+            $("#nodeScroll").show();
+        }
+        //初始化事件
+        initEventBind();
+        try {
+            //关键字提示
+            remember();
+        }
+        catch (ee)
+        { }
+        $(".headfen-right .sz").click(function (event) {
+            //校验是否打开历史纪录
+            if (checkHistoryEnabled()) {
+                $("#OpenHistory").hide();
+                $("#ShutDownHistory").show()
+            } else {
+                $("#OpenHistory").show();
+                $("#ShutDownHistory").hide();
+            }
+            $(this).siblings("ul").show();
+            event.stopPropagation();//阻止子元素继承父级事件
+        });
+        $("body").click(function () {
+            $(".headfen-right ul").hide()
+        });
+        //组合搜索框
+        bindKeyWordsConfirmOpen();
+        //判断顶部搜索是否为多类型组合搜索
+        var mulitySearchOrNot = $("#MultiTermSearch .xiugai").length > 1;
+        //悬浮顶端搜索框  TODO  待改
+        var scrollTop = 0;
+        var offsetHeight = $(".head-wrap").siblings("#PageContent").offset().top;
+        var baseOffsetTop = offsetHeight;
+        $(window).scroll(function () {
+            scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            if (scrollTop > 0) {
+                $("#MultiTermSearch .xiugai").hide();
+                $("#MultiTermSearch .xiugai").eq(0).show().find(".searchwrap").css("display", "block");
+                if (mulitySearchOrNot) {
+                    var currentOffsetHeight = $(".head-wrap").siblings("#PageContent").offset().top;
+                    $(".head-wrap").siblings("#PageContent").css("margin-top", currentOffsetHeight);
+                }
+                else {
+                    $(".head-wrap").siblings("#PageContent").css("margin-top", offsetHeight);
+                }
+                $(".head-wrap").addClass("float-head");
+                $(".to-top").show();//显示浮动按钮 跳转到头部
+            }
+            else {
+                $(".head-wrap").removeClass("float-head");
+                if ($("#MultiTermSearch .xiugai").length > 1) {
+                    $("#MultiTermSearch .xiugai").eq(0).find(".searchwrap").css("display", "none");
+                }
+                $("#MultiTermSearch .xiugai").show();
+                $(".head-wrap").siblings("#PageContent").css("margin-top", "");
+
+                $(".to-top").hide();//隐藏浮动按钮 跳转到头部
+            }
+        })
+        //滚动中 鼠标移动到搜索栏
+        $(".head-fen").hover(function () {
+            if (scrollTop > 0) {
+                if ($("#MultiTermSearch .xiugai").length > 1) {
+                    $("#MultiTermSearch .xiugai").eq(0).find(".searchwrap").css("display", "none");
+                }
+                $("#MultiTermSearch .xiugai").show();
+            }
+        }, function () {
+            if (scrollTop > 0) {
+                $(".head-wrap").addClass("float-head");
+                $("#MultiTermSearch .xiugai").hide();
+                $("#MultiTermSearch .xiugai").eq(0).show().find(".searchwrap").css("display", "block");
+            }
+        })
+
+    });
+    //添加数组IndexOf方法 兼容ie8数组没有indexof方法
+    if (!Array.prototype.indexOf) {
+        Array.prototype.indexOf = function (elt /*, from*/) {
+            var len = this.length >>> 0;
+            var from = Number(arguments[1]) || 0;
+            from = (from < 0) ? Math.ceil(from) : Math.floor(from);
+            if (from < 0)
+                from += len;
+            for (; from < len; from++) {
+                if (from in this && this[from] === elt)
+                    return from;
+            }
+            return -1;
+        };
+    }
+
+    function SetHome(obj) {
+        try {
+            var url = window.location.href;
+            obj.style.behavior = 'url(#default#homepage)';
+            obj.setHomePage(url);
+        } catch (e) {
+            alert("设置首页失败，请手动设置！");
+        }
+    }
+</script>
+<script src="/scripts/InitChart.js"></script>
+<script src="/scripts/tz_fly.js"></script>
+<script>
+    var echartsUrl = "/scripts/echarts/source";
+    var ChartsMathUrl = "";
+    $(document).ready(function () {
+        referenceServerUrl = "/Reference/ViewSave";
+        play_fly_imgSrc = "/images/result/addBtn.png";
+        fileterResultServerApiUrl = "/api/fileterresultapi/articlefileter";
+        getImageReleantUrl = "/search/getimagebykeyword";
+        // Page(1);
+        // initPage(1);
+        bindFilterSelectItemEvent();
+        //测试
+        if (window.location.href.indexOf("192.168.100.") != -1)
+            getImageReleantUrl = "http://192.168.21.118:8650/Search/getimagebykeyword";
+        $(".px .rank p").hover(
+            function (event) {
+                $(this).siblings("ul").css("display", "block");
+                event.stopPropagation()
+            }, function () {
+                $(this).siblings("ul").css("display", "none");
+            })
+
+        $(".rank ul li a").click(
+            function () {
+                var Text1 = $(this).text()
+                $(".rank p").text(Text1)
+                $(this).parent("ul").hide()
+            })
+
+        $(".rank ul").hover(function () {
+            $(this).css("display", "block");
+        }, function () {
+            $(this).css("display", "none");
+        })
+        $(document).click(function () {
+            $(".rank ul").hide()
+        })
+
+        // $("#QuickSearch .search").click(function () {
+        //     var quickKey = $("#textSearchKey").val();
+        //     if (quickKey != "") doGetRecommandWords(quickKey);
+        // });
+        // $("#MultiTermSearch .search").click(function () {
+        //     var multiKey = $("#MultiTermSearch input[type='text']").first().val();
+        //     if (multiKey != undefined && multiKey != "") doGetRecommandWords(multiKey);
+        // });
+
+        $(".filtrate .itemm").click(function () {
+            var field = $(this).attr("data-field");
+            if (filterReloadTagobj[field]) {
+                if (searchGroupObj.checkIsFrequently())
+                    return false;
+                loadfilter(field);
+            }
+            else {
+                $(".pop2").hide();
+                $("#filter_" + field).show();
+            }
+            $(".filtrate .itemm .see2").hide();
+            $(this).children(".see2").show();
+        });
+        $(".yx p").live("hover", function (event) {
+            if (event.type == 'mouseenter') {
+                $(this).addClass("hover").children(".close2").addClass("close2red");
+            }
+            else {
+                $(this).removeClass("hover").children(".close2").removeClass("close2red");
+            }
+        });
+
+        $("#rightOrg a[name='aOrg']").live("click", function () {
+            var code = $(this).attr("code");
+            var href = $("#InstitutionUrl").val() + code;
+            $(this).attr("href", href);
+        });
+
+        var keyword = "EPC";
+        var spaceIndex = keyword.trim().indexOf(" ");
+
+        // if (keyword.length > 0)
+        //     loadTranslate(keyword);
+        //RightSubjectInfo(keyword); //右侧学科信息加载
+        setTimeout(function () {
+            $(".re-table1 tr:nth-child(even)").addClass("even-row");
+        }, 5000);
+
+        var hasLoadChart = false;
+        // var hasLoadResult = false;
+        //监听鼠标移动事件
+        document.onmouseover=function(){
+            // if(!hasLoadResult){
+            //     hasLoadResult = true;
+            //     Page(1);
+            // }
+            if(!hasLoadChart){
+                hasLoadChart = true;
+                InitBasicChartConfig();
+            }
+        };
+
+        setTimeout(function () {
+            Page(1);
+            if (($("#QuickSearch .MulSerchKey").is(":visible") || ($("#MultiTermSearch .MulSerchKey").is(":visible") && $("#MultiTermSearch .MulSerchKey").length < 2)) && spaceIndex == -1) {
+                if (keyword.length > 0) {
+                    // loadBaikea(keyword);
+                    loadMallPinde(keyword);
+                    // loadCorpus(keyword);
+                    // loadImageRelevant(keyword);
+                }
+            }
+            //GetOrgAndAuthorInfo("Organization");//机构
+            //GetOrgAndAuthorInfo("AcefuthorFilter");//学者
+        }, 200);
+        //$(".itemm").eq(0).click();
+        //relevantArticleMagazine(keyword, 6, true);
+
+        //到参考文献 start at 20170609
+        initSelectedRefItemsBindEvent();
+        initSelectedRefItemsForCookie();
+    });
+
+</script>
+<script>
+    var searchListFristItemZtCode = '';
+    var timer = setInterval(function () {
+        var searchListSize = $(".lplist .list-item .tit .left").length;
+        if (searchListSize > 0) {
+            clearInterval(timer);
+            searchListFristItemZtCode = $($(".lplist .list-item .tit .left")[0]).attr("data-ztcode");
+            if (searchListFristItemZtCode && searchListFristItemZtCode.length > 0) {
+                //searchListFristItemZtCode = "E055";
+                var timestamp = Date.parse(new Date());
+                var t = timestamp + Math.round(Math.random() * 100000);
+                var t2 = timestamp + Math.round(Math.random() * 100000);
+
+                var rightAdScriptSrc = "https://ad.cnki.net/gadssource/js/barfreereadad.js?adpot=0607002&zt=" + searchListFristItemZtCode + "&t=" + t + "&w=286&h=162&s=1&pe=rightadspotcontainer&wcss=1&debuggerflag=true1";
+                var searchListAdScriptSrc = "https://ad.cnki.net/gadssource/js/spacesearchad.js?adpot=0607001&zt=" + searchListFristItemZtCode + "&t=" + t2 + "&w=&h=127&s=3&pe=lplistAD&wcss=1&debuggerflag=true1";
+                var scripts = [
+                    searchListAdScriptSrc,
+                    rightAdScriptSrc,
+                ];
+                loadScripts(scripts, function() {
+                    //try {
+                    //	console.log('All scripts loaded.');
+                    //} catch (e) { }
+                });
+            }
+        }
+    }, 1000);
+
+    function loadScripts(scripts, callback) {
+        var scriptsLoaded = 0;
+
+        function scriptLoaded() {
+            scriptsLoaded++;
+            if (scriptsLoaded === scripts.length) {
+                callback();
+            }
+        }
+
+        for (var i = 0; i < scripts.length; i++) {
+            var script = document.createElement('script');
+            script.src = scripts[i];
+            script.onload = scriptLoaded;
+            script.onerror = scriptLoaded;
+
+            // 兼容IE浏览器
+            script.onreadystatechange = function() {
+                if (this.readyState === "loaded" || this.readyState === "complete") {
+                    scriptLoaded();
+                }
+            };
+            document.head.appendChild(script);
+        }
+    }
+</script>
+<div style="display: none;">
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://"); document.write(unescape("%3Cspan id='cnzz_stat_icon_1257838124'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/stat.php%3Fid%3D1257838124%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

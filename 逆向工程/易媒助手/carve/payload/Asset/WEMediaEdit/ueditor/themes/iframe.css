@@ -1,0 +1,128 @@
+/*可以在这里添加你自己的css*/
+@charset "utf-8";
+*{
+    margin: 0;
+    padding:0;
+}
+
+iframe {
+    border:0;
+    margin: 0;
+    padding:0;
+}
+
+html {
+    -webkit-text-size-adjust:none;
+    background:#fff;
+}
+
+.view {
+    padding:0;
+    word-wrap: break-word;
+    cursor: text;
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: helvetica,Arial,"Hiragino Sans GB","Microsoft YaHei",simsun;
+    font-size:16px;
+    line-height:1.5;
+    color:#5D5D5D;
+    word-wrap:break-word;
+    padding:15px 35px!important;
+}
+
+
+img {
+    max-width: 100%;
+    display: block;
+    clear: both;
+    margin: 0 auto;
+}
+
+a {
+    color:#a42020;
+    text-decoration:none;
+    border:0;
+    outline:0
+}
+
+a:active {
+    border:0;
+    outline:0
+}
+
+body>p {
+    line-height: 1.5;
+    margin: 1em 0;
+}
+
+p {
+    word-wrap:break-word;
+    display:block;
+    text-align:justify
+}
+
+blockquote {
+    line-height:1.4;
+    padding:12px 8px;
+    color:#999;
+    background-color:#F3F4F5;
+    margin:10px 0
+}
+
+h1 {
+
+    font-weight: 700;
+    line-height: 24px;
+    padding-left: 12px;
+    font-size: 18px;
+    position: relative;
+    margin: 1em 0;
+}
+
+h1,h2,h3,h4,h5,h6
+{
+    position:relative;
+    margin:1em 0;
+    font-size:16px;
+    line-height:1.75;
+    font-weight:400
+}
+
+h1::after {
+    content: "";
+    width: 4px;
+    height: 18px;
+    background: #f85959;
+    top: 3px;
+    position: absolute;
+    left: 0;
+}
+
+hr {
+    margin:1.5em 0;
+    border:1px solid #E9E9E9;
+    border-width:1px 0 0
+}
+
+body pre,body code{
+    font-size:12px;
+    line-height:1.5em;
+    padding:10px;
+    margin:15px 0;
+    display:block;
+    background:#F0F0F0;
+    -webkit-border-radius:3px;
+    -moz-border-radius:3px;
+    border-radius:3px;
+    font-family:monaco,Consolas,"Liberation Mono",Courier,monospace;
+    white-space:pre;
+    word-wrap:break-word;
+    overflow-x:auto
+}
+
+#edui1_imagescale{display:none !important;} /*去除点击图片后出现的拉伸边框*/
+
+}

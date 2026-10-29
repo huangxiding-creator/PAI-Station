@@ -1,0 +1,366 @@
+===== core/auth.pyc =====
+DOCSTRING: 授权验证与本地离线授权保护。
+
+[<module>] args=() names=('__doc__', 'base64', 'binascii', 'hashlib', 'json', 'os', 'platform', 'secrets', 'time', 'requests', 'cryptography.hazmat.backends', 'default_backend', 'cryptography.hazmat.primitives', 'hashes', 'serialization', 'cryptography.hazmat.primitives.asymmetric.ed25519', 'Ed25519PublicKey', 'cryptography.hazmat.primitives.ciphers.aead', 'AESGCM', 'cryptography.hazmat.primitives.kdf.pbkdf2', 'PBKDF2HMAC', 'core.config_manager', 'get_config_manager', 'AUTH_PROTOCOL_VERSION', 'MAX_OFFLINE_SECONDS', 'CLOCK_ROLLBACK_TOLERANCE_SECONDS', 'ValueError', 'AuthProtocolError', 'RuntimeError', 'AuthServerError', 'ERROR_TRANSLATIONS', 'translate_error_message', '_get_config', 'get_machine_code', '_build_request', '_signature_messages', 'verify_ed25519_signature', '_response_error_detail', 'unpack_secure_response', 'get_local_aes_key', '_write_local_cache', 'save_local_cache', 'load_local_cache', '_signed_server_time', '_save_online_result', 'activate_license', 'verify_license', 'issue_download_token', 'refund_download_quota', '_offline_security_state', '_record_offline_check', 'check_license', 'renew_license')
+  CONST '授权验证与本地离线授权保护。'
+  CONST 0
+  CONST None
+  CONST ('default_backend')
+  CONST ('hashes', 'serialization')
+  CONST ('Ed25519PublicKey')
+  CONST ('AESGCM')
+  CONST ('PBKDF2HMAC')
+  CONST ('get_config_manager')
+  CONST 2
+  CONST 172800
+  CONST 300
+  CONST 'AuthProtocolError'
+  CONST 'AuthServerError'
+  CONST 'insufficient quota'
+  CONST '剩余额度不足，无法完成本次下载'
+  CONST 'invalid token'
+  CONST '授权令牌无效，请重新激活卡密'
+  CONST 'license not found'
+  CONST '授权不存在，请重新激活卡密'
+  CONST 'license expired'
+  CONST '授权已过期，请续费后再使用'
+  CONST 'card not found'
+  CONST '卡密不存在，请检查后重新输入'
+  CONST 'invalid card'
+  CONST '卡密无效，请检查后重新输入'
+  CONST 'card disabled'
+  CONST '卡密已停用，请联系管理员'
+  CONST 'card revoked'
+  CONST '卡密已撤销，请联系管理员'
+  CONST 'card deleted'
+  CONST '卡密已删除，请联系管理员'
+  CONST 'card exhausted'
+  CONST '卡密可激活次数已用完'
+  CONST 'card usage limit reached'
+  CONST 'activation limit exceeded'
+  CONST 'renewal card usage limit reached'
+  CONST '续费卡密可使用次数已用完'
+  CONST 'activation card cannot renew itself'
+  CONST '不能使用当前激活卡密给自己续费'
+  CONST 'invalid renewal card'
+  CONST '续费卡密无效或已停用'
+  CONST 'machine mismatch'
+  CONST '当前设备与授权绑定设备不一致'
+  CONST 'nonce expired'
+  CONST '请求已过期，请重试'
+  CONST '请求已失效，请重试'
+  CONST '请求校验失败，请重试'
+  CONST '服务端签名校验失败'
+  CONST '请求参数错误'
+  CONST '未授权，请先激活卡密'
+  CONST '无权执行该操作'
+  CONST '服务端内部错误，请稍后重试'
+  CONST ('nonce replay', 'invalid nonce', 'invalid signature', 'bad request', 'not authorized', 'unauthorized', 'forbidden', 'internal server error')
+  CONST ('online_verified_at', 'last_seen_time')
+  CONST (None)
+  CONST (())
+  CONST (True)
+
+  [AuthProtocolError] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', '__doc__', '__static_attributes__')
+    CONST 'AuthProtocolError'
+    CONST 26
+    CONST '服务端响应未满足认证协议安全要求。'
+    CONST ()
+    CONST None
+
+  [AuthServerError] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', '__doc__', '__static_attributes__')
+    CONST 'AuthServerError'
+    CONST 30
+    CONST '服务端明确返回的业务错误。'
+    CONST ()
+    CONST None
+
+  [translate_error_message] args=('message',) names=('str', 'strip', 'join', 'lower', 'replace', 'split', 'ERROR_TRANSLATIONS', 'items')
+    CONST 'Translate common service-side English errors into user-facing Chinese.'
+    CONST ''
+    CONST ' '
+    CONST '_'
+    CONST '-'
+
+  [_get_config] args=() names=('get_config_manager',)
+    CONST '获取配置管理器。'
+
+  [get_machine_code] args=() names=('subprocess', 'platform', 'system', 'machine', 'winreg', 'OpenKey', 'HKEY_LOCAL_MACHINE', 'QueryValueEx', 'CloseKey', 'Exception', 'STARTUPINFO', 'dwFlags', 'STARTF_USESHOWWINDOW', 'run', 'CREATE_NO_WINDOW', 'stdout', 'strip', 'split', 'len', 'hashlib', 'sha256', 'encode', 'hexdigest')
+    CONST '生成机器码。'
+    CONST 0
+    CONST None
+    CONST 'Windows'
+    CONST 'UNKNOWN_GUID'
+    CONST 'SOFTWARE\\Microsoft\\Cryptography'
+    CONST 'MachineGuid'
+    CONST 'UNKNOWN_MB'
+    CONST ('wmic', 'baseboard', 'get', 'serialnumber')
+    CONST True
+    CONST 5
+    CONST ('capture_output', 'text', 'timeout', 'startupinfo', 'creationflags')
+    CONST '\n'
+    CONST 1
+    CONST '|'
+    CONST 'Darwin'
+    CONST 'UNKNOWN_CPU'
+    CONST 'system_profiler'
+    CONST 'SPHardwareDataType'
+    CONST ('capture_output', 'text', 'timeout')
+    CONST 'Serial Number'
+    CONST ':'
+    CONST ('sysctl', '-n', 'machdep.cpu.brand_string')
+    CONST ('dmidecode', '-s', 'baseboard-serial-number')
+    CONST ('dmidecode', '-t', 'processor')
+    CONST 'ID:'
+
+  [_build_request] args=() names=('_get_config', 'int', 'time', 'secrets', 'token_hex', 'AUTH_PROTOCOL_VERSION', 'getattr', 'str')
+    CONST '构造不包含客户端共享秘密的版本化请求。'
+    CONST 16
+    CONST ('timestamp', 'nonce', 'protocol_version')
+    CONST 'version'
+    CONST None
+    CONST 'client_version'
+
+  [_signature_messages] args=('response_data',) names=('items', 'json', 'dumps', 'encode')
+    CONST '同时兼容当前服务端 JSON 编码和 auth-v2 规范化编码。'
+    CONST 'signature'
+    CONST True
+    CONST ('sort_keys')
+    CONST False
+    CONST (',', ':')
+    CONST ('sort_keys', 'ensure_ascii', 'separators')
+
+  [verify_ed25519_signature] args=('response_data', 'signature_b64') names=('isinstance', 'dict', 'get', 'str', 'serialization', 'load_pem_public_key', '_get_config', 'server_public_key_pem', 'encode', 'Ed25519PublicKey', 'base64', 'b64decode', 'ValueError', 'TypeError', 'binascii', 'Error', '_signature_messages', 'verify', 'Exception')
+    CONST '验证完整响应体的 Ed25519 签名。'
+    CONST False
+    CONST 'signature'
+    CONST True
+    CONST ('validate')
+
+  [_response_error_detail] args=('result', 'status_code') names=('isinstance', 'dict', 'get', 'list', 'any', 'str', 'translate_error_message', 'join')
+    CONST None
+    CONST 'detail'
+    CONST '服务端认证协议过旧，请升级服务端以支持 auth-v2'
+    CONST 'msg'
+    CONST ''
+    CONST '；'
+    CONST ('message', 'msg', 'error')
+    CONST '服务端请求失败（HTTP '
+    CONST '）'
+
+    [_response_error_detail.<locals>.<genexpr>] args=('.0',) names=('isinstance', 'dict', 'get')
+      CONST 'sign'
+      CONST 'loc'
+      CONST ()
+      CONST None
+
+  [unpack_secure_response] args=('response', 'required_fields') names=('json', 'Exception', 'AuthProtocolError', 'isinstance', 'dict', 'status_code', 'AuthServerError', '_response_error_detail', 'verify_ed25519_signature', 'get', 'str', 'base64', 'b64decode', 'len', 'ValueError', 'AESGCM', 'decrypt', 'loads', 'TypeError', 'binascii', 'Error', 'JSONDecodeError', 'setdefault', 'join')
+    CONST '统一校验成功响应签名并安全解包 payload。'
+    CONST '服务端响应不是有效 JSON'
+    CONST None
+    CONST '服务端响应格式无效'
+    CONST 200
+    CONST 300
+    CONST '服务端成功响应签名缺失或验证失败'
+    CONST 'payload'
+    CONST 'session_key'
+    CONST '服务端成功响应缺少安全载荷'
+    CONST True
+    CONST ('validate')
+    CONST (16, 24, 32)
+    CONST 13
+    CONST 'invalid encrypted envelope'
+    CONST 12
+    CONST '服务端安全载荷解包失败'
+    CONST '服务端安全载荷解密失败'
+    CONST '服务端载荷格式无效'
+    CONST 'server_time'
+    CONST '服务端载荷缺少字段: '
+    CONST ', '
+
+  [get_local_aes_key] args=() names=('PBKDF2HMAC', 'hashes', 'SHA256', 'default_backend', 'derive', 'get_machine_code', 'encode')
+    CONST '从机器码派生本地授权缓存密钥。'
+    CONST 32
+    CONST b'ima_local_salt'
+    CONST 100000
+    CONST ('algorithm', 'length', 'salt', 'iterations', 'backend')
+
+  [_write_local_cache] args=('data',) names=('_get_config', 'license_file', 'get_local_aes_key', 'os', 'urandom', 'AESGCM', 'encrypt', 'json', 'dumps', 'encode', 'path', 'dirname', 'makedirs', 'open', 'write', 'flush', 'fsync', 'fileno', 'replace')
+    CONST None
+    CONST 12
+    CONST False
+    CONST ('ensure_ascii')
+    CONST True
+    CONST ('exist_ok')
+    CONST '.tmp'
+    CONST 'wb'
+
+  [save_local_cache] args=('token', 'expire_at', 'remaining') names=('float', 'time', 'max', 'min', 'MAX_OFFLINE_SECONDS', 'get_machine_code', '_write_local_cache')
+    CONST '保存授权缓存，并记录不可超过 48 小时的离线窗口。'
+    CONST None
+    CONST 2
+    CONST ('cache_version', 'token', 'expire_at', 'last_verify', 'last_online_verify', 'last_seen_time', 'offline_deadline', 'cached_remaining', 'machine_code')
+
+  [load_local_cache] args=() names=('_get_config', 'license_file', 'os', 'path', 'exists', 'open', 'read', 'len', 'AESGCM', 'get_local_aes_key', 'decrypt', 'json', 'loads', 'isinstance', 'dict', 'get', 'get_machine_code', 'Exception')
+    CONST '读取本地授权缓存并验证机器码与安全字段。'
+    CONST None
+    CONST 'rb'
+    CONST 13
+    CONST 12
+    CONST 'machine_code'
+    CONST 'token'
+    CONST 'expire_at'
+
+  [_signed_server_time] args=('payload',) names=('get', 'time', 'float', 'TypeError', 'ValueError')
+    CONST None
+    CONST 'server_time'
+
+  [_save_online_result] args=('cache', 'payload', 'remaining') names=('get', 'AuthProtocolError', 'save_local_cache', '_signed_server_time')
+    CONST None
+    CONST 'expire_at'
+    CONST '服务端载荷缺少授权到期时间'
+    CONST 'remaining'
+    CONST 'cached_remaining'
+    CONST 0
+    CONST 'token'
+    CONST ('online_verified_at')
+
+  [activate_license] args=('card_key',) names=('_build_request', 'get_machine_code', 'requests', 'post', '_get_config', 'get_api_url', 'unpack_secure_response', 'save_local_cache', 'get', '_signed_server_time', 'AuthProtocolError', 'AuthServerError', 'str', 'Exception')
+    CONST '激活卡密。'
+    CONST ('card_key', 'machine_code')
+    CONST 'activate'
+    CONST 10
+    CONST ('json', 'timeout')
+    CONST ('token', 'expire_at')
+    CONST ('required_fields')
+    CONST 'token'
+    CONST 'expire_at'
+    CONST 'quota_total'
+    CONST 'remaining'
+    CONST 0
+    CONST ('online_verified_at')
+    CONST (True, '激活成功')
+    CONST False
+    CONST None
+    CONST '激活失败: '
+
+  [verify_license] args=() names=('_get_config', 'load_local_cache', '_build_request', 'get_machine_code', 'requests', 'post', 'get_api_url', 'unpack_secure_response', 'get', 'isinstance', 'dict', 'set_config_pack', '_save_online_result', 'exceptions', 'Timeout', 'ConnectionError', 'AuthProtocolError', 'AuthServerError', 'str', 'Exception')
+    CONST '向服务端验证授权。'
+    CONST (False, '未激活')
+    CONST 'token'
+    CONST ('token', 'machine_code')
+    CONST 'verify'
+    CONST 10
+    CONST ('json', 'timeout')
+    CONST ('remaining')
+    CONST ('required_fields')
+    CONST 'config_pack'
+    CONST 'base_url'
+    CONST 'ima_base_url'
+    CONST True
+    CONST False
+    CONST '网络超时: '
+    CONST None
+    CONST '网络连接失败: '
+    CONST '网络错误: '
+
+  [issue_download_token] args=('file_count',) names=('load_local_cache', '_build_request', 'get_machine_code', 'requests', 'post', '_get_config', 'get_api_url', 'unpack_secure_response', '_save_online_result', 'AuthProtocolError', 'AuthServerError', 'str', 'Exception')
+    CONST '申请下载令牌。'
+    CONST (False, '未激活', None)
+    CONST 'token'
+    CONST ('token', 'machine_code', 'file_count')
+    CONST 'quota_issue'
+    CONST 10
+    CONST ('json', 'timeout')
+    CONST ('remaining', 'download_token')
+    CONST ('required_fields')
+    CONST True
+    CONST '剩余 '
+    CONST 'remaining'
+    CONST ' 次'
+    CONST 'download_token'
+    CONST False
+    CONST None
+    CONST '网络错误: '
+
+  [refund_download_quota] args=('file_count', 'download_token') names=('load_local_cache', 'get_machine_code', '_build_request', 'requests', 'post', '_get_config', 'get_api_url', 'unpack_secure_response', '_save_online_result', 'AuthProtocolError', 'AuthServerError', 'str', 'Exception')
+    CONST '退回下载失败所消耗的额度。'
+    CONST 0
+    CONST (True, '无需退回额度')
+    CONST (False, '未激活')
+    CONST 'token'
+    CONST ('token', 'machine_code', 'file_count')
+    CONST 'download_token'
+    CONST 'quota_refund'
+    CONST 10
+    CONST ('json', 'timeout')
+    CONST ('remaining')
+    CONST ('required_fields')
+    CONST 'remaining'
+    CONST True
+    CONST '已退回 '
+    CONST ' 次，剩余 '
+    CONST ' 次'
+    CONST False
+    CONST None
+    CONST '退回额度失败: '
+    CONST ()
+
+  [_offline_security_state] args=('cache', 'current_time', 'enforce_offline_limit') names=('float', 'get', 'min', 'MAX_OFFLINE_SECONDS', 'KeyError', 'TypeError', 'ValueError', 'CLOCK_ROLLBACK_TOLERANCE_SECONDS')
+    CONST None
+    CONST 'expire_at'
+    CONST 'last_online_verify'
+    CONST 'last_verify'
+    CONST 0
+    CONST 'last_seen_time'
+    CONST 'offline_deadline'
+    CONST (False, '本地授权缓存无效')
+    CONST (False, '检测到系统时间回拨，请联网重新验证')
+    CONST (False, '授权已过期')
+    CONST (False, '离线授权已超过 48 小时，请联网验证')
+    CONST (True, None)
+
+  [_record_offline_check] args=('cache', 'current_time') names=('dict', 'float', 'get', 'update', 'max', 'min', 'MAX_OFFLINE_SECONDS', 'get_machine_code', '_write_local_cache')
+    CONST None
+    CONST 'last_online_verify'
+    CONST 'last_verify'
+    CONST 0
+    CONST 2
+    CONST 'last_seen_time'
+    CONST 'expire_at'
+    CONST ('cache_version', 'last_verify', 'last_online_verify', 'last_seen_time', 'offline_deadline', 'machine_code')
+
+  [check_license] args=() names=('load_local_cache', 'float', 'time', '_offline_security_state', 'verify_license', 'get', 'strftime', 'localtime', 'str', 'any', '_record_offline_check', 'Exception')
+    CONST '检查授权，网络不可用时最多允许离线 48 小时。'
+    CONST (False, '未激活')
+    CONST False
+    CONST ('enforce_offline_limit')
+    CONST 'expire_at'
+    CONST '%Y-%m-%d'
+    CONST True
+    CONST '授权有效，到期: '
+    CONST ('网络', '超时', '连接')
+    CONST (False, '无法更新本地授权安全状态')
+    CONST '授权有效（离线），到期: '
+
+    [check_license.<locals>.<genexpr>] args=('.0',) names=()
+      CONST None
+
+  [renew_license] args=('card_key',) names=('load_local_cache', '_build_request', 'get_machine_code', 'requests', 'post', '_get_config', 'get_api_url', 'unpack_secure_response', '_save_online_result', 'time', 'strftime', 'localtime', 'float', 'AuthProtocolError', 'AuthServerError', 'str', 'Exception')
+    CONST '使用续费卡密延长授权。'
+    CONST (False, '请先激活卡密')
+    CONST 'token'
+    CONST ('card_key', 'token', 'machine_code')
+    CONST 'renew'
+    CONST 10
+    CONST ('json', 'timeout')
+    CONST ('expire_at', 'remaining')
+    CONST ('required_fields')
+    CONST '%Y-%m-%d'
+    CONST 'expire_at'
+    CONST True
+    CONST '续费成功！到期时间: '
+    CONST False
+    CONST None
+    CONST '续费失败: '
+

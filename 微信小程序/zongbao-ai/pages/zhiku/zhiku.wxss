@@ -1,16 +1,31 @@
 /* 智库页 — v0.9.1 重设计「图纸目录页」：hero 图签统计带 + 四库手风琴目录 + 溯源时间线（复用蓝图语言） */
 .page { padding-bottom: 40rpx; }
 
-/* ══ KB-FACTORY 入口卡（1021 W4）：显眼导航条，蓝图渐变+安全橙描边，同 zk-ad 语言 ══ */
-.kbf-entry {
-  position: relative;
-  margin: 22rpx 24rpx;
-  padding: 26rpx 28rpx;
-  border-radius: 12rpx;
-  overflow: hidden;
+/* ══ 知识库蓝图设计（独立区块，1023 用户令：与总包智库视觉区分） ══ */
+.kbf-section { margin: 0 0 28rpx; }
+.kbf-section-divider {
+  height: 1rpx;
+  margin: 20rpx 24rpx 16rpx;
+  background: linear-gradient(90deg, transparent, var(--t-line, rgba(255,255,255,0.12)), transparent);
+}
+.kbf-section .kbf-entry {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  margin: 0 24rpx;
+  padding: 28rpx 26rpx;
+  border-radius: 20rpx;
   background: linear-gradient(135deg, rgba(var(--t-navy1-rgb), 0.96) 0%, rgba(var(--t-navy2-rgb, var(--t-navy1-rgb)), 0.88) 100%);
-  border: 2rpx solid rgba(var(--t-accent-rgb), 0.45);
-  box-shadow: 0 10rpx 30rpx rgba(var(--t-accent-rgb), 0.18), inset 0 0 40rpx rgba(var(--t-glow-rgb), 0.08);
+  border: 2rpx solid rgba(var(--t-accent-rgb), 0.35);
+}
+.kbf-e-icon { font-size: 56rpx; line-height: 1; flex-shrink: 0; }
+.kbf-e-body { flex: 1; min-width: 0; }
+.kbf-section-note {
+  margin: 12rpx 24rpx 0;
+  font-size: 20rpx;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 1rpx;
+  text-align: center;
 }
 .kbf-entry-hover { opacity: 0.92; transform: scale(0.995); }
 .kbf-e-kicker {

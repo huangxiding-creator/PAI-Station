@@ -677,14 +677,15 @@ def test_pot_category_tags_and_filter(client):
     assert client.get("/api/pot/list", params={"cat": "不存在的分类"}).json()["items"] == []
 
 
-def test_public_stats_excludes_seed_account(client):
-    """v0.9.10 用户令 1010：首页统计面——官方种子账号不计入注册用户数/咨询总数。"""
+def test_public_stats_seed_counts_as_brain_answer(client):
+    """1029 用户令：累计咨询=大脑回答的全部问题——种子（工程行业大脑）计入 asks，
+    users 仍排除种子（非注册用户）。"""
     from qianwen_engine import store
 
-    store.save_pot_answer("锅圈种子问题", "解答" * 60, [])  # POT_OPENID 落库，两处都不计入
+    store.save_pot_answer("锅圈种子问题", "解答" * 60, [])  # POT_OPENID ready 落库
     s = client.get("/api/stats").json()
     assert set(s) == {"users", "asks"}
-    assert s["users"] == 0 and s["asks"] == 0  # 空库+一条种子 → 双零（种子被排除）
+    assert s["users"] == 0 and s["asks"] == 1  # 种子算大脑回答，users 不算注册
 
 
 def test_public_stats_counts_only_ready(client):
@@ -698,10 +699,10 @@ def test_public_stats_counts_only_ready(client):
     store.fail_answer(failed, "KB 断路器打开")                          # error 行
     done = store.create_pending("u-stat", "成功问题")                  # 生产路径：pending→ready
     store.complete_answer(done, "解答" * 80, [])
-    store.save_pot_answer("种子", "解" * 60, [])                       # 种子 ready 也不计
+    store.save_pot_answer("种子", "解" * 60, [])                       # 种子 ready=大脑回答，计入
     s = client.get("/api/stats").json()
-    assert s["asks"] == 1        # 只有 ready 的用户咨询计入
-    assert s["users"] == 1       # u-stat 一人（种子不计）
+    assert s["asks"] == 2        # 用户 ready 1 + 大脑种子 ready 1（1029 口径）
+    assert s["users"] == 1       # u-stat 一人（种子不计入注册用户）
 
 
 # ── 1013 /api/pot/seed 写入腿守卫（We-APIO 大脑精华直投锅圈）──

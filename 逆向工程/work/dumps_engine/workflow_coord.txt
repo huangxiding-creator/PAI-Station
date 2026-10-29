@@ -1,0 +1,355 @@
+@@@ off=2414400
+rkflow is not running");
+if(t.runningSchedule)return reject(t,"schedule is already running");
+r=startFirstPendingSchedule({
+...t,common:"quiescent"
+}
+);
+break
+}
+case"schedule-received":{
+if(t.lifecycle==="stopped")return reject(t,"stopped workflow does not accept schedule work");
+if(t.runningSchedule?.id===e.work.id||t.pendingSchedules.some(s=>s.id===e.work.id))return reject(t,"duplicate local schedule ID");
+const a={
+...t,pendingSchedules:[...t.pendingSchedules,e.work]
+}
+;
+r=t.lifecycle==="running"&&t.common==="quiescent"&&!t.runningSchedule?startFirstPendingSchedule(a):{
+state:a,effects:[],accepted:!0
+}
+;
+break
+}
+case"schedule-cancelled":{
+if(t.lifecycle==="stopped")return reject(t,"workflow is stopped");
+if(t.runningSchedule?.id===e.scheduleId)return reject(t,"running schedule must settle through schedule-finished");
+if(t.pendingSchedules.findIndex(a=>a.id===e.scheduleId)<0)return reject(t,"schedule is not pending");
+r={
+state:{
+...t,pendingSchedules:t.pendingSchedules.filter(a=>a.id!==e.scheduleId)
+}
+,effects:[],accepted:!0
+}
+;
+break
+}
+case"schedule-finished":{
+if(t.lifecycle!=="running")return reject(t,"workflow is not running");
+if(!t.runningSchedule)return reject(t,"no schedule is running");
+if(t.runningSchedule.id!==e.scheduleId)return reject(t,"stale schedule completion");
+t.pendingSchedules.length>0?r=startFirstPendingSchedule({
+...t,runningSchedule:null
+}
+):r={
+state:{
+...t,common:"protected",runningSchedule:null
+}
+,effects:[{
+type:"start-unread-check",generation:t.generation
+}
+],accepted:!0
+}
+;
+break
+}
+
+}
+return assertWorkflowInvariants(r.state),r
+}
+;
+class WorkflowCoordinator{
+state=createInitialWorkflowState();
+snapshot(){
+return this.state
+}
+dispatch(e){
+const r=reduceWorkflow(this.state,e);
+return this.state=r.state,r
+}
+
+}
+const workflowCoordinator=new WorkflowCoordinator;
+let workflowScheduleSequence=0;
+const CHAT_SSE_RETRY_DELAY_MS=750;
+rxEngine.phase$.subscribe(t=>{
+if(console.log(`[PhaseSync] Phase → ${
+t.phase
+}
+`),t.phase===EnginePhase.STOPPED&&workflowCoordinator.snapshot().lifecycle!=="stopped"&&workflowCoordinator.d
+@@@ off=2416400
+ispatch({
+type:"stop"
+}
+),workflowCoordinator.snapshot().lifecycle==="stopped"&&t.phase!==EnginePhase.STOPPED){
+console.warn("【Workflow】拒绝没有 workflow start 的 phase 复活:",t.phase),rxEngine.setPhase(EnginePhase.STOPPED);
+return
+}
+if(workflowCoordinator.snapshot().lifecycle==="starting"&&t.phase!==EnginePhase.STARTING&&t.phase!==EnginePhase.STOPPED){
+console.warn("【Workflow】忽略 starting 期间旧 action 的 phase 恢复:",t.phase),rxEngine.setPhase(EnginePhase.STARTING);
+return
+}
+replayLogger.logEvent("phase_change",`Phase → ${
+t.phase
+}
+`,{
+metadata:{
+phase:t.phase,instant:t.instant
+}
+
+}
+);
+try{
+getBridge().sendToRenderer("ENGINE_STATUS_CHANGED",{
+isRunning:engineState.isEngineActive&&t.phase!==EnginePhase.STOPPED,phase:t.phase
+}
+)
+}
+catch{
+
+}
+
+}
+);
+rxEngine.responseTimeout$.subscribe(()=>{
+_consecutiveTimeoutCount++;
+const t=rxEngine.currentScope("response")?.runId,e=_activeChatRequest?.runId===t;
+if(expireActiveResponseRequest("response_timeout"),!_lastUploadContext)return;
+const r=_responseSseMessages.length===0?"no_response":"stalled",n=getResponseTimeoutMs(),a=Math.round(n/1e3),s=_responseSseMessages.length>0?_responseSseMessages[_responseSseMessages.length-1].trace_id:void 0;
+forceUploadTraceLog("screenshot_response",r==="no_response"?"sse_no_response_timeout":"sse_stalled_timeout",{
+imageBase64:_lastUploadContext.screenshotBase64,error:r==="no_response"?`${
+a
+}
+s 内未收到任何 SSE 响应`:`最后一条 SSE 消息后 ${
+a
+}
+s 无后续`,extra:{
+timeoutType:r,responseTimeoutMs:n,traceId:s,responseRunId:_lastUploadContext.responseRunId,consecutiveTimeoutCount:_consecutiveTimeoutCount,sseMessageCount:_responseSseMessages.length,lastSseMessages:_responseSseMessages.length>0?_responseSseMessages:void 0,lastSseTimestamp:_responseSseMessages.length>0?_responseSseMessages[_responseSseMessages.length-1].timestamp:void 0,uploadTimestamp:_lastUploadContext.uploadTimestamp,appType:_lastUploadContext.appType,agentType:_lastUploadContext.agentType,
+platform:process.platform==="darwin"?"mac":"win",sseRequestWasActive:e,screenshotWidth:_lastUploadContext.width,screens
+@@@ off=2418400
+hotHeight:_lastUploadContext.height,version:getDisplayVersion()
+}
+
+}
+)
+}
+);
+let _lastUploadContext=null,_responseSseMessages=[],_consecutiveTimeoutCount=0;
+const store$1=createAppStore(),IS_MAC$1=process.platform==="darwin",IS_WINDOWS$2=process.platform==="win32",startResponseTimeout=()=>{
+engineState.isEngineActive&&(rxEngine.abortScope("polling","response_active"),rxEngine.setPhase(EnginePhase.RESPONSE_ACTIVE))
+}
+,setCheckUnreadTimer=()=>{
+rxEngine.setPhase(EnginePhase.POLLING)
+}
+,setCheckChatDiffTimer=()=>{
+rxEngine.setPhase(EnginePhase.POLLING)
+}
+,getWorkflowActionName=t=>t.msg_type||t.action||"unknown",failClosedOnWorkflowInvariant=(t,e)=>{
+console.error("【Workflow】安全不变量被破坏，强制停止，禁止 common/schedule 并发:",{
+reason:t,...e
+}
+),displayMessage("action","任务流程状态异常，已安全停止，请重新启动","error"),cleanupResources()
+}
+,enqueueWorkflowUnreadCheck=t=>{
+const e=workflowCoordinator.snapshot();
+if(e.lifecycle!=="running"||e.generation!==t||e.runningSchedule||e.pendingSchedules.length>0||e.common!=="protected"){
+console.log("【Workflow】忽略过期或非法的 unread effect:",{
+effectGeneration:t,snapshot:e
+}
+);
+return
+}
+const r=rxEngine.startScope("polling","after_schedule_unread"),n=getCurrentAppType()==="whatsapp"?{
+action:"whatsapp_next_step",data:null
+}
+:{
+action:"receivemessage",data:null
+}
+;
+rxEngine.enqueueAction({
+...n,skip_current_diff:!0,__workflowUnreadCheck:!0,__workflowGeneration:t
+}
+,r)
+}
+,enqueueWorkflowSchedule=t=>{
+const e=workflowCoordinator.snapshot();
+if(e.lifecycle!=="running"||e.common!=="quiescent"||e.runningSchedule?.id!==t.id){
+failClosedOnWorkflowInvariant("start-schedule effect does not own workflow",{
+scheduleId:t.id,lifecycle:e.lifecycle,common:e.common,runningScheduleId:e.runningSchedule?.id
+}
+);
+return
+}
+const r=rxEngine.currentScope("response");
+if(r){
+failClosedOnWorkflowInvariant("schedule attempted while response scope is active",{
+scheduleId:t.id,responseRunId:r.runId
+}
+);
+return
+}
+rxEngine.abortScope("polling",`schedule_started:${
+t.id
+}
+`);
+const n=rxEngine.currentScope("schedule")||rxEngine.startScope("schedule",`schedule_drain:
+@@@ off=2420400
+${
+t.id
+}
+`);
+console.log("【Workflow】schedule 出队执行:",{
+scheduleId:t.id,action:getWorkflowActionName(t.payload),pending:e.pendingSchedules.length
+}
+),rxEngine.setPhase(EnginePhase.EXECUTING),rxEngine.enqueueAction({
+...t.payload,__workflowScheduleId:t.id,__workflowGeneration:e.generation
+}
+,n)||failClosedOnWorkflowInvariant("schedule payload could not enter the Rx queue",{
+scheduleId:t.id,action:getWorkflowActionName(t.payload)
+}
+)
+}
+,applyWorkflowEffects=t=>{
+for(const e of t)e.type==="start-schedule"?enqueueWorkflowSchedule(e.work):e.type==="start-unread-check"&&enqueueWorkflowUnreadCheck(e.generation)
+}
+,dispatchWorkflowEvent=t=>{
+const e=workflowCoordinator.snapshot(),r=workflowCoordinator.dispatch(t),n=r.state,a=`event=${
+t.type
+}
+ accepted=${
+r.accepted
+}
+ lifecycle=${
+e.lifecycle
+}
+->${
+n.lifecycle
+}
+ common=${
+e.common
+}
+->${
+n.common
+}
+ schedule=${
+n.runningSchedule?.id||"none"
+}
+ pending=${
+n.pendingSchedules.length
+}
+ generation=${
+n.generation
+}
+`;
+return r.accepted?debugLog(`【Workflow】${
+a
+}
+`):console.warn(`【Workflow】${
+a
+}
+ reason=${
+r.reason||"unknown"
+}
+`),applyWorkflowEffects(r.effects),r
+}
+,startWorkflowRun=()=>(workflowCoordinator.snapshot().lifecycle!=="stopped"&&dispatchWorkflowEvent({
+type:"stop"
+}
+),dispatchWorkflowEvent({
+type:"start"
+}
+)),markWorkflowReady=t=>dispatchWorkflowEvent({
+type:"ready",common:t
+}
+),protectCommonWorkflow=t=>{
+const e=dispatchWorkflowEvent({
+type:"protect-common"
+}
+);
+return e.accepted||console.log("【Workflow】common 未取得执行权:",{
+source:t,reason:e.reason,runningSchedule:e.state.runningSchedule?.id
+}
+),e.accepted
+}
+,yieldToScheduleAtUnreadBoundary=()=>{
+const t=dispatchWorkflowEvent({
+type:"unread-boundary"
+}
+);
+return t.boundaryDecision==="yield-to-schedule"||t.state.lifecycle!=="running"||!!t.state.runningSchedule
+}
+,finishUnreadCheck=(t="idle")=>{
+const e=dispatchWorkflowEvent({
+type:t==="failed"?"unread-failed":"unread-idle"
+}
+);
+return e.state.lifecycle!=="running"||!!e.state.runningSchedule
+}
+,enqueueWorkflowSchedulePayload=t=>{
+workflowScheduleSequence+=1;
+const e={
+id:`schedule:${
+Date.now().toString(36)
+}
+:
+@@@ off=2422400
+${
+workflowScheduleSequence.toString(36)
+}
+`,payload:t
+}
+,r=dispatchWorkflowEvent({
+type:"schedule-received",work:e
+}
+);
+return{
+work:e,transition:r
+}
+
+}
+,receiveWorkflowSchedule=t=>enqueueWorkflowSchedulePayload(t).transition.accepted,enqueueSendTaskNow=(t,e,r)=>{
+const n=rxEngine.startScope("task","send_task_now");
+return acquirePauseHotkey("fixed-task"),new Promise(a=>{
+let s=!1;
+const i=u=>{
+s||(s=!0,n.signal.removeEventListener("abort",o),releasePauseHotkey("fixed-task"),engineState.isProcessingSendTaskNow=!1,a(u))
+}
+,o=()=>i({
+success:!1,error:"任务已中断"
+}
+);
+n.signal.addEventListener("abort",o,{
+once:!0
+}
+),rxEngine.enqueueAction({
+action:"send_task_now",actions:t,target_names:e,options:r,__resolve:i
+}
+,n)||(i({
+success:!1,error:"固定任务无法进入执行队列"
+}
+),rxEngine.abortScope("task","send_task_now_enqueue_failed",n.runId))
+}
+)
+}
+,stopSendTaskNow=()=>{
+const t=rxEngine.currentScope("task");
+return t?rxEngine.abortScope("task","send_task_now_cancelled",t.runId):!1
+}
+,beginCurrentChatCapture=t=>!engineState.isEngineActive||!rxEngine.isRunning()?(console.log("【当前聊天截图】引擎未运行，忽略截图请求:",t),!1):protectCommonWorkflow(`capture:${
+t
+}
+`)?(rxEngine.abortScope("polling",`capture:${
+t
+}
+`),rxEngine.setPhase(EnginePhase.CAPTURING_CURRENT_CHAT),!0):!1,captureCurrentChat=async(t,e="upload",r)=>{
+beginCurrentChatCapture(t)&&await takeScreenshot(e,r)
+}
+;
+rxEngine.getPollingInitialDelay=()=>{
+const t=getCurrentAppType();
+return resolvePollingInitialDelay({
+appType:t,isWindows:IS_WINDOWS$2,postReplyCheckPending:hasPostReplyMessageCheckPending()
+}
+)
+}
+;
+rxEngine.

@@ -1,0 +1,3659 @@
+{
+ "kind": "brick_domain_seed",
+ "domain": "LOC",
+ "domain_zh": "空间域",
+ "domain_en": "Location and Space",
+ "note": "空间词表双轨：brick:Location 遗产类（v1.4.4 已整体弃用，deprecated 如实标注）+ REC rec:Space 现行空间类（房间/楼层/园区），供建筑工程库对照使用",
+ "source": {
+  "repo": "BrickSchema/Brick",
+  "tag": "v1.4.4",
+  "license": "BSD-3-Clause",
+  "license_copyright": "Copyright (c) 2016-2026, Brick Consortium, Inc.",
+  "url": "https://github.com/BrickSchema/Brick/releases/tag/v1.4.4",
+  "asset": "Brick.ttl（release 编译版，含 Brick+REC 对齐）",
+  "asset_sha256": "b65720b7b9b64c646745c689777e6138c0d59ce0088df0aeb78fbd444d04d8e7",
+  "license_file": "seeds/brick/LICENSE"
+ },
+ "stats": {
+  "classes": 227,
+  "zh_mapped": 75,
+  "roots": 1,
+  "max_depth": 7,
+  "deprecated": 109,
+  "multi_parent_classes": 1,
+  "zh_rate": 0.3304
+ },
+ "concepts": [
+  {
+   "id": "brick:Ablutions_Room",
+   "en": "Ablutions Room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Ablutions_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Atrium",
+   "en": "Atrium",
+   "label_source": "rdfs:label",
+   "zh": "中庭",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Atrium",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Common_Space",
+   "parents": [
+    "brick:Common_Space"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Auditorium",
+   "en": "Auditorium",
+   "label_source": "rdfs:label",
+   "zh": "观众厅",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Auditorium",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Common_Space",
+   "parents": [
+    "brick:Common_Space"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Basement",
+   "en": "Basement",
+   "label_source": "rdfs:label",
+   "zh": "地下室",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Basement",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Floor",
+   "parents": [
+    "brick:Floor"
+   ],
+   "depth": 4,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Battery_Room",
+   "en": "Battery Room",
+   "label_source": "rdfs:label",
+   "zh": "电池室",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Battery_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Electrical_Room",
+   "parents": [
+    "brick:Electrical_Room"
+   ],
+   "depth": 7,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Bench_Space",
+   "en": "Bench Space",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Bench_Space",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Outdoor_Area",
+   "parents": [
+    "brick:Outdoor_Area"
+   ],
+   "depth": 4,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Break_Room",
+   "en": "Break Room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Break_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Breakroom",
+   "en": "Breakroom",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Breakroom",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Broadcast_Room",
+   "en": "Broadcast Room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Broadcast_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Media_Room",
+   "parents": [
+    "brick:Media_Room"
+   ],
+   "depth": 6,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Building",
+   "en": "Building",
+   "label_source": "rdfs:label",
+   "zh": "楼宇",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Building",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Location",
+   "parents": [
+    "brick:Location"
+   ],
+   "depth": 3,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Cafeteria",
+   "en": "Cafeteria",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Cafeteria",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Common_Space",
+   "parents": [
+    "brick:Common_Space"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Cold_Box",
+   "en": "Cold Box",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Cold_Box",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Laboratory",
+   "parents": [
+    "brick:Laboratory"
+   ],
+   "depth": 6,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Common_Space",
+   "en": "Common Space",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Common_Space",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Space",
+   "parents": [
+    "brick:Space"
+   ],
+   "depth": 4,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Concession",
+   "en": "Concession",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Concession",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Food_Service_Room",
+   "parents": [
+    "brick:Food_Service_Room"
+   ],
+   "depth": 6,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Conference_Room",
+   "en": "Conference Room",
+   "label_source": "rdfs:label",
+   "zh": "会议室",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Conference_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Control_Room",
+   "en": "Control Room",
+   "label_source": "rdfs:label",
+   "zh": "控制室",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Control_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Copy_Room",
+   "en": "Copy Room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Copy_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Cubicle",
+   "en": "Cubicle",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Cubicle",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Office",
+   "parents": [
+    "brick:Office"
+   ],
+   "depth": 6,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Detention_Room",
+   "en": "Detention Room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Detention_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Security_Service_Room",
+   "parents": [
+    "brick:Security_Service_Room"
+   ],
+   "depth": 6,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Distribution_Frame",
+   "en": "Distribution Frame",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Distribution_Frame",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Telecom_Room",
+   "parents": [
+    "brick:Telecom_Room"
+   ],
+   "depth": 6,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Electrical_Room",
+   "en": "Electrical Room",
+   "label_source": "rdfs:label",
+   "zh": "电气机房",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Electrical_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Service_Room",
+   "parents": [
+    "brick:Service_Room"
+   ],
+   "depth": 6,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Elevator_Shaft",
+   "en": "Elevator Shaft",
+   "label_source": "rdfs:label",
+   "zh": "电梯井",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Elevator_Shaft",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Vertical_Space",
+   "parents": [
+    "brick:Vertical_Space"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Elevator_Space",
+   "en": "Elevator Space",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Elevator_Space",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Vertical_Space",
+   "parents": [
+    "brick:Vertical_Space"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Employee_Entrance_Lobby",
+   "en": "Employee Entrance Lobby",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Employee_Entrance_Lobby",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Lobby",
+   "parents": [
+    "brick:Lobby"
+   ],
+   "depth": 6,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Enclosed_Office",
+   "en": "Enclosed Office",
+   "label_source": "rdfs:label",
+   "zh": "封闭办公室",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Enclosed_Office",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Office",
+   "parents": [
+    "brick:Office"
+   ],
+   "depth": 6,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Energy_Zone",
+   "en": "Energy Zone",
+   "label_source": "rdfs:label",
+   "zh": "能耗分区",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Energy_Zone",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Zone",
+   "parents": [
+    "brick:Zone"
+   ],
+   "depth": 4,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Entrance",
+   "en": "Entrance",
+   "label_source": "rdfs:label",
+   "zh": "入口",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Entrance",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Space",
+   "parents": [
+    "brick:Space"
+   ],
+   "depth": 4,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Environment_Box",
+   "en": "Environment Box",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Environment_Box",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Laboratory",
+   "parents": [
+    "brick:Laboratory"
+   ],
+   "depth": 6,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Equipment_Room",
+   "en": "Equipment Room",
+   "label_source": "rdfs:label",
+   "zh": "设备间",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Equipment_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Telecom_Room",
+   "parents": [
+    "brick:Telecom_Room"
+   ],
+   "depth": 6,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Exercise_Room",
+   "en": "Exercise Room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Exercise_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Field_Of_Play",
+   "en": "Field Of Play",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Field_Of_Play",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Outdoor_Area",
+   "parents": [
+    "brick:Outdoor_Area"
+   ],
+   "depth": 4,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Fire_Zone",
+   "en": "Fire Zone",
+   "label_source": "rdfs:label",
+   "zh": "防火分区",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Fire_Zone",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Zone",
+   "parents": [
+    "brick:Zone"
+   ],
+   "depth": 4,
+   "deprecated": true
+  },
+  {
+   "id": "brick:First_Aid_Room",
+   "en": "First Aid Room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#First_Aid_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Medical_Room",
+   "parents": [
+    "brick:Medical_Room"
+   ],
+   "depth": 6,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Floor",
+   "en": "Floor",
+   "label_source": "rdfs:label",
+   "zh": "楼层",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Floor",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Location",
+   "parents": [
+    "brick:Location"
+   ],
+   "depth": 3,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Food_Service_Room",
+   "en": "Food Service Room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Food_Service_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Freezer",
+   "en": "Freezer",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Freezer",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Laboratory",
+   "parents": [
+    "brick:Laboratory"
+   ],
+   "depth": 6,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Gatehouse",
+   "en": "Gatehouse",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Gatehouse",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Space",
+   "parents": [
+    "brick:Space"
+   ],
+   "depth": 4,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Generator_Room",
+   "en": "Generator Room",
+   "label_source": "rdfs:label",
+   "zh": "发电机房",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Generator_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Electrical_Room",
+   "parents": [
+    "brick:Electrical_Room"
+   ],
+   "depth": 7,
+   "deprecated": true
+  },
+  {
+   "id": "brick:HVAC_Zone",
+   "en": "HVAC Zone",
+   "label_source": "rdfs:label",
+   "zh": "暖通空调分区",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#HVAC_Zone",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Zone",
+   "parents": [
+    "brick:Zone"
+   ],
+   "depth": 4,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Hallway",
+   "en": "Hallway",
+   "label_source": "rdfs:label",
+   "zh": "走廊",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Hallway",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Common_Space",
+   "parents": [
+    "brick:Common_Space"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Hazardous_Materials_Storage",
+   "en": "Hazardous Materials Storage",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Hazardous_Materials_Storage",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Storage_Room",
+   "parents": [
+    "brick:Storage_Room"
+   ],
+   "depth": 6,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Hospitality_Box",
+   "en": "Hospitality Box",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Hospitality_Box",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Hot_Box",
+   "en": "Hot Box",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Hot_Box",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Laboratory",
+   "parents": [
+    "brick:Laboratory"
+   ],
+   "depth": 6,
+   "deprecated": true
+  },
+  {
+   "id": "brick:IDF",
+   "en": "IDF",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#IDF",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Distribution_Frame",
+   "parents": [
+    "brick:Distribution_Frame"
+   ],
+   "depth": 7,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Information_Area",
+   "en": "Information Area",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Information_Area",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Outdoor_Area",
+   "parents": [
+    "brick:Outdoor_Area"
+   ],
+   "depth": 4,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Janitor_Room",
+   "en": "Janitor Room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Janitor_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Laboratory",
+   "en": "Laboratory",
+   "label_source": "rdfs:label",
+   "zh": "实验室",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Laboratory",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Library",
+   "en": "Library",
+   "label_source": "rdfs:label",
+   "zh": "图书室",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Library",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Lighting_Zone",
+   "en": "Lighting Zone",
+   "label_source": "rdfs:label",
+   "zh": "照明分区",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Lighting_Zone",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Zone",
+   "parents": [
+    "brick:Zone"
+   ],
+   "depth": 4,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Loading_Dock",
+   "en": "Loading Dock",
+   "label_source": "rdfs:label",
+   "zh": "装卸货区",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Loading_Dock",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Lobby",
+   "en": "Lobby",
+   "label_source": "rdfs:label",
+   "zh": "大堂",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Lobby",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Common_Space",
+   "parents": [
+    "brick:Common_Space"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Location",
+   "en": "Location",
+   "label_source": "rdfs:label",
+   "zh": "空间位置",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Location",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Class",
+   "parents": [
+    "brick:Class",
+    "brick:Entity"
+   ],
+   "depth": 2,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Lounge",
+   "en": "Lounge",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Lounge",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Common_Space",
+   "parents": [
+    "brick:Common_Space"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:MDF",
+   "en": "MDF",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#MDF",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Distribution_Frame",
+   "parents": [
+    "brick:Distribution_Frame"
+   ],
+   "depth": 7,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Mail_Room",
+   "en": "Mail Room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Mail_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Majlis",
+   "en": "Majlis",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Majlis",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Lounge",
+   "parents": [
+    "brick:Lounge"
+   ],
+   "depth": 6,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Massage_Room",
+   "en": "Massage Room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Massage_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Mechanical_Room",
+   "en": "Mechanical Room",
+   "label_source": "rdfs:label",
+   "zh": "暖通空调机房",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Mechanical_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Service_Room",
+   "parents": [
+    "brick:Service_Room"
+   ],
+   "depth": 6,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Media_Hot_Desk",
+   "en": "Media Hot Desk",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Media_Hot_Desk",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Space",
+   "parents": [
+    "brick:Space"
+   ],
+   "depth": 4,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Media_Production_Room",
+   "en": "Media Production Room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Media_Production_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Media_Room",
+   "parents": [
+    "brick:Media_Room"
+   ],
+   "depth": 6,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Media_Room",
+   "en": "Media Room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Media_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Medical_Room",
+   "en": "Medical Room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Medical_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Office",
+   "en": "Office",
+   "label_source": "rdfs:label",
+   "zh": "办公室",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Office",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Office_Kitchen",
+   "en": "Office Kitchen",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Office_Kitchen",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Open_Office",
+   "en": "Open Office",
+   "label_source": "rdfs:label",
+   "zh": "开放办公区",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Open_Office",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Office",
+   "parents": [
+    "brick:Office"
+   ],
+   "depth": 6,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Outdoor_Area",
+   "en": "Outdoor Area",
+   "label_source": "rdfs:label",
+   "zh": "室外区域",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Outdoor_Area",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Location",
+   "parents": [
+    "brick:Location"
+   ],
+   "depth": 3,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Outside",
+   "en": "Outside",
+   "label_source": "rdfs:label",
+   "zh": "室外",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Outside",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Location",
+   "parents": [
+    "brick:Location"
+   ],
+   "depth": 3,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Parking_Level",
+   "en": "Parking Level",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Parking_Level",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Floor",
+   "parents": [
+    "brick:Floor"
+   ],
+   "depth": 4,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Parking_Space",
+   "en": "Parking Space",
+   "label_source": "rdfs:label",
+   "zh": "停车位",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Parking_Space",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Space",
+   "parents": [
+    "brick:Space"
+   ],
+   "depth": 4,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Parking_Structure",
+   "en": "Parking Structure",
+   "label_source": "rdfs:label",
+   "zh": "停车楼",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Parking_Structure",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Building",
+   "parents": [
+    "brick:Building"
+   ],
+   "depth": 4,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Plumbing_Room",
+   "en": "Plumbing Room",
+   "label_source": "rdfs:label",
+   "zh": "给排水机房",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Plumbing_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Service_Room",
+   "parents": [
+    "brick:Service_Room"
+   ],
+   "depth": 6,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Prayer_Room",
+   "en": "Prayer Room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Prayer_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Private_Office",
+   "en": "Private Office",
+   "label_source": "rdfs:label",
+   "zh": "独立办公室",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Private_Office",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Enclosed_Office",
+   "parents": [
+    "brick:Enclosed_Office"
+   ],
+   "depth": 7,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Pump_Room",
+   "en": "Pump Room",
+   "label_source": "rdfs:label",
+   "zh": "水泵房",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Pump_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Mechanical_Room",
+   "parents": [
+    "brick:Mechanical_Room"
+   ],
+   "depth": 7,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Reception",
+   "en": "Reception",
+   "label_source": "rdfs:label",
+   "zh": "前台接待区",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Reception",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Region",
+   "en": "Region",
+   "label_source": "rdfs:label",
+   "zh": "地理区域",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Region",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Location",
+   "parents": [
+    "brick:Location"
+   ],
+   "depth": 3,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Rest_Room",
+   "en": "Rest Room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Rest_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Restroom",
+   "en": "Restroom",
+   "label_source": "rdfs:label",
+   "zh": "卫生间",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Restroom",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Retail_Room",
+   "en": "Retail Room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Retail_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Riser",
+   "en": "Riser",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Riser",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Vertical_Space",
+   "parents": [
+    "brick:Vertical_Space"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Rooftop",
+   "en": "Rooftop",
+   "label_source": "rdfs:label",
+   "zh": "屋顶",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Rooftop",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Floor",
+   "parents": [
+    "brick:Floor"
+   ],
+   "depth": 4,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Room",
+   "en": "Room",
+   "label_source": "rdfs:label",
+   "zh": "房间",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Space",
+   "parents": [
+    "brick:Space"
+   ],
+   "depth": 4,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Security_Service_Room",
+   "en": "Security Service Room",
+   "label_source": "rdfs:label",
+   "zh": "安防值班室",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Security_Service_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Server_Room",
+   "en": "Server Room",
+   "label_source": "rdfs:label",
+   "zh": "服务器机房",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Server_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Service_Room",
+   "en": "Service Room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Service_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Shared_Office",
+   "en": "Shared Office",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Shared_Office",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Enclosed_Office",
+   "parents": [
+    "brick:Enclosed_Office"
+   ],
+   "depth": 7,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Shower",
+   "en": "Shower",
+   "label_source": "rdfs:label",
+   "zh": "淋浴间",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Shower",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Site",
+   "en": "Site",
+   "label_source": "rdfs:label",
+   "zh": "场地",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Site",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Location",
+   "parents": [
+    "brick:Location"
+   ],
+   "depth": 3,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Space",
+   "en": "Space",
+   "label_source": "rdfs:label",
+   "zh": "空间",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Space",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Location",
+   "parents": [
+    "brick:Location"
+   ],
+   "depth": 3,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Sports_Service_Room",
+   "en": "Sports Service Room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Sports_Service_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Staircase",
+   "en": "Staircase",
+   "label_source": "rdfs:label",
+   "zh": "楼梯间",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Staircase",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Vertical_Space",
+   "parents": [
+    "brick:Vertical_Space"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Storage_Room",
+   "en": "Storage Room",
+   "label_source": "rdfs:label",
+   "zh": "库房",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Storage_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Storey",
+   "en": "Storey",
+   "label_source": "rdfs:label",
+   "zh": "楼层",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Storey",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Location",
+   "parents": [
+    "brick:Location"
+   ],
+   "depth": 3,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Studio",
+   "en": "Studio",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Studio",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Media_Room",
+   "parents": [
+    "brick:Media_Room"
+   ],
+   "depth": 6,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Switch_Room",
+   "en": "Switch Room",
+   "label_source": "rdfs:label",
+   "zh": "配电间",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Switch_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Telecom_Room",
+   "parents": [
+    "brick:Telecom_Room"
+   ],
+   "depth": 6,
+   "deprecated": true
+  },
+  {
+   "id": "brick:TETRA_Room",
+   "en": "TETRA Room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#TETRA_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Telecom_Room",
+   "parents": [
+    "brick:Telecom_Room"
+   ],
+   "depth": 6,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Team_Room",
+   "en": "Team Room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Team_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Enclosed_Office",
+   "parents": [
+    "brick:Enclosed_Office"
+   ],
+   "depth": 7,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Telecom_Room",
+   "en": "Telecom Room",
+   "label_source": "rdfs:label",
+   "zh": "电信间",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Telecom_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Ticketing_Booth",
+   "en": "Ticketing Booth",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Ticketing_Booth",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Space",
+   "parents": [
+    "brick:Space"
+   ],
+   "depth": 4,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Transformer_Room",
+   "en": "Transformer Room",
+   "label_source": "rdfs:label",
+   "zh": "变压器室",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Transformer_Room",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Electrical_Room",
+   "parents": [
+    "brick:Electrical_Room"
+   ],
+   "depth": 7,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Tunnel",
+   "en": "Tunnel",
+   "label_source": "rdfs:label",
+   "zh": "隧道",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Tunnel",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Space",
+   "parents": [
+    "brick:Space"
+   ],
+   "depth": 4,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Vertical_Space",
+   "en": "Vertical Space",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Vertical_Space",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Space",
+   "parents": [
+    "brick:Space"
+   ],
+   "depth": 4,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Visitor_Lobby",
+   "en": "Visitor Lobby",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Visitor_Lobby",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Lobby",
+   "parents": [
+    "brick:Lobby"
+   ],
+   "depth": 6,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Wardrobe",
+   "en": "Wardrobe",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Wardrobe",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Waste_Storage",
+   "en": "Waste Storage",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Waste_Storage",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Storage_Room",
+   "parents": [
+    "brick:Storage_Room"
+   ],
+   "depth": 6,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Water_Tank",
+   "en": "Water Tank",
+   "label_source": "rdfs:label",
+   "zh": "水箱",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Water_Tank",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Space",
+   "parents": [
+    "brick:Space"
+   ],
+   "depth": 4,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Wing",
+   "en": "Wing",
+   "label_source": "rdfs:label",
+   "zh": "翼楼",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Wing",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Location",
+   "parents": [
+    "brick:Location"
+   ],
+   "depth": 3,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Workshop",
+   "en": "Workshop",
+   "label_source": "rdfs:label",
+   "zh": "检修间",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Workshop",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Room",
+   "parents": [
+    "brick:Room"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Zone",
+   "en": "Zone",
+   "label_source": "rdfs:label",
+   "zh": "区域",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Zone",
+   "domain": "LOC",
+   "namespace": "brick",
+   "parent": "brick:Location",
+   "parents": [
+    "brick:Location"
+   ],
+   "depth": 3,
+   "deprecated": true
+  },
+  {
+   "id": "rec:AccessControlZone",
+   "en": "Access control zone",
+   "label_source": "rdfs:label",
+   "zh": "门禁管控分区",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#AccessControlZone",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Zone",
+   "parents": [
+    "rec:Zone"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:AdmittingRoom",
+   "en": "Admitting room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#AdmittingRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:HealthcareRoom",
+   "parents": [
+    "rec:HealthcareRoom"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Architecture",
+   "en": "Architecture",
+   "label_source": "rdfs:label",
+   "zh": "建筑",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#Architecture",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Space",
+   "parents": [
+    "rec:Space"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Atrium",
+   "en": "Atrium",
+   "label_source": "rdfs:label",
+   "zh": "中庭",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#Atrium",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Auditorium",
+   "en": "Auditorium",
+   "label_source": "rdfs:label",
+   "zh": "礼堂",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#Auditorium",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:BackOffice",
+   "en": "Back office",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#BackOffice",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:BarRoom",
+   "en": "Bar room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#BarRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:FoodHandlingRoom",
+   "parents": [
+    "rec:FoodHandlingRoom"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:BasementLevel",
+   "en": "Basement level",
+   "label_source": "rdfs:label",
+   "zh": "地下层",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#BasementLevel",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Level",
+   "parents": [
+    "rec:Level"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Bathroom",
+   "en": "Bathroom",
+   "label_source": "rdfs:label",
+   "zh": "浴室",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#Bathroom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Bedroom",
+   "en": "Bedroom",
+   "label_source": "rdfs:label",
+   "zh": "卧室",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#Bedroom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:BicycleGarage",
+   "en": "Bicycle garage",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#BicycleGarage",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Garage",
+   "parents": [
+    "rec:Garage"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Building",
+   "en": "Building",
+   "label_source": "rdfs:label",
+   "zh": "楼宇",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#Building",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Architecture",
+   "parents": [
+    "rec:Architecture"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Cabinet",
+   "en": "Cabinet",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Cabinet",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:UtilitiesRoom",
+   "parents": [
+    "rec:UtilitiesRoom"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:CableRoom",
+   "en": "Cable room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#CableRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:UtilitiesRoom",
+   "parents": [
+    "rec:UtilitiesRoom"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:CafeteriaRoom",
+   "en": "Cafeteria room",
+   "label_source": "rdfs:label",
+   "zh": "自助餐厅",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#CafeteriaRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:FoodHandlingRoom",
+   "parents": [
+    "rec:FoodHandlingRoom"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Cinema",
+   "en": "Cinema",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Cinema",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Classroom",
+   "en": "Classroom",
+   "label_source": "rdfs:label",
+   "zh": "教室",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#Classroom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:EducationalRoom",
+   "parents": [
+    "rec:EducationalRoom"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:CleaningRoom",
+   "en": "Cleaning room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#CleaningRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ClimateControlRoom",
+   "en": "Climate-control room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ClimateControlRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:UtilitiesRoom",
+   "parents": [
+    "rec:UtilitiesRoom"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:CloakRoom",
+   "en": "Cloak room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#CloakRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ConferenceRoom",
+   "en": "Conference room",
+   "label_source": "rdfs:label",
+   "zh": "会议室",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#ConferenceRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ConversationRoom",
+   "en": "Conversation room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ConversationRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:CookingRoom",
+   "en": "Cooking room",
+   "label_source": "rdfs:label",
+   "zh": "厨房",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#CookingRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:FoodHandlingRoom",
+   "parents": [
+    "rec:FoodHandlingRoom"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:CopyingRoom",
+   "en": "Copying room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#CopyingRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:DataServerRoom",
+   "en": "Data server room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#DataServerRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:UtilitiesRoom",
+   "parents": [
+    "rec:UtilitiesRoom"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:DiningRoom",
+   "en": "Dining room",
+   "label_source": "rdfs:label",
+   "zh": "餐厅",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#DiningRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:FoodHandlingRoom",
+   "parents": [
+    "rec:FoodHandlingRoom"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:DisabledToilet",
+   "en": "Disabled toilet",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#DisabledToilet",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:PersonalHygiene",
+   "parents": [
+    "rec:PersonalHygiene"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:DishingRoom",
+   "en": "Dishing room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#DishingRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:FoodHandlingRoom",
+   "parents": [
+    "rec:FoodHandlingRoom"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:DressingRoom",
+   "en": "Dressing room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#DressingRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:EducationalRoom",
+   "en": "Educational room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#EducationalRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ElectricityRoom",
+   "en": "Electricity room",
+   "label_source": "rdfs:label",
+   "zh": "电气间",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#ElectricityRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:UtilitiesRoom",
+   "parents": [
+    "rec:UtilitiesRoom"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ElevatorRoom",
+   "en": "Elevator room",
+   "label_source": "rdfs:label",
+   "zh": "电梯机房",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#ElevatorRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ElevatorShaft",
+   "en": "Elevator shaft",
+   "label_source": "rdfs:label",
+   "zh": "电梯井",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#ElevatorShaft",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Entrance",
+   "en": "Entrance",
+   "label_source": "rdfs:label",
+   "zh": "入口",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#Entrance",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ExerciseRoom",
+   "en": "Exercise room",
+   "label_source": "rdfs:label",
+   "zh": "健身房",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#ExerciseRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ExhibitionRoom",
+   "en": "Exhibition room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ExhibitionRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:FittingRoom",
+   "en": "Fitting room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#FittingRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:RetailRoom",
+   "parents": [
+    "rec:RetailRoom"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:FoodHandlingRoom",
+   "en": "Food-handling room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#FoodHandlingRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Garage",
+   "en": "Garage",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Garage",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:GroupRoom",
+   "en": "Group room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#GroupRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:EducationalRoom",
+   "parents": [
+    "rec:EducationalRoom"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:HVACZone",
+   "en": "HVAC zone",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#HVACZone",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Zone",
+   "parents": [
+    "rec:Zone"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Hallway",
+   "en": "Hallway",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Hallway",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:HealthcareRoom",
+   "en": "Healthcare room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#HealthcareRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Hospital",
+   "en": "Hospital",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Hospital",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Building",
+   "parents": [
+    "rec:Building"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Kitchenette",
+   "en": "Kitchenette",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Kitchenette",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:FoodHandlingRoom",
+   "parents": [
+    "rec:FoodHandlingRoom"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Laboratory",
+   "en": "Laboratory",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Laboratory",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:LaboratoryDry",
+   "en": "Laboratory (dry)",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#LaboratoryDry",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Laboratory",
+   "parents": [
+    "rec:Laboratory"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:LaboratoryWet",
+   "en": "Laboratory (wet)",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#LaboratoryWet",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Laboratory",
+   "parents": [
+    "rec:Laboratory"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:LaundryRoom",
+   "en": "Laundry room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#LaundryRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Level",
+   "en": "Level",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Level",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Architecture",
+   "parents": [
+    "rec:Architecture"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Library",
+   "en": "Library",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Library",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:LivingRoom",
+   "en": "Living room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#LivingRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:LoadingReceivingRoom",
+   "en": "Loading/receiving room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#LoadingReceivingRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Lobby",
+   "en": "Lobby",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Lobby",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:LockerRoom",
+   "en": "Locker room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#LockerRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Lounge",
+   "en": "Lounge",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Lounge",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:MailRoom",
+   "en": "Mail room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#MailRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:BackOffice",
+   "parents": [
+    "rec:BackOffice"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:MainEntrance",
+   "en": "Main entrance",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#MainEntrance",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Entrance",
+   "parents": [
+    "rec:Entrance"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:MeditationRoom",
+   "en": "Meditation room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#MeditationRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:MezzanineLevel",
+   "en": "Mezzanine level",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#MezzanineLevel",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Level",
+   "parents": [
+    "rec:Level"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Morgue",
+   "en": "Morgue",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Morgue",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:HealthcareRoom",
+   "parents": [
+    "rec:HealthcareRoom"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:MothersRoom",
+   "en": "Mothers' room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#MothersRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:MultiPurposeRoom",
+   "en": "Multi-purpose room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#MultiPurposeRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:NeonatalNursingRoom",
+   "en": "Neonatal nursing room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#NeonatalNursingRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:HealthcareRoom",
+   "parents": [
+    "rec:HealthcareRoom"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:OccupancyZone",
+   "en": "Occupancy zone",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#OccupancyZone",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Zone",
+   "parents": [
+    "rec:Zone"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Office",
+   "en": "Office",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Office",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:OfficeLandscape",
+   "en": "OfficeLandscape",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#OfficeLandscape",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Office",
+   "parents": [
+    "rec:Office"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:OfficeRoom",
+   "en": "OfficeRoom",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#OfficeRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Office",
+   "parents": [
+    "rec:Office"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:OperatingRoom",
+   "en": "Operating room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#OperatingRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:HealthcareRoom",
+   "parents": [
+    "rec:HealthcareRoom"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:OutdoorSpace",
+   "en": "Outdoor space",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#OutdoorSpace",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Architecture",
+   "parents": [
+    "rec:Architecture"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:OutpatientServicesRoom",
+   "en": "Outpatient services room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#OutpatientServicesRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:HealthcareRoom",
+   "parents": [
+    "rec:HealthcareRoom"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Pantry",
+   "en": "Pantry",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Pantry",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:FoodHandlingRoom",
+   "parents": [
+    "rec:FoodHandlingRoom"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ParkingSpace",
+   "en": "Parking space",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ParkingSpace",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Zone",
+   "parents": [
+    "rec:Zone"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:PersonalHygiene",
+   "en": "Personal hygiene room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#PersonalHygiene",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:PharmacyRoom",
+   "en": "Pharmacy room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#PharmacyRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:HealthcareRoom",
+   "parents": [
+    "rec:HealthcareRoom"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:PhoneBooth",
+   "en": "PhoneBooth",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#PhoneBooth",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Office",
+   "parents": [
+    "rec:Office"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:RadiologyRoom",
+   "en": "Radiology room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#RadiologyRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:HealthcareRoom",
+   "parents": [
+    "rec:HealthcareRoom"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Reception",
+   "en": "Reception",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Reception",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:RecordingRoom",
+   "en": "Recording room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#RecordingRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:RecreationalRoom",
+   "en": "Recreational room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#RecreationalRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Region",
+   "en": "Region",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Region",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Space",
+   "parents": [
+    "rec:Space"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:RestingRoom",
+   "en": "Resting room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#RestingRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:RetailRoom",
+   "en": "Retail room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#RetailRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:RoofLevel",
+   "en": "Roof level",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#RoofLevel",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Level",
+   "parents": [
+    "rec:Level"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Room",
+   "en": "Room",
+   "label_source": "rdfs:label",
+   "zh": "房间",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#Room",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Architecture",
+   "parents": [
+    "rec:Architecture"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Sauna",
+   "en": "Sauna",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Sauna",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:PersonalHygiene",
+   "parents": [
+    "rec:PersonalHygiene"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:School",
+   "en": "School",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#School",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Building",
+   "parents": [
+    "rec:Building"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:SecurityRoom",
+   "en": "Security room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#SecurityRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ServiceEntrance",
+   "en": "Service entrance",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ServiceEntrance",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Entrance",
+   "parents": [
+    "rec:Entrance"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ServiceShaft",
+   "en": "Service shaft",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ServiceShaft",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Shelter",
+   "en": "Shelter",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Shelter",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ShelterGasLock",
+   "en": "Shelter gas lock",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ShelterGasLock",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Shelter",
+   "parents": [
+    "rec:Shelter"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ShelterRoom",
+   "en": "Shelter room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ShelterRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Shelter",
+   "parents": [
+    "rec:Shelter"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ShoppingMall",
+   "en": "Shopping mall",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ShoppingMall",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Building",
+   "parents": [
+    "rec:Building"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ShowerRoom",
+   "en": "Shower room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ShowerRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:PersonalHygiene",
+   "parents": [
+    "rec:PersonalHygiene"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Site",
+   "en": "Site",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Site",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Architecture",
+   "parents": [
+    "rec:Architecture"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:SmallStudyRoom",
+   "en": "Small study room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#SmallStudyRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:EducationalRoom",
+   "parents": [
+    "rec:EducationalRoom"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Space",
+   "en": "Space",
+   "label_source": "rdfs:label",
+   "zh": "空间",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#Space",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": null,
+   "parents": [],
+   "depth": 0,
+   "deprecated": false
+  },
+  {
+   "id": "rec:SprinklerRoom",
+   "en": "Sprinkler room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#SprinklerRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:UtilitiesRoom",
+   "parents": [
+    "rec:UtilitiesRoom"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Stadium",
+   "en": "Stadium",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Stadium",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Building",
+   "parents": [
+    "rec:Building"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:StaffRoom",
+   "en": "Staff room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#StaffRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Stairwell",
+   "en": "Stairwell",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Stairwell",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Storage",
+   "en": "Storage",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Storage",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:SubBuilding",
+   "en": "Sub-building",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#SubBuilding",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Architecture",
+   "parents": [
+    "rec:Architecture"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:TeamRoom",
+   "en": "Team Room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#TeamRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:TelecommunicationRoom",
+   "en": "Telecommunication room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#TelecommunicationRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:CableRoom",
+   "parents": [
+    "rec:CableRoom"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Theater",
+   "en": "Theater",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Theater",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:TherapyRoom",
+   "en": "Therapy room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#TherapyRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:HealthcareRoom",
+   "parents": [
+    "rec:HealthcareRoom"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Toilet",
+   "en": "Toilet",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Toilet",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:PersonalHygiene",
+   "parents": [
+    "rec:PersonalHygiene"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:TreatmentRoom",
+   "en": "Treatment room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#TreatmentRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:TreatmentWaitingRoom",
+   "en": "Treatment waiting room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#TreatmentWaitingRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:TreatmentRoom",
+   "parents": [
+    "rec:TreatmentRoom"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:UtilitiesRoom",
+   "en": "Utilities room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#UtilitiesRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:VirtualBuilding",
+   "en": "Virtual building",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#VirtualBuilding",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Building",
+   "parents": [
+    "rec:Building"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:WasteManagementRoom",
+   "en": "Waste management room",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#WasteManagementRoom",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Wing",
+   "en": "Wing",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Wing",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Architecture",
+   "parents": [
+    "rec:Architecture"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Workshop",
+   "en": "Workshop",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Workshop",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Room",
+   "parents": [
+    "rec:Room"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Workspace",
+   "en": "Workspace",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Workspace",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Zone",
+   "parents": [
+    "rec:Zone"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Zone",
+   "en": "Zone",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Zone",
+   "domain": "LOC",
+   "namespace": "rec",
+   "parent": "rec:Architecture",
+   "parents": [
+    "rec:Architecture"
+   ],
+   "depth": 2,
+   "deprecated": false
+  }
+ ]
+}

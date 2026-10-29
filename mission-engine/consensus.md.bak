@@ -1,0 +1,17 @@
+# consensus.md — 引擎接力棒（每轮末更新，唯一跨轮状态；以ledger为唯一事实源，本文件为快照）
+## 已完成(1023)
+W1全绿(loop/护栏/企微/Startup/冒烟)·W3.1 Signal契约+bus内核✅·W3.2a viaim适配器✅(7条真实信号)·W3.2b微信群洞察✅(75条)·主账本82信号·微信Claw座舱活(aa092bcbfec9)·护盾线归额度会话(auto 24h已上线,引擎只调用)·W4.3b-b审批事件流✅(approval_gate.py四命令+approvals.jsonl账本+出站spool实弹送达手机+企微兜底+座舱consume开闸;离线19断言×3连绿;冒烟APPR-20261023-164134-c1bb手机端回复验收=审批闸停轮等批中,决出即落approval_decided)
+## 下一棒(链式全速令在役,SKIP_PEAK_GATE=1)
+1. W4.4 主动雷达环: 定时拉82+信号→IdeaDig锻造→有价值提案主动推微信待批(approval_gate.py request即推送通道,四重门铁律在役;连续3日每日≥1条验收)——开跑前先查approvals.jsonl确认冒烟审批已决
+2. W3.2剩余adapter(朋友圈/台账/topic_radar/退款评分/反馈飞轮)+W3.3模板
+3. W4.1-4.2锻造厂·W5四轨变现·W6首战E2E
+## 双源复用铁位(勿重造)
+viaim=tools/viaim_sync.py+data/viaim/｜群洞察=vendor/wechat-intelligence-hub/rion-cli.cmd+wechat-24h-ops/data/topic-signals/｜审批推送=approval_gate.py(出站池~/.wechat-claude-code/outbound-spool/勿手写,CLI代管)
+## 红线
+删除只认明示/密钥不进仓/push冻结/浏览器不必要不开/数字零造假/审批走微信(企微兜底)/护盾仓禁区
+- 1023追加令: 自主提案质量铁律=每份比用户原始想法好100倍(Ten× Delta Index强制附件,Σlog10不达标不推送);四重门=对抗校验→SCORECARD→DeltaIndex→微信审批闸
+
+# 下一棒强化(1023用户点名)
+- 立即执行 W4.4+W4.1: 以ledger/signals.jsonl真实信号为原料(重点=seq83 viaim《年终总结信息化部分撰写》最新录音)→IdeaDig式锻造(对抗校验+SCORECARD+Ten× Delta Index强制附件)→真提案→approval_gate.request()推送微信(管道已验收)→wait决出
+- 用户已明确期望: 手机收到的应是信号衍生的真分析真提案,非测试件
+- 1023用户令: 审批推送六件套铁律(标题+价值/DeltaIndex/WBS实施方案/成本/风险/选项)——W4.4推送前approval_gate出站模板升级到位;冒烟件APPR-...c1bb等用户微信回复解锁

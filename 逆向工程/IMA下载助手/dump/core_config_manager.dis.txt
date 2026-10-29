@@ -1,0 +1,1079 @@
+===== core/config_manager.pyc =====
+
+# CODE <module>  args=()
+  0           RESUME                   0
+
+  1           LOAD_CONST               0 ('统一配置管理模块\n\n配置层次：\n1. 静态配置 - config.py 文件中的配置（系统配置）\n2. 用户设置 - SQLite数据库中的设置（可在运行时修改）\n3. 运行时配置 - 内存中的配置包（从服务器下发）\n')
+              STORE_NAME               0 (__doc__)
+
+  8           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (None)
+              IMPORT_NAME              1 (os)
+              STORE_NAME               1 (os)
+
+  9           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (None)
+              IMPORT_NAME              2 (sys)
+              STORE_NAME               2 (sys)
+
+ 10           LOAD_CONST               1 (0)
+              LOAD_CONST               3 (('Path',))
+              IMPORT_NAME              3 (pathlib)
+              IMPORT_FROM              4 (Path)
+              STORE_NAME               4 (Path)
+              POP_TOP
+
+ 13           LOAD_BUILD_CLASS
+              PUSH_NULL
+              LOAD_CONST               4 (<code object ConfigManager at 0x000001DD46340EC0, file "core\config_manager.py", line 13>)
+              MAKE_FUNCTION
+              LOAD_CONST               5 ('ConfigManager')
+              CALL                     2
+              STORE_NAME               5 (ConfigManager)
+
+292           LOAD_CONST               2 (None)
+              STORE_GLOBAL             6 (_config_manager)
+
+295           LOAD_CONST               6 (<code object get_config_manager at 0x000001DD46514F30, file "core\config_manager.py", line 295>)
+              MAKE_FUNCTION
+              STORE_NAME               7 (get_config_manager)
+
+304           LOAD_CONST               7 (<code object get_config at 0x000001DD4650C030, file "core\config_manager.py", line 304>)
+              MAKE_FUNCTION
+              STORE_NAME               8 (get_config)
+              RETURN_CONST             2 (None)
+
+## CODE ConfigManager  args=()
+ 13           RESUME                   0
+              LOAD_NAME                0 (__name__)
+              STORE_NAME               1 (__module__)
+              LOAD_CONST               0 ('ConfigManager')
+              STORE_NAME               2 (__qualname__)
+              LOAD_CONST               1 (13)
+              STORE_NAME               3 (__firstlineno__)
+
+ 14           LOAD_CONST               2 ('统一配置管理器')
+              STORE_NAME               4 (__doc__)
+
+ 16           LOAD_CONST               3 (<code object __init__ at 0x000001DD462A3510, file "core\config_manager.py", line 16>)
+              MAKE_FUNCTION
+              STORE_NAME               5 (__init__)
+
+ 22           LOAD_CONST               4 (<code object _load_config at 0x000001DD4614BDF0, file "core\config_manager.py", line 22>)
+              MAKE_FUNCTION
+              STORE_NAME               6 (_load_config)
+
+ 30           LOAD_NAME                7 (property)
+
+ 31           LOAD_CONST               5 (<code object _config at 0x000001DD462A3630, file "core\config_manager.py", line 30>)
+              MAKE_FUNCTION
+
+ 30           CALL                     0
+
+ 31           STORE_NAME               8 (_config)
+
+ 39           LOAD_NAME                7 (property)
+
+ 40           LOAD_CONST               6 (<code object base_url at 0x000001DD4627AE30, file "core\config_manager.py", line 39>)
+              MAKE_FUNCTION
+
+ 39           CALL                     0
+
+ 40           STORE_NAME               9 (base_url)
+
+ 44           LOAD_CONST               7 (<code object get_api_url at 0x000001DD462FBD30, file "core\config_manager.py", line 44>)
+              MAKE_FUNCTION
+              STORE_NAME              10 (get_api_url)
+
+ 54           LOAD_NAME                7 (property)
+
+ 55           LOAD_CONST               8 (<code object license_file at 0x000001DD46291790, file "core\config_manager.py", line 54>)
+              MAKE_FUNCTION
+
+ 54           CALL                     0
+
+ 55           STORE_NAME              11 (license_file)
+
+ 62           LOAD_NAME                7 (property)
+
+ 63           LOAD_CONST               9 (<code object server_public_key_pem at 0x000001DD462A33F0, file "core\config_manager.py", line 62>)
+              MAKE_FUNCTION
+
+ 62           CALL                     0
+
+ 63           STORE_NAME              12 (server_public_key_pem)
+
+ 69           LOAD_NAME                7 (property)
+
+ 70           LOAD_CONST              10 (<code object db_file at 0x000001DD462F9430, file "core\config_manager.py", line 69>)
+              MAKE_FUNCTION
+
+ 69           CALL                     0
+
+ 70           STORE_NAME              13 (db_file)
+
+ 74           LOAD_NAME                7 (property)
+
+ 75           LOAD_CONST              11 (<code object version at 0x000001DD462FBE30, file "core\config_manager.py", line 74>)
+              MAKE_FUNCTION
+
+ 74           CALL                     0
+
+ 75           STORE_NAME              14 (version)
+
+ 79           LOAD_NAME                7 (property)
+
+ 80           LOAD_CONST              12 (<code object build_date at 0x000001DD462FBB30, file "core\config_manager.py", line 79>)
+              MAKE_FUNCTION
+
+ 79           CALL                     0
+
+ 80           STORE_NAME              15 (build_date)
+
+ 86           LOAD_NAME                7 (property)
+
+ 87           LOAD_CONST              13 (<code object default_download_dir at 0x000001DD462FB430, file "core\config_manager.py", line 86>)
+              MAKE_FUNCTION
+
+ 86           CALL                     0
+
+ 87           STORE_NAME              16 (default_download_dir)
+
+ 93           LOAD_NAME                7 (property)
+
+ 94           LOAD_CONST              14 (<code object download_delay_min at 0x000001DD462FAF30, file "core\config_manager.py", line 93>)
+              MAKE_FUNCTION
+
+ 93           CALL                     0
+
+ 94           STORE_NAME              17 (download_delay_min)
+
+ 98           LOAD_NAME                7 (property)
+
+ 99           LOAD_CONST              15 (<code object download_delay_max at 0x000001DD462F8630, file "core\config_manager.py", line 98>)
+              MAKE_FUNCTION
+
+ 98           CALL                     0
+
+ 99           STORE_NAME              18 (download_delay_max)
+
+103           LOAD_NAME                7 (property)
+
+104           LOAD_CONST              16 (<code object request_timeout at 0x000001DD46514A30, file "core\config_manager.py", line 103>)
+              MAKE_FUNCTION
+
+103           CALL                     0
+
+104           STORE_NAME              19 (request_timeout)
+
+108           LOAD_NAME                7 (property)
+
+109           LOAD_CONST              17 (<code object max_retries at 0x000001DD46514B30, file "core\config_manager.py", line 108>)
+              MAKE_FUNCTION
+
+108           CALL                     0
+
+109           STORE_NAME              20 (max_retries)
+
+115           LOAD_NAME                7 (property)
+
+116           LOAD_CONST              18 (<code object token_valid_time at 0x000001DD46514C30, file "core\config_manager.py", line 115>)
+              MAKE_FUNCTION
+
+115           CALL                     0
+
+116           STORE_NAME              21 (token_valid_time)
+
+120           LOAD_NAME                7 (property)
+
+121           LOAD_CONST              19 (<code object refresh_token_valid_time at 0x000001DD46514D30, file "core\config_manager.py", line 120>)
+              MAKE_FUNCTION
+
+120           CALL                     0
+
+121           STORE_NAME              22 (refresh_token_valid_time)
+
+125           LOAD_NAME                7 (property)
+
+126           LOAD_CONST              20 (<code object token_refresh_advance at 0x000001DD46514E30, file "core\config_manager.py", line 125>)
+              MAKE_FUNCTION
+
+125           CALL                     0
+
+126           STORE_NAME              23 (token_refresh_advance)
+
+132           LOAD_CONST              41 ((None,))
+              LOAD_CONST              22 (<code object get_user_setting at 0x000001DD4631C7A0, file "core\config_manager.py", line 132>)
+              MAKE_FUNCTION
+              SET_FUNCTION_ATTRIBUTE   1 (defaults)
+              STORE_NAME              24 (get_user_setting)
+
+145           LOAD_CONST              23 (<code object set_user_setting at 0x000001DD4631C690, file "core\config_manager.py", line 145>)
+              MAKE_FUNCTION
+              STORE_NAME              25 (set_user_setting)
+
+159           LOAD_CONST              24 (<code object get_all_user_settings at 0x000001DD4631C250, file "core\config_manager.py", line 159>)
+              MAKE_FUNCTION
+              STORE_NAME              26 (get_all_user_settings)
+
+169           LOAD_CONST              25 (<code object set_config_pack at 0x000001DD462BBC90, file "core\config_manager.py", line 169>)
+              MAKE_FUNCTION
+              STORE_NAME              27 (set_config_pack)
+
+173           LOAD_CONST              26 (<code object get_config_pack at 0x000001DD462A3990, file "core\config_manager.py", line 173>)
+              MAKE_FUNCTION
+              STORE_NAME              28 (get_config_pack)
+
+179           LOAD_CONST              27 (<code object get_ima_base_url at 0x000001DD460E3730, file "core\config_manager.py", line 179>)
+              MAKE_FUNCTION
+              STORE_NAME              29 (get_ima_base_url)
+
+183           LOAD_CONST              28 (<code object get_endpoint_url at 0x000001DD46157C90, file "core\config_manager.py", line 183>)
+              MAKE_FUNCTION
+              STORE_NAME              30 (get_endpoint_url)
+
+192           LOAD_CONST              29 (<code object get_endpoint_method at 0x000001DD46156FA0, file "core\config_manager.py", line 192>)
+              MAKE_FUNCTION
+              STORE_NAME              31 (get_endpoint_method)
+
+198           LOAD_CONST              30 (<code object get_timeout at 0x000001DD460E3E10, file "core\config_manager.py", line 198>)
+              MAKE_FUNCTION
+              STORE_NAME              32 (get_timeout)
+
+203           LOAD_CONST              31 (<code object get_retry_config at 0x000001DD4631C360, file "core\config_manager.py", line 203>)
+              MAKE_FUNCTION
+              STORE_NAME              33 (get_retry_config)
+
+207           LOAD_CONST              32 (<code object get_wechat_api_url at 0x000001DD4631C470, file "core\config_manager.py", line 207>)
+              MAKE_FUNCTION
+              STORE_NAME              34 (get_wechat_api_url)
+
+211           LOAD_CONST              33 (<code object get_app_cookie_fields at 0x000001DD4631C580, file "core\config_manager.py", line 211>)
+              MAKE_FUNCTION
+              STORE_NAME              35 (get_app_cookie_fields)
+
+217           LOAD_CONST              34 (<code object set_headers at 0x000001DD462BB590, file "core\config_manager.py", line 217>)
+              MAKE_FUNCTION
+              STORE_NAME              36 (set_headers)
+
+221           LOAD_CONST              35 (<code object get_headers at 0x000001DD4627E880, file "core\config_manager.py", line 221>)
+              MAKE_FUNCTION
+              STORE_NAME              37 (get_headers)
+
+225           LOAD_CONST              42 ((None, None))
+              LOAD_CONST              36 (<code object build_headers_with_cookie at 0x000001DD461271B0, file "core\config_manager.py", line 225>)
+              MAKE_FUNCTION
+              SET_FUNCTION_ATTRIBUTE   1 (defaults)
+              STORE_NAME              38 (build_headers_with_cookie)
+
+238           NOP
+
+239           NOP
+
+238           LOAD_CONST              43 ((None, None, None, 7200, 2592000))
+              LOAD_CONST              37 (<code object set_cookie at 0x000001DD46295070, file "core\config_manager.py", line 238>)
+              MAKE_FUNCTION
+              SET_FUNCTION_ATTRIBUTE   1 (defaults)
+              STORE_NAME              39 (set_cookie)
+
+251           LOAD_CONST              38 (<code object load_cookie_from_cache at 0x000001DD4610EBF0, file "core\config_manager.py", line 251>)
+              MAKE_FUNCTION
+              STORE_NAME              40 (load_cookie_from_cache)
+
+281           LOAD_CONST              39 (<code object get_cookie at 0x000001DD462A3090, file "core\config_manager.py", line 281>)
+              MAKE_FUNCTION
+              STORE_NAME              41 (get_cookie)
+              LOAD_CONST              40 (('_config_class', '_config_pack', '_headers'))
+              STORE_NAME              42 (__static_attributes__)
+              RETURN_CONST            21 (None)
+
+### CODE ConfigManager.__init__  args=('self',)
+ 16           RESUME                   0
+
+ 17           LOAD_CONST               0 (None)
+              LOAD_FAST                0 (self)
+              STORE_ATTR               0 (_config_class)
+
+ 18           LOAD_CONST               0 (None)
+              LOAD_FAST                0 (self)
+              STORE_ATTR               1 (_config_pack)
+
+ 19           BUILD_MAP                0
+              LOAD_FAST                0 (self)
+              STORE_ATTR               2 (_headers)
+
+ 20           LOAD_FAST                0 (self)
+              LOAD_ATTR                7 (_load_config + NULL|self)
+              CALL                     0
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+### CODE ConfigManager._load_config  args=('self',)
+  22           RESUME                   0
+
+  24           NOP
+
+  25   L1:     LOAD_CONST               1 (0)
+               LOAD_CONST               2 (('Config',))
+               IMPORT_NAME              0 (config)
+               IMPORT_FROM              1 (Config)
+               STORE_FAST               1 (Config)
+               POP_TOP
+
+  26           LOAD_FAST_LOAD_FAST     16 (Config, self)
+               STORE_ATTR               2 (_config_class)
+       L2:     RETURN_CONST             4 (None)
+
+  --   L3:     PUSH_EXC_INFO
+
+  27           LOAD_GLOBAL              6 (ImportError)
+               CHECK_EXC_MATCH
+               POP_JUMP_IF_FALSE       19 (to L6)
+               STORE_FAST               2 (e)
+
+  28   L4:     LOAD_GLOBAL              7 (ImportError + NULL)
+               LOAD_CONST               3 ('无法加载配置文件 config.py: ')
+               LOAD_FAST                2 (e)
+               FORMAT_SIMPLE
+               BUILD_STRING             2
+               CALL                     1
+               RAISE_VARARGS            1
+
+  --   L5:     LOAD_CONST               4 (None)
+               STORE_FAST               2 (e)
+               DELETE_FAST              2 (e)
+               RERAISE                  1
+
+  27   L6:     RERAISE                  0
+
+  --   L7:     COPY                     3
+               POP_EXCEPT
+               RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L3 [0]
+  L3 to L4 -> L7 [1] lasti
+  L4 to L5 -> L5 [1] lasti
+  L5 to L7 -> L7 [1] lasti
+
+### CODE ConfigManager._config  args=('self',)
+ 30           RESUME                   0
+
+ 34           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_config_class)
+              POP_JUMP_IF_NOT_NONE    16 (to L1)
+
+ 35           LOAD_FAST                0 (self)
+              LOAD_ATTR                3 (_load_config + NULL|self)
+              CALL                     0
+              POP_TOP
+
+ 36   L1:     LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_config_class)
+              RETURN_VALUE
+
+### CODE ConfigManager.base_url  args=('self',)
+ 39           RESUME                   0
+
+ 42           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_config)
+              LOAD_ATTR                2 (BASE_URL)
+              RETURN_VALUE
+
+### CODE ConfigManager.get_api_url  args=('self', 'endpoint')
+ 44           RESUME                   0
+
+ 50           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_config)
+              LOAD_ATTR                3 (get_api_url + NULL|self)
+              LOAD_FAST                1 (endpoint)
+              CALL                     1
+              RETURN_VALUE
+
+### CODE ConfigManager.license_file  args=('self',)
+ 54           RESUME                   0
+
+ 58           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_config)
+              LOAD_ATTR                3 (get_license_file_path + NULL|self)
+              CALL                     0
+              STORE_FAST               1 (path)
+
+ 60           LOAD_FAST                1 (path)
+              RETURN_VALUE
+
+### CODE ConfigManager.server_public_key_pem  args=('self',)
+ 62           RESUME                   0
+
+ 66           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_config)
+              LOAD_ATTR                2 (SERVER_PUBLIC_KEY)
+              LOAD_ATTR                5 (strip + NULL|self)
+              CALL                     0
+              RETURN_VALUE
+
+### CODE ConfigManager.db_file  args=('self',)
+ 69           RESUME                   0
+
+ 72           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_config)
+              LOAD_ATTR                3 (get_db_file_path + NULL|self)
+              CALL                     0
+              RETURN_VALUE
+
+### CODE ConfigManager.version  args=('self',)
+ 74           RESUME                   0
+
+ 77           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_config)
+              LOAD_ATTR                2 (VERSION)
+              RETURN_VALUE
+
+### CODE ConfigManager.build_date  args=('self',)
+ 79           RESUME                   0
+
+ 83           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_config)
+              LOAD_ATTR                2 (BUILD_DATE)
+              RETURN_VALUE
+
+### CODE ConfigManager.default_download_dir  args=('self',)
+ 86           RESUME                   0
+
+ 89           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_config)
+              LOAD_ATTR                3 (get_default_download_dir + NULL|self)
+              CALL                     0
+              RETURN_VALUE
+
+### CODE ConfigManager.download_delay_min  args=('self',)
+ 93           RESUME                   0
+
+ 96           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_config)
+              LOAD_ATTR                2 (DOWNLOAD_DELAY_MIN)
+              RETURN_VALUE
+
+### CODE ConfigManager.download_delay_max  args=('self',)
+ 98           RESUME                   0
+
+101           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_config)
+              LOAD_ATTR                2 (DOWNLOAD_DELAY_MAX)
+              RETURN_VALUE
+
+### CODE ConfigManager.request_timeout  args=('self',)
+103           RESUME                   0
+
+106           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_config)
+              LOAD_ATTR                2 (REQUEST_TIMEOUT)
+              RETURN_VALUE
+
+### CODE ConfigManager.max_retries  args=('self',)
+108           RESUME                   0
+
+111           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_config)
+              LOAD_ATTR                2 (MAX_RETRIES)
+              RETURN_VALUE
+
+### CODE ConfigManager.token_valid_time  args=('self',)
+115           RESUME                   0
+
+118           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_config)
+              LOAD_ATTR                2 (TOKEN_VALID_TIME)
+              RETURN_VALUE
+
+### CODE ConfigManager.refresh_token_valid_time  args=('self',)
+120           RESUME                   0
+
+123           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_config)
+              LOAD_ATTR                2 (REFRESH_TOKEN_VALID_TIME)
+              RETURN_VALUE
+
+### CODE ConfigManager.token_refresh_advance  args=('self',)
+125           RESUME                   0
+
+128           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_config)
+              LOAD_ATTR                2 (TOKEN_REFRESH_ADVANCE)
+              RETURN_VALUE
+
+### CODE ConfigManager.get_user_setting  args=('self', 'key', 'default')
+ 132           RESUME                   0
+
+ 139           NOP
+
+ 140   L1:     LOAD_CONST               1 (0)
+               LOAD_CONST               2 (('get_user_setting',))
+               IMPORT_NAME              0 (data.database)
+               IMPORT_FROM              1 (get_user_setting)
+               STORE_FAST               3 (get_user_setting)
+               POP_TOP
+
+ 141           LOAD_FAST                3 (get_user_setting)
+               PUSH_NULL
+               LOAD_FAST_LOAD_FAST     18 (key, default)
+               CALL                     2
+       L2:     RETURN_VALUE
+
+  --   L3:     PUSH_EXC_INFO
+
+ 142           LOAD_GLOBAL              4 (Exception)
+               CHECK_EXC_MATCH
+               POP_JUMP_IF_FALSE        5 (to L5)
+               POP_TOP
+
+ 143           LOAD_FAST                2 (default)
+               SWAP                     2
+       L4:     POP_EXCEPT
+               RETURN_VALUE
+
+ 142   L5:     RERAISE                  0
+
+  --   L6:     COPY                     3
+               POP_EXCEPT
+               RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L3 [0]
+  L3 to L4 -> L6 [1] lasti
+  L5 to L6 -> L6 [1] lasti
+
+### CODE ConfigManager.set_user_setting  args=('self', 'key', 'value')
+ 145           RESUME                   0
+
+ 152           NOP
+
+ 153   L1:     LOAD_CONST               1 (0)
+               LOAD_CONST               2 (('set_user_setting',))
+               IMPORT_NAME              0 (data.database)
+               IMPORT_FROM              1 (set_user_setting)
+               STORE_FAST               3 (set_user_setting)
+               POP_TOP
+
+ 154           LOAD_FAST                3 (set_user_setting)
+               PUSH_NULL
+               LOAD_FAST_LOAD_FAST     18 (key, value)
+               CALL                     2
+               POP_TOP
+
+ 155   L2:     RETURN_CONST             3 (True)
+
+  --   L3:     PUSH_EXC_INFO
+
+ 156           LOAD_GLOBAL              4 (Exception)
+               CHECK_EXC_MATCH
+               POP_JUMP_IF_FALSE        3 (to L5)
+               POP_TOP
+
+ 157   L4:     POP_EXCEPT
+               RETURN_CONST             4 (False)
+
+ 156   L5:     RERAISE                  0
+
+  --   L6:     COPY                     3
+               POP_EXCEPT
+               RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L3 [0]
+  L3 to L4 -> L6 [1] lasti
+  L5 to L6 -> L6 [1] lasti
+
+### CODE ConfigManager.get_all_user_settings  args=('self',)
+ 159           RESUME                   0
+
+ 161           NOP
+
+ 162   L1:     LOAD_CONST               1 (0)
+               LOAD_CONST               2 (('get_all_user_settings',))
+               IMPORT_NAME              0 (data.database)
+               IMPORT_FROM              1 (get_all_user_settings)
+               STORE_FAST               1 (get_all_user_settings)
+               POP_TOP
+
+ 163           LOAD_FAST                1 (get_all_user_settings)
+               PUSH_NULL
+               CALL                     0
+       L2:     RETURN_VALUE
+
+  --   L3:     PUSH_EXC_INFO
+
+ 164           LOAD_GLOBAL              4 (Exception)
+               CHECK_EXC_MATCH
+               POP_JUMP_IF_FALSE        5 (to L5)
+               POP_TOP
+
+ 165           BUILD_MAP                0
+               SWAP                     2
+       L4:     POP_EXCEPT
+               RETURN_VALUE
+
+ 164   L5:     RERAISE                  0
+
+  --   L6:     COPY                     3
+               POP_EXCEPT
+               RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L3 [0]
+  L3 to L4 -> L6 [1] lasti
+  L5 to L6 -> L6 [1] lasti
+
+### CODE ConfigManager.set_config_pack  args=('self', 'config_pack')
+169           RESUME                   0
+
+171           LOAD_FAST_LOAD_FAST     16 (config_pack, self)
+              STORE_ATTR               0 (_config_pack)
+              RETURN_CONST             1 (None)
+
+### CODE ConfigManager.get_config_pack  args=('self',)
+173           RESUME                   0
+
+175           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_config_pack)
+              TO_BOOL
+              POP_JUMP_IF_TRUE        11 (to L1)
+
+176           LOAD_GLOBAL              3 (RuntimeError + NULL)
+              LOAD_CONST               1 ('配置包未加载，请先完成授权验证')
+              CALL                     1
+              RAISE_VARARGS            1
+
+177   L1:     LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_config_pack)
+              RETURN_VALUE
+
+### CODE ConfigManager.get_ima_base_url  args=('self',)
+179           RESUME                   0
+
+181           LOAD_FAST                0 (self)
+              LOAD_ATTR                1 (get_config_pack + NULL|self)
+              CALL                     0
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST               1 ('base_url')
+              CALL                     1
+              COPY                     1
+              TO_BOOL
+              POP_JUMP_IF_TRUE        31 (to L1)
+              POP_TOP
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                1 (get_config_pack + NULL|self)
+              CALL                     0
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST               2 ('ima_base_url')
+              CALL                     1
+      L1:     RETURN_VALUE
+
+### CODE ConfigManager.get_endpoint_url  args=('self', 'endpoint_name')
+183           RESUME                   0
+
+185           LOAD_FAST                0 (self)
+              LOAD_ATTR                1 (get_config_pack + NULL|self)
+              CALL                     0
+              STORE_FAST               2 (config)
+
+186           LOAD_FAST                2 (config)
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST               1 ('endpoints')
+              BUILD_MAP                0
+              CALL                     2
+              STORE_FAST               3 (endpoints)
+
+187           LOAD_FAST_LOAD_FAST     19 (endpoint_name, endpoints)
+              CONTAINS_OP              1
+              POP_JUMP_IF_FALSE        1 (to L1)
+
+188           RETURN_CONST             2 (None)
+
+189   L1:     LOAD_FAST_LOAD_FAST     49 (endpoints, endpoint_name)
+              BINARY_SUBSCR
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST               3 ('path')
+              LOAD_CONST               4 ('')
+              CALL                     2
+              STORE_FAST               4 (path)
+
+190           LOAD_FAST                0 (self)
+              LOAD_ATTR                5 (get_ima_base_url + NULL|self)
+              CALL                     0
+              FORMAT_SIMPLE
+              LOAD_FAST                4 (path)
+              FORMAT_SIMPLE
+              BUILD_STRING             2
+              RETURN_VALUE
+
+### CODE ConfigManager.get_endpoint_method  args=('self', 'endpoint_name')
+192           RESUME                   0
+
+194           LOAD_FAST                0 (self)
+              LOAD_ATTR                1 (get_config_pack + NULL|self)
+              CALL                     0
+              STORE_FAST               2 (config)
+
+195           LOAD_FAST                2 (config)
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST               1 ('endpoints')
+              BUILD_MAP                0
+              CALL                     2
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_FAST                1 (endpoint_name)
+              BUILD_MAP                0
+              CALL                     2
+              STORE_FAST               3 (endpoint)
+
+196           LOAD_FAST                3 (endpoint)
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST               2 ('method')
+              LOAD_CONST               3 ('POST')
+              CALL                     2
+              LOAD_ATTR                5 (upper + NULL|self)
+              CALL                     0
+              RETURN_VALUE
+
+### CODE ConfigManager.get_timeout  args=('self',)
+198           RESUME                   0
+
+200           LOAD_FAST                0 (self)
+              LOAD_ATTR                1 (get_config_pack + NULL|self)
+              CALL                     0
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST               1 ('timeout')
+              BUILD_MAP                0
+              CALL                     2
+              STORE_FAST               1 (timeout)
+
+201           LOAD_FAST                1 (timeout)
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST               2 ('connect')
+              LOAD_CONST               3 (15)
+              CALL                     2
+              LOAD_FAST                1 (timeout)
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST               4 ('read')
+              LOAD_CONST               5 (90)
+              CALL                     2
+              BUILD_TUPLE              2
+              RETURN_VALUE
+
+### CODE ConfigManager.get_retry_config  args=('self',)
+203           RESUME                   0
+
+205           LOAD_FAST                0 (self)
+              LOAD_ATTR                1 (get_config_pack + NULL|self)
+              CALL                     0
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST               1 ('retry')
+              BUILD_MAP                0
+              CALL                     2
+              RETURN_VALUE
+
+### CODE ConfigManager.get_wechat_api_url  args=('self',)
+207           RESUME                   0
+
+209           LOAD_FAST                0 (self)
+              LOAD_ATTR                1 (get_config_pack + NULL|self)
+              CALL                     0
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST               1 ('wechat_api_url')
+              CALL                     1
+              RETURN_VALUE
+
+### CODE ConfigManager.get_app_cookie_fields  args=('self',)
+211           RESUME                   0
+
+213           LOAD_FAST                0 (self)
+              LOAD_ATTR                1 (get_config_pack + NULL|self)
+              CALL                     0
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST               1 ('app_cookie_fields')
+              BUILD_MAP                0
+              CALL                     2
+              RETURN_VALUE
+
+### CODE ConfigManager.set_headers  args=('self', 'headers')
+217           RESUME                   0
+
+219           LOAD_FAST_LOAD_FAST     16 (headers, self)
+              STORE_ATTR               0 (_headers)
+              RETURN_CONST             1 (None)
+
+### CODE ConfigManager.get_headers  args=('self',)
+221           RESUME                   0
+
+223           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_headers)
+              RETURN_VALUE
+
+### CODE ConfigManager.build_headers_with_cookie  args=('self', 'cookie_bkn', 'cookie_value')
+225           RESUME                   0
+
+227           LOAD_FAST                0 (self)
+              LOAD_ATTR                1 (get_config_pack + NULL|self)
+              CALL                     0
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST               1 ('headers_template')
+              BUILD_MAP                0
+              CALL                     2
+              LOAD_ATTR                5 (copy + NULL|self)
+              CALL                     0
+              STORE_FAST               3 (headers)
+
+228           LOAD_FAST                3 (headers)
+              LOAD_ATTR                7 (setdefault + NULL|self)
+              LOAD_CONST               2 ('From_browser_ima')
+              LOAD_CONST               3 ('1')
+              CALL                     2
+              POP_TOP
+
+230           LOAD_FAST                1 (cookie_bkn)
+              TO_BOOL
+              POP_JUMP_IF_FALSE        4 (to L1)
+
+231           LOAD_FAST_LOAD_FAST     19 (cookie_bkn, headers)
+              LOAD_CONST               4 ('X-Ima-Bkn')
+              STORE_SUBSCR
+
+232   L1:     LOAD_FAST                2 (cookie_value)
+              TO_BOOL
+              POP_JUMP_IF_FALSE        4 (to L2)
+
+233           LOAD_FAST_LOAD_FAST     35 (cookie_value, headers)
+              LOAD_CONST               5 ('X-Ima-Cookie')
+              STORE_SUBSCR
+
+234   L2:     LOAD_FAST                3 (headers)
+              RETURN_VALUE
+
+### CODE ConfigManager.set_cookie  args=('self', 'bkn', 'cookie_value', 'user_id', 'token', 'refresh_token', 'token_valid_time', 'refresh_token_valid_time')
+ 238           RESUME                   0
+
+ 242           LOAD_CONST               1 (0)
+               LOAD_CONST               2 (('save_login_credentials',))
+               IMPORT_NAME              0 (data.database)
+               IMPORT_FROM              1 (save_login_credentials)
+               STORE_FAST               8 (save_login_credentials)
+               POP_TOP
+
+ 243           NOP
+
+ 244   L1:     LOAD_FAST                8 (save_login_credentials)
+               PUSH_NULL
+
+ 245           LOAD_FAST_LOAD_FAST     18 (bkn, cookie_value)
+               LOAD_FAST_LOAD_FAST     52 (user_id, token)
+               LOAD_FAST                5 (refresh_token)
+
+ 246           LOAD_FAST_LOAD_FAST    103 (token_valid_time, refresh_token_valid_time)
+
+ 244           CALL                     7
+               POP_TOP
+
+ 250   L2:     LOAD_FAST                0 (self)
+               LOAD_ATTR                7 (build_headers_with_cookie + NULL|self)
+               LOAD_FAST_LOAD_FAST     18 (bkn, cookie_value)
+               CALL                     2
+               LOAD_FAST                0 (self)
+               STORE_ATTR               4 (_headers)
+               RETURN_CONST             3 (None)
+
+  --   L3:     PUSH_EXC_INFO
+
+ 248           LOAD_GLOBAL              4 (Exception)
+               CHECK_EXC_MATCH
+               POP_JUMP_IF_FALSE        3 (to L5)
+               POP_TOP
+
+ 249   L4:     POP_EXCEPT
+               JUMP_BACKWARD_NO_INTERRUPT 35 (to L2)
+
+ 248   L5:     RERAISE                  0
+
+  --   L6:     COPY                     3
+               POP_EXCEPT
+               RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L3 [0]
+  L3 to L4 -> L6 [1] lasti
+  L5 to L6 -> L6 [1] lasti
+
+### CODE ConfigManager.load_cookie_from_cache  args=('self',)
+ 251            RESUME                   0
+
+ 253            LOAD_CONST               1 (0)
+                LOAD_CONST               2 (('get_login_credentials',))
+                IMPORT_NAME              0 (data.database)
+                IMPORT_FROM              1 (get_login_credentials)
+                STORE_FAST               1 (get_login_credentials)
+                POP_TOP
+
+ 254            LOAD_CONST               1 (0)
+                LOAD_CONST               3 (('check_and_refresh_token',))
+                IMPORT_NAME              2 (services.token_refresh_service)
+                IMPORT_FROM              3 (check_and_refresh_token)
+                STORE_FAST               2 (check_and_refresh_token)
+                POP_TOP
+
+ 256            NOP
+
+ 258    L1:     LOAD_FAST                2 (check_and_refresh_token)
+                PUSH_NULL
+                CALL                     0
+                POP_TOP
+
+ 260            LOAD_FAST                1 (get_login_credentials)
+                PUSH_NULL
+                CALL                     0
+                STORE_FAST               3 (cache_data)
+
+ 261            LOAD_FAST                3 (cache_data)
+                TO_BOOL
+                POP_JUMP_IF_TRUE         1 (to L3)
+
+ 262    L2:     RETURN_CONST             4 (False)
+
+ 264    L3:     NOP
+
+ 265    L4:     LOAD_FAST                0 (self)
+                LOAD_ATTR                9 (build_headers_with_cookie + NULL|self)
+
+ 266            LOAD_FAST                3 (cache_data)
+                LOAD_CONST               5 ('bkn')
+                BINARY_SUBSCR
+
+ 267            LOAD_FAST                3 (cache_data)
+                LOAD_CONST               6 ('cookie')
+                BINARY_SUBSCR
+
+ 265            CALL                     2
+                LOAD_FAST                0 (self)
+                STORE_ATTR               5 (_headers)
+
+ 278    L5:     RETURN_CONST            11 (True)
+
+  --    L6:     PUSH_EXC_INFO
+
+ 269            LOAD_GLOBAL             12 (RuntimeError)
+                CHECK_EXC_MATCH
+                POP_JUMP_IF_FALSE       22 (to L9)
+                POP_TOP
+
+ 272            LOAD_CONST               7 ('*/*')
+
+ 273            LOAD_CONST               8 ('application/json')
+
+ 274            LOAD_FAST                3 (cache_data)
+                LOAD_CONST               5 ('bkn')
+                BINARY_SUBSCR
+
+ 275            LOAD_FAST                3 (cache_data)
+                LOAD_CONST               6 ('cookie')
+                BINARY_SUBSCR
+
+ 276            LOAD_CONST               9 ('ima/4032 CFNetwork/3860.300.31 Darwin/25.2.0')
+
+ 271            LOAD_CONST              10 (('Accept', 'Content-Type', 'X-Ima-Bkn', 'X-Ima-Cookie', 'User-Agent'))
+                BUILD_CONST_KEY_MAP      5
+                LOAD_FAST                0 (self)
+                STORE_ATTR               5 (_headers)
+        L7:     POP_EXCEPT
+
+ 278    L8:     RETURN_CONST            11 (True)
+
+ 269    L9:     RERAISE                  0
+
+  --   L10:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+       L11:     PUSH_EXC_INFO
+
+ 279            LOAD_GLOBAL             14 (Exception)
+                CHECK_EXC_MATCH
+                POP_JUMP_IF_FALSE        3 (to L13)
+                POP_TOP
+
+ 280   L12:     POP_EXCEPT
+                RETURN_CONST             4 (False)
+
+ 279   L13:     RERAISE                  0
+
+  --   L14:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L11 [0]
+  L4 to L5 -> L6 [0]
+  L6 to L7 -> L10 [1] lasti
+  L7 to L8 -> L11 [0]
+  L9 to L10 -> L10 [1] lasti
+  L10 to L11 -> L11 [0]
+  L11 to L12 -> L14 [1] lasti
+  L13 to L14 -> L14 [1] lasti
+
+### CODE ConfigManager.get_cookie  args=('self',)
+ 281           RESUME                   0
+
+ 283           LOAD_CONST               1 (0)
+               LOAD_CONST               2 (('get_login_credentials',))
+               IMPORT_NAME              0 (data.database)
+               IMPORT_FROM              1 (get_login_credentials)
+               STORE_FAST               1 (get_login_credentials)
+               POP_TOP
+
+ 284           NOP
+
+ 285   L1:     LOAD_FAST                1 (get_login_credentials)
+               PUSH_NULL
+               CALL                     0
+               STORE_FAST               2 (cache_data)
+
+ 286           LOAD_FAST                2 (cache_data)
+               TO_BOOL
+               POP_JUMP_IF_FALSE        2 (to L3)
+               LOAD_FAST                2 (cache_data)
+       L2:     RETURN_VALUE
+       L3:     BUILD_MAP                0
+       L4:     RETURN_VALUE
+
+  --   L5:     PUSH_EXC_INFO
+
+ 287           LOAD_GLOBAL              4 (Exception)
+               CHECK_EXC_MATCH
+               POP_JUMP_IF_FALSE        5 (to L7)
+               POP_TOP
+
+ 288           BUILD_MAP                0
+               SWAP                     2
+       L6:     POP_EXCEPT
+               RETURN_VALUE
+
+ 287   L7:     RERAISE                  0
+
+  --   L8:     COPY                     3
+               POP_EXCEPT
+               RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L5 [0]
+  L3 to L4 -> L5 [0]
+  L5 to L6 -> L8 [1] lasti
+  L7 to L8 -> L8 [1] lasti
+
+## CODE get_config_manager  args=()
+295           RESUME                   0
+
+299           LOAD_GLOBAL              0 (_config_manager)
+              POP_JUMP_IF_NOT_NONE    10 (to L1)
+
+300           LOAD_GLOBAL              3 (ConfigManager + NULL)
+              CALL                     0
+              STORE_GLOBAL             0 (_config_manager)
+
+301   L1:     LOAD_GLOBAL              0 (_config_manager)
+              RETURN_VALUE
+
+## CODE get_config  args=()
+304           RESUME                   0
+
+306           LOAD_GLOBAL              1 (get_config_manager + NULL)
+              CALL                     0
+              RETURN_VALUE

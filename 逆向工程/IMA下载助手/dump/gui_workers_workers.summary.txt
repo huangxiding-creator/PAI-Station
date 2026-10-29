@@ -1,0 +1,470 @@
+===== gui/workers/workers.pyc =====
+DOCSTRING: Background workers.
+
+[<module>] args=() names=('__doc__', 'PySide6.QtCore', 'Qt', 'QThread', 'Signal', 'services.ima_service', 'get_knowledge_base_list', 'download_single_file', 'get_folder_content', 'sanitize_filename', 'get_file_count', 'search_knowledge', 'get_tag_view', 'file_exists', 'make_dirs', 'fs_path', 'core.settings', 'get_setting', 'core.auth', 'translate_error_message', 'os', 'is_auth_expired_response', 'format_service_error', '_PendingFileCollector', 'LoadKnowledgeBasesWorker', 'StreamDownloadWorker', 'DownloadWorker', 'LoadFolderWorker', 'SearchKnowledgeWorker', 'FetchTagsWorker', 'KbTreeItemAdapter', 'AutoUpdateWorker')
+  CONST 'Background workers.'
+  CONST 0
+  CONST ('Qt', 'QThread', 'Signal')
+  CONST ('get_knowledge_base_list', 'download_single_file', 'get_folder_content', 'sanitize_filename', 'get_file_count', 'search_knowledge', 'get_tag_view', 'file_exists', 'make_dirs', 'fs_path')
+  CONST ('get_setting')
+  CONST ('translate_error_message')
+  CONST None
+  CONST '_PendingFileCollector'
+  CONST 'LoadKnowledgeBasesWorker'
+  CONST 'StreamDownloadWorker'
+  CONST 'DownloadWorker'
+  CONST 'LoadFolderWorker'
+  CONST 'SearchKnowledgeWorker'
+  CONST 'FetchTagsWorker'
+  CONST 'KbTreeItemAdapter'
+  CONST 'AutoUpdateWorker'
+
+  [is_auth_expired_response] args=('result',) names=('bool', 'get')
+    CONST 'Only treat explicit auth-expired responses as login expiration.'
+    CONST 'code'
+    CONST 600001
+
+  [format_service_error] args=('result',) names=('get', 'translate_error_message')
+    CONST 'Keep IMA business error codes visible instead of hiding them.'
+    CONST '网络请求失败，请检查代理设置或网络连接'
+    CONST 'code'
+    CONST 'msg'
+    CONST '加载失败'
+    CONST 'IMA接口错误 '
+    CONST '：'
+
+  [_PendingFileCollector] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', '__init__', 'put', '__static_attributes__')
+    CONST '_PendingFileCollector'
+    CONST 34
+    CONST ('files')
+    CONST None
+
+    [_PendingFileCollector.__init__] args=('self',) names=('files',)
+      CONST None
+
+    [_PendingFileCollector.put] args=('self', 'file_info') names=('files', 'append')
+      CONST None
+
+  [LoadKnowledgeBasesWorker] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', 'Signal', 'list', 'list_ready', 'str', 'object', 'icon_loaded', 'int', 'file_count_loaded', 'finished', 'error', 'auth_expired', 'run', '__static_attributes__')
+    CONST 'LoadKnowledgeBasesWorker'
+    CONST 42
+    CONST ()
+    CONST None
+
+    [LoadKnowledgeBasesWorker.run] args=('self',) names=('get_knowledge_base_list', 'get', 'replace', 'strip', 'append', 'list_ready', 'emit', 'PySide6.QtGui', 'QIcon', 'requests', 'QPixmap', 'status_code', 'loadFromData', 'content', 'isNull', 'icon_loaded', 'Exception', 'get_file_count', 'file_count_loaded', 'finished', 'is_auth_expired_response', 'auth_expired', 'error', 'format_service_error', 'str')
+      CONST None
+      CONST 'code'
+      CONST 0
+      CONST 'results'
+      CONST 'knowledge_base_list'
+      CONST 'basic_info'
+      CONST 'member_info'
+      CONST 'permission_info'
+      CONST 'knowledge_base_status_toast'
+      CONST ''
+      CONST '鏈€杩戞洿鏂?'
+      CONST '-'
+      CONST 'id'
+      CONST 'name'
+      CONST '未命名'
+      CONST 'size'
+      CONST '0'
+      CONST 'member_count'
+      CONST 'visible_export_status'
+      CONST 3
+      CONST 'description'
+      CONST 'cover_url'
+      CONST ('id', 'name', 'size', 'member_count', 'file_count', 'update_time', 'visible_export_status', 'description', 'cover_url')
+      CONST ('QIcon')
+      CONST ('QPixmap')
+      CONST 5
+      CONST ('timeout')
+      CONST 200
+      CONST '閿欒: '
+
+  [StreamDownloadWorker] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', '__doc__', 'Signal', 'int', 'str', 'progress', 'finished', 'quota_error', 'file_discovered', 'scan_progress', 'quota_updated', '__init__', 'pause', 'resume', 'stop', 'run', '_traverse_and_queue', '_traverse_item', '_traverse_folder', '_add_file_to_queue', '_expected_local_file', '_download_file', '_write_link_to_excel', '_close_all_excel_writers', '__static_attributes__', '__classcell__')
+    CONST 'StreamDownloadWorker'
+    CONST 122
+    CONST 'Stream download worker.'
+    CONST ('_date_suffix', '_downloaded_count', '_excel_lock', '_excel_writers', '_is_paused', '_is_stopped', '_quota_pool', '_quota_requested', '_total_count', 'cutoff_datetime', 'selected_items')
+    CONST (None)
+
+    [StreamDownloadWorker.__init__] args=('self', 'selected_items', 'cutoff_datetime') names=('super', '__init__', 'selected_items', 'cutoff_datetime', '_is_paused', '_is_stopped', '_downloaded_count', '_total_count', '_quota_pool', '_quota_requested', '_excel_writers', '_excel_lock', '_date_suffix')
+      CONST None
+      CONST False
+      CONST 0
+      CONST ''
+
+    [StreamDownloadWorker.pause] args=('self',) names=('_is_paused',)
+      CONST None
+      CONST True
+
+    [StreamDownloadWorker.resume] args=('self',) names=('_is_paused',)
+      CONST None
+      CONST False
+
+    [StreamDownloadWorker.stop] args=('self',) names=('_is_stopped',)
+      CONST None
+      CONST True
+
+    [StreamDownloadWorker.run] args=('self',) names=('core.auth', 'issue_download_token', 'refund_download_quota', 'queue', 'threading', 'Lock', '_excel_lock', '_PendingFileCollector', '_traverse_and_queue', 'files', '_is_stopped', '_close_all_excel_writers', 'finished', 'emit', 'len', 'quota_error', 'quota_updated', 'Queue', 'range', 'Thread', 'start', 'append', 'put', 'join', 'scan_progress', 'Exception', 'str')
+      CONST None
+      CONST 0
+      CONST ('issue_download_token', 'refund_download_quota')
+      CONST 5
+      CONST 50
+      CONST ('maxsize')
+      CONST True
+      CONST ('target', 'daemon')
+      CONST '下载任务异常: '
+
+      [StreamDownloadWorker.run.<locals>.download_worker] args=() names=('get', 'Empty', '_is_stopped', 'task_done', '_is_paused', 'msleep', '_download_file', 'Exception')
+        CONST None
+        CONST 1
+        CONST ('timeout')
+        CONST 100
+
+    [StreamDownloadWorker._traverse_and_queue] args=('self', 'file_queue') names=('selected_items', '_is_stopped', '_traverse_item')
+      CONST 'Traverse selected items and collect files.'
+      CONST None
+      CONST ''
+
+    [StreamDownloadWorker._traverse_item] args=('self', 'item', 'path', 'file_queue') names=('_is_stopped', 'isinstance', 'dict', 'data', 'Qt', 'UserRole', 'get', '_add_file_to_queue', 'sanitize_filename', '_traverse_folder')
+      CONST 'Traverse a selected item.'
+      CONST None
+      CONST 1
+      CONST 'type'
+      CONST 'file'
+      CONST 'kb'
+      CONST 'name'
+      CONST 'id'
+      CONST 'folder'
+      CONST 'full_path'
+      CONST ''
+      CONST 'kb_name'
+      CONST '/'
+      CONST 'kb_id'
+      CONST 'folder_id'
+
+    [StreamDownloadWorker._traverse_folder] args=('self', 'kb_id', 'folder_id', 'current_path', 'file_queue') names=('_is_stopped', 'scan_progress', 'emit', 'get_folder_content', 'get', 'replace', '_total_count', '_downloaded_count', 'progress', 'cutoff_datetime', 'utils.time_parser', 'parse_time_wording', 'sanitize_filename', 'get_setting', '_date_suffix', 'split', 'len', 'os', 'path', 'join', '_expected_local_file', 'file_exists', 'file_discovered', 'put', '_traverse_folder')
+      CONST 'Traverse a folder recursively.'
+      CONST None
+      CONST '正在扫描: '
+      CONST '根目录'
+      CONST 'files'
+      CONST 0
+      CONST 'access_status'
+      CONST 3
+      CONST 1
+      CONST 'title'
+      CONST ''
+      CONST '\r\n'
+      CONST '\r'
+      CONST '\n'
+      CONST '跳过['
+      CONST '/'
+      CONST '] '
+      CONST ' - 无下载权限'
+      CONST ('parse_time_wording')
+      CONST 'update_time'
+      CONST 'untitled'
+      CONST 'media_id'
+      CONST 'media_type'
+      CONST 'media_type_info'
+      CONST 'file_size'
+      CONST ('media_id', 'kb_id', 'media_type', 'media_type_info', 'title', 'display_title', 'path', 'file_size', 'update_time')
+      CONST 'download_dir'
+      CONST 'download'
+      CONST '\\'
+      CONST '⊘ ['
+      CONST ' - 已跳过（文件已存在）'
+      CONST '  跳过 '
+      CONST ' 个文件（更新时间早于起始时间）'
+      CONST 'folders'
+      CONST 'name'
+      CONST 'folder_id'
+
+    [StreamDownloadWorker._add_file_to_queue] args=('self', 'data', 'path', 'file_queue') names=('cutoff_datetime', 'utils.time_parser', 'parse_time_wording', 'get', 'replace', 'sanitize_filename', 'get_setting', '_date_suffix', 'split', 'len', 'os', 'path', 'join', '_expected_local_file', 'file_exists', '_total_count', 'file_discovered', 'emit', 'put', '_downloaded_count', 'progress')
+      CONST 'Add one file to the pending download list.'
+      CONST 0
+      CONST ('parse_time_wording')
+      CONST 'update_time'
+      CONST ''
+      CONST None
+      CONST 'title'
+      CONST '\r\n'
+      CONST '\r'
+      CONST '\n'
+      CONST 'untitled'
+      CONST 'full_path'
+      CONST 'kb_name'
+      CONST 'media_id'
+      CONST 'kb_id'
+      CONST 'media_type'
+      CONST 'media_type_info'
+      CONST 'file_size'
+      CONST ('media_id', 'kb_id', 'media_type', 'media_type_info', 'title', 'display_title', 'path', 'file_size', 'update_time')
+      CONST 'download_dir'
+      CONST 'download'
+      CONST '/'
+      CONST 1
+      CONST '\\'
+      CONST '⊘ ['
+      CONST '] '
+      CONST ' - 已跳过（文件已存在）'
+
+    [StreamDownloadWorker._expected_local_file] args=('self', 'save_dir', 'safe_title', 'file_info') names=('get', 'lower', 'endswith', 'get_setting', 'os', 'path', 'join')
+      CONST 'Best-effort local path used only for skip/existence checks.'
+      CONST 'media_type_info'
+      CONST 'name'
+      CONST ''
+      CONST 'media_type'
+      CONST 2
+      CONST ('网址', '腾讯新闻')
+      CONST 6
+      CONST '公众号'
+      CONST '.html'
+      CONST 11
+      CONST '笔记'
+      CONST 'note_format'
+      CONST 'md'
+      CONST '.md'
+      CONST 'ima 报告'
+
+    [StreamDownloadWorker._download_file] args=('self', 'file_info', 'lock') names=('get_setting', 'split', 'sanitize_filename', 'join', '_date_suffix', 'len', 'os', 'path', 'download_single_file', '_downloaded_count', 'get', '_write_link_to_excel', '_total_count', 'progress', 'emit')
+      CONST 'Download one file and return whether it succeeded.'
+      CONST 'download_dir'
+      CONST 'download'
+      CONST 'path'
+      CONST '/'
+      CONST 1
+      CONST 0
+      CONST ''
+      CONST 'media_id'
+      CONST 'kb_id'
+      CONST 'media_type'
+      CONST 'media_type_info'
+      CONST 'file_size'
+      CONST 'update_time'
+      CONST 'display_title'
+      CONST 'title'
+      CONST 'link'
+      CONST None
+      CONST '未知知识库'
+      CONST 'name'
+      CONST '未知'
+      CONST ('kb_name', 'path', 'title', 'type', 'url')
+      CONST '✓ ['
+      CONST '] '
+      CONST ' (链接已记录)'
+      CONST '✗ ['
+      CONST ' - '
+
+    [StreamDownloadWorker._write_link_to_excel] args=('self', 'kb_name', 'link_data') names=('openpyxl', 'Workbook', 'load_workbook', 'os', '_excel_lock', 'get_setting', '_date_suffix', 'path', 'join', 'make_dirs', '_excel_writers', 'file_exists', 'fs_path', 'active', 'title', 'append', 'column_dimensions', 'width', 'save', 'Exception')
+      CONST 'Write link records to an Excel file.'
+      CONST 0
+      CONST ('Workbook', 'load_workbook')
+      CONST None
+      CONST 'download_dir'
+      CONST 'download'
+      CONST '公众号文章和网址汇总.xlsx'
+      CONST 'wb'
+      CONST 'ws'
+      CONST '链接汇总'
+      CONST ('知识库名称', '所在目录', '名称', '类型', '链接')
+      CONST 20
+      CONST 'A'
+      CONST 30
+      CONST 'B'
+      CONST 40
+      CONST 'C'
+      CONST 15
+      CONST 'D'
+      CONST 60
+      CONST 'E'
+      CONST ('wb', 'ws', 'path')
+      CONST 'kb_name'
+      CONST 'path'
+      CONST 'title'
+      CONST 'type'
+      CONST 'url'
+
+    [StreamDownloadWorker._close_all_excel_writers] args=('self',) names=('_excel_lock', '_excel_writers', 'items', 'save', 'fs_path', 'close', 'Exception', 'clear')
+      CONST 'Close all Excel writers.'
+      CONST 'wb'
+      CONST 'path'
+      CONST None
+
+  [DownloadWorker] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', '__doc__', 'Signal', 'int', 'str', 'progress', 'finished', 'quota_error', '__init__', 'pause', 'resume', 'stop', 'run', '__static_attributes__', '__classcell__')
+    CONST 'DownloadWorker'
+    CONST 629
+    CONST 'Legacy batch download worker.'
+    CONST ('_is_paused', '_is_stopped', 'files')
+
+    [DownloadWorker.__init__] args=('self', 'files') names=('super', '__init__', 'files', '_is_paused', '_is_stopped')
+      CONST None
+      CONST False
+
+    [DownloadWorker.pause] args=('self',) names=('_is_paused',)
+      CONST None
+      CONST True
+
+    [DownloadWorker.resume] args=('self',) names=('_is_paused',)
+      CONST None
+      CONST False
+
+    [DownloadWorker.stop] args=('self',) names=('_is_stopped',)
+      CONST None
+      CONST True
+
+    [DownloadWorker.run] args=('self',) names=('core.auth', 'issue_download_token', 'refund_download_quota', 'data.database', 'save_download_records_batch', 'concurrent.futures', 'ThreadPoolExecutor', 'as_completed', 'len', 'files', 'quota_error', 'emit', 'finished', 'range', '_is_stopped', 'min', 'enumerate', '_is_paused', 'msleep', 'get_setting', 'os', 'path', 'join', 'submit', 'download_single_file', 'get', 'result', 'append', 'progress', 'Exception', 'str')
+      CONST None
+      CONST 0
+      CONST ('issue_download_token', 'refund_download_quota')
+      CONST ('save_download_records_batch')
+      CONST ('ThreadPoolExecutor', 'as_completed')
+      CONST 50
+      CONST 5
+      CONST ('max_workers')
+      CONST 100
+      CONST 'download_dir'
+      CONST 'download'
+      CONST 'path'
+      CONST 'media_id'
+      CONST 'kb_id'
+      CONST 'media_type'
+      CONST 'media_type_info'
+      CONST 'file_size'
+      CONST 'update_time'
+      CONST 'title'
+      CONST ('media_id', 'file_name', 'file_size', 'update_time', 'local_path')
+      CONST 1
+      CONST '✓ ['
+      CONST '/'
+      CONST '] '
+      CONST '✗ ['
+      CONST ' - '
+
+  [LoadFolderWorker] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', 'Signal', 'dict', 'str', 'bool', 'finished', 'error', 'progress', '__init__', 'run', '__static_attributes__', '__classcell__')
+    CONST 'LoadFolderWorker'
+    CONST 744
+    CONST ('cursor', 'folder_id', 'kb_id', 'limit')
+    CONST (None, '50')
+
+    [LoadFolderWorker.__init__] args=('self', 'kb_id', 'folder_id', 'cursor', 'limit') names=('super', '__init__', 'kb_id', 'folder_id', 'cursor', 'limit')
+      CONST None
+
+    [LoadFolderWorker.run] args=('self',) names=('progress', 'emit', 'services.ima_service', 'get_knowledge_list', 'extract_folders_and_files', 'kb_id', 'folder_id', 'limit', 'cursor', 'get', 'error', 'finished', 'Exception', 'str')
+      CONST None
+      CONST '姝ｅ湪鍔犺浇鏂囦欢鍒楄〃...'
+      CONST 0
+      CONST ('get_knowledge_list', 'extract_folders_and_files')
+      CONST 'code'
+      CONST '鍔犺浇澶辫触'
+      CONST 'knowledge_list'
+      CONST 'next_cursor'
+      CONST 'is_end'
+      CONST False
+      CONST ('folders', 'files')
+      CONST ''
+      CONST '閿欒: '
+
+  [SearchKnowledgeWorker] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', '__doc__', 'Signal', 'list', 'bool', 'str', 'finished', 'error', '__init__', 'run', '__static_attributes__', '__classcell__')
+    CONST 'SearchKnowledgeWorker'
+    CONST 782
+    CONST 'Search knowledge worker.'
+    CONST ('cursor', 'filters', 'knowledge_base_id', 'query')
+    CONST ('', None)
+
+    [SearchKnowledgeWorker.__init__] args=('self', 'knowledge_base_id', 'query', 'cursor', 'filters') names=('super', '__init__', 'knowledge_base_id', 'query', 'cursor', 'filters')
+      CONST None
+
+    [SearchKnowledgeWorker.run] args=('self',) names=('search_knowledge', 'knowledge_base_id', 'query', 'cursor', 'filters', 'get', 'finished', 'emit', 'error', 'Exception', 'str')
+      CONST None
+      CONST ('filters')
+      CONST 'code'
+      CONST 0
+      CONST 'searched_knowledge_list'
+      CONST 'is_end'
+      CONST True
+      CONST 'next_cursor'
+      CONST ''
+      CONST 'msg'
+      CONST '鎼滅储澶辫触'
+      CONST '缃戠粶璇锋眰澶辫触'
+      CONST '鎼滅储寮傚父: '
+
+  [FetchTagsWorker] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', '__doc__', 'Signal', 'list', 'str', 'bool', 'finished', 'error', '__init__', 'run', '__static_attributes__', '__classcell__')
+    CONST 'FetchTagsWorker'
+    CONST 812
+    CONST 'Load knowledge tags worker.'
+    CONST ('cursor', 'knowledge_base_id', 'limit')
+    CONST ('', 20)
+
+    [FetchTagsWorker.__init__] args=('self', 'knowledge_base_id', 'cursor', 'limit') names=('super', '__init__', 'knowledge_base_id', 'cursor', 'limit')
+      CONST None
+
+    [FetchTagsWorker.run] args=('self',) names=('get_tag_view', 'knowledge_base_id', 'cursor', 'limit', 'get', 'finished', 'emit', 'Exception', 'error', 'str')
+      CONST None
+      CONST ('cursor', 'limit')
+      CONST 'code'
+      CONST 0
+      CONST ''
+      CONST True
+      CONST 'views'
+      CONST 'tag'
+      CONST 'is_end'
+      CONST 'next_cursor'
+      CONST '鑾峰彇鏍囩澶辫触: '
+
+  [KbTreeItemAdapter] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', '__doc__', '__init__', 'data', '__static_attributes__')
+    CONST 'KbTreeItemAdapter'
+    CONST 841
+    CONST 'Adapter exposing QTreeWidgetItem.data() for StreamDownloadWorker.'
+    CONST ('_data', '_folder_id', '_folder_name')
+    CONST None
+    CONST ('', '')
+
+    [KbTreeItemAdapter.__init__] args=('self', 'kb_data', 'folder_id', 'folder_name') names=('_data', '_folder_id', '_folder_name')
+      CONST None
+
+    [KbTreeItemAdapter.data] args=('self', 'column', 'role') names=('Qt', 'UserRole', '_folder_id', '_data', '_folder_name', 'get')
+      CONST None
+      CONST 1
+      CONST 'folder'
+      CONST 'id'
+      CONST 'name'
+      CONST '/'
+      CONST 'visible_export_status'
+      CONST 3
+      CONST ('type', 'kb_id', 'kb_name', 'folder_id', 'name', 'full_path', 'visible_export_status')
+      CONST 'kb'
+      CONST ('type', 'id', 'name', 'full_path', 'visible_export_status')
+
+  [AutoUpdateWorker] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', '__doc__', 'Signal', 'int', 'str', 'progress', 'file_discovered', 'scan_progress', 'finished', 'quota_error', 'quota_updated', 'kb_started', 'kb_finished', '__init__', 'run', 'pause', 'resume', 'stop', '__static_attributes__', '__classcell__')
+    CONST 'AutoUpdateWorker'
+    CONST 875
+    CONST 'Auto incremental update worker.'
+    CONST ('_current_stream_worker', '_is_stopped', 'cutoff_datetime', 'folder_id', 'kb_data_list')
+    CONST ('')
+
+    [AutoUpdateWorker.__init__] args=('self', 'kb_data_list', 'cutoff_datetime', 'folder_id') names=('super', '__init__', 'kb_data_list', 'cutoff_datetime', 'folder_id', '_is_stopped', '_current_stream_worker')
+      CONST None
+      CONST False
+
+    [AutoUpdateWorker.run] args=('self',) names=('kb_data_list', '_is_stopped', 'kb_started', 'emit', 'KbTreeItemAdapter', 'folder_id', 'StreamDownloadWorker', 'cutoff_datetime', '_current_stream_worker', 'progress', 'connect', 'file_discovered', 'scan_progress', 'quota_error', 'quota_updated', 'run', 'kb_finished', 'finished')
+      CONST None
+      CONST 'name'
+      CONST ('folder_id')
+      CONST 0
+
+    [AutoUpdateWorker.pause] args=('self',) names=('_current_stream_worker', 'pause')
+      CONST None
+
+    [AutoUpdateWorker.resume] args=('self',) names=('_current_stream_worker', 'resume')
+      CONST None
+
+    [AutoUpdateWorker.stop] args=('self',) names=('_is_stopped', '_current_stream_worker', 'stop')
+      CONST None
+      CONST True
+

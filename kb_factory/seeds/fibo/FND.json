@@ -1,0 +1,6127 @@
+{
+ "kind": "fibo_module_seed",
+ "module": "FND",
+ "module_zh": "基础概念基座",
+ "module_en": "Foundations",
+ "note": "主干模块（任务点名）",
+ "source": {
+  "repo": "EDMCouncil/fibo",
+  "tag": "master_2026Q3",
+  "license": "MIT",
+  "license_copyright": "Copyright (c) 2020 Enterprise Data Management Council",
+  "url": "https://github.com/EDMCouncil/fibo/tree/master_2026Q3",
+  "tarball_sha256": "48a1690255df0fb161d624a6e12fb529f4e4f38c73ac8cfbe1ed81e913625e27"
+ },
+ "stats": {
+  "classes": 426,
+  "zh_mapped": 129,
+  "zh_rate": 0.3028,
+  "roots": 157,
+  "max_depth": 5,
+  "multi_parent_classes": 24,
+  "derived_labels": 0,
+  "external_parent_edges_dropped": 165
+ },
+ "concepts": [
+  {
+   "id": "AmountOfMoney",
+   "en": "amount of money",
+   "label_source": "rdfs:label",
+   "zh": "金额",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/AmountOfMoney",
+   "module": "FND",
+   "subdomain": "Accounting",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "CalculatedPrice",
+   "en": "calculated price",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/CalculatedPrice",
+   "module": "FND",
+   "subdomain": "Accounting",
+   "parent": "MonetaryPrice",
+   "parents": [
+    "MonetaryPrice"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CashFlow",
+   "en": "cash flow",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CashFlows/CashFlow",
+   "module": "FND",
+   "subdomain": "Accounting",
+   "parent": "DatedCollectionConstituent",
+   "parents": [
+    "DatedCollectionConstituent"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "CashFlowStructure",
+   "en": "cash flow structure",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CashFlows/CashFlowStructure",
+   "module": "FND",
+   "subdomain": "Accounting",
+   "parent": "DatedStructuredCollection",
+   "parents": [
+    "DatedStructuredCollection"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Currency",
+   "en": "currency",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/Currency",
+   "module": "FND",
+   "subdomain": "Accounting",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "CurrencyBasket",
+   "en": "currency basket",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/CurrencyBasket",
+   "module": "FND",
+   "subdomain": "Accounting",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "CurrencyIdentifier",
+   "en": "currency identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/CurrencyIdentifier",
+   "module": "FND",
+   "subdomain": "Accounting",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ExchangeRate",
+   "en": "exchange rate",
+   "label_source": "rdfs:label",
+   "zh": "汇率",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/ExchangeRate",
+   "module": "FND",
+   "subdomain": "Accounting",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "FND.TriggeringEvent",
+   "en": "triggering event",
+   "label_source": "rdfs:label",
+   "zh": "触发事件",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CashFlows/TriggeringEvent",
+   "module": "FND",
+   "subdomain": "Accounting",
+   "parent": "Occurrence",
+   "parents": [
+    "Occurrence"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Funds",
+   "en": "funds",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/Funds",
+   "module": "FND",
+   "subdomain": "Accounting",
+   "parent": "Currency",
+   "parents": [
+    "Currency"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "FundsIdentifier",
+   "en": "funds identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/FundsIdentifier",
+   "module": "FND",
+   "subdomain": "Accounting",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "InterestRate",
+   "en": "interest rate",
+   "label_source": "rdfs:label",
+   "zh": "利率",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/InterestRate",
+   "module": "FND",
+   "subdomain": "Accounting",
+   "parent": "PercentageMonetaryAmount",
+   "parents": [
+    "PercentageMonetaryAmount"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "MonetaryAmount",
+   "en": "monetary amount",
+   "label_source": "rdfs:label",
+   "zh": "货币金额",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/MonetaryAmount",
+   "module": "FND",
+   "subdomain": "Accounting",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "MonetaryPrice",
+   "en": "monetary price",
+   "label_source": "rdfs:label",
+   "zh": "货币价格",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/MonetaryPrice",
+   "module": "FND",
+   "subdomain": "Accounting",
+   "parent": "MonetaryAmount",
+   "parents": [
+    "MonetaryAmount",
+    "Price"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "PercentageMonetaryAmount",
+   "en": "percentage monetary amount",
+   "label_source": "rdfs:label",
+   "zh": "百分比货币金额",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/PercentageMonetaryAmount",
+   "module": "FND",
+   "subdomain": "Accounting",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "PreciousMetal",
+   "en": "precious metal",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/PreciousMetal",
+   "module": "FND",
+   "subdomain": "Accounting",
+   "parent": "Metal",
+   "parents": [
+    "Metal",
+    "NegotiableCommodity"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "PreciousMetalIdentifier",
+   "en": "precious metal identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/PreciousMetalIdentifier",
+   "module": "FND",
+   "subdomain": "Accounting",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Price",
+   "en": "price",
+   "label_source": "rdfs:label",
+   "zh": "价格",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/Price",
+   "module": "FND",
+   "subdomain": "Accounting",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "UnitOfAccount",
+   "en": "unit of account",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/UnitOfAccount",
+   "module": "FND",
+   "subdomain": "Accounting",
+   "parent": "Currency",
+   "parents": [
+    "Currency"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "UnitOfAccountIdentifier",
+   "en": "unit of account identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/UnitOfAccountIdentifier",
+   "module": "FND",
+   "subdomain": "Accounting",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "UnitPrice",
+   "en": "unit price",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/UnitPrice",
+   "module": "FND",
+   "subdomain": "Accounting",
+   "parent": "MonetaryPrice",
+   "parents": [
+    "MonetaryPrice"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "Adult",
+   "en": "adult",
+   "label_source": "rdfs:label",
+   "zh": "成年人",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/Adult",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": "Person",
+   "parents": [
+    "Person"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "AgeOfMajority",
+   "en": "age of majority",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/AgeOfMajority",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": "LegalAge",
+   "parents": [
+    "LegalAge"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "BirthCertificate",
+   "en": "birth certificate",
+   "label_source": "rdfs:label",
+   "zh": "出生证明",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/BirthCertificate",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": "IdentityDocument",
+   "parents": [
+    "IdentityDocument"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "BirthCertificateIdentificationScheme",
+   "en": "birth certificate identification scheme",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/BirthCertificateIdentificationScheme",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "BirthCertificateIdentifier",
+   "en": "birth certificate identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/BirthCertificateIdentifier",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Contact",
+   "en": "contact",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/Contact",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ContactRecord",
+   "en": "contact record",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/ContactRecord",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "DateOfBirth",
+   "en": "date of birth",
+   "label_source": "rdfs:label",
+   "zh": "出生日期",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/DateOfBirth",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "DateOfDeath",
+   "en": "date of death",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/DateOfDeath",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "DeathCertificate",
+   "en": "death certificate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/DeathCertificate",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": "IdentityDocument",
+   "parents": [
+    "IdentityDocument"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "DeathCertificateIdentificationScheme",
+   "en": "death certificate identification scheme",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/DeathCertificateIdentificationScheme",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "DeathCertificateIdentifier",
+   "en": "death certificate identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/DeathCertificateIdentifier",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "DriversLicense",
+   "en": "driver's license",
+   "label_source": "rdfs:label",
+   "zh": "驾驶证",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/DriversLicense",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": "IdentityDocument",
+   "parents": [
+    "IdentityDocument"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "DriversLicenseIdentificationScheme",
+   "en": "driver's license identification scheme",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/DriversLicenseIdentificationScheme",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "DriversLicenseIdentifier",
+   "en": "driver's license identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/DriversLicenseIdentifier",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "EmancipatedMinor",
+   "en": "emancipated minor",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/EmancipatedMinor",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": "Minor",
+   "parents": [
+    "Minor"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "IdentityDocument",
+   "en": "identity document",
+   "label_source": "rdfs:label",
+   "zh": "身份证件",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/IdentityDocument",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "IncapacitatedAdult",
+   "en": "incapacitated adult",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/IncapacitatedAdult",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": "Adult",
+   "parents": [
+    "Adult"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "LegalAge",
+   "en": "legal age",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/LegalAge",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": "Age",
+   "parents": [
+    "Age"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "LegalWorkingAge",
+   "en": "legal working age",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/LegalWorkingAge",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": "LegalAge",
+   "parents": [
+    "LegalAge"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "LegalWorkingAgePerson",
+   "en": "legal working age person",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/LegalWorkingAgePerson",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": "Person",
+   "parents": [
+    "Person"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "LegallyCapableAdult",
+   "en": "legally capable adult",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/LegallyCapableAdult",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": "Adult",
+   "parents": [
+    "Adult"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "Minor",
+   "en": "minor",
+   "label_source": "rdfs:label",
+   "zh": "未成年人",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/Minor",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": "Person",
+   "parents": [
+    "Person"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "NationalIdentificationNumber",
+   "en": "national identification number",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/NationalIdentificationNumber",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "NationalIdentificationNumberScheme",
+   "en": "national identification number scheme",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/NationalIdentificationNumberScheme",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Passport",
+   "en": "passport",
+   "label_source": "rdfs:label",
+   "zh": "护照",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/Passport",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": "IdentityDocument",
+   "parents": [
+    "IdentityDocument"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "PassportNumber",
+   "en": "passport number",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/PassportNumber",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": "NationalIdentificationNumber",
+   "parents": [
+    "NationalIdentificationNumber"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "PassportNumberIdentificationScheme",
+   "en": "passport number identification scheme",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/PassportNumberIdentificationScheme",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Person",
+   "en": "person",
+   "label_source": "rdfs:label",
+   "zh": "自然人",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/Person",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "PersonName",
+   "en": "person name",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/PersonName",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "PlaceOfBirth",
+   "en": "place of birth",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/PlaceOfBirth",
+   "module": "FND",
+   "subdomain": "AgentsAndPeople",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Agreement",
+   "en": "agreement",
+   "label_source": "rdfs:label",
+   "zh": "协议",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Agreements/Agreement",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "AssignableContract",
+   "en": "assignable contract",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/AssignableContract",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "TransferableContract",
+   "parents": [
+    "TransferableContract"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "Beneficiary",
+   "en": "beneficiary",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Agreements/Beneficiary",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "BilateralAgreement",
+   "en": "bilateral agreement",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Agreements/BilateralAgreement",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "Agreement",
+   "parents": [
+    "Agreement"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "BilateralContract",
+   "en": "bilateral contract",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/BilateralContract",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "BilateralAgreement",
+   "parents": [
+    "BilateralAgreement",
+    "WrittenContract"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "BilateralNettingProvision",
+   "en": "bilateral netting provision",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/BilateralNettingProvision",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "NettingProvision",
+   "parents": [
+    "NettingProvision"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "BreachOfContract",
+   "en": "breach of contract",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/BreachOfContract",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "ContractLifecycleEvent",
+   "parents": [
+    "ContractLifecycleEvent",
+    "OccurrenceKind"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "BreachOfCovenant",
+   "en": "breach of covenant",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/BreachOfCovenant",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "ContractLifecycleEvent",
+   "parents": [
+    "ContractLifecycleEvent",
+    "OccurrenceKind"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "CloseOutNettingProvision",
+   "en": "close-out netting provision",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/CloseOutNettingProvision",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "NettingProvision",
+   "parents": [
+    "NettingProvision"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "CollateralAgreement",
+   "en": "collateral agreement",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/CollateralAgreement",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "WrittenContract",
+   "parents": [
+    "WrittenContract"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "Commitment",
+   "en": "commitment",
+   "label_source": "rdfs:label",
+   "zh": "承诺",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Agreements/Commitment",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "CommitmentAtLarge",
+   "en": "commitment at large",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Agreements/CommitmentAtLarge",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "UnilateralCommitment",
+   "parents": [
+    "UnilateralCommitment"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "ConditionPrecedent",
+   "en": "condition precedent",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/ConditionPrecedent",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "ContractualElement",
+   "parents": [
+    "ContractualElement"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Contract",
+   "en": "contract",
+   "label_source": "rdfs:label",
+   "zh": "合同",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/Contract",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "Agreement",
+   "parents": [
+    "Agreement"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "ContractDocument",
+   "en": "contract document",
+   "label_source": "rdfs:label",
+   "zh": "合同文书",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/ContractDocument",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ContractMilestone",
+   "en": "contract milestone",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/ContractMilestone",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "ConditionPrecedent",
+   "parents": [
+    "ConditionPrecedent",
+    "OccurrenceKind"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "ContractParty",
+   "en": "contract party",
+   "label_source": "rdfs:label",
+   "zh": "合同当事方",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/ContractParty",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ContractPrincipal",
+   "en": "contract principal",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/ContractPrincipal",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "ContractParty",
+   "parents": [
+    "ContractParty"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "ContractThirdParty",
+   "en": "contract third party",
+   "label_source": "rdfs:label",
+   "zh": "合同第三方",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/ContractThirdParty",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ContractualCommitment",
+   "en": "contractual commitment",
+   "label_source": "rdfs:label",
+   "zh": "合同承诺",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/ContractualCommitment",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "ContractualElement",
+   "parents": [
+    "ContractualElement"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "ContractualDefinition",
+   "en": "contractual definition",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/ContractualDefinition",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "ContractualElement",
+   "parents": [
+    "ContractualElement"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "ContractualElement",
+   "en": "contractual element",
+   "label_source": "rdfs:label",
+   "zh": "合同要素",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/ContractualElement",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Counterparty",
+   "en": "counterparty",
+   "label_source": "rdfs:label",
+   "zh": "交易对手",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/Counterparty",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "ContractParty",
+   "parents": [
+    "ContractParty"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "DisclosureProvision",
+   "en": "disclosure provision",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/DisclosureProvision",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "ContractualCommitment",
+   "parents": [
+    "ContractualCommitment"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "EarlyTerminationProvision",
+   "en": "early termination provision",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/EarlyTerminationProvision",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "TerminationProvision",
+   "parents": [
+    "TerminationProvision"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "ExtensionProvision",
+   "en": "extension provision",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/ExtensionProvision",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "ContractualCommitment",
+   "parents": [
+    "ContractualCommitment"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "FND.NotificationProvision",
+   "en": "notification provision",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/NotificationProvision",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "ContractualCommitment",
+   "parents": [
+    "ContractualCommitment"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "MasterAgreement",
+   "en": "master agreement",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/MasterAgreement",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "WrittenContract",
+   "parents": [
+    "WrittenContract"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "MilestoneEvent",
+   "en": "milestone event",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/MilestoneEvent",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "Occurrence",
+   "parents": [
+    "Occurrence"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "MilestoneSchedule",
+   "en": "milestone schedule",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/MilestoneSchedule",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "Schedule",
+   "parents": [
+    "Schedule"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "MultilateralAgreement",
+   "en": "multilateral agreement",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Agreements/MultilateralAgreement",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "Agreement",
+   "parents": [
+    "Agreement"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "MultilateralContract",
+   "en": "multilateral contract",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/MultilateralContract",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "MultilateralAgreement",
+   "parents": [
+    "MultilateralAgreement",
+    "WrittenContract"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "MultilateralNettingProvision",
+   "en": "multilateral netting provision",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/MultilateralNettingProvision",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "NettingProvision",
+   "parents": [
+    "NettingProvision"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "NettingProvision",
+   "en": "netting provision",
+   "label_source": "rdfs:label",
+   "zh": "净额结算条款",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/NettingProvision",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "ContractualCommitment",
+   "parents": [
+    "ContractualCommitment"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "NonBindingTerm",
+   "en": "non-binding term",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/NonBindingTerm",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "ContractualElement",
+   "parents": [
+    "ContractualElement"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "NonTransferableContract",
+   "en": "non-transferable contract",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/NonTransferableContract",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "WrittenContract",
+   "parents": [
+    "WrittenContract"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "NovateableContract",
+   "en": "novateable contract",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/NovateableContract",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "TransferableContract",
+   "parents": [
+    "TransferableContract"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "NovationNettingProvision",
+   "en": "novation netting provision",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/NovationNettingProvision",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "NettingProvision",
+   "parents": [
+    "NettingProvision"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "Obligee",
+   "en": "obligee",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Agreements/Obligee",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Obligor",
+   "en": "obligor",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Agreements/Obligor",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "PaymentNettingProvision",
+   "en": "payment netting provision",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/PaymentNettingProvision",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "NettingProvision",
+   "parents": [
+    "NettingProvision"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "Representation",
+   "en": "representation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/Representation",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "ContractualCommitment",
+   "parents": [
+    "ContractualCommitment"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "SettlementNettingProvision",
+   "en": "settlement netting provision",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/SettlementNettingProvision",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "NettingProvision",
+   "parents": [
+    "NettingProvision"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "TermSheet",
+   "en": "term sheet",
+   "label_source": "rdfs:label",
+   "zh": "条款清单",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/TermSheet",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "Agreement",
+   "parents": [
+    "Agreement"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "TerminationProvision",
+   "en": "termination provision",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/TerminationProvision",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "ContractualCommitment",
+   "parents": [
+    "ContractualCommitment"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "TransferableContract",
+   "en": "transferable contract",
+   "label_source": "rdfs:label",
+   "zh": "可转让合同",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/TransferableContract",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "WrittenContract",
+   "parents": [
+    "WrittenContract"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "UnilateralCommitment",
+   "en": "unilateral commitment",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Agreements/UnilateralCommitment",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "Commitment",
+   "parents": [
+    "Commitment"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "UnilateralContract",
+   "en": "unilateral contract",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/UnilateralContract",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "WrittenContract",
+   "parents": [
+    "WrittenContract"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "UseOfProceedsProvision",
+   "en": "use of proceeds provision",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/UseOfProceedsProvision",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "ContractualCommitment",
+   "parents": [
+    "ContractualCommitment"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "VerbalContract",
+   "en": "verbal contract",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/VerbalContract",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "Contract",
+   "parents": [
+    "Contract"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "Warranty",
+   "en": "warranty",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/Warranty",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "ContractualCommitment",
+   "parents": [
+    "ContractualCommitment"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "WrittenContract",
+   "en": "written contract",
+   "label_source": "rdfs:label",
+   "zh": "书面合同",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/WrittenContract",
+   "module": "FND",
+   "subdomain": "Agreements",
+   "parent": "Contract",
+   "parents": [
+    "Contract"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "Appraisal",
+   "en": "appraisal",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Assessments/Appraisal",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "AssessmentReport",
+   "parents": [
+    "AssessmentReport"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "AppraisedValue",
+   "en": "appraised value",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Assessments/AppraisedValue",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "MarketValue",
+   "parents": [
+    "MarketValue"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "Appraiser",
+   "en": "appraiser",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Assessments/Appraiser",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "AssessmentActivity",
+   "en": "assessment activity",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Assessments/AssessmentActivity",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "OccurrenceKind",
+   "parents": [
+    "OccurrenceKind"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "AssessmentEvent",
+   "en": "assessment event",
+   "label_source": "rdfs:label",
+   "zh": "评估事件",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Assessments/AssessmentEvent",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "Occurrence",
+   "parents": [
+    "Occurrence"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "AssessmentReport",
+   "en": "assessment report",
+   "label_source": "rdfs:label",
+   "zh": "评估报告",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Assessments/AssessmentReport",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "Report",
+   "parents": [
+    "Report"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "ExpectedValue",
+   "en": "expected value",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Assessments/ExpectedValue",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "Value",
+   "parents": [
+    "Value"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "FairValue",
+   "en": "fair value",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Assessments/FairValue",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "MonetaryAmount",
+   "parents": [
+    "MonetaryAmount",
+    "QuantitativeValue"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "FinancialRecord",
+   "en": "financial record",
+   "label_source": "rdfs:label",
+   "zh": "财务记录",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Documents/FinancialRecord",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Index",
+   "en": "index",
+   "label_source": "rdfs:label",
+   "zh": "指数",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/IdentifiersAndIndices/Index",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "IndexingScheme",
+   "en": "indexing scheme",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/IdentifiersAndIndices/IndexingScheme",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "Scheme",
+   "parents": [
+    "Scheme"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "IndustrySectorClassificationScheme",
+   "en": "industry sector classification scheme",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/ClassificationSchemes/IndustrySectorClassificationScheme",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "IndustrySectorClassifier",
+   "en": "industry sector classifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/ClassificationSchemes/IndustrySectorClassifier",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Lifecycle",
+   "en": "lifecycle",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Lifecycles/Lifecycle",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "LifecycleEvent",
+   "en": "lifecycle event",
+   "label_source": "rdfs:label",
+   "zh": "生命周期事件",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Lifecycles/LifecycleEvent",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "OccurrenceKind",
+   "parents": [
+    "OccurrenceKind"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "LifecycleEventOccurrence",
+   "en": "lifecycle event occurrence",
+   "label_source": "rdfs:label",
+   "zh": "生命周期事件发生",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Lifecycles/LifecycleEventOccurrence",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "Occurrence",
+   "parents": [
+    "Occurrence"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "LifecycleOccurrence",
+   "en": "lifecycle occurrence",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Lifecycles/LifecycleOccurrence",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "Occurrence",
+   "parents": [
+    "Occurrence"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "LifecycleStage",
+   "en": "lifecycle stage",
+   "label_source": "rdfs:label",
+   "zh": "生命周期阶段",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Lifecycles/LifecycleStage",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "LifecycleStageOccurrence",
+   "en": "lifecycle stage occurrence",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Lifecycles/LifecycleStageOccurrence",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "Occurrence",
+   "parents": [
+    "Occurrence"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "LifecycleStatus",
+   "en": "lifecycle status",
+   "label_source": "rdfs:label",
+   "zh": "生命周期状态",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Lifecycles/LifecycleStatus",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "MarketValue",
+   "en": "market value",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Assessments/MarketValue",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "MonetaryAmount",
+   "parents": [
+    "MonetaryAmount",
+    "QuantitativeValue"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "ObservedValue",
+   "en": "observed value",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Assessments/ObservedValue",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "Value",
+   "parents": [
+    "Value"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Opinion",
+   "en": "opinion",
+   "label_source": "rdfs:label",
+   "zh": "意见",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Assessments/Opinion",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "PresentValue",
+   "en": "present value",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Assessments/PresentValue",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "QuantitativeValue",
+   "parents": [
+    "QuantitativeValue"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "QualitativeRatingScore",
+   "en": "qualitative rating score",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Ratings/QualitativeRatingScore",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "RatingScore",
+   "parents": [
+    "RatingScore"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "QualitativeValue",
+   "en": "qualitative value",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Assessments/QualitativeValue",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "Value",
+   "parents": [
+    "Value"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "QuantitativeRatingScore",
+   "en": "quantitative rating score",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Ratings/QuantitativeRatingScore",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "RatingScore",
+   "parents": [
+    "RatingScore"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "QuantitativeValue",
+   "en": "quantitative value",
+   "label_source": "rdfs:label",
+   "zh": "量化值",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Assessments/QuantitativeValue",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "Value",
+   "parents": [
+    "Value"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Rating",
+   "en": "rating",
+   "label_source": "rdfs:label",
+   "zh": "评级",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Ratings/Rating",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "Opinion",
+   "parents": [
+    "Opinion"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "RatingAgency",
+   "en": "rating agency",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Ratings/RatingAgency",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "RatingIssuer",
+   "parents": [
+    "RatingIssuer",
+    "RatingScalePublisher"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "RatingAssessmentActivity",
+   "en": "rating assessment activity",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Ratings/RatingAssessmentActivity",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "AssessmentActivity",
+   "parents": [
+    "AssessmentActivity"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "RatingAssessmentEvent",
+   "en": "rating assessment event",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Ratings/RatingAssessmentEvent",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "AssessmentEvent",
+   "parents": [
+    "AssessmentEvent"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "RatingIssuer",
+   "en": "rating issuer",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Ratings/RatingIssuer",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "RatingParty",
+   "en": "rating party",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Ratings/RatingParty",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "RatingReport",
+   "en": "rating report",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Ratings/RatingReport",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "AssessmentReport",
+   "parents": [
+    "AssessmentReport"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "RatingScale",
+   "en": "rating scale",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Ratings/RatingScale",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "RatingScalePublisher",
+   "en": "rating scale publisher",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Ratings/RatingScalePublisher",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "RatingScore",
+   "en": "rating score",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Ratings/RatingScore",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ReassignableIdentifier",
+   "en": "reassignable identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/IdentifiersAndIndices/ReassignableIdentifier",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ReferenceValue",
+   "en": "reference value",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Assessments/ReferenceValue",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "QuantitativeValue",
+   "parents": [
+    "QuantitativeValue"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "Report",
+   "en": "report",
+   "label_source": "rdfs:label",
+   "zh": "报告",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Reporting/Report",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ReportingParty",
+   "en": "reporting party",
+   "label_source": "rdfs:label",
+   "zh": "报送方",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Reporting/ReportingParty",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Request",
+   "en": "request",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Reporting/Request",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "Occurrence",
+   "parents": [
+    "Occurrence"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "RequestActivity",
+   "en": "request activity",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Reporting/RequestActivity",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "OccurrenceKind",
+   "parents": [
+    "OccurrenceKind"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Requester",
+   "en": "requester",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Reporting/Requester",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Scheme",
+   "en": "scheme",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Arrangements/Scheme",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Submitter",
+   "en": "submitter",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Reporting/Submitter",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ValuationMethod",
+   "en": "valuation method",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Assessments/ValuationMethod",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "Strategy",
+   "parents": [
+    "Strategy"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "Value",
+   "en": "value",
+   "label_source": "rdfs:label",
+   "zh": "价值",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Assessments/Value",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ValueAssessment",
+   "en": "value assessment",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Assessments/ValueAssessment",
+   "module": "FND",
+   "subdomain": "Arrangements",
+   "parent": "AssessmentEvent",
+   "parents": [
+    "AssessmentEvent"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "AdHocSchedule",
+   "en": "ad hoc schedule",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/FinancialDates/AdHocSchedule",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": "Schedule",
+   "parents": [
+    "Schedule"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "AdHocScheduleEntry",
+   "en": "ad hoc schedule entry",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/FinancialDates/AdHocScheduleEntry",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": "DatedCollectionConstituent",
+   "parents": [
+    "DatedCollectionConstituent"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Age",
+   "en": "age",
+   "label_source": "rdfs:label",
+   "zh": "年龄",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/FinancialDates/Age",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "AnchorDate",
+   "en": "anchor date",
+   "label_source": "rdfs:label",
+   "zh": "锚定日期",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/FinancialDates/AnchorDate",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "BusinessCalendar",
+   "en": "business calendar",
+   "label_source": "rdfs:label",
+   "zh": "营业日历",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/FinancialDates/BusinessCalendar",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": "Schedule",
+   "parents": [
+    "Schedule"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "BusinessDayConvention",
+   "en": "business day convention",
+   "label_source": "rdfs:label",
+   "zh": "营业日惯例",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/BusinessDates/BusinessDayConvention",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": "BusinessRecurrenceIntervalConvention",
+   "parents": [
+    "BusinessRecurrenceIntervalConvention"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "BusinessRecurrenceInterval",
+   "en": "business recurrence interval",
+   "label_source": "rdfs:label",
+   "zh": "营业循环间隔",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/BusinessDates/BusinessRecurrenceInterval",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": "RecurrenceInterval",
+   "parents": [
+    "RecurrenceInterval"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "BusinessRecurrenceIntervalConvention",
+   "en": "business recurrence interval convention",
+   "label_source": "rdfs:label",
+   "zh": "营业循环间隔惯例",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/BusinessDates/BusinessRecurrenceIntervalConvention",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": "Convention",
+   "parents": [
+    "Convention"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "CalculatedDate",
+   "en": "calculated date",
+   "label_source": "rdfs:label",
+   "zh": "计算日期",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/FinancialDates/CalculatedDate",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Calculation",
+   "en": "calculation",
+   "label_source": "rdfs:label",
+   "zh": "计算",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/Occurrences/Calculation",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": "Occurrence",
+   "parents": [
+    "Occurrence"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "CalculationEvent",
+   "en": "calculation event",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/Occurrences/CalculationEvent",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": "OccurrenceKind",
+   "parents": [
+    "OccurrenceKind"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "CalculationPeriod",
+   "en": "calculation period",
+   "label_source": "rdfs:label",
+   "zh": "计算周期",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/FinancialDates/CalculationPeriod",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "CalculationPeriodLength",
+   "en": "calculation period length",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/FinancialDates/CalculationPeriodLength",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "CalendarPeriod",
+   "en": "calendar period",
+   "label_source": "rdfs:label",
+   "zh": "日历周期",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/FinancialDates/CalendarPeriod",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "CalendarSpecifiedInterval",
+   "en": "calendar-specified interval",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/FinancialDates/CalendarSpecifiedInterval",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": "RecurrenceInterval",
+   "parents": [
+    "RecurrenceInterval"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Convention",
+   "en": "convention",
+   "label_source": "rdfs:label",
+   "zh": "惯例",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/BusinessDates/Convention",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "DatedCollectionConstituent",
+   "en": "dated collection constituent",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/FinancialDates/DatedCollectionConstituent",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "DatedStructuredCollection",
+   "en": "dated structured collection",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/FinancialDates/DatedStructuredCollection",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "DayOfMonth",
+   "en": "day of month",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/BusinessDates/DayOfMonth",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": "BusinessRecurrenceInterval",
+   "parents": [
+    "BusinessRecurrenceInterval"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "DayOfWeek",
+   "en": "day of the week",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/BusinessDates/DayOfWeek",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": "BusinessRecurrenceInterval",
+   "parents": [
+    "BusinessRecurrenceInterval"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "EndOfMonth",
+   "en": "end of the month",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/BusinessDates/EndOfMonth",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": "BusinessRecurrenceInterval",
+   "parents": [
+    "BusinessRecurrenceInterval"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "ExplicitRecurrenceInterval",
+   "en": "explicit recurrence interval",
+   "label_source": "rdfs:label",
+   "zh": "显式循环间隔",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/FinancialDates/ExplicitRecurrenceInterval",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": "RecurrenceInterval",
+   "parents": [
+    "RecurrenceInterval"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Occurrence",
+   "en": "occurrence",
+   "label_source": "rdfs:label",
+   "zh": "事件发生",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/Occurrences/Occurrence",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "OccurrenceBasedDate",
+   "en": "occurrence-based date",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/Occurrences/OccurrenceBasedDate",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": "CalculatedDate",
+   "parents": [
+    "CalculatedDate"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "OccurrenceKind",
+   "en": "occurrence kind",
+   "label_source": "rdfs:label",
+   "zh": "事件种类",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/Occurrences/OccurrenceKind",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "RecurrenceInterval",
+   "en": "recurrence interval",
+   "label_source": "rdfs:label",
+   "zh": "循环间隔",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/FinancialDates/RecurrenceInterval",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "RegularSchedule",
+   "en": "regular schedule",
+   "label_source": "rdfs:label",
+   "zh": "定期日程",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/FinancialDates/RegularSchedule",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": "Schedule",
+   "parents": [
+    "Schedule"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "RelativeDate",
+   "en": "relative date",
+   "label_source": "rdfs:label",
+   "zh": "相对日期",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/FinancialDates/RelativeDate",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": "CalculatedDate",
+   "parents": [
+    "CalculatedDate"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Schedule",
+   "en": "schedule",
+   "label_source": "rdfs:label",
+   "zh": "日程表",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/FinancialDates/Schedule",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ScheduleStub",
+   "en": "schedule stub",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/FinancialDates/ScheduleStub",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "SpecifiedDate",
+   "en": "specified date",
+   "label_source": "rdfs:label",
+   "zh": "指定日期",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/FinancialDates/SpecifiedDate",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": "CalculatedDate",
+   "parents": [
+    "CalculatedDate"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "TimeDirection",
+   "en": "time direction",
+   "label_source": "rdfs:label",
+   "zh": "时间方向",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/FinancialDates/TimeDirection",
+   "module": "FND",
+   "subdomain": "DatesAndTimes",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Aim",
+   "en": "aim",
+   "label_source": "rdfs:label",
+   "zh": "目的",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/GoalsAndObjectives/Objectives/Aim",
+   "module": "FND",
+   "subdomain": "GoalsAndObjectives",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Approach",
+   "en": "approach",
+   "label_source": "rdfs:label",
+   "zh": "方法路径",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/GoalsAndObjectives/Objectives/Approach",
+   "module": "FND",
+   "subdomain": "GoalsAndObjectives",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "BusinessObjective",
+   "en": "business objective",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/GoalsAndObjectives/Objectives/BusinessObjective",
+   "module": "FND",
+   "subdomain": "GoalsAndObjectives",
+   "parent": "Objective",
+   "parents": [
+    "Objective"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "BusinessStrategy",
+   "en": "business strategy",
+   "label_source": "rdfs:label",
+   "zh": "商业战略",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/GoalsAndObjectives/Objectives/BusinessStrategy",
+   "module": "FND",
+   "subdomain": "GoalsAndObjectives",
+   "parent": "Strategy",
+   "parents": [
+    "Strategy"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "DistributionStrategy",
+   "en": "distribution strategy",
+   "label_source": "rdfs:label",
+   "zh": "分销策略",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/GoalsAndObjectives/Objectives/DistributionStrategy",
+   "module": "FND",
+   "subdomain": "GoalsAndObjectives",
+   "parent": "Strategy",
+   "parents": [
+    "Strategy"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "FinancialObjective",
+   "en": "financial objective",
+   "label_source": "rdfs:label",
+   "zh": "财务目标",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/GoalsAndObjectives/Objectives/FinancialObjective",
+   "module": "FND",
+   "subdomain": "GoalsAndObjectives",
+   "parent": "Objective",
+   "parents": [
+    "Objective"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "Goal",
+   "en": "goal",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/GoalsAndObjectives/Objectives/Goal",
+   "module": "FND",
+   "subdomain": "GoalsAndObjectives",
+   "parent": "Aim",
+   "parents": [
+    "Aim"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "InvestmentObjective",
+   "en": "investment objective",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/GoalsAndObjectives/Objectives/InvestmentObjective",
+   "module": "FND",
+   "subdomain": "GoalsAndObjectives",
+   "parent": "FinancialObjective",
+   "parents": [
+    "FinancialObjective"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "LocalInvestmentObjective",
+   "en": "local investment objective",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/GoalsAndObjectives/Objectives/LocalInvestmentObjective",
+   "module": "FND",
+   "subdomain": "GoalsAndObjectives",
+   "parent": "InvestmentObjective",
+   "parents": [
+    "InvestmentObjective"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "Method",
+   "en": "method",
+   "label_source": "rdfs:label",
+   "zh": "方法",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/GoalsAndObjectives/Objectives/Method",
+   "module": "FND",
+   "subdomain": "GoalsAndObjectives",
+   "parent": "Approach",
+   "parents": [
+    "Approach"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Objective",
+   "en": "objective",
+   "label_source": "rdfs:label",
+   "zh": "目标",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/GoalsAndObjectives/Objectives/Objective",
+   "module": "FND",
+   "subdomain": "GoalsAndObjectives",
+   "parent": "Aim",
+   "parents": [
+    "Aim"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Program",
+   "en": "program",
+   "label_source": "rdfs:label",
+   "zh": "计划",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/GoalsAndObjectives/Objectives/Program",
+   "module": "FND",
+   "subdomain": "GoalsAndObjectives",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ProgramIdentifier",
+   "en": "program identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/GoalsAndObjectives/Objectives/ProgramIdentifier",
+   "module": "FND",
+   "subdomain": "GoalsAndObjectives",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ProgramName",
+   "en": "program name",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/GoalsAndObjectives/Objectives/ProgramName",
+   "module": "FND",
+   "subdomain": "GoalsAndObjectives",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Project",
+   "en": "project",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/GoalsAndObjectives/Objectives/Project",
+   "module": "FND",
+   "subdomain": "GoalsAndObjectives",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ProjectIdentifier",
+   "en": "project identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/GoalsAndObjectives/Objectives/ProjectIdentifier",
+   "module": "FND",
+   "subdomain": "GoalsAndObjectives",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ProjectName",
+   "en": "project name",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/GoalsAndObjectives/Objectives/ProjectName",
+   "module": "FND",
+   "subdomain": "GoalsAndObjectives",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "SalesStrategy",
+   "en": "sales strategy",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/GoalsAndObjectives/Objectives/SalesStrategy",
+   "module": "FND",
+   "subdomain": "GoalsAndObjectives",
+   "parent": "BusinessStrategy",
+   "parents": [
+    "BusinessStrategy"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "Strategy",
+   "en": "strategy",
+   "label_source": "rdfs:label",
+   "zh": "战略",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/GoalsAndObjectives/Objectives/Strategy",
+   "module": "FND",
+   "subdomain": "GoalsAndObjectives",
+   "parent": "Approach",
+   "parents": [
+    "Approach"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Study",
+   "en": "study",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/GoalsAndObjectives/Objectives/Study",
+   "module": "FND",
+   "subdomain": "GoalsAndObjectives",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "TripleBottomLineObjective",
+   "en": "triple bottom line objective",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/GoalsAndObjectives/Objectives/TripleBottomLineObjective",
+   "module": "FND",
+   "subdomain": "GoalsAndObjectives",
+   "parent": "InvestmentObjective",
+   "parents": [
+    "InvestmentObjective"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "Claim",
+   "en": "claim",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCapacity/Claim",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": "LegalConstruct",
+   "parents": [
+    "LegalConstruct"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Constitution",
+   "en": "constitution",
+   "label_source": "rdfs:label",
+   "zh": "章程",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCore/Constitution",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ContingentObligation",
+   "en": "contingent obligation",
+   "label_source": "rdfs:label",
+   "zh": "或有负债",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCapacity/ContingentObligation",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": "Duty",
+   "parents": [
+    "Duty"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "ContingentRight",
+   "en": "contingent right",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCapacity/ContingentRight",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": "Right",
+   "parents": [
+    "Right"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "ContractualCapability",
+   "en": "contractual capability",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCapacity/ContractualCapability",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": "LegalCapacity",
+   "parents": [
+    "LegalCapacity"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "ContractualInterest",
+   "en": "contractual interest",
+   "label_source": "rdfs:label",
+   "zh": "合同利息",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCapacity/ContractualInterest",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": "ContractualRight",
+   "parents": [
+    "ContractualRight"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "ContractualObligation",
+   "en": "contractual obligation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCapacity/ContractualObligation",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": "LegalObligation",
+   "parents": [
+    "LegalObligation"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "ContractualOption",
+   "en": "contractual option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCapacity/ContractualOption",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": "ContractualRight",
+   "parents": [
+    "ContractualRight"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "ContractualRight",
+   "en": "contractual right",
+   "label_source": "rdfs:label",
+   "zh": "合同权利",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCapacity/ContractualRight",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": "Right",
+   "parents": [
+    "Right"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CourtOfLaw",
+   "en": "court of law",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCore/CourtOfLaw",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "DelegatedLegalAuthority",
+   "en": "delegated legal authority",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCapacity/DelegatedLegalAuthority",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": "LegalCapacity",
+   "parents": [
+    "LegalCapacity"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "DeliveryObligation",
+   "en": "delivery obligation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCapacity/DeliveryObligation",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": "ContingentObligation",
+   "parents": [
+    "ContingentObligation",
+    "LegalObligation"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "Duty",
+   "en": "duty",
+   "label_source": "rdfs:label",
+   "zh": "义务",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCapacity/Duty",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": "LegalConstruct",
+   "parents": [
+    "LegalConstruct"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Law",
+   "en": "law",
+   "label_source": "rdfs:label",
+   "zh": "法律",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCore/Law",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "LegalCapacity",
+   "en": "legal capacity",
+   "label_source": "rdfs:label",
+   "zh": "法律行为能力",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCapacity/LegalCapacity",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": "LegalConstruct",
+   "parents": [
+    "LegalConstruct"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "LegalConstruct",
+   "en": "legal construct",
+   "label_source": "rdfs:label",
+   "zh": "法律构造",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCapacity/LegalConstruct",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "LegalObligation",
+   "en": "legal obligation",
+   "label_source": "rdfs:label",
+   "zh": "法律义务",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCapacity/LegalObligation",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": "Duty",
+   "parents": [
+    "Duty"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "LegalRight",
+   "en": "legal right",
+   "label_source": "rdfs:label",
+   "zh": "法定权利",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCapacity/LegalRight",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": "Right",
+   "parents": [
+    "Right"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "LiabilityCapacity",
+   "en": "liability capacity",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCapacity/LiabilityCapacity",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": "LegalCapacity",
+   "parents": [
+    "LegalCapacity"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "License",
+   "en": "license",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCapacity/License",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "LicenseIdentifier",
+   "en": "license identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCapacity/LicenseIdentifier",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Licensee",
+   "en": "licensee",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCapacity/Licensee",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Licensor",
+   "en": "licensor",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCapacity/Licensor",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "LitigationCapacity",
+   "en": "litigation capacity",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCapacity/LitigationCapacity",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": "LegalCapacity",
+   "parents": [
+    "LegalCapacity"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "NotificationObligation",
+   "en": "notification obligation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCapacity/NotificationObligation",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": "ContingentObligation",
+   "parents": [
+    "ContingentObligation",
+    "LegalObligation"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "Policy",
+   "en": "policy",
+   "label_source": "rdfs:label",
+   "zh": "政策",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCapacity/Policy",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Regulation",
+   "en": "regulation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCapacity/Regulation",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": "LegalConstruct",
+   "parents": [
+    "LegalConstruct"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "ReportingPolicy",
+   "en": "reporting policy",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCapacity/ReportingPolicy",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": "Policy",
+   "parents": [
+    "Policy"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Right",
+   "en": "right",
+   "label_source": "rdfs:label",
+   "zh": "权利",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCapacity/Right",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": "LegalConstruct",
+   "parents": [
+    "LegalConstruct"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "SignatoryCapacity",
+   "en": "signatory capacity",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCapacity/SignatoryCapacity",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": "LegalCapacity",
+   "parents": [
+    "LegalCapacity"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "StatuteLaw",
+   "en": "statute law",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Law/LegalCore/StatuteLaw",
+   "module": "FND",
+   "subdomain": "Law",
+   "parent": "Law",
+   "parents": [
+    "Law"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Employee",
+   "en": "employee",
+   "label_source": "rdfs:label",
+   "zh": "雇员",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Organizations/FormalOrganizations/Employee",
+   "module": "FND",
+   "subdomain": "Organizations",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Employer",
+   "en": "employer",
+   "label_source": "rdfs:label",
+   "zh": "雇主",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Organizations/FormalOrganizations/Employer",
+   "module": "FND",
+   "subdomain": "Organizations",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Employment",
+   "en": "employment",
+   "label_source": "rdfs:label",
+   "zh": "雇佣",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Organizations/FormalOrganizations/Employment",
+   "module": "FND",
+   "subdomain": "Organizations",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Group",
+   "en": "group",
+   "label_source": "rdfs:label",
+   "zh": "团体",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Organizations/FormalOrganizations/Group",
+   "module": "FND",
+   "subdomain": "Organizations",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Asset",
+   "en": "asset",
+   "label_source": "rdfs:label",
+   "zh": "资产",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Ownership/Asset",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "CapitalSurplus",
+   "en": "capital surplus",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Ownership/CapitalSurplus",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": "PaidInCapital",
+   "parents": [
+    "PaidInCapital"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "Control",
+   "en": "control",
+   "label_source": "rdfs:label",
+   "zh": "控制",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Control/Control",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ControlledThing",
+   "en": "controlled thing",
+   "label_source": "rdfs:label",
+   "zh": "受控对象",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Control/ControlledThing",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ControllingParty",
+   "en": "controlling party",
+   "label_source": "rdfs:label",
+   "zh": "控制当事方",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Control/ControllingParty",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "DeFactoControl",
+   "en": "de facto control",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Control/DeFactoControl",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": "Control",
+   "parents": [
+    "Control"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "DeJureControl",
+   "en": "de jure control",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Control/DeJureControl",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": "LegalConstruct",
+   "parents": [
+    "Control",
+    "LegalConstruct"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "DigitalAsset",
+   "en": "digital asset",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Ownership/DigitalAsset",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": "Asset",
+   "parents": [
+    "Asset"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "DigitalToken",
+   "en": "digital token",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Ownership/DigitalToken",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": "DigitalAsset",
+   "parents": [
+    "DigitalAsset"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "DigitalTokenIdentifier",
+   "en": "digital token identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Ownership/DigitalTokenIdentifier",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "DigitalTokenRegistrationScheme",
+   "en": "digital token registration scheme",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Ownership/DigitalTokenRegistrationScheme",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "DigitalTokenRegistry",
+   "en": "digital token registry",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Ownership/DigitalTokenRegistry",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "DigitalTokenRegistryRecord",
+   "en": "digital token registry record",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Ownership/DigitalTokenRegistryRecord",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "EarningsBeforeInterestTaxesDepreciationAmortization",
+   "en": "earnings before interest, taxes, depreciation and amortization",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Ownership/EarningsBeforeInterestTaxesDepreciationAmortization",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "FinancialAsset",
+   "en": "financial asset",
+   "label_source": "rdfs:label",
+   "zh": "金融资产",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Ownership/FinancialAsset",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": "TangibleAsset",
+   "parents": [
+    "TangibleAsset"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "FungibleToken",
+   "en": "fungible token",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Ownership/FungibleToken",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": "DigitalToken",
+   "parents": [
+    "DigitalToken"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "Holding",
+   "en": "holding",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Ownership/Holding",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": "Asset",
+   "parents": [
+    "Asset"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Income",
+   "en": "income",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Ownership/Income",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": "MonetaryAmount",
+   "parents": [
+    "MonetaryAmount"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "IntangibleAsset",
+   "en": "intangible asset",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Ownership/IntangibleAsset",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": "Asset",
+   "parents": [
+    "Asset"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "NonFungibleToken",
+   "en": "non-fungible token",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Ownership/NonFungibleToken",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": "DigitalToken",
+   "parents": [
+    "DigitalToken"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "Owner",
+   "en": "owner",
+   "label_source": "rdfs:label",
+   "zh": "所有权人",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Ownership/Owner",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "OwnersEquity",
+   "en": "owners' equity",
+   "label_source": "rdfs:label",
+   "zh": "所有者权益",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Ownership/OwnersEquity",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Ownership",
+   "en": "ownership",
+   "label_source": "rdfs:label",
+   "zh": "所有权",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Ownership/Ownership",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "OwnershipControlSituation",
+   "en": "ownership control situation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/OwnershipAndControl/OwnershipControlSituation",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "PaidInCapital",
+   "en": "paid-in capital",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Ownership/PaidInCapital",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": "OwnersEquity",
+   "parents": [
+    "OwnersEquity"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "PhysicalAsset",
+   "en": "physical asset",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Ownership/PhysicalAsset",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": "TangibleAsset",
+   "parents": [
+    "TangibleAsset"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "Portfolio",
+   "en": "portfolio",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Ownership/Portfolio",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "RetainedEarnings",
+   "en": "retained earnings",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Ownership/RetainedEarnings",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": "OwnersEquity",
+   "parents": [
+    "OwnersEquity"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "ShareholdersEquity",
+   "en": "shareholders' equity",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Ownership/ShareholdersEquity",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": "OwnersEquity",
+   "parents": [
+    "OwnersEquity"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "TangibleAsset",
+   "en": "tangible asset",
+   "label_source": "rdfs:label",
+   "zh": "有形资产",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/OwnershipAndControl/Ownership/TangibleAsset",
+   "module": "FND",
+   "subdomain": "OwnershipAndControl",
+   "parent": "Asset",
+   "parents": [
+    "Asset"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "PartyRoleIdentificationScheme",
+   "en": "party role identification scheme",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Parties/Parties/PartyRoleIdentificationScheme",
+   "module": "FND",
+   "subdomain": "Parties",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "PartyRoleIdentifier",
+   "en": "party role identifier",
+   "label_source": "rdfs:label",
+   "zh": "当事方角色标识符",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Parties/Parties/PartyRoleIdentifier",
+   "module": "FND",
+   "subdomain": "Parties",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "TaxIdentificationScheme",
+   "en": "tax identification scheme",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Parties/Parties/TaxIdentificationScheme",
+   "module": "FND",
+   "subdomain": "Parties",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "TaxIdentifier",
+   "en": "tax identifier",
+   "label_source": "rdfs:label",
+   "zh": "税务标识符",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Parties/Parties/TaxIdentifier",
+   "module": "FND",
+   "subdomain": "Parties",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Address",
+   "en": "address",
+   "label_source": "rdfs:label",
+   "zh": "地址",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/Addresses/Address",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "Index",
+   "parents": [
+    "Index"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "AddressComponent",
+   "en": "address component",
+   "label_source": "rdfs:label",
+   "zh": "地址组成部分",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/Addresses/AddressComponent",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "AddressingScheme",
+   "en": "addressing scheme",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/Addresses/AddressingScheme",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "IndexingScheme",
+   "parents": [
+    "IndexingScheme"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CompleteAddress",
+   "en": "complete address",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/NorthAmerica/USPostalServiceAddresses/CompleteAddress",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "StandardizedAddress",
+   "parents": [
+    "StandardizedAddress"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "ConventionalStreetAddress",
+   "en": "conventional street address",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/Addresses/ConventionalStreetAddress",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "PhysicalAddress",
+   "parents": [
+    "PhysicalAddress"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "DeliveryAddressCodeSet",
+   "en": "delivery address code set",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/NorthAmerica/USPostalServiceAddresses/DeliveryAddressCodeSet",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "DeliveryPointCode",
+   "en": "delivery point code",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/NorthAmerica/USPostalServiceAddresses/DeliveryPointCode",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "DeliveryPointCodeSet",
+   "en": "delivery point code set",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/NorthAmerica/USPostalServiceAddresses/DeliveryPointCodeSet",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "DepartmentOfStateAddress",
+   "en": "Department of State address",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/NorthAmerica/USPostalServiceAddresses/DepartmentOfStateAddress",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "PhysicalAddress",
+   "parents": [
+    "PhysicalAddress"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "DepartmentOfStateUnitComponent",
+   "en": "Department of State unit component",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/NorthAmerica/USPostalServiceAddresses/DepartmentOfStateUnitComponent",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "SupplementalAddressComponent",
+   "parents": [
+    "SupplementalAddressComponent"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "ElectronicMailAddress",
+   "en": "electronic mail address",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/VirtualPlaces/ElectronicMailAddress",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "VirtualAddress",
+   "parents": [
+    "VirtualAddress"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "GeneralDeliveryAddress",
+   "en": "general delivery address",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/NorthAmerica/USPostalServiceAddresses/GeneralDeliveryAddress",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "PhysicalAddress",
+   "parents": [
+    "PhysicalAddress"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "GeographicDirectionalSymbol",
+   "en": "geographic directional symbol",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/Addresses/GeographicDirectionalSymbol",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "HighwayContractRoute",
+   "en": "highway contract route",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/NorthAmerica/USPostalServiceAddresses/HighwayContractRoute",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "SupplementalAddressComponent",
+   "parents": [
+    "SupplementalAddressComponent"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "HighwayContractRouteAddress",
+   "en": "highway contract address",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/NorthAmerica/USPostalServiceAddresses/HighwayContractRouteAddress",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "PhysicalAddress",
+   "parents": [
+    "PhysicalAddress"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "InternationalAddress",
+   "en": "international address",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/NorthAmerica/USPostalServiceAddresses/InternationalAddress",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "PhysicalAddress",
+   "parents": [
+    "PhysicalAddress"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "Mailbox",
+   "en": "mailbox",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/NorthAmerica/USPostalServiceAddresses/Mailbox",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "SupplementalAddressComponent",
+   "parents": [
+    "SupplementalAddressComponent"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "NetworkLocation",
+   "en": "network location",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/VirtualPlaces/NetworkLocation",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "NotionalPlace",
+   "en": "notional place",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/VirtualPlaces/NotionalPlace",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "OverseasMilitaryAddress",
+   "en": "overseas military address",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/NorthAmerica/USPostalServiceAddresses/OverseasMilitaryAddress",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "PhysicalAddress",
+   "parents": [
+    "PhysicalAddress"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "PersonalProperty",
+   "en": "personal property",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/RealProperty/PersonalProperty",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "Asset",
+   "parents": [
+    "Asset"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "PhysicalAddress",
+   "en": "physical address",
+   "label_source": "rdfs:label",
+   "zh": "实体地址",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/Addresses/PhysicalAddress",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "Address",
+   "parents": [
+    "Address"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "PhysicalAddressIdentifier",
+   "en": "physical address identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/Addresses/PhysicalAddressIdentifier",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "PhysicalAddressingScheme",
+   "en": "physical addressing scheme",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/Addresses/PhysicalAddressingScheme",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "AddressingScheme",
+   "parents": [
+    "AddressingScheme"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "PostCodeArea",
+   "en": "post code area",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/Addresses/PostCodeArea",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "PostOfficeBox",
+   "en": "post office box",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/Addresses/PostOfficeBox",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "SupplementalAddressComponent",
+   "parents": [
+    "SupplementalAddressComponent"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "PostOfficeBoxAddress",
+   "en": "post office box address",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/Addresses/PostOfficeBoxAddress",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "PhysicalAddress",
+   "parents": [
+    "PhysicalAddress"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "PostOfficeBoxDesignator",
+   "en": "post office box designator",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/Addresses/PostOfficeBoxDesignator",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "SupplementalAddressDesignator",
+   "parents": [
+    "SupplementalAddressDesignator"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Postcode",
+   "en": "postcode",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/Addresses/Postcode",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "PostdirectionalSymbol",
+   "en": "postdirectional symbol",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/Addresses/PostdirectionalSymbol",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "GeographicDirectionalSymbol",
+   "parents": [
+    "GeographicDirectionalSymbol"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "PredirectionalSymbol",
+   "en": "predirectional symbol",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/Addresses/PredirectionalSymbol",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "GeographicDirectionalSymbol",
+   "parents": [
+    "GeographicDirectionalSymbol"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "PrimaryAddressNumber",
+   "en": "primary address number",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/Addresses/PrimaryAddressNumber",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "AddressComponent",
+   "parents": [
+    "AddressComponent"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "PrivateMailBoxAddress",
+   "en": "private mail box address",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/NorthAmerica/USPostalServiceAddresses/PrivateMailBoxAddress",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "ConventionalStreetAddress",
+   "parents": [
+    "ConventionalStreetAddress"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "PropertyInspection",
+   "en": "property inspection",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/RealProperty/PropertyInspection",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "AssessmentEvent",
+   "parents": [
+    "AssessmentEvent"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "PropertyInspectionReport",
+   "en": "property inspection report",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/RealProperty/PropertyInspectionReport",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "AssessmentReport",
+   "parents": [
+    "AssessmentReport"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "PuertoRicoAddress",
+   "en": "Puerto Rico address",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/NorthAmerica/USPostalServiceAddresses/PuertoRicoAddress",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "ConventionalStreetAddress",
+   "parents": [
+    "ConventionalStreetAddress"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "RealEstate",
+   "en": "real estate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/RealProperty/RealEstate",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "Asset",
+   "parents": [
+    "Asset"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "RealProperty",
+   "en": "real property",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/RealProperty/RealProperty",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "PhysicalAsset",
+   "parents": [
+    "PhysicalAsset",
+    "RealEstate"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "RealPropertyAppraisal",
+   "en": "real property appraisal",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/RealProperty/RealPropertyAppraisal",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "Appraisal",
+   "parents": [
+    "Appraisal"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "RealPropertyIdentifier",
+   "en": "real property identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/RealProperty/RealPropertyIdentifier",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "RegionSpecificIdentifier",
+   "en": "region-specific identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/Addresses/RegionSpecificIdentifier",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "RuralRoute",
+   "en": "highway contract route address",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/NorthAmerica/USPostalServiceAddresses/RuralRoute",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "SupplementalAddressComponent",
+   "parents": [
+    "SupplementalAddressComponent"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "RuralRouteAddress",
+   "en": "rural route address",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/NorthAmerica/USPostalServiceAddresses/RuralRouteAddress",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "PhysicalAddress",
+   "parents": [
+    "PhysicalAddress"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "SecondaryUnit",
+   "en": "secondary unit",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/Addresses/SecondaryUnit",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "AddressComponent",
+   "parents": [
+    "AddressComponent"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "SecondaryUnitDesignator",
+   "en": "secondary unit designator",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/Addresses/SecondaryUnitDesignator",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "SecondaryUnitIndicator",
+   "en": "secondary unit indicator",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/Addresses/SecondaryUnitIndicator",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "AddressComponent",
+   "parents": [
+    "AddressComponent"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "StandardizedAddress",
+   "en": "standardized address",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/NorthAmerica/USPostalServiceAddresses/StandardizedAddress",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "PhysicalAddress",
+   "parents": [
+    "PhysicalAddress"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "StreetAddress",
+   "en": "street address",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/Addresses/StreetAddress",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "AddressComponent",
+   "parents": [
+    "AddressComponent"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "StreetName",
+   "en": "street name",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/Addresses/StreetName",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "AddressComponent",
+   "parents": [
+    "AddressComponent"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "StreetSuffix",
+   "en": "street suffix",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/Addresses/StreetSuffix",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "AddressComponent",
+   "parents": [
+    "AddressComponent"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "StructureName",
+   "en": "structure name",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/Addresses/StructureName",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "AddressComponent",
+   "parents": [
+    "AddressComponent"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "SupplementalAddressComponent",
+   "en": "supplemental address component",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/Addresses/SupplementalAddressComponent",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "AddressComponent",
+   "parents": [
+    "AddressComponent"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "SupplementalAddressDesignator",
+   "en": "supplemental address designator",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/Addresses/SupplementalAddressDesignator",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "SupplementalAddressUnit",
+   "en": "supplemental address unit",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/Addresses/SupplementalAddressUnit",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "AddressComponent",
+   "parents": [
+    "AddressComponent"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "TelephoneNumber",
+   "en": "telephone number",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/VirtualPlaces/TelephoneNumber",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "VirtualAddress",
+   "parents": [
+    "VirtualAddress"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "USPostalServiceAddressIdentifier",
+   "en": "U.S. Postal Service address identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/NorthAmerica/USPostalServiceAddresses/USPostalServiceAddressIdentifier",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "PhysicalAddressIdentifier",
+   "parents": [
+    "PhysicalAddressIdentifier"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Urbanization",
+   "en": "urbanization",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/NorthAmerica/USPostalServiceAddresses/Urbanization",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "VirtualAddress",
+   "en": "virtual address",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/Addresses/VirtualAddress",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "Address",
+   "parents": [
+    "Address"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "ZIPCode",
+   "en": "Zip Code",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/NorthAmerica/USPostalServiceAddresses/ZIPCode",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "Postcode",
+   "parents": [
+    "Postcode"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "ZIPPlus4Code",
+   "en": "ZIP+4 Code",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/NorthAmerica/USPostalServiceAddresses/ZIPPlus4Code",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": "Postcode",
+   "parents": [
+    "Postcode"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "ZipCodeScheme",
+   "en": "zip code scheme",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Places/NorthAmerica/USPostalServiceAddresses/ZipCodeScheme",
+   "module": "FND",
+   "subdomain": "Places",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Buyer",
+   "en": "buyer",
+   "label_source": "rdfs:label",
+   "zh": "买方",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/ProductsAndServices/Buyer",
+   "module": "FND",
+   "subdomain": "ProductsAndServices",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Client",
+   "en": "client",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/ProductsAndServices/Client",
+   "module": "FND",
+   "subdomain": "ProductsAndServices",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ClientIdentifier",
+   "en": "client identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/ProductsAndServices/ClientIdentifier",
+   "module": "FND",
+   "subdomain": "ProductsAndServices",
+   "parent": "PartyRoleIdentifier",
+   "parents": [
+    "PartyRoleIdentifier"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Commodity",
+   "en": "commodity",
+   "label_source": "rdfs:label",
+   "zh": "大宗商品",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/ProductsAndServices/Commodity",
+   "module": "FND",
+   "subdomain": "ProductsAndServices",
+   "parent": "Good",
+   "parents": [
+    "Good"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Consumer",
+   "en": "consumer",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/ProductsAndServices/Consumer",
+   "module": "FND",
+   "subdomain": "ProductsAndServices",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ContractualProduct",
+   "en": "contractual product",
+   "label_source": "rdfs:label",
+   "zh": "合同类产品",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/ProductsAndServices/ContractualProduct",
+   "module": "FND",
+   "subdomain": "ProductsAndServices",
+   "parent": "Product",
+   "parents": [
+    "Product"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "ContractualTemplateProduct",
+   "en": "contractual template product",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/ProductsAndServices/ContractualTemplateProduct",
+   "module": "FND",
+   "subdomain": "ProductsAndServices",
+   "parent": "ContractualProduct",
+   "parents": [
+    "ContractualProduct",
+    "OffTheShelfProduct"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CustomProduct",
+   "en": "custom product",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/ProductsAndServices/CustomProduct",
+   "module": "FND",
+   "subdomain": "ProductsAndServices",
+   "parent": "Product",
+   "parents": [
+    "Product"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Customer",
+   "en": "customer",
+   "label_source": "rdfs:label",
+   "zh": "客户",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/ProductsAndServices/Customer",
+   "module": "FND",
+   "subdomain": "ProductsAndServices",
+   "parent": "Buyer",
+   "parents": [
+    "Buyer"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "CustomerIdentifier",
+   "en": "customer identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/ProductsAndServices/CustomerIdentifier",
+   "module": "FND",
+   "subdomain": "ProductsAndServices",
+   "parent": "PartyRoleIdentifier",
+   "parents": [
+    "PartyRoleIdentifier"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "FND.ProductsAndServices.TransactionEvent",
+   "en": "transaction event",
+   "label_source": "rdfs:label",
+   "zh": "交易事件",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/ProductsAndServices/TransactionEvent",
+   "module": "FND",
+   "subdomain": "ProductsAndServices",
+   "parent": "OccurrenceKind",
+   "parents": [
+    "OccurrenceKind"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Good",
+   "en": "good",
+   "label_source": "rdfs:label",
+   "zh": "货物",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/ProductsAndServices/Good",
+   "module": "FND",
+   "subdomain": "ProductsAndServices",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "NegotiableCommodity",
+   "en": "negotiable commodity",
+   "label_source": "rdfs:label",
+   "zh": "可流通大宗商品",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/ProductsAndServices/NegotiableCommodity",
+   "module": "FND",
+   "subdomain": "ProductsAndServices",
+   "parent": "Commodity",
+   "parents": [
+    "Commodity"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "OffTheShelfProduct",
+   "en": "off-the-shelf product",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/ProductsAndServices/OffTheShelfProduct",
+   "module": "FND",
+   "subdomain": "ProductsAndServices",
+   "parent": "Product",
+   "parents": [
+    "Product"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Payee",
+   "en": "payee",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/PaymentsAndSchedules/Payee",
+   "module": "FND",
+   "subdomain": "ProductsAndServices",
+   "parent": "Obligee",
+   "parents": [
+    "Obligee"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Payer",
+   "en": "payer",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/PaymentsAndSchedules/Payer",
+   "module": "FND",
+   "subdomain": "ProductsAndServices",
+   "parent": "Obligor",
+   "parents": [
+    "Obligor"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Payment",
+   "en": "payment",
+   "label_source": "rdfs:label",
+   "zh": "付款",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/PaymentsAndSchedules/Payment",
+   "module": "FND",
+   "subdomain": "ProductsAndServices",
+   "parent": "Occurrence",
+   "parents": [
+    "Occurrence"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "PaymentEvent",
+   "en": "payment event",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/PaymentsAndSchedules/PaymentEvent",
+   "module": "FND",
+   "subdomain": "ProductsAndServices",
+   "parent": "FND.ProductsAndServices.TransactionEvent",
+   "parents": [
+    "FND.ProductsAndServices.TransactionEvent"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "PaymentObligation",
+   "en": "payment obligation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/PaymentsAndSchedules/PaymentObligation",
+   "module": "FND",
+   "subdomain": "ProductsAndServices",
+   "parent": "Commitment",
+   "parents": [
+    "Commitment",
+    "Duty"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "PaymentSchedule",
+   "en": "payment schedule",
+   "label_source": "rdfs:label",
+   "zh": "付款日程",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/PaymentsAndSchedules/PaymentSchedule",
+   "module": "FND",
+   "subdomain": "ProductsAndServices",
+   "parent": "Schedule",
+   "parents": [
+    "Schedule"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Producer",
+   "en": "producer",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/ProductsAndServices/Producer",
+   "module": "FND",
+   "subdomain": "ProductsAndServices",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Product",
+   "en": "product",
+   "label_source": "rdfs:label",
+   "zh": "产品",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/ProductsAndServices/Product",
+   "module": "FND",
+   "subdomain": "ProductsAndServices",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ProductIdentifier",
+   "en": "product identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/ProductsAndServices/ProductIdentifier",
+   "module": "FND",
+   "subdomain": "ProductsAndServices",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Sale",
+   "en": "sale",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/ProductsAndServices/Sale",
+   "module": "FND",
+   "subdomain": "ProductsAndServices",
+   "parent": "FND.ProductsAndServices.TransactionEvent",
+   "parents": [
+    "FND.ProductsAndServices.TransactionEvent"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "Seller",
+   "en": "seller",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/ProductsAndServices/Seller",
+   "module": "FND",
+   "subdomain": "ProductsAndServices",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ServiceAgreement",
+   "en": "service agreement",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/ProductsAndServices/ServiceAgreement",
+   "module": "FND",
+   "subdomain": "ProductsAndServices",
+   "parent": "WrittenContract",
+   "parents": [
+    "WrittenContract"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "Supplier",
+   "en": "supplier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/ProductsAndServices/Supplier",
+   "module": "FND",
+   "subdomain": "ProductsAndServices",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "TransactionConfirmation",
+   "en": "transaction confirmation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/ProductsAndServices/TransactionConfirmation",
+   "module": "FND",
+   "subdomain": "ProductsAndServices",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Referent",
+   "en": "referent",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Relations/Relations/Referent",
+   "module": "FND",
+   "subdomain": "Relations",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ContractualEconomicAgreement",
+   "en": "contractual economic agreement",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/REATransactions/ContractualEconomicAgreement",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": "Contract",
+   "parents": [
+    "Contract",
+    "EconomicAgreement"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "ContractualTransaction",
+   "en": "contractual transaction",
+   "label_source": "rdfs:label",
+   "zh": "合同类交易",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/REATransactions/ContractualTransaction",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": "EconomicTransaction",
+   "parents": [
+    "EconomicTransaction"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "ContractualTransactionParty",
+   "en": "contractual transaction party",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/REATransactions/ContractualTransactionParty",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": "ContractParty",
+   "parents": [
+    "ContractParty",
+    "TransactionParty"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "CoveredTransaction",
+   "en": "covered transaction",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/REATransactions/CoveredTransaction",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": "ContractualTransaction",
+   "parents": [
+    "ContractualTransaction"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "DischargingEvent",
+   "en": "discharging event",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/REATransactions/DischargingEvent",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": "TransactionBusinessEvent",
+   "parents": [
+    "TransactionBusinessEvent"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "EconomicAgreement",
+   "en": "economic agreement",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/REATransactions/EconomicAgreement",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": "Contract",
+   "parents": [
+    "Contract"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "EconomicCommitment",
+   "en": "economic commitment",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/REATransactions/EconomicCommitment",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": "Commitment",
+   "parents": [
+    "Commitment"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "EconomicContract",
+   "en": "economic contract",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/REATransactions/EconomicContract",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": "Contract",
+   "parents": [
+    "Contract"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "EconomicContractTermsSet",
+   "en": "economic contract commitment",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/REATransactions/EconomicContractTermsSet",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": "ContractualCommitment",
+   "parents": [
+    "ContractualCommitment"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "EconomicResource",
+   "en": "economic resource",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/REATransactions/EconomicResource",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "EconomicTransaction",
+   "en": "economic transaction",
+   "label_source": "rdfs:label",
+   "zh": "经济交易",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/REATransactions/EconomicTransaction",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "FND.TransactionsExt.TransactionEvent",
+   "en": "transaction event",
+   "label_source": "rdfs:label",
+   "zh": "交易事件",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/REATransactions/TransactionEvent",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "FinancialPrimaryMarketTransaction",
+   "en": "financial primary market transaction",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/SecuritiesTransactions/FinancialPrimaryMarketTransaction",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": "MarketTransaction",
+   "parents": [
+    "ContractualTransaction",
+    "MarketTransaction"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "FinancialSecuritiesSecondaryMarketTransaction",
+   "en": "financial securities secondary market transaction",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/SecuritiesTransactions/FinancialSecuritiesSecondaryMarketTransaction",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": "MarketTransaction",
+   "parents": [
+    "ContractualTransaction",
+    "MarketTransaction"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "LedgerEntry",
+   "en": "ledger entry",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/REATransactions/LedgerEntry",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": "DatedCollectionConstituent",
+   "parents": [
+    "DatedCollectionConstituent"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "MarketTransaction",
+   "en": "market transaction",
+   "label_source": "rdfs:label",
+   "zh": "市场交易",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/MarketTransactions/MarketTransaction",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": "EconomicTransaction",
+   "parents": [
+    "EconomicTransaction"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "MarketTransactionInvoicingTerms",
+   "en": "market transaction invoicing terms",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/MarketTransactions/MarketTransactionInvoicingTerms",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": "EconomicContractTermsSet",
+   "parents": [
+    "EconomicContractTermsSet"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "MarketTransactionPaymentTerms",
+   "en": "market transaction payment terms",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/MarketTransactions/MarketTransactionPaymentTerms",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": "EconomicContractTermsSet",
+   "parents": [
+    "EconomicContractTermsSet"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "REAClaim",
+   "en": "r e a claim",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/REATransactions/REAClaim",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Revaluation",
+   "en": "revaluation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/REATransactions/Revaluation",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": "TransactionBusinessEvent",
+   "parents": [
+    "TransactionBusinessEvent"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "SecuritiesTransactionContract",
+   "en": "securities transaction contract",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/SecuritiesTransactions/SecuritiesTransactionContract",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": "EconomicContract",
+   "parents": [
+    "EconomicContract"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "SecuritiesTransactionCounterparty",
+   "en": "securities transaction counterparty",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/SecuritiesTransactions/SecuritiesTransactionCounterparty",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": "TransactionCounterparty",
+   "parents": [
+    "TransactionCounterparty"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "SecuritiesTransactionPrincipal",
+   "en": "securities transaction principal",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/SecuritiesTransactions/SecuritiesTransactionPrincipal",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": "TransactionPrincipal",
+   "parents": [
+    "TransactionPrincipal"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "SettlementProcess",
+   "en": "settlement process",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/SecuritiesTransactions/SettlementProcess",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "TransactionBusinessEvent",
+   "en": "transaction business event",
+   "label_source": "rdfs:label",
+   "zh": "交易业务事件",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/REATransactions/TransactionBusinessEvent",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "TransactionCounterparty",
+   "en": "transaction counterparty",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/MarketTransactions/TransactionCounterparty",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": "Counterparty",
+   "parents": [
+    "Counterparty",
+    "TransactionParty"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "TransactionEventAspect",
+   "en": "transaction event aspect",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/REATransactions/TransactionEventAspect",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "TransactionParty",
+   "en": "transaction party",
+   "label_source": "rdfs:label",
+   "zh": "交易当事方",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/REATransactions/TransactionParty",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "TransactionPrincipal",
+   "en": "transaction principal",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/MarketTransactions/TransactionPrincipal",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": "ContractPrincipal",
+   "parents": [
+    "ContractPrincipal",
+    "TransactionParty"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "TransactionUndertaking",
+   "en": "transaction undertaking",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/REATransactions/TransactionUndertaking",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": "UndertakingEvent",
+   "parents": [
+    "UndertakingEvent"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "Undertaking",
+   "en": "undertaking",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/REATransactions/Undertaking",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "UndertakingEvent",
+   "en": "undertaking event",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/REATransactions/UndertakingEvent",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": "TransactionBusinessEvent",
+   "parents": [
+    "TransactionBusinessEvent",
+    "Undertaking"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "WhenIssuedTransaction",
+   "en": "when issued transaction",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/TransactionsExt/SecuritiesTransactions/WhenIssuedTransaction",
+   "module": "FND",
+   "subdomain": "TransactionsExt",
+   "parent": "FinancialSecuritiesSecondaryMarketTransaction",
+   "parents": [
+    "FinancialSecuritiesSecondaryMarketTransaction"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "AnnualizedStandardDeviation",
+   "en": "annualized standard deviation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/AnnualizedStandardDeviation",
+   "module": "FND",
+   "subdomain": "Utilities",
+   "parent": "StandardDeviation",
+   "parents": [
+    "StandardDeviation"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "ArithmeticMean",
+   "en": "arithmetic mean",
+   "label_source": "rdfs:label",
+   "zh": "算术平均数",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/ArithmeticMean",
+   "module": "FND",
+   "subdomain": "Utilities",
+   "parent": "Mean",
+   "parents": [
+    "Mean"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "AverageAbsoluteDeviation",
+   "en": "average absolute deviation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/AverageAbsoluteDeviation",
+   "module": "FND",
+   "subdomain": "Utilities",
+   "parent": "Dispersion",
+   "parents": [
+    "Dispersion"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "Difference",
+   "en": "difference",
+   "label_source": "rdfs:label",
+   "zh": "差额",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/Difference",
+   "module": "FND",
+   "subdomain": "Utilities",
+   "parent": "StatisticalMeasure",
+   "parents": [
+    "StatisticalMeasure"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Dispersion",
+   "en": "dispersion",
+   "label_source": "rdfs:label",
+   "zh": "离散度",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/Dispersion",
+   "module": "FND",
+   "subdomain": "Utilities",
+   "parent": "StatisticalMeasure",
+   "parents": [
+    "StatisticalMeasure"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "FinitePopulation",
+   "en": "finite population",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/FinitePopulation",
+   "module": "FND",
+   "subdomain": "Utilities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Formula",
+   "en": "formula",
+   "label_source": "rdfs:label",
+   "zh": "公式",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/Formula",
+   "module": "FND",
+   "subdomain": "Utilities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "GeometricMean",
+   "en": "geometric mean",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/GeometricMean",
+   "module": "FND",
+   "subdomain": "Utilities",
+   "parent": "Mean",
+   "parents": [
+    "Mean"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "KeyPerformanceIndicator",
+   "en": "key performance indicator",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/KeyPerformanceIndicator",
+   "module": "FND",
+   "subdomain": "Utilities",
+   "parent": "QualifiedMeasure",
+   "parents": [
+    "QualifiedMeasure"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "MaturityLevel",
+   "en": "maturity level",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/AnnotationVocabulary/MaturityLevel",
+   "module": "FND",
+   "subdomain": "Utilities",
+   "parent": "LifecycleStage",
+   "parents": [
+    "LifecycleStage"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Mean",
+   "en": "mean",
+   "label_source": "rdfs:label",
+   "zh": "均值",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/Mean",
+   "module": "FND",
+   "subdomain": "Utilities",
+   "parent": "StatisticalMeasure",
+   "parents": [
+    "StatisticalMeasure"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Median",
+   "en": "median",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/Median",
+   "module": "FND",
+   "subdomain": "Utilities",
+   "parent": "StatisticalMeasure",
+   "parents": [
+    "StatisticalMeasure"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "MedianAbsoluteDeviation",
+   "en": "median absolute deviation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/MedianAbsoluteDeviation",
+   "module": "FND",
+   "subdomain": "Utilities",
+   "parent": "Dispersion",
+   "parents": [
+    "Dispersion"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "Module",
+   "en": "module",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/AnnotationVocabulary/Module",
+   "module": "FND",
+   "subdomain": "Utilities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "NumericIndexValue",
+   "en": "numeric index value",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/NumericIndexValue",
+   "module": "FND",
+   "subdomain": "Utilities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "QualifiedMeasure",
+   "en": "qualified measure",
+   "label_source": "rdfs:label",
+   "zh": "限定度量",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/QualifiedMeasure",
+   "module": "FND",
+   "subdomain": "Utilities",
+   "parent": "StatisticalMeasure",
+   "parents": [
+    "StatisticalMeasure"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "SamplingVariance",
+   "en": "sampling variance",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/SamplingVariance",
+   "module": "FND",
+   "subdomain": "Utilities",
+   "parent": "Variance",
+   "parents": [
+    "Variance"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "ScopedMeasure",
+   "en": "scoped measure",
+   "label_source": "rdfs:label",
+   "zh": "范围度量",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/ScopedMeasure",
+   "module": "FND",
+   "subdomain": "Utilities",
+   "parent": "QualifiedMeasure",
+   "parents": [
+    "QualifiedMeasure"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "StandardDeviation",
+   "en": "standard deviation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/StandardDeviation",
+   "module": "FND",
+   "subdomain": "Utilities",
+   "parent": "Dispersion",
+   "parents": [
+    "Dispersion"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "StatisticalArea",
+   "en": "statistical area",
+   "label_source": "rdfs:label",
+   "zh": "统计区域",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/StatisticalArea",
+   "module": "FND",
+   "subdomain": "Utilities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "StatisticalAreaIdentifier",
+   "en": "statistical area identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/StatisticalAreaIdentifier",
+   "module": "FND",
+   "subdomain": "Utilities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "StatisticalMeasure",
+   "en": "statistical measure",
+   "label_source": "rdfs:label",
+   "zh": "统计度量",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/StatisticalMeasure",
+   "module": "FND",
+   "subdomain": "Utilities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "StatisticalPopulation",
+   "en": "statistical population",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/StatisticalPopulation",
+   "module": "FND",
+   "subdomain": "Utilities",
+   "parent": "FinitePopulation",
+   "parents": [
+    "FinitePopulation",
+    "StatisticalUniverse"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "StatisticalProgram",
+   "en": "statistical program",
+   "label_source": "rdfs:label",
+   "zh": "统计计划",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/StatisticalProgram",
+   "module": "FND",
+   "subdomain": "Utilities",
+   "parent": "Program",
+   "parents": [
+    "Program"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "StatisticalUniverse",
+   "en": "statistical universe",
+   "label_source": "rdfs:label",
+   "zh": "统计总体",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/StatisticalUniverse",
+   "module": "FND",
+   "subdomain": "Utilities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Variance",
+   "en": "variance",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/Variance",
+   "module": "FND",
+   "subdomain": "Utilities",
+   "parent": "Dispersion",
+   "parents": [
+    "Dispersion"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "WeightingFunction",
+   "en": "weighting function",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/WeightingFunction",
+   "module": "FND",
+   "subdomain": "Utilities",
+   "parent": "StatisticalMeasure",
+   "parents": [
+    "StatisticalMeasure"
+   ],
+   "depth": 1
+  }
+ ]
+}

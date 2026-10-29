@@ -1,0 +1,2695 @@
+{
+ "kind": "fibo_module_seed",
+ "module": "LOAN",
+ "module_zh": "贷款",
+ "module_en": "Loans",
+ "note": "主干模块（任务点名）",
+ "source": {
+  "repo": "EDMCouncil/fibo",
+  "tag": "master_2026Q3",
+  "license": "MIT",
+  "license_copyright": "Copyright (c) 2020 Enterprise Data Management Council",
+  "url": "https://github.com/EDMCouncil/fibo/tree/master_2026Q3",
+  "tarball_sha256": "48a1690255df0fb161d624a6e12fb529f4e4f38c73ac8cfbe1ed81e913625e27"
+ },
+ "stats": {
+  "classes": 180,
+  "zh_mapped": 45,
+  "zh_rate": 0.25,
+  "roots": 30,
+  "max_depth": 9,
+  "multi_parent_classes": 26,
+  "derived_labels": 0,
+  "external_parent_edges_dropped": 31
+ },
+ "concepts": [
+  {
+   "id": "AllBorrowersMonthlyIncome",
+   "en": "all borrowers' monthly income",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoanApplications/AllBorrowersMonthlyIncome",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "MonetaryAmount",
+   "parents": [
+    "Income",
+    "MonetaryAmount"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "BorrowerAssessment",
+   "en": "borrower assessment",
+   "label_source": "rdfs:label",
+   "zh": "借款人评估",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoanApplications/BorrowerAssessment",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "AssessmentReport",
+   "parents": [
+    "AssessmentReport"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "BorrowerDataProtectionRequirement",
+   "en": "borrower data protection requirement",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoansRegulatory/BorrowerDataProtectionRequirement",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "DataProtectionRequirement",
+   "parents": [
+    "DataProtectionRequirement"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "BorrowerDisclosureRequirement",
+   "en": "borrower disclosure requirement",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoansRegulatory/BorrowerDisclosureRequirement",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "DisclosureRequirement",
+   "parents": [
+    "DisclosureRequirement"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "BorrowerMonthlyIncome",
+   "en": "borrower monthly income",
+   "label_source": "rdfs:label",
+   "zh": "借款人月收入",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoanApplications/BorrowerMonthlyIncome",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "MonetaryAmount",
+   "parents": [
+    "Income",
+    "MonetaryAmount"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "BorrowerRight",
+   "en": "borrower right",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoansRegulatory/BorrowerRight",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "ConsumerRight",
+   "parents": [
+    "ConsumerRight"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "ClosedEndCredit",
+   "en": "closed-end credit",
+   "label_source": "rdfs:label",
+   "zh": "封闭式信贷",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/ClosedEndCredit",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "CreditAgreement",
+   "parents": [
+    "CreditAgreement"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "CollateralValuation",
+   "en": "collateral valuation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoanEvents/CollateralValuation",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "AssessmentActivity",
+   "parents": [
+    "AssessmentActivity"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CollateralizedLoan",
+   "en": "collateralized loan",
+   "label_source": "rdfs:label",
+   "zh": "有抵押贷款",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/CollateralizedLoan",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "SecuredLoan",
+   "parents": [
+    "SecuredLoan"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "Comaker",
+   "en": "co-maker",
+   "label_source": "rdfs:label",
+   "zh": "共同借款人",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/Comaker",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "ContractThirdParty",
+   "parents": [
+    "ContractThirdParty"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "CombinedLoanToValueRatio",
+   "en": "combined loan-to-value ratio",
+   "label_source": "rdfs:label",
+   "zh": "综合贷款价值比",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/CombinedLoanToValueRatio",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "PercentageMonetaryAmount",
+   "parents": [
+    "PercentageMonetaryAmount"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "ConsumerCreditEqualTreatmentRequirement",
+   "en": "consumer credit equal treatment requirement",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoansRegulatory/ConsumerCreditEqualTreatmentRequirement",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "ConsumerCreditRequirement",
+   "parents": [
+    "ConsumerCreditRequirement"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "ConsumerCreditProtectionLaw",
+   "en": "consumer credit protection law",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoansRegulatory/ConsumerCreditProtectionLaw",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "ConsumerProtectionLaw",
+   "parents": [
+    "ConsumerProtectionLaw"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "ConsumerCreditReferenceAgency",
+   "en": "consumer credit reference agency",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoansRegulatory/ConsumerCreditReferenceAgency",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ConsumerCreditRequirement",
+   "en": "consumer credit requirement",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoansRegulatory/ConsumerCreditRequirement",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "LegalObligation",
+   "parents": [
+    "LegalObligation"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "ConsumerProtectionAgency",
+   "en": "consumer protection agency",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoansRegulatory/ConsumerProtectionAgency",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ConsumerProtectionLaw",
+   "en": "consumer protection law",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoansRegulatory/ConsumerProtectionLaw",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "StatuteLaw",
+   "parents": [
+    "StatuteLaw"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "ConsumerRight",
+   "en": "consumer right",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoansRegulatory/ConsumerRight",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "LegalRight",
+   "parents": [
+    "LegalRight"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "CourtJudgment",
+   "en": "court judgment",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoanEvents/CourtJudgment",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "LegalProceeding",
+   "parents": [
+    "LegalProceeding"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CreditReferenceAgencyRequirements",
+   "en": "credit reference agency requirements",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoansRegulatory/CreditReferenceAgencyRequirements",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "CreditRiskAssessment",
+   "en": "credit risk assessment",
+   "label_source": "rdfs:label",
+   "zh": "信用风险评估",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoanApplications/CreditRiskAssessment",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "AssessmentActivity",
+   "parents": [
+    "AssessmentActivity"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "DataProtectionRequirement",
+   "en": "data protection requirement",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoansRegulatory/DataProtectionRequirement",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "LegalObligation",
+   "parents": [
+    "LegalObligation"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "DisclosureRequirement",
+   "en": "disclosure requirement",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoansRegulatory/DisclosureRequirement",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "ConsumerCreditRequirement",
+   "parents": [
+    "ConsumerCreditRequirement"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "EqualTreatmentRight",
+   "en": "equal treatment right",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoansRegulatory/EqualTreatmentRight",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "BorrowerRight",
+   "parents": [
+    "BorrowerRight"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "GoodFaithEstimate",
+   "en": "good faith estimate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoansRegulatory/GoodFaithEstimate",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "LoanProductRepresentations",
+   "parents": [
+    "LoanProductRepresentations"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "GuaranteedLoan",
+   "en": "guaranteed loan",
+   "label_source": "rdfs:label",
+   "zh": "保证贷款",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/GuaranteedLoan",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "SecuredLoan",
+   "parents": [
+    "SecuredLoan"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "IncomeVerificationReport",
+   "en": "income verification report",
+   "label_source": "rdfs:label",
+   "zh": "收入核实报告",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoanApplications/IncomeVerificationReport",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "AssessmentReport",
+   "parents": [
+    "AssessmentReport"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "IndividualPaymentTransaction",
+   "en": "individual payment transaction",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/IndividualPaymentTransaction",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "IndividualTransaction",
+   "parents": [
+    "IndividualTransaction",
+    "Payment"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "IndividualPersonCreditRating",
+   "en": "individual person credit rating",
+   "label_source": "rdfs:label",
+   "zh": "个人信用评级",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoanApplications/IndividualPersonCreditRating",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "CreditRating",
+   "parents": [
+    "CreditRating"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "InformationRight",
+   "en": "information right",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoansRegulatory/InformationRight",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "BorrowerRight",
+   "parents": [
+    "BorrowerRight"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "LegalProceeding",
+   "en": "legal proceeding",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoanEvents/LegalProceeding",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "Occurrence",
+   "parents": [
+    "Occurrence"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "LenderLienPosition",
+   "en": "lender lien position",
+   "label_source": "rdfs:label",
+   "zh": "贷款人留置权顺位",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/LenderLienPosition",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "LenderRight",
+   "en": "lender right",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoansRegulatory/LenderRight",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "LegalRight",
+   "parents": [
+    "LegalRight"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "Loan",
+   "en": "loan",
+   "label_source": "rdfs:label",
+   "zh": "贷款",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/Loan",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "CreditAgreementRepaidPeriodically",
+   "parents": [
+    "CreditAgreementRepaidPeriodically",
+    "DebtInstrument"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "LoanApplication",
+   "en": "loan application",
+   "label_source": "rdfs:label",
+   "zh": "贷款申请",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoanApplications/LoanApplication",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "LoanApplicationAtAgreementStage",
+   "en": "loan application at agreement stage",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoanApplications/LoanApplicationAtAgreementStage",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "LoanApplicationStatus",
+   "parents": [
+    "LoanApplicationStatus"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "LoanApplicationAtDisbursementStage",
+   "en": "loan application at disbursement stage",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoanApplications/LoanApplicationAtDisbursementStage",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "LoanApplicationStatus",
+   "parents": [
+    "LoanApplicationStatus"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "LoanApplicationPhase",
+   "en": "loan application phase",
+   "label_source": "rdfs:label",
+   "zh": "贷款申请阶段",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoanApplications/LoanApplicationPhase",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "LifecycleStage",
+   "parents": [
+    "LifecycleStage"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "LoanApplicationStatus",
+   "en": "loan application status",
+   "label_source": "rdfs:label",
+   "zh": "贷款申请状态",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoanApplications/LoanApplicationStatus",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "LifecycleStatus",
+   "parents": [
+    "LifecycleStatus"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "LoanAtApplicationStage",
+   "en": "loan at application stage",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoanApplications/LoanAtApplicationStage",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "LoanApplicationStatus",
+   "parents": [
+    "LoanApplicationStatus"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "LoanDefaultProceeding",
+   "en": "loan default proceeding",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoanEvents/LoanDefaultProceeding",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "LegalProceeding",
+   "parents": [
+    "LegalProceeding"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "LoanPaidInFull",
+   "en": "loan paid in full",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoanEvents/LoanPaidInFull",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "LoanPhase",
+   "parents": [
+    "LoanPhase"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "LoanPaymentSchedule",
+   "en": "loan payment schedule",
+   "label_source": "rdfs:label",
+   "zh": "贷款还款日程",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/LoanPaymentSchedule",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "PaymentSchedule",
+   "parents": [
+    "PaymentSchedule"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "LoanPhase",
+   "en": "loan phase",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoanEvents/LoanPhase",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "LifecycleStage",
+   "parents": [
+    "LifecycleStage"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "LoanProductRepresentations",
+   "en": "loan product representations",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoansRegulatory/LoanProductRepresentations",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "Representation",
+   "parents": [
+    "Representation"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "LoanRegulatoryRequirement",
+   "en": "loan regulatory requirement",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoansRegulatory/LoanRegulatoryRequirement",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "LegalObligation",
+   "parents": [
+    "LegalObligation"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "LoanSpecificCustomerAccount",
+   "en": "loan-specific customer account",
+   "label_source": "rdfs:label",
+   "zh": "贷款专用客户账户",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/LoanSpecificCustomerAccount",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "CustomerAccount",
+   "parents": [
+    "CustomerAccount",
+    "LoanOrCreditAccount"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "LoanToValueRatio",
+   "en": "loan-to-value ratio",
+   "label_source": "rdfs:label",
+   "zh": "贷款价值比",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/LoanToValueRatio",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "PercentageMonetaryAmount",
+   "parents": [
+    "PercentageMonetaryAmount"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "OpenEndCredit",
+   "en": "open-end credit",
+   "label_source": "rdfs:label",
+   "zh": "循环信贷",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/OpenEndCredit",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "CreditAgreement",
+   "parents": [
+    "CreditAgreement"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "OwnershipInterest",
+   "en": "ownership interest",
+   "label_source": "rdfs:label",
+   "zh": "所有权权益",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/OwnershipInterest",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "PaymentHistory",
+   "en": "payment history",
+   "label_source": "rdfs:label",
+   "zh": "还款历史",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/PaymentHistory",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "TransactionRecord",
+   "parents": [
+    "TransactionRecord"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "PreApprovalContract",
+   "en": "pre-approval contract",
+   "label_source": "rdfs:label",
+   "zh": "预批合同",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoanApplications/PreApprovalContract",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "WrittenContract",
+   "parents": [
+    "WrittenContract"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "PreApprovalRequest",
+   "en": "pre-approval request",
+   "label_source": "rdfs:label",
+   "zh": "预批申请",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoanApplications/PreApprovalRequest",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "RequestActivity",
+   "parents": [
+    "RequestActivity"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "Prepayment",
+   "en": "prepayment",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoanEvents/Prepayment",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "Payment",
+   "parents": [
+    "Payment"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "PrepaymentTerms",
+   "en": "pre-payment terms",
+   "label_source": "rdfs:label",
+   "zh": "提前还款条款",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/PrepaymentTerms",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "PrincipalRepaymentTerms",
+   "parents": [
+    "PrincipalRepaymentTerms"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "ProductDisclosureRequirement",
+   "en": "product disclosure requirement",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoansRegulatory/ProductDisclosureRequirement",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "DisclosureRequirement",
+   "parents": [
+    "DisclosureRequirement"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "ProductDisclosureRight",
+   "en": "product disclosure right",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoansRegulatory/ProductDisclosureRight",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "InformationRight",
+   "parents": [
+    "InformationRight"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "PublicRecord",
+   "en": "public record",
+   "label_source": "rdfs:label",
+   "zh": "公共记录",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoanApplications/PublicRecord",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "PublicRecordCategory",
+   "en": "public record category",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoanApplications/PublicRecordCategory",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "RegB",
+   "en": "reg b",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoansRegulatory/RegB",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "ConsumerCreditEqualTreatmentRequirement",
+   "parents": [
+    "ConsumerCreditEqualTreatmentRequirement",
+    "DisclosureRequirement"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "RegZ",
+   "en": "reg z",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoansRegulatory/RegZ",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "ProductDisclosureRequirement",
+   "parents": [
+    "ProductDisclosureRequirement"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "RepaymentPhase",
+   "en": "repayment phase",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoanEvents/RepaymentPhase",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "LoanPhase",
+   "parents": [
+    "LoanPhase"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "RightOfCreditRecordCorrection",
+   "en": "right of credit record correction",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoansRegulatory/RightOfCreditRecordCorrection",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "CreditReferenceAgencyRequirements",
+   "parents": [
+    "CreditReferenceAgencyRequirements"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "SecuredLoan",
+   "en": "secured loan",
+   "label_source": "rdfs:label",
+   "zh": "担保贷款",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/SecuredLoan",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "Loan",
+   "parents": [
+    "Loan"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "Servicer",
+   "en": "servicer",
+   "label_source": "rdfs:label",
+   "zh": "贷款服务机构",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/Servicer",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "FinancialServiceProvider",
+   "parents": [
+    "ContractThirdParty",
+    "FinancialServiceProvider"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "TotalDebtExpenseRatio",
+   "en": "total debt expense ratio",
+   "label_source": "rdfs:label",
+   "zh": "总债务支出比",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoanApplications/TotalDebtExpenseRatio",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "PercentageMonetaryAmount",
+   "parents": [
+    "PercentageMonetaryAmount"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "TotalOutstandingPrincipal",
+   "en": "total outstanding principal",
+   "label_source": "rdfs:label",
+   "zh": "未偿本金余额",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/TotalOutstandingPrincipal",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "Principal",
+   "parents": [
+    "Principal"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "UnderwritingAutomation",
+   "en": "underwriting automation",
+   "label_source": "rdfs:label",
+   "zh": "核保自动化",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoanApplications/UnderwritingAutomation",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "UnderwritingDecision",
+   "en": "underwriting decision",
+   "label_source": "rdfs:label",
+   "zh": "核保决定",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/LoanApplications/UnderwritingDecision",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "UnsecuredLoan",
+   "en": "unsecured loan",
+   "label_source": "rdfs:label",
+   "zh": "无担保贷款",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/UnsecuredLoan",
+   "module": "LOAN",
+   "subdomain": "LoansGeneral",
+   "parent": "Loan",
+   "parents": [
+    "Loan"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "AssessmentBoundary",
+   "en": "assessment boundary",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/GreenLoans/AssessmentBoundary",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "AutoLoanPurpose",
+   "en": "auto loan purpose",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/LoanProducts/AutoLoanPurpose",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "LoanPurpose",
+   "parents": [
+    "LoanPurpose"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "BridgingLoanPurpose",
+   "en": "bridging loan purpose",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/LoanProducts/BridgingLoanPurpose",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "LoanPurpose",
+   "parents": [
+    "LoanPurpose"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "CardAccount",
+   "en": "card account",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/CardAccount",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "CustomerAccount",
+   "parents": [
+    "CustomerAccount"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "CardAuthenticationValue",
+   "en": "card authentication value",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/CardAuthenticationValue",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "MagneticStripeVerificationCodeValue",
+   "parents": [
+    "MagneticStripeVerificationCodeValue"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CardAuthenticationValue2",
+   "en": "card authentication value 2",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/CardAuthenticationValue2",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "ThreeDigitVerificationCodeValue",
+   "parents": [
+    "ThreeDigitVerificationCodeValue"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CardExpirationDate",
+   "en": "card expiration date",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/CardExpirationDate",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "CardIdentificationNumber",
+   "en": "card identification number",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/CardIdentificationNumber",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "ThreeDigitVerificationCodeValue",
+   "parents": [
+    "ThreeDigitVerificationCodeValue"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CardProduct",
+   "en": "card product",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/CardProduct",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "FinancialProduct",
+   "parents": [
+    "FinancialProduct"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CardSecurityCode",
+   "en": "card security code",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/CardSecurityCode",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "MagneticStripeVerificationCodeValue",
+   "parents": [
+    "MagneticStripeVerificationCodeValue"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CardValidationCode",
+   "en": "card validation code",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/CardValidationCode",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "MagneticStripeVerificationCodeValue",
+   "parents": [
+    "MagneticStripeVerificationCodeValue"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CardValidationCode2",
+   "en": "card validation code 2",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/CardValidationCode2",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "ThreeDigitVerificationCodeValue",
+   "parents": [
+    "ThreeDigitVerificationCodeValue"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CardVerificationCodeValue",
+   "en": "card verification code or value",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/CardVerificationCodeValue",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "CardVerificationValue",
+   "en": "card verification value",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/CardVerificationValue",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "MagneticStripeVerificationCodeValue",
+   "parents": [
+    "MagneticStripeVerificationCodeValue"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CardVerificationValue2",
+   "en": "card verification value 2",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/CardVerificationValue2",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "ThreeDigitVerificationCodeValue",
+   "parents": [
+    "ThreeDigitVerificationCodeValue"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "Cardholder",
+   "en": "cardholder",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/Cardholder",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "CustomerAccountHolder",
+   "parents": [
+    "CustomerAccountHolder"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "CommercialCreditCardAgreement",
+   "en": "commercial credit card agreement",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/CommercialCreditCardAgreement",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "CreditCardAgreement",
+   "parents": [
+    "CreditCardAgreement"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "CommercialLoan",
+   "en": "commercial loan",
+   "label_source": "rdfs:label",
+   "zh": "商业贷款",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CommercialLoans/CommercialLoan",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "Loan",
+   "parents": [
+    "Loan"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "ConstructionLoanPurpose",
+   "en": "construction loan purpose",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/LoanProducts/ConstructionLoanPurpose",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "LoanPurpose",
+   "parents": [
+    "LoanPurpose"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "ConsumerCreditCardAgreement",
+   "en": "consumer credit card agreement",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/ConsumerCreditCardAgreement",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "CreditCardAgreement",
+   "parents": [
+    "CreditCardAgreement",
+    "UnsecuredConsumerLoan"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "ConsumerLoan",
+   "en": "consumer loan",
+   "label_source": "rdfs:label",
+   "zh": "消费贷款",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/ConsumerLoans/ConsumerLoan",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "Loan",
+   "parents": [
+    "Loan"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "CreditCard",
+   "en": "credit card",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/CreditCard",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "PaymentCard",
+   "parents": [
+    "PaymentCard"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "CreditCardAccount",
+   "en": "credit card account",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/CreditCardAccount",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "LoanOrCreditAccount",
+   "parents": [
+    "CardAccount",
+    "LoanOrCreditAccount"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "CreditCardAgreement",
+   "en": "credit card agreement",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/CreditCardAgreement",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "CommittedCreditFacility",
+   "parents": [
+    "CommittedCreditFacility",
+    "PaymentCardAgreement"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "CreditCardNetwork",
+   "en": "credit card network",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/CreditCardNetwork",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "CreditCardProduct",
+   "en": "credit card product",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/CreditCardProduct",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "CardProduct",
+   "parents": [
+    "CardProduct"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "CreditCardReceivablePurpose",
+   "en": "credit card receivable purpose",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/LoanProducts/CreditCardReceivablePurpose",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "LoanPurpose",
+   "parents": [
+    "LoanPurpose"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "DebitCard",
+   "en": "debit card",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/DebitCard",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "PaymentCard",
+   "parents": [
+    "PaymentCard"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "DebitCardAccount",
+   "en": "debit card account",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/DebitCardAccount",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "CardAccount",
+   "parents": [
+    "CardAccount"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "DebitCardProduct",
+   "en": "debit card product",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/DebitCardProduct",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "CardProduct",
+   "parents": [
+    "CardProduct"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "EnvironmentalProgram",
+   "en": "environmental program",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/GreenLoans/EnvironmentalProgram",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "Program",
+   "parents": [
+    "Program"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "EnvironmentalProject",
+   "en": "environmental project",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/GreenLoans/EnvironmentalProject",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "Project",
+   "parents": [
+    "Project"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "GreenLoan",
+   "en": "green loan",
+   "label_source": "rdfs:label",
+   "zh": "绿色贷款",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/GreenLoans/GreenLoan",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "CreditAgreementRepaidPeriodically",
+   "parents": [
+    "CreditAgreementRepaidPeriodically"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "GreenProject",
+   "en": "green project",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/GreenLoans/GreenProject",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "EnvironmentalProject",
+   "parents": [
+    "EnvironmentalProject"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "GreenProjectUseOfProceedsProvision",
+   "en": "green project use of proceeds provision",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/GreenLoans/GreenProjectUseOfProceedsProvision",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "UseOfProceedsProvision",
+   "parents": [
+    "UseOfProceedsProvision"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "HomeEquityLineOfCredit",
+   "en": "home equity line of credit",
+   "label_source": "rdfs:label",
+   "zh": "房屋净值信贷额度",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/ConsumerLoans/HomeEquityLineOfCredit",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "RevolvingLineOfCredit",
+   "parents": [
+    "LoanSecuredByRealEstate",
+    "RevolvingLineOfCredit",
+    "SecuredConsumerLoan"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "HomeEquityLoanPurpose",
+   "en": "home equity loan purpose",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/LoanProducts/HomeEquityLoanPurpose",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "LoanPurpose",
+   "parents": [
+    "LoanPurpose"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "IssuingFinancialInstitution",
+   "en": "issuing financial institution",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/IssuingFinancialInstitution",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "Issuer",
+   "parents": [
+    "FinancialServiceProvider",
+    "Issuer"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "LineItem",
+   "en": "line item",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/LoanProducts/LineItem",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "LoanMarketCategory",
+   "en": "loan market category",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/LoanProducts/LoanMarketCategory",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "IndustrySectorClassifier",
+   "parents": [
+    "IndustrySectorClassifier"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "LoanProduct",
+   "en": "loan product",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/LoanProducts/LoanProduct",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "CreditFacility",
+   "parents": [
+    "CreditFacility",
+    "FinancialProduct"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "LoanProductDisclosureRight",
+   "en": "loan product disclosure right",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/LoanProducts/LoanProductDisclosureRight",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "ProductDisclosureRight",
+   "parents": [
+    "ProductDisclosureRight"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "LoanProductOffering",
+   "en": "loan offering",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/LoanProducts/LoanProductOffering",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "Offering",
+   "parents": [
+    "Offering"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "LoanPurpose",
+   "en": "loan purpose",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/LoanProducts/LoanPurpose",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "Objective",
+   "parents": [
+    "Objective"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "MagneticStripeVerificationCodeValue",
+   "en": "magnetic stripe verification code or value",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/MagneticStripeVerificationCodeValue",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "CardVerificationCodeValue",
+   "parents": [
+    "CardVerificationCodeValue"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "MarineFinancing",
+   "en": "marine finance",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/MarineFinance/MarineFinancing",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "Loan",
+   "parents": [
+    "Loan"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "MortgageProduct",
+   "en": "mortgage product",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/LoanProducts/MortgageProduct",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "LoanProduct",
+   "parents": [
+    "LoanProduct"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "MotorVehicleLoan",
+   "en": "motor vehicle loan",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/ConsumerLoans/MotorVehicleLoan",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "CollateralizedLoan",
+   "parents": [
+    "CollateralizedLoan",
+    "SecuredConsumerLoan"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "MotorhomeLoanPurpose",
+   "en": "motorhome loan purpose",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/LoanProducts/MotorhomeLoanPurpose",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "LoanPurpose",
+   "parents": [
+    "LoanPurpose"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "ObservedIndicatorValue",
+   "en": "observed indicator value",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/GreenLoans/ObservedIndicatorValue",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "DatedCollectionConstituent",
+   "parents": [
+    "DatedCollectionConstituent"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "ObservedIndicatorValueStructure",
+   "en": "observed indicator value structure",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/GreenLoans/ObservedIndicatorValueStructure",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "DatedStructuredCollection",
+   "parents": [
+    "DatedStructuredCollection"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "OrdinaryLoanPurpose",
+   "en": "ordinary loan purpose",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/LoanProducts/OrdinaryLoanPurpose",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "LoanPurpose",
+   "parents": [
+    "LoanPurpose"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "OverdraftFacilityPurpose",
+   "en": "overdraft facility purpose",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/LoanProducts/OverdraftFacilityPurpose",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "LoanPurpose",
+   "parents": [
+    "LoanPurpose"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "PaymentCard",
+   "en": "payment card",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/PaymentCard",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "PaymentCardAgreement",
+   "en": "payment card agreement",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/PaymentCardAgreement",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "CreditAgreement",
+   "parents": [
+    "AccountSpecificServiceAgreement",
+    "CreditAgreement"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "PrimaryCardAccountNumber",
+   "en": "primary card account number",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/PrimaryCardAccountNumber",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "AccountIdentifier",
+   "parents": [
+    "AccountIdentifier"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "PrivateStudentLoan",
+   "en": "private student loan",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/StudentLoans/PrivateStudentLoan",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "RegulatedStudentLoan",
+   "parents": [
+    "RegulatedStudentLoan",
+    "StudentLoan"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "RegulatedStudentLoan",
+   "en": "regulated student loan",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/StudentLoans/RegulatedStudentLoan",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "StudentLoan",
+   "parents": [
+    "StudentLoan"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "ResidentialHouseboatLoanPurpose",
+   "en": "residential houseboat loan purpose",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/LoanProducts/ResidentialHouseboatLoanPurpose",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "LoanPurpose",
+   "parents": [
+    "LoanPurpose"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "SecuredConsumerLoan",
+   "en": "secured consumer loan",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/ConsumerLoans/SecuredConsumerLoan",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "SecuredLoan",
+   "parents": [
+    "ConsumerLoan",
+    "SecuredLoan"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "SmartCard",
+   "en": "smart card",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/SmartCard",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "PaymentCard",
+   "parents": [
+    "PaymentCard"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "StudentLoan",
+   "en": "student loan",
+   "label_source": "rdfs:label",
+   "zh": "学生贷款",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/StudentLoans/StudentLoan",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "Loan",
+   "parents": [
+    "Loan"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "StudentLoanPurpose",
+   "en": "student loan purpose",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/LoanProducts/StudentLoanPurpose",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "LoanPurpose",
+   "parents": [
+    "LoanPurpose"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "SustainabilityBusinessObjective",
+   "en": "sustainability business objective",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/GreenLoans/SustainabilityBusinessObjective",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "BusinessObjective",
+   "parents": [
+    "BusinessObjective"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "SustainabilityBusinessStrategy",
+   "en": "sustainability business strategy",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/GreenLoans/SustainabilityBusinessStrategy",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "BusinessStrategy",
+   "parents": [
+    "BusinessStrategy"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "SustainabilityKeyPerformanceIndicator",
+   "en": "sustainability key performance indicator",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/GreenLoans/SustainabilityKeyPerformanceIndicator",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "KeyPerformanceIndicator",
+   "parents": [
+    "KeyPerformanceIndicator"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "SustainabilityKeyPerformanceIndicatorIdentifier",
+   "en": "sustainability key performance indicator identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/GreenLoans/SustainabilityKeyPerformanceIndicatorIdentifier",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "SustainabilityLinkedLoan",
+   "en": "sustainability-linked loan",
+   "label_source": "rdfs:label",
+   "zh": "可持续发展挂钩贷款",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/GreenLoans/SustainabilityLinkedLoan",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "CreditAgreementRepaidPeriodically",
+   "parents": [
+    "CommercialLoan",
+    "CreditAgreementRepaidPeriodically"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "SustainabilityPerformanceTarget",
+   "en": "sustainability performance target",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/GreenLoans/SustainabilityPerformanceTarget",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "DatedStructuredCollection",
+   "parents": [
+    "DatedStructuredCollection"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "SustainabilityPerformanceTargetIdentifier",
+   "en": "sustainability performance target identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/GreenLoans/SustainabilityPerformanceTargetIdentifier",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "SustainabilityStructuringAgent",
+   "en": "sustainability structuring agent",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/GreenLoans/SustainabilityStructuringAgent",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "SyndicateMember",
+   "parents": [
+    "SyndicateMember"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "TargetIndicatorValue",
+   "en": "target indicator value",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/GreenLoans/TargetIndicatorValue",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "DatedCollectionConstituent",
+   "parents": [
+    "DatedCollectionConstituent"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "ThreeDigitVerificationCodeValue",
+   "en": "three-digit verification code or value",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/CardAccounts/ThreeDigitVerificationCodeValue",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "CardVerificationCodeValue",
+   "parents": [
+    "CardVerificationCodeValue"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "TransitionLoan",
+   "en": "transition loan",
+   "label_source": "rdfs:label",
+   "zh": "转型贷款",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/GreenLoans/TransitionLoan",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "CreditAgreementRepaidPeriodically",
+   "parents": [
+    "CommercialLoan",
+    "CreditAgreementRepaidPeriodically"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "TransitionProject",
+   "en": "transition project",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/GreenLoans/TransitionProject",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "EnvironmentalProject",
+   "parents": [
+    "EnvironmentalProject"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "TransitionStrategy",
+   "en": "transition strategy",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/GreenLoans/TransitionStrategy",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "BusinessStrategy",
+   "parents": [
+    "BusinessStrategy"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "TransitionUseOfProceedsProvision",
+   "en": "transition use of proceeds provision",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/GreenLoans/TransitionUseOfProceedsProvision",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "UseOfProceedsProvision",
+   "parents": [
+    "UseOfProceedsProvision"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "UnsecuredConsumerLoan",
+   "en": "unsecured consumer loan",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/ConsumerLoans/UnsecuredConsumerLoan",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "UnsecuredLoan",
+   "parents": [
+    "ConsumerLoan",
+    "UnsecuredLoan"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "WorkingCapitalPurpose",
+   "en": "working capital purpose",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansSpecific/LoanProducts/WorkingCapitalPurpose",
+   "module": "LOAN",
+   "subdomain": "LoansSpecific",
+   "parent": "LoanPurpose",
+   "parents": [
+    "LoanPurpose"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "AmortizationType",
+   "en": "amortization type",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/MortgageOrigination/AmortizationType",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "AutomatedSystem",
+   "en": "automated system",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/MortgageOrigination/AutomatedSystem",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "AutomatedUnderwritingSystem",
+   "en": "automated underwriting system",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/MortgageOrigination/AutomatedUnderwritingSystem",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": "AutomatedSystem",
+   "parents": [
+    "AutomatedSystem"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "CashOutStatus",
+   "en": "cash-out status",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/MortgageOrigination/CashOutStatus",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ChargeCategory",
+   "en": "charge category",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/MortgageOrigination/ChargeCategory",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ClosedEndMortgageLoan",
+   "en": "closed-end mortgage loan",
+   "label_source": "rdfs:label",
+   "zh": "封闭式抵押贷款",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/Mortgages/ClosedEndMortgageLoan",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": "ClosedEndCredit",
+   "parents": [
+    "ClosedEndCredit",
+    "LoanSecuredByRealEstate"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "ClosedEndReverseMortgage",
+   "en": "closed-end reverse mortgage",
+   "label_source": "rdfs:label",
+   "zh": "封闭式反向抵押贷款",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/Mortgages/ClosedEndReverseMortgage",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": "ClosedEndMortgageLoan",
+   "parents": [
+    "ClosedEndMortgageLoan",
+    "ReverseMortgageLoan"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "ConstructionLoan",
+   "en": "construction loan",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/ConstructionLoans/ConstructionLoan",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": "CreditFacility",
+   "parents": [
+    "CollateralizedLoan",
+    "CreditFacility",
+    "MasterAgreement"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "ConstructionType",
+   "en": "construction type",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/HomeMortgageDisclosureActCoveredMortgages/ConstructionType",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "DwellingCapacity",
+   "en": "dwelling capacity",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/MortgageOrigination/DwellingCapacity",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Ethnicity",
+   "en": "ethnicity",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/HomeMortgageDisclosureActCoveredMortgages/Ethnicity",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "GovernmentSponsoredLoan",
+   "en": "government-sponsored loan",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/MortgageOrigination/GovernmentSponsoredLoan",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": "LoanSecuredByRealEstate",
+   "parents": [
+    "LoanSecuredByRealEstate"
+   ],
+   "depth": 9
+  },
+  {
+   "id": "HMDA-CoveredLoanContract",
+   "en": "HMDA covered loan contract",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/HomeMortgageDisclosureActCoveredMortgages/HMDA-CoveredLoanContract",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": "LoanSecuredByRealEstate",
+   "parents": [
+    "LoanSecuredByRealEstate"
+   ],
+   "depth": 9
+  },
+  {
+   "id": "HMDA-Disposition",
+   "en": "HMDA disposition",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/HomeMortgageDisclosureActCoveredMortgages/HMDA-Disposition",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "HMDA-PreApprovalRequest",
+   "en": "HMDA pre-approval request",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/HomeMortgageDisclosureActCoveredMortgages/HMDA-PreApprovalRequest",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": "PreApprovalRequest",
+   "parents": [
+    "PreApprovalRequest"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "HMDA-Report",
+   "en": "HMDA report",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/HomeMortgageDisclosureActCoveredMortgages/HMDA-Report",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": "Report",
+   "parents": [
+    "Report"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "HowSubmitted",
+   "en": "how submitted",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/HomeMortgageDisclosureActCoveredMortgages/HowSubmitted",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "LoanSecuredByRealEstate",
+   "en": "loan secured by real estate",
+   "label_source": "rdfs:label",
+   "zh": "不动产担保贷款",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/Mortgages/LoanSecuredByRealEstate",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": "CollateralizedLoan",
+   "parents": [
+    "CollateralizedLoan"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "ManufacturedHomeLegalClassification",
+   "en": "manufactured home legal classification",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/MortgageOrigination/ManufacturedHomeLegalClassification",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Mortgage",
+   "en": "mortgage",
+   "label_source": "rdfs:label",
+   "zh": "抵押贷款",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/Mortgages/Mortgage",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": "SecurityAgreement",
+   "parents": [
+    "SecurityAgreement"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "MortgageIndemnityGuarantee",
+   "en": "mortgage indemnity guarantee",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/MortgageOrigination/MortgageIndemnityGuarantee",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": "InsuranceBackedGuaranty",
+   "parents": [
+    "InsuranceBackedGuaranty"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "MortgageIndemnityGuarantor",
+   "en": "mortgage indemnity guarantor",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/MortgageOrigination/MortgageIndemnityGuarantor",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": "Guarantor",
+   "parents": [
+    "Guarantor",
+    "Insurer"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "MortgageIndemnityInsurancePolicy",
+   "en": "mortgage indemnity insurance policy",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/MortgageOrigination/MortgageIndemnityInsurancePolicy",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": "InsurancePolicy",
+   "parents": [
+    "InsurancePolicy"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "MortgageLoanPurpose",
+   "en": "mortgage loan purpose",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/MortgageOrigination/MortgageLoanPurpose",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": "LoanPurpose",
+   "parents": [
+    "LoanPurpose"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "NMLSR-ID",
+   "en": "Nationwide Mortgage Licensing System and Registry Identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/MortgageOrigination/NMLSR-ID",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": "LicenseIdentifier",
+   "parents": [
+    "LicenseIdentifier"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "OpenEndMortgageLoan",
+   "en": "open-end mortgage loan",
+   "label_source": "rdfs:label",
+   "zh": "开放式抵押贷款",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/Mortgages/OpenEndMortgageLoan",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": "OpenEndCredit",
+   "parents": [
+    "LoanSecuredByRealEstate",
+    "OpenEndCredit"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "OpenEndReverseMortgage",
+   "en": "open-end reverse mortgage",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/Mortgages/OpenEndReverseMortgage",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": "OpenEndMortgageLoan",
+   "parents": [
+    "OpenEndMortgageLoan",
+    "ReverseMortgageLoan"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "PropertyUsage",
+   "en": "property usage",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/MortgageOrigination/PropertyUsage",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Race",
+   "en": "race",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/HomeMortgageDisclosureActCoveredMortgages/Race",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ReverseMortgageLoan",
+   "en": "reverse mortgage loan",
+   "label_source": "rdfs:label",
+   "zh": "反向抵押贷款",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/Mortgages/ReverseMortgageLoan",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": "LoanSecuredByRealEstate",
+   "parents": [
+    "LoanSecuredByRealEstate"
+   ],
+   "depth": 9
+  },
+  {
+   "id": "UniversalLoanIdentifier",
+   "en": "universal loan identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/HomeMortgageDisclosureActCoveredMortgages/UniversalLoanIdentifier",
+   "module": "LOAN",
+   "subdomain": "RealEstateLoans",
+   "parent": "FinancialInstrumentIdentifier",
+   "parents": [
+    "FinancialInstrumentIdentifier"
+   ],
+   "depth": 1
+  }
+ ]
+}

@@ -37,6 +37,10 @@ import sys
 import time
 from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit, parse_qsl
+try:                                    # P1-1 语义判层第二道 (fail-soft)
+    import semantic_judge               # 缺件不拖垮弹药池, 退纯启发式
+except Exception:                       # noqa: BLE001
+    semantic_judge = None
 
 try:                                    # FT-4 辛迪加折叠 (fail-soft)
     from syndicate import effective_hosts
@@ -271,6 +275,55 @@ def parse_kws(kw: str) -> list[str]:
     return [k for k in re.split(r"[\s,，、]+", kw) if len(k) >= 2]
 
 
+# ---------- P0-4 (1028): 入池格式化预处理 (MarkItDown, 微软开源) ----------
+# 非 md/txt 件先 markitdown 转 md 再判层 (docx/xlsx/pptx/html/pdf → md);
+# fail-soft: 未安装/转换失败回退 read_text_safe 既有链 (pdf=pypdf,
+# docx/pptx=zipfile 剥标签), 绝不拖垮入池. (.bak-1028-p0 先行)
+_PLAIN_TEXT_SUFFIXES = {".md", ".txt", ".markdown"}
+
+
+def _format_to_text(fp: Path) -> tuple[str, str]:
+    """入池文本提取前置道. 返回 (text, converter):
+
+    - native_text      md/txt 直读 (既有链不变)
+    - markitdown       非纯文本件 MarkItDown 转换成功 (P0-4 主道)
+    - read_text_safe   markitdown 缺件/失败回退 (fail-soft 既有链)
+    """
+    if fp.suffix.lower() in _PLAIN_TEXT_SUFFIXES:
+        return read_text_safe(fp), "native_text"
+    try:
+        from markitdown import MarkItDown       # 延迟导入: 不给纯文本路径加负
+        text = str(MarkItDown().convert(str(fp)).text_content or "")
+        if len(text) >= 20:
+            return text, "markitdown"
+    except Exception:                            # noqa: BLE001 — fail-soft 回退
+        pass
+    return read_text_safe(fp), "read_text_safe"
+
+
+# ---------- P0-1 (1028): manifest 容错读 (EPC-SCHED 4 行历史 \u 转义坏行) ----------
+# 坏行不清不删 (只增不删铁律): 解析失败包成 {"__raw__": 原行, "judge": "pending"},
+# 判层/重建跳过, manifest 原子写回时原样落盘 — 字节保全, 既有账不动.
+RAW_MARK = "__raw__"
+
+
+def _jload(line: str) -> dict:
+    """容错 JSON 行解析 — 坏行回 __raw__ 包裹 dict, 调用方按 RAW_MARK 跳过."""
+    try:
+        return json.loads(line)
+    except (json.JSONDecodeError, ValueError):
+        return {RAW_MARK: line, "judge": "pending"}
+
+
+def _dump_rows(rows: list[dict]) -> str:
+    """manifest 原子写回序列化 — __raw__ 行原字节落盘, 正常行 json.dumps."""
+    out = []
+    for r in rows:
+        out.append(r[RAW_MARK] if RAW_MARK in r
+                   else json.dumps(r, ensure_ascii=False))
+    return "\n".join(out) + "\n"
+
+
 # ---------- 证据分级 (G3: Cochrane GRADE 简化版) ----------
 GRADE_MAP = {"official": "A", "research": "B", "media": "B",
              "unknown": "C"}   # A=官方一手 B=权威二手 C=未验证
@@ -493,7 +546,7 @@ def _manifest_keys(d: Path) -> set[str]:
     p = d / "manifest.jsonl"
     if not p.is_file():
         return set()
-    return {json.loads(x).get("dedup_key", "") for x in
+    return {_jload(x).get("dedup_key", "") for x in
             p.read_text(encoding="utf-8").splitlines() if x.strip()}
 
 
@@ -551,7 +604,7 @@ def rebuild(cid: str) -> int:
         print(f"[pool] 无 manifest: {cid}", file=sys.stderr)
         return 1
     with _pool_lock(d):
-        rows = [json.loads(x) for x in
+        rows = [_jload(x) for x in
                 mp.read_text(encoding="utf-8").splitlines() if x.strip()]
         s = _load_state(d)
         # G-014 守卫: 台账件数远大于 manifest 行数 = manifest 疑被外部
@@ -582,6 +635,8 @@ def rebuild(cid: str) -> int:
         tot = pen = rej = 0
         it = pit = rit = 0
         for r in rows:
+            if RAW_MARK in r:             # 1028: 历史坏行只保全不计数
+                continue
             ch, j = r.get("chars", 0), r.get("judge", "pending")
             if j == "valid":
                 tot += ch
@@ -634,10 +689,10 @@ def ingest(cid: str, file: str, engine: str, url: str = "",
     # PDF 重新抽字一遍 (119 件标准 PDF ~10min 纯浪费).
     mp = d / "manifest.jsonl"
     if mp.is_file() and any(
-            json.loads(x).get("source_path") == str(fp)
+            _jload(x).get("source_path") == str(fp)
             for x in mp.read_text(encoding="utf-8").splitlines() if x.strip()):
         return 0
-    text = read_text_safe(fp)
+    text, converter = _format_to_text(fp)       # P0-4: markitdown 前端格式化
     if len(text) < 50:
         print(f"[pool] 跳过 (太短): {fp.name}")
         return 0
@@ -671,6 +726,7 @@ def ingest(cid: str, file: str, engine: str, url: str = "",
               "pending_items": s.get("pending_items", 0) + 1}
         _save_state(d, ns)
     print(f"[pool] +待审 {ch:>7,}字 {fp.name[:36]:<36} "
+          f"[文本道: {converter}] "
           f"待审判有效后计数 (现待审 {ns['pending_chars']:,})")
     return 0
 
@@ -697,7 +753,7 @@ def ingest_files(cid: str, items: list, chunk: int = 400) -> tuple:
             try:
                 if not fp.is_file():
                     continue
-                text = read_text_safe(fp)
+                text, _conv = _format_to_text(fp)   # P0-4 批量入池同道
             except Exception:
                 continue
             if len(text) < 50:
@@ -715,7 +771,9 @@ def ingest_files(cid: str, items: list, chunk: int = 400) -> tuple:
                 for x in mp.read_text(encoding="utf-8").splitlines():
                     if not x.strip():
                         continue
-                    r = json.loads(x)
+                    r = _jload(x)
+                    if RAW_MARK in r:
+                        continue
                     have.add(r.get("source_path"))
                     keys.add(r.get("dedup_key", ""))
             lines = []
@@ -770,8 +828,13 @@ def _judge_locked(d: Path, mp: Path, limit: int) -> int:
         print("[judge] 战役未配置课题关键词 (init --kw), 无法判相关性 — "
               "全部保持 pending, 绝不静默计数", file=sys.stderr)
         return 2
-    rows = [json.loads(x) for x in
+    rows = [_jload(x) for x in
             mp.read_text(encoding="utf-8").splitlines() if x.strip()]
+    # 1028 P0-1: 历史坏行 (__raw__) 判层跳过, 写回原样保全 (只增不删)
+    n_raw_bad = sum(1 for r in rows if RAW_MARK in r)
+    if n_raw_bad:
+        print(f"[judge] ⚠ manifest 含 {n_raw_bad} 行历史坏 JSON — "
+              f"跳过判层, 原字节保全 (EPC-SCHED 类 \\u 转义伤)", file=sys.stderr)
     # G-014 告警: manifest 行数 << 台账件数 = 疑外部截断 — judge 只翻
     # 现存行字段 (行保全), 但要让操作者看见这个态
     st_items = (s.get("items", 0) + s.get("pending_items", 0)
@@ -784,6 +847,15 @@ def _judge_locked(d: Path, mp: Path, limit: int) -> int:
     # REQ-044 fail-soft 自愈: 前轮写快照失败 (snapshot_pending) 的增量 valid
     # 行本轮补档 — 只动快照字段, 判定/账目不动 (只增不删)
     n_snap_fix = 0
+    # P1-1 语义判层第二道 (世界顶级差距#4): L1 判废 ∧ 外文材料信号
+    # → GLM 复核; SEMANTIC_JUDGE 环境变量激活, 默认关 (保守上线,
+    # 不开不动既有账). 旧账不重写 — 只影响本轮起的新判.
+    n_sem = n_sem_flip = n_sem_hold = n_sem_err = 0
+    sem_on = bool(semantic_judge and semantic_judge.semantic_enabled())
+    if (semantic_judge is None and os.environ.get('SEMANTIC_JUDGE', '0')
+            .strip().lower() in ('1', 'true', 'yes', 'on')):
+        print('[判断·语义二道] ⚠ SEMANTIC_JUDGE=1 但 semantic_judge '
+              '不可用 — 维持纯启发式', file=sys.stderr)
     for i, row in enumerate(rows):
         if (row.get("judge") == "valid" and row.get("snapshot_pending")
                 and is_snapshot_incremental(row.get("ts", ""), cutoff)):
@@ -798,6 +870,8 @@ def _judge_locked(d: Path, mp: Path, limit: int) -> int:
     n_valid = n_rej = n_keep = 0
     n_snap = n_snap_pend = 0
     for i, row in enumerate(rows):
+        if RAW_MARK in row:                   # 1028: 坏行不判不改只保全
+            continue
         if limit and n_valid + n_rej >= limit:
             break
         if row.get("judge", "pending") != "pending":
@@ -810,7 +884,29 @@ def _judge_locked(d: Path, mp: Path, limit: int) -> int:
             n_keep += 1
             continue
         verdict, reason = judge_heuristic(text, kws)
-        row.update(judge=verdict, judge_reason=reason, judge_engine="heuristic",
+        sem_engine = 'heuristic'
+        if (verdict == 'rejected' and sem_on
+                and semantic_judge.foreign_ratio(
+                    text[:semantic_judge.HEAD_CHARS])
+                >= semantic_judge.FOREIGN_RATIO_GATE):  # 外文材料信号
+            n_sem += 1
+            res = semantic_judge.judge_semantic(
+                row.get('title') or fp.stem,
+                text[:semantic_judge.HEAD_CHARS], kws)
+            if (res.get('verdict') == 'valid'
+                    and float(res.get('score', 0))
+                    >= semantic_judge.SCORE_GATE):
+                verdict = 'valid'    # L2 翻案 (judge_reason 记双层)
+                reason = (f"sem_overturn[L1:{reason}|L2:glm@"
+                          f"{res.get('model')} score={res.get('score')} "
+                          f"{str(res.get('reason', ''))[:60]}")
+                sem_engine = 'semantic_glm'
+                n_sem_flip += 1
+            elif res.get('verdict') == 'rejected':
+                n_sem_hold += 1   # GLM 维持 L1 判废 — 保守维持
+            else:
+                n_sem_err += 1    # GLM 出错 — fail-soft 维持 rejected
+        row.update(judge=verdict, judge_reason=reason, judge_engine=sem_engine,
                    grade=GRADE_MAP.get(row.get("credibility", "unknown"), "C"))
         ch = row["chars"]
         if verdict == "valid":
@@ -844,12 +940,18 @@ def _judge_locked(d: Path, mp: Path, limit: int) -> int:
                  "pending_chars": s["pending_chars"] - ch,
                  "pending_items": s["pending_items"] - 1}
     tmp = d / "manifest.tmp"
-    tmp.write_text("\n".join(json.dumps(r, ensure_ascii=False)
-                             for r in rows) + "\n", encoding="utf-8")
+    tmp.write_text(_dump_rows(rows), encoding="utf-8")
     tmp.replace(mp)
     _save_state(d, {**s, "last_judge": time.strftime("%Y-%m-%d %H:%M")})
     print(f"\n[判断] 启发式@课题关键词({len(kws)}): 有效 {n_valid} 入门槛账 | "
           f"废弃 {n_rej} | 留审 {n_keep} (文件缺失)")
+    if sem_on:
+        _st = semantic_judge.STATS
+        print(f"[判断·语义二道] 复核 {n_sem} 外文件 | 翻案 {n_sem_flip} "
+              f"(score>={semantic_judge.SCORE_GATE}) | 维持 {n_sem_hold} | "
+              f"GLM错误 {n_sem_err} | glm {_st['ok']}ok/{_st['err']}err "
+              f"模型{_st['models']} 双钥{_st['keys']}把轮换"
+              f"{_st['key_rotations']}")
     print(f"[快照] valid 同事务落档 {n_snap} | 写失败留 pending {n_snap_pend} | "
           f"补档前轮失败 {n_snap_fix} (REQ-044, 增量=cutoff {cutoff} 后)")
     total_ref = gate_total_chars()   # 决策时现读 gates.json (T-002R)

@@ -1,0 +1,200 @@
+===== gui/incremental_download_dialog.pyc =====
+DOCSTRING: 增量更新任务提交/编辑对话框 + 任务管理窗口
+
+[<module>] args=() names=('__doc__', 'PySide6.QtWidgets', 'QDialog', 'QVBoxLayout', 'QHBoxLayout', 'QLabel', 'QDateTimeEdit', 'QPushButton', 'QSpinBox', 'QRadioButton', 'QScrollArea', 'QWidget', 'QCheckBox', 'QButtonGroup', 'QFrame', 'QTableWidget', 'QTableWidgetItem', 'QHeaderView', 'QAbstractItemView', 'QMessageBox', 'PySide6.QtCore', 'Qt', 'QDateTime', 'Signal', 'PySide6.QtGui', 'QColor', 'datetime', 'utils', 'set_window_icon', 'IncrementalUpdateDialog', 'TaskManagerDialog')
+  CONST '增量更新任务提交/编辑对话框 + 任务管理窗口'
+  CONST 0
+  CONST ('QDialog', 'QVBoxLayout', 'QHBoxLayout', 'QLabel', 'QDateTimeEdit', 'QPushButton', 'QSpinBox', 'QRadioButton', 'QScrollArea', 'QWidget', 'QCheckBox', 'QButtonGroup', 'QFrame', 'QTableWidget', 'QTableWidgetItem', 'QHeaderView', 'QAbstractItemView', 'QMessageBox')
+  CONST ('Qt', 'QDateTime', 'Signal')
+  CONST ('QColor')
+  CONST ('datetime')
+  CONST ('set_window_icon')
+  CONST 'IncrementalUpdateDialog'
+  CONST 'TaskManagerDialog'
+  CONST None
+
+  [IncrementalUpdateDialog] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', '__init__', '_make_separator', '_on_mode_changed', '_fill_edit_mode', 'get_selected_datetime', 'get_kb_id', 'get_kb_name', 'get_folder_id', 'get_folder_name', 'get_is_loop', 'get_interval_hours', '__static_attributes__', '__classcell__')
+    CONST 'IncrementalUpdateDialog'
+    CONST 28
+    CONST ('datetime_edit', 'edit_task', 'folder_id', 'folder_name', 'interval_spinbox', 'kb_id', 'kb_name', 'loop_container', 'radio_loop', 'radio_once')
+    CONST (None, '', '', None)
+
+    [IncrementalUpdateDialog.__init__] args=('self', 'kb_id', 'kb_name', 'parent', 'folder_id', 'folder_name', 'edit_task') names=('super', '__init__', 'kb_id', 'kb_name', 'folder_id', 'folder_name', 'edit_task', 'setWindowTitle', 'setModal', 'setMinimumWidth', 'set_window_icon', 'QVBoxLayout', 'QHBoxLayout', 'addWidget', 'QLabel', 'setStyleSheet', 'addStretch', 'addLayout', '_make_separator', 'QDateTimeEdit', 'datetime_edit', 'setCalendarPopup', 'setDisplayFormat', 'setDateTime', 'QDateTime', 'currentDateTime', 'addDays', 'QRadioButton', 'radio_once', 'radio_loop', 'setChecked', 'QButtonGroup', 'addButton', 'QWidget', 'loop_container', 'setContentsMargins', 'QSpinBox', 'interval_spinbox', 'setRange', 'setValue', 'setSuffix', 'setVisible', 'toggled', 'connect', '_on_mode_changed', 'QPushButton', 'clicked', 'accept', 'reject', '_fill_edit_mode')
+      CONST '\nArgs:\n    kb_id: 知识库ID\n    kb_name: 知识库名称\n    parent: 父窗口\n    folder_id: 文件夹ID，空表示整个知识库\n    folder_name: 文件夹名称，空表示整个知识库\n    edit_task: 编辑模式时传入任务 dict，None 表示新增模式\n'
+      CONST '编辑更新任务'
+      CONST '提交增量更新任务'
+      CONST True
+      CONST 500
+      CONST '知识库：'
+      CONST 'font-weight: bold;'
+      CONST '目\u3000录：'
+      CONST '整个知识库'
+      CONST '起始时间：'
+      CONST 'yyyy-MM-dd HH:mm'
+      CONST -7
+      CONST '仅下载此时间之后更新的文件'
+      CONST 'color: #888; font-size: 12px;'
+      CONST '执行方式：'
+      CONST '仅执行一次'
+      CONST '定时循环'
+      CONST 0
+      CONST '更新间隔：'
+      CONST 1
+      CONST 24
+      CONST ' 小时'
+      CONST False
+      CONST '提交任务'
+      CONST '保存修改'
+      CONST '取消'
+      CONST None
+
+    [IncrementalUpdateDialog._make_separator] args=('self',) names=('QFrame', 'setFrameShape', 'HLine', 'setFrameShadow', 'Sunken', 'setStyleSheet')
+      CONST None
+      CONST 'color: #ddd;'
+
+    [IncrementalUpdateDialog._on_mode_changed] args=('self', 'checked') names=('loop_container', 'setVisible', 'radio_loop', 'isChecked', 'adjustSize')
+      CONST None
+
+    [IncrementalUpdateDialog._fill_edit_mode] args=('self', 'task') names=('get', 'datetime', 'fromtimestamp', 'PySide6.QtCore', 'QDateTime', 'datetime_edit', 'setDateTime', 'fromSecsSinceEpoch', 'int', 'timestamp', 'radio_loop', 'setChecked', 'interval_spinbox', 'setValue', 'radio_once')
+      CONST '编辑模式：回填已有配置'
+      CONST 'start_time'
+      CONST 0
+      CONST ('datetime')
+      CONST ('QDateTime')
+      CONST 'interval_hours'
+      CONST True
+      CONST None
+
+    [IncrementalUpdateDialog.get_selected_datetime] args=('self',) names=('datetime_edit', 'dateTime', 'toPython')
+      CONST None
+
+    [IncrementalUpdateDialog.get_kb_id] args=('self',) names=('kb_id',)
+      CONST None
+
+    [IncrementalUpdateDialog.get_kb_name] args=('self',) names=('kb_name',)
+      CONST None
+
+    [IncrementalUpdateDialog.get_folder_id] args=('self',) names=('folder_id',)
+      CONST None
+
+    [IncrementalUpdateDialog.get_folder_name] args=('self',) names=('folder_name',)
+      CONST None
+
+    [IncrementalUpdateDialog.get_is_loop] args=('self',) names=('radio_loop', 'isChecked')
+      CONST None
+
+    [IncrementalUpdateDialog.get_interval_hours] args=('self',) names=('interval_spinbox', 'value')
+      CONST None
+
+  [TaskManagerDialog] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', '__doc__', 'Signal', 'tasks_changed', '__init__', 'showEvent', '_do_deferred_refresh', 'refresh_table', '_make_action_widget', '_toggle_task', '_delete_task', '_get_running_task_ids', 'staticmethod', '_format_time', '__static_attributes__', '__classcell__')
+    CONST 'TaskManagerDialog'
+    CONST 192
+    CONST '更新任务管理窗口，非 modal，可常驻打开'
+    CONST ('_refresh_pending', 'kb_list', 'table')
+    CONST (None)
+
+    [TaskManagerDialog.__init__] args=('self', 'kb_list', 'parent') names=('super', '__init__', 'kb_list', 'setWindowTitle', 'setMinimumSize', 'setModal', 'set_window_icon', 'QVBoxLayout', 'QHBoxLayout', 'addWidget', 'QLabel', 'addStretch', 'addLayout', 'QTableWidget', 'table', 'setColumnCount', 'setHorizontalHeaderLabels', 'setSelectionBehavior', 'QAbstractItemView', 'SelectRows', 'setEditTriggers', 'NoEditTriggers', 'verticalHeader', 'setVisible', 'horizontalHeader', 'setSectionResizeMode', 'QHeaderView', 'ResizeToContents', 'Stretch', 'Fixed', 'resizeSection', '_refresh_pending', 'refresh_table')
+      CONST None
+      CONST '更新任务管理'
+      CONST 800
+      CONST 400
+      CONST False
+      CONST '增量更新任务列表'
+      CONST 7
+      CONST ('知识库', '目录', '起始时间', '间隔', '上次运行', '状态', '操作')
+      CONST 0
+      CONST 1
+      CONST 2
+      CONST 3
+      CONST 4
+      CONST 5
+      CONST 6
+      CONST 120
+
+    [TaskManagerDialog.showEvent] args=('self', 'event') names=('super', 'showEvent', '_refresh_pending', 'PySide6.QtCore', 'QTimer', 'singleShot', '_do_deferred_refresh')
+      CONST None
+      CONST True
+      CONST 0
+      CONST ('QTimer')
+
+    [TaskManagerDialog._do_deferred_refresh] args=('self',) names=('_refresh_pending', 'refresh_table')
+      CONST None
+      CONST False
+
+    [TaskManagerDialog.refresh_table] args=('self',) names=('data.database', 'get_all_tasks', 'table', 'setRowCount', 'len', 'enumerate', 'setItem', 'QTableWidgetItem', 'get', '_format_time', 'setText', 'setForeground', 'QColor', '_get_running_task_ids', 'setCellWidget', '_make_action_widget')
+      CONST None
+      CONST 0
+      CONST ('get_all_tasks')
+      CONST 'id'
+      CONST 'interval_hours'
+      CONST 'enabled'
+      CONST 1
+      CONST 'kb_name'
+      CONST ''
+      CONST 'folder_name'
+      CONST '整个知识库'
+      CONST 2
+      CONST 'start_time'
+      CONST 3
+      CONST '小时'
+      CONST '单次'
+      CONST 4
+      CONST 'last_run'
+      CONST '已停用'
+      CONST '已结束'
+      CONST '#999'
+      CONST '运行中'
+      CONST '#4CAF50'
+      CONST '等待中'
+      CONST '#2196F3'
+      CONST 5
+      CONST 6
+
+    [TaskManagerDialog._make_action_widget] args=('self', 'task') names=('QWidget', 'QHBoxLayout', 'setContentsMargins', 'setSpacing', 'QPushButton', 'setFixedWidth', 'clicked', 'connect', 'addWidget', 'addStretch')
+      CONST None
+      CONST 4
+      CONST 2
+      CONST 'id'
+      CONST 'enabled'
+      CONST 1
+      CONST 'interval_hours'
+      CONST 0
+      CONST '停用'
+      CONST '启用'
+      CONST 50
+      CONST '删除'
+
+      [TaskManagerDialog._make_action_widget.<locals>.<lambda>] args=('_', 'tid', 'en') names=('_toggle_task',)
+        CONST None
+
+      [TaskManagerDialog._make_action_widget.<locals>.<lambda>] args=('_', 'tid') names=('_delete_task',)
+        CONST None
+
+    [TaskManagerDialog._toggle_task] args=('self', 'task_id', 'current_enabled') names=('data.database', 'update_task', 'refresh_table', 'tasks_changed', 'emit', 'Exception', 'QMessageBox', 'warning')
+      CONST None
+      CONST 0
+      CONST ('update_task')
+      CONST 1
+      CONST ('enabled')
+      CONST '操作失败'
+      CONST '停用/启用失败: '
+
+    [TaskManagerDialog._delete_task] args=('self', 'task_id') names=('QMessageBox', 'question', 'Yes', 'No', 'data.database', 'delete_task', 'refresh_table', 'tasks_changed', 'emit', 'Exception', 'warning')
+      CONST None
+      CONST '确认删除'
+      CONST '确定要删除此任务吗？'
+      CONST 0
+      CONST ('delete_task')
+      CONST '删除失败'
+      CONST '删除任务失败: '
+
+    [TaskManagerDialog._get_running_task_ids] args=('self',) names=('parent', 'hasattr', '_running_task_ids', 'set')
+      CONST None
+      CONST '_running_task_ids'
+
+    [TaskManagerDialog._format_time] args=('ts',) names=('datetime', 'fromtimestamp', 'strftime')
+      CONST None
+      CONST 0
+      CONST '—'
+      CONST '%Y-%m-%d %H:%M'
+

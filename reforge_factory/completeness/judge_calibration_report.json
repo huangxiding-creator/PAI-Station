@@ -1,0 +1,40 @@
+{
+ "ts": "2026-10-28 11:11",
+ "filter_campaign": "(全部)",
+ "records_total": 551,
+ "brier_population": 276,
+ "mean_brier": 0.5391,
+ "brier_gate": 0.2,
+ "gate": "FAIL",
+ "small_sample_warning": false,
+ "confidence_bands": {
+  "0-10%": {
+   "n": 151,
+   "mean_confidence": 0.0,
+   "observed_valid_rate": 0.861,
+   "mean_brier": 0.8609,
+   "bias": "仲裁冲突(需人工settle复核)"
+  },
+  "80-90%": {
+   "n": 125,
+   "mean_confidence": 0.8,
+   "observed_valid_rate": 0.816,
+   "mean_brier": 0.1504,
+   "bias": "校准良好"
+  }
+ },
+ "l1_heuristic_kill_rate": {
+  "判层L1": {
+   "n": 271,
+   "wrongly_rejected": 228,
+   "kill_rate": 0.841
+  },
+  "判层L1生产": {
+   "n": 4,
+   "wrongly_rejected": 3,
+   "kill_rate": 0.75
+  }
+ },
+ "unresolved": 0,
+ "adjudicator_note": "域词目验为机械仲裁 (固定词表+命中词落账); 外文长尾材料易漏判, 局限如实。"
+}

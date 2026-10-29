@@ -1,0 +1,2875 @@
+{
+ "kind": "brick_domain_seed",
+ "domain": "CORE",
+ "domain_zh": "基座闭包",
+ "domain_en": "Closure Base",
+ "note": "父级闭包基座：Brick 元类(Entity/Class)/系统/环路/量/物质 + REC 资产/主体/事件/信息/建筑构件",
+ "source": {
+  "repo": "BrickSchema/Brick",
+  "tag": "v1.4.4",
+  "license": "BSD-3-Clause",
+  "license_copyright": "Copyright (c) 2016-2026, Brick Consortium, Inc.",
+  "url": "https://github.com/BrickSchema/Brick/releases/tag/v1.4.4",
+  "asset": "Brick.ttl（release 编译版，含 Brick+REC 对齐）",
+  "asset_sha256": "b65720b7b9b64c646745c689777e6138c0d59ce0088df0aeb78fbd444d04d8e7",
+  "license_file": "seeds/brick/LICENSE"
+ },
+ "stats": {
+  "classes": 179,
+  "zh_mapped": 39,
+  "roots": 9,
+  "max_depth": 7,
+  "deprecated": 2,
+  "multi_parent_classes": 1,
+  "zh_rate": 0.2179
+ },
+ "concepts": [
+  {
+   "id": "brick:Air_Loop",
+   "en": "Air Loop",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Air_Loop",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Loop",
+   "parents": [
+    "brick:Loop"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Air_System",
+   "en": "Air System",
+   "label_source": "rdfs:label",
+   "zh": "空调风系统",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Air_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Heating_Ventilation_Air_Conditioning_System",
+   "parents": [
+    "brick:Heating_Ventilation_Air_Conditioning_System"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Automatic_Tint_Window_Array",
+   "en": "Automatic Tint Window Array",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Automatic_Tint_Window_Array",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:System",
+   "parents": [
+    "brick:System"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Battery_Energy_Storage_System",
+   "en": "Battery Energy Storage System",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Battery_Energy_Storage_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Energy_Storage_System",
+   "parents": [
+    "brick:Energy_Storage_System"
+   ],
+   "depth": 7,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Blind_Group",
+   "en": "Blind Group",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Blind_Group",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Shading_System",
+   "parents": [
+    "brick:Shading_System"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Chilled_Water_Loop",
+   "en": "Chilled Water Loop",
+   "label_source": "rdfs:label",
+   "zh": "冷冻水环路",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Chilled_Water_Loop",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Water_Loop",
+   "parents": [
+    "brick:Water_Loop"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Chilled_Water_System",
+   "en": "Chilled Water System",
+   "label_source": "rdfs:label",
+   "zh": "冷冻水系统",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Chilled_Water_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Water_System",
+   "parents": [
+    "brick:Water_System"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Class",
+   "en": "Class",
+   "label_source": "rdfs:label",
+   "zh": "类",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Class",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Entity",
+   "parents": [
+    "brick:Entity"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Collection",
+   "en": "Collection",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Collection",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Class",
+   "parents": [
+    "brick:Class",
+    "brick:Entity"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Condenser_Water_Loop",
+   "en": "Condenser Water Loop",
+   "label_source": "rdfs:label",
+   "zh": "冷却水环路",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Condenser_Water_Loop",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Water_Loop",
+   "parents": [
+    "brick:Water_Loop"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Condenser_Water_System",
+   "en": "Condenser Water System",
+   "label_source": "rdfs:label",
+   "zh": "冷却水系统",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Condenser_Water_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Water_System",
+   "parents": [
+    "brick:Water_System"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Domestic_Hot_Water_System",
+   "en": "Domestic Hot Water System",
+   "label_source": "rdfs:label",
+   "zh": "生活热水系统",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Domestic_Hot_Water_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:System",
+   "parents": [
+    "brick:System"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Domestic_Water_Loop",
+   "en": "Domestic Water Loop",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Domestic_Water_Loop",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Water_Loop",
+   "parents": [
+    "brick:Water_Loop"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:EV_Charging_Hub",
+   "en": "EV Charging Hub",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#EV_Charging_Hub",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Collection",
+   "parents": [
+    "brick:Collection"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Electric_Vehicle_Charging_Hub",
+   "en": "Electric Vehicle Charging Hub",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Electric_Vehicle_Charging_Hub",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Collection",
+   "parents": [
+    "brick:Collection"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Electrical_System",
+   "en": "Electrical System",
+   "label_source": "rdfs:label",
+   "zh": "电气系统",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Electrical_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:System",
+   "parents": [
+    "brick:System"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Emergency_Air_Flow_System",
+   "en": "Emergency Air Flow System",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Emergency_Air_Flow_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Safety_System",
+   "parents": [
+    "brick:Safety_System"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Emergency_Power_Off_System",
+   "en": "Emergency Power Off System",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Emergency_Power_Off_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Safety_System",
+   "parents": [
+    "brick:Safety_System"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Energy_Generation_System",
+   "en": "Energy Generation System",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Energy_Generation_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Energy_System",
+   "parents": [
+    "brick:Energy_System"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Energy_Storage_System",
+   "en": "Energy Storage System",
+   "label_source": "rdfs:label",
+   "zh": "储能系统",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Energy_Storage_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Energy_System",
+   "parents": [
+    "brick:Energy_System"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Energy_System",
+   "en": "Energy System",
+   "label_source": "rdfs:label",
+   "zh": "能源系统",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Energy_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Electrical_System",
+   "parents": [
+    "brick:Electrical_System"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Entity",
+   "en": "Entity",
+   "label_source": "rdfs:label",
+   "zh": "实体",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Entity",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": null,
+   "parents": [],
+   "depth": 0,
+   "deprecated": false
+  },
+  {
+   "id": "brick:EntityPropertyValue",
+   "en": "EntityPropertyValue",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#EntityPropertyValue",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Entity",
+   "parents": [
+    "brick:Entity"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Fire_Safety_System",
+   "en": "Fire Safety System",
+   "label_source": "rdfs:label",
+   "zh": "消防系统",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Fire_Safety_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Safety_System",
+   "parents": [
+    "brick:Safety_System"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Gas_System",
+   "en": "Gas System",
+   "label_source": "rdfs:label",
+   "zh": "燃气系统",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Gas_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:System",
+   "parents": [
+    "brick:System"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:HVAC_System",
+   "en": "HVAC System",
+   "label_source": "rdfs:label",
+   "zh": "暖通空调系统",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#HVAC_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:System",
+   "parents": [
+    "brick:System"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Heat_Recovery_Hot_Water_System",
+   "en": "Heat Recovery Hot Water System",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Heat_Recovery_Hot_Water_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Hot_Water_System",
+   "parents": [
+    "brick:Hot_Water_System"
+   ],
+   "depth": 7,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Heating_Ventilation_Air_Conditioning_System",
+   "en": "Heating Ventilation Air Conditioning System",
+   "label_source": "rdfs:label",
+   "zh": "供暖通风与空调系统",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Heating_Ventilation_Air_Conditioning_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:System",
+   "parents": [
+    "brick:System"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Hot_Water_Loop",
+   "en": "Hot Water Loop",
+   "label_source": "rdfs:label",
+   "zh": "热水环路",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Hot_Water_Loop",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Water_Loop",
+   "parents": [
+    "brick:Water_Loop"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Hot_Water_System",
+   "en": "Hot Water System",
+   "label_source": "rdfs:label",
+   "zh": "热水系统",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Hot_Water_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Water_System",
+   "parents": [
+    "brick:Water_System"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Lighting_System",
+   "en": "Lighting System",
+   "label_source": "rdfs:label",
+   "zh": "照明系统",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Lighting_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:System",
+   "parents": [
+    "brick:System"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Loop",
+   "en": "Loop",
+   "label_source": "rdfs:label",
+   "zh": "环路",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Loop",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Collection",
+   "parents": [
+    "brick:Collection"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Measurable",
+   "en": "Measurable",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Measurable",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Class",
+   "parents": [
+    "brick:Class"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "brick:PV_Array",
+   "en": "PV Array",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#PV_Array",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Collection",
+   "parents": [
+    "brick:Collection"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "brick:PV_Generation_System",
+   "en": "PV Generation System",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#PV_Generation_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Energy_Generation_System",
+   "parents": [
+    "brick:Energy_Generation_System"
+   ],
+   "depth": 7,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Photovoltaic_Array",
+   "en": "Photovoltaic Array",
+   "label_source": "rdfs:label",
+   "zh": "光伏阵列",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Photovoltaic_Array",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Collection",
+   "parents": [
+    "brick:Collection"
+   ],
+   "depth": 3,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Portfolio",
+   "en": "Portfolio",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Portfolio",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Collection",
+   "parents": [
+    "brick:Collection"
+   ],
+   "depth": 3,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Preheat_Hot_Water_System",
+   "en": "Preheat Hot Water System",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Preheat_Hot_Water_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Hot_Water_System",
+   "parents": [
+    "brick:Hot_Water_System"
+   ],
+   "depth": 7,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Quantity",
+   "en": "Quantity",
+   "label_source": "rdfs:label",
+   "zh": "量",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Quantity",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": null,
+   "parents": [],
+   "depth": 0,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Radiation_Hot_Water_System",
+   "en": "Radiation Hot Water System",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Radiation_Hot_Water_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Hot_Water_System",
+   "parents": [
+    "brick:Hot_Water_System"
+   ],
+   "depth": 7,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Refrigeration_System",
+   "en": "Refrigeration System",
+   "label_source": "rdfs:label",
+   "zh": "制冷系统",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Refrigeration_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Heating_Ventilation_Air_Conditioning_System",
+   "parents": [
+    "brick:Heating_Ventilation_Air_Conditioning_System"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Reheat_Hot_Water_System",
+   "en": "Reheat Hot Water System",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Reheat_Hot_Water_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Hot_Water_System",
+   "parents": [
+    "brick:Hot_Water_System"
+   ],
+   "depth": 7,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Safety_System",
+   "en": "Safety System",
+   "label_source": "rdfs:label",
+   "zh": "安全系统",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Safety_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:System",
+   "parents": [
+    "brick:System"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Shading_System",
+   "en": "Shading System",
+   "label_source": "rdfs:label",
+   "zh": "遮阳系统",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Shading_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:System",
+   "parents": [
+    "brick:System"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Steam_System",
+   "en": "Steam System",
+   "label_source": "rdfs:label",
+   "zh": "蒸汽系统",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Steam_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Heating_Ventilation_Air_Conditioning_System",
+   "parents": [
+    "brick:Heating_Ventilation_Air_Conditioning_System"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Substance",
+   "en": "Substance",
+   "label_source": "rdfs:label",
+   "zh": "物质",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Substance",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": null,
+   "parents": [],
+   "depth": 0,
+   "deprecated": false
+  },
+  {
+   "id": "brick:System",
+   "en": "System",
+   "label_source": "rdfs:label",
+   "zh": "系统",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Collection",
+   "parents": [
+    "brick:Collection"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Tag",
+   "en": "Tag",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Tag",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Entity",
+   "parents": [
+    "brick:Entity"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "brick:VRF_System",
+   "en": "VRF System",
+   "label_source": "rdfs:label",
+   "zh": "多联机系统",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#VRF_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Heating_Ventilation_Air_Conditioning_System",
+   "parents": [
+    "brick:Heating_Ventilation_Air_Conditioning_System"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Ventilation_Air_System",
+   "en": "Ventilation Air System",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Ventilation_Air_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Air_System",
+   "parents": [
+    "brick:Air_System"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Water_Loop",
+   "en": "Water Loop",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Water_Loop",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Loop",
+   "parents": [
+    "brick:Loop"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Water_System",
+   "en": "Water System",
+   "label_source": "rdfs:label",
+   "zh": "给排水系统",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Water_System",
+   "domain": "CORE",
+   "namespace": "brick",
+   "parent": "brick:Heating_Ventilation_Air_Conditioning_System",
+   "parents": [
+    "brick:Heating_Ventilation_Air_Conditioning_System"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "rec:AbsoluteHumidityObservation",
+   "en": "Absolute humidity observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#AbsoluteHumidityObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:AccelerationObservation",
+   "en": "Acceleration observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#AccelerationObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:AccessPanel",
+   "en": "Access panel",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#AccessPanel",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:BarrierAsset",
+   "parents": [
+    "rec:BarrierAsset"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ActuationEvent",
+   "en": "Actuation event",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ActuationEvent",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:PointEvent",
+   "parents": [
+    "rec:PointEvent"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Agent",
+   "en": "Agent",
+   "label_source": "rdfs:label",
+   "zh": "主体",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#Agent",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": null,
+   "parents": [],
+   "depth": 0,
+   "deprecated": false
+  },
+  {
+   "id": "rec:AlarmObject",
+   "en": "Alarm object",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#AlarmObject",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ServiceObject",
+   "parents": [
+    "rec:ServiceObject"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:AngleObservation",
+   "en": "Angle observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#AngleObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:AngularAccelerationObservation",
+   "en": "Angular acceleration observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#AngularAccelerationObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:AngularVelocityObservation",
+   "en": "Angular velocity observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#AngularVelocityObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Apartment",
+   "en": "Apartment",
+   "label_source": "rdfs:label",
+   "zh": "公寓",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#Apartment",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Collection",
+   "parents": [
+    "rec:Collection"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ArchitecturalAsset",
+   "en": "Architectural asset",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ArchitecturalAsset",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Asset",
+   "parents": [
+    "rec:Asset"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ArchitectureArea",
+   "en": "Architecture area",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ArchitectureArea",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Information",
+   "parents": [
+    "rec:Information"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ArchitectureCapacity",
+   "en": "Architecture capacity",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ArchitectureCapacity",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Information",
+   "parents": [
+    "rec:Information"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:AreaObservation",
+   "en": "Area observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#AreaObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Asset",
+   "en": "Asset",
+   "label_source": "rdfs:label",
+   "zh": "资产",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#Asset",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": null,
+   "parents": [],
+   "depth": 0,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Balcony",
+   "en": "Balcony",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Balcony",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:BuildingElement",
+   "parents": [
+    "rec:BuildingElement"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:BarrierAsset",
+   "en": "Barrier asset",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#BarrierAsset",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ArchitecturalAsset",
+   "parents": [
+    "rec:ArchitecturalAsset"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Bed",
+   "en": "Bed",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Bed",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Furniture",
+   "parents": [
+    "rec:Furniture"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Bookcase",
+   "en": "Bookcase",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Bookcase",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Furniture",
+   "parents": [
+    "rec:Furniture"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:BooleanValueObservation",
+   "en": "Boolean value observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#BooleanValueObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:BuildingElement",
+   "en": "Building element",
+   "label_source": "rdfs:label",
+   "zh": "建筑构件",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#BuildingElement",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": null,
+   "parents": [],
+   "depth": 0,
+   "deprecated": false
+  },
+  {
+   "id": "rec:BulletinBoard",
+   "en": "Bulletin board",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#BulletinBoard",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Furniture",
+   "parents": [
+    "rec:Furniture"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Campus",
+   "en": "Campus",
+   "label_source": "rdfs:label",
+   "zh": "园区",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#Campus",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Collection",
+   "parents": [
+    "rec:Collection"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:CapacitanceObservation",
+   "en": "Capacitance observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#CapacitanceObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Cart",
+   "en": "Cart",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Cart",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Furniture",
+   "parents": [
+    "rec:Furniture"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Chair",
+   "en": "Chair",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Chair",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Furniture",
+   "parents": [
+    "rec:Furniture"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:CoatRack",
+   "en": "Coat rack",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#CoatRack",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Furniture",
+   "parents": [
+    "rec:Furniture"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:CoffeeTable",
+   "en": "Coffee table",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#CoffeeTable",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Table",
+   "parents": [
+    "rec:Table"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Collection",
+   "en": "Collection",
+   "label_source": "rdfs:label",
+   "zh": "集合",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#Collection",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": null,
+   "parents": [],
+   "depth": 0,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Company",
+   "en": "Company",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Company",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Organization",
+   "parents": [
+    "rec:Organization"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ComputerCart",
+   "en": "Computer cart",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ComputerCart",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Cart",
+   "parents": [
+    "rec:Cart"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ConferenceTable",
+   "en": "Conference table",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ConferenceTable",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Table",
+   "parents": [
+    "rec:Table"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:DataRateObservation",
+   "en": "Data rate observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#DataRateObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:DataSizeObservation",
+   "en": "Data size observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#DataSizeObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:DensityObservation",
+   "en": "Density observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#DensityObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Department",
+   "en": "Department",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Department",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Organization",
+   "parents": [
+    "rec:Organization"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Desk",
+   "en": "Desk",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Desk",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Furniture",
+   "parents": [
+    "rec:Furniture"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:DeskLamp",
+   "en": "Desk lamp",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#DeskLamp",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Lamp",
+   "parents": [
+    "rec:Lamp"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:DistanceObservation",
+   "en": "Distance observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#DistanceObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Document",
+   "en": "Document",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Document",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Information",
+   "parents": [
+    "rec:Information"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Door",
+   "en": "Door",
+   "label_source": "rdfs:label",
+   "zh": "门",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#Door",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:BarrierAsset",
+   "parents": [
+    "rec:BarrierAsset"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:DoubleValueObservation",
+   "en": "Double value observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#DoubleValueObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ElectricChargeObservation",
+   "en": "Electric charge observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ElectricChargeObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ElectricCurrentObservation",
+   "en": "Elecric current observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ElectricCurrentObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ElevatorTrip",
+   "en": "Elevator trip",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ElevatorTrip",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Event",
+   "parents": [
+    "rec:Event"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:EndTable",
+   "en": "End table",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#EndTable",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Table",
+   "parents": [
+    "rec:Table"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:EnergyObservation",
+   "en": "Energy observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#EnergyObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:EquipmentCollection",
+   "en": "Equipment collection",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#EquipmentCollection",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Collection",
+   "parents": [
+    "rec:Collection"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ErrorReport",
+   "en": "Error report",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ErrorReport",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ServiceObject",
+   "parents": [
+    "rec:ServiceObject"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Event",
+   "en": "Event",
+   "label_source": "rdfs:label",
+   "zh": "事件",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#Event",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": null,
+   "parents": [],
+   "depth": 0,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ExceptionEvent",
+   "en": "Exception event",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ExceptionEvent",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:PointEvent",
+   "parents": [
+    "rec:PointEvent"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Facade",
+   "en": "Facade",
+   "label_source": "rdfs:label",
+   "zh": "建筑立面",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#Facade",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:BuildingElement",
+   "parents": [
+    "rec:BuildingElement"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:FilingCabinet",
+   "en": "Filing cabinet",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#FilingCabinet",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Furniture",
+   "parents": [
+    "rec:Furniture"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:FloorLamp",
+   "en": "Floor lamp",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#FloorLamp",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Lamp",
+   "parents": [
+    "rec:Lamp"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:FloorMat",
+   "en": "Floor mat",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#FloorMat",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Furniture",
+   "parents": [
+    "rec:Furniture"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:FoldingChair",
+   "en": "Folding chair",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#FoldingChair",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Chair",
+   "parents": [
+    "rec:Chair"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:FoldingTable",
+   "en": "Folding table",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#FoldingTable",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Table",
+   "parents": [
+    "rec:Table"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Footrest",
+   "en": "Footrest",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Footrest",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Furniture",
+   "parents": [
+    "rec:Furniture"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ForceObservation",
+   "en": "Force observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ForceObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:FrequencyObservation",
+   "en": "Frequency observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#FrequencyObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Furniture",
+   "en": "Furniture",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Furniture",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Asset",
+   "parents": [
+    "rec:Asset"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:FurnitureCollection",
+   "en": "Furniture collection",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#FurnitureCollection",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Collection",
+   "parents": [
+    "rec:Collection"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Geometry",
+   "en": "Geometry",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Geometry",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Information",
+   "parents": [
+    "rec:Information"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Georeference",
+   "en": "Georeference",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Georeference",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Information",
+   "parents": [
+    "rec:Information"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Geotransform",
+   "en": "Geotransform",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Geotransform",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Georeference",
+   "parents": [
+    "rec:Georeference"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:IlluminanceObservation",
+   "en": "Illuminance observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#IlluminanceObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:InductanceObservation",
+   "en": "Inductance observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#InductanceObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Information",
+   "en": "Information",
+   "label_source": "rdfs:label",
+   "zh": "信息",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#Information",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": null,
+   "parents": [],
+   "depth": 0,
+   "deprecated": false
+  },
+  {
+   "id": "rec:IntegerValueObservation",
+   "en": "Integer value observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#IntegerValueObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Lamp",
+   "en": "Lamp",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Lamp",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Furniture",
+   "parents": [
+    "rec:Furniture"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Lease",
+   "en": "Lease",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Lease",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Event",
+   "parents": [
+    "rec:Event"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:LeaseContract",
+   "en": "Lease contract",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#LeaseContract",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Document",
+   "parents": [
+    "rec:Document"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:LengthObservation",
+   "en": "Length observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#LengthObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:LuminanceObservation",
+   "en": "Luminance observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#LuminanceObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:LuminousFluxObservation",
+   "en": "Luminous flux observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#LuminousFluxObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:LuminousIntensityObservation",
+   "en": "Luminous intensity observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#LuminousIntensityObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:MagneticFluxObservation",
+   "en": "Magnetic flux observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#MagneticFluxObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:MailroomCart",
+   "en": "Mailroom cart",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#MailroomCart",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Cart",
+   "parents": [
+    "rec:Cart"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:MassFlowRateObservation",
+   "en": "Mass flow rate observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#MassFlowRateObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:MassObservation",
+   "en": "Mass observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#MassObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:MobileDesk",
+   "en": "Mobile desk",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#MobileDesk",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Desk",
+   "parents": [
+    "rec:Desk"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:MultiPoint",
+   "en": "Multi point",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#MultiPoint",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Geometry",
+   "parents": [
+    "rec:Geometry"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:MultiPolygon",
+   "en": "Multi polygon",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#MultiPolygon",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Geometry",
+   "parents": [
+    "rec:Geometry"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:NotificationObject",
+   "en": "Notification object",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#NotificationObject",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ServiceObject",
+   "parents": [
+    "rec:ServiceObject"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ObservationEvent",
+   "en": "Observation event",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ObservationEvent",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:PointEvent",
+   "parents": [
+    "rec:PointEvent"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:OfficeChair",
+   "en": "Office chair",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#OfficeChair",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Chair",
+   "parents": [
+    "rec:Chair"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Organization",
+   "en": "Organization",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Organization",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Agent",
+   "parents": [
+    "rec:Agent"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Partition",
+   "en": "Partition",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Partition",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:BarrierAsset",
+   "parents": [
+    "rec:BarrierAsset"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Person",
+   "en": "Person",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Person",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Agent",
+   "parents": [
+    "rec:Agent"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Point",
+   "en": "Point",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Point",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Geometry",
+   "parents": [
+    "rec:Geometry"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:PointEvent",
+   "en": "Point event",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#PointEvent",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Event",
+   "parents": [
+    "rec:Event"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:PointOfInterest",
+   "en": "Point of Interest",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#PointOfInterest",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Information",
+   "parents": [
+    "rec:Information"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Polygon",
+   "en": "Polygon",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Polygon",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Geometry",
+   "parents": [
+    "rec:Geometry"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Portfolio",
+   "en": "Portfolio",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Portfolio",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Collection",
+   "parents": [
+    "rec:Collection"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:PostalAddress",
+   "en": "Postal address",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#PostalAddress",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Information",
+   "parents": [
+    "rec:Information"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:PowerObservation",
+   "en": "Power observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#PowerObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Premises",
+   "en": "Premises",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Premises",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Collection",
+   "parents": [
+    "rec:Collection"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:PressureObservation",
+   "en": "Pressure observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#PressureObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:PrinterCart",
+   "en": "Printer cart",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#PrinterCart",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Cart",
+   "parents": [
+    "rec:Cart"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:PrinterStand",
+   "en": "Printer stand",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#PrinterStand",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Stand",
+   "parents": [
+    "rec:Stand"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:RealEstate",
+   "en": "Real Estate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#RealEstate",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Collection",
+   "parents": [
+    "rec:Collection"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ReceptionTable",
+   "en": "Reception table",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ReceptionTable",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Table",
+   "parents": [
+    "rec:Table"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:RelativeHumidityObservation",
+   "en": "Relative humidity observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#RelativeHumidityObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ResistanceObservation",
+   "en": "Resistance observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ResistanceObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Roof",
+   "en": "Roof",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Roof",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:BuildingElement",
+   "parents": [
+    "rec:BuildingElement"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Safe",
+   "en": "Safe",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Safe",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Furniture",
+   "parents": [
+    "rec:Furniture"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ServiceObject",
+   "en": "Service object",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ServiceObject",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Information",
+   "parents": [
+    "rec:Information"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Slab",
+   "en": "Slab",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Slab",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:BuildingElement",
+   "parents": [
+    "rec:BuildingElement"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Sofa",
+   "en": "Sofa",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Sofa",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Furniture",
+   "parents": [
+    "rec:Furniture"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:SoundPressureObservation",
+   "en": "Sound pressure observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#SoundPressureObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Stand",
+   "en": "Stand",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Stand",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Furniture",
+   "parents": [
+    "rec:Furniture"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:StorageCabinet",
+   "en": "Storage cabinet",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#StorageCabinet",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Furniture",
+   "parents": [
+    "rec:Furniture"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:TVStand",
+   "en": "TV stand",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#TVStand",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Stand",
+   "parents": [
+    "rec:Stand"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Table",
+   "en": "Table",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Table",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Furniture",
+   "parents": [
+    "rec:Furniture"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:TemperatureObservation",
+   "en": "Temperature observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#TemperatureObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ThrustObservation",
+   "en": "Thrust observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ThrustObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:TimeSpanObservation",
+   "en": "Timespan observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#TimeSpanObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:TorqueObservation",
+   "en": "Torque observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#TorqueObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:VelocityObservation",
+   "en": "Velocity observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#VelocityObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:VoltageObservation",
+   "en": "Voltage observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#VoltageObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:VolumeFlowRateObservation",
+   "en": "Volume flow rate observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#VolumeFlowRateObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:VolumeObservation",
+   "en": "Volume observation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#VolumeObservation",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ObservationEvent",
+   "parents": [
+    "rec:ObservationEvent"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Wall",
+   "en": "Wall",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Wall",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:BuildingElement",
+   "parents": [
+    "rec:BuildingElement"
+   ],
+   "depth": 1,
+   "deprecated": false
+  },
+  {
+   "id": "rec:WallInner",
+   "en": "Wall (inner)",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#WallInner",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Wall",
+   "parents": [
+    "rec:Wall"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:WasteBasket",
+   "en": "Waste basket",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#WasteBasket",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:Furniture",
+   "parents": [
+    "rec:Furniture"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "rec:Window",
+   "en": "Window",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#Window",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:BarrierAsset",
+   "parents": [
+    "rec:BarrierAsset"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:WorkOrder",
+   "en": "Work order",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#WorkOrder",
+   "domain": "CORE",
+   "namespace": "rec",
+   "parent": "rec:ServiceObject",
+   "parents": [
+    "rec:ServiceObject"
+   ],
+   "depth": 2,
+   "deprecated": false
+  }
+ ]
+}

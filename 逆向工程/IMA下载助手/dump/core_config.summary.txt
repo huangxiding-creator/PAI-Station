@@ -1,0 +1,65 @@
+===== core/config.pyc =====
+DOCSTRING: 统一配置管理模块（兼容层）
+
+此模块保持向后兼容，所有函数委托给 core.config_manager
+
+
+[<module>] args=() names=('__doc__', 'core.config_manager', 'get_config_manager', 'HEADERS', 'DOWNLOAD_DIR', '_get_config', 'set_cookie', 'load_cookie_from_cache', 'get_cookie', 'set_config_pack', 'get_config', 'get_base_url', 'get_endpoint_url', 'get_endpoint_method', 'get_timeout', 'get_retry_config', 'get_wechat_api_url', 'build_headers_with_cookie', 'get_app_cookie_fields')
+  CONST '统一配置管理模块（兼容层）\n\n此模块保持向后兼容，所有函数委托给 core.config_manager\n'
+  CONST 0
+  CONST ('get_config_manager')
+  CONST 'download'
+  CONST None
+  CONST (None, None, None, 7200, 2592000)
+  CONST (None, None)
+
+  [_get_config] args=() names=('get_config_manager',)
+    CONST '获取配置管理器'
+
+  [set_cookie] args=('bkn', 'cookie_value', 'user_id', 'token', 'refresh_token', 'token_valid_time', 'refresh_token_valid_time') names=('data.database', 'save_login_credentials', '_get_config', 'build_headers_with_cookie', 'RuntimeError', 'set_headers')
+    CONST '使用 DPAPI 安全保存 Cookie，并更新当前请求头。'
+    CONST 0
+    CONST ('save_login_credentials')
+    CONST '*/*'
+    CONST 'application/json'
+    CONST 'ima/4032 CFNetwork/3860.300.31 Darwin/25.2.0'
+    CONST ('Accept', 'Content-Type', 'X-Ima-Bkn', 'X-Ima-Cookie', 'User-Agent')
+    CONST True
+
+  [load_cookie_from_cache] args=() names=('_get_config', 'load_cookie_from_cache', 'get_headers', 'HEADERS')
+    CONST '从数据库加载Cookie，并自动刷新过期的token'
+
+  [get_cookie] args=() names=('_get_config', 'get_cookie')
+    CONST '获取Cookie缓存'
+
+  [set_config_pack] args=('config_pack',) names=('_get_config', 'set_config_pack')
+    CONST '设置配置包'
+    CONST None
+
+  [get_config] args=() names=('_get_config', 'get_config_pack')
+    CONST '获取配置包'
+
+  [get_base_url] args=() names=('_get_config', 'get_ima_base_url')
+    CONST '获取基础URL'
+
+  [get_endpoint_url] args=('endpoint_name',) names=('_get_config', 'get_endpoint_url')
+    CONST '获取接口URL'
+
+  [get_endpoint_method] args=('endpoint_name',) names=('_get_config', 'get_endpoint_method')
+    CONST '获取接口HTTP方法，默认POST'
+
+  [get_timeout] args=() names=('_get_config', 'get_timeout')
+    CONST '获取超时配置'
+
+  [get_retry_config] args=() names=('_get_config', 'get_retry_config')
+    CONST '获取重试配置'
+
+  [get_wechat_api_url] args=() names=('_get_config', 'get_wechat_api_url')
+    CONST '获取微信API URL'
+
+  [build_headers_with_cookie] args=('cookie_bkn', 'cookie_value') names=('_get_config', 'build_headers_with_cookie')
+    CONST '构建请求头'
+
+  [get_app_cookie_fields] args=() names=('_get_config', 'get_app_cookie_fields')
+    CONST '获取App Cookie固定字段'
+

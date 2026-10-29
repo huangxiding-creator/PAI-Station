@@ -1,0 +1,4839 @@
+{
+ "kind": "fibo_module_seed",
+ "module": "DER",
+ "module_zh": "衍生品",
+ "module_en": "Derivatives",
+ "note": "主干父级闭包纳入（层级无孤儿所需）",
+ "source": {
+  "repo": "EDMCouncil/fibo",
+  "tag": "master_2026Q3",
+  "license": "MIT",
+  "license_copyright": "Copyright (c) 2020 Enterprise Data Management Council",
+  "url": "https://github.com/EDMCouncil/fibo/tree/master_2026Q3",
+  "tarball_sha256": "48a1690255df0fb161d624a6e12fb529f4e4f38c73ac8cfbe1ed81e913625e27"
+ },
+ "stats": {
+  "classes": 317,
+  "zh_mapped": 43,
+  "zh_rate": 0.1356,
+  "roots": 14,
+  "max_depth": 10,
+  "multi_parent_classes": 80,
+  "derived_labels": 0,
+  "external_parent_edges_dropped": 15
+ },
+ "concepts": [
+  {
+   "id": "AssetBackedCreditDefaultSwap",
+   "en": "asset-backed credit default swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/CreditDerivatives/CreditDefaultSwaps/AssetBackedCreditDefaultSwap",
+   "module": "DER",
+   "subdomain": "CreditDerivatives",
+   "parent": "CreditDefaultSwap",
+   "parents": [
+    "CreditDefaultSwap"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "BasketCreditDefaultSwap",
+   "en": "basket credit default swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/CreditDerivatives/CreditDefaultSwaps/BasketCreditDefaultSwap",
+   "module": "DER",
+   "subdomain": "CreditDerivatives",
+   "parent": "MultiNameCreditDefaultSwap",
+   "parents": [
+    "MultiNameCreditDefaultSwap"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "BasketOfCreditDefaultSwaps",
+   "en": "basket of credit default swaps",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/CreditDerivatives/CreditDefaultSwaps/BasketOfCreditDefaultSwaps",
+   "module": "DER",
+   "subdomain": "CreditDerivatives",
+   "parent": "WeightedBasket",
+   "parents": [
+    "DatedStructuredCollection",
+    "WeightedBasket"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CashSettlementMethod",
+   "en": "cash settlement method",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/CreditDerivatives/CreditDefaultSwaps/CashSettlementMethod",
+   "module": "DER",
+   "subdomain": "CreditDerivatives",
+   "parent": "PriceDeterminationMethod",
+   "parents": [
+    "PriceDeterminationMethod"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "ContingentCreditDefaultSwap",
+   "en": "contingent credit default swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/CreditDerivatives/CreditDefaultSwaps/ContingentCreditDefaultSwap",
+   "module": "DER",
+   "subdomain": "CreditDerivatives",
+   "parent": "CreditDefaultSwap",
+   "parents": [
+    "CreditDefaultSwap"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "CreditDefaultSwap",
+   "en": "credit default swap",
+   "label_source": "rdfs:label",
+   "zh": "信用违约互换",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/CreditDerivatives/CreditDefaultSwaps/CreditDefaultSwap",
+   "module": "DER",
+   "subdomain": "CreditDerivatives",
+   "parent": "CreditDerivative",
+   "parents": [
+    "CreditDerivative",
+    "Swap"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "CreditDefaultSwapIndex",
+   "en": "credit default swap index",
+   "label_source": "rdfs:label",
+   "zh": "信用违约互换指数",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/CreditDerivatives/CreditDefaultSwaps/CreditDefaultSwapIndex",
+   "module": "DER",
+   "subdomain": "CreditDerivatives",
+   "parent": "ReferenceIndex",
+   "parents": [
+    "ReferenceIndex"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "CreditEventNotice",
+   "en": "credit event notice",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/CreditDerivatives/CreditDefaultSwaps/CreditEventNotice",
+   "module": "DER",
+   "subdomain": "CreditDerivatives",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "CreditProtectionTerms",
+   "en": "credit protection terms",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/CreditDerivatives/CreditDefaultSwaps/CreditProtectionTerms",
+   "module": "DER",
+   "subdomain": "CreditDerivatives",
+   "parent": "DerivativeTerms",
+   "parents": [
+    "DerivativeTerms"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "DER.TriggeringEvent",
+   "en": "triggering event",
+   "label_source": "rdfs:label",
+   "zh": "触发事件",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/CreditDerivatives/CreditDefaultSwaps/TriggeringEvent",
+   "module": "DER",
+   "subdomain": "CreditDerivatives",
+   "parent": "Occurrence",
+   "parents": [
+    "Occurrence"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "DeliverableObligation",
+   "en": "deliverable asset",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/CreditDerivatives/CreditDefaultSwaps/DeliverableObligation",
+   "module": "DER",
+   "subdomain": "CreditDerivatives",
+   "parent": "Asset",
+   "parents": [
+    "Asset"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "DeliverableObligationBuyer",
+   "en": "deliverable obligation buyer",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/CreditDerivatives/CreditDefaultSwaps/DeliverableObligationBuyer",
+   "module": "DER",
+   "subdomain": "CreditDerivatives",
+   "parent": "ContractParty",
+   "parents": [
+    "Buyer",
+    "ContractParty"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "DeliverableObligationSeller",
+   "en": "deliverable obligation seller",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/CreditDerivatives/CreditDefaultSwaps/DeliverableObligationSeller",
+   "module": "DER",
+   "subdomain": "CreditDerivatives",
+   "parent": "ContractParty",
+   "parents": [
+    "ContractParty",
+    "Seller"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "EscrowAgent",
+   "en": "escrow agent",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/CreditDerivatives/CreditDefaultSwaps/EscrowAgent",
+   "module": "DER",
+   "subdomain": "CreditDerivatives",
+   "parent": "RegisteredAgent",
+   "parents": [
+    "ContractThirdParty",
+    "RegisteredAgent"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "IndexCreditDefaultSwap",
+   "en": "index credit default swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/CreditDerivatives/CreditDefaultSwaps/IndexCreditDefaultSwap",
+   "module": "DER",
+   "subdomain": "CreditDerivatives",
+   "parent": "MultiNameCreditDefaultSwap",
+   "parents": [
+    "MultiNameCreditDefaultSwap"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "IndexTrancheCreditDefaultSwap",
+   "en": "index tranche credit default swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/CreditDerivatives/CreditDefaultSwaps/IndexTrancheCreditDefaultSwap",
+   "module": "DER",
+   "subdomain": "CreditDerivatives",
+   "parent": "MultiNameCreditDefaultSwap",
+   "parents": [
+    "MultiNameCreditDefaultSwap"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "LoanCreditDefaultSwap",
+   "en": "loan credit default swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/CreditDerivatives/CreditDefaultSwaps/LoanCreditDefaultSwap",
+   "module": "DER",
+   "subdomain": "CreditDerivatives",
+   "parent": "CreditDefaultSwap",
+   "parents": [
+    "CreditDefaultSwap"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "MultiNameCreditDefaultSwap",
+   "en": "multi-name credit default swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/CreditDerivatives/CreditDefaultSwaps/MultiNameCreditDefaultSwap",
+   "module": "DER",
+   "subdomain": "CreditDerivatives",
+   "parent": "CreditDefaultSwap",
+   "parents": [
+    "CreditDefaultSwap"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "NotifyingParty",
+   "en": "notifying party",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/CreditDerivatives/CreditDefaultSwaps/NotifyingParty",
+   "module": "DER",
+   "subdomain": "CreditDerivatives",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "SettlementAuction",
+   "en": "settlement auction",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/CreditDerivatives/CreditDefaultSwaps/SettlementAuction",
+   "module": "DER",
+   "subdomain": "CreditDerivatives",
+   "parent": "SettlementEvent",
+   "parents": [
+    "SettlementEvent"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "SingleNameCreditDefaultSwap",
+   "en": "single name credit default swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/CreditDerivatives/CreditDefaultSwaps/SingleNameCreditDefaultSwap",
+   "module": "DER",
+   "subdomain": "CreditDerivatives",
+   "parent": "CreditDefaultSwap",
+   "parents": [
+    "CreditDefaultSwap"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "AccountChangeNotificationObligation",
+   "en": "account change notification obligation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesMasterAgreements/AccountChangeNotificationObligation",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "NotificationObligation",
+   "parents": [
+    "NotificationObligation"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "AgriculturalResource",
+   "en": "agricultural resource",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/AgriculturalResource",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "NegotiableCommodity",
+   "parents": [
+    "NegotiableCommodity"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "AllotmentRight",
+   "en": "allotment right",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/AllotmentRight",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "EquityDerivative",
+   "parents": [
+    "Entitlement",
+    "EquityDerivative"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "AllotmentRightFormula",
+   "en": "allotment right formula",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/AllotmentRightFormula",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "AsianOption",
+   "en": "Asian option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/ExoticOptions/AsianOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ExoticOption",
+   "parents": [
+    "ExoticOption"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "AsianOptionClassifier",
+   "en": "Asian option classifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/ExoticOptions/AsianOptionClassifier",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "FinancialInstrumentClassifier",
+   "parents": [
+    "FinancialInstrumentClassifier"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "AveragingStrategy",
+   "en": "averaging strategy",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/ExoticOptions/AveragingStrategy",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Strategy",
+   "parents": [
+    "Strategy"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "BarrierCapitalProtectionCertificate",
+   "en": "barrier capital protection certificate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/StructuredInstruments/BarrierCapitalProtectionCertificate",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CapitalProtectedProduct",
+   "parents": [
+    "CapitalProtectedProduct",
+    "ParticipationCertificate"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "BarrierDiscountCertificate",
+   "en": "barrier discount certificate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/StructuredInstruments/BarrierDiscountCertificate",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ParticipationCertificate",
+   "parents": [
+    "ParticipationCertificate",
+    "StructuredFinanceWithoutPrincipalProtection"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "BarrierInstrumentBasedMiniFutureCertificate",
+   "en": "barrier instrument-based mini-future certificate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/BarrierInstrumentBasedMiniFutureCertificate",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "MiniFutureCertificate",
+   "parents": [
+    "MiniFutureCertificate"
+   ],
+   "depth": 9
+  },
+  {
+   "id": "BarrierOption",
+   "en": "barrier option",
+   "label_source": "rdfs:label",
+   "zh": "障碍期权",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/ExoticOptions/BarrierOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ExoticOption",
+   "parents": [
+    "ExoticOption"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "BarrierReverseConvertibleCertificate",
+   "en": "barrier reverse convertible certificate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/StructuredInstruments/BarrierReverseConvertibleCertificate",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ParticipationCertificate",
+   "parents": [
+    "ParticipationCertificate",
+    "StructuredFinanceWithoutPrincipalProtection"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "BarrierUnderlyingMiniFutureCertificate",
+   "en": "barrier underlying mini-future certificate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/BarrierUnderlyingMiniFutureCertificate",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "MiniFutureCertificate",
+   "parents": [
+    "MiniFutureCertificate"
+   ],
+   "depth": 9
+  },
+  {
+   "id": "BaseMetal",
+   "en": "base metal",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/BaseMetal",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Metal",
+   "parents": [
+    "Metal"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "BasisSwap",
+   "en": "basis swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/BasisSwap",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "RatesSwap",
+   "parents": [
+    "RatesSwap"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "BasketCertificate",
+   "en": "basket certificate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/StructuredInstruments/BasketCertificate",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ParticipationCertificate",
+   "parents": [
+    "ParticipationCertificate"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "BasketFuture",
+   "en": "basket future",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/FuturesAndForwards/BasketFuture",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "FinancialFuture",
+   "parents": [
+    "FinancialFuture"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "BasketOfCommodities",
+   "en": "basket of commodities",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/BasketOfCommodities",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "WeightedBasket",
+   "parents": [
+    "WeightedBasket"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "BasketOption",
+   "en": "basket option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/BasketOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ExoticOption",
+   "parents": [
+    "ExoticOption"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "BasketWarrant",
+   "en": "basket warrant",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/BasketWarrant",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Warrant",
+   "parents": [
+    "Warrant"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "BondFuture",
+   "en": "bond future",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/FuturesAndForwards/BondFuture",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "DebtInstrumentFuture",
+   "parents": [
+    "DebtInstrumentFuture"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "BondOption",
+   "en": "bond option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/BondOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "FixedIncomeOption",
+   "parents": [
+    "FixedIncomeOption"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "BondPurchaseRight",
+   "en": "bond purchase right",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/BondPurchaseRight",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "PurchaseRight",
+   "parents": [
+    "PurchaseRight"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "BondSubscriptionRight",
+   "en": "bond subscription right",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/BondSubscriptionRight",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "SubscriptionRight",
+   "parents": [
+    "SubscriptionRight"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "BonusCertificate",
+   "en": "bonus certificate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/StructuredInstruments/BonusCertificate",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ParticipationCertificate",
+   "parents": [
+    "ParticipationCertificate"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "Bullion",
+   "en": "bullion",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/Bullion",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "PreciousMetal",
+   "parents": [
+    "PreciousMetal"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "Butterfly",
+   "en": "butterfly",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/Butterfly",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "OptionTradingStrategy",
+   "parents": [
+    "OptionTradingStrategy"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "CallOption",
+   "en": "call option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/CallOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Option",
+   "parents": [
+    "Option"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "CallPutWarrant",
+   "en": "call put warrant",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/CallPutWarrant",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CallWarrant",
+   "parents": [
+    "CallWarrant",
+    "PutWarrant"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "CallWarrant",
+   "en": "call warrant",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/CallWarrant",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Warrant",
+   "parents": [
+    "Warrant"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "CapitalProtectedProduct",
+   "en": "capital-protected product",
+   "label_source": "rdfs:label",
+   "zh": "保本产品",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/StructuredInstruments/CapitalProtectedProduct",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "StructuredProduct",
+   "parents": [
+    "StructuredProduct"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "CapitalProtectionCertificateWithCoupons",
+   "en": "capital protection certificate with coupons",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/StructuredInstruments/CapitalProtectionCertificateWithCoupons",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CapitalProtectedProduct",
+   "parents": [
+    "CapitalProtectedProduct",
+    "ParticipationCertificate"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "CapitalProtectionCertificateWithParticipation",
+   "en": "capital protection certificate with participation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/StructuredInstruments/CapitalProtectionCertificateWithParticipation",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CapitalProtectedProduct",
+   "parents": [
+    "CapitalProtectedProduct",
+    "ParticipationCertificate"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "CapitalProtectionConvertibleCertificate",
+   "en": "capital protection convertible certificate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/StructuredInstruments/CapitalProtectionConvertibleCertificate",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CapitalProtectedProduct",
+   "parents": [
+    "CapitalProtectedProduct",
+    "ParticipationCertificate"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "CappedOption",
+   "en": "capped option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/CappedOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "VanillaOption",
+   "parents": [
+    "VanillaOption"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "CashflowExpression",
+   "en": "cashflow expression",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesBasics/CashflowExpression",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "CashflowFormula",
+   "en": "cashflow formula",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesBasics/CashflowFormula",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Formula",
+   "parents": [
+    "Formula"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "CashflowTerms",
+   "en": "cashflow terms",
+   "label_source": "rdfs:label",
+   "zh": "现金流条款",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesBasics/CashflowTerms",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "DerivativeTerms",
+   "parents": [
+    "DebtTerms",
+    "DerivativeTerms"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "ChooserOption",
+   "en": "chooser option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/ExoticOptions/ChooserOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ExoticOption",
+   "parents": [
+    "ExoticOption"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "CliquetOption",
+   "en": "cliquet option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/ExoticOptions/CliquetOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ExoticOption",
+   "parents": [
+    "ExoticOption"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "Collar",
+   "en": "collar",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/Collar",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "OptionTradingStrategy",
+   "parents": [
+    "OptionTradingStrategy"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "CombinedInstrumentsPurchaseRight",
+   "en": "combined instruments purchase right",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/CombinedInstrumentsPurchaseRight",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "PurchaseRight",
+   "parents": [
+    "PurchaseRight"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "CombinedInstrumentsSubscriptionRight",
+   "en": "combined instruments subscription right",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/CombinedInstrumentsSubscriptionRight",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "SubscriptionRight",
+   "parents": [
+    "SubscriptionRight"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "CommodityBasketConstituent",
+   "en": "commodity basket constituent",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/CommodityBasketConstituent",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "WeightedBasketConstituent",
+   "parents": [
+    "WeightedBasketConstituent"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CommodityDerivative",
+   "en": "commodity derivative",
+   "label_source": "rdfs:label",
+   "zh": "商品衍生品",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/CommodityDerivative",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CommodityInstrument",
+   "parents": [
+    "CommodityInstrument",
+    "DerivativeInstrument"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "CommodityDerivativeUnderlier",
+   "en": "commodity derivative underlier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/CommodityDerivativeUnderlier",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Underlier",
+   "parents": [
+    "Underlier"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "CommodityForward",
+   "en": "commodity forward",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/CommodityForward",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CommodityDerivative",
+   "parents": [
+    "CommodityDerivative",
+    "Forward"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "CommodityFuture",
+   "en": "commodity future",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/CommodityFuture",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CommodityDerivative",
+   "parents": [
+    "CommodityDerivative",
+    "Future"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "CommodityIndex",
+   "en": "commodity index",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/CommodityIndex",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ReferenceIndex",
+   "parents": [
+    "ReferenceIndex"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "CommodityOption",
+   "en": "commodity option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/CommodityOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CommodityDerivative",
+   "parents": [
+    "CommodityDerivative",
+    "VanillaOption"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "CommodityReturnLeg",
+   "en": "commodity return leg",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/CommodityReturnLeg",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ReturnLeg",
+   "parents": [
+    "ReturnLeg"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "CommoditySpotContract",
+   "en": "commodity spot contract",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/CommoditySpotContract",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CommodityInstrument",
+   "parents": [
+    "CommodityInstrument",
+    "SpotContract"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "CommoditySwap",
+   "en": "commodity swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/CommoditySwap",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CommodityDerivative",
+   "parents": [
+    "CommodityDerivative",
+    "ReturnSwap"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "CommodityWarrant",
+   "en": "commodity warrant",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/CommodityWarrant",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CommodityDerivative",
+   "parents": [
+    "CommodityDerivative",
+    "Warrant"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "CommodoreOption",
+   "en": "commodore option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/ExoticOptions/CommodoreOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ExoticOption",
+   "parents": [
+    "ExoticOption"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "CommonConvertibleSharePurchaseRight",
+   "en": "common convertible share purchase right",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/CommonConvertibleSharePurchaseRight",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "PurchaseRight",
+   "parents": [
+    "PurchaseRight"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "CommonConvertibleShareSubscriptionRight",
+   "en": "common convertible share subscription right",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/CommonConvertibleShareSubscriptionRight",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "SubscriptionRight",
+   "parents": [
+    "SubscriptionRight"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "CommonSharePurchaseRight",
+   "en": "common share purchase right",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/CommonSharePurchaseRight",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "PurchaseRight",
+   "parents": [
+    "PurchaseRight"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "CommonShareSubscriptionRight",
+   "en": "common share subscription right",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/CommonShareSubscriptionRight",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "SubscriptionRight",
+   "parents": [
+    "SubscriptionRight"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "CompoundOption",
+   "en": "compound option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/ExoticOptions/CompoundOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ExoticOption",
+   "parents": [
+    "ExoticOption"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "CondorSpread",
+   "en": "condor spread",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/CondorSpread",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "OptionTradingStrategy",
+   "parents": [
+    "OptionTradingStrategy"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "ConstantLeverageCertificate",
+   "en": "constant leverage certificate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/ConstantLeverageCertificate",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "SecurityBasedDerivative",
+   "parents": [
+    "Entitlement",
+    "Option",
+    "SecurityBasedDerivative"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "ContractForDifference",
+   "en": "contract for difference",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesBasics/ContractForDifference",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "DerivativeInstrument",
+   "parents": [
+    "DerivativeInstrument"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "CorrelationLeg",
+   "en": "correlation leg",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/CorrelationLeg",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "PerformanceBasedVariableLeg",
+   "parents": [
+    "PerformanceBasedVariableLeg"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "CorrelationSwap",
+   "en": "correlation swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/CorrelationSwap",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "StatisticalSwap",
+   "parents": [
+    "StatisticalSwap"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "CoveredCall",
+   "en": "covered call",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/CoveredCall",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CallOption",
+   "parents": [
+    "CallOption"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "CoveredWarrant",
+   "en": "covered warrant",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/CoveredWarrant",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Warrant",
+   "parents": [
+    "Warrant"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "CreditDerivative",
+   "en": "credit derivative",
+   "label_source": "rdfs:label",
+   "zh": "信用衍生品",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesBasics/CreditDerivative",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "DerivativeInstrument",
+   "parents": [
+    "DerivativeInstrument"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "CurrencyDerivative",
+   "en": "currency derivative",
+   "label_source": "rdfs:label",
+   "zh": "货币衍生品",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CurrencyContracts/CurrencyDerivative",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CurrencyInstrument",
+   "parents": [
+    "CurrencyInstrument",
+    "DerivativeInstrument"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "CurrencyForward",
+   "en": "currency forward",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CurrencyContracts/CurrencyForward",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CurrencyDerivative",
+   "parents": [
+    "CurrencyDerivative",
+    "Forward"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "CurrencyForwardOutright",
+   "en": "currency forward outright",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CurrencyContracts/CurrencyForwardOutright",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CurrencyForward",
+   "parents": [
+    "CurrencyForward"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "CurrencyFuture",
+   "en": "currency future",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/FuturesAndForwards/CurrencyFuture",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CurrencyDerivative",
+   "parents": [
+    "CurrencyDerivative",
+    "FinancialFuture"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "CurrencyOption",
+   "en": "currency option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CurrencyContracts/CurrencyOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CurrencyDerivative",
+   "parents": [
+    "CurrencyDerivative",
+    "VanillaOption"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "CurrencySpotContract",
+   "en": "currency spot contract",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CurrencyContracts/CurrencySpotContract",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CurrencyInstrument",
+   "parents": [
+    "CurrencyInstrument",
+    "SpotContract"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "CurrencySpotForwardSwap",
+   "en": "currency spot forward swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CurrencyContracts/CurrencySpotForwardSwap",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CurrencySwap",
+   "parents": [
+    "CurrencySwap"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "CurrencySwap",
+   "en": "currency swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CurrencyContracts/CurrencySwap",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CurrencyDerivative",
+   "parents": [
+    "CurrencyDerivative",
+    "Swap"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "CurrencyVolatilityOption",
+   "en": "currency volatility option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CurrencyContracts/CurrencyVolatilityOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CurrencyOption",
+   "parents": [
+    "CurrencyOption"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "CurrencyWarrant",
+   "en": "currency warrant",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/CurrencyWarrant",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CurrencyDerivative",
+   "parents": [
+    "CurrencyDerivative",
+    "Warrant"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "DebtInstrumentFuture",
+   "en": "debt instrument future",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/FuturesAndForwards/DebtInstrumentFuture",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "FinancialFuture",
+   "parents": [
+    "DebtInstrumentDerivative",
+    "FinancialFuture"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "DebtWarrant",
+   "en": "debt warrant",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/DebtWarrant",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Warrant",
+   "parents": [
+    "DebtInstrumentDerivative",
+    "Warrant"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "DerivativeCreditSupportAgreement",
+   "en": "derivative credit support agreement",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesMasterAgreements/DerivativeCreditSupportAgreement",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CreditEnhancementAgreement",
+   "parents": [
+    "CreditEnhancementAgreement"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "DerivativeMasterAgreement",
+   "en": "derivative master agreement",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesMasterAgreements/DerivativeMasterAgreement",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CreditAgreement",
+   "parents": [
+    "CreditAgreement",
+    "MasterAgreement"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "DerivativeSettlementTerms",
+   "en": "derivative settlement terms",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesBasics/DerivativeSettlementTerms",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "DerivativeTerms",
+   "parents": [
+    "DerivativeTerms",
+    "SettlementTerms"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "DerivativeTerms",
+   "en": "derivative terms",
+   "label_source": "rdfs:label",
+   "zh": "衍生条款",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesBasics/DerivativeTerms",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ContractualCommitment",
+   "parents": [
+    "ContractualCommitment"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "DerivativesClearingOrganization",
+   "en": "derivatives clearing organization",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesBasics/DerivativesClearingOrganization",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ClearingHouse",
+   "parents": [
+    "ClearingHouse"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "DigitalOption",
+   "en": "digital option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/ExoticOptions/DigitalOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "BarrierOption",
+   "parents": [
+    "BarrierOption"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "DiscountCertificate",
+   "en": "discount certificate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/StructuredInstruments/DiscountCertificate",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ParticipationCertificate",
+   "parents": [
+    "ParticipationCertificate",
+    "StructuredFinanceWithoutPrincipalProtection"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "DispersionLeg",
+   "en": "dispersion leg",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/DispersionLeg",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "PerformanceBasedVariableLeg",
+   "parents": [
+    "PerformanceBasedVariableLeg"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "DispersionSwap",
+   "en": "dispersion swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/DispersionSwap",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "StatisticalSwap",
+   "parents": [
+    "StatisticalSwap"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "DividendAdjustmentPeriod",
+   "en": "dividend adjustment period",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/FuturesAndForwards/DividendAdjustmentPeriod",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "DividendFuture",
+   "en": "dividend future",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/FuturesAndForwards/DividendFuture",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "FinancialFuture",
+   "parents": [
+    "EquityDerivative",
+    "FinancialFuture"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "DoubleBarrierOption",
+   "en": "double barrier option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/ExoticOptions/DoubleBarrierOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "BarrierOption",
+   "parents": [
+    "BarrierOption"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "EconomicRateBasedDerivative",
+   "en": "economic rate-based derivative",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesBasics/EconomicRateBasedDerivative",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "RateBasedDerivative",
+   "parents": [
+    "RateBasedDerivative"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "EnergyResource",
+   "en": "energy resource",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/EnergyResource",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "NegotiableCommodity",
+   "parents": [
+    "NegotiableCommodity"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "EnergyTransmissionRights",
+   "en": "energy transmission rights",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/EnergyTransmissionRights",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "EnergyResource",
+   "parents": [
+    "EnergyResource"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "EnvironmentalResource",
+   "en": "environmental resource",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/EnvironmentalResource",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "NegotiableCommodity",
+   "parents": [
+    "NegotiableCommodity"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "EquityForward",
+   "en": "equity forward",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/FuturesAndForwards/EquityForward",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Forward",
+   "parents": [
+    "Forward"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "EquityFuture",
+   "en": "equity future",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/FuturesAndForwards/EquityFuture",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "FinancialFuture",
+   "parents": [
+    "EquityDerivative",
+    "FinancialFuture"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "EquityOption",
+   "en": "equity option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/EquityOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "VanillaOption",
+   "parents": [
+    "EquityDerivative",
+    "VanillaOption"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "EquityWarrant",
+   "en": "equity warrant",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/EquityWarrant",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CallWarrant",
+   "parents": [
+    "CallWarrant",
+    "EquityDerivative",
+    "TraditionalWarrant"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "ExcessReturnSwap",
+   "en": "excess return swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/ExcessReturnSwap",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "IndexReturnSwap",
+   "parents": [
+    "IndexReturnSwap"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "ExchangeTradedWarrant",
+   "en": "exchange-traded warrant",
+   "label_source": "rdfs:label",
+   "zh": "上市认股权证",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/ExchangeTradedWarrant",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "PublicWarrant",
+   "parents": [
+    "ListedSecurity",
+    "PublicWarrant"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "ExoticOption",
+   "en": "exotic option",
+   "label_source": "rdfs:label",
+   "zh": "异形期权",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/ExoticOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "OverTheCounterDerivativeInstrument",
+   "parents": [
+    "Option",
+    "OverTheCounterDerivativeInstrument"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "ExoticWarrant",
+   "en": "exotic warrant",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/ExoticWarrant",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Warrant",
+   "parents": [
+    "Warrant"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "ExpressCertificate",
+   "en": "express certificate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/StructuredInstruments/ExpressCertificate",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ParticipationCertificate",
+   "parents": [
+    "ParticipationCertificate",
+    "StructuredFinanceWithoutPrincipalProtection"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "ExtractionResource",
+   "en": "extraction resource",
+   "label_source": "rdfs:label",
+   "zh": "采掘资源",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/ExtractionResource",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "NegotiableCommodity",
+   "parents": [
+    "NegotiableCommodity"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "ExtrinsicValue",
+   "en": "extrinsic value",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/ExtrinsicValue",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "MonetaryAmount",
+   "parents": [
+    "MonetaryAmount"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Fence",
+   "en": "fence",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/Fence",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "OptionTradingStrategy",
+   "parents": [
+    "OptionTradingStrategy"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "FertilizerResource",
+   "en": "fertilizer resource",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/FertilizerResource",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "NegotiableCommodity",
+   "parents": [
+    "NegotiableCommodity"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "FinancialFuture",
+   "en": "financial future",
+   "label_source": "rdfs:label",
+   "zh": "金融期货",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/FuturesAndForwards/FinancialFuture",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Future",
+   "parents": [
+    "Future"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "FixedIncomeOption",
+   "en": "fixed income option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/FixedIncomeOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "VanillaOption",
+   "parents": [
+    "DebtInstrumentDerivative",
+    "VanillaOption"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "FixedLeg",
+   "en": "fixed leg",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/FixedLeg",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "SwapLeg",
+   "parents": [
+    "SwapLeg"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "FixedLookbackStrikeExpression",
+   "en": "fixed lookback strike expression",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/ExoticOptions/FixedLookbackStrikeExpression",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CashflowExpression",
+   "parents": [
+    "CashflowExpression"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "FixedPaymentLeg",
+   "en": "fixed payment leg",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/FixedPaymentLeg",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "SwapLeg",
+   "parents": [
+    "SwapLeg"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "FloatingLeg",
+   "en": "floating leg",
+   "label_source": "rdfs:label",
+   "zh": "浮动腿",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/FloatingLeg",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "SwapLeg",
+   "parents": [
+    "SwapLeg"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "FloatingLookbackStrikeExpression",
+   "en": "floating lookback strike expression",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/ExoticOptions/FloatingLookbackStrikeExpression",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CashflowExpression",
+   "parents": [
+    "CashflowExpression"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "ForeignExchangeMasterAgreement",
+   "en": "foreign exchange master agreement",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CurrencyContracts/ForeignExchangeMasterAgreement",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "MasterAgreement",
+   "parents": [
+    "MasterAgreement"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "ForeignExchangeSettlementNettingProvision",
+   "en": "foreign exchange settlement netting provision",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CurrencyContracts/ForeignExchangeSettlementNettingProvision",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "SettlementNettingProvision",
+   "parents": [
+    "SettlementNettingProvision"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "Forward",
+   "en": "forward",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/FuturesAndForwards/Forward",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "OverTheCounterDerivativeInstrument",
+   "parents": [
+    "DerivativeInstrument",
+    "OverTheCounterDerivativeInstrument"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "ForwardContractAdjustmentMethod",
+   "en": "forward contract adjustment method",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/FuturesAndForwards/ForwardContractAdjustmentMethod",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Strategy",
+   "parents": [
+    "Strategy"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "ForwardRateAgreement",
+   "en": "forward rate agreement",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesBasics/ForwardRateAgreement",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "InterestRateDerivative",
+   "parents": [
+    "InterestRateDerivative"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "ForwardStartOption",
+   "en": "forward start option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/ExoticOptions/ForwardStartOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ExoticOption",
+   "parents": [
+    "ExoticOption"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "FreightResource",
+   "en": "freight resource",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/FreightResource",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "NegotiableCommodity",
+   "parents": [
+    "NegotiableCommodity"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "FutureOnFuture",
+   "en": "future on future",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/FuturesAndForwards/FutureOnFuture",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "FinancialFuture",
+   "parents": [
+    "FinancialFuture"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "FutureOnOption",
+   "en": "future on option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/FuturesAndForwards/FutureOnOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "FinancialFuture",
+   "parents": [
+    "FinancialFuture"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "FutureOnSwap",
+   "en": "future on swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/FuturesAndForwards/FutureOnSwap",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "FinancialFuture",
+   "parents": [
+    "FinancialFuture"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "GasCommodity",
+   "en": "gas commodity",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/GasCommodity",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "EnergyResource",
+   "parents": [
+    "EnergyResource",
+    "ExtractionResource"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "GeneratedResource",
+   "en": "generated resource",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/GeneratedResource",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "NegotiableCommodity",
+   "parents": [
+    "NegotiableCommodity"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "GrainCommodity",
+   "en": "grain commodity",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/GrainCommodity",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "AgriculturalResource",
+   "parents": [
+    "AgriculturalResource"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "IndexCertificate",
+   "en": "index certificate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/StructuredInstruments/IndexCertificate",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ParticipationCertificate",
+   "parents": [
+    "ParticipationCertificate"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "IndexFuture",
+   "en": "index future",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/FuturesAndForwards/IndexFuture",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "FinancialFuture",
+   "parents": [
+    "FinancialFuture"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "IndexReturnSwap",
+   "en": "index return swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/IndexReturnSwap",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ReturnSwap",
+   "parents": [
+    "ReturnSwap"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "IndexWarrant",
+   "en": "index warrant",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/IndexWarrant",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Warrant",
+   "parents": [
+    "Warrant"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "IndustrialResource",
+   "en": "industrial resource",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/IndustrialResource",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "NegotiableCommodity",
+   "parents": [
+    "NegotiableCommodity"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "InterestRateCapOption",
+   "en": "interest rate cap option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/ExoticOptions/InterestRateCapOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "InterestRateOption",
+   "parents": [
+    "InterestRateOption"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "InterestRateDerivative",
+   "en": "interest rate derivative",
+   "label_source": "rdfs:label",
+   "zh": "利率衍生品",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesBasics/InterestRateDerivative",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "RateBasedDerivative",
+   "parents": [
+    "RateBasedDerivative"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "InterestRateFloorOption",
+   "en": "interest rate floor option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/ExoticOptions/InterestRateFloorOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "InterestRateOption",
+   "parents": [
+    "InterestRateOption"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "InterestRateFuture",
+   "en": "interest rate future",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/FuturesAndForwards/InterestRateFuture",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "FinancialFuture",
+   "parents": [
+    "FinancialFuture"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "InterestRateOption",
+   "en": "interest rate option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/InterestRateOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "InterestRateDerivative",
+   "parents": [
+    "InterestRateDerivative",
+    "VanillaOption"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "IntrinsicValue",
+   "en": "intrinsic value",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/IntrinsicValue",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "MonetaryAmount",
+   "parents": [
+    "MonetaryAmount"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "IntroducingBroker",
+   "en": "introducing broker",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesBasics/IntroducingBroker",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "NonDepositoryInstitution",
+   "parents": [
+    "Broker",
+    "NonDepositoryInstitution"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "IronButterfly",
+   "en": "iron butterfly",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/IronButterfly",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Butterfly",
+   "parents": [
+    "Butterfly"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "IronCondor",
+   "en": "iron condor",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/IronCondor",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CondorSpread",
+   "parents": [
+    "CondorSpread"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "KnockInOption",
+   "en": "knock-in option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/ExoticOptions/KnockInOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "BarrierOption",
+   "parents": [
+    "BarrierOption"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "KnockOutOption",
+   "en": "knock-out option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/ExoticOptions/KnockOutOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "BarrierOption",
+   "parents": [
+    "BarrierOption"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "LeveragedProduct",
+   "en": "leveraged product",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/StructuredInstruments/LeveragedProduct",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "StructuredProduct",
+   "parents": [
+    "StructuredProduct"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "LongMiniFutureCertificate",
+   "en": "long mini-future certificate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/LongMiniFutureCertificate",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "MiniFutureCertificate",
+   "parents": [
+    "MiniFutureCertificate"
+   ],
+   "depth": 9
+  },
+  {
+   "id": "LongTermEquityAnticipationSecurity",
+   "en": "long-term equity anticipation security",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/LongTermEquityAnticipationSecurity",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "EquityOption",
+   "parents": [
+    "EquityOption"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "LookbackOption",
+   "en": "lookback option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/ExoticOptions/LookbackOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ExoticOption",
+   "parents": [
+    "ExoticOption"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "LookbackStrikeTerms",
+   "en": "lookback strike terms",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/ExoticOptions/LookbackStrikeTerms",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "DerivativeTerms",
+   "parents": [
+    "DerivativeTerms"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "LowExercisePriceOption",
+   "en": "low exercise price option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/ExoticOptions/LowExercisePriceOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CallOption",
+   "parents": [
+    "CallOption",
+    "ExoticOption"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "MajorSwapParticipant",
+   "en": "major swap participant",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/MajorSwapParticipant",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "NonDepositoryInstitution",
+   "parents": [
+    "NonDepositoryInstitution"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "MasterAgreementEarlyTerminationRight",
+   "en": "master agreement early termination right",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesMasterAgreements/MasterAgreementEarlyTerminationRight",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ContractualRight",
+   "parents": [
+    "ContractualRight"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "MeatCommodity",
+   "en": "meat commodity",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/MeatCommodity",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "AgriculturalResource",
+   "parents": [
+    "AgriculturalResource"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "Metal",
+   "en": "metal",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/Metal",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ExtractionResource",
+   "parents": [
+    "ExtractionResource"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "MiniFutureCertificate",
+   "en": "mini-future certificate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/MiniFutureCertificate",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "BarrierOption",
+   "parents": [
+    "BarrierOption",
+    "Entitlement",
+    "SecurityBasedDerivative"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "MoneyMarketFuture",
+   "en": "money market future",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/FuturesAndForwards/MoneyMarketFuture",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "DebtInstrumentFuture",
+   "parents": [
+    "DebtInstrumentFuture"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "Moneyness",
+   "en": "moneyness",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/Moneyness",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "MountainRangeOption",
+   "en": "mountain range option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/ExoticOptions/MountainRangeOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ExoticOption",
+   "parents": [
+    "ExoticOption"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "NakedWarrant",
+   "en": "naked warrant",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/NakedWarrant",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Warrant",
+   "parents": [
+    "Warrant"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "ObservableValue",
+   "en": "observable value",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesBasics/ObservableValue",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ObservedBestValue",
+   "en": "observed best value",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/ExoticOptions/ObservedBestValue",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "MarketPrice",
+   "parents": [
+    "MarketPrice"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "OilCommodity",
+   "en": "oil commodity",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/OilCommodity",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "GeneratedResource",
+   "parents": [
+    "GeneratedResource"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "OilGrade",
+   "en": "oil grade",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/OilGrade",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "OptionHolder",
+   "en": "option holder",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/OptionHolder",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Owner",
+   "parents": [
+    "Owner"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "OptionIssuer",
+   "en": "option issuer",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/OptionIssuer",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Issuer",
+   "parents": [
+    "Issuer"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "OptionOnFuture",
+   "en": "option on future",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/OptionOnFuture",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "VanillaOption",
+   "parents": [
+    "VanillaOption"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "OptionPremium",
+   "en": "option premium",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/OptionPremium",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "MarketPrice",
+   "parents": [
+    "MarketPrice"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "OptionPremiumFormula",
+   "en": "option premium formula",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/OptionPremiumFormula",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "OptionTradingStrategy",
+   "en": "option trading strategy",
+   "label_source": "rdfs:label",
+   "zh": "期权交易策略",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/OptionTradingStrategy",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "TradingStrategy",
+   "parents": [
+    "TradingStrategy"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "OutperformanceBonusCertificate",
+   "en": "outperformance bonus certificate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/StructuredInstruments/OutperformanceBonusCertificate",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "BonusCertificate",
+   "parents": [
+    "BonusCertificate",
+    "OutperformanceCertificate"
+   ],
+   "depth": 9
+  },
+  {
+   "id": "OutperformanceCertificate",
+   "en": "outperformance certificate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/StructuredInstruments/OutperformanceCertificate",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ParticipationCertificate",
+   "parents": [
+    "ParticipationCertificate"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "OverTheCounterDerivativeInstrument",
+   "en": "over-the-counter derivative instrument",
+   "label_source": "rdfs:label",
+   "zh": "场外衍生工具",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesBasics/OverTheCounterDerivativeInstrument",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "OverTheCounterInstrument",
+   "parents": [
+    "DerivativeInstrument",
+    "OverTheCounterInstrument"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "OverTheCounterInstrument",
+   "en": "over-the-counter instrument",
+   "label_source": "rdfs:label",
+   "zh": "场外交易工具",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesBasics/OverTheCounterInstrument",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "FinancialInstrument",
+   "parents": [
+    "FinancialInstrument"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "PaperResource",
+   "en": "paper resource",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/PaperResource",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "NegotiableCommodity",
+   "parents": [
+    "NegotiableCommodity"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "ParametricCashflowTerms",
+   "en": "parametric cashflow terms",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesBasics/ParametricCashflowTerms",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CashflowTerms",
+   "parents": [
+    "CashflowTerms"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "ParticipationCertificate",
+   "en": "participation certificate",
+   "label_source": "rdfs:label",
+   "zh": "参与证书",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/StructuredInstruments/ParticipationCertificate",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ParticipationInstrument",
+   "parents": [
+    "ParticipationInstrument",
+    "StructuredFinanceInstrument"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "ParticipationInstrument",
+   "en": "participation instrument",
+   "label_source": "rdfs:label",
+   "zh": "参与型工具",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/StructuredInstruments/ParticipationInstrument",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "StructuredProduct",
+   "parents": [
+    "SecurityBasedDerivative",
+    "StructuredProduct"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "PayingParty",
+   "en": "paying party",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesBasics/PayingParty",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ContractParty",
+   "parents": [
+    "Buyer",
+    "ContractParty",
+    "Payer"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "PerformanceBasedVariableLeg",
+   "en": "performance-based variable leg",
+   "label_source": "rdfs:label",
+   "zh": "表现挂钩浮动腿",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/PerformanceBasedVariableLeg",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "FloatingLeg",
+   "parents": [
+    "FloatingLeg"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "PerpetualWarrant",
+   "en": "perpetual warrant",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/PerpetualWarrant",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Warrant",
+   "parents": [
+    "Warrant"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "PolypropyleneResource",
+   "en": "polypropylene resource",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/PolypropyleneResource",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "NegotiableCommodity",
+   "parents": [
+    "NegotiableCommodity"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "PreferredConvertibleSharePurchaseRight",
+   "en": "preferred convertible share purchase right",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/PreferredConvertibleSharePurchaseRight",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "PurchaseRight",
+   "parents": [
+    "PurchaseRight"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "PreferredConvertibleShareSubscriptionRight",
+   "en": "preferred convertible share subscription right",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/PreferredConvertibleShareSubscriptionRight",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "SubscriptionRight",
+   "parents": [
+    "SubscriptionRight"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "PreferredSharePurchaseRight",
+   "en": "preferred share purchase right",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/PreferredSharePurchaseRight",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "PurchaseRight",
+   "parents": [
+    "PurchaseRight"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "PreferredShareSubscriptionRight",
+   "en": "preferred share subscription right",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/PreferredShareSubscriptionRight",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "SubscriptionRight",
+   "parents": [
+    "SubscriptionRight"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "PrivateWarrant",
+   "en": "private warrant",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/PrivateWarrant",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Warrant",
+   "parents": [
+    "NonNegotiableSecurity",
+    "Warrant"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "ProjectedValueAtMaturity",
+   "en": "projected value at maturity",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/ExoticOptions/ProjectedValueAtMaturity",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CalculatedPrice",
+   "parents": [
+    "CalculatedPrice"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "ProtectiveCollar",
+   "en": "protective collar",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/ProtectiveCollar",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Collar",
+   "parents": [
+    "Collar"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "ProtectivePut",
+   "en": "protective put",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/ProtectivePut",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "PutOption",
+   "parents": [
+    "PutOption"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "PublicWarrant",
+   "en": "public warrant",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/PublicWarrant",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Warrant",
+   "parents": [
+    "NegotiableSecurity",
+    "Warrant"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "PurchaseRight",
+   "en": "purchase right",
+   "label_source": "rdfs:label",
+   "zh": "购买权",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/PurchaseRight",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Entitlement",
+   "parents": [
+    "Entitlement"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "PutOption",
+   "en": "put option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/PutOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Option",
+   "parents": [
+    "Option"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "PutWarrant",
+   "en": "put warrant",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/PutWarrant",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Warrant",
+   "parents": [
+    "Warrant"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "RainbowOption",
+   "en": "rainbow option",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/ExoticOptions/RainbowOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ExoticOption",
+   "parents": [
+    "ExoticOption"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "RateBasedDerivative",
+   "en": "rate-based derivative",
+   "label_source": "rdfs:label",
+   "zh": "利率类衍生品",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesBasics/RateBasedDerivative",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "DerivativeInstrument",
+   "parents": [
+    "DerivativeInstrument"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "RateBasedLeg",
+   "en": "rate-based leg",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/RateBasedLeg",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "SwapLeg",
+   "parents": [
+    "SwapLeg"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "RatesSwap",
+   "en": "rates swap",
+   "label_source": "rdfs:label",
+   "zh": "利率类互换",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/RatesSwap",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Swap",
+   "parents": [
+    "Swap"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "RealizedVariableLeg",
+   "en": "realized variable leg",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/RealizedVariableLeg",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "PerformanceBasedVariableLeg",
+   "parents": [
+    "PerformanceBasedVariableLeg"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "ReceivingParty",
+   "en": "receiving counterparty",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesBasics/ReceivingParty",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ContractParty",
+   "parents": [
+    "ContractParty",
+    "Payee",
+    "Seller"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "ReturnLeg",
+   "en": "return leg",
+   "label_source": "rdfs:label",
+   "zh": "收益腿",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/ReturnLeg",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "FloatingLeg",
+   "parents": [
+    "FloatingLeg"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "ReturnSwap",
+   "en": "return swap",
+   "label_source": "rdfs:label",
+   "zh": "收益互换",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/ReturnSwap",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Swap",
+   "parents": [
+    "Swap"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "ReverseConvertibleCertificate",
+   "en": "reverse convertible certificate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/StructuredInstruments/ReverseConvertibleCertificate",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ParticipationCertificate",
+   "parents": [
+    "ParticipationCertificate",
+    "StructuredFinanceWithoutPrincipalProtection"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "RiskReversal",
+   "en": "risk reversal",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/RiskReversal",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "OptionTradingStrategy",
+   "parents": [
+    "OptionTradingStrategy"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "ServiceResource",
+   "en": "service resource",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/ServiceResource",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "NegotiableCommodity",
+   "parents": [
+    "NegotiableCommodity"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "ShortMiniFutureCertificate",
+   "en": "short mini-future certificate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/ShortMiniFutureCertificate",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "MiniFutureCertificate",
+   "parents": [
+    "MiniFutureCertificate"
+   ],
+   "depth": 9
+  },
+  {
+   "id": "SimpleReturnLeg",
+   "en": "simple return leg",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/SimpleReturnLeg",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ReturnLeg",
+   "parents": [
+    "ReturnLeg"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "StandardizedFuturesListingTerms",
+   "en": "standardized futures listing terms",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/FuturesAndForwards/StandardizedFuturesListingTerms",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "DerivativeTerms",
+   "parents": [
+    "DerivativeTerms",
+    "StandardizedTerms"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "StandardizedFuturesTerms",
+   "en": "standardized futures terms",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/FuturesAndForwards/StandardizedFuturesTerms",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "DerivativeTerms",
+   "parents": [
+    "DerivativeTerms",
+    "StandardizedTerms"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "StandardizedOptionsTerms",
+   "en": "standardized options terms",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/StandardizedOptionsTerms",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "StandardizedTerms",
+   "parents": [
+    "StandardizedTerms"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "StatisticalSwap",
+   "en": "statistical swap",
+   "label_source": "rdfs:label",
+   "zh": "统计互换",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/StatisticalSwap",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Swap",
+   "parents": [
+    "Swap"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "Straddle",
+   "en": "straddle",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/Straddle",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "OptionTradingStrategy",
+   "parents": [
+    "OptionTradingStrategy"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "Strangle",
+   "en": "strangle",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/Strangle",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "OptionTradingStrategy",
+   "parents": [
+    "OptionTradingStrategy"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "StrikeLeg",
+   "en": "strike leg",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/StrikeLeg",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "FixedLeg",
+   "parents": [
+    "FixedLeg"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "StrikePrice",
+   "en": "strike price",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/StrikePrice",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "MonetaryPrice",
+   "parents": [
+    "MonetaryPrice"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "StripStrategy",
+   "en": "strip strategy",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/StripStrategy",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "OptionTradingStrategy",
+   "parents": [
+    "OptionTradingStrategy"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "StructuredProduct",
+   "en": "structured product",
+   "label_source": "rdfs:label",
+   "zh": "结构化产品",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/StructuredInstruments/StructuredProduct",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "DerivativeInstrument",
+   "parents": [
+    "DerivativeInstrument"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "StructuredWarrant",
+   "en": "structured warrant",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/StructuredWarrant",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Warrant",
+   "parents": [
+    "Warrant"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "SubscriptionRight",
+   "en": "subscription right",
+   "label_source": "rdfs:label",
+   "zh": "认购权",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/SubscriptionRight",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Entitlement",
+   "parents": [
+    "Entitlement"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "Swap",
+   "en": "swap",
+   "label_source": "rdfs:label",
+   "zh": "互换",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/Swap",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "DerivativeInstrument",
+   "parents": [
+    "DerivativeInstrument"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "SwapConfirmation",
+   "en": "swap confirmation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/SwapConfirmation",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "SwapLifecycleEvent",
+   "parents": [
+    "SwapLifecycleEvent",
+    "TransactionConfirmation"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "SwapDataRepository",
+   "en": "swap data repository",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/SwapDataRepository",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "FinancialServiceProvider",
+   "parents": [
+    "FinancialServiceProvider"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "SwapDealer",
+   "en": "swap dealer",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/SwapDealer",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "NonDepositoryInstitution",
+   "parents": [
+    "Dealer",
+    "NonDepositoryInstitution"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "SwapLeg",
+   "en": "swap leg",
+   "label_source": "rdfs:label",
+   "zh": "互换腿",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/SwapLeg",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CashflowTerms",
+   "parents": [
+    "CashflowTerms",
+    "SwapTerms"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "SwapLegEvent",
+   "en": "swap leg event",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/SwapLegEvent",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "SwapLifecycleEvent",
+   "parents": [
+    "SwapLifecycleEvent"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "SwapLifecycleEvent",
+   "en": "swap lifecycle event",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/SwapLifecycleEvent",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "LifecycleEvent",
+   "parents": [
+    "LifecycleEvent"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "SwapLifecycleEventIdentifier",
+   "en": "swap lifecycle event identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/SwapLifecycleEventIdentifier",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "SwapParty",
+   "en": "swap party",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/SwapParty",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ContractParty",
+   "parents": [
+    "ContractParty"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "SwapPayingParty",
+   "en": "swap paying party",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/SwapPayingParty",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "PayingParty",
+   "parents": [
+    "PayingParty",
+    "SwapParty"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "SwapReceivingParty",
+   "en": "swap receiving party",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/SwapReceivingParty",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ReceivingParty",
+   "parents": [
+    "ReceivingParty",
+    "SwapParty"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "SwapTerms",
+   "en": "swap terms",
+   "label_source": "rdfs:label",
+   "zh": "互换条款",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/SwapTerms",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "DerivativeTerms",
+   "parents": [
+    "DerivativeTerms"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "Swaption",
+   "en": "swaption",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/ExoticOptions/Swaption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ExoticOption",
+   "parents": [
+    "ExoticOption"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "TotalReturnLeg",
+   "en": "total return leg",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/TotalReturnLeg",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ReturnLeg",
+   "parents": [
+    "ReturnLeg"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "TotalReturnSwap",
+   "en": "total return swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/TotalReturnSwap",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CreditDerivative",
+   "parents": [
+    "CreditDerivative",
+    "ReturnSwap"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "TrackerCertificate",
+   "en": "tracker certificate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/StructuredInstruments/TrackerCertificate",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ParticipationCertificate",
+   "parents": [
+    "ParticipationCertificate"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "TraditionalWarrant",
+   "en": "traditional warrant",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/TraditionalWarrant",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Warrant",
+   "parents": [
+    "Warrant"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "TurboCertificate",
+   "en": "turbo certificate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/StructuredInstruments/TurboCertificate",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ParticipationCertificate",
+   "parents": [
+    "ParticipationCertificate"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "TwinWinCertificate",
+   "en": "twin-win certificate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/StructuredInstruments/TwinWinCertificate",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ParticipationCertificate",
+   "parents": [
+    "ParticipationCertificate"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "UnderlyingAssetValuation",
+   "en": "underlying asset valuation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesBasics/UnderlyingAssetValuation",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "ValueAssessment",
+   "parents": [
+    "ValueAssessment"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "UniqueProductIdentifier",
+   "en": "unique product identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesBasics/UniqueProductIdentifier",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "FinancialInstrumentIdentifier",
+   "parents": [
+    "FinancialInstrumentIdentifier"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "UniqueProductIdentifierRegistryEntry",
+   "en": "unique product identifier registry entry",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesBasics/UniqueProductIdentifierRegistryEntry",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "UniqueProductIdentifierServiceProvider",
+   "en": "unique product identifier service provider",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesBasics/UniqueProductIdentifierServiceProvider",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "UniqueSwapIdentifier",
+   "en": "unique swap identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/UniqueSwapIdentifier",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "FinancialInstrumentIdentifier",
+   "parents": [
+    "FinancialInstrumentIdentifier"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "ValuationTerms",
+   "en": "valuation terms",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesBasics/ValuationTerms",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "DerivativeTerms",
+   "parents": [
+    "DerivativeTerms"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "VanillaOption",
+   "en": "vanilla option",
+   "label_source": "rdfs:label",
+   "zh": "普通期权",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Options/VanillaOption",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Option",
+   "parents": [
+    "Option"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "Warrant",
+   "en": "warrant",
+   "label_source": "rdfs:label",
+   "zh": "认股权证",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/RightsAndWarrants/Warrant",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "Entitlement",
+   "parents": [
+    "Entitlement"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "WeatherDerivative",
+   "en": "weather derivative",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/CommoditiesContracts/WeatherDerivative",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "CommodityDerivative",
+   "parents": [
+    "CommodityDerivative",
+    "DerivativeInstrument"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "YieldEnhancementProduct",
+   "en": "yield-enhancement product",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/StructuredInstruments/YieldEnhancementProduct",
+   "module": "DER",
+   "subdomain": "DerivativesContracts",
+   "parent": "StructuredProduct",
+   "parents": [
+    "StructuredProduct"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "CrossCurrencyInterestRateSwap",
+   "en": "cross-currency interest rate swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/IRSwaps/CrossCurrencyInterestRateSwap",
+   "module": "DER",
+   "subdomain": "RateDerivatives",
+   "parent": "InterestRateSwap",
+   "parents": [
+    "InterestRateSwap"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "FixedFixedInterestRateSwap",
+   "en": "fixed fixed interest rate swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/IRSwaps/FixedFixedInterestRateSwap",
+   "module": "DER",
+   "subdomain": "RateDerivatives",
+   "parent": "InterestRateSwap",
+   "parents": [
+    "InterestRateSwap"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "FixedFloatCrossCurrencyInterestRateSwap",
+   "en": "fixed float cross-currency interest rate swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/IRSwaps/FixedFloatCrossCurrencyInterestRateSwap",
+   "module": "DER",
+   "subdomain": "RateDerivatives",
+   "parent": "CrossCurrencyInterestRateSwap",
+   "parents": [
+    "CrossCurrencyInterestRateSwap",
+    "FixedFloatInterestRateSwap"
+   ],
+   "depth": 9
+  },
+  {
+   "id": "FixedFloatInterestRateSwap",
+   "en": "fixed float interest rate swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/IRSwaps/FixedFloatInterestRateSwap",
+   "module": "DER",
+   "subdomain": "RateDerivatives",
+   "parent": "InterestRateSwap",
+   "parents": [
+    "InterestRateSwap"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "FixedFloatSingleCurrencyInterestRateSwap",
+   "en": "fixed float single currency interest rate swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/IRSwaps/FixedFloatSingleCurrencyInterestRateSwap",
+   "module": "DER",
+   "subdomain": "RateDerivatives",
+   "parent": "FixedFloatInterestRateSwap",
+   "parents": [
+    "FixedFloatInterestRateSwap"
+   ],
+   "depth": 9
+  },
+  {
+   "id": "FixedInterestRateLeg",
+   "en": "fixed interest rate leg",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/IRSwaps/FixedInterestRateLeg",
+   "module": "DER",
+   "subdomain": "RateDerivatives",
+   "parent": "FixedLeg",
+   "parents": [
+    "FixedLeg",
+    "InterestRateSwapLeg"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "FloatFloatCrossCurrencyInterestRateSwap",
+   "en": "float float cross-currency interest rate swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/IRSwaps/FloatFloatCrossCurrencyInterestRateSwap",
+   "module": "DER",
+   "subdomain": "RateDerivatives",
+   "parent": "FloatFloatInterestRateSwap",
+   "parents": [
+    "FloatFloatInterestRateSwap"
+   ],
+   "depth": 9
+  },
+  {
+   "id": "FloatFloatInterestRateSwap",
+   "en": "float float interest rate swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/IRSwaps/FloatFloatInterestRateSwap",
+   "module": "DER",
+   "subdomain": "RateDerivatives",
+   "parent": "BasisSwap",
+   "parents": [
+    "BasisSwap",
+    "InterestRateSwap"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "FloatFloatSingleCurrencyInterestRateSwap",
+   "en": "float float single currency interest rate swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/IRSwaps/FloatFloatSingleCurrencyInterestRateSwap",
+   "module": "DER",
+   "subdomain": "RateDerivatives",
+   "parent": "FloatFloatInterestRateSwap",
+   "parents": [
+    "FloatFloatInterestRateSwap"
+   ],
+   "depth": 9
+  },
+  {
+   "id": "FloatingInterestRateLeg",
+   "en": "floating interest rate leg",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/IRSwaps/FloatingInterestRateLeg",
+   "module": "DER",
+   "subdomain": "RateDerivatives",
+   "parent": "FloatingLeg",
+   "parents": [
+    "FloatingLeg",
+    "InterestRateSwapLeg"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "InflationLeg",
+   "en": "inflation leg",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/IRSwaps/InflationLeg",
+   "module": "DER",
+   "subdomain": "RateDerivatives",
+   "parent": "FloatingLeg",
+   "parents": [
+    "FloatingLeg"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "InflationSwap",
+   "en": "inflation swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/IRSwaps/InflationSwap",
+   "module": "DER",
+   "subdomain": "RateDerivatives",
+   "parent": "RateBasedDerivative",
+   "parents": [
+    "RateBasedDerivative",
+    "RatesSwap"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "InterestRateSwap",
+   "en": "interest rate swap",
+   "label_source": "rdfs:label",
+   "zh": "利率互换",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/IRSwaps/InterestRateSwap",
+   "module": "DER",
+   "subdomain": "RateDerivatives",
+   "parent": "InterestRateDerivative",
+   "parents": [
+    "InterestRateDerivative",
+    "RatesSwap"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "InterestRateSwapLeg",
+   "en": "interest rate swap leg",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/IRSwaps/InterestRateSwapLeg",
+   "module": "DER",
+   "subdomain": "RateDerivatives",
+   "parent": "RateBasedLeg",
+   "parents": [
+    "RateBasedLeg"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "NotionalStepAmount",
+   "en": "notional step amount",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/IRSwaps/NotionalStepAmount",
+   "module": "DER",
+   "subdomain": "RateDerivatives",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "NotionalStepChangeEvent",
+   "en": "notional step change event",
+   "label_source": "rdfs:label",
+   "zh": "名义本金变动事件",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/IRSwaps/NotionalStepChangeEvent",
+   "module": "DER",
+   "subdomain": "RateDerivatives",
+   "parent": "ContractLifecycleEventOccurrence",
+   "parents": [
+    "ContractLifecycleEventOccurrence",
+    "StepEvent"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "NotionalStepPeriodLength",
+   "en": "notional step period length",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/IRSwaps/NotionalStepPeriodLength",
+   "module": "DER",
+   "subdomain": "RateDerivatives",
+   "parent": "RecurrenceInterval",
+   "parents": [
+    "RecurrenceInterval"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "NotionalStepSchedule",
+   "en": "notional step schedule",
+   "label_source": "rdfs:label",
+   "zh": "名义本金变动日程",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/IRSwaps/NotionalStepSchedule",
+   "module": "DER",
+   "subdomain": "RateDerivatives",
+   "parent": "ProjectedContractEventSchedule",
+   "parents": [
+    "ProjectedContractEventSchedule",
+    "StepSchedule"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "OvernightIndexSwap",
+   "en": "overnight index swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/IRSwaps/OvernightIndexSwap",
+   "module": "DER",
+   "subdomain": "RateDerivatives",
+   "parent": "InterestRateSwap",
+   "parents": [
+    "InterestRateSwap"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "OvernightRateIndexLeg",
+   "en": "overnight rate index leg",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/IRSwaps/OvernightRateIndexLeg",
+   "module": "DER",
+   "subdomain": "RateDerivatives",
+   "parent": "FloatingInterestRateLeg",
+   "parents": [
+    "FloatingInterestRateLeg"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "PlainVanillaInterestRateSwap",
+   "en": "plain vanilla interest rate swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/IRSwaps/PlainVanillaInterestRateSwap",
+   "module": "DER",
+   "subdomain": "RateDerivatives",
+   "parent": "FixedFloatSingleCurrencyInterestRateSwap",
+   "parents": [
+    "FixedFloatSingleCurrencyInterestRateSwap"
+   ],
+   "depth": 10
+  },
+  {
+   "id": "SingleCurrencyInterestRateSwap",
+   "en": "single currency interest rate swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/IRSwaps/SingleCurrencyInterestRateSwap",
+   "module": "DER",
+   "subdomain": "RateDerivatives",
+   "parent": "InterestRateSwap",
+   "parents": [
+    "InterestRateSwap"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "ZeroCouponInterestRateSwap",
+   "en": "zero coupon interest rate swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/IRSwaps/ZeroCouponInterestRateSwap",
+   "module": "DER",
+   "subdomain": "RateDerivatives",
+   "parent": "InterestRateSwap",
+   "parents": [
+    "InterestRateSwap"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "BasketOfDebtInstruments",
+   "en": "basket of debt instruments",
+   "label_source": "rdfs:label",
+   "zh": "债务工具篮子",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/SecurityBasedDerivatives/SecurityBasedDerivatives/BasketOfDebtInstruments",
+   "module": "DER",
+   "subdomain": "SecurityBasedDerivatives",
+   "parent": "BasketOfSecurities",
+   "parents": [
+    "BasketOfSecurities"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "CapitalizedLeaseObligationDebtBasket",
+   "en": "capitalized lease obligation debt basket",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/SecurityBasedDerivatives/SecurityBasedDerivatives/CapitalizedLeaseObligationDebtBasket",
+   "module": "DER",
+   "subdomain": "SecurityBasedDerivatives",
+   "parent": "BasketOfDebtInstruments",
+   "parents": [
+    "BasketOfDebtInstruments"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "ContributionDebtBasket",
+   "en": "contribution debt basket",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/SecurityBasedDerivatives/SecurityBasedDerivatives/ContributionDebtBasket",
+   "module": "DER",
+   "subdomain": "SecurityBasedDerivatives",
+   "parent": "BasketOfDebtInstruments",
+   "parents": [
+    "BasketOfDebtInstruments"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "CreditFacilityDebtBasket",
+   "en": "credit facility debt basket",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/SecurityBasedDerivatives/SecurityBasedDerivatives/CreditFacilityDebtBasket",
+   "module": "DER",
+   "subdomain": "SecurityBasedDerivatives",
+   "parent": "BasketOfDebtInstruments",
+   "parents": [
+    "BasketOfDebtInstruments"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "DebtInstrumentDerivative",
+   "en": "debt instrument derivative",
+   "label_source": "rdfs:label",
+   "zh": "债务工具衍生品",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/SecurityBasedDerivatives/SecurityBasedDerivatives/DebtInstrumentDerivative",
+   "module": "DER",
+   "subdomain": "SecurityBasedDerivatives",
+   "parent": "SecurityBasedDerivative",
+   "parents": [
+    "SecurityBasedDerivative"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "DispersionSwapIndexConstituentsLeg",
+   "en": "dispersion swap index constituents leg",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/SecurityBasedDerivatives/EquitySwaps/DispersionSwapIndexConstituentsLeg",
+   "module": "DER",
+   "subdomain": "SecurityBasedDerivatives",
+   "parent": "DispersionLeg",
+   "parents": [
+    "DispersionLeg"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "DispersionSwapIndexLeg",
+   "en": "dispersion swap index leg",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/SecurityBasedDerivatives/EquitySwaps/DispersionSwapIndexLeg",
+   "module": "DER",
+   "subdomain": "SecurityBasedDerivatives",
+   "parent": "DispersionLeg",
+   "parents": [
+    "DispersionLeg"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "DividendLeg",
+   "en": "dividend leg",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/SecurityBasedDerivatives/EquitySwaps/DividendLeg",
+   "module": "DER",
+   "subdomain": "SecurityBasedDerivatives",
+   "parent": "SimpleReturnLeg",
+   "parents": [
+    "SimpleReturnLeg"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "DividendSwap",
+   "en": "dividend swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/SecurityBasedDerivatives/EquitySwaps/DividendSwap",
+   "module": "DER",
+   "subdomain": "SecurityBasedDerivatives",
+   "parent": "EquitySwap",
+   "parents": [
+    "EquitySwap"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "EquityCorrelationSwap",
+   "en": "equity correlation swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/SecurityBasedDerivatives/EquitySwaps/EquityCorrelationSwap",
+   "module": "DER",
+   "subdomain": "SecurityBasedDerivatives",
+   "parent": "CorrelationSwap",
+   "parents": [
+    "CorrelationSwap",
+    "EquitySwap"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "EquityDerivative",
+   "en": "equity derivative",
+   "label_source": "rdfs:label",
+   "zh": "权益衍生品",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/SecurityBasedDerivatives/SecurityBasedDerivatives/EquityDerivative",
+   "module": "DER",
+   "subdomain": "SecurityBasedDerivatives",
+   "parent": "SecurityBasedDerivative",
+   "parents": [
+    "SecurityBasedDerivative"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "EquityPriceReturnSwap",
+   "en": "equity price return swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/SecurityBasedDerivatives/EquitySwaps/EquityPriceReturnSwap",
+   "module": "DER",
+   "subdomain": "SecurityBasedDerivatives",
+   "parent": "ReturnSwap",
+   "parents": [
+    "EquitySwap",
+    "ReturnSwap"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "EquityReturnLeg",
+   "en": "equity return leg",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/SecurityBasedDerivatives/EquitySwaps/EquityReturnLeg",
+   "module": "DER",
+   "subdomain": "SecurityBasedDerivatives",
+   "parent": "ReturnLeg",
+   "parents": [
+    "ReturnLeg"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "EquitySwap",
+   "en": "equity swap",
+   "label_source": "rdfs:label",
+   "zh": "权益互换",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/SecurityBasedDerivatives/EquitySwaps/EquitySwap",
+   "module": "DER",
+   "subdomain": "SecurityBasedDerivatives",
+   "parent": "Swap",
+   "parents": [
+    "EquityDerivative",
+    "Swap"
+   ],
+   "depth": 6
+  },
+  {
+   "id": "EquityTotalReturnSwap",
+   "en": "equity total return swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/SecurityBasedDerivatives/EquitySwaps/EquityTotalReturnSwap",
+   "module": "DER",
+   "subdomain": "SecurityBasedDerivatives",
+   "parent": "TotalReturnSwap",
+   "parents": [
+    "EquitySwap",
+    "TotalReturnSwap"
+   ],
+   "depth": 7
+  },
+  {
+   "id": "EquityVarianceSwap",
+   "en": "equity variance swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/SecurityBasedDerivatives/EquitySwaps/EquityVarianceSwap",
+   "module": "DER",
+   "subdomain": "SecurityBasedDerivatives",
+   "parent": "DispersionSwap",
+   "parents": [
+    "DispersionSwap",
+    "EquitySwap"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "EquityVolatilitySwap",
+   "en": "equity volatility swap",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/SecurityBasedDerivatives/EquitySwaps/EquityVolatilitySwap",
+   "module": "DER",
+   "subdomain": "SecurityBasedDerivatives",
+   "parent": "DispersionSwap",
+   "parents": [
+    "DispersionSwap",
+    "EquitySwap"
+   ],
+   "depth": 8
+  },
+  {
+   "id": "GeneralDebtBasket",
+   "en": "general debt basket",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/SecurityBasedDerivatives/SecurityBasedDerivatives/GeneralDebtBasket",
+   "module": "DER",
+   "subdomain": "SecurityBasedDerivatives",
+   "parent": "BasketOfDebtInstruments",
+   "parents": [
+    "BasketOfDebtInstruments"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "IncrementalFacilityDebtBasket",
+   "en": "incremental facility debt basket",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/SecurityBasedDerivatives/SecurityBasedDerivatives/IncrementalFacilityDebtBasket",
+   "module": "DER",
+   "subdomain": "SecurityBasedDerivatives",
+   "parent": "CreditFacilityDebtBasket",
+   "parents": [
+    "CreditFacilityDebtBasket"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "LocalLinesOfCreditDebtBasket",
+   "en": "local lines of credit debt basket",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/SecurityBasedDerivatives/SecurityBasedDerivatives/LocalLinesOfCreditDebtBasket",
+   "module": "DER",
+   "subdomain": "SecurityBasedDerivatives",
+   "parent": "BasketOfDebtInstruments",
+   "parents": [
+    "BasketOfDebtInstruments"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "Non-GuarantorDebtBasket",
+   "en": "non-guarantor debt basket",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/SecurityBasedDerivatives/SecurityBasedDerivatives/Non-GuarantorDebtBasket",
+   "module": "DER",
+   "subdomain": "SecurityBasedDerivatives",
+   "parent": "BasketOfDebtInstruments",
+   "parents": [
+    "BasketOfDebtInstruments"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "QualifyingDividendPeriod",
+   "en": "qualifying dividend period",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/SecurityBasedDerivatives/EquitySwaps/QualifyingDividendPeriod",
+   "module": "DER",
+   "subdomain": "SecurityBasedDerivatives",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "RatioDebtBasket",
+   "en": "ratio debt basket",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/SecurityBasedDerivatives/SecurityBasedDerivatives/RatioDebtBasket",
+   "module": "DER",
+   "subdomain": "SecurityBasedDerivatives",
+   "parent": "BasketOfDebtInstruments",
+   "parents": [
+    "BasketOfDebtInstruments"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "SecurityBasedDerivative",
+   "en": "security-based derivative",
+   "label_source": "rdfs:label",
+   "zh": "证券类衍生品",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/SecurityBasedDerivatives/SecurityBasedDerivatives/SecurityBasedDerivative",
+   "module": "DER",
+   "subdomain": "SecurityBasedDerivatives",
+   "parent": "DerivativeInstrument",
+   "parents": [
+    "DerivativeInstrument"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "SpecialDividendLegTerms",
+   "en": "special dividend leg terms",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/DER/SecurityBasedDerivatives/EquitySwaps/SpecialDividendLegTerms",
+   "module": "DER",
+   "subdomain": "SecurityBasedDerivatives",
+   "parent": "CashflowTerms",
+   "parents": [
+    "CashflowTerms"
+   ],
+   "depth": 4
+  }
+ ]
+}

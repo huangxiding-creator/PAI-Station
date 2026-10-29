@@ -1,0 +1,393 @@
+===== config.pyc =====
+
+# CODE <module>  args=()
+  0           RESUME                   0
+
+  1           LOAD_CONST               0 ('\nIMA Client 配置文件\n\n客户端只应保存公开配置和服务端验签公钥，不得保存共享秘密。\n')
+              STORE_NAME               0 (__doc__)
+
+  6           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (None)
+              IMPORT_NAME              1 (os)
+              STORE_NAME               1 (os)
+
+  7           LOAD_CONST               1 (0)
+              LOAD_CONST               3 (('Path',))
+              IMPORT_NAME              2 (pathlib)
+              IMPORT_FROM              3 (Path)
+              STORE_NAME               3 (Path)
+              POP_TOP
+
+ 10           LOAD_BUILD_CLASS
+              PUSH_NULL
+              LOAD_CONST               4 (<code object Config at 0x000001DD460DE250, file "config.py", line 10>)
+              MAKE_FUNCTION
+              LOAD_CONST               5 ('Config')
+              CALL                     2
+              STORE_NAME               4 (Config)
+
+146           LOAD_NAME                4 (Config)
+              PUSH_NULL
+              CALL                     0
+              STORE_NAME               5 (config)
+
+150           LOAD_NAME                4 (Config)
+              LOAD_ATTR               12 (BASE_URL)
+              STORE_NAME               6 (BASE_URL)
+
+151           LOAD_NAME                4 (Config)
+              LOAD_ATTR               14 (VERSION)
+              STORE_NAME               7 (VERSION)
+
+152           LOAD_NAME                4 (Config)
+              LOAD_ATTR               16 (BUILD_DATE)
+              STORE_NAME               8 (BUILD_DATE)
+              RETURN_CONST             2 (None)
+
+## CODE Config  args=()
+ 10           RESUME                   0
+              LOAD_NAME                0 (__name__)
+              STORE_NAME               1 (__module__)
+              LOAD_CONST               0 ('Config')
+              STORE_NAME               2 (__qualname__)
+              LOAD_CONST               1 (10)
+              STORE_NAME               3 (__firstlineno__)
+
+ 11           LOAD_CONST               2 ('应用配置类')
+              STORE_NAME               4 (__doc__)
+
+ 15           LOAD_CONST               3 ('https://imaima.iepose.cn')
+              STORE_NAME               5 (BASE_URL)
+
+ 19           LOAD_CONST               4 ('/api/v1/activate')
+
+ 20           LOAD_CONST               5 ('/api/v1/verify')
+
+ 21           LOAD_CONST               6 ('/api/v1/quota/issue_token')
+
+ 22           LOAD_CONST               7 ('/api/v1/quota/refund')
+
+ 23           LOAD_CONST               8 ('/api/v1/renew')
+
+ 24           LOAD_CONST               9 ('/api/version/check')
+
+ 18           LOAD_CONST              10 (('activate', 'verify', 'quota_issue', 'quota_refund', 'renew', 'version_check'))
+              BUILD_CONST_KEY_MAP      6
+              STORE_NAME               6 (API_ENDPOINTS)
+
+ 29           LOAD_CONST              11 ('license.enc')
+              STORE_NAME               7 (LICENSE_FILE)
+
+ 31           LOAD_CONST              12 ('-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAL7EUTOqGayZQ2QYFZwoaUh+aVNrQ7pblqRCqVvPBoZA=\n-----END PUBLIC KEY-----')
+              STORE_NAME               8 (SERVER_PUBLIC_KEY)
+
+ 36           LOAD_CONST              13 ('download.db')
+              STORE_NAME               9 (DB_FILE)
+
+ 38           LOAD_CONST              14 ('1.7.1')
+              STORE_NAME              10 (VERSION)
+
+ 41           LOAD_CONST              15 ('2026-06-04')
+              STORE_NAME              11 (BUILD_DATE)
+
+ 45           LOAD_CONST              16 ('download')
+              STORE_NAME              12 (DEFAULT_DOWNLOAD_DIR)
+
+ 49           LOAD_CONST              17 (1)
+              STORE_NAME              13 (DOWNLOAD_DELAY_MIN)
+
+ 50           LOAD_CONST              18 (3)
+              STORE_NAME              14 (DOWNLOAD_DELAY_MAX)
+
+ 53           LOAD_CONST              19 (15)
+              STORE_NAME              15 (REQUEST_TIMEOUT)
+
+ 56           LOAD_CONST              18 (3)
+              STORE_NAME              16 (MAX_RETRIES)
+
+ 60           LOAD_CONST              20 (7200)
+              STORE_NAME              17 (TOKEN_VALID_TIME)
+
+ 63           LOAD_CONST              21 (2592000)
+              STORE_NAME              18 (REFRESH_TOKEN_VALID_TIME)
+
+ 66           LOAD_CONST              22 (300)
+              STORE_NAME              19 (TOKEN_REFRESH_ADVANCE)
+
+ 69           LOAD_NAME               20 (classmethod)
+
+ 70           LOAD_CONST              23 (<code object get_api_url at 0x000001DD462FC290, file "config.py", line 69>)
+              MAKE_FUNCTION
+
+ 69           CALL                     0
+
+ 70           STORE_NAME              21 (get_api_url)
+
+ 82           LOAD_NAME               20 (classmethod)
+
+ 83           LOAD_CONST              24 (<code object get_base_dir at 0x000001DD465FDD10, file "config.py", line 82>)
+              MAKE_FUNCTION
+
+ 82           CALL                     0
+
+ 83           STORE_NAME              22 (get_base_dir)
+
+109           LOAD_NAME               20 (classmethod)
+
+110           LOAD_CONST              25 (<code object get_license_file_path at 0x000001DD462961F0, file "config.py", line 109>)
+              MAKE_FUNCTION
+
+109           CALL                     0
+
+110           STORE_NAME              23 (get_license_file_path)
+
+118           LOAD_NAME               20 (classmethod)
+
+119           LOAD_CONST              26 (<code object get_db_file_path at 0x000001DD46296470, file "config.py", line 118>)
+              MAKE_FUNCTION
+
+118           CALL                     0
+
+119           STORE_NAME              24 (get_db_file_path)
+
+127           LOAD_NAME               20 (classmethod)
+
+128           LOAD_CONST              27 (<code object get_log_file_path at 0x000001DD462FC880, file "config.py", line 127>)
+              MAKE_FUNCTION
+
+127           CALL                     0
+
+128           STORE_NAME              25 (get_log_file_path)
+
+131           LOAD_NAME               20 (classmethod)
+
+132           LOAD_CONST              28 (<code object get_crash_log_file_path at 0x000001DD462FCFA0, file "config.py", line 131>)
+              MAKE_FUNCTION
+
+131           CALL                     0
+
+132           STORE_NAME              26 (get_crash_log_file_path)
+
+135           LOAD_NAME               20 (classmethod)
+
+136           LOAD_CONST              29 (<code object get_default_download_dir at 0x000001DD460BED80, file "config.py", line 135>)
+              MAKE_FUNCTION
+
+135           CALL                     0
+
+136           STORE_NAME              27 (get_default_download_dir)
+              LOAD_CONST              30 (())
+              STORE_NAME              28 (__static_attributes__)
+              RETURN_CONST            31 (None)
+
+### CODE Config.get_api_url  args=('cls', 'endpoint')
+ 69           RESUME                   0
+
+ 79           LOAD_FAST                0 (cls)
+              LOAD_ATTR                0 (API_ENDPOINTS)
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_FAST                1 (endpoint)
+              LOAD_CONST               1 ('/api/')
+              LOAD_FAST                1 (endpoint)
+              FORMAT_SIMPLE
+              BUILD_STRING             2
+              CALL                     2
+              STORE_FAST               2 (path)
+
+ 80           LOAD_FAST                0 (cls)
+              LOAD_ATTR                4 (BASE_URL)
+              FORMAT_SIMPLE
+              LOAD_FAST                2 (path)
+              FORMAT_SIMPLE
+              BUILD_STRING             2
+              RETURN_VALUE
+
+### CODE Config.get_base_dir  args=('cls',)
+ 82           RESUME                   0
+
+ 89           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (None)
+              IMPORT_NAME              0 (sys)
+              STORE_FAST               1 (sys)
+
+ 90           LOAD_GLOBAL              3 (getattr + NULL)
+              LOAD_FAST                1 (sys)
+              LOAD_CONST               3 ('frozen')
+              LOAD_CONST               4 (False)
+              CALL                     3
+              TO_BOOL
+              POP_JUMP_IF_FALSE      191 (to L2)
+
+ 91           LOAD_FAST                1 (sys)
+              LOAD_ATTR                4 (platform)
+              LOAD_CONST               5 ('darwin')
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE       58 (to L1)
+
+ 92           LOAD_GLOBAL              6 (Path)
+              LOAD_ATTR                8 (home)
+              PUSH_NULL
+              CALL                     0
+              LOAD_CONST               6 ('imahelper')
+              BINARY_OP               11 (/)
+              STORE_FAST               2 (user_dir)
+
+ 93           LOAD_GLOBAL             10 (os)
+              LOAD_ATTR               12 (makedirs)
+              PUSH_NULL
+              LOAD_FAST                2 (user_dir)
+              LOAD_CONST               7 (True)
+              LOAD_CONST               8 (('exist_ok',))
+              CALL_KW                  2
+              POP_TOP
+
+ 94           LOAD_GLOBAL             15 (str + NULL)
+              LOAD_FAST                2 (user_dir)
+              CALL                     1
+              STORE_FAST               3 (base_dir)
+
+107           LOAD_FAST                3 (base_dir)
+              RETURN_VALUE
+
+ 96   L1:     LOAD_GLOBAL             10 (os)
+              LOAD_ATTR               16 (environ)
+              LOAD_ATTR               19 (get + NULL|self)
+              LOAD_CONST               9 ('APPDATA')
+              LOAD_GLOBAL             10 (os)
+              LOAD_ATTR               20 (path)
+              LOAD_ATTR               23 (expanduser + NULL|self)
+              LOAD_CONST              10 ('~')
+              CALL                     1
+              CALL                     2
+              STORE_FAST               4 (appdata)
+
+ 97           LOAD_GLOBAL             10 (os)
+              LOAD_ATTR               20 (path)
+              LOAD_ATTR               25 (join + NULL|self)
+              LOAD_FAST                4 (appdata)
+              LOAD_CONST               6 ('imahelper')
+              CALL                     2
+              STORE_FAST               3 (base_dir)
+
+ 98           LOAD_GLOBAL             10 (os)
+              LOAD_ATTR               12 (makedirs)
+              PUSH_NULL
+              LOAD_FAST                3 (base_dir)
+              LOAD_CONST               7 (True)
+              LOAD_CONST               8 (('exist_ok',))
+              CALL_KW                  2
+              POP_TOP
+              NOP
+
+107           LOAD_FAST                3 (base_dir)
+              RETURN_VALUE
+
+105   L2:     LOAD_GLOBAL             10 (os)
+              LOAD_ATTR               20 (path)
+              LOAD_ATTR               27 (dirname + NULL|self)
+              LOAD_GLOBAL             10 (os)
+              LOAD_ATTR               20 (path)
+              LOAD_ATTR               29 (abspath + NULL|self)
+              LOAD_GLOBAL             30 (__file__)
+              CALL                     1
+              CALL                     1
+              STORE_FAST               3 (base_dir)
+
+107           LOAD_FAST                3 (base_dir)
+              RETURN_VALUE
+
+### CODE Config.get_license_file_path  args=('cls',)
+109           RESUME                   0
+
+116           LOAD_GLOBAL              0 (os)
+              LOAD_ATTR                2 (path)
+              LOAD_ATTR                5 (join + NULL|self)
+              LOAD_FAST                0 (cls)
+              LOAD_ATTR                7 (get_base_dir + NULL|self)
+              CALL                     0
+              LOAD_FAST                0 (cls)
+              LOAD_ATTR                8 (LICENSE_FILE)
+              CALL                     2
+              RETURN_VALUE
+
+### CODE Config.get_db_file_path  args=('cls',)
+118           RESUME                   0
+
+125           LOAD_GLOBAL              0 (os)
+              LOAD_ATTR                2 (path)
+              LOAD_ATTR                5 (join + NULL|self)
+              LOAD_FAST                0 (cls)
+              LOAD_ATTR                7 (get_base_dir + NULL|self)
+              CALL                     0
+              LOAD_FAST                0 (cls)
+              LOAD_ATTR                8 (DB_FILE)
+              CALL                     2
+              RETURN_VALUE
+
+### CODE Config.get_log_file_path  args=('cls',)
+127           RESUME                   0
+
+129           LOAD_GLOBAL              0 (os)
+              LOAD_ATTR                2 (path)
+              LOAD_ATTR                5 (join + NULL|self)
+              LOAD_FAST                0 (cls)
+              LOAD_ATTR                7 (get_base_dir + NULL|self)
+              CALL                     0
+              LOAD_CONST               1 ('log.txt')
+              CALL                     2
+              RETURN_VALUE
+
+### CODE Config.get_crash_log_file_path  args=('cls',)
+131           RESUME                   0
+
+133           LOAD_GLOBAL              0 (os)
+              LOAD_ATTR                2 (path)
+              LOAD_ATTR                5 (join + NULL|self)
+              LOAD_FAST                0 (cls)
+              LOAD_ATTR                7 (get_base_dir + NULL|self)
+              CALL                     0
+              LOAD_CONST               1 ('crash.log')
+              CALL                     2
+              RETURN_VALUE
+
+### CODE Config.get_default_download_dir  args=('cls',)
+135           RESUME                   0
+
+139           LOAD_FAST                0 (cls)
+              LOAD_ATTR                0 (DEFAULT_DOWNLOAD_DIR)
+              COPY                     1
+              TO_BOOL
+              POP_JUMP_IF_TRUE         2 (to L1)
+              POP_TOP
+              LOAD_CONST               1 ('download')
+      L1:     STORE_FAST               1 (default_dir)
+
+140           LOAD_GLOBAL              2 (os)
+              LOAD_ATTR                4 (path)
+              LOAD_ATTR                7 (isabs + NULL|self)
+              LOAD_FAST                1 (default_dir)
+              CALL                     1
+              TO_BOOL
+              POP_JUMP_IF_TRUE        46 (to L2)
+
+141           LOAD_GLOBAL              2 (os)
+              LOAD_ATTR                4 (path)
+              LOAD_ATTR                9 (join + NULL|self)
+              LOAD_FAST                0 (cls)
+              LOAD_ATTR               11 (get_base_dir + NULL|self)
+              CALL                     0
+              LOAD_FAST                1 (default_dir)
+              CALL                     2
+              STORE_FAST               1 (default_dir)
+
+142   L2:     LOAD_GLOBAL              2 (os)
+              LOAD_ATTR               12 (makedirs)
+              PUSH_NULL
+              LOAD_FAST                1 (default_dir)
+              LOAD_CONST               2 (True)
+              LOAD_CONST               3 (('exist_ok',))
+              CALL_KW                  2
+              POP_TOP
+
+143           LOAD_FAST                1 (default_dir)
+              RETURN_VALUE

@@ -1,0 +1,17 @@
+{
+ "_note": "T43 NFR3 门器合成样本（夹具面=离线确定性数据，公约第10条；正样本凭据形态仅存在于本夹具，发布门扫描面如实排除 tests/fixtures）：positives=应命中（R1 字面量赋值/R2 BDUSS cookie），negatives=不得命中（env 读取/占位值/非字面量）。",
+ "positives": [
+  {"file": "m1.py", "line": "password = \"hunter2-secure-value\""},
+  {"file": "m2.py", "line": "token: \"wfZV4VXfSSBLwX9PNXmmdBXRXeRC2XTAESreymXodihoe9_y5a\""},
+  {"file": "m3.py", "line": "headers = {\"Cookie\": \"BDUSS=AbCdEf123456789012345678\"}"}
+ ],
+ "negatives": [
+  {"file": "ok1.py", "line": "password = os.environ.get(\"KB_WENKU_SECRET\", \"\")"},
+  {"file": "ok2.py", "line": "token = \"STUB_TOKEN\""},
+  {"file": "ok3.py", "line": "cookie = get_cookie()"},
+  {"file": "ok4.py", "line": "secret = \"xxxxxxxxxxxx\""},
+  {"file": "ok5.py", "line": "password = ''"},
+  {"file": "ok6.py", "line": "api_key: \"<your-api-key-here>\""},
+  {"file": "ok7.py", "line": "sk = f\"sk-{uid}\""}
+ ]
+}

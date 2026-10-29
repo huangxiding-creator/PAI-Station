@@ -1,0 +1,110 @@
+Hello👋, welcome to ESP-Claw! | ESP-Claw Docs
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- Skip to content 
+
+- Welcome 
+- Supported chips & development boards 
+- Prepare materials 
+- Assemble ESP-Claw 
+- Web Flash 
+- First interactions 
+- Web Console 
+- Skills Lab 
+- FAQ 
+
+ GitHub 
+ Flash via Browser 
+
+ Select language 
+ English中文 
+
+## Hello👋, welcome to ESP-Claw!
+
+ESP-Claw is a Chat Coding AI agent framework for IoT devices. It defines device behavior through conversation and completes the full loop of sensing, reasoning, decision-making, and execution locally on Espressif chips.
+
+ Chat to Build 
+
+Define device behavior through IM chat + dynamic Lua loading, with generated logic persisted as local deterministic rules 
+
+ Event-Driven 
+
+Devices report events proactively with millisecond-level response; if no rule matches, call LLM automatically with cloud-edge collaboration 
+
+ Bi-Directional MCP 
+
+Devices act as both MCP Server and MCP Client, callable by external Agents while also calling external services proactively 
+
+ Local Memory 
+
+Structured long-term memory with lightweight summary-tag retrieval, keeping privacy local 
+
+## ESP-Claw vs Traditional IoT
+
+Section titled “ESP-Claw vs Traditional IoT”
+
+Dimension
+Traditional IoT (Cloud-Centric)
+ESP-Claw (Edge AI)
+
+Processing logic
+Preset static rules (If-This-Then-That)
+LLM dynamic decision-making + Lua deterministic rules
+
+Execution engine
+Rule engine
+LLM + Lua + Router (three-tier event handling)
+
+Control center
+Cloud server
+Edge node (ESP chip)
+
+Device protocol
+MQTT / Matter / proprietary SDK
+MCP as a unified language + multi-protocol bridging
+
+Memory management
+Cloud data storage
+Local structured memory (JSONL + tags)
+
+Interaction model
+App / control panel
+IM chat (Telegram / WeChat / Feishu)
+
+Intelligence
+Preset automation
+LLM + local rules (continuous evolution)
+
+## Get Started
+
+Section titled “Get Started”
+
+This tutorial walks you from zero to a working ESP32-S3 breadboard build, then flashes the latest ESP-Claw firmware.
+
+ Breadboard ESP-Claw 
+ BOM list and assembly 
+ Get Started 
+ Already have hardware? Start flashing and setup here 
+
+## Development Plan
+
+Section titled “Development Plan”
+
+ESP-Claw is still under active development. Feel free to open an issue to report problems or request features.
+You can also share your ideas through our online survey (in Chinese).
+
+Click here to view our TODO List (in Chinese),
+and vote for the features or issues you care about. That helps us prioritize them sooner.
+
+## Documentation Map
+
+Section titled “Documentation Map”
+
+- Start from user workflows: Get Started → Web Config / Console Usage → FAQ
+
+- Start from developer workflows: Build and Flash from Source, then Project Architecture, Core, and Capabilities

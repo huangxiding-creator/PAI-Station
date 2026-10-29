@@ -1,0 +1,860 @@
+===== gui/qr_login_dialog.pyc =====
+
+# CODE <module>  args=()
+  0           RESUME                   0
+
+  1           LOAD_CONST               0 ('二维码登录对话框')
+              STORE_NAME               0 (__doc__)
+
+  2           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (None)
+              IMPORT_NAME              1 (threading)
+              STORE_NAME               1 (threading)
+
+  4           LOAD_CONST               1 (0)
+              LOAD_CONST               3 (('QDialog', 'QVBoxLayout', 'QLabel', 'QPushButton', 'QMessageBox'))
+              IMPORT_NAME              2 (PySide6.QtWidgets)
+              IMPORT_FROM              3 (QDialog)
+              STORE_NAME               3 (QDialog)
+              IMPORT_FROM              4 (QVBoxLayout)
+              STORE_NAME               4 (QVBoxLayout)
+              IMPORT_FROM              5 (QLabel)
+              STORE_NAME               5 (QLabel)
+              IMPORT_FROM              6 (QPushButton)
+              STORE_NAME               6 (QPushButton)
+              IMPORT_FROM              7 (QMessageBox)
+              STORE_NAME               7 (QMessageBox)
+              POP_TOP
+
+  5           LOAD_CONST               1 (0)
+              LOAD_CONST               4 (('Qt', 'QThread', 'Signal'))
+              IMPORT_NAME              8 (PySide6.QtCore)
+              IMPORT_FROM              9 (Qt)
+              STORE_NAME               9 (Qt)
+              IMPORT_FROM             10 (QThread)
+              STORE_NAME              10 (QThread)
+              IMPORT_FROM             11 (Signal)
+              STORE_NAME              11 (Signal)
+              POP_TOP
+
+  6           LOAD_CONST               1 (0)
+              LOAD_CONST               5 (('QPixmap',))
+              IMPORT_NAME             12 (PySide6.QtGui)
+              IMPORT_FROM             13 (QPixmap)
+              STORE_NAME              13 (QPixmap)
+              POP_TOP
+
+  7           LOAD_CONST               1 (0)
+              LOAD_CONST               6 (('WeChatQRLogin',))
+              IMPORT_NAME             14 (services.login_service)
+              IMPORT_FROM             15 (WeChatQRLogin)
+              STORE_NAME              15 (WeChatQRLogin)
+              POP_TOP
+
+  8           LOAD_CONST               1 (0)
+              LOAD_CONST               7 (('set_window_icon',))
+              IMPORT_NAME             16 (utils)
+              IMPORT_FROM             17 (set_window_icon)
+              STORE_NAME              17 (set_window_icon)
+              POP_TOP
+
+ 11           LOAD_NAME               18 (set)
+              PUSH_NULL
+              CALL                     0
+              STORE_NAME              19 (_active_login_workers)
+
+ 14           LOAD_CONST               8 (<code object _retain_worker_until_finished at 0x000001DD462966F0, file "gui\qr_login_dialog.py", line 14>)
+              MAKE_FUNCTION
+              STORE_NAME              20 (_retain_worker_until_finished)
+
+ 20           LOAD_BUILD_CLASS
+              PUSH_NULL
+              LOAD_CONST               9 (<code object LoginStatusWorker at 0x000001DD4631C360, file "gui\qr_login_dialog.py", line 20>)
+              MAKE_FUNCTION
+              LOAD_CONST              10 ('LoginStatusWorker')
+              LOAD_NAME               10 (QThread)
+              CALL                     3
+              STORE_NAME              21 (LoginStatusWorker)
+
+ 48           LOAD_BUILD_CLASS
+              PUSH_NULL
+              LOAD_CONST              11 (<code object QRLoginDialog at 0x000001DD462FC290, file "gui\qr_login_dialog.py", line 48>)
+              MAKE_FUNCTION
+              LOAD_CONST              12 ('QRLoginDialog')
+              LOAD_NAME                3 (QDialog)
+              CALL                     3
+              STORE_NAME              22 (QRLoginDialog)
+              RETURN_CONST             2 (None)
+
+## CODE _retain_worker_until_finished  args=('worker',)
+  --           MAKE_CELL                0 (worker)
+
+  14           RESUME                   0
+
+  16           LOAD_GLOBAL              0 (_active_login_workers)
+               LOAD_ATTR                3 (add + NULL|self)
+               LOAD_DEREF               0 (worker)
+               CALL                     1
+               POP_TOP
+
+  17           LOAD_DEREF               0 (worker)
+               LOAD_ATTR                4 (finished)
+               LOAD_ATTR                7 (connect + NULL|self)
+               LOAD_FAST                0 (worker)
+               BUILD_TUPLE              1
+               LOAD_CONST               1 (<code object <lambda> at 0x000001DD462F8630, file "gui\qr_login_dialog.py", line 17>)
+               MAKE_FUNCTION
+               SET_FUNCTION_ATTRIBUTE   8 (closure)
+               CALL                     1
+               POP_TOP
+               RETURN_CONST             2 (None)
+
+### CODE _retain_worker_until_finished.<locals>.<lambda>  args=()
+  --           COPY_FREE_VARS           1
+
+  17           RESUME                   0
+               LOAD_GLOBAL              0 (_active_login_workers)
+               LOAD_ATTR                3 (discard + NULL|self)
+               LOAD_DEREF               0 (worker)
+               CALL                     1
+               RETURN_VALUE
+
+## CODE LoginStatusWorker  args=()
+  --           MAKE_CELL                0 (__class__)
+
+  20           RESUME                   0
+               LOAD_NAME                0 (__name__)
+               STORE_NAME               1 (__module__)
+               LOAD_CONST               0 ('LoginStatusWorker')
+               STORE_NAME               2 (__qualname__)
+               LOAD_CONST               1 (20)
+               STORE_NAME               3 (__firstlineno__)
+
+  21           LOAD_CONST               2 ('后台轮询登录状态的Worker')
+               STORE_NAME               4 (__doc__)
+
+  22           LOAD_NAME                5 (Signal)
+               PUSH_NULL
+               LOAD_NAME                6 (str)
+               CALL                     1
+               STORE_NAME               7 (status_changed)
+
+  24           LOAD_FAST                0 (__class__)
+               BUILD_TUPLE              1
+               LOAD_CONST               3 (<code object __init__ at 0x000001DD4614BDF0, file "gui\qr_login_dialog.py", line 24>)
+               MAKE_FUNCTION
+               SET_FUNCTION_ATTRIBUTE   8 (closure)
+               STORE_NAME               8 (__init__)
+
+  29           LOAD_CONST               4 (<code object run at 0x000001DD463BC370, file "gui\qr_login_dialog.py", line 29>)
+               MAKE_FUNCTION
+               STORE_NAME               9 (run)
+
+  43           LOAD_CONST               5 (<code object stop at 0x000001DD462FAF30, file "gui\qr_login_dialog.py", line 43>)
+               MAKE_FUNCTION
+               STORE_NAME              10 (stop)
+               LOAD_CONST               6 (('_stop_event', 'login_client'))
+               STORE_NAME              11 (__static_attributes__)
+               LOAD_FAST                0 (__class__)
+               COPY                     1
+               STORE_NAME              12 (__classcell__)
+               RETURN_VALUE
+
+### CODE LoginStatusWorker.__init__  args=('self', 'login_client')
+  --           COPY_FREE_VARS           1
+
+  24           RESUME                   0
+
+  25           LOAD_GLOBAL              0 (super)
+               LOAD_DEREF               2 (__class__)
+               LOAD_FAST                0 (self)
+               LOAD_SUPER_ATTR          5 (__init__ + NULL|self)
+               CALL                     0
+               POP_TOP
+
+  26           LOAD_FAST_LOAD_FAST     16 (login_client, self)
+               STORE_ATTR               2 (login_client)
+
+  27           LOAD_GLOBAL              6 (threading)
+               LOAD_ATTR                8 (Event)
+               PUSH_NULL
+               CALL                     0
+               LOAD_FAST                0 (self)
+               STORE_ATTR               5 (_stop_event)
+               RETURN_CONST             0 (None)
+
+### CODE LoginStatusWorker.run  args=('self',)
+ 29           RESUME                   0
+
+ 31           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_stop_event)
+              LOAD_ATTR                3 (is_set + NULL|self)
+              CALL                     0
+              TO_BOOL
+              POP_JUMP_IF_TRUE       126 (to L5)
+
+ 33   L1:     LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (login_client)
+              LOAD_ATTR                7 (check_scan_status + NULL|self)
+              CALL                     0
+              STORE_FAST               1 (status)
+
+ 35           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_stop_event)
+              LOAD_ATTR                3 (is_set + NULL|self)
+              CALL                     0
+              TO_BOOL
+              POP_JUMP_IF_FALSE        1 (to L2)
+
+ 36           RETURN_CONST             2 (None)
+
+ 38   L2:     LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (status_changed)
+              LOAD_ATTR               11 (emit + NULL|self)
+              LOAD_FAST                1 (status)
+              CALL                     1
+              POP_TOP
+
+ 40           LOAD_FAST                1 (status)
+              LOAD_CONST               1 (('success', 'expired', 'error'))
+              CONTAINS_OP              0
+              POP_JUMP_IF_FALSE        1 (to L3)
+
+ 41           RETURN_CONST             2 (None)
+
+ 31   L3:     LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_stop_event)
+              LOAD_ATTR                3 (is_set + NULL|self)
+              CALL                     0
+              TO_BOOL
+              POP_JUMP_IF_TRUE         2 (to L4)
+              JUMP_BACKWARD          125 (to L1)
+      L4:     RETURN_CONST             2 (None)
+      L5:     RETURN_CONST             2 (None)
+
+### CODE LoginStatusWorker.stop  args=('self',)
+ 43           RESUME                   0
+
+ 45           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_stop_event)
+              LOAD_ATTR                3 (set + NULL|self)
+              CALL                     0
+              POP_TOP
+              RETURN_CONST             1 (None)
+
+## CODE QRLoginDialog  args=()
+  --           MAKE_CELL                0 (__class__)
+
+  48           RESUME                   0
+               LOAD_NAME                0 (__name__)
+               STORE_NAME               1 (__module__)
+               LOAD_CONST               0 ('QRLoginDialog')
+               STORE_NAME               2 (__qualname__)
+               LOAD_CONST               1 (48)
+               STORE_NAME               3 (__firstlineno__)
+
+  49           LOAD_CONST              11 ((None,))
+               LOAD_FAST                0 (__class__)
+               BUILD_TUPLE              1
+               LOAD_CONST               2 (<code object __init__ at 0x000001DD4612A1F0, file "gui\qr_login_dialog.py", line 49>)
+               MAKE_FUNCTION
+               SET_FUNCTION_ATTRIBUTE   8 (closure)
+               SET_FUNCTION_ATTRIBUTE   1 (defaults)
+               STORE_NAME               4 (__init__)
+
+  63           LOAD_CONST               3 (<code object init_ui at 0x000001DD45F8E340, file "gui\qr_login_dialog.py", line 63>)
+               MAKE_FUNCTION
+               STORE_NAME               5 (init_ui)
+
+ 106           LOAD_CONST               4 (<code object load_qr_code at 0x000001DD465F95C0, file "gui\qr_login_dialog.py", line 106>)
+               MAKE_FUNCTION
+               STORE_NAME               6 (load_qr_code)
+
+ 139           LOAD_CONST               5 (<code object on_status_changed at 0x000001DD466037E0, file "gui\qr_login_dialog.py", line 139>)
+               MAKE_FUNCTION
+               STORE_NAME               7 (on_status_changed)
+
+ 163           LOAD_CONST               6 (<code object refresh_qr_code at 0x000001DD46314450, file "gui\qr_login_dialog.py", line 163>)
+               MAKE_FUNCTION
+               STORE_NAME               8 (refresh_qr_code)
+
+ 171           LOAD_CONST               7 (<code object _stop_status_worker at 0x000001DD4612B2D0, file "gui\qr_login_dialog.py", line 171>)
+               MAKE_FUNCTION
+               STORE_NAME               9 (_stop_status_worker)
+
+ 185           LOAD_CONST               8 (<code object closeEvent at 0x000001DD4631C9C0, file "gui\qr_login_dialog.py", line 185>)
+               MAKE_FUNCTION
+               STORE_NAME              10 (closeEvent)
+
+ 190           LOAD_FAST                0 (__class__)
+               BUILD_TUPLE              1
+               LOAD_CONST               9 (<code object reject at 0x000001DD4631C470, file "gui\qr_login_dialog.py", line 190>)
+               MAKE_FUNCTION
+               SET_FUNCTION_ATTRIBUTE   8 (closure)
+               STORE_NAME              11 (reject)
+               LOAD_CONST              10 (('login_client', 'qr_label', 'refresh_btn', 'status_label', 'status_worker'))
+               STORE_NAME              12 (__static_attributes__)
+               LOAD_FAST                0 (__class__)
+               COPY                     1
+               STORE_NAME              13 (__classcell__)
+               RETURN_VALUE
+
+### CODE QRLoginDialog.__init__  args=('self', 'parent')
+  --           COPY_FREE_VARS           1
+
+  49           RESUME                   0
+
+  50           LOAD_GLOBAL              0 (super)
+               LOAD_DEREF               2 (__class__)
+               LOAD_FAST                0 (self)
+               LOAD_SUPER_ATTR          5 (__init__ + NULL|self)
+               LOAD_FAST                1 (parent)
+               CALL                     1
+               POP_TOP
+
+  51           LOAD_FAST                0 (self)
+               LOAD_ATTR                5 (setWindowTitle + NULL|self)
+               LOAD_CONST               1 ('微信扫码登录')
+               CALL                     1
+               POP_TOP
+
+  52           LOAD_FAST                0 (self)
+               LOAD_ATTR                7 (setModal + NULL|self)
+               LOAD_CONST               2 (True)
+               CALL                     1
+               POP_TOP
+
+  53           LOAD_FAST                0 (self)
+               LOAD_ATTR                9 (setMinimumSize + NULL|self)
+               LOAD_CONST               3 (400)
+               LOAD_CONST               4 (500)
+               CALL                     2
+               POP_TOP
+
+  55           LOAD_GLOBAL             11 (set_window_icon + NULL)
+               LOAD_FAST                0 (self)
+               CALL                     1
+               POP_TOP
+
+  57           LOAD_GLOBAL             13 (WeChatQRLogin + NULL)
+               CALL                     0
+               LOAD_FAST                0 (self)
+               STORE_ATTR               7 (login_client)
+
+  58           LOAD_CONST               0 (None)
+               LOAD_FAST                0 (self)
+               STORE_ATTR               8 (status_worker)
+
+  60           LOAD_FAST                0 (self)
+               LOAD_ATTR               19 (init_ui + NULL|self)
+               CALL                     0
+               POP_TOP
+
+  61           LOAD_FAST                0 (self)
+               LOAD_ATTR               21 (load_qr_code + NULL|self)
+               CALL                     0
+               POP_TOP
+               RETURN_CONST             0 (None)
+
+### CODE QRLoginDialog.init_ui  args=('self',)
+ 63           RESUME                   0
+
+ 64           LOAD_GLOBAL              1 (QVBoxLayout + NULL)
+              LOAD_FAST                0 (self)
+              CALL                     1
+              STORE_FAST               1 (layout)
+
+ 65           LOAD_FAST                1 (layout)
+              LOAD_ATTR                3 (setSpacing + NULL|self)
+              LOAD_CONST               1 (20)
+              CALL                     1
+              POP_TOP
+
+ 66           LOAD_FAST                1 (layout)
+              LOAD_ATTR                5 (setContentsMargins + NULL|self)
+              LOAD_CONST               2 (30)
+              LOAD_CONST               2 (30)
+              LOAD_CONST               2 (30)
+              LOAD_CONST               2 (30)
+              CALL                     4
+              POP_TOP
+
+ 68           LOAD_GLOBAL              7 (QLabel + NULL)
+              LOAD_CONST               3 ('请使用微信扫描二维码进行登录')
+              CALL                     1
+              STORE_FAST               2 (tip_label)
+
+ 69           LOAD_FAST                2 (tip_label)
+              LOAD_ATTR                9 (setAlignment + NULL|self)
+              LOAD_GLOBAL             10 (Qt)
+              LOAD_ATTR               12 (AlignCenter)
+              CALL                     1
+              POP_TOP
+
+ 70           LOAD_FAST                2 (tip_label)
+              LOAD_ATTR               15 (setStyleSheet + NULL|self)
+              LOAD_CONST               4 ('font-size: 16px; color: #333; font-weight: bold;')
+              CALL                     1
+              POP_TOP
+
+ 71           LOAD_FAST                1 (layout)
+              LOAD_ATTR               17 (addWidget + NULL|self)
+              LOAD_FAST                2 (tip_label)
+              CALL                     1
+              POP_TOP
+
+ 73           LOAD_GLOBAL              7 (QLabel + NULL)
+              CALL                     0
+              LOAD_FAST                0 (self)
+              STORE_ATTR               9 (qr_label)
+
+ 74           LOAD_FAST                0 (self)
+              LOAD_ATTR               18 (qr_label)
+              LOAD_ATTR                9 (setAlignment + NULL|self)
+              LOAD_GLOBAL             10 (Qt)
+              LOAD_ATTR               12 (AlignCenter)
+              CALL                     1
+              POP_TOP
+
+ 75           LOAD_FAST                0 (self)
+              LOAD_ATTR               18 (qr_label)
+              LOAD_ATTR               21 (setMinimumSize + NULL|self)
+              LOAD_CONST               5 (300)
+              LOAD_CONST               5 (300)
+              CALL                     2
+              POP_TOP
+
+ 76           LOAD_FAST                0 (self)
+              LOAD_ATTR               18 (qr_label)
+              LOAD_ATTR               15 (setStyleSheet + NULL|self)
+              LOAD_CONST               6 ('border: 1px solid #ddd; background: white;')
+              CALL                     1
+              POP_TOP
+
+ 77           LOAD_FAST                1 (layout)
+              LOAD_ATTR               17 (addWidget + NULL|self)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               18 (qr_label)
+              CALL                     1
+              POP_TOP
+
+ 79           LOAD_GLOBAL              7 (QLabel + NULL)
+              LOAD_CONST               7 ('正在加载二维码...')
+              CALL                     1
+              LOAD_FAST                0 (self)
+              STORE_ATTR              11 (status_label)
+
+ 80           LOAD_FAST                0 (self)
+              LOAD_ATTR               22 (status_label)
+              LOAD_ATTR                9 (setAlignment + NULL|self)
+              LOAD_GLOBAL             10 (Qt)
+              LOAD_ATTR               12 (AlignCenter)
+              CALL                     1
+              POP_TOP
+
+ 81           LOAD_FAST                0 (self)
+              LOAD_ATTR               22 (status_label)
+              LOAD_ATTR               15 (setStyleSheet + NULL|self)
+              LOAD_CONST               8 ('font-size: 14px; color: #666;')
+              CALL                     1
+              POP_TOP
+
+ 82           LOAD_FAST                1 (layout)
+              LOAD_ATTR               17 (addWidget + NULL|self)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               22 (status_label)
+              CALL                     1
+              POP_TOP
+
+ 84           LOAD_GLOBAL             25 (QPushButton + NULL)
+              LOAD_CONST               9 ('刷新二维码')
+              CALL                     1
+              LOAD_FAST                0 (self)
+              STORE_ATTR              13 (refresh_btn)
+
+ 85           LOAD_FAST                0 (self)
+              LOAD_ATTR               26 (refresh_btn)
+              LOAD_ATTR               15 (setStyleSheet + NULL|self)
+              LOAD_CONST              10 ('\n            QPushButton {\n                min-height: 36px;\n                padding: 8px 20px;\n                border-radius: 4px;\n                font-size: 14px;\n                background-color: #2196F3;\n                color: white;\n                font-weight: bold;\n            }\n            QPushButton:hover {\n                background-color: #1976D2;\n            }\n        ')
+              CALL                     1
+              POP_TOP
+
+ 99           LOAD_FAST                0 (self)
+              LOAD_ATTR               26 (refresh_btn)
+              LOAD_ATTR               28 (clicked)
+              LOAD_ATTR               31 (connect + NULL|self)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               32 (refresh_qr_code)
+              CALL                     1
+              POP_TOP
+
+100           LOAD_FAST                1 (layout)
+              LOAD_ATTR               17 (addWidget + NULL|self)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               26 (refresh_btn)
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+### CODE QRLoginDialog.load_qr_code  args=('self',)
+106           RESUME                   0
+
+108           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (status_label)
+              LOAD_ATTR                3 (setText + NULL|self)
+              LOAD_CONST               1 ('正在加载二维码...')
+              CALL                     1
+              POP_TOP
+
+109           LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (refresh_btn)
+              LOAD_ATTR                7 (setEnabled + NULL|self)
+              LOAD_CONST               2 (False)
+              CALL                     1
+              POP_TOP
+
+111           LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (login_client)
+              LOAD_ATTR               11 (get_qr_uuid + NULL|self)
+              CALL                     0
+              STORE_FAST               1 (uuid)
+
+112           LOAD_FAST                1 (uuid)
+              TO_BOOL
+              POP_JUMP_IF_TRUE        55 (to L1)
+
+113           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (status_label)
+              LOAD_ATTR                3 (setText + NULL|self)
+              LOAD_CONST               3 ('获取二维码失败，请点击刷新重试')
+              CALL                     1
+              POP_TOP
+
+114           LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (refresh_btn)
+              LOAD_ATTR                7 (setEnabled + NULL|self)
+              LOAD_CONST               4 (True)
+              CALL                     1
+              POP_TOP
+
+115           RETURN_CONST             5 (None)
+
+117   L1:     LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (login_client)
+              LOAD_ATTR               13 (get_qr_code_image + NULL|self)
+              CALL                     0
+              STORE_FAST               2 (qr_image_data)
+
+118           LOAD_FAST                2 (qr_image_data)
+              TO_BOOL
+              POP_JUMP_IF_TRUE        55 (to L2)
+
+119           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (status_label)
+              LOAD_ATTR                3 (setText + NULL|self)
+              LOAD_CONST               6 ('加载二维码失败，请点击刷新重试')
+              CALL                     1
+              POP_TOP
+
+120           LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (refresh_btn)
+              LOAD_ATTR                7 (setEnabled + NULL|self)
+              LOAD_CONST               4 (True)
+              CALL                     1
+              POP_TOP
+
+121           RETURN_CONST             5 (None)
+
+123   L2:     LOAD_GLOBAL             15 (QPixmap + NULL)
+              CALL                     0
+              STORE_FAST               3 (pixmap)
+
+124           LOAD_FAST                3 (pixmap)
+              LOAD_ATTR               17 (loadFromData + NULL|self)
+              LOAD_FAST                2 (qr_image_data)
+              CALL                     1
+              POP_TOP
+
+125           LOAD_FAST                3 (pixmap)
+              LOAD_ATTR               19 (scaled + NULL|self)
+
+126           LOAD_CONST               7 (280)
+              LOAD_CONST               7 (280)
+              LOAD_GLOBAL             20 (Qt)
+              LOAD_ATTR               22 (KeepAspectRatio)
+              LOAD_GLOBAL             20 (Qt)
+              LOAD_ATTR               24 (SmoothTransformation)
+
+125           CALL                     4
+              STORE_FAST               4 (scaled_pixmap)
+
+128           LOAD_FAST                0 (self)
+              LOAD_ATTR               26 (qr_label)
+              LOAD_ATTR               29 (setPixmap + NULL|self)
+              LOAD_FAST                4 (scaled_pixmap)
+              CALL                     1
+              POP_TOP
+
+130           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (status_label)
+              LOAD_ATTR                3 (setText + NULL|self)
+              LOAD_CONST               8 ('请使用微信扫描二维码')
+              CALL                     1
+              POP_TOP
+
+131           LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (refresh_btn)
+              LOAD_ATTR                7 (setEnabled + NULL|self)
+              LOAD_CONST               4 (True)
+              CALL                     1
+              POP_TOP
+
+133           LOAD_GLOBAL             31 (LoginStatusWorker + NULL)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (login_client)
+              CALL                     1
+              LOAD_FAST                0 (self)
+              STORE_ATTR              16 (status_worker)
+
+134           LOAD_FAST                0 (self)
+              LOAD_ATTR               32 (status_worker)
+              LOAD_ATTR               34 (status_changed)
+              LOAD_ATTR               37 (connect + NULL|self)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               38 (on_status_changed)
+              CALL                     1
+              POP_TOP
+
+135           LOAD_FAST                0 (self)
+              LOAD_ATTR               32 (status_worker)
+              LOAD_ATTR               41 (start + NULL|self)
+              CALL                     0
+              POP_TOP
+              RETURN_CONST             5 (None)
+
+### CODE QRLoginDialog.on_status_changed  args=('self', 'status')
+139           RESUME                   0
+
+141           LOAD_FAST                1 (status)
+              LOAD_CONST               1 ('success')
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE      185 (to L2)
+
+142           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (status_label)
+              LOAD_ATTR                3 (setText + NULL|self)
+              LOAD_CONST               2 ('扫码成功，正在登录...')
+              CALL                     1
+              POP_TOP
+
+143           LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (refresh_btn)
+              LOAD_ATTR                7 (setEnabled + NULL|self)
+              LOAD_CONST               3 (False)
+              CALL                     1
+              POP_TOP
+
+145           LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (login_client)
+              LOAD_ATTR               11 (login + NULL|self)
+              CALL                     0
+              UNPACK_SEQUENCE          2
+              STORE_FAST_STORE_FAST   35 (success, msg)
+
+146           LOAD_FAST                2 (success)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       17 (to L1)
+
+147           LOAD_FAST                0 (self)
+              LOAD_ATTR               13 (accept + NULL|self)
+              CALL                     0
+              POP_TOP
+              RETURN_CONST            11 (None)
+
+149   L1:     LOAD_GLOBAL             14 (QMessageBox)
+              LOAD_ATTR               16 (critical)
+              PUSH_NULL
+              LOAD_FAST                0 (self)
+              LOAD_CONST               4 ('失败')
+              LOAD_FAST                3 (msg)
+              CALL                     3
+              POP_TOP
+
+150           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (status_label)
+              LOAD_ATTR                3 (setText + NULL|self)
+              LOAD_CONST               5 ('登录失败，请刷新二维码重试')
+              CALL                     1
+              POP_TOP
+
+151           LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (refresh_btn)
+              LOAD_ATTR                7 (setEnabled + NULL|self)
+              LOAD_CONST               6 (True)
+              CALL                     1
+              POP_TOP
+              RETURN_CONST            11 (None)
+
+152   L2:     LOAD_FAST                1 (status)
+              LOAD_CONST               7 ('expired')
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE       55 (to L3)
+
+153           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (status_label)
+              LOAD_ATTR                3 (setText + NULL|self)
+              LOAD_CONST               8 ('二维码已失效，请点击刷新')
+              CALL                     1
+              POP_TOP
+
+154           LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (refresh_btn)
+              LOAD_ATTR                7 (setEnabled + NULL|self)
+              LOAD_CONST               6 (True)
+              CALL                     1
+              POP_TOP
+              RETURN_CONST            11 (None)
+
+155   L3:     LOAD_FAST                1 (status)
+              LOAD_CONST               9 ('error')
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE       55 (to L4)
+
+156           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (status_label)
+              LOAD_ATTR                3 (setText + NULL|self)
+              LOAD_CONST              10 ('网络错误，请点击刷新重试')
+              CALL                     1
+              POP_TOP
+
+157           LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (refresh_btn)
+              LOAD_ATTR                7 (setEnabled + NULL|self)
+              LOAD_CONST               6 (True)
+              CALL                     1
+              POP_TOP
+              RETURN_CONST            11 (None)
+
+155   L4:     RETURN_CONST            11 (None)
+
+### CODE QRLoginDialog.refresh_qr_code  args=('self',)
+163           RESUME                   0
+
+165           LOAD_FAST                0 (self)
+              LOAD_ATTR                1 (_stop_status_worker + NULL|self)
+              CALL                     0
+              POP_TOP
+
+167           LOAD_FAST                0 (self)
+              LOAD_ATTR                2 (qr_label)
+              LOAD_ATTR                5 (clear + NULL|self)
+              CALL                     0
+              POP_TOP
+
+168           LOAD_GLOBAL              7 (WeChatQRLogin + NULL)
+              CALL                     0
+              LOAD_FAST                0 (self)
+              STORE_ATTR               4 (login_client)
+
+169           LOAD_FAST                0 (self)
+              LOAD_ATTR               11 (load_qr_code + NULL|self)
+              CALL                     0
+              POP_TOP
+              RETURN_CONST             1 (None)
+
+### CODE QRLoginDialog._stop_status_worker  args=('self',)
+ 171           RESUME                   0
+
+ 173           LOAD_FAST                0 (self)
+               LOAD_ATTR                0 (status_worker)
+               STORE_FAST               1 (worker)
+
+ 174           LOAD_CONST               1 (None)
+               LOAD_FAST                0 (self)
+               STORE_ATTR               0 (status_worker)
+
+ 175           LOAD_FAST                1 (worker)
+               TO_BOOL
+               POP_JUMP_IF_FALSE       21 (to L1)
+               LOAD_FAST                1 (worker)
+               LOAD_ATTR                3 (isRunning + NULL|self)
+               CALL                     0
+               TO_BOOL
+               POP_JUMP_IF_TRUE         1 (to L2)
+
+ 176   L1:     RETURN_CONST             1 (None)
+
+ 178   L2:     LOAD_FAST                1 (worker)
+               LOAD_ATTR                5 (stop + NULL|self)
+               CALL                     0
+               POP_TOP
+
+ 179           NOP
+
+ 180   L3:     LOAD_FAST                1 (worker)
+               LOAD_ATTR                6 (status_changed)
+               LOAD_ATTR                9 (disconnect + NULL|self)
+               LOAD_FAST                0 (self)
+               LOAD_ATTR               10 (on_status_changed)
+               CALL                     1
+               POP_TOP
+
+ 183   L4:     LOAD_GLOBAL             17 (_retain_worker_until_finished + NULL)
+               LOAD_FAST                1 (worker)
+               CALL                     1
+               POP_TOP
+               RETURN_CONST             1 (None)
+
+  --   L5:     PUSH_EXC_INFO
+
+ 181           LOAD_GLOBAL             12 (RuntimeError)
+               LOAD_GLOBAL             14 (TypeError)
+               BUILD_TUPLE              2
+               CHECK_EXC_MATCH
+               POP_JUMP_IF_FALSE        3 (to L7)
+               POP_TOP
+
+ 182   L6:     POP_EXCEPT
+               JUMP_BACKWARD_NO_INTERRUPT 30 (to L4)
+
+ 181   L7:     RERAISE                  0
+
+  --   L8:     COPY                     3
+               POP_EXCEPT
+               RERAISE                  1
+ExceptionTable:
+  L3 to L4 -> L5 [0]
+  L5 to L6 -> L8 [1] lasti
+  L7 to L8 -> L8 [1] lasti
+
+### CODE QRLoginDialog.closeEvent  args=('self', 'event')
+185           RESUME                   0
+
+187           LOAD_FAST                0 (self)
+              LOAD_ATTR                1 (_stop_status_worker + NULL|self)
+              CALL                     0
+              POP_TOP
+
+188           LOAD_FAST                1 (event)
+              LOAD_ATTR                3 (accept + NULL|self)
+              CALL                     0
+              POP_TOP
+              RETURN_CONST             1 (None)
+
+### CODE QRLoginDialog.reject  args=('self',)
+  --           COPY_FREE_VARS           1
+
+ 190           RESUME                   0
+
+ 192           LOAD_FAST                0 (self)
+               LOAD_ATTR                1 (_stop_status_worker + NULL|self)
+               CALL                     0
+               POP_TOP
+
+ 193           LOAD_GLOBAL              2 (super)
+               LOAD_DEREF               1 (__class__)
+               LOAD_FAST                0 (self)
+               LOAD_SUPER_ATTR          9 (reject + NULL|self)
+               CALL                     0
+               POP_TOP
+               RETURN_CONST             1 (None)

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+    <head>
+        <title>视频截图</title>
+    </head>
+    <body>
+        <video id="video" controls="controls" width="480" height="260" loop="true" >
+			<source src="C:\movie.webm"></source> 
+		</video>
+		<script>
+			function captureImage()
+			{
+				var scale = 1;
+                var canvas = document.createElement("canvas");				
+                canvas.width = video.videoWidth * scale;
+                canvas.height = video.videoHeight * scale;
+				canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);				
+				var url = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');                
+				window.JsGetCutVideoImgData(this.videoUrl, this.flag, canvas.toDataURL());
+            }
+			function init(videoUrl, flag)
+			{
+				this.flag = flag;
+				if (!this.flag)
+				  this.flag = "";
+				this.videoUrl = videoUrl;
+				alert(videoUrl);
+				video.src=videoUrl;
+			}
+			function get_cur_time()
+			{
+				window.JsGetCutPlayTime(this.videoUrl, this.flag, video.currentTime);
+			}
+			function setVideoCtrlSize()
+			{
+				video.width = width;
+				video.height = height;
+			}
+			
+			video.addEventListener("canplaythrough", function () {
+				window.JsGetVideoSize(this.videoUrl, this.flag, video.videoWidth,video.videoHeight);
+			});
+        </script>		
+    </body>
+</html>

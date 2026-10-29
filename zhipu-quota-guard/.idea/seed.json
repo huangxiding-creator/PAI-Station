@@ -1,0 +1,9 @@
+{
+  "summary": "智谱GLM Coding Plan额度监控+自动重置守护服务：24h实时监控5小时窗口额度比例，达阈值自动调用后台重置（每日≤2次，留1次给自媒永动机），护航CC编程开发永不因额度不足中断",
+  "persona": "AI-Station工作站运营者，重度Claude Code用户，用GLM Coding Plan驱动24h不间断开发（含自媒永动机产线）",
+  "pain": "GLM Coding Plan按5小时窗口计额度，工作日14:00-18:00高峰期3倍消耗，额度耗尽CC立即中断开发任务链",
+  "constraints": "重置每日约3次其中1次必须留给自媒永动机故本工具每日最多用2次; 逆向指定DrissionPage+REA结合; 密钥不入仓; 24h常驻运行",
+  "success_form": "Windows常驻守护服务：登录态保活+实时额度比例获取→智能阈值决策→自动重置→CC永不断线，含通知与可观测性",
+  "value_hypothesis": "逆向打通bigmodel.cn用户中心『额度查询+用量重置』双链路后，配额消耗-恢复闭环全自动，CC开发连续性从『随时可能断』变『永不断』",
+  "lang": "zh"
+}

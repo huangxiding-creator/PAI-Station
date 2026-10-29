@@ -1,0 +1,844 @@
+===== gui/search_mixin.pyc =====
+
+# CODE <module>  args=()
+  0           RESUME                   0
+
+  1           LOAD_CONST               0 ('搜索功能 Mixin')
+              STORE_NAME               0 (__doc__)
+
+  2           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (('QTreeWidgetItem', 'QMessageBox'))
+              IMPORT_NAME              1 (PySide6.QtWidgets)
+              IMPORT_FROM              2 (QTreeWidgetItem)
+              STORE_NAME               2 (QTreeWidgetItem)
+              IMPORT_FROM              3 (QMessageBox)
+              STORE_NAME               3 (QMessageBox)
+              POP_TOP
+
+  3           LOAD_CONST               1 (0)
+              LOAD_CONST               3 (('Qt',))
+              IMPORT_NAME              4 (PySide6.QtCore)
+              IMPORT_FROM              5 (Qt)
+              STORE_NAME               5 (Qt)
+              POP_TOP
+
+  4           LOAD_CONST               1 (0)
+              LOAD_CONST               4 (('QColor',))
+              IMPORT_NAME              6 (PySide6.QtGui)
+              IMPORT_FROM              7 (QColor)
+              STORE_NAME               7 (QColor)
+              POP_TOP
+
+  5           LOAD_CONST               1 (0)
+              LOAD_CONST               5 (('SearchKnowledgeWorker',))
+              IMPORT_NAME              8 (gui.workers.workers)
+              IMPORT_FROM              9 (SearchKnowledgeWorker)
+              STORE_NAME               9 (SearchKnowledgeWorker)
+              POP_TOP
+
+  8           LOAD_BUILD_CLASS
+              PUSH_NULL
+              LOAD_CONST               6 (<code object SearchMixin at 0x000001DD462FBE30, file "gui\search_mixin.py", line 8>)
+              MAKE_FUNCTION
+              LOAD_CONST               7 ('SearchMixin')
+              CALL                     2
+              STORE_NAME              10 (SearchMixin)
+              RETURN_CONST             8 (None)
+
+## CODE SearchMixin  args=()
+  8           RESUME                   0
+              LOAD_NAME                0 (__name__)
+              STORE_NAME               1 (__module__)
+              LOAD_CONST               0 ('SearchMixin')
+              STORE_NAME               2 (__qualname__)
+              LOAD_CONST               1 (8)
+              STORE_NAME               3 (__firstlineno__)
+
+  9           LOAD_CONST               2 ('鎼滅储鍔熻兘锛屼緵 MainWindow 缁ф壙')
+              STORE_NAME               4 (__doc__)
+
+ 11           LOAD_CONST               3 (<code object on_search_clicked at 0x000001DD45F8E810, file "gui\search_mixin.py", line 11>)
+              MAKE_FUNCTION
+              STORE_NAME               5 (on_search_clicked)
+
+ 46           LOAD_CONST               4 (<code object on_search_finished at 0x000001DD465F7460, file "gui\search_mixin.py", line 46>)
+              MAKE_FUNCTION
+              STORE_NAME               6 (on_search_finished)
+
+ 82           LOAD_CONST               5 (<code object on_search_error at 0x000001DD460CB630, file "gui\search_mixin.py", line 82>)
+              MAKE_FUNCTION
+              STORE_NAME               7 (on_search_error)
+
+ 91           LOAD_CONST               6 (<code object on_clear_search at 0x000001DD46429FF0, file "gui\search_mixin.py", line 91>)
+              MAKE_FUNCTION
+              STORE_NAME               8 (on_clear_search)
+
+114           LOAD_CONST               7 (<code object convert_search_result_to_tree_item at 0x000001DD46409430, file "gui\search_mixin.py", line 114>)
+              MAKE_FUNCTION
+              STORE_NAME               9 (convert_search_result_to_tree_item)
+              LOAD_CONST               8 (('search_mode', 'search_next_cursor', 'search_worker', 'selected_tags'))
+              STORE_NAME              10 (__static_attributes__)
+              RETURN_CONST             9 (None)
+
+### CODE SearchMixin.on_search_clicked  args=('self',)
+  --           MAKE_CELL                0 (self)
+               MAKE_CELL                4 (kb_id)
+               MAKE_CELL                5 (kb_name)
+
+  11           RESUME                   0
+
+  13           LOAD_DEREF               0 (self)
+               LOAD_ATTR                0 (search_input)
+               LOAD_ATTR                3 (text + NULL|self)
+               CALL                     0
+               LOAD_ATTR                5 (strip + NULL|self)
+               CALL                     0
+               STORE_FAST               1 (query)
+
+  14           LOAD_FAST                1 (query)
+               TO_BOOL
+               POP_JUMP_IF_TRUE        42 (to L1)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR                6 (selected_tags)
+               TO_BOOL
+               POP_JUMP_IF_TRUE        25 (to L1)
+
+  15           LOAD_GLOBAL              8 (QMessageBox)
+               LOAD_ATTR               10 (warning)
+               PUSH_NULL
+               LOAD_DEREF               0 (self)
+               LOAD_CONST               1 ('提示')
+               LOAD_CONST               2 ('请输入关键词或选择标签')
+               CALL                     3
+               POP_TOP
+
+  16           RETURN_CONST             3 (None)
+
+  18   L1:     LOAD_DEREF               0 (self)
+               LOAD_ATTR               12 (kb_selector)
+               LOAD_ATTR               15 (currentData + NULL|self)
+               CALL                     0
+               STORE_DEREF              4 (kb_id)
+
+  19           LOAD_DEREF               4 (kb_id)
+               TO_BOOL
+               POP_JUMP_IF_TRUE        25 (to L2)
+
+  20           LOAD_GLOBAL              8 (QMessageBox)
+               LOAD_ATTR               10 (warning)
+               PUSH_NULL
+               LOAD_DEREF               0 (self)
+               LOAD_CONST               1 ('提示')
+               LOAD_CONST               4 ('请选择要搜索的知识库')
+               CALL                     3
+               POP_TOP
+
+  21           RETURN_CONST             3 (None)
+
+  23   L2:     LOAD_DEREF               0 (self)
+               LOAD_ATTR               12 (kb_selector)
+               LOAD_ATTR               17 (currentText + NULL|self)
+               CALL                     0
+               STORE_DEREF              5 (kb_name)
+
+  24           LOAD_CONST               3 (None)
+               STORE_FAST               2 (filters)
+
+  25           LOAD_DEREF               0 (self)
+               LOAD_ATTR                6 (selected_tags)
+               TO_BOOL
+               POP_JUMP_IF_FALSE       18 (to L3)
+
+  26           LOAD_CONST               5 (2)
+               LOAD_CONST               6 ('tags')
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR                6 (selected_tags)
+               BUILD_MAP                1
+               LOAD_CONST               7 (('filter_type', 'tags_filter'))
+               BUILD_CONST_KEY_MAP      2
+               BUILD_LIST               1
+               STORE_FAST               2 (filters)
+
+  28   L3:     LOAD_CONST               8 (True)
+               LOAD_DEREF               0 (self)
+               STORE_ATTR               9 (search_mode)
+
+  29           LOAD_DEREF               0 (self)
+               LOAD_ATTR               20 (search_btn)
+               LOAD_ATTR               23 (setEnabled + NULL|self)
+               LOAD_CONST               9 (False)
+               CALL                     1
+               POP_TOP
+
+  30           LOAD_DEREF               0 (self)
+               LOAD_ATTR                0 (search_input)
+               LOAD_ATTR               23 (setEnabled + NULL|self)
+               LOAD_CONST               9 (False)
+               CALL                     1
+               POP_TOP
+
+  31           LOAD_DEREF               0 (self)
+               LOAD_ATTR               12 (kb_selector)
+               LOAD_ATTR               23 (setEnabled + NULL|self)
+               LOAD_CONST               9 (False)
+               CALL                     1
+               POP_TOP
+
+  32           LOAD_DEREF               0 (self)
+               LOAD_ATTR               24 (tag_selector)
+               LOAD_ATTR               23 (setEnabled + NULL|self)
+               LOAD_CONST               9 (False)
+               CALL                     1
+               POP_TOP
+
+  34           LOAD_FAST                1 (query)
+               TO_BOOL
+               POP_JUMP_IF_FALSE        5 (to L4)
+               LOAD_CONST              10 ('正在搜索：')
+               LOAD_FAST                1 (query)
+               FORMAT_SIMPLE
+               BUILD_STRING             2
+               JUMP_FORWARD             1 (to L5)
+       L4:     LOAD_CONST              11 ('正在按标签筛选')
+       L5:     STORE_FAST               3 (log_msg)
+
+  35           LOAD_DEREF               0 (self)
+               LOAD_ATTR               27 (add_log + NULL|self)
+               LOAD_FAST                3 (log_msg)
+               LOAD_CONST              12 ('info')
+               CALL                     2
+               POP_TOP
+
+  37           LOAD_GLOBAL             29 (SearchKnowledgeWorker + NULL)
+               LOAD_DEREF               4 (kb_id)
+               LOAD_FAST_LOAD_FAST     18 (query, filters)
+               LOAD_CONST              13 (('filters',))
+               CALL_KW                  3
+               LOAD_DEREF               0 (self)
+               STORE_ATTR              15 (search_worker)
+
+  38           LOAD_DEREF               0 (self)
+               LOAD_ATTR               30 (search_worker)
+               LOAD_ATTR               32 (finished)
+               LOAD_ATTR               35 (connect + NULL|self)
+
+  39           LOAD_FAST                4 (kb_id)
+               LOAD_FAST                5 (kb_name)
+               LOAD_FAST                0 (self)
+               BUILD_TUPLE              3
+               LOAD_CONST              14 (<code object <lambda> at 0x000001DD462F9430, file "gui\search_mixin.py", line 39>)
+               MAKE_FUNCTION
+               SET_FUNCTION_ATTRIBUTE   8 (closure)
+
+  38           CALL                     1
+               POP_TOP
+
+  43           LOAD_DEREF               0 (self)
+               LOAD_ATTR               30 (search_worker)
+               LOAD_ATTR               36 (error)
+               LOAD_ATTR               35 (connect + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR               38 (on_search_error)
+               CALL                     1
+               POP_TOP
+
+  44           LOAD_DEREF               0 (self)
+               LOAD_ATTR               30 (search_worker)
+               LOAD_ATTR               41 (start + NULL|self)
+               CALL                     0
+               POP_TOP
+               RETURN_CONST             3 (None)
+
+#### CODE SearchMixin.on_search_clicked.<locals>.<lambda>  args=('results', 'is_end', 'cursor')
+  --           COPY_FREE_VARS           3
+
+  39           RESUME                   0
+               LOAD_DEREF               5 (self)
+               LOAD_ATTR                1 (on_search_finished + NULL|self)
+
+  40           LOAD_FAST_LOAD_FAST      1 (results, is_end)
+               LOAD_FAST                2 (cursor)
+               LOAD_DEREF               3 (kb_id)
+               LOAD_DEREF               4 (kb_name)
+
+  39           CALL                     5
+               RETURN_VALUE
+
+### CODE SearchMixin.on_search_finished  args=('self', 'results', 'is_end', 'next_cursor', 'kb_id', 'kb_name')
+ 46           RESUME                   0
+
+ 48           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (search_btn)
+              LOAD_ATTR                3 (setEnabled + NULL|self)
+              LOAD_CONST               1 (True)
+              CALL                     1
+              POP_TOP
+
+ 49           LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (search_input)
+              LOAD_ATTR                3 (setEnabled + NULL|self)
+              LOAD_CONST               1 (True)
+              CALL                     1
+              POP_TOP
+
+ 50           LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (kb_selector)
+              LOAD_ATTR                3 (setEnabled + NULL|self)
+              LOAD_CONST               1 (True)
+              CALL                     1
+              POP_TOP
+
+ 51           LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (tag_selector)
+              LOAD_ATTR                3 (setEnabled + NULL|self)
+              LOAD_CONST               1 (True)
+              CALL                     1
+              POP_TOP
+
+ 52           LOAD_FAST_LOAD_FAST     48 (next_cursor, self)
+              STORE_ATTR               5 (search_next_cursor)
+
+ 54           LOAD_FAST                1 (results)
+              TO_BOOL
+              POP_JUMP_IF_TRUE        72 (to L1)
+
+ 55           LOAD_FAST                0 (self)
+              LOAD_ATTR               12 (tree)
+              LOAD_ATTR               15 (clear + NULL|self)
+              CALL                     0
+              POP_TOP
+
+ 56           LOAD_FAST                0 (self)
+              LOAD_ATTR               17 (add_log + NULL|self)
+              LOAD_CONST               2 ('未找到匹配的文件')
+              LOAD_CONST               3 ('warning')
+              CALL                     2
+              POP_TOP
+
+ 57           LOAD_FAST                0 (self)
+              LOAD_ATTR               18 (clear_search_btn)
+              LOAD_ATTR               21 (setVisible + NULL|self)
+              LOAD_CONST               1 (True)
+              CALL                     1
+              POP_TOP
+
+ 58           RETURN_CONST             4 (None)
+
+ 60   L1:     LOAD_FAST                0 (self)
+              LOAD_ATTR               12 (tree)
+              LOAD_ATTR               23 (setUpdatesEnabled + NULL|self)
+              LOAD_CONST               5 (False)
+              CALL                     1
+              POP_TOP
+
+ 61           LOAD_FAST                0 (self)
+              LOAD_ATTR               12 (tree)
+              LOAD_ATTR               15 (clear + NULL|self)
+              CALL                     0
+              POP_TOP
+
+ 63           BUILD_LIST               0
+              STORE_FAST               6 (items)
+
+ 64           LOAD_FAST                1 (results)
+              GET_ITER
+      L2:     FOR_ITER                47 (to L4)
+              STORE_FAST               7 (result)
+
+ 65           LOAD_FAST                0 (self)
+              LOAD_ATTR               25 (convert_search_result_to_tree_item + NULL|self)
+              LOAD_FAST_LOAD_FAST    116 (result, kb_id)
+              LOAD_FAST                5 (kb_name)
+              CALL                     3
+              STORE_FAST               8 (item)
+
+ 66           LOAD_FAST                8 (item)
+              TO_BOOL
+              POP_JUMP_IF_TRUE         2 (to L3)
+              JUMP_BACKWARD           30 (to L2)
+
+ 67   L3:     LOAD_FAST                6 (items)
+              LOAD_ATTR               27 (append + NULL|self)
+              LOAD_FAST                8 (item)
+              CALL                     1
+              POP_TOP
+              JUMP_BACKWARD           49 (to L2)
+
+ 64   L4:     END_FOR
+              POP_TOP
+
+ 69           LOAD_FAST                0 (self)
+              LOAD_ATTR               12 (tree)
+              LOAD_ATTR               29 (addTopLevelItems + NULL|self)
+              LOAD_FAST                6 (items)
+              CALL                     1
+              POP_TOP
+
+ 70           LOAD_FAST                6 (items)
+              GET_ITER
+      L5:     FOR_ITER               117 (to L8)
+              STORE_FAST               8 (item)
+
+ 71           LOAD_FAST                8 (item)
+              LOAD_ATTR               31 (data + NULL|self)
+              LOAD_CONST               6 (1)
+              LOAD_GLOBAL             32 (Qt)
+              LOAD_ATTR               34 (UserRole)
+              CALL                     2
+              STORE_FAST               9 (data)
+
+ 72           LOAD_FAST                9 (data)
+              TO_BOOL
+              POP_JUMP_IF_TRUE         2 (to L6)
+              JUMP_BACKWARD           44 (to L5)
+
+ 73   L6:     LOAD_FAST                9 (data)
+              LOAD_ATTR               37 (get + NULL|self)
+              LOAD_CONST               7 ('tags')
+              BUILD_LIST               0
+              CALL                     2
+              STORE_FAST              10 (tags)
+
+ 74           LOAD_FAST               10 (tags)
+              TO_BOOL
+              POP_JUMP_IF_TRUE         2 (to L7)
+              JUMP_BACKWARD           71 (to L5)
+
+ 75   L7:     LOAD_FAST                0 (self)
+              LOAD_ATTR               39 (_create_tag_widget + NULL|self)
+              LOAD_FAST               10 (tags)
+              CALL                     1
+              STORE_FAST              11 (tag_widget)
+
+ 76           LOAD_FAST                0 (self)
+              LOAD_ATTR               12 (tree)
+              LOAD_ATTR               41 (setItemWidget + NULL|self)
+              LOAD_FAST                8 (item)
+              LOAD_CONST               8 (5)
+              LOAD_FAST               11 (tag_widget)
+              CALL                     3
+              POP_TOP
+              JUMP_BACKWARD          119 (to L5)
+
+ 70   L8:     END_FOR
+              POP_TOP
+
+ 77           LOAD_FAST                0 (self)
+              LOAD_ATTR               12 (tree)
+              LOAD_ATTR               23 (setUpdatesEnabled + NULL|self)
+              LOAD_CONST               1 (True)
+              CALL                     1
+              POP_TOP
+
+ 79           LOAD_FAST                0 (self)
+              LOAD_ATTR               17 (add_log + NULL|self)
+              LOAD_CONST               9 ('找到 ')
+              LOAD_GLOBAL             43 (len + NULL)
+              LOAD_FAST                1 (results)
+              CALL                     1
+              FORMAT_SIMPLE
+              LOAD_CONST              10 (' 个文件')
+              BUILD_STRING             3
+              LOAD_CONST              11 ('success')
+              CALL                     2
+              POP_TOP
+
+ 80           LOAD_FAST                0 (self)
+              LOAD_ATTR               18 (clear_search_btn)
+              LOAD_ATTR               21 (setVisible + NULL|self)
+              LOAD_CONST               1 (True)
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             4 (None)
+
+### CODE SearchMixin.on_search_error  args=('self', 'error_msg')
+ 82           RESUME                   0
+
+ 84           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (search_btn)
+              LOAD_ATTR                3 (setEnabled + NULL|self)
+              LOAD_CONST               1 (True)
+              CALL                     1
+              POP_TOP
+
+ 85           LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (search_input)
+              LOAD_ATTR                3 (setEnabled + NULL|self)
+              LOAD_CONST               1 (True)
+              CALL                     1
+              POP_TOP
+
+ 86           LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (kb_selector)
+              LOAD_ATTR                3 (setEnabled + NULL|self)
+              LOAD_CONST               1 (True)
+              CALL                     1
+              POP_TOP
+
+ 87           LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (tag_selector)
+              LOAD_ATTR                3 (setEnabled + NULL|self)
+              LOAD_CONST               1 (True)
+              CALL                     1
+              POP_TOP
+
+ 88           LOAD_FAST                0 (self)
+              LOAD_ATTR               11 (add_log + NULL|self)
+              LOAD_CONST               2 ('搜索失败：')
+              LOAD_FAST                1 (error_msg)
+              FORMAT_SIMPLE
+              BUILD_STRING             2
+              LOAD_CONST               3 ('error')
+              CALL                     2
+              POP_TOP
+
+ 89           LOAD_GLOBAL             12 (QMessageBox)
+              LOAD_ATTR               14 (warning)
+              PUSH_NULL
+              LOAD_FAST                0 (self)
+              LOAD_CONST               4 ('搜索失败')
+              LOAD_FAST                1 (error_msg)
+              CALL                     3
+              POP_TOP
+              RETURN_CONST             5 (None)
+
+### CODE SearchMixin.on_clear_search  args=('self',)
+ 91           RESUME                   0
+
+ 93           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (search_mode)
+              TO_BOOL
+              POP_JUMP_IF_TRUE         1 (to L1)
+
+ 94           RETURN_CONST             1 (None)
+
+ 96   L1:     LOAD_FAST                0 (self)
+              LOAD_ATTR                2 (current_kb_list)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       27 (to L2)
+
+ 97           LOAD_FAST                0 (self)
+              LOAD_ATTR                5 (populate_kb_tree + NULL|self)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                2 (current_kb_list)
+              CALL                     1
+              POP_TOP
+
+ 99   L2:     LOAD_CONST               2 (False)
+              LOAD_FAST                0 (self)
+              STORE_ATTR               0 (search_mode)
+
+100           LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (search_input)
+              LOAD_ATTR                9 (clear + NULL|self)
+              CALL                     0
+              POP_TOP
+
+101           LOAD_CONST               3 ('')
+              LOAD_FAST                0 (self)
+              STORE_ATTR               5 (search_next_cursor)
+
+102           LOAD_FAST                0 (self)
+              LOAD_ATTR               12 (clear_search_btn)
+              LOAD_ATTR               15 (setVisible + NULL|self)
+              LOAD_CONST               2 (False)
+              CALL                     1
+              POP_TOP
+
+103           LOAD_FAST                0 (self)
+              LOAD_ATTR               16 (kb_selector)
+              LOAD_ATTR               19 (setEnabled + NULL|self)
+              LOAD_CONST               4 (True)
+              CALL                     1
+              POP_TOP
+
+104           LOAD_FAST                0 (self)
+              LOAD_ATTR               20 (search_btn)
+              LOAD_ATTR               19 (setEnabled + NULL|self)
+              LOAD_CONST               4 (True)
+              CALL                     1
+              POP_TOP
+
+105           LOAD_FAST                0 (self)
+              LOAD_ATTR               22 (tag_selector)
+              LOAD_ATTR               19 (setEnabled + NULL|self)
+              LOAD_CONST               4 (True)
+              CALL                     1
+              POP_TOP
+
+106           LOAD_GLOBAL             25 (range + NULL)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               26 (tag_list_widget)
+              LOAD_ATTR               29 (count + NULL|self)
+              CALL                     0
+              CALL                     1
+              GET_ITER
+      L3:     FOR_ITER                59 (to L4)
+              STORE_FAST               1 (i)
+
+107           LOAD_FAST                0 (self)
+              LOAD_ATTR               26 (tag_list_widget)
+              LOAD_ATTR               31 (item + NULL|self)
+              LOAD_FAST                1 (i)
+              CALL                     1
+              LOAD_ATTR               33 (setCheckState + NULL|self)
+              LOAD_GLOBAL             34 (Qt)
+              LOAD_ATTR               36 (Unchecked)
+              CALL                     1
+              POP_TOP
+              JUMP_BACKWARD           61 (to L3)
+
+106   L4:     END_FOR
+              POP_TOP
+
+108           BUILD_LIST               0
+              LOAD_FAST                0 (self)
+              STORE_ATTR              19 (selected_tags)
+
+109           LOAD_FAST                0 (self)
+              LOAD_ATTR               22 (tag_selector)
+              LOAD_ATTR               41 (setEditText + NULL|self)
+              LOAD_CONST               3 ('')
+              CALL                     1
+              POP_TOP
+
+110           LOAD_FAST                0 (self)
+              LOAD_ATTR               22 (tag_selector)
+              LOAD_ATTR               43 (setPlaceholderText + NULL|self)
+              LOAD_CONST               5 ('选择标签（可选）')
+              CALL                     1
+              POP_TOP
+
+112           LOAD_FAST                0 (self)
+              LOAD_ATTR               45 (add_log + NULL|self)
+              LOAD_CONST               6 ('已返回知识库列表')
+              LOAD_CONST               7 ('info')
+              CALL                     2
+              POP_TOP
+              RETURN_CONST             1 (None)
+
+### CODE SearchMixin.convert_search_result_to_tree_item  args=('self', 'search_result', 'kb_id', 'kb_name')
+114           RESUME                   0
+
+116           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (None)
+              IMPORT_NAME              0 (re)
+              STORE_FAST               4 (re)
+
+118           LOAD_FAST                1 (search_result)
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST               3 ('knowledge')
+              BUILD_MAP                0
+              CALL                     2
+              STORE_FAST               5 (knowledge)
+
+119           LOAD_FAST                5 (knowledge)
+              TO_BOOL
+              POP_JUMP_IF_TRUE         1 (to L1)
+
+120           RETURN_CONST             2 (None)
+
+122   L1:     LOAD_FAST                5 (knowledge)
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST               4 ('media_id')
+              LOAD_CONST               5 ('')
+              CALL                     2
+              STORE_FAST               6 (media_id)
+
+123           LOAD_FAST                5 (knowledge)
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST               6 ('title')
+              LOAD_CONST               5 ('')
+              CALL                     2
+              STORE_FAST               7 (title)
+
+124           LOAD_GLOBAL              5 (int + NULL)
+              LOAD_FAST                5 (knowledge)
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST               7 ('file_size')
+              LOAD_CONST               1 (0)
+              CALL                     2
+              CALL                     1
+              STORE_FAST               8 (file_size)
+
+125           LOAD_FAST                5 (knowledge)
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST               8 ('media_type')
+              LOAD_CONST               1 (0)
+              CALL                     2
+              STORE_FAST               9 (media_type)
+
+126           LOAD_FAST                5 (knowledge)
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST               9 ('media_type_info')
+              BUILD_MAP                0
+              CALL                     2
+              STORE_FAST              10 (media_type_info)
+
+127           LOAD_FAST                5 (knowledge)
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST              10 ('time_wording')
+              LOAD_CONST              11 ('-')
+              CALL                     2
+              STORE_FAST              11 (update_time)
+
+128           LOAD_FAST                1 (search_result)
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST              12 ('parent_folder_name')
+              LOAD_CONST               5 ('')
+              CALL                     2
+              STORE_FAST              12 (parent_folder_name)
+
+129           LOAD_FAST                0 (self)
+              LOAD_ATTR                7 (_format_size + NULL|self)
+              LOAD_FAST                8 (file_size)
+              CALL                     1
+              STORE_FAST              13 (size_str)
+
+131           LOAD_FAST                1 (search_result)
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST              13 ('highlight_content')
+              LOAD_CONST               5 ('')
+              CALL                     2
+              STORE_FAST              14 (highlight_content)
+
+132           LOAD_FAST                4 (re)
+              LOAD_ATTR                9 (sub + NULL|self)
+              LOAD_CONST              14 ('<[^>]+>')
+              LOAD_CONST               5 ('')
+              LOAD_FAST               14 (highlight_content)
+              CALL                     3
+              LOAD_CONST               2 (None)
+              LOAD_CONST              15 (100)
+              BINARY_SLICE
+              STORE_FAST              15 (content_preview)
+
+134           LOAD_FAST                5 (knowledge)
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST              16 ('tags')
+              BUILD_LIST               0
+              CALL                     2
+              COPY                     1
+              TO_BOOL
+              POP_JUMP_IF_TRUE        18 (to L2)
+              POP_TOP
+              LOAD_FAST                1 (search_result)
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST              16 ('tags')
+              BUILD_LIST               0
+              CALL                     2
+      L2:     STORE_FAST              16 (tags)
+
+136           LOAD_FAST                5 (knowledge)
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST              17 ('access_status')
+              LOAD_CONST              18 (3)
+              CALL                     2
+              STORE_FAST              17 (access_status)
+
+137           LOAD_FAST                0 (self)
+              LOAD_ATTR               11 (get_access_status_display + NULL|self)
+              LOAD_FAST               17 (access_status)
+              CALL                     1
+              UNPACK_SEQUENCE          2
+              STORE_FAST              18 (status_text)
+              STORE_FAST              19 (status_color)
+
+139           LOAD_GLOBAL             13 (QTreeWidgetItem + NULL)
+
+140           LOAD_FAST                7 (title)
+
+141           LOAD_FAST               10 (media_type_info)
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST              19 ('name')
+              LOAD_CONST              20 ('文件')
+              CALL                     2
+
+142           LOAD_FAST               13 (size_str)
+
+143           LOAD_FAST               11 (update_time)
+
+144           LOAD_FAST               18 (status_text)
+
+145           LOAD_FAST               15 (content_preview)
+
+139           BUILD_LIST               6
+              CALL                     1
+              STORE_FAST              20 (item)
+
+147           LOAD_FAST               20 (item)
+              LOAD_ATTR               15 (setIcon + NULL|self)
+              LOAD_CONST               1 (0)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               17 (_get_file_icon + NULL|self)
+              LOAD_FAST               10 (media_type_info)
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST              19 ('name')
+              LOAD_CONST               5 ('')
+              CALL                     2
+              CALL                     1
+              CALL                     2
+              POP_TOP
+
+148           LOAD_FAST               20 (item)
+              LOAD_ATTR               19 (setForeground + NULL|self)
+              LOAD_CONST              21 (4)
+              LOAD_FAST               19 (status_color)
+              CALL                     2
+              POP_TOP
+
+150           LOAD_FAST               20 (item)
+              LOAD_ATTR               21 (setData + NULL|self)
+              LOAD_CONST              22 (1)
+              LOAD_GLOBAL             22 (Qt)
+              LOAD_ATTR               24 (UserRole)
+
+151           LOAD_CONST              23 ('file')
+
+152           LOAD_FAST                2 (kb_id)
+
+153           LOAD_FAST                3 (kb_name)
+
+154           LOAD_FAST                6 (media_id)
+
+155           LOAD_FAST                9 (media_type)
+
+156           LOAD_FAST               10 (media_type_info)
+
+157           LOAD_FAST                7 (title)
+
+158           LOAD_FAST               12 (parent_folder_name)
+              TO_BOOL
+              POP_JUMP_IF_FALSE        7 (to L3)
+              LOAD_FAST                3 (kb_name)
+              FORMAT_SIMPLE
+              LOAD_CONST              24 ('/')
+              LOAD_FAST               12 (parent_folder_name)
+              FORMAT_SIMPLE
+              BUILD_STRING             3
+              JUMP_FORWARD             1 (to L4)
+      L3:     LOAD_FAST                3 (kb_name)
+
+159   L4:     LOAD_FAST                8 (file_size)
+
+160           LOAD_FAST                5 (knowledge)
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST              25 ('update_time')
+              LOAD_CONST               1 (0)
+              CALL                     2
+
+161           LOAD_FAST               17 (access_status)
+
+162           LOAD_FAST               17 (access_status)
+              LOAD_CONST              22 (1)
+              COMPARE_OP              72 (==)
+
+163           LOAD_FAST               16 (tags)
+
+150           LOAD_CONST              26 (('type', 'kb_id', 'kb_name', 'media_id', 'media_type', 'media_type_info', 'title', 'full_path', 'file_size', 'update_time', 'access_status', 'forbid_access', 'tags'))
+              BUILD_CONST_KEY_MAP     13
+              CALL                     3
+              POP_TOP
+
+165           LOAD_FAST               20 (item)
+              RETURN_VALUE

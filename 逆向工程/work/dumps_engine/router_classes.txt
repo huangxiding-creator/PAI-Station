@@ -1,0 +1,98 @@
+@@@ off=2405600
+差异，上传截图"),await a.takeScreenshot("upload",d.uploadFrame);
+else{
+if(console.log("【receivemessage】辅助模式未检测到差异，5秒后继续检查"),a.yieldToScheduleAtUnreadBoundary())return;
+a.finishUnreadCheck()||a.setCheckChatDiffTimer()
+}
+
+}
+catch(d){
+if(isExecutionAbortError(d))return;
+console.error("【receivemessage】辅助模式检查差异失败:",d),a.setCheckChatDiffTimer()
+}
+
+}
+else try{
+const d=await receiveNewNessageRPA(s,i||void 0,{
+skipCurrentChatDiff:o,onUnreadBoundary:()=>a.yieldToScheduleAtUnreadBoundary()?"yield":"continue"
+}
+);
+if(debugLog("【receivemessage】接收消息任务执行完成"),d?.action==="yield")return;
+i?.throwIfAborted(),d?.action==="screenshot"?(debugLog("【receivemessage】需要截图"),await a.takeScreenshot("upload",d.uploadFrame)):(debugLog("【receivemessage】未检测到未读消息，5秒后继续检查"),a.finishUnreadCheck()||a.setCheckUnreadTimer())
+}
+catch(d){
+if(isExecutionAbortError(d))return;
+console.error("【receivemessage】异常，触发截图自愈:",d),await a.takeScreenshot("upload")
+}
+break
+}
+case"mini_program":{
+console.log("【暂停截图】准备发送小程序:",e.data),await a.handleMiniProgramSend(e,r),console.log("Main RPA 处理小程序发送",{
+isEnd:r,data:e.data
+}
+);
+break
+}
+case"image":{
+if(console.log("【暂停截图】准备发送图片:",e.data),e.data){
+console.log("【MiscHandler】发送图片消息:",e.data),displayMessage("keyboard","发送图片","");
+try{
+i?.throwIfAborted(),await sendImageRPA(e.data,s,i),i?.throwIfAborted(),console.log("【MiscHandler】图片发送完成")
+}
+catch(o){
+if(isExecutionAbortError(o))break;
+console.error("【MiscHandler】发送图片失败:",o)
+}
+
+}
+else console.warn("【MiscHandler】图片 action 缺少 data 字段");
+console.log("Main RPA 处理图片发送",{
+isEnd:r,data:e.data
+}
+),r&&await a.resumeNextLoop({
+instant:!0
+}
+);
+break
+}
+case"weixin_favorites":{
+console.log("【暂停截图】准备发送收藏夹内容:",e.data);
+try{
+i?.throwIfAborted();
+const o=await performCompleteCollectionFlow(e.data,s,i);
+i?.throwIfAborted(),o.success?isBeijingSubwayProject()&&(console.log("【beijing_subway】收藏夹发送完成，等待 5 秒..."),await new Promise(d=>setTimeout(d,5e3))):console.error("【MiscHandler】发送收藏夹内容失败:",o.error||"未知错误")
+}
+catch(o){
+if(isExecutionAbortError(o))break;
+console.error("【MiscHandler】发送收藏夹内容失败:",o)
+}
+console.log("Main RPA 处理收
+@@@ off=2407600
+藏夹发送",{
+isEnd:r,data:e.data
+}
+);
+break
+}
+case"text_prompt":{
+console.log("【MiscHandler】检测到 text_prompt 类型，开始流式发送:",e.data);
+const{
+user:o,system:d
+}
+=parsePromptData(e.data||"");
+displayMessage("thinking",o);
+try{
+await sendStreamingPromptMessage(o,s,i||void 0,d),console.log("【MiscHandler】流式发送完成")
+}
+catch(u){
+if(isExecutionAbortError(u))break;
+console.error("【MiscHandler】流式发送失败:",u)
+}
+break
+}
+case"simple_task":{
+rxEngine.setPhase(EnginePhase.EXECUTING),console.log("【simple_task】收到简单任务:",e.data);
+let o;
+try{
+const d=JSON.parse(e.data),u=Array.isArray(d)?d:d.actions||[],l=Array.isArray(d)?void 0:d.target_names,f=Array.isArray(d)?e.log_id:d.log_id??e.log_id;
+o=typeof f=="

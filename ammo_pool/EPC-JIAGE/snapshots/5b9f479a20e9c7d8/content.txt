@@ -1,0 +1,37 @@
+# EPC-JIAGE S1 二波 · Manus军团试探性派单回执 (engine=manus)
+
+- 日期: 2026-10-25 | 派单窗: 北京 12:59-13:04 = 美东 00:59-01:04 (1010用户令
+  黄金窗 23:00-07:00 之内, 1022修订窗外亦可跑; 实派在窗内零等待)
+- NB让路检查: F:/We-AIPO run_state.mode=direct, nb_wave.state=done, queue=0 → 无让路
+- 派单主题: 工程计价依据体系全景：各省信息价发布机制、定额测定流程与合同解除结算规则
+  (附加: 8省信息价载体/频次/效力; 定额测定立项-测算-审批-发布; 合同解除类型结算规则;
+  GB50500与造价鉴定规范现行版本; 官方一手优先, 2024-2026现行优先)
+- 用途形态: collect 轻采集简报 (军团简报定型, 100-200积分/单档), 3套引用变体轮换
+- 派单机制: ①REST CreateTask 复探 404×3 (0923考古+1025新鲜双实锤, 纯HTTP派发死路
+  如实记录); ②走军团在役浏览器 composer 路 (manus_lib login/send_task, profiles_v3
+  登录态+Turnstile自动过), 端口 9441/9442/9443 (避开 9333/9222/9336/9337 红线口),
+  最小化+离屏窗, 用完即杀 (PID级清理, chrome 计数 36 基线复原, 端口全清)
+- 积分预检: token直调 GetAvailableCredits 三号均 300/300 (派单前)
+
+## 派单结果 (3/3 全中, 零造假)
+
+| # | 账号 | sid | 派单时刻(北京) | 积分 300→ | 实证 |
+|---|------|-----|----------------|-----------|------|
+| 1 | 05nroahztr@manus.edu.kg | TL1G5WB1iVfimZb4jMDXN5 | 12:59:30 | 244 (-56) | getSessionV2 200, 自动标题「汇编工程计价依据体系公开资料库」 |
+| 2 | 18c1iqzd2j@hema.edu.kg | 8DfN7eje8xeNuyt2mvUcM1 | 13:01:46 | 271 (-29) | 积分实耗=任务在跑 |
+| 3 | 1y0hfms0d3@hema.edu.kg | Po5bK9EdfIOQlm2VoiLy0B | 13:04:01 | 290 (-10) | 积分实耗=任务在跑 |
+
+## 留痕位置
+
+- 军团统一台账: E:/AI-Station/Auto_Manus/data/epc50_corps_log.jsonl
+  (engine=manus, battle=EPC-JIAGE, 3行, 1025 12:59-13:04)
+- 本腿专账: E:/AI-Station/Auto_Manus/data/epc_jiage_dispatch_log.jsonl (3行)
+- 派单脚本(新增件): E:/AI-Station/Auto_Manus/epc_jiage_manus_dispatch.py
+- 本回执: E:/AI-Station/ammo_pool/EPC-JIAGE/staging/manus/manus_dispatch_receipt_2026-10-25.md
+
+## 收割路径 (后续班次)
+
+sids 即收割句柄: corps_api.py harvest / session_downloader.py 按
+getSessionFilesV2 拉 collected_materials.md 成果, 入池时本回执所记 sids
+可用于对账。试探性 3 单全中 = 风控 favorable 实证, 军团主力可按此窗续派
+(美东窗内), 仍守单号日帽。

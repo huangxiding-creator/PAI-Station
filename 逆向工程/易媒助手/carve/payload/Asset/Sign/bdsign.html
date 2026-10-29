@@ -1,0 +1,16 @@
+<html>
+	<head>
+	<script type="text/javascript" src="sign.js"></script>
+	</head>
+	<body>
+		<script type="text/javascript">
+			function sign(content, gtk, flag) {
+				var res = hash(content, gtk)
+				if (!flag)
+					flag = '';
+				window.JsBaiduSign(res, flag);
+			}
+		
+		</script>
+	</body>
+</html>

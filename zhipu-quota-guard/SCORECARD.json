@@ -1,0 +1,20 @@
+{
+  "generated": "2026-10-23",
+  "product": "ZhipuQuotaGuard 智谱额度护盾",
+  "maturity_landscape": {"best": 84.5, "median": 51.2, "mean": 53.5, "n": 20, "mature_count": 1},
+  "tenx": {"index": 1.641, "best_axis": "latency", "multiplier": 43.75, "verdict": "tenx_qualified",
+           "axes": [
+             {"axis": "latency", "ours": 0.08, "baseline": 3.5, "log10": 1.641, "note": "额度耗尽→恢复MTTR(小时): 自动~5min vs 人工~3.5h(含无人值守)"},
+             {"axis": "deploy_cost", "ours": 2, "baseline": 12, "log10": 0.778, "note": "人日: 85%复用 vs 从零自研"},
+             {"axis": "extensibility", "ours": 2, "baseline": 1, "log10": 0.301, "note": "双站provider抽象 vs 单站硬编码"}
+           ]},
+  "scorecard": {"feasibility": 0.691, "user_value": 0.95, "monetization": 0.70, "tenx": 0.99,
+                "weighted": 0.845, "verdict": "proceed",
+                "rationale": {
+                  "feasibility": "landscape median 51.2 → derive 0.691；复用度85%（MIT端点契约/ccusage/DrissionPage官方范式），自建仅重置glue+决策引擎+编排",
+                  "user_value": "一手痛点（用户亲述+24h产线无人值守场景）+官方规则实证；量化为MTTR 43.75x",
+                  "monetization": "内部ROI代理（非售卖品）：中断挽回+重置卡零作废+排程增益",
+                  "tenx": "latency轴 43.75x（tenx_qualified）；可证伪：上线后run-ledger实测MTTR中位数>0.5h则回炉"
+                }},
+  "approval_gate": "待用户批准（批准/修改/否决 三选一）"
+}

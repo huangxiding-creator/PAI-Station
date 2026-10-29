@@ -1,0 +1,32 @@
+test_wenku_docid.py:199: # ---------------- WenkuDownloadAdapter 骨架契约 ----------------
+test_wenku_docid.py:200: 
+test_wenku_docid.py:201: def test_fr2_ac1_adapter_class_contract():
+test_wenku_docid.py:202:     """DownloadAdapter 子类注册 channel=wenku；四段契约：search 可用、后三段骨架留 T22/T26/T31/T35。"""
+test_wenku_docid.py:203:     adapter = WenkuDownloadAdapter(
+test_wenku_docid.py:204:         meta_adapter=WenkuMetaAdapter(limiter=RateLimiter(min_interval=0, daily_limit=10)))
+test_wenku_docid.py:205:     assert issubclass(WenkuDownloadAdapter, DownloadAdapter)
+---
+test_wenku_docid.py:206:     assert adapter.site == "wenku" and adapter.channel == "wenku"
+test_wenku_docid.py:207:     assert FOUR_STAGES[0] == "search" and callable(adapter.search)
+test_wenku_docid.py:208:     meta = FileMeta(title="骨架样例", fmt="doc")
+test_wenku_docid.py:209:     with pytest.raises(NotImplementedError, match="T22"):
+test_wenku_docid.py:210:         adapter.plan(meta)
+test_wenku_docid.py:211:     with pytest.raises(NotImplementedError, match=r"T26/T31/T35"):
+test_wenku_docid.py:212:         adapter.fetch_ladder(HarvestPlan(meta=meta))
+---
+test_wenku_docid.py:208:     meta = FileMeta(title="骨架样例", fmt="doc")
+test_wenku_docid.py:209:     with pytest.raises(NotImplementedError, match="T22"):
+test_wenku_docid.py:210:         adapter.plan(meta)
+test_wenku_docid.py:211:     with pytest.raises(NotImplementedError, match=r"T26/T31/T35"):
+test_wenku_docid.py:212:         adapter.fetch_ladder(HarvestPlan(meta=meta))
+test_wenku_docid.py:213:     with pytest.raises(NotImplementedError, match=r"T26/T31/T35"):
+test_wenku_docid.py:214:         adapter.verify(LadderResult(ok=True))
+---
+test_wenku_docid.py:210:         adapter.plan(meta)
+test_wenku_docid.py:211:     with pytest.raises(NotImplementedError, match=r"T26/T31/T35"):
+test_wenku_docid.py:212:         adapter.fetch_ladder(HarvestPlan(meta=meta))
+test_wenku_docid.py:213:     with pytest.raises(NotImplementedError, match=r"T26/T31/T35"):
+test_wenku_docid.py:214:         adapter.verify(LadderResult(ok=True))
+test_wenku_docid.py:215: 
+test_wenku_docid.py:216: 
+---

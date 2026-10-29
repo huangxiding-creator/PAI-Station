@@ -1,0 +1,2784 @@
+{
+ "kind": "fibo_module_seed",
+ "module": "BE",
+ "module_zh": "基础实体",
+ "module_en": "Business Entities",
+ "note": "主干模块（任务点名）",
+ "source": {
+  "repo": "EDMCouncil/fibo",
+  "tag": "master_2026Q3",
+  "license": "MIT",
+  "license_copyright": "Copyright (c) 2020 Enterprise Data Management Council",
+  "url": "https://github.com/EDMCouncil/fibo/tree/master_2026Q3",
+  "tarball_sha256": "48a1690255df0fb161d624a6e12fb529f4e4f38c73ac8cfbe1ed81e913625e27"
+ },
+ "stats": {
+  "classes": 188,
+  "zh_mapped": 38,
+  "zh_rate": 0.2021,
+  "roots": 41,
+  "max_depth": 5,
+  "multi_parent_classes": 17,
+  "derived_labels": 0,
+  "external_parent_edges_dropped": 61
+ },
+ "concepts": [
+  {
+   "id": "APIFirstMarketDataProvider",
+   "en": "API-first market data provider",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/FunctionalEntities/Publishers/APIFirstMarketDataProvider",
+   "module": "BE",
+   "subdomain": "FunctionalEntities",
+   "parent": "MarketDataProvider",
+   "parents": [
+    "MarketDataProvider"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "AlternativeDataProvider",
+   "en": "alternative data provider",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/FunctionalEntities/Publishers/AlternativeDataProvider",
+   "module": "BE",
+   "subdomain": "FunctionalEntities",
+   "parent": "MarketDataProvider",
+   "parents": [
+    "MarketDataProvider"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "Association",
+   "en": "association",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/FunctionalEntities/FunctionalEntities/Association",
+   "module": "BE",
+   "subdomain": "FunctionalEntities",
+   "parent": "NotForProfitOrganization",
+   "parents": [
+    "NotForProfitOrganization"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "CooperativeSociety",
+   "en": "cooperative society",
+   "label_source": "rdfs:label",
+   "zh": "合作社",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/FunctionalEntities/FunctionalEntities/CooperativeSociety",
+   "module": "BE",
+   "subdomain": "FunctionalEntities",
+   "parent": "FunctionalBusinessEntity",
+   "parents": [
+    "FunctionalBusinessEntity"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CryptoDigitalAssetDataProvider",
+   "en": "crypto and digital-asset data provider",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/FunctionalEntities/Publishers/CryptoDigitalAssetDataProvider",
+   "module": "BE",
+   "subdomain": "FunctionalEntities",
+   "parent": "MarketDataProvider",
+   "parents": [
+    "MarketDataProvider"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "DerivativesVolatilityDataProvider",
+   "en": "derivatives and volatility data provider",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/FunctionalEntities/Publishers/DerivativesVolatilityDataProvider",
+   "module": "BE",
+   "subdomain": "FunctionalEntities",
+   "parent": "MarketDataProvider",
+   "parents": [
+    "MarketDataProvider"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "ExchangeSourcedDataProvider",
+   "en": "exchange-sourced data provider",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/FunctionalEntities/Publishers/ExchangeSourcedDataProvider",
+   "module": "BE",
+   "subdomain": "FunctionalEntities",
+   "parent": "MarketDataProvider",
+   "parents": [
+    "MarketDataProvider"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "FamilyOffice",
+   "en": "family office",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/FunctionalEntities/FunctionalEntities/FamilyOffice",
+   "module": "BE",
+   "subdomain": "FunctionalEntities",
+   "parent": "FunctionalBusinessEntity",
+   "parents": [
+    "FunctionalBusinessEntity"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "FixedIncomeSpecialistProvider",
+   "en": "fixed income specialist provider",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/FunctionalEntities/Publishers/FixedIncomeSpecialistProvider",
+   "module": "BE",
+   "subdomain": "FunctionalEntities",
+   "parent": "MarketDataProvider",
+   "parents": [
+    "MarketDataProvider"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "FunctionalBusinessEntity",
+   "en": "functional business entity",
+   "label_source": "rdfs:label",
+   "zh": "职能商业实体",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/FunctionalEntities/FunctionalEntities/FunctionalBusinessEntity",
+   "module": "BE",
+   "subdomain": "FunctionalEntities",
+   "parent": "FunctionalEntity",
+   "parents": [
+    "FunctionalEntity"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "FunctionalEntity",
+   "en": "functional entity",
+   "label_source": "rdfs:label",
+   "zh": "职能实体",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/FunctionalEntities/FunctionalEntities/FunctionalEntity",
+   "module": "BE",
+   "subdomain": "FunctionalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "InstitutionalMarketDataProvider",
+   "en": "institutional market data provider",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/FunctionalEntities/Publishers/InstitutionalMarketDataProvider",
+   "module": "BE",
+   "subdomain": "FunctionalEntities",
+   "parent": "MarketDataProvider",
+   "parents": [
+    "MarketDataProvider"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "MarketDataProvider",
+   "en": "market data provider",
+   "label_source": "rdfs:label",
+   "zh": "市场数据提供商",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/FunctionalEntities/Publishers/MarketDataProvider",
+   "module": "BE",
+   "subdomain": "FunctionalEntities",
+   "parent": "Publisher",
+   "parents": [
+    "Publisher"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Merchant",
+   "en": "merchant",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/FunctionalEntities/FunctionalEntities/Merchant",
+   "module": "BE",
+   "subdomain": "FunctionalEntities",
+   "parent": "FunctionalBusinessEntity",
+   "parents": [
+    "FunctionalBusinessEntity"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "MerchantCategoryCode",
+   "en": "merchant category code",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/FunctionalEntities/FunctionalEntities/MerchantCategoryCode",
+   "module": "BE",
+   "subdomain": "FunctionalEntities",
+   "parent": "IndustrySectorClassifier",
+   "parents": [
+    "IndustrySectorClassifier"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "MerchantCategoryCodeScheme",
+   "en": "merchant category code scheme",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/FunctionalEntities/FunctionalEntities/MerchantCategoryCodeScheme",
+   "module": "BE",
+   "subdomain": "FunctionalEntities",
+   "parent": "IndustrySectorClassificationScheme",
+   "parents": [
+    "IndustrySectorClassificationScheme"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "MerchantIdentifier",
+   "en": "merchant identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/FunctionalEntities/FunctionalEntities/MerchantIdentifier",
+   "module": "BE",
+   "subdomain": "FunctionalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Publication",
+   "en": "publication",
+   "label_source": "rdfs:label",
+   "zh": "出版物",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/FunctionalEntities/Publishers/Publication",
+   "module": "BE",
+   "subdomain": "FunctionalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Publisher",
+   "en": "publisher",
+   "label_source": "rdfs:label",
+   "zh": "出版方",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/FunctionalEntities/Publishers/Publisher",
+   "module": "BE",
+   "subdomain": "FunctionalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ReferenceDataSpecialistProvider",
+   "en": "reference data specialist provider",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/FunctionalEntities/Publishers/ReferenceDataSpecialistProvider",
+   "module": "BE",
+   "subdomain": "FunctionalEntities",
+   "parent": "MarketDataProvider",
+   "parents": [
+    "MarketDataProvider"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "Syndicate",
+   "en": "syndicate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/FunctionalEntities/FunctionalEntities/Syndicate",
+   "module": "BE",
+   "subdomain": "FunctionalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "SyndicateMember",
+   "en": "syndicate member",
+   "label_source": "rdfs:label",
+   "zh": "银团成员",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/FunctionalEntities/FunctionalEntities/SyndicateMember",
+   "module": "BE",
+   "subdomain": "FunctionalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "BranchOfGovernment",
+   "en": "branch of government",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/GovernmentEntities/GovernmentEntities/BranchOfGovernment",
+   "module": "BE",
+   "subdomain": "GovernmentEntities",
+   "parent": "GovernmentBody",
+   "parents": [
+    "GovernmentBody"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "DevolvedGovernment",
+   "en": "devolved government",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/GovernmentEntities/GovernmentEntities/DevolvedGovernment",
+   "module": "BE",
+   "subdomain": "GovernmentEntities",
+   "parent": "Government",
+   "parents": [
+    "Government"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "ExecutiveBranch",
+   "en": "executive branch",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/GovernmentEntities/GovernmentEntities/ExecutiveBranch",
+   "module": "BE",
+   "subdomain": "GovernmentEntities",
+   "parent": "BranchOfGovernment",
+   "parents": [
+    "BranchOfGovernment"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "FederalGovernment",
+   "en": "federal government",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/GovernmentEntities/GovernmentEntities/FederalGovernment",
+   "module": "BE",
+   "subdomain": "GovernmentEntities",
+   "parent": "NationalGovernment",
+   "parents": [
+    "NationalGovernment"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "FederatedSovereignty",
+   "en": "federated sovereignty",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/GovernmentEntities/GovernmentEntities/FederatedSovereignty",
+   "module": "BE",
+   "subdomain": "GovernmentEntities",
+   "parent": "SovereignState",
+   "parents": [
+    "SovereignState"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "Government",
+   "en": "government",
+   "label_source": "rdfs:label",
+   "zh": "政府",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/GovernmentEntities/GovernmentEntities/Government",
+   "module": "BE",
+   "subdomain": "GovernmentEntities",
+   "parent": "FunctionalEntity",
+   "parents": [
+    "FunctionalEntity"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "GovernmentAgency",
+   "en": "government agency",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/GovernmentEntities/GovernmentEntities/GovernmentAgency",
+   "module": "BE",
+   "subdomain": "GovernmentEntities",
+   "parent": "GovernmentBody",
+   "parents": [
+    "GovernmentBody"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "GovernmentAppointee",
+   "en": "government appointee",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/GovernmentEntities/GovernmentEntities/GovernmentAppointee",
+   "module": "BE",
+   "subdomain": "GovernmentEntities",
+   "parent": "GovernmentOfficial",
+   "parents": [
+    "Executive",
+    "GovernmentOfficial"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "GovernmentBody",
+   "en": "government body",
+   "label_source": "rdfs:label",
+   "zh": "政府机构",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/GovernmentEntities/GovernmentEntities/GovernmentBody",
+   "module": "BE",
+   "subdomain": "GovernmentEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "GovernmentDepartment",
+   "en": "government department",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/GovernmentEntities/GovernmentEntities/GovernmentDepartment",
+   "module": "BE",
+   "subdomain": "GovernmentEntities",
+   "parent": "GovernmentBody",
+   "parents": [
+    "GovernmentBody"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "GovernmentMinister",
+   "en": "government minister",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/GovernmentEntities/GovernmentEntities/GovernmentMinister",
+   "module": "BE",
+   "subdomain": "GovernmentEntities",
+   "parent": "GovernmentOfficial",
+   "parents": [
+    "Executive",
+    "GovernmentOfficial"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "GovernmentOfficial",
+   "en": "government official",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/GovernmentEntities/GovernmentEntities/GovernmentOfficial",
+   "module": "BE",
+   "subdomain": "GovernmentEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Instrumentality",
+   "en": "instrumentality",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/GovernmentEntities/GovernmentEntities/Instrumentality",
+   "module": "BE",
+   "subdomain": "GovernmentEntities",
+   "parent": "GovernmentBody",
+   "parents": [
+    "GovernmentBody"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Judiciary",
+   "en": "judiciary",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/GovernmentEntities/GovernmentEntities/Judiciary",
+   "module": "BE",
+   "subdomain": "GovernmentEntities",
+   "parent": "BranchOfGovernment",
+   "parents": [
+    "BranchOfGovernment"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "Legislature",
+   "en": "legislature",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/GovernmentEntities/GovernmentEntities/Legislature",
+   "module": "BE",
+   "subdomain": "GovernmentEntities",
+   "parent": "BranchOfGovernment",
+   "parents": [
+    "BranchOfGovernment"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "MunicipalEntity",
+   "en": "municipal entity",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/GovernmentEntities/GovernmentEntities/MunicipalEntity",
+   "module": "BE",
+   "subdomain": "GovernmentEntities",
+   "parent": "Polity",
+   "parents": [
+    "Polity"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "MunicipalGovernment",
+   "en": "municipal government",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/GovernmentEntities/GovernmentEntities/MunicipalGovernment",
+   "module": "BE",
+   "subdomain": "GovernmentEntities",
+   "parent": "Government",
+   "parents": [
+    "Government"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "NationalGovernment",
+   "en": "national government",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/GovernmentEntities/GovernmentEntities/NationalGovernment",
+   "module": "BE",
+   "subdomain": "GovernmentEntities",
+   "parent": "Government",
+   "parents": [
+    "Government"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "Polity",
+   "en": "polity",
+   "label_source": "rdfs:label",
+   "zh": "政治体",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/GovernmentEntities/GovernmentEntities/Polity",
+   "module": "BE",
+   "subdomain": "GovernmentEntities",
+   "parent": "GovernmentBody",
+   "parents": [
+    "GovernmentBody"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "RegionalGovernment",
+   "en": "regional government",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/GovernmentEntities/GovernmentEntities/RegionalGovernment",
+   "module": "BE",
+   "subdomain": "GovernmentEntities",
+   "parent": "Government",
+   "parents": [
+    "Government"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "RegionalSovereignty",
+   "en": "regional sovereignty",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/GovernmentEntities/GovernmentEntities/RegionalSovereignty",
+   "module": "BE",
+   "subdomain": "GovernmentEntities",
+   "parent": "Polity",
+   "parents": [
+    "Polity"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "SovereignState",
+   "en": "sovereign state",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/GovernmentEntities/GovernmentEntities/SovereignState",
+   "module": "BE",
+   "subdomain": "GovernmentEntities",
+   "parent": "Polity",
+   "parents": [
+    "Polity"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "SupranationalEntity",
+   "en": "supranational entity",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/GovernmentEntities/GovernmentEntities/SupranationalEntity",
+   "module": "BE",
+   "subdomain": "GovernmentEntities",
+   "parent": "Polity",
+   "parents": [
+    "Polity"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "TribalArea",
+   "en": "tribal area",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/GovernmentEntities/GovernmentEntities/TribalArea",
+   "module": "BE",
+   "subdomain": "GovernmentEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "TribalEntity",
+   "en": "tribal entity",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/GovernmentEntities/GovernmentEntities/TribalEntity",
+   "module": "BE",
+   "subdomain": "GovernmentEntities",
+   "parent": "Polity",
+   "parents": [
+    "Polity"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "TribalGovernment",
+   "en": "tribal government",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/GovernmentEntities/GovernmentEntities/TribalGovernment",
+   "module": "BE",
+   "subdomain": "GovernmentEntities",
+   "parent": "Government",
+   "parents": [
+    "Government"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "AccountingFramework",
+   "en": "accounting framework",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/LEIEntities/AccountingFramework",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": "RelationshipQualifier",
+   "parents": [
+    "RelationshipQualifier"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "BenefitCorporation",
+   "en": "benefit corporation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/BenefitCorporation",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": "NotForProfitCorporation",
+   "parents": [
+    "NotForProfitCorporation"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "BoardAgreement",
+   "en": "board agreement",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/BoardAgreement",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": "OrganizationCoveringAgreement",
+   "parents": [
+    "OrganizationCoveringAgreement"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "Branch",
+   "en": "branch",
+   "label_source": "rdfs:label",
+   "zh": "分支机构",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/FormalBusinessOrganizations/Branch",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "BusinessEntity",
+   "en": "business entity",
+   "label_source": "rdfs:label",
+   "zh": "商业实体",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/LegalPersons/BusinessEntity",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "BusinessLicense",
+   "en": "business license",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/LegalPersons/BusinessLicense",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": "License",
+   "parents": [
+    "License"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "CharteredLegalPerson",
+   "en": "chartered legal person",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/LegalPersons/CharteredLegalPerson",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "CommonInterestDevelopmentCorporation",
+   "en": "common interest development corporation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/CommonInterestDevelopmentCorporation",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": "NotForProfitCorporation",
+   "parents": [
+    "NotForProfitCorporation"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "ContractuallyCapableEntity",
+   "en": "contractually capable entity",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/LEIEntities/ContractuallyCapableEntity",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Corporation",
+   "en": "corporation",
+   "label_source": "rdfs:label",
+   "zh": "法人公司",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/Corporation",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Division",
+   "en": "division",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/FormalBusinessOrganizations/Division",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "EntityLegalForm",
+   "en": "entity legal form",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/LEIEntities/EntityLegalForm",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "EntityLegalFormIdentifier",
+   "en": "entity legal form identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/LEIEntities/EntityLegalFormIdentifier",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "EntityLegalFormScheme",
+   "en": "entity legal form scheme",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/LEIEntities/EntityLegalFormScheme",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ForProfitCorporation",
+   "en": "for profit corporation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/ForProfitCorporation",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": "Corporation",
+   "parents": [
+    "Corporation"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "IncorporationGuarantee",
+   "en": "incorporation guarantee",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/IncorporationGuarantee",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": "Constitution",
+   "parents": [
+    "Constitution"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "InstrumentOfIncorporation",
+   "en": "instrument of incorporation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/InstrumentOfIncorporation",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": "Constitution",
+   "parents": [
+    "Constitution"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "JointStockCompany",
+   "en": "joint stock company",
+   "label_source": "rdfs:label",
+   "zh": "股份有限公司",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/JointStockCompany",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": "BusinessEntity",
+   "parents": [
+    "BusinessEntity"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "JointVenture",
+   "en": "joint venture",
+   "label_source": "rdfs:label",
+   "zh": "合资企业",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/FormalBusinessOrganizations/JointVenture",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "LEIRegisteredEntity",
+   "en": "LEI registered entity",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/LEIEntities/LEIRegisteredEntity",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "LegalEntityIdentifier",
+   "en": "legal entity identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/LEIEntities/LegalEntityIdentifier",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "LegalEntityIdentifierScheme",
+   "en": "legal entity identifier scheme",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/LEIEntities/LegalEntityIdentifierScheme",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "LegallyCompetentNaturalPerson",
+   "en": "legally competent natural person",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/LegalPersons/LegallyCompetentNaturalPerson",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": "Person",
+   "parents": [
+    "Person"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "NonGovernmentalOrganization",
+   "en": "non-governmental organization",
+   "label_source": "rdfs:label",
+   "zh": "非政府组织",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/FormalBusinessOrganizations/NonGovernmentalOrganization",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": "NotForProfitOrganization",
+   "parents": [
+    "NotForProfitOrganization"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "NotForProfitCorporation",
+   "en": "not-for-profit corporation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/NotForProfitCorporation",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": "Corporation",
+   "parents": [
+    "Corporation",
+    "NotForProfitOrganization"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "NotForProfitObjective",
+   "en": "not for profit objective",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/LegalPersons/NotForProfitObjective",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": "Objective",
+   "parents": [
+    "Objective"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "NotForProfitOrganization",
+   "en": "not for profit organization",
+   "label_source": "rdfs:label",
+   "zh": "非营利组织",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/FormalBusinessOrganizations/NotForProfitOrganization",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "OrganizationCoveringAgreement",
+   "en": "organization covering agreement",
+   "label_source": "rdfs:label",
+   "zh": "组织覆盖协议",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/FormalBusinessOrganizations/OrganizationCoveringAgreement",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": "WrittenContract",
+   "parents": [
+    "WrittenContract"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "PowerOfAttorney",
+   "en": "power of attorney",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/LegalPersons/PowerOfAttorney",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": "LegalCapacity",
+   "parents": [
+    "LegalCapacity"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "PrivatelyHeldCompany",
+   "en": "privately held company",
+   "label_source": "rdfs:label",
+   "zh": "非公开招股公司",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/PrivatelyHeldCompany",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": "StockCorporation",
+   "parents": [
+    "StockCorporation"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "ProfitObjective",
+   "en": "profit objective",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/LegalPersons/ProfitObjective",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": "BusinessObjective",
+   "parents": [
+    "BusinessObjective"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "PublicPurpose",
+   "en": "public purpose",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/LegalPersons/PublicPurpose",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": "Objective",
+   "parents": [
+    "Objective"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "PubliclyHeldCompany",
+   "en": "publicly held company",
+   "label_source": "rdfs:label",
+   "zh": "公开招股公司",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/PubliclyHeldCompany",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": "StockCorporation",
+   "parents": [
+    "StockCorporation"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "RegistrationIdentifier",
+   "en": "registration identifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/RegistrationIdentifier",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "RegistrationIdentifierScheme",
+   "en": "registration identifier scheme",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/RegistrationIdentifierScheme",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "RelationshipPeriodQualifier",
+   "en": "relationship period qualifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/LEIEntities/RelationshipPeriodQualifier",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "RelationshipQualifier",
+   "en": "relationship qualifier",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/LEIEntities/RelationshipQualifier",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "RelationshipRecord",
+   "en": "relationship record",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/LEIEntities/RelationshipRecord",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "RelationshipStatus",
+   "en": "relationship status",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/LEIEntities/RelationshipStatus",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ReligiousCorporation",
+   "en": "religious corporation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/ReligiousCorporation",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": "NotForProfitCorporation",
+   "parents": [
+    "NotForProfitCorporation"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "ReligiousObjective",
+   "en": "religious objective",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/LegalPersons/ReligiousObjective",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": "NotForProfitObjective",
+   "parents": [
+    "NotForProfitObjective"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "SpecialPurposeVehicle",
+   "en": "fonds commun de placement",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/LegalPersons/SpecialPurposeVehicle",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "StatutoryBody",
+   "en": "statutory body",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/LegalPersons/StatutoryBody",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "StockCorporation",
+   "en": "stock corporation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/StockCorporation",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": "Corporation",
+   "parents": [
+    "Corporation"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "ValueAddedTaxIdentificationNumber",
+   "en": "value-added tax identification number",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/FormalBusinessOrganizations/ValueAddedTaxIdentificationNumber",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": "TaxIdentifier",
+   "parents": [
+    "TaxIdentifier"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "VariableInterestEntity",
+   "en": "variable interest entity",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/LegalPersons/VariableInterestEntity",
+   "module": "BE",
+   "subdomain": "LegalEntities",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Affiliate",
+   "en": "affiliate",
+   "label_source": "rdfs:label",
+   "zh": "附属机构",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/CorporateControl/Affiliate",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Affiliation",
+   "en": "affiliation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/CorporateControl/Affiliation",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "Control",
+   "parents": [
+    "Control"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "ArticlesOfIncorporation",
+   "en": "articles of incorporation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/ArticlesOfIncorporation",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "InstrumentOfIncorporation",
+   "parents": [
+    "InstrumentOfIncorporation"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "Auditor",
+   "en": "auditor",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/Auditor",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "AuthorizedIndividual",
+   "en": "authorized individual",
+   "label_source": "rdfs:label",
+   "zh": "授权个人",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/AuthorizedIndividual",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "BeneficialOwner",
+   "en": "beneficial owner",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/CorporateOwnership/BeneficialOwner",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "Owner",
+   "parents": [
+    "Owner"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "BeneficialOwnership",
+   "en": "beneficial ownership",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/CorporateOwnership/BeneficialOwnership",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "Ownership",
+   "parents": [
+    "Ownership"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "BoardCapacity",
+   "en": "board capacity",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/BoardCapacity",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "DelegatedLegalAuthority",
+   "parents": [
+    "DelegatedLegalAuthority"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "BoardCompositionControl",
+   "en": "board composition control",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/BoardCompositionControl",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "Control",
+   "parents": [
+    "Control"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "BoardMember",
+   "en": "board member",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/BoardMember",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "BoardMembership",
+   "en": "board membership",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/BoardMembership",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "Control",
+   "parents": [
+    "Control"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "BoardOfDirectors",
+   "en": "board of directors",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/BoardOfDirectors",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "EntityControllingParty",
+   "parents": [
+    "EntityControllingParty"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "Bylaws",
+   "en": "bylaws",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/Bylaws",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "Law",
+   "parents": [
+    "Law"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "ChiefExecutiveOfficer",
+   "en": "chief executive officer",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/ChiefExecutiveOfficer",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "CorporateOfficer",
+   "parents": [
+    "CorporateOfficer",
+    "ExecutiveBoardMember",
+    "PrincipalParty"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "ChiefFinancialOfficer",
+   "en": "chief financial officer",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/ChiefFinancialOfficer",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "CorporateOfficer",
+   "parents": [
+    "CorporateOfficer"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CompanyLaw",
+   "en": "company law",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/CompanyLaw",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "StatuteLaw",
+   "parents": [
+    "StatuteLaw"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CompanySecretary",
+   "en": "company secretary",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/CompanySecretary",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "CorporateOfficer",
+   "parents": [
+    "CorporateOfficer"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "ConstitutionalOwner",
+   "en": "constitutional owner",
+   "label_source": "rdfs:label",
+   "zh": "章程所有权人",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/OwnershipParties/ConstitutionalOwner",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "EntityOwner",
+   "parents": [
+    "EntityOwner"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "ContractualControl",
+   "en": "contractual control",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/ControlParties/ContractualControl",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "DeJureControl",
+   "parents": [
+    "DeJureControl"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "ControlledAffiliate",
+   "en": "controlled affiliate",
+   "label_source": "rdfs:label",
+   "zh": "受控附属机构",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/CorporateControl/ControlledAffiliate",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "ControlledParty",
+   "parents": [
+    "Affiliate",
+    "ControlledParty"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "ControlledParty",
+   "en": "controlled party",
+   "label_source": "rdfs:label",
+   "zh": "受控当事方",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/ControlParties/ControlledParty",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "ControlledThing",
+   "parents": [
+    "ControlledThing"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "ControllingAffiliate",
+   "en": "controlling affiliate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/CorporateControl/ControllingAffiliate",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "MajorityControllingParty",
+   "parents": [
+    "Affiliate",
+    "MajorityControllingParty"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "ControllingAlliance",
+   "en": "controlling alliance",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/ControlParties/ControllingAlliance",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "Group",
+   "parents": [
+    "Group"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "ControllingEquity",
+   "en": "controlling equity",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/OwnershipParties/ControllingEquity",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "ShareholdersEquity",
+   "parents": [
+    "ShareholdersEquity"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "ControllingNominee",
+   "en": "controlling nominee",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/ControllingNominee",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "CorporateBylaws",
+   "en": "corporate bylaws",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/CorporateBylaws",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "Bylaws",
+   "parents": [
+    "Bylaws"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CorporateOfficer",
+   "en": "corporate officer",
+   "label_source": "rdfs:label",
+   "zh": "公司高级职员",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/CorporateOfficer",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "Executive",
+   "parents": [
+    "Executive",
+    "Signatory"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "CourtAppointedControl",
+   "en": "court appointed control",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/ControlParties/CourtAppointedControl",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "DeJureControl",
+   "parents": [
+    "DeJureControl"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "DeFactoControllingInterestParty",
+   "en": "de facto controlling interest party",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/ControlParties/DeFactoControllingInterestParty",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "ControllingParty",
+   "parents": [
+    "ControllingParty"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "DeJureControllingInterestParty",
+   "en": "de jure controlling interest party",
+   "label_source": "rdfs:label",
+   "zh": "法律上控制权益方",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/ControlParties/DeJureControllingInterestParty",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "ControllingParty",
+   "parents": [
+    "ControllingParty"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "DirectConsolidation",
+   "en": "direct consolidation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/OwnershipParties/DirectConsolidation",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "EntityOwnership",
+   "parents": [
+    "EntityOwnership"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "DomesticUltimateParent",
+   "en": "domestic ultimate parent",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/CorporateControl/DomesticUltimateParent",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "TotalControllingInterestParty",
+   "parents": [
+    "TotalControllingInterestParty"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "EntityControllingParty",
+   "en": "entity controlling party",
+   "label_source": "rdfs:label",
+   "zh": "实体控制方",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/ControlParties/EntityControllingParty",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "ControllingParty",
+   "parents": [
+    "ControllingParty"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "EntityOwner",
+   "en": "entity owner",
+   "label_source": "rdfs:label",
+   "zh": "实体所有权人",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/OwnershipParties/EntityOwner",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "Owner",
+   "parents": [
+    "Owner"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "EntityOwnership",
+   "en": "entity ownership",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/OwnershipParties/EntityOwnership",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "Ownership",
+   "parents": [
+    "Ownership"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Executive",
+   "en": "executive",
+   "label_source": "rdfs:label",
+   "zh": "高管",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/Executive",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ExecutiveBoardMember",
+   "en": "executive board member",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/ExecutiveBoardMember",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "BoardMember",
+   "parents": [
+    "BoardMember",
+    "Employee"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "ExternalAuditor",
+   "en": "external auditor",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/ExternalAuditor",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "Auditor",
+   "parents": [
+    "Auditor"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "ForeignBranchOwnership",
+   "en": "foreign branch ownership",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/OwnershipParties/ForeignBranchOwnership",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "EntityOwnership",
+   "parents": [
+    "EntityOwnership"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "GlobalUltimateParent",
+   "en": "global ultimate parent",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/CorporateControl/GlobalUltimateParent",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "TotalControllingInterestParty",
+   "parents": [
+    "TotalControllingInterestParty"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "InfluenceBasedDeFactoControl",
+   "en": "influence-based de facto control",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/ControlParties/InfluenceBasedDeFactoControl",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "DeFactoControl",
+   "parents": [
+    "DeFactoControl"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "InfluenceBasedDeFactoControllingParty",
+   "en": "influence-based de facto controlling party",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/ControlParties/InfluenceBasedDeFactoControllingParty",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "DeFactoControllingInterestParty",
+   "parents": [
+    "DeFactoControllingInterestParty"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "InternalAuditor",
+   "en": "internal auditor",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/InternalAuditor",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "Auditor",
+   "parents": [
+    "Auditor",
+    "Employee"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "InvestmentBasedDeFactoControl",
+   "en": "investment-based de facto control",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/ControlParties/InvestmentBasedDeFactoControl",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "DeFactoControl",
+   "parents": [
+    "DeFactoControl"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "InvestmentBasedDeFactoControllingInterestParty",
+   "en": "investment-based de facto controlling interest party",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/ControlParties/InvestmentBasedDeFactoControllingInterestParty",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "DeFactoControllingInterestParty",
+   "parents": [
+    "DeFactoControllingInterestParty",
+    "Investor"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "InvestmentEquity",
+   "en": "investment equity",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/OwnershipParties/InvestmentEquity",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "OwnersEquity",
+   "parents": [
+    "OwnersEquity"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Investor",
+   "en": "investor",
+   "label_source": "rdfs:label",
+   "zh": "投资者",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/OwnershipParties/Investor",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "EntityOwner",
+   "parents": [
+    "ContractParty",
+    "EntityOwner"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "InvestorContract",
+   "en": "investor contract",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/OwnershipParties/InvestorContract",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "WrittenContract",
+   "parents": [
+    "WrittenContract"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "JointControllingParty",
+   "en": "joint controlling party",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/ControlParties/JointControllingParty",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "EntityControllingParty",
+   "parents": [
+    "EntityControllingParty"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "JointVenturePartner",
+   "en": "joint venture partner",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/CorporateControl/JointVenturePartner",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "EntityControllingParty",
+   "parents": [
+    "EntityControllingParty"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "MajorityControllingParty",
+   "en": "majority controlling party",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/ControlParties/MajorityControllingParty",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "EntityControllingParty",
+   "parents": [
+    "EntityControllingParty"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "NonExecutiveBoardMember",
+   "en": "non-executive board member",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/NonExecutiveBoardMember",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "BoardMember",
+   "parents": [
+    "BoardMember"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "PrincipalParty",
+   "en": "principal party",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/PrincipalParty",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "Signatory",
+   "parents": [
+    "Signatory"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "PurchaseLot",
+   "en": "purchase lot",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/CorporateOwnership/PurchaseLot",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "FinancialAsset",
+   "parents": [
+    "FinancialAsset"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "Receiver",
+   "en": "receiver",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/ControlParties/Receiver",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "DeJureControllingInterestParty",
+   "parents": [
+    "DeJureControllingInterestParty"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "Shareholder",
+   "en": "shareholder",
+   "label_source": "rdfs:label",
+   "zh": "股东",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/CorporateOwnership/Shareholder",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "ConstitutionalOwner",
+   "parents": [
+    "ConstitutionalOwner",
+    "Counterparty"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "Shareholding",
+   "en": "shareholding",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/CorporateOwnership/Shareholding",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "FinancialAsset",
+   "parents": [
+    "FinancialAsset"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "Signatory",
+   "en": "signatory",
+   "label_source": "rdfs:label",
+   "zh": "签署人",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/Signatory",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "AuthorizedIndividual",
+   "parents": [
+    "AuthorizedIndividual"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "SignificantShareholder",
+   "en": "significant shareholder",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/CorporateControl/SignificantShareholder",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "VotingShareholder",
+   "parents": [
+    "VotingShareholder"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "SoleControllingParty",
+   "en": "sole controlling party",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/ControlParties/SoleControllingParty",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "EntityControllingParty",
+   "parents": [
+    "EntityControllingParty"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "Subsidiary",
+   "en": "subsidiary",
+   "label_source": "rdfs:label",
+   "zh": "子公司",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/CorporateControl/Subsidiary",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "ControlledAffiliate",
+   "parents": [
+    "ControlledAffiliate"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "TaxLot",
+   "en": "tax lot",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/CorporateOwnership/TaxLot",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "FinancialAsset",
+   "parents": [
+    "FinancialAsset"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "TotalControllingInterestParty",
+   "en": "total controlling interest party",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/CorporateControl/TotalControllingInterestParty",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "TotalOwner",
+   "parents": [
+    "SignificantShareholder",
+    "TotalOwner"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "TotalOwner",
+   "en": "total owner",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/ControlParties/TotalOwner",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "ConstitutionalOwner",
+   "parents": [
+    "ConstitutionalOwner"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "UltimateConsolidation",
+   "en": "ultimate ownership",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/OwnershipParties/UltimateConsolidation",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "EntityOwnership",
+   "parents": [
+    "EntityOwnership"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "VotingShareholder",
+   "en": "voting shareholder",
+   "label_source": "rdfs:label",
+   "zh": "有表决权股东",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/CorporateControl/VotingShareholder",
+   "module": "BE",
+   "subdomain": "OwnershipAndControl",
+   "parent": "DeJureControllingInterestParty",
+   "parents": [
+    "DeJureControllingInterestParty",
+    "Shareholder"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "GeneralPartner",
+   "en": "general partner",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/Partnerships/Partnerships/GeneralPartner",
+   "module": "BE",
+   "subdomain": "Partnerships",
+   "parent": "DeJureControllingInterestParty",
+   "parents": [
+    "DeJureControllingInterestParty",
+    "Partner"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "GeneralPartnership",
+   "en": "general partnership",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/Partnerships/Partnerships/GeneralPartnership",
+   "module": "BE",
+   "subdomain": "Partnerships",
+   "parent": "Partnership",
+   "parents": [
+    "Partnership"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "LimitedLiabilityLimitedPartnership",
+   "en": "limited liability limited partnership",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/Partnerships/Partnerships/LimitedLiabilityLimitedPartnership",
+   "module": "BE",
+   "subdomain": "Partnerships",
+   "parent": "LimitedPartnership",
+   "parents": [
+    "LimitedPartnership"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "LimitedLiabilityPartnership",
+   "en": "limited liability partnership",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/Partnerships/Partnerships/LimitedLiabilityPartnership",
+   "module": "BE",
+   "subdomain": "Partnerships",
+   "parent": "Partnership",
+   "parents": [
+    "Partnership"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "LimitedPartner",
+   "en": "limited partner",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/Partnerships/Partnerships/LimitedPartner",
+   "module": "BE",
+   "subdomain": "Partnerships",
+   "parent": "Partner",
+   "parents": [
+    "Partner"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "LimitedPartnership",
+   "en": "limited partnership",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/Partnerships/Partnerships/LimitedPartnership",
+   "module": "BE",
+   "subdomain": "Partnerships",
+   "parent": "Partnership",
+   "parents": [
+    "Partnership"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "Partner",
+   "en": "partner",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/Partnerships/Partnerships/Partner",
+   "module": "BE",
+   "subdomain": "Partnerships",
+   "parent": "ConstitutionalOwner",
+   "parents": [
+    "ConstitutionalOwner"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "Partnership",
+   "en": "partnership",
+   "label_source": "rdfs:label",
+   "zh": "合伙企业",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/Partnerships/Partnerships/Partnership",
+   "module": "BE",
+   "subdomain": "Partnerships",
+   "parent": "BusinessEntity",
+   "parents": [
+    "BusinessEntity"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "PartnershipAgreement",
+   "en": "partnership agreement",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/Partnerships/Partnerships/PartnershipAgreement",
+   "module": "BE",
+   "subdomain": "Partnerships",
+   "parent": "OrganizationCoveringAgreement",
+   "parents": [
+    "OrganizationCoveringAgreement"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "LimitedLiabilityCompany",
+   "en": "limited liability company",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/PrivateLimitedCompanies/PrivateLimitedCompanies/LimitedLiabilityCompany",
+   "module": "BE",
+   "subdomain": "PrivateLimitedCompanies",
+   "parent": "PrivateCompanyWithLimitedLiability",
+   "parents": [
+    "PrivateCompanyWithLimitedLiability"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "LimitedLiabilityCompanyMember",
+   "en": "limited liability company member",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/PrivateLimitedCompanies/PrivateLimitedCompanies/LimitedLiabilityCompanyMember",
+   "module": "BE",
+   "subdomain": "PrivateLimitedCompanies",
+   "parent": "DeJureControllingInterestParty",
+   "parents": [
+    "DeJureControllingInterestParty",
+    "EntityControllingParty",
+    "EntityOwner"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "LimitedLiabilityCompanyTaxedAsACorporation",
+   "en": "limited liability company taxed as a corporation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/PrivateLimitedCompanies/PrivateLimitedCompanies/LimitedLiabilityCompanyTaxedAsACorporation",
+   "module": "BE",
+   "subdomain": "PrivateLimitedCompanies",
+   "parent": "LimitedLiabilityCompany",
+   "parents": [
+    "LimitedLiabilityCompany"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "ManagerManagedLimitedLiabilityCompany",
+   "en": "manager-managed limited liability company",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/PrivateLimitedCompanies/PrivateLimitedCompanies/ManagerManagedLimitedLiabilityCompany",
+   "module": "BE",
+   "subdomain": "PrivateLimitedCompanies",
+   "parent": "LimitedLiabilityCompany",
+   "parents": [
+    "LimitedLiabilityCompany"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "ManagingMember",
+   "en": "managing member",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/PrivateLimitedCompanies/PrivateLimitedCompanies/ManagingMember",
+   "module": "BE",
+   "subdomain": "PrivateLimitedCompanies",
+   "parent": "PrincipalParty",
+   "parents": [
+    "LimitedLiabilityCompanyMember",
+    "PrincipalParty"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "PrivateCompanyWithLimitedLiability",
+   "en": "private company with limited liability",
+   "label_source": "rdfs:label",
+   "zh": "私营有限责任公司",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/PrivateLimitedCompanies/PrivateLimitedCompanies/PrivateCompanyWithLimitedLiability",
+   "module": "BE",
+   "subdomain": "PrivateLimitedCompanies",
+   "parent": "BusinessEntity",
+   "parents": [
+    "BusinessEntity"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "PrivateLimitedCompany",
+   "en": "private limited company",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/PrivateLimitedCompanies/PrivateLimitedCompanies/PrivateLimitedCompany",
+   "module": "BE",
+   "subdomain": "PrivateLimitedCompanies",
+   "parent": "PrivateCompanyWithLimitedLiability",
+   "parents": [
+    "PrivateCompanyWithLimitedLiability"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "SoleProprietor",
+   "en": "sole proprietor",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/SoleProprietorships/SoleProprietorships/SoleProprietor",
+   "module": "BE",
+   "subdomain": "SoleProprietorships",
+   "parent": "EntityOwner",
+   "parents": [
+    "EntityOwner"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "SoleProprietorship",
+   "en": "sole proprietorship",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/SoleProprietorships/SoleProprietorships/SoleProprietorship",
+   "module": "BE",
+   "subdomain": "SoleProprietorships",
+   "parent": "BusinessEntity",
+   "parents": [
+    "BusinessEntity"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "IrrevocableTrust",
+   "en": "irrevocable trust",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/Trusts/Trusts/IrrevocableTrust",
+   "module": "BE",
+   "subdomain": "Trusts",
+   "parent": "Trust",
+   "parents": [
+    "Trust"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "LivingTrust",
+   "en": "living trust",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/Trusts/Trusts/LivingTrust",
+   "module": "BE",
+   "subdomain": "Trusts",
+   "parent": "Trust",
+   "parents": [
+    "Trust"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "RevocableTrust",
+   "en": "revocable trust",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/Trusts/Trusts/RevocableTrust",
+   "module": "BE",
+   "subdomain": "Trusts",
+   "parent": "Trust",
+   "parents": [
+    "Trust"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "TestamentaryTrust",
+   "en": "testamentary trust",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/Trusts/Trusts/TestamentaryTrust",
+   "module": "BE",
+   "subdomain": "Trusts",
+   "parent": "IrrevocableTrust",
+   "parents": [
+    "IrrevocableTrust"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "Trust",
+   "en": "trust",
+   "label_source": "rdfs:label",
+   "zh": "信托",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/Trusts/Trusts/Trust",
+   "module": "BE",
+   "subdomain": "Trusts",
+   "parent": "BusinessEntity",
+   "parents": [
+    "BusinessEntity"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "TrustAgreement",
+   "en": "trust agreement",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/Trusts/Trusts/TrustAgreement",
+   "module": "BE",
+   "subdomain": "Trusts",
+   "parent": "OrganizationCoveringAgreement",
+   "parents": [
+    "OrganizationCoveringAgreement"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "TrustBeneficiary",
+   "en": "trust beneficiary",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/Trusts/Trusts/TrustBeneficiary",
+   "module": "BE",
+   "subdomain": "Trusts",
+   "parent": "Beneficiary",
+   "parents": [
+    "Beneficiary"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "TrustFundManager",
+   "en": "trust fund manager",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/Trusts/Trusts/TrustFundManager",
+   "module": "BE",
+   "subdomain": "Trusts",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Trustee",
+   "en": "trustee",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/Trusts/Trusts/Trustee",
+   "module": "BE",
+   "subdomain": "Trusts",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "Trustor",
+   "en": "trustor",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/Trusts/Trusts/Trustor",
+   "module": "BE",
+   "subdomain": "Trusts",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  }
+ ]
+}

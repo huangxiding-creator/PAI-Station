@@ -1,0 +1,1872 @@
+# -*- coding: utf-8 -*-
+"""总包千问引擎 API（FastAPI）。
+
+P0 端点：
+  POST /api/login          {code} → {token, quota}
+  POST /api/ask            {question} → {id, status, quota}（异步流水线）
+  GET  /api/answer/{id}    → 答案详情（未解锁只给 preview；锅圈答案全员可见）
+  POST /api/answer/{id}/like        → 有用 +1 次（每答案一次）
+  POST /api/answer/{id}/criticize   {text} → 存证 + 具体纠错意见赠 1 次
+  POST /api/answer/{id}/export      → 导出文件（base64）；v0.7.3 起不赠次
+  POST /api/question/optimize       → AI 优化提问（递进式三小问，10 次/天）
+  POST /api/answers/export_all      → 全部咨询记录批量导出（docx/pdf/md）
+  GET  /api/pot/list                → 锅圈热点问题列表（100 字预览）
+  GET  /api/history        → 我的提问
+  GET  /api/engine/status  → 引擎护栏状态
+
+v0.6.0 100× 弧线（全免费：智谱接地，绝不烧 KB 积分）：
+  POST /api/answer/{aid}/followup   {question} → {id,status} 免费追问（异步回答）
+  GET  /api/answer/{aid}/followups  → 本人的追问对话流
+  GET  /api/answer/{aid}/digest     → 要点速览 tldr + 相关问题 related（每答案缓存一次）
+  GET  /api/answer/{aid}/poster     → 分享海报 PNG（base64；问题+要点+品牌+小程序码）
+
+v0.7.0（用户十一点令 0930）：
+  GET  /api/answer/{aid}            → pending 态携带 partial（SSE 流式增量正文，打字机素材）
+  POST /api/answer/{aid}/share_on   → 共享入锅圈 + 赠 1 次咨询（本人已完成答案）
+  POST /api/answer/{aid}/share_off  → 取消共享：撤出锅圈 + 扣 1 次咨询
+  GET  /api/answer/{aid}/citations/{n} → 依据来源全文展开（智谱接地，aid+n 永久缓存）
+  公益免费：付费墙拆除（unlocked 恒真，全文直接下发）
+
+v0.9.17（用户令② 1013：咨询记录删除）：
+  DELETE /api/answers/{aid}          → 软删本人咨询记录（幂等 200；quota/pay_log/rewards 零动）
+"""
+from __future__ import annotations
+
+import base64
+import hashlib
+import json
+import logging
+import os
+import re
+import secrets
+import threading
+import time
+from typing import Optional
+
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, JSONResponse
+from pydantic import BaseModel
+
+from . import (config, exporter, metaso_kb, poster, potcat, report_catalog,
+               report_qa, store, wechat, zhipu)
+from .voice_feedback import router as voice_feedback_router
+
+_log = logging.getLogger("qianwen.app")
+
+app = FastAPI(title="qianwen-engine", version="0.4.0")
+app.add_middleware(
+    CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]
+)
+app.include_router(voice_feedback_router)
+
+# 串行闸：KB 引擎一次一问（网页会话共享 + 节流铁律）
+_ask_lock = threading.Semaphore(1)
+
+# v0.2.2 透明化：每问的阶段事件流（内存态，随进程；落库为终态 status）
+# v0.7.0：新增 partial（流式增量正文——打字机素材）与 chars（实时字数）
+_PROGRESS: dict = {}
+_PROG_LOCK = threading.Lock()
+
+
+def _openid(req: Request) -> str:
+    auth = req.headers.get("Authorization", "")
+    token = auth[7:] if auth.startswith("Bearer ") else ""
+    openid = wechat.verify_token(token)
+    if not openid:
+        raise HTTPException(401, "未登录或凭证过期")
+    return openid
+
+
+class LoginIn(BaseModel):
+    code: str
+
+
+class AskIn(BaseModel):
+    question: str
+
+
+class CriticizeIn(BaseModel):
+    text: str
+
+
+@app.post("/api/login")
+def login(body: LoginIn):
+    # 测试双闸（默认关，仅自动化测试进程开）：code 直映射 dev openid + 假答案
+    if os.environ.get("QW_DEV_LOGIN") == "1":
+        openid = "dev-" + body.code
+        return {"token": wechat.issue_token(openid), "quota": store.quota_left(openid)}
+    try:
+        sess = wechat.code2session(body.code)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(502, f"微信登录失败: {exc}") from exc
+    openid = sess["openid"]
+    # v0.8.0 虚拟支付回归：session_key 服务端留存是支付双签名刚需（对抗审计
+    # CRITICAL-1：不落盘=签名腿恒 401 死锁）。仅存服务端用于 HMAC 签名，
+    # 绝不下发客户端、绝不出现在任何 API 响应——合规面等价于微信官方推荐形态。
+    store.save_session(openid, sess.get("session_key") or "")
+    return {
+        "token": wechat.issue_token(openid),
+        "quota": store.quota_left(openid),
+    }
+
+
+@app.post("/api/ask")
+def ask(body: AskIn, request: Request):
+    """v0.2.2 异步流水线：校验+扣次+落 pending 行后秒回，KB 在后台线程跑。"""
+    openid = _openid(request)
+    q = (body.question or "").strip()
+    if not q:
+        raise HTTPException(400, "问题不能为空")
+    if len(q) > 500:
+        raise HTTPException(400, "问题过长（≤500字）")
+    if not store.consume_one(openid):
+        raise HTTPException(
+            402, "今日免费次数已用完；点「有用/纠错」或把自己的问答「共享」进锅圈可再获次数",
+        )
+    aid = store.create_pending(openid, q)
+    with _PROG_LOCK:
+        _PROGRESS[aid] = {"t0": time.time(), "events": []}
+    _ev(aid, "已提交，进入队列")
+    threading.Thread(target=_run_answer, args=(aid, openid, q), daemon=True).start()
+    return {"id": aid, "status": "pending", "quota": store.quota_left(openid)}
+
+
+def _ev(aid: str, text: str) -> None:
+    with _PROG_LOCK:
+        p = _PROGRESS.get(aid)
+        if p is not None:
+            p["events"].append({"t": round(time.time() - p["t0"], 1), "text": text})
+
+
+def _ev_stream(aid: str, chars: int, partial: str, tail: str) -> None:
+    """流式进度：合并同一阶段为单行（进度列表不膨胀），并刷新 partial 正文。"""
+    with _PROG_LOCK:
+        p = _PROGRESS.get(aid)
+        if p is None:
+            return
+        p["partial"] = partial or ""
+        p["chars"] = int(chars or 0)
+        entry = {"t": round(time.time() - p["t0"], 1), "text": tail, "stream": True}
+        if p["events"] and p["events"][-1].get("stream"):
+            p["events"][-1] = entry
+        else:
+            p["events"].append(entry)
+
+
+def _run_answer(aid: str, openid: str, q: str) -> None:
+    """后台跑总包智库：一次一问（串行闸），全程事件外送，失败自动退次。"""
+    try:
+        if not _ask_lock.acquire(timeout=300):
+            raise metaso_kb.EngineError("排队超时（前面的问题占用了引擎），请稍后重试")
+        _ev(aid, "开始处理")
+        try:
+            if os.environ.get("QW_FAKE_ASK") == "1":
+                time.sleep(0.3)
+                result = metaso_kb.KbAnswer(
+                    question=q,
+                    answer=(
+                        "【测试答案】用于自动化回归，不烧秘塔积分。\n\n"
+                        "## 关键要点\n\n"
+                        "- 要点一：配额与退次全链验证\n"
+                        "- 要点二：**结构化渲染**不得有裸符号\n\n"
+                        "1. 查招标文件专用合同条款\n"
+                        "2. 核对金额上限\n\n"
+                        "> 依据《测试规范》第 12 条\n\n"
+                        "| 情形 | 限额 |\n|---|---|\n| 依法必须招标 | 2% |\n\n"
+                        + "段落内容。" * 30
+                    ),
+                    cid="test-cid",
+                    url="https://example.invalid/test",
+                    citations=[{"n": 1, "source": "测试规范", "loc": 12}],
+                    elapsed_sec=0.3,
+                )
+            else:
+                def cb(kind: str, data: dict) -> None:
+                    if kind == "delivered":
+                        _ev(aid, "问题已送达总包智库")
+                    elif kind == "session_refreshing":
+                        _ev(aid, "会话续期中…")
+                    elif kind == "streaming":
+                        _ev_stream(aid, data.get("chars", 0), data.get("partial", ""),
+                                   "总包智库检索中 · 已生成 {} 字".format(data.get("chars", 0)))
+                    elif kind == "polling":
+                        _ev_stream(aid, data.get("chars", 0), "",  # 兜底线无 partial 素材
+                                   "总包智库检索中 · 第{}轮 · 已生成 {} 字".format(
+                                       data.get("round", 1), data.get("chars", 0)))
+                result = metaso_kb.ask(q, on_event=cb)
+            store.complete_answer(aid, result.answer, result.citations, result.elapsed_sec)
+            _ev(aid, "回答完成")
+        finally:
+            _ask_lock.release()
+    except Exception as exc:  # noqa: BLE001
+        store.fail_answer(aid, str(exc))
+        store.refund_one(openid)
+        _ev(aid, "处理失败，已自动退回提问次数")
+
+
+@app.get("/api/answer/{aid}")
+def answer(aid: str, request: Request):
+    openid = _openid(request)
+    row = store.get_answer_visible(aid, openid)
+    if row is None:
+        raise HTTPException(404, "答案不存在")
+    status = row["status"]
+    is_pot = row["openid"] == config.POT_OPENID
+    # 锅圈=公共内容：点赞态按人走 rewards 表；本人答案=行级 flag
+    liked = (store.reward_exists(openid, aid, "like") if is_pot else bool(row["liked"]))
+    # v0.7.0 公益免费令：付费墙拆除——全文直接下发，unlocked 恒真（列留作兼容）
+    d = {"id": aid, "question": row["question"], "status": status,
+         "error_text": row["error_text"] if "error_text" in row.keys() else "",
+         "unlocked": True,
+         "preview": row["answer_full"][: config.PREVIEW_CHARS],
+         "answer": row["answer_full"],
+         "citations": row["citations"],
+         "full_chars": len(row["answer_full"]),
+         "liked": liked, "criticized": bool(row["criticized"]) if not is_pot else False,
+         "is_pot": is_pot,
+         # v0.8.0 导出收费（¥0.1/条）：is_owner + export_paid 驱动客户端付费墙。
+         # v0.9.14：export_paid 改观看者口径——答主=行级 flag，锅圈观看者=按人记账
+         "is_owner": row["openid"] == openid,
+         "export_paid": _export_unlocked(aid, row, openid),
+         "shares": (row["shares"] if "shares" in row.keys() else 0) or 0,
+         "shared": bool(row["shared"]) if "shared" in row.keys() else False,
+         "can_share": (not is_pot and status == "ready" and bool(row["answer_full"])),
+         }
+    if status == "pending":
+        with _PROG_LOCK:
+            prog = _PROGRESS.get(aid)
+            if prog:
+                d["progress"] = list(prog["events"])
+                d["elapsed"] = round(time.time() - prog["t0"], 1)
+                # v0.7.0 流式正文：打字机素材（生成中即见增量）
+                d["partial"] = prog.get("partial", "")
+                d["stream_chars"] = prog.get("chars", 0)
+            else:
+                d["progress"], d["elapsed"], d["partial"], d["stream_chars"] = [], 0, "", 0
+    else:
+        # v0.7.3（用户令）观看计数：看到全文即 +1（同人重复看持续累计；pending 轮询不计）
+        d["views"] = store.bump_views(aid)
+    return d
+
+
+@app.post("/api/answer/{aid}/like")
+def like(aid: str, request: Request):
+    openid = _openid(request)
+    row = store.get_answer_visible(aid, openid)
+    if row is None:
+        raise HTTPException(404, "答案不存在")
+    if row["openid"] == openid:
+        # 本人答案：行级 flag 去重 + 赠次
+        if not store.mark_liked(aid, openid):
+            raise HTTPException(400, "已点赞过")
+        granted = store.grant_reward(openid, aid, "like")
+    else:
+        # 锅圈公共答案：按人走 rewards UNIQUE 去重（人人可赞）
+        granted = store.grant_reward(openid, aid, "like")
+        if not granted:
+            raise HTTPException(400, "已点赞过")
+    return {"granted": granted, "quota": store.quota_left(openid)}
+
+
+@app.post("/api/answer/{aid}/criticize")
+def criticize(aid: str, body: CriticizeIn, request: Request):
+    openid = _openid(request)
+    text = (body.text or "").strip()
+    if not text:
+        raise HTTPException(400, "请写具体的纠错意见")
+    if not store.save_criticism(aid, openid, text):
+        raise HTTPException(400, "本答案已反馈过（每答案限一次）")
+    # 用户令 v0.5.0：给出具体纠错意见 = 奖励 1 次免费咨询
+    granted = store.grant_reward(openid, aid, "criticize")
+    return {"received": True, "granted": granted, "quota": store.quota_left(openid)}
+
+
+# v0.8.0 审计整改：旧「分享赠次」端点 /api/answer/{aid}/share 已下线
+# （0.7.6 起分享不赠次、客户端零调用——留着徒增「诱导分享」翻旧账风险）。
+
+
+# ── v0.7.0 用户共享入锅圈（用户令 0930 第 8 条）：共享赠 1 次 / 取消共享扣 1 次 ──
+@app.post("/api/answer/{aid}/share_on")
+def share_on(aid: str, request: Request):
+    """本人的已完成问答 → 共享进锅圈（公共展区）+ 赠 1 次咨询机会。
+    v0.7.4 提审合规：入库前过 security.msgSecCheck（UGC 公开展示门，fail-closed）。"""
+    openid = _openid(request)
+    row = store.get_answer_visible(aid, openid)
+    if row is None or row["openid"] != openid or row["status"] != "ready":
+        raise HTTPException(400, "本篇暂不可共享（仅本人已完成解答，且未共享过）")
+    try:
+        ok_q = wechat.msg_sec_check(row["question"], openid)
+        ok_a = wechat.msg_sec_check(row["answer_full"], openid)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(503, "内容安全检测暂不可用，请稍后再试") from exc
+    if not (ok_q and ok_a):
+        raise HTTPException(400, "内容未通过安全检测，暂不能共享")
+    if not store.share_on(aid, openid):
+        raise HTTPException(400, "本篇暂不可共享（仅本人已完成解答，且未共享过）")
+    return {"shared": True, "quota": store.quota_left(openid)}
+
+
+class PotReportIn(BaseModel):
+    aid: str
+    reason: str
+
+
+class PotSeedIn(BaseModel):
+    """★ 1013 We-APIO 大脑精华写入腿的载荷（q=已带【EPC】前缀标签的完整题，
+    a=完整回答，sort=名次）。"""
+    q: str
+    a: str
+    sort: int = 0
+
+
+@app.post("/api/pot/report")
+def pot_report(body: PotReportIn, request: Request):
+    """v0.7.4 提审合规：锅圈 UGC 内容举报入口（每用户每条限一次，无奖励）。"""
+    openid = _openid(request)
+    reason = (body.reason or "").strip()
+    if not reason:
+        raise HTTPException(400, "请填写举报原因")
+    if len(reason) > 500:
+        raise HTTPException(400, "举报原因过长（≤500字）")
+    if not store.save_pot_report((body.aid or "").strip(), openid, reason):
+        raise HTTPException(400, "该内容不存在或您已举报过")
+    return {"received": True}
+
+
+@app.post("/api/pot/seed")
+def pot_seed(body: PotSeedIn, request: Request):
+    """★ 1013 We-APIO 写入腿：外部内容生产系统把优质问答直投锅圈。
+
+    鉴权：X-Seed-Key == 环境变量 POT_SEED_SECRET（未配置=503 不放行，
+    同 telemetry 运营腿模式）；幂等：同题 pot_exists 跳过（跨日重推安全）；
+    via="weaipo" 标数据来源；分类标签已含在题目前缀（【EPC】等）。"""
+    want = (os.environ.get("POT_SEED_SECRET") or "").strip()
+    got = (request.headers.get("x-seed-key") or "").strip()
+    if not want:
+        raise HTTPException(503, "seed 未启用")
+    if got != want:
+        raise HTTPException(403, "forbidden")
+    q = (body.q or "").strip()
+    a = (body.a or "").strip()
+    if not q or not a or len(q) > 600 or len(a) > 60000:
+        raise HTTPException(422, "bad payload")
+    if store.pot_exists(q):
+        return {"ok": True, "skipped": True}
+    aid = store.save_pot_answer(q, a, citations=[], sort=int(body.sort or 0),
+                                elapsed=0.0, via="weaipo")
+    return {"ok": True, "aid": aid}
+
+
+@app.post("/api/answer/{aid}/share_off")
+def share_off(aid: str, request: Request):
+    """取消共享：撤出锅圈 + 扣 1 次咨询机会。"""
+    openid = _openid(request)
+    if not store.share_off(aid, openid):
+        raise HTTPException(400, "本篇当前不在共享状态")
+    return {"shared": False, "quota": store.quota_left(openid)}
+
+
+# ── v0.9.17 软删（用户令② 1013）：DELETE /api/answers/{aid} ──
+@app.delete("/api/answers/{aid}")
+def delete_answer(aid: str, request: Request):
+    """软删本人咨询记录（仅置 answers.deleted=1，物理表零删除——身后
+    pay_log/rewards 审计链不动）。
+    - 非 owner/未知 aid → 404（不暴露存在性，与 get_answer 同律）
+    - 已删再删 → 幂等 200：owner 门按 include_deleted 原行判定（get_answer
+      默认已滤 deleted，直接用它会把本人二次删除误判 404）
+    - 锅圈联动：列表侧由 pot_list 的 deleted 过滤兜底（幽灵修），此处零额外动作。"""
+    openid = _openid(request)
+    row = store.get_answer(aid, openid, include_deleted=True)
+    if row is None:
+        raise HTTPException(404, "记录不存在")
+    store.delete_answer(aid, openid)   # 已删时 no-op（False），幂等仍 200
+    return {"deleted": True}
+
+
+class ExportIn(BaseModel):
+    fmt: str  # docx | pdf（md 由小程序本地生成，不走引擎）
+
+
+@app.post("/api/answer/{aid}/export")
+def export_answer(aid: str, body: ExportIn, request: Request):
+    """v0.4.0 导出：Word/PDF 文件（base64 回传）。v0.7.0 公益免费：全文开放。
+    v0.7.3（用户令）：导出不再赠次——赠次动作=like/criticize/share 三件。
+    v0.8.0（用户令 1008）：咨询全免费，导出按条收费 ¥0.1——须已解锁。
+    v0.9.14（用户令 1010）：锅圈共享答案同权付费导出（解锁按观看者记账）。"""
+    openid = _openid(request)
+    row = store.get_answer_visible(aid, openid)
+    if row is None:
+        raise HTTPException(404, "答案不存在")
+    if row["status"] != "ready":
+        raise HTTPException(400, "回答尚未完成，稍后再试")
+    if not _export_unlocked(aid, row, openid):
+        raise HTTPException(402, "导出未解锁（¥0.1/条），请先在导出弹窗完成支付")
+    try:
+        out = exporter.build((body.fmt or "").strip().lower(), row)
+    except exporter.FontMissing as exc:
+        raise HTTPException(503, str(exc)) from exc
+    except exporter.FormatNotSupported as exc:
+        raise HTTPException(400, str(exc)) from exc
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(500, f"导出失败: {exc}") from exc
+    return out
+
+
+class ExportAllIn(BaseModel):
+    fmt: str  # docx | pdf | md
+
+
+@app.post("/api/answers/export_all")
+def export_all(body: ExportAllIn, request: Request):
+    """v0.5.0 批量导出：用户全部已完成问答（docx/pdf/md）。不参与赠次（防刷）。
+    v0.8.0（用户令 1008）：须全部条目已解锁（批量支付 N×¥0.1），否则 402。"""
+    openid = _openid(request)
+    rows = store.history_all(openid)
+    if not rows:
+        raise HTTPException(404, "还没有完成的咨询记录")
+    unpaid = sum(1 for r in rows if not r.get("export_paid"))
+    if unpaid:
+        total_yuan = unpaid * config.EXPORT_PRICE_FEN / 100
+        raise HTTPException(402, f"还有 {unpaid} 条未解锁（¥0.1/条，共 ¥{total_yuan:g}），请先完成批量支付")
+    try:
+        return exporter.build_all((body.fmt or "").strip().lower(), rows)
+    except exporter.FontMissing as exc:
+        raise HTTPException(503, str(exc)) from exc
+    except exporter.FormatNotSupported as exc:
+        raise HTTPException(400, str(exc)) from exc
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(500, f"批量导出失败: {exc}") from exc
+
+
+# ── v0.5.0 AI 优化提问：把问题改写成递进式三小问（更深入/更清晰/更究竟/更根本） ──
+OPTIMIZE_PROMPT = (
+    "你是资深工程总包咨询专家，也是提问教练。请把下面这个工程咨询问题改写成一个"
+    "更深入、更清晰、更究竟、更根本的新问题：新问题采用递进式结构，至少由三个"
+    "层层深入的小问组成（第一问问定性结论，第二问问法律与合同依据，第三问及以上"
+    "问具体操作步骤、证据准备与风险防范）。只输出改写后的新问题本身，不要回答"
+    "这个问题，不要任何解释、前言或后缀，控制在 200 字以内。\n\n原问题：{q}"
+)
+
+
+@app.post("/api/question/optimize")
+def question_optimize(body: AskIn, request: Request):
+    """AI 优化提问：智谱免费链主引擎（用户令 0929，不烧 KB 积分池）；
+    无 key/全链失败回落总包智库 KB 免费池（串行闸）。每用户每天 10 次。"""
+    openid = _openid(request)
+    q = (body.question or "").strip()
+    if len(q) < 2 or len(q) > 500:
+        raise HTTPException(400, "请先输入 2-500 字的咨询问题再优化")
+    if not store.consume_optimize(openid):
+        raise HTTPException(
+            429, f"今日 AI 优化次数已用完（每天 {config.OPTIMIZE_DAILY_CAP} 次），明天再来",
+        )
+    if zhipu.configured():
+        try:
+            optimized = zhipu.rewrite(OPTIMIZE_PROMPT.format(q=q))
+        except Exception as exc:  # noqa: BLE001
+            store.refund_optimize(openid)
+            raise HTTPException(502, f"AI 优化失败: {exc}") from exc
+    else:
+        if not _ask_lock.acquire(timeout=150):
+            store.refund_optimize(openid)
+            raise HTTPException(503, "总包智库正忙，请稍后再试")
+        try:
+            result = metaso_kb.ask(OPTIMIZE_PROMPT.format(q=q))
+        except Exception as exc:  # noqa: BLE001
+            store.refund_optimize(openid)
+            raise HTTPException(502, f"AI 优化失败: {exc}") from exc
+        finally:
+            _ask_lock.release()
+        optimized = (result.answer or "").strip()
+    if len(optimized) < 10:
+        store.refund_optimize(openid)
+        raise HTTPException(502, "优化结果异常，已退还本次次数，请稍后再试")
+    return {
+        "optimized": optimized[:500],
+        "left": max(0, config.OPTIMIZE_DAILY_CAP - store.opt_used_today(openid)),
+    }
+
+
+@app.get("/api/stats")
+def public_stats():
+    """v0.9.10 用户令 1010：首页社会信任面——注册用户总数+咨询总数。
+    公开聚合数（非个人信息，未登录可看）；官方种子账号（POT_OPENID）不计入。"""
+    return store.public_stats()
+
+
+# ── v0.5.0 锅圈：打破砂锅问到底（公共热点问题展区） ──
+@app.get("/api/pot/list")
+def pot_list(request: Request):
+    """v0.9.10 用户令 1009：锅圈分类标签——读时纯函数打标（存量/新增即打即得，
+    规则升级全员自动重标）；cats=全量计数（切筛不清 chips）；?cat= 过滤。"""
+    _openid(request)
+    cat = (request.query_params.get("cat") or "").strip()
+    items = store.pot_list()
+    for it in items:
+        it["cat"] = potcat.classify(it.get("question") or "")
+    cats = []
+    for name, _kws in potcat.CATEGORY_RULES + ((potcat.FALLBACK_CATEGORY, ()),):
+        n = sum(1 for it in items if it["cat"] == name)
+        if n:
+            cats.append({"name": name, "n": n})
+    if cat:
+        items = [it for it in items if it["cat"] == cat]
+    # v0.9.19（1017 用户令）：锅圈双分区——最新≤3（纯时间）+ 最热（观看+点赞+转发总和倒序）
+    def _heat(it):
+        return (it.get("views") or 0) + (it.get("likes") or 0) + (it.get("shares") or 0)
+    latest = sorted(items, key=lambda it: it.get("created_at") or "", reverse=True)[:3]
+    hot = sorted(items, key=_heat, reverse=True)
+    for it in hot:
+        it["heat"] = _heat(it)
+    return {"items": items, "cats": cats, "latest": latest, "hot": hot}
+
+
+@app.get("/api/history")
+def my_history(request: Request):
+    openid = _openid(request)
+    # export_unpaid_all=服务端权威未解锁计数（审计 MEDIUM-5：客户端只看 20 条
+    # 截断列表会算错批量弹窗金额，与实际扣款不符）
+    all_rows = store.history_all(openid)
+    unpaid_n = len([r for r in all_rows if not r.get("export_paid")])
+    return {"items": store.history(openid), "quota": store.quota_left(openid),
+            "export_unpaid_all": unpaid_n}
+
+
+@app.get("/api/quota")
+def my_quota(request: Request):
+    openid = _openid(request)
+    return {"quota": store.quota_left(openid)}
+
+
+@app.get("/api/engine/status")
+def engine_status():
+    return metaso_kb.engine_status()
+
+
+# ── v0.8.0 虚拟支付·导出收费（用户令 1008）：咨询全免费；导出 ¥0.1/条（单条/批量同价） ──
+# 旧 ¥1 整篇解锁已按用户令下线；道具 export_once 10 分（货架），buyQuantity=条数。
+def _vp_config() -> dict:
+    f = config.VIRTUAL_PAY_FILE
+    if not f.exists():
+        return {}
+    out: dict = {}
+    for line in f.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if line and "=" in line and not line.startswith("#"):
+            k, v = line.split("=", 1)
+            out[k.strip()] = v.strip()
+    return out
+
+
+def _make_otn(prefix: str, anchor: str) -> str:
+    """outTradeNo：合法字符 [0-9A-Za-z_-|*@]，8-32 位，不以下划线开头；
+    尾接毫秒 base36（6 位）+ 4 位随机熵（审计 LOW-6：防同毫秒双开单碰撞
+    与尾 5 位截断的复用窗口）。"""
+    base = re.sub(r"[^0-9A-Za-z_\-|*@]", "x", anchor)[:24]
+    tail = format(int(time.time() * 1000), "36")[-6:] + secrets.token_hex(2)
+    otn = (prefix + base + "-" + tail)[:32]
+    return ("q" + otn[1:]) if otn.startswith("_") else otn
+
+
+def _order_status_paid(d: dict) -> tuple:
+    """从微信查单应答提取 (status, paid)。明确成功枚举 → True；明确未付/关闭 →
+    False；字段缺失或陌生枚举 → None（对账中——fail-closed，绝不猜）。"""
+    o = d.get("order") if isinstance(d.get("order"), dict) else d
+    status = ""
+    for k in ("status", "pay_status", "order_status", "trade_state"):
+        v = o.get(k) if isinstance(o, dict) else None
+        if v:
+            status = str(v).upper()
+            break
+    if status in ("SUCCESS", "PAYED", "PAID"):
+        return status, True
+    if status in ("NOTPAY", "NOT_PAY", "CLOSED", "PAYERROR", "REFUND", "USERPAYING"):
+        return status, False
+    return status or "UNKNOWN", None
+
+
+def _query_paid(openid: str, otn: str, vp: dict, env_val: int,
+                app_key: str, session_key: str) -> bool | None:
+    """微信侧查单 → True已付/False未付/None查不出（补账与回调核验共用的探测腿）。"""
+    try:
+        d = wechat.xpay_query_order(openid, otn, vp["offer_id"],
+                                    env_val, app_key, session_key)
+    except wechat.XpayError:
+        return None
+    return _order_status_paid(d)[1]
+
+
+def _order_paid_reconcile(openid: str, open_o: dict, vp: dict, env_val: int,
+                          app_key: str, session_key: str) -> bool:
+    """老 signed 单查单补账：微信侧确已支付 → 本地转 paid 返回 True（调用方补
+    业务标记并 409 收口，防二次扣款）；未付/查不出返回 False。
+    用户令 1009（不保留待支付态）：调用方对 False 单作废重开、下次想买重新下单
+    ——已取消/关闭订单复用同一 otn 必 ORDER_CLOSED(-15012)，支付面板永远拉不起
+    （真机缺陷根因：首单取消后本地库不知情，签名腿一直发死单号）。"""
+    return bool(_query_paid(openid, open_o["out_trade_no"], vp, env_val,
+                            app_key, session_key)
+                and store.mark_order_paid(open_o["out_trade_no"]))
+
+
+def _verify_order_paid(order: dict, openid: str, vp: dict, env_val: int,
+                       app_key: str, session_key: str) -> None:
+    """回调腿核验（审计 CRITICAL-2）：微信查单确认已付才放行，绝不裸信客户端。
+
+    生产（env=0）fail-closed：查单失败/状态不明一律 503 对账中——宁可让用户
+    稍后重试，不给「零支付解锁」留门。沙箱（env=1）查单基础设施不可用时信任
+    回调：沙箱本就是模拟支付无真实资金，且 env 由服务端配置决定，客户端无法
+    自选环境伪造。"""
+    try:
+        d = wechat.xpay_query_order(openid, order["out_trade_no"], vp["offer_id"],
+                                    env_val, app_key, session_key)
+    except wechat.XpayError as exc:
+        if env_val == 1:
+            return
+        raise HTTPException(
+            503, "支付对账中，请稍后重新点击导出完成解锁") from exc
+    status, paid = _order_status_paid(d)
+    if paid is True:
+        return
+    if paid is False:
+        raise HTTPException(400, "该订单尚未支付成功，请在支付完成后重试")
+    if env_val == 1:
+        return
+    raise HTTPException(503, "支付对账中，请稍后重新点击导出完成解锁")
+
+
+def _vpay_env(openid: str, vp: dict) -> tuple:
+    """支付环境三验（offer/AppKey/session_key）公共腿；通过返回
+    (env, app_key, session_key)。道具级配置由各业务腿先行校验。"""
+    if not vp.get("offer_id"):
+        raise HTTPException(503, "虚拟支付尚未开通")
+    env_val = int(vp.get("env", "0") or 0)
+    app_key = (vp.get("prod_appkey") if env_val == 0 else vp.get("sandbox_appkey")) or ""
+    if not app_key:
+        raise HTTPException(503, "虚拟支付AppKey未配置")
+    session_key = store.get_session(openid)
+    if not session_key:
+        # 401 → 客户端自动静默重登（刷新 session_key）后重试
+        raise HTTPException(401, "登录态需要刷新")
+    return env_val, app_key, session_key
+
+
+def _export_pay_env(openid: str, vp: dict) -> tuple:
+    """导出腿支付环境（v0.8.0）：道具 export_product_id 先行校验。"""
+    if not vp.get("export_product_id"):
+        raise HTTPException(503, "导出支付尚未开通")
+    return _vpay_env(openid, vp)
+
+
+class ExportPaidIn(BaseModel):
+    out_trade_no: str = ""
+
+
+def _export_unlocked(aid: str, row: dict, openid: str) -> bool:
+    """导出解锁判据（观看者维度，v0.9.14 用户令「锅圈也要支持付费导出」）：
+    答主=answers.export_paid 行级 flag（历史/批量口径不变）；
+    锅圈观看者=answer_export_unlocks 按 (openid, aid) 记账，两腿取或。"""
+    return ((row["openid"] == openid and bool(row.get("export_paid")))
+            or store.answer_export_unlocked(openid, aid))
+
+
+def _mark_export_unlocked(aid: str, row: dict, openid: str, otn: str) -> None:
+    """导出解锁记账：答主补行级 flag，人人落按人行（幂等）。"""
+    if row["openid"] == openid:
+        store.mark_export_paid(aid, openid, otn)
+    store.mark_answer_export_paid(openid, aid, otn)
+
+
+@app.post("/api/answer/{aid}/export_sign")
+def export_sign(aid: str, request: Request):
+    """签名腿（单条导出）：本人答案 或 锅圈共享答案（v0.9.14 用户令：
+    锅圈也要支持付费导出）；签名即落单，客户端原样透传拉起支付。
+    重复发起时老未付单作废重开新号（用户令 1009：不保留待支付态）；
+    若老单微信侧已付成功，当场补标记并以 409 收口（已扣款必解锁，防二次扣款）。"""
+    openid = _openid(request)
+    row = store.get_answer_visible(aid, openid)
+    if row is None:
+        raise HTTPException(404, "答案不存在")
+    if row["status"] != "ready":
+        raise HTTPException(409, "回答尚未完成，暂不可导出")
+    if _export_unlocked(aid, row, openid):
+        raise HTTPException(409, "本篇导出已解锁")
+    vp = _vp_config()
+    env_val, app_key, session_key = _export_pay_env(openid, vp)
+    open_o = store.open_pay_order(openid, "single", aid)
+    if open_o:
+        if _order_paid_reconcile(openid, open_o, vp, env_val,
+                                 app_key, session_key):
+            _mark_export_unlocked(aid, row, openid, open_o["out_trade_no"])
+            raise HTTPException(409, "支付已到账，本篇导出已解锁")
+        store.cancel_pay_order(open_o["out_trade_no"])
+    otn = _make_otn("e", aid)
+    store.create_pay_order(otn, openid, "single", aid=aid,
+                           buy_quantity=1, total_fen=config.EXPORT_PRICE_FEN)
+    sign_data = {
+        "offerId": vp["offer_id"],
+        "buyQuantity": 1,
+        "env": env_val,
+        "currencyType": "CNY",
+        "productId": vp["export_product_id"],
+        "goodsPrice": config.EXPORT_PRICE_FEN,
+        "outTradeNo": otn,
+        "attach": hashlib.sha256(openid.encode()).hexdigest()[:16],
+        "mode": "short_series_goods",
+    }
+    body, pay_sig, signature = wechat.virtual_pay_sign(
+        app_key, session_key, sign_data)
+    return {
+        "mode": "short_series_goods",
+        "sign_data": body,
+        "pay_sig": pay_sig,
+        "signature": signature,
+        "out_trade_no": otn,
+        "price_fen": config.EXPORT_PRICE_FEN,
+    }
+
+
+@app.post("/api/answer/{aid}/export_paid")
+def export_paid(aid: str, body: ExportPaidIn, request: Request):
+    """支付成功回调腿（单条导出）：凭服务端订单 + 微信查单核验（审计
+    CRITICAL-2：绝不裸信客户端声称）；核验通过才幂等标记 + pay_log 对账。
+    v0.9.14：锅圈观看者同权——解锁按观看者记账（answer_export_unlocks）。"""
+    openid = _openid(request)
+    row = store.get_answer_visible(aid, openid)
+    if row is None:
+        raise HTTPException(404, "答案不存在")
+    if _export_unlocked(aid, row, openid):
+        return {"export_paid": True}
+    otn = (body.out_trade_no or "").strip()
+    order = store.get_pay_order(otn) if otn else None
+    if (order is None or order["openid"] != openid
+            or order["kind"] != "single" or order["aid"] != aid):
+        raise HTTPException(404, "支付订单不存在")
+    vp = _vp_config()
+    env_val, app_key, session_key = _export_pay_env(openid, vp)
+    _verify_order_paid(order, openid, vp, env_val, app_key, session_key)
+    store.mark_order_paid(otn)
+    _mark_export_unlocked(aid, row, openid, otn)
+    return {"export_paid": True}
+
+
+@app.post("/api/answers/export_all_sign")
+def export_all_sign(request: Request):
+    """签名腿（批量导出）：buyQuantity=未解锁条数快照，一单付清 N×¥0.1。
+    快照落 aid_list（审计 MEDIUM-4：支付存续期新完成的咨询不被顺带解锁）；
+    老未付单一律作废重开（用户令 1009：不保留待支付态），已付未标记当场补收口。"""
+    openid = _openid(request)
+    rows = store.history_all(openid)
+    if not rows:
+        raise HTTPException(404, "还没有完成的咨询记录")
+    unpaid = [r for r in rows if not r.get("export_paid")]
+    if not unpaid:
+        raise HTTPException(409, "全部咨询导出均已解锁")
+    if len(unpaid) > config.EXPORT_BATCH_MAX:
+        raise HTTPException(400, f"一次最多解锁 {config.EXPORT_BATCH_MAX} 条，请分批处理")
+    vp = _vp_config()
+    env_val, app_key, session_key = _export_pay_env(openid, vp)
+    snapshot = ",".join(r["id"] for r in unpaid)
+    open_o = store.open_pay_order(openid, "batch")
+    if open_o and (open_o.get("aid_list") or "") == snapshot:
+        if _order_paid_reconcile(openid, open_o, vp, env_val,
+                                 app_key, session_key):
+            n = store.mark_export_paid_many(
+                openid, open_o["aid_list"].split(","), open_o["out_trade_no"])
+            raise HTTPException(409, f"支付已到账，已解锁 {n} 条导出")
+    if open_o:
+        store.cancel_pay_order(open_o["out_trade_no"])
+    # 批量锚点用 openid 哈希片段（审计 WARN：otn 进用户账单详情，不留明文）
+    otn = _make_otn("b", hashlib.sha256(openid.encode()).hexdigest()[:16])
+    store.create_pay_order(otn, openid, "batch", aid_list=snapshot,
+                           buy_quantity=len(unpaid),
+                           total_fen=len(unpaid) * config.EXPORT_PRICE_FEN)
+    sign_data = {
+        "offerId": vp["offer_id"],
+        "buyQuantity": len(unpaid),
+        "env": env_val,
+        "currencyType": "CNY",
+        "productId": vp["export_product_id"],
+        "goodsPrice": config.EXPORT_PRICE_FEN,
+        "outTradeNo": otn,
+        "attach": hashlib.sha256(openid.encode()).hexdigest()[:16],
+        "mode": "short_series_goods",
+    }
+    body, pay_sig, signature = wechat.virtual_pay_sign(
+        app_key, session_key, sign_data)
+    return {
+        "mode": "short_series_goods",
+        "sign_data": body,
+        "pay_sig": pay_sig,
+        "signature": signature,
+        "out_trade_no": otn,
+        "quantity": len(unpaid),
+        "total_fen": len(unpaid) * config.EXPORT_PRICE_FEN,
+    }
+
+
+@app.post("/api/answers/export_all_paid")
+def export_all_paid(body: ExportPaidIn, request: Request):
+    """支付成功回调腿（批量导出）：凭订单快照 + 微信查单核验；只解锁签名
+    时刻的那批（新完成的咨询留给下一单）。"""
+    openid = _openid(request)
+    otn = (body.out_trade_no or "").strip()
+    order = store.get_pay_order(otn) if otn else None
+    if order is None or order["openid"] != openid or order["kind"] != "batch":
+        raise HTTPException(404, "支付订单不存在")
+    aids = [a for a in (order.get("aid_list") or "").split(",") if a]
+    if not aids:
+        raise HTTPException(404, "支付订单不存在")
+    if order["status"] == "paid":
+        return {"export_paid": store.mark_export_paid_many(openid, aids, otn)}
+    vp = _vp_config()
+    env_val, app_key, session_key = _export_pay_env(openid, vp)
+    _verify_order_paid(order, openid, vp, env_val, app_key, session_key)
+    store.mark_order_paid(otn)
+    return {"export_paid": store.mark_export_paid_many(openid, aids, otn)}
+
+
+# ── v0.9.0 报告商城（用户令 1008：研究报告售卖整合进总包AI顾问，wx5cee）──
+# 链路同导出收费腿（签名即落单→客户端拉起→回调凭单+查单核验 fail-closed），
+# kind='report'，pay_order.aid 存 sku；道具按价格分档 report_product_<元>。
+# 可售判定在 report_catalog（PDF 存在且 ≤20MB；BLUEBOOK-2027 预售无货、
+# TOPIC-06 PDF 143MB 生成事故均自动落「整理中」，可看不可买）。
+def _openid_soft(req: Request) -> str:
+    """软鉴权：目录/详情浏览不强制登录（漏斗前宽后严）；无凭证/过期返回 ''。"""
+    try:
+        return _openid(req)
+    except HTTPException:
+        return ""
+
+
+def _report_product(vp: dict, sku: str) -> tuple:
+    """价格分档道具（report_product_<元>）；未配档返回 (None, 0)。"""
+    price_fen = report_catalog.price_fen(sku)
+    pid = vp.get(f"report_product_{price_fen // 100}") or ""
+    return (pid, price_fen) if pid else (None, price_fen)
+
+
+@app.get("/api/reports")
+def reports_list(request: Request):
+    """报告目录（公开浏览）：sellable=false 为整理中（可看不可买）。
+    v0.9.21（1018 用户令）：双分区——latest（发布时间≤3）+ hot（互动总热度倒序）；
+    互动计数随行（views/likes/shares/heat）。"""
+    openid = _openid_soft(request)
+    unlocked = store.report_unlocked_skus(openid) if openid else set()
+    stats = store.report_stats_all()
+
+    def _heat(sku: str) -> int:
+        s = stats.get(sku) or {}
+        return (s.get("views") or 0) + (s.get("likes") or 0) + (s.get("shares") or 0)
+
+    items = []
+    for it in report_catalog.catalog():
+        sku = it["sku"]
+        s = stats.get(sku) or {}
+        items.append({**it, "unlocked": sku in unlocked,
+                      "views": s.get("views") or 0, "likes": s.get("likes") or 0,
+                      "shares": s.get("shares") or 0, "heat": _heat(sku)})
+    # v0.9.22d 终版（1021 用户令=上架时间倒序前三）：catalog() 已按 listed_at 倒序
+    # （1021 根修去反转），items 即最新优先——latest 直接取前3可售，禁止任何二次反转。
+    # （历史教训：另一会话基于「catalog=reversed」假设补过 reversed(items)，与时间序
+    # 叠加变升序取到最老三册——双会话改同函数必须对齐 catalog 语义再动 latest。）
+    latest_skus = [it["sku"] for it in items if it.get("sellable")][:3]
+    latest = [it for it in items if it["sku"] in latest_skus]
+    # hot：热度倒序（零热度报告按目录序排后）
+    hot = sorted(items, key=lambda x: (-x["heat"], items.index(x)))
+    return {"reports": items, "latest": latest, "hot": hot}
+
+
+@app.get("/api/report/{sku}")
+def report_detail(sku: str, request: Request):
+    """报告详情：章节目录/适用人群/简介全文 + 本人解锁态。"""
+    d = report_catalog.get_report(sku)
+    if d is None:
+        raise HTTPException(404, "报告不存在")
+    openid = _openid_soft(request)
+    d["unlocked"] = bool(openid) and sku in store.report_unlocked_skus(openid)
+    return d
+
+
+@app.get("/api/report/{sku}/sample")
+def report_sample(sku: str):
+    """试读正文（markdown 文本，公开——目录页/详情页试读窗）。"""
+    text = report_catalog.sample_text(sku)
+    if text is None:
+        raise HTTPException(404, "试读整理中")
+    return {"sku": sku, "text": text}
+
+
+class ReportPaidIn(BaseModel):
+    out_trade_no: str = ""
+
+
+@app.post("/api/report/{sku}/unlock_sign")
+def report_unlock_sign(sku: str, request: Request):
+    """签名腿（报告解锁）：仅可售报告；签名即落单，老未付单作废重开新号
+    （用户令 1009：不保留待支付态，想买重新下单）；已付未标记当场查单补
+    收口（防二次扣款）。道具=价格分档 report_product_<元>。"""
+    openid = _openid(request)
+    if not report_catalog.sellable(sku):
+        raise HTTPException(404, "报告不存在或整理中")
+    if sku in store.report_unlocked_skus(openid):
+        raise HTTPException(409, "本报告已解锁")
+    vp = _vp_config()
+    product_id, price_fen = _report_product(vp, sku)
+    if not product_id:
+        raise HTTPException(503, "报告支付尚未开通")
+    env_val, app_key, session_key = _vpay_env(openid, vp)
+    open_o = store.open_pay_order(openid, "report", aid=sku)
+    if open_o:
+        if _order_paid_reconcile(openid, open_o, vp, env_val,
+                                 app_key, session_key):
+            store.mark_report_paid(openid, sku, open_o["out_trade_no"])
+            raise HTTPException(409, "支付已到账，本报告已解锁")
+        store.cancel_pay_order(open_o["out_trade_no"])
+    otn = _make_otn("r", sku)
+    store.create_pay_order(otn, openid, "report", aid=sku,
+                           buy_quantity=1, total_fen=price_fen)
+    sign_data = {
+        "offerId": vp["offer_id"],
+        "buyQuantity": 1,
+        "env": env_val,
+        "currencyType": "CNY",
+        "productId": product_id,
+        "goodsPrice": price_fen,
+        "outTradeNo": otn,
+        "attach": hashlib.sha256(openid.encode()).hexdigest()[:16],
+        "mode": "short_series_goods",
+    }
+    body, pay_sig, signature = wechat.virtual_pay_sign(
+        app_key, session_key, sign_data)
+    return {
+        "mode": "short_series_goods",
+        "sign_data": body,
+        "pay_sig": pay_sig,
+        "signature": signature,
+        "out_trade_no": otn,
+        "price_fen": price_fen,
+    }
+
+
+@app.post("/api/report/{sku}/unlock_paid")
+def report_unlock_paid(sku: str, body: ReportPaidIn, request: Request):
+    """回调腿（报告解锁）：凭服务端订单 + 微信查单核验（fail-closed），
+    核验通过才幂等标记解锁 + pay_log 对账。"""
+    openid = _openid(request)
+    if not report_catalog.sellable(sku):
+        raise HTTPException(404, "报告不存在或整理中")
+    if sku in store.report_unlocked_skus(openid):
+        return {"unlocked": True}
+    otn = (body.out_trade_no or "").strip()
+    order = store.get_pay_order(otn) if otn else None
+    if (order is None or order["openid"] != openid
+            or order["kind"] != "report" or order["aid"] != sku):
+        raise HTTPException(404, "支付订单不存在")
+    vp = _vp_config()
+    env_val, app_key, session_key = _vpay_env(openid, vp)
+    _verify_order_paid(order, openid, vp, env_val, app_key, session_key)
+    store.mark_order_paid(otn)
+    store.mark_report_paid(openid, sku, otn)
+    return {"unlocked": True}
+
+
+@app.get("/api/report/{sku}/pdf")
+def report_pdf(sku: str, request: Request):
+    """PDF 全文（已解锁本人；流式 FileResponse，客户端 downloadFile+openDocument）。"""
+    openid = _openid(request)
+    p = report_catalog.pdf_path(sku)
+    if p is None:
+        raise HTTPException(404, "报告不存在或整理中")
+    if sku not in store.report_unlocked_skus(openid):
+        raise HTTPException(402, "购买后可查看完整报告")
+    return FileResponse(p, media_type="application/pdf", filename=f"{sku}.pdf")
+
+
+# ══ v0.9.15（用户令 1011）：报告详情页互动三件——有用/分享给同行 赠次 + 研报转化海报 ══
+
+@app.post("/api/report/{sku}/useful")
+def report_useful(sku: str, request: Request):
+    """报告「有用」：真实互动赠次（每报告每人一次，+1 咨询额度；与答案 like 同构）。"""
+    openid = _openid(request)
+    if report_catalog.get_report(sku) is None:
+        raise HTTPException(404, "报告不存在")
+    if not store.grant_reward(openid, f"report:{sku}", "report_useful"):
+        raise HTTPException(400, "已点过有用")
+    return {"granted": True, "quota": store.quota_left(openid)}
+
+
+@app.post("/api/report/{sku}/share")
+def report_share(sku: str, request: Request):
+    """报告「分享给同行」：静默赠次（每报告每人一次）。合规设计（运营规范 3.2.1
+    红线=分享动作不得明示利益）：客户端零诱导文案、不弹获赠提示，仅额度数字自然 +1。"""
+    openid = _openid(request)
+    if report_catalog.get_report(sku) is None:
+        raise HTTPException(404, "报告不存在")
+    granted = store.grant_reward(openid, f"report:{sku}", "report_share")
+    return {"granted": granted, "quota": store.quota_left(openid)}  # 幂等：重复点不报错
+
+
+@app.get("/api/report/{sku}/poster")
+def report_poster(sku: str):
+    """研报转化海报（v0.9.15 用户令：不显示价格·「可免费试读」显眼）：题名/目录亮点/
+    试读带+小程序码；每 sku×env 一次缓存（REPORT_LAYOUT_VERSION 进键，改版自动失效）。
+    公开（漏斗前宽后严，与目录/详情同律）。码 scene "s=r&i={sku}" → ask 路由腿
+    s=r → 报告详情；老版（线上 0.9.12）无 s=r 分支=落咨询首页，无害降级不 404。"""
+    d = report_catalog.get_report(sku)
+    if d is None:
+        raise HTTPException(404, "报告不存在")
+    env_v = f"{config.POSTER_QR_ENV_VERSION}:r{poster.REPORT_LAYOUT_VERSION}"
+    cached = store.get_poster(f"report:{sku}", env_v)
+    if cached:
+        return {"b64": base64.b64encode(cached).decode()}
+    qr = None
+    try:
+        if len(f"s=r&i={sku}") <= 32:
+            qr = wechat.wxacode_unlimited(f"s=r&i={sku}", "pages/ask/ask")
+    except Exception as exc:  # noqa: BLE001 — 无码兜底版（搜一搜引导）
+        _log.warning("report poster 小程序码失败（无码兜底）: %s", exc)
+    try:
+        png = poster.build_report(d, qr, catalog_count=len(report_catalog.catalog()))
+    except poster.LayoutError as exc:
+        raise HTTPException(503, f"海报服务暂不可用: {exc}") from exc
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(500, f"海报生成失败: {exc}") from exc
+    store.save_poster(f"report:{sku}", png, env_v)
+    return {"b64": base64.b64encode(png).decode()}
+
+
+# ══ v0.9.20（用户令 1018）：报告对话官——分层经济学回答；v0.9.23 统一额度池 ══
+# L1 结论免费 / L2 论据挂章号免费 / L3 全文付费（hint 转化条直达购买）。
+# v0.9.23：额度并入统一池（咨询+问报告共享 FREE_PER_DAY=6/日），解锁该报告后无限问（left=999）。
+# 零造假铁律：检索（report_qa 2-gram 章级）未过门槛 → 固定 no_answer 话术，
+# 绝不调 LLM 编造；限频腿先于 LLM（池尽 429 零 token 消耗；LLM 失败 503 退款不扣次）。
+class ReportAskIn(BaseModel):
+    q: str
+
+
+# v0.9.23：解锁态无限问的进程内软限速（单副本/单 worker 部署形态下即全局限速；
+# 防 left=999 被脚本刷穿智谱免费链。分钟窗计数，惰性清理）。
+_RQA_RATE: dict = {}
+
+
+def _rqa_rate_ok(openid: str) -> bool:
+    import time as _t
+    now = int(_t.time() // 60)  # 分钟桶
+    hit = _RQA_RATE.get(openid)
+    if hit is None or hit[0] != now:
+        if len(_RQA_RATE) > 10000:            # 惰性清理：防无界增长
+            _RQA_RATE.clear()
+        _RQA_RATE[openid] = (now, 1)
+        return True
+    _RQA_RATE[openid] = (now, hit[1] + 1)
+    return hit[1] + 1 <= config.RQA_UNLOCKED_RATE_PER_MIN
+
+
+_RQA_POINT_RE = re.compile(r"^(?:第(\d+)章|试读摘要)：(.*)")  # 1018 完美化：兼收 ch=0 伪章 + 捕获余文（角标/正文不重复）
+_RQA_TRANS_RE = re.compile(r"^(关键)?(论据|要点|论据要点|关键论据)[:：]?\s*$")  # v0.9.23：结论尾转场行剥离
+
+
+def _parse_rqa_reply(text: str) -> tuple:
+    """LLM 文本 → (conclusion, points≤3)。形态解析（answer-policy.md 测试法）：
+    首个「第N章：」行之前的所有非空行=结论（v0.9.23 修复：千字结论常分多段，
+    只取首行会腰斩——现按段累积 join，1200 字封顶）；「第N章：」行=论据。"""
+    concl_lines: list = []
+    points: list = []
+    for raw_line in (text or "").splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+        # 1018 完美化：markdown 记号剥离（**加星**/`code` 直显气泡的观感缺陷）
+        line = line.replace("*", "").replace("`", "")
+        m = _RQA_POINT_RE.match(line)
+        if m and len(points) < 3:
+            ch = int(m.group(1)) if m.group(1) else 0   # 试读摘要=ch 0
+            text_tail = (m.group(2) or "").strip()
+            points.append({"ch": ch, "text": text_tail[:120]})  # v0.9.23：论据摘要加长
+        elif not points:
+            concl_lines.append(line)              # 论据出现前一律结论段
+    conclusion = "\n".join(concl_lines)[:1200]    # v0.9.23：多段累积，千字诚意回答
+    # 尾部转场行（「关键论据要点：」等论据区引导语）不属结论，剥掉
+    while conclusion and _RQA_TRANS_RE.match(conclusion.rsplit("\n", 1)[-1]):
+        conclusion = conclusion.rsplit("\n", 1)[0].rstrip()
+    return conclusion, points
+
+
+@app.post("/api/report/{sku}/bump/{field}")
+def report_bump(sku: str, field: str):
+    """报告互动计数（v0.9.21 用户令）：views/likes/shares 自增，返回新值。
+    公开（目录浏览计数无鉴权必要；点赞分享由客户端触发）。"""
+    if field not in ("views", "likes", "shares"):
+        raise HTTPException(400, "field 须为 views/likes/shares")
+    if report_catalog.get_report(sku) is None:
+        raise HTTPException(404, "报告不存在")
+    val = store.report_stats_bump(sku, field)
+    return {"sku": sku, "field": field, "value": val}
+
+
+@app.post("/api/report/{sku}/ask")
+def report_ask(sku: str, body: ReportAskIn, request: Request):
+    """报告对话官 v0.9.23 变现重构：统一额度池（咨询+问报告共享 6/日）+
+    解锁后该报告无限问。鉴权 → 404 → 400 → 429（统一 quota，非解锁态）→
+    检索未命中 no_answer → 命中走智谱（1000字诚意回答）。"""
+    openid = _openid(request)
+    if report_catalog.get_report(sku) is None:
+        raise HTTPException(404, "报告不存在")
+    d_unlocked = sku in store.report_unlocked_skus(openid)
+    q = (body.q or "").strip()
+    if len(q) < 2 or len(q) > 200:
+        raise HTTPException(400, "问题需 2-200 字")
+    # v0.9.23：统一额度池（咨询+问报告共享 FREE_PER_DAY=6/日，解锁后无限）
+    unified_left = 999 if d_unlocked else store.quota_left(openid)["total_left"]
+    if unified_left <= 0:
+        return JSONResponse(
+            status_code=429,
+            content={"detail": f"今日{config.FREE_PER_DAY}问已用完，明日再来；解锁本报告即可无限问", "left": 0})
+    if d_unlocked and not _rqa_rate_ok(openid):
+        # 解锁态软限速：429 但 left=999（客户端只对 left===0 切用尽态，此处仅 toast 提示）
+        return JSONResponse(
+            status_code=429,
+            content={"detail": "问得太快啦，歇一会儿再问", "left": 999})
+    pre = None
+    if not d_unlocked:
+        pre = store.quota_left(openid)
+        if not store.consume_one(openid):       # 并发双查兜底：池在 pre 检查后被并发问掏空
+            return JSONResponse(
+                status_code=429,
+                content={"detail": f"今日{config.FREE_PER_DAY}问已用完，明日再来；解锁本报告即可无限问", "left": 0})
+    chapters, hit = report_qa.retrieve(sku, q)
+    if not hit:
+        best = chapters[0] if chapters else {"no": 0, "title": ""}
+        conclusion = config.RQA_NO_ANSWER
+        hint = (config.RQA_HINT_MISS0 if best["no"] == 0
+                else config.RQA_HINT_MISS.format(no=best["no"], title=best["title"]))
+        store.log_report_ask(openid, sku, q, conclusion)
+        return {"conclusion": conclusion, "points": [], "hint": hint,
+                "left": 999 if d_unlocked else store.quota_left(openid)["total_left"]}
+    report = report_catalog.get_report(sku) or {}
+    system = config.RQA_PROMPT_SYSTEM.format(title=report.get("title") or sku)
+    excerpt = "；".join(
+        (f"试读摘要：{ch['desc']}" if ch["no"] == 0
+         else f"第{ch['no']}章 {ch['title']}：{ch['desc']}") for ch in chapters)
+    try:
+        raw = zhipu.deep_answer(system, f"【章节摘录】{excerpt}\n【问题】{q}",
+                                temperature=0.3, max_tokens=config.RQA_MAX_TOKENS)
+        conclusion, points = _parse_rqa_reply(raw)
+    except Exception as exc:  # noqa: BLE001 — 静默降级：错误进日志，用户侧固定话术
+        _log.warning("report ask zhipu fail sku=%s: %s", sku, exc)
+        conclusion, points = "", []
+    if not conclusion:  # LLM 异常或空解析 → 503 且不扣次（REQ-004 契约）
+        _log.warning("report ask empty reply sku=%s", sku)
+        if pre is not None:
+            store.refund_one(openid, from_bonus=pre["free_left"] <= 0)
+        raise HTTPException(503, "问答稍后再试")
+    hint = (config.RQA_HINT_FULL0 if chapters[0]["no"] == 0
+            else config.RQA_HINT_FULL.format(no=chapters[0]["no"]))  # 转化条=检索最优章；ch0=试读伪章特例
+    store.log_report_ask(openid, sku, q, conclusion)
+    return {"conclusion": conclusion, "points": points, "hint": hint,
+            "left": 999 if d_unlocked else store.quota_left(openid)["total_left"]}
+
+
+@app.get("/api/report/asks/history")
+def report_asks_history(request: Request):
+    """我的报告提问记录（REQ-011：openid/sku/问题/结论/时间，新→旧；
+    title 由 report_catalog 联查回填，目录缺失回 ''）。"""
+    openid = _openid(request)
+    items = []
+    for r in store.report_ask_history(openid):
+        rep = report_catalog.get_report(r.get("sku") or "") or {}
+        items.append({
+            "sku": r.get("sku") or "",
+            "q": r.get("q") or "",
+            "conclusion": r.get("conclusion") or "",
+            "title": rep.get("title") or "",
+            "created_at": r.get("created_at") or "",
+        })
+    return {"items": items}
+
+
+# ── v0.9.13 虚拟支付道具图（微信道具后台 item_url 引用；公开只读，白名单+防穿越）──
+_GOODS_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$")
+
+
+@app.get("/static/goods/{name}")
+def static_goods(name: str):
+    """道具封面图（static_goods/<name>.jpg）：虚拟支付发布校验会拉取该 URL，必须公网可达。"""
+    if not _GOODS_NAME_RE.match(name or ""):
+        raise HTTPException(404, "not found")
+    base = config.GOODS_STATIC_DIR.resolve()
+    p = (base / (name + ".jpg")).resolve()
+    if p.parent != base or not p.is_file():
+        raise HTTPException(404, "not found")
+    return FileResponse(p, media_type="image/jpeg",
+                        headers={"Cache-Control": "public, max-age=86400"})
+
+
+# ── v0.6.0 100× 弧线（全免费）：追问对话 / 要点速览 / 相关问题 / 分享海报 ──
+# 产品语义：总包智库=正式咨询（唯一烧 KB 位）；以下全部以智谱免费链接地，
+# 以本篇解答全文为上下文作答——贵的答案只买一次，便宜的解释无限次。
+FOLLOWUP_PROMPT = (
+    "你是总包AI智库的咨询助手。以下是工程师的原始咨询与智库专业解答全文。"
+    "只依据【专业解答】回答用户的追问；先核对解答中的适用前提是否满足，再下结论；"
+    "若解答未覆盖该追问，如实说明并建议就这一点发起新的正式咨询。"
+    "要求：结论先行，条理清晰，可引用解答原文关键句，300 字以内，纯文本输出。\n\n"
+    "【原始问题】{q}\n【专业解答】{a}\n【用户追问】{f}"
+)
+
+DIGEST_PROMPT = (
+    "你是总包AI智库的编辑。基于下面的咨询问题与专业解答，产出两部分：\n"
+    "1. tldr：3 条要点速览，每条不超过 40 字，覆盖解答最核心的结论、依据与操作；\n"
+    "2. related：3 个用户可能想接着问的相关问题，每条不超过 30 字，用问句。\n"
+    '只输出 JSON，格式 {{"tldr": ["…","…","…"], "related": ["…","…","…"]}}，'
+    "不要任何其他文字。\n\n【咨询问题】{q}\n【专业解答】{a}"
+)
+
+
+def _visible_ready(request: Request, aid: str) -> tuple:
+    """可见性（本人/锅圈）+ 已完成 校验；返回 (openid, row)。"""
+    openid = _openid(request)
+    row = store.get_answer_visible(aid, openid)
+    if row is None:
+        raise HTTPException(404, "答案不存在")
+    if row["status"] != "ready" or not row["answer_full"]:
+        raise HTTPException(400, "回答尚未完成，稍后再试")
+    return openid, row
+
+
+class FollowupIn(BaseModel):
+    question: str
+
+
+@app.post("/api/answer/{aid}/followup")
+def followup(aid: str, body: FollowupIn, request: Request):
+    """免费追问（智谱接地，异步流水线）：绝不烧 KB 积分。双日限防刷。"""
+    openid, row = _visible_ready(request, aid)
+    q = (body.question or "").strip()
+    if len(q) < 2 or len(q) > config.FOLLOWUP_MAX_CHARS:
+        raise HTTPException(400, f"追问需 2-{config.FOLLOWUP_MAX_CHARS} 字")
+    if not zhipu.configured():
+        raise HTTPException(503, "追问服务暂不可用，稍后再试")
+    fid, reason, _left = store.create_followup(aid, openid, q)
+    if fid is None:
+        cap = (config.FOLLOWUP_PER_ANSWER_DAILY if reason == "per_answer"
+               else config.FOLLOWUP_GLOBAL_DAILY)
+        raise HTTPException(429, f"今日追问次数已用完（每答案 {config.FOLLOWUP_PER_ANSWER_DAILY} 次"
+                                 f"/每天共 {cap} 次），明天再来")
+    threading.Thread(
+        target=_run_followup,
+        args=(fid, row["question"], row["answer_full"], q), daemon=True).start()
+    left_a, left_g = store.followup_left(aid, openid)
+    return {"id": fid, "status": "pending", "left_answer": left_a, "left_global": left_g}
+
+
+def _run_followup(fid: int, q: str, answer_full: str, fq: str) -> None:
+    """v0.7.0：瞬断重试一次（免费链冷却切换后常即恢复）+ 友好文案落库。"""
+    err: Exception | None = None
+    for attempt in range(2):
+        try:
+            reply = zhipu.rewrite(FOLLOWUP_PROMPT.format(q=q, a=answer_full, f=fq))
+            if len(reply) < 5:
+                raise RuntimeError("回答内容异常")
+            store.finish_followup(fid, reply)
+            return
+        except Exception as exc:  # noqa: BLE001
+            err = exc
+            if attempt == 0:
+                time.sleep(3)
+    store.fail_followup(fid, zhipu.friendly_error(err))
+
+
+@app.get("/api/answer/{aid}/followups")
+def followups(aid: str, request: Request):
+    """本人在本答案下的追问对话（时间正序）。"""
+    openid = _openid(request)
+    row = store.get_answer_visible(aid, openid)
+    if row is None:
+        raise HTTPException(404, "答案不存在")
+    return {"items": store.list_followups(aid, openid)}
+
+
+# ── v0.7.0 依据来源全文展开（用户令 0930 第 11 条）：点开即读条文/法条完整内容 ──
+CITATION_PROMPT = (
+    "你是总包智库的资料员。工程师正在阅读一篇工程咨询专业解答，"
+    "其中「依据来源」第 {n} 条为：{c}。"
+    "请依据【专业解答全文】中与该依据相关的论述，完整展开这条依据的核心内容："
+    "它是什么文件/法规、关键条文或要点有哪些、对本文结论起到什么支撑作用。"
+    "若全文信息不足以还原该依据的原文条款，请如实说明这一点，"
+    "并给出查阅该依据原文的可靠途径（如官方发布渠道）。"
+    "600 字以内，纯文本输出，不要使用任何 Markdown 符号。\n\n"
+    "【专业解答全文】{a}"
+)
+
+
+@app.get("/api/answer/{aid}/citations/{n}")
+def citation_fulltext(aid: str, n: int, request: Request):
+    """依据条目全文展开（免费智谱接地，按 aid+n 永久缓存；诚实降级不编造）。"""
+    _openid, row = _visible_ready(request, aid)
+    cits = row["citations"] or []
+    if n < 1 or n > len(cits):
+        raise HTTPException(404, "依据不存在")
+    cached = store.get_citation_ft(aid, n)
+    if cached:
+        return {"text": cached, "cached": True}
+    c = cits[n - 1]
+    src = (c.get("source") or "").strip() or "未具名依据"
+    if c.get("loc"):
+        src += f"（第 {c.get('loc')} 条/页）"
+    if not zhipu.configured():
+        raise HTTPException(503, "依据展开服务暂不可用，稍后再试")
+    try:
+        text = zhipu.rewrite(CITATION_PROMPT.format(n=n, c=src, a=row["answer_full"]))
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(502, zhipu.friendly_error(exc)) from exc
+    if len(text) < 10:
+        raise HTTPException(502, "依据展开失败，请稍后再试")
+    store.save_citation_ft(aid, n, text)
+    return {"text": text, "cached": False}
+
+
+def _digest_json(raw: str) -> tuple:
+    """智谱 digest 输出 → ([tldr ≤3], [related ≤3])；非法结构抛 ValueError。"""
+    t = (raw or "").strip()
+    if t.startswith("```"):
+        t = t.strip("`").lstrip(" \n").rstrip(" \n")
+        if t.lower().startswith("json"):
+            t = t[4:].lstrip(" \n")
+    s, e = t.find("{"), t.rfind("}")
+    if s < 0 or e <= s:
+        raise ValueError("digest 输出非 JSON")
+    d = json.loads(t[s:e + 1])
+    tldr = [str(x).strip()[:60] for x in d.get("tldr", []) if str(x).strip()][:3]
+    related = [str(x).strip()[:40] for x in d.get("related", []) if str(x).strip()][:3]
+    if not tldr:
+        raise ValueError("tldr 为空")
+    return tldr, related
+
+
+@app.get("/api/answer/{aid}/digest")
+def digest(aid: str, request: Request):
+    """要点速览 + 相关问题（免费智谱，每答案生成一次永久缓存；失败可重试）。"""
+    _, row = _visible_ready(request, aid)
+    tldr, related = store.get_digest(aid)
+    if tldr or related:
+        return {"tldr": tldr, "related": related, "cached": True}
+    if not zhipu.configured():
+        raise HTTPException(503, "要点生成服务暂不可用，稍后再试")
+    try:
+        raw = zhipu.rewrite(DIGEST_PROMPT.format(q=row["question"], a=row["answer_full"]))
+        tldr, related = _digest_json(raw)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(502, f"要点生成失败，稍后再试（{exc}）") from exc
+    store.save_digest(aid, tldr, related)
+    return {"tldr": tldr, "related": related, "cached": False}
+
+
+@app.get("/api/answer/{aid}/poster")
+def share_poster(aid: str, request: Request):
+    """分享海报（免费 Pillow）：问题+要点+品牌+小程序码；每答案×每 env 版本一次缓存
+    （v0.7.0：提审切 release 后旧 trial 码海报自动失效重生成）。
+    要点优先取缓存 digest，未缓存则现场生成；再失败用预览兜底——海报零失败姿态。"""
+    _, row = _visible_ready(request, aid)
+    store.bump_shares(aid)   # v0.7.3：海报传播=转发行为，转发数 +1
+    # v0.9.8：版式版本进缓存键——重设计上线后旧缓存自动失效重生成
+    env_v = f"{config.POSTER_QR_ENV_VERSION}:{poster.LAYOUT_VERSION}"
+    cached = store.get_poster(aid, env_v)
+    if cached:
+        return {"b64": base64.b64encode(cached).decode()}
+    bullets = []
+    try:
+        tldr, _related = store.get_digest(aid)
+        if not tldr:
+            raw = zhipu.rewrite(DIGEST_PROMPT.format(q=row["question"], a=row["answer_full"]))
+            tldr, related = _digest_json(raw)
+            store.save_digest(aid, tldr, related)
+        bullets = tldr
+    except Exception as exc:  # noqa: BLE001 — 要点缺席不废海报
+        _log.warning("poster digest 兜底（用预览）: %s", exc)
+    if not bullets:
+        bullets = [store.strip_md((row["answer_full"] or ""))[:60].strip()
+                   or "专业解答已就绪"]
+    qr = None
+    try:
+        qr = wechat.wxacode_unlimited(f"s=p&a={aid}", "pages/ask/ask")
+    except Exception as exc:  # noqa: BLE001 — 无码兜底版（搜一搜引导）
+        _log.warning("poster 小程序码失败（无码兜底）: %s", exc)
+    try:
+        # v0.9.8（用户令 1009）：海报新增约 200 字解答摘录区——取完整解答开头
+        # 连续段落（脱 Markdown），build 内按行优雅截断（末行省略号收口）
+        png = poster.build(
+            row["question"], bullets, qr,
+            meta={"chars": len(row["answer_full"] or ""),
+                  "cites": len(row["citations"] or [])},
+            answer=store.strip_md(row["answer_full"] or "")[:240])
+    except poster.LayoutError as exc:
+        raise HTTPException(503, f"海报服务暂不可用: {exc}") from exc
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(500, f"海报生成失败: {exc}") from exc
+    store.save_poster(aid, png, env_v)
+    return {"b64": base64.b64encode(png).decode()}
+
+
+# ══ v0.9.4 发票（1009 用户令：累计消费满 ¥200 可申请增值税专用发票；申请即企业微信推送运营）══
+class InvoiceApplyIn(BaseModel):
+    title: str
+    tax_no: str
+    email: str
+    addr_phone: str = ""
+    bank_acct: str = ""
+    note: str = ""
+
+
+def _invoice_wecom_push(app_row: dict) -> None:
+    """申请单企业微信推送（fail-open 旁路：推失败只记日志，绝不影响申请落库/返回）。"""
+    import urllib.request
+    try:
+        hook = config.INVOICE_WECOM_WEBHOOK
+        if not hook and config.INVOICE_WECOM_WEBHOOK_FILE.exists():
+            hook = config.INVOICE_WECOM_WEBHOOK_FILE.read_text(encoding="utf-8").strip()
+        if not hook:
+            _log.warning("invoice wecom push skipped: no webhook configured")
+            return
+        content = ("**【发票申请】总包AI顾问**\n"
+                   "> 类型：增值税专用发票\n"
+                   f"> 累计消费：¥{app_row['total_fen'] / 100:.2f}\n"
+                   f"> 抬头：{app_row['title']}\n"
+                   f"> 税号：{app_row['tax_no']}\n"
+                   f"> 地址电话：{app_row.get('addr_phone') or '—'}\n"
+                   f"> 开户行账号：{app_row.get('bank_acct') or '—'}\n"
+                   f"> 收票邮箱：{app_row['email']}\n"
+                   f"> 备注：{app_row.get('note') or '—'}\n"
+                   f"> 时间：{app_row.get('created_at') or ''}")
+        payload = json.dumps({"msgtype": "markdown", "markdown": {"content": content}},
+                             ensure_ascii=True).encode("ascii")
+        req = urllib.request.Request(hook, data=payload,
+                                     headers={"Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            _log.info("invoice wecom push: %s", resp.read()[:120])
+    except Exception as exc:  # noqa: BLE001 —— 推送是旁路，任何失败不阻断申请
+        _log.warning("invoice wecom push failed: %s", exc)
+
+
+@app.get("/api/invoice/status")
+def invoice_status(request: Request):
+    """发票状态：累计已付金额 + 门槛 + 本人申请记录（未登录只看门槛口径）。"""
+    openid = _openid_soft(request)
+    total = store.paid_total_fen(openid) if openid else 0
+    apps = store.invoice_apps(openid) if openid else []
+    return {
+        "total_fen": total,
+        "threshold_fen": config.INVOICE_THRESHOLD_FEN,
+        "can_apply": total >= config.INVOICE_THRESHOLD_FEN
+                     and not any(a["status"] == "pending" for a in apps),
+        "applications": apps,
+    }
+
+
+@app.post("/api/invoice/apply")
+def invoice_apply(body: InvoiceApplyIn, request: Request):
+    """提交开票申请（增值税专用发票）：门槛 ¥200；待处理期间不重复提交；
+    落库后企业微信推送运营（fail-open）。"""
+    openid = _openid(request)   # 开票必须登录（openid 记账归属）
+    title = body.title.strip()
+    tax_no = body.tax_no.strip().upper()
+    email = body.email.strip()
+    addr_phone = body.addr_phone.strip()
+    bank_acct = body.bank_acct.strip()
+    note = body.note.strip()[:200]
+    if not (2 <= len(title) <= 64):
+        raise HTTPException(422, "发票抬头须为 2-64 字")
+    if not re.fullmatch(r"[0-9A-Z]{15,20}", tax_no):
+        raise HTTPException(422, "纳税人识别号须为 15-20 位数字/大写字母")
+    if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
+        raise HTTPException(422, "收票邮箱格式不正确")
+    total = store.paid_total_fen(openid)
+    if total < config.INVOICE_THRESHOLD_FEN:
+        raise HTTPException(
+            403, f"累计消费满 ¥{config.INVOICE_THRESHOLD_FEN // 100} 元可申请发票"
+                 f"（当前 ¥{total / 100:.2f}）")
+    if any(a["status"] == "pending" for a in store.invoice_apps(openid)):
+        raise HTTPException(409, "已有一笔发票申请在处理中，开票完成后可再次申请")
+    if not store.create_invoice_app(openid, total, title, tax_no,
+                                    addr_phone, bank_acct, email, note):
+        raise HTTPException(500, "申请落库失败，请稍后重试")
+    try:
+        _invoice_wecom_push({
+            "total_fen": total, "title": title, "tax_no": tax_no,
+            "addr_phone": addr_phone, "bank_acct": bank_acct, "email": email,
+            "note": note, "created_at": time.strftime("%Y-%m-%d %H:%M:%S"),
+        })
+    except Exception:  # noqa: BLE001 —— 双保险：推送旁路崩溃绝无可能伤申请主流程
+        _log.warning("invoice wecom push crashed at call site", exc_info=True)
+    apps = store.invoice_apps(openid)
+    return {"ok": True, "application": apps[0] if apps else None}
+
+
+@app.get("/api/health")
+def health():
+    return {"ok": True}
+
+
+# ── v0.9.6 真机遥测（1009 真机根因战）：匿名执行轨迹上行/读数 ──────────────────
+# 背景：wx.showModal confirmText >4 字符在真机静默 fail（devtools 宽松+e2e mock=双盲区），
+# 三条主链（隐私门/导出/批量导出）死得无声无息。此端点=客户端 fire-and-forget 打点的
+# 地面真值腿：事件是否真的在真机上发生，与弹窗/控制台完全解耦。
+class TelemetryIn(BaseModel):
+    event: str
+    boot: str = ""
+    ver: str = ""
+    extra: Optional[dict] = None
+
+
+_TEL_EVENT_RE = re.compile(r"[a-z0-9_]{1,40}")
+
+
+@app.post("/api/telemetry")
+def telemetry_post(body: TelemetryIn):
+    """匿名打点（公开端点）：只收白名单形态事件名 + 截断字段，不收任何用户内容。"""
+    event = (body.event or "").strip().lower()
+    if not _TEL_EVENT_RE.fullmatch(event):
+        raise HTTPException(422, "bad event")
+    boot = (body.boot or "").strip()[:24]
+    ver = (body.ver or "").strip()[:16]
+    try:
+        extra = json.dumps(body.extra or {}, ensure_ascii=False,
+                           separators=(",", ":"))[:255]
+    except Exception:  # noqa: BLE001 —— extra 序列化失败=丢 extra 不丢事件
+        extra = ""
+    store.save_telemetry(event, boot, ver, extra)
+    return {"ok": True}
+
+
+@app.get("/api/telemetry/recent")
+def telemetry_recent(request: Request, limit: int = 200):
+    """运营读数腿：X-Tel-Key == telemetry.secret 才放行（密钥文件缺失=503 不放行）。"""
+    want = ""
+    try:
+        if config.TELEMETRY_SECRET_FILE.exists():
+            want = config.TELEMETRY_SECRET_FILE.read_text(encoding="utf-8").strip()
+    except Exception:  # noqa: BLE001
+        want = ""
+    if not want:
+        raise HTTPException(503, "telemetry read not configured")
+    got = request.headers.get("x-tel-key") or ""
+    if not secrets.compare_digest(got, want):
+        raise HTTPException(401, "bad tel key")
+    limit = max(1, min(int(limit), 1000))
+    return {"events": store.recent_telemetry(limit)}
+
+
+# ══ v0.9.24 KB-FACTORY（W11 用户令 1022：知识库工厂五端点+云端履约桥）══
+# 链路逐行镜像既有虚拟支付先例（导出/报告商城）：签名即落单 → 客户端
+# wx.requestVirtualPayment 透传 → 回调腿凭单+微信查单核验（fail-closed）。
+# 蓝图导出（¥0.1 恒价，复用 export_product_id 道具）；整库订单（动态价=
+# 服务端按蓝图摘要复算，kb_goods 道具 ¥1×buyQuantity）。
+# 履约桥 = 机对机端点（X-KB-Bridge 共享密钥，不走用户 token）：
+# 云端 confirmed(accepted) 单 → 本地 fulfillment inbox。
+
+_KB_VERSIONS = ("original", "md", "import")
+_KB_SHA_RE = re.compile(r"[0-9a-f]{4,32}")
+_KB_EMAIL_RE = re.compile(r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+$")
+# pay_order.kind 是 VARCHAR(8)（1009 生产实锤：超长词元 MySQL 500）：两单据词元钉死
+KB_KIND_BLUEPRINT = "kb_bp"
+KB_KIND_ORDER = "kb_order"
+
+
+class KbBlueprintSignIn(BaseModel):
+    version_sha: str = ""
+    price_fen_expected: int = 0
+
+
+class KbPaidIn(BaseModel):
+    out_trade_no: str = ""
+
+
+class KbOrderIn(BaseModel):
+    """整库订单四键 payload（签名腿与履约收尾腿同构，与 kbfactory_pay.js 对齐）。"""
+    blueprint: dict = {}
+    email: str = ""
+    version: str = "original"
+    need_text: str = ""
+
+
+class KbAckIn(BaseModel):
+    otn: str = ""
+
+
+def _kb_digest(body: KbOrderIn) -> dict:
+    """蓝图摘要校验（五键 {domain,files,gb,total,version_sha}）；非法即 400。"""
+    bp = body.blueprint or {}
+    sha = str(bp.get("version_sha") or "").strip().lower()
+    try:
+        files = int(bp.get("files") or 0)
+        gb = float(bp.get("gb") or 0.0)
+        total = float(bp.get("total") or 0.0)
+    except (TypeError, ValueError) as exc:
+        raise HTTPException(400, "蓝图摘要字段非法") from exc
+    domain = str(bp.get("domain") or "").strip()
+    if (not sha or not _KB_SHA_RE.fullmatch(sha) or gb < 0
+            or total < 0 or files < 0 or not domain):
+        raise HTTPException(400, "蓝图摘要字段非法")
+    return {"domain": domain[:64], "files": files, "gb": gb,
+            "total": total, "version_sha": sha}
+
+
+def _kb_price_fen(digest: dict, version: str) -> tuple:
+    """服务端复算价（硬门：客户端 total 仅对账，差>50fen 拒单防篡价）。
+    base=2900+gb×200（fen 四舍五入）；md=×1.5 四舍五入；import=+1900。
+    支付粒度=kb_goods 道具 ¥1×buyQuantity → 金额对齐整元（四舍五入）。
+    返回 (charge_fen, buy_quantity)。"""
+    base = int(config.KB_ORDER_BASE_FEN
+               + digest["gb"] * config.KB_ORDER_PER_GB_FEN + 0.5)
+    declared = int(digest["total"] * 100 + 0.5)
+    if abs(base - declared) > config.KB_ORDER_PRICE_TOL_FEN:
+        raise HTTPException(400, "订单金额与蓝图报价不符，请重新确认后下单")
+    if version == "md":
+        fen = int(base * config.KB_ORDER_MD_FACTOR + 0.5)
+    elif version == "import":
+        fen = base + config.KB_ORDER_IMPORT_ADD_FEN
+    else:
+        fen = base
+    charge = int(fen / config.KB_GOODS_UNIT_FEN + 0.5) * config.KB_GOODS_UNIT_FEN
+    qty = charge // config.KB_GOODS_UNIT_FEN
+    if qty < 1 or qty > config.KB_ORDER_MAX_QUANTITY:
+        raise HTTPException(400, "订单金额超出可支付范围")
+    return charge, qty
+
+
+def _kb_email_valid(email: str) -> str:
+    e = (email or "").strip()
+    if not e or not _KB_EMAIL_RE.fullmatch(e) or len(e) > 128:
+        raise HTTPException(400, "交付邮箱不合法")
+    return e
+
+
+@app.post("/api/kb/blueprint_sign")
+def kb_blueprint_sign(body: KbBlueprintSignIn, request: Request):
+    """签名腿（蓝图导出 ¥0.1）：A 档硬编码校验（expected≠10 拒 400）；
+    复用 export_once 道具（¥0.1 已现网）；kind=kb_bp、aid=version_sha；
+    老未付单作废重开 + 已付补账 409 收口（同导出/报告先例）。"""
+    openid = _openid(request)
+    sha = (body.version_sha or "").strip().lower()
+    if not _KB_SHA_RE.fullmatch(sha):
+        raise HTTPException(400, "蓝图摘要非法")
+    if int(body.price_fen_expected or 0) != config.KB_BLUEPRINT_PRICE_FEN:
+        raise HTTPException(400, "蓝图导出价格校验失败")
+    if store.kb_blueprint_unlocked(openid, sha):
+        raise HTTPException(409, "本张蓝图导出已解锁")
+    vp = _vp_config()
+    env_val, app_key, session_key = _export_pay_env(openid, vp)
+    open_o = store.open_pay_order(openid, KB_KIND_BLUEPRINT, aid=sha)
+    if open_o:
+        if _order_paid_reconcile(openid, open_o, vp, env_val,
+                                 app_key, session_key):
+            store.mark_kb_blueprint_paid(openid, sha, open_o["out_trade_no"])
+            raise HTTPException(409, "支付已到账，本张蓝图导出已解锁")
+        store.cancel_pay_order(open_o["out_trade_no"])
+    otn = _make_otn("p", sha)
+    store.create_pay_order(otn, openid, KB_KIND_BLUEPRINT, aid=sha,
+                           buy_quantity=1, total_fen=config.KB_BLUEPRINT_PRICE_FEN)
+    sign_data = {
+        "offerId": vp["offer_id"],
+        "buyQuantity": 1,
+        "env": env_val,
+        "currencyType": "CNY",
+        "productId": vp["export_product_id"],
+        "goodsPrice": config.KB_BLUEPRINT_PRICE_FEN,
+        "outTradeNo": otn,
+        "attach": hashlib.sha256(openid.encode()).hexdigest()[:16],
+        "mode": "short_series_goods",
+    }
+    body_s, pay_sig, signature = wechat.virtual_pay_sign(
+        app_key, session_key, sign_data)
+    return {
+        "mode": "short_series_goods",
+        "sign_data": body_s,
+        "pay_sig": pay_sig,
+        "signature": signature,
+        "out_trade_no": otn,
+        "price_fen": config.KB_BLUEPRINT_PRICE_FEN,
+    }
+
+
+@app.post("/api/kb/blueprint_paid")
+def kb_blueprint_paid(body: KbPaidIn, request: Request):
+    """回调腿（蓝图导出）：凭服务端订单 + 微信查单核验（fail-closed），
+    核验通过才幂等标记解锁 + pay_log 对账；重复回调收口 True。"""
+    openid = _openid(request)
+    otn = (body.out_trade_no or "").strip()
+    order = store.get_pay_order(otn) if otn else None
+    if (order is None or order["openid"] != openid
+            or order["kind"] != KB_KIND_BLUEPRINT):
+        raise HTTPException(404, "支付订单不存在")
+    sha = order["aid"]   # version_sha 从订单行取，不裸信客户端
+    if store.kb_blueprint_unlocked(openid, sha):
+        return {"blueprint_paid": True}
+    vp = _vp_config()
+    env_val, app_key, session_key = _export_pay_env(openid, vp)
+    _verify_order_paid(order, openid, vp, env_val, app_key, session_key)
+    store.mark_order_paid(otn)
+    store.mark_kb_blueprint_paid(openid, sha, otn)
+    return {"blueprint_paid": True}
+
+
+@app.post("/api/kb/order_sign")
+def kb_order_sign(body: KbOrderIn, request: Request):
+    """签名腿（整库订单，动态价）：服务端按蓝图摘要+version 复算金额
+    （客户端 total 差>50fen 拒 400 防篡价）；kb_goods 道具 ¥1×buyQuantity；
+    落 kb_orders（status=pending，含 email/version/need_text/蓝图摘要）；
+    老未付单作废重开 + 已付补账收口（先例同构）。"""
+    openid = _openid(request)
+    version = (body.version or "").strip().lower()
+    if version not in _KB_VERSIONS:
+        raise HTTPException(400, "交付版本非法")
+    email = _kb_email_valid(body.email)
+    digest = _kb_digest(body)
+    charge_fen, qty = _kb_price_fen(digest, version)
+    vp = _vp_config()
+    pid = vp.get("kb_product_id") or ""
+    if not pid:
+        raise HTTPException(503, "整库订单支付尚未开通")
+    env_val, app_key, session_key = _vpay_env(openid, vp)
+    sha = digest["version_sha"]
+    open_o = store.open_pay_order(openid, KB_KIND_ORDER, aid=sha)
+    if open_o:
+        if _order_paid_reconcile(openid, open_o, vp, env_val,
+                                 app_key, session_key):
+            store.mark_kb_order_paid(open_o["out_trade_no"])
+            raise HTTPException(409, "支付已到账，本单已受理")
+        store.cancel_pay_order(open_o["out_trade_no"])
+    otn = _make_otn("o", sha)
+    store.create_pay_order(otn, openid, KB_KIND_ORDER, aid=sha,
+                           buy_quantity=qty, total_fen=charge_fen)
+    store.create_kb_order(otn, openid, sha, email, version,
+                          (body.need_text or "").strip(),
+                          json.dumps(digest, ensure_ascii=False,
+                                     separators=(",", ":")),
+                          qty, charge_fen)
+    sign_data = {
+        "offerId": vp["offer_id"],
+        "buyQuantity": qty,
+        "env": env_val,
+        "currencyType": "CNY",
+        "productId": pid,
+        "goodsPrice": config.KB_GOODS_UNIT_FEN,
+        "outTradeNo": otn,
+        "attach": hashlib.sha256(openid.encode()).hexdigest()[:16],
+        "mode": "short_series_goods",
+    }
+    body_s, pay_sig, signature = wechat.virtual_pay_sign(
+        app_key, session_key, sign_data)
+    return {
+        "mode": "short_series_goods",
+        "sign_data": body_s,
+        "pay_sig": pay_sig,
+        "signature": signature,
+        "out_trade_no": otn,
+        "price_fen": charge_fen,
+        "buy_quantity": qty,
+    }
+
+
+@app.post("/api/kb/order_paid")
+def kb_order_paid(body: KbPaidIn, request: Request):
+    """回调腿（整库订单）：查单核验 → pay_order 转 paid + kb_orders 转 paid；
+    重复回调幂等收口。"""
+    openid = _openid(request)
+    otn = (body.out_trade_no or "").strip()
+    order = store.get_pay_order(otn) if otn else None
+    if (order is None or order["openid"] != openid
+            or order["kind"] != KB_KIND_ORDER):
+        raise HTTPException(404, "支付订单不存在")
+    ko = store.get_kb_order(otn)
+    if ko is not None and ko["status"] != "pending":
+        return {"order_paid": True}
+    vp = _vp_config()
+    env_val, app_key, session_key = _vpay_env(openid, vp)
+    _verify_order_paid(order, openid, vp, env_val, app_key, session_key)
+    store.mark_order_paid(otn)
+    store.mark_kb_order_paid(otn)
+    return {"order_paid": True}
+
+
+@app.post("/api/kb/order")
+def kb_order_submit(body: KbOrderIn, request: Request):
+    """履约单提交腿（支付成功后收尾）：email 必填校验 → 补 email/need_text
+    → status=accepted（幂等）。pending 单当场查单补账（回调断网恢复路径）；
+    仍未付 → 402。小程序侧失败落本地订单箱排队，不丢单。"""
+    openid = _openid(request)
+    version = (body.version or "").strip().lower()
+    if version not in _KB_VERSIONS:
+        raise HTTPException(400, "交付版本非法")
+    email = _kb_email_valid(body.email)
+    digest = _kb_digest(body)
+    ko = store.latest_kb_order(openid, digest["version_sha"], version)
+    if ko is None:
+        raise HTTPException(404, "整库订单不存在，请先完成支付")
+    if ko["status"] == "pending":
+        vp = _vp_config()
+        env_val, app_key, session_key = _vpay_env(openid, vp)
+        po = store.get_pay_order(ko["otn"])
+        if (po is None or not _order_paid_reconcile(openid, po, vp, env_val,
+                                                    app_key, session_key)):
+            raise HTTPException(402, "订单尚未支付成功，请完成支付后提交")
+        store.mark_kb_order_paid(ko["otn"])
+    if not store.confirm_kb_order(ko["otn"], email,
+                                  (body.need_text or "").strip()):
+        raise HTTPException(409, "订单状态不允许提交履约详情")
+    return {"accepted": True, "out_trade_no": ko["otn"]}
+
+
+# ── 履约桥（机对机）：云端订单 → 本地 fulfillment inbox ──────────────────
+# 认证 = X-KB-Bridge 头携带 SECRETS_DIR/kb_bridge.key 文件内容（密钥文件
+# 不存在 → 503 如实）；不走用户 token（_openid 不调用——引擎鉴权是
+# 端点内显式调用而非全局中间件，桥端点天然豁免）。
+
+def _kb_bridge_auth(request: Request) -> None:
+    want = ""
+    try:
+        if config.KB_BRIDGE_KEY_FILE.exists():
+            want = config.KB_BRIDGE_KEY_FILE.read_text(encoding="utf-8").strip()
+    except Exception:  # noqa: BLE001 —— 读失败视同未配置
+        want = ""
+    if not want:
+        raise HTTPException(503, "履约桥密钥未配置")
+    got = request.headers.get("x-kb-bridge") or ""
+    if not got or not secrets.compare_digest(got, want):
+        raise HTTPException(401, "履约桥认证失败")
+
+
+@app.get("/api/kb/orders/pending")
+def kb_orders_pending(request: Request, after: str = ""):
+    """履约桥拉取腿：accepted 且未 pulled 订单（脱敏出履约所需字段，
+    不含 openid/session 类身份数据）；after=confirmed_at 游标可选。"""
+    _kb_bridge_auth(request)
+    rows = store.kb_orders_accepted_unpulled(after=(after or "").strip())
+    out = []
+    for r in rows:
+        try:
+            bp = json.loads(r.get("blueprint_json") or "{}")
+        except ValueError:
+            bp = {}
+        out.append({
+            "otn": r["otn"], "blueprint": bp, "email": r["email"],
+            "version": r["version_sel"], "need_text": r.get("need_text") or "",
+            "total_fen": r["total_fen"], "buy_quantity": r["buy_quantity"],
+            "confirmed_at": r.get("confirmed_at") or "",
+        })
+    return {"orders": out}
+
+
+@app.post("/api/kb/orders/ack")
+def kb_orders_ack(body: KbAckIn, request: Request):
+    """履约桥回执腿：{otn} 标 pulled（幂等；未受理订单 404）。"""
+    _kb_bridge_auth(request)
+    otn = (body.otn or "").strip()
+    if not otn or not store.ack_kb_order_pulled(otn):
+        row = store.get_kb_order(otn) if otn else None
+        if row is None:
+            raise HTTPException(404, "订单不存在")
+        if row["status"] == "pulled":
+            return {"acknowledged": True}
+        raise HTTPException(409, "订单尚未确认受理")
+    return {"acknowledged": True}

@@ -1,0 +1,17 @@
+@@@ off=2409900
+KeyboardHandler,stream_macro_keyboard:new KeyboardHandler,thinking:new ThinkingHandler,"model-thinking":new ThinkingHandler,stream_macro_thinking:new ThinkingHandler,"stream_macro_model-thinking":new ThinkingHandler,whatsapp_next_step:new WhatsAppHandler,whatsapp_receivemessage:new WhatsAppHandler,vision_prompt:new VisionHandler,check_enterprise_diff:new VisionHandler
+}
+;
+fallbackHandler=new MiscHandler;
+async execute(e,r){
+const n=e.trace_id,a=e.is_end!==void 0?e.is_end:!0,s=!!e.is_trunk_reply,i=getActionExecutionContext(e);
+let o=[];
+if(e.actions&&Array.isArray(e.actions))o=e.actions;
+else if(e.action)o=[e];
+else{
+console.warn("[ActionRouter] ⚠️ 无法识别的 action 格式:",e);
+return
+}
+if(isGenericImRuntime()){
+const d=o.filter(u=>!isGenericRuntimeActionAllowed(u?.action));
+if(d.length>0&&console.warn("[ActionRouter] 通用 IM 模式忽略未开放的 action:",d.map(u=>u?.action)),o=o.filter(u=>isGenericRuntimeActionAllowed(u?.ac

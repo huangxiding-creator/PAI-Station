@@ -59,6 +59,52 @@ DIM_EXACT: dict[str, str] = {
     "政策监管": "政策法规", "市场规模": "市场行情", "竞争格局": "竞争格局",
     "项目案例": "案例实践", "风险事件": "风险纠纷", "财务经营": "财务经营",
     **{f: f for f in TEN_FACETS},
+    # 1026 EPC-JIAGE 树十维精确映射 (五轴门修①): 异版树十维逐一入面,
+    # 关键词回退对计价域维度(投标编制/结算核对/造价鉴定争议等)不命中,
+    # 致 6 维 9+6+9+9+6+9=48 EEIs / 2,519 条有效证据不计入十面 (零虚报修复)。
+    # 领域对位: 投标=竞标竞争行为→竞争格局; 结算核对=工程款财务面→财务经营;
+    # 造价鉴定与争议=司法纠纷面→风险纠纷; 计价模式/定额测定=计价技术方法
+    # 体系→技术方案; 造价咨询与职业=职业资格人事面→组织人事;
+    # 数据源与工具生态=渠道生态面(同"生态"恒等)。
+    "政策法规与定额体系": "政策法规",
+    "计价依据与定额测定": "技术方案",
+    "信息价与市场价基准": "市场行情",
+    "投标编制实务": "竞争格局",
+    "结算核对实务": "财务经营",
+    "合同解除结算": "案例实践",
+    "造价鉴定与争议": "风险纠纷",
+    "清单与定额计价模式": "技术方案",
+    "造价咨询与职业": "组织人事",
+    "数据源与工具生态": "渠道生态",
+    # 1028 EPC-TOP50 树十维精确映射 (同 JIAGE 门修① 先例, 只增不改):
+    # 异版树十维逐一入面 — 格局方法论(总量/排名/口径)=市场行情;
+    # 转型/集团军/专业赛道/区域梯队/分档画像=玩家竞争格局;
+    # 项目管理与交付=案例实践; 营收盈利=财务经营; 人才与组织=组织人事;
+    # 数字化与技术创新=技术方案。(政策法规/风险纠纷面由 E3 政策件与
+    # Q19 风险维的关键词回退点亮; 国际对标/渠道生态本树无对应维,
+    # 豁免走 1026 轴级豁免显式记录。)
+    "总承包营业额格局与排名方法论": "市场行情",
+    "设计院转型EPC的路径与模式": "竞争格局",
+    "央企集团军作战体系": "竞争格局",
+    "专业工程公司赛道": "竞争格局",
+    "区域勘测设计院梯队": "竞争格局",
+    "总承包项目管理与交付能力": "案例实践",
+    "营收结构盈利与风险": "财务经营",
+    "人才与组织": "组织人事",
+    "数字化与技术创新": "技术方案",
+    "50强名单企业分档画像": "竞争格局",
+}
+
+# 1028 EPC-TOP50 EEI 级精修 (十面映射门修①续, 战役限定零跨役影响):
+# 维级映射粒度不足两处 — ① Q19 (应收垫资纠纷与经营风险) 本体即风险纠纷
+# 面, 其维已整维映财务经营, 拆回风险面; ② 全树 26 个 -E3 槽 = need 钦定
+# 「官方文件/规范/公报原文」槽, 证据即政策法规面 (E3 优先于维面)。
+EEI_FACET_OVERRIDE: dict[str, dict[str, str]] = {
+    "EPC-TOP50": {
+        "Q19-E1": "风险纠纷",
+        "Q19-E2": "风险纠纷",
+        **{f"Q{n}-E3": "政策法规" for n in range(1, 27)},
+    },
 }
 
 # 关键词回退 (异版树): 先专后泛 — 国际/海外先于市场 (国际市场→国际对标),
@@ -95,6 +141,26 @@ def dim_to_facet(dim: str) -> str | None:
         if any(k in dim for k in kws):
             return facet
     return None
+
+
+def load_axis_waiver(cid: str, pool_root=None, out_dir=None) -> dict:
+    """重跑保留: 读池内已有 coverage_facets.json / completeness/B_axis.json
+    的轴级豁免 (waived 真值 + waiver_note), 供 scan 输出携带 — 同
+    entity_timeline.load_existing_waivers 范式 (人工登记不因重跑抹除,
+    1026 五轴门修③配链)."""
+    root = Path(pool_root) if pool_root else POOL_ROOT
+    out = Path(out_dir) if out_dir else root / cid
+    for name in ("coverage_facets.json", "completeness/B_axis.json"):
+        p = out / name
+        if p.is_file():
+            try:
+                prev = json.loads(p.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            if isinstance(prev, dict) and prev.get("waived"):
+                return {"waived": True,
+                        "waiver_note": str(prev.get("waiver_note") or "")}
+    return {}
 
 
 # ---------- host 口径 (与 ammo_pool.coverage 同式 + 可选辛迪加折叠) ----------
@@ -155,6 +221,7 @@ def scan(cid: str, pool_root=None, out_dir=None, write: bool = True) -> dict:
         if not isinstance(tree, dict):
             tree = None
         if tree:
+            ovr = EEI_FACET_OVERRIDE.get(cid, {})
             for q in tree.get("subquestions", []):
                 dim = str(q.get("dim", ""))
                 facet = dim_to_facet(dim)
@@ -162,13 +229,14 @@ def scan(cid: str, pool_root=None, out_dir=None, write: bool = True) -> dict:
                 eei_total += len(eeis)
                 if facet is None:
                     unmapped_eeis[dim] = unmapped_eeis.get(dim, 0) + len(eeis)
-                else:
-                    facet_eei_total[facet] += len(eeis)
                 for e in eeis:
                     eid = str(e.get("id", ""))
+                    f2 = ovr.get(eid, facet)      # EEI 级精修优先
                     if eid:
-                        eei_facet[eid] = facet
-                        if facet is None:
+                        eei_facet[eid] = f2
+                        if f2 is not None:
+                            facet_eei_total[f2] += 1
+                        else:
                             unmapped_ids[eid] = dim
 
     # manifest 挂树证据 (只认 valid; 坏行跳过透明计数)
@@ -234,6 +302,14 @@ def scan(cid: str, pool_root=None, out_dir=None, write: bool = True) -> dict:
         "green": lit_count == len(TEN_FACETS),
         "notes": notes,
     }
+    # 1026 轴级豁免重跑保留 (五轴门修③): B green=十面全亮; 战役树无对应维
+    # 的面 (如 EPC-JIAGE 国内计价专题无国际对标维) 不可点亮, 豁免须显式
+    # 在案 (waived+waiver_note), cidx/完备门按 all_green_or_waived 消费.
+    waiver = load_axis_waiver(cid, root, out_dir)
+    if waiver.get("waived"):
+        rec["waived"] = True
+        if waiver.get("waiver_note"):
+            rec["waiver_note"] = waiver["waiver_note"]
     if n_bad:
         notes.append(f"manifest 坏行 {n_bad} 条已跳过")
     for dim, n_eei in sorted(unmapped_eeis.items()):

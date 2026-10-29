@@ -1,0 +1,5693 @@
+{
+ "kind": "brick_domain_seed",
+ "domain": "EQUIP",
+ "domain_zh": "设备域",
+ "domain_en": "Building Equipment",
+ "note": "建筑设备类层级：暖通空调/电气/给排水/消防/电梯/安防/表计/自控设备（含 v1.4 与 REC 互认类）",
+ "source": {
+  "repo": "BrickSchema/Brick",
+  "tag": "v1.4.4",
+  "license": "BSD-3-Clause",
+  "license_copyright": "Copyright (c) 2016-2026, Brick Consortium, Inc.",
+  "url": "https://github.com/BrickSchema/Brick/releases/tag/v1.4.4",
+  "asset": "Brick.ttl（release 编译版，含 Brick+REC 对齐）",
+  "asset_sha256": "b65720b7b9b64c646745c689777e6138c0d59ce0088df0aeb78fbd444d04d8e7",
+  "license_file": "seeds/brick/LICENSE"
+ },
+ "stats": {
+  "classes": 354,
+  "zh_mapped": 110,
+  "roots": 0,
+  "max_depth": 7,
+  "deprecated": 21,
+  "multi_parent_classes": 1,
+  "zh_rate": 0.3107
+ },
+ "concepts": [
+  {
+   "id": "brick:AED",
+   "en": "AED",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#AED",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Safety_Equipment",
+   "parents": [
+    "brick:Safety_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:AHU",
+   "en": "AHU",
+   "label_source": "rdfs:label",
+   "zh": "空气处理机组",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#AHU",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Absorption_Chiller",
+   "en": "Absorption Chiller",
+   "label_source": "rdfs:label",
+   "zh": "吸收式冷水机组",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Absorption_Chiller",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Chiller",
+   "parents": [
+    "brick:Chiller"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Access_Control_Equipment",
+   "en": "Access Control Equipment",
+   "label_source": "rdfs:label",
+   "zh": "门禁设备",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Access_Control_Equipment",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Security_Equipment",
+   "parents": [
+    "brick:Security_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Access_Reader",
+   "en": "Access Reader",
+   "label_source": "rdfs:label",
+   "zh": "门禁读卡器",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Access_Reader",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Access_Control_Equipment",
+   "parents": [
+    "brick:Access_Control_Equipment"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Active_Chilled_Beam",
+   "en": "Active Chilled Beam",
+   "label_source": "rdfs:label",
+   "zh": "主动式冷梁",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Active_Chilled_Beam",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Chilled_Beam",
+   "parents": [
+    "brick:Chilled_Beam"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Air_Cooled_Chiller",
+   "en": "Air Cooled Chiller",
+   "label_source": "rdfs:label",
+   "zh": "风冷冷水机组",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Air_Cooled_Chiller",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Chiller",
+   "parents": [
+    "brick:Chiller"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Air_Diffuser",
+   "en": "Air Diffuser",
+   "label_source": "rdfs:label",
+   "zh": "散流器",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Air_Diffuser",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Terminal_Unit",
+   "parents": [
+    "brick:Terminal_Unit"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Air_Handler_Unit",
+   "en": "Air Handler Unit",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Air_Handler_Unit",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Air_Handling_Unit",
+   "en": "Air Handling Unit",
+   "label_source": "rdfs:label",
+   "zh": "空气处理机组",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Air_Handling_Unit",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Air_Plenum",
+   "en": "Air Plenum",
+   "label_source": "rdfs:label",
+   "zh": "静压箱",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Air_Plenum",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Audio_Visual_Equipment",
+   "en": "Audio Visual Equipment",
+   "label_source": "rdfs:label",
+   "zh": "音视频设备",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Audio_Visual_Equipment",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:ICT_Equipment",
+   "parents": [
+    "brick:ICT_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Automated_External_Defibrillator",
+   "en": "Automated External Defibrillator",
+   "label_source": "rdfs:label",
+   "zh": "自动体外除颤器",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Automated_External_Defibrillator",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Safety_Equipment",
+   "parents": [
+    "brick:Safety_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Automatic_Switch",
+   "en": "Automatic Switch",
+   "label_source": "rdfs:label",
+   "zh": "自动开关",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Automatic_Switch",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Switchgear",
+   "parents": [
+    "brick:Switchgear"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Automatic_Tint_Window",
+   "en": "Automatic Tint Window",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Automatic_Tint_Window",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Shading_Equipment",
+   "parents": [
+    "brick:Shading_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Automatic_Transfer_Switch",
+   "en": "Automatic Transfer Switch",
+   "label_source": "rdfs:label",
+   "zh": "自动转换开关",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Automatic_Transfer_Switch",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Automatic_Switch",
+   "parents": [
+    "brick:Automatic_Switch"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:BACnet_Controller",
+   "en": "BACnet Controller",
+   "label_source": "rdfs:label",
+   "zh": "BACnet控制器",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#BACnet_Controller",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Controller",
+   "parents": [
+    "brick:Controller"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Backflow_Preventer_Valve",
+   "en": "Backflow Preventer Valve",
+   "label_source": "rdfs:label",
+   "zh": "防回流污染阀",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Backflow_Preventer_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Check_Valve",
+   "parents": [
+    "brick:Check_Valve"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Baseboard_Radiator",
+   "en": "Baseboard Radiator",
+   "label_source": "rdfs:label",
+   "zh": "踢脚板散热器",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Baseboard_Radiator",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Radiator",
+   "parents": [
+    "brick:Radiator"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Battery",
+   "en": "Battery",
+   "label_source": "rdfs:label",
+   "zh": "电池",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Battery",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Energy_Storage",
+   "parents": [
+    "brick:Energy_Storage"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Blind",
+   "en": "Blind",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Blind",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Shading_Equipment",
+   "parents": [
+    "brick:Shading_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Boiler",
+   "en": "Boiler",
+   "label_source": "rdfs:label",
+   "zh": "锅炉",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Boiler",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Booster_Fan",
+   "en": "Booster Fan",
+   "label_source": "rdfs:label",
+   "zh": "增压风机",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Booster_Fan",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Fan",
+   "parents": [
+    "brick:Fan"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Booster_Pump",
+   "en": "Booster Pump",
+   "label_source": "rdfs:label",
+   "zh": "增压泵",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Booster_Pump",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Pump",
+   "parents": [
+    "brick:Pump"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Branch_Selector",
+   "en": "Branch Selector",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Branch_Selector",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Breaker_Panel",
+   "en": "Breaker Panel",
+   "label_source": "rdfs:label",
+   "zh": "断路器配电箱",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Breaker_Panel",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Electrical_Equipment",
+   "parents": [
+    "brick:Electrical_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Building_Chilled_Water_Meter",
+   "en": "Building Chilled Water Meter",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Building_Chilled_Water_Meter",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Building_Meter",
+   "parents": [
+    "brick:Building_Meter"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Building_Disconnect_Switch",
+   "en": "Building Disconnect Switch",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Building_Disconnect_Switch",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Disconnect_Switch",
+   "parents": [
+    "brick:Disconnect_Switch"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Building_Electrical_Meter",
+   "en": "Building Electrical Meter",
+   "label_source": "rdfs:label",
+   "zh": "建筑总电表",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Building_Electrical_Meter",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Building_Meter",
+   "parents": [
+    "brick:Building_Meter"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Building_Gas_Meter",
+   "en": "Building Gas Meter",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Building_Gas_Meter",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Building_Meter",
+   "parents": [
+    "brick:Building_Meter"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Building_Hot_Water_Meter",
+   "en": "Building Hot Water Meter",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Building_Hot_Water_Meter",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Building_Meter",
+   "parents": [
+    "brick:Building_Meter"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Building_Meter",
+   "en": "Building Meter",
+   "label_source": "rdfs:label",
+   "zh": "建筑总表",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Building_Meter",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Meter",
+   "parents": [
+    "brick:Meter"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Building_Water_Meter",
+   "en": "Building Water Meter",
+   "label_source": "rdfs:label",
+   "zh": "建筑总水表",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Building_Water_Meter",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Building_Meter",
+   "parents": [
+    "brick:Building_Meter"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Bus_Riser",
+   "en": "Bus Riser",
+   "label_source": "rdfs:label",
+   "zh": "母线立管",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Bus_Riser",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Electrical_Equipment",
+   "parents": [
+    "brick:Electrical_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Bypass_Damper",
+   "en": "Bypass Damper",
+   "label_source": "rdfs:label",
+   "zh": "旁通风阀",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Bypass_Damper",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Damper",
+   "parents": [
+    "brick:Damper"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Bypass_Valve",
+   "en": "Bypass Valve",
+   "label_source": "rdfs:label",
+   "zh": "旁通阀",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Bypass_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:CAV",
+   "en": "CAV",
+   "label_source": "rdfs:label",
+   "zh": "定风量末端",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#CAV",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Terminal_Unit",
+   "parents": [
+    "brick:Terminal_Unit"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:CRAC",
+   "en": "CRAC",
+   "label_source": "rdfs:label",
+   "zh": "机房精密空调（直接膨胀型）",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#CRAC",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:CRAH",
+   "en": "CRAH",
+   "label_source": "rdfs:label",
+   "zh": "机房精密空调（冷冻水型）",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#CRAH",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Camera",
+   "en": "Camera",
+   "label_source": "rdfs:label",
+   "zh": "摄像机",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Camera",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Equipment",
+   "parents": [
+    "brick:Equipment"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Capillary_Tube_Metering_Device",
+   "en": "Capillary Tube Metering Device",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Capillary_Tube_Metering_Device",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Refrigerant_Metering_Device",
+   "parents": [
+    "brick:Refrigerant_Metering_Device"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Cassette_Fan_Coil_Unit",
+   "en": "Cassette Fan Coil Unit",
+   "label_source": "rdfs:label",
+   "zh": "卡式风机盘管",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Cassette_Fan_Coil_Unit",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Fan_Coil_Unit",
+   "parents": [
+    "brick:Fan_Coil_Unit"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Ceiling_Fan",
+   "en": "Ceiling Fan",
+   "label_source": "rdfs:label",
+   "zh": "吊扇",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Ceiling_Fan",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Fan",
+   "parents": [
+    "brick:Fan"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Centrifugal_Chiller",
+   "en": "Centrifugal Chiller",
+   "label_source": "rdfs:label",
+   "zh": "离心式冷水机组",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Centrifugal_Chiller",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Chiller",
+   "parents": [
+    "brick:Chiller"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Check_Valve",
+   "en": "Check Valve",
+   "label_source": "rdfs:label",
+   "zh": "止回阀",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Check_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Valve",
+   "parents": [
+    "brick:Valve"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Chilled_Beam",
+   "en": "Chilled Beam",
+   "label_source": "rdfs:label",
+   "zh": "冷梁",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Chilled_Beam",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Terminal_Unit",
+   "parents": [
+    "brick:Terminal_Unit"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Chilled_Water_Booster_Pump",
+   "en": "Chilled Water Booster Pump",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Chilled_Water_Booster_Pump",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Booster_Pump",
+   "parents": [
+    "brick:Booster_Pump"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Chilled_Water_Circulator_Pump",
+   "en": "Chilled Water Circulator Pump",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Chilled_Water_Circulator_Pump",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Chilled_Water_Pump",
+   "parents": [
+    "brick:Chilled_Water_Pump"
+   ],
+   "depth": 7,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Chilled_Water_Coil",
+   "en": "Chilled Water Coil",
+   "label_source": "rdfs:label",
+   "zh": "冷冻水盘管",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Chilled_Water_Coil",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Cooling_Coil",
+   "parents": [
+    "brick:Cooling_Coil"
+   ],
+   "depth": 7,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Chilled_Water_Meter",
+   "en": "Chilled Water Meter",
+   "label_source": "rdfs:label",
+   "zh": "冷冻水表",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Chilled_Water_Meter",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Water_Meter",
+   "parents": [
+    "brick:Water_Meter"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Chilled_Water_Pump",
+   "en": "Chilled Water Pump",
+   "label_source": "rdfs:label",
+   "zh": "冷冻水泵",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Chilled_Water_Pump",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Water_Pump",
+   "parents": [
+    "brick:Water_Pump"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Chilled_Water_Storage_Tank",
+   "en": "Chilled Water Storage Tank",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Chilled_Water_Storage_Tank",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Water_Storage_Tank",
+   "parents": [
+    "brick:Water_Storage_Tank"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Chilled_Water_Thermal_Energy_Storage_Tank",
+   "en": "Chilled Water Thermal Energy Storage Tank",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Chilled_Water_Thermal_Energy_Storage_Tank",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Thermal_Energy_Storage_Tank",
+   "parents": [
+    "brick:Thermal_Energy_Storage_Tank"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Chilled_Water_Thermal_Expansion_Tank",
+   "en": "Chilled Water Thermal Expansion Tank",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Chilled_Water_Thermal_Expansion_Tank",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Thermal_Expansion_Tank",
+   "parents": [
+    "brick:Thermal_Expansion_Tank"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Chilled_Water_Valve",
+   "en": "Chilled Water Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Chilled_Water_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Valve",
+   "parents": [
+    "brick:HVAC_Valve"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Chiller",
+   "en": "Chiller",
+   "label_source": "rdfs:label",
+   "zh": "冷水机组",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Chiller",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Circuit_Breaker",
+   "en": "Circuit Breaker",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Circuit_Breaker",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Switchgear",
+   "parents": [
+    "brick:Switchgear"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Circulator_Pump",
+   "en": "Circulator Pump",
+   "label_source": "rdfs:label",
+   "zh": "循环泵",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Circulator_Pump",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Pump",
+   "parents": [
+    "brick:Pump"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Coil",
+   "en": "Coil",
+   "label_source": "rdfs:label",
+   "zh": "盘管",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Coil",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Heat_Exchanger",
+   "parents": [
+    "brick:Heat_Exchanger"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Cold_Deck",
+   "en": "Cold Deck",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Cold_Deck",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Cold_Water_Storage_Tank",
+   "en": "Cold Water Storage Tank",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Cold_Water_Storage_Tank",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Water_Storage_Tank",
+   "parents": [
+    "brick:Water_Storage_Tank"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Collection_Basin_Water_Heater",
+   "en": "Collection Basin Water Heater",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Collection_Basin_Water_Heater",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Water_Heater",
+   "parents": [
+    "brick:Water_Heater"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Compressor",
+   "en": "Compressor",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Compressor",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Computer_Room_Air_Conditioning",
+   "en": "Computer Room Air Conditioning",
+   "label_source": "rdfs:label",
+   "zh": "机房专用空调",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Computer_Room_Air_Conditioning",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Computer_Room_Air_Handler",
+   "en": "Computer Room Air Handler",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Computer_Room_Air_Handler",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Condenser_Heat_Exchanger",
+   "en": "Condenser Heat Exchanger",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Condenser_Heat_Exchanger",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Heat_Exchanger",
+   "parents": [
+    "brick:Heat_Exchanger"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Condenser_Water_Booster_Pump",
+   "en": "Condenser Water Booster Pump",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Condenser_Water_Booster_Pump",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Booster_Pump",
+   "parents": [
+    "brick:Booster_Pump"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Condenser_Water_Bypass_Valve",
+   "en": "Condenser Water Bypass Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Condenser_Water_Bypass_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Bypass_Valve",
+   "parents": [
+    "brick:Bypass_Valve"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Condenser_Water_Circulator_Pump",
+   "en": "Condenser Water Circulator Pump",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Condenser_Water_Circulator_Pump",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Circulator_Pump",
+   "parents": [
+    "brick:Circulator_Pump"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Condenser_Water_Isolation_Valve",
+   "en": "Condenser Water Isolation Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Condenser_Water_Isolation_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Isolation_Valve",
+   "parents": [
+    "brick:Isolation_Valve"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Condenser_Water_Pump",
+   "en": "Condenser Water Pump",
+   "label_source": "rdfs:label",
+   "zh": "冷却水泵",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Condenser_Water_Pump",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Water_Pump",
+   "parents": [
+    "brick:Water_Pump"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Condenser_Water_Valve",
+   "en": "Condenser Water Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Condenser_Water_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Valve",
+   "parents": [
+    "brick:HVAC_Valve"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Condensing_Natural_Gas_Boiler",
+   "en": "Condensing Natural Gas Boiler",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Condensing_Natural_Gas_Boiler",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Natural_Gas_Boiler",
+   "parents": [
+    "brick:Natural_Gas_Boiler"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Condensing_Unit",
+   "en": "Condensing Unit",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Condensing_Unit",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Constant_Air_Volume_Box",
+   "en": "Constant Air Volume Box",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Constant_Air_Volume_Box",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Terminal_Unit",
+   "parents": [
+    "brick:Terminal_Unit"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Controller",
+   "en": "Controller",
+   "label_source": "rdfs:label",
+   "zh": "控制器",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Controller",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:ICT_Equipment",
+   "parents": [
+    "brick:ICT_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Cooling_Coil",
+   "en": "Cooling Coil",
+   "label_source": "rdfs:label",
+   "zh": "冷却盘管",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Cooling_Coil",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Coil",
+   "parents": [
+    "brick:Coil"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Cooling_Only_Air_Source_Condensing_Unit",
+   "en": "Cooling Only Air Source Condensing Unit",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Cooling_Only_Air_Source_Condensing_Unit",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Cooling_Only_Condensing_Unit",
+   "parents": [
+    "brick:Cooling_Only_Condensing_Unit"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Cooling_Only_Condensing_Unit",
+   "en": "Cooling Only Condensing Unit",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Cooling_Only_Condensing_Unit",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Condensing_Unit",
+   "parents": [
+    "brick:Condensing_Unit"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Cooling_Only_Ground_Source_Condensing_Unit",
+   "en": "Cooling Only Ground Source Condensing Unit",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Cooling_Only_Ground_Source_Condensing_Unit",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Cooling_Only_Condensing_Unit",
+   "parents": [
+    "brick:Cooling_Only_Condensing_Unit"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Cooling_Only_Water_Source_Condensing_Unit",
+   "en": "Cooling Only Water Source Condensing Unit",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Cooling_Only_Water_Source_Condensing_Unit",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Cooling_Only_Condensing_Unit",
+   "parents": [
+    "brick:Cooling_Only_Condensing_Unit"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Cooling_Tower",
+   "en": "Cooling Tower",
+   "label_source": "rdfs:label",
+   "zh": "冷却塔",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Cooling_Tower",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Cooling_Tower_Fan",
+   "en": "Cooling Tower Fan",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Cooling_Tower_Fan",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Fan",
+   "parents": [
+    "brick:Fan"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Cooling_Valve",
+   "en": "Cooling Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Cooling_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:DDAHU",
+   "en": "DDAHU",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#DDAHU",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Air_Handling_Unit",
+   "parents": [
+    "brick:Air_Handling_Unit"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:DOAS",
+   "en": "DOAS",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#DOAS",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Air_Handling_Unit",
+   "parents": [
+    "brick:Air_Handling_Unit"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Damper",
+   "en": "Damper",
+   "label_source": "rdfs:label",
+   "zh": "风阀",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Damper",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Data_Network_Equipment",
+   "en": "Data Network Equipment",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Data_Network_Equipment",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:ICT_Equipment",
+   "parents": [
+    "brick:ICT_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Daylight_Sensor_Equipment",
+   "en": "Daylight Sensor Equipment",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Daylight_Sensor_Equipment",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Sensor_Equipment",
+   "parents": [
+    "brick:Sensor_Equipment"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Dedicated_Outdoor_Air_System_Unit",
+   "en": "Dedicated Outdoor Air System Unit",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Dedicated_Outdoor_Air_System_Unit",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Air_Handling_Unit",
+   "parents": [
+    "brick:Air_Handling_Unit"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Differential_Pressure_Bypass_Valve",
+   "en": "Differential Pressure Bypass Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Differential_Pressure_Bypass_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Bypass_Valve",
+   "parents": [
+    "brick:Bypass_Valve"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Dimmer",
+   "en": "Dimmer",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Dimmer",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Switch",
+   "parents": [
+    "brick:Switch"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Direct_Expansion_Cooling_Coil",
+   "en": "Direct Expansion Cooling Coil",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Direct_Expansion_Cooling_Coil",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Cooling_Coil",
+   "parents": [
+    "brick:Cooling_Coil"
+   ],
+   "depth": 7,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Direct_Expansion_Heating_Coil",
+   "en": "Direct Expansion Heating Coil",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Direct_Expansion_Heating_Coil",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Heating_Coil",
+   "parents": [
+    "brick:Heating_Coil"
+   ],
+   "depth": 7,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Discharge_Air_Plenum",
+   "en": "Discharge Air Plenum",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Discharge_Air_Plenum",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Air_Plenum",
+   "parents": [
+    "brick:Air_Plenum"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Discharge_Fan",
+   "en": "Discharge Fan",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Discharge_Fan",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Fan",
+   "parents": [
+    "brick:Fan"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Disconnect_Switch",
+   "en": "Disconnect Switch",
+   "label_source": "rdfs:label",
+   "zh": "隔离开关",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Disconnect_Switch",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Switchgear",
+   "parents": [
+    "brick:Switchgear"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Displacement_Flow_Air_Diffuser",
+   "en": "Displacement Flow Air Diffuser",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Displacement_Flow_Air_Diffuser",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Air_Diffuser",
+   "parents": [
+    "brick:Air_Diffuser"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Domestic_Hot_Water_Circulator_Pump",
+   "en": "Domestic Hot Water Circulator Pump",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Domestic_Hot_Water_Circulator_Pump",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Hot_Water_Circulator_Pump",
+   "parents": [
+    "brick:Hot_Water_Circulator_Pump"
+   ],
+   "depth": 7,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Domestic_Hot_Water_Valve",
+   "en": "Domestic Hot Water Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Domestic_Hot_Water_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Hot_Water_Valve",
+   "parents": [
+    "brick:Hot_Water_Valve"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Drench_Hose",
+   "en": "Drench Hose",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Drench_Hose",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Emergency_Wash_Station",
+   "parents": [
+    "brick:Emergency_Wash_Station"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Dry_Cooler",
+   "en": "Dry Cooler",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Dry_Cooler",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Dual_Duct_Air_Handling_Unit",
+   "en": "Dual Duct Air Handling Unit",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Dual_Duct_Air_Handling_Unit",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Air_Handling_Unit",
+   "parents": [
+    "brick:Air_Handling_Unit"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Duct_Fan_Coil_Unit",
+   "en": "Duct Fan Coil Unit",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Duct_Fan_Coil_Unit",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Fan_Coil_Unit",
+   "parents": [
+    "brick:Fan_Coil_Unit"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:ESS_Panel",
+   "en": "ESS Panel",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#ESS_Panel",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Radiant_Panel",
+   "parents": [
+    "brick:Radiant_Panel"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Economizer",
+   "en": "Economizer",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Economizer",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Economizer_Damper",
+   "en": "Economizer Damper",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Economizer_Damper",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Damper",
+   "parents": [
+    "brick:Damper"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Electric_Baseboard_Radiator",
+   "en": "Electric Baseboard Radiator",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Electric_Baseboard_Radiator",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Baseboard_Radiator",
+   "parents": [
+    "brick:Baseboard_Radiator"
+   ],
+   "depth": 7,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Electric_Boiler",
+   "en": "Electric Boiler",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Electric_Boiler",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Boiler",
+   "parents": [
+    "brick:Boiler"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Electric_Radiator",
+   "en": "Electric Radiator",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Electric_Radiator",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Radiator",
+   "parents": [
+    "brick:Radiator"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Electric_Vehicle_Charging_Port",
+   "en": "Electric Vehicle Charging Port",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Electric_Vehicle_Charging_Port",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Electrical_Equipment",
+   "parents": [
+    "brick:Electrical_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Electric_Vehicle_Charging_Station",
+   "en": "Electric Vehicle Charging Station",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Electric_Vehicle_Charging_Station",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Electrical_Equipment",
+   "parents": [
+    "brick:Electrical_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Electrical_Equipment",
+   "en": "Electrical Equipment",
+   "label_source": "rdfs:label",
+   "zh": "电气设备",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Electrical_Equipment",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Equipment",
+   "parents": [
+    "brick:Equipment"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Electrical_Meter",
+   "en": "Electrical Meter",
+   "label_source": "rdfs:label",
+   "zh": "电表",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Electrical_Meter",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Meter",
+   "parents": [
+    "brick:Meter"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Electronic_Expansion_Valve",
+   "en": "Electronic Expansion Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Electronic_Expansion_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Refrigerant_Metering_Device",
+   "parents": [
+    "brick:Refrigerant_Metering_Device"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Electronic_Mixing_Valve",
+   "en": "Electronic Mixing Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Electronic_Mixing_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Mixing_Valve",
+   "parents": [
+    "brick:Mixing_Valve"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Elevator",
+   "en": "Elevator",
+   "label_source": "rdfs:label",
+   "zh": "电梯",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Elevator",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Equipment",
+   "parents": [
+    "brick:Equipment"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Embedded_Surface_System_Panel",
+   "en": "Embedded Surface System Panel",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Embedded_Surface_System_Panel",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Radiant_Panel",
+   "parents": [
+    "brick:Radiant_Panel"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Emergency_Phone",
+   "en": "Emergency Phone",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Emergency_Phone",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Intercom_Equipment",
+   "parents": [
+    "brick:Intercom_Equipment"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Emergency_Wash_Station",
+   "en": "Emergency Wash Station",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Emergency_Wash_Station",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Safety_Equipment",
+   "parents": [
+    "brick:Safety_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Energy_Storage",
+   "en": "Energy Storage",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Energy_Storage",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Electrical_Equipment",
+   "parents": [
+    "brick:Electrical_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Equipment",
+   "en": "Equipment",
+   "label_source": "rdfs:label",
+   "zh": "设备",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Equipment",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Class",
+   "parents": [
+    "brick:Class",
+    "brick:Entity"
+   ],
+   "depth": 2,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Ethernet_Port",
+   "en": "Ethernet Port",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Ethernet_Port",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Data_Network_Equipment",
+   "parents": [
+    "brick:Data_Network_Equipment"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Ethernet_Switch",
+   "en": "Ethernet Switch",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Ethernet_Switch",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Data_Network_Equipment",
+   "parents": [
+    "brick:Data_Network_Equipment"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Evaporative_Heat_Exchanger",
+   "en": "Evaporative Heat Exchanger",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Evaporative_Heat_Exchanger",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Heat_Exchanger",
+   "parents": [
+    "brick:Heat_Exchanger"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Exhaust_Damper",
+   "en": "Exhaust Damper",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Exhaust_Damper",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Damper",
+   "parents": [
+    "brick:Damper"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Exhaust_Fan",
+   "en": "Exhaust Fan",
+   "label_source": "rdfs:label",
+   "zh": "排风机",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Exhaust_Fan",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Fan",
+   "parents": [
+    "brick:Fan"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Eye_Wash_Station",
+   "en": "Eye Wash Station",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Eye_Wash_Station",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Emergency_Wash_Station",
+   "parents": [
+    "brick:Emergency_Wash_Station"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:FCU",
+   "en": "FCU",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#FCU",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Terminal_Unit",
+   "parents": [
+    "brick:Terminal_Unit"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Fan",
+   "en": "Fan",
+   "label_source": "rdfs:label",
+   "zh": "风机",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Fan",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Fan_Coil_Unit",
+   "en": "Fan Coil Unit",
+   "label_source": "rdfs:label",
+   "zh": "风机盘管",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Fan_Coil_Unit",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Terminal_Unit",
+   "parents": [
+    "brick:Terminal_Unit"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Fan_VFD",
+   "en": "Fan VFD",
+   "label_source": "rdfs:label",
+   "zh": "风机变频器",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Fan_VFD",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Variable_Frequency_Drive",
+   "parents": [
+    "brick:Variable_Frequency_Drive"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Filter",
+   "en": "Filter",
+   "label_source": "rdfs:label",
+   "zh": "过滤器",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Filter",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Final_Filter",
+   "en": "Final Filter",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Final_Filter",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Filter",
+   "parents": [
+    "brick:Filter"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Fire_Alarm",
+   "en": "Fire Alarm",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Fire_Alarm",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Fire_Safety_Equipment",
+   "parents": [
+    "brick:Fire_Safety_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Fire_Alarm_Control_Panel",
+   "en": "Fire Alarm Control Panel",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Fire_Alarm_Control_Panel",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Fire_Safety_Equipment",
+   "parents": [
+    "brick:Fire_Safety_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Fire_Alarm_Manual_Call_Point",
+   "en": "Fire Alarm Manual Call Point",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Fire_Alarm_Manual_Call_Point",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Manual_Fire_Alarm_Activation_Equipment",
+   "parents": [
+    "brick:Manual_Fire_Alarm_Activation_Equipment"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Fire_Alarm_Pull_Station",
+   "en": "Fire Alarm Pull Station",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Fire_Alarm_Pull_Station",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Manual_Fire_Alarm_Activation_Equipment",
+   "parents": [
+    "brick:Manual_Fire_Alarm_Activation_Equipment"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Fire_Control_Panel",
+   "en": "Fire Control Panel",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Fire_Control_Panel",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Fire_Safety_Equipment",
+   "parents": [
+    "brick:Fire_Safety_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Fire_Safety_Equipment",
+   "en": "Fire Safety Equipment",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Fire_Safety_Equipment",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Equipment",
+   "parents": [
+    "brick:Equipment"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Fire_Sprinkler_Thermal_Expansion_Tank",
+   "en": "Fire Sprinkler Thermal Expansion Tank",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Fire_Sprinkler_Thermal_Expansion_Tank",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Thermal_Expansion_Tank",
+   "parents": [
+    "brick:Thermal_Expansion_Tank"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Fire_Sprinkler_Water_Storage_Tank",
+   "en": "Fire Sprinkler Water Storage Tank",
+   "label_source": "rdfs:label",
+   "zh": "喷淋储水箱",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Fire_Sprinkler_Water_Storage_Tank",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Water_Storage_Tank",
+   "parents": [
+    "brick:Water_Storage_Tank"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:First_Aid_Kit",
+   "en": "First Aid Kit",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#First_Aid_Kit",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Safety_Equipment",
+   "parents": [
+    "brick:Safety_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Floor_Fan_Coil_Unit",
+   "en": "Floor Fan Coil Unit",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Floor_Fan_Coil_Unit",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Fan_Coil_Unit",
+   "parents": [
+    "brick:Fan_Coil_Unit"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Fume_Hood",
+   "en": "Fume Hood",
+   "label_source": "rdfs:label",
+   "zh": "通风柜",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Fume_Hood",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Exhaust_Fan",
+   "parents": [
+    "brick:Exhaust_Fan"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Furniture",
+   "en": "Furniture",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Furniture",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Equipment",
+   "parents": [
+    "brick:Equipment"
+   ],
+   "depth": 3,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Gas_Distribution",
+   "en": "Gas Distribution",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Gas_Distribution",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Equipment",
+   "parents": [
+    "brick:Equipment"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Gas_Meter",
+   "en": "Gas Meter",
+   "label_source": "rdfs:label",
+   "zh": "燃气表",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Gas_Meter",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Meter",
+   "parents": [
+    "brick:Meter"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Gas_Pressure_Regulator_Valve",
+   "en": "Gas Pressure Regulator Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Gas_Pressure_Regulator_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Gas_Valve",
+   "parents": [
+    "brick:Gas_Valve"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Gas_Valve",
+   "en": "Gas Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Gas_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Valve",
+   "parents": [
+    "brick:Valve"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Gateway",
+   "en": "Gateway",
+   "label_source": "rdfs:label",
+   "zh": "网关",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Gateway",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:ICT_Equipment",
+   "parents": [
+    "brick:ICT_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Grease_Interceptor",
+   "en": "Grease Interceptor",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Grease_Interceptor",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Separation_Tank",
+   "parents": [
+    "brick:Separation_Tank"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:HVAC_Equipment",
+   "en": "HVAC Equipment",
+   "label_source": "rdfs:label",
+   "zh": "暖通空调设备",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#HVAC_Equipment",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Equipment",
+   "parents": [
+    "brick:Equipment"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "brick:HVAC_Valve",
+   "en": "HVAC Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#HVAC_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:HX",
+   "en": "HX",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#HX",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Heat_Detector",
+   "en": "Heat Detector",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Heat_Detector",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Fire_Safety_Equipment",
+   "parents": [
+    "brick:Fire_Safety_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Heat_Exchanger",
+   "en": "Heat Exchanger",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Heat_Exchanger",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Heat_Pump_Air_Source_Condensing_Unit",
+   "en": "Heat Pump Air Source Condensing Unit",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Heat_Pump_Air_Source_Condensing_Unit",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Heat_Pump_Condensing_Unit",
+   "parents": [
+    "brick:Heat_Pump_Condensing_Unit"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Heat_Pump_Condensing_Unit",
+   "en": "Heat Pump Condensing Unit",
+   "label_source": "rdfs:label",
+   "zh": "热泵冷凝机组",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Heat_Pump_Condensing_Unit",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Condensing_Unit",
+   "parents": [
+    "brick:Condensing_Unit"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Heat_Pump_Ground_Source_Condensing_Unit",
+   "en": "Heat Pump Ground Source Condensing Unit",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Heat_Pump_Ground_Source_Condensing_Unit",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Heat_Pump_Condensing_Unit",
+   "parents": [
+    "brick:Heat_Pump_Condensing_Unit"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Heat_Pump_Water_Source_Condensing_Unit",
+   "en": "Heat Pump Water Source Condensing Unit",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Heat_Pump_Water_Source_Condensing_Unit",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Heat_Pump_Condensing_Unit",
+   "parents": [
+    "brick:Heat_Pump_Condensing_Unit"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Heat_Recovery_Air_Source_Condensing_Unit",
+   "en": "Heat Recovery Air Source Condensing Unit",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Heat_Recovery_Air_Source_Condensing_Unit",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Heat_Recovery_Condensing_Unit",
+   "parents": [
+    "brick:Heat_Recovery_Condensing_Unit"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Heat_Recovery_Condensing_Unit",
+   "en": "Heat Recovery Condensing Unit",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Heat_Recovery_Condensing_Unit",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Condensing_Unit",
+   "parents": [
+    "brick:Condensing_Unit"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Heat_Recovery_Water_Source_Condensing_Unit",
+   "en": "Heat Recovery Water Source Condensing Unit",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Heat_Recovery_Water_Source_Condensing_Unit",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Heat_Recovery_Condensing_Unit",
+   "parents": [
+    "brick:Heat_Recovery_Condensing_Unit"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Heat_Wheel",
+   "en": "Heat Wheel",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Heat_Wheel",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Heat_Exchanger",
+   "parents": [
+    "brick:Heat_Exchanger"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Heat_Wheel_VFD",
+   "en": "Heat Wheel VFD",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Heat_Wheel_VFD",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Variable_Frequency_Drive",
+   "parents": [
+    "brick:Variable_Frequency_Drive"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Heating_Coil",
+   "en": "Heating Coil",
+   "label_source": "rdfs:label",
+   "zh": "加热盘管",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Heating_Coil",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Coil",
+   "parents": [
+    "brick:Coil"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Heating_Valve",
+   "en": "Heating Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Heating_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Horizontal_Fan_Coil_Unit",
+   "en": "Horizontal Fan Coil Unit",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Horizontal_Fan_Coil_Unit",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Fan_Coil_Unit",
+   "parents": [
+    "brick:Fan_Coil_Unit"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Hot_Deck",
+   "en": "Hot Deck",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Hot_Deck",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Hot_Water_Baseboard_Radiator",
+   "en": "Hot Water Baseboard Radiator",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Hot_Water_Baseboard_Radiator",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Baseboard_Radiator",
+   "parents": [
+    "brick:Baseboard_Radiator"
+   ],
+   "depth": 7,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Hot_Water_Booster_Pump",
+   "en": "Hot Water Booster Pump",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Hot_Water_Booster_Pump",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Booster_Pump",
+   "parents": [
+    "brick:Booster_Pump"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Hot_Water_Circulator_Pump",
+   "en": "Hot Water Circulator Pump",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Hot_Water_Circulator_Pump",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Circulator_Pump",
+   "parents": [
+    "brick:Circulator_Pump"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Hot_Water_Coil",
+   "en": "Hot Water Coil",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Hot_Water_Coil",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Heating_Coil",
+   "parents": [
+    "brick:Heating_Coil"
+   ],
+   "depth": 7,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Hot_Water_Meter",
+   "en": "Hot Water Meter",
+   "label_source": "rdfs:label",
+   "zh": "热水表",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Hot_Water_Meter",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Water_Meter",
+   "parents": [
+    "brick:Water_Meter"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Hot_Water_Pump",
+   "en": "Hot Water Pump",
+   "label_source": "rdfs:label",
+   "zh": "热水泵",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Hot_Water_Pump",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Water_Pump",
+   "parents": [
+    "brick:Water_Pump"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Hot_Water_Radiator",
+   "en": "Hot Water Radiator",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Hot_Water_Radiator",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Radiator",
+   "parents": [
+    "brick:Radiator"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Hot_Water_Storage_Tank",
+   "en": "Hot Water Storage Tank",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Hot_Water_Storage_Tank",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Water_Storage_Tank",
+   "parents": [
+    "brick:Water_Storage_Tank"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Hot_Water_Thermal_Energy_Storage_Tank",
+   "en": "Hot Water Thermal Energy Storage Tank",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Hot_Water_Thermal_Energy_Storage_Tank",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Thermal_Energy_Storage_Tank",
+   "parents": [
+    "brick:Thermal_Energy_Storage_Tank"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Hot_Water_Thermal_Expansion_Tank",
+   "en": "Hot Water Thermal Expansion Tank",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Hot_Water_Thermal_Expansion_Tank",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Thermal_Expansion_Tank",
+   "parents": [
+    "brick:Thermal_Expansion_Tank"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Hot_Water_Valve",
+   "en": "Hot Water Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Hot_Water_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Heating_Valve",
+   "parents": [
+    "brick:Heating_Valve"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Humidifier",
+   "en": "Humidifier",
+   "label_source": "rdfs:label",
+   "zh": "加湿器",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Humidifier",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:IAQ_Sensor_Equipment",
+   "en": "IAQ Sensor Equipment",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#IAQ_Sensor_Equipment",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Sensor_Equipment",
+   "parents": [
+    "brick:Sensor_Equipment"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:ICT_Equipment",
+   "en": "ICT Equipment",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#ICT_Equipment",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Equipment",
+   "parents": [
+    "brick:Equipment"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "brick:ICT_Hardware",
+   "en": "ICT Hardware",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#ICT_Hardware",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:ICT_Equipment",
+   "parents": [
+    "brick:ICT_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:ICT_Rack",
+   "en": "ICT Rack",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#ICT_Rack",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:ICT_Equipment",
+   "parents": [
+    "brick:ICT_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Induction_Unit",
+   "en": "Induction Unit",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Induction_Unit",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Terminal_Unit",
+   "parents": [
+    "brick:Terminal_Unit"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Intake_Air_Filter",
+   "en": "Intake Air Filter",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Intake_Air_Filter",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Filter",
+   "parents": [
+    "brick:Filter"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Intercom_Equipment",
+   "en": "Intercom Equipment",
+   "label_source": "rdfs:label",
+   "zh": "对讲设备",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Intercom_Equipment",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Security_Equipment",
+   "parents": [
+    "brick:Security_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Interface",
+   "en": "Interface",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Interface",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Lighting_Equipment",
+   "parents": [
+    "brick:Lighting_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Intrusion_Detection_Equipment",
+   "en": "Intrusion Detection Equipment",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Intrusion_Detection_Equipment",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Security_Equipment",
+   "parents": [
+    "brick:Security_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Inverter",
+   "en": "Inverter",
+   "label_source": "rdfs:label",
+   "zh": "逆变器",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Inverter",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Electrical_Equipment",
+   "parents": [
+    "brick:Electrical_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Isolation_Damper",
+   "en": "Isolation Damper",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Isolation_Damper",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Damper",
+   "parents": [
+    "brick:Damper"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Isolation_Switch",
+   "en": "Isolation Switch",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Isolation_Switch",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Switchgear",
+   "parents": [
+    "brick:Switchgear"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Isolation_Valve",
+   "en": "Isolation Valve",
+   "label_source": "rdfs:label",
+   "zh": "隔离阀",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Isolation_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Jet_Nozzle_Air_Diffuser",
+   "en": "Jet Nozzle Air Diffuser",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Jet_Nozzle_Air_Diffuser",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Air_Diffuser",
+   "parents": [
+    "brick:Air_Diffuser"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Laminar_Flow_Air_Diffuser",
+   "en": "Laminar Flow Air Diffuser",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Laminar_Flow_Air_Diffuser",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Air_Diffuser",
+   "parents": [
+    "brick:Air_Diffuser"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Leak_Detector_Equipment",
+   "en": "Leak Detector Equipment",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Leak_Detector_Equipment",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Sensor_Equipment",
+   "parents": [
+    "brick:Sensor_Equipment"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Lighting",
+   "en": "Lighting",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Lighting",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Lighting_Equipment",
+   "parents": [
+    "brick:Lighting_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Lighting_Equipment",
+   "en": "Lighting Equipment",
+   "label_source": "rdfs:label",
+   "zh": "照明设备",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Lighting_Equipment",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Equipment",
+   "parents": [
+    "brick:Equipment"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Luminaire",
+   "en": "Luminaire",
+   "label_source": "rdfs:label",
+   "zh": "照明灯具",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Luminaire",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Lighting",
+   "parents": [
+    "brick:Lighting"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Luminaire_Driver",
+   "en": "Luminaire Driver",
+   "label_source": "rdfs:label",
+   "zh": "灯具驱动器",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Luminaire_Driver",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Lighting",
+   "parents": [
+    "brick:Lighting"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:MAU",
+   "en": "MAU",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#MAU",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Air_Handling_Unit",
+   "parents": [
+    "brick:Air_Handling_Unit"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Main_Circuit_Breaker",
+   "en": "Main Circuit Breaker",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Main_Circuit_Breaker",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Circuit_Breaker",
+   "parents": [
+    "brick:Circuit_Breaker"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Main_Disconnect_Switch",
+   "en": "Main Disconnect Switch",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Main_Disconnect_Switch",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Disconnect_Switch",
+   "parents": [
+    "brick:Disconnect_Switch"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Makeup_Air_Unit",
+   "en": "Makeup Air Unit",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Makeup_Air_Unit",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Air_Handling_Unit",
+   "parents": [
+    "brick:Air_Handling_Unit"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Makeup_Water_Valve",
+   "en": "Makeup Water Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Makeup_Water_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Valve",
+   "parents": [
+    "brick:HVAC_Valve"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Manual_Fire_Alarm_Activation_Equipment",
+   "en": "Manual Fire Alarm Activation Equipment",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Manual_Fire_Alarm_Activation_Equipment",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Fire_Safety_Equipment",
+   "parents": [
+    "brick:Fire_Safety_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Meter",
+   "en": "Meter",
+   "label_source": "rdfs:label",
+   "zh": "表计",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Meter",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Equipment",
+   "parents": [
+    "brick:Equipment"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Mixed_Air_Filter",
+   "en": "Mixed Air Filter",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Mixed_Air_Filter",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Filter",
+   "parents": [
+    "brick:Filter"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Mixed_Damper",
+   "en": "Mixed Damper",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Mixed_Damper",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Damper",
+   "parents": [
+    "brick:Damper"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Mixing_Valve",
+   "en": "Mixing Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Mixing_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Valve",
+   "parents": [
+    "brick:Valve"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Modbus_Controller",
+   "en": "Modbus Controller",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Modbus_Controller",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Controller",
+   "parents": [
+    "brick:Controller"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Motor",
+   "en": "Motor",
+   "label_source": "rdfs:label",
+   "zh": "电动机",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Motor",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Equipment",
+   "parents": [
+    "brick:Equipment"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Motor_Control_Center",
+   "en": "Motor Control Center",
+   "label_source": "rdfs:label",
+   "zh": "电机控制中心",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Motor_Control_Center",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Electrical_Equipment",
+   "parents": [
+    "brick:Electrical_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:NVR",
+   "en": "NVR",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#NVR",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Video_Surveillance_Equipment",
+   "parents": [
+    "brick:Video_Surveillance_Equipment"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Natural_Gas_Boiler",
+   "en": "Natural Gas Boiler",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Natural_Gas_Boiler",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Boiler",
+   "parents": [
+    "brick:Boiler"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Natural_Gas_Seismic_Shutoff_Valve",
+   "en": "Natural Gas Seismic Shutoff Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Natural_Gas_Seismic_Shutoff_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Valve",
+   "parents": [
+    "brick:Valve"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Network_Router",
+   "en": "Network Router",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Network_Router",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Data_Network_Equipment",
+   "parents": [
+    "brick:Data_Network_Equipment"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Network_Security_Equipment",
+   "en": "Network Security Equipment",
+   "label_source": "rdfs:label",
+   "zh": "网络安全设备",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Network_Security_Equipment",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Data_Network_Equipment",
+   "parents": [
+    "brick:Data_Network_Equipment"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Network_Video_Recorder",
+   "en": "Network Video Recorder",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Network_Video_Recorder",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Video_Surveillance_Equipment",
+   "parents": [
+    "brick:Video_Surveillance_Equipment"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Noncondensing_Natural_Gas_Boiler",
+   "en": "Noncondensing Natural Gas Boiler",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Noncondensing_Natural_Gas_Boiler",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Natural_Gas_Boiler",
+   "parents": [
+    "brick:Natural_Gas_Boiler"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Occupancy_Sensor_Equipment",
+   "en": "Occupancy Sensor Equipment",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Occupancy_Sensor_Equipment",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Sensor_Equipment",
+   "parents": [
+    "brick:Sensor_Equipment"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Outside_Damper",
+   "en": "Outside Damper",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Outside_Damper",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Damper",
+   "parents": [
+    "brick:Damper"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Outside_Fan",
+   "en": "Outside Fan",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Outside_Fan",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Fan",
+   "parents": [
+    "brick:Fan"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:PAU",
+   "en": "PAU",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#PAU",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Air_Handling_Unit",
+   "parents": [
+    "brick:Air_Handling_Unit"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:PVT_Panel",
+   "en": "PVT Panel",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#PVT_Panel",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:PV_Panel",
+   "parents": [
+    "brick:PV_Panel"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:PV_Panel",
+   "en": "PV Panel",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#PV_Panel",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Equipment",
+   "parents": [
+    "brick:Equipment"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Packaged_Air_Source_Heat_Pump",
+   "en": "Packaged Air Source Heat Pump",
+   "label_source": "rdfs:label",
+   "zh": "风冷热泵机组",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Packaged_Air_Source_Heat_Pump",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Packaged_Heat_Pump",
+   "parents": [
+    "brick:Packaged_Heat_Pump"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Packaged_Heat_Pump",
+   "en": "Packaged Heat Pump",
+   "label_source": "rdfs:label",
+   "zh": "整体式热泵机组",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Packaged_Heat_Pump",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Packaged_Water_Source_Heat_Pump",
+   "en": "Packaged Water Source Heat Pump",
+   "label_source": "rdfs:label",
+   "zh": "水环热泵机组",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Packaged_Water_Source_Heat_Pump",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Packaged_Heat_Pump",
+   "parents": [
+    "brick:Packaged_Heat_Pump"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Passive_Chilled_Beam",
+   "en": "Passive Chilled Beam",
+   "label_source": "rdfs:label",
+   "zh": "被动式冷梁",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Passive_Chilled_Beam",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Chilled_Beam",
+   "parents": [
+    "brick:Chilled_Beam"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:People_Count_Sensor_Equipment",
+   "en": "People Count Sensor Equipment",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#People_Count_Sensor_Equipment",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Sensor_Equipment",
+   "parents": [
+    "brick:Sensor_Equipment"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Photovoltaic_Inverter",
+   "en": "Photovoltaic Inverter",
+   "label_source": "rdfs:label",
+   "zh": "光伏逆变器",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Photovoltaic_Inverter",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Inverter",
+   "parents": [
+    "brick:Inverter"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:PlugStrip",
+   "en": "PlugStrip",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#PlugStrip",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Electrical_Equipment",
+   "parents": [
+    "brick:Electrical_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Pre-Cooling_Air_Unit",
+   "en": "Pre-Cooling Air Unit",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Pre-Cooling_Air_Unit",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Air_Handling_Unit",
+   "parents": [
+    "brick:Air_Handling_Unit"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Pre_Filter",
+   "en": "Pre Filter",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Pre_Filter",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Filter",
+   "parents": [
+    "brick:Filter"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Preheat_Hot_Water_Valve",
+   "en": "Preheat Hot Water Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Preheat_Hot_Water_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Hot_Water_Valve",
+   "parents": [
+    "brick:Hot_Water_Valve"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Pressure_Reducing_Valve",
+   "en": "Pressure Reducing Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Pressure_Reducing_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Valve",
+   "parents": [
+    "brick:Valve"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Pressure_Regulator_Valve",
+   "en": "Pressure Regulator Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Pressure_Regulator_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Valve",
+   "parents": [
+    "brick:Valve"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Pressure_Relief_Valve",
+   "en": "Pressure Relief Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Pressure_Relief_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Valve",
+   "parents": [
+    "brick:Valve"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Pressurization_Fan",
+   "en": "Pressurization Fan",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Pressurization_Fan",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Fan",
+   "parents": [
+    "brick:Fan"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Pump",
+   "en": "Pump",
+   "label_source": "rdfs:label",
+   "zh": "水泵",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Pump",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Pump_VFD",
+   "en": "Pump VFD",
+   "label_source": "rdfs:label",
+   "zh": "水泵变频器",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Pump_VFD",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Variable_Frequency_Drive",
+   "parents": [
+    "brick:Variable_Frequency_Drive"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:RC_Panel",
+   "en": "RC Panel",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#RC_Panel",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Radiant_Panel",
+   "parents": [
+    "brick:Radiant_Panel"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:RTU",
+   "en": "RTU",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#RTU",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Air_Handling_Unit",
+   "parents": [
+    "brick:Air_Handling_Unit"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:RVAV",
+   "en": "RVAV",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#RVAV",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Variable_Air_Volume_Box",
+   "parents": [
+    "brick:Variable_Air_Volume_Box"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Radiant_Ceiling_Panel",
+   "en": "Radiant Ceiling Panel",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Radiant_Ceiling_Panel",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Radiant_Panel",
+   "parents": [
+    "brick:Radiant_Panel"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Radiant_Panel",
+   "en": "Radiant Panel",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Radiant_Panel",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Terminal_Unit",
+   "parents": [
+    "brick:Terminal_Unit"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Radiator",
+   "en": "Radiator",
+   "label_source": "rdfs:label",
+   "zh": "散热器",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Radiator",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Terminal_Unit",
+   "parents": [
+    "brick:Terminal_Unit"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Rain_Water_Storage_Tank",
+   "en": "Rain Water Storage Tank",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Rain_Water_Storage_Tank",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Water_Storage_Tank",
+   "parents": [
+    "brick:Water_Storage_Tank"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Refrigerant_Metering_Device",
+   "en": "Refrigerant Metering Device",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Refrigerant_Metering_Device",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Refrigerant_Valve",
+   "en": "Refrigerant Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Refrigerant_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Valve",
+   "parents": [
+    "brick:Valve"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Reheat_Valve",
+   "en": "Reheat Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Reheat_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Heating_Valve",
+   "parents": [
+    "brick:Heating_Valve"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Relay",
+   "en": "Relay",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Relay",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Equipment",
+   "parents": [
+    "brick:Equipment"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Relief_Damper",
+   "en": "Relief Damper",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Relief_Damper",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Damper",
+   "parents": [
+    "brick:Damper"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Relief_Fan",
+   "en": "Relief Fan",
+   "label_source": "rdfs:label",
+   "zh": "泄压风机",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Relief_Fan",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Fan",
+   "parents": [
+    "brick:Fan"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Return_Air_Filter",
+   "en": "Return Air Filter",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Return_Air_Filter",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Filter",
+   "parents": [
+    "brick:Filter"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Return_Air_Plenum",
+   "en": "Return Air Plenum",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Return_Air_Plenum",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Air_Plenum",
+   "parents": [
+    "brick:Air_Plenum"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Return_Damper",
+   "en": "Return Damper",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Return_Damper",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Damper",
+   "parents": [
+    "brick:Damper"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Return_Fan",
+   "en": "Return Fan",
+   "label_source": "rdfs:label",
+   "zh": "回风机",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Return_Fan",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Fan",
+   "parents": [
+    "brick:Fan"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Return_Heating_Valve",
+   "en": "Return Heating Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Return_Heating_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Heating_Valve",
+   "parents": [
+    "brick:Heating_Valve"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Reversing_Valve",
+   "en": "Reversing Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Reversing_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Refrigerant_Valve",
+   "parents": [
+    "brick:Refrigerant_Valve"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Rooftop_Unit",
+   "en": "Rooftop Unit",
+   "label_source": "rdfs:label",
+   "zh": "屋顶式空调机组",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Rooftop_Unit",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Air_Handling_Unit",
+   "parents": [
+    "brick:Air_Handling_Unit"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Safety_Equipment",
+   "en": "Safety Equipment",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Safety_Equipment",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Equipment",
+   "parents": [
+    "brick:Equipment"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Safety_Shower",
+   "en": "Safety Shower",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Safety_Shower",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Emergency_Wash_Station",
+   "parents": [
+    "brick:Emergency_Wash_Station"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Security_Equipment",
+   "en": "Security Equipment",
+   "label_source": "rdfs:label",
+   "zh": "安防设备",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Security_Equipment",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Equipment",
+   "parents": [
+    "brick:Equipment"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Sensor_Equipment",
+   "en": "Sensor Equipment",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Sensor_Equipment",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:ICT_Equipment",
+   "parents": [
+    "brick:ICT_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Separation_Tank",
+   "en": "Separation Tank",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Separation_Tank",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Tank",
+   "parents": [
+    "brick:Tank"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Server",
+   "en": "Server",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Server",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:ICT_Hardware",
+   "parents": [
+    "brick:ICT_Hardware"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Shading_Equipment",
+   "en": "Shading Equipment",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Shading_Equipment",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Equipment",
+   "parents": [
+    "brick:Equipment"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Smoke_Detector",
+   "en": "Smoke Detector",
+   "label_source": "rdfs:label",
+   "zh": "烟感探测器",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Smoke_Detector",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Fire_Safety_Equipment",
+   "parents": [
+    "brick:Fire_Safety_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Solar_Thermal_Collector",
+   "en": "Solar Thermal Collector",
+   "label_source": "rdfs:label",
+   "zh": "太阳能集热器",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Solar_Thermal_Collector",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Equipment",
+   "parents": [
+    "brick:Equipment"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Space_Heater",
+   "en": "Space Heater",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Space_Heater",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Stage_Riser",
+   "en": "Stage Riser",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Stage_Riser",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Furniture",
+   "parents": [
+    "brick:Furniture"
+   ],
+   "depth": 4,
+   "deprecated": true
+  },
+  {
+   "id": "brick:Standby_CRAC",
+   "en": "Standby CRAC",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Standby_CRAC",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Computer_Room_Air_Conditioning",
+   "parents": [
+    "brick:Computer_Room_Air_Conditioning"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Standby_Fan",
+   "en": "Standby Fan",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Standby_Fan",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Fan",
+   "parents": [
+    "brick:Fan"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Static_Transfer_Switch",
+   "en": "Static Transfer Switch",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Static_Transfer_Switch",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Automatic_Switch",
+   "parents": [
+    "brick:Automatic_Switch"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Steam_Baseboard_Radiator",
+   "en": "Steam Baseboard Radiator",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Steam_Baseboard_Radiator",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Baseboard_Radiator",
+   "parents": [
+    "brick:Baseboard_Radiator"
+   ],
+   "depth": 7,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Steam_Distribution",
+   "en": "Steam Distribution",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Steam_Distribution",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Equipment",
+   "parents": [
+    "brick:Equipment"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Steam_Pressure_Reducing_Valve",
+   "en": "Steam Pressure Reducing Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Steam_Pressure_Reducing_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Pressure_Reducing_Valve",
+   "parents": [
+    "brick:Pressure_Reducing_Valve"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Steam_Pressure_Relief_Valve",
+   "en": "Steam Pressure Relief Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Steam_Pressure_Relief_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Pressure_Relief_Valve",
+   "parents": [
+    "brick:Pressure_Relief_Valve"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Steam_Radiator",
+   "en": "Steam Radiator",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Steam_Radiator",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Radiator",
+   "parents": [
+    "brick:Radiator"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Steam_Valve",
+   "en": "Steam Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Steam_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Storage_Tank",
+   "en": "Storage Tank",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Storage_Tank",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Tank",
+   "parents": [
+    "brick:Tank"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Supply_Air_Plenum",
+   "en": "Supply Air Plenum",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Supply_Air_Plenum",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Air_Plenum",
+   "parents": [
+    "brick:Air_Plenum"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Supply_Fan",
+   "en": "Supply Fan",
+   "label_source": "rdfs:label",
+   "zh": "送风机",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Supply_Fan",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Fan",
+   "parents": [
+    "brick:Fan"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Surveillance_Camera",
+   "en": "Surveillance Camera",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Surveillance_Camera",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Camera",
+   "parents": [
+    "brick:Camera"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Switch",
+   "en": "Switch",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Switch",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Interface",
+   "parents": [
+    "brick:Interface"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Switchgear",
+   "en": "Switchgear",
+   "label_source": "rdfs:label",
+   "zh": "开关柜",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Switchgear",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Electrical_Equipment",
+   "parents": [
+    "brick:Electrical_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:TABS_Panel",
+   "en": "TABS Panel",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#TABS_Panel",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Radiant_Panel",
+   "parents": [
+    "brick:Radiant_Panel"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Tablet",
+   "en": "Tablet",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Tablet",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:ICT_Hardware",
+   "parents": [
+    "brick:ICT_Hardware"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Tank",
+   "en": "Tank",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Tank",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Equipment",
+   "parents": [
+    "brick:Equipment"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Terminal_Unit",
+   "en": "Terminal Unit",
+   "label_source": "rdfs:label",
+   "zh": "末端装置",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Terminal_Unit",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Thermal_Energy_Storage_Tank",
+   "en": "Thermal Energy Storage Tank",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Thermal_Energy_Storage_Tank",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Storage_Tank",
+   "parents": [
+    "brick:Storage_Tank"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Thermal_Expansion_Tank",
+   "en": "Thermal Expansion Tank",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Thermal_Expansion_Tank",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Tank",
+   "parents": [
+    "brick:Tank"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Thermal_Expansion_Valve",
+   "en": "Thermal Expansion Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Thermal_Expansion_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Refrigerant_Metering_Device",
+   "parents": [
+    "brick:Refrigerant_Metering_Device"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Thermal_Power_Meter",
+   "en": "Thermal Power Meter",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Thermal_Power_Meter",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Meter",
+   "parents": [
+    "brick:Meter"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Thermally_Activated_Building_System_Panel",
+   "en": "Thermally Activated Building System Panel",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Thermally_Activated_Building_System_Panel",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Radiant_Panel",
+   "parents": [
+    "brick:Radiant_Panel"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Thermostat",
+   "en": "Thermostat",
+   "label_source": "rdfs:label",
+   "zh": "恒温控制器",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Thermostat",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Thermostat_Equipment",
+   "en": "Thermostat Equipment",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Thermostat_Equipment",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Sensor_Equipment",
+   "parents": [
+    "brick:Sensor_Equipment"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Thermostatic_Mixing_Valve",
+   "en": "Thermostatic Mixing Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Thermostatic_Mixing_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Mixing_Valve",
+   "parents": [
+    "brick:Mixing_Valve"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Touchpanel",
+   "en": "Touchpanel",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Touchpanel",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Interface",
+   "parents": [
+    "brick:Interface"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Transfer_Fan",
+   "en": "Transfer Fan",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Transfer_Fan",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Fan",
+   "parents": [
+    "brick:Fan"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Transfer_Switch",
+   "en": "Transfer Switch",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Transfer_Switch",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Switchgear",
+   "parents": [
+    "brick:Switchgear"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Transformer",
+   "en": "Transformer",
+   "label_source": "rdfs:label",
+   "zh": "变压器",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Transformer",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Electrical_Equipment",
+   "parents": [
+    "brick:Electrical_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Underfloor_Air_Plenum",
+   "en": "Underfloor Air Plenum",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Underfloor_Air_Plenum",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Supply_Air_Plenum",
+   "parents": [
+    "brick:Supply_Air_Plenum"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:VAV",
+   "en": "VAV",
+   "label_source": "rdfs:label",
+   "zh": "变风量末端",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#VAV",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Terminal_Unit",
+   "parents": [
+    "brick:Terminal_Unit"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:VFD",
+   "en": "VFD",
+   "label_source": "rdfs:label",
+   "zh": "变频器",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#VFD",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Motor",
+   "parents": [
+    "brick:Motor"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Valve",
+   "en": "Valve",
+   "label_source": "rdfs:label",
+   "zh": "阀门",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Equipment",
+   "parents": [
+    "brick:Equipment"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Variable_Air_Volume_Box",
+   "en": "Variable Air Volume Box",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Variable_Air_Volume_Box",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Terminal_Unit",
+   "parents": [
+    "brick:Terminal_Unit"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Variable_Air_Volume_Box_With_Reheat",
+   "en": "Variable Air Volume Box With Reheat",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Variable_Air_Volume_Box_With_Reheat",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Variable_Air_Volume_Box",
+   "parents": [
+    "brick:Variable_Air_Volume_Box"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Variable_Frequency_Drive",
+   "en": "Variable Frequency Drive",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Variable_Frequency_Drive",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Motor",
+   "parents": [
+    "brick:Motor"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Vibration_Sensor_Equipment",
+   "en": "Vibration Sensor Equipment",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Vibration_Sensor_Equipment",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Sensor_Equipment",
+   "parents": [
+    "brick:Sensor_Equipment"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Video_Intercom",
+   "en": "Video Intercom",
+   "label_source": "rdfs:label",
+   "zh": "可视对讲",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Video_Intercom",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Intercom_Equipment",
+   "parents": [
+    "brick:Intercom_Equipment"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Video_Surveillance_Equipment",
+   "en": "Video Surveillance Equipment",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Video_Surveillance_Equipment",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Security_Equipment",
+   "parents": [
+    "brick:Security_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Wall_Air_Conditioner",
+   "en": "Wall Air Conditioner",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Wall_Air_Conditioner",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:HVAC_Equipment",
+   "parents": [
+    "brick:HVAC_Equipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Wall_Fan_Coil_Unit",
+   "en": "Wall Fan Coil Unit",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Wall_Fan_Coil_Unit",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Fan_Coil_Unit",
+   "parents": [
+    "brick:Fan_Coil_Unit"
+   ],
+   "depth": 6,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Waste_Meter",
+   "en": "Waste Meter",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Waste_Meter",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Meter",
+   "parents": [
+    "brick:Meter"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Water_Cooled_Chiller",
+   "en": "Water Cooled Chiller",
+   "label_source": "rdfs:label",
+   "zh": "水冷冷水机组",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Water_Cooled_Chiller",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Chiller",
+   "parents": [
+    "brick:Chiller"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Water_Distribution",
+   "en": "Water Distribution",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Water_Distribution",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Equipment",
+   "parents": [
+    "brick:Equipment"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Water_Heater",
+   "en": "Water Heater",
+   "label_source": "rdfs:label",
+   "zh": "热水器",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Water_Heater",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Equipment",
+   "parents": [
+    "brick:Equipment"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Water_Meter",
+   "en": "Water Meter",
+   "label_source": "rdfs:label",
+   "zh": "水表",
+   "zh_source": "manual_v1",
+   "iri": "https://brickschema.org/schema/Brick#Water_Meter",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Meter",
+   "parents": [
+    "brick:Meter"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Water_Pressure_Reducing_Valve",
+   "en": "Water Pressure Reducing Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Water_Pressure_Reducing_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Pressure_Reducing_Valve",
+   "parents": [
+    "brick:Pressure_Reducing_Valve"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Water_Pressure_Relief_Valve",
+   "en": "Water Pressure Relief Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Water_Pressure_Relief_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Pressure_Relief_Valve",
+   "parents": [
+    "brick:Pressure_Relief_Valve"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Water_Pump",
+   "en": "Water Pump",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Water_Pump",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Pump",
+   "parents": [
+    "brick:Pump"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Water_Storage_Tank",
+   "en": "Water Storage Tank",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Water_Storage_Tank",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Storage_Tank",
+   "parents": [
+    "brick:Storage_Tank"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Water_Valve",
+   "en": "Water Valve",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Water_Valve",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Valve",
+   "parents": [
+    "brick:Valve"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Weather_Station",
+   "en": "Weather Station",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Weather_Station",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Equipment",
+   "parents": [
+    "brick:Equipment"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Wireless_Access_Point",
+   "en": "Wireless Access Point",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Wireless_Access_Point",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Data_Network_Equipment",
+   "parents": [
+    "brick:Data_Network_Equipment"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "brick:Zone_Damper",
+   "en": "Zone Damper",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://brickschema.org/schema/Brick#Zone_Damper",
+   "domain": "EQUIP",
+   "namespace": "brick",
+   "parent": "brick:Damper",
+   "parents": [
+    "brick:Damper"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "rec:AudioVisualEquipment",
+   "en": "Audio Visual Equipment",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#AudioVisualEquipment",
+   "domain": "EQUIP",
+   "namespace": "rec",
+   "parent": "rec:ICTEquipment",
+   "parents": [
+    "rec:ICTEquipment"
+   ],
+   "depth": 4,
+   "deprecated": true
+  },
+  {
+   "id": "rec:BACnetController",
+   "en": "BACnet Controller",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#BACnetController",
+   "domain": "EQUIP",
+   "namespace": "rec",
+   "parent": "rec:Controller",
+   "parents": [
+    "rec:Controller"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "rec:Controller",
+   "en": "Controller",
+   "label_source": "rdfs:label",
+   "zh": "控制器",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#Controller",
+   "domain": "EQUIP",
+   "namespace": "rec",
+   "parent": "rec:ICTEquipment",
+   "parents": [
+    "rec:ICTEquipment"
+   ],
+   "depth": 4,
+   "deprecated": true
+  },
+  {
+   "id": "rec:DataNetworkEquipment",
+   "en": "Data Network Equipment",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#DataNetworkEquipment",
+   "domain": "EQUIP",
+   "namespace": "rec",
+   "parent": "rec:ICTEquipment",
+   "parents": [
+    "rec:ICTEquipment"
+   ],
+   "depth": 4,
+   "deprecated": true
+  },
+  {
+   "id": "rec:DaylightSensorEquipment",
+   "en": "Daylight Sensor",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#DaylightSensorEquipment",
+   "domain": "EQUIP",
+   "namespace": "rec",
+   "parent": "rec:SensorEquipment",
+   "parents": [
+    "rec:SensorEquipment"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "rec:EthernetPort",
+   "en": "Ethernet Port",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#EthernetPort",
+   "domain": "EQUIP",
+   "namespace": "rec",
+   "parent": "rec:DataNetworkEquipment",
+   "parents": [
+    "rec:DataNetworkEquipment"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "rec:EthernetSwitch",
+   "en": "Ethernet Switch",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#EthernetSwitch",
+   "domain": "EQUIP",
+   "namespace": "rec",
+   "parent": "rec:DataNetworkEquipment",
+   "parents": [
+    "rec:DataNetworkEquipment"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "rec:Gateway",
+   "en": "Gateway",
+   "label_source": "rdfs:label",
+   "zh": "网关",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#Gateway",
+   "domain": "EQUIP",
+   "namespace": "rec",
+   "parent": "rec:ICTEquipment",
+   "parents": [
+    "rec:ICTEquipment"
+   ],
+   "depth": 4,
+   "deprecated": true
+  },
+  {
+   "id": "rec:IAQSensorEquipment",
+   "en": "Indoor Air Quality Sensor",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#IAQSensorEquipment",
+   "domain": "EQUIP",
+   "namespace": "rec",
+   "parent": "rec:SensorEquipment",
+   "parents": [
+    "rec:SensorEquipment"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "rec:ICTEquipment",
+   "en": "ICT Equipment",
+   "label_source": "rdfs:label",
+   "zh": "信息通信技术设备",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#ICTEquipment",
+   "domain": "EQUIP",
+   "namespace": "rec",
+   "parent": "brick:Equipment",
+   "parents": [
+    "brick:Equipment"
+   ],
+   "depth": 3,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ICTHardware",
+   "en": "ICT Hardware",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ICTHardware",
+   "domain": "EQUIP",
+   "namespace": "rec",
+   "parent": "rec:ICTEquipment",
+   "parents": [
+    "rec:ICTEquipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:ITRack",
+   "en": "IT Rack",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ITRack",
+   "domain": "EQUIP",
+   "namespace": "rec",
+   "parent": "rec:ICTEquipment",
+   "parents": [
+    "rec:ICTEquipment"
+   ],
+   "depth": 4,
+   "deprecated": false
+  },
+  {
+   "id": "rec:LeakDetectorEquipment",
+   "en": "Leak Detector",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#LeakDetectorEquipment",
+   "domain": "EQUIP",
+   "namespace": "rec",
+   "parent": "rec:SensorEquipment",
+   "parents": [
+    "rec:SensorEquipment"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "rec:ModbusController",
+   "en": "Modbus Controller",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ModbusController",
+   "domain": "EQUIP",
+   "namespace": "rec",
+   "parent": "rec:Controller",
+   "parents": [
+    "rec:Controller"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "rec:NetworkRouter",
+   "en": "Network Router",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#NetworkRouter",
+   "domain": "EQUIP",
+   "namespace": "rec",
+   "parent": "rec:DataNetworkEquipment",
+   "parents": [
+    "rec:DataNetworkEquipment"
+   ],
+   "depth": 5,
+   "deprecated": false
+  },
+  {
+   "id": "rec:NetworkSecurityEquipment",
+   "en": "Network Security Equipment",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#NetworkSecurityEquipment",
+   "domain": "EQUIP",
+   "namespace": "rec",
+   "parent": "rec:DataNetworkEquipment",
+   "parents": [
+    "rec:DataNetworkEquipment"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "rec:OccupancySensorEquipment",
+   "en": "Occupancy Sensor",
+   "label_source": "rdfs:label",
+   "zh": "人员占用传感设备",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#OccupancySensorEquipment",
+   "domain": "EQUIP",
+   "namespace": "rec",
+   "parent": "rec:SensorEquipment",
+   "parents": [
+    "rec:SensorEquipment"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "rec:PeopleCountSensorEquipment",
+   "en": "People Count Sensor",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#PeopleCountSensorEquipment",
+   "domain": "EQUIP",
+   "namespace": "rec",
+   "parent": "rec:SensorEquipment",
+   "parents": [
+    "rec:SensorEquipment"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "rec:SensorEquipment",
+   "en": "Sensor Equipment",
+   "label_source": "rdfs:label",
+   "zh": "传感设备",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#SensorEquipment",
+   "domain": "EQUIP",
+   "namespace": "rec",
+   "parent": "rec:ICTEquipment",
+   "parents": [
+    "rec:ICTEquipment"
+   ],
+   "depth": 4,
+   "deprecated": true
+  },
+  {
+   "id": "rec:Server",
+   "en": "Server",
+   "label_source": "rdfs:label",
+   "zh": "服务器",
+   "zh_source": "manual_v1",
+   "iri": "https://w3id.org/rec#Server",
+   "domain": "EQUIP",
+   "namespace": "rec",
+   "parent": "rec:ICTHardware",
+   "parents": [
+    "rec:ICTHardware"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "rec:ThermostatEquipment",
+   "en": "Thermostat",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#ThermostatEquipment",
+   "domain": "EQUIP",
+   "namespace": "rec",
+   "parent": "rec:SensorEquipment",
+   "parents": [
+    "rec:SensorEquipment"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "rec:VibrationSensorEquipment",
+   "en": "Vibration Sensor",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#VibrationSensorEquipment",
+   "domain": "EQUIP",
+   "namespace": "rec",
+   "parent": "rec:SensorEquipment",
+   "parents": [
+    "rec:SensorEquipment"
+   ],
+   "depth": 5,
+   "deprecated": true
+  },
+  {
+   "id": "rec:WirelessAccessPoint",
+   "en": "Wireless Access Point",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://w3id.org/rec#WirelessAccessPoint",
+   "domain": "EQUIP",
+   "namespace": "rec",
+   "parent": "rec:DataNetworkEquipment",
+   "parents": [
+    "rec:DataNetworkEquipment"
+   ],
+   "depth": 5,
+   "deprecated": true
+  }
+ ]
+}

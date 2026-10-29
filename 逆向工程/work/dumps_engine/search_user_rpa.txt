@@ -1,0 +1,152 @@
+@@@ off=2267800
+or:f.error||"OCR 提取失败",headerImage:a
+}
+;
+const h=f.text,p=h.split(/\s+/).filter(m=>m.length>0);
+return r("【获取OCR】OCR结果",{
+allText:h,ocrTexts:p
+}
+),{
+success:!0,ocrText:h,ocrTexts:p,headerImage:a
+}
+
+}
+catch(s){
+return r("【获取OCR】失败",{
+error:s?.message||String(s)
+}
+),{
+success:!1,error:s?.message||String(s),headerImage:a
+}
+
+}
+
+}
+,matchOcrText=(t,e,r)=>{
+const n=r||(()=>{
+
+}
+),a=isTextMatch(t,e);
+return a?n("【对比OCR】匹配成功",{
+targetName:t,ocrText:e
+}
+):n("【对比OCR】不匹配",{
+targetName:t,ocrText:e
+}
+),a
+}
+,performOcrPrecheck=async(t,e,r)=>{
+try{
+const n=await getHeaderOcrText(e,r);
+return!n||!n.success||!n.ocrText?null:matchOcrText(t,n.ocrText,r)?{
+matched:!0
+}
+:{
+matched:!1
+}
+
+}
+catch(n){
+return r("【OCR预检】失败，继续搜索",{
+error:n?.message||String(n)
+}
+),null
+}
+
+}
+,searchUserRPA=async(t,e=isWhatsAppBuild()?"whatsapp":"personal",{
+enableOcrPrecheck:r=!1,enableOcrPostcheck:n=!1,isGroupChat:a,shouldStop:s
+}
+={
+
+}
+)=>{
+const i=Date.now(),o=(u,l)=>{
+const f=Date.now()-i;
+console.log(`[${
+f
+}
+ms] ${
+u
+}
+`,l||"")
+}
+;
+if(o("【searchUserRPA 启动】",{
+platform:process.platform,appType:e,rawInput:t,enableOcrPrecheck:r,enableOcrPostcheck:n,isGroupChat:a
+}
+),e==="whatsapp")return o("【searchUserRPA】WhatsApp 模式，跳过搜索用户"),{
+success:!0,skipped:!0,reason:"whatsapp_not_supported"
+}
+;
+const d=await visionSearchUserRPA(t,e,{
+isGroupChat:a,enableOcrPrecheck:r,enableOcrPostcheck:n,shouldStop:s
+}
+);
+return!d||!d.success?d?.error==="任务已中断"?(o("【searchUserRPA】任务已中断"),{
+success:!1,interrupted:!0,error:"任务已中断"
+}
+):(o("【ERROR】visionSearchUserRPA 执行失败",{
+error:d?.error||"未知错误"
+}
+),null):(o("【完成】searchUserRPA 执行完成",{
+success:!0,targetPosition:d.targetPosition,searchUser:d.searchUser,totalTime:Date.now()-i
+}
+),{
+...d,success:!0
+}
+)
+}
+,pasteTextViaClipboard=async(t,e)=>{
+const r=e?.logPrefix||"【剪贴板粘贴】",n=e?.action||"both",a=e?.skipRestore||!1,s=getInputController(),i=getCurrentInputBackendMode(),o=process.platform,d=!!store$2.get("debug_log_mode",!1),u=n!=="paste"?getBridge().clipboard.readText():"";
+n!=="paste"&&await randomDelayInWithStop(200,300,e?.ctx);
+try{
+if(d&&console.log(`${
+r
+}
+开始`,{
+action:n,backendMode:i,platform:
+@@@ off=2269800
+o,textLength:t.length,skipRestore:a
+}
+),n==="write"||n==="both"){
+e?.ctx?.throwIfAborted(),getBridge().clipboard.writeText(t);
+const l=getBridge().clipboard.readText();
+d&&console.log(`${
+r
+}
+剪贴板已写入`,{
+expectedLength:t.length,actualLength:l.length,matched:l===t
+}
+),await randomDelayInWithStop(300,500,e?.ctx)
+}
+if(n==="write")return!0;
+if(e?.ctx?.throwIfAborted(),d&&console.log(`${
+r
+}
+准备发送粘贴快捷键`,{
+shortcut:o==="darwin"?"command+v":"control+v",backendMode:i
+}
+),await s.pasteShortcut(o),e?.ctx?.throwIfAborted(),d&&console.log(`${
+r
+}
+粘贴快捷键已发出`,{
+shortcut:o==="darwin"?"command+v":"control+v",backendMode:i
+}
+),i==="external-hid"?await randomDelayInWithStop(800,1200,e?.ctx):await randomDelayInWithStop(300,500,e?.ctx),n==="both"&&!a){
+const l=e?.restoreContent||u;
+e?.ctx?.throwIfAborted(),getBridge().clipboard.writeText(l),await randomDelayInWithStop(300,500,e?.ctx),d&&console.log(`${
+r
+}
+剪贴板内容已恢复`,{
+restoredLength:l.length
+}
+)
+}
+return!0
+}
+catch(l){
+return isExecutionAbortError(l)?(console.log(`${
+r
+}
+收到停止信号，取消粘贴`),!1):(console.err

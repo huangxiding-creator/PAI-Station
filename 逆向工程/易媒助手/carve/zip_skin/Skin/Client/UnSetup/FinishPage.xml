@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window>
+<UnFinishPageLayout bkcolor="#FFFFFFFF">
+	<HorizontalLayout name="hor_bk" height="64">
+		<Control width="20"/>
+		<Label padding="0,20,0,0" text="卸载成功，为什么卸载融媒宝呢？" font="7" textcolor="0xff2c2c2c" height="24" align="left" valign="center" />
+		<Control width="10"/>
+		<Button name="btn_close_finishpage" padding="0,5,0,0" width="20" height="20" bkimage="public\close_black.png" />
+		<Control width="5" />
+	</HorizontalLayout>
+	<HorizontalLayout padding="20,00,00,0" visible="true">
+		<VerticalLayout width="222">
+			<Option name="opt_1" text="不支持我想要的平台" textpadding="22,0,0,0" width="240" height="14" textcolor="#ff2c2c2c" normalimage="file='public\B09.png' source='0,0,14,14' dest='0,0,14,14'"  hotimage="file='public\B09.png' source='0,14,14,28' dest='0,0,14,14'" selectedimage="file='public\B09.png' source='0,28,14,42' dest='0,0,14,14'"  align="left" valign="center" font="0"/>
+			<Control height="20" />
+			<Option name="opt_3" text="无法同步文章" textpadding="22,0,0,0" width="240" height="14" textcolor="#ff2c2c2c" normalimage="file='public\B09.png' source='0,0,14,14' dest='0,0,14,14'"  hotimage="file='public\B09.png' source='0,14,14,28' dest='0,0,14,14'" selectedimage="file='public\B09.png' source='0,28,14,42' dest='0,0,14,14'"  align="left" valign="center"  font="0"/>
+			<Control height="20" />
+			<Option name="opt_5" text="程序不稳定，崩溃或卡死" textpadding="22,0,0,0" width="240" height="14" textcolor="#ff2c2c2c" normalimage="file='public\B09.png' source='0,0,14,14' dest='0,0,14,14'"  hotimage="file='public\B09.png' source='0,14,14,28' dest='0,0,14,14'" selectedimage="file='public\B09.png' source='0,28,14,42' dest='0,0,14,14'"  align="left" valign="center"  font="0"/>
+			<Control height="20" />
+			<Option name="opt_7" text="其它" textpadding="22,0,0,0" width="240" height="14" textcolor="#ff2c2c2c" normalimage="file='public\B09.png' source='0,0,14,14' dest='0,0,14,14'"  hotimage="file='public\B09.png' source='0,14,14,28' dest='0,0,14,14'" selectedimage="file='public\B09.png' source='0,28,14,42' dest='0,0,14,14'"  align="left" valign="center"  font="0"/>
+		</VerticalLayout>
+		<Control width="20"/>
+		<VerticalLayout width="222">
+			<Option name="opt_2" text="无法添加账号" textpadding="22,0,0,0" width="240" height="14" textcolor="#ff2c2c2c" normalimage="file='public\B09.png' source='0,0,14,14' dest='0,0,14,14'"  hotimage="file='public\B09.png' source='0,14,14,28' dest='0,0,14,14'" selectedimage="file='public\B09.png' source='0,28,14,42' dest='0,0,14,14'"  align="left" valign="center"  font="0"/>
+			<Control height="20" />
+			<Option name="opt_4" text="编辑器不好用" textpadding="22,0,0,0" width="240" height="14" textcolor="#ff2c2c2c" normalimage="file='public\B09.png' source='0,0,14,14' dest='0,0,14,14'"  hotimage="file='public\B09.png' source='0,14,14,28' dest='0,0,14,14'" selectedimage="file='public\B09.png' source='0,28,14,42' dest='0,0,14,14'"  align="left" valign="center"  font="0"/>
+			<Control height="20" />
+			<Option name="opt_6" text="我是做视频的" textpadding="22,0,0,0" width="240" height="14" textcolor="#ff2c2c2c" normalimage="file='public\B09.png' source='0,0,14,14' dest='0,0,14,14'"  hotimage="file='public\B09.png' source='0,14,14,28' dest='0,0,14,14'" selectedimage="file='public\B09.png' source='0,28,14,42' dest='0,0,14,14'"  align="left" valign="center"  font="0"/>
+		</VerticalLayout>
+	</HorizontalLayout>
+	<RichEdit name="richedit_feedback" padding="20,0,0,0" width="542" height="100" deftextcolor="#ffd9d9d9" deftext="请写下您的意见，以帮助我们更好的完善产品" enable="true" align="left" multiline="true" vscrollbar="true" font="0" textcolor="0xff2c2c2c" normalimage="file='public/input_bk.png' source='0,0,30,32' corner='6,6,6,6'" hotimage="file='public/input_bk.png' source='0,32,30,64' corner='6,6,6,6'" focusedimage="file='public/input_bk.png' source='0,32,30,64' corner='6,6,6,6'" inset="10,9,10,9"/>
+	<Control height="20" />
+	<HorizontalLayout height="72" padding="20,0,20,0" bordersize="0,1,0,0" bordercolor="0xfff4f4f4">
+		<Control />
+		<Button name="btn_cancel" xmltext="Unsetup/40" padding="0,20,0,0" width="54" height="32" textcolor="#ff5e5e5e" hottextcolor="#ff6358ed" pushedtextcolor="#ff6358ed" font="0" normalimage="file='public/B01.png' source='0,0,30,32' corner='10,10,10,10'" hotimage="file='public/B01.png' source='0,32,30,64' corner='10,10,10,10'" pushedimage="file='public/B01.png' source='0,32,30,64' corner='10,10,10,10'"/>
+		<Control width="20"/>
+		<Button name="btn_bye" xmltext="Unsetup/38" padding="0,20,0,0" width="54" height="32" textcolor="#ffffffff" font="0" normalimage="file='public/B02.png' source='0,0,30,32' corner='10,10,10,10'" hotimage="file='public/B02.png' source='0,32,30,64' corner='10,10,10,10'" pushedimage="file='public/B02.png' source='0,32,30,64' corner='10,10,10,10'"/>
+	</HorizontalLayout>		
+</UnFinishPageLayout>
+</Window> 

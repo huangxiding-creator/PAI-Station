@@ -1,0 +1,254 @@
+{
+  "rows": [
+    {
+      "cmd": "whoami",
+      "rc": 0,
+      "errno": 0,
+      "elapsed_s": 1.1,
+      "requests": 0,
+      "ok": true,
+      "summary": "pyeyeye uk=587408217 VIP8（档案复用）"
+    },
+    {
+      "cmd": "quota",
+      "rc": 0,
+      "errno": 0,
+      "elapsed_s": 1.0,
+      "requests": 0,
+      "ok": true,
+      "summary": "总17.10TB 用12.83TB 余4.28TB（档案复用）"
+    },
+    {
+      "cmd": "ls /",
+      "rc": 0,
+      "errno": 0,
+      "elapsed_s": 1.1,
+      "requests": 1,
+      "ok": true,
+      "summary": "18 项"
+    },
+    {
+      "cmd": "tree fence d1",
+      "rc": 0,
+      "errno": 0,
+      "elapsed_s": 1.1,
+      "requests": 1,
+      "ok": true,
+      "summary": "16 节点 请求1 发 截断=False"
+    },
+    {
+      "cmd": "search",
+      "rc": 0,
+      "errno": 0,
+      "elapsed_s": 2.3,
+      "requests": 1,
+      "ok": true,
+      "summary": "命中 20 条（key=演讲）"
+    },
+    {
+      "cmd": "shares",
+      "rc": 0,
+      "errno": 0,
+      "elapsed_s": 1.1,
+      "requests": 1,
+      "ok": true,
+      "summary": "43 条记录"
+    },
+    {
+      "cmd": "recycle",
+      "rc": 0,
+      "errno": 0,
+      "elapsed_s": 1.4,
+      "requests": 1,
+      "ok": true,
+      "summary": "100 项"
+    },
+    {
+      "cmd": "doctor",
+      "rc": 0,
+      "errno": 0,
+      "elapsed_s": 11.1,
+      "requests": 8,
+      "ok": true,
+      "summary": "verdict=ok 8针 漂移1"
+    },
+    {
+      "cmd": "mkdir qa_gate_tmp",
+      "rc": 0,
+      "errno": 0,
+      "elapsed_s": 1.2,
+      "requests": 1,
+      "ok": true,
+      "summary": ""
+    },
+    {
+      "cmd": "mkdir sub",
+      "rc": 0,
+      "errno": 0,
+      "elapsed_s": 1.2,
+      "requests": 1,
+      "ok": true,
+      "summary": ""
+    },
+    {
+      "cmd": "upload 100KB",
+      "rc": 0,
+      "errno": 0,
+      "elapsed_s": 4.1,
+      "requests": 3,
+      "ok": true,
+      "summary": "size=102400 rapid=False 数据面1发"
+    },
+    {
+      "cmd": "rename",
+      "rc": 0,
+      "errno": 0,
+      "elapsed_s": 2.5,
+      "requests": 1,
+      "ok": true,
+      "summary": ""
+    },
+    {
+      "cmd": "mv",
+      "rc": 0,
+      "errno": 0,
+      "elapsed_s": 1.3,
+      "requests": 1,
+      "ok": true,
+      "summary": ""
+    },
+    {
+      "cmd": "cp",
+      "rc": 0,
+      "errno": 0,
+      "elapsed_s": 1.6,
+      "requests": 1,
+      "ok": true,
+      "summary": "ondup=newcopy → 同名副本落 /API复刻测试_1029/qa_gate_tmp"
+    },
+    {
+      "cmd": "rm --confirm",
+      "rc": 0,
+      "errno": 0,
+      "elapsed_s": 2.6,
+      "requests": 2,
+      "ok": true,
+      "summary": "删除 qa_100k_rn.bin（回收站） executed=True"
+    },
+    {
+      "cmd": "download+md5",
+      "rc": 0,
+      "errno": 0,
+      "elapsed_s": 3.3,
+      "requests": 2,
+      "ok": true,
+      "summary": "md5_ok=None 0.04MB/s"
+    },
+    {
+      "cmd": "download md5 本地比对",
+      "rc": 0,
+      "errno": 0,
+      "ok": true,
+      "elapsed_s": 0,
+      "requests": 0,
+      "summary": "源md5=849d5ef4… 回传md5=849d5ef4…"
+    },
+    {
+      "cmd": "meta",
+      "rc": 0,
+      "errno": 0,
+      "elapsed_s": 1.1,
+      "requests": 0,
+      "ok": true,
+      "summary": "1 条 来源=api/filemetas path=/API复刻测试_1029/qa_gate_tmp/sub/qa_100k_rn.bin"
+    },
+    {
+      "cmd": "share-create",
+      "rc": 0,
+      "errno": 0,
+      "elapsed_s": 1.7,
+      "requests": 1,
+      "ok": true,
+      "summary": "shareid=27396886864 发数=1"
+    },
+    {
+      "cmd": "share-cancel",
+      "rc": 0,
+      "errno": 0,
+      "elapsed_s": 2.1,
+      "requests": 2,
+      "ok": true,
+      "summary": "属主护栏放行自建 27396886864 requests=2"
+    },
+    {
+      "cmd": "share-cancel 护栏负例",
+      "rc": 3,
+      "errno": -9,
+      "ok": true,
+      "elapsed_s": 0,
+      "requests": 0,
+      "summary": "离线单测引证（tests/test_offline_w6.py 三件：非自建拒发 rc3 零 POST/混入整批拒/自建放行）"
+    },
+    {
+      "cmd": "transfer(引证任务二)",
+      "rc": 1,
+      "errno": "?",
+      "ok": false,
+      "elapsed_s": 8.1,
+      "requests": null,
+      "summary": "errno=?（bdstoken 携带形态；蓝本全参shareid+from 已实装待 W7 复测）"
+    },
+    {
+      "cmd": "mirror --dry-run",
+      "rc": 0,
+      "errno": 0,
+      "elapsed_s": 1.1,
+      "requests": 1,
+      "ok": true,
+      "summary": "计划 2 件 零上传 remote_scan=1发"
+    },
+    {
+      "cmd": "mirror 护栏负例",
+      "rc": 1,
+      "errno": "?",
+      "elapsed_s": 0.5,
+      "requests": 0,
+      "ok": true,
+      "summary": "bdn: [errno=-7] 镜像远端目标过浅: '/备份'（/ 或一级根目录拒绝，防误铺根；确需请加 --allow-root）"
+    }
+  ],
+  "cli_control": 29,
+  "lib_control_e1e2_and_ls": 4,
+  "lib_control_excluding_e2_download_meta": null,
+  "note": "transfer 1/1 硬帽耗于任务二（引证零新发）；share create 1 cancel 1；rm 仅围栏内 1 文件；qa_gate_tmp 产物保留待用户处置",
+  "e1": {
+    "xpan": {
+      "elapsed_s": null,
+      "count": 20,
+      "errno": 0
+    },
+    "pcs_legacy": {
+      "elapsed_s": 0.6,
+      "errno": null,
+      "keys": [
+        "error_code",
+        "error_msg",
+        "request_id"
+      ]
+    },
+    "conclusion": "pcs 遗产端点死亡/劣化 → xpan 维持唯一搜索通道（router 不动）"
+  },
+  "e2_summary": {
+    "sample": "/API复刻测试_1029/bdnw4_10m.bin",
+    "winner": "w8",
+    "delta_pct": 58.6,
+    "conclusion": "w8 快 58.6%（单次测量，网络波动在案；默认 8 线程维持/调整结论入 README）"
+  },
+  "post_hoc_corrections": [
+    "meta 行 requests 台账记 0，实发 1（meta 命令 payload 无 requests 自报字段）",
+    "本进程 cli_control=29 不含首跑 3 发（whoami1+quota1+ls1——首跑因文件名 bug 崩于 ls 落档）",
+    "W6 全局控制面真账=50/50：QA段 CLI 30+首跑3+库4（ls定位1+E1 pcs1+E2 metas2）+任务二13（复测2+CLI估6+跳级探针5）",
+    "transfer 引证行 errno=? 系任务二 CLI 异常路径无 JSON；errno=2 实锤见 transfer_retest.json stderr+transfer_hop_probe.json",
+    "E1 xpan 侧时延=QA search 行 2.3s（rows 内有档）"
+  ]
+}

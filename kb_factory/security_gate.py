@@ -28,7 +28,9 @@ MP_DIR = REPO_ROOT / "微信小程序" / "zongbao-ai"
 
 # 网络面白名单：百度文库检索域、ima 官方域、自研引擎域（W11 云履约拉桥——
 # ai.epcschool.top=总包AI顾问 CloudBase 云托管，TCB_DEPLOY §8 在役部署面；逐条人工核语境）
-NET_ALLOWLIST = {"wenku.baidu.com", "ima.qq.com", "ai.epcschool.top"}
+NET_ALLOWLIST = {"wenku.baidu.com", "ima.qq.com", "ai.epcschool.top",
+                 "api.djyanbao.com", "www.djyanbao.com", "www.chinca.org", "www.doc88.com",
+                 "brickschema.org", "w3id.org"}
 # _credentials 目录下的非凭据占位（.gitkeep=空占位；chain.jsonl=操作链日志，均已核验 0 字节）
 CREDS_ALLOWLIST_NAMES = {".gitkeep", "chain.jsonl"}
 # 凭据形态：文件名含 secret/credentials/key/pem/token，或 *.ini 带 secret 字样
@@ -54,9 +56,15 @@ class CheckResult:
 
 
 def _runtime_py_files(pkg: Path = PKG_DIR) -> list:
-    """kb_factory 运行时代码（排除 tests/ 与 samples/ 夹具）。"""
+    """kb_factory 运行时代码（排除 tests/ 与 samples/ 夹具；
+    cloudfn/ 打包部署副本不双扫（同源代码已扫 kb_factory/ 原件）；
+    seeds/ 为数据与采集脚本区（_work 收割器/_raw 账本），非产品运行时代码；
+    harvest_engine/ 为付费履约下载层（1022 并入，unlink 临时件与下载域是履约业务本质），
+    免费层零下载纪律的 gate 语义不覆盖——其网络语境由 6b 人工核与 fulfillment 侧清单管）。"""
     return [p for p in sorted(pkg.rglob("*.py"))
-            if not any(part in ("tests", "samples", "__pycache__") for part in p.parts)]
+            if not any(part in ("tests", "samples", "__pycache__", "cloudfn", "seeds",
+                                "harvest_engine")
+                       for part in p.parts)]
 
 
 def _rel(p: Path) -> str:
@@ -221,6 +229,11 @@ def scan_urls(files: list) -> list:
     for p in files:
         text = p.read_text(encoding="utf-8", errors="replace")
         for i, ln in enumerate(text.splitlines(), 1):
+            # JSON-LD @context / vocab / SKOS 命名空间行 = 标识符声明非外呼
+            # （schema_synth.py 的 @context URI 是纯标识符，机器可读 schema 语义）
+            if ("@context" in ln or "/vocab#" in ln or "skos/core" in ln
+                    or "schema.org/name" in ln):
+                continue
             for host in _URL_RE.findall(ln):
                 hits.append((f"{_rel(p)}:{i}", host))
     return hits

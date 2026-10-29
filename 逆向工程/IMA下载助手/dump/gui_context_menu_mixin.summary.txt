@@ -1,0 +1,96 @@
+===== gui/context_menu_mixin.pyc =====
+DOCSTRING: 右键上下文菜单 Mixin
+
+[<module>] args=() names=('__doc__', 'PySide6.QtWidgets', 'QMenu', 'QApplication', 'QMessageBox', 'PySide6.QtCore', 'Qt', 'ContextMenuMixin')
+  CONST '右键上下文菜单 Mixin'
+  CONST 0
+  CONST ('QMenu', 'QApplication', 'QMessageBox')
+  CONST ('Qt')
+  CONST 'ContextMenuMixin'
+  CONST None
+
+  [ContextMenuMixin] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', '__doc__', 'show_context_menu', '_show_kb_menu', '_show_folder_menu', '_show_file_menu', '_show_multi_menu', '__static_attributes__')
+    CONST 'ContextMenuMixin'
+    CONST 6
+    CONST '右键上下文菜单功能，供 MainWindow 继承'
+    CONST ()
+    CONST None
+
+    [ContextMenuMixin.show_context_menu] args=('self', 'pos') names=('tree', 'itemAt', 'selectedItems', 'len', '_show_multi_menu', 'data', 'Qt', 'UserRole', 'get', '_show_kb_menu', '_show_folder_menu', '_show_file_menu')
+      CONST '显示右键上下文菜单'
+      CONST None
+      CONST 1
+      CONST 'type'
+      CONST 'kb'
+      CONST 'folder'
+      CONST 'file'
+
+    [ContextMenuMixin._show_kb_menu] args=('self', 'item', 'data', 'pos') names=('get', 'QMenu', 'addAction', 'setEnabled', 'addSeparator', 'exec_', 'tree', 'viewport', 'mapToGlobal', 'clearSelection', 'setSelected', 'download_selected', '_submit_update_task', 'QApplication', 'clipboard', 'setText', 'takeChildren', 'setData', 'Qt', 'UserRole', 'load_folder')
+      CONST None
+      CONST 'visible_export_status'
+      CONST 3
+      CONST 1
+      CONST '下载全部文件'
+      CONST '新建更新任务'
+      CONST False
+      CONST '复制名称'
+      CONST '刷新'
+      CONST True
+      CONST 'id'
+      CONST 'name'
+      CONST ''
+      CONST ('kb_id', 'kb_name', 'folder_id', 'folder_name')
+      CONST 0
+      CONST 2
+
+    [ContextMenuMixin._show_folder_menu] args=('self', 'item', 'data', 'pos') names=('get', 'QMenu', 'addAction', 'setEnabled', 'addSeparator', 'exec_', 'tree', 'viewport', 'mapToGlobal', 'clearSelection', 'setSelected', 'download_selected', '_submit_update_task', 'QApplication', 'clipboard', 'setText')
+      CONST None
+      CONST 'visible_export_status'
+      CONST 3
+      CONST 1
+      CONST '下载此文件夹'
+      CONST '新建更新任务'
+      CONST False
+      CONST '复制名称'
+      CONST '复制路径'
+      CONST True
+      CONST 'kb_id'
+      CONST 'kb_name'
+      CONST ''
+      CONST 'folder_id'
+      CONST 'name'
+      CONST ('kb_id', 'kb_name', 'folder_id', 'folder_name')
+      CONST 'full_path'
+
+    [ContextMenuMixin._show_file_menu] args=('self', 'item', 'data', 'pos') names=('QMenu', 'addAction', 'addSeparator', 'exec_', 'tree', 'viewport', 'mapToGlobal', 'clearSelection', 'setSelected', 'download_selected', 'QApplication', 'clipboard', 'setText', 'get', 'QMessageBox', 'information')
+      CONST None
+      CONST '下载此文件'
+      CONST '复制文件名'
+      CONST '查看详情'
+      CONST True
+      CONST 'title'
+      CONST ''
+      CONST '名称: '
+      CONST 'name'
+      CONST '-'
+      CONST '\n类型: '
+      CONST 'media_type_info'
+      CONST 'type'
+      CONST '\n文件ID: '
+      CONST 'media_id'
+      CONST '\n知识库ID: '
+      CONST 'kb_id'
+      CONST '\n大小: '
+      CONST 'file_size'
+      CONST '\n更新时间: '
+      CONST 'update_time'
+      CONST '\n路径: '
+      CONST 'full_path'
+      CONST '文件详情'
+
+    [ContextMenuMixin._show_multi_menu] args=('self', 'items', 'pos') names=('QMenu', 'addAction', 'len', 'addSeparator', 'exec_', 'tree', 'viewport', 'mapToGlobal', 'download_selected', 'clearSelection')
+      CONST None
+      CONST '下载选中项 ('
+      CONST ')'
+      CONST '取消选择'
+

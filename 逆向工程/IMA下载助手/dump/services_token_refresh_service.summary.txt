@@ -1,0 +1,85 @@
+===== services/token_refresh_service.pyc =====
+DOCSTRING: Token自动刷新服务
+
+[<module>] args=() names=('__doc__', 'requests', 'data.database', 'get_login_credentials', 'is_token_expired', 'is_refresh_token_expired', 'update_token', 'utils.bkn', 'calculate_bkn', 'get_timestamp', 'refresh_access_token', 'check_and_refresh_token', 'get_valid_credentials')
+  CONST 'Token自动刷新服务'
+  CONST 0
+  CONST None
+  CONST ('get_login_credentials', 'is_token_expired', 'is_refresh_token_expired', 'update_token')
+  CONST ('calculate_bkn', 'get_timestamp')
+
+  [refresh_access_token] args=() names=('is_refresh_token_expired', 'get_login_credentials', 'requests', 'post', 'raise_for_status', 'json', 'get', 'int', 'calculate_bkn', 'split', 'strip', 'join', 'items', 'update_token', 'str', 'Exception')
+    CONST '使用refresh_token刷新access_token\n\nReturns:\n    tuple: (success, message, new_token_data)\n        - success: 刷新是否成功\n        - message: 结果消息\n        - new_token_data: 新的token数据字典（如果成功）\n'
+    CONST (False, 'refresh_token已过期，请重新登录', None)
+    CONST (False, '未找到登录凭证', None)
+    CONST 'user_id'
+    CONST 'refresh_token'
+    CONST 'https://ima.qq.com/cgi-bin/auth_login/refresh'
+    CONST 'User-Agent'
+    CONST 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36'
+    CONST 'Content-Type'
+    CONST 'application/json'
+    CONST 'Accept'
+    CONST '*/*'
+    CONST 'Origin'
+    CONST 'https://ima.qq.com'
+    CONST 'Referer'
+    CONST 'https://ima.qq.com/wikis?webFrom=10000050'
+    CONST 'X-Ima-Cookie'
+    CONST 'IMA-GUID=guid-ca2055bffb9236ba0dea970403000002519701; IMA-Q36=ca2055bffb9236ba0dea970403000002519701; IMA-IUA=Mozilla/5.0 (Macintosh, Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36; PLATFORM=H5; CLIENT-TYPE=256052; WEB-VERSION=999.999.999'
+    CONST 'From_browser_ima'
+    CONST '1'
+    CONST 'Sec-Ch-Ua-Platform'
+    CONST '"macOS"'
+    CONST 'Sec-Ch-Ua'
+    CONST '"Not:A-Brand";v="99", "Google Chrome";v="145", "Chromium";v="145"'
+    CONST 'Sec-Ch-Ua-Mobile'
+    CONST '?0'
+    CONST 'Dnt'
+    CONST 'Sec-Fetch-Site'
+    CONST 'same-origin'
+    CONST 'Sec-Fetch-Mode'
+    CONST 'cors'
+    CONST 'Sec-Fetch-Dest'
+    CONST 'empty'
+    CONST 'Accept-Encoding'
+    CONST 'gzip, deflate, br'
+    CONST 'Accept-Language'
+    CONST 'zh-CN,zh;q=0.9'
+    CONST 14
+    CONST ('user_id', 'refresh_token', 'token_type')
+    CONST 15
+    CONST ('json', 'headers', 'timeout')
+    CONST 'code'
+    CONST 0
+    CONST 'token'
+    CONST 'token_valid_time'
+    CONST 7200
+    CONST 'cookie'
+    CONST ';'
+    CONST '='
+    CONST 1
+    CONST 'IMA-TOKEN'
+    CONST '; '
+    CONST True
+    CONST 'Token刷新成功'
+    CONST ('token', 'bkn', 'cookie', 'token_valid_time')
+    CONST False
+    CONST '刷新失败: '
+    CONST 'msg'
+    CONST '未知错误'
+    CONST None
+    CONST '刷新请求失败: '
+
+  [check_and_refresh_token] args=() names=('is_token_expired', 'refresh_access_token')
+    CONST '检查token是否过期，如果过期则自动刷新\n\nReturns:\n    tuple: (need_refresh, success, message)\n        - need_refresh: 是否需要刷新\n        - success: 刷新是否成功（如果不需要刷新则为None）\n        - message: 结果消息\n'
+    CONST False
+    CONST None
+    CONST 'Token有效，剩余'
+    CONST '秒'
+    CONST True
+
+  [get_valid_credentials] args=() names=('check_and_refresh_token', 'get_login_credentials')
+    CONST '获取有效的登录凭证，如果token过期则自动刷新\n\nReturns:\n    dict: 有效的登录凭证，如果获取失败返回None\n'
+    CONST None
+

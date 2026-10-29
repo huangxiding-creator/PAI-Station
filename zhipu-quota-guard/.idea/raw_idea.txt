@@ -1,0 +1,16 @@
+# 智谱额度监控及重置 — 原始想法（语音转写校正版 2026-10-23）
+
+persona: AI-Station 工作站运营者，重度 Claude Code 用户，用智谱 GLM Coding Plan 驱动 CC 进行 24h 不间断开发（含自媒永动机产线）
+
+pain: 智谱 Coding Plan 按 5 小时窗口计额度；工作日 14:00-18:00（北京时间）高峰期按 3 倍计算，非高峰 1 倍；额度用完 CC 开发立即中断，任务链断裂
+
+constraints:
+- 智谱后台（bigmodel.cn）提供「用量重置」操作，约每日 3 次；必须留 1 次给自媒永动机 → 本工具每日最多主动重置 2 次
+- 逆向手段指定：DrissionPage 浏览器自动化 + REA 逆向结合
+- 24 小时持续监控运行
+- 密钥/账号密码不入 git 仓（station 铁律）
+- 登录页 https://bigmodel.cn/login?redirect=%2Fusercenter%2Fsettings%2Faccount（账号密码已单独提供，存 gitignored 密钥文件）
+
+success_form: 常驻监控服务：实时获取当前窗口已用额度比例 → 达到阈值（如 98%）自动执行后台重置 → CC 开发永不因额度不足中断
+
+value_hypothesis: 逆向打通「额度查询 + 额度重置」两条链路后，配额消耗与恢复全部自动化；CC 24h 开发连续性从「随时可能断」变成「永不断」，产线吞吐直接提升

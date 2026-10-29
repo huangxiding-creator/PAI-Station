@@ -1,0 +1,36 @@
+=== REQUIREMENTS FR2 section ===
+y 标记 dead）并入周报。
+  - FR1.AC3 用 FISH_PROBE 已判死站（如 wenku.it168.com 503 / daokeyuedu NXDOMAIN）回放断言。
+
+## FR2 百度文库适配器（MUST；VIP 路径 SHOULD）
+- FR2.1 当输入为 wenku URL 或 docId 时，系统应解析出 docId 并复用 WenkuMetaAdapter（syncmrecall 免登录；2026-10-22 实测存活）检索元数据。
+  - FR2.AC1 实弹 1 词→≥10 条 FileMeta。
+- FR2.2 当目标文档可得（免费件 MUST；VIP 账号可见件 SHOULD——当前非 VIP 账号下仅免费路径可验）时，系统应按 WENKU_SPEC 三型分支做**页面重建**：初始 readerInfo 纯 HTTP 免签挖取（view 页 var pageData）；免费额度不足时经 ACS 签名器（Playwright 隐藏页 + paris_2030.getAcsToken）补页；按类型3（JSON+PNG+TTF）/类型2（纯图片）/类型1（editor 滚动展开）重组 HTML → printToPDF 产 **PDF**（无 TXT 产物路径）。
+  - FR2.AC2 实弹 10 份：**渲染三型各≥2 份**（类型按 SPEC §5.2 判定并记入 ledger），10/10 过质检门（§NFR-GATE）。
+  - FR2.AC3 实弹边界：>400 页文档按 SPEC §8-2 拒绝并提示；无效 docId（403）报「无法提取 pageData」。
+- FR2.3 当补页连续 3 轮零进展 且 showPage<page 且非 tri_cap 触发时，系统应标记 `needs_vip_candidate`（形态=推断，两字段入 ledger 与 FileMeta.perm 备注）。
+  - FR2.AC4 实弹 ≥2 份 VIP 专享文档（非 VIP 账号）：断言标记正确、产出部分覆盖 PDF、覆盖页数如实记 showPage/page。
+
+## FR3 book118 适配器（MUST；OCR 层 SHOULD）
+- FR3.1 当目标为 book118 文档时，系统应按 BOOK118_SPEC 现行链（NewView 页挖 PREVIEW_DATA → openapi getPreview 4参数+page 每批6页 → view-cache 图像）拉取并按图像实际像素拼 PDF。
+  - FR3.AC1 实弹 10 份（免费≥6/收费≥4）：免费件页数==actual；收费件页数==preview 且 FileMeta 形态标注「预览部分」。
+- FR3.2 当产出为图片型 PDF 时，系统应加 OCR 文字层（paddleocr，2026-10-22 装载实测 OK）。
+  - FR3.AC2 取样协议（硬一致性③修复）：每份 fixture=标题+首页可见文本前 2 个≥4 字词（人工誊录一次入 tests/fixtures/book118_gt.json）；pypdfium2 抽 PDF 文字层做精确匹配，3/3 命中=该份过；≥8/10 份过=AC 过。容错=0（精确匹配）。
+- FR3.3 PPT 类型：v1 不在射程（原作不支持），COULD。
+
+## FR4 doc88 适配器（MUST；**机制重写，方案B**）
+- FR4.1 当目标为 doc88 文档时，系统应以重写实现（零 GPL 码）完成：doc.php?act=info 配置解密（key2 变体base64 自实现）→ ebt 资产整文件下载+本地字节缓存（CDN 忽略 Range，R14）→ 按页偏移切片合成 SWF → FFDec 子进程提取。
+  - FR4.AC1 实弹 10 份，**等价抽取阈值门**：①页数==p_pagecount（或 p_allow_page_count 预览上限，逐份记录取哪个）②PDF 可抽文本字数≥0.9×FFDec frame:text 同源参照 ③首/中/末 3 页视觉抽检（PNG 渲染无缺页/黑页）。
+  - FR4.AC2 WAF 分支：命中「网络环境安全验证」→ 标记 blocked_waf，**禁止**自动走第三方镜像域（R20）。
+  - FR4.AC3 免费直下分支（p_download=1）走下载接口。
+- FR4.2 隐
+=== SPEC_REVIEW note#5 ===
+5 增补实弹/质检门全过/等价抽取/标记映射/复活。残留（非阻塞）：NFR1/NFR2 无 ACn（由 NFR-GATE+标记映射+NFR3/5/6 命令化承接） |
+
+## 复审结论
+
+- 15/15 条 **FIXED**（BLOCKER×4、MAJOR×6、MINOR×5 全清）；0 PARTIAL / 0 OPEN。
+- 残留 4 条均为非阻塞注记（#3 许可证标签待 RELEASE 核、#5 wenku 类型2/1 字数参照待 planner 补、#7 FR6.2 句式、#15 NFR1/2 ACn），已登记在案，不影响 P4 批准与 P5 签收。
+- 初评四查 FAIL 均已被 v1.0 修复对应条目化解；D1-D7 全清（ARCHITECTURE 自标且逐条核实属实）。
+
+SPEC READY: yes

@@ -1,0 +1,61 @@
+@@@ off=2383300
+=>t&&((t.id===void 0||t.id===null||t.id==="")&&(messageIdCounter+=1,t.id=`msg-${
+Date.now()
+}
+-${
+messageIdCounter
+}
+`),t),setCurrentMessage=t=>{
+currentMessage=ensureMessageId(t)
+}
+;
+function broadcastMessages(t=currentMessage){
+messageList.length>MAX_MESSAGES&&messageList.splice(0,messageList.length-MAX_MESSAGES),messageList.forEach(ensureMessageId),ensureMessageId(t);
+const e=messageList.filter(r=>r.chat_history_id!=null);
+e.length>0&&console.log(`【反馈调试】broadcastMessages: messageList 中有 ${
+e.length
+}
+ 条消息带 chat_history_id`),getBridge()&&getBridge().sendToRenderer("UPDATE_MESSAGE_LIST",{
+messages:messageList,currentMessage:t
+}
+)
+}
+const displayMessage=(t,e,r)=>{
+try{
+const n=ensureMessageId({
+type:t,content:e
+}
+);
+typeof r=="string"&&(n.prefix_text=r),messageList.push(n),broadcastMessages(n)
+}
+catch(n){
+console.error("displayMessage error",n)
+}
+
+}
+;
+class ChatSseResponseLifecycle{
+pendingPollingResume=new Map;
+requestPollingResume(e,r){
+const n=this.pendingPollingResume.get(e);
+this.pendingPollingResume.set(e,{
+instant:!!(n?.instant||r?.instant)
+}
+)
+}
+consumePollingResume(e){
+const r=this.pendingPollingResume.get(e);
+return this.pendingPollingResume.delete(e),r||{
+instant:!1
+}
+
+}
+clear(e){
+this.pendingPollingResume.delete(e)
+}
+
+}
+const chatSseResponseLifecycle=new ChatSseResponseLifecycle;
+let keyboardCommand$=null,keyboardSubscription=null,keyboardPipelineCompletion=null,stopKeyboardPipeline=null;
+const waitForPipeline=async()=>{
+co

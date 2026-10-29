@@ -1,0 +1,726 @@
+===== gui/tag_mixin.pyc =====
+
+# CODE <module>  args=()
+  0           RESUME                   0
+
+  1           LOAD_CONST               0 ('标签功能 Mixin')
+              STORE_NAME               0 (__doc__)
+
+  2           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (('QListWidgetItem', 'QWidget', 'QHBoxLayout', 'QLabel', 'QSizePolicy'))
+              IMPORT_NAME              1 (PySide6.QtWidgets)
+              IMPORT_FROM              2 (QListWidgetItem)
+              STORE_NAME               2 (QListWidgetItem)
+              IMPORT_FROM              3 (QWidget)
+              STORE_NAME               3 (QWidget)
+              IMPORT_FROM              4 (QHBoxLayout)
+              STORE_NAME               4 (QHBoxLayout)
+              IMPORT_FROM              5 (QLabel)
+              STORE_NAME               5 (QLabel)
+              IMPORT_FROM              6 (QSizePolicy)
+              STORE_NAME               6 (QSizePolicy)
+              POP_TOP
+
+  3           LOAD_CONST               1 (0)
+              LOAD_CONST               3 (('Qt',))
+              IMPORT_NAME              7 (PySide6.QtCore)
+              IMPORT_FROM              8 (Qt)
+              STORE_NAME               8 (Qt)
+              POP_TOP
+
+  4           LOAD_CONST               1 (0)
+              LOAD_CONST               4 (('FetchTagsWorker',))
+              IMPORT_NAME              9 (gui.workers.workers)
+              IMPORT_FROM             10 (FetchTagsWorker)
+              STORE_NAME              10 (FetchTagsWorker)
+              POP_TOP
+
+  7           LOAD_BUILD_CLASS
+              PUSH_NULL
+              LOAD_CONST               5 (<code object TagMixin at 0x000001DD462A3090, file "gui\tag_mixin.py", line 7>)
+              MAKE_FUNCTION
+              LOAD_CONST               6 ('TagMixin')
+              CALL                     2
+              STORE_NAME              11 (TagMixin)
+              RETURN_CONST             7 (None)
+
+## CODE TagMixin  args=()
+  7           RESUME                   0
+              LOAD_NAME                0 (__name__)
+              STORE_NAME               1 (__module__)
+              LOAD_CONST               0 ('TagMixin')
+              STORE_NAME               2 (__qualname__)
+              LOAD_CONST               1 (7)
+              STORE_NAME               3 (__firstlineno__)
+
+  8           LOAD_CONST               2 ('鏍囩\ue137鍔熻兘锛屼緵 MainWindow 缁ф壙')
+              STORE_NAME               4 (__doc__)
+
+ 10           BUILD_LIST               0
+              LOAD_CONST               3 ((('#E3F2FD', '#1565C0'), ('#E8F5E9', '#2E7D32'), ('#FFF3E0', '#E65100'), ('#F3E5F5', '#7B1FA2'), ('#FFEBEE', '#C62828'), ('#E0F7FA', '#00695C'), ('#FFF8E1', '#F57F17'), ('#FCE4EC', '#AD1457')))
+              LIST_EXTEND              1
+              STORE_NAME               5 (_TAG_COLORS)
+
+ 21           LOAD_CONST               4 (<code object _on_kb_changed at 0x000001DD46368000, file "gui\tag_mixin.py", line 21>)
+              MAKE_FUNCTION
+              STORE_NAME               6 (_on_kb_changed)
+
+ 37           LOAD_CONST               5 (<code object _fetch_tags at 0x000001DD45F6CF60, file "gui\tag_mixin.py", line 37>)
+              MAKE_FUNCTION
+              STORE_NAME               7 (_fetch_tags)
+
+ 56           LOAD_CONST               6 (<code object _fetch_more_tags at 0x000001DD465F9870, file "gui\tag_mixin.py", line 56>)
+              MAKE_FUNCTION
+              STORE_NAME               8 (_fetch_more_tags)
+
+ 71           LOAD_CONST               7 (<code object _on_first_tags_loaded at 0x000001DD466037E0, file "gui\tag_mixin.py", line 71>)
+              MAKE_FUNCTION
+              STORE_NAME               9 (_on_first_tags_loaded)
+
+ 88           LOAD_CONST               8 (<code object _on_more_tags_loaded at 0x000001DD46603A90, file "gui\tag_mixin.py", line 88>)
+              MAKE_FUNCTION
+              STORE_NAME              10 (_on_more_tags_loaded)
+
+103           LOAD_CONST               9 (<code object _on_tags_error at 0x000001DD46126BB0, file "gui\tag_mixin.py", line 103>)
+              MAKE_FUNCTION
+              STORE_NAME              11 (_on_tags_error)
+
+110           LOAD_CONST              10 (<code object _on_tag_selection_changed at 0x000001DD466242C0, file "gui\tag_mixin.py", line 110>)
+              MAKE_FUNCTION
+              STORE_NAME              12 (_on_tag_selection_changed)
+
+123           LOAD_CONST              11 (<code object _create_tag_widget at 0x000001DD4633D000, file "gui\tag_mixin.py", line 123>)
+              MAKE_FUNCTION
+              STORE_NAME              13 (_create_tag_widget)
+              LOAD_CONST              12 (('_current_tag_kb_id', '_tag_fetch_worker', '_tag_is_end', '_tag_loading', '_tag_next_cursor', 'current_tags', 'selected_tags'))
+              STORE_NAME              14 (__static_attributes__)
+              RETURN_CONST            13 (None)
+
+### CODE TagMixin._on_kb_changed  args=('self', 'index')
+ 21           RESUME                   0
+
+ 23           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (kb_selector)
+              LOAD_ATTR                3 (currentData + NULL|self)
+              CALL                     0
+              STORE_FAST               2 (kb_id)
+
+ 24           LOAD_FAST                2 (kb_id)
+              TO_BOOL
+              POP_JUMP_IF_TRUE       143 (to L1)
+
+ 25           LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (tag_list_widget)
+              LOAD_ATTR                7 (clear + NULL|self)
+              CALL                     0
+              POP_TOP
+
+ 26           LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (tag_selector)
+              LOAD_ATTR               11 (setEnabled + NULL|self)
+              LOAD_CONST               1 (False)
+              CALL                     1
+              POP_TOP
+
+ 27           LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (tag_selector)
+              LOAD_ATTR               13 (setEditText + NULL|self)
+              LOAD_CONST               2 ('')
+              CALL                     1
+              POP_TOP
+
+ 28           LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (tag_selector)
+              LOAD_ATTR               15 (setPlaceholderText + NULL|self)
+              LOAD_CONST               3 ('选择标签（可选）')
+              CALL                     1
+              POP_TOP
+
+ 29           BUILD_LIST               0
+              LOAD_FAST                0 (self)
+              STORE_ATTR               8 (current_tags)
+
+ 30           BUILD_LIST               0
+              LOAD_FAST                0 (self)
+              STORE_ATTR               9 (selected_tags)
+
+ 31           LOAD_CONST               2 ('')
+              LOAD_FAST                0 (self)
+              STORE_ATTR              10 (_tag_next_cursor)
+
+ 32           LOAD_CONST               4 (True)
+              LOAD_FAST                0 (self)
+              STORE_ATTR              11 (_tag_is_end)
+
+ 33           LOAD_CONST               5 (None)
+              LOAD_FAST                0 (self)
+              STORE_ATTR              12 (_current_tag_kb_id)
+
+ 34           RETURN_CONST             5 (None)
+
+ 35   L1:     LOAD_FAST                0 (self)
+              LOAD_ATTR               27 (_fetch_tags + NULL|self)
+              LOAD_FAST                2 (kb_id)
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             5 (None)
+
+### CODE TagMixin._fetch_tags  args=('self', 'kb_id')
+ 37           RESUME                   0
+
+ 39           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (tag_list_widget)
+              LOAD_ATTR                3 (clear + NULL|self)
+              CALL                     0
+              POP_TOP
+
+ 40           LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (tag_selector)
+              LOAD_ATTR                7 (setEditText + NULL|self)
+              LOAD_CONST               1 ('')
+              CALL                     1
+              POP_TOP
+
+ 41           LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (tag_selector)
+              LOAD_ATTR                9 (setEnabled + NULL|self)
+              LOAD_CONST               2 (False)
+              CALL                     1
+              POP_TOP
+
+ 42           BUILD_LIST               0
+              LOAD_FAST                0 (self)
+              STORE_ATTR               5 (selected_tags)
+
+ 43           BUILD_LIST               0
+              LOAD_FAST                0 (self)
+              STORE_ATTR               6 (current_tags)
+
+ 44           LOAD_CONST               1 ('')
+              LOAD_FAST                0 (self)
+              STORE_ATTR               7 (_tag_next_cursor)
+
+ 45           LOAD_CONST               3 (True)
+              LOAD_FAST                0 (self)
+              STORE_ATTR               8 (_tag_is_end)
+
+ 46           LOAD_CONST               3 (True)
+              LOAD_FAST                0 (self)
+              STORE_ATTR               9 (_tag_loading)
+
+ 47           LOAD_FAST_LOAD_FAST     16 (kb_id, self)
+              STORE_ATTR              10 (_current_tag_kb_id)
+
+ 48           LOAD_FAST                0 (self)
+              LOAD_ATTR               22 (_tag_fetch_worker)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       84 (to L1)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               22 (_tag_fetch_worker)
+              LOAD_ATTR               25 (isRunning + NULL|self)
+              CALL                     0
+              TO_BOOL
+              POP_JUMP_IF_FALSE       53 (to L1)
+
+ 49           LOAD_FAST                0 (self)
+              LOAD_ATTR               22 (_tag_fetch_worker)
+              LOAD_ATTR               27 (quit + NULL|self)
+              CALL                     0
+              POP_TOP
+
+ 50           LOAD_FAST                0 (self)
+              LOAD_ATTR               22 (_tag_fetch_worker)
+              LOAD_ATTR               29 (wait + NULL|self)
+              LOAD_CONST               4 (2000)
+              CALL                     1
+              POP_TOP
+
+ 51   L1:     LOAD_GLOBAL             31 (FetchTagsWorker + NULL)
+              LOAD_FAST                1 (kb_id)
+              LOAD_CONST               1 ('')
+              LOAD_CONST               5 (20)
+              LOAD_CONST               6 (('limit',))
+              CALL_KW                  3
+              LOAD_FAST                0 (self)
+              STORE_ATTR              11 (_tag_fetch_worker)
+
+ 52           LOAD_FAST                0 (self)
+              LOAD_ATTR               22 (_tag_fetch_worker)
+              LOAD_ATTR               32 (finished)
+              LOAD_ATTR               35 (connect + NULL|self)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               36 (_on_first_tags_loaded)
+              CALL                     1
+              POP_TOP
+
+ 53           LOAD_FAST                0 (self)
+              LOAD_ATTR               22 (_tag_fetch_worker)
+              LOAD_ATTR               38 (error)
+              LOAD_ATTR               35 (connect + NULL|self)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               40 (_on_tags_error)
+              CALL                     1
+              POP_TOP
+
+ 54           LOAD_FAST                0 (self)
+              LOAD_ATTR               22 (_tag_fetch_worker)
+              LOAD_ATTR               43 (start + NULL|self)
+              CALL                     0
+              POP_TOP
+              RETURN_CONST             7 (None)
+
+### CODE TagMixin._fetch_more_tags  args=('self',)
+ 56           RESUME                   0
+
+ 58           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_tag_loading)
+              TO_BOOL
+              POP_JUMP_IF_TRUE        34 (to L1)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                2 (_tag_is_end)
+              TO_BOOL
+              POP_JUMP_IF_TRUE        17 (to L1)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (_current_tag_kb_id)
+              TO_BOOL
+              POP_JUMP_IF_TRUE         1 (to L2)
+
+ 59   L1:     RETURN_CONST             1 (None)
+
+ 60   L2:     LOAD_CONST               2 (True)
+              LOAD_FAST                0 (self)
+              STORE_ATTR               0 (_tag_loading)
+
+ 61           LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (_tag_fetch_worker)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       84 (to L3)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (_tag_fetch_worker)
+              LOAD_ATTR                9 (isRunning + NULL|self)
+              CALL                     0
+              TO_BOOL
+              POP_JUMP_IF_FALSE       53 (to L3)
+
+ 62           LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (_tag_fetch_worker)
+              LOAD_ATTR               11 (quit + NULL|self)
+              CALL                     0
+              POP_TOP
+
+ 63           LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (_tag_fetch_worker)
+              LOAD_ATTR               13 (wait + NULL|self)
+              LOAD_CONST               3 (2000)
+              CALL                     1
+              POP_TOP
+
+ 64   L3:     LOAD_GLOBAL             15 (FetchTagsWorker + NULL)
+
+ 65           LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (_current_tag_kb_id)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               16 (_tag_next_cursor)
+              LOAD_CONST               4 (20)
+
+ 64           LOAD_CONST               5 (('limit',))
+              CALL_KW                  3
+              LOAD_FAST                0 (self)
+              STORE_ATTR               3 (_tag_fetch_worker)
+
+ 67           LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (_tag_fetch_worker)
+              LOAD_ATTR               18 (finished)
+              LOAD_ATTR               21 (connect + NULL|self)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               22 (_on_more_tags_loaded)
+              CALL                     1
+              POP_TOP
+
+ 68           LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (_tag_fetch_worker)
+              LOAD_ATTR               24 (error)
+              LOAD_ATTR               21 (connect + NULL|self)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               26 (_on_tags_error)
+              CALL                     1
+              POP_TOP
+
+ 69           LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (_tag_fetch_worker)
+              LOAD_ATTR               29 (start + NULL|self)
+              CALL                     0
+              POP_TOP
+              RETURN_CONST             1 (None)
+
+### CODE TagMixin._on_first_tags_loaded  args=('self', 'tags', 'next_cursor', 'is_end')
+ 71           RESUME                   0
+
+ 73           LOAD_CONST               1 (False)
+              LOAD_FAST                0 (self)
+              STORE_ATTR               0 (_tag_loading)
+
+ 74           LOAD_FAST_LOAD_FAST     32 (next_cursor, self)
+              STORE_ATTR               1 (_tag_next_cursor)
+
+ 75           LOAD_FAST_LOAD_FAST     48 (is_end, self)
+              STORE_ATTR               2 (_tag_is_end)
+
+ 76           LOAD_GLOBAL              7 (list + NULL)
+              LOAD_FAST                1 (tags)
+              CALL                     1
+              LOAD_FAST                0 (self)
+              STORE_ATTR               4 (current_tags)
+
+ 78           LOAD_FAST                1 (tags)
+              GET_ITER
+      L1:     FOR_ITER               120 (to L2)
+              STORE_FAST               4 (tag)
+
+ 79           LOAD_GLOBAL             11 (QListWidgetItem + NULL)
+              LOAD_FAST                4 (tag)
+              CALL                     1
+              STORE_FAST               5 (item)
+
+ 80           LOAD_FAST                5 (item)
+              LOAD_ATTR               13 (setFlags + NULL|self)
+              LOAD_FAST                5 (item)
+              LOAD_ATTR               15 (flags + NULL|self)
+              CALL                     0
+              LOAD_GLOBAL             16 (Qt)
+              LOAD_ATTR               18 (ItemIsUserCheckable)
+              BINARY_OP                7 (|)
+              CALL                     1
+              POP_TOP
+
+ 81           LOAD_FAST                5 (item)
+              LOAD_ATTR               21 (setCheckState + NULL|self)
+              LOAD_GLOBAL             16 (Qt)
+              LOAD_ATTR               22 (Unchecked)
+              CALL                     1
+              POP_TOP
+
+ 82           LOAD_FAST                0 (self)
+              LOAD_ATTR               24 (tag_list_widget)
+              LOAD_ATTR               27 (addItem + NULL|self)
+              LOAD_FAST                5 (item)
+              CALL                     1
+              POP_TOP
+              JUMP_BACKWARD          122 (to L1)
+
+ 78   L2:     END_FOR
+              POP_TOP
+
+ 84           LOAD_FAST                0 (self)
+              LOAD_ATTR               28 (tag_selector)
+              LOAD_ATTR               31 (setEnabled + NULL|self)
+              LOAD_GLOBAL             33 (bool + NULL)
+              LOAD_FAST                1 (tags)
+              CALL                     1
+              CALL                     1
+              POP_TOP
+
+ 85           LOAD_FAST                1 (tags)
+              TO_BOOL
+              POP_JUMP_IF_TRUE        28 (to L3)
+
+ 86           LOAD_FAST                0 (self)
+              LOAD_ATTR               28 (tag_selector)
+              LOAD_ATTR               35 (setPlaceholderText + NULL|self)
+              LOAD_CONST               2 ('无可用标签')
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             3 (None)
+
+ 85   L3:     RETURN_CONST             3 (None)
+
+### CODE TagMixin._on_more_tags_loaded  args=('self', 'tags', 'next_cursor', 'is_end')
+ 88           RESUME                   0
+
+ 90           LOAD_CONST               1 (False)
+              LOAD_FAST                0 (self)
+              STORE_ATTR               0 (_tag_loading)
+
+ 91           LOAD_FAST_LOAD_FAST     32 (next_cursor, self)
+              STORE_ATTR               1 (_tag_next_cursor)
+
+ 92           LOAD_FAST_LOAD_FAST     48 (is_end, self)
+              STORE_ATTR               2 (_tag_is_end)
+
+ 93           LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (current_tags)
+              LOAD_ATTR                9 (extend + NULL|self)
+              LOAD_FAST                1 (tags)
+              CALL                     1
+              POP_TOP
+
+ 95           LOAD_FAST                0 (self)
+              LOAD_ATTR               10 (tag_list_widget)
+              LOAD_ATTR               13 (blockSignals + NULL|self)
+              LOAD_CONST               2 (True)
+              CALL                     1
+              POP_TOP
+
+ 96           LOAD_FAST                1 (tags)
+              GET_ITER
+      L1:     FOR_ITER               120 (to L2)
+              STORE_FAST               4 (tag)
+
+ 97           LOAD_GLOBAL             15 (QListWidgetItem + NULL)
+              LOAD_FAST                4 (tag)
+              CALL                     1
+              STORE_FAST               5 (item)
+
+ 98           LOAD_FAST                5 (item)
+              LOAD_ATTR               17 (setFlags + NULL|self)
+              LOAD_FAST                5 (item)
+              LOAD_ATTR               19 (flags + NULL|self)
+              CALL                     0
+              LOAD_GLOBAL             20 (Qt)
+              LOAD_ATTR               22 (ItemIsUserCheckable)
+              BINARY_OP                7 (|)
+              CALL                     1
+              POP_TOP
+
+ 99           LOAD_FAST                5 (item)
+              LOAD_ATTR               25 (setCheckState + NULL|self)
+              LOAD_GLOBAL             20 (Qt)
+              LOAD_ATTR               26 (Unchecked)
+              CALL                     1
+              POP_TOP
+
+100           LOAD_FAST                0 (self)
+              LOAD_ATTR               10 (tag_list_widget)
+              LOAD_ATTR               29 (addItem + NULL|self)
+              LOAD_FAST                5 (item)
+              CALL                     1
+              POP_TOP
+              JUMP_BACKWARD          122 (to L1)
+
+ 96   L2:     END_FOR
+              POP_TOP
+
+101           LOAD_FAST                0 (self)
+              LOAD_ATTR               10 (tag_list_widget)
+              LOAD_ATTR               13 (blockSignals + NULL|self)
+              LOAD_CONST               1 (False)
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             3 (None)
+
+### CODE TagMixin._on_tags_error  args=('self', 'msg')
+103           RESUME                   0
+
+105           LOAD_CONST               1 (False)
+              LOAD_FAST                0 (self)
+              STORE_ATTR               0 (_tag_loading)
+
+106           LOAD_FAST                0 (self)
+              LOAD_ATTR                2 (tag_list_widget)
+              LOAD_ATTR                5 (clear + NULL|self)
+              CALL                     0
+              POP_TOP
+
+107           LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (tag_selector)
+              LOAD_ATTR                9 (setPlaceholderText + NULL|self)
+              LOAD_CONST               2 ('标签加载失败')
+              CALL                     1
+              POP_TOP
+
+108           LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (tag_selector)
+              LOAD_ATTR               11 (setEnabled + NULL|self)
+              LOAD_CONST               1 (False)
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             3 (None)
+
+### CODE TagMixin._on_tag_selection_changed  args=('self', 'item')
+110           RESUME                   0
+
+112           BUILD_LIST               0
+              LOAD_FAST                0 (self)
+              STORE_ATTR               0 (selected_tags)
+
+113           LOAD_GLOBAL              3 (range + NULL)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (tag_list_widget)
+              LOAD_ATTR                7 (count + NULL|self)
+              CALL                     0
+              CALL                     1
+              GET_ITER
+      L1:     FOR_ITER               107 (to L3)
+              STORE_FAST               2 (i)
+
+114           LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (tag_list_widget)
+              LOAD_ATTR                9 (item + NULL|self)
+              LOAD_FAST                2 (i)
+              CALL                     1
+              STORE_FAST               3 (list_item)
+
+115           LOAD_FAST                3 (list_item)
+              LOAD_ATTR               11 (checkState + NULL|self)
+              CALL                     0
+              LOAD_GLOBAL             12 (Qt)
+              LOAD_ATTR               14 (Checked)
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_TRUE         2 (to L2)
+              JUMP_BACKWARD           66 (to L1)
+
+116   L2:     LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (selected_tags)
+              LOAD_ATTR               17 (append + NULL|self)
+              LOAD_FAST                3 (list_item)
+              LOAD_ATTR               19 (text + NULL|self)
+              CALL                     0
+              CALL                     1
+              POP_TOP
+              JUMP_BACKWARD          109 (to L1)
+
+113   L3:     END_FOR
+              POP_TOP
+
+117           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (selected_tags)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       51 (to L4)
+
+118           LOAD_FAST                0 (self)
+              LOAD_ATTR               20 (tag_selector)
+              LOAD_ATTR               23 (setEditText + NULL|self)
+              LOAD_CONST               1 ('已选 ')
+              LOAD_GLOBAL             25 (len + NULL)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (selected_tags)
+              CALL                     1
+              FORMAT_SIMPLE
+              LOAD_CONST               2 (' 个标签')
+              BUILD_STRING             3
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             5 (None)
+
+120   L4:     LOAD_FAST                0 (self)
+              LOAD_ATTR               20 (tag_selector)
+              LOAD_ATTR               23 (setEditText + NULL|self)
+              LOAD_CONST               3 ('')
+              CALL                     1
+              POP_TOP
+
+121           LOAD_FAST                0 (self)
+              LOAD_ATTR               20 (tag_selector)
+              LOAD_ATTR               27 (setPlaceholderText + NULL|self)
+              LOAD_CONST               4 ('选择标签（可选）')
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             5 (None)
+
+### CODE TagMixin._create_tag_widget  args=('self', 'tags')
+123           RESUME                   0
+
+125           LOAD_FAST                1 (tags)
+              TO_BOOL
+              POP_JUMP_IF_TRUE         1 (to L1)
+
+126           RETURN_CONST             1 (None)
+
+127   L1:     LOAD_GLOBAL              1 (QWidget + NULL)
+              CALL                     0
+              STORE_FAST               2 (container)
+
+128           LOAD_GLOBAL              3 (QHBoxLayout + NULL)
+              LOAD_FAST                2 (container)
+              CALL                     1
+              STORE_FAST               3 (layout)
+
+129           LOAD_FAST                3 (layout)
+              LOAD_ATTR                5 (setContentsMargins + NULL|self)
+              LOAD_CONST               2 (0)
+              LOAD_CONST               3 (2)
+              LOAD_CONST               2 (0)
+              LOAD_CONST               3 (2)
+              CALL                     4
+              POP_TOP
+
+130           LOAD_FAST                3 (layout)
+              LOAD_ATTR                7 (setSpacing + NULL|self)
+              LOAD_CONST               4 (4)
+              CALL                     1
+              POP_TOP
+
+131           LOAD_GLOBAL              9 (enumerate + NULL)
+              LOAD_FAST                1 (tags)
+              CALL                     1
+              GET_ITER
+      L2:     FOR_ITER               171 (to L4)
+              UNPACK_SEQUENCE          2
+              STORE_FAST_STORE_FAST   69 (i, tag)
+
+132           LOAD_FAST                5 (tag)
+              TO_BOOL
+              POP_JUMP_IF_TRUE         2 (to L3)
+
+133           JUMP_BACKWARD           14 (to L2)
+
+134   L3:     LOAD_FAST                0 (self)
+              LOAD_ATTR               10 (_TAG_COLORS)
+              LOAD_FAST                4 (i)
+              LOAD_GLOBAL             13 (len + NULL)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               10 (_TAG_COLORS)
+              CALL                     1
+              BINARY_OP                6 (%)
+              BINARY_SUBSCR
+              UNPACK_SEQUENCE          2
+              STORE_FAST_STORE_FAST  103 (bg, fg)
+
+135           LOAD_GLOBAL             15 (QLabel + NULL)
+              LOAD_FAST                5 (tag)
+              CALL                     1
+              STORE_FAST               8 (label)
+
+136           LOAD_FAST                8 (label)
+              LOAD_ATTR               17 (setStyleSheet + NULL|self)
+
+137           LOAD_CONST               5 ('background-color: ')
+              LOAD_FAST                6 (bg)
+              FORMAT_SIMPLE
+              LOAD_CONST               6 ('; color: ')
+              LOAD_FAST                7 (fg)
+              FORMAT_SIMPLE
+              LOAD_CONST               7 ('; border-radius: 8px; padding: 1px 6px; font-size: 11px;')
+              BUILD_STRING             5
+
+136           CALL                     1
+              POP_TOP
+
+139           LOAD_FAST                8 (label)
+              LOAD_ATTR               19 (setSizePolicy + NULL|self)
+              LOAD_GLOBAL             20 (QSizePolicy)
+              LOAD_ATTR               22 (Policy)
+              LOAD_ATTR               24 (Fixed)
+              LOAD_GLOBAL             20 (QSizePolicy)
+              LOAD_ATTR               22 (Policy)
+              LOAD_ATTR               24 (Fixed)
+              CALL                     2
+              POP_TOP
+
+140           LOAD_FAST                3 (layout)
+              LOAD_ATTR               27 (addWidget + NULL|self)
+              LOAD_FAST                8 (label)
+              CALL                     1
+              POP_TOP
+              JUMP_BACKWARD          173 (to L2)
+
+131   L4:     END_FOR
+              POP_TOP
+
+141           LOAD_FAST                3 (layout)
+              LOAD_ATTR               29 (addStretch + NULL|self)
+              CALL                     0
+              POP_TOP
+
+142           LOAD_FAST                2 (container)
+              RETURN_VALUE

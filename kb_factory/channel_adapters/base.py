@@ -12,10 +12,15 @@
 """
 import json
 import os
+import threading
 import time
 from dataclasses import dataclass, field
 
 AUDIT_DEFAULT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "audit.jsonl")
+
+# 审计落盘锁：渠道编排池（pool.py）并发后多渠道线程共写同一 audit.jsonl，
+# 行级加锁保每行 JSON 完整（单线程路径行为不变，纯增量不改既有语义）
+_AUDIT_LOCK = threading.Lock()
 
 
 @dataclass
@@ -120,6 +125,7 @@ class AuditLog:
     """统一审计 audit.jsonl：每请求一行 JSON（ts/channel/event/query/count/...）。
 
     零造假：字段值只来自实测事实（elapsed_ms 实测、count 实数、detail 原样异常）。
+    线程安全：渠道编排池并发下多线程共写，行级加锁（单线程行为不变）。
     """
 
     def __init__(self, path: str = AUDIT_DEFAULT_PATH):
@@ -128,5 +134,6 @@ class AuditLog:
     def log(self, **fields) -> None:
         rec = {"ts": time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime())}
         rec.update(fields)
-        with open(self.path, "a", encoding="utf-8") as f:
-            f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+        with _AUDIT_LOCK:
+            with open(self.path, "a", encoding="utf-8") as f:
+                f.write(json.dumps(rec, ensure_ascii=False) + "\n")

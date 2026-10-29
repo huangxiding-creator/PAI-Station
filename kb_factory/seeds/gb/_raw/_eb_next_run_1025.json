@@ -1,0 +1,20 @@
+{
+ "ts": "2026-10-25 10:26:00 +08:00",
+ "run": "v2.6边腿 GB免费种子续跑(eBiaozhun幂等续跑件) 如实归档",
+ "proxy_7893_health": {"tries": 3, "ok": 2, "detail": "200@1.85s / reset(35) / 200@1.85s", "verdict": "healthy"},
+ "eb_search_leg": "活: 8关键词全通(每词60links), 新池3件强制性GB + 遗产14合并去重 = 17候选",
+ "eb_detail_leg": {
+  "verdict": "dead_no_pid",
+  "evidence": "5连no_pid熔断(10:18:37-10:18:50, 秒回非超时); 抽样GB/T 42871-2023详情页 curl 实测 200/14313B 真实内容页(标题正确), 但 var pid / paystatus / 金币 标记命中数=0, 导航为会员充值/会员权益, 样式已到 style-v6",
+  "conclusion": "站点改版: 0币免登录下载入口已离开静态HTML, 旧配方(gb-standard: var pid->paystatus->直链)失效, 非网络问题非挑战页"
+ },
+ "collected": {"pdf_ok": 0, "paid_recorded": 0, "note": "0件禁凑数, manifest每件一行在案"},
+ "std_samr_probe": {"std.samr.gov.cn": "200@0.36s", "openstd.samr.gov.cn": "200@0.10s", "verdict": "官方两站直连可达性已恢复; native PDF直链是否解冻待全链复验(上轮12件native_unavailable)"},
+ "next_run_conditions": [
+  "1. 优先复验 std-samr 官方 native 链: 两站首页已200, 用 std-samr-gb 技能全链实测1件(检索API->详情->PDF直链), 解冻则回官方链免重逆向",
+  "2. eb 链复活需先重逆向新版详情页(/std/{hash}.html style-v6): 找新下载入口(疑似移入登录/会员或新API), 再改 harvest_eb.py 的 pid/price 正则; 改前禁止硬磕",
+  "3. 出口7893维持3测2通健康阈; 详情腿若再5连no_pid按熔断停手, 幂等件可直接续跑(manifest ok跳过)",
+  "4. 17候选池已留 _eb_candidates.json(遗产14全保留), 复活后直接续跑勿重搜"
+ ],
+ "tests": "kb_factory pytest 25/25 两轮全绿(跑前/跑后)"
+}

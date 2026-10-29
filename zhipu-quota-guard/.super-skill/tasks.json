@@ -1,0 +1,601 @@
+{
+ "project": "zhipu-quota-guard",
+ "created": "2026-10-23",
+ "tasks": [
+  {
+   "id": "T-01",
+   "title": "W0 真身侦察：套餐Key归源+quota/limit+卡库存端点实测采样（脱敏fixture落盘）",
+   "owner": "insession",
+   "wave": 0,
+   "phase_ref": "W0",
+   "covers": [
+    "FR1",
+    "FR2",
+    "EARS3"
+   ],
+   "deps": [],
+   "files": [
+    "scripts/w0_recon.py",
+    "scripts/w0_check_fixtures.py",
+    "tests/fixtures/quota_limit_zai.json",
+    "tests/fixtures/quota_limit_bigmodel.json",
+    "tests/fixtures/cards_zai.json",
+    "KNOWLEDGE_BASE/rules-and-endpoints.md"
+   ],
+   "verify": "e:/AI-Station/.venv/Scripts/python.exe zhipu-quota-guard/scripts/w0_check_fixtures.py",
+   "dod": {
+    "产出": [
+     "双站 quota/limit 脱敏响应fixture(含TOKENS_LIMIT+TIME_LIMIT)",
+     "z.ai卡库存fixture(fiveHourResets/weekResets结构)",
+     "ADR7判别结论(V3=高峰1x/非高峰0.5x 或 V2=1/3)+bigmodel卡端点路径结论写回KNOWLEDGE_BASE"
+    ],
+    "验收标准": [
+     "实测端点返回200且结构含limits[].type=TOKENS_LIMIT、percentage、remaining、nextResetTime",
+     "fixture全程脱敏: Authorization/Key仅留前4位无完整密钥",
+     "w0_check_fixtures.py断言四要素通过exit 0"
+    ],
+    "实测要求": [
+     "用真套餐Key(secrets/zhipu_secrets.json或~/.claude/settings.json)跑通至少一站; 另站Key缺失则记blocked结论",
+     "网关无鉴权行为复核: 裸调应回code=1001"
+    ],
+    "契约缝合": [
+     "本任务fixture是T-04/T-05/T-13契约快照的唯一真身源; SCHEMAS QuotaSnapshot.raw字段以此为准"
+    ]
+   },
+   "complexity": 4
+  },
+  {
+   "id": "T-02",
+   "title": "zqg包骨架+ledger账本: run-ledger JSONL唯一事实源(fail-loud)",
+   "owner": "worker",
+   "wave": 1,
+   "covers": [
+    "FR8",
+    "NFR4"
+   ],
+   "deps": [],
+   "files": [
+    "zqg/__init__.py",
+    "zqg/ledger.py",
+    "tests/conftest.py",
+    "tests/test_ledger.py"
+   ],
+   "verify": "e:/AI-Station/.venv/Scripts/python.exe -m pytest zhipu-quota-guard/tests/test_ledger.py -q",
+   "dod": {
+    "产出": [
+     "Ledger类: append(kind,payload)写{ts,kind,payload}单行JSONL; run-YYYYMMDD.jsonl按日分文件; read_tail(n)/read_range(kind); cards.json缓存读写; payload落盘前redact()(sk-/Bearer/token类字段截断)",
+     "tests/conftest.py: 把zhipu-quota-guard根注入sys.path(后续所有测试任务复用)"
+    ],
+    "验收标准": [
+     "kind枚举=poll|decision|reset_exec|reset_result|notify|heartbeat|login|drift|error, 非法kind断言失败",
+     "写失败(目录只读模拟)异常上抛不吞(fail loud, 进程退出交给计划任务拉起)",
+     "redact后样本不含任何32+位十六进制/sk-串"
+    ],
+    "实测要求": [
+     "pytest全绿; fallback=python -m unittest zhipu-quota-guard.tests.test_ledger(已实测venv pytest 9.1.1在位, 预期无需fallback)"
+    ],
+    "契约缝合": [
+     "RunLedgerEntry结构严格按SCHEMAS §2; T-05/T-07/T-08/T-10/T-11全部经此账本读写不得另立存储"
+    ]
+   },
+   "complexity": 3
+  },
+  {
+   "id": "T-03",
+   "title": "config.yaml加载器+secrets引用解析+脱敏视图",
+   "owner": "worker",
+   "wave": 1,
+   "covers": [
+    "FR9",
+    "ADR4"
+   ],
+   "deps": [],
+   "files": [
+    "zqg/config.py",
+    "config.example.yaml",
+    "tests/test_config.py"
+   ],
+   "verify": "e:/AI-Station/.venv/Scripts/python.exe -m pytest zhipu-quota-guard/tests/test_config.py -q",
+   "dod": {
+    "产出": [
+     "load_config(path): providers(zai/bigmodel: enabled,base_url,plan_key_ref)/poll(idle_min=10,busy_min=2,threshold_pct=90)/policy(reserve_cards=1,lead_time_min=30,fifo_by_expiry=true,mode=auto|dry_run|notify_only)/notify(wecom=true)/daemon(heartbeat_min=15)+peak_factor(peak=1.0,offpeak=0.5)",
+     "resolve_secrets(plan_key_ref)到secrets/zhipu_secrets.json取值; redacted_view()供日志"
+    ],
+    "验收标准": [
+     "缺字段按SCHEMAS §3默认补齐; 非法值(threshold_pct>100/mode拼错/idle_min<busy_min)抛带字段名的ConfigError",
+     "secrets文件缺失时错误信息含ref名不含值",
+     "config.example.yaml与默认值全量一致(测试断言)"
+    ],
+    "实测要求": [
+     "pytest全绿; venv内pyyaml已实测可import"
+    ],
+    "契约缝合": [
+     "config.yaml结构=SCHEMAS §3逐字段; peak_factor默认取KNOWLEDGE_BASE V3结论, T-01判别若推翻则改默认值并在此任务备注"
+    ]
+   },
+   "complexity": 3
+  },
+  {
+   "id": "T-04",
+   "title": "providers双站额度客户端+契约漂移检测(z.ai/bigmodel同构)",
+   "owner": "worker",
+   "wave": 1,
+   "covers": [
+    "FR1",
+    "EARS3",
+    "ADR2"
+   ],
+   "deps": [
+    "T-01",
+    "T-03"
+   ],
+   "files": [
+    "zqg/providers/__init__.py",
+    "zqg/providers/base.py",
+    "zqg/providers/zai.py",
+    "zqg/providers/bigmodel.py",
+    "tests/test_providers.py"
+   ],
+   "verify": "e:/AI-Station/.venv/Scripts/python.exe -m pytest zhipu-quota-guard/tests/test_providers.py -q",
+   "dod": {
+    "产出": [
+     "fetch_quota(): Bearer套餐Key GET /api/monitor/usage/quota/limit(stdlib urllib+timeout零新依赖); 归一化TOKENS_LIMIT为QuotaSnapshot{ts,provider,window_pct,remaining,next_reset_at,raw}; TIME_LIMIT留raw不入窗",
+     "漂移检测: 对raw做契约断言(字段存在+类型), 不符抛ContractDrift携带字段路径不崩溃; code=1001抛AuthError; 401/超时抛RetryableError(供上层退避3次)",
+     "zai.py/bigmodel.py仅差base_url+provider名(ADR2抽象实证)"
+    ],
+    "验收标准": [
+     "用T-01真身fixture回放: 归一化值与fixture中percentage/remaining/nextResetTime逐字段相等",
+     "变异测试: 删nextResetTime/改percentage类型时ContractDrift指名该字段",
+     "fake transport(monkeypatch urlopen)离线覆盖三异常分支"
+    ],
+    "实测要求": [
+     "pytest全绿; 两provider共用一条参数化测试路径"
+    ],
+    "契约缝合": [
+     "端点契约=KNOWLEDGE_BASE端点节; QuotaSnapshot=SCHEMAS §2; ContractDrift字段路径格式与T-13快照测试共用"
+    ]
+   },
+   "complexity": 5
+  },
+  {
+   "id": "T-05",
+   "title": "卡库存客户端: reset/list转CardInventory+卡预算与FIFO序",
+   "owner": "worker",
+   "wave": 1,
+   "covers": [
+    "FR2",
+    "FR5"
+   ],
+   "deps": [
+    "T-01",
+    "T-04"
+   ],
+   "files": [
+    "zqg/cards.py",
+    "tests/test_cards.py"
+   ],
+   "verify": "e:/AI-Station/.venv/Scripts/python.exe -m pytest zhipu-quota-guard/tests/test_cards.py -q",
+   "dod": {
+    "产出": [
+     "fetch_cards(): GET /api/biz/customer-package-reset/list?targetType=PERSONAL 转 CardInventory{five_hour:[{count,expire_at}],weekly:[...],fetched_at}(按最近过期聚合)",
+     "card_budget(type)=sum(count)-reserve_cards下限0; fifo_order(type)=expire_at升序; weekly_eligible()钩子: 周卡仅当周额度也预测烧穿才可用(布尔输入供T-07调用)",
+     "bigmodel端点未验证/404时打ConsoleFallback标记+注记(依T-01结论)不抛死"
+    ],
+    "验收标准": [
+     "真身fixture回放: fiveHourResets/weekResets数量与最近过期时间解析正确",
+     "budget: 3卡reserve1得2; 0卡得0(EARS2决策输入)",
+     "FIFO: expire_at早者排先, 同刻稳定排序"
+    ],
+    "实测要求": [
+     "pytest全绿(fake transport回放fixture不发真请求)"
+    ],
+    "契约缝合": [
+     "CardInventory=SCHEMAS §2; reserve_cards来自T-03 policy配置; weekly判定信号由T-07注入本任务只留钩子"
+    ]
+   },
+   "complexity": 4
+  },
+  {
+   "id": "T-06",
+   "title": "predictor烧穿预测: CC JSONL遥测聚合x积分系数转BurnRate+预测时刻",
+   "owner": "worker",
+   "wave": 2,
+   "covers": [
+    "FR3",
+    "ADR7"
+   ],
+   "deps": [
+    "T-03"
+   ],
+   "files": [
+    "zqg/predictor.py",
+    "tests/test_predictor.py",
+    "tests/fixtures/telemetry_sample/"
+   ],
+   "verify": "e:/AI-Station/.venv/Scripts/python.exe -m pytest zhipu-quota-guard/tests/test_predictor.py -q",
+   "dod": {
+    "产出": [
+     "scan_jsonl(root): 聚合~/.claude/projects/**/*.jsonl近30min usage(input/cache_read/output tokens); 速率=(input*6.9+cache*1.7+output*24)/10000积分每分钟, 乘peak_factor(高峰1.0/非高峰0.5由T-03配置注入); peak_now=周一至五14:00-18:00 UTC+8判定(时钟可注入)",
+     "BurnRate{tokens_per_min,peak_now}; predict_exhaust(remaining,rate,now)返回epoch或None(rate<=0); margin_vs_reset(exhaust_at,next_reset_at)返回提前分钟数"
+    ],
+    "验收标准": [
+     "手算fixture: 给定token数与时间窗, 速率与预测时刻精确断言(含高峰/非高峰两组系数)",
+     "空遥测/全旧数据时rate=0且exhaust为None(不除零)",
+     "root参数化(测试用tests/fixtures/telemetry_sample/, 生产默认~/.claude/projects)"
+    ],
+    "实测要求": [
+     "pytest全绿; 另做一次本机真~/.claude/projects抽样跑(只打印速率不落密钥), 量级合理性记入测试备注"
+    ],
+    "契约缝合": [
+     "BurnRate=SCHEMAS §2; 积分公式与高峰窗=KNOWLEDGE_BASE官方规则节; 预测时刻供T-07与nextResetTime(ADR6)比对"
+    ]
+   },
+   "complexity": 5
+  },
+  {
+   "id": "T-07",
+   "title": "policy决策引擎: 烧穿比对+卡预算FIFO+lead_time+mode全分支",
+   "owner": "worker",
+   "wave": 2,
+   "covers": [
+    "FR4",
+    "FR5",
+    "EARS1",
+    "EARS2",
+    "EARS5"
+   ],
+   "deps": [
+    "T-05",
+    "T-06"
+   ],
+   "files": [
+    "zqg/policy.py",
+    "tests/test_policy.py"
+   ],
+   "verify": "e:/AI-Station/.venv/Scripts/python.exe -m pytest zhipu-quota-guard/tests/test_policy.py -q",
+   "dod": {
+    "产出": [
+     "decide(snapshot,burn,cards,config,recent_ledger)返回Decision{action:reset|wait|notify_only, reason, predicted_exhaust_at, card_to_use:five_hour|weekly|None}; 规则确定性可回放(ADR3无LLM)",
+     "规则序: (1)预测烧穿早于nextResetTime且提前量>=lead_time_min(30)且卡预算>0且mode=auto时reset+选卡(five_hour FIFO快过期先花+would_expire_wasted规避: 自然刷新前将过期的卡优先标损; weekly仅weekly_eligible时); (2)卡预算=0时notify_only+卡不足建议文案(EARS2); (3)其余wait; mode=dry_run同规则但附simulated=true(EARS5); notify_only模式永不reset; 同卡24h内>2次失败进入冷却(recent_ledger查询)"
+    ],
+    "验收标准": [
+     "表驱动用例覆盖EARS1/EARS2/EARS5全分支+边界(提前量29/30min、预算0/1、周卡双门槛)",
+     "reason为人读中文一句话(企微推送原文)含数字(提前X分钟/卡余Y张)",
+     "同一输入两次调用结果逐字节一致(可回放)"
+    ],
+    "实测要求": [
+     "pytest全绿; 决策序列回放测试: 固定ledger输入得固定Decision"
+    ],
+    "契约缝合": [
+     "Decision=SCHEMAS §2; 输入QuotaSnapshot/CardInventory/BurnRate均为前序产物; reason文本直接供T-08企微与T-12面板"
+    ]
+   },
+   "complexity": 5
+  },
+  {
+   "id": "T-08",
+   "title": "notify企微通知: 七类事件+脱敏+失败不侵入主循环",
+   "owner": "worker",
+   "wave": 2,
+   "covers": [
+    "FR6",
+    "NFR4"
+   ],
+   "deps": [
+    "T-02",
+    "T-03"
+   ],
+   "files": [
+    "zqg/notify.py",
+    "tests/test_notify.py"
+   ],
+   "verify": "e:/AI-Station/.venv/Scripts/python.exe -m pytest zhipu-quota-guard/tests/test_notify.py -q",
+   "dod": {
+    "产出": [
+     "Notifier.send(event,text): 企微webhook(url出secrets/config); 事件=reset_exec/reset_result/low_water(水位>=85%)/login_invalid/card_shortage/drift/heartbeat_timeout/daily_digest; markdown模板; 重试2次; 发送结果与失败均写账本notify/error条目",
+     "失败返回False不raise(daemon主循环不受影响); dry-run捕获模式(记payload不发网)"
+    ],
+    "验收标准": [
+     "本地HTTP stub捕获: webhook收到合法markdown payload且文本经redact(无Key/token)",
+     "stub返回500时重试2次返回False+账本error条目",
+     "七类事件各至少一条模板用例"
+    ],
+    "实测要求": [
+     "pytest全绿; 真webhook实弹一条test事件由主会话在T-15前抽验(不在本任务)"
+    ],
+    "契约缝合": [
+     "事件枚举=FR6七类逐字对齐; 账本写入走T-02 Ledger; webhook机制复用station既有(ARCHITECTURE notify节)"
+    ]
+   },
+   "complexity": 3
+  },
+  {
+   "id": "T-09",
+   "title": "W2登录态抓包: 重置使用按钮XHR契约捕获(抓不到则UIA兜底定版)",
+   "owner": "insession",
+   "wave": 2,
+   "phase_ref": "W2",
+   "covers": [
+    "FR4",
+    "ADR1"
+   ],
+   "deps": [
+    "T-01"
+   ],
+   "files": [
+    "scripts/w2_capture_reset.py",
+    "scripts/w0_check_fixtures.py",
+    "tests/fixtures/reset_capture.json",
+    "KNOWLEDGE_BASE/rules-and-endpoints.md"
+   ],
+   "verify": "e:/AI-Station/.venv/Scripts/python.exe zhipu-quota-guard/scripts/w0_check_fixtures.py --reset-capture",
+   "dod": {
+    "产出": [
+     "DrissionPage 9341独立profile打开用量页(z.ai manage-apikey/subscription或bigmodel usage), 监听网络触发重置使用, 抓XHR method/url/payload/auth头类型, 脱敏存tests/fixtures/reset_capture.json+端点契约写回KNOWLEDGE_BASE",
+     "若无可触发卡/按钮: 记录UIA兜底selector树(脱敏截图存档)+reset_capture.json标uia_fallback=true定版"
+    ],
+    "验收标准": [
+     "抓包成功: method+url_pattern+payload字段齐且Authorization脱敏为前缀4位",
+     "两条路线必居其一且结论写死(API优先/UIA兜底), T-10据此实现",
+     "浏览器用完即清: DrissionPage quit+Chrome进程计数前后对齐(铁律)"
+    ],
+    "实测要求": [
+     "真登录态操作一次; 全程不落完整密钥; 9341 profile外不动9222/9336/9337"
+    ],
+    "契约缝合": [
+     "reset_capture.json是T-10 API腿唯一请求模板源; 兜底selector是T-10 UIA腿点击路径源"
+    ]
+   },
+   "complexity": 5
+  },
+  {
+   "id": "T-10",
+   "title": "resetter重置执行器: API优先+DrissionPage UIA兜底+抖动+冷却+dry_run",
+   "owner": "worker",
+   "wave": 3,
+   "covers": [
+    "FR4",
+    "FR5",
+    "FR7",
+    "FR9"
+   ],
+   "deps": [
+    "T-02",
+    "T-07",
+    "T-09"
+   ],
+   "files": [
+    "zqg/resetter.py",
+    "zqg/browser/__init__.py",
+    "zqg/browser/session.py",
+    "tests/test_resetter.py"
+   ],
+   "verify": "e:/AI-Station/.venv/Scripts/python.exe -m pytest zhipu-quota-guard/tests/test_resetter.py -q",
+   "dod": {
+    "产出": [
+     "execute_reset(decision): API腿按reset_capture.json契约组请求(auth出secrets); 失败转UIA腿: 9341 profile+state/下cookie复用按W2 selector点使用; 两腿前后各3-8s随机抖动(rng可注入断言边界); 结果复核=重拉quota/limit比对",
+     "浏览器会话最短化: 启动-动作-quit+子进程清理(Chrome守门对齐, session.py收口); 同卡24h失败>2次拒发(RefuseRetry); dry_run时账本写simulated_reset零网络",
+     "reset_exec/reset_result两条账本+1分钟内结果返回(供daemon通报)"
+    ],
+    "验收标准": [
+     "fake transport+fake page双腿离线测试: 成功/API败转UIA/双腿败ResetFailed三路径",
+     "抖动断言: 注入固定rng序列, 延迟在[3,8]s且动作前后各一次",
+     "冷却: 构造24h内3次失败账本时该卡被拒",
+     "dry_run: transport调用计数=0+账本simulated_reset"
+    ],
+    "实测要求": [
+     "pytest全绿; UIA腿真浏览器冒烟由T-15实弹阶段验收"
+    ],
+    "契约缝合": [
+     "请求模板=T-09 reset_capture.json; 决策输入=T-07 Decision.card_to_use; 账本走T-02; profile 9341=ARCHITECTURE browser节"
+    ]
+   },
+   "complexity": 5
+  },
+  {
+   "id": "T-11",
+   "title": "daemon主循环: 轮询-漂移-预测-决策-执行全链+自适应频率+fail-loud",
+   "owner": "worker",
+   "wave": 3,
+   "covers": [
+    "FR1",
+    "FR7",
+    "EARS1",
+    "EARS4",
+    "EARS5",
+    "EARS6",
+    "NFR4",
+    "NFR5"
+   ],
+   "deps": [
+    "T-04",
+    "T-06",
+    "T-07",
+    "T-08",
+    "T-10"
+   ],
+   "files": [
+    "zqg/daemon.py",
+    "zqg/monitor.py",
+    "tests/test_daemon.py"
+   ],
+   "verify": "e:/AI-Station/.venv/Scripts/python.exe -m pytest zhipu-quota-guard/tests/test_daemon.py -q",
+   "dod": {
+    "产出": [
+     "python -m zqg.daemon主循环: poll(provider)取snapshot-漂移检查(ContractDrift时账本drift+企微+降级标记不崩溃, EARS3通路daemon层闭环)-predictor-policy-dispatch: wait心跳/notify_only企微/reset走resetter+结果1分钟内通报(EARS1)",
+     "自适应频率: burn高或window_pct>=threshold时busy_min(2)否则idle_min(10), 并与nextReset_time取近(ADR6); heartbeat_min=15账本心跳",
+     "AuthError自动续期一次(重读secrets/重登钩子)仍败企微唤人监控纯API链路继续(EARS4); 超时/401退避3次后账本+企微; 账本写失败sys.exit(1) fail-loud(EARS6配合计划任务); state/lock单实例锁; 信号干净退出"
+    ],
+    "验收标准": [
+     "注入fake providers/时钟的仿真循环: wait/notify_only/reset/drift四路径各驱动到位; 频率迁移idle-busy-idle断言间隔值",
+     "dry_run全链: 真决策+simulated_reset账本+零重置网络(EARS5)",
+     "账本故障注入时进程exit code=1",
+     "心跳条目按heartbeat_min产出(kill后拉起实证归T-14)"
+    ],
+    "实测要求": [
+     "pytest全绿; 仿真100轮wall-clock<10s(时钟注入而非sleep)"
+    ],
+    "契约缝合": [
+     "组件全为前序产物(T-04/T-06/T-07/T-08/T-10), daemon只做编排; 数据流=ARCHITECTURE关键数据流图逐框"
+    ]
+   },
+   "complexity": 5
+  },
+  {
+   "id": "T-12",
+   "title": "panel单文件状态面板+每日汇总文本",
+   "owner": "worker",
+   "wave": 3,
+   "covers": [
+    "FR8"
+   ],
+   "deps": [
+    "T-02",
+    "T-07"
+   ],
+   "files": [
+    "zqg/panel.py",
+    "zqg/templates/panel_template.html",
+    "panel/index.html",
+    "tests/test_panel.py"
+   ],
+   "verify": "e:/AI-Station/.venv/Scripts/python.exe -m pytest zhipu-quota-guard/tests/test_panel.py -q",
+   "dod": {
+    "产出": [
+     "render(ledger_dir,cards,snapshot,decision)产出自包含单文件HTML(内联CSS/JS零CDN): 当前水位条(window_pct)/预测线(predicted_exhaust_at vs next_reset_at)/卡库存(5h+周数量+最近过期)/最近动作(账本尾20条); 数据以inline JSON注入供前端自刷新",
+     "daily_digest(date,ledger)产出markdown汇总文本(供notify daily_digest事件)",
+     "panel/index.html为生成产物(gitignored已覆盖)"
+    ],
+    "验收标准": [
+     "fixture账本渲染: 四区块标题与数值断言; HTML中无sk-/Bearer/token长串(脱敏复用T-02 redact)",
+     "每日汇总含水位区间/决策次数/重置次数/心跳计数",
+     "单文件性: regex断言无外部http src/href引用"
+    ],
+    "实测要求": [
+     "pytest全绿; 渲染产物浏览器人查由T-15验收"
+    ],
+    "契约缝合": [
+     "数据源仅T-02账本+缓存(C10唯一事实源不直连API); decision字段名=T-07 Decision"
+    ]
+   },
+   "complexity": 4
+  },
+  {
+   "id": "T-13",
+   "title": "契约快照金测试: 真身fixture金样+漂移回归+决策回放",
+   "owner": "worker",
+   "wave": 3,
+   "covers": [
+    "EARS3",
+    "NFR2"
+   ],
+   "deps": [
+    "T-04",
+    "T-01"
+   ],
+   "files": [
+    "tests/test_contract_snapshots.py",
+    "tests/fixtures/"
+   ],
+   "verify": "e:/AI-Station/.venv/Scripts/python.exe -m pytest zhipu-quota-guard/tests/test_contract_snapshots.py -q",
+   "dod": {
+    "产出": [
+     "金测试钉死双站quota/limit+卡库存响应形状(字段集+类型源自T-01真身fixture); 变异回归: 删字段/改类型时ContractDrift且字段路径精确; drift时账本drift条目+降级不崩溃(EARS3回归); 网关1001转AuthError回归",
+     "决策回放(NFR2支撑): 真身快照+固定遥测得固定Decision, 防策略漂移导致误重置"
+    ],
+    "验收标准": [
+     "全部断言来自fixture数据而非手写魔法值; 变异用例至少5个字段路径",
+     "回放用例含自然刷新可覆盖场景断言action=wait(零误重置门)"
+    ],
+    "实测要求": [
+     "pytest全绿; T-01 fixture更新时本测试同步更新(缝合点显式: fixture到金测试单向流)"
+    ],
+    "契约缝合": [
+     "金样=T-01 fixture; 断言对象=T-04 ContractDrift/T-07 Decision; 本任务把W0证据固化为回归网的总缝合件"
+    ]
+   },
+   "complexity": 4
+  },
+  {
+   "id": "T-14",
+   "title": "W4计划任务部署: ONSTART+失败重启+kill实证自拉起",
+   "owner": "insession",
+   "wave": 4,
+   "phase_ref": "W4",
+   "covers": [
+    "FR7",
+    "EARS6",
+    "NFR5"
+   ],
+   "deps": [
+    "T-11"
+   ],
+   "files": [
+    "scripts/deploy_schtasks.ps1",
+    "scripts/verify_deploy.ps1",
+    "DEPLOY.md"
+   ],
+   "verify": "powershell -ExecutionPolicy Bypass -File zhipu-quota-guard/scripts/verify_deploy.ps1",
+   "dod": {
+    "产出": [
+     "schtasks任务ZhipuQuotaGuard: ONSTART触发+失败60s重启+工作目录zhipu-quota-guard+命令行e:/AI-Station/.venv/Scripts/python.exe -m zqg.daemon; secrets就位核验; DEPLOY.md部署/卸载/查日志三节"
+    ],
+    "验收标准": [
+     "schtasks /query显示任务在册且状态Running",
+     "kill实验: taskkill /F杀python进程后<=60s自动拉起, 账本心跳断点间隔<=90s(EARS6账本可证)",
+     "tasklist实测常驻内存<150MB; 闲时CPU抽样约0(NFR5)"
+    ],
+    "实测要求": [
+     "真实kill+拉起至少2轮取心跳间隔; verify_deploy.ps1汇总三指标exit 0"
+    ],
+    "契约缝合": [
+     "daemon入口=T-11 python -m zqg.daemon; 心跳条目=T-02 kind=heartbeat; 60s阈值=EARS6原文"
+    ]
+   },
+   "complexity": 4
+  },
+  {
+   "id": "T-15",
+   "title": "W6实弹试运行: dry_run>=12h转auto>=24h全指标验收",
+   "owner": "insession",
+   "wave": 4,
+   "phase_ref": "W6",
+   "covers": [
+    "NFR1",
+    "NFR2",
+    "NFR3",
+    "EARS1",
+    "EARS2"
+   ],
+   "deps": [
+    "T-12",
+    "T-14"
+   ],
+   "files": [
+    "scripts/w6_acceptance.py",
+    "ACCEPTANCE.md"
+   ],
+   "verify": "e:/AI-Station/.venv/Scripts/python.exe zhipu-quota-guard/scripts/w6_acceptance.py",
+   "dod": {
+    "产出": [
+     "阶段A: dry_run>=12h全链运行(决策/心跳/漂移检查账本齐全零静默失败)",
+     "阶段B: auto>=24h实弹; w6_acceptance.py解析账本产出指标JSON并全阈值判定",
+     "ACCEPTANCE.md: MTTR/零误重置/泄露扫描/企微实收四节实测记录"
+    ],
+    "验收标准": [
+     "MTTR: 额度耗尽到恢复中位<=0.5h(账本时间戳实测NFR1)",
+     "零误重置: 自然刷新可覆盖场景花卡次数=0(决策序列证明NFR2)",
+     "泄露扫描: 仓内git grep密钥模式0命中+日志抽样脱敏100%(NFR3)",
+     "企微七类中重置结果/低水位/每日汇总至少各1条实收; EARS1/EARS2场景若期间真实发生逐条对账"
+    ],
+    "实测要求": [
+     "指标全部由账本/日志机读产出(数字零造假铁律禁手填); 任一阈值不过时exit非0并输出不达标项"
+    ],
+    "契约缝合": [
+     "验收判据逐条挂EARS/NFR原文编号; 数据源=T-02账本(C10唯一事实源)"
+    ]
+   },
+   "complexity": 5
+  }
+ ]
+}

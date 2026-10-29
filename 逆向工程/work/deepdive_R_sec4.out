@@ -1,0 +1,70 @@
+STORE KEYS (get/set):
+   agent_type
+   agent_types
+   agentic_settings_onboarding_always_on
+   appType
+   before_id
+   bindWechatNonce
+   chat_probe
+   chatpage_start_guide_test_mode
+   code
+   content-disposition
+   content-type
+   debug_log_mode
+   device_id
+   discord_invite_url
+   enable_hotkey_unread
+   enable_save_comparison_screenshots
+   external_hid_device_key
+   google_token
+   input_backend
+   loginNonce
+   login_time
+   nanokvm_baud_rate
+   nanokvm_port_path
+   operation_mode
+   page_size
+   redirect_uri
+   replay_enabled
+   reply_mode
+   responseTimeoutMs
+   scroll_calibration_config
+   token
+   user
+   x-shiflow-device-route
+   x-shiflow-dialog-stream-status
+   x-shiflow-environment
+   x-shiflow-revision
+   x-shiflow-route
+==================== KW: launchHelper ====================
+hits: 0
+==================== KW: helperToken ====================
+hits: 0
+==================== KW: HELPER_READY ====================
+hits: 0
+==================== KW: getBuildEnv ====================
+hits: 16
+--- [0] off=324404 ---
+r(e){let r,n;if(process$1.type==="renderer"){const a=electron.ipcRenderer.sendSync("electron-store-get-data");if(!a)throw new Error("Electron Store: You need to call `.initRenderer()` from the main process.");({defaultCwd:r,appVersion:n}=a)}else ipcMain&&app&&({defaultCwd:r,appVersion:n}=initDataListener());e={name:"config",...e},e.projectVersion||=n,e.cwd?e.cwd=path.isAbsolute(e.cwd)?e.cwd:path.join(r,e.cwd):e.cwd=r,e.configName=e.name,delete e.name,super(e)}static initRenderer(){initDataListener()}async openInEditor(){const e=await shell.openPath(this.path);if(e)throw new Error(e)}}function getBuildEnv(){return getBridge().env}let appStore=null;const randomDelay=async(t,e=!0)=>{if(e){const r=.9+Math.random()*.3,n=Math.round(t*r);await new Promise(a=>setTimeout(a,n))}else await new Promise(r=>setTimeout(r,t))},randomDelayIn=async(t,e)=>{const r=t+Math.random()*(e-t);await new Promise(n=>setTimeout(n,Math.round(r)))},isBeijingSubwayProject=()=>getBuildEnv().TARGET==="beijing_subway";function createAppStore(t){if(appStore)return appStore;let e=null;const r=()=>{if(e)return e;const a=getBridge().app.getName();return e=new ElectronStore({...t,name:a}),appStore=e,e};return new Proxy({},{get(n,a,s
+--- [1] off=324762 ---
+?e.cwd=path.isAbsolute(e.cwd)?e.cwd:path.join(r,e.cwd):e.cwd=r,e.configName=e.name,delete e.name,super(e)}static initRenderer(){initDataListener()}async openInEditor(){const e=await shell.openPath(this.path);if(e)throw new Error(e)}}function getBuildEnv(){return getBridge().env}let appStore=null;const randomDelay=async(t,e=!0)=>{if(e){const r=.9+Math.random()*.3,n=Math.round(t*r);await new Promise(a=>setTimeout(a,n))}else await new Promise(r=>setTimeout(r,t))},randomDelayIn=async(t,e)=>{const r=t+Math.random()*(e-t);await new Promise(n=>setTimeout(n,Math.round(r)))},isBeijingSubwayProject=()=>getBuildEnv().TARGET==="beijing_subway";function createAppStore(t){if(appStore)return appStore;let e=null;const r=()=>{if(e)return e;const a=getBridge().app.getName();return e=new ElectronStore({...t,name:a}),appStore=e,e};return new Proxy({},{get(n,a,s){const i=r(),o=Reflect.get(i,a,s);return typeof o=="function"?o.bind(i):o},set(n,a,s){const i=r();return Reflect.set(i,a,s)},has(n,a){const s=r();return Reflect.has(s,a)}})}const IS_WIN$1=process.platform==="win32",IS_MAC$6=process.platform==="darwin",TAG$1="[Helper]",store$8=createAppStore();function isInputBackendDebugLogEnabled$1(){return!!store$8.get(
+... more at: [2082049, 2082145, 2402675, 2480909, 2480935, 2500893, 2500929, 2501796, 2501832, 2533068, 2533094, 2542599, 2543819, 2547282]
+==================== KW: OEM_SOURCE ====================
+hits: 7
+--- [0] off=2402696 ---
+hedAccountLevel?.token===e&&cachedAccountLevel.expiresAt>r?cachedAccountLevel.vipLevel:pendingAccountLevel||(pendingAccountLevel=(async()=>{const n=new AbortController,a=setTimeout(()=>n.abort(),REQUEST_TIMEOUT_MS$1);try{const s=getBuildEnv(),o=!!(s.OEM_SOURCE||s.IS_OEM)?"/accounts/open/settings":"/accounts/settings",d=await ppeFetch(getShiflowV1Url(o),{method:"GET",headers:{"Content-Type":"application/json",Authorization:`JWT ${e}`},signal:n.signal});if(!d.ok)throw new Error(`HTTP ${d.status}`);const u=a
+--- [1] off=2480923 ---
+),d}catch(n){throw console.error(`API 请求失败: ${t}`,n),n}}let accountEntitlementsRefreshPromise=null;async function fetchCurrentAccountSettings(){const t=store.get("token");if(!t||typeof t!="string")throw new Error("登录已过期，请重新登录");const r=getBuildEnv().OEM_SOURCE||getBuildEnv().IS_OEM?"/accounts/open/settings":"/accounts/settings",a=(await apiRequest(r,{method:"GET",headers:{Authorization:`JWT ${t}`}}))?.body||{};return updateAccountEntitlementsFromSettings(a),a}async function refreshCurrentAccountSettings()
+--- [2] off=2500907 ---
+console.error("账号登录失败:",l),{success:!1,error:l.message||"登录失败"}}}),getBridge().ipc.handle("ACCOUNT_REGISTER",async(o,d,u,l)=>{try{const h=getCurrentApiEnvironment()==="test"?"see_test":"see",p={username:d,password:u,confirm_password:l};getBuildEnv().OEM_SOURCE&&(p.app_id=getBuildEnv().OEM_SOURCE);const m=await apiRequest("/register",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)});return console.log("账号注册响应:",m),m.code===0?{success:!0}:{success:!1,error:m.msg||m.message|
+--- [3] off=2500943 ---
+!1,error:l.message||"登录失败"}}}),getBridge().ipc.handle("ACCOUNT_REGISTER",async(o,d,u,l)=>{try{const h=getCurrentApiEnvironment()==="test"?"see_test":"see",p={username:d,password:u,confirm_password:l};getBuildEnv().OEM_SOURCE&&(p.app_id=getBuildEnv().OEM_SOURCE);const m=await apiRequest("/register",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)});return console.log("账号注册响应:",m),m.code===0?{success:!0}:{success:!1,error:m.msg||m.message||"注册失败"}}catch(f){return console.err
+--- [4] off=2501810 ---
+h(l){return console.error("获取验证码异常:",l),{success:!1,error:l.message||"网络异常"}}}),getBridge().ipc.handle("PHONE_LOGIN",async(o,d,u,l)=>{try{console.log("手机号登录:",{phone:d,code:u,inviteCode:l});const f={phone:d,code:u};l&&(f.invite_code=l),getBuildEnv().OEM_SOURCE&&(f.app_id=getBuildEnv().OEM_SOURCE);const h=await apiRequest("/phone_login",{method:"POST",body:JSON.stringify(f)});if(h.code===200||h.code===0||h.success){const p=h.data||h.body||h,m=p.token||p.access_token;if(m){resetAccountEntitlements(),store.s
+... more at: [2501846, 2533082]
+==================== KW: google_client ====================
+hits: 0
+==================== KW: client_id ====================
+hits: 1
+--- [0] off=2492652 ---
+getApiEnvironmentIdentity(),d=getCurrentApiEnvironment(),u=buildApiHttpUrl(d,"/third/oauth","v1"),l=new url__namespace.URL(u),f=new url__namespace.URL("https://accounts.google.com/o/oauth2/v2/auth");f.search=new URLSearchParams({response_type:"code",client_id:"1006364483480-bt4qk1d8jc1gr0eg81pumhsqke0d4cq7.apps.googleusercontent.com",redirect_uri:u,scope:"https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",prompt:"select_account",access_type:"offline"}).toStri

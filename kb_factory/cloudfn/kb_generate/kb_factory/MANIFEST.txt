@@ -1,0 +1,38 @@
+source: E:\AI-Station\kb_factory\catalog_engine
+files (27):
+  kb_factory/__init__.py
+  kb_factory/catalog_engine/__init__.py
+  kb_factory/catalog_engine/engine.py
+  kb_factory/catalog_engine/taxonomy.py
+  kb_factory/catalog_engine/blueprint.py
+  kb_factory/catalog_engine/metadata.py
+  kb_factory/catalog_engine/lint.py
+  kb_factory/catalog_engine/document_engine.py
+  kb_factory/catalog_engine/structure_miner.py
+  kb_factory/catalog_engine/doc_search.py
+  kb_factory/catalog_engine/evidence.py
+  kb_factory/catalog_engine/multistore.py
+  kb_factory/catalog_engine/schema_synth.py
+  kb_factory/catalog_engine/ascode.py
+  kb_factory/catalog_engine/corrector.py
+  kb_factory/catalog_engine/contract.py
+  kb_factory/catalog_engine/cataloging.py
+  kb_factory/catalog_engine/purpose.py
+  kb_factory/catalog_engine/views.py
+  kb_factory/catalog_engine/skos_export.py
+  kb_factory/catalog_engine/dendron.py
+  kb_factory/catalog_engine/storm_breadth.py
+  kb_factory/catalog_engine/clc_layer.py
+  kb_factory/catalog_engine/thuocl_lex.py
+  kb_factory/catalog_engine/fibo_lex.py
+  kb_factory/catalog_engine/brick_lex.py
+  kb_factory/catalog_engine/cilin_norm.py
+
+包体决策（收口波B，实测为凭）：
+  纯代码核心全进（含收口波 11 新模块，全 stdlib）。
+  重数据不进、留服务器侧：seeds/thuocl 6.8M · seeds/fibo 76M ·
+  seeds/brick 2.6M · seeds/cilin 3.6M · seeds/taxonomy YAML 120K ·
+  seeds/0*.json 六域种子 ~9.7M——loader 缺数据一律 fail-soft。
+  taxonomy_loader.py 不进包（import yaml=第三方，云函数零依赖铁律）。
+  KB_TAXONOMY_GATE 需 seeds 校验器未随包——云函数侧保持关。
+package: 397080 bytes (388KB) / budget 2048KB OK

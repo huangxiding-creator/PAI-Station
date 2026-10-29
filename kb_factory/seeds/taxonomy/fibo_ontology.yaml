@@ -1,0 +1,284 @@
+version: 1.0.0
+updated: '2026-10-25'
+kind: taxonomy_seed_v1
+sources:
+- name: Shopify/product-taxonomy
+  url: https://github.com/Shopify/product-taxonomy
+  license: MIT
+  role: 制式蓝本
+- name: EDMCouncil/fibo
+  repo: EDMCouncil/fibo
+  tag: master_2026Q3
+  url: https://github.com/EDMCouncil/fibo/tree/master_2026Q3
+  license: MIT
+  license_copyright: Copyright (c) 2020 Enterprise Data Management Council
+  tarball_sha256: 48a1690255df0fb161d624a6e12fb529f4e4f38c73ac8cfbe1ed81e913625e27
+  role: 本体上游（2625 概念数据仍在 seeds/fibo/<模块>.json；概念层级最深 11 级，进不了 ≤3 级树制式，本件只迁模块索引）
+- name: seeds/fibo/_zh_map.json
+  version: v1_manual_2026_10_25
+  entries: 340
+  role: 人工中文映射表 v1 台账位（entries=词数对账）
+- name: seeds/fibo/_fnd_common.json
+  role: FND 基座公共层真源（五概念组逐组概念计数入树）
+tree:
+  type: root
+  id: fibo
+  name: FIBO 财务本体
+  children:
+  - type: layer
+    id: modules
+    name: 模块层
+    children:
+    - type: module
+      id: BE
+      name: 基础实体
+      module_en: Business Entities
+      role: trunk
+      note: 主干模块（任务点名）
+      classes: 188
+      zh_mapped: 38
+      zh_rate: 0.2021
+      roots: 41
+      max_depth: 5
+      multi_parent_classes: 17
+      derived_labels: 0
+      external_parent_edges_dropped: 61
+    - type: module
+      id: CAE
+      name: 企业行为与事件
+      module_en: Corporate Actions and Events
+      role: trunk
+      note: 任务命名 CA，FIBO 2026Q3 实际模块码为 CAE（企业行为与事件）；企业法人本体在 BE/LegalEntities
+      classes: 78
+      zh_mapped: 4
+      zh_rate: 0.0513
+      roots: 4
+      max_depth: 5
+      multi_parent_classes: 3
+      derived_labels: 0
+      external_parent_edges_dropped: 6
+    - type: module
+      id: DER
+      name: 衍生品
+      module_en: Derivatives
+      role: closure
+      note: 主干父级闭包纳入（层级无孤儿所需）
+      classes: 317
+      zh_mapped: 43
+      zh_rate: 0.1356
+      roots: 14
+      max_depth: 10
+      multi_parent_classes: 80
+      derived_labels: 0
+      external_parent_edges_dropped: 15
+    - type: module
+      id: FBC
+      name: 金融业务与商务
+      module_en: Financial Business and Commerce
+      role: trunk
+      note: 主干模块（任务点名）
+      classes: 503
+      zh_mapped: 73
+      zh_rate: 0.1451
+      roots: 90
+      max_depth: 8
+      multi_parent_classes: 58
+      derived_labels: 0
+      external_parent_edges_dropped: 121
+    - type: module
+      id: FND
+      name: 基础概念基座
+      module_en: Foundations
+      role: trunk
+      note: 主干模块（任务点名）
+      classes: 426
+      zh_mapped: 129
+      zh_rate: 0.3028
+      roots: 157
+      max_depth: 5
+      multi_parent_classes: 24
+      derived_labels: 0
+      external_parent_edges_dropped: 165
+    - type: module
+      id: IND
+      name: 指数与指标
+      module_en: Indices and Indicators
+      role: closure
+      note: 主干父级闭包纳入（层级无孤儿所需）
+      classes: 120
+      zh_mapped: 1
+      zh_rate: 0.0083
+      roots: 5
+      max_depth: 5
+      multi_parent_classes: 16
+      derived_labels: 0
+      external_parent_edges_dropped: 14
+    - type: module
+      id: LOAN
+      name: 贷款
+      module_en: Loans
+      role: trunk
+      note: 主干模块（任务点名）
+      classes: 180
+      zh_mapped: 45
+      zh_rate: 0.25
+      roots: 30
+      max_depth: 9
+      multi_parent_classes: 26
+      derived_labels: 0
+      external_parent_edges_dropped: 31
+    - type: module
+      id: SEC
+      name: 证券
+      module_en: Securities
+      role: closure
+      note: 主干父级闭包纳入（层级无孤儿所需）
+      classes: 813
+      zh_mapped: 9
+      zh_rate: 0.0111
+      roots: 42
+      max_depth: 11
+      multi_parent_classes: 301
+      derived_labels: 0
+      external_parent_edges_dropped: 45
+  - type: layer
+    id: fnd_common
+    name: FND 基座公共层（六库可选）
+    children:
+    - type: fnd_common_group
+      id: organizations
+      name: 机构
+      desc: 组织与机构形态：雇佣关系、法人组织、政府与公司族谱
+      concepts: 25
+    - type: fnd_common_group
+      id: parties
+      name: 主体
+      desc: 参与方与角色：自然人、当事方、合同角色、控制关系
+      concepts: 26
+    - type: fnd_common_group
+      id: documents
+      name: 文件
+      desc: 文书与记录：合同文书、身份证件、报告与记录
+      concepts: 15
+    - type: fnd_common_group
+      id: time
+      name: 时间
+      desc: 时间与事件：发生、日程、循环间隔、营业日历与生命周期
+      concepts: 20
+    - type: fnd_common_group
+      id: quantities
+      name: 量
+      desc: 量与度量：货币金额、统计度量、价格、利率与汇率
+      concepts: 21
+attributes:
+  root:
+    id:
+      type: string
+      required: true
+      pattern: ^[a-z][a-z0-9_]*$
+    name:
+      type: string
+      required: true
+  layer:
+    id:
+      type: string
+      required: true
+      pattern: ^[a-z][a-z0-9_]*$
+    name:
+      type: string
+      required: true
+  module:
+    id:
+      type: string
+      required: true
+      pattern: ^[A-Z][A-Z0-9]*$
+    name:
+      type: string
+      required: true
+      vocab: module_names
+    module_en:
+      type: string
+      required: true
+    role:
+      type: string
+      required: true
+      vocab: module_roles
+    note:
+      type: string
+      required: true
+    classes:
+      type: integer
+      required: true
+      min: 0
+    derived_labels:
+      type: integer
+      required: true
+      min: 0
+    external_parent_edges_dropped:
+      type: integer
+      required: true
+      min: 0
+    max_depth:
+      type: integer
+      required: true
+      min: 0
+    multi_parent_classes:
+      type: integer
+      required: true
+      min: 0
+    roots:
+      type: integer
+      required: true
+      min: 0
+    zh_mapped:
+      type: integer
+      required: true
+      min: 0
+    zh_rate:
+      type: number
+      required: true
+      min: 0
+  fnd_common_group:
+    id:
+      type: string
+      required: true
+      pattern: ^[a-z][a-z0-9_]*$
+    name:
+      type: string
+      required: true
+    desc:
+      type: string
+      required: true
+    concepts:
+      type: integer
+      required: true
+      min: 1
+values:
+  module_names:
+  - 基础实体
+  - 企业行为与事件
+  - 衍生品
+  - 金融业务与商务
+  - 基础概念基座
+  - 指数与指标
+  - 贷款
+  - 证券
+  module_roles:
+  - trunk
+  - closure
+  trunk_modules:
+  - BE
+  - CAE
+  - FBC
+  - FND
+  - LOAN
+  closure_modules:
+  - DER
+  - IND
+  - SEC
+  fnd_common_keys:
+  - organizations
+  - parties
+  - documents
+  - time
+  - quantities

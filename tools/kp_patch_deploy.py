@@ -15,7 +15,7 @@ from ecs_kp_deploy3 import run, sh, SHARD  # noqa: E402
 
 REPO = Path(r'E:\AI-Station\kunpeng-bid')
 FILES = sys.argv[1].split(',') if len(sys.argv) > 1 else [
-    'kunpeng/workflow.py', 'kunpeng/server.py', 'server.py', 'static/index.html', 'config.yaml',
+    'kunpeng/workflow.py', 'server.py', 'static/app.html', 'static/index.html', 'config.yaml',
 ]
 
 
@@ -30,17 +30,21 @@ def main():
     shards = [b64[i:i + SHARD] for i in range(0, len(b64), SHARD)]
     print(f'patch payload {len(buf.getvalue())}B -> {len(shards)} shards', flush=True)
 
-    sh('prep', 'rm -f /tmp/kp_patch.b64')
+    import time as _t
+    _ts = int(_t.time())
+    _remote = f'/tmp/kp_patch_{_ts}.b64'
+    sh('prep', f'rm -f {_remote}')
     for i, chunk in enumerate(shards):
-        sh(f'shard {i+1}/{len(shards)}', f"printf '%s' '{chunk}' >> /tmp/kp_patch.b64", timeout=120)
-    sh('apply+restart', '''
+        sh(f'shard {i+1}/{len(shards)}', f"printf '%s' '{chunk}' >> {_remote}", timeout=120)
+    sh('apply+restart', f'''
 set -e
-base64 -d /tmp/kp_patch.b64 | tar xz -C /opt/kunpeng-bid
-rm -f /tmp/kp_patch.b64
-systemctl restart kunpeng
-sleep 4
-systemctl is-active kunpeng
-curl -s --max-time 5 http://127.0.0.1:5100/api/health && echo
+base64 -d {_remote} | tar xz -C /opt/kunpeng-bid
+rm -f {_remote}
+systemctl restart kunpeng || true
+sleep 5
+systemctl is-active kunpeng || systemctl restart kunpeng
+sleep 3
+curl -s --max-time 8 http://127.0.0.1:5100/api/health && echo
 ''', timeout=300)
 
     for i in range(10):

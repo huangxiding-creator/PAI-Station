@@ -1,0 +1,809 @@
+==============================================================================================================
+SUBSYSTEM: 数据与画像子系统（总包私域运营台 · zb-data，单机本地 SQLite，本地优先/数据主权）
+OVERVIEW: 定位：为"企微官方API为主体 + 个人微信精简版RPA为补充"的混合架构提供统一的数据底座——消息/联系人/群/商机/素材/动作的存储、联系人画像计算、商机台账、频率账本与导出，并内置个保法对齐的治理层（脱敏写入、保留期、删除开关、出网审计）。存储布局：双 SQLite 库（WAL 模式）——core.db 承载长周期台账与审计（contacts/groups/leads/actions/content_assets/quota_ledger/治理表），msg.db（ATTACH 挂载）承载高体量、可整体清洗的内容数据（messages/contact_events/ai_interactions + FTS5 全文索引）；拆双库的原因：保留期清理和"删除开关"可以按文件级完成（redact 后直接 detach/轮换），core.db 备份小而稳定。写入路径唯一：better-sqlite3 跑在 Electron 主进程，RPA helper 与企微连接器一律经 IPC 提交，不直开数据库（单写者，busy_timeout=5000，foreign_keys=ON）。写入即脱敏：手机号/身份证/银行卡在落库前正则替换为占位符，不可逆。逆向参照与差异：识流（E:\AI-Station\逆向工程\extracted\app64\resources\biz\index.js）为云端中心架构——本地只有 ReplayLogger 审计截图（userData/replay）、布局缓存与 hot-versions.json，没有本地业务库；本设计反其道而行（本地优先），但借鉴其 replay 式逐步取证，落到 actions.evidence_path（每个对外动作存 before/after 截图目录）。ER 述（mermaid）：CONTACTS ||--o{ GROUP_MEMBERS }-- GROUPS；GROUPS ||--o{ MESSAGES；CONTACTS ||--o{ MESSAGES；MESSAGES ||--o{ AI_INTERACTIONS（触发）；AI_INTERACTIONS ||--o| ACTIONS（产出）；CONTACTS ||--o{ LEADS；LEADS ||--o{ LEAD_EVENTS（阶段流转留痕）；CONTACTS ||--o{ CONTACT_EVENTS（画像证据，指向 evidence_message_id）；CONTENT_ASSETS ||--o{ MOMENTS_SCHEDULE（排期）；ACTIONS 多态弱引用 trigger_message_id / related_lead_id / related_asset_id / target_contact_id / target_group_id（允许 NULL，审计不因外键缺失断链）；QUOTA_LEDGER 独立按 (日期,类别,scope) 计数，被动作网关在读侧消费。身份模型：contacts 唯一键为 (channel, ext_id)，同一人双通道暂为两行（merged_into_id 支持人工合并，见 open_questions）。与既有资产呼应：用户已有"微信情报库/商机雷达"（本地微信聊天只读检索）——本子系统提供只读导入适配器作历史回填与对账源（只用本人可见数据），商机台账字段（待回复/待复联/承诺跟进）沿用商机雷达的心智模型。
+------------------------------------------------------------------------------------------
+[COMP] zb-store（core.db 存储核心）
+  职责: 长周期台账与审计数据的唯一存储：联系人/群/成员/商机/动作审计/素材/排期/频率账本/治理配置；提供建库迁移与夜间备份。
+  选型: better-sqlite3（同步 API、单写者最优）+ WAL + PRAGMA user_version 编号迁移（migrations/0001_init.sql…）+ 每日 .backup() 滚动 7 份
+  接口: contacts(id PK, channel CHECK('wx','wecom'), ext_id, UNIQUE(channel,ext_id) wxid/企微external_userid, display_name, alias, kind('person'|'official'|'self'), first_seen_at, last_active_at, profile_json 画像汇总快照, consent('unknown'|'ok'|'objected') 营销意愿, note, merged_into_id, anonymized_at)｜groups(id, channel, ext_id UNIQUE, name, topic_hint 人工主题标注, keywords_json 触发词, watch_config_json{enabled,quiet_hours,scan_interval_sec}, scan_cursor UIA读取位点, member_count_cached, status('active'|'paused'|'muted'))｜group_members(PK(group_id,contact_id), nickname_in_group, role, first_seen_at, last_seen_at)｜leads(id, contact_id FK, origin_group_id, title 一句话商机, domain, stage('new'|'qualified'|'contacted'|'nurturing'|'proposal'|'won'|'lost'|'dormant'), score 0-100, detail_json, evidence_msg_ids_json, next_action, next_action_at, owner_note, created_at/updated_at/closed_at, lost_reason)｜lead_events(id, lead_id F
+------------------------------------------------------------------------------------------
+[COMP] msg-store（msg.db 消息与互动库）
+  职责: 高体量内容数据：原始消息（脱敏后）、画像证据事件、AI 交互全记录与出网审计；是保留期清理与删除开关的主要作用对象。
+  选型: 同 better-sqlite3，ATTACH 'msg.db'；FTS5（中文用 trigram tokenizer）建 message_fts(content_text) content=messages；可 detach/轮换
+  接口: messages(id PK, channel, chat_type('group'|'dm'), group_id FK, sender_contact_id FK NULL, is_self, dedupe_key UNIQUE(chat,sender,分钟桶,content_hash) UIA重读去重键, msg_type('text'|'image'|'link'|'file'|'system'), content_text 脱敏后, link_url, content_hash, occurred_at 消息时间, captured_at 读取时间, intent_json{is_question,domains[],urgency,lead_signal}, redacted, backfilled, ai_interaction_id；索引(group_id,occurred_at),(sender_contact_id,occurred_at))｜contact_events(id, contact_id, group_id, event_type('asked_question'|'mentioned_keyword'|'replied_to_us'|'dm_us'|'asked_price'|'shared_doc'), domain, weight, evidence_message_id, occurred_at)｜ai_interactions(id, trigger_message_id, group_id, contact_id, pipeline_stage('intent'|'draft'|'policy_gate'), model, prompt_chars, completion_chars, cost_micro_cents, outbound_excerpt 实际发往云端LLM的最小摘录(出网审计), draft_reply, final_reply, verdict('sent'|'edited_sent'|'rejected
+------------------------------------------------------------------------------------------
+[COMP] ingest-pipeline（摄取与脱敏管道）
+  职责: 把个人微信 UIA 轮询读到的消息与企微回调事件统一清洗落库：敏感信息脱敏、按 dedupe_key 去重、增量更新 scan_cursor；并为'微信情报库'提供只读历史回填适配器。
+  选型: 主进程内管道函数（正则脱敏：18位身份证、1[3-9]开头的11位手机号、Luhn银行卡 → '[已脱敏:手机号]'类占位符，不可逆）+ import_sources 台账记录每次回填
+  接口: 输入：UIA reader 消息帧 / 企微 callback / 情报库回填批次（read-only，仅本人可见数据）。输出：messages 行 + groups.scan_cursor 前移 + import_sources(id, source, scope_json, stats_json, started_at, finished_at, note)。核心函数：scrub(text)->(safe_text, mask_count)；dedupe(messages[])->new_rows。二次扫描兜底任务：定期重扫存量 content_text 捕捉变体格式漏检
+------------------------------------------------------------------------------------------
+[COMP] profile-engine（画像计算器）
+  职责: 从群聊/私聊互动沉淀联系人画像：活跃度、需求领域（对齐总包智库主题树）、与我方互动度、风险标记；夜间批量 + 摄取增量双模式；标签带置信度、证据链和衰减期。
+  选型: 夜算 cron（node-cron，每日 03:00）跑聚合 SQL 产出 facets；分类用'规则优先、LLM 抽样复核'降成本（识流的视觉分类整层被砍掉，分类只作用于文本）
+  接口: contact_tags(id, contact_id FK, facet('activity'|'domain'|'engagement'|'stage_suggest'|'risk'), value, confidence, basis_json 证据计数与消息id样本, computed_at, expires_at 如 activity 7天/ domain 半衰期90天)；汇总快照写回 contacts.profile_json。产出定义：activity=近30天发言频次+趋势→active/normal/quiet/silent；domain=taxonomy(造价|招标投标|EPC管理|施工技术|资质|材料价格|其他) top3；engagement=被回复后是否再回应/是否私聊过（企微侧含链接点击）；stage_suggest 规则示例：问价或要方案→qualified，多轮追问→nurturing；risk=广告号/竞对启发式
+------------------------------------------------------------------------------------------
+[COMP] lead-ledger（商机台账）
+  职责: 商机的增删改查、阶段状态机与留痕；自动发现的商机只自动建 new 档，阶段升降级以'建议'形式待人确认（auto-classify 只写 lead_events 建议，manual 才生效），呼应商机雷达的'待回复/待复联'视图。
+  选型: 阶段机在存储层实现（lead_events 追加式，禁止 UPDATE 覆盖历史）；视图 v_leads_followup（next_action_at 到期）与 v_contact_stage_rollup
+  接口: 视图：待办商机（next_action_at<=今天 AND stage NOT IN won/lost）、本周新增/变阶段、每人待复联清单。入口 API：createLeadFromSignal(message_id, title, domain, evidence_ids)（分类器调用）；suggestTransition(lead_id, to_stage, reason)（只落 lead_events 建议，不动 leads.stage）；confirmTransition(lead_id, event_id)（人工确认后生效）
+------------------------------------------------------------------------------------------
+[COMP] quota-ledger（频率账本）
+  职责: 一切对外动作的每日计数与冷却位点存储，供动作网关在发送前检查（执行属另一子系统，本子系统只管账）；这是'低频+响应式+可熔断'硬约束的数据支撑。
+  选型: UPSERT 计数（INSERT ON CONFLICT…count=count+1）；读侧视图 v_quota_today + settings 中的每日上限配置（群回复/群每日上限、单联系人 proactive DM 每周1次、朋友圈每日1条且间隔≥23h）
+  接口: quota_ledger(PK(ledger_date 'YYYY-MM-DD', category('group_reply'|'dm_reply'|'moments'|'wecom_msg'), scope_key('group:<id>'|'ctc:<id>'|'global')), attempt_count, success_count, last_action_at)。API：checkQuota(category, scope_key, limit)->bool；recordAttempt/recordSuccess；熔断开关 settings('kill_switch' 布尔，动作网关首查项)
+------------------------------------------------------------------------------------------
+[COMP] exporter（导出器）
+  职责: 商机周报与朋友圈排期表两类例行导出，落本地 exports/ 目录（YYYY-Www.xlsx / moments_plan_14d.csv），可选经企微应用消息推送提醒。
+  选型: better-sqlite3 只读连接 + exceljs（xlsx）/内置 CSV；每周一 08:00 与每日 09:00 定时生成，导出动作本身记入 actions(action_type='export_report')
+  接口: 商机周报章节：本周新增商机（leads+lead_events where created/changed 本周）、阶段变动明细、待跟进（next_action_at 到期）、本周互动Top联系人（contact_events 聚合）、我方动作效果（actions join messages 回应率）、建议动作清单。排期表字段：日期/时段/素材标题/产品线/状态(pending_confirm|confirmed|assisted|published)/确认人/发布证据路径；取 moments_schedule join content_assets 未来14天
+------------------------------------------------------------------------------------------
+[COMP] governance（治理与保留）
+  职责: 个保法对齐的治理执行：保留期清理任务、删除开关（单联系人/单群/全部原始消息）、LLM 出网审计汇总、备份轮换；治理动作本身进 actions 审计。
+  选型: 每日 04:00 清理 job（retention_policy 驱动 UPDATE redact + FTS 重建 + 月度 VACUUM；核心库 SQLite backup API 滚动备份）
+  接口: retention_policy(kind PK, days, enabled) 建议初值：messages 180 / contact_events 365 / ai_interactions 90 / 动作截图 30 / actions 1095 / quota_ledger 400｜deletion_requests(id, scope('contact'|'group'|'all_messages'), target_id, requested_at, status, executed_at, note)。删除语义：contact→anonymize（display_name 置'已删除联系人#'，messages 整体 redact，leads 保留但脱敏以维持统计）；all_messages→msg.db detach 后重建空库。出网审计：按 ai_interactions.outbound_excerpt 汇总'本月离开了本机的文本量/字符数/目标模型'
+[FLOW] 群消息摄取→落库：UIA 轮询按 groups.scan_cursor 读新帧 → scrub 脱敏 → dedupe_key 去重 → 批量事务写 messages（500ms 合并 flush）→ 分类器写 intent_json → 同步产出 contact_events（asked_question/mentioned_keyword 等加权事件）
+[FLOW] 画像夜算：每日 03:00 聚合近窗 contact_events → 计算 activity/domain/engagement/risk 各 facet → 写 contact_tags（带 basis 证据与 expires_at 衰减）→ 汇总回 contacts.profile_json → 过期标签自动失效重算
+[FLOW] 商机自动发现→人工确认：分类器检出 lead_signal（问价/要方案/要联系方式）→ createLeadFromSignal 建 leads(stage=new, evidence_msg_ids) → profile-engine 的 stage_suggest 规则给后续升降级建议 → lead_events(source=auto-classify) 落建议 → 人工在台账确认后 confirmTransition 生效
+[FLOW] 出站动作-频率-审计闭环（数据侧）：动作网关发送前 checkQuota + 读 kill_switch → 闸门通过即先写 actions 行(outcome=进行中, idempotency_key 防重发) → 执行（RPA 或企微 API）→ 回填 outcome/content_snapshot/evidence_path（before/after 截图，仿识流 ReplayLogger）→ recordSuccess 更新 quota_ledger；崩溃窗口留下的'无 outcome'行本身即审计事实
+[FLOW] 朋友圈半自动流：草拟 content_assets(status=draft) → 合规自检 compliance_json → 人工批准 approved → moments_schedule 排期(status=pending_confirm) → 主理人当日确认(confirmed) → wx 侧 RPA 辅助发布 / 企微客户朋友圈 API 直接发布 → actions 记录(assist_moments_publish, approved_by=human, evidence 截图) → 排期状态推进 published
+[FLOW] 历史回填（情报库数据源）：import_sources 登记 → 只读遍历本人可见聊天（rion-wechat-cli/情报库能力）→ 走同一 scrub 管道以 backfilled=1 写入 messages → 事后触发一次全量画像重算；该源亦用于周期性对账（发现 UIA 漏读的消息）
+[FLOW] 治理流：每日 04:00 retention job 按策略 redact 过期内容 → 月度 VACUUM；用户在面板触发删除开关 → deletion_requests → 执行器事务内（匿名化联系人+redact 消息+清 FTS+写 actions(action_type=data_deletion)）→ 标记 executed_at
+[FLOW] 导出流：每周一 08:00 生成商机周报（新增/变阶段/待跟进/互动Top/我方动作效果/建议动作）→ exports/YYYY-Www.xlsx；每日 09:00 刷新朋友圈 14 天排期表 → exports/moments_plan_14d.csv；两者均记 actions 审计
+[RISK] UIA 读取没有服务端消息 ID，dedupe_key（分钟桶+内容哈希+发送者）是启发式：同分钟同内容不同消息可能误并、跨分钟重读可能漏并——需 scan_cursor 前移保守化 + 借情报库源周期对账兜底
+[RISK] actions 先写 attempt 再执行的两段式：执行进程崩溃会留下 outcome 为空的行——语义上可接受（审计如实），但报表需区分'尝试'与'成功'计数
+[RISK] FTS5 中文检索默认分词不可用：必须 trigram 或外置分词，且 rebuild 在大库上有耗时窗口（安排在保留期 job 之后低峰执行）
+[RISK] 脱敏正则存在变体漏检（带空格/分隔符的手机号、位数变形）：二次扫描任务只是兜底不是根治，残余 PII 风险要在文档明示
+[RISK] msg.db 无界增长：若用户关闭保留期（retention_policy.enabled=0），一年行业群量级约百万行仍可控，但截图/附件目录必须单独限额（30天硬清理）
+[RISK] better-sqlite3 是原生模块，Electron 升级需按 ABI rebuild，版本锁死要与发布流程绑定
+[RISK] 画像 taxonomy 若与总包智库目录不一致会导致 domain 标签返工：taxonomy 变更需触发 contact_events 的 domain 重映射（成本可控但要有迁移脚本）
+[RISK] 同一自然人双通道（个人微信 wxid + 企微 external_userid）在 contacts 是两行：画像与商机暂不自动归并，merged_into_id 仅人工——统计口径可能出现重复计数
+[RISK] LLM 出网 unavoidable（问题摘录发往云端模型）：outbound_excerpt 审计列让出网可查，但若用户要求零出网需切本地 GLM，成本结构改变
+[Q] 保留期数值确认：建议 消息180天/AI交互90天/动作审计3年/截图30天——待用户拍板
+[Q] 手机号脱敏是否需要'可逆保险箱'（便于人工回联客户）还是彻底不可逆（当前设计：彻底不可逆，原文始终可在微信客户端查询）
+[Q] 商机 stage 集合与用户现有'商机雷达'字段（待回复/待复联/承诺跟进）的精确映射——是作视图还是作独立字段
+[Q] 商机周报交付渠道与接收人：企微应用消息推送 / 仅本地文件 / 邮件
+[Q] domain taxonomy 是否直接复用总包智库一级目录（造价/招标投标/EPC管理/…），需要拿到智库目录清单对齐
+[Q] 是否启用 SQLCipher 静态加密（性能损失 vs 合规加分，当前默认依赖 Windows 用户级文件 ACL）
+[Q] 企微官方 API 拉到的客户数据（external_userid/名称/标签）与个人微信侧合并策略：仅人工 merge 是否够用，是否需要软身份解析（同名+同群共现打分）
+==============================================================================================================
+SUBSYSTEM: 部署与运维子系统（总包私域运营台 · 单机 Windows 常驻）
+OVERVIEW: 单机 Windows、双会话边界是本子系统的第一设计约束：凡需要读写微信桌面客户端 UIA 树的进程（主服务、RPA worker、托盘看护）必须运行在用户交互式桌面会话（Session 1+），绝不能注册为 Windows 服务——服务会话（Session 0）无桌面访问权，UIA 直接失能，这条必须写进部署文档并作为验收项；唯一适合装成 Windows 服务（nssm 托管）的是纯网络转发进程：企微回调隧道（cloudflared 或 frpc），它不需要桌面。进程模型 3+1：zp-supervisor（托盘看护）→ zp-core（Node 主服务）+ zp-rpa（Python UIA 工作进程）+ cloudfrp（隧道服务）。RPA worker 与主服务的隔离通信直接复刻逆向出的识流 helper-win 契约（127.0.0.1 HTTP + Bearer token + ppid 2 秒看门狗，见 E:\AI-Station\逆向工程\extracted\app64\resources\helper-win\main.js）；升级策略刻意不抄识流 electron-updater 的 autoDownload+autoInstallOnAppQuit 全自动热更（见 E:\AI-Station\逆向工程\extracted\app64\resources\app-update.yml），改为维护窗口+版本目录+junction 切换+双版本回滚，因为单机系统要的是可回滚而非无人值守。端口规划（全部仅本地监听）：58560=supervisor 控制口、58561=core 健康口、58570=RPA 工作口（token 鉴权）、58080=企微回调端点（隧道对外）。目录统一 C:\zp-ops\{app,config,data,logs,versions,backup,config_history}。会话与电源：专用标准用户+sysinternals Autologon（凭据入 LSA）+永不锁屏永不休眠+BIOS 来电自启+任务计划"仅当用户登录时"启动 supervisor；主理人经远程桌面完成朋友圈人工确认与扫码类处置。告警只经"运维专用企微群机器人 webhook"单向发出，绝不走个人微信 RPA 通路（结构上杜绝递归），失败降级邮件+本地 toast+alerts.log 兜底。敏感信息（API key/webhook/隧道凭据）用 Windows DPAPI 按用户加密存 secrets.dat，非密配置 config.yaml 明文+每次变更快照可回滚。微信客户端关闭自动更新并锁版本，UIA 选择器适配层独立成热更模块。自愈目标：断电重启后无人干预 5 分钟内全链路回到就绪；RPO≤1h、RTO≤30min。
+------------------------------------------------------------------------------------------
+[COMP] zp-supervisor（托盘看护进程）
+  职责: 进程树总管与安全开关。开机按序拉起 zp-core、zp-rpa、探测 cloudflared；子进程存活/心跳监控，崩溃按指数退避重启（30s→2min→10min），连续5次失败自动转只读降级并告警；承载一键熔断三入口：全局热键Ctrl+Alt+F12、托盘菜单、磁盘开关文件 C:\zp-ops\KILL.switch（任何人创建该文件即全系统2秒内停止RPA动作）；编排升级drain→staging→切换→回滚；触发日志轮转与备份。必须运行在交互式桌面会话。
+  选型: Node.js 22 LTS 打包单exe（Node SEA）；托盘用systray轻量库；由任务计划程序拉起（触发器=用户登录、勾选仅当用户登录时运行、失败1min后重启），不用HKCU Run键也不用Windows服务。
+  接口: 入口：任务计划（登录触发、延迟30s）；本地控制API 127.0.0.1:58560（token鉴权，start/stop/status/drain/rollback）；监听 KILL.switch 文件与全局热键；出：按序spawn子进程并注入token；托盘菜单与状态色。
+------------------------------------------------------------------------------------------
+[COMP] zp-core（主服务，Node）
+  职责: 业务编排中枢：企微回调事件接入并先持久化再处理（防隧道重投丢事件）；RPA上报的个人微信消息进同一管线；AI答疑与智库推荐调用总包AI顾问；出站动作统一频控、排队、审计打点；朋友圈素材定时生成任务；维护窗口与降级态管理；健康指标暴露。
+  选型: Node.js 22 LTS，Fastify（本地监听）；better-sqlite3；node-cron做内部调度；无头运行在用户会话（supervisor子进程），绝不装成服务。
+  接口: 入：127.0.0.1:58080 企微回调（先落库再ack）；127.0.0.1:58561 本地health/metrics/drain；出：调zp-rpa 58570、调总包AI顾问HTTP API、发运维告警webhook、读写SQLite(WAL)。
+------------------------------------------------------------------------------------------
+[COMP] zp-rpa（UIA工作进程，Python）
+  职责: 个人微信侧唯一执行体：UIA无障碍树直读会话列表与消息文本（新消息事件化上报）；响应式回复输入（剪贴板写入→Ctrl+V→恢复剪贴板，动作间随机化间隔）；朋友圈半自动辅助发布（素材core生成、主理人远程桌面人工确认后辅助执行，设计为幂等三段：贴→停→人工点发，系统永不自动点发）；微信客户端健康探测（主窗存在性、掉线二维码识别）；每动作记录审计上下文。单实例锁。
+  选型: Python 3.12 + uiautomation/pywinauto（wxaco已验证的UIA3路线）+ mss截图；进程间通信复刻逆向出的识流helper-win契约：127.0.0.1 HTTP + Bearer token + ppid看门狗每2秒（参照 E:\AI-Station\逆向工程\extracted\app64\resources\helper-win\main.js）。不做驱动级输入、不做硬件HID。
+  接口: 入：127.0.0.1:58570，POST {action,args}，Authorization: Bearer <token> 或 x-helper-token 头；出：消息/健康事件上报zp-core、动作审计写rpa-audit.jsonl、必要截图存data/replay/{date}/。
+------------------------------------------------------------------------------------------
+[COMP] cloudfrp（企微回调隧道，唯一Windows服务）
+  职责: 把单机动态IP后的本地端点暴露为固定公网HTTPS地址，满足企微自建应用回调的可信域名要求；隧道故障不影响个人微信RPA侧（两通路独立）。纯网络转发、无桌面依赖，是全系统唯一允许注册为Windows服务的进程。
+  选型: 首选Cloudflare Tunnel（cloudflared，需一个自有域名，免公网IP免端口映射）；备选frp+便宜VPS；经nssm注册为服务并配自动重启。
+  接口: 入：公网 https://回调域名/ → 本地127.0.0.1:58080；nssm负责崩溃自动重启；连通性探测结果上报supervisor。
+------------------------------------------------------------------------------------------
+[COMP] 配置与密钥管理
+  职责: 分层：非密配置config.yaml（功能开关、频控参数、会话白名单、维护窗口、UIA选择器适配层定义）；敏感凭据secrets（企微corpid/secret、AI key、隧道凭据、RPA token）单独存放；一切变更全量留痕、可回滚到任意历史版本。
+  选型: secrets用Windows DPAPI（CryptProtectData，当前用户scope）加密为secrets.dat（Node用win-dpapi、Python用win32crypt），文件ACL仅本用户；config.yaml明文+每次变更快照带sha256清单。不用明文.env存密。
+  接口: core各模块经统一config库读取（启动加载+监听变更热生效）；secrets解密仅发生在进程内存；每次变更复制到config_history/{ts}-{sha256}.yaml；备份任务对config目录整体快照。
+------------------------------------------------------------------------------------------
+[COMP] 监控告警中心
+  职责: 指标采集（进程心跳、微信在线、隧道连通、磁盘水位、动作成功率滑窗、SQLite完整性周检）；告警分级P1熔断/微信掉线、P2隧道断/连续动作失败、P3磁盘与备份异常；防风暴：同主题15分钟聚合去重、每小时上限N条超限只发摘要；与个人微信RPA通路物理隔离，杜绝告警触发被自己处理的递归。
+  选型: core内嵌告警模块（不独立成进程，减少守护面）；出口：企微群机器人webhook（专用运维群，单向）→ 失败降级SMTP邮件 → Windows toast + alerts.log兜底。
+  接口: 入：core/rpa/supervisor的告警事件（本地HTTP或日志钩子）；出：企微群机器人webhook、SMTP、Windows toast、C:\zp-ops\logs\alerts.log兜底持久层。
+------------------------------------------------------------------------------------------
+[COMP] 日志与审计
+  职责: 三类分离：app.log运行日志（INFO起可调DEBUG）；rpa-audit.jsonl追加式审计（每个RPA动作记录时间/目标会话/动作类型/触发原因/结果/关联消息id，文本脱敏）；replay截图仅排查期按需开启；轮转按日+大小双限，app留90天、审计压缩留180天，磁盘水位85%时加速清理。
+  选型: Node侧pino + pino-roll；Python侧loguru（rotation内建）；审计jsonl统一schema两端共用；截图JPEG按日期目录。
+  接口: core/rpa/supervisor经统一logger写入；审计jsonl双写SQLite索引表供台账查询；备份任务按计划打包logs与data。
+------------------------------------------------------------------------------------------
+[COMP] 数据存储与备份
+  职责: 单文件业务库zp.db：联系人/群/消息索引/线索台账/画像/审计索引，WAL模式；三级备份：每小时在线热备、每日03:30全量+zstd（滚动保留7日+4周）、配置每次变更即时快照；每周一次人工触发异地备；每季度真实恢复演练（目标RPO≤1h、RTO≤30min）。
+  选型: SQLite（Node better-sqlite3与Python sqlite3双端共用同一WAL库，写路径集中在core）；备份经计划任务调备份脚本；压缩zstd；异地备复用百度网盘备份通道或外置硬盘。
+  接口: core经better-sqlite3同步访问；备份器用SQLite在线backup API读不阻塞写；恢复用documented脚本restore.ps1+演练清单。
+------------------------------------------------------------------------------------------
+[COMP] 升级管理（双轨）
+  职责: 轨道A数据热更新免重启：话术/SOP/知识库引用/频控参数/UIA选择器适配层均为数据文件，改动即热生效——适配层单列因为微信版本升级主要破坏的就是选择器，必须能不动代码快速修补；轨道B整体更新：仅维护窗口（默认04:00-06:00）且无在途RPA动作时执行，下载→sha256+签名校验→解到versions/v{ts}/→drain排空在途回复→切换current junction→滚动重启→冒烟自检，保留最近2版本一键回滚。
+  选型: 版本目录+NTFS junction指向current（原子切换、秒级回滚）；升级包sha256+签名校验；刻意不用识流的electron-updater autoInstallOnAppQuit全自动热更（见 E:\AI-Station\逆向工程\extracted\app64\resources\app-update.yml），单机要可回滚不要无人值守。
+  接口: 读versions/目录与manifest；切换后经supervisor滚动重启进程树；适配层热更只触发rpa worker模块重载，不重启微信。
+------------------------------------------------------------------------------------------
+[COMP] 健康检查体系
+  职责: 四层探活：进程层（supervisor对子进程pid+心跳，2s粒度）；依赖层（微信客户端：进程存活+UIA主窗可见+无掉线二维码，60s粒度，掉线属P1需人工扫码，系统只告警暂停不自动处理）；网络层（隧道出口探活、企微API可达性，5min粒度）；资源层（磁盘水位、库完整性周检）。微信不在线时RPA自动进入静默等待而非反复重试。
+  选型: 分层探测统一汇入core的health聚合器，暴露127.0.0.1:58561/health给supervisor与告警中心消费；探测参数（间隔、阈值）进config.yaml可调。
+  接口: 对core/rpa的/health探测；对cloudflared服务状态探测；对微信的UIA探测经rpa worker代理执行；结果驱动托盘状态色与告警中心。
+------------------------------------------------------------------------------------------
+[COMP] 会话与电源管理（开机自启链）
+  职责: 固化UIA运行的会话前提：专用标准用户+sysinternals Autologon（凭据入LSA非注册表明文）实现断电重启后无人干预回到桌面；永不锁屏、永不休眠、显示器可关（UIA不需要亮屏但需要未锁桌面）；BIOS设置来电自启；远程管理通道（ToDesk或RDP）供主理人异地确认朋友圈发布与处置扫码。物理安全由BitLocker+可控环境补偿。
+  选型: Autologon for Windows（sysinternals）；powercfg锁定电源计划；组策略/注册表钉死Windows活动时间到凌晨与维护窗口重合，避免白天强制重启；ToDesk/RDP开二步验证。
+  接口: 构成开机到全链路就绪的入口链：BIOS/电源策略→自动登录→任务计划→supervisor→子进程；远程桌面通道供主理人完成朋友圈人工确认与扫码类处置。
+[FLOW] 开机到就绪链路：BIOS来电自启→Windows自动登录→桌面加载→任务计划延迟30s启动zp-supervisor（微信自身开机自启已在跑）→supervisor依次探测cloudflared服务、拉起zp-core、zp-rpa→rpa上报微信在线→core发就绪心跳到运维群→托盘转绿色。全程目标：无人干预5分钟内自愈到就绪。
+[FLOW] 崩溃自愈流：子进程心跳丢失→supervisor分类（可重启崩溃vs配置/权限类致命错）→可重启类按30s/2min/10min指数退避重启并计数→连续5次失败：停止重启、系统转只读降级（RPA停、企微侧只收不发）、P1告警→人工经托盘或远程桌面处置后一键恢复并清零计数。
+[FLOW] 微信离线处置流：rpa健康探测发现UIA主窗消失→三分支：进程崩溃（自动重启微信进程并等窗口回归，最多2次）；账号掉线出现二维码（不自动扫码：P1告警+RPA暂停，主理人手机确认或远程桌面扫码）；仅失焦（不处理）→恢复在线后自动回到工作状态，全程审计留痕。
+[FLOW] 告警递送流：任意子系统产生告警事件→告警中心分级+同主题15分钟聚合→经运维企微群机器人webhook单向发出（与个人微信RPA通路物理隔离，结构上不可能递归）→3次投递失败降级SMTP邮件+Windows toast→兜底永远先写alerts.log（出口全挂仍有本地凭据）→每小时上限熔断防风暴。
+[FLOW] 一键熔断流：人工按热键/托盘菜单/创建KILL.switch文件→supervisor广播停机令→zp-rpa 2秒内停止一切输入并退出当前会话操作→zp-core转只读（继续收消息入台账但不回）→熔断状态托盘置顶红色+P1告警通知主理人→恢复需托盘菜单二次确认防误触→全程状态变化写审计。
+[FLOW] 升级流双轨：轨道A（适配层热更）——替换选择器数据文件→rpa worker重载模块→对当前微信窗口做一次只读UIA树校验→通过即生效，失败自动回退旧适配层并转只读告警。轨道B（整体更新）——维护窗口到期或人工触发→检查无在途RPA动作（有则顺延）→下载升级包→sha256+签名校验失败即中止告警→解压到versions/v{ts}/→逐进程drain排空在途回复→切换current junction→滚动重启→冒烟自检（微信在线探测、回调自ping、RPA dry-run）→失败自动切回上一版本并告警。
+[FLOW] 备份与恢复流：每小时整点在线热备zp.db→每日03:30全量备份+zstd→配置每次变更即时快照config_history→每周主理人手动触发异地备（百度网盘通道或外置盘）→季度恢复演练：停core→以最近好备份还原zp.db→用config_history对齐配置→起core→核对台账计数与审计流连续性→记录RTO/RPO实测值。
+[FLOW] 首次部署清单：(1)机器与账户：专用标准用户+强口令、BitLocker开、Autologon、电源计划永不休眠永不锁屏、BIOS来电自启、Windows活动时间钉到凌晨；(2)目录与权限：建C:\zp-ops\七目录结构、ACL限本用户；(3)微信客户端：装锁定版本、关闭自动更新、设开机自启、登录一次并勾选记住；(4)装nssm并注册cloudflared服务、配隧道域名；(5)写config.yaml与secrets（DPAPI加密）；(6)任务计划建supervisor登录触发项；(7)企微管理后台：自建应用回调URL与可信域名、运维群机器人webhook；(8)验收测试：熔断测试（建KILL.switch→RPA 2秒内停）、断电重启演练（来电→5分钟自愈）、备份恢复演练、告警全链路测试（含webhook失败降级邮件）、升级回滚演练；(9)交付runbook文档（含故障预案表、恢复脚本用法、各目录说明）。
+[RISK] 微信客户端自动升级破坏UIA选择器（最高频故障源）｜症状：树校验失败率突增或找不到控件｜预案：部署时关闭微信自动更新并锁版本；适配层为独立热更模块，微信升级必须走先更适配层再升微信的受控流程；适配层校验失败自动回退旧层并转只读。
+[RISK] RPA相关进程被误装成Windows服务（Session 0隔离）｜症状：服务显示运行中但UIA全部超时失败｜预案：部署文档以红字写明supervisor/core/rpa只能跑在交互式桌面会话，全系统唯一服务是cloudflared；验收清单含UIA冒烟测试必过。
+[RISK] 微信账号掉线出现二维码（无法也不应自动处理）｜症状：UIA探测到登录二维码｜预案：P1告警+RPA自动暂停，主理人手机确认或远程桌面扫码；期间企微侧不受影响继续服务；恢复后自动续跑并审计留痕。
+[RISK] Windows强制更新重启打断在途动作｜症状：动作半途中断、会话可能停在输入框状态｜预案：活动时间钉到凌晨与维护窗口重合；Autologon+任务计划保证重启后5分钟内全链路自愈；审计流标记中断动作，恢复后不自动重发（宁可漏发不重发骚扰）。
+[RISK] 告警递归或风暴｜症状：告警触发更多事件形成回环或单点故障刷屏｜预案：告警唯一出口是运维企微群机器人webhook（单向、RPA永不操作该群）；同主题15分钟聚合+每小时上限+超限摘要；alerts.log兜底确保出口全挂时仍有本地凭据。
+[RISK] SQLite库损坏（断电/磁盘错误）｜症状：database disk image is malformed｜预案：WAL+常规检查点；小时级热备链；恢复脚本取最近好备份还原，缺口窗口用审计jsonl重放补台账；季度演练保证恢复流程真实可用。
+[RISK] 磁盘写满（日志/截图/备份堆积）｜症状：写入失败、微信客户端卡顿｜预案：日志按大小+天数双限自动清理；replay截图默认关、排查期限额；85%水位告警+自动加速清理；备份目录滚动保留。
+[RISK] 隧道中断（企微回调失联）｜症状：企微侧停收、个人微信侧不受影响｜预案：nssm自动重启cloudfrp隧道；3次失败P2告警；事件先落库设计保证隧道恢复后企微重推不丢不重；极端情况临时切手机热点出口。
+[RISK] 自动登录凭据暴露（物理接触机器）｜风险：单机含客户数据与微信会话｜预案：BitLocker全盘加密；机器置于可控物理环境；Autologon凭据存LSA非注册表明文；远程通道开二步验证；审计日志记录本地登录事件。
+[RISK] 熔断开关误触发｜症状：KILL.switch被误建、系统静默停｜预案：熔断状态托盘置顶红色+P1告警（不会unnoticed）；恢复需二次确认防误操作；开关文件路径写入runbook便于人工排查。
+[RISK] 备份从未验证不可恢复（最隐蔽风险）｜症状：出事才发现备份损坏或流程不会用｜预案：季度真实恢复演练列入运维日历并记录RTO/RPO实测；备份完成时做zstd测试解压+SQLite integrity_check。
+[RISK] 朋友圈辅助发布中途失败（半自动流断在输入半途）｜症状：文案粘贴了但未发出｜预案：该流程本就人工确认制，设计为幂等三段（贴→停→人工点发），系统永不自动点击发布；中断即告警提示主理人手动收尾。
+[RISK] 主服务内存泄漏长期运行劣化｜症状：core RSS缓慢上涨、响应变慢｜预案：supervisor每日维护窗口主动优雅重启core（drain后重启，RPA无感）；内存水位超阈值即时告警提前重启。
+[Q] 公网接入选型：主理人是否有自有域名（决定Cloudflare Tunnel）还是需要买VPS跑frp？企微回调可信域名还要求企业主体认证资料，需确认总包科技企微主体资质齐备。
+[Q] 微信版本锁定策略的运维接受度：锁定版本意味着手机端与桌面端可能有功能差，且需定义多久受控升级一次（建议每月一次、先更适配层再升微信）；主理人是否接受这个节奏。
+[Q] RPA技术栈终选：Python uiautomation（生态熟、wxauto有验证）vs C# .NET 8 + FlaUI（UIA3更稳、单exe部署更干净）——建议原型期各做一周消息直读A/B再定；58570 HTTP+token契约已按语言无关设计，切换不影响部署形态。
+[Q] 备份异地目标确认：百度网盘通道（已有skill与备份脚本可复用）还是外置硬盘？审计数据含聊天文本，出域边界需主理人拍板（个保法最小化精神：异地副本同样要加密）。
+[Q] Windows更新窗口与业务冲突：是否用组策略把活动时间硬钉在03:00-05:00（与维护窗口重合），从源头减少白天强制重启打断RPA动作的可能。
+[Q] 远程确认朋友圈的移动端体验：现在假定主理人经ToDesk/RDP远程桌面确认，若嫌重，可评估后续加一个极简企微自建应用确认卡片（点确认才执行辅助发布），属架构侧接口预留问题。
+==============================================================================================================
+SUBSYSTEM: 个人微信精简版RPA子系统（总包私域运营台 · wx-rpa）——最敏感子系统，护栏优先，分级放权
+OVERVIEW: 定位与总原则：本子系统是运营台中唯一触碰个人微信桌面客户端的执行器，设计立场是"感知强、执行弱、人工可介入"：只做响应式动作（被@/关键词求助/白名单私聊），低频+可一键熔断+全量审计；与主台（企微官方API路线）进程隔离，本子系统崩溃或被熔断不影响主台。落地采用三阶段放权：Phase 0 影子期（只读感知+生成草稿+审计，零输入动作，跑2周基线）→ Phase 1 辅助期（人工逐条批准后才执行粘贴；朋友圈半自动填充）→ Phase 2 受限自动期（仅@提及与私聊白名单免批自动答，收紧限额）；任何阶段可一键降级回上一阶段。
+
+关键实测证据（2026-10-12本机，Weixin 4.1.8.107，安装于 C:\Program Files\Tencent\Weixin，正在运行，主窗口 pid=17340 class=Qt51514QWindowIcon name=微信）：用 System.Windows.Automation 分别以 ControlViewWalker 与 RawViewWalker 遍历主窗口，两种视图均只返回1个不透明Window节点、零子节点、无AriaRole——即该版本主窗口当前不向UIA暴露任何会话列表/消息内容。这推翻"4.x直接UIA直读"的乐观假设，但不推翻架构：感知层做成适配器（UIA为主选，微信3.9.x全树可用；4.x降级为本地OCR固定区域识别；另配只读本地DB做台账补充），启动自检自动判定后端并上报，禁止静默假装可用。4.x下Phase 2自动发送默认关闭，直至感知+校验可靠。
+
+技术选型对比（worker语言）：① python uiautomation/pywinauto——微信自动化社区事实标准（wxauto生态围绕其维护3.9.x选择器），COM直调UIA，低频场景性能足够，PyInstaller打包，LLM栈亲和；② C# UIA——UIA事件性能与COM控制力最强，适合事件驱动高频场景，但开发成本高、与现有栈割裂；③ node+windows-foreground——与Electron主台同语言、可直接复用逆向出的粘贴流程代码，但微信选择器社区积累在Python侧。结论：worker用Python（uiautomation+pywin32+pillow+本地PaddleOCR），IPC照抄逆向验证过的 helper-win/main.js 模式（127.0.0.1随机端口+Bearer token+ppid看门狗2s自杀），即"主台 ⇄ localhost HTTP+token ⇄ RPA worker(Python)"。UIA事件vs轮询：选轮询（3-8s抖动），理由：Qt/mmui类框架几乎不发可靠UIA事件、COM事件回调在Python有死锁风险，参照产品同为轮询+红点检测（biz/index.js的unread_detected/poll循环）。
+
+对参照产品（识流，逆向产物位于 E:\AI-Station\逆向工程\extracted\app64\resources\）的取舍：不继承——wyhkm.dll/wyhr.dll驱动级输入（lib/wyhkm-dll.js的FFI全套）、CH9329/AtomS3U/NanoKVM硬件HID四后端（robot/index.js）、云端YOLO布局检测与豆包视觉后验、整套拟人军备；保留借鉴——剪贴板粘贴闭环（biz/index.js的pasteTextViaClipboard：备份→写入→readText回读校验→300-500ms随机延时→Ctrl+V→恢复并校验，支持中止信号）、"不前台拉起"原则（其代码注释：忽略前台拉起调用以避免触发截屏风控）、reply_mode可切换（auto/人工）、ReplayLogger式逐步事件审计（但默认不存截图，仅失败可选存并限期清除）、发送键模式探测（单Enter/Ctrl+Enter兼容）。
+
+"永不做"清单（硬编码进GuardrailCore，任何配置不可解锁）：1) 不自动点赞/评论/回复他人朋友圈；2) 不做未经人工确认的全自动朋友圈发布（系统最高权限是"填充后停在发表按钮前"，发布点击永远归人）；3) 不主动私聊陌生人、不群发批量营销；4) 不自动加好友/拉群/改群公告；5) 不对白名单以外会话做任何动作（读取也仅限白名单群）；6) 不绕过或自动处理微信风控验证（验证码/滑块/短信一律停机转人工）；7) 主理人正在用机时（GetLastInputInfo近120秒有键鼠输入）不抢焦点不抢键盘，动作推迟；8) 20:30-08:30不执行任何输入动作；9) 重启后不回放积压消息批量补发；10) 不向云端LLM发送真实昵称/手机号等身份字段（编号化）；11) 不伪装人类——被问是否AI必须承认（写入Advisor提示词）。
+------------------------------------------------------------------------------------------
+[COMP] rpa-worker（隔离工作进程）
+  职责: 唯一允许触碰微信窗口的进程；承载感知、执行、护栏、熔断的运行时；不持有业务状态（状态归主台），崩溃由Supervisor退避重启、连续崩溃即停机告警；退出路径保证恢复剪贴板、不遗留按键/焦点状态。
+  选型: Python 3.11 单进程 + uiautomation/pywin32（UIA）+ pillow（截图）+ 本地PaddleOCR（仅4.x降级启用）；PyInstaller 打包独立exe；明确不引入任何驱动级DLL（wyhkm类）或串口HID库。
+  接口: 暴露 HTTP 127.0.0.1:<随机端口>，头 X-Helper-Token: Bearer <token>（复刻 E:\AI-Station\逆向工程\extracted\app64\resources\helper-win\main.js 的鉴权+看门狗模式）；动作集：health / poll_sessions / read_messages / send_approved_draft / moments_fill / halt / ping；每30s心跳上报状态与限额计数快照。
+------------------------------------------------------------------------------------------
+[COMP] SensingAdapter 感知适配层（SessionListSensor + ChatPaneReader）
+  职责: 会话列表监控（白名单群过滤+新消息检测）与消息结构化（发送者/文本/@提及检测；图片/引用/表情降级为占位符，图片默认不参与触发）；屏蔽后端差异输出统一Msg；启动自检上报当前可用后端，禁止静默假装可用。
+  选型: 后端A=UIA直读（python-uiautomation，适配微信3.9.x全树；4.x开放无障碍后即刻可用）；后端B=本地OCR（固定区域截图+PaddleOCR中文模型，坐标经一次性人工标定向导，分辨率/DPI变更需重标定，截图用PrintWindow/PW_RENDERFULLCONTENT不抢前台）；后端C=只读本地DB（复用本机已有 rion-wechat-cli 只读能力，仅补台账/画像/去重，不驱动实时触发）。UIA事件方案评估后否决（Qt/mmui不可靠事件+COM回调死锁风险），统一3-8s抖动轮询。
+  接口: poll_sessions() -> [SessionDelta{chat_key, unread_hint}]；read_new_messages(chat_key) -> [Msg{msg_uid, sender_ref, text, is_at_me, msg_kind}]；selfcheck() -> SensingReport{backend, wechat_build, probe_detail}；msg_uid=(chat_key,内容哈希,位置序号) 去重防重读重答。
+------------------------------------------------------------------------------------------
+[COMP] TriggerGate 响应式触发规则引擎
+  职责: 判定一条消息是否值得进入回答流程，只做响应式：群内被@（精确匹配主理人昵称）、白名单求助句式（请问/怎么/如何/求助+工程领域词）、Phase2起私聊白名单直问；其余一律ignore并只计数。规则可配置但受GuardrailCore约束（规则不能解锁永不做清单）。
+  选型: 纯Python规则引擎（正则+词表+简单评分），规则热加载；不做LLM前置分类（成本与延迟不必要，判定进LLM的是已触发消息）。
+  接口: evaluate(msg: Msg) -> Decision{action: trigger|ignore|escalate, reason_code, matched_rule}；rules.yaml 由主台热更新（带版本审计）。
+------------------------------------------------------------------------------------------
+[COMP] AdvisorClient 顾问调用客户端
+  职责: 把已触发消息（去身份化：发送者替换为群内编号）连同群上下文摘要发给总包AI顾问，取回回复草稿+智库引用；执行输出护栏：长度<=300字、必须附来源、被问是否AI必须承认、涉报价/合同/安全事故等高危话题强制 need_human=true。
+  选型: HTTPS 调用主台已有的 Claude/GLM 栈（主台统一管密钥与模型路由）；worker 内只做脱敏与长度/话术校验，不含模型密钥。
+  接口: draft(msg: Msg) -> ReplyDraft{text(<=300字), citations[], need_human: bool, refusal_reason?}；POST 主台 /advisor/draft；调用前对文本做脱敏清洗（手机号/身份证正则打码）。
+------------------------------------------------------------------------------------------
+[COMP] GuardrailCore 频率与权限护栏核
+  职责: 每个动作前强制过闸：每群每小时回复上限2条、同群冷却15分钟、全局每日上限15条（Phase2）且全局硬顶20、活动时段08:30-20:30、任意两次输入动作全局间隔>=30s±抖动、GetLastInputInfo检测主理人近120秒有键鼠输入则推迟、重启后不回放积压（只处理在场新消息）；同时持有『永不做』清单的代码级判定（禁点赞评论他人朋友圈/禁未确认发布/禁主动私聊陌生人/禁自动加好友/禁绕过风控验证/禁深夜动作/禁向云端发送真实身份字段等）。
+  选型: 纯Python本地模块+SQLite计数表；与熔断器联动：护栏拒绝事件也写审计。
+  接口: check_and_consume(action_kind, chat_key) -> {allowed: bool, reason}；get_limits() -> LimitsSnapshot；所有阈值 config/guardrails.json 主台可改但下限不可低于安全档（如全局日限不可>20）。
+------------------------------------------------------------------------------------------
+[COMP] ReplyExecutor 回复执行器
+  职责: 仅文本回复；流程：检测输入框当前是否有草稿文本（非空即中止并转人工，绝不覆盖主理人未发内容）→备份剪贴板→写入文本→回读校验→焦点置于输入框（不全局前台抢占）→Ctrl+V→UIA回读输入框内容二次校验（4.x OCR降级时以OCR校验或跳过并降级为人工确认）→按探测到的发送键模式（单Enter/Ctrl+Enter）发送→恢复剪贴板并校验；全程随机延时300-500ms级（借鉴识流 pasteTextViaClipboard 实测参数）。
+  选型: pyperclip/pywin32 剪贴板 + uiautomation ValuePattern 回读 + pydirectinput 发键；4.x无UIA时坐标点击（标定向导产物）+OCR校验；不使用驱动级输入。
+  接口: send_text(chat_key, text) -> ExecResult{ok, verify_method, clipboard_restored}；不暴露任何『点击发布』类接口——接口层面不存在该动作。
+------------------------------------------------------------------------------------------
+[COMP] MomentsAssist 朋友圈半自动流
+  职责: 两档模式：clipboard_only（系统只把终稿文案+配图放剪贴板/存素材目录，人自己操作微信）与 assisted_fill（worker打开发朋友圈面板、粘贴文案、按目录顺序添加配图、然后停机等待，绝不点击『发表』）；发布动作永远由人工完成并在面板回勾记录形成闭环台账。
+  选型: 与ReplyExecutor共用剪贴板与输入栈；朋友圈界面定位同样走UIA（可用时）或人工标定坐标；配图由主台内容管线生成（总包AI顾问文案+现有海报引擎产物）。
+  接口: moments_fill(job_id, text, images[]) -> FillResult{filled: bool, stopped_before_publish: true}；作业由ReviewPanel确认后创建；配置键 moments_mode 枚举不含 auto_publish。
+------------------------------------------------------------------------------------------
+[COMP] CircuitBreaker 熔断器
+  职责: 四类触发：①微信界面出现风控词（操作频繁/异常/验证/封等词表，UIA或OCR侦得）②UI结构异常（选择器连续失败>=5次、窗口消失、登录页出现）③执行失败环（同一动作失败3次）④人工/护栏指令；动作=立即halt+冻结任务队列+经企微群机器人webhook推送告警给主理人；恢复必须人工在ReviewPanel点击re-arm并确认风险自担。
+  选型: worker内状态机+主台侧告警通道（企微webhook，复用主体方案的合规通道）。
+  接口: subscribe(worker_events) -> Alarm{level, code, detail}；导出 halt()（主台任何组件可调用）；企微群机器人 webhook URL 由主台注入。
+------------------------------------------------------------------------------------------
+[COMP] AuditStore 审计与状态库（主台侧）
+  职责: 全量本地审计：每个感知事件与动作的{时间,目标,动作类型,决策依据,结果,限额余量}；消息缓存保留90天（原始文本）后只留聚合统计；提供按群/按人删除函数（个保法可删除）；计数器（频率护栏的权威数据源，worker重启不丢失）。
+  选型: SQLite（单文件、本地、免服务）；不做任何云端同步；每日自动备份到本机另一目录。
+  接口: REST 查询 /audit/search、/limits、/moments/jobs；命令 /arm /halt /purge(chat_key) /rotate_rules。
+------------------------------------------------------------------------------------------
+[COMP] ReviewPanel 人工确认面板（主台侧UI）
+  职责: Phase0/1的审批工作台：回复草稿（原文+草稿+引用）一键批准/改后批准/忽略；朋友圈作业确认与发布回勾；一键熔断/降级/恢复；限额与规则查看调整；所有人工动作同样入审计。
+  选型: 主台Web界面（与企微主体方案同栈），不装进worker。
+  接口: 调 worker HTTP API（token）；读AuditStore；发 AdvisorClient 草稿审批流；触发 CircuitBreaker halt。
+------------------------------------------------------------------------------------------
+[COMP] WorkerSupervisor 进程监护（主台侧）
+  职责: 拉起worker、健康监测；崩溃退避重启（10s/30s/2min）；10分钟内崩溃>=3次则停止重启并告警（防止半死状态反复触碰微信）；启停全程审计。
+  选型: 主台内轻量监护模块（Node child_process），复用识流 helper 的ppid双向看门狗思路。
+  接口: spawn worker（注入token/端口/ppid）→ 监听心跳 → 指数退避重启 → 停机时经企微webhook告警并置主台徽标『微信侧离线』（主体企微路线不受影响继续运行）。
+[FLOW] 启动自检流：Supervisor拉起worker→worker读config→SensingAdapter.selfcheck()：探测微信进程与版本→UIA树探针（对主窗口做ControlView+RawView两级采样，节点数为0且当前为4.x即判定UIA后端不可用，自动落OCR后端并把SensingReport上报主台与告警通道）→检查已登录态（无登录页特征）→护栏计数从AuditStore恢复→进入轮询循环。版本或感知后端变化必须人工在面板确认后才允许进入执行阶段。
+[FLOW] 群消息响应主流程（三阶段）：轮询发现白名单群有新消息→切到该会话→read_new_messages结构化+去重→TriggerGate判定（被@/求助句式）→不过闸则仅审计→过闸则AdvisorClient生成草稿（发送者编号化+引用智库）→Phase0：草稿只入面板供主理人参考；Phase1：面板批准→GuardrailCore.check_and_consume→ReplyExecutor粘贴发送（草稿保护→剪贴备份→写入→校验→粘贴→二次校验→发送→恢复剪贴板）→审计闭环；Phase2：仅@提及与白名单私聊允许免批自动发送，其余仍走人工。
+[FLOW] 私聊直答流（Phase2起，更严限额）：仅白名单联系人；单联系人每日上限1条主动侧回复（其余只提醒主理人人工处理）；同群/同人冷却20分钟；流程同上但escalate阈值更低（任何不确定即转面板）。
+[FLOW] 朋友圈半自动流：主台内容管线（总包AI顾问文案+海报/配图生成）→生成作业入队→ReviewPanel人工终审（可编辑文案与换图）→确认后按moments_mode执行：clipboard_only（终稿写入剪贴板+素材目录打开，人自己发）或assisted_fill（worker填充文案与图片后停止，界面停在发表按钮前）→人工点击发表→面板回勾『已发布』→台账记录（文案快照/图指纹/时间）。
+[FLOW] 熔断与恢复流：CircuitBreaker任一触发源命中→halt()冻结一切输入动作（感知轮询可继续只读）→企微webhook告警（级别/原因/最近动作）→主台徽标变红→人工检查微信状态→ReviewPanel点击re-arm（需勾选确认）→worker重新自检后才恢复；风控词类触发默认额外要求冷却至少2小时。
+[FLOW] 崩溃恢复流：worker异常退出→Supervisor按10s/30s/2min退避重启→重启后不回放积压（只处理在场新消息，历史缺口由只读DB适配器事后补台账）→10分钟内3次崩溃→停止重启+告警；主台与其余子系统全程不受影响。
+[FLOW] 数据保留与删除流：消息原始文本90天自动清除（留聚合）；ReviewPanel提供按群/按联系人一键删除（同步清worker缓存与AuditStore记录并写删除审计）；升级/迁移仅整机搬SQLite文件，无云端副本。
+[RISK] 封号风险为不可消除的残余风险：即使低频响应式+随机化，个人微信外挂自动化仍违反《微信个人账号使用规范》。缓解：三阶段放权+小号先行+限额保守+响应式边界；建议Phase0/1至少跑在非核心账号上验证1个月再评估是否切主号。
+[RISK] 微信4.1.8 UIA空树（本机实测）迫使感知层降级OCR：OCR有误读率，可能导致答非所问或漏读@；缓解：OCR置信度阈值、低置信不触发、Phase2在4.x上默认禁用免批自动发送；若锁3.9.x则3.9有被官方强制升级/停止登录的运营风险。
+[RISK] 微信静默自动更新破坏选择器/坐标/流程：必须在机器上关闭微信自动更新并锁版本，且启动自检含版本比对，版本变化即进入只读影子模式待人工确认。
+[RISK] 剪贴板与焦点竞态：粘贴瞬间主理人正在复制/打字会互相破坏；缓解：动作前GetLastInputInfo空闲检测、输入框草稿非空即中止、全程<2秒的剪贴板占用窗口+事后恢复校验、失败即熔断计数。
+[RISK] 误发风险（Enter模式+焦点错乱导致文本发到错误窗口）：缓解：发送前UIA/OCR双重确认焦点在目标输入框；4.x坐标模式下该风险更高，故assisted_fill之外4.x默认不自动发送。
+[RISK] LLM工程建议错误的责任风险：错误规范引用可能造成工程损失；缓解：必须附智库出处、300字上限、高危话题（安全/合同/报价）强制转人工、Phase1全量人工审批校准采纳率后再放权。
+[RISK] 隐私合规：群聊文本经云端LLM处理属个人信息处理行为；缓解：发送者编号化+正则打码手机号等、消息90天删除、本地SQLite不外传、可整体切换本地模型（GLM本地部署为后续选项）。
+[RISK] 依赖链风险：wxauto生态若锁3.9而官方强推4.x，社区选择器可能断层；自研选择器模块化隔离，便于按版本更换；OCR坐标标定增加部署成本（每次UI改版重标定）。
+[RISK] 单点机器风险：常驻Windows机器断电/重启后全自动恢复可能放大无人值守动作；默认开机不自启执行阶段，需人工确认后才进入对应Phase。
+[Q] 微信4.1.8空UIA树是否可被激活：是否存在微信内『无障碍』设置、或Qt的screen-reader检测标志（SPI_SETSCREENREADER）开启后即暴露完整树？需主理人同意后做一次受控实验（改系统标志可逆）；若可激活，4.x主路径立即从OCR切回UIA。
+[Q] 微信4.x窗口标题未读计数行为：标题是否随未读变为『微信(N)』格式、N是否可靠（影响最廉价的『有无新消息』粗检测）；同样需要受控实验观察。
+[Q] 锁3.9.x的现实性：官方是否仍提供3.9.x安装包、服务器是否会强制弹窗升级/限制登录旧版；若可行，3.9+UIA是Phase2自动化的最稳地基；不可行则评估采购wxautox（商业库）对4.x的支持与许可条款。
+[Q] wxauto/wxautox对微信4.x的支持现状与许可证（wxauto开源版3.9为主，wxautox闭源收费）：值得在架构确定后做一次小额评估，若其已稳定支持4.1.x，感知层可直接复用其选择器维护成果。
+[Q] OCR降级路径的两个工程细节：①PrintWindow/PW_RENDERFULLCONTENT对微信4.x GPU渲染窗口的后台截取是否完整（部分DWM场景会黑帧）；②固定区域坐标在DPI缩放/窗口布局调整下的稳定性与重标定成本。
+[Q] 朋友圈界面的可达性：4.x朋友圈是独立窗口还是WeChatAppEx(Chromium)承载——若为Chromium窗口，UIA树很可能完整可用（Chromium按需开a11y），朋友圈assisted_fill可走比聊天更稳的UIA路线；需实测确认。
+[Q] Phase2自动化的账号策略：是否先用非核心小号试运行4周再切主号（强烈建议）；以及私聊白名单的初始名单与审批人（主理人本人还是授权运营）。
+[Q] 云端LLM的隐私权衡：脱敏后仍含问题原文，是否需要为高敏群配置本地GLM推理（本机有常驻GPU与否待确认）；个保法口径下『消息文本→云端模型』的告知义务与用户(群友)感知边界。
+[Q] 与企微主体的数据合流口径：个人微信侧台账（联系人/商机线索）如何与企微客户联系数据去重合并（同一客户双端身份关联规则），属主系统设计但影响本子系统台账schema，需与主体架构设计对齐。
+==============================================================================================================
+SUBSYSTEM: 合规护栏子系统（Guardian）— 横切企微官方API / 个人微信UIA-RPA / 朋友圈半自动辅助三条通道的统一强制层
+OVERVIEW: 设计原则：护栏不是散落在业务代码里的检查集合，而是一个独立的 Policy Decision Point——名为 Guardian 的独立本地进程，持有全部对外动作的唯一放行权。三条通道（企微API、个人微信RPA执行器、朋友圈辅助发布）的每个对外动作必须先取得 Guardian 签发的一次性 permit（HMAC 签名，绑定内容哈希+通道+对象+epoch+短TTL），执行器逐动作验签、并在不可逆步骤（回车/点击发送）前复核熔断 epoch。固定决策管线顺序：①急停状态检查→②免打扰/节流日历→③内容审核闸门→④频率限制扣减→⑤人工确认路由→⑥落审计intent并fsync后才签发（no log no permit 不变式）。架构取舍直接取自本次逆向结论：继承识流已验证的 helper-win 进程隔离模式（127.0.0.1+token+ppid双向看门狗，见 extracted/app64/resources/helper-win/main.js）与每动作留痕的 ReplayLogger 思路，但修复其四个结构性缺陷——bundle内敏感词/审核/过滤词零命中（无内容闸门）、reply_mode默认auto（无人审默认）、ReplayLogger可一键清理且非append-only（审计可篡改）、stop为散布全码的协作式软停（非fail-closed）。进程拓扑附加一条结构性保证：RPA执行器进程被OS防火墙完全禁外网，唯一socket是Guardian loopback——输入路径在结构上不可能外传数据。诚实边界：单机单操作者场景下，护栏的设计目标是防bug、防行为漂移、保证留痕可追责，不是对抗机器所有者本人；所有配置修改均版本化+审计留痕以提高可见性，而非技术阻断。
+------------------------------------------------------------------------------------------
+[COMP] Guardian 护栏网关(permit 机制, 强制基座)
+  职责: 全系统唯一对外动作放行口与决策管线编排者。对外动作定义 = 任何经由三条通道发出的消息/请求/发布。决策管线固定顺序①至⑥不可重排; 每步判定写入 decision_path 随 intent 记录落盘。permit 一次性(nonce防重放)、短TTL默认90秒、绑定 sha256(最终发送内容)。【强制点】编排器到执行器之间物理上无第二条通路; 执行器除心跳与outcome上报外无任何被允许的写操作。
+  选型: 独立 Node.js 进程(WinSW 注册为 Windows 服务, 开机自启); 127.0.0.1 HTTP+token(继承逆向出的 helper-win 模式但反转信任方向: 不是 helper 信任调用方, 而是执行器必须持 Guardian 签发的 permit 才动作); 状态存 SQLite(better-sqlite3); HMAC-SHA256 密钥仅 Guardian 与执行器持有。
+  接口: REST(仅loopback): POST /v1/permit/request, /v1/permit/revoke, /v1/risk-signal, /v1/heartbeat, /v1/audit/outcome, GET /v1/state。【绕过难度: 高】绕过需改执行器代码或伪造HMAC签名; 每分钟对账任务(outcome无对应intent即视为绕过信号, 自动熔断告警) + 审计哈希链断链检测使静默绕过必然留痕; 对机器owner不设防(明示边界)。
+------------------------------------------------------------------------------------------
+[COMP] G1 频率限制器(令牌桶, 四维)
+  职责: 四层维度: 通道级(个人微信默认每小时30条、每天150条; 企微按官方接口限额镜像)、对象级(每群每小时2次回复且仅响应式触发)、会话级(同一会话两条回复最小间隔约120秒加jitter, 克制不刷屏)、动作类型级(加好友/主动私信/朋友圈协助发布各自独立桶)。桶状态 SQLite 持久化, 重启不清零, 封死重启即绕过的口子; 配置热加载且变更本身写审计。【强制点】决策管线第④步, 同步扣减, 扣减失败即拒绝; permit 一次性防重放。
+  选型: SQLite 持久化桶 + 内存快速路径; YAML 配置(config/guard_rates.yaml) schema 校验后热加载; 配置文件带版本号与变更审计。
+  接口: 内部模块 API: checkAndConsume(channel, object_id, action_type) 返回 allowed/retry_after; 控制台可视化当前各桶余量。【绕过难度: 中高】编排器直连执行器被 permit 机制挡住; 改桶状态需改 SQLite(有 Guardian 维护的校验和); 改配置文件放宽仅留痕可见(版本+审计)。
+------------------------------------------------------------------------------------------
+[COMP] G2 内容审核闸门(三级词库)
+  职责: 发送前全量过闸(文本/表情包文案/朋友圈文案; 图片仅允许注册过的模板资产, 用户提供图片一律转人工)。三级词库: 一级硬阻断(涉政涉法涉黄暴恐、诈骗推广、广告法绝对化用语如 最/第一/国家级/100%); 二级工程行业承诺类禁用语(保证中标/包过/包验收/终身免费/绝对安全零事故/资质挂靠/围标串标话术, 阻断或强制人工); 三级提示级(报价/工期/责任表述、夸大修辞, 转人工确认)。词库本地、版本化、SHA-256清单固化。逆向已验证: 识流 bundle 内敏感词/审核/过滤词零命中且 reply_mode 默认 auto —— 这是本系统与参照物的核心差异点。【强制点】决策管线第③步, 先于频率扣减(被拒内容不消耗令牌); LLM 二审只允许升严、永不放行硬阻断。
+  选型: Aho-Corasick 多模式匹配 + 正则层(绝对化用语模式) + 可选 LLM 二审(复用总包AI顾问 Claude/GLM 栈, 严格 JSON 裁决 pass/review/block, 仅升严不降级)。
+  接口: moderate(content, channel) 返回 verdict/rule_hits/reason; 词库管理UI(导入/版本diff/最近变更展示)。【绕过难度: 高】单一咽喉 + 确定性匹配为主、LLM 仅辅助; 词库文件用户可删减但修改被版本化记录并在控制台首页展示当前词库版本与最近变更。
+------------------------------------------------------------------------------------------
+[COMP] G3 人工确认队列
+  职责: 必审动作基线清单(不可配置为空的核心集): 一朋友圈发布(硬约束: 全自动发布被禁止, 系统仅辅助); 二任何主动私信首次触达; 三审核闸门判 review 的内容; 四含报价/工期/承诺类表述; 五单群当日产品推介超过配额后的追加推介; 六批量动作(对象大于1); 七熔断后的恢复操作。队列 SQLite 持久化, 控制台展示原文+命中规则+目标+拟发送时间; 批准时对内容哈希签名绑定, 批准后内容被改则 permit 失效需重审。时效: 会话类30分钟未审即过期丢弃(过期不补发, 宁可不回); 朋友圈草稿保留7天。【强制点】决策管线第⑤步路由; 执行器校验 permit.content_hash 等于实际发送内容哈希。
+  选型: SQLite 队列 + 本地 Web 控制台(React+Fastify) + 操作者 PIN(Argon2 哈希存本地)。
+  接口: enqueue(action), approve/reject/edit(编辑重过闸), 过期sweeper; Windows toast 通知。【绕过难度: 中高】编排器无法自批(批准需在 localhost 控制台进行且要求操作者PIN); 单机单操作者下其真实作用是强制摩擦+留痕, 而非对抗owner。
+------------------------------------------------------------------------------------------
+[COMP] G4 审计日志(append-only 哈希链)
+  职责: JSONL 按天分片 + SQLite 索引。每个对外动作两条记录: intent(Guardian 签发 permit 前 fsync 落盘, 含时间/通道/对象/动作类型/全文内容/决策依据=各护栏判定明细/permit_id)与 outcome(执行器回报成败+发送后UIA回读校验结果)。对账任务巡检 有outcome无intent 即绕过信号, 自动触发熔断告警。防篡改: 记录间哈希链(每条含 prev_hash), 每日锚定根哈希导出; 启动验链, 断链即告警。保留: 内容全文90天后转哈希+元数据, 索引180天, 事故事件截图30天。对比逆向产物: 识流 ReplayLogger(MAX_SESSIONS=5/EVENTS_PER_SESSION=200/JPEG60)每步双截图且可一键清理 —— 留其每动作留痕思路, 去其可篡改与PII超采。【强制点】无日志不签发: intent 先于 permit 写盘是签发前置条件; outcome 是执行器除心跳外唯一被允许的写操作。
+  选型: JSONL+自研哈希链(约200行) + better-sqlite3 索引; 对账 cron 每分钟; 验链于每次启动。
+  接口: append(type,payload), verifyChain(), reconcile(), retention sweeper; 控制台审计检索UI(按通道/对象/时间/结果过滤)。【绕过难度: 高(对进程内逻辑)/中(对文件系统)】owner 可删文件但验链会在下次启动检出断链; 可选异机备份根哈希(仅哈希不含PII, 可上云)。
+------------------------------------------------------------------------------------------
+[COMP] G5 Kill Switch 熔断器(两级+自动触发)
+  职责: 两级: 全局急停(全部通道)与分通道急停(默认只停个人微信RPA通道, 企微降级为暂停+告警)。状态三处冗余: Guardian 内存 + 持久化标志文件 + epoch 计数器; 熔断时 epoch 递增, 所有在途 permit 立即失效(执行器在不可逆步骤前校验 epoch)。触发源: 人工(控制台大红按钮/全局热键如 Ctrl+Alt+F12/企微机器人指令急停 —— 用合规通道反向控制, 人在手机上也能停); 自动(UIA 风险信号监视器在微信窗口树或弹窗文本命中 账号异常/操作频繁/环境异常/登录验证/验证码 即熔断该通道; 发送后UIA回读校验连续2次以上失败即熔断; 审计对账失配; 审核阻断率突增; 企微API 45009/45002 限频码); 互看门狗(Guardian 与执行器双向心跳, Guardian 死亡则执行器 fail-closed 拒绝一切动作)。恢复仅人工: 必填恢复原因 + 冷却期默认30分钟 + 连续3次自动熔断后升级为需重启加二次确认。【强制点】决策管线第①步 + 执行器不可逆步骤前的 epoch 复核 + 独立UIA监视线程(与发送路径解耦)。
+  选型: epoch + 持久标志文件 + 双向心跳(继承 helper-win ppid 看门狗模式); UIA 弹窗关键词监视复用读取通道; Windows toast + 企微 webhook 双路通知。
+  接口: trip(level,reason,source), resume(level,reason), POST /v1/risk-signal 上报; 控制台状态横幅常显。【绕过难度: 最高】编排器无解除权; 状态三处冗余(内存/文件/epoch); 参照物 stop 为协作式软停, 本系统为结构式硬停。
+------------------------------------------------------------------------------------------
+[COMP] G6 免打扰与节流日历
+  职责: 三态日历模型: 每周循环窗口(默认每日22:00至次日07:00全局DND)、节假日表(内置法定节假日+自定义)、模式 normal/reduced(限额减半)/silent(禁出站, inbound 读取继续供台账)/blackout。定时节流规划器: 把朋友圈提醒、群digest等计划推送摊排进允许时段并与G1桶预算合并, 避免到点突击。任务排队时与执行时双重校验(09:00排队09:07执行, 执行时以当前窗口为准)。【强制点】决策管线第②步 + 计划器排队前预检; silent 模式下 Guardian 直接拒绝所有出站 permit。
+  选型: iCal 式周循环规则自研简化版 + holidays 表; 与G1共享 YAML 配置文件族。
+  接口: modeAt(ts, channel) 返回 mode/reason; planner.slotsFor(task) 返回时间槽建议; 控制台日历编辑UI。【绕过难度: 中高】同G1: 配置可改但变更留痕; 运行时以 Guardian 内存态为准, 改文件需经热加载事件从而必过审计。
+------------------------------------------------------------------------------------------
+[COMP] G7 个保法合规套件(最小化/脱敏/告知/删除)
+  职责: 一最小化采集: UIA读取层输出 schema 白名单(昵称/伪ID/消息文本/时间/群名), 其余字段读取即弃; 不拉通讯录全量、不默认存头像。二脱敏出口代理: AI答疑调 Claude/GLM 前正则掩码(姓名/手机号/身份证/项目编号替换为占位符), 配置 cloud_deid 与 local 两档。三告知语模板: 入群欢迎/首次私聊告知 本群由总包科技AI助手辅助运营, 不希望被AI回复可@管理员, 配 opt-out 名单(对列入者抑制AI回复)。四删除流程: 控制台按联系人删除 —— 消息/台账/派生统计物理删除或假名化, 审计链以 tombstone 记录保持连续(内容正文删除、哈希链保留, 张力文档化明示), 出具删除报告; 另有整体清空(退役用)。五留存清扫 cron: 原始消息文本90天、审计正文90天、截图30天。【强制点】读取层(源头截断, schema外字段不进持久层)、脱敏代理(唯一LLM出站路径)、执行器进程防火墙禁外网(结构性保证: 输入路径不可能外传数据)。
+  选型: zod schema 白名单 + 掩码正则库 + Windows 防火墙规则(装机时 netsh 脚本固化) + cron sweeper。
+  接口: deidentify(text) 返回 masked; deleteSubject(contact_id) 返回删除报告; opt-out list API; 告知语模板管理UI。【绕过难度: 高】最小化在代码层、出站在代理层、外传在OS防火墙层三重强制; 删除流程的完整性受审计链设计约束(张力已明示)。
+[FLOW] 群消息响应流(个人微信): UIA读到群消息 → AI起草回复 → Guardian管线(急停①→日历②→审核③→频率④→人审路由⑤→落intent⑥→签permit) → 执行器验签并宏输入 → UIA回读验证消息已发出 → outcome落审计 → 每分钟对账闭环
+[FLOW] 朋友圈半自动流: 生成文案 → 审核闸门 → 人工确认队列(必经) → 人工编辑/批准(内容哈希绑定, 改动即重审) → 辅助发布(执行器填充编辑器, 最终发送点击按保守默认留给人工, 可配置为批准后代发) → 审计
+[FLOW] 风控熔断流: UIA监视器命中 账号异常 弹窗 → POST /v1/risk-signal → Guardian trip(RPA通道, epoch+1, 在途permit全废) → toast+企微双路通知owner → 人工核查 → 控制台填因恢复(冷却30分钟) → 全程审计
+[FLOW] 企微合规流: 客户/群事件回调 → 关键词自动回复或AI答疑走同一 Guardian 管线(频率镜像官方限额、内容全量过闸) → qyapi.weixin.qq.com 调用 → 审计
+[FLOW] 数据主体删除流: 控制台发起 → 停相关任务 → 删除/假名化各存储 → 审计链写 tombstone 保持连续 → 输出删除报告
+[FLOW] 对账与留痕流: 每分钟 reconcile(outcome与intent配对, 失配即风险信号触发熔断告警); 每日验证哈希链并导出锚定根哈希(仅哈希无PII, 可选异机备份)
+[RISK] UIA回读校验受微信消息列表虚拟化/异步渲染影响可能误判发送失败导致误熔断; 需N次连续失败阈值+重试读取再判定
+[RISK] 审计 append-only 与个保法删除权存在结构性张力(tombstone折中), 法律上未完全消解, 需文档化明示
+[RISK] 脱敏正则对上下文人名/项目名覆盖不全, 云LLM出口仍有残余泄露面; 严格场景切 local 档
+[RISK] 微信版本升级破坏UIA树时读取层降级为 silent+告警(绝不降级为无验证发送), 但响应式答疑会停摆, 需监控告警配套
+[RISK] 单机单操作者边界: 所有护栏对机器owner本质可绕(改配置/删文件), 设计目标是防bug/防漂移/留痕可追责而非防owner, 已向用户明示
+[RISK] permit验签增加发送链路毫秒级延迟(可忽略)与执行器实现复杂度(epoch复核须插入不可逆步骤前)
+[RISK] 令牌桶/日历配置被放宽无技术阻断仅审计可见, 运营期需自察
+[RISK] 熔断自动触发的弹窗关键词表基于推测文案, 需实机校准; 漏检风险由发送后回读校验作为第二道网兜底
+[Q] 朋友圈辅助发布最后一步: 保守默认人工点击发送, 还是批准 permit 后自动点击? (建议默认人工, 试运行期后再评估放开)
+[Q] 云 LLM 脱敏档与本地模型档的默认值与切换策略需用户拍板
+[Q] 审计正文90天/索引180天/截图30天的保留期确认
+[Q] 企微通道人工确认范围: 关键词自动回复默认免审是否接受
+[Q] opt-out 粒度: 按用户/按群/按用户加群组合
+[Q] 风控弹窗关键词表需实机采集校准(哪些文案在真实微信中出现), 漏检风险由回读校验兜底
+[Q] 熔断恢复冷却期时长与递增锁定策略的运营参数
+[Q] 审计根哈希是否做异机/云端锚定(仅哈希无PII, 可复用用户已有的百度网盘备份链路但需确认不上传正文)
+==============================================================================================================
+SUBSYSTEM: 企业微信主通道子系统（总包私域运营台·合规主干）
+OVERVIEW: 【核实方法说明】WebSearch 后端配额耗尽（2026-10-26 重置），改用更强的方式：直读企业微信开发者中心官方文档正文（通过文档站 docFetch API 拉取 18 篇现行文档，含 2025-08 更新的"消息推送"与 2026-10-11 更新的"智能机器人长连接"），以下所有能力/限制均出自官方文档原文，非二手记忆。
+
+【已核实的 2025-2026 关键现状】
+1. 群机器人 webhook（已更名"消息推送"，2025-08 更新）：只发不收；每机器人 ≤20条/分钟（超限 errcode 45009）；支持 text(≤2048字节)/markdown(≤4096字节)/image/news/文件(upload_media，media_id 3天有效)；text 支持 @成员。API 文档树中不存在"客户群机器人"原语——客户群不能挂 webhook 机器人。
+2. 智能机器人（2025-2026 最重要的新能力，长连接文档 2026-10-11 仍在更新）：支持"API 模式"，两种接入——Webhook 回调（需公网 URL+加解密）或 WebSocket 长连接 wss://openws.work.weixin.qq.com（无需公网 IP、无需加解密、官方 aibot-python-sdk/aibot-node-sdk）。触发方式：群里@机器人 或 单聊发消息（群聊支持 text/图文混排/引用；image/语音/文件/视频仅单聊）。支持流式回复（stream.id+finish=true，10分钟内完成）——天然适配 LLM 流式输出。频率：每会话 30条/分钟、1000条/小时；收到消息后 24 小时内可回复；用户发过消息后可 aibot_send_msg 主动推送(markdown/模板卡片)。每机器人同时仅 1 条长连接（新连接踢旧连接，有 disconnected_event），心跳 30s。from.userid 可能是密文 open_userid，需自建应用 batch/openuserid_to_userid 转明文。发送者身份均为企业成员（是否可进客户群未见任何 API 迹象，待实测）。API 模式机器人还内置 MCP 文档/智能表格工具并可接 OpenClaw。
+3. 自建应用回调：URL/Token/EncodingAESKey(43位)；GET echostr 验证（1秒内回明文）、POST 签名+AES 密文；access_token 按应用独立、7200s、须缓存。
+4. 客户联系：新客户欢迎语 send_welcome_msg 的 welcome_code 仅 20 秒有效且只能调一次（多应用竞速 41096/41051）；入群欢迎语素材库全企业 ≤100 条（%NICKNAME% 变量）；企业群发 add_msg_template 不直接发送、须成员客户端确认，每客户/每客户群每月接收上限=当月天数（可在群发助手调整为每周7条/每天1条），仅推给最后互动成员；JS-SDK shareToExternalChat 同一成员每日对同一客户群最多 1 条。
+5. 客户朋友圈：企业发表 add_moment_task（text≤2000字/4000字节；9图 或 1视频≤30s/10MB 或 1链接；visible_range 按成员/部门/客户标签；异步 jobid→get_moment_task_result；企业侧 10次/分钟、10万次/月；任务推给成员在客户端确认发表）；JS-SDK ww.shareToExternalMoments 拉起发表框预填内容由成员手动点发（半自动）。前提：自建应用配进"可调用应用"、成员在客户朋友圈使用范围、具备客户联系与外部沟通权限。
+6. 会话存档：官方 C SDK v3.0（2025-02-13，openssl3.0，Linux x86/arm+Windows）；流程 init→按 seq 分页拉取→RSA 解密 random_key→AES 解密→拉媒体；外部客户需同意（"同意会话聊天内容"消息类型+同意事件回调）；开通需付费订阅（价格未写在文档，以后台为准）。
+7. 微信客服：回调 kf_msg_or_event→sync_msg 读消息→kf/send_msg 发送；仅当微信客户主动发消息后 48 小时内可发、最多 5 条（用户再发重新计数）；自建应用须配入「微信客服-可调用接口的应用」（2023-12 起系统应用 secret 不可用）；微信客服用户是微信侧客户（EXTERNAL_USERID）——这是官方接收微信用户消息的唯一正道。
+
+【场景映射结论】A 群聊守护：企业内部群/员工单聊→智能机器人长连接(AI 答疑+流式回复)；企微客户群(微信客户可入)→入群欢迎语+关键词自动回复+克制的企业群发+(可选)会话存档辅助；行业大群(个人微信群)→不归企微，留给个人微信 RPA 子系统。B 朋友圈：企微侧走 add_moment_task 企业任务(成员客户端一键确认) 与 JS-SDK 半自动双路；个人微信朋友圈素材由本子系统素材库供给、发布由 RPA 子系统人工确认执行。C 客户沉淀：客户联系+客户群 API 全量/增量拉取→本地 SQLite 台账，AI 会话中抽取商机线索。
+------------------------------------------------------------------------------------------
+[COMP] wecom-core（企微开放平台适配层）
+  职责: 统一封装企业微信服务端 API：access_token 按应用缓存与刷新(7200s)、请求重试与错误码映射(45009/41096/41051等)、临时素材与附件资源上传、IP 白名单与可信域名配置装载。所有其它组件只经它调企微。
+  选型: Python 3.12 + httpx(异步)；加解密用官方 weworkapi_python 的 WXBizMsgCrypt3 示例库(AES-256-CBC+SHA1签名)；不用停更的第三方库(wechatpy)。
+  接口: GET qyapi/cgi-bin/gettoken；POST webhook/upload_media；POST media/upload(临时素材)、upload_attachment(朋友圈附件)；内部: WecomClient.call(method, payload)→{errcode,errmsg,...}；token 存 SQLite kv 表带过期锁。
+------------------------------------------------------------------------------------------
+[COMP] aibot-gateway（智能机器人长连接网关）
+  职责: 承载场景A主链路：维持与企微的 WebSocket 长连接(wss://openws.work.weixin.qq.com)，接收消息/事件回调，msgid 排重，调用 AI 后以流式消息回复，支持主动推送与模板卡片。单连接守护(新连接踢旧连接→disconnected_event 告警+重连)。
+  选型: 官方 aibot-python-sdk + asyncio websockets；心跳30s指数退避重连；from.userid 密文经 wecom-core 的 batch/openuserid_to_userid 转明文(自建应用 token)。
+  接口: 入站 cmd: aibot_msg_callback(text/mixed/quote,chattype=single|group)、aibot_event_callback(enter_chat/template_card_event/feedback_event/disconnected_event)；出站 cmd: aibot_respond_msg(stream.id,finish)/aibot_respond_welcome_msg(5秒内)/aibot_respond_update_msg/aibot_send_msg(markdown|template_card)；SDK 内置媒体上传(分片)+AES-256-CBC(per-URL aeskey) 解密。
+------------------------------------------------------------------------------------------
+[COMP] callback-service（回调接收服务）
+  职责: 承接需要公网回调的事件：自建应用的 change_external_contact(含 welcome_code)/change_external_chat/标签变更、微信客服 kf_msg_or_event。GET 验证 URL 有效性(echostr 解密1秒回明文)，POST 验签+解密后投递内部事件总线。本地单机无公网 IP 时经内网穿透隧道暴露(仅此一个入口)。
+  选型: FastAPI+uvicorn，监听 127.0.0.1:端口，经 frp/cloudflared 隧道映射到公网域名(该域名同时配为应用可信域名)；WXBizMsgCrypt3 加解密；XML/JSON 两种推送格式兼容。
+  接口: GET/POST /wecom/callback/{agent_key}?msg_signature&timestamp&nonce[&echostr]；出站事件: ExternalContactAdded(welcome_code,20秒时效)、ExternalContactDeleted、ExternalChatChanged、KfEvent(open_kfid,token)。
+------------------------------------------------------------------------------------------
+[COMP] kf-service（微信客服接入）
+  职责: 面向微信侧外部客户的官方咨询通道：客服账号管理、获取客服链接(布点公众号/视频号/官网)、事件到达后 sync_msg 拉取消息、在 48小时/5条窗口内经 AI 或人工回复；会话状态(未处理/接待中/智能助手)维护。
+  选型: wecom-core 调 API + callback-service 事件驱动；窗口计数存 SQLite(按 external_userid+open_kfid 滚动计数)。
+  接口: POST kf/account_add/update/list、GET kf/add_contact_way(客服链接)；POST kf/sync_msg(cursor 分页)；POST kf/send_msg(touser,open_kfid,msgtype: text≤2048B/image/voice/video/file/link/miniprogram/menu/geo)；POST kf/service_state/trans。前提: 应用配入「微信客服-可调用接口的应用」。
+------------------------------------------------------------------------------------------
+[COMP] message-router（消息路由与频控熔断）
+  职责: 所有入站消息的统一编排：关键词精确匹配→FAQ直答；意图分类(工程问题/产品咨询/闲聊/商机信号)→AI 生成或转人工；静默规则(深夜/刷屏抑制)。实施双频控：企微硬限(智能机器人每会话30条/分、1000条/时；webhook 20条/分)之下再叠自限(默认每群≤6条/时，可配)；一键熔断开关作用于此。
+  选型: 纯 Python 规则引擎(优先级链: 熔断>黑名单>关键词>意图>默认)；频控令牌桶 SQLite 持久化；配置 YAML 热加载。
+  接口: 入: MsgIn(channel=aibot|kf|callback, sender, chat, text, quote)；出: ActionReply(stream|text|card)、ActionTransfer(转人工)、ActionLead(线索抽取)；内部事件总线用 asyncio.Queue(进程内)。
+------------------------------------------------------------------------------------------
+[COMP] ai-consultant-bridge（总包AI顾问桥）
+  职责: 复用已有的总包AI顾问(Claude/GLM 栈)：组装系统提示词+总包智库 RAG 检索+会话上下文(取自 contact-ledger 最近互动摘要)，流式产出答案；同时输出结构化副产物{意图,商机信号,推荐内容清单}。对企微侧做内容安全过滤(禁词/联系方式合规)。
+  选型: OpenAI 兼容接口调用现有 Claude/GLM 网关(项目已有栈)；async 生成器逐段喂给 aibot 流式回复；智库检索沿用现有知识库(秘塔/本地索引)的 HTTP 接口。
+  接口: 入: GenerateRequest(question, persona, history_digest, rag_topk)；出: async Iterator[str](流式增量) + StructuredMeta{intent, lead_hints[], recommend_items[]}；环境变量配 API base/key，密钥不入库。
+------------------------------------------------------------------------------------------
+[COMP] welcome-engine（欢迎语与自动回复引擎）
+  职责: 新客户/新入群第一触达：ExternalContactAdded 事件 20 秒竞速内调 send_welcome_msg(个性化文案+附件)；维护入群欢迎语素材库(group_welcome_template ≤100 条,%NICKNAME%)并 notify 成员应用到指定客户群；关键词自动回复双轨——企微客户端官方自动回复配置(建议管理员后台配置)+智能机器人路由内的快捷回复。
+  选型: callback-service 事件直达(不经队列,保 20 秒时效)；素材模板 Jinja2 渲染；media_id 预上传缓存(3天有效,提前刷新)。
+  接口: POST externalcontact/send_welcome_msg(welcome_code,text≤4000B,≤9附件: image/link/miniprogram/video/file)；POST/GET/DEL externalcontact/group_welcome_template/{add|get|update|del}；配置文件: welcome_rules.yaml。
+------------------------------------------------------------------------------------------
+[COMP] moment-studio（客户朋友圈发表任务流）
+  职责: 场景B企微侧：素材生成(AI 文案+配图)→人工在运维台确认→add_moment_task 创建企业发表任务(visible_range 按成员/客户标签圈选)→轮询 get_moment_task_result(status 1/2/3, moment_id)→通知成员在企微客户端一键确认发表→结果入台账。备用路径：成员打开内嵌 H5 用 JS-SDK ww.shareToExternalMoments 预填后手动发表。自限频率：每日≤2个任务、远低于官方 10次/分钟与 10万次/月。
+  选型: APScheduler 定时轮询 jobid；visible_range 圈选基于 contact-ledger 的标签数据；H5 备用页用 ww.registerJssdk 应用身份注册。
+  接口: POST externalcontact/add_moment_task(text≤2000字,attachments: 9图|1视频(≤30s,≤10MB)|1链接,visible_range{sender_list,external_contact_list.tag_list})→{jobid,24h有效}；GET externalcontact/get_moment_task_result(jobid)；JS-SDK: ww.shareToExternalMoments(params)；任务队列: moments_pending 表(状态 draft→approved→submitted→member_confirmed→published/failed)。
+------------------------------------------------------------------------------------------
+[COMP] group-mass-sender（企业群发编排）
+  职责: 面向客户群/单聊的克制触达（产品发布、周报、智库精选）：创建 add_msg_template 任务→推送成员客户端确认发送→查询群发结果。强制预算：每客户群每月接收≤当月天数(官方上限)，自限默认每月≤4条/群；同一成员每日对同一客户群≤1条(shareToExternalChat 约束)。
+  选型: wecom-core API + 预算账本 SQLite(budget_by_month 表)；发送内容必须先过 material-library 审核态。
+  接口: POST externalcontact/add_msg_template(chat_type:single|group,external_userid[]|chat_id_list[],sender,text,attachments≤9)→{msgid}；GET externalcontact/get_groupmsg_send_result；提醒: 提醒成员群发(97610)/停止企业群发(97611)。
+------------------------------------------------------------------------------------------
+[COMP] contact-ledger（客户台账与画像）
+  职责: 场景C核心：contacts(external_userid,昵称,标签,跟进人,来源)、groups(群ID,名称,成员数,活跃度)、interactions(每次 AI/人工互动摘要)、leads(商机: 线索描述,置信度,状态)四张主表。增量靠 change_* 回调，全量对账每日一次(获取客户列表/批量详情、客户群列表/详情)。对外提供画像查询给 message-router(决定回复口吻)与 moment-studio(圈选可见范围)。
+  选型: SQLite(WAL)+SQLAlchemy 2.0；对账任务 APScheduler；数据本地存储、支持按 external_userid 物理删除(个保法可删除要求)。
+  接口: GET externalcontact/get_contact_list(batch)、get_contact_detail、get_contact_detail_batch(92994)；GET externalcontact/get_groupchat_list/get_groupchat_detail(92120/92122)；回调: change_external_contact(change_type:add|edit|del_follow/del)、change_external_chat；内部 API: LedgerAPI.upsert/contact_profile(tag)/recent_interactions(n)。
+------------------------------------------------------------------------------------------
+[COMP] material-library（素材库）
+  职责: 统一素材中心：朋友圈素材、欢迎语素材、群发素材、AI 推荐卡片模板。双目的地供给——企微侧(media_id/附件资源)与个人微信侧半自动发布(生成文案+图片文件,交由 RPA 子系统的人工确认队列)。版本管理与审核态(draft/reviewed/approved)。
+  选型: 本地文件库(目录约定 assets/{type}/{yyyy-mm}/)+SQLite 元数据；图片入库时按企微规格预检(朋友圈图长边≤10800px/短边≤1080px,视频≤30s/10MB)。
+  接口: 内部 REST: POST /materials(上传)、GET /materials?type=&status=、POST /materials/{id}/approve；出站: 上传为企微 media(upload_attachment→media_id,朋友圈用)与临时素材(media/upload)；对个人微信子系统输出: 素材包目录约定+manifest.json(文案+图路径+发布建议时间)。
+------------------------------------------------------------------------------------------
+[COMP] ops-console（运维台·审计·熔断）
+  职责: 本地管理界面：一键熔断(停所有出站动作)、频率面板(各渠道当日用量/剩余预算)、朋友圈与群发的人工确认队列、审计日志检索(每条出站动作: 时间/渠道/目标/内容摘要/结果/操作者)。个保法合规入口：数据导出与按客户删除。
+  选型: FastAPI 同进程挂载轻量前端(HTMX 或纯静态页)；审计写 SQLite audit_log 表+每日 JSONL 归档；熔断状态存 hold_state 型 JSON(项目已有惯例)。
+  接口: 本地 http://127.0.0.1:PORT/console/*；POST /console/breakdown/{on|off}；GET /console/audit?channel=&date=；POST /console/leads/{id}/convert。仅监听本机,不出公网。
+------------------------------------------------------------------------------------------
+[COMP] session-archive-agent（会话存档接入·可选增强）
+  职责: 可选模块(P2)：若企业订阅会话存档，用官方 C SDK 拉取成员参与的客户群聊天明文→投给 message-router 做AI建议回复(推给成员客户端由人一键发送,不做自动外发)→明细入 interactions。外部客户须同意(同意事件回调 92005)后方可存档其消息。
+  选型: 官方 WeWorkFinanceSdk v3.0(Windows 版,2025-02-13)经 ctypes/cffi 封装；RSA 私钥解密 encrypt_random_key→AES 解密 chatdata；seq 游标持久化断点续拉。
+  接口: SDK: NewSdk/Init(corpid,secret)/GetChatData(seq,limit,proxy,passwd,timeout)/DecryptData(encrypt_random_key,encrypt_chat_msg)/GetMediaData；事件: 客户同意进行聊天内容存档回调；出站: ArchiveMessage→message-router(AI建议,仅辅助)。
+[FLOW] F1 群聊守护·AI答疑(流式)：成员在内部群 @总包AI顾问 或单聊发消息 → 企微经 wss://openws.work.weixin.qq.com 推 aibot_msg_callback(msgid,chattype,from.userid[可能密文]) → aibot-gateway msgid排重+open_userid转明文 → message-router 优先级链判定(熔断关?→关键词FAQ?→意图分类) → ai-consultant-bridge 检索总包智库+画像上下文,流式生成 → aibot_respond_msg(stream.id=新ID,finish=false) 逐段刷新(10分钟内) → finish=true 收尾 → StructuredMeta.lead_hints 非空则写 contact-ledger.leads 并经群机器人 webhook(text≤2048B,≤20条/分) 通知商机群；全程 audit_log 落库。频率护栏: 该会话自限≤6条/时,企微硬限30条/分、1000条/时。
+[FLOW] F2 客户朋友圈·半自动发表：ops-console 生成任务(素材库 AI 文案+配图,预检 9图|1视频|1链接,text≤2000字) → 主理人在运维台人工确认(硬性闸门) → moment-studio 调 add_moment_task(visible_range 按 contact-ledger 客户标签圈选) → 返回 jobid(24h有效) → APScheduler 轮询 get_moment_task_result 至 status=3,取 moment_id → 任务出现在成员企微客户端『待发表』,成员一键确认 → 客户朋友圈可见；失败/invalid_sender_list 回写台账。并行备用路径：成员打开内嵌 H5,JS-SDK ww.shareToExternalMoments 预填内容手动点发(需成员具备客户联系+朋友圈范围+外部沟通权限)。个人微信朋友圈同素材走 material-library 的 manifest 输出,交个人微信 RPA 子系统的人工确认队列,不在本通道自动发布。
+[FLOW] F3 新客户承接与沉淀：微信客户扫码/点客服链接添加成员 → callback-service 收 change_external_contact(add_external_contact,携带 welcome_code) 验签解密 → 立即(20秒窗口,只许一次) welcome-engine send_welcome_msg(个性化模板+智库入口链接) → contact-ledger 调 get_contact_detail 拉画像并打标签(来源渠道) → 若该客户来自行业大群引导(个人微信子系统经本地事件总线送来 lead 关联)则合并画像；后续互动持续入 interactions,月度对账任务全量校验(获取客户列表/客户群列表)。外部咨询分流：同一名客户点微信客服链接 → kf_msg_or_event 回调 → sync_msg 读消息 → message-router→AI 在 48小时/5条窗口内回复。
+[RISK] 智能机器人可否加入客户群未获官方文档确认(API 面全部以企业成员 userid 表达,无外部联系人身份)——若实测不支持,客户群的AI自动答疑降级为:欢迎语+官方自动回复+企业群发+(可选)会话存档辅助人工回复,架构其余部分不受影响
+[RISK] 回调公网依赖：send_welcome_msg 的 welcome_code 仅20秒有效且仅一次,必须有实时可达的回调 URL——本地单机需 frp/cloudflared 内网穿透,隧道故障期间新客户将收不到个性化欢迎语(降级:提前在管理端配兜底欢迎语,官方文档明示此场景不返回 welcome_code)
+[RISK] 企业群发与朋友圈任务均需成员在客户端人工确认,不是全自动——这符合本项目的克制原则,但运营节奏依赖主理人配合度;add_msg_template 每客户/客户群月度接收上限=当月天数,超限客户静默不可达
+[RISK] 企微硬限频红线：群机器人 webhook 20条/分钟(45009)、智能机器人每会话30条/分与1000条/时、企业朋友圈任务10次/分钟;自限参数必须留足余量,否则触发平台侧风控
+[RISK] 客户朋友圈/客户联系 API 前提：自建应用须配入『可调用应用』、成员须在客户朋友圈使用范围且具备客户联系与外部沟通权限;若总包科技企微未完成企业验证,相关接口可能不可用——上线前需逐项在管理后台核验
+[RISK] 会话存档为付费订阅+外部客户逐一同意,成本与覆盖率需先询价实测;其 C SDK 需妥善保管 RSA 私钥与存档 secret
+[RISK] 密钥安全：corpid/各应用 secret/webhook key/智能机器人 Secret/aeskey 全部落本地,需集中加密存储(项目 hold_state 惯例+DPAPI),泄露等于他人可冒发消息
+[RISK] 个保法合规：客户聊天明细/画像/互动记录均本地 SQLite 存储,须实现按 external_userid 的导出与物理删除;AI 训练复用需匿名化;微信客服与智能机器人通道的语音/图片解密件同样受最小化原则约束
+[RISK] 长连接单实例约束:每智能机器人仅1条 WebSocket,进程重启窗口内消息可能丢失(企微不承诺补推)——需msgid幂等+启动后 sync 兜底(仅客服通道有 sync_msg,机器人通道靠 disconnected_event 对账)
+[Q] 总包科技的企业微信主体是否已完成企业验证?客户联系/客户朋友圈/微信客服/会话存档四项功能在管理后台的实际可用状态需逐项截图核验(影响 moment-studio/welcome-engine/kf-service 能否直接开通)
+[Q] 智能机器人能否被添加进客户群(外部群)?需在企微管理后台建一个测试客户群实测;能则客户群AI答疑升级为机器人直答,不能则维持降级方案
+[Q] 会话存档的订阅价格(按席位/年)与开通流程——官方文档不含报价,需在管理后台-会话存档页询价;以此决定 session-archive-agent 是否立项(P2)
+[Q] 内网穿透的具体形态:自建 frp(需一台有公网IP的小云主机)还是 cloudflared 免费隧道?域名是否需备案(企微可信域名要求)?
+[Q] 主理人现有行业大群(个人微信群)到企微客户群的迁移策略:哪些群值得迁(核心客户群)、迁移话术与激励,以及个人微信侧与企微侧的客户身份对齐规则(手机号/昵称模糊匹配还是获客链接归一)
+[Q] 微信客服账号的布点位置(公众号菜单/视频号主页/官网)与接待分流策略(智能助手先行 vs 人工优先),以及 48小时/5条窗口外的召回手段(企微群发?朋友圈?)
+==============================================================================================================
+SUBSYSTEM: 总包私域运营台 · AI编排子系统 (AI Orchestration Subsystem)
+OVERVIEW: AI编排子系统是运营台的"大脑"，位于消息采集子系统（个人微信UIA直读 / 企微官方回调）与发送执行子系统之间：消费规范化消息事件，完成 意图识别与需求挖掘 → 上下文构造 → 智库RAG检索 → 大模型答疑生成（规范条款强制出处标注+引用校验）→ 推荐决策（克制度治理）→ 合规话术护栏 → 按需人工审核 的全链路编排，产出 SendTask 交发送执行子系统，并把商机信号/画像写入客户沉淀子系统。四条设计铁律：①"要不要发、发多少"这类克制与熔断决策全部由确定性规则代码执行，LLM只做理解与生成，永远不替规则做发送决定；②模型分级控成本——意图分类/历史摘要/复核走小模型（GLM-4-Flash 免费档），工程答疑走大模型（Claude Sonnet 首选、GLM-4.6 兜底），统一经本地 LiteLLM 网关接入、计量、预算硬顶与降级；③全程决策留痕：每条消息从意图、置信度、检索引用到最终动作（直发/审核/静默）写入 append-only 审计日志，与熔断开关联动；④prompt作为版本化资产管理，改动必经评测集回归后才可灰度上线。运行形态：Python 3.11 asyncio 单机服务，Windows 常驻（NSSM 注册为服务），存储全本地（SQLite WAL + JSONL 日志），不外传任何个人信息。
+------------------------------------------------------------------------------------------
+[COMP] 消息预筛与意图识别器 (Intent Classifier & Need Miner)
+  职责: 对每条群消息做两层分类：第一层零成本规则预筛（regex识别GB/JGJ/JTG/DB标准号、@机器人、疑问句式、长度阈值——纯闲聊直接短路不调模型，省token）；第二层小模型结构化分类，输出 工程疑问/求资源/商机信号/闲聊/敏感 五类及置信度，并抽取槽位（专业领域如岩土/机电/造价、标准编号、项目阶段、是否追问上下文）。商机信号细分：求方案/求供应商/抱怨现有工具/招标信息，供线索台账消费。低置信度(<0.6)自动转人工审核而非猜测。
+  选型: 小模型走网关T1档：智谱 glm-4-flash（免费档，复用仓库 qianwen-engine/zhipu.py 的多账号免费池+429冷却+1.5s全局节流成熟经验）；response_format=json_object 强制结构化输出，单条prompt<800 token；规则层纯Python无模型。备选T1: glm-4.5-air。
+  接口: 输入: NormalizedMessage{chat_id, msg_id, sender_id, sender_name, text, ts, is_at_bot, reply_to, images_ocr?}（消息采集子系统产出，本地IPC/SQLite队列传 入）。输出: IntentResult{label∈[工程疑问,求资源,商机信号,闲聊,敏感/风险,无关], sub_label, confidence∈[0,1], slots{专业领域,提及的标准号,项目阶段,紧急度}, risk_flags[涉报价/涉法律/涉事故]}。旁路输出: risk_flags→审核队列与合规护栏。
+------------------------------------------------------------------------------------------
+[COMP] 上下文构造器 (Context Builder)
+  职责: 为答疑组装恰当上下文：滚动窗口保留最近20条原文；更早历史由小模型离线压缩为滚动摘要（每群维护，增量更新，含近期话题与已答问题，避免重复回答）；引用消息还原（群聊'回复XX'链）；注入群画像（群主题、活跃度、机器人历史发言摘要）与提问者画像（历史提问领域，来自客户沉淀子系统）；去重检查——若该问题24h内已在同群答过，直接复用缓存答案或改为私聊引导。
+  选型: 摘要用T1档 glm-4-flash 定时任务（每群每30分钟增量）；上下文存SQLite（messages与summaries两表，WAL模式）；无模型参与窗口裁剪（纯代码按token预算裁切）。
+  接口: 输入: IntentResult + chat_id。输出: AnswerContext{question, history_window[≤20条], rolling_summary, group_profile, sender_profile, dedup_hint}。依赖: 客户沉淀子系统提供 group_profile/sender_profile 只读视图。
+------------------------------------------------------------------------------------------
+[COMP] 智库RAG检索器 (Hybrid Retriever)
+  职责: 检索总包智库回答工程问题：混合检索（SQLite FTS5 关键词/BM25 + 向量近邻，标准号等精确查询走FTS优先），粗排top20→精排top6；每个chunk携带引用元数据（标准号+年份+条款号+文档标题+章节），是出处的唯一合法来源；求资源类意图直接走文档卡片匹配而非片段检索；支持按规范领域/现行有效状态过滤（废止标准不进上下文）。
+  选型: 向量库 sqlite-vec（嵌入SQLite单文件，单机零运维，量级<百万chunk足够）；embedding首选智谱 embedding-3 API（中文强、免运维），涉密/敏感内容备选本地 BGE-M3（Ollama 跑，CPU可接受）；重排可选 bge-reranker-v2-m3 本地或省略（top_k小+大模型自带抗噪）。知识入库侧用PyMuPDF解析规范PDF，条款级切分（按'第X.X.X条'结构切，保留标准号头）。
+  接口: 输入: retrieve(query: str, top_k=6, filters{std_no?, domain?}) → List<CitedChunk>。输出给答疑生成器与引用校验器；求资源类直接映射为 LibraryCard{title, doc_type, summary, share_ref}。库构建侧接口: ingest(文档/PDF) → chunks+embeddings（离线管线，与在线检索解耦）。
+------------------------------------------------------------------------------------------
+[COMP] 答疑生成器 · 总包AI顾问 (Answer Composer)
+  职责: 大模型生成群聊体量的工程答疑：system prompt定义'总包AI顾问'人设——工程师口吻、群聊场景下先给结论再给依据、默认120字以内（复杂问题分段）、不确定就说不确定；硬约束：所有规范性表述只能基于检索到的CitedChunks生成，引用条款必须内联标注'依据GB/T xxx-2020 第x.x.x条'，chunk未覆盖的问题如实说明并建议查阅正式版规范或私聊详聊；禁止输出报价、资质承诺、法律责任判断。超长答案自动提议'转私聊/企微全文'。
+  选型: 网关T2档路由：首选 claude-sonnet-4-5（经LiteLLM的Anthropic渠道，开prompt caching——system+智库固定导语缓存命中可省大半成本），GLM glm-4.6 为成本/可达性兜底与超时fallback；max_tokens按场景限死（群答400/私聊2000）；流式输出仅用于运营台审核员实时预览（群消息整条发出，不做假流式）。
+  接口: 输入: AnswerContext + CitedChunks + PromptTemplate(v)。输出: DraftReply{body, citations[]{std_no, clause, quote_range}, confidence, needs_review: bool, model_used, prompt_version}。输出给引用校验器与合规护栏。
+------------------------------------------------------------------------------------------
+[COMP] 引用校验器 (Citation Verifier)
+  职责: 对DraftReply里的每处规范引用做事后校验：①条款号必须存在于本次检索命中的CitedChunks元数据中（杜绝编造条款号）；②引文内容与chunk原文做编辑距离/包含性比对，防止张冠李戴；③检查标准现行状态（库内版本字段），若引用了即将废止/被替代标准则触发重检索或加免责声明。校验失败→打回生成器重试一次（附失败原因），再失败→转人工审核。这是对抗幻觉的最后一道机器闸门。
+  选型: 纯代码：difflib相似度+条款号字符串匹配（零模型成本、确定性）；标准时效数据来自智库元数据表，不联网核查（版本信息入库时人工/半自动维护）。
+  接口: 输入: DraftReply。输出: VerifyResult{pass: bool, failed_citations[], verdict}；fail→打回生成器重生成(带失败原因，最多1次)或降级人工审核。审计: VerifyResult全量落决策审计追踪。
+------------------------------------------------------------------------------------------
+[COMP] 推荐决策与克制度治理器 (Recommendation Governor)
+  职责: 决定'这条消息回什么、要不要顺带推荐'——全部确定性规则，零LLM：①配额制：每群每日产品/服务主动提及上限默认1次、每联系人7日1次，配额耗尽自动只推智库内容或纯答疑；②触发条件：产品提及仅当 商机信号明确（求方案/求供应商）或 对方主动询问，绝不无触发硬推；③冷却期：同群两次机器人发言间隔≥10分钟（被@除外），避免刷屏；④响应式优先：非@消息且群活跃时段消息密集时降级为'记录线索不发言'；⑤智库内容推荐限每次答疑最多附1张资料卡片且与问题强相关（检索相似度阈值）；⑥读取全局熔断开关，熔断状态下一律只收不发。
+  选型: 纯Python规则引擎 + policies.yaml 声明式配置（阈值/配额可由主理人在运营台改，改即生效、留痕）；计数器与冷却状态存SQLite（quotas表，按 chat_id×date 主键，原子更新）。
+  接口: 输入: IntentResult + DraftReply + PolicyState + 熔断开关状态。输出: ActionPlan{action∈[send_direct, send_with_knowledge_card, mention_product(受限), enqueue_review, silent_hold], product_quota{used, cap}, cooldown_remaining}。读: 发送执行子系统的全局熔断状态；写: quota计数。策略配置: policies.yaml（人工可改，改动留审计）。
+------------------------------------------------------------------------------------------
+[COMP] 合规话术护栏 (Compliance & Style Guard)
+  职责: 双向护栏——生成前把合规守则注入system prompt（不做资质/报价/工期承诺，不贬低同行，不使用'保证通过''最低价''包过审'类表述，涉法律问题引导咨询专业人士）；生成后对DraftReply做输出校验：禁词/承诺句式regex扫描（报价数字+服务类动词、'保证''承诺''肯定能'、资质代办话术）、长度与格式检查（群聊≤200字、emoji≤2个）、称呼与语气抽检；命中即改写为合规模板句（'具体要结合项目情况，方便私聊详聊吗'）或直接拦截转人工。个保法护栏：输出中不回显他人手机号/身份证等敏感字段。
+  选型: 主检测纯代码（禁词表+regex模板库，版本化随prompt资产一起管理）；每周用小模型T1对已发消息抽样复核话术一致性（离线质检，不在线路）。
+  接口: 输入: DraftReply(生成后)。输出: GuardResult{pass|sanitized|block, applied_rules[], sanitized_body?}。sanitized/block均落审计。与意图识别器共享禁词表（单一数据源 prompt-assets/guardlists/）。
+------------------------------------------------------------------------------------------
+[COMP] 人工审核队列 (Human Review Queue)
+  职责: 五类必入队：①意图置信度<0.6；②涉报价/商务条款（risk_flags命中）；③涉法律/事故/质量安全责任；④产品提及类动作（首次每群首次提及永远人工确认，之后按配额可直发）；⑤引用校验二次失败。队列项展示完整决策上下文（原消息、意图、检索引用、草稿、护栏意见），主理人可 批准/编辑后发/拒绝/转私聊；审核结果回流为few-shot样本与prompt迭代依据；积压超SLA（4小时）桌面+企微双重提醒。
+  选型: SQLite review_queue 表 + 状态机（pending/approved/edited/rejected/expired，行级锁原子流转）；通知走 Windows toast（win10toast/pywin32）+ 企微自建应用消息（复用企微官方通道，合规）；运营台UI归属运营台前端子系统，本组件只提供REST接口（本地FastAPI）。
+  接口: 入队: enqueue(item)。运营台UI: 列表/详情/一键操作；动作API: decide(item_id, action, edited_body?) → SendTask或结案。出队后: approved/edited → 发送执行子系统；同时回流训练样本库 samples/。通知: Windows toast + 企微应用消息。
+------------------------------------------------------------------------------------------
+[COMP] 模型网关与成本控制器 (Model Gateway & Cost Controller)
+  职责: 统一接入Claude与GLM并管住钱：模型分级路由表 T1=意图/摘要/复核（glm-4-flash），T2=答疑（claude-sonnet-4-5 → glm-4.6 fallback链，按可用性+成本+当月预算自动选）；预算硬顶三层——每群每日token上限、全局每日上限、每月金额上限，触顶自动降级（T2→glm-4.6→T1模板应答→仅审核队列模式）并在运营台亮灯；用量计量落库（按模型/按群/按意图维度，出周报）；透传Claude prompt caching；智谱侧继承仓库已验证的429冷却/账号池/全局节流逻辑。
+  选型: 本地网关 LiteLLM Proxy（Python，OpenAI兼容统一端点/v1，Windows下NSSM注册为常驻服务）：Anthropic渠道接Claude（官方API或既有 ANTHROPIC_BASE_URL 中转，密钥环境变量注入），智谱渠道接 open.bigmodel.cn/api/paas/v4（OpenAI兼容，直接兼容glm-4.6/glm-4-flash，LiteLLM内置zhipu provider）；编排服务SDK用 Python litellm 库（proxy故障时可退化为进程内直连，anthropic SDK+自移植zhipu客户端双直连通道保命）。备选网关New API（one-api中文分支，带UI），若主理人偏好图形化渠道管理可平替，但预算计量需自建。
+  接口: 统一调用面: complete(tier∈[T1,T2], messages, response_format?, stream?, cache_key?) → AsyncIterator/text + UsageEvent。UsageEvent → SQLite usage表 + 预算检查器。降级信号 → 意图识别器/生成器/运营台仪表盘。密钥: data/secrets/ 本地文件，不入库不入日志。
+------------------------------------------------------------------------------------------
+[COMP] Prompt资产注册表 (Prompt Registry)
+  职责: 所有prompt（意图分类、答疑system、摘要、护栏禁词表、朋友圈文案模板、审核话术）作为带版本的资产而非硬编码字符串：目录化管理+manifest登记（版本号、内容hash、changelog、生效状态、评测报告指针）；运行时按 name+version 解析，线上每条请求记录所用版本；新版本必须先过固定评测集（含合规红线用例、幻觉陷阱用例——故意问库里没有的条款看是否编造、以及风格用例）达标才能 set_active；支持双版本灰度（新版本只对10%流量生效对比审核通过率）。
+  选型: 文件形态 prompts/<name>/v<N>.md + manifest.json，纳入git版本控制（diff天然可见）；registry为纯Python加载器（启动预载+热重载manifest）；评测集 evals/datasets/*.jsonl（约100条黄金用例），跑批走网关T1+T2，结果存 evals/reports/。
+  接口: 加载: render(name, version='active', vars) → messages[]。管理: register(new_version, changelog) / set_active(name, version, 依据=评测报告id) / list_versions(name)。评测: run_eval(name, version, dataset) → EvalReport{accuracy, citation_pass_rate, style_pass_rate}。所有生成请求携带 prompt_version 写入审计。
+------------------------------------------------------------------------------------------
+[COMP] 决策审计追踪 (Decision Trace & Audit)
+  职责: append-only记录每条消息的完整决策链：msg_id→意图结果（含模型与prompt版本）→检索引用清单→草稿与校验结果→治理器动作与配额状态→护栏裁决→最终去向（直发/审核/静默/熔断）+token用量与成本。审计日志是熔断事后核查、prompt迭代归因、以及'可向群主解释机器人为什么说话'的唯一事实源。保留策略默认180天，可整段删除（个保法'可删除'要求），删除动作本身留痕。
+  选型: JSONL追加写（audit/YYYY-MM-DD.jsonl，按日轮转）+ SQLite trace索引表（msg_id主键便于回查）；写入与业务解耦（内存队列异步落盘，掉电最多丢秒级）；敏感字段（手机号等）落盘前掩码。
+  接口: 输入: 各组件埋点（装饰器/显式调用）。查询: query_trace(msg_id) / export_range(date)。输出: 审计记录 + 周度量指标（意图分布、答疑直发率、审核通过率、平均成本/条、引用校验通过率）。对齐消息采集子系统的全局熔断开关（同一开关表）。
+[FLOW] 群消息答疑主流程（响应式核心链）: 消息采集子系统→NormalizedMessage→规则预筛（闲聊/无关节流，不调模型）→意图识别器T1分类→[工程疑问]→上下文构造器（20条窗口+群摘要+画像+去重）→智库RAG检索top6→答疑生成器T2（流式仅运营台预览，带内联条款引用）→引用校验器（条款号必须来自命中chunk，fail打回1次）→合规护栏（禁词/长度/语气）→治理器终审（配额/冷却/熔断）→置信度≥0.6且无risk_flags→SendTask直发；否则→人工审核队列。全链每个环节写决策审计。
+[FLOW] 求资源流程: 意图=求资源→智库文档卡片匹配（不走片段检索）→命中→生成≤80字说明+1张LibraryCard→护栏→治理器（资料卡片不计产品配额但受发言冷却约束）→直发或轻审核；未命中→话术'智库暂时没有这块，我记下来了，也可以私聊我详细说说需求'→同时登记内容缺口到智库运营清单。
+[FLOW] 商机信号流程（默认不自动推销）: 意图=商机信号→治理器检查：写入客户沉淀子系统线索台账（必做）+桌面/企微通知主理人（必做）；仅当 求方案/求供应商明确 且 该群产品配额未耗尽 且 群首次提及已人工背书过 → 生成一句克制价值提示（'这类我们做过一些项目，需要的话私聊'级别）→必进人工审核→批准后随答疑附带发出；配额耗尽或任何条件不满足→只答问题+记线索。
+[FLOW] 朋友圈半自动文案流程: 选题日历（运营台维护）+本周产品/知识主题→T2大模型按朋友圈话术模板批量生成3-5条候选（含配图建议）→100%进人工审核队列（此流程无直发路径）→主理人编辑确认→交辅助发布子系统（系统只生成素材+走人工确认的发布通道，永不自动发圈，也永不做点赞/评论他人能力——不在任何组件的能力清单内）。
+[FLOW] 成本控制与降级链: 每次模型调用→网关计量UsageEvent→预算检查器实时累计（群/日/月三层）→月预算>80%运营台预警；触顶→T2自动切glm-4.6→再触顶→意图与生成全面转T1→最终态'仅审核队列模式'（机器人只出草稿不直发任何内容）→恢复窗口（次日/次月）自动回升，升降级全部落审计并通知主理人。
+[FLOW] 人工审核回流与迭代闭环: 审核动作（编辑后发/拒绝）→样本入库 samples/（脱敏）→每周离线批跑：小模型抽检已发消息话术一致性 + 引用抽检复核 + 高频编辑模式总结→形成prompt改进提案→Prompt Registry登记新版本→评测集回归（含幻觉陷阱与合规红线用例）→达标灰度10%流量→对比审核通过率后 set_active；不达标自动退回。
+[FLOW] 熔断联动: 运营台一键熔断（或治理器检测到异常，如单群被投诉关键词/发送连续失败）→全局开关置位→本子系统所有出口动作收敛为 silent_hold+审核队列，采集侧照常收消息记台账（只读不受影响）→解除需主理人显式操作并留审计记录。
+[RISK] 规范条款幻觉是最大技术风险：大模型可能编造'GB xxx第x.x.x条'。缓解=引用只能来自检索chunk元数据+引用校验器事后比对+幻觉陷阱评测用例，但无法归零，需在话术层保留'以现行正式版规范为准'免责声明兜底。
+[RISK] UIA侧消息质量问题反噬意图识别：消息分片、表情包、引用链解析不全会导致上下文残缺、误判闲聊或答非所问。需与消息采集子系统约定NormalizedMessage契约（含reply_to与分片合并标识），并在低完整度时主动降置信度转审核。
+[RISK] 标准时效风险：智库中规范被废止/替代后若未及时标记，AI引用旧规范可能造成工程误导（工程行业这不是小事）。需库内版本字段+入库时人工确认现行状态+答案免责声明三重缓解。
+[RISK] 群聊体感风险：即使有克制度，'AI感'过重的回复仍可能引发反感或被群主移出。缓解：@优先响应、非@高密度时段静默、回复人设口语化、每群可单独配置aggressiveness等级（默认最低）。
+[RISK] 成本失控与可用性双风险：GLM免费档限流（仓库经验：需1.5s全局节流+账号池）与Claude中转通道不稳定的叠加可能导致答疑链路降级频繁；预算降级链末端'仅审核队列模式'体验差，需主理人知晓并预设月度金额上限的合理值。
+[RISK] 个保法合规风险：群消息天然含第三方个人信息。缓解：本地存储、敏感字段落盘掩码、180天保留期+可删除工具、审计日志本身可整段清除且清除留痕；但'群友不知情被AI分析'的伦理边界需主理人自行把握话术透明度（如群公告声明有AI助手）。
+[RISK] 人工审核积压风险：早期置信度阈值未校准时审核队列可能爆炸，机器人'看起来坏了'。缓解：SLA提醒+首月重点调阈值+审核动作回流加速校准；极端时一键放宽为'全部直发纯答疑类'模式（产品类仍人工）。
+[RISK] prompt资产与代码漂移风险：prompt迭代快，若绕过Registry直接改文件会导致线上版本不可追溯。缓解：启动时校验manifest hash与git状态，未登记变更打警告；评测报告与set_active绑定强制留痕。
+[Q] 总包智库的当前形态是什么（规范PDF数量级/已有结构化程度/是否已有向量库）？决定RAG入库管线工作量与sqlite-vec是否够用，以及条款级切分的规范覆盖范围。
+[Q] Claude的接入通道走官方API+代理，还是复用现有中转（ANTHROPIC_BASE_URL）？涉及月费测算与LiteLLM渠道配置；若中转不稳定是否接受'GLM为主、Claude为增强'的路由反转。
+[Q] GLM用量边界：意图分类走glm-4-flash免费档是否够（取决于群数量×日消息量）？需给出 量级→套餐 映射表；免费池多账号是否合规够用还是建议升级付费档（关系到可用性SLA）。
+[Q] embedding本地化需求：智库内容是否含不便出网的敏感规范/项目资料？若是，BGE-M3本地部署（Ollama，CPU可跑但慢）与智谱embedding-3 API的边界怎么划——按文档密级路由还是全本地？
+[Q] 主理人审核习惯与SLA：审核通知偏好（Windows toast vs 企微应用消息 vs 两者）、可接受审核延迟、是否需要手机端轻审核（只批不改）入口——影响审核队列UI子系统优先级。
+[Q] 克制度默认参数需实测校准：每群每日1次产品提及、10分钟发言冷却、20条上下文窗口是合理起点，但需要1-2周真实群观察数据（消息密度、被@频率、群主容忍度）后再固化进policies.yaml默认值。
+[Q] 标准规范现行状态的维护机制：废止/替代标准信息由谁更新（人工月检/半自动抓取标准公告页）？这是引用合规的隐性依赖，需要明确责任人与周期。
+==============================================================================================================
+SUBSYSTEM: 数据与画像子系统（总包私域运营台 · zb_private_ops.db 数据层）
+OVERVIEW: 单机本地 SQLite（zb_private_ops.db，SQLCipher 全库加密 + WAL + 单写者编排进程）承载全部业务数据；企微与个人微信同库以 channel 字段区分，联系人可做双通道合并视图。三条设计铁律：①一切对外动作以 actions 表为唯一事实（append-only，含全文快照），频率账本 freq_ledger 与动作同事务"预占-确认"；②messages 只读入湖且落库前完成不可逆 PII 脱敏；③画像（contact_tags）是纯派生数据，带证据消息 id、来源与有效期，可随时从 messages+leads 重建。ER 图述：
+contacts 1─N group_members N─1 groups；
+contacts 1─N messages（私聊对端），groups 1─N messages（group_id 可空）；
+messages 1─N ai_interactions（trigger_message_id）→ ai_interactions 0..1 actions；
+contacts 1─N leads，leads N..0..1 groups（origin_group_id）；
+contacts 1─N contact_tags（PK=contact+tag_type+tag_key，带 valid_to）；
+actions N..0..1 content_assets；moments_schedule 0..1 published_action→actions；
+freq_ledger 独立，UNIQUE(slot_date,channel,scope_type,scope_id,action_type)，与 actions 同事务；
+治理与运维独立：deletion_requests / system_events / retention_policy / rollup_daily（消息到期后的匿名日聚合）。
+核心查询视图：v_contact_profile（联系人+生效标签）、v_lead_pipeline（商机周报源）、v_moments_plan（朋友圈排期表源）、v_group_health（群活跃度）。与既有资产衔接：微信情报库（wechat-intelligence-hub + rion-wechat-cli，只读、仅本人可见数据）作为 bootstrap 数据源，其 opportunities 商机管线状态与"已确认/高概率/待核实"置信分层直接映射进 leads。
+------------------------------------------------------------------------------------------
+[COMP] 存储核心 zb_private_ops.db
+  职责: 全部业务数据唯一持久层；企微/个人微信同库分 channel；WAL+单写者避免 SQLite 锁冲突；每日加密备份。
+  选型: SQLite 3 + SQLCipher 全库加密（密钥挂 Windows DPAPI），WAL 模式，busy_timeout=5s，备份保留 7 份滚动。
+  接口: 关键字段——contacts(id, wx_id UNIQUE[本地明文仅作join、任何导出一律hash], wecom_external_userid NULL, channel[personal|wecom|both], display_name/remark, company/title, region, source_group_id, first/last_seen_at, profile_stale_at, opt_out, deleted_at)；groups(id, channel, group_wxid UNIQUE/wecom_chat_id, name, theme行业主题, guard_enabled, member_count, last_active_at, status[active|muted|exited])；group_members(group_id+contact_id PK, nickname_in_group[群昵称是跨群同人识别关键], role[owner|admin|member], joined/left_at)；messages(id, channel, group_id NULL, contact_id NULL, direction[in|out], ts, msg_type, content_text[已脱敏], content_hash, dedup_key UNIQUE(group,sender,ts,hash), is_at_bot, pii_masked, media_ref[库外缓存路径], pipeline_state[pending|classified|answered|archived|ignored], retain_until)。
+------------------------------------------------------------------------------------------
+[COMP] 采集入库契约 Ingest
+  职责: 三类写入方（UIA 直读个人微信 / 企微回调 / 情报库导入）统一入库管线：去重→PII 脱敏→落库；媒体不进库只存引用；messages 只增不改。
+  选型: 进程内 Ingest API（编排器串行队列写）；情报库导入走 NDJSON 文件；脱敏器=正则（11位手机/18位身份证/银行卡）+上下文关键词门控，原文不落库不可逆。
+  接口: 入库记录 schema {channel, group_key, sender_key, ts, msg_type, text, media_path, capture_seq}；对接 rion-wechat-cli/hub.sh：chat-search/db-search 历史导出 + opportunities 管线状态导入（仅本人可见数据；历史消息标 pipeline_state=archived 不参与响应；source=intel_hub_import）。
+------------------------------------------------------------------------------------------
+[COMP] AI 交互与动作审计（ai_interactions / actions / freq_ledger）
+  职责: 群守护意图分类与草稿留痕；一切对外动作先写 actions 再执行，append-only；频率账本同事务预占；熔断检查内建于执行前置。
+  选型: SQLite 事务 + 两阶段（pre-insert planned→执行→update executed/failed/aborted）；freq_ledger UNIQUE(date,channel,scope,action_type) 计数并快照当日上限。
+  接口: ai_interactions(id, trigger_message_id, stage[intent|draft|final], model, prompt_version, intent_class[engineering_question|need_signal|product_interest|chitchat|risk], confidence, draft_text, review_status[auto|approved|edited|rejected], tokens_in/out, cost, ts)；actions(id, ts, channel[wecom_api|personal_rpa|moments_assist], action_type[group_reply|private_msg|moments_publish|mass_send][枚举刻意不含点赞/评论他人——需求已排除], target_type+target_id, trigger[responsive|scheduled|manual][个人微信硬约束仅 responsive+manual], 关联 message/lead/ai_interaction/content_asset id, content_snapshot全文快照, operator[bot|human|human_approved_bot], confirmed_by/at, status[planned|awaiting_confirm|executed|failed|aborted], abort_reason)；freq_ledger(slot_date, channel, scope_type/scope_id, action_type, count, limit_snapshot, blocked)。
+------------------------------------------------------------------------------------------
+[COMP] 画像引擎（contact_tags + 夜跑管线）
+  职责: 从群聊互动沉淀联系人标签：活跃度（加权频次×时间衰减）、需求领域（LLM 分类聚合到行业 taxonomy）、商机阶段（leads 镜像）；标签带证据与有效期，人工覆盖自动；画像可全量重建。
+  选型: 每日 SQL 聚合 job + 批量 LLM 分类（固定 prompt_version，输出带 confidence）；活跃度 90 天半衰、领域标签 valid_to 默认 120 天。
+  接口: contact_tags(contact_id+tag_type+tag_key PK, tag_type[activity|domain|stage|custom], value, weight, source[rule|llm|manual], evidence_ids JSON, valid_from/to)；沿用情报库置信分层（已确认/高概率/待核实→weight 1.0/0.6/0.3）；低置信只进待核清单不入正式标签；对外视图 v_contact_profile / v_group_health。
+------------------------------------------------------------------------------------------
+[COMP] 商机台账与导出（leads / moments_schedule / 报表）
+  职责: 商机全生命周期台账（对齐情报库经验：机会藏在自然对话/附件/接龙而非仅链接）；产出商机周报与朋友圈排期表两份固定导出。
+  选型: SQLite 视图 + openpyxl/Markdown 双格式导出；导出强制走脱敏视图（无 wx_id 明文、无手机号）。
+  接口: leads(id, contact_id, origin_group_id NULL, title一句话, domain[造价|投标|施组|EPC管理|规范标准|数字化|培训|其他], stage[new|nurturing|qualified|proposal|won|lost|dormant], score 0-100, signals_json[{msg_id,quote脱敏摘录,ts,confidence}], next_followup_at, last_touch_at, source[auto|manual|intel_hub], owner, created/updated)；moments_schedule(id, content_asset_id, planned_date+slot, channel[personal_assist|wecom_api], status[scheduled|reminded|confirmed|published|skipped], published_action_id)；导出：v_lead_pipeline→商机周报（近7天变更/新信号/到期跟进），v_moments_plan→未来14/30天排期表。
+------------------------------------------------------------------------------------------
+[COMP] 内容资产（content_assets）
+  职责: 朋友圈与群发素材库，关联总包智库文档；生成→合规预检→人工审批状态机；个人朋友圈素材必须到 human_approved 才可进排期（半自动铁律）。
+  选型: 正文 Markdown 存库，图片/视频存库外目录仅引用；合规预检=规则词表（广告法极限词/敏感承诺）+LLM 复核写 compliance_flags。
+  接口: content_assets(id, kind[moments|group_share|kb_article|answer_card], title, body_md, media_path, topic_tags, kb_ref智库文档id, status[draft|ai_generated|approved|published|retired], compliance_flags, approved_by/at, created_at)；使用效果（引用次数/后续互动）经 actions join 派生不冗余存储。
+------------------------------------------------------------------------------------------
+[COMP] 数据治理（retention / deletion / 备份）
+  职责: 保留期限与删除开关执行者；个保法精神落地：最小化/本地存储/可删除/不外传；消息到期降级为匿名日聚合。
+  选型: 每日 retention sweep job；retention_policy 配置表驱动；删除两档——匿名化（wx_id→sha256、sender 置空、保留计数聚合）与硬删；actions 豁免 TTL 但快照落库前已脱敏。
+  接口: retention_policy(table_name, ttl_days, action[drop|anonymize|keep_aggregate]) 默认：media 缓存 30d、ai_interactions prompt 90d、messages 原文 180d 后转 rollup_daily(contact_id,group_id,date,msg_cnt,域分布)永久留存；deletion_requests(id, scope[contact|media|messages_range|all], mode[hard|anonymize], requested/executed_at, affected_rows)；system_events(event[killswitch_on|killswitch_off|retention_sweep|import_run|uia_reconnect], detail_json)。
+[FLOW] 群守护响应链：UIA 读到群消息→Ingest（dedup_key 去重→PII 脱敏→messages[pending]）→意图分类（ai_interactions[intent]）→命中工程问题且群 guard_enabled 且策略允许→生成草稿→个人微信路径：actions[awaiting_confirm]→主理人一键确认→执行前置检查（熔断开关 + freq_ledger 余量同事务预占）→RPA 发出→actions[executed] + messages[out] 回写；失败/熔断则 aborted 并回补账本。
+[FLOW] 商机沉淀链：intent=need_signal（自然对话/附件/接龙均算信号，参照情报库规则：培训/咨询/合作常无链接）→leads 按 (contact_id,domain) upsert→signals_json 追加脱敏证据→score 重算→stage 流转（输赢由人工最终确认，沿用'候选不等于真实商单'纪律）。
+[FLOW] 画像夜跑：每日聚合窗口内 messages→activity 标签（频次×90天半衰）→domain 标签（LLM 批量分类+规则词，带 evidence_ids）→stage 标签镜像 leads→manual 标签优先保留→刷新 v_contact_profile 与 profile_stale_at。
+[FLOW] 朋友圈半自动：content_assets[draft→ai_generated（合规预检）→人工 approved]→moments_schedule 排期→到点提醒→人工最终确认→辅助发布→actions（trigger=scheduled, operator=human_approved_bot, content_snapshot 留档）→freq_ledger[moments] 计数。
+[FLOW] 情报库 bootstrap：hub.sh opportunities 管线状态 + rion-wechat-cli 检索导出 NDJSON→importer 写 leads（source=intel_hub，置信分层映射）与历史 messages（pipeline_state=archived）→预置 contact_tags；只用本人可见数据，原始数据不出本机。
+[FLOW] 治理日任务：retention_sweep（媒体 30d/交互 90d/消息 180d→rollup_daily）→删除开关队列执行→加密备份→system_events 留痕；周报/排期等一切导出强制走脱敏视图。
+[RISK] UIA 采集无服务器消息 id，dedup_key=(群,发送者,秒级 ts,hash) 在同秒同文本或丢帧时仍可能重/漏→采集端加 capture_seq 序号辅助，接受少量重复并靠 content_hash 幂等。
+[RISK] PII 脱敏误伤工程数字（18 位构件编号/图纸号）→上下文关键词门控+抽样复核；反向风险是漏掩真 PII，由导出二次过滤兜底。
+[RISK] 两阶段与 RPA 现实裂隙：'实际已发出但进程崩溃未回写'→恢复时 planned+超时视为 unknown，保守不补发，转人工核对。
+[RISK] SQLite 单写者约束：采集/AI/调度多 worker 直连会锁竞争→一律经编排器队列写，分析走只读 WAL 连接。
+[RISK] 画像漂移与 LLM 分类不稳定→prompt_version 固定+taxonomy 季度校准，低置信只进待核清单。
+[RISK] SQLCipher 密钥绑定 DPAPI 后整机迁移/灾备复杂→备份包需附密钥托管说明，密钥丢失=不可恢复要有预案。
+[RISK] 个保法：群聊他人信息的聚合画像属个人信息处理，即便本地也应最小字段+TTL+可删+导出脱敏；画像字段不得进入任何外部 AI 调用，出域的只有脱敏摘要。
+[Q] 消息原文保留期默认 180 天是否满足主理人（情报库经验偏长留存）？与最小化精神的平衡需用户拍板。
+[Q] leads 跟进若确需手机号：允许 app 级可逆加密列 phone_enc（仅人工查看）还是坚持全脱敏由人工记录？
+[Q] 企微 external_userid 与个人 wx_id 无手机号时的合并键缺失，是否接受人工合并工作台？
+[Q] 朋友圈排期默认频率（建议个人微信每周 2-3 条）与 freq_ledger 各 scope 上限值待定。
+[Q] 行业领域 taxonomy 初版清单（水利水电/EPC总承包/造价投标/施组设计/规范标准/数字化/培训）需主理人校准。
+[Q] 情报库导入是一次性 bootstrap 还是每日增量；opportunities 管线状态变化是否要双向回写？
+==============================================================================================================
+SUBSYSTEM: 合规护栏子系统（Compliance Guardrail Subsystem，横切企微API/个人微信RPA/朋友圈辅助发布三通道）
+OVERVIEW: 七项护栏能力（限频/审核/人审/审计/急停/日历/个保法）各自独立成模块，由"统一动作网关 ActionGateway"编排为一条固定顺序的强制链：急停检查→免打扰日历→抑制名单→令牌桶限频→内容审核→人工确认门→签发派发票据→执行→结果回写。人工确认释放后整链重跑（时间推移后各闸状态可能已变化）；令牌仅在动作真正派发时扣减，被拒/挂起即返还。四条架构铁律：(1)单一咽喉点——三条通道的执行器只接受网关签发的含动作哈希+单调序号+急停状态版本的HMAC票据，执行器代码中不存在无票据路径；(2)能力白名单——动作类型是封闭枚举，"自动点赞/评论他人朋友圈"不在枚举中（硬约束②以"能力不存在"而非"被禁止"的方式落实），朋友圈仅"辅助发布自有内容"一种动作且永远前置人工确认；(3)fail-closed——网关不可用、监督进程心跳丢失、配置schema校验失败、票据急停版本陈旧时一律拒绝动作；系统以代码内最严默认值启动，硬核规则（朋友圈必人审/夜间禁营销/禁自动点赞评论）在代码常量层，配置只能收紧不能放松；(4)全程留痕——每次对外动作写前留intent、写后留result，每步护栏决策连同命中规则ID入append-only审计日志，夜间对账比对通道侧回执与审计记录，不一致自动暂停通道。全部本地运行：SQLite/本地词库/本地日历，无云控面；LLM调用前的上下文必经脱敏过滤器（个保法）。威胁模型定位：防程序bug、防误用、防失控循环，其次防本地数据泄露；不设防敌意Owner（单机自用）。
+------------------------------------------------------------------------------------------
+[COMP] ActionGateway 统一动作网关（咽喉点与护栏编排器）
+  职责: 全系统唯一对外动作入口，按固定顺序编排护栏链（急停→日历→抑制名单→限频→审核→人审门），对全链通过的动作签发含动作全文哈希+单调序号+护栏链版本+急停状态版本的派发票据。维护封闭动作类型枚举（能力白名单）：自动点赞/评论他人朋友圈不在枚举中，不存在即不可绕过；朋友圈仅有一种「辅助发布自有内容」动作。强制点：三条通道执行器（企微API客户端/个人微信RPA执行器/朋友圈辅助发布器）的唯一入口，执行器无票据即拒发。绕过难度：高——需改网关代码或伪造本地HMAC密钥；带外直发（人手直接操作微信）在威胁模型之外，由夜间对账检测并告警。
+  选型: Python独立进程（asyncio）；票据=HMAC-SHA256（密钥存Windows DPAPI）；与执行器间走本地IPC（命名管道或仅监听127.0.0.1的回环HTTP），不监听外网
+  接口: submit(action)→Decision{allowed|denied|held(held_id)}; release(confirmed_id)→重跑链; verify_ticket(ticket)→bool(供执行器); register_action_type(type, policy)→仅代码层可调用
+------------------------------------------------------------------------------------------
+[COMP] RateLimiter 频率限制器（令牌桶）
+  职责: 分层令牌桶，维度=全局→通道→账号→对象（群/联系人），四层全过取最严。示例默认：个人微信RPA全局≤50条/天、每群≤3条/小时且≤8条/天、每联系人≤2条/天、任意两次动作最小间隔45–180s随机抖动；朋友圈≤2条/天且仅限档期；企微API在官方频控之上叠加本地保守层。桶状态SQLite持久化，重启不重置配额（防止重启刷新额度）。强制点：网关链内、审核闸之前同步执行；票据仅在令牌实际扣减后签发，动作被拒/挂起/过期时返还令牌。绕过难度：高——令牌由网关单写者进程持有，其他进程无法铸造配额；残余风险是对象ID不稳定（群改名）导致桶键漂移，由账号层+全局层硬顶兜底（不依赖对象身份）。
+  选型: 自研持久化令牌桶：SQLite单写者+WAL；时间源=单调钟+墙钟双记录（防改时钟）；配置化阈值存YAML
+  接口: check(channel, account, object_id, cost)→Allow|Deny{原因,下次可用时间,剩余量}; reserve/commit/refund; 桶配置查询与热更（仅收紧即时生效）
+------------------------------------------------------------------------------------------
+[COMP] ModerationGate 内容审核闸门
+  职责: 所有通道外发文本发送前全量过闸（含企微——广告法约束不分公司号/个人号）。三级词库：A级禁发（涉政涉法敏感词、工程禁用承诺类如「保证中标/百分百通过验收/绝对安全/零风险」、广告法第九条绝对化用语如「第一/最优/国家级/最高级」、平台高压词）；B级改写降级（给出软化建议并转人审）；C级提示放行（营销味过浓）。对模板变量填充后的最终渲染文本扫描（防变量注入敏感内容），模板本体在配置载入时预扫描入库。叠加规则：URL白名单、文本中出现手机号等PII即转人审、LLM语义二审（仅对产品介绍类动作，结果只标记不自动放行）。强制点：网关链内、人审门之前；朋友圈草稿生成时也预扫实现早失败。绕过难度：中高——同咽喉点+命中规则ID与文本哈希入审计，夜间对账发现「无扫描记录的发出」即告警暂停通道；残余风险是谐音/拆字/emoji混淆绕过词库，由「营销类动作强制人审」兜底，低量响应式场景下风险接受。
+  选型: pyahocorasick AC自动机多模匹配（A/B级词库）+正则规则层+可选本地LLM语义二审；词库本地YAML/CSV版本化管理，无云端内容安全API（本地化硬约束）
+  接口: scan(final_text, action_category)→Verdict{tier, matched_rules[], suggestions[]}; lint_template(tpl)→issues; reload(version)→词库热载
+------------------------------------------------------------------------------------------
+[COMP] ConfirmationQueue 人工确认队列（含确认UI）
+  职责: 需人审动作类型清单=配置化清单+不可关闭硬核清单：朋友圈发布（永远，硬约束②）、个人微信任何主动私聊（非响应式）、任一对象首次收到产品/服务推介、加联系人/加群、涉及报价/合同/承诺的回复、一切批量操作、A级拦截文本的复核申诉。队列项展示完整上下文（触发消息原文、AI草稿、审核命中明细、该对象当前频控余量），操作：批准/批准并编辑/驳回/稍后；24h未处理自动驳回（fail-closed）并经企微应用消息通知主理人。强制点：网关链末端——此类动作的派发票据仅在对应确认记录存在后签发；朋友圈执行器与主动私聊执行器物理上只从「已确认」表取任务，代码无免确认路径。绕过难度：高——需改执行器代码；确认记录（谁/何时/所见内容哈希）追加进审计日志；残余风险是主理人无脑批准，缓解为UI置顶显示审核命中与AI原稿diff。
+  选型: 本地Web控制台（127.0.0.1+本机鉴权），FastAPI+SQLite队列表；过期通知复用企微应用消息通道
+  接口: enqueue(action, reason)→held_id; list_pending(); decide(held_id, approve|approve_edit|reject, operator, new_text); expire_sweep(); 通知回调→企微应用消息
+------------------------------------------------------------------------------------------
+[COMP] AuditLog 审计日志（append-only）
+  职责: 记录每次对外动作与每次护栏决策。字段：单调序号+墙钟时间、通道、对象（稳定ID+显示名）、动作类型、内容（全文或哈希+本地内容块引用）、结果（sent/blocked/held/expired/failed）、决策依据（命中的限频桶ID、审核规则ID、确认记录ID与操作者、急停状态版本、护栏链与配置版本）。写前留intent、写后留result的双写顺序是网关硬编码行为。夜间对账：通道侧回执（企微API message_id；个人微信发送后UI读回校验）与审计逐条比对，不一致即告警+自动暂停该通道。保留策略：内容全文90天后降为哈希骨架（配合个保法最小化），聚合元数据长期保留作合规抗辩。强制点：包裹网关全链；执行器另写低层ops日志（每次UIA调用/每次输入注入）供取证。绕过难度：对bug与误用=高（经网关的动作不可能无intent记录；带外直发由对账发现）；对机器管理员=中（SQLite可被改写，叠加记录级哈希链「每条含前条哈希」提高篡改成本；威胁模型定位为防错防滥用而非防敌意Owner）。
+  选型: SQLite WAL+STRICT只增表；月度JSONL导出+SHA256清单归档；可选记录级哈希链字段；ops日志独立分库
+  接口: append_intent(action)→seq; append_result(seq, outcome); query(filters); reconcile_report()（夜间任务）; purge_content_older_than(days)
+------------------------------------------------------------------------------------------
+[COMP] KillSwitch 急停开关（全局+分通道+自动触发）
+  职责: 手动触发三路径：控制台大红钮、全局热键（控制台宕机仍可用）、企微应用消息指令「急停」（校验发送者=主理人绑定账号）。自动触发条件：RPA看门狗检测到风控弹窗文本（「账号异常/操作过于频繁/验证/封/登录」等）或微信掉登录态、企微API返回风控类错误码、夜间对账不一致、限频持续拒绝（失控循环征兆）。急停语义：取消全部排队/挂起动作→在飞输入序列于安全边界中止→RPA通道额外夺占输入互斥元并停止一切动作注入（只读监听默认保留以便观察）→必须人工显式re-arm并记录原因，re-arm带5分钟冷却。强制点：三重——(a)网关入口每动作必查；(b)执行器在低层步骤间独立复查标志；(c)RPA看门狗可夺占输入互斥元，所有RPA输入注入必须先获取它；票据内嵌急停状态版本，陈旧即fail-closed。绕过难度：很高——需同时绕过网关检查、执行器步进检查并维持监督进程存活；监督进程死亡本身即自动跳闸。
+  选型: 原子状态文件+内存标志双通道、版本号化；Windows命名互斥元（Mutex）作RPA输入总闸；看门狗为独立小进程（UIA顶层窗口扫描+登录态轮询），与网关互心跳
+  接口: trip(scope, reason, source)（幂等）; state()→{global, per_channel, version}; arm(scope, operator, reason)（5分钟冷却）; 输入互斥元acquire/release（仅RPA输入后端可调用）
+------------------------------------------------------------------------------------------
+[COMP] QuietCalendar 免打扰与节流日历
+  职责: 分层日历：全局静默时段（默认22:00–08:00零外发）→通道窗口（个人微信RPA仅09:00–21:00可动作）→对象级覆盖（某群禁营销/某联系人全禁）→特殊日历（周末与节假日限频系数×0.3，大节假日停产品营销类内容）→朋友圈固定档期（如08:30/12:30/20:30）。响应式特例（可配置，默认）：21点后个人群内纯答疑可回（须10分钟内有对应入站提问），营销类内容夜间一律Defer至次日窗口并标记原因。强制点：网关链内、限频之前；同时内部调度器（朋友圈草稿生成、线索跟进任务）在生成动作前先问日历，从源头不产生无效动作。绕过难度：高——同咽喉点；残余风险是本机改时钟，缓解为单调钟+文件mtime进度做合理性校验，单机自用威胁模型下接受。
+  选型: 本地JSON规则+日期例外表+循环规则（cron式），载入时合并为生效视图；节假日表本地维护（不依赖在线API）
+  接口: check(channel, object_id, action_category, ts)→Allow|Defer{下次窗口}|Deny; effective_view(date)→预览; per_object_override 增删改查
+------------------------------------------------------------------------------------------
+[COMP] PIPLGuard 个保法合规模块
+  职责: 四块能力：①最小化采集——采集层schema即最小化，只存活跃会话文本+显示名+稳定ID，默认不拉取头像/媒体，电话等敏感字段列级AES-GCM加密、密钥存Windows DPAPI；②告知语模板库——首次互动回复自带AI身份与记录告知+「回复拒绝即退订」，群内首次发言简短说明，朋友圈简介版；模板版本化且每次使用入日志；「拒绝/退订」入站自动进抑制名单，该联系人永不再外发并在下次清理删档；③LLM出境最小化——上下文构建器是LLM调用唯一路径，其中脱敏过滤器把联系人昵称/号码替换为占位符、本地回填；④数据删除——控制台「删除该联系人全部数据」作业依据数据地图（哪类数据在哪表）跨库清除（消息档案/画像/标签/审计内容块——审计元数据保留、内容即时降为哈希），删除幂等可重跑，季度孤儿行自查报告。强制点：(a)采集端schema约束（无列即不可存，最强）；(b)LLM上下文构建器唯一路径+脱敏；(c)抑制名单检查在网关链内（日历之后）。绕过难度：高——schema级最小化无法绕过；脱敏绕过需改上下文构建器；抑制名单在咽喉点。
+  选型: SQLite列级加密（python-cryptography AES-GCM，密钥存DPAPI）；数据地图以配置文件维护并与迁移脚本同步；删除作业幂等设计
+  接口: redact_for_llm(context)→{safe_context, mapping}; suppress(contact_id, source); purge_contact(contact_id)→回执{清单,行数}; notice_templates(version)→texts; is_suppressed(contact_id)（网关链内调用）
+------------------------------------------------------------------------------------------
+[COMP] GuardrailConfig + OpsConsole 护栏配置与运维控制台
+  职责: 单一YAML配置经schema校验，校验失败拒绝启动（fail-closed）；硬核规则（朋友圈必人审/夜间禁营销/禁自动点赞评论/响应式为主）在代码常量层，配置只能收紧不能放松；一切配置变更生成新版本并写审计（旧版本可回放比对）。控制台（仅127.0.0.1+本机鉴权）提供：人审队列、急停按钮与状态面板、各维度限频余量可视、审计检索、对账报告、联系人数据删除入口、告知模板与词库日历查看。强制点：启动期配置校验+护栏链对配置做一次动作内版本快照（一条链跑在一致配置上）；控制台是人审决策与急停re-arm的指定入口。绕过难度：高——放松性修改被代码常量顶死；手改配置文件导致SHA256指纹与审计记录不符，启动校验即暴露。
+  选型: YAML+pydantic（JSON Schema）校验；FastAPI本地Web控制台，前端轻量（原生HTML+少量JS）；配置文件SHA256指纹入审计
+  接口: load_validate(path)→Config{snapshot_version}; mutate(diff, operator)→new_version+审计记录; 控制台端点：/queue /kill /limits /audit /reconcile /purge /templates
+[FLOW] 个人微信群响应式回复（主链路）：入站消息（UIA直读）→AI生成草稿→网关链：急停OK→日历OK（夜间纯答疑走响应式特例，营销类Defer到次日）→抑制名单OK→令牌桶检查→审核扫描最终渲染文本→纯答疑类签发票据→RPA执行器验票+步进复查急停→发送后UI读回→审计写result→夜间对账。任一环节挂起（审核B级/首次营销触达）→入人审队列，24h未决自动驳回。
+[FLOW] 朋友圈半自动发布（硬约束②落地）：调度器在日历档期前生成文案草稿→审核预扫（早失败）→入人审队列（永远）→主理人批准/批准并编辑→释放时对编辑后终稿整链重跑：急停→日历档期→限频→审核重扫→签票→朋友圈辅助发布器在档期窗口内辅助发布（剪贴板粘贴+人工点击确认，系统无全自动路径）。全程不触碰他人朋友圈的读外动作（点赞/评论动作类型在枚举中不存在）。
+[FLOW] 自动急停（风控信号）：RPA看门狗UIA扫描到「账号异常」类弹窗或微信掉登录态→trip(personal_wx, reason)→网关取消全部排队动作、执行器在安全边界中止、输入互斥元被夺占、企微通知主理人→只读观察模式保留→人工在控制台re-arm（强制填原因，5分钟冷却）→全程入审计。
+[FLOW] fail-closed启动与自愈：进程启动→配置schema校验（失败拒启并提示按内置最严默认值修复）→令牌桶从SQLite恢复配额（重启不重置）→网关与监督进程互心跳（任一方死亡→自动trip）→夜间对账任务比对通道回执与审计→不一致即告警并暂停相关通道→日终对账报告入控制台。
+[FLOW] 数据删除（个保法）：主理人在控制台发起「删除联系人X」→purge_contact依据数据地图跨消息档案/画像/标签/抑制名单清除，审计内容块即时降为哈希→产出删除回执（清单+行数）入审计→季度孤儿行自查校验删除完整性。
+[FLOW] 人审释放重跑：ConfirmationQueue.decide(approve)→网关对（可能被编辑的）终稿重跑急停→日历→限频→审核全链→全过才签发票据；任一环节此时失败则驳回并在队列UI注明失败闸与原因，令牌不扣减。
+[RISK] 词库绕过：谐音/拆字/emoji混淆可绕过AC自动机匹配；兜底=营销类动作强制人审+LLM二审标记（只标记不放行）+低量响应式场景，残余风险明确接受。
+[RISK] 个人微信通道无官方回执：发送后UI读回校验不完美，对账在该通道只能尽力而为；读回失败一律按「结果未知」处理并计入风控观察计数。
+[RISK] 对象ID不稳定（群改名/联系人改昵称）导致限频桶键漂移：账号层与全局层硬顶兜底（不依赖对象身份），但对象级精度下降。
+[RISK] 看门狗依赖微信客户端UI结构：版本升级可能使风控弹窗检测失明；缓解=「连续N次交互受阻且出现未知模态框」即视为风控信号自动trip。
+[RISK] 审计日志对本机管理员可篡改（SQLite），哈希链仅提高成本不构成密码学防护；威胁模型已明确为防错防滥用，非防敌意Owner。
+[RISK] 人审形式化（无脑点批准）使确认门退化为橡皮图章；缓解=UI置顶审核命中与AI原稿diff+频控余量展示，无法完全消除。
+[RISK] SQLite单写者（网关进程）在队列极端积压时是吞吐瓶颈；本系统低频设计下风险低，预留按月分表扩展路径。
+[RISK] 改本机时钟可欺骗日历与限频的时间维度；单机自用威胁模型下接受，用单调钟+文件mtime进度做合理性校验缓解。
+[RISK] 企微通知路径（人审过期提醒/急停通知）依赖网络与企微账号可用性；本地热键+控制台为冗余路径。
+[RISK] 云端LLM调用（Claude/GLM）仍会把消息文本送出本机：脱敏过滤器降低但未消除个人信息提供风险，需在告知语中覆盖「AI辅助生成」事实。
+[Q] 个人微信夜间（如23点后）群内纯答疑默认是否回复？当前设计默认「10分钟内有入站提问即可回纯答疑」，需主理人确认。
+[Q] 审计内容全文保留期（现设90天后降哈希）与合规抗辩留痕需求的精确边界，建议固化前获取一次法务意见。
+[Q] 群聊场景告知的呈现方式（首次发言附带/群公告/私聊告知）与群成员「单独退订」的落地形式待定。
+[Q] 联系人昵称是否一律作为个人信息在LLM出境时脱敏（当前倾向：是，一律占位符化）。
+[Q] 人审队列超时时长（现设24h）是否分动作类型差异化（如朋友圈48h/主动私聊4h），及过期通知是否需要本地弹窗兜底。
+[Q] 节假日节流日历的数据源与维护责任人（本地手工维护vs导入ics），年度更新节奏待定。
+[Q] 企微通道kill switch的语义边界：仅停外发消息，还是连接收处理与自动打标签也一并停（当前：停一切对外动作，接收与展示保留人工可见）。
+[Q] B级改写建议词库的初始规模与维护机制（谁负责持续补充工程行业禁用承诺类话术与绝对化用语变体）。
+==============================================================================================================
+SUBSYSTEM: 部署与运维子系统（单机 Windows 常驻：进程模型 / 守护自愈 / 会话要求 / 配置 / 监控告警 / 日志 / 升级 / 备份 / 部署清单 / 故障预案）
+OVERVIEW: 【定位】让"总包私域运营台"在一台用户自己的 Windows 机器（以现有 Windows 10 Home 为基线，兼容 Pro）上 7x24 无人值守常驻，且所有个人微信动作可控、可熔断、可审计、可恢复。设计原则：看门狗极简可靠、监督分层、数据面与控制面分离、任何组件死了都能被更低层拉起、任何状态都能一键停。【进程与端口模型】三层监督树：①计划任务看门狗（Task Scheduler，2条任务：ZB-Start 登录触发启动主服务；ZB-Health 每5分钟检查主服务进程存活+心跳哨兵文件超时则拉起，用全局命名互斥量 Mutex 防双开）。②主服务 zb-supervisor（Python 3.11 打包，跑在用户会话）：调度中枢+子进程监督者，自身不做 UIA；管理 rpa-worker 子进程（崩溃指数退避重启 5s→30s→5min，每小时崩溃预算5次，超限停 RPA 动作保观测+P1告警）。③rpa-worker（独立进程，uiautomation/comtypes 直读微信桌面客户端 UIA 树）：独立进程因 UIA COM 调用栈易崩需隔离、可单独熔断与升级；与主服务经命名管道 \\.\pipe\zb-rpa-ipc（JSON 行协议，token 鉴权）通信，消息先落盘队列再处理，断续容错。wecom-gateway（FastAPI）监听 127.0.0.1:8440：/wecom/callback 企微回调（经 frp 内网穿透到达）、/healthz 健康探针、/breaker 熔断端点；本机管理台（含朋友圈素材人工确认页）静态托管于 127.0.0.1:8441，仅 loopback。nssm 仅可选用于无桌面依赖组件（如 frpc），文档铁律：任何需要 UIA 的进程严禁注册为 Windows 服务。【登录会话要求（硬前提，必须写清）】UIA 的读写与输入注入要求进程运行在交互式桌面会话（Session 1+）；Windows 服务运行在 Session 0（无桌面、UIA 完全不可用），所以本系统不走 nssm 服务化主链路，而走"BIOS 来电自启 → Sysinternals Autologon 自动登录（凭据存 LSA，优于注册表明文）→ 登录后计划任务拉起全链"。屏幕可关闭休眠（不影响 UIA），但会话不得锁定/注销：关闭"离开时锁定"与睡眠（电源计划：永不睡眠、可关显示器、无唤醒密码）。远程运维禁用直接断开 RDP（断开=锁会话→RPA 输入立即失效）：Win10 Home 本就无 RDP 主机，统一用向日葵/ToDesk/RustDesk 类镜像会话远控；若临时用 RDP，退出前执行 tscon <会话id> /dest:console 重定向回控制台。Windows Update 设活跃时间+定期检查，防强制重启打断会话。【微信客户端健康检查（3层）】L1 进程存在（WeChat.exe）；L2 主窗口与登录态（UIA 树出现"登录"按钮=掉线，或窗口类名探测）；L3 功能探针（每10分钟读一次会话列表，统计 UIA 调用成功率）。降级阶梯：读失败→只记录不动作→自动重启微信客户端（每日限2次，重启后若需扫码登录则 P0 告警"需人工扫码"）→全局熔断。【配置管理】C:\zb-ops\config\ 下 defaults.yaml（随版本发布的只读基线）+ config.yaml（本机覆盖）+ secrets\（不进 git）：敏感项（企微 corpid/secret/token/aesKey、LLM keys、frp token）用 Windows DPAPI（CryptProtectData，CurrentUser）加密为 secrets.dat，CLI 提供 zbctl secret set/get；每次变更写前快照到 config\history\（时间戳版本化，非敏感部分纳入本地 git），审计日志记录，支持热加载信号或标记需重启。【监控告警（防递归是核心）】通道分离：A=告警通道用企微"群机器人 webhook"（自建仅含主理人的群+一个机器人，webhook 只能发不能收，物理上不可能递归）；B=命令通道用企微自建应用回调或仅限本机（托盘/管理台/桌面"熔断.bat"），A/B 严格分离。风暴抑制：同类告警15分钟聚合1条+每日摘要；分级 P0（SQLite损坏/磁盘<5%）P1（微信掉线/UIA失效/RPA熔断/回调不可达）即时推，P2（LLM超时/单任务失败）聚合，P3 进日报；兜底通道为本地 Windows Toast+可选 SMTP 邮件（企微 webhook 失效时启用）。指标：心跳戳、UIA成功率、消息处理时延、动作日预算消耗、磁盘水位、最近备份成功时间。【日志】loguru JSONL，按模块分目录 logs\{main,rpa,wecom,audit}\；轮转每日+50MB；运行日志留30天，审计日志（全部 RPA 动作/外发内容/配置变更/熔断记录）≥180天并 zip 归档、单独磁盘配额；手机号/wxid 审计中哈希化脱敏；磁盘>80% 告警。【升级策略】双层：数据型模块（提示词/推荐规则/朋友圈文案模板/知识库索引/微信UIA选择器适配 yaml）文件监视+原子替换+热重载；代码型整体更走版本目录：app\releases\YYYYMMDD-N\ + current junction，启动固定走 current\zb-supervisor.exe，升级=新 release 落地→SHA256校验+冒烟脚本→维护窗口（如周二07:00主理人值守）先熔断 RPA→停进程→切 junction→启动验证→失败自动回切上一版（保留最近5版）。微信适配层版本化：adapters\wechat-4.x\selectors.yaml 绑定微信版本，检测到微信自动升级后先探测版本找适配包，无适配则降级只读+P1告警。【备份】SQLite(WAL) 每日 03:30 VACUUM INTO backup\db\YYYYMMDD.sqlite（在线安全），GFS：日7+周4+月12；每周日自动对最近日备做恢复演练（restore 到 temp+PRAGMA integrity_check）；副本先写第二物理盘/USB，云副本默认关闭，开启时先 7z AES-256 加密（密钥主理人离线持有）；secrets.dat 是 DPAPI 绑本机的，必须另备一份明文封存（密码管理器/纸质信封）供换机恢复，RESTORE.md 步骤化：装机→运行时→git 还原 config→secrets→恢复 sqlite→冒烟。【部署清单】A 硬件/系统：①专用机器≥8G内存+256G SSD+第二块物理盘或定期插的USB盘 ②BIOS 设"来电自启" ③电源计划永不睡眠/关显示器/无唤醒密码 ④关闭锁屏（Home 用注册表 DisableLockWorkstation）⑤Windows Update 设活跃时间 ⑥安装向日葵/ToDesk 供远程运维（禁用断开式远程）。B 账号/凭据：⑦企微管理员权限与自建应用（corpid/secret/回调token+aesKey）⑧主理人个人微信已登录且记住登录 ⑨LLM API keys（Claude/GLM）⑩建"告警专用"企微群并添加群机器人取 webhook ⑪（如需公网回调）frp 服务端或 cpolar 账号。C 安装：⑫装 Python 3.11/运行时与 releases\current ⑬Autologon 配自动登录 ⑭导入两条计划任务（ZB-Start/ZB-Health）⑮secrets 经 zbctl 写入 DPAPI ⑯装微信客户端目标版本并锁定 ⑰（可选）nssm 装 frpc。D 验证：⑱重启整机验证自动登录→全链自起→收到"系统上线"企微心跳 ⑲手工杀 rpa-worker 验证退避重启 ⑳手工杀主服务验证计划任务5分钟内拉起 ㉑执行一次熔断.bat 验证 RPA 动作全停+企微收到确认 ㉒跑一次备份与恢复演练。【故障预案表（故障|检测|自动处置|人工处置）】微信客户端崩溃|L1进程检查|重启微信（日限2次）→仍失败熔断|需扫码则扫码，次日重置计数；微信掉线/被踢登录|L2登录态探测|停止动作+P0告警|手机扫码重登；微信版本升级致UIA失效|L3成功率骤降+版本探测|切对应适配包，无则只读降级|等适配包发布；rpa-worker崩溃循环|监督者崩溃预算|退避重启→超预算停RPA保观测+P1|按日志定位，可整版回滚；主服务死亡|计划任务心跳哨兵|5分钟内拉起|若反复死看日志/回滚；整机重启/断电来电|BIOS自启+自动登录+ZB-Start|全链自动恢复|收到上线心跳即可，异常则远程查看；SQLite损坏|备份演练integrity_check+运行时报错|切最近好备份（可能丢1日内数据）|按RESTORE.md重建；磁盘满|水位监控|轮转日志紧急清理非审计文件+P0|人工清理/换盘；frp/回调断|gateway自检外部探针|降级轮询可轮项+P1|修复穿透或转纯本机模式；企微token过期|API报错码检测|P1告警|企微后台刷新secret并 zbctl 更新；LLM API失效/超时|调用失败率|降级备用模型→关闭AI外发只记录|检查配额/换key；触发微信风控（账号功能受限）|发送失败/账号提示|立即全局熔断+P0|主理人自查账号，评估后手动恢复；Windows更新强制重启|计划任务重启后|同整机重启流程|调整活跃时间。
+------------------------------------------------------------------------------------------
+[COMP] watchdog-scheduler（计划任务看门狗）
+  职责: 全链最底层守护：Windows 计划任务两条——ZB-Start（用户登录时启动主服务）与 ZB-Health（每5分钟检查主服务进程存活与心跳哨兵文件，死了就拉起）；只做'进程不存在则启动'这一件极简可靠的事，不做复杂逻辑；全局命名互斥量防双开。
+  选型: Windows 任务计划程序（schtasks 导出 XML 随版本发布），'仅用户登录时运行'+交互式触发；不依赖第三方。
+  接口: schtasks /create 导入的 ZB-Start.xml / ZB-Health.xml；读取 C:\zb-ops\runtime\heartbeat.json 哨兵（含各模块心跳戳）；启动目标 C:\zb-ops\app\current\zb-supervisor.exe。
+------------------------------------------------------------------------------------------
+[COMP] zb-supervisor（主服务/监督者）
+  职责: 调度中枢：定时任务（朋友圈素材生成、台账整理、备份触发）、AI 调用编排、企微官方 API 客户端（合规自动化主体）、商机台账写入、告警发出、子进程监督（rpa-worker 崩溃退避重启与崩溃预算）、心跳哨兵写入、熔断总开关持有者。自身绝不触碰 UIA。
+  选型: Python 3.11 + asyncio，loguru 日志，APScheduler 调度；打包为 releases 目录形式（venv 或 PyInstaller 单 exe），跑在交互式用户会话。
+  接口: 命名管道 \\.\pipe\zb-rpa-ipc 与 rpa-worker 双向 JSON 行协议（token 鉴权）；读 config/ 下 yaml；写 SQLite（WAL）；HTTP 调企微开放 API 与 LLM API；经 wecom-gateway 的内部端点下发控制命令。
+------------------------------------------------------------------------------------------
+[COMP] rpa-worker（个人微信 RPA 工作进程）
+  职责: 唯一拥有微信桌面客户端依赖的进程：UIA 直读消息文本、执行保守频率的响应式动作、上报消息与执行结果；独立进程以隔离 UIA COM 崩溃，可被单独熔断/暂停/升级；崩溃由 supervisor 退避重启。
+  选型: Python + uiautomation/comtypes（备选 pywinauto；如需更稳可换 C# FlaUI 子进程），选择器适配层 yaml 版本化绑定微信版本。
+  接口: 命名管道 \\.\pipe\zb-rpa-ipc 接收指令/上报消息（先落盘队列再处理，断续容错）；UIA 操作微信客户端窗口；执行动作前检查全局熔断开关文件 runtime\breaker.on；写 logs\audit\ 动作审计。
+------------------------------------------------------------------------------------------
+[COMP] wecom-gateway（回调与控制面 HTTP 服务）
+  职责: 承接企微官方回调（URL 验证+事件解密）、暴露 /healthz 健康探针与 /breaker 熔断端点；可选挂载 frp 内网穿透以获得公网可达回调地址；全部仅监听 loopback（frp 场景由 frpc 出站连接建立通道，不开放入站端口）。
+  选型: FastAPI/uvicorn，绑定 127.0.0.1；企微回调签名验证与 AES 解密按官方 SDK；frp/frpc 或 cpolar 作为可选穿透组件（可用 nssm 或计划任务托管，因无桌面依赖）。
+  接口: 127.0.0.1:8440/wecom/callback（GET 验证 + POST 事件）、/healthz、/breaker（POST）；127.0.0.1:8441 本机管理台静态页（含朋友圈素材人工确认工作流）；上游转发主服务。
+------------------------------------------------------------------------------------------
+[COMP] session-keeper（开机自启与会话保持）
+  职责: 落实 UIA 硬前提：交互式桌面会话。BIOS 来电自启 + Sysinternals Autologon 自动登录（凭据存 LSA）+ 关闭睡眠/锁屏 + 远程运维规范（镜像式远控或 tscon /dest:console，禁断开式 RDP）；文档明示：任何需要 UIA 的进程严禁注册为 Windows 服务（Session 0 隔离无桌面）。
+  选型: Autologon for Windows（LSA 存储）；电源计划与注册表 DisableLockWorkation/无唤醒密码；向日葵/ToDesk/RustDesk 任一做远程运维通道。
+  接口: 部署清单与 RESTORE.md 中的装机步骤；tscon <sessionId> /dest:console 应急脚本置于 tools\。
+------------------------------------------------------------------------------------------
+[COMP] health-checker（健康检查）
+  职责: 三层微信客户端健康检查（L1 进程存在 / L2 主窗口+登录态 / L3 每10分钟功能探针统计 UIA 成功率）+ 系统面检查（磁盘水位、SQLite 可写、frp 通道、LLM 可用性、备份新鲜度）；输出分级状态驱动降级阶梯与告警。
+  选型: 主服务内调度线程；psutil 查进程；UIA 探针复用 rpa-worker 通道；外部探针经 gateway 自检。
+  接口: 写 runtime\health.json（管理台与看门狗共用）；状态变更事件进告警总线；触发熔断器与微信重启流程。
+------------------------------------------------------------------------------------------
+[COMP] alerter（监控告警，防递归设计）
+  职责: 分级告警：P0 即时、P1 即时、P2 聚合、P3 日报；防递归核心=告警通道用企微群机器人 webhook（只能发不能收，物理单向），命令通道与之严格分离；风暴抑制（同类15分钟聚合、每日摘要）；兜底 Windows Toast 与可选 SMTP 邮件。
+  选型: 企微群机器人 webhook（主理人专属群）；python-win10toast/plyer 本地通知；可选 smtplib。
+  接口: 内部告警总线（级别+类别+去重键）；HTTP POST webhook；每日 21:00 日报（心跳/消息量/动作量/预算消耗/备份结果）。
+------------------------------------------------------------------------------------------
+[COMP] breaker（全局熔断器）
+  职责: 一键停：写入 runtime\breaker.on 哨兵文件后，rpa-worker 在每个动作前检查并立即停止一切个人微信主动动作（观测与台账保留，企微官方通道不受影响）；三个触发入口：桌面'熔断.bat'/托盘菜单、管理台按钮、（有公网回调时）企微自建应用命令；微信风控信号自动触发；解除需人工显式确认。
+  选型: 哨兵文件+主服务广播+审计记录（谁/何时/为何熔断）。
+  接口: C:\zb-ops\runtime\breaker.on；gateway /breaker 端点；熔断与解除均发企微确认消息并写审计日志。
+------------------------------------------------------------------------------------------
+[COMP] config-manager（配置与密钥管理）
+  职责: 分层配置：defaults.yaml（版本基线）+ config.yaml（本机覆盖）+ secrets\（DPAPI 加密 secrets.dat：企微 corpid/secret/token/aesKey、LLM keys、frp token）；变更写前快照到 config\history\ 并入本地 git（非敏感部分），支持热加载信号与'需重启'标记；提供 zbctl secret set/get CLI。
+  选型: yaml 分层合并 + Windows DPAPI（CryptProtectData，CurrentUser）+ 本地 git 仓库管配置版本。
+  接口: config/ 目录约定；zbctl CLI；reload 命名事件；审计日志记录全部变更。
+------------------------------------------------------------------------------------------
+[COMP] logging-stack（日志与轮转）
+  职责: JSONL 结构化日志按模块分目录（main/rpa/wecom/audit）；每日+50MB 轮转；运行日志留30天、审计日志（全部 RPA 动作/外发内容/配置变更/熔断）≥180天 zip 归档并单独配额；手机号/wxid 哈希脱敏；磁盘>80% 告警并在>90%时只清理非审计文件。
+  选型: loguru（rotation+retention+compression 内建），自定义脱敏 sink 与审计专用 sink。
+  接口: logs\<module>\*.jsonl；审计条目字段：时间/触发消息ID/动作类型/目标/结果/操作者（人或系统）。
+------------------------------------------------------------------------------------------
+[COMP] backup-agent（备份与恢复演练）
+  职责: SQLite 每日 03:30 VACUUM INTO 到 backup\db\（在线安全），GFS 保留（日7+周4+月12）；每周日自动恢复演练（restore 到 temp + PRAGMA integrity_check，失败 P0）；配置与 DPAPI secrets 一并入备份；第二物理盘/USB 副本；云副本默认关闭，开启时先 7z AES-256 加密且密钥离线保存；配套 RESTORE.md 换机重建手册与个保法'可删除'数据清理工具（含备份副本处理）。
+  选型: SQLite VACUUM INTO；robocopy 同步第二盘；7z AES-256（可选云上传）；备份结果写 health.json 供告警检查新鲜度。
+  接口: backup\db\YYYYMMDD.sqlite、backup\config\、RESTORE.md；zbctl backup --now / zbctl restore --dry-run。
+------------------------------------------------------------------------------------------
+[COMP] updater（升级与回滚）
+  职责: 双层升级：数据型模块（提示词/推荐规则/朋友圈文案模板/知识库索引/微信UIA选择器适配 yaml）文件监视+原子替换+热重载；代码型走版本目录 app\releases\YYYYMMDD-N\ + current junction，升级=落地→SHA256校验+冒烟→维护窗口先熔断→停进程→切 junction→启→验证，失败自动回切上一版（保留5版）；微信适配层按检测到的微信版本选择 adapters\wechat-x.y\ 包，无适配则只读降级+P1。
+  选型: NTFS junction 切换（计划任务与快捷方式固定启动 current\）；冒烟脚本内置健康断言；适配包与微信版本号绑定。
+  接口: releases\ 目录与 CURRENT 指针文件；升级/回滚事件写审计并推企微通知；维护窗口建议每周固定时段且主理人在线。
+------------------------------------------------------------------------------------------
+[COMP] admin-ui（本机管理台）
+  职责: 本机浏览器打开的状态与操作面板：系统健康面板、朋友圈素材人工确认工作流（生成→人审→辅助发布）、台账/画像查看入口、熔断/恢复按钮、配置查看、备份状态；仅监听 127.0.0.1，不开公网。
+  选型: 静态页由 gateway 托管（127.0.0.1:8441），API 复用 gateway 内部端点，token 本机鉴权。
+  接口: 浏览器访问 http://127.0.0.1:8441；操作全部走审计日志。
+[FLOW] 开机到就绪：来电自启(BIOS)→Windows 自动登录(Autologon/LSA)→计划任务 ZB-Start 触发→zb-supervisor 启动→拉起 wecom-gateway 与 rpa-worker→health-checker 三层检查通过（微信在线+已登录+UIA 可读）→写 heartbeat.json→企微群机器人 webhook 发送'系统上线'心跳（单向通道，无递归面）。
+[FLOW] RPA worker 崩溃自愈：rpa-worker 进程退出→supervisor 捕获→按退避序列重启（5s→30s→5min）→恢复后从落盘队列续处理未确认消息→若1小时内崩溃超5次预算→停止重启、触发全局 RPA 熔断（保观测停动作）+P1 告警→人工按日志定位或整版回滚。
+[FLOW] 微信客户端异常处置：L3 探针连续失败→L2 复核登录态→若掉线：停个人微信动作+P0 告警'需人工扫码'；若进程崩溃：自动重启微信（每日限2次）→重启后登录态校验→失败则 P0；若版本升级致选择器失效：探测微信版本→匹配 adapters\ 适配包→无匹配则降级'只读记录'模式+P1 告警等适配。
+[FLOW] 告警链路（防递归）：任意模块产生事件→告警总线按（级别,类别,去重键）路由→P0/P1 经企微群机器人 webhook 单向推出（webhook 只能发不能收，物理上不可能形成消息回环）→P2 进入15分钟聚合窗→P3 计入日报；兜底：webhook 发送失败重试2次后转 Windows Toast+邮件；命令类操作（熔断/恢复）只从命令通道（管理台/托盘/企微自建应用）进入，与告警通道物理分离。
+[FLOW] 一键熔断：任意入口（桌面熔断.bat/托盘/管理台按钮/企微命令）→写 runtime\breaker.on→主服务管道广播→rpa-worker 在下一个动作边界前检查哨兵并立即停止一切个人微信主动动作（观测与台账继续，企微官方通道不受影响）→审计记录触发者与时间→企微收到熔断确认→解除必须人工在管理台显式确认并说明原因。
+[FLOW] 代码升级流程：新版本落盘 releases\YYYYMMDD-N→SHA256 校验+冒烟脚本（不碰生产库）→维护窗口（固定每周时段，主理人在线）先触发熔断→计划停止子进程与主服务→junction current 切换到新版本→按开机流程重启→健康断言（心跳/微信在线/UIA 成功）→通过则发企微'升级成功'；任一断言失败→自动切回上一 release 并重启→P0 告警。
+[FLOW] 数据型模块热更新：提示词/推荐规则/朋友圈文案模板/选择器适配 yaml 变更→文件监视检测→写入临时文件后原子 rename→发模块 reload 信号→各消费者重建内存态→审计+管理台通知；热更失败（解析错误）自动回读上一快照并告警，不影响主进程存活。
+[FLOW] 每日备份流程：03:30 备份代理触发→对 SQLite 执行 VACUUM INTO 生成 backup\db\YYYYMMDD.sqlite→按 GFS（日7+周4+月12）清理过期→robocopy 同步到第二物理盘/USB→（可选开启时）7z AES-256 加密后上传云端→备份结果戳写 health.json→连续2天无新鲜备份则 P1 告警；每周日对最近日备自动恢复演练（restore 到 temp+integrity_check）。
+[FLOW] 整机灾难恢复：新机/重装→按 RESTORE.md：BIOS 与电源设置→Autologon→装运行时与 releases→git 还原 config（含 history）→从离线封存取回 secrets 明文重录 zbctl secret→恢复最近校验通过的 SQLite 备份→执行部署清单 D 段验证（含杀进程演练与熔断演练）→旧机数据按个保法清理工具销毁（含备份副本）。
+[RISK] UIA 会话硬约束被误配：任何把主链路注册成 Windows 服务（Session 0）、或远程运维用断开式 RDP 导致锁屏，都会让个人微信 RPA 立即失能且表象是'静默假死'——必须靠部署清单固定 Autologon+镜像远控，并在健康检查中加入'会话锁定状态'探测项。
+[RISK] 自动登录的物理安全风险：机器开机即进桌面且存有微信登录态与密钥，机器失窃=数据面全失——缓解：专用机器不放无关敏感数据、机器物理上锁、secrets 云备份密钥离线保存；Windows 10 Home 无完整 BitLocker（仅部分设备有 Device Encryption），磁盘加密能力弱是明确短板。
+[RISK] 微信客户端版本升级是最高频破坏源：UIA 选择器随版本漂移；自动更新难以彻底禁用，只能'检测版本→适配包匹配→无则只读降级+告警'的补偿策略，存在功能静默退化窗口。
+[RISK] 账号风控残余风险：即便低频+响应式+可熔断，个人微信自动化仍可能被平台判定异常（限功能/封号）；熔断与审计只能降低损失不能消除概率，需在运营上保留'人工值守时段'与降级预案（企微官方通道承接全部合规动作）。
+[RISK] 企微回调需要公网可达地址：单机无公网 IP 时依赖 frp/cpolar 穿透，引入第三方可用性与安全面；若完全不开公网，企微侧部分实时能力降级为轮询/半离线，功能边界需在产品层明确。
+[RISK] 告警通道自身故障（webhook 失效/群被删/网络断）会让'系统病了但没人知道'：兜底 Toast+邮件也依赖本机在场；需把'连续N小时未发日报'视作异常信号（外部视角的心跳缺失检查，如主理人手机端每日21:00没收到日报即人工介入）。
+[RISK] 单盘故障与 SQLite 损坏：备份在第二物理盘才有效，若只有单盘则 GFS 形同虚设；恢复演练若不跑，备份可用性存疑；最坏丢最近1日数据（日备粒度）。
+[RISK] DPAPI secrets 换机不可解：secrets.dat 绑定本机用户，若无离线明文封存，整机灾难恢复时所有凭据需全部重申请（企微 secret 重置、LLM key 重录），恢复时间显著拉长。
+[RISK] Windows Update 强制重启与断电：重启后链路可自愈，但正在进行的 RPA 动作与当日备份可能中断；活跃时间设置只能缓解，需接受偶发中断并靠'开机到就绪'流程兜底。
+[RISK] LLM/API 依赖失效：Claude/GLM 超时或配额耗尽会让 AI 答疑停摆——降级为'记录问题+稍后统一回复'而非硬重试；企微 token 过期需人工刷新 secret（无法全自动）。
+[Q] 企微回调公网方案选型：是否接受 frp 自建 VPS / cpolar 商用穿透，还是首期走'无公网半离线模式'（明确牺牲哪些企微实时能力）？
+[Q] 机器硬件实况：是否有第二块物理盘或可定期插入的 USB 备份盘？磁盘容量与微信客户端版本锁定目标（当前用 3.x 还是 4.x）？
+[Q] 是否要开启加密云备份（如百度网盘/对象存储），密钥由谁离线保管？个保法'不外传'边界下加密副本是否被主理人接受？
+[Q] 维护窗口与值守安排：升级固定在每周哪个时段、主理人在线时间如何，决定自动升级的自动化程度（全自动 vs 半自动确认）？
+[Q] Windows 版本是否考虑从 Home 升 Pro（获得 BitLocker/gpedit），还是接受 Home 的注册表+第三方远控方案？
+[Q] 升级制品分发方式：手动拷贝、git 拉取还是内部制品目录？单机场景建议最简的'本地目录+junction'，需主理人确认偏好。
+[Q] 企微主体与权限：是否已有企微管理员权限创建自建应用与回调可信域名/IP 白名单（穿透域名需备案或使用免备案方案）？
+[Q] 风控红线量化：个人微信动作的日预算上限（条/日、条/群/日）与值守时段由主理人定，作为熔断器与告警的配置基线。
+==============================================================================================================
+SUBSYSTEM: 个人微信精简版RPA子系统（WeChat-Lite-RPA，护栏优先/能力分级架构）
+OVERVIEW: 定位：总包私域运营台的"手和眼"——独立进程运行在常驻Windows机上，用UI Automation直读微信桌面客户端做【低频+响应式】群聊应答与【半自动】朋友圈辅助；所有业务判断（AI答疑、内容生成、台账）留在主台，本子系统不含任何LLM密钥与数据库写权限。核心架构决策是"能力分级门控（capability-gated）"：因为已有2025年实测文献（cnblogs.com/zhaoweiwei/p/19731420）证实微信4.x改用跨平台自绘Canvas渲染，Inspect.exe看不到内部控件、pywinauto/uiautomation无法定位按钮——"UIA直读"这一前提在4.x上不成立或仅部分成立（3.9.x时代UIA树丰富，yinkaisheng/uiautomation正是以微信3.x为示范场景）。因此Phase 0必须先跑本机UIA探针，按探针矩阵（会话列表可读/消息项可读/输入框可写/发送按钮可Invoke四项能力）把系统锁定在三种模式之一：全自动响应模式（四项全过）、只读建议模式（可读不可写：消息照读、答案只在主台确认面板显示+一键复制、人工手发）、纯辅助模式（探针全挂：仅剩朋友圈素材生成+剪贴板辅助，零微信自动读取）。绝不在能力不足时退回视觉栈/OCR/硬件HID（路线已砍，不复活）。技术选型结论：主栈Python 3.11 + yinkaisheng/uiautomation（comtypes直连UIA COM，与主台同语言、中文社区成熟、以微信自动化著称），pywinauto(UIA backend)作为窗口级操作与对话框断言的副库；C#方案（cswin32+IUIAutomation）仅在需要STA事件泵或事件Handler稳定性不佳时作为≤200行的sidecar可执行文件保留，不作主栈；Node+windows-foreground否决——它只解决SetForegroundWindow一个子问题，无UIA树访问能力，Node侧UIA需经edge-js二次桥接.NET，链路长无收益。新消息检测默认轮询（2-5s抖动扫描会话列表未读角标），UIA结构变更事件因微信是否触发无实证、降级为可选优化项。回复执行仅文本：剪贴板备份→写入→Ctrl+V→点击"发送"按钮（优先Invoke而非回车，规避用户发送键配置差异）→读取消息列表末条做后置校验，失败即熔断计数。护栏三层：进程内守门（每次动作前限额校验，SQLite持久化计数防重启洗白）+ 主台侧总量核验 + 物理熔断（本地pause旗标文件+全局热键，主台挂了也能停）。朋友圈半自动为两级：L0默认级仅"复制文案+打开图片文件夹+唤起微信主窗"；L1配置级额外代开朋友圈编辑器并粘贴文案与选图，但"发表"按钮选择器写入代码级FORBIDDEN选择器清单，ReplyActor在动作目标命中该清单时直接拒绝执行——不自动发布是代码约束而非流程约定。熔断触发词（"操作过于频繁/账号异常/验证/重新登录"等）+选择器连续失配+后置校验失败+心跳丢失多路触发，触发即停机、树文本快照留证（默认不截屏，最小采集）、Windows Toast+主台横幅告警、人工两步恢复（点恢复+选原因码）。进程隔离：worker经Job Object纳管，崩溃由独立supervisor按"30分钟冷却内最多重启1次"处理，绝不影响主台；worker与主台仅经127.0.0.1 HTTP+命名事件通信，事件信封内发送者一律加盐哈希假名化，AI调用仅携带脱敏最小上下文。"永不做"清单硬编码于worker常量与选择器denylist双层强制。
+------------------------------------------------------------------------------------------
+[COMP] uia-probe（Phase 0 探针，先于一切）
+  职责: 对当前安装的微信桌面版dump UIA树，产出能力矩阵：会话列表项可读？未读角标可读？消息项发送者/正文/时间可读？输入框可定位可写？发送按钮可Invoke？窗口标题/登录态可判？输出能力等级（FULL/READ_ONLY/DEAD）+选择器指纹哈希+微信版本号。微信客户端更新后自动重跑并比对，指纹变化即预警。
+  选型: Python + uiautomation（WalkTree限定深度导出Name/ClassName/ControlType/AutomationId，只导文本元数据不截屏）
+  接口: CLI: uia_probe --dump --score；输出JSON: {wechat_version, capabilities{session_list, unread_badge, msg_item, input_edit, send_btn}, selector_fingerprint} → 写入console API /api/probe-report
+------------------------------------------------------------------------------------------
+[COMP] rpa-worker（UIA驱动核心进程）
+  职责: 唯一允许触碰微信的进程。单线程动作循环（COM在线程内初始化，UIAutomationInitializerInThread）+独立轮询线程；持有白名单、限额计数、熔断状态；对外只暴露'读消息信封/执行回复/辅助动作'三类原语。崩溃半径=自身。
+  选型: Python 3.11 + uiautomation为主，pywinauto为辅（窗口枚举/对话框）；Win32 Job Object纳管子动作进程
+  接口: 仅监听127.0.0.1:8731（token鉴权）：POST /task/reply、POST /task/moments-assist、POST /control/pause|resume；向console单向POST事件信封；心跳写入heartbeat.jsonl
+------------------------------------------------------------------------------------------
+[COMP] selector-registry（版本化选择器库）
+  职责: 选择器按微信版本+能力指纹分版本管理，每条选择器带fallback链（Name→ClassName→相对位置索引）；FORBIDDEN清单（朋友圈'发表'按钮、加好友确认、群发相关控件）在代码常量层与该库双层登记，actor执行前强制比对拒绝。
+  选型: 声明式JSON + Python加载器；选择器变更走git版本化，与探针指纹绑定
+  接口: worker内部API: resolve(key) -> selector chain；FORBIDDEN命中时抛ActionForbidden异常并计入审计
+------------------------------------------------------------------------------------------
+[COMP] session-monitor（会话列表监控）
+  职责: 轮询会话列表（2-5s随机抖动），仅识别白名单群+未读角标>0才导航进入；群身份绑定=群名精确匹配+成员规模+锚点消息哈希三元组，歧义即拒读并告警；每轮询周期最多导航1个会话，读完恢复原会话焦点。
+  选型: uiautomation ListControl轮询（默认）；IUIAutomation结构变更事件作Phase 2可选优化（微信是否触发事件无实证，见open_questions）
+  接口: 内部产出 RawSessionEvent{binding_id, unread_delta}；不直接外发——交message-parser
+------------------------------------------------------------------------------------------
+[COMP] message-parser（消息读取与结构化）
+  职责: 进入目标群后读取新增消息项，解析出发送者显示名（→加盐哈希假名）、文本正文、@我检测（'有人@我'预览标记+正文前缀@昵称/@所有人双路）、方向判断（自身消息启发式）；非文本降级为类型占位符[图片][语音][文件][视频][链接][引用:截断]不提取内容；消息去重用(群绑定+发送者哈希+文本+分钟桶)指纹。
+  选型: Python正则+结构解析；占位符降级策略（无OCR、无语音转写——最小采集铁律）
+  接口: 产出 MessageEnvelope{msg_hash, binding_id, sender_pseudo, type, text?, at_me, quote_ref?, ts} → POST console /api/messages
+------------------------------------------------------------------------------------------
+[COMP] trigger-engine（响应式触发规则）
+  职责: 在console侧运行（worker只送信封不含判断）。三级触发：T0被@（强）；T1关键词/句式（标准号regex：GB/JGJ/JTG/JTS/DL\/T/NB/CECS+年份，求助句式'请问|怎么处理|求助|有没有…规范'）；T2廉价模型语义分类（批量、仅对白名单新消息）。'先让人答'延迟：T1/T2等待90-150s无真人回复才生成答案；同群24h内相同归一化问题去重或引用早前答案。生成答案交给人工可配的'高敏群先审'开关。
+  选型: Python规则引擎+GLM/Claude小上下文调用（仅传问题文本+脱敏上下文，不传全群记录）
+  接口: 消费/api/messages流；产出ReplyTask{binding_id, text_segments[≤3段,每段≤500字], priority} → worker /task/reply
+------------------------------------------------------------------------------------------
+[COMP] reply-actor（回复执行器）
+  职责: 执行文本回复：激活微信窗口→点击输入框→剪贴板协议（备份→写入→Ctrl+V→5s后恢复）→点击发送按钮（Invoke优先）→后置校验（列表末条与所发文本一致，5s窗口）→失败重试1次→再失败计熔断分。FORBIDDEN目标拒绝。夜间/限额/停机旗标硬拒。
+  选型: uiautomation动作原语+win32clipboard；不使用SendMessage/WM_SETTEXT（4.x无HWND控件）；不使用驱动级键鼠
+  接口: 内部消费ReplyTask；产出ActionResult{ok, post_verified, err_class} → 审计JSONL + console回填
+------------------------------------------------------------------------------------------
+[COMP] guardrail（频率护栏）
+  职责: 三层：进程内守门（每动作前查SQLite计数：默认每群≤3条/小时、每群≤20条/天、全局≤30条/天、任意两次发送间隔≥120s±抖动、22:30-07:30全停只排队）；主台侧总量核验（防worker状态被污染）；物理熔断（pause旗标文件+注册的全局热键，主台失联仍可停）。计数持久化，重启不清零。
+  选型: Python + SQLite WAL（本地单文件）+文件旗标+global-hotkey库
+  接口: worker内部canAct(binding_id)->Decision；暴露/console API /api/guardrail/stats 给主台仪表盘
+------------------------------------------------------------------------------------------
+[COMP] moments-assist（朋友圈半自动流）
+  职责: 消费主台已生成且人工批准的素材包。L0（默认）：复制文案到剪贴板+打开配图文件夹+唤起微信主窗，人手动发。L1（配置显式开启）：额外自动打开朋友圈编辑器、粘贴文案、经文件对话框选图，止步于发表前——'发表'按钮在FORBIDDEN清单，代码层不可触达。发布节奏护栏：≤2条/天、间隔≥4h、仅08:30-21:00。
+  选型: uiautomation导航+剪贴板协议（与reply-actor共用）；确认面板在主台Web UI（逐条强制停留阅读防'一键全批'）
+  接口: 消费主台批准件MomentsDraft{id, text, images[], level:L0|L1}；产出执行回执（不含是否已发表——发表事实由人工回执勾选）
+------------------------------------------------------------------------------------------
+[COMP] circuit-breaker + supervisor（熔断器与看门狗）
+  职责: 熔断触发：风控提示词命中（'操作过于频繁|账号存在异常|请输入验证|重新登录|扫码验证'）/必选选择器连续失配≥3/后置校验失败×2/微信窗口消失或登出/滚动10次回复成功率<80%/心跳丢失。动作：立即置pause、清空待发队列、留存UIA树文本快照、Toast+主台横幅+可选邮件告警、要求人工两步恢复（恢复按钮+原因码）。supervisor独立小进程：心跳超时杀worker进程树（Job Object），30分钟冷却内最多重启1次，再崩即保持停机+告警。
+  选型: Python监督进程+Windows任务计划程序托管；告警走Windows Toast+console webhook
+  接口: 状态文件breaker_state.json（ paused|running|down + reason_code ）；console轮询+worker每次动作前读取
+------------------------------------------------------------------------------------------
+[COMP] audit-log（审计日志）
+  职责: append-only JSONL逐动作记录：ts、action_type、binding_id、selector_fingerprint、耗时、结果、err_class；消息正文仅存'已触发应答的白名单问题文本'（假名化），默认90天保留+一键清除工具（个保法可删除义务）；默认零截屏、零图片/语音落盘。
+  选型: 本地JSONL+SQLite索引；清除工具提供按群/按日期/全量三档
+  接口: worker本地写入+镜像POST console /api/audit；清除工具CLI: audit_purge --binding --before
+------------------------------------------------------------------------------------------
+[COMP] bridge（主台↔worker IPC）
+  职责: 127.0.0.1单端口token鉴权HTTP+命名事件；schema校验所有跨界载荷；worker侧无LLM密钥、无DB直连、无外网域名白名单之外访问。
+  选型: FastAPI(主台) + 内置http.server最小面(worker，攻击面最小化)
+  接口: 见各组件；契约文件contracts/*.json 双端共用
+[FLOW] 启动自检流：supervisor拉起worker→探测微信进程与登录态→跑uia-probe能力矩阵→与selector-registry指纹比对→能力分级(全自动响应/只读建议/纯辅助)上报console→按级进入运行模式；指纹不匹配=降级+告警，绝不带病硬跑
+[FLOW] 消息监听流：session-monitor轮询会话列表→白名单+未读角标判定→三元组身份核验(名+规模+锚点)→导航进群→message-parser读新增消息→结构化信封(假名化)→POST主台→恢复原会话焦点→trigger-engine三级判定(T0@/T1关键词/T2语义)→'先让人答'延迟窗→主台AI生成答案→(高敏群先经人工审)→下发ReplyTask
+[FLOW] 回复执行流：worker收task→guardrail.canAct校验(群/时/天/间隔/夜间/pause旗标六查)→reply-actor剪贴板协议粘贴→Invoke发送按钮→后置校验消息落列表→审计落盘+限额计数递增→失败路径：重试1次→计熔断分→连续失败走熔断流
+[FLOW] 朋友圈半自动流：主台排程生成文案+配图→人工确认面板逐条审改批准→按级别执行L0(复制文案+开图夹+唤起微信)或L1(代开编辑器+粘贴+选图,止于发表前)→人手动点击发表→人工回执勾选已发→台账回填；'发表'按钮选择器在FORBIDDEN清单，actor层物理拒绝
+[FLOW] 熔断流：任一触发条件命中→置pause旗标+清队列→UIA树文本快照留证→Toast/主台横幅/邮件告警→worker进入只心跳状态→人工两步恢复(点恢复+选原因码)→恢复后先重跑探针再复级
+[FLOW] 崩溃恢复流：heartbeat.jsonl超时→supervisor经Job Object终结worker进程树→读最近审计定位崩溃点→冷却判定(30分钟内已重启过则不再拉起)→重启或保持down+告警→主台全程不受影响，消息信封在重连后续传
+[RISK] 【最高风险·路线前提】微信4.x为跨平台自绘Canvas UI，已有2025年实测文献（cnblogs.com/zhaoweiwei/p/19731420）证实Inspect.exe看不到内部控件、uiautomation/pywinauto无法定位——'UIA直读'在4.x上可能整体不成立或仅部分成立；若探针判DEAD，本子系统降级为只读建议/纯辅助模式，绝不退回截屏OCR/驱动级输入/硬件HID（路线已砍，复活即违背用户确认的路线）
+[RISK] 3.9.x版本锁定受侵蚀：老版本可能被强制升级或限制登录，锁定方案有半衰期；需探针+版本监控双保险
+[RISK] 群名可被任意成员修改且可重名：白名单误绑→误读非目标群（合规与信任双重风险）；三元组绑定只能缓解不能根除，歧义即拒读
+[RISK] 账号风控不可免疫：即使低频+响应式，机器行为特征仍可能被识别为自动化；熔断只能止损，不能保护账号不被处置——主理人须知情接受此残余风险
+[RISK] 剪贴板是全机共享可变全局：与同机人用冲突、被剪贴板管理器/同步工具（如输入法云剪贴板）外泄的次生风险；缓解=备份恢复协议+动作瞬间完成+禁用云剪贴板建议，但非零风险
+[RISK] 前台要求冲突：UIA写动作需交互式桌面，锁屏/断开会话即阻断；常驻机须保持登录态——物理安全与操作连续性互相拉扯（无人值守机房vs不锁屏）
+[RISK] 图片/语音/引用内容不可读→语义遗漏导致答非所问或漏接需求的体验风险；只能靠降级提示('图片消息我看不了,麻烦文字描述')兜底
+[RISK] 确认疲劳滑变：朋友圈确认面板用久后人工滑向'无脑批'，半自动事实漂移为全自动；需逐条强制停留+随机抽检提醒，但属流程性防御非硬约束
+[RISK] 本地台账含个人信息（假名化不彻底时的显示名残留）：删除工具与保留期必须先于采集上线，否则违反自定个保法铁律
+[RISK] UIA树遍历的COM跨界开销：大群消息列表轮询的CPU/延迟；缓解=限定深度+只读增量+白名单收窄，但Windows低配机上仍可感
+[RISK] UIA事件不可用性：若微信不触发结构变更事件，轮询是唯一路径，检测延迟与扫描频率此消彼长
+[RISK] 单机单号单点：无冗余无故障转移，机器/微信号任一不可用即整子系统停摆（可接受，但需在SLA预期里写明）
+[Q] 【Phase 0必答】当前生产微信版本(2026年最新4.x)的UIA能力矩阵实测：会话列表项/未读角标/消息项发送者与正文/输入框/发送按钮五项各自暴露与否——每项独立判定，不假设全有或全无；本设计的三级降级模式即为此准备
+[Q] 微信3.9.x在2026年是否仍可安装并登录（腾讯是否强制升级/限制老版本登录）——决定'锁定老版本'这条保命路径的存续
+[Q] 群会话在UIA树中是否存在稳定AutomationId或可推导的内部标识（若只有显示名，三元组绑定的误绑率阈值需实测标定）
+[Q] 微信4.x是否触发UIA结构变更事件（决定poll与event模式的最终取舍；当前按轮询设计，事件列为优化项）
+[Q] 锁屏/RDP断开/会话切换后UIA读与写的可用性边界（读可能可用、写大概率阻断），决定常驻机的桌面保持策略
+[Q] 输入框是否支持ValuePattern.SetValue（若支持可部分绕开剪贴板，降低共享冲突面）
+[Q] 主理人昵称变更的@检测词表同步机制：改昵称后@词表多久失效、由谁更新（人工改vs定期从UIA自读自检）
+[Q] 企微侧承接边界复查：群应答能否整体迁企微客户群（若是，个人微信侧仅剩朋友圈辅助，子系统进一步瘦身）——'能迁企微一律迁企微'铁律的年度复核
+[Q] 告警通道选型：Windows Toast在无人值守场景覆盖不足，是否补Server酱/邮件/企微机器人 webhook（涉及'不外传'边界，需只传事件元数据不传内容）
+[Q] 微信多开/切换账号的检测与拒绝策略（出现第二个登录态时worker应如何自证没碰错实例）

@@ -1,0 +1,68 @@
+  0           RESUME                   0
+
+  1           LOAD_CONST               0 ('\nIMA下载器 - 桌面应用主程序\n')
+              STORE_NAME               0 (__doc__)
+
+  4           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (None)
+              IMPORT_NAME              1 (sys)
+              STORE_NAME               1 (sys)
+
+  5           LOAD_CONST               1 (0)
+              LOAD_CONST               3 (('QApplication',))
+              IMPORT_NAME              2 (PySide6.QtWidgets)
+              IMPORT_FROM              3 (QApplication)
+              STORE_NAME               3 (QApplication)
+              POP_TOP
+
+  6           LOAD_CONST               1 (0)
+              LOAD_CONST               4 (('MainWindow',))
+              IMPORT_NAME              4 (gui.main_window)
+              IMPORT_FROM              5 (MainWindow)
+              STORE_NAME               5 (MainWindow)
+              POP_TOP
+
+  7           LOAD_CONST               1 (0)
+              LOAD_CONST               5 (('DisclaimerDialog',))
+              IMPORT_NAME              6 (gui.disclaimer_dialog)
+              IMPORT_FROM              7 (DisclaimerDialog)
+              STORE_NAME               7 (DisclaimerDialog)
+              POP_TOP
+
+  8           LOAD_CONST               1 (0)
+              LOAD_CONST               6 (('apply_app_theme',))
+              IMPORT_NAME              8 (gui.theme)
+              IMPORT_FROM              9 (apply_app_theme)
+              STORE_NAME               9 (apply_app_theme)
+              POP_TOP
+
+  9           LOAD_CONST               1 (0)
+              LOAD_CONST               7 (('get_app_icon',))
+              IMPORT_NAME             10 (utils)
+              IMPORT_FROM             11 (get_app_icon)
+              STORE_NAME              11 (get_app_icon)
+              POP_TOP
+
+ 10           LOAD_CONST               1 (0)
+              LOAD_CONST               8 (('install_crash_guard',))
+              IMPORT_NAME             12 (utils.crash_guard)
+              IMPORT_FROM             13 (install_crash_guard)
+              STORE_NAME              13 (install_crash_guard)
+              POP_TOP
+
+ 12           LOAD_CONST               9 (<code object main at 0x000001DD45F6CF60, file "main.py", line 12>)
+              MAKE_FUNCTION
+              STORE_NAME              14 (main)
+
+ 34           LOAD_NAME               15 (__name__)
+              LOAD_CONST              10 ('__main__')
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE        8 (to L1)
+
+ 35           LOAD_NAME               14 (main)
+              PUSH_NULL
+              CALL                     0
+              POP_TOP
+              RETURN_CONST             2 (None)
+
+ 34   L1:     RETURN_CONST             2 (None)

@@ -1,0 +1,16 @@
+[i] 已加载凭证 user_id=0019ec11b6401317 token过期时间=Thu Oct 22 03:24:40 2026
+[i] token 过期，自动刷新…
+Traceback (most recent call last):
+  File "E:\AI-Station\.claude\skills\ima-kb-harvest\scripts\harvest.py", line 353, in <module>
+    main()
+  File "E:\AI-Station\.claude\skills\ima-kb-harvest\scripts\harvest.py", line 341, in main
+    for k in search_plaza(c, args.kw, args.pages):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\AI-Station\.claude\skills\ima-kb-harvest\scripts\harvest.py", line 37, in search_plaza
+    res = c.api("search_knowledge_base",
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\AI-Station\.claude\skills\ima-kb-harvest\scripts\ima_replica.py", line 245, in api
+    self.ensure_token()
+  File "E:\AI-Station\.claude\skills\ima-kb-harvest\scripts\ima_replica.py", line 232, in ensure_token
+    raise RuntimeError(f"刷新失败: {res.get('msg')}")
+RuntimeError: 刷新失败: type:business, code:41, msg:登录过期，请重新登录, caused by type:business, code:110031, msg:token session expired

@@ -1,0 +1,36 @@
+# zhipu-quota-guard 配置样例（SCHEMAS §3 逐字段；密钥除外——ADR4）
+# 铁律：本文件绝不写密钥明文；providers.*.plan_key_ref 只是引用名，
+#       实际值在 secrets/zhipu_secrets.json（gitignored）与
+#       ~/.claude/settings.json 的 env 段（详见 zqg/config.py 注释）。
+# 使用：cp config.example.yaml config.yaml 后按需改值；缺字段自动按默认补齐。
+
+providers:
+  zai:                       # 主站（W0：api.z.ai，双域同源）
+    enabled: true
+    base_url: https://api.z.ai
+    plan_key_ref: zai
+  bigmodel:                  # 备站（W0：open.bigmodel.cn，与 zai 同账户故障转移）
+    enabled: true
+    base_url: https://open.bigmodel.cn
+    plan_key_ref: bigmodel
+
+poll:                        # 轮询节奏（分钟）与烧穿预警线
+  idle_min: 10
+  busy_min: 2
+  threshold_pct: 90
+
+policy:                      # 重置决策
+  reserve_cards: 1           # 卡预算预留（默认留 1 给自媒永动机）
+  lead_time_min: 30          # 预测烧穿提前量
+  fifo_by_expiry: true       # 12-22 统一有效期下退化为预算约束按需，临近过期优先提示
+  mode: dry_run              # auto | dry_run | notify_only（首次部署默认安全模式）
+  idle_grace_min: 10          # CC空闲宽限(分钟):最近遥测超此值=空闲,不花卡(1023用户令)
+
+notify:
+  wecom: true                # 企微推送（先斩后奏通报）
+
+daemon:
+  heartbeat_min: 15
+  peak_factor:               # KB V3 结论：高峰 1x / 非高峰 0.5x（非 V2「3倍」）
+    peak: 1.0
+    offpeak: 0.5

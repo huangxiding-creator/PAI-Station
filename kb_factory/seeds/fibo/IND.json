@@ -1,0 +1,1833 @@
+{
+ "kind": "fibo_module_seed",
+ "module": "IND",
+ "module_zh": "指数与指标",
+ "module_en": "Indices and Indicators",
+ "note": "主干父级闭包纳入（层级无孤儿所需）",
+ "source": {
+  "repo": "EDMCouncil/fibo",
+  "tag": "master_2026Q3",
+  "license": "MIT",
+  "license_copyright": "Copyright (c) 2020 Enterprise Data Management Council",
+  "url": "https://github.com/EDMCouncil/fibo/tree/master_2026Q3",
+  "tarball_sha256": "48a1690255df0fb161d624a6e12fb529f4e4f38c73ac8cfbe1ed81e913625e27"
+ },
+ "stats": {
+  "classes": 120,
+  "zh_mapped": 1,
+  "zh_rate": 0.0083,
+  "roots": 5,
+  "max_depth": 5,
+  "multi_parent_classes": 16,
+  "derived_labels": 0,
+  "external_parent_edges_dropped": 14
+ },
+ "concepts": [
+  {
+   "id": "AmericanStatisticsPublisher",
+   "en": "American statistics publisher",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/NorthAmericanIndicators/USEconomicIndicators/AmericanStatisticsPublisher",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "StatisticalInformationPublisher",
+   "parents": [
+    "StatisticalInformationPublisher"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "AverageDailyEarnings",
+   "en": "average daily earnings",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/AverageDailyEarnings",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "AverageEarnings",
+   "parents": [
+    "AverageEarnings"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "AverageEarnings",
+   "en": "average earnings",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/AverageEarnings",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "EconomicIndicator",
+   "parents": [
+    "EconomicIndicator"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "AverageHourlyEarnings",
+   "en": "average hourly earnings",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/AverageHourlyEarnings",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "AverageEarnings",
+   "parents": [
+    "AverageEarnings"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "AverageMonthlyEarnings",
+   "en": "average monthly earnings",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/AverageMonthlyEarnings",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "AverageEarnings",
+   "parents": [
+    "AverageEarnings"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "AverageWeeklyEarnings",
+   "en": "average weekly earnings",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/AverageWeeklyEarnings",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "AverageEarnings",
+   "parents": [
+    "AverageEarnings"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "CanadianConsumerPriceIndex",
+   "en": "Canadian consumer price index",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/NorthAmericanIndicators/CAEconomicIndicators/CanadianConsumerPriceIndex",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "ConsumerPriceIndex",
+   "parents": [
+    "ConsumerPriceIndex"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "CanadianHouseholdsConsumersUniverse",
+   "en": "Canadian households consumers universe",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/NorthAmericanIndicators/CAEconomicIndicators/CanadianHouseholdsConsumersUniverse",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "CivilianNonInstitutionalPopulation",
+   "parents": [
+    "CivilianNonInstitutionalPopulation"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CanadianProducerPriceIndex",
+   "en": "Canadian producer price index",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/NorthAmericanIndicators/CAEconomicIndicators/CanadianProducerPriceIndex",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "ProducerPriceIndex",
+   "parents": [
+    "ProducerPriceIndex"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "CapitalLaborEnergyMaterialsMultifactorProductivity",
+   "en": "capital-labor-energy-materials multifactor productivity",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/CapitalLaborEnergyMaterialsMultifactorProductivity",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "Productivity",
+   "parents": [
+    "Productivity"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "CapitalLaborMultifactorProductivityValueAdded",
+   "en": "capital-labor multifactor productivity (MFP), based on value added",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/CapitalLaborMultifactorProductivityValueAdded",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "Productivity",
+   "parents": [
+    "Productivity"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "CapitalProductivityValueAdded",
+   "en": "capital productivity, based on value added",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/CapitalProductivityValueAdded",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "Productivity",
+   "parents": [
+    "Productivity"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "Civilian",
+   "en": "civilian",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/Civilian",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "LegallyCompetentNaturalPerson",
+   "parents": [
+    "LegallyCompetentNaturalPerson"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CivilianLaborForce",
+   "en": "civilian labor force",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/CivilianLaborForce",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "CivilianNonInstitutionalPopulation",
+   "parents": [
+    "CivilianNonInstitutionalPopulation"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CivilianLaborForceParticipationRate",
+   "en": "civilian labor force participation rate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/CivilianLaborForceParticipationRate",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "EconomicIndicator",
+   "parents": [
+    "EconomicIndicator"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "CivilianNonInstitutionalPerson",
+   "en": "civilian non-institutional person",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/CivilianNonInstitutionalPerson",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "LegalWorkingAgePerson",
+   "parents": [
+    "Civilian",
+    "LegalWorkingAgePerson"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CivilianNonInstitutionalPopulation",
+   "en": "civilian non-institutional population",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/CivilianNonInstitutionalPopulation",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "StatisticalUniverse",
+   "parents": [
+    "StatisticalUniverse"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "CombinedStatisticalArea",
+   "en": "combined statistical area",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/CombinedStatisticalArea",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "GovernmentSpecifiedStatisticalArea",
+   "parents": [
+    "GovernmentSpecifiedStatisticalArea"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "ConsumerExpenditureSurvey",
+   "en": "consumer expenditure survey",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/NorthAmericanIndicators/USEconomicIndicators/ConsumerExpenditureSurvey",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "StatisticalProgram",
+   "parents": [
+    "StatisticalProgram"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "ConsumerPriceIndex",
+   "en": "consumer price index",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/ConsumerPriceIndex",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "EconomicIndicator",
+   "parents": [
+    "EconomicIndicator"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "CurrentEmploymentStatistics",
+   "en": "current employment statistics",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/NorthAmericanIndicators/USEconomicIndicators/CurrentEmploymentStatistics",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "StatisticalProgram",
+   "parents": [
+    "StatisticalProgram"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CurrentPopulationSurvey",
+   "en": "current population survey",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/NorthAmericanIndicators/USEconomicIndicators/CurrentPopulationSurvey",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "StatisticalProgram",
+   "parents": [
+    "StatisticalProgram"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "DiscouragedWorkerPopulation",
+   "en": "discouraged worker population",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/DiscouragedWorkerPopulation",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "MarginallyAttachedPopulation",
+   "parents": [
+    "MarginallyAttachedPopulation"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "EconomicIndicator",
+   "en": "economic indicator",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/EconomicIndicator",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "ScopedMeasure",
+   "parents": [
+    "ScopedMeasure"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "EmployedPopulation",
+   "en": "employed population",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/EmployedPopulation",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "CivilianLaborForce",
+   "parents": [
+    "CivilianLaborForce"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "EmployedPopulationPartTime",
+   "en": "employed population part-time",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/EmployedPopulationPartTime",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "EmployedPopulation",
+   "parents": [
+    "EmployedPopulation"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "EmployedPopulationPartTimeForEconomicReasons",
+   "en": "employed population part-time for economic reasons",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/EmployedPopulationPartTimeForEconomicReasons",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "EmployedPopulationPartTime",
+   "parents": [
+    "EmployedPopulationPartTime",
+    "UnderemployedPopulation"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "EmployedPopulationPartTimeForNonEconomicReasons",
+   "en": "employed population part-time for non-economic reasons",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/EmployedPopulationPartTimeForNonEconomicReasons",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "EmployedPopulationPartTime",
+   "parents": [
+    "EmployedPopulationPartTime"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "EmployedPopulationTemporarilyNotAtWork",
+   "en": "employed population temporarily not at work",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/EmployedPopulationTemporarilyNotAtWork",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "EmployedPopulation",
+   "parents": [
+    "EmployedPopulation"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "EmploymentPopulationRatio",
+   "en": "employment-population ratio",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/EmploymentPopulationRatio",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "EconomicIndicator",
+   "parents": [
+    "EconomicIndicator"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "EmploymentSituationEstablishmentSurvey",
+   "en": "employment situation establishment survey",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/NorthAmericanIndicators/USEconomicIndicators/EmploymentSituationEstablishmentSurvey",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "EmploymentSituationSurvey",
+   "parents": [
+    "EmploymentSituationSurvey"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "EmploymentSituationHouseholdSurvey",
+   "en": "employment situation household survey",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/NorthAmericanIndicators/USEconomicIndicators/EmploymentSituationHouseholdSurvey",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "EmploymentSituationSurvey",
+   "parents": [
+    "EmploymentSituationSurvey"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "EmploymentSituationSurvey",
+   "en": "employment situation survey",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/NorthAmericanIndicators/USEconomicIndicators/EmploymentSituationSurvey",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "CurrentEmploymentStatistics",
+   "parents": [
+    "CurrentEmploymentStatistics",
+    "CurrentPopulationSurvey"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "Enterprise",
+   "en": "enterprise",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/Enterprise",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "FunctionalBusinessEntity",
+   "parents": [
+    "FunctionalBusinessEntity",
+    "InstitutionalUnit"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "EnterprisePopulation",
+   "en": "enterprise population",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/EnterprisePopulation",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "StatisticalUniverse",
+   "parents": [
+    "StatisticalUniverse"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Establishment",
+   "en": "establishment",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/Establishment",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "InstitutionalUnit",
+   "parents": [
+    "InstitutionalUnit"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "EstablishmentEmployment",
+   "en": "establishment employment",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/EstablishmentEmployment",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "EconomicIndicator",
+   "parents": [
+    "EconomicIndicator"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "EstablishmentPopulation",
+   "en": "establishment population",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/EstablishmentPopulation",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "EnterprisePopulation",
+   "parents": [
+    "EnterprisePopulation"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "FixedBasket",
+   "en": "fixed basket",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/FixedBasket",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "Basket",
+   "parents": [
+    "Basket",
+    "DatedStructuredCollection"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "FixedBasketConstituent",
+   "en": "fixed basket constituent",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/FixedBasketConstituent",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "BasketConstituent",
+   "parents": [
+    "BasketConstituent",
+    "DatedCollectionConstituent"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "FixedBasketPopulation",
+   "en": "fixed basket population",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/FixedBasketPopulation",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "StatisticalUniverse",
+   "parents": [
+    "StatisticalUniverse"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "GovernmentSpecifiedStatisticalArea",
+   "en": "government-specified statistical area",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/GovernmentSpecifiedStatisticalArea",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "StatisticalArea",
+   "parents": [
+    "StatisticalArea"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "GrossDomesticProduct",
+   "en": "gross domestic product",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/GrossDomesticProduct",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "EconomicIndicator",
+   "parents": [
+    "EconomicIndicator"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "Household",
+   "en": "household",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/Household",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "InstitutionalUnit",
+   "parents": [
+    "InstitutionalUnit"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "HousingUnit",
+   "en": "housing unit",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/HousingUnit",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "IndustrialProductsSector",
+   "en": "industrial products sector",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/NorthAmericanIndicators/CAEconomicIndicators/IndustrialProductsSector",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "IndustrySectorClassifier",
+   "parents": [
+    "IndustrySectorClassifier"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "InflationRate",
+   "en": "inflation rate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/InflationRate",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "EconomicIndicator",
+   "parents": [
+    "EconomicIndicator"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "InputProducerPriceIndex",
+   "en": "input producer price index",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/InputProducerPriceIndex",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "ProducerPriceIndex",
+   "parents": [
+    "ProducerPriceIndex"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "InstitutionalPerson",
+   "en": "institutional person",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/InstitutionalPerson",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "Person",
+   "parents": [
+    "Person"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "InstitutionalUnit",
+   "en": "institutional unit",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/InstitutionalUnit",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "FunctionalEntity",
+   "parents": [
+    "FunctionalEntity"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "LaborProductivityGrossOutput",
+   "en": "labor productivity, based on gross output",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/LaborProductivityGrossOutput",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "Productivity",
+   "parents": [
+    "Productivity"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "LaborProductivityValueAdded",
+   "en": "labor productivity, based on value added",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/LaborProductivityValueAdded",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "Productivity",
+   "parents": [
+    "Productivity"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "MarginallyAttachedPopulation",
+   "en": "marginally attached population",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/MarginallyAttachedPopulation",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "PopulationNotInLaborForce",
+   "parents": [
+    "PopulationNotInLaborForce"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "MetropolitanStatisticalArea",
+   "en": "metropolitan statistical area",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/MetropolitanStatisticalArea",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "GovernmentSpecifiedStatisticalArea",
+   "parents": [
+    "GovernmentSpecifiedStatisticalArea"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "MicropolitanStatisticalArea",
+   "en": "micropolitan statistical area",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/MicropolitanStatisticalArea",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "GovernmentSpecifiedStatisticalArea",
+   "parents": [
+    "GovernmentSpecifiedStatisticalArea"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "MilitaryPerson",
+   "en": "military person",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/MilitaryPerson",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "LegallyCompetentNaturalPerson",
+   "parents": [
+    "LegallyCompetentNaturalPerson"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "NewHousingSector",
+   "en": "new housing sector",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/NorthAmericanIndicators/CAEconomicIndicators/NewHousingSector",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "IndustrySectorClassifier",
+   "parents": [
+    "IndustrySectorClassifier"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "OutputProducerPriceIndex",
+   "en": "output producer price index",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/OutputProducerPriceIndex",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "ProducerPriceIndex",
+   "parents": [
+    "ProducerPriceIndex"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "PersonalConsumptionExpenditures",
+   "en": "personal consumption expenditures",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/PersonalConsumptionExpenditures",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "EconomicIndicator",
+   "parents": [
+    "EconomicIndicator"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "PointOfPurchaseSurvey",
+   "en": "point of purchase survey",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/NorthAmericanIndicators/USEconomicIndicators/PointOfPurchaseSurvey",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "StatisticalProgram",
+   "parents": [
+    "StatisticalProgram"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "PopulationNotInLaborForce",
+   "en": "population not in the labor force",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/PopulationNotInLaborForce",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "CivilianNonInstitutionalPopulation",
+   "parents": [
+    "CivilianNonInstitutionalPopulation"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "ProducerPriceIndex",
+   "en": "producer price index",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/ProducerPriceIndex",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "EconomicIndicator",
+   "parents": [
+    "EconomicIndicator"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "Productivity",
+   "en": "productivity",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/Productivity",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "EconomicIndicator",
+   "parents": [
+    "EconomicIndicator"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "RawMaterialsSector",
+   "en": "raw materials sector",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/NorthAmericanIndicators/CAEconomicIndicators/RawMaterialsSector",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "IndustrySectorClassifier",
+   "parents": [
+    "IndustrySectorClassifier"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "StatisticalInformationPublisher",
+   "en": "statistical information publisher",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/StatisticalInformationPublisher",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "Publisher",
+   "parents": [
+    "Publisher"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "USProducerPriceIndex",
+   "en": "U.S. producer price index",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/NorthAmericanIndicators/USEconomicIndicators/USProducerPriceIndex",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "ProducerPriceIndex",
+   "parents": [
+    "ProducerPriceIndex"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "UltimateConsumer",
+   "en": "ultimate consumer",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/UltimateConsumer",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "Consumer",
+   "parents": [
+    "Consumer"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "UnderemployedPopulation",
+   "en": "underemployed population",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/UnderemployedPopulation",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "EmployedPopulation",
+   "parents": [
+    "EmployedPopulation"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "UnderemployedPopulationWithRespectToOccupation",
+   "en": "underemployed population with respect to occupation",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/UnderemployedPopulationWithRespectToOccupation",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "UnderemployedPopulation",
+   "parents": [
+    "UnderemployedPopulation"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "UnderutilizedPopulation",
+   "en": "underutilized population",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/UnderutilizedPopulation",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "CivilianNonInstitutionalPopulation",
+   "parents": [
+    "CivilianNonInstitutionalPopulation"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "UnemployedPopulation",
+   "en": "unemployed population",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/UnemployedPopulation",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "CivilianLaborForce",
+   "parents": [
+    "CivilianLaborForce"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "UnemploymentRate",
+   "en": "unemployment rate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/UnemploymentRate",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "EconomicIndicator",
+   "parents": [
+    "EconomicIndicator"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "UrbanConsumerPriceIndex",
+   "en": "urban consumer price index",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/NorthAmericanIndicators/USEconomicIndicators/UrbanConsumerPriceIndex",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "ConsumerPriceIndex",
+   "parents": [
+    "ConsumerPriceIndex"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "UrbanConsumersUniverse",
+   "en": "urban consumers universe",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/NorthAmericanIndicators/USEconomicIndicators/UrbanConsumersUniverse",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "CivilianNonInstitutionalPopulation",
+   "parents": [
+    "CivilianNonInstitutionalPopulation"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "ValueAddedProducerPriceIndex",
+   "en": "value-added producer price index",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/ValueAddedProducerPriceIndex",
+   "module": "IND",
+   "subdomain": "EconomicIndicators",
+   "parent": "ProducerPriceIndex",
+   "parents": [
+    "ProducerPriceIndex"
+   ],
+   "depth": 5
+  },
+  {
+   "id": "CurrencyConversionService",
+   "en": "currency conversion service",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/ForeignExchange/ForeignExchange/CurrencyConversionService",
+   "module": "IND",
+   "subdomain": "ForeignExchange",
+   "parent": "ForeignExchangeService",
+   "parents": [
+    "ForeignExchangeService"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CurrencyForwardRate",
+   "en": "currency forward rate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/ForeignExchange/ForeignExchange/CurrencyForwardRate",
+   "module": "IND",
+   "subdomain": "ForeignExchange",
+   "parent": "QuotedExchangeRate",
+   "parents": [
+    "QuotedExchangeRate"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CurrencyForwardRateVolatility",
+   "en": "currency forward rate volatility",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/ForeignExchange/ForeignExchange/CurrencyForwardRateVolatility",
+   "module": "IND",
+   "subdomain": "ForeignExchange",
+   "parent": "ExchangeRateVolatility",
+   "parents": [
+    "ExchangeRateVolatility",
+    "ImpliedVolatility"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "CurrencySpotBuyRate",
+   "en": "currency spot buy rate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/ForeignExchange/ForeignExchange/CurrencySpotBuyRate",
+   "module": "IND",
+   "subdomain": "ForeignExchange",
+   "parent": "CurrencySpotRate",
+   "parents": [
+    "CurrencySpotRate"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "CurrencySpotMidRate",
+   "en": "currency spot mid rate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/ForeignExchange/ForeignExchange/CurrencySpotMidRate",
+   "module": "IND",
+   "subdomain": "ForeignExchange",
+   "parent": "CurrencySpotRate",
+   "parents": [
+    "CurrencySpotRate"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "CurrencySpotRate",
+   "en": "currency spot rate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/ForeignExchange/ForeignExchange/CurrencySpotRate",
+   "module": "IND",
+   "subdomain": "ForeignExchange",
+   "parent": "QuotedExchangeRate",
+   "parents": [
+    "QuotedExchangeRate"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CurrencySpotSellRate",
+   "en": "currency spot sell rate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/ForeignExchange/ForeignExchange/CurrencySpotSellRate",
+   "module": "IND",
+   "subdomain": "ForeignExchange",
+   "parent": "CurrencySpotRate",
+   "parents": [
+    "CurrencySpotRate"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "CurrencySpotVolatility",
+   "en": "currency spot volatility",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/ForeignExchange/ForeignExchange/CurrencySpotVolatility",
+   "module": "IND",
+   "subdomain": "ForeignExchange",
+   "parent": "ExchangeRateVolatility",
+   "parents": [
+    "ExchangeRateVolatility",
+    "HistoricalVolatility"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "ExchangeRateStructure",
+   "en": "exchange rate structure",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/ForeignExchange/ForeignExchange/ExchangeRateStructure",
+   "module": "IND",
+   "subdomain": "ForeignExchange",
+   "parent": "DatedStructuredCollection",
+   "parents": [
+    "DatedStructuredCollection"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "ExchangeRateVolatility",
+   "en": "exchange rate volatility",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/ForeignExchange/ForeignExchange/ExchangeRateVolatility",
+   "module": "IND",
+   "subdomain": "ForeignExchange",
+   "parent": "Volatility",
+   "parents": [
+    "Volatility"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "ForeignExchangeService",
+   "en": "foreign exchange service",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/ForeignExchange/ForeignExchange/ForeignExchangeService",
+   "module": "IND",
+   "subdomain": "ForeignExchange",
+   "parent": "FinancialService",
+   "parents": [
+    "FinancialService"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "InternationalElectronicFundsTransferService",
+   "en": "international electronic funds transfer service",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/ForeignExchange/ForeignExchange/InternationalElectronicFundsTransferService",
+   "module": "IND",
+   "subdomain": "ForeignExchange",
+   "parent": "ElectronicFundsTransferService",
+   "parents": [
+    "ElectronicFundsTransferService",
+    "ForeignExchangeService"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "QuotedExchangeRate",
+   "en": "quoted exchange rate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/ForeignExchange/ForeignExchange/QuotedExchangeRate",
+   "module": "IND",
+   "subdomain": "ForeignExchange",
+   "parent": "ExchangeRate",
+   "parents": [
+    "ExchangeRate",
+    "MarketRate"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "DailyAverageMarketRate",
+   "en": "daily average market rate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/Indicators/Indicators/DailyAverageMarketRate",
+   "module": "IND",
+   "subdomain": "Indicators",
+   "parent": "MarketRate",
+   "parents": [
+    "MarketRate"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "EndOfDayMarketRate",
+   "en": "end-of-day market rate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/Indicators/Indicators/EndOfDayMarketRate",
+   "module": "IND",
+   "subdomain": "Indicators",
+   "parent": "MarketRate",
+   "parents": [
+    "MarketRate"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "HistoricalPriceVolatility",
+   "en": "historical price volatility",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/Indicators/Indicators/HistoricalPriceVolatility",
+   "module": "IND",
+   "subdomain": "Indicators",
+   "parent": "HistoricalVolatility",
+   "parents": [
+    "HistoricalVolatility",
+    "PriceVolatility"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "HistoricalVolatility",
+   "en": "historical volatility",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/Indicators/Indicators/HistoricalVolatility",
+   "module": "IND",
+   "subdomain": "Indicators",
+   "parent": "Volatility",
+   "parents": [
+    "Volatility"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "ImpliedPriceVolatility",
+   "en": "implied price volatility",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/Indicators/Indicators/ImpliedPriceVolatility",
+   "module": "IND",
+   "subdomain": "Indicators",
+   "parent": "ImpliedVolatility",
+   "parents": [
+    "ImpliedVolatility",
+    "PriceVolatility"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "ImpliedVolatility",
+   "en": "implied volatility",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/Indicators/Indicators/ImpliedVolatility",
+   "module": "IND",
+   "subdomain": "Indicators",
+   "parent": "Volatility",
+   "parents": [
+    "Volatility"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "MarketRate",
+   "en": "market rate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/Indicators/Indicators/MarketRate",
+   "module": "IND",
+   "subdomain": "Indicators",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "MarketSpread",
+   "en": "market spread",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/Indicators/Indicators/MarketSpread",
+   "module": "IND",
+   "subdomain": "Indicators",
+   "parent": "ScopedMeasure",
+   "parents": [
+    "ScopedMeasure"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "PriceStructure",
+   "en": "price structure",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/Indicators/Indicators/PriceStructure",
+   "module": "IND",
+   "subdomain": "Indicators",
+   "parent": "DatedStructuredCollection",
+   "parents": [
+    "DatedStructuredCollection"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "PriceVolatility",
+   "en": "price volatility",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/Indicators/Indicators/PriceVolatility",
+   "module": "IND",
+   "subdomain": "Indicators",
+   "parent": "Volatility",
+   "parents": [
+    "Volatility"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "QuotedPrice",
+   "en": "quoted price",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/Indicators/Indicators/QuotedPrice",
+   "module": "IND",
+   "subdomain": "Indicators",
+   "parent": "MonetaryPrice",
+   "parents": [
+    "MonetaryPrice"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "TermStructure",
+   "en": "term structure",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/Indicators/Indicators/TermStructure",
+   "module": "IND",
+   "subdomain": "Indicators",
+   "parent": "DatedStructuredCollection",
+   "parents": [
+    "DatedStructuredCollection"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "Volatility",
+   "en": "volatility",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/Indicators/Indicators/Volatility",
+   "module": "IND",
+   "subdomain": "Indicators",
+   "parent": "Dispersion",
+   "parents": [
+    "Dispersion"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "BaseRate",
+   "en": "base rate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/InterestRates/BaseRate",
+   "module": "IND",
+   "subdomain": "InterestRates",
+   "parent": "ReferenceInterestRate",
+   "parents": [
+    "ReferenceInterestRate"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "InterbankBidRate",
+   "en": "interbank bid rate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/InterestRates/InterbankBidRate",
+   "module": "IND",
+   "subdomain": "InterestRates",
+   "parent": "InterbankRate",
+   "parents": [
+    "InterbankRate"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "InterbankMidRate",
+   "en": "interbank mid rate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/InterestRates/InterbankMidRate",
+   "module": "IND",
+   "subdomain": "InterestRates",
+   "parent": "InterbankRate",
+   "parents": [
+    "InterbankRate"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "InterbankOfferedRate",
+   "en": "interbank offered rate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/InterestRates/InterbankOfferedRate",
+   "module": "IND",
+   "subdomain": "InterestRates",
+   "parent": "InterbankRate",
+   "parents": [
+    "InterbankRate"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "InterbankRate",
+   "en": "interbank rate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/InterestRates/InterbankRate",
+   "module": "IND",
+   "subdomain": "InterestRates",
+   "parent": "ReferenceInterestRate",
+   "parents": [
+    "ReferenceInterestRate"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "InterestRateAuthority",
+   "en": "interest rate authority",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/InterestRates/InterestRateAuthority",
+   "module": "IND",
+   "subdomain": "InterestRates",
+   "parent": "Publisher",
+   "parents": [
+    "FinancialServiceProvider",
+    "Publisher"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "InterestRateBenchmark",
+   "en": "interest rate benchmark",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/InterestRates/InterestRateBenchmark",
+   "module": "IND",
+   "subdomain": "InterestRates",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "InterestRateBenchmarkClassificationScheme",
+   "en": "interest rate benchmark classification scheme",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/InterestRates/InterestRateBenchmarkClassificationScheme",
+   "module": "IND",
+   "subdomain": "InterestRates",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "OvernightRate",
+   "en": "overnight rate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/InterestRates/OvernightRate",
+   "module": "IND",
+   "subdomain": "InterestRates",
+   "parent": "ReferenceInterestRate",
+   "parents": [
+    "ReferenceInterestRate"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "ReferenceInterestRate",
+   "en": "reference interest rate",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/InterestRates/ReferenceInterestRate",
+   "module": "IND",
+   "subdomain": "InterestRates",
+   "parent": "InterestRate",
+   "parents": [
+    "InterestRate",
+    "MarketRate"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "SpecificProviderInterestRateBenchmark",
+   "en": "specific-provider interest rate benchmark",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/InterestRates/SpecificProviderInterestRateBenchmark",
+   "module": "IND",
+   "subdomain": "InterestRates",
+   "parent": "InterestRateBenchmark",
+   "parents": [
+    "InterestRateBenchmark"
+   ],
+   "depth": 1
+  },
+  {
+   "id": "BasketOfCreditRisks",
+   "en": "basket of credit risks",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/MarketIndices/BasketIndices/BasketOfCreditRisks",
+   "module": "IND",
+   "subdomain": "MarketIndices",
+   "parent": "WeightedBasket",
+   "parents": [
+    "DatedStructuredCollection",
+    "WeightedBasket"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "BasketOfEquities",
+   "en": "basket of equities",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/MarketIndices/BasketIndices/BasketOfEquities",
+   "module": "IND",
+   "subdomain": "MarketIndices",
+   "parent": "BasketOfSecurities",
+   "parents": [
+    "BasketOfSecurities"
+   ],
+   "depth": 3
+  },
+  {
+   "id": "CapitalizationBasedWeightingFunction",
+   "en": "capitalization-based weighting function",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/MarketIndices/BasketIndices/CapitalizationBasedWeightingFunction",
+   "module": "IND",
+   "subdomain": "MarketIndices",
+   "parent": "WeightingFunction",
+   "parents": [
+    "WeightingFunction"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "CreditIndex",
+   "en": "credit index",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/MarketIndices/BasketIndices/CreditIndex",
+   "module": "IND",
+   "subdomain": "MarketIndices",
+   "parent": "ReferenceIndex",
+   "parents": [
+    "ReferenceIndex"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "CreditIndexConstituent",
+   "en": "credit index constituent",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/MarketIndices/BasketIndices/CreditIndexConstituent",
+   "module": "IND",
+   "subdomain": "MarketIndices",
+   "parent": "WeightedBasketConstituent",
+   "parents": [
+    "DatedCollectionConstituent",
+    "WeightedBasketConstituent"
+   ],
+   "depth": 2
+  },
+  {
+   "id": "EquityIndex",
+   "en": "equity index",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/MarketIndices/BasketIndices/EquityIndex",
+   "module": "IND",
+   "subdomain": "MarketIndices",
+   "parent": "ReferenceIndex",
+   "parents": [
+    "ReferenceIndex"
+   ],
+   "depth": 4
+  },
+  {
+   "id": "MarketCapitalization",
+   "en": "market capitalization",
+   "label_source": "rdfs:label",
+   "zh": null,
+   "zh_source": null,
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/MarketIndices/BasketIndices/MarketCapitalization",
+   "module": "IND",
+   "subdomain": "MarketIndices",
+   "parent": null,
+   "parents": [],
+   "depth": 0
+  },
+  {
+   "id": "ReferenceIndex",
+   "en": "reference index",
+   "label_source": "rdfs:label",
+   "zh": "参考指数",
+   "zh_source": "manual_v1",
+   "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/MarketIndices/BasketIndices/ReferenceIndex",
+   "module": "IND",
+   "subdomain": "MarketIndices",
+   "parent": "ScopedMeasure",
+   "parents": [
+    "ScopedMeasure"
+   ],
+   "depth": 3
+  }
+ ]
+}

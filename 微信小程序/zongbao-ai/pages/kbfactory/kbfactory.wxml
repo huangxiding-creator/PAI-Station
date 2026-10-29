@@ -28,6 +28,26 @@
         <text class="kf-mic-t">{{recording ? '松手' : '按住说'}}</text>
       </view>
     </view>
+
+    <!-- 蓝图深度三档：标准版/专业版/旗舰版（默认标准版；档位决定蓝图文件规模） -->
+    <view class="kf-depth">
+      <view class="kf-depth-item {{depth === 'standard' ? 'on' : ''}}" hover-class="kf-press"
+        hover-stay-time="80" data-d="standard" bindtap="onDepthPick">
+        <view class="kf-depth-name">标准版</view>
+        <view class="muted kf-depth-note">常用规模，够用就好</view>
+      </view>
+      <view class="kf-depth-item {{depth === 'pro' ? 'on' : ''}}" hover-class="kf-press"
+        hover-stay-time="80" data-d="pro" bindtap="onDepthPick">
+        <view class="kf-depth-name">专业版</view>
+        <view class="muted kf-depth-note">文件多四成，查得更全</view>
+      </view>
+      <view class="kf-depth-item {{depth === 'flagship' ? 'on' : ''}}" hover-class="kf-press"
+        hover-stay-time="80" data-d="flagship" bindtap="onDepthPick">
+        <view class="kf-depth-name">旗舰版</view>
+        <view class="muted kf-depth-note">文件近翻倍，一步到位</view>
+      </view>
+    </view>
+
     <button class="btn-primary kf-go" hover-class="btn-hover" bindtap="onGenerate" disabled="{{building}}">🖨️ 免费设计知识库</button>
     <view class="muted kf-hint">免费看完整蓝图 · 满意再带走</view>
   </view>
@@ -52,7 +72,14 @@
     <!-- 顶部统计带 -->
     <view class="card ticks rise" style="animation-delay: 90ms">
       <view class="kf-k kicker kicker-on-paper">STATS · 图签统计带</view>
-      <view class="kf-domain">{{bp.domain}}<text class="kf-mode mono">{{bp.tree.mode === 'six_domains' ? '六域骨架' : '通用骨架'}}</text></view>
+      <view class="kf-domain">{{bp.domain}}<text class="kf-mode mono">{{bp.tree.mode === 'evidence_tree' ? '真实调研' : (bp.tree.mode === 'document_driven' ? '真实文件' : (bp.tree.mode === 'six_domains' ? '六域骨架' : '通用骨架'))}}</text><text class="kf-mode mono" wx:if="{{depthBadge}}">{{depthBadge}}</text></view>
+      <!-- 价值徽标行：四计数全实测（真实文件=树内 real 计数·总数/GB=stats 真值·来源=渠道徽章种类），禁手填 -->
+      <view class="kf-value" wx:if="{{valueBadges.length}}">
+        <view class="kf-vb" wx:for="{{valueBadges}}" wx:for-item="vb" wx:key="l">
+          <text class="kf-vb-n mono">{{vb.n}}</text>
+          <text class="kf-vb-l muted">{{vb.l}}</text>
+        </view>
+      </view>
       <view class="kf-stats">
         <view class="kf-stat">
           <view class="kf-stat-n mono">{{bp.stats.files}}</view>
@@ -69,18 +96,17 @@
       </view>
     </view>
 
-    <!-- 配比仪表盘 -->
+    <!-- 配比仪表盘（v2 document_driven：按超越层名 N 段；v1：三段固定档） -->
     <view class="card ticks rise" style="animation-delay: 120ms">
       <view class="kf-k kicker kicker-on-paper">RATIO · 配比仪表盘</view>
       <view class="kf-bar">
-        <view class="kf-seg kf-seg-core" style="width: {{bp.ratio.core}}%;"></view>
-        <view class="kf-seg kf-seg-field" style="width: {{bp.ratio.field}}%;"></view>
-        <view class="kf-seg kf-seg-guide" style="width: {{bp.ratio.guide}}%;"></view>
+        <view class="kf-seg kf-seg-{{item.cls}}" style="width: {{item.pct}}%;"
+          wx:for="{{ratioSegs}}" wx:key="name"></view>
       </view>
       <view class="kf-ratio-legend">
-        <view class="kf-rl"><view class="kf-dot kf-dot-core"></view>核心主干<text class="mono">{{bp.ratio.core}}%</text></view>
-        <view class="kf-rl"><view class="kf-dot kf-dot-field"></view>领域补充<text class="mono">{{bp.ratio.field}}%</text></view>
-        <view class="kf-rl"><view class="kf-dot kf-dot-guide"></view>导读合成<text class="mono">{{bp.ratio.guide}}%</text></view>
+        <view class="kf-rl" wx:for="{{ratioSegs}}" wx:key="name">
+          <view class="kf-dot kf-dot-{{item.cls}}"></view>{{item.name}}<text class="mono">{{item.pct}}%</text>
+        </view>
       </view>
     </view>
 
@@ -89,6 +115,8 @@
       <view class="kf-k kicker kicker-on-paper">QUOTE · 动态报价</view>
       <view class="kf-total mono">¥{{bp.quote.total}}</view>
       <view class="muted kf-total-sub">按 {{bp.stats.gb}}GB 实测体积计价 · 基础 ¥{{bp.quote.base}} + 每GB ¥{{bp.quote.per_gb}}</view>
+      <!-- 对比锚：人工代建市价 vs 本方案一次性交付（市场事实表述，静态文案） -->
+      <view class="muted kf-anchor">人工代建同类知识库 ≈8000 元/月起 · 本方案一次性交付</view>
       <view class="kf-price-rows">
         <view class="kf-pr"><text class="kf-pr-t">原文件版</text><text class="mono">¥{{bp.quote.total}}</text></view>
         <view class="kf-pr"><text class="kf-pr-t">轻便阅读版（Markdown）</text><text class="mono">¥{{mdPrice}}</text></view>
@@ -97,11 +125,19 @@
       <button class="btn-primary kf-buy" hover-class="btn-hover" wx:if="{{paySupported}}" bindtap="onBuyLibrary">📦 带走整库 ¥{{bp.quote.total}} 起</button>
       <button class="btn-primary kf-export" hover-class="btn-hover" wx:if="{{paySupported}}" disabled="{{exporting}}" bindtap="onExport">导出蓝图 ¥0.1</button>
       <button class="kf-poster" hover-class="kf-poster-hover" disabled="{{exporting}}" bindtap="onPoster">生成分享卡</button>
+      <!-- 预览站点入口（免费不挂付费门；服务端生成件就绪前=如实提示即将上线） -->
+      <button class="kf-preview" hover-class="kf-preview-hover" wx:if="{{built}}" bindtap="onPreviewSite">生成预览站点</button>
     </view>
 
-    <!-- 三级目录树 -->
+    <!-- 三级目录树（收口波A：三视图 tab——主题=既有三级树；阶段/类型=平铺组单层列表） -->
     <view class="card ticks rise" style="animation-delay: 180ms">
       <view class="kf-k kicker kicker-on-paper">TREE · 三级编目树</view>
+      <view class="kf-vtabs">
+        <view class="kf-vtab {{viewTab === 'by_topic' ? 'on' : ''}}" hover-class="kf-press" hover-stay-time="80" data-v="by_topic" bindtap="onViewTabPick">主题</view>
+        <view class="kf-vtab {{viewTab === 'by_phase' ? 'on' : ''}}" hover-class="kf-press" hover-stay-time="80" data-v="by_phase" bindtap="onViewTabPick">阶段</view>
+        <view class="kf-vtab {{viewTab === 'by_type' ? 'on' : ''}}" hover-class="kf-press" hover-stay-time="80" data-v="by_type" bindtap="onViewTabPick">类型</view>
+      </view>
+      <block wx:if="{{viewTab === 'by_topic'}}">
       <view class="kf-l1 {{item.open ? 'open' : ''}}" wx:for="{{tree}}" wx:for-item="l1" wx:for-index="i1" wx:key="code">
         <view class="kf-l1-head" hover-class="kf-press" hover-stay-time="80" data-i="{{i1}}" bindtap="toggleL1">
           <view class="kf-l1-code mono">{{l1.code}}</view>
@@ -126,12 +162,36 @@
                   <view class="kf-f-name">{{f.name}}</view>
                   <view class="muted kf-f-meta">{{f.icon}} {{f.src}} · {{f.size}} · {{f.perm}}</view>
                 </view>
+                <!-- v2 document_driven：real 真实检索标记徽章（v1 无此字段不显示） -->
+                <text wx:if="{{f.real === true || f.real === false}}"
+                  class="kf-real {{f.real ? 'on' : ''}}">{{f.real ? '✓ 真实检索' : '○ 占位'}}</text>
               </view>
               <view class="muted kf-more" wx:if="{{l2.file_count > l2.files.length}}">另有 {{l2.file_count - l2.files.length}} 件同主题文件，蓝图导出后可见</view>
             </view>
           </view>
         </view>
       </view>
+      </block>
+      <!-- 阶段/类型视图：平铺组单层列表（组名=映射表 verbatim 全名，「待归类」恒排尾；文件行复用主题视图样式） -->
+      <block wx:else>
+        <view class="kf-vg {{item.open ? 'open' : ''}}" wx:for="{{viewGroups}}" wx:key="name">
+          <view class="kf-vg-head" hover-class="kf-press" hover-stay-time="80" data-i="{{index}}" bindtap="toggleViewGroup">
+            <view class="kf-vg-name">{{item.name}}</view>
+            <text class="kf-l2-n mono">{{item.files.length}} 件</text>
+            <view class="kf-chevron kf-chevron-sm"></view>
+          </view>
+          <view class="kf-files" wx:if="{{item.open}}">
+            <view class="kf-file" wx:for="{{item.files}}" wx:for-item="f" wx:key="ref">
+              <text class="kf-ext mono">{{f.fmt || '·'}}</text>
+              <view class="kf-f-body">
+                <view class="kf-f-name">{{f.name}}</view>
+                <view class="muted kf-f-meta">{{f.line}}</view>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="muted kf-note" wx:if="{{!viewGroups.length}}">本视图暂无分组</view>
+      </block>
       <view class="muted kf-note">{{sampleNote}}</view>
     </view>
   </block>

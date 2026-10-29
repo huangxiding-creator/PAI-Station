@@ -1,0 +1,26 @@
+{
+  "repo": "kebenxiaoming/matrix",
+  "url": "https://github.com/kebenxiaoming/matrix",
+  "stars": 969,
+  "license": "Apache-2.0",
+  "pushed_at": "2025-12-27",
+  "created": "2024-05-15",
+  "archived": false,
+  "language": "Python",
+  "forks": 202,
+  "desc": "抖音/快手/视频号/小红书短视频矩阵分发脚本,python3+playwright",
+  "platforms": [
+    "抖音",
+    "视频号",
+    "小红书",
+    "快手"
+  ],
+  "publish_types": "仅视频",
+  "tech_stack": "Python3+Playwright; Redis存登录态队列+MySQL存发布队列+supervisor守护; 小红书登录依赖本地xhs-api服务(app2024.py)计算x-s/x-t签名",
+  "account_mgmt": "cookie文件管理+MySQL/Redis账号队列,可多账号(user_queue_login按类型排队登录)",
+  "signature": "内置小红书x-s/x-t签名服务(xhs-api目录,本地flask)",
+  "maintenance": "半休眠(约10个月未推)",
+  "adoption": "reuse(Apache-2.0)",
+  "source": "gh api+README实测 2026-10-19",
+  "status": "COMPLETE"
+}

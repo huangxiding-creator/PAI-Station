@@ -1,0 +1,692 @@
+{
+ "kind": "fibo_fnd_common",
+ "zh": "FIBO 基座公共层（六库可选）",
+ "note": "FND 基座思想蒸馏：机构/主体/文件/时间/量 五概念组，六域知识库可整体挂接为可选公共层；概念实例逐条可在模块种子中按 id 追溯（含 IRI 与层级）。",
+ "source": {
+  "repo": "EDMCouncil/fibo",
+  "tag": "master_2026Q3",
+  "license": "MIT",
+  "license_copyright": "Copyright (c) 2020 Enterprise Data Management Council",
+  "url": "https://github.com/EDMCouncil/fibo/tree/master_2026Q3",
+  "tarball_sha256": "48a1690255df0fb161d624a6e12fb529f4e4f38c73ac8cfbe1ed81e913625e27"
+ },
+ "groups": [
+  {
+   "key": "organizations",
+   "zh": "机构",
+   "desc": "组织与机构形态：雇佣关系、法人组织、政府与公司族谱",
+   "concepts": [
+    {
+     "id": "Employee",
+     "en": "employee",
+     "zh": "雇员",
+     "module": "FND"
+    },
+    {
+     "id": "Employer",
+     "en": "employer",
+     "zh": "雇主",
+     "module": "FND"
+    },
+    {
+     "id": "Employment",
+     "en": "employment",
+     "zh": "雇佣",
+     "module": "FND"
+    },
+    {
+     "id": "Group",
+     "en": "group",
+     "zh": "团体",
+     "module": "FND"
+    },
+    {
+     "id": "BusinessEntity",
+     "en": "business entity",
+     "zh": "商业实体",
+     "module": "BE"
+    },
+    {
+     "id": "FunctionalBusinessEntity",
+     "en": "functional business entity",
+     "zh": "职能商业实体",
+     "module": "BE"
+    },
+    {
+     "id": "Corporation",
+     "en": "corporation",
+     "zh": "法人公司",
+     "module": "BE"
+    },
+    {
+     "id": "JointStockCompany",
+     "en": "joint stock company",
+     "zh": "股份有限公司",
+     "module": "BE"
+    },
+    {
+     "id": "PubliclyHeldCompany",
+     "en": "publicly held company",
+     "zh": "公开招股公司",
+     "module": "BE"
+    },
+    {
+     "id": "PrivatelyHeldCompany",
+     "en": "privately held company",
+     "zh": "非公开招股公司",
+     "module": "BE"
+    },
+    {
+     "id": "JointVenture",
+     "en": "joint venture",
+     "zh": "合资企业",
+     "module": "BE"
+    },
+    {
+     "id": "Partnership",
+     "en": "partnership",
+     "zh": "合伙企业",
+     "module": "BE"
+    },
+    {
+     "id": "Trust",
+     "en": "trust",
+     "zh": "信托",
+     "module": "BE"
+    },
+    {
+     "id": "CooperativeSociety",
+     "en": "cooperative society",
+     "zh": "合作社",
+     "module": "BE"
+    },
+    {
+     "id": "NotForProfitOrganization",
+     "en": "not for profit organization",
+     "zh": "非营利组织",
+     "module": "BE"
+    },
+    {
+     "id": "NonGovernmentalOrganization",
+     "en": "non-governmental organization",
+     "zh": "非政府组织",
+     "module": "BE"
+    },
+    {
+     "id": "GovernmentBody",
+     "en": "government body",
+     "zh": "政府机构",
+     "module": "BE"
+    },
+    {
+     "id": "Government",
+     "en": "government",
+     "zh": "政府",
+     "module": "BE"
+    },
+    {
+     "id": "Branch",
+     "en": "branch",
+     "zh": "分支机构",
+     "module": "BE"
+    },
+    {
+     "id": "Division",
+     "en": "division",
+     "zh": null,
+     "module": "BE"
+    },
+    {
+     "id": "HoldingCompany",
+     "en": "holding company",
+     "zh": "控股公司",
+     "module": "FBC"
+    },
+    {
+     "id": "Subsidiary",
+     "en": "subsidiary",
+     "zh": "子公司",
+     "module": "BE"
+    },
+    {
+     "id": "Affiliate",
+     "en": "affiliate",
+     "zh": "附属机构",
+     "module": "BE"
+    },
+    {
+     "id": "Executive",
+     "en": "executive",
+     "zh": "高管",
+     "module": "BE"
+    },
+    {
+     "id": "CorporateOfficer",
+     "en": "corporate officer",
+     "zh": "公司高级职员",
+     "module": "BE"
+    }
+   ]
+  },
+  {
+   "key": "parties",
+   "zh": "主体",
+   "desc": "参与方与角色：自然人、当事方、合同角色、控制关系",
+   "concepts": [
+    {
+     "id": "Person",
+     "en": "person",
+     "zh": "自然人",
+     "module": "FND"
+    },
+    {
+     "id": "Adult",
+     "en": "adult",
+     "zh": "成年人",
+     "module": "FND"
+    },
+    {
+     "id": "Minor",
+     "en": "minor",
+     "zh": "未成年人",
+     "module": "FND"
+    },
+    {
+     "id": "Signatory",
+     "en": "signatory",
+     "zh": "签署人",
+     "module": "BE"
+    },
+    {
+     "id": "AuthorizedIndividual",
+     "en": "authorized individual",
+     "zh": "授权个人",
+     "module": "BE"
+    },
+    {
+     "id": "LegalAgent",
+     "en": "legal agent",
+     "zh": "法定代理人",
+     "module": "FBC"
+    },
+    {
+     "id": "RegisteredAgent",
+     "en": "registered agent",
+     "zh": "注册代理人",
+     "module": "FBC"
+    },
+    {
+     "id": "ThirdPartyAgent",
+     "en": "third-party agent",
+     "zh": "第三方代理",
+     "module": "FBC"
+    },
+    {
+     "id": "Buyer",
+     "en": "buyer",
+     "zh": "买方",
+     "module": "FND"
+    },
+    {
+     "id": "Counterparty",
+     "en": "counterparty",
+     "zh": "交易对手",
+     "module": "FND"
+    },
+    {
+     "id": "TransactionParty",
+     "en": "transaction party",
+     "zh": "交易当事方",
+     "module": "FND"
+    },
+    {
+     "id": "ContractParty",
+     "en": "contract party",
+     "zh": "合同当事方",
+     "module": "FND"
+    },
+    {
+     "id": "ContractThirdParty",
+     "en": "contract third party",
+     "zh": "合同第三方",
+     "module": "FND"
+    },
+    {
+     "id": "ControllingParty",
+     "en": "controlling party",
+     "zh": "控制当事方",
+     "module": "FND"
+    },
+    {
+     "id": "ControlledParty",
+     "en": "controlled party",
+     "zh": "受控当事方",
+     "module": "BE"
+    },
+    {
+     "id": "Owner",
+     "en": "owner",
+     "zh": "所有权人",
+     "module": "FND"
+    },
+    {
+     "id": "Customer",
+     "en": "customer",
+     "zh": "客户",
+     "module": "FND"
+    },
+    {
+     "id": "Investor",
+     "en": "investor",
+     "zh": "投资者",
+     "module": "BE"
+    },
+    {
+     "id": "Shareholder",
+     "en": "shareholder",
+     "zh": "股东",
+     "module": "BE"
+    },
+    {
+     "id": "VotingShareholder",
+     "en": "voting shareholder",
+     "zh": "有表决权股东",
+     "module": "BE"
+    },
+    {
+     "id": "Obligor",
+     "en": "obligor",
+     "zh": null,
+     "module": "FND"
+    },
+    {
+     "id": "Obligee",
+     "en": "obligee",
+     "zh": null,
+     "module": "FND"
+    },
+    {
+     "id": "SyndicateMember",
+     "en": "syndicate member",
+     "zh": "银团成员",
+     "module": "BE"
+    },
+    {
+     "id": "Servicer",
+     "en": "servicer",
+     "zh": "贷款服务机构",
+     "module": "LOAN"
+    },
+    {
+     "id": "Comaker",
+     "en": "co-maker",
+     "zh": "共同借款人",
+     "module": "LOAN"
+    },
+    {
+     "id": "Issuer",
+     "en": "issuer",
+     "zh": "发行人",
+     "module": "FBC"
+    }
+   ]
+  },
+  {
+   "key": "documents",
+   "zh": "文件",
+   "desc": "文书与记录：合同文书、身份证件、报告与记录",
+   "concepts": [
+    {
+     "id": "ContractDocument",
+     "en": "contract document",
+     "zh": "合同文书",
+     "module": "FND"
+    },
+    {
+     "id": "IdentityDocument",
+     "en": "identity document",
+     "zh": "身份证件",
+     "module": "FND"
+    },
+    {
+     "id": "Passport",
+     "en": "passport",
+     "zh": "护照",
+     "module": "FND"
+    },
+    {
+     "id": "BirthCertificate",
+     "en": "birth certificate",
+     "zh": "出生证明",
+     "module": "FND"
+    },
+    {
+     "id": "DriversLicense",
+     "en": "driver's license",
+     "zh": "驾驶证",
+     "module": "FND"
+    },
+    {
+     "id": "FinancialRecord",
+     "en": "financial record",
+     "zh": "财务记录",
+     "module": "FND"
+    },
+    {
+     "id": "Report",
+     "en": "report",
+     "zh": "报告",
+     "module": "FND"
+    },
+    {
+     "id": "TermSheet",
+     "en": "term sheet",
+     "zh": "条款清单",
+     "module": "FND"
+    },
+    {
+     "id": "AssessmentReport",
+     "en": "assessment report",
+     "zh": "评估报告",
+     "module": "FND"
+    },
+    {
+     "id": "Opinion",
+     "en": "opinion",
+     "zh": "意见",
+     "module": "FND"
+    },
+    {
+     "id": "Publication",
+     "en": "publication",
+     "zh": "出版物",
+     "module": "BE"
+    },
+    {
+     "id": "CreditReport",
+     "en": "credit report",
+     "zh": "信用报告",
+     "module": "FBC"
+    },
+    {
+     "id": "IncomeVerificationReport",
+     "en": "income verification report",
+     "zh": "收入核实报告",
+     "module": "LOAN"
+    },
+    {
+     "id": "PublicRecord",
+     "en": "public record",
+     "zh": "公共记录",
+     "module": "LOAN"
+    },
+    {
+     "id": "Constitution",
+     "en": "constitution",
+     "zh": "章程",
+     "module": "FND"
+    }
+   ]
+  },
+  {
+   "key": "time",
+   "zh": "时间",
+   "desc": "时间与事件：发生、日程、循环间隔、营业日历与生命周期",
+   "concepts": [
+    {
+     "id": "Occurrence",
+     "en": "occurrence",
+     "zh": "事件发生",
+     "module": "FND"
+    },
+    {
+     "id": "OccurrenceKind",
+     "en": "occurrence kind",
+     "zh": "事件种类",
+     "module": "FND"
+    },
+    {
+     "id": "Schedule",
+     "en": "schedule",
+     "zh": "日程表",
+     "module": "FND"
+    },
+    {
+     "id": "RegularSchedule",
+     "en": "regular schedule",
+     "zh": "定期日程",
+     "module": "FND"
+    },
+    {
+     "id": "RecurrenceInterval",
+     "en": "recurrence interval",
+     "zh": "循环间隔",
+     "module": "FND"
+    },
+    {
+     "id": "ExplicitRecurrenceInterval",
+     "en": "explicit recurrence interval",
+     "zh": "显式循环间隔",
+     "module": "FND"
+    },
+    {
+     "id": "BusinessRecurrenceInterval",
+     "en": "business recurrence interval",
+     "zh": "营业循环间隔",
+     "module": "FND"
+    },
+    {
+     "id": "BusinessDayConvention",
+     "en": "business day convention",
+     "zh": "营业日惯例",
+     "module": "FND"
+    },
+    {
+     "id": "BusinessCalendar",
+     "en": "business calendar",
+     "zh": "营业日历",
+     "module": "FND"
+    },
+    {
+     "id": "CalculatedDate",
+     "en": "calculated date",
+     "zh": "计算日期",
+     "module": "FND"
+    },
+    {
+     "id": "RelativeDate",
+     "en": "relative date",
+     "zh": "相对日期",
+     "module": "FND"
+    },
+    {
+     "id": "SpecifiedDate",
+     "en": "specified date",
+     "zh": "指定日期",
+     "module": "FND"
+    },
+    {
+     "id": "AnchorDate",
+     "en": "anchor date",
+     "zh": "锚定日期",
+     "module": "FND"
+    },
+    {
+     "id": "Age",
+     "en": "age",
+     "zh": "年龄",
+     "module": "FND"
+    },
+    {
+     "id": "CalendarPeriod",
+     "en": "calendar period",
+     "zh": "日历周期",
+     "module": "FND"
+    },
+    {
+     "id": "CalculationPeriod",
+     "en": "calculation period",
+     "zh": "计算周期",
+     "module": "FND"
+    },
+    {
+     "id": "TimeDirection",
+     "en": "time direction",
+     "zh": "时间方向",
+     "module": "FND"
+    },
+    {
+     "id": "LifecycleEvent",
+     "en": "lifecycle event",
+     "zh": "生命周期事件",
+     "module": "FND"
+    },
+    {
+     "id": "LifecycleStage",
+     "en": "lifecycle stage",
+     "zh": "生命周期阶段",
+     "module": "FND"
+    },
+    {
+     "id": "LifecycleStatus",
+     "en": "lifecycle status",
+     "zh": "生命周期状态",
+     "module": "FND"
+    }
+   ]
+  },
+  {
+   "key": "quantities",
+   "zh": "量",
+   "desc": "量与度量：货币金额、统计度量、价格、利率与汇率",
+   "concepts": [
+    {
+     "id": "MonetaryAmount",
+     "en": "monetary amount",
+     "zh": "货币金额",
+     "module": "FND"
+    },
+    {
+     "id": "AmountOfMoney",
+     "en": "amount of money",
+     "zh": "金额",
+     "module": "FND"
+    },
+    {
+     "id": "PercentageMonetaryAmount",
+     "en": "percentage monetary amount",
+     "zh": "百分比货币金额",
+     "module": "FND"
+    },
+    {
+     "id": "QuantitativeValue",
+     "en": "quantitative value",
+     "zh": "量化值",
+     "module": "FND"
+    },
+    {
+     "id": "StatisticalMeasure",
+     "en": "statistical measure",
+     "zh": "统计度量",
+     "module": "FND"
+    },
+    {
+     "id": "QualifiedMeasure",
+     "en": "qualified measure",
+     "zh": "限定度量",
+     "module": "FND"
+    },
+    {
+     "id": "ScopedMeasure",
+     "en": "scoped measure",
+     "zh": "范围度量",
+     "module": "FND"
+    },
+    {
+     "id": "Formula",
+     "en": "formula",
+     "zh": "公式",
+     "module": "FND"
+    },
+    {
+     "id": "Mean",
+     "en": "mean",
+     "zh": "均值",
+     "module": "FND"
+    },
+    {
+     "id": "ArithmeticMean",
+     "en": "arithmetic mean",
+     "zh": "算术平均数",
+     "module": "FND"
+    },
+    {
+     "id": "Dispersion",
+     "en": "dispersion",
+     "zh": "离散度",
+     "module": "FND"
+    },
+    {
+     "id": "Price",
+     "en": "price",
+     "zh": "价格",
+     "module": "FND"
+    },
+    {
+     "id": "MonetaryPrice",
+     "en": "monetary price",
+     "zh": "货币价格",
+     "module": "FND"
+    },
+    {
+     "id": "InterestRate",
+     "en": "interest rate",
+     "zh": "利率",
+     "module": "FND"
+    },
+    {
+     "id": "ExchangeRate",
+     "en": "exchange rate",
+     "zh": "汇率",
+     "module": "FND"
+    },
+    {
+     "id": "Index",
+     "en": "index",
+     "zh": "指数",
+     "module": "FND"
+    },
+    {
+     "id": "Value",
+     "en": "value",
+     "zh": "价值",
+     "module": "FND"
+    },
+    {
+     "id": "Rating",
+     "en": "rating",
+     "zh": "评级",
+     "module": "FND"
+    },
+    {
+     "id": "Yield",
+     "en": "yield",
+     "zh": "收益率",
+     "module": "FBC"
+    },
+    {
+     "id": "CreditRating",
+     "en": "credit rating",
+     "zh": "信用评级",
+     "module": "FBC"
+    },
+    {
+     "id": "Exposure",
+     "en": "exposure",
+     "zh": "风险敞口",
+     "module": "FBC"
+    }
+   ]
+  }
+ ]
+}

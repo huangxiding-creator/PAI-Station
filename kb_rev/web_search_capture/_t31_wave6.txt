@@ -1,0 +1,60 @@
+{
+ "id": "T31",
+ "title": "wenku 类型2 重组（纯图片）+字数参照定义",
+ "wave": 6,
+ "depends": [
+  "T26"
+ ],
+ "paths": [
+  "kb_factory/harvest_engine/adapters/wenku.py",
+  "kb_factory/harvest_engine/tests/test_wenku_type2.py"
+ ],
+ "acceptance": "支撑 FR2.AC2：实弹 1 份类型2 纯图片重组(renderImageHtml)；注记#5 落地=类型2 字数参照=OCR 文字层字数(quality_gate manifest.ref_chars_source=ocr)，不走 pageJson；PDF 页尺寸==pageInfo；命令: py -3 -m pytest -q kb_factory/harvest_engine/tests/test_wenku_type2.py(含实弹用例)",
+ "brief": "WENKU_SPEC §5.2/§7.3+SPEC_REVIEW #5(pageJson 仅类型3，类型2/1 参照由本卡定死)"
+}
+{
+ "id": "T32",
+ "title": "doc88 SWF 合成→FFDec→presse→PDF 全链接线",
+ "wave": 6,
+ "depends": [
+  "T12",
+  "T27"
+ ],
+ "paths": [
+  "kb_factory/harvest_engine/adapters/doc88.py",
+  "kb_factory/harvest_engine/tests/test_doc88_swf.py"
+ ],
+ "acceptance": "支撑 FR4.AC1：实弹 1 份=切片合成 SWF(长度补丁)+帧 RECT 修正/帧数0 检测→FFDec frame:pdf 子进程→presse merge；PDF 可抽文本字数≥0.9×FFDec frame:text 同源参照；命令: py -3 -m pytest -q kb_factory/harvest_engine/tests/test_doc88_swf.py(含实弹用例)",
+ "brief": "DOC88_SPEC §1.6/§1.7/§6(复刻落地顺序)；ADR-3 FFDec/presse 仅子进程"
+}
+{
+ "id": "T33",
+ "title": "book118 OCR 文字层+GT 取样协议",
+ "wave": 6,
+ "depends": [
+  "T13",
+  "T23"
+ ],
+ "paths": [
+  "kb_factory/harvest_engine/adapters/book118.py",
+  "kb_factory/harvest_engine/tests/fixtures/book118_gt.json",
+  "kb_factory/harvest_engine/tests/test_book118_ocr_gt.py"
+ ],
+ "acceptance": "FR3.AC2：取样协议=每份 fixture 标题+首页可见文本前 2 个≥4 字词(人工誊录一次入 book118_gt.json)+pypdfium2 抽 PDF 文字层精确匹配(容错=0)3/3 命中=该份过；脚本对 3 份 GT 全过；命令: py -3 -m pytest -q kb_factory/harvest_engine/tests/test_book118_ocr_gt.py",
+ "brief": "BOOK118_SPEC §4/§5+REQ FR3.AC2 四要素(来源/选词/引擎/通过率)"
+}
+{
+ "id": "T34",
+ "title": "docin 豆丁适配器接入+复活实证",
+ "wave": 6,
+ "depends": [
+  "T09",
+  "T21"
+ ],
+ "paths": [
+  "kb_factory/harvest_engine/adapters/docin.py",
+  "kb_factory/harvest_engine/tests/test_docin_revive.py"
+ ],
+ "acceptance": "FR6.AC1：豆丁 ≥1 份真实下载过质检门(=「复活」定义)+≥3 站复活实证汇总断言(book118/doc88 天然计入，ledger/registry 汇总≥3)；命令: py -3 -m pytest -q kb_factory/harvest_engine/tests/test_docin_revive.py(实弹用例)",
+ "brief": "T21 落档之 DOCIN_SPEC 为唯一施工依据+FISH_PROBE「复活」词条；mbalib 候补不进 v1"
+}

@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:uap2="http://schemas.microsoft.com/appx/manifest/uap/windows10/2" xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities" xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10" xmlns:desktop6="http://schemas.microsoft.com/appx/manifest/desktop/windows10/6" xmlns:desktop7="http://schemas.microsoft.com/appx/manifest/desktop/windows10/7" xmlns:desktop10="http://schemas.microsoft.com/appx/manifest/desktop/windows10/10" xmlns:uap10="http://schemas.microsoft.com/appx/manifest/uap/windows10/10" xmlns:uap11="http://schemas.microsoft.com/appx/manifest/uap/windows10/11" IgnorableNamespaces="uap uap2 rescap desktop desktop6 desktop7 desktop10 uap10 uap11" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
+  <Identity Name="ManusAI.Manus" Publisher="CN=845AA9DF-1559-4AA0-8A94-CE74FEB6A77B" Version="1.4.1.0" ProcessorArchitecture="x64" />
+  <Properties>
+    <DisplayName>manus</DisplayName>
+    <PublisherDisplayName>Manus AI</PublisherDisplayName>
+    <Logo>assets\icon.png</Logo>
+  </Properties>
+  <Resources>
+    <Resource Language="en-US" />
+  </Resources>
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+  <Applications>
+    <Application Id="ManusApp" Executable="Manus.exe" EntryPoint="Windows.FullTrustApplication" uap10:TrustLevel="mediumIL" uap10:RuntimeBehavior="packagedClassicApp">
+      <uap:VisualElements AppListEntry="default" DisplayName="manus" Description="Manus App" BackgroundColor="transparent" Square150x150Logo="assets\Square150x150Logo.png" Square44x44Logo="assets\Square44x44Logo.png" />
+      <Extensions>
+        <uap:Extension Category="windows.protocol">
+          <uap:Protocol Name="manus">
+            <uap:DisplayName>Manus Protocol</uap:DisplayName>
+          </uap:Protocol>
+        </uap:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+  <mp:PhoneIdentity PhoneProductId="b32cdefd-5a6f-4248-8897-250a6fab3e9a" PhonePublisherId="f7b8adb5-dd79-4324-bcc7-363a0da5d89b" />
+</Package>

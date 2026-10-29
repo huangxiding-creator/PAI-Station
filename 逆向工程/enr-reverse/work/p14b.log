@@ -1,0 +1,27 @@
+elapsed 155.1 s | solves: 1
+coverage: {"intl_rows": 217, "intl_with_rev": 211, "ranks_inferred": 1, "cn_rows": 82, "rank_range": [3, 249]}
+facts: {"top": [{"rank": 1, "intl_rev_yi": 427.3}, {"rank": 2, "intl_rev_yi": 416.2}, {"rank": 3, "intl_rev_yi": 301.5}, {"rank": 4, "intl_rev_yi": 248.4}, {"rank": 6, "intl_rev_yi": 153.4}, {"rank": 8, "intl_rev_yi": 115.6}, {"rank": 10, "intl_rev_yi": 100.2}], "cn_firms": 81, "total_intl_yi": 4997.0}
+images: [{"url": "/upload/image/20240914/6386190698312862675480644.png", "kind": "cn_list", "lines": 83, "bytes": 1170680}, {"url": "/upload/image/20240914/6386190716584735821057666.png", "kind": "intl", "lines": 55, "bytes": 889826}, {"url": "/upload/image/20240914/6386190720698796221956325.png", "kind": "intl", "lines": 55, "bytes": 911185}, {"url": "/upload/image/20240914/6386190721989418155746270.png", "kind": "intl", "lines": 58, "bytes": 964555}, {"url": "/upload/image/20240914/6386190723144108439752196.png", "kind": "intl", "lines": 55, "bytes": 921789}, {"url": "/upload/image/20240914/6386190724411295792314429.png", "kind": "intl", "lines": 58, "bytes": 948630}]
+gates: {"g1_top_text_vs_ocr": {"pairs": 4, "matched": 1, "detail": [{"rank": 3, "text_yi": 301.5, "ocr_yi": 44.2, "match": false}, {"rank": 6, "text_yi": 153.4, "ocr_yi": 7.7, "match": false}, {"rank": 8, "text_yi": 115.6, "ocr_yi": 9.4, "match": false}, {"rank": 10, "text_yi": 100.2, "ocr_yi": 100.2, "match": true}]}, "g2_monotonic_intl_rev": {"n": 211, "violations": 38}, "g3_cn_count": {"text": 81, "image_list": 82, "match": true}}
+
+intl_table 样例:
+   3 37 4419.6 MAIRE SPA, Milan, taly 
+   6 87 770.6 QINGJIAN GROUP CO. LTD., Qingdao, China 
+   7 52 1599.9 WORLEY LTD., Sydney, Austrlia 
+   8 74 944.3 DONGFANG ELECTRIC CORP, Chengdu, China 
+   9 None 42729.0 VINCI, Nantere,France inferred
+   10 None 10016.0 CHINA RAILWAYCONSTRUCTION CORPTD.,Bejing 
+   11 10 9380.1 FERROVALAstrdamtheran 
+   12 11 9133.6 HYUNDAI ENGINEERING & CONSTRUCTION CO. L 
+   13 14 7435.0 EIFFAGEVlzy-VillacoblayFran 
+   14 15 7405.0 WEBUILD SPA, Rozzano, taly 
+   15 13 7357.9 CHINA RAILWAY GROUP LTD., Beijing. China 
+   16 25 7080.0 SAMSUNG C&TCORP,Seoul,SouthKorea 
+  ...
+   246 247 275.0 DOGUS INSAAT VETICARETAS,Istanbul, Turke 
+   247 175 3783.4 HANWHA ENGINEERING &CONSTRUCTION, Seoul, 
+   248 None 1243.6 DENNIS GROU, Springfield, Mas, US.A 
+   249 250 358.0 RONCELLU INC., Sterling Heights, Mich, U 
+
+cn_list 样例: [{"rank": null, "rank_prev": 92, "firm_cn": "001 中石化练化工程（集团）股份有限公司"}, {"rank": null, "rank_prev": 113, "firm_cn": "1-19 云南省建设投资控股集团有限公司"}, {"rank": null, "rank_prev": 127, "firm_cn": "10-1 中国航空技术国际工程有限公司"}, {"rank": null, "rank_prev": 99, "firm_cn": "101 哈尔滨电气国际工程有限责红公司"}, {"rank": null, "rank_prev": 107, "firm_cn": "108 新量生产建设兵团建设工程（集团）有限责任公司"}]
+saved p14_2024_full.json

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window>
+<StartPageLayout>
+	<HorizontalLayout name="hor_bk" height="60">
+		<Control width="10" />
+		<Label name="label_version" padding="0,8,0,0" height="20" align="left" valign="top" textcolor="#FFFFFFFF" font="0"/>
+		<Button name="btn_close1" padding="0,5,0,0" width="20" height="20" bkimage="public\close_white.png" />
+		<Control width="5" />
+	</HorizontalLayout>
+	<Control name="ctrl_logo" padding="260,0,0,0" width="60" height="60" bkimage="ChannelImage/rmb/logo60_60.png" />
+	<Control height="15" />
+	<Label name="lbl_product_name" text="融媒宝" height="30" textcolor="0xffffffff" align="center" valign="center" font="5" />
+	<Control height="5" />
+	<Label name="lbl_product_intro" text="高效新媒体运营、营销工具" height="16" textcolor="0xffffffff" align="center" valign="center" font="2" />
+	<Control height="30" />
+	<Button name="btn_install" xmltext="Setup/10" padding="190,0,0,0" width="200" height="44" textcolor="#ff6358ed" disabledtextcolor="#ff6358ed" font="3" normalimage="file='public/btn-h28.png' source='0,0,30,28' corner='10,10,10,10'" disabledimage="file='public/btn_disable.png' corner='10,10,10,10'"/>
+	<Control height="30" />
+	<HorizontalLayout visible="false" name="layout_selfsel" padding="80,0,80,0" width="420" height="36" bkimage="Setup/edit_path_bk.png">
+		<Edit name="edit_installpath" bkcolor="0x00000000" enabled="false" textcolor="#FFFFFFFF" disabledtextcolor="#FFFFFFFF" font="0" textpadding="12,0,12,0" align="left" valign="center" />
+		<Button name="btn_browse" xmltext="Setup/2" width="78" textcolor="#ff6358ed" disabledtextcolor="#ff6358ed" font="0" normalimage="file='public/btn-h28.png' source='0,0,30,28' corner='10,10,10,10'" disabledimage="file='public/btn_disable.png' corner='10,10,10,10'"/>
+	</HorizontalLayout>
+	<Control />
+	<Control height="2" bkcolor="#1affffff" />
+	<HorizontalLayout height="36">
+		<Control width="10"/>
+		<Option name="opt_license_detail" padding="0,11,0,0" width="47" height="14" xmltext="Setup/0" align="left" valign="center" font="0" textpadding="22,0,0,0" normalimage="file='public\B08.png' source='0,0,14,14' dest='0,0,14,14'"  selectedimage="file='public\B08.png' source='0,28,14,42' dest='0,0,14,14'" selected="true" textcolor="#99ffffff" /> 
+		<Button name="btn_license_detail" showhtml="true" xmltext="Setup/1" align="left" padding="0,11,0,0" width="74" height="14"/>
+		<Control />
+		<Option name="opt_selfsel" xmltext="Setup/9" padding="0,11,0,0" width="76" height="14" align="right" valign="center" font="0" textpadding="0,0,16,0" normalimage="file='Setup\unexpand.png' dest='68,5,76,10'" selectedimage="file='Setup\expand.png' dest='68,5,76,10'" textcolor="#99ffffff" /> 
+		<Control width="10"/>
+	</HorizontalLayout>	
+</StartPageLayout>
+</Window>

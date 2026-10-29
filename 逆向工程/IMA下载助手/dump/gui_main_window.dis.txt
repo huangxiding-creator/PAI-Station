@@ -1,0 +1,2050 @@
+===== gui/main_window.pyc =====
+
+# CODE <module>  args=()
+  0           RESUME                   0
+
+  1           LOAD_CONST               0 ('主窗口')
+              STORE_NAME               0 (__doc__)
+
+  2           LOAD_CONST               1 (0)
+              LOAD_CONST               2 (('QMainWindow', 'QWidget', 'QVBoxLayout', 'QHBoxLayout', 'QPushButton', 'QTreeWidget', 'QTextEdit', 'QProgressBar', 'QLabel', 'QLineEdit', 'QComboBox', 'QFrame', 'QListWidget', 'QSizePolicy'))
+              IMPORT_NAME              1 (PySide6.QtWidgets)
+              IMPORT_FROM              2 (QMainWindow)
+              STORE_NAME               2 (QMainWindow)
+              IMPORT_FROM              3 (QWidget)
+              STORE_NAME               3 (QWidget)
+              IMPORT_FROM              4 (QVBoxLayout)
+              STORE_NAME               4 (QVBoxLayout)
+              IMPORT_FROM              5 (QHBoxLayout)
+              STORE_NAME               5 (QHBoxLayout)
+              IMPORT_FROM              6 (QPushButton)
+              STORE_NAME               6 (QPushButton)
+              IMPORT_FROM              7 (QTreeWidget)
+              STORE_NAME               7 (QTreeWidget)
+              IMPORT_FROM              8 (QTextEdit)
+              STORE_NAME               8 (QTextEdit)
+              IMPORT_FROM              9 (QProgressBar)
+              STORE_NAME               9 (QProgressBar)
+              IMPORT_FROM             10 (QLabel)
+              STORE_NAME              10 (QLabel)
+              IMPORT_FROM             11 (QLineEdit)
+              STORE_NAME              11 (QLineEdit)
+              IMPORT_FROM             12 (QComboBox)
+              STORE_NAME              12 (QComboBox)
+              IMPORT_FROM             13 (QFrame)
+              STORE_NAME              13 (QFrame)
+              IMPORT_FROM             14 (QListWidget)
+              STORE_NAME              14 (QListWidget)
+              IMPORT_FROM             15 (QSizePolicy)
+              STORE_NAME              15 (QSizePolicy)
+              POP_TOP
+
+ 18           LOAD_CONST               1 (0)
+              LOAD_CONST               3 (('Qt', 'QByteArray', 'QTimer'))
+              IMPORT_NAME             16 (PySide6.QtCore)
+              IMPORT_FROM             17 (Qt)
+              STORE_NAME              17 (Qt)
+              IMPORT_FROM             18 (QByteArray)
+              STORE_NAME              18 (QByteArray)
+              IMPORT_FROM             19 (QTimer)
+              STORE_NAME              19 (QTimer)
+              POP_TOP
+
+ 19           LOAD_CONST               1 (0)
+              LOAD_CONST               4 (('get_setting', 'save_settings'))
+              IMPORT_NAME             20 (core.settings)
+              IMPORT_FROM             21 (get_setting)
+              STORE_NAME              21 (get_setting)
+              IMPORT_FROM             22 (save_settings)
+              STORE_NAME              22 (save_settings)
+              POP_TOP
+
+ 20           LOAD_CONST               1 (0)
+              LOAD_CONST               5 (('VERSION',))
+              IMPORT_NAME             23 (config)
+              IMPORT_FROM             24 (VERSION)
+              STORE_NAME              24 (VERSION)
+              POP_TOP
+
+ 21           LOAD_CONST               1 (0)
+              LOAD_CONST               6 (('ContextMenuMixin',))
+              IMPORT_NAME             25 (gui.context_menu_mixin)
+              IMPORT_FROM             26 (ContextMenuMixin)
+              STORE_NAME              26 (ContextMenuMixin)
+              POP_TOP
+
+ 22           LOAD_CONST               1 (0)
+              LOAD_CONST               7 (('KbTreeMixin',))
+              IMPORT_NAME             27 (gui.kb_tree_mixin)
+              IMPORT_FROM             28 (KbTreeMixin)
+              STORE_NAME              28 (KbTreeMixin)
+              POP_TOP
+
+ 23           LOAD_CONST               1 (0)
+              LOAD_CONST               8 (('SearchMixin',))
+              IMPORT_NAME             29 (gui.search_mixin)
+              IMPORT_FROM             30 (SearchMixin)
+              STORE_NAME              30 (SearchMixin)
+              POP_TOP
+
+ 24           LOAD_CONST               1 (0)
+              LOAD_CONST               9 (('TagMixin',))
+              IMPORT_NAME             31 (gui.tag_mixin)
+              IMPORT_FROM             32 (TagMixin)
+              STORE_NAME              32 (TagMixin)
+              POP_TOP
+
+ 25           LOAD_CONST               1 (0)
+              LOAD_CONST              10 (('DownloadMixin',))
+              IMPORT_NAME             33 (gui.download_mixin)
+              IMPORT_FROM             34 (DownloadMixin)
+              STORE_NAME              34 (DownloadMixin)
+              POP_TOP
+
+ 26           LOAD_CONST               1 (0)
+              LOAD_CONST              11 (('AuthMixin',))
+              IMPORT_NAME             35 (gui.auth_mixin)
+              IMPORT_FROM             36 (AuthMixin)
+              STORE_NAME              36 (AuthMixin)
+              POP_TOP
+
+ 27           LOAD_CONST               1 (0)
+              LOAD_CONST              12 (('AutoUpdateMixin',))
+              IMPORT_NAME             37 (gui.auto_update_mixin)
+              IMPORT_FROM             38 (AutoUpdateMixin)
+              STORE_NAME              38 (AutoUpdateMixin)
+              POP_TOP
+
+ 30           LOAD_BUILD_CLASS
+              PUSH_NULL
+              LOAD_CONST              13 (<code object MainWindow at 0x000001DD462A3AB0, file "gui\main_window.py", line 30>)
+              MAKE_FUNCTION
+              LOAD_CONST              14 ('MainWindow')
+
+ 31           LOAD_NAME               26 (ContextMenuMixin)
+
+ 32           LOAD_NAME               28 (KbTreeMixin)
+
+ 33           LOAD_NAME               30 (SearchMixin)
+
+ 34           LOAD_NAME               32 (TagMixin)
+
+ 35           LOAD_NAME               34 (DownloadMixin)
+
+ 36           LOAD_NAME               36 (AuthMixin)
+
+ 37           LOAD_NAME               38 (AutoUpdateMixin)
+
+ 38           LOAD_NAME                2 (QMainWindow)
+
+ 30           CALL                    10
+              STORE_NAME              39 (MainWindow)
+              RETURN_CONST            15 (None)
+
+## CODE MainWindow  args=()
+  --           MAKE_CELL                0 (__class__)
+
+  30           RESUME                   0
+               LOAD_NAME                0 (__name__)
+               STORE_NAME               1 (__module__)
+               LOAD_CONST               0 ('MainWindow')
+               STORE_NAME               2 (__qualname__)
+               LOAD_CONST               1 (30)
+               STORE_NAME               3 (__firstlineno__)
+
+  40           LOAD_FAST                0 (__class__)
+               BUILD_TUPLE              1
+               LOAD_CONST               2 (<code object __init__ at 0x000001DD45F6CF60, file "gui\main_window.py", line 40>)
+               MAKE_FUNCTION
+               SET_FUNCTION_ATTRIBUTE   8 (closure)
+               STORE_NAME               4 (__init__)
+
+  78           LOAD_CONST               3 (<code object _restore_window_state at 0x000001DD464130C0, file "gui\main_window.py", line 78>)
+               MAKE_FUNCTION
+               STORE_NAME               5 (_restore_window_state)
+
+  91           LOAD_FAST                0 (__class__)
+               BUILD_TUPLE              1
+               LOAD_CONST               4 (<code object eventFilter at 0x000001DD46428C90, file "gui\main_window.py", line 91>)
+               MAKE_FUNCTION
+               SET_FUNCTION_ATTRIBUTE   8 (closure)
+               STORE_NAME               6 (eventFilter)
+
+ 113           LOAD_CONST               5 (<code object _check_tag_scroll_load at 0x000001DD4610EA30, file "gui\main_window.py", line 113>)
+               MAKE_FUNCTION
+               STORE_NAME               7 (_check_tag_scroll_load)
+
+ 121           LOAD_CONST               6 (<code object closeEvent at 0x000001DD465FCCC0, file "gui\main_window.py", line 121>)
+               MAKE_FUNCTION
+               STORE_NAME               8 (closeEvent)
+
+ 160           LOAD_CONST               7 (<code object _make_separator at 0x000001DD460D7360, file "gui\main_window.py", line 160>)
+               MAKE_FUNCTION
+               STORE_NAME               9 (_make_separator)
+
+ 167           LOAD_CONST               8 (<code object init_ui at 0x000001DD46638590, file "gui\main_window.py", line 167>)
+               MAKE_FUNCTION
+               STORE_NAME              10 (init_ui)
+               LOAD_CONST               9 (('_current_tag_kb_id', '_download_start_bytes', '_download_start_time', '_license_authorized', '_log_expanded', '_running_task_ids', '_running_task_workers', '_tag_fetch_worker', '_tag_filter_installed', '_tag_is_end', '_tag_loading', '_tag_next_cursor', '_tag_scroll_timer', '_task_manager_dialog', 'auto_update_indicator', 'auto_update_timer', 'clear_search_btn', 'current_kb_list', 'current_tags', 'download_worker', 'folder_worker', 'help_btn', 'is_paused', 'is_stopped', 'kb_selector', 'license_label', 'load_btn', 'log', 'log_toggle_btn', 'login_btn', 'logout_btn', 'pause_btn', 'progress', 'progress_detail', 'progress_panel', 'renew_btn', 'search_btn', 'search_input', 'search_mode', 'search_next_cursor', 'search_worker', 'selected_tags', 'settings_btn', 'stop_btn', 'tag_list_widget', 'tag_selector', 'token_refresh_timer', 'tree', 'update_btn', 'version_label'))
+               STORE_NAME              11 (__static_attributes__)
+               LOAD_FAST                0 (__class__)
+               COPY                     1
+               STORE_NAME              12 (__classcell__)
+               RETURN_VALUE
+
+### CODE MainWindow.__init__  args=('self',)
+  --           COPY_FREE_VARS           1
+
+  40           RESUME                   0
+
+  41           LOAD_GLOBAL              0 (super)
+               LOAD_DEREF               2 (__class__)
+               LOAD_FAST                0 (self)
+               LOAD_SUPER_ATTR          5 (__init__ + NULL|self)
+               CALL                     0
+               POP_TOP
+
+  42           LOAD_FAST                0 (self)
+               LOAD_ATTR                5 (setWindowTitle + NULL|self)
+               LOAD_CONST               1 ('效率助手')
+               CALL                     1
+               POP_TOP
+
+  43           LOAD_FAST                0 (self)
+               LOAD_ATTR                7 (setMinimumSize + NULL|self)
+               LOAD_CONST               2 (1200)
+               LOAD_CONST               3 (840)
+               CALL                     2
+               POP_TOP
+
+  45           LOAD_CONST               4 (0)
+               LOAD_CONST               5 (('set_window_icon',))
+               IMPORT_NAME              4 (utils)
+               IMPORT_FROM              5 (set_window_icon)
+               STORE_FAST               1 (set_window_icon)
+               POP_TOP
+
+  46           LOAD_FAST                1 (set_window_icon)
+               PUSH_NULL
+               LOAD_FAST                0 (self)
+               CALL                     1
+               POP_TOP
+
+  48           LOAD_CONST               0 (None)
+               LOAD_FAST                0 (self)
+               STORE_ATTR               6 (folder_worker)
+
+  49           LOAD_CONST               0 (None)
+               LOAD_FAST                0 (self)
+               STORE_ATTR               7 (download_worker)
+
+  50           LOAD_CONST               0 (None)
+               LOAD_FAST                0 (self)
+               STORE_ATTR               8 (token_refresh_timer)
+
+  51           LOAD_CONST               0 (None)
+               LOAD_FAST                0 (self)
+               STORE_ATTR               9 (search_worker)
+
+  52           LOAD_CONST               6 (False)
+               LOAD_FAST                0 (self)
+               STORE_ATTR              10 (search_mode)
+
+  53           BUILD_LIST               0
+               LOAD_FAST                0 (self)
+               STORE_ATTR              11 (current_kb_list)
+
+  54           LOAD_CONST               7 ('')
+               LOAD_FAST                0 (self)
+               STORE_ATTR              12 (search_next_cursor)
+
+  55           BUILD_LIST               0
+               LOAD_FAST                0 (self)
+               STORE_ATTR              13 (current_tags)
+
+  56           BUILD_LIST               0
+               LOAD_FAST                0 (self)
+               STORE_ATTR              14 (selected_tags)
+
+  57           LOAD_CONST               0 (None)
+               LOAD_FAST                0 (self)
+               STORE_ATTR              15 (_tag_fetch_worker)
+
+  58           LOAD_CONST               7 ('')
+               LOAD_FAST                0 (self)
+               STORE_ATTR              16 (_tag_next_cursor)
+
+  59           LOAD_CONST               8 (True)
+               LOAD_FAST                0 (self)
+               STORE_ATTR              17 (_tag_is_end)
+
+  60           LOAD_CONST               6 (False)
+               LOAD_FAST                0 (self)
+               STORE_ATTR              18 (_tag_loading)
+
+  61           LOAD_CONST               0 (None)
+               LOAD_FAST                0 (self)
+               STORE_ATTR              19 (_current_tag_kb_id)
+
+  62           LOAD_CONST               0 (None)
+               LOAD_FAST                0 (self)
+               STORE_ATTR              20 (auto_update_timer)
+
+  63           BUILD_MAP                0
+               LOAD_FAST                0 (self)
+               STORE_ATTR              21 (_running_task_workers)
+
+  64           LOAD_GLOBAL             45 (set + NULL)
+               CALL                     0
+               LOAD_FAST                0 (self)
+               STORE_ATTR              23 (_running_task_ids)
+
+  65           LOAD_CONST               0 (None)
+               LOAD_FAST                0 (self)
+               STORE_ATTR              24 (_task_manager_dialog)
+
+  66           LOAD_CONST               6 (False)
+               LOAD_FAST                0 (self)
+               STORE_ATTR              25 (_license_authorized)
+
+  68           LOAD_FAST                0 (self)
+               LOAD_ATTR               53 (_init_icons + NULL|self)
+               CALL                     0
+               POP_TOP
+
+  70           LOAD_FAST                0 (self)
+               LOAD_ATTR               55 (init_ui + NULL|self)
+               CALL                     0
+               POP_TOP
+
+  72           LOAD_FAST                0 (self)
+               LOAD_ATTR               57 (_restore_window_state + NULL|self)
+               CALL                     0
+               POP_TOP
+
+  74           LOAD_FAST                0 (self)
+               LOAD_ATTR               59 (check_authorization + NULL|self)
+               CALL                     0
+               POP_TOP
+
+  75           LOAD_FAST                0 (self)
+               LOAD_ATTR               61 (start_token_refresh_timer + NULL|self)
+               CALL                     0
+               POP_TOP
+
+  76           LOAD_FAST                0 (self)
+               LOAD_ATTR               63 (start_auto_update_timer + NULL|self)
+               CALL                     0
+               POP_TOP
+               RETURN_CONST             0 (None)
+
+### CODE MainWindow._restore_window_state  args=('self',)
+ 78           RESUME                   0
+
+ 80           LOAD_GLOBAL              1 (get_setting + NULL)
+              LOAD_CONST               1 ('window_geometry')
+              LOAD_CONST               2 ('')
+              CALL                     2
+              STORE_FAST               1 (geom)
+
+ 81           LOAD_FAST                1 (geom)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       51 (to L1)
+
+ 82           LOAD_FAST                0 (self)
+              LOAD_ATTR                3 (restoreGeometry + NULL|self)
+              LOAD_GLOBAL              4 (QByteArray)
+              LOAD_ATTR                6 (fromHex)
+              PUSH_NULL
+              LOAD_FAST                1 (geom)
+              LOAD_ATTR                9 (encode + NULL|self)
+              CALL                     0
+              CALL                     1
+              CALL                     1
+              POP_TOP
+
+ 84   L1:     LOAD_GLOBAL              1 (get_setting + NULL)
+              LOAD_CONST               3 ('log_collapsed')
+              LOAD_CONST               4 (False)
+              CALL                     2
+              STORE_FAST               2 (log_collapsed)
+
+ 85           LOAD_FAST                2 (log_collapsed)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       89 (to L2)
+
+ 86           LOAD_FAST                0 (self)
+              LOAD_ATTR               10 (log)
+              LOAD_ATTR               13 (setMaximumHeight + NULL|self)
+              LOAD_CONST               5 (0)
+              CALL                     1
+              POP_TOP
+
+ 87           LOAD_FAST                0 (self)
+              LOAD_ATTR               10 (log)
+              LOAD_ATTR               15 (setVisible + NULL|self)
+              LOAD_CONST               4 (False)
+              CALL                     1
+              POP_TOP
+
+ 88           LOAD_FAST                0 (self)
+              LOAD_ATTR               16 (log_toggle_btn)
+              LOAD_ATTR               19 (setText + NULL|self)
+              LOAD_CONST               6 ('展开')
+              CALL                     1
+              POP_TOP
+
+ 89           LOAD_CONST               4 (False)
+              LOAD_FAST                0 (self)
+              STORE_ATTR              10 (_log_expanded)
+              RETURN_CONST             7 (None)
+
+ 85   L2:     RETURN_CONST             7 (None)
+
+### CODE MainWindow.eventFilter  args=('self', 'obj', 'event')
+  --           COPY_FREE_VARS           1
+
+  91           RESUME                   0
+
+  93           LOAD_CONST               1 (0)
+               LOAD_CONST               2 (('QEvent',))
+               IMPORT_NAME              0 (PySide6.QtCore)
+               IMPORT_FROM              1 (QEvent)
+               STORE_FAST               3 (QEvent)
+               POP_TOP
+
+  94           LOAD_CONST               1 (0)
+               LOAD_CONST               3 (('QMouseEvent',))
+               IMPORT_NAME              2 (PySide6.QtGui)
+               IMPORT_FROM              3 (QMouseEvent)
+               STORE_FAST               4 (QMouseEvent)
+               POP_TOP
+
+  97           LOAD_GLOBAL              9 (hasattr + NULL)
+               LOAD_FAST                0 (self)
+               LOAD_CONST               4 ('_tag_filter_installed')
+               CALL                     2
+               TO_BOOL
+               EXTENDED_ARG             1
+               POP_JUMP_IF_FALSE      345 (to L3)
+
+  98           LOAD_FAST_LOAD_FAST     16 (obj, self)
+               LOAD_ATTR               10 (tag_list_widget)
+               LOAD_ATTR               13 (viewport + NULL|self)
+               CALL                     0
+               COMPARE_OP              88 (bool(==))
+               EXTENDED_ARG             1
+               POP_JUMP_IF_FALSE      315 (to L3)
+
+  99           LOAD_FAST                2 (event)
+               LOAD_ATTR               15 (type + NULL|self)
+               CALL                     0
+               LOAD_FAST                3 (QEvent)
+               LOAD_ATTR               16 (Type)
+               LOAD_ATTR               18 (MouseButtonRelease)
+               COMPARE_OP              88 (bool(==))
+               EXTENDED_ARG             1
+               POP_JUMP_IF_FALSE      274 (to L3)
+
+ 100           LOAD_GLOBAL             21 (isinstance + NULL)
+               LOAD_FAST_LOAD_FAST     36 (event, QMouseEvent)
+               CALL                     2
+               TO_BOOL
+               EXTENDED_ARG             1
+               POP_JUMP_IF_FALSE      257 (to L3)
+
+ 102           LOAD_FAST                2 (event)
+               LOAD_ATTR               23 (position + NULL|self)
+               CALL                     0
+               LOAD_ATTR               25 (toPoint + NULL|self)
+               CALL                     0
+               STORE_FAST               5 (pos)
+
+ 103           LOAD_FAST                0 (self)
+               LOAD_ATTR               10 (tag_list_widget)
+               LOAD_ATTR               27 (itemAt + NULL|self)
+               LOAD_FAST                5 (pos)
+               CALL                     1
+               STORE_FAST               6 (item)
+
+ 104           LOAD_FAST                6 (item)
+               TO_BOOL
+               POP_JUMP_IF_FALSE      193 (to L3)
+               LOAD_FAST                6 (item)
+               LOAD_ATTR               29 (flags + NULL|self)
+               CALL                     0
+               LOAD_GLOBAL             30 (Qt)
+               LOAD_ATTR               32 (ItemIsUserCheckable)
+               BINARY_OP                1 (&)
+               TO_BOOL
+               POP_JUMP_IF_FALSE      155 (to L3)
+
+ 105           LOAD_FAST                6 (item)
+               LOAD_ATTR               35 (checkState + NULL|self)
+               CALL                     0
+               LOAD_GLOBAL             30 (Qt)
+               LOAD_ATTR               36 (Checked)
+               COMPARE_OP              88 (bool(==))
+               POP_JUMP_IF_FALSE       16 (to L1)
+               LOAD_GLOBAL             30 (Qt)
+               LOAD_ATTR               38 (Unchecked)
+               JUMP_FORWARD            15 (to L2)
+       L1:     LOAD_GLOBAL             30 (Qt)
+               LOAD_ATTR               36 (Checked)
+       L2:     STORE_FAST               7 (new_state)
+
+ 106           LOAD_FAST                0 (self)
+               LOAD_ATTR               10 (tag_list_widget)
+               LOAD_ATTR               41 (blockSignals + NULL|self)
+               LOAD_CONST               5 (True)
+               CALL                     1
+               POP_TOP
+
+ 107           LOAD_FAST                6 (item)
+               LOAD_ATTR               43 (setCheckState + NULL|self)
+               LOAD_FAST                7 (new_state)
+               CALL                     1
+               POP_TOP
+
+ 108           LOAD_FAST                0 (self)
+               LOAD_ATTR               10 (tag_list_widget)
+               LOAD_ATTR               41 (blockSignals + NULL|self)
+               LOAD_CONST               6 (False)
+               CALL                     1
+               POP_TOP
+
+ 109           LOAD_FAST                0 (self)
+               LOAD_ATTR               45 (_on_tag_selection_changed + NULL|self)
+               LOAD_FAST                6 (item)
+               CALL                     1
+               POP_TOP
+
+ 110           RETURN_CONST             5 (True)
+
+ 111   L3:     LOAD_GLOBAL             46 (super)
+               LOAD_DEREF               8 (__class__)
+               LOAD_FAST                0 (self)
+               LOAD_SUPER_ATTR         97 (eventFilter + NULL|self)
+               LOAD_FAST_LOAD_FAST     18 (obj, event)
+               CALL                     2
+               RETURN_VALUE
+
+### CODE MainWindow._check_tag_scroll_load  args=('self',)
+113           RESUME                   0
+
+115           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (_tag_loading)
+              TO_BOOL
+              POP_JUMP_IF_TRUE        17 (to L1)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                2 (_tag_is_end)
+              TO_BOOL
+              POP_JUMP_IF_FALSE        1 (to L2)
+
+116   L1:     RETURN_CONST             1 (None)
+
+117   L2:     LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (tag_list_widget)
+              LOAD_ATTR                7 (verticalScrollBar + NULL|self)
+              CALL                     0
+              STORE_FAST               1 (sb)
+
+118           LOAD_FAST                1 (sb)
+              LOAD_ATTR                9 (value + NULL|self)
+              CALL                     0
+              LOAD_FAST                1 (sb)
+              LOAD_ATTR               11 (maximum + NULL|self)
+              CALL                     0
+              LOAD_CONST               2 (2)
+              BINARY_OP               10 (-)
+              COMPARE_OP             188 (bool(>=))
+              POP_JUMP_IF_FALSE       17 (to L3)
+
+119           LOAD_FAST                0 (self)
+              LOAD_ATTR               13 (_fetch_more_tags + NULL|self)
+              CALL                     0
+              POP_TOP
+              RETURN_CONST             1 (None)
+
+118   L3:     RETURN_CONST             1 (None)
+
+### CODE MainWindow.closeEvent  args=('self', 'event')
+ 121            RESUME                   0
+
+ 123            LOAD_GLOBAL              1 (save_settings + NULL)
+
+ 124            LOAD_FAST                0 (self)
+                LOAD_ATTR                3 (saveGeometry + NULL|self)
+                CALL                     0
+                LOAD_ATTR                5 (toHex + NULL|self)
+                CALL                     0
+                LOAD_ATTR                7 (data + NULL|self)
+                CALL                     0
+                LOAD_ATTR                9 (decode + NULL|self)
+                CALL                     0
+
+ 125            LOAD_FAST                0 (self)
+                LOAD_ATTR               10 (_log_expanded)
+                TO_BOOL
+                UNARY_NOT
+
+ 123            LOAD_CONST               1 (('window_geometry', 'log_collapsed'))
+                BUILD_CONST_KEY_MAP      2
+                CALL                     1
+                POP_TOP
+
+ 128            LOAD_CONST               2 (('token_refresh_timer', 'auto_update_timer', '_indicator_timer', '_tag_scroll_timer'))
+                GET_ITER
+        L1:     FOR_ITER                36 (to L3)
+                STORE_FAST               2 (timer_attr)
+
+ 134            LOAD_GLOBAL             13 (getattr + NULL)
+                LOAD_FAST_LOAD_FAST      2 (self, timer_attr)
+                LOAD_CONST               3 (None)
+                CALL                     3
+                STORE_FAST               3 (timer)
+
+ 135            LOAD_FAST                3 (timer)
+                POP_JUMP_IF_NOT_NONE     2 (to L2)
+                JUMP_BACKWARD           20 (to L1)
+
+ 136    L2:     LOAD_FAST                3 (timer)
+                LOAD_ATTR               15 (stop + NULL|self)
+                CALL                     0
+                POP_TOP
+                JUMP_BACKWARD           38 (to L1)
+
+ 128    L3:     END_FOR
+                POP_TOP
+
+ 138            LOAD_GLOBAL             17 (list + NULL)
+                LOAD_FAST                0 (self)
+                LOAD_ATTR               18 (_running_task_workers)
+                LOAD_ATTR               21 (items + NULL|self)
+                CALL                     0
+                CALL                     1
+                GET_ITER
+        L4:     FOR_ITER                38 (to L5)
+                UNPACK_SEQUENCE          2
+                STORE_FAST_STORE_FAST   69 (task_id, worker)
+
+ 139            LOAD_FAST                5 (worker)
+                LOAD_ATTR               23 (quit + NULL|self)
+                CALL                     0
+                POP_TOP
+
+ 140            LOAD_FAST                5 (worker)
+                LOAD_ATTR               25 (wait + NULL|self)
+                LOAD_CONST               4 (2000)
+                CALL                     1
+                POP_TOP
+                JUMP_BACKWARD           40 (to L4)
+
+ 138    L5:     END_FOR
+                POP_TOP
+
+ 141            LOAD_FAST                0 (self)
+                LOAD_ATTR               18 (_running_task_workers)
+                LOAD_ATTR               27 (clear + NULL|self)
+                CALL                     0
+                POP_TOP
+
+ 142            LOAD_FAST                0 (self)
+                LOAD_ATTR               28 (_running_task_ids)
+                LOAD_ATTR               27 (clear + NULL|self)
+                CALL                     0
+                POP_TOP
+
+ 144            LOAD_CONST               5 (('worker', 'folder_worker', 'download_worker', 'search_worker', '_tag_fetch_worker'))
+                GET_ITER
+        L6:     FOR_ITER               109 (to L10)
+                STORE_FAST               6 (worker_attr)
+
+ 145            LOAD_GLOBAL             13 (getattr + NULL)
+                LOAD_FAST_LOAD_FAST      6 (self, worker_attr)
+                LOAD_CONST               3 (None)
+                CALL                     3
+                STORE_FAST               5 (worker)
+
+ 146            LOAD_FAST                5 (worker)
+                POP_JUMP_IF_NOT_NONE     2 (to L7)
+                JUMP_BACKWARD           20 (to L6)
+        L7:     LOAD_FAST                5 (worker)
+                LOAD_ATTR               31 (isRunning + NULL|self)
+                CALL                     0
+                TO_BOOL
+                POP_JUMP_IF_TRUE         2 (to L8)
+                JUMP_BACKWARD           43 (to L6)
+
+ 147    L8:     LOAD_GLOBAL             33 (hasattr + NULL)
+                LOAD_FAST                5 (worker)
+                LOAD_CONST               6 ('stop')
+                CALL                     2
+                TO_BOOL
+                POP_JUMP_IF_FALSE       16 (to L9)
+
+ 148            LOAD_FAST                5 (worker)
+                LOAD_ATTR               15 (stop + NULL|self)
+                CALL                     0
+                POP_TOP
+
+ 149    L9:     LOAD_FAST                5 (worker)
+                LOAD_ATTR               23 (quit + NULL|self)
+                CALL                     0
+                POP_TOP
+
+ 150            LOAD_FAST                5 (worker)
+                LOAD_ATTR               25 (wait + NULL|self)
+                LOAD_CONST               4 (2000)
+                CALL                     1
+                POP_TOP
+                JUMP_BACKWARD          111 (to L6)
+
+ 144   L10:     END_FOR
+                POP_TOP
+
+ 152            NOP
+
+ 153   L11:     LOAD_CONST               7 (0)
+                LOAD_CONST               8 (('close_session',))
+                IMPORT_NAME             17 (services.ima_service)
+                IMPORT_FROM             18 (close_session)
+                STORE_FAST               7 (close_session)
+                POP_TOP
+
+ 154            LOAD_FAST                7 (close_session)
+                PUSH_NULL
+                CALL                     0
+                POP_TOP
+
+ 158   L12:     LOAD_FAST                1 (event)
+                LOAD_ATTR               41 (accept + NULL|self)
+                CALL                     0
+                POP_TOP
+                RETURN_CONST             3 (None)
+
+  --   L13:     PUSH_EXC_INFO
+
+ 155            LOAD_GLOBAL             38 (Exception)
+                CHECK_EXC_MATCH
+                POP_JUMP_IF_FALSE        3 (to L15)
+                POP_TOP
+
+ 156   L14:     POP_EXCEPT
+                JUMP_BACKWARD_NO_INTERRUPT 29 (to L12)
+
+ 155   L15:     RERAISE                  0
+
+  --   L16:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+ExceptionTable:
+  L11 to L12 -> L13 [0]
+  L13 to L14 -> L16 [1] lasti
+  L15 to L16 -> L16 [1] lasti
+
+### CODE MainWindow._make_separator  args=('self',)
+160           RESUME                   0
+
+162           LOAD_GLOBAL              1 (QFrame + NULL)
+              CALL                     0
+              STORE_FAST               1 (sep)
+
+163           LOAD_FAST                1 (sep)
+              LOAD_ATTR                3 (setFrameShape + NULL|self)
+              LOAD_GLOBAL              0 (QFrame)
+              LOAD_ATTR                4 (VLine)
+              CALL                     1
+              POP_TOP
+
+164           LOAD_FAST                1 (sep)
+              LOAD_ATTR                7 (setFixedHeight + NULL|self)
+              LOAD_CONST               1 (24)
+              CALL                     1
+              POP_TOP
+
+165           LOAD_FAST                1 (sep)
+              RETURN_VALUE
+
+### CODE MainWindow.init_ui  args=('self',)
+  --           MAKE_CELL                0 (self)
+
+ 167           RESUME                   0
+
+ 168           LOAD_GLOBAL              1 (QWidget + NULL)
+               CALL                     0
+               STORE_FAST               1 (central)
+
+ 169           LOAD_FAST                1 (central)
+               LOAD_ATTR                3 (setObjectName + NULL|self)
+               LOAD_CONST               1 ('appCentral')
+               CALL                     1
+               POP_TOP
+
+ 170           LOAD_DEREF               0 (self)
+               LOAD_ATTR                5 (setCentralWidget + NULL|self)
+               LOAD_FAST                1 (central)
+               CALL                     1
+               POP_TOP
+
+ 171           LOAD_GLOBAL              7 (QVBoxLayout + NULL)
+               LOAD_FAST                1 (central)
+               CALL                     1
+               STORE_FAST               2 (layout)
+
+ 172           LOAD_FAST                2 (layout)
+               LOAD_ATTR                9 (setContentsMargins + NULL|self)
+               LOAD_CONST               2 (16)
+               LOAD_CONST               3 (14)
+               LOAD_CONST               2 (16)
+               LOAD_CONST               3 (14)
+               CALL                     4
+               POP_TOP
+
+ 173           LOAD_FAST                2 (layout)
+               LOAD_ATTR               11 (setSpacing + NULL|self)
+               LOAD_CONST               4 (10)
+               CALL                     1
+               POP_TOP
+
+ 175           LOAD_GLOBAL             13 (QFrame + NULL)
+               CALL                     0
+               STORE_FAST               3 (top_bar)
+
+ 176           LOAD_FAST                3 (top_bar)
+               LOAD_ATTR                3 (setObjectName + NULL|self)
+               LOAD_CONST               5 ('topBar')
+               CALL                     1
+               POP_TOP
+
+ 177           LOAD_GLOBAL             15 (QHBoxLayout + NULL)
+               CALL                     0
+               STORE_FAST               4 (btn_layout)
+
+ 178           LOAD_FAST                4 (btn_layout)
+               LOAD_ATTR                9 (setContentsMargins + NULL|self)
+               LOAD_CONST               3 (14)
+               LOAD_CONST               4 (10)
+               LOAD_CONST               3 (14)
+               LOAD_CONST               4 (10)
+               CALL                     4
+               POP_TOP
+
+ 179           LOAD_FAST                4 (btn_layout)
+               LOAD_ATTR               11 (setSpacing + NULL|self)
+               LOAD_CONST               6 (8)
+               CALL                     1
+               POP_TOP
+
+ 180           LOAD_FAST                3 (top_bar)
+               LOAD_ATTR               17 (setLayout + NULL|self)
+               LOAD_FAST                4 (btn_layout)
+               CALL                     1
+               POP_TOP
+
+ 182           LOAD_GLOBAL              7 (QVBoxLayout + NULL)
+               CALL                     0
+               STORE_FAST               5 (brand_layout)
+
+ 183           LOAD_FAST                5 (brand_layout)
+               LOAD_ATTR                9 (setContentsMargins + NULL|self)
+               LOAD_CONST               7 (0)
+               LOAD_CONST               7 (0)
+               LOAD_CONST               3 (14)
+               LOAD_CONST               7 (0)
+               CALL                     4
+               POP_TOP
+
+ 184           LOAD_FAST                5 (brand_layout)
+               LOAD_ATTR               11 (setSpacing + NULL|self)
+               LOAD_CONST               7 (0)
+               CALL                     1
+               POP_TOP
+
+ 185           LOAD_GLOBAL             19 (QLabel + NULL)
+               LOAD_CONST               8 ('IMA 效率助手')
+               CALL                     1
+               STORE_FAST               6 (app_title)
+
+ 186           LOAD_FAST                6 (app_title)
+               LOAD_ATTR                3 (setObjectName + NULL|self)
+               LOAD_CONST               9 ('appTitle')
+               CALL                     1
+               POP_TOP
+
+ 187           LOAD_GLOBAL             19 (QLabel + NULL)
+               LOAD_CONST              10 ('知识库文件管理与同步')
+               CALL                     1
+               STORE_FAST               7 (app_subtitle)
+
+ 188           LOAD_FAST                7 (app_subtitle)
+               LOAD_ATTR                3 (setObjectName + NULL|self)
+               LOAD_CONST              11 ('appSubtitle')
+               CALL                     1
+               POP_TOP
+
+ 189           LOAD_FAST                5 (brand_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_FAST                6 (app_title)
+               CALL                     1
+               POP_TOP
+
+ 190           LOAD_FAST                5 (brand_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_FAST                7 (app_subtitle)
+               CALL                     1
+               POP_TOP
+
+ 191           LOAD_FAST                4 (btn_layout)
+               LOAD_ATTR               23 (addLayout + NULL|self)
+               LOAD_FAST                5 (brand_layout)
+               CALL                     1
+               POP_TOP
+
+ 193           LOAD_GLOBAL             25 (QPushButton + NULL)
+               LOAD_CONST              12 ('登录')
+               CALL                     1
+               LOAD_DEREF               0 (self)
+               STORE_ATTR              13 (login_btn)
+
+ 194           LOAD_DEREF               0 (self)
+               LOAD_ATTR               26 (login_btn)
+               LOAD_ATTR               29 (setProperty + NULL|self)
+               LOAD_CONST              13 ('variant')
+               LOAD_CONST              14 ('primary')
+               CALL                     2
+               POP_TOP
+
+ 195           LOAD_DEREF               0 (self)
+               LOAD_ATTR               26 (login_btn)
+               LOAD_ATTR               30 (clicked)
+               LOAD_ATTR               33 (connect + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR               34 (login_ima)
+               CALL                     1
+               POP_TOP
+
+ 196           LOAD_GLOBAL             25 (QPushButton + NULL)
+               LOAD_CONST              15 ('退出登录')
+               CALL                     1
+               LOAD_DEREF               0 (self)
+               STORE_ATTR              18 (logout_btn)
+
+ 197           LOAD_DEREF               0 (self)
+               LOAD_ATTR               36 (logout_btn)
+               LOAD_ATTR               29 (setProperty + NULL|self)
+               LOAD_CONST              13 ('variant')
+               LOAD_CONST              16 ('danger')
+               CALL                     2
+               POP_TOP
+
+ 198           LOAD_DEREF               0 (self)
+               LOAD_ATTR               36 (logout_btn)
+               LOAD_ATTR               30 (clicked)
+               LOAD_ATTR               33 (connect + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR               38 (logout_ima)
+               CALL                     1
+               POP_TOP
+
+ 199           LOAD_DEREF               0 (self)
+               LOAD_ATTR               36 (logout_btn)
+               LOAD_ATTR               41 (setVisible + NULL|self)
+               LOAD_CONST              17 (False)
+               CALL                     1
+               POP_TOP
+
+ 200           LOAD_FAST                4 (btn_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR               26 (login_btn)
+               CALL                     1
+               POP_TOP
+
+ 201           LOAD_FAST                4 (btn_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR               36 (logout_btn)
+               CALL                     1
+               POP_TOP
+
+ 203           LOAD_FAST                4 (btn_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR               43 (_make_separator + NULL|self)
+               CALL                     0
+               CALL                     1
+               POP_TOP
+
+ 205           LOAD_GLOBAL             25 (QPushButton + NULL)
+               LOAD_CONST              18 ('加载知识库')
+               CALL                     1
+               LOAD_DEREF               0 (self)
+               STORE_ATTR              22 (load_btn)
+
+ 206           LOAD_DEREF               0 (self)
+               LOAD_ATTR               44 (load_btn)
+               LOAD_ATTR               29 (setProperty + NULL|self)
+               LOAD_CONST              13 ('variant')
+               LOAD_CONST              14 ('primary')
+               CALL                     2
+               POP_TOP
+
+ 207           LOAD_DEREF               0 (self)
+               LOAD_ATTR               44 (load_btn)
+               LOAD_ATTR               30 (clicked)
+               LOAD_ATTR               33 (connect + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR               46 (load_knowledge_bases)
+               CALL                     1
+               POP_TOP
+
+ 208           LOAD_GLOBAL             25 (QPushButton + NULL)
+               LOAD_CONST              19 ('任务管理')
+               CALL                     1
+               LOAD_DEREF               0 (self)
+               STORE_ATTR              24 (update_btn)
+
+ 209           LOAD_DEREF               0 (self)
+               LOAD_ATTR               48 (update_btn)
+               LOAD_ATTR               30 (clicked)
+               LOAD_ATTR               33 (connect + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR               50 (show_task_manager_dialog)
+               CALL                     1
+               POP_TOP
+
+ 210           LOAD_DEREF               0 (self)
+               LOAD_ATTR               48 (update_btn)
+               LOAD_ATTR               53 (setEnabled + NULL|self)
+               LOAD_CONST              17 (False)
+               CALL                     1
+               POP_TOP
+
+ 211           LOAD_FAST                4 (btn_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR               44 (load_btn)
+               CALL                     1
+               POP_TOP
+
+ 212           LOAD_FAST                4 (btn_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR               48 (update_btn)
+               CALL                     1
+               POP_TOP
+
+ 214           LOAD_GLOBAL             19 (QLabel + NULL)
+               CALL                     0
+               LOAD_DEREF               0 (self)
+               STORE_ATTR              27 (auto_update_indicator)
+
+ 215           LOAD_DEREF               0 (self)
+               LOAD_ATTR               54 (auto_update_indicator)
+               LOAD_ATTR               41 (setVisible + NULL|self)
+               LOAD_CONST              17 (False)
+               CALL                     1
+               POP_TOP
+
+ 216           LOAD_FAST                4 (btn_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR               54 (auto_update_indicator)
+               CALL                     1
+               POP_TOP
+
+ 218           LOAD_FAST                4 (btn_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR               43 (_make_separator + NULL|self)
+               CALL                     0
+               CALL                     1
+               POP_TOP
+
+ 220           LOAD_GLOBAL             25 (QPushButton + NULL)
+               LOAD_CONST              20 ('下载设置')
+               CALL                     1
+               LOAD_DEREF               0 (self)
+               STORE_ATTR              28 (settings_btn)
+
+ 221           LOAD_DEREF               0 (self)
+               LOAD_ATTR               56 (settings_btn)
+               LOAD_ATTR               30 (clicked)
+               LOAD_ATTR               33 (connect + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR               58 (show_settings_dialog)
+               CALL                     1
+               POP_TOP
+
+ 222           LOAD_GLOBAL             25 (QPushButton + NULL)
+               LOAD_CONST              21 ('延长授权')
+               CALL                     1
+               LOAD_DEREF               0 (self)
+               STORE_ATTR              30 (renew_btn)
+
+ 223           LOAD_DEREF               0 (self)
+               LOAD_ATTR               60 (renew_btn)
+               LOAD_ATTR               30 (clicked)
+               LOAD_ATTR               33 (connect + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR               62 (show_renew_dialog)
+               CALL                     1
+               POP_TOP
+
+ 224           LOAD_GLOBAL             25 (QPushButton + NULL)
+               LOAD_CONST              22 ('使用说明')
+               CALL                     1
+               LOAD_DEREF               0 (self)
+               STORE_ATTR              32 (help_btn)
+
+ 225           LOAD_DEREF               0 (self)
+               LOAD_ATTR               64 (help_btn)
+               LOAD_ATTR               30 (clicked)
+               LOAD_ATTR               33 (connect + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR               66 (show_help_dialog)
+               CALL                     1
+               POP_TOP
+
+ 226           LOAD_FAST                4 (btn_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR               56 (settings_btn)
+               CALL                     1
+               POP_TOP
+
+ 227           LOAD_FAST                4 (btn_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR               60 (renew_btn)
+               CALL                     1
+               POP_TOP
+
+ 228           LOAD_FAST                4 (btn_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR               64 (help_btn)
+               CALL                     1
+               POP_TOP
+
+ 230           LOAD_DEREF               0 (self)
+               LOAD_ATTR               69 (update_login_status + NULL|self)
+               CALL                     0
+               POP_TOP
+
+ 232           LOAD_FAST                4 (btn_layout)
+               LOAD_ATTR               71 (addStretch + NULL|self)
+               CALL                     0
+               POP_TOP
+
+ 233           LOAD_GLOBAL             19 (QLabel + NULL)
+               LOAD_CONST              23 ('授权信息加载中...')
+               CALL                     1
+               LOAD_DEREF               0 (self)
+               STORE_ATTR              36 (license_label)
+
+ 234           LOAD_DEREF               0 (self)
+               LOAD_ATTR               72 (license_label)
+               LOAD_ATTR                3 (setObjectName + NULL|self)
+               LOAD_CONST              24 ('licenseBadge')
+               CALL                     1
+               POP_TOP
+
+ 235           LOAD_FAST                4 (btn_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR               72 (license_label)
+               CALL                     1
+               POP_TOP
+
+ 236           LOAD_GLOBAL             19 (QLabel + NULL)
+               LOAD_CONST              25 ('V')
+               LOAD_GLOBAL             74 (VERSION)
+               FORMAT_SIMPLE
+               BUILD_STRING             2
+               CALL                     1
+               LOAD_DEREF               0 (self)
+               STORE_ATTR              38 (version_label)
+
+ 237           LOAD_DEREF               0 (self)
+               LOAD_ATTR               76 (version_label)
+               LOAD_ATTR                3 (setObjectName + NULL|self)
+               LOAD_CONST              26 ('versionLabel')
+               CALL                     1
+               POP_TOP
+
+ 238           LOAD_FAST                4 (btn_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR               76 (version_label)
+               CALL                     1
+               POP_TOP
+
+ 240           LOAD_FAST                2 (layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_FAST                3 (top_bar)
+               CALL                     1
+               POP_TOP
+
+ 242           LOAD_GLOBAL             13 (QFrame + NULL)
+               CALL                     0
+               STORE_FAST               8 (filter_bar)
+
+ 243           LOAD_FAST                8 (filter_bar)
+               LOAD_ATTR                3 (setObjectName + NULL|self)
+               LOAD_CONST              27 ('filterBar')
+               CALL                     1
+               POP_TOP
+
+ 244           LOAD_GLOBAL             15 (QHBoxLayout + NULL)
+               LOAD_FAST                8 (filter_bar)
+               CALL                     1
+               STORE_FAST               9 (search_layout)
+
+ 245           LOAD_FAST                9 (search_layout)
+               LOAD_ATTR                9 (setContentsMargins + NULL|self)
+               LOAD_CONST              28 (12)
+               LOAD_CONST               4 (10)
+               LOAD_CONST              28 (12)
+               LOAD_CONST               4 (10)
+               CALL                     4
+               POP_TOP
+
+ 246           LOAD_FAST                9 (search_layout)
+               LOAD_ATTR               11 (setSpacing + NULL|self)
+               LOAD_CONST               6 (8)
+               CALL                     1
+               POP_TOP
+
+ 247           LOAD_GLOBAL             19 (QLabel + NULL)
+               LOAD_CONST              29 ('文件筛选')
+               CALL                     1
+               STORE_FAST              10 (search_label)
+
+ 248           LOAD_FAST               10 (search_label)
+               LOAD_ATTR                3 (setObjectName + NULL|self)
+               LOAD_CONST              30 ('sectionTitle')
+               CALL                     1
+               POP_TOP
+
+ 249           LOAD_FAST                9 (search_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_FAST               10 (search_label)
+               CALL                     1
+               POP_TOP
+
+ 250           LOAD_GLOBAL             79 (QLineEdit + NULL)
+               CALL                     0
+               LOAD_DEREF               0 (self)
+               STORE_ATTR              40 (search_input)
+
+ 251           LOAD_DEREF               0 (self)
+               LOAD_ATTR               80 (search_input)
+               LOAD_ATTR               83 (setPlaceholderText + NULL|self)
+               LOAD_CONST              31 ('输入关键词搜索文件...')
+               CALL                     1
+               POP_TOP
+
+ 252           LOAD_DEREF               0 (self)
+               LOAD_ATTR               80 (search_input)
+               LOAD_ATTR               85 (setMinimumWidth + NULL|self)
+               LOAD_CONST              32 (220)
+               CALL                     1
+               POP_TOP
+
+ 253           LOAD_DEREF               0 (self)
+               LOAD_ATTR               80 (search_input)
+               LOAD_ATTR               87 (setSizePolicy + NULL|self)
+               LOAD_GLOBAL             88 (QSizePolicy)
+               LOAD_ATTR               90 (Expanding)
+               LOAD_GLOBAL             88 (QSizePolicy)
+               LOAD_ATTR               92 (Fixed)
+               CALL                     2
+               POP_TOP
+
+ 254           LOAD_DEREF               0 (self)
+               LOAD_ATTR               80 (search_input)
+               LOAD_ATTR               94 (returnPressed)
+               LOAD_ATTR               33 (connect + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR               96 (on_search_clicked)
+               CALL                     1
+               POP_TOP
+
+ 255           LOAD_GLOBAL             99 (QComboBox + NULL)
+               CALL                     0
+               LOAD_DEREF               0 (self)
+               STORE_ATTR              50 (kb_selector)
+
+ 256           LOAD_DEREF               0 (self)
+               LOAD_ATTR              100 (kb_selector)
+               LOAD_ATTR               85 (setMinimumWidth + NULL|self)
+               LOAD_CONST              33 (210)
+               CALL                     1
+               POP_TOP
+
+ 257           LOAD_DEREF               0 (self)
+               LOAD_ATTR              100 (kb_selector)
+               LOAD_ATTR              103 (setMaximumWidth + NULL|self)
+               LOAD_CONST              34 (280)
+               CALL                     1
+               POP_TOP
+
+ 258           LOAD_DEREF               0 (self)
+               LOAD_ATTR              100 (kb_selector)
+               LOAD_ATTR              105 (setSizeAdjustPolicy + NULL|self)
+               LOAD_GLOBAL             98 (QComboBox)
+               LOAD_ATTR              106 (AdjustToContents)
+               CALL                     1
+               POP_TOP
+
+ 259           LOAD_DEREF               0 (self)
+               LOAD_ATTR              100 (kb_selector)
+               LOAD_ATTR               53 (setEnabled + NULL|self)
+               LOAD_CONST              17 (False)
+               CALL                     1
+               POP_TOP
+
+ 260           LOAD_DEREF               0 (self)
+               LOAD_ATTR              100 (kb_selector)
+               LOAD_ATTR              108 (currentIndexChanged)
+               LOAD_ATTR               33 (connect + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR              110 (_on_kb_changed)
+               CALL                     1
+               POP_TOP
+
+ 261           LOAD_GLOBAL             99 (QComboBox + NULL)
+               CALL                     0
+               LOAD_DEREF               0 (self)
+               STORE_ATTR              56 (tag_selector)
+
+ 262           LOAD_DEREF               0 (self)
+               LOAD_ATTR              112 (tag_selector)
+               LOAD_ATTR               85 (setMinimumWidth + NULL|self)
+               LOAD_CONST              35 (170)
+               CALL                     1
+               POP_TOP
+
+ 263           LOAD_DEREF               0 (self)
+               LOAD_ATTR              112 (tag_selector)
+               LOAD_ATTR              103 (setMaximumWidth + NULL|self)
+               LOAD_CONST              36 (240)
+               CALL                     1
+               POP_TOP
+
+ 264           LOAD_DEREF               0 (self)
+               LOAD_ATTR              112 (tag_selector)
+               LOAD_ATTR              105 (setSizeAdjustPolicy + NULL|self)
+               LOAD_GLOBAL             98 (QComboBox)
+               LOAD_ATTR              106 (AdjustToContents)
+               CALL                     1
+               POP_TOP
+
+ 265           LOAD_DEREF               0 (self)
+               LOAD_ATTR              112 (tag_selector)
+               LOAD_ATTR               83 (setPlaceholderText + NULL|self)
+               LOAD_CONST              37 ('选择标签（可选）')
+               CALL                     1
+               POP_TOP
+
+ 266           LOAD_DEREF               0 (self)
+               LOAD_ATTR              112 (tag_selector)
+               LOAD_ATTR               53 (setEnabled + NULL|self)
+               LOAD_CONST              17 (False)
+               CALL                     1
+               POP_TOP
+
+ 267           LOAD_GLOBAL            115 (QListWidget + NULL)
+               CALL                     0
+               LOAD_DEREF               0 (self)
+               STORE_ATTR              58 (tag_list_widget)
+
+ 268           LOAD_DEREF               0 (self)
+               LOAD_ATTR              116 (tag_list_widget)
+               LOAD_ATTR              119 (setSelectionMode + NULL|self)
+               LOAD_GLOBAL            114 (QListWidget)
+               LOAD_ATTR              120 (NoSelection)
+               CALL                     1
+               POP_TOP
+
+ 269           LOAD_DEREF               0 (self)
+               LOAD_ATTR              112 (tag_selector)
+               LOAD_ATTR              123 (setModel + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR              116 (tag_list_widget)
+               LOAD_ATTR              125 (model + NULL|self)
+               CALL                     0
+               CALL                     1
+               POP_TOP
+
+ 270           LOAD_DEREF               0 (self)
+               LOAD_ATTR              112 (tag_selector)
+               LOAD_ATTR              127 (setView + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR              116 (tag_list_widget)
+               CALL                     1
+               POP_TOP
+
+ 271           LOAD_DEREF               0 (self)
+               LOAD_ATTR              112 (tag_selector)
+               LOAD_ATTR              129 (setEditable + NULL|self)
+               LOAD_CONST              38 (True)
+               CALL                     1
+               POP_TOP
+
+ 272           LOAD_DEREF               0 (self)
+               LOAD_ATTR              112 (tag_selector)
+               LOAD_ATTR              131 (lineEdit + NULL|self)
+               CALL                     0
+               LOAD_ATTR              133 (setReadOnly + NULL|self)
+               LOAD_CONST              38 (True)
+               CALL                     1
+               POP_TOP
+
+ 273           LOAD_DEREF               0 (self)
+               LOAD_ATTR              116 (tag_list_widget)
+               LOAD_ATTR              135 (viewport + NULL|self)
+               CALL                     0
+               LOAD_ATTR              137 (installEventFilter + NULL|self)
+               LOAD_DEREF               0 (self)
+               CALL                     1
+               POP_TOP
+
+ 274           LOAD_CONST              38 (True)
+               LOAD_DEREF               0 (self)
+               STORE_ATTR              69 (_tag_filter_installed)
+
+ 275           LOAD_DEREF               0 (self)
+               LOAD_ATTR              116 (tag_list_widget)
+               LOAD_ATTR              140 (itemChanged)
+               LOAD_ATTR               33 (connect + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR              142 (_on_tag_selection_changed)
+               CALL                     1
+               POP_TOP
+
+ 276           LOAD_GLOBAL            145 (QTimer + NULL)
+               CALL                     0
+               LOAD_DEREF               0 (self)
+               STORE_ATTR              73 (_tag_scroll_timer)
+
+ 277           LOAD_DEREF               0 (self)
+               LOAD_ATTR              146 (_tag_scroll_timer)
+               LOAD_ATTR              149 (setSingleShot + NULL|self)
+               LOAD_CONST              38 (True)
+               CALL                     1
+               POP_TOP
+
+ 278           LOAD_DEREF               0 (self)
+               LOAD_ATTR              146 (_tag_scroll_timer)
+               LOAD_ATTR              151 (setInterval + NULL|self)
+               LOAD_CONST              39 (300)
+               CALL                     1
+               POP_TOP
+
+ 279           LOAD_DEREF               0 (self)
+               LOAD_ATTR              146 (_tag_scroll_timer)
+               LOAD_ATTR              152 (timeout)
+               LOAD_ATTR               33 (connect + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR              154 (_check_tag_scroll_load)
+               CALL                     1
+               POP_TOP
+
+ 280           LOAD_DEREF               0 (self)
+               LOAD_ATTR              116 (tag_list_widget)
+               LOAD_ATTR              157 (verticalScrollBar + NULL|self)
+               CALL                     0
+               LOAD_ATTR              158 (valueChanged)
+               LOAD_ATTR               33 (connect + NULL|self)
+
+ 281           LOAD_FAST                0 (self)
+               BUILD_TUPLE              1
+               LOAD_CONST              40 (<code object <lambda> at 0x000001DD4627AE30, file "gui\main_window.py", line 281>)
+               MAKE_FUNCTION
+               SET_FUNCTION_ATTRIBUTE   8 (closure)
+
+ 280           CALL                     1
+               POP_TOP
+
+ 284           LOAD_GLOBAL             25 (QPushButton + NULL)
+               LOAD_CONST              41 ('搜索')
+               CALL                     1
+               LOAD_DEREF               0 (self)
+               STORE_ATTR              80 (search_btn)
+
+ 285           LOAD_DEREF               0 (self)
+               LOAD_ATTR              160 (search_btn)
+               LOAD_ATTR               29 (setProperty + NULL|self)
+               LOAD_CONST              13 ('variant')
+               LOAD_CONST              14 ('primary')
+               CALL                     2
+               POP_TOP
+
+ 286           LOAD_DEREF               0 (self)
+               LOAD_ATTR              160 (search_btn)
+               LOAD_ATTR               53 (setEnabled + NULL|self)
+               LOAD_CONST              17 (False)
+               CALL                     1
+               POP_TOP
+
+ 287           LOAD_DEREF               0 (self)
+               LOAD_ATTR              160 (search_btn)
+               LOAD_ATTR               30 (clicked)
+               LOAD_ATTR               33 (connect + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR               96 (on_search_clicked)
+               CALL                     1
+               POP_TOP
+
+ 288           LOAD_GLOBAL             25 (QPushButton + NULL)
+               LOAD_CONST              42 ('返回列表')
+               CALL                     1
+               LOAD_DEREF               0 (self)
+               STORE_ATTR              81 (clear_search_btn)
+
+ 289           LOAD_DEREF               0 (self)
+               LOAD_ATTR              162 (clear_search_btn)
+               LOAD_ATTR               29 (setProperty + NULL|self)
+               LOAD_CONST              13 ('variant')
+               LOAD_CONST              43 ('ghost')
+               CALL                     2
+               POP_TOP
+
+ 290           LOAD_DEREF               0 (self)
+               LOAD_ATTR              162 (clear_search_btn)
+               LOAD_ATTR               41 (setVisible + NULL|self)
+               LOAD_CONST              17 (False)
+               CALL                     1
+               POP_TOP
+
+ 291           LOAD_DEREF               0 (self)
+               LOAD_ATTR              162 (clear_search_btn)
+               LOAD_ATTR               30 (clicked)
+               LOAD_ATTR               33 (connect + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR              164 (on_clear_search)
+               CALL                     1
+               POP_TOP
+
+ 292           LOAD_FAST                9 (search_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR               80 (search_input)
+               CALL                     1
+               POP_TOP
+
+ 293           LOAD_FAST                9 (search_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR              100 (kb_selector)
+               CALL                     1
+               POP_TOP
+
+ 294           LOAD_FAST                9 (search_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR              112 (tag_selector)
+               CALL                     1
+               POP_TOP
+
+ 295           LOAD_FAST                9 (search_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR              160 (search_btn)
+               CALL                     1
+               POP_TOP
+
+ 296           LOAD_FAST                9 (search_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR              162 (clear_search_btn)
+               CALL                     1
+               POP_TOP
+
+ 297           LOAD_FAST                2 (layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_FAST                8 (filter_bar)
+               CALL                     1
+               POP_TOP
+
+ 299           LOAD_GLOBAL            167 (QTreeWidget + NULL)
+               CALL                     0
+               LOAD_DEREF               0 (self)
+               STORE_ATTR              84 (tree)
+
+ 300           LOAD_DEREF               0 (self)
+               LOAD_ATTR              168 (tree)
+               LOAD_ATTR                3 (setObjectName + NULL|self)
+               LOAD_CONST              44 ('fileTree')
+               CALL                     1
+               POP_TOP
+
+ 301           LOAD_DEREF               0 (self)
+               LOAD_ATTR              168 (tree)
+               LOAD_ATTR              171 (setHeaderLabels + NULL|self)
+               BUILD_LIST               0
+               LOAD_CONST              45 (('名称', '类型', '大小', '更新时间', '权限', '简介'))
+               LIST_EXTEND              1
+               CALL                     1
+               POP_TOP
+
+ 302           LOAD_DEREF               0 (self)
+               LOAD_ATTR              168 (tree)
+               LOAD_ATTR              173 (setColumnWidth + NULL|self)
+               LOAD_CONST               7 (0)
+               LOAD_CONST              46 (350)
+               CALL                     2
+               POP_TOP
+
+ 303           LOAD_DEREF               0 (self)
+               LOAD_ATTR              168 (tree)
+               LOAD_ATTR              173 (setColumnWidth + NULL|self)
+               LOAD_CONST              47 (1)
+               LOAD_CONST              48 (80)
+               CALL                     2
+               POP_TOP
+
+ 304           LOAD_DEREF               0 (self)
+               LOAD_ATTR              168 (tree)
+               LOAD_ATTR              173 (setColumnWidth + NULL|self)
+               LOAD_CONST              49 (2)
+               LOAD_CONST              50 (150)
+               CALL                     2
+               POP_TOP
+
+ 305           LOAD_DEREF               0 (self)
+               LOAD_ATTR              168 (tree)
+               LOAD_ATTR              173 (setColumnWidth + NULL|self)
+               LOAD_CONST              51 (3)
+               LOAD_CONST              52 (120)
+               CALL                     2
+               POP_TOP
+
+ 306           LOAD_DEREF               0 (self)
+               LOAD_ATTR              168 (tree)
+               LOAD_ATTR              173 (setColumnWidth + NULL|self)
+               LOAD_CONST              53 (4)
+               LOAD_CONST              52 (120)
+               CALL                     2
+               POP_TOP
+
+ 307           LOAD_DEREF               0 (self)
+               LOAD_ATTR              168 (tree)
+               LOAD_ATTR              119 (setSelectionMode + NULL|self)
+               LOAD_GLOBAL            166 (QTreeWidget)
+               LOAD_ATTR              174 (ExtendedSelection)
+               CALL                     1
+               POP_TOP
+
+ 308           LOAD_DEREF               0 (self)
+               LOAD_ATTR              168 (tree)
+               LOAD_ATTR              177 (setAlternatingRowColors + NULL|self)
+               LOAD_CONST              38 (True)
+               CALL                     1
+               POP_TOP
+
+ 309           LOAD_DEREF               0 (self)
+               LOAD_ATTR              168 (tree)
+               LOAD_ATTR              179 (setUniformRowHeights + NULL|self)
+               LOAD_CONST              38 (True)
+               CALL                     1
+               POP_TOP
+
+ 310           LOAD_DEREF               0 (self)
+               LOAD_ATTR              168 (tree)
+               LOAD_ATTR              181 (setRootIsDecorated + NULL|self)
+               LOAD_CONST              38 (True)
+               CALL                     1
+               POP_TOP
+
+ 311           LOAD_DEREF               0 (self)
+               LOAD_ATTR              168 (tree)
+               LOAD_ATTR              183 (setContextMenuPolicy + NULL|self)
+               LOAD_GLOBAL            184 (Qt)
+               LOAD_ATTR              186 (CustomContextMenu)
+               CALL                     1
+               POP_TOP
+
+ 312           LOAD_DEREF               0 (self)
+               LOAD_ATTR              168 (tree)
+               LOAD_ATTR              188 (customContextMenuRequested)
+               LOAD_ATTR               33 (connect + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR              190 (show_context_menu)
+               CALL                     1
+               POP_TOP
+
+ 313           LOAD_DEREF               0 (self)
+               LOAD_ATTR              168 (tree)
+               LOAD_ATTR              192 (itemExpanded)
+               LOAD_ATTR               33 (connect + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR              194 (on_item_expanded)
+               CALL                     1
+               POP_TOP
+
+ 314           LOAD_DEREF               0 (self)
+               LOAD_ATTR              168 (tree)
+               LOAD_ATTR              196 (itemClicked)
+               LOAD_ATTR               33 (connect + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR              198 (on_tree_item_clicked)
+               CALL                     1
+               POP_TOP
+
+ 315           LOAD_FAST                2 (layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR              168 (tree)
+               LOAD_CONST              47 (1)
+               CALL                     2
+               POP_TOP
+
+ 317           LOAD_GLOBAL             13 (QFrame + NULL)
+               CALL                     0
+               STORE_FAST              11 (progress_panel)
+
+ 318           LOAD_FAST               11 (progress_panel)
+               LOAD_ATTR                3 (setObjectName + NULL|self)
+               LOAD_CONST              54 ('progressPanel')
+               CALL                     1
+               POP_TOP
+
+ 319           LOAD_GLOBAL             15 (QHBoxLayout + NULL)
+               LOAD_FAST               11 (progress_panel)
+               CALL                     1
+               STORE_FAST              12 (progress_layout)
+
+ 320           LOAD_FAST               12 (progress_layout)
+               LOAD_ATTR                9 (setContentsMargins + NULL|self)
+               LOAD_CONST              28 (12)
+               LOAD_CONST              55 (9)
+               LOAD_CONST              28 (12)
+               LOAD_CONST              55 (9)
+               CALL                     4
+               POP_TOP
+
+ 321           LOAD_FAST               12 (progress_layout)
+               LOAD_ATTR               11 (setSpacing + NULL|self)
+               LOAD_CONST               6 (8)
+               CALL                     1
+               POP_TOP
+
+ 322           LOAD_GLOBAL             19 (QLabel + NULL)
+               LOAD_CONST              56 ('下载进度')
+               CALL                     1
+               STORE_FAST              13 (progress_title)
+
+ 323           LOAD_FAST               13 (progress_title)
+               LOAD_ATTR                3 (setObjectName + NULL|self)
+               LOAD_CONST              30 ('sectionTitle')
+               CALL                     1
+               POP_TOP
+
+ 324           LOAD_FAST               12 (progress_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_FAST               13 (progress_title)
+               CALL                     1
+               POP_TOP
+
+ 325           LOAD_GLOBAL            201 (QProgressBar + NULL)
+               CALL                     0
+               LOAD_DEREF               0 (self)
+               STORE_ATTR             101 (progress)
+
+ 326           LOAD_DEREF               0 (self)
+               LOAD_ATTR              202 (progress)
+               LOAD_ATTR               41 (setVisible + NULL|self)
+               LOAD_CONST              17 (False)
+               CALL                     1
+               POP_TOP
+
+ 327           LOAD_DEREF               0 (self)
+               LOAD_ATTR              202 (progress)
+               LOAD_ATTR              205 (setFormat + NULL|self)
+               LOAD_CONST              57 ('%v/%m - %p%')
+               CALL                     1
+               POP_TOP
+
+ 328           LOAD_FAST               12 (progress_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR              202 (progress)
+               LOAD_CONST              47 (1)
+               CALL                     2
+               POP_TOP
+
+ 329           LOAD_GLOBAL             19 (QLabel + NULL)
+               CALL                     0
+               LOAD_DEREF               0 (self)
+               STORE_ATTR             103 (progress_detail)
+
+ 330           LOAD_DEREF               0 (self)
+               LOAD_ATTR              206 (progress_detail)
+               LOAD_ATTR               41 (setVisible + NULL|self)
+               LOAD_CONST              17 (False)
+               CALL                     1
+               POP_TOP
+
+ 331           LOAD_DEREF               0 (self)
+               LOAD_ATTR              206 (progress_detail)
+               LOAD_ATTR                3 (setObjectName + NULL|self)
+               LOAD_CONST              58 ('mutedLabel')
+               CALL                     1
+               POP_TOP
+
+ 332           LOAD_FAST               12 (progress_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR              206 (progress_detail)
+               CALL                     1
+               POP_TOP
+
+ 333           LOAD_GLOBAL             25 (QPushButton + NULL)
+               LOAD_CONST              59 ('暂停')
+               CALL                     1
+               LOAD_DEREF               0 (self)
+               STORE_ATTR             104 (pause_btn)
+
+ 334           LOAD_DEREF               0 (self)
+               LOAD_ATTR              208 (pause_btn)
+               LOAD_ATTR               41 (setVisible + NULL|self)
+               LOAD_CONST              17 (False)
+               CALL                     1
+               POP_TOP
+
+ 335           LOAD_DEREF               0 (self)
+               LOAD_ATTR              208 (pause_btn)
+               LOAD_ATTR               30 (clicked)
+               LOAD_ATTR               33 (connect + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR              210 (pause_download)
+               CALL                     1
+               POP_TOP
+
+ 336           LOAD_FAST               12 (progress_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR              208 (pause_btn)
+               CALL                     1
+               POP_TOP
+
+ 337           LOAD_GLOBAL             25 (QPushButton + NULL)
+               LOAD_CONST              60 ('停止')
+               CALL                     1
+               LOAD_DEREF               0 (self)
+               STORE_ATTR             106 (stop_btn)
+
+ 338           LOAD_DEREF               0 (self)
+               LOAD_ATTR              212 (stop_btn)
+               LOAD_ATTR               29 (setProperty + NULL|self)
+               LOAD_CONST              13 ('variant')
+               LOAD_CONST              16 ('danger')
+               CALL                     2
+               POP_TOP
+
+ 339           LOAD_DEREF               0 (self)
+               LOAD_ATTR              212 (stop_btn)
+               LOAD_ATTR               41 (setVisible + NULL|self)
+               LOAD_CONST              17 (False)
+               CALL                     1
+               POP_TOP
+
+ 340           LOAD_DEREF               0 (self)
+               LOAD_ATTR              212 (stop_btn)
+               LOAD_ATTR               30 (clicked)
+               LOAD_ATTR               33 (connect + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR              214 (stop_download)
+               CALL                     1
+               POP_TOP
+
+ 341           LOAD_FAST               12 (progress_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR              212 (stop_btn)
+               CALL                     1
+               POP_TOP
+
+ 342           LOAD_FAST               11 (progress_panel)
+               LOAD_ATTR               41 (setVisible + NULL|self)
+               LOAD_CONST              17 (False)
+               CALL                     1
+               POP_TOP
+
+ 343           LOAD_FAST                2 (layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_FAST               11 (progress_panel)
+               CALL                     1
+               POP_TOP
+
+ 344           LOAD_FAST               11 (progress_panel)
+               LOAD_DEREF               0 (self)
+               STORE_ATTR             108 (progress_panel)
+
+ 346           LOAD_GLOBAL             13 (QFrame + NULL)
+               CALL                     0
+               STORE_FAST              14 (log_panel)
+
+ 347           LOAD_FAST               14 (log_panel)
+               LOAD_ATTR                3 (setObjectName + NULL|self)
+               LOAD_CONST              61 ('logPanel')
+               CALL                     1
+               POP_TOP
+
+ 348           LOAD_FAST               14 (log_panel)
+               LOAD_ATTR               87 (setSizePolicy + NULL|self)
+               LOAD_GLOBAL             88 (QSizePolicy)
+               LOAD_ATTR              218 (Preferred)
+               LOAD_GLOBAL             88 (QSizePolicy)
+               LOAD_ATTR              220 (Maximum)
+               CALL                     2
+               POP_TOP
+
+ 349           LOAD_GLOBAL              7 (QVBoxLayout + NULL)
+               LOAD_FAST               14 (log_panel)
+               CALL                     1
+               STORE_FAST              15 (log_layout)
+
+ 350           LOAD_FAST               15 (log_layout)
+               LOAD_ATTR                9 (setContentsMargins + NULL|self)
+               LOAD_CONST              28 (12)
+               LOAD_CONST               6 (8)
+               LOAD_CONST              28 (12)
+               LOAD_CONST               4 (10)
+               CALL                     4
+               POP_TOP
+
+ 351           LOAD_FAST               15 (log_layout)
+               LOAD_ATTR               11 (setSpacing + NULL|self)
+               LOAD_CONST              62 (6)
+               CALL                     1
+               POP_TOP
+
+ 352           LOAD_GLOBAL             15 (QHBoxLayout + NULL)
+               CALL                     0
+               STORE_FAST              16 (log_header)
+
+ 353           LOAD_GLOBAL             19 (QLabel + NULL)
+               LOAD_CONST              63 ('运行日志')
+               CALL                     1
+               STORE_FAST              17 (log_title)
+
+ 354           LOAD_FAST               17 (log_title)
+               LOAD_ATTR                3 (setObjectName + NULL|self)
+               LOAD_CONST              30 ('sectionTitle')
+               CALL                     1
+               POP_TOP
+
+ 355           LOAD_FAST               16 (log_header)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_FAST               17 (log_title)
+               CALL                     1
+               POP_TOP
+
+ 356           LOAD_FAST               16 (log_header)
+               LOAD_ATTR               71 (addStretch + NULL|self)
+               CALL                     0
+               POP_TOP
+
+ 357           LOAD_GLOBAL             25 (QPushButton + NULL)
+               LOAD_CONST              64 ('折叠')
+               CALL                     1
+               LOAD_DEREF               0 (self)
+               STORE_ATTR             111 (log_toggle_btn)
+
+ 358           LOAD_DEREF               0 (self)
+               LOAD_ATTR              222 (log_toggle_btn)
+               LOAD_ATTR               29 (setProperty + NULL|self)
+               LOAD_CONST              13 ('variant')
+               LOAD_CONST              43 ('ghost')
+               CALL                     2
+               POP_TOP
+
+ 359           LOAD_DEREF               0 (self)
+               LOAD_ATTR              222 (log_toggle_btn)
+               LOAD_ATTR               30 (clicked)
+               LOAD_ATTR               33 (connect + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR              224 (toggle_log)
+               CALL                     1
+               POP_TOP
+
+ 360           LOAD_FAST               16 (log_header)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR              222 (log_toggle_btn)
+               CALL                     1
+               POP_TOP
+
+ 361           LOAD_FAST               15 (log_layout)
+               LOAD_ATTR               23 (addLayout + NULL|self)
+               LOAD_FAST               16 (log_header)
+               CALL                     1
+               POP_TOP
+
+ 362           LOAD_GLOBAL            227 (QTextEdit + NULL)
+               CALL                     0
+               LOAD_DEREF               0 (self)
+               STORE_ATTR             114 (log)
+
+ 363           LOAD_DEREF               0 (self)
+               LOAD_ATTR              228 (log)
+               LOAD_ATTR              133 (setReadOnly + NULL|self)
+               LOAD_CONST              38 (True)
+               CALL                     1
+               POP_TOP
+
+ 364           LOAD_DEREF               0 (self)
+               LOAD_ATTR              228 (log)
+               LOAD_ATTR              231 (setMaximumHeight + NULL|self)
+               LOAD_CONST              52 (120)
+               CALL                     1
+               POP_TOP
+
+ 365           LOAD_FAST               15 (log_layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR              228 (log)
+               CALL                     1
+               POP_TOP
+
+ 366           LOAD_FAST                2 (layout)
+               LOAD_ATTR               21 (addWidget + NULL|self)
+               LOAD_FAST               14 (log_panel)
+               CALL                     1
+               POP_TOP
+
+ 367           LOAD_CONST              38 (True)
+               LOAD_DEREF               0 (self)
+               STORE_ATTR             116 (_log_expanded)
+
+ 369           LOAD_CONST              17 (False)
+               LOAD_DEREF               0 (self)
+               STORE_ATTR             117 (is_paused)
+
+ 370           LOAD_CONST              17 (False)
+               LOAD_DEREF               0 (self)
+               STORE_ATTR             118 (is_stopped)
+
+ 371           LOAD_CONST               7 (0)
+               LOAD_DEREF               0 (self)
+               STORE_ATTR             119 (_download_start_time)
+
+ 372           LOAD_CONST               7 (0)
+               LOAD_DEREF               0 (self)
+               STORE_ATTR             120 (_download_start_bytes)
+               RETURN_CONST             0 (None)
+
+#### CODE MainWindow.init_ui.<locals>.<lambda>  args=()
+  --           COPY_FREE_VARS           1
+
+ 281           RESUME                   0
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR                0 (_tag_scroll_timer)
+               LOAD_ATTR                3 (start + NULL|self)
+               CALL                     0
+               RETURN_VALUE

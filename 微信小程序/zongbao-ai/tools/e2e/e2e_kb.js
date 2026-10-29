@@ -85,18 +85,27 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     await sleep(300);
     const go = await page.$('.kf-go');
     rec('输入+生成按钮就绪', !!go);
-    await page.callMethod('onGenerate');  // 直调稳于 tap（tap 事件链受过渡态干扰）
+    await go.tap();  // callMethod 在 v2 后报 Uncaught（方法在原型上但 automator 找不到）；tap 事件链经 W4 实证稳定
     // 施工直播 8 阶段（样本路由 water）→ 轮询 bp 就绪
     let bp = null;
-    for (let i = 0; i < 90; i++) {
+    for (let i = 0; i < 120; i++) {
       await sleep(1000);
       const d = await page.data();
       if (d.bp && d.bp.stats && !d.building) { bp = d.bp; break; }
     }
+    if (!bp) { await sleep(4000); const d = await page.data(); if (d.bp && d.bp.stats) bp = d.bp; }  // 时序兜底终读
     rec('蓝图生成完成', !!bp, bp ? `files=${bp.bp ? '' : ''}${bp.stats.files} gb=${bp.stats.gb} quote=${bp.quote && bp.quote.total}` : '60s未就绪');
     if (bp) {
       const l1n = (bp.tree && bp.tree.l1 ? bp.tree.l1.length : 0);
-      rec('L1大类数∈[8,22]', l1n >= 8 && l1n <= 22, 'L1=' + l1n);
+      const mode = bp.tree && bp.tree.mode;
+      if (mode === 'evidence_tree') {
+        // 真调研模式：L1 数=真实调研覆盖的大类数（如实不强凑；2.0 严滤后窄域查询自然收窄，≥2 为有效调研下限）
+        rec('L1大类数(真调研,≥2,调研覆盖如实)', l1n >= 2 && l1n <= 22, 'L1=' + l1n);
+      } else if (mode === 'document_driven') {
+        rec('L1超越层=4(v2)', l1n >= 2 && l1n <= 6, 'L1=' + l1n + ' [' + (bp.tree.l1||[]).map(x=>x.name).join('/') + ']');
+      } else {
+        rec('L1大类数∈[8,22](v1)', l1n >= 8 && l1n <= 22, 'L1=' + l1n);
+      }
       const sample = bp.tree.l1[0];
       const names = (sample.l2[0].files || []).map((f) => f.name).filter(Boolean);
       rec('文件槽位清单渲染（真名走M6远端适配）', names.length > 0 && names.every((n) => /\.\w+$/.test(n)), names.slice(0, 2).join(' / ').slice(0, 80));

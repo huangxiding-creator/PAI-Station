@@ -92,7 +92,18 @@ function generateBlueprintPoster(bp, digest) {
 
   var W = 750;
   var HEAD = 300, STATS = 190, RATIO = 200, QUOTE = 320, TREEHEAD = 96;
-  var H = HEAD + STATS + RATIO + QUOTE + TREEHEAD + l1.length * 74 + 130;
+  // 动态计算高度：L1 行 + 每个 L1 下最多5个 L2 行 + 间距
+  var allL1ForH = ((bp.tree && bp.tree.l1) || []);
+  var estTreeH = 0;
+  for (var ei = 0; ei < Math.min(allL1ForH.length, 6); ei++) {
+    estTreeH += 60; // L1 行
+    var l2n = Math.min((allL1ForH[ei].l2 || []).length, 5);
+    estTreeH += l2n * 42; // L2 行
+    if ((allL1ForH[ei].l2 || []).length > 5) estTreeH += 36;
+    estTreeH += 14; // 间距
+  }
+  if (allL1ForH.length > 6) estTreeH += 40;
+  var H = HEAD + STATS + RATIO + QUOTE + TREEHEAD + estTreeH + 130;
   var cv = _canvas(W, H);
   if (!cv) return Promise.reject({ message: '当前微信版本较低，长图生成暂不可用' });
   var ctx = cv.getContext('2d');
@@ -182,38 +193,67 @@ function generateBlueprintPoster(bp, digest) {
     ctx.textAlign = 'left';
   }
 
-  // 树缩略（一级大类清单，最多 10 行，超出注明）
+  // 树缩略（完整二级目录：L1 + L2 子目录，含文件数）
   var TY = QY + QUOTE;
+  var allL1 = ((bp.tree && bp.tree.l1) || []);
   ctx.fillStyle = INK2;
   ctx.font = '22px sans-serif';
-  ctx.fillText('目录骨架 TREE · 一级大类', 48, TY + 46);
-  for (var k = 0; k < l1.length; k++) {
-    var rowY = TY + TREEHEAD + k * 74;
+  ctx.fillText('目录骨架 TREE · 完整二级结构', 48, TY + 46);
+  var rowY = TY + TREEHEAD;
+  var shownL1 = Math.min(allL1.length, 6); // 最多 6 个 L1（海报可读性）
+  for (var k = 0; k < shownL1; k++) {
+    var l1Item = allL1[k];
+    // L1 行
     ctx.strokeStyle = ACCENT;
     ctx.lineWidth = 3;
     _rr(ctx, 48, rowY - 36, 56, 44, 8);
     ctx.stroke();
     ctx.fillStyle = ACCENT;
     ctx.font = 'bold 24px sans-serif';
-    ctx.fillText(_clip(ctx, l1[k].code || String(k + 1), 48), 56, rowY - 6);
+    ctx.fillText(_clip(ctx, l1Item.code || String(k + 1), 48), 56, rowY - 6);
     ctx.fillStyle = INK;
-    ctx.font = '26px sans-serif';
-    ctx.fillText(_clip(ctx, l1[k].name || '', W - 340), 128, rowY - 6);
+    ctx.font = 'bold 28px sans-serif';
+    ctx.fillText(_clip(ctx, l1Item.name || '', W - 380), 128, rowY - 6);
     ctx.fillStyle = INK2;
     ctx.font = '22px sans-serif';
     ctx.textAlign = 'right';
-    ctx.fillText((l1[k].l2_count || 0) + ' 组', W - 48, rowY - 6);
+    var l2Count = (l1Item.l2 || []).length;
+    ctx.fillText(l2Count + ' 组', W - 48, rowY - 6);
     ctx.textAlign = 'left';
+    rowY += 60;
+    // L2 行（最多 5 个，超出注明）
+    var l2List = (l1Item.l2 || []).slice(0, 5);
+    for (var m = 0; m < l2List.length; m++) {
+      ctx.fillStyle = BLUE;
+      ctx.font = '22px sans-serif';
+      ctx.fillText('·', 148, rowY - 6);
+      ctx.fillStyle = INK2;
+      ctx.font = '24px sans-serif';
+      var fc = (l2List[m].files || []).length || l2List[m].file_count || 0;
+      ctx.fillText(_clip(ctx, l2List[m].name || '', W - 400), 172, rowY - 6);
+      ctx.fillStyle = 'rgba(57,68,90,0.5)';
+      ctx.font = '20px sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText(fc + ' 件', W - 48, rowY - 6);
+      ctx.textAlign = 'left';
+      rowY += 42;
+    }
+    if (l2Count > 5) {
+      ctx.fillStyle = 'rgba(57,68,90,0.4)';
+      ctx.font = '20px sans-serif';
+      ctx.fillText('…… 共 ' + l2Count + ' 组', 172, rowY - 6);
+      rowY += 36;
+    }
+    rowY += 14; // L1 间距
   }
-  var totalL1 = ((bp.tree && bp.tree.l1) || []).length;
-  if (totalL1 > l1.length) {
-    var moreY = TY + TREEHEAD + l1.length * 74;
+  if (allL1.length > shownL1) {
     ctx.fillStyle = INK2;
     ctx.font = '22px sans-serif';
-    ctx.fillText('…… 另有 ' + (totalL1 - l1.length) + ' 个大类，蓝图内可展开', 48, moreY);
+    ctx.fillText('…… 另有 ' + (allL1.length - shownL1) + ' 个大类，蓝图内可展开', 48, rowY - 6);
+    rowY += 40;
   }
-
-  // 页脚
+  // 动态调整页脚位置
+  H = rowY + 100;
   var FY = H - 70;
   ctx.setLineDash([8, 8]);
   ctx.strokeStyle = LINE;

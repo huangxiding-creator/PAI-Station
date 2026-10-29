@@ -1,0 +1,70 @@
+===== utils/crash_guard.pyc =====
+DOCSTRING: None
+
+[<module>] args=() names=('faulthandler', 'os', 'platform', 'sys', 'threading', 'time', 'traceback', 'PySide6.QtCore', 'QtMsgType', 'qInstallMessageHandler', 'config', 'Config', 'VERSION', '_crash_file', '_previous_sys_excepthook', '_previous_threading_excepthook', '_write_crash_log', '_header', '_format_exception', '_sys_excepthook', '_threading_excepthook', '_qt_message_handler', 'install_crash_guard')
+  CONST 0
+  CONST None
+  CONST ('QtMsgType', 'qInstallMessageHandler')
+  CONST ('Config', 'VERSION')
+
+  [_write_crash_log] args=('text',) names=('Config', 'get_crash_log_file_path', 'os', 'makedirs', 'path', 'dirname', 'open', 'write', 'endswith', 'Exception')
+    CONST None
+    CONST True
+    CONST ('exist_ok')
+    CONST 'a'
+    CONST 'utf-8'
+    CONST ('encoding')
+    CONST '\n'
+
+  [_header] args=('title',) names=('time', 'strftime', 'VERSION', 'sys', 'version', 'replace', 'os', 'linesep', 'platform', 'getattr')
+    CONST None
+    CONST '\n================================================================================'
+    CONST '\n'
+    CONST 'Time: '
+    CONST '%Y-%m-%d %H:%M:%S'
+    CONST 'Version: '
+    CONST 'Python: '
+    CONST ' '
+    CONST 'Platform: '
+    CONST 'Frozen: '
+    CONST 'frozen'
+    CONST False
+    CONST '================================================================================'
+
+  [_format_exception] args=('exc_type', 'exc_value', 'exc_traceback') names=('join', 'traceback', 'format_exception')
+    CONST None
+    CONST ''
+
+  [_sys_excepthook] args=('exc_type', 'exc_value', 'exc_traceback') names=('_write_crash_log', '_header', '_format_exception', '_previous_sys_excepthook', '_sys_excepthook', 'Exception')
+    CONST None
+    CONST 'UNHANDLED EXCEPTION'
+
+  [_threading_excepthook] args=('args',) names=('_write_crash_log', '_header', 'getattr', 'thread', '_format_exception', 'exc_type', 'exc_value', 'exc_traceback', '_previous_threading_excepthook', '_threading_excepthook', 'Exception')
+    CONST None
+    CONST 'THREAD EXCEPTION: '
+    CONST 'name'
+    CONST 'unknown'
+
+  [_qt_message_handler] args=('message_type', 'context', 'message') names=('QtMsgType', 'QtCriticalMsg', 'QtFatalMsg', 'getattr', 'file', 'line', '_write_crash_log', '_header')
+    CONST None
+    CONST ''
+    CONST 'file'
+    CONST ' ('
+    CONST ':'
+    CONST ')'
+    CONST 'QT CRITICAL MESSAGE'
+    CONST '\n'
+
+  [install_crash_guard] args=() names=('Config', 'get_crash_log_file_path', 'os', 'makedirs', 'path', 'dirname', 'open', '_crash_file', 'faulthandler', 'enable', 'Exception', 'sys', 'excepthook', '_previous_sys_excepthook', '_sys_excepthook', 'getattr', 'threading', '_previous_threading_excepthook', '_threading_excepthook', 'qInstallMessageHandler', '_qt_message_handler', '_write_crash_log', '_header')
+    CONST 'Install best-effort crash logging for packaged GUI builds.'
+    CONST True
+    CONST ('exist_ok')
+    CONST 'a'
+    CONST 'utf-8'
+    CONST 1
+    CONST ('encoding', 'buffering')
+    CONST ('file', 'all_threads')
+    CONST None
+    CONST 'excepthook'
+    CONST 'APPLICATION STARTED'
+

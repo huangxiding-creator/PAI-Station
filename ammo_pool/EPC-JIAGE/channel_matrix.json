@@ -1,0 +1,549 @@
+{
+ "axis": "C",
+ "sensor": "channel_matrix",
+ "campaign": "EPC-JIAGE",
+ "channels_hit": 18,
+ "channels_total": 35,
+ "hit_ratio": 0.5143,
+ "hit_channels": [
+  {
+   "id": "manus",
+   "name": "Manus 军团",
+   "chars": 1510,
+   "engines": [
+    "manus"
+   ]
+  },
+  {
+   "id": "sougo",
+   "name": "搜狗微信",
+   "chars": 126150,
+   "engines": [
+    "sogou_wechat"
+   ]
+  },
+  {
+   "id": "metaso",
+   "name": "秘塔学术",
+   "chars": 1209,
+   "engines": [
+    "metaso"
+   ]
+  },
+  {
+   "id": "djyanbao",
+   "name": "洞见研报",
+   "chars": 385,
+   "engines": [
+    "djyanbao"
+   ]
+  },
+  {
+   "id": "ima_public",
+   "name": "ima 公开知识库",
+   "chars": 13160739,
+   "engines": [
+    "ima_public"
+   ]
+  },
+  {
+   "id": "weread",
+   "name": "微信读书",
+   "chars": 504156,
+   "engines": [
+    "weread"
+   ]
+  },
+  {
+   "id": "wechat4",
+   "name": "微信4.x加密库",
+   "chars": 3673646,
+   "engines": [
+    "wechat4x"
+   ]
+  },
+  {
+   "id": "browser360",
+   "name": "360浏览器画像",
+   "chars": 1160,
+   "engines": [
+    "browser360"
+   ]
+  },
+  {
+   "id": "localfiles",
+   "name": "本地文件库",
+   "chars": 24342095,
+   "engines": [
+    "localfiles",
+    "localfiles:rss"
+   ]
+  },
+  {
+   "id": "court",
+   "name": "涉诉检索",
+   "chars": 189686,
+   "engines": [
+    "court",
+    "court:anysearch",
+    "govlist:court"
+   ]
+  },
+  {
+   "id": "corpus_stores",
+   "name": "存量语料库",
+   "chars": 15987845,
+   "engines": [
+    "corpus_stores"
+   ]
+  },
+  {
+   "id": "govlist",
+   "name": "政府名录线",
+   "chars": 335480,
+   "engines": [
+    "govlist",
+    "govlist:court"
+   ]
+  },
+  {
+   "id": "zh_search_pro",
+   "name": "免key中文多引擎检索",
+   "chars": 60781,
+   "engines": [
+    "zh_search_pro"
+   ]
+  },
+  {
+   "id": "anysearch",
+   "name": "AnySearch实时搜索(web+垂直域17域+并发批量+网页抽取, 匿名免鉴权)",
+   "chars": 235660,
+   "engines": [
+    "anysearch:web",
+    "court:anysearch"
+   ]
+  },
+  {
+   "id": "kb_harvest",
+   "name": "KB-HARVEST 收割引擎(文库/book118/doc88 检索聚合)",
+   "chars": 49212,
+   "engines": [
+    "kb_harvest:wenku"
+   ]
+  },
+  {
+   "id": "dangdang",
+   "name": "当当图书(书目情报: 题录/简介/目录框架)",
+   "chars": 26748,
+   "engines": [
+    "dangdang"
+   ]
+  },
+  {
+   "id": "metaso_kb",
+   "name": "秘塔知识库专题(工程行业大脑: 知识库内文件检索/元数据/原文件下载)",
+   "chars": 44772,
+   "engines": [
+    "metaso_kb"
+   ]
+  },
+  {
+   "id": "last30days",
+   "name": "last30days 近30天多源社媒热度 (Reddit/HN/Polymarket/GitHub)",
+   "chars": 18058,
+   "engines": [
+    "last30days"
+   ]
+  }
+ ],
+ "miss_list": [
+  "官网爬虫",
+  "视频文稿",
+  "ima 知识库",
+  "飞书语料",
+  "微信本地数据",
+  "WebSearch",
+  "CNKI 论文",
+  "E-OSCAR 情报引擎",
+  "CLI 化栈",
+  "网盘聚合发现",
+  "全套教材语料库",
+  "电子书渠道族(两篇文章111站+Arc K扫荡105站=216站纳册)",
+  "网页搜索项目注册表(8角度扫荡111候选+8本机在册=119项)",
+  "夸克网盘账号面(扫码授权+转存四步+列目录+下载直链+签到保活)",
+  "OpenAlex 学术API(免key)",
+  "Semantic Scholar 学术API(S2, 免key)",
+  "arXiv 学术API(免key)"
+ ],
+ "miss_detail": [
+  {
+   "id": "website",
+   "name": "官网爬虫"
+  },
+  {
+   "id": "video",
+   "name": "视频文稿"
+  },
+  {
+   "id": "ima",
+   "name": "ima 知识库"
+  },
+  {
+   "id": "lark",
+   "name": "飞书语料"
+  },
+  {
+   "id": "wechat_local",
+   "name": "微信本地数据"
+  },
+  {
+   "id": "websearch",
+   "name": "WebSearch"
+  },
+  {
+   "id": "cnki",
+   "name": "CNKI 论文"
+  },
+  {
+   "id": "eoscar",
+   "name": "E-OSCAR 情报引擎"
+  },
+  {
+   "id": "cli_stack",
+   "name": "CLI 化栈"
+  },
+  {
+   "id": "pansou",
+   "name": "网盘聚合发现"
+  },
+  {
+   "id": "chinatextbook",
+   "name": "全套教材语料库"
+  },
+  {
+   "id": "ebook_library",
+   "name": "电子书渠道族(两篇文章111站+Arc K扫荡105站=216站纳册)"
+  },
+  {
+   "id": "search_library",
+   "name": "网页搜索项目注册表(8角度扫荡111候选+8本机在册=119项)"
+  },
+  {
+   "id": "quark_pan",
+   "name": "夸克网盘账号面(扫码授权+转存四步+列目录+下载直链+签到保活)"
+  },
+  {
+   "id": "openalex",
+   "name": "OpenAlex 学术API(免key)"
+  },
+  {
+   "id": "semantic_scholar",
+   "name": "Semantic Scholar 学术API(S2, 免key)"
+  },
+  {
+   "id": "arxiv",
+   "name": "arXiv 学术API(免key)"
+  }
+ ],
+ "new_channel_queue": [],
+ "miss_in_queue": [],
+ "channel_invocations": 92,
+ "invoked_channels": [
+  "anysearch",
+  "arxiv",
+  "arxiv_py",
+  "baidu_serp_api",
+  "bing_news_rss",
+  "browser360",
+  "bts_gov",
+  "ccgp_gov_cn",
+  "chinatextbook",
+  "cli_stack",
+  "cninfo_com_cn",
+  "cnki",
+  "court",
+  "crossref_rest_api",
+  "dangdang",
+  "data_gov_uk",
+  "ddgr",
+  "ddgs_duckduckgo_search",
+  "djyanbao",
+  "doaj_api",
+  "douyin",
+  "duckduckgo_html_lite_instant_answer_api",
+  "ebook_library",
+  "emsc_seismic_portal",
+  "enr",
+  "eoscar",
+  "europe_pmc_rest_api",
+  "gdacs",
+  "gdelt_2_0_doc_api",
+  "gdelt_doc_2_0_api",
+  "google_news_rss",
+  "google_news_rss_2",
+  "hdx_humanitarian_data_exchange",
+  "hn_algolia_api",
+  "huggingface_hub_api",
+  "ima",
+  "imf_datamapper_sdmx",
+  "kb_harvest",
+  "kb_harvest:wenku",
+  "kituin_picimagesearch",
+  "lark",
+  "last30days",
+  "manus",
+  "marginalia_search",
+  "marginalia_search_2",
+  "mwmbl",
+  "oecd_data_explorer",
+  "oecd_data_explorer_sdmx",
+  "open_ownership_register",
+  "openaire_search_api",
+  "openalex",
+  "opensanctions",
+  "openverse",
+  "openverse_2",
+  "pansou",
+  "prozorro",
+  "quark",
+  "quark_pan",
+  "reddit_json",
+  "reliefweb_api",
+  "samtay_so",
+  "sckott_habanero",
+  "search_library",
+  "searx_space",
+  "searxng_cli",
+  "sec_edgar",
+  "semantic_scholar",
+  "semantic_scholar_graph_api",
+  "sse_com_cn",
+  "stackexchange_api_stack_overflow",
+  "stdsamr",
+  "szse_cn",
+  "unpaywall_api",
+  "usaspending",
+  "usgs_earthquake_api",
+  "video",
+  "webregistry",
+  "websearch",
+  "website",
+  "wechat_local",
+  "wiby",
+  "wikidata",
+  "worldbank_projects",
+  "zh_search_pro",
+  "zquestz_s"
+ ],
+ "miss_not_invoked": [],
+ "invocations_path": "E:\\AI-Station\\ammo_pool\\EPC-JIAGE\\channel_invocations.jsonl",
+ "green": true,
+ "green_rule": "1022宪法: 全渠道调用即绿(收获另计, 零豁免)",
+ "engine_map": {
+  "crosspool:EPC-BID26": {
+   "channels": [],
+   "notes": [],
+   "bases": []
+  },
+  "crosspool:EPC-CONTRACT": {
+   "channels": [],
+   "notes": [],
+   "bases": []
+  },
+  "corpus_stores": {
+   "channels": [
+    "corpus_stores"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "metaso_kb": {
+   "channels": [
+    "metaso_kb"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "sogou_wechat": {
+   "channels": [
+    "sougo"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "court:anysearch": {
+   "channels": [
+    "anysearch",
+    "court"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "metaso": {
+   "channels": [
+    "metaso"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "govlist:court": {
+   "channels": [
+    "court",
+    "govlist"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "anysearch:web": {
+   "channels": [
+    "anysearch"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "ima_public": {
+   "channels": [
+    "ima_public"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "browser360": {
+   "channels": [
+    "browser360"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "weread": {
+   "channels": [
+    "weread"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "zh_search_pro": {
+   "channels": [
+    "zh_search_pro"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "localfiles:rss": {
+   "channels": [
+    "localfiles"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "localfiles": {
+   "channels": [
+    "localfiles"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "manus": {
+   "channels": [
+    "manus"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "govlist": {
+   "channels": [
+    "govlist"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "last30days": {
+   "channels": [
+    "last30days"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "wechat4x": {
+   "channels": [
+    "wechat4"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "book118": {
+   "channels": [],
+   "notes": [],
+   "bases": []
+  },
+  "doc88": {
+   "channels": [],
+   "notes": [],
+   "bases": []
+  },
+  "court": {
+   "channels": [
+    "court"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "chinca": {
+   "channels": [],
+   "notes": [],
+   "bases": []
+  },
+  "stdsamr": {
+   "channels": [],
+   "notes": [],
+   "bases": []
+  },
+  "kb_harvest:wenku": {
+   "channels": [
+    "kb_harvest"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "djyanbao": {
+   "channels": [
+    "djyanbao"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "dangdang": {
+   "channels": [
+    "dangdang"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "google_news_rss": {
+   "channels": [],
+   "notes": [],
+   "bases": []
+  },
+  "wikidata": {
+   "channels": [],
+   "notes": [],
+   "bases": []
+  }
+ },
+ "unmapped_engines": [
+  "book118",
+  "chinca",
+  "crosspool:EPC-BID26",
+  "crosspool:EPC-CONTRACT",
+  "doc88",
+  "google_news_rss",
+  "stdsamr",
+  "wikidata"
+ ],
+ "zero_char_engines": [],
+ "approx_notes": [],
+ "manifest": "E:\\AI-Station\\ResearchFactory-Eng\\channel_manifest.json",
+ "fail_soft": false,
+ "fail_soft_note": "",
+ "generated_at": "2026-10-26T01:24:09+08:00"
+}

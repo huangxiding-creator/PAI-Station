@@ -1,0 +1,339 @@
+version: 1.0.0
+updated: '2026-10-25'
+kind: taxonomy_seed_v1
+sources:
+- name: Shopify/product-taxonomy
+  url: https://github.com/Shopify/product-taxonomy
+  license: MIT
+  role: 制式蓝本（垂直域 YAML 三件套：tree/attributes/values）
+- name: 总包智库 zhiku.js vaults
+  path: 微信小程序/zongbao-ai/pages/zhiku/zhiku.js
+  version: v0.9.3
+  role: 六库与 49 分组名逐字源（经 catalog_engine/taxonomy.py SIX_DOMAINS 实读，2026-10-21）
+  license: 内部资产（不分发）
+- name: seeds/0*.json 蓝图槽位实测
+  role: 每分组 slots 实测源（同名 l2 分组 file_count 求和；38 分组×10 槽出自律所 seeds/05，11 分组未实灌=0）
+tree:
+  type: root
+  id: engineering_epc
+  name: 工程总承包
+  children:
+  - type: library
+    id: MK
+    name: 市场库
+    desc: 区域市场 · 前瞻 · 研究成果
+    children:
+    - type: group
+      id: MK-01
+      name: 区域市场报告
+      slots: 10
+    - type: group
+      id: MK-02
+      name: 市场前瞻
+      slots: 10
+    - type: group
+      id: MK-03
+      name: 研究成果
+      slots: 10
+  - type: library
+    id: EN
+    name: 企业库
+    desc: 总包同行 · 竞对 · 供应链画像
+    children:
+    - type: group
+      id: EN-01
+      name: 总包百强研究
+      slots: 10
+    - type: group
+      id: EN-02
+      name: 标杆企业研究
+      slots: 10
+    - type: group
+      id: EN-03
+      name: 标杆专访
+      slots: 10
+    - type: group
+      id: EN-04
+      name: 企业档案
+      slots: 10
+  - type: library
+    id: EX
+    name: 专家库
+    desc: 行业专家 · 判例 · 实务方法论
+    children:
+    - type: group
+      id: EX-01
+      name: 专家百人档案
+      slots: 10
+    - type: group
+      id: EX-02
+      name: 专家百人课程包
+      slots: 10
+    - type: group
+      id: EX-03
+      name: 大咖课堂
+      slots: 10
+    - type: group
+      id: EX-04
+      name: 大咖私房课
+      slots: 10
+    - type: group
+      id: EX-05
+      name: 总包大家谈
+      slots: 10
+    - type: group
+      id: EX-06
+      name: 总包好声音
+      slots: 10
+    - type: group
+      id: EX-07
+      name: 总包讲师
+      slots: 10
+  - type: library
+    id: KN
+    name: 知识库
+    desc: 政策 · 法规 · 课程 · 实务手册
+    children:
+    - type: group
+      id: KN-01
+      name: VIP必修课
+      slots: 10
+    - type: group
+      id: KN-02
+      name: VIP深造课
+      slots: 10
+    - type: group
+      id: KN-03
+      name: SVIP私房课
+      slots: 10
+    - type: group
+      id: KN-04
+      name: VIP案例库
+      slots: 10
+    - type: group
+      id: KN-05
+      name: 项目管理知识体系
+      slots: 10
+    - type: group
+      id: KN-06
+      name: 项目管理过程
+      slots: 10
+    - type: group
+      id: KN-07
+      name: 组织能力建设
+      slots: 10
+    - type: group
+      id: KN-08
+      name: 国际EPC
+      slots: 10
+    - type: group
+      id: KN-09
+      name: AI技术与应用
+      slots: 10
+    - type: group
+      id: KN-10
+      name: 认知升级课
+      slots: 10
+    - type: group
+      id: KN-11
+      name: 探索总包
+      slots: 0
+    - type: group
+      id: KN-12
+      name: 工程总承包
+      slots: 0
+    - type: group
+      id: KN-13
+      name: 公益课程
+      slots: 0
+    - type: group
+      id: KN-14
+      name: 论坛峰会
+      slots: 0
+    - type: group
+      id: KN-15
+      name: 直播课件
+      slots: 0
+    - type: group
+      id: KN-16
+      name: 模板与工具
+      slots: 0
+    - type: group
+      id: KN-17
+      name: 政策法规资讯
+      slots: 0
+    - type: group
+      id: KN-18
+      name: 综合资料
+      slots: 0
+  - type: library
+    id: CA
+    name: 案例库
+    desc: 实务手册 · 行业指南 · 事故复盘
+    children:
+    - type: group
+      id: CA-01
+      name: 《EPC总承包项目经理能力手册》
+      slots: 10
+    - type: group
+      id: CA-02
+      name: 《中国企业EPC业务创效30招式》
+      slots: 10
+    - type: group
+      id: CA-03
+      name: 《EPC工程总承包项目全周期成本精准管控工作指引》
+      slots: 10
+    - type: group
+      id: CA-04
+      name: 《工程总承包招投标合规工作指南》
+      slots: 10
+    - type: group
+      id: CA-05
+      name: 《核电工程EPC项目管理策划编制指南》
+      slots: 10
+    - type: group
+      id: CA-06
+      name: 《水利工程EPC项目管理策划编制指南》
+      slots: 10
+    - type: group
+      id: CA-07
+      name: 《风电EPC项目管理策划工作指南》
+      slots: 10
+    - type: group
+      id: CA-08
+      name: 《DeepSeek在EPC项目中的应用研究》
+      slots: 10
+    - type: group
+      id: CA-09
+      name: 《工程人这样用AI：从入门到精通，成为AI时代的超级项目管理者》
+      slots: 10
+    - type: group
+      id: CA-10
+      name: 《马斯克成大事五步法实践指北》
+      slots: 10
+    - type: group
+      id: CA-11
+      name: 《杨房沟水电站EPC实践全景复盘报告》
+      slots: 0
+    - type: group
+      id: CA-12
+      name: 《江西丰城电厂三期EPC特大事故沉思录》
+      slots: 0
+    - type: group
+      id: CA-13
+      name: 《建设项目工程总承包管理规范》GB/T 50358-2017
+      slots: 0
+  - type: library
+    id: RB
+    name: 研报库
+    desc: 电子书 · 论文 · 券商研报 · 年报
+    children:
+    - type: group
+      id: RB-01
+      name: 电子书与研究报告
+      slots: 10
+    - type: group
+      id: RB-02
+      name: 学术论文
+      slots: 10
+    - type: group
+      id: RB-03
+      name: 券商研报精选
+      slots: 10
+    - type: group
+      id: RB-04
+      name: 公司公告与年报
+      slots: 10
+attributes:
+  root:
+    id:
+      type: string
+      required: true
+      pattern: ^[a-z][a-z0-9_]*$
+    name:
+      type: string
+      required: true
+  library:
+    id:
+      type: string
+      required: true
+      pattern: ^[A-Z]{2}$
+    name:
+      type: string
+      required: true
+      vocab: library_names
+    desc:
+      type: string
+      required: true
+  group:
+    id:
+      type: string
+      required: true
+      pattern: ^[A-Z]{2}-[0-9]{2}$
+    name:
+      type: string
+      required: true
+      vocab: group_names
+    slots:
+      type: integer
+      required: true
+      min: 0
+      desc: 蓝图实灌文件槽位数（seeds/0*.json 同名 l2 分组 file_count 之和；未实灌=0）
+values:
+  library_names:
+  - 市场库
+  - 企业库
+  - 专家库
+  - 知识库
+  - 案例库
+  - 研报库
+  group_names:
+  - 区域市场报告
+  - 市场前瞻
+  - 研究成果
+  - 总包百强研究
+  - 标杆企业研究
+  - 标杆专访
+  - 企业档案
+  - 专家百人档案
+  - 专家百人课程包
+  - 大咖课堂
+  - 大咖私房课
+  - 总包大家谈
+  - 总包好声音
+  - 总包讲师
+  - VIP必修课
+  - VIP深造课
+  - SVIP私房课
+  - VIP案例库
+  - 项目管理知识体系
+  - 项目管理过程
+  - 组织能力建设
+  - 国际EPC
+  - AI技术与应用
+  - 认知升级课
+  - 探索总包
+  - 工程总承包
+  - 公益课程
+  - 论坛峰会
+  - 直播课件
+  - 模板与工具
+  - 政策法规资讯
+  - 综合资料
+  - 《EPC总承包项目经理能力手册》
+  - 《中国企业EPC业务创效30招式》
+  - 《EPC工程总承包项目全周期成本精准管控工作指引》
+  - 《工程总承包招投标合规工作指南》
+  - 《核电工程EPC项目管理策划编制指南》
+  - 《水利工程EPC项目管理策划编制指南》
+  - 《风电EPC项目管理策划工作指南》
+  - 《DeepSeek在EPC项目中的应用研究》
+  - 《工程人这样用AI：从入门到精通，成为AI时代的超级项目管理者》
+  - 《马斯克成大事五步法实践指北》
+  - 《杨房沟水电站EPC实践全景复盘报告》
+  - 《江西丰城电厂三期EPC特大事故沉思录》
+  - 《建设项目工程总承包管理规范》GB/T 50358-2017
+  - 电子书与研究报告
+  - 学术论文
+  - 券商研报精选
+  - 公司公告与年报

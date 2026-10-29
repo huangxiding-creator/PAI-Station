@@ -1,0 +1,582 @@
+===== utils/crash_guard.pyc =====
+
+# CODE <module>  args=()
+  0           RESUME                   0
+
+  1           LOAD_CONST               0 (0)
+              LOAD_CONST               1 (None)
+              IMPORT_NAME              0 (faulthandler)
+              STORE_NAME               0 (faulthandler)
+
+  2           LOAD_CONST               0 (0)
+              LOAD_CONST               1 (None)
+              IMPORT_NAME              1 (os)
+              STORE_NAME               1 (os)
+
+  3           LOAD_CONST               0 (0)
+              LOAD_CONST               1 (None)
+              IMPORT_NAME              2 (platform)
+              STORE_NAME               2 (platform)
+
+  4           LOAD_CONST               0 (0)
+              LOAD_CONST               1 (None)
+              IMPORT_NAME              3 (sys)
+              STORE_NAME               3 (sys)
+
+  5           LOAD_CONST               0 (0)
+              LOAD_CONST               1 (None)
+              IMPORT_NAME              4 (threading)
+              STORE_NAME               4 (threading)
+
+  6           LOAD_CONST               0 (0)
+              LOAD_CONST               1 (None)
+              IMPORT_NAME              5 (time)
+              STORE_NAME               5 (time)
+
+  7           LOAD_CONST               0 (0)
+              LOAD_CONST               1 (None)
+              IMPORT_NAME              6 (traceback)
+              STORE_NAME               6 (traceback)
+
+  9           LOAD_CONST               0 (0)
+              LOAD_CONST               2 (('QtMsgType', 'qInstallMessageHandler'))
+              IMPORT_NAME              7 (PySide6.QtCore)
+              IMPORT_FROM              8 (QtMsgType)
+              STORE_NAME               8 (QtMsgType)
+              IMPORT_FROM              9 (qInstallMessageHandler)
+              STORE_NAME               9 (qInstallMessageHandler)
+              POP_TOP
+
+ 11           LOAD_CONST               0 (0)
+              LOAD_CONST               3 (('Config', 'VERSION'))
+              IMPORT_NAME             10 (config)
+              IMPORT_FROM             11 (Config)
+              STORE_NAME              11 (Config)
+              IMPORT_FROM             12 (VERSION)
+              STORE_NAME              12 (VERSION)
+              POP_TOP
+
+ 14           LOAD_CONST               1 (None)
+              STORE_GLOBAL            13 (_crash_file)
+
+ 15           LOAD_CONST               1 (None)
+              STORE_GLOBAL            14 (_previous_sys_excepthook)
+
+ 16           LOAD_CONST               1 (None)
+              STORE_GLOBAL            15 (_previous_threading_excepthook)
+
+ 19           LOAD_CONST               4 (<code object _write_crash_log at 0x00000229D899D2B0, file "utils\crash_guard.py", line 19>)
+              MAKE_FUNCTION
+              STORE_NAME              16 (_write_crash_log)
+
+ 31           LOAD_CONST               5 (<code object _header at 0x00000229D869B430, file "utils\crash_guard.py", line 31>)
+              MAKE_FUNCTION
+              STORE_NAME              17 (_header)
+
+ 46           LOAD_CONST               6 (<code object _format_exception at 0x00000229D88016B0, file "utils\crash_guard.py", line 46>)
+              MAKE_FUNCTION
+              STORE_NAME              18 (_format_exception)
+
+ 50           LOAD_CONST               7 (<code object _sys_excepthook at 0x00000229D86F5E30, file "utils\crash_guard.py", line 50>)
+              MAKE_FUNCTION
+              STORE_NAME              19 (_sys_excepthook)
+
+ 59           LOAD_CONST               8 (<code object _threading_excepthook at 0x00000229D86E2310, file "utils\crash_guard.py", line 59>)
+              MAKE_FUNCTION
+              STORE_NAME              20 (_threading_excepthook)
+
+ 71           LOAD_CONST               9 (<code object _qt_message_handler at 0x00000229D871E040, file "utils\crash_guard.py", line 71>)
+              MAKE_FUNCTION
+              STORE_NAME              21 (_qt_message_handler)
+
+ 79           LOAD_CONST              10 (<code object install_crash_guard at 0x00000229D8532FC0, file "utils\crash_guard.py", line 79>)
+              MAKE_FUNCTION
+              STORE_NAME              22 (install_crash_guard)
+              RETURN_CONST             1 (None)
+
+## CODE _write_crash_log  args=('text',)
+  19            RESUME                   0
+
+  20            NOP
+
+  21    L1:     LOAD_GLOBAL              0 (Config)
+                LOAD_ATTR                2 (get_crash_log_file_path)
+                PUSH_NULL
+                CALL                     0
+                STORE_FAST               1 (path)
+
+  22            LOAD_GLOBAL              4 (os)
+                LOAD_ATTR                6 (makedirs)
+                PUSH_NULL
+                LOAD_GLOBAL              4 (os)
+                LOAD_ATTR                8 (path)
+                LOAD_ATTR               11 (dirname + NULL|self)
+                LOAD_FAST                1 (path)
+                CALL                     1
+                LOAD_CONST               1 (True)
+                LOAD_CONST               2 (('exist_ok',))
+                CALL_KW                  2
+                POP_TOP
+
+  23            LOAD_GLOBAL             13 (open + NULL)
+                LOAD_FAST                1 (path)
+                LOAD_CONST               3 ('a')
+                LOAD_CONST               4 ('utf-8')
+                LOAD_CONST               5 (('encoding',))
+                CALL_KW                  3
+                BEFORE_WITH
+        L2:     STORE_FAST               2 (file_obj)
+
+  24            LOAD_FAST                2 (file_obj)
+                LOAD_ATTR               15 (write + NULL|self)
+                LOAD_FAST                0 (text)
+                CALL                     1
+                POP_TOP
+
+  25            LOAD_FAST                0 (text)
+                LOAD_ATTR               17 (endswith + NULL|self)
+                LOAD_CONST               6 ('\n')
+                CALL                     1
+                TO_BOOL
+                POP_JUMP_IF_TRUE        17 (to L3)
+
+  26            LOAD_FAST                2 (file_obj)
+                LOAD_ATTR               15 (write + NULL|self)
+                LOAD_CONST               6 ('\n')
+                CALL                     1
+                POP_TOP
+
+  23    L3:     LOAD_CONST               0 (None)
+                LOAD_CONST               0 (None)
+                LOAD_CONST               0 (None)
+                CALL                     2
+                POP_TOP
+        L4:     RETURN_CONST             0 (None)
+        L5:     PUSH_EXC_INFO
+                WITH_EXCEPT_START
+                TO_BOOL
+                POP_JUMP_IF_TRUE         1 (to L6)
+                RERAISE                  2
+        L6:     POP_TOP
+        L7:     POP_EXCEPT
+                POP_TOP
+                POP_TOP
+        L8:     RETURN_CONST             0 (None)
+
+  --    L9:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+       L10:     PUSH_EXC_INFO
+
+  27            LOAD_GLOBAL             18 (Exception)
+                CHECK_EXC_MATCH
+                POP_JUMP_IF_FALSE        3 (to L12)
+                POP_TOP
+
+  28   L11:     POP_EXCEPT
+                RETURN_CONST             0 (None)
+
+  27   L12:     RERAISE                  0
+
+  --   L13:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L10 [0]
+  L2 to L3 -> L5 [1] lasti
+  L3 to L4 -> L10 [0]
+  L5 to L7 -> L9 [3] lasti
+  L7 to L8 -> L10 [0]
+  L9 to L10 -> L10 [0]
+  L10 to L11 -> L13 [1] lasti
+  L12 to L13 -> L13 [1] lasti
+
+## CODE _header  args=('title',)
+ 31           RESUME                   0
+
+ 33           LOAD_CONST               1 ('\n================================================================================')
+
+ 35           LOAD_CONST               2 ('\n')
+              LOAD_FAST                0 (title)
+              FORMAT_SIMPLE
+              LOAD_CONST               2 ('\n')
+              BUILD_STRING             3
+
+ 33           BINARY_OP                0 (+)
+
+ 36           LOAD_CONST               3 ('Time: ')
+              LOAD_GLOBAL              0 (time)
+              LOAD_ATTR                2 (strftime)
+              PUSH_NULL
+              LOAD_CONST               4 ('%Y-%m-%d %H:%M:%S')
+              CALL                     1
+              FORMAT_SIMPLE
+              LOAD_CONST               2 ('\n')
+              BUILD_STRING             3
+
+ 33           BINARY_OP                0 (+)
+
+ 37           LOAD_CONST               5 ('Version: ')
+              LOAD_GLOBAL              4 (VERSION)
+              FORMAT_SIMPLE
+              LOAD_CONST               2 ('\n')
+              BUILD_STRING             3
+
+ 33           BINARY_OP                0 (+)
+
+ 38           LOAD_CONST               6 ('Python: ')
+              LOAD_GLOBAL              6 (sys)
+              LOAD_ATTR                8 (version)
+              LOAD_ATTR               11 (replace + NULL|self)
+              LOAD_GLOBAL             12 (os)
+              LOAD_ATTR               14 (linesep)
+              LOAD_CONST               7 (' ')
+              CALL                     2
+              FORMAT_SIMPLE
+              LOAD_CONST               2 ('\n')
+              BUILD_STRING             3
+
+ 33           BINARY_OP                0 (+)
+
+ 39           LOAD_CONST               8 ('Platform: ')
+              LOAD_GLOBAL             16 (platform)
+              LOAD_ATTR               16 (platform)
+              PUSH_NULL
+              CALL                     0
+              FORMAT_SIMPLE
+              LOAD_CONST               2 ('\n')
+              BUILD_STRING             3
+
+ 33           BINARY_OP                0 (+)
+
+ 40           LOAD_CONST               9 ('Frozen: ')
+              LOAD_GLOBAL             19 (getattr + NULL)
+              LOAD_GLOBAL              6 (sys)
+              LOAD_CONST              10 ('frozen')
+              LOAD_CONST              11 (False)
+              CALL                     3
+              FORMAT_SIMPLE
+              LOAD_CONST               2 ('\n')
+              BUILD_STRING             3
+
+ 33           BINARY_OP                0 (+)
+
+ 41           LOAD_CONST              12 ('================================================================================')
+
+ 33           BINARY_OP                0 (+)
+
+ 42           LOAD_CONST               2 ('\n')
+
+ 33           BINARY_OP                0 (+)
+
+ 32           RETURN_VALUE
+
+## CODE _format_exception  args=('exc_type', 'exc_value', 'exc_traceback')
+ 46           RESUME                   0
+
+ 47           LOAD_CONST               1 ('')
+              LOAD_ATTR                1 (join + NULL|self)
+              LOAD_GLOBAL              2 (traceback)
+              LOAD_ATTR                4 (format_exception)
+              PUSH_NULL
+              LOAD_FAST_LOAD_FAST      1 (exc_type, exc_value)
+              LOAD_FAST                2 (exc_traceback)
+              CALL                     3
+              CALL                     1
+              RETURN_VALUE
+
+## CODE _sys_excepthook  args=('exc_type', 'exc_value', 'exc_traceback')
+  50           RESUME                   0
+
+  51           LOAD_GLOBAL              1 (_write_crash_log + NULL)
+               LOAD_GLOBAL              3 (_header + NULL)
+               LOAD_CONST               1 ('UNHANDLED EXCEPTION')
+               CALL                     1
+               LOAD_GLOBAL              5 (_format_exception + NULL)
+               LOAD_FAST_LOAD_FAST      1 (exc_type, exc_value)
+               LOAD_FAST                2 (exc_traceback)
+               CALL                     3
+               BINARY_OP                0 (+)
+               CALL                     1
+               POP_TOP
+
+  52           LOAD_GLOBAL              6 (_previous_sys_excepthook)
+               TO_BOOL
+               POP_JUMP_IF_FALSE       28 (to L4)
+               LOAD_GLOBAL              6 (_previous_sys_excepthook)
+               LOAD_GLOBAL              8 (_sys_excepthook)
+               IS_OP                    1
+               POP_JUMP_IF_FALSE       14 (to L3)
+
+  53           NOP
+
+  54   L1:     LOAD_GLOBAL              7 (_previous_sys_excepthook + NULL)
+               LOAD_FAST_LOAD_FAST      1 (exc_type, exc_value)
+               LOAD_FAST                2 (exc_traceback)
+               CALL                     3
+               POP_TOP
+       L2:     RETURN_CONST             0 (None)
+
+  52   L3:     RETURN_CONST             0 (None)
+       L4:     RETURN_CONST             0 (None)
+
+  --   L5:     PUSH_EXC_INFO
+
+  55           LOAD_GLOBAL             10 (Exception)
+               CHECK_EXC_MATCH
+               POP_JUMP_IF_FALSE        3 (to L7)
+               POP_TOP
+
+  56   L6:     POP_EXCEPT
+               RETURN_CONST             0 (None)
+
+  55   L7:     RERAISE                  0
+
+  --   L8:     COPY                     3
+               POP_EXCEPT
+               RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L5 [0]
+  L5 to L6 -> L8 [1] lasti
+  L7 to L8 -> L8 [1] lasti
+
+## CODE _threading_excepthook  args=('args',)
+  59           RESUME                   0
+
+  60           LOAD_GLOBAL              1 (_write_crash_log + NULL)
+
+  61           LOAD_GLOBAL              3 (_header + NULL)
+               LOAD_CONST               1 ('THREAD EXCEPTION: ')
+               LOAD_GLOBAL              5 (getattr + NULL)
+               LOAD_FAST                0 (args)
+               LOAD_ATTR                6 (thread)
+               LOAD_CONST               2 ('name')
+               LOAD_CONST               3 ('unknown')
+               CALL                     3
+               FORMAT_SIMPLE
+               BUILD_STRING             2
+               CALL                     1
+
+  62           LOAD_GLOBAL              9 (_format_exception + NULL)
+               LOAD_FAST                0 (args)
+               LOAD_ATTR               10 (exc_type)
+               LOAD_FAST                0 (args)
+               LOAD_ATTR               12 (exc_value)
+               LOAD_FAST                0 (args)
+               LOAD_ATTR               14 (exc_traceback)
+               CALL                     3
+
+  61           BINARY_OP                0 (+)
+
+  60           CALL                     1
+               POP_TOP
+
+  64           LOAD_GLOBAL             16 (_previous_threading_excepthook)
+               TO_BOOL
+               POP_JUMP_IF_FALSE       27 (to L4)
+               LOAD_GLOBAL             16 (_previous_threading_excepthook)
+               LOAD_GLOBAL             18 (_threading_excepthook)
+               IS_OP                    1
+               POP_JUMP_IF_FALSE       13 (to L3)
+
+  65           NOP
+
+  66   L1:     LOAD_GLOBAL             17 (_previous_threading_excepthook + NULL)
+               LOAD_FAST                0 (args)
+               CALL                     1
+               POP_TOP
+       L2:     RETURN_CONST             0 (None)
+
+  64   L3:     RETURN_CONST             0 (None)
+       L4:     RETURN_CONST             0 (None)
+
+  --   L5:     PUSH_EXC_INFO
+
+  67           LOAD_GLOBAL             20 (Exception)
+               CHECK_EXC_MATCH
+               POP_JUMP_IF_FALSE        3 (to L7)
+               POP_TOP
+
+  68   L6:     POP_EXCEPT
+               RETURN_CONST             0 (None)
+
+  67   L7:     RERAISE                  0
+
+  --   L8:     COPY                     3
+               POP_EXCEPT
+               RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L5 [0]
+  L5 to L6 -> L8 [1] lasti
+  L7 to L8 -> L8 [1] lasti
+
+## CODE _qt_message_handler  args=('message_type', 'context', 'message')
+ 71           RESUME                   0
+
+ 72           LOAD_FAST                0 (message_type)
+              LOAD_GLOBAL              0 (QtMsgType)
+              LOAD_ATTR                2 (QtCriticalMsg)
+              LOAD_GLOBAL              0 (QtMsgType)
+              LOAD_ATTR                4 (QtFatalMsg)
+              BUILD_TUPLE              2
+              CONTAINS_OP              0
+              POP_JUMP_IF_FALSE       78 (to L2)
+
+ 73           LOAD_CONST               1 ('')
+              STORE_FAST               3 (location)
+
+ 74           LOAD_GLOBAL              7 (getattr + NULL)
+              LOAD_FAST                1 (context)
+              LOAD_CONST               2 ('file')
+              LOAD_CONST               0 (None)
+              CALL                     3
+              TO_BOOL
+              POP_JUMP_IF_FALSE       29 (to L1)
+
+ 75           LOAD_CONST               3 (' (')
+              LOAD_FAST                1 (context)
+              LOAD_ATTR                8 (file)
+              FORMAT_SIMPLE
+              LOAD_CONST               4 (':')
+              LOAD_FAST                1 (context)
+              LOAD_ATTR               10 (line)
+              FORMAT_SIMPLE
+              LOAD_CONST               5 (')')
+              BUILD_STRING             5
+              STORE_FAST               3 (location)
+
+ 76   L1:     LOAD_GLOBAL             13 (_write_crash_log + NULL)
+              LOAD_GLOBAL             15 (_header + NULL)
+              LOAD_CONST               6 ('QT CRITICAL MESSAGE')
+              CALL                     1
+              LOAD_FAST                2 (message)
+              FORMAT_SIMPLE
+              LOAD_FAST                3 (location)
+              FORMAT_SIMPLE
+              LOAD_CONST               7 ('\n')
+              BUILD_STRING             3
+              BINARY_OP                0 (+)
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+ 72   L2:     RETURN_CONST             0 (None)
+
+## CODE install_crash_guard  args=()
+  79            RESUME                   0
+
+  83            NOP
+
+  84    L1:     LOAD_GLOBAL              0 (Config)
+                LOAD_ATTR                2 (get_crash_log_file_path)
+                PUSH_NULL
+                CALL                     0
+                STORE_FAST               0 (path)
+
+  85            LOAD_GLOBAL              4 (os)
+                LOAD_ATTR                6 (makedirs)
+                PUSH_NULL
+                LOAD_GLOBAL              4 (os)
+                LOAD_ATTR                8 (path)
+                LOAD_ATTR               11 (dirname + NULL|self)
+                LOAD_FAST                0 (path)
+                CALL                     1
+                LOAD_CONST               1 (True)
+                LOAD_CONST               2 (('exist_ok',))
+                CALL_KW                  2
+                POP_TOP
+
+  86            LOAD_GLOBAL             13 (open + NULL)
+                LOAD_FAST                0 (path)
+                LOAD_CONST               3 ('a')
+                LOAD_CONST               4 ('utf-8')
+                LOAD_CONST               5 (1)
+                LOAD_CONST               6 (('encoding', 'buffering'))
+                CALL_KW                  4
+                STORE_GLOBAL             7 (_crash_file)
+
+  87            LOAD_GLOBAL             16 (faulthandler)
+                LOAD_ATTR               18 (enable)
+                PUSH_NULL
+                LOAD_GLOBAL             14 (_crash_file)
+                LOAD_CONST               1 (True)
+                LOAD_CONST               7 (('file', 'all_threads'))
+                CALL_KW                  2
+                POP_TOP
+
+  91    L2:     LOAD_GLOBAL             22 (sys)
+                LOAD_ATTR               24 (excepthook)
+                STORE_GLOBAL            13 (_previous_sys_excepthook)
+
+  92            LOAD_GLOBAL             28 (_sys_excepthook)
+                LOAD_GLOBAL             22 (sys)
+                STORE_ATTR              12 (excepthook)
+
+  94            LOAD_GLOBAL             31 (getattr + NULL)
+                LOAD_GLOBAL             32 (threading)
+                LOAD_CONST               9 ('excepthook')
+                LOAD_CONST               8 (None)
+                CALL                     3
+                STORE_GLOBAL            17 (_previous_threading_excepthook)
+
+  95            LOAD_GLOBAL             34 (_previous_threading_excepthook)
+                POP_JUMP_IF_NONE        15 (to L3)
+
+  96            LOAD_GLOBAL             36 (_threading_excepthook)
+                LOAD_GLOBAL             32 (threading)
+                STORE_ATTR              12 (excepthook)
+
+  98    L3:     NOP
+
+  99    L4:     LOAD_GLOBAL             39 (qInstallMessageHandler + NULL)
+                LOAD_GLOBAL             40 (_qt_message_handler)
+                CALL                     1
+                POP_TOP
+
+ 103    L5:     LOAD_GLOBAL             43 (_write_crash_log + NULL)
+                LOAD_GLOBAL             45 (_header + NULL)
+                LOAD_CONST              10 ('APPLICATION STARTED')
+                CALL                     1
+                CALL                     1
+                POP_TOP
+                RETURN_CONST             8 (None)
+
+  --    L6:     PUSH_EXC_INFO
+
+  88            LOAD_GLOBAL             20 (Exception)
+                CHECK_EXC_MATCH
+                POP_JUMP_IF_FALSE        5 (to L8)
+                POP_TOP
+
+  89            LOAD_CONST               8 (None)
+                STORE_GLOBAL             7 (_crash_file)
+        L7:     POP_EXCEPT
+                JUMP_BACKWARD_NO_INTERRUPT 121 (to L2)
+
+  88    L8:     RERAISE                  0
+
+  --    L9:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+       L10:     PUSH_EXC_INFO
+
+ 100            LOAD_GLOBAL             20 (Exception)
+                CHECK_EXC_MATCH
+                POP_JUMP_IF_FALSE        3 (to L12)
+                POP_TOP
+
+ 101   L11:     POP_EXCEPT
+                JUMP_BACKWARD_NO_INTERRUPT 51 (to L5)
+
+ 100   L12:     RERAISE                  0
+
+  --   L13:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L6 [0]
+  L4 to L5 -> L10 [0]
+  L6 to L7 -> L9 [1] lasti
+  L8 to L9 -> L9 [1] lasti
+  L10 to L11 -> L13 [1] lasti
+  L12 to L13 -> L13 [1] lasti

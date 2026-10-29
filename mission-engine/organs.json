@@ -1,0 +1,17 @@
+{
+  "_note": "引擎器官注册表(W2.2)。stale_sec须≥2×器官心跳周期(zqg idle=10min轮询才刷新锁,取21min防误报;zqg内部接管锁另用600s,两层阈值解耦)。start_cmd数组=Popen argv;新器官只加条目不改代码(器官层契约)。process_dead且hb未过期时zqg自拒接管,守护节奏兜底,器官层不代删锁文件(站规删除铁律)。",
+  "organs": [
+    {
+      "id": "zqg",
+      "name": "智谱额度护盾",
+      "workdir": "E:/AI-Station/zhipu-quota-guard",
+      "start_cmd": ["E:/AI-Station/.venv/Scripts/pythonw.exe", "-X", "utf8", "-m", "zqg.daemon"],
+      "lock_file": "state/daemon.lock",
+      "ledger_dir": "ledger",
+      "stdout_log": "state/daemon_stdout.log",
+      "stale_sec": 1260,
+      "config_file": "config.yaml",
+      "config_mode_path": ["policy", "mode"]
+    }
+  ]
+}

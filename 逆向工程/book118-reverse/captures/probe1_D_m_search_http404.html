@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>很抱歉，你访问的页面已被外星人劫走了...</title>
+    <meta name="keywords" content="很抱歉，你访问的页面已被外星人劫走了..."/>
+    <meta name="description" content="很抱歉，你访问的页面已被外星人劫走了..."/>
+    <meta name="applicable-device"content="mobile">
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <style type="text/css">
+        body{
+            font-family: "Helvetica Neue",Helvetica,STHeiTi,sans-serif;
+            line-height: 1.5;
+            font-size: 16px;
+            color: #000;
+            margin: 0 auto;
+        }
+        *{
+            box-sizing: content-box;
+        }
+        .search{
+            padding: 2rem 1rem;
+        }
+        .search form{
+            position: relative;
+            padding: 0 4rem 0 0;
+            overflow: hidden;
+            height: 2.4rem;
+        }
+        .search form input,
+        .search form button{
+            display: block;
+            margin: 0; padding: 0;
+            height: 2rem;line-height: 2rem;
+            font-size: 1rem;
+        }
+        .search form input{
+            width: 100%;
+            border-top: 1px solid #ddd;
+            border-left: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            text-indent: 10px;
+            border-radius: 3px 0 0 3px;
+            color: #999;
+        }
+        .search form button{
+            position: absolute;
+            right: 0px;top:0px;
+            width: 4rem;height: 2rem;
+            background-color: #458DEC;
+            border:1px solid #458DEC;
+            color: #fff;
+            border-radius: 0 3px 3px 0;
+        }
+        .main{
+            padding: 1rem;
+            text-align: center;
+        }
+        .main img{
+            max-width: 100%;
+        }
+        .main p{
+            line-height: 1.5rem;
+            font-size: 1rem;color: #333;
+        }
+        .main .btn{
+            padding: 10px 0;
+            text-align: center;
+        }
+        .main .btn a{
+            display: inline-block;
+            padding: 0 1.5rem;
+            margin: 0 6px;
+            height: 2.2rem;line-height: 2.2rem;
+            font-size: 1rem;
+            border:1px solid #458DEC;
+            border-radius: 3px;
+            text-decoration: none;
+        }
+        .main .btn a.re-index{
+            color: #458DEC;
+        }
+        .main .btn a.re-prev{
+            background-color: #458DEC;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+<div class="search">
+    <form action="/home/search/index.html" method="get">
+        <input placeholder="请输入关键词搜索" name="q" onblur="s()" onkeyup="s()"/><button type="submit" id="btn_sub" disabled>搜索</button>
+    </form>
+</div>
+<div class="main">
+    <img src="//file-1.book118.com/sr1/M00/0A/26/wKh2Alz3aTiIQDF4AAAuQq6eRpAAAdzugHxYHcAAC5a808.png" alt="很抱歉，您访问的页面已被外星人劫走了"/>
+    <p>很抱歉，您访问的页面已被外星人劫走了...</p>
+    <div class="btn">
+        <a class="re-index" href="/" title="返回首页">返回首页</a>
+        <a class="re-prev" href="javascript:history.go(-1);" title="返回上一页">返回上一页</a>
+    </div>
+</div>
+<script type="text/javascript">
+    function s() {
+        var q = document.getElementsByName('q')[0].value,
+            $btn = document.getElementById('btn_sub');
+        q = q.replace(/\s+/g,"");
+        if( q !='' ){
+            $btn.removeAttribute('disabled');
+        }else{
+            $btn.setAttribute('disabled','disabled');
+        }
+    }
+</script>
+</body>
+</html>

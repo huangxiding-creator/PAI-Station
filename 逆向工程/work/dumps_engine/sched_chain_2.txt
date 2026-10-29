@@ -1,0 +1,180 @@
+@@@ off=2444300
+==="whatsapp"){
+const r=t.filter(n=>n.action!=="weixin_favorites");
+return r.length!==t.length&&console.log(`【过滤actions】WhatsApp模式下已过滤 ${
+t.length-r.length
+}
+ 个 weixin_favorites action`),r
+}
+return t
+}
+,processScheduleAction=async t=>{
+console.log("wtf action",t);
+const e=getActionExecutionContext(t)||rxEngine.startScope("schedule","processScheduleAction"),r=getCurrentAppType(),n=typeof t.__workflowScheduleId=="string"?t.__workflowScheduleId:null,a=t.__workflowGeneration;
+let s=null,i="fail",o;
+try{
+if(!n||a!==workflowCoordinator.snapshot().generation||workflowCoordinator.snapshot().runningSchedule?.id!==n){
+console.log("【Workflow】丢弃过期或无 owner 的 schedule action:",{
+scheduleId:n,scheduleGeneration:a,currentGeneration:workflowCoordinator.snapshot().generation,runningScheduleId:workflowCoordinator.snapshot().runningSchedule?.id
+}
+);
+return
+}
+if(rxEngine.setPhase(EnginePhase.EXECUTING),e.throwIfAborted(),!await checkRobotPermissions())return;
+const u=(t.msg_type||t.action)==="task_executing"&&typeof t.target_name=="string"&&t.target_name.trim().length>0?t.target_name:null;
+switch(u&&(s=traceLogger.beginForcedScope("target_name_send",{
+appType:r,extra:{
+source:"schedule_task_executing",traceId:t.trace_id,executionRunId:e.runId,targetName:u,nickname:t.nickname,logId:t.log_id,actionCount:Array.isArray(t.actions)?t.actions.length:0
+}
+
+}
+)),console.log("【定时任务执行】开始执行任务"),e.throwIfAborted(),console.log("【定时任务当前对话对象】",engineState.currentConversationTarget),console.log("【定时任务action.nickname】",t.nickname),t.nickname&&t.nickname!==engineState.currentConversationTarget?(t.msg_type!=="task_executing"&&(engineState.currentConversationTarget=t.nickname),await focusWeChatWindow(r),await e.delay(500)):await focusWeChatWindow(r),t.msg_type||t.action){
+case"task_executing":{
+console.log("【🔍诊断】processScheduleAction task_executing 收到的关键字段:",{
+nickname:t.nickname,target_name:t.target_name,target_names:t.target_names,actions_count:Array.isArray(t.actions)?t.actions.length:"N/A",msg_type:t.msg_type,log_id:t.log_id
+}
+);
+const l=
+@@@ off=2446300
+t.log_id;
+let f=!0;
+try{
+const m=Array.isArray(t.actions)?t.actions.length:0,_=t.nickname||"";
+displayMessage("action",m>0?`接收到定时任务：「${
+_
+}
+」（共 ${
+m
+}
+ 条）`:`接收到定时任务：「${
+_
+}
+」`,"task_received")
+}
+catch{
+
+}
+if(shouldStopContext(e)){
+console.log("【定时任务】收到停止信号，跳过任务执行"),f=!1;
+break
+}
+if(shouldStopContext(e)){
+console.log("【定时任务】收到停止信号，跳过搜索用户"),f=!1;
+break
+}
+const h=await searchUserRPA(t.nickname,r,{
+shouldStop:()=>shouldStopContext(e)
+}
+);
+if(e.throwIfAborted(),!h||!h.success){
+console.log("【定时任务】搜索用户失败，立即终止发送",{
+targetName:t.nickname,error:h?.error
+}
+),f=!1,o=h?.error||`搜索用户失败: ${
+t.nickname
+}
+`,engineState.currentConversationTarget=null,l!=null&&await reportTaskLogStatus(l,0);
+break
+}
+engineState.currentConversationTarget=t.nickname,console.log("【定时任务当前对话对象】",engineState.currentConversationTarget),console.log("【定时任务action.target_name】",t.target_name);
+let p=t.target_name;
+if(t.chat_type==="group"&&p&&(p=p.replace(/[（(]\d+[）)]$/,""),console.log("【定时任务群聊处理】原始名称:",t.target_name,"处理后:",p)),p&&p!==engineState.currentConversationTarget){
+console.log("【定时任务切换对话】从",engineState.currentConversationTarget,"切换到",p),displayMessage("action",`切换对话：${
+p
+}
+`,"switch");
+const m=await searchUserRPA(p,r,{
+shouldStop:()=>shouldStopContext(e)
+}
+);
+if(e.throwIfAborted(),!m||!m.success){
+console.log("【定时任务】切换对话搜索用户失败，立即终止发送",{
+targetName:p,error:m?.error
+}
+),f=!1,o=m?.error||`搜索用户失败: ${
+p
+}
+`,engineState.currentConversationTarget=null,l!=null&&await reportTaskLogStatus(l,0);
+break
+}
+engineState.currentConversationTarget=p
+}
+if(traceLogger.log("target_name_send","schedule_target_resolved",{
+result:"success",extra:{
+source:"schedule_task_executing",traceId:t.trace_id,rawTargetName:t.target_name,processedTargetName:p,nickname:t.nickname,currentConversationTarget:engineState.currentConversationTarget
+}
+
+}
+),t.actions&&Array.isArray(t.actions)){
+const m=filterActionsByAppType(t.actions,r);
+console.log("【定时任务】开始发送 actions 中的消息:",m.length,"条");
+const _=p||t.nickname||"";
+displayMessage("action",`开始向「${
+_
+}
+」发送消息（共 ${
+m.length
+}
+ 条）`,"sending");
+const v=await runTaskRecipe(e,m,v
+@@@ off=2448300
+oid 0,{
+source:"schedule_task_executing"
+}
+);
+v.success?(console.log("【定时任务】所有消息发送完成"),displayMessage("action","任务执行完成","complete")):(console.log("【定时任务】消息发送被中断"),f=!1,o=v.error)
+}
+l!=null&&await reportTaskLogStatus(l,f?1:0),i=f?"success":"fail";
+break
+}
+case"receivemessage":console.log("【定时任务 receivemessage】作为 schedule 边界信号处理，不在当前窗口截图");
+break
+}
+
+}
+catch(d){
+isExecutionAbortError(d)?(console.log("执行定时任务被中断"),i="interrupted",o="任务已中断"):(console.error("执行定时任务失败:",d),i="fail",o=d instanceof Error?d.message:String(d))
+}
+finally{
+if(traceLogger.endForcedScope(s,{
+result:i,error:o,extra:{
+source:"schedule_task_executing",traceId:t.trace_id,executionRunId:e.runId,targetName:t.target_name,nickname:t.nickname,currentConversationTarget:engineState.currentConversationTarget
+}
+
+}
+),n&&a===workflowCoordinator.snapshot().generation&&workflowCoordinator.snapshot().runningSchedule?.id===n){
+const d=dispatchWorkflowEvent({
+type:"schedule-finished",scheduleId:n
+}
+);
+d.accepted&&!d.state.runningSchedule&&rxEngine.completeScopeAfterAction("schedule","schedule_drain_completed",e.runId,{
+resume:!1
+}
+)
+}
+console.log("【定时任务执行】任务执行完成")
+}
+
+}
+;
+rxEngine.actionHandler=async t=>{
+const e=getActionExecutionContext(t);
+if(t.action==="__chat_sse_done"){
+const r=typeof t.__responseRunId=="string"?t.__responseRunId:getOwningRunId(e,"response");
+if(r&&rxEngine.currentScope("response")?.runId===r){
+const n=chatSseResponseLifecycle.consumePollingResume(r);
+rxEngine.completeScopeAfterAction("response",`chat_sse_${
+t.__doneSource||"done"
+}
+`,r,{
+instant:n.instant
+}
+)
+}
+return
+}
+if(t.action==="send_task_now"){
+await processSendTaskNowAction(t,e);
+return
+}
+e?.scope==="sc

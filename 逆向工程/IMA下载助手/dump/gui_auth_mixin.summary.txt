@@ -1,0 +1,169 @@
+===== gui/auth_mixin.pyc =====
+DOCSTRING: 登录/授权/Token管理 Mixin
+
+[<module>] args=() names=('__doc__', 'PySide6.QtWidgets', 'QDialog', 'QMessageBox', 'PySide6.QtCore', 'Qt', 'gui.qr_login_dialog', 'QRLoginDialog', 'gui.dialogs.common_dialogs', 'show_settings_dialog', 'show_help_dialog', 'show_renew_dialog', 'show_activation_dialog', 'core.auth', 'check_license', 'time', 'AuthMixin')
+  CONST '登录/授权/Token管理 Mixin'
+  CONST 0
+  CONST ('QDialog', 'QMessageBox')
+  CONST ('Qt')
+  CONST ('QRLoginDialog')
+  CONST ('show_settings_dialog', 'show_help_dialog', 'show_renew_dialog', 'show_activation_dialog')
+  CONST ('check_license')
+  CONST None
+  CONST 'AuthMixin'
+
+  [AuthMixin] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', '__doc__', 'login_ima', 'logout_ima', 'update_login_status', 'check_authorization', 'check_ima_login_status', 'start_token_refresh_timer', 'auto_refresh_token', 'on_auth_expired', 'update_license_info', 'show_renew_dialog', 'show_activation_dialog', 'show_settings_dialog', 'show_help_dialog', '__static_attributes__')
+    CONST 'AuthMixin'
+    CONST 10
+    CONST '登录/授权/Token管理功能，供 MainWindow 继承'
+    CONST ('_license_authorized', 'token_refresh_timer')
+    CONST None
+
+    [AuthMixin.login_ima] args=('self',) names=('QRLoginDialog', 'exec', 'QDialog', 'Accepted', 'add_log', 'update_login_status')
+      CONST '显示二维码登录对话框'
+      CONST '登录成功'
+      CONST 'success'
+      CONST '登录已取消'
+      CONST 'warning'
+      CONST None
+
+    [AuthMixin.logout_ima] args=('self',) names=('QMessageBox', 'question', 'Yes', 'No', 'data.database', 'clear_login_credentials', 'update_login_status', 'tree', 'clear', '_running_task_ids', '_running_task_workers', '_update_indicator_style', 'add_log')
+      CONST '退出登录'
+      CONST '确认退出'
+      CONST '确定要退出当前登录吗？退出后需要重新扫码登录。'
+      CONST 0
+      CONST ('clear_login_credentials')
+      CONST 'off'
+      CONST '已退出登录'
+      CONST 'warning'
+      CONST None
+
+    [AuthMixin.update_login_status] args=('self',) names=('core.config', 'get_cookie', 'get', 'login_btn', 'setVisible', 'logout_btn', 'load_btn', 'setEnabled', 'bool', '_license_authorized', 'setText')
+      CONST '更新登录状态和按钮样式'
+      CONST 0
+      CONST ('get_cookie')
+      CONST 'cookie'
+      CONST False
+      CONST True
+      CONST '登录'
+      CONST None
+
+    [AuthMixin.check_authorization] args=('self',) names=('check_license', 'bool', '_license_authorized', 'license_label', 'setText', 'gui.theme', 'set_widget_property', 'add_log', 'show_activation_dialog', 'update_license_info', 'update_login_status', 'check_ima_login_status')
+      CONST '检查授权状态 - 优化版：区分不同的失败场景'
+      CONST '网络'
+      CONST '超时'
+      CONST '连接'
+      CONST '网络连接问题'
+      CONST 0
+      CONST ('set_widget_property')
+      CONST 'status'
+      CONST 'warning'
+      CONST '⚠️ '
+      CONST '，请检查网络连接'
+      CONST '未授权'
+      CONST 'success'
+      CONST None
+
+    [AuthMixin.check_ima_login_status] args=('self',) names=('data.database', 'get_login_credentials', 'services.token_refresh_service', 'check_and_refresh_token', 'update_login_status', 'lower', 'core.config', 'load_cookie_from_cache', 'add_log', 'clear_login_credentials', 'Exception', 'str', 'get_cookie', '_license_authorized', 'get', 'current_kb_list', 'load_knowledge_bases')
+      CONST '后台检查IMA登录状态'
+      CONST 0
+      CONST ('get_login_credentials')
+      CONST ('check_and_refresh_token')
+      CONST None
+      CONST '网络'
+      CONST '连接'
+      CONST '超时'
+      CONST 'resolve'
+      CONST ('load_cookie_from_cache')
+      CONST '⚠️ 网络连接问题，Token刷新失败，将在网络恢复后自动重试'
+      CONST 'warning'
+      CONST ('clear_login_credentials')
+      CONST '登录凭证已过期，请重新登录'
+      CONST '登录凭证已自动刷新'
+      CONST 'success'
+      CONST '已自动登录'
+      CONST '⚠️ 网络连接问题，将在网络恢复后自动重试'
+      CONST '登录状态检查失败: '
+      CONST 'error'
+      CONST ('get_cookie')
+      CONST 'cookie'
+
+    [AuthMixin.start_token_refresh_timer] args=('self',) names=('PySide6.QtCore', 'QTimer', 'token_refresh_timer', 'timeout', 'connect', 'auto_refresh_token', 'start')
+      CONST '启动Token自动刷新定时器'
+      CONST 0
+      CONST ('QTimer')
+      CONST 300000
+      CONST None
+
+    [AuthMixin.auto_refresh_token] args=('self',) names=('data.database', 'get_login_credentials', 'is_token_expired', 'services.token_refresh_service', 'refresh_access_token', 'core.config', 'load_cookie_from_cache', 'add_log', 'lower', 'clear_login_credentials', 'update_login_status')
+      CONST '定时自动刷新Token'
+      CONST 0
+      CONST ('get_login_credentials', 'is_token_expired')
+      CONST ('refresh_access_token')
+      CONST ('load_cookie_from_cache')
+      CONST None
+      CONST '登录凭证已自动刷新'
+      CONST 'success'
+      CONST '网络'
+      CONST '连接'
+      CONST '超时'
+      CONST 'resolve'
+      CONST '⚠️ 网络连接问题，Token刷新失败，将在下次定时检查时重试'
+      CONST 'warning'
+      CONST ('clear_login_credentials')
+      CONST '✗ Token刷新失败: '
+      CONST 'error'
+
+    [AuthMixin.on_auth_expired] args=('self',) names=('load_btn', 'setEnabled', 'add_log', 'data.database', 'clear_login_credentials', 'update_login_status', 'QMessageBox', 'warning')
+      CONST '处理凭证过期'
+      CONST False
+      CONST '登录凭证已过期'
+      CONST 'error'
+      CONST 0
+      CONST ('clear_login_credentials')
+      CONST '凭证过期'
+      CONST '登录凭证已过期，请重新登录IMA！'
+      CONST None
+
+    [AuthMixin.update_license_info] args=('self',) names=('core.auth', 'load_local_cache', 'get', 'time', 'strftime', 'localtime', 'license_label', 'setText', 'gui.theme', 'set_widget_property')
+      CONST '更新授权信息显示'
+      CONST 0
+      CONST ('load_local_cache')
+      CONST 'expire_at'
+      CONST '%Y-%m-%d'
+      CONST 'cached_remaining'
+      CONST 'remaining'
+      CONST '到期: '
+      CONST ' ｜ 剩余额度: '
+      CONST ('set_widget_property')
+      CONST 'status'
+      CONST 'active'
+      CONST '未授权'
+      CONST 'warning'
+      CONST None
+
+    [AuthMixin.show_renew_dialog] args=('self',) names=('show_renew_dialog',)
+      CONST None
+      CONST ('on_success')
+
+      [AuthMixin.show_renew_dialog.<locals>.<lambda>] args=() names=('update_license_info', 'add_log')
+        CONST None
+        CONST '续费成功'
+        CONST 'success'
+
+    [AuthMixin.show_activation_dialog] args=('self',) names=('show_activation_dialog',)
+      CONST None
+      CONST ('on_success')
+
+      [AuthMixin.show_activation_dialog.<locals>.on_success] args=() names=('_license_authorized', 'update_license_info', 'update_login_status', 'add_log')
+        CONST None
+        CONST True
+        CONST '授权激活成功'
+        CONST 'success'
+
+    [AuthMixin.show_settings_dialog] args=('self',) names=('show_settings_dialog',)
+      CONST None
+
+    [AuthMixin.show_help_dialog] args=('self',) names=('show_help_dialog',)
+      CONST None
+

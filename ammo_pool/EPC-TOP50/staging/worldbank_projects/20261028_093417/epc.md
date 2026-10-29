@@ -1,0 +1,85 @@
+# World Bank Projects & Operations API 检索简报 | 施工企业与多元主体切入EPC的路径 政策 规范 文件
+
+本件为渠道普查纳管 (1025令) 新接入的 World Bank Projects & Operations API 渠道一次引擎运行的实测收割面。内容=命中条目的标题、元信息与摘要/描述摘录 (cred=data, 结构化一手元数据面), 数字均引擎实测零手填。
+
+- 检索词: 施工企业与多元主体切入EPC的路径 政策 规范 文件
+- 引擎: World Bank Projects & Operations API (engine=worldbank_projects) | 采集: 2026-10-28 09:37
+- 通道: HTTP 200 via direct | https://search.worldbank.org/api/v2/projects
+
+---
+
+## Boosting Green Finance, Investment and Trade in Rwanda
+
+*P505244 | Active | Rwanda*
+
+原文: https://projects.worldbank.org/en/projects-operations/project-detail/P505244
+
+**摘要/描述摘录:**
+> Boosting Green Finance, Investment and Trade in Rwanda
+
+## Chattogram Water Supply Improvement Project
+
+*P176429 | Active | Bangladesh*
+
+原文: https://projects.worldbank.org/en/projects-operations/project-detail/P176429
+
+**摘要/描述摘录:**
+> Chattogram Water Supply and Sewerage Authority
+
+## Transforming Agri-food Systems in Morocco
+
+*P181587 | Active | Morocco*
+
+原文: https://projects.worldbank.org/en/projects-operations/project-detail/P181587
+
+**摘要/描述摘录:**
+> Ministry of Agriculture, Maritime Fisheries, Rural Development, Water and Forests (MAPMDREF)
+
+## Health, Nutrition and Population Sector Development Program
+
+*P180283 | Active | Bangladesh*
+
+原文: https://projects.worldbank.org/en/projects-operations/project-detail/P180283
+
+**摘要/描述摘录:**
+> Ministry of Health and Family Welfare
+
+## Amaravati Integrated Urban Development Program
+
+*P507508 | Active | India*
+
+原文: https://projects.worldbank.org/en/projects-operations/project-detail/P507508
+
+**摘要/描述摘录:**
+> Amaravati Integrated Urban Development Program
+
+## Second Bangladesh Green and Climate Resilient Development Credit
+
+*P180439 | Active | Bangladesh*
+
+原文: https://projects.worldbank.org/en/projects-operations/project-detail/P180439
+
+**摘要/描述摘录:**
+> Finance Division, Ministry of Finance
+
+## Burundi Colline Climate Resilience Project
+
+*P180864 | Active | Burundi*
+
+原文: https://projects.worldbank.org/en/projects-operations/project-detail/P180864
+
+**摘要/描述摘录:**
+> Burundi Colline Climate Resilience Project
+
+## First Zambia Climate and Economic Resilience Programmatic DPF with Cat-DDO
+
+*P507116 | Active | Zambia*
+
+原文: https://projects.worldbank.org/en/projects-operations/project-detail/P507116
+
+**摘要/描述摘录:**
+> First Zambia Climate and Economic Resilience Programmatic DPF with Cat-DDO
+
+---
+
+合计 8 条命中 (源状态与代理路径如实记录于台账; 零手填)。

@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Expires" content="0" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Cache-control" content="no-cache" />
+    <meta http-equiv="Cache" content="no-cache" />
+    <title>聚合评论</title>
+    <link rel="stylesheet" href="./css/_layout.css?v=1684976400" />
+    <link rel="stylesheet" href="./css/_comment.css?v=1684976400" />
+    <link rel="stylesheet" href="./assets/css/element-ui.css" />
+    <script src="./assets/js/vue@2.js"></script>
+    <script src="./assets/js/element-ui.js"></script>
+    <script src="./assets/js/jquery.min.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <div class="wh-full comment-pxy flex">
+        <div class="left-box bgcolor-1">
+          <div>
+            <div class="flex items-center left-top" v-if="accountInfo.id">
+              <div class="border-2 radius-2">
+                <img :src="accountInfo.avatar" alt="" width="40px" height="40px" />
+              </div>
+              <div class="text-ellipsis">{{ accountInfo.name }}</div>
+            </div>
+            <div v-else class="left-top-text color-3">暂无授权的账号</div>
+          </div>
+          <div v-if="accountInfo.id">
+            <div class="flex justify-around left-date items-center">
+              <div>
+                <img src="./assets/img/question.png" alt="" width="21px" height="21px" />
+              </div>
+              <div class="f14 color-1">更新时间 : {{ updateTime }}</div>
+              <div class="cursor-pointer" @click="onResetList">
+                <i class="el-icon-refresh-right color-2 f18"></i>
+              </div>
+            </div>
+            <div class="px-2 pb-1 border-b1">
+              <el-input
+                placeholder="请输入作品名称"
+                v-model="worksName"
+                size="small"
+                clearable
+                :disabled="worksPage.total"
+                @input="worksName=worksName.replace(
+                  /[^\a-\z\A-\Z0-9\u4E00-\u9FA5\.\,\?\<\>\。\，\-\——\=\;\@\！\!\+\$]/g,
+                  ''
+                )"
+                @keyup.enter.native="onSearchVideo"
+              >
+                <el-button slot="append" icon="el-icon-search" @click="onSearchVideo"></el-button>
+              </el-input>
+            </div>
+            <div class="works-view">
+              <div
+                v-for="(i, index) of worksViewList"
+                :key="i.item_id"
+                class="flex py-1 border-b1 cursor-pointer works-el"
+                :class="{'active-bcg': i.activeClass}"
+                @click="onSelectWorks(i, index)"
+              >
+                <div class="left-cover">
+                  <img :src="i.cover" alt="封面" width="35px" height="45px" />
+                </div>
+                <div class="left-title" :title="i.title">
+                  <span>{{ i.title }}</span>
+                </div>
+              </div>
+              <div v-loading="worksPage.loading"></div>
+            </div>
+          </div>
+          <div v-else class="flex items-center justify-content pt50">
+            <img
+              src="./assets/img/left-arrow.png"
+              class="cursor-pointer"
+              alt=""
+              width="28px"
+              height="28px"
+              @click="onSelectAccount"
+            />
+            <div class="pl-1 cursor-pointer" @click="onSelectAccount">请选择授权账号</div>
+          </div>
+        </div>
+
+        <div class="content-box bgcolor-1">
+          <div class="comment-bor1"></div>
+          <div class="comment-bor1"></div>
+
+          <div class="comment-top flex items-center">
+            <div class="f18 pr-1">评论列表</div>
+            <div class="flex justify-around items-center">
+              <div>
+                <img src="./assets/img/question.png" alt="" width="21px" height="21px" />
+              </div>
+              <div class="f14 color-1 pl-1">更新时间 : {{ commentsTime }}</div>
+              <div class="cursor-pointer pl-1 flex" @click="onResetComment">
+                <i class="el-icon-refresh-right color-2 f18"></i>
+                <span class="color-2">刷新</span>
+              </div>
+            </div>
+          </div>
+          <div class="comment-search comment-top flex">
+            <div>
+              <el-input
+                placeholder="请输入评论内容"
+                v-model="commentConent"
+                size="small"
+                clearable
+                :disabled="isQuery"
+                @input="commentConent=commentConent.replace(
+                  /[^\a-\z\A-\Z0-9\u4E00-\u9FA5\.\,\?\<\>\。\，\-\——\=\;\@\！\!\+\$]/g,
+                  ''
+                )"
+                @keyup.enter.native="onCommentSearch(1)"
+              >
+                <el-button
+                  slot="append"
+                  icon="el-icon-search"
+                  :disabled="isQuery"
+                  @click="onCommentSearch(1)"
+                ></el-button>
+              </el-input>
+            </div>
+            <div class="pl-2 pr-2">
+              <el-date-picker
+                v-model="commentDate"
+                type="daterange"
+                align="left"
+                size="small"
+                range-separator=""
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                :default-time="['00:00:00', '23:59:59']"
+                :disabled="isQuery"
+                @change="onCommentSearch(2)"
+              ></el-date-picker>
+            </div>
+            <div class="flex f12 radius-1 items-center border-3 cursor-pointer comment-radio">
+              <div
+                class="px-3 color-1 h-full"
+                @click="onCommentSearchType('1')"
+                :class="{'color-2': commentType === '1'}"
+              >
+                全部
+              </div>
+              <div class="bgcolor-2 h-full" style="width: 1px"></div>
+              <div
+                class="px-3 color-1 h-full"
+                @click="onCommentSearchType('2')"
+                :class="{'color-2': commentType === '2'}"
+              >
+                作者未回复
+              </div>
+            </div>
+          </div>
+          <div class="comment-box">
+            <div class="wh-full bgcolor-3" v-loading="commentPage.loading">
+              <div v-if="commentPage.status === 1" class="wh-full comment-content">
+                <div class="f16 pl-3 pt-3 radius-1">
+                  <el-checkbox
+                    v-model="checkedAll"
+                    :disabled="isQuery || replyStatus.status"
+                    @change="onChangeCheckedAll('all', '')"
+                  >
+                    选择全部评论（{{ commentViewList.length }}）
+                  </el-checkbox>
+                </div>
+
+                <div class="pt-4 wh-fulll">
+                  <div v-for="(item, index) of commentViewList" :key="item.item_id" class="pb-1">
+                    <div class="flex">
+                      <div class="coment-list-checked h-full">
+                        <el-checkbox
+                          v-model="item.checkedVal"
+                          :disabled="replyStatus.status"
+                          @change="onChangeCheckedAll(item, index)"
+                        ></el-checkbox>
+                      </div>
+                      <div class="flex-1 pt-1">
+                        <div class="flex items-center coment-list-title_info">
+                          <img
+                            :src="item.avatar"
+                            alt=""
+                            width="20px"
+                            height="20px"
+                            class="radius-2"
+                          />
+                          <div class="px-1">
+                            <span v-if="item.nick_name">{{ item.nick_name }}</span>
+                            <span v-else>评论用户({{ item.userName }})</span>
+                          </div>
+                          <div v-show="item.is_author === 1" class="comment-author">作者</div>
+                          <div class="px-3 f12">{{ item.formatDate }}</div>
+                        </div>
+                      </div>
+                      <div class="coment-list-status h-full">
+                        <div class="status-control">
+                          <div v-show="item.author_reply">已回复</div>
+                          <div v-show="!item.author_reply">未回复</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="coment-content-box flex">
+                      <div class="content-wrapper" v-html="item.contentVal"></div>
+                    </div>
+
+                    <div
+                      v-if="item.reply_comment_total !== 0 && !item.isViewRelpy"
+                      class="color-1 f12 coment-content-more"
+                    >
+                      <span
+                        v-if="!item.reply_loading"
+                        class="cursor-pointer reply-comment"
+                        @click="onViewRelpy(item, index, '1')"
+                      >
+                        <span>展开{{ item.reply_comment_total }}条回复</span>
+                        <span>
+                          <span class="inline-block">
+                            <img
+                              src="./assets/img/up-icon.png"
+                              alt="下"
+                              width="10px"
+                              height="10px"
+                            />
+                          </span>
+                        </span>
+                      </span>
+                    </div>
+
+                    <div v-if="item.isViewRelpy" class="reply-comment">
+                      <div
+                        v-for="rtem of item.relpyCommentList"
+                        :key="rtem.comment_id"
+                        class="reply-comment-list"
+                      >
+                        <div class="flex items-center coment-list-title_info">
+                          <img
+                            :src="rtem.avatar"
+                            alt=""
+                            width="20px"
+                            height="20px"
+                            class="radius-2"
+                          />
+                          <div class="px-1">
+                            <span v-if="rtem.nick_name">{{ rtem.nick_name }}</span>
+                            <span v-else>评论用户({{ rtem.userName }})</span>
+                          </div>
+                          <div v-show="rtem.is_author === 1" class="comment-author">作者</div>
+                          <div class="px-3 f12">{{ rtem.formatDate }}</div>
+                        </div>
+                        <div class="reply-comment-list_content flex">
+                          <div class="content-wrapper" v-html="rtem.contentVal"></div>
+                        </div>
+                      </div>
+                      <div class="flex reply-coment-more" v-if="!item.reply_loading">
+                        <div
+                          v-if="item.cursor"
+                          class="flex items-center cursor-pointer mr-2 color-1 f12"
+                          @click="onViewRelpy(item, index, '2')"
+                        >
+                          <div>展开更多</div>
+                          &nbsp;
+                          <img src="./assets/img/up-icon.png" alt="上" width="10px" height="10px" />
+                        </div>
+                        <div
+                          class="flex items-center cursor-pointer color-1 f12"
+                          @click="onRetractRelpy(item, index)"
+                        >
+                          <div>收起</div>
+                          &nbsp;
+                          <img
+                            src="./assets/img/down-icon.png"
+                            alt="下"
+                            width="10px"
+                            height="10px"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="comment-loading" v-show="item.reply_loading">
+                      <div class="infinity-2"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="wh-full flex no-comment" v-if="commentPage.status === 2">
+                <img src="./assets/img/nodata.png" alt="" width="100px" height="100px" />
+                <div class="text">
+                  <span>暂无评论</span>
+                  <span
+                    @click="onRefreshComent"
+                    class="cursor-pointer"
+                    v-show="commentPage.status === 2 && commentPage.itemId && !commentList.length"
+                  >
+                    <span class="color-2">刷新</span>
+                    <img
+                      src="./assets/img/reset-2.png"
+                      alt="刷新"
+                      width="22px"
+                      height="22px"
+                      class="inline-block"
+                    />
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="right-box bgcolor-1 relative">
+          <div class="right-title f18">回复已选评论</div>
+          <div class="right-content">
+            <div v-if="checkedComList.length" class="right-option relative">
+              <div
+                v-for="(i, index) of checkedComList.slice(0, 3)"
+                :key="i.comment_id"
+                class="flex right-list"
+              >
+                <div class="color-3 text-ellipsis">@{{ i.nick_name }}</div>
+                ：
+                <div class="text-ellipsis" v-html="i.contentVal"></div>
+              </div>
+              <div class="color-1 absolute right-index">等{{checkedComList.length}}条评论</div>
+            </div>
+            <div v-else class="right-tip">
+              <div class="py-1">请先在左侧【评论列表】勾选评论</div>
+            </div>
+            <div v-if="sentding.status === 1">
+              <div class="flex pt-4">
+                <div
+                  @click="onClickTabs('1')"
+                  :class="{'rigth-active': rigthActive === '1'}"
+                  class="pl-2 cursor-pointer color-3"
+                >
+                  自定义回复
+                </div>
+                <div
+                  v-show="accountInfo.id"
+                  class="pl-2 cursor-pointer color-3"
+                  @click="onClickTabs('2')"
+                  :class="{'rigth-active': rigthActive === '2'}"
+                >
+                  话术库
+                </div>
+              </div>
+
+              <div v-show="rigthActive === '2' && !isTextarea" class="f12 px-3 pt-1 cursor-pointer">
+                <span @click="onSaveScript">
+                  <i class="el-icon-circle-plus-outline"></i>
+                  新增话术
+                </span>
+              </div>
+
+              <div class="right-contentedi" v-show="isTextarea">
+                <div
+                  contenteditable="true"
+                  id="contenteditable"
+                  class="expression-input"
+                  ref="replyInput"
+                  @blur="onBlurTextarea"
+                  @focus="onFocusTextarea"
+                  @keydown="onKeydownWord($event)"
+                  @paste="onPasteTextarea($event)"
+                ></div>
+              </div>
+
+              <div class="right-face relative" v-show="isTextarea">
+                <img
+                  class="cursor-pointer imgFace"
+                  src="./assets/img/face.png"
+                  alt="表情"
+                  width="20px"
+                  height="20px"
+                  @click="onShowFace"
+                />
+                <div class="absolute flex right-face-btn f12" v-show="sentding.operateVisible">
+                  <div
+                    @click="onAddScript(false)"
+                    class="cursor-pointer"
+                    v-show="sentding.list.length > 0"
+                  >
+                    取消
+                  </div>
+                  <div class="pl-1 cursor-pointer" @click="onAddScript(true)">保存</div>
+                </div>
+                <div class="right-face-icon1" v-show="isFace"></div>
+                <div class="right-face-icon2" v-show="isFace"></div>
+                <div class="absolute radius-1 flex flow-wrap reply-face" v-show="isFace">
+                  <div v-for="item of face_list" :key="item.id" class="imgFace">
+                    <img
+                      class="cursor-pointer imgFace"
+                      :src="item.icon"
+                      :alt="item.code"
+                      :title="item.text"
+                      @click.stop="onSetFace(item)"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="right-script" v-show="sentding.visible">
+            <div class="right-script-box px-3" :style="`height: ${scriptHight}`">
+              <div
+                v-for="(item, index) of sentding.list"
+                :key="item.id"
+                class="text-ellipsis relative cursor-pointer"
+                :class="{'script-active': item.active}"
+                @click="onSelectScript(item, index)"
+              >
+                <span v-html="item.contentVal"></span>
+
+                <div
+                  class="absolute right-script-del cursor-pointer"
+                  @click.stop="onDelScript(item)"
+                >
+                  <i class="el-icon-circle-close"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="right-button">
+            <div
+              @click="onConfirmSending"
+              class="cursor-pointer"
+              v-if="sentding.status === 1 && checkedComList.length"
+            >
+              确认发送
+            </div>
+            <div class="cursor-pointer" @click="onISee" v-if="isSendingCompleted">我知道了</div>
+          </div>
+
+          <div v-show="sentding.status === 2" class="px-4 right-sentding-box">
+            <div class="f18 color-3 pt-4 pb-1">回复内容:</div>
+            <div class="right-sending-cont py-1" v-html="sentding.contentVal"></div>
+            <div class="f18 color-3 pt-4 pb-1" v-show="!isSendingCompleted">
+              正在发送（{{ sendintLeng }}/{{ checkedComList.length }}）
+            </div>
+            <div class="progress-1" v-show="!isSendingCompleted"></div>
+            <div class="f18 color-3 pt-4 pb-1" v-show="isSendingCompleted">任务发送情况:</div>
+            <div
+              class="flex justify-center items-center py-1 bgcolor-3 px-1"
+              v-show="isSendingCompleted"
+            >
+              <img src="./assets/img/vector-1.png" alt="成功" />
+              <div class="flex-1 px-2">发送成功：{{ replyStatus.success }}条</div>
+              <img src="./assets/img/vector-2.png" alt="失败" />
+              <div class="flex-1 px-2">发送失败：{{ replyStatus.fail }}条</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./js/api.js?v=1684976400"></script>
+    <script src="./js/utils.js?v=1684976400"></script>
+    <script src="./js/request.js?v=1684976400"></script>
+    <script>
+      const app = new Vue({
+        el: "#app",
+        data() {
+          return {
+            accountInfo: {
+              name: "",
+              avatar: "",
+              id: ""
+            },
+            updateTime: "",
+            worksName: "",
+            worksList: [],
+            worksViewList: [],
+            worksPage: {
+              cursor: 0,
+              limit: 20,
+              total: true,
+              id: null,
+              loading: false
+            },
+            commentsTime: "",
+            commentConent: "",
+            commentDate: "",
+            commentType: "1",
+            commentPage: {
+              cursor: 0,
+              limit: 20,
+              loading: false,
+              itemId: "",
+              status: 2
+            },
+            commentList: [],
+            commentViewList: [],
+            checkedAll: false,
+            checkedComList: [],
+            rigthActive: "1",
+            isFace: false,
+            textareaVal: "",
+            sentding: {
+              status: 1,
+              content: "",
+              visible: false,
+              operateVisible: false,
+              page: 1,
+              limit: 200,
+              list: [],
+              listActive: null,
+              type: "save",
+              contentVal: ""
+            },
+            replyStatus: {
+              success: 0,
+              fail: 0,
+              status: false
+            },
+            scriptHight: "0px",
+            isTextarea: true,
+            isSendingCompleted: false,
+            sendintLeng: 0,
+            isQuery: true,
+            isSetWorks: true,
+            isTextLentth: false
+          }
+        },
+        created() {
+          interface.getQueryString()
+          window.setEmpowerAccountInfo = this.onSetEmpowerAccountInfo
+        },
+        watch: {
+          sendintLeng(newVal, oldVal) {
+            if (newVal === this.checkedComList.length) {
+              this.isSendingCompleted = true
+              let num = this.replyStatus.success + this.replyStatus.fail
+              if (num === this.checkedComList.length) {
+                this.replyStatus.status = false
+                this.textareaVal = ""
+                $("#contenteditable").html("")
+                this.onResetComment()
+                let _this = this
+                api.commentsPage.getCommentLimit("", _this.accountInfo.id, function (result) {
+                  if (result.code === "200") {
+                    interface.replyCommentNumbr(result.data.commentLimit)
+                  }
+                })
+              }
+            }
+          },
+          "sentding.status": (newVal, oldVal) => {
+            if (newVal === 2) {
+              let heig = $(".right-box").height() - 315
+              $(".right-sentding-box").height(heig + "px")
+            }
+          },
+          isQuery(newVal, oldVal) {
+            if (!newVal) {
+              this.commentPage.loading = false
+              this.commentsTime = formatDateTime(new Date())
+            }
+          }
+        },
+        methods: {
+          // 重新加载页面
+          onResetIndex() {
+            this.accountInfo = {
+              name: "",
+              avatar: "",
+              id: ""
+            }
+            this.updateTime = ""
+            this.worksName = ""
+            this.worksList = []
+            this.worksViewList = []
+            this.worksPage = {
+              cursor: 0,
+              limit: 20,
+              total: true,
+              id: null,
+              loading: true
+            }
+            this.commentsTime = ""
+            this.commentConent = ""
+            this.commentDate = ""
+            this.commentType = "1"
+            this.commentPage = {
+              cursor: 0,
+              limit: 20,
+              loading: false,
+              itemId: "",
+              status: 2
+            }
+            this.commentList = []
+            this.commentViewList = []
+            this.checkedAll = false
+            this.checkedComList = []
+            this.rigthActive = "1"
+            this.isFace = false
+            this.textareaVal = ""
+            this.sentding = {
+              status: 1,
+              content: "",
+              visible: false,
+              page: 1,
+              limit: 200,
+              list: [],
+              listActive: null,
+              type: "save",
+              contentVal: ""
+            }
+            this.replyStatus = {
+              success: 0,
+              fail: 0,
+              status: false
+            }
+            this.scriptHight = "0px"
+            this.isTextarea = true
+            this.isSendingCompleted = false
+            this.sendintLeng = 0
+            this.isQuery = true
+            this.isSetWorks = true
+            this.isTextLentth = false
+          },
+
+          // 设置账号信息
+          onSetEmpowerAccountInfo(v) {
+            this.onResetIndex()
+            this.accountInfo = v
+            this.onGetAccountVideo()
+          },
+
+          // 列表高度
+          setScriptHight() {
+            this.scriptHight =
+              $(".right-box").height() - $(".right-content").innerHeight() - 45 + "px"
+          },
+
+          // 选择授权账号
+          onSelectAccount() {
+            interface.selectEmpowerAccount("1", "")
+          },
+
+          // 搜索视频
+          onSearchVideo: debounce(function () {
+            if (!this.worksPage.total) {
+              this.worksPage.loading = true
+              let queryString = this.worksName.replace(
+                /[^\a-\z\A-\Z0-9\u4E00-\u9FA5\.\,\?\<\>\。\，\-\——\=\;\@\！\!\+\$]/g,
+                ""
+              )
+              let results = this.worksList.filter(i => {
+                return i.title.toLowerCase().indexOf(queryString.toLowerCase()) !== -1
+              })
+              if (results.length) {
+                this.worksViewList = []
+                setTimeout(() => {
+                  this.worksViewList = results
+                  this.worksPage.loading = false
+                }, 200)
+              } else {
+                this.worksPage.loading = false
+                this.$message({
+                  message: "没有搜索到符合的数据。",
+                  type: "warning"
+                })
+              }
+            } else {
+              this.$message({
+                message: "数据正在加载，请稍后。",
+                type: "warning"
+              })
+            }
+          }, 200),
+
+          // 刷新视频列表
+          onResetList: debounce(function () {
+            this.worksPage.loading = true
+            this.worksName = ""
+            this.worksViewList = []
+            this.worksPage.cursor = 0
+            this.commentList = []
+            this.commentViewList = []
+            this.checkedComList = []
+            this.commentPage.cursor = 0
+            this.commentPage.status = 2
+            this.commentPage.itemId = ""
+            this.onGetAccountVideo()
+          }, 500),
+
+          // 获取账号视频
+          onGetAccountVideo() {
+            if (this.accountInfo.id) {
+              this.onGetList()
+              setTimeout(() => {
+                this.updateTime = formatDateTime(new Date())
+              }, 200)
+            }
+          },
+
+          // 账号视频列表
+          onGetList() {
+            let _this = this
+            let requestAnimationId = ""
+            api.commentsPage.getAuthVideoList(
+              {
+                id: _this.accountInfo.id,
+                cursor: _this.worksPage.cursor,
+                limit: _this.worksPage.limit
+              },
+              _this.accountInfo.id,
+              function (result, parames) {
+                if (_this.accountInfo.id !== parames.id) {
+                  return
+                }
+                let isJson = result.code === "200" ? isJsonType(result.data) : false
+                if (result.code === "200" && isJson) {
+                  let data = JSON.parse(result.data)
+                  if (data.data.error_code === 0) {
+                    let list = data.data.list || []
+                    list.forEach(el => {
+                      el.activeClass = false
+                      if (el.create_time !== 0) {
+                        _this.worksList.push(el)
+                        _this.worksViewList.push(el)
+                      }
+                    })
+
+                    _this.worksPage.total = data.data.has_more
+                    if (
+                      data.data.has_more &&
+                      _this.worksList.length < initialization.query_Info.videoMax
+                    ) {
+                      _this.worksPage.cursor = data.data.cursor
+                      requestAnimationId = window.requestAnimationFrame(function () {
+                        _this.onGetList()
+                      })
+                    } else {
+                      window.cancelAnimationFrame(requestAnimationId)
+                      _this.worksPage.loading = false
+                    }
+                  } else {
+                    _this.worksPage.loading = false
+                    _this.$message({
+                      message: "数据有误，请稍后重试。",
+                      type: "warning"
+                    })
+                  }
+                } else {
+                  _this.worksPage.loading = false
+                  let msg = result.msg || "网络波动，请稍后再试。"
+                  _this.$message({
+                    message: msg,
+                    type: "warning"
+                  })
+                }
+              }
+            )
+          },
+
+          // 重置刷新评论
+          onRefreshComent() {
+            this.commentPage.loading = true
+            this.onGetComment()
+          },
+
+          // 切换作品获取评论
+          onSelectWorks: debounce(function (v, index) {
+            if (this.isSetWorks) {
+              if (this.commentPage.itemId === v.item_id) {
+                return
+              }
+              this.worksViewList.forEach(value => (value.activeClass = false))
+              this.worksViewList[index].activeClass = true
+              this.commentList = []
+              this.checkedComList = this.replyStatus.status ? this.checkedComList : []
+              this.commentViewList = []
+              this.commentPage.status = 0
+              this.commentPage.loading = true
+              this.commentPage.itemId = v.item_id
+              this.onGetComment()
+            }
+          }, 200),
+
+          // 获取评论
+          onGetComment() {
+            let _this = this
+            let requestAnimationId = ""
+            let parame = {
+              id: _this.accountInfo.id,
+              cursor: _this.commentPage.cursor,
+              limit: _this.commentPage.limit,
+              item_id: _this.commentPage.itemId,
+              sort_type: "time"
+            }
+            this.isSetWorks = false
+            _this.isQuery = true
+            api.commentsPage.getCommentList(parame, _this.accountInfo.id, function (result) {
+              let isJson = result.code === "200" ? isJsonType(result.data) : false
+              if (result.code === "200" && isJson) {
+                let data = JSON.parse(result.data)
+                if (data.data.error_code === 0) {
+                  let list = data.data.list || []
+                  list.forEach(el => {
+                    if (el.content) {
+                      el.checkedVal = _this.checkedComList.some(c => c.comment_id === el.comment_id)
+                      el.formatDate = formatTime(el.create_time * 1000, "yyyy-mm-dd hh:mi:ss")
+                      el.userName = el.comment_user_id.substring(
+                        el.comment_user_id.length - 5,
+                        el.comment_user_id.length
+                      )
+                      el.cursor = 0
+                      el.limit = 10
+                      el.isViewRelpy = false
+                      el.reply_loading = false
+                      el.relpyCommentList = []
+                      let contentVal = el.content
+                      let textReg = /\[(.+?)\]/g
+                      let list = contentVal.match(textReg) || []
+                      list.forEach(el => {
+                        let item = face_list.find(node => {
+                          return node.code === el
+                        })
+                        contentVal = contentVal.replace(el, function () {
+                          if (item) {
+                            let img1 = `<img src="${item.icon}" title="" alt="" width="24px" height="24px" style="display: inline-block;" />`
+                            return img1
+                          } else {
+                            return el
+                          }
+                        })
+                      })
+                      el.contentVal = contentVal
+                      _this.commentList.push(el)
+                      _this.commentViewList.push(el)
+                    }
+                  })
+
+                  _this.commentPage.status = _this.commentViewList.length ? 1 : 2
+
+                  let isCommentMax =
+                    _this.commentList.length &&
+                    _this.commentList.length < initialization.query_Info.commentMax
+                  if (data.data.has_more && isCommentMax) {
+                    _this.isQuery = true
+                    _this.commentPage.cursor = data.data.cursor
+                    requestAnimationId = window.requestAnimationFrame(function () {
+                      _this.onGetComment()
+                    })
+                  } else {
+                    _this.isQuery = _this.commentViewList.length ? false : true
+                    _this.commentPage.loading = false
+                    window.cancelAnimationFrame(requestAnimationId)
+                  }
+                } else {
+                  _this.commentPage.loading = false
+                  _this.$message({
+                    message: "数据有误，请稍后重试。",
+                    type: "warning"
+                  })
+                }
+              } else {
+                let msg = result.msg || "网络波动，请稍后再试。"
+                _this.$message({
+                  message: msg,
+                  type: "warning"
+                })
+                _this.commentPage.loading = false
+              }
+              _this.isSetWorks = true
+            })
+          },
+
+          // 刷新评论列表
+          onResetComment: debounce(function () {
+            if (this.commentPage.itemId) {
+              this.commentList = []
+              this.commentViewList = []
+              this.checkedComList = this.sentding.status === 2 ? this.checkedComList : []
+              this.commentPage.status = 0
+              this.commentPage.loading = true
+              this.commentConent = ""
+              this.commentDate = ""
+              this.commentType = "1"
+              this.onGetComment()
+            }
+          }, 500),
+
+          // 搜索评论
+          onCommentSearch: debounce(function (type) {
+            if (this.commentList.length) {
+              this.commentPage.loading = true
+              this.commentPage.status = 0
+              let conentVal = []
+              if (this.commentConent) {
+                let queryString = this.commentConent.replace(
+                  /[^\a-\z\A-\Z0-9\u4E00-\u9FA5\.\,\?\<\>\。\，\-\——\=\;\@\！\!\+\$]/g,
+                  ""
+                )
+                conentVal = this.commentList.filter(i => {
+                  return i.content.toLowerCase().indexOf(queryString.toLowerCase()) !== -1
+                })
+              }
+              let dateList = []
+              if (this.commentDate) {
+                let list = this.commentConent ? conentVal : this.commentList
+                list.forEach(el => {
+                  let isDate = formatDaterange(
+                    this.commentDate[0],
+                    this.commentDate[1],
+                    el.create_time
+                  )
+                  if (isDate) {
+                    dateList.push(el)
+                  }
+                })
+              }
+              let result = this.commentList
+              if (this.commentConent) {
+                result = conentVal
+              }
+              if (this.commentDate) {
+                result = dateList
+              }
+              if (this.commentType === "2") {
+                result = result.filter(item => {
+                  return !item.author_reply
+                })
+              }
+              this.commentViewList = result
+              this.commentViewList.forEach(el => {
+                el.isViewRelpy = false
+                el.relpyCommentList = []
+              })
+              setTimeout(() => {
+                this.commentPage.loading = false
+                this.commentPage.status = this.commentViewList.length ? 1 : 2
+              }, 200)
+            }
+          }, 200),
+
+          // 切换评论类型
+          onCommentSearchType(type) {
+            if (this.commentType !== type && !this.isQuery) {
+              this.commentType = type
+              this.onCommentSearch()
+            }
+          },
+
+          // 选中全部
+          onChangeCheckedAll(v, eq) {
+            if (v === "all") {
+              this.commentViewList.forEach(el => {
+                el.checkedVal = this.checkedAll
+              })
+              let newList = JSON.parse(JSON.stringify(this.commentViewList))
+              this.checkedComList = this.checkedAll ? newList : []
+            } else {
+              if (v.checkedVal) {
+                if (!this.checkedComList.find(item => item.comment_id === v.comment_id)) {
+                  this.checkedComList.push(v)
+                }
+              } else {
+                this.checkedComList.splice(
+                  this.checkedComList.findIndex(item => item.comment_id === v.comment_id),
+                  1
+                )
+              }
+            }
+            this.checkedAll =
+              this.checkedComList.length === this.commentViewList.length ? true : false
+          },
+
+          // 获取回复评论
+          onViewRelpy(v, eq, type) {
+            v.reply_loading = true
+            let _this = this
+            let parame = {
+              id: _this.accountInfo.id,
+              cursor: v.cursor,
+              limit: v.limit,
+              item_id: _this.commentPage.itemId,
+              comment_id: v.comment_id,
+              sort_type: "time"
+            }
+            api.commentsPage.getReplyCmtlist(parame, _this.accountInfo.id, function (result) {
+              let isJson = result.code === "200" ? isJsonType(result.data) : false
+              if (result.code === "200" && isJson) {
+                let data = JSON.parse(result.data)
+                if (data.data.error_code === 0) {
+                  let list = data.data.list || []
+                  list.forEach(el => {
+                    el.userName = el.comment_user_id.substring(
+                      el.comment_user_id.length - 5,
+                      el.comment_user_id.length
+                    )
+                    el.formatDate = formatTime(el.create_time * 1000, "yyyy-mm-dd hh:mi:ss")
+                    el.content = el.content || "当前评论为自定义内容，请前往平台内查看！"
+                    let contentVal = el.content
+                    let textReg = /\[(.+?)\]/g
+                    let list = contentVal.match(textReg) || []
+                    list.forEach(el => {
+                      let item = face_list.find(node => {
+                        return node.code === el
+                      })
+                      contentVal = contentVal.replace(el, function () {
+                        if (item) {
+                          let img1 = `<img src="${item.icon}" title="" alt="" width="24px" height="24px" style="display: inline-block;" />`
+                          return img1
+                        } else {
+                          return el
+                        }
+                      })
+                    })
+                    el.contentVal = contentVal
+                    v.relpyCommentList.push(el)
+                  })
+                  if (v.relpyCommentList.length && type === "1") {
+                    v.isViewRelpy = true
+                  }
+                  if (data.data.has_more) {
+                    v.cursor = data.data.cursor
+                  } else {
+                    v.cursor = false
+                  }
+                } else {
+                  _this.$message({
+                    message: "数据有误，请稍后重试。",
+                    type: "warning"
+                  })
+                }
+                v.reply_loading = false
+              } else {
+                v.reply_loading = false
+                let msg = result.msg || "网络波动，请稍后再试。"
+                _this.$message({
+                  message: msg,
+                  type: "warning"
+                })
+              }
+            })
+          },
+
+          // 收起评论
+          onRetractRelpy(v, eq) {
+            v.cursor = 0
+            v.relpyCommentList = []
+            v.isViewRelpy = false
+          },
+
+          // 回复tab
+          onClickTabs(v) {
+            if (this.rigthActive !== v) {
+              this.isTextarea = false
+              this.textareaVal = ""
+              this.$refs.replyInput.innerHTML = ""
+              this.sentding.list = []
+              this.sentding.type = "save"
+              this.rigthActive = v
+              if (v === "1") {
+                this.isTextarea = true
+                this.sentding.visible = false
+                this.sentding.operateVisible = false
+              }
+              if (v === "2") {
+                this.getScriptPage()
+              }
+            }
+          },
+
+          // 获取话术列表
+          getScriptPage() {
+            let _this = this
+            api.commentsPage.getReplyScript(
+              {
+                page: this.sentding.page,
+                limit: this.sentding.limit
+              },
+              _this.accountInfo.id,
+              function (result) {
+                if (result.code === "200") {
+                  let list = result.data.data || []
+                  list.forEach(el => {
+                    el.active = false
+                    let contentVal = el.content
+                    let textReg = /\[(.+?)\]/g
+                    let reg_list = contentVal.match(textReg) || []
+                    reg_list.forEach(el => {
+                      let item = face_list.find(node => {
+                        return node.code === el
+                      })
+                      contentVal = contentVal.replace(el, function () {
+                        if (item) {
+                          let code = ""
+                          if (item.code[0] === "[") {
+                            code = item.code.substring(1, item.code.length - 1)
+                          } else {
+                            code = item.code
+                          }
+                          let img1 = `<img src="${item.icon}" title="${code}" alt="${code}" width="24px" height="24px" style="display: inline-block;" />`
+                          return img1
+                        } else {
+                          return el
+                        }
+                      })
+                    })
+                    el.contentVal = contentVal
+                  })
+                  _this.isTextarea = list.length ? false : true
+                  _this.sentding.visible = !_this.isTextarea
+                  _this.sentding.operateVisible = list.length ? false : true
+                  _this.$nextTick(() => {
+                    _this.setScriptHight()
+                  })
+                  _this.sentding.list = list
+                } else {
+                  let msg = result.msg || "网络波动，请稍后再试。"
+                  _this.$message({
+                    message: msg,
+                    type: "warning"
+                  })
+                }
+              }
+            )
+          },
+
+          // 新增话术
+          onSaveScript() {
+            this.sentding.type = "save"
+            this.sentding.listActive = null
+            this.sentding.list.forEach(el => {
+              el.active = false
+            })
+            this.isTextarea = true
+            this.sentding.operateVisible = true
+            this.textareaVal = ""
+            this.$refs.replyInput.innerHTML = ""
+            this.$nextTick(() => {
+              this.setScriptHight()
+              this.$refs.replyInput.focus()
+            })
+          },
+
+          // 保存话术
+          onAddScript(v) {
+            if (v) {
+              if (this.sentding.type === "save") {
+                let val = this.textareaVal.replace(
+                  /[^\a-\z\A-\Z0-9\u4E00-\u9FA5\.\,\?\<\>\。\，\-\——\=\;\@\！\!\+\$]/g,
+                  ""
+                )
+                if (val) {
+                  if (val.length <= 300) {
+                    if (this.sentding.list.length < 200) {
+                      let _this = this
+                      api.commentsPage.saveReplyScript(
+                        {
+                          content: _this.textareaVal
+                        },
+                        _this.accountInfo.id,
+                        function (result) {
+                          if (result.code === "200" && result.data === "1") {
+                            _this.$message({
+                              message: "保存成功！",
+                              type: "success"
+                            })
+                            _this.getScriptPage()
+                          } else {
+                            let msg = result.msg || "网络波动，请稍后再试。"
+                            _this.$message({
+                              message: msg,
+                              type: "warning"
+                            })
+                          }
+                        }
+                      )
+                      this.textareaVal = ""
+                      this.$refs.replyInput.innerHTML = ""
+                    } else {
+                      this.$message({
+                        message: "话术库最多可存储200条。",
+                        type: "warning"
+                      })
+                    }
+                  } else {
+                    this.$message({
+                      message: "内容长度不得超过300字，当前长度为" + "：" + val.length,
+                      type: "warning"
+                    })
+                  }
+                } else {
+                  this.$message({
+                    message: "内容为空或含有特殊符号，请重新输入。",
+                    type: "warning"
+                  })
+                }
+              } else {
+                this.onEditScript()
+              }
+            } else {
+              this.sentding.list.forEach(el => {
+                el.active = false
+              })
+              this.sentding.type = "save"
+              this.isTextarea = false
+              this.sentding.operateVisible = false
+              this.$nextTick(() => {
+                this.setScriptHight()
+              })
+              this.textareaVal = ""
+              this.$refs.replyInput.innerHTML = ""
+            }
+          },
+
+          // 选中话术
+          onSelectScript(v, eq) {
+            if (v.active) {
+              this.sentding.list.forEach(el => {
+                el.active = false
+              })
+              this.sentding.listActive = null
+              this.sentding.type = "save"
+              this.textareaVal = ""
+              this.$refs.replyInput.innerHTML = ""
+            } else {
+              this.sentding.list.forEach(el => {
+                el.active = el.id === v.id ? true : false
+              })
+              this.sentding.listActive = v
+              this.sentding.type = "edit"
+              this.textareaVal = v.content
+              // let content = v.content;
+              // let textReg = /\[(.+?)\]/g;
+              // let list = content.match(textReg) || [];
+              // list.forEach(el => {
+              //   let item = face_list.find(node => {
+              //     return node.code === el;
+              //   });
+              //   content = content.replace(el, function () {
+              //     if (item) {
+              //       let code = "";
+              //       if (item.code[0] === "[") {
+              //         code = item.code.substring(1, item.code.length - 1);
+              //       } else {
+              //         code = item.code;
+              //       }
+              //       let img1 = `<img src="${item.icon}" title="${code}" alt="${code}" width="24px" height="24px" style="display: inline-block;" />`;
+              //       return img1;
+              //     } else {
+              //       return el;
+              //     }
+              //   });
+              // });
+              this.isTextarea = true
+              this.sentding.operateVisible = true
+              this.$nextTick(() => {
+                this.setScriptHight()
+                this.$refs.replyInput.innerHTML = v.contentVal
+                this.$refs.replyInput.focus()
+                const input = $(".expression-input")[0]
+                let selection = window.getSelection()
+                selection.selectAllChildren(input)
+                selection.collapseToEnd()
+              })
+            }
+          },
+
+          // 修改话术
+          onEditScript() {
+            let val = this.textareaVal.replace(
+              /[^\a-\z\A-\Z0-9\u4E00-\u9FA5\.\,\?\<\>\。\，\-\——\=\;\@\！\!\+\$]/g,
+              ""
+            )
+            if (val) {
+              if (val.length < 300) {
+                let _this = this
+                api.commentsPage.editReplyScript(
+                  {
+                    id: _this.sentding.listActive.id,
+                    content: _this.textareaVal
+                  },
+                  _this.accountInfo.id,
+                  function (result) {
+                    if (result.code === "200" && result.data === "1") {
+                      _this.$message({
+                        message: "修改成功！",
+                        type: "success"
+                      })
+                      _this.getScriptPage()
+                      _this.sentding.type = "save"
+                      _this.textareaVal = ""
+                      _this.$refs.replyInput.innerHTML = ""
+                    } else {
+                      let msg = result.msg || "网络波动，请稍后再试。"
+                      _this.$message({
+                        message: msg,
+                        type: "warning"
+                      })
+                    }
+                  }
+                )
+              } else {
+                this.$message({
+                  message: "内容长度不得超过300字，当前长度为" + "：" + val.length,
+                  type: "warning"
+                })
+              }
+            } else {
+              this.$message({
+                message: "内容为空或含有特殊符号，请重新输入。",
+                type: "warning"
+              })
+            }
+          },
+
+          // 删除话术
+          onDelScript(v) {
+            let _this = this
+            api.commentsPage.delReplyScript(
+              {
+                ids: v.id
+              },
+              _this.accountInfo.id,
+              function (result) {
+                if (result.code === "200" && result.data === "1") {
+                  _this.$message({
+                    message: "删除成功！",
+                    type: "success"
+                  })
+                  _this.getScriptPage()
+                } else {
+                  let msg = result.msg || "网络波动，请稍后再试。"
+                  _this.$message({
+                    message: msg,
+                    type: "warning"
+                  })
+                }
+              }
+            )
+          },
+
+          // 显示表情框
+          onShowFace() {
+            this.isFace = !this.isFace
+            if (this.isFace) {
+              this.$refs.replyInput.focus()
+              const input = $(".expression-input")[0]
+              let selection = window.getSelection()
+              selection.selectAllChildren(input)
+              selection.collapseToEnd()
+              let _this = this
+              document.onclick = function (event) {
+                let cla = event.target
+                let is = $(cla).hasClass("imgFace")
+                if (!is && _this.isFace) {
+                  _this.isFace = false
+                  document.onclick = null
+                }
+              }
+            } else {
+              document.onclick = null
+            }
+          },
+
+          onFocusTextarea() {},
+
+          // 设置表情
+          onSetFace(item) {
+            this.$refs.replyInput.focus()
+            let img2 = new Image()
+            img2.src = item.icon
+            img2.title = item.text
+            img2.alt = item.text
+            img2.width = 20
+            img2.height = 20
+            img2.style = "display: inline-block;font-size: 0px;"
+            if (window.getSelection) {
+              let img1 = `<img src="${item.icon}" title=${item.text} alt=${item.text} width="24px" height="24px" style="display: inline-block;" />`
+              let caretOffset = 0
+              const sel = window.getSelection()
+              if (sel.rangeCount > 0) {
+                let range = sel.getRangeAt(0)
+                range.deleteContents()
+                // 插入内容到指定位置
+                let el = document.createElement("div")
+                el.innerHTML = img1
+                let frag = document.createDocumentFragment()
+                let node = el.firstChild
+                let lastNode = frag.appendChild(node)
+                range.insertNode(frag)
+                let contentRange = range.cloneRange()
+                contentRange.collapse(false)
+                sel.removeAllRanges()
+                sel.addRange(contentRange)
+              }
+            } else if ("selection" in document) {
+              document.selection.createRange().pasteHTML(img2)
+            }
+          },
+
+          // 获取输入后的值
+          onBlurTextarea() {
+            let imgReg = /<img.*?(?:>|\/>)/gi
+            let inputVal = $("#contenteditable")
+              .html()
+              .replace(/&nbsp;/g, " ")
+            let list = $("#contenteditable").html().match(imgReg) || []
+            if (list.length) {
+              list.forEach(el => {
+                let code = ""
+                if ($(el).attr("title")[0] === "[") {
+                  code = $(el).attr("title")
+                } else {
+                  code = "[" + $(el).attr("title") + "]"
+                }
+                inputVal = inputVal.replace(/<img.*?(?:>|\/>)/i, code)
+              })
+            }
+            this.textareaVal = inputVal
+          },
+
+          // 判断禁止回车
+          onKeydownWord(event) {
+            if (event.keyCode === 13) {
+              event.preventDefault()
+            }
+          },
+
+          // 编辑框粘贴时清除所有样式
+          onPasteTextarea(e) {
+            e.preventDefault()
+            let text
+            let clp = (e.originalEvent || e).clipboardData
+            if (clp === undefined || clp === null) {
+              text = window.clipboardData.getData("text") || ""
+              if (text !== "") {
+                if (window.getSelection) {
+                  let newNode = document.createElement("span")
+                  newNode.innerHTML = text
+                  window.getSelection().getRangeAt(0).insertNode(newNode)
+                } else {
+                  document.selection.createRange().pasteHTML(text)
+                }
+              }
+            } else {
+              text = clp.getData("text/plain") || ""
+              if (text !== "") {
+                document.execCommand("insertText", false, text)
+              }
+            }
+          },
+
+          // 获取剩余回复条数
+          onConfirmSending() {
+            let _this = this
+            api.commentsPage.getCommentLimit("", _this.accountInfo.id, function (result) {
+              if (result.code === "200") {
+                let limit = Number(result.data.commentLimit)
+                if (_this.checkedComList.length <= limit) {
+                  _this.onClickSending()
+                } else {
+                  _this.$message({
+                    message: "当前剩余回复条数额度不足，请充值。",
+                    type: "warning"
+                  })
+                }
+              }
+            })
+          },
+
+          // 我知道了
+          onISee() {
+            this.textareaVal = ""
+            $("#contenteditable").html("")
+            this.rigthActive = "1"
+            this.sendintLeng = 0
+            this.isSendingCompleted = false
+            this.sentding.operateVisible = false
+            this.replyStatus = {
+              success: 0,
+              fail: 0
+            }
+            this.sentding.status = 1
+          },
+
+          // 发送回复
+          onClickSending: debounce(function () {
+            let _this = this
+            if (this.checkedComList.length) {
+              if (this.textareaVal) {
+                let val = this.textareaVal.replace(
+                  /[^\a-\z\A-\Z0-9\u4E00-\u9FA5\.\,\?\<\>\。\，\-\——\=\;\@\！\!\+\$]/g,
+                  ""
+                )
+                if (val) {
+                  if (val.length <= 300) {
+                    this.isSendingCompleted = false
+                    this.replyStatus.status = true
+                    this.sentding.status = 2
+                    this.sentding.visible = false
+                    this.sentding.content = this.textareaVal
+                    this.sentding.contentVal = $("#contenteditable").html()
+                    this.checkedComList.forEach(item => {
+                      api.commentsPage.setReplyComment(
+                        {
+                          id: this.accountInfo.id,
+                          content: this.sentding.content,
+                          item_id: this.commentPage.itemId,
+                          comment_id: item.comment_id
+                        },
+                        _this.accountInfo.id,
+                        function (result) {
+                          _this.sendintLeng++
+                          let isJson = result.code === "200" ? isJsonType(result.data) : false
+                          if (result.code === "200" && isJson) {
+                            let data = JSON.parse(result.data)
+                            if (data.data.error_code === 0) {
+                              _this.replyStatus.success++
+                            } else {
+                              _this.replyStatus.fail++
+                            }
+                          } else {
+                            _this.replyStatus.fail++
+                          }
+                        }
+                      )
+                    })
+                  } else {
+                    this.$message({
+                      message: "内容长度不得超过300字，当前长度为" + "：" + val.length,
+                      type: "warning"
+                    })
+                  }
+                } else {
+                  this.$message({
+                    message: "内容含有特殊符号，请重新输入。",
+                    type: "warning"
+                  })
+                }
+              } else {
+                this.$message({
+                  message: "请输入或选择回复内容。",
+                  type: "warning"
+                })
+              }
+            }
+          }, 500)
+        }
+      })
+    </script>
+  </body>
+</html>

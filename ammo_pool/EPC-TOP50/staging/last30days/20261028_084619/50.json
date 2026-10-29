@@ -1,0 +1,109 @@
+{
+ "artifacts": {
+  "corpus_in_export": false,
+  "grounding": [],
+  "hiring_signals_mode": false,
+  "plan_source": "deterministic",
+  "pre_research_flags_present": true,
+  "resolved": {
+   "context": "",
+   "entity": "总量格局与集中度 榜单 50强 门槛值 案例 方法",
+   "github_repos": [],
+   "github_user": "",
+   "subreddits": [],
+   "trustpilot_domain": "",
+   "x_handle": ""
+  }
+ },
+ "clusters": [],
+ "errors_by_source": {
+  "polymarket": "URL Error: [WinError 10061] 由于目标计算机积极拒绝，无法连接。; URL Error: [WinError 10061] 由于目标计算机积极拒绝，无法连接。",
+  "reddit": "URL Error: timed out"
+ },
+ "freshness_verdicts": [],
+ "generated_at": "2026-10-28T00:47:04.096618+00:00",
+ "items_by_source": {
+  "github": [],
+  "hackernews": [],
+  "polymarket": [],
+  "reddit": []
+ },
+ "library_context": [],
+ "provider_runtime": {
+  "planner_model": "deterministic",
+  "reasoning_provider": "local",
+  "rerank_model": "local-score"
+ },
+ "query_plan": {
+  "cluster_mode": "none",
+  "freshness_mode": "evergreen_ok",
+  "intent": "concept",
+  "notes": [
+   "fallback-plan"
+  ],
+  "raw_topic": "总量格局与集中度 榜单 50强 门槛值 案例 方法",
+  "source_weights": {
+   "github": 0.25,
+   "hackernews": 0.25,
+   "polymarket": 0.25,
+   "reddit": 0.25
+  },
+  "subqueries": [
+   {
+    "label": "primary",
+    "ranking_query": "What recent evidence from the last 30 days is most relevant to 总量格局与集中度 榜单 50强 门槛值 案例 方法?",
+    "search_query": "总量格局与集中度 榜单 50强 门槛值 案例 方法",
+    "sources": [
+     "reddit",
+     "hackernews",
+     "github",
+     "polymarket"
+    ],
+    "weight": 1.0
+   }
+  ]
+ },
+ "range_from": "2026-09-28",
+ "range_to": "2026-10-28",
+ "ranked_candidates": [],
+ "source_status": {
+  "github": {
+   "at": "2026-10-28T00:47:02.436730Z",
+   "attempted": true,
+   "items_returned": 0,
+   "source": "github",
+   "state": "no-results"
+  },
+  "hackernews": {
+   "at": "2026-10-28T00:47:02.437012Z",
+   "attempted": true,
+   "items_returned": 0,
+   "source": "hackernews",
+   "state": "no-results"
+  },
+  "polymarket": {
+   "at": "2026-10-28T00:47:02.436926Z",
+   "attempted": true,
+   "detail": "URL Error: [WinError 10061] 由于目标计算机积极拒绝，无法连接。; URL Error: [WinError 10061] 由于目标计算机积极拒绝，无法连接。",
+   "fix_hint": "doctor",
+   "items_returned": 0,
+   "source": "polymarket",
+   "state": "unreachable"
+  },
+  "reddit": {
+   "at": "2026-10-28T00:47:02.437103Z",
+   "attempted": true,
+   "detail": "URL Error: timed out",
+   "fix_hint": "doctor",
+   "items_returned": 0,
+   "source": "reddit",
+   "state": "timeout"
+  }
+ },
+ "topic": "总量格局与集中度 榜单 50强 门槛值 案例 方法",
+ "warnings": [
+  "No candidates survived retrieval and ranking.",
+  "Evidence is thin for this topic.",
+  "Some sources failed: polymarket, reddit"
+ ]
+}

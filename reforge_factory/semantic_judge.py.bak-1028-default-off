@@ -1,0 +1,178 @@
+# -*- coding: utf-8 -*-
+"""semantic_judge.py — P1-1 语义判层第二道 (世界顶级差距#4 修复).
+
+止血对象: 英文材料被纯中文关键词启发式系统性误杀
+(实证: EPC-JIAGE 英文面腿/学术件 off_topic 全拒; 关键词子串命中对
+外文材料结构性失效).
+
+双层判层架构 (ammo_pool.judge 主循环接线):
+  第一道 L1 = judge_heuristic (本地免费, 中文课题 kw 子串 + 实质度 + 垃圾页)
+  第二道 L2 = 本件 (GLM 语义复核, 仅在 L1 判废 ∧ 外文材料信号时触发):
+    - 触发条件: L1 verdict=rejected 且 foreign_ratio(text_head)>=0.30
+    - 翻案条件: GLM verdict=valid 且 score>=SCORE_GATE(0.6, 保守阈值)
+    - 维持: GLM rejected / score 不足 / GLM 出错 → 一律维持 L1 判废 (fail-soft)
+
+铁律:
+  * 密钥走 forge/glm_json 双钥客户端 (data/secrets/zhipu.secret, gitignored)
+    — 密钥不进仓不进日志不进报错文本;
+  * 模型链: glm-4-flash (免费档) 优先, 失败降级 glm-4-air;
+  * 双钥轮换: 每次成功调用后轮转密钥序 (防单钥过热 429, 宪法: 双账号全用);
+  * 调用串行 (编队<=4 并发红线, judge 主循环天然串行, 本件再加锁保险);
+  * SEMANTIC_JUDGE 环境变量激活, 默认关 — 不开不动既有账 (保守上线).
+"""
+from __future__ import annotations
+
+import os
+import sys
+import threading
+from pathlib import Path
+
+_MISSION_FORGE = Path(r"E:/AI-Station/mission-engine/forge")
+if str(_MISSION_FORGE) not in sys.path:
+    sys.path.insert(0, str(_MISSION_FORGE))
+
+try:                                    # fail-soft: forge 缺件不拖垮弹药池
+    from glm_json import GlmJson, load_keys
+    _GLM_IMPORT_ERR = ""
+except Exception as _e:                 # noqa: BLE001
+    GlmJson = None                      # type: ignore[assignment]
+    load_keys = None                    # type: ignore[assignment]
+    _GLM_IMPORT_ERR = f"{type(_e).__name__}: {_e}"[:160]
+
+# ---------- 参数 (保守阈值) ----------
+SEM_ENABLED_ENV = "SEMANTIC_JUDGE"      # =1/true 激活; 默认 0 关
+SCORE_GATE = 0.6                        # GLM score<0.6 不翻案 (用户铁律)
+FOREIGN_RATIO_GATE = 0.30               # 外文材料信号门 (字母占比)
+HEAD_CHARS = 3000                       # 语义判层窗口 = L1 head 同窗口
+MODELS = ("glm-4-flash", "glm-4-air")   # 免费档优先, 失败降级 (forge 同序)
+
+_LOCK = threading.Lock()
+_CLIENTS: dict = {}
+STATS = {"calls": 0, "ok": 0, "err": 0,
+         "models": {}, "keys": 0, "key_rotations": 0, "import_err": _GLM_IMPORT_ERR}
+
+_SYSTEM = (
+    "你是研究报告的资料相关性判层器。给定研究报告的课题关键词与一份候选材料"
+    "(标题+开头节选), 判断该材料对该课题是否有实质参考价值。\n"
+    "判层规则:\n"
+    "1. 英文等外文材料对中文课题按领域相关性判断(如工程/造价/计价/合同/能源/"
+    "水利/法律/政策/管理域), 不因语言不同而否决;\n"
+    "2. 材料与课题同域且含可引用的实质内容(方法/数据/规则/案例/标准/观点) "
+    "→ valid;\n"
+    "3. 领域无关、或仅是搜索结果清单/导航页/垃圾页/无实质内容 → rejected;\n"
+    "4. score 为 0~1 的参考价值置信度, 宁低勿高。\n"
+    '只输出 JSON, 不要输出其他文字: '
+    '{"verdict":"valid"|"rejected","score":0.0~1.0,"reason":"30字内中文理由"}'
+)
+
+
+def semantic_enabled() -> bool:
+    """SEMANTIC_JUDGE 环境开关 (默认关 — 保守上线, 既有账默认行为不变)."""
+    return os.environ.get(SEM_ENABLED_ENV, "0").strip().lower() in (
+        "1", "true", "yes", "on")
+
+
+# ---------- 外文材料信号 ----------
+_CJK_RANGES = ((0x4E00, 0x9FFF), (0x3400, 0x4DBF), (0xF900, 0xFAFF),
+               (0x3040, 0x30FF))        # 汉字+兼容+日文假名
+
+
+def _is_cjk(ch: str) -> bool:
+    o = ord(ch)
+    return any(lo <= o <= hi for lo, hi in _CJK_RANGES)
+
+
+def foreign_ratio(text_head: str) -> float:
+    """外文材料信号: 拉丁字母数 / (拉丁字母数 + CJK 字符数).
+
+    只计字母, 不计数字/标点/URL/空白 — 中文页含 URL 与 "EPC" 等缩写不误触
+    (实测字面非CJK占比口径下 1723/1967 中文 off_topic 件会误触, 信号失真;
+    字母口径只留真外文材料, 与「英文材料被系统性误杀」止血对象对齐).
+    """
+    latin = cjk = 0
+    for ch in text_head:
+        if ("a" <= ch <= "z") or ("A" <= ch <= "Z"):
+            latin += 1
+        elif _is_cjk(ch):
+            cjk += 1
+    tot = latin + cjk
+    return latin / tot if tot else 0.0
+
+
+# ---------- GLM 客户端 (双钥轮换 + 模型降级链) ----------
+def _get_client(model: str):
+    with _LOCK:
+        cl = _CLIENTS.get(model)
+        if cl is None:
+            if GlmJson is None:
+                raise RuntimeError(f"glm_json 不可用: {_GLM_IMPORT_ERR or '未知'}")
+            cl = GlmJson(model=model)           # 密钥从 secret 位现读
+            _CLIENTS[model] = cl
+            STATS["keys"] = max(STATS["keys"], len(cl.keys))
+        return cl
+
+
+def _rotate_keys(cl) -> None:
+    """调用成功后轮转密钥序 — 下次首选另一把 (双账号全用防 429)."""
+    if len(cl.keys) > 1:
+        cl.keys = cl.keys[1:] + cl.keys[:1]
+        STATS["key_rotations"] += 1
+
+
+def judge_semantic(title: str, text_head: str, campaign_kws) -> dict:
+    """GLM 语义复核一道. 返回
+    {"verdict": "valid"|"rejected"|"error", "score": float,
+     "reason": str, "model": str}.
+    - valid/rejected = GLM 完成判层 (score 为 GLM 自报置信度);
+    - error = 全模型链失败 (调用方 fail-soft 维持 L1 判废, 不翻案);
+    - 翻案与否由调用方以 SCORE_GATE 把关 (本函数不越权改判).
+    """
+    if GlmJson is None:
+        return {"verdict": "error", "score": 0.0,
+                "reason": f"glm_client_unavailable|{_GLM_IMPORT_ERR[:80]}",
+                "model": ""}
+    kws_txt = "、".join(str(k) for k in list(campaign_kws or [])[:20])
+    if not kws_txt:
+        return {"verdict": "error", "score": 0.0,
+                "reason": "no_campaign_kws", "model": ""}
+    user = (f"课题关键词: {kws_txt}\n"
+            f"材料标题: {str(title)[:200]}\n"
+            f"材料开头节选(前{HEAD_CHARS}字):\n{str(text_head)[:HEAD_CHARS]}")
+    last_err = ""
+    for model in MODELS:                        # 免费档优先 → 降级链
+        try:
+            cl = _get_client(model)
+            with _LOCK:                         # 串行: 编队<=4 红线保险
+                STATS["calls"] += 1
+                obj = cl.chat_json(_SYSTEM, user, temperature=0.1, timeout=45)
+            _rotate_keys(cl)
+            STATS["ok"] += 1
+            STATS["models"][model] = STATS["models"].get(model, 0) + 1
+            verdict = str(obj.get("verdict", "")).strip().lower()
+            if verdict not in ("valid", "rejected"):
+                return {"verdict": "error", "score": 0.0,
+                        "reason": f"glm_bad_verdict|{str(obj)[:80]}", "model": model}
+            try:
+                score = float(obj.get("score", 0.0))
+            except (TypeError, ValueError):
+                score = 0.0                     # 分数解析失败 → 保守 0.0
+            return {"verdict": verdict, "score": round(score, 3),
+                    "reason": str(obj.get("reason", ""))[:120], "model": model}
+        except Exception as e:                  # noqa: BLE001 — 降级下一模型
+            last_err = f"{type(e).__name__}: {e}"[:160]
+            STATS["err"] += 1
+            continue
+    return {"verdict": "error", "score": 0.0,
+            "reason": f"glm_all_models_failed|{last_err}", "model": ""}
+
+
+if __name__ == "__main__":                      # 冒烟自测: py semantic_judge.py
+    print("glm_import_err:", _GLM_IMPORT_ERR or "none")
+    print("keys:", STATS["keys"] or "(lazy — 现读)")
+    r = judge_semantic(
+        "Cost estimation for EPC projects: a review",
+        "Cost estimation and control in Engineering, Procurement and "
+        "Construction (EPC) projects. This paper reviews parametric "
+        "estimating methods and cost overrun risks in large infrastructure.",
+        ["EPC", "总承包", "计价", "造价"])
+    print("smoke:", r, "| stats:", STATS)

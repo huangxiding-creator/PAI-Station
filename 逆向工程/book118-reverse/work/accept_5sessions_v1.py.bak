@@ -1,0 +1,85 @@
+# -*- coding: utf-8 -*-
+"""验收件：5 次独立会话贯通（每会话全新 Book118Client=独立 CookieJar 零残留）。
+
+口径（任务书）：
+  - 纯 HTTP「国际工程 EPC」类查询拿到题录清单
+  - 能提取的免费预览文字 ≥500 字/份，每会话 ≥3 份（wenku 战役同构口径）
+  - S1 附加验证详情+预览清单腿（doc_detail + preview_pages 各 1 发）
+产物：captures/accept_s1..s5/session.json + 总账 accept_summary.json
+"""
+import json
+import sys
+import time
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+REPLICA = HERE.parent / "replica"
+sys.path.insert(0, str(REPLICA))
+from book118_api import Book118Client, Book118ApiError  # noqa: E402
+
+CAP = HERE.parent / "captures"
+
+QUERIES = ["国际工程EPC", "EPC总承包合同", "国际工程投标",
+           "FIDIC EPC", "海外工程项目管理"]
+
+LIMIT = 10
+MIN_CHARS = 500
+NEED_DOCS = 3
+
+summary = []
+all_ok = True
+for i, q in enumerate(QUERIES, 1):
+    t0 = time.monotonic()
+    row = {"session": i, "query": q, "independent": "fresh Book118Client/CookieJar"}
+    rows = []
+    client = Book118Client()          # 独立会话（全新 CookieJar）
+    try:
+        rows = client.search_with_text(q, LIMIT, text_min_chars=0)
+        ge500 = [r for r in rows if r["text_chars"] >= MIN_CHARS]
+        paid_n = sum(1 for r in rows if r["paid"])
+        row.update(
+            hits=len(rows), total=client.last_search_total,
+            ge500_docs=len(ge500), paid_docs=paid_n,
+            requests=client.requests,
+            text_chars_top3=[r["text_chars"] for r in ge500[:3]],
+            titles=[r["title"][:38] for r in ge500[:3]],
+            ok=len(rows) > 0 and len(ge500) >= NEED_DOCS)
+        # S1 附加：详情+预览清单腿
+        if i == 1 and rows:
+            try:
+                det = client.doc_detail(rows[0]["shtm_url"])
+                pv = client.preview_pages(det, max_batches=1)
+                row["detail_leg"] = {"aid": det["aid"],
+                                     "preview_page": det["preview_page"],
+                                     "actual_page": det["actual_page"],
+                                     "view_token_head": det["view_token"][:12],
+                                     "page_urls_n": len(pv),
+                                     "ok": bool(det["view_token"]) and len(pv) >= 1}
+                row["requests"] = client.requests
+            except Book118ApiError as e:
+                row["detail_leg"] = {"ok": False, "error": f"{e.kind}: {e.detail}"[:120]}
+    except Book118ApiError as e:
+        row.update(ok=False, error=f"{e.kind}: {e.detail}"[:200],
+                   requests=client.requests)
+    row["elapsed_s"] = round(time.monotonic() - t0, 1)
+    all_ok = all_ok and row.get("ok")
+    summary.append(row)
+    out = CAP / f"accept_s{i}"
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "session.json").write_text(
+        json.dumps({"summary_row": row, "rows": rows},
+                   ensure_ascii=False, indent=1), encoding="utf-8")
+    print(json.dumps(row, ensure_ascii=False))
+    time.sleep(3.0)                    # 会话间礼貌间隔
+
+ledger = {
+    "date": "2026-10-24", "sessions": len(summary),
+    "ok_sessions": sum(1 for r in summary if r.get("ok")),
+    "criteria": f"每会话: 题录>0 且 ≥{MIN_CHARS}字 ≥{NEED_DOCS} 份",
+    "all_ok": all_ok, "rows": summary,
+}
+(CAP / "accept_summary.json").write_text(
+    json.dumps(ledger, ensure_ascii=False, indent=1), encoding="utf-8")
+print("\n== ALL", "PASS" if all_ok else "FAIL",
+      f"{ledger['ok_sessions']}/{ledger['sessions']}")
+raise SystemExit(0 if all_ok else 1)

@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 """harvest_djyanbao — 洞见研报渠道收割腿 (BID26 四面优先 · C 轴 djyanbao 渠道).
 
-链路: DrissionPage 有头浏览器(离屏) → 密码登录(凭据读 01 账号授权/洞见研报
-密码登录账号.txt, 永不打印) → report/search 检索 → 卡片双重相关门 → 详情页
-取摘要+正文可读部分 → 落 data/harvest/djyanbao/<cid>/*.md + records.jsonl.
-只产文件, 绝不写 ammo_pool (不 import, 不 ingest).
+链路 (1024 API优先令, 双层):
+  ① API 路径 (优先): 复刻件 djyanbao_api (api.djyanbao.com 无Cookie JSON 域,
+     匿名检索/详情/AI摘要 200 实测) — 零浏览器零登录, 卡片同款双重相关门;
+  ② 浏览器路径 (降级兜底, 原样保留): DrissionPage 有头浏览器(离屏) → 密码登录
+     (凭据读 01 账号授权/洞见研报密码登录账号.txt, 永不打印) → report/search 检索
+     → 卡片双重相关门 → 详情页取摘要+正文可读部分。
+落 data/harvest/djyanbao/<cid>/*.md + records.jsonl (只增).
+只产文件, 绝不写 ammo_pool (不 import, 不 ingest); API 路径成功则
+channel_invocations.jsonl 台账记一行 (tool=api_replica:*, 只增).
 
 纪律:
   1. 双重相关门: 标题/卡片文本命中检索面词 ∧ 命中域词
@@ -41,6 +46,8 @@ from urllib.parse import quote
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 REPO = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPO / "reforge_factory" / "legs"))
+import api_replica_bridge as arb               # noqa: E402 (1024 API优先桥)
 CRED_FILE = (REPO / "ResearchFactory-Eng" / "01 账号授权"
              / "洞见研报密码登录账号.txt")          # 指定凭据源, 只读不打印
 RUNNER_DIR = (REPO / "ResearchFactory-Eng" / "engineering-research.skill"
@@ -304,10 +311,122 @@ def click_scrape_detail(page, card) -> dict:
         return {"title": "", "text": "", "url": ""}
 
 
-def run(cid: str, per_query: int = 3, max_total: int = 12,
-        login_wait: int = 45, dry: bool = False, visible: bool = False) -> int:
+def run_api(plan: list[tuple[str, str]], cid: str, per_query: int,
+            max_total: int, dry: bool) -> tuple[int, str]:
+    """API 优先路径 (1024): 复刻件 djyanbao_api 匿名 JSON 面 — 零浏览器零登录.
+
+    返回 (saved, err): saved>0 = API 路径完成 (调用方免启浏览器);
+    saved=0 + err = 如实降级原因 (调用方回退浏览器路径)."""
     out_dir = REPO / "data" / "harvest" / "djyanbao" / cid
     out_dir.mkdir(parents=True, exist_ok=True)
+    try:
+        mod = arb.load("djyanbao")
+        dj = mod.DjYanbao(use_token=False)           # 匿名面 (VIP PDF 不在采集面)
+    except Exception as e:
+        return 0, f"复刻件加载失败 {type(e).__name__}: {str(e)[:100]}"
+    rec_fp = out_dir / "records.jsonl"
+    records: list[dict] = []
+    if rec_fp.is_file():                             # 只增: 续接既有行
+        try:
+            records = [json.loads(x) for x in
+                       rec_fp.read_text(encoding="utf-8").splitlines() if x.strip()]
+        except json.JSONDecodeError:
+            records = []
+    seen = {r.get("url", "") for r in records}
+    stats = {"queries": 0, "cards": 0, "skip_type": 0, "skip_gate": 0,
+             "skip_short": 0, "saved": 0}
+    NL = chr(92) + "n"
+    NL2 = NL + NL              # f-string 内换行转义 (两字符字面)
+    try:
+        for q, eei in plan:
+            if stats["saved"] >= max_total:
+                break
+            stats["queries"] += 1
+            try:
+                cards, total = dj.search(q, limit=10)
+            except Exception as e:                   # DjAuthError/DjRateLimited/网错
+                return stats["saved"], f"{q}: {type(e).__name__}: {str(e)[:90]}"
+            stats["cards"] += len(cards)
+            got = 0
+            for c in cards:
+                if got >= per_query or stats["saved"] >= max_total:
+                    break
+                blob = " ".join(filter(None, (c.title, c.org, c.snippet,
+                                              c.stock_name or "")))
+                if any(kw in blob for kw in SKIP_TYPE_KEYWORDS):
+                    stats["skip_type"] += 1
+                    continue
+                if not (face_hit(q, blob) and DOMAIN_RE.search(blob)):
+                    stats["skip_gate"] += 1
+                    continue
+                if c.web_url in seen:
+                    continue
+                seen.add(c.web_url)
+                try:
+                    det = dj.detail(c.id)
+                    ai = dj.ai_analysis(c.id)
+                except Exception as e:
+                    return stats["saved"], f"{q}: {type(e).__name__}: {str(e)[:90]}"
+                parts = [str(ai.get("summary") or ""), str(ai.get("reportBrief") or ""),
+                         str(ai.get("outline") or "")]
+                body = NL2.join(x for x in parts if x.strip())
+                if len(body) < 300:                  # AI摘要面门槛 (同浏览器路径 300 字口径)
+                    stats["skip_short"] += 1
+                    continue
+                fname = re.sub(r"[^\w一-鿿-]+", "_", c.title)[:50] + ".md"
+                md = (f"# {det.title or c.title}{NL2}"
+                      f"> 来源: 洞见研报 ({det.web_url}){NL}"
+                      f"> engine: djyanbao:api | tree: {eei} | cred: research"
+                      f" | harvested: {time.strftime('%Y-%m-%d')} (API复刻件匿名面){NL2}"
+                      f"## 检索命中{NL2}关键词「{q}」命中卡片: {c.org}"
+                      f"《{c.title}》 {c.publish_at} {c.page_total}页{NL2}"
+                      f"## 报告元数据{NL2}- 机构: {det.org} | 作者: {det.authors}{NL}"
+                      f"- 发布: {det.publish_at} | 页数: {det.page_total}"
+                      f" | 大小: {det.file_size}{NL2}"
+                      f"## AI 摘要 (api.djyanbao.com 匿名免费面){NL2}{body}{NL}")
+                if dry:
+                    print(f"  [dry] {eei} {fname[:52]} ({len(body)}字)")
+                else:
+                    (out_dir / fname).write_text(md, encoding="utf-8")
+                    records.append({"file": str(out_dir / fname),
+                                    "url": det.web_url, "engine": "djyanbao:api",
+                                    "tree": eei, "cred": "research"})
+                stats["saved"] += 1
+                got += 1
+            print(f"[djyanbao:api] '{q}' → 卡片 {len(cards)} | 累计 saved {stats['saved']}")
+        if not dry and stats["saved"]:
+            with rec_fp.open("a", encoding="utf-8") as f:   # 只追加新行
+                for r in records:
+                    f.write(json.dumps(r, ensure_ascii=False) + "\n")
+            arb.append_invocation(
+                "djyanbao",
+                "api_replica:djyanbao_api(api.djyanbao.com JSON 匿名面: 检索+详情+AI摘要)",
+                "; ".join(q for q, _ in plan[:stats["queries"]]),
+                f"{stats['saved']}件 AI摘要面 ({stats['cards']}卡片)",
+                note="1024 API优先令: djyanbao浏览器腿切复刻件直出; 降级条件=复刻件401/429/网错/零产出",
+                campaign=cid)
+        print(f"[djyanbao:api] {'DRY' if dry else 'APPLY'}: 查询 {stats['queries']} | "
+              f"卡片 {stats['cards']} | 类型跳 {stats['skip_type']} | 域门跳 "
+              f"{stats['skip_gate']} | 短文跳 {stats['skip_short']} | 落件 {stats['saved']}")
+        return stats["saved"], ""
+    except Exception as e:                            # 兜底: 任何意外如实降级
+        return stats["saved"], f"{type(e).__name__}: {str(e)[:120]}"
+
+
+def run(cid: str, per_query: int = 3, max_total: int = 12,
+        login_wait: int = 45, dry: bool = False, visible: bool = False,
+        queries: list[str] | None = None) -> int:
+    out_dir = REPO / "data" / "harvest" / "djyanbao" / cid
+    out_dir.mkdir(parents=True, exist_ok=True)
+    if not visible:                                  # visible=交互修复登录用, 不抢跑
+        plan = [(q, "") for q in queries] if queries else PLAN
+        api_saved, api_err = run_api(plan, cid, per_query, max_total, dry)
+        if api_saved > 0:
+            return 0
+        if api_err:
+            print(f"[djyanbao] API路径未成({api_err}) → 降级浏览器路径 (fallback 原因如上)")
+        else:
+            print("[djyanbao] API路径零产出 → 降级浏览器路径")
     page = create_page(out_dir, visible=visible)
     records: list[dict] = []
     stats = {"queries": 0, "cards": 0, "skip_type": 0, "skip_gate": 0,
@@ -320,7 +439,7 @@ def run(cid: str, per_query: int = 3, max_total: int = 12,
             print("[djyanbao] BLOCKER: 登录未成会话 (改版后密码流被风控/"
                   "验证码挡下, 扫码超时) — 按纪律收兵, 0 件")
             return 1
-        for q, eei in PLAN:
+        for q, eei in ([(x, "") for x in queries] if queries else PLAN):
             if stats["saved"] >= max_total:
                 break
             stats["queries"] += 1
@@ -403,9 +522,12 @@ def main() -> int:
     ap.add_argument("--login-wait", type=int, default=45)
     ap.add_argument("--dry", action="store_true")
     ap.add_argument("--visible", action="store_true", help="窗口主屏可见 (扫码登录用)")
+    ap.add_argument("--queries", default="",
+                    help="逗号分隔查询词覆盖 PLAN (冒烟/定向用; 缺省走 BID26 四面 PLAN)")
     ns = ap.parse_args()
+    qs = [x.strip() for x in ns.queries.split(",") if x.strip()] or None
     return run(ns.campaign, ns.per_query, ns.max_total, ns.login_wait,
-               ns.dry, ns.visible)
+               ns.dry, ns.visible, qs)
 
 
 if __name__ == "__main__":

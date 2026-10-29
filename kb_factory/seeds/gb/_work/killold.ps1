@@ -1,0 +1,1 @@
+Get-CimInstance Win32_Process -Filter "Name='python.exe'" | Where-Object { $_.CommandLine -match 'harvest\.py' } | ForEach-Object { Write-Output ("KILL " + $_.ProcessId); taskkill /PID $_.ProcessId /F }

@@ -225,3 +225,19 @@ planchief/
 kb_factory/harvest_engine/harvest_audit.jsonl
 kb_factory/harvest_engine/**/harvest_audit*.jsonl
 kb_factory/harvest_engine/.cache/
+
+# KB-HARVEST 运行时产物（T43 警示：含运行 token，勿整树入库）
+kb_factory/harvest_engine/e2e/artifacts/
+kb_factory/harvest_engine/e2e/**/work/
+
+# 个人资源清单(密钥汇总,永不进仓 20261023)
+个人资源清单.md
+grl.tmp.md
+
+# zhipu-quota-guard 铁律: 密钥/登录态/账本/面板缓存不入仓
+zhipu-quota-guard/secrets/
+zhipu-quota-guard/state/
+zhipu-quota-guard/ledger/
+zhipu-quota-guard/panel/
+zhipu-quota-guard/.chrome-profile/
+微信小程序/zongbao-ai/tools/_release_token.json

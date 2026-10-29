@@ -1,0 +1,33 @@
+{
+  "repo": "dreammis/social-auto-upload",
+  "url": "https://github.com/dreammis/social-auto-upload",
+  "stars": 15619,
+  "license": "MIT",
+  "pushed_at": "2026-09-02",
+  "archived": false,
+  "language": "Python",
+  "forks": 2648,
+  "platforms": [
+    "抖音",
+    "Bilibili",
+    "小红书",
+    "快手",
+    "视频号",
+    "百家号",
+    "支付宝生活号",
+    "微博",
+    "虎扑",
+    "TikTok",
+    "YouTube"
+  ],
+  "publish_types": "视频全平台; 图文仅抖音/小红书/快手; 定时发布多数平台",
+  "tech_stack": "Playwright浏览器自动化 + Bilibili走biliup协议库; 自带sau CLI与AI skills",
+  "account_mgmt": "Playwright storage_state JSON + xhs的accounts.ini多账号配置 + SQLite(db/)",
+  "signature": "B站走biliup协议上传; 无X-Bogus/a_bogus类签名逆向",
+  "matrix_note": "README平台矩阵: 抖音(视频+图文+定时+CLI+Skill全支持,主线重构最完整); B站运行时自动准备biliup; 小红书/快手浏览器自动化含图文; 视频号tencent_uploader; 百家号/支付宝生活号/微博/虎扑浏览器自动化仅视频; TikTok Chrome版; YouTube Studio",
+  "maintenance": "活跃(2026-09推送)",
+  "adoption": "reuse(MIT)",
+  "source": "gh api+README实测 2026-10-19",
+  "dir_evidence": "uploader/下12个平台模块: alipay/baijiahao/bilibili/douyin/hupu/ks/tencent/tk/weibo/xhs/xiaohongshu/youtube; xhs_uploader含accounts.ini(多账号ini)+扫码登录py; bilibili_uploader仅runtime.py(运行时装biliup协议库); 另有sau_backend/sau_frontend/db/createTable.py(SQLite)/skills/",
+  "status": "COMPLETE"
+}

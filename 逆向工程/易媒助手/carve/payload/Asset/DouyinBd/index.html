@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>融媒宝-热门榜单再见</title>
+    <link rel="icon" href=".\favicon.ico" />
+    <link rel="stylesheet" href="./assets/css/normalize8.0.1.css" />
+    <link rel="stylesheet" href="./assets/css/element-plus@2.3.9.min.css" />
+    <link rel="stylesheet" href="./css/reset.css" />
+    <link rel="stylesheet" href="./css/index.css" />
+    <script src="./assets/js/vue3.min.js"></script>
+    <script src="./assets/js/element-plus@2.3.9.min.js"></script>
+    <script src="./assets/js/element-plus@2.3.9locale_zh-cn.js"></script>
+    <script src="./assets/js/jquery3.5.0.min.js"></script>
+    <script src="./assets/js/echarts@5.4.3.min.js"></script>
+    <!-- <script src="./assets/js/xlsx.core.min.js"></script> -->
+
+    <style>
+      [v-cloak] {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="layout">
+        <!-- 侧边栏菜单 -->
+        <div class="sidebar-wrapper" v-cloak>
+          <div
+            v-for="i of listMenu"
+            :key="i.id"
+            class="menu-item"
+            :class="{'menu-active': i.active}"
+            @click="onHandleSelect(i)"
+          >
+            <div class="item">
+              <embed :src="i.icon" type="image/svg+xml" width="22px" height="22px" />
+              <div class="name">{{ i.name }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 菜单内容 -->
+        <div
+          class="content-wrapper"
+          v-loading="loading"
+          element-loading-text="Loading..."
+          element-loading-background="rgba(223, 223, 223, 0.8)"
+        >
+          <div class="content-container" v-cloak>
+            <!-- 内容主体 -->
+            <div class="main" v-if="!visibleDetails">
+              <div class="export" v-show="!visibleDetails && selectMenuData.type !== 'data'">
+                <el-button @click="onExport">
+                  <svg
+                    t="1692671215813"
+                    class="icon"
+                    viewBox="0 0 1024 1024"
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    p-id="2460"
+                    width="16"
+                    height="16"
+                  >
+                    <path
+                      d="M467.781818 150.626263h88.307071V636.121212c0 13.187879-8.791919 22.109091-22.109091 22.109091h-44.088889c-13.187879 0-22.109091-8.791919-22.109091-22.109091V150.626263z m0 0"
+                      fill="#4E6EF2"
+                      p-id="2461"
+                    ></path>
+                    <path
+                      d="M309.010101 388.913131l-30.90101-30.90101c-8.791919-8.791919-8.791919-22.109091 0-30.90101l218.50505-218.50505c8.791919-8.791919 22.109091-8.791919 30.901011 0l46.286868 46.286868-234.020202 234.020202c-8.791919 8.791919-21.979798 8.791919-30.771717 0z m0 0"
+                      fill="#4E6EF2"
+                      p-id="2462"
+                    ></path>
+                    <path
+                      d="M450.19798 155.022222L496.484848 108.606061c8.791919-8.791919 22.109091-8.791919 30.901011 0l218.50505 218.50505c8.791919 8.791919 8.791919 22.109091 0 30.90101l-30.90101 30.90101c-8.791919 8.791919-22.109091 8.791919-30.90101 0L450.19798 155.022222z m458.989899 348.573738h-44.088889c-13.187879 0-22.109091 8.791919-22.109091 22.109091v286.90101c0 13.187879-8.791919 22.109091-22.109091 22.109091H202.989899c-13.187879 0-22.109091-8.791919-22.109091-22.109091V525.705051c0-13.187879-8.791919-22.109091-22.109091-22.109091h-43.959596c-13.187879 0-22.109091 8.791919-22.109091 22.109091v375.078787c0 13.187879 8.791919 22.109091 22.109091 22.109091h794.375758c13.187879 0 22.109091-8.791919 22.109091-22.109091V525.705051c-0.129293-13.187879-8.921212-22.109091-22.109091-22.109091z m0 0"
+                      fill="#4E6EF2"
+                      p-id="2463"
+                    ></path>
+                    <path
+                      d="M269.187879 591.90303H136.791919v-88.30707h132.39596c13.187879 0 22.109091 8.791919 22.109091 22.109091v44.088888c0 11.119192-8.791919 22.109091-22.109091 22.109091z m617.890909 0H754.682828c-13.187879 0-22.109091-8.791919-22.109091-22.109091v-44.088888c0-13.187879 8.791919-22.109091 22.109091-22.109091h132.39596v88.30707z m0 0"
+                      fill="#4E6EF2"
+                      p-id="2464"
+                    ></path>
+                  </svg>
+                  <span style="color: #4e6ef2; margin-left: 6px">导出数据</span>
+                </el-button>
+              </div>
+
+              <div class="title" v-show="selectMenuData.type !== 'sage'">
+                <h2>{{ selectMenuData.title }}</h2>
+                <img src="./assets/img/reset-1.png" alt="Refresh" @click="onRefresh" />
+              </div>
+
+              <div class="sage-nav" v-show="selectMenuData.type === 'sage'">
+                <h2 :class="{'nav-active': sageTitleActive === '1'}" @click="onSageNav('1')">
+                  行业达人榜
+                </h2>
+                <div class="nav-divider">/</div>
+                <h2 :class="{'nav-active': sageTitleActive === '2'}" @click="onSageNav('2')">
+                  星图达人榜
+                </h2>
+                <img src="./assets/img/reset-1.png" alt="Refresh" @click="onRefresh" />
+                <!-- <div class="nav-desc">
+                  根据达人的影响力指数数据排序，展示不同行业下内容传播效果最好的达人。
+                </div> -->
+              </div>
+
+              <!-- 数据大盘 -->
+              <div class="data-content" v-if="selectMenuData.type === 'data'">
+                <div class="data-wrapper">
+                  <div
+                    v-for="(i, inx) of dataList"
+                    :key="i.id"
+                    class="data-layout"
+                    :class="{'data-layout-back': i.id === '2' || i.id === '5'}"
+                  >
+                    <div class="header">
+                      <div class="left">
+                        <h5 class="title">{{ i.title }}</h5>
+                        <div class="time">{{ i.time }}</div>
+                      </div>
+                      <div class="right" @click="onSelectList(i)">
+                        <span>完整榜单&nbsp;</span>
+                        <embed
+                          src="./assets/icon/rightArrow-1.svg"
+                          type="image/svg+xml"
+                          width="16px"
+                          height="16px"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="label">{{ i.label }}</div>
+
+                    <div v-for="(v, index) of i.list" :key="v.id" class="list">
+                      <div class="list-content">
+                        <div class="ranking">
+                          <img v-show="v.id === 1" src="./assets/img/first1.png" :alt="v.id" />
+                          <img v-show="v.id === 2" src="./assets/img/third1.png" :alt="v.id" />
+                          <img v-show="v.id === 3" src="./assets/img/second1.png" :alt="v.id" />
+                          <div v-show="v.id === 4">4</div>
+                          <div v-show="v.id === 5">5</div>
+                        </div>
+                        <div v-show="v.img" class="avatar">
+                          <el-avatar :size="40" :src="v.img" />
+                        </div>
+                        <div class="title">
+                          <el-text truncated>{{ v.title }}</el-text>
+                        </div>
+                      </div>
+
+                      <div
+                        class="list-option"
+                        :style="`${i.type === 'live' ? 'width: 90px;' : ''}`"
+                      >
+                        <el-text truncated>{{ onFilterate(v.option1) }}</el-text>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 热门榜单 -->
+              <div class="hot-content" v-if="selectMenuData.type !== 'data'">
+                <!-- 榜单title -->
+                <div class="search" v-show="sageTitleActive !== '2'">
+                  <div class="search-date">
+                    <div
+                      v-show="['video', 'live', 'music', 'sage'].indexOf(selectMenuData.type) !== -1"
+                    >
+                      <el-radio-group v-model="videoRadioVal" @change="onHandleRadioChange">
+                        <el-radio-button label="日"></el-radio-button>
+                        <el-radio-button label="周"></el-radio-button>
+                        <el-radio-button label="月"></el-radio-button>
+                      </el-radio-group>
+                    </div>
+                    <div>
+                      <el-select
+                        v-model="hotDayValue"
+                        placeholder="请选择日期"
+                        @change="onHandleChange"
+                        style="width: 208px"
+                      >
+                        <el-option
+                          v-for="item in hotDayOption"
+                          :key="item.id"
+                          :label="item.value"
+                          :value="item.value"
+                        />
+                      </el-select>
+                    </div>
+                    <div>{{ selectMenuData.placeholder }}</div>
+                  </div>
+
+                  <div class="search-hour" v-show="selectMenuData.type === 'hot'">
+                    <div>小时榜</div>
+                    <div
+                      v-for="h of hourList"
+                      :key="h.id"
+                      class="hour-item"
+                      :class="{'hour-item-active': h.active}"
+                      @click="onSelectHour(h)"
+                    >
+                      {{ h.label }}
+                    </div>
+                  </div>
+
+                  <div class="search-tab" v-show="selectMenuData.type === 'hot'">
+                    <div
+                      :class="{'search-tab-active': hotActiveName === 'all'}"
+                      @click="onHandleClick('all')"
+                    >
+                      总榜
+                    </div>
+                    <div
+                      :class="{'search-tab-active': hotActiveName === 'rise'}"
+                      @click="onHandleClick('rise')"
+                    >
+                      上升榜
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 达人Tab -->
+                <div
+                  class="tabs"
+                  v-show="selectMenuData.type === 'sage' && sageTitleActive === '2'"
+                >
+                  <div
+                    v-for="i of starIndex"
+                    :key="i.id"
+                    class="tabs-item"
+                    :class="{'tabs-item-active': startType === i.value}"
+                    @click="onHandleTab(i)"
+                  >
+                    {{ i.label }}
+                  </div>
+                </div>
+
+                <!-- 热点榜单 -->
+                <div class="hot-table" v-show="selectMenuData.type === 'hot'">
+                  <el-table
+                    :data="hotTableData"
+                    style="width: 100%"
+                    size="large"
+                    :header-cell-style="tableHeaderColor"
+                  >
+                    <el-table-column
+                      prop="rank"
+                      label="排名"
+                      width="100"
+                      align="center"
+                    ></el-table-column>
+                    <el-table-column prop="sentence" label="热点名称"></el-table-column>
+                    <el-table-column
+                      prop="hot_level"
+                      label="热点变化趋势"
+                      align="center"
+                      :formatter="onFormatterVal"
+                    ></el-table-column>
+                    <el-table-column label="操作" width="150" align="center">
+                      <template #default="scope">
+                        <div class="hot-details">
+                          <span @click="onViewDetails(scope)">详情</span>
+                        </div>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </div>
+
+                <!-- 话题榜单 -->
+                <div class="topic-table" v-show="selectMenuData.type === 'topic'">
+                  <el-table
+                    :data="hotTableData"
+                    style="width: 100%"
+                    size="large"
+                    :header-cell-style="tableHeaderColor"
+                  >
+                    <el-table-column
+                      prop="rank"
+                      label="排名"
+                      width="100"
+                      align="center"
+                    ></el-table-column>
+                    <el-table-column prop="title" label="话题名称" align="center"></el-table-column>
+                    <el-table-column
+                      prop="effect_value"
+                      label="影响力指数"
+                      align="center"
+                      :formatter="onFormatterVal"
+                    ></el-table-column>
+                    <el-table-column label="操作" width="150" align="center">
+                      <template #default="scope">
+                        <div class="view-video">
+                          <span @click="onViewTopic(scope.row)">查看</span>
+                        </div>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </div>
+
+                <!-- 视频榜单 -->
+                <div class="topic-table" v-show="selectMenuData.type === 'video'">
+                  <el-table
+                    :data="hotTableData"
+                    style="width: 100%"
+                    size="large"
+                    :header-cell-style="tableHeaderColor"
+                    @sort-change="onSortChange"
+                    :empty-text="videoRadioVal !== '日' && !isVip ? '您目前是普通会员，查看权限不足，请升级会员' : '暂无数据'"
+                  >
+                    <el-table-column
+                      prop="rank"
+                      label="排名"
+                      width="100"
+                      align="center"
+                    ></el-table-column>
+                    <el-table-column prop="item_cover" label="视频封面" width="100" align="center">
+                      <template #default="scope">
+                        <div style="min-width: 50px; min-height: 50px">
+                          <el-image
+                            style="width: 50px; margin: 0 auto"
+                            :src="scope.row.item_cover"
+                            loading="lazy"
+                          />
+                        </div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column prop="title" label="视频名称">
+                      <template #default="scope">
+                        <el-text truncated :title="scope.row.title">{{ scope.row.title }}</el-text>
+                      </template>
+                    </el-table-column>
+                    <el-table-column prop="author" label="达人" width="140">
+                      <template #default="scope">
+                        <el-text truncated :title="scope.row.author">
+                          {{ scope.row.author }}
+                        </el-text>
+                      </template>
+                    </el-table-column>
+                    <el-table-column
+                      prop="play_count"
+                      label="播放数"
+                      sortable="custom"
+                      :formatter="onFormatterVal"
+                      align="center"
+                    ></el-table-column>
+                    <el-table-column
+                      prop="digg_count"
+                      label="点赞数"
+                      sortable="custom"
+                      width="135"
+                      :formatter="onFormatterVal"
+                    ></el-table-column>
+                    <el-table-column
+                      prop="comment_count"
+                      label="评论数"
+                      sortable="custom"
+                      width="135"
+                      :formatter="onFormatterVal"
+                    ></el-table-column>
+                    <el-table-column label="操作" width="120" align="center">
+                      <template #default="scope">
+                        <div class="view-video">
+                          <span @click="onOpenVideoUrl(scope.row)">查看</span>
+                        </div>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </div>
+
+                <!-- 直播榜单 -->
+                <div class="topic-table" v-show="selectMenuData.type === 'live'">
+                  <el-table
+                    :data="hotTableData"
+                    style="width: 100%"
+                    size="large"
+                    :header-cell-style="tableHeaderColor"
+                    :empty-text="videoRadioVal !== '日' && !isVip ? '您目前是普通会员，查看权限不足，请升级会员' : '暂无数据'"
+                  >
+                    <el-table-column
+                      prop="rank"
+                      label="排名"
+                      width="100"
+                      align="center"
+                    ></el-table-column>
+                    <el-table-column prop="cover" label="直播封面" width="100" align="center">
+                      <template #default="scope">
+                        <div style="min-width: 50px; min-height: 50px">
+                          <el-image
+                            style="width: 50px; margin: 0 auto"
+                            :src="scope.row.cover"
+                            loading="lazy"
+                          />
+                        </div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column prop="title" label="直播标题">
+                      <template #default="scope">
+                        <el-text truncated :title="scope.row.title">{{ scope.row.title }}</el-text>
+                      </template>
+                    </el-table-column>
+                    <el-table-column prop="nickname" label="达人"></el-table-column>
+                    <el-table-column
+                      prop="hot_value"
+                      label="热度指数"
+                      width="200"
+                      :formatter="onFormatterVal"
+                    ></el-table-column>
+                  </el-table>
+                </div>
+
+                <!-- 音乐榜单 -->
+                <div class="topic-table" v-show="selectMenuData.type === 'music'">
+                  <el-table
+                    :data="hotTableData"
+                    style="width: 100%"
+                    size="large"
+                    :header-cell-style="tableHeaderColor"
+                    :empty-text="videoRadioVal !== '日' && !isVip ? '您目前是普通会员，查看权限不足，请升级会员' : '暂无数据'"
+                  >
+                    <el-table-column
+                      prop="rank"
+                      label="排名"
+                      width="100"
+                      align="center"
+                    ></el-table-column>
+                    <el-table-column prop="cover" label="歌曲封面" width="100" align="center">
+                      <template #default="scope">
+                        <div style="min-width: 50px; min-height: 50px" class="table-img">
+                          <el-image
+                            style="width: 50px; margin: 0 auto; border-radius: 50%"
+                            :src="scope.row.cover"
+                            loading="lazy"
+                          />
+                        </div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column prop="title" label="歌曲标题"></el-table-column>
+                    <el-table-column prop="author" label="作者"></el-table-column>
+                    <el-table-column
+                      prop="use_count"
+                      label="使用量"
+                      width="200"
+                      :formatter="onFormatterVal"
+                    ></el-table-column>
+                    <el-table-column label="操作" width="120" align="center">
+                      <template #default="scope">
+                        <div class="view-video">
+                          <span @click="onOpenVideoUrl(scope.row)">查看</span>
+                        </div>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </div>
+
+                <!-- 达人榜单 -->
+                <div class="sage-table" v-show="selectMenuData.type === 'sage'">
+                  <el-table
+                    :data="hotTableData"
+                    style="width: 100%"
+                    size="large"
+                    :header-cell-style="tableHeaderColor"
+                    v-show="sageTitleActive === '1'"
+                    :empty-text="videoRadioVal !== '日' && !isVip ? '您目前是普通会员，查看权限不足，请升级会员' : '暂无数据'"
+                  >
+                    <el-table-column
+                      prop="rank"
+                      label="排名"
+                      width="100"
+                      align="center"
+                    ></el-table-column>
+                    <el-table-column prop="avatar" label="头像" width="100" align="center">
+                      <template #default="scope">
+                        <div style="min-width: 50px; min-height: 50px">
+                          <el-image
+                            style="width: 50px; margin: 0 auto; border-radius: 50%"
+                            :src="scope.row.avatar"
+                            loading="lazy"
+                          />
+                        </div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column prop="nickname" label="达人"></el-table-column>
+                    <el-table-column
+                      prop="follower_count"
+                      label="粉丝数"
+                      :formatter="onFormatterVal"
+                    ></el-table-column>
+                    <el-table-column
+                      prop="effect_value"
+                      label="影响力指数"
+                      :formatter="onFormatterVal"
+                    ></el-table-column>
+                  </el-table>
+
+                  <el-table
+                    :data="hotTableData"
+                    style="width: 100%"
+                    size="large"
+                    :header-cell-style="tableHeaderColor"
+                    v-show="sageTitleActive === '2'"
+                  >
+                    <el-table-column
+                      prop="rank"
+                      label="排名"
+                      width="100"
+                      align="center"
+                    ></el-table-column>
+                    <el-table-column prop="nick_name" label="达人"></el-table-column>
+                    <el-table-column prop="unique_id" label="抖音号"></el-table-column>
+                    <el-table-column
+                      prop="follower"
+                      label="粉丝数"
+                      :formatter="onFormatterVal"
+                    ></el-table-column>
+                  </el-table>
+                </div>
+
+                <!-- 分页 -->
+                <div class="pagination">
+                  <div v-if="isVip" class="page-layout">
+                    <el-pagination
+                      background
+                      layout="prev, pager, next, sizes, total"
+                      :total="hotPage.total"
+                      :page-size="hotPage.size"
+                      :page-sizes="[15,50,100]"
+                      @update:page-size="onUpdateSize"
+                      :current-page="hotPage.curren"
+                      @update:current-page="onUpdatePage"
+                    />
+                  </div>
+                  <div v-else class="member-layout">
+                    <div class="text">您目前是普通会员，查看权限不足，请升级会员</div>
+                    <div class="button" @click="onUpdateVip">升级会员</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 详情 -->
+            <div class="details" v-else>
+              <el-row>
+                <el-col :span="2">
+                  <h4 class="details-name">热点名称 :</h4>
+                </el-col>
+                <el-col :span="20">
+                  <el-text truncated style="font-size: 16px">
+                    {{ hotDetails.hotRow.sentence }}
+                  </el-text>
+                </el-col>
+                <el-col :span="2">
+                  <div class="details-close" @click="onCloseDetails">返回</div>
+                </el-col>
+              </el-row>
+
+              <!-- 热度图表 -->
+              <div class="details-echarts">
+                <div id="echarts-main"></div>
+              </div>
+
+              <!-- 视频列表 -->
+              <div class="details-video">
+                <div v-for="i of hotDetails.hotVideo" :key="i.item_id" class="grid-cell">
+                  <div class="video-cover" @click="onOpenVideoUrl(i)">
+                    <el-image :src="i.cover" alt="封面" loading="lazy" fit="cover"></el-image>
+                  </div>
+
+                  <div class="video-content">
+                    <div class="video-title">
+                      <el-tooltip placement="top">
+                        <template #content>
+                          <div style="width: 240px; text-align: center">{{ i.title }}</div>
+                        </template>
+                        <el-text truncated>{{ i.title }}</el-text>
+                      </el-tooltip>
+                    </div>
+
+                    <div class="video-action">
+                      <div>
+                        <div>
+                          <svg
+                            width="32"
+                            height="32"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="bvTE03NJ"
+                            viewBox="0 0 36 37"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              clip-rule="evenodd"
+                              d="M18.215 10.124c1.098-1.565 2.901-2.392 4.886-2.392 3.778 0 6.921 3.278 6.921 7.175v0l-.002.257c-.002.085-.003.128.003.142-.014.82-.156 1.497-.407 2.391-.143.161-.275.464-.407.798-.209.323-.287.48-.408.797-.098.166-.202.332-.31.499-1.027 1.585-2.428 3.168-3.825 4.565-2.1 2.114-4.232 3.872-5.163 4.64-.258.212-.424.349-.47.396-.332.33-.663.34-.994.34h-.028c-.68 0-1.02-.34-1.36-.68a3.166 3.166 0 00-.192-.16c-1.032-.761-3.366-2.627-5.553-4.876-1.656-1.687-3.248-3.62-4.122-5.51-.34-.681-.764-2.301-.784-3.2.007-.007.006-.05.004-.137-.002-.063-.004-.15-.004-.262 0-3.899 3.141-7.175 6.922-7.175 1.98 0 3.785.827 5.293 2.392z"
+                              fill="#ff2c55"
+                            ></path>
+                          </svg>
+                        </div>
+                        <div>{{ onFilteStatistics(i.statistics.digg_count) }}</div>
+                      </div>
+                      <div>
+                        <div>
+                          <svg
+                            width="32"
+                            height="32"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="qIngyRdQ"
+                            viewBox="0 0 36 37"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              clip-rule="evenodd"
+                              d="M29.25 17.444c0 2.71-1.304 5.039-3.536 7.274-.196.197-.404.392-.62.584-1.953 2.171-3.86 3.436-5.583 3.94-2.243.657-1.376-2.42-1.348-2.518v-.002c-6.214 0-11.413-3.777-11.413-9.278S11.787 7.483 18 7.483c6.214 0 11.25 4.46 11.25 9.96zm-16.715 1.848c.888 0 1.608-.714 1.608-1.596 0-.88-.72-1.595-1.608-1.595-.887 0-1.607.714-1.607 1.595 0 .882.72 1.596 1.607 1.596zm7.072-1.596c0 .882-.72 1.596-1.607 1.596a1.602 1.602 0 01-1.608-1.596c0-.88.72-1.595 1.608-1.595.887 0 1.607.714 1.607 1.595zm3.857 1.596c.888 0 1.607-.714 1.607-1.596a1.6 1.6 0 00-1.607-1.595c-.887 0-1.607.714-1.607 1.595 0 .882.72 1.596 1.607 1.596z"
+                              fill="#ff2c55"
+                            ></path>
+                          </svg>
+                        </div>
+                        <div>{{ onFilteStatistics(i.statistics.comment_count) }}</div>
+                      </div>
+                      <div>
+                        <div>
+                          <svg
+                            width="32"
+                            height="32"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="oh8cnLMd"
+                            viewBox="0 0 36 36"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              clip-rule="evenodd"
+                              d="M21.884 9.416c-1.209-1.156-3.214-.3-3.214 1.374v2.396c-.132 0-.263 0-.393.003-1.402-.038-6.254.115-9.667 3.775-2.361 2.533-3.423 6.562-3.357 8.642-.062 2.073.905 1.887 1.165 1.41 2.976-5.462 12.252-3.791 12.252-3.791v2.264c0 1.637 1.932 2.508 3.159 1.425l7.989-7.06a1.9 1.9 0 00.055-2.797l-7.99-7.64z"
+                              fill="#ff2c55"
+                            ></path>
+                          </svg>
+                        </div>
+                        <div>{{ onFilteStatistics(i.statistics.share_count) }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./js/data.js?v=1692265965"></script>
+    <script src="./js/utils.js?v=1692265965"></script>
+    <script src="./js/request.js?v=1692265965"></script>
+    <script src="./js/xlsxExport.js?v=1692265965"></script>
+
+    <script>
+      const app = Vue.createApp({
+        data() {
+          return {
+            loginInfo: {},
+            listMenu: listMenu,
+            selectMenuData: {
+              id: "1",
+              type: "data",
+              name: "数据大盘",
+              title: "最新抖音热榜数据",
+              placeholder: "",
+              active: true,
+              icon: "./assets/icon/statistics-1.svg",
+              action: "data_market"
+            },
+            loading: true,
+            visibleDetails: false,
+            hotDetails: {
+              hotRow: {},
+              hotEharts: [],
+              hotVideo: []
+            },
+            dataList: dataList,
+            hotDayValue: getCurrentDate(),
+            hotDayOption: getLastDay(1),
+            hotPage: {
+              curren: 1,
+              size: 15,
+              total: 0
+            },
+            hotTime: {
+              start_time: "",
+              end_time: ""
+            },
+            hotActiveName: "all",
+            hourList: hourList,
+            hotTableData: [],
+            myChart: "",
+            videoRadioVal: "日",
+            sageTitleActive: "1",
+            startType: "star_map",
+            starIndex: starIndex,
+            isVip: null,
+            compareList: compareList
+          }
+        },
+
+        created() {
+          window.setLoginInfo = this.onSetLoginInfo
+          this.onSetLoginInfo(interface.getQueryString())
+          this.onRefresh()
+          this.onGetAction()
+        },
+
+        beforeDestroy() {
+          this.myChart ? this.myChart.dispose() : ""
+          window.removeEventListener("resize", this.onChartResize)
+        },
+
+        methods: {
+          // 更新用户数据
+          onSetLoginInfo(v) {
+            this.loginInfo = v
+            this.isVip =
+              this.loginInfo.usertype === "1" ||
+              this.loginInfo.usertype === "2" ||
+              this.loginInfo.usertype === "3" ||
+              (this.loginInfo.usertype === "4" && this.loginInfo.isteam === "1")
+          },
+
+          // 获取数据大盘
+          onGetDataMarket() {
+            this.loading = true
+            const _this = this
+            const h = new Date().getHours()
+            const date = h < 13 ? getYestDayOrNextDay(-1) : getYestDayOrNextDay(0)
+            const params = {
+              start_time: date + " 00:00:00",
+              end_time: date + " 23:59:59"
+            }
+            request.getDataMarket(params, function (result) {
+              if (result.code === "200") {
+                _this.dataList.forEach(element => {
+                  result.data[element.type].list.forEach((v, index) => {
+                    v.id = index + 1
+                    v.title = v[element.itemTitle]
+                    v.img = element.itemAvatar ? v[element.itemAvatar] : ""
+                    v.option1 = v[element.itemOption1]
+                    v.time = v[element.itemTime]
+                  })
+                  element.list = result.data[element.type].list
+                  element.time = result.data[element.type].active_time
+                })
+              } else if (result !== "abort") {
+                let msg = result.msg || "网络波动，请稍后再试。"
+                ElementPlus.ElMessage({
+                  message: msg,
+                  type: "warning"
+                })
+              }
+              _this.loading = false
+            })
+          },
+
+          // 获取实时热点
+          onGetDataHot() {
+            this.loading = true
+            const _this = this
+            const params = {
+              type: this.hotActiveName === "all" ? 1 : 2,
+              start_time: this.hotTime.start_time,
+              end_time: this.hotTime.end_time,
+              page: this.hotPage.curren,
+              limit: this.hotPage.size
+            }
+            request.getDataHot(params, function (result) {
+              if (result.code === "200") {
+                _this.hotTableData = result.data.list || []
+                _this.hotPage.total = Number(result.data.total)
+              } else if (result !== "abort") {
+                let msg = result.msg || "网络波动，请稍后再试。"
+                ElementPlus.ElMessage({
+                  message: msg,
+                  type: "warning"
+                })
+              }
+              _this.loading = false
+            })
+          },
+
+          // 获取热点详情
+          async onGetHotDetails() {
+            this.loading = true
+            const _this = this
+            const params = {
+              type: this.hotActiveName === "all" ? 1 : 2,
+              start_time: this.hotDayValue + " 00:00:00",
+              end_time: this.hotDayValue + " 23:59:59",
+              sentence: this.hotDetails.hotRow.sentence
+            }
+            request.getHotDetails(params, function (result) {
+              if (result.code === "200") {
+                _this.hotDetails.hotEharts = result.data.hot || []
+                result.data.video_list = isJsonType(result.data.video_list)
+                  ? JSON.parse(result.data.video_list)
+                  : result.data.video_list
+                _this.hotDetails.hotVideo = []
+                if (result.data.video_list && result.data.video_list.length) {
+                  _this.hotDetails.hotVideo = result.data.video_list[0].error_code
+                    ? []
+                    : result.data.video_list
+                }
+
+                if (_this.hotDetails.hotEharts.length) {
+                  let xData = _this.hotDetails.hotEharts.map(el => {
+                    return el.active_time
+                  })
+                  let seriesData = _this.hotDetails.hotEharts.map(el => {
+                    return el.hot_level
+                  })
+                  _this.myChart = Vue.markRaw(echarts.init(document.getElementById("echarts-main")))
+                  const option = {
+                    tooltip: {
+                      trigger: "axis",
+                      formatter(params) {
+                        for (let x in params) {
+                          return (
+                            "出现时间：" + params[x].name + "<br />" + "热度：" + params[x].data
+                          )
+                        }
+                      }
+                    },
+                    grid: {
+                      left: "2%",
+                      right: "2%",
+                      bottom: "8%",
+                      containLabel: true
+                    },
+                    xAxis: {
+                      data: xData,
+                      type: "category",
+                      name: "出现时间",
+                      nameGap: 40,
+                      nameLocation: "center",
+                      nameTextStyle: {
+                        fontSize: 14
+                      }
+                    },
+                    yAxis: {
+                      type: "value",
+                      name: "热度",
+                      nameGap: 30,
+                      nameTextStyle: {
+                        fontSize: 14,
+                        padding: [0, 0, 0, -42]
+                      }
+                    },
+                    series: [
+                      {
+                        data: seriesData,
+                        type: "line",
+                        smooth: true,
+                        name: "热度"
+                      }
+                    ]
+                  }
+                  _this.myChart.setOption(option)
+
+                  window.addEventListener("resize", _this.onChartResize)
+                } else {
+                  document.getElementById("echarts-main").style.display = "none"
+                }
+              } else {
+                let msg = result.msg || "网络波动，请稍后再试。"
+                ElementPlus.ElMessage({
+                  message: msg,
+                  type: "warning"
+                })
+              }
+              setTimeout(() => {
+                _this.loading = false
+              }, 200)
+            })
+          },
+
+          // 获取热门话题
+          onGetDataTopic() {
+            this.loading = true
+            const _this = this
+            let date = this.hotDayValue
+            if (this.hotDayValue === getYestDayOrNextDay(0)) {
+              const h = new Date().getHours()
+              date = h < 13 ? getYestDayOrNextDay(-1) : date
+            }
+            const params = {
+              day_time: date,
+              page: this.hotPage.curren,
+              limit: this.hotPage.size
+            }
+            request.getDataTopic(params, function (result) {
+              if (result.code === "200") {
+                _this.hotTableData = result.data.list || []
+                _this.hotPage.total = Number(result.data.total)
+              } else if (result !== "abort") {
+                let msg = result.msg || "网络波动，请稍后再试。"
+                ElementPlus.ElMessage({
+                  message: msg,
+                  type: "warning"
+                })
+              }
+              _this.loading = false
+            })
+          },
+
+          // 获取热门视频
+          onGetDataVideo() {
+            this.loading = true
+            const _this = this
+            const params = {
+              start_time: this.hotTime.start_time,
+              end_time: this.hotTime.end_time,
+              page: this.hotPage.curren,
+              limit: this.hotPage.size
+            }
+            request.getDataVideo(params, function (result) {
+              if (result.code === "200") {
+                _this.hotTableData = result.data.list || []
+                _this.hotTableData.forEach(el => {
+                  el.digg_count = Number(el.digg_count)
+                  el.play_count = Number(el.play_count)
+                  el.comment_count = Number(el.comment_count)
+                })
+                _this.hotPage.total = Number(result.data.total)
+              } else if (result !== "abort") {
+                let msg = result.msg || "网络波动，请稍后再试。"
+                ElementPlus.ElMessage({
+                  message: msg,
+                  type: "warning"
+                })
+              }
+              _this.loading = false
+            })
+          },
+
+          // 获取直播榜
+          onGetDataLive() {
+            this.loading = true
+            const _this = this
+            const params = {
+              start_time: this.hotTime.start_time,
+              end_time: this.hotTime.end_time,
+              page: this.hotPage.curren,
+              limit: this.hotPage.size
+            }
+            request.getDataLive(params, function (result) {
+              if (result.code === "200") {
+                _this.hotTableData = result.data.list || []
+                _this.hotPage.total = Number(result.data.total)
+              } else if (result !== "abort") {
+                let msg = result.msg || "网络波动，请稍后再试。"
+                ElementPlus.ElMessage({
+                  message: msg,
+                  type: "warning"
+                })
+              }
+              _this.loading = false
+            })
+          },
+
+          // 获取音乐榜
+          onGetDataMusic() {
+            this.loading = true
+            const _this = this
+            const params = {
+              start_time: this.hotTime.start_time,
+              end_time: this.hotTime.end_time,
+              page: this.hotPage.curren,
+              limit: this.hotPage.size
+            }
+            request.getDataMusic(params, function (result) {
+              if (result.code === "200") {
+                _this.hotTableData = result.data.list || []
+                _this.hotPage.total = Number(result.data.total)
+              } else if (result !== "abort") {
+                let msg = result.msg || "网络波动，请稍后再试。"
+                ElementPlus.ElMessage({
+                  message: msg,
+                  type: "warning"
+                })
+              }
+              _this.loading = false
+            })
+          },
+
+          // 获取达人榜
+          onGetDataSage() {
+            this.loading = true
+            const _this = this
+            if (this.sageTitleActive === "1") {
+              let list = { 日: 1, 周: 2, 月: 3 }
+              const params = {
+                start_time: this.hotTime.start_time,
+                end_time: this.hotTime.end_time,
+                page: this.hotPage.curren,
+                limit: this.hotPage.size,
+                flag: list[this.videoRadioVal]
+              }
+              request.getDataSage(params, function (result) {
+                if (result.code === "200") {
+                  _this.hotTableData = result.data.list || []
+                  _this.hotPage.total = Number(result.data.total)
+                } else if (result !== "abort") {
+                  let msg = result.msg || "网络波动，请稍后再试。"
+                  ElementPlus.ElMessage({
+                    message: msg,
+                    type: "warning"
+                  })
+                }
+                _this.loading = false
+              })
+            } else {
+              const params = {
+                type: this.startType,
+                page: this.hotPage.curren,
+                limit: this.hotPage.size
+              }
+              request.getDataStart(params, function (result) {
+                if (result.code === "200") {
+                  _this.hotTableData = result.data.list || []
+                  _this.hotPage.total = Number(result.data.total)
+                } else {
+                  let msg = result.msg || "网络波动，请稍后再试。"
+                  ElementPlus.ElMessage({
+                    message: msg,
+                    type: "warning"
+                  })
+                }
+                _this.loading = false
+              })
+            }
+          },
+
+          // 图表大小变化
+          onChartResize() {
+            this.myChart.resize()
+          },
+
+          // 数据投递 >> 进入页面请求完数据后
+          onGetAction() {
+            const params = {
+              type: 99,
+              uid: this.loginInfo.uid,
+              did: this.loginInfo.did,
+              channel: this.loginInfo.channel,
+              version: this.loginInfo.version,
+              event: this.selectMenuData.action
+            }
+            request.getActionCollect(params, function (result) {
+              console.log("+++" + "数据投递" + "+++")
+            })
+          },
+
+          // 切换菜单
+          onHandleSelect(v) {
+            if (this.selectMenuData.id === v.id) return
+            closeAjax()
+            this.sageTitleActive = "1"
+            this.videoRadioVal = "日"
+            this.visibleDetails = false
+            this.selectMenuData = v
+            this.listMenu.forEach(value => {
+              value.active = value.id === v.id ? true : false
+            })
+            this.onRefresh()
+            this.onGetAction()
+          },
+
+          // 刷新菜单
+          onRefresh() {
+            this.hotTableData = []
+            this.hotPage.curren = 1
+            this.hotPage.size = 15
+            this.hotPage.total = 0
+            this.videoRadioVal = "日"
+
+            if (this.selectMenuData.type === "data") {
+              this.onGetDataMarket()
+            }
+            if (this.selectMenuData.type === "hot") {
+              this.hotDayValue = getCurrentDate()
+              this.hourList.forEach(el => (el.active = false))
+              this.hotActiveName = "all"
+              const currentTime = new Date().getTime()
+              try {
+                this.compareList.forEach(element => {
+                  const time = new Date(element.time).getTime()
+                  if (currentTime < time) {
+                    this.hotTime.start_time = element.value[0]
+                    this.hotTime.end_time = element.value[1]
+                    throw Error()
+                  }
+                })
+              } catch (error) {}
+
+              this.onGetDataHot()
+            }
+            if (this.selectMenuData.type === "topic") {
+              this.hotDayValue = getCurrentDate()
+              this.onGetDataTopic()
+            }
+            if (
+              this.selectMenuData.type === "video" ||
+              this.selectMenuData.type === "live" ||
+              this.selectMenuData.type === "music" ||
+              this.selectMenuData.type === "sage"
+            ) {
+              this.sageTitleActive = "1"
+              this.startType = "star_map"
+              this.hotDayOption = getLastDay(1)
+              this.hotDayValue = getCurrentDate()
+              const h = new Date().getHours()
+              const date = h < 13 ? getYestDayOrNextDay(-1) : getYestDayOrNextDay(0)
+              this.hotTime.start_time = date + " 00:00:00"
+              this.hotTime.end_time = date + " 23:59:59"
+              this.selectMenuData.type === "video" ? this.onGetDataVideo() : ""
+              this.selectMenuData.type === "live" ? this.onGetDataLive() : ""
+              this.selectMenuData.type === "music" ? this.onGetDataMusic() : ""
+              this.selectMenuData.type === "sage" ? this.onGetDataSage() : ""
+            }
+          },
+
+          // 过滤option
+          onFilterate(v) {
+            return Number(v) ? transNumberToShort(Number(v)) : v
+          },
+
+          // 格式化内容
+          onFormatterVal(row, column, cellValue, inde) {
+            return Number(cellValue) ? transNumberToShort(Number(cellValue)) : cellValue
+          },
+
+          // 查看完整榜单
+          onSelectList(v) {
+            let sl = this.listMenu.find(item => {
+              return item.type === v.type
+            })
+            this.onHandleSelect(sl)
+          },
+
+          // 选择日期
+          onHandleChange(v) {
+            if (this.selectMenuData.type === "hot") {
+              let item = this.hourList.find(el => el.active)
+              if (item) {
+                this.hotTime.start_time = v + " " + item.value[0]
+                this.hotTime.end_time =
+                  item.id === 12
+                    ? getDayOrNextDay(1, v) + " " + item.value[1]
+                    : v + " " + item.value[1]
+              } else {
+                if (v === getCurrentDate()) {
+                  const currentTime = new Date().getTime()
+                  try {
+                    this.compareList.forEach(element => {
+                      const time = new Date(element.time).getTime()
+                      if (currentTime < time) {
+                        this.hotTime.start_time = element.value[0]
+                        this.hotTime.end_time = element.value[1]
+                        throw Error()
+                      }
+                    })
+                  } catch (error) {}
+                } else {
+                  this.hotTime.start_time = v + " 00:00:00"
+                  this.hotTime.end_time = v + " 23:59:59"
+                }
+              }
+              this.hotPage.curren = 1
+              this.onGetDataHot()
+            }
+            if (this.selectMenuData.type === "topic") {
+              this.hotPage.curren = 1
+              this.onGetDataTopic()
+            }
+            if (
+              this.selectMenuData.type === "video" ||
+              this.selectMenuData.type === "live" ||
+              this.selectMenuData.type === "music" ||
+              this.selectMenuData.type === "sage"
+            ) {
+              this.hotPage.curren = 1
+              if (this.videoRadioVal === "日") {
+                let date = v
+                if (v === getCurrentDate()) {
+                  const h = new Date().getHours()
+                  date = h < 13 ? getYestDayOrNextDay(-1) : date
+                }
+                this.hotTime.start_time = date + " 00:00:00"
+                this.hotTime.end_time = date + " 23:59:59"
+              }
+              if (this.videoRadioVal === "周") {
+                const date = this.hotDayOption.find(el => el.value === this.hotDayValue)
+                this.hotTime.start_time = date.beforeMonday + " 00:00:00"
+                this.hotTime.end_time = date.beforeSunday + " 23:59:59"
+              }
+              if (this.videoRadioVal === "月") {
+                let str = getMonthFristLast(v)
+                this.hotTime.start_time = str.startingDay + " 00:00:00"
+                this.hotTime.end_time = str.endDay + " 23:59:59"
+              }
+              this.selectMenuData.type === "video" ? this.onGetDataVideo() : ""
+              this.selectMenuData.type === "live" ? this.onGetDataLive() : ""
+              this.selectMenuData.type === "music" ? this.onGetDataMusic() : ""
+              this.selectMenuData.type === "sage" ? this.onGetDataSage() : ""
+            }
+          },
+
+          // 选择小时榜
+          onSelectHour(v) {
+            if (v.active) return
+            this.hourList.forEach(el => {
+              el.active = el.id === v.id ? true : false
+            })
+            this.hotTime.start_time = this.hotDayValue + " " + v.value[0]
+            this.hotTime.end_time =
+              v.id === 12
+                ? getDayOrNextDay(1, this.hotDayValue) + " " + v.value[1]
+                : this.hotDayValue + " " + v.value[1]
+
+            this.hotPage.curren = 1
+            this.onGetDataHot()
+          },
+
+          // 切换总榜和上升榜
+          onHandleClick(v) {
+            this.hotActiveName = v
+            this.hotPage.curren = 1
+            this.onGetDataHot()
+          },
+
+          // 表格表头背景色
+          tableHeaderColor(data) {
+            return { background: "#F8F8F8", color: "#000" }
+          },
+
+          // 表格查看详情
+          onViewDetails({ row }) {
+            this.hotDetails.hotRow = row
+            this.visibleDetails = true
+            this.onGetHotDetails()
+          },
+
+          // 关闭详情页
+          onCloseDetails() {
+            this.myChart ? this.myChart.dispose() : ""
+            window.removeEventListener("resize", this.onChartResize)
+            this.visibleDetails = false
+            this.hotDetails = {
+              hotRow: {},
+              hotEharts: [],
+              hotVideo: []
+            }
+          },
+
+          // 切换页数
+          onUpdatePage(v) {
+            this.hotPage.curren = v
+            this.selectMenuData.type === "hot" ? this.onGetDataHot() : ""
+            this.selectMenuData.type === "topic" ? this.onGetDataTopic() : ""
+            this.selectMenuData.type === "video" ? this.onGetDataVideo() : ""
+            this.selectMenuData.type === "live" ? this.onGetDataLive() : ""
+            this.selectMenuData.type === "music" ? this.onGetDataMusic() : ""
+            this.selectMenuData.type === "sage" ? this.onGetDataSage() : ""
+          },
+
+          // 切换条数
+          onUpdateSize(v) {
+            this.hotPage.curren = 1
+            this.hotPage.size = v
+            this.selectMenuData.type === "hot" ? this.onGetDataHot() : ""
+            this.selectMenuData.type === "topic" ? this.onGetDataTopic() : ""
+            this.selectMenuData.type === "video" ? this.onGetDataVideo() : ""
+            this.selectMenuData.type === "live" ? this.onGetDataLive() : ""
+            this.selectMenuData.type === "music" ? this.onGetDataMusic() : ""
+            this.selectMenuData.type === "sage" ? this.onGetDataSage() : ""
+          },
+
+          // 导出数据
+          onExport() {
+            const is =
+              this.loginInfo.usertype === "2" ||
+              this.loginInfo.usertype === "3" ||
+              (this.loginInfo.usertype === "1" && this.loginInfo.isteam === "1")
+            if (is) {
+              const _this = this
+              ElementPlus.ElMessageBox.confirm(
+                "本次将导出最多500条数据， 如需导出更多数据，请联系客服！",
+                "温馨提示",
+                {
+                  confirmButtonText: "确定",
+                  cancelButtonText: "取消",
+                  type: "warning",
+                  center: true
+                }
+              )
+                .then(() => {
+                  this.loading = true
+                  const handleExport = {
+                    caption: this.selectMenuData.title,
+                    headerList: [],
+                    tableList: [],
+                    tableKey: [],
+                    cellList: [],
+                    exportName: getCurrentDate() + "_" + this.selectMenuData.title
+                  }
+
+                  if (this.selectMenuData.type === "hot") {
+                    const params = {
+                      type: this.hotActiveName === "all" ? 1 : 2,
+                      start_time: this.hotTime.start_time,
+                      end_time: this.hotTime.end_time,
+                      page: 1,
+                      limit: 500,
+                      export: 1
+                    }
+                    request.getDataHot(params, function (result) {
+                      if (result.code === "200") {
+                        handleExport.tableList = result.data || []
+                        handleExport.headerList = ["排名", "热点名称", "热点变化趋势"]
+                        handleExport.tableKey = ["rank", "sentence", "hot_level"]
+                        handleExport.tableList.forEach(el1 => {
+                          let node = []
+                          handleExport.tableKey.forEach(el2 => {
+                            node.push(el1[el2])
+                          })
+                          handleExport.cellList.push(node)
+                        })
+                        exportExcelFromFront(handleExport)
+                      } else {
+                        let msg = result.msg || "网络波动，请稍后再试。"
+                        ElementPlus.ElMessage({
+                          message: msg,
+                          type: "warning"
+                        })
+                      }
+                      _this.loading = false
+                    })
+                  }
+
+                  if (this.selectMenuData.type === "topic") {
+                    let date = this.hotDayValue
+                    if (this.hotDayValue === getYestDayOrNextDay(0)) {
+                      const h = new Date().getHours()
+                      date = h < 13 ? getYestDayOrNextDay(-1) : date
+                    }
+                    const params = {
+                      day_time: date,
+                      page: 1,
+                      limit: 500,
+                      export: 1
+                    }
+                    request.getDataTopic(params, function (result) {
+                      if (result.code === "200") {
+                        handleExport.tableList = result.data || []
+                        handleExport.headerList = ["排名", "话题名称", "影响力指数"]
+                        handleExport.tableKey = ["rank", "title", "effect_value"]
+                        handleExport.tableList.forEach(el1 => {
+                          let node = []
+                          handleExport.tableKey.forEach(el2 => {
+                            node.push(el1[el2])
+                          })
+                          handleExport.cellList.push(node)
+                        })
+                        exportExcelFromFront(handleExport)
+                      } else {
+                        let msg = result.msg || "网络波动，请稍后再试。"
+                        ElementPlus.ElMessage({
+                          message: msg,
+                          type: "warning"
+                        })
+                      }
+                      _this.loading = false
+                    })
+                  }
+
+                  if (this.selectMenuData.type === "video") {
+                    const params = {
+                      start_time: this.hotTime.start_time,
+                      end_time: this.hotTime.end_time,
+                      page: 1,
+                      limit: 500,
+                      export: 1
+                    }
+                    request.getDataVideo(params, function (result) {
+                      if (result.code === "200") {
+                        handleExport.tableList = result.data || []
+                        handleExport.headerList = [
+                          "排名",
+                          "视频名称",
+                          "达人",
+                          "播放数",
+                          "点赞数",
+                          "评论数"
+                        ]
+                        handleExport.tableKey = [
+                          "rank",
+                          "title",
+                          "author",
+                          "play_count",
+                          "digg_count",
+                          "comment_count"
+                        ]
+                        handleExport.tableList.forEach(el1 => {
+                          let node = []
+                          handleExport.tableKey.forEach(el2 => {
+                            node.push(el1[el2])
+                          })
+                          handleExport.cellList.push(node)
+                        })
+                        exportExcelFromFront(handleExport)
+                      } else {
+                        let msg = result.msg || "网络波动，请稍后再试。"
+                        ElementPlus.ElMessage({
+                          message: msg,
+                          type: "warning"
+                        })
+                      }
+                      _this.loading = false
+                    })
+                  }
+
+                  if (this.selectMenuData.type === "live") {
+                    const params = {
+                      start_time: this.hotTime.start_time,
+                      end_time: this.hotTime.end_time,
+                      page: 1,
+                      limit: 500,
+                      export: 1
+                    }
+                    request.getDataLive(params, function (result) {
+                      if (result.code === "200") {
+                        handleExport.tableList = result.data || []
+                        handleExport.headerList = ["排名", "直播标题", "达人", "热度指数"]
+                        handleExport.tableKey = ["rank", "title", "nickname", "hot_value"]
+                        handleExport.tableList.forEach(el1 => {
+                          let node = []
+                          handleExport.tableKey.forEach(el2 => {
+                            node.push(el1[el2])
+                          })
+                          handleExport.cellList.push(node)
+                        })
+                        exportExcelFromFront(handleExport)
+                      } else {
+                        let msg = result.msg || "网络波动，请稍后再试。"
+                        ElementPlus.ElMessage({
+                          message: msg,
+                          type: "warning"
+                        })
+                      }
+                      _this.loading = false
+                    })
+                  }
+
+                  if (this.selectMenuData.type === "music") {
+                    const params = {
+                      start_time: this.hotTime.start_time,
+                      end_time: this.hotTime.end_time,
+                      page: 1,
+                      limit: 500,
+                      export: 1
+                    }
+                    request.getDataMusic(params, function (result) {
+                      if (result.code === "200") {
+                        handleExport.tableList = result.data || []
+                        handleExport.headerList = ["排名", "歌曲标题", "作者", "使用量"]
+                        handleExport.tableKey = ["rank", "title", "author", "use_count"]
+                        handleExport.tableList.forEach(el1 => {
+                          let node = []
+                          handleExport.tableKey.forEach(el2 => {
+                            node.push(el1[el2])
+                          })
+                          handleExport.cellList.push(node)
+                        })
+                        exportExcelFromFront(handleExport)
+                      } else {
+                        let msg = result.msg || "网络波动，请稍后再试。"
+                        ElementPlus.ElMessage({
+                          message: msg,
+                          type: "warning"
+                        })
+                      }
+                      _this.loading = false
+                    })
+                  }
+
+                  if (this.selectMenuData.type === "sage") {
+                    if (this.sageTitleActive === "1") {
+                      const h = new Date().getHours()
+                      const date = h < 13 ? getYestDayOrNextDay(-1) : getYestDayOrNextDay(0)
+                      this.hotTime.start_time = date + " 00:00:00"
+                      this.hotTime.end_time = date + " 23:59:59"
+                      const params = {
+                        start_time: this.hotTime.start_time,
+                        end_time: this.hotTime.end_time,
+                        page: 1,
+                        limit: 500,
+                        export: 1
+                      }
+                      request.getDataSage(params, function (result) {
+                        if (result.code === "200") {
+                          handleExport.tableList = result.data || []
+                          handleExport.headerList = ["排名", "达人", "粉丝数", "影响力指数"]
+                          handleExport.tableKey = [
+                            "rank",
+                            "nickname",
+                            "follower_count",
+                            "effect_value"
+                          ]
+                          handleExport.tableList.forEach(el1 => {
+                            let node = []
+                            handleExport.tableKey.forEach(el2 => {
+                              node.push(el1[el2])
+                            })
+                            handleExport.cellList.push(node)
+                          })
+                          exportExcelFromFront(handleExport)
+                        } else {
+                          let msg = result.msg || "网络波动，请稍后再试。"
+                          ElementPlus.ElMessage({
+                            message: msg,
+                            type: "warning"
+                          })
+                        }
+                        _this.loading = false
+                      })
+                    } else {
+                      const params = {
+                        type: this.startType,
+                        page: 1,
+                        limit: 500,
+                        export: 1
+                      }
+                      request.getDataStart(params, function (result) {
+                        if (result.code === "200") {
+                          handleExport.tableList = result.data || []
+                          handleExport.headerList = ["排名", "达人", "抖音号", "粉丝数"]
+                          handleExport.tableKey = ["rank", "nick_name", "unique_id", "follower"]
+                          handleExport.tableList.forEach(el1 => {
+                            let node = []
+                            handleExport.tableKey.forEach(el2 => {
+                              node.push(el1[el2])
+                            })
+                            handleExport.cellList.push(node)
+                          })
+                          exportExcelFromFront(handleExport)
+                        } else {
+                          let msg = result.msg || "网络波动，请稍后再试。"
+                          ElementPlus.ElMessage({
+                            message: msg,
+                            type: "warning"
+                          })
+                        }
+                        _this.loading = false
+                      })
+                    }
+                  }
+                })
+                .catch(() => {})
+            } else {
+              this.onUpdateVip()
+            }
+          },
+
+          // 过滤视频信息
+          onFilteStatistics(v) {
+            return Number(v) ? transNumberToShort(Number(v)) : v
+          },
+
+          // 打开视频链接
+          onOpenVideoUrl(v) {
+            interface.setOpenUrl(v.share_url)
+          },
+
+          // 切换日 周 年
+          onHandleRadioChange(v) {
+            this.hotDayValue = ""
+            this.hotDayOption = []
+            if (v === "日") {
+              this.onRefresh()
+            }
+            if (this.isVip) {
+              if (v === "周") {
+                this.hotDayValue = ""
+                this.hotDayOption = []
+                for (let i = 1; i < 5; i++) {
+                  let obj = getBeforeWeeksTime(i)
+                  let node = {
+                    id: i,
+                    value: obj.beforeMonday + "/" + obj.beforeSunday,
+                    beforeMonday: obj.beforeMonday,
+                    beforeSunday: obj.beforeSunday
+                  }
+                  this.hotDayOption.push(node)
+                }
+                this.hotDayValue = this.hotDayOption[0].value
+                this.hotPage.curren = 1
+                this.hotTime.start_time = this.hotDayOption[0].beforeMonday + " 00:00:00"
+                this.hotTime.end_time = this.hotDayOption[0].beforeSunday + " 23:59:59"
+
+                this.selectMenuData.type === "video" ? this.onGetDataVideo() : ""
+                this.selectMenuData.type === "live" ? this.onGetDataLive() : ""
+                this.selectMenuData.type === "music" ? this.onGetDataMusic() : ""
+                this.selectMenuData.type === "sage" ? this.onGetDataSage() : ""
+              }
+              if (v === "月") {
+                let obj = getRecentMonth(6)
+                obj.forEach((el, index) => {
+                  let node = {
+                    id: index + 1,
+                    value: el
+                  }
+                  this.hotDayOption.push(node)
+                })
+                this.hotDayValue = this.hotDayOption[0].value
+                let str = getMonthFristLast(this.hotDayValue)
+                this.hotPage.curren = 1
+                this.hotTime.start_time = str.startingDay + " 00:00:00"
+                this.hotTime.end_time = str.endDay + " 23:59:59"
+
+                this.selectMenuData.type === "video" ? this.onGetDataVideo() : ""
+                this.selectMenuData.type === "live" ? this.onGetDataLive() : ""
+                this.selectMenuData.type === "music" ? this.onGetDataMusic() : ""
+                this.selectMenuData.type === "sage" ? this.onGetDataSage() : ""
+              }
+            } else {
+              this.hotTableData = []
+              this.hotDayValue = ""
+            }
+          },
+
+          // 达人榜导航
+          onSageNav(v) {
+            if (this.sageTitleActive === v) return
+            this.sageTitleActive = v
+            if (v === "1") {
+              this.videoRadioVal = "日"
+              this.onRefresh()
+            } else {
+              this.hotPage.curren = 1
+              this.startType = "star_map"
+              this.onGetDataSage()
+            }
+          },
+
+          // 星图指数切换
+          onHandleTab(v) {
+            this.hotTableData = []
+            this.hotPage.curren = 1
+            this.hotPage.size = 15
+            this.startType = v.value
+            v.value === "1" ? this.onRefresh() : this.onGetDataSage()
+          },
+
+          // 升级VIP
+          onUpdateVip() {
+            interface.setUpgradeVip()
+          },
+
+          // 排序监听
+          onSortChange({ column, prop, order }) {
+            if (this.isVip) {
+              if (order === "ascending") {
+                function compare(property) {
+                  return function (a, b) {
+                    let value1 = a[property]
+                    let value2 = b[property]
+                    return value1 - value2
+                  }
+                }
+                this.hotTableData.sort(compare(prop))
+              }
+
+              if (order === "descending") {
+                function compare1(property) {
+                  return function (a, b) {
+                    let value1 = a[property]
+                    let value2 = b[property]
+                    return -(value1 - value2)
+                  }
+                }
+                this.hotTableData.sort(compare1(prop))
+              }
+
+              if (!order) {
+                function compare2(property) {
+                  return function (a, b) {
+                    let value1 = a[property]
+                    let value2 = b[property]
+                    return value1 - value2
+                  }
+                }
+                this.hotTableData.sort(compare2("rank"))
+              }
+            } else {
+              column.order = null
+              this.onUpdateVip()
+            }
+          },
+
+          onViewTopic(row) {
+            const share_url = "https://www.douyin.com/search/" + row.title
+            interface.setOpenUrl(share_url)
+          }
+        }
+      })
+      app.use(ElementPlus, {
+        locale: ElementPlusLocaleZhCn
+      })
+      app.mount("#app")
+    </script>
+  </body>
+</html>

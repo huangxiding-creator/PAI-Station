@@ -151,8 +151,9 @@ def test_cloud_pull_full_chain_via_real_cli(tmp_path, fake_engine):
     sha = digest_of_blueprint(json.loads(bp.read_text(encoding="utf-8")))
     order_cloud = {
         "otn": "o1a2b3c4d-xxxxxx", "email": "buyer@example.com",
-        "version": "md", "need_text": "随单备注", "total_fen": 4700,
-        "buy_quantity": 47, "confirmed_at": "2026-10-22 11:00:00",
+        # 真算价（judge-W11#1 封门口径）：gb=0.01 → (2900+2)*1.5 = 4353
+        "version": "md", "need_text": "随单备注", "total_fen": 4353,
+        "buy_quantity": 43, "confirmed_at": "2026-10-22 11:00:00",
         "blueprint": {"domain": "水利EPC", "files": 7, "gb": 0.01,
                       "total": 29.0, "version_sha": sha},
     }
@@ -172,7 +173,7 @@ def test_cloud_pull_full_chain_via_real_cli(tmp_path, fake_engine):
     o = Order.from_json(p)
     assert o.id == order_cloud["otn"] and o.email == "buyer@example.com"
     assert o.version_selection == "md"          # Order 词法兼容（md→markdown）
-    assert o.price == "47.00" and o.status == "paid"
+    assert o.price == "43.53" and o.status == "paid"
     assert o.blueprint_ref.endswith(".json") and Path(o.blueprint_ref).is_file()
     assert _FakeEngineHandler.state["acked"] == [order_cloud["otn"]]
 
@@ -201,6 +202,33 @@ def test_cloud_pull_unresolved_blueprint_not_acked(tmp_path, fake_engine):
     assert s["unresolved"] == ["oUNKNOWN-sha"]
     assert not list((base / "inbox").glob("*.json"))
     assert _FakeEngineHandler.state["acked"] == []   # 未 ack：云端仍持有
+
+
+def test_cloud_pull_price_tamper_blocked(tmp_path, fake_engine):
+    """judge-W11#1 封门：云端价≠蓝图真值(>50fen) → 不写单不ack+price_mismatch记账。"""
+    import os
+    os.environ["KB_WECOM_NOTIFY"] = "0"          # 测试静默告警腿
+    try:
+        bp = _mini_blueprint(tmp_path, gb=5.0)   # 真值: (2900+1000)*1.5=5850
+        sha = digest_of_blueprint(json.loads(bp.read_text(encoding="utf-8")))
+        _FakeEngineHandler.state["orders"].append({
+            "otn": "oTAMPER-001", "email": "attacker@example.com",
+            "version": "md", "need_text": "低价摘要攻击", "total_fen": 4350,
+            "buy_quantity": 43, "confirmed_at": "2026-10-22 11:06:00",
+            "blueprint": {"domain": "水利EPC", "files": 7, "gb": 5.0,
+                          "total": 43.5, "version_sha": sha},
+        })
+        base = tmp_path / "line3"
+        r = _cli(fake_engine, base, blueprints=tmp_path / "blueprints")
+        assert r.returncode == 0
+        s = json.loads(r.stdout.splitlines()[-1].removeprefix("[cloud-pull] "))
+        assert s["pulled"] == 1 and s["written"] == 0 and s["acked"] == 0
+        assert s["price_mismatch"] and s["price_mismatch"][0]["otn"] == "oTAMPER-001"
+        assert s["price_mismatch"][0]["truth_fen"] == 5850
+        assert not list((base / "inbox").glob("*.json"))
+        assert _FakeEngineHandler.state["acked"] == []
+    finally:
+        os.environ.pop("KB_WECOM_NOTIFY", None)
 
 
 def test_cloud_pull_wrong_key_fails_honestly(tmp_path, fake_engine):

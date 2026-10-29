@@ -1,0 +1,902 @@
+•  
+ 
+Innovative Pathways to Net 
+Zero Emissions: Subnational 
+Strategies for Distributed Solar 
+Deployment to Improve Grid 
+Quality and Reduce Energy 
+Costs in Argentina 
+Pranav Sharma, James Morris, Sarah Turner, Vahan Gevorgian,  
+Tom Harris, Daniella Rough, Maria Sol Saavedra  
+ 
+National Renewable Energy Laboratory 
+ 
+ 
+ 
+ 
+Innovative Pathways to Net 
+Zero Emissions: Subnational 
+Strategies for Distributed Solar 
+Deployment to Improve Grid 
+Quality and Reduce Energy 
+Costs in Argentina 
+Pranav Sharma, James Morris, Sarah Turner, Vahan Gevorgian, 
+Tom Harris, Daniella Rough, Maria Sol Saavedra 
+National Renewable Energy Laboratory 
+Lawrence Livermore 
+National Laboratory 
+Suggested Citation: Pranav Sharma, James Morris, Sarah Turner, Vahan Gevorgian, Tom Harris, Daniella Rough, and Maria Sol Saavedra. 
+2025. Innovative Pathways to Net Zero Emissions: Subnational Strategies for Distributed Solar Deployment to Improve Grid Quality and 
+Reduce Energy Costs in Argentina. Golden, CO: National Renewable Energy Laboratory.NREL/TP-7A40-91767. https:/ /www.nrel.gov/ 
+docs/fy25osti/91767.pdf. 
+ 
+ 
+NOTICE 
+This work was authored in part by the National Renewable 
+Energy Laboratory, operated by Alliance for Sustainable 
+Energy, LLC, for the U.S. Department of Energy (DOE) under 
+Contract No. DE-AC36-08GO28308. The views expressed 
+herein do not necessarily represent the views of the DOE or 
+the U.S. Government. 
+NATIONAL RENEWABLE ENERGY LABORATORY 
+operated by 
+ALLIANCE FOR SUSTAINABLE ENERGY, LLC 
+for the 
+UNITED STATES DEPARTMENT OF ENERGY 
+under Contract DE-AC36-08GO28308 
+This report is available at no cost from the National Renewable 
+Energy Laboratory (NREL) at www.nrel.gov/publications. 
+U.S. Department of Energy (DOE) reports produced after 1991 
+and a growing number of pre-1991 documents are available 
+free via www.OSTI.gov. 
+NREL prints on paper that contains recycled content. 
+iii 
+Acknowledgements 
+The authors wish to thank the U.S. Department of Energy under the Net Zero World Initiative for 
+funding this research. The authors are grateful for the contributions and support they received 
+from the Secretariat of Energy of the Ministry of Economy of Argentina, the Energy and Mining 
+Secretariat of La Pampa, the Administración Provincial de Energía de La Pampa (APELP), and 
+PAMPetrol. Special thanks are extended to Luciano Gonzalez, Ivan Collman and Román Gomez 
+from APELP for their valuable insights, expertise, and assistance in developing the models and 
+analysis utilized in the case study. The authors also appreciate the subject matter expertise 
+provided by NREL colleague, Ron Benioff, and Juan Pablo Carvallo from the Lawrence 
+Berkeley National Laboratory during the review of the case study. Lastly, the authors thank 
+Angela Ortega Pastor and Isabel McCann for preparing their technical edits and assistance in 
+preparing the report for publication.   
+  
+iv 
+List of Acronyms  
+APELP Administración Provincial de Energía de La Pampa 
+ATB Annual Technology Baseline 
+CAMMESA Compañía Administradora del Mercado Mayorista Eléctrico Sociedad 
+Anónima 
+DER distributed energy resource 
+DPV distributed solar photovoltaic 
+NREL National Renewable Energy Laboratory 
+PSS®E Power System Simulator for Engineering 
+PSCAD Power Systems Computer Aided Design 
+PV photovoltaic 
+T&D transmission and distribution 
+USD U.S. dollar 
+v 
+Executive Summary 
+The Net Zero World Initiative is a collaborative effort led by the U.S. Department of Energy 
+involving 9 U.S. government agencies, 10 U.S. national laboratories, 8 member countries, and 
+other international partners. The primary goal of the initiative is to accelerate the decarbonization 
+of energy systems and ensure a smooth energy transition, helping countries enhance their climate 
+goals by developing and implementing technical and investment strategies for achieving net-zero 
+emissions. The Net Zero World Initiative joins forces with international partners to accelerate the 
+transition to a clean and secure energy system in a worldwide effort to build a net-zero world.  
+Through Net Zero World, the National Renewable Energy Laboratory (NREL), the National 
+Energy Secretariat of Argentina, La Pampa’s Energy and Mining Secretariat, PAMPetrol, and 
+the Administración Provincial de Energía de La Pampa (APELP) conducted an integrated 
+analysis of the power system of the La Pampa province in Argentina. The study assessed the 
+impact that solar and battery energy storage systems could have on the regional grid’s reliability 
+and electricity costs, providing insights into long-term decarbonization strategies across 
+Argentina. Both bulk and distributed energy resources (DERs) were considered in the analysis 
+(Jain et al. 2019; U.S. Department Of Energy 2002).1 While DERs can include various electric 
+power sources like wind or diesel, in this case study, they refer specifically to distributed solar 
+photovoltaic (DPV) and lithium-ion battery energy storage systems. Researchers, in this study, 
+evaluated the voltage regulation capabilities of DERs for the distribution system as well as their 
+potential cost benefits. For simplicity, the terms DER and DPV will be used interchangeably in 
+this report to denote both small- and utility-scale photovoltaic (PV) systems, respectively. 
+The analysis demonstrated that the strategic deployment of DERs is expected not only to help 
+with decarbonization efforts, but also to bolster grid resiliency, reduce line losses, and improve 
+voltage regulation while lowering electricity costs (Figure ES- 1). These findings signal the 
+promising local social and economic benefits that distributed renewable energy systems can 
+bring to rural regions, providing a foundation for long-term local sustainability. The prospect for 
+DERs to lower electricity costs for residents is particularly relevant as the Argentine government 
+seeks to reduce energy subsidies (Argentina 2024). This case study shows how local utilities like 
+APELP can achieve greater voltage regulation at a lower cost compared to legacy methods, 
+resulting in more affordable and stable electricity procurement and delivery.   
+ 
+ 
+1 DERs refer to smaller-scale electric power sources that connect to the electric distribution system. For more 
+information on DERs and their history, visit https://www.nrel.gov/docs/fy20osti/72714.pdf or 
+https://www.nrel.gov/docs/fy02osti/31570.pdf   
+vi 
+ 
+Figure ES- 1. Modeled improvements in the voltage regulation of La Pampa’s distribution network 
+with the strategic deployment of DERs  
+Here, the voltages at various points in the network are shown where >0.9 per unit represents the desired voltage. As 
+shown in the figure, multiple points in the present distribution network experience low voltages; however, the 
+deployment of DERs at strategic locations can alleviate these voltage issues. 
+Additionally, this case study indicates that there are significant reliability and economic 
+opportunity costs associated with not providing actionable decision support for local distribution 
+grid upgrades through analyses like this one. This is because installing DPV systems at any grid 
+location does not always lead to improved voltage regulation and instead should be determined 
+through strategic assessments to ensure their effective integration into the grid. Our report offers 
+a replicable framework for similar studies across other Argentine provinces, which could inform 
+a national grid reliability plan and enable regional coordination for DER implementation. Such 
+coordination will play a key role in helping to support a nationwide clean energy transition as 
+Argentina increases its share of renewable energy deployment. Follow-up studies will be 
+essential to analyzing national transmission needs and exploring how provinces can integrate 
+distributed renewable generation with bulk power systems, enhancing both local and national 
+grid reliability. By coordinating subnational energy plans with national strategies, Argentina can 
+secure a resilient clean energy future, leveraging the substantial renewable resources available 
+across its provinces. 
+
+vii 
+Table of Contents 
+Executive Summary .................................................................................................................................... v 
+1 Background ........................................................................................................................................... 1 
+1.1 Summary of La Pampa’s Electric Grid ......................................................................................... 2 
+2 Approach ............................................................................................................................................... 5 
+2.1 Power Flow Analysis .................................................................................................................... 5 
+2.2 Techno-Economic Analysis .......................................................................................................... 7 
+3 Findings ............................................................................................................................................... 10 
+3.1 Voltage Regulation Insights ........................................................................................................ 10 
+3.2 Techno-Economic Evaluation ..................................................................................................... 13 
+4 Next Steps ........................................................................................................................................... 17 
+5 Conclusion .......................................................................................................................................... 19 
+References ................................................................................................................................................. 20 
+viii 
+List of Figures 
+Figure ES- 1. Modeled improvements in the voltage regulation of La Pampa’s distribution network with 
+the strategic deployment of DERs ........................................................................................... vi 
+Figure 1. Distribution of net zero projects in La Pampa ............................................................................... 2 
+Figure 2. Solar resource potential (average global horizontal solar irradiance) in Argentina ...................... 4 
+Figure 3. Map of distribution network during peak demand, highlighting normalized voltage levels at 
+different buses .......................................................................................................................... 6 
+Figure 4. Map of distribution voltage profile when 55 MW of planned PV were integrated to the grid .... 11 
+Figure 5. Map of the identified feeders for minimum DER installation to address voltage ....................... 12 
+Figure 6. Successive impact of strategic DER integration on voltage regulation in La Pampa .................. 12 
+Figure 7. Map of distribution network with the integration of 39.2 MW of strategic DERs ...................... 13 
+Figure 8. Line graph of the levelized cost of electricity across scenarios and CAMMESA power price 
+sensitivities where export was allowed .................................................................................. 15 
+Figure 9. Comparison of fault response at a neighboring bus near Victorica for various inverter 
+capabilities ............................................................................................................................. 17 
+ 
+List of Tables 
+Table 1. Normalized Bus Voltages for Peak Load Scenario ......................................................................... 6 
+Table 2. Scenario Formulation for Techno-Economic Analysis ................................................................... 8 
+Table 3. DER Integration Sites for Voltage Improvement ......................................................................... 12 
+Table 4. Total Single-Axis Tracking Solar PV Capacity (MW) by Scenario (export allowed) .................. 14 
+ 
+1 
+1 Background 
+The complexity of global energy challenges is rooted in the distinct nature of each region, calling 
+for innovative approaches to accelerate the path to a net-zero world. Argentina faces significant 
+energy challenges on many fronts, including an aging infrastructure, a heavy reliance on natural 
+gas generation, and dispersed concentrations of demand (Campos Do Prado, Logan, and Flores-
+Espino 2019).2 Nowhere are these dynamics more apparent than within the province of La 
+Pampa. Located in central Argentina, La Pampa spans 143,440 km2, representing 6% of the 
+nation’s total land area. La Pampa, however, is home to less than 1% of Argentina’s total 
+population, making it one the most sparsely populated provinces in the country with the second-
+lowest population density (La Pampa Government 2021).  Most of La Pampa’s inhabitants reside 
+in the region’s two major cities: General Pico and Santa Rosa, the province’s capital, but there 
+are urban clusters scattered throughout the province. La Pampa’s low population density requires 
+long distribution lines, leading to significant voltage regulation issues that make it difficult to 
+provide reliable electricity service across long distances. These issues need targeted solutions. 
+Distributed energy resources (DERs), including distributed photovoltaic (DPV) systems, are one 
+solution that La Pampa could pursue to raise voltage levels at locations where the voltage drops 
+by injecting real power into the grid in or near these locations. Real power is the electrical energy 
+consumed by devices to perform real work, such as providing light through a light bulb or 
+mechanical energy through an electric motor. Reactive power is the energy that flows back and 
+forth between the source and the end user. By supplying power closer to the point of use, DERs 
+can increase the local current flowing through the line, counteracting the voltage drops to 
+maintain voltage levels. Even if DPV systems are unable to inject real power due to cloud cover 
+or night conditions, their inverters can still support voltage regulation by injecting and/or 
+absorbing reactive power into/from the grid.3 By virtue of these capabilities, DERs can reduce 
+the need for costly voltage regulation equipment like capacitor banks and tap-changing 
+transformers. Given that DPV can also supply electricity to customers at potentially lower costs, 
+while helping to decarbonize electricity generation, there are several value streams associated 
+with these assets. For these reasons, provinces like La Pampa have significant potential to 
+integrate renewable resources into their regional power systems and export clean energy 
+generation to the national grid, which could support country-wide decarbonization strategies. 
+La Pampa has already established an energy transition plan focused on developing its renewable 
+energy resources, including building solar stations, distributed generation, and small photovoltaic 
+systems for general uses (boating, pumping, etc.). The plan also prioritizes energy efficiency by 
+replacing public lighting with LEDs (Figure 1). These technologies will be central to the 
+province's strategy to address local energy challenges and broader national climate goals. 
+Provincial energy transformation efforts like these are critical to supporting Argentina's national 
+ 
+ 
+ 
+3 Reactive power is the power dissipated by reactive components like capacitances and inductances. It is essential 
+for moving active power through the T&D system to the customer end. Reactive power is used to regulate voltage in 
+an electrical system by managing the generation or consumption of reactive power. Reactive power needs to be 
+provided closer to the loads than real power because it does not travel well through the grid. 
+2 
+climate goals, as they help reduce carbon emissions, improve energy resilience, and promote 
+sustainable energy development at the regional level. 
+ 
+Figure 1. Distribution of net zero projects in La Pampa  
+Source: La Pampa Energy Transition Plan 
+1.1 Summary of La Pampa’s Electric Grid 
+Administración Provincial de Energía de La Pampa (APELP) serves as the primary transmission 
+and distribution (T&D) provider in La Pampa, ensuring a reliable electricity supply to over 
+353,000 residents. APELP accomplishes this by maintaining and operating 14 high-voltage 
+transmission lines at 132 kV, which feed into substations. These substations then deliver power 
+to customers through 33-kV and 13.2-kV distribution feeders in non-concessioned areas and 
+through 13.2 kV feeders to 29 electric cooperatives in concessioned areas. Presently, La Pampa 
+receives the bulk of its power from the national grid from four transmission interconnections at 
+500 kV and 132 kV. These transmission interconnections are in the southwest to northeast ends 
+of APELP’s service territory, with the majority of power (~80% of total load) being fed by a 
+single connection to the national grid near the main load center of General Pico and Santa Rosa.  
+The national grid is overseen by the Compañía Administradora del Mercado Mayorista Eléctrico 
+Sociedad Anónima (CAMMESA), which manages Argentina’s wholesale electricity market and 
+coordinates the efficient dispatch of power throughout the country. Apart from procuring power 
+from the national grid, APELP, the La Pampa Energy Secretariat, and PAMPetrol have 
+embarked on their decarbonization pathway with a recent installation of a 7.2-MW solar 
+photovoltaic (PV) plant in Victorica. The anticipated benefits of the solar PV farm, owned and 
+operated by PAMPetrol, will be detailed later in this report. 
+
+3 
+1.1.1 Challenges in the Grid Operation 
+As noted earlier, the distribution lines in La Pampa are long because of the disbursed nature of 
+the population. The longer the distribution line, the greater the power losses along the line, 
+because the electricity is lost to heat from the electrical resistance of the line. Long distribution 
+lines also lead to drops in voltage levels when the power moves farther away from the 
+transmission nodes because the transmission grid acts as the backbone to the power supply and 
+maintains desired voltage levels at various distribution feeders. This raises the issue of 
+maintaining appropriate voltage at various 33-kV and 13.2-kV buses. Buses, also known as 
+busbars, are groups of conductors within a substation that facilitate the transfer of electricity 
+from incoming feeders to outgoing feeders. In this case, they connect APELP’s high-voltage 
+132-kV transmission lines to a transformer, which steps down the electricity’s voltage to 33 kV 
+or 13.2 kV for distribution (Atwa 2019). 
+In a conventional grid operation, it is crucial to supply power to all consumers at a reasonable 
+voltage level (±5% of the buses’ nominal voltages). During peak load conditions, when customer 
+demand is at its highest, APELP has reported extreme voltage drops in their distribution grid 
+(33 kV) that can affect end users. These voltage drops, if they extend beyond 20% of the buses’ 
+nominal values, can lead to a loss of load, impacting the health of various grid components. 
+APELP has identified voltage regulation and grid resiliency as the key issues to be addressed in 
+the near future.4 
+Furthermore, the national grid, served by CAMMESA’s generation mix, relies mostly on natural 
+gas and traditional thermal generators, which in the past has left the country vulnerable to price 
+spikes from fuel shortages.5 APEPL's current power prices from CAMMESA are fixed under a 
+power purchase agreement, and at the time of the analysis, the price APELP paid for power was 
+45 USD per MWh. However, with the recent drastic reduction in energy subsidies, APELP has 
+experienced a 55% increase in its power tariff, where electricity costs approximately 70 USD per 
+MWh now to procure from CAMMESA. This case study examined both CAMMESA price 
+points to assess their respective economic impact on the potential energy cost savings from local 
+solar PV generation. 
+With the dual challenges of voltage regulation and anticipated rising costs, APELP partnered 
+with Net Zero World to conduct an integrated analysis that would assess how DERs like solar 
+PV could provide more cost-effective solutions while addressing voltage regulation issues. 
+Argentina’s renewable energy potential is significant, with strong wind capacity in the south 
+toward Tierra del Fuego and substantial solar resource throughout the country, particularly in the 
+northwest as shown in Figure 2 (NREL, n.d.-b). La Pampa’s provincial government has already 
+expressed its commitment to boosting the region’s renewable energy production and becoming 
+self-sufficient, positioning itself as a leader in sustainable energy development in Argentina. 
+ 
+ 
+4 Here, voltage regulation describes a grid’s ability to maintain sufficient voltage levels across all its distribution 
+feeders, while grid resiliency refers to a power system’s ability to recover to normal operations following faults and 
+disturbances (Kundur and Malik 2022). 
+5 For a detailed analysis of Argentina’s energy mix, refer to the IRENA and Enel Foundation report on Energy 
+Transition Pathways (2023). Argentina remains a net importer of natural gas, which can create economic and energy 
+market challenges during supply shortages. Additional information on Argentina’s natural gas dependency is 
+available from the International Energy Agency (IEA). 
+4 
+Under the Energy Deployment Regime, also known as Law 3285, La Pampa plans to construct 
+three solar PV farms, one of which has already been built in Victorica (Sarmiento 2022). The 
+other solar PV farms will be built in phases near General Pico and Macachín, totaling 55 MW of 
+additional renewable power by 2031. In this way, APELP is ideally positioned to construct 
+distributed solar PV systems along its distribution network. Not only would this reduce APELP’s 
+reliance on CAMMESA for power supply and move La Pampa closer to renewable self-
+generation, but it could also improve the regional grid’s voltage regulation. 
+ 
+Figure 2. Solar resource potential (average global horizontal solar irradiance) in Argentina  
+Source: NSRDB (2024) 
+  
+
+5 
+2 Approach 
+To examine these objectives in an integrated fashion, the National Renewable Energy Laboratory 
+(NREL) designed a study that would: first, evaluate the viability of DPV as a solution to 
+APELP’s voltage regulation challenges and, second, evaluate to what extent generating power 
+locally with PV could be more cost effective than procuring power from CAMMESA. The 
+assessment of the viability for DPV to address voltage regulation was a power flow modeling 
+exercise that identified points in APELP’s distribution network that are the most susceptible to 
+voltage drops during peak load. The same model was used to determine how much DPV would 
+be needed to address voltage regulation challenges. The results of this study were incorporated 
+into a techno-economic (capacity expansion) study that looked at the cost-competitiveness of 
+local solar development and battery energy storage systems compared to continuing imports of 
+electricity from CAMMESA from the national grid. This integrated approach effectively 
+combined technical feasibility considerations with economic assessments to provide a 
+comprehensive understanding of the benefits that DPV could provide APELP in achieving grid 
+reliability and sustainability targets. 
+Net Zero World deployed three modeling tools—Power System Simulator for Engineering 
+(PSS®E), Power Systems Computer Aided Design (PSCAD), and Engage™—to analyze the 
+impacts that DERs could have on La Pampa’s power system. The models were shared with 
+APELP to support ongoing study and to prepare for future DER integration. Each of the 
+modeling tools performed different functions to analyze different types of system impact, though 
+their results often informed decisions about similar system parameters. This process provided 
+opportunities to interpret the analyses in an integrated fashion and use the outputs of one model 
+to inform analysis with the other. The integrated modeling approach was refined with input from 
+APELP to ensure alignment with La Pampa’s regional conditions, system priorities, and project 
+feasibility.6  
+2.1 Power Flow Analysis  
+Using the PSS®E software, NREL first developed a steady-state power flow model to analyze the 
+viability of various load and generation conditions and their effects on voltage regulation 
+(Siemens 2024).7 In PSS®E, NREL analyzed peak demand conditions to represent the worst-case 
+scenario for voltage regulation and line losses. An initial assessment also found that the 33-kV 
+ 
+ 
+6 APELP provided Net Zero World with data from their Electrical Transient Analyzer Program (ETAP) software, 
+which captured important technical characteristics of La Pampa’s T&D network. In addition, APELP provided 
+substation locations and a load profile of the system’s total demand at a 15-minute resolution for an entire year. The 
+load profile provided by APELP reflected the entire T&D network as a single demand curve, without differentiating 
+between individual substations, where demand profiles could vary significantly. To account for this, NREL modeled 
+the same demand profile at all substations but adjusted each one by a scale factor to represent the substation’s share 
+of total system demand. Based on the annual load data provided by APE from 2022, La Pampa’s average electrical 
+load was 150 MW, increasing to 230 MW during the system’s annual peak in the summer. 
+7  A steady-state model refers to studying how electricity flows across the grid under normal conditions, creating a 
+snapshot of the power flow. This contrasts with a dynamic stability model, which examines how the system reacts 
+over time to disturbances from its steady state. The steady-state approach is valuable for understanding the system’s 
+performance under typical operating conditions and identifying potential issues when the system is in a steady, 
+unchanging state. PSS®E is a commercial tool widely used to simulate and analyze electrical grids, assessing both 
+steady-state and dynamic conditions of power systems, from small to very large grid models. 
+6 
+and 13.2-kV feeders downstream from the 132-kV transmission interconnections maintained 
+voltage levels within acceptable ranges; however, feeders located farther away from the 
+transmission grid experienced more significant voltage drops during peak demand. Table 1 
+summarizes the percentage of 33-kV and 13.2-kV buses that underwent voltage drops below 
+their per-unit (pu) threshold value. The voltage levels of the buses are normalized to account for 
+both 33-kV and 13.2-kV feeders in APELP’s distribution network, where a value of 1 pu 
+represents the rated voltage level per unit.8 As shown in Table 1, 71% of the distribution grid 
+violated its voltage regulation limits by over 5% of its nominal value during peak load and will 
+require reinforcement for reliable operations. 
+Table 1. Normalized Bus Voltages for Peak Load Scenario 
+Voltage Threshold <0.95 pu <0.9 pu <0.85 pu <0.8 pu 
+Percentage of Buses With Voltage Levels Below 
+Their Threshold Value (represented pu) 71% 46% 21% 12% 
+For this analysis, the buses that experienced 
+voltage drops below 90% (0.9 pu) of their 
+rated voltage were clustered into smaller 
+groups based on their electrical proximity to 
+each other. The result of the close electrical 
+proximity of members of a group is that any 
+reinforcement aimed at improving the 
+voltage profile of one bus will affect all the 
+buses within its group in a similar way. 
+NREL created five geographical clusters to 
+prioritize areas for DER installation, as 
+depicted in (Figure 3). These were provided 
+to the techno-economic model to inform the 
+buildout of new solar PV generation.  
+The second model NREL developed was in 
+the PSCAD software tool, which captures the 
+electromagnetic transient dynamics of a 
+power system. Electromagnetic transient 
+models are necessary for analyzing the 
+dynamic response of a power system to 
+disturbances, including possible 
+oscillations,9 fault conditions, and 
+instabilities in a grid (Wang 2021). As 
+Argentina expands its renewable energy 
+ 
+ 
+8 For example, if a bus had the rated voltage of 33 kV but the steady state analysis showed the bus voltage dropped 
+to 28 kV, its normalized voltage value would be (28 ÷ 33 = 0.848) less than 0.85 pu.   
+9 Oscillations refer to changes in the alternating current (AC) flow, which can cause different system components 
+like generators to sway between different operating states. Oscillations often occur when there has been a system 
+disturbance like a fault and can lead to system failure if they are not controlled. 
+Figure 3. Map of distribution network during peak demand, 
+highlighting normalized voltage levels at different buses 
+Buses below 0.9 of their normalized voltage level have been clustered 
+based on their electrical proximity and sensitivity. 
+7 
+capacity, the share of inverter-based resources—such as wind and solar PV—will grow in the 
+generation mix.10 These inverter-based resources introduce complex and fast dynamics to grid 
+operations, which will require detailed dynamic stability modeling and simulations to evaluate 
+their impact on grid reliability. Even though NREL focused its power flow analysis on the 
+steady-state model and did not use the PSCAD model beyond an example preliminary fault 
+assessment (Next Steps), both the PSS®E and PSCAD models were developed for APELP to 
+conduct future dynamic stability studies.11 
+2.2 Techno-Economic Analysis  
+For the techno-economic analysis, NREL used Engage, a free-to-use capacity expansion 
+modeling web application developed and web-hosted by the lab. Capacity expansion models 
+simulate investment into new generation, transmission, and storage technologies, given 
+assumptions about future demand, fuel and resource prices, technology costs and performance, 
+and policies and regulations (Boyd 2015). Engage performs least-cost optimizations of the 
+selection, capacities, and dispatches of different generation, transmission, and storage 
+technologies to meet demand, adhering to technical, cost, and sociopolitical constraints set by the 
+modeler (NREL, n.d.-a). 
+NREL built an Engage model to simulate La Pampa’s generation and transmission system12, 
+starting with a baseline model that included the 7.2-MW solar PV farm in Victorica.13  The 
+model incorporated interconnection points to the national grid to represent CAMMESA power, 
+assuming an infinite supply of electricity, limited only by the carrying capacities of the 
+downstream 132-kV transmission lines. Power costs from the national grid were initially set at 
+45 USD per MWh, which was the price at the beginning of the analysis. However, with the 
+recent 55% increase, they were adjusted to 70 USD per MWh to reflect the current cost of the 
+CAMMESA tariff. In the model, both scenarios were run to assess the cost-benefit with and 
+without subsidies. 
+APELP’s existing tariff with CAMMESA limits how much power it can export to the national 
+grid, capping exports to a small percentage of APELP’s served demand. The province, however, 
+retains the flexibility to establish power purchase agreements with CAMMESA. For this case 
+study, NREL explored scenarios both with and without export capabilities. In scenarios allowing 
+ 
+ 
+10 While hydropower is a major source of renewable energy, it relies on turbine based synchronous generators to 
+directly produce AC power synchronized with the grid and hence do not need inverters to converter 
+DC/asynchronous power to synchronized AC power.  
+11 NREL validated both models against the known operating parameters of the existing grid and fine-tuned them 
+through regular discussions with APELP engineers to ensure accurate representation of La Pampa’s electric grid.   
+12 Configured as a capacity expansion model for La Pampa, Engage focused on the transmission system down to the 
+132 kV level to ensure computational feasibility while accounting for numerous time intervals and variables in the 
+analysis. The 132 kV transmission lines were configured to match the lengths, carrying capacities, and pre-
+calculated average carrying efficiencies. Projected demand was aggregated at the transmission substation level.  
+13 To generate the solar production profiles for existing, planned, and new single-axis tracking solar PV systems for 
+the Engage model, NREL used the PVWatts® Calculator—a solar technical modeling tool that generates location-
+specific solar PV production profiles based on historical solar irradiation data. For the Victorica solar PV farm, the 
+timeseries was scaled such that the PVWatts profile total annual production matched the reported annual production 
+of the Victorica PV farm. For more information on the PVWatts Calculator, visit https://pvwatts.nrel.gov/. 
+ 
+8 
+export, NREL assumed there would be no barriers to exporting excess solar PV production and 
+that the national grid would be able to absorb all the exported generation. When export was 
+permitted, NREL postulated that any renewable generation exported would be remunerated at 20 
+USD per MWh when CAMMESA power prices were 45 USD per MWh and at 35 USD per 
+MWh when CAMMESA power prices were 70 USD per MWh, respectively. 
+With feedback from APELP, NREL developed four scenarios that explored the different speeds 
+at which solar PV could be reasonably built in La Pampa, which informed how aggressively the 
+province would need to develop additional solar to become net-zero by 2050. Table 2 
+summarizes the scenarios explored for their economic feasibility. For all scenarios, the model 
+enabled the construction of lithium-ion batteries, if cost-competitive. In addition to solar exports, 
+NREL performed a sensitivity analysis across all scenarios to examine how asset buildout would 
+change with current or increased CAMMESA power prices.  
+Table 2. Scenario Formulation for Techno-Economic Analysis 
+Scenario Description 
+Base 
+Investigated the economics of DPV if APELP only built the currently planned 
+solar PV systems through 2031. This would be an additional 55 MW of solar 
+PV, or 62.2 MW total, including the existing Victorica solar PV farm. 
+Conservative 
+Analyzed the economics of APELP building the planned 55 MW of DPV 
+through 2031 and new solar PV being developed at a maximum rate of 
+9 MW per year after 2031, if cost effective.14 
+Ambitious (Net-Zero) 
+Examined the economics of APELP building the planned 55 MW of DPV 
+through 2031 with new solar PV being developed on an aggressive schedule 
+with the requirement that La Pampa be net-zero on an annual basis by 
+2050.15 During all modeling years, APELP could only export as much solar 
+PV generation as it imported from the grid at night to meet net-zero 
+requirements. NREL exclusively ran this scenario with export capabilities. 
+Cost-Optimal E xplored the economics of APELP building the planned 55 MW of DPV through 2031 with no constraints on the rate of development. 
+ 
+NREL ran 1-year simulations of the model for each scenario every 5 years, starting in 2025 and 
+ending in 2050, assessing how demand growth and technology costs would influence the 
+constrained cost-optimal plant capacities.16 To determine the capital and investment costs of 
+building a new single-axis tracking solar PV system in Argentina, NREL referenced the 
+construction costs of the Victorica solar PV farm, which were approximately 1,134.53 USD per 
+ 
+ 
+14 A 9-MW-per-year development rate was chosen for the Conservative scenario as it represented the average 
+construction rate of La Pampa’s planned solar PV farms (55 MW in 6 years). 
+15 Until 2030, the Engage model imposed no minimum requirement for La Pampa’s demand to be met through in-
+province generation. However, in 2030, NREL adjusted the model to mandate that 30% of demand be satisfied 
+through solar development on an annual basis, increasing to 50% in 2035, 75% by 2045, and 100% by 2050. NREL 
+did not run the model without enabling exports, because achieving net-zero targets without exports would 
+necessitate substantial, cost-prohibitive investments in large-scale solar PV and battery storage systems to meet 
+demand at every timestep. 
+16 In consultation with APELP, NREL assumed that electricity consumption in the province would grow at an annual 
+rate of approximately 3.27% and that the interest rate on any new asset would be 10%. 
+9 
+kW.17 NREL also modeled 4-hour and 6-hour lithium-ion battery storage systems using data 
+from NREL’s Annual Technology Baseline (ATB). The ATB informed the future construction 
+cost curves for both solar PV and battery storage systems, projecting that technology costs would 
+decline overtime.18 
+The geographic clusters of buses that experienced voltage issues identified in the power flow 
+analysis were mapped within Engage using node groups.19 Minimum build requirements were 
+established for the node groups in Engage, corresponding to the minimum DPV required to 
+improve voltage regulation from the power flow model. In other words, Engage required that 
+new solar PV systems be constructed in prioritized areas first, fulfilling minimum capacity 
+targets before any additional solar PV systems could be deployed to other parts of the grid. In all 
+scenarios except the Base scenario, which only considered planned solar PV, these constraints 
+ensured that the solar PV buildout in the techno-economic model aligned with stakeholder 
+objectives for grid reliability.  
+  
+ 
+ 
+17 The Victorica solar PV farm cost 8,168,620 USD to construct. Background information on the Victorica solar PV 
+farm can be found at https://pampetrol.com/parque-solar-fotovoltaico-victorica/ 
+18 The ATB is a dataset of technology-specific cost projections over time, given assumptions about improvements in 
+technology performance, different electricity generation futures, and financial modeling scenarios. The ATB is 
+focused on the North American market, so adjustments may be required to apply it to other markets according to 
+regional factors like the cost of securing financing and skilled labor. NREL pulled the cost forecasts for battery 
+energy storage and solar PV from ATB moderate modeling scenarios. More information on the ATB can be found at 
+https://atb.nrel.gov/.   
+19 Nodes represent mathematical intersections of technologies at assigned locations in the model to measure the flow 
+of energy and commodities. Creating a node group in Engage allowed NREL to set overarching scenario constraints, 
+including minimum build requirements of single-axis tracking solar PV systems at specific locations in the model. 
+10 
+3 Findings 
+The integrated analysis from the power flow and techno-economic studies revealed substantial 
+value in strategically integrating DPV into La Pampa’s grid, for improved voltage regulation (to 
+within 0.9 pu or better across all buses at peak load) and reduced electricity costs. The power 
+flow analysis not only confirmed that locally generated solar PV would alleviate voltage drops in 
+the distribution lines and reduce line losses, but also indicated that a relatively small amount 
+(~32 MW) of renewable generation would be sufficient for voltage regulation if deployed in 
+specific areas. The techno-economic analysis revealed that self-generating a substantial portion 
+of the province’s load through DPV systems would be significantly more cost-competitive than 
+importing power from CAMMESA. Under the current CAMMESA power price (70 USD), the 
+analysis projected that La Pampa residents could face over 2.5 times higher electricity costs by 
+2050 if APELP only developed its planned solar PV construction under the Base scenario 
+compared to the Cost Optimal case. The analysis also identified over 1.2 GW of solar PV to be 
+competitive in La Pampa if exports are allowed, highlighting the favorable conditions for solar 
+energy development that Argentina could leverage in its clean energy transition.   
+3.1 Voltage Regulation Insights 
+The PSS®E model identified numerous significant voltage violations in APELP’s distribution 
+network without strategically placed DPV, with 46% of the system’s buses operating at below 
+90% of their nominal voltage levels during peak demand (Table 1). To determine where DPV 
+systems would have the greatest impact, NREL modeled the incremental integration of DER, 
+assessing improvements to voltage regulation across the geographical clusters with the addition 
+of DPV. NREL first examined the grid’s response if only the planned 55 MW of solar PV 
+systems were built, with 50 MW planned for General Pico and 5 MW for Macachín.  
+As shown in Figure 4, the voltage improvement under the Base case was minimal. At first 
+glance, constructing a large solar PV system in General Pico seems logical, given that it is the 
+second-most-populated city in La Pampa and would supply power closer to high-demand areas, 
+reducing the strain on the grid. The PSS®E model revealed, however, that the planned General 
+Pico PV system would not enhance the grid’s overall voltage regulation because the most critical 
+areas, Clusters 1 and 2, are too far away from the General Pico PV injection point to realize 
+voltage regulation improvements. This analysis highlights a key point that constructing DPV 
+systems in non-strategic locations on the grid may not always effectively address voltage 
+regulation issues. It also demonstrates the potential importance of steady-state analysis in 
+maximizing the benefits of DERs through strategic placement. 
+11 
+  
+ 
+Figure 4. Map of distribution voltage profile when 55 MW of planned PV were integrated to the grid 
+After grouping the affected buses into geographical clusters, the team modeled the potential 
+impacts of increased DER generation at various points in the grid to identify optimal sites and 
+capacities for DER deployment, specifically to improve voltage regulation. Figure 5 shows the 
+locations and capacities of DER facilities determined by the PSS®E model to be sufficient for 
+remedying voltage regulation issues in their corresponding areas. Beginning with the most 
+critical group of buses under Cluster 1, the team developed 12 successive DER installation cases 
+that evaluated the minimum DER capacity needed at each geographical cluster to adequately 
+boost the voltages of the buses in that region during peak load. The cases and their corresponding 
+capacities for remedying voltage regulation issues in each area are listed in Table 3.  
+ 
+
+12 
+Table 3. DER Integration Sites for Voltage Improvement 
+Case Description of Additional DER Installation Total Cumulative DER Installation 
+1 Base case 0 
+2 7.2 MW at Victorica 7.2 MW 
+3 5 MW at Cluster 1 12.2 MW 
+4 4 MW at Cluster 2 16. 2 MW 
+5 4 MW at Cluster 2 20.2 MW 
+6 3 MW at Cluster 5 23. 2 MW 
+7 5.5 MW at Cluster 4 28.7 MW 
+8 2 MW at Cluster 4 30. 7 MW 
+9 2 MW at Cluster 1 32.7 MW 
+10 2.5 MW at Cluster 1 35. 2 MW 
+11 2 MW at Cluster 2 37.2 MW 
+12 
+2 
+MW in the northwestern 
+region of APELP’s service 
+territory 
+39.2 MW 
+The cumulative total minimum DER capacity required to resolve all voltage violations in 
+APELP’s distribution network amount to 39.2 MW, of which 32 MW would be new capacity 
+outside of the 7.2 MW Victorica solar PV farm already installed. Figure 6 charts the impact each 
+case had on the voltage regulation on APELP’s distribution lines. With just the 7.2-MW 
+Victorica solar PV farm online (Case 2), the analysis showed a 30% reduction in the number of 
+buses with voltages that fell below 0.9 pu at peak. Each successive installation yielded smaller 
+gains in voltage regulation compared to the first 7.2 MW installation; however, the total 
+39.2 MW of DER capacity, 
+including 32 MW of new 
+DERs, were indicated to fully 
+resolve voltage regulation 
+issues in the bus clusters, 
+restoring voltage levels back 
+to over 90% (0.9), as shown in 
+Figure 7. NREL had set 0.9 pu 
+as a threshold criterion, 
+because if voltage can be 
+regulated above this level 
+during peak load conditions, it 
+is reasonable to assume that 
+the desired 0.95 pu voltage at 
+all buses could be achieved 
+under normal loading 
+conditions.  
+Figure 5. Map of the identified feeders for 
+minimum DER installation to address voltage 
+ 
+Figure 6. Successive impact of strategic DER integration on 
+voltage regulation in La Pampa 
+13 
+ 
+Figure 7. Map of distribution network with the integration of 39.2 MW of strategic DERs  
+Although the team did not conduct a social cost-benefit analysis for this case study, numerous 
+studies have linked improved grid reliability to social benefits for the end user (Nassif et al. 
+2022; Wachtel, Melander, and Jeffers 2022). This could include reducing social burdens by 
+minimizing the need for backup generators and storage systems. Additionally, adequate voltage 
+regulation avoids damage to and supports proper operation of electrical equipment, preventing 
+the overheating of generators and motors as well as premature electronic equipment failures. In 
+this way, DERs could more than pay for themselves, saving utilities like APELP expenses on 
+energy while avoiding the cost of traditional voltage regulation equipment. Using the strategic 
+placement of DPV for voltage regulation could lower the bundled electricity costs that 
+disproportionally affect low-income households downstream.  
+3.2 Techno-Economic Evaluation 
+The early modeling results from the techno-economic analysis demonstrated significant potential 
+for DPV generation as a cost-effective alternative to importing electricity from the national 
+wholesale market. Under the Cost-Optimal scenario, in which the rate of DPV development was 
+not restricted, the Engage model identified up to 1.2 GW of DPV to be cost-competitive by 2050. 
+This indicates APELP’s potential to lower the province’s electricity costs through local solar 
+generation while positioning itself to become a prominent clean energy exporter to the national 
+
+14 
+grid. Table 4 describes the amount of DPV capacity constructed across all scenarios over the 25-
+year modeling period, including under different CAMMESA power prices.20 
+Table 4. Total Single-Axis Tracking Solar PV Capacity (MW) by Scenario (export allowed) 
+CAMMESA Price refers to the power tariff for which “low” means the initial cost of power at 45 USD per MWh, while 
+“high” means the current cost of power at 70 USD per MWh. 
+Scenario Base Conservative Ambitious Cost-Optimal 
+CAMMESA Price Low High Low High Low High Low High 
+2025 Build 22.2 22.2 22.2 22.2 22.2 22.2 22.2 22.2 
+2030 Build 37.2 37.2 37.2 37.2 32.2 92.2 32.2 92.2 
+2035 Build 62.2 62. 2 98.2 98.2 163.1 175.9 248.8 452.3 
+2040 Build 62.2 62.2 143.2 143.2 189.1 203.1 320.1 472.7 
+2045 Build 62.2 62. 2 188.2 188.2 372.1 389.7 416.1 971.3 
+2050 Build 62.2 62.2 233.2 233.2 590.3 597.7 516.7 1,207.7 
+ 
+The Engage model found DPV to be highly competitive against CAMMESA power, building 
+significant DPV capacity when CAMMESA power prices were both low and high. Under the 
+Conservative scenario, Engage built 9 MW of DPV every year, maximizing the development rate 
+to reach 233.2 MW by 2050. This suggests that the major challenge to developing DPV systems 
+in La Pampa will not be DPV’s cost-competitiveness against other power sources, but rather the 
+potential speed of construction and APELP’s ability to secure reasonable financing. 
+When the model was not constrained by its build rate, Engage indicated that even aggressive 
+DPV generation targets could be economically viable in La Pampa. While the rate-limited 
+Conservative scenario built 233.2 MW of DPV by 2050, the non-rate-limited Cost-Optimal 
+scenario found that over 248 MW of DPV would be cost-competitive as early as 2035. The 
+Ambitious scenario similarly found that it was more cost-effective to build a substantial amount 
+of DPV as early as possible. The slower buildout timeline observed in the Ambitious scenario in 
+contrast to the Cost-Optimal scenario was not a reflection of solar PV’s competitiveness but 
+rather how the model was constrained to meet interim annual net-zero requirements. At points, 
+this created a cap on the Ambitious scenario’s DPV build compared to the capacity constructed 
+under the Cost-Optimal scenario. Only under the low CAMMESA power price sensitivity did the 
+Ambitious scenario need to build more than the Cost-Optimal scenario to meet the 100% annual 
+net-zero load requirement in 2050. 
+ 
+ 
+20 For all scenarios, the model built 22 MW of PV in 2025 because planned solar projects were implemented first. 
+By 2035, all 55 MW of planned solar PV projects were completed, in addition to the existing 7.2-MW Victorica 
+solar PV farm, which was why the Base scenario only built 62.2 MW without further expansion. For the other three 
+scenarios, the model included room for additional solar PV expansion, starting with the prioritized areas for voltage 
+regulation from the power flow analysis. By 2040, all 32 MW of required DPV to ensure voltage regulation was 
+built in the model, with the Conservative, Ambitious (Net-Zero), and Cost-Optimal scenarios differing by how much 
+the model built beyond that. 
+15 
+While CAMMESA prices had no effect on the Base and Conservative scenarios, they did 
+substantially influence the Cost-Optimal scenario. These trends are shown in Figure 8, which 
+presents the levelized costs of electricity for each scenario over the modeling horizon when 
+export was allowed. While scenarios with the high CAMMESA power cost had higher levelized 
+costs of electricity, the divergence between the Cost-Optimal scenario and the other scenarios 
+was striking. When the model was allowed to optimize the build of DPV systems after 2031, the 
+model built significantly more DPV capacity to offset CAMMESA imports with lower-cost DPV 
+generation and increase its exports to the national grid.  
+ 
+Figure 8. Line graph of the levelized cost of electricity across scenarios and CAMMESA power 
+price sensitivities where export was allowed  
+The export dynamics in the model did not have any bearing on the Base and Conservative 
+scenarios because of the rate limit on the DPV build. Because of the limited build rate, any solar 
+PV capacity provided greater value by supplying power to meet demand in the province than 
+through export. This is also why the model did not choose to build any battery energy storage 
+systems across all scenarios. When export was permitted, it was more cost-effective to export 
+solar power to the national grid rather than storing power in batteries, as it generated additional 
+revenue, decreasing the system’s total electricity costs. Even when export was not allowed, the 
+model did not build any batteries because it was cheaper to reduce demand with solar PV during 
+the day and then import the remaining power from CAMMESA, including with increased 
+CAMMESA power prices. These results indicate that battery energy storage systems in La 
+Pampa are not cost-competitive when the province can rely on the national grid.  
+Under the Cost-Optimal scenario when CAMMESA powers costs were low, the price APELP 
+received for selling DPV generation to the national grid was similarly low, resulting in little 
+incentive for the model to invest heavily in DPV for export. In the high CAMMESA power price 
+sensitivity, though, the export rate was higher, enough to incentivize the model to build more 
+solar PV than needed to meet demand. This indicates that the ability to export excess DPV 
+
+16 
+generation to the national grid for revenue substantially increases the amount of local DPV that 
+can be constructed economically. The extent to which there will be a national market for PV 
+generation exports, however, will depend upon Argentina’s generation mix going forward—in 
+addition to accommodating significant renewable penetration to the grid. For this reason and 
+others, local planning must be carefully coordinated with the national context for accurate 
+assessments of grid asset valuations. 
+  
+17 
+4 Next Steps 
+This case study provided a high-level evaluation of the likely benefits that DPV systems could 
+bring to rural power systems like La Pampa. The analysis showed that strategic new DPV 
+systems could resolve the province’s voltage regulation issues at electricity cost savings for the 
+province (i.e., at a negative cost). Further efforts are necessary, however, to build upon these 
+findings to properly support an actionable path forward for APELP. For one, the study indicates 
+that, while the planned DPV systems will help APELP reduce electricity costs for residents, such 
+systems will not improve the region’s voltage regulation, and may, in some cases, even worsen 
+bus voltage levels. Therefore, it may be beneficial either to reassess the locations for the planned 
+DPV systems, prioritizing strategic placements, or build new strategic systems alongside the 
+planned DPV through 2031. 
+In addition, while the steady-state power flow analysis provided valuable insight into the sites 
+and capacities for DERs to address voltage regulation, a comprehensive dynamics stability 
+analysis is essential to fully understanding the broader system implications of DER integration. 
+To support this effort, NREL developed and shared a PSCAD model of La Pampa’s T&D 
+network, positioning APELP to move forward with such a study. Using the PSCAD model, 
+NREL conducted an example preliminary fault analysis to demonstrate the types of dynamics 
+stability studies APELP will need to plan for DER integration, such as evaluating the impact of 
+different DPV systems’ inverter capabilities on system resilience. As shown in Figure 9, when a 
+DPV resource was not connected to the grid, the voltage drop during a fault event was more 
+severe than when a DPV system with grid-following inverters equipped with basic control 
+capabilities was connected to the grid. The voltage drop was further reduced by grid-forming 
+inverters with fault-ride-through capabilities. As APELP advances its plans for local renewable 
+generation, this type of dynamic stability analysis will be useful in guiding project decisions, 
+because solar PV systems with fault-ride-through capabilities are slightly more expensive to 
+construct but offer greater reliability benefits. 
+ 
+Figure 9. Comparison of fault response at a neighboring bus near Victorica for various inverter 
+capabilities  
+0
+0.2
+0.4
+0.6
+0.8
+1
+1.2
+0.5 0.7 0.9 1.1 1.3 1.5 1.7 1.9
+V (p.u.)
+Time (secs)
+Fault response and voltage recovery with DER integration
+Existing grid Grid following PV resource with basic control
+Grid forming PV resource with FRT capabilities
+18 
+Furthermore, in this study, the team assessed grid implications of DPV in La Pampa under 
+steady-state conditions with the assumption that the national grid’s reliability remained 
+unchanged. If other provinces also adopt DERs, a national-scale reliability study should be 
+conducted to evaluate the full network complexities created by widespread DER integration. 
+This need arises because as the national grid becomes increasingly reliant on variable resources 
+for power, with more provinces moving toward local renewable generation, there could be broad 
+implications for managing the grid, such as high variability, low inertia conditions, and limited 
+grid strength.  
+These factors should be studied to ensure national coordination among provinces to prevent 
+overcapacity from solar during the day, oscillatory events, and large-scale power outages 
+(blackouts). In addition, datasets might be created and leveraged by CAMMESA and the 
+National Energy Secretariat to identify voltage vulnerabilities in the national grid and coordinate 
+with provinces to address those vulnerabilities through DER integration. The Demand Response 
+Technical Working Group of Argentinean utilities, led by the National Energy Secretariat and 
+supported by Net Zero World, is ideally situated to analyze this data and translate it into 
+strategies for improving grid operations. This could include developing DERs to reduce peak 
+load and maximize regional economic and social benefits.  
+Although this case study focused on DPV as a DER, wind power also holds promise across a 
+number of regions of Argentina, especially in provinces farther south toward Tierra del Fuego. In 
+a separate Net Zero World case study, NREL and its project partners found that wind farms 
+could cost-competitively serve a significant portion of Tierra del Fuego’s load (Harris et al. 
+2024).21 Moreover, the province’s potential to export excess wind production to the mainland 
+was a key finding, one that may be relevant to La Pampa and other provinces in Argentina. The 
+potential to export surplus renewable electricity is a pivotal insight that may shape Argentina’s 
+national grid regulatory framework in the future.  
+Currently, APELP, like other T&D providers, faces restrictions on what it is permitted to export 
+to the national grid. While APELP could create power purchase agreements to sell power to 
+CAMMESA, this process can be lengthy and highlights the need for creating a regulatory 
+environment that can address these challenges not just in La Pampa but across provinces. 
+Establishing regulations that support large exports to the grid will strengthen national energy 
+planning and enhance coordination among provinces on their renewable energy projects. These 
+regulations should be explored in a national-scale study as well that would consider the effect 
+increased renewable deployment would have on the cost of power. For example, if provinces 
+expand DPV development, generating a significant amount of solar energy during the day, it 
+could lead to an oversupply when demand is low. If unaddressed, this could severely jeopardize 
+the long-term economic viability of DPV deployment for a province by creating solar value 
+deflation as seen in California and European countries. National-scale planning and operational 
+modeling in this way could help provide important data on future power costs to better inform 
+national-scale DER integration and valuation. 
+  
+ 
+ 
+21 The full report can be read at https://www.nrel.gov/docs/fy24osti/88156.pdf. 
+19 
+5 Conclusion 
+This Net Zero World case study highlights the great opportunity for realizing the benefits of 
+integrating DPV into the La Pampa electric grid. To address the province’s priorities for grid 
+reliability, sustainability, and economic security, NREL created a modeling framework that 
+combined insights from power flow and techno-economic models to evaluate two key impacts 
+from the strategic placement of DPV: improved voltage regulation and energy cost savings. 
+The study results position APELP to create an informed action plan to pursue local renewable 
+generation with identified strategic sites for DER integration and expected system savings to 
+build a compelling business case. The work performed in this case study could serve as a 
+blueprint for the other provinces in Argentina that experience similar challenges, including 
+dispersed populations and heavy reliance on aging natural gas systems. The case study also 
+indicates the potential for missed opportunities as provinces pursue local renewable generation if 
+they do not conduct reliability studies to ensure that DPV integration is designed to contribute 
+system services maximally. Strategically locating and operating DPV in consideration of 
+reliability concerns, like voltage regulation, can provide multiple economic value streams. This 
+includes a reduced reliance on CAMMESA power as well as avoided costs associated with 
+traditional voltage regulation equipment and premature electronic equipment failures.  
+Argentina’s diverse geography and regional resources offer valuable opportunities for renewable 
+energy deployment, particularly in areas with high solar and wind potential. The insights from 
+this La Pampa study may imply similar opportunities elsewhere in Argentina while pointing to 
+the need for a national study integrating and synthesizing such findings. Accounting for the full 
+value of regional opportunities for DERs in national planning can help advance Argentina’s 
+clean energy transition more effectively than approaches that account only for the energy value 
+of transmission-connected grid assets. This strategy will ultimately pave the way for a more 
+sustainable, reliable, and just clean energy future for all of Argentina’s provinces. 
+  
+20 
+References  
+Atwa, Omar Salah Elsayed. 2019. “Chapter 2 - Substations.” In Practical Power System and 
+Protective Relays Commissioning, edited by Omar Salah Elsayed Atwa, 9–21. Academic Press. 
+https://doi.org/10.1016/B978-0-12-816858-5.00002-2. 
+Argentina. 2024. “Decree 465/2024: Provisions, Legislation and Official Notices.” BOLETIN 
+OFICIAL REPUBLICA ARGENTINA. Buenos Aires. DECTO-2024-465-APN-PTE - 
+Disposiciones. https://www.boletinoficial.gob.ar/detalleAviso/primera/308255. 
+Boyd, Erin. 2015. “Power Sector Modeling 101.” 
+https://www.energy.gov/sites/prod/files/2016/02/f30/EPSA_Power_Sector_Modeling_FINAL_0
+21816_0.pdf. 
+Campos Do Prado, Josue, Jeffrey Logan, and Francisco Flores-Espino. 2019. Options for 
+Resilient and Flexible Power Systems in Select South American Economies. Golden, CO: NREL. 
+NREL/TP--6A50-75431, 1577969. https://doi.org/10.2172/1577969. 
+Enel Foundation. 2023. “Energy Transition Pathways in South America.” Abu Dhabi: 
+International Renewable Energy Agency. https://openinnovability.enel.com/content/dam/enel-
+foundation/topics/2024/05/irena/IRENA_ENEL_Energy_transition_pathways_2023.pdf.  
+Harris, Tom, Sarah Turner, James Morris, Anastasiia Sakharova, Omar Guerra, Juan Carvallo, 
+Daniella Rough, Ezequiel Perez Vazquez, Joaquin Perez Torres, and Ana Ferrera. 2024. Tierra 
+Del Fuego Case Study Capacity Expansion Analysis. Golden, CO: NREL. NREL/TP--7A40-
+88156. https://doi.org/10.2172/2348906. 
+IEA (International Energy Agency). 2022. “Argentina.” 
+https://www.iea.org/countries/argentina/natural-gas. 
+Jain, Akshay Kumar, Adarsh Nagarajan, Ilya Chernyakhovskiy, Thomas Bowen, Barry Mather, 
+and Jaquelin Cochran. 2019. “Overview of Evolving Distributed Energy Resource Grid 
+Interconnection Standards: Preprint.” Renewable Energy. 
+https://www.nrel.gov/docs/fy20osti/72714.pdf. 
+Kundur, Prabha S., and Om P. Malik. 2022. “Basic Concepts Related to Voltage Stability.” In 
+Power System Stability and Control. McGraw-Hill Education. 
+https://www.accessengineeringlibrary.com/content/book/9781260473544/toc-
+chapter/chapter14/section/section2. 
+Nassif, Alexandre B., Sean Ericson, Chad Abbey, Robert Jeffers, Eliza Hotchkiss, and Shay 
+Bahramirad. 2022. “Valuing Resilience Benefits of Microgrids for an Interconnected Island 
+Distribution System.” Electronics 11 (24): 4206. https://doi.org/10.3390/electronics11244206. 
+NREL. n.d. "ATB." Accessed November 6, 2024. https://atb.nrel.gov/. 
+—. n.d. "PVWatts Calculator." Accessed November 6, 2024. https://pvwatts.nrel.gov/. 
+21 
+—. n.d. "NSRDB: National Solar Radiation Data Base." Accessed November 6, 2024. 
+https://nsrdb.nrel.gov/. 
+PAMPetrol. n.d. “Parque Solar Victorica.” https://pampetrol.com/parque-sol ar-fotovoltaico-
+victorica/. 
+PSCAD. n.d. "PSCAD: Power Systems Computer Aided Design." Accessed November 6, 2024. 
+https://www.pscad.com/.  
+Sarmiento, Franyi. 2022. “In Argentina They Advance with an Innovative Photovoltaic Energy 
+Plan.” Inspenet. April 8, 2022. https://inspenet.com/en/noticias/in-arg entina-they-advance-with-
+an-innovative-photovoltaic-energy-plan/. 
+Siemens. 2024. “Get to Know PSS®E: Robust Transmission Planning and Analysis.” 
+https://www.siemens.com/us/en/products/energy/grid-software/planning/pss-software/pss-e.html. 
+U.S. Department Of Energy. 2002. “Using Distributed Energy Resources: A How-to Guide for 
+Federal Facility Managers.” Distributed Generation & Alternative Energy Journal, October, 37–
+66. https://doi.org/10.13052/dgaej2156-3306.1743. 
+Wachtel, Amanda, Darryl Melander, and Robert Jeffers. 2022. Measuring Societal Infrastructure 
+Service Burden. Sandia, NM: Sandia National Laboratories. SAND2022-2029R. 
+https://doi.org/10.2172/1846088. 
+Wang, Bin. 2021. “Demystifying Power System Oscillations - Recent and Ongoing Efforts.” 
+Presented at the 2021 Joint Synchronized Information Subcommittee (JSIS) Meeting, Grid 
+Planning and Analysis Center, NREL, May 13, 2021. 
+https://www.nrel.gov/docs/fy21osti/79994.pdf. 
+ZFL La Pampa. n.d. “Zona Franca General Pico.” Accessed November 6, 2024. 
+http://www.zflapampa.com.ar/en/general-pico/. 
+ 
+Lawrence Livermore 
+National Laboratory 
+National Renewable Energy Laboratory NREL is a national laboratory of the U.S. Department of Energy, 
+15013 Denver West Parkway, Golden, CO 80401 Ofce of Energy Efciency and Renewable Energy, operated 
+303-275-3000  •  www.nrel.gov by the Alliance for Sustainable Energy, LLC. 
+NREL prints on paper that contains recycled content. NREL/TP-7A40-91767  •  January 2025 

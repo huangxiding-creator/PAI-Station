@@ -210,6 +210,14 @@ def chapter_verdict(md_text: str, chapter_type: str = "精编", *,
     m = metrics(md_text)
     table = load_thresholds(thresholds_path)
     th = _thresholds_for(chapter_type, table)
+    lb = table.get('length_buckets')   # v3(1024): 长度分层桶按章长覆盖型阈值(Heaps律修正)
+    if lb:
+        _cjk = m.get('cjk_chars', 0)
+        for _name, _b in lb.items():
+            _lo, _hi = _b.get('cjk_min', 0), _b.get('cjk_max', 10**12)
+            if _lo <= _cjk < _hi:
+                th = {**th, **{k: v for k, v in _b.items() if not str(k).startswith('cjk_')}}
+                break
     failed = []
     for metric_key, rule_key, direction in _RULE_KEYS:
         limit = th.get(rule_key)

@@ -1,0 +1,27 @@
+# 360浏览器画像复采：工程计价维度（EPC-JIAGE · browser360 二波补位）
+
+- 取证时间: 2026-10-25（S1军令「所有渠道都要使用」二波补位腿）
+- 渠道: 360浏览器画像 | engine_id: browser360 | 取证方式: 本机书签库只读复筛 + 纯HTTP抓取，未启动任何浏览器
+- 数据源: EPC-OVERSEAS staging 360画像法全量书签导出 bookmarks_full_export_20261024.json（2551条, 源自360se6 DailyBackup/360default_ori_2026_10_23.favdb 明文JSON）
+
+## 一、筛选实测（数字零造假）
+- 核心词 造价|计价|定额|结算: 命中 2 条（均为10.x内网源, 抓取实测timeout=内网不可达, 真实死因）
+- 扩展词(信息价/工程量清单/组价/招标控制价/预算/概算/取费/基价/人材机/综合单价): 总命中 3 条, 除核心词外新增 1 条
+- 公网可抓取: 0 条
+
+## 二、命中清单（全量, 实测）
+| 命中词 | 书签名 | URL | 抓取结果 |
+|---|---|---|---|
+| 造价 | 『施工设计部-施工组织 创造价值』 - 首页 - 施工组织 创造价值 | http://10.4.134.7/sgb/ | timeout/内网不可达 err=URLError(TimeoutError('timed out')) |
+| 造价 | 施工设计及工程管理部 [施工组织 创造价值 工程管理 未来有您！] | http://10.4.134.44/sgb/ | timeout/内网不可达 err=URLError(TimeoutError('timed out')) |
+| 概算 | 贵州省政府投资项目概算调整审批办法（黔发改建设[2013]558） | http://www.gzmwr.gov.cn/Content.aspx?ItemID=43782 | 失败 URLError(gaierror(11001, 'getaddrinfo failed')) |
+
+## 三、360History 历史库（引用既往实测）
+- 30,048,256B 全库逐页加密(chrome.dll SEE式sqlite codec, 页号参与加密, journal同密文), SQLite直读blocked——详见同目录 360history_reverse_progress_20261025.md。本腿不重复攻坚, 仅书签面复采。
+
+## 四、计价维度弹药正文（公网命中全文）
+(公网命中 0 条可抓正文——内网2条timeout + 公网gov源抓取失败, 全部真实死因见上表)
+
+## 五、结论
+- browser360 渠道计价维度: 书签面核心词命中仅2条内网源(不可达), 扩展词新增1条公网gov源(抓取结果见上表)。
+- 渠道判定: 已用尽(2551条全量复筛, 无遗漏); 本腿零造假, 死因如实。

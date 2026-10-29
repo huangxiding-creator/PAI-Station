@@ -1,0 +1,149 @@
+{
+  "task": "W3 wenku-Setup-3.4.3 app.asar 静态API面猎杀",
+  "date": "2026-10-21",
+  "method": "纯静态: asar定向抽取(SHA256校验) + 正则字符串挖掘 + 调用点上下文人工研判; 未运行/未联网",
+  "base_default": "https://wenku.baidu.com (main.bundle.js module 14019 currentUrl, @929063)",
+  "endpoints": [
+    {
+      "id": "EP01",
+      "star": true,
+      "name": "用户登录信息",
+      "method": "GET",
+      "path": "/user/interface/getuserinfo",
+      "host": "https://wenku.baidu.com",
+      "params": "无显式参数(靠Cookie); 返回 {data:{userInfo:{isLogin,...}}}",
+      "evidence": "build/main.bundle.js@1067146 (module 58426 SERVICE_API.USERINFO) / fetchUserInfo调用@1065477",
+      "confidence": "高(定义+消费双证)"
+    },
+    {
+      "id": "EP02",
+      "star": true,
+      "name": "VIP会员信息",
+      "method": "GET",
+      "path": "/customer/interface/vipinfo",
+      "host": "https://wenku.baidu.com",
+      "params": "无显式参数(靠Cookie); 返回 {data:{vipInfo对象, 供下载权限展示}}",
+      "evidence": "build/main.bundle.js@1067282 (SERVICE_API.VIPINFO); fetchUserInfo合并 vipInfo@1065701",
+      "confidence": "高"
+    },
+    {
+      "id": "EP03",
+      "name": "投放转化上报(TF)",
+      "method": "GET",
+      "path": "/user/interface/sendconvertevent",
+      "host": "https://wenku.baidu.com",
+      "params": "event(默认'13'=TFActivity), url(=trackPath, ^..^包裹剪除), bdvid; 渠道 wkpc通道newClient2024",
+      "evidence": "build/main.bundle.js@1067431 (SERVICE_API.TFLaunch) / sendLaunchParams@1054556 / IPC WK_SEND_TF_LOG@1005506",
+      "confidence": "中高(GET query参数形态由调用侧拼装推断)"
+    },
+    {
+      "id": "EP04",
+      "star": true,
+      "name": "sula推荐召回(结构化元数据)",
+      "method": "POST",
+      "path": "/gsula/sula/syncmrecall",
+      "host": "https://wenku.baidu.com",
+      "params": "body={requests:[{sceneID:<n>}]}, Content-Type: application/json;charset=utf-8, withCredentials(wkAxios)",
+      "evidence": "build/main.bundle.js@990574 (module 88655 getSulaData, wkAxios直调) / IPC sula-params->get-sula-data@963897",
+      "confidence": "高(完整请求体原文); 返回文档推荐元数据, 免费层结构化数据最佳直连候选"
+    },
+    {
+      "id": "EP05",
+      "name": "收银台扫码支付码(拦截改写)",
+      "method": "GET(页面XHR)",
+      "path": "/cashier/interfacev2/getqrpaycode",
+      "host": "https://wenku.baidu.com",
+      "params": "客户端webRequest改写: 删action, 加 ext_third_fr=pc_client_win_{channel}_{appVer} 后放行",
+      "evidence": "build/main.bundle.js@1070856 (URL拦截器)",
+      "confidence": "高(改写逻辑原文)"
+    },
+    {
+      "id": "EP06",
+      "name": "异步下单(拦截改写)",
+      "method": "POST(页面XHR)",
+      "path": "/ndcashier/api/maketradeasync",
+      "host": "https://wenku.baidu.com",
+      "params": "同上: action移位+ext_third_fr注入",
+      "evidence": "build/main.bundle.js@1070980",
+      "confidence": "高(改写逻辑原文); method POST为现金收银台惯例推断, 标中"
+    },
+    {
+      "id": "EP07",
+      "name": "埋点像素",
+      "method": "GET",
+      "path": "/click.gif | /pv.gif",
+      "host": "https://wkctj.baidu.com",
+      "params": "channelNum(默认newClient2024)等; 客户端识别放行",
+      "evidence": "build/main.bundle.js@1070700",
+      "confidence": "高"
+    },
+    {
+      "id": "EP08",
+      "name": "阅读页(参数注入)",
+      "method": "GET(页面)",
+      "path": "/view/{docId}",
+      "host": "https://wenku.baidu.com",
+      "params": "客户端追加 hasOpen=true & wkpc_client_channel={ch}; 深链 wkpcclient://wenku.baidu.com/reader?docId= 由 getDocIdFromUrl 解析",
+      "evidence": "build/main.bundle.js@1071100区域 / getDocIdFromUrl@1068400区域(module 58811)",
+      "confidence": "高"
+    },
+    {
+      "id": "EP09",
+      "name": "升级包下载",
+      "method": "GET",
+      "path": "/v1/pcclient/upgrade",
+      "host": "https://edu-wenku.bdimg.com",
+      "params": "win/mac同址; electron-updater(NSIS) generic provider, 缓存目录 wenku-pc-updater; feed URL(app-update.yml)在asar外",
+      "evidence": "build/main.bundle.js@1135624 (module 1942 xpage) / autoUpdater模块@996779",
+      "confidence": "中(下载地址确定; 版本检查feed不在asar内)"
+    },
+    {
+      "id": "EP10",
+      "star": true,
+      "name": "AI联合搜索落地页(客户端搜索入口)",
+      "method": "GET(页面)",
+      "path": "/ndcore/browse/aiunion",
+      "host": "https://wenku.baidu.com",
+      "params": "actTab=chat, fr=pcclient|options_search_1..7, landType=ppt|writing|image|contract; 新标签页搜索框则跳 www.baidu.com/s?wd=",
+      "evidence": "build/app.bundle.js@11317-12283 / build/defaulttab.bundle.js@7890-8724(@18375 baidu跳转) / main@929740",
+      "confidence": "高(页面URL全量); 页内检索XHR接口在web前端, 不在本客户端包 → W4抓包靶心"
+    },
+    {
+      "id": "EP11",
+      "name": "下载库页(最近下载)",
+      "method": "GET(页面)",
+      "path": "/ndcore/browse/database?tab=download&t={ts}&recentdoctab=",
+      "host": "https://wenku.baidu.com",
+      "params": "tab=download",
+      "evidence": "build/downloads.bundle.js@20555",
+      "confidence": "高"
+    },
+    {
+      "id": "EP12",
+      "name": "其余内嵌页面URL面",
+      "method": "GET(页面)",
+      "path": "/pcClientLogin/login.html(登录) /ndwelfare/browse/vipcenter(VIP中心) /ndbusiness/browse/wenkuvipcashier?cashier_code=pcClent_2024_* /ndcore/browse/docPack /ndcore/browse/sub /nddesktopview/browse/createview /ndthirdparty/home /portal/browse/help /browse/downloadrec /board(自由画布) + box.baidu.com/ndtool/home + cuttlefish.baidu.com/shop + help.baidu.com/question",
+      "host": "https://wenku.baidu.com 等",
+      "params": "-",
+      "evidence": "build/main.bundle.js@1128850-1131100 (module 97861 env->URL表) + @929063 (module 14019)",
+      "confidence": "高(常量表)"
+    }
+  ],
+  "auth_flow": {
+    "login": "纯网页登录: BrowserWindow加载 LoginURL=https://wenku.baidu.com/pcClientLogin/login.html (main@929740); 客户端无账号密码逻辑",
+    "session_check": "verifyLogin: 读 session.defaultSession.cookies(passport.baidu.com), 校验 BDUSS/BDUSS_BFESS/BAIDUID/BAIDUID_BFESS 四cookie, BFESS成对修复(只留BFESS时删BFESS留原值) (main@1063240区域)",
+    "request_auth": "axios拦截器(module 97246@985000): 惰性取 passport.baidu.com 全量cookie拼 'Cookie: name=value; ...' 头注入每个请求; resetCookie()在登录态变化时失效缓存",
+    "cookie_sync_quirk": "setLoginCookies: 把passport cookies复制到域 baidu-int.com (url=http://fedev_yg01.wk.wenku.baidu-int.com/, 1小时有效期) — 内网联调残留 (main@1064500区域)",
+    "logout": "遍历删除所有 baidu.com/baidu-int.com 域 cookie (main@1064700区域)",
+    "device_id": "node-machine-id 1.1.12: Windows=REG QUERY HKLM\\SOFTWARE\\Microsoft\\Cryptography /v MachineGuid + sha256 (module 61572@698984); getDeviceInfo(module 54348@1059600): platform/hostname/cpu/mac/sysVer/appVer/deviceId/ip/sessionId(YYYYMMDDHHmmss-uuid13); IPC handle 'get-device-info'",
+    "unused_deps": "node-rsa/speakeasy/spy-client 仅出现在内嵌package.json依赖清单(main@2011858), main.bundle 无任何import/调用 → 登录加密/TOTP假设证伪, 高置信",
+    "BAIDUID": "getBdUid: 从passport cookies取BAIDUID (main@1063400区域)"
+  },
+  "download_flow": {
+    "client": "通用Electron下载管理: session will-download + IPC download-pause/resume/cancel/remove/open-when-done (main@1023825区域); 记录存 nedb userData/storage/downloads.db; 状态机 DOWNLOAD_FILE_STATUS(module 63734@931274: waiting/success/paused/failed/progressing/cancelled/deleted)",
+    "doc_export": "wenku文档导出与VIP门禁均在web页(server-side), 客户端仅提供 vipinfo 展示 + 文件落地承接; 无 download/export/getfile 直连CGI",
+    "ipc_surface_size": "79个ipcMain通道(详见api_notes.md附录), 含 get-user-info/get-device-info/sula-params/WK_SEND_TF_LOG/update-*/logout-refresh-tabs/load-h5-url"
+  },
+  "files_root": "E:\\AI-Station\\kb_rev\\asar_files\\ (84件, SHA256全验通过)",
+  "tooling_note": "asar data_start=8+json_len; 旧asar_extract.py的16+json_len恒偏8字节(其package.json结论内容仍可读但字节错位), 本任务脚本已修正并校验"
+}

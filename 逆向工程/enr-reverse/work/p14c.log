@@ -1,0 +1,27 @@
+elapsed 148.9 s | solves: 1
+coverage: {"intl_rows": 247, "intl_with_rev": 247, "ranks_inferred": 75, "cn_rows": 82, "rank_range": [1, 250]}
+facts: {"top": [{"rank": 1, "intl_rev_yi": 427.3}, {"rank": 2, "intl_rev_yi": 416.2}, {"rank": 3, "intl_rev_yi": 301.5}, {"rank": 4, "intl_rev_yi": 248.4}, {"rank": 6, "intl_rev_yi": 153.4}, {"rank": 8, "intl_rev_yi": 115.6}, {"rank": 10, "intl_rev_yi": 100.2}], "cn_firms": 81, "total_intl_yi": 4997.0}
+images: [{"url": "/upload/image/20240914/6386190698312862675480644.png", "kind": "cn_list", "lines": 83, "bytes": 1170680}, {"url": "/upload/image/20240914/6386190716584735821057666.png", "kind": "intl", "lines": 55, "bytes": 889826}, {"url": "/upload/image/20240914/6386190720698796221956325.png", "kind": "intl", "lines": 55, "bytes": 911185}, {"url": "/upload/image/20240914/6386190721989418155746270.png", "kind": "intl", "lines": 58, "bytes": 964555}, {"url": "/upload/image/20240914/6386190723144108439752196.png", "kind": "intl", "lines": 55, "bytes": 921789}, {"url": "/upload/image/20240914/6386190724411295792314429.png", "kind": "intl", "lines": 58, "bytes": 948630}]
+gates: {"g1_top_text_vs_ocr": {"pairs": 7, "matched": 7, "detail": [{"rank": 1, "text_yi": 427.3, "ocr_yi": 427.3, "match": true}, {"rank": 2, "text_yi": 416.2, "ocr_yi": 416.2, "match": true}, {"rank": 3, "text_yi": 301.5, "ocr_yi": 301.5, "match": true}, {"rank": 4, "text_yi": 248.4, "ocr_yi": 248.4, "match": true}, {"rank": 6, "text_yi": 153.4, "ocr_yi": 153.4, "match": true}, {"rank": 8, "text_yi": 115.6, "ocr_yi": 115.5, "match": true}, {"rank": 10, "text_yi": 100.2, "ocr_yi": 100.2, "match": true}]}, "g2_monotonic_intl_rev": {"n": 247, "violations": 0}, "g3_cn_count": {"text": 81, "image_list": 82, "match": true}}
+
+intl_table 样例:
+   1 None 42729.0 VINCI, Nantere,France inferred
+   2 None 41620.4 GRUPO ACS/HOCHTIEF,Madrid, pain inferred
+   3 None 30153.0 BOUYGUES, Paris France inferred
+   4 None 24842.3 CHINACOMMUNICATIONSCONSTRUCTIONGROUPLTD, inferred
+   5 None 17756.8 STRABAGEVnaA inferred
+   6 None 15339.6 CHINA STATECONSTRUCTION ENGINEERING CORP inferred
+   7 None 11734.8 SKANSKA AB,Stockholm, Sweden inferred
+   8 None 11554.5 POWERONSTRUCTIONCORPFCHINABejingChin inferred
+   9 None 11452.0 SAIPEM SPA, Milano, taly inferred
+   10 None 10016.0 CHINA RAILWAYCONSTRUCTION CORPTD.,Bejing 
+   11 10 9380.1 FERROVALAstrdamtheran 
+   12 11 9133.6 HYUNDAI ENGINEERING & CONSTRUCTION CO. L 
+  ...
+   247 175 41.4 HANWHA ENGINEERING &CONSTRUCTION, Seoul, 
+   248 None 41.4 DENNIS GROU, Springfield, Mas, US.A 
+   249 250 38.0 RONCELLU INC., Sterling Heights, Mich, U 
+   250 235 36.5 ENERGOPROJEKT HOLDING PLC,Begrade,Serbia 
+
+cn_list 样例: [{"rank": 124, "rank_prev": 128, "firm_cn": "上海城建（集团）有限公司"}, {"rank": 136, "rank_prev": 124, "firm_cn": "上海建工集团股份有限公司"}, {"rank": 122, "rank_prev": 62, "firm_cn": "上海电气集团股份有限公司"}, {"rank": 179, "rank_prev": 222, "firm_cn": "中亿丰建设集团股份有限公司"}, {"rank": null, "rank_prev": 84, "firm_cn": "中信建设有限责江公司"}]
+saved p14_2024_full.json

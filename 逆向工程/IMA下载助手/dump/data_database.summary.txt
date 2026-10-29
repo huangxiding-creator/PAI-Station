@@ -1,0 +1,313 @@
+===== data/database.pyc =====
+DOCSTRING: 文件下载记录数据库模块
+
+[<module>] args=() names=('__doc__', 'base64', 'ctypes', 'wintypes', 'sqlite3', 'hashlib', 'os', 'json', 'sys', 'threading', 'contextlib', 'contextmanager', 'config', 'Config', 'DPAPI_PREFIX', 'DPAPI_ENTROPY', 'CRYPTPROTECT_UI_FORBIDDEN', '_credential_cache', 'RLock', '_credential_cache_lock', 'RuntimeError', 'CredentialProtectionError', 'Structure', '_DataBlob', '_to_blob', '_dpapi_transform', '_copy_credentials', '_set_credential_cache', 'clear_credential_cache', '_dpapi_protect', '_dpapi_unprotect', '_protect_credential', '_unprotect_credential', '_protected_credential_values', 'get_db_file', 'get_db', 'init_db', 'save_login_credentials', 'get_login_credentials', 'clear_login_credentials', 'check_file_exists', 'save_download_record', 'save_download_records_batch', 'is_token_expired', 'is_refresh_token_expired', 'update_token', '_init_default_settings', 'get_user_setting', 'set_user_setting', 'get_all_user_settings', 'delete_user_setting', '_migrate_auto_update_settings', 'add_task', 'get_all_tasks', 'get_enabled_tasks', 'get_task_by_id', 'update_task', 'delete_task')
+  CONST '文件下载记录数据库模块'
+  CONST 0
+  CONST None
+  CONST ('wintypes')
+  CONST ('contextmanager')
+  CONST ('Config')
+  CONST 'dpapi:v1:'
+  CONST b'ima-helper-login-credentials-v1'
+  CONST 1
+  CONST 'CredentialProtectionError'
+  CONST '_DataBlob'
+  CONST (None, None, None, 7200, 2592000)
+  CONST (None)
+  CONST ('', '')
+
+  [CredentialProtectionError] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', '__doc__', '__static_attributes__')
+    CONST 'CredentialProtectionError'
+    CONST 23
+    CONST '登录凭证无法通过操作系统安全存储保护。'
+    CONST ()
+    CONST None
+
+  [_DataBlob] args=() names=('__name__', '__module__', '__qualname__', '__firstlineno__', 'wintypes', 'DWORD', 'ctypes', 'POINTER', 'c_ubyte', '_fields_', '__static_attributes__')
+    CONST '_DataBlob'
+    CONST 27
+    CONST 'cbData'
+    CONST 'pbData'
+    CONST ()
+    CONST None
+
+  [_to_blob] args=('value',) names=('ctypes', 'create_string_buffer', '_DataBlob', 'len', 'cast', 'POINTER', 'c_ubyte')
+    CONST None
+
+  [_dpapi_transform] args=('value', 'protect') names=('sys', 'platform', 'CredentialProtectionError', '_to_blob', 'DPAPI_ENTROPY', '_DataBlob', 'ctypes', 'WinDLL', 'CryptProtectData', 'POINTER', 'c_wchar_p', 'c_void_p', 'wintypes', 'DWORD', 'argtypes', 'byref', 'CRYPTPROTECT_UI_FORBIDDEN', 'CryptUnprotectData', 'BOOL', 'restype', 'LocalFree', 'get_last_error', 'string_at', 'pbData', 'cbData')
+    CONST None
+    CONST 'win32'
+    CONST 'Windows DPAPI 仅可在 Windows 上使用'
+    CONST 'crypt32'
+    CONST True
+    CONST ('use_last_error')
+    CONST 'kernel32'
+    CONST 'IMA login credential'
+    CONST 'Windows DPAPI 操作失败（错误码 '
+    CONST '）'
+
+  [_copy_credentials] args=('credentials',) names=('dict',)
+    CONST None
+
+  [_set_credential_cache] args=('credentials',) names=('_credential_cache_lock', '_copy_credentials', '_credential_cache')
+    CONST None
+
+  [clear_credential_cache] args=() names=('_set_credential_cache',)
+    CONST None
+
+  [_dpapi_protect] args=('value',) names=('_dpapi_transform',)
+    CONST None
+    CONST True
+    CONST ('protect')
+
+  [_dpapi_unprotect] args=('value',) names=('_dpapi_transform',)
+    CONST None
+    CONST False
+    CONST ('protect')
+
+  [_protect_credential] args=('value',) names=('str', 'encode', '_dpapi_protect', 'DPAPI_PREFIX', 'base64', 'b64encode', 'decode')
+    CONST None
+    CONST ''
+    CONST 'utf-8'
+    CONST 'ascii'
+
+  [_unprotect_credential] args=('value',) names=('isinstance', 'str', 'CredentialProtectionError', 'startswith', 'DPAPI_PREFIX', 'base64', 'b64decode', 'len', '_dpapi_unprotect', 'decode', 'Exception')
+    CONST None
+    CONST '数据库中的登录凭证格式无效'
+    CONST True
+    CONST ('validate')
+    CONST 'utf-8'
+    CONST False
+    CONST '登录凭证解密失败'
+
+  [_protected_credential_values] args=('user_id', 'token', 'refresh_token', 'bkn', 'cookie') names=('tuple',)
+    CONST None
+
+    [_protected_credential_values.<locals>.<genexpr>] args=('.0',) names=('_protect_credential',)
+      CONST None
+
+  [get_db_file] args=() names=('core.config_manager', 'get_config_manager', 'db_file', 'Exception', 'Config', 'get_db_file_path')
+    CONST '获取数据库文件路径'
+    CONST 0
+    CONST ('get_config_manager')
+
+  [get_db] args=() names=('sqlite3', 'connect', 'get_db_file', 'Row', 'row_factory', 'close')
+    CONST '获取数据库连接'
+    CONST None
+
+  [init_db] args=() names=('get_db', 'execute', 'commit', 'fetchall', 'Exception', '_init_default_settings')
+    CONST '初始化数据库'
+    CONST '\n            CREATE TABLE IF NOT EXISTS download_records (\n                media_id TEXT PRIMARY KEY,\n                file_name TEXT NOT NULL,\n                file_size INTEGER,\n                update_time INTEGER,\n                local_path TEXT,\n                download_time INTEGER\n            )\n        '
+    CONST '\n            CREATE TABLE IF NOT EXISTS login_credentials (\n                id INTEGER PRIMARY KEY,\n                user_id TEXT NOT NULL,\n                token TEXT NOT NULL,\n                refresh_token TEXT NOT NULL,\n                bkn TEXT NOT NULL,\n                cookie TEXT NOT NULL,\n                token_expire_time INTEGER NOT NULL,\n                refresh_token_expire_time INTEGER NOT NULL,\n                token_valid_time INTEGER NOT NULL,\n                refresh_token_valid_time INTEGER NOT NULL,\n                timestamp INTEGER NOT NULL\n            )\n        '
+    CONST '\n            CREATE TABLE IF NOT EXISTS user_settings (\n                key TEXT PRIMARY KEY,\n                value TEXT NOT NULL,\n                value_type TEXT NOT NULL,\n                updated_at INTEGER NOT NULL\n            )\n        '
+    CONST "\n            CREATE TABLE IF NOT EXISTS update_tasks (\n                id INTEGER PRIMARY KEY AUTOINCREMENT,\n                kb_id TEXT NOT NULL,\n                kb_name TEXT NOT NULL,\n                folder_id TEXT NOT NULL DEFAULT '',\n                folder_name TEXT NOT NULL DEFAULT '',\n                start_time INTEGER NOT NULL,\n                interval_hours INTEGER NOT NULL DEFAULT 1,\n                enabled INTEGER NOT NULL DEFAULT 1,\n                last_run INTEGER NOT NULL DEFAULT 0,\n                last_cutoff INTEGER NOT NULL DEFAULT 0,\n                created_at INTEGER NOT NULL\n            )\n        "
+    CONST 'PRAGMA table_info(update_tasks)'
+    CONST 1
+    CONST 'folder_id'
+    CONST "ALTER TABLE update_tasks ADD COLUMN folder_id TEXT NOT NULL DEFAULT ''"
+    CONST "ALTER TABLE update_tasks ADD COLUMN folder_name TEXT NOT NULL DEFAULT ''"
+    CONST 'PRAGMA table_info(login_credentials)'
+    CONST 'user_id'
+    CONST 'DROP TABLE IF EXISTS login_credentials'
+    CONST '\n                    CREATE TABLE login_credentials (\n                        id INTEGER PRIMARY KEY,\n                        user_id TEXT NOT NULL,\n                        token TEXT NOT NULL,\n                        refresh_token TEXT NOT NULL,\n                        bkn TEXT NOT NULL,\n                        cookie TEXT NOT NULL,\n                        token_expire_time INTEGER NOT NULL,\n                        refresh_token_expire_time INTEGER NOT NULL,\n                        token_valid_time INTEGER NOT NULL,\n                        refresh_token_valid_time INTEGER NOT NULL,\n                        timestamp INTEGER NOT NULL\n                    )\n                '
+    CONST None
+
+  [save_login_credentials] args=('bkn', 'cookie', 'user_id', 'token', 'refresh_token', 'token_valid_time', 'refresh_token_valid_time') names=('time', 'int', '_protected_credential_values', 'get_db', 'execute', 'commit', '_set_credential_cache')
+    CONST '保存登录凭证到数据库\n\nArgs:\n    bkn: 计算得到的bkn值\n    cookie: 完整的cookie字符串\n    user_id: 用户ID\n    token: IMA-TOKEN\n    refresh_token: 刷新令牌\n    token_valid_time: token有效期（秒），默认7200\n    refresh_token_valid_time: refresh_token有效期（秒），默认2592000\n'
+    CONST 0
+    CONST None
+    CONST 'DELETE FROM login_credentials'
+    CONST '\n            INSERT INTO login_credentials\n            (id, user_id, token, refresh_token, bkn, cookie,\n             token_expire_time, refresh_token_expire_time,\n             token_valid_time, refresh_token_valid_time, timestamp)\n            VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)\n        '
+    CONST ('user_id', 'token', 'refresh_token', 'bkn', 'cookie', 'token_expire_time', 'refresh_token_expire_time', 'token_valid_time', 'refresh_token_valid_time', 'timestamp')
+
+  [get_login_credentials] args=() names=('_credential_cache_lock', '_credential_cache', '_copy_credentials', 'get_db', 'execute', 'fetchone', '_unprotect_credential', '_protected_credential_values', 'commit', '_set_credential_cache')
+    CONST '获取登录凭证，并自动将旧版明文记录迁移到 DPAPI。'
+    CONST None
+    CONST '\n            SELECT user_id, token, refresh_token, bkn, cookie,\n                   token_expire_time, refresh_token_expire_time,\n                   token_valid_time, refresh_token_valid_time, timestamp\n            FROM login_credentials WHERE id=1\n        '
+    CONST ('user_id', 'token', 'refresh_token', 'bkn', 'cookie')
+    CONST False
+    CONST '\n                    UPDATE login_credentials\n                    SET user_id = ?, token = ?, refresh_token = ?, bkn = ?, cookie = ?\n                    WHERE id = 1\n                '
+    CONST 'token_expire_time'
+    CONST 'refresh_token_expire_time'
+    CONST 'token_valid_time'
+    CONST 'refresh_token_valid_time'
+    CONST 'timestamp'
+    CONST ('token_expire_time', 'refresh_token_expire_time', 'token_valid_time', 'refresh_token_valid_time', 'timestamp')
+
+    [get_login_credentials.<locals>.<genexpr>] args=('.0',) names=()
+      CONST None
+
+  [clear_login_credentials] args=() names=('get_db', 'execute', 'commit', 'clear_credential_cache')
+    CONST '清除登录凭证'
+    CONST 'DELETE FROM login_credentials'
+    CONST None
+
+  [check_file_exists] args=('media_id', 'file_size', 'update_time') names=('get_db', 'execute', 'fetchone', 'os', 'path', 'exists')
+    CONST '检查文件是否已下载且未更新'
+    CONST 'SELECT * FROM download_records WHERE media_id=?'
+    CONST None
+    CONST False
+    CONST 'local_path'
+    CONST 'file_size'
+    CONST 'update_time'
+    CONST True
+
+  [save_download_record] args=('media_id', 'file_name', 'file_size', 'update_time', 'local_path') names=('time', 'get_db', 'execute', 'int', 'commit')
+    CONST '保存下载记录'
+    CONST 0
+    CONST None
+    CONST '\n            INSERT OR REPLACE INTO download_records\n            (media_id, file_name, file_size, update_time, local_path, download_time)\n            VALUES (?, ?, ?, ?, ?, ?)\n        '
+
+  [save_download_records_batch] args=('records',) names=('time', 'get_db', 'int', 'executemany', 'commit')
+    CONST '批量保存下载记录（优化版）'
+    CONST 0
+    CONST None
+    CONST '\n            INSERT OR REPLACE INTO download_records\n            (media_id, file_name, file_size, update_time, local_path, download_time)\n            VALUES (?, ?, ?, ?, ?, ?)\n        '
+    CONST 'media_id'
+    CONST 'file_name'
+    CONST 'file_size'
+    CONST 'update_time'
+    CONST 'local_path'
+
+  [is_token_expired] args=() names=('time', 'get_login_credentials', 'int')
+    CONST '检查token是否过期\n\nReturns:\n    tuple: (is_expired, time_remaining)\n        - is_expired: True表示已过期，False表示未过期\n        - time_remaining: 剩余有效时间（秒），如果过期则为负数\n    如果没有凭证返回 (True, 0)\n'
+    CONST 0
+    CONST None
+    CONST (True, 0)
+    CONST 'token_expire_time'
+    CONST 300
+
+  [is_refresh_token_expired] args=() names=('time', 'get_login_credentials', 'int')
+    CONST '检查refresh_token是否过期\n\nReturns:\n    bool: True表示已过期，False表示未过期\n'
+    CONST 0
+    CONST None
+    CONST True
+    CONST 'refresh_token_expire_time'
+
+  [update_token] args=('new_token', 'new_bkn', 'new_cookie', 'token_valid_time') names=('time', 'get_login_credentials', 'int', '_protect_credential', 'get_db', 'execute', 'commit', 'dict', 'update', '_set_credential_cache')
+    CONST '更新token和bkn（保持其他字段不变）\n\nArgs:\n    new_token: 新的token\n    new_bkn: 新的bkn值\n    new_cookie: 新的cookie字符串\n    token_valid_time: 新的token有效期（秒），如果为None则使用旧值\n'
+    CONST 0
+    CONST None
+    CONST False
+    CONST 'token_valid_time'
+    CONST '\n            UPDATE login_credentials\n            SET token = ?, bkn = ?, cookie = ?,\n                token_valid_time = ?, token_expire_time = ?, timestamp = ?\n            WHERE id = 1\n        '
+    CONST ('token', 'bkn', 'cookie', 'token_valid_time', 'token_expire_time', 'timestamp')
+    CONST True
+
+  [_init_default_settings] args=('conn',) names=('time', 'Config', 'get_default_download_dir', 'items', 'execute', 'fetchone', 'int', 'commit', '_migrate_auto_update_settings')
+    CONST '初始化默认设置'
+    CONST 0
+    CONST None
+    CONST ('false', 'bool')
+    CONST ('1', 'int')
+    CONST ('3', 'int')
+    CONST 'str'
+    CONST ('[]', 'json')
+    CONST ('0', 'int')
+    CONST ('enable_download_delay', 'delay_min', 'delay_max', 'download_dir', 'auto_update_enabled', 'auto_update_interval_hours', 'auto_update_kb_ids', 'auto_update_last_run', 'auto_update_last_cutoff', 'auto_update_start_time')
+    CONST 'SELECT 1 FROM user_settings WHERE key=?'
+    CONST '\n                INSERT INTO user_settings (key, value, value_type, updated_at)\n                VALUES (?, ?, ?, ?)\n            '
+
+  [get_user_setting] args=('key', 'default') names=('get_db', 'execute', 'fetchone', 'lower', 'int', 'float', 'json', 'loads', 'Exception')
+    CONST '获取用户设置\n\nArgs:\n    key: 设置键名\n    default: 默认值\n\nReturns:\n    设置值，根据存储的类型自动转换\n'
+    CONST 'SELECT value, value_type FROM user_settings WHERE key=?'
+    CONST None
+    CONST 'value'
+    CONST 'value_type'
+    CONST 'bool'
+    CONST ('true', '1', 'yes')
+    CONST 'int'
+    CONST 'float'
+    CONST 'json'
+
+  [set_user_setting] args=('key', 'value') names=('time', 'isinstance', 'bool', 'int', 'str', 'float', 'dict', 'list', 'json', 'dumps', 'get_db', 'execute', 'commit')
+    CONST '保存用户设置\n\nArgs:\n    key: 设置键名\n    value: 设置值（自动推断类型）\n'
+    CONST 0
+    CONST None
+    CONST 'true'
+    CONST 'false'
+    CONST 'bool'
+    CONST 'int'
+    CONST 'float'
+    CONST False
+    CONST ('ensure_ascii')
+    CONST 'json'
+    CONST 'str'
+    CONST '\n            INSERT OR REPLACE INTO user_settings (key, value, value_type, updated_at)\n            VALUES (?, ?, ?, ?)\n        '
+
+  [get_all_user_settings] args=() names=('get_db', 'execute', 'fetchall', 'lower', 'int', 'float', 'json', 'loads', 'Exception')
+    CONST '获取所有用户设置\n\nReturns:\n    dict: 所有设置的字典\n'
+    CONST 'SELECT key, value, value_type FROM user_settings'
+    CONST 'key'
+    CONST 'value'
+    CONST 'value_type'
+    CONST 'bool'
+    CONST ('true', '1', 'yes')
+    CONST 'int'
+    CONST 'float'
+    CONST 'json'
+    CONST None
+
+  [delete_user_setting] args=('key',) names=('get_db', 'execute', 'commit')
+    CONST '删除用户设置\n\nArgs:\n    key: 设置键名\n'
+    CONST 'DELETE FROM user_settings WHERE key=?'
+    CONST None
+
+  [_migrate_auto_update_settings] args=('conn',) names=('execute', 'fetchone', 'lower', 'json', 'time', 'loads', 'int', 'commit', 'Exception')
+    CONST '将旧的 auto_update_* 配置迁移到 update_tasks 表'
+    CONST 'SELECT COUNT(*) as cnt FROM update_tasks'
+    CONST 'cnt'
+    CONST 0
+    CONST None
+    CONST "SELECT value FROM user_settings WHERE key='auto_update_enabled'"
+    CONST 'value'
+    CONST 'true'
+    CONST "SELECT value FROM user_settings WHERE key='auto_update_kb_ids'"
+    CONST "SELECT value FROM user_settings WHERE key='auto_update_interval_hours'"
+    CONST "SELECT value FROM user_settings WHERE key='auto_update_start_time'"
+    CONST "SELECT value FROM user_settings WHERE key='auto_update_last_run'"
+    CONST "SELECT value FROM user_settings WHERE key='auto_update_last_cutoff'"
+    CONST 1
+    CONST '\n                INSERT INTO update_tasks\n                (kb_id, kb_name, start_time, interval_hours, enabled, last_run, last_cutoff, created_at)\n                VALUES (?, ?, ?, ?, 1, ?, ?, ?)\n            '
+    CONST ('auto_update_enabled', 'auto_update_kb_ids', 'auto_update_interval_hours', 'auto_update_start_time', 'auto_update_last_run', 'auto_update_last_cutoff')
+    CONST 'DELETE FROM user_settings WHERE key=?'
+
+  [add_task] args=('kb_id', 'kb_name', 'start_time', 'interval_hours', 'folder_id', 'folder_name') names=('time', 'get_db', 'execute', 'int', 'commit', 'lastrowid')
+    CONST '新增增量更新任务，返回 task id'
+    CONST 0
+    CONST None
+    CONST '\n            INSERT INTO update_tasks\n            (kb_id, kb_name, folder_id, folder_name, start_time, interval_hours, enabled, last_run, last_cutoff, created_at)\n            VALUES (?, ?, ?, ?, ?, ?, 1, 0, 0, ?)\n        '
+
+  [get_all_tasks] args=() names=('get_db', 'execute', 'fetchall', 'dict')
+    CONST '获取所有任务'
+    CONST 'SELECT * FROM update_tasks ORDER BY created_at DESC'
+    CONST None
+
+  [get_enabled_tasks] args=() names=('get_db', 'execute', 'fetchall', 'dict')
+    CONST '获取所有启用的任务'
+    CONST 'SELECT * FROM update_tasks WHERE enabled=1 ORDER BY created_at DESC'
+    CONST None
+
+  [get_task_by_id] args=('task_id',) names=('get_db', 'execute', 'fetchone', 'dict')
+    CONST '获取单个任务'
+    CONST 'SELECT * FROM update_tasks WHERE id=?'
+    CONST None
+
+  [update_task] args=('task_id',) names=('items', 'join', 'list', 'values', 'get_db', 'execute', 'commit')
+    CONST '更新任务字段'
+    CONST None
+    CONST ('last_run', 'start_time', 'last_cutoff', 'kb_name', 'interval_hours', 'enabled', 'folder_name', 'folder_id')
+    CONST ', '
+    CONST 'UPDATE update_tasks SET '
+    CONST ' WHERE id=?'
+
+    [update_task.<locals>.<genexpr>] args=('.0',) names=()
+      CONST '=?'
+      CONST None
+
+  [delete_task] args=('task_id',) names=('get_db', 'execute', 'commit')
+    CONST '删除任务'
+    CONST 'DELETE FROM update_tasks WHERE id=?'
+    CONST None
+

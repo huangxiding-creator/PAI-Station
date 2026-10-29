@@ -1,0 +1,13 @@
+必改 | 判定 | 依据 |
+|---|---|---|---|
+| 1 | FR2.2/2.3 VIP 语义 | **FIXED** | REQ L17：页面重建三型产 PDF、明书「无 TXT 产物路径」、初始 readerInfo 免签/补页需签分开；L20：needs_vip_candidate=连续3轮零进展+showPage<page+非tri_cap（N=3 定值，形态=推断），与 WENKU_SPEC 5.3 节机制事实相符 |
+| 2 | FR4 验收重写 | **FIXED** | REQ L32（FR4.AC1）：等价抽取三阈值门（页数==声明/预览上限逐份记录、字数≥0.9×FFDec frame:text 同源参照、首中末3页视觉抽检）；「无损」已从全文清除（CONTEXT L30 禁用） |
+| 3 | ADR-3 裁决 | **FIXED** | ARCH L41-42：反转为方案B机制重写，被拒方案A三脆弱点（交互式 input()/updater 联网/config 耦合）+GPL 边界模糊入档；「stdin/stdout 假设不成立」已自认。残留（非阻塞）：ADR 称 FFDec/presse 许可证「Apache/LGPL」本集文档无据（FFDec 实为 GPL-3.0），幸有「逐个核对入 RELEASE 章②发布门」兜底，届时改标 |
+| 4 | ladder_try 补 L3 | **FIXED** | ARCH L52：`ladder_try:[L1,L2,L3]`，与 REQ FR1.2（L9 L1→L2→L3）、CONTEXT L8 三处一致 |
+| 5 | 质检门数值化 | **FIXED** | REQ L69（NFR-GATE）：四项各带数值+判定命令（quality_gate 模块退出码 0=全过）。残留（非阻塞）：②字数参照对 wenku 类型2纯图片/类型1 editor 未定义（pageJson 仅类型3）——planner 落地时补按型参照或豁免，FR2.AC2 三型覆盖验收会自然逼出 |
+| 6 | FR1.3 架构承接 | **FIXED** | ARCH L25 probe/health.py + L26 scheduler.py（显式标【承接 FR1.3，D2 修复】）；REQ L11 引用同一符号 |
+| 7 | EARS 形态 | **FIXED** | 11 条行为需求全部「当X时系统应Y」（含 FR2.1 重写+日期写死 2026-10-22、FR10.1/FR11.1 系统主语化）。残留（非阻塞）：FR6.2 为约束句无触发形态；FR3.3/FR4.2 为射程声明（非行为需求，可接受） |
+| 8 | FR3.2 取样协议 | **FIXED** | REQ L27（FR3.AC2）：fixture=标题+首页前2个≥4字词人工誊录入 tests/fixtures/book118_gt.json、pypdfium2 精确匹配 3/3、≥8/10 份、容错=0——四要素（来源/选词/引擎/通过率）全落 |
+| 9 | 前提资产账 | **FIXED** | REQ L4 文档头资产账四条全落；FR5 头（L37）整任务挂起语义；FR8.AC2（L54）降单测不阻塞；FR2.2 VIP 路径降 SHOULD |
+| 10 | FR2 配比+needs_vip 用例 | **FIXED** | REQ L18（FR2.AC2）渲染三型各≥2（按 SPEC 5.2 判定入 ledger）；L21（FR2.AC4）≥2 份 VIP 专享+非VIP 账号断言；另补 L19（FR2.AC3）边界用例 |
+| 11 | FR6 口径+复活定义 | **FIXED** | REQ

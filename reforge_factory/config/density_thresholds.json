@@ -1,5 +1,5 @@
 {
- "version": 2,
+ "version": 3,
  "note": "黄金样板分位数标定 (2026-10-15): 蓝皮书五卷 74 章 (P95/P5/P95); 回验坏样本全拒/样板通过率 63/74; 旧表见 superseded (v1 临时基线)",
  "metric_notes": {
   "redundancy_ratio_max": "1-NCD(前半,后半) raw-deflate；高=冗余复制；超标于 > max",
@@ -57,6 +57,27 @@
    "redundancy_ratio_max": 0.18,
    "new_ngram_rate_min": 0.62,
    "slop_density_per_kchar_max": 0.022
+  },
+  "length_buckets": {
+   "lt_6000": {
+    "cjk_max": 6000,
+    "new_ngram_rate_min": 0.6278,
+    "slop_density_per_kchar_max": 0.22,
+    "redundancy_ratio_max": 0.1871
+   },
+   "6000_12000": {
+    "cjk_min": 6000,
+    "cjk_max": 12000,
+    "new_ngram_rate_min": 0.6134,
+    "slop_density_per_kchar_max": 0.22,
+    "redundancy_ratio_max": 0.156
+   },
+   "gte_12000": {
+    "cjk_min": 12000,
+    "new_ngram_rate_min": 0.54,
+    "slop_density_per_kchar_max": 0.22,
+    "redundancy_ratio_max": 0.165
+   }
   }
  }
 }
