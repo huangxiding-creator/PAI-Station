@@ -1,0 +1,161 @@
+{
+  "args": [
+    "doctor"
+  ],
+  "rc": 0,
+  "payload": {
+    "generated_at": "2026-10-29 23:54:55",
+    "checks": {
+      "credentials": {
+        "status": "ok",
+        "errno": 0,
+        "ms": 536.4,
+        "requests": 0,
+        "username": "pyeyeye",
+        "uk": 587408217,
+        "vip_level": 8,
+        "roundtrip_ms": 536.4
+      },
+      "quota": {
+        "status": "ok",
+        "errno": 0,
+        "ms": 1109.2,
+        "requests": 0,
+        "total": 18806265924806,
+        "used": 14104170771716,
+        "free": 4702095153090
+      },
+      "read_probe_ls_root": {
+        "status": "ok",
+        "errno": 0,
+        "ms": 1516.8,
+        "requests": 0,
+        "entries": 18
+      },
+      "filemetas": {
+        "status": "ok",
+        "errno": 0,
+        "ms": 1425.2,
+        "requests": 0
+      },
+      "share_record": {
+        "status": "ok",
+        "errno": 0,
+        "ms": 1577.3,
+        "requests": 0,
+        "count": 43
+      },
+      "recycle_list": {
+        "status": "ok",
+        "errno": 0,
+        "ms": 1591.8,
+        "requests": 0,
+        "count": 10
+      },
+      "locateupload": {
+        "status": "ok",
+        "errno": 0,
+        "ms": 1799.3,
+        "requests": 0,
+        "servers": 6
+      },
+      "precreate_gate": {
+        "status": "ok",
+        "errno": 2,
+        "requests": 8,
+        "ms": 1005.7
+      }
+    },
+    "fingerprints": [
+      {
+        "probe": "loginStatus 字段族",
+        "status": "ok",
+        "expect": [
+          "login_info"
+        ],
+        "missing": [],
+        "sub_missing": []
+      },
+      {
+        "probe": "api/quota 字段族",
+        "status": "ok",
+        "expect": [
+          "total",
+          "used"
+        ],
+        "missing": [],
+        "sub_missing": []
+      },
+      {
+        "probe": "api/list 字段族",
+        "status": "ok",
+        "expect": [
+          "list",
+          "guid_info"
+        ],
+        "missing": [],
+        "sub_missing": []
+      },
+      {
+        "probe": "api/filemetas 字段族",
+        "status": "ok",
+        "expect": [
+          "info"
+        ],
+        "missing": [],
+        "sub_missing": []
+      },
+      {
+        "probe": "share/record 字段族",
+        "status": "ok",
+        "expect": [
+          "list"
+        ],
+        "missing": [],
+        "sub_missing": []
+      },
+      {
+        "probe": "api/recycle/list 字段族",
+        "status": "ok",
+        "expect": [
+          "list"
+        ],
+        "missing": [],
+        "sub_missing": []
+      },
+      {
+        "probe": "locateupload 字段族",
+        "status": "ok",
+        "expect": [
+          "servers"
+        ],
+        "missing": [],
+        "sub_missing": []
+      }
+    ],
+    "drift": [
+      {
+        "probe": "read_probe_ls_root",
+        "kind": "root_count_changed",
+        "entries": 18,
+        "baseline": 17
+      }
+    ],
+    "verdict": "ok",
+    "requests_sent": 8,
+    "requests_total_session": 8,
+    "circuit_open": false,
+    "baseline": {
+      "root_entries": 17
+    },
+    "credentials": {
+      "cred_path": "E:\\AI-Station\\data\\secrets\\bdn_credentials.json",
+      "bduss": "***",
+      "stoken": "***",
+      "ua": "netdisk;8.2.5.103;PC;PC-Windows;10.0.19045;WindowsBaiduYunGuanJia"
+    }
+  },
+  "stderr": "",
+  "elapsed_s": 11.1,
+  "requests": 8
+}

@@ -1,0 +1,62 @@
+﻿[
+ {
+  "db": "C:\\Users\\91216\\AppData\\Roaming\\baidu\\BaiduNetdisk\\users\\a4aa449c024a858ffbe49cc71af639ec\\BaiduYunGuanjia.db",
+  "tables": [
+   {
+    "name": "upload_file",
+    "sql": "CREATE TABLE upload_file (task_id INTEGER NOT NULL PRIMARY KEY,server_path varchar(1024) COLLATE NOCASE, local_path varchar(1024) COLLATE NOCASE, status INTEGER,file_size INTEGER, isdir INTEGER,error_code INTEGER,add_time INTEGER,status_changetime INTEGER,  reserved1 INTEGER DEFAULT 0,reserved2 INTEGER DEFAULT 0,reserved3 TEXT DEFAULT '',reserved4 TEXT DEFAULT '' )",
+    "rows": 0
+   },
+   {
+    "name": "upload_history_file",
+    "sql": "CREATE TABLE upload_history_file (id INTEGER PRIMARY KEY,server_path varchar(1024) COLLATE NOCASE,  local_path varchar(1024) COLLATE NOCASE, isdir INTEGER,size INTEGER,op_starttime INTEGER,op_endtime INTEGER,  reserved1 INTEGER DEFAULT 0,reserved2 INTEGER DEFAULT 0,reserved3 TEXT DEFAULT '',reserved4 TEXT DEFAULT '',reserved5 TEXT DEFAULT '' )",
+    "rows": 0
+   },
+   {
+    "name": "download_file",
+    "sql": "CREATE TABLE download_file(task_id INTEGER NOT NULL PRIMARY KEY,server_path varchar(1024) COLLATE NOCASE, local_path varchar(1024) COLLATE NOCASE, status INTEGER,file_size INTEGER,isdir INTEGER,error_code INTEGER, add_time INTEGER,status_changetime INTEGER,download_url TEXT,download_type INTEGER,  param1 TEXT,param2 TEXT,param3 TEXT,param4 TEXT,param5 TEXT, reserved1 INTEGER DEFAULT 0,reserved2 IN",
+    "rows": 0
+   },
+   {
+    "name": "download_history_file",
+    "sql": "CREATE TABLE download_history_file (id INTEGER PRIMARY KEY,server_path varchar(1024) COLLATE NOCASE,  local_path varchar(1024) COLLATE NOCASE, isdir INTEGER,size INTEGER,op_starttime INTEGER,op_endtime INTEGER,download_type INTEGER,  reserved1 INTEGER DEFAULT 0,reserved2 INTEGER DEFAULT 0,reserved3 TEXT DEFAULT '',reserved4 TEXT DEFAULT '',reserved5 TEXT DEFAULT '' )",
+    "rows": 0
+   },
+   {
+    "name": "backup_file",
+    "sql": "CREATE TABLE backup_file (local_filename varchar(1024) NOT NULL COLLATE NOCASE,  base_dir varchar(1024) NOT NULL COLLATE NOCASE,file_size INTEGER,mtime INTEGER,is_dir INTEGER, reserved1 INTEGER DEFAULT 0,reserved2 INTEGER DEFAULT 0,reserved3 TEXT DEFAULT '',reserved4 TEXT DEFAULT '',reserved5 TEXT DEFAULT '',reserved6 TEXT DEFAULT '',reserved7 TEXT DEFAULT '',CONSTRAINT pk_backupfile PRIMARY KEY(l",
+    "rows": 0
+   },
+   {
+    "name": "version",
+    "sql": "CREATE TABLE version (table_name TEXT NOT NULL PRIMARY KEY,version INTEGER )",
+    "rows": 5
+   }
+  ]
+ },
+ {
+  "db": "C:\\Users\\91216\\AppData\\Roaming\\baidu\\BaiduNetdisk\\module\\BrowserEngine\\users\\99af0537cf40bb0c69c1f5f36ad112ae\\BaiduYunDevice.db",
+  "tables": [
+   {
+    "name": "devicedownload_file",
+    "sql": "CREATE TABLE devicedownload_file(task_id INTEGER NOT NULL PRIMARY KEY,server_path TEXT COLLATE NOCASE, local_path TEXT COLLATE NOCASE, status INTEGER,file_size INTEGER,finished_size INTEGER,error_code INTEGER, process float, src_deviceid TEXT, des_deviceid TEXT,  reserved1 INTEGER,reserved2 INTEGER,reserved3 INTEGER,reserved4 INTEGER,reserved5 INTEGER, reserved6 TEXT,reserved7 TEXT,reserved8 TEXT,",
+    "rows": 0
+   },
+   {
+    "name": "version",
+    "sql": "CREATE TABLE version (table_name TEXT NOT NULL PRIMARY KEY,version INTEGER )",
+    "rows": 1
+   }
+  ]
+ },
+ {
+  "db": "C:\\Users\\91216\\AppData\\Roaming\\baidu\\BaiduNetdisk\\module\\BrowserEngine\\resources\\BaiduNetdiskModuleList.db",
+  "tables": [],
+  "open_error": "DatabaseError('file is not a database')"
+ },
+ {
+  "file": "C:\\Users\\91216\\AppData\\Roaming\\baidu\\BaiduNetdisk\\users\\temp2.data",
+  "utf16_keys": [],
+  "head": "ZxsQGgpxQtTqJ3IL2Li9ybo7Ot25z3sjCA91BE8aLV01wB2qcLJa+03Sh6DlpvkvQOpVPN0J\nYCcfXcS"
+ }
+]

@@ -1,0 +1,12 @@
+# BDPAN-FACTORY 项目级忽略：大件/密钥/嵌套仓不入库（主仓已有 19.4GiB 大 blob 前科，勿再添）
+captures/*.mitm
+captures/*.har
+captures/secrets_vault.json
+captures/netstat.txt
+blueprint/
+replica/**/__pycache__/
+replica/tests/_diag_archive/**/local/
+replica/tests/_diag_archive/__pycache__/
+*.pyc
+replica/.bdn_*
+replica/*.log
