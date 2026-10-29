@@ -20,3 +20,8 @@
 | 10-29 22:3x | W4 收官：a-h 20/22（200MB kill 续传=40%重传实证/下载 md5 一致/rm 双确认+回收站命中）；协议新发现=写面唯一可靠 /api 家族（xpan 写 9019 墙） | 37/80 控制面 |
 | 10-29 22:5x | **ss-judge 二审 DISCARD（文档轴）**：独立重放证伪「superfile2 需 CEF UA」——真门=参数完整度（path 双放+vip+web+app_id），native UA 全参 200；工人矩阵变量未隔离误归因 → 返工：PROTOCOL/README/api/transfer/_diag 九处改写+ERRATA_1029.md+探针归档+2.02→2.21 速度勘正 → 70/70 单测复绿，根目录零残留 | judge 7 发 |
 | 10-29 23:0x | W5 技能腿 ✅（.claude/skills/bdn/ 5 件，分区路由，官方 skill 零改动）；**用户令：W4.5 复审通过，W5-W6 放行** → W5 核心 Workflow 发车（doctor/router/mirror/share-transfer 条件门 + judge） | - |
+| 10-30 00:0x | W5 核心 Workflow 收官：judge KEEP 首次零返工（doctor 8 针零漂移/mirror 26/26→增量0/只增不删代码审计/分享旧代写面活=漂移账#15/transfer 至 bdstoken 门 errno2）；101/101 离线；judge 留 4 小项 | 91 发 |
+| 10-30 00:4x | W6 收官：judge 4 修正全落地（属主护栏/归档清洗器/镜像根护栏/死代码）+QA 总门 23/24 绿+Ralph E2（8 线程 +58.6%）；115/115 离线 | 50/50 帽内 |
+| 10-30 00:5x | 主会话 transfer 终测：新建分享(1发)→全参转存 errno=-12（服务端拒自转，非参数问题）→取消分享(护栏真跑 errno=0)→**transfer 条件门定格 N/A（如实）**；全量单测 115/115 终验 | 3 发 |
+| 10-30 00:5x | 终局打包：项目 .gitignore（挡 484MB 流/嵌套仓/密钥）→ staged 真值扫描 CLEAN → **本地 commit（123 件/24856 行，push 冻结待令）**；记忆沉淀 bdpan-factory-project + MEMORY.md 索引 | - |
+| 10-30 01:1x | **用户令「清理，push」执行**：① 云端围栏 /API复刻测试_1029/ 整删（bdn rm --confirm errno=0，入网盘回收站可恢复，ls 复核根目录已无）② 本地 share_create.json.orig + _tmp_v1_credcheck 删除 ③ 根库存旧 mitm CA 出库（证书删除 1 确认）④ push：主仓直推实测阻断（未推区间 50353 对象含 103MB blob>GitHub 100MiB 硬限，15.03GiB pack——既账复现）→ **手术枝单树备份推送成功**（8e81e3c7 → origin/backup/bdpan-1030，SSH 443 直通）⑤ 备份常令兑现：bdpan-factory-1030.tar.gz(1.8MB) 经 **bdn 本体**上传 /AI-Station-archive/baidu-netdisk/1030/（errno=0，远端 size 对账一致） | 全清+双推 |
