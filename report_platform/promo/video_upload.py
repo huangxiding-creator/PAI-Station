@@ -1,19 +1,26 @@
 # -*- coding: utf-8 -*-
-"""video_upload — 视频号自主发布腿 v1 (F5b · 用户令「视频也是自己发布」).
+"""video_upload — 视频号自主发布腿 v5 (F5b · 1030 免扫码链升级).
 
-复用 We-AIPO vendor tencent_uploader (Playwright 独立实例 + storage_state,
-不碰其 9222 浏览器/锁 — 侦察实证 vendor 无在役调用方) + 从其 live channels
-浏览器只读导出的登录态 (video_account_state.json).
+1030 改造 (借永动机法, 用户令「微信快捷登录免打扰」):
+  默认 live 模式 = attach 永动机 9222 常驻 Chrome 的 live context 新开 tab
+  发布, 用毕只关 tab (1025 实证: cookie 移植独立实例不可行 session 绑定
+  live profile; 9222 常驻占用 channels profile, 第二实例违反 Chrome 单例).
+  预检前移: --go 先 ensure() — probe 强探测 9222 登录态, 死则 S367 快捷
+  登录自动复活 (PC 微信在场即零扫码零人工), 仍死才退出 (人工兜底
+  video_relogin.py). STATE_FILE 不再是 live 模式前置 (登录态真源在 9222).
+  --mode solo 保留旧独立 Playwright + storage_state 路径 (自建会话两日
+  过期, 仅人工刚跑完 video_relogin.py 后用).
 
 防撞四件套 (账号安全红线全继承):
   ① We-AIPO RUNLOG 45min 内有视频发表记录 → 让路退出
   ② 自家锁 video_upload.lock (O_EXCL)
   ③ 自家日帽 1 条/日 (promo_ledger src=sph)
   ④ 失败/登录失效 → 退出上报, 绝不重试轰炸
+  ⑤ (1030) 永动机 channels_publish.lock 活 → 快捷登录让路不碰 9222
 
-用法 (必须用 We-AIPO venv python 跑 — playwright 在那边):
+用法 (必须用 We-AIPO venv python 跑 — playwright/DrissionPage 在那边):
   F:/We-AIPO/.venv/Scripts/python.exe -X utf8 video_upload.py \
-      --slug cnnec_v1 [--go]
+      --slug cnnec_v1 [--go] [--mode live|solo]
 默认 dry-run: 只做预检+参数打印.
 """
 from __future__ import annotations
@@ -27,6 +34,9 @@ import re
 import sys
 import time
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import video_channel_session as vcs        # 1030 免扫码会话件 (同目录)
 
 sys.stdout = io.TextIOWrapper(
     sys.stdout.buffer, encoding="utf-8", errors="replace")
@@ -86,11 +96,17 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--slug", required=True, help="videos/<slug>.mp4 + .json")
     ap.add_argument("--go", action="store_true", help="真发布 (默认 dry-run)")
+    ap.add_argument("--mode", choices=("live", "solo"), default="live",
+                    help="live=attach 9222 live context (默认, 免扫码链); "
+                         "solo=旧独立 Playwright+storage_state")
     ns = ap.parse_args()
 
     mp4 = PROMO / "videos" / f"{ns.slug}.mp4"
     meta_p = PROMO / "videos" / f"{ns.slug}.json"
-    for p, what in ((mp4, "视频文件"), (meta_p, "meta"), (STATE_FILE, "登录态")):
+    checks = [(mp4, "视频文件"), (meta_p, "meta")]
+    if ns.mode == "solo":
+        checks.append((STATE_FILE, "登录态"))   # live 模式登录态真源在 9222
+    for p, what in checks:
         if not p.exists():
             print(f"[vup] 缺 {what}: {p}")
             return 1
@@ -107,11 +123,26 @@ def main() -> int:
         print(f"[vup] ①让路: We-AIPO {recent:.0f} 分钟内发过视频 — 退出")
         return 2
     if not ns.go:
+        sess = vcs.probe_weak()
         print(f"[vup] DRY-RUN: title={title!r} tags={tags} video={mp4.name} "
-              f"({mp4.stat().st_size // 1024}KB) state=自导出 "
-              f"(recent_weaipo={recent and int(recent)}min前)")
-        print("      加 --go 真发布 (Playwright 独立 chromium, 有头 ~2-3min)")
+              f"({mp4.stat().st_size // 1024}KB) mode={ns.mode} "
+              f"(recent_weaipo={recent and int(recent)}min前 "
+              f"9222_alive={sess['alive']} "
+              f"sid_left_h={sess['sessionid_left_h']})")
+        print(f"      加 --go 真发布 (mode=live: attach 9222 新tab "
+              f"~2-3min, 死态自动快捷登录复活)")
         return 0
+
+    # ---- 预检前移 (1030 免扫码链): live 模式先保登录态 ----
+    if ns.mode == "live":
+        res = vcs.ensure()
+        print(f"[vup] ⑤登录预检: alive={res['alive']} via={res['via']} "
+              f"sid_left_h={(res.get('weak') or {}).get('sessionid_left_h')}")
+        if not res["alive"]:
+            print("[vup] 9222 登录态死且快捷登录未复活 — 退出。"
+                  "人工兜底: video_relogin.py 扫一次码后 --mode solo 发布, "
+                  "或等 PC 微信在线后重试 (keeper 每日自动复活)")
+            return 3
 
     # ---- 锁 ----
     try:
@@ -552,7 +583,35 @@ def main() -> int:
                         print(f"[vup] P3: 列表验证异常: {exc}")
                 return confirmed
 
-        up = PatchedUploader(
+        # ---- LIVE 挂载 (1030 默认, 1025 实证): attach 9222 live context
+        #      新开 tab 发布, 用毕只关 tab 不断浏览器 (登录态真源不动) ----
+        class LiveUploader(PatchedUploader):
+            async def init_browser(self):
+                from playwright.async_api import async_playwright
+                self.playwright = await async_playwright().start()
+                self.browser = await self.playwright.chromium.connect_over_cdp(
+                    "http://127.0.0.1:9222")
+                self.context = self.browser.contexts[0]  # live 默认context=登录态所在
+                self.page = await self.context.new_page()  # 新tab, 不动既有tab
+                print("[vup-live] attached 9222 live context, new tab opened")
+
+            async def close_browser(self):
+                try:
+                    await self.page.close()          # 只关自己的tab
+                    print("[vup-live] tab closed")
+                except Exception:
+                    pass
+                try:
+                    await self.browser.close()       # CDP attach: 仅断连不杀浏览器
+                except Exception:
+                    pass
+                if self.playwright:
+                    try:
+                        await self.playwright.stop()
+                    except Exception:
+                        pass
+
+        up = (LiveUploader if ns.mode == "live" else PatchedUploader)(
             title=title,
             file_path=mp4,
             tags=tags,
