@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""PAN-HUNTER 源健康轮（W3 · 2026-10-30）
+r"""PAN-HUNTER 源健康轮（W3 · 2026-10-30）
 
 跑法：python scripts/health_round.py            # 全 LIVE 源探活 → analysis/health_rounds/<ts>.json
       python scripts/health_round.py --kw 民法典 # 自定探针词（默认「测试」，对齐 ph.py doctor）
