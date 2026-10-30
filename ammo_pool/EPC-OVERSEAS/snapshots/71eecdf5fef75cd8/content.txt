@@ -1,0 +1,8 @@
+# webregistry run log — SearXNG 公共实例 (BLOCKED, 实测名单)
+
+- registry_id: searxng__github_com | name: SearXNG | url: https://github.com/searxng/searxng | cat: metasearch | tier: 1
+- query 计划: `中资电力EPC出海` (format=json)
+- 实测 20 个公共实例全部 000 (curl -m 10~15, 直连与 proxy 127.0.0.1:7892 均试, 7892 无监听):
+  searx.be / priv.au / searx.tiekoetter.com / paulgo.io / search.inetol.net / search.gbt.ai / sx.1pgseek.com / searxng.site / search.pagequest.app / opnxng.com / search.rhscz.eu / baresearch.org / search.hbubli.cc / search.ononoki.org / searxng.world / search.sapti.me / searx.work / search.citw.lgt.org / privatus.su
+- 佐证: netstat 无 7890/7892 监听; 国外基线 duckduckgo.com=000, 国内基线 baidu/bing.cn/sogou=200
+- verdict: BLOCKED (实例全数网络墙; searx_space 实例目录亦不可达, 无从选 CN 可达实例)

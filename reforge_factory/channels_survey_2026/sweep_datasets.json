@@ -1,0 +1,658 @@
+{
+  "sweep": "sweep_datasets",
+  "lane": "数据集/学术文献/专利/标准/统计门户",
+  "generated": "2026-10-25",
+  "method": "curl实测HTTP状态码(直连→7895代理兜底,-L跟进重定向)+gh api仓库核验; 403/000多为反爬或瞬时不可达,非通道死亡判定; 官方文档形态如实标注未实测项",
+  "proxy": "http://127.0.0.1:7895",
+  "count": 72,
+  "projects": [
+    {
+      "name": "OpenAlex API",
+      "repo_or_site": "https://api.openalex.org",
+      "one_liner": "2.5亿+学术作品/作者/机构开放元数据图谱,微软MAG继任者,研报文献普查主力",
+      "access": "免登录API(匿名限额,mailto礼貌池提额)",
+      "cn_reach": "直连实测200",
+      "fit": "学术专利",
+      "evidence": "HTTP 200 direct (works?per-page=1)"
+    },
+    {
+      "name": "Crossref REST API",
+      "repo_or_site": "https://api.crossref.org",
+      "one_liner": "1.6亿+DOI注册元数据,期刊/会议/资助关联,参考文献抽取",
+      "access": "免登录API(mailto礼貌池提额)",
+      "cn_reach": "直连实测200",
+      "fit": "学术专利",
+      "evidence": "HTTP 200 direct (works?rows=1)"
+    },
+    {
+      "name": "CORE API v3",
+      "repo_or_site": "https://api.core.ac.uk",
+      "one_liner": "全球3亿+开放获取元数据与全文收割聚合,工程OA论文全文来源",
+      "access": "需免费key(匿名限流)",
+      "cn_reach": "直连301→429(匿名限流实证)",
+      "fit": "学术专利",
+      "evidence": "301→429 direct; 官方要求注册免费key"
+    },
+    {
+      "name": "OpenAIRE Search API",
+      "repo_or_site": "https://api.openaire.eu/search",
+      "one_liner": "欧盟地平线计划资助产出+项目关联图谱,欧洲工程研究项目一手",
+      "access": "免登录API",
+      "cn_reach": "直连实测200",
+      "fit": "学术专利/项目数据",
+      "evidence": "HTTP 200 direct"
+    },
+    {
+      "name": "Unpaywall API",
+      "repo_or_site": "https://api.unpaywall.org",
+      "one_liner": "按DOI解析合法OA全文位置,付费墙论文的免费全文定位器",
+      "access": "免登录API(仅需email参数)",
+      "cn_reach": "直连实测200",
+      "fit": "学术专利",
+      "evidence": "HTTP 200 direct (email参数)"
+    },
+    {
+      "name": "Semantic Scholar Graph API",
+      "repo_or_site": "https://api.semanticscholar.org",
+      "one_liner": "引文网络+TLDR摘要+领域标注(本项目已在役,本次复验)",
+      "access": "免登录API(无key限速)",
+      "cn_reach": "直连实测429(限速非墙,端点活)",
+      "fit": "学术专利",
+      "evidence": "HTTP 429 direct; 本项目在役渠道"
+    },
+    {
+      "name": "Europe PMC REST API",
+      "repo_or_site": "https://www.ebi.ac.uk/europepmc/webservices/rest",
+      "one_liner": "生命科学文献+全文,环境/水利/职业健康等工程交叉面",
+      "access": "免登录API",
+      "cn_reach": "直连实测200",
+      "fit": "学术专利",
+      "evidence": "HTTP 200 direct"
+    },
+    {
+      "name": "arXiv API",
+      "repo_or_site": "https://export.arxiv.org/api",
+      "one_liner": "预印本检索,eess工程数学/cs/physics分册,工程前沿方法论文",
+      "access": "免登录API",
+      "cn_reach": "直连实测200(https)",
+      "fit": "学术专利",
+      "evidence": "HTTP 200 direct; http入口301"
+    },
+    {
+      "name": "DOAJ API",
+      "repo_or_site": "https://doaj.org/api",
+      "one_liner": "2万+开放获取期刊白名单元数据,predatory刊过滤",
+      "access": "免登录API",
+      "cn_reach": "直连实测200",
+      "fit": "学术专利",
+      "evidence": "HTTP 200 direct"
+    },
+    {
+      "name": "BASE",
+      "repo_or_site": "https://www.base-search.net",
+      "one_liner": "比勒费尔德学术索引,3.4亿+文档聚合机构仓库(补OpenAlex盲区)",
+      "access": "浏览器+API需合作申请",
+      "cn_reach": "直连000,代理实测200(需代理)",
+      "fit": "学术专利",
+      "evidence": "HTTP 200 via proxy 7895"
+    },
+    {
+      "name": "OpenCitations",
+      "repo_or_site": "https://opencitations.net",
+      "one_liner": "开放引文索引数据集+API,引用关系透明化(引文核查)",
+      "access": "数据集+免登录API",
+      "cn_reach": "直连实测403(新端点被拦); v1端点410已弃",
+      "fit": "学术专利",
+      "evidence": "v1 410 Gone实证; /acm/api/meta 403"
+    },
+    {
+      "name": "Springer Nature API",
+      "repo_or_site": "https://dev.springernature.com",
+      "one_liner": "Springer/Nature文献元数据,工程学科馆藏强",
+      "access": "需免费key",
+      "cn_reach": "开发者门户直连200; 数据API未实测",
+      "fit": "学术专利",
+      "evidence": "portal HTTP 200 direct"
+    },
+    {
+      "name": "IEEE Xplore API",
+      "repo_or_site": "https://developer.ieee.org",
+      "one_liner": "IEEE电子电气计算机全文库API,工程核心文献",
+      "access": "需key(有免费配额)",
+      "cn_reach": "开发者门户直连200; 数据API未实测",
+      "fit": "学术专利",
+      "evidence": "portal HTTP 200 direct"
+    },
+    {
+      "name": "Scopus API (Elsevier Dev)",
+      "repo_or_site": "https://dev.elsevier.com",
+      "one_liner": "Scopus摘要引文API,工程覆盖最广的订阅库",
+      "access": "需机构订阅key",
+      "cn_reach": "开发者门户直连200; 数据API未实测",
+      "fit": "学术专利",
+      "evidence": "portal HTTP 200 direct"
+    },
+    {
+      "name": "Dimensions",
+      "repo_or_site": "https://app.dimensions.ai",
+      "one_liner": "文献+专利+资助+政策文本四库联动分析(Digital Science)",
+      "access": "需key(订阅,有学术免费档)",
+      "cn_reach": "直连实测303(门户重定向,可达)",
+      "fit": "学术专利",
+      "evidence": "HTTP 303 direct"
+    },
+    {
+      "name": "Web of Science API",
+      "repo_or_site": "https://clarivate.com/products/web-of-science/",
+      "one_liner": "老牌引文索引,机构订阅制API",
+      "access": "需机构订阅key",
+      "cn_reach": "产品页直连301(可达)",
+      "fit": "学术专利",
+      "evidence": "HTTP 301 direct"
+    },
+    {
+      "name": "Google Patents Public Datasets (BigQuery)",
+      "repo_or_site": "https://patents.google.com",
+      "one_liner": "美欧世等专利全量BigQuery公开表,CPC/引文/家族字段齐全,批量分析首选",
+      "access": "需GCP计费项目(BigQuery免额度)",
+      "cn_reach": "检索页代理实测200(直连000)",
+      "fit": "学术专利",
+      "evidence": "patents.google.com 200 via proxy"
+    },
+    {
+      "name": "Google Patents 检索",
+      "repo_or_site": "https://patents.google.com",
+      "one_liner": "浏览器专利全文检索,含非公开XHR查询接口可程序化",
+      "access": "浏览器免登录+非公开XHR",
+      "cn_reach": "代理实测200(直连000,需代理)",
+      "fit": "学术专利",
+      "evidence": "HTTP 200 via proxy"
+    },
+    {
+      "name": "EPO Espacenet + OPS API",
+      "repo_or_site": "https://ops.epo.org/3.2/rest-services/",
+      "one_liner": "欧专局全球专利检索(浏览器免登录)+OPS官方REST API",
+      "access": "浏览器免登录; API需免费key",
+      "cn_reach": "OPS直连403(无key实证拦截)",
+      "fit": "学术专利",
+      "evidence": "OPS HTTP 403 direct (key实证)"
+    },
+    {
+      "name": "WIPO PATENTSCOPE",
+      "repo_or_site": "https://patentscope.wipo.int",
+      "one_liner": "世知组织PCT国际申请检索,70+国家藏量",
+      "access": "浏览器免登录; API需key",
+      "cn_reach": "直连实测302(会话跳转,可达)",
+      "fit": "学术专利",
+      "evidence": "HTTP 302 direct"
+    },
+    {
+      "name": "PatentsView (USPTO)",
+      "repo_or_site": "https://search.patentsview.org",
+      "one_liner": "美国专利开放分析API,发明人/受让人/CPC聚合统计",
+      "access": "需免费key",
+      "cn_reach": "直连+代理均000(疑反爬,未实证通)",
+      "fit": "学术专利",
+      "evidence": "000 both; 官方2023新规需注册key"
+    },
+    {
+      "name": "Lens.org API",
+      "repo_or_site": "https://api.lens.org",
+      "one_liner": "学术文献+专利双库联动检索,Lens学术免费档",
+      "access": "需申请key",
+      "cn_reach": "GET/POST直连均401(无key实证)",
+      "fit": "学术专利",
+      "evidence": "HTTP 401 direct (GET+POST双实证)"
+    },
+    {
+      "name": "国家知识产权局专利检索系统",
+      "repo_or_site": "https://pss-system.cponline.cnipa.gov.cn",
+      "one_liner": "中国专利官方检索,中文一手专利渠道",
+      "access": "浏览器免登录(反爬)",
+      "cn_reach": "直连实测412(预条件反爬拦截)",
+      "fit": "学术专利",
+      "evidence": "HTTP 412 direct"
+    },
+    {
+      "name": "ISO Online Browsing Platform",
+      "repo_or_site": "https://www.iso.org/obp/ui/",
+      "one_liner": "ISO标准全文条款免费在线浏览(HTML),PDF付费",
+      "access": "浏览器免登录",
+      "cn_reach": "直连403(curl探针被拦,站点在)",
+      "fit": "标准定额造价",
+      "evidence": "HTTP 403 direct (anti-bot)"
+    },
+    {
+      "name": "IEC",
+      "repo_or_site": "https://www.iec.ch",
+      "one_liner": "国际电工标准IEC 60xxx系列,电气工程母标准",
+      "access": "浏览器(购买;GPICS等免费件)",
+      "cn_reach": "直连实测202",
+      "fit": "标准定额造价",
+      "evidence": "HTTP 202 direct"
+    },
+    {
+      "name": "NIST Technical Series Publications",
+      "repo_or_site": "https://www.nist.gov",
+      "one_liner": "美国标准技术研究院出版物,计量/建筑/火灾工程PDF免费直下(nvlpubs)",
+      "access": "免登录PDF直下",
+      "cn_reach": "nist.gov与nvlpubs.nist.gov双站直连200",
+      "fit": "标准定额造价",
+      "evidence": "200 direct x2"
+    },
+    {
+      "name": "ANSI Webstore",
+      "repo_or_site": "https://webstore.ansi.org",
+      "one_liner": "美国国标委标准商店,ANSI及ISO美版采购",
+      "access": "浏览器(付费)",
+      "cn_reach": "直连403(反爬,站点在)",
+      "fit": "标准定额造价",
+      "evidence": "HTTP 403 direct"
+    },
+    {
+      "name": "ASTM International",
+      "repo_or_site": "https://www.astm.org",
+      "one_liner": "材料试验标准母版,工程建设ASTM A/C/E系列",
+      "access": "浏览器(付费)",
+      "cn_reach": "直连实测200",
+      "fit": "标准定额造价",
+      "evidence": "HTTP 200 direct"
+    },
+    {
+      "name": "BSI",
+      "repo_or_site": "https://www.bsigroup.com/en-GB/",
+      "one_liner": "英国标准,BS EN欧标英版母版,海外EPC英系项目适用",
+      "access": "浏览器(付费;部分BS免费)",
+      "cn_reach": "直连实测200",
+      "fit": "标准定额造价",
+      "evidence": "HTTP 200 direct"
+    },
+    {
+      "name": "DIN",
+      "repo_or_site": "https://www.din.de/en",
+      "one_liner": "德国标准DIN EN/ISO德版,机械与工程母版",
+      "access": "浏览器(付费;DIN SPEC部分免费)",
+      "cn_reach": "直连实测200",
+      "fit": "标准定额造价",
+      "evidence": "HTTP 200 direct"
+    },
+    {
+      "name": "JISC (日本产业标准调查会)",
+      "repo_or_site": "https://www.jisc.go.jp",
+      "one_liner": "日本JIS标准体系,日系海外工程EPC适用",
+      "access": "浏览器(日文;英译付费)",
+      "cn_reach": "英文路径直连404(入口疑变,待核)",
+      "fit": "标准定额造价",
+      "evidence": "HTTP 404 direct (path TBD)"
+    },
+    {
+      "name": "CEN-CENELEC",
+      "repo_or_site": "https://www.cencenelec.eu",
+      "one_liner": "欧洲标准EN体系(EN 1090/1991等工程建设主战场)",
+      "access": "浏览器(购买;部分国别门户免费)",
+      "cn_reach": "直连实测200",
+      "fit": "标准定额造价",
+      "evidence": "HTTP 200 direct"
+    },
+    {
+      "name": "ASME",
+      "repo_or_site": "https://www.asme.org",
+      "one_liner": "美国机械工程师学会标准,锅炉压力容器BPVC等",
+      "access": "浏览器(付费)",
+      "cn_reach": "直连实测200",
+      "fit": "标准定额造价",
+      "evidence": "HTTP 200 direct"
+    },
+    {
+      "name": "awesome-public-datasets",
+      "repo_or_site": "https://github.com/awesomedata/awesome-public-datasets",
+      "one_liner": "79.7k星主题化开放数据集总目,含Architecture/Economics/Energy/GIS/Government/Transportation工程经济子集",
+      "access": "数据集目录(repo浏览)",
+      "cn_reach": "gh直连核验",
+      "fit": "数据集",
+      "evidence": "79736 stars; README 2363行,章节行号Architecture71/Climate188/Economics438/Energy714/GIS905/Government986/Transportation2238"
+    },
+    {
+      "name": "awesome-spacecraft-engineering-datasets",
+      "repo_or_site": "https://github.com/patrickfleith/awesome-spacecraft-engineering-datasets",
+      "one_liner": "航天器工程数据集清单(产业+科研)",
+      "access": "数据集目录",
+      "cn_reach": "gh直连核验",
+      "fit": "数据集",
+      "evidence": "110 stars (gh api)"
+    },
+    {
+      "name": "awesome-civil-engineering (QuantumNovice)",
+      "repo_or_site": "https://github.com/QuantumNovice/awesome-civil-engineering",
+      "one_liner": "土木工程软件与编程资源清单",
+      "access": "数据集目录(工具生态)",
+      "cn_reach": "gh直连核验",
+      "fit": "数据集",
+      "evidence": "105 stars (gh api)"
+    },
+    {
+      "name": "awesome-civil-engineering (riponcm)",
+      "repo_or_site": "https://github.com/riponcm/awesome-civil-engineering",
+      "one_liner": "开源土木软件:结构FEA/岩土/交通/水利/BIM/GIS/测绘",
+      "access": "数据集目录(工具生态)",
+      "cn_reach": "gh直连核验",
+      "fit": "数据集",
+      "evidence": "5 stars (gh api)"
+    },
+    {
+      "name": "awesome-digital-civil-engineering",
+      "repo_or_site": "https://github.com/Ayberkrk/awesome-digital-civil-engineering",
+      "one_liner": "土木与基础设施开源工具+数据集(结构/抗震/水力/BIM/点云/地理)",
+      "access": "数据集目录",
+      "cn_reach": "gh直连核验",
+      "fit": "数据集",
+      "evidence": "3 stars (gh api)"
+    },
+    {
+      "name": "Kaggle Datasets",
+      "repo_or_site": "https://www.kaggle.com/datasets",
+      "one_liner": "众包数据集平台,含construction/cost类工程数据集",
+      "access": "浏览器+API需key",
+      "cn_reach": "直连实测200",
+      "fit": "数据集",
+      "evidence": "HTTP 200 direct"
+    },
+    {
+      "name": "Google Dataset Search",
+      "repo_or_site": "https://datasetsearch.research.google.com",
+      "one_liner": "谷歌数据集垂直检索,按schema.org元数据聚合",
+      "access": "浏览器",
+      "cn_reach": "代理实测200(直连000,需代理)",
+      "fit": "数据集",
+      "evidence": "HTTP 200 via proxy"
+    },
+    {
+      "name": "Zenodo API",
+      "repo_or_site": "https://zenodo.org/api",
+      "one_liner": "CERN开放仓库,Horizon欧盟项目工程数据集+DOI沉淀",
+      "access": "免登录API",
+      "cn_reach": "直连301(可达),代理跟进200",
+      "fit": "数据集",
+      "evidence": "301→200"
+    },
+    {
+      "name": "Figshare API",
+      "repo_or_site": "https://api.figshare.com",
+      "one_liner": "学术数据集托管,工程试验数据常见载体",
+      "access": "免登录API(上传需key)",
+      "cn_reach": "直连403(探针被拦;官方开放API)",
+      "fit": "数据集",
+      "evidence": "HTTP 403 direct (probe blocked)"
+    },
+    {
+      "name": "Dryad API",
+      "repo_or_site": "https://datadryad.org/api/v2",
+      "one_liner": "同行评审关联研究数据仓库",
+      "access": "免登录API",
+      "cn_reach": "直连实测200",
+      "fit": "数据集",
+      "evidence": "HTTP 200 direct"
+    },
+    {
+      "name": "DataCite API",
+      "repo_or_site": "https://api.datacite.org",
+      "one_liner": "数据集DOI元数据注册库,数万仓库索引",
+      "access": "免登录API",
+      "cn_reach": "直连实测200",
+      "fit": "数据集",
+      "evidence": "HTTP 200 direct"
+    },
+    {
+      "name": "re3data API",
+      "repo_or_site": "https://www.re3data.org",
+      "one_liner": "全球研究数据仓库注册目录,按学科定位工程数据仓库",
+      "access": "免登录API",
+      "cn_reach": "直连实测200",
+      "fit": "数据集",
+      "evidence": "HTTP 200 direct"
+    },
+    {
+      "name": "data.gov (US CKAN)",
+      "repo_or_site": "https://data.gov",
+      "one_liner": "美国政府开放数据门户,基建/能源/采购数据集",
+      "access": "浏览器+CKAN API",
+      "cn_reach": "CKAN探针404(入口疑迁移); 门户待核",
+      "fit": "数据集/项目数据",
+      "evidence": "package_search与site_read均404 direct"
+    },
+    {
+      "name": "data.europa.eu",
+      "repo_or_site": "https://data.europa.eu",
+      "one_liner": "欧盟开放数据门户,成员国交通/能源/工程目录",
+      "access": "浏览器+API",
+      "cn_reach": "代理实测200(直连000)",
+      "fit": "数据集",
+      "evidence": "HTTP 200 via proxy"
+    },
+    {
+      "name": "Wikidata API",
+      "repo_or_site": "https://www.wikidata.org",
+      "one_liner": "结构化知识库,工程机构/项目/标准号实体事实源",
+      "access": "免登录API+SPARQL",
+      "cn_reach": "代理实测200(直连000)",
+      "fit": "数据集",
+      "evidence": "HTTP 200 via proxy"
+    },
+    {
+      "name": "OpenStreetMap Overpass API",
+      "repo_or_site": "https://overpass-api.de",
+      "one_liner": "全球基础设施地理底图,路网/建筑/水利设施矢量数据",
+      "access": "免登录API(多镜像)",
+      "cn_reach": "主镜像+备用均000(当前网络不可达)",
+      "fit": "数据集",
+      "evidence": "000 both mirrors; 官方免费无key"
+    },
+    {
+      "name": "HuggingFace Datasets API",
+      "repo_or_site": "https://huggingface.co/api/datasets",
+      "one_liner": "数据集托管+行业语料,工程中文语料渐增",
+      "access": "免登录API(部分下载需登录)",
+      "cn_reach": "代理实测200(直连000)",
+      "fit": "数据集",
+      "evidence": "HTTP 200 via proxy"
+    },
+    {
+      "name": "Common Crawl",
+      "repo_or_site": "https://commoncrawl.org",
+      "one_liner": "PB级全网网页快照语料,自建舆情语料的原料",
+      "access": "数据集(S3公开桶)+索引API",
+      "cn_reach": "索引API代理实测200(直连000)",
+      "fit": "数据集/新闻舆情",
+      "evidence": "index API 200 via proxy"
+    },
+    {
+      "name": "GDELT 2.0 Doc API",
+      "repo_or_site": "https://api.gdeltproject.org",
+      "one_liner": "全球新闻事件库,30秒级更新含地理与情绪",
+      "access": "免登录API",
+      "cn_reach": "直连+代理均000(当前不可达,通道仍在)",
+      "fit": "新闻舆情",
+      "evidence": "000 both; 官方免费无key"
+    },
+    {
+      "name": "Our World in Data",
+      "repo_or_site": "https://ourworldindata.org",
+      "one_liner": "全球议题图表化数据,CSV/Grapher配置直下",
+      "access": "数据集+免登录CSV",
+      "cn_reach": "直连实测200",
+      "fit": "数据集",
+      "evidence": "HTTP 200 direct"
+    },
+    {
+      "name": "World Bank Open Data API",
+      "repo_or_site": "https://api.worldbank.org/v2",
+      "one_liner": "世行14000+指标,基建投资/能源/城市专题",
+      "access": "免登录API",
+      "cn_reach": "直连实测200",
+      "fit": "项目数据",
+      "evidence": "HTTP 200 direct"
+    },
+    {
+      "name": "World Bank Projects & Operations API",
+      "repo_or_site": "https://search.worldbank.org/api/v2/projects",
+      "one_liner": "世行贷款项目级档案,国际工程行业一手项目流",
+      "access": "免登录API",
+      "cn_reach": "直连实测200",
+      "fit": "项目数据",
+      "evidence": "HTTP 200 direct"
+    },
+    {
+      "name": "IMF DataMapper + SDMX",
+      "repo_or_site": "https://www.imf.org/external/datamapper/api/v1/",
+      "one_liner": "国际货币基金宏观库(WEO/IFS),汇率与宏观景气底座",
+      "access": "免登录API(官方)",
+      "cn_reach": "DataMapper直连403(反爬); SDMX dataservices 000",
+      "fit": "项目数据",
+      "evidence": "403/000 probes; 官方开放JSON文档在"
+    },
+    {
+      "name": "OECD Data Explorer SDMX",
+      "repo_or_site": "https://sdmx.oecd.org/public/rest/",
+      "one_liner": "OECD全库SDMX API,建筑指数/投资/专利(STP)",
+      "access": "免登录API(匿名限额)",
+      "cn_reach": "直连实测200(dataflow目录)",
+      "fit": "项目数据",
+      "evidence": "HTTP 200 direct"
+    },
+    {
+      "name": "Eurostat API",
+      "repo_or_site": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/",
+      "one_liner": "欧盟统计局,建筑生产指数/建筑许可/PPI,欧洲工程景气主源",
+      "access": "免登录API",
+      "cn_reach": "直连实测200",
+      "fit": "项目数据",
+      "evidence": "HTTP 200 direct"
+    },
+    {
+      "name": "UN Data Portal",
+      "repo_or_site": "https://data.un.org",
+      "one_liner": "联合国数据门户,汇集UN各统计库含能源与工业",
+      "access": "浏览器+SDMX API",
+      "cn_reach": "直连实测200",
+      "fit": "项目数据",
+      "evidence": "HTTP 200 direct"
+    },
+    {
+      "name": "UN Comtrade API",
+      "repo_or_site": "https://comtradeapi.un.org/data/v1/get/",
+      "one_liner": "国际贸易HS全量,建材/机电进出口工程贸易流",
+      "access": "需免费key",
+      "cn_reach": "直连401(无key实证)",
+      "fit": "项目数据",
+      "evidence": "HTTP 401 direct (实证)"
+    },
+    {
+      "name": "UNIDO Statistics",
+      "repo_or_site": "https://stat.unido.org",
+      "one_liner": "工发组织工业统计,INDSTAT产业库含建筑业分国",
+      "access": "浏览器(部分XLSX免下)",
+      "cn_reach": "直连403(反爬)",
+      "fit": "项目数据",
+      "evidence": "HTTP 403 direct"
+    },
+    {
+      "name": "国家统计局国家数据",
+      "repo_or_site": "https://data.stats.gov.cn",
+      "one_liner": "中国官方月度/年度库,建筑业产值/固定资产投资/价格指数",
+      "access": "浏览器(易query接口需会话cookie)",
+      "cn_reach": "首页直连302; easyquery 403(需会话)",
+      "fit": "项目数据",
+      "evidence": "302/403; 会话制实测"
+    },
+    {
+      "name": "US Census Bureau API",
+      "repo_or_site": "https://api.census.gov",
+      "one_liner": "美国普查局,建设支出C30/经济普查,美国工程量价源",
+      "access": "需免费key(data.json目录免)",
+      "cn_reach": "data.json代理实测200(直连000)",
+      "fit": "项目数据",
+      "evidence": "data.json 200 via proxy"
+    },
+    {
+      "name": "BLS Public Data API",
+      "repo_or_site": "https://api.bls.gov/publicAPI/v2/timeseries/data/",
+      "one_liner": "美国劳工统计局,PPI建材/就业/CPI,造价通胀底座",
+      "access": "免登录API(注册key提额)",
+      "cn_reach": "直连403(探针被拦;官方公共API文档明确no-key)",
+      "fit": "项目数据",
+      "evidence": "HTTP 403 probe; 官方no-key文档"
+    },
+    {
+      "name": "FRED API",
+      "repo_or_site": "https://api.stlouisfed.org",
+      "one_liner": "圣路易斯联储宏观数据库10万+序列,住宅建筑/材料价格序列",
+      "access": "需免费key",
+      "cn_reach": "直连400(缺api_key实证)",
+      "fit": "项目数据",
+      "evidence": "HTTP 400 direct (missing key实证)"
+    },
+    {
+      "name": "EIA API v2",
+      "repo_or_site": "https://api.eia.gov/v2",
+      "one_liner": "美国能源信息署,电力/油气全量,能源工程量价",
+      "access": "需免费key",
+      "cn_reach": "直连403(无key实证)",
+      "fit": "项目数据",
+      "evidence": "HTTP 403 direct (实证)"
+    },
+    {
+      "name": "IEA Data & Statistics",
+      "repo_or_site": "https://www.iea.org/data-and-statistics",
+      "one_liner": "国际能源署,能源平衡表/电力基建投资,能源转型数据",
+      "access": "浏览器(部分数据产品付费)",
+      "cn_reach": "直连403(反爬)",
+      "fit": "项目数据",
+      "evidence": "HTTP 403 direct"
+    },
+    {
+      "name": "ADB Projects & Statistics",
+      "repo_or_site": "https://www.adb.org/projects",
+      "one_liner": "亚行项目库+基本统计,亚洲工程贷款一手项目流",
+      "access": "浏览器",
+      "cn_reach": "直连+代理均000(当前不可达,官方公开)",
+      "fit": "项目数据",
+      "evidence": "000 both"
+    },
+    {
+      "name": "AidData",
+      "repo_or_site": "https://www.aiddata.org",
+      "one_liner": "发展融资地理编码数据集,含中国对外工程融资追踪",
+      "access": "数据集免登录下载",
+      "cn_reach": "代理实测200(直连000)",
+      "fit": "项目数据",
+      "evidence": "HTTP 200 via proxy"
+    },
+    {
+      "name": "USAspending API",
+      "repo_or_site": "https://api.usaspending.gov",
+      "one_liner": "美国联邦支出全透明API,含联邦工程合同与受援方",
+      "access": "免登录API",
+      "cn_reach": "直连实测200",
+      "fit": "项目数据",
+      "evidence": "HTTP 200 direct"
+    },
+    {
+      "name": "Open Contracting Data Registry",
+      "repo_or_site": "https://data.open-contracting.org",
+      "one_liner": "全球公共采购开放数据注册表,OCDS工程招标结构化",
+      "access": "数据集+免登录",
+      "cn_reach": "代理实测200(直连000)",
+      "fit": "项目数据",
+      "evidence": "HTTP 200 via proxy"
+    },
+    {
+      "name": "TED (Tenders Electronic Daily)",
+      "repo_or_site": "https://ted.europa.eu",
+      "one_liner": "欧盟官方招标公报,欧洲工程procurement一手,v3 API匿名限额",
+      "access": "浏览器+API(匿名限额)",
+      "cn_reach": "直连实测202",
+      "fit": "项目数据",
+      "evidence": "HTTP 202 direct"
+    }
+  ]
+}

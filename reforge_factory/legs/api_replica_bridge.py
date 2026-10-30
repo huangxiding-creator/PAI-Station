@@ -111,6 +111,10 @@ CLI_ENGINES: dict[str, dict[str, Path]] = {
         "script": REPO / "reforge_factory" / "legs" / "zenodo_leg.py",
         "python":  Path("py"),
     },
+    "bdn": {                                      # 1030 接入令·百度网盘检索下载 (bdn CLI)
+        "script": REPO / "逆向工程" / "baidu-netdisk" / "replica" / "bdn.py",
+        "python":  Path("py"),                    # 腿件调法=py -I <bdn.py> search/download --json (隔离模式)
+    },
 }
 
 

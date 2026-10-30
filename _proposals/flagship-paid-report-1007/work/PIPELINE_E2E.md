@@ -73,6 +73,7 @@ BID26 实测：docx 130KB + PDF 1.4MB/80 页，文本层可检索。
 | 号位 | 总包之声 / 总包说 / 工程行业大脑 |
 | BID26 | ①总包之声已发（1015 预制「2026年招投标新规齐爆」ok=true media_id 在档）②③本链补发（总包说版+工程行业大脑版，数字对齐成书实况）|
 | 纪律 | 数字与成书一致（ promo 数字须复核——1015 预制文为预估数，后续文按 57,129/80页 实况）|
+| 海报位（1027 用户令，追加） | 文末二维码位→嵌 `<SKU>.png` 报告宣传海报（`report_platform/promo/poster_fetch.py` 拉引擎 `/api/report/<SKU>/poster`，发布前草稿箱换图）；规则全文=`report_platform/promo/promo_poster_rule.md` |
 
 ## 段 6：S6 宣传视频（≥3，H3≥1）
 

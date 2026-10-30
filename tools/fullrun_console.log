@@ -1,0 +1,26 @@
+[00:04:04 +    0.0s] 全量真实试跑启动: TENDER.docx (并发4·不修剪·全闸门)
+[00:04:05 +    1.2s] upload OK cid=cda41bd94e6e4d9ab459bcc4882557a6
+[00:04:24 +   19.9s] explain OK 18.5s events=7 bid_type=engineering clauses=0
+[00:04:54 +   49.8s] outline OK 29.8s 章=9 叶≈53
+[00:04:54 +   50.0s] outline-confirm(不修剪) 200
+[00:05:09 +   65.0s] facts propose+put: 10项
+[00:05:09 +   65.0s] body 全稿生成开始(快照流并行)
+[01:10:23 + 3979.1s] body OK 3913.8s events=273 errs=6 sections=62 {'done': 62} 总字=116222
+[01:10:37 + 3993.2s] review OK 14.1s events=2 errs=0
+[01:10:59 + 4015.6s] gantt OK 22.5s events=2 errs=0
+[01:11:55 + 4070.8s] ppt OK 55.1s events=6 errs=0
+[01:11:59 + 4074.9s] export-docx: OK 118949B 4.2s
+[01:12:00 + 4076.2s] export-pdf: OK 72760B 1.2s
+[01:12:01 + 4077.6s] export-pptx: OK 63061B 1.4s
+[01:12:07 + 4082.9s] export-anbiao: OK 118484B 5.3s
+[01:12:07 + 4083.1s] report-matrix: 2764B 0.2s
+[01:12:07 + 4083.2s] report-gates: 18494B 0.2s
+[01:12:07 + 4083.4s] report-evaluation: 21909B 0.2s
+[01:12:07 + 4083.6s] report-fairness: 1105B 0.2s
+[01:12:08 + 4083.8s] report-prequal: 19459B 0.2s
+[01:12:08 + 4084.0s] report-facts_audit: 93B 0.1s
+[01:12:12 + 4088.4s] report-dedup: 3266B 4.4s
+[01:12:12 + 4088.5s] report-archive_verify: 36B 0.1s
+[01:12:13 + 4088.7s] report-task_final: 51682B 0.2s
+[01:12:13 + 4088.7s] 终报: gates修复=1443 致命=28 G7=1.0 内评=REJECT
+[01:12:13 + 4088.7s] 全量试跑完结 — 全部证据在 tools/fullrun/

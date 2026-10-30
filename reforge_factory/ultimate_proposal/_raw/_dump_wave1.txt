@@ -1,0 +1,198 @@
+DOC: 世界顶级调研能力终极提案·调研波1: 研究方法论框架与AI研究编排系统普查(GitHub+HN180天+WebSearch); 聚焦怎么调研而非数据从哪来; 只登记不装不clone
+METHOD: gh api search/repositories(topic:deep-research×3页/topic:research-agent×2页/topic:auto-research/graphrag/osint/threat-intelligence/fact-checking/llm-evaluation + 具名repo直查60+件) + HN Algolia近180天10查询 + WebSearch缺口补查; stars全部为gh api实测(2026-10-28), 零手填
+DEDUP: 上轮620项渠道普查(channels_survey_2026, 1025)已登记80个GitHub研究agent仓(_raw/prev_survey_repos.txt); 本轮除8件任务点名锚定件(note=prev_survey复登, 以方法论角度复登)外全部新增零重复
+STATS: {
+ "total_items": 164,
+ "by_lane": {
+  "1-AI研究编排框架": 52,
+  "2-多智能体研究角色分工": 11,
+  "3-证据链与事实核查": 32,
+  "4-知识图谱与推理引擎": 20,
+  "5-竞争情报OSINT方法论": 26,
+  "6-研究报告质量评估": 23
+ },
+ "by_fit": {
+  "需改造": 13,
+  "可直接采用": 45,
+  "方法论参考": 91,
+  "纯论文": 15
+ },
+ "prev_survey复登锚定件": 9,
+ "新增零重复件": 155
+}
+
+##### LANE 1-AI研究编排框架 (n=52) focus: 聚焦「怎么组织研究」: 计划-执行-综合-自检的编排架构(深研agent/自动科研/工作流引擎)
+- [STORM] 编排事实锚: 研究写作骨架=多视角问询(Perspectifier)→多agent对话(WRITER/EDITOR角色分离)→大纲→带引用全篇长文 | repo=https://github.com/stanford-oval/storm | access=开源MIT自托管(Python) | fit=可直接采用 | stars=31720 | note=prev_survey复登
+- [gpt-researcher] 编排事实锚: 计划agent+执行agent分工(广度查库→深度研读→综合), 产出带引用报告; 人类协同与子任务定制是方法论核心 | repo=https://github.com/assafelovic/gpt-researcher | access=开源Apache-2.0自托管(Python, 多LLM) | fit=需改造 | stars=30317 | note=prev_survey复登
+- [harness2(Google Research)] Google递归agent harness(Recursive Agent Harnessing, HN 81pt/19c); 递归编排与任务拆解骨架 | repo=https://github.com/google-research/harness2 | access=开源自托管 | fit=可直接采用 | stars=20542 | note=HN近180天发现
+- [AI-Scientist] 全自动科研闭环: idea→实验→写作→自动评审(内置LLM Reviewer三段评审), 评审agent可直接移植为研报critic | repo=https://github.com/SakanaAI/AI-Scientist | access=开源自托管(Python, 需LLM key) | fit=需改造 | stars=14810 | note=
+- [open-deep-research(LangChain)] 编排事实锚: 子agent并行生成假设→后台supervisor压缩上下文循环; 已archived但压缩-精炼循环范式仍被广泛抄用 | repo=https://github.com/langchain-ai/open_deep_research | access=开源MIT(官方已归档, 需改造) | fit=方法论参考 | stars=12673 | note=prev_survey复登
+- [AI-Scientist-v2] agentic树搜索驱动的workshop级自动发现; 树搜索+自动审稿迭代双环是长报告自检的方法论来源 | repo=https://github.com/SakanaAI/AI-Scientist-v2 | access=开源研究代码(Python) | fit=纯论文 | stars=7415 | note=
+- [loopx] 本地优先语义控制平面+research workbench: 长程目标→可验证结果(把研究目标当语义工单管理) | repo=https://github.com/loopx-project/loopx | access=开源本地优先 | fit=方法论参考 | stars=6452 | note=
+- [Agent Laboratory] 编排事实锚: 文献综述→公式化→实验计划→执行→报告全流程human-in-loop工作站(博士级流水线蓝本) | repo=https://github.com/SamuelSchmidgall/AgentLaboratory | access=开源MIT自托管(Python) | fit=方法论参考 | stars=5914 | note=prev_survey复登
+- [FAROS] 蓝图驱动的AutoResearch运行时: idea生成→实验→产物全链编排 | repo=https://github.com/OpenNSWM-Lab/FAROS | access=开源自托管 | fit=方法论参考 | stars=3036 | note=
+- [dr-claw] AI博士军团研究IDE(海量AI Doctor助手编队), 研究工作台交互范式 | repo=https://github.com/OpenLAIR/dr-claw | access=开源自托管 | fit=方法论参考 | stars=1169 | note=
+- [luxas] 自主研究同事: 一个问题→过夜编译成手稿; 长时程无人值守研究编排 | repo=https://github.com/Muuuun/luxas | access=开源自托管 | fit=方法论参考 | stars=1169 | note=
+- [sgr-agent-core] Schema-Guided Reasoning(SGR): 用schema约束agent推理路径(可迁移到研究流程结构化) | repo=https://github.com/vamplabAI/sgr-agent-core | access=开源自托管 | fit=方法论参考 | stars=1127 | note=
+- [DeepResearcher(GAIR)] 编排事实锚: 在真实web环境端到端RL训练深研agent(浏览-推理-综合一体), RL训练范式证据 | repo=https://github.com/GAIR-NLP/DeepResearcher | access=开源Apache-2.0(研究代码) | fit=纯论文 | stars=806 | note=prev_survey复登
+- [AFlow] MCTS自动搜索agentic workflow代码表示(ICLR2025 Oral); 研究流程本身可被自动优化而非手写 | repo=https://github.com/FoundationAgents/AFlow | access=开源MIT(Python) | fit=可直接采用 | stars=626 | note=
+- [hoolulu/deep-research] 券商级深度研报生成skill: 一条命令约十分钟出专业级深研报告 | repo=https://github.com/hoolulu/deep-research | access=Claude Code skill即装即用 | fit=可直接采用 | stars=605 | note=
+- [AutoScholarLoop] 多agent自动研究环: idea发现→实验执行→证据落地论文写作→质量审计四段闭环 | repo=https://github.com/damonwan1/AutoScholarLoop | access=开源自托管 | fit=方法论参考 | stars=534 | note=
+- [de-anthropocentric-research-engine] 给定研究方向自动跑: 文献综合→gap验证→假说形成→实验设计(非人类中心的严谨研究管线) | repo=https://github.com/yogsoth-ai/de-anthropocentric-research-engine | access=开源自托管 | fit=方法论参考 | stars=505 | note=
+- [UniversalDeepResearch] NVIDIA通用深研论文(arXiv:2509.00244)官方代码 | repo=https://github.com/NVlabs/UniversalDeepResearch | access=开源研究代码 | fit=纯论文 | stars=470 | note=
+- [CycleResearcher] 研究agent×自动评审agent互促强化学习(CycleReviewer); 产-评互促RL范式可借鉴为报告质量内环 | repo=https://github.com/zhu-minjun/Researcher | access=开源研究代码 | fit=纯论文 | stars=407 | note=
+- [gptr-mcp] gpt-researcher官方MCP服务化(LLM应用经MCP协议执行深研) | repo=https://github.com/assafelovic/gptr-mcp | access=开源MCP即挂 | fit=可直接采用 | stars=376 | note=
+- [deepdive skill] 12阶段研究管线skill: plan-review门+并行子agent搜索+claims台账(证据账本) | repo=https://github.com/Socialpranker/deepdive | access=Claude Code skill即装即用 | fit=可直接采用 | stars=368 | note=
+- [Open-Deep-Research-workflow-on-Dify] Dify上的深研工作流DSL: 级联多源搜索→大纲→带引用长文(低代码可视化编排样本) | repo=https://github.com/AdamPlatin123/Open-Deep-Research-workflow-on-Dify | access=开源Dify DSL即导入 | fit=可直接采用 | stars=320 | note=
+- [Mole] 终端深度研究agent: 强制预算+引用核实(verified quotes)+本地数据隐私边界(HN 100pt) | repo=https://github.com/lajosdeme/mole | access=开源自托管(终端CLI) | fit=可直接采用 | stars=317 | note=HN近180天发现
+- [research-toolkit] 研究方法+工作流工具+独立评审三合一(Agent Skill/插件/本地MCP三形态) | repo=https://github.com/rrrrrredy/research-toolkit | access=skill/MCP即装即用 | fit=可直接采用 | stars=310 | note=
+- [deepsearch-agents] 对话式多智能体深搜实战项目(LangGraph+RAGFlow+Tavily): 深研agent工程教材级样本 | repo=https://github.com/didilili/deepsearch-agents | access=开源自托管 | fit=方法论参考 | stars=300 | note=
+- [folio] 本地优先AI投研工作台: 深度调研+证据化投资论点+组合风险分析(投研编排参考) | repo=https://github.com/helsome/folio | access=开源本地优先 | fit=方法论参考 | stars=265 | note=
+- [Polaris] 面向自主科学发现的agent系统(ZJU), 发现导向编排 | repo=https://github.com/ZJU-REAL/Polaris | access=开源研究代码 | fit=纯论文 | stars=264 | note=
+- [research-town] 人类研究社区模拟器(ICML2025): agent扮演作者/审稿人社区; 社区化评审方法论 | repo=https://github.com/ulab-uiuc/research-town | access=开源研究代码 | fit=纯论文 | stars=216 | note=
+- [SeanEllyJames/deep-research-skill] 会思考有判断的深度调研(反信息罗列式汇总)即插即用skill | repo=https://github.com/SeanEllyJames/deep-research-skill | access=Agent skill即装即用 | fit=可直接采用 | stars=187 | note=
+- [qiqihezh/deepresearch-agent] 生产级深研系统: 多agent编排+红蓝对抗降噪+语义级上下文压缩+跨agent共享记忆(165实验+显著性检验) | repo=https://github.com/qiqihezh/deepresearch-agent | access=开源自托管 | fit=方法论参考 | stars=171 | note=
+- [deepevolve] DeepResearch+代码进化双agent发现新算法; 深研×进化搜索组合范式 | repo=https://github.com/liugangcode/deepevolve | access=开源自托管 | fit=方法论参考 | stars=144 | note=
+- [XScientist] Git式证据史: 研究过程可检查/可复现/可回滚(inspectable evidence histories) | repo=https://github.com/smileformylove/XScientist | access=开源自托管 | fit=方法论参考 | stars=126 | note=
+- [deep-research-mcp] 统一MCP口聚合OpenAI/Gemini Deep Research/Tavily/自托管DR引擎(多DR引擎编排器) | repo=https://github.com/pminervini/deep-research-mcp | access=开源MCP即挂 | fit=可直接采用 | stars=116 | note=
+- [CoAutoResearch] 自主调查+递归自改进+人机协同研究系统 | repo=https://github.com/YihongT/CoAutoResearch | access=开源自托管 | fit=方法论参考 | stars=112 | note=
+- [PaperTeam] 证据落地科研agent: 引用核验+论文生产流水线 | repo=https://github.com/JiahongXu88/PaperTeam | access=开源自托管 | fit=方法论参考 | stars=95 | note=
+- [super-survey] 可复用多轮调研skill: 证据背书的产品/市场/技术/开源/投资式调研 | repo=https://github.com/GoatGit/super-survey | access=Agent skill即装即用 | fit=可直接采用 | stars=89 | note=
+- [hermes-researcher-agent] 隐私安全研究员agent: web/GitHub/YouTube/Reddit/文档+source-lineage核查+反例寻找 | repo=https://github.com/AlekseiUL/hermes-researcher-agent | access=开源自托管 | fit=方法论参考 | stars=63 | note=
+- [report-helper] 长篇深度研究报告调研/写作助手: 一句话跑完完整报告输出高质量PDF | repo=https://github.com/Jiaranbb/report-helper | access=开源自托管 | fit=可直接采用 | stars=60 | note=
+- [deepcloak] 本地优先研究工具: 显式抓取决策+来源证据+带引用报告(CLI+MCP双口) | repo=https://github.com/Mrbaeksang/deepcloak | access=开源本地优先(Python) | fit=方法论参考 | stars=60 | note=
+- [openrouter-deep-research-mcp] 多agent研究MCP: 异步agent网/流式swarm编排研究 | repo=https://github.com/wheattoast11/openrouter-deep-research-mcp | access=开源MCP即挂 | fit=方法论参考 | stars=55 | note=
+- [Agon] Claude Code自主科研插件: 多agent环从裸题直达运行实验 | repo=https://github.com/AutoResearch-Factory/Agon | access=Claude Code插件即装 | fit=方法论参考 | stars=54 | note=
+- [deepresearchagent(1612535983)] 可恢复可审计深研agent(LangGraph): 规划→搜索→证据管理→报告, 断点续跑 | repo=https://github.com/1612535983/deepresearchagent | access=开源自托管 | fit=方法论参考 | stars=52 | note=
+- [newssurvey] 用指定新闻站+LLM写survey报告(信源限定式综述生成) | repo=https://github.com/impredicative/newssurvey | access=开源自托管 | fit=方法论参考 | stars=31 | note=
+- [steer] STEER: AI4R实验框架, 接驳既有研究工具的auto-research编排 | repo=https://github.com/xieyulai/steer | access=开源自托管 | fit=方法论参考 | stars=28 | note=
+- [researcher-skill(ReAct)] ReAct深搜skill: 搜深不搜宽, 每轮沿上一轮线索追进(线索链式深挖) | repo=https://github.com/ViryaZheng/researcher-skill | access=Agent skill即装即用 | fit=可直接采用 | stars=26 | note=
+- [LongCat-DeepResearch] 美团开源深研harness: 多agent规划+独立分节研究+证据落地报告 | repo=https://github.com/meituan-longcat/LongCat-DeepResearch | access=开源自托管 | fit=方法论参考 | stars=24 | note=
+- [lastsearch] 可靠研究基建: 证据背书搜索+引用+置信分 | repo=https://github.com/LastSearch-HQ/lastsearch | access=开源自托管 | fit=方法论参考 | stars=20 | note=
+- [jeffy-skills] 证据背书深研skill: 时间线/力场图/机制框架产出可追溯决策就绪报告 | repo=https://github.com/jeffy-Peng/jeffy-skills | access=Agent skill即装即用 | fit=可直接采用 | stars=20 | note=
+- [caesar-agent] 图驱动深度网探索+对抗性答案合成(graph-based exploration + adversarial synthesis) | repo=https://github.com/jasonzliang/caesar-agent | access=开源自托管 | fit=方法论参考 | stars=16 | note=
+- [walsh] 多agent研究管线含可否决交易的风控经理(HN发现); 风控否决位可移植为研报质量门 | repo=https://github.com/ats4321/walsh | access=开源自托管 | fit=方法论参考 | stars=13 | note=HN近180天发现
+- [shandu] 开源深研agent: LLM agents搜网+读页读PDF+来源可信度评分 | repo=https://github.com/jolovicdev/shandu | access=开源自托管 | fit=方法论参考 | stars=11 | note=
+- [WeResearch] 任务点名件: GitHub+全网双源实测无官方公开仓(仅同名0星站点壳仓), 代码未公开; 登记论文线索待追踪 | repo=https://github.com/search?q=WeResearch | access=论文(代码未公开) | fit=纯论文 | stars=None | note=官方repo未公开(1028双源实测)
+
+##### LANE 2-多智能体研究角色分工 (n=11) focus: 多agent系统的角色分工机制: researcher/writer/critic如何分配/交接/对抗
+- [TradingAgents] 证券研究多agent角色分工教科书: analyst团队→research团队(牛熊对抗辩论)→trader→risk manager(可否决); 辩论式证伪直接可用 | repo=https://github.com/TauricResearch/TradingAgents | access=开源自托管(Python) | fit=需改造 | stars=117312 | note=
+- [MetaGPT] 角色流水线范本(PM→架构师→工程师→QA): SOP编码进agent; 研究公司模拟=把角色换成选题官/研究员/撰写/审校 | repo=https://github.com/FoundationAgents/MetaGPT | access=开源MIT自托管(Python) | fit=需改造 | stars=71038 | note=prev_survey复登(方法论角度)
+- [AutoGen] GroupChat群聊协作: 多agent对话+critic代理(评审终结条件); 评审者角色注入范式 | repo=https://github.com/microsoft/autogen | access=开源自托管(Python) | fit=需改造 | stars=61591 | note=prev_survey复登(方法论角度)
+- [CrewAI] 角色扮演自主agent编队+hierarchical process(manager agent分派审查); researcher/writer角色内置 | repo=https://github.com/crewAIInc/crewAI | access=开源MIT自托管(Python) | fit=需改造 | stars=60184 | note=prev_survey复登(方法论角度)
+- [academic-research-skills] research→write→review→revise→finalize五段技能链(研究-撰写-评审-修订角色序列skill化) | repo=https://github.com/Imbad0202/academic-research-skills | access=Claude Code skills即装即用 | fit=可直接采用 | stars=54171 | note=
+- [ChatDev] chat-chain角色瀑布(CEO/CTO/程序员/测试员双人对话串): 瀑布式角色协作机制可直接套研报链 | repo=https://github.com/OpenBMB/ChatDev | access=开源Apache-2.0自托管 | fit=需改造 | stars=34598 | note=
+- [AgentScope] 看得见可理解可信任的多agent框架(消息可视化/监控/容错), 阿里出品 | repo=https://github.com/agentscope-ai/agentscope | access=开源Apache-2.0自托管 | fit=可直接采用 | stars=34448 | note=
+- [openai-agents-python] Swarm继任生产框架: 多agent workflow+handoff+guardrails三原语 | repo=https://github.com/openai/openai-agents-python | access=开源MIT自托管(Python) | fit=可直接采用 | stars=30338 | note=
+- [Swarm(OpenAI)] 轻量多agent编排教学件: agent与handoff原语(角色=agent, 交接=路由)的最小范式 | repo=https://github.com/openai/swarm | access=开源MIT(教育级, 已由agents-sdk接棒) | fit=方法论参考 | stars=22079 | note=
+- [CAMEL] inception role-playing机制: 双agent任务导向角色扮演+任务指定者/执行者分工 | repo=https://github.com/camel-ai/camel | access=开源Apache-2.0自托管 | fit=方法论参考 | stars=17983 | note=prev_survey复登(方法论角度)
+- [AgentVerse] 动态编队范式: 招募→协作→评估→再招募循环; 任务求解时按需组合solver/reviewer角色 | repo=https://github.com/OpenBMB/AgentVerse | access=开源Apache-2.0(原实验性) | fit=方法论参考 | stars=5160 | note=
+
+##### LANE 3-证据链与事实核查 (n=32) focus: 每句话有出处: claim抽取-分解-检索-判定-修订的证据链工程
+- [FacTool] GAIR事实检测: claim抽取→检索核查+代码执行核查双路→二值判定; 每句话可验证的工程蓝本 | repo=https://github.com/GAIR-NLP/factool | access=开源Apache-2.0(Python) | fit=可直接采用 | stars=935 | note=
+- [FactCircuit] 可审计claim-evidence验证环: 不可变溯源+分阶段检查+有界核验 | repo=https://github.com/superwesleyhys-ux/factcircuit | access=开源自托管 | fit=方法论参考 | stars=882 | note=
+- [IncarnaMind] 杂乱文件→核查报告的开源桌面应用(macOS/Win/Linux): 从素材到checked report的成品形态 | repo=https://github.com/IncarnaMind/IncarnaMind | access=开源桌面应用 | fit=可直接采用 | stars=847 | note=
+- [SAFE(long-form-factuality)] Google DeepMind搜索增强事实评估器(任务点名件SAFE): 长文事实claim→多步搜索推理→支持/反驳判定; 附LongFact数据集 | repo=https://github.com/google-deepmind/long-form-factuality | access=开源Apache-2.0(Python) | fit=方法论参考 | stars=698 | note=
+- [Automated-Fact-Checking-Resources] 自动事实核对研究总库(TACL22/EMNLP23配套): 文献级方法论地图 | repo=https://github.com/Cartus/Automated-Fact-Checking-Resources | access=开源文献清单 | fit=方法论参考 | stars=578 | note=
+- [ALCE] 带引用文本生成评测(EMNLP2023): citation recall/precision双指标=机器化判断每句话有出处的标准答案 | repo=https://github.com/princeton-nlp/ALCE | access=开源MIT(Python) | fit=方法论参考 | stars=528 | note=
+- [FActScore] EMNLP2023原子化事实评分: 生成文本→原子事实分解→检索→逐条核验→百分比分数; 长报告逐句打分的事实基线 | repo=https://github.com/shmsw25/FActScore | access=开源(Python) | fit=方法论参考 | stars=460 | note=
+- [claude-skills-journalism] 新闻/媒体/学术Claude Code技能包: 核验/FOIA/数据新闻/学术写作; 记者级事实核查工作流skill化 | repo=https://github.com/jamditis/claude-skills-journalism | access=Claude Code skills即装即用 | fit=可直接采用 | stars=436 | note=
+- [RefChecker] Amazon细粒度幻觉检测: claim-tripplet(主体-关系-客体)抽取→与参考证据图比对; 检测管线+基准数据集 | repo=https://github.com/amazon-science/RefChecker | access=开源(Python) | fit=可直接采用 | stars=434 | note=
+- [FreshQA] 世界知识新鲜度问答基准: 对抗性+隐性过时信息挑战(判别「该不该查」再答) | repo=https://github.com/freshllms/freshqa | access=开源(数据+评测代码) | fit=方法论参考 | stars=404 | note=
+- [LLM-for-misinformation-research] LLM错误信息研究论文集(多模态含): 错误信息识别方法论综述源 | repo=https://github.com/ICTMCG/LLM-for-misinformation-research | access=开源论文清单 | fit=方法论参考 | stars=334 | note=
+- [dsh-research-report] 可验证研究报告引擎: 内容寻址证据台账(claim-快照绑定防证据漂移) | repo=https://github.com/PerryLink/dsh-research-report | access=开源自托管 | fit=方法论参考 | stars=213 | note=
+- [bullshit-detector] 逐claim事实核查+0-10 BS评分的agent skills(对任一网页断言打分并给源) | repo=https://github.com/SerhiiKorniienko/bullshit-detector | access=Agent skills即装即用 | fit=可直接采用 | stars=160 | note=
+- [Factcheck-GPT] 任务分解式核查: check-worthy claim抽取→原子分解→检索→核验; 内含FactCheck-Bench(Factbench.jsonl)=任务点名件FactCheck-Bench实体 | repo=https://github.com/yuxiaw/Factcheck-GPT | access=开源(Python+数据集) | fit=可直接采用 | stars=117 | note=FactCheck-Bench官方数据集宿主
+- [web-researcher-mcp] 搜网+读一手来源+逐条引用核验的MCP服务(Claude/Cursor/Codex通用) | repo=https://github.com/zoharbabin/web-researcher-mcp | access=开源MCP即挂 | fit=可直接采用 | stars=72 | note=
+- [FELM] NeurIPS2023事实性评测基准: 分域(世界知识/科学/数学/推荐)+分推理链的事实性细分 | repo=https://github.com/hkust-nlp/felm | access=开源(基准+代码) | fit=纯论文 | stars=65 | note=
+- [OpenFactCheck] 事实性评测开源框架: 可复现FacTool/FActScore/ClaimVerify等五种方法+自定义核查pipeline可视化搭建 | repo=https://github.com/yuxiaw/OpenFactCheck | access=开源(Python) | fit=可直接采用 | stars=64 | note=
+- [Attributed-QA] Google归因问答基准: 引用归因能力直接评测集 | repo=https://github.com/google-research-datasets/Attributed-QA | access=数据集(开源) | fit=纯论文 | stars=55 | note=
+- [RARR] 检索增强重归因与修订(ACL2023): 事后为LLM输出补出处+改错(post-hoc修正器); 修订式而非拒绝式纠错 | repo=https://github.com/anthonywchen/RARR | access=开源(Python) | fit=方法论参考 | stars=53 | note=
+- [research-proof] 压力测试研究主张: 可证伪证据计划+对抗检查+冻结验证器+证明台账 | repo=https://github.com/tonyblu331/research-proof | access=开源自托管 | fit=方法论参考 | stars=52 | note=
+- [build-research-evidence] claim驱动科研skill: 骨干实验优先+独立结果审计+Evidence Freeze(证据冻结) | repo=https://github.com/cpt13-g/build-research-evidence | access=Agent skills即装即用 | fit=方法论参考 | stars=46 | note=
+- [FactReasoner] IBM长文事实性assessor: 生成即评的推理式事实判定 | repo=https://github.com/IBM/FactReasoner | access=开源(Python) | fit=方法论参考 | stars=44 | note=
+- [OLAPH] 生物医学长文QA事实性提升(迭代自纠训练) | repo=https://github.com/dmis-lab/OLAPH | access=开源研究代码 | fit=纯论文 | stars=37 | note=
+- [FaStfact] EMNLP2025更快更强长文事实性评测(成本敏感的事实核查) | repo=https://github.com/Yingjia-Wan/FaStfact | access=开源研究代码 | fit=纯论文 | stars=36 | note=
+- [Awesome-Long-Form-Factuality] 长文事实性论文与资源策展清单 | repo=https://github.com/ki-ljl/Awesome-Long-Form-Factuality | access=开源论文清单 | fit=方法论参考 | stars=28 | note=
+- [sage-research] 多agent深研系统: 自主网搜/学搜+质量门检索+结构化报告(中文) | repo=https://github.com/qinyu8028/sage-research | access=开源自托管 | fit=方法论参考 | stars=25 | note=
+- [SignalDesk-deep-searching] AI/Agent技术选型深研系统: 问题澄清→多源搜证→引用回链→证据覆盖校验→报告导出 | repo=https://github.com/riveeji/SignalDesk-deep-searching | access=开源自托管 | fit=方法论参考 | stars=22 | note=
+- [FactAlign] EMNLP2024长文事实性对齐(训练侧) | repo=https://github.com/MiuLab/FactAlign | access=开源研究代码 | fit=纯论文 | stars=19 | note=
+- [PremiseCheck] 对人类与AI审稿意见做前提事实核查(审稿意见也可被核查) | repo=https://github.com/OpenLAIR/PremiseCheck | access=开源研究代码 | fit=方法论参考 | stars=6 | note=
+- [citeweave] 证据优先可审计书目度量agent: 元数据→科学图谱→可出版报告 | repo=https://github.com/ruoyuanwang/citeweave | access=开源自托管 | fit=方法论参考 | stars=5 | note=
+- [automated-fact-checking(aic-factcheck)] 多语言自动事实核对pipeline与数据生成(几乎任意语言) | repo=https://github.com/aic-factcheck/automated-fact-checking | access=开源(Python) | fit=方法论参考 | stars=4 | note=
+- [ClaimVerify] 任务点名件: 证据检索→文档选择→立场判定三段式主张验证pipeline+基准(ACL2022); 官方仓已404(本轮实测), 方法论由Factcheck-GPT/RefChecker承接 | repo=https://github.com/google-research/claimverify | access=论文+数据集(repo已下线404实测) | fit=方法论参考 | stars=None | note=
+
+##### LANE 4-知识图谱与推理引擎 (n=20) focus: 比向量检索更深的关联推理: 图RAG/知识图谱/时序图谱/多跳推理
+- [graphify] 代码库+文档+SQL+PDF→可查询知识图谱(单一管线多源入图) | repo=https://github.com/Graphify-Labs/graphify | access=开源自托管 | fit=需改造 | stars=136962 | note=
+- [RAGFlow] 深文档理解RAG引擎: 版面解析+引用溯源(Chunk级出处)+Agent融合; 带引用研报的工程底座 | repo=https://github.com/infiniflow/ragflow | access=开源Apache-2.0自托管(Docker) | fit=可直接采用 | stars=92971 | note=
+- [LightRAG] EMNLP2025轻量图RAG: 双层检索(低层实体+高层主题)+增量更新, 落地成本远低于微软版 | repo=https://github.com/HKUDS/LightRAG | access=开源MIT自托管(Python) | fit=可直接采用 | stars=40369 | note=
+- [GraphRAG(微软)] 图RAG开创件: 实体抽取→社区层级聚类→局部/全局两查询模式(全局问题向量检索失效的解法) | repo=https://github.com/microsoft/graphrag | access=开源MIT自托管(Python) | fit=可直接采用 | stars=36464 | note=
+- [graphiti] 实时agent知识图谱: bi-temporal双时间轴(事件时间与摄取时间分离)+增量更新; 研究情报随时间演化的解法 | repo=https://github.com/getzep/graphiti | access=开源MIT自托管(Python) | fit=可直接采用 | stars=32283 | note=
+- [NebulaGraph] 分布式图数据库(大规模图谱横向扩展) | repo=https://github.com/vesoft-inc/nebula | access=开源Apache-2.0 | fit=需改造 | stars=12454 | note=
+- [FalkorDB] GraphBLAS稀疏矩阵图数据库, 低延迟多跳查询(GraphRAG推理底座选型) | repo=https://github.com/FalkorDB/FalkorDB | access=开源图数据库 | fit=需改造 | stars=10494 | note=
+- [KAG] 逻辑形式引导的推理与检索框架(OpenSPG引擎+LLM): 受控推理而非纯向量相似 | repo=https://github.com/OpenSPG/KAG | access=开源Apache-2.0自托管 | fit=可直接采用 | stars=9130 | note=
+- [llm-graph-builder] Neo4j官方: 非结构化数据LLM自动建图(PDF/网页→属性图) | repo=https://github.com/neo4j-labs/llm-graph-builder | access=开源Apache-2.0(Neo4j栈) | fit=可直接采用 | stars=5285 | note=
+- [Memgraph] 内存图数据库: 主打GraphRAG/AI记忆/实时图分析 | repo=https://github.com/memgraph/memgraph | access=开源图数据库(BSL) | fit=需改造 | stars=4632 | note=
+- [HippoRAG] NeurIPS2024海马体启发RAG: PPG个性化PageRank多跳推理(单步检索做多跳问题) | repo=https://github.com/OSU-NLP-Group/HippoRAG | access=开源研究代码 | fit=方法论参考 | stars=4081 | note=
+- [nano-graphrag] 极简可hack的GraphRAG实现(微软论文的最小复刻), 二次开发首选底座 | repo=https://github.com/gusye1234/nano-graphrag | access=开源MIT(Python) | fit=可直接采用 | stars=4006 | note=
+- [autoflow] TiDB向量+GraphRAG对话式知识库工具(pingcap) | repo=https://github.com/pingcap/autoflow | access=开源自托管(Docker) | fit=可直接采用 | stars=2978 | note=
+- [TrustGraph] 语义agent治理平台: 知识图谱+流程治理agent基建 | repo=https://github.com/trustgraph-ai/trustgraph | access=开源自托管 | fit=方法论参考 | stars=2842 | note=
+- [Awesome-GraphRAG] GraphRAG资源总库(综述/论文/基准/开源项目) | repo=https://github.com/DEEP-PolyU/Awesome-GraphRAG | access=开源论文清单 | fit=方法论参考 | stars=2680 | note=
+- [RAPTOR] 树状递归摘要检索: 文档聚类→摘要→再聚类(层级抽象记忆); 研报分层叙事的检索对应物 | repo=https://github.com/parthsarthi03/raptor | access=开源MIT(Python) | fit=方法论参考 | stars=1775 | note=
+- [neo4j-graphrag-python] Neo4j官方GraphRAG Python SDK(生产化接法) | repo=https://github.com/neo4j/neo4j-graphrag-python | access=开源(Python SDK) | fit=可直接采用 | stars=1321 | note=
+- [smartrag] GraphRAG驱动的多agent深度研究(图+多agent组合样本) | repo=https://github.com/aymenfurter/smartrag | access=开源自托管 | fit=方法论参考 | stars=87 | note=
+- [menu-rag] 超越基础RAG的实时深度研究(菜单式检索编排) | repo=https://github.com/nambo/menu-rag | access=开源自托管 | fit=方法论参考 | stars=22 | note=
+- [post-graph-rag] Postgres原生高精度GraphRAG: 新事实替换旧事实(时间感知图谱, CFO换人问题) | repo=https://github.com/crajah/post-graph-rag | access=开源(Postgres扩展) | fit=方法论参考 | stars=12 | note=HN近180天发现
+
+##### LANE 5-竞争情报OSINT方法论 (n=26) focus: 顶级情报机构的结构化调查方法: 威胁情报平台/OSINT自动化/链接分析
+- [sherlock] 用户名跨站追踪(750+社交网络): 单一标识→全网画像的起点方法 | repo=https://github.com/sherlock-project/sherlock | access=开源CLI | fit=方法论参考 | stars=95039 | note=
+- [worldmonitor] 实时全球情报仪表盘: AI新闻聚合+地缘监测+基础设施事件(情报台形态样本) | repo=https://github.com/koala73/worldmonitor | access=开源自托管 | fit=方法论参考 | stars=89667 | note=
+- [maigret] 人物卷宗: 6000+网站用户名聚合出完整dossier | repo=https://github.com/soxoj/maigret | access=开源CLI | fit=方法论参考 | stars=39394 | note=
+- [web-check] 网站全维OSINT分析一站式(37+检查项) | repo=https://github.com/lissy93/web-check | access=开源自托管(Web) | fit=方法论参考 | stars=35265 | note=
+- [Anthropic-Cybersecurity-Skills] 817条结构化网络安全技能, 映射MITRE ATT&CK/NIST CSF等六框架(结构化方法论skill化样本) | repo=https://github.com/mukul975/Anthropic-Cybersecurity-Skills | access=Agent skills即装即用 | fit=可直接采用 | stars=35128 | note=
+- [awesome-osint] OSINT资源总库(经典): 全品类调查方法入口 | repo=https://github.com/jivoi/awesome-osint | access=开源清单 | fit=方法论参考 | stars=30507 | note=
+- [social-analyzer] 社媒画像API/CLI/Web(1000+站点检测) | repo=https://github.com/qeeqbox/social-analyzer | access=开源自托管 | fit=方法论参考 | stars=24396 | note=
+- [SpiderFoot] OSINT自动化(任务点名件): 200+模块自动采集→实体关联→调查导出; Maltego开源替代主力 | repo=https://github.com/smicallef/spiderfoot | access=开源自托管(Python) | fit=方法论参考 | stars=23906 | note=
+- [GHunt] Google账号情报框架(offensive OSINT) | repo=https://github.com/mxrch/GHunt | access=开源CLI | fit=方法论参考 | stars=19753 | note=
+- [phoneinfoga] 电话号码情报框架(号段/运营商/足迹) | repo=https://github.com/sundowndev/phoneinfoga | access=开源CLI(Go) | fit=方法论参考 | stars=18301 | note=
+- [theHarvester] 邮箱/子域名/人名/主机收割器(经典信息收集) | repo=https://github.com/laramies/theHarvester | access=开源CLI(Python) | fit=方法论参考 | stars=18068 | note=
+- [awesome-hacker-search-engines] 黑客搜索引擎大全(按调查目标分类): 竞争对手情报检索地图 | repo=https://github.com/edoardottt/awesome-hacker-search-engines | access=开源清单 | fit=方法论参考 | stars=11428 | note=
+- [bbot] 递归互联网扫描: 目标→发现→新目标递归展开(OSINT树状调查法) | repo=https://github.com/blacklanternsecurity/bbot | access=开源自托管(Python) | fit=方法论参考 | stars=10886 | note=
+- [OpenCTI] 开源网络威胁情报平台(任务点名件): STIX2知识图谱+调查关系图谱+时间线+报告产物; 顶级情报机构的结构化调查方法论本体 | repo=https://github.com/OpenCTI-Platform/opencti | access=开源自托管(Docker) | fit=需改造 | stars=10211 | note=
+- [deepdarkCTI] 深暗网TI信源集(情报源扩展) | repo=https://github.com/fastfire/deepdarkCTI | access=开源清单 | fit=方法论参考 | stars=7433 | note=
+- [MISP] 威胁情报共享平台: 事件→属性→标签→ sightings结构化+共享社区治理; 情报结构化共享范式 | repo=https://github.com/MISP/MISP | access=开源自托管(AGPL) | fit=方法论参考 | stars=6624 | note=
+- [dnstwist] 域名置换引擎: 检测仿冒/typo抢注/品牌侵权(竞争情报的品牌监测方法) | repo=https://github.com/elceef/dnstwist | access=开源CLI(Python) | fit=方法论参考 | stars=5767 | note=
+- [user-scanner] 邮箱+用户名OSINT二合一套件, 原生MCP支持(agent化OSINT) | repo=https://github.com/kaifcodec/user-scanner | access=开源MCP即挂 | fit=可直接采用 | stars=5494 | note=
+- [IntelOwl] 大规模TI编排: 100+分析器流水线对同一observable并行聚合 | repo=https://github.com/intelowlproject/IntelOwl | access=开源自托管(Docker) | fit=方法论参考 | stars=4769 | note=
+- [Awesome-OSINT-List] OSINT工具分类库(红队/侦察/企业情报分册) | repo=https://github.com/Astrosp/Awesome-OSINT-List | access=开源清单 | fit=方法论参考 | stars=4602 | note=
+- [Yeti] IOC协作调查平台: observable→indicator→sighting证据链组织 | repo=https://github.com/yeti-platform/yeti | access=开源自托管 | fit=方法论参考 | stars=2040 | note=
+- [voidaccess] 自托管暗网OSINT平台: 查询→图谱13步自动化(HN 188pt) | repo=https://github.com/KatrielMoses/voidaccess | access=开源自托管 | fit=方法论参考 | stars=945 | note=HN近180天发现
+- [ogi] 开源链接分析与OSINT框架(Maltego开源直替): 实体-关系调查图 | repo=https://github.com/khashashin/ogi | access=开源自托管 | fit=需改造 | stars=335 | note=
+- [querytool] 本地优先独立OSINT查询工具: 源过滤+定向开搜(调查者的搜索调度台) | repo=https://github.com/osintshifu/querytool | access=开源自托管 | fit=可直接采用 | stars=326 | note=
+- [OSINT-for-countries] 分国OSINT资源(面向事实核查员与数字画像师结构化) | repo=https://github.com/paulpogoda/OSINT-for-countries-V2.0-MOVED | access=开源清单 | fit=方法论参考 | stars=167 | note=
+- [awesome-osint-repos] OSINT工具/技能/插件/MCP/agentic集成持续目录 | repo=https://github.com/osintshifu/awesome-osint-repos | access=开源清单 | fit=方法论参考 | stars=90 | note=
+
+##### LANE 6-研究报告质量评估 (n=23) focus: 机器化判断「报告达到世界顶级」: RAG评测/LLM评审/活体基准/审计
+- [langfuse] 开源agent评测与可观测: trace-评分-数据集闭环(报告生产过程的留痕评审) | repo=https://github.com/langfuse/langfuse | access=开源自托管(TS) | fit=可直接采用 | stars=36615 | note=
+- [iFixAi] AI agent独立审计(人审或agent自审): 回答「这agent到底行不行」的审计框架 | repo=https://github.com/ifixai-ai/iFixAi | access=开源自托管 | fit=方法论参考 | stars=35945 | note=
+- [mlflow] AI工程平台含LLM评估(实验-评估-注册生产闭环) | repo=https://github.com/mlflow/mlflow | access=开源Apache-2.0 | fit=方法论参考 | stars=28563 | note=
+- [promptfoo] prompt/agent/RAG评测+红队: 矩阵对比/断言/回归; 产线质量门工程件 | repo=https://github.com/promptfoo/promptfoo | access=开源MIT(跨语言CLI) | fit=可直接采用 | stars=26515 | note=
+- [opik] LLM/RAG/agentic评测监控: 幻觉检测+在线评测 | repo=https://github.com/comet-ml/opik | access=开源Apache-2.0自托管 | fit=可直接采用 | stars=22975 | note=
+- [OpenAI evals] OpenAI评测框架+开源基准注册表(评测即代码的鼻祖件) | repo=https://github.com/openai/evals | access=开源MIT(Python) | fit=方法论参考 | stars=19663 | note=
+- [DeepEval] LLM评测框架(任务点名件): G-Eval等40+指标含忠实度/幻觉/引用, pytest式用例; 报告质量门机器化首选 | repo=https://github.com/confident-ai/deepeval | access=开源Apache-2.0(Python) | fit=可直接采用 | stars=19145 | note=
+- [RAGAS] RAG质量评测(任务点名件): 忠实度/答案相关/上下文精确召回等无参考评测指标族(原explodinggradients) | repo=https://github.com/vibrantlabsai/ragas | access=开源Apache-2.0(Python) | fit=可直接采用 | stars=16165 | note=
+- [lm-evaluation-harness] 标准评测harness(数百任务统一口, 基准工程范式) | repo=https://github.com/EleutherAI/lm-evaluation-harness | access=开源MIT(Python) | fit=方法论参考 | stars=14332 | note=
+- [phoenix] AI可观测与评估: 实验追踪+LLM trace评估 | repo=https://github.com/Arize-ai/phoenix | access=开源Apache-2.0(ELv2) | fit=可直接采用 | stars=12033 | note=
+- [garak] NVIDIA的LLM漏洞扫描器(红队式质量探针) | repo=https://github.com/NVIDIA/garak | access=开源Apache-2.0(Python) | fit=方法论参考 | stars=9729 | note=
+- [giskard] LLM agent开源评测测试库: 自动扫描质量/安全缺陷+CI集成 | repo=https://github.com/Giskard-AI/giskard-oss | access=开源Apache-2.0(Python) | fit=可直接采用 | stars=5931 | note=
+- [TruLens] RAG triad评估: 上下文相关/接地性/答案相关三角(接地性=无证据支持即报错的工程化) | repo=https://github.com/truera/trulens | access=开源MIT(Python) | fit=方法论参考 | stars=3615 | note=
+- [HELM] 斯坦福全景语言模型评测方法论(透明/多指标/场景矩阵的评估设计范式) | repo=https://github.com/stanford-crfm/helm | access=开源Apache-2.0(Python) | fit=方法论参考 | stars=2960 | note=
+- [BrowseComp-Plus] 更公平透明的深研agent评测基准(ACL2026 Main, 反作弊设计) | repo=https://github.com/texttron/BrowseComp-Plus | access=开源(基准+代码) | fit=方法论参考 | stars=385 | note=HN近180天发现
+- [ResearchClawBench] 自动化研究评测: 从再发现到新发现分级评测AI agent | repo=https://github.com/InternScience/ResearchClawBench | access=开源研究代码 | fit=方法论参考 | stars=276 | note=
+- [deepscholar] 构建并benchmark深研系统(学术向); 评测驱动的深研构建方法论 | repo=https://github.com/guestrin-lab/deepscholar | access=开源研究代码 | fit=方法论参考 | stars=247 | note=
+- [SGI-Bench] 科学家对齐工作流探针(用工作流测科学通识智能) | repo=https://github.com/InternScience/SGI-Bench | access=开源研究代码 | fit=纯论文 | stars=172 | note=
+- [LiveResearchBench] Salesforce开放式深研活体基准+评测框架(动态任务防污染) | repo=https://github.com/SalesforceAIResearch/LiveResearchBench | access=开源(Python) | fit=方法论参考 | stars=121 | note=
+- [ReportBench] 字节学术综述任务深研agent综合基准 | repo=https://github.com/ByteDance-BandAI/ReportBench | access=开源研究代码 | fit=方法论参考 | stars=56 | note=
+- [livedrbench] 微软活体深研基准(挑战性客观任务) | repo=https://github.com/microsoft/livedrbench | access=开源研究代码 | fit=纯论文 | stars=22 | note=
+- [agent-review-studio] 本地优先证据评审/评估/精炼工作台(agent产物的人工评审台) | repo=https://github.com/chasedndt/agent-review-studio | access=开源自托管 | fit=方法论参考 | stars=1 | note=HN近180天发现
+- [Deterministic-Judge(论文)] 有状态agent评测中LLM评审的确定性替代(arXiv 2606.22737, HN发现): 评审去随机化 | repo=https://arxiv.org/abs/2606.22737 | access=论文 | fit=纯论文 | stars=None | note=HN近180天发现

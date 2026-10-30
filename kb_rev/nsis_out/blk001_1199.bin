@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window size="600,415" sizebox="0,0,0,0" caption="0,0,0,390" roundcorner="24,24" showshadow="true" shadowcolor="#676767" shadowsize="5" shadowdarkness="50" shadowposition="1,1" shadowcorner="24,24,24,24" layered="false" alwaysontop="false">
+  <Font id="0" name="微软雅黑" size="18" bold="true" />
+  <Font id="1" name="微软雅黑" size="16" />
+  <Font id="2" name="微软雅黑" size="12" />
+
+  <TabLayout name="windowbk">
+    <VerticalLayout bkcolor="#FFFFFFFF">
+      <HorizontalLayout height="26" inset="0,14,20,0">
+        <Control />
+        <Button name="InstallTab_sysMinBtn" width="12" height="12" normalimage="file='res\button\btn_win_min.png'" />
+        <Control width="16" />
+        <Button name="InstallTab_sysCloseBtn" width="12" height="12" normalimage="file='res\button\btn_win_close.png'" />
+      </HorizontalLayout>
+      <AnimationTabLayout name="WizardTab" height="561">
+        <Include source="install_configpage.xml" />
+        <Include source="install_processingpage.xml" />
+        <Include source="install_finishpage.xml" />
+      </AnimationTabLayout>
+    </VerticalLayout>
+  </TabLayout>
+
+</Window>

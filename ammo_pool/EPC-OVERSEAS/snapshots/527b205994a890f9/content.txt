@@ -1,0 +1,299 @@
+ 
+ 
+ISSN 2096-2223 
+CN 11-6035/N 
+ 
+ 
+ 
+ 
+文献 DOI： 
+10.11922/csdata.2019.0069.zh 
+数据 DOI： 
+10.11922/sciencedb.893 
+文献分类：地球科学 
+ 
+收稿日期：2019-09-24 
+开放同评：2019-10-08 
+录用日期：2019-12-27 
+发表日期：2019-12-30 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+* 论文通信作者 
+邬明权：wumq@aircas.ac.cn 
+ 
+ 
+ 
+www.csdata.org 
+专题 地球大数据科学工程 
+2000–2019 年中国海外电力项目信息数据集 
+蒋瑜 1，邬明权 2*，黄长军 1,3，牛铮 2 
+1. 湘潭大学土木工程与力学学院，湖南湘潭  411105 
+2. 中国科学院空天信息创新研究院遥感科学国家重点实验室，北京  100101 
+3. 湖南城市学院市政与测绘工程学院，湖南益阳  413000 
+摘要：电力短缺是“一带一路”区域发展中国家所面临的主要问题之一。自“一
+带一路”倡议提出以来，中国企业在“一带一路”沿线电力短缺的国家和地区投
+资、建设了大量的电力项目。“一带一路”海外项目分布广泛，且数量持续增长，
+但大量的项目信息较为分散，不利于信息挖掘，亟需将这些项目信息进行收集汇
+总。本文利用网络爬虫技术获取海外电力项目信息，并通过部委、使馆、经济商
+务部参赞机构文件、中英文当地新闻报道、学者、非政府组织进行的案例研究和
+实地研究对项目信息进行进一步补充和完善，编制成了中国海外电力项目信息数
+据集。本数据集包括来自亚洲、非洲、欧洲、美洲、大洋洲76 个国家的 383 个电
+力项目，每个项目信息包含项目编号、项目状态、集团公司、二级单位、项目名
+称、规模、所属地区、所在国家、项目类型、中标信息。本数据集能反映中国海
+外电力项目的分布规律，以及近年来的海外电力投资建设的发展态势，可为我国
+电力企业“走出去”提供依据，为“一带一路”海外电力项目发展规划、政府部
+门决策提供参考。 
+关键字：一带一路；电力项目；数据集；网络爬虫 
+数据库（集）基本信息简介 
+数据库（集）名称 2000–2019 年中国海外电力项目信息数据集 
+数据作者 蒋瑜、邬明权、黄长军、牛铮 
+数据通信作者 邬明权（wumq@aircas.ac.cn） 
+数据时间范围 2000–2019年 
+地理区域 
+地理范围包括53°42′48″N – 3122′12″N，12211′24″E – 6730′36″W。
+其中包括亚洲、非洲、欧洲、南美洲、北美洲和大洋洲。区域范围涉
+及到的主要国家有柬埔寨、老挝、泰国、越南、马来西亚、印度尼西
+亚、缅甸、菲律宾、巴基斯坦、阿富汗、印度、孟加拉、尼泊尔、蒙
+古、斯里兰卡、哈萨克斯坦、吉尔吉斯坦、乌兹别克斯坦、沙特阿拉
+伯、土耳其、阿联酋、格鲁吉亚、伊朗、克罗地亚、白俄罗斯、乌克
+兰、 布亚新几内亚、 埃塞俄比亚、 肯尼亚、 乌干达、 赞比亚、 安哥拉、
+尼日利亚、埃及、阿尔及利亚、刚果等76个国家。 
+数据量 76 KB 
+数据格式 *.xlsx 
+2000–2019 年中国海外电力项目信息数据集 
+ 
+www.csdata.org 
+数据服务系统网址 http://www.sciencedb.cn/dataSet/handle/893 
+基金项目 
+中国科学院A类战略性先导科技专项（XDA19030304）；中国科学院青年创新促进会
+（2017089）。 
+数据库（集）组成 
+数据集为一个Excel文件，主要内容包括项目编号、项目状态、集团公司、二级单位、
+项目名称、规模、所属地区、所在国家、项目类型、中标信息。 
+引  言                                                            
+“一带一路” 重大倡议自 2013 年提出以来，受到国际社会的高度关注， 且得到全球多个国家和
+国际组织的支持。2017 年 5 月，国家发展和改革委员会、国家能源局共同发布了《推动丝绸之路经
+济带和 21 世纪海上丝绸之路能源合作愿景与行动》 ，旨在让丝绸之路在能源合作领域焕发新的活力，
+促进各国的能源合作[1]。“一带一路”沿线大多属于发展中国家， 人均用电仅为 2825 千瓦时， 远低于
+国际水平的 3295 千瓦时[2]，相对落后的电力基础设施导致部分国家存在巨大的电力缺口，电力供应
+难以满足经济社会的发展需求[3]。能源电力是经济社会发展的基石，电力国际合作无疑将成为 “一带
+一路”建设的重要内容[4-5]。 
+我国电力企业在技术、装备、管理和建设水平方面处于世界领先水平，近年来在“一带一路”
+沿线国家投资、建设了大量的电力项目。例如，巴基斯坦萨希瓦尔燃煤电站总装机容量 1320 MW，
+至 2018 年底累计发电 140 亿千瓦时，填补了巴基斯坦全国 1/4 的电力缺口；摩洛哥努奥光伏电站建
+成后预计为摩洛哥提供近 50%的电力，将帮助摩洛哥摆脱能源困境；迪拜哈翔清洁能源电站总装机
+2400 MW， 建成之后能为迪拜提供20%的电力， 为迪拜2020 世界博览会提供电力保障。这些项目在
+缓解所在地区用电压力的同时带动了当地经济社会发展，但当前对于海外的项目研究大多是基于单
+个项目的分析[6-9]，对海外电力项目统计还不够全面，不利于电力项目信息挖掘，不便于了解中国海
+外电力项目分布规律和发展态势。 
+本文利用网络爬虫技术开展了海外电力项目信息的收集工作， 收集了亚洲、 非洲、 欧洲、 美洲、
+大洋洲 76 个国家的 383 个电力项目， 每个项目信息包含项目编号、 项目状态、 集团公司、 二级单位、
+项目名称、 规模、 所属地区、 所在国家、 项目类型、 中标信息。基于收集的大量项目信息， 编制了中
+国海外电力项目信息数据集，以期为我国企业“走出去”提供参考，为推进能源战略布局提供可靠
+资料。 
+1  数据采集和处理方法                                               
+为解决海外电力项目信息统计不全面、不系统的问题，本文主要通过网络爬虫技术，收集并整
+理自“一带一路”倡议提出以来中国企业在海外投资建设的电力项目信息，形成海外发电站项目数
+据集，以便于进行信息挖掘。 
+1.1  数据获取 
+首先，本文利用网络爬虫技术获取中国海外发电站项目名称、签约时间等相关信息；然后通过
+部委、使馆、经济商务部参赞机构文件、中英文当地新闻报道、学者、非政府组织进行的案例研究
+和实地研究对项目信息进行进一步补充和完善；最后，从“一带一路”的官方数据平台获取项目名
+2000–2019 年中国海外电力项目信息数据集 
+中国科学数据, 2019, 4(4) 
+称、项目所在国家及地区等相关信息，对项目信息进行核验修正，进而编制成中国海外电力项目信
+息数据集，流程如图 1 所示。 
+网络爬虫技术
+政府部门网站、企业官网、
+ 一带一路 官方数据平台
+中国海外电力项目信息
+数据集
+海外电力项目名录 补充与核验
+学者和非政府组织研
+究案例
+新闻报道
+政府部门文件
+分类整理
+ 
+图 1  数据处理流程图 
+1.2  数据分类 
+电力项目获取之后，为便于信息查询和分析，将项目按照电力类型分成火电站、光伏电站、风
+电站、其他电站、输变电工程 5 个类别。 
+1.2.1  火电站 
+火力电站主要是以煤、天然气、油等作为燃料进行发电，火力电站总装机容量大，建成之后能
+显著解决缺电国家的电力危机。为方便电站所需燃料的运输，火电站一般分布在沿海、沿河等交通
+运输便利的地方。例如巴基斯坦卡西姆电站、印度蒙德拉电站、印度嘉佳圣雄甘地超临界电站等。 
+1.2.2  光伏电站 
+光伏电站利用太阳能进行发电，不受其他资源分布的限制，主要包括集中式和屋顶式两种。集
+中式光伏电站装机容量可达 1000 MW，能解决大区域用电问题，但占地面积大且需架设输电线路；
+屋顶光伏工程不需要架设输电线路即可就地发电供电。光伏电站适合日照时间充足的国家和地区发
+展光伏电站，如阿尔及利亚光伏项目、摩洛哥努奥光伏项目、迪拜集中式太阳能项目等。 
+1.2.3  风电站 
+风能是一种清洁无公害的可再生能源，风电站建设周期短，装机规模灵活，适合风能充足的国
+家和地区，如三峡巴基斯坦二期项目、南非德阿风电项目、塞尼风电项目、哈萨克斯坦 Shar 风电项
+目等。 
+1.2.4  其他电站 
+本文所统计的其他电站主要包括生物质发电、地热发电、垃圾焚烧发电、核电等。如巴基斯坦
+卡拉奇核电项目、泰国生物质电站项目、土耳其伊斯坦布尔垃圾焚烧发电项目等。 
+2000–2019 年中国海外电力项目信息数据集 
+www.csdata.org 
+1.2.5  输变电工程 
+输变电工程和电站建设相互关联， “一带一路” 沿线国家大多数为发展中国家，输变电设施落后，
+无法满足正常供电需求，亟需更新和修建输变电设施，如巴基斯坦默拉直流输电项目、老挝 500 KV
+输变电项目、缅甸首条 500 KV 双回输电线路安装项目等。 
+2  数据样本描述                                                   
+2.1  数据样例 
+数据集以 Excel 表格形式体现海外电力项目信息， 其中包括来自亚洲、 非洲、 欧洲、 大洋洲、 美
+洲 76 个国家的 383 条电力项目信息。按照项目属性将项目分成火电站、光伏电站、风电站、输变电
+工程、其他电站 5 个类型，每个项目信息包含项目编号、项目状态、集团公司、二级单位、项目名
+称、规模、所在国家、所属地区、 项目类型、 中标信息，统计到的各类型项目信息样本如图 2 所示。 
+ 
+图 2  中国海外电力项目部分信息 
+2.2  数据分布 
+目前本数据集共收集到各类型电力项目 383 个，其中包括火电站项目 191 个，光伏电站项目 75
+个，风电站 24 个，其他电站 30 个，输变电工程 63 个，各类型项目数量在各个大洲的分布情况如图
+3。“一带一路” 沿线国家大多是发展中国家， 对电力需求大， 电力项目主要分布在亚洲和非洲地区。
+亚洲电力项目最多，数量多达 274 个，其中火电站数量 156 个， 光伏电站数量50 个， 风电站13 个，
+输变电工程 36 个，其他电站 19 个；非洲电力项目数量 56 个，其中火电站 24 个，光伏电站 8 个，
+风电站 3 个，输变电工程 16 个，其他电站 5 个；欧洲、美洲、大洋洲电力项目数量分布相对较少，
+分别为 30 个、19 个、4 个。 
+
+2000–2019 年中国海外电力项目信息数据集 
+中国科学数据, 2019, 4(4) 
+ 
+图 3 海外电力项目数量分布图 
+3  数据质量控制和评估                                             
+3.1  数据的可靠性 
+为提高数据的真实性和可靠性，数据集所涉及的项目信息均来自政府部门官网、企业官网以及
+“一带一路”官方数据平台。通过部委、 使馆、 经济商务部参赞机构文件，中英文当地新闻报道，学
+者和非政府组织进行的案例研究对项目信息进行进一步核查验证，以确保本数据集质量可靠。 
+3.2  数据的局限性 
+部分海外电力项目没有相关数据公布，导致收集的项目信息不完整。在 383 个电力项目中，阿
+塔卡抽水蓄能电站项目、吉打州光伏发电项目、越南 420 MW 太阳能 EPC 项目、越南宁顺省太阳能
+光伏发电系统项目、越南地面光伏电站等 19 个项目无法收集到二级单位信息。 阿塔卡抽水蓄能电站
+项目、印尼玻雅项目、缅甸仰光城市电网规划项目、菲律宾 VISIYAS 地区电压升高项目等 20 个项
+目缺乏项目规模信息。“一带一路” 海外电力项目分布规律和发展态势的分析主要考虑项目所在国家、
+项目类型和项目数量，部分项目虽然缺失二级单位或规模信息，但对数据分析影响小。 
+3.3  未来的完善 
+自 2013 年“一带一路”倡议提出以来，少数电力项目已经竣工投产，但多数电力项目正处于建
+设中，进而将产生更多附加项目信息，如电站的所有者、投产时间、电站年产电量、解决就业数量
+等等。笔者将逐步更新、完善本数据集的项目信息， 形成一个系统的中国海外电力项目信息数据集。 
+4  数据价值                                                       
+本数据集能反映“一带一路”电力项目的分布规律和发展态势，为我国企业投资发展、政府部
+门决策提供参考。企业可根据各类型电力项目在“一带一路”沿线国家的空间分布特征，了解不同
+国家未来电力投资发展的空间和潜力。例如中南半岛经济走廊沿线各国新建了大量的电力设施，填
+
+2000–2019 年中国海外电力项目信息数据集 
+www.csdata.org 
+补了电力缺口，拓宽了经济发展空间，为其他行业投资提供了契机；欧洲发达国家的电力项目以风
+电和光伏为主的清洁能源电站为主，体现其绿色发展理念，不适合高排放量的产业投资。 
+各类型电力项目数量增长态势反映了不同地区对各类型电力项目的发展需求，且一定程度上反
+映区域经济发展规律，结合“一带一路” 海外铁路、 公路、 港口等项目信息数据，可全面了解 “一带
+一路”重大工程项目互联互通情况，进而充分了解沿线国家资源优势，有利于政府推进能源战略布
+局，实现更大范围能源资源优化配置。 
+致 谢                                                                
+感谢中国科学院空天信息创新研究院遥感科学国家重点实验室重大工程遥感监测工作组尹富杰、
+田定慧、肖建华、朱洪臣、贾战海、李祜梅等成员为中国海外电力项目信息数据集做出的贡献及为
+本数据集论文的撰写提供了宝贵的意见。 
+数据作者分工职责                                                  
+蒋瑜（1995—） ，男，湖南岳阳人，硕士研究生，研究方向为工程遥感。主要承担工作：数据搜
+集处理、质量控制、论文撰写。 
+邬明权（1983—） ，男，湖南株洲人，副研究员，硕导，研究方向为重大工程遥感与农业遥感。
+主要承担工作：总体技术路线设计与指导。 
+黄长军 （1980—），男，湖北随州人， 博士， 副教授， 研究方向为INSAR 在变形监测中的应用。
+主要承担工作：技术支持与指导。 
+牛铮 （1965—），男， 北京市人， 研究员， 博导， 研究方向为全球变化遥感研究。 主要承担工作：
+技术支持与指导。 
+参考文献                                                          
+[1] 刘哲, 高艺, 王玉生, 等. “一带一路”电力互联互通浅析[J]. 中国工程科学, 2019, 21(04): 76-81. 
+[2] 一带一路大背景下电力投资成为引领我国企业‘走出去’风向标[N/OL]. 中国电力报. ( 2017-12-2
+6). http://www.cnenergy.org/dl/201712/t20171226_449554.html. 
+[3] 于学华. 助力“一带一路”国家开展电力综合资源规划[J]. 能源研究与利用, 2018 (06): 5-6. 
+[4] 潜旭明. “一带一路”倡议背景下中国的国际能源合作[J]. 国际观察, 2017 (03): 129-146. 
+[5] 乔满平. 中俄“一带一路”区域能源合作中的问题及应对策略研究[D]. 湘潭: 湘潭大学, 2016. 
+[6] 张昆, 马静洲, 吴泽斌, 等. 基于老挝南立 1-2 水电站的境外投资项目浅析[J]. 水利经济, 2015, 
+33(05): 53 -56, 79.  
+[7] 鲜恩伟, 张国栋, 冯海军. “ 一带一路”沿线国家水电工程征地移民工作探讨——以柬埔寨桑河二
+级水电站为例[J]. 四川水利, 2019, 40(01): 26 -30. 
+[8] 赵珊. 柬埔寨甘再水电站项目管理研究[D]. 西安: 西北大学, 2013. 
+[9] 辛望, 曾德勇, 李俊成. 迪拜哈斯彦电站码头项目国际化管理实践[J]. 水运工程, 2018 (08): 9-13, 
+17. 
+2000–2019 年中国海外电力项目信息数据集 
+中国科学数据, 2019, 4(4) 
+论文引用格式                                                       
+蒋瑜, 邬明权, 黄长军, 牛铮. 2000–2019 年中国海外电力项目信息数据集[J/OL]. 中国科学数据, 2019, 
+4(4). (2019-12-28). DOI: 10.11922/csdata.2019.0069.zh. 
+数据引用格式                                                      
+蒋瑜, 邬明权, 黄长军, 牛铮. 2000–2019 年中国海外电力项目信息数据集[DB/OL]. Science Data Bank, 
+2019. (2019-12-28). DOI: 10.11922/sciencedb.893. 
+ 
+ 
+A dataset of China’s overseas power projects (2000–2019) 
+Jiang Yu1, Wu Mingquan2*, Huang Changjun1,3, Niu Zheng2 
+1. College of Civil Engineering and Mechanics, Xiangtan University, Xiangtan 411105, P. R. China 
+2. State Key Laboratory of Remote Sensing Science, Aerospace Information Research Institute, Chinese 
+Academy of Sciences, Beijing 100101, P. R. China 
+3. Institute of Municipal and Mapping Engineering Hunan City University, Yiyang 413000, P. R. China 
+*Email: wumq@aircas.ac.cn 
+Abstract: Power shortage is one of the serious problems faced by developing countries along the Belt and 
+Road. Since the Belt and Road initiative was put forward, China’s companies have invested and built a large 
+number of electrical power projects in countries and areas with power shortages in this region. Due  to the 
+large number and wide distribution of projects as well as the growing number of new power projects, there 
+is a large amount of project information to be collected here and there not conducive to information mining. 
+Therefore, it is urgent to summarize the information on China’s overseas power projects along the Belt and 
+Road. With the aid of web crawler technology, we obtain China’s overseas power project information, which 
+was further supplemented and improved by referring to the documents from ministries, embassies, counselors 
+of the Ministry of Economy and Commerce, local news reports in Chinese and English, case studies and field 
+studies conducted by scholars and non-governmental organizations. The dataset contains information on 383 
+power projects from 76 countries in Asia, Africa, Europe, America, and Oceania. Each project’s information 
+includes the project number, project name, construction status, enterprise name, secondary units, installed 
+capacity, based continent and  country, project category, and bid -winning information. The collection and 
+improvement of this dataset can reflect the distribution regularities of China’s overseas power projects, as 
+well as the development trend in overseas power investment and construction in recent years. Based on this 
+dataset, China’s power companies can acquire useful information to better go global . It can  provide a 
+reference for the development planning of overseas power projects and the decision-making practice of 
+government sectors. 
+Keywords: Belt and Road; power project; dataset; web crawler technology 
+2000–2019 年中国海外电力项目信息数据集 
+www.csdata.org 
+Dataset Profile 
+Title A dataset of China’s overseas power projects (2000–2019) 
+Data corresponding author Wu Mingquan (wumq@aircas.ac.cn) 
+Data authors Jiang Yu, Wu Mingquan, Huang Changjun, Niu Zheng 
+Time range 2000 – 2019 
+Geographical scope 
+Geographical scope (longitude & latitude 53 42′48″N – 3122′12″N, 122 11′24″E – 
+6730′36 ″W): Asia, Africa, Europe, South America, North America and Oceania, 
+including 76 countries, such as Cambodia, Laos, Thailand, Vietnam, Malaysia, 
+Indonesia, Myanmar, Philippines, Pakistan, Afghanistan, India, Bangladesh, Nepal, 
+Mongolia, Sri Lanka, Kazakhst an, Kyrgyzstan, Uzbekistan, Saudi Arabia, Turkey, 
+United Arab Emirates, Georgia, Iran, Croatia, Belarus, Ukraine, Buja New Guinea, 
+Ethiopia, Kenya, Uganda, Zambia, Angola, Nigeria, Egypt, Algeria an Congo. 
+Data volume 76 KB 
+Data format *.xlsx 
+Data service system <http://www.sciencedb.cn/dataSet/handle/893> 
+Sources of funding 
+Strategic Priority Research Program of Chinese Academy of Sciences 
+(XDA19030404); Youth Innovation Promotion Association of Chinese Academy of 
+Sciences (2017089). 
+Dataset composition 
+The dataset is an Excel data file. Each set mainly includes the project number, project 
+name, construction status, enterprise name, secondary units, installed capacity, based 
+continent and country, project category, and bid-winning information. 
+ 

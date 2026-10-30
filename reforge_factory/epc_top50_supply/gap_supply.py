@@ -419,15 +419,36 @@ PLAN_R4 = [
 ]
 
 
+# ---------- 第五轮 (r5: D 轴 open_gaps 补 — 做空审计/调查叙事 L0→有命中) ----------
+# D 轴 sensor 扫 manifest 行 (title/text_head), 维词表: 做空审计=关联方/利益
+# 输送/资金流向/审计意见/内控/红旗/隐瞒/伪造/做空; 调查叙事=时间线交叉/信源
+# 动机/利益冲突/选择性披露/内幕/叙事。green=无 L0 维 (1 命中即脱 open_gaps)。
+# 挂树走 Q24-E2 (央企巨头风险质疑, 零槽搭车) + Q19-E2 (风险纠纷反证)。
+PLAN_R5 = [
+    {"eeis": ["Q24-E2"],
+     "q": "审计署 中央企业 审计结果公告 内控 工程建设",
+     "must": ["审计"], "want": ["内控", "审计意见", "关联方", "隐瞒", "伪造"]},
+    {"eeis": ["Q24-E2", "Q19-E2"],
+     "q": "央企 工程建设 审计 通报 违规 内控问题",
+     "must": ["审计"], "want": ["内控", "利益输送", "资金流向", "隐瞒"]},
+    {"eeis": ["Q24-E2"],
+     "q": "一带一路 建筑央企 订单 叙事 深度 分析",
+     "must": ["一带一路"], "want": ["叙事"]},
+    {"eeis": ["Q19-E2"],
+     "q": "工程招投标 内幕 串标 调查 处罚",
+     "must": ["内幕"], "want": ["工程"]},
+]
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--leg", default="all",
-                    choices=["e3", "e2", "all", "r2", "r3", "r4"])
+                    choices=["e3", "e2", "all", "r2", "r3", "r4", "r5"])
     ap.add_argument("--max-tasks", type=int, default=99)
     ns = ap.parse_args()
     STAGE.mkdir(parents=True, exist_ok=True)
     c = AnySearchClient()
-    plans = {"r2": PLAN_R2, "r3": PLAN_R3, "r4": PLAN_R4}.get(
+    plans = {"r2": PLAN_R2, "r3": PLAN_R3, "r4": PLAN_R4, "r5": PLAN_R5}.get(
         ns.leg,
         ([] if ns.leg == "e2" else PLAN_E3) +
         ([] if ns.leg == "e3" else PLAN_E2))

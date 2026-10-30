@@ -217,6 +217,7 @@ conductor 全渠道统一调度器(7min tick·资源互斥·完备门·黑名单
 ```
 
 - **S1 采集段标准入口（1026 生产接线令）**：`reforge_factory/channels_dispatcher.py` 全渠道生产调度器 — question_tree EEI × 渠道 fit 标签自动路由、活/墙/骨架健康账自动跳过（墙与骨架跳过+原因入账）、进程池并发≤4、qhash 幂等、逐腿收 stdout 终态 JSON；首战 EPC-JIAGE 3 未饱和 EEI×9 词实派 43 活腿（全集 137：活51/墙14/骨架63/词面不匹配9），命中 318、两波新入池 16 件 49,054 字、judge 判有效 12 件 47,817 字入门槛账（实测数字见 `legs/API_SWITCH_LEDGER.md`）；台账 `reforge_factory/dispatch_ledger.jsonl` 只增不改
+- **S3 出书标准入口（1027 WPS复刻排版入产线令）**：`reforge_factory/s3_book_chain.py` 一键出书链 ①合并（扉页=书名/出品：总包创研院研究团队/版本日期·chapters.json 章序拼·chars尾注+使用说明块删减三重守门）②docx（tools/report_to_docx 封面/点线目录/页码）③**WPS复刻排版硬门**（逆向工程/wps-ai-paiban 复刻件 aipaiban·零云端·研报预设轨 beauty/三线表/TOC/页码/h1-break；排版失败=链中断禁止出PDF——1022宪法「合并完成必须排版·无绕行」代码化）④PDF（Word COM·PID 精准清·pypdf 实测页数）⑤幂等质检（合并 sha256 零漂移+排版 dry-run incremental）⑥产物清单（sha256/bytes/页数实测+manifest）；固化自第9份 EPC-OVERSEAS 实证链（out/ 341页），冒烟=第9份章源重放全链 PASS 65s（合并 sha256 与正式件比特一致，PDF 341页/3,344,002B，隔离落 _backup_tmp/s3_book_smoke_1027）；台账 `reforge_factory/s3_book_chain_ledger.jsonl` 只增不改
 
 - **弹药门槛 2 亿字**（用户 1004 终版令，从 1000 万三级跳）：`ammo_pool.py/epc50_start_gate.py/forge.py` 三常量落定；门槛=**转产触发器**——达标即转 NB 写作，边写边补缺口
 - **NB Pro 极限定标**：单源 98 万当量装包 · 单本 ≤280 源/2.5 亿字（3 亿=300×100 万耦合乘积，留 0.5 亿萃取炼金）；多本架构=共性库+每战役一本，NB 永远不是瓶颈

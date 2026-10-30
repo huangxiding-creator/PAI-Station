@@ -97,6 +97,7 @@ EXTRA_TAGS: dict[str, str] = {
     "last30days": "新闻舆情",          # 近30日社媒热度 (1025 接入令)
     "dangdang": "数据集",              # 当当图书情报 (1024 专项令)
     "metaso_kb": "数据集",             # 秘塔知识库专题·工程行业大脑 (1024 专项令)
+    "bdn": "数据集/工商招投标/通用网研",   # 百度网盘检索下载 (1030 接入令, 自有SVIP8账号面)
 }
 
 #: ---- EEI → 域标签路由 (channels_hint 渠道 id → fit 标签域) ----------------
@@ -141,6 +142,9 @@ def build_cmd(engine: str, leg: Path, campaign: str, queries: list[str],
                        "--limit", str(rows)]
     if engine == "last30days":                     # 无 --rows 形参 (1026实弹实证)
         return base + ["--campaign", campaign, "--queries", *queries]
+    if engine == "bdn":                            # 下载腿: 收紧下载预算 3 件 (1030 接入令)
+        return base + ["--campaign", campaign, "--queries", *queries,
+                       "--download-limit", "3", "--max-mb", "100"]
     return base + ["--campaign", campaign, "--queries", *queries,
                    "--rows", str(rows)]
 

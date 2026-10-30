@@ -1,0 +1,83 @@
+[
+ {
+  "name": "国家统计局·国家数据",
+  "repo_or_site": "https://data.stats.gov.cn/",
+  "replaces": "Wind宏观库(中国宏观指标)",
+  "one_liner": "官方宏观月度/年度库: 建筑业产值/固定资产投资/价格指数/能源, easyquery接口需会话cookie(浏览器面免费)",
+  "access": "免费页面(query接口需会话)",
+  "fit": "中国宏观",
+  "existing": "none(new)",
+  "overlap": "sweep_datasets已录(彼时302/403); 本表按Wind平替口径重定位",
+  "probe_key": "stats_gov"
+ },
+ {
+  "name": "中债·中国债券信息网公开面",
+  "repo_or_site": "https://yield.chinabond.com.cn/",
+  "replaces": "Wind债券估值/收益率曲线域",
+  "one_liner": "中债登官网: 中债收益率曲线+中债估值公开下载面(关键期限/主要券种), 深历史全字段为付费, 公开面=部分全等",
+  "access": "免费页面(数据文件下载)",
+  "fit": "债券估值",
+  "existing": "none(new)",
+  "probe_key": "chinabond"
+ },
+ {
+  "name": "上期所日行情与持仓",
+  "repo_or_site": "https://www.shfe.com.cn/",
+  "replaces": "Wind期货日行情(上期所品种)",
+  "one_liner": "上期所官网每日行情/成交持仓排名数据文件免费下载, 一手全等(日频)",
+  "access": "免费页面+公开数据文件",
+  "fit": "期货行情",
+  "existing": "none(new)",
+  "probe_key": "shfe"
+ },
+ {
+  "name": "大商所日行情与持仓",
+  "repo_or_site": "http://www.dce.com.cn/",
+  "replaces": "Wind期货日行情(大商所品种)",
+  "one_liner": "大商所官网日行情/持仓排名文件免费下载(日频一手), 探针412为预条件反爬(浏览器面正常)",
+  "access": "免费页面+公开数据文件",
+  "fit": "期货行情",
+  "existing": "none(new)",
+  "probe_key": "dce"
+ },
+ {
+  "name": "郑商所日行情与持仓",
+  "repo_or_site": "http://www.czce.com.cn/",
+  "replaces": "Wind期货日行情(郑商所品种)",
+  "one_liner": "郑商所官网日行情/仓单数据文件免费下载(日频一手), 探针412为预条件反爬",
+  "access": "免费页面+公开数据文件",
+  "fit": "期货行情",
+  "existing": "none(new)",
+  "probe_key": "czce"
+ },
+ {
+  "name": "中金所日统计",
+  "repo_or_site": "http://www.cffex.com.cn/",
+  "replaces": "Wind金融期货行情(中金所)",
+  "one_liner": "中金所官网每日统计: 股指/国债期货量价持仓免费下载(日频一手)",
+  "access": "免费页面+公开数据文件",
+  "fit": "期货行情",
+  "existing": "none(new)",
+  "probe_key": "cffex"
+ },
+ {
+  "name": "中国货币网(外汇交易中心)",
+  "repo_or_site": "https://www.chinamoney.com.cn/",
+  "replaces": "Wind汇率中间价/LPR/SHIBOR域",
+  "one_liner": "CFETS官网: 人民币汇率中间价/SHIBOR/LPR/回购定盘利率公告免费, 汇率利率一手全等",
+  "access": "免费页面",
+  "fit": "汇率/利率",
+  "existing": "none(new)",
+  "probe_key": "chinamoney"
+ },
+ {
+  "name": "LME官网延迟行情",
+  "repo_or_site": "https://www.lme.com/",
+  "replaces": "Wind/Refinitiv LME实时盘口",
+  "one_liner": "LME官网金属行情免费延迟面——实时盘口无免费等价(交易所收费授权), 如实标注: 无全等平替, 有约10-15分钟延迟免费替代; 探针403为Akamai反爬",
+  "access": "免费页面(延迟行情)",
+  "fit": "境外金属行情(delayed)",
+  "existing": "none(new)",
+  "probe_key": "lme"
+ }
+]

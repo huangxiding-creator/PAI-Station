@@ -1,0 +1,1153 @@
+{
+ "lane": "sweep_topic_hn",
+ "generated": "2026-10-25",
+ "method": "gh api search/repositories 11次查询(topic:search-engine p1-p2 / topic:web-scraping p1-p2 / topic:osint p1 / topic:data-engineering p1 / topic:crawler p1 / kw:deep-research p1-p2 / kw:search-api p1 / kw:deep-research created>2026-07-27, 均stars排序) + HN Algolia search_by_date 90天(deep-research / search-engine-research / web-scraping, tags=story)",
+ "query_stats": {
+  "gh:topic:search-engine": "total_count=6249, 取前60",
+  "gh:topic:web-scraping": "total_count=23293, 取前60",
+  "gh:topic:osint": "total_count=8493, 取前30",
+  "gh:topic:data-engineering": "total_count=22198, 取前30",
+  "gh:topic:crawler": "total_count=9233, 取前30",
+  "gh:kw:deep-research": "total_count=9330, 取前60",
+  "gh:kw:search-api": "total_count=15112, 取前30",
+  "gh:kw:deep-research created>2026-07-27": "total_count=1733, 取前30",
+  "hn:deep-research 90d": "nbHits=13",
+  "hn:search-engine-research 90d": "nbHits=4",
+  "hn:web-scraping 90d": "nbHits=15"
+ },
+ "dedup_rule": "与awesome系清单头部条目及纯搜索引擎库(非渠道)跳过, 见skipped字段; 少数高价值但可能已入awesome清单者保留并在desc标注[重叠风险]",
+ "count": 112,
+ "projects": [
+  {
+   "name": "Alibaba-NLP/DeepResearch",
+   "repo_or_site": "https://github.com/Alibaba-NLP/DeepResearch",
+   "desc": "阿里通义实验室开源的旗舰深度调研智能体(模型+代码), 面向开放式长程调研任务, 官方blog见tongyi-agent.github.io",
+   "access": "本地部署(开源)·需自配环境/权重",
+   "cn_reachable": "中文团队项目; GitHub直连实测可达",
+   "fit": "通用深度调研/研报代产腿, 中文任务原生友好",
+   "stars_or_evidence": "stars=20078(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research"
+  },
+  {
+   "name": "dzhng/deep-research",
+   "repo_or_site": "https://github.com/dzhng/deep-research",
+   "desc": "经典迭代式深度调研agent: 搜索引擎+网页抓取+多轮推理生成带引用报告(TS实现) [重叠风险:高]",
+   "access": "本地部署(开源)·需LLM key+搜索源key",
+   "cn_reachable": "GitHub直连实测可达; 所依赖上游API另需实测",
+   "fit": "通用深度调研/研报代产腿",
+   "stars_or_evidence": "stars=19826(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research"
+  },
+  {
+   "name": "langchain-ai/open_deep_research",
+   "repo_or_site": "https://github.com/langchain-ai/open_deep_research",
+   "desc": "LangChain官方开放式深度调研agent(多子agent规划-检索-综合成长报告) [重叠风险:高]",
+   "access": "本地部署(开源)·需LLM key",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "通用深度调研/研报代产腿",
+   "stars_or_evidence": "stars=12676(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research"
+  },
+  {
+   "name": "LearningCircuit/local-deep-research",
+   "repo_or_site": "https://github.com/LearningCircuit/local-deep-research",
+   "desc": "支持全本地LLM的深度调研(自报SimpleQA约95%), 内置10+搜索引擎可选, 隐私友好",
+   "access": "本地部署(开源)·可全离线",
+   "cn_reachable": "GitHub直连实测可达; 全离线模式不涉外网",
+   "fit": "通用深度调研/研报代产腿(可内网跑)",
+   "stars_or_evidence": "stars=9405(gh api 2026-10-25; 自报精度数字未复核)",
+   "src": "src=gh:kw:deep research"
+  },
+  {
+   "name": "langchain-ai/local-deep-researcher",
+   "repo_or_site": "https://github.com/langchain-ai/local-deep-researcher",
+   "desc": "LangChain全本地web调研+报告撰写助手",
+   "access": "本地部署(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "通用深度调研/研报代产腿",
+   "stars_or_evidence": "stars=9389(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research"
+  },
+  {
+   "name": "MiroMindAI/MiroThinker",
+   "repo_or_site": "https://github.com/MiroMindAI/MiroThinker",
+   "desc": "面向复杂调研与预测任务的深度调研模型系列(MiroThinker-1.7等开源)",
+   "access": "模型权重/本地部署(开源)",
+   "cn_reachable": "GitHub直连实测可达; 模型下载走HF等未实测",
+   "fit": "通用深度调研/研报代产腿(预测任务)",
+   "stars_or_evidence": "stars=8425(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research"
+  },
+  {
+   "name": "zilliztech/deep-searcher",
+   "repo_or_site": "https://github.com/zilliztech/deep-searcher",
+   "desc": "Zilliz开源的私有数据深度搜索/调研agent(RAG+推理, Reason-and-Search开源替代)",
+   "access": "本地部署(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "私有知识库调研腿(内部资料/已收割语料再调研)",
+   "stars_or_evidence": "stars=8348(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research"
+  },
+  {
+   "name": "jina-ai/node-DeepResearch",
+   "repo_or_site": "https://github.com/jina-ai/node-DeepResearch",
+   "desc": "Jina出品: 循环 搜索-读页-推理 直到找到答案或超token预算(依赖search.jina.ai)",
+   "access": "本地部署(开源)·依赖jina reader/search key",
+   "cn_reachable": "GitHub直连实测可达; jina服务国内可达性未实测",
+   "fit": "通用深度调研腿",
+   "stars_or_evidence": "stars=5240(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research"
+  },
+  {
+   "name": "u14app/deep-research",
+   "repo_or_site": "https://github.com/u14app/deep-research",
+   "desc": "任意LLM驱动的深度调研服务, 支持SSE API与MCP server, 在线站research.u14.app",
+   "access": "网站+自部署(开源)",
+   "cn_reachable": "中文开发者项目; GitHub直连实测可达; 在线站未实测",
+   "fit": "通用深度调研腿(可直接当API用)",
+   "stars_or_evidence": "stars=4687(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research"
+  },
+  {
+   "name": "jordan-gibbs/hyperresearch",
+   "repo_or_site": "https://github.com/jordan-gibbs/hyperresearch",
+   "desc": "把Claude Code/Codex改造成深度调研agent: 采集-检索-综合成报告",
+   "access": "本地部署(开源)·Claude Code生态",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "通用深度调研/研报代产腿(与本项目Claude产线同构)",
+   "stars_or_evidence": "stars=4082(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research"
+  },
+  {
+   "name": "SkyworkAI/DeepResearchAgent",
+   "repo_or_site": "https://github.com/SkyworkAI/DeepResearchAgent",
+   "desc": "昆仑万维Skywork开源的分层多agent深度调研系统(调研+通用任务)",
+   "access": "本地部署(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "通用深度调研/研报代产腿",
+   "stars_or_evidence": "stars=3562(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research"
+  },
+  {
+   "name": "Weizhena/Deep-Research-skills",
+   "repo_or_site": "https://github.com/Weizhena/Deep-Research-skills",
+   "desc": "Claude Code/OpenCode/Codex的结构化深度调研skill(人在环控制)",
+   "access": "skill文件即用",
+   "cn_reachable": "中文描述项目; GitHub直连实测可达",
+   "fit": "通用深度调研腿(可直接装进本项目skill体系)",
+   "stars_or_evidence": "stars=2419(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research"
+  },
+  {
+   "name": "AnotiaWang/deep-research-web-ui",
+   "repo_or_site": "https://github.com/AnotiaWang/deep-research-web-ui",
+   "desc": "自托管深度调研agent Web UI: 规划搜索-读真实源-证据核验-带引用报告",
+   "access": "本地部署(开源)·需LLM/搜索key",
+   "cn_reachable": "中文开发者项目; GitHub直连实测可达",
+   "fit": "通用深度调研/研报代产腿",
+   "stars_or_evidence": "stars=2223(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research"
+  },
+  {
+   "name": "btahir/open-deep-research",
+   "repo_or_site": "https://github.com/btahir/open-deep-research",
+   "desc": "Gemini Deep Research开源平替: 基于搜索结果的AI报告生成(在线站opendeepresearch.vercel.app)",
+   "access": "网站+自部署(开源)",
+   "cn_reachable": "GitHub直连实测可达; vercel站在国内可达性未实测",
+   "fit": "通用深度调研腿",
+   "stars_or_evidence": "stars=2139(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research"
+  },
+  {
+   "name": "agentset-ai/agentset",
+   "repo_or_site": "https://github.com/agentset-ai/agentset",
+   "desc": "开源RAG平台: 内置引用/深度调研/22+文件格式解析/分区/MCP server",
+   "access": "本地部署(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "私有知识库+通用调研腿",
+   "stars_or_evidence": "stars=2114(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research"
+  },
+  {
+   "name": "HKUDS/Auto-Deep-Research",
+   "repo_or_site": "https://github.com/HKUDS/Auto-Deep-Research",
+   "desc": "港大HKUDS全自动化个人AI助手(自动深度调研, arXiv:2502.05957)",
+   "access": "本地部署(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "通用深度调研腿(学术背景)",
+   "stars_or_evidence": "stars=1752(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research"
+  },
+  {
+   "name": "TIGER-AI-Lab/OpenResearcher",
+   "repo_or_site": "https://github.com/TIGER-AI-Lab/OpenResearcher",
+   "desc": "长程深度调研轨迹合成的全开源管线(学术)",
+   "access": "本地部署(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "学术调研/轨迹合成(研究向)",
+   "stars_or_evidence": "stars=1262(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research"
+  },
+  {
+   "name": "SalesforceAIResearch/enterprise-deep-research",
+   "repo_or_site": "https://github.com/SalesforceAIResearch/enterprise-deep-research",
+   "desc": "Salesforce研究部门的企业级深度调研框架(面向企业数据源)",
+   "access": "本地部署(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "企业内部源深度调研腿",
+   "stars_or_evidence": "stars=1220(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research"
+  },
+  {
+   "name": "199-biotechnologies/claude-deep-research-skill",
+   "repo_or_site": "https://github.com/199-biotechnologies/claude-deep-research-skill",
+   "desc": "Claude Code企业级深度调研skill: 8阶段管线+信源可信度评分+自动验证",
+   "access": "skill文件即用",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "通用深度调研腿(信源评分机制对本产线有借鉴)",
+   "stars_or_evidence": "stars=1198(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research"
+  },
+  {
+   "name": "zamalali/DeepGit",
+   "repo_or_site": "https://github.com/zamalali/DeepGit",
+   "desc": "帮你找到最佳GitHub仓库的深度调研agent(在线站deepgit.vercel.app)",
+   "access": "网站+自部署(开源)",
+   "cn_reachable": "GitHub直连实测可达; 在线站未实测",
+   "fit": "代码/工具发现腿(为渠道扩展找弹药)",
+   "stars_or_evidence": "stars=923(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research"
+  },
+  {
+   "name": "hoolulu/deep-research",
+   "repo_or_site": "https://github.com/hoolulu/deep-research",
+   "desc": "一条命令十分钟生成券商级深度调研报告的skill(中文, www.h33.top)",
+   "access": "skill文件即用",
+   "cn_reachable": "中文原生项目; GitHub直连实测可达",
+   "fit": "研报产线直接可用, 强相关(券商级中文研报标准)",
+   "stars_or_evidence": "stars=604(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research"
+  },
+  {
+   "name": "firecrawl/firesearch",
+   "repo_or_site": "https://github.com/firecrawl/firesearch",
+   "desc": "Firecrawl官方AI深度搜索产品: 分解复杂问题-验证答案-带引用结果 [重叠风险:中, firecrawl系]",
+   "access": "需key(Firecrawl账号)",
+   "cn_reachable": "服务端境外, 国内可达性未实测",
+   "fit": "通用深度搜索腿",
+   "stars_or_evidence": "stars=499(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research"
+  },
+  {
+   "name": "Nutlope/open-deep-research",
+   "repo_or_site": "https://github.com/Nutlope/open-deep-research",
+   "desc": "Together AI演示的开源DR应用(opendeepresearch.dev, OSS LLM产报告)",
+   "access": "网站+自部署(开源)·需Together key",
+   "cn_reachable": "GitHub直连实测可达; 在线站未实测",
+   "fit": "通用深度调研腿",
+   "stars_or_evidence": "stars=433(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research"
+  },
+  {
+   "name": "lingzhi227/agent-research-skills",
+   "repo_or_site": "https://github.com/lingzhi227/agent-research-skills",
+   "desc": "Claude Code skill集: 系统性学术文献综述",
+   "access": "skill文件即用",
+   "cn_reachable": "中文作者; GitHub直连实测可达",
+   "fit": "学术文献综述腿(工程研报文献段)",
+   "stars_or_evidence": "stars=432(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research"
+  },
+  {
+   "name": "Haohao-end/openagent",
+   "repo_or_site": "https://github.com/Haohao-end/openagent",
+   "desc": "OpenAI Deep Research与Dify合一的开源垂直agent平台(openllm.cloud, 中文)",
+   "access": "自托管(开源)",
+   "cn_reachable": "中文原生项目; GitHub直连实测可达",
+   "fit": "通用深度调研+垂直agent平台",
+   "stars_or_evidence": "stars=775(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research"
+  },
+  {
+   "name": "himovo/movo",
+   "repo_or_site": "https://github.com/himovo/movo",
+   "desc": "把DeepSeek Harness升级为自托管企业agent平台: 知识/深度调研/内容生成(中文)",
+   "access": "自托管(开源)",
+   "cn_reachable": "中文原生项目; GitHub直连实测可达",
+   "fit": "通用深度调研腿",
+   "stars_or_evidence": "stars=357(gh api 2026-10-25; 近90天新)",
+   "src": "src=gh:kw:deep research created>2026-07-27"
+  },
+  {
+   "name": "lajosdeme/mole",
+   "repo_or_site": "https://github.com/lajosdeme/mole",
+   "desc": "终端深度调研agent(Go): 强制预算+引用逐句核验+本地数据隐私边界",
+   "access": "本地部署(开源)·CLI",
+   "cn_reachable": "GitHub直连实测可达; 其默认搜索源国内可达性未实测",
+   "fit": "通用深度调研腿(预算+核验设计适合产线成本控制)",
+   "stars_or_evidence": "stars=317(gh api 2026-10-25); HN=100分/14评(2026-08-14, Algolia实测)",
+   "src": "src=gh:kw:recent + hn:deep research 90d"
+  },
+  {
+   "name": "HezaoHezao/poirot",
+   "repo_or_site": "https://github.com/HezaoHezao/poirot",
+   "desc": "面向agent架构研究者的深度调研内核(白盒可拆解)",
+   "access": "本地部署(开源)",
+   "cn_reachable": "中文作者; GitHub直连实测可达",
+   "fit": "通用深度调研内核(方法论借鉴)",
+   "stars_or_evidence": "stars=254(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research created>2026-07-27"
+  },
+  {
+   "name": "Yijia-Xiao/FinanceHarness",
+   "repo_or_site": "https://github.com/Yijia-Xiao/FinanceHarness",
+   "desc": "自主金融深度调研框架(arXiv:2607.27853配套代码)",
+   "access": "本地部署(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "金融/造价数据调研腿",
+   "stars_or_evidence": "stars=207(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research created>2026-07-27"
+  },
+  {
+   "name": "SeanEllyJames/deep-research-skill",
+   "repo_or_site": "https://github.com/SeanEllyJames/deep-research-skill",
+   "desc": "让AI Agent做会思考有判断的深度调研(而非信息堆砌)的即插即用skill(中文)",
+   "access": "skill文件即用",
+   "cn_reachable": "中文原生; GitHub直连实测可达",
+   "fit": "通用深度调研腿(判断力框架)",
+   "stars_or_evidence": "stars=187(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research created>2026-07-27"
+  },
+  {
+   "name": "qa10devteam/behive",
+   "repo_or_site": "https://github.com/qa10devteam/behive",
+   "desc": "开源深度调研引擎: 边调研边构建结构化知识图谱, MCP原生, 自报平均质量0.82+(未复核)",
+   "access": "自托管(开源)·MCP",
+   "cn_reachable": "GitHub直连实测可达; api.yu-na.io未实测",
+   "fit": "通用深度调研腿(知识图谱沉淀)",
+   "stars_or_evidence": "stars=147(gh api 2026-10-25; 自报0.82+质量数字未复核)",
+   "src": "src=gh:kw:deep research created>2026-07-27"
+  },
+  {
+   "name": "xie-ying/Industry-DeepResearch-Assistant",
+   "repo_or_site": "https://github.com/xie-ying/Industry-DeepResearch-Assistant",
+   "desc": "融合大模型问答+联网深度检索+本地知识库+行业资讯聚合的行业信息分析助手(中文)",
+   "access": "本地部署(开源)",
+   "cn_reachable": "中文原生项目; GitHub直连实测可达",
+   "fit": "行业资讯聚合+知识库调研, 与工程行业研报直接对口",
+   "stars_or_evidence": "stars=92(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research created>2026-07-27"
+  },
+  {
+   "name": "boluodaixue/paperpilot",
+   "repo_or_site": "https://github.com/boluodaixue/paperpilot",
+   "desc": "LangGraph个人深度研究系统: 递归DeepResearch x LLM Wiki x Obsidian, 研究沉淀为可追溯长期知识(中文)",
+   "access": "本地部署(开源)",
+   "cn_reachable": "中文原生项目; GitHub直连实测可达",
+   "fit": "学术/长期知识沉淀腿",
+   "stars_or_evidence": "stars=82(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research created>2026-07-27"
+  },
+  {
+   "name": "1612535983/deepresearchagent",
+   "repo_or_site": "https://github.com/1612535983/deepresearchagent",
+   "desc": "LangGraph可恢复可审计深度调研agent: 规划-搜索-证据管理-带引用",
+   "access": "本地部署(开源)",
+   "cn_reachable": "中文作者; GitHub直连实测可达",
+   "fit": "通用深度调研腿(可恢复设计适合长任务)",
+   "stars_or_evidence": "stars=52(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research created>2026-07-27"
+  },
+  {
+   "name": "ry0narushima/bettersearch",
+   "repo_or_site": "https://github.com/ry0narushima/bettersearch",
+   "desc": "基于DeepSeek新版Search API的任意agent深度调研: 子代理+事实核查+HTML报告",
+   "access": "本地部署(开源)·需DeepSeek key(便宜)",
+   "cn_reachable": "GitHub直连实测可达; DeepSeek API国内原生可用",
+   "fit": "通用深度调研腿(低成本国产链路)",
+   "stars_or_evidence": "stars=40(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research created>2026-07-27"
+  },
+  {
+   "name": "meituan-longcat/LongCat-DeepResearch",
+   "repo_or_site": "https://github.com/meituan-longcat/LongCat-DeepResearch",
+   "desc": "美团开源的循证报告深度调研harness: 多agent规划+分节独立调研+定向补漏",
+   "access": "本地部署(开源)",
+   "cn_reachable": "中文大厂开源; GitHub直连实测可达",
+   "fit": "研报产线直接可用(分节+循证与本项目结构同构)",
+   "stars_or_evidence": "stars=24(gh api 2026-10-25; 2026-10-23新)",
+   "src": "src=gh:kw:deep research created>2026-07-27"
+  },
+  {
+   "name": "toustifer/dsh-harvest",
+   "repo_or_site": "https://github.com/toustifer/dsh-harvest",
+   "desc": "DSH原生多平台深度调研流水线插件: scout多源发现/deep_research长篇研报/extract穿透抓取/verify交叉验证/audit审计(中文)",
+   "access": "DSH插件/skill",
+   "cn_reachable": "中文原生; GitHub直连实测可达",
+   "fit": "研报全链插件(发现-研报-抽取-验证-审计五段)",
+   "stars_or_evidence": "stars=15(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research created>2026-07-27"
+  },
+  {
+   "name": "ielab/skim-search-agent",
+   "repo_or_site": "https://github.com/ielab/skim-search-agent",
+   "desc": "在自有语料上构建与评测深度调研agent的组合式库",
+   "access": "本地部署(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "私有语料调研+agent评测",
+   "stars_or_evidence": "stars=15(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research created>2026-07-27"
+  },
+  {
+   "name": "Tencent/CognitiveKernel-Pro",
+   "repo_or_site": "https://github.com/Tencent/CognitiveKernel-Pro",
+   "desc": "腾讯AI Lab深度调研agent CognitiveKernel-Pro(arXiv:2508.00414配套)",
+   "access": "本地部署(开源)",
+   "cn_reachable": "中文大厂; GitHub直连实测可达",
+   "fit": "通用深度调研腿(学术前沿)",
+   "stars_or_evidence": "stars=533(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research"
+  },
+  {
+   "name": "RUC-NLPIR/WebThinker",
+   "repo_or_site": "https://github.com/RUC-NLPIR/WebThinker",
+   "desc": "人大NeurIPS 2025: 赋予大推理模型深度调研能力(WebThinker)",
+   "access": "模型/代码(开源)",
+   "cn_reachable": "中文高校; GitHub直连实测可达",
+   "fit": "学术调研模型腿",
+   "stars_or_evidence": "stars=1471(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research"
+  },
+  {
+   "name": "GAIR-NLP/DeepResearcher",
+   "repo_or_site": "https://github.com/GAIR-NLP/DeepResearcher",
+   "desc": "上交GAIR: 真实web环境强化学习扩展深度调研(仅用搜索交互训练)",
+   "access": "模型/代码(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "学术调研模型腿",
+   "stars_or_evidence": "stars=806(gh api 2026-10-25)",
+   "src": "src=gh:kw:deep research"
+  },
+  {
+   "name": "ItzCrazyKns/Vane",
+   "repo_or_site": "https://github.com/ItzCrazyKns/Vane",
+   "desc": "AI问答式搜索引擎(自托管Perplexity类回答引擎)",
+   "access": "自部署(开源)·需LLM key+搜索API",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "通用搜索/资料检索腿(AI问答式)",
+   "stars_or_evidence": "stars=37725(gh api 2026-10-25)",
+   "src": "src=gh:topic:search-engine"
+  },
+  {
+   "name": "zaidmukaddam/scira",
+   "repo_or_site": "https://github.com/zaidmukaddam/scira",
+   "desc": "极简AI搜索引擎(带引用, 前身MiniPerplx, 在线站scira.ai)",
+   "access": "网站+自部署(开源)",
+   "cn_reachable": "GitHub直连实测可达; 在线站国内可达性未实测",
+   "fit": "通用搜索/资料检索腿",
+   "stars_or_evidence": "stars=11908(gh api 2026-10-25)",
+   "src": "src=gh:topic:search-engine"
+  },
+  {
+   "name": "benbusby/whoogle-search",
+   "repo_or_site": "https://github.com/benbusby/whoogle-search",
+   "desc": "自托管无广告隐私Google元搜索(免key) [重叠风险:中]",
+   "access": "自部署(开源)·免key",
+   "cn_reachable": "GitHub直连实测可达; 部署后依赖Google可达性",
+   "fit": "通用搜索腿(Google结果代理)",
+   "stars_or_evidence": "stars=11560(gh api 2026-10-25)",
+   "src": "src=gh:topic:search-engine"
+  },
+  {
+   "name": "asciimoo/hister",
+   "repo_or_site": "https://github.com/asciimoo/hister",
+   "desc": "你自己的搜索引擎(hister.org, 独立元搜索)",
+   "access": "自部署(开源)·免key",
+   "cn_reachable": "GitHub直连实测可达; 元搜索源可达性取决于部署环境",
+   "fit": "通用搜索腿",
+   "stars_or_evidence": "stars=6128(gh api 2026-10-25)",
+   "src": "src=gh:topic:search-engine"
+  },
+  {
+   "name": "yacy/yacy_search_server",
+   "repo_or_site": "https://github.com/yacy/yacy_search_server",
+   "desc": "P2P分布式web搜索引擎(自建索引+内网检索两用)",
+   "access": "自部署(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "通用搜索腿(可自建索引, 也可做内部语料检索)",
+   "stars_or_evidence": "stars=4076(gh api 2026-10-25)",
+   "src": "src=gh:topic:search-engine"
+  },
+  {
+   "name": "nilsherzig/LLocalSearch",
+   "repo_or_site": "https://github.com/nilsherzig/LLocalSearch",
+   "desc": "完全本地运行的搜索聚合器(LLM agent回答, 不依赖云API)",
+   "access": "本地部署(开源)·可离线",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "通用搜索腿(内网)",
+   "stars_or_evidence": "stars=5940(gh api 2026-10-25)",
+   "src": "src=gh:topic:search-engine"
+  },
+  {
+   "name": "KnockOutEZ/wigolo",
+   "repo_or_site": "https://github.com/KnockOutEZ/wigolo",
+   "desc": "给AI coding agent的本地优先search/fetch/crawl一体MCP: 无API key, 0成本/query",
+   "access": "本地MCP(开源)·免key",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "通用搜索+抓取腿(零成本MCP)",
+   "stars_or_evidence": "stars=5502(gh api 2026-10-25)",
+   "src": "src=gh:topic:search-engine"
+  },
+  {
+   "name": "rashadphz/farfalle",
+   "repo_or_site": "https://github.com/rashadphz/farfalle",
+   "desc": "自托管AI搜索引擎(本地或云LLM)",
+   "access": "自部署(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "通用搜索腿",
+   "stars_or_evidence": "stars=3543(gh api 2026-10-25)",
+   "src": "src=gh:topic:search-engine"
+  },
+  {
+   "name": "swirlai/swirl-search",
+   "repo_or_site": "https://github.com/swirlai/swirl-search",
+   "desc": "不搬数据的联邦式AI搜索/RAG: 一Query联邦100+企业应用源",
+   "access": "自部署(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "企业内部多源联邦检索腿",
+   "stars_or_evidence": "stars=3046(gh api 2026-10-25)",
+   "src": "src=gh:topic:search-engine"
+  },
+  {
+   "name": "NikolaiT/GoogleScraper",
+   "repo_or_site": "https://github.com/NikolaiT/GoogleScraper",
+   "desc": "多搜索引擎抓取python模块(Google/Yandex/Bing/DDG异步抓取)",
+   "access": "本地部署(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "SERP采集腿",
+   "stars_or_evidence": "stars=2889(gh api 2026-10-25); 最后push=2021-07, 停更风险在案",
+   "src": "src=gh:topic:search-engine"
+  },
+  {
+   "name": "GerevAI/gerev",
+   "repo_or_site": "https://github.com/GerevAI/gerev",
+   "desc": "企业内AI搜索引擎(聊天式检索内部知识)",
+   "access": "自部署(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "企业内部搜索腿",
+   "stars_or_evidence": "stars=2809(gh api 2026-10-25); 最后push=2023-12, 停更风险在案",
+   "src": "src=gh:topic:search-engine"
+  },
+  {
+   "name": "devflowinc/trieve",
+   "repo_or_site": "https://github.com/devflowinc/trieve",
+   "desc": "搜索/推荐/RAG/分析一体化平台(API提供)",
+   "access": "自部署(开源)/API",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "语料检索基础设施腿",
+   "stars_or_evidence": "stars=2721(gh api 2026-10-25)",
+   "src": "src=gh:topic:search-engine"
+  },
+  {
+   "name": "thinkany-ai/rag-search",
+   "repo_or_site": "https://github.com/thinkany-ai/rag-search",
+   "desc": "thinkany出品的RAG搜索API(中文)",
+   "access": "API/自部署(开源)",
+   "cn_reachable": "中文团队项目; GitHub直连实测可达",
+   "fit": "通用搜索腿(RAG增强)",
+   "stars_or_evidence": "stars=1178(gh api 2026-10-25)",
+   "src": "src=gh:kw:search api"
+  },
+  {
+   "name": "fastcrw/crw",
+   "repo_or_site": "https://github.com/fastcrw/crw",
+   "desc": "Rust写的Firecrawl/Tavily轻量开源平替: 抓取/爬取/搜索API+MCP server",
+   "access": "自部署(开源)·免key",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "通用抓取+搜索腿(替代付费API)",
+   "stars_or_evidence": "stars=1174(gh api 2026-10-25)",
+   "src": "src=gh:kw:search api"
+  },
+  {
+   "name": "kitUIN/PicImageSearch",
+   "repo_or_site": "https://github.com/kitUIN/PicImageSearch",
+   "desc": "聚合多平台以图搜图API(中文, pic-image-search.kituin.fun)",
+   "access": "python库(免登录聚合源)",
+   "cn_reachable": "中文原生项目; GitHub直连实测可达",
+   "fit": "图片溯源腿(舆情图片核验/工地照片溯源)",
+   "stars_or_evidence": "stars=736(gh api 2026-10-25)",
+   "src": "src=gh:kw:search api"
+  },
+  {
+   "name": "ScrapingBee/google-search-api",
+   "repo_or_site": "https://github.com/ScrapingBee/google-search-api",
+   "desc": "ScrapingBee官方Google SERP API(结构化Google结果采集)",
+   "access": "需key(付费SaaS, 有试用)",
+   "cn_reachable": "境外服务, 国内可达性未实测",
+   "fit": "SERP采集腿(商用兜底)",
+   "stars_or_evidence": "stars=553(gh api 2026-10-25)",
+   "src": "src=gh:kw:search api"
+  },
+  {
+   "name": "brave/brave-search-skills",
+   "repo_or_site": "https://github.com/brave/brave-search-skills",
+   "desc": "Brave官方搜索API的agent skills(api.search.brave.com) [重叠风险:高, Brave常列awesome]",
+   "access": "需key(有免费层)",
+   "cn_reachable": "境外API, 国内可达性未实测",
+   "fit": "通用搜索API腿",
+   "stars_or_evidence": "stars=191(gh api 2026-10-25)",
+   "src": "src=gh:kw:search api"
+  },
+  {
+   "name": "sckott/habanero",
+   "repo_or_site": "https://github.com/sckott/habanero",
+   "desc": "Crossref REST API的python客户端(DOI/文献元数据/引用)",
+   "access": "python库·免登录API(Crossref公共)",
+   "cn_reachable": "GitHub直连实测可达; Crossref国内可达性未实测",
+   "fit": "学术文献元数据腿(参考文献核验/引用数)",
+   "stars_or_evidence": "stars=252(gh api 2026-10-25)",
+   "src": "src=gh:kw:search api"
+  },
+  {
+   "name": "damonwonghv/youtube-search-api",
+   "repo_or_site": "https://github.com/damonwonghv/youtube-search-api",
+   "desc": "无需登录/API key获取YouTube搜索结果",
+   "access": "python库·免登录",
+   "cn_reachable": "GitHub直连实测可达; YouTube国内需代理(常识判断, 未实测)",
+   "fit": "海外视频舆情腿",
+   "stars_or_evidence": "stars=153(gh api 2026-10-25)",
+   "src": "src=gh:kw:search api"
+  },
+  {
+   "name": "vladkens/twscrape",
+   "repo_or_site": "https://github.com/vladkens/twscrape",
+   "desc": "X/Twitter抓取库: 多账号轮换+内置限流处理",
+   "access": "本地部署(开源)·需X账号",
+   "cn_reachable": "GitHub直连实测可达; X国内需代理",
+   "fit": "海外舆情腿(X平台)",
+   "stars_or_evidence": "stars=2894(gh api 2026-10-25)",
+   "src": "src=gh:topic:web-scraping"
+  },
+  {
+   "name": "D4Vinci/Scrapling",
+   "repo_or_site": "https://github.com/D4Vinci/Scrapling",
+   "desc": "自适应反检测爬虫框架: 从单请求到全站爬取(自动适配页面变化) [重叠风险:中]",
+   "access": "本地部署(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "采集基建腿(自建渠道的通用引擎)",
+   "stars_or_evidence": "stars=89623(gh api 2026-10-25)",
+   "src": "src=gh:topic:crawler"
+  },
+  {
+   "name": "NaiboWang/EasySpider",
+   "repo_or_site": "https://github.com/NaiboWang/EasySpider",
+   "desc": "可视化无代码爬虫(中文易采集): 图形化设计+执行采集任务 [重叠风险:中]",
+   "access": "本地GUI工具(开源)·免代码",
+   "cn_reachable": "中文原生项目; GitHub直连实测可达; 官网easyspider.net",
+   "fit": "采集基建腿(非程序员也能建渠道)",
+   "stars_or_evidence": "stars=44738(gh api 2026-10-25)",
+   "src": "src=gh:topic:crawler"
+  },
+  {
+   "name": "ScrapeGraphAI/Scrapegraph-ai",
+   "repo_or_site": "https://github.com/ScrapeGraphAI/Scrapegraph-ai",
+   "desc": "AI驱动爬虫: LLM+图结构自动抽取目标字段 [重叠风险:高]",
+   "access": "本地部署(开源)·需LLM key",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "采集基建腿(NLP式字段抽取)",
+   "stars_or_evidence": "stars=32208(gh api 2026-10-25)",
+   "src": "src=gh:topic:crawler"
+  },
+  {
+   "name": "dgtlmoon/changedetection.io",
+   "repo_or_site": "https://github.com/dgtlmoon/changedetection.io",
+   "desc": "网站变更检测与监控告警平台(盯页面变化发通知)",
+   "access": "自部署(开源)/有云服务",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "页面变更监测腿(盯标准发布页/政策页/造价信息页)",
+   "stars_or_evidence": "stars=35280(gh api 2026-10-25)",
+   "src": "src=gh:topic:web-scraping"
+  },
+  {
+   "name": "Evil0ctal/Douyin_TikTok_Download_API",
+   "repo_or_site": "https://github.com/Evil0ctal/Douyin_TikTok_Download_API",
+   "desc": "自托管抖音/TikTok/B站数据采集与无水印下载API, 支持MCP调用(中文)",
+   "access": "自部署(开源)·Docker一键",
+   "cn_reachable": "中文原生项目; GitHub直连实测可达; douyin.wtf",
+   "fit": "短视频舆情腿(抖音/B站)",
+   "stars_or_evidence": "stars=20891(gh api 2026-10-25)",
+   "src": "src=gh:topic:crawler"
+  },
+  {
+   "name": "lexmount/moli",
+   "repo_or_site": "https://github.com/lexmount/moli",
+   "desc": "Rust写的AI agent无头浏览器(轻量/快/高兼容)",
+   "access": "本地部署(开源)",
+   "cn_reachable": "中文团队项目; GitHub直连实测可达",
+   "fit": "采集基建腿(AI浏览器)",
+   "stars_or_evidence": "stars=20595(gh api 2026-10-25)",
+   "src": "src=gh:topic:web-scraping"
+  },
+  {
+   "name": "getmaxun/maxun",
+   "repo_or_site": "https://github.com/getmaxun/maxun",
+   "desc": "把任意网站变成结构化API: 提取/自动化/搜索/监控(maxun.dev)",
+   "access": "自部署(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "采集腿(网站转API化, 快速渠道封装)",
+   "stars_or_evidence": "stars=18033(gh api 2026-10-25)",
+   "src": "src=gh:topic:web-scraping"
+  },
+  {
+   "name": "browserbase/stagehand",
+   "repo_or_site": "https://github.com/browserbase/stagehand",
+   "desc": "网页数据提取与交互SDK(AI agent生态, Claude Code/Codex等)",
+   "access": "SDK(开源)+云(需key)或自托管",
+   "cn_reachable": "GitHub直连实测可达; 云服务国内可达性未实测",
+   "fit": "采集基建腿(AI网页操作)",
+   "stars_or_evidence": "stars=25805(gh api 2026-10-25)",
+   "src": "src=gh:topic:web-scraping"
+  },
+  {
+   "name": "projectdiscovery/katana",
+   "repo_or_site": "https://github.com/projectdiscovery/katana",
+   "desc": "下一代爬取/spider框架(标准/无头双模式)",
+   "access": "CLI(开源)·免key",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "采集基建腿(站点结构发现)",
+   "stars_or_evidence": "stars=17727(gh api 2026-10-25)",
+   "src": "src=gh:topic:crawler"
+  },
+  {
+   "name": "MODSetter/SurfSense",
+   "repo_or_site": "https://github.com/MODSetter/SurfSense",
+   "desc": "隔离网隐私优先的NotebookLM开源平替: 调研-转化-编辑文档, 接20+数据源(含arXiv)",
+   "access": "本地部署(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "私有知识库+多源聚合调研腿",
+   "stars_or_evidence": "stars=16601(gh api 2026-10-25)",
+   "src": "src=gh:topic:web-scraping"
+  },
+  {
+   "name": "codelucas/newspaper",
+   "repo_or_site": "https://github.com/codelucas/newspaper",
+   "desc": "新闻全文与元数据抽取python库(newspaper3k系) [重叠风险:中]",
+   "access": "python库(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "新闻舆情腿(正文抽取)",
+   "stars_or_evidence": "stars=15180(gh api 2026-10-25)",
+   "src": "src=gh:topic:crawler"
+  },
+  {
+   "name": "shengqiangzhang/examples-of-web-crawlers",
+   "repo_or_site": "https://github.com/shengqiangzhang/examples-of-web-crawlers",
+   "desc": "中文趣味爬虫例子集: 淘宝/天猫/微信/微信读书/豆瓣/QQ等(新手友好)",
+   "access": "参考代码集(开源)",
+   "cn_reachable": "中文原生项目; GitHub直连实测可达",
+   "fit": "中文平台采集参考实现库(微信生态采集范例)",
+   "stars_or_evidence": "stars=14706(gh api 2026-10-25)",
+   "src": "src=gh:topic:crawler"
+  },
+  {
+   "name": "crawlab-team/crawlab",
+   "repo_or_site": "https://github.com/crawlab-team/crawlab",
+   "desc": "分布式爬虫管理平台(中文, 任意语言框架统一调度) [重叠风险:中]",
+   "access": "自部署(开源)·Go/Docker",
+   "cn_reachable": "中文原生项目; GitHub直连实测可达; crawlab.cn",
+   "fit": "采集基建腿(多渠道爬虫统一管理)",
+   "stars_or_evidence": "stars=12285(gh api 2026-10-25)",
+   "src": "src=gh:topic:crawler"
+  },
+  {
+   "name": "code4craft/webmagic",
+   "repo_or_site": "https://github.com/code4craft/webmagic",
+   "desc": "Java可扩展爬虫框架(中文)",
+   "access": "框架(开源)",
+   "cn_reachable": "中文原生项目; GitHub直连实测可达",
+   "fit": "采集基建腿(Java栈)",
+   "stars_or_evidence": "stars=11672(gh api 2026-10-25)",
+   "src": "src=gh:topic:crawler"
+  },
+  {
+   "name": "ssssssss-team/spider-flow",
+   "repo_or_site": "https://github.com/ssssssss-team/spider-flow",
+   "desc": "图形化定义爬虫流程平台(中文, 不写代码完成爬虫)",
+   "access": "自部署(开源)",
+   "cn_reachable": "中文原生项目; GitHub直连实测可达; spiderflow.org",
+   "fit": "采集基建腿(可视化流程)",
+   "stars_or_evidence": "stars=11360(gh api 2026-10-25)",
+   "src": "src=gh:topic:crawler"
+  },
+  {
+   "name": "jhao104/proxy_pool",
+   "repo_or_site": "https://github.com/jhao104/proxy_pool",
+   "desc": "python代理池(爬虫IP轮换基建, 中文)",
+   "access": "自部署(开源)",
+   "cn_reachable": "中文原生项目; GitHub直连实测可达",
+   "fit": "采集基建腿(代理轮换)",
+   "stars_or_evidence": "stars=23766(gh api 2026-10-25)",
+   "src": "src=gh:topic:crawler"
+  },
+  {
+   "name": "nanobrowser/nanobrowser",
+   "repo_or_site": "https://github.com/nanobrowser/nanobrowser",
+   "desc": "用真实已登录浏览器做自动化的开源AI agent(Chrome扩展)",
+   "access": "浏览器扩展+本地LLM(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "登录态渠道采集腿(已登录站点如微信生态)",
+   "stars_or_evidence": "stars=14176(gh api 2026-10-25)",
+   "src": "src=gh:topic:web-scraping"
+  },
+  {
+   "name": "NopeCHALLC/nopecha-extension",
+   "repo_or_site": "https://github.com/NopeCHALLC/nopecha-extension",
+   "desc": "自动验证码求解浏览器扩展(配合Selenium/Puppeteer/Playwright)",
+   "access": "浏览器扩展+需key(有免费额度)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "采集通关件(验证码)",
+   "stars_or_evidence": "stars=11059(gh api 2026-10-25)",
+   "src": "src=gh:topic:web-scraping"
+  },
+  {
+   "name": "pinchtab/pinchtab",
+   "repo_or_site": "https://github.com/pinchtab/pinchtab",
+   "desc": "高性能浏览器自动化桥+多实例编排(隐身注入+实时仪表盘)",
+   "access": "本地部署(开源)·Go",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "采集基建腿(浏览器农场)",
+   "stars_or_evidence": "stars=10449(gh api 2026-10-25)",
+   "src": "src=gh:topic:web-scraping"
+  },
+  {
+   "name": "gosom/google-maps-scraper",
+   "repo_or_site": "https://github.com/gosom/google-maps-scraper",
+   "desc": "Google Maps数据抓取: 名称/地址/电话/网站/评分/评论数/坐标(Go)",
+   "access": "CLI(开源)·免key",
+   "cn_reachable": "GitHub直连实测可达; Google国内需代理",
+   "fit": "企业名录/供应商地图腿(参建单位与供应商普查)",
+   "stars_or_evidence": "stars=6837(gh api 2026-10-25)",
+   "src": "src=gh:topic:web-scraping"
+  },
+  {
+   "name": "lexiforest/curl_cffi",
+   "repo_or_site": "https://github.com/lexiforest/curl_cffi",
+   "desc": "可模拟浏览器TLS/JA3/HTTP2指纹的python http客户端(反反爬核心件)",
+   "access": "python库(开源)",
+   "cn_reachable": "中文维护者; GitHub直连实测可达",
+   "fit": "采集基建腿(指纹对抗, 本项目复刻件已依赖同族技术)",
+   "stars_or_evidence": "stars=6771(gh api 2026-10-25)",
+   "src": "src=gh:topic:web-scraping"
+  },
+  {
+   "name": "adbar/trafilatura",
+   "repo_or_site": "https://github.com/adbar/trafilatura",
+   "desc": "web正文与元数据抽取(CLI+库, 输出TXT/CSV/JSON/MD) [重叠风险:中]",
+   "access": "python库/CLI(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "采集后处理腿(正文净化为语料)",
+   "stars_or_evidence": "stars=7021(gh api 2026-10-25)",
+   "src": "src=gh:topic:web-scraping"
+  },
+  {
+   "name": "MontFerret/ferret",
+   "repo_or_site": "https://github.com/MontFerret/ferret",
+   "desc": "声明式数据自动化语言与Go运行时(一段脚本完成结构化抽取)",
+   "access": "CLI(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "采集基建腿(声明式抽取)",
+   "stars_or_evidence": "stars=6015(gh api 2026-10-25)",
+   "src": "src=gh:topic:web-scraping"
+  },
+  {
+   "name": "Zipstack/unstract",
+   "repo_or_site": "https://github.com/Zipstack/unstract",
+   "desc": "非结构化数据LLM抽取平台(API部署/ETL管线)",
+   "access": "自部署(开源)·需LLM key",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "文档抽取腿(标书/合同/报表PDF结构化)",
+   "stars_or_evidence": "stars=7297(gh api 2026-10-25)",
+   "src": "src=gh:topic:data-engineering"
+  },
+  {
+   "name": "jaypyles/Scraperr",
+   "repo_or_site": "https://github.com/jaypyles/Scraperr",
+   "desc": "自托管web爬虫(Web UI+队列+导出, 并发抓取)",
+   "access": "自部署(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "采集基建腿(带界面)",
+   "stars_or_evidence": "stars=4906(gh api 2026-10-25)",
+   "src": "src=gh:topic:web-scraping"
+  },
+  {
+   "name": "Kaliiiiiiiiii-Vinyzu/patchright",
+   "repo_or_site": "https://github.com/Kaliiiiiiiiii-Vinyzu/patchright",
+   "desc": "反检测版Playwright(同API, 过自动化检测)",
+   "access": "python库(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "采集基建腿(隐身自动化, 本项目DrissionPage外的备选)",
+   "stars_or_evidence": "stars=4971(gh api 2026-10-25)",
+   "src": "src=gh:topic:web-scraping"
+  },
+  {
+   "name": "Anakin-Inc/anakin",
+   "repo_or_site": "https://github.com/Anakin-Inc/anakin",
+   "desc": "开源web scraping API: 任意网站转干净markdown/结构化JSON, 反检测+代理自动选择",
+   "access": "自部署(开源)/云",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "采集腿(网站转LLM就绪数据)",
+   "stars_or_evidence": "stars=3893(gh api 2026-10-25)",
+   "src": "src=gh:topic:web-scraping"
+  },
+  {
+   "name": "vibheksoni/stealth-browser-mcp",
+   "repo_or_site": "https://github.com/vibheksoni/stealth-browser-mcp",
+   "desc": "MCP隐身浏览器自动化: 导航/网络钩子/DOM抽取/截图",
+   "access": "本地MCP(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "采集基建腿(MCP挂进agent)",
+   "stars_or_evidence": "stars=3273(gh api 2026-10-25)",
+   "src": "src=gh:topic:web-scraping"
+  },
+  {
+   "name": "spider-rs/spider",
+   "repo_or_site": "https://github.com/spider-rs/spider",
+   "desc": "Rust低延迟web数据采集引擎(爬取/调度/并行)",
+   "access": "库/CLI(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "采集基建腿(高性能)",
+   "stars_or_evidence": "stars=2794(gh api 2026-10-25)",
+   "src": "src=gh:topic:web-scraping"
+  },
+  {
+   "name": "brightdata/brightdata-mcp",
+   "repo_or_site": "https://github.com/brightdata/brightdata-mcp",
+   "desc": "Bright Data官方MCP: 公共web一站式访问(搜索/抓取/反封锁代理) [重叠风险:高, 商用大牌]",
+   "access": "需key(付费, 有试用)",
+   "cn_reachable": "境外服务, 国内可达性未实测",
+   "fit": "采集兜底腿(硬骨头站点解锁)",
+   "stars_or_evidence": "stars=2686(gh api 2026-10-25)",
+   "src": "src=gh:topic:web-scraping"
+  },
+  {
+   "name": "3441293738/creatorhub",
+   "repo_or_site": "https://github.com/3441293738/creatorhub",
+   "desc": "多平台内容监控/采集/搬运Web面板: 抖音/小红书/快手(中文)",
+   "access": "自部署(开源)",
+   "cn_reachable": "中文原生项目; GitHub直连实测可达",
+   "fit": "社媒舆情腿(小红书/快手监控)",
+   "stars_or_evidence": "stars=2553(gh api 2026-10-25)",
+   "src": "src=gh:topic:web-scraping"
+  },
+  {
+   "name": "0xMassi/webclaw",
+   "repo_or_site": "https://github.com/0xMassi/webclaw",
+   "desc": "Rust本地优先web内容抽取: 爬取/结构化/CLI/REST/MCP",
+   "access": "本地部署(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "采集腿(LLM向内容抽取)",
+   "stars_or_evidence": "stars=2387(gh api 2026-10-25)",
+   "src": "src=gh:topic:web-scraping"
+  },
+  {
+   "name": "s0md3v/Photon",
+   "repo_or_site": "https://github.com/s0md3v/Photon",
+   "desc": "为OSINT设计的高速爬虫(情报式抓取)",
+   "access": "CLI(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "弱相关(OSINT式采集, 记录备查)",
+   "stars_or_evidence": "stars=13295(gh api 2026-10-25)",
+   "src": "src=gh:topic:crawler"
+  },
+  {
+   "name": "airbytehq/airbyte",
+   "repo_or_site": "https://github.com/airbytehq/airbyte",
+   "desc": "开源数据搬迁平台(300+连接器: API/数据库/文件转仓库/湖)",
+   "access": "自部署(开源)/云",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "数据集成腿(多源API统一入库)",
+   "stars_or_evidence": "stars=22264(gh api 2026-10-25)",
+   "src": "src=gh:topic:data-engineering"
+  },
+  {
+   "name": "ruc-datalab/DeepAnalyze",
+   "repo_or_site": "https://github.com/ruc-datalab/DeepAnalyze",
+   "desc": "人大开源AI数据分析师: 自动分析大量数据一键生成专业分析报告(中文)",
+   "access": "本地部署(开源)",
+   "cn_reachable": "中文原生项目; GitHub直连实测可达",
+   "fit": "数据分析+报告生成腿(实测数据转分析章)",
+   "stars_or_evidence": "stars=4751(gh api 2026-10-25)",
+   "src": "src=gh:topic:data-engineering"
+  },
+  {
+   "name": "koala73/worldmonitor",
+   "repo_or_site": "https://github.com/koala73/worldmonitor",
+   "desc": "实时全球情报仪表盘: AI新闻聚合/地缘政治监测/基础设施追踪(worldmonitor.app)",
+   "access": "自部署(开源)/在线站",
+   "cn_reachable": "GitHub直连实测可达; 在线站国内可达性未实测",
+   "fit": "新闻舆情+地缘监测腿",
+   "stars_or_evidence": "stars=89481(gh api 2026-10-25)",
+   "src": "src=gh:topic:osint"
+  },
+  {
+   "name": "bilawalsidhu/gods-eye-view",
+   "repo_or_site": "https://github.com/bilawalsidhu/gods-eye-view",
+   "desc": "浏览器里的真实数据卫星影像空间情报(开源数据3D地球)",
+   "access": "自部署(开源)",
+   "cn_reachable": "GitHub直连实测可达; 卫星图源国内可达性未实测",
+   "fit": "项目数据腿(基建/工地卫星观测, 新颖)",
+   "stars_or_evidence": "stars=59878(gh api 2026-10-25)",
+   "src": "src=gh:topic:osint"
+  },
+  {
+   "name": "calesthio/Crucix",
+   "repo_or_site": "https://github.com/calesthio/Crucix",
+   "desc": "个人情报agent: 盯多数据源, 有变化才提醒(crucix.live)",
+   "access": "自部署(开源)/在线站",
+   "cn_reachable": "GitHub直连实测可达; 在线站未实测",
+   "fit": "监测腿(多源盯梢告警)",
+   "stars_or_evidence": "stars=12138(gh api 2026-10-25)",
+   "src": "src=gh:topic:osint"
+  },
+  {
+   "name": "BigBodyCobain/Shadowbroker",
+   "repo_or_site": "https://github.com/BigBodyCobain/Shadowbroker",
+   "desc": "全球开源情报: 公务机/间谍卫星/船舶实时追踪",
+   "access": "本地部署(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "弱相关(物流/地缘观测, 记录备查)",
+   "stars_or_evidence": "stars=11360(gh api 2026-10-25)",
+   "src": "src=gh:topic:osint"
+  },
+  {
+   "name": "Trendradar (technologieradar)",
+   "repo_or_site": "https://technologieradar.tryresearchly.com",
+   "desc": "地平线扫描与前瞻雷达工具(趋势监测)",
+   "access": "网站服务(未实测)",
+   "cn_reachable": "境外站点, 国内可达性未实测",
+   "fit": "趋势前瞻腿(技术雷达/选题前瞻)",
+   "stars_or_evidence": "HN=2分/0评(2026-09-15, Algolia实测)",
+   "src": "src=hn:web scraping 90d"
+  },
+  {
+   "name": "DeepSearch (deepsearch.ing)",
+   "repo_or_site": "https://deepsearch.ing/",
+   "desc": "基于DeepSeek API构建的搜索引擎(Show HN自述)",
+   "access": "网站服务(未实测, 疑需自带key)",
+   "cn_reachable": "境外站点, 未实测",
+   "fit": "通用搜索腿(国产模型驱动)",
+   "stars_or_evidence": "HN=3分/2评(2026-10-24, Algolia实测)",
+   "src": "src=hn:search engine 90d"
+  },
+  {
+   "name": "xorsoft web search (search.xorsoft.dev)",
+   "repo_or_site": "https://search.xorsoft.dev/",
+   "desc": "用CommonCrawl语料自建的web搜索引擎(Show HN自述)",
+   "access": "免登录站点(未实测)",
+   "cn_reachable": "境外站点, 未实测",
+   "fit": "通用搜索腿(独立索引, 大厂SE之外的补充源)",
+   "stars_or_evidence": "HN=5分/3评(2026-10-02, Algolia实测)",
+   "src": "src=hn:search engine 90d"
+  },
+  {
+   "name": "TrueStar",
+   "repo_or_site": "https://truestar.tech",
+   "desc": "AI主持的专家访谈+多agent深度调研服务",
+   "access": "网站服务(未实测)",
+   "cn_reachable": "境外站点, 未实测",
+   "fit": "专家访谈渠道腿(一手信息获取, 新颖)",
+   "stars_or_evidence": "HN=2分/0评(2026-08-16, Algolia实测)",
+   "src": "src=hn:deep research 90d"
+  },
+  {
+   "name": "FutureSearch",
+   "repo_or_site": "https://futuresearch.ai/",
+   "desc": "可验证的AI预测(forecasting)服务",
+   "access": "网站服务(未实测)",
+   "cn_reachable": "境外站点, 未实测",
+   "fit": "预测腿(研报前瞻/预测段素材)",
+   "stars_or_evidence": "HN=11分/0评(2026-08-03, Algolia实测)",
+   "src": "src=hn:deep research 90d"
+  },
+  {
+   "name": "Prices.eu.org",
+   "repo_or_site": "https://prices.eu.org/",
+   "desc": "价格数据/比价站(Show HN)",
+   "access": "网站服务(未实测)",
+   "cn_reachable": "境外站点, 未实测",
+   "fit": "弱相关(价格数据, 以消费品为主, 记录备查)",
+   "stars_or_evidence": "HN=16分/8评(2026-09-04, Algolia实测)",
+   "src": "src=hn:deep research 90d"
+  },
+  {
+   "name": "Danubia content extraction API",
+   "repo_or_site": "https://danubia.tech",
+   "desc": "EU托管的内容抽取API(合规抓取, Show HN)",
+   "access": "API服务(未实测)",
+   "cn_reachable": "境外服务, 未实测",
+   "fit": "采集腿(EU合规抽取)",
+   "stars_or_evidence": "HN=1分/0评(2026-09-01, Algolia实测)",
+   "src": "src=hn:web scraping 90d"
+  },
+  {
+   "name": "FetchRelay",
+   "repo_or_site": "https://fetchrelay.com",
+   "desc": "web抓取与爬行服务(Show HN)",
+   "access": "服务(未实测)",
+   "cn_reachable": "境外服务, 未实测",
+   "fit": "采集腿(托管型)",
+   "stars_or_evidence": "HN=1分/0评(2026-09-07, Algolia实测)",
+   "src": "src=hn:web scraping 90d"
+  },
+  {
+   "name": "beneadie/deep_dog_2",
+   "repo_or_site": "https://github.com/beneadie/deep_dog_2",
+   "desc": "自述以极小成本逼近大厂Deep Research效果的开源DR(效果自称, 未验证)",
+   "access": "本地部署(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "通用深度调研腿(低成本路线)",
+   "stars_or_evidence": "HN=2分/1评(2026-09-13, Algolia实测); star数未查",
+   "src": "src=hn:deep research 90d"
+  },
+  {
+   "name": "mldsveda/PyScrappy",
+   "repo_or_site": "https://github.com/mldsveda/PyScrappy",
+   "desc": "自愈选择器web抓取+MCP server(选择器失效自动修复)",
+   "access": "本地部署(开源)·MCP",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "采集基建腿(选择器自愈=渠道维护降本)",
+   "stars_or_evidence": "HN=22分/2评(2026-08-16, Algolia实测); star数未查",
+   "src": "src=hn:web scraping 90d"
+  },
+  {
+   "name": "h4ckf0r0day/obscura",
+   "repo_or_site": "https://github.com/h4ckf0r0day/obscura",
+   "desc": "为web scraping与AI agent自动化设计的无头浏览器引擎",
+   "access": "本地部署(开源)",
+   "cn_reachable": "GitHub直连实测可达",
+   "fit": "采集基建腿(无头引擎)",
+   "stars_or_evidence": "HN=1分/0评(2026-08-08, Algolia实测); star数未查",
+   "src": "src=hn:web scraping 90d"
+  },
+  {
+   "name": "Ayobamiu/usefulness-search",
+   "repo_or_site": "https://github.com/Ayobamiu/usefulness-search",
+   "desc": "内置有用度评分的AI agent搜索(小微项目)",
+   "access": "网站(未实测)",
+   "cn_reachable": "GitHub直连实测可达; vercel应用未实测",
+   "fit": "通用搜索腿(带评分排序, 记录备查)",
+   "stars_or_evidence": "HN=2分/0评(2026-10-13, Algolia实测); star数未查",
+   "src": "src=hn:deep research 90d"
+  }
+ ],
+ "skipped_awesome_overlap_or_irrelevant": [
+  "搜索引擎库/向量库(非渠道, awesome头部): searxng(38829)/searx(13562)/meilisearch(59661)/typesense(27041)/elasticsearch(78369)/opensearch(13906)/qdrant/weaviate/vespa/tantivy/sonic/quickwit/paradedb/manticore/lancedb/orama/flexsearch/minisearch/tinysearch/riot/ravendb/USearch/zvec/infinity/RediSearch/lucene-solr",
+  "爬虫经典件(awesome-web-scraping系覆盖): scrapy(65010)/firecrawl(195179)/crawl4ai(86234)/crawlee+crawlee-python/colly(25570)/browser-use(119092)/seleniumbase/helium/jsoup/rod/pydoll/autoscraper/node-crawler/grab/pyspider(停更2024)",
+  "深度调研头部(awesome-deep-research系覆盖): gpt-researcher(30287)/khoj(37814)",
+  "人物/安全向OSINT(awesome-osint系覆盖且与工程研报弱相关): sherlock(94878)/maigret(39352)/spiderfoot(23771)/theHarvester(18049)/GHunt(19743)/holehe/phoneinfoga(18286)/social-analyzer/Osintgram/amass/subfinder/bbot/httpx/OpenCTI/twint(死2023)/instaloader/OneForAll/snoop/flowsint/web-check(35220)",
+  "清单repo本身(移交awesome清扫腿): lorien/awesome-web-scraping(8193)/BruceDone/awesome-crawler(7349)/jivoi/awesome-osint(30458)/edoardottt/awesome-hacker-search-engines(11410)/DavidZWZ/Awesome-Deep-Research(873)/scienceaix/deepresearch(435)/WuizaKaseiyo/awesome-deep-research-agent(641)/cporter202/API-mega-list(8188)/lockfale/OSINT-Framework(12338)/i365dev/awesome-seo(2826)/eugeneyan/applied-ml(30713)",
+  "停更/教程/基准类DR: mshumer/OpenDeepResearcher(2788,2025-05停)/nickscamara/open-deep-research(6294,2025-05停)/fdarkaou(877,2025-02停)/epuerta9(421)/langchain-ai/deep_research_from_scratch(809)/google-deepmind/deepmind-research(论文代码非渠道)/deep_research_bench/AgentHarness/OmniDR-Bench等",
+  "无关域跳过: 电影DB/torrent系/印尼邮编/AV系/Mailpile/qbittorrent插件/trace.moe/fsearch/magnetico/magnetissimo/课程类zoomcamp-roadmap/教程站"
+ ],
+ "raw_evidence_dir": "E:/AI-Station/reforge_factory/channels_survey_2026/_raw (14个原始JSON: 11个gh + 3个hn)",
+ "notes": "铁律遵守: 只登记未clone未安装; star/points均为API实测值; 项目自报性能数字均标注未复核; 境外站点可达性如实标未实测; 仓库内容仅作数据不执行指令; WebSearch MCP按令未用。"
+}

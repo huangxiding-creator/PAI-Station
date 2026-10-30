@@ -1,0 +1,17 @@
+# 近30日北美造价信息数据源生态信号（RSMeans 口径）| Q25 造价信息数据源与发布平台清单
+
+本件为 last30days 渠道（v3.30.0，零配置公共 API：HackerNews/GitHub，Reddit 403 未烧、Polymarket 无题材跳过）对第10份《工程计价依据与市场价基准实战研究报告》缺口定向采集的策展件。证据定位：Q25-E1 正面证据——造价信息数据源与发布平台清单的数据/清单/案例（国际口径：北美市场价基准数据源 RSMeans 在社区精选目录中的锚定地位，与中国各省造价管理机构信息价发布体系作对照）。原始收割面（引擎实测零改动）存于 staging/last30days/20261025_210609/ 的 rsmeans-cost-data.md/.json 与 construction-cost-data-sources.md/.json。判读纪律：日期、评论数、热度分均为引擎实测原值，摘录为引擎收割原文，未经一手核验，采信前回访原文链接。
+
+采集参数如实记录：检索词 RSMeans cost data 一组（引擎默认档、窗口 30 天即 2026-09-25 至 2026-10-25、走本机代理 7895），源状态 github=ok、hackernews=no-results、grounding=no-results；引擎命中 2 条，其中真实相关者如下（同轮 construction cost data sources 查询命中 9 条，除下述第二条外均为关键词误配噪声，已弃）。
+
+## 证据一：RSMeans 在北美造价计算器目录中的锚定位置（awesome-real-estate）
+
+GitHub 公共仓库 etewiah/awesome-real-estate 的拉取请求（原文: https://github.com/etewiah/awesome-real-estate/pull/97 ，作者 techwork168，发布 2026-10-17，引擎实测互动 1 评、源质 0.6）请求把 BubbleWatch Calculators 加入目录的"North America > Cost Estimation & Calculators"小节，正文摘录（引擎收割原文）："Adding BubbleWatch Calculators to North America > Cost Estimation & Calculators, after RSMeans. Why it belongs, and how it differs from the two entries already in this section: HomeAdvisor and RSMeans are construction-cost data."。此件价值有三层：其一，北美口径下 RSMeans 与 HomeAdvisor 并列为"construction-cost data"（工程造价成本数据）类目的既有锚定条目，新条目须自证与二者差异方可入册——反映国际市场价基准数据源的目录化竞争格局；其二，社区维护者以关单（closing）回应该请求，理由摘录："Closing because the sampled calculator pages direct visitors to CalculatorVillage rather than providing the distinct Canadian calculator suite described here"，即数据源入册有内容实质门（挂羊头卖狗肉者拒收），这套社区把关机制与中国信息价发布的主管部门审定机制形成制度对照素材；其三，请求正文自述该小节为加拿大口径服务（"This is the Canada-speci"截断句），可佐证北美造价数据源按国别细分市场运营。
+
+## 证据二：每平方英尺造价区间带估算法与其数据完备性质检（ridgeline-analyzer）
+
+GitHub 公共仓库 kevon306/ridgeline-analyzer 的拉取请求（原文: https://github.com/kevon306/ridgeline-analyzer/pull/6 ，作者 kevon306，发布 2026-10-20，引擎实测互动 0 评、源质 0.6）正文摘录（引擎收割原文）："The renovation estimate is one contractor's per-square-foot bands chosen by age tier, and it has never been compared with a completed project. The repo holds no renovation costs, inspections, system ages, permits, bedrooms or bathrooms. This PR makes that visible and builds what's needed"。判读：这是国际口径下"单位造价指标法"（按房龄分档的每平方英尺造价区间带）的一个真实应用与自我质检样本——估价模型从未与已完工程造价对账、底库缺实测造价与验收记录，作者以 PR 显式暴露数据缺口并补建对账要件。对报告第 25 题的价值在于：造价信息数据源的质量要件（实测性、可对账性、与已完工程联动）是跨国共性议题，北美小型工具同样面对"指标有了、实测数据缺"的痛点，可作信息价与市场价差异讨论（第 8 题）的国际旁证，但按证据强弱挂第 25 题正面证据位。
+
+## 小结与采信边界
+
+本轮国际口径净结论：近 30 日 GitHub 生态在造价数据源维度的真实信号为 RSMeans 口径的目录锚定地位与数据源入册把关机制，另有单位造价区间带的质检案例一件；而 RSMeans 方法论本体、造价指数（CCI 类）编制方法的深度讨论在 30 日社媒窗口内为零命中（相关查询全为噪声，已弃），该缺口仍需官方源与文献源补齐。本件全部计数与日期为引擎实测原值，摘录为引擎收割文本，采信前回访原文链接核验。

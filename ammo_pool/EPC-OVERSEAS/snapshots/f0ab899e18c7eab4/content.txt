@@ -1,0 +1,12 @@
+# webregistry run log — mwmbl
+
+- registry_id: mwmbl__github_com | name: mwmbl | url: https://github.com/mwmbl/mwmbl | cat: metasearch | tier: 1 (免键深验席)
+- campaign: EPC-OVERSEAS S1 网页搜索项目注册表腿
+- query: `china power epc overseas`
+- endpoint: https://mwmbl.org/api/v1/search?s=china%20power%20epc%20overseas (JSON API, 本机直连, 无代理)
+- transport: curl 直连 HTTP 200, 997 bytes (raw_china_power_epc_overseas.json 留证)
+- 结果: 2 条
+  1. Sinohydro | https://en.wikipedia.org/wiki/Sinohydro — 69 overseas offices / 53 countries / 261 projects in 57 nations (wiki 摘要, 直连 000 未能取全文)
+  2. China Power EPC Mercado | https://www.mordorintelligence.com/es/industry-reports/china-power-epc-market → 英文版已取全文
+- 全文产出: articles/mordor_china_power_epc_market.md (China Power EPC Market, CAGR 4%, 主要玩家 CEEC/大唐/山东能源等, 4043字)
+- verdict: 实跑成功, 小索引对窄题命中有限但含行业研报直链

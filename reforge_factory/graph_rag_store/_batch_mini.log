@@ -1,0 +1,434 @@
+WARNING: pypinyin is not installed. Chinese pinyin sorting will use simple string sorting.
+INFO: [] Loaded graph from E:\AI-Station\reforge_factory\graph_rag_store\EPC-TOP50\graph_chunk_entity_relation.graphml with 244 nodes, 196 edges
+INFO: Role LLM Configuration (initialized):
+INFO:  - extract: None/None, host=None, max_async=4, timeout=240
+INFO:  - keyword: None/None, host=None, max_async=4, timeout=240
+INFO:  - query: None/None, host=None, max_async=4, timeout=240
+INFO:  - vlm: None/None, host=None, max_async=4, timeout=240
+INFO: [] Process 25488 KV load full_docs with 3 records
+INFO: [] Process 25488 KV load text_chunks with 12 records
+INFO: [] Process 25488 KV load full_entities with 2 records
+INFO: [] Process 25488 KV load full_relations with 2 records
+INFO: [] Process 25488 KV load entity_chunks with 244 records
+INFO: [] Process 25488 KV load relation_chunks with 196 records
+INFO:nano-vectordb:Load (244, 512) data
+INFO:nano-vectordb:Init {'embedding_dim': 512, 'metric': 'cosine', 'storage_file': 'E:\\AI-Station\\reforge_factory\\graph_rag_store\\EPC-TOP50\\vdb_entities.json'} 244 data
+INFO:nano-vectordb:Load (196, 512) data
+INFO:nano-vectordb:Init {'embedding_dim': 512, 'metric': 'cosine', 'storage_file': 'E:\\AI-Station\\reforge_factory\\graph_rag_store\\EPC-TOP50\\vdb_relationships.json'} 196 data
+INFO:nano-vectordb:Load (12, 512) data
+INFO:nano-vectordb:Init {'embedding_dim': 512, 'metric': 'cosine', 'storage_file': 'E:\\AI-Station\\reforge_factory\\graph_rag_store\\EPC-TOP50\\vdb_chunks.json'} 12 data
+INFO: [] Process 25488 KV load llm_response_cache with 23 records
+INFO: [] Process 25488 doc status load doc_status with 3 records
+INFO: Reset 1 interrupted document(s) from PARSING/ANALYZING/PROCESSING to PENDING status
+INFO: Processing 3 document(s)
+INFO: Parsing (native): doc-cd98fa71ea0655e21fa0a2276d13a0d9
+INFO: Parsing (native): doc-08a180bdb871ce3b27c0714805ca4c59
+INFO: Parsing (native): doc-b193cc18a848e11bb1955a082207078b
+INFO: Extracting stage 1/3: unknown_source
+INFO: Processing d-id: doc-cd98fa71ea0655e21fa0a2276d13a0d9
+INFO: [resume] doc-cd98fa71ea0655e21fa0a2276d13a0d9: purging 6 chunk(s) and associated KG entries from a previous run before rebuilding under current process_options
+INFO: Extracting stage 2/3: ent_sdyuan.txt
+INFO: Processing d-id: doc-08a180bdb871ce3b27c0714805ca4c59
+INFO: Extracting stage 3/3: ent_shizheng.txt
+INFO: Processing d-id: doc-b193cc18a848e11bb1955a082207078b
+WARNING: [purge] doc-cd98fa71ea0655e21fa0a2276d13a0d9: recovery anchor row(s) missing (full_entities, full_relations), but kg_write_state proves the document's own merge never started; cleaning up staged chunks only
+INFO: Chunking F(legacy): size=1200, split_only=False, overlap=100, doc_id: doc-08a180bdb871ce3b27c0714805ca4c59
+INFO: Chunking F(legacy): size=1200, split_only=False, overlap=100, doc_id: doc-b193cc18a848e11bb1955a082207078b
+INFO: [purge] doc-cd98fa71ea0655e21fa0a2276d13a0d9: 0 entity(ies) to rebuild, 0 to delete
+INFO: [purge] doc-cd98fa71ea0655e21fa0a2276d13a0d9: 0 relation(s) to rebuild, 0 to delete
+INFO: [] chunks flush: embedding 4 vectors in 1 batch(es) (batch_num=10)
+INFO: Embedding func: 8 new workers initialized (Timeouts: Func: 30s, Worker: 60s, Health Check: 75s)
+INFO: extract LLM func: 4 new workers initialized (Timeouts: Func: 240s, Worker: 480s, Health Check: 495s)
+INFO: [] Writing graph with 244 nodes, 196 edges
+INFO: In memory DB persist to disk
+INFO: Chunk 1 of 2 extracted 25 Ent + 22 Rel doc-08a180bdb871ce3b27c0714805ca4c59-chunk-000
+WARNING: doc-b193cc18a848e11bb1955a082207078b-chunk-000: LLM output format error; found 4/5 fields on RELATION `黄细丁`~`Wrote, Authored`
+WARNING: doc-b193cc18a848e11bb1955a082207078b-chunk-000: LLM output format error; found 4/5 fields on RELATION `2025年6月`~`Published, Released`
+WARNING: doc-b193cc18a848e11bb1955a082207078b-chunk-000: LLM output format error; found 4/5 fields on RELATION `前言`~`Part of, Included in`
+WARNING: doc-b193cc18a848e11bb1955a082207078b-chunk-000: LLM output format error; found 4/5 fields on RELATION `全球经济一体化进程`~`Accelerates, Advances`
+WARNING: doc-b193cc18a848e11bb1955a082207078b-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国“一带一路”倡议`~`Advances, Promotes`
+WARNING: doc-b193cc18a848e11bb1955a082207078b-chunk-000: LLM output format error; found 4/5 fields on RELATION `工程建设领域`~`Increases, Intensifies`
+WARNING: doc-b193cc18a848e11bb1955a082207078b-chunk-000: LLM output format error; found 4/5 fields on RELATION `工程总承包（EPC）模式`~`Adopts, Implements`
+INFO: Chunk 1 of 2 extracted 28 Ent + 16 Rel doc-b193cc18a848e11bb1955a082207078b-chunk-000
+INFO: [] chunks flush: applied 0 deferred deletes (6 queued, 0 awaiting save)
+INFO: [purge] doc-cd98fa71ea0655e21fa0a2276d13a0d9: deleted 6 chunk(s) from storage
+INFO: Chunking F(legacy): size=1200, split_only=False, overlap=100, doc_id: doc-cd98fa71ea0655e21fa0a2276d13a0d9
+INFO:  == LLM cache == saving: default:extract:733c8440aefaf008f3d22d65b60a5b38
+INFO: Chunk 2 of 2 extracted 3 Ent + 2 Rel doc-08a180bdb871ce3b27c0714805ca4c59-chunk-001
+INFO: Merging stage 2/3: ent_sdyuan.txt
+INFO: Phase 0: Writing recovery indexes for doc-08a180bdb871ce3b27c0714805ca4c59: 28 candidate entities, 24 candidate relations
+INFO: Phase 1: Processing 28 entities from doc-08a180bdb871ce3b27c0714805ca4c59 (async: 8)
+INFO: Merged: `全球能源转型` | 1+0 (dd 1)
+INFO: Merged: `一带一路倡议` | 2+0 (dd 1)
+INFO: Merged: `工程总承包模式` | 2+0 (dd 1)
+INFO: Merged: `电力工程建设领域` | 1+0 (dd 1)
+INFO: Merged: `山东电力工程咨询院有限公司` | 5+0 (dd 1)
+INFO: Merged: `EPC总承包业务` | 4+0 (dd 1)
+INFO: Merged: `国家智库级别` | 1+0 (dd 1)
+INFO: Merged: `国务院总理` | 2+0 (dd 1)
+INFO: Merged: `宏观经济政策` | 1+0 (dd 1)
+INFO: Merged: `能源产业发展` | 1+0 (dd 1)
+INFO: Merged: `EPC业务管理` | 1+0 (dd 1)
+INFO: Merged: `技术创新` | 2+0 (dd 1)
+INFO: Merged: `风险控制` | 2+0 (dd 1)
+INFO: Merged: `供应链协同` | 1+0 (dd 1)
+INFO: Merged: `火电` | 2+0 (dd 1)
+INFO: Merged: `新能源` | 1+0 (dd 1)
+INFO: Merged: `光伏` | 2+0 (dd 1)
+INFO: Merged: `风电` | 2+0 (dd 1)
+INFO: Merged: `光热` | 2+0 (dd 1)
+INFO: Merged: `氢能` | 1+0 (dd 1)
+INFO: Merged: `电网` | 1+0 (dd 1)
+INFO: Merged: `市场份额` | 1+0 (dd 1)
+INFO: Merged: `技术水平` | 1+0 (dd 1)
+INFO: Merged: `管理效率` | 1+0 (dd 1)
+INFO: Merged: `国际化程度` | 1+0 (dd 1)
+INFO: Merged: `比较分析法` | 1+1
+INFO: Merged: `山东院` | 3+1
+INFO: Phase 2: Processing 24 relations from doc-08a180bdb871ce3b27c0714805ca4c59 (async: 8)
+INFO: Merged: `全球能源转型`~`电力工程建设领域` | 1+0 (dd 1)
+INFO: Merged: `EPC总承包业务`~`山东电力工程咨询院有限公司` | 2+0 (dd 1)
+INFO: Upserting relation VDB: `全球能源转型->电力工程建设领域`
+INFO: Upserting relation VDB: `EPC总承包业务->山东电力工程咨询院有限公司`
+INFO: Merged: `一带一路倡议`~`电力工程建设领域` | 1+0 (dd 1)
+INFO: Merged: `国家智库级别`~`山东电力工程咨询院有限公司` | 1+0 (dd 1)
+INFO: Upserting relation VDB: `一带一路倡议->电力工程建设领域`
+INFO: Upserting relation VDB: `国家智库级别->山东电力工程咨询院有限公司`
+INFO: Merged: `工程总承包模式`~`电力工程建设领域` | 1+0 (dd 1)
+INFO: Merged: `国务院总理`~`山东电力工程咨询院有限公司` | 2+0 (dd 1)
+INFO: Upserting relation VDB: `工程总承包模式->电力工程建设领域`
+INFO: Upserting relation VDB: `国务院总理->山东电力工程咨询院有限公司`
+INFO: Merged: `EPC业务管理`~`山东电力工程咨询院有限公司` | 1+0 (dd 1)
+INFO: Merged: `国务院总理`~`宏观经济政策` | 1+0 (dd 1)
+INFO: Merged: `新能源`~`火电` | 1+0 (dd 1)
+INFO: Upserting relation VDB: `EPC业务管理->山东电力工程咨询院有限公司`
+INFO: Upserting relation VDB: `国务院总理->宏观经济政策`
+INFO: Upserting relation VDB: `新能源->火电`
+INFO: Merged: `山东电力工程咨询院有限公司`~`技术创新` | 1+0 (dd 1)
+INFO: Merged: `国务院总理`~`能源产业发展` | 1+0 (dd 1)
+INFO: Merged: `光伏`~`新能源` | 1+0 (dd 1)
+INFO: Upserting relation VDB: `山东电力工程咨询院有限公司->技术创新`
+INFO: Upserting relation VDB: `国务院总理->能源产业发展`
+INFO: Upserting relation VDB: `光伏->新能源`
+INFO: Merged: `山东电力工程咨询院有限公司`~`风险控制` | 1+0 (dd 1)
+INFO: Merged: `新能源`~`风电` | 1+0 (dd 1)
+INFO: Upserting relation VDB: `山东电力工程咨询院有限公司->风险控制`
+INFO: Upserting relation VDB: `新能源->风电`
+INFO: Merged: `供应链协同`~`山东电力工程咨询院有限公司` | 1+0 (dd 1)
+INFO: Merged: `光热`~`新能源` | 1+0 (dd 1)
+INFO: Upserting relation VDB: `供应链协同->山东电力工程咨询院有限公司`
+INFO: Upserting relation VDB: `光热->新能源`
+INFO: Merged: `山东电力工程咨询院有限公司`~`市场份额` | 1+0 (dd 1)
+INFO: Merged: `新能源`~`氢能` | 1+0 (dd 1)
+INFO: Upserting relation VDB: `山东电力工程咨询院有限公司->市场份额`
+INFO: Upserting relation VDB: `山东院->比较分析法`
+INFO: Upserting relation VDB: `新能源->氢能`
+INFO: Merged: `山东电力工程咨询院有限公司`~`技术水平` | 1+0 (dd 1)
+INFO: Merged: `新能源`~`电网` | 1+0 (dd 1)
+INFO: Upserting relation VDB: `EPC业务->比较分析法`
+INFO: Upserting relation VDB: `山东电力工程咨询院有限公司->技术水平`
+INFO: Upserting relation VDB: `新能源->电网`
+INFO: Merged: `山东电力工程咨询院有限公司`~`管理效率` | 1+0 (dd 1)
+INFO: Upserting relation VDB: `山东电力工程咨询院有限公司->管理效率`
+INFO: Merged: `国际化程度`~`山东电力工程咨询院有限公司` | 1+0 (dd 1)
+INFO: Upserting relation VDB: `国际化程度->山东电力工程咨询院有限公司`
+INFO: Phase 2 relation processing completed for doc-08a180bdb871ce3b27c0714805ca4c59: edges=24 added_entities=0
+INFO: Completed merging: 28 entities, 0 extra entities, 24 relations
+INFO: [] entities flush: embedding 28 vectors in 3 batch(es) (batch_num=10)
+INFO: [] relationships flush: applied 0 deferred deletes (24 queued, 0 awaiting save)
+INFO: [] relationships flush: embedding 24 vectors in 3 batch(es) (batch_num=10)
+INFO: [] chunks flush: embedding 6 vectors in 1 batch(es) (batch_num=10)
+INFO: [] Writing graph with 245 nodes, 198 edges
+INFO: In memory DB persist to disk
+INFO: Completed processing file 2/3: ent_sdyuan.txt
+INFO:  == LLM cache == saving: default:extract:39a2ed11b6d97e9413f4bd1a1684c78d
+INFO: Chunk 2 of 2 extracted 6 Ent + 3 Rel doc-b193cc18a848e11bb1955a082207078b-chunk-001
+INFO: Merging stage 3/3: ent_shizheng.txt
+INFO: Phase 0: Writing recovery indexes for doc-b193cc18a848e11bb1955a082207078b: 32 candidate entities, 19 candidate relations
+INFO: Phase 1: Processing 32 entities from doc-b193cc18a848e11bb1955a082207078b (async: 8)
+INFO: Merged: `内部研究成果` | 1+0 (dd 1)
+INFO: Merged: `推荐序` | 1+0 (dd 1)
+INFO: Merged: `上海市政工程设计研究总院(集团)有限公司EPC总承包业务经营与管理研究报告` | 1+0 (dd 1)
+INFO: Merged: `建造大国` | 1+0 (dd 1)
+INFO: Merged: `建造强国` | 1+0 (dd 1)
+INFO: Merged: `工程总承包(EPC)模式` | 2+0 (dd 2)
+INFO: Merged: `工程设计咨询企业` | 1+0 (dd 1)
+INFO: Merged: `上海市政工程设计研究总院(集团)有限公司` | 3+0 (dd 1)
+INFO: Merged: `EPC总承包业务` | 4+0 (dd 1)
+INFO: Merged: `设计优势` | 1+0 (dd 1)
+INFO: Merged: `项目管理` | 1+0 (dd 1)
+INFO: Merged: `资源整合` | 1+0 (dd 1)
+INFO: Merged: `风险控制` | 2+0 (dd 1)
+INFO: Merged: `设计、采购、施工` | 1+0 (dd 1)
+INFO: Merged: `EPC模式` | 1+0 (dd 1)
+INFO: Merged: `研究报告` | 1+0 (dd 1)
+INFO: Merged: `BIM技术` | 2+0 (dd 1)
+INFO: Merged: `智慧建造` | 1+0 (dd 1)
+INFO: Merged: `绿色低碳` | 1+0 (dd 1)
+INFO: Merged: `EPC+模式创新` | 1+0 (dd 1)
+INFO: Merged: `国际化发展` | 2+0 (dd 1)
+INFO: Merged: `总包之声` | 1+0 (dd 1)
+INFO: Merged: `黄细丁` | 1+0 (dd 1)
+INFO: Merged: `2025年6月` | 1+0 (dd 1)
+INFO: Merged: `前言` | 1+0 (dd 1)
+INFO: Merged: `全球经济一体化进程` | 2+1 (dd 1)
+INFO: Merged: `中国一带一路倡议` | 1+0 (dd 1)
+INFO: Merged: `工程建设领域` | 2+0 (dd 2)
+INFO: Merged: `中国` | 1+1
+INFO: Merged: `一带一路倡议` | 2+1
+INFO: Merged: `工程总承包模式` | 2+1
+INFO: Phase 2: Processing 19 relations from doc-b193cc18a848e11bb1955a082207078b (async: 8)
+INFO: Merged: `上海市政工程设计研究总院(集团)有限公司EPC总承包业务经营与管理研究报告`~`内部研究成果` | 1+0 (dd 1)
+INFO: Merged: `EPC总承包业务`~`上海市政工程设计研究总院(集团)有限公司` | 1+0 (dd 1)
+INFO: Upserting relation VDB: `上海市政工程设计研究总院(集团)有限公司EPC总承包业务经营与管理研究报告->内部研究成果`
+INFO: Upserting relation VDB: `EPC总承包业务->上海市政工程设计研究总院(集团)有限公司`
+INFO: Merged: `上海市政工程设计研究总院(集团)有限公司`~`建造强国` | 1+0 (dd 1)
+INFO: Upserting relation VDB: `上海市政工程设计研究总院(集团)有限公司->建造强国`
+INFO: Merged: `上海市政工程设计研究总院(集团)有限公司`~`工程总承包(EPC)模式` | 1+0 (dd 1)
+INFO: Merged: `BIM技术`~`研究报告` | 1+0 (dd 1)
+INFO: Upserting relation VDB: `上海市政工程设计研究总院(集团)有限公司->工程总承包(EPC)模式`
+INFO: Upserting relation VDB: `BIM技术->研究报告`
+INFO: Merged: `上海市政工程设计研究总院(集团)有限公司`~`设计优势` | 1+0 (dd 1)
+INFO: Merged: `智慧建造`~`研究报告` | 1+0 (dd 1)
+INFO: Upserting relation VDB: `上海市政工程设计研究总院(集团)有限公司->设计优势`
+INFO: Upserting relation VDB: `智慧建造->研究报告`
+INFO: Merged: `上海市政工程设计研究总院(集团)有限公司`~`项目管理` | 1+0 (dd 1)
+INFO: Merged: `研究报告`~`绿色低碳` | 1+0 (dd 1)
+INFO: Upserting relation VDB: `上海市政工程设计研究总院(集团)有限公司->项目管理`
+INFO: Upserting relation VDB: `研究报告->绿色低碳`
+INFO: Merged: `上海市政工程设计研究总院(集团)有限公司`~`资源整合` | 1+0 (dd 1)
+INFO: Merged: `EPC+模式创新`~`研究报告` | 1+0 (dd 1)
+INFO: Merged: `总包之声`~`推荐序` | 1+0 (dd 1)
+INFO: Upserting relation VDB: `上海市政工程设计研究总院(集团)有限公司->资源整合`
+INFO: Upserting relation VDB: `EPC+模式创新->研究报告`
+INFO: Upserting relation VDB: `总包之声->推荐序`
+INFO: Upserting relation VDB: `一带一路倡议->全球经济一体化进程`
+INFO: Merged: `上海市政工程设计研究总院(集团)有限公司`~`风险控制` | 1+0 (dd 1)
+INFO: Merged: `国际化发展`~`研究报告` | 1+0 (dd 1)
+INFO: Upserting relation VDB: `上海市政工程设计研究总院(集团)有限公司->风险控制`
+INFO: Upserting relation VDB: `国际化发展->研究报告`
+INFO: Upserting relation VDB: `一带一路倡议->工程建设领域`
+INFO: Merged: `上海市政工程设计研究总院(集团)有限公司`~`设计、采购、施工` | 1+0 (dd 1)
+INFO: Upserting relation VDB: `上海市政工程设计研究总院(集团)有限公司->设计、采购、施工`
+INFO: Upserting relation VDB: `工程建设领域->工程总承包模式`
+INFO: Merged: `EPC模式`~`上海市政工程设计研究总院(集团)有限公司` | 1+0 (dd 1)
+INFO: Upserting relation VDB: `EPC模式->上海市政工程设计研究总院(集团)有限公司`
+INFO: Phase 2 relation processing completed for doc-b193cc18a848e11bb1955a082207078b: edges=19 added_entities=0
+INFO: Completed merging: 32 entities, 0 extra entities, 19 relations
+INFO: [] entities flush: embedding 32 vectors in 4 batch(es) (batch_num=10)
+INFO: [] relationships flush: applied 0 deferred deletes (19 queued, 0 awaiting save)
+INFO: [] relationships flush: embedding 19 vectors in 2 batch(es) (batch_num=10)
+INFO: [] Writing graph with 246 nodes, 201 edges
+INFO: In memory DB persist to disk
+INFO: Completed processing file 3/3: ent_shizheng.txt
+INFO:  == LLM cache == saving: default:extract:eadab36412707fa6d2c687ac06a99ff0
+INFO: Chunk 1 of 6 extracted 12 Ent + 13 Rel doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-001
+INFO:  == LLM cache == saving: default:extract:d4e07a649f7c9d9496f23c1d7a5c9f6b
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-000: LLM output format error; found 4/5 fields on RELATION `决策者`~`uses`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-000: LLM output format error; found 4/5 fields on RELATION `管理者`~`uses`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-000: LLM output format error; found 4/5 fields on RELATION `投资者`~`uses`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-000: LLM output format error; found 4/5 fields on RELATION `研究人员`~`uses`
+INFO: Chunk 2 of 6 extracted 34 Ent + 28 Rel doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-000
+INFO:  == LLM cache == saving: default:extract:4b3db144bcf14479ee4cc5bcc9a69623
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-002: LLM output format error; found 4/5 fields on RELATION `技术创新`~`竞争优势`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-002: LLM output format error; found 4/5 fields on RELATION `可持续发展`~`发展模式`
+INFO: Chunk 3 of 6 extracted 38 Ent + 25 Rel doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-002
+INFO:  == LLM cache == saving: default:extract:2ded6aebd501acb7c8d4e15b9a2943cf
+INFO: Chunk 4 of 6 extracted 18 Ent + 8 Rel doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-005
+INFO:  == LLM cache == saving: default:extract:f1d3a7ae16267750eb160de4b9ecfebc
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `成本控制`~`企业`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `技术创新`~`EPC模式`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `数字化转型`~`EPC行业`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `本土化`~`EPC承包商`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `可持续发展`~`EPC行业`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `EPC承包商`~`环境保护`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `EPC承包商`~`社会责任`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `国际合作`~`联合体投标`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `项目`~`竞争`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `优势互补`~`国际合作`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `风险共担`~`国际合作`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `EPC模式`~`数字化`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `EPC模式`~`智能化`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `EPC模式`~`绿色低碳`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `EPC项目`~`规划`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `EPC项目`~`设计`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `EPC项目`~`采购`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `EPC项目`~`施工`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `EPC项目`~`运营`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `EPC项目`~`管理`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `建筑信息模型（BIM）`~`数字化`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `地理信息系统（GIS）`~`数字化`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `物联网（IoT）`~`数字化`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `云计算`~`数字化`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `大数据`~`数字化`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `数字孪生（Digital Twin）`~`数字化`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `无人机`~`数字化`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `传感器`~`数字化`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `施工方案`~`数字化`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `人工智能（AI）`~`智能化`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `机器人技术`~`智能化`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `绿色低碳`~`EPC项目`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `EPC行业`~`碳达峰、碳中和`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `EPC项目`~`节能、节水、节材、节地`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `EPC项目`~`可再生能源`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `EPC项目`~`绿色施工工艺`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `EPC项目`~`建筑能效提升`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `EPC行业`~`碳捕集、利用与封存（CCUS）`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `EPC行业`~`氢能`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `新能源电站EPC项目`~`场址选择`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `新能源电站EPC项目`~`设备效率`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003: LLM output format error; found 4/5 fields on RELATION `新能源电站EPC项目`~`智能运维系统`
+INFO: Chunk 5 of 6 extracted 59 Ent + 0 Rel doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-003
+INFO:  == LLM cache == saving: default:extract:a2a1fd2475eaba53c9b5b4f0329a0b78
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `新能源电站EPC项目`~`Optimizes site selection`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `新能源电站EPC项目`~`Improves equipment efficiency`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `新能源电站EPC项目`~`Adopts intelligent operation and maintenance system`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `新能源电站EPC项目`~`Maximizes green electricity output`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `传统工业设施`~`Reduces carbon emission intensity`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `技术创新`~`Improves EPC project efficiency, quality, and safety`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `技术创新`~`Reduces EPC project cost and risk`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `技术创新`~`Promotes transformation of EPC business model`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `技术创新`~`Creates new value growth points for enterprises`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `全球供应链重构`~`Increases vulnerability and uncertainty of global supply chain system`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `地缘政治冲突`~`Increases vulnerability and uncertainty of global supply chain system`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `贸易保护主义`~`Increases vulnerability and uncertainty of global supply chain system`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `全球疫情冲击`~`Increases vulnerability and uncertainty of global supply chain system`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `极端天气事件`~`Increases vulnerability and uncertainty of global supply chain system`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `全球供应链体系`~`Affects EPC project execution`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `关键设备和材料`~`Increases risk of supply delay or interruption`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `采购成本`~`Significantly increases`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `物流运输效率`~`Decreases and increases uncertainty`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `供应链透明度`~`Decreases`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `供应链韧性`~`Decreases`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `EPC承包商`~`Needs to take proactive measures`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `多元化和本土化采购策略`~`Implement`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `全球采购渠道`~`Expand`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `本土化采购力度`~`Increase`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `本地供应商`~`Cultivate`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `地缘政治风险`~`Reduce`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `运输成本`~`Reduce`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `项目本地化水平`~`Improve`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `可持续性`~`Enhance`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `供应链风险评估和预警机制`~`Establish and improve`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `国际政治经济形势`~`Track`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `主要供应国政策变化`~`Track`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `大宗商品价格走势`~`Track`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `物流运输状况`~`Track`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `潜在风险`~`Identify and judge in advance`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `应急预案`~`Develop`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `库存水平`~`Optimize`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `战略储备`~`Increase`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `寄售`~`Optimize`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `供应商管理库存`~`Optimize`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `物流服务商`~`Strengthen cooperation with`
+WARNING: doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004: LLM output format error; found 4/5 fields on RELATION `可靠的运输`~`Choose reliable`
+INFO: Chunk 6 of 6 extracted 66 Ent + 2 Rel doc-cd98fa71ea0655e21fa0a2276d13a0d9-chunk-004
+INFO: Merging stage 1/3: unknown_source
+INFO: Phase 0: Writing recovery indexes for doc-cd98fa71ea0655e21fa0a2276d13a0d9: 214 candidate entities, 76 candidate relations
+INFO: Phase 1: Processing 204 entities from doc-cd98fa71ea0655e21fa0a2276d13a0d9 (async: 8)
+INFO: Merged: `EPC` | 1+2
+INFO: Merged: `一带一路倡议` | 3+1
+INFO: Merged: `新能源` | 1+2
+INFO: Merged: `核心竞争力` | 1+1
+INFO: Merged: `中国` | 2+0 (dd 1)
+INFO: Merged: `中国一带一路倡议` | 1+1
+INFO: Merged: `火电` | 2+1
+INFO: Merged: `输变电` | 1+1
+INFO: Merged: `技术创新` | 2+2
+INFO: Merged: `数字化转型` | 1+2
+INFO: Merged: `竞争优势` | 1+1
+INFO: Merged: `EPC模式` | 1+1
+INFO: Merged: `绿色低碳` | 1+1
+INFO: Merged: `氢能` | 1+2
+INFO: Merged: `潜在风险` | 1+1
+INFO: Phase 2: Processing 76 relations from doc-cd98fa71ea0655e21fa0a2276d13a0d9 (async: 8)
+INFO: Upserting relation VDB: `EPC->中国电建集团昆明勘测设计研究院有限公司`
+INFO: Upserting relation VDB: `一带一路倡议->中国电建集团昆明勘测设计研究院有限公司`
+INFO: Upserting relation VDB: `中国电建集团昆明勘测设计研究院有限公司->水电`
+INFO: Upserting relation VDB: `中国电建集团昆明勘测设计研究院有限公司->新能源`
+INFO: Upserting relation VDB: `中国电建集团昆明勘测设计研究院有限公司->基础设施建设`
+INFO: Upserting relation VDB: `中国电建集团昆明勘测设计研究院有限公司->核心竞争力`
+INFO: Upserting relation VDB: `中国电建集团昆明勘测设计研究院有限公司->风险管控`
+INFO: Upserting relation VDB: `中国电建集团昆明勘测设计研究院有限公司->可持续发展`
+INFO: Upserting relation VDB: `中国电建集团昆明勘测设计研究院有限公司->多维度分析方法`
+INFO: Upserting relation VDB: `中国电建集团昆明勘测设计研究院有限公司->国内外EPC市场环境`
+INFO: Upserting relation VDB: `中国电建集团昆明勘测设计研究院有限公司->前沿理论`
+INFO: Upserting relation VDB: `中国电建集团昆明勘测设计研究院有限公司->成功的关键要素`
+INFO: Upserting relation VDB: `中国电建集团昆明勘测设计研究院有限公司->深层挑战`
+INFO: Upserting relation VDB: `中国电建集团昆明勘测设计研究院有限公司->优化与提升策略`
+INFO: Upserting relation VDB: `中国电建集团昆明勘测设计研究院有限公司->行业脉搏`
+INFO: Upserting relation VDB: `中国电建集团昆明勘测设计研究院有限公司->标杆企业智慧`
+INFO: Upserting relation VDB: `中国电建集团昆明勘测设计研究院有限公司->跨越式发展`
+INFO: Upserting relation VDB: `中国电建集团昆明勘测设计研究院有限公司->经营管理体系`
+INFO: Upserting relation VDB: `中国电建集团昆明勘测设计研究院有限公司->高强度竞争`
+INFO: Upserting relation VDB: `中国电建集团昆明勘测设计研究院有限公司->供应链管理能力`
+INFO: Upserting relation VDB: `中国电建集团昆明勘测设计研究院有限公司->国际化运营能力`
+INFO: Upserting relation VDB: `中国电建集团昆明勘测设计研究院有限公司->系统性研究`
+INFO: Upserting relation VDB: `EPC->昆明院`
+INFO: Upserting relation VDB: `中国电建集团昆明勘测设计研究院有限公司->内在逻辑`
+INFO: Upserting relation VDB: `中国->昆明院`
+INFO: Upserting relation VDB: `EPC->全球`
+INFO: Upserting relation VDB: `中国电建集团昆明勘测设计研究院有限公司->关键驱动因素`
+INFO: Upserting relation VDB: `EPC->中国`
+INFO: Upserting relation VDB: `全球->工程承包`
+INFO: Upserting relation VDB: `中国电建集团昆明勘测设计研究院有限公司->先进经验`
+INFO: Upserting relation VDB: `EPC->国际工程建设领域`
+INFO: Upserting relation VDB: `中国->工程承包`
+INFO: Upserting relation VDB: `中国电建集团昆明勘测设计研究院有限公司->独到之处`
+INFO: Upserting relation VDB: `EPC->基础设施`
+INFO: Upserting relation VDB: `中国电建集团昆明勘测设计研究院有限公司->软实力建设`
+INFO: Upserting relation VDB: `EPC->能源转型`
+INFO: Upserting relation VDB: `亚洲市场->全球EPC市场`
+INFO: Upserting relation VDB: `中国电建集团昆明勘测设计研究院有限公司->立体、鲜活的昆明院EPC业务全景图`
+INFO: Upserting relation VDB: `EPC->亚太地区`
+INFO: Upserting relation VDB: `亚洲市场->新能源`
+INFO: Upserting relation VDB: `中东地区->可再生能源`
+INFO: Upserting relation VDB: `EPC->中东及非洲地区`
+INFO: Upserting relation VDB: `亚洲市场->新型基础设施`
+INFO: Upserting relation VDB: `中国一带一路倡议->非洲大陆`
+INFO: Upserting relation VDB: `中东地区->非石油经济`
+INFO: Upserting relation VDB: `EPC->北美及欧洲市场`
+INFO: Upserting relation VDB: `亚洲市场->环境工程`
+INFO: Upserting relation VDB: `发达国家市场->项目可持续性`
+INFO: Upserting relation VDB: `EPC承包商->技术创新能力`
+INFO: Upserting relation VDB: `EPC->拉丁美洲市场`
+INFO: Upserting relation VDB: `中国电建->水电`
+INFO: Upserting relation VDB: `中国能建->火电`
+INFO: Upserting relation VDB: `发达国家市场->项目韧性`
+INFO: Upserting relation VDB: `EPC承包商->综合解决方案能力`
+INFO: Upserting relation VDB: `中国交建->交通`
+INFO: Upserting relation VDB: `中国建筑->建筑`
+INFO: Upserting relation VDB: `中国电建->新能源领域`
+INFO: Upserting relation VDB: `中国能建->水环境治理`
+INFO: Upserting relation VDB: `中国建筑->智慧城市`
+INFO: Upserting relation VDB: `发达国家市场->项目智能化水平`
+INFO: Upserting relation VDB: `专业化公司->石油化工领域`
+INFO: Upserting relation VDB: `大型项目->市场集中度`
+INFO: Upserting relation VDB: `本土化->海外市场`
+INFO: Upserting relation VDB: `中低端市场->价格竞争`
+INFO: Upserting relation VDB: `CCUS->EPC industry`
+INFO: Upserting relation VDB: `专业化公司->高端装备制造领域`
+INFO: Upserting relation VDB: `库存管理->数字化技术`
+INFO: Upserting relation VDB: `智慧供应链管理平台->需求预测`
+INFO: Upserting relation VDB: `EPC industry->氢能`
+INFO: Upserting relation VDB: `专业化公司->环保技术领域`
+INFO: Upserting relation VDB: `数字化技术->物流方案`
+INFO: Upserting relation VDB: `EPC承包商->全球资源整合能力`
+INFO: Upserting relation VDB: `供应链风险->合同条款`
+INFO: Upserting relation VDB: `智慧供应链管理平台->采购执行`
+INFO: Upserting relation VDB: `EPC承包商->风险管理能力`
+INFO: Upserting relation VDB: `智慧供应链管理平台->物流跟踪`
+INFO: Phase 2 relation processing completed for doc-cd98fa71ea0655e21fa0a2276d13a0d9: edges=76 added_entities=10
+INFO: Completed merging: 204 entities, 10 extra entities, 76 relations
+INFO: [] entities flush: embedding 214 vectors in 22 batch(es) (batch_num=10)
+INFO: [] relationships flush: applied 0 deferred deletes (76 queued, 0 awaiting save)
+INFO: [] relationships flush: embedding 76 vectors in 8 batch(es) (batch_num=10)
+INFO: [] Writing graph with 445 nodes, 277 edges
+INFO: In memory DB persist to disk
+INFO: Completed processing file 1/3: unknown_source
+INFO: Enqueued document processing pipeline stopped
+[graph_rag] 战役=EPC-TOP50 | valid 件 2 | cap=1200字/件 | 工作目录=E:\AI-Station\reforge_factory\graph_rag_store\EPC-TOP50
+[graph_rag] 批量入队 2 件 (track=enqueue_20261028, 0.2万字符) → 处理…
+  [01/2] ent_sdyuan.txt
+  [02/2] ent_shizheng.txt
+[graph_rag] 建图完成: {'entities': 445, 'relations': 277, 'entity_types': {'concept': 118, 'organization': 85, 'method': 71, 'event': 40, 'content': 25, 'artifact': 24, 'data': 23, 'location': 12}} (LLM调用8/败0, 171s) → E:\AI-Station\reforge_factory\completeness\graph_rag_EPC-TOP50.json

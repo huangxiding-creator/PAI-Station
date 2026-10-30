@@ -460,6 +460,7 @@ S-1 选题同法升级（TOPIC_FRAMEWORK.md：评论/留言/群聊/视频评论/
 
 1. **S4 上架**：report.json 添加 SKU → PDF≤20MB → 试读件 → 引擎上云 → 四腿验证 → 价档挂接
 2. **S5 文章×3**（=协议下限，上限自主按漏斗）：引流文 → 生成二维码 → 推送总包之声+总包说+工程行业大脑草稿箱 → autopub 自动发
+   - **海报位新规（1027 用户令，追加）**：文末二维码位→嵌 `<SKU>.png` 报告宣传海报（`report_platform/promo/poster_fetch.py` 拉引擎端点 `/api/report/<SKU>/poster`），发布前草稿箱编辑器上传素材替换二维码；第10份起全面生效。规则全文=`report_platform/promo/promo_poster_rule.md`
 3. **S6 视频×3**（=协议下限，上限自主按漏斗；H3 至少 1 支保留）：2 个 artmotion 竖屏卡 + 1 个 H3 生成 → gen_cover 世界级封面 → 总包说视频号发布
 4. **S7 通知+推送**：企微通知（含全部链接）→ PDF 文件推送企微 → RUN_LEDGER 回填 → git commit
 5. **S8 变现复盘**（v2 新增）：funnel_query 周报 → 选题评分权重与定价建议回写（decision_ledger 落账）→ 转化好的内容形态按漏斗数据加发

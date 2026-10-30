@@ -2,14 +2,14 @@
  "axis": "C",
  "sensor": "channel_matrix",
  "campaign": "EPC-TOP50",
- "channels_hit": 8,
- "channels_total": 35,
- "hit_ratio": 0.2286,
+ "channels_hit": 9,
+ "channels_total": 36,
+ "hit_ratio": 0.25,
  "hit_channels": [
   {
    "id": "sougo",
    "name": "搜狗微信",
-   "chars": 44242,
+   "chars": 98098,
    "engines": [
     "sogou_wechat"
    ]
@@ -25,7 +25,7 @@
   {
    "id": "corpus_stores",
    "name": "存量语料库",
-   "chars": 5058012,
+   "chars": 25290060,
    "engines": [
     "corpus_stores:ent50"
    ]
@@ -33,7 +33,7 @@
   {
    "id": "anysearch",
    "name": "AnySearch实时搜索(web+垂直域17域+并发批量+网页抽取, 匿名免鉴权)",
-   "chars": 431966,
+   "chars": 556654,
    "engines": [
     "anysearch_web"
    ]
@@ -41,7 +41,7 @@
   {
    "id": "openalex",
    "name": "OpenAlex 学术API(免key)",
-   "chars": 12474,
+   "chars": 19483,
    "engines": [
     "openalex",
     "openalex_api"
@@ -50,7 +50,7 @@
   {
    "id": "arxiv",
    "name": "arXiv 学术API(免key)",
-   "chars": 26578,
+   "chars": 43162,
    "engines": [
     "arxiv_api",
     "arxiv_py"
@@ -59,7 +59,7 @@
   {
    "id": "dangdang",
    "name": "当当图书(书目情报: 题录/简介/目录框架)",
-   "chars": 19223,
+   "chars": 21333,
    "engines": [
     "dangdang"
    ]
@@ -67,9 +67,17 @@
   {
    "id": "last30days",
    "name": "last30days 近30天多源社媒热度 (Reddit/HN/Polymarket/GitHub)",
-   "chars": 5085,
+   "chars": 10170,
    "engines": [
     "last30days"
+   ]
+  },
+  {
+   "id": "bdn",
+   "name": "百度网盘检索下载",
+   "chars": 23723,
+   "engines": [
+    "bdn"
    ]
   }
  ],
@@ -214,12 +222,13 @@
  ],
  "new_channel_queue": [],
  "miss_in_queue": [],
- "channel_invocations": 103,
+ "channel_invocations": 108,
  "invoked_channels": [
   "anysearch",
   "arxiv",
   "arxiv_api",
   "baidu_serp_api",
+  "bdn",
   "bing_news_rss",
   "browser360",
   "ccgp_gov_cn",
@@ -424,6 +433,13 @@
    "channels": [],
    "notes": [],
    "bases": []
+  },
+  "bdn": {
+   "channels": [
+    "bdn"
+   ],
+   "notes": [],
+   "bases": []
   }
  },
  "unmapped_engines": [
@@ -444,5 +460,5 @@
  "manifest": "E:\\AI-Station\\ResearchFactory-Eng\\channel_manifest.json",
  "fail_soft": false,
  "fail_soft_note": "",
- "generated_at": "2026-10-28T11:51:45+08:00"
+ "generated_at": "2026-10-30T11:49:57+08:00"
 }

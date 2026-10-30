@@ -17,7 +17,7 @@ def connect_and_token(wait_qr_seconds=0):
     m = re.search(r"token=(\d+)", page.url or "")
     if not m:
         page.get("https://mp.weixin.qq.com/")
-        for i in range(max(3, wait_qr_seconds // 3)):
+        for i in range(max(10, wait_qr_seconds // 3)):  # 边缘态慢加载窗≥30s(keepalive 15s 实证不够时兜)
             time.sleep(3)
             mm = re.search(r"token=(\d+)", page.url or "")
             if mm and "scanlogin" not in (page.url or ""): m = mm; break

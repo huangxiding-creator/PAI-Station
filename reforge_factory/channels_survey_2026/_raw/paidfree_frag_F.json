@@ -1,0 +1,65 @@
+[
+ {
+  "name": "EIA API v2(美能源署)",
+  "repo_or_site": "https://api.eia.gov/v2",
+  "replaces": "IHS/伍德麦肯兹(美国能源全库)",
+  "one_liner": "美能源署全库API: 原油/天然气/电力/煤炭供需与价格, 免费key——美国能源域免费全等",
+  "access": "免费API(需免费key)",
+  "fit": "能源数据(美)",
+  "existing": "factory_registry(eia在册)",
+  "overlap": "sweep_datasets已录(直连403无key实证)",
+  "prior": "直连403(无key实证; sweep_datasets 10-25)"
+ },
+ {
+  "name": "IEA免费数据产品",
+  "repo_or_site": "https://www.iea.org/data-and-statistics",
+  "replaces": "伍德麦肯兹(全球能源平衡)",
+  "one_liner": "国际能源署数据浏览器+免费数据产品(能源平衡表/电力/可再生)——全球能源域拼合主力(部分数据产品付费)",
+  "access": "免费页面(部分产品付费)",
+  "fit": "能源数据(全球)",
+  "existing": "none(new)",
+  "overlap": "sweep_datasets已录(直连403反爬实证)",
+  "prior": "直连403(反爬; sweep_datasets 10-25)"
+ },
+ {
+  "name": "OPEC月报(MOMR)",
+  "repo_or_site": "https://www.opec.org/",
+  "replaces": "IHS(石油月度供需情报)",
+  "one_liner": "OPEC月度石油市场报告免费PDF: 供需平衡/产量/库存/预测一手——石油月度域免费主力; 探针403反爬(官方免费站)",
+  "access": "免费页面(PDF直下)",
+  "fit": "石油月报",
+  "existing": "none(new)",
+  "probe_key": "opec"
+ },
+ {
+  "name": "世行商品价格粉皮书(Pink Sheet)",
+  "repo_or_site": "https://www.worldbank.org/en/research/commodity-markets",
+  "replaces": "Bloomberg/Refinitiv(大宗商品价格月频)",
+  "one_liner": "世行CMR: Pink Sheet 70+商品月度价格xlsx免费直下(1960-今)+价格预测——大宗价格月频域免费全等",
+  "access": "免费页面(xlsx直下)",
+  "fit": "大宗商品价格",
+  "existing": "none(new)",
+  "probe_key": "wb_cmr"
+ },
+ {
+  "name": "UN Comtrade(全球贸易)",
+  "repo_or_site": "https://comtradeapi.un.org/data/v1/get/",
+  "replaces": "Wind/Bloomberg(全球贸易流HS)",
+  "one_liner": "联合国商品贸易统计全库API: HS级双边贸易流(免费key, 匿名限额)——贸易域免费全等",
+  "access": "免费API(需免费key)",
+  "fit": "全球贸易",
+  "existing": "none(new)",
+  "overlap": "sweep_datasets已录(直连401无key实证)",
+  "prior": "直连401(无key实证; sweep_datasets 10-25)"
+ },
+ {
+  "name": "海关总署统计数据平台",
+  "repo_or_site": "http://stats.customs.gov.cn/",
+  "replaces": "Wind(中国海关月度域)",
+  "one_liner": "海关总署在线查询: 月度进出口按商品/国别/贸易方式免费查询——中国海关域免费全等; 探针412预条件反爬",
+  "access": "免费页面(在线查询)",
+  "fit": "中国进出口",
+  "existing": "none(new)",
+  "probe_key": "customs"
+ }
+]

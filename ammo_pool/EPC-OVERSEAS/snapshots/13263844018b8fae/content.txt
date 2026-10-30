@@ -1,0 +1,1065 @@
+PLOS One | https://doi.org/10.1371/journal.pone.0332379 September 25, 2025 1 / 24
+ 
+ OPEN ACCESS
+Citation: Shen Z, Ye Y, Siraj A, Li Z (2025) 
+Bargaining risk governance within the context 
+of China's belt and road initiative: Perspectives 
+derived from the Kindleberger Trap theory. 
+PLoS One 20(9): e0332379. https://doi.
+org/10.1371/journal.pone.0332379
+Editor: Han Lin, Nanjing Audit University, 
+CHINA
+Received: July 14, 2025
+Accepted: August 29, 2025
+Published: September 25, 2025
+Copyright: © 2025 Shen et al. This is an open 
+access article distributed under the terms of 
+the Creative Commons Attribution License, 
+which permits unrestricted use, distribution, 
+and reproduction in any medium, provided the 
+original author and source are credited.
+Data availability statement: All relevant data 
+are within the paper and a public repository 
+(Zenodo). 1.Shen Z, Ye Y, Ahsan S, Li Z. 
+MATLAB scripts for bargaining risk evolu-
+tionary simulations (NS5_1, NS5_2, NS5_3). 
+Zenodo; 2025. DOI: https://doi.org/10.5281/
+zenodo.16779795.
+RESEARCH ARTICLE
+Bargaining risk governance within the context 
+of China’s belt and road initiative: Perspectives 
+derived from the Kindleberger Trap theory
+Zhifeng Shen, Yongming Ye, Ahsan Siraj , Zhihui Li *
+School of management, Zhengzhou University, Zhengzhou, Henan, China 
+* Lizhihui@zzu.edu.cn
+Abstract 
+“Belt and Road” infrastructure projects frequently encounter bargaining risks. This 
+study aims to explore the causes of bargaining behavior and investigate how to con-
+trol bargaining behavior in projects. The study identifies the factors affecting bargain-
+ing risk and employs evolutionary game theory to examine the strategic decisions of 
+Chinese contractors and host governments. The results show that lower negotiation 
+and bargaining costs promote sustained cooperation in the negotiation process. 
+When the value of the contract is substantial and the contractor receives less benefit 
+from the contract than it claims from the host government, terminating the project is 
+good for the contractor.
+1. Introduction
+Mega projects are often empirically defined as a complex system with budgets over 
+US$1 billion. Mega projects are implemented according to design documents, unified 
+economic accounting, independent administrative organization and unified man-
+agement of the project, with large investment scale, high technical requirements, 
+compact and complex structure, difficult management, wide professional knowledge, 
+many participating units, complex construction environment [1,2]. The construction 
+of mega projects is carried out under the conditions of certain human, material and 
+financial resources to achieve the investment goal. Most of the “Belt and Road” infra-
+structure projects are mega projects.
+The infrastructure initiatives known as the “Belt and Road” have yielded signif -
+icant outcomes, including in the export of global public goods [ 3]. However, as of 
+2021, 234 undertakings have encountered the potential for bargaining risks. As a 
+result of the influence of certain foreign scholars and media discourse, the ruling 
+party of the host country, opposition parties, local government, opinion leaders, 
+and residents have initiated a bargaining approach, citing poor project returns, 
+loss of sovereignty, national debt crisis, state-owned enterprise monopolies, 
+
+PLOS One | https://doi.org/10.1371/journal.pone.0332379 September 25, 2025 2 / 24
+environmental concerns, lack of transparency, and subpar quality of Chinese 
+infrastructure construction [ 4,5]. Kindleberger, a top expert on international issues 
+and a major constructor of the Marshall Plan, pointed out that moments of the rise 
+of emerging powers and the decline of established powers often lead to a lack of 
+supply of global public goods. In 2017, the American political scientist Joseph Nye 
+formally put forward the Kindleberger Trap, arguing that changes in the power of 
+China and the United States and the continuation of the game have resulted in 
+the United States inability to assume responsibility for the supply of global pub -
+lic goods and that for a variety of reasons China is unable or unwilling to supply 
+such public goods. This imbalance in responsibility and legitimacy creates an 
+institutional vacuum, which in turn allows weaker actors—such as host country 
+governments, local authorities, and non-state stakeholders—to strategically initiate 
+bargaining behavior. In the context of the Belt and Road, this manifests in the 
+re-negotiation of previously agreed terms such as pricing, governance structures, 
+or environmental standards. From this perspective, the bargaining risk observed in 
+BRI (the “Belt and Road” Initiative) infrastructure projects can be seen as a micro-
+level manifestation of the Kindleberger Trap: the structural tension between rising 
+responsibility and insufficient authority leads to governance fragility and contract 
+instability. The above theory explains the dilemma faced by the “Belt and Road” 
+infrastructure projects. The bargaining entities often alter previously determined 
+contract terms, such as the price or value of the project, in violation of local laws, 
+regulations, and international contracting practices. In recent years, there has 
+been a significant increase in the number of infrastructure projects with bargaining 
+behavior in regions such as Malaysia, Myanmar, Thailand, Sri Lanka, and others 
+along the “Belt and Road” [ 6–9].
+Unlike Western management concepts and theories that rely on strict adherence 
+to contractual obligations and relevant FIDIC clauses to resolve disputes, bargaining 
+behavior is a departure from these traditional provisions. These concepts and stan-
+dards have limited applicability in controlling the bargaining behavior of the “Belt and 
+Road” infrastructure projects.
+To address this issue, it becomes imperative to introduce a new governance 
+framework that not only identifies bargaining as a distinct form of project risk but also 
+accounts for the structural and relational dynamics that drive it.
+The Nobel Prize in Economics was awarded to two scholars in auction theory for 
+their theoretical and practical innovations in bargaining in 2020 [10]. There exists 
+no research that provides a conceptual elucidation of the bargaining behavior in the 
+infrastructure projects of the “Belt and Road”, but solely describes it through case 
+studies [11,12].
+Therefore, this study proposes to conceptualize and model bargaining risk as an 
+independent and quantifiable governance challenge, and to explore its dynamics 
+through a combination of case-based evidence, evolutionary game theory, and East-
+ern governance frameworks. This effort is of both theoretical and practical value, as it 
+contributes to the global understanding of how infrastructure diplomacy unfolds in the 
+absence of hegemonic governance certainty.
+Funding: The authors who received each award: 
+First Author: Zhifeng Shen Funded projects: 
+1.Research Support Project of Ministry of 
+Education of the People’s Republic of China 
+for Humanities and Social Sciences: Research 
+on the Governance of Offer Behavior of “Belt 
+and Road” Infrastructure Projects under the 
+Kindleberger Trap (21YJCZH130). 2. Annual 
+Project of Philosophy and Social Science 
+Planning of Henan Province: Research on 
+the Transformation Governance of “Belt and 
+Road” Infrastructure Projects Supply under 
+China’s Discourse System (2023BZH010). 3. 
+Ministry of Education of the People’s Republic 
+of China Industry-University Cooperation 
+Collaborative Education Program: Intelligent 
+Construction School-Enterprise Joint Internship 
+Base (20220102983), Intelligent Construction 
+Management and Urban Renewal Talent 
+Cultivation and Practice (230901960180950). 
+4. General Project of Humanities and Social 
+Sciences Research in Universities of Henan 
+Province: Research on the Relationship 
+between Enterprise Digitization Level, Strategic 
+Flexibility and Digital Transformation - Case 
+Study Based on Emerging Strategic Enterprises 
+in Henan Province (2024-ZDJH-031).
+Competing interests: The authors have 
+declared that no competing interests exist.
+
+PLOS One | https://doi.org/10.1371/journal.pone.0332379 September 25, 2025 3 / 24
+2. Relevant theories and literature review
+2.1 The bargaining behavior of the “Belt and Road” infrastructure projects
+The article by Glosten and Milgrom marked the inception of highly cited literature in the realm of bargaining research [13]. 
+Since then, the subject matter of bargaining behavior has been extensively explored, as evident from the works of Carr 
+[14], Cui and Wiggins [15], Khezr and Menezes [16], Lester, Visschers, and Wolthoff [17], and Khezr and Menezes [18]. 
+The research has encompassed diverse aspects of bargaining, ranging from its form to its effect, and has involved the 
+negotiation of general consumer goods, financial products, real estate, and service products. Furthermore, the theories of 
+auction [Auction theory: Auction theory is a theoretical tool used to guide the design of real-world auctions that can help 
+sellers increase their income while allowing buyers to buy at a lower cost, and the seminar between buyers and sellers 
+about price is an economic equilibrium.] and bargaining have found relevance in the context of bidding for infrastructure 
+projects and negotiating engineering projects [19]. These theories also provide an explanation for the behavior of the “five 
+parties” [Five parties: five parties responsible for the construction of the main project are to undertake the construction of 
+construction projects: the construction unit project leader, survey unit project leader, design unit project leader, construc-
+tion unit project manager and supervision unit superintendent engineer.] involved in infrastructure projects. However, the 
+“Belt and Road” doctrine and public opinion may stimulate the bargaining behavior in these projects, which is primarily 
+linked to regime change, debt crisis, employment deterioration, environmental crisis, and misleading media propaganda 
+in the countries along the “Belt and Road”. To varying degrees, the “Belt and Road” has enhanced the bargaining power 
+and development opportunities of many countries in the global South [20]. However, the deliberate bargaining behaviors 
+often portray Chinese general contracting enterprises as threats from Chinese state-owned enterprises, characterized 
+by low-quality standards, corruption in projects, plunder of resources, sovereignty crisis, lease-term colonization, and 
+pan-politicization. These behaviors may trigger bargaining behaviors against Chinese state-owned enterprises by local 
+governments, other organizations, or local residents at any time. Bunnak and Song analyze governance and renegotiation 
+dynamics in the Sino–Thai railway project, highlighting how shifting stakeholder roles and institutional adaptation influence 
+contract modification behaviors [21]. Similarly, Wang investigates Southeast Asian countries’ policy responses to contrac-
+tual uncertainties, revealing strategies such as proactive coordination and procedural flexibility—practices that closely 
+resemble the governance challenges associated with bargaining behaviors in infrastructure projects [22]. These recent 
+empirical insights offer valuable perspectives for expanding the conceptual scope of BRI-related risk governance, never-
+theless, no scholars have systematically studied this behavior, its causes, and its hazards.
+2.2 The bargaining risk of the “Belt and Road” infrastructure projects
+The potential for the bargaining risk within the “Belt and Road” infrastructure initiatives arises from the bargaining behavior 
+of the host government. This behavior is demonstrated through the inconsistent stance of the host government towards 
+the “Belt and Road” program. The host government’s contradictory attitude of seeking to collaborate with Chinese 
+businesses to enhance its infrastructure whilst also suspending or terminating infrastructure initiatives that are already 
+ underway for certain reasons, is rooted in the current global political landscape [23]. The year 2023 will mark the 10th 
+anniversary of the “Belt and Road” initiative, and China has entered into over 200 cooperation agreements with 151 coun-
+tries and 32 international organizations for the construction of the “Belt and Road”. During the process of state interaction, 
+smaller and medium-sized countries with significant autonomy will utilize negotiation tactics toward larger nations in the 
+pursuit of their own interests. For, example, Kazakhstan’s multi-vector State-to-State engagement with other countries, 
+such as China, has recently become an important strategy for enhancing its bargaining power. China’s willingness to con-
+nect in the “Belt and Road” also gives the Kazakh government more bargaining leverage [24]. This represents a bargain-
+ing tool of the host government and can be interpreted as a “breach of contract at the negotiating table”. Although the “Belt 
+and Road” infrastructure projects are paused, most of them are resumed through negotiation, to some extent complying 
+
+PLOS One | https://doi.org/10.1371/journal.pone.0332379 September 25, 2025 4 / 24
+with certain bargaining terms. Nevertheless, the bargaining behavior not only delays the completion date of the infrastruc-
+ture projects and increases the overall contracting cost for the Chinese party, but also harms the international reputation of 
+the bargaining party. Based on the above analysis of the bargaining behavior, this research defines the notion of bargain-
+ing risk within the “Belt and Road” infrastructure initiatives as the demand for a modification of the project price or value 
+initiated by bargaining party to the Chinese general contractor subsequent to the signing of the construction contract of 
+the “Belt and Road” infrastructure projects. This poses a significant risk to the prospects of the infrastructure project.
+2.3 Causes of the bargaining risk of the “Belt and Road” infrastructure projects
+The variability in cost or value of infrastructure projects in the “Belt and Road” initiative shows a strong correlation with 
+political risk, as posited by Robock [25]. Although “bargaining risk” overlaps with “political risk” in the traditional sense in 
+some ways, there are obvious differences between the two in terms of their essential characteristics and impact mech-
+anisms. Bennon and Fukuyama [5] conducted an in-depth analysis of the “obsolescing bargain” mechanism in Belt and 
+Road Initiative projects, pointing out that when initial cooperative arrangements become ineffective under a new govern-
+ment or regime, Chinese enterprises often face a new round of “re-negotiation” dilemmas. Although their study highlights 
+the renegotiations triggered primarily by political regime changes—characterized as abrupt, coercive, and externally 
+imposed—the “bargaining risk” defined in our research differs distinctly. Specifically, Political risk refers to the uncertainty 
+that political events or government actions pose to production and operations, and national strategies drive subject behav-
+ior., which usually stems from changes in government, legal changes, or sudden policy interventions, and is characterized 
+by its non-institutional, unpredictable, and coercive nature [26]. For instance, Southeast Asian nations have persistently 
+sought alterations in the price or value of the “Belt and Road” infrastructure projects, which are linked to the change of 
+local regimes or ruling parties, as indicated by Li et al. [27]. Bargaining risk, on the other hand, is a negotiating tactic, and 
+interest motivates the subject behavior. mainly manifests itself in the host country’s proactive bargaining demands based 
+on project value reassessment or political and economic motives during project implementation. It has a certain degree 
+of predictability and strategic game-playing nature, and is often embedded in institutional frameworks and contractual 
+relationships.
+Notably, the involvement of the Chinese government has led to a decline in such risks, so effective risk management 
+of such projects is likely to bring significant benefits to Chinese enterprises, as argued by Conway [28]. Moreover, smaller 
+countries also aim to change the contract price or value terms to achieve more benefits, such as resolving industrial 
+structure issues, introducing advanced technologies, tackling employment difficulties, and enhancing their ecological 
+ environment through the construction of “Belt and Road” infrastructure projects. Using a strategic action area framework to 
+analyze Chinese investors’ interactions with Pakistan’s power sector, Safdar M T confirms the turnover of Chinese inves-
+tors’ bargaining power at different stages of a project, which tends to be greater at the beginning of a project’s investment 
+and is often reversed afterwards [29]. Consequently, the factors that influence bargaining behaviors can be highly intricate. 
+Existing literature mostly considers bargaining behaviors as political risks, they often overlook the distinction between the 
+two. Therefore, this research seeks to identify the crucial factors that give rise to bargaining risks associated with the “Belt 
+and Road” infrastructure projects, commencing with a thorough examination of the manifestation of bargaining behavior.
+2.4 Control of the bargaining risk of “the Belt and Road” infrastructure projects
+There exists a dearth of literature pertaining to the management of bargaining risk associated with “the Belt and Road” 
+infrastructure projects, with the few available studies being primarily focused on project management, thus causing confu-
+sion. Existing research fails to adopt a macroscopic and project perspective to manage different bargaining behaviors and 
+conceptualize the bargaining behavior. The current dispute resolution mechanism in the international engineering field or 
+in the larger international trade field relies on Western concepts which are inefficient in controlling the bargaining behavior 
+of the “Belt and Road” infrastructure projects.
+
+PLOS One | https://doi.org/10.1371/journal.pone.0332379 September 25, 2025 5 / 24
+Through the review of the relevant literature, it can be found that the resolution of the bargaining risk of the “Belt and 
+Road” infrastructure projects generally relies on international commercial rules and international contract terms. However, 
+the host countries of the “Belt and Road” infrastructure projects are generally developing countries with undeveloped 
+market economy, and international business rules and international contract terms are not fully applicable in solving the 
+bargaining risk of the “Belt and Road” infrastructure projects [30]. Therefore, under the premise of international commer-
+cial rules and international contract terms, the Eastern governance theory can be introduced to solve the bargaining risk of 
+the “Belt and Road” infrastructure projects, which can improve the solution efficiency and reduce the cost, and supplement 
+the governance theory of international infrastructure projects.
+3. Case analysis of the bargaining risk of the “Belt and Road” infrastructure projects
+The analysis was carried out in accordance with the exemplification of “Belt and Road” infrastructure bargaining projects, 
+involving the refinement of bargaining categories, purification of bargaining factors. This culminated in the creation of a 
+comprehensive categorization table, which is meticulously detailed in Table 1.
+The bargaining behavior of the “Belt and Road” infrastructure projects is a renegotiation process, the process of the 
+bargaining will involve the two sides of the dynamic game, so the evolutionary game theory can be applied to analyze the 
+game process of the two sides.
+4. Method
+This paper uses an evolutionary game method to analyze the bargaining strategies of the host government and Chinese 
+engineering contractors in the “Belt and Road” infrastructure projects.
+4.1 Basic hypotheses
+Hypothesis 1 posits that, during negotiations for “Belt and Road” infrastructure projects, the host government’s strategy 
+space can be defined as either “continued cooperation” or “terminated cooperation”, abbreviated as “{A1, A2}”. The former 
+denotes a willingness to continue the project while initiating bargaining behavior with the Chinese general contractor, while 
+the latter signifies a refusal to continue construction and payment of compensation to said contractor. Similarly, the Chinese 
+general contractor’s strategy space can be categorized as either “continued cooperation” or “terminated cooperation”, abbre-
+viated as “{B1, B2}”. The former denotes a desire to continue the project and accept negotiations initiated by the host govern-
+ment, while the latter signifies a refusal to continue construction and initiation of a claim against the host government.
+Hypothesis 2 assumes that, if the host government expects to complete the project, the loss it will suffer can be quanti-
+fied as “{q(q > 0)}”. This loss can be reduced by negotiating a difference in contract price with the Chinese general con-
+tractor, denoted as “{p(p > 0)}”. If negotiations break down and the project is canceled, the host government can obtain 
+savings of “{q}”, which is based on the assumption that there is “{p > q}”.
+Hypothesis 3 establishes that the total benefit to both the host government and the Chinese general contractor, in the 
+event of successful cooperation, is “{πg }” and “{πe }”, respectively.
+Hypothesis 4 suggests that the cost of performance for either the host government or the Chinese general contractor, 
+due to a desire for continued cooperation, is “{cg, ce}”. This includes the human and material resources expended by both 
+parties during negotiations.
+Hypothesis 5 claims that, among the host government and the Chinese general contractor, the party that chooses ter-
+minated cooperation will suffer a loss of credibility, quantified as “{µ, θ}”.
+Hypothesis 6 states that, if negotiations between the two parties break down, the host government will compensate the 
+Chinese general contractor in the amount of “{d}”.
+Hypothesis 7 indicates that, if negotiations between the two parties break down, the Chinese general contractor will 
+lose potential profits in the host market, which is estimated to be “{l }”.
+
+PLOS One | https://doi.org/10.1371/journal.pone.0332379 September 25, 2025 6 / 24
+Based on these hypotheses, the payment matrix for the evolutionary game of bargaining negotiation is constructed, as 
+detailed in Table 2.
+The evolutionary game payment matrix of the bargaining negotiation between the host government and Chinese gen-
+eral contractor is shown in Table 3.
+4.2 Solving for the equilibrium point of bargaining negotiation
+Assuming that the probability of the host government adopting the continued cooperation strategy in the initial state is 
+x (x ∈ [0, 1]) and the probability of adopting the terminated cooperation strategy is 1 – x . Based on the payment matrix, we 
+Table 1. Case analysis of the bargaining risk.
+No. Project 
+names
+The “Belt and Road” infrastructure bargaining project examples extraction Bargaining catego-
+ries refinement
+Bargaining factors 
+purification
+1 Colombo 
+Port City 
+Project in Sri 
+Lanka
+Incoming President Sirisena’s viewed that the Colombo project was started during 
+the former president’s administration and was suspected of violating local laws and 
+circumventing relevant environmental requirements;
+Sri Lanka’s excessive borrowing from China and the need to reconsider the 
+Colombo Port City project.
+Review of the license 
+certificate;Unknown 
+contract terms;
+Debt relief.
+Political factor;
+Economic factor;Le-
+gal factor.
+2 Malaysia 
+East Coast 
+Railway Plan
+During the general election campaign, Mahathir opposed the foreign policy of the 
+then ruling party, arguing that corruption was involved and detrimental to Malaysia’s 
+development, and called for a scaling down of the project;
+Najib set up companies for money laundering and corruption, and the East Coast 
+Railway project was questioned and opposed;
+Chinese-funded projects led to Malaysia’s debt problems.
+Reduced project 
+scale;
+Project cost reduction;
+Debt trap.
+Political factor;
+Economic factor;
+Legal factor.
+3 Jakarta- 
+Bandung 
+High-Speed 
+Railway in 
+Indonesia
+The “grassroots” President Joko’s use of the project as a political chip for re- 
+election caused discontent among the elite, and “anti-Joko” forces used the media 
+and academics to smear the Jakarta-Bandung High-Speed Railway project;
+Unclear land ownership increases the cost and difficulty of project land acquisition;
+With rising cost, China-Indonesian joint ventures are facing huge capital pressure 
+and financing risks.
+Certificates are not yet 
+complete;
+Project scale down;
+People’s livelihood 
+compensation issues;
+Insufficient funds.
+Political factor;
+Economic factor;
+Cultural factor.
+4 China- 
+Thailand 
+Railway
+Due to the coup in Thailand, the strategic project of China-Thailand Railway has no 
+time to be taken into consideration;
+Thailand’s financial system is unstable, and there are problems with railway financ-
+ing and cost recovery;
+China’s interest rate on loans for the China-Thailand railway is higher than other 
+countries’;
+Construction and maintenance are difficult, and the risk of land expropriation is 
+high.
+High interest rates on 
+Chinese loans;
+Project scale down;
+Lack of detailed 
+assessment.
+Political factor;
+Economic factor;
+Cultural factor.
+5 Myanmar 
+Myitsone 
+Hydropower 
+Station
+The Myanmar party believes that the construction of the project has deteriorated 
+the living environment of fish and endangered the water quality downstream;
+The hydropower station is located on an earthquake fault, which creates a major 
+potential hazard to people’s lives;
+the Myitsone region is the birthplace of local civilization and the local people 
+oppose the construction of the hydropower station;
+The Myitsone project has become the main topic of political games between the 
+local government, armed forces and ethnic forces.
+Environmental com-
+pensation issues;
+Cultural difference 
+issues;
+Internal benefit distri-
+bution issues.
+Environmental 
+factor;
+Cultural factor;
+Political factor.
+6 China- 
+Myanmar 
+Kyaukpyu- 
+Kunming 
+Railway
+Myanmar citizens and NGOs have repeatedly protested to the Myanmar govern-
+ment over environmental protection, land compensation, employment and other 
+issues, demanding the suspension of the railroad project;
+Myanmar’s media smear China as “interfering in Myanmar’s internal affairs and 
+threatening Myanmar’s national security”;
+Chinese enterprises have left the negative impact of not paying attention to the 
+environment and disregarding people’s livelihoods.
+People’s livelihood 
+compensation issues;
+Differences in techni-
+cal standards;
+Environmental pollu-
+tion problems.
+Legal factor;
+Environmental 
+factor;
+Political factor.
+(Source: The paper draws up this table by analyzing the literature, news, books and other materials)
+https://doi.org/10.1371/journal.pone.0332379.t001
+
+PLOS One | https://doi.org/10.1371/journal.pone.0332379 September 25, 2025 7 / 24
+can obtain the expected benefits E (A1) , E(A2) and the average benefits E(A) of the host government adopting the contin-
+ued cooperation and terminated cooperation strategies, respectively:
+ E(A1)= y(πg + p – µ – cg)+( 1 – y)( –cg – µ – d + q) (1)
+ E (A2)= y(–µ – d + q)+( 1 – y)(–µ – d + q) (2)
+ E(A)= xE(A1)+( 1 – x)E(A2) (3)
+The replication dynamic equation for the host government’s strategy at this point is:
+ F(x)= dx/dt = x [E(A1) – E(A)] = x(1 – x)[ –cg +( πg + p + d – q)y] (4)
+Assuming that the probability of the Chinese general contractor adopting the continued cooperation strategy in the initial 
+state is y(y ∈ [0, 1]) and the probability of adopting the strategy is 1 – y . Based on the payment matrix, we can obtain the 
+expected benefits E(B1), E(B2) and the average benefits E(B) for the Chinese general contractor adopting the continued 
+cooperation and terminated cooperation strategies, respectively.
+ E(B1)= x(πe – p + θ + l – ce)+( 1 – x)
+( –ce + θ + d – l ) (5)
+ E(B2)= x
+( –θ + d – l ) + ( 1 – x )( –θ + d – l ) (6)
+ E(B)= yE(B1)+( 1 – y)E(B2) (7)
+Table 2. Definition of key variables in evolutionary game model.
+Symbol Definition
+q The loss when the host government completes the project
+p The host government reduces losses by negotiating the differences in contract prices with the Chinese general contractor
+πg The total benifit of the host government when successfully cooperating with the Chinese general contractor
+πe The total benifit of the Chinese general contractor when successfully cooperating with the host government
+cg The bargaining cost of the host government, includes the human and material resources expended during negotiations.
+ce The bargaining cost of the Chinese general contractor, includes the human and material resources expended during negotiations.
+µ The loss of credibility of the host government
+θ The loss of credibility of the Chinese general contractor
+d The amount compensated by the host government to the Chinese general contractor when the negotiations between the two 
+parties broke down
+l The potential host market loss of Chinese contractors
+https://doi.org/10.1371/journal.pone.0332379.t002
+Table 3. Bargaining negotiation evolutionary game payment matrix.
+Both parties of the game Chinese general contractor
+continued cooperation terminated cooperation
+Host Government continued cooperation πg + p – µ – cg
+πe – p + θ + l – ce
+–cg – µ + q – d
+–θ + d – l
+terminated cooperation –µ + q – d
+–ce + θ + d – l
+–µ + q – d
+–θ + d – l
+https://doi.org/10.1371/journal.pone.0332379.t003
+
+PLOS One | https://doi.org/10.1371/journal.pone.0332379 September 25, 2025 8 / 24
+The replication dynamic equation of the Chinese general contractor’s strategy at this point is:
+ F(y)= dy/dt = y[E(B1) – E(B)] = y(1 – y) [2θ – ce +( πe – p – d +2 l)x] (8)
+When the above dynamic equation F(x)=0 , F(y)=0 , it means that the infrastructure project offer negotiation evolution 
+system reaches a relatively stable state, and the five local equilibrium points are solved as (0,0), (0,1), (1,0), (1,1), (1,1), 
+(x∗, y∗), where x∗ = ce –2θπe –p–d+2l , y∗ = cgπg +p+d–q. Only the cases of x, y ∈ [0, 1] are considered.
+4.3 Equilibrium state analysis of bargaining negotiation
+The evolutionary steady state of the replication dynamic equations can be obtained from the local stability analysis of the 
+Jacobian matrix. The Jacobian matrix of the bargaining negotiation evolution system of the “Belt and Road” infrastructure 
+projects is shown in Formula (9).
+ 
+J(x, y)=
+((1 – 2x) [(πg + p + d – q) y – cg] x(1 – x)( πg + p + d – q)
+y(1 – y)( πe – p – d +2 l) (1 – 2y) [2θ – ce +( πe – p – d +2 l) x]
+)
+ (9)
+If the Jacobian matrix satisfies det.J > 0 and trJ < 0, the equilibrium point obtained by the solution of the replication 
+dynamic equation is the bargaining negotiation system evolutionary stability strategy (ESS). The results are calculated by 
+substituting each local equilibrium point into the expressions of the determinant of Jacobian matrix (det.J) and the trace of 
+the Jacobian matrix (trJ ). The details are shown in T able 4.
+From T able 4, it can be seen that the steady state of the evolving system is determined by the positive and negative 
+cases of (ce – 2θ), 
+( πg + p + d – q – cg ) as well as (πe – p – d +2 l +2 θ – ce). T o facilitate the discussion of the system 
+evolution results below, let r1 = πg + p + d – q – cg and r2 = πe – p – d +2 l +2 θ – ce. Where r1 denotes the difference 
+between the benefits of continuation and termination of the contract by the host government, and r2 denotes the difference 
+between the benefits of continuation and termination of the contract by the Chinese general contractor. Based on the posi-
+tive and negative cases of each, five evolutionary scenarios are obtained in combination for discussion.
+Situation 1:ce–2θ > 0,r1> 0,r2> 0
+At this time, the performance cost of the Chinese general contractor is higher than 2 times the loss of reputation and the 
+gain of the host government to continue the contract by way of bargaining is greater than the gain of termination, and the 
+gain of the Chinese general contractor to accept the way of bargaining to continue the contract is greater than the gain 
+of compensation from suing the host government. The evolutionary stability of the system is shown in Table 5, and the 
+evolutionary path is shown in Fig 1.
+Under this condition, both B (1,1) and O (0,0) are the equilibrium points of the system. The line segment formed by con-
+necting the saddle points A, C, E divides the plane into regions 1 and 2. When the initial state is in region 1, the evolution-
+ary stability direction of both parties of the game is O (0,0); when the initial state is in region 2, the evolutionary stability 
+Table 4. Determinant and trace of Jacobian matrix.
+Equilibum points det.J trJ
+(0,0) cg(ce – 2θ) 2θ – ce – cg
+(0,1) ( πg + p + d – q – cg )( ce – 2θ ) πg + p + d – q – cg + ce – 2θ
+(1,0) cg(πe – p – d +2 l +2 θ – ce) cg + πe – p – d +2 l +2 θ – ce
+(1,1) ( q + cg – πg – p – d )( –πe + p + d – 2l – 2θ + ce ) q + cg + ce – πg – πe – 2θ – 2l
+(x∗, y∗) cg (ce –2θ)(πe –p–d+2l+2θ–ce )(πg +p+d–q–cg )
+(πe –p–d+2l)(πg +p+d–q)
+0
+https://doi.org/10.1371/journal.pone.0332379.t004
+
+PLOS One | https://doi.org/10.1371/journal.pone.0332379 September 25, 2025 9 / 24
+direction of both parties of the game is B (1,1). It can be seen that the equilibrium strategies of the two evolutionary paths 
+are related to the relative area sizes of region 1 and region 2. When the area of region S1 > S2, the probability of the initial 
+state falling in region 1 increases and the probability of the game equilibrium of the host government and the Chinese 
+general contractor converging to O (0,0) increases; when the area of region S1 < S2, the probability of the initial state 
+falling in region 2 increases and the probability of the game equilibrium of the host government and the Chinese general 
+contractor converging to B (1,1) increases. The analysis shows that when both parties receive more from the project, the 
+greater the potential market profit of the host country and the higher the reputation of the Chinese general contractor, that 
+is, πg , πe , l , θ are larger. The smaller the negotiation cost of both parties, that is, cg, ce are smaller, the greater the proba-
+bility that the game equilibrium converges to B (1,1).
+Situation 2:Ce–2θ>0,r1<0 or r2<0
+At present, the performance expenses incurred by the Chinese general contractor surpass twice the magnitude of the 
+damage to its reputation. In case the benefits that the host government receives by continuing the contract through nego-
+tiations are inferior to the benefits of termination, or the benefits that the Chinese general contractor obtains by accepting 
+the negotiation route to continue the contract are smaller than the gains of compensation obtained by suing the host 
+government, under such circumstances, the equilibrium of the game will lead to the discontinuation of cooperation by both 
+the host government and the Chinese general contractor. The stability of the system’s evolution is exhibited in Table 6, 
+whereas the path of evolution is presented in Fig 2.
+Situation 3:ce–2θ < 0,r1> 0,r2> 0
+At present, the expense incurred by the Chinese general contractor in terms of performance is less than twice the cost 
+of damage to its reputation. Furthermore, the host government stands to gain more from continuing the contract through 
+Table 5. Stability analysis of equilibrium points of Situation 1 evolutionary game system.
+Equilibrium points det.J trJ Stability
+(0,0) + – ESS
+(0,1) + + Instability point
+(1,0) + + Instability point
+(1,1) + – ESS
+(x∗, y∗) – 0 Saddle point
+https://doi.org/10.1371/journal.pone.0332379.t005
+Fig 1. Situation 1 evolutionary phase diagram. 
+https://doi.org/10.1371/journal.pone.0332379.g001
+
+PLOS One | https://doi.org/10.1371/journal.pone.0332379 September 25, 2025 10 / 24
+negotiations than it would from terminating it, whereas the Chinese general contractor would also benefit more from 
+accepting the bargaining process to continue the contract than it would from seeking compensation via legal action 
+against the host government. Given this situation, the equilibrium point of the game is reached when both the host gov-
+ernment and the Chinese general contractor continue to cooperate with one another. The stability of the system is demon-
+strated in Table 7, and the evolutionary path is illustrated in Fig 3.
+Situation 4:ce–2θ < 0,rl> 0,r2< 0
+At the present juncture, the performance expenses incurred by the Chinese general contractor are inferior to twice the 
+reduction in reputation. In addition, the benefits reaped by the host government through continued negotiation of the con-
+tract outweigh the advantages of contract termination. Conversely, the benefits acquired by the Chinese general contrac-
+tor through continued negotiations with regards to the continuation of the contract are inferior to the compensation gained 
+Table 6. Stability analysis of equilibrium points of Situation 2 evolutionary game system.
+r1> 0,r2< 0 r1< 0,r2> 0 r1< 0,r2< 0
+Equilibrium points det.J trJ Stability det.J trJ Stability det.J trJ Stability
+(0,0) + – ESS + – ESS + – ESS
+(0,1) + + Instability point – + Saddle point – ± Saddle point
+(1,0) – ± Saddle point + + Instability point – ± Saddle point
+(1,1) – ± Saddle point – ± Saddle point + + Instability point
+(x∗, y∗) Beyond the boundary Beyond the boundary Beyond the boundary
+https://doi.org/10.1371/journal.pone.0332379.t006
+Fig 2. Situation 2 evolutionary phase diagram.
+https://doi.org/10.1371/journal.pone.0332379.g002
+Table 7. Stability analysis of equilibrium points of Situation 3 evolutionary game system.
+Equilibrium points det.J trJ Stability
+(0,0) – ± Saddle point
+(0,1) – ± Saddle point
+(1,0) + + Instability point
+(1,1) + – ESS
+(x∗, y∗) Beyond the boundary
+https://doi.org/10.1371/journal.pone.0332379.t007
+
+PLOS One | https://doi.org/10.1371/journal.pone.0332379 September 25, 2025 11 / 24
+from suing the host government. Given these circumstances, the final system assumes a central position. The evolution-
+ary stability of this system is depicted in Table 8, whereas the evolutionary path is illustrated in Fig 4.
+Situation 5:Ce–2θ<0, r1<0 ,r2>0 or r2<0
+At this point, the cost of performance incurred by the Chinese general contractor is below twice the expense of reputa-
+tional loss, and the benefits derived from negotiations for continuing the contract with the host government are inferior 
+to those gained from terminating the contract. Irrespective of whether the advantages of the Chinese general contractor 
+Fig 3. Situation 3 evolutionary phase diagram.
+https://doi.org/10.1371/journal.pone.0332379.g003
+Table 8. Stability analysis of equilibrium points of Situation 4 evolutionary game system.
+Equilibrium points det.J trJ Stability
+(0,0) – ± Saddle point
+(0,1) – ± Saddle point
+(1,0) – ± Saddle point
+(1,1) – ± Saddle point
+(x∗, y∗) + 0 Center Point
+https://doi.org/10.1371/journal.pone.0332379.t008
+Fig 4. Situation 4 evolutionary phase diagram.
+https://doi.org/10.1371/journal.pone.0332379.g004
+
+PLOS One | https://doi.org/10.1371/journal.pone.0332379 September 25, 2025 12 / 24
+accepting the method of negotiation for continuing the contract surpass the benefits of compensation acquired by litigating 
+against the host government, the game equilibrium will ultimately converge towards the discontinuation of cooperation by 
+the host government and the continuation of cooperation by the Chinese general contractor. The stability of the system’s 
+evolution may be observed through Table 9, whereas the evolution path may be traced through Fig 5.
+5. Matlab numerical simulation analysis of key bargaining factors
+The pertinent parameters are chosen for sensitivity analysis using the Matlab software, and the parameter values are 
+subsequently altered to investigate the impact of these parameters on the stable strategies of the game equilibrium for 
+both parties of the game. An array of cases is explored, solved, and scrutinized to analyze the position and stability of the 
+equilibrium point of the evolutionary game. The system’s evolutionary process is depicted by a phase diagram. The values 
+of the parameters will affect the speed of convergence of the system to the equilibrium point in the evolutionary process, 
+set the initial strategy x =0 .6, y =0 .3, and other parameters are taken as shown in T able 10.
+5.1 The impact of Chinese general Contractor negotiation cost on the Evolutionary Path
+With other parameters unchanged, the negotiation cost ceof the Chinese general contractor is taken as 2,6,10,14,18, and 
+the evolutionary path of the equilibrium strategy under different negotiation cost is obtained, as shown in Fig 6. As the 
+cost of negotiation for the Chinese general contractor diminishes, the strategic approach of the aforementioned contractor 
+gravitates towards the direction of continued collaboration, as opposed to terminated collaboration. Furthermore, it can be 
+Table 9. Stability analysis of equilibrium points of Situation 4 evolutionary game system.
+r2> 0 r2<0
+Equilibrium points det.J trJ Stability det.J trJ Stability
+(0,0) – ± Saddle point – ± Saddle point
+(0,1) + – ESS + – ESS
+(1,0) + + Instability point – ± Saddle point
+(1,1) – ± Saddle point + + Instability point
+(x∗, y∗) Beyond the boundary Beyond the boundary
+https://doi.org/10.1371/journal.pone.0332379.t009
+Fig 5. Situation 5 evolutionary phase diagram.
+https://doi.org/10.1371/journal.pone.0332379.g005
+
+PLOS One | https://doi.org/10.1371/journal.pone.0332379 September 25, 2025 13 / 24
+inferred that the lower the negotiation cost incurred by the Chinese general contractor, the more expeditious the contrac-
+tor’s convergence toward the direction of continuation.
+When the cost of negotiation for the Chinese general contractor is low, the optimal strategy for the aforementioned 
+contractor during bargaining negotiations is to persist in their cooperation. The optimization of the organizational structure 
+of negotiations, coupled with the reduction of negotiation time, not only decreases the cost of negotiation for the Chinese 
+general contractor but also minimizes the losses incurred by project suspension. Additionally, it increases the likelihood 
+of the Chinese general contractor choosing to continue with the construction project. The Chinese concepts of sharing, 
+co-construction, joint discussion, and coordination, as opposed to Western litigation or contract management, are effective 
+in precisely shortening the negotiation time.
+5.2 The impact of host government negotiation cost on the evolutionary path
+Taking the negotiation cost cg of the host government as 1,6,11,16,21 with other parameters unchanged, the evolution 
+path of the equilibrium strategy under different negotiation cost is obtained, as shown in Fig 7. As the expenses associ-
+ated with negotiation incurred by the host government diminish, the host government aligns its strategy towards a shift 
+from terminated cooperation to ongoing cooperation. Moreover, it is observed that the greater the reduction in the host 
+government’s negotiation expenditure, the more swiftly the host government converges towards the path of sustained 
+cooperation.
+When the cost of negotiation for the host government is low, the most advantageous course of action for the said 
+government during bargaining negotiations is to continue cooperation. This can be achieved by minimizing the number of 
+negotiations and clearly outlining the demands of the negotiation. In doing so, the negotiation cost for the host government 
+is reduced. Furthermore, a decrease in negotiation time leads to a decrease in compensation paid to the Chinese general 
+contractor by the host government. This, in turn, increases the likelihood that the host government will choose to proceed 
+Table 10. Parameter values table.
+Parameters πg πe cg ce l θ µ p q d
+Values/
+Unit
+8 10 1 2 3 4 6 5 2 3
+https://doi.org/10.1371/journal.pone.0332379.t010
+Fig 6. The impact of negotiation cost on the evolutionary path of Chinese general contractor.
+https://doi.org/10.1371/journal.pone.0332379.g006
+
+PLOS One | https://doi.org/10.1371/journal.pone.0332379 September 25, 2025 14 / 24
+with the construction project. The introduction of China’s concept of harmony and cooperation [The concept of harmony 
+and cooperation: The concept of harmony and cooperation is the primary value of Chinese culture, the essence of Chi-
+nese culture, and the most perfect and complete form of embodiment of Chinese cultural life.] differential order pattern 
+[Differential order pattern: “Differential order pattern” is proposed by Fei Xiaotong, which occurs in social relations such as 
+kinship and geopolitical relations, and takes oneself as the center and pushes away like water ripples, further and further, 
+thinner and thinner and can be released and retracted, and it produces different circles with the change of time and space 
+in which one is located.], relationship governance [Relationship governance: Relationship governance refers to the man-
+agement approach of controlling enterprises formed by balancing various relationships through human governance, which 
+has Chinese characteristics and is a traditional corporate governance method developed from state-run enterprises.] and 
+order governance [Order Governance: Chinese indigenous ritual governance is a concept of order governance repre-
+sented by Confucianism and widely recognized in the integration of traditional culture and governance theory to regulate 
+social behavior.] into risk management can precisely reduce negotiation cost.
+5.3 The impact of the bargaining amount on the evolutionary path of both parties
+The evolutionary paths of equilibrium strategies under different bargaining amounts are obtained by taking the bargain-
+ing amount p as 2,6,10,14,18 with other parameters unchanged, as shown in Figs 8 and 9. As the amount of bargaining 
+by the host government increases, the host government’s strategy converges to the direction of continued cooperation 
+at a faster rate, while the convergence of the strategy of the Chinese general contractor toward continued cooperation 
+slows down. Furthermore, the figure reveals that the impact of the bargaining amount on the convergence speed of the 
+Chinese general contractor’s strategy is more pronounced than that on the convergence speed of the strategy of the host 
+government.
+In the process of bargaining negotiation, as the bargaining amount p continues to increase, r1 > 0 is always estab-
+lished. When p increases to p > πe – d +2 l +2 θ – ce, that is, r2 changes from positive value to negative value, the 
+Fig 7. The impact of negotiation cost on the evolutionary path of the host government.
+https://doi.org/10.1371/journal.pone.0332379.g007
+
+PLOS One | https://doi.org/10.1371/journal.pone.0332379 September 25, 2025 15 / 24
+dominant strategy of both parties in the negotiation changes from continued cooperation to an unstable state, and the 
+strategy selection of both parties cannot converge. The alteration in circumstances corresponds to a modification in 
+the advantages bestowed upon the Chinese principal contractor. This elucidates the fact that the amount of bargaining 
+Fig 8. The impact of bargaining amount on the evolutionary path of the host government.
+https://doi.org/10.1371/journal.pone.0332379.g008
+Fig 9. The impact of bargaining amount on the evolutionary path of the Chinese general contractor.
+https://doi.org/10.1371/journal.pone.0332379.g009
+
+PLOS One | https://doi.org/10.1371/journal.pone.0332379 September 25, 2025 16 / 24
+influences the Chinese principal contractor’s strategy convergence rate more than the host government’s strategy conver-
+gence rate. Consequently, during the bargaining negotiation, the host government ought to explicate the current difficul-
+ties instead of initiating “unwarranted” high offers that would be detrimental to the Chinese principal contractor and solely 
+serve its own interests. China promotes the notion of harmony, order, and adaptability, which can balance the interests of 
+all parties.
+6. Discussion
+Through the mathematical derivation and simulation analysis above we find that continued cooperation is not easy to 
+achieve, and the evolutionary stabilization strategies of both parties are related to several key parameters, namely the dif-
+ference between the benefits of continuing and terminating the contract for the host government and China, respectively, 
+and the difference between the cost of performance and the loss of reputation of the Chinese contractor by a factor of two. 
+It can be seen that the host government only needs to consider the pure benefits of cooperation or termination, while the 
+Chinese contractors need to consider the additional costs.
+Only two of the previous five scenarios achieve an evolutionarily stable strategy in which both parties continue to coop-
+erate. The first thing that is certain is that both parties are likely to continue to cooperate only if the benefits of continuing 
+to do so are greater than the benefits of terminating the cooperation. The difference lies in the trade-off between the cost 
+of performance by the Chinese contractor and the loss of its reputation. When the Chinese contractor is unwilling to bear 
+a high loss of reputation or faces a low cost of performance, continuing the cooperation is a result that both parties would 
+like to see; however, when the loss of reputation is not so terrible or the cost of performance is too high, the situation 
+becomes unpredictable, and whether the two parties will continue the cooperation or terminate depends on the probability 
+of the two parties’ strategic choices. When the benefits of continuing the contract for either party are negative, it is difficult 
+to achieve a state in which both parties continue to cooperate. When both parties have negative benefits of continuing 
+cooperation and the performance cost of the Chinese contractor is very large, the termination of cooperation is indisput-
+able; when the loss of reputation of the Chinese contractor is even greater, the Chinese contractor is always inclined to 
+make up for the contract in order to continue to cooperate with the host government, but its own loss of continuing cooper-
+ation or the host country’s denial of the continued cooperation in the face of the loss of the role of the impediment.
+7. Implications
+The discussion in the previous chapter shows that sustained cooperation between the host government and the contractor 
+occurs only under two conditions. Accordingly, the governance of bargaining risk in Belt and Road infrastructure projects 
+needs to be assessed in terms of mutual benefits, performance costs, and reputational loss. At the same time, recent 
+research indicates that introducing process-oriented principles—anticipation, inclusion, reflexivity, and responsiveness—
+can shift negotiation from adversarial interaction to co-governance, thereby reducing bargaining costs and stabilizing 
+expectations in cross-border projects [31]. This mechanism-level insight is highly consistent with our Eastern governance 
+approach. Against this backdrop, this chapter introduces related theories and concepts, including Eastern governance, 
+and, together with illustrative cases, seeks to contribute to bargaining-risk governance in infrastructure projects beyond 
+the context of the Belt and Road Initiative.
+7.1 Business and management implications: from the governance of bargaining for the “Belt and Road” 
+infrastructure projects
+(1) The concept of harmony and cooperation. As the quintessence of traditional culture, the “spirit of harmony 
+and cooperation” is considered the “meta-spirit” of China’s autochthonous governance theory. In contrast to Western 
+theories that prioritize rational thinking, the notion of harmony and cooperation accentuates the amalgamation of reason 
+and emotion in managing social relationships. The culture of “harmony and cooperation” is explicated as “the sum of the 
+
+PLOS One | https://doi.org/10.1371/journal.pone.0332379 September 25, 2025 17 / 24
+conflict and fusion of many elements of nature, society, interpersonal relationships, the human mind and civilization, and 
+the new life and new things formed by the recombination of elements in the dynamic process of conflict and integration 
+[32].” The Chinese people have consistently pursued harmonious development, win-win cooperation, and collaboration 
+among all nations. Over the course of its extensive historical development, this concept of harmonious coexistence and 
+differences has become deeply ingrained in the national culture and character of the Chinese people, serving as the 
+fundamental principle for China’s approach to international relations and social issues [33]. In response to the bargaining 
+risk of the “Belt and Road” infrastructure projects, China consistently upholds the concept of harmony and cooperation, 
+endeavoring to govern the bargaining risk by employing the path of integration and integrative thinking as the main 
+method.
+The China–Laos Railway Project, a landmark infrastructure initiative under the Belt and Road Initiative, offers a com-
+pelling example of how the concept of harmony and cooperation—as the meta-spirit of China’s indigenous governance 
+philosophy—can be translated into practical risk mitigation in cross-border bargaining contexts. During the early stages of 
+the project, differences in legal systems, construction standards, and financial responsibility generated negotiation dead-
+locks and elevated transaction costs for both sides. While a Western-style adversarial negotiation might have pushed the 
+parties toward contract litigation or renegotiation, the Chinese side instead embraced a path guided by integrative thinking 
+rooted in the logic of harmony.
+Rather than viewing conflict as zero-sum, Chinese negotiators treated the disputes as part of a dynamic integration pro-
+cess—seeking not compromise through subtraction, but coexistence through mutual adaptation. For instance, a trilateral 
+mechanism was established involving Chinese engineers, Lao transport authorities, and third-party regional coordinators 
+to harmonize technical standards and training protocols. Additionally, cultural engagement initiatives—such as language 
+training, joint holiday celebrations, and symbolic co-governance rituals—fostered emotional resonance and trust between 
+the parties, reducing miscommunication and bureaucratic friction.
+This harmony-oriented approach effectively lowered the negotiation costs (cg, ce decreased), mitigated potential repu-
+tational losses (µ, θ decreased) by reducing the risk of conflict escalation, and stabilized the bargaining environment by 
+avoiding sharp fluctuations in bargaining demand (p stabilized). Ultimately, the project proceeded smoothly despite early 
+tensions, demonstrating how harmony and cooperation—unlike rigid legalism—can function as a flexible yet robust gov-
+ernance tool in the face of complex bargaining dynamics. The China–Laos Railway thus exemplifies how a deeply rooted 
+cultural principle can evolve into a strategic governance mechanism, particularly suited for infrastructure diplomacy under 
+the BRI framework.
+(2) The concept of sharing economy. In contemporary times, the efficacy of economic tenets such as the 
+international division of labor and comparative advantage in guiding corporate strategies and prognosticating project 
+implementation is diminishing, particularly in the context of the Belt and Road infrastructure projects, as reported by 
+Durand and Kremp [34]. As such, the sharing economy concept serves as a salient complement. In contrast to the 
+conventional concept of incessantly augmenting competition to secure advantages and efficiency, the sharing economy 
+concept is centered on cooperation for competitive advantages and efficiency, particularly with regard to the balance 
+of competition and cooperation concepts, as elucidated by Dyal-Chand, Ika et al., and Xue et al. [35–37]. Consistent 
+with this logic, recent research advances a stakeholder “affordance” perspective: by purposefully designing interaction 
+modalities—such as data sharing, co-monitoring, and co-benefit allocation—project organizations can enable cooperative, 
+pro-sustainability behaviors and thereby lower bargaining and coordination costs in BRI negotiations [38]. The sharing 
+economy concept has the potential to supplant existing economic theories as the dominant paradigm in the next 30 
+years, impacting various sectors and engendering a novel social, legal, moral, political, economic, and cultural system 
+grounded in digitization, according to Kawashima [39]. Professor Eric has dubbed the sharing economy concept as “the 
+second invisible hand” and posits that it will undoubtedly extend to the planning, investment, construction, operation, 
+management, and maintenance of extant transportation, water, and energy infrastructure facilities, as posited by Piscicelli, 
+
+PLOS One | https://doi.org/10.1371/journal.pone.0332379 September 25, 2025 18 / 24
+Ludden, and Cooper, Yeow et al., Artto et al., and Patanakul and Shenhar [40–43], thereby yielding unforeseen outcomes 
+for the governance of the bargaining risk of the “Belt and Road” infrastructure projects.
+The advent and evolution of project sharing have had a significant impact on traditional project management theory and 
+practice and have been instrumental in addressing gaps in project theory [44,45]. Infrastructure projects have garnered 
+attention due to shared elements such as benefits, values, resources, information, risks, and ideas. However, there is a 
+lack of a systematic governance framework [46–49]. Moreover, shared environments will become a crucial basis for mea-
+suring international project governance capabilities. Shared systems have significantly diminished the previous advan-
+tages of firms, and resource- and competition-based perspectives may even undermine and hinder project innovation 
+practices [50–52]. Therefore, the “Belt and Road” infrastructure projects must introduce the concept of sharing to exploit 
+the benefits of cooperation. The sharing economy theory (similar to the old sharing economy of Nobel laureate Meade 
+and Nobel nominee Weitzman) and the extensive involvement of infrastructure project practices in the “Belt and Road” 
+Initiative have created opportunities for achieving breakthrough results in infrastructure project governance research and 
+practice.
+The Sahiwal Coal Power Plant Project, a flagship energy infrastructure project under the China–Pakistan Economic 
+Corridor (CPEC), offers a concrete embodiment of the sharing economy concept in action—where cooperation, rather 
+than pure competition, becomes the vehicle for strategic advantage. Unlike traditional models of project management 
+grounded in unilateral control and resource competition, this project integrated mechanisms for shared resources, joint 
+responsibility, and mutual benefit, reflecting the theoretical shift toward collaborative governance in transnational infra-
+structure delivery.
+From the early planning phase, both Chinese and Pakistani stakeholders embraced shared protocols in energy plan-
+ning, environmental regulation, and risk allocation. For example, the integration of environmental protection facilities was 
+not only funded by the Chinese contractor but jointly monitored by a binational commission. A real-time data-sharing plat-
+form was established to ensure operational transparency, while contractual arrangements stipulated dynamic electricity 
+pricing adjusted via cooperative negotiation rather than unilateral imposition. These mechanisms reflect a transition from 
+firm-centric ownership to ecosystem-wide co-creation, a hallmark of the second invisible hand of the economy as envi-
+sioned by Piscicelli et al. [43].
+In the language of bargaining risk governance, this “shared infrastructure model helped reduce the frequency and 
+intensity of price-related renegotiations (p stabilized), minimized procedural uncertainty (cg, ce lowered), and enhanced 
+the alignment of long-term interests (πg , πe  increased). More importantly, it promoted a culture of relational reciprocity, mit-
+igating trust deficits and reputational losses (µ, θ decreased). The Sahiwal case exemplifies how sharing economy princi-
+ples—applied not merely to consumer platforms but to sovereign-scale infrastructure projects—can reshape the dynamics 
+of cooperation, turning potential conflicts into enduring partnerships.
+(3) The concept of project management. In the context of the sharing economy concept, there is increasing 
+attention paid to the balance between competition and cooperation in the strategic adjustment of international enterprises 
+[53]. The function of project management in carrying corporate strategy is weakening, leading to an increase in the 
+independence of projects [54]. In fact, project management has become the “compass” and “trigger” of corporate strategy 
+adjustment [55]. Therefore, it is imperative that the laws presented by this bargaining phenomenon be followed in the 
+international market [56,57], rather than demonizing and politicizing these projects, which would only initiate bargaining 
+behavior. Such behavior is contrary to the original intention of the “Belt and Road” Initiative and the Eastern concept. The 
+sharing economy concept can guide the formation of a new project management model for international infrastructure 
+[58]. However, no scholars have yet proposed a project-sharing model, nor have they introduced these concepts into 
+the governance of the bargaining risk of the “Belt and Road” infrastructure projects and other issues. Furthermore, the 
+causes, concepts, values, and obstacles of project sharing have yet to be analyzed in-depth, and the project management 
+academic community is far behind the practice community in this regard.
+
+PLOS One | https://doi.org/10.1371/journal.pone.0332379 September 25, 2025 19 / 24
+In the context of the East Coast Rail Link (ECRL) project in Malaysia, the evolution of project management has 
+reflected the theoretical shift from being a passive implementer of enterprise strategy to becoming an active “compass” 
+and “trigger” of strategic adaptation [55]. The initial phase of the ECRL project saw delays and uncertainty caused by 
+Malaysia’s political transition in 2018, during which the project was suspended, renegotiated, and finally reinstated. 
+This fluctuation mirrored not only political dynamics but also the lack of a flexible and autonomous project governance 
+structure.
+In response, the Chinese contractor adopted a project-centered governance approach, treating the ECRL project as 
+an independent strategic entity rather than a mere contractual deliverable. Several concrete mechanisms were intro-
+duced, including a local project joint task force, decentralized financial negotiation teams, and explicit risk-sharing clauses 
+in renegotiated contracts. These adjustments effectively transformed project management into a strategic buffer zone 
+insulated from political volatility—consistent with above proposition that project governance is evolving toward shared and 
+decentralized control structures in the sharing economy context [58].
+This governance transformation significantly reduced the Chinese contractor’s exposure to potential market loss 
+(l  decreased), minimized credibility damage (θ decreased), and lowered negotiation costs (ce lowered) through more 
+localized and autonomous coordination. Meanwhile, the Malaysian government was able to regain control over sensitive 
+political narratives, reducing reputational losses (µ reduced) and eventual compensation obligations (d reduced).
+The ECRL case exemplifies the practical emergence of a project-sharing governance model, even in the absence of a 
+formalized academic framework. It underscores the urgency of aligning academic research on project management with 
+practical innovations in global infrastructure governance under the Belt and Road Initiative. As your original manuscript 
+emphasizes, demonizing or politicizing international projects tends to incite bargaining behavior rather than fostering 
+cooperative adaptation. Project-level autonomy and decentralization offer a more resilient model, both theoretically and 
+operationally, for managing bargaining risk in transnational contexts.
+7.2 Theoretical implications: from the governance of bargaining for the “Belt and Road” infrastructure projects
+(1) The theory of differential order pattern. The theory of Eastern governance has been passed down for millennia, 
+and although it may not be mainstream in the microcosm of corporate and project governance, its significance in 
+social governance and other areas cannot be disregarded. Fei Xiaotong’s book Rural China introduced the notion of 
+a “differential order pattern” to describe the social structure and interpersonal relationship characteristics of traditional 
+Chinese society. Fei Xiaotong compares the “group pattern” of Western society with the “differential order pattern” of 
+Chinese society in order to explain the latter. The relationship between people in the group pattern is described as 
+“a bundle of clearly tied firewood”, where the interpersonal relationship is succinct and equal. Chinese rural society’s 
+interpersonal pattern of closeness and distance, on the other hand, is akin to a ripple on the water surface [59]. It extends 
+from oneself, circle by circle, dividing closeness and distance according to the distance from oneself. This mode of 
+governance, which relies on differential order pattern theory, has sustained the relationship between the countryside and 
+the village for thousands of years.
+In the context of the Kyaukpyu Deep-Sea Port Project in Myanmar, initial project implementation was obstructed by 
+widespread local resistance, particularly from coastal fishing communities, due to perceptions of unequal land compensa-
+tion and limited local benefit-sharing. Traditional contractual governance models, which emphasize clear boundaries and 
+standardized procedures, proved inadequate in addressing such localized, trust-based concerns.
+To respond to this, the Chinese side gradually adopted a relational governance model aligned with Fei Xiaotong’s 
+theory of “differential order pattern.” Rather than interacting uniformly with all stakeholders, Chinese contractors prioritized 
+engagement based on concentric circles of social distance—starting with local government officials, then village elders, 
+and eventually informal community leaders. For example, the project team initiated temple restoration programs and 
+fishing equipment subsidies for influential coastal households, which catalyzed broader community acceptance. These 
+
+PLOS One | https://doi.org/10.1371/journal.pone.0332379 September 25, 2025 20 / 24
+targeted efforts mirrored Fei’s conceptualization of relationships as “ripples on a water surface,” extending from the self 
+outward in layers of closeness and moral obligation [59].
+Practically, this governance adaptation reduced local hostility and bargaining intensity (reflected in a lower p), improved 
+host acceptance (raising the effective cooperation benefit πg ), and reduced the credibility loss from political backlash (µ 
+decreased). The Kyaukpyu case illustrates how traditional Eastern governance concepts—though historically rooted in 
+rural societies—can offer effective, context-sensitive mechanisms for managing bargaining risks in international infrastruc-
+ture projects.
+(2) The theory of relationship governance. Rational governance frequently presents itself as a counterpoint to 
+rule-based governance, indicating that the governance process is not strictly rule-based, but rather consensual, reliant 
+upon mutual trust and full consultation among various participants. The roots of relational governance are grounded in the 
+Eastern governance system, where cultural practices hold significant influence. Chinese society, for instance, has been an 
+“acquaintance society” since ancient times, while Western governance culture is based on the rule of law and regulations 
+as the foundation of governance. While rule-based governance is essential in governance activities, relational governance 
+can serve as an alternative and complement to rule-based governance in certain contexts. In the realm of project 
+governance, relational governance can largely compensate for the absence of “contractual governance” in projects, and 
+has emerged as one of the two most vital concepts or approaches in corporate governance and project governance.
+The Jakarta–Bandung High-Speed Railway Project in Indonesia exemplifies the growing prominence of relational 
+governance as an alternative to strict rule-based or contract-based governance, particularly in cross-border infrastructure 
+cooperation. In the early stages of the project, disputes over land acquisition, unclear property rights, and inconsistent 
+policy enforcement led to significant delays and stakeholder mistrust. These challenges revealed the limitations of formal 
+contracts in environments where the legal system is fragmented and administrative power is decentralized.
+To address these issues, the Chinese project consortium did not rely solely on legal renegotiation mechanisms. 
+Instead, they adopted a relational governance approach deeply rooted in Eastern governance traditions—emphasizing 
+mutual trust, long-term relationships, and frequent consultation. Practical measures included establishing an Indonesian–
+Chinese coordination office embedded within the local government structure, frequent informal dialogues with provincial 
+authorities, and public forums with affected communities. In one notable example, Chinese and Indonesian executives 
+jointly attended Ramadan events in affected areas, strengthening interpersonal bonds and demonstrating mutual respect.
+This relational approach significantly reduced negotiation costs (ce, cg), as consensus-building supplanted adversarial 
+legal processes. It also mitigated reputational losses stemming from early-stage conflict (µ, θ), and partially offset poten-
+tial market losses for the contractor by restoring local legitimacy (l  stabilized). The Jakarta–Bandung case illustrates how 
+relational governance, grounded in trust and cultural affinity, can serve as a flexible yet effective complement to rule-based 
+governance in managing bargaining risks under the Belt and Road Initiative.
+(3) The theory of order governance. The traditional Chinese ritual order is composed of two orders: “constructive 
+order” and “self-generated order”. This enables citizens of society to comply with the obligatory rules of the state, while 
+simultaneously instilling moral standards that promote self-discipline and discipline. As a result, it serves as an effective 
+mechanism of governance. The Chinese indigenous ritual governance, represented by Confucianism, is a theory of order 
+and governance that is widely recognized as a fusion of traditional culture and governance theory for regulating social 
+behavior [60]. Unlike the Western theory of social order governance, which is based on contract theory, the indigenous 
+Chinese theory of social governance emphasizes the rule of law in conjunction with the rule of morality. From ancient 
+times to the present, social order has been well ordered under this theory of governance, whether it was during the feudal 
+dynasties or in modernized China. This is sufficient to demonstrate the validity of this theory in specific scenarios.
+The Colombo Port City Project in Sri Lanka, a flagship Belt and Road Initiative project, encountered substantial regula-
+tory uncertainty during its early stages, including abrupt policy reversals, environmental protests, and inconsistent licens-
+ing procedures. These challenges were symptomatic of fragmented legal enforcement and a lack of shared normative 
+
+PLOS One | https://doi.org/10.1371/journal.pone.0332379 September 25, 2025 21 / 24
+frameworks between project stakeholders. Initial attempts to rely solely on contract-based dispute mechanisms failed to 
+resolve recurring governance frictions.
+To address this, the Chinese consortium implemented a dual-layered governance mechanism reflective of traditional 
+Chinese order governance theory. Specifically, a “constructive order” was established through the signing of memoranda 
+of understanding (MOUs) with multiple levels of the Sri Lankan government, ensuring formal alignment with national 
+development goals and legal standards. Concurrently, a “self-generated order” was cultivated through non-contractual 
+moral commitments, including jointly issued ethical codes, environmental charters, and publicly endorsed social responsi-
+bility pledges signed by both parties.
+These efforts promoted a holistic behavioral discipline across the project ecosystem. They not only reduced transaction 
+friction but also fostered moral reciprocity and institutional legitimacy. As a result, reputational risks on both sides dimin-
+ished (µ, θ), the host government’s project completion losses were mitigated (q decreased), and negotiation costs (ce, cg)  
+fell due to fewer procedural disruptions. The Colombo case demonstrates how Confucian-rooted order governance—com-
+bining formal legal instruments with culturally resonant moral norms—can effectively stabilize cooperation in complex 
+international infrastructure projects where rule-based governance alone may fall short.
+8. Conclusions
+This study focuses on the bargaining behavior observed in “Belt and Road” infrastructure projects, and puts forward the 
+concept of bargaining risk as a distinct and practical form of project risk. Unlike traditional political risk, which often stems 
+from sudden, top-down government intervention, bargaining risk typically arises within the existing contractual and insti-
+tutional framework through deliberate, strategic interactions. Clarifying this distinction helps refine our theoretical under-
+standing of international infrastructure risks and offers a more precise lens for analyzing China’s overseas projects.
+Drawing on the logic of the Kindleberger Trap Theory, the research interprets these bargaining behaviors as structural 
+manifestations of responsibility asymmetry in a rising-power context. Much like how the Kindleberger Trap describes 
+global instability caused by hegemonic vacuums, we observe that when Chinese contractors assume de facto infrastruc-
+ture leadership roles without corresponding normative legitimacy or reciprocal obligations from host states, it creates 
+bargaining incentives. This perspective helps explain why host countries may continue to seek new terms, even within 
+existing agreements, and why the political burden of stabilization often falls disproportionately on the Chinese side.
+Through multiple case studies, the research identifies factors that commonly trigger bargaining behavior—such as polit-
+ical transitions, contract asymmetries, or localized resistance. Projects like the Colombo Port City, Kyaukpyu Deep-Water 
+Port, and Jakarta–Bandung High-Speed Railway provide concrete illustrations of how tensions evolve and how gover-
+nance responses vary in effectiveness.
+An evolutionary game model is employed to simulate the strategic decisions of both parties. The results indicate 
+that low negotiation costs and moderate bargaining amounts foster continued cooperation, while excessive bargaining 
+demands, particularly when contractor gains fall below legal or reputational losses, lead rationally to project termination. 
+These insights offer a useful framework for anticipating and managing risk in real-world infrastructure negotiations.
+In addition to quantitative modeling, this study introduces three Eastern governance perspectives—differential order 
+pattern, relational governance, and order governance—as tools for understanding and managing bargaining risks. Rooted 
+in Chinese governance traditions, these frameworks emphasize trust, moral order, and relational equilibrium, offering 
+practical pathways to reduce friction, stabilize expectations, and build informal legitimacy. By integrating them with the 
+Kindleberger Trap perspective, we gain a more holistic understanding of both structural tensions and local governance 
+solutions.
+While the current analysis focuses on bilateral bargaining interactions, future research may explore multilateral negoti-
+ation dynamics, especially in projects involving international lenders, third-party contractors, or transnational regulations. 
+Moreover, as BRI initiatives move into emerging domains such as green infrastructure, digital connectivity, and climate 
+
+PLOS One | https://doi.org/10.1371/journal.pone.0332379 September 25, 2025 22 / 24
+resilience, it becomes increasingly important to test the applicability and boundaries of this model across sectors. Further 
+studies in these directions may extend both the theoretical relevance and policy utility of the bargaining risk framework.
+Author contributions
+Conceptualization: Zhifeng Shen, Yongming Ye, Ahsan Siraj, Zhihui Li.
+Data curation: Zhifeng Shen, Yongming Ye, Zhihui Li.
+Funding acquisition: Zhifeng Shen.
+Methodology: Yongming Ye.
+Software: Zhifeng Shen.
+Writing – original draft: Zhifeng Shen, Yongming Ye, Ahsan Siraj, Zhihui Li.
+Writing – review & editing: Zhifeng Shen, Yongming Ye, Ahsan Siraj, Zhihui Li.
+References
+ 1. Liu Y, Houwing E-J, Hertogh M, Yuan Z, Liu H. Explorative Learning in Infrastructure Development Megaprojects: The Case of the Hong Kong-
+Zhuhai- Macao Bridge. Project Management Journal. 2022;53(2):113–27. https://doi.org/10.1177/87569728211065574
+ 2. Louw W, Steyn H, Wium J, Gevers W. An investigation of sponsor attributes on six megaproject cases. IJMPB. 2021;15(1):58–81. https://doi.
+org/10.1108/ijmpb-11-2020-0343
+ 3. Wang ML, Qiu Q, Choi CH. How will the Belt and Road initiative advance China’s exports?. Asia Pacific Business Review. 2018;25(1):81–99. 
+https://doi.org/10.1080/13602381.2018.1525855
+ 4. Li H, Zhong Y, Fan C. Reducing the social risks of transnational railway construction: a discussion on the formation mechanism of host country 
+people’s coping behaviors. ECAM. 2020;28(6):1657–82. https://doi.org/10.1108/ecam-04-2020-0232
+ 5. Bennon M, Fukuyama F. The obsolescing bargain crosses the Belt and Road Initiative: renegotiations on BRI projects. Oxford Review of Economic 
+Policy. 2022;38(2):278–301. https://doi.org/10.1093/oxrep/grac002
+ 6. Mao W. Great-power overseas infrastructure-building and the change of regional order: China’s infrastructural cooperation in southeast Asia as a 
+case (Daguo haiwai jijian yu diqu zhixu biandong). World Econ Polit. 2020;12:96–122.
+ 7. Chheang V. Cambodia’s Embrace of China’s Belt and Road Initiative: Managing Asymmetries, Maximizing Authority. Asian Perspective. 
+2021;45(2):375–96. https://doi.org/10.1353/apr.2021.0005
+ 8. Shen Z, Li M, Li Y. Research on the Logical Evolution of Internationalization Strategy of Chinese Construction Enterprises Based on the Concept of 
+Project Sharing. Pacific Focus. 2022;37(2):343–71. https://doi.org/10.1111/pafo.12211
+ 9. Ogden S. The Impact of China’s Dams on the Mekong River Basin: Governance, Sustainable Development, and the Energy-Water Nexus. Journal 
+of Contemporary China. 2022;32(139):152–69. https://doi.org/10.1080/10670564.2022.2052445
+ 10. Milgrom P, Wilson R. Discovering auctions: Contributions of. 2021.
+ 11. Chan DSW, Pun N. Renegotiating Belt and Road cooperation: social resistance in a Sino–Myanmar copper mine. Third World Quarterly. 
+2020;41(12):2109–29. https://doi.org/10.1080/01436597.2020.1807928
+ 12. Luise C, Buckley PJ, Voss H, Plakoyiannaki E, Barbieri E. A bargaining and property rights perspective on the Belt and Road Initiative: Cases from 
+the Italian port system. J Int Bus Policy. 2021;5(2):172–93. https://doi.org/10.1057/s42214-021-00122-9
+ 13. Glosten LR, Milgrom PR. Bid, ask and transaction prices in a specialist market with heterogeneously informed traders. Journal of Financial Eco-
+nomics. 1985;14(1):71–100. https://doi.org/10.1016/0304-405x(85)90044-3
+ 14. Carr PG. Investigation of Bid Price Competition Measured through Prebid Project Estimates, Actual Bid Prices, and Number of Bidders. J Constr 
+Eng Manage. 2005;131(11):1165–72. https://doi.org/10.1061/(asce)0733-9364(2005)131:11(1165)
+ 15. Cui AP, Wiggins J. What You Ask Changes What I Pay: Framing Effects in Pay What You Want Pricing. Journal of Marketing Theory and Practice. 
+2017;25(4):323–39. https://doi.org/10.1080/10696679.2017.1345281
+ 16. Khezr P, Menezes FM. Dynamic and Static Asking Prices in the Sydney Housing Market. Economic Record. 2016;92(297):209–21. https://doi.
+org/10.1111/1475-4932.12242
+ 17. Lester B, Visschers L, Wolthoff R. Competing with asking prices. Theoretical Economics. 2017;12(2):731–70. https://doi.org/10.3982/te1846
+ 18. Khezr P, Menezes F. Auctions with an asking price. Int J Game Theory. 2018;47(4):1329–50. https://doi.org/10.1007/s00182-018-0620-3
+ 19. Chen C, Lv L, Wang Z, Qiao R. Bargaining optimization model for risk renegotiation with fairness concerns in infrastructure PPP projects. ECAM. 
+2022;30(9):3876–94. https://doi.org/10.1108/ecam-11-2021-1006
+
+PLOS One | https://doi.org/10.1371/journal.pone.0332379 September 25, 2025 23 / 24
+ 20. Chiengkul P. Towards a greener BRI? Critical IPE, the Belt and Road Initiative, and renewable energy transitions. Australian Journal of International 
+Affairs. 2025;79(3):385–405. https://doi.org/10.1080/10357718.2025.2482719
+ 21. Bunnak P, Song N, Chen X, Thomson R. A governance perspective on China’s belt and road initiative: a case study of the Sino-Thai railway proj-
+ect. Journal of Asian Public Policy. 2024;1–20. https://doi.org/10.1080/17516234.2024.2386719
+ 22. Wang Z. Promise and peril of relational governance for Asian regionalism: evidence from China’s BRI infrastructure development in maritime 
+Southeast Asia. Asia Eur J. 2025. https://doi.org/10.1007/s10308-025-00714-7
+ 23. Kuik C-C. Asymmetry and Authority: Theorizing Southeast Asian Responses to China’s Belt and Road Initiative. Asian Perspective. 
+2021;45(2):255–76. https://doi.org/10.1353/apr.2021.0000
+ 24. Yin-nor TJIA, L. China’s role in Kazakhstan’s automotive sector: The complexity and complementarity of multi-vector state-to-state engagement 
+and product diversification. Competition & Change. https://doi.org/10.1177/10245294251335097
+ 25. Robock SH. Political risk: Identification and assessment. Columbia Journal of World Business. 1971;6(4):6–20.
+ 26. Jiang W, Martek I. Strategies for managing the political risk of investing in infrastructure projects, in developing countries. Engineering, Construc-
+tion and Architectural Management. 2024;31(10):4079–98.
+ 27. Li J, Van Assche A, Li L, Qian G. Foreign direct investment along the Belt and Road: A political economy perspective. J Int Bus Stud. 
+2021;53(5):902–19. https://doi.org/10.1057/s41267-021-00435-0
+ 28. Conway JE. The risk is in the relationship (not the country): Political risk management in the uranium industry in Kazakhstan. Energy Policy. 
+2013;56:201–9. https://doi.org/10.1016/j.enpol.2012.12.043
+ 29. Safdar MT. The BRI in Pakistan’s power sector: From initial success to structural challenges. World Development. 2025;190:106929. https://doi.
+org/10.1016/j.worlddev.2025.106929
+ 30. Asmussen CG, Fosfuri A, Larsen MM, Santangelo GD. Corporate social responsibility in the global value chain: A bargaining perspective. J Int Bus 
+Stud. 2023;54(7):1175–92. https://doi.org/10.1057/s41267-023-00635-w
+ 31. Lin H, Nie S, Wu P, Yuan M, Yu M, Tam V. Megaproject responsible innovation: Concept, framework, and governance. Front Eng Manag. 
+2025;12(3):653–68. https://doi.org/10.1007/s42524-025-4071-9
+ 32. Hu G. Postmodern reflection and indigenous research of management paradigms. 1 ed. Beijing: China Renmin University Press. 2017.
+ 33. Warner M, Zhu Y. Labour and management in the People’s Republic of China: seeking the ‘harmonious society’. Chinese Management in the ‘Har-
+monious Society’. Routledge. 2013: 13–26.
+ 34. Durand R, Kremp P-A. Classical Deviation: OrganizationalandIndividual Status as Antecedents of Conformity. AMJ. 2016;59(1):65–89. https://doi.
+org/10.5465/amj.2013.0767
+ 35. Dyal-Chand R. Regulating sharing: The sharing economy as an alternative capatilist system. Tul L Rev. 2015;90:241.
+ 36. Xue L, Ray G, Zhao X. Managerial Incentives and IT Strategic Posture. Information Systems Research. 2017;28(1):180–98. https://doi.
+org/10.1287/isre.2016.0660
+ 37. Ika LA, Söderlund J, Munro LT, Landoni P. When project management meets international development, what can we learn? Elsevier. 2020.
+ 38. Yuan H, Ma X, Xia B. Mega infrastructure project affordance: A new perspective to improve stakeholder management and project sustainability. 
+Front Eng Manag. 2024;11(4):766–71. https://doi.org/10.1007/s42524-024-4063-1
+ 39. Kawashima K. Service outsourcing and labour mobility in a digital age: transnational linkages between Japan and Dalian, China. Global Networks. 
+2017;17(4):483–99. https://doi.org/10.1111/glob.12157
+ 40. Artto K, Kujala J, Dietrich P, Martinsuo M. What is project strategy? International Journal of Project Management. 2008;26(1):4–12. https://doi.
+org/10.1016/j.ijproman.2007.07.006
+ 41. Patanakul P, Shenhar AJ. What Project Strategy Really Is: The Fundamental Building Block in Strategic Project Management. Project Management 
+Journal. 2012;43(1):4–20. https://doi.org/10.1002/pmj.20282
+ 42. Yeow A, Soh C, Hansen R. Aligning with new digital strategy: A dynamic capabilities approach. The Journal of Strategic Information Systems. 
+2018;27(1):43–58. https://doi.org/10.1016/j.jsis.2017.09.001
+ 43. Piscicelli L, Ludden GDS, Cooper T. What makes a sustainable business model successful? An empirical comparison of two peer-to-peer 
+goods-sharing platforms. Journal of Cleaner Production. 2018;172:4580–91. https://doi.org/10.1016/j.jclepro.2017.08.170
+ 44. Turcan V, Gribincea A, Birca I. Digital economy-a premise for economic development in the 20th century. Economie si Sociologie: Revista 
+Teoretico- Stiintifica. 2014;(2):109–15.
+ 45. Sadiq M, Moslehpour M, Qiu R, Hieu VM, Duong KD, Ngo TQ. Sharing economy benefits and sustainable development goals: Empirical evidence 
+from the transportation industry of Vietnam. Journal of Innovation & Knowledge. 2023;8(1):100290. https://doi.org/10.1016/j.jik.2022.100290
+ 46. Oliver C, Holzinger I. The Effectiveness of Strategic Political Management: A Dynamic Capabilities Framework. AMR. 2008;33(2):496–520. https://
+doi.org/10.5465/amr.2008.31193538
+ 47. Bahinipati BK, Kanda A, Deshmukh SG. Revenue sharing in semiconductor industry supply chain: Cooperative game theoretic approach. Sad-
+hana. 2009;34(3):501–27. https://doi.org/10.1007/s12046-009-0018-9
+ 48. Botsman R, Foley K. What’s mine is yours. Tantor Media, Incorporated. 2010.
+
+PLOS One | https://doi.org/10.1371/journal.pone.0332379 September 25, 2025 24 / 24
+ 49. Kramer MR, Porter M. Creating shared value. Boston, MA, USA: FSG. 2011.
+ 50. Ika LA, Hodgson D. Learning from international development projects: Blending Critical Project Studies and Critical Development Studies. Interna-
+tional Journal of Project Management. 2014;32(7):1182–96. https://doi.org/10.1016/j.ijproman.2014.01.004
+ 51. Oumlil R, Juiz C. An Up-to-date Survey in Barriers to Open Innovation. Journal of Technology Management & Innovation. 2016;11(3):137–52. 
+https://doi.org/10.4067/s0718-27242016000300016
+ 52. Tempini N. Till data do us part: Understanding data-based value creation in data-intensive infrastructures. Information and Organization. 
+2017;27(4):191–210. https://doi.org/10.1016/j.infoandorg.2017.08.001
+ 53. Geraldi J, Söderlund J. Project studies: What it is, where it is going. International Journal of Project Management. 2018;36(1):55–70. https://doi.
+org/10.1016/j.ijproman.2017.06.004
+ 54. Locatelli G, Ika L, Drouin N, Müller R, Huemann M, Söderlund J, et al. A Manifesto for project management research. European Management 
+Review. 2023;20(1):3–17. https://doi.org/10.1111/emre.12568
+ 55. Bernardi M, Diamantini D. Shaping the sharing city: An exploratory study on Seoul and Milan. Journal of Cleaner Production. 2018;203:30–42. 
+https://doi.org/10.1016/j.jclepro.2018.08.132
+ 56. Kulp HS, Kool AL. You help me, he helps you: dispute systems design in the sharing economy. Wash UJL & Pol’y. 2015;48:179.
+ 57. Hakim J. ‘The Spornosexual’: the affective contradictions of male body-work in neoliberal digital culture. Journal of Gender Studies. 
+2016;27(2):231–41. https://doi.org/10.1080/09589236.2016.1217771
+ 58. Zwikael O. International journal of project management special issue on “project benefit management”. Int J Proj Manag. 2016.
+ 59. Fei X. The fertility system in rural China. Peking University Press Beijing, China; 1998.
+ 60. Chin T, Shi Y, Rowley C, Meng J. Confucian business model canvas in the Asia Pacific: a Yin-Yang harmony cognition to value creation and inno-
+vation. Asia Pacific Business Review. 2020;27(3):342–58. https://doi.org/10.1080/13602381.2020.1795481

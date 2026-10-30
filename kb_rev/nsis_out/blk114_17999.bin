@@ -1,0 +1,474 @@
+# unicode编码的nsis脚本
+
+!addplugindir "${BUILD_RESOURCES_DIR}\x86-unicode"
+!addincludedir "${BUILD_RESOURCES_DIR}\include"
+
+
+Var Dialog
+Var MessageBoxHandle
+Var installPath
+Var appExe
+Var isUpdate
+Var oldVersion # 系统中已安装版本
+Var UnInstallValue  #卸载进度
+
+# 宏定义内容
+!define INSTALL_FILENAME "${PRODUCT_NAME}.exe"
+!define UNINSTALL_FILENAME "Uninstall ${PRODUCT_NAME}.exe"
+!define INSTALL_APPEND_DIR "wenku-pc"
+!define newDesktopLink "$DESKTOP\${PRODUCT_NAME}.lnk"
+!define UNINSTALL_DIR "$TEMP\WENKU\wenkuStep"
+!define INSTALL_REGISTRY_KEY "Software\${APP_GUID}"
+!define UNINSTALL_REGISTRY_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${UNINSTALL_APP_KEY}"
+!define SHCNF_IDLIST 0
+!define MUI_FINISHPAGE_NOREBOOTSUPPORT ;安装完成后不需要重新启动
+!define LICENCE_WEB_URL "https://wenku.baidu.com/portal/browse/help#help/24" ;文库协议链接地址
+!define LOCATE_OPTIONS "/G=1 /M=*.* /L=FDE" ;参考https://nsis.sourceforge.io/Locate
+!define PROTOCOLS_SCHEME "wkpcclient" ;通过此协议pc浏览器可直接调起文库客户端
+
+SetOverwrite on
+SetCompress auto
+SetCompressor /SOLID lzma
+SetCompressorDictSize 32
+SetDatablockOptimize on
+SetDateSave on
+Unicode true
+
+AllowRootDirInstall false
+Name "${PRODUCT_NAME}"
+OutFile "${PROJECT_DIR}\dist\wenku-Setup-${VERSION}.exe"
+InstallDir "$PROGRAMFILES\wenku-pc"
+RequestExecutionLevel admin ;Request application privileges for Windows Vista
+
+# 引入其他nsis脚本
+!include "MUI.nsh"
+!include "FileFunc.nsh"
+!include "StdUtils.nsh"
+!include "nsOpenUrl.nsh"
+!include "WinVer.nsh"
+# 必须添加，否则安装图标不能正常展示
+!insertmacro MUI_LANGUAGE "SimpChinese"
+
+# 安装和卸载页面
+Page         custom     InstallProgress
+Page         instfiles  "" InstallShow
+UninstPage   custom     un.UninstallProgress
+#UninstPage   instfiles	""	un.UninstallNow
+
+Function CancelTopmost
+    ; 使用 WinAPI 常量
+    !define HWND_NOTOPMOST 0xFFFFFFFE
+    !define SWP_NOMOVE 0x0002
+    !define SWP_NOSIZE 0x0001
+    !define SWP_NOACTIVATE 0x0010
+
+    ; 获取安装程序主窗口的句柄
+    System::Call 'USER32::FindWindow(t "#32770", "") i.@hWnd'
+    
+    ; 检查是否成功获取窗口句柄
+    ${If} $hWnd != 0
+        ; 调用 SetWindowPos 取消置顶
+        System::Call 'USER32::SetWindowPos(i $hWnd, i ${HWND_NOTOPMOST}, i 0, i 0, i 0, i 0, i ${SWP_NOMOVE}|${SWP_NOSIZE}|${SWP_NOACTIVATE})'
+    ${EndIf}
+FunctionEnd
+
+Function .onInit
+    # 先判断是第一次安装还是升级安装
+    ReadRegStr $installPath HKLM "${INSTALL_REGISTRY_KEY}" "InstPath"
+    ReadRegStr $oldVersion HKLM "${UNINSTALL_REGISTRY_KEY}" "DisplayVersion"
+    ${If} $installPath == ""
+        StrCpy $installPath "$PROGRAMFILES\wenku-pc"
+        StrCpy $INSTDIR $installPath
+        StrCpy $isUpdate "false"
+    ${Else}
+        StrCpy $INSTDIR $installPath
+        # 只有当前版本比已安装版本新时才执行升级
+        ${If} $oldVersion == ""
+            StrCpy $isUpdate "false"
+        ${ElseIf} ${VERSION} > $oldVersion
+            StrCpy $isUpdate "true"
+        ${Else}
+            StrCpy $isUpdate "false"
+        ${EndIf}
+    ${EndIf}
+    # 安装程序初始化开始
+    SetOutPath "${UNINSTALL_DIR}"
+    File /r /x *.db "${BUILD_RESOURCES_DIR}\resources\*.*"
+    nsSkinEngine::NSISInitSkinEngine /NOUNLOAD "${UNINSTALL_DIR}" "InstallPackages.xml" "WizardTab" "false" ${PRODUCT_NAME} "${APP_GUID}" "${MUI_ICON}" "false"
+    Pop $Dialog
+    nsSkinEngine::NSISInitMessageBox "MessageBox_Install.xml" "TitleLab" "TextLab" "CloseBtn" "YESBtn" "NOBtn"
+    Pop $MessageBoxHandle
+    # windows版本值为： 95、98、ME、NT4、2000、XP、2003、Vista、2008、7、2008R2、8、2012、8.1、2012R2、10
+    # 只允许Windows7及以上系统安装(即2008及以下不允许安装)
+    ${If} ${AtMostWin2008}
+        nsSkinEngine::NSISMessageBox "" "该系统暂不支持，$\n本应用只支持win7、win8、win10系统"
+        Pop $0
+        ${If} $0 == "1"
+            nsSkinEngine::NSISExitSkinEngine "false"
+        ${EndIf}
+    ${EndIf}
+    # 处理运行提醒弹窗和升级操作
+    Call handleAlertAndUpdate
+    Call CancelTopmost
+FunctionEnd
+
+Function handleAlertAndUpdate
+    # 如果程序正在运行，则弹窗提醒
+    nsProcess::_FindProcess "${INSTALL_FILENAME}"
+    Pop $R0
+    ${If} $R0 == 0
+        nsSkinEngine::NSISMessageBox "" "应用正在打开中，请关闭应用再操作"
+        Pop $0
+           ${If} $0 == "1"
+            nsSkinEngine::NSISExitSkinEngine "false"
+        ${EndIf}
+    ${Else}
+        # 检查当前版本是否已经安装
+        ${If} $oldVersion == ${VERSION}
+            nsSkinEngine::NSISMessageBox "" "当前版本已安装"
+            Pop $0
+               ${If} $0 == "1"
+                nsSkinEngine::NSISExitSkinEngine "false"
+            ${EndIf}
+        ${Else}
+            # 安装程序初始化完毕后，如果是升级则直接启动升级步骤
+            ${If} $isUpdate == "true"
+                Call InstallPageFunc
+            ${EndIf}
+        ${EndIf}
+    ${EndIf}
+FunctionEnd
+
+Function InstallProgress
+    # 关闭按钮
+    GetFunctionAddress $0 OnInstallCloseFunc
+    nsSkinEngine::NSISOnControlBindNSISScript "InstallTab_sysCloseBtn" $0
+    # 缩小按钮
+    GetFunctionAddress $0 OnInstallMinFunc
+    nsSkinEngine::NSISOnControlBindNSISScript "InstallTab_sysMinBtn" $0
+    # 安装地址输入框
+    GetFunctionAddress $0 OnTextChangeFunc
+    nsSkinEngine::NSISOnControlBindNSISScript "InstallTab_InstallFilePath" $0
+    nsSkinEngine::NSISSetControlData "InstallTab_InstallFilePath" $installPath "text"
+    Call OnTextChangeFunc
+    # 安装地址选择按钮
+    GetFunctionAddress $0 OnInstallPathBrownBtnFunc
+    nsSkinEngine::NSISOnControlBindNSISScript "InstallTab_SelectFilePathBtn"  $0
+    # 自定义安装按钮
+    GetFunctionAddress $0 OnCheckChanged
+    nsSkinEngine::NSISOnControlBindNSISScript "CustomOptionsCheckBox"  $0
+    # checkbox 同意协议
+    GetFunctionAddress $0 acceptCheckChangedFunc
+    nsSkinEngine::NSISOnControlBindNSISScript "acceptCheckBox"  $0
+    # 浏览协议信息
+    GetFunctionAddress $0 showLicense
+    nsSkinEngine::NSISOnControlBindNSISScript "licenseBtn"  $0
+    # 立即安装
+    GetFunctionAddress $0 InstallPageFunc
+    nsSkinEngine::NSISOnControlBindNSISScript "InstallBtn"  $0
+    # 安装完成按钮
+    GetFunctionAddress $0 OnCompleteBtnFunc
+    nsSkinEngine::NSISOnControlBindNSISScript "CompleteTab_CompleteBtn"  $0
+    Call OnCheckChanged
+    nsSkinEngine::NSISSetControlData "acceptCheckBox"  "true"  "Checked"
+    nsSkinEngine::NSISSetControlData "deskShortCheckBox"  "true"  "Checked"
+    nsSkinEngine::NSISRunSkinEngine "true"
+FunctionEnd
+
+Function OnInstallCloseFunc
+    Call handleInstallFinishFunc
+    nsSkinEngine::NSISExitSkinEngine "false"
+FunctionEnd
+
+Function OnInstallMinFunc
+    nsSkinEngine::NSISMinSkinEngine
+FunctionEnd
+
+Function OnTextChangeFunc
+    nsSkinEngine::NSISGetControlData InstallTab_InstallFilePath "text"
+    Pop $0
+    StrCpy $INSTDIR $0
+FunctionEnd
+
+Function OnInstallPathBrownBtnFunc
+    nsSkinEngine::NSISGetControlData "InstallTab_InstallFilePath" "text" ;
+    Pop $installPath
+    nsSkinEngine::NSISSelectFolderDialog "请选择安装路径" $installPath
+    Pop $installPath
+
+    StrCpy $0 $installPath
+    ${If} $0 == "-1"
+    ${Else}
+        StrCpy $INSTDIR "$installPath\${INSTALL_APPEND_DIR}"
+        StrCpy $installPath $INSTDIR
+        nsSkinEngine::NSISSetControlData "InstallTab_InstallFilePath"  $installPath  "text"
+    ${EndIf}
+FunctionEnd
+
+Function OnCheckChanged
+    nsSkinEngine::NSISGetControlData "CustomOptionsCheckBox" "Checked" ;
+    Pop $0
+    ${If} $0 == "1"
+        nsSkinEngine::NSISResize "600" "520"
+        nsSkinEngine::NSISSetControlData "customVer"  "true"  "visible"
+    ${Else}
+        ${If} $isUpdate == "true"
+            nsSkinEngine::NSISResize "600" "450"
+        ${Else}
+            nsSkinEngine::NSISResize "600" "310"
+        ${EndIf}
+        nsSkinEngine::NSISSetControlData "customVer"  "false"  "visible"
+    ${EndIf}
+FunctionEnd
+
+Function acceptCheckChangedFunc
+    nsSkinEngine::NSISGetControlData "acceptCheckBox" "Checked" ;
+    Pop $0
+    ${If} $0 == "1"
+        nsSkinEngine::NSISSetControlData "InstallBtn"  "true"  "enable"
+    ${Else}
+        nsSkinEngine::NSISSetControlData "InstallBtn"  "false"  "enable"
+    ${EndIf}
+FunctionEnd
+
+Function showLicense
+    ExecShell "open" "${LICENCE_WEB_URL}"
+FunctionEnd
+
+Function InstallPageFunc
+    # 升级程序之前先将旧的文件与桌面链接删除
+    ${If} $isUpdate == "true"
+        RMDir /r "$INSTDIR\locales"
+        RMDir /r "$INSTDIR\resources"
+        RMDir /r "$INSTDIR\swiftshader"
+        Delete "$INSTDIR\*.*"
+        Delete "$DESKTOP\${PRODUCT_NAME}.lnk"
+        ${StdUtils.InvokeShellVerb} $0 "$INSTDIR" "${PRODUCT_NAME}" ${StdUtils.Const.ShellVerb.UnpinFromTaskbar}
+    ${EndIf}
+
+    CreateDirectory "$INSTDIR"
+    ; # 将 ${EXENAME} 的值复制到另一个变量
+    StrCpy $0 $EXEPATH
+    ; # 提取文件名
+    ${GetFileName} $0 $0
+    FileOpen $1 "$INSTDIR\cInfo.txt" w
+    FileWrite $1 "$0"
+    FileClose $1
+
+    nsSkinEngine::NSISResize "600" "450"
+    nsSkinEngine::NSISSetControlData "customVer"  "false"  "visible"
+    nsSkinEngine::NSISSetControlData "InstallProgressBar"  "0"  "ProgressInt"
+    nsSkinEngine::NSISSetControlData "progressText"  "0%"  "text"
+    nsSkinEngine::NSISStartInstall "true"
+FunctionEnd
+
+Function InstallShow
+    ${If} $isUpdate == "true"
+        nsSkinEngine::NSISSetControlData "installLayout"  "false"  "visible"
+        nsSkinEngine::NSISSetControlData "updateLayout"  "true"  "visible"
+        nsSkinEngine::NSISSetControlData "InstallTab_sysCloseBtn"  "false"  "visible"
+    ${Else}
+        nsSkinEngine::NSISSetControlData "installLayout"  "true"  "visible"
+        nsSkinEngine::NSISSetControlData "updateLayout"  "false"  "visible"
+        nsSkinEngine::NSISSetControlData "InstallTab_sysCloseBtn"  "true"  "visible"
+    ${EndIf}
+    nsSkinEngine::NSISBindingProgress "InstallProgressBar" "progressText"
+FunctionEnd
+
+Section InstallFiles
+    SetOutPath "$INSTDIR"
+    SetOverwrite ifnewer
+    File /r "${PROJECT_DIR}\dist\win-unpacked\*.*"
+SectionEnd
+
+Section RegistKeys
+    StrCpy $0 "/allusers"
+    StrCpy $1 ""
+    StrCpy $2 "$INSTDIR\${UNINSTALL_FILENAME}"
+    # 创建卸载程序
+    WriteUninstaller "$2"
+    WriteRegStr HKLM "${INSTALL_REGISTRY_KEY}" "InstPath" "$INSTDIR"
+    WriteRegStr HKLM "${INSTALL_REGISTRY_KEY}" KeepShortcuts "true"
+    WriteRegStr HKLM "${INSTALL_REGISTRY_KEY}" ShortcutName "${SHORTCUT_NAME}"
+    WriteRegStr HKLM "${UNINSTALL_REGISTRY_KEY}" DisplayName "${UNINSTALL_DISPLAY_NAME}$1"
+    WriteRegStr HKLM "${UNINSTALL_REGISTRY_KEY}" UninstallString '"$2" $0'
+    WriteRegStr HKLM "${UNINSTALL_REGISTRY_KEY}" QuietUninstallString '"$2" $0 /S'
+    WriteRegStr HKLM "${UNINSTALL_REGISTRY_KEY}" "DisplayVersion" "${VERSION}"
+    StrCpy $appExe "$INSTDIR\${INSTALL_FILENAME}"
+    WriteRegStr HKLM "${UNINSTALL_REGISTRY_KEY}" "DisplayIcon" "$appExe,0"
+    WriteRegStr HKLM "${UNINSTALL_REGISTRY_KEY}" "Publisher" "${COMPANY_NAME}"
+    WriteRegDWORD HKLM "${UNINSTALL_REGISTRY_KEY}" NoModify 1
+    WriteRegDWORD HKLM "${UNINSTALL_REGISTRY_KEY}" NoRepair 1
+    # 将浏览器调起客户端的protocol写入注册表
+    WriteRegStr HKCR "${PROTOCOLS_SCHEME}" "" "URL:${PROTOCOLS_SCHEME}"
+    WriteRegStr HKCR "${PROTOCOLS_SCHEME}" "URL Protocol" ""
+    WriteRegStr HKCR "${PROTOCOLS_SCHEME}\shell" "" ""
+    WriteRegStr HKCR "${PROTOCOLS_SCHEME}\shell\open" "" ""
+    WriteRegStr HKCR "${PROTOCOLS_SCHEME}\shell\open\command" "" '"$INSTDIR\${INSTALL_FILENAME}" "%1"'
+SectionEnd
+
+Section CreateShorts
+    SetShellVarContext all
+    SetOverwrite ifnewer
+    nsSkinEngine::NSISGetControlData "deskShortCheckBox" "Checked" ;
+    Pop $0
+    ${If} $0 == "1"
+        # 创建桌面快捷方式
+        CreateShortCut "$DESKTOP\${PRODUCT_NAME}.lnk" "$INSTDIR\${PRODUCT_NAME}"
+    ${EndIf}
+    ${StdUtils.InvokeShellVerb} $0 "$INSTDIR" "${PRODUCT_NAME}" ${StdUtils.Const.ShellVerb.PinToTaskbar}
+    Call RefreshShellIcons
+SectionEnd
+
+Section Finish
+    ${If} $isUpdate == "true"
+        Call OnCompleteBtnFunc
+    ${EndIf}
+SectionEnd
+
+Function OnCompleteBtnFunc
+    Call handleInstallFinishFunc
+    Exec '"$INSTDIR\${INSTALL_FILENAME}"'
+    nsSkinEngine::NSISExitSkinEngine "false"
+FunctionEnd
+
+Function handleInstallFinishFunc
+    ${If} $isUpdate != "true"
+        # 处理开机自动启动
+        nsSkinEngine::NSISGetControlData "CompleteTab_AutoLaunchCheckBox" "checked"
+        Pop $R0
+            ${If} $R0 == "1"
+                FileOpen $0 "$INSTDIR\AutoLaunch.txt" w
+                FileClose $0
+            ${Else}
+                FileOpen $0 "$INSTDIR\NoAutoLaunch.txt" w
+                FileClose $0
+            ${EndIf}
+    ${EndIf}
+    nsSkinEngine::NSISHideSkinEngine
+    nsSkinEngine::NSISStopAnimationBkControl
+FunctionEnd
+
+;-----------------------------------------------------------------------------------------------------------------------------
+
+Function un.onInit
+    SetOutPath "${UNINSTALL_DIR}"
+    File /r /x *.db "${BUILD_RESOURCES_DIR}\resources\*.*"
+    # 卸载初始化
+    nsSkinEngine::NSISInitSkinEngine /NOUNLOAD "${UNINSTALL_DIR}" "UninstallPackages.xml" "WizardTab" "false" ${PRODUCT_NAME} "${APP_GUID}" "${MUI_UNICON}" "false"
+    Pop $Dialog
+    nsSkinEngine::NSISInitMessageBox "MessageBox_Uninstall.xml" "TitleLab" "TextLab" "CloseBtn" "YESBtn" "NOBtn"
+    Pop $MessageBoxHandle
+    # 检查app是否正在运行并弹窗提醒
+    Call un.alertRunningApp
+FunctionEnd
+
+Function un.UninstallProgress
+    # 关闭按钮
+    GetFunctionAddress $0 un.OnUnInstallCloseFunc
+    nsSkinEngine::NSISOnControlBindNSISScript "sysCloseBtn" $0
+    # 缩放按钮
+    GetFunctionAddress $0 un.OnUnInstallMinFunc
+    nsSkinEngine::NSISOnControlBindNSISScript "sysMinBtn" $0
+    # 继续保留
+    GetFunctionAddress $0 un.OnUnInstallCloseFunc
+    nsSkinEngine::NSISOnControlBindNSISScript "cancelUninstallBtn" $0
+    # 立即卸载
+    GetFunctionAddress $0 un.UnInstallPageFunc
+    nsSkinEngine::NSISOnControlBindNSISScript "okUninstallBtn" $0
+    # 卸载完毕按钮
+    GetFunctionAddress $0 un.OnCompleteBtnFunc
+    nsSkinEngine::NSISOnControlBindNSISScript "completeBtn" $0
+    # 卸载进度条
+    nsSkinEngine::NSISOnControlBindNSISScript "UnInstallProgressBar"
+    # 卸载文案
+    nsSkinEngine::NSISOnControlBindNSISScript "UnInstallProgressText"
+
+    nsSkinEngine::NSISRunSkinEngine "true"
+FunctionEnd
+
+Function un.alertRunningApp
+    nsProcess::_FindProcess "${INSTALL_FILENAME}"
+    Pop $R0
+    ${If} $R0 == 0
+          nsSkinEngine::NSISMessageBox "" "应用正在打开中，请关闭应用再操作"
+          Pop $0
+              ${If} $0 == "1"
+               nsSkinEngine::NSISExitSkinEngine "false"
+          ${EndIf}
+    ${EndIf}
+FunctionEnd
+
+Function un.OnUnInstallCloseFunc
+    nsSkinEngine::NSISExitSkinEngine "false"
+FunctionEnd
+
+Function un.OnUnInstallMinFunc
+    nsSkinEngine::NSISMinSkinEngine
+FunctionEnd
+
+Function un.UnInstallPageFunc
+    nsSkinEngine::NSISSetControlData "uninstall_tablayout"  "1"  "TabCurrentIndexInt"
+    # 不区分用户
+    SetShellVarContext all
+    # 删除注册表、桌面快捷方式、开机启动
+    DeleteRegKey HKLM "${UNINSTALL_REGISTRY_KEY}"
+    DeleteRegKey HKLM "${INSTALL_REGISTRY_KEY}"
+    Delete "$DESKTOP\${PRODUCT_NAME}.lnk"
+    DeleteRegKey HKCR "${PROTOCOLS_SCHEME}"
+    ${StdUtils.InvokeShellVerb} $0 "$INSTDIR" "${PRODUCT_NAME}" ${StdUtils.Const.ShellVerb.UnpinFromTaskbar}
+    # 删除文件
+    GetFunctionAddress $0 un.RemoveFiles
+    BgWorker::CallAndWait
+FunctionEnd
+
+Function un.RemoveFiles
+    IntOp $UnInstallValue 0 + 8
+    ${Locate} "$INSTDIR" $LOCATE_OPTIONS "un.onDeleteFiles"
+FunctionEnd
+
+Function un.onDeleteFiles
+    IntOp $UnInstallValue $UnInstallValue + 6
+
+    ${If} $UnInstallValue > 100
+        nsSkinEngine::NSISSetControlData "UnInstallProgressBar"  "99"  "ProgressInt"
+        RMDir /r "$INSTDIR\locales"
+        RMDir /r "$INSTDIR\resources"
+        RMDir /r "$INSTDIR\swiftshader"
+        Delete "$INSTDIR\*.*"
+        # 删除文件
+        GetFunctionAddress $0 un.showLastPage
+        BgWorker::CallAndWait
+        Push "StopLocate"
+    ${Else}
+        Delete $R9
+        nsSkinEngine::NSISSetControlData "UnInstallProgressText"  "正在删除$R7"  "text"
+        nsSkinEngine::NSISSetControlData "UnInstallProgressBar"  "$UnInstallValue"  "ProgressInt"
+        Sleep 100
+        Push "StopLocate"
+        ${Locate} "$INSTDIR" $LOCATE_OPTIONS "un.onDeleteFiles"
+    ${EndIf}
+FunctionEnd
+
+# 卸载完毕后展示卸载完成页面
+Function un.showLastPage
+    nsSkinEngine::NSISSetControlData "uninstall_tablayout"  "2"  "TabCurrentIndexInt"
+    nsSkinEngine::NSISNormalSkinEngine
+    # 重新设置卸载完成页面窗口size（直接将窗口设置到指定大小后会导致圆角右边与底部圆角消失，只能通过渐进方式设置窗口大小）
+    nsSkinEngine::NSISResize "490" "216"
+    nsSkinEngine::NSISResize "363" "216"
+    nsSkinEngine::NSISResize "362" "215"
+    Sleep 1000000000
+FunctionEnd
+
+Function un.OnCompleteBtnFunc
+    # 卸载完毕后点击“我知道了”按钮后继续删除安装文件夹
+    RMDir /r /REBOOTOK  "$INSTDIR"
+    nsSkinEngine::NSISHideSkinEngine
+    nsSkinEngine::NSISExitSkinEngine "false"
+FunctionEnd
+
+Function RefreshShellIcons
+    System::Call 'shell32.dll::SHChangeNotify(i, i, i, i) v \
+    (${SHCNF_IDLIST}, ${SHCNF_IDLIST}, 0, 0)'
+FunctionEnd

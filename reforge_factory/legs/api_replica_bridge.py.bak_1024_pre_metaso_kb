@@ -1,0 +1,108 @@
+# -*- coding: utf-8 -*-
+"""api_replica_bridge — 逆向复刻件 API 优先接入层 (1024 用户令: 全渠道尽量避免浏览器自动化).
+
+模式 (每处浏览器腿同构):
+  ① API 优先: importlib 加载复刻件原文件 (绝不修改复刻件本身), 调其公开类/函数;
+  ② 复刻件抛错 (墙/配额/网络/依赖缺) → 降级原浏览器路径, 日志如实打印 fallback 原因;
+  ③ 原浏览器路径原样保留 (降级兜底铁律), 本件只加适配层;
+  ④ 记账: API 路径成功 → channel_invocations.jsonl 追加一行 (tool 字段带
+     api_replica: 前缀), 台账只增不改不删 (1022 宪法口径)。
+
+台账寻址: 显式 ledger 参数 > env RF_API_INVOCATION_LEDGER (绝对路径) >
+ammo_pool/<campaign>/channel_invocations.jsonl (campaign 参数) > 不落盘 (打印)。
+"""
+from __future__ import annotations
+
+import importlib.util
+import json
+import os
+import sys
+import time
+from pathlib import Path
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
+REPO = Path(__file__).resolve().parents[2]          # E:\AI-Station
+AMMO_ROOT = REPO / "ammo_pool"
+
+#: 复刻件登记表 (7 件, 全部已实测贯通 — LEDGER 权威源; dangdang 1024 当当专项令入列)
+REPLICAS: dict[str, Path] = {
+    "sogou":    REPO / "逆向工程" / "sogou-weixin-reverse" / "replica" / "sogou_weixin_api.py",
+    "metaso":   REPO / "逆向工程" / "metaso-reverse" / "replica" / "metaso_api.py",
+    "djyanbao": REPO / "逆向工程" / "djyanbao-reverse" / "replica" / "djyanbao_api.py",
+    "wenku":    REPO / "逆向工程" / "wenku-search-reverse" / "replica" / "wenku_full_api.py",
+    "cnki":     REPO / "逆向工程" / "cnki-reverse" / "replica" / "cnki_api.py",
+    "chinca":   REPO / "逆向工程" / "chinca-reverse" / "replica" / "chinca_api.py",
+    "dangdang": REPO / "逆向工程" / "dangdang-reverse" / "replica" / "dangdang_api.py",
+}
+
+_mod_cache: dict[str, object] = {}
+
+
+def load(name: str):
+    """按名加载复刻件模块 (路径导入, 零修改; 缓存复用)。缺件/依赖缺 → 抛 RuntimeError。"""
+    if name in _mod_cache:
+        return _mod_cache[name]
+    path = REPLICAS.get(name)
+    if path is None:
+        raise RuntimeError(f"未知复刻件: {name!r} (合法={sorted(REPLICAS)})")
+    if not path.is_file():
+        raise RuntimeError(f"复刻件缺失: {path}")
+    # metaso_api.py import 期 curl_cffi 缺失会 sys.exit → 预检 (SystemExit 不入 except Exception)
+    if name == "metaso":
+        try:
+            import curl_cffi  # noqa: F401
+        except ImportError as e:
+            raise RuntimeError(f"复刻件依赖缺: curl_cffi ({e})")
+    spec = importlib.util.spec_from_file_location(f"api_replica_{name}", path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"复刻件加载失败: {path}")
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = mod                     # dataclass 需 sys.modules 可寻址
+    try:
+        spec.loader.exec_module(mod)
+    except SystemExit as e:                          # 复刻件 import 期自检失败如实抛
+        sys.modules.pop(spec.name, None)
+        raise RuntimeError(f"复刻件 import 期退出: {e}")
+    except BaseException:
+        sys.modules.pop(spec.name, None)
+        raise
+    _mod_cache[name] = mod
+    return mod
+
+
+def resolve_ledger(ledger: str | Path | None = None,
+                   campaign: str | None = None) -> Path | None:
+    """台账路径解析: 显式 > env > campaign 池 > None(不落盘)。"""
+    if ledger:
+        return Path(ledger)
+    env = os.environ.get("RF_API_INVOCATION_LEDGER", "").strip()
+    if env:
+        return Path(env)
+    if campaign:
+        return AMMO_ROOT / campaign / "channel_invocations.jsonl"
+    return None
+
+
+def append_invocation(channel: str, tool: str, queries: str,
+                      yld: str, note: str = "",
+                      *, campaign: str | None = None,
+                      ledger: str | Path | None = None) -> bool:
+    """API 路径成功 → 台账追加一行 {channel,ts,tool,queries,yield,note} (只增)。
+
+    tool 由调用方给 (本层不越权编造), 惯例前缀 ``api_replica:``。"""
+    row = {"channel": channel, "ts": time.strftime("%Y-%m-%d %H:%M:%S"),
+           "tool": tool, "queries": queries, "yield": yld,
+           "note": note or "api_replica 路径 (1024 API优先令)"}
+    lp = resolve_ledger(ledger, campaign)
+    if lp is None:
+        print(f"[api_replica] 台账未寻址(无 campaign/env), 仅打印: {json.dumps(row, ensure_ascii=False)}")
+        return False
+    try:
+        lp.parent.mkdir(parents=True, exist_ok=True)
+        with lp.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps(row, ensure_ascii=False) + "\n")
+        return True
+    except OSError as e:
+        print(f"[api_replica] 台账写失败({lp}): {type(e).__name__}: {e}")
+        return False

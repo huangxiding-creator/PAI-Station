@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window size="356,189" sizebox="0,0,0,0" caption="0,0,0,30" roundcorner="24,24" showshadow="true" shadowcolor="#676767" shadowsize="5" shadowdarkness="50" shadowposition="1,1" shadowcorner="24,24,24,24">
+
+	<!--卸载提醒弹窗-->
+	<Font id="1000" name="微软雅黑" size="15" bold="false" />
+
+	<VerticalLayout bkcolor="#FFFFFFFF">
+		<Button name="YESBtn" width="10" height="10" padding="322,24,24,0" normalimage="file='res\button\btn_win_close.png'" hotimage="file='res\button\btn_win_close.png'" pushedimage="file='res\button\btn_win_close.png'" />
+		<VerticalLayout height="54" padding="48,0,48,0" inset="0,6,0,0">
+			<Text name="TextLab" text="该系统暂不支持，本应用只支持win7、win8、win10系统" align="center" textcolor="0xFF222222" font="1000"/>
+		</VerticalLayout>
+		<Button name="YESBtn" text="我知道了" padding="118,0,0,0" textcolor="#FFFFFFFF" normalimage="res\button\btn_dialog_green.png" hotimage="res\button\btn_dialog_green_hover.png" pushedimage="res\button\btn_dialog_green_hover.png" width="120" height="42" font="1000" />
+	</VerticalLayout>
+</Window>

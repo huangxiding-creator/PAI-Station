@@ -1,0 +1,3094 @@
+{
+  "_doc": "B级(234条)接入行动分型: ①free_key=免费API钥可申领/免key开放API(action_url=申领或直调入口) ②dataset=开放数据集·文件直下·目录清单形态(action_url=下载或目录入口) ③free_register=免费账号注册可用·含免登录网页免费面 ④paid_only=纯付费/订阅/机构订阅(留档不接入); 依据MASTER_REGISTRY.json tier=B逐条access字段+官网常识分型; action_url取登记entry时即免费使用面",
+  "source": "MASTER_REGISTRY.json",
+  "generated": "2026-10-26",
+  "stats": {
+    "total_B": 234,
+    "free_key": 64,
+    "dataset": 21,
+    "free_register": 124,
+    "paid_only": 25
+  },
+  "entries": [
+    {
+      "idx": 0,
+      "name": "ACLED",
+      "repo_or_site": "https://acleddata.com/",
+      "bucket": "free_key",
+      "action_url": "https://acleddata.com/register/",
+      "form": "注册账号→申API key(学术/非营利免费); 年度CSV可直下",
+      "access_raw": "需key(学术/非营利免费)",
+      "tags": [
+        "项目数据",
+        "数据集"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 1,
+      "name": "ANSI Webstore",
+      "repo_or_site": "https://webstore.ansi.org",
+      "bucket": "paid_only",
+      "action_url": "https://webstore.ansi.org",
+      "form": "标准付费购买(PDF按份), 留档",
+      "access_raw": "浏览器(付费)",
+      "tags": [
+        "标准定额",
+        "工商招投标"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 2,
+      "name": "ASME",
+      "repo_or_site": "https://www.asme.org",
+      "bucket": "paid_only",
+      "action_url": "https://www.asme.org",
+      "form": "标准付费购买, 留档",
+      "access_raw": "浏览器(付费)",
+      "tags": [
+        "标准定额"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 3,
+      "name": "ASTM International",
+      "repo_or_site": "https://www.astm.org",
+      "bucket": "paid_only",
+      "action_url": "https://www.astm.org",
+      "form": "标准付费购买, 留档",
+      "access_raw": "浏览器(付费)",
+      "tags": [
+        "标准定额"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 4,
+      "name": "BochaAI/bocha-search-mcp",
+      "repo_or_site": "https://github.com/BochaAI/bocha-search-mcp",
+      "bucket": "free_key",
+      "action_url": "https://open.bochaai.com",
+      "form": "注册赠免费额度key(超出按量付费), 中文AI搜索API",
+      "access_raw": "需key(博查中文AI搜索API)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": "key_required"
+    },
+    {
+      "idx": 5,
+      "name": "Brave Search(网页+API)",
+      "repo_or_site": "search.brave.com / brave.com/search/api",
+      "bucket": "free_key",
+      "action_url": "https://api.search.brave.com/app/register",
+      "form": "免费层2000次/月key; 网页免登录兜底",
+      "access_raw": "免登录网页；API需key(有免费层,额度以官网为准)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 6,
+      "name": "brave/brave-search-mcp-server",
+      "repo_or_site": "https://github.com/brave/brave-search-mcp-server",
+      "bucket": "free_key",
+      "action_url": "https://api.search.brave.com/app/register",
+      "form": "同源Brave key(免费层), MCP服务器用",
+      "access_raw": "需key(API)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": "key_required"
+    },
+    {
+      "idx": 7,
+      "name": "brave/brave-search-skills",
+      "repo_or_site": "https://github.com/brave/brave-search-skills",
+      "bucket": "free_key",
+      "action_url": "https://api.search.brave.com/app/register",
+      "form": "同源Brave key(免费层)",
+      "access_raw": "需key(有免费层)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 8,
+      "name": "brightdata/brightdata-mcp",
+      "repo_or_site": "https://github.com/brightdata/brightdata-mcp",
+      "bucket": "paid_only",
+      "action_url": "https://brightdata.com",
+      "form": "付费SaaS key(有试用), 留档",
+      "access_raw": "需key(付费, 有试用)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 9,
+      "name": "BSI",
+      "repo_or_site": "https://www.bsigroup.com/en-GB/",
+      "bucket": "paid_only",
+      "action_url": "https://www.bsigroup.com/en-GB/",
+      "form": "标准购买为主(部分BS标准免费下载), 留档",
+      "access_raw": "浏览器(付费;部分BS免费)",
+      "tags": [
+        "标准定额"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 10,
+      "name": "bx (brave-search-cli)",
+      "repo_or_site": "https://github.com/brave/brave-search-cli",
+      "bucket": "free_key",
+      "action_url": "https://api.search.brave.com/app/register",
+      "form": "同源Brave key, CLI用",
+      "access_raw": "需key(API)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": "key_required"
+    },
+    {
+      "idx": 11,
+      "name": "Copernicus Data Space Ecosystem",
+      "repo_or_site": "https://dataspace.copernicus.eu/",
+      "bucket": "free_key",
+      "action_url": "https://dataspace.copernicus.eu/",
+      "form": "免费注册→API token; 卫星数据集直下",
+      "access_raw": "需key(免费注册)+数据集",
+      "tags": [
+        "新闻舆情",
+        "项目数据",
+        "数据集"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 12,
+      "name": "CORE API",
+      "repo_or_site": "core.ac.uk / api.core.ac.uk",
+      "bucket": "free_key",
+      "action_url": "https://core.ac.uk/services/api",
+      "form": "注册免费key(匿名可用但限流)",
+      "access_raw": "需key(免费)",
+      "tags": [
+        "学术专利"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 13,
+      "name": "Danubia content extraction API",
+      "repo_or_site": "https://danubia.tech",
+      "bucket": "paid_only",
+      "action_url": "https://danubia.tech",
+      "form": "商业API未实测, 价格面待核, 留档",
+      "access_raw": "API服务(未实测)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 14,
+      "name": "DeepSearch (deepsearch.ing)",
+      "repo_or_site": "https://deepsearch.ing/",
+      "bucket": "free_register",
+      "action_url": "https://deepsearch.ing/",
+      "form": "免费网页服务(可自带key), 未实测存疑",
+      "access_raw": "网站服务(未实测, 疑需自带key)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 15,
+      "name": "DevelopmentAid",
+      "repo_or_site": "https://www.developmentaid.org/",
+      "bucket": "free_register",
+      "action_url": "https://www.developmentaid.org/users/register",
+      "form": "有限免费层注册, 深度面付费",
+      "access_raw": "浏览器(免费层有限/付费订阅)",
+      "tags": [
+        "工商招投标",
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 16,
+      "name": "Dimensions",
+      "repo_or_site": "https://app.dimensions.ai",
+      "bucket": "free_key",
+      "action_url": "https://app.dimensions.ai",
+      "form": "学术免费档注册(研究人员免费)",
+      "access_raw": "需key(订阅,有学术免费档)",
+      "tags": [
+        "学术专利"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 17,
+      "name": "DIN",
+      "repo_or_site": "https://www.din.de/en",
+      "bucket": "paid_only",
+      "action_url": "https://www.din.de/en",
+      "form": "标准购买(DIN SPEC部分免费), 留档",
+      "access_raw": "浏览器(付费;DIN SPEC部分免费)",
+      "tags": [
+        "标准定额"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 18,
+      "name": "ENTSO-E Transparency Platform",
+      "repo_or_site": "https://transparency.entsoe.eu/",
+      "bucket": "free_key",
+      "action_url": "https://transparency.entsoe.eu/",
+      "form": "免费注册→RESTful security token",
+      "access_raw": "需key(免费RESTful token)",
+      "tags": [
+        "项目数据",
+        "数据集"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 19,
+      "name": "Event Registry",
+      "repo_or_site": "https://eventregistry.org/",
+      "bucket": "free_key",
+      "action_url": "https://eventregistry.org/register",
+      "form": "免费层key(限流)",
+      "access_raw": "需key(免费层)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 20,
+      "name": "Exa",
+      "repo_or_site": "exa.ai",
+      "bucket": "free_key",
+      "action_url": "https://dashboard.exa.ai/",
+      "form": "注册免费额度key",
+      "access_raw": "需key(有免费层,以官网为准)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 21,
+      "name": "exa-labs/exa-mcp-server",
+      "repo_or_site": "https://github.com/exa-labs/exa-mcp-server",
+      "bucket": "free_key",
+      "action_url": "https://dashboard.exa.ai/",
+      "form": "同源Exa key",
+      "access_raw": "需key(API)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": "key_required"
+    },
+    {
+      "idx": 22,
+      "name": "exa-py",
+      "repo_or_site": "https://github.com/exa-labs/exa-py",
+      "bucket": "free_key",
+      "action_url": "https://dashboard.exa.ai/",
+      "form": "同源Exa key",
+      "access_raw": "需key(API)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": "key_required"
+    },
+    {
+      "idx": 23,
+      "name": "FetchRelay",
+      "repo_or_site": "https://fetchrelay.com",
+      "bucket": "paid_only",
+      "action_url": "https://fetchrelay.com",
+      "form": "服务未实测, 付费面待核, 留档",
+      "access_raw": "服务(未实测)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 24,
+      "name": "Figshare API",
+      "repo_or_site": "https://api.figshare.com",
+      "bucket": "dataset",
+      "action_url": "https://api.figshare.com/docs",
+      "form": "免key公开读API+文件直下(上传才需key)",
+      "access_raw": "免登录API(上传需key)",
+      "tags": [
+        "学术专利",
+        "数据集"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 25,
+      "name": "firecrawl/firesearch",
+      "repo_or_site": "https://github.com/firecrawl/firesearch",
+      "bucket": "free_key",
+      "action_url": "https://www.firecrawl.dev/",
+      "form": "Firecrawl账号key(免费500积分)",
+      "access_raw": "需key(Firecrawl账号)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 26,
+      "name": "FutureSearch",
+      "repo_or_site": "https://futuresearch.ai/",
+      "bucket": "paid_only",
+      "action_url": "https://futuresearch.ai/",
+      "form": "未实测疑商业服务, 留档待核",
+      "access_raw": "网站服务(未实测)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 27,
+      "name": "GNews API",
+      "repo_or_site": "https://gnews.io/",
+      "bucket": "free_key",
+      "action_url": "https://gnews.io/register",
+      "form": "免费层100次/天key",
+      "access_raw": "需key(免费层)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 28,
+      "name": "Google Programmable Search Engine JSON API",
+      "repo_or_site": "developers.google.com/custom-search",
+      "bucket": "free_key",
+      "action_url": "https://console.cloud.google.com/apis/library/customsearch.googleapis.com",
+      "form": "GCP控制台启用API key(100次/天免费)",
+      "access_raw": "需key(小额免费配额,以官方文档为准)",
+      "tags": [
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 29,
+      "name": "google-api-python-client (Custom Search JSON API)",
+      "repo_or_site": "https://github.com/googleapis/google-api-python-client",
+      "bucket": "free_key",
+      "action_url": "https://console.cloud.google.com/apis/library/customsearch.googleapis.com",
+      "form": "同源Google CSE key",
+      "access_raw": "需key(API)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": "key_required"
+    },
+    {
+      "idx": 30,
+      "name": "google-search-results-python (SerpApi 官方)",
+      "repo_or_site": "https://github.com/serpapi/google-search-results-python",
+      "bucket": "free_key",
+      "action_url": "https://serpapi.com/manage-api-key",
+      "form": "注册100次/月免费key",
+      "access_raw": "需key(API)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": "key_required"
+    },
+    {
+      "idx": 31,
+      "name": "IEA Data & Statistics",
+      "repo_or_site": "https://www.iea.org/data-and-statistics",
+      "bucket": "free_register",
+      "action_url": "https://www.iea.org/data-and-statistics",
+      "form": "免登录浏览+部分数据免费CSV(付费产品另购)",
+      "access_raw": "浏览器(部分数据产品付费)",
+      "tags": [
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 32,
+      "name": "IEEE Xplore API",
+      "repo_or_site": "https://developer.ieee.org",
+      "bucket": "free_key",
+      "action_url": "https://developer.ieee.org/",
+      "form": "注册申请API key(免费配额)",
+      "access_raw": "需key(有免费配额)",
+      "tags": [
+        "学术专利"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 33,
+      "name": "JISC (日本产业标准调查会)",
+      "repo_or_site": "https://www.jisc.go.jp",
+      "bucket": "free_register",
+      "action_url": "https://www.jisc.go.jp",
+      "form": "日文原典免登录浏览(英译付费)",
+      "access_raw": "浏览器(日文;英译付费)",
+      "tags": [
+        "标准定额"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 34,
+      "name": "Kaggle",
+      "repo_or_site": "kaggle.com/api",
+      "bucket": "free_key",
+      "action_url": "https://www.kaggle.com/settings",
+      "form": "注册账号→kaggle.json token(免费)",
+      "access_raw": "需key(免费账号)",
+      "tags": [
+        "标准定额",
+        "数据集"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 35,
+      "name": "Kaggle Datasets",
+      "repo_or_site": "https://www.kaggle.com/datasets",
+      "bucket": "free_key",
+      "action_url": "https://www.kaggle.com/settings",
+      "form": "同源Kaggle token(免费)",
+      "access_raw": "浏览器+API需key",
+      "tags": [
+        "数据集"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 36,
+      "name": "kagi-cli",
+      "repo_or_site": "https://github.com/Microck/kagi-cli",
+      "bucket": "paid_only",
+      "action_url": "https://help.kagi.com/kagi/api/",
+      "form": "付费订阅API key(网页有试用), 留档",
+      "access_raw": "需key(API)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": "key_required"
+    },
+    {
+      "idx": 37,
+      "name": "kagisearch/kagimcp",
+      "repo_or_site": "https://github.com/kagisearch/kagimcp",
+      "bucket": "paid_only",
+      "action_url": "https://help.kagi.com/kagi/api/",
+      "form": "同源Kagi付费key",
+      "access_raw": "需key(API)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": "key_required"
+    },
+    {
+      "idx": 38,
+      "name": "Media Cloud",
+      "repo_or_site": "mediacloud.org",
+      "bucket": "free_key",
+      "action_url": "https://sources.mediacloud.org/#/register",
+      "form": "免费申请研究API key; 网页免登录",
+      "access_raw": "免登录网页；研究API需key(免费申请)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 39,
+      "name": "MediaCloud",
+      "repo_or_site": "https://mediacloud.org/",
+      "bucket": "free_key",
+      "action_url": "https://sources.mediacloud.org/#/register",
+      "form": "免费注册key(同源38)",
+      "access_raw": "需key(免费注册)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 40,
+      "name": "MetaGer",
+      "repo_or_site": "metager.de(开源gitlab.com/metager-org)",
+      "bucket": "free_key",
+      "action_url": "https://metager.de/keys",
+      "form": "向官方申请免费key(非商业免费)",
+      "access_raw": "免登录网页；API需key(向官方申请)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 41,
+      "name": "Mojeek",
+      "repo_or_site": "mojeek.com",
+      "bucket": "free_register",
+      "action_url": "mojeek.com",
+      "form": "免登录网页; 商业API收费留档",
+      "access_raw": "免登录网页；商业API需key(收费)",
+      "tags": [
+        "标准定额"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 42,
+      "name": "NASA FIRMS",
+      "repo_or_site": "https://firms.modaps.eosdis.nasa.gov/",
+      "bucket": "free_key",
+      "action_url": "https://firms.modaps.eosdis.nasa.gov/api/map_key/",
+      "form": "免费申领MAP_KEY; WMS免key",
+      "access_raw": "需key(MAP_KEY免费)+WMS",
+      "tags": [
+        "新闻舆情",
+        "数据集"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 43,
+      "name": "NewsAPI.org",
+      "repo_or_site": "https://newsapi.org/",
+      "bucket": "free_key",
+      "action_url": "https://newsapi.org/register",
+      "form": "免费开发层key(100req/天)",
+      "access_raw": "需key(免费开发层)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 44,
+      "name": "NopeCHALLC/nopecha-extension",
+      "repo_or_site": "https://github.com/NopeCHALLC/nopecha-extension",
+      "bucket": "free_key",
+      "action_url": "https://nopecha.com/",
+      "form": "注册免费额度key(验证码识别)",
+      "access_raw": "浏览器扩展+需key(有免费额度)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 45,
+      "name": "OpenAI Deep Research",
+      "repo_or_site": "https://openai.com/index/introducing-deep-research/",
+      "bucket": "paid_only",
+      "action_url": "https://openai.com/chatgpt/pricing/",
+      "form": "Plus/Pro账号或API计费, 留档",
+      "access_raw": "闭源产品: 网页需账号(Plus/Pro), API需key",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 46,
+      "name": "OpenCorporates",
+      "repo_or_site": "https://opencorporates.com",
+      "bucket": "free_key",
+      "action_url": "https://opencorporates.com/api",
+      "form": "研究/记者用途免费key申请; 免登录网页检索兜底(API付费面按令排除)",
+      "access_raw": "免费面+付费面,仅用免费面(免登录网页检索; API=付费面按令排除)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 47,
+      "name": "Perplexity Sonar API",
+      "repo_or_site": "docs.perplexity.ai",
+      "bucket": "paid_only",
+      "action_url": "https://docs.perplexity.ai/",
+      "form": "计费key, 留档",
+      "access_raw": "需key(计费)",
+      "tags": [
+        "学术专利",
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 48,
+      "name": "perplexityai/modelcontextprotocol",
+      "repo_or_site": "https://github.com/perplexityai/modelcontextprotocol",
+      "bucket": "paid_only",
+      "action_url": "https://docs.perplexity.ai/",
+      "form": "同源Sonar计费key",
+      "access_raw": "需key(API)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": "key_required"
+    },
+    {
+      "idx": 49,
+      "name": "Richard-Weiss/mcp-google-cse",
+      "repo_or_site": "https://github.com/Richard-Weiss/mcp-google-cse",
+      "bucket": "free_key",
+      "action_url": "https://console.cloud.google.com/apis/library/customsearch.googleapis.com",
+      "form": "同源Google CSE key",
+      "access_raw": "需key(API)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": "key_required"
+    },
+    {
+      "idx": 50,
+      "name": "ScrapingBee/google-search-api",
+      "repo_or_site": "https://github.com/ScrapingBee/google-search-api",
+      "bucket": "paid_only",
+      "action_url": "https://www.scrapingbee.com/",
+      "form": "付费SaaS(试用额度), 留档",
+      "access_raw": "需key(付费SaaS, 有试用)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 51,
+      "name": "SearchApi.io",
+      "repo_or_site": "searchapi.io",
+      "bucket": "free_key",
+      "action_url": "https://www.searchapi.io/",
+      "form": "注册100次/月免费key",
+      "access_raw": "需key(有免费层,以官网为准)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 52,
+      "name": "SearchHive",
+      "repo_or_site": "https://searchhive.dev/",
+      "bucket": "paid_only",
+      "action_url": "https://searchhive.dev/",
+      "form": "API需key, 免费面未实测待核, 留档",
+      "access_raw": "API需key",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 53,
+      "name": "SerpAPI",
+      "repo_or_site": "serpapi.com",
+      "bucket": "free_key",
+      "action_url": "https://serpapi.com/manage-api-key",
+      "form": "注册100次/月免费key",
+      "access_raw": "需key(有免费层,以官网为准)",
+      "tags": [
+        "学术专利",
+        "新闻舆情",
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 54,
+      "name": "serpapi/serpapi-mcp",
+      "repo_or_site": "https://github.com/serpapi/serpapi-mcp",
+      "bucket": "free_key",
+      "action_url": "https://serpapi.com/manage-api-key",
+      "form": "同源SerpAPI key",
+      "access_raw": "需key(API)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": "key_required"
+    },
+    {
+      "idx": 55,
+      "name": "Serper.dev",
+      "repo_or_site": "serper.dev",
+      "bucket": "free_key",
+      "action_url": "https://serper.dev/",
+      "form": "注册赠2500次额度key",
+      "access_raw": "需key(注册赠额度,以官网为准)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 56,
+      "name": "Tavily",
+      "repo_or_site": "tavily.com(github.com/tavily-ai/tavily-python)",
+      "bucket": "free_key",
+      "action_url": "https://app.tavily.com/",
+      "form": "注册1000积分/月免费key",
+      "access_raw": "需key(有免费层,以官网为准)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 57,
+      "name": "tavily-ai/tavily-mcp",
+      "repo_or_site": "https://github.com/tavily-ai/tavily-mcp",
+      "bucket": "free_key",
+      "action_url": "https://app.tavily.com/",
+      "form": "同源Tavily key",
+      "access_raw": "需key(API)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": "key_required"
+    },
+    {
+      "idx": 58,
+      "name": "tavily-open (已更名 TrailSearch)",
+      "repo_or_site": "https://github.com/jianjungki/tavily-open",
+      "bucket": "free_key",
+      "action_url": "https://app.tavily.com/",
+      "form": "同源Tavily key(开源客户端)",
+      "access_raw": "需key(API)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": "key_required"
+    },
+    {
+      "idx": 59,
+      "name": "tavily-python",
+      "repo_or_site": "https://github.com/tavily-ai/tavily-python",
+      "bucket": "free_key",
+      "action_url": "https://app.tavily.com/",
+      "form": "同源Tavily key",
+      "access_raw": "需key(API)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": "key_required"
+    },
+    {
+      "idx": 60,
+      "name": "Trendradar (technologieradar)",
+      "repo_or_site": "https://technologieradar.tryresearchly.com",
+      "bucket": "free_register",
+      "action_url": "https://technologieradar.tryresearchly.com",
+      "form": "网页服务未实测, 注册面待核",
+      "access_raw": "网站服务(未实测)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 61,
+      "name": "TrueStar",
+      "repo_or_site": "https://truestar.tech",
+      "bucket": "free_register",
+      "action_url": "https://truestar.tech",
+      "form": "网页服务未实测, 注册面待核",
+      "access_raw": "网站服务(未实测)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 62,
+      "name": "UK Companies House API",
+      "repo_or_site": "https://developer.company-information.service.gov.uk/",
+      "bucket": "free_key",
+      "action_url": "https://developer.company-information.service.gov.uk/get-started/",
+      "form": "免费注册→API key(免费层)",
+      "access_raw": "需key(免费注册)",
+      "tags": [
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 63,
+      "name": "UN Comtrade+ API",
+      "repo_or_site": "https://comtradeplus.un.org/",
+      "bucket": "free_key",
+      "action_url": "https://comtradeplus.un.org/",
+      "form": "免费注册→订阅key(免费层)",
+      "access_raw": "需key(免费层)",
+      "tags": [
+        "项目数据",
+        "数据集"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 64,
+      "name": "vladkens/twscrape",
+      "repo_or_site": "https://github.com/vladkens/twscrape",
+      "bucket": "free_register",
+      "action_url": "https://github.com/vladkens/twscrape",
+      "form": "开源自部署+X账号cookie(非API key)",
+      "access_raw": "本地部署(开源)·需X账号",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 65,
+      "name": "WIPO PATENTSCOPE",
+      "repo_or_site": "https://patentscope.wipo.int",
+      "bucket": "free_key",
+      "action_url": "https://developer.wipo.int/",
+      "form": "OPS免费注册key; 网页免登录",
+      "access_raw": "浏览器免登录; API需key",
+      "tags": [
+        "学术专利"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 66,
+      "name": "Wolfram Alpha",
+      "repo_or_site": "wolframalpha.com",
+      "bucket": "free_key",
+      "action_url": "https://developer.wolframalpha.com/",
+      "form": "免费试用AppID(2000次)后计费; 网页基础查询免登录",
+      "access_raw": "免登录网页(基础查询)/API需key",
+      "tags": [
+        "标准定额"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 67,
+      "name": "You.com API",
+      "repo_or_site": "you.com",
+      "bucket": "paid_only",
+      "action_url": "https://you.com/api",
+      "form": "计费/试用key, 留档",
+      "access_raw": "需key(计费/试用)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 68,
+      "name": "You.com Research",
+      "repo_or_site": "https://you.com/",
+      "bucket": "paid_only",
+      "action_url": "https://you.com/",
+      "form": "账号制产品(研究功能付费), 留档",
+      "access_raw": "闭源产品(API需key)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 69,
+      "name": "中信保(Sinosure)国别风险公开面",
+      "repo_or_site": "https://www.sinosure.com.cn",
+      "bucket": "free_register",
+      "action_url": "https://www.sinosure.com.cn",
+      "form": "国别风险报告/资讯栏目免登录免费(买方资信=付费面不用)",
+      "access_raw": "免费面+付费面,仅用免费面(国别风险报告/风险资讯栏目免费; 买方资信报告=付费面不用)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 70,
+      "name": "中国水泥网",
+      "repo_or_site": "https://www.ccement.com",
+      "bucket": "free_register",
+      "action_url": "https://www.ccement.com",
+      "form": "行情资讯免登录(大数据API=付费面不用)",
+      "access_raw": "免费面+付费面,仅用免费面(行情免登录; 大数据API=付费面不用)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 71,
+      "name": "企查查",
+      "repo_or_site": "https://www.qcc.com",
+      "bucket": "free_register",
+      "action_url": "https://www.qcc.com",
+      "form": "免登录基础查询+登录免费日额度(官方API付费不用)",
+      "access_raw": "免费面+付费面,仅用免费面(免登录网页基础查询/VIP日额度内明细; 官方API=付费面不用)",
+      "tags": [
+        "工商招投标"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 72,
+      "name": "剑鱼标讯",
+      "repo_or_site": "https://www.jianyu360.com",
+      "bucket": "free_register",
+      "action_url": "https://www.jianyu360.com",
+      "form": "免登录/免费注册检索",
+      "access_raw": "免费面+付费面,仅用免费面(免登录/免费注册检索)",
+      "tags": [
+        "工商招投标"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 73,
+      "name": "千里马招标网",
+      "repo_or_site": "https://www.qianlima.com",
+      "bucket": "free_register",
+      "action_url": "https://www.qianlima.com",
+      "form": "免登录公告检索(会员明细不用)",
+      "access_raw": "免费面+付费面,仅用免费面(免登录公告检索/公开公告页; 会员明细不用)",
+      "tags": [
+        "工商招投标"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 74,
+      "name": "启信宝",
+      "repo_or_site": "https://www.qixin.com",
+      "bucket": "free_register",
+      "action_url": "https://www.qixin.com",
+      "form": "免登录/免费注册基础查询(API付费不用)",
+      "access_raw": "免费面+付费面,仅用免费面(免登录/免费注册基础查询; API=付费面不用)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 75,
+      "name": "天眼查",
+      "repo_or_site": "https://www.tianyancha.com",
+      "bucket": "free_register",
+      "action_url": "https://www.tianyancha.com",
+      "form": "免登录基础+登录免费额度(API付费不用)",
+      "access_raw": "免费面+付费面,仅用免费面(免登录基础查询+登录免费额度; API=付费面不用)",
+      "tags": [
+        "工商招投标"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 76,
+      "name": "建设通",
+      "repo_or_site": "https://www.jianshe99.com",
+      "bucket": "free_register",
+      "action_url": "https://www.jianshe99.com",
+      "form": "免登录企业/工程基础检索",
+      "access_raw": "免费面+付费面,仅用免费面(免登录企业/工程基础检索; 会员明细不用)",
+      "tags": [
+        "工商招投标"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 77,
+      "name": "必联网",
+      "repo_or_site": "https://www.ebnew.com",
+      "bucket": "free_register",
+      "action_url": "https://www.ebnew.com",
+      "form": "免登录公告浏览",
+      "access_raw": "免费面+付费面,仅用免费面(免登录公告浏览)",
+      "tags": [
+        "工商招投标"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 78,
+      "name": "我的钢铁网",
+      "repo_or_site": "https://www.mysteel.com",
+      "bucket": "free_register",
+      "action_url": "https://www.mysteel.com",
+      "form": "行情/资讯免登录(数据API付费不用)",
+      "access_raw": "免费面+付费面,仅用免费面(行情/资讯免登录; 数据API=付费面不用)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 79,
+      "name": "智谱 web_search_pro",
+      "repo_or_site": "open.bigmodel.cn",
+      "bucket": "free_key",
+      "action_url": "https://open.bigmodel.cn/usercenter/apikeys",
+      "form": "bigmodel控制台key(新户免费token额度; 双账号轮换已在役)",
+      "access_raw": "需key(国内直连)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 80,
+      "name": "比地招标网",
+      "repo_or_site": "https://www.bidizhaobiao.com",
+      "bucket": "free_register",
+      "action_url": "https://www.bidizhaobiao.com",
+      "form": "免登录公告检索",
+      "access_raw": "免费面+付费面,仅用免费面(免登录公告检索)",
+      "tags": [
+        "工商招投标"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 81,
+      "name": "火山方舟联网搜索(豆包)",
+      "repo_or_site": "volcengine.com(方舟)",
+      "bucket": "free_key",
+      "action_url": "https://console.volcengine.com/ark",
+      "form": "方舟控制台key(注册赠免费额度)",
+      "access_raw": "需key(国内直连)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 82,
+      "name": "爱企查(百度)",
+      "repo_or_site": "https://aiqicha.baidu.com",
+      "bucket": "free_register",
+      "action_url": "https://aiqicha.baidu.com",
+      "form": "免登录网页查询(百度智能云API=付费面不用)",
+      "access_raw": "免费面+付费面,仅用免费面(免登录网页查询; API走百度智能云=付费面不用)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 83,
+      "name": "百年建筑网",
+      "repo_or_site": "https://www.100njz.com",
+      "bucket": "free_register",
+      "action_url": "https://www.100njz.com",
+      "form": "行情资讯免登录(会员报告不用)",
+      "access_raw": "免费面+付费面,仅用免费面(行情资讯免登录; 会员报告不用)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 84,
+      "name": "英国Companies House",
+      "repo_or_site": "https://find-and-update.company-information.service.gov.uk/",
+      "bucket": "free_key",
+      "action_url": "https://developer.company-information.service.gov.uk/get-started/",
+      "form": "免登录网页+免费API key免费层",
+      "access_raw": "免费面+付费面,仅用免费面(免登录网页检索+免费注册API key免费层; 增值产品不用)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 85,
+      "name": "邓白氏D&B(纯付费-按令排除)",
+      "repo_or_site": "https://www.dnb.com",
+      "bucket": "paid_only",
+      "action_url": "https://www.dnb.com",
+      "form": "纯付费按令排除, 留档",
+      "access_raw": "纯付费, 按免费令排除",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 86,
+      "name": "采招网",
+      "repo_or_site": "https://www.bidcenter.com.cn",
+      "bucket": "free_register",
+      "action_url": "https://www.bidcenter.com.cn",
+      "form": "免登录公告列表(会员明细不用)",
+      "access_raw": "免费面+付费面,仅用免费面(免登录公告列表; 会员明细不用)",
+      "tags": [
+        "工商招投标"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 87,
+      "name": "360搜索(含360AI搜索)",
+      "repo_or_site": "so.com",
+      "bucket": "free_register",
+      "action_url": "so.com",
+      "form": "免登录网页(含360AI搜索)",
+      "access_raw": "免登录网页",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 88,
+      "name": "4get",
+      "repo_or_site": "4get.ca(源码git.lolcat.ca/4get)",
+      "bucket": "free_register",
+      "action_url": "https://4get.ca",
+      "form": "公共实例免登录/开源自托管",
+      "access_raw": "免登录网页/自托管",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 89,
+      "name": "ADB Projects & Statistics",
+      "repo_or_site": "https://www.adb.org/projects",
+      "bucket": "free_register",
+      "action_url": "https://www.adb.org/projects",
+      "form": "免登录项目库浏览+公开导出",
+      "access_raw": "浏览器",
+      "tags": [
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 90,
+      "name": "Anthropic Research (Claude)",
+      "repo_or_site": "https://www.anthropic.com/news/research",
+      "bucket": "free_register",
+      "action_url": "https://www.anthropic.com/news/research",
+      "form": "新闻/研究页免登录(深度研究产品=账号付费)",
+      "access_raw": "闭源产品(账号)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 91,
+      "name": "AutoGLM-Research",
+      "repo_or_site": "https://autoglm-research.zhipuai.cn/",
+      "bucket": "free_register",
+      "action_url": "https://autoglm-research.zhipuai.cn/",
+      "form": "智谱账号免费试用",
+      "access_raw": "闭源产品(账号)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 92,
+      "name": "awesome-civil-engineering (QuantumNovice)",
+      "repo_or_site": "https://github.com/QuantumNovice/awesome-civil-engineering",
+      "bucket": "dataset",
+      "action_url": "https://github.com/QuantumNovice/awesome-civil-engineering",
+      "form": "GitHub数据集目录清单(直链各源)",
+      "access_raw": "数据集目录(工具生态)",
+      "tags": [
+        "数据集"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 93,
+      "name": "awesome-civil-engineering (riponcm)",
+      "repo_or_site": "https://github.com/riponcm/awesome-civil-engineering",
+      "bucket": "dataset",
+      "action_url": "https://github.com/riponcm/awesome-civil-engineering",
+      "form": "GitHub数据集目录清单(直链各源)",
+      "access_raw": "数据集目录(工具生态)",
+      "tags": [
+        "数据集"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 94,
+      "name": "awesome-digital-civil-engineering",
+      "repo_or_site": "https://github.com/Ayberkrk/awesome-digital-civil-engineering",
+      "bucket": "dataset",
+      "action_url": "https://github.com/Ayberkrk/awesome-digital-civil-engineering",
+      "form": "GitHub数字土木数据集目录清单",
+      "access_raw": "数据集目录",
+      "tags": [
+        "数据集"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 95,
+      "name": "awesome-osint",
+      "repo_or_site": "https://github.com/jivoi/awesome-osint",
+      "bucket": "dataset",
+      "action_url": "https://github.com/jivoi/awesome-osint",
+      "form": "OSINT资源清单(免登录)",
+      "access_raw": "浏览器(免登录)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 96,
+      "name": "awesome-public-datasets",
+      "repo_or_site": "https://github.com/awesomedata/awesome-public-datasets",
+      "bucket": "dataset",
+      "action_url": "https://github.com/awesomedata/awesome-public-datasets",
+      "form": "公开数据集目录清单",
+      "access_raw": "数据集目录(repo浏览)",
+      "tags": [
+        "数据集"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 97,
+      "name": "awesome-selfhosted (search engines 分类)",
+      "repo_or_site": "https://github.com/awesome-selfhosted/awesome-selfhosted",
+      "bucket": "dataset",
+      "action_url": "https://github.com/awesome-selfhosted/awesome-selfhosted",
+      "form": "自托管软件清单文档(search engines类)",
+      "access_raw": "数据集(清单文档)",
+      "tags": [
+        "数据集"
+      ],
+      "cat": "awesome_list"
+    },
+    {
+      "idx": 98,
+      "name": "awesome-spacecraft-engineering-datasets",
+      "repo_or_site": "https://github.com/patrickfleith/awesome-spacecraft-engineering-datasets",
+      "bucket": "dataset",
+      "action_url": "https://github.com/patrickfleith/awesome-spacecraft-engineering-datasets",
+      "form": "航天工程数据集目录清单",
+      "access_raw": "数据集目录",
+      "tags": [
+        "数据集"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 99,
+      "name": "BASE",
+      "repo_or_site": "https://www.base-search.net",
+      "bucket": "free_register",
+      "action_url": "https://www.base-search.net",
+      "form": "免登录网页; API合作申请(机构免费)",
+      "access_raw": "浏览器+API需合作申请",
+      "tags": [
+        "学术专利"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 100,
+      "name": "BASE",
+      "repo_or_site": "base-search.net",
+      "bucket": "free_register",
+      "action_url": "base-search.net",
+      "form": "免登录网页; API注册申请",
+      "access_raw": "免登录网页;API需注册",
+      "tags": [
+        "学术专利"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 101,
+      "name": "Bellingcat Online Investigation Toolkit",
+      "repo_or_site": "https://bellingcat.gitbook.io/toolkit",
+      "bucket": "free_register",
+      "action_url": "https://bellingcat.gitbook.io/toolkit",
+      "form": "免登录工具目录",
+      "access_raw": "浏览器(免登录)",
+      "tags": [
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 102,
+      "name": "Bing",
+      "repo_or_site": "bing.com / cn.bing.com",
+      "bucket": "free_register",
+      "action_url": "bing.com / cn.bing.com",
+      "form": "免登录网页+RSS(旧API已退役)",
+      "access_raw": "免登录网页(新闻等支持RSS;通用Web搜索API已于2025年退役勿登记旧API)",
+      "tags": [
+        "标准定额",
+        "学术专利",
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 103,
+      "name": "BOAMP",
+      "repo_or_site": "https://www.boamp.fr/",
+      "bucket": "free_register",
+      "action_url": "https://www.boamp.fr/",
+      "form": "免登录公告检索; 全量dumps在data.gouv.fr",
+      "access_raw": "浏览器(免登录)",
+      "tags": [
+        "工商招投标",
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 104,
+      "name": "Boardreader",
+      "repo_or_site": "boardreader.com",
+      "bucket": "free_register",
+      "action_url": "boardreader.com",
+      "form": "免登录网页",
+      "access_raw": "免登录网页",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 105,
+      "name": "CEN-CENELEC",
+      "repo_or_site": "https://www.cencenelec.eu",
+      "bucket": "paid_only",
+      "action_url": "https://www.cencenelec.eu",
+      "form": "标准购买(部分国别门户免费), 留档",
+      "access_raw": "浏览器(购买;部分国别门户免费)",
+      "tags": [
+        "标准定额"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 106,
+      "name": "Compras.gov.br/PNCP(巴西)",
+      "repo_or_site": "https://www.gov.br/compras/pt-br",
+      "bucket": "free_key",
+      "action_url": "https://www.gov.br/compras/pt-br",
+      "form": "PNCP免key开放API+免登录网页",
+      "access_raw": "浏览器(免登录)+API",
+      "tags": [
+        "工商招投标",
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 107,
+      "name": "Consensus",
+      "repo_or_site": "https://consensus.app/",
+      "bucket": "free_register",
+      "action_url": "https://consensus.app/",
+      "form": "账号免费档(unlimited付费)",
+      "access_raw": "闭源产品(账号, 有免费档)",
+      "tags": [
+        "学术专利"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 108,
+      "name": "CORE API v3",
+      "repo_or_site": "https://api.core.ac.uk",
+      "bucket": "free_key",
+      "action_url": "https://core.ac.uk/services/api",
+      "form": "免费key(匿名限流)",
+      "access_raw": "需免费key(匿名限流)",
+      "tags": [
+        "学术专利"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 109,
+      "name": "Coze Space",
+      "repo_or_site": "https://www.coze.cn/space-preview",
+      "bucket": "free_register",
+      "action_url": "https://www.coze.cn/",
+      "form": "扣子账号免费额度",
+      "access_raw": "闭源产品(账号)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 110,
+      "name": "data.gov (US CKAN)",
+      "repo_or_site": "https://data.gov",
+      "bucket": "free_key",
+      "action_url": "https://api.data.gov/",
+      "form": "CKAN免key API+bulk直下",
+      "access_raw": "浏览器+CKAN API",
+      "tags": [
+        "工商招投标",
+        "项目数据",
+        "数据集"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 111,
+      "name": "data.gov.in(印度)",
+      "repo_or_site": "https://www.data.gov.in/",
+      "bucket": "free_key",
+      "action_url": "https://www.data.gov.in/help",
+      "form": "免费注册API key",
+      "access_raw": "浏览器(免登录)+API",
+      "tags": [
+        "项目数据",
+        "数据集"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 112,
+      "name": "EBRD项目数据库",
+      "repo_or_site": "https://www.ebrd.com/work-with-us/procurement/projects-database.html",
+      "bucket": "free_register",
+      "action_url": "https://www.ebrd.com/work-with-us/procurement/projects-database.html",
+      "form": "免登录项目库网页检索",
+      "access_raw": "免登录网页",
+      "tags": [
+        "工商招投标",
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 113,
+      "name": "Ecosia",
+      "repo_or_site": "ecosia.org",
+      "bucket": "free_register",
+      "action_url": "ecosia.org",
+      "form": "免登录网页",
+      "access_raw": "免登录网页",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 114,
+      "name": "edoardottt/awesome-hacker-search-engines",
+      "repo_or_site": "https://github.com/edoardottt/awesome-hacker-search-engines",
+      "bucket": "dataset",
+      "action_url": "https://github.com/edoardottt/awesome-hacker-search-engines",
+      "form": "黑客搜索引擎目录清单",
+      "access_raw": "数据集(清单文档)",
+      "tags": [
+        "项目数据",
+        "数据集"
+      ],
+      "cat": "awesome_list"
+    },
+    {
+      "idx": 115,
+      "name": "EIA API v2",
+      "repo_or_site": "https://api.eia.gov/v2",
+      "bucket": "free_key",
+      "action_url": "https://www.eia.gov/opendata/register.php",
+      "form": "免费key注册",
+      "access_raw": "需免费key",
+      "tags": [
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 116,
+      "name": "EIC欧洲国际承包商",
+      "repo_or_site": "https://eic.fiec.org",
+      "bucket": "free_register",
+      "action_url": "https://eic.fiec.org",
+      "form": "免登录网页",
+      "access_raw": "免登录网页",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 117,
+      "name": "Elicit",
+      "repo_or_site": "https://elicit.com/",
+      "bucket": "free_register",
+      "action_url": "https://elicit.com/",
+      "form": "账号免费积分档",
+      "access_raw": "闭源产品(账号, 有免费档)",
+      "tags": [
+        "学术专利"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 118,
+      "name": "EPO Espacenet + OPS API",
+      "repo_or_site": "https://ops.epo.org/3.2/rest-services/",
+      "bucket": "free_key",
+      "action_url": "https://developers.epo.org/",
+      "form": "免费注册OPS key",
+      "access_raw": "浏览器免登录; API需免费key",
+      "tags": [
+        "学术专利"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 119,
+      "name": "Espacenet/EPO OPS",
+      "repo_or_site": "https://worldwide.espacenet.com/",
+      "bucket": "free_key",
+      "action_url": "https://developers.epo.org/",
+      "form": "同源OPS key; Espacenet网页免登录",
+      "access_raw": "浏览器(免登录)/OPS API需免费key",
+      "tags": [
+        "学术专利",
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 120,
+      "name": "felladrin/awesome-ai-web-search",
+      "repo_or_site": "https://github.com/felladrin/awesome-ai-web-search",
+      "bucket": "dataset",
+      "action_url": "https://github.com/felladrin/awesome-ai-web-search",
+      "form": "AI网搜目录清单",
+      "access_raw": "数据集(清单文档)",
+      "tags": [
+        "项目数据",
+        "数据集"
+      ],
+      "cat": "awesome_list"
+    },
+    {
+      "idx": 121,
+      "name": "FIDIC国际咨询工程师联合会",
+      "repo_or_site": "https://fidic.org",
+      "bucket": "free_register",
+      "action_url": "https://fidic.org",
+      "form": "免登录网页(文献付费)",
+      "access_raw": "免登录网页",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 122,
+      "name": "FIEC欧洲建筑业联合会",
+      "repo_or_site": "https://fiec.org",
+      "bucket": "free_register",
+      "action_url": "https://fiec.org",
+      "form": "免登录网页",
+      "access_raw": "免登录网页",
+      "tags": [
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 123,
+      "name": "Flowith Oracle Mode",
+      "repo_or_site": "https://flowith.net/",
+      "bucket": "free_register",
+      "action_url": "https://flowith.net/",
+      "form": "账号免费积分",
+      "access_raw": "闭源产品(账号)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 124,
+      "name": "FRED API",
+      "repo_or_site": "https://api.stlouisfed.org",
+      "bucket": "free_key",
+      "action_url": "https://fred.stlouisfed.org/docs/api/api_key.html",
+      "form": "免费key申请",
+      "access_raw": "需免费key",
+      "tags": [
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 125,
+      "name": "FutureHouse Platform",
+      "repo_or_site": "https://www.futurehouse.org/research-announcements/launching-futurehouse-platform-ai-agents",
+      "bucket": "free_register",
+      "action_url": "https://www.futurehouse.org/",
+      "form": "申请制免费科研平台(注册)",
+      "access_raw": "需申请",
+      "tags": [
+        "学术专利"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 126,
+      "name": "Gemini Deep Research",
+      "repo_or_site": "https://gemini.google/overview/deep-research/",
+      "bucket": "free_register",
+      "action_url": "https://gemini.google/overview/deep-research/",
+      "form": "谷歌账号免费档限额",
+      "access_raw": "闭源产品(谷歌账号)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 127,
+      "name": "Genspark Super Agent",
+      "repo_or_site": "https://www.genspark.ai/",
+      "bucket": "free_register",
+      "action_url": "https://www.genspark.ai/",
+      "form": "账号免费日额度",
+      "access_raw": "闭源产品(账号)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 128,
+      "name": "GitHub topic: search-engine 聚合页",
+      "repo_or_site": "https://github.com/topics/search-engine?o=desc&s=stars",
+      "bucket": "dataset",
+      "action_url": "https://github.com/topics/search-engine?o=desc&s=stars",
+      "form": "GitHub topic目录清单",
+      "access_raw": "数据集(清单文档)",
+      "tags": [
+        "数据集"
+      ],
+      "cat": "awesome_list"
+    },
+    {
+      "idx": 129,
+      "name": "Global Energy Monitor",
+      "repo_or_site": "https://globalenergymonitor.org/",
+      "bucket": "dataset",
+      "action_url": "https://globalenergymonitor.org/",
+      "form": "数据/报告下载(部分需注册)",
+      "access_raw": "浏览器+数据集(部分需注册)",
+      "tags": [
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 130,
+      "name": "Google",
+      "repo_or_site": "google.com",
+      "bucket": "free_register",
+      "action_url": "google.com",
+      "form": "免登录网页(强反爬, 走代理浏览器)",
+      "access_raw": "浏览器(强反爬)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 131,
+      "name": "Google Dataset Search",
+      "repo_or_site": "https://datasetsearch.research.google.com",
+      "bucket": "dataset",
+      "action_url": "https://datasetsearch.research.google.com",
+      "form": "免登录数据集检索入口",
+      "access_raw": "浏览器",
+      "tags": [
+        "数据集"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 132,
+      "name": "Google Dataset Search",
+      "repo_or_site": "datasetsearch.research.google.com",
+      "bucket": "dataset",
+      "action_url": "datasetsearch.research.google.com",
+      "form": "同源131",
+      "access_raw": "浏览器",
+      "tags": [
+        "数据集"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 133,
+      "name": "Google Patents Public Datasets (BigQuery)",
+      "repo_or_site": "https://patents.google.com",
+      "bucket": "free_key",
+      "action_url": "https://console.cloud.google.com/bigquery",
+      "form": "GCP项目+BigQuery免费查询额度(超量计费); patents.google.com免key",
+      "access_raw": "需GCP计费项目(BigQuery免额度)",
+      "tags": [
+        "学术专利",
+        "数据集"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 134,
+      "name": "Google Scholar",
+      "repo_or_site": "scholar.google.com",
+      "bucket": "free_register",
+      "action_url": "scholar.google.com",
+      "form": "免登录网页(强反爬禁批量)",
+      "access_raw": "浏览器(强反爬,禁批量)",
+      "tags": [
+        "学术专利"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 135,
+      "name": "Google Trends",
+      "repo_or_site": "trends.google.com",
+      "bucket": "free_register",
+      "action_url": "trends.google.com",
+      "form": "免登录网页+非官方pytrends(无官方API)",
+      "access_raw": "免登录网页/非官方pytrends库",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 136,
+      "name": "Grok DeepSearch / Agents",
+      "repo_or_site": "https://x.ai/news/grok-3",
+      "bucket": "free_register",
+      "action_url": "https://grok.com/",
+      "form": "X/xAI账号免费档(API付费)",
+      "access_raw": "闭源产品(账号)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 137,
+      "name": "H2O.ai Deep Research",
+      "repo_or_site": "https://h2o.ai/",
+      "bucket": "free_register",
+      "action_url": "https://h2o.ai/",
+      "form": "开源自托管+云产品账号",
+      "access_raw": "闭源产品+开源模型混合",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 138,
+      "name": "IEC",
+      "repo_or_site": "https://www.iec.ch",
+      "bucket": "paid_only",
+      "action_url": "https://www.iec.ch",
+      "form": "标准购买(GPICS等免费件), 留档",
+      "access_raw": "浏览器(购买;GPICS等免费件)",
+      "tags": [
+        "标准定额"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 139,
+      "name": "ISO Online Browsing Platform",
+      "repo_or_site": "https://www.iso.org/obp/ui/",
+      "bucket": "free_register",
+      "action_url": "https://www.iso.org/obp/ui/",
+      "form": "OBP免登录在线浏览(PDF购买)",
+      "access_raw": "浏览器免登录",
+      "tags": [
+        "标准定额"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 140,
+      "name": "Kagi",
+      "repo_or_site": "kagi.com",
+      "bucket": "paid_only",
+      "action_url": "https://kagi.com/",
+      "form": "订阅会员(API含于会员, 有试用), 留档",
+      "access_raw": "需订阅(会员可用API)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 141,
+      "name": "Kimi-Researcher",
+      "repo_or_site": "https://moonshotai.github.io/Kimi-Researcher/",
+      "bucket": "free_register",
+      "action_url": "https://www.kimi.com/",
+      "form": "kimi账号免费使用",
+      "access_raw": "闭源产品(kimi.com账号)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 142,
+      "name": "Lens.org API",
+      "repo_or_site": "https://api.lens.org",
+      "bucket": "free_key",
+      "action_url": "https://www.lens.org/",
+      "form": "学术免费申请API key",
+      "access_raw": "需申请key",
+      "tags": [
+        "标准定额",
+        "学术专利"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 143,
+      "name": "LibreY",
+      "repo_or_site": "github.com/Ahwxorg/LibreY",
+      "bucket": "free_register",
+      "action_url": "https://github.com/Ahwxorg/LibreY",
+      "form": "公共实例免登录/自托管",
+      "access_raw": "自托管/公共实例(浏览器)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 144,
+      "name": "LME官网延迟行情",
+      "repo_or_site": "https://www.lme.com/",
+      "bucket": "free_register",
+      "action_url": "https://www.lme.com/",
+      "form": "免登录延迟行情页",
+      "access_raw": "免费页面(延迟行情)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 145,
+      "name": "Magi",
+      "repo_or_site": "magi.com",
+      "bucket": "free_register",
+      "action_url": "magi.com",
+      "form": "免登录网页",
+      "access_raw": "免登录网页",
+      "tags": [
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 146,
+      "name": "MGX",
+      "repo_or_site": "https://mgx.dev/",
+      "bucket": "free_register",
+      "action_url": "https://mgx.dev/",
+      "form": "账号免费积分",
+      "access_raw": "闭源产品(账号)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 147,
+      "name": "Microsoft Copilot Researcher",
+      "repo_or_site": "https://www.microsoft.com/en-us/microsoft-365/blog/2025/03/25/introducing-researcher-and-analyst-in-microsoft-365-copilot/",
+      "bucket": "paid_only",
+      "action_url": "https://www.microsoft.com/microsoft-365/copilot",
+      "form": "M365订阅产品, 留档",
+      "access_raw": "闭源产品(M365订阅)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 148,
+      "name": "MillionShort",
+      "repo_or_site": "millionshort.com",
+      "bucket": "free_register",
+      "action_url": "https://millionshort.com/",
+      "form": "免登录网页",
+      "access_raw": "免登录网页",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 149,
+      "name": "Mwmbl",
+      "repo_or_site": "mwmbl.org(github.com/mwmbl/mwmbl)",
+      "bucket": "free_register",
+      "action_url": "https://mwmbl.org/",
+      "form": "免登录网页/开源自托管",
+      "access_raw": "免登录网页/自托管参与",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 150,
+      "name": "Not Human Search",
+      "repo_or_site": "https://nothumansearch.ai/",
+      "bucket": "free_key",
+      "action_url": "https://nothumansearch.ai/",
+      "form": "MCP/API端点(免费面未实测待核)",
+      "access_raw": "MCP/API",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 151,
+      "name": "NotebookLM",
+      "repo_or_site": "https://notebooklm.google/",
+      "bucket": "free_register",
+      "action_url": "https://notebooklm.google/",
+      "form": "谷歌账号免费",
+      "access_raw": "免费(谷歌账号)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 152,
+      "name": "Open Canada",
+      "repo_or_site": "https://open.canada.ca/",
+      "bucket": "free_key",
+      "action_url": "https://open.canada.ca/",
+      "form": "免key开放数据API",
+      "access_raw": "浏览器(免登录)+API",
+      "tags": [
+        "工商招投标",
+        "项目数据",
+        "数据集"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 153,
+      "name": "Open Contracting Partnership",
+      "repo_or_site": "https://www.open-contracting.org/",
+      "bucket": "dataset",
+      "action_url": "https://data.open-contracting.org/",
+      "form": "OCDS注册表bulk直下+免key API",
+      "access_raw": "浏览器(免登录)+数据集(OCDS注册表)",
+      "tags": [
+        "标准定额",
+        "工商招投标",
+        "项目数据",
+        "数据集"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 154,
+      "name": "OpenCitations",
+      "repo_or_site": "https://opencitations.net",
+      "bucket": "dataset",
+      "action_url": "https://opencitations.net/download",
+      "form": "Dumps直下+免key API",
+      "access_raw": "数据集+免登录API",
+      "tags": [
+        "学术专利",
+        "数据集"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 155,
+      "name": "OpenInfraMap",
+      "repo_or_site": "https://openinframap.org/",
+      "bucket": "free_register",
+      "action_url": "https://openinframap.org/",
+      "form": "免登录网页+免key瓦片",
+      "access_raw": "浏览器(免登录)",
+      "tags": [
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 156,
+      "name": "OSINT Framework",
+      "repo_or_site": "https://osintframework.com/",
+      "bucket": "free_register",
+      "action_url": "https://osintframework.com/",
+      "form": "免登录目录",
+      "access_raw": "浏览器(免登录)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 157,
+      "name": "OSINT Stuff Tools Collection",
+      "repo_or_site": "https://github.com/cipher387/osint_stuff_tool_collection",
+      "bucket": "dataset",
+      "action_url": "https://github.com/cipher387/osint_stuff_tool_collection",
+      "form": "OSINT工具清单目录",
+      "access_raw": "浏览器(免登录)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 158,
+      "name": "PatentsView (USPTO)",
+      "repo_or_site": "https://search.patentsview.org",
+      "bucket": "free_key",
+      "action_url": "https://search.patentsview.org/docs/",
+      "form": "免费申请API key",
+      "access_raw": "需免费key",
+      "tags": [
+        "学术专利",
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 159,
+      "name": "Perplexity Deep Research",
+      "repo_or_site": "https://www.perplexity.ai/hub/blog/introducing-perplexity-deep-research",
+      "bucket": "free_register",
+      "action_url": "https://www.perplexity.ai/",
+      "form": "账号免费档含深度研究配额(API计费)",
+      "access_raw": "闭源产品(账号; 有API)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 160,
+      "name": "Petal Search",
+      "repo_or_site": "petalsearch.com",
+      "bucket": "free_register",
+      "action_url": "https://petalsearch.com/",
+      "form": "免登录网页",
+      "access_raw": "免登录网页",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 161,
+      "name": "Phind",
+      "repo_or_site": "phind.com",
+      "bucket": "free_register",
+      "action_url": "https://phind.com/",
+      "form": "免费网页(API付费)",
+      "access_raw": "免登录网页",
+      "tags": [
+        "标准定额"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 162,
+      "name": "Presearch",
+      "repo_or_site": "presearch.com",
+      "bucket": "free_register",
+      "action_url": "https://presearch.com/",
+      "form": "免登录网页",
+      "access_raw": "免登录网页",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 163,
+      "name": "Public APIs",
+      "repo_or_site": "https://github.com/public-apis/public-apis",
+      "bucket": "dataset",
+      "action_url": "https://github.com/public-apis/public-apis",
+      "form": "API目录清单(免登录)",
+      "access_raw": "浏览器(免登录)",
+      "tags": [
+        "新闻舆情",
+        "数据集"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 164,
+      "name": "punkpeye/awesome-mcp-servers",
+      "repo_or_site": "https://github.com/punkpeye/awesome-mcp-servers",
+      "bucket": "dataset",
+      "action_url": "https://github.com/punkpeye/awesome-mcp-servers",
+      "form": "MCP服务器目录清单",
+      "access_raw": "数据集(清单文档)",
+      "tags": [
+        "数据集"
+      ],
+      "cat": "awesome_list"
+    },
+    {
+      "idx": 165,
+      "name": "Qwant",
+      "repo_or_site": "qwant.com",
+      "bucket": "free_register",
+      "action_url": "https://www.qwant.com/",
+      "form": "免登录网页(API仅合作伙伴)",
+      "access_raw": "免登录网页(API仅对合作伙伴)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 166,
+      "name": "Qwen Deep Research",
+      "repo_or_site": "https://chat.qwen.ai/?inputFeature=deep_research",
+      "bucket": "free_register",
+      "action_url": "https://chat.qwen.ai/",
+      "form": "Qwen账号免费(限额)",
+      "access_raw": "闭源产品(账号)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 167,
+      "name": "ResearchRabbit",
+      "repo_or_site": "https://www.researchrabbit.ai/",
+      "bucket": "free_register",
+      "action_url": "https://www.researchrabbit.ai/",
+      "form": "免费账号",
+      "access_raw": "免费(账号)",
+      "tags": [
+        "学术专利"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 168,
+      "name": "RSSHub",
+      "repo_or_site": "github.com/DIYgod/RSSHub",
+      "bucket": "free_register",
+      "action_url": "https://docs.rsshub.app/",
+      "form": "自托管/公共实例",
+      "access_raw": "自托管/公共实例",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 169,
+      "name": "SAM.gov排除名单",
+      "repo_or_site": "https://sam.gov/content/exclusions",
+      "bucket": "free_key",
+      "action_url": "https://sam.gov/api-docs",
+      "form": "排除名单免登录检索+Entity API免费注册key",
+      "access_raw": "免登录网页检索(排除面)+免费注册key(Entity API免费层)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 170,
+      "name": "SciSpace",
+      "repo_or_site": "https://scispace.com/",
+      "bucket": "free_register",
+      "action_url": "https://scispace.com/",
+      "form": "账号免费档",
+      "access_raw": "闭源产品(账号)",
+      "tags": [
+        "学术专利"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 171,
+      "name": "Scite.ai",
+      "repo_or_site": "https://scite.ai/",
+      "bucket": "free_register",
+      "action_url": "https://scite.ai/",
+      "form": "账号免费试用档",
+      "access_raw": "闭源产品(账号)",
+      "tags": [
+        "学术专利"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 172,
+      "name": "Scopus API (Elsevier Dev)",
+      "repo_or_site": "https://dev.elsevier.com",
+      "bucket": "paid_only",
+      "action_url": "https://dev.elsevier.com",
+      "form": "机构订阅key, 留档",
+      "access_raw": "需机构订阅key",
+      "tags": [
+        "学术专利"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 173,
+      "name": "searx.space",
+      "repo_or_site": "searx.space",
+      "bucket": "dataset",
+      "action_url": "https://searx.space",
+      "form": "SearXNG公共实例清单",
+      "access_raw": "免登录网页(目录站)",
+      "tags": [
+        "数据集"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 174,
+      "name": "Springer Nature API",
+      "repo_or_site": "https://dev.springernature.com",
+      "bucket": "free_key",
+      "action_url": "https://dev.springernature.com/",
+      "form": "免费注册key(限流配额)",
+      "access_raw": "需免费key",
+      "tags": [
+        "学术专利"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 175,
+      "name": "SSRN(社科预印本平台)",
+      "repo_or_site": "https://www.ssrn.com/index.cfm",
+      "bucket": "free_register",
+      "action_url": "https://www.ssrn.com/index.cfm",
+      "form": "免费注册下载(部分论文)",
+      "access_raw": "免费注册下载(部分)",
+      "tags": [
+        "学术专利"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 176,
+      "name": "Startpage",
+      "repo_or_site": "startpage.com",
+      "bucket": "free_register",
+      "action_url": "https://www.startpage.com/",
+      "form": "免登录网页(强反爬)",
+      "access_raw": "浏览器(强反爬)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 177,
+      "name": "Stract",
+      "repo_or_site": "stract.com(github.com/stract/stract)",
+      "bucket": "free_register",
+      "action_url": "https://stract.com/",
+      "form": "免登录网页/自托管",
+      "access_raw": "免登录网页/自托管",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 178,
+      "name": "Swisscows",
+      "repo_or_site": "swisscows.com",
+      "bucket": "free_register",
+      "action_url": "https://swisscows.com/",
+      "form": "免登录网页",
+      "access_raw": "免登录网页",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 179,
+      "name": "Teclis",
+      "repo_or_site": "teclis.com",
+      "bucket": "free_register",
+      "action_url": "https://teclis.com/",
+      "form": "免登录网页",
+      "access_raw": "免登录网页",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 180,
+      "name": "Tushare(Pro免费积分面)",
+      "repo_or_site": "https://github.com/waditu/tushare",
+      "bucket": "free_key",
+      "action_url": "https://tushare.pro/register",
+      "form": "注册免费积分token(基础接口免费)",
+      "access_raw": "免费注册积分面(基础接口免费)",
+      "tags": [
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 181,
+      "name": "UK Contracts Finder",
+      "repo_or_site": "https://www.gov.uk/contracts-finder",
+      "bucket": "free_register",
+      "action_url": "https://www.gov.uk/contracts-finder",
+      "form": "免登录检索+免key JSON API",
+      "access_raw": "浏览器(免登录)",
+      "tags": [
+        "工商招投标",
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 182,
+      "name": "UN Comtrade API",
+      "repo_or_site": "https://comtradeapi.un.org/data/v1/get/",
+      "bucket": "free_key",
+      "action_url": "https://comtradeapi.un.org/",
+      "form": "免费注册key(免费层)",
+      "access_raw": "需免费key",
+      "tags": [
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 183,
+      "name": "UNGM联合国全球市场",
+      "repo_or_site": "https://www.ungm.org",
+      "bucket": "free_register",
+      "action_url": "https://www.ungm.org/PublicTender",
+      "form": "免登录检索+免费账号下载文档",
+      "access_raw": "免费面: 检索免登录+免费注册账号下载文档(全免费)",
+      "tags": [
+        "工商招投标"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 184,
+      "name": "UNIDO Statistics",
+      "repo_or_site": "https://stat.unido.org",
+      "bucket": "free_register",
+      "action_url": "https://stat.unido.org/",
+      "form": "免登录浏览+XLSX直下",
+      "access_raw": "浏览器(部分XLSX免下)",
+      "tags": [
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 185,
+      "name": "US Census Bureau API",
+      "repo_or_site": "https://api.census.gov",
+      "bucket": "free_key",
+      "action_url": "https://api.census.gov/data/key_signup.html",
+      "form": "免费key申请(限流内免key)",
+      "access_raw": "需免费key(data.json目录免)",
+      "tags": [
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 186,
+      "name": "USGS EarthExplorer/Landsat",
+      "repo_or_site": "https://earthexplorer.usgs.gov/",
+      "bucket": "free_key",
+      "action_url": "https://ers.cr.usgs.gov/",
+      "form": "免费注册→M2M API下载",
+      "access_raw": "浏览器(免费注册)+M2M API",
+      "tags": [
+        "项目数据",
+        "数据集"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 187,
+      "name": "Web of Science API",
+      "repo_or_site": "https://clarivate.com/products/web-of-science/",
+      "bucket": "paid_only",
+      "action_url": "https://clarivate.com/products/web-of-science/",
+      "form": "机构订阅key, 留档",
+      "access_raw": "需机构订阅key",
+      "tags": [
+        "学术专利"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 188,
+      "name": "Yandex",
+      "repo_or_site": "yandex.com",
+      "bucket": "free_register",
+      "action_url": "https://yandex.com/",
+      "form": "免登录网页(强反爬)",
+      "access_raw": "免登录网页(强反爬)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 189,
+      "name": "Yep",
+      "repo_or_site": "yep.com",
+      "bucket": "free_register",
+      "action_url": "https://yep.com/",
+      "form": "免登录网页",
+      "access_raw": "免登录网页",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 190,
+      "name": "东方财富数据中心(免费网页面)",
+      "repo_or_site": "https://data.eastmoney.com/",
+      "bucket": "free_register",
+      "action_url": "https://data.eastmoney.com/",
+      "form": "免费数据页+公开XHR接口可直采",
+      "access_raw": "免费页面(+部分公开XHR)",
+      "tags": [
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 191,
+      "name": "中国人民银行公开数据",
+      "repo_or_site": "http://www.pbc.gov.cn/",
+      "bucket": "free_register",
+      "action_url": "http://www.pbc.gov.cn/",
+      "form": "免费页面(统计数据直读)",
+      "access_raw": "免费页面",
+      "tags": [
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 192,
+      "name": "中国建筑业协会",
+      "repo_or_site": "http://www.ecaci.org.cn",
+      "bucket": "free_register",
+      "action_url": "http://www.ecaci.org.cn",
+      "form": "免登录网页",
+      "access_raw": "免登录网页",
+      "tags": [
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 193,
+      "name": "中国建设报/中国建设新闻网",
+      "repo_or_site": "http://www.chinajsb.cn",
+      "bucket": "free_register",
+      "action_url": "http://www.chinajsb.cn",
+      "form": "免登录网页",
+      "access_raw": "免登录网页",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 194,
+      "name": "中国执行信息公开网",
+      "repo_or_site": "https://zxgk.court.gov.cn",
+      "bucket": "free_register",
+      "action_url": "https://zxgk.court.gov.cn",
+      "form": "免登录检索+验证码闸门(无API)",
+      "access_raw": "浏览器检索(验证码闸门)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 195,
+      "name": "中国招标投标公共服务平台",
+      "repo_or_site": "http://www.cebpubservice.com",
+      "bucket": "free_register",
+      "action_url": "http://www.cebpubservice.com",
+      "form": "免登录公告检索(bulletin子站)",
+      "access_raw": "免登录检索(bulletin公告子站)",
+      "tags": [
+        "工商招投标"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 196,
+      "name": "中国政府公报(国务院+地方)",
+      "repo_or_site": "https://www.gov.cn/gongbao/",
+      "bucket": "free_register",
+      "action_url": "https://www.gov.cn/gongbao/",
+      "form": "免费页面(公报全文)",
+      "access_raw": "免费页面",
+      "tags": [
+        "学术专利"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 197,
+      "name": "中国货币网(外汇交易中心)",
+      "repo_or_site": "https://www.chinamoney.com.cn/",
+      "bucket": "free_register",
+      "action_url": "https://www.chinamoney.com.cn/",
+      "form": "免费页面",
+      "access_raw": "免费页面",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 198,
+      "name": "中施企协(中国施工企业管理协会)",
+      "repo_or_site": "http://www.cacem.com.cn",
+      "bucket": "free_register",
+      "action_url": "http://www.cacem.com.cn",
+      "form": "免登录名单公示",
+      "access_raw": "免登录网页(名单公示)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 199,
+      "name": "亚投行(AIIB)",
+      "repo_or_site": "https://www.aiib.org/en/projects/index.html",
+      "bucket": "free_register",
+      "action_url": "https://www.aiib.org/en/projects/index.html",
+      "form": "免登录项目库",
+      "access_raw": "免登录网页",
+      "tags": [
+        "工商招投标"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 200,
+      "name": "人民法院案例库(rmfyalk)",
+      "repo_or_site": "https://rmfyalk.court.gov.cn/",
+      "bucket": "free_register",
+      "action_url": "https://rmfyalk.court.gov.cn/",
+      "form": "免费注册检索",
+      "access_raw": "免费注册检索",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 201,
+      "name": "信用中国",
+      "repo_or_site": "https://www.creditchina.gov.cn",
+      "bucket": "free_register",
+      "action_url": "https://www.creditchina.gov.cn",
+      "form": "免登录检索(反爬412, 浏览器腿)",
+      "access_raw": "免登录检索(浏览器; 反爬412实测,curl需绕行)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 202,
+      "name": "全国公共资源交易平台",
+      "repo_or_site": "https://www.ggzy.gov.cn",
+      "bucket": "free_register",
+      "action_url": "https://www.ggzy.gov.cn",
+      "form": "免登录公告聚合检索",
+      "access_raw": "免登录检索(公告聚合)",
+      "tags": [
+        "工商招投标"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 203,
+      "name": "全国公路建设市场信用信息管理系统",
+      "repo_or_site": "https://glxy.mot.gov.cn",
+      "bucket": "free_register",
+      "action_url": "https://glxy.mot.gov.cn",
+      "form": "浏览器免费公开查询",
+      "access_raw": "浏览器免费公开查询",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 204,
+      "name": "全国图书馆参考咨询联盟",
+      "repo_or_site": "http://www.ucdrs.superlib.net/",
+      "bucket": "free_register",
+      "action_url": "http://www.ucdrs.superlib.net/",
+      "form": "免费注册文献传递",
+      "access_raw": "免费注册文献传递",
+      "tags": [
+        "学术专利"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 205,
+      "name": "全国水利建设市场监管平台",
+      "repo_or_site": "http://xypt.mwr.cn",
+      "bucket": "free_register",
+      "action_url": "http://xypt.mwr.cn",
+      "form": "浏览器免费公开查询",
+      "access_raw": "浏览器免费公开查询",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 206,
+      "name": "北交所披露与市场数据",
+      "repo_or_site": "https://www.bse.cn/",
+      "bucket": "free_register",
+      "action_url": "https://www.bse.cn/",
+      "form": "免费页面(披露/数据)",
+      "access_raw": "免费页面",
+      "tags": [
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 207,
+      "name": "北大法宝免费面",
+      "repo_or_site": "https://www.pkulaw.com/",
+      "bucket": "free_register",
+      "action_url": "https://www.pkulaw.com/",
+      "form": "免费检索面(全文库付费)",
+      "access_raw": "免费面(部分)",
+      "tags": [
+        "数据集"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 208,
+      "name": "商务部对外投资合作信息服务",
+      "repo_or_site": "https://fec.mofcom.gov.cn",
+      "bucket": "free_register",
+      "action_url": "https://fec.mofcom.gov.cn",
+      "form": "免登录检索(备案/统计栏目)",
+      "access_raw": "免登录检索(项目备案/统计栏目)",
+      "tags": [
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 209,
+      "name": "四库一平台/全国建筑市场监管公共服务平台",
+      "repo_or_site": "https://jzsc.mohurd.gov.cn",
+      "bucket": "free_register",
+      "action_url": "https://jzsc.mohurd.gov.cn",
+      "form": "免登录三面检索(JSON端点POST 405待探)",
+      "access_raw": "免登录网页检索(企业/人员/业绩三面); 公开JSON端点POST实测405待另探GET形态",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 210,
+      "name": "国家企业信用信息公示系统",
+      "repo_or_site": "https://gsxt.gov.cn",
+      "bucket": "free_register",
+      "action_url": "https://gsxt.gov.cn",
+      "form": "滑块验证码+详情免费登录(无官方API)",
+      "access_raw": "浏览器检索(滑块验证码闸门,详情页需免费登录; 无官方API)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 211,
+      "name": "国家公共数据资源平台",
+      "repo_or_site": "https://data.gov.cn",
+      "bucket": "dataset",
+      "action_url": "https://data.gov.cn",
+      "form": "公共数据目录(免登录, 导流各省平台)",
+      "access_raw": "浏览器(免登录)",
+      "tags": [
+        "项目数据",
+        "数据集"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 212,
+      "name": "国家哲学社会科学文献中心(NCPSSD)",
+      "repo_or_site": "https://www.ncpssd.cn/",
+      "bucket": "free_register",
+      "action_url": "https://www.ncpssd.cn/",
+      "form": "免费注册全刊下载",
+      "access_raw": "免费注册全刊下载",
+      "tags": [
+        "学术专利"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 213,
+      "name": "国家法律法规数据库(flk)",
+      "repo_or_site": "https://flk.npc.gov.cn/",
+      "bucket": "free_register",
+      "action_url": "https://flk.npc.gov.cn/",
+      "form": "免费页面(法规全文)",
+      "access_raw": "免费页面",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 214,
+      "name": "国家电网电子商务平台",
+      "repo_or_site": "https://ecp.sgcc.com.cn",
+      "bucket": "free_register",
+      "action_url": "https://ecp.sgcc.com.cn",
+      "form": "免登录公告检索",
+      "access_raw": "免登录公告检索",
+      "tags": [
+        "工商招投标"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 215,
+      "name": "国家知识产权局专利检索系统",
+      "repo_or_site": "https://pss-system.cponline.cnipa.gov.cn",
+      "bucket": "free_register",
+      "action_url": "https://pss-system.cponline.cnipa.gov.cn",
+      "form": "免登录专利检索(反爬)",
+      "access_raw": "浏览器免登录(反爬)",
+      "tags": [
+        "学术专利"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 216,
+      "name": "国家科技图书文献中心(NSTL)",
+      "repo_or_site": "https://www.nstl.gov.cn/",
+      "bucket": "free_register",
+      "action_url": "https://www.nstl.gov.cn/",
+      "form": "免费检索+注册文献传递",
+      "access_raw": "免费检索+注册传递",
+      "tags": [
+        "学术专利"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 217,
+      "name": "国家统计局国家数据",
+      "repo_or_site": "https://data.stats.gov.cn",
+      "bucket": "free_register",
+      "action_url": "https://data.stats.gov.cn",
+      "form": "浏览器在线查询(接口需会话cookie)",
+      "access_raw": "浏览器(易query接口需会话cookie)",
+      "tags": [
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 218,
+      "name": "国家能源局电力业务资质",
+      "repo_or_site": "https://www.nea.gov.cn",
+      "bucket": "free_register",
+      "action_url": "https://www.nea.gov.cn",
+      "form": "免费栏目检索(子系统入口)",
+      "access_raw": "浏览器免费栏目检索(子系统入口见官网)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 219,
+      "name": "国铁采购平台",
+      "repo_or_site": "https://cg.95306.cn",
+      "bucket": "free_register",
+      "action_url": "https://cg.95306.cn",
+      "form": "免登录公告检索",
+      "access_raw": "免登录公告检索",
+      "tags": [
+        "工商招投标"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 220,
+      "name": "地方产权交易所公告(代表:上海联交所)",
+      "repo_or_site": "https://www.suaee.com/",
+      "bucket": "free_register",
+      "action_url": "https://www.suaee.com/",
+      "form": "免费公告页面",
+      "access_raw": "免费页面",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 221,
+      "name": "天工AI搜索",
+      "repo_or_site": "tiangong.cn",
+      "bucket": "free_register",
+      "action_url": "https://www.tiangong.cn/",
+      "form": "免登录网页",
+      "access_raw": "免登录网页",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 222,
+      "name": "头条搜索",
+      "repo_or_site": "so.toutiao.com",
+      "bucket": "free_register",
+      "action_url": "https://so.toutiao.com",
+      "form": "免登录网页",
+      "access_raw": "免登录网页",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 223,
+      "name": "建筑时报",
+      "repo_or_site": "http://www.jzsbs.com",
+      "bucket": "free_register",
+      "action_url": "http://www.jzsbs.com",
+      "form": "免登录网页",
+      "access_raw": "免登录网页",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 224,
+      "name": "新三板(股转系统)",
+      "repo_or_site": "https://www.neeq.com.cn",
+      "bucket": "free_register",
+      "action_url": "https://www.neeq.com.cn",
+      "form": "免登录检索(接口形态待验)",
+      "access_raw": "免登录检索(网页; 接口形态待验)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 225,
+      "name": "海关总署统计数据平台",
+      "repo_or_site": "http://stats.customs.gov.cn/",
+      "bucket": "free_register",
+      "action_url": "http://stats.customs.gov.cn/",
+      "form": "免费在线查询",
+      "access_raw": "免费页面(在线查询)",
+      "tags": [
+        "项目数据"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 226,
+      "name": "港交所披露易",
+      "repo_or_site": "https://www1.hkexnews.hk",
+      "bucket": "free_register",
+      "action_url": "https://www1.hkexnews.hk",
+      "form": "免登录全文检索",
+      "access_raw": "免登录检索(全文检索表单面)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 227,
+      "name": "港交所披露易(HKEXnews)",
+      "repo_or_site": "https://www.hkexnews.hk/index_c.htm",
+      "bucket": "free_register",
+      "action_url": "https://www.hkexnews.hk/index_c.htm",
+      "form": "免费页面",
+      "access_raw": "免费页面",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 228,
+      "name": "百度学术",
+      "repo_or_site": "xueshu.baidu.com",
+      "bucket": "free_register",
+      "action_url": "https://xueshu.baidu.com",
+      "form": "免登录网页",
+      "access_raw": "免登录网页",
+      "tags": [
+        "学术专利"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 229,
+      "name": "百度学术(免费发现层)",
+      "repo_or_site": "https://xueshu.baidu.com/",
+      "bucket": "free_register",
+      "action_url": "https://xueshu.baidu.com/",
+      "form": "免费发现层页面",
+      "access_raw": "免费页面",
+      "tags": [
+        "学术专利"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 230,
+      "name": "百度指数",
+      "repo_or_site": "index.baidu.com",
+      "bucket": "free_register",
+      "action_url": "https://index.baidu.com",
+      "form": "需百度账号登录(免费)",
+      "access_raw": "浏览器(需登录)",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 231,
+      "name": "百度新闻",
+      "repo_or_site": "news.baidu.com",
+      "bucket": "free_register",
+      "action_url": "https://news.baidu.com",
+      "form": "免登录网页",
+      "access_raw": "免登录网页",
+      "tags": [
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 232,
+      "name": "秘塔AI搜索(metaso)",
+      "repo_or_site": "metaso.cn",
+      "bucket": "free_register",
+      "action_url": "https://metaso.cn",
+      "form": "免登录(深度功能需登录)",
+      "access_raw": "免登录网页(部分深度功能需登录)",
+      "tags": [
+        "学术专利",
+        "新闻舆情"
+      ],
+      "cat": ""
+    },
+    {
+      "idx": 233,
+      "name": "艾瑞咨询免费报告面",
+      "repo_or_site": "https://www.iresearch.cn/",
+      "bucket": "free_register",
+      "action_url": "https://www.iresearch.cn/",
+      "form": "免费注册下载(部分报告)",
+      "access_raw": "免费注册下载(部分)",
+      "tags": [
+        "通用网研"
+      ],
+      "cat": ""
+    }
+  ]
+}

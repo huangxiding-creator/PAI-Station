@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Windows>
+	<!-- 安装启动页 -->
+	<VerticalLayout bkcolor="#FFFFFF">
+		<!-- 顶部Logo区域 -->
+		<VerticalLayout height="120" padding="0,15,0,0" bkcolor="#F5F5F5">
+			<Control />
+			<HorizontalLayout height="120">
+				<Control />
+				<VerticalLayout width="250" height="93" bkimage="file='res\img_logo_install.png'" />
+				<Control />
+			</HorizontalLayout>
+		</VerticalLayout>
+		
+		<!-- 主要内容区域 -->
+		<VerticalLayout>
+			<!-- 安装按钮 -->
+			<HorizontalLayout height="64" padding="40,15,40,0">
+				<Control />
+				<Button name="InstallBtn" width="200" height="64" text="一键安装" textcolor="#FFFFFF" font="1" textpadding="0,0,0,12" align="center" normalimage="res\button\btn_install_enable.png" hotimage="res\button\btn_install_hover.png" pushedimage="res\button\btn_install_enable.png" disabledimage="res\button\btn_install_disable.png"/>
+				<Control />
+			</HorizontalLayout>
+			
+			<!-- 协议区域 -->
+			<HorizontalLayout height="24" padding="40,30,40,20">
+				<CheckBox name="acceptCheckBox" width="140" height="24" text="同意百度文库的" textcolor="#666666" selected="true" font="1" textpadding="28,0,0,0" normalimage="file='res\checkbox\check_no.png' dest='2,4,22,24'" hotimage="file='res\checkbox\check_hover.png' dest='2,4,22,24'" selectedimage="file='res\checkbox\check_yes.png' dest='2,4,22,24'"/>
+				<Button name="licenseBtn" width="100" text="用户许可协议" textcolor="#44B58F" align="left" font="1"/>
+				<Control />
+				<CheckBox name="CustomOptionsCheckBox" width="120" height="24" text="自定义安装" textcolor="#666666" font="1" textpadding="24,0,0,0" normalimage="file='res\checkbox\check_arrow_down.png' dest='4,8,16,20'" hotimage="file='res\checkbox\check_arrow_down.png' dest='4,8,16,20'" selectedimage="file='res\checkbox\check_arrow_up.png' dest='4,8,16,20'"/>
+			</HorizontalLayout>
+			
+			<!-- 自定义安装区域 -->
+			<VerticalLayout name="customVer" visible="false" bkcolor="#FFF5F5F5">
+				<VerticalLayout padding="40,18,40,0">
+					<Label text="安装路径" height="24" textcolor="#333333" font="1"/>
+					<HorizontalLayout height="48" padding="0,12,0,0">
+						<RichEdit name="InstallTab_InstallFilePath" width="400" height="48" text="" textcolor="#222222" font="1" bkcolor="#FFFFFFFF" bordercolor="#E5E5E5" bordersize="1" borderround="4,4" inset="16,8,16,8"/>
+						<Button name="InstallTab_SelectFilePathBtn" width="108" height="48" text="更改路径" textcolor="#FFFFFF" font="1" bkcolor="#0xFF53A683" borderround="0,4"/>
+					</HorizontalLayout>
+					
+					<HorizontalLayout height="24" padding="0,20,0,0">
+						<CheckBox name="deskShortCheckBox" width="180" height="24" text="在桌面创建快捷方式" textcolor="#666666" selected="true" font="1" textpadding="28,0,0,0" normalimage="file='res\checkbox\check_no.png' dest='2,4,22,24'" hotimage="file='res\checkbox\check_hover.png' dest='2,4,22,24'" selectedimage="file='res\checkbox\check_yes.png' dest='2,4,22,24'"/>
+						<Label name="InstallTab_FreeSpace" visible="false" text="#GB"/>
+					</HorizontalLayout>
+				</VerticalLayout>
+			</VerticalLayout>
+		</VerticalLayout>
+	</VerticalLayout>
+</Windows>

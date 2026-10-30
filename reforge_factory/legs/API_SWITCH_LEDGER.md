@@ -46,6 +46,21 @@
 - 意外发现 (利好): harvest_djyanbao 浏览器路径今日实测「已登录 (profile 会话
   复用)」且正常落件 — 1015 改版 blocker 已自然解除, 降级兜底链路是活的。
 
+## 1026 增补: warehouse 数仓渠道 (P1-4 ETL 数仓, 世界顶级差距#3修复)
+
+| 渠道 | 数据链 | 接入点 | 冒烟结果 (实测) | 说明 |
+|---|---|---|---|---|
+| warehouse (本地 ETL 数仓) | akshare 免费接口 → ETL → `data/warehouse/price_finance.db` (SQLite 四表: stock_financials / commodity_prices / macro_series / company_registry) | `data/warehouse/etl.py` (建仓+首轮ETL+verify) + `reforge_factory/legs/warehouse_leg.py` (查询→散文md→ingest engine=warehouse cred=research, 支持 --tree 挂树) | ✅ 首轮 ETL 实测行数见 `data/warehouse/etl_log.jsonl`; 冒烟「中国建筑近5年营收序列」实测行入 EPC-JIAGE (台账行 channel=warehouse) | 零浏览器零密钥 (免费宪法); 数字零造假 — 全部 akshare/SQLite 实测; 混凝土日线 akshare 免费面无序列=如实缺口不伪造 |
+
+数据源 (全免费, akshare 1.19.3 @ E:/AI-Station/.venv): 央企财务
+stock_financial_abstract(同花顺)+stock_zygc_em 海外收入(东财, 半年报频率);
+材料价格 futures_main_sina 主力日线(新浪)+futures_spot_price_daily 现货月采样
+(生意社100ppi)+macro_china_construction_price_index 建材指数(东财);
+宏观 macro_china_ppi/macro_china_gdzctz(东财)+macro_china_nbs_nation
+固投建安/建筑业总产值(国家统计局)。
+渠道登记: channel_matrix.py CHANNEL_ALIASES 增 `warehouse: [warehouse, 数仓, 价格财务数仓]`
+(1026); akshare 注册表键见 SURVEY_ALIASES (登记≠接线, 本条=接线完成)。
+
 ## 全渠道生产调度器 channels_dispatcher (1026 生产接线令 — S1 采集段标准入口)
 
 > 令: 生产中使用起来 — **全部点亮渠道自动进每一份报告的 S1 采集产线, 取代手工编波**。
@@ -66,3 +81,21 @@
 - 数字零造假: hits/ingested/chars 全从腿 stdout 终态 JSON 实收; 零命中/失败腿如实记录 (如 27 腿零命中=中文规范词面在英文数据集 API 的如实回零)
 
 **下一份报告产线的 S1 采集段标准入口 = 本调度器。**
+
+## 1027 S3 出书链固化 — WPS 复刻排版入产线（用户令：从 WPS 逆向破解的专业排版进入生产链条）
+- 新件 `reforge_factory/s3_book_chain.py`（16,843B，只增不删）：`--campaign/--chapters-dir/--title/--out-dir` 参数化一键链 ①合并②docx③**aipaiban 排版硬门**④PDF⑤幂等质检⑥产物清单；**排版失败=return 3 链中断、PDF 只从排版版 docx 出**（1022 宪法「合并完成必须排版·无绕行」条款代码化）；蓝本=第9份 `work/m2/overseas/s3_out_chain.py`（既有件零改动），腿件复用 `tools/report_to_docx.py` + `逆向工程/wps-ai-paiban/replica/aipaiban.py`（零云端）
+- 排版轨（产线研报预设，同 `work/m2/report_paiban.py` 调用面）：`--preset beauty --toc on --page-numbers on --h1-break on --table-style three_line`
+- 冒烟实测（campaign=EPC-OVERSEAS-SMOKE，第9份章源重放，出物隔离 `_backup_tmp/s3_book_smoke_1027`，正式件零接触）：合并 906,505B CJK=250,451（删元数据 2,092 字·逐章恰删 1 尾注+2 行说明块·幂等复跑零漂移）且 **sha256=0b5af12e495707fb 与第9份正式 REPORT_FULL.md 比特一致**；docx 449,528B / 排版版 455,016B+summary 1,213B / PDF 3,344,002B（三件与正式件同字节大小，OOXML/PDF 时间戳致 sha 不同——如实记）；PDF **Word 统计 341 页 = pypdf 实测 341 页**（第9份=341页）；排版 dry-run 复跑=incremental PASS；全链 PASS 65s
+- 台账：`reforge_factory/s3_book_chain_ledger.jsonl`（只增不改）+ 每run `s3_run_manifest.json`；README 生产链条节已同步登记（S3 出书标准入口行）
+- **S3 出书标准入口 = s3_book_chain.py（含 WPS 复刻排版硬门）。**
+
+## 1030 增补: bdn 百度网盘检索下载渠道 (用户令: bdn CLI 接入调研渠道体系)
+
+| 渠道 | 数据链 | 接入点 | 冒烟结果 (实测) | 说明 |
+|---|---|---|---|---|
+| bdn (百度网盘检索下载) | 自有 SVIP8 账号面 BDUSS 直连 (`bdn` CLI, 零遥测): xpan 全盘 search → 三层价值判定 (扩展名首选 .pdf/.docx/.xlsx/.md/.txt +100 / 次选 .doc 族 +40; 文件名×campaign tiers T1+60/T2+25/查询词+10; 尺寸门 8KB–200MB) → download (dlink 多线程+md5 校验+断点续传) 落 staging → ingest | `reforge_factory/legs/bdn_leg.py` (search→judge_entry 判值→download→staging/files→ingest engine=bdn cred=research, url=bdpan://<远端路径> 稳定去重) + 桥 `api_replica_bridge.py CLI_ENGINES["bdn"]` + 渠道册 `channel_manifest.json` named_channels (36 位, id=bdn) + `channel_matrix.py CHANNEL_ALIASES` (fit=数据集+工商招投标+通用网研) + 调度器 `channels_dispatcher.py` EXTRA_TAGS/build_cmd (下载预算收紧 3 件×100MB) | ✅ EPC-TOP50「工程总承包」: search 100 命中 (可下载面 93) → 判分 230 头部 3 件 PDF 全下载成功 (BIM 水利总承包应用 2.93MB / 集成计价模式 2.10MB / 风险控制 1.57MB, pypdf 抽文真期刊全文) + 命中面简报 → 入池 4 件 23,723 字 → judge **4/4 有效 0 废弃** → 门槛账 60,948,716→60,972,439 (+23,723), T1 直接层 183,789→207,512 (41→45 件), 信源域 162→163; by_engine[bdn]=23,723; C 轴 bdn 点亮 (channels_hit 8→9, miss_not_invoked 清空 green=true) | 铁律: 只 search/download (子命令白名单代码化), **不转存/不分享/不删**; 下载物一律落 `staging/bdn/<ts>/` 再入池; 凭据走 bdn 默认 `data/secrets/bdn_credentials.json` (gitignored, 密钥零进仓); 数字零造假 (hits/字数全 CLI 实收) |
+
+.bak 三件先行: `channel_matrix.py.bak_1030_pre_bdn` /
+`api_replica_bridge.py.bak_1030_pre_bdn` / `channel_manifest.json.bak_1030_pre_bdn`
+(+ `channels_dispatcher.py.bak_1030_pre_bdn`)。腿件 --num 兼容 --rows 别名,
+下载预算 --download-limit 全程总口径 (跨查询远端路径去重)。

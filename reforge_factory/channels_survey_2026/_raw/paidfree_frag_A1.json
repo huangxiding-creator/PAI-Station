@@ -1,0 +1,62 @@
+[
+ {
+  "name": "AKShare 开源金融数据库",
+  "repo_or_site": "https://github.com/akfamily/akshare",
+  "replaces": "Wind/iFinD/Choice(行情/财务/宏观/期货多域)",
+  "one_liner": "开源Python金融数据库(MIT), 数百接口聚合东财/新浪/交易所等免费一手源, A股/港美股/期货/宏观/外汇全谱, Wind免费平替主力件",
+  "access": "开源库(pip安装, 聚合免费源)",
+  "fit": "金融数据全家桶",
+  "existing": "none(new)",
+  "probe_key": "gh:akfamily/akshare"
+ },
+ {
+  "name": "Tushare(Pro免费积分面)",
+  "repo_or_site": "https://github.com/waditu/tushare",
+  "replaces": "Wind/iFinD(日线行情/财务/宏观)",
+  "one_liner": "老牌开源金融数据接口, Pro版积分制基础接口免费(A股日线/财务指标/宏观), 免费档限频",
+  "access": "免费注册积分面(基础接口免费)",
+  "fit": "金融数据",
+  "existing": "none(new)",
+  "probe_key": "gh:waditu/tushare"
+ },
+ {
+  "name": "efinance 轻量行情财报库",
+  "repo_or_site": "https://github.com/Micro-sheep/efinance",
+  "replaces": "iFinD/Choice(实时快照/历史K线/财报)",
+  "one_liner": "开源轻量库, 直连东财公开接口: 实时行情快照+历史K线+财务报表免费拉取",
+  "access": "开源库(聚合免费源)",
+  "fit": "金融数据",
+  "existing": "none(new)",
+  "probe_key": "gh:Micro-sheep/efinance"
+ },
+ {
+  "name": "新浪财经行情接口(非官方公开)",
+  "repo_or_site": "https://hq.sinajs.cn/list=sh000001",
+  "replaces": "Wind/同花顺实时行情(快照级)",
+  "one_liner": "新浪行情HTTP接口: 股/期/汇实时快照与分钟线, 免费免key, 需带Referer头(2021后强制)",
+  "access": "免费接口(非官方公开, 需Referer)",
+  "fit": "实时行情(秒级快照)",
+  "existing": "none(new)",
+  "probe_key": "sina_hq"
+ },
+ {
+  "name": "腾讯财经行情接口(非官方公开)",
+  "repo_or_site": "https://qt.gtimg.cn/q=sh000001",
+  "replaces": "Wind/同花顺实时行情(快照级)",
+  "one_liner": "腾讯行情HTTP接口: 股票/期货/外汇快照, 多年稳定, 免费免key",
+  "access": "免费接口(非官方公开)",
+  "fit": "实时行情(秒级快照)",
+  "existing": "none(new)",
+  "probe_key": "tencent_qt"
+ },
+ {
+  "name": "东方财富数据中心(免费网页面)",
+  "repo_or_site": "https://data.eastmoney.com/",
+  "replaces": "东方财富Choice(同门付费终端)",
+  "one_liner": "东财网页数据中心: 财报/资金流/龙虎榜/大宗交易/限售解禁/宏观 全免费页面——Choice付费终端的数据母源大面公开, 部分XHR可程序化",
+  "access": "免费页面(+部分公开XHR)",
+  "fit": "金融数据",
+  "existing": "none(new)",
+  "probe_key": "eastmoney"
+ }
+]

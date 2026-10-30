@@ -1,4 +1,4 @@
-# bdn 全命令参考（16 子命令，2026-10-29 自 `python -I bdn.py <cmd> --help` 实测提取）
+# bdn 全命令参考（21 子命令，2026-10-29/30 自 `python -I bdn.py <cmd> --help` 实测提取）
 
 CLI 真身：`E:\AI-Station\逆向工程\baidu-netdisk\replica\bdn.py`（依赖同目录 `bdncore\`）。
 所有示例假设 `BDN=E:\AI-Station\逆向工程\baidu-netdisk\replica\bdn.py`。
@@ -253,6 +253,64 @@ JSON：`{errno, path(remote), local, size, chunks_total, chunks_this_run, resume
 行为：Range 4MB×≤8 线程；状态存 `.bdn_dl_state.json`，中断重跑同命令续传。实测约 2.21MB/s（10MB 样本）。
 
 ---
+
+## W7 新命令五件（2026-10-30）
+
+### pull — 拉取恢复（远端目录→本地；mirror 反向件）
+
+```
+python -I %BDN% pull remote local [--dry-run] [--max-scan-requests N] [--json]
+```
+
+| 参数 | 说明 |
+|---|---|
+| `remote` | 远端绝对目录（如 `/AI-Station-archive/项目`） |
+| `local` | 本地落盘目录（**不存在自动建**） |
+| `--dry-run` | 只出计划零下载 |
+| `--max-scan-requests` | 远端递归扫描预算（默认 100 发；耗尽**如实报**已用/上限+未扫目录清单，不硬崩） |
+
+行为：本地缺文件 / size 不符 → DownloadEngine 下载（md5 校验+断点续传）；**本地多出的文件只报告不删**（`local_only` 字段）；远端空文件可拉。恢复腿：镜像丢了本地盘后 `pull` 回来，或两机对齐。
+
+### clean — 本地断点残留清理（零网络）
+
+```
+python -I %BDN% clean dir [--confirm] [--json]
+```
+
+递归扫 `dir` 下三类残留：`*.bdn_upload_state.json` / `*.bdn_dl_state.json` / `.bdn_mirror_*.json`（含 `.bdn_circuit.json`）。无 `--confirm` 只列清单退出 3（对齐删除铁律）；有才删清单内文件。状态文件被同步盘锁住时引擎给中文错误（不裸崩），处置即 `clean --confirm`。
+
+### recycle restore — 回收站还原（双确认）
+
+```
+python -I %BDN% recycle restore <fsid|路径> [--confirm] [--json]
+```
+
+无 `--confirm` 只列待还原清单退出 3；有才执行。端点=pcs `file?method=restore`（蓝本形态）——**W7 实测双死**：pcs 腿 31030 "pcs token not exist"+api 族猜形 errno 2（见 README W7 节）；命令保留待通道复活。
+
+### recycle delete — 回收站彻底删除（不可逆）
+
+```
+python -I %BDN% recycle delete <fsid|路径> --confirm [--json]
+```
+
+必须 `--confirm`（同双确认流）。端点=POST `/api/recycle/delete`（W7 实测 errno=0 放行）。
+
+### recycle clear — 清空回收站（整箱不可逆）
+
+```
+python -I %BDN% recycle clear --i-mean-it [--json]
+```
+
+默认拒绝（退出 3）；仅 `--i-mean-it` 执行。端点=pcs `file?method=delete&type=recycle`（仅实现，未活测——整箱操作勿轻试）。
+
+### 既有命令新旗标（W7）
+
+| 命令 | 旗标 | 说明 |
+|---|---|---|
+| `download` | `--svip` | 走安卓腿 locatedownload 直链（LocateDownloadSign；**W7 实测命中：4.2 vs 2.6MB/s**）；失败自动回退 web dlink 零损失 |
+| `upload` | `--allow-empty` | 放行 0 字节文件（**W7 实测 precreate errno 2 拒——默认拒绝维持**，旗标留作通道复活后备） |
+| `mirror` | `--max-scan-requests N` | 远端扫描预算（默认 100；耗尽如实报+列未扫目录，不硬崩） |
+| `doctor` | `--reset` | 清跨进程熔断标记（凭据同目录 `.bdn_circuit.json`，TTL 30 分钟）再体检 |
 
 ## 常见 errno 速查（完整表在 bdncore\errors.py）
 

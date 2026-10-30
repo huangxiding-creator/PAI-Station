@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="490,395" sizebox="0,0,0,0" caption="0,0,0,390" roundcorner="24,24" showshadow="true" shadowcolor="#676767" shadowsize="5" shadowdarkness="50" shadowposition="1,1" shadowcorner="24,24,24,24" layered="false" alwaysontop="false">
+	<Font id="101" name="微软雅黑" size="16" bold="false" />
+	<Font id="102" name="微软雅黑" size="16" />
+	<Font id="103" name="微软雅黑" size="14" />
+	<Font id="104" name="微软雅黑" size="24" />
+
+	<VerticalLayout bkcolor="#FFFFFFFF">
+		<HorizontalLayout height="26" inset="0,14,20,0">
+			<Control />
+			<Button name="sysMinBtn" width="12" height="12" normalimage="file='res\button\btn_win_min.png'" />
+			<Control width="16" />
+			<Button name="sysCloseBtn" width="12" height="12" normalimage="file='res\button\btn_win_close.png'" />
+		</HorizontalLayout>
+		<TabLayout name="uninstall_tablayout">
+			<AnimationTabLayout name="WizardTab" height="369">
+				<Include source="uninstall_startpage.xml" />
+			</AnimationTabLayout>
+			<Include source="uninstall_processingpage.xml" />
+			<Include source="uninstall_finishpage.xml" />
+		</TabLayout>
+	</VerticalLayout>
+</Window>

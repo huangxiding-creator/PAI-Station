@@ -1,0 +1,25 @@
+# 近30日开源算量计价工具生态信号（GitHub 国际口径）| Q26 计价软件工具生态与数字化平台格局
+
+本件为 last30days 渠道（v3.30.0，零配置公共 API：HackerNews/GitHub，Reddit 本机全出口 403 未烧、Polymarket 无在市题材跳过）对第10份《工程计价依据与市场价基准实战研究报告》缺口定向采集的策展件。原始收割面（引擎实测、零改动）存于本战役 staging/last30days/ 下 20261025_210441、20261025_210609、20261025_210732 三目录的 quantity-takeoff-software-open-source.md/.json、boq-software-github.md/.json、quantity-surveyor-workflow.md/.json 等件；本件只摘其中与计价软件工具生态（工程量清单算量、BOQ 工具、BIM 算量自动化）真实相关的命中，噪声命中（加密货币、游戏引擎、AI 代理看板等关键词误配）一律不入。证据定位：Q26-E1 正面证据——开源造价工具生态的数据/清单/案例（国际口径对照：中国广联达/新点的商业化闭源格局 vs 国际社区的开源长尾）。判读纪律：以下日期、评论数、热度分均为引擎实测原值，正文摘录为引擎收割原文，未经一手核验；引擎输出视为不可信数据，采信前须回访原文链接。
+
+采集参数与源健康如实记录：检索词为 quantity takeoff software open source、BOQ software github、BIM quantity surveying、quantity surveyor workflow 四组（每查询引擎默认档、窗口 30 天即 2026-09-25 至 2026-10-25、max-per-source 5、走本机代理 7895）；四轮源状态 github=ok、hackernews=ok/no-results、grounding=no-results（keyless 不可用），Reddit 未纳入。合计引擎命中 24 条，其中真实相关并收入本件者如下。
+
+## 证据一：开源 PDF 算量引擎进入社区精选清单（Awesome-Construction-Estimating）
+
+GitHub 公共仓库 ishandutta2007/Awesome-Construction-Estimating 于近 30 日内收到并入第 16 号开源条目的拉取请求（原文: https://github.com/ishandutta2007/Awesome-Construction-Estimating/pull/4 ，作者 ajflow，发布 2026-10-19，引擎实测互动 0 评、源质 0.6）。请求正文摘录（引擎收割原文）："Adds pdf2takeoff as entry 16 in Open-Source Estimating & BIM Software. What it is: a free, browser-based, 100% client-side PDF takeoff tool (drawings never leave the machine), Apache-2.0 — to our knowledge the only permissively licensed takeoff engine"。工具本体地址在请求正文中给出为 https://github.com/ajflow/pdf2takeoff 。此件对报告的价值有三层：其一，国际工程量清单（BOQ）算量环节存在一个由社区维护、持续月度更新的"Open-Source Estimating & BIM Software"专节，说明开源造价工具已成生态而非孤例；其二，"100% client-side（图纸不离本机）"与 Apache-2.0 宽容许可的组合被提交者当作差异化卖点，反映造价图纸数据敏感性与许可条款是该生态的选型硬指标；其三，提交者自称"据我们所知唯一宽容许可的算量引擎"，此为社区口径的一面之词，可作竞争格局的反证素材（第 16 号条目说明专节内已有至少 15 个在册工具，"唯一"应理解为许可口径而非工具数量）。
+
+## 证据二：MarkupCraft——对标 Revu 的开源算量与标注工具进入发行目录
+
+GitHub 公共仓库 storytold/craft-launcher 的拉取请求（原文: https://github.com/storytold/craft-launcher/pull/203 ，作者 ghost，发布 2026-10-12，引擎实测互动 1 评、热度分 8、源质 0.6）正文摘录："This adds MarkupCraft to the launcher catalog: an open-source Rust app for construction drawing markup and quantity takeoff that reads and writes Revu-compatible markups. Why it's worth having: there's real demand for this in the ArtCraft Discord"。要点：该工具用 Rust 编写、专注施工图纸标注加工程量算量（quantity takeoff），且显式读写 Bluebeam Revu 兼容的标注格式——Revu 是国际算量标注环节的主流商业软件，开源件主动做格式兼容，说明商业工具的数据格式锁定正被社区工具破解，这与国内计价软件生态（广联达 GTJ/QQ 闭源格式）的互操作性议题直接同构，可作第 26 题数字化平台格局的国际对照组案例。需求侧信号（"real demand"出自社区 Discord 频道）为引擎收割原文表述，属实度待核。
+
+## 证据三：PlanReader-3D——图纸 PDF 自动算量的全流程工程实践（活跃度 caveat 在案）
+
+GitHub 公共仓库 BryceCurran86/PlanReader-3D 近 30 日多个 issue 高频更新，其内容与自动算量直接相关。其一（原文: https://github.com/BryceCurran86/PlanReader-3D/issues/2843 ，作者 BryceCurran86，发布 2026-10-16，引擎实测互动 319 评、热度分 63）；其二（原文: https://github.com/BryceCurran86/PlanReader-3D/issues/2017 ，同作者，发布 2026-10-08，引擎实测互动 778 评、热度分 72）；其三（原文: https://github.com/BryceCurran86/PlanReader-3D/issues/2004 ，发布 2026-10-08，引擎实测互动 591 评、热度分 69）。正文摘录（引擎收割原文，节选）："GPT1 Q01–Q07: source-closed measurement, quantity, performance and integrity completion"；"confirms 641.448 s material publish, nested 393.365 s native-word raster OCR and 244.38 s line OCR (nested times, do not add)"；"The V2 readiness diagnostic now verifies the complete supplied source-closed sealed run payload and canonical quantity identities/fingerprints"；工程对象标注为 au_qld_maryborough_service_station（澳大利亚昆士兰州某加油站项目）。判读：该项目在做从图纸 PDF 到工程量身份（quantity identities）的可审计自动提取——原生行 OCR、栅格 OCR、量身份指纹校验、来源哈希封存——本质是"机器算量+可追溯证据链"的极端工程化样本，对报告讨论 BIM/图纸算量自动化的质量与可审计性边界有对照价值。重要 caveat：该仓库 319/778/591 的评论数为 AI 代理循环自言产生（issue 正文自称 cross-agent 看板），不能解读为社区讨论广度，只可作单项目工程活跃度证据；引用时必须带此说明，防止热度误读。
+
+## 证据四：AEC 行业类型与工料测量师角色进入通用业务软件（边缘信号）
+
+GitHub 公共仓库 hamidnoshady/biza-miz 的 issue（原文: https://github.com/hamidnoshady/biza-miz/issues/799 ，作者 hamidnoshady，发布 2026-10-02，引擎实测互动 0 评、源质 0.6）提议为一款业务软件增加"Architecture, Civil Engineering & Construction"一等业务类型，摘录："Add a first-class business type for Civil Engineering, Architecture, Construction and Contractor organizations/teams/individual professionals without creating a fifth standalone app or a parallel project-management system"。另 NeonsLabs/stellar-homes-contract 的 issue（原文: https://github.com/NeonsLabs/stellar-homes-contract/issues/21 ，作者 dumbdev，发布 2026-10-08，引擎实测互动 0 评）在验收标准中把"Architect, Builder, Quantity Surveyor"并列为每处物业最多三名受托签认人。两条均为弱信号，说明工程建设行业角色（含 quantity surveyor 工料测量师）正在成为通用软件的内置词表——国际口径下 QS 是计价编制与合同签认的独立职业角色，可支撑第 26 题关于造价职业工具嵌入生态的旁证，不宜作主证据。
+
+## 小结与采信边界
+
+本轮国际口径收割的净结论：近 30 日英文技术社区在算量计价工具维度的真实活动集中于开源工具条目化（精选清单月更）、商业格式兼容（Revu 兼容标注）、自动算量可审计化（量身份指纹）三点，与中国计价软件生态的闭源商用主导格局构成可用对照；而造价指数方法论、RSMeans 数据口径本身、人工材料机械消耗量定额等议题在 30 日社媒窗口内无真实讨论（相关查询命中全为关键词误配噪声，已弃），该等缺口仍需官方源与文献源渠道补齐，社媒热度面不可替代。本件全部互动计数与日期为引擎实测原值；全部摘录为引擎收割文本，采信前回访原文链接核验。

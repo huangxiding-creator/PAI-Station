@@ -1,0 +1,123 @@
+[conn] ✅ 出口可用 (http://127.0.0.1:7892, 锁定态见 nblm_conn_state.json)
+E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\jiage\sched\nblm_run_jiage.py:113: DeprecationWarning: Non-default legacy NotebookLMClient.from_storage tuning arguments are deprecated; group them under config=ClientConfig(...). They will be removed in v1.0. Offending arguments: keepalive, limits, max_concurrent_rpcs, max_concurrent_uploads, timeout.
+  return await NotebookLMClient.from_storage(
+E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\jiage\sched\nblm_run_jiage.py:113: DeprecationWarning: Awaiting NotebookLMClient.from_storage(...) is deprecated; use `async with NotebookLMClient.from_storage(...) as client:` instead. The await form will be removed in v1.0.
+  return await NotebookLMClient.from_storage(
+22:53:21 WARNING [notebooklm.middleware.tracing] [req=e211e474] rpc failed: RPC CREATE_NOTEBOOK (TransportServerError)
+22:53:21 ERROR [notebooklm._rpc_executor] [req=e211e474] RPC CREATE_NOTEBOOK failed after 10.011s: Failed to perform, curl: (28) Connection timed out after 10008 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details. (server-error retries exhausted)
+Traceback (most recent call last):
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_curl_cffi_transport.py", line 204, in __aenter__
+    curl_resp = await self._cm.__aenter__()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\contextlib.py", line 214, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\curl_cffi\requests\session.py", line 1153, in stream
+    rsp = await self.request(method=method, url=url, **kwargs, stream=True)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\curl_cffi\requests\session.py", line 1585, in request
+    return await self._request_once(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<36 lines>...
+    )
+    ^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\curl_cffi\requests\session.py", line 1500, in _request_once
+    raise first_element
+curl_cffi.requests.exceptions.Timeout: Failed to perform, curl: (28) Connection timed out after 10008 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_web\transport\runtime.py", line 258, in terminal
+    response = await self._kernel.post(
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_web\transport\kernel.py", line 215, in post
+    return await stream_post_with_size_cap(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_web\transport\streaming_post.py", line 68, in stream_post_with_size_cap
+    async with client.stream("POST", url, **stream_kwargs) as response:
+               ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_curl_cffi_transport.py", line 212, in __aenter__
+    raise httpx.RequestError(
+        str(exc), request=httpx.Request(self._method, self._url)
+    ) from exc
+httpx.RequestError: Failed to perform, curl: (28) Connection timed out after 10008 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\jiage\sched\nblm_run_jiage.py", line 485, in <module>
+    raise SystemExit(asyncio.run(main()))
+                     ~~~~~~~~~~~^^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\asyncio\base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\jiage\sched\nblm_run_jiage.py", line 471, in main
+    fw = await phase_framework(st, ld, client=client)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\jiage\sched\nblm_run_jiage.py", line 239, in phase_framework
+    nb_id = await ensure_notebook(
+            ^^^^^^^^^^^^^^^^^^^^^^
+        client, st, "framework", "JIAGE-计价依据报告-00战役总")
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\jiage\sched\nblm_run_jiage.py", line 134, in ensure_notebook
+    nb = await client.notebooks.create(title=title)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_notebooks.py", line 166, in create
+    return await call_unconfirmed_on_transport_loss(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_idempotency.py", line 1115, in call_unconfirmed_on_transport_loss
+    return await call()
+           ^^^^^^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_notebooks.py", line 164, in _create
+    return await self._send_create(title)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_web\notebooks.py", line 620, in _send_create
+    result = await self._rpc.rpc_call(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_request_policy.py", line 120, in asynchronous
+    return await function(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_web\transport\executor.py", line 188, in rpc_call
+    return await self._rpc_call_bound(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<13 lines>...
+    )
+    ^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_web\transport\executor.py", line 307, in _rpc_call_bound
+    return await self._execute_once(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<13 lines>...
+    )
+    ^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_web\transport\executor.py", line 472, in _execute_once
+    self.raise_rpc_error_from_request_error(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        exc.original, method, read_timeout=read_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_web\transport\executor.py", line 715, in raise_rpc_error_from_request_error
+    raise NetworkError(
+    ...<3 lines>...
+    ) from exc
+notebooklm.exceptions.NetworkError: Request failed calling CREATE_NOTEBOOK: Failed to perform, curl: (28) Connection timed out after 10008 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+MEGA_EXIT=1

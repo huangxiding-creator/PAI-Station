@@ -1,0 +1,169 @@
+# 360浏览器画像取证：海外EPC/国际工程/电力出海（browser360）
+
+- 取证时间: 2026-10-24 深夜低峰（EPC-OVERSEAS S1 收口·收殓二批）
+- 渠道: 360浏览器画像 | engine_id: browser360 | 取证方式: 本机文件只读扫描，未启动任何浏览器（tasklist 实测 360* 进程 = NONE）
+
+## 一、数据面盘点（实测）
+
+- 浏览器真身: 360安全浏览器 360se6（C:/Users/91216/AppData/Roaming/360se6；Roaming 其余 360* 目录为安全卫士/工具类非浏览器；360browser 仅含 bkinfo 空壳；AppData/Local 与 LocalLow 实测 0 个 360* 条目）
+- 收藏夹主源: DailyBackup/360default_ori_2026_10_23.favdb = 明文JSON（头字节 {，893,838 B，mtime 2026-10-23T10:15:04）
+- 收藏夹总量: 2551 条书签（roots: bookmark_bar / other）
+- 历史库: User Data/Default/360History 30,048,256 B（mtime 2026-10-23T20:58:11）及 HisDailyBackup/History_2026_10_1x.db（10_13/10_17/10_23 三份，同尺寸同魔数）= 360私有加密格式，SQLite 直读 blocked（详见第4节）
+- 360mobilefav.dat: 标准SQLite（tb_fav 1 行），已入 snap 快照
+
+## 二、关键词命中画像（海外EPC/国际工程/电力出海 21词表）
+
+- 命中书签: 125 / 2551
+- 分词计数: epc×64、承包×41、招标×15、电力×5、enr×5、电站×5、中标×5、投标×3、海外×2、能源×2、电网×2、国际工程×1
+- 出海维度直检: 海外×2、国际工程×1、出海×0、境外×0、一带一路×0、overseas×0
+- 画像结论(如实): 该浏览器用户兴趣主轴 = 国内EPC工程总承包+水利水电+电力工程+招投标（重度、长期、跨度2012-2026存档）。海外/出海维度信号薄（海外×2其一为人民日报海外版）。对本线的价值 = 确认目标用户为EPC/电力工程深度从业者（电建/能建集团官网、ENR、工程总承包政策、EPC税制、总承包管理信息系统均入藏）；海外EPC弹药本身需依赖其它渠道补强。
+
+## 三、命中书签全清单
+
+| # | 关键词 | 目录 | 名称 | URL | 添加日 |
+|---|---|---|---|---|---|
+| 1 | 海外 | 收藏栏/EveryDay/常用网站 | 人民日报海外版-人民网 | http://paper.people.com.cn/rmrbhwb/html/2012-10/02/node_865.htm | 2012-10-03 |
+| 2 | epc | 收藏栏/EveryDay | 中国工程项目管理联合网 | http://www.china-epc.com/ | 2013-09-24 |
+| 3 | 电力 | 收藏栏/EveryDay | 中国电力建设集团有限公司 > 首页 | http://www.zhongguodianjian.com/ | 2013-09-24 |
+| 4 | 能源 | 收藏栏/EveryDay | 中国能源建设集团有限公司 | http://www.ceec.net.cn/ | 2013-09-24 |
+| 5 | enr | 收藏栏/EveryDay | Construction, Building & Engineering News: ENR / McGraw-Hill Construct | http://enr.construction.com/Default.asp | 2013-10-03 |
+| 6 | 承包 | 收藏栏/EveryDay | 中华人民共和国住房和城乡建设部 - 关于征求《关于进一步推进工程总承包发展的若干意见（征求意见稿）》意见的函 | http://www.mohurd.gov.cn/zcfg/jsbwj_0/jsbwjjzsc/201501/t20150127_220219.html | 2015-02-02 |
+| 7 | 承包 | 收藏栏/水利水电/服务单位 | 四川林飞数码科技有限公司欢迎您！设计院管理信息系统_工程总承包管理信息系统_电子档案管理系统_固定资产管理系统_编辑部管理信息系统... | http://www.scsjy.com/ | 2011-11-02 |
+| 8 | 承包 | 收藏栏/水利水电/服务单位 | 理正总承包管理信息系统（业务监管）_ | http://www.lizheng.com.cn/html/MIS/MISPro/mispro07.shtml | 2011-11-02 |
+| 9 | 电网 | 收藏栏/水利水电/信息整合 | 欢迎光临四川水力发电网站 | http://www.powerfoo.com/news/sdyhb/sdhblt/sdhblt_2.html | 2010-06-16 |
+| 10 | 电站 | 收藏栏/学习 | 项目动态 - 仁宗海水库电站大坝防渗墙工程顺利通过验收 | http://www.invest.com.cn/NewsDetail.aspx?class=pn&id=736 | 2010-09-15 |
+| 11 | epc | 收藏栏/学习 | 软件：工程项目管理（EPC）软件 | http://www.mypm.net/software/show_message_content.asp?ID=5164 | 2011-09-13 |
+| 12 | 承包,招标 | 收藏栏/学习 | 关于印发简明标准施工招标文件和标准设计施工总承包招标文件的通知 | http://www.gov.cn/zwgk/2012-01/10/content_2040872.htm | 2012-02-06 |
+| 13 | 承包 | 收藏栏/学习 | (报名已满)关于举办2013年第二期全国工程总承包项目经理培训班的通知 | http://www.ccesda.com/webhtml/syxh/zypx/gzdt/201303/34442.html | 2013-04-03 |
+| 14 | 招标 | 收藏栏/学习 | 以设计发生重大变更为由要求重新招标是违约行为_政策法规_中国建筑新闻网 | http://project.newsccn.com/2012-10-24/179832.html | 2013-08-05 |
+| 15 | epc,承包 | 收藏栏/学习 | 中国税务网：“营改增”对EPC工程总承包税收影响分析 | http://www.ctax.org.cn/grhy/xw/201301/t20130107_710342.shtml | 2013-08-06 |
+| 16 | 电网,能源 | 收藏栏/学习/珍藏 | 未来10年新能源新材料题材之一：超导电网 - □-股市大家谈 - 55168论坛 - 中国领先的价值投资交流平台 | http://www.55168.cn/bbs/viewthread.php?tid=176930&extra=page%3D1%26amp%3Bfilter%3Dtype%26amp%3Btypeid%3D1&page | 2010-06-16 |
+| 17 | 电站 | 收藏栏/学习/珍藏 | 我国第二大水电站----溪洛渡水电站精品照片集 - 工程图片 - 水利工程 - 网易土木在线社区 | http://b.co188.com/content/0_552309_1.html | 2010-06-16 |
+| 18 | 电站 | 收藏栏/学习/珍藏 | 中国的一些 大坝与水电站 （非常全） - ［水利与建筑工程学院］ - 712100社区门户 | http://x.712100.com/viewthread-6657295 | 2010-06-16 |
+| 19 | 招标 | 收藏栏/学习/珍藏 | 专家解读《简明标准施工招标文件》 | http://10.4.128.2:9000/eisp/pub/cms/1/102346/105/159856.html | 2012-08-01 |
+| 20 | enr | 收藏栏/考试/生活/购物 | 淘宝热卖 | http://re.taobao.com/auction?keyword=%C3%D4%C4%E3%D0%A1%D2%F4%CF%E4%2F%B2%E5%BF%A8%D2%F4%CF%E4&catid=50005267& | 2013-09-03 |
+| 21 | enr | 收藏栏/考试/生活/购物 | 团购网_团购网站大全 | http://www.renrenzhe.com/ | 2011-07-25 |
+| 22 | 电力 | 收藏栏/考试/生活 | 河南省电力公司95598供电服务网站 | http://www.95598.ha.sgcc.com.cn/jsp/index.jsp | 2012-09-16 |
+| 23 | epc | 收藏栏/理财 | 岗位工作室 | http://yrecepc.cn:30012/WebCenter/MainMenu/1717a999-ae16-3660-6607-79cd4603f02c | 2021-09-02 |
+| 24 | epc,承包 | 收藏栏/项目管理及信息化/企业级智能项目管理平台 | 企业级工程总承包管理系统 | http://www.yrecepc.cn:10012/login_yrec.html | 2019-08-13 |
+| 25 | epc | 收藏栏/项目管理及信息化/企业级智能项目管理平台 | 构建卓越的“EPC项目管理体系”--管理空间 | http://www.mypm.net/blog/user5/jbbj2008/archives/2009/43560.html | 2017-04-26 |
+| 26 | epc | 收藏栏/项目管理及信息化/企业级智能项目管理平台 | 浅谈国际EPC业务管理体系建设——接轨欧美、追求卓越_项目管理文章库_项目管理者联盟 | http://www.mypm.net/articles/show_article_content.asp?articleID=32686 | 2017-04-26 |
+| 27 | 承包 | 收藏栏/项目管理及信息化/合同及法律 | 观韬解读｜解读住建部《关于进一步推进工程总承包发展的若干意见》 | https://sanwen8.cn/p/2cd3xyZ.html | 2017-02-20 |
+| 28 | 承包 | 收藏栏/项目管理及信息化/合同及法律 | 德兴市政府信息公开 - 关于德兴市重大建设项目在预选承包商名录内实行工程总承包暂行意见 | http://xxgk.dxs.gov.cn/bm/content/zfwj/2016/11/18/133099.htm | 2017-02-20 |
+| 29 | 承包 | 收藏栏/项目管理及信息化/合同及法律 | 对于进一步推进工程总承包发展的认识与想法——对工程总承包相关问题的重新认识_wenwuxiansheng_新浪博客 | http://blog.sina.com.cn/s/blog_67689e500102ycfi.html | 2017-02-20 |
+| 30 | 招标 | 收藏栏/项目管理及信息化/招标 | 中国采购与招标网_官网_中国最大的招标采购信息服务平台 | http://www.chinabidding.com.cn/ | 2014-12-31 |
+| 31 | 招标 | 收藏栏/项目管理及信息化/招标 | 视频会议系统采购质疑函答复-中国建设工程招标网 | http://www.projectbidding.cn/zaobiao/gonggao/20090427/093601951.html | 2015-01-30 |
+| 32 | 中标 | 收藏栏/项目管理及信息化/招标 | 中标通知书发出后建设工程合同是否成立生效的新思考 | http://www.renyuechuanqi.com/profiles/blogs/2300512:BlogPost:86684 | 2013-05-21 |
+| 33 | 承包 | 收藏栏/项目管理及信息化/索赔管理 | 文章：广东水利工程总承包工程变更与合同价格调整初探 | http://www.mypm.net/articles/show_article_content.asp?articleID=22548&pageNO=1 | 2012-07-08 |
+| 34 | 承包 | 收藏栏/项目管理及信息化/索赔管理 | 广东水利工程总承包工程变更与合同价格调整初探 - 中国工程项目管理网 | http://www.cpmchina.com/html/2/62391.html | 2012-07-16 |
+| 35 | epc | 收藏栏/云河/总包强国 | 中建八局技术总工总分享走进EPC-今日头条 | https://partner-hl.365yg.com/a6845264994737586695/?crypt=8375&a_t=30160022425816478738356951158b92&mibusinessI | 2020-07-06 |
+| 36 | epc | 收藏栏/创新/总包之声 | 总包之声官网 | http://www.voiceofepc.cn/ | 2024-01-04 |
+| 37 | 承包 | 收藏栏/创新/总包之声/总包指数 | 工程总承包的学术趋势 | http://trend.cnki.net/TrendSearch/trendshow.htm?searchword=%u5DE5%u7A0B%u603B%u627F%u5305 | 2016-09-24 |
+| 38 | 承包 | 收藏栏/创新/总包之声/总包指数 | 工程总承包政策趋势图 | http://echarts.baidu.com/demo.html#bar-label-rotation | 2017-11-19 |
+| 39 | 招标 | 收藏栏/创新/总包之声/名师追踪 | 【原创】朱中华律师：发改委2018版《必须招标的工程项目规定》详解与适用_朱中华律师--国际国内工程律师_新浪博客 | http://blog.sina.com.cn/s/blog_8193711c0102x7ha.html | 2018-05-21 |
+| 40 | epc,承包 | 收藏栏/创新/总包之声/名师追踪 | 何饶 EPC总承包实战系列课 | http://v.qq.com/vplus/97819734b8bf6e8ba25e9827b38c171e?page=cover | 2019-09-02 |
+| 41 | 承包 | 收藏栏/创新/总包之声/地方政策 | [市住建委]关于印发《上海市工程总承包试点项目管理办法实施要点》的通知 沪建建管（2017）433号_最新文件_上海市建筑施工行业协会 | http://www.shjx.org.cn/article-10010.aspx | 2017-08-12 |
+| 42 | epc | 收藏栏/创新/总包之声/EPC业务上市公司 | 杰瑞股份：EPC持续推进 强烈推荐评级_中证网 | http://www.cs.com.cn/gppd/tzpj/201708/t20170811_5419822.html | 2017-08-26 |
+| 43 | epc | 收藏栏/创新/总包之声/EPC业务上市公司 | EPC site:www.cs.com.cn_百度搜索 | https://www.baidu.com/s?ie=utf-8&f=8&rsv_bp=1&tn=15007414_2_pg&ch=1&ch=1&wd=EPC%20site%3Awww.cs.com.cn&oq=%252 | 2017-08-26 |
+| 44 | epc | 收藏栏/创新/总包之声/EPC业务上市公司 | 机构布局政策受益主题 看好EPC业务公司_行业研究_中证网 | http://www.cs.com.cn/gppd/hyyj/201702/t20170227_5188790.html | 2017-08-26 |
+| 45 | epc | 收藏栏/创新/总包之声/EPC业务上市公司 | 国电清新：新技术促进EPC业务量大幅增长 带动业绩超预期_投资评级_中证网 | http://www.cs.com.cn/gppd/tzpj/201411/t20141128_4575484.html | 2017-08-26 |
+| 46 | epc,海外 | 收藏栏/创新/总包之声/EPC业务上市公司 | 永鼎股份:海外EPC进入收获期 加速布局汽车后市场_个股评级_中证网 | http://www.cs.com.cn/gppd/tzpj/201511/t20151105_4833872.html | 2017-08-26 |
+| 47 | epc,电站 | 收藏栏/创新/总包之声/EPC业务上市公司 | 金智科技：模块化变电站业务爆发 EPC收入确认确保全年业绩高增_中证网 | http://www.cs.com.cn/gppd/tzpj/201705/t20170511_5277828.html | 2017-08-26 |
+| 48 | epc | 收藏栏/创新/总包之声/EPC业务上市公司 | 惠博普：油服EPC总包持续贡献业绩 买入评级_个股评级_中证网 | http://www.cs.com.cn/gppd/tzpj/201701/t20170104_5144423.html | 2017-08-26 |
+| 49 | epc,中标 | 收藏栏/创新/总包之声/EPC业务上市公司 | 太极实业：子公司十一科技再度中标58.7亿EPC项目彰显行业领先地位 买入评级_中证网 | http://www.cs.com.cn/gppd/tzpj/201705/t20170516_5283414.html | 2017-08-26 |
+| 50 | epc | 收藏栏/创新/总包之声/EPC业务上市公司 | 厚普股份：转型EPC初见成效 买入评级-股票频道-和讯网 | http://stock.hexun.com/2017-08-22/190548407.html?from=rss | 2017-08-26 |
+| 51 | 电站,承包 | 收藏栏/创新/总包之声/EPC业务上市公司 | 山东电建三公司：世界电站总承包的领跑者_17城_山东新闻_新闻_齐鲁网 | http://news.iqilu.com/shandong/shandonggedi/20180524/3927438.shtml | 2018-05-25 |
+| 52 | 承包 | 收藏栏/创新/总包之声/侵权 | 工程总承包之家 | https://727724.kuaizhan.com/ | 2017-07-28 |
+| 53 | 承包 | 收藏栏/创新/总包之声/侵权 | 工程总承包之家的个人展示页 | http://mp.sohu.com/profile?xpt=ZXBjanlsdEBzb2h1LmNvbQ== | 2017-07-28 |
+| 54 | 中标 | 收藏栏/创新/总包之声/大型工程总承包项目 | 中国中铁中标208亿孟加拉铁路总包项目/孟加拉/项目/铁路_新浪财经_新浪网 | http://finance.sina.com.cn/roll/2016-08-09/doc-ifxutfyw0926519.shtml | 2017-10-31 |
+| 55 | 承包 | 收藏栏/创新/总包之声/交流活动及会议 | 中国建筑学会工程总承包专业委员会成立大会在京圆满召开_中国建筑学会 | http://www.chinaasc.org/news/117050.html | 2017-09-27 |
+| 56 | epc,承包 | 收藏栏/创新/总包之声/交流活动及会议 | EPC工程总承包信息化的 项目管理模式探索 - 目录 - 项目管理评论 | http://www.pmreview.com.cn/index.php?m=content&c=index&a=show&catid=43&id=755 | 2017-12-29 |
+| 57 | epc | 收藏栏/创新/总包学园 | 总包学园 PC端官网 | https://epcschool.top/ | 2023-09-18 |
+| 58 | epc | 收藏栏/创新/总包智能 | 总包问答 | https://wd.epcschool.top/b/jp1637w6welrmo8e | 2024-01-08 |
+| 59 | 投标 | 收藏栏/创新/总包智能 | 智标领航 - 招投标AI解决方案 | https://www.intellibid.cn/home | 2025-02-12 |
+| 60 | 投标,招标 | 收藏栏/创新/总包智能 | 中国招标投标公共服务平台 | http://www.cebpubservice.com/ | 2025-03-04 |
+| 61 | epc | 收藏栏/创新/总包智能 | 首页 - 飞书智能伙伴创建平台 | https://epctalkk.feishu.cn/ai/start | 2025-03-11 |
+| 62 | 承包 | 收藏栏/创新/总包要闻 | 工程总承包_360资讯搜索 | https://news.so.com/ns?j=0&rank=pdate&src=sort_time&scq=&q=%E5%B7%A5%E7%A8%8B%E6%80%BB%E6%89%BF%E5%8C%85 | 2022-07-19 |
+| 63 | 承包 | 收藏栏/创新/总包要闻 | 工程总承包_【快资讯】 | https://www.360kuai.com/search?q=%E5%B7%A5%E7%A8%8B%E6%80%BB%E6%89%BF%E5%8C%85&sign=look&isNew= | 2022-07-19 |
+| 64 | 承包 | 收藏栏/创新/总包要闻 | 百度资讯搜索_工程总承包 | https://www.baidu.com/s?tn=15007414_2_pg&ch=1&ch=1&rtt=4&bsst=1&cl=2&wd=%E5%B7%A5%E7%A8%8B%E6%80%BB%E6%89%BF%E | 2022-07-19 |
+| 65 | epc,电力 | 收藏栏/创新/总包内参/核心信息来源 | 山东电力工程咨询院有限公司 | http://www.sdepci.com/ | 2016-09-27 |
+| 66 | epc,电力 | 收藏栏/创新/总包内参/核心信息来源 | 山东电力建设第三工程公司 | http://www.sepco3.com/cn/magazine_info.aspx?CateId=118#book7/page6-page7 | 2017-04-27 |
+| 67 | 承包 | 收藏栏/创新/总包内参/核心信息来源 | [市住建委]关于印发《上海市工程总承包试点项目管理办法实施要点》的通知 沪建建管（2017）433号_最新文件_上海市建筑施工行业协会 | http://www.shjx.org.cn/article-10010.aspx | 2017-08-12 |
+| 68 | epc,承包 | 收藏栏/创新/总包内参 | 总承包项目管理平台 | http://yrecepc.cn:9002/index.html | 2025-03-31 |
+| 69 | 承包 | 收藏栏/创新/总包人生活馆 | 有赞 - 工程总承包之家的后花园 | https://www.youzan.com/v2/dashboard/index/index | 2018-03-30 |
+| 70 | epc | 收藏栏/创新/平台之上 | 欢迎来到数字工业时代 / GE China | http://www.ge.com/cn/new-homepage-china?utm_source=baidu&utm_medium=cpc&utm_term=%E5%B7%A5%E7%A8%8B%E6%80%BB%E | 2016-09-18 |
+| 71 | 国际工程,承包 | 收藏栏/创新/平台之上 | 四家大型国际工程承包公司核心竞争力比较分析 | http://www.istis.sh.cn/list/list.aspx?id=6555 | 2017-07-14 |
+| 72 | epc | 收藏栏/AI总包创研院/总包生态战略 | 水利安全AI眼镜数据后台 | https://epctalkk.feishu.cn/base/Ym9wb9950aXPqgsYdtvcX0jYnr5?table=blkIl11yoCXx4Ovw | 2026-07-06 |
+| 73 | 中标 | 收藏栏/AI总包创研院/AI机器人 | 建筑行业最新资讯_企业经营分析_中标分析_地区统计_行业动态 - 建设通 | https://www.cbi360.net/hyzx/ | 2025-11-09 |
+| 74 | epc | 收藏栏/AI总包创研院/总包大脑 | 总包黑嘴Agent（总包说） - Dify | https://dify.epcschool.top/app/dea130b4-37bd-429f-a572-d3a681905119/workflow | 2025-12-15 |
+| 75 | epc | 收藏栏/AI总包创研院/总包千问 | 总包千问AI | https://zbqw.epcschool.top/ | 2025-06-15 |
+| 76 | epc | 收藏栏/AI总包创研院/总包千问 | 总包千问 - Dify | https://dify.epcschool.top/apps | 2025-06-10 |
+| 77 | epc | 收藏栏/AI总包创研院/总包千问 | FastGPT-总包千问 | https://fastgpt.epcschool.top/login?lastRoute=%2Fdashboard%2Fapps | 2025-06-26 |
+| 78 | enr | 收藏栏/AI总包创研院/总包千问 | OpenRouter | https://openrouter.ai/settings/credits?payment_intent=pi_3S7txCDhhPj8i4PA2CdTXIsv&payment_intent_client_secret | 2025-09-16 |
+| 79 | epc | 收藏栏/AI总包创研院/总包大家谈 | 09 总包大家谈 - 飞书主持稿 | https://epctalkk.feishu.cn/drive/folder/GRHzfhUbklt8RFdSzRecjmn7nkd | 2025-11-15 |
+| 80 | epc | 收藏栏/AI总包创研院/AI工具 | ‌‬​⁢⁤⁤‌⁣‌⁤​⁢‌‌​​⁣‌⁡⁢‬​‌‍​⁤⁡﻿​⁣‌⁢​⁤⁣⁤⁢​​⁢​⁤‌⁢​‍⁢​⁤⁡DeepSeek学习园地 - 飞书云文档 | https://epctalkk.feishu.cn/wiki/QmOwwPupUiuHPikYYjScGc5Vnof | 2025-02-26 |
+| 81 | 投标 | 收藏栏/AI总包创研院/AI工具 | 智标领航 - 招投标AI解决方案 | https://www.intellibid.cn/infoManageSystem/analysisResult?from=analysisStatusList#%E5%9F%BA%E7%A1%80%E4%BF%A1% | 2025-02-26 |
+| 82 | epc | 收藏栏/AI总包创研院/总包AI研报 | EPC_中国搜索 | https://www.chinaso.com/newssearch/all/allResults?q=EPC | 2025-06-23 |
+| 83 | 招标 | 收藏栏/AI总包创研院/总包AI研报 | 中国招标网/政府企业招标网采购信息 | https://www.yfbzb.com/yfbsemsite/yfb_360so2 | 2025-09-07 |
+| 84 | 招标 | 收藏栏/AI总包创研院/总包AI研报 | 中国采购与招标网 | https://www.chinabidding.com.cn/ | 2025-09-07 |
+| 85 | enr | 收藏栏/AI总包创研院/优质开源项目 | HenryQW/Awesome-TTRSS: 🐋 Awesome TTRSS, a powerful Dockerised all-in-o | https://github.com/HenryQW/Awesome-TTRSS | 2026-01-26 |
+| 86 | 招标 | 收藏栏/未来之城/有项目 | 飞云江招标 | http://www.zmctc.com/zjgcjy/ShowInfo/SearchResult.aspx?keyword=%u98DE%u4E91%u6C5F&searchtype=title | 2023-04-07 |
+| 87 | 中标 | 收藏栏/未来之城/有项目 | 浙江省公共资源交易-瑞安市飞云江治理二期工程勘察设计勘察设计[E3300000007000894001001]中标结果公告 | http://www.zmctc.com/zjgcjy/infodetail/?infoid=b8987f77-9c4b-4189-9ea4-a26795ead96a&categoryNum=004010003 | 2023-04-18 |
+| 88 | 招标 | 收藏栏/未来之城/有项目 | 地下空间招标信息网-招标采购导航网-招标采购行业指定平台 | https://www.okcis.cn/weiyizhidingzbpt/h2zbcg229772?qhclickid=286ef09383ca88c4 | 2023-10-13 |
+| 89 | 招标 | 收藏栏/未来之城/有项目 | 千里马招标信息网 | https://www.qlmzhaobiao.com/v2/360-1/pc_template_2?id=58&unit=136282&keyword=%E5%9C%B0%E4%B8%8B%E7%A9%BA%E9%97 | 2023-10-13 |
+| 90 | epc | 收藏栏/总承包/AI眼镜 | ﻿⁡​​‬‬⁡⁤​⁢​‬⁣​⁣‍⁢‍⁢​‌﻿⁡⁤⁤⁢​​⁤⁣‌‍﻿‍﻿⁣⁣‬‌⁢⁢‍⁣⁡​‌⁤⁢⁡事故隐患信息台账 | https://epctalkk.feishu.cn/base/Ym9wb9950aXPqgsYdtvcX0jYnr5?table=blkIl11yoCXx4Ovw | 2026-06-17 |
+| 91 | 承包 | 收藏栏/总承包/智慧总包平台 | 总承包新平台-阿里云服务器管理控制台 | https://ecs.console.aliyun.com/server/i-2vcd732wxftf0142w80x/detail?regionId=cn-chengdu#/ | 2025-11-18 |
+| 92 | epc,承包 | 收藏栏/总承包/数字总包 | 总承包项目管理平台（新服务器） | http://www.yrecepc.cn:9002/login.html | 2025-11-23 |
+| 93 | 承包 | 收藏栏/总承包/数字总包 | 总承包项目管理平台（IP访问） | http://8.137.119.18:9002/index.html | 2025-11-24 |
+| 94 | epc,承包 | 收藏栏/总承包/数字总包 | 总承包项目管理（移动端） | http://www.yrecepc.cn:9002/h5/#/2025020811133022/plugin/JE-PLUGIN-LOGIN | 2026-01-05 |
+| 95 | epc | 收藏栏/总承包/数字总包 | 数字总包4.0 | http://dh.yrecepc.cn:30012/WebCenter/Open/00000000-0000-0000-0000-00000000000a | 2025-02-26 |
+| 96 | epc | 收藏栏/总承包/数字总包 | 数字总包3.0 | http://yrecepc.cn:30012/login_yrec.html | 2025-02-25 |
+| 97 | epc | 收藏栏/总承包/数字总包 | 数字总包4.0 | http://szzb.yrecepc.cn:30012/login_yrec.html | 2021-05-24 |
+| 98 | epc | 收藏栏/总承包/数字总包 | 数字总包 APP | http://dh.yrecepc.cn:30012/PowerMobile2/index.html#/work | 2021-06-02 |
+| 99 | epc | 收藏栏/总承包/数字总包 | PowerM3开发平台 | http://szzbkf.yrecepc.cn:30012/Login.html | 2021-05-24 |
+| 100 | epc | 收藏栏/总承包/数字总包 | 工作台 | http://dh.yrecepc.cn:10012/PowerMobile2/index.html#/work | 2020-11-13 |
+| 101 | epc,承包 | 收藏栏/总承包/监控室大屏 | 总承包项目管理平台（多项目） | http://yrecepc.cn:9002/index.html | 2024-12-16 |
+| 102 | epc | 收藏栏/总承包/监控室大屏 | 塔塔棱数字孪生建管 | http://dh.yrecepc.cn:9002/login.html | 2024-10-22 |
+| 103 | epc | 收藏栏/总承包/监控室大屏 | 总包平台手机端 | http://yrecepc.cn:9002/h5/#/2025020811133022/home/JE-PLUGIN-MENU?code=905a0b610711b1c6c640 | 2025-05-26 |
+| 104 | epc | 收藏栏/总承包/监控室大屏 | 数字总包 | http://yrecepc.cn:30012/login_yrec.html | 2025-06-18 |
+| 105 | epc | 收藏栏/总承包/兰州水源地 | 兰州水源地EPC项目管理平台 | http://www.lzsyd.cn/ |  |
+| 106 | epc | 收藏栏/总承包/兰州水源地 | 手机APP | http://lanzhouepc.kuaizhan.com/ |  |
+| 107 | epc | 收藏栏/总承包/兰州水源地 | 黄河EPC开放平台 | http://www.yrecepc.cn/ |  |
+| 108 | epc,承包 | 收藏栏/总承包/兰州水源地 | 企业级工程总承包管理系统 | http://www.yrecepc.cn:10012/login_yrec.html | 2019-08-13 |
+| 109 | epc | 收藏栏/总承包/兰州水源地 | 手机APP | http://lanzhouepc.kuaizhan.com/ |  |
+| 110 | epc | 收藏栏/总承包/兰州/新技术 | EPC项目全过程动态管理资源整合平台 | http://www.huatengoa.com/newxinxi.asp?id=185&tid= | 2016-03-15 |
+| 111 | 承包 | 收藏栏/总承包/兰州/变更 | 说说铁路工程总承包风险费-中铁二十一局集团路桥工程有限公司 | http://www.cr21lq.com/newsitem/276772589 | 2017-10-31 |
+| 112 | epc | 收藏栏/总承包/兰州 | 兰州水源地EPC项目管理平台 | http://www.lzsyd.cn/ | 2016-01-05 |
+| 113 | epc | 收藏栏/总承包/兰州 | 手机APP | http://lanzhouepc.kuaizhan.com/ | 2016-02-19 |
+| 114 | epc | 收藏栏/总承包/兰州 | 信息部工作表单 · 兰州市水源地建设工程 | http://lanzhouepc.kuaizhan.com/pc/?url=/51/27/p3057853381fe1a& | 2016-02-02 |
+| 115 | 电力 | 收藏栏/总承包/兰州 | 云南润晶水利电力工程技术股份有限公司 | http://rjsldl.com/ | 2016-05-12 |
+| 116 | epc | 收藏栏/总承包/兰州 | 黄河EPC开放平台 | http://www.yrecepc.cn/ | 2017-01-18 |
+| 117 | epc,承包 | 收藏栏/总承包/兰州 | 中国勘察设计协会建设项目管理和工程总承包分会会长、副会长、秘书长名单_领军成员_中国工程项目管理联合网 | http://www.china-epc.com/contents/6/588.html | 2017-02-16 |
+| 118 | 承包,招标 | 收藏栏/总承包/喀什 | 喀什（伽师）一市四县城乡饮水安全项目沉砂调节池工程设计施工总承包招标公告 | http://www.xjslt.gov.cn/jsyglc/zbgg/2016/40619.htm | 2016-11-30 |
+| 119 | epc | 收藏栏/总承包/喀什 | 喀什一市四县城乡饮水工程EPC项目智能项目管理平台 | http://www.lzsyd.cn/login_ks.html | 2017-05-19 |
+| 120 | epc | 收藏栏/总承包/喀什 | 喀什一市四县城乡饮水工程EPC项目智能项目管理平台 | http://www.ksgsepc.cn/login_ks.html | 2017-05-19 |
+| 121 | epc,承包,招标 | 收藏栏/总承包/布哈拉除险加固 | 克孜河布哈拉引水枢纽除险加固工程设计采购施工总承包（EPC），监理标招标公告 | https://xj.zhiliaobiaoxun.com/article/72171042 | 2025-09-02 |
+| 122 | epc,承包 | 收藏栏/总承包 | 企业级工程总承包管理系统 | http://www.yrecepc.cn:10012/WebCenter/Open/00000000-0000-0000-0000-00000000000a | 2019-07-30 |
+| 123 | 承包 | 收藏栏/总承包 | 工程总承包视频 | http://v.qq.com/vplus/60207d6de7f6597b3c127e842543015d | 2018-12-09 |
+| 124 | epc,承包 | 收藏栏/总承包 | 特区建发东部大厦EPC总承包工程宣传视频_腾讯视频 | https://v.qq.com/x/page/q0755un0pis.html | 2018-12-09 |
+| 125 | 招标 | 收藏栏/总承包 | 全国招标采购信息大全-知了标讯 | https://www.zhiliaobiaoxun.com/search | 2025-09-12 |
+
+## 四、历史SQLite直读 = blocked（格式墙，证据在案）
+
+- 直读报错: sqlite3 mode=ro 打开 Default/360History 与 chromeshell/Default/360History 均 file is not a database（另有一次报 database is locked；复测 tasklist 360* 进程=NONE，排除锁因，实为格式墙）
+- 魔数(hex): 4f99fac821c3818d95d86038（全部 360History 与 History_2026_1x.db 一致，非 SQLite format 3 头）
+- 修复尝试: staging 副本首16字节覆写为标准 SQLite 头后仍 file is not a database → 全库加密（360se 私有格式），非仅文件头混淆
+- 佐证: HisDailyBackup 三份日备（10_13/10_17/10_23）尺寸全部恰为 30,048,256 B，与主库一致
+- 快照证据: staging/browser360/snap/（副本+修复尝试件）
+
+## 五、方法与局限
+
+- 方法: 目录实扫(AppData三根) → 格式探测(头16字节) → 快照staging → SQLite/JSON双路解析 → 21词表关键词匹配 → md+双JSON落盘。全程只读源文件、只写 staging/browser360/。
+- 局限: ①收藏夹为2026-10-23备份快照（最新可得明文面）；②date_added 在源数据中单位混用（WebKit微秒与100ns并存），表内仅保留换算后落在2000-2030的日期，其余留空；③360sefav_new_*.favdb（AAAAAPOW私有格式，1.2-1.7MB×6份）未破译；④历史库加密未破译（如需须逆向360se解密层，另行立项）。
+
+## 六、落盘件
+
+- staging/browser360/browser360_overseas_epc_profile_20261024.md（本件）
+- staging/browser360/bookmarks_full_export_20261024.json（全量2551条）
+- staging/browser360/bookmarks_epc_overseas_matched_20261024.json（命中125条）
+- staging/browser360/snap/（6件快照副本）

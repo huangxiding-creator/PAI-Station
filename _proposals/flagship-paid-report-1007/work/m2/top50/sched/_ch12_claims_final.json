@@ -1,0 +1,708 @@
+{
+ "summary": {
+  "chapter": "_ch12_final.md",
+  "bank": "bank_ch12.md",
+  "ts": "2026-10-30 06:58",
+  "bank_sections": 38,
+  "bank_empty_sections": 0,
+  "sentences_total": 267,
+  "claim_sentences": 62,
+  "tally": {
+   "UNVERIFIED": 40,
+   "PASS": 12,
+   "PASS(bank)": 2,
+   "FAIL": 4,
+   "OWN_CALC": 4
+  },
+  "pass_rate": 24.1
+ },
+ "rows": [
+  {
+   "n": 1,
+   "sentence": "全书研究框架把读者使用场景归为三类——全景画像、分档对比、行动清单——前两类已由第1章至第11章交付，本章将行动清单场景落成三份可直接执行的清单：场景一，传统施工企业与设计院向工程总承包转型升级",
+   "verdict": "UNVERIFIED",
+   "claims": 1,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 2,
+   "sentence": "用于境外EPC项目中梳理《分包商承诺协议》、业主介入权（Step-in Right）行使边界及止付维权 [来源: P001151]",
+   "verdict": "PASS",
+   "claims": 1,
+   "evidence": "P001151",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "《分包商承诺协议》",
+     "kind": "proper",
+     "evidence": "P001151"
+    }
+   ]
+  },
+  {
+   "n": 3,
+   "sentence": "传统设计院虽占据技术源头优势，却缺乏采购供应链整合能力、现场施工组织经验与大资金调配能力，转型EPC时易被施工分包商\"架空\"——承担总包责任却无法实现造价封顶（痛点归纳为本研究据源文整理）[来源: P001151, P001101]",
+   "verdict": "PASS(bank)",
+   "claims": 1,
+   "evidence": "P001151,P001101",
+   "detail": "锚点节未中/bank全文兜底: 传统设计院",
+   "claim_rows": [
+    {
+     "claim": "传统设计院",
+     "kind": "proper",
+     "evidence": "bank全文"
+    }
+   ]
+  },
+  {
+   "n": 4,
+   "sentence": "转型的市场赏格足够丰厚：在政策引导下EPC模式应用范围持续扩大，据源文统计，2020年中国工程总承包市场规模已超过3万亿元，其中EPC模式占比超过60%——谁能率先完成法人级一体化交付能力的重组，谁就占据这一最大单一细分市场的主赛道 [来源: P001101]",
+   "verdict": "PASS(bank)",
+   "claims": 3,
+   "evidence": "P001101",
+   "detail": "锚点节未中/bank全文兜底: 2020; 60",
+   "claim_rows": [
+    {
+     "claim": "2020",
+     "kind": "number",
+     "evidence": "bank全文"
+    },
+    {
+     "claim": "3",
+     "kind": "number",
+     "evidence": "P001101"
+    },
+    {
+     "claim": "60",
+     "kind": "number",
+     "evidence": "bank全文"
+    }
+   ]
+  },
+  {
+   "n": 5,
+   "sentence": "政策沿革上，《国务院关于取消第一批行政审批项目的决定》（国发〔2002〕24号）取消了原有的工程总承包资格核准",
+   "verdict": "UNVERIFIED",
+   "claims": 2,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 6,
+   "sentence": "此后《建筑业企业资质标准》（建市〔2014〕159号）等文件进一步明确：**取得工程设计资质或施工总承包资质的企业，均可以在其资质许可范围内开展工程总承包业务** [来源: P001151]",
+   "verdict": "PASS",
+   "claims": 2,
+   "evidence": "P001151",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "2014",
+     "kind": "number",
+     "evidence": "P001151"
+    },
+    {
+     "claim": "《建筑业企业资质标准》",
+     "kind": "proper",
+     "evidence": "P001151"
+    }
+   ]
+  },
+  {
+   "n": 7,
+   "sentence": "司法实践同样支持这一准入规则：在最高人民法院审理的\"达华电力案\"［(2016)最高法民终695号］中，发包人与EPC总承包人签订固定总价总承包合同后，因银行融资要求专款专用，将合同拆分为勘测设计及工程管理合同、设备成套采购合同与施工总承包合同",
+   "verdict": "UNVERIFIED",
+   "claims": 1,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 8,
+   "sentence": "总承包人起诉主张发包人拖欠节点进度款53,485,080元，发包人以节点付款条件未成就为由拒付",
+   "verdict": "UNVERIFIED",
+   "claims": 1,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 9,
+   "sentence": "最高法院认定：总承包人持有工程设计电力行业乙级资质，依据《工程设计资质标准》可依法承揽资质许可范围内的工程总承包业务，合同合法有效",
+   "verdict": "UNVERIFIED",
+   "claims": 1,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 10,
+   "sentence": "施工企业与设计院两条转型路径的要点对照如下（路径框架为本研究归纳，政策与判例依据据源文）：",
+   "verdict": "UNVERIFIED",
+   "claims": 1,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 11,
+   "sentence": "向工程公司转型：设立总承包事业部与三级PMO管控体系，落实项目经理负责制 [来源: P001106, P001111]",
+   "verdict": "PASS",
+   "claims": 1,
+   "evidence": "P001106,P001111",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "工程公司",
+     "kind": "proper",
+     "evidence": "P001106"
+    }
+   ]
+  },
+  {
+   "n": 12,
+   "sentence": "其二是复合型人才：EPC需要既懂设计又懂采购施工的人才结构，企业应支持与高校、行业协会合作开展EPC教育培训，在项目实战中培养复合型骨干——这恰是施工企业与设计院共同的短板，也是转型初期最值得投入的软资产 [来源: P001101]",
+   "verdict": "FAIL",
+   "claims": 2,
+   "evidence": "P001101",
+   "detail": "缺证: 恰是施工企业与设计院; 行业协会",
+   "claim_rows": [
+    {
+     "claim": "恰是施工企业与设计院",
+     "kind": "proper",
+     "evidence": "-"
+    },
+    {
+     "claim": "行业协会",
+     "kind": "proper",
+     "evidence": "-"
+    }
+   ]
+  },
+  {
+   "n": 13,
+   "sentence": "建市〔2014〕159号及\"达华电力案\"［(2016)最高法民终695号］裁判规则 [来源: P001151]",
+   "verdict": "PASS",
+   "claims": 2,
+   "evidence": "P001151",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "2014",
+     "kind": "number",
+     "evidence": "P001151"
+    },
+    {
+     "claim": "2016",
+     "kind": "number",
+     "evidence": "P001151"
+    }
+   ]
+  },
+  {
+   "n": 14,
+   "sentence": "《建设项目工程总承包管理规范》（GB/T 50358-2017）[来源: P001116, P001151]",
+   "verdict": "PASS",
+   "claims": 2,
+   "evidence": "P001116,P001151",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "2017",
+     "kind": "number",
+     "evidence": "P001116"
+    },
+    {
+     "claim": "《建设项目工程总承包管理规范》",
+     "kind": "proper",
+     "evidence": "P001116"
+    }
+   ]
+  },
+  {
+   "n": 15,
+   "sentence": "设立集团级EPC管理中心与三级PMO体系，落实项目经理负责制，将造价节约与团队绩效挂钩",
+   "verdict": "UNVERIFIED",
+   "claims": 1,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 16,
+   "sentence": "此外，生产性或经营性项目的铺底流动资金按全部流动资金的30%计列，非生产经营性建设项目不计列——这一条常被转型企业忽略，投产初期的现金流安全垫即系于此 [来源: P001151]",
+   "verdict": "PASS",
+   "claims": 1,
+   "evidence": "P001151",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "30",
+     "kind": "number",
+     "evidence": "P001151"
+    }
+   ]
+  },
+  {
+   "n": 17,
+   "sentence": "［(2016)最高法民再53号］：总包合同与分包合同系两个独立合同但不具主从关系，总包合同是签订、履行分包合同的前提和基础",
+   "verdict": "UNVERIFIED",
+   "claims": 1,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 18,
+   "sentence": "［(2017)川民终72号］及《独立保函司法解释》（法释〔2016〕24号）：国内交易约定独立保函的，不得以缺乏涉外因素主张无效",
+   "verdict": "UNVERIFIED",
+   "claims": 3,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 19,
+   "sentence": "签署《分包商承诺协议》与介入权条款时，同步建立履约凭证与往来函件台账",
+   "verdict": "UNVERIFIED",
+   "claims": 1,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 20,
+   "sentence": "《法工委函〔2017〕2号》：地方性法规中\"直接规定以审计结果作为竣工结算依据\"或\"要求在招标文件、合同中约定以审计结果为结算依据\"的条款，限制民事权利、超越地方立法权限，应予清理",
+   "verdict": "UNVERIFIED",
+   "claims": 2,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 21,
+   "sentence": "［(2012)民提字第205号］\"重庆勇创案\"：即使合同约定以审计结果为准，审计机关也必须严格按照合同约定的计价标准和方法进行审计，偏离合同约定的审计报告不能作为结算依据",
+   "verdict": "UNVERIFIED",
+   "claims": 1,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 22,
+   "sentence": "其中川民终72号案的细节值得出海企业反复推演（案情据源文）：中机公司作为总承包商承建危地马拉2×15MW电站项目，华西能源为锅炉分包商（合同金额1.8亿元）",
+   "verdict": "UNVERIFIED",
+   "claims": 3,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 23,
+   "sentence": "业主、总包商与分包商三方签署《分包商承诺协议》，约定总包商违约导致合同终止时业主有权行使介入权替代总包商接管分包合同",
+   "verdict": "UNVERIFIED",
+   "claims": 1,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 24,
+   "sentence": "华西能源开具以中机公司为受益人、金额2,565万元的独立保函",
+   "verdict": "UNVERIFIED",
+   "claims": 2,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 25,
+   "sentence": "后业主行使介入权，华西能源直接向业主履行合同，中机公司却以华西能源未向其履约构成违约为由向开函行申请提取保函——法院认定其属于明知无索赔事实而滥用权利，构成独立保函欺诈 [来源: P001151]",
+   "verdict": "PASS",
+   "claims": 1,
+   "evidence": "P001151",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "中机公司",
+     "kind": "proper",
+     "evidence": "P001151"
+    }
+   ]
+  },
+  {
+   "n": 26,
+   "sentence": "\"重庆勇创案\"同样有可操作的细节（案情据源文）：该案审计机关套用2008年《重庆市建设工程费用定额》进行审计，背离了双方合同约定的计价标准",
+   "verdict": "UNVERIFIED",
+   "claims": 2,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 27,
+   "sentence": "［(2016)最高法民再53号］、［(2017)川民终72号］、《法工委函〔2017〕2号］规则 [来源: P001151]",
+   "verdict": "PASS",
+   "claims": 2,
+   "evidence": "P001151",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "2016",
+     "kind": "number",
+     "evidence": "P001151"
+    },
+    {
+     "claim": "2017",
+     "kind": "number",
+     "evidence": "P001151"
+    }
+   ]
+  },
+  {
+   "n": 28,
+   "sentence": "保函防线方面，签署《分包商承诺协议》与介入权条款的同时建立履约凭证与函件台账，一旦遭遇恶意索赔立即向有管辖权的法院申请止付裁定",
+   "verdict": "UNVERIFIED",
+   "claims": 1,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 29,
+   "sentence": "计价锁定方面，对国内及涉外政府投资项目全面引用《法工委函〔2017〕2号》清理强制行政审计条款，必须约定审计的，加注\"审计机关须严格按照本合同约定的计价标准和方法进行结算审计\"的限制条款 [来源: P001151]",
+   "verdict": "PASS",
+   "claims": 2,
+   "evidence": "P001151",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "2017",
+     "kind": "number",
+     "evidence": "P001151"
+    },
+    {
+     "claim": "《法工委函〔2017〕2号》",
+     "kind": "proper",
+     "evidence": "P001151"
+    }
+   ]
+  },
+  {
+   "n": 30,
+   "sentence": "传统工程企业和设计院切入绿色新能源EPC时，普遍面临四类瓶颈（痛点归纳为本研究据源文整理）：",
+   "verdict": "UNVERIFIED",
+   "claims": 1,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 31,
+   "sentence": "山东院东营项目集成实证（能源综合利用效率提高15%以上）[来源: P001117]",
+   "verdict": "PASS",
+   "claims": 1,
+   "evidence": "P001117",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "15",
+     "kind": "number",
+     "evidence": "P001117"
+    }
+   ]
+  },
+  {
+   "n": 32,
+   "sentence": "上海市政总院协同平台（信息传递效率提高30%）",
+   "verdict": "UNVERIFIED",
+   "claims": 1,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 33,
+   "sentence": "中国化学境外新签1,245.16亿元 [来源: P001127, P001133]",
+   "verdict": "FAIL",
+   "claims": 1,
+   "evidence": "P001127,P001133",
+   "detail": "缺证: 1,245.16",
+   "claim_rows": [
+    {
+     "claim": "1,245.16",
+     "kind": "number",
+     "evidence": "-"
+    }
+   ]
+  },
+  {
+   "n": 34,
+   "sentence": "短期（0至6个月，own_calc示意）",
+   "verdict": "OWN_CALC",
+   "claims": 1,
+   "evidence": "-",
+   "detail": "own_calc 作者推算, 免核"
+  },
+  {
+   "n": 35,
+   "sentence": "依据建市〔2014〕159号与\"达华电力案\"裁判规则清理内部挂靠与松散联合体",
+   "verdict": "UNVERIFIED",
+   "claims": 1,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 36,
+   "sentence": "引用《法工委函〔2017〕2号》清理强制行政审计条款",
+   "verdict": "UNVERIFIED",
+   "claims": 2,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 37,
+   "sentence": "中期（6至18个月，own_calc示意）",
+   "verdict": "OWN_CALC",
+   "claims": 1,
+   "evidence": "-",
+   "detail": "own_calc 作者推算, 免核"
+  },
+  {
+   "n": 38,
+   "sentence": "长期（18至36个月，own_calc示意）",
+   "verdict": "OWN_CALC",
+   "claims": 1,
+   "evidence": "-",
+   "detail": "own_calc 作者推算, 免核"
+  },
+  {
+   "n": 39,
+   "sentence": "1. **资质准入与单一法人交付**：国发〔2002〕24号取消工程总承包资格核准后，具备工程设计资质或施工总承包资质的企业即可依法承揽资质许可范围内的EPC业务，\"达华电力案\"［(2016)最高法民终695号］在司法层面确认了这一规则",
+   "verdict": "UNVERIFIED",
+   "claims": 2,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 40,
+   "sentence": "2. **概算管控是EPC固定总价包干的算力根基**：依据GB/T 50358-2017，造价控制关口前移至初步设计阶段——概算定额法、概算指标法（结构修正公式J修正 = J + Q1×P1 − Q2×P2）与类似工程预算法（D = A×K）按设计深度选型，设备安装概算四法按清单深度匹配，生产性项目按全部流动资金的30",
+   "verdict": "PASS",
+   "claims": 2,
+   "evidence": "P001116,P001151",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "2017",
+     "kind": "number",
+     "evidence": "P001116"
+    },
+    {
+     "claim": "30",
+     "kind": "number",
+     "evidence": "P001116"
+    }
+   ]
+  },
+  {
+   "n": 41,
+   "sentence": "3. **海外履约的三张司法防护网**：主分包同步解除与物权退场［(2016)最高法民再53号］、独立保函欺诈止付［(2017)川民终72号］、行政审计条款清理与计价标准锁定［《法工委函〔2017〕2号》、\"重庆勇创案\"［(2012)民提字第205号］］——三案一函的规则须在合同签订阶段落地为条款 [来源: P0011",
+   "verdict": "PASS",
+   "claims": 4,
+   "evidence": "P001151",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "2012",
+     "kind": "number",
+     "evidence": "P001151"
+    },
+    {
+     "claim": "2016",
+     "kind": "number",
+     "evidence": "P001151"
+    },
+    {
+     "claim": "2017",
+     "kind": "number",
+     "evidence": "P001151"
+    },
+    {
+     "claim": "《法工委函〔2017〕2号》",
+     "kind": "proper",
+     "evidence": "P001151"
+    }
+   ]
+  },
+  {
+   "n": 42,
+   "sentence": "4. **双碳赛道的胜负手是商业化造血**：从\"纯付费封存\"转向\"捕集-转化-新材料-碳交易\"闭环，以专有技术包与新材料实业构筑壁垒——中国化学的POE与二氧化碳资源化利用技术、气凝胶新材料，山东路桥的2,645万平方米路面再生与钢渣资源化，都是环保负担变增长极的实证 [来源: P001133, P001135, P0",
+   "verdict": "FAIL",
+   "claims": 1,
+   "evidence": "P001133,P001135,P001151",
+   "detail": "缺证: 2,645",
+   "claim_rows": [
+    {
+     "claim": "2,645",
+     "kind": "number",
+     "evidence": "-"
+    }
+   ]
+  },
+  {
+   "n": 43,
+   "sentence": "回望全书十二章：第1至2章给了全景画像与榜单口径的\"地图\"，第3至6章拆解了央企集团军、专业赛道、区域梯队与设计院转型四种\"棋风\"，第7至10章锻造了项目管理、盈利风控、人才组织与数字化四项\"内功\"，第11章完成三档分档的\"对镜自照\"，本章则把这一切收束为三份可执行清单——地图、棋风、内功、自照、清单，五件套齐备，读者",
+   "verdict": "FAIL",
+   "claims": 2,
+   "evidence": "P001151,P001133,P001127,P001101",
+   "detail": "缺证: 区域梯队与设计院; 章拆解了央企集团",
+   "claim_rows": [
+    {
+     "claim": "区域梯队与设计院",
+     "kind": "proper",
+     "evidence": "-"
+    },
+    {
+     "claim": "章拆解了央企集团",
+     "kind": "proper",
+     "evidence": "-"
+    }
+   ]
+  },
+  {
+   "n": 44,
+   "sentence": "1. **数据与样本归属边界**：本章企业经营数据（如山东路桥2025年路桥工程收入616.62亿元、养护收入44.48亿元、未完工EPC项目125个及项目金额38,790,974,558.80元",
+   "verdict": "UNVERIFIED",
+   "claims": 5,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 45,
+   "sentence": "中国化学2025年营业总收入1,901.25亿元、利润总额84.35亿元、新签合同额4,036.61亿元、境外新签1,245.16亿元",
+   "verdict": "UNVERIFIED",
+   "claims": 5,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 46,
+   "sentence": "上海市政总院EPC营收突破140亿元等）、项目实绩（长沙磁浮、合肥宿松路、东营综合智慧能源、陕煤榆林180万吨/年乙二醇、江苏LNG、巴斯夫100万吨/年乙烯装置等）与技术参数（2,645万平方米再生规模、能源综合利用效率提高15%以上等），均取自本章尾注所列事实资料库源文，未补充任何资料库以外的数据",
+   "verdict": "UNVERIFIED",
+   "claims": 5,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 47,
+   "sentence": "山东院\"非洲某国2×350MW电站争议\"为源文示例性设定的演示案例，已按示意性复盘标注，不代表特定项目实录",
+   "verdict": "UNVERIFIED",
+   "claims": 1,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 48,
+   "sentence": "2. **口径纪律**：中国化学\"营业总收入1,901.25亿元\"与\"营业收入1,895.01亿元\"为年报两个口径，引用时不得混用",
+   "verdict": "UNVERIFIED",
+   "claims": 2,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 49,
+   "sentence": "利润总额84.35亿元与净利润70.77亿元、归母净利润64.36亿元分属不同利润口径，本章随文明示",
+   "verdict": "UNVERIFIED",
+   "claims": 3,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 50,
+   "sentence": "上海市政总院、山东院、中国联合、中国寰球、中建五局、铁四院为非本章上市公司样本，其数据均为研究报告整理口径而非经审计年报口径",
+   "verdict": "UNVERIFIED",
+   "claims": 1,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 51,
+   "sentence": "3. **判例与政策适用边界**：本章引用的最高人民法院及地方法院裁判规则（［(2016)最高法民终695号］、［(2016)最高法民再53号］、［(2017)川民终72号］、［(2012)民提字第205号］）、《法工委函〔2017〕2号》与《独立保函司法解释》（法释〔2016〕24号），均为个案裁判与特定时点文件，不",
+   "verdict": "UNVERIFIED",
+   "claims": 5,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 52,
+   "sentence": "4. **政策标准时效边界**：《建设项目工程总承包管理规范》（GB/T 50358-2017）、建市〔2014〕159号等资质政策与\"双碳\"技术路线均为资料库采集时点的现行文本，建筑业资质改革与新能源技术迭代较快，跨年度引用时应回最新政策法规与企业最新披露核对",
+   "verdict": "UNVERIFIED",
+   "claims": 3,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 53,
+   "sentence": "山东路桥未完工EPC项目金额约387.91亿元为own_calc折算值（源文为38,790,974,558.80元）",
+   "verdict": "OWN_CALC",
+   "claims": 2,
+   "evidence": "-",
+   "detail": "own_calc 作者推算, 免核"
+  },
+  {
+   "n": 54,
+   "sentence": "中国联合工程有限公司EPC总承包业务研究报告（事实资料库研究报告，ent源全文）",
+   "verdict": "UNVERIFIED",
+   "claims": 1,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 55,
+   "sentence": "《建设项目工程总承包管理规范》（GB/T 50358-2017）全文（网页版收录件）",
+   "verdict": "UNVERIFIED",
+   "claims": 2,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 56,
+   "sentence": "山东电力工程咨询院有限公司（山东院）EPC总承包业务研究报告（事实资料库研究报告，ent源全文）",
+   "verdict": "UNVERIFIED",
+   "claims": 1,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 57,
+   "sentence": "上海市政工程设计研究总院（集团）有限公司EPC总承包业务研究报告（事实资料库研究报告，ent源全文）",
+   "verdict": "UNVERIFIED",
+   "claims": 1,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 58,
+   "sentence": "中国寰球工程有限公司EPC总承包业务研究报告（事实资料库研究报告，ent源全文）",
+   "verdict": "UNVERIFIED",
+   "claims": 1,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 59,
+   "sentence": "《工程总承包的风险与防范》（律师事务所媒体稿，设计风险与雇主要求管控建议）",
+   "verdict": "UNVERIFIED",
+   "claims": 1,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 60,
+   "sentence": "中国化学（601117）2025年年度报告全文（巨潮资讯网，经审计年报）",
+   "verdict": "UNVERIFIED",
+   "claims": 1,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 61,
+   "sentence": "山东路桥（000498）2025年年度报告全文（巨潮资讯网，经审计年报）",
+   "verdict": "UNVERIFIED",
+   "claims": 1,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  },
+  {
+   "n": 62,
+   "sentence": "《中石化南京工程有限公司怎么干EPC总承包",
+   "verdict": "UNVERIFIED",
+   "claims": 1,
+   "evidence": "-",
+   "detail": "含数字/专名但无锚点引用"
+  }
+ ]
+}

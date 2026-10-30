@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Windows>
+	<!-- 卸载过程中页面 -->
+	<VerticalLayout padding="0,34,0,0">
+		<VerticalLayout width="404" height="227" padding="43,0,0,0" bkimage="file='res\img_bg_uninstall.png'"/>
+
+		<VerticalLayout padding="40,33,40,0">
+			<Progress name="UnInstallProgressBar" borderround="4,4" height="6" mouse="false"  min="0" max="100" forecolor="#FF22AB82" bkcolor="#FFF1F1F1" value="0" />
+			<Control height="22"/>
+			<Label name="UnInstallProgressText" text="正在删除" height="17" align="center" textcolor="#FF999999" font="102"/>
+		</VerticalLayout>
+	</VerticalLayout>
+</Windows>

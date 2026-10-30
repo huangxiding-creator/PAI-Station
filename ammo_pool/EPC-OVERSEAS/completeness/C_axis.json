@@ -2,9 +2,9 @@
  "axis": "C",
  "sensor": "channel_matrix",
  "campaign": "EPC-OVERSEAS",
- "channels_hit": 6,
- "channels_total": 32,
- "hit_ratio": 0.1875,
+ "channels_hit": 8,
+ "channels_total": 35,
+ "hit_ratio": 0.2286,
  "hit_channels": [
   {
    "id": "manus",
@@ -25,23 +25,32 @@
   {
    "id": "localfiles",
    "name": "本地文件库",
-   "chars": 1035531,
+   "chars": 1193955,
    "engines": [
-    "localfiles"
+    "localfiles",
+    "localfiles:rss"
    ]
   },
   {
    "id": "corpus_stores",
    "name": "存量语料库",
-   "chars": 44358781,
+   "chars": 455665274,
    "engines": [
     "corpus_stores"
    ]
   },
   {
+   "id": "zh_search_pro",
+   "name": "免key中文多引擎检索",
+   "chars": 232973,
+   "engines": [
+    "zh_search_pro"
+   ]
+  },
+  {
    "id": "openalex",
    "name": "OpenAlex 学术API(免key)",
-   "chars": 39703,
+   "chars": 67297,
    "engines": [
     "openalex"
    ]
@@ -49,9 +58,17 @@
   {
    "id": "arxiv",
    "name": "arXiv 学术API(免key)",
-   "chars": 24345,
+   "chars": 26899,
    "engines": [
     "arxiv"
+   ]
+  },
+  {
+   "id": "kb_harvest",
+   "name": "KB-HARVEST 收割引擎(文库/book118/doc88 检索聚合)",
+   "chars": 767,
+   "engines": [
+    "kb_harvest:wenku"
    ]
   }
  ],
@@ -75,13 +92,14 @@
   "CLI 化栈",
   "网盘聚合发现",
   "全套教材语料库",
-  "免key中文多引擎检索",
   "电子书渠道族(两篇文章111站+Arc K扫荡105站=216站纳册)",
   "网页搜索项目注册表(8角度扫荡111候选+8本机在册=119项)",
   "夸克网盘账号面(扫码授权+转存四步+列目录+下载直链+签到保活)",
   "AnySearch实时搜索(web+垂直域17域+并发批量+网页抽取, 匿名免鉴权)",
   "Semantic Scholar 学术API(S2, 免key)",
-  "KB-HARVEST 收割引擎(文库/book118/doc88 检索聚合)"
+  "当当图书(书目情报: 题录/简介/目录框架)",
+  "秘塔知识库专题(工程行业大脑: 知识库内文件检索/元数据/原文件下载)",
+  "last30days 近30天多源社媒热度 (Reddit/HN/Polymarket/GitHub)"
  ],
  "miss_detail": [
   {
@@ -161,10 +179,6 @@
    "name": "全套教材语料库"
   },
   {
-   "id": "zh_search_pro",
-   "name": "免key中文多引擎检索"
-  },
-  {
    "id": "ebook_library",
    "name": "电子书渠道族(两篇文章111站+Arc K扫荡105站=216站纳册)"
   },
@@ -185,13 +199,21 @@
    "name": "Semantic Scholar 学术API(S2, 免key)"
   },
   {
-   "id": "kb_harvest",
-   "name": "KB-HARVEST 收割引擎(文库/book118/doc88 检索聚合)"
+   "id": "dangdang",
+   "name": "当当图书(书目情报: 题录/简介/目录框架)"
+  },
+  {
+   "id": "metaso_kb",
+   "name": "秘塔知识库专题(工程行业大脑: 知识库内文件检索/元数据/原文件下载)"
+  },
+  {
+   "id": "last30days",
+   "name": "last30days 近30天多源社媒热度 (Reddit/HN/Polymarket/GitHub)"
   }
  ],
  "new_channel_queue": [],
  "miss_in_queue": [],
- "channel_invocations": 34,
+ "channel_invocations": 71,
  "invoked_channels": [
   "anysearch",
   "arxiv",
@@ -219,16 +241,22 @@
   "semantic_scholar",
   "sougo",
   "video",
+  "webregistry",
   "websearch",
   "website",
   "wechat4",
   "wechat_local",
+  "wenku",
   "weread",
   "zh_search_pro"
  ],
- "miss_not_invoked": [],
+ "miss_not_invoked": [
+  "当当图书(书目情报: 题录/简介/目录框架)",
+  "秘塔知识库专题(工程行业大脑: 知识库内文件检索/元数据/原文件下载)",
+  "last30days 近30天多源社媒热度 (Reddit/HN/Polymarket/GitHub)"
+ ],
  "invocations_path": "E:\\AI-Station\\ammo_pool\\EPC-OVERSEAS\\channel_invocations.jsonl",
- "green": true,
+ "green": false,
  "green_rule": "1022宪法: 全渠道调用即绿(收获另计, 零豁免)",
  "engine_map": {
   "localfiles": {
@@ -272,6 +300,27 @@
    ],
    "notes": [],
    "bases": []
+  },
+  "zh_search_pro": {
+   "channels": [
+    "zh_search_pro"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "localfiles:rss": {
+   "channels": [
+    "localfiles"
+   ],
+   "notes": [],
+   "bases": []
+  },
+  "kb_harvest:wenku": {
+   "channels": [
+    "kb_harvest"
+   ],
+   "notes": [],
+   "bases": []
   }
  },
  "unmapped_engines": [],
@@ -280,5 +329,5 @@
  "manifest": "E:\\AI-Station\\ResearchFactory-Eng\\channel_manifest.json",
  "fail_soft": false,
  "fail_soft_note": "",
- "generated_at": "2026-10-23T08:04:23+08:00"
+ "generated_at": "2026-10-26T11:39:19+08:00"
 }

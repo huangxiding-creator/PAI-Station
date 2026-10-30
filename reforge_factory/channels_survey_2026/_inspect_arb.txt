@@ -1,0 +1,72 @@
+HTTP block len=15700
+
+    "agent_search": {"kind": "http_api", "url": "https://github.com/brcrusoe72/agent-search",
+              "access": "免登录API封装", "tags": "通用网研", "name": "agent-search"},
+    "aiddata": {"kind": "dataset", "url": "https://www.aiddata.org",
+              "access": "数据集免登录下载", "tags": "项目数据/数据集", "name": "AidData"},
+    "anysearch": {"kind": "http_api", "url": "https://github.com/anysearch-ai/anysearch-skill",
+              "access": "免登录API(匿名限额10/窗,日限200)", "tags": "新闻舆情", "name": "AnySearch实时搜索"},
+    "arxiv_api": {"kind": "http_api", "url": "https://export.arxiv.org/api",
+              "access": "免登录API", "tags": "学术专利", "name": "arXiv API"},
+    "arxiv_py": {"kind": "http_api", "url": "https://github.com/lukasschwab/arxiv.py",
+              "access": "免登录API封装(arXiv官方API)", "tags": "标准定额/学术专利", "name": "arxiv.py"},
+    "baidu_serp_api": {"kind": "http_api", "url": "https://github.com/ohblue/baidu-serp-api",
+              "access": "免key(免登录直取)", "tags": "新闻舆情", "name": "baidu-serp-api"},
+    "bls": {"kind": "http_api", "url": "https://api.bls.gov/publicAPI/v2/timeseries/data/",
+              "access": "免登录API(注册key提额)", "tags": "标准定额/项目数据", "name": "BLS Public Data API"},
+    "cc_index_table": {"kind": "http_api", "url": "https://github.com/commoncrawl/cc-index-table",
+              "access": "免登录API(Athena/SQL直查)", "tags": "数据集", "name": "cc-index-table"},
+    "crossref_rest_api": {"kind": "http_api", "url": "https://api.crossref.org",
+              "access": "免登录API(mailto礼貌池提额)", "tags": "学术专利", "name": "Crossref REST API"},
+    "damodaran": {"kind": "http_api", "url": "https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datacurrent.html",
+              "access": "免登录API(静态目录直链)", "tags": "数据集", "name": "Damodaran 数据集目录(估值对标免费基准库)"},
+    "damonwonghv_youtube_search_api": {"kind": "python_lib", "url": "https://github.com/damonwonghv/youtube-search-api",
+              "access": "python库·免登录", "tags": "新闻舆情", "name": "damonwonghv/youtube-search-api"},
+    "datacite": {"kind": "http_api", "url": "https://api.datacite.org",
+              "access": "免登录API", "tags": "数据集", "name": "DataCite API"},
+    "ddgr": {"kind": "http_api", "url": "https://github.com/jarun/ddgr",
+              "access": "免key CLI(pip/npm)", "tags": "通用网研", "name": "ddgr"},
+    "ddgs_duckduckgo_search": {"kind": "http_api", "url": "https://github.com/deedy5/ddgs",
+              "access": "免登录API封装", "tags": "通用网研", "name": "ddgs (duckduckgo_search 换代版)"},
+    "doaj_api": {"kind": "http_api", "url": "https://doaj.org/api",
+              "access": "免登录API", "tags": "学术专利", "name": "DOAJ API"},
+    "dryad": {"kind": "http_api", "url": "https://datadryad.org/api/v2",
+              "access": "免登录API", "tags": "数据集", "name": "Dryad API"},
+    "europe_pmc_rest_api": {"kind": "http_api", "url": "https://www.ebi.ac.uk/europepmc/webservices/rest",
+              "access": "免登录API", "tags": "学术专利", "name": "Europe PMC REST API"},
+    "eurostat": {"kind": "http_api", "url": "https://ec.
+
+===== CLI =====
+
+    "last30days": {
+        "script": REPO / "vendors" / "last30days-skill" / "skills" / "last30days"
+                  / "scripts" / "last30days.py",
+        "python":  REPO / "vendors" / "last30days-skill" / ".venv"
+                  / "Scripts" / "python.exe",
+    },
+    "bls": {                                   # 1025 纳管令·BLS Public Data API
+        "script": REPO / "reforge_factory" / "legs" / "bls_leg.py",
+        "python":  Path("py"),
+    },
+    "datacite": {                                   # 1025 纳管令·DataCite API
+        "script": REPO / "reforge_factory" / "legs" / "datacite_leg.py",
+        "python":  Path("py"),
+    },
+    "ddgr": {                                   # 1025 纳管令·ddgr
+        "script": REPO / "reforge_factory" / "legs" / "ddgr_leg.py",
+        "python":  Path("py"),
+    },
+    "dryad": {                                   # 1025 纳管令·Dryad API
+        "script": REPO / "reforge_factory" / "legs" / "dryad_leg.py",
+        "python":  Path("py"),
+    },
+    "eurostat": {                                   # 1025 纳管令·Eurostat API
+        "script": REPO / "reforge_factory" / "legs" / "eurostat_leg.py",
+        "python":  Path("py"),
+    },
+    "hf_datasets": {                                   # 1025 纳管令·HuggingFace Datasets API
+        "script": REPO / "reforge_factory" / "legs" / "hf_datasets_leg.py",
+        "python":  Path("py"),
+    },
+    "nist": {                                   # 1025 纳管令·NIST Technical Series Publicat
+        "script": REPO / "

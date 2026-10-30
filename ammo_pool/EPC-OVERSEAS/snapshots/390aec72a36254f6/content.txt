@@ -1,0 +1,112 @@
+# 中国楼宇机电出海，从"卖设备"转向"过标准"
+
+- 公众号: 工程经略张工 avenue
+- 发布时间: 2026-10-10
+- URL: https://mp.weixin.qq.com/s?src=11&timestamp=1792797062&ver=7045&signature=9l4JMG9ozZHJGuna6*gHrv29Wuig9D8EwTp8KtQGTJ2dsJKPI4-9zo*Mcn-mWkWSGPLJIPcqsJToBKZds7NR0RA1wy*vJqvBuL9Ee4c3SgFt2IA*X2OKf24FI7ul6DAx&new=1
+- 采集: sogou_wechat(A面/浏览器) 2026-10-24 (query=标准不兼容 中国设备 海外 tree=Q18-E2 stance=against)
+
+摘要
+中国楼宇机电企业出海东南亚，过去靠的是设备性价比和总包分包渠道；近两三年，标杆项目的采购逻辑已经换了一套。
+新门槛不在硬件参数，而在四件事：协议开放可互通、绿色能效认证、数据本地与网络安全、全生命周期 TCO。
+新加坡 BCA 从 2025 年起把 GFA ≥ 5,000㎡ 的新建和重大改造建筑纳入强制绿色合规，政府售地项目直接要求 Green Mark Platinum Super Low Energy，相对 2005 基准节能 60%。
+协议层正在发生一次静默换代：BACnet 仍占全球指定项目的七成以上，但 BACnet/SC、KNX、Matter over Thread 正在把"设备联网"升级为"跨厂商互通"，本地控制、不依赖境外云成为国家级项目的硬要求。
+头部企业已经在用新打法：美的楼宇科技 2026 年 5 月在吉隆坡发布 AIDC 全栈温控方案并与吉宝基础设施战略合作；海尔在泰国春武里建年产能 600 万台的空调基地。这不是简单的产品出口，是把供应链、合规能力和本地服务一起搬出去。
+01 过去三十年，中国机电出海的旧剧本
+中国工程人第一次大规模接触海外机电项目，大概是在上世纪九十年代末到二十一世纪初。那时候的出海逻辑很朴素：国内人工便宜、制造成本低，跟着总包或者通过本地代理商，把冷水机组、空调末端、配电柜、水泵卖到东南亚、中东、非洲。
+这个阶段的竞争要素主要有三条：
+同参数下价格低 15%–25%；
+交期比欧美品牌短；
+能接受更宽松的付款条件和更长的质保。
+本质上是"产品出口"。设备卖出去之后，调试、运维、备件、软件升级大部分交给业主自己的运维团队或者本地 SI（系统集成商）。中国厂商在整个价值链里站在制造环节，利润薄、话语权弱，业主换型、扩容、升级的时候，第一选择往往还是霍尼韦尔、江森自控、西门子、特灵、开利这些老牌子。
+这个剧本在国内和东南亚二三线市场今天仍然成立。但如果把目光移到新加坡、吉隆坡核心区、泰国东部经济走廊那些真正的标杆项目——数据中心、国际机场、政府公建、超高层综合体——会发现采购逻辑已经变了。业主在招标文件里看的不再是"你这个机组 COP 多少"，而是一连串关于合规、协议、认证、数据归属的问题。
+02 东南亚标杆项目的"新门槛"长什么样
+我把近三年经手和观察到的东南亚高端项目招标文件做了一个归纳。和十年前相比，要求项的结构发生了明显位移。
+维度
+	十年前的关注点
+	现在的关注点
+硬件参数
+	冷量、COP、噪声、外形尺寸
+	仍然要，但不再是决定项
+价格
+	最低价中标或低价分差占比 60% 以上
+	低价仅为入场券，技术与合规分权重显著上升
+协议兼容
+	能提供 BACnet/Modbus 接口即可
+	BACnet/SC 加密、KNX、MQTT、Matter over Thread 多协议网关；要求 BTL 认证
+绿色合规
+	自评 LEED/Green Mark 铜级即可
+	法定门槛：新加坡 GFA ≥ 5,000㎡ 项目强制 Green Mark；GLS 地块要求 Platinum SLE
+数据与网络安全
+	基本不提
+	本地服务器、数据不出境、第三方渗透测试、与 IT 部门联合评审
+运维
+	交付即结束
+	要求 5–10 年 TCO 测算、远程运维平台开放接口、备件本地库存
+本地责任
+	国内厂商签字即可
+	要求本地实体、本地服务团队、本地 SI 联合体
+这张表不是某一家业主的偏好，而是新加坡 BCA、马来西亚 SSM、泰国 BOI 几方监管要求叠加之后，市场自然长出来的采购标准。
+03 协议层：从"设备联网"到"跨厂商互通"
+要理解新门槛，先得把楼宇自动化的协议栈讲清楚。
+BACnet 是 ASHRAE 在 1990 年代主导开发的开放通信协议，目前在 190 多个国家使用，全球约 77% 的楼宇自动化项目在规格书中指定 BACnet。它解决的核心问题是：不同厂家的冷机、空调末端、水泵、阀门控制器能不能在同一个系统里对话。
+但 BACnet 走到今天，自己也在换代。老版本 BACnet/IP 跑在 UDP 上，明文传输，企业 IT 部门不愿意把楼宇网直接接进办公网。ASHRAE 因此推出 BACnet Secure Connect（BACnet/SC），在数据链路层做加密，让 IT 部门能够接受。BACnet International 在 2026 年春季的行业期刊里明确提到，2027 年 1 月起将执行新的最低协议版本要求——这意味着今天还在卖老版本 BACnet 接口的设备，三年内会在高端项目里被集体淘汰。
+在 BACnet 之外，KNX 长期占据欧洲照明和房间自动化市场，Modbus 负责老设备接入，MQTT 负责 IoT 传感器网络。这些协议过去是各管一段，业主集成的时候靠网关翻译。
+最近几年进来的新变量是 Thread 和 Matter。Thread 是一种低功耗、自愈式的无线网状网络，Thread Group 自己明确说过，Thread Commercial Extensions 已经被 KNX 和 BACnet 选作商业楼宇的无线组网技术。Matter 是 CSA 连接标准联盟（原 Zigbee 联盟）主导的统一应用层协议，特点是 IP 化、本地控制、跨厂商互通，不依赖某一家的云。
+这两个协议放在一起，对业主的吸引力是什么？
+跨厂商互通：照明、HVAC、遮阳、电梯、安防可以在同一个应用层对话，不再被某一家的私有协议锁定；
+本地控制：核心控制逻辑跑在本地网络，断云不影响楼宇运行；
+IT 友好：跑在 IP 网络上，可以接入企业现有的安全体系；
+未来扩容：新设备通过 Matter-ID 识别，扫码即可入网，业主在全生命周期保留竞争性采购能力。
+对中国厂商的含义很直接：过去出口一台冷水机组，配上自己的私有协议网关就算交付；现在要投标新加坡、吉隆坡的高端项目，得有 BTL 认证的 BACnet 接口、要支持 BACnet/SC、要能和 KNX/Matter 网关对接，最好还能提供本地部署的运维平台。硬件参数大家都做得出来，协议合规能力才是这一轮的真实门槛。
+04 绿色与能效：BCA Green Mark 是怎么把压力传到供应链的
+新加坡的绿色合规，不只"Green Mark 是个认证"。它已从一个自愿评级工具，变成强制性的法律门槛。
+BCA Green Mark 体系 2005 年 1 月推出，最初是自愿性的绿色建筑评级。2008 年起，BCA 对新建建筑实施最低能效要求。拐点在 2025 年：
+2025 年修订的《建筑控制（环境可持续）条例》（Building Control (Environmental Sustainability) (Amendment) Regulations 2025）把强制范围扩大到：所有 GFA ≥ 5,000㎡ 的新建建筑、既有建筑扩建增加 GFA ≥ 5,000㎡、既有建筑 GFA ≥ 5,000㎡ 的重大改造；
+政府售地（GLS）项目把门槛从 Green Mark GoldPLUS/Platinum 提到 Platinum Super Low Energy + Maintainability Badge，要求相对 2005 基准节能 60%；
+新加坡绿色建筑总纲（SGBMP）的目标是：到 2030 年，80% 的新建项目 GFA 为 Super Low Energy 建筑；公共部门空调面积超过 5,000㎡ 的新建建筑直接要求 Green Mark Platinum；
+BCA 在 2026 年 7 月发布的 DPfD 研究已经验证，80% 的能效提升目标（相对 2005 基准）在新办公、酒店、混合开发项目上技术可行。
+这些监管要求最后会怎么传导到供应链？三个口子：
+第一，设计阶段就要按 Green Mark 评分体系做节能计算，围护结构 RETV、冷机效率、照明功率密度、楼宇自控系统的能耗监测点数都直接对应评分项。投标设备的时候，厂家提供的设备性能表要能被 BCA 的 e-Planning 平台接受。
+第二，60% 节能不是靠一台高效冷机堆出来的，是靠"高效设备 + 自由冷却 + 蓄冷 + 群控优化 + 分项计量"整套系统。这就要求投标方提供的不是单台设备，而是带控制逻辑的能源方案。
+第三，Platinum SLE 的维持性徽章（Maintainability Badge）要求建筑交付后真正能持续运行达标，不是拿个证书就完事。这倒逼厂家把运维数据、远程诊断、AI 调优一起打包。
+对中国机电企业来说，这意味着出口新加坡和马来西亚高端项目，光有 ISO 9001 和 CE 不够。要熟悉 Green Mark 的评分细则，要有新加坡本地的专业团队或者合作伙伴配合做绿建咨询，要把设备参数翻译成 BCA 能认的能效口径。
+05 数据主权与本地控制：为什么"不依赖云端"成了硬要求
+这一点是这一轮出海里最容易被国内厂商低估的。
+新加坡、马来西亚、泰国的国家级基础设施——机场、轨交、数据中心、政府公建——在招标文件里对数据存放位置和网络架构的要求这几年明显收紧。背后有三个驱动：
+数据主权法规。新加坡《个人数据保护法》（PDPA）、马来西亚《个人数据保护法》（PDPA 2010）都对个人数据跨境传输有约束；机场、轨交场景里大量人流、视频、通行数据，业主要求核心控制数据和运行数据留在本地服务器。
+网络安全。楼宇自动化系统一旦接进企业 IT 网，就是攻击面。新加坡 CSA（网络安全局）对关键信息基础设施（CII）有法定安全要求。业主不愿意把楼控系统的运维平台放在境外厂商的公有云上。
+业务连续性。机场、医院、数据中心这类场所，断网就是事故。Matter/Thread 本地控制架构的吸引力就在这里——核心控制不依赖境外云专线，断云不停机。
+我见过一些国内厂商的海外方案书，打开后架构图上画一个"XX 云"，数据全部回传国内做 AI 优化。这种方案在国内产业园项目里能过，但在新加坡的机场、数据中心项目里，第一轮技术评审就会被打回来。
+新的打法是什么？把 AI 优化引擎下沉到本地网关或者本地服务器，云端只做匿名化的模型迭代；数据出境之前做脱敏；提供独立的本地部署版本；配合业主的 IT 部门做渗透测试和安全评审。这套能力不是技术上做不出来，是国内厂商过去没有动力做——因为国内项目业主不在意。
+06 头部企业已经在换打法
+与其空谈趋势，不如看几家头部企业公开披露的动作。这些都是可以在企业官网、主流行业媒体和地方政府出海平台上交叉验证的事实。
+美的楼宇科技：2026 年 5 月 21 日在马来西亚吉隆坡办"Feel the Future"发布会，面向海外市场正式推出 AIDC（AI 数据中心）全栈温控方案，核心产品包括磁悬浮主动式 CDU、新一代风冷磁悬浮离心机组和全套液冷矩阵。同月，美的与新加坡吉宝基础设施（Keppel Infrastructure）签署战略合作；9 月双方在泰国曼谷 AixEnergy 展会上首次联合参展。国内端，美的顺德液冷智造基地总投资超过 10 亿元，2026 年 3 月开工，预计 2027 年 8 月投产，做液冷核心组件的规模化量产。
+海尔智家：2025 年 9 月 23 日，海尔在泰国春武里的空调工业园正式投产，年规划产能 600 万台，是中国企业在东南亚最大的空调制造基地，产品直接供应东南亚和北美市场。加上海信、TCL 智家（奥马）在泰国的产能布局，泰国正在形成中国 HVAC 的产业集群。
+格力：2026 年初中标上海轨道交通 19 号线和嘉闵线项目合计 1.88 亿元，国内交通枢纽的中大机组能力在持续验证。
+这三件事放在一起看，能读出三个信号：
+头部企业出海已经不是"把国内库存卖出去"，而是围绕海外市场专门开发产品（液冷 CDU、磁悬浮机组）、专门建产能（泰国基地、顺德液冷基地）、专门绑定本地合作伙伴（吉宝）。
+主战场在切换。过去是卖家用空调和商用多联机，现在是 AIDC 数据中心温控、交通枢纽中大系统、绿色公建——这些场景的客单价、技术门槛、合规要求都高一个量级。
+竞争主体在变化。以前和欧美品牌拼价格，现在要和本地 SI、本地开发商联合，一起满足 BCA、BOI、SSM 的合规要求。
+这就是"标准出海"的真实含义：不是中国企业去输出一套自己的标准，而是中国企业开始具备按国际主流标准交付的能力，并且把这种能力变成可复制的产品和服务体系。
+07 给国内机电从业者的五条判断
+写在最后，是给同行——尤其是正在考虑东南亚市场、或者正在做投标决策的同仁和工程师——的几条直白判断：
+第一，别再把低价当核心竞争力。在 GFA 5,000㎡ 以上、有政府背景、有国际品牌业主的项目里，低价只能帮你进短名单，进不了技术标。决定中标的是协议合规、绿色认证、数据安全这三件事能不能写进技术偏离表的"零偏离"栏。
+第二，投标前先做"标准清单"，不要只做"产品清单"。每进一个新国家，先把监管要求列清楚：新加坡是 BCA Green Mark + PDPA + CSA CII；马来西亚是 SSM 公司合规 + ST Green Building Index；泰国是 BOI 投资促进 + 当地工程师签字。这些要求不体现在产品样本上，体现在投标文件和交付流程里。
+第三，协议能力要提前布局。BACnet/SC 2027 年 1 月起强制执行新版本，Matter over Thread 在商业楼宇的渗透率这两年会快速上升。今天还在投老版本 BACnet 接口的项目，等于在设备生命周期起点就埋了合规债务。
+第四，和本地 SI 绑定比自己铺团队更现实。新加坡、马来西亚的高端项目，业主对本地责任主体的要求非常明确。与其在海外自建销售和服务团队，不如找一家有 Green Mark 咨询经验、有本地工程师牌照、有类似项目交付记录的 SI 做联合体，前期成本更低、合规风险更小。
+第五，把 TCO 算给业主看，不要只比初投资。Green Mark Platinum SLE 的项目，业主要的是 60% 节能和 10 年低运维。谁能把全生命周期的电费、运维、备件、升级成本算清楚，谁就有机会把初投资高 10%–15% 的方案卖出去。这是过去十年中国厂商最不擅长的事，也是下一个十年最该补的课。
+小结
+中国楼宇机电出海正在经历一次静悄悄的换代。过去拼的是设备价格和交期，现在拼的是协议能不能互通、绿色认证能不能过关、数据能不能留在本地、全生命周期成本能不能算清。头部企业已经在马来西亚、泰国建厂、发全栈方案、绑定本地开发商；还停留在"卖单机"思路的厂商，未来三年会在东南亚高端项目里被逐步挤出短名单。标准合规能力，正在取代低价，成为中国机电企业出海的核心竞争力。这不是营销话术，是招标文件里一条一条写出来的硬门槛。
+内容验真
+BACnet 应用广度与 2027 年协议版本升级：BACnet International 2026 年春季《Journal of Building Automation》第 29 期（https://bacnetglobal.org/wp-content/uploads/2026/06/Journal-of-Building-Automation-Spring-2026.pdf），以及 BACnet International AHR 2024 资料（https://bacnetinternational.org/wp-content/uploads/sites/2/2024/01/AHR-Handout-2024-Version-2-400-qty-1.pdf）。
+BACnet/SC 加密与网关策略：Trane Technologies 白皮书 BAS-SLB148-EN（https://elibrary.tranetechnologies.com/public/commercial-hvac/Literature/Sales/BAS-SLB148-EN_03142024.pdf）；开放协议架构综述 ASDV Consultant 2026-06（https://www.asdvconsultant.com/blog/open-protocol-bacnet-knx-modbus-integration）。
+Thread 商业扩展与被 KNX/BACnet 选用：Thread Group 官方说明（https://threadgroup.org/News-and-Events/ID/665/What-does-Project-CHIP-mean-for-Thread-in-Commercial）。
+BCA Green Mark 体系与 2025 年修订：BCA 官网 Green Mark 介绍（https://www1.bca.gov.sg/sustainability/greenmark/）；2025 年修订条例适用范围（https://www1.bca.gov.sg/sustainability/legislation-on-environmental-sustainability-for-buildings/new-buildings-and-existing-buildings-undergoing-major-additions-and-alterations/）。
+**GLS 项目 Platinum SLE + 节能 60%**：BCA 官网 GLS 说明（https://www1.bca.gov.sg/sustainability/legislation-on-environmental-sustainability-for-buildings/new-buildings-and-existing-buildings-undergoing-major-additions-and-alterations/government-land-sales/）。
+SGBMP 2030 年 80% SLE 目标：BCA 官网 SGBMP（https://www1.bca.gov.sg/sustainability/sgbmp/）；BCA DPfD 研究新闻 2026-07-30（https://www1.bca.gov.sg/resources/newsroom/new-bca-study-confirms-80--energy-efficiency-target-is-within-reach-for-singapore-s-built-environment-sector/）。
+美的楼宇科技吉隆坡发布与 AIDC 全栈方案：中国日报网 2026-05-22（http://caijing.chinadaily.com.cn/a/202605/22/WS6a0ff77da310942cc49adba4.html）；产业在线 2026-05-28（http://www.chinaiol.com/News/Content/202605/21_66418.html）；MBT 官网 2026-05-21（https://mbt.midea.com/global/news/mideas-full-stack-data-center-solutions-go-global--powering-ai-infrastructure）；RefIndustry 2026-05-29（https://refindustry.com/news/midea-launches-ai-data-center-cooling-solutions-in-malaysia/）。
+美的与吉宝战略合作及联合参展：暖通制冷空调在线 2026-09-17（https://www.hvrac.cn/jishulunwen/jishujiaoliu/2026091723871.html）。
+美的顺德液冷基地投资与投产时间：上海证券报 2026-06-25（http://www.cnstock.com/commonDetail/734345）。
+海尔泰国春武里基地投产及中国 HVAC 在泰集群：RACC 展会新闻（https://www.raccexpo.com/home/news/view/20251125143833WR6O.htm）。
+格力中标上海轨交项目：东方网 2026-03-06（http://qiye.eastday.com/n34/20260306/73bcbd2059b449e9ab82363fa946d353.html）。
+关于网传"中国 HVAC 中标樟宜机场 T3"事件：本文未引用。该消息仅见于 atfxcent.com 单站多篇互相矛盾的报道，签约日期、峰会城市、中标主体、合同金额在不同报道中不一致；樟宜机场集团官网、2024/25 年报、新加坡 BCA 及主流英文媒体均未交叉证实。按"不把传闻当事实"原则，本文以行业逻辑和可证实的监管、产品、企业动态为论据。

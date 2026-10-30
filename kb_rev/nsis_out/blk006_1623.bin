@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Windows>
+    <!-- 安装启动页中点击收缩页面 -->
+    <VerticalLayout>
+        <VerticalLayout name="customVer" inset="30,20,30,0" bkcolor="#FFF5F5F5" visible="false" height="172">
+            <Label text="安装路径：" textcolor="#FF666666" font="1"/>
+            <HorizontalLayout height="40" padding="0,15,0,0">
+                <RichEdit name="InstallTab_InstallFilePath" width="430" height="40" text="" textcolor="0xFF222222" font="1" inset="20,11,0,11" bkimage="res\path\path_selected_editor.png" autohscroll="false" wantreturn="false" wantctrlreturn="false" multiline="false" />
+                <Button name="InstallTab_SelectFilePathBtn" width="110" height="40" text="更改路径" font="1" textcolor="#FFFFFFFF" align="center" normalimage="file='res\path\path_selected_button.png'" hotimage="file='res\path\path_selected_button_hover.png'" selectedimage="file='res\path\path_selected_hover.png'"/>
+            </HorizontalLayout>
+            <HorizontalLayout height="16" padding="0,20,0,0">
+                <CheckBox name="deskShortCheckBox" width="168" height="16" text="在桌面建立快捷方式" textcolor="#FF666666" selected="true" textpadding="24,0,0,0" normalimage="file='res\checkbox\check_no.png' dest='0,0,16,16'" hotimage="file='res\checkbox\check_hover.png' dest='0,0,16,16'" selectedimage="file='res\checkbox\check_yes.png' dest='0,0,16,16'" font="1"/>
+                <Label name="InstallTab_FreeSpace" visible="false" text="#GB"/>
+            </HorizontalLayout>
+        </VerticalLayout>
+    </VerticalLayout>
+</Windows>
+
+
+

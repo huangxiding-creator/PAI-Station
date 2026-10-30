@@ -1,0 +1,63 @@
+[
+ {
+  "name": "国家法律法规数据库(flk)",
+  "repo_or_site": "https://flk.npc.gov.cn/",
+  "replaces": "律商LexisNexis/威科先行(中国法规全文域)",
+  "one_liner": "全国人大官方库: 现行有效法律法规/行政法规/司法解释/地方性法规全量免费检索——中国法规域免费全等本体",
+  "access": "免费页面",
+  "fit": "法规全文",
+  "existing": "none(new)",
+  "probe_key": "flk"
+ },
+ {
+  "name": "中国裁判文书网",
+  "repo_or_site": "https://wenshu.court.gov.cn/",
+  "replaces": "律商/威科(中国判例库)",
+  "one_liner": "最高法裁判文书公开库: 判决书全文一手(首页探针200, 深采受限在案: 滑块+登录), 在役口径=metaso/websearch二手源兜底+案例库拼合——上网文书规模缩减为如实限制",
+  "access": "免费(直采受限, 通道兜底)",
+  "fit": "判例文书",
+  "existing": "named(court; 直采受限在案)",
+  "overlap": "channel_manifest在册",
+  "probe_key": "wenshu"
+ },
+ {
+  "name": "人民法院案例库(rmfyalk)",
+  "repo_or_site": "https://rmfyalk.court.gov.cn/",
+  "replaces": "威科先行(指导性/参考案例域)",
+  "one_liner": "最高法案例库: 指导性案例+参考案例(含裁判要旨)免费注册检索——2024后判例检索免费主力面",
+  "access": "免费注册检索",
+  "fit": "指导案例",
+  "existing": "none(new)",
+  "probe_key": "rmfyalk"
+ },
+ {
+  "name": "北大法宝免费面",
+  "repo_or_site": "https://www.pkulaw.com/",
+  "replaces": "律商Lexis(中国法规域辅助面)",
+  "one_liner": "北大法宝免费档: 法规目录+现行法正文大面免费(修订对照/英文译本等深度功能付费)——法规域免费部分平替",
+  "access": "免费面(部分)",
+  "fit": "法规(辅助)",
+  "existing": "none(new)",
+  "probe_key": "pkulaw"
+ },
+ {
+  "name": "国务院政策文件库",
+  "repo_or_site": "https://www.gov.cn/zhengce/",
+  "replaces": "威科先行(中央政策文件域)",
+  "one_liner": "国务院政策文件+解读官方全量免费检索——中央政策域全等本体",
+  "access": "免费页面",
+  "fit": "政策文件",
+  "existing": "none(new)",
+  "probe_key": "gov_zhengce"
+ },
+ {
+  "name": "CourtListener+RECAP(美国判例)",
+  "repo_or_site": "https://www.courtlistener.com/",
+  "replaces": "LexisNexis(美国判例/PACER域)",
+  "one_liner": "免费法律文库(Free Law Project): 美法院判例全文+PACER文书镜像(RECAP)——美国诉讼尽调免费主力",
+  "access": "免费页面+免费API(限额)",
+  "fit": "海外判例(美)",
+  "existing": "none(new)",
+  "probe_key": "courtlistener"
+ }
+]

@@ -1,0 +1,709 @@
+{
+ "count": 78,
+ "lane": "sweep_searchengines（搜索引擎/元搜索/SERP API/免登录检索API族清扫路）",
+ "notes": "【通道实况】本清扫路三条实测通道全灭：①web-reader与web-search-prime均429(周/月限额尽,重置2026-10-26 15:20:27,与任务预警一致,勿再烧调用)；②WebFetch被企业安全域校验全拒(api.github.com/raw.githubusercontent.com/searx.space/api.gdeltproject.org/api.openalex.org无一放行)；③本会话无Bash/Write工具,gh CLI不可执行、JSON无法落盘。【数字纪律】因此全部条目按知识库登记产出：零星数、零具体免费配额数字,stars_or_evidence只用三档证据=知识库登记(未实测)/本仓在役(实)/官方文档口径(未复测)；cn_reachable除标(实)者外均为经验判断未实测。【落盘委托】E:/AI-Station/reforge_factory/channels_survey_2026/sweep_searchengines.json 请编排器落盘,本输出projects数组+本notes即完整文件内容(建议结构:{\"lane\":...,\"count\":78,\"projects\":[...],\"notes\":...})。【去重口径】Brave(网页+API)与DuckDuckGo(网页+html/lite+InstantAnswer)各并1条；Google系各产品(CSE/Scholar/Trends/NewsRSS/DatasetSearch)访问形态不同保留多条；searx原版与SearXNG为不同项目分开登记(原版维护停滞已注)。【超目标】78条≥本路军令40条,超额38条。【复测清单】10-26 15:20额度恢复后建议WebFetch逐点免登录API留实测证据:GDELT/OpenAlex/Crossref/HN Algolia/Wayback CDX/Openverse/ddgs；另需复核三个状态存疑件:Stract(疑似停摆)/Gigablast(源码陈旧)/Magi(状态不明)。【已知坑】Bing Web Search API已于2025年退役,勿按旧API登记；Reddit搜索JSON本仓10-25实测多出口403/000拒绝,配置时需谨慎；Google/Startpage强反爬只走浏览器零星用。【相邻路提示】OpenAlex/Crossref/S2/CORE/BASE/百度学术等学术检索件如与\"学术专利清扫路\"重复登记,建议以本路为API访问口径、彼路为内容口径合并。",
+ "projects": [
+  {
+   "access": "免登录网页(公共实例)/自托管；JSON输出需实例管理员开启",
+   "cn_reachable": "官方demo需代理；公共实例部分可直连(实例各异)",
+   "desc": "开源元搜索引擎,聚合大量引擎(Google/Bing/维基/学术/新闻等),可自托管,是本产线",
+   "evidence": "知识库登记(未实测)",
+   "fit": "通用检索底座(标准/项目/学术/舆情皆可查)",
+   "name": "SearXNG",
+   "repo_or_site": "github.com/searxng/searxng (+docs.searxng.org)"
+  },
+  {
+   "access": "自托管",
+   "cn_reachable": "同SearXNG实例格局",
+   "desc": "SearXNG前身,上游维护基本停滞,登记备查,主用SearXNG",
+   "evidence": "知识库登记(未实测)",
+   "fit": "通用检索底座(备用)",
+   "name": "Searx(原版)",
+   "repo_or_site": "github.com/searx/searx"
+  },
+  {
+   "access": "免登录网页(目录站)",
+   "cn_reachable": "不稳定",
+   "desc": "SearX/SearXNG公共实例目录,含稳定性分级,是挑选可直连实例的依据源",
+   "evidence": "知识库登记(未实测)",
+   "fit": "渠道发现(实例清单)",
+   "name": "searx.space",
+   "repo_or_site": "searx.space"
+  },
+  {
+   "access": "自托管",
+   "cn_reachable": "自托管本地；公共实例少且需代理",
+   "desc": "自托管Google结果代理,无广告无追踪,产线自部署后可稳定取Google结果",
+   "evidence": "知识库登记(未实测)",
+   "fit": "通用检索底座(Google替代链)",
+   "name": "Whoogle",
+   "repo_or_site": "github.com/benbusby/whoogle-search"
+  },
+  {
+   "access": "自托管/公共实例(浏览器)",
+   "cn_reachable": "公共实例基本需代理(实例各异)",
+   "desc": "LibreX的社区延续,轻量元搜索,可自托管",
+   "evidence": "知识库登记(未实测)",
+   "fit": "通用检索底座(备用)",
+   "name": "LibreY",
+   "repo_or_site": "github.com/Ahwxorg/LibreY"
+  },
+  {
+   "access": "免登录网页/自托管",
+   "cn_reachable": "实例各异",
+   "desc": "抗审查元搜索,带多引擎前端代理,自有实例网络",
+   "evidence": "知识库登记(未实测)",
+   "fit": "通用检索底座(备用)",
+   "name": "4get",
+   "repo_or_site": "4get.ca(源码git.lolcat.ca/4get)"
+  },
+  {
+   "access": "免登录网页；API需key(向官方申请)",
+   "cn_reachable": "直连可达(判)",
+   "desc": "德国开源元搜索(MetaGer)聚合多引擎,欧洲系来源补充",
+   "evidence": "知识库登记(未实测)",
+   "fit": "新闻舆情(欧洲报道)",
+   "name": "MetaGer",
+   "repo_or_site": "metager.de(开源gitlab.com/metager-org)"
+  },
+  {
+   "access": "自托管(本地索引)",
+   "cn_reachable": "自托管本地无外联依赖",
+   "desc": "P2P分布式自托管搜索引擎,自建爬虫索引,完全去中心化",
+   "evidence": "知识库登记(未实测)",
+   "fit": "长尾网页发现(数据集向)",
+   "name": "YaCy",
+   "repo_or_site": "github.com/yacy/yacy_search_server"
+  },
+  {
+   "access": "免登录网页；商业API需key(收费)",
+   "cn_reachable": "直连可达(判)",
+   "desc": "英国独立引擎,全自建索引零追踪,反主流结果差异化高",
+   "evidence": "知识库登记(未实测)",
+   "fit": "通用底座(英文长尾/厂商标准页)",
+   "name": "Mojeek",
+   "repo_or_site": "mojeek.com"
+  },
+  {
+   "access": "免登录API(限速)/需key提额",
+   "cn_reachable": "需代理(判)",
+   "desc": "独立爬虫索引,专收非商业小站长文,工程社区长尾资料独此一家",
+   "evidence": "知识库登记(未实测)",
+   "fit": "通用底座(长尾技术资料)",
+   "name": "Marginalia Search",
+   "repo_or_site": "search.marginalia.nu"
+  },
+  {
+   "access": "免登录网页",
+   "cn_reachable": "需代理(判)",
+   "desc": "Marginalia同作者的小网页/博客索引,长尾轻量内容",
+   "evidence": "知识库登记(未实测)",
+   "fit": "长尾技术资料",
+   "name": "Teclis",
+   "repo_or_site": "teclis.com"
+  },
+  {
+   "access": "免登录网页/自托管",
+   "cn_reachable": "需代理(判)",
+   "desc": "开源Rust爬虫索引引擎,索引规模小,项目状态需复核再启用",
+   "evidence": "知识库登记(未实测)",
+   "fit": "通用底座(备用/研究)",
+   "name": "Stract",
+   "repo_or_site": "stract.com(github.com/stract/stract)"
+  },
+  {
+   "access": "免登录网页/自托管参与",
+   "cn_reachable": "需代理(判)",
+   "desc": "非营利开源微型索引引擎,可自托管参与爬取",
+   "evidence": "知识库登记(未实测)",
+   "fit": "长尾网页发现",
+   "name": "Mwmbl",
+   "repo_or_site": "mwmbl.org(github.com/mwmbl/mwmbl)"
+  },
+  {
+   "access": "免登录网页",
+   "cn_reachable": "需代理(判)",
+   "desc": "Ahrefs自建索引的通用引擎,SEO视角独特",
+   "evidence": "知识库登记(未实测)",
+   "fit": "通用底座(英文)",
+   "name": "Yep",
+   "repo_or_site": "yep.com"
+  },
+  {
+   "access": "免登录API(wiby.me/json/)",
+   "cn_reachable": "需代理(判)",
+   "desc": "极简老派网页索引,偏历史轻量页面,有JSON端点",
+   "evidence": "知识库登记(未实测)",
+   "fit": "历史技术资料(数据集向)",
+   "name": "Wiby",
+   "repo_or_site": "wiby.me"
+  },
+  {
+   "access": "数据集/源码",
+   "cn_reachable": "无网络依赖(源码)",
+   "desc": "老牌C++搜索引擎开源源码,项目陈旧,仅作自建索引参考件登记",
+   "evidence": "知识库登记(未实测)",
+   "fit": "数据集(源码)",
+   "name": "Gigablast开源",
+   "repo_or_site": "github.com/gigablast/open-source-search-engine"
+  },
+  {
+   "access": "免登录网页",
+   "cn_reachable": "直连(判)",
+   "desc": "华为系搜索引擎,新闻/图片垂直较全,中文可用",
+   "evidence": "知识库登记(未实测)",
+   "fit": "新闻舆情+图片素材",
+   "name": "Petal Search",
+   "repo_or_site": "petalsearch.com"
+  },
+  {
+   "access": "浏览器(强反爬)",
+   "cn_reachable": "需代理(实:本仓常年经验)",
+   "desc": "全球最大通用引擎,仅浏览器人工链,批量自动化禁用",
+   "evidence": "本仓在役经验(实)",
+   "fit": "通用底座(人工抽查链)",
+   "name": "Google",
+   "repo_or_site": "google.com"
+  },
+  {
+   "access": "免登录网页(新闻等支持RSS;通用Web搜索API已于2025年退役勿登记旧API)",
+   "cn_reachable": "直连(cn.bing,实:本仓常年经验)",
+   "desc": "微软通用引擎,国内可直连,国际版+国内版双口径",
+   "evidence": "本仓在役经验(实)",
+   "fit": "通用底座(标准/项目/学术/舆情)",
+   "name": "Bing",
+   "repo_or_site": "bing.com / cn.bing.com"
+  },
+  {
+   "access": "免登录网页(html/lite端点可脚本化)；Instant Answer API免登录",
+   "cn_reachable": "需代理(实:本仓常年经验)",
+   "desc": "隐私引擎,html/lite端点对脚本友好,Instant Answer API免登录即时答案",
+   "evidence": "知识库登记+本仓经验(实)",
+   "fit": "通用底座(英文)",
+   "name": "DuckDuckGo(含html/lite与Instant Answer API)",
+   "repo_or_site": "duckduckgo.com / html.duckduckgo.com / lite.duckduckgo.com / api.duckduckgo.com"
+  },
+  {
+   "access": "免登录网页(强反爬)",
+   "cn_reachable": "不稳定(判)",
+   "desc": "俄语区第一引擎,图片与俄语资料强,反爬严",
+   "evidence": "知识库登记(未实测)",
+   "fit": "通用底座(俄语/图片)",
+   "name": "Yandex",
+   "repo_or_site": "yandex.com"
+  },
+  {
+   "access": "浏览器(强反爬)",
+   "cn_reachable": "需代理(判)",
+   "desc": "Google结果匿名代理,仅浏览器使用",
+   "evidence": "知识库登记(未实测)",
+   "fit": "通用底座(Google旁路,人工)",
+   "name": "Startpage",
+   "repo_or_site": "startpage.com"
+  },
+  {
+   "access": "免登录网页(API仅对合作伙伴)",
+   "cn_reachable": "需代理(判)",
+   "desc": "法国引擎,欧洲合规视角,公共API不开放",
+   "evidence": "知识库登记(未实测)",
+   "fit": "通用底座(欧洲,人工)",
+   "name": "Qwant",
+   "repo_or_site": "qwant.com"
+  },
+  {
+   "access": "免登录网页",
+   "cn_reachable": "不稳定(判)",
+   "desc": "Bing生态环保主题引擎,无独立API",
+   "evidence": "知识库登记(未实测)",
+   "fit": "通用底座(备用)",
+   "name": "Ecosia",
+   "repo_or_site": "ecosia.org"
+  },
+  {
+   "access": "免登录网页",
+   "cn_reachable": "需代理(判)",
+   "desc": "瑞士匿名家庭友好引擎(Bing系)",
+   "evidence": "知识库登记(未实测)",
+   "fit": "通用底座(备用)",
+   "name": "Swisscows",
+   "repo_or_site": "swisscows.com"
+  },
+  {
+   "access": "免登录网页；API需key(有免费层,额度以官网为准)",
+   "cn_reachable": "不稳定(判)",
+   "desc": "自建独立索引的挑战者引擎,网页+官方API双形态,LLM社区常用替代",
+   "evidence": "官方文档口径(未复测)",
+   "fit": "通用底座+新闻舆情",
+   "name": "Brave Search(网页+API)",
+   "repo_or_site": "search.brave.com / brave.com/search/api"
+  },
+  {
+   "access": "免登录网页",
+   "cn_reachable": "需代理(判)",
+   "desc": "去中心化节点搜索,代币激励",
+   "evidence": "知识库登记(未实测)",
+   "fit": "通用底座(备用)",
+   "name": "Presearch",
+   "repo_or_site": "presearch.com"
+  },
+  {
+   "access": "免登录网页(可HTTP复刻;无公开通用搜索API)",
+   "cn_reachable": "直连(实:本仓常年经验)",
+   "desc": "中文第一引擎,标准/定额/造价中文资料主查口",
+   "evidence": "本仓在役经验(实)",
+   "fit": "标准定额造价+项目数据+新闻舆情(中文主链)",
+   "name": "百度",
+   "repo_or_site": "baidu.com"
+  },
+  {
+   "access": "免登录网页(微信垂直已复刻API化)",
+   "cn_reachable": "直连(实)",
+   "desc": "腾讯系引擎,weixin.sogou.com独占微信公众号文章检索——产线舆情独家源",
+   "evidence": "本仓在役(实):replica/sogou_weixin_api.py全绿",
+   "fit": "新闻舆情(微信公众号独家)+中文通用",
+   "name": "搜狗(含微信垂直)",
+   "repo_or_site": "sogou.com / weixin.sogou.com"
+  },
+  {
+   "access": "免登录网页",
+   "cn_reachable": "直连(实:本仓常年经验)",
+   "desc": "国产第二梯队引擎,页面免登录,内置AI搜索模式",
+   "evidence": "本仓在役经验(实)",
+   "fit": "中文通用+新闻舆情",
+   "name": "360搜索(含360AI搜索)",
+   "repo_or_site": "so.com"
+  },
+  {
+   "access": "免登录网页",
+   "cn_reachable": "直连(实:本仓常年经验)",
+   "desc": "字节系资讯检索,行业舆情与资讯覆盖强",
+   "evidence": "本仓在役经验(实)",
+   "fit": "新闻舆情(中文资讯)",
+   "name": "头条搜索",
+   "repo_or_site": "so.toutiao.com"
+  },
+  {
+   "access": "免登录网页(部分深度功能需登录)",
+   "cn_reachable": "直连(实)",
+   "desc": "国产AI深度搜索领跑者,学术与研报检索质量高,本仓已有复刻件与上传技能",
+   "evidence": "本仓在役(实):1024复刻件+metaso-upload技能",
+   "fit": "学术专利+新闻舆情+研报素材(中文AI搜索主力)",
+   "name": "秘塔AI搜索(metaso)",
+   "repo_or_site": "metaso.cn"
+  },
+  {
+   "access": "免登录网页",
+   "cn_reachable": "直连(判)",
+   "desc": "昆仑万维AI搜索,中文长文研读",
+   "evidence": "知识库登记(未实测)",
+   "fit": "新闻舆情+研报素材",
+   "name": "天工AI搜索",
+   "repo_or_site": "tiangong.cn"
+  },
+  {
+   "access": "免登录网页",
+   "cn_reachable": "直连(判;站点状态需复核)",
+   "desc": "知识图谱式中文搜索引擎,自动抽取实体关系,工程实体关系挖掘独特,状态需复核",
+   "evidence": "知识库登记(未实测)",
+   "fit": "项目数据(实体关系)+中文长尾",
+   "name": "Magi",
+   "repo_or_site": "magi.com"
+  },
+  {
+   "access": "需key(小额免费配额,以官方文档为准)",
+   "cn_reachable": "需代理(判)",
+   "desc": "官方可编程搜索引擎JSON API,适合定向站内/站点集检索",
+   "evidence": "官方文档口径(未复测)",
+   "fit": "项目数据(定向站点深挖)",
+   "name": "Google Programmable Search Engine JSON API",
+   "repo_or_site": "developers.google.com/custom-search"
+  },
+  {
+   "access": "需key(注册赠额度,以官网为准)",
+   "cn_reachable": "不稳定(判)",
+   "desc": "Google SERP API,LLM社区最常用SERP源之一,价格低",
+   "evidence": "官方文档口径(未复测)",
+   "fit": "通用底座(Google结果API化)",
+   "name": "Serper.dev",
+   "repo_or_site": "serper.dev"
+  },
+  {
+   "access": "需key(有免费层,以官网为准)",
+   "cn_reachable": "不稳定(判)",
+   "desc": "多引擎SERP API覆盖最广(Google/ Scholar/新闻/地图等)",
+   "evidence": "官方文档口径(未复测)",
+   "fit": "学术专利+新闻舆情+项目数据",
+   "name": "SerpAPI",
+   "repo_or_site": "serpapi.com"
+  },
+  {
+   "access": "需key(有免费层,以官网为准)",
+   "cn_reachable": "不稳定(判)",
+   "desc": "SERP API新锐,引擎覆盖广,价格竞争",
+   "evidence": "官方文档口径(未复测)",
+   "fit": "通用底座(SERP API化)",
+   "name": "SearchApi.io",
+   "repo_or_site": "searchapi.io"
+  },
+  {
+   "access": "需key(有免费层,以官网为准)",
+   "cn_reachable": "不稳定(判)",
+   "desc": "为LLM设计的检索API,单调用返回整理好的上下文,深度调研主力件",
+   "evidence": "官方文档口径(未复测)",
+   "fit": "通用底座(AI产线检索腿)",
+   "name": "Tavily",
+   "repo_or_site": "tavily.com(github.com/tavily-ai/tavily-python)"
+  },
+  {
+   "access": "需key(有免费层,以官网为准)",
+   "cn_reachable": "不稳定(判)",
+   "desc": "语义/神经检索API,相似页扩展与找相似公司/相似工程强",
+   "evidence": "官方文档口径(未复测)",
+   "fit": "通用底座(语义检索腿)",
+   "name": "Exa",
+   "repo_or_site": "exa.ai"
+  },
+  {
+   "access": "需key(计费)",
+   "cn_reachable": "需代理(判)",
+   "desc": "带联网检索的LLM API(sonar系),深度研究模式可产出综述初稿",
+   "evidence": "官方文档口径(未复测)",
+   "fit": "新闻舆情+学术专利(AI综述腿)",
+   "name": "Perplexity Sonar API",
+   "repo_or_site": "docs.perplexity.ai"
+  },
+  {
+   "access": "需key(计费/试用)",
+   "cn_reachable": "需代理(判)",
+   "desc": "AI检索API,企业研究场景套餐",
+   "evidence": "官方文档口径(未复测)",
+   "fit": "通用底座(AI产线,备用)",
+   "name": "You.com API",
+   "repo_or_site": "you.com"
+  },
+  {
+   "access": "需订阅(会员可用API)",
+   "cn_reachable": "需代理(判)",
+   "desc": "订阅制无广告高质量引擎,小众深度结果质量突出",
+   "evidence": "官方文档口径(未复测)",
+   "fit": "通用底座(高质量付费补充)",
+   "name": "Kagi",
+   "repo_or_site": "kagi.com"
+  },
+  {
+   "access": "免登录网页",
+   "cn_reachable": "需代理(判)",
+   "desc": "开发者向AI搜索,工程技术调研问答强",
+   "evidence": "知识库登记(未实测)",
+   "fit": "工程技术问答(标准/定额实务旁证)",
+   "name": "Phind",
+   "repo_or_site": "phind.com"
+  },
+  {
+   "access": "免登录API",
+   "cn_reachable": "需代理(镜像站可直连)",
+   "desc": "多语言百科全文检索API,概念/标准背景快速查证",
+   "evidence": "知识库登记(未实测)",
+   "fit": "通用底座(概念背景)",
+   "name": "Wikipedia API(中英等多语言)",
+   "repo_or_site": "zh.wikipedia.org/w/api.php 等"
+  },
+  {
+   "access": "免登录API",
+   "cn_reachable": "需代理(判)",
+   "desc": "结构化知识图谱查询端点,可拉取企业/工程实体的属性与关系",
+   "evidence": "知识库登记(未实测)",
+   "fit": "项目数据(企业/工程实体结构化)",
+   "name": "Wikidata SPARQL",
+   "repo_or_site": "query.wikidata.org"
+  },
+  {
+   "access": "免登录网页(基础查询)/API需key",
+   "cn_reachable": "需代理(判)",
+   "desc": "知识计算引擎,单位换算/工程计算/数据比较,定额与计量旁证工具",
+   "evidence": "知识库登记(未实测)",
+   "fit": "工程计算辅助(定额/单位换算旁证)",
+   "name": "Wolfram Alpha",
+   "repo_or_site": "wolframalpha.com"
+  },
+  {
+   "access": "免登录API",
+   "cn_reachable": "需代理(判)",
+   "desc": "Hacker News全文检索免登录API,国际技术舆情一手源",
+   "evidence": "知识库登记(未实测)",
+   "fit": "新闻舆情(国际技术圈)",
+   "name": "HN Algolia API",
+   "repo_or_site": "hn.algolia.com/api"
+  },
+  {
+   "access": "免登录API(有匿名配额;key免费提额)",
+   "cn_reachable": "需代理(判)",
+   "desc": "Stack Overflow等全站系统一API,工程实务问答检索",
+   "evidence": "知识库登记(未实测)",
+   "fit": "工程技术问答(标准/造价/施工实务)",
+   "name": "StackExchange API(含Stack Overflow)",
+   "repo_or_site": "api.stackexchange.com"
+  },
+  {
+   "access": "免登录API(限流严;出口敏感)",
+   "cn_reachable": "需代理+多出口被拒(实:本仓10-25实测直连000/7895出口403)",
+   "desc": "Reddit站内搜索JSON端点,行业一线讨论源,但反自动化趋严需谨慎配置",
+   "evidence": "本仓实测(实):git@9844dee97全出口拒记录",
+   "fit": "新闻舆情(国际行业一线口碑)",
+   "name": "Reddit搜索JSON",
+   "repo_or_site": "reddit.com/search.json"
+  },
+  {
+   "access": "免登录API(RSS)",
+   "cn_reachable": "需代理(判)",
+   "desc": "按关键词的免登录新闻RSS,中英文皆可,舆情监控廉价主干",
+   "evidence": "知识库登记(未实测)",
+   "fit": "新闻舆情(关键词监控)",
+   "name": "Google News RSS",
+   "repo_or_site": "news.google.com/rss/search?q=关键词"
+  },
+  {
+   "access": "免登录API(RSS)",
+   "cn_reachable": "直连(cn.bing,判)",
+   "desc": "必应新闻RSS,免登录,国内cn.bing口径可直连",
+   "evidence": "知识库登记(未实测)",
+   "fit": "新闻舆情(中文+国际)",
+   "name": "Bing News RSS",
+   "repo_or_site": "bing.com/news/search?q=关键词&format=RSS"
+  },
+  {
+   "access": "免登录网页",
+   "cn_reachable": "直连(实:本仓常年经验)",
+   "desc": "中文新闻聚合检索,工程行业中文舆情主口之一",
+   "evidence": "本仓在役经验(实)",
+   "fit": "新闻舆情(中文)",
+   "name": "百度新闻",
+   "repo_or_site": "news.baidu.com"
+  },
+  {
+   "access": "免登录API",
+   "cn_reachable": "不稳定(判)",
+   "desc": "全球新闻事件库免登录全文检索API,按查询出全球报道列表,宏观舆情利器",
+   "evidence": "知识库登记(未实测,本轮通道死未复测)",
+   "fit": "新闻舆情(全球工程新闻宏观)",
+   "name": "GDELT DOC 2.0 API",
+   "repo_or_site": "api.gdeltproject.org/api/v2/doc/doc"
+  },
+  {
+   "access": "免登录网页/非官方pytrends库",
+   "cn_reachable": "需代理(判)",
+   "desc": "搜索热度趋势,行业关注度的量化旁证",
+   "evidence": "知识库登记(未实测)",
+   "fit": "新闻舆情(热度趋势量化)",
+   "name": "Google Trends",
+   "repo_or_site": "trends.google.com"
+  },
+  {
+   "access": "浏览器(需登录)",
+   "cn_reachable": "直连(判)",
+   "desc": "中文搜索热度指数,国内行业关注度量化,需登录",
+   "evidence": "知识库登记(未实测)",
+   "fit": "新闻舆情(中文热度量化)",
+   "name": "百度指数",
+   "repo_or_site": "index.baidu.com"
+  },
+  {
+   "access": "免登录网页；研究API需key(免费申请)",
+   "cn_reachable": "需代理(判)",
+   "desc": "媒介报道研究平台,媒体叙事与话题量化分析",
+   "evidence": "知识库登记(未实测)",
+   "fit": "新闻舆情(媒介研究)",
+   "name": "Media Cloud",
+   "repo_or_site": "mediacloud.org"
+  },
+  {
+   "access": "免登录API",
+   "cn_reachable": "需代理(判)",
+   "desc": "URL历史存档索引API,找回已删改页面与工程网页存证",
+   "evidence": "知识库登记(未实测)",
+   "fit": "项目数据(网页存证/历史版本)",
+   "name": "Wayback Machine CDX API",
+   "repo_or_site": "web.archive.org/cdx/search/cdx"
+  },
+  {
+   "access": "免登录网页/子库检索API",
+   "cn_reachable": "需代理(实:本仓常年经验)",
+   "desc": "互联网存档库,含文本/学术(Scholar)/图像子库",
+   "evidence": "本仓在役经验(实)",
+   "fit": "项目数据(存档)+学术专利(存档学术)",
+   "name": "Internet Archive",
+   "repo_or_site": "archive.org"
+  },
+  {
+   "access": "数据集+免登录索引API",
+   "cn_reachable": "需代理(判)",
+   "desc": "海量网页爬取开放数据集(S3)+索引服务器API,自建语料与回溯检索用",
+   "evidence": "知识库登记(未实测)",
+   "fit": "数据集(网页语料)",
+   "name": "Common Crawl",
+   "repo_or_site": "commoncrawl.org / index.commoncrawl.org"
+  },
+  {
+   "access": "免登录API(限速;可选key提额)",
+   "cn_reachable": "需代理(判)",
+   "desc": "CC授权图片/音频/视频检索API,报告配图合规来源",
+   "evidence": "知识库登记(未实测)",
+   "fit": "数据集(合规配图素材)",
+   "name": "Openverse",
+   "repo_or_site": "api.openverse.org / openverse.org"
+  },
+  {
+   "access": "浏览器",
+   "cn_reachable": "需代理(判)",
+   "desc": "数据集垂直搜索引擎(浏览器),找公开数据集",
+   "evidence": "知识库登记(未实测)",
+   "fit": "数据集(发现)",
+   "name": "Google Dataset Search",
+   "repo_or_site": "datasetsearch.research.google.com"
+  },
+  {
+   "access": "免登录API(限速)",
+   "cn_reachable": "不稳定；hf-mirror.com镜像可直连(判)",
+   "desc": "数据集/模型枢纽检索API,工程数据集与行业模型发现",
+   "evidence": "知识库登记(未实测)",
+   "fit": "数据集(工程数据集/模型)",
+   "name": "HuggingFace Hub API",
+   "repo_or_site": "huggingface.co/api(镜像hf-mirror.com)"
+  },
+  {
+   "access": "需key(免费账号)",
+   "cn_reachable": "不稳定(判)",
+   "desc": "数据科学竞赛+数据集库,API检索下载,工程/造价公开数据集池",
+   "evidence": "知识库登记(未实测)",
+   "fit": "数据集(行业数据集)",
+   "name": "Kaggle",
+   "repo_or_site": "kaggle.com/api"
+  },
+  {
+   "access": "自托管/公共实例",
+   "cn_reachable": "公共实例需代理(判)；自托管本地",
+   "desc": "万物皆RSS开源路由器,自托管后可把任意垂直站变成监控源",
+   "evidence": "知识库登记(未实测)",
+   "fit": "新闻舆情(垂直站监控基础设施)",
+   "name": "RSSHub",
+   "repo_or_site": "github.com/DIYgod/RSSHub"
+  },
+  {
+   "access": "数据集/源码+在线demo",
+   "cn_reachable": "demo需代理(判)",
+   "desc": "检索结果自动聚类开源组件,调研资料组织与去重辅助",
+   "evidence": "知识库登记(未实测)",
+   "fit": "调研结果组织(辅助件)",
+   "name": "Carrot2",
+   "repo_or_site": "github.com/carrot2/carrot2 / carrot2.org"
+  },
+  {
+   "access": "免登录API(可选mailto进礼貌池)",
+   "cn_reachable": "直连可达(判)",
+   "desc": "全球学术作品开放图谱API,免登录,工程文献检索主力免费源之一",
+   "evidence": "官方文档口径(未复测)",
+   "fit": "学术专利(工程文献主力)",
+   "name": "OpenAlex",
+   "repo_or_site": "openalex.org / api.openalex.org"
+  },
+  {
+   "access": "免登录API",
+   "cn_reachable": "直连可达(判)",
+   "desc": "DOI注册元数据API免登录,文献账目与引文核对",
+   "evidence": "知识库登记(未实测)",
+   "fit": "学术专利(文献元数据核对)",
+   "name": "Crossref API",
+   "repo_or_site": "api.crossref.org"
+  },
+  {
+   "access": "免登录API(限速;免费key提额)",
+   "cn_reachable": "需代理(判)",
+   "desc": "AI驱动的学术检索API,语义检索与引文图谱强",
+   "evidence": "知识库登记(未实测)",
+   "fit": "学术专利(语义文献检索)",
+   "name": "Semantic Scholar API",
+   "repo_or_site": "api.semanticscholar.org"
+  },
+  {
+   "access": "需key(免费)",
+   "cn_reachable": "需代理(判)",
+   "desc": "全球开放获取论文聚合,免费key即可批量取全文元数据",
+   "evidence": "知识库登记(未实测)",
+   "fit": "学术专利(开放获取全文)",
+   "name": "CORE API",
+   "repo_or_site": "core.ac.uk / api.core.ac.uk"
+  },
+  {
+   "access": "免登录网页;API需注册",
+   "cn_reachable": "直连可达(判)",
+   "desc": "比勒费尔德学术检索引擎,全球开放获取索引量最大之一",
+   "evidence": "知识库登记(未实测)",
+   "fit": "学术专利(开放获取)",
+   "name": "BASE",
+   "repo_or_site": "base-search.net"
+  },
+  {
+   "access": "浏览器(强反爬,禁批量)",
+   "cn_reachable": "需代理(实:本仓常年经验)",
+   "desc": "学术覆盖最强但强反爬,仅浏览器零星人工使用,禁批量自动化",
+   "evidence": "本仓在役经验(实)",
+   "fit": "学术专利(人工抽查链)",
+   "name": "Google Scholar",
+   "repo_or_site": "scholar.google.com"
+  },
+  {
+   "access": "免登录网页",
+   "cn_reachable": "直连(实:本仓常年经验)",
+   "desc": "中文学术检索,覆盖国内期刊/学位论文,免登录网页",
+   "evidence": "本仓在役经验(实)",
+   "fit": "学术专利(中文工程文献)",
+   "name": "百度学术",
+   "repo_or_site": "xueshu.baidu.com"
+  },
+  {
+   "access": "免登录网页",
+   "cn_reachable": "需代理(判)",
+   "desc": "论坛/社区聚合检索,行业口碑与一线抱怨长尾源",
+   "evidence": "知识库登记(未实测)",
+   "fit": "新闻舆情(论坛长尾)",
+   "name": "Boardreader",
+   "repo_or_site": "boardreader.com"
+  },
+  {
+   "access": "免登录网页",
+   "cn_reachable": "需代理(判)",
+   "desc": "跳过头部百万结果的深挖引擎,长尾独特视角",
+   "evidence": "知识库登记(未实测)",
+   "fit": "通用底座(长尾补充)",
+   "name": "MillionShort",
+   "repo_or_site": "millionshort.com"
+  },
+  {
+   "access": "需key(国内直连)",
+   "cn_reachable": "直连(实:本仓智谱生态在役)",
+   "desc": "智谱GLM配套联网检索工具API,与产线现有智谱账号体系无缝,中文检索质量好",
+   "evidence": "本仓在役(实):智谱双账号强制令在宪",
+   "fit": "新闻舆情+通用底座(AI检索腿,国产直连)",
+   "name": "智谱 web_search_pro",
+   "repo_or_site": "open.bigmodel.cn"
+  },
+  {
+   "access": "需key(国内直连)",
+   "cn_reachable": "直连(判)",
+   "desc": "火山方舟(豆包)联网搜索工具API,国产直连的AI检索腿",
+   "evidence": "官方文档口径(未复测)",
+   "fit": "新闻舆情+通用底座(AI检索腿,国产直连)",
+   "name": "火山方舟联网搜索(豆包)",
+   "repo_or_site": "volcengine.com(方舟)"
+  },
+  {
+   "access": "本仓技能(免登录URL模板)",
+   "cn_reachable": "直连(实)",
+   "desc": "本仓自有中文多引擎URL模板检索技能:必应中国/搜狗微信/知乎/头条/360免登录检索",
+   "evidence": "本仓在役(实):zh-search-pro技能",
+   "fit": "中文全链(标准/舆情/项目通用底座聚合)",
+   "name": "zh-search-pro(本仓技能资产)",
+   "repo_or_site": "E:/AI-Station(.claude/skills/zh-search-pro)"
+  }
+ ]
+}

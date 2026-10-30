@@ -1,0 +1,23 @@
+===== sweep_enterprise.json | lane=enterprise | count=56
+--method: "curl探活(直连→7895代理兜底,≤2请求/站)+gh api仓库核验+已有资产对照; 全部HTTP码为1025实测, 零手填"
+--notes: "用户令: 有益于调研工程企业的渠道尽最大可能收集齐(中国+国际双域)。方法: curl实测HTTP码(直连GET→7895代理兜底, 每站≤2请求)+gh api仓库核验+已有资产对照(逆向工程/xique-reverse,chinca-reverse,enr-reverse; channel_manifest court/govlist在役)。免费令执行: 含付费面条目17条保留免费面且access仅述免费路径(标注「免费面+付费面,仅用免费面」)(企查查/天眼查/爱企查/启信宝/OpenCorporates/Companies House增值面/千里马/建设通/比地/采招网/必联/剑鱼/TED增值面/中信保资信面/百年建筑/我的钢铁/水泥网); 纯付费无免费面=1条(邓白氏D&B)desc明标「纯付费-按令排除」不入使用册。A级(免登录)=6个纯免key API(SEC EDGAR双端点/世行项目API v2/USAspending/上交所query/深交所api/巨潮POST query)+1个免key POST检索端点(政采search)=7个免登录接口; 另Companies House/TED/SAM/UNGM为免费注册key面。主族分布(按fit首标签): 工商9、黑名单5、资质业绩7、招投标16、资本8、行业组织6、舆情5。探活异常如实记录: gsxt与glxy.mot直连代理双000(强反爬), adb.org代理403(WAF拒curl), ecaci.org.cn与fiec系000待浏览器复验, xypt.mwr 500波动, creditchina 412反爬, enr.com 403走chinca镜像链(复刻件在案), 世行API v3已死404改用v2。未注册任何账号、未爬任何大数据(铁律)。溯源件: _scripts/probe_enterprise.sh+probe_enterprise_results.tsv。"
+projects=56
+project keys: ['access', 'cn_reachable', 'desc', 'fit', 'name', 'repo_or_site', 'stars_or_evidence']
+
+===== sweep_paidfree.json | lane=paidfree_free_equiv | count=61
+--method: "官网探活urllib(直连→7895代理兜底, ≤2请求/站, 51站实测)+gh api星标核验(3仓)+channel_manifest 35渠对照标existing+sweep_datasets同日证据复用; 执行口径=免费平替+免费通道, 付费墙本体不破解; 覆盖率口径=字段域级(全等/拼合/延迟/部分/无), 数字由脚本从矩阵自算零手填"
+--proxy: "http://127.0.0.1:7895"
+--coverage_summary: {"paid_lib_families": 8, "named_paid_products": 21, "field_domains": 47, "levels": {"全等": 28, "无": 2, "部分": 9, "延迟": 2, "拼合": 6}, "全等率": 0.596, "免费可覆盖率(全等+拼合+延迟+部分)": 0.957, "硬缺口域数(无)": 2}
+projects=61
+project keys: ['access', 'cn_reach', 'evidence', 'existing', 'fit', 'name', 'one_liner', 'replaces', 'repo_or_site']
+
+===== sweep_searchengines.json | lane=sweep_searchengines（搜索引擎/元搜索/SERP API/免登录检索API族清扫路） | count=78
+--notes: "【通道实况】本清扫路三条实测通道全灭：①web-reader与web-search-prime均429(周/月限额尽,重置2026-10-26 15:20:27,与任务预警一致,勿再烧调用)；②WebFetch被企业安全域校验全拒(api.github.com/raw.githubusercontent.com/searx.space/api.gdeltproject.org/api.openalex.org无一放行)；③本会话无Bash/Write工具,gh CLI不可执行、JSON无法落盘。【数字纪律】因此全部条目按知识库登记产出：零星数、零具体免费配额数字,stars_or_evidence只用三档证据=知识库登记(未实测)/本仓在役(实)/官方文档口径(未复测)；cn_reachable除标(实)者外均为经验判断未实测。【落盘委托】E:/AI-Station/reforge_factory/channels_survey_2026/sweep_searchengines.json 请编排器落盘,本输出projects数组+本notes即完整文件内容(建议结构:{\"lane\":...,\"count\":78,\"projects\":[...],\"notes\":...})。【去重口径】Brave(网页+API)与DuckDuckGo(网页+html/lite+InstantAnswer)各并1条；Google系各产品(CSE/Scholar/Trends/NewsRSS/DatasetSearch)访问形态不同保留多条；searx原版与SearXNG为不同项目分开登记(原版维护停滞已注)。【超目标】78条≥本路军令40条,超额38条。【复测清单】10-26 15:20额度恢复后建议WebFetch逐点免登录API留实测证据:GDELT/OpenAlex/Crossref/HN Algolia/Wayback CDX/Openverse/ddgs；另需复核三个状态存疑件:Stract(疑似停摆)/Gigablast(源码陈旧)/Magi(状态不明)。【已知坑】Bing Web Search API已于2025年退役,勿按旧API登记；Reddit搜索JSON本仓10-25实测多出口403/000拒绝,配置时需谨慎；Google/Startpage强反爬只走浏览器零星用。【相邻路提示】OpenAlex/Crossref/S2/CORE/BASE/百度学术等学术检索件如与\"学术专利清扫路\"重复登记,建议以本路为API访问口径、彼路为内容口径合并。"
+projects=78
+project keys: ['access', 'cn_reachable', 'desc', 'evidence', 'fit', 'name', 'repo_or_site']
+
+===== sweep_osint_geo.json | lane=sweep_osint_geo | count=85
+--notes: "【诚实声明·数字零造假】本会话全部外网验证通道实测全阻，本清单为知识登记(领域公知的稳定公共资源)，零star数字/零限额数字/零可用性实测数据。通道故障证据: ①WebFetch对github.com/api.github.com/raw.githubusercontent.com/api.openalex.org/api.gdeltproject.org/earthquake.usgs.gov/r.jina.ai七域两轮+重试均报\"Unable to verify if domain is safe to fetch\"(其安全预检服务不可达); ②web_reader MCP报429周额度耗尽(重置2026-10-26 15:20:27); ③analyze_image MCP报500网络错误(thum.io截图法两试); ④WebSearch MCP额度死(任务简报载明); ⑤本子代理无Bash工具(ToolSearch五轮探针无果,gh CLI虽认证但不可调)。【落盘待办】本会话无文件写入工具，sweep_osint_geo.json未落盘；请orchestrator将本输出projects数组按{\"lane\":\"sweep_osint_geo\",\"count\":85,\"projects\":[...]}结构以UTF-8写入 E:/AI-Station/reforge_factory/channels_survey_2026/sweep_osint_geo.json。【构成】85条去重: 渠道发现6+政府门户14+地理空间基建21+工商招投标17+监测舆情12+学术专利标准8+行业情报7；工程研报五适用面全覆盖(标准定额造价: Eurostat/EIA/NIST/统计局; 项目数据: TED/SAM/世行PPI/ADB/ProZorro/UNGM等招投标族; 学术专利: OpenAlex/PATENTSCOPE/Lens/Espacenet; 新闻舆情: GDELT/EventRegistry/新闻API族; 数据集: OSM/Overture/哥白尼/CommonCrawl等)。【网络恢复后复核建议】gh api search/repositories逐一核GitHub仓(awesome-osint/osint_stuff/public-apis/awesome-public-datasets/GlobalMLBuildingFootprints等6条+star数回填stars_or_evidence); 抽验免key API活性(GDELT DOC/OpenAlex/USGS EQ/USAspending/ReliefWeb/EDGAR FTS/Overpass各1发); key类核对免费层现行限额；cn_reachable全部未实测待代理/直连双路实测回填。"
+projects=81
+project keys: ['access', 'cn_reachable', 'desc', 'fit', 'name', 'repo_or_site', 'stars_or_evidence']
+

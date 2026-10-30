@@ -1,0 +1,378 @@
+# unicode编码的nsis脚本
+Unicode true
+
+# 包含必要的头文件
+!include "MUI2.nsh"
+!include "nsDialogs.nsh"
+!include "LogicLib.nsh"
+!include "WinMessages.nsh"
+!include "FileFunc.nsh"
+!include "WinVer.nsh"
+!include "StdUtils.nsh"
+
+; 设置压缩选项
+SetCompressor /SOLID lzma
+SetCompressorDictSize 32
+
+# 基本信息定义
+!ifndef PRODUCT_NAME
+  !define PRODUCT_NAME "百度文库"
+!endif
+!ifndef PRODUCT_PUBLISHER
+  !define PRODUCT_PUBLISHER "百度在线网络技术（北京）有限公司"
+!endif
+!ifndef PRODUCT_WEB_SITE
+  !define PRODUCT_WEB_SITE "https://wenku.baidu.com"
+!endif
+!ifndef INSTALL_FILENAME
+  !define INSTALL_FILENAME "${PRODUCT_NAME}.exe"
+!endif
+!ifndef UNINSTALL_FILENAME
+  !define UNINSTALL_FILENAME "uninst.exe"
+!endif
+!ifndef PRODUCT_DIR_REGKEY
+  !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\${INSTALL_FILENAME}"
+!endif
+!ifndef PRODUCT_UNINST_KEY
+  !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
+!endif
+!ifndef PROTOCOLS_SCHEME
+  !define PROTOCOLS_SCHEME "wkpcclient"
+!endif
+
+# 界面颜色定义
+!define COLOR_BACKGROUND "F5F5F5"
+!define COLOR_TEXT "000000"
+!define COLOR_ACCENT "44B58F"
+
+# 界面布局常量
+!define MARGIN_X 20
+!define MARGIN_Y 15
+!define SECTION_SPACING 10
+
+# 初始化变量
+Var Dialog
+Var InstallPath
+Var CreateDesktopShortcut
+Var AutoStart
+Var UninstDialog
+Var RemoveUserData
+Var RemoveDesktopShortcut
+Var isUpdate
+Var oldVersion
+
+# MUI 现代界面定义
+!define MUI_ABORTWARNING
+!define MUI_UNABORTWARNING
+!define MUI_BGCOLOR "${COLOR_BACKGROUND}"
+!define MUI_TEXTCOLOR "${COLOR_TEXT}"
+
+# 检查 MUI_ICON 是否已定义
+!ifndef MUI_ICON
+  !define MUI_ICON "${PROJECT_DIR}/winBuild/installerIcon.ico"
+!endif
+!ifndef MUI_UNICON
+  !define MUI_UNICON "${PROJECT_DIR}/winBuild/uninstallerIcon.ico"
+!endif
+
+# 自定义页面
+Page custom InstallOptionsPage InstallOptionsLeave
+!insertmacro MUI_PAGE_INSTFILES
+
+# 卸载页面
+!define MUI_UNPAGE_CONFIRM
+UninstPage custom un.UninstallOptionsPage un.UninstallOptionsLeave
+!insertmacro MUI_UNPAGE_INSTFILES
+
+# 语言设置
+!insertmacro MUI_LANGUAGE "SimpChinese"
+
+; 安装程序信息
+Name "${PRODUCT_NAME}"
+OutFile "${PROJECT_DIR}/dist/wenku-Setup-${VERSION}.exe"
+InstallDir "$PROGRAMFILES\${PRODUCT_NAME}"
+ShowInstDetails show
+ShowUnInstDetails show
+
+Function .onInit
+    System::Call 'kernel32::CreateMutexA(i 0, i 0, t "WenkuInstaller") i .r1 ?e'
+    Pop $R0
+    StrCmp $R0 0 +3
+    MessageBox MB_OK|MB_ICONEXCLAMATION "安装程序已经在运行中"
+    Abort
+    
+    ; 检查是否已安装
+    ReadRegStr $R0 HKLM "${PRODUCT_UNINST_KEY}" "UninstallString"
+    StrCmp $R0 "" done
+    
+    ; 获取已安装版本
+    ReadRegStr $oldVersion HKLM "${PRODUCT_UNINST_KEY}" "DisplayVersion"
+    StrCpy $isUpdate "1"
+    MessageBox MB_OKCANCEL|MB_ICONINFORMATION "检测到已安装${PRODUCT_NAME}，版本为$oldVersion，是否继续安装？" IDOK continue
+    Abort
+    
+    continue:
+    ; 尝试关闭正在运行的程序
+    FindWindow $0 "" "${PRODUCT_NAME}"
+    IntCmp $0 0 done
+    MessageBox MB_OKCANCEL|MB_ICONINFORMATION "${PRODUCT_NAME}正在运行，点击确定关闭。" IDOK tryclose
+    Abort
+    
+    tryclose:
+    SendMessage $0 ${WM_CLOSE} 0 0
+    Sleep 2000
+    
+    done:
+    ; 设置默认安装路径
+    StrCpy $InstallPath "$PROGRAMFILES\${PRODUCT_NAME}"
+    
+    ; 初始化界面
+    InitPluginsDir
+    File /oname=$PLUGINSDIR\install_configpage.xml "${PROJECT_DIR}/winBuild/resources/install_configpage.xml"
+    
+    ; 创建系统字体
+    CreateFont $R1 "Microsoft YaHei UI" 9 400
+FunctionEnd
+
+Function InstallOptionsPage
+    nsDialogs::Create /NOUNLOAD 1018
+    Pop $Dialog
+    
+    ${If} $Dialog == error
+        Abort
+    ${EndIf}
+    
+    ; 创建现代化字体
+    CreateFont $R1 "Microsoft YaHei UI" 10 400
+    CreateFont $R2 "Microsoft YaHei UI" 12 700  ; 粗体字体用于标题
+    
+    ; 标题
+    ${NSD_CreateLabel} 0 0 100% 30 "选择安装选项"
+    Pop $R3
+    SetCtlColors $R3 "000000" "transparent"  ; 黑色文字，透明背景
+    SendMessage $R3 ${WM_SETFONT} $R2 0
+    
+    ; 安装路径组
+    ${NSD_CreateGroupBox} 0 40 100% 80 "安装位置"
+    Pop $R3
+    SendMessage $R3 ${WM_SETFONT} $R1 0
+    
+    ${NSD_CreateDirRequest} 10 65 70% 25 $InstallPath
+    Pop $R0
+    SetCtlColors $R0 "" "FFFFFF"  ; 白色背景
+    SendMessage $R0 ${WM_SETFONT} $R1 0
+    
+    ${NSD_CreateBrowseButton} 82% 65 15% 25 "浏览..."
+    Pop $R1
+    SendMessage $R1 ${WM_SETFONT} $R1 0
+    
+    ; 选项组
+    ${NSD_CreateGroupBox} 0 130 100% 100 "安装选项"
+    Pop $R3
+    SendMessage $R3 ${WM_SETFONT} $R1 0
+    
+    ; 创建桌面快捷方式选项
+    ${NSD_CreateCheckbox} 10 155 90% 20 "创建桌面快捷方式"
+    Pop $CreateDesktopShortcut
+    SetCtlColors $CreateDesktopShortcut "000000" "transparent"
+    SendMessage $CreateDesktopShortcut ${WM_SETFONT} $R1 0
+    ${NSD_Check} $CreateDesktopShortcut  ; 默认选中
+    StrCpy $0 1  ; 设置初始状态为选中
+    
+    ; 添加开机自启动选项
+    ${NSD_CreateCheckbox} 10 180 90% 20 "开机自动启动"
+    Pop $AutoStart
+    SetCtlColors $AutoStart "000000" "transparent"
+    SendMessage $AutoStart ${WM_SETFONT} $R1 0
+    
+    ; 添加浏览按钮事件处理
+    ${NSD_OnClick} $R1 OnBrowse
+    
+    ; 设置对话框背景色
+    SetCtlColors $Dialog "" "F5F5F5"  ; 浅灰色背景
+    
+    nsDialogs::Show
+FunctionEnd
+
+Function OnBrowse
+    ${NSD_GetText} $R0 $InstallPath
+    nsDialogs::SelectFolderDialog "选择安装目录" $InstallPath
+    Pop $0
+    ${If} $0 != error
+        StrCpy $InstallPath $0
+        ${NSD_SetText} $R0 $InstallPath
+    ${EndIf}
+
+    CreateDirectory "$INSTDIR"
+    ; # 将 ${EXENAME} 的值复制到另一个变量
+    StrCpy $0 $EXEPATH
+
+    ; # 提取文件名
+    ${GetFileName} $0 $0
+    FileOpen $1 "$INSTDIR\cInfo.txt" w
+    FileWrite $1 "$0"
+    FileClose $1
+
+FunctionEnd
+
+Function InstallOptionsLeave
+    ${NSD_GetText} $R0 $InstallPath
+    ${NSD_GetState} $CreateDesktopShortcut $0
+    ${NSD_GetState} $AutoStart $1
+    
+    ; 验证安装路径
+    ${If} $InstallPath == ""
+        MessageBox MB_ICONEXCLAMATION|MB_OK "请选择安装路径"
+        Abort
+    ${EndIf}
+    
+    ; 更新 INSTDIR
+    StrCpy $INSTDIR $InstallPath
+    
+    ; 保存快捷方式选项状态
+    StrCpy $CreateDesktopShortcut $0
+FunctionEnd
+
+Section "MainSection" SEC01
+    SetOutPath "$INSTDIR"
+    SetOverwrite on
+    
+    DetailPrint "开始复制程序文件..."
+    File /r "${PROJECT_DIR}/dist/win-unpacked/*.*"
+    DetailPrint "程序文件复制完成"
+    
+    ; 验证可执行文件是否存在
+    IfFileExists "$INSTDIR\${INSTALL_FILENAME}" file_exists file_not_exists
+    file_not_exists:
+        DetailPrint "错误: 未找到主程序文件"
+        MessageBox MB_OK|MB_ICONEXCLAMATION "安装文件不完整，请重新下载安装包"
+        Abort
+    file_exists:
+        DetailPrint "主程序文件检查通过"
+    
+    ; 创建开始菜单快捷方式
+    DetailPrint "创建开始菜单快捷方式..."
+    CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
+    CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\${INSTALL_FILENAME}"
+    DetailPrint "开始菜单快捷方式创建完成"
+    
+    ; 创建桌面快捷方式
+    DetailPrint "桌面快捷方式选项状态: $CreateDesktopShortcut"
+    
+    ${If} $CreateDesktopShortcut == 1
+        DetailPrint "正在创建桌面快捷方式..."
+        ClearErrors
+        CreateShortCut "$DESKTOP\${PRODUCT_NAME}.lnk" "$INSTDIR\${INSTALL_FILENAME}"
+        
+        ${If} ${FileExists} "$DESKTOP\${PRODUCT_NAME}.lnk"
+            DetailPrint "桌面快捷方式创建成功"
+        ${Else}
+            DetailPrint "警告: 桌面快捷方式创建失败"
+            MessageBox MB_OK|MB_ICONEXCLAMATION "无法创建桌面快捷方式，请检查权限设置"
+        ${EndIf}
+    ${Else}
+        DetailPrint "用户未选择创建桌面快捷方式"
+    ${EndIf}
+    
+    ; 设置开机自启动
+    ${NSD_GetState} $AutoStart $0
+    ${If} $0 == 1
+        WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "${PRODUCT_NAME}" "$INSTDIR\${INSTALL_FILENAME}"
+        DetailPrint "已添加到开机自启动"
+    ${EndIf}
+    
+    ; 写入注册表信息
+    DetailPrint "写入注册表信息..."
+    WriteUninstaller "$INSTDIR\${UNINSTALL_FILENAME}"
+    WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" "" "$INSTDIR\${INSTALL_FILENAME}"
+    WriteRegStr HKLM "${PRODUCT_UNINST_KEY}" "DisplayName" "${PRODUCT_NAME}"
+    WriteRegStr HKLM "${PRODUCT_UNINST_KEY}" "UninstallString" "$INSTDIR\${UNINSTALL_FILENAME}"
+    WriteRegStr HKLM "${PRODUCT_UNINST_KEY}" "DisplayIcon" "$INSTDIR\${INSTALL_FILENAME}"
+    WriteRegStr HKLM "${PRODUCT_UNINST_KEY}" "DisplayVersion" "${VERSION}"
+    WriteRegStr HKLM "${PRODUCT_UNINST_KEY}" "URLInfoAbout" "${PRODUCT_WEB_SITE}"
+    WriteRegStr HKLM "${PRODUCT_UNINST_KEY}" "Publisher" "${PRODUCT_PUBLISHER}"
+    
+    ; 注册协议
+    WriteRegStr HKCR "${PROTOCOLS_SCHEME}" "" "URL:${PRODUCT_NAME} Protocol"
+    WriteRegStr HKCR "${PROTOCOLS_SCHEME}" "URL Protocol" ""
+    WriteRegStr HKCR "${PROTOCOLS_SCHEME}\DefaultIcon" "" "$INSTDIR\${INSTALL_FILENAME}"
+    WriteRegStr HKCR "${PROTOCOLS_SCHEME}\shell\open\command" "" '"$INSTDIR\${INSTALL_FILENAME}" "%1"'
+    
+    DetailPrint "安装完成"
+SectionEnd
+
+# 卸载选项页面
+Function un.UninstallOptionsPage
+    nsDialogs::Create 1018
+    Pop $UninstDialog
+    
+    ${If} $UninstDialog == error
+        Abort
+    ${EndIf}
+    
+    ; 创建系统字体
+    CreateFont $R1 "Microsoft YaHei UI" 9 400
+    
+    ; 标题
+    ${NSD_CreateLabel} 0 0 100% 24 "请选择卸载选项："
+    Pop $R0
+    SendMessage $R0 ${WM_SETFONT} $R1 0
+    
+    ; 删除用户数据选项
+    ${NSD_CreateCheckbox} 0 30 100% 20 "删除用户数据和设置"
+    Pop $RemoveUserData
+    SendMessage $RemoveUserData ${WM_SETFONT} $R1 0
+    
+    ; 删除桌面快捷方式选项
+    ${NSD_CreateCheckbox} 0 60 100% 20 "删除桌面快捷方式"
+    Pop $RemoveDesktopShortcut
+    SendMessage $RemoveDesktopShortcut ${WM_SETFONT} $R1 0
+    ${NSD_Check} $RemoveDesktopShortcut
+    
+    nsDialogs::Show
+FunctionEnd
+
+Function un.onInit
+    ; 初始化卸载选项
+    StrCpy $RemoveUserData ${BST_UNCHECKED}
+    StrCpy $RemoveDesktopShortcut ${BST_CHECKED}
+FunctionEnd
+
+Function un.UninstallOptionsLeave
+    ${NSD_GetState} $RemoveUserData $0
+    ${NSD_GetState} $RemoveDesktopShortcut $1
+    
+    ; 保存选项状态
+    StrCpy $RemoveUserData $0
+    StrCpy $RemoveDesktopShortcut $1
+FunctionEnd
+
+# 卸载区段
+Section "Uninstall"
+    ; 删除程序文件和目录
+    Delete "$INSTDIR\${INSTALL_FILENAME}"
+    RMDir /r "$INSTDIR"
+    
+    ; 删除开始菜单快捷方式
+    Delete "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk"
+    RMDir "$SMPROGRAMS\${PRODUCT_NAME}"
+    
+    ; 根据用户选择删除桌面快捷方式
+    ${If} $RemoveDesktopShortcut == 1
+        Delete "$DESKTOP\${PRODUCT_NAME}.lnk"
+    ${EndIf}
+    
+    ; 根据用户选择删除用户数据
+    ${If} $RemoveUserData == 1
+        RMDir /r "$LOCALAPPDATA\${PRODUCT_NAME}"
+        DeleteRegKey HKCU "Software\${PRODUCT_NAME}"
+    ${EndIf}
+    
+    ; 删除注册表项
+    DeleteRegKey HKLM "${PRODUCT_UNINST_KEY}"
+    DeleteRegKey HKLM "${PRODUCT_DIR_REGKEY}"
+    DeleteRegKey HKCR "${PROTOCOLS_SCHEME}"
+    
+    ; 删除开机自启动
+    DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "${PRODUCT_NAME}"
+SectionEnd

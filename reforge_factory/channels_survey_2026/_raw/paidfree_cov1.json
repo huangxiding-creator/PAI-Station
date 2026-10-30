@@ -1,0 +1,236 @@
+[
+ {
+  "paid_lib": "Wind/同花顺iFinD/东方财富Choice(金融终端)",
+  "domains": [
+   {
+    "domain": "A股/港美股/期货行情(日频与实时快照)",
+    "replacement": [
+     "AKShare",
+     "新浪行情接口",
+     "腾讯行情接口",
+     "上期所/大商所/郑商所/中金所日行情"
+    ],
+    "level": "全等",
+    "note": "日线OHLC与秒级快照免费多路; 历史复权因子akshare免费拼合"
+   },
+   {
+    "domain": "Level-2逐笔委托/毫秒tick流",
+    "replacement": [],
+    "level": "无",
+    "note": "交易所Level-2本身收费授权, 免费无等价; 残缺口#1"
+   },
+   {
+    "domain": "财务三表/股本股东",
+    "replacement": [
+     "巨潮公告全文(财报原文)",
+     "东方财富数据中心免费面",
+     "EDGAR XBRL(美股)"
+    ],
+    "level": "全等",
+    "note": "披露口径一手全等"
+   },
+   {
+    "domain": "公告/信披检索",
+    "replacement": [
+     "巨潮资讯网",
+     "沪深北交易所披露页",
+     "港交所披露易",
+     "SEC EDGAR全文检索"
+    ],
+    "level": "全等",
+    "note": "法定信披平台=母源本体"
+   },
+   {
+    "domain": "中国宏观指标",
+    "replacement": [
+     "国家统计局·国家数据",
+     "中国人民银行",
+     "FRED(全球序列)"
+    ],
+    "level": "全等",
+    "note": "官方一手"
+   },
+   {
+    "domain": "人民币汇率中间价/LPR/SHIBOR",
+    "replacement": [
+     "中国货币网(CFETS)"
+    ],
+    "level": "全等",
+    "note": "定盘机构官网=母源"
+   },
+   {
+    "domain": "债券估值/收益率曲线(深历史全库)",
+    "replacement": [
+     "中债公开面(曲线+估值文件)",
+     "交易所债券行情"
+    ],
+    "level": "部分",
+    "note": "公开面覆盖关键期限与主要券种, 全字段深历史付费"
+   },
+   {
+    "domain": "期货行情与持仓排名(境内四所)",
+    "replacement": [
+     "上期所",
+     "大商所",
+     "郑商所",
+     "中金所日频数据文件"
+    ],
+    "level": "全等",
+    "note": "日频一手全等; 盘中tick见残缺口#1"
+   },
+   {
+    "domain": "LME等境外交易所实时盘口",
+    "replacement": [
+     "LME官网延迟行情"
+    ],
+    "level": "延迟",
+    "note": "无全等平替, 约10-15分钟延迟免费替代"
+   }
+  ]
+ },
+ {
+  "paid_lib": "CNKI/万方/维普(文献全库)",
+  "domains": [
+   {
+    "domain": "中文社科期刊全文",
+    "replacement": [
+     "NCPSSD"
+    ],
+    "level": "全等",
+    "note": "全刊免费下载(免费注册)"
+   },
+   {
+    "domain": "中文理工期刊全文",
+    "replacement": [
+     "CNKI免费面+NCPSSD交叉+图书馆联盟传递"
+    ],
+    "level": "拼合",
+    "note": "多源拼合可覆盖大部分; 单一免费库不全等"
+   },
+   {
+    "domain": "学位论文全文",
+    "replacement": [
+     "全国图书馆参考咨询联盟(部分传递)"
+    ],
+    "level": "部分",
+    "note": "残缺口#3: 大部分学位论文无免费全文"
+   },
+   {
+    "domain": "外文OA全文",
+    "replacement": [
+     "OpenAIRE",
+     "CORE",
+     "arXiv",
+     "PMC"
+    ],
+    "level": "全等",
+    "note": "OA域免费全等"
+   },
+   {
+    "domain": "外文付费墙全文",
+    "replacement": [
+     "Unpaywall定位",
+     "SSRN工作论文",
+     "馆际互递(NSTL/联盟)"
+    ],
+    "level": "拼合",
+    "note": "定位+预印本+传递三路拼合"
+   },
+   {
+    "domain": "政府文献/公报",
+    "replacement": [
+     "中国政府公报+地方公报门户"
+    ],
+    "level": "全等",
+    "note": "一手全等"
+   },
+   {
+    "domain": "跨库发现层(题录检索)",
+    "replacement": [
+     "百度学术",
+     "OpenAlex(named在册)"
+    ],
+    "level": "全等",
+    "note": "发现层免费; 全文另配"
+   }
+  ]
+ },
+ {
+  "paid_lib": "慧博/艾瑞/易观/头豹/沙利文(研报库)",
+  "domains": [
+   {
+    "domain": "券商研报全文",
+    "replacement": [
+     "洞见研报(在役)",
+     "券商公众号免费推送(搜狗微信通道)"
+    ],
+    "level": "拼合",
+    "note": "聚合面+首发流双路"
+   },
+   {
+    "domain": "行业规模/市占率数据",
+    "replacement": [
+     "招股书/年报行业章节(巨潮+EDGAR)",
+     "行业协会年报公开版"
+    ],
+    "level": "拼合",
+    "note": "一手披露拼合, 权威口径常优于二手研报"
+   },
+   {
+    "domain": "行业统计年鉴",
+    "replacement": [
+     "行业协会年度报告公开版(chinca代表)"
+    ],
+    "level": "全等",
+    "note": "官方口径一手"
+   },
+   {
+    "domain": "自家免费面",
+    "replacement": [
+     "艾瑞免费报告面"
+    ],
+    "level": "部分",
+    "note": "付费库的免费子集"
+   }
+  ]
+ },
+ {
+  "paid_lib": "中信保国别风险/买方资信",
+  "domains": [
+   {
+    "domain": "国别投资经营指南",
+    "replacement": [
+     "商务部国别指南(已有)"
+    ],
+    "level": "全等",
+    "note": "官方全库免费"
+   },
+   {
+    "domain": "国别风险评级",
+    "replacement": [
+     "中国信保公开面",
+     "MIGA出版物"
+    ],
+    "level": "拼合",
+    "note": "公开面评级口径; 深度版付费"
+   },
+   {
+    "domain": "投资政策/政治风险追踪",
+    "replacement": [
+     "UNCTAD IPM",
+     "MIGA"
+    ],
+    "level": "全等",
+    "note": "国际组织一手免费"
+   },
+   {
+    "domain": "海外买方企业资信深度报告",
+    "replacement": [
+     "gsxt+四库一平台+OpenCorporates拼合"
+    ],
+    "level": "部分",
+    "note": "登记口径全等可拼; 信用评分模型无免费等价, 残缺口#5"
+   }
+  ]
+ }
+]

@@ -2,10 +2,10 @@
  "axis": "D",
  "sensor": "dimension_matrix",
  "campaign": "EPC-TOP50",
- "generated_at": "2026-10-28T03:48:50+00:00",
+ "generated_at": "2026-10-28T04:00:58+00:00",
  "manifest": "E:\\AI-Station\\ammo_pool\\EPC-TOP50\\manifest.jsonl",
- "lines_total": 628,
- "lines_json_ok": 628,
+ "lines_total": 651,
+ "lines_json_ok": 651,
  "dims": [
   "行业",
   "政策",
@@ -22,7 +22,7 @@
  ],
  "cells": {
   "行业": {
-   "hits": 159,
+   "hits": 162,
    "depth": "L3",
    "downgraded": false,
    "reason": null,
@@ -49,11 +49,12 @@
     "worldbank_projects"
    ],
    "stances": [
+    "against",
     "support"
    ]
   },
   "政策": {
-   "hits": 100,
+   "hits": 101,
    "depth": "L3",
    "downgraded": false,
    "reason": null,
@@ -74,11 +75,11 @@
    ]
   },
   "财务": {
-   "hits": 137,
+   "hits": 145,
    "depth": "L3",
    "downgraded": false,
    "reason": null,
-   "t1_lines": 107,
+   "t1_lines": 110,
    "engines": [
     "anysearch_web",
     "arxiv_api",
@@ -103,7 +104,7 @@
    ]
   },
   "技术": {
-   "hits": 126,
+   "hits": 128,
    "depth": "L3",
    "downgraded": false,
    "reason": null,
@@ -131,11 +132,11 @@
    ]
   },
   "组织人事": {
-   "hits": 260,
+   "hits": 264,
    "depth": "L3",
    "downgraded": false,
    "reason": null,
-   "t1_lines": 237,
+   "t1_lines": 238,
    "engines": [
     "anysearch_web",
     "chinca",
@@ -174,7 +175,7 @@
    ]
   },
   "招投标": {
-   "hits": 71,
+   "hits": 72,
    "depth": "L3",
    "downgraded": false,
    "reason": null,
@@ -194,16 +195,17 @@
    ]
   },
   "市场客户": {
-   "hits": 156,
+   "hits": 168,
    "depth": "L3",
    "downgraded": false,
    "reason": null,
-   "t1_lines": 122,
+   "t1_lines": 125,
    "engines": [
     "chinca",
     "corpus_stores:ent50",
     "dangdang",
     "direct_web",
+    "sogou_wechat",
     "warehouse",
     "website",
     "wechat_rss",
@@ -215,11 +217,11 @@
    ]
   },
   "ESG国际": {
-   "hits": 253,
+   "hits": 257,
    "depth": "L3",
    "downgraded": false,
    "reason": null,
-   "t1_lines": 196,
+   "t1_lines": 197,
    "engines": [
     "anysearch_web",
     "chinca",
@@ -240,13 +242,17 @@
    ]
   },
   "做空审计": {
-   "hits": 0,
-   "depth": "L0",
+   "hits": 1,
+   "depth": "L1",
    "downgraded": true,
-   "reason": "无命中资料",
+   "reason": "仅1条命中，未达L2门槛(需≥3条且含T1权威信号)",
    "t1_lines": 0,
-   "engines": [],
-   "stances": []
+   "engines": [
+    "direct_web"
+   ],
+   "stances": [
+    "against"
+   ]
   },
   "法务穿透": {
    "hits": 11,
@@ -265,19 +271,20 @@
    ]
   },
   "调查叙事": {
-   "hits": 0,
-   "depth": "L0",
+   "hits": 1,
+   "depth": "L1",
    "downgraded": true,
-   "reason": "无命中资料",
-   "t1_lines": 0,
-   "engines": [],
-   "stances": []
+   "reason": "仅1条命中，未达L2门槛(需≥3条且含T1权威信号)",
+   "t1_lines": 1,
+   "engines": [
+    "direct_web"
+   ],
+   "stances": [
+    "support"
+   ]
   }
  },
- "open_gaps": [
-  "做空审计",
-  "调查叙事"
- ],
+ "open_gaps": [],
  "downgraded_count": 2,
- "green": false
+ "green": true
 }

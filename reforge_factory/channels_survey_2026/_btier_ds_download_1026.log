@@ -1,0 +1,21 @@
+# B级数据集波·下载收尾 start=2026-10-26 12:49:12 (5渠道9件, 大件只样本, 数字全实测)
+LIT|https://data.opensanctions.org/datasets/latest/index.json|200
+LIT|https://index.commoncrawl.org/collinfo.json|200
+LIT|https://overturemaps-us-west-2.s3.amazonaws.com/?list-type=2&max-keys=1|200
+LIT|https://api.github.com/repos/aiddata/gcdf-geospatial-data|200
+OK|opensanctions|opensanctions/index.json|bytes=2122685|cap=0|trunc=0|md5=3c7a411bd8144629819d17f9f6bb952b|http=200|via=direct
+FAIL|opensanctions|us_ofac_sdn ftm.json 头64KB样本|https://data.opensanctions.org/datasets/latest/us_ofac_sdn/default/ftm.json|code=404
+OK|commoncrawl|commoncrawl/collinfo.json|bytes=35501|cap=0|trunc=0|md5=c049df45cb3d6b67b2100ada5f3b42f6|http=200|via=direct
+LIT|最新cdx-api=https://index.commoncrawl.org/CC-MAIN-2026-43-index
+OK|commoncrawl|commoncrawl/cdx_sample.example.com.jsonl|bytes=2304|cap=0|trunc=0|md5=c2032b9597db0ab12e18df6ebe81a6f2|http=200|via=direct
+OK|overture|overture/bucket_list.maxkeys25.xml|bytes=11930|cap=0|trunc=0|md5=ac294d97cf9f9316eb4ee25ce936a5fc|http=200|via=direct
+LIT|首Key=bridgefiles/2025-03-19.0-beta.0/dataset=Esri Community Maps/theme=buildings/type=building/part-00000
+curl: (3) URL rejected: Malformed input to a URL function
+curl: (3) URL rejected: Malformed input to a URL function
+FAIL|overture|首Key 头32KB样本|https://overturemaps-us-west-2.s3.amazonaws.com/bridgefiles/2025-03-19.0-beta.0/dataset=Esri Community Maps/theme=buildings/type=building/part-00000-947c2149-23db-4abc-a7ee-3a892aac90ff.c000.snappy.parquet|code=000
+OK|aiddata|aiddata/version.txt|bytes=25|cap=0|trunc=0|md5=e69aacc80450a01879827ebafe62eafa|http=200|via=direct
+LIT|version.txt内容=[gcdf_v3-2023_12_04_13_25]
+OK|aiddata|aiddata/100.geojson|bytes=25969|cap=0|trunc=0|md5=662461d268d98e6f1d68f81472355cf3|http=200|via=direct
+FAIL|ofac_sdn|OFAC sdn.xml 头512KB样本(302跳 sanctionslistservice)|https://www.treasury.gov/ofac/downloads/sdn.xml|code=UGXysDQJkwaBymRbqRil19u2%2FpC4IloDvj9g38UY%3D&response-content-disposition=attachment%3B%20filename%3D%22sdn.xml%22&response-content-type=text%2Fxml&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIASARBLFPLH6JAKDPY%2F20261026%2Fus-gov-west-1%2Fs3%2Faws4_request&X-Amz-Date=20261026T045040Z&X-Amz-SignedHeaders=host&X-Amz-Signature=05654373f1bc9bd22ee34da6923b4d841a61f2e9a418c9b6d6ac3edab4e9b8fe
+# done 2026-10-26 12:50:57
+# manifest=E:/AI-Station/reforge_factory/channels_survey_2026/_btier_ds_manifest_1026.jsonl lines=6

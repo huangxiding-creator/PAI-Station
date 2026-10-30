@@ -345,6 +345,68 @@ def main() -> int:
                         await self.page.keyboard.press("Escape")
                     await asyncio.sleep(1)
 
+            async def _sweep_publish_modals(self, i: int) -> None:
+                """v6: 发表后弹窗清扫 (帧遍历版, 1030 top50_hm_v1 取证驱动).
+
+                旧探针只认主文档 .weui-desktop-dialog__wrp — 实弹是别的
+                modal 类/在 iframe, 60s 零命中卡死发表. 今版: 四类名 × 全
+                帧, 见弹 → 截图取证 → 弹内未勾条款 checkbox 勾上 → 文案梯
+                (确认发表>确认发布>确认>直接发表) 帧内+全帧点键. 判真仍归
+                URL/文案/列表终验, 本清扫只清障不判成功.
+                """
+                wrappers = (".weui-desktop-dialog__wrp",
+                            ".weui-desktop-modal__wrp",
+                            ".weui-desktop-modal",
+                            ".weui-desktop-dialog")
+                for fr in [self.page, *self.page.frames]:
+                    for sel in wrappers:
+                        try:
+                            dlg = fr.locator(f"{sel}:visible")
+                            if await dlg.count() == 0:
+                                continue
+                            d = dlg.first
+                            txt = (await d.inner_text() or "")[:150]
+                            print(f"[vup] P3 弹窗文本({sel.split(':')[-1]}): "
+                                  f"{txt!r}")
+                            await self.page.screenshot(path=str(
+                                PROMO / "videos" / f"forensics_dialog{i}.png"))
+                            try:
+                                cbs = d.locator("input[type=checkbox]")
+                                for ci in range(await cbs.count()):
+                                    cb = cbs.nth(ci)
+                                    if not await cb.is_checked():
+                                        if await self._rmouse_click(cb):
+                                            print("[vup] P3: ✓弹内条款"
+                                                  "checkbox已勾")
+                                            await asyncio.sleep(0.8)
+                            except Exception as exc:
+                                print(f"[vup] P3 弹内勾选异常(忽略): {exc}")
+                            clicked = False
+                            for t in ("确认发表", "确认发布", "确认",
+                                      "直接发表"):
+                                try:
+                                    btn = d.locator(
+                                        "button, [role=button], .weui-btn, "
+                                        "div[class*='btn'], a[class*='btn']"
+                                    ).filter(has_text=t)
+                                    if (await btn.count() > 0
+                                            and await btn.first.is_visible()):
+                                        if await self._rmouse_click(btn.first):
+                                            print(f"[vup] P3: ✓弹窗点「{t}」")
+                                            clicked = True
+                                            await asyncio.sleep(2)
+                                            break
+                                except Exception:
+                                    continue
+                            if clicked:
+                                return
+                            if await self._click_frame_button("直接发表"):
+                                print("[vup] P3: ✓weui弹窗点「直接发表」")
+                                await asyncio.sleep(2)
+                                return
+                        except Exception:
+                            continue
+
             async def _rmouse_click(self, loc) -> bool:
                 """真鼠标点击 (emitter _iclick_el 移植: CDP Input 事件;
                 Vue handler 不认无 isTrusted 的 DOM click. Playwright 的
@@ -532,16 +594,11 @@ def main() -> int:
                             break
                         # weui 弹窗清扫 (r9-r12 常客: 广告分成挽留弹窗;
                         # r11 取证=两独立键, r12 实锤真鼠标点「直接发表」可关)
-                        dlg = self.page.locator(
-                            ".weui-desktop-dialog__wrp:visible")
-                        if await dlg.count() > 0:
-                            txt = (await dlg.first.inner_text() or "")[:150]
-                            print(f"[vup] P3 弹窗文本: {txt!r}")
-                            await self.page.screenshot(path=str(
-                                PROMO / "videos" / f"forensics_dialog{i}.png"))
-                            if await self._click_frame_button("直接发表"):
-                                print("[vup] P3: ✓weui弹窗点「直接发表」")
-                                await asyncio.sleep(2)
+                        # v6 (1030 top50_hm_v1 取证): 发表后弹「声明原创」
+                        #   条款确认弹窗 — modal 类名不带 dialog__wrp (旧
+                        #   探针60s零命中) 且确认键是裸「确认」非「确认发表」
+                        #   → 帧遍历+四类名+弹内勾条款checkbox+文案梯点键.
+                        await self._sweep_publish_modals(i)
                         # 延迟确认弹窗 (只试一次, emitter 同款)
                         if not _confirm_clicked and i >= 2:
                             for t in ("确认发表", "确认发布"):

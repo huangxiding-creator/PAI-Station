@@ -1,0 +1,93 @@
+[
+ {
+  "name": "FRED(圣路易斯联储)",
+  "repo_or_site": "https://api.stlouisfed.org",
+  "replaces": "Bloomberg/Refinitiv(宏观时间序列)",
+  "one_liner": "圣路易斯联储10万+宏观序列免费API(需免费key): 含材料价格/建筑支出序列——全球宏观域免费全等",
+  "access": "免费API(需免费key)",
+  "fit": "宏观序列",
+  "existing": "none(new)",
+  "overlap": "sweep_datasets已录(直连400缺key实证)",
+  "prior": "直连400(缺api_key实证; sweep_datasets 10-25)"
+ },
+ {
+  "name": "中国人民银行公开数据",
+  "repo_or_site": "http://www.pbc.gov.cn/",
+  "replaces": "Bloomberg(中国货币金融域)",
+  "one_liner": "央行官网: 社融/M2/LPR/汇率/公开市场操作公告一手免费——中国货币金融域全等",
+  "access": "免费页面",
+  "fit": "中国货币金融",
+  "existing": "none(new)",
+  "probe_key": "pbc"
+ },
+ {
+  "name": "ECB数据门户(SDW)",
+  "repo_or_site": "https://data.ecb.europa.eu/",
+  "replaces": "Refinitiv(欧元区金融统计)",
+  "one_liner": "欧央行统计数据仓库全库免费(SDMX API)——欧元区金融域免费全等; 本轮探针直连+代理均不可达(瞬时网络态, 官方免费门户在案)",
+  "access": "免费页面+免费API",
+  "fit": "欧元区统计",
+  "existing": "none(new)",
+  "probe_key": "ecb"
+ },
+ {
+  "name": "BIS统计门户",
+  "repo_or_site": "https://data.bis.org/",
+  "replaces": "Bloomberg(国际清算/信贷域)",
+  "one_liner": "国际清算银行统计: 国际信贷/流动性/汇率/国债收益率免费API(SDMX)——跨境金融域免费全等",
+  "access": "免费页面+免费API",
+  "fit": "国际清算统计",
+  "existing": "none(new)",
+  "probe_key": "bis"
+ },
+ {
+  "name": "国家企业信用信息公示系统",
+  "repo_or_site": "https://www.gsxt.gov.cn/",
+  "replaces": "天眼查专业版/企查查VIP(登记一手)",
+  "one_liner": "市场监管总局官方公示: 登记信息/年报/行政处罚/经营异常一手全等(检索需登录验证)——天眼查数据母源本体; 探针521/403反爬在案",
+  "access": "免费页面(登录验证)",
+  "fit": "工商登记",
+  "existing": "none(new)",
+  "probe_key": "gsxt"
+ },
+ {
+  "name": "信用中国",
+  "repo_or_site": "https://www.creditchina.gov.cn/",
+  "replaces": "企查查VIP(信用域)",
+  "one_liner": "全国信用信息共享平台: 失信被执行人/行政处罚/行政许可公示一手——信用域免费全等; 探针412预条件反爬",
+  "access": "免费页面",
+  "fit": "信用信息",
+  "existing": "factory_registry(creditchina在册)",
+  "probe_key": "creditchina"
+ },
+ {
+  "name": "四库一平台(全国建筑市场监管)",
+  "repo_or_site": "https://jzsc.mohurd.gov.cn/",
+  "replaces": "天眼查(建企资质/人员/业绩画像)",
+  "one_liner": "住建部全国建筑市场监管公共服务平台: 建企资质/注册人员/工程项目/诚信记录——建企尽调免费一手全等(EPC专用)",
+  "access": "免费页面(查询接口公开)",
+  "fit": "建企监管数据",
+  "existing": "none(new)",
+  "probe_key": "jzsc"
+ },
+ {
+  "name": "OpenCorporates(全球公司注册)",
+  "repo_or_site": "https://opencorporates.com/",
+  "replaces": "企查查海外公司面/D&B(全球注册)",
+  "one_liner": "2亿+全球公司注册数据聚合: 页面免费检索(API需申请)——海外公司登记域免费主力",
+  "access": "免费页面(API需申请)",
+  "fit": "海外工商",
+  "existing": "none(new)",
+  "probe_key": "opencorp"
+ },
+ {
+  "name": "地方产权交易所公告(代表:上海联交所)",
+  "repo_or_site": "https://www.suaee.com/",
+  "replaces": "天眼查(股权变更/产权交易监测)",
+  "one_liner": "产权交易所公告免费检索: 国企产权转让/增资挂牌一手(沪联交所为代表)——产权交易监测域部分平替",
+  "access": "免费页面",
+  "fit": "产权交易",
+  "existing": "none(new)",
+  "probe_key": "suaee"
+ }
+]

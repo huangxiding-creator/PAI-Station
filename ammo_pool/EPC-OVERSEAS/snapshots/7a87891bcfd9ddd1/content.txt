@@ -1,0 +1,14 @@
+# webregistry run log — ddgs (BLOCKED, 引擎层网络墙实证)
+
+- registry_id: ddgs__github_com | name: ddgs (duckduckgo_search 换代版) | url: https://github.com/deedy5/ddgs | cat: api_wrapper | tier: 1
+- 安装: pip --target _libs ddgs → 9.16.0 安装成功, DDGS import OK (包本体可用)
+- 实跑留证 (raw_zzdl_epc_overseas.json / raw_china_power_epc_en.json / raw_ddgs_news_mojeek.json):
+  - text(中资电力EPC出海 全球市场 准入, region=cn-zh, backend=auto) → TimeoutException https://www.startpage.com/
+  - backend=bing → ConnectError https://www.startpage.com/ (ddgs 9.x bing 引擎内部路由 startpage)
+  - backend=yandex → TimeoutException https://www.google.com/wml/search
+  - backend=auto(英文) → ConnectError https://search.yahoo.com
+  - backend=mojeek → No results found (引擎可达但对实测查询返回空, 英文简查 power EPC 同样空)
+  - backend=wikipedia / duckduckgo → No results found (DDG/Wikipedia 直连 000)
+  - news(中资电力 EPC 海外, backend=bing_news) → TimeoutException https://duckduckgo.com/
+- 死因: 上游引擎全数被网络墙阻 (startpage / google-wml / yahoo / ddg / wikipedia 直连 000), 唯一可达引擎 mojeek 对本题材零命中; 包本身安装成功且 API 正常抛错 — 物理网络缺失, 非配置错误
+- verdict: BLOCKED (代理可用后可复跑; 请用户裁豁免)

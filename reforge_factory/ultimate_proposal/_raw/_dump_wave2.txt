@@ -1,0 +1,182 @@
+TASK: 世界顶级调研能力终极提案·调研波2：顶级咨询/情报机构方法论公开面 + 人类专家网络模型 + 连续监测体系 + 报告自动化管道 + 中文研究方法论 + 竞争分析框架开源
+METHOD: web_search_prime 多轮检索(方法页/运作模式/替代品对比) | gh api search/repositories 星标排序(中英文关键词, 含'舆情/论文/智库/公众号导出'等中文query) | curl -L -w http_code 官网探活(25+官方域, 000=本机网络阻断但搜索侧证实存活)
+STATS: {
+ "total_items": 80,
+ "by_category": {
+  "consulting_methodology": 13,
+  "expert_network": 8,
+  "continuous_monitoring": 22,
+  "report_automation": 18,
+  "chinese_methodology": 8,
+  "competitive_framework": 11
+ },
+ "by_fit": {
+  "方法论参考": 17,
+  "需付费": 10,
+  "直接采用": 23,
+  "开源可改造": 30
+ },
+ "target": ">=60",
+ "result": "PASS (80/60)"
+}
+FIT_LEGEND: {"直接采用": "现成可用, 装好即上产线", "方法论参考": "方法论/流程蓝本, 需内化为工厂自己的门与章法", "需付费": "订阅/按次付费服务, 付费才有产出", "开源可改造": "开源代码需二次开发/裁剪后上产线"}
+- [w2-001|consulting_methodology|McKinsey & Company] McKinsey 七步问题解决法(公开专栏页) :: 麦肯锡官方问题解决主题页(2021-08), 含七步流程(定义问题→拆解问题→优先排序→工作计划→关键分析→综合结论→沟通)与问题解决心态篇。七步=可执行的调研SOP骨架。 | url=https://www.mckinsey.com/featured-insights/themes/problem-solving-doesnt-have-to-be-a-puzzle | type=official_article | access=free_public | license=proprietary_content | stars=None | fit=方法论参考 | probe=search_confirmed
+    relevance: 直接映射为工厂S-1选题定义与章节拆解的门; 七步可改写为产线checklist
+- [w2-002|consulting_methodology|Wikipedia(Peters/Waterman, McKinsey)] McKinsey 7S Framework :: 组织诊断七要素框架(Strategy/Structure/Systems/Shared Values/Skills/Style/Staff), 与七步法是两套东西, 常被混用。 | url=https://en.wikipedia.org/wiki/McKinsey_7S_Framework | type=framework | access=free_public | license=CC-BY-SA | stars=None | fit=方法论参考 | probe=search_confirmed
+    relevance: 企业研究章节的组织维度分析模板
+- [w2-003|consulting_methodology|McKinsey Global Institute] McKinsey Global Institute(MGI) 研究报告体系 :: MGI全部深度研究报告免费公开, 报告结构=世界级行业报告的事实范本(executive summary→方法论附录→数据来源披露)。 | url=https://www.mckinsey.com/mgi/ | type=whitepaper | access=free_public | license=proprietary_content | stars=None | fit=方法论参考 | probe=blocked_local_network
+    relevance: 免费对标件: 拿MGI成品反推我方报告的章法与门
+- [w2-004|consulting_methodology|Wikipedia(Barbara Minto/McKinsey体系)] MECE 原则 :: Mutually Exclusive, Collectively Exhaustive: 议题树拆分的不重不漏铁律, 是金字塔原理与issue tree的底层约束。 | url=https://en.wikipedia.org/wiki/MECE_principle | type=framework | access=free_public | license=CC-BY-SA | stars=None | fit=方法论参考 | probe=search_confirmed
+    relevance: 章节矩阵/证据池分桶的去重查重理论根基(与dupcheck门直接挂钩)
+- [w2-005|consulting_methodology|Boston Consulting Group] BCG Growth-Share Matrix(官方历史页) :: BCG官方对自家增长份额矩阵(明星/现金牛/问题/瘦狗)的定义页, 含矩阵原始思想与使用边界。 | url=https://www.bcg.com/about/overview/our-history/growth-share-matrix | type=official_article | access=free_public | license=proprietary_content | stars=None | fit=方法论参考 | probe=403_botwall
+    relevance: 产品族/业务组合分析的官方口径; w2-079等开源件可自动化之
+- [w2-006|consulting_methodology|Boston Consulting Group] BCG Publications 洞见库 :: BCG全部公开洞察文章/报告检索库, 行业与方法论文章均可免费读取。 | url=https://www.bcg.com/publications | type=whitepaper | access=free_public | license=proprietary_content | stars=None | fit=方法论参考 | probe=403_botwall
+    relevance: 行业研究二手信源+报告结构范本
+- [w2-007|consulting_methodology|Bain & Company] Bain Net Promoter Score System(官方方法页) :: Bain官方NPS方法论页: 单一指标预测公司增长与客户终身价值, NPS是一套经营哲学而非单纯打分。配套netpromotersystem.com免费测分工具。 | url=https://www.bain.com/consulting-services/customer-strategy-and-marketing/net-promoter-score-system | type=official_article | access=free_public | license=proprietary_content | stars=None | fit=方法论参考 | probe=200
+    relevance: 客户研究/竞品口碑量化章节的方法来源
+- [w2-008|consulting_methodology|Bain & Company] Bain Results Delivery(成果交付方法论) :: Bain成果交付办公室方法: 超越传统项目管理, 跟踪'价值实现'而非'任务完成', 含员工NPS+15分的实证口径。 | url=https://www.bain.com/consulting-services/change-management-results-delivery/results-delivery-office | type=official_article | access=free_public | license=proprietary_content | stars=None | fit=方法论参考 | probe=search_confirmed
+    relevance: 工厂交付层的验收标准可借其'价值实现度'视角(呼应变现就绪度收口)
+- [w2-009|consulting_methodology|Barbara Minto] The Minto Pyramid Principle(官网) :: 金字塔原理创始人官网: 结论先行→分层支撑→MECE分组; SCQA(情境-冲突-问题-答案)开场法源于此。官网有方法自述与书/课入口。 | url=https://www.barbaraminto.com/ | type=book_course | access=free_public(书/课需付费) | license=proprietary_content | stars=None | fit=方法论参考 | probe=200
+    relevance: 报告章内结构与前言之王的直接蓝本; SCQA=导论章模板
+- [w2-010|consulting_methodology|S&P Global Ratings] S&P Global Ratings 评级标准库(Criteria) :: 标普评级标准全量公开披露(基本面因素/分析原则/方法论/关键假设), 监管要求强制透明=白送的世界级方法论文库。 | url=https://disclosure.spglobal.com/ratings/en/regulatory/article/-/view/sourceId/5475093 | type=whitepaper | access=free_public | license=proprietary_content | stars=None | fit=方法论参考 | probe=403_botwall
+    relevance: 评级/风险类报告的假设披露与打分卡写法范本
+- [w2-011|consulting_methodology|Wood Mackenzie] Wood Mackenzie Lens 数据平台(专有方法论) :: 能源/自然资源研究平台Lens: 50+年市场专长+专有方法论+项目级评估法(project-level assessment), 与Microsoft Copilot集成。详细方法论是IP不公开, 营销页公开表述。 | url=https://www.woodmac.com/lens | type=platform | access=paid | license=proprietary | stars=None | fit=需付费 | probe=200
+    relevance: 能源行业报告的对照标尺; 其'项目级评估'思路可借鉴为要素级打分
+- [w2-012|consulting_methodology|Oxford Economics] Oxford Economics Global Economic Model :: 全球经济模型+全球产业模型+情景与压力测试(预置/定制经济路径), 90+国95%全球GDP, 世行级机构采用; 新推AskOE自然语言情景助手。 | url=https://www.oxfordeconomics.com/ | type=platform | access=paid | license=proprietary | stars=None | fit=需付费 | probe=200
+    relevance: 宏观/行业预测章节的口径参照; '情景+压力测试'结构可复刻进报告
+- [w2-013|consulting_methodology|ModelThinkers.com] Model Thinkers 思维模型百科 :: 数百个商业/决策思维模型的结构化百科(含Minto金字塔/波特框架的图解版), 每模型给'何时用/怎么用'。 | url=https://modelthinkers.com/ | type=directory | access=free_public | license=proprietary_content | stars=None | fit=方法论参考 | probe=200
+    relevance: 分析框架选型库: 写章节前按模型卡选分析姿势
+- [w2-014|expert_network|GLG] GLG(Gerson Lehrman Group) :: 全球最大专家网络: 一对一专家通话为主, 兼专家证人/法律、调研、活动、转录库与长周期项目engagement。客户订阅+按通话付费。 | url=https://glg.com/ | type=platform | access=paid | license=proprietary | stars=None | fit=需付费 | probe=200
+    relevance: 一手人类情报的标准作业模式: 招募→合规过滤→匹配→1小时通话→转录沉淀
+- [w2-015|expert_network|AlphaSights] AlphaSights :: 知识按需平台: 订阅+按次咨询费, 服务投资人/商业专业人士; 内设Content Compliance岗做合规防火墙(Glassdoor/LinkedIn佐证)。 | url=https://www.alphasights.com/ | type=platform | access=paid | license=proprietary | stars=None | fit=需付费 | probe=blocked_local_network
+    relevance: 合规防火墙机制值得复刻: 我方访谈腿须有合规门(不碰内幕/竞业)
+- [w2-016|expert_network|Third Bridge Group] Third Bridge :: 精品投行系专家网络: 招募-审查-排期-通话-转录全托管, 以访谈前调研包(interview prep)深度著称。 | url=https://www.thirdbridge.com/ | type=platform | access=paid | license=proprietary | stars=None | fit=需付费 | probe=200
+    relevance: '访谈前调研包'模式=我方微信访谈腿的提问卡设计蓝本
+- [w2-017|expert_network|ProSapient] ProSapient :: 科技驱动的专家网络与专有洞察平台, 主打快速匹配+结构化专家库, 欧洲私募/对冲基金客户为主。 | url=https://www.prosapient.com/ | type=platform | access=paid | license=proprietary | stars=None | fit=需付费 | probe=200
+    relevance: 结构化专家库(标签化专家画像)的建库思路可借
+- [w2-018|expert_network|Guidepoint] Guidepoint :: 全球专家网络四强之一: 通话+调研+活动+顾问长期聘用多形态, 合规体系(Guidepoint Global Advisors)公开材料多。 | url=https://www.guidepoint.com/ | type=platform | access=paid | license=proprietary | stars=None | fit=需付费 | probe=200
+    relevance: 多形态专家产品线划分(单次/长期/问卷)可映射为访谈腿SKU
+- [w2-019|expert_network|Inex One] Inex One 专家网络目录与对比库 :: 公开的专家网络行业目录: GLG/AlphaSights/Guidepoint/Third Bridge/ProSapient等逐家运作模式、服务形态、定价模式横向拆解。 | url=https://inex.one/expert-network-directory | type=directory | access=free_public | license=proprietary_content | stars=None | fit=方法论参考 | probe=200
+    relevance: 不花钱看全行业模式的最佳入口; 专家网络选型与模式学习的公开教材
+- [w2-020|expert_network|NexusExpertResearch] 专家通话在咨询项目中的运作(行业拆解文) :: 拆解专家网络如何source→vet→schedule专家并服务咨询项目全流程, 含行业格局与收费模式。 | url=https://nexusexpertresearch.co/blog/how-expert-calls-work-in-consulting-projects | type=explainer | access=free_public | license=proprietary_content | stars=None | fit=方法论参考 | probe=search_confirmed
+    relevance: 专家腿SOP的第三方对照稿
+- [w2-021|expert_network|AlphaSense] AlphaSense(含Tegus专家通话转录库) :: 市场情报搜索平台, 2024年并购Tegus后拥有海量专家通话转录库+公司数据, 可全文检索历史专家访谈。 | url=https://www.alpha-sense.com/ | type=platform | access=paid | license=proprietary | stars=None | fit=需付费 | probe=200
+    relevance: 转录库沉淀模式: 访谈资产一次采集反复检索=知识库工厂同构
+- [w2-022|continuous_monitoring|GDELT Project] GDELT Project(已注册) :: 全球事件/媒体/情绪数据库, 每15分钟更新全球新闻事件编码(CAMEO), 已注册API。额度内免费大表查询。 | url=https://www.gdeltproject.org/ | type=api_service | access=free_public | license=open_data | stars=None | fit=直接采用 | probe=200
+    relevance: 7x24监测的底座数据源之一, 事件编码可进选题雷达
+- [w2-023|continuous_monitoring|GDELT Project] GDELT DOC 2.0 API(全文检索端点) :: GDELT文档API: 跨全球新闻的全文检索+情绪+实体+时间线, 单GET即可批量拉数, 支持中文查询。 | url=https://api.gdeltproject.org/api/v2/doc/doc | type=api_service | access=free_public | license=open_data | stars=None | fit=直接采用 | probe=search_confirmed
+    relevance: 监测腿的主力免费API, 配合调度器做定时关键词巡检
+- [w2-024|continuous_monitoring|linwoodc3] gdeltPyR(Python客户端) :: GDELT大表/events的Python封装: 参数化拉取+DataFrame化, 省去裸SQL。 | url=https://github.com/linwoodc3/gdeltPyR | type=open_source_repo | access=open_source | license=GPL-3.0 | stars=260 | fit=开源可改造 | probe=gh_api_verified
+    relevance: GDELT接入的工程捷径, 直接进产线采集脚本
+- [w2-025|continuous_monitoring|Event Registry] Event Registry / newsAPI.ai :: 斯洛文尼亚AI系新闻事件库: 事件聚类+多语言文章关联+趋势, Google News API停摆后的主要学术/商用替代, 免费档有日配额。 | url=https://newsapi.ai/ | type=api_service | access=freemium | license=proprietary | stars=None | fit=需付费 | probe=200
+    relevance: 事件级(非文章级)聚合的对照源; 中文新闻覆盖可用
+- [w2-026|continuous_monitoring|EventRegistry] event-registry-python(官方客户端) :: Event Registry官方Python SDK: 文章/事件查询、语义关联、时间趋势一体封装。 | url=https://github.com/EventRegistry/event-registry-python | type=open_source_repo | access=open_source | license=unknown | stars=262 | fit=开源可改造 | probe=gh_api_verified
+    relevance: 免费档配额内的自动巡检客户端
+- [w2-027|continuous_monitoring|NewsAPI] NewsAPI.org :: 最常用的新闻检索API: 15万+源全文检索, 免费档限开发者环境100请求/天, 生产需付费。 | url=https://newsapi.org/ | type=api_service | access=freemium | license=proprietary | stars=None | fit=需付费 | probe=blocked_local_network
+    relevance: 英文新闻关键词监测的通用件, 商用条款需核对
+- [w2-028|continuous_monitoring|dgtlmoon] changedetection.io(Follow That Page开源替代) :: 网页变更监测+告警王者: CSS选择器盯任意页面区块, 80+通知渠道(Discord/Telegram/webhook), 可盯列表页新增链接。官网changedetection.io探活200。 | url=https://github.com/dgtlmoon/changedetection.io | type=open_source_repo | access=open_source | license=Apache-2.0 | stars=35332 | fit=开源可改造 | probe=gh_api_verified
+    relevance: 盯招标公告/竞品官网/政策页的7x24腿, 替代Follow That Page且可自托管
+- [w2-029|continuous_monitoring|Follow That Page] Follow That Page(免费档网页盯梢) :: 老牌网页变更邮件通知服务, 免费档5个页面/日检, 无需自建。 | url=https://followthatpage.com/ | type=platform | access=freemium | license=proprietary | stars=None | fit=直接采用 | probe=200
+    relevance: 零运维兜底腿: 关键页面少量盯梢的即插即用件
+- [w2-030|continuous_monitoring|DIYgod] RSSHub(已装) :: 万物皆可RSS: 千余路由把公众号/微博/政府网/期刊/竞品页转成订阅流。已装在役。AGPL许可, 内部使用无碍, 二次分发需开源同化。 | url=https://github.com/DIYgod/RSSHub | type=open_source_repo | access=open_source | license=AGPL-3.0 | stars=46687 | fit=直接采用 | probe=gh_api_verified
+    relevance: 监测体系的中枢总线; 新渠道接入先查有无现成路由
+- [w2-031|continuous_monitoring|rachelos] we-mp-rss(微信公众号转RSS) :: 微信公众号助手: 公众号文章转Markdown/PDF、定时更新订阅、生成RSS源、Webhook/API推送。 | url=https://github.com/rachelos/we-mp-rss | type=open_source_repo | access=open_source | license=unknown | stars=5049 | fit=开源可改造 | probe=gh_api_verified
+    relevance: 中文源监测缺口件: 把行业公众号变成可订阅数据流(与RSSHub互补)
+- [w2-032|continuous_monitoring|huginn] Huginn(可编程代理监测系统) :: 建代理替你监控并行动: 触发器(网页/天气/邮件)→条件流→动作(webhook/邮件), 可视化编排的自动化监测老祖。 | url=https://github.com/huginn/huginn | type=open_source_repo | access=open_source | license=MIT | stars=50161 | fit=开源可改造 | probe=gh_api_verified
+    relevance: 监测编排引擎备选; 触发-条件-动作范式可借给mission-engine
+- [w2-033|continuous_monitoring|FreshRSS] FreshRSS(自托管聚合器) :: 自托管多用户RSS聚合: 订阅管理+全文抓取+API(可接手机阅读器)+扩展机制。 | url=https://github.com/FreshRSS/FreshRSS | type=open_source_repo | access=open_source | license=AGPL-3.0 | stars=16428 | fit=直接采用 | probe=gh_api_verified
+    relevance: RSSHub产出的落库与阅读层; 全量订阅流的家里
+- [w2-034|continuous_monitoring|miniflux] Miniflux(极简Feed服务) :: Go写的极简主义Feed阅读器: 单二进制部署+PostgreSQL+API完善, 无花活极稳。 | url=https://github.com/miniflux/v2 | type=open_source_repo | access=open_source | license=Apache-2.0 | stars=9849 | fit=开源可改造 | probe=gh_api_verified
+    relevance: FreshRSS的轻量备选, 服务器资源紧张时的监测前端
+- [w2-035|continuous_monitoring|codelucas] newspaper3k(新闻正文抽取) :: 新闻全文化与元数据抽取: URL进→标题/正文/作者/图片出, 中英皆可。维护趋缓但仍是事实标准。 | url=https://github.com/codelucas/newspaper | type=open_source_repo | access=open_source | license=MIT | stars=15181 | fit=开源可改造 | probe=gh_api_verified
+    relevance: 监测到链接后的正文化前置件(喂进证据池前洗数据)
+- [w2-036|continuous_monitoring|fhamborg] news-please(新闻爬取+抽取一体化) :: 学术级新闻采集框架: 爬虫+通用抽取器+去重+常见站点配置, pipeline化设计可扩展。 | url=https://github.com/fhamborg/news-please | type=open_source_repo | access=open_source | license=Apache-2.0 | stars=2494 | fit=开源可改造 | probe=gh_api_verified
+    relevance: 批量新闻采集的工程底版, 抽取器可单独拆出来用
+- [w2-037|continuous_monitoring|sansan0] TrendRadar(AI舆情趋势雷达) :: 中文起家的AI驱动舆情趋势监测: 多平台聚合+RSS+智能告警, 部署即用的趋势雷达。 | url=https://github.com/sansan0/TrendRadar | type=open_source_repo | access=open_source | license=GPL-3.0 | stars=63233 | fit=直接采用 | probe=gh_api_verified
+    relevance: 与我方日更雷达三族同构的开源对照件, 直接可跑中文热点
+- [w2-038|continuous_monitoring|666ghj] BettaFish/微舆(多Agent舆情分析) :: 微舆: 多Agent舆情分析助手, 打破信息茧房-还原舆情原貌-预测走向-辅助决策, 零框架依赖。 | url=https://github.com/666ghj/BettaFish | type=open_source_repo | access=open_source | license=GPL-2.0 | stars=42542 | fit=开源可改造 | probe=gh_api_verified
+    relevance: 舆情多Agent编队开源范本, 分析段可直接对标改造
+- [w2-039|continuous_monitoring|smicallef] SpiderFoot(OSINT自动化) :: 开源情报自动化: 200+数据源模块对目标实体(公司/域名/人)自动画像并出图, 有定时扫描。 | url=https://github.com/smicallef/spiderfoot | type=open_source_repo | access=open_source | license=MIT | stars=23906 | fit=开源可改造 | probe=gh_api_verified
+    relevance: 企业实体尽调腿: 投标/竞对画像的OSINT自动收割机
+- [w2-040|continuous_monitoring|Armed Conflict Location & Event Data Project] ACLED(武装冲突事件数据) :: 全球冲突事件手工编码库(时间/地点/行为体/事件类型), 学术用户免费取数, 有API与周报。 | url=https://www.acleddata.com/ | type=api_service | access=free_public(学术注册) | license=open_data | stars=None | fit=直接采用 | probe=200
+    relevance: 海外工程/地缘风险报告的权威事件数据源(EPC-OVERSEAS线可用)
+- [w2-041|continuous_monitoring|Media Cloud/Berkman系] Media Cloud(媒体生态分析) :: 开源媒体监测研究平台: 海量在线新闻语料+话题/注意力/叙事分析工具, GitHub org公开代码。 | url=https://mediacloud.org/ | type=platform | access=free_public | license=open_source | stars=None | fit=开源可改造 | probe=200
+    relevance: 叙事/议程分析的方法与工具箱, 报告传播效果评估可用
+- [w2-042|continuous_monitoring|Google] Google Alerts :: 关键词→邮件快照, 无API但零成本, 长尾关键词兜底。 | url=https://www.google.com/alerts | type=platform | access=free_public | license=proprietary | stars=None | fit=直接采用 | probe=search_confirmed
+    relevance: 免费兜底腿: 专有名词/冷门实体盯梢
+- [w2-043|continuous_monitoring|Talkwalker] Talkwalker Alerts :: Google Alerts增强替代: 覆盖新闻/博客/论坛/社交, 免费邮件推送。 | url=https://www.talkwalker.com/alerts | type=platform | access=free_public | license=proprietary | stars=None | fit=直接采用 | probe=200
+    relevance: 与Google Alerts双轨互备的关键词邮件腿
+- [w2-044|report_automation|Quarto-dev(posit系)] Quarto(出版级报告系统) :: 科学/技术出版系统: Markdown+可执行代码单元→HTML/PDF/Word/幻灯多格式, Pandoc内核, 支持中文排版。 | url=https://quarto.org/ | type=open_source_repo | access=open_source | license=GPL-2.0 | stars=6131 | fit=直接采用 | probe=200
+    relevance: 从数据到成品报告的一体化出版件; 20万字长文分章编译可用
+- [w2-045|report_automation|mcanouil] awesome-quarto(模板与范例库) :: Quarto模板/扩展/范例精选清单, 含书籍与报告类模板。 | url=https://github.com/mcanouil/awesome-quarto | type=directory | access=open_source | license=unknown | stars=2189 | fit=方法论参考 | probe=gh_api_verified
+    relevance: Quarto上产线的模板选型入口
+- [w2-046|report_automation|Typst] Typst(现代排版系统) :: LaTeX替代: 标记语法简单+编译快如闪电+脚本与包生态, 官方Web编辑器可用。中文社区包(cetz等)成熟。 | url=https://typst.com/ | type=open_source_repo | access=open_source | license=Apache-2.0 | stars=56856 | fit=直接采用 | probe=200
+    relevance: 出书/PDF成品的现代排版引擎, 编译速度适合20万字级量产
+- [w2-047|report_automation|jgm] Pandoc(万能文档转换器) :: 文档格式万能转换: md/docx/latex/html/epub互转, 支持引用与模板自定义。 | url=https://github.com/jgm/pandoc | type=open_source_repo | access=open_source | license=GPL-2.0 | stars=46718 | fit=直接采用 | probe=gh_api_verified
+    relevance: 报告产线格式转换枢纽(企微PDF/上架件/多格式发布链)
+- [w2-048|report_automation|pandas-dev] Pandas(数据分析底座) :: Python数据分析事实标准: DataFrame读写/清洗/透视/出表, 生态最大。 | url=https://pandas.pydata.org/ | type=open_source_repo | access=open_source | license=BSD-3 | stars=None | fit=直接采用 | probe=search_confirmed
+    relevance: 产线数据腿的既有底座, 无需多言
+- [w2-049|report_automation|sinaptik-ai] PandasAI(对话式数据分析) :: 用自然语言查数据库/CSV/parquet, LLM生成代码并执行, 支持多Agent与可视化。 | url=https://github.com/sinaptik-ai/pandas-ai | type=open_source_repo | access=open_source | license=MIT | stars=23906 | fit=直接采用 | probe=gh_api_verified
+    relevance: 调研数据→图表→报告段落的自动化加速件
+- [w2-050|report_automation|nteract] Papermill(参数化Notebook执行) :: 参数化-执行-分析Jupyter notebook: 一个模板notebook按参数矩阵批量跑, 生产化调度友好。 | url=https://github.com/nteract/papermill | type=open_source_repo | access=open_source | license=BSD-3 | stars=6496 | fit=直接采用 | probe=gh_api_verified
+    relevance: 每份报告的数据处理notebook模板化+定时复跑(日更数据章)
+- [w2-051|report_automation|ploomber] Ploomber(数据管道) :: 迭代式数据管道: notebook/脚本声明式编排, 依赖追踪, 本地开发→云端部署同构。 | url=https://github.com/ploomber/ploomber | type=open_source_repo | access=open_source | license=Apache-2.0 | stars=3621 | fit=开源可改造 | probe=gh_api_verified
+    relevance: 调研数据加工管道(DAG)备选引擎
+- [w2-052|report_automation|Microsoft] Microsoft AutoGen(多Agent编程框架) :: 企业级agentic AI框架: 多Agent对话/代码执行/人工审批节点, 数据分析与报告生成的多Agent编队底座之一。 | url=https://github.com/microsoft/autogen | type=open_source_repo | access=open_source | license=MIT | stars=61591 | fit=开源可改造 | probe=gh_api_verified
+    relevance: Manus军团之外的编排引擎对照项; Agent产线备胎
+- [w2-053|report_automation|executablebooks] Jupyter Book(计算型成书) :: 从计算型内容(notebook/md)生成出版级书册与文档, 章节结构+交叉引用+编号自动化。 | url=https://github.com/jupyter-book/jupyter-book | type=open_source_repo | access=open_source | license=BSD-3 | stars=4289 | fit=直接采用 | probe=gh_api_verified
+    relevance: 20万字级报告的成书骨架件(分卷分册编号自动化)
+- [w2-054|report_automation|Streamlit] Streamlit(数据应用快速前端) :: 纯Python搭数据应用: 图表/表格/交互式报告面板, 部署即网页。 | url=https://github.com/streamlit/streamlit | type=open_source_repo | access=open_source | license=Apache-2.0 | stars=46157 | fit=直接采用 | probe=gh_api_verified
+    relevance: 报告配套数据看板/雷达大屏的快速前端
+- [w2-055|report_automation|evidentlyai] Evidently(ML/LLM观测与报告) :: 开源ML/LLM观测框架: 评估/测试/监控, 自动生成HTML报告页, 数据漂移检测成熟。 | url=https://github.com/evidentlyai/evidently | type=open_source_repo | access=open_source | license=Apache-2.0 | stars=8016 | fit=开源可改造 | probe=gh_api_verified
+    relevance: 数据质量与产线自检报告的现成生成器(质检章自动化)
+- [w2-056|report_automation|Microsoft] MarkItDown(微软文档转Markdown) :: Office/PDF/邮件/音频等文件批量转Markdown, LLM预处理事实标准。 | url=https://github.com/microsoft/markitdown | type=open_source_repo | access=open_source | license=MIT | stars=192569 | fit=直接采用 | probe=gh_api_verified
+    relevance: 调研原始件(PDF/Word)进证据池前的统一格式化件
+- [w2-057|report_automation|Kozea] WeasyPrint(HTML→PDF工厂) :: 纯Python的HTML/CSS→PDF渲染引擎, 打印级CSS支持, 服务器端无人值守出PDF。 | url=https://github.com/Kozea/WeasyPrint | type=open_source_repo | access=open_source | license=BSD-3 | stars=9735 | fit=开源可改造 | probe=gh_api_verified
+    relevance: 报告PDF推送腿的引擎选型(现有链路的对照件)
+- [w2-058|report_automation|bytedance] DeerFlow(字节跳动开源深度研究代理) :: 开源长周期SuperAgent: 研究-编码-创作一体, 沙箱执行+多Agent编排, 85k星热度第一梯队。 | url=https://github.com/bytedance/deer-flow | type=open_source_repo | access=open_source | license=MIT | stars=84500 | fit=开源可改造 | probe=gh_api_verified
+    relevance: 自建研究军团的头部开源对照件; 沙箱+编排设计可拆件吸收
+- [w2-059|report_automation|mvanhorn] last30days-skill(近30天民意收割) :: AI agent技能: 任意主题跨Reddit/X/YouTube/TikTok/HN/Polymarket收割近30天真实发言与互动数据并综合。本机已有同名skill在役。 | url=https://github.com/mvanhorn/last30days-skill | type=open_source_repo | access=open_source | license=MIT | stars=65692 | fit=直接采用 | probe=gh_api_verified
+    relevance: 近30天一手民意腿(盲测证据路线的买家声音来源)
+- [w2-060|report_automation|zi-yue-1129] DATAGEN(多Agent科研助手) :: AI多Agent科研助理: 假设生成→数据分析→报告写作全链自动化。 | url=https://github.com/zi-yue-1129/DATAGEN | type=open_source_repo | access=open_source | license=unknown | stars=1810 | fit=开源可改造 | probe=gh_api_verified
+    relevance: 科研式报告流水线的开源参照(与我方S链同构度高的学术件)
+- [w2-061|report_automation|pedrohcgs] claude-code-my-workflow(学术多审校工作流模板) :: 可fork的Claude Code学术工作流模板: LaTeX/Beamer+R, 多Agent互审+质量门+可复现研究。 | url=https://github.com/pedrohcgs/claude-code-my-workflow | type=open_source_repo | access=open_source | license=unknown | stars=1672 | fit=方法论参考 | probe=gh_api_verified
+    relevance: 多Agent审校+质量门的工程化范例, 与我方judge环对照
+- [w2-062|chinese_methodology|binary-husky] gpt_academic(GPT学术优化) :: 面向GPT/GLM的学术交互工作台: 论文阅读/润色/翻译/审稿/LaTeX互译, 模块化插件与自定义快捷按钮。 | url=https://github.com/binary-husky/gpt_academic | type=open_source_repo | access=open_source | license=GPL-3.0 | stars=71563 | fit=直接采用 | probe=gh_api_verified
+    relevance: 中文论文级写作辅助的国民级开源件; 润色插件可拆用
+- [w2-063|chinese_methodology|zLanqing] codex-claude-academic-skills(科研三件套skill) :: 学术科研三skill: 文献阅读→论文写作→科学计算全覆盖, office-academic-skill直接产论文阅读报告与学术PPT/Word。 | url=https://github.com/zLanqing/codex-claude-academic-skills | type=open_source_repo | access=open_source | license=unknown | stars=5386 | fit=直接采用 | probe=gh_api_verified
+    relevance: 与我方skill体系同构的中文学术工作流, 可直接对照收编
+- [w2-064|chinese_methodology|zhanwen] MathModel(数学建模全套模板) :: 数学建模竞赛全套: 优秀论文+算法+LaTeX论文模板+思维导图+参考书体系。 | url=https://github.com/zhanwen/MathModel | type=open_source_repo | access=open_source | license=unknown | stars=12394 | fit=方法论参考 | probe=gh_api_verified
+    relevance: 中文建模论文的方法论与模板素材库
+- [w2-065|chinese_methodology|sjtug] SJTUThesis(上海交大学位论文LaTeX模板) :: 维护活跃的中文高校学位论文模板(同族: hithesis哈工大2469星等), 中文书册排版规范的事实参照。 | url=https://github.com/sjtug/SJTUThesis | type=open_source_repo | access=open_source | license=LaTeX-Project | stars=3890 | fit=开源可改造 | probe=gh_api_verified
+    relevance: 中文长文排版(字体/章节/图表编号规范)的模板母版
+- [w2-066|chinese_methodology|fxsjy] jieba(结巴中文分词) :: 中文分词事实标准, 支持自定义词典, 词频统计/关键词抽取(TF-IDF/TextRank)开箱即用。 | url=https://github.com/fxsjy/jieba | type=open_source_repo | access=open_source | license=MIT | stars=35221 | fit=直接采用 | probe=gh_api_verified
+    relevance: 中文语料统计腿(词频/关键词/主题热度)的底件
+- [w2-067|chinese_methodology|fighting41love] funNLP(中文NLP资源大全) :: 中文NLP资源总库: 敏感词/情感词典/停用词/缩写库/繁简转换等数十种词典与工具。 | url=https://github.com/fighting41love/funNLP | type=directory | access=open_source | license=unknown | stars=84201 | fit=直接采用 | probe=gh_api_verified
+    relevance: 中文舆情与文本分析的资源军火库, 舆情腿词典直取
+- [w2-068|chinese_methodology|wechat-article] wechat-article-exporter(公众号文章导出) :: 在线微信公众号文章批量下载: 支持阅读量/评论数据导出, 支持docker私有化与Cloudflare部署。 | url=https://github.com/wechat-article/wechat-article-exporter | type=open_source_repo | access=open_source | license=unknown | stars=13104 | fit=开源可改造 | probe=gh_api_verified
+    relevance: 公众号信源收割件(与ima收割/微信洞察选题源互补)
+- [w2-069|chinese_methodology|simonlin1212] a-stock-data(A股研报与舆情数据工具包) :: A股全栈数据工具包: 行情/研报/资金面/新闻/公告/舆情/宏观利率等15层87端点34数据源。 | url=https://github.com/simonlin1212/a-stock-data | type=open_source_repo | access=open_source | license=unknown | stars=11181 | fit=开源可改造 | probe=gh_api_verified
+    relevance: 中文研报信源与金融数据的现成通道(研报对研报的原料)
+- [w2-070|competitive_framework|gnurio] porter-strategy-skills(波特竞争战略12技能) :: 从波特《竞争战略》提炼的12个可执行AI agent技能(五力/价值链/通用战略等), 面向Claude类agent。 | url=https://github.com/gnurio/porter-strategy-skills | type=open_source_repo | access=open_source | license=unknown | stars=61 | fit=开源可改造 | probe=gh_api_verified
+    relevance: 五力自动化的事实件: 竞争章分析的即插技能包
+- [w2-071|competitive_framework|AnugamChakra] think-like-a-strategy-consultant(战略顾问思维16技能) :: 16个Claude技能: 问题定义/issue tree拆解/框架选择等战略顾问基本功训练集。 | url=https://github.com/AnugamChakra/think-like-a-strategy-consultant | type=open_source_repo | access=open_source | license=unknown | stars=30 | fit=开源可改造 | probe=gh_api_verified
+    relevance: 麦肯锡式拆题的agent化实现, 与七步法配套
+- [w2-072|competitive_framework|abinauv] business-consulting(Claude商业咨询插件) :: 商业咨询插件: 16技能+24命令+5行业覆盖层, 市场研究/竞争分析/战略。 | url=https://github.com/abinauv/business-consulting | type=open_source_repo | access=open_source | license=unknown | stars=33 | fit=开源可改造 | probe=gh_api_verified
+    relevance: SWOT/PESTEL/波特等框架的agent指令化成品, 可直接比对收编
+- [w2-073|competitive_framework|l4ci] latticework(思维格栅框架技能集) :: 思维/战略/分析框架打包成模型无关的agent技能(Munger格栅理论取向)。 | url=https://github.com/l4ci/latticework | type=open_source_repo | access=open_source | license=unknown | stars=5 | fit=开源可改造 | probe=gh_api_verified
+    relevance: 多框架随身卡: 章节分析姿势的候选库
+- [w2-074|competitive_framework|ferdinandobons] startup-skill(创业验证与竞争情报技能) :: AI agent技能集: 创业点子验证+竞争情报+规划, 星标活跃。 | url=https://github.com/ferdinandobons/startup-skill | type=open_source_repo | access=open_source | license=unknown | stars=1231 | fit=开源可改造 | probe=gh_api_verified
+    relevance: 选题验证腿的现成agent技能(与七源选题框架互补)
+- [w2-075|competitive_framework|SourcingDenis] free-online-competitive-intelligence(OSINT 40+工具清单) :: 40+免费在线OSINT工具清单(公司/人/域名/市场调查向)。 | url=https://github.com/SourcingDenis/free-online-competitive-intelligence | type=directory | access=open_source | license=unknown | stars=208 | fit=方法论参考 | probe=gh_api_verified
+    relevance: 竞调工具箱索引: 渠道三件套之外的横向补充
+- [w2-076|competitive_framework|4mmar1mtiaz] Research_Tools(终端市场研究20件) :: 20个终端内免费市场研究工具: 点子验证器/TAM SAM SOM计算器/竞对扫描等。 | url=https://github.com/4mmar1mtiaz/Research_Tools | type=open_source_repo | access=open_source | license=unknown | stars=3 | fit=开源可改造 | probe=gh_api_verified
+    relevance: 市场规模测算自动化的小型现成件
+- [w2-077|competitive_framework|dungnotnull] market-analysis-hd-skill(董事会级市场分析) :: 产品简介→带引用的TAM/SAM/SOM与竞争分析董事会级报告harness。 | url=https://github.com/dungnotnull/market-analysis-hd-skill | type=open_source_repo | access=open_source | license=unknown | stars=4 | fit=开源可改造 | probe=gh_api_verified
+    relevance: 市场规模章的引用纪律(每个数字带来源)可从此件抄
+- [w2-078|competitive_framework|Gingiris-1031] Competitor-analysis-tool(analook后端) :: AI竞对分析后端: 从任意URL生成竞对teardown报告(驱动analook.com)。 | url=https://github.com/Gingiris-1031/Competitor-analysis-tool | type=open_source_repo | access=open_source | license=unknown | stars=111 | fit=开源可改造 | probe=gh_api_verified
+    relevance: URL进-竞对报告出的最小可行样板
+- [w2-079|competitive_framework|openbq-org(原OpenBB-finance)] OpenBB(开源金融数据平台) :: 分析师/量化/AI代理的开源数据平台: 终端+平台+AI工作流一体, 金融与宏观数据接入层开放扩展。AGPL注意闭源分发限制。 | url=https://github.com/openbq-org/OpenBB | type=open_source_repo | access=open_source | license=AGPL-3.0 | stars=74797 | fit=开源可改造 | probe=gh_api_verified
+    relevance: 金融/宏观维度的开源终端底座, 竞争与行业数据腿复用
+- [w2-080|competitive_framework|GitHub长尾(analyzer2004/bcgmatrix等)] BCG矩阵/竞争框架自动化备件群 :: BCG矩阵组件等长尾开源件(另见hermes-agent-amazon-research含BCG矩阵+报告DeckOS多Agent)。星标低但可拆。 | url=https://github.com/analyzer2004/bcgmatrix | type=open_source_repo | access=open_source | license=unknown | stars=5 | fit=开源可改造 | probe=gh_api_verified
+    relevance: 图表级框架组件: 报告插图生成的小零件池

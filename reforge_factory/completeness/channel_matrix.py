@@ -105,6 +105,22 @@ CHANNEL_ALIASES: dict[str, list[str]] = {
     # 1025 渠道整合令: last30days 近30天多源社媒渠道 (reddit/hn/polymarket/
     # github 键less地板), 引擎标签 last30days/l30d 直落本渠
     "last30days": ["last30days", "l30d", "last30", "近30天社媒"],
+    # 1026 P1-4 ETL数仓渠道 (世界顶级差距#3修复): warehouse 腿查本地
+    # data/warehouse/price_finance.db (akshare 免费ETL落库, 零浏览器),
+    # engine=warehouse 直命中本渠; akshare 注册表键同源 (SURVEY_ALIASES)。
+    "warehouse": ["warehouse", "数仓", "价格财务数仓"],
+    # --- 1026 B级数据集波: 数据集形态引擎别名 (腿=legs/*_ds_leg.py; 渠道建渠走T-015, 先注册防by_engine漏记) ---
+    "opensanctions": ["opensanctions", "opensanctions_ds"],
+    "common_crawl": ["common_crawl", "commoncrawl", "common_crawl_2", "commoncrawl_ds"],
+    "overture_maps": ["overture_maps", "overture", "overture_maps_foundation", "overture_ds"],
+    "aiddata": ["aiddata", "aiddata_gcdf", "aiddata_gcdf_ds"],
+    "ofac_sdn": ["ofac_sdn", "ofac_sdn_ds"],
+    # 1030 bdn 接入令: 百度网盘检索下载渠道 (自有 SVIP8 账号面全盘检索+下载;
+    # fit=数据集+工商招投标+通用网研; 腿=legs/bdn_leg.py, 桥=api_replica_bridge
+    # CLI_ENGINES[bdn]; 渠道册同步登记 named_channels — 登记=接线完成)。
+    # 「最长别名优先」规则保证 bduss 注册表条目别名「百度网盘(bduss扫码+离线下载)」
+    # 命中时 bdn 的短别名「百度网盘」让位, 两键并存零冲突。
+    "bdn": ["bdn", "百度网盘检索下载", "百度网盘"],
 }
 
 
@@ -252,7 +268,7 @@ SURVEY_ALIASES: dict[str, list[str]] = {
     "last30days_skill": ["last30days-skill", "github.com", "mvanhorn/last30days-skill"],  # A级·新闻舆情·last30days-skill
     "modelcontextprotocol_servers_fetch": ["modelcontextprotocol/servers (官方参考服务器, 含 fetch)", "github.com", "modelcontextprotocol/servers"],  # A级·通用网研·modelcontextprotocol/servers (官方参考服务器, 含 fetch)
     "mrkrsl_web_search_mcp": ["mrkrsl/web-search-mcp", "github.com"],  # A级·通用网研·mrkrsl/web-search-mcp
-    "mwmbl": ["github.com", "mwmbl/mwmbl"],  # A级·通用网研·mwmbl
+    "mwmbl": ["github.com", "mwmbl/mwmbl", "mwmbl.org"],  # A级·通用网研·mwmbl
     "nickclyde_duckduckgo_mcp_server": ["nickclyde/duckduckgo-mcp-server", "github.com"],  # A级·通用网研·nickclyde/duckduckgo-mcp-server
     "python_baidusearch_pypi_baidusearch": ["python-baidusearch (pypi baidusearch)", "github.com", "amazingcoderpro/python-baidusearch"],  # A级·新闻舆情·python-baidusearch (PyPI baidusearch)
     "re3data": ["re3data api", "re3data.org"],  # A级·数据集·re3data API
@@ -314,8 +330,8 @@ SURVEY_ALIASES: dict[str, list[str]] = {
     "czce_com_cn": ["郑商所日行情与持仓", "czce.com.cn"],  # A级·通用网研·郑商所日行情与持仓
     "giiisp_com_keyless": ["集思谱 giiisp.com 论文检索(keyless英文腿)", "giiisp.com"],  # A级·学术专利·集思谱 giiisp.com 论文检索(keyless英文腿)
     "lark_cli_wiki": ["飞书语料 (lark-cli 检索/导出 + 总包智库 wiki 存量, 云端战略文档中枢)", "feishu.cn"],  # A级·数据集·飞书语料 (lark-cli 检索/导出 + 总包智库 wiki 存量, 云端战略文档中枢)
-    "360_360ai": ["360搜索(含360ai搜索)"],  # B级·新闻舆情·360搜索(含360AI搜索)
-    "4get": [],  # B级·通用网研·4get
+    "360_360ai": ["360搜索(含360ai搜索)", "so.com"],  # B级·新闻舆情·360搜索(含360AI搜索)
+    "4get": ["4get.ca"],  # B级·通用网研·4get
     "acled": ["acleddata.com"],  # B级·项目数据/数据集·ACLED
     "adb_projects_statistics": ["adb projects & statistics", "adb.org"],  # B级·项目数据·ADB Projects & Statistics
     "ansi_webstore": ["ansi webstore", "webstore.ansi.org"],  # B级·标准定额/工商招投标·ANSI Webstore
@@ -328,8 +344,8 @@ SURVEY_ALIASES: dict[str, list[str]] = {
     "boamp": ["boamp.fr"],  # B级·工商招投标/项目数据·BOAMP
     "bsigroup_com": ["bsigroup.com"],  # B级·标准定额·BSI
     "bellingcat_online_investigation_toolkit": ["bellingcat online investigation toolkit", "bellingcat.gitbook.io"],  # B级·项目数据·Bellingcat Online Investigation Toolkit
-    "bing": [],  # B级·标准定额/学术专利/新闻舆情·Bing
-    "boardreader": [],  # B级·新闻舆情·Boardreader
+    "bing": ["bing.com"],  # B级·标准定额/学术专利/新闻舆情·Bing
+    "boardreader": ["boardreader.com"],  # B级·新闻舆情·Boardreader
     "bochaai_bocha_search_mcp": ["bochaai/bocha-search-mcp", "github.com"],  # B级·新闻舆情·BochaAI/bocha-search-mcp
     "brave_search_api": ["brave search(网页+api)"],  # B级·新闻舆情·Brave Search(网页+API)
     "cen_cenelec": ["cen-cenelec", "cencenelec.eu"],  # B级·标准定额·CEN-CENELEC
@@ -367,13 +383,13 @@ SURVEY_ALIASES: dict[str, list[str]] = {
     "genspark_super_agent": ["genspark super agent", "genspark.ai"],  # B级·通用网研·Genspark Super Agent
     "github_topic_search_engine": ["github topic: search-engine 聚合页", "github.com", "topics/search-engine?o=desc&s=stars"],  # B级·数据集·GitHub topic: search-engine 聚合页
     "global_energy_monitor": ["global energy monitor", "globalenergymonitor.org"],  # B级·项目数据·Global Energy Monitor
-    "google": [],  # B级·通用网研·Google
+    "google": ["google.com"],  # B级·通用网研·Google
     "google_dataset_search": ["google dataset search", "datasetsearch.research.google.com"],  # B级·数据集·Google Dataset Search
     "google_dataset_search_2": ["google dataset search"],  # B级·数据集·Google Dataset Search
     "google_patents_public_datasets_bigquery": ["google patents public datasets (bigquery)", "patents.google.com"],  # B级·学术专利/数据集·Google Patents Public Datasets (BigQuery)
     "google_programmable_search_engine_json_api": ["google programmable search engine json api"],  # B级·项目数据·Google Programmable Search Engine JSON API
-    "google_scholar": ["google scholar"],  # B级·学术专利·Google Scholar
-    "google_trends": ["google trends"],  # B级·新闻舆情·Google Trends
+    "google_scholar": ["google scholar", "scholar.google.com"],  # B级·学术专利·Google Scholar
+    "google_trends": ["google trends", "trends.google.com"],  # B级·新闻舆情·Google Trends
     "grok_deepsearch_agents": ["grok deepsearch / agents"],  # B级·新闻舆情·Grok DeepSearch / Agents
     "h2o_ai_deep_research": ["h2o.ai deep research", "h2o.ai"],  # B级·通用网研·H2O.ai Deep Research
     "iea_data_statistics": ["iea data & statistics", "iea.org"],  # B级·项目数据·IEA Data & Statistics
@@ -395,7 +411,7 @@ SURVEY_ALIASES: dict[str, list[str]] = {
     "metager": [],  # B级·新闻舆情·MetaGer
     "microsoft_copilot_researcher": ["microsoft copilot researcher", "microsoft.com"],  # B级·通用网研·Microsoft Copilot Researcher
     "millionshort": [],  # B级·通用网研·MillionShort
-    "mojeek": [],  # B级·标准定额·Mojeek
+    "mojeek": ["mojeek.com"],  # B级·标准定额·Mojeek
     "mwmbl_2": [],  # B级·通用网研·Mwmbl
     "nasa_firms": ["nasa firms", "firms.modaps.eosdis.nasa.gov"],  # B级·新闻舆情/数据集·NASA FIRMS
     "newsapi_org": ["newsapi.org"],  # B级·新闻舆情·NewsAPI.org
@@ -417,9 +433,9 @@ SURVEY_ALIASES: dict[str, list[str]] = {
     "phind": [],  # B级·标准定额·Phind
     "presearch": [],  # B级·通用网研·Presearch
     "public_apis": ["public apis", "github.com", "public-apis/public-apis"],  # B级·新闻舆情/数据集·Public APIs
-    "qwant": [],  # B级·通用网研·Qwant
+    "qwant": ["qwant.com"],  # B级·通用网研·Qwant
     "qwen_deep_research": ["qwen deep research", "chat.qwen.ai"],  # B级·通用网研·Qwen Deep Research
-    "rsshub": [],  # B级·新闻舆情·RSSHub
+    "rsshub": ["docs.rsshub.app"],  # B级·新闻舆情·RSSHub
     "researchrabbit": ["researchrabbit.ai"],  # B级·学术专利·ResearchRabbit
     "richard_weiss_mcp_google_cse": ["richard-weiss/mcp-google-cse", "github.com"],  # B级·新闻舆情·Richard-Weiss/mcp-google-cse
     "sam_gov": ["sam.gov排除名单", "sam.gov"],  # B级·通用网研·SAM.gov排除名单
@@ -433,11 +449,11 @@ SURVEY_ALIASES: dict[str, list[str]] = {
     "serpapi": [],  # B级·学术专利/新闻舆情/项目数据·SerpAPI
     "serper_dev": ["serper.dev"],  # B级·通用网研·Serper.dev
     "springer_nature_api": ["springer nature api", "dev.springernature.com"],  # B级·学术专利·Springer Nature API
-    "startpage": [],  # B级·通用网研·Startpage
-    "stract": [],  # B级·通用网研·Stract
-    "swisscows": [],  # B级·通用网研·Swisscows
+    "startpage": ["startpage.com"],  # B级·通用网研·Startpage
+    "stract": ["stract.com"],  # B级·通用网研·Stract
+    "swisscows": ["swisscows.com"],  # B级·通用网研·Swisscows
     "tavily": [],  # B级·通用网研·Tavily
-    "teclis": [],  # B级·通用网研·Teclis
+    "teclis": ["teclis.com"],  # B级·通用网研·Teclis
     "trendradar_technologieradar": ["trendradar (technologieradar)", "technologieradar.tryresearchly.com"],  # B级·新闻舆情·Trendradar (technologieradar)
     "truestar": ["truestar.tech"],  # B级·通用网研·TrueStar
     "tushare_pro": ["tushare(pro免费积分面)", "github.com", "waditu/tushare"],  # B级·项目数据·Tushare(Pro免费积分面)
@@ -452,7 +468,7 @@ SURVEY_ALIASES: dict[str, list[str]] = {
     "wipo_patentscope": ["wipo patentscope", "patentscope.wipo.int"],  # B级·学术专利·WIPO PATENTSCOPE
     "web_of_science_api": ["web of science api", "clarivate.com"],  # B级·学术专利·Web of Science API
     "wolfram_alpha": ["wolfram alpha"],  # B级·标准定额·Wolfram Alpha
-    "yandex": [],  # B级·通用网研·Yandex
+    "yandex": ["yandex.com"],  # B级·通用网研·Yandex
     "yep": [],  # B级·通用网研·Yep
     "you_com_api": ["you.com api"],  # B级·通用网研·You.com API
     "you_com_research": ["you.com research", "you.com"],  # B级·通用网研·You.com Research
@@ -523,9 +539,9 @@ SURVEY_ALIASES: dict[str, list[str]] = {
     "nea_gov_cn": ["国家能源局电力业务资质", "nea.gov.cn"],  # B级·通用网研·国家能源局电力业务资质
     "cg_95306_cn": ["国铁采购平台", "cg.95306.cn"],  # B级·工商招投标·国铁采购平台
     "suaee_com": ["地方产权交易所公告(代表:上海联交所)", "suaee.com"],  # B级·新闻舆情·地方产权交易所公告(代表:上海联交所)
-    "ai": ["天工ai搜索"],  # B级·新闻舆情·天工AI搜索
+    "ai": ["天工ai搜索", "tiangong.cn"],  # B级·新闻舆情·天工AI搜索
     "tianyancha_com": ["tianyancha.com"],  # B级·工商招投标·天眼查
-    "so_toutiao_com": [],  # B级·新闻舆情·头条搜索
+    "so_toutiao_com": ["so.toutiao.com"],  # B级·新闻舆情·头条搜索
     "jzsbs_com": ["jzsbs.com"],  # B级·新闻舆情·建筑时报
     "jianshe99_com": ["jianshe99.com"],  # B级·工商招投标·建设通
     "ebnew_com": ["ebnew.com"],  # B级·工商招投标·必联网
@@ -542,12 +558,17 @@ SURVEY_ALIASES: dict[str, list[str]] = {
     "xueshu_baidu_com": [],  # B级·学术专利·百度学术
     "xueshu_baidu_com_2": ["百度学术(免费发现层)", "xueshu.baidu.com"],  # B级·学术专利·百度学术(免费发现层)
     "index_baidu_com": [],  # B级·新闻舆情·百度指数
-    "news_baidu_com": [],  # B级·新闻舆情·百度新闻
+    "news_baidu_com": ["news.baidu.com"],  # B级·新闻舆情·百度新闻
     "ai_metaso": ["秘塔ai搜索(metaso)"],  # B级·学术专利/新闻舆情·秘塔AI搜索(metaso)
     "iresearch_cn": ["艾瑞咨询免费报告面", "iresearch.cn"],  # B级·通用网研·艾瑞咨询免费报告面
     "companies_house": ["英国companies house", "find-and-update.company-information.service.gov.uk"],  # B级·通用网研·英国Companies House
     "dnb_com": ["邓白氏d&b(纯付费-按令排除)", "dnb.com"],  # B级·通用网研·邓白氏D&B(纯付费-按令排除)
-    "bidcenter_com_cn": ["bidcenter.com.cn"],  # B级·工商招投标·采招网
+    "bidcenter_com_cn": ["bidcenter.com.cn"],  # B级·工商招投标·采招网,
+    #: ---- 1026 B级接入终账·点亮渠道别名补同步 (只增; 依据 btier_freekey_ledger.md / btier_register_ledger.md 实测点亮面):
+    #: 上方 19 条为免费注册波点亮站点域名别名补齐 (键已存在, 域名别名缺失; 碰撞检查零冲突)。
+    #: 下 2 条为免费钥波点亮引擎补录 — 注册表无独立条目, 按「引擎id=渠道id」惯例新建, 使入池 engine 标签直落渠道。
+    "nasa_images": ["nasa images", "images-api.nasa.gov"],  # 免费钥波LIT·NASA Image and Video Library API (registry仅nasa_firms, 本面独立)
+    "noaa_nws": ["noaa nws", "api.weather.gov", "weather.gov"],  # 免费钥波LIT·NOAA NWS 官方面 (ncei检索面400停用疑, 如实分流)
 }
 # 只增合并: 与存量渠道同名键(如 arxiv)并入, 不覆盖不删除
 for _k in list(SURVEY_ALIASES):

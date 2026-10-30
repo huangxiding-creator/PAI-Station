@@ -1,0 +1,94 @@
+[
+ {
+  "name": "洞见研报(研报聚合)",
+  "repo_or_site": "https://www.djyanbao.com/",
+  "replaces": "慧博投研/艾瑞/易观研报库",
+  "one_liner": "券商/行业研报聚合免费面(VIP至2027-01在役)——研报域主力平替, 逆向件djyanbao_drission在案",
+  "access": "免费+VIP档(在役)",
+  "fit": "研报全文",
+  "existing": "named(djyanbao)",
+  "overlap": "channel_manifest在册",
+  "probe_key": "djyanbao"
+ },
+ {
+  "name": "券商研究所公众号免费推送(通道)",
+  "repo_or_site": "https://weixin.sogou.com/weixin?type=2",
+  "replaces": "慧博投研(首发研报流)",
+  "one_liner": "券商研究所公众号首发研报免费推送面, 经搜狗微信通道采集(复刻件sogou_weixin_api四段链在案)——首发研报域拼合平替",
+  "access": "免费页面(采集通道在役)",
+  "fit": "研报(首发流)",
+  "existing": "named(sougo)+复刻件sogou_weixin_api",
+  "probe_key": null
+ },
+ {
+  "name": "上市公司公告行业数据(通道:招股书/年报行业章节)",
+  "repo_or_site": "http://www.cninfo.com.cn/new/index",
+  "replaces": "艾瑞/易观/头豹(行业规模与市占数据)",
+  "one_liner": "招股书行业章节+年报经营数据免费一手: 行业规模/竞争格局/市占率数据(巨潮+EDGAR双库)——付费行研数据域拼合平替主力",
+  "access": "免费(巨潮/EDGAR检索+PDF解析)",
+  "fit": "行业规模数据",
+  "existing": "factory_registry(cninfo/edgar在册, 本通道为其行业数据用法)",
+  "probe_key": null
+ },
+ {
+  "name": "行业协会年度报告公开版(代表:对外承包工程商会)",
+  "repo_or_site": "http://www.chinca.org/",
+  "replaces": "沙利文/头豹(行业统计口径)",
+  "one_liner": "行业协会年报/统计公开版: chinca对外承包统计已破(逆向复刻件在案)——官方口径行业统计免费一手",
+  "access": "免费页面(部分需会员)",
+  "fit": "行业统计",
+  "existing": "factory_registry(chinca在册)+逆向工程复刻件",
+  "probe_key": "chinca"
+ },
+ {
+  "name": "艾瑞咨询免费报告面",
+  "repo_or_site": "https://www.iresearch.cn/",
+  "replaces": "艾瑞付费库(自家免费子集)",
+  "one_liner": "艾瑞官网免费报告专区(注册免费下载部分报告)——付费库的自家免费面, 覆盖部分全库",
+  "access": "免费注册下载(部分)",
+  "fit": "行业研报(互联网/新经济)",
+  "existing": "none(new)",
+  "probe_key": "iresearch"
+ },
+ {
+  "name": "商务部《对外投资合作国别(地区)指南》",
+  "repo_or_site": "https://www.mofcom.gov.cn/",
+  "replaces": "中信保国别报告(指南域)",
+  "one_liner": "商务部对外投资国别指南全库免费PDF: 国别经营环境/法规/税务/劳工一手(海外EPC尽调底座)——任务令口径已有渠道; fec子站探针双不可达, 主站直连200",
+  "access": "免费页面(PDF直下)",
+  "fit": "国别指南",
+  "existing": "在役(任务令口径已有; gov_list线)",
+  "probe_key": "mofcom_www",
+  "alt_probe": "mofcom_fec"
+ },
+ {
+  "name": "中国信保国别风险公开面",
+  "repo_or_site": "https://www.sinosure.com.cn/",
+  "replaces": "中信保国别风险深度报告(付费版)",
+  "one_liner": "中国信保官网国别风险信息/《国家风险分析报告》公开面——深度付费版的免费部分平替",
+  "access": "免费页面(公开部分)",
+  "fit": "国别风险",
+  "existing": "none(new)",
+  "probe_key": "sinosure"
+ },
+ {
+  "name": "世行MIGA政治风险出版物",
+  "repo_or_site": "https://www.miga.org/",
+  "replaces": "政治风险保险数据(世行系付费咨询)",
+  "one_liner": "多边投资担保机构: 政治风险险种/国别风险出版物免费——政治风险域免费一手",
+  "access": "免费页面(出版物直下)",
+  "fit": "政治风险",
+  "existing": "none(new)",
+  "probe_key": "miga"
+ },
+ {
+  "name": "UNCTAD投资政策观察站(IPM)",
+  "repo_or_site": "https://investmentpolicy.unctad.org/",
+  "replaces": "IHS/律商(投资政策追踪域)",
+  "one_liner": "联合国贸发会议投资政策措施数据库: 各国投资政策/条约/争端全量免费——投资政策风险追踪一手; 探针403反爬(官方免费站)",
+  "access": "免费页面+数据下载",
+  "fit": "投资政策风险",
+  "existing": "none(new)",
+  "probe_key": "unctad_iph"
+ }
+]

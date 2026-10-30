@@ -1,0 +1,1220 @@
+{
+ "sweep": "sweep_paidfree",
+ "lane": "paidfree_free_equiv",
+ "generated": "2026-10-25",
+ "method": "官网探活urllib(直连→7895代理兜底, ≤2请求/站, 51站实测)+gh api星标核验(3仓)+channel_manifest 35渠对照标existing+sweep_datasets同日证据复用; 执行口径=免费平替+免费通道, 付费墙本体不破解; 覆盖率口径=字段域级(全等/拼合/延迟/部分/无), 数字由脚本从矩阵自算零手填",
+ "proxy": "http://127.0.0.1:7895",
+ "count": 61,
+ "coverage_summary": {
+  "paid_lib_families": 8,
+  "named_paid_products": 21,
+  "field_domains": 47,
+  "levels": {
+   "全等": 28,
+   "无": 2,
+   "部分": 9,
+   "延迟": 2,
+   "拼合": 6
+  },
+  "全等率": 0.596,
+  "免费可覆盖率(全等+拼合+延迟+部分)": 0.957,
+  "硬缺口域数(无)": 2
+ },
+ "coverage_by_library": [
+  {
+   "paid_lib": "Wind/同花顺iFinD/东方财富Choice(金融终端)",
+   "domains": [
+    {
+     "domain": "A股/港美股/期货行情(日频与实时快照)",
+     "replacement": [
+      "AKShare",
+      "新浪行情接口",
+      "腾讯行情接口",
+      "上期所/大商所/郑商所/中金所日行情"
+     ],
+     "level": "全等",
+     "note": "日线OHLC与秒级快照免费多路; 历史复权因子akshare免费拼合"
+    },
+    {
+     "domain": "Level-2逐笔委托/毫秒tick流",
+     "replacement": [],
+     "level": "无",
+     "note": "交易所Level-2本身收费授权, 免费无等价; 残缺口#1"
+    },
+    {
+     "domain": "财务三表/股本股东",
+     "replacement": [
+      "巨潮公告全文(财报原文)",
+      "东方财富数据中心免费面",
+      "EDGAR XBRL(美股)"
+     ],
+     "level": "全等",
+     "note": "披露口径一手全等"
+    },
+    {
+     "domain": "公告/信披检索",
+     "replacement": [
+      "巨潮资讯网",
+      "沪深北交易所披露页",
+      "港交所披露易",
+      "SEC EDGAR全文检索"
+     ],
+     "level": "全等",
+     "note": "法定信披平台=母源本体"
+    },
+    {
+     "domain": "中国宏观指标",
+     "replacement": [
+      "国家统计局·国家数据",
+      "中国人民银行",
+      "FRED(全球序列)"
+     ],
+     "level": "全等",
+     "note": "官方一手"
+    },
+    {
+     "domain": "人民币汇率中间价/LPR/SHIBOR",
+     "replacement": [
+      "中国货币网(CFETS)"
+     ],
+     "level": "全等",
+     "note": "定盘机构官网=母源"
+    },
+    {
+     "domain": "债券估值/收益率曲线(深历史全库)",
+     "replacement": [
+      "中债公开面(曲线+估值文件)",
+      "交易所债券行情"
+     ],
+     "level": "部分",
+     "note": "公开面覆盖关键期限与主要券种, 全字段深历史付费"
+    },
+    {
+     "domain": "期货行情与持仓排名(境内四所)",
+     "replacement": [
+      "上期所",
+      "大商所",
+      "郑商所",
+      "中金所日频数据文件"
+     ],
+     "level": "全等",
+     "note": "日频一手全等; 盘中tick见残缺口#1"
+    },
+    {
+     "domain": "LME等境外交易所实时盘口",
+     "replacement": [
+      "LME官网延迟行情"
+     ],
+     "level": "延迟",
+     "note": "无全等平替, 约10-15分钟延迟免费替代"
+    }
+   ]
+  },
+  {
+   "paid_lib": "CNKI/万方/维普(文献全库)",
+   "domains": [
+    {
+     "domain": "中文社科期刊全文",
+     "replacement": [
+      "NCPSSD"
+     ],
+     "level": "全等",
+     "note": "全刊免费下载(免费注册)"
+    },
+    {
+     "domain": "中文理工期刊全文",
+     "replacement": [
+      "CNKI免费面+NCPSSD交叉+图书馆联盟传递"
+     ],
+     "level": "拼合",
+     "note": "多源拼合可覆盖大部分; 单一免费库不全等"
+    },
+    {
+     "domain": "学位论文全文",
+     "replacement": [
+      "全国图书馆参考咨询联盟(部分传递)"
+     ],
+     "level": "部分",
+     "note": "残缺口#3: 大部分学位论文无免费全文"
+    },
+    {
+     "domain": "外文OA全文",
+     "replacement": [
+      "OpenAIRE",
+      "CORE",
+      "arXiv",
+      "PMC"
+     ],
+     "level": "全等",
+     "note": "OA域免费全等"
+    },
+    {
+     "domain": "外文付费墙全文",
+     "replacement": [
+      "Unpaywall定位",
+      "SSRN工作论文",
+      "馆际互递(NSTL/联盟)"
+     ],
+     "level": "拼合",
+     "note": "定位+预印本+传递三路拼合"
+    },
+    {
+     "domain": "政府文献/公报",
+     "replacement": [
+      "中国政府公报+地方公报门户"
+     ],
+     "level": "全等",
+     "note": "一手全等"
+    },
+    {
+     "domain": "跨库发现层(题录检索)",
+     "replacement": [
+      "百度学术",
+      "OpenAlex(named在册)"
+     ],
+     "level": "全等",
+     "note": "发现层免费; 全文另配"
+    }
+   ]
+  },
+  {
+   "paid_lib": "慧博/艾瑞/易观/头豹/沙利文(研报库)",
+   "domains": [
+    {
+     "domain": "券商研报全文",
+     "replacement": [
+      "洞见研报(在役)",
+      "券商公众号免费推送(搜狗微信通道)"
+     ],
+     "level": "拼合",
+     "note": "聚合面+首发流双路"
+    },
+    {
+     "domain": "行业规模/市占率数据",
+     "replacement": [
+      "招股书/年报行业章节(巨潮+EDGAR)",
+      "行业协会年报公开版"
+     ],
+     "level": "拼合",
+     "note": "一手披露拼合, 权威口径常优于二手研报"
+    },
+    {
+     "domain": "行业统计年鉴",
+     "replacement": [
+      "行业协会年度报告公开版(chinca代表)"
+     ],
+     "level": "全等",
+     "note": "官方口径一手"
+    },
+    {
+     "domain": "自家免费面",
+     "replacement": [
+      "艾瑞免费报告面"
+     ],
+     "level": "部分",
+     "note": "付费库的免费子集"
+    }
+   ]
+  },
+  {
+   "paid_lib": "中信保国别风险/买方资信",
+   "domains": [
+    {
+     "domain": "国别投资经营指南",
+     "replacement": [
+      "商务部国别指南(已有)"
+     ],
+     "level": "全等",
+     "note": "官方全库免费"
+    },
+    {
+     "domain": "国别风险评级",
+     "replacement": [
+      "中国信保公开面",
+      "MIGA出版物"
+     ],
+     "level": "拼合",
+     "note": "公开面评级口径; 深度版付费"
+    },
+    {
+     "domain": "投资政策/政治风险追踪",
+     "replacement": [
+      "UNCTAD IPM",
+      "MIGA"
+     ],
+     "level": "全等",
+     "note": "国际组织一手免费"
+    },
+    {
+     "domain": "海外买方企业资信深度报告",
+     "replacement": [
+      "gsxt+四库一平台+OpenCorporates拼合"
+     ],
+     "level": "部分",
+     "note": "登记口径全等可拼; 信用评分模型无免费等价, 残缺口#5"
+    }
+   ]
+  },
+  {
+   "paid_lib": "律商LexisNexis/威科先行(法规判例库)",
+   "domains": [
+    {
+     "domain": "中国现行法律法规全文",
+     "replacement": [
+      "国家法律法规数据库flk.npc.gov.cn"
+     ],
+     "level": "全等",
+     "note": "人大官方库免费全量"
+    },
+    {
+     "domain": "中央政策文件",
+     "replacement": [
+      "国务院政策文件库"
+     ],
+     "level": "全等",
+     "note": "官方全量"
+    },
+    {
+     "domain": "裁判文书(判决书全文)",
+     "replacement": [
+      "裁判文书网+人民法院案例库+二手源兜底(court在役)"
+     ],
+     "level": "部分",
+     "note": "上网文书规模缩减+直采受限; 拼合可达, 残缺口#6"
+    },
+    {
+     "domain": "指导性案例/参考案例",
+     "replacement": [
+      "人民法院案例库rmfyalk"
+     ],
+     "level": "全等",
+     "note": "免费注册全量"
+    },
+    {
+     "domain": "法规英文译本/修订对照工具",
+     "replacement": [
+      "北大法宝免费面+NPC官方英文库"
+     ],
+     "level": "部分",
+     "note": "深度工具付费"
+    },
+    {
+     "domain": "海外判例(美国)",
+     "replacement": [
+      "CourtListener+RECAP"
+     ],
+     "level": "部分",
+     "note": "美域免费主力; 其他法域覆盖不全"
+    }
+   ]
+  },
+  {
+   "paid_lib": "伍德麦肯兹/IHS S&P Global(能源大宗情报)",
+   "domains": [
+    {
+     "domain": "美国能源供需/价格全库",
+     "replacement": [
+      "EIA API v2"
+     ],
+     "level": "全等",
+     "note": "官方免费key"
+    },
+    {
+     "domain": "全球能源平衡/电力",
+     "replacement": [
+      "IEA免费数据产品+OPEC月报"
+     ],
+     "level": "拼合",
+     "note": "两家免费面拼合"
+    },
+    {
+     "domain": "大宗商品价格(月频)",
+     "replacement": [
+      "世行Pink Sheet"
+     ],
+     "level": "全等",
+     "note": "70+商品1960-今xlsx直下"
+    },
+    {
+     "domain": "全球贸易流(HS级)",
+     "replacement": [
+      "UN Comtrade"
+     ],
+     "level": "全等",
+     "note": "免费key"
+    },
+    {
+     "domain": "中国进出口月度",
+     "replacement": [
+      "海关总署统计平台"
+     ],
+     "level": "全等",
+     "note": "官方在线查询"
+    },
+    {
+     "domain": "上游项目级资产经济模型(油气田/矿山)",
+     "replacement": [],
+     "level": "无",
+     "note": "专有咨询模型无免费等价, 残缺口#4; 拼合=公司年报披露+供需面"
+    }
+   ]
+  },
+  {
+   "paid_lib": "Bloomberg/Refinitiv(全球行情宏观终端)",
+   "domains": [
+    {
+     "domain": "宏观时间序列(美/全球)",
+     "replacement": [
+      "FRED"
+     ],
+     "level": "全等",
+     "note": "10万+序列免费key"
+    },
+    {
+     "domain": "欧元区金融统计",
+     "replacement": [
+      "ECB SDW"
+     ],
+     "level": "全等",
+     "note": "SDMX免费; 本轮探针瞬时不可达如实标注"
+    },
+    {
+     "domain": "国际清算/信贷统计",
+     "replacement": [
+      "BIS统计门户"
+     ],
+     "level": "全等",
+     "note": "SDMX免费"
+    },
+    {
+     "domain": "中国货币金融",
+     "replacement": [
+      "中国人民银行公开数据"
+     ],
+     "level": "全等",
+     "note": "一手公告"
+    },
+    {
+     "domain": "全球实时tick行情流",
+     "replacement": [
+      "新浪/腾讯秒级快照轮询",
+      "AKShare"
+     ],
+     "level": "延迟",
+     "note": "秒级快照≠逐笔tick流; 深度行情见残缺口#1"
+    }
+   ]
+  },
+  {
+   "paid_lib": "天眼查专业版/企查查VIP(工商深度)",
+   "domains": [
+    {
+     "domain": "企业登记/年报/行政处罚一手",
+     "replacement": [
+      "国家企业信用信息公示系统"
+     ],
+     "level": "全等",
+     "note": "母源本体; 检索需登录验证"
+    },
+    {
+     "domain": "失信/经营异常/信用公示",
+     "replacement": [
+      "信用中国"
+     ],
+     "level": "全等",
+     "note": "一手全等"
+    },
+    {
+     "domain": "建企资质/人员/工程业绩",
+     "replacement": [
+      "四库一平台"
+     ],
+     "level": "全等",
+     "note": "住建部一手(EPC专用)"
+    },
+    {
+     "domain": "海外公司注册",
+     "replacement": [
+      "OpenCorporates"
+     ],
+     "level": "全等",
+     "note": "2亿+聚合"
+    },
+    {
+     "domain": "股权穿透自动图谱",
+     "replacement": [
+      "gsxt+年报穿透人工拼合"
+     ],
+     "level": "部分",
+     "note": "数据可得但自动化图谱引擎无免费等价, 残缺口#7"
+    },
+    {
+     "domain": "产权交易/股权变更监测",
+     "replacement": [
+      "地方产权交易所公告(沪联交所代表)"
+     ],
+     "level": "部分",
+     "note": "公告面免费, 覆盖以国企产权为主"
+    }
+   ]
+  }
+ ],
+ "residual_gaps": [
+  {
+   "id": 1,
+   "gap": "沪深Level-2逐笔委托/毫秒tick流",
+   "scope": "Wind/iFinD/Choice/Bloomberg",
+   "reason": "交易所Level-2行情收费授权, 免费生态无等价源",
+   "mitigation": "延迟容忍: 新浪/腾讯秒级快照轮询+akshare分钟级, 研报场景够用",
+   "level": "无"
+  },
+  {
+   "id": 2,
+   "gap": "LME等境外交易所实时盘口",
+   "scope": "Wind/Refinitiv",
+   "reason": "实时数据授权收费",
+   "mitigation": "LME官网延迟行情(约10-15分钟)",
+   "level": "延迟"
+  },
+  {
+   "id": 3,
+   "gap": "中文学位论文全文(大部分)",
+   "scope": "CNKI/万方",
+   "reason": "NCPSSD不含学位论文; 联盟仅部分传递",
+   "mitigation": "全国图书馆参考咨询联盟部分传递+馆际互借",
+   "level": "部分"
+  },
+  {
+   "id": 4,
+   "gap": "上游项目级资产经济模型(油气田/矿山单位成本曲线)",
+   "scope": "伍德麦肯兹/IHS",
+   "reason": "专有咨询模型, 无公开数据源",
+   "mitigation": "拼合: 上市公司年报披露+OPEC/EIA供需+Pink Sheet价格",
+   "level": "无"
+  },
+  {
+   "id": 5,
+   "gap": "买方资信信用评分模型",
+   "scope": "中信保/D&B/科法斯",
+   "reason": "评分模型为商业专有",
+   "mitigation": "gsxt/四库一平台/OpenCorporates登记口径拼合+财报自算",
+   "level": "部分"
+  },
+  {
+   "id": 6,
+   "gap": "裁判文书上网规模缩减(2021后)",
+   "scope": "律商/威科/文书网",
+   "reason": "最高法上网文书规模收缩+直采受限",
+   "mitigation": "人民法院案例库(参考案例)+替代源+metaso兜底在役",
+   "level": "部分"
+  },
+  {
+   "id": 7,
+   "gap": "股权穿透自动图谱引擎",
+   "scope": "天眼查/企查查",
+   "reason": "图谱算法为产品能力非数据本体",
+   "mitigation": "gsxt公示数据人工穿透+年报交叉",
+   "level": "部分"
+  },
+  {
+   "id": 8,
+   "gap": "中债估值深历史全字段库",
+   "scope": "Wind/Choice债券估值",
+   "reason": "中债公开面覆盖关键期限, 全库深历史为付费产品",
+   "mitigation": "当期估值公开文件+交易所债券行情拼合",
+   "level": "部分"
+  }
+ ],
+ "projects": [
+  {
+   "name": "AKShare 开源金融数据库",
+   "repo_or_site": "https://github.com/akfamily/akshare",
+   "replaces": "Wind/iFinD/Choice(行情/财务/宏观/期货多域)",
+   "one_liner": "开源Python金融数据库(MIT), 数百接口聚合东财/新浪/交易所等免费一手源, A股/港美股/期货/宏观/外汇全谱, Wind免费平替主力件",
+   "access": "开源库(pip安装, 聚合免费源)",
+   "fit": "金融数据全家桶",
+   "existing": "none(new)",
+   "cn_reach": "GitHub gh api实证",
+   "evidence": "23068 stars (gh-cli, 2026-10-25)"
+  },
+  {
+   "name": "Tushare(Pro免费积分面)",
+   "repo_or_site": "https://github.com/waditu/tushare",
+   "replaces": "Wind/iFinD(日线行情/财务/宏观)",
+   "one_liner": "老牌开源金融数据接口, Pro版积分制基础接口免费(A股日线/财务指标/宏观), 免费档限频",
+   "access": "免费注册积分面(基础接口免费)",
+   "fit": "金融数据",
+   "existing": "none(new)",
+   "cn_reach": "GitHub gh api实证",
+   "evidence": "15464 stars (gh-cli, 2026-10-25)"
+  },
+  {
+   "name": "efinance 轻量行情财报库",
+   "repo_or_site": "https://github.com/Micro-sheep/efinance",
+   "replaces": "iFinD/Choice(实时快照/历史K线/财报)",
+   "one_liner": "开源轻量库, 直连东财公开接口: 实时行情快照+历史K线+财务报表免费拉取",
+   "access": "开源库(聚合免费源)",
+   "fit": "金融数据",
+   "existing": "none(new)",
+   "cn_reach": "GitHub gh api实证",
+   "evidence": "4095 stars (gh-cli, 2026-10-25)"
+  },
+  {
+   "name": "新浪财经行情接口(非官方公开)",
+   "repo_or_site": "https://hq.sinajs.cn/list=sh000001",
+   "replaces": "Wind/同花顺实时行情(快照级)",
+   "one_liner": "新浪行情HTTP接口: 股/期/汇实时快照与分钟线, 免费免key, 需带Referer头(2021后强制)",
+   "access": "免费接口(非官方公开, 需Referer)",
+   "fit": "实时行情(秒级快照)",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "腾讯财经行情接口(非官方公开)",
+   "repo_or_site": "https://qt.gtimg.cn/q=sh000001",
+   "replaces": "Wind/同花顺实时行情(快照级)",
+   "one_liner": "腾讯行情HTTP接口: 股票/期货/外汇快照, 多年稳定, 免费免key",
+   "access": "免费接口(非官方公开)",
+   "fit": "实时行情(秒级快照)",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "东方财富数据中心(免费网页面)",
+   "repo_or_site": "https://data.eastmoney.com/",
+   "replaces": "东方财富Choice(同门付费终端)",
+   "one_liner": "东财网页数据中心: 财报/资金流/龙虎榜/大宗交易/限售解禁/宏观 全免费页面——Choice付费终端的数据母源大面公开, 部分XHR可程序化",
+   "access": "免费页面(+部分公开XHR)",
+   "fit": "金融数据",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "巨潮资讯网(法定信披平台)",
+   "repo_or_site": "http://www.cninfo.com.cn/new/index",
+   "replaces": "Wind公告库(沪深京全量公告/财报原文)",
+   "one_liner": "证监会指定信披网站, 沪深京全量公告检索+PDF直下, 公开查询接口(hisAnnouncement)可程序化——公告域免费一手全等源",
+   "access": "免费页面+公开查询接口",
+   "fit": "公告/财报原文",
+   "existing": "factory_registry(cninfo在册)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "上交所披露与市场数据",
+   "repo_or_site": "https://www.sse.com.cn/",
+   "replaces": "Wind公告库(沪市)/沪市统计行情",
+   "one_liner": "上交所官网: 沪市公告披露+统计数据(日行情/统计月报/年鉴)免费页面与公开数据文件",
+   "access": "免费页面+公开数据文件",
+   "fit": "公告/交易所统计",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "深交所披露与市场数据",
+   "repo_or_site": "https://www.szse.cn/",
+   "replaces": "Wind公告库(深市)/深市日行情",
+   "one_liner": "深交所官网: 深市公告+市场数据(股票/基金/债券日行情文件免费下载)",
+   "access": "免费页面+公开数据文件",
+   "fit": "公告/交易所统计",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "北交所披露与市场数据",
+   "repo_or_site": "https://www.bse.cn/",
+   "replaces": "Wind公告库(北交所)",
+   "one_liner": "北交所官网: 公告披露与市场行情数据免费",
+   "access": "免费页面",
+   "fit": "公告/交易所统计",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "港交所披露易(HKEXnews)",
+   "repo_or_site": "https://www.hkexnews.hk/index_c.htm",
+   "replaces": "Wind港股公告/港股财报",
+   "one_liner": "港交所法定披露易: 全量公告/年报/通函免费检索下载, 港股一手全等",
+   "access": "免费页面",
+   "fit": "港股公告",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "SEC EDGAR全文检索API",
+   "repo_or_site": "https://efts.sec.gov/LATEST/search-index",
+   "replaces": "Refinitiv/Bloomberg(美股filings域)",
+   "one_liner": "美证监会EDGAR: 全文检索API(efts)+XBRL公司事实API(data.sec.gov), 美股公告财报一手全等",
+   "access": "免费API(需UA标识)",
+   "fit": "美股公告/财报",
+   "existing": "factory_registry(edgar在册)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "国家统计局·国家数据",
+   "repo_or_site": "https://data.stats.gov.cn/",
+   "replaces": "Wind宏观库(中国宏观指标)",
+   "one_liner": "官方宏观月度/年度库: 建筑业产值/固定资产投资/价格指数/能源, easyquery接口需会话cookie(浏览器面免费)",
+   "access": "免费页面(query接口需会话)",
+   "fit": "中国宏观",
+   "existing": "none(new)",
+   "overlap": "sweep_datasets已录(彼时302/403); 本表按Wind平替口径重定位",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "中债·中国债券信息网公开面",
+   "repo_or_site": "https://yield.chinabond.com.cn/",
+   "replaces": "Wind债券估值/收益率曲线域",
+   "one_liner": "中债登官网: 中债收益率曲线+中债估值公开下载面(关键期限/主要券种), 深历史全字段为付费, 公开面=部分全等",
+   "access": "免费页面(数据文件下载)",
+   "fit": "债券估值",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "上期所日行情与持仓",
+   "repo_or_site": "https://www.shfe.com.cn/",
+   "replaces": "Wind期货日行情(上期所品种)",
+   "one_liner": "上期所官网每日行情/成交持仓排名数据文件免费下载, 一手全等(日频)",
+   "access": "免费页面+公开数据文件",
+   "fit": "期货行情",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "大商所日行情与持仓",
+   "repo_or_site": "http://www.dce.com.cn/",
+   "replaces": "Wind期货日行情(大商所品种)",
+   "one_liner": "大商所官网日行情/持仓排名文件免费下载(日频一手), 探针412为预条件反爬(浏览器面正常)",
+   "access": "免费页面+公开数据文件",
+   "fit": "期货行情",
+   "existing": "none(new)",
+   "cn_reach": "直连412/代理412(反爬或预条件, 站点在)",
+   "evidence": "direct=412; proxy=412"
+  },
+  {
+   "name": "郑商所日行情与持仓",
+   "repo_or_site": "http://www.czce.com.cn/",
+   "replaces": "Wind期货日行情(郑商所品种)",
+   "one_liner": "郑商所官网日行情/仓单数据文件免费下载(日频一手), 探针412为预条件反爬",
+   "access": "免费页面+公开数据文件",
+   "fit": "期货行情",
+   "existing": "none(new)",
+   "cn_reach": "直连412/代理412(反爬或预条件, 站点在)",
+   "evidence": "direct=412; proxy=412"
+  },
+  {
+   "name": "中金所日统计",
+   "repo_or_site": "http://www.cffex.com.cn/",
+   "replaces": "Wind金融期货行情(中金所)",
+   "one_liner": "中金所官网每日统计: 股指/国债期货量价持仓免费下载(日频一手)",
+   "access": "免费页面+公开数据文件",
+   "fit": "期货行情",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "中国货币网(外汇交易中心)",
+   "repo_or_site": "https://www.chinamoney.com.cn/",
+   "replaces": "Wind汇率中间价/LPR/SHIBOR域",
+   "one_liner": "CFETS官网: 人民币汇率中间价/SHIBOR/LPR/回购定盘利率公告免费, 汇率利率一手全等",
+   "access": "免费页面",
+   "fit": "汇率/利率",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "LME官网延迟行情",
+   "repo_or_site": "https://www.lme.com/",
+   "replaces": "Wind/Refinitiv LME实时盘口",
+   "one_liner": "LME官网金属行情免费延迟面——实时盘口无免费等价(交易所收费授权), 如实标注: 无全等平替, 有约10-15分钟延迟免费替代; 探针403为Akamai反爬",
+   "access": "免费页面(延迟行情)",
+   "fit": "境外金属行情(delayed)",
+   "existing": "none(new)",
+   "cn_reach": "直连403/代理403(反爬或预条件, 站点在)",
+   "evidence": "direct=403; proxy=403"
+  },
+  {
+   "name": "国家哲学社会科学文献中心(NCPSSD)",
+   "repo_or_site": "https://www.ncpssd.cn/",
+   "replaces": "CNKI中文社科期刊全库",
+   "one_liner": "国家级免费学术平台: 中文社科期刊全量免费全文下载(免费注册), 社科域对知网的全等免费平替",
+   "access": "免费注册全刊下载",
+   "fit": "中文文献(社科)",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "全国图书馆参考咨询联盟",
+   "repo_or_site": "http://www.ucdrs.superlib.net/",
+   "replaces": "万方/知网文献传递域",
+   "one_liner": "全国图书馆联合免费文献传递: 期刊/学位论文/图书部分章节免费邮箱传递(免费注册), 付费库传递服务的免费本体; ucdrs.net.cn新域名当前不可达, superlib老域名直连200",
+   "access": "免费注册文献传递",
+   "fit": "中文文献(传递)",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "国家科技图书文献中心(NSTL)",
+   "repo_or_site": "https://www.nstl.gov.cn/",
+   "replaces": "万方外文文献/查新域",
+   "one_liner": "NSTL: 外文科技文献免费检索+注册用户优惠传递/开放获取全文入口, 增补项",
+   "access": "免费检索+注册传递",
+   "fit": "外文文献",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "百度学术(免费发现层)",
+   "repo_or_site": "https://xueshu.baidu.com/",
+   "replaces": "CNKI跨库发现层(题录检索)",
+   "one_liner": "免费学术发现层: 聚合知网/万方/维普题录+免费全文入口定位——发现层平替, 全文另配(NCPSSD/联盟/OA)",
+   "access": "免费页面",
+   "fit": "文献发现层",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "OpenAIRE Search API",
+   "repo_or_site": "https://api.openaire.eu/search",
+   "replaces": "CNKI/万方(外文OA域)",
+   "one_liner": "欧盟OA聚合: 地平线资助产出+项目关联图谱, 外文OA免费一手",
+   "access": "免登录API",
+   "fit": "外文文献(OA)",
+   "existing": "none(new)",
+   "overlap": "sweep_datasets已录(直连200实测)",
+   "prior": "直连实测200(sweep_datasets 10-25)",
+   "cn_reach": "复用既有证据/通道态",
+   "evidence": "直连实测200(sweep_datasets 10-25)"
+  },
+  {
+   "name": "CORE API v3",
+   "repo_or_site": "https://api.core.ac.uk",
+   "replaces": "CNKI/万方(外文全文聚合)",
+   "one_liner": "3亿+OA元数据与全文收割聚合, 工程OA论文全文来源",
+   "access": "需免费key(匿名限流)",
+   "fit": "外文文献(OA全文)",
+   "existing": "none(new)",
+   "overlap": "sweep_datasets已录(301→429实证)",
+   "prior": "直连301→429匿名限流(sweep_datasets 10-25)",
+   "cn_reach": "复用既有证据/通道态",
+   "evidence": "直连301→429匿名限流(sweep_datasets 10-25)"
+  },
+  {
+   "name": "Unpaywall API",
+   "repo_or_site": "https://api.unpaywall.org",
+   "replaces": "付费墙外文全文(定位器)",
+   "one_liner": "按DOI解析合法OA全文位置: 付费墙论文的免费全文定位器",
+   "access": "免登录API(仅需email参数)",
+   "fit": "外文全文定位",
+   "existing": "none(new)",
+   "overlap": "sweep_datasets已录(直连200实证)",
+   "prior": "直连实测200(sweep_datasets 10-25)",
+   "cn_reach": "复用既有证据/通道态",
+   "evidence": "直连实测200(sweep_datasets 10-25)"
+  },
+  {
+   "name": "arXiv API",
+   "repo_or_site": "https://export.arxiv.org/api",
+   "replaces": "付费预印本墙(eess/cs/physics)",
+   "one_liner": "预印本全库免费: 工程/数学/计算机/物理分册一手",
+   "access": "免登录API",
+   "fit": "预印本",
+   "existing": "named(arxiv)",
+   "overlap": "sweep_datasets+channel_manifest(arxiv在册)",
+   "prior": "直连实测200(sweep_datasets 10-25)",
+   "cn_reach": "复用既有证据/通道态",
+   "evidence": "直连实测200(sweep_datasets 10-25)"
+  },
+  {
+   "name": "SSRN(社科预印本平台)",
+   "repo_or_site": "https://www.ssrn.com/index.cfm",
+   "replaces": "付费墙外文工作论文",
+   "one_liner": "Elsevier旗下社科/经管预印本平台: 大量论文免费下载(免费注册), 工作论文域平替; 探针直连不可达+代理403(Cloudflare级, 浏览器面在)",
+   "access": "免费注册下载(部分)",
+   "fit": "外文工作论文",
+   "existing": "none(new)",
+   "cn_reach": "直连ERR:URLError/代理403(反爬或预条件, 站点在)",
+   "evidence": "direct=ERR:URLError; proxy=403"
+  },
+  {
+   "name": "PubMed Central (PMC)",
+   "repo_or_site": "https://www.ncbi.nlm.nih.gov/pmc/",
+   "replaces": "付费医学全文库(生命科学交叉域)",
+   "one_liner": "NIH生物医学全文库: 环境/职业健康等工程交叉面免费全文, eutils免费API",
+   "access": "免费页面+免费API",
+   "fit": "生命科学交叉文献",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "中国政府公报(国务院+地方)",
+   "repo_or_site": "https://www.gov.cn/gongbao/",
+   "replaces": "CNKI政府文献/公报库",
+   "one_liner": "国务院公报全文免费+各省人民政府公报门户链接——政府文献一手全等",
+   "access": "免费页面",
+   "fit": "政府文献",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "洞见研报(研报聚合)",
+   "repo_or_site": "https://www.djyanbao.com/",
+   "replaces": "慧博投研/艾瑞/易观研报库",
+   "one_liner": "券商/行业研报聚合免费面(VIP至2027-01在役)——研报域主力平替, 逆向件djyanbao_drission在案",
+   "access": "免费+VIP档(在役)",
+   "fit": "研报全文",
+   "existing": "named(djyanbao)",
+   "overlap": "channel_manifest在册",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "券商研究所公众号免费推送(通道)",
+   "repo_or_site": "https://weixin.sogou.com/weixin?type=2",
+   "replaces": "慧博投研(首发研报流)",
+   "one_liner": "券商研究所公众号首发研报免费推送面, 经搜狗微信通道采集(复刻件sogou_weixin_api四段链在案)——首发研报域拼合平替",
+   "access": "免费页面(采集通道在役)",
+   "fit": "研报(首发流)",
+   "existing": "named(sougo)+复刻件sogou_weixin_api",
+   "cn_reach": "复用既有证据/通道态",
+   "evidence": "通道型条目(无独立站点; 依托在役通道: sougo搜狗微信/cninfo/edgar)"
+  },
+  {
+   "name": "上市公司公告行业数据(通道:招股书/年报行业章节)",
+   "repo_or_site": "http://www.cninfo.com.cn/new/index",
+   "replaces": "艾瑞/易观/头豹(行业规模与市占数据)",
+   "one_liner": "招股书行业章节+年报经营数据免费一手: 行业规模/竞争格局/市占率数据(巨潮+EDGAR双库)——付费行研数据域拼合平替主力",
+   "access": "免费(巨潮/EDGAR检索+PDF解析)",
+   "fit": "行业规模数据",
+   "existing": "factory_registry(cninfo/edgar在册, 本通道为其行业数据用法)",
+   "cn_reach": "复用既有证据/通道态",
+   "evidence": "通道型条目(无独立站点; 依托在役通道: sougo搜狗微信/cninfo/edgar)"
+  },
+  {
+   "name": "行业协会年度报告公开版(代表:对外承包工程商会)",
+   "repo_or_site": "http://www.chinca.org/",
+   "replaces": "沙利文/头豹(行业统计口径)",
+   "one_liner": "行业协会年报/统计公开版: chinca对外承包统计已破(逆向复刻件在案)——官方口径行业统计免费一手",
+   "access": "免费页面(部分需会员)",
+   "fit": "行业统计",
+   "existing": "factory_registry(chinca在册)+逆向工程复刻件",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "艾瑞咨询免费报告面",
+   "repo_or_site": "https://www.iresearch.cn/",
+   "replaces": "艾瑞付费库(自家免费子集)",
+   "one_liner": "艾瑞官网免费报告专区(注册免费下载部分报告)——付费库的自家免费面, 覆盖部分全库",
+   "access": "免费注册下载(部分)",
+   "fit": "行业研报(互联网/新经济)",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "商务部《对外投资合作国别(地区)指南》",
+   "repo_or_site": "https://www.mofcom.gov.cn/",
+   "replaces": "中信保国别报告(指南域)",
+   "one_liner": "商务部对外投资国别指南全库免费PDF: 国别经营环境/法规/税务/劳工一手(海外EPC尽调底座)——任务令口径已有渠道; fec子站探针双不可达, 主站直连200",
+   "access": "免费页面(PDF直下)",
+   "fit": "国别指南",
+   "existing": "在役(任务令口径已有; gov_list线)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "中国信保国别风险公开面",
+   "repo_or_site": "https://www.sinosure.com.cn/",
+   "replaces": "中信保国别风险深度报告(付费版)",
+   "one_liner": "中国信保官网国别风险信息/《国家风险分析报告》公开面——深度付费版的免费部分平替",
+   "access": "免费页面(公开部分)",
+   "fit": "国别风险",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "世行MIGA政治风险出版物",
+   "repo_or_site": "https://www.miga.org/",
+   "replaces": "政治风险保险数据(世行系付费咨询)",
+   "one_liner": "多边投资担保机构: 政治风险险种/国别风险出版物免费——政治风险域免费一手",
+   "access": "免费页面(出版物直下)",
+   "fit": "政治风险",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "UNCTAD投资政策观察站(IPM)",
+   "repo_or_site": "https://investmentpolicy.unctad.org/",
+   "replaces": "IHS/律商(投资政策追踪域)",
+   "one_liner": "联合国贸发会议投资政策措施数据库: 各国投资政策/条约/争端全量免费——投资政策风险追踪一手; 探针403反爬(官方免费站)",
+   "access": "免费页面+数据下载",
+   "fit": "投资政策风险",
+   "existing": "none(new)",
+   "cn_reach": "直连403/代理403(反爬或预条件, 站点在)",
+   "evidence": "direct=403; proxy=403"
+  },
+  {
+   "name": "国家法律法规数据库(flk)",
+   "repo_or_site": "https://flk.npc.gov.cn/",
+   "replaces": "律商LexisNexis/威科先行(中国法规全文域)",
+   "one_liner": "全国人大官方库: 现行有效法律法规/行政法规/司法解释/地方性法规全量免费检索——中国法规域免费全等本体",
+   "access": "免费页面",
+   "fit": "法规全文",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "中国裁判文书网",
+   "repo_or_site": "https://wenshu.court.gov.cn/",
+   "replaces": "律商/威科(中国判例库)",
+   "one_liner": "最高法裁判文书公开库: 判决书全文一手(首页探针200, 深采受限在案: 滑块+登录), 在役口径=metaso/websearch二手源兜底+案例库拼合——上网文书规模缩减为如实限制",
+   "access": "免费(直采受限, 通道兜底)",
+   "fit": "判例文书",
+   "existing": "named(court; 直采受限在案)",
+   "overlap": "channel_manifest在册",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "人民法院案例库(rmfyalk)",
+   "repo_or_site": "https://rmfyalk.court.gov.cn/",
+   "replaces": "威科先行(指导性/参考案例域)",
+   "one_liner": "最高法案例库: 指导性案例+参考案例(含裁判要旨)免费注册检索——2024后判例检索免费主力面",
+   "access": "免费注册检索",
+   "fit": "指导案例",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "北大法宝免费面",
+   "repo_or_site": "https://www.pkulaw.com/",
+   "replaces": "律商Lexis(中国法规域辅助面)",
+   "one_liner": "北大法宝免费档: 法规目录+现行法正文大面免费(修订对照/英文译本等深度功能付费)——法规域免费部分平替",
+   "access": "免费面(部分)",
+   "fit": "法规(辅助)",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "国务院政策文件库",
+   "repo_or_site": "https://www.gov.cn/zhengce/",
+   "replaces": "威科先行(中央政策文件域)",
+   "one_liner": "国务院政策文件+解读官方全量免费检索——中央政策域全等本体",
+   "access": "免费页面",
+   "fit": "政策文件",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "CourtListener+RECAP(美国判例)",
+   "repo_or_site": "https://www.courtlistener.com/",
+   "replaces": "LexisNexis(美国判例/PACER域)",
+   "one_liner": "免费法律文库(Free Law Project): 美法院判例全文+PACER文书镜像(RECAP)——美国诉讼尽调免费主力",
+   "access": "免费页面+免费API(限额)",
+   "fit": "海外判例(美)",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "EIA API v2(美能源署)",
+   "repo_or_site": "https://api.eia.gov/v2",
+   "replaces": "IHS/伍德麦肯兹(美国能源全库)",
+   "one_liner": "美能源署全库API: 原油/天然气/电力/煤炭供需与价格, 免费key——美国能源域免费全等",
+   "access": "免费API(需免费key)",
+   "fit": "能源数据(美)",
+   "existing": "factory_registry(eia在册)",
+   "overlap": "sweep_datasets已录(直连403无key实证)",
+   "prior": "直连403(无key实证; sweep_datasets 10-25)",
+   "cn_reach": "复用既有证据/通道态",
+   "evidence": "直连403(无key实证; sweep_datasets 10-25)"
+  },
+  {
+   "name": "IEA免费数据产品",
+   "repo_or_site": "https://www.iea.org/data-and-statistics",
+   "replaces": "伍德麦肯兹(全球能源平衡)",
+   "one_liner": "国际能源署数据浏览器+免费数据产品(能源平衡表/电力/可再生)——全球能源域拼合主力(部分数据产品付费)",
+   "access": "免费页面(部分产品付费)",
+   "fit": "能源数据(全球)",
+   "existing": "none(new)",
+   "overlap": "sweep_datasets已录(直连403反爬实证)",
+   "prior": "直连403(反爬; sweep_datasets 10-25)",
+   "cn_reach": "复用既有证据/通道态",
+   "evidence": "直连403(反爬; sweep_datasets 10-25)"
+  },
+  {
+   "name": "OPEC月报(MOMR)",
+   "repo_or_site": "https://www.opec.org/",
+   "replaces": "IHS(石油月度供需情报)",
+   "one_liner": "OPEC月度石油市场报告免费PDF: 供需平衡/产量/库存/预测一手——石油月度域免费主力; 探针403反爬(官方免费站)",
+   "access": "免费页面(PDF直下)",
+   "fit": "石油月报",
+   "existing": "none(new)",
+   "cn_reach": "直连403/代理403(反爬或预条件, 站点在)",
+   "evidence": "direct=403; proxy=403"
+  },
+  {
+   "name": "世行商品价格粉皮书(Pink Sheet)",
+   "repo_or_site": "https://www.worldbank.org/en/research/commodity-markets",
+   "replaces": "Bloomberg/Refinitiv(大宗商品价格月频)",
+   "one_liner": "世行CMR: Pink Sheet 70+商品月度价格xlsx免费直下(1960-今)+价格预测——大宗价格月频域免费全等",
+   "access": "免费页面(xlsx直下)",
+   "fit": "大宗商品价格",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "UN Comtrade(全球贸易)",
+   "repo_or_site": "https://comtradeapi.un.org/data/v1/get/",
+   "replaces": "Wind/Bloomberg(全球贸易流HS)",
+   "one_liner": "联合国商品贸易统计全库API: HS级双边贸易流(免费key, 匿名限额)——贸易域免费全等",
+   "access": "免费API(需免费key)",
+   "fit": "全球贸易",
+   "existing": "none(new)",
+   "overlap": "sweep_datasets已录(直连401无key实证)",
+   "prior": "直连401(无key实证; sweep_datasets 10-25)",
+   "cn_reach": "复用既有证据/通道态",
+   "evidence": "直连401(无key实证; sweep_datasets 10-25)"
+  },
+  {
+   "name": "海关总署统计数据平台",
+   "repo_or_site": "http://stats.customs.gov.cn/",
+   "replaces": "Wind(中国海关月度域)",
+   "one_liner": "海关总署在线查询: 月度进出口按商品/国别/贸易方式免费查询——中国海关域免费全等; 探针412预条件反爬",
+   "access": "免费页面(在线查询)",
+   "fit": "中国进出口",
+   "existing": "none(new)",
+   "cn_reach": "直连412/代理412(反爬或预条件, 站点在)",
+   "evidence": "direct=412; proxy=412"
+  },
+  {
+   "name": "FRED(圣路易斯联储)",
+   "repo_or_site": "https://api.stlouisfed.org",
+   "replaces": "Bloomberg/Refinitiv(宏观时间序列)",
+   "one_liner": "圣路易斯联储10万+宏观序列免费API(需免费key): 含材料价格/建筑支出序列——全球宏观域免费全等",
+   "access": "免费API(需免费key)",
+   "fit": "宏观序列",
+   "existing": "none(new)",
+   "overlap": "sweep_datasets已录(直连400缺key实证)",
+   "prior": "直连400(缺api_key实证; sweep_datasets 10-25)",
+   "cn_reach": "复用既有证据/通道态",
+   "evidence": "直连400(缺api_key实证; sweep_datasets 10-25)"
+  },
+  {
+   "name": "中国人民银行公开数据",
+   "repo_or_site": "http://www.pbc.gov.cn/",
+   "replaces": "Bloomberg(中国货币金融域)",
+   "one_liner": "央行官网: 社融/M2/LPR/汇率/公开市场操作公告一手免费——中国货币金融域全等",
+   "access": "免费页面",
+   "fit": "中国货币金融",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "ECB数据门户(SDW)",
+   "repo_or_site": "https://data.ecb.europa.eu/",
+   "replaces": "Refinitiv(欧元区金融统计)",
+   "one_liner": "欧央行统计数据仓库全库免费(SDMX API)——欧元区金融域免费全等; 本轮探针直连+代理均不可达(瞬时网络态, 官方免费门户在案)",
+   "access": "免费页面+免费API",
+   "fit": "欧元区统计",
+   "existing": "none(new)",
+   "cn_reach": "直连+代理均不可达(瞬时网络态)",
+   "evidence": "direct=ERR:URLError; proxy=ERR:URLError"
+  },
+  {
+   "name": "BIS统计门户",
+   "repo_or_site": "https://data.bis.org/",
+   "replaces": "Bloomberg(国际清算/信贷域)",
+   "one_liner": "国际清算银行统计: 国际信贷/流动性/汇率/国债收益率免费API(SDMX)——跨境金融域免费全等",
+   "access": "免费页面+免费API",
+   "fit": "国际清算统计",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "国家企业信用信息公示系统",
+   "repo_or_site": "https://www.gsxt.gov.cn/",
+   "replaces": "天眼查专业版/企查查VIP(登记一手)",
+   "one_liner": "市场监管总局官方公示: 登记信息/年报/行政处罚/经营异常一手全等(检索需登录验证)——天眼查数据母源本体; 探针521/403反爬在案",
+   "access": "免费页面(登录验证)",
+   "fit": "工商登记",
+   "existing": "none(new)",
+   "cn_reach": "直连521/代理403(反爬或预条件, 站点在)",
+   "evidence": "direct=521; proxy=403"
+  },
+  {
+   "name": "信用中国",
+   "repo_or_site": "https://www.creditchina.gov.cn/",
+   "replaces": "企查查VIP(信用域)",
+   "one_liner": "全国信用信息共享平台: 失信被执行人/行政处罚/行政许可公示一手——信用域免费全等; 探针412预条件反爬",
+   "access": "免费页面",
+   "fit": "信用信息",
+   "existing": "factory_registry(creditchina在册)",
+   "cn_reach": "直连412/代理412(反爬或预条件, 站点在)",
+   "evidence": "direct=412; proxy=412"
+  },
+  {
+   "name": "四库一平台(全国建筑市场监管)",
+   "repo_or_site": "https://jzsc.mohurd.gov.cn/",
+   "replaces": "天眼查(建企资质/人员/业绩画像)",
+   "one_liner": "住建部全国建筑市场监管公共服务平台: 建企资质/注册人员/工程项目/诚信记录——建企尽调免费一手全等(EPC专用)",
+   "access": "免费页面(查询接口公开)",
+   "fit": "建企监管数据",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "OpenCorporates(全球公司注册)",
+   "repo_or_site": "https://opencorporates.com/",
+   "replaces": "企查查海外公司面/D&B(全球注册)",
+   "one_liner": "2亿+全球公司注册数据聚合: 页面免费检索(API需申请)——海外公司登记域免费主力",
+   "access": "免费页面(API需申请)",
+   "fit": "海外工商",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  },
+  {
+   "name": "地方产权交易所公告(代表:上海联交所)",
+   "repo_or_site": "https://www.suaee.com/",
+   "replaces": "天眼查(股权变更/产权交易监测)",
+   "one_liner": "产权交易所公告免费检索: 国企产权转让/增资挂牌一手(沪联交所为代表)——产权交易监测域部分平替",
+   "access": "免费页面",
+   "fit": "产权交易",
+   "existing": "none(new)",
+   "cn_reach": "直连实测200",
+   "evidence": "HTTP 200 direct (探针2026-10-25)"
+  }
+ ]
+}

@@ -1,0 +1,151 @@
+[conn] ✅ 出口可用 (http://127.0.0.1:7892, 锁定态见 nblm_conn_state.json)
+E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\jiage\sched\nblm_run_jiage.py:111: DeprecationWarning: Non-default legacy NotebookLMClient.from_storage tuning arguments are deprecated; group them under config=ClientConfig(...). They will be removed in v1.0. Offending arguments: keepalive, timeout.
+  return await NotebookLMClient.from_storage(
+E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\jiage\sched\nblm_run_jiage.py:111: DeprecationWarning: Awaiting NotebookLMClient.from_storage(...) is deprecated; use `async with NotebookLMClient.from_storage(...) as client:` instead. The await form will be removed in v1.0.
+  return await NotebookLMClient.from_storage(
+Traceback (most recent call last):
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\httpx\_transports\default.py", line 394, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\httpcore\_async\connection_pool.py", line 256, in handle_async_request
+    raise exc from None
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\httpcore\_async\connection_pool.py", line 236, in handle_async_request
+    response = await connection.handle_async_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        pool_request.request
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\httpcore\_async\connection.py", line 101, in handle_async_request
+    raise exc
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\httpcore\_async\connection.py", line 78, in handle_async_request
+    stream = await self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\httpcore\_async\connection.py", line 124, in _connect
+    stream = await self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\httpcore\_backends\auto.py", line 31, in connect_tcp
+    return await self._backend.connect_tcp(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\httpcore\_backends\anyio.py", line 113, in connect_tcp
+    with map_exceptions(exc_map):
+         ~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: All connection attempts failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\jiage\sched\nblm_run_jiage.py", line 479, in <module>
+    raise SystemExit(asyncio.run(main()))
+                     ~~~~~~~~~~~^^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\asyncio\base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\jiage\sched\nblm_run_jiage.py", line 464, in main
+    async with await get_client() as client:
+               ^^^^^^^^^^^^^^^^^^
+  File "E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\jiage\sched\nblm_run_jiage.py", line 121, in get_client
+    raise last
+  File "E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\jiage\sched\nblm_run_jiage.py", line 111, in get_client
+    return await NotebookLMClient.from_storage(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        timeout=120.0, keepalive=60.0)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_request_policy.py", line 120, in asynchronous
+    return await function(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\client.py", line 1184, in _build
+    loaded = await _auth_tokens._load_stored_auth(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_auth\tokens.py", line 854, in _load_stored_auth
+    return await loader.load(
+           ^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_auth\tokens.py", line 778, in load
+    acquired = await self._token_acquirer.acquire(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_auth\tokens.py", line 702, in acquire
+    csrf, session_id, baseline = await _auth_refresh._fetch_tokens_with_exact_baseline(
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_auth\refresh.py", line 775, in _fetch_tokens_with_exact_baseline
+    csrf, session_id, _, _, baseline = await _fetch_tokens_with_refresh_core(
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<8 lines>...
+    )
+    ^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_auth\refresh.py", line 811, in _fetch_tokens_with_refresh_core
+    csrf, session_id = await _fetch_tokens_with_jar(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_auth\refresh.py", line 1016, in _fetch_tokens_with_jar
+    response = await client.get(
+               ^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\httpx\_client.py", line 1768, in get
+    return await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+    ...<9 lines>...
+    )
+    ^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\httpx\_client.py", line 1540, in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\httpx\_client.py", line 1629, in send
+    response = await self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\httpx\_client.py", line 1657, in _send_handling_auth
+    response = await self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\httpx\_client.py", line 1694, in _send_handling_redirects
+    response = await self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\httpx\_client.py", line 1730, in _send_single_request
+    response = await transport.handle_async_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\httpx\_transports\default.py", line 393, in handle_async_request
+    with map_httpcore_exceptions():
+         ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: All connection attempts failed
+MEGA_EXIT=1

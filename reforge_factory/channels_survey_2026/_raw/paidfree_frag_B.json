@@ -1,0 +1,117 @@
+[
+ {
+  "name": "国家哲学社会科学文献中心(NCPSSD)",
+  "repo_or_site": "https://www.ncpssd.cn/",
+  "replaces": "CNKI中文社科期刊全库",
+  "one_liner": "国家级免费学术平台: 中文社科期刊全量免费全文下载(免费注册), 社科域对知网的全等免费平替",
+  "access": "免费注册全刊下载",
+  "fit": "中文文献(社科)",
+  "existing": "none(new)",
+  "probe_key": "ncpssd"
+ },
+ {
+  "name": "全国图书馆参考咨询联盟",
+  "repo_or_site": "http://www.ucdrs.superlib.net/",
+  "replaces": "万方/知网文献传递域",
+  "one_liner": "全国图书馆联合免费文献传递: 期刊/学位论文/图书部分章节免费邮箱传递(免费注册), 付费库传递服务的免费本体; ucdrs.net.cn新域名当前不可达, superlib老域名直连200",
+  "access": "免费注册文献传递",
+  "fit": "中文文献(传递)",
+  "existing": "none(new)",
+  "probe_key": "ucdrs_superlib",
+  "alt_probe": "ucdrs"
+ },
+ {
+  "name": "国家科技图书文献中心(NSTL)",
+  "repo_or_site": "https://www.nstl.gov.cn/",
+  "replaces": "万方外文文献/查新域",
+  "one_liner": "NSTL: 外文科技文献免费检索+注册用户优惠传递/开放获取全文入口, 增补项",
+  "access": "免费检索+注册传递",
+  "fit": "外文文献",
+  "existing": "none(new)",
+  "probe_key": "nstl"
+ },
+ {
+  "name": "百度学术(免费发现层)",
+  "repo_or_site": "https://xueshu.baidu.com/",
+  "replaces": "CNKI跨库发现层(题录检索)",
+  "one_liner": "免费学术发现层: 聚合知网/万方/维普题录+免费全文入口定位——发现层平替, 全文另配(NCPSSD/联盟/OA)",
+  "access": "免费页面",
+  "fit": "文献发现层",
+  "existing": "none(new)",
+  "probe_key": "baidu_xueshu"
+ },
+ {
+  "name": "OpenAIRE Search API",
+  "repo_or_site": "https://api.openaire.eu/search",
+  "replaces": "CNKI/万方(外文OA域)",
+  "one_liner": "欧盟OA聚合: 地平线资助产出+项目关联图谱, 外文OA免费一手",
+  "access": "免登录API",
+  "fit": "外文文献(OA)",
+  "existing": "none(new)",
+  "overlap": "sweep_datasets已录(直连200实测)",
+  "prior": "直连实测200(sweep_datasets 10-25)"
+ },
+ {
+  "name": "CORE API v3",
+  "repo_or_site": "https://api.core.ac.uk",
+  "replaces": "CNKI/万方(外文全文聚合)",
+  "one_liner": "3亿+OA元数据与全文收割聚合, 工程OA论文全文来源",
+  "access": "需免费key(匿名限流)",
+  "fit": "外文文献(OA全文)",
+  "existing": "none(new)",
+  "overlap": "sweep_datasets已录(301→429实证)",
+  "prior": "直连301→429匿名限流(sweep_datasets 10-25)"
+ },
+ {
+  "name": "Unpaywall API",
+  "repo_or_site": "https://api.unpaywall.org",
+  "replaces": "付费墙外文全文(定位器)",
+  "one_liner": "按DOI解析合法OA全文位置: 付费墙论文的免费全文定位器",
+  "access": "免登录API(仅需email参数)",
+  "fit": "外文全文定位",
+  "existing": "none(new)",
+  "overlap": "sweep_datasets已录(直连200实证)",
+  "prior": "直连实测200(sweep_datasets 10-25)"
+ },
+ {
+  "name": "arXiv API",
+  "repo_or_site": "https://export.arxiv.org/api",
+  "replaces": "付费预印本墙(eess/cs/physics)",
+  "one_liner": "预印本全库免费: 工程/数学/计算机/物理分册一手",
+  "access": "免登录API",
+  "fit": "预印本",
+  "existing": "named(arxiv)",
+  "overlap": "sweep_datasets+channel_manifest(arxiv在册)",
+  "prior": "直连实测200(sweep_datasets 10-25)"
+ },
+ {
+  "name": "SSRN(社科预印本平台)",
+  "repo_or_site": "https://www.ssrn.com/index.cfm",
+  "replaces": "付费墙外文工作论文",
+  "one_liner": "Elsevier旗下社科/经管预印本平台: 大量论文免费下载(免费注册), 工作论文域平替; 探针直连不可达+代理403(Cloudflare级, 浏览器面在)",
+  "access": "免费注册下载(部分)",
+  "fit": "外文工作论文",
+  "existing": "none(new)",
+  "probe_key": "ssrn"
+ },
+ {
+  "name": "PubMed Central (PMC)",
+  "repo_or_site": "https://www.ncbi.nlm.nih.gov/pmc/",
+  "replaces": "付费医学全文库(生命科学交叉域)",
+  "one_liner": "NIH生物医学全文库: 环境/职业健康等工程交叉面免费全文, eutils免费API",
+  "access": "免费页面+免费API",
+  "fit": "生命科学交叉文献",
+  "existing": "none(new)",
+  "probe_key": "pmc"
+ },
+ {
+  "name": "中国政府公报(国务院+地方)",
+  "repo_or_site": "https://www.gov.cn/gongbao/",
+  "replaces": "CNKI政府文献/公报库",
+  "one_liner": "国务院公报全文免费+各省人民政府公报门户链接——政府文献一手全等",
+  "access": "免费页面",
+  "fit": "政府文献",
+  "existing": "none(new)",
+  "probe_key": "gov_gongbao"
+ }
+]

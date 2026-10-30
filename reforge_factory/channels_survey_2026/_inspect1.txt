@@ -1,0 +1,33 @@
+=== tier_defs ===
+{
+ "A": "免登录API/CLI可直采(搜索/数据/文献类)立即接入",
+ "B": "需key/账号/购买或数据集目录形态, 先注册登记",
+ "C": "研究代理框架/编排/引擎/爬取基建, 作方法论资产",
+ "D": "纯无关(娱乐/消费品/开发者文档/生产分发件)剔除"
+}
+=== entry[0] ===
+{
+ "name": "AnySearch Skill",
+ "entry": "https://github.com/anysearch-ai/anysearch-skill",
+ "tier": "A",
+ "tags": [
+  "新闻舆情"
+ ],
+ "dedup_key": "gh:anysearch-ai/anysearch-skill",
+ "source_lanes": [
+  "sweep_localregistry"
+ ],
+ "access": "自托管开源(LLM key自配)",
+ "stars_or_evidence": "search_library注册表在册(1005 8角度扫描); 6.4k stars",
+ "cat": "ai_search",
+ "managed": "已纳册(search_library渠道); 未接线=存量候选",
+ "desc": "GitHub API 实证: 6.4k stars / Python / 推送 2026-09-17 活跃。README 实证: 面向 AI agent 的统一实时检索 skill — 通用…",
+ "fit": "泛深度检索底座+新闻舆情(答案引擎)",
+ "existing_match": true,
+ "existing_source": "现役渠道[anysearch]",
+ "dup_merge_count": 2
+}
+=== entry keys union ===
+['access', 'cat', 'dedup_key', 'desc', 'dup_merge_count', 'entry', 'evidence', 'existing_match', 'existing_source', 'fit', 'managed', 'name', 'note', 'one_liner', 'same_source_as', 'source_lanes', 'src', 'stars_or_evidence', 'tags', 'tier']
+tier dist: Counter({'C': 479, 'B': 93, 'A': 45, 'D': 3})
+lanes: {'sweep_localregistry': 158, 'paidfree_free_equiv': 59, '数据集/学术文献/专利/标准/统计门户': 71, 'sweep_topic_hn': 112, 'enterprise': 56, 'sweep_osint_geo': 81, 'deepresearch-agents-and-orchestration': 106, 'sweep_searchengines（搜索引擎/元搜索/SERP API/免登录检索API族清扫路）': 78}

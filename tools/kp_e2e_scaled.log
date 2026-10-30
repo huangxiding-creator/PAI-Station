@@ -1,0 +1,33 @@
+✔ upload cid=7b79526b46f342a395c964effbfc95c1
+✔ explain(SSE+LLM) events=7 errs=0 tail=data: {"event": "done", "parts_ok": ["basic", "score", "requirement"]} keys=['basic', 'bid_type', 'requirement', 'score']
+✔ outline(SSE) events=2 errs=0 tail=data: {"event": "done", "outline": [{"text": "第一章 编制依据与项目概述", "important": 1, "theme": "明确投标文件编制依据及项 nodes=9
+✔ outline-confirm(PUT+trim) {"code":200}
+
+✘ body(全稿生成) timeout(1500s) events=57 errs=0 tail=data: {"stage": "body", "section_id": "7b79526b46f342a395c964effbfc95c1#c2#s1", "title": "3.2 施工进度计划 sections=9 done=5 min_chars=1593
+✘ review(SSE) timeout(600s) events=10 errs=0 tail=data: {"stage": "review_report", "status": "generating"}
+✘ gantt(SSE+GET) timeout(420s) events=7 errs=0 tail=data: {"stage": "gantt", "status": "generating"} get=True
+✔ ppt(SSE+GET) events=6 errs=0 tail=data: {"event": "ppt_done", "outline": {"title": "某灌区干支渠节水改造工程投标述标PPT大纲", "pages": [{"title": "封面",  get=True
+✔ export-docx 48415B magic=b'PK\x03\x04'
+✔ export-pdf 9498B magic=b'%PDF'
+✔ export-pptx 62799B magic=b'PK\x03\x04'
+✔ editor-ai-edit {"action":"polish","code":200,"edited":"\u6e20\u9053\u886c\u780c\u91c7\u7528C25\
+✔ editor-save {"chars":31,"code":200}
+
+✔ facts-propose 12项 [{'content': '三百六十五日历天', 'id': 'f1', 'title': '项目工期'}]
+✔ facts-put {"code":200}
+
+✔ matrix-coverage total=6 covered=4 rate=0.667
+✘ G7-factcheck rate=None verdict=None
+✔ prequal items=1 verdict=REVIEW
+✔ anbiao-validate verdict=PASS reject=0
+✔ simhash-dedup 比对了10个历史任务
+✔ evaluation verdict=REJECT summary={'format': 'PASS', 'precheck': 'REJECT', 'risk': 'WARN', 'tech': 'WARN'}
+✔ fairness hits=0
+✔ clause-diff stats={'added': 0, 'changed': 1, 'removed': 0, 'substantive': 1}
+✔ archive-verify entries=31
+✔ price-pattern pattern=报价间距呈等差数列特征(间距CV=0.0000 < 0.05)
+✔ usage-metering calls=347 prompt=716656 completion=287419 cached=0
+✔ chat-agent applied=2 rejected=1
+✔ section-versions versions=0
+
+[E2E SCALED FAIL] 24/28 · 3244s · cid=7b79526b46f342a395c964effbfc95c1

@@ -1,0 +1,62 @@
+[
+ {
+  "name": "巨潮资讯网(法定信披平台)",
+  "repo_or_site": "http://www.cninfo.com.cn/new/index",
+  "replaces": "Wind公告库(沪深京全量公告/财报原文)",
+  "one_liner": "证监会指定信披网站, 沪深京全量公告检索+PDF直下, 公开查询接口(hisAnnouncement)可程序化——公告域免费一手全等源",
+  "access": "免费页面+公开查询接口",
+  "fit": "公告/财报原文",
+  "existing": "factory_registry(cninfo在册)",
+  "probe_key": "cninfo"
+ },
+ {
+  "name": "上交所披露与市场数据",
+  "repo_or_site": "https://www.sse.com.cn/",
+  "replaces": "Wind公告库(沪市)/沪市统计行情",
+  "one_liner": "上交所官网: 沪市公告披露+统计数据(日行情/统计月报/年鉴)免费页面与公开数据文件",
+  "access": "免费页面+公开数据文件",
+  "fit": "公告/交易所统计",
+  "existing": "none(new)",
+  "probe_key": "sse"
+ },
+ {
+  "name": "深交所披露与市场数据",
+  "repo_or_site": "https://www.szse.cn/",
+  "replaces": "Wind公告库(深市)/深市日行情",
+  "one_liner": "深交所官网: 深市公告+市场数据(股票/基金/债券日行情文件免费下载)",
+  "access": "免费页面+公开数据文件",
+  "fit": "公告/交易所统计",
+  "existing": "none(new)",
+  "probe_key": "szse"
+ },
+ {
+  "name": "北交所披露与市场数据",
+  "repo_or_site": "https://www.bse.cn/",
+  "replaces": "Wind公告库(北交所)",
+  "one_liner": "北交所官网: 公告披露与市场行情数据免费",
+  "access": "免费页面",
+  "fit": "公告/交易所统计",
+  "existing": "none(new)",
+  "probe_key": "bse"
+ },
+ {
+  "name": "港交所披露易(HKEXnews)",
+  "repo_or_site": "https://www.hkexnews.hk/index_c.htm",
+  "replaces": "Wind港股公告/港股财报",
+  "one_liner": "港交所法定披露易: 全量公告/年报/通函免费检索下载, 港股一手全等",
+  "access": "免费页面",
+  "fit": "港股公告",
+  "existing": "none(new)",
+  "probe_key": "hkexnews"
+ },
+ {
+  "name": "SEC EDGAR全文检索API",
+  "repo_or_site": "https://efts.sec.gov/LATEST/search-index",
+  "replaces": "Refinitiv/Bloomberg(美股filings域)",
+  "one_liner": "美证监会EDGAR: 全文检索API(efts)+XBRL公司事实API(data.sec.gov), 美股公告财报一手全等",
+  "access": "免费API(需UA标识)",
+  "fit": "美股公告/财报",
+  "existing": "factory_registry(edgar在册)",
+  "probe_key": "edgar_efts"
+ }
+]

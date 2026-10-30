@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Windows>
+	<!-- 安装过程中页 -->
+	<VerticalLayout bkcolor="#FFFFFFFF" padding="0,-5,0,0">
+		<VerticalLayout padding="98,0,0,0" width="404" height="310" bkimage="file='res\img_bg_install.png'"/>
+
+		<VerticalLayout padding="40,45,40,0">
+			<Progress name="InstallProgressBar" borderround="4,4" height="6" mouse="false" forecolor="#FF22AB82" bkcolor="#FFF1F1F1"  min="0" max="100" value="0" />
+			<HorizontalLayout name="installLayout" visible="true" width="122" height="16" padding="200,25,0,0">
+				<Button font="1" width="64" text="正在安装" textcolor="#FF999999"/>
+				<Button font="1" width="46" name="progressText" text="" align="right" textcolor="#FF999999"/>
+				<Button font="1" width="12" text="..." textcolor="#FF999999"/>
+			</HorizontalLayout>
+			<HorizontalLayout name="updateLayout" visible="false" width="80" height="16" padding="220,25,0,0">
+				<Button font="1" width="80" text="正在升级..." textcolor="#FF999999"/>
+			</HorizontalLayout>
+		</VerticalLayout>
+	</VerticalLayout >
+</Windows>

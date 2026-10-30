@@ -102,8 +102,8 @@ def main() -> None:
                   f'{BASE}/api/task/{cid}/outline'], 30)
     rec('outline-confirm(PUT+trim)', rc == 0 and '"code":200' in out, out[:60])
 
-    # 5 body 全稿(段级error非致命,终判看任务态)
-    ok, note = sse(cid, 'body', 900, fatal_errors=False)
+    # 5 body 全稿(段级error非致命,终判看任务态; 并发闸下放宽预算)
+    ok, note = sse(cid, 'body', 1500, fatal_errors=False)
     info = task(cid)
     secs = info.get('sections') or []
     n_done = sum(1 for s in secs if s.get('status') == 'done')
@@ -112,17 +112,17 @@ def main() -> None:
         f'{note} sections={len(secs)} done={n_done} min_chars={min_chars}')
 
     # 6 review
-    ok, note = sse(cid, 'review', 300)
+    ok, note = sse(cid, 'review', 600)
     rec('review(SSE)', ok, note)
 
     # 7 gantt
-    ok, note = sse(cid, 'gantt', 240)
+    ok, note = sse(cid, 'gantt', 420)
     rc, out = sh(['curl', '-s', '--max-time', '15', f'{BASE}/api/task/{cid}/gantt'], 30)
     get_ok = '"code":200' in out
     rec('gantt(SSE+GET)', ok and get_ok, f'{note} get={get_ok}')
 
     # 8 ppt(SSE超时不判死: 服务器端生成常以孤儿方式完赛,轮询GET对齐)
-    ok, note = sse(cid, 'ppt', 600)
+    ok, note = sse(cid, 'ppt', 900)
     ppt_get_ok = False
     for _ in range(36):
         rc, out = sh(['curl', '-s', '--max-time', '15', f'{BASE}/api/task/{cid}/ppt'], 30)
@@ -158,6 +158,152 @@ def main() -> None:
                   '-d', json.dumps({'content': 'E2E回写验证段落：本段由缩配E2E写入，验证编辑器保存链路。'}, ensure_ascii=False),
                   f'{BASE}/api/task/{cid}/save/{sid}'], 60)
     rec('editor-save', rc == 0 and '"code":200' in out, out[:60])
+
+    # ══ V4 融合关 (14-19) ══
+    # 14 全局事实: propose → PUT落库
+    rc, out = sh(['curl', '-s', '--max-time', '150', '-X', 'POST',
+                  f'{BASE}/api/task/{cid}/facts/propose'], 160)
+    try:
+        fg = json.loads(out).get('facts') or []
+    except Exception:
+        fg = []
+    rec('facts-propose', len(fg) >= 1, f'{len(fg)}项 {str(fg[:1])[:80]}')
+    if fg:
+        rc, out = sh(['curl', '-s', '--max-time', '15', '-X', 'PUT', '-H', 'Content-Type: application/json',
+                      '-d', json.dumps({'facts': fg}, ensure_ascii=False),
+                      f'{BASE}/api/task/{cid}/facts'], 30)
+        rec('facts-put', '"code":200' in out, out[:40])
+
+    # 15 评分响应矩阵+覆盖率
+    rc, out = sh(['curl', '-s', '--max-time', '15', f'{BASE}/api/task/{cid}/matrix'], 30)
+    try:
+        cov = json.loads(out).get('coverage') or {}
+    except Exception:
+        cov = {}
+    rec('matrix-coverage', cov.get('total', 0) >= 1 and 'rate' in cov,
+        f"total={cov.get('total')} covered={cov.get('covered')} rate={cov.get('rate')}")
+
+    # 16 G7 反幻觉闸(gates含G7)
+    rc, out = sh(['curl', '-s', '--max-time', '15', f'{BASE}/api/task/{cid}/gates'], 30)
+    try:
+        g7 = ((json.loads(out).get('gates') or {}).get('G7') or {})
+    except Exception:
+        g7 = {}
+    rec('G7-factcheck', 'overall_rate' in g7, f"rate={g7.get('overall_rate')} verdict={g7.get('verdict')}")
+
+    # 17 资格预审
+    rc, out = sh(['curl', '-s', '--max-time', '60', '-X', 'POST', f'{BASE}/api/task/{cid}/prequal'], 70)
+    try:
+        pq = json.loads(out)
+    except Exception:
+        pq = {}
+    rec('prequal', pq.get('code') == 200 and 'verdict' in pq,
+        f"items={len(pq.get('items') or [])} verdict={pq.get('verdict')}")
+
+    # 18 暗标校验
+    rc, out = sh(['curl', '-s', '--max-time', '60', '-X', 'POST', '-H', 'Content-Type: application/json',
+                  '-d', '{}', f'{BASE}/api/task/{cid}/anbiao/validate'], 70)
+    try:
+        ab = json.loads(out)
+    except Exception:
+        ab = {}
+    rec('anbiao-validate', ab.get('code') == 200 and ab.get('verdict') in ('PASS', 'WARN', 'REJECT'),
+        f"verdict={ab.get('verdict')} reject={ab.get('reject_count')}")
+
+    # 19 SimHash查重(与历史任务库)
+    rc, out = sh(['curl', '-s', '--max-time', '30', '-X', 'POST', '-H', 'Content-Type: application/json',
+                  '-d', '{}', f'{BASE}/api/task/{cid}/dedup'], 40)
+    try:
+        dd = json.loads(out)
+    except Exception:
+        dd = {}
+    rec('simhash-dedup', dd.get('code') == 200, f"比对了{len(dd.get('results') or [])}个历史任务")
+
+    # ══ V4二波关 (20-24) ══
+    # 20 内测评标四阶段
+    rc, out = sh(['curl', '-s', '--max-time', '60', '-X', 'POST',
+                  f'{BASE}/api/task/{cid}/evaluation'], 70)
+    try:
+        ev = json.loads(out)
+    except Exception:
+        ev = {}
+    rec('evaluation', ev.get('code') == 200 and len(ev.get('stages') or []) == 4,
+        f"verdict={ev.get('verdict')} summary={ev.get('summary')}")
+
+    # 21 公平竞争审查
+    rc, out = sh(['curl', '-s', '--max-time', '60', '-X', 'POST',
+                  f'{BASE}/api/task/{cid}/fairness'], 70)
+    try:
+        fa = json.loads(out)
+    except Exception:
+        fa = {}
+    rec('fairness', fa.get('code') == 200 and 'stats' in fa,
+        f"hits={fa.get('stats', {}).get('total')}")
+
+    # 22 澄疑条款diff
+    rc, out = sh(['curl', '-s', '--max-time', '30', '-X', 'POST', '-H', 'Content-Type: application/json',
+                  '-d', json.dumps({'old_text': '工期365日历天，保证金80万元。',
+                                    'new_text': '工期300日历天，保证金50万元。'}, ensure_ascii=False),
+                  f'{BASE}/api/clause-diff'], 40)
+    try:
+        cd = json.loads(out)
+    except Exception:
+        cd = {}
+    rec('clause-diff', cd.get('code') == 200 and cd.get('stats', {}).get('substantive', 0) >= 1,
+        f"stats={cd.get('stats')}")
+
+    # 23 WORM档案验链(导出已自动归档, 此处验链)
+    rc, out = sh(['curl', '-s', '--max-time', '15', f'{BASE}/api/archive/verify'], 30)
+    try:
+        ar = json.loads(out)
+    except Exception:
+        ar = {}
+    rec('archive-verify', ar.get('code') == 200 and ar.get('ok') is True,
+        f"entries={ar.get('entries')}")
+
+    # 24 报价规律(等差数列样本)
+    rc, out = sh(['curl', '-s', '--max-time', '15', '-X', 'POST', '-H', 'Content-Type: application/json',
+                  '-d', json.dumps({'quotes': [{'name': '甲', 'price': 100}, {'name': '乙', 'price': 110},
+                                                {'name': '丙', 'price': 120}, {'name': '丁', 'price': 130}]}),
+                  f'{BASE}/api/price-pattern'], 30)
+    try:
+        pp = json.loads(out)
+    except Exception:
+        pp = {}
+    rec('price-pattern', pp.get('code') == 200 and pp.get('pattern') and '等差' in pp['pattern'],
+        f"pattern={pp.get('pattern', '')[:40]}")
+
+    # ══ V5 W-A关 (25-27) ══
+    # 25 Token计量账单
+    rc, out = sh(['curl', '-s', '--max-time', '15', f'{BASE}/api/task/{cid}/usage'], 30)
+    try:
+        us = json.loads(out)
+    except Exception:
+        us = {}
+    rec('usage-metering', us.get('code') == 200 and us.get('calls', 0) >= 1,
+        f"calls={us.get('calls')} prompt={us.get('prompt')} completion={us.get('completion')} cached={us.get('cached')}")
+
+    # 26 对话式编辑Agent(replace-patch)
+    rc, out = sh(['curl', '-s', '--max-time', '150', '-X', 'POST', '-H', 'Content-Type: application/json',
+                  '-d', json.dumps({'message': '把施工部署概要一节中任意一段描述润色得更专业具体'}, ensure_ascii=False),
+                  f'{BASE}/api/task/{cid}/chat'], 160)
+    try:
+        ch = json.loads(out)
+    except Exception:
+        ch = {}
+    rec('chat-agent', ch.get('code') == 200 and bool(ch.get('reply')),
+        f"applied={len(ch.get('applied') or [])} rejected={len(ch.get('rejected') or [])}")
+
+    # 27 版本diff
+    sid_raw = secs[0]['id'] if secs else ''
+    rc, out = sh(['curl', '-s', '--max-time', '15',
+                  f'{BASE}/api/task/{cid}/versions/{quote(sid_raw, safe="")}'], 30)
+    try:
+        vs = json.loads(out)
+    except Exception:
+        vs = {}
+    rec('section-versions', vs.get('code') == 200 and isinstance(vs.get('versions'), list),
+        f"versions={len(vs.get('versions') or [])}")
 
     # 收官
     n_pass = sum(1 for _, ok, _ in results if ok)

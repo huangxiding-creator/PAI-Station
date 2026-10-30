@@ -1,0 +1,142 @@
+WARNING: pypinyin is not installed. Chinese pinyin sorting will use simple string sorting.
+INFO: [] Loaded graph from E:\AI-Station\reforge_factory\graph_rag_store\EPC-TOP50\graph_chunk_entity_relation.graphml with 445 nodes, 277 edges
+INFO: Role LLM Configuration (initialized):
+INFO:  - extract: None/None, host=None, max_async=4, timeout=240
+INFO:  - keyword: None/None, host=None, max_async=4, timeout=240
+INFO:  - query: None/None, host=None, max_async=4, timeout=240
+INFO:  - vlm: None/None, host=None, max_async=4, timeout=240
+INFO: [] Process 22960 KV load full_docs with 5 records
+INFO: [] Process 22960 KV load text_chunks with 22 records
+INFO: [] Process 22960 KV load full_entities with 5 records
+INFO: [] Process 22960 KV load full_relations with 5 records
+INFO: [] Process 22960 KV load entity_chunks with 445 records
+INFO: [] Process 22960 KV load relation_chunks with 277 records
+INFO:nano-vectordb:Load (445, 512) data
+INFO:nano-vectordb:Init {'embedding_dim': 512, 'metric': 'cosine', 'storage_file': 'E:\\AI-Station\\reforge_factory\\graph_rag_store\\EPC-TOP50\\vdb_entities.json'} 445 data
+INFO:nano-vectordb:Load (277, 512) data
+INFO:nano-vectordb:Init {'embedding_dim': 512, 'metric': 'cosine', 'storage_file': 'E:\\AI-Station\\reforge_factory\\graph_rag_store\\EPC-TOP50\\vdb_relationships.json'} 277 data
+INFO:nano-vectordb:Load (22, 512) data
+INFO:nano-vectordb:Init {'embedding_dim': 512, 'metric': 'cosine', 'storage_file': 'E:\\AI-Station\\reforge_factory\\graph_rag_store\\EPC-TOP50\\vdb_chunks.json'} 22 data
+INFO: [] Process 22960 KV load llm_response_cache with 31 records
+INFO: [] Process 22960 doc status load doc_status with 5 records
+[graph_rag] 战役=EPC-TOP50 | valid 件 28 | cap=6000字/件 | 工作目录=E:\AI-Station\reforge_factory\graph_rag_store\EPC-TOP50
+WARNING: Duplicate document detected (content_hash): doc-e56bcb331ee18f9d5d0d37c81eb63102 (ent_kmyuan.txt)
+WARNING: Duplicate document detected (filename): doc-b193cc18a848e11bb1955a082207078b (ent_shizheng.txt)
+WARNING: Duplicate document detected (filename): doc-08a180bdb871ce3b27c0714805ca4c59 (ent_sdyuan.txt)
+INFO: Created 3 duplicate document records with track_id: enqueue_20261028_095259_c3a97c33
+[graph_rag] 批量入队 28 件 (track=enqueue_20261028, 16.8万字符) → 处理…
+INFO: Processing 25 document(s)
+INFO: Parsing (native): doc-01202272badfe67fc689d295cc1c6bbc
+INFO: Parsing (native): doc-0f4f29c7c713a0dc9cceab37367c4fc5
+INFO: Parsing (native): doc-2434be21f9a4cab7742c6bd9e8e2f4ec
+INFO: Parsing (native): doc-2e372fae4139a56afb147dd651580dc3
+INFO: Parsing (native): doc-2f7ba3b967d0bbe97df4390812533e84
+INFO: Parsing (native): doc-30c0f4bd5f135b59a2f974b84a17b8b0
+INFO: Parsing (native): doc-413fe55eb1eee082c8074d17ae6e9add
+INFO: Parsing (native): doc-4949bfb145c2ade8099f1ed932793ac8
+INFO: Parsing (native): doc-4b4a2e6a92f9c37a7eda682f79ba873b
+INFO: Parsing (native): doc-672521f12fd1986bcd639d9767739595
+INFO: Extracting stage 1/25: ent_qiche.txt
+INFO: Processing d-id: doc-01202272badfe67fc689d295cc1c6bbc
+INFO: Extracting stage 2/25: ent_sanju.txt
+INFO: Processing d-id: doc-0f4f29c7c713a0dc9cceab37367c4fc5
+INFO: Chunking F(legacy): size=1200, split_only=False, overlap=100, doc_id: doc-01202272badfe67fc689d295cc1c6bbc
+INFO: Chunking F(legacy): size=1200, split_only=False, overlap=100, doc_id: doc-0f4f29c7c713a0dc9cceab37367c4fc5
+INFO: Extracting stage 3/25: ent_hunanyuan.txt
+INFO: Processing d-id: doc-2434be21f9a4cab7742c6bd9e8e2f4ec
+INFO: Chunking F(legacy): size=1200, split_only=False, overlap=100, doc_id: doc-2434be21f9a4cab7742c6bd9e8e2f4ec
+INFO: extract LLM func: 4 new workers initialized (Timeouts: Func: 240s, Worker: 480s, Health Check: 495s)
+INFO: Parsing (native): doc-716e5b1a644ad0022b77a1f1c453a4f2
+INFO: Parsing (native): doc-79f54ecf387b35cfbcb780658cda7e0c
+INFO: Parsing (native): doc-8e480456b2e7793ef0d707c3c9078d8c
+INFO: Parsing (native): doc-a43dbd4b2b947134fc69f60b4be05440
+INFO: Parsing (native): doc-aad98ed6151be31033f17cc129b4d0a9
+INFO: Parsing (native): doc-b25c2bf361b1d3a2ceed0acc32ff9c3b
+INFO: Parsing (native): doc-b29a52e333544710f55868605b6607b5
+INFO: Parsing (native): doc-c624410f178b887c6c0457b877b38623
+INFO: Parsing (native): doc-c7786e670e089b87df36cc29f6ebd44e
+INFO: Parsing (native): doc-d19777aff1f7b27fad9d73af393b32b0
+INFO: Parsing (native): doc-d9c93107f8e4ba0bc4a3e611a9453342
+INFO: Parsing (native): doc-db2bf80b66d1b2d2b370fcce2eea748d
+INFO: Parsing (native): doc-e3cad40f59e07155b604482453280471
+INFO: Parsing (native): doc-ed736e09a269eb76dc1206c55d3a4c10
+INFO: Parsing (native): doc-f1fc67e06ce2ff217d4ff116fc60940b
+INFO:  == LLM cache == saving: default:extract:d83b5f55abb35742059d2e427d910210
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-001: LLM output format error; found 4/5 fields on RELATION `中汽工程`~`提供EPC总承包业务`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-001: LLM output format error; found 4/5 fields on RELATION `中国工程企业`~`涉及汽车工程领域`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-001: LLM output format error; found 4/5 fields on RELATION `汽车产业`~`对高质量发展具有重要意义`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-001: LLM output format error; found 4/5 fields on RELATION `工程服务业`~`推动工程服务业升级`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-001: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`提供EPC总承包业务`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-001: LLM output format error; found 4/5 fields on RELATION `汽车工程领域`~`提供EPC总承包业务`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-001: LLM output format error; found 4/5 fields on RELATION `汽车工业`~`经历历史性变革`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-001: LLM output format error; found 4/5 fields on RELATION `汽车大国`~`努力实现历史性跨越`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-001: LLM output format error; found 4/5 fields on RELATION `黄细丁`~`是总包之声创始人`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-001: LLM output format error; found 4/5 fields on RELATION `2025年6月`~`本书出版时间`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-001: LLM output format error; found 4/5 fields on RELATION `前言`~`介绍研究背景和目的`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-001: LLM output format error; found 4/5 fields on RELATION `研究报告`~`旨在提出战略建议`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-001: LLM output format error; found 4/5 fields on RELATION `行业趋势`~`把握行业趋势`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-001: LLM output format error; found 4/5 fields on RELATION `技术创新`~`持续投入技术创新`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-001: LLM output format error; found 4/5 fields on RELATION `绿色发展理念`~`坚定践行绿色发展理念`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-001: LLM output format error; found 4/5 fields on RELATION `组织管理`~`不断优化组织管理`
+INFO: Chunk 1 of 6 extracted 18 Ent + 0 Rel doc-01202272badfe67fc689d295cc1c6bbc-chunk-001
+INFO:  == LLM cache == saving: default:extract:1b82f6816be0bf5d02f189d371aaddcf
+INFO: Chunk 2 of 6 extracted 30 Ent + 26 Rel doc-01202272badfe67fc689d295cc1c6bbc-chunk-002
+INFO:  == LLM cache == saving: default:extract:2e3d17668bae3f7ac47be52bf052bef0
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-003: LLM output format error; found 4/5 fields on RELATION `中国汽车工业协会`~`统计,发布`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-003: LLM output format error; found 4/5 fields on RELATION `2023年中国汽车产销量`~`达到,实现`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-003: LLM output format error; found 4/5 fields on RELATION `比亚迪,蔚来,小鹏`~`技术实力,增强`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-003: LLM output format error; found 4/5 fields on RELATION `智能网联技术`~`应用,加速`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-003: LLM output format error; found 4/5 fields on RELATION `华为,百度,地平线`~`参与,推动`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-003: LLM output format error; found 4/5 fields on RELATION `产业链`~`重构,升级`
+INFO: Chunk 3 of 6 extracted 35 Ent + 8 Rel doc-01202272badfe67fc689d295cc1c6bbc-chunk-003
+INFO:  == LLM cache == saving: default:extract:80c5f71acc8792b7a3295fcc7bed6a66
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`EPC总承包业务`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中汽工程`~`汽车工程EPC行业`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`组织架构`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`管理体系`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`经营策略`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`技术创新`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`绿色发展路径`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`未来发展方向`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`绪论`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`发展概况`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`规模与结构`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`市场定位`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`SWOT分析`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`战略建议`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`核心竞争力`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`产业变革`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`生产方式`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`发展趋势`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`挑战与机遇`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`国际化工程服务商`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`全球化竞争`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`综合实力`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`国际影响力`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`数据驱动`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`案例丰富`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`分析深入`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`传统设计院`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`综合工程服务商`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`核心竞争力`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`新能源`
+WARNING: doc-01202272badfe67fc689d295cc1c6bbc-chunk-000: LLM output format error; found 4/5 fields on RELATION `中国汽车工业工程有限公司`~`智能化`
+INFO: Chunk 4 of 6 extracted 32 Ent + 0 Rel doc-01202272badfe67fc689d295cc1c6bbc-chunk-000
+INFO:  == LLM cache == saving: default:extract:b2eb9c3d5f1c88ab99c59b5116d0c9b7
+INFO: Chunk 1 of 6 extracted 10 Ent + 8 Rel doc-0f4f29c7c713a0dc9cceab37367c4fc5-chunk-000
+INFO:  == LLM cache == saving: default:extract:cf7c833807465b98c2f7c8ef99a0b33d
+WARNING: doc-0f4f29c7c713a0dc9cceab37367c4fc5-chunk-003: LLM output format error; found 4/5 fields on RELATION `技术路线`~`Described in`
+WARNING: doc-0f4f29c7c713a0dc9cceab37367c4fc5-chunk-003: LLM output format error; found 4/5 fields on RELATION `准备阶段`~`Part of`
+WARNING: doc-0f4f29c7c713a0dc9cceab37367c4fc5-chunk-003: LLM output format error; found 4/5 fields on RELATION `信息收集阶段`~`Part of`
+WARNING: doc-0f4f29c7c713a0dc9cceab37367c4fc5-chunk-003: LLM output format error; found 4/5 fields on RELATION `大纲优化与确认阶段`~`Part of`
+WARNING: doc-0f4f29c7c713a0dc9cceab37367c4fc5-chunk-003: LLM output format error; found 4/5 fields on RELATION `分章节研究与撰写阶段`~`Part of`
+WARNING: doc-0f4f29c7c713a0dc9cceab37367c4fc5-chunk-003: LLM output format error; found 4/5 fields on RELATION `整合与修订阶段`~`Part of`
+WARNING: doc-0f4f29c7c713a0dc9cceab37367c4fc5-chunk-003: LLM output format error; found 4/5 fields on RELATION `报告结构`~`Based on`
+WARNING: doc-0f4f29c7c713a0dc9cceab37367c4fc5-chunk-003: LLM output format error; found 4/5 fields on RELATION `第一部分`~`Part of`
+WARNING: doc-0f4f29c7c713a0dc9cceab37367c4fc5-chunk-003: LLM output format error; found 4/5 fields on RELATION `第二部分`~`Part of`
+WARNING: doc-0f4f29c7c713a0dc9cceab37367c4fc5-chunk-003: LLM output format error; found 4/5 fields on RELATION `第三部分`~`Part of`
+INFO: Chunk 2 of 6 extracted 12 Ent + 1 Rel doc-0f4f29c7c713a0dc9cceab37367c4fc5-chunk-003
+INFO:  == LLM cache == saving: default:extract:18ecc0a7a849d9fdf37ff6b4a69ff6d4
+INFO: Chunk 3 of 6 extracted 29 Ent + 24 Rel doc-0f4f29c7c713a0dc9cceab37367c4fc5-chunk-002
+INFO:  == LLM cache == saving: default:extract:31c72daa0cca0c51ccf166d2d79284a9
+INFO: Chunk 1 of 6 extracted 28 Ent + 27 Rel doc-2434be21f9a4cab7742c6bd9e8e2f4ec-chunk-000

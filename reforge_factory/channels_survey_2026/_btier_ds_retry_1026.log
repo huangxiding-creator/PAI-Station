@@ -1,0 +1,10 @@
+# retry start=2026-10-26 12:52:02
+LIT|us_ofac_sdn ftm直链=https://data.opensanctions.org/artifacts/us_ofac_sdn/20261026041005-bhx/entities.ftm.json
+FAIL|opensanctions|us_ofac_sdn ftm.json 头64KB样本|code=|200|
+FAIL|overture|首Key(空格已编码) 头32KB样本|code=|200|
+FAIL|ofac_sdn|OFAC sdn.xml 头512KB样本(302→sanctionslistservice→S3预签名)|code=|200|
+CLEAN|残留临时件 29245041字节 E:/AI-Station/data/datasets/ofac_sdn/sdn.xml.head512k.dl
+CLEAN|残留临时件 53283878字节 E:/AI-Station/data/datasets/opensanctions/us_ofac_sdn.ftm.json.head64k.dl
+CLEAN|残留临时件 4149562字节 E:/AI-Station/data/datasets/overture/bridgefile.head32k.parquet.dl
+# retry done 2026-10-26 12:54:01
+# manifest lines=6
