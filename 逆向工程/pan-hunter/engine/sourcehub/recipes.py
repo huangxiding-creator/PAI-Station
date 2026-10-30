@@ -94,7 +94,7 @@ RECIPES = [
            headers={"Referer": "https://miaosou.fun/",
                     "satoken": "c2F0b2tlbjpubXNwYXJrLWxvZ2luLmNvbTo0MDI4ODMxOTSNejZhUzdHeUtFSTh1TERqcGljS0pleUw"},
            kw_mode="first",
-           note="r2#13 | pansou plugin/miaoso 共享 satoken（会过期）；W0 当日 CF 403 oldie"),
+           note="r2#13 | pansou plugin/miaoso 共享 satoken（会过期）；上游 MIT 件公开协议情报·非用户凭据·非生产依赖（源死）；W0 当日 CF 403 oldie"),
     Recipe("sopanya", "GET",
            "https://sopanya.com/api/other/web_search?title={kw}&is_type=-1", "sse",
            note="r2#15 | pansou plugin/sopanya；SSE 流，有行为风控"),

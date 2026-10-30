@@ -359,5 +359,21 @@
   ],
   "err": "",
   "elapsed_s": 0
+ },
+ {
+  "disk": "feijipan",
+  "url": "https://share.feijipan.com/s/yj3GPwTo",
+  "pwd": "",
+  "verdict": "绿·门过",
+  "file": "w1_downloads/feijipan/IMG_2023.MP4",
+  "size": 29400106,
+  "sha1": "0C373C1315E3B63EBE534EA1A219B2806C21FB11",
+  "steps": [
+   "vip 预热 POST /ws/buy/vip/list（fj_hex 时间戳签名）",
+   "列表 POST /ws/recommend/list → fileList（IMG_2023.MP4）",
+   "直链 GET /ws/file/redirect?downloadId={fj_hex(fileId|userId)}&auth=… → 302 Location",
+   "落盘 29,400,106B（28.04MB）· 实跑于 W1 三轮门（16:47），sha1 复核 0C373C13…"
+  ],
+  "err": ""
  }
 ]

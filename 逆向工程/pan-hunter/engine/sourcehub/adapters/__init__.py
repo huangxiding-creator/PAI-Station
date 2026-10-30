@@ -27,12 +27,15 @@ ADAPTERS: dict[str, BaseAdapter] = {
 # 注：ILanzou/Feijipan 排在 Lanzou 前——"lanzou" 是 "ilanzou.com" 的子串，先匹配长名防误吞。
 # LanzouFolderAdapter 自动判别目录/单文件（目录=filemoreajax 列表→逐文件单链）。
 
-#: 盘型红绿灯（W1 门实测后 gates 台账为权威；此表为路由用缺省）
+#: 盘型红绿灯（权威=analysis/W1_GREEN_GATES.md 终版；此表为路由用同步口径）
 DISK_LIGHTS = {
-    "uc": "绿", "115": "绿", "123": "绿", "lanzou": "绿", "ilanzou": "绿",
-    "feijipan": "绿", "ecpan": "绿", "guangya": "绿",
-    "wenshushu": "绿?",
-    # 盘级死亡（2026-01-10 官方停服公告，cowtransfer.com DNS 不解析+代理出口 TLS 重置）
+    # W1 真件门绿（5/10）
+    "uc": "绿", "lanzou": "绿", "ilanzou": "绿", "feijipan": "绿", "ecpan": "绿",
+    # 门未过·定性如实（W1 终判）
+    "115": "绿?(owner开关)",          # skip_login 端点活；2026-01 官方停发免费免登流量
+    "123": "黄(免费层墙5112)",        # 列表免登全通；直链一律 5112 注册/付费
+    "guangya": "绿?(owner开关)",      # 匿名全链通到 207 分享者未开启免登下载
+    "wenshushu": "绿?(无当活链)",
     "cow": "死(停服2026-01-10)",
     # 黄盘（发现+探活，W2）
     "baidu": "黄", "quark": "黄", "aliyun": "黄", "xunlei": "黄",

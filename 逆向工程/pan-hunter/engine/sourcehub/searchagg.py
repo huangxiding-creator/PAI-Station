@@ -44,12 +44,17 @@ class Hit:
 
 
 class SearchLedger:
-    """全线程搜索记账（含重试）。"""
+    """全线程搜索记账（含重试）。
 
-    def __init__(self, jsonl_path: str | None = None):
+    W2（judge#1 修复）：①记账行增 disks 字段（该发命中的盘型列表，离线可重算盘型面）；
+    ②可选 hits_path 命中归档——每命中一行（url/disk/light/source/kw），URL 永不再只留内存。
+    """
+
+    def __init__(self, jsonl_path: str | None = None, hits_path: str | None = None):
         self.lock = threading.Lock()
         self.rows: list[dict] = []
         self.jsonl_path = jsonl_path
+        self.hits_path = hits_path
 
     def log(self, **row):
         row["ts"] = time.strftime("%H:%M:%S")
@@ -58,6 +63,18 @@ class SearchLedger:
             if self.jsonl_path:
                 with open(self.jsonl_path, "a", encoding="utf-8") as f:
                     f.write(json.dumps(row, ensure_ascii=False) + "\n")
+
+    def log_hits(self, kw: str, source: str, hits: list):
+        """命中行归档（url+disk 全落盘；供离线盘型重算与发现层语料复用）。"""
+        if not self.hits_path:
+            return
+        with self.lock:
+            with open(self.hits_path, "a", encoding="utf-8") as f:
+                for h in hits:
+                    f.write(json.dumps({"ts": time.strftime("%H:%M:%S"), "kw": kw,
+                                        "source": source, "url": h.url,
+                                        "disk": h.disk, "light": h.light},
+                                       ensure_ascii=False) + "\n")
 
     @property
     def shots(self) -> int:
@@ -115,12 +132,15 @@ class SearchSession:
             try:
                 status, body = self._fetch(PROXIES if path == "proxy_retry" else None)
                 hits = extract_hits(body, self.source)
+                disks = sorted({h.disk for h in hits})          # judge#1：盘型入账
                 self.ledger.log(source=self.source, kw=kw, path=path, status=status,
-                                hits=len(hits), elapsed=round(time.time() - t0, 1))
+                                hits=len(hits), disks=disks,
+                                elapsed=round(time.time() - t0, 1))
+                self.ledger.log_hits(kw, self.source, hits)      # judge#1 根因：URL 归档
                 return hits
             except Exception as e:
                 self.ledger.log(source=self.source, kw=kw, path=path, status=0,
-                                hits=0, error=f"{type(e).__name__}:{str(e)[:60]}",
+                                hits=0, disks=[], error=f"{type(e).__name__}:{str(e)[:60]}",
                                 elapsed=round(time.time() - t0, 1))
                 continue
         return hits
