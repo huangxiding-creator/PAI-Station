@@ -517,7 +517,7 @@ async def gen_one(client, st: dict, ch: dict) -> None:
     print("[OK] ch" + str(no) + "章初稿 _ch" + nn + "_nblm.md " + f"{len(full):,}"
           + "字 (CJK " + f"{cjk:,}" + ", 门" + ("✓" if cjk >= CJK_GATE else "✗")
           + ", 扩写轮" + str(extra) + ", " + str(round(time.time() - t0)) + "s)")
-    await asyncio.sleep(3)      # 章间节流
+    await asyncio.sleep(5)      # 章间节流 (任务令: 5s)
 
 
 # ---------- 三武器逐章审计 ----------
