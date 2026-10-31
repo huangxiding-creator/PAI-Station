@@ -1,0 +1,85 @@
+E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\caselaw\caselaw_nblm_run.py:79: DeprecationWarning: Non-default legacy NotebookLMClient.from_storage tuning arguments are deprecated; group them under config=ClientConfig(...). They will be removed in v1.0. Offending arguments: keepalive, limits, max_concurrent_rpcs, max_concurrent_uploads, timeout.
+  return await NotebookLMClient.from_storage(
+E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\caselaw\caselaw_nblm_run.py:79: DeprecationWarning: Awaiting NotebookLMClient.from_storage(...) is deprecated; use `async with NotebookLMClient.from_storage(...) as client:` instead. The await form will be removed in v1.0.
+  return await NotebookLMClient.from_storage(
+[storm] 框架前置文件就位 -> E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\caselaw\sched\nblm_out\00_多视角问题框架.md
+[exit] 未找到含美国04的代理组控制器 — 只读保持当前出口
+[conn] NB via http://127.0.0.1:7892: http=301 redirect=https://notebook.google.com/ -> 可达
+[通道] NB 可达, transport=curl_cffi 单会话开产
+[nb] 建 CASELAW-第12份-00战役总笔记本 → 650f99c4-7b9e-4752-9632-854fec2cbda2
+[up] 框架 ← c01_锚点合集_导论：工程造价争议全景与谱系方法论.md
+[up] 框架 ← c02_锚点合集_判例方法论与争议分类学：类案检索与分.md
+[up] 框架 ← c03_锚点合集_固定总价与总价包干争议：范围、调价与.md
+[up] 框架 ← c04_锚点合集_结算与审减攻防：送审、审计与视为认可.md
+[up] 框架 ← c05_锚点合集_变更签证与索赔反索赔：效力认定与失权.md
+[up] 框架 ← c06_锚点合集_造价鉴定程序与质证：从委托到重新鉴定.md
+[up] 框架 ← c07_锚点合集_工期与费用索赔：延误、赶工与停窝工损.md
+[up] 框架 ← c08_锚点合集_合同效力与黑白合同：结算依据选择与折.md
+[up] 框架 ← c09_锚点合集_优先受偿权与工程款保护：权利行使与利.md
+[up] 框架 ← c10_锚点合集_调解与ADR实务：调解协议确认与争议.md
+[up] 框架 ← c11_锚点合集_仲裁与诉讼策略：路径选择与证据攻防.md
+[up] 框架 ← c12_锚点合集_全书判例谱系总表与三场景行动清单.md
+[nb] 战役总笔记本源数: (12, 12), 开始生成框架…
+[storm] 前置多视角问题块 (1,828字, 取前2600)
+[retry] ask 第1次失败: ChatError Chat request was rate limited or rejected by the API. Wait a few seconds and try
+[retry] ask 第2次失败: ChatError Chat request was rate limited or rejected by the API. Wait a few seconds and try
+[retry] ask 第3次失败: ChatError Chat request was rate limited or rejected by the API. Wait a few seconds and try
+Traceback (most recent call last):
+  File "E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\caselaw\caselaw_nblm_run.py", line 603, in <module>
+    raise SystemExit(asyncio.run(main()))
+                     ~~~~~~~~~~~^^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\asyncio\base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\caselaw\caselaw_nblm_run.py", line 573, in main
+    await phase_framework(st, client)
+  File "E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\caselaw\caselaw_nblm_run.py", line 280, in phase_framework
+    res = await ask_retry(client, nb_id, framework_prompt())
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\caselaw\caselaw_nblm_run.py", line 176, in ask_retry
+    raise last
+  File "E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\caselaw\caselaw_nblm_run.py", line 171, in ask_retry
+    return await client.chat.ask(nb_id, question)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_chat.py", line 343, in ask
+    return await self._ask_in_scope(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_chat.py", line 477, in _ask_in_scope
+    posted = await perform_request(
+             ^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_chat.py", line 378, in perform_request
+    posted = await self._stream_answer(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_request_policy.py", line 120, in asynchronous
+    return await function(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_web\chat.py", line 265, in _stream_answer
+    parsed = parse_streaming_chat_response(response.text)
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_web\rows\chat_stream.py", line 248, in parse_streaming_chat_response
+    process_chunk(lines[i])
+    ~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_web\rows\chat_stream.py", line 202, in process_chunk
+    chunk = _extract_chunk_with_parseable(json_str)
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_web\rows\chat_stream.py", line 463, in _extract_chunk_with_parseable
+    raise_if_rate_limited(error_payload)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\91216\AppData\Local\Programs\Python\Python313F\Lib\site-packages\notebooklm\_web\rows\chat_stream.py", line 663, in raise_if_rate_limited
+    raise mark_commit_state(
+    ...<6 lines>...
+    )
+notebooklm.exceptions.ChatError: Chat request was rate limited or rejected by the API. Wait a few seconds and try again.
