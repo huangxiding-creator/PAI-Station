@@ -58,6 +58,10 @@ class Engine:
             ticket = create_ticket_from_decision(
                 self.store, decision, trigger,
                 title=trigger.metadata.get("title", trigger.content[:50]))
+            # 双向订阅：ticket→thread 已在 create 中设置，此处补 thread→ticket
+            if ticket.id not in thread.subscriptions:
+                thread.subscriptions.append(ticket.id)
+                self.store.save_thread(thread)
             return decision
 
         return decision
