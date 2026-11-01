@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>AI-Station 注意力面板</title>
+<style>
+:root { --bg:#0d1117; --card:#161b22; --border:#30363d; --text:#c9d1d9; --accent:#58a6ff; --warn:#f0883e; --ok:#3fb950; --red:#f85149; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:-apple-system,'Segoe UI',sans-serif; padding:20px; max-width:900px; margin:0 auto; }
+h1 { font-size:1.4rem; margin-bottom:16px; color:var(--accent); }
+h2 { font-size:1rem; margin:16px 0 8px; color:var(--text); }
+.card { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:12px 16px; margin-bottom:8px; }
+.card.attention { border-color:var(--warn); }
+.card.working { border-color:var(--accent); }
+.stage { display:inline-block; padding:2px 8px; border-radius:4px; font-size:0.75rem; font-weight:600; }
+.stage.review { background:#f0883e22; color:var(--warn); }
+.stage.answer { background:#f0883e22; color:var(--warn); }
+.stage.blocked { background:#f8514922; color:var(--red); }
+.stage.working { background:#58a6ff22; color:var(--accent); }
+.stage.queued { background:#58a6ff11; color:var(--text); }
+.stage.idle { background:#3fb95011; color:var(--ok); }
+.meta { font-size:0.8rem; color:#8b949e; margin-top:4px; }
+.empty { color:#8b949e; font-style:italic; padding:16px; text-align:center; }
+#refresh { position:fixed; top:20px; right:20px; background:var(--accent); color:var(--bg); border:none; padding:6px 14px; border-radius:6px; cursor:pointer; font-weight:600; }
+</style>
+</head>
+<body>
+<h1>AI-Station 注意力面板</h1>
+<button id="refresh" onclick="load()">刷新</button>
+<h2>⚠ 需要你决定</h2>
+<div id="attention"></div>
+<h2>⚙ 执行中</h2>
+<div id="working"></div>
+<h2>📊 总览</h2>
+<div id="overview" class="card"></div>
+<script>
+async function load() {
+  try {
+    const r = await fetch('/api/overview');
+    const d = await r.json();
+    const att = document.getElementById('attention');
+    const wrk = document.getElementById('working');
+    const ovw = document.getElementById('overview');
+    if (!d.needs_attention.length) {
+      att.innerHTML = '<div class="empty">✅ 无需人工干预</div>';
+    } else {
+      att.innerHTML = d.needs_attention.map(t => `
+        <div class="card attention">
+          <strong>${t.title}</strong>
+          <span class="stage ${t.stage.split('/')[1]}">${t.stage}</span>
+          ${t.report?.attention ? `<div class="meta">❓ ${t.report.attention}</div>` : ''}
+        </div>`).join('');
+    }
+    if (!d.working.length) {
+      wrk.innerHTML = '<div class="empty">当前无执行中任务</div>';
+    } else {
+      wrk.innerHTML = d.working.map(t => `
+        <div class="card working">
+          <strong>${t.title}</strong>
+          <span class="stage ${t.stage.split('/')[1] || t.stage}">${t.stage}</span>
+        </div>`).join('');
+    }
+    ovw.innerHTML = `活跃 Ticket: ${d.open_count} ｜ 策略版本: ${d.policy_version}`;
+  } catch(e) {
+    document.getElementById('overview').textContent = '面板服务未启动';
+  }
+}
+load();
+setInterval(load, 5000);
+</script>
+</body>
+</html>
