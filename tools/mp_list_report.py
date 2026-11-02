@@ -77,6 +77,20 @@ def refresh_auth() -> bool:
     r = subprocess.run(["cmd", "/c", CB, "env", "list"], capture_output=True,
                        text=True, timeout=90)
     ok = "cloudbase-" in r.stdout
+    if not ok:
+        # 1101固化: tmp凭证过期时自动走 refreshToken 续期件 (tcb_refresh端点,
+        # 复刻CLI私有会话), refreshToken本体约2个月有效 — 到期才需再扫码授权
+        REFRESH = REPO / "data" / "state" / "mn_client" / "_tcb_refresh_v0923.js"
+        if REFRESH.is_file():
+            print("[mp] tmp凭证过期 → 自动 refreshToken 续期…")
+            rr = subprocess.run(["node", str(REFRESH)], capture_output=True,
+                                text=True, timeout=90, cwd=str(REFRESH.parent))
+            if "code: 0" in rr.stdout:
+                r = subprocess.run(["cmd", "/c", CB, "env", "list"],
+                                   capture_output=True, text=True, timeout=90)
+                ok = "cloudbase-" in r.stdout
+            else:
+                print(f"[mp] refreshToken 续期失败(需重新扫码授权): {rr.stdout[-120:]}")
     print(f"[mp] auth refresh probe: {'ok' if ok else 'FAIL ' + r.stdout[-120:]}")
     return ok
 
