@@ -61,8 +61,27 @@ Retrofit base：`i.weread.qq.com`（UrlFactory 实证）。
 ## 6. 实测时间线（1102）
 
 - 17:38 web `/web/book/info` → errCode **-2012**（登录态 10-25 存档已失效）→ 起扫码登录（b7ztp37ag）+ 企微通知已发
-- app 域 book/info → 401（与 -2012 同因，token 陈旧非协议分离——待新登录态复测）
-- 待复测清单：①book/info 200 ②chapterdownload chapters=0-1 权限语义 ③encryptKey→zip 解密 ④enVersion=7.5.0 兼容性 ⑤/book/search 形态
+- 17:36 用户新扫码 → web skey 新鲜；**app 域 book/info 仍 401/-2012**（accessToken 头与 Cookie 形态双测均拒）
+  → **token 分离实锤**：i.weread.qq.com 只认 app 自有 accessToken；HuanMeng 路线 2024-08 已被官方掐死
+  （GitHub issue「一直提示登录超时」2024-08 实锤，工具 2023-12 弃更）
+- app 登录协议：`account/model/WRLoginService` — `login`/@POST /login @JSONField(code,deviceId,pf,timestamp,random,signature…)
+  = wx OAuth code + 签名兑换；`refreshToken` 续期；guest/guestLogin 游客通道。纯 HTTP 复刻成本高 → 弃
+- **路线决策（用户拍板）**：雷电9模拟器跑真 app（流量100%真app，封号检测无从谈起）→ UIA 驱动「下载全本」→ adb 拉件 → 本地解密
+- 18:00 雷电9 装于 `F:\leidian\LDPlayer9`（用户手装，安装器静默参数不被接受）；adb=emulator-5554；官方APK `adb install -r` Success
+- 18:04 app 登录页 → 隐私协议弹窗（同意并继续@[1280,1208]）→ 登录方式：微 信 登 录[918-1014] / **微信扫码登录[1046-1142]** / 直接试用
+  → 点「微信扫码登录」出二维码（evidence/emu_screen4.png）→ **等用户手机扫码**（唯一必要可见环节）
+- deeplink：`weread://` scheme（LaunchExternalSchema，exported singleTask）+ https weread.qq.com；实测路由待登录后验
+- 驱动件：`replica/ldapp_driver.py`（dump/shot/tap/tap-text/deeplink/pull/launch）
+- 转换件：`replica/wrapp_zip.py`（zip→book.json/md，站内 schema 同构：chapterUid/html/images/level/text/title）
+- 用户令追加：**避免频繁弹窗**（popup-minimize-discipline 记忆已立档）
+
+## 6b. 登录后待办
+
+1. deeplink 实测：`weread://web/bookDetail?bookId=3300229637` 是否直达详情页
+2. 详情页按钮面：加入书架/下载全本(或缓存/离线) 的文本+坐标 → 驱动流程定型
+3. 单本全流程实走：下载 → `adb shell find /sdcard/Android/data/com.tencent.weread -name "*.zip"` 定位落盘
+4. 拉件 → wrapp_zip 转换 → 与 web 管线产物对拍验收（章数/字数/空文）
+5. 节奏引擎：25-90s 人类化抖动 + 会话批量（模拟晚间囤书）+ 异常截图熔断
 
 ## 7. 工件位
 
