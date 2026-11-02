@@ -18,7 +18,7 @@ from pathlib import Path
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 REPO = Path(__file__).resolve().parents[2]
-Q = "中资电力EPC出海 国际工程市场准入"
+Q = sys.argv[2] if len(sys.argv) > 2 else "中资电力EPC出海 国际工程市场准入"
 
 LEDGER: Path = None  # main() 里初始化
 
