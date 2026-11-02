@@ -82,6 +82,9 @@ def one_book(sess, bid, idx, total):
     if not j.get("title"):
         print("  info no title (bookId 无效?)", flush=True)
         return "SKIP", None
+    if j.get("soldout") or (not j.get("version") and not j.get("chapterSize")):
+        print("  已下架/无内容分发（soldout=%s），跳过" % j.get("soldout"), flush=True)
+        return "SKIP_SOLDOUT", j.get("title")
     title = j["title"]
     print("  《%s》%s章 %s字" % (title, j.get("chapterSize", "?"),
                                 format(j.get("totalWords", 0), ",")), flush=True)
@@ -130,8 +133,8 @@ def run(limit):
         if status == "OK":
             st["done"].append(bid)
             n_today += 1
-        elif status in ("SKIP", "SKIP402"):
-            st["failed"].append(bid)  # 无效/无权不重试
+        elif status.startswith("SKIP"):
+            st["failed"].append(bid)  # 无效/无权/下架：不重试、不计熔断
         elif status == "AUTH_DEAD":
             print("!! 401：token 过期（回模拟器重提取 weread_app_token.json）", flush=True)
             st["failed"].append(bid)
@@ -150,7 +153,7 @@ def run(limit):
                           "ts": time.strftime("%H:%M:%S")})
         save(STATE, st)
         save(DAILY, {today: n_today})
-        if i < len(queue):
+        if i < len(queue) and status == "OK":
             gap = random.uniform(60, 180)
             print("  书间歇 %.0fs …" % gap, flush=True)
             time.sleep(gap)
