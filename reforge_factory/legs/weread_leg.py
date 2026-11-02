@@ -1,24 +1,25 @@
 # -*- coding: utf-8 -*-
-"""weread_leg — 微信读书调研渠道腿 (1102 用户令接入, 逆向仓 wrapp 复刻驱动).
+"""weread_leg — 微信读书调研渠道腿（1102 换心: app 域整书通道, 替换旧 web 逐章管线）.
 
-能力链: 搜书(scripts/weread_search.py 节流内建) → 书元信息(wrapp info)
-→ 章节提取(wrapp download 试读/已购面) → 入池(engine=weread) → 挂树.
+通道升级实录见 逆向工程/weread-apk-reverse/KNOWLEDGE.md:
+  旧: web 逐章提取 200+请求/本, 日限 2, 节流 5.5-12s/章 (已被替换)
+  新: app 域 chapterdownload 整书一包 2请求/本 (1102 破签之战贯通),
+      凭据=模拟器真 app 令牌, 头表=在线 dump 真值, 产物与 web 管线同构
 
-账号安全铁律 (weread-download skill 在案, 违者风控):
-  - 每日提取 ≤2 本 (书间冷却 600s)
-  - 章节节流 5.5-12s 随机 + 每 12 章阅读间歇 90-180s
-  - 搜索日限 8 次/间隔 ≥25s (weread_search 内建 pace_guard)
-  - 只读接口, 不碰支付/写操作
+安全纪律 (内建于 scripts/wrapp_channel.py, 违者风控):
+  - 日预算 15 本 (单一台账 data/weread/_recon/app_daily_count.json, 观察期后可提 30)
+  - 401 令牌过期自动恢复: wrapp_channel.py token (~30s, 唤醒模拟器 app 滚新)
+  - soldout 已下架书自动跳过; 402=账号读不了的正常边界
+  - 搜索走公共目录免登录, 零账号风险
 用法:
-  py -X utf8 weread_leg.py search <关键词> [n]     # 搜书出书单
+  py -X utf8 weread_leg.py search <关键词> [n]
   py -X utf8 weread_leg.py harvest <campaign> --bid <bookId> [--dry]
-      # 提取可见章节入池(当日配额管理在 data/weread/_recon/harvest_pace.json)
+  py -X utf8 weread_leg.py quota
 """
 from __future__ import annotations
 
 import argparse
 import json
-import random
 import re
 import subprocess
 import sys
@@ -27,93 +28,73 @@ from pathlib import Path
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 REPO = Path(r"E:\AI-Station")
-WR = REPO / "逆向工程" / "weread-apk-reverse" / "replica"
-RECON = REPO / "data" / "weread" / "_recon"
-PACE = RECON / "harvest_pace.json"
-DAILY_BOOKS = 2
-COOLDOWN_S = 600
+WRAPP = REPO / "scripts" / "wrapp_channel.py"
+DAILY = REPO / "data" / "weread" / "_recon" / "app_daily_count.json"
+DAILY_BOOKS = 15
 
 
-def sh(cmd, timeout=300):
-    r = subprocess.run(cmd, capture_output=True, text=True,
+def sh(cmd, timeout=1800):
+    r = subprocess.run(["py", "-X", "utf8"] + cmd, capture_output=True, text=True,
                        encoding="utf-8", errors="replace", timeout=timeout,
                        cwd=str(REPO))
     return (r.stdout or "") + (r.stderr or "")
 
 
-def quota_left() -> int:
+def quota_state():
     today = time.strftime("%Y-%m-%d")
-    st = {"date": today, "books": []}
-    if PACE.exists():
-        try:
-            d = json.loads(PACE.read_text(encoding="utf-8"))
-            if d.get("date") == today:
-                st = d
-        except Exception:  # noqa: BLE001
-            pass
-    return DAILY_BOOKS - len(st.get("books", []))
-
-
-def take_quota(bid: str, title: str):
-    st = {"date": time.strftime("%Y-%m-%d"),
-          "books": json.loads(PACE.read_text(encoding="utf-8")).get("books", [])
-          } if PACE.exists() else {"date": time.strftime("%Y-%m-%d"), "books": []}
-    if st.get("date") != time.strftime("%Y-%m-%d"):
-        st = {"date": time.strftime("%Y-%m-%d"), "books": []}
-    st["books"].append({"bid": bid, "title": title, "ts": time.strftime("%F %T")})
-    PACE.parent.mkdir(parents=True, exist_ok=True)
-    PACE.write_text(json.dumps(st, ensure_ascii=False, indent=1), encoding="utf-8")
+    d = json.loads(DAILY.read_text(encoding="utf-8")) if DAILY.exists() else {}
+    return d.get(today, 0), today
 
 
 def cmd_search(kw: str, n: int):
-    out = sh(["py", "-X", "utf8", str(REPO / "scripts" / "weread_search.py"), kw, str(n)])
-    print(out)
-
-
-def book_info(bid: str) -> dict:
-    out = sh(["py", "-X", "utf8", str(WR / "wrapp_client.py"), "info", bid])
-    m = re.search(r"HTTP (\d+) (.+)$", out.strip().splitlines()[-1] if out.strip() else "")
-    try:
-        return json.loads(m.group(2)) if m and m.group(1) == "200" else {}
-    except Exception:  # noqa: BLE001
-        return {}
+    out = sh([str(WRAPP), "search", kw, "--pages", "3"])
+    lines = [l for l in out.splitlines() if re.match(r"^(HAVE|new )", l)]
+    for l in lines[:n]:
+        print(l)
+    print(f"[weread] 命中 {len(lines)} 本（公共目录搜索, 免登录）")
 
 
 def cmd_harvest(campaign: str, bid: str, dry: bool):
-    if quota_left() <= 0:
-        print(f"[weread] 今日提取配额已尽({DAILY_BOOKS}本), 明日再提 — 账号安全铁律")
+    used, today = quota_state()
+    if used >= DAILY_BOOKS:
+        print(f"[weread] 今日预算已尽({used}/{DAILY_BOOKS}本), 明日再战 — 观察期铁律")
         return 2
     if dry:
-        print("[weread] DRY (web通道 weread_batch, 含内建节流)")
+        print(f"[weread] DRY: app域整书通道将执行 wrapp_channel download {bid} "
+              f"(预算 {used}/{DAILY_BOOKS})")
         return 0
-    # web 通道整书提取 (APP 接口 wrapp 401 弃用; weread_batch 内建账号节流+book.json幂等)
-    out = sh(["py", "-X", "utf8", str(REPO / "scripts" / "weread_batch.py"),
-              "--book-id", bid, "--no-docx"], 1800)
-    tail = out.strip().splitlines()[-1][:120] if out.strip() else "?"
-    print("[weread] batch:", tail)
-    # 产物定位: data/weread/{书名}/
-    base = REPO / "data" / "weread"
-    cands = sorted([p for p in base.rglob("*.md") if p.stat().st_mtime > time.time() - 3600],
-                   key=lambda p: p.stat().st_mtime, reverse=True) if base.exists() else []
-    ingested = 0
-    title = ""
-    for c in cands[:2]:
-        r = sh(["py", "-X", "utf8", str(REPO / "reforge_factory" / "ammo_pool.py"),
-                "ingest", campaign, "--file", str(c), "--engine", "weread"])
-        if "[pool]" in r:
-            ingested += 1
-            title = title or c.parent.name
-    take_quota(bid, title or bid)
+    out = sh([str(WRAPP), "download", bid])
+    print("[wrapp]", out.strip().splitlines()[-1][:160] if out.strip() else "?")
+    if "401" in out:
+        print("[weread] 令牌过期, 自动恢复中 …")
+        print("[wrapp]", sh([str(WRAPP), "token"]).strip().splitlines()[-1][:100])
+        out = sh([str(WRAPP), "download", bid])
+        print("[wrapp]", out.strip().splitlines()[-1][:160])
+    ok = "✓" in out
+    ingested, title = 0, ""
+    if ok:
+        m = re.search(r"→ (.+)$", out.strip().splitlines()[-1])
+        out_dir = Path(m.group(1).split(" |")[0].strip()) if m else None
+        if out_dir and out_dir.exists():
+            md = sorted(out_dir.glob("*.md"), key=lambda p: p.stat().st_size, reverse=True)
+            for c in md[:2]:
+                r = sh([str(REPO / "reforge_factory" / "ammo_pool.py"),
+                        "ingest", campaign, "--file", str(c), "--engine", "weread"], 600)
+                if "[pool]" in r:
+                    ingested += 1
+                    title = title or out_dir.name
+    used_now, _ = quota_state()
     inv = REPO / "ammo_pool" / campaign / "channel_invocations.jsonl"
     inv.parent.mkdir(parents=True, exist_ok=True)
     with inv.open("a", encoding="utf-8") as fh:
-        fh.write(json.dumps({"channel": "weread", "ts": time.strftime("%F %T"),
-                             "tool": "weread_leg harvest (web通道 weread_batch, 账号铁律节流)",
-                             "queries": f"book:{bid}:{title or '?'}",
-                             "yield": f"batch {'ok' if ingested else 'fail'} / 入池{ingested}件"},
-                            ensure_ascii=False) + "\n")
-    print(f"[weread] 收官: 入池{ingested}件 剩余额度{quota_left()}本")
-    return 0
+        fh.write(json.dumps({
+            "channel": "weread", "ts": time.strftime("%F %T"),
+            "tool": "weread_leg harvest (app域整书通道 wrapp_channel, 日预算15)",
+            "queries": f"book:{bid}:{title or '?'}",
+            "yield": f"{'ok' if ok else 'fail'} / 入池{ingested}件",
+        }, ensure_ascii=False) + "\n")
+    print(f"[weread] 收官: {'✓' if ok else '✗'} 入池{ingested}件 今日台账{used_now}/{DAILY_BOOKS}")
+    return 0 if ok else 1
 
 
 def main() -> int:
@@ -126,7 +107,8 @@ def main() -> int:
     ap.add_argument("--dry", action="store_true")
     ns = ap.parse_args()
     if ns.cmd == "quota":
-        print(f"今日剩余额度: {quota_left()} 本")
+        used, today = quota_state()
+        print(f"今日 {used}/{DAILY_BOOKS} 本（app域台账, {today}）")
     elif ns.cmd == "search":
         cmd_search(ns.kw, ns.n)
     elif ns.cmd == "harvest":

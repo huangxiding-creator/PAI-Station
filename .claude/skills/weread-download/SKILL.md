@@ -13,11 +13,13 @@ description: 微信读书整书提取落盘（book.json + md + docx），产出�
 
 | 通道 | 速度 | 何时用 |
 |---|---|---|
-| **app 域通道（新）** | **2请求/本，秒级**，日容量 15→30+ | 默认首选。`逆向工程/weread-apk-reverse/replica/wrapp_client.py`（单本）与 `wrapp_batch.py`（批量）。凭据 `data/secrets/weread_app_token.json`（模拟器真 app 提取；头表=UA/appver 必须与注册设备逐字一致，详见 `逆向工程/weread-apk-reverse/KNOWLEDGE.md`）。token 过期(401)→模拟器开 app 自动 refresh 后重提取 |
-| web 逐章通道（旧） | 200+请求/本，25-70分钟/本，日限2 | app 通道凭据失效时的兜底；也用于搜索（`scripts/weread_search.py`）与书架元数据 |
+| **app 域通道（正身）** | **2请求/本，秒级**，日容量 15→30+ | 默认首选。统一 CLI=`scripts/wrapp_channel.py`（search/info/download/token/quota 五命令自含搜索+下载+转换+令牌自动恢复）。批量=`逆向工程/weread-apk-reverse/replica/wrapp_batch.py`（书间抖动+熔断）。研报产线腿=`reforge_factory/legs/weread_leg.py`（harvest 直入 ammo_pool） |
+| web 逐章通道（旧） | 200+请求/本，25-70分钟/本，日限2 | 仅 app 通道彻底失效时兜底（`scripts/weread_batch.py`） |
 
-app 通道安全纪律：书间 60~180s 抖动 / 日预算默认 15（稳定后可提 30）/ 401 或连续 2 失败即熔断 /
-账号能在线读的（无限卡/已购/免费）都可整包下，402=账号读不了的正常边界。
+app 通道要点：凭据 `data/secrets/weread_app_token.json`（模拟器真 app 令牌）；头表铁律=appver 全版本号
+`10.2.2.10167650` + UA 与注册设备逐字一致（服务器校验，详见 `逆向工程/weread-apk-reverse/KNOWLEDGE.md`）；
+401 → `py -X utf8 scripts/wrapp_channel.py token` 自动恢复（~30s）；soldout 已下架自动跳过；
+账号能在线读的（无限卡/已购/免费）都可整包下，402=读不了的正常边界。
 **注意：app 登录会踢 web 会话（多端互踢），两通道分时使用。**
 
 ## 产物落点
