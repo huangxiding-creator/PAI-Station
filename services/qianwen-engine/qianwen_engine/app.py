@@ -1007,6 +1007,17 @@ def report_share(sku: str, request: Request):
     return {"granted": granted, "quota": store.quota_left(openid)}  # 幂等：重复点不报错
 
 
+@app.get("/content/full/{name}")
+def content_full(name: str):
+    """1102 用户令: 详情页封面图静态路由 (仅 full 下 png/jpg, PDF仍走签名API)."""
+    if not re.fullmatch(r"[A-Za-z0-9._-]+\.(?:png|jpg|jpeg)", name):
+        raise HTTPException(404, "not found")
+    p = Path(config.REPORT_CONTENT_DIR) / "full" / name
+    if not p.is_file():
+        raise HTTPException(404, "not found")
+    return FileResponse(p)
+
+
 @app.get("/api/report/{sku}/poster")
 def report_poster(sku: str):
     """研报转化海报（v0.9.15 用户令：不显示价格·「可免费试读」显眼）：题名/目录亮点/
