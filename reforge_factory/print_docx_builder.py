@@ -369,18 +369,20 @@ def build(md_path: Path, out_path: Path, title: str, org: str,
         if t == "h1":
             ch += 1
             tbl_n = fig_n = 0
-            doc.add_page_break()
+            if ch > 1:
+                doc.add_page_break()            # 首章不空页(正文节起始页即第1章)
             doc.add_paragraph()
-            num, _, rest = b["text"].partition(" ")
+            m = re.match(r"^(第[一二三四五六七八九十百\d]+章)[\s　]*(.*)$", b["text"])
+            full = b["text"] if not m else f"{m.group(1)}　{m.group(2)}".strip()
             p = doc.add_paragraph()
             p.paragraph_format.space_after = Pt(2)
-            r = p.add_run(num)
+            r = p.add_run(f"{ch:02d}")           # 大号章序艺术字(纯数字, 免与H1重复)
             r.font.size = Pt(40)
-            r.font.name = HEAD_FONT
+            r.font.name = MONO_FONT
             r._element.rPr.rFonts.set(qn("w:eastAsia"), HEAD_FONT)
-            r.font.color.rgb = PRIMARY
-            hp = doc.add_paragraph()
-            hr = hp.add_run(rest)
+            r.font.color.rgb = ACCENT
+            hp = doc.add_paragraph(style="Heading 1")   # 章题=真H1(TOC收章级, 1102章节混乱修复)
+            hr = hp.add_run(full)
             hr.font.size = Pt(22)
             hr.font.name = HEAD_FONT
             hr._element.rPr.rFonts.set(qn("w:eastAsia"), HEAD_FONT)
@@ -390,7 +392,21 @@ def build(md_path: Path, out_path: Path, title: str, org: str,
             doc.add_paragraph()
         elif t in ("h2", "h3", "h4"):
             style_map = {"h2": "Heading 2", "h3": "Heading 3", "h4": "Heading 4"}
-            doc.add_paragraph(b["text"], style=style_map[t])
+            # 程序性节(尾注/小结/边界)不入目录: 用无样式段模拟H2视觉
+            if t == "h2" and any(k in b["text"] for k in
+                                  ("尾注", "小结要点", "证据边界", "数据说明")):
+                sp = doc.add_paragraph()
+                sp.paragraph_format.space_before = Pt(16)
+                sp.paragraph_format.space_after = Pt(8)
+                sp.paragraph_format.keep_with_next = True
+                sr = sp.add_run(b["text"])
+                sr.font.size = Pt(13)
+                sr.font.name = HEAD_FONT
+                sr._element.rPr.rFonts.set(qn("w:eastAsia"), HEAD_FONT)
+                sr.font.color.rgb = PRIMARY
+                bottom_rule(sp, color="8FA3BF", sz="4")
+            else:
+                doc.add_paragraph(b["text"], style=style_map[t])
         elif t == "para":
             p = doc.add_paragraph()
             p.alignment = WD_ALIGN_PARAGRAPH.LEFT
