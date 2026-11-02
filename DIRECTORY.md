@@ -13,6 +13,7 @@
 | report_platform/（+ECS 云端） | 自建发布平台（漏斗/订单/周报北极星/定价实验） | ~百MB |
 | tools/ + services/ + Auto_Manus(代码) | 常驻工具与 31 个 PAIStation 计划任务 | ~GB |
 | .claude/ | 技能/记忆/会话（worktrees 为他会在役工树） | ~GB |
+| rea-runtime/ + rea-tools/ + reark/ | 逆向运行时三件套：REA v6.5.0 静态军械 + ReArk v1.2.0 动态工作台（1102 整合，靶件账在 逆向工程/reark/） | ~GB |
 
 ## 数据与语料（在役资产）
 
