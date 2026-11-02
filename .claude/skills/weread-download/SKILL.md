@@ -9,6 +9,17 @@ description: 微信读书整书提取落盘（book.json + md + docx），产出�
 实现源码在仓库里（`scripts/weread_*.py` + `src/paistation/forge/weread*.py`），
 本 skill 只编排它们，不重新发明。
 
+## ⚡ 通道选择（1102 起：优先 app 通道）
+
+| 通道 | 速度 | 何时用 |
+|---|---|---|
+| **app 域通道（新）** | **2请求/本，秒级**，日容量 15→30+ | 默认首选。`逆向工程/weread-apk-reverse/replica/wrapp_client.py`（单本）与 `wrapp_batch.py`（批量）。凭据 `data/secrets/weread_app_token.json`（模拟器真 app 提取；头表=UA/appver 必须与注册设备逐字一致，详见 `逆向工程/weread-apk-reverse/KNOWLEDGE.md`）。token 过期(401)→模拟器开 app 自动 refresh 后重提取 |
+| web 逐章通道（旧） | 200+请求/本，25-70分钟/本，日限2 | app 通道凭据失效时的兜底；也用于搜索（`scripts/weread_search.py`）与书架元数据 |
+
+app 通道安全纪律：书间 60~180s 抖动 / 日预算默认 15（稳定后可提 30）/ 401 或连续 2 失败即熔断 /
+账号能在线读的（无限卡/已购/免费）都可整包下，402=账号读不了的正常边界。
+**注意：app 登录会踢 web 会话（多端互踢），两通道分时使用。**
+
 ## 产物落点
 
 `data/weread/<书名slug>/`：`book.json`（章节树+全文，管线原料）、`<书名>.md`、`<书名>.docx`、`images/`。

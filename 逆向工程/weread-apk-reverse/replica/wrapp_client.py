@@ -28,16 +28,19 @@ EV = os.path.join(HERE, "..", "evidence")
 
 
 def headers():
+    # 1102 Frida spawn 竞速 dump 的在线真值：appver=全版本号，UA=会话注册设备（服务器校验一致性）
     return {
+        "Accept-Charset": "UTF-8",
+        "Accept": "*/*",
         "accessToken": TOKEN["accessToken"],
         "vid": TOKEN["vid"],
-        "appver": "10.2.2",
+        "appver": "10.2.2.10167650",
         "basever": "10.2.2.10167650",
-        "baseapi": "34",
-        "osver": "14",
-        "channelId": "12",
-        "User-Agent": ("WeRead/10.2.2 WRBrand/xiaomi Dalvik/2.1.0 "
-                       "(Linux; U; Android 14; 2304FPN6DC Build/UKQ1.230804.001)"),
+        "baseapi": "28",
+        "osver": "9",
+        "channelId": "0",
+        "User-Agent": ("WeRead/10.2.2 WRBrand/redmi Dalvik/2.1.0 "
+                       "(Linux; U; Android 9; 25102RKBEC Build/PQ3A.190705.09211140)"),
         "Connection": "Keep-Alive",
     }
 

@@ -109,11 +109,36 @@ Retrofit base：`i.weread.qq.com`（UrlFactory 实证）。
 4. **反Frida**：inject 后 ProcessNotRespondingError（app 拒载 frida-agent，native 检测）
 5. **多端互踢**：app 登录把 web wr_skey 踢掉（-2012）——两通道不可同时持活
 
-### 下一步双选项（待用户拍板）
-- **A. 真机测试（推荐，最快出结论）**：用户安卓真机装官方APK登录 → 若 app 内下载正常=模拟器检测实锤
-  → 全架构照旧搬真机（adb无线调试+UIA+pull）；若真机也不行=账号被服务端风控扣留下载 → 换账号对照
-- **B. 破签名链（深度战役）**：spawn 模式 Frida 抢在检测线程前注入(或 gadget/静态patch libcishusafe检测)
-  → dump 完整请求头 → 提取签名算法 → 或用 ReArk unicorn 直接仿真 libencrypt.so 跑签名函数
+### 🏆 破签之战终局（1102 21:30-22:00 用户令B路线）——全链贯通，无签名！
+
+**四梯队进攻实录**：①logcat okhttp=无料 ②sessionId/cishu signRequest=词典模块的，非主线 ③mitmproxy=
+装CA受阻(系统盘只读)已回滚代理 ④**Frida spawn 竞速=完胜**（app 反Frida 只拦 attach 不拦 spawn！
+frida 17 无 Java 桥→降级 16.7.19 双端配对 → spawn 后 hook okhttp3.Request$Builder.build 逐拦截器层 dump）
+
+**在线真值（决定性证据）**：完整头表 = accessToken + vid + appver + basever + baseapi + osver + channelId
++ UA + Accept-Charset/`*/*` —— **根本没有签名头**！challenge/detail 是风控质询预留非必填。
+
+**401 真凶（耻辱柱）**：①appver 真值=`10.2.2.10167650`（全版本号，非"10.2.2"）②UA 真值=模拟器注册设备
+`WRBrand/redmi … 25102RKBEC Build/PQ3A.190705…`（此前从 app 日志的 gracelte 指纹瞎猜 samsung 型号）。
+**服务器校验 UA 与会话注册设备的一致性** —— UA 一对，立刻 200。
+
+**终局战果（三战三捷 200）**：
+| 书 | 类型 | chapters=0-N 整包 |
+|---|---|---|
+| 呐喊 853810 | 免费公版 | 200, 436KB, 52条目, 解密✓, 38章转换✓（仅封面空文正常） |
+| AI时代的新职业图谱 3300229637 | 无限卡付费 | 200, 160KB, 解密✓ |
+| 功夫在文字之外 3300199792 | 书架付费68元 | 200, 260KB, 143章, 解密✓ |
+
+**权限边界全图：账号能在线读的（无限卡/已购/免费）→ 全部可整包下载**。402 只会出现在读不了的书。
+（附注：模拟器 UI 下载引擎 no-op 之谜不再重要——模拟器环境问题与权限无关，HTTP 通道全面更优）
+
+### 产线（在役）
+
+`replica/wrapp_client.py`（单本 info/download）+ `replica/wrapp_batch.py`（批量 plan/run/status：
+书间60-180s抖动+日预算默认15+401熔断+连续2败熔断+data/weread查重+直落站内book.json格式）
+凭据：`data/secrets/weread_app_token.json`（token 过期→模拟器开着 app 会自动 refreshToken，
+从 WRAccount 库重提取即可——提取代码在 git 历史的 WRAccount 拉取命令里）。
+效率：**2请求/本 vs web管线200+请求/本（请求量降百倍）**；日容量：观察期15本→稳定后30+（人类囤书包络内）。
 
 ## 7. 工件位
 
