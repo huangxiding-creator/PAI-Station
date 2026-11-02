@@ -45,6 +45,10 @@ REPLICAS: dict[str, Path] = {
 #: 非 importlib 复刻件 (引擎自带 CLI argparse 主入口, 走 subprocess 而非路径导入)。
 #: python=专用 venv (引擎硬门 py>=3.12, 根 .venv 是 3.11 不可用); 引擎纯标准库零依赖。
 CLI_ENGINES: dict[str, dict[str, Path]] = {
+    "weread": {                                 # 1102 用户令: 微信读书渠道接入
+        "script": REPO / "reforge_factory" / "legs" / "weread_leg.py",
+        "python":  Path("py"),
+    },
     "last30days": {
         "script": REPO / "vendors" / "last30days-skill" / "skills" / "last30days"
                   / "scripts" / "last30days.py",
@@ -114,6 +118,10 @@ CLI_ENGINES: dict[str, dict[str, Path]] = {
     "bdn": {                                      # 1030 接入令·百度网盘检索下载 (bdn CLI)
         "script": REPO / "逆向工程" / "baidu-netdisk" / "replica" / "bdn.py",
         "python":  Path("py"),                    # 腿件调法=py -I <bdn.py> search/download --json (隔离模式)
+    },
+    "pan_hunter": {                               # 1031 接入令·全网网盘资源检索 (ph.py 九活源聚合)
+        "script": REPO / "逆向工程" / "pan-hunter" / "ph.py",
+        "python":  Path("py"),                    # 腿件调法=py -I <ph.py> search/download (隔离模式; search --json)
     },
 }
 
