@@ -25,6 +25,12 @@ ADB = r"E:\AI-Station\rea-tools\platform-tools\adb.exe"
 DEV = "emulator-5554"
 EV = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "evidence")
 
+try:  # Windows GBK 控制台兼容：全输出走 UTF-8
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 
 def sh(*args, binary=False, timeout=60):
     r = subprocess.run([ADB, "-s", DEV] + list(args), capture_output=True, timeout=timeout)

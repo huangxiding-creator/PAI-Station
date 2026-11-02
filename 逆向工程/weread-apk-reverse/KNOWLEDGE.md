@@ -83,6 +83,19 @@ Retrofit base：`i.weread.qq.com`（UrlFactory 实证）。
 4. 拉件 → wrapp_zip 转换 → 与 web 管线产物对拍验收（章数/字数/空文）
 5. 节奏引擎：25-90s 人类化抖动 + 会话批量（模拟晚间囤书）+ 异常截图熔断
 
+## 6c. 封存与一键续跑协议（1102 用户暂离，等回座扫码）
+
+**当前态**（封存时点）：雷电9 运行中（F:\leidian\LDPlayer9, adb=emulator-5554, 网络22ms已验）；
+微信读书 10.2.2 已装；LoginActivity 微信扫码页；**隐私协议已同意**（持久）；二维码会过期——回来后**先刷新再扫**。
+
+**用户回座后三步**（agent 执行，用户只做扫码一个动作）：
+1. `replica/ldapp_driver.py focus` 确认 app 状态；若在登录页 → `shot qr` 看码；若显示已失效 → `tap 780 770` 刷新
+2. 置前模拟器窗（PowerShell AppActivate dnplayer）+ 挂自动护航（协议弹窗自动点同 意 + 防抖登录识别，脚本在
+   git log 2f8b3ea85 消息与 bhz9nipjj 任务命令里，可直接复用 ldapp_batch.py 的 dump/tap 工具重写 5 行）
+3. 用户手机微信扫码→允许 → 护航报 LOGIN_CONFIRMED → 直接进 §6b 待办 1
+
+**续跑口令**：用户说「我回来了/扫了/继续weread」皆触发上述三步。
+
 ## 7. 工件位
 
 - 探针：`replica/wrapp_probe.py`（两发只读，凭据零打印）
