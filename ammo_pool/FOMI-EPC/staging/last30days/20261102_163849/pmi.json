@@ -1,0 +1,109 @@
+{
+ "artifacts": {
+  "corpus_in_export": false,
+  "grounding": [],
+  "hiring_signals_mode": false,
+  "plan_source": "deterministic",
+  "pre_research_flags_present": true,
+  "resolved": {
+   "context": "",
+   "entity": "PMI 项目管理大奖 评选标准",
+   "github_repos": [],
+   "github_user": "",
+   "subreddits": [],
+   "trustpilot_domain": "",
+   "x_handle": ""
+  }
+ },
+ "clusters": [],
+ "errors_by_source": {
+  "polymarket": "URL Error: [WinError 10061] 由于目标计算机积极拒绝，无法连接。; URL Error: [WinError 10061] 由于目标计算机积极拒绝，无法连接。",
+  "reddit": "URL Error: timed out"
+ },
+ "freshness_verdicts": [],
+ "generated_at": "2026-11-02T08:41:22.416259+00:00",
+ "items_by_source": {
+  "github": [],
+  "hackernews": [],
+  "polymarket": [],
+  "reddit": []
+ },
+ "library_context": [],
+ "provider_runtime": {
+  "planner_model": "deterministic",
+  "reasoning_provider": "local",
+  "rerank_model": "local-score"
+ },
+ "query_plan": {
+  "cluster_mode": "none",
+  "freshness_mode": "evergreen_ok",
+  "intent": "concept",
+  "notes": [
+   "fallback-plan"
+  ],
+  "raw_topic": "PMI 项目管理大奖 评选标准",
+  "source_weights": {
+   "github": 0.25,
+   "hackernews": 0.25,
+   "polymarket": 0.25,
+   "reddit": 0.25
+  },
+  "subqueries": [
+   {
+    "label": "primary",
+    "ranking_query": "What recent evidence from the last 30 days is most relevant to PMI 项目管理大奖 评选标准?",
+    "search_query": "pmi 项目管理大奖 评选标准",
+    "sources": [
+     "reddit",
+     "hackernews",
+     "github",
+     "polymarket"
+    ],
+    "weight": 1.0
+   }
+  ]
+ },
+ "range_from": "2026-10-03",
+ "range_to": "2026-11-02",
+ "ranked_candidates": [],
+ "source_status": {
+  "github": {
+   "at": "2026-11-02T08:41:19.720439Z",
+   "attempted": true,
+   "items_returned": 0,
+   "source": "github",
+   "state": "no-results"
+  },
+  "hackernews": {
+   "at": "2026-11-02T08:41:19.720785Z",
+   "attempted": true,
+   "items_returned": 0,
+   "source": "hackernews",
+   "state": "no-results"
+  },
+  "polymarket": {
+   "at": "2026-11-02T08:41:19.720658Z",
+   "attempted": true,
+   "detail": "URL Error: [WinError 10061] 由于目标计算机积极拒绝，无法连接。; URL Error: [WinError 10061] 由于目标计算机积极拒绝，无法连接。",
+   "fix_hint": "doctor",
+   "items_returned": 0,
+   "source": "polymarket",
+   "state": "unreachable"
+  },
+  "reddit": {
+   "at": "2026-11-02T08:41:19.720918Z",
+   "attempted": true,
+   "detail": "URL Error: timed out",
+   "fix_hint": "doctor",
+   "items_returned": 0,
+   "source": "reddit",
+   "state": "timeout"
+  }
+ },
+ "topic": "PMI 项目管理大奖 评选标准",
+ "warnings": [
+  "No candidates survived retrieval and ranking.",
+  "Evidence is thin for this topic.",
+  "Some sources failed: polymarket, reddit"
+ ]
+}
