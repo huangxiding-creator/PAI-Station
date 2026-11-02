@@ -83,18 +83,37 @@ Retrofit base：`i.weread.qq.com`（UrlFactory 实证）。
 4. 拉件 → wrapp_zip 转换 → 与 web 管线产物对拍验收（章数/字数/空文）
 5. 节奏引擎：25-90s 人类化抖动 + 会话批量（模拟晚间囤书）+ 异常截图熔断
 
-## 6c. 封存与一键续跑协议（1102 用户暂离，等回座扫码）
+## 6c. 【已过时】1102 晚间续跑实录（扫码已完成，进入实证相）
 
-**当前态**（封存时点）：雷电9 运行中（F:\leidian\LDPlayer9, adb=emulator-5554, 网络22ms已验）；
-微信读书 10.2.2 已装；LoginActivity 微信扫码页；**隐私协议已同意**（持久）；二维码会过期——回来后**先刷新再扫**。
+用户 20:20 扫码成功 → app 专属登录落地（WeReadFragmentActivity）。随后实证相全记录：
 
-**用户回座后三步**（agent 执行，用户只做扫码一个动作）：
-1. `replica/ldapp_driver.py focus` 确认 app 状态；若在登录页 → `shot qr` 看码；若显示已失效 → `tap 780 770` 刷新
-2. 置前模拟器窗（PowerShell AppActivate dnplayer）+ 挂自动护航（协议弹窗自动点同 意 + 防抖登录识别，脚本在
-   git log 2f8b3ea85 消息与 bhz9nipjj 任务命令里，可直接复用 ldapp_batch.py 的 dump/tap 工具重写 5 行）
-3. 用户手机微信扫码→允许 → 护航报 LOGIN_CONFIRMED → 直接进 §6b 待办 1
+### 登录后实证成果
+- **deeplink 有效**：`weread://web/bookDetail?bookId=` 直达详情页（LaunchExternalSchema）
+- **RN 盲区**：主界面/阅读器是 React Native(Hermes) 渲染，uiautomator 全盲 → 驱动转视觉坐标法
+- **下载入口坐标链**（2560x1440）：阅读器中心tap唤菜单(1280,720) → ⋯(2420,114) → 底部面板「下载全本」(1197,1094)
+  ⚠️ 四项间距非等分（分享~640/下载全本~1197/加入书架~1560/版权信息~1930），之前 (1280,1090) 打到加入书架区
+- **root 已开**：ldconsole modify --index 0 --root 1 + 重启实例（su 可用）
+- **存储布局**（root 实证）：`databases/<vid>/` = WRReader(章节元数据+Chapter表)+WRBook+kv/(leveldb×23)
+  PDF 类下载落 `databases/<vid>/pdf/<bookId>.pdf`；epub 下载=chapterdownload ZIP（未亲证落盘）
+- **真凭证已提取**：`data/secrets/weread_app_token.json`（accessToken=8字符 GIOPGZvu / refreshToken / vid=376864951）
+  来源=WRAccount 库；app 日志 retrofit 行自曝 token（"Request token:accessToken:GIOPGZvu"）
 
-**续跑口令**：用户说「我回来了/扫了/继续weread」皆触发上述三步。
+### 三重封锁实锤（全部带根因）
+1. **app 内 epub 下载引擎不动作**：「已加入下载队列」toast 后 KVAutoDownLoadBook*/OfflineRequest 队列全空、
+   无 chapterdownload 网络请求、重启 app 处理器跑起来仍 empty。免费公版书(呐喊853810)同样不落。
+   唯一下载成功=用户自传 CB_ PDF（走 wrco/PDF 通道）。**嫌疑：模拟器检测/服务端风控静默扣留**
+2. **直调 chapterdownload 401**：真 token+真设备参数(channel:0/apilevel:28/gracelte指纹,从app日志抓的)+okhttp4_android_9
+   TLS 指纹(tls-client) 三重还原仍 401 → 存在隐藏的每请求签名（`/challenge/detail?version=v3&scene=2` 质询体系，
+   native libencrypt.so 计算）
+3. **wrco PDF 直链也 401**（裸/带token双测）——API 门禁非裸CDN
+4. **反Frida**：inject 后 ProcessNotRespondingError（app 拒载 frida-agent，native 检测）
+5. **多端互踢**：app 登录把 web wr_skey 踢掉（-2012）——两通道不可同时持活
+
+### 下一步双选项（待用户拍板）
+- **A. 真机测试（推荐，最快出结论）**：用户安卓真机装官方APK登录 → 若 app 内下载正常=模拟器检测实锤
+  → 全架构照旧搬真机（adb无线调试+UIA+pull）；若真机也不行=账号被服务端风控扣留下载 → 换账号对照
+- **B. 破签名链（深度战役）**：spawn 模式 Frida 抢在检测线程前注入(或 gadget/静态patch libcishusafe检测)
+  → dump 完整请求头 → 提取签名算法 → 或用 ReArk unicorn 直接仿真 libencrypt.so 跑签名函数
 
 ## 7. 工件位
 
