@@ -292,6 +292,12 @@ Page({
     wx.previewImage({ urls: [path], fail: () => wx.showToast({ title: '海报已生成', icon: 'none' }) });
   },
 
+  // 1102 用户令: 封面图点击全屏预览
+  onCoverTap(e) {
+    const src = e.currentTarget.dataset.src;
+    if (src) wx.previewImage({ urls: [src] });
+  },
+
   // ══ v0.9.20 报告对话官（用户令 1018）：问报告 hero 大区常驻（REQ-006..009/011 引擎侧已就绪）══
   // v0.9.21（令升维）：原第四 pill 开合退役——hero 置于简介之上恒可见，零购买门槛不变（REQ-006.AC0）。
 

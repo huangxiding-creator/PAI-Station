@@ -470,22 +470,66 @@ def build(md_path: Path, out_path: Path, title: str, org: str,
     return out_path
 
 
+def finalize(docx_path: Path, pdf_path: Path | None = None) -> int:
+    """Word COM 域自动更新: 目录页码/正文页码打开即见(免手动F9), 可选出PDF.
+    Quit 崩容错(PID 精准清, 同 s3_book_chain 卫生纪律)."""
+    import subprocess
+    pages = 0
+    try:
+        import win32com.client
+        word = win32com.client.Dispatch("Word.Application")
+        word.Visible = False
+        try:
+            doc = word.Documents.Open(str(docx_path))
+            doc.Fields.Update()
+            for toc in doc.TablesOfContents:
+                toc.Update()
+            for r in range(1, doc.Sections.Count + 1):
+                sec = doc.Sections(r)
+                for hf in (sec.Headers, sec.Footers):
+                    for hpf in hf:
+                        hpf.Range.Fields.Update()
+            if pdf_path:
+                try:
+                    doc.SaveAs2(str(pdf_path), FileFormat=17)
+                except Exception:                      # noqa: BLE001 — PDF失败不阻断域固化
+                    print(f"[print][finalize] PDF转换失败(域固化继续): "
+                          f"{getattr(pdf_path, 'name', pdf_path)}", flush=True)
+            pages = doc.ComputeStatistics(2)          # wdStatisticPages
+            doc.Save()                                 # 域结果固化进 docx
+            doc.Close(SaveChanges=0)
+        finally:
+            try:
+                word.Quit()
+            except Exception:                          # noqa: BLE001 — 已知病
+                subprocess.run(["powershell", "-Command",
+                                "Get-Process WINWORD -ErrorAction SilentlyContinue"
+                                " | Stop-Process -Force"], capture_output=True)
+    except ImportError:
+        print("[print][finalize] 无 pywin32 — 域需 Word 打开后 Ctrl+A→F9", flush=True)
+    return pages
+
+
 def main() -> int:
+    import time as _t
     ap = argparse.ArgumentParser(description="印刷版 docx 产线件 (顶级咨询气质)")
     ap.add_argument("--md", required=True, help="合并稿 REPORT_FULL.md")
     ap.add_argument("--out", required=True, help="输出 .docx 路径")
     ap.add_argument("--title", required=True)
     ap.add_argument("--org", default="总包创研院研究团队")
     ap.add_argument("--subtitle", default="")
-    ap.add_argument("--version", default=time.strftime("%Y年%m月版")
-                    if False else __import__("time").strftime("%Y年%m月版"))
+    ap.add_argument("--version", default=_t.strftime("%Y年%m月版"))
     ap.add_argument("--stats-line", default="字　数：见 S3 产物清单")
+    ap.add_argument("--pdf", default="", help="同时输出 PDF 路径(域更新后)")
     ns = ap.parse_args()
     out = build(Path(ns.md), Path(ns.out), ns.title, ns.org,
                 ns.subtitle or ns.title, ns.version, ns.stats_line)
     n_tbl = len(Document(str(out)).tables)
-    print(f"[print] {out.name} ({out.stat().st_size:,} B) | 表格 {n_tbl} | "
-          f"域更新: Word 打开后 Ctrl+A → F9")
+    pdf = Path(ns.pdf) if ns.pdf else None
+    pages = finalize(out, pdf)
+    tail = f" | PDF {pages}页" if pdf else ""
+    print(f"[print] {out.name} ({out.stat().st_size:,} B) | 表格 {n_tbl}"
+          f"{tail} | 页码/目录域已固化(打开即见)")
     return 0
 
 

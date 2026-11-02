@@ -123,6 +123,13 @@ def get_report(sku: str) -> Optional[dict]:
     if r is None:
         return None
     out = _item(r)
+    # 1102 用户令: 详情页封面图 (full/<sku>_cover.png 存在即回 cover_url)
+    try:
+        _cp = _content_dir() / "full" / f"{sku}_cover.png"
+        if _cp.is_file():
+            out["cover_url"] = f"/content/full/{sku}_cover.png"
+    except Exception:  # noqa: BLE001
+        pass
     out.update({
         "chapters": r.get("chapters") or [],
         "audience": r.get("audience", ""),

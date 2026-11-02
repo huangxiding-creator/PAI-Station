@@ -9,6 +9,10 @@
     </view>
 
     <view class="hero-inner">
+      <view class="rp-cover" wx:if="{{d.cover_url}}">
+        <image class="rp-cover-img" src="{{d.cover_url}}" mode="widthFix"
+               data-src="{{d.cover_url}}" bindtap="onCoverTap" show-menu-by-longpress />
+      </view>
       <view class="hero-kicker">{{d.cat_name}} · REPORT</view>
       <view class="rp-title">{{d.title}}</view>
       <view class="hero-sub">{{d.subtitle}}</view>
