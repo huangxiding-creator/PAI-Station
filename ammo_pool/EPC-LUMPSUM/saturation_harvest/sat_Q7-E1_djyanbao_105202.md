@@ -1,0 +1,116 @@
+# 研报检索·全国 固定总价EPC合同的计价、调价与风险管控实
+
+来源: djyanbao | 检索词: 见manifest | URL: https://api.djyanbao.com
+
+{
+ "itemCount": 10000,
+ "n": 10,
+ "cards": [
+  {
+   "id": 4715764,
+   "title": "南方传媒（601900）：渠道整合与成本管控持续见效",
+   "org": "华泰证券",
+   "authors": "夏路路,郑裕佳",
+   "publish_at": "2026-10-26",
+   "page_total": 6,
+   "file_size": 588135,
+   "uploader": "伊娃",
+   "type_id": 16,
+   "stock_name": "南方传媒",
+   "report_score": null,
+   "snippet": "作为全国首\n家试水微短剧的地方出版单位，广东人民出版社推出80集微短剧《厌朱墙》，\n热度值最高达4000万；旗下《包拯在端州》六集微短剧已于10月21日上\n线爱奇艺、优酷、搜狐。",
+   "web_url": "https://www.djyanbao.com/report/4715764"
+  },
+  {
+   "id": 4719452,
+   "title": "丰盛生活服务 2025-2026 年报",
+   "org": "港交所",
+   "authors": "",
+   "publish_at": "2026-10-28",
+   "page_total": 227,
+   "file_size": 16002472,
+   "uploader": "珉林流婉",
+   "type_id": 18,
+   "stock_name": "丰盛生活服务",
+   "report_score": null,
+   "snippet": "我們真誠地為各界服務：\n\n\n \n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2025-2026\n1\n\n\n2 \n4 \n7 \n10 \n16 \n24 \n40 \n62 \n106 \n121 \n126 \n127 \n128",
+   "web_url": "https://www.djyanbao.com/report/4719452"
+  },
+  {
+   "id": 4723979,
+   "title": "华夏水务集团 年度报告2025-2026",
+   "org": "港交所",
+   "authors": "",
+   "publish_at": "2026-10-30",
+   "page_total": 103,
+   "file_size": 4683466,
+   "uploader": "David",
+   "type_id": 18,
+   "stock_name": "华夏水务集团",
+   "report_score": null,
+   "snippet": "GEM\n1\n • 2025-2026\nGEM\n\nGEMGEM\nGEM\n\n\nGEMGEM\n\n\n\n\n\n2\n • 2025-2026\n3\n5\n6\n7\n17\n21\n32\n44\n49\n50\n51\n52\n53",
+   "web_url": "https://www.djyanbao.com/report/4723979"
+  },
+  {
+   "id": 4719476,
+   "title": "2025-2026年度互联网安全报告：AI加剧攻防失衡 原生边缘安全架构成必选",
+   "org": "网宿科技",
+   "authors": "",
+   "publish_at": "2026-10-27",
+   "page_total": 46,
+   "file_size": 2874742,
+   "uploader": "雪春酱吖",
+   "type_id": 10,
+   "stock_name": null,
+   "report_score": null,
+   "snippet": "互联网安全报告\n2025-2026\n年度\nAI加剧攻防失衡\n原生边缘安全架构成必选 \n\n\n\n01\n2025-2026年度互联网安全报告：AI加剧攻防失衡，原生边缘安全架构成必选 \n目录 CONTENTS",
+   "web_url": "https://www.djyanbao.com/report/4719476"
+  },
+  {
+   "id": 4705910,
+   "title": "固定收益专题：国债期货的技术分析与Skill的构建",
+   "org": "国盛证券",
+   "authors": "杨业伟",
+   "publish_at": "2026-10-12",
+   "page_total": 27,
+   "file_size": 2817711,
+   "uploader": "Florence",
+   "type_id": 19,
+   "stock_name": null,
+   "report_score": null,
+   "snippet": "",
+   "web_url": "https://www.djyanbao.com/report/4705910"
+  },
+  {
+   "id": 4708897,
+   "title": "Salesforce的复盘与启示：企业SaaS与AI应用生态展望",
+   "org": "国盛证券",
+   "authors": "孙行臻,徐瀚",
+   "publish_at": "2026-10-16",
+   "page_total": 20,
+   "file_size": 1900647,
+   "uploader": "茶花信笺",
+   "type_id": 10,
+   "stock_name": null,
+   "report_score": null,
+   "snippet": "",
+   "web_url": "https://www.djyanbao.com/report/4708897"
+  },
+  {
+   "id": 4719028,
+   "title": "生猪：现实悲观，管控趋严",
+   "org": "国泰君安期货",
+   "authors": "周小球,吴昊",
+   "publish_at": "2026-10-28",
+   "page_total": 2,
+   "file_size": 543251,
+   "uploader": "醉酒饮天下",
+   "type_id": 19,
+   "stock_name": null,
+   "report_score": null,
+   "snippet": "",
+   "web_url": "https://www.djyanbao.com/report/4719028"
+  },
+  {
+   "id": 4720985,
+   "title": "生猪：现货偏弱，管控

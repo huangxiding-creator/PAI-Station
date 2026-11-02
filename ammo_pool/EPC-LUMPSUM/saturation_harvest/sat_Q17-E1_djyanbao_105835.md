@@ -1,0 +1,116 @@
+# 研报检索·全国 固定总价EPC合同的计价、调价与风险管控实
+
+来源: djyanbao | 检索词: 见manifest | URL: https://api.djyanbao.com
+
+{
+ "itemCount": 10000,
+ "n": 10,
+ "cards": [
+  {
+   "id": 4715764,
+   "title": "南方传媒（601900）：渠道整合与成本管控持续见效",
+   "org": "华泰证券",
+   "authors": "夏路路,郑裕佳",
+   "publish_at": "2026-10-26",
+   "page_total": 6,
+   "file_size": 588135,
+   "uploader": "伊娃",
+   "type_id": 16,
+   "stock_name": "南方传媒",
+   "report_score": null,
+   "snippet": "作为全国首\n家试水微短剧的地方出版单位，广东人民出版社推出80集微短剧《厌朱墙》，\n热度值最高达4000万；旗下《包拯在端州》六集微短剧已于10月21日上\n线爱奇艺、优酷、搜狐。",
+   "web_url": "https://www.djyanbao.com/report/4715764"
+  },
+  {
+   "id": 4719452,
+   "title": "丰盛生活服务 2025-2026 年报",
+   "org": "港交所",
+   "authors": "",
+   "publish_at": "2026-10-28",
+   "page_total": 227,
+   "file_size": 16002472,
+   "uploader": "珉林流婉",
+   "type_id": 18,
+   "stock_name": "丰盛生活服务",
+   "report_score": null,
+   "snippet": "我們真誠地為各界服務：\n\n\n \n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2025-2026\n1\n\n\n2 \n4 \n7 \n10 \n16 \n24 \n40 \n62 \n106 \n121 \n126 \n127 \n128",
+   "web_url": "https://www.djyanbao.com/report/4719452"
+  },
+  {
+   "id": 4723979,
+   "title": "华夏水务集团 年度报告2025-2026",
+   "org": "港交所",
+   "authors": "",
+   "publish_at": "2026-10-30",
+   "page_total": 103,
+   "file_size": 4683466,
+   "uploader": "David",
+   "type_id": 18,
+   "stock_name": "华夏水务集团",
+   "report_score": null,
+   "snippet": "GEM\n1\n • 2025-2026\nGEM\n\nGEMGEM\nGEM\n\n\nGEMGEM\n\n\n\n\n\n2\n • 2025-2026\n3\n5\n6\n7\n17\n21\n32\n44\n49\n50\n51\n52\n53",
+   "web_url": "https://www.djyanbao.com/report/4723979"
+  },
+  {
+   "id": 4709127,
+   "title": "可转债择时与配置周报（261012-261016）：反弹信号增强，风险约束未消",
+   "org": "国泰海通",
+   "authors": "顾一格,孙飞帆",
+   "publish_at": "2026-10-17",
+   "page_total": 10,
+   "file_size": 1444717,
+   "uploader": "公冶俊晤",
+   "type_id": 14,
+   "stock_name": null,
+   "report_score": null,
+   "snippet": "",
+   "web_url": "https://www.djyanbao.com/report/4709127"
+  },
+  {
+   "id": 4710992,
+   "title": "海外新兴产业日报20261019：美国通胀与消费信号分化，AI信用风险与半导体增长并存，数据中心独立供电扩张",
+   "org": "华创证券",
+   "authors": "张一弛,袁凤婷,韩家宝",
+   "publish_at": "2026-10-20",
+   "page_total": 8,
+   "file_size": 1201007,
+   "uploader": "司寇凡桃",
+   "type_id": 10,
+   "stock_name": null,
+   "report_score": null,
+   "snippet": "",
+   "web_url": "https://www.djyanbao.com/report/4710992"
+  },
+  {
+   "id": 4711155,
+   "title": "液化天然气日报：计价冬季风险过程中，高位震荡",
+   "org": "华泰期货",
+   "authors": "潘翔,康远宁,李祖智",
+   "publish_at": "2026-10-20",
+   "page_total": 6,
+   "file_size": 1149012,
+   "uploader": "溪澈小哥哥",
+   "type_id": 19,
+   "stock_name": null,
+   "report_score": null,
+   "snippet": "",
+   "web_url": "https://www.djyanbao.com/report/4711155"
+  },
+  {
+   "id": 4706918,
+   "title": "苹果：天气风险与产量预估-天气定产质 产质定盘面",
+   "org": "南华期货",
+   "authors": "南华期货研究所",
+   "publish_at": "2026-10-13",
+   "page_total": 8,
+   "file_size": 1542951,
+   "uploader": "暮白",
+   "type_id": 19,
+   "stock_name": null,
+   "report_score": null,
+   "snippet": "2025年全国苹果产量大约为3423万吨，与2024年相比减\n产约300万吨，幅度约8%。山东产区受灾最为严重，减产约16.5%。",
+   "web_url": "https://www.djyanbao.com/report/4706918"
+  },
+  {
+   "id": 4709081,
+   "title": "海外新兴产业日报20261

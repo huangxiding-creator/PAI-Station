@@ -1,0 +1,116 @@
+# 研报检索·全国 固定总价EPC合同的计价、调价与风险管控实
+
+来源: djyanbao | 检索词: 见manifest | URL: https://api.djyanbao.com
+
+{
+ "itemCount": 10000,
+ "n": 10,
+ "cards": [
+  {
+   "id": 4715764,
+   "title": "南方传媒（601900）：渠道整合与成本管控持续见效",
+   "org": "华泰证券",
+   "authors": "夏路路,郑裕佳",
+   "publish_at": "2026-10-26",
+   "page_total": 6,
+   "file_size": 588135,
+   "uploader": "伊娃",
+   "type_id": 16,
+   "stock_name": "南方传媒",
+   "report_score": null,
+   "snippet": "作为全国首\n家试水微短剧的地方出版单位，广东人民出版社推出80集微短剧《厌朱墙》，\n热度值最高达4000万；旗下《包拯在端州》六集微短剧已于10月21日上\n线爱奇艺、优酷、搜狐。",
+   "web_url": "https://www.djyanbao.com/report/4715764"
+  },
+  {
+   "id": 4719452,
+   "title": "丰盛生活服务 2025-2026 年报",
+   "org": "港交所",
+   "authors": "",
+   "publish_at": "2026-10-28",
+   "page_total": 227,
+   "file_size": 16002472,
+   "uploader": "珉林流婉",
+   "type_id": 18,
+   "stock_name": "丰盛生活服务",
+   "report_score": null,
+   "snippet": "我們真誠地為各界服務：\n\n\n \n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2025-2026\n1\n\n\n2 \n4 \n7 \n10 \n16 \n24 \n40 \n62 \n106 \n121 \n126 \n127 \n128",
+   "web_url": "https://www.djyanbao.com/report/4719452"
+  },
+  {
+   "id": 4723979,
+   "title": "华夏水务集团 年度报告2025-2026",
+   "org": "港交所",
+   "authors": "",
+   "publish_at": "2026-10-30",
+   "page_total": 103,
+   "file_size": 4683466,
+   "uploader": "David",
+   "type_id": 18,
+   "stock_name": "华夏水务集团",
+   "report_score": null,
+   "snippet": "GEM\n1\n • 2025-2026\nGEM\n\nGEMGEM\nGEM\n\n\nGEMGEM\n\n\n\n\n\n2\n • 2025-2026\n3\n5\n6\n7\n17\n21\n32\n44\n49\n50\n51\n52\n53",
+   "web_url": "https://www.djyanbao.com/report/4723979"
+  },
+  {
+   "id": 4712265,
+   "title": "利率策略与相对价值系列四：基于主成分分析（PCA）斜率因子的期限选择与交易构建",
+   "org": "浙商证券",
+   "authors": "章恒豪",
+   "publish_at": "2026-10-21",
+   "page_total": 20,
+   "file_size": 1588525,
+   "uploader": "Anjanette",
+   "type_id": 14,
+   "stock_name": null,
+   "report_score": 82,
+   "snippet": "表1： 初期期限利差回归策略表现 \n频率 区间 累计净收益 \nSharpe \n最大回撤 \n周度 \n2018-2024 0.52% 0.65 0.14% \n周度 2025-2026 -0.09% -0.84",
+   "web_url": "https://www.djyanbao.com/report/4712265"
+  },
+  {
+   "id": 4705718,
+   "title": "股指期货：托底对冲风险助推企稳",
+   "org": "国泰君安期货",
+   "authors": "毛磊",
+   "publish_at": "2026-10-12",
+   "page_total": 8,
+   "file_size": 1013638,
+   "uploader": "塞勒瑞诺",
+   "type_id": 19,
+   "stock_name": null,
+   "report_score": null,
+   "snippet": "",
+   "web_url": "https://www.djyanbao.com/report/4705718"
+  },
+  {
+   "id": 4705592,
+   "title": "股指期货：托底对冲风险，助推企稳",
+   "org": "国泰君安期货",
+   "authors": "毛磊",
+   "publish_at": "2026-10-12",
+   "page_total": 8,
+   "file_size": 1374254,
+   "uploader": "漆雕安然",
+   "type_id": 19,
+   "stock_name": null,
+   "report_score": null,
+   "snippet": "",
+   "web_url": "https://www.djyanbao.com/report/4705592"
+  },
+  {
+   "id": 4711931,
+   "title": "六因子打分体系与波动率风险筛选及季度缓冲调仓：红利策略：A股高股息精选",
+   "org": "浙商证券",
+   "authors": "廖静池,王大霁",
+   "publish_at": "2026-10-21",
+   "page_total": 10,
+   "file_size": 718453,
+   "uploader": "南宫红旭",
+   "type_id": 14,
+   "stock_name": null,
+   "report_score": null,
+   "snippet": "",
+   "web_url": "https://www.djyanbao.com/report/4711931"
+  },
+  {
+   "id": 4716414,
+   "title": "甲醇：再平衡路上的主要矛盾与支线故事
