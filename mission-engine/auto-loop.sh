@@ -30,6 +30,12 @@ $cons
 这是第 ${n} 轮。轮末三件套：更新consensus.md传棒+追加ledger事件+到审批闸则企微通知后停轮。高峰期(工作日14-18)外才可重活。"
   tmp="$LOG_DIR/cycle-$(printf '%04d' "$n").json"; err="$LOG_DIR/cycle-$(printf '%04d' "$n").err"
   timeout -k 10 "$CYCLE_TIMEOUT_SECONDS" "$CLAUDE_BIN" -p "$full" --output-format json > "$tmp" 2>"$err" || rc=$?
+  if [ $rc -eq 126 ]; then
+    CLAUDE_BIN="$(find "$USERPROFILE/.vscode/extensions" -maxdepth 4 -path "*claude-code-*/resources/native-binary/claude.exe" 2>/dev/null | sort -V | tail -1)"
+    echo "[$(date +%F_%T)] #$n swap-retry(扩展热更126重解析)" >> logs/auto-loop.log
+    timeout -k 10 "$CYCLE_TIMEOUT_SECONDS" "$CLAUDE_BIN" -p "$full" --output-format json > "$tmp" 2>"$err" || rc=$?
+  fi
+
   if [ $rc -eq 124 ]; then ledger cycle_timeout "{\"cycle\":$n}"; log "#$n 超时被看门狗强杀"; return 124; fi
   if [ $rc -ne 0 ]; then ledger cycle_claude_exit "{\"cycle\":$n,\"exit\":$rc}"; return $rc; fi
   if grep -qiE "usage limit|rate limit|too many requests|resource_exhausted|overloaded|429|额度" "$tmp" "$err" 2>/dev/null; then
