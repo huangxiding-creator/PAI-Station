@@ -11,12 +11,16 @@ description: >-
   DO NOT TRIGGER: 纯静态反编译单发需求（直接用 rea MCP 更快）、非授权目标（先核授权范围）。
 ---
 
-# reark — ReArk×REA 联合逆向技能
+# reark — ReArk×REA×CraftAnything 四链联合逆向技能
 
 ## 是什么
 
 ReArk v1.2.0（lkimuk/ReArk，Qt6 原生应用，非 Electron）：AI 辅助逆向工作台。
 2026-11-02 由用户令引入，与站内 REA v6.5.0（静态深钻）互补成全链：**REA 管静态，ReArk 管动态，Claude 做总编排**。
+2026-11-03 增补 **Chain D：Craft Anything**（storytold/craft-anything v0.3.0，纯 Rust 净室复刻引擎，315 MCP 工具
+`mcp__craft__*`，注册于项目 .mcp.json，wrapper=`craft-anything/bin/ca-mcp.cmd`，config 桥已认领 rea-tools 7 台引擎）：
+全域调查（固件/pcap/游戏文件/.NET/Apple）+ **Study→Build→Check→Ready 自动复刻闭环**（`craft-anything-cli rebuild <目标> "<要求>"`）。
+四链全景见 `逆向工程/craft-anything/INTEGRATION.md`。
 
 | 能力 | 归属 | 入口 |
 |---|---|---|
