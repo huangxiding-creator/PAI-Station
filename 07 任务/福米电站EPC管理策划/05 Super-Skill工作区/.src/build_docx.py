@@ -100,7 +100,7 @@ def cover(doc: Document) -> None:
     p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     set_font(p.add_run(TITLE), "方正小标宋简体", "SimHei", 26, True, INK)
     p2 = doc.add_paragraph(); p2.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    set_font(p2.add_run("（送审讨论稿）"), "楷体", "KaiTi", 16, False, GRAY)
+    set_font(p2.add_run("（送审稿）"), "楷体", "KaiTi", 16, False, GRAY)
     for _ in range(6):
         doc.add_paragraph()
     for line in ("编制单位：黄河勘测规划设计研究院有限公司", "二〇二六年十一月"):
@@ -109,27 +109,54 @@ def cover(doc: Document) -> None:
     doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
 
 
-INLINE = re.compile(r"(\*\*[^*]+\*\*|《[^》]+》|【[^】]*(待供给|待核|待续)[^】]*】)")
+INLINE = re.compile(r"(\*\*[^*]+\*\*|《[^》]+》)")
+
+
+def delivery_polish(text: str) -> str:
+    """交付净化滤镜(1103用户令: 可直接交付工行): 工作流标记→交付语言.
+    工作稿保留原标记(零编造台账), 仅在构建交付件时转译."""
+    text = re.sub(r"【待供给[:：]?[^】]*】", "（相关事项于融资前落实，安排详见附录D）", text)
+    text = re.sub(r"【待核[:：]?[^】]*】", "（以最终核定口径为准）", text)
+    text = re.sub(r"【存疑[^】]*】", "", text)
+    text = re.sub(r"【待续】?", "", text)
+    text = re.sub(r"〔[^〕]*补写[^〕]*〕", "", text)
+    text = text.replace("工行审贷官", "融资审查方").replace("审贷官", "融资审查方")
+    text = text.replace("（送审稿）", "（送审稿）").replace("送审稿", "送审稿")
+    return text
+
+
+_MD_INLINE = re.compile(r"(\*\*[^*]+\*\*|\*[^*\s][^*]*\*|`[^`]+`|《[^》]+》)")
+
+
+def add_runs_md(par, text, size=12, base_bold=False):
+    """统一内联渲染道: **粗** *斜* `码` 《书》 — 正文/列表/表格单元格共用(防md符号漏出)."""
+    text = delivery_polish(text)
+    text = text.replace("\\*", "＊")
+    pos = 0
+    for m in _MD_INLINE.finditer(text):
+        if m.start() > pos:
+            set_font(par.add_run(text[pos:m.start()]), size=size, bold=base_bold)
+        seg = m.group(0)
+        if seg.startswith("**"):
+            set_font(par.add_run(seg[2:-2]), size=size, bold=True)
+        elif seg.startswith("`"):
+            set_font(par.add_run(seg[1:-1]), "Consolas", "Consolas",
+                     size=max(9, size - 1), bold=base_bold)
+        elif seg.startswith("*"):
+            set_font(par.add_run(seg[1:-1]), "楷体", "KaiTi",
+                     size=size, bold=base_bold)
+        else:
+            set_font(par.add_run(seg), size=size, bold=base_bold)
+        pos = m.end()
+    if pos < len(text):
+        set_font(par.add_run(text[pos:]), size=size, bold=base_bold)
 
 
 def add_body_par(doc, text, indent=True):
     p = doc.add_paragraph()
     if indent:
         p.paragraph_format.first_line_indent = Pt(24)
-    pos = 0
-    for m in INLINE.finditer(text):
-        if m.start() > pos:
-            set_font(p.add_run(text[pos:m.start()]))
-        seg = m.group(0)
-        if seg.startswith("**"):
-            set_font(p.add_run(seg[2:-2]), bold=True)
-        elif seg.startswith("《"):
-            set_font(p.add_run(seg))
-        else:
-            set_font(p.add_run(seg), "楷体", "KaiTi", 10.5, False, ACCENT)
-        pos = m.end()
-    if pos < len(text):
-        set_font(p.add_run(text[pos:]))
+    add_runs_md(p, text)
     return p
 
 
@@ -150,7 +177,7 @@ def add_table(doc, rows):
             cell = tb.cell(i, j)
             cell.text = ""
             p = cell.paragraphs[0]
-            set_font(p.add_run(txt), size=10.5, bold=(i == 0))
+            add_runs_md(p, txt, size=10.5, base_bold=(i == 0))
             if i == 0:
                 tcPr = cell._tc.get_or_add_tcPr()
                 sh = OxmlElement("w:shd")
@@ -178,6 +205,9 @@ def convert(md_text: str, doc: Document) -> None:
                 i += 1; continue
             lvl, txt = len(m.group(1)), m.group(2).strip()
             txt = re.sub(r"\*\*", "", txt)
+            txt = re.sub(r"^【?\s*待供给[/·\s]*待核.*】?\s*$",
+                         "待闭合事项与安排", txt)
+            txt = delivery_polish(txt)
             if lvl == 1:
                 if first_h1 and TITLE in txt:
                     i += 1; continue          # 封面已呈现主标题
@@ -188,10 +218,14 @@ def convert(md_text: str, doc: Document) -> None:
                 doc.add_heading(txt, level=min(lvl, 3))
         elif re.match(r"^[-*]\s+", s):
             p = doc.add_paragraph(style="List Bullet")
-            set_font(p.add_run(re.sub(r"^[-*]\s+", "", s)))
+            add_runs_md(p, re.sub(r"^[-*]\s+", "", s))
         elif re.match(r"^\d+[.、]\s*", s):
             p = doc.add_paragraph(style="List Number")
-            set_font(p.add_run(re.sub(r"^\d+[.、]\s*", "", s)))
+            add_runs_md(p, re.sub(r"^\d+[.、]\s*", "", s))
+        elif s.startswith(">"):
+            p = doc.add_paragraph()
+            p.paragraph_format.left_indent = Pt(20)
+            add_runs_md(p, s.lstrip("> ").strip(), size=10.5)
         elif s == "---":
             bottom_rule(doc.add_paragraph())
         elif s:
@@ -209,7 +243,7 @@ def build(md_path: Path, out_path: Path) -> None:
     # 页眉页脚
     hp = sec.header.paragraphs[0]
     hp.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    set_font(hp.add_run(TITLE + "（送审讨论稿）"), size=9, color=GRAY)
+    set_font(hp.add_run(TITLE + "（送审稿）"), size=9, color=GRAY)
     fp = sec.footer.paragraphs[0]
     fp.alignment = WD_ALIGN_PARAGRAPH.CENTER
     add_page_field(fp, "PAGE")
