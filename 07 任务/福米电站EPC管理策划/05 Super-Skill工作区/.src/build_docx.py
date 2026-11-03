@@ -125,6 +125,35 @@ def delivery_polish(text: str) -> str:
     text = re.sub(r"由附录[A-FＡ-Ｆ][总表逐行]{0,4}索引", "逐行索引", text)
     text = re.sub(r"[，,；;]?\s*附录[A-FＡ-Ｆ][／/]?附录?[A-FＡ-Ｆ]?超?越?项?(声明|行|总表)?", "", text)
     text = re.sub(r"\s*\[\d+(?:\s*[,\-–，]\s*\d+)*\]", "", text)
+    # 1103令: 资料来源说明全部剥离(交付件=最终成果, 不呈现文字依据)
+    text = re.sub(r"〔[^〕]{0,120}〕", "", text)                 # 〔出处/口径/补写〕透镜括号
+    text = re.sub(r"[（(]\s*出处[:：][^（）()]{0,80}[）)]", "", text)
+    text = re.sub(r"`c\d{2}_[^`]+`", "", text)                  # 资料键
+    text = re.sub(r"[（(][甲乙丙丁]级?[）)]", "", text)          # 证据级
+    srcdoc = r"(?:可研|施组|运维V3|MMK|台账|基准表|数字基准表|读者工程|框架件|兰州体系文件|S\d|附录B?银行版?)"
+    text = re.sub(
+        r"[（(][^（）()]{0,28}" + srcdoc +
+        r"[^（）()]{0,40}?(\d+\.\d+|第\d+章|表\d|图\d|PAGE|口径|出处)[^（）()]{0,20}[）)]", "", text)
+    text = re.sub(r"[，,;；]?\s*〔?见?(?:synth|readers|researchers|deep)/?[^\s，。；〕]{0,24}〕?", "", text)
+    text = re.sub(r"[，,]\s*$", "", text)                        # 尾随逗号清洁
+    # 1103令: 零AI/工序痕迹 + 自信呈现
+    text = re.sub(r"数字化军团", "数字化体系", text)
+    text = re.sub(r"数字化管控军团", "全过程数字化管控体系", text)
+    text = re.sub(r"管控军团", "管控体系", text)
+    text = re.sub(r"总包GPT（[^（）]*）", "总包智能问答知识库", text)
+    text = re.sub(r"总包GPT", "总包智能问答知识库", text)
+    text = re.sub(r"细目见底稿[_a-zA-Z0-9]* ?与?", "细目见", text)
+    text = re.sub(r"见底稿[_a-zA-Z0-9]*", "", text)
+    text = re.sub(r"[，,]?\s*底稿[_a-zA-Z0-9]*所引", "", text)
+    text = re.sub(r"投标版底稿", "投标版", text)
+    text = re.sub(r"施组有底稿", "施组载有", text)
+    text = re.sub(r"[（(]底稿[）)]", "", text)
+    text = re.sub(r"【第\d+章完】", "", text)
+    text = re.sub(r"置顶八弹", "置顶呈现", text)
+    text = re.sub(r"八弹", "八大独特优势", text)
+    text = re.sub(r"[（(][^（）()]{0,20}(Wave[A-CＢ]? ?\d?|波次|军团|红队|机检|滤镜|构建器|收口|底稿|弹药|清扫|重组|织入|1103令|1102令)[^（）()]{0,20}[）)]", "", text)
+    text = re.sub(r"v2收口Wave[BＢ]?·?1103", "", text)
+    text = re.sub(r"[·•]\s*(Wave|110[23])\d*", "", text)
     text = re.sub(r"【待核[:：]?[^】]*】", "（以最终核定口径为准）", text)
     text = re.sub(r"【存疑[^】]*】", "", text)
     text = re.sub(r"【待续】?", "", text)
@@ -137,9 +166,12 @@ def delivery_polish(text: str) -> str:
 _MD_INLINE = re.compile(r"(\*\*[^*]+\*\*|\*[^*\s][^*]*\*|`[^`]+`|《[^》]+》)")
 
 
-def add_runs_md(par, text, size=12, base_bold=False):
-    """统一内联渲染道: **粗** *斜* `码` 《书》 — 正文/列表/表格单元格共用(防md符号漏出)."""
+def add_runs_md(par, text, size=12, base_bold=False, prose=False):
+    """统一内联渲染道: **粗** *斜* `码` 《书》 — 正文/列表/表格单元格共用(防md符号漏出).
+    prose=True 时剥离括号补充说明(1103令: 正文散文体括号插入语全清, 表格数据括注保留)."""
     text = delivery_polish(text)
+    if prose:
+        text = re.sub(r"（[^（）]{0,80}）", "", text)
     text = text.replace("\\*", "＊")
     pos = 0
     for m in _MD_INLINE.finditer(text):
@@ -159,13 +191,16 @@ def add_runs_md(par, text, size=12, base_bold=False):
         pos = m.end()
     if pos < len(text):
         set_font(par.add_run(text[pos:]), size=size, bold=base_bold)
+    for r in par.runs:                          # 孤儿双星清扫(不成对残留)
+        if "**" in r.text:
+            r.text = r.text.replace("**", "")
 
 
 def add_body_par(doc, text, indent=True):
     p = doc.add_paragraph()
     if indent:
         p.paragraph_format.first_line_indent = Pt(24)
-    add_runs_md(p, text)
+    add_runs_md(p, text, prose=True)
     return p
 
 
@@ -199,11 +234,14 @@ def add_table(doc, rows):
 def convert(md_text: str, doc: Document) -> None:
     lines = md_text.splitlines()
     i, first_h1 = 0, True
-    META = re.compile(r"^(本章回应|本章定位|本章核心响应|建议引用资料|本章为)")
+    META = re.compile(r"^(本章回应|本章定位|本章核心响应|建议引用资料|本章为"
+                      r"|出处约定|可信级[:：]|章尾标记|底稿说明|资料源表?|本章引资料源)")
     while i < len(lines):
         ln = lines[i]
         s = ln.strip()
-        if META.match(s):                    # 元话语行: 交付版整行剔除(1103令)
+        s2 = re.sub(r"^[>*#\s*`]+", "", s)          # 剥装饰前缀再验元话语
+        if META.match(s) or META.match(s2) or s2.startswith("出处约定") \
+                or s2.startswith("底稿说明"):
             i += 1
             continue
         if s.startswith("|") and i + 1 < len(lines):
