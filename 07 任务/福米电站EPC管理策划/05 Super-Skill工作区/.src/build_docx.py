@@ -117,7 +117,14 @@ def delivery_polish(text: str) -> str:
     工作稿保留原标记(零编造台账), 仅在构建交付件时转译."""
     text = re.sub(r"【待(供给|核)\s*[/·、]\s*待(核|供给)[^】]*】",
                   "待闭合事项", text)
-    text = re.sub(r"【待供给[:：]?[^】]*】", "（相关事项于融资前落实，安排详见附录D）", text)
+    text = re.sub(r"【待供给[:：]?[^】]*】", "（相关事项于融资前落实）", text)
+    text = re.sub(r"[，,]?\s*(安排)?详见附录[A-ZＡ-Ｚ]", "", text)
+    text = re.sub(r"[，,]?\s*见附录[A-ZＡ-Ｚ]", "", text)
+    text = re.sub(r"[（(][^（）()]*附录[A-FＡ-Ｆ][^（）()]*[）)]", "", text)
+    text = re.sub(r"经附录[A-FＡ-Ｆ]覆盖审计", "经", text)
+    text = re.sub(r"由附录[A-FＡ-Ｆ][总表逐行]{0,4}索引", "逐行索引", text)
+    text = re.sub(r"[，,；;]?\s*附录[A-FＡ-Ｆ][／/]?附录?[A-FＡ-Ｆ]?超?越?项?(声明|行|总表)?", "", text)
+    text = re.sub(r"\s*\[\d+(?:\s*[,\-–，]\s*\d+)*\]", "", text)
     text = re.sub(r"【待核[:：]?[^】]*】", "（以最终核定口径为准）", text)
     text = re.sub(r"【存疑[^】]*】", "", text)
     text = re.sub(r"【待续】?", "", text)
@@ -192,9 +199,13 @@ def add_table(doc, rows):
 def convert(md_text: str, doc: Document) -> None:
     lines = md_text.splitlines()
     i, first_h1 = 0, True
+    META = re.compile(r"^(本章回应|本章定位|本章核心响应|建议引用资料|本章为)")
     while i < len(lines):
         ln = lines[i]
         s = ln.strip()
+        if META.match(s):                    # 元话语行: 交付版整行剔除(1103令)
+            i += 1
+            continue
         if s.startswith("|") and i + 1 < len(lines):
             rows = []
             while i < len(lines) and lines[i].strip().startswith("|"):
