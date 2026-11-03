@@ -1,0 +1,72 @@
+E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\lumpsum\lumpsum_nblm_run.py:79: DeprecationWarning: Non-default legacy NotebookLMClient.from_storage tuning arguments are deprecated; group them under config=ClientConfig(...). They will be removed in v1.0. Offending arguments: keepalive, limits, max_concurrent_rpcs, max_concurrent_uploads, timeout.
+  return await NotebookLMClient.from_storage(
+E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\lumpsum\lumpsum_nblm_run.py:79: DeprecationWarning: Awaiting NotebookLMClient.from_storage(...) is deprecated; use `async with NotebookLMClient.from_storage(...) as client:` instead. The await form will be removed in v1.0.
+  return await NotebookLMClient.from_storage(
+01:40:09 ERROR [notebooklm._rpc_executor] [req=09d4447d] RPC CREATE_NOTEBOOK failed after 0.494s: RPCError rpc_code=8
+01:40:30 ERROR [notebooklm._rpc_executor] [req=7c031077] RPC CREATE_NOTEBOOK failed after 0.478s: RPCError rpc_code=8
+01:41:10 ERROR [notebooklm._rpc_executor] [req=3d52e108] RPC CREATE_NOTEBOOK failed after 0.491s: RPCError rpc_code=8
+[exit] 未找到含美国04的代理组控制器 — 只读保持当前出口
+[conn] NB via http://127.0.0.1:7892: http=301 redirect=https://notebook.google.com/ -> 可达
+[通道] NB 可达, transport=curl_cffi 单会话开产
+[nb!] 建本第1次失败: RPCError The server rejected this request (resource exhausted).
+[nb!] 建本第2次失败: RPCError The server rejected this request (resource exhausted).
+[nb!] 建本第3次失败: RPCError The server rejected this request (resource exhausted).
+[!!] 第1章第1次失败(RPCError: The server rejected this request (resource exhausted).)——420s后重试(新client)
+E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\lumpsum\lumpsum_nblm_run.py:79: DeprecationWarning: Non-default legacy NotebookLMClient.from_storage tuning arguments are deprecated; group them under config=ClientConfig(...). They will be removed in v1.0. Offending arguments: keepalive, limits, max_concurrent_rpcs, max_concurrent_uploads, timeout.
+  return await NotebookLMClient.from_storage(
+E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\lumpsum\lumpsum_nblm_run.py:79: DeprecationWarning: Awaiting NotebookLMClient.from_storage(...) is deprecated; use `async with NotebookLMClient.from_storage(...) as client:` instead. The await form will be removed in v1.0.
+  return await NotebookLMClient.from_storage(
+[auth] from_storage 第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]') — 冷却300s 后重试 (不切出口)
+[!!] 第1章第2次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]')——420s后重试(新client)
+[auth] from_storage 第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]') — 冷却300s 后重试 (不切出口)
+[!!] 第1章第3次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]')——420s后重试(新client)
+[auth] from_storage 第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]') — 冷却300s 后重试 (不切出口)
+[!!] 第1章第4次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]')——420s后重试(新client)
+[auth] from_storage 第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]') — 冷却300s 后重试 (不切出口)
+[!!] 第1章第5次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]')——420s后重试(新client)
+[auth] from_storage 第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]') — 冷却300s 后重试 (不切出口)
+[!!] 第1章第6次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]')——放弃续跑
+[auth] from_storage 第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]') — 冷却300s 后重试 (不切出口)
+[!!] 第2章第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]')——420s后重试(新client)
+[auth] from_storage 第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]') — 冷却300s 后重试 (不切出口)
+[!!] 第2章第2次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]')——420s后重试(新client)
+[auth] from_storage 第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]') — 冷却300s 后重试 (不切出口)
+[!!] 第2章第3次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]')——420s后重试(新client)
+[auth] from_storage 第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]') — 冷却300s 后重试 (不切出口)
+[!!] 第2章第4次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]')——420s后重试(新client)
+[auth] from_storage 第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]') — 冷却300s 后重试 (不切出口)
+[!!] 第2章第5次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]')——420s后重试(新client)
+[auth] from_storage 第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]') — 冷却300s 后重试 (不切出口)
+[!!] 第2章第6次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]')——放弃续跑
+[auth] from_storage 第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]') — 冷却300s 后重试 (不切出口)
+[!!] 第3章第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]')——420s后重试(新client)
+[auth] from_storage 第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]') — 冷却300s 后重试 (不切出口)
+[!!] 第3章第2次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]')——420s后重试(新client)
+[auth] from_storage 第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]') — 冷却300s 后重试 (不切出口)
+[!!] 第3章第3次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]')——420s后重试(新client)
+[auth] from_storage 第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]') — 冷却300s 后重试 (不切出口)
+[!!] 第3章第4次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]')——420s后重试(新client)
+[auth] from_storage 第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]') — 冷却300s 后重试 (不切出口)
+[!!] 第3章第5次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]')——420s后重试(新client)
+[auth] from_storage 第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]') — 冷却300s 后重试 (不切出口)
+[!!] 第3章第6次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]')——放弃续跑
+[auth] from_storage 第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]') — 冷却300s 后重试 (不切出口)
+[!!] 第4章第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]')——420s后重试(新client)
+[auth] from_storage 第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]') — 冷却300s 后重试 (不切出口)
+[!!] 第4章第2次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]')——420s后重试(新client)
+[auth] from_storage 第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]') — 冷却300s 后重试 (不切出口)
+[!!] 第4章第3次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]')——420s后重试(新client)
+[auth] from_storage 第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]') — 冷却300s 后重试 (不切出口)
+[!!] 第4章第4次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]')——420s后重试(新client)
+[auth] from_storage 第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]') — 冷却300s 后重试 (不切出口)
+[!!] 第4章第5次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]')——420s后重试(新client)
+[auth] from_storage 第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]') — 冷却300s 后重试 (不切出口)
+[!!] 第4章第6次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]')——放弃续跑
+[auth] from_storage 第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]') — 冷却300s 后重试 (不切出口)
+[!!] 第5章第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]')——420s后重试(新client)
+[auth] from_storage 第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]') — 冷却300s 后重试 (不切出口)
+[!!] 第5章第2次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]')——420s后重试(新client)
+[auth] from_storage 第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]') — 冷却300s 后重试 (不切出口)
+[!!] 第5章第3次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]')——420s后重试(新client)
+[auth] from_storage 第1次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]') — 冷却300s 后重试 (不切出口)
+[!!] 第5章第4次失败(MissingDependencyError: Master-token auth needs gpsoauth. Install: pip install 'notebooklm-py[headless]')——420s后重试(新client)
