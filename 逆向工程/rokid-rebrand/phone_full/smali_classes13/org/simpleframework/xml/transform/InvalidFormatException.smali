@@ -1,0 +1,46 @@
+.class public Lorg/simpleframework/xml/transform/InvalidFormatException;
+.super Lorg/simpleframework/xml/transform/TransformException;
+.source "InvalidFormatException.java"
+
+
+# direct methods
+.method public varargs constructor <init>(Ljava/lang/String;[Ljava/lang/Object;)V
+    .locals 2
+    .param p1, "text"    # Ljava/lang/String;
+    .param p2, "list"    # [Ljava/lang/Object;
+
+    .line 41
+    invoke-static {p1, p2}, Ljava/lang/String;->format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+
+    move-result-object v0
+
+    const/4 v1, 0x0
+
+    new-array v1, v1, [Ljava/lang/Object;
+
+    invoke-direct {p0, v0, v1}, Lorg/simpleframework/xml/transform/TransformException;-><init>(Ljava/lang/String;[Ljava/lang/Object;)V
+
+    .line 42
+    return-void
+.end method
+
+.method public varargs constructor <init>(Ljava/lang/Throwable;Ljava/lang/String;[Ljava/lang/Object;)V
+    .locals 2
+    .param p1, "cause"    # Ljava/lang/Throwable;
+    .param p2, "text"    # Ljava/lang/String;
+    .param p3, "list"    # [Ljava/lang/Object;
+
+    .line 54
+    invoke-static {p2, p3}, Ljava/lang/String;->format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+
+    move-result-object v0
+
+    filled-new-array {p1}, [Ljava/lang/Object;
+
+    move-result-object v1
+
+    invoke-direct {p0, v0, v1}, Lorg/simpleframework/xml/transform/TransformException;-><init>(Ljava/lang/String;[Ljava/lang/Object;)V
+
+    .line 55
+    return-void
+.end method

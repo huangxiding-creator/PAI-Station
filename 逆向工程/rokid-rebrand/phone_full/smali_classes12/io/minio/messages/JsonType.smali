@@ -1,0 +1,118 @@
+.class public final enum Lio/minio/messages/JsonType;
+.super Ljava/lang/Enum;
+.source "JsonType.java"
+
+
+# annotations
+.annotation system Ldalvik/annotation/Signature;
+    value = {
+        "Ljava/lang/Enum<",
+        "Lio/minio/messages/JsonType;",
+        ">;"
+    }
+.end annotation
+
+
+# static fields
+.field private static final synthetic $VALUES:[Lio/minio/messages/JsonType;
+
+.field public static final enum DOCUMENT:Lio/minio/messages/JsonType;
+
+.field public static final enum LINES:Lio/minio/messages/JsonType;
+
+
+# direct methods
+.method private static synthetic $values()[Lio/minio/messages/JsonType;
+    .locals 2
+
+    .line 20
+    sget-object v0, Lio/minio/messages/JsonType;->DOCUMENT:Lio/minio/messages/JsonType;
+
+    sget-object v1, Lio/minio/messages/JsonType;->LINES:Lio/minio/messages/JsonType;
+
+    filled-new-array {v0, v1}, [Lio/minio/messages/JsonType;
+
+    move-result-object v0
+
+    return-object v0
+.end method
+
+.method static constructor <clinit>()V
+    .locals 3
+
+    .line 21
+    new-instance v0, Lio/minio/messages/JsonType;
+
+    const-string v1, "DOCUMENT"
+
+    const/4 v2, 0x0
+
+    invoke-direct {v0, v1, v2}, Lio/minio/messages/JsonType;-><init>(Ljava/lang/String;I)V
+
+    sput-object v0, Lio/minio/messages/JsonType;->DOCUMENT:Lio/minio/messages/JsonType;
+
+    .line 22
+    new-instance v0, Lio/minio/messages/JsonType;
+
+    const-string v1, "LINES"
+
+    const/4 v2, 0x1
+
+    invoke-direct {v0, v1, v2}, Lio/minio/messages/JsonType;-><init>(Ljava/lang/String;I)V
+
+    sput-object v0, Lio/minio/messages/JsonType;->LINES:Lio/minio/messages/JsonType;
+
+    .line 20
+    invoke-static {}, Lio/minio/messages/JsonType;->$values()[Lio/minio/messages/JsonType;
+
+    move-result-object v0
+
+    sput-object v0, Lio/minio/messages/JsonType;->$VALUES:[Lio/minio/messages/JsonType;
+
+    return-void
+.end method
+
+.method private constructor <init>(Ljava/lang/String;I)V
+    .locals 0
+    .annotation system Ldalvik/annotation/Signature;
+        value = {
+            "()V"
+        }
+    .end annotation
+
+    .line 20
+    invoke-direct {p0, p1, p2}, Ljava/lang/Enum;-><init>(Ljava/lang/String;I)V
+
+    return-void
+.end method
+
+.method public static valueOf(Ljava/lang/String;)Lio/minio/messages/JsonType;
+    .locals 1
+    .param p0, "name"    # Ljava/lang/String;
+
+    .line 20
+    const-class v0, Lio/minio/messages/JsonType;
+
+    invoke-static {v0, p0}, Ljava/lang/Enum;->valueOf(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;
+
+    move-result-object v0
+
+    check-cast v0, Lio/minio/messages/JsonType;
+
+    return-object v0
+.end method
+
+.method public static values()[Lio/minio/messages/JsonType;
+    .locals 1
+
+    .line 20
+    sget-object v0, Lio/minio/messages/JsonType;->$VALUES:[Lio/minio/messages/JsonType;
+
+    invoke-virtual {v0}, [Lio/minio/messages/JsonType;->clone()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, [Lio/minio/messages/JsonType;
+
+    return-object v0
+.end method

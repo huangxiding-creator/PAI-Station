@@ -1,0 +1,387 @@
+package com.rokid.phone.glsurface.view;
+
+import android.content.Context;
+import android.opengl.GLES20;
+import android.opengl.GLSurfaceView;
+import android.util.AttributeSet;
+import android.util.Log;
+
+import com.rokid.phone.glsurface.opengl.GLShaderUtil;
+import com.rokid.phone.glsurface.opengl.GlUtil;
+import com.rokid.phone.video.FitCenterScaleCalculator;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
+
+
+public class BackgroundGLSurfaceView extends GLSurfaceView {
+    private static final String TAG = "BackgroundGLSurfaceView";
+    private FpsListener fpsListener;
+    public void setFpsListener(FpsListener listener) {
+        this.fpsListener = listener;
+    }
+    private int mProgram;
+
+    private int av_Position;
+    private int af_Position;
+
+    private int myTextureLoc;
+    private int muvTextureLoc;
+
+    //顶点坐标 Buffer
+    // Vertex coordinate buffer.
+    private FloatBuffer mVertexBuffer;
+    private int mVertexBufferId;
+
+    //纹理坐标 Buffer
+    // Texture coordinate buffer.
+    private FloatBuffer mTextureBuffer;
+    private int mTextureBufferId;
+
+    private int[] mTextureID = new int[2];
+    private volatile int mSurfaceWidth;
+    private volatile int mSurfaceHeight;
+    private volatile int mFrameWidth;
+    private volatile int mFrameHeight;
+    private int mAppliedSurfaceWidth;
+    private int mAppliedSurfaceHeight;
+    private int mAppliedFrameWidth;
+    private int mAppliedFrameHeight;
+
+    private float vertexData[] = {
+            // 左下角
+            // Bottom-left corner.
+            -1f, -1f,
+            // 右下角
+            // Bottom-right corner.
+            1f, -1f,
+            // 左上角
+            // Top-left corner.
+            -1f, 1f,
+            // 右上角
+            // Top-right corner.
+            1f, 1f,
+    };
+
+    private float textureData[] = {
+            0f, 1f,
+            1f, 1f,
+            0f, 0f,
+            1f, 0f,
+    };
+
+    private PreviewRenderer mRenderer;
+
+    private final int CoordsPerVertexCount = 2;
+    private final int VertexCount = vertexData.length / CoordsPerVertexCount;
+    private final int VertexStride = CoordsPerVertexCount * 4;
+    private final int CoordsPerTextureCount = 2;
+    private final int TextureStride = CoordsPerTextureCount * 4;
+
+    private Context mContext;
+
+    public BackgroundGLSurfaceView(Context context) {
+        super(context);
+        initRenderer(context);
+    }
+
+    public BackgroundGLSurfaceView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        initRenderer(context);
+    }
+
+    private void initRenderer(Context context) {
+        this.mContext = context;
+        mRenderer = new PreviewRenderer();
+        this.setEGLContextClientVersion(2);
+        this.setRenderer(mRenderer);
+        this.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+    }
+
+    /**
+     * 初始化EGL环境
+     * Initialize the EGL environment.
+     */
+    private void initGLEnv() {
+        mProgram = GLShaderUtil.createProgram(vertexSource, fragmentSourceNV21);
+        initVertexBufferObjects();
+        av_Position = GLES20.glGetAttribLocation(mProgram, "av_Position");
+        af_Position = GLES20.glGetAttribLocation(mProgram, "af_Position");
+        myTextureLoc = GLES20.glGetUniformLocation(mProgram,  "yTexture");
+        muvTextureLoc = GLES20.glGetUniformLocation(mProgram,  "uvTexture");
+    }
+
+    // 预览数据进行渲染
+    // Render the preview data.
+    public synchronized void setPreviewData(byte[] data, int width, int height) {
+        if (mRenderer != null && data != null && data.length > 0) {
+            mRenderer.setPreviewData(data, width, height);
+            this.requestRender();
+        }
+    }
+
+    public synchronized void releasePreview(){
+        if (mRenderer != null){
+            mRenderer.releaseBuf();
+            this.requestRender();
+        }
+    }
+
+    class PreviewRenderer implements Renderer {
+        private volatile ByteBuffer yFloatBuffer;
+        private volatile ByteBuffer uvFloatBuffer;
+
+        private int width;
+        private int height;
+        private long lastTime = 0;
+        private int frameCount = 0;
+        private float fps = 0;
+        @Override
+        public void onDrawFrame(GL10 gl) {
+            if(mTextureID[0] == 0 || mTextureID[1] == 0) {
+                mTextureID[0] = GlUtil.GenImageTexture();
+                mTextureID[1] = GlUtil.GenImageTexture();
+            }
+
+            GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+            GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
+            if (yFloatBuffer == null || uvFloatBuffer == null) {
+                return;
+            }
+
+            frameCount++;
+            long currentTime = System.currentTimeMillis();
+            if (lastTime == 0) {
+                lastTime = currentTime;
+            }
+            long delta = currentTime - lastTime;
+            // 每秒统计一次
+            // Calculate statistics once per second.
+            if (delta >= 1000) {
+                fps = frameCount * 1000.0f / delta;
+                frameCount = 0;
+                lastTime = currentTime;
+
+                // 这里可以打日志，或者回调出去
+                // Log the result here or deliver it through a callback.
+                if (fpsListener != null) {
+                    fpsListener.onFpsUpdate(fps);
+                }
+            }
+            GLES20.glUseProgram(mProgram);
+
+            updateFitCenterVertexBufferIfNeeded();
+
+            // 绑定顶点和纹理坐标
+            // Bind vertex and texture coordinates.
+            GLES20.glEnableVertexAttribArray(av_Position);
+            GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, mVertexBufferId);
+            GLES20.glVertexAttribPointer(av_Position, CoordsPerVertexCount, GLES20.GL_FLOAT, false, 0, 0);
+
+            GLES20.glEnableVertexAttribArray(af_Position);
+            GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, mTextureBufferId);
+            GLES20.glVertexAttribPointer(af_Position, CoordsPerTextureCount, GLES20.GL_FLOAT, false, 0, 0);
+
+            GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
+
+            // 绑定Y和UV纹理
+            // Bind the Y and UV textures.
+            GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextureID[0]);
+            GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_LUMINANCE, width, height, 0, GLES20.GL_LUMINANCE, GLES20.GL_UNSIGNED_BYTE, yFloatBuffer);
+            GLES20.glUniform1i(myTextureLoc, 0);
+
+            GLES20.glActiveTexture(GLES20.GL_TEXTURE1);
+            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextureID[1]);
+            GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_LUMINANCE_ALPHA, width / 2, height / 2, 0, GLES20.GL_LUMINANCE_ALPHA, GLES20.GL_UNSIGNED_BYTE, uvFloatBuffer);
+            GLES20.glUniform1i(muvTextureLoc, 1);
+
+            // 绘制 GLES20.GL_TRIANGLE_STRIP:复用坐标
+            // Draw with GLES20.GL_TRIANGLE_STRIP to reuse coordinates.
+            GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, VertexCount);
+
+            GLES20.glDisableVertexAttribArray(av_Position);
+            GLES20.glDisableVertexAttribArray(af_Position);
+            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
+
+        }
+
+        @Override
+        public void onSurfaceChanged(GL10 gl, int w, int h) {
+            //当surface的尺寸发生改变时，该方法被调用，。往往在这里设置ViewPort。或者Camara等。
+            // Called when the surface size changes; typically configure the viewport or camera here.
+            gl.glViewport(0, 0, w, h);
+            mSurfaceWidth = w;
+            mSurfaceHeight = h;
+        }
+
+        @Override
+        public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+            // 该方法在渲染开始前调用，OpenGL ES的绘制上下文被重建时也会调用。
+            // Called before rendering starts and whenever the OpenGL ES rendering context is recreated.
+            //当Activity暂停时，绘制上下文会丢失，当Activity恢复时，绘制上下文会重建。
+            // The rendering context is lost when the Activity pauses and recreated when it resumes.
+            initGLEnv();
+        }
+
+        /**
+         * 设置preview数据
+         * Set the preview data.
+         * @param data
+         * @param width
+         * @param height
+         */
+        public synchronized void setPreviewData(byte[] data, int width, int height) {
+            if (width <= 0 || height <= 0) {
+                Log.w(TAG, "setPreviewData: invalid size " + width + "x" + height);
+                return;
+            }
+
+            int ySize = width * height;
+            int uvSize = ySize / 2;
+            int expectedSize = ySize + uvSize;
+            if (data == null || data.length < expectedSize) {
+                Log.w(TAG, "setPreviewData: invalid NV21 data length="
+                        + (data == null ? 0 : data.length)
+                        + ", expected=" + expectedSize
+                        + ", size=" + width + "x" + height);
+                return;
+            }
+
+            if (yFloatBuffer == null || uvFloatBuffer == null
+                    || yFloatBuffer.capacity() < ySize
+                    || uvFloatBuffer.capacity() < uvSize
+                    || this.width != width
+                    || this.height != height) {
+                yFloatBuffer = ByteBuffer.allocateDirect(ySize);
+                uvFloatBuffer = ByteBuffer.allocateDirect(uvSize);
+            }
+            this.width = width;
+            this.height = height;
+            mFrameWidth = width;
+            mFrameHeight = height;
+            yFloatBuffer.clear();
+            yFloatBuffer.put(data, 0, ySize);
+            yFloatBuffer.flip();
+
+            uvFloatBuffer.clear();
+            uvFloatBuffer.put(data, ySize, uvSize);
+            uvFloatBuffer.flip();
+        }
+
+        public synchronized void releaseBuf(){
+            if (yFloatBuffer != null){
+                yFloatBuffer.clear();
+                yFloatBuffer = null;
+            }
+
+            if (uvFloatBuffer != null){
+                uvFloatBuffer.clear();
+                uvFloatBuffer = null;
+            }
+        }
+    }
+
+
+    private void initVertexBufferObjects() {
+        int[] vbo = new int[2];
+        GLES20.glGenBuffers(2, vbo, 0);
+
+        mVertexBuffer = ByteBuffer.allocateDirect(vertexData.length * 4)
+                .order(ByteOrder.nativeOrder())
+                .asFloatBuffer()
+                .put(vertexData);
+        mVertexBuffer.position(0);
+        mVertexBufferId = vbo[0];
+        // ARRAY_BUFFER 将使用 Float*Array 而 ELEMENT_ARRAY_BUFFER 必须使用 Uint*Array
+        // ARRAY_BUFFER uses Float*Array, while ELEMENT_ARRAY_BUFFER must use Uint*Array.
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, mVertexBufferId);
+        GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER, vertexData.length * 4, mVertexBuffer, GLES20.GL_DYNAMIC_DRAW);
+
+        mTextureBuffer = ByteBuffer.allocateDirect(textureData.length * 4)
+                .order(ByteOrder.nativeOrder())
+                .asFloatBuffer()
+                .put(textureData);
+        mTextureBuffer.position(0);
+        mTextureBufferId = vbo[1];
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, mTextureBufferId);
+        GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER, textureData.length * 4, mTextureBuffer, GLES20.GL_STATIC_DRAW);
+
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER,0);
+    }
+
+    /**
+     * 完整显示帧并保持真实宽高比。比例不一致时显示黑边，不裁剪、不拉伸。
+     * Display the entire frame at its original aspect ratio. Add black bars when ratios differ, without cropping or stretching.
+     */
+    private void updateFitCenterVertexBufferIfNeeded() {
+        if (mVertexBuffer == null || mVertexBufferId == 0 ||
+                mSurfaceWidth <= 0 || mSurfaceHeight <= 0 ||
+                mFrameWidth <= 0 || mFrameHeight <= 0) {
+            return;
+        }
+        if (mAppliedSurfaceWidth == mSurfaceWidth && mAppliedSurfaceHeight == mSurfaceHeight &&
+                mAppliedFrameWidth == mFrameWidth && mAppliedFrameHeight == mFrameHeight) {
+            return;
+        }
+
+        FitCenterScaleCalculator.Scale scale = FitCenterScaleCalculator.INSTANCE.calculate(
+                mFrameWidth, mFrameHeight, mSurfaceWidth, mSurfaceHeight);
+        float[] fittedVertexData = {
+                -scale.getX(), -scale.getY(),
+                scale.getX(), -scale.getY(),
+                -scale.getX(), scale.getY(),
+                scale.getX(), scale.getY(),
+        };
+
+        mVertexBuffer.clear();
+        mVertexBuffer.put(fittedVertexData);
+        mVertexBuffer.position(0);
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, mVertexBufferId);
+        GLES20.glBufferSubData(
+                GLES20.GL_ARRAY_BUFFER, 0, fittedVertexData.length * 4, mVertexBuffer);
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
+
+        mAppliedSurfaceWidth = mSurfaceWidth;
+        mAppliedSurfaceHeight = mSurfaceHeight;
+        mAppliedFrameWidth = mFrameWidth;
+        mAppliedFrameHeight = mFrameHeight;
+        Log.d(TAG, "FIT_CENTER frame=" + mFrameWidth + "x" + mFrameHeight +
+                ", surface=" + mSurfaceWidth + "x" + mSurfaceHeight +
+                ", scale=" + scale);
+    }
+
+
+    private final String vertexSource = "attribute vec4 av_Position; " +
+            "attribute vec2 af_Position; " +
+            "varying vec2 v_texPo; " +
+            "void main() { " +
+            "    v_texPo = af_Position; " +
+            "    gl_Position = av_Position; " +
+            "}";
+
+    // 修改 fragmentSourceNV21 字段，移除亮度偏移
+    // Modify fragmentSourceNV21 to remove the brightness offset.
+    private final String fragmentSourceNV21 = "precision highp float;" +
+            "uniform sampler2D yTexture;" +
+            "uniform sampler2D uvTexture;" +
+            "varying highp vec2 v_texPo;" +
+            "void main()" +
+            "{" +
+            "   float r, g, b, y, u, v;\n" +
+            // 移除 -0.2 偏移
+            // Remove the -0.2 offset.
+            "   y = texture2D(yTexture, v_texPo).r;\n" +
+            "   u = texture2D(uvTexture, v_texPo).a - 0.5;\n" +
+            "   v = texture2D(uvTexture, v_texPo).r - 0.5;\n" +
+            "   r = y + 1.57481*v;\n" +
+            "   g = y - 0.18732*u - 0.46813*v;\n" +
+            "   b = y + 1.8556*u;\n" +
+            "   gl_FragColor = vec4(r, g, b, 1.0);\n" +
+            "}";
+
+}

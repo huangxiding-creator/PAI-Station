@@ -1,0 +1,154 @@
+.class public Lcom/amazonaws/services/cognitoidentityprovider/model/transform/AdminCreateUserResultJsonUnmarshaller;
+.super Ljava/lang/Object;
+.source "AdminCreateUserResultJsonUnmarshaller.java"
+
+# interfaces
+.implements Lcom/amazonaws/transform/Unmarshaller;
+
+
+# annotations
+.annotation system Ldalvik/annotation/Signature;
+    value = {
+        "Ljava/lang/Object;",
+        "Lcom/amazonaws/transform/Unmarshaller<",
+        "Lcom/amazonaws/services/cognitoidentityprovider/model/AdminCreateUserResult;",
+        "Lcom/amazonaws/transform/JsonUnmarshallerContext;",
+        ">;"
+    }
+.end annotation
+
+
+# static fields
+.field private static instance:Lcom/amazonaws/services/cognitoidentityprovider/model/transform/AdminCreateUserResultJsonUnmarshaller;
+
+
+# direct methods
+.method public constructor <init>()V
+    .locals 0
+
+    .line 26
+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+
+    return-void
+.end method
+
+.method public static getInstance()Lcom/amazonaws/services/cognitoidentityprovider/model/transform/AdminCreateUserResultJsonUnmarshaller;
+    .locals 1
+
+    .line 51
+    sget-object v0, Lcom/amazonaws/services/cognitoidentityprovider/model/transform/AdminCreateUserResultJsonUnmarshaller;->instance:Lcom/amazonaws/services/cognitoidentityprovider/model/transform/AdminCreateUserResultJsonUnmarshaller;
+
+    if-nez v0, :cond_0
+
+    .line 52
+    new-instance v0, Lcom/amazonaws/services/cognitoidentityprovider/model/transform/AdminCreateUserResultJsonUnmarshaller;
+
+    invoke-direct {v0}, Lcom/amazonaws/services/cognitoidentityprovider/model/transform/AdminCreateUserResultJsonUnmarshaller;-><init>()V
+
+    sput-object v0, Lcom/amazonaws/services/cognitoidentityprovider/model/transform/AdminCreateUserResultJsonUnmarshaller;->instance:Lcom/amazonaws/services/cognitoidentityprovider/model/transform/AdminCreateUserResultJsonUnmarshaller;
+
+    .line 53
+    :cond_0
+    sget-object v0, Lcom/amazonaws/services/cognitoidentityprovider/model/transform/AdminCreateUserResultJsonUnmarshaller;->instance:Lcom/amazonaws/services/cognitoidentityprovider/model/transform/AdminCreateUserResultJsonUnmarshaller;
+
+    return-object v0
+.end method
+
+
+# virtual methods
+.method public unmarshall(Lcom/amazonaws/transform/JsonUnmarshallerContext;)Lcom/amazonaws/services/cognitoidentityprovider/model/AdminCreateUserResult;
+    .locals 4
+    .param p1, "context"    # Lcom/amazonaws/transform/JsonUnmarshallerContext;
+    .annotation system Ldalvik/annotation/Throws;
+        value = {
+            Ljava/lang/Exception;
+        }
+    .end annotation
+
+    .line 30
+    new-instance v0, Lcom/amazonaws/services/cognitoidentityprovider/model/AdminCreateUserResult;
+
+    invoke-direct {v0}, Lcom/amazonaws/services/cognitoidentityprovider/model/AdminCreateUserResult;-><init>()V
+
+    .line 32
+    .local v0, "adminCreateUserResult":Lcom/amazonaws/services/cognitoidentityprovider/model/AdminCreateUserResult;
+    invoke-virtual {p1}, Lcom/amazonaws/transform/JsonUnmarshallerContext;->getReader()Lcom/amazonaws/util/json/AwsJsonReader;
+
+    move-result-object v1
+
+    .line 33
+    .local v1, "reader":Lcom/amazonaws/util/json/AwsJsonReader;
+    invoke-interface {v1}, Lcom/amazonaws/util/json/AwsJsonReader;->beginObject()V
+
+    .line 34
+    :goto_0
+    invoke-interface {v1}, Lcom/amazonaws/util/json/AwsJsonReader;->hasNext()Z
+
+    move-result v2
+
+    if-eqz v2, :cond_1
+
+    .line 35
+    invoke-interface {v1}, Lcom/amazonaws/util/json/AwsJsonReader;->nextName()Ljava/lang/String;
+
+    move-result-object v2
+
+    .line 36
+    .local v2, "name":Ljava/lang/String;
+    const-string v3, "User"
+
+    invoke-virtual {v2, v3}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v3
+
+    if-eqz v3, :cond_0
+
+    .line 37
+    invoke-static {}, Lcom/amazonaws/services/cognitoidentityprovider/model/transform/UserTypeJsonUnmarshaller;->getInstance()Lcom/amazonaws/services/cognitoidentityprovider/model/transform/UserTypeJsonUnmarshaller;
+
+    move-result-object v3
+
+    .line 38
+    invoke-virtual {v3, p1}, Lcom/amazonaws/services/cognitoidentityprovider/model/transform/UserTypeJsonUnmarshaller;->unmarshall(Lcom/amazonaws/transform/JsonUnmarshallerContext;)Lcom/amazonaws/services/cognitoidentityprovider/model/UserType;
+
+    move-result-object v3
+
+    .line 37
+    invoke-virtual {v0, v3}, Lcom/amazonaws/services/cognitoidentityprovider/model/AdminCreateUserResult;->setUser(Lcom/amazonaws/services/cognitoidentityprovider/model/UserType;)V
+
+    goto :goto_1
+
+    .line 40
+    :cond_0
+    invoke-interface {v1}, Lcom/amazonaws/util/json/AwsJsonReader;->skipValue()V
+
+    .line 42
+    .end local v2    # "name":Ljava/lang/String;
+    :goto_1
+    goto :goto_0
+
+    .line 43
+    :cond_1
+    invoke-interface {v1}, Lcom/amazonaws/util/json/AwsJsonReader;->endObject()V
+
+    .line 45
+    return-object v0
+.end method
+
+.method public bridge synthetic unmarshall(Ljava/lang/Object;)Ljava/lang/Object;
+    .locals 0
+    .annotation system Ldalvik/annotation/Throws;
+        value = {
+            Ljava/lang/Exception;
+        }
+    .end annotation
+
+    .line 26
+    check-cast p1, Lcom/amazonaws/transform/JsonUnmarshallerContext;
+
+    invoke-virtual {p0, p1}, Lcom/amazonaws/services/cognitoidentityprovider/model/transform/AdminCreateUserResultJsonUnmarshaller;->unmarshall(Lcom/amazonaws/transform/JsonUnmarshallerContext;)Lcom/amazonaws/services/cognitoidentityprovider/model/AdminCreateUserResult;
+
+    move-result-object p1
+
+    return-object p1
+.end method

@@ -1,0 +1,274 @@
+.class final Lcom/rokid/security/phone/sdk/base/utils/net/excetion/ApiException2Kt$api2Call2$6;
+.super Ljava/lang/Object;
+.source "ApiException2.kt"
+
+# interfaces
+.implements Lkotlinx/coroutines/flow/FlowCollector;
+
+
+# annotations
+.annotation system Ldalvik/annotation/EnclosingMethod;
+    value = Lcom/rokid/security/phone/sdk/base/utils/net/excetion/ApiException2Kt;->api2Call2(Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+.end annotation
+
+.annotation system Ldalvik/annotation/InnerClass;
+    accessFlags = 0x18
+    name = null
+.end annotation
+
+.annotation system Ldalvik/annotation/Signature;
+    value = {
+        "<T:",
+        "Ljava/lang/Object;",
+        ">",
+        "Ljava/lang/Object;",
+        "Lkotlinx/coroutines/flow/FlowCollector;"
+    }
+.end annotation
+
+.annotation runtime Lkotlin/Metadata;
+    d1 = {
+        "\u0000\u0016\n\u0000\n\u0002\u0010\u0002\n\u0002\u0008\u0003\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0008\u0002\u0010\u0000\u001a\u00020\u0001\"\u0004\u0008\u0000\u0010\u0002\"\u0004\u0008\u0001\u0010\u00032\u001e\u0010\u0004\u001a\u001a\u0012\n\u0012\u0008\u0012\u0004\u0012\u0002H\u00020\u0006\u0012\n\u0012\u0008\u0012\u0004\u0012\u0002H\u00030\u00060\u0005H\u008a@\u00a2\u0006\u0004\u0008\u0007\u0010\u0008"
+    }
+    d2 = {
+        "<anonymous>",
+        "",
+        "T1",
+        "T2",
+        "it",
+        "Lkotlin/Pair;",
+        "Lcom/rokid/security/phone/sdk/base/utils/net/bean/BaseResponse2;",
+        "emit",
+        "(Lkotlin/Pair;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;"
+    }
+    k = 0x3
+    mv = {
+        0x1,
+        0x8,
+        0x0
+    }
+    xi = 0x30
+.end annotation
+
+
+# instance fields
+.field final synthetic $fail:Lkotlin/jvm/functions/Function2;
+    .annotation system Ldalvik/annotation/Signature;
+        value = {
+            "Lkotlin/jvm/functions/Function2<",
+            "Ljava/lang/Integer;",
+            "Ljava/lang/String;",
+            "Lkotlin/Unit;",
+            ">;"
+        }
+    .end annotation
+.end field
+
+.field final synthetic $success:Lkotlin/jvm/functions/Function1;
+    .annotation system Ldalvik/annotation/Signature;
+        value = {
+            "Lkotlin/jvm/functions/Function1<",
+            "Lkotlin/Pair<",
+            "Lcom/rokid/security/phone/sdk/base/utils/net/bean/BaseResponse2<",
+            "TT1;>;",
+            "Lcom/rokid/security/phone/sdk/base/utils/net/bean/BaseResponse2<",
+            "TT2;>;>;",
+            "Lkotlin/Unit;",
+            ">;"
+        }
+    .end annotation
+.end field
+
+
+# direct methods
+.method constructor <init>(Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;)V
+    .locals 0
+    .annotation system Ldalvik/annotation/Signature;
+        value = {
+            "(",
+            "Lkotlin/jvm/functions/Function1<",
+            "-",
+            "Lkotlin/Pair<",
+            "Lcom/rokid/security/phone/sdk/base/utils/net/bean/BaseResponse2<",
+            "TT1;>;",
+            "Lcom/rokid/security/phone/sdk/base/utils/net/bean/BaseResponse2<",
+            "TT2;>;>;",
+            "Lkotlin/Unit;",
+            ">;",
+            "Lkotlin/jvm/functions/Function2<",
+            "-",
+            "Ljava/lang/Integer;",
+            "-",
+            "Ljava/lang/String;",
+            "Lkotlin/Unit;",
+            ">;)V"
+        }
+    .end annotation
+
+    iput-object p1, p0, Lcom/rokid/security/phone/sdk/base/utils/net/excetion/ApiException2Kt$api2Call2$6;->$success:Lkotlin/jvm/functions/Function1;
+
+    iput-object p2, p0, Lcom/rokid/security/phone/sdk/base/utils/net/excetion/ApiException2Kt$api2Call2$6;->$fail:Lkotlin/jvm/functions/Function2;
+
+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+
+    return-void
+.end method
+
+
+# virtual methods
+.method public bridge synthetic emit(Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+    .locals 1
+    .param p1, "value"    # Ljava/lang/Object;
+    .param p2, "$completion"    # Lkotlin/coroutines/Continuation;
+
+    .line 223
+    move-object v0, p1
+
+    check-cast v0, Lkotlin/Pair;
+
+    invoke-virtual {p0, v0, p2}, Lcom/rokid/security/phone/sdk/base/utils/net/excetion/ApiException2Kt$api2Call2$6;->emit(Lkotlin/Pair;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+
+    move-result-object v0
+
+    return-object v0
+.end method
+
+.method public final emit(Lkotlin/Pair;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+    .locals 3
+    .param p1, "it"    # Lkotlin/Pair;
+    .param p2, "$completion"    # Lkotlin/coroutines/Continuation;
+    .annotation system Ldalvik/annotation/Signature;
+        value = {
+            "(",
+            "Lkotlin/Pair<",
+            "Lcom/rokid/security/phone/sdk/base/utils/net/bean/BaseResponse2<",
+            "TT1;>;",
+            "Lcom/rokid/security/phone/sdk/base/utils/net/bean/BaseResponse2<",
+            "TT2;>;>;",
+            "Lkotlin/coroutines/Continuation<",
+            "-",
+            "Lkotlin/Unit;",
+            ">;)",
+            "Ljava/lang/Object;"
+        }
+    .end annotation
+
+    .line 224
+    invoke-virtual {p1}, Lkotlin/Pair;->getFirst()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Lcom/rokid/security/phone/sdk/base/utils/net/bean/BaseResponse2;
+
+    invoke-virtual {v0}, Lcom/rokid/security/phone/sdk/base/utils/net/bean/BaseResponse2;->success()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_0
+
+    invoke-virtual {p1}, Lkotlin/Pair;->getSecond()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Lcom/rokid/security/phone/sdk/base/utils/net/bean/BaseResponse2;
+
+    invoke-virtual {v0}, Lcom/rokid/security/phone/sdk/base/utils/net/bean/BaseResponse2;->success()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_0
+
+    .line 225
+    iget-object v0, p0, Lcom/rokid/security/phone/sdk/base/utils/net/excetion/ApiException2Kt$api2Call2$6;->$success:Lkotlin/jvm/functions/Function1;
+
+    invoke-interface {v0, p1}, Lkotlin/jvm/functions/Function1;->invoke(Ljava/lang/Object;)Ljava/lang/Object;
+
+    goto :goto_0
+
+    .line 227
+    :cond_0
+    invoke-virtual {p1}, Lkotlin/Pair;->getFirst()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Lcom/rokid/security/phone/sdk/base/utils/net/bean/BaseResponse2;
+
+    invoke-virtual {v0}, Lcom/rokid/security/phone/sdk/base/utils/net/bean/BaseResponse2;->success()Z
+
+    move-result v0
+
+    if-nez v0, :cond_1
+
+    .line 228
+    iget-object v0, p0, Lcom/rokid/security/phone/sdk/base/utils/net/excetion/ApiException2Kt$api2Call2$6;->$fail:Lkotlin/jvm/functions/Function2;
+
+    invoke-virtual {p1}, Lkotlin/Pair;->getFirst()Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, Lcom/rokid/security/phone/sdk/base/utils/net/bean/BaseResponse2;
+
+    invoke-virtual {v1}, Lcom/rokid/security/phone/sdk/base/utils/net/bean/BaseResponse2;->getCode()Ljava/lang/Integer;
+
+    move-result-object v1
+
+    invoke-virtual {p1}, Lkotlin/Pair;->getFirst()Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, Lcom/rokid/security/phone/sdk/base/utils/net/bean/BaseResponse2;
+
+    invoke-virtual {v2}, Lcom/rokid/security/phone/sdk/base/utils/net/bean/BaseResponse2;->getMsg()Ljava/lang/String;
+
+    move-result-object v2
+
+    invoke-interface {v0, v1, v2}, Lkotlin/jvm/functions/Function2;->invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    goto :goto_0
+
+    .line 229
+    :cond_1
+    invoke-virtual {p1}, Lkotlin/Pair;->getSecond()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Lcom/rokid/security/phone/sdk/base/utils/net/bean/BaseResponse2;
+
+    invoke-virtual {v0}, Lcom/rokid/security/phone/sdk/base/utils/net/bean/BaseResponse2;->success()Z
+
+    move-result v0
+
+    if-nez v0, :cond_2
+
+    .line 230
+    iget-object v0, p0, Lcom/rokid/security/phone/sdk/base/utils/net/excetion/ApiException2Kt$api2Call2$6;->$fail:Lkotlin/jvm/functions/Function2;
+
+    invoke-virtual {p1}, Lkotlin/Pair;->getSecond()Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, Lcom/rokid/security/phone/sdk/base/utils/net/bean/BaseResponse2;
+
+    invoke-virtual {v1}, Lcom/rokid/security/phone/sdk/base/utils/net/bean/BaseResponse2;->getCode()Ljava/lang/Integer;
+
+    move-result-object v1
+
+    invoke-virtual {p1}, Lkotlin/Pair;->getSecond()Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, Lcom/rokid/security/phone/sdk/base/utils/net/bean/BaseResponse2;
+
+    invoke-virtual {v2}, Lcom/rokid/security/phone/sdk/base/utils/net/bean/BaseResponse2;->getMsg()Ljava/lang/String;
+
+    move-result-object v2
+
+    invoke-interface {v0, v1, v2}, Lkotlin/jvm/functions/Function2;->invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    .line 233
+    :cond_2
+    :goto_0
+    sget-object v0, Lkotlin/Unit;->INSTANCE:Lkotlin/Unit;
+
+    return-object v0
+.end method

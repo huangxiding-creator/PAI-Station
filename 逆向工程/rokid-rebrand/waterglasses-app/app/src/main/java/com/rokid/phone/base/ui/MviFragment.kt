@@ -1,0 +1,82 @@
+package com.rokid.phone.base.ui
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.viewbinding.ViewBinding
+import com.rokid.phone.base.viewmodel.MviViewModel
+import com.rokid.phone.base.viewmodel.interfaces.UiEvent
+import com.rokid.phone.base.viewmodel.interfaces.UiIntent
+import com.rokid.phone.base.viewmodel.interfaces.UiState
+import kotlinx.coroutines.launch
+
+abstract class MviFragment<VB : ViewBinding,State : UiState, Intent : UiIntent, Event : UiEvent, VM : MviViewModel<State, Intent, Event>> :
+    Fragment() {
+
+    private val TAG = "MviFragment"
+    private lateinit var binding: VB
+    protected abstract val viewModel: VM
+
+    override fun onStart() {
+        super.onStart()
+        observeViewModel()
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding =initViewBinding()
+        onInit(savedInstanceState)
+        return binding.root
+    }
+
+
+
+    abstract fun onInit(savedInstanceState: Bundle?)
+
+    abstract fun initViewBinding(): VB
+
+
+    private fun observeViewModel() {
+        // 观察状态变化
+        // Observe state changes.
+        lifecycleScope.launch {
+            viewModel.state
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect { state ->
+                    render(state)
+                }
+        }
+
+        // 观察一次性事件
+        // Observe one-time events.
+        lifecycleScope.launch {
+            viewModel.event
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect { event ->
+                    handleEvent(event)
+                }
+        }
+    }
+
+    // 必须实现：渲染状态
+    // Required implementation: render state.
+    protected abstract fun render(state: State)
+
+    // 可选实现：处理一次性事件
+    // Optional implementation: handle one-time events.
+    protected open fun handleEvent(event: Event) {}
+
+    // 发送意图
+    // Send an intent.
+    protected fun dispatchIntent(intent: Intent) {
+        viewModel.sendIntent(intent)
+    }
+}

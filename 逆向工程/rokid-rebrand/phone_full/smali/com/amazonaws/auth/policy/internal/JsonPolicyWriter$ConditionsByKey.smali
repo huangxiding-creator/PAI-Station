@@ -1,0 +1,193 @@
+.class Lcom/amazonaws/auth/policy/internal/JsonPolicyWriter$ConditionsByKey;
+.super Ljava/lang/Object;
+.source "JsonPolicyWriter.java"
+
+
+# annotations
+.annotation system Ldalvik/annotation/EnclosingClass;
+    value = Lcom/amazonaws/auth/policy/internal/JsonPolicyWriter;
+.end annotation
+
+.annotation system Ldalvik/annotation/InnerClass;
+    accessFlags = 0x8
+    name = "ConditionsByKey"
+.end annotation
+
+
+# instance fields
+.field private conditionsByKey:Ljava/util/Map;
+    .annotation system Ldalvik/annotation/Signature;
+        value = {
+            "Ljava/util/Map<",
+            "Ljava/lang/String;",
+            "Ljava/util/List<",
+            "Ljava/lang/String;",
+            ">;>;"
+        }
+    .end annotation
+.end field
+
+
+# direct methods
+.method public constructor <init>()V
+    .locals 1
+
+    .line 258
+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+
+    .line 259
+    new-instance v0, Ljava/util/HashMap;
+
+    invoke-direct {v0}, Ljava/util/HashMap;-><init>()V
+
+    iput-object v0, p0, Lcom/amazonaws/auth/policy/internal/JsonPolicyWriter$ConditionsByKey;->conditionsByKey:Ljava/util/Map;
+
+    .line 260
+    return-void
+.end method
+
+
+# virtual methods
+.method public addValuesToKey(Ljava/lang/String;Ljava/util/List;)V
+    .locals 3
+    .param p1, "key"    # Ljava/lang/String;
+    .annotation system Ldalvik/annotation/Signature;
+        value = {
+            "(",
+            "Ljava/lang/String;",
+            "Ljava/util/List<",
+            "Ljava/lang/String;",
+            ">;)V"
+        }
+    .end annotation
+
+    .line 284
+    .local p2, "values":Ljava/util/List;, "Ljava/util/List<Ljava/lang/String;>;"
+    invoke-virtual {p0, p1}, Lcom/amazonaws/auth/policy/internal/JsonPolicyWriter$ConditionsByKey;->getConditionsByKey(Ljava/lang/String;)Ljava/util/List;
+
+    move-result-object v0
+
+    .line 285
+    .local v0, "conditionValues":Ljava/util/List;, "Ljava/util/List<Ljava/lang/String;>;"
+    if-nez v0, :cond_0
+
+    .line 286
+    iget-object v1, p0, Lcom/amazonaws/auth/policy/internal/JsonPolicyWriter$ConditionsByKey;->conditionsByKey:Ljava/util/Map;
+
+    new-instance v2, Ljava/util/ArrayList;
+
+    invoke-direct {v2, p2}, Ljava/util/ArrayList;-><init>(Ljava/util/Collection;)V
+
+    invoke-interface {v1, p1, v2}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    goto :goto_0
+
+    .line 288
+    :cond_0
+    invoke-interface {v0, p2}, Ljava/util/List;->addAll(Ljava/util/Collection;)Z
+
+    .line 289
+    :goto_0
+    return-void
+.end method
+
+.method public containsKey(Ljava/lang/String;)Z
+    .locals 1
+    .param p1, "key"    # Ljava/lang/String;
+
+    .line 271
+    iget-object v0, p0, Lcom/amazonaws/auth/policy/internal/JsonPolicyWriter$ConditionsByKey;->conditionsByKey:Ljava/util/Map;
+
+    invoke-interface {v0, p1}, Ljava/util/Map;->containsKey(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    return v0
+.end method
+
+.method public getConditionsByKey(Ljava/lang/String;)Ljava/util/List;
+    .locals 1
+    .param p1, "key"    # Ljava/lang/String;
+    .annotation system Ldalvik/annotation/Signature;
+        value = {
+            "(",
+            "Ljava/lang/String;",
+            ")",
+            "Ljava/util/List<",
+            "Ljava/lang/String;",
+            ">;"
+        }
+    .end annotation
+
+    .line 275
+    iget-object v0, p0, Lcom/amazonaws/auth/policy/internal/JsonPolicyWriter$ConditionsByKey;->conditionsByKey:Ljava/util/Map;
+
+    invoke-interface {v0, p1}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Ljava/util/List;
+
+    return-object v0
+.end method
+
+.method public getConditionsByKey()Ljava/util/Map;
+    .locals 1
+    .annotation system Ldalvik/annotation/Signature;
+        value = {
+            "()",
+            "Ljava/util/Map<",
+            "Ljava/lang/String;",
+            "Ljava/util/List<",
+            "Ljava/lang/String;",
+            ">;>;"
+        }
+    .end annotation
+
+    .line 263
+    iget-object v0, p0, Lcom/amazonaws/auth/policy/internal/JsonPolicyWriter$ConditionsByKey;->conditionsByKey:Ljava/util/Map;
+
+    return-object v0
+.end method
+
+.method public keySet()Ljava/util/Set;
+    .locals 1
+    .annotation system Ldalvik/annotation/Signature;
+        value = {
+            "()",
+            "Ljava/util/Set<",
+            "Ljava/lang/String;",
+            ">;"
+        }
+    .end annotation
+
+    .line 279
+    iget-object v0, p0, Lcom/amazonaws/auth/policy/internal/JsonPolicyWriter$ConditionsByKey;->conditionsByKey:Ljava/util/Map;
+
+    invoke-interface {v0}, Ljava/util/Map;->keySet()Ljava/util/Set;
+
+    move-result-object v0
+
+    return-object v0
+.end method
+
+.method public setConditionsByKey(Ljava/util/Map;)V
+    .locals 0
+    .annotation system Ldalvik/annotation/Signature;
+        value = {
+            "(",
+            "Ljava/util/Map<",
+            "Ljava/lang/String;",
+            "Ljava/util/List<",
+            "Ljava/lang/String;",
+            ">;>;)V"
+        }
+    .end annotation
+
+    .line 267
+    .local p1, "conditionsByKey":Ljava/util/Map;, "Ljava/util/Map<Ljava/lang/String;Ljava/util/List<Ljava/lang/String;>;>;"
+    iput-object p1, p0, Lcom/amazonaws/auth/policy/internal/JsonPolicyWriter$ConditionsByKey;->conditionsByKey:Ljava/util/Map;
+
+    .line 268
+    return-void
+.end method

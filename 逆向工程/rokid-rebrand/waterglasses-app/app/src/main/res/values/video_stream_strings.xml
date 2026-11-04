@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  视频流页面的状态文案。
+  小数倍率依赖 phone-sdk 2.2.2-E 起的 GlassVideoStreamParam.zoomRatio，旧版眼镜会忽略该字段；
+  预览层只展示解码后的真实分辨率和眼镜最近确认的实际倍率。
+
+  Status copy for the video stream page.
+  Decimal zoom relies on GlassVideoStreamParam.zoomRatio (phone-sdk 2.2.2-E and later); older glasses ignore that field.
+  The preview overlay shows only the decoded frame size and the latest confirmed camera zoom.
+-->
+<resources>
+    <string name="video_zoom_label">Camera zoom</string>
+    <string name="video_zoom_follow">Follow shared camera</string>
+    <string name="video_zoom_custom">Custom zoom</string>
+    <string name="video_zoom_custom_hint">1.0</string>
+    <string name="video_zoom_custom_invalid">Enter a zoom ratio from 1.0 to 8.0</string>
+    <string name="video_zoom_custom_integer_invalid">Enter an integer zoom ratio from 1 to 8</string>
+    <string name="video_zoom_integer_compat">Integer zoom mode</string>
+    <string name="video_zoom_actual_unknown">Actual resolution: waiting · Actual zoom: waiting</string>
+    <string name="video_preview_status">Actual resolution: %1$d×%2$d · Actual zoom: %3$.3f×</string>
+    <string name="video_preview_status_zoom_waiting">Actual resolution: %1$d×%2$d · Actual zoom: waiting</string>
+    <string name="video_preview_status_resolution_waiting">Actual resolution: waiting · Actual zoom: %1$.3f×</string>
+    <string name="video_preview_status_waiting">Actual resolution: waiting · Actual zoom: waiting</string>
+    <string name="video_preview_resolution_waiting">Actual resolution: waiting</string>
+    <string name="video_preview_resolution">Actual resolution: %1$d×%2$d</string>
+</resources>

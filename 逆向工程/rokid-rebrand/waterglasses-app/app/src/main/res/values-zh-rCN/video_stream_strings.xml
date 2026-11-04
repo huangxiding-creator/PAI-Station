@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  视频流页面的状态文案。
+  小数倍率依赖 phone-sdk 2.2.2-E 起的 GlassVideoStreamParam.zoomRatio，旧版眼镜会忽略该字段；
+  预览层只展示解码后的真实分辨率和眼镜最近确认的实际倍率。
+
+  Status copy for the video stream page.
+  Decimal zoom relies on GlassVideoStreamParam.zoomRatio (phone-sdk 2.2.2-E and later); older glasses ignore that field.
+  The preview overlay shows only the decoded frame size and the latest confirmed camera zoom.
+-->
+<resources>
+    <string name="video_zoom_label">相机倍率</string>
+    <string name="video_zoom_follow">跟随共享相机</string>
+    <string name="video_zoom_custom">自定义倍率</string>
+    <string name="video_zoom_custom_hint">1.0</string>
+    <string name="video_zoom_custom_invalid">请输入 1.0 到 8.0 之间的倍率</string>
+    <string name="video_zoom_custom_integer_invalid">请输入 1 到 8 之间的整数倍率</string>
+    <string name="video_zoom_integer_compat">整数倍率模式</string>
+    <string name="video_zoom_actual_unknown">实际分辨率：等待首帧 · 实际倍率：等待眼镜状态</string>
+    <string name="video_preview_status">实际分辨率：%1$d×%2$d · 实际倍率：%3$.3f×</string>
+    <string name="video_preview_status_zoom_waiting">实际分辨率：%1$d×%2$d · 实际倍率：等待眼镜状态</string>
+    <string name="video_preview_status_resolution_waiting">实际分辨率：等待首帧 · 实际倍率：%1$.3f×</string>
+    <string name="video_preview_status_waiting">实际分辨率：等待首帧 · 实际倍率：等待眼镜状态</string>
+    <string name="video_preview_resolution_waiting">实际分辨率：等待首帧</string>
+    <string name="video_preview_resolution">实际分辨率：%1$d×%2$d</string>
+</resources>
