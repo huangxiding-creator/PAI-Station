@@ -1,37 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView android:background="@color/page_background" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true"
+<androidx.core.widget.NestedScrollView android:background="#F0F8FC" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true"
   xmlns:android="http://schemas.android.com/apk/res/android">
-    <LinearLayout android:orientation="vertical" android:padding="0dp" android:layout_width="match_parent" android:layout_height="wrap_content">
-        <WebView android:id="@+id/v3_webview" android:layout_width="match_parent" android:layout_height="400dp" />
-        <LinearLayout android:orientation="vertical" android:padding="20.0dp" android:layout_width="match_parent" android:layout_height="wrap_content">
-        <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
-            <TextView android:textSize="24.0sp" android:textStyle="bold" android:textColor="@color/text_primary" android:id="@id/tvTitle" android:layout_width="0.0dp" android:layout_height="wrap_content" android:text="@string/app_name" android:layout_weight="1.0" />
+    <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content">
+
+        <!-- 顶部标题栏 -->
+        <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:paddingLeft="20.0dp" android:paddingRight="20.0dp" android:paddingTop="16.0dp" android:layout_width="match_parent" android:layout_height="wrap_content">
+            <TextView android:textSize="22.0sp" android:textStyle="bold" android:textColor="#08233E" android:id="@id/tvTitle" android:layout_width="0.0dp" android:layout_height="wrap_content" android:text="@string/app_name" android:layout_weight="1.0" />
             <ImageButton android:id="@id/btnSettings" android:background="?selectableItemBackgroundBorderless" android:padding="10.0dp" android:layout_width="44.0dp" android:layout_height="44.0dp" android:src="@drawable/ic_settings" android:contentDescription="@string/demo_settings" />
         </LinearLayout>
-        <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/deviceCard" android:background="@drawable/rounded_corner_bg" android:padding="20.0dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="28.0dp">
-            <ImageView android:layout_width="180.0dp" android:layout_height="96.0dp" android:src="@mipmap/icon_rokid_big" android:scaleType="centerInside" android:contentDescription="@null" />
-            <TextView android:textSize="18.0sp" android:textStyle="bold" android:textColor="@color/text_primary" android:id="@id/tvDeviceName" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8.0dp" android:text="@string/demo_rokid_glass3" />
-            <ImageView android:id="@id/ivConnectStatus" android:layout_width="80.0dp" android:layout_height="28.0dp" android:layout_marginTop="6.0dp" android:src="@mipmap/icon_to_connect2" android:scaleType="centerInside" android:contentDescription="@null" />
+
+        <!-- ===== AI 助手主卡（主角位置） ===== -->
+        <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:background="@drawable/rounded_corner_bg" android:padding="24.0dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginLeft="16.0dp" android:layout_marginRight="16.0dp" android:layout_marginTop="16.0dp">
+            <TextView android:textSize="48.0sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🌊" />
+            <TextView android:textSize="22.0sp" android:textStyle="bold" android:textColor="#08233E" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="12.0dp" android:text="小禹 · 水利安全AI助手" />
+            <TextView android:textSize="15.0sp" android:textColor="#48C0D8" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6.0dp" android:text="定量测距分析 · 视觉量化判定 · 六项机制智能落地" />
+            <TextView android:textSize="14.0sp" android:textColor="#666666" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16.0dp" android:text="佩戴眼镜后，说出「小禹」唤醒AI助手" />
+            <TextView android:textSize="13.0sp" android:textColor="#999999" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4.0dp" android:text="或点击下方按钮开始对话" />
+        </LinearLayout>
+
+        <!-- ===== 核心操作区（围绕助手） ===== -->
+        <LinearLayout android:gravity="center" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginLeft="16.0dp" android:layout_marginRight="16.0dp" android:layout_marginTop="12.0dp">
+            <LinearLayout android:gravity="center" android:orientation="vertical" android:background="@drawable/rounded_corner_bg" android:padding="16.0dp" android:layout_width="0.0dp" android:layout_height="wrap_content" android:layout_weight="1.0" android:layout_marginRight="6.0dp">
+                <TextView android:textSize="28.0sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="📸" />
+                <TextView android:textSize="13.0sp" android:textStyle="bold" android:textColor="#08233E" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4.0dp" android:text="拍照识别" />
+                <TextView android:textSize="11.0sp" android:textColor="#999999" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2.0dp" android:text="隐患即刻分析" />
+            </LinearLayout>
+            <LinearLayout android:gravity="center" android:orientation="vertical" android:background="@drawable/rounded_corner_bg" android:padding="16.0dp" android:layout_width="0.0dp" android:layout_height="wrap_content" android:layout_weight="1.0" android:layout_marginLeft="6.0dp">
+                <TextView android:textSize="28.0sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🎤" />
+                <TextView android:textSize="13.0sp" android:textStyle="bold" android:textColor="#08233E" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4.0dp" android:text="语音对话" />
+                <TextView android:textSize="11.0sp" android:textColor="#999999" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2.0dp" android:text="说出你的问题" />
+            </LinearLayout>
+            <LinearLayout android:gravity="center" android:orientation="vertical" android:background="@drawable/rounded_corner_bg" android:padding="16.0dp" android:layout_width="0.0dp" android:layout_height="wrap_content" android:layout_weight="1.0" android:layout_marginLeft="6.0dp">
+                <TextView android:textSize="28.0sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="📋" />
+                <TextView android:textSize="13.0sp" android:textStyle="bold" android:textColor="#08233E" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4.0dp" android:text="生成报告" />
+                <TextView android:textSize="11.0sp" android:textColor="#999999" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2.0dp" android:text="巡检自动出" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- ===== V3 官网 ===== -->
+        <WebView android:id="@+id/v3_webview" android:layout_width="match_parent" android:layout_height="360dp" android:layout_marginTop="12.0dp" />
+
+        <!-- ===== 设备连接（辅助区） ===== -->
+        <LinearLayout android:id="@id/deviceCard" android:orientation="vertical" android:padding="16.0dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginLeft="16.0dp" android:layout_marginRight="16.0dp" android:layout_marginTop="12.0dp" android:background="@drawable/rounded_corner_bg">
+            <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+                <ImageView android:layout_width="24.0dp" android:layout_height="24.0dp" android:src="@drawable/ic_bluetooth" android:contentDescription="@null" />
+                <TextView android:textSize="14.0sp" android:textColor="#08233E" android:id="@id/tvDeviceName" android:layout_width="0.0dp" android:layout_height="wrap_content" android:text="@string/demo_rokid_glass3" android:layout_weight="1.0" android:layout_marginLeft="8.0dp" />
+                <ImageView android:id="@id/ivConnectStatus" android:layout_width="60.0dp" android:layout_height="24.0dp" android:src="@mipmap/icon_to_connect2" android:contentDescription="@null" />
+            </LinearLayout>
             <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4.0dp">
-                <ImageView android:layout_width="18.0dp" android:layout_height="18.0dp" android:src="@drawable/ic_bluetooth" android:contentDescription="@null" />
-                <TextView android:textSize="14.0sp" android:textColor="@color/text_secondary" android:id="@id/tvConnectionState" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/demo_disconnected" android:layout_marginStart="4.0dp" />
-                <ImageView android:layout_width="18.0dp" android:layout_height="18.0dp" android:src="@drawable/ic_p2p" android:contentDescription="@null" android:layout_marginStart="12.0dp" />
-                <TextView android:textSize="12.0sp" android:textColor="@color/text_secondary" android:id="@id/tvP2PState" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/demo_p2p_disconnected_short" android:layout_marginStart="4.0dp" />
-                <androidx.appcompat.widget.AppCompatButton android:enabled="false" android:textSize="12.0sp" android:textColor="#ff008fc7" android:id="@id/btnP2P" android:background="?selectableItemBackgroundBorderless" android:paddingLeft="8.0dp" android:paddingRight="8.0dp" android:layout_width="wrap_content" android:layout_height="32.0dp" android:minWidth="0.0dp" android:minHeight="0.0dp" android:text="@string/demo_connect_p2p" android:textAllCaps="false" android:layout_marginStart="8.0dp" android:paddingHorizontal="8.0dp" />
+                <ImageView android:layout_width="16.0dp" android:layout_height="16.0dp" android:src="@drawable/ic_battery" android:contentDescription="@null" />
+                <TextView android:textSize="12.0sp" android:textColor="#666666" android:id="@id/tvBattery" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="电量 --" android:layout_marginLeft="4.0dp" />
+                <TextView android:textSize="12.0sp" android:textColor="#999999" android:id="@id/tvConnectionState" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="未连接" android:layout_marginLeft="12.0dp" />
+                <TextView android:textSize="12.0sp" android:textColor="#999999" android:id="@id/tvP2PState" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="" android:visibility="gone" />
+                <androidx.appcompat.widget.AppCompatButton android:textSize="12.0sp" android:textColor="#48C0D8" android:id="@id/btnP2P" android:background="?selectableItemBackgroundBorderless" android:layout_width="wrap_content" android:layout_height="28.0dp" android:text="P2P" android:textAllCaps="false" android:visibility="gone" />
             </LinearLayout>
-            <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6.0dp">
-                <ImageView android:layout_width="20.0dp" android:layout_height="20.0dp" android:src="@drawable/ic_battery" android:contentDescription="@null" />
-                <TextView android:textSize="14.0sp" android:textColor="@color/text_primary" android:id="@id/tvBattery" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/demo_battery_unknown" android:layout_marginStart="4.0dp" />
+            <androidx.appcompat.widget.AppCompatButton android:textSize="14.0sp" android:textColor="#FFFFFF" android:id="@id/btnConnect" android:background="@drawable/bg_rounded_button" android:layout_width="match_parent" android:layout_height="44.0dp" android:layout_marginTop="12.0dp" android:text="@string/demo_connect_glasses" android:textAllCaps="false" />
+        </LinearLayout>
+
+        <!-- ===== 更多功能入口 ===== -->
+        <LinearLayout android:orientation="vertical" android:padding="16.0dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginLeft="16.0dp" android:layout_marginRight="16.0dp" android:layout_marginTop="8.0dp" android:layout_marginBottom="16.0dp" android:background="@drawable/rounded_corner_bg">
+            <TextView android:textSize="14.0sp" android:textStyle="bold" android:textColor="#08233E" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="更多功能" />
+            <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="44.0dp" android:layout_marginTop="8.0dp">
+                <LinearLayout android:id="@id/btnAiVision" android:background="@drawable/main_menu_bg" android:gravity="center" android:orientation="vertical" android:layout_width="0.0dp" android:layout_height="match_parent" android:layout_weight="1.0" android:layout_marginRight="4.0dp">
+                    <TextView android:textSize="13.0sp" android:textColor="#08233E" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="AI识别" />
+                </LinearLayout>
+                <androidx.appcompat.widget.AppCompatButton android:textSize="13.0sp" android:textColor="#08233E" android:id="@id/btnGallery" android:background="@drawable/main_menu_bg" android:layout_width="0.0dp" android:layout_height="match_parent" android:text="相册" android:textAllCaps="false" android:layout_weight="1.0" android:layout_marginLeft="4.0dp" />
             </LinearLayout>
         </LinearLayout>
-        <androidx.appcompat.widget.AppCompatButton android:textSize="16.0sp" android:textColor="@color/white" android:id="@id/btnConnect" android:background="@drawable/bg_rounded_button" android:layout_width="match_parent" android:layout_height="52.0dp" android:layout_marginTop="18.0dp" android:text="@string/demo_connect_glasses" android:textAllCaps="false" />
-        <LinearLayout android:enabled="false" android:gravity="center" android:orientation="vertical" android:id="@id/btnAiVision" android:background="@drawable/main_menu_bg" android:paddingLeft="12.0dp" android:paddingTop="8.0dp" android:paddingRight="12.0dp" android:paddingBottom="8.0dp" android:focusable="true" android:clickable="true" android:layout_width="match_parent" android:layout_height="72.0dp" android:layout_marginTop="10.0dp" android:paddingHorizontal="12.0dp" android:paddingVertical="8.0dp">
-            <TextView android:textSize="17.0sp" android:textStyle="bold" android:textColor="@color/text_primary" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/demo_ai_vision" />
-            <TextView android:textSize="11.0sp" android:textColor="@color/text_secondary" android:gravity="center" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2.0dp" android:text="@string/demo_ai_vision_description" />
-        </LinearLayout>
-        <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="48.0dp" android:layout_marginTop="10.0dp">
-            <androidx.appcompat.widget.AppCompatButton android:textSize="15.0sp" android:textColor="@color/text_primary" android:id="@id/btnGallery" android:background="@drawable/main_menu_bg" android:layout_width="match_parent" android:layout_height="match_parent" android:text="@string/demo_gallery" android:textAllCaps="false" />
-        </LinearLayout>
-    </LinearLayout>
+
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
