@@ -1632,6 +1632,29 @@
     return-object v0
 .end method
 
+# ===== 水利安全AI眼镜: 返回键Tab回退 =====
+.method public onBackPressed()V
+    .locals 2
+
+    # V3 WebView回退
+    const v0, 0x7f080238
+    invoke-virtual {p0, v0}, Lcom/rokid/phone/ui/MainPhoneActivity;->findViewById(I)Landroid/view/View;
+    move-result-object v0
+    check-cast v0, Landroid/webkit/WebView;
+    if-eqz v0, :call_super
+
+    invoke-virtual {v0}, Landroid/webkit/WebView;->canGoBack()Z
+    move-result v1
+    if-eqz v1, :call_super
+
+    invoke-virtual {v0}, Landroid/webkit/WebView;->goBack()V
+    return-void
+
+    :call_super
+    invoke-super {p0}, Lcom/rokid/phone/base/BaseActivity;->onBackPressed()V
+    return-void
+.end method
+
 .method protected onDestroy()V
     .locals 3
 
@@ -1804,20 +1827,25 @@
     .line 124
     invoke-direct {p0}, Lcom/rokid/phone/ui/MainPhoneActivity;->continueStartup()V
 
-    # 水利安全AI眼镜: 加载V3官网WebView (findViewById方式)
+    # 水安全AI眼镜: V3官网WebView(0x7f080238=v3_webview)
     const v0, 0x7f080238
     invoke-virtual {p0, v0}, Lcom/rokid/phone/ui/MainPhoneActivity;->findViewById(I)Landroid/view/View;
     move-result-object v0
     check-cast v0, Landroid/webkit/WebView;
-    if-eqz v0, :skip_webview
+    if-eqz v0, :skip_nav
     invoke-virtual {v0}, Landroid/webkit/WebView;->getSettings()Landroid/webkit/WebSettings;
     move-result-object v1
     const/4 v2, 0x1
     invoke-virtual {v1, v2}, Landroid/webkit/WebSettings;->setJavaScriptEnabled(Z)V
     invoke-virtual {v1, v2}, Landroid/webkit/WebSettings;->setDomStorageEnabled(Z)V
+    invoke-virtual {v1, v2}, Landroid/webkit/WebSettings;->setUseWideViewPort(Z)V
+    invoke-virtual {v1, v2}, Landroid/webkit/WebSettings;->setLoadWithOverviewMode(Z)V
+    new-instance v1, Landroid/webkit/WebViewClient;
+    invoke-direct {v1}, Landroid/webkit/WebViewClient;-><init>()V
+    invoke-virtual {v0, v1}, Landroid/webkit/WebView;->setWebViewClient(Landroid/webkit/WebViewClient;)V
     const-string v1, "http://47.120.43.20:8090/"
     invoke-virtual {v0, v1}, Landroid/webkit/WebView;->loadUrl(Ljava/lang/String;)V
-    :skip_webview
+    :skip_nav
 
     .line 125
     return-void
