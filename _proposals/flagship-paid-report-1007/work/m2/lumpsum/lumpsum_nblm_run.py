@@ -440,7 +440,7 @@ async def gen_one(client, st: dict, ch: dict) -> None:
               + " < 门 " + f"{CJK_GATE:,}" + " — 重产")
     nb_id = await ensure_notebook(
         client, st, "ch" + nn,
-        "CASELAW-第12份-第" + str(no) + "章-" + ch["title"][:12])
+        "LUMPSUM-第13份-第" + str(no) + "章-" + ch["title"][:12])
     total, present = await upload_dir_3s(
         client, nb_id, UPLOAD / ("ch" + nn + "_笔记本"), "ch" + nn)
     if present < total:

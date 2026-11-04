@@ -1,0 +1,25 @@
+[exit] 未找到含美国04的代理组控制器 — 只读保持当前出口
+[conn] NB via http://127.0.0.1:7892: http=301 redirect=https://notebook.google.com/ -> 可达
+[通道] NB 可达, transport=curl_cffi 单会话开产
+[regen] ch02 旧稿 CJK 5,630 < 门 15,000 — 重产
+[nb] ch02 生成章稿 (4段指向式+CJK门扩写轮)…
+[retry] ask 第1次失败: ChatError Chat request was rate limited or rejected by the API. Wait a few seconds and try
+[retry] ask 第2次失败: ChatError Chat request was rate limited or rejected by the API. Wait a few seconds and try
+[retry] ask 第3次失败: ChatError Chat request was rate limited or rejected by the API. Wait a few seconds and try
+[!!] 第2章第1次失败(ChatError: Chat request was rate limited or rejected by the API. Wait a few seconds and try again.)——420s后重试(新client)
+[regen] ch02 旧稿 CJK 5,630 < 门 15,000 — 重产
+[nb] ch02 生成章稿 (4段指向式+CJK门扩写轮)…
+[retry] ask 第1次失败: ChatError Chat request was rate limited or rejected by the API. Wait a few seconds and try
+[retry] ask 第2次失败: ChatError Chat request was rate limited or rejected by the API. Wait a few seconds and try
+[retry] ask 第3次失败: ChatError Chat request was rate limited or rejected by the API. Wait a few seconds and try
+[!!] 第2章第2次失败(ChatError: Chat request was rate limited or rejected by the API. Wait a few seconds and try again.)——420s后重试(新client)
+[regen] ch02 旧稿 CJK 5,630 < 门 15,000 — 重产
+[!!] 第2章第3次失败(RPCError: The server rejected this request (unauthenticated).)——420s后重试(新client)
+[regen] ch02 旧稿 CJK 5,630 < 门 15,000 — 重产
+[!!] 第2章第4次失败(RPCError: The server rejected this request (unauthenticated).)——420s后重试(新client)
+[regen] ch02 旧稿 CJK 5,630 < 门 15,000 — 重产
+[!!] 第2章第5次失败(RPCError: The server rejected this request (unauthenticated).)——420s后重试(新client)
+[auth] from_storage 第1次失败(ValueError: CSRF token not found in HTML. Final URL: https://notebook.google.com/
+This may indicate th) — 冷却300s 后重试 (不切出口)
+[!!] 第2章第6次失败(ValueError: CSRF token not found in HTML. Final URL: https://notebook.google.com/
+This may indicate the page structure has changed.)——放弃续跑
