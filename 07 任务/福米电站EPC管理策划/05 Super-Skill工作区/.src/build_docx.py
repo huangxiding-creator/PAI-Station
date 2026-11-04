@@ -7,6 +7,7 @@
 """
 from __future__ import annotations
 
+import os
 import re
 import sys
 from pathlib import Path
@@ -308,6 +309,21 @@ def convert(md_text: str, doc: Document) -> None:
             p = doc.add_paragraph()
             p.paragraph_format.left_indent = Pt(20)
             add_runs_md(p, s.lstrip("> ").strip(), size=10.5)
+        elif s.startswith("![") and "](" in s:
+            # 图片: ![标题](路径)
+            m_img = re.match(r"!\[([^\]]*)\]\(([^)]+)\)", s)
+            if m_img:
+                img_path = m_img.group(2).strip()
+                if os.path.isfile(img_path):
+                    p = doc.add_paragraph()
+                    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                    r = p.add_run()
+                    r.add_picture(img_path, width=Cm(15))
+                    cap = m_img.group(1).strip()
+                    if cap:
+                        pc = doc.add_paragraph()
+                        pc.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                        set_font(pc.add_run(cap), "楷体", "KaiTi", 9, color=GRAY)
         elif s == "---":
             bottom_rule(doc.add_paragraph())
         elif s:

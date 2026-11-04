@@ -77,6 +77,7 @@ def main() -> int:
     out_name = "策划方案_初稿_v0.1.md"
     if "--out" in sys.argv:
         out_name = sys.argv[sys.argv.index("--out") + 1]
+    no_appendix = "--no-appendix" in sys.argv
     parts = [COVER]
     missing = []
     es = OUT / "_ch00_综合说明.md"
@@ -85,21 +86,25 @@ def main() -> int:
                      + es.read_text(encoding="utf-8", errors="replace"))
     else:
         missing.append("综合说明")
-    for i in range(1, 17):
-        fp = OUT / f"_ch{i:02d}.md"
+    for i in range(1, 21):            # 20章(含第4章设计院牵头EPC优势)
+        fp = OUT / f"_v2_ch{i:02d}.md"
+        if not fp.is_file():
+            fp = OUT / f"_ch{i:02d}.md"
         if fp.is_file():
             parts.append("\n\n---\n\n" + fp.read_text(encoding="utf-8",
                                                       errors="replace"))
         else:
             missing.append(f"第{i}章")
-    parts.extend(appendix_blocks())
+    if not no_appendix:
+        parts.extend(appendix_blocks())
     body = "".join(parts)
     cjk = len(re.findall(r"[一-鿿]", body))
     blanks = len(re.findall(r"【待(供给|核|续)", body))
     fp = WS / out_name
     fp.write_text(body, encoding="utf-8")
     print(f"[asm] {out_name}: {len(body):,}字 CJK {cjk:,} | "
-          f"缺章: {missing or '无'} | 留白标记 {blanks} 处")
+          f"缺章: {missing or '无'} | 留白标记 {blanks} 处"
+          + (" | 无附录交付版" if no_appendix else ""))
     return 0
 
 
