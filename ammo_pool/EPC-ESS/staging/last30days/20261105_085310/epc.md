@@ -1,9 +1,9 @@
-# 近30日社媒热度简报 | 全国 国际储能与光伏EPC总承包投标、技术路线与成本控制实战 国家层面政策文件与五年规划定位 失败案例 质疑
+# 近30日社媒热度简报 | 全国 国际储能与光伏EPC总承包投标、技术路线与成本控制实战 市场规模与近三年新签合同额趋势 官方数据
 
 本件为 last30days 渠道 (v3.30.0, 零配置公共API: Reddit/HackerNews/Polymarket/GitHub) 一次引擎运行的实测收割面。内容=命中帖文的标题、互动计数与正文/高赞评论摘录, 反映近30日英文技术社区对该主题的真实讨论热度与观点样本 (cred=media, 热度信号面)。
 
-- 检索词: 全国 国际储能与光伏EPC总承包投标、技术路线与成本控制实战 国家层面政策文件与五年规划定位 失败案例 质疑
-- 源: reddit,hackernews,polymarket,github | 窗口: 30天 (2026-10-06~2026-11-05) | 采集: 2026-11-05 09:04
+- 检索词: 全国 国际储能与光伏EPC总承包投标、技术路线与成本控制实战 市场规模与近三年新签合同额趋势 官方数据
+- 源: reddit,hackernews,polymarket,github | 窗口: 30天 (2026-10-06~2026-11-05) | 采集: 2026-11-05 09:12
 - 源健康: github=no-results, hackernews=no-results, polymarket=timeout(URL Error: timed out; URL Error: timed out), reddit=timeout(URL Error: timed out)
 
 ---
