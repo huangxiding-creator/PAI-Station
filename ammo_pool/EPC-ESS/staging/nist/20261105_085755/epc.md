@@ -1,0 +1,85 @@
+# NIST Technical Series Publications 检索简报 | 全国 国际储能与光伏EPC总承包投标、技术路线与成本控制实战 主要平台与渠道体系 官方数据
+
+本件为渠道普查纳管 (1025令) 新接入的 NIST Technical Series Publications 渠道一次引擎运行的实测收割面。内容=命中条目的标题、元信息与摘要/描述摘录 (cred=data, 结构化一手元数据面), 数字均引擎实测零手填。
+
+- 检索词: 全国 国际储能与光伏EPC总承包投标、技术路线与成本控制实战 主要平台与渠道体系 官方数据
+- 引擎: NIST Technical Series Publications (engine=nist) | 采集: 2026-11-05 09:03
+- 通道: HTTP 200 via direct | https://www.nist.gov/publications/search
+
+---
+
+## Robotic Sorting and Artificial Intelligence in Material Recovery Facilities: A Mixed-Methods Study of Published Research and Industry Perspectives
+
+*NIST 出版物检索命中*
+
+原文: https://www.nist.gov/publications/robotic-sorting-and-artificial-intelligence-material-recovery-facilities-mixed-methods
+
+**摘要/描述摘录:**
+> NIST 技术系列出版物检索命中: Robotic Sorting and Artificial Intelligence in Material Recovery Facilities: A Mixed-Methods Study of Published Research and Industry Perspectives
+
+## Thermoacoustic analysis of 3 K thermal buffer tubes and implications for miniaturization of 1 Hz pulse tube refrigerators
+
+*NIST 出版物检索命中*
+
+原文: https://www.nist.gov/publications/thermoacoustic-analysis-3-k-thermal-buffer-tubes-and-implications-miniaturization-1-hz
+
+**摘要/描述摘录:**
+> NIST 技术系列出版物检索命中: Thermoacoustic analysis of 3 K thermal buffer tubes and implications for miniaturization of 1 Hz pulse tube refrigerators
+
+## Removing Fringes from Hyperspectral Images Using Truncated-Singular Value Decomposition
+
+*NIST 出版物检索命中*
+
+原文: https://www.nist.gov/publications/removing-fringes-hyperspectral-images-using-truncated-singular-value-decomposition
+
+**摘要/描述摘录:**
+> NIST 技术系列出版物检索命中: Removing Fringes from Hyperspectral Images Using Truncated-Singular Value Decomposition
+
+## Research Challenges in Industrial Technology and Impediments to its Adoption
+
+*NIST 出版物检索命中*
+
+原文: https://www.nist.gov/publications/research-challenges-industrial-technology-and-impediments-its-adoption
+
+**摘要/描述摘录:**
+> NIST 技术系列出版物检索命中: Research Challenges in Industrial Technology and Impediments to its Adoption
+
+## Transition to Post-Quantum Cryptography Standards
+
+*NIST 出版物检索命中*
+
+原文: https://www.nist.gov/publications/transition-post-quantum-cryptography-standards
+
+**摘要/描述摘录:**
+> NIST 技术系列出版物检索命中: Transition to Post-Quantum Cryptography Standards
+
+## Conversion of Reported Temperatures from Historical Scales to the ITS-90
+
+*NIST 出版物检索命中*
+
+原文: https://www.nist.gov/publications/conversion-reported-temperatures-historical-scales-its-90
+
+**摘要/描述摘录:**
+> NIST 技术系列出版物检索命中: Conversion of Reported Temperatures from Historical Scales to the ITS-90
+
+## Advanced Sensors for Multi-Color Infrared Imaging Bolometers
+
+*NIST 出版物检索命中*
+
+原文: https://www.nist.gov/publications/advanced-sensors-multi-color-infrared-imaging-bolometers
+
+**摘要/描述摘录:**
+> NIST 技术系列出版物检索命中: Advanced Sensors for Multi-Color Infrared Imaging Bolometers
+
+## Institutional Resilience and Recovery: An Annotated Bibliography of Conceptual and Methodological Approaches for Measurement
+
+*NIST 出版物检索命中*
+
+原文: https://www.nist.gov/publications/institutional-resilience-and-recovery-annotated-bibliography-conceptual-and
+
+**摘要/描述摘录:**
+> NIST 技术系列出版物检索命中: Institutional Resilience and Recovery: An Annotated Bibliography of Conceptual and Methodological Approaches for Measurement
+
+---
+
+合计 8 条命中 (源状态与代理路径如实记录于台账; 零手填)。
