@@ -242,6 +242,16 @@ def add_table(doc, rows):
                                          for c in r)]
     if not cells:
         return
+    # 序号列: 如果首行第一列不是「序号」且首列内容不是数字编号, 自动加序号列
+    has_seq = (cells[0][0].strip() in ("序号", "编号", "No", "#") or
+               (len(cells) > 1 and re.match(r"^\d+[.、）)]?$|^[（(]\d+[）)]$",
+                                            cells[1][0].strip() if cells[1] else "")))
+    if not has_seq and len(cells) > 2:  # 3行以上才加序号
+        for i, row in enumerate(cells):
+            if i == 0:
+                row.insert(0, "序号")
+            else:
+                row.insert(0, str(i))
     ncol = max(len(r) for r in cells)
     # 计算每列最优宽度(基于内容长度, 最小2cm, 按比例分配总宽约15cm)
     col_max = [2] * ncol
