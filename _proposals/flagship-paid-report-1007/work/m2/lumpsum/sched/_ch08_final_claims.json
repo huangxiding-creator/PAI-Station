@@ -1,30 +1,43 @@
 {
  "summary": {
-  "chapter": "sched\\_ch08_final.md",
-  "bank": "sched\\bank_ch08.md",
-  "ts": "2026-11-04 18:56",
+  "chapter": "_ch08_final.md",
+  "bank": "bank_ch08.md",
+  "ts": "2026-11-05 09:36",
   "bank_sections": 38,
   "bank_empty_sections": 0,
-  "sentences_total": 407,
-  "claim_sentences": 81,
+  "sentences_total": 430,
+  "claim_sentences": 80,
   "tally": {
-   "UNVERIFIED": 69,
-   "PASS": 12
+   "PASS(bank)": 1,
+   "UNVERIFIED": 25,
+   "PASS": 54
   },
-  "pass_rate": 14.8
+  "pass_rate": 68.8
  },
  "rows": [
   {
    "n": 1,
-   "sentence": "在FIDIC《施工合同条件》（新红皮书）第20.1款及我国《建设工程施工合同（示范文本）》中，索赔被明确界定为当事人依法享有的民事权利主张[1][7]",
-   "verdict": "UNVERIFIED",
+   "sentence": "在FIDIC《施工合同条件》（新红皮书）第20.1款及我国《建设工程施工合同（示范文本）》中，索赔被明确界定为当事人依法享有的民事权利主张(P000702)",
+   "verdict": "PASS(bank)",
    "claims": 2,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
+   "evidence": "P000702",
+   "detail": "锚点节未中/bank全文兜底: 《建设工程施工合同（示范文本）》",
+   "claim_rows": [
+    {
+     "claim": "《建设工程施工合同（示范文本）》",
+     "kind": "proper",
+     "evidence": "bank全文"
+    },
+    {
+     "claim": "《施工合同条件》",
+     "kind": "proper",
+     "evidence": "P000702"
+    }
+   ]
   },
   {
    "n": 2,
-   "sentence": "若机械为外租，按承包人实际支付给第三方租赁公司的租赁费及停工期间摊销费核算[4][7]",
+   "sentence": "若机械为外租，按承包人实际支付给第三方租赁公司的租赁费及停工期间摊销费核算",
    "verdict": "UNVERIFIED",
    "claims": 1,
    "evidence": "-",
@@ -32,102 +45,454 @@
   },
   {
    "n": 3,
-   "sentence": "承包人必须提供发包人出具的《停工令》、设计变更通知、图纸延误签收单、资金欠付催告函或政府行政干预文件，证明停工系发包人原因或非承包人风险范畴[4][6][7]",
+   "sentence": "判决书首部列明：原告（反诉被告）西安怡合装饰有限责任公司，被告（反诉原告）陕西建工第六建设集团有限公司，被告中国石油天然气集团公司管材研究所",
    "verdict": "UNVERIFIED",
-   "claims": 1,
+   "claims": 3,
    "evidence": "-",
    "detail": "含数字/专名但无锚点引用"
   },
   {
    "n": 4,
-   "sentence": "2012年8月2日，陕西建工第六建设集团有限公司（六建公司，发包方）与西安怡合装饰有限责任公司（怡合公司，承包方）签订《劳务合同》，约定怡合公司承建中石油管材研究所综合楼、中试车间铝合金工程，承包方式为包工包料（含铝合金窗二次设计），合同工期50天（2012年8月25日进场，2012年10月15日完工），约定延期一天处",
-   "verdict": "UNVERIFIED",
-   "claims": 12,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
+   "sentence": "经审理查明，2012年8月2日，六建公司（甲方、发包方）和怡合公司（乙方、承包方）签订《劳务合同》，工程名称为中石油管材研究所综合楼，承包范围为综合楼、中试车间铝合金工程，承包方式为包工包料（含铝合金窗二次设计），合同工期50天（2012年8月25日进场，2012年10月15日完工），约定延期一天处罚结算款2‰，因甲方",
+   "verdict": "PASS",
+   "claims": 9,
+   "evidence": "P000701",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "10",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "15",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "2",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "2012",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "25",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "8",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "《劳务合同》",
+     "kind": "proper",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "六建公司",
+     "kind": "proper",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "怡合公司",
+     "kind": "proper",
+     "evidence": "P000701"
+    }
+   ]
   },
   {
    "n": 5,
-   "sentence": "怡合公司实际于2012年9月1日进场，2013年12月10日完工[4]",
-   "verdict": "UNVERIFIED",
+   "sentence": "怡合公司实际于2012年9月1日进场，2013年12月10日完工(P000701)",
+   "verdict": "PASS",
    "claims": 7,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
+   "evidence": "P000701",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "1",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "10",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "12",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "2012",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "2013",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "9",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "怡合公司",
+     "kind": "proper",
+     "evidence": "P000701"
+    }
+   ]
   },
   {
    "n": 6,
-   "sentence": "工程经鉴定造价为2,547,181.42元，六建公司已付147万元[4]",
-   "verdict": "UNVERIFIED",
+   "sentence": "工程经鉴定造价为2547181.42元，六建公司已付147万元(P000701)",
+   "verdict": "PASS",
    "claims": 3,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
+   "evidence": "P000701",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "147",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "2547181.42",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "六建公司",
+     "kind": "proper",
+     "evidence": "P000701"
+    }
+   ]
   },
   {
    "n": 7,
-   "sentence": "怡合公司起诉主张：由于六建公司前段工序施工工期耽误、给出窗口尺寸等施工依据较晚，导致怡合公司长期窝工，产生待工损失302,520元[4]",
-   "verdict": "UNVERIFIED",
-   "claims": 4,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
+   "sentence": "怡合公司诉称：由于被告六建公司前段工序施工工期耽误，造成怡合公司进场后长期窝工，请求判令：被告六建公司承担因其工期耽误给原告造成的待工损失302520元(P000701)",
+   "verdict": "PASS",
+   "claims": 5,
+   "evidence": "P000701",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "302520",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "于被告六建公司",
+     "kind": "proper",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "告六建公司",
+     "kind": "proper",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "怡合公司",
+     "kind": "proper",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "造成怡合公司",
+     "kind": "proper",
+     "evidence": "P000701"
+    }
+   ]
   },
   {
    "n": 8,
-   "sentence": "怡合公司提交了部分铝合金窗尺寸图、门窗大样图、证人戴某1证言（称2012年9月1日至10月31日在工地等待2个月不具备施工条件）以及怡合公司向戴某1支付待工费134,810元的收条[4]",
-   "verdict": "UNVERIFIED",
-   "claims": 9,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
+   "sentence": "怡合公司就其主张的窝工损失一节，提交了部分铝合金窗尺寸图、门窗大样图(P000701)",
+   "verdict": "PASS",
+   "claims": 1,
+   "evidence": "P000701",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "怡合公司",
+     "kind": "proper",
+     "evidence": "P000701"
+    }
+   ]
   },
   {
    "n": 9,
-   "sentence": "六建公司反诉主张：怡合公司延误工期416天，要求怡合公司支付延期交工违约金950,000元，并提交了《生产例会纪要》、《会议签到表》及《监理例会纪要》[4]",
-   "verdict": "UNVERIFIED",
-   "claims": 7,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
+   "sentence": "证人戴某1称2012年9月1日按怡合公司要求进案涉工地，但不具备施工条件，其等待两个月（2012年9月1日至2012年10月31日）后去了其它工地(P000701)",
+   "verdict": "PASS",
+   "claims": 6,
+   "evidence": "P000701",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "1",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "10",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "2012",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "31",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "9",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "日按怡合公司",
+     "kind": "proper",
+     "evidence": "P000701"
+    }
+   ]
   },
   {
    "n": 10,
-   "sentence": "怡合公司主张因六建公司前道工序延误导致的302,520元窝工待工损失能否成立[4]",
-   "verdict": "UNVERIFIED",
-   "claims": 2,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
+   "sentence": "怡合公司支付戴某1待工费134810元（怡合公司提交了《收条》）(P000701)",
+   "verdict": "PASS",
+   "claims": 3,
+   "evidence": "P000701",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "134810",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "《收条》",
+     "kind": "proper",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "怡合公司",
+     "kind": "proper",
+     "evidence": "P000701"
+    }
+   ]
   },
   {
    "n": 11,
-   "sentence": "六建公司反诉主张怡合公司逾期完工并要求950,000元违约金能否成立[4]",
-   "verdict": "UNVERIFIED",
-   "claims": 2,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
+   "sentence": "六建公司反诉称：怡合公司并未依约在约定工期内完成合同内容，实际进场时间为2012年9月1日，实际完工时间为2013年12月10日，实际延误工期416天，请求判令：怡合公司承担延期交工违约金950000元(P000701)",
+   "verdict": "PASS",
+   "claims": 9,
+   "evidence": "P000701",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "1",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "10",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "12",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "2012",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "2013",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "9",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "950000",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "六建公司",
+     "kind": "proper",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "怡合公司",
+     "kind": "proper",
+     "evidence": "P000701"
+    }
+   ]
   },
   {
    "n": 12,
-   "sentence": "怡合公司的窝工损失诉请不予支持**：合同明确约定“因甲方原因造成的工期顺延乙方以书面形式通知甲方”，但怡合公司未提交任何书面通知六建公司并经六建公司确认的凭证[4]",
-   "verdict": "UNVERIFIED",
-   "claims": 3,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
+   "sentence": "六建公司就其主张的怡合公司拖延工期一节，提交了部分《生产例会纪要》及《会议签到表》和部分《监理例会纪要》(P000701)",
+   "verdict": "PASS",
+   "claims": 4,
+   "evidence": "P000701",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "《会议签到表》",
+     "kind": "proper",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "《生产例会纪要》",
+     "kind": "proper",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "《监理例会纪要》",
+     "kind": "proper",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "六建公司就其主张的怡合公司",
+     "kind": "proper",
+     "evidence": "P000701"
+    }
+   ]
   },
   {
    "n": 13,
-   "sentence": "怡合公司提交的铝合金窗尺寸图及门窗大样图属于合同约定的二次设计范畴，不能证明六建公司给出的施工依据过晚[4]",
-   "verdict": "UNVERIFIED",
+   "sentence": "怡合公司主张的窝工损失与待工损失302520元诉请能否成立(P000701)",
+   "verdict": "PASS",
    "claims": 2,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
+   "evidence": "P000701",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "302520",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "怡合公司",
+     "kind": "proper",
+     "evidence": "P000701"
+    }
+   ]
   },
   {
    "n": 14,
-   "sentence": "证人戴某1系怡合公司工人，与怡合公司存在利害关系，且无其他客观证据佐证其出场情况，怡合公司亦未对其主张的302,520元窝工金额提供有效财务原始凭证，应承担举证不能的不利后果[4]",
-   "verdict": "UNVERIFIED",
-   "claims": 4,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
+   "sentence": "六建公司就其主张的怡合公司拖延工期一节，请求判令：怡合公司承担延期交工违约金950000元——该反诉能否成立(P000701)",
+   "verdict": "PASS",
+   "claims": 3,
+   "evidence": "P000701",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "950000",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "六建公司就其主张的怡合公司",
+     "kind": "proper",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "怡合公司",
+     "kind": "proper",
+     "evidence": "P000701"
+    }
+   ]
   },
   {
    "n": 15,
+   "sentence": "怡合公司的窝工损失诉请不予支持**：合同明确约定“因甲方原因造成的工期顺延乙方以书面形式通知甲方”，但怡合公司提交的证据无法证明其以书面形式通知六建公司并经其确认(P000701)",
+   "verdict": "PASS",
+   "claims": 2,
+   "evidence": "P000701",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "怡合公司",
+     "kind": "proper",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "无法证明其以书面形式通知六建公司",
+     "kind": "proper",
+     "evidence": "P000701"
+    }
+   ]
+  },
+  {
+   "n": 16,
+   "sentence": "按照合同约定，怡合公司施工内容包含铝合金窗的二次设计等，故其认为六建公司给出的施工依据较晚导致窝工，理由不能成立(P000701)",
+   "verdict": "PASS",
+   "claims": 2,
+   "evidence": "P000701",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "怡合公司",
+     "kind": "proper",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "故其认为六建公司",
+     "kind": "proper",
+     "evidence": "P000701"
+    }
+   ]
+  },
+  {
+   "n": 17,
+   "sentence": "证人戴某1系怡合公司工人，与怡合公司存在利害关系，且无其他客观证据佐证其出场情况，怡合公司亦未对其主张的302520元窝工金额提供有效财务原始凭证，应承担举证不能的不利后果(P000701)",
+   "verdict": "PASS",
+   "claims": 4,
+   "evidence": "P000701",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "302520",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "与怡合公司",
+     "kind": "proper",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "怡合公司",
+     "kind": "proper",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "系怡合公司",
+     "kind": "proper",
+     "evidence": "P000701"
+    }
+   ]
+  },
+  {
+   "n": 18,
    "sentence": "六建公司的工期违约金反诉诉请不予支持**：六建公司提交的例会纪要无怡合公司人员签字确认，无法明确未按期完工的真正原因",
    "verdict": "UNVERIFIED",
    "claims": 2,
@@ -135,152 +500,343 @@
    "detail": "含数字/专名但无锚点引用"
   },
   {
-   "n": 16,
-   "sentence": "且六建公司经法院释明后，未对怡合公司延误工期的天数及责任归属申请司法鉴定，举证不足[4]",
-   "verdict": "UNVERIFIED",
-   "claims": 2,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
-  },
-  {
-   "n": 17,
-   "sentence": "法院判决六建公司向怡合公司支付剩余工程款1,077,181.42元及逾期付款利息，驳回怡合公司的窝工损失诉请与六建公司的违约金反诉[4]",
-   "verdict": "UNVERIFIED",
-   "claims": 4,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
-  },
-  {
-   "n": 18,
-   "sentence": "1. **书面通知与签证是停窝工索赔的生死线**：遭遇前道工序延误或工作面未按时交付时，承包人必须严格执行合同约定的程序，第一时间向发包人及监理出具书面《工期顺延与停窝工告知函》，并要求发包人书面签认，切忌仅凭口头协商或事后补办[4]",
-   "verdict": "UNVERIFIED",
-   "claims": 1,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
-  },
-  {
    "n": 19,
-   "sentence": "2009年7月18日，温州二井建设有限公司（二井公司，原告）与山西蒲县黑龙关宏兴煤业有限公司（宏兴煤业，被告）签订《建设工程施工合同》，约定二井公司承建宏兴煤业年产15万吨矿井巷道工程，合同总价款为34,301,242.58元[5]",
-   "verdict": "UNVERIFIED",
-   "claims": 10,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
+   "sentence": "经本院释明，六建公司对其主张的延误工期未申请司法鉴定，其前述主张，证据不足(P000701)",
+   "verdict": "PASS",
+   "claims": 1,
+   "evidence": "P000701",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "六建公司",
+     "kind": "proper",
+     "evidence": "P000701"
+    }
+   ]
   },
   {
    "n": 20,
-   "sentence": "2009年11月8日，山西省煤矿企业兼并重组整合工作领导组办公室发文批复宏兴煤业兼并重组整合方案，导致工程停滞[5]",
+   "sentence": "判决六建公司支付怡合公司工程款1077181.42元并赔偿逾期付款利息",
    "verdict": "UNVERIFIED",
-   "claims": 3,
+   "claims": 2,
    "evidence": "-",
    "detail": "含数字/专名但无锚点引用"
   },
   {
    "n": 21,
-   "sentence": "2010年4月21日，二井公司向宏兴煤业提交343万元《履约保函》[5]",
-   "verdict": "UNVERIFIED",
-   "claims": 6,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
-  },
-  {
-   "n": 22,
-   "sentence": "2010年4月25日，双方签订《保函移交书及特别约定》，明确约定：“保函到期后工程仍然无法复工，被告要按保函343万金额的60%即205.80万元补偿给原告",
-   "verdict": "UNVERIFIED",
-   "claims": 7,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
-  },
-  {
-   "n": 23,
-   "sentence": "非原告原因造成不能施工完成合同，被告按合同总金额20%的利润率及矿区的设备、设施及材料折价不低于100万元支付给原告”[5]",
-   "verdict": "UNVERIFIED",
-   "claims": 2,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
-  },
-  {
-   "n": 24,
-   "sentence": "同日，二井公司向宏兴煤业出具《承诺书》，表示双方签订合同后因资源整合政策致使合同未及时履约，鉴于双方均无过错，二井公司承诺互不追究违约责任，放弃2009年7月18日至2010年4月21日期间发生的损失[5]",
-   "verdict": "UNVERIFIED",
-   "claims": 8,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
-  },
-  {
-   "n": 25,
-   "sentence": "后工程因矿井年产规模由15万吨变更为60万吨而重新审批招标，二井公司起诉要求宏兴煤业支付停窝工补偿金、保函补偿金及预期利润等[5]",
-   "verdict": "UNVERIFIED",
-   "claims": 3,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
-  },
-  {
-   "n": 26,
-   "sentence": "《保函移交书及特别约定》与二井公司出具的《承诺书》效力如何认定，二井公司是否有权主张停窝工补偿[5]",
-   "verdict": "UNVERIFIED",
-   "claims": 4,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
-  },
-  {
-   "n": 27,
-   "sentence": "按合同总金额每日万分之三（0.03%/日）计算停窝工补偿金的约定是否应当支持[5]",
+   "sentence": "驳回原告（反诉被告）西安怡合装饰有限责任公司的其余诉讼请求",
    "verdict": "UNVERIFIED",
    "claims": 1,
    "evidence": "-",
    "detail": "含数字/专名但无锚点引用"
   },
   {
-   "n": 28,
-   "sentence": "承诺书与特别约定的时间边界清晰**：二井公司出具的《承诺书》仅明确放弃2009年7月18日至2010年4月21日期间发生的损失",
-   "verdict": "UNVERIFIED",
-   "claims": 8,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
+   "n": 22,
+   "sentence": "驳回被告（反诉原告）陕西建工第六建设集团有限公司的反诉请求(P000701)",
+   "verdict": "PASS",
+   "claims": 1,
+   "evidence": "P000701",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "陕西建工第六建设集团有限公司",
+     "kind": "proper",
+     "evidence": "P000701"
+    }
+   ]
   },
   {
-   "n": 29,
-   "sentence": "而双方于2010年4月25日签署的《保函移交书及特别约定》系对2010年4月21日之后停窝工损失及后续风险的合意安排，该特别约定合法有效，宏兴煤业应当恪守履约[5]",
+   "n": 23,
+   "sentence": "判决书首部列明：上诉人（原审被告）山西蒲县黑龙关宏兴煤业有限公司，被上诉人（原审原告）温州二井建设有限公司(P000708)",
+   "verdict": "PASS",
+   "claims": 2,
+   "evidence": "P000708",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "山西蒲县黑龙关宏兴煤业有限公司",
+     "kind": "proper",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "温州二井建设有限公司",
+     "kind": "proper",
+     "evidence": "P000708"
+    }
+   ]
+  },
+  {
+   "n": 24,
+   "sentence": "原判认定：2009年5月18日，原告通过招投标方式以总价34301242.58元中标被告年产15万吨矿井巷道工程",
    "verdict": "UNVERIFIED",
    "claims": 5,
    "evidence": "-",
    "detail": "含数字/专名但无锚点引用"
   },
   {
-   "n": 30,
-   "sentence": "停窝工补偿标准按合意执行**：双方在《特别约定》中自愿确立了“按合同总金额每日万分之三（34,301,242.58元 × 0.0003 = 10,290.37元/日）”的停窝工补偿计算标准，该标准系民事主体对停工损失的预先量化处分，法院依法予以认可并判令宏兴煤业按约支付停窝工补偿款[5]",
-   "verdict": "UNVERIFIED",
+   "n": 25,
+   "sentence": "2009年7月18日，原、被告签订《建设工程施工合同》，约定原告承包被告井巷工程，合同总价款为34301242.58元(P000708)",
+   "verdict": "PASS",
+   "claims": 5,
+   "evidence": "P000708",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "18",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "2009",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "34301242.58",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "7",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "《建设工程施工合同》",
+     "kind": "proper",
+     "evidence": "P000708"
+    }
+   ]
+  },
+  {
+   "n": 26,
+   "sentence": "2009年11月8日，山西省煤矿企业兼并重组整合工作领导组办公室发文批复宏兴煤业兼并重组整合方案，导致工程停滞(P000708)",
+   "verdict": "PASS",
    "claims": 3,
+   "evidence": "P000708",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "11",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "2009",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "8",
+     "kind": "number",
+     "evidence": "P000708"
+    }
+   ]
+  },
+  {
+   "n": 27,
+   "sentence": "2010年2月1日，原、被告进行会谈，被告要求原告足额缴纳合同履约保证金343万元完善施工合同(P000708)",
+   "verdict": "PASS",
+   "claims": 4,
+   "evidence": "P000708",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "1",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "2",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "2010",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "343",
+     "kind": "number",
+     "evidence": "P000708"
+    }
+   ]
+  },
+  {
+   "n": 28,
+   "sentence": "2010年4月21日，浙江中财担保有限公司向被告出具了《履约保函》，担保金额最高不超过343万元，有效期至2011年3月6日止(P000708)",
+   "verdict": "PASS",
+   "claims": 9,
+   "evidence": "P000708",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "2010",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "2011",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "21",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "3",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "343",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "4",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "6",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "《履约保函》",
+     "kind": "proper",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "浙江中财担保有限公司",
+     "kind": "proper",
+     "evidence": "P000708"
+    }
+   ]
+  },
+  {
+   "n": 29,
+   "sentence": "2010年4月25日，原、被告签订了《保函移交书及特别约定》，明确约定：“保函到期后工程仍然无法复工，被告要按保函343万金额的60%即205.80万元补偿给原告",
+   "verdict": "UNVERIFIED",
+   "claims": 7,
    "evidence": "-",
    "detail": "含数字/专名但无锚点引用"
   },
   {
+   "n": 30,
+   "sentence": "非原告原因造成不能施工完成合同，被告按合同总金额20%的利润率及矿区的设备、设施及材料折价不低于100万元支付给原告”(P000708)",
+   "verdict": "PASS",
+   "claims": 2,
+   "evidence": "P000708",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "100",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "20",
+     "kind": "number",
+     "evidence": "P000708"
+    }
+   ]
+  },
+  {
    "n": 31,
-   "sentence": "1. **政策性停工应及时签署补充补偿协议**：因政府资源整合、规划调整等不可归责于发承包双方的原因导致项目长期停工时，承包人应积极与发包人协商，签署《停工补偿协议》，明确约定停窝工每日定额补偿标准或计算公式，避免事后因损耗难以核算而陷入举证僵局[5]",
+   "sentence": "同日，原告向被告出具了《承诺书》，表示双方签订合同后，由于山西省政府出台资源整合等政策，致使合同没有及时履约，鉴于双方都不存在过错，原告承诺双方互不追究合同违约责任，保证放弃2009年7月18日至2010年4月21日期间发生的损失(P000708)",
+   "verdict": "PASS",
+   "claims": 7,
+   "evidence": "P000708",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "18",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "2009",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "2010",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "21",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "4",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "7",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "《承诺书》",
+     "kind": "proper",
+     "evidence": "P000708"
+    }
+   ]
+  },
+  {
+   "n": 32,
+   "sentence": "2011年7月28日，被告向原告发函表示：原、被告签订的矿井井巷工程合同因企业兼并重组整合，年产变更为60万吨，原15万吨矿井的一切手续作废，需重新审批、设计和重新招标，双方签订的合同暂不能履行，工程也一直停滞(P000708)",
+   "verdict": "PASS",
+   "claims": 5,
+   "evidence": "P000708",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "15",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "2011",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "28",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "60",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "7",
+     "kind": "number",
+     "evidence": "P000708"
+    }
+   ]
+  },
+  {
+   "n": 33,
+   "sentence": "温州二井建设有限公司遂提起本案诉讼，请求按上述特别约定支付停窝工补偿等款项",
    "verdict": "UNVERIFIED",
    "claims": 1,
    "evidence": "-",
    "detail": "含数字/专名但无锚点引用"
   },
   {
-   "n": 32,
-   "sentence": "2. **放弃权利的承诺书必须精准限定时间范围**：在向发包人出具放弃索赔或免责承诺时，必须极其严密地限定放弃损失的具体起止日期（如“仅放弃2010年4月21日之前的损失”），防止发包人将承诺书无限扩张解释为放弃整段停工周期的索赔权[5]",
-   "verdict": "UNVERIFIED",
-   "claims": 3,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
-  },
-  {
-   "n": 33,
-   "sentence": "2008年7月，临泉县土地建筑工程有限公司（土建公司，原告）与阜阳市建颍房地产开发有限公司（建颍公司，被告）签订《建设工程施工合同》，承建桥口新村1、2号商住楼土建及安装工程，合同采用包工包料，总价款7,419,300元，工期280天（2008年7月28日开工）[6]",
-   "verdict": "UNVERIFIED",
-   "claims": 9,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
-  },
-  {
    "n": 34,
-   "sentence": "履约过程中，建颍公司未按期足额支付工程进度款，仅支付了480万元[6]",
+   "sentence": "原告向被告出具《承诺书》与双方签订《保函移交书及特别约定》的效力如何认定",
    "verdict": "UNVERIFIED",
    "claims": 2,
    "evidence": "-",
@@ -288,46 +844,329 @@
   },
   {
    "n": 35,
-   "sentence": "土建公司分别于2009年12月7日和2010年5月10日向监理及建颍公司发出书面《停工报告》并实施停工[6]",
+   "sentence": "承诺书与特别约定的时间边界清晰**：二井公司出具的《承诺书》仅明确放弃2009年7月18日至2010年4月21日期间发生的损失",
    "verdict": "UNVERIFIED",
-   "claims": 9,
+   "claims": 8,
    "evidence": "-",
    "detail": "含数字/专名但无锚点引用"
   },
   {
    "n": 36,
-   "sentence": "土建公司起诉要求建颍公司支付欠付工程款177万元、停工损失464,400元及违约金70万元[6]",
-   "verdict": "UNVERIFIED",
-   "claims": 4,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
+   "sentence": "而双方于2010年4月25日签署的《保函移交书及特别约定》系对2010年4月21日之后停窝工损失及后续风险的合意安排，该特别约定合法有效，宏兴煤业应当恪守履约(P000708)",
+   "verdict": "PASS",
+   "claims": 5,
+   "evidence": "P000708",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "2010",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "21",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "25",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "4",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "《保函移交书及特别约定》",
+     "kind": "proper",
+     "evidence": "P000708"
+    }
+   ]
   },
   {
    "n": 37,
-   "sentence": "建颍公司反诉主张：土建公司施工时将整栋楼柱子错位8颗达50公分，后重新砸掉重做，且施工人员少无故停工导致严重拖延工期，请求解除合同并判令土建公司赔偿损失200万元[6]",
-   "verdict": "UNVERIFIED",
-   "claims": 4,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
+   "sentence": "停窝工补偿标准按合意执行**：双方在《保函移交书及特别约定》中自愿确立了“按合同总金额每日万分之三（以合同总金额34301242.58元为基数按日计付）”的停窝工补偿计算标准，该标准系民事主体对停工损失的预先量化处分，法院依法予以认可并判令宏兴煤业按约支付停窝工补偿款(P000708)",
+   "verdict": "PASS",
+   "claims": 2,
+   "evidence": "P000708",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "34301242.58",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "《保函移交书及特别约定》",
+     "kind": "proper",
+     "evidence": "P000708"
+    }
+   ]
   },
   {
    "n": 38,
-   "sentence": "建颍公司拖欠工程款导致土建公司停工是否符合合同约定，土建公司是否有权主张工期顺延与停工损失[6]",
-   "verdict": "UNVERIFIED",
-   "claims": 2,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
+   "sentence": "2. **放弃权利的承诺书必须精准限定时间范围**：在向发包人出具放弃索赔或免责承诺时，必须极其严密地限定放弃损失的具体起止日期（如“仅放弃2010年4月21日之前的损失”），防止发包人将承诺书无限扩张解释为放弃整段停工周期的索赔权(P000708)",
+   "verdict": "PASS",
+   "claims": 3,
+   "evidence": "P000708",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "2010",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "21",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "4",
+     "kind": "number",
+     "evidence": "P000708"
+    }
+   ]
   },
   {
    "n": 39,
-   "sentence": "建颍公司以土建公司施工质量缺陷（柱错位）及工期延误为由主张解除合同及违约赔偿能否成立[6]",
-   "verdict": "UNVERIFIED",
-   "claims": 1,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
+   "sentence": "判决书首部列明：原告（反诉被告）临泉县土地建筑工程有限公司（以下简称土建公司）诉被告（反诉原告）阜阳市建颍房地产开发有限公司（以下简称建颍公司）建设工程施工合同纠纷一案(P000713)",
+   "verdict": "PASS",
+   "claims": 4,
+   "evidence": "P000713",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "临泉县土地建筑工程有限公司",
+     "kind": "proper",
+     "evidence": "P000713"
+    },
+    {
+     "claim": "以下简称土建公司",
+     "kind": "proper",
+     "evidence": "P000713"
+    },
+    {
+     "claim": "以下简称建颍公司",
+     "kind": "proper",
+     "evidence": "P000713"
+    },
+    {
+     "claim": "阜阳市建颍房地产开发有限公司",
+     "kind": "proper",
+     "evidence": "P000713"
+    }
+   ]
   },
   {
    "n": 40,
+   "sentence": "经审理查明：2008年7月，土建公司与建颍公司签订了《建设工程施工合同》，建颍公司将其开发建设的阜阳市桥口新村1、2号商住楼的土建、安装工程（不包括卫生洁具、卷闸门，不粉顶、毛墙毛地，不包括所有门及室外工程和灯具）发包给土建公司，合同约定包工包料，总价款7419300元，合同约定工期280天，2008年7月28日开工(",
+   "verdict": "PASS",
+   "claims": 8,
+   "evidence": "P000713",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "2008",
+     "kind": "number",
+     "evidence": "P000713"
+    },
+    {
+     "claim": "28",
+     "kind": "number",
+     "evidence": "P000713"
+    },
+    {
+     "claim": "7",
+     "kind": "number",
+     "evidence": "P000713"
+    },
+    {
+     "claim": "7419300",
+     "kind": "number",
+     "evidence": "P000713"
+    },
+    {
+     "claim": "《建设工程施工合同》",
+     "kind": "proper",
+     "evidence": "P000713"
+    },
+    {
+     "claim": "发包给土建公司",
+     "kind": "proper",
+     "evidence": "P000713"
+    },
+    {
+     "claim": "土建公司与建颍公司",
+     "kind": "proper",
+     "evidence": "P000713"
+    },
+    {
+     "claim": "建颍公司",
+     "kind": "proper",
+     "evidence": "P000713"
+    }
+   ]
+  },
+  {
+   "n": 41,
+   "sentence": "履约过程中，建颍公司未按期足额支付工程进度款，仅支付了480万元(P000713)",
+   "verdict": "PASS",
+   "claims": 2,
+   "evidence": "P000713",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "480",
+     "kind": "number",
+     "evidence": "P000713"
+    },
+    {
+     "claim": "建颍公司",
+     "kind": "proper",
+     "evidence": "P000713"
+    }
+   ]
+  },
+  {
+   "n": 42,
+   "sentence": "原告先后于2009年12月7日、2010年5月10日发出《停工报告》并实施停工(P000713)",
+   "verdict": "PASS",
+   "claims": 7,
+   "evidence": "P000713",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "10",
+     "kind": "number",
+     "evidence": "P000713"
+    },
+    {
+     "claim": "12",
+     "kind": "number",
+     "evidence": "P000713"
+    },
+    {
+     "claim": "2009",
+     "kind": "number",
+     "evidence": "P000713"
+    },
+    {
+     "claim": "2010",
+     "kind": "number",
+     "evidence": "P000713"
+    },
+    {
+     "claim": "5",
+     "kind": "number",
+     "evidence": "P000713"
+    },
+    {
+     "claim": "7",
+     "kind": "number",
+     "evidence": "P000713"
+    },
+    {
+     "claim": "《停工报告》",
+     "kind": "proper",
+     "evidence": "P000713"
+    }
+   ]
+  },
+  {
+   "n": 43,
+   "sentence": "原告诉请判令被告支付原告工程款1770000元，赔偿原告经济损失464400元，并支付违约金700000元(P000713)",
+   "verdict": "PASS",
+   "claims": 3,
+   "evidence": "P000713",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "1770000",
+     "kind": "number",
+     "evidence": "P000713"
+    },
+    {
+     "claim": "464400",
+     "kind": "number",
+     "evidence": "P000713"
+    },
+    {
+     "claim": "700000",
+     "kind": "number",
+     "evidence": "P000713"
+    }
+   ]
+  },
+  {
+   "n": 44,
+   "sentence": "建颍公司反诉主张：土建公司施工时将整栋楼柱子错位8颗达50公分，后重新砸掉重做，且施工人员少无故停工导致严重拖延工期，请求判令终止（解除）双方建设施工合同的行为合法有效，并由被反诉人赔偿反诉人各项损失及违约金人民币200万元整(P000713)",
+   "verdict": "PASS",
+   "claims": 3,
+   "evidence": "P000713",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "200",
+     "kind": "number",
+     "evidence": "P000713"
+    },
+    {
+     "claim": "土建公司",
+     "kind": "proper",
+     "evidence": "P000713"
+    },
+    {
+     "claim": "建颍公司",
+     "kind": "proper",
+     "evidence": "P000713"
+    }
+   ]
+  },
+  {
+   "n": 45,
+   "sentence": "被告拖欠工程款致使工期顺延并造成经济损失，原告发出停工报告及请求赔偿经济损失464400元、违约金700000元是否有据(P000713)",
+   "verdict": "PASS",
+   "claims": 2,
+   "evidence": "P000713",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "464400",
+     "kind": "number",
+     "evidence": "P000713"
+    },
+    {
+     "claim": "700000",
+     "kind": "number",
+     "evidence": "P000713"
+    }
+   ]
+  },
+  {
+   "n": 46,
+   "sentence": "反诉原告建颍公司主张：被反诉人在施工时就将整栋楼的柱子错位了八颗，错位达50公分，且经常无故停工、拖延工期——其反诉请求终止合同并索赔200万元能否成立(P000713)",
+   "verdict": "PASS",
+   "claims": 2,
+   "evidence": "P000713",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "200",
+     "kind": "number",
+     "evidence": "P000713"
+    },
+    {
+     "claim": "反诉原告建颍公司",
+     "kind": "proper",
+     "evidence": "P000713"
+    }
+   ]
+  },
+  {
+   "n": 47,
    "sentence": "承包人依据合同行使停工权合法**：建颍公司未依约足额支付工程进度款构成违约",
    "verdict": "UNVERIFIED",
    "claims": 1,
@@ -335,72 +1174,33 @@
    "detail": "含数字/专名但无锚点引用"
   },
   {
-   "n": 41,
-   "sentence": "合同明确约定甲方资金不到位工期顺延，土建公司在发包人拖欠工程款后依法履行了书面告知义务，向建颍公司及监理递交《停工报告》，其停工行为有合同依据，工期相应顺延[6]",
-   "verdict": "UNVERIFIED",
-   "claims": 3,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
-  },
-  {
-   "n": 42,
-   "sentence": "发包人反诉证据不足**：建颍公司主张土建公司施工质量存在柱子错位及无故停工，但未能向法院提交监理工程师关于质量不合格需砸掉重做的整改通知或权威质量鉴定报告，且建颍公司单方解除合同依据不足，故驳回建颍公司的反诉请求[6]",
-   "verdict": "UNVERIFIED",
-   "claims": 3,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
-  },
-  {
-   "n": 43,
-   "sentence": "判决建颍公司支付工程款及对应停工损失[6]",
-   "verdict": "UNVERIFIED",
-   "claims": 1,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
-  },
-  {
-   "n": 44,
-   "sentence": "1. **资金欠付停工必须履行法定/约定程序**：当发包人拒不支付进度款时，承包人切不可擅自自发默示停工，而应严格按照合同约定发送《催款申请书》，并在合理的催告期届满后递交正式《停工报告》，确保停工行为在法律上被认定为合法的先履行抗辩权行使[6]",
-   "verdict": "UNVERIFIED",
-   "claims": 2,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
-  },
-  {
-   "n": 45,
-   "sentence": "2. **反驳发包人质量抗辩须依赖监理与鉴定**：发包人在停工纠纷中常以“承包人质量缺陷导致整改停工”进行抗辩，承包人应严格核查发包人是否留存有监理下发的《暂停施工指令》或质量事故认定单",
-   "verdict": "UNVERIFIED",
-   "claims": 1,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
-  },
-  {
-   "n": 46,
-   "sentence": "王志平、宋建宗出资以张明龙名义拍得土地开发“祥瑞阁”A、B栋商住楼，后以880元/㎡包干价发包给谢兵，谢兵转包给李国生[8]",
-   "verdict": "UNVERIFIED",
-   "claims": 1,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
-  },
-  {
-   "n": 47,
-   "sentence": "2013年11月28日，不具备劳务资质的李国生与同样无资质的实际施工人牟锦签订《建筑工程劳务分包合同》，约定牟锦承包A、B栋主体劳务，采用固定单价155元/㎡，按实际面积收方，每完成一层支付80%工程款[8]",
-   "verdict": "UNVERIFIED",
-   "claims": 6,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
-  },
-  {
    "n": 48,
-   "sentence": "1. **中途停工必须第一时间办理“现场工程量停工节点收方”**：无论是固定总价、固定单价还是定额计价合同，一旦发生中途停工或合同解除，发承包双方必须立即对已完工程量、半成品及现场材料进行三方（发包、承包、监理）共同收方确认，签署《停工节点工程量现场签认单》[8]",
-   "verdict": "UNVERIFIED",
-   "claims": 1,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
+   "sentence": "合同明确约定甲方资金不到位工期顺延，土建公司在发包人拖欠工程款后依法履行了书面告知义务，向建颍公司及监理递交《停工报告》，其停工行为有合同依据，工期相应顺延(P000713)",
+   "verdict": "PASS",
+   "claims": 3,
+   "evidence": "P000713",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "《停工报告》",
+     "kind": "proper",
+     "evidence": "P000713"
+    },
+    {
+     "claim": "土建公司",
+     "kind": "proper",
+     "evidence": "P000713"
+    },
+    {
+     "claim": "建颍公司",
+     "kind": "proper",
+     "evidence": "P000713"
+    }
+   ]
   },
   {
    "n": 49,
-   "sentence": "根据最高人民法院（2017）最高法民再97号判决确立的全国统一裁判规则[3]：",
+   "sentence": "发包人反诉证据不足**：建颍公司答辩称原告违约在先、未按期完工、施工质量不合格，并提交了监理纪录、监理报告、公证书等证据",
    "verdict": "UNVERIFIED",
    "claims": 1,
    "evidence": "-",
@@ -408,15 +1208,15 @@
   },
   {
    "n": 50,
-   "sentence": "北京市高级人民法院**（京高法发〔2012〕245号）第24条规定：结算协议生效后，承包人以因发包人原因导致工程延期为由，要求赔偿停工、窝工等损失的，不予支持，但结算协议另有约定的除外[3]",
+   "sentence": "但反诉被告土建公司答辩指出实际开工时间是2009年2月13日、开工后仅2号楼柱子错位且系反诉人违约造成停工",
    "verdict": "UNVERIFIED",
-   "claims": 1,
+   "claims": 4,
    "evidence": "-",
    "detail": "含数字/专名但无锚点引用"
   },
   {
    "n": 51,
-   "sentence": "湖南省高级人民法院**（2023年解答）第8条规定：当事人就建设工程价款自行达成结算协议后，又以施工合同无效为由否定结算协议效力的，不予支持[3]",
+   "sentence": "1. **资金欠付停工必须履行法定/约定程序**：当发包人拒不支付进度款时，承包人切不可擅自自发默示停工，而应严格按照合同约定发送催款申请书（本案中原告提交的催款申请书即有3份在卷），并在合理的催告期届满后递交正式《停工报告》，确保停工行为在法律上被认定为合法的先履行抗辩权行使",
    "verdict": "UNVERIFIED",
    "claims": 1,
    "evidence": "-",
@@ -424,7 +1224,7 @@
   },
   {
    "n": 52,
-   "sentence": "只有口头通知无书面《停工令》",
+   "sentence": "2. **反驳发包人质量抗辩须依赖监理与鉴定**：发包人在停工纠纷中常以“承包人质量缺陷导致整改停工”进行抗辩，承包人应严格核查发包人是否留存有监理下发的《暂停施工指令》或质量事故认定单",
    "verdict": "UNVERIFIED",
    "claims": 1,
    "evidence": "-",
@@ -432,47 +1232,107 @@
   },
   {
    "n": 53,
-   "sentence": "FIDIC《施工合同条件》（新红皮书）第20.1款及国内《建设工程施工合同（示范文本）》通用条款第19.1款对索赔程序设立了三道防线[05, 17]：",
-   "verdict": "UNVERIFIED",
-   "claims": 2,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
+   "sentence": "王志平、宋建宗出资以张明龙名义拍得土地开发“祥瑞阁”A、B栋商住楼，后以880元/㎡包干价发包给谢兵，谢兵转包给李国生(P000715)",
+   "verdict": "PASS",
+   "claims": 1,
+   "evidence": "P000715",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "880",
+     "kind": "number",
+     "evidence": "P000715"
+    }
+   ]
   },
   {
    "n": 54,
-   "sentence": "发包人发出的《赶工指令》或双方签署的《压缩工期协议》具有直接法律约束力，发包人必须承担承包人因执行赶工指令而发生的全部赶工费用[05, 17]",
-   "verdict": "UNVERIFIED",
-   "claims": 2,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
+   "sentence": "2013年11月28日，不具备劳务资质的李国生与同样无资质的实际施工人牟锦签订《建筑工程劳务分包合同》，约定牟锦承包A、B栋主体劳务，采用固定单价155元/㎡，按实际面积收方，每完成一层支付80%工程款(P000715)",
+   "verdict": "PASS",
+   "claims": 6,
+   "evidence": "P000715",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "11",
+     "kind": "number",
+     "evidence": "P000715"
+    },
+    {
+     "claim": "155",
+     "kind": "number",
+     "evidence": "P000715"
+    },
+    {
+     "claim": "2013",
+     "kind": "number",
+     "evidence": "P000715"
+    },
+    {
+     "claim": "28",
+     "kind": "number",
+     "evidence": "P000715"
+    },
+    {
+     "claim": "80",
+     "kind": "number",
+     "evidence": "P000715"
+    },
+    {
+     "claim": "《建筑工程劳务分包合同》",
+     "kind": "proper",
+     "evidence": "P000715"
+    }
+   ]
   },
   {
    "n": 55,
-   "sentence": "因安排施工人员夜间赶工或在法定节假日、休息日加班，依法及依行业定额额外支付的1.5倍、2倍至3倍的人工工资补贴及夜间施工津贴[05, 17]",
-   "verdict": "UNVERIFIED",
-   "claims": 3,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
+   "sentence": "根据最高人民法院（2017）最高法民再97号判决确立的全国统一裁判规则(P000709)：",
+   "verdict": "PASS",
+   "claims": 1,
+   "evidence": "P000709",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "2017",
+     "kind": "number",
+     "evidence": "P000709"
+    }
+   ]
   },
   {
    "n": 56,
-   "sentence": "造价核算中通常参考行业标准“降效系数（如15%–30%）”或采用“修正的总费用法”进行计算[05, 17]",
-   "verdict": "UNVERIFIED",
-   "claims": 2,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
+   "sentence": "北京市高级人民法院**（京高法发〔2012〕245号）第24条规定：结算协议生效后，承包人以因发包人原因导致工程延期为由，要求赔偿停工、窝工等损失的，不予支持，但结算协议另有约定的除外(P000709)",
+   "verdict": "PASS",
+   "claims": 1,
+   "evidence": "P000709",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "2012",
+     "kind": "number",
+     "evidence": "P000709"
+    }
+   ]
   },
   {
    "n": 57,
-   "sentence": "若承包人在施工中虽然实际增加了人员和机械投入，但未能提供发包人下发的书面《赶工指令》，亦未能证明其曾向发包人申请工期顺延而被发包人明确拒绝，法院通常认定该赶工行为属于承包人为了自身施工组织效益或抢抓进度的自主行为（自愿赶工），赶工费用由承包人自行承担，不支持向发包人索赔[05, 17, 19]",
-   "verdict": "UNVERIFIED",
+   "sentence": "湖南省高级人民法院**（2023年解答）第8条规定：当事人就建设工程价款自行达成结算协议后，又以施工合同无效为由否定结算协议效力的，不予支持(P000709)",
+   "verdict": "PASS",
    "claims": 1,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
+   "evidence": "P000709",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "2023",
+     "kind": "number",
+     "evidence": "P000709"
+    }
+   ]
   },
   {
    "n": 58,
-   "sentence": "若发承包双方在合同中约定了“提前竣工奖（如每提前一天奖励X万元）”，或者在履约中签订了《提前竣工协议》，承包人按照协议实现提前交工的，法院判令发包人严格按照协议约定支付提前竣工奖金或赶工补偿[17, 19]",
+   "sentence": "只有口头通知无书面《停工令》",
    "verdict": "UNVERIFIED",
    "claims": 1,
    "evidence": "-",
@@ -480,7 +1340,7 @@
   },
   {
    "n": 59,
-   "sentence": "遭遇赶工需求时，承包人应优先促成发包人签发正式书面《赶工指令》，或签订包含赶工费用计价方法的《赶工补充协议》[05, 17]",
+   "sentence": "FIDIC《施工合同条件》（新红皮书）第20.1款及国内《建设工程施工合同（示范文本）》通用条款第19.1款对索赔程序设立了三道防线：",
    "verdict": "UNVERIFIED",
    "claims": 2,
    "evidence": "-",
@@ -488,15 +1348,15 @@
   },
   {
    "n": 60,
-   "sentence": "当发包人拒绝批准工期顺延并口头催促竣工时，承包人必须立即书面发送《关于发包人拒绝顺延工期被迫采取构造性赶工措施及赶工费用预估的函》，明确告知发包人：“因贵方拒绝顺延工期，我方为避免违约被迫采取赶工措施，由此产生的一切赶工费用及降效损失将由贵方承担”[05, 17]",
+   "sentence": "因安排施工人员夜间赶工或在法定节假日、休息日加班，依法及依行业定额额外支付的1.5倍、2倍至3倍的人工工资补贴及夜间施工津贴",
    "verdict": "UNVERIFIED",
-   "claims": 1,
+   "claims": 3,
    "evidence": "-",
    "detail": "含数字/专名但无锚点引用"
   },
   {
    "n": 61,
-   "sentence": "调解达成一致后，双方必须立即签署《停窝工损失补偿与工期顺延协议》或将其纳入《施工过程/竣工结算补充协议》[12, 17]",
+   "sentence": "造价核算中通常参考行业标准“降效系数（如15%–30%）”或采用“修正的总费用法”进行计算",
    "verdict": "UNVERIFIED",
    "claims": 2,
    "evidence": "-",
@@ -504,17 +1364,17 @@
   },
   {
    "n": 62,
-   "sentence": "严格执行索赔“28天时限规则”，遭遇停工、图纸延误或工程暂停指令时，在28天内向发包人及监理递交书面《索赔意向通知书》及《工期顺延申请表》，并保留邮寄签收凭证[05, 06, 17]",
+   "sentence": "若发承包双方在合同中约定了“提前竣工奖（如每提前一天奖励X万元）”，或者在履约中签订了《提前竣工协议》，承包人按照协议实现提前交工的，法院判令发包人严格按照协议约定支付提前竣工奖金或赶工补偿",
    "verdict": "UNVERIFIED",
-   "claims": 2,
+   "claims": 1,
    "evidence": "-",
    "detail": "含数字/专名但无锚点引用"
   },
   {
    "n": 63,
-   "sentence": "办理竣工总结算时，若停窝工损失未获得发包人满意认可，必须在《竣工结算协议》、《总结算表》及《承诺书》中载明“精准权利保留条款”，清晰写明保留索赔的具体停工事项、起止日期及金额，严防因签署总结算而导致索赔权被概括阻却[12, 20]",
+   "sentence": "严格执行索赔“28天时限规则”，遭遇停工、图纸延误或工程暂停指令时，在28天内向发包人及监理递交书面《索赔意向通知书》及《工期顺延申请表》，并保留邮寄签收凭证",
    "verdict": "UNVERIFIED",
-   "claims": 3,
+   "claims": 2,
    "evidence": "-",
    "detail": "含数字/专名但无锚点引用"
   },
@@ -559,11 +1419,53 @@
   },
   {
    "n": 68,
-   "sentence": "1. **判例语料与案号真实性边界**：本章所引用的建工判例——西安怡合装饰有限责任公司案（2015）雁民初字第09694号、温州二井建设有限公司案、临泉县土地建筑工程有限公司案、豫1133号案、（2016）冀民初143/162号案等——均取自判决语料切片实收全文",
-   "verdict": "UNVERIFIED",
-   "claims": 5,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
+   "sentence": "1. **判例语料与案号真实性边界**：本章所引用的建工判例——西安怡合装饰有限责任公司案（2015）雁民初字第09694号(P000701)、温州二井建设有限公司案（2013）浙温民终字第1545号(P000708)、临泉县土地建筑工程有限公司案（2010）阜民一初字第0032号(P000713)、牟锦与张明龙等分包",
+   "verdict": "PASS",
+   "claims": 8,
+   "evidence": "P000701,P000708,P000713,P000715,P000709",
+   "detail": "锚点全命中",
+   "claim_rows": [
+    {
+     "claim": "2010",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "2013",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "2015",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "2016",
+     "kind": "number",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "2017",
+     "kind": "number",
+     "evidence": "P000701"
+    },
+    {
+     "claim": "临泉县土地建筑工程有限公司",
+     "kind": "proper",
+     "evidence": "P000713"
+    },
+    {
+     "claim": "温州二井建设有限公司",
+     "kind": "proper",
+     "evidence": "P000708"
+    },
+    {
+     "claim": "西安怡合装饰有限责任公司",
+     "kind": "proper",
+     "evidence": "P000701"
+    }
+   ]
   },
   {
    "n": 69,
@@ -587,14 +1489,6 @@
   },
   {
    "n": 70,
-   "sentence": "如果需要生成段4《源引用对照》清单，请随时告诉我，我将为您输出包含全部20份笔记本源文件名称、编号及引用的对照表",
-   "verdict": "UNVERIFIED",
-   "claims": 1,
-   "evidence": "-",
-   "detail": "含数字/专名但无锚点引用"
-  },
-  {
-   "n": 71,
    "sentence": "(P000752) → 02_第10章_横向对标、行业借鉴与未来展望：面向_2030_的科技工程服务商演进 → 包含科技工程服务商演进路径、造价风险控制数学模型、M238争议预防框架及过程技术文件归档防线",
    "verdict": "PASS",
    "claims": 1,
@@ -609,7 +1503,7 @@
    ]
   },
   {
-   "n": 72,
+   "n": 71,
    "sentence": "(P000701) → 04_判决语料切片_停窝工损失_2017-2021.md → 包含（2015）雁民初字第09694号（西安怡合与陕西六建工期拖延及窝工待工损失案）与（2017）鄂0302民初4296号判决原文与裁判要点",
    "verdict": "PASS",
    "claims": 2,
@@ -629,7 +1523,7 @@
    ]
   },
   {
-   "n": 73,
+   "n": 72,
    "sentence": "(P000704) → 07_判决语料切片_固定总价判例泛面_2017-2021 → 包含固定总价合同下工程款结算、合同相对性与未签补充协议下已完工程量价款支付裁判规则",
    "verdict": "PASS",
    "claims": 2,
@@ -649,7 +1543,7 @@
    ]
   },
   {
-   "n": 74,
+   "n": 73,
    "sentence": "(P000705) → 08_判决语料切片_包干范围争议_2017-2021 → 包含包干范围争议判例切片、招投标程序瑕疵导致合同无效后的造价鉴定与折价补偿规则",
    "verdict": "PASS",
    "claims": 2,
@@ -669,7 +1563,7 @@
    ]
   },
   {
-   "n": 75,
+   "n": 74,
    "sentence": "(P000708) → 11_判决语料切片_情势变更调价_2009-2016.md → 包含（2013）浙温民终字第1545号（温州二井与宏兴煤业煤矿整合停窝工定额补偿案）及（2013）洛民终字第891号判决切片",
    "verdict": "PASS",
    "claims": 2,
@@ -689,7 +1583,7 @@
    ]
   },
   {
-   "n": 76,
+   "n": 75,
    "sentence": "建工合同-631f5a78 → 包含最高人民法院（2017）最高法民再97号判决确立的“竣工总结算办结后不得再提既往索赔”裁判总规则及书面权利保留条款表述实务",
    "verdict": "UNVERIFIED",
    "claims": 1,
@@ -697,7 +1591,7 @@
    "detail": "含数字/专名但无锚点引用"
   },
   {
-   "n": 77,
+   "n": 76,
    "sentence": "(P000710) → 13_判决语料切片_EPC总价包干_2017-2021 → 包含EPC总价包干合同争议判例切片、发包人违约致停工与固定总价解除清算裁决要点",
    "verdict": "PASS",
    "claims": 2,
@@ -717,7 +1611,7 @@
    ]
   },
   {
-   "n": 78,
+   "n": 77,
    "sentence": "(P000711) → 14_判决语料切片_下浮率结算_2017-2021 → 包含下浮率结算合同纠纷判例切片、工程款拖欠利息起算及第三人责任豁免裁判规则",
    "verdict": "PASS",
    "claims": 2,
@@ -737,7 +1631,7 @@
    ]
   },
   {
-   "n": 79,
+   "n": 78,
    "sentence": "(P000712) → 15_判决语料切片_工程量偏差_2017-2021 → 包含工程量偏差与漏项计价争议判例切片、造价咨询与行政审计在诉讼中的证据效力认定",
    "verdict": "PASS",
    "claims": 2,
@@ -757,7 +1651,7 @@
    ]
   },
   {
-   "n": 80,
+   "n": 79,
    "sentence": "(P000713) → 16_判决语料切片_设计变更计价_2009-2016 → 包含（2010）阜民一初字第0032号（临泉县土地建筑工程有限公司诉被告阜阳市建颍房地产开发有限公司——资金欠付停工及质量反诉案）及（2009）绍越民初字第5007号判决切片",
    "verdict": "PASS",
    "claims": 5,
@@ -792,7 +1686,7 @@
    ]
   },
   {
-   "n": 81,
+   "n": 80,
    "sentence": "(P000715) → 18_判决语料切片_固定总价解除结算_2017-2021 → 包含（2016）川08民终128号（牟锦与张明龙、李国生等分包合同无效、未完工程收方缺失及鉴定不能败诉案）判决切片",
    "verdict": "PASS",
    "claims": 3,
