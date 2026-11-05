@@ -1,0 +1,138 @@
+# sg2_Q19-E3.md
+
+来源: gap
+
+# 搜狗第二异源: 电化学储能 系统集成 技术 规范
+
+EEI: Q19-E3
+
+{
+ "query": "电化学储能 系统集成 技术 规范",
+ "hits": [
+  {
+   "title": "电化学储能系统集成技术痛点及发展趋势分析",
+   "account": "电气思享",
+   "snippet": "本文分析了电化学储能系统集成技术的关键痛点及发展趋势,涵盖了技术概念、现状、冷却与安全管理系统、储能单元集成方式及中电...",
+   "publish_time": "2026-02-07",
+   "link_url": "https://weixin.sogou.com/link?url=dn9a_-gY295K0Rci_xozVXfdMkSQTLW6cwJThYulHEtVjXrGTiVgS4T3V7gUeopmoLpUz0jl_3pnfUbQrSbHbVqXa8Fplpd9NfoQT-QuBx6C7UPD04cS547KKoSjCeLOEQ_Cpf0DAnHsCmPdbxTbPWfbAUuiQSyNf_rJparmUmVbWz2YuMcUcvVUXFa1A7dLNo1ZnaQuHVRFeP_50C_DT6qytYhIeGP_8-NgsAMqIn0h9rt7J1WEUr057pbiB4LkZwdgMa993_zf3q8uRDTfkw..&type=2&query=%E7%94%B5%E5%8C%96%E5%AD%A6%E5%82%A8%E8%83%BD %E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90 %E6%8A%80%E6%9C%AF %E8%A7%84%E8%8C%83&token=062ADA9CF19027E03B3C654685C9616B3B5AA9DC6AEBE164",
+   "token": "062ADA9CF19027E03B3C654685C9616B3B5AA9DC6AEBE164",
+   "resolved_url": "https://mp.weixin.qq.com/s?src=11&timestamp=1793843556&ver=7069&signature=jSmG206vuXGvl7yLHNignC8gJS8mWz*tDTuDVSzuoWZGngmgOadVj4AFntsg77ZvaCFxoguptrDcHaHmS-iS0uBfQ-UudBPxRw4jzsRATlXkmxT010588v3yQxQVrsMG&new=1"
+  },
+  {
+   "title": "风电场配套电化学储能系统的设计研究",
+   "account": "太阳能杂志",
+   "snippet": "电化学储能技术包括铅酸电池储能技术、铅碳电池储能技术、钠硫... 其中,储能电池集装箱内集成有磷酸铁锂电池簇系统、BMS、电池...",
+   "publish_time": "2022-11-02",
+   "link_url": "https://weixin.sogou.com/link?url=dn9a_-gY295K0Rci_xozVXfdMkSQTLW6cwJThYulHEtVjXrGTiVgS4T3V7gUeopmoLpUz0jl_3pnfUbQrSbHbVqXa8Fplpd9Vbf0Ln8wKEPrsNhMVCg0jE3KhiEGcyPbsGwpU6c0YzcexvBw6vz4xsRJf_Fj5Uo95N0DtZ2Q89XXIXUE5EA71clTNMomqvKnHP0vhnXU5pXGPNPIcusJmtBEV3hbMdaXSZkqqVXasLCm_Y9nP2wrwzDM-soBO7HpcdH784a_4ystPujwwRB2Pw..&type=2&query=%E7%94%B5%E5%8C%96%E5%AD%A6%E5%82%A8%E8%83%BD %E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90 %E6%8A%80%E6%9C%AF %E8%A7%84%E8%8C%83&token=062ADA9CF19027E03B3C654685C9616B3B5AA9DC6AEBE164",
+   "token": "062ADA9CF19027E03B3C654685C9616B3B5AA9DC6AEBE164",
+   "resolved_url": "https://mp.weixin.qq.com/s?src=11&timestamp=1793843556&ver=7069&signature=IDUgLy7ElqIq2iOf8hSlxY4D4SO*xxhFCdkFI0HUrLcZVwc7L9NCiIcG5yFSU2KGzKttSjCn8RjNkw-Sz4CZpAT7B1JVt3RB2PigWyJj3Uz8dRyZx0c3ww5xR1v4JDVI&new=1"
+  },
+  {
+   "title": "权威发布 | 电化学储能系统故障诊断与安全预警技术研究及工程应用",
+   "account": "国际清洁能源博览会",
+   "snippet": "《磷酸铁锂电池储能舱早期安全预警系统技术规范》,该标准规定... EMS等系统集成的仿真及优化设计,保障电站整体性能特性;开展...",
+   "publish_time": "2026-02-27",
+   "link_url": "https://weixin.sogou.com/link?url=dn9a_-gY295K0Rci_xozVXfdMkSQTLW6cwJThYulHEtVjXrGTiVgS4T3V7gUeopmoLpUz0jl_3pnfUbQrSbHbVqXa8Fplpd9GKllSXp8vQ50SIXkvvssBBwOlRMbT8zwTOq-yCa7exlRZ169v6OPYaBjL1dcmc5qSp32FvFwYMkTcWBfcAsGsBg-JmeTubb9cKr88350aFLO5CW_0X7WcCzwgvn7rN9IdX9wTv_9OThd4RC9qbtv5RNm_-q9TCbdSia8TgyqE_HvzHZXxeLdyg..&type=2&query=%E7%94%B5%E5%8C%96%E5%AD%A6%E5%82%A8%E8%83%BD %E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90 %E6%8A%80%E6%9C%AF %E8%A7%84%E8%8C%83&token=062ADA9CF19027E03B3C654685C9616B3B5AA9DC6AEBE164",
+   "token": "062ADA9CF19027E03B3C654685C9616B3B5AA9DC6AEBE164",
+   "resolved_url": "https://mp.weixin.qq.com/s?src=11&timestamp=1793843556&ver=7069&signature=AUxkqx*ltGE7ckAGSLIsepaITfNteSiWjSD5aCIQjgPZRgU8uN0eaATTqbFbS3OK13dCSF206wqCzM84VNPQ-kg23TbkWknvzHeNEZDheHQ-VDflTKzYI6Bm*lWodBQU&new=1"
+  },
+  {
+   "title": "新闻 | 团体标准《民用建筑电化学储能系统技术规程》启动会顺利召开",
+   "account": "直流建筑联盟",
+   "snippet": "为电化学储能系统进入民用建筑提供具体明确的参考规则和技术标准,促进新能源在低碳节能建筑中的广泛应用,同时推动行业规范化...",
+   "publish_time": "2024-01-03",
+   "link_url": "https://weixin.sogou.com/link?url=dn9a_-gY295K0Rci_xozVXfdMkSQTLW6cwJThYulHEtVjXrGTiVgS4T3V7gUeopmoLpUz0jl_3pnfUbQrSbHbVqXa8Fplpd9TVSnGM2OKBVxts5vtMmWvyJlLJQBcAdgT7pZWagtEBbtg8J0HclhCyfuFUdPgy0Wi8ZZmLABOwAelQtkruyZvmSfpXazCVbL3gVQ8xagBeMnglW1vijYk6X_GTDlNENLVqzTjoqPXHLhg1zYZzJE9Ul2iFTo94MV7WmtRW9vNERFkDr8IT4KYw..&type=2&query=%E7%94%B5%E5%8C%96%E5%AD%A6%E5%82%A8%E8%83%BD %E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90 %E6%8A%80%E6%9C%AF %E8%A7%84%E8%8C%83&token=062ADA9CF19027E03B3C654685C9616B3B5AA9DC6AEBE164",
+   "token": "062ADA9CF19027E03B3C654685C9616B3B5AA9DC6AEBE164",
+   "resolved_url": ""
+  },
+  {
+   "title": "国内外电化学储能产业消防安全标准对比分析",
+   "account": "CDCC",
+   "snippet": "工程安装疏忽、储能系统集成存在缺陷等4种因素.位于亚利桑那... 及《电化学储能系统用电池管理系统技术规范》已完成征求意见稿...",
+   "publish_time": "2021-07-06",
+   "link_url": "https://weixin.sogou.com/link?url=dn9a_-gY295K0Rci_xozVXfdMkSQTLW6cwJThYulHEtVjXrGTiVgS4T3V7gUeopmoLpUz0jl_3pnfUbQrSbHbVqXa8Fplpd9R8hj4s9Or9s4BRGY3Y1gZe3ZoqFILaQLnIOB0hNoZrWe-iAzD5oBqRLYuBYMAH6bfODJ1GBxD1ejeY0FHkpA9JsBgVLL2THWjs61JUeeY7JXsCAxavLfAs5qGVscjhyADI65380DHPdIi2Vd5YKh8FHbBbDX8XsGIxkjh05a-tgO8fIRwtipOg..&type=2&query=%E7%94%B5%E5%8C%96%E5%AD%A6%E5%82%A8%E8%83%BD %E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90 %E6%8A%80%E6%9C%AF %E8%A7%84%E8%8C%83&token=062ADA9CF19027E03B3C654685C9616B3B5AA9DC6AEBE164",
+   "token": "062ADA9CF19027E03B3C654685C9616B3B5AA9DC6AEBE164",
+   "resolved_url": ""
+  },
+  {
+   "title": "2023年中国储能系统集成产业现状简析:电化学储能装机量持续走高,技术推动行业持续发展[图]",
+   "account": "智研咨询",
+   "snippet": "主要集中在发展规划、市场机制、技术研发以及安全规范等领域.... 在电化学储能装机快速增长的推动下,我国储能系统集成行业市场...",
+   "publish_time": "2023-09-27",
+   "link_url": "https://weixin.sogou.com/link?url=dn9a_-gY295K0Rci_xozVXfdMkSQTLW6cwJThYulHEtVjXrGTiVgS4T3V7gUeopmoLpUz0jl_3pnfUbQrSbHbVqXa8Fplpd9T6M5CgP6Ix4SMzVUFpM4kPq2NqmwgG_e_dCED3qGhJbV4UOZshnd7ujhiReUP9twxOAz4EeOl00BzvhZ75zZtBdyELJdEkpopZIv3jgMkEK_pIjNim69W_lDFfSZYxABWnIomTYHhB4Lpg_romTuGUWzU-F50VliubcNzzJA7yQCYioxHkzTmA..&type=2&query=%E7%94%B5%E5%8C%96%E5%AD%A6%E5%82%A8%E8%83%BD %E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90 %E6%8A%80%E6%9C%AF %E8%A7%84%E8%8C%83&token=062ADA9CF19027E03B3C654685C9616B3B5AA9DC6AEBE164",
+   "token": "062ADA9CF19027E03B3C654685C9616B3B5AA9DC6AEBE164",
+   "resolved_url": ""
+  },
+  {
+   "title": "《移动式电化学储能系统技术要求》国标大纲通过审查",
+   "account": "储能网",
+   "snippet": "《移动式电化学储能系统技术要求》国家标准的大纲审查会.中国... 中国电科院作为该规范的牵头起草单位,具体承办此次会议并参加...",
+   "publish_time": "2017-04-05",
+   "link_url": "https://weixin.sogou.com/link?url=dn9a_-gY295K0Rci_xozVXfdMkSQTLW6ft3wfAVofsP5Peu-UiA4DJSxOBVsIfqwZgt8pPyjJ-2VgrFeYQugDorqazMdgJjjMaCZl-Ek3vwdyrC64FsLR15R2nXwIKI4Hnzd2rJFx-Q_2LfeQvl4rXPGKLVZY7mjpZdx0zMSAgDu3a_Gx86KEVGVriaL8pKdUZpo6rjt7O9niGymItwGX2n17tvZJqVOFXHCxd8h7kTP8T5NqgmHM-BkupuZmJ4dBeVkWceafCUJh3qGLhUhGroDwlouP4307nZTW4tcFUR12jiSAEMsV9XtQiZNeKlLiZqwg0yoRFw.&type=2&query=%E7%94%B5%E5%8C%96%E5%AD%A6%E5%82%A8%E8%83%BD %E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90 %E6%8A%80%E6%9C%AF %E8%A7%84%E8%8C%83&token=062ADA9CF19027E03B3C654685C9616B3B5AA9DC6AEBE164",
+   "token": "062ADA9CF19027E03B3C654685C9616B3B5AA9DC6AEBE164",
+   "resolved_url": ""
+  },
+  {
+   "title": "国家标准丨《电化学储能电站模型参数测试规程》征意见",
+   "account": "储能世界",
+   "snippet": "本文件规定了电力系统稳定分析用电化学储能电站的模型参数测试... 突破能量型、功率型等储能本体及系统集成关键技术和核心装备锂...",
+   "publish_time": "2022-10-13",
+   "link_url": "https://weixin.sogou.com/link?url=dn9a_-gY295K0Rci_xozVXfdMkSQTLW6cwJThYulHEtVjXrGTiVgS4T3V7gUeopmoLpUz0jl_3pnfUbQrSbHbVqXa8Fplpd9CL1KmSmWEzVqGRuXP-UNt7htTHr3zoEqJaLU1szlJPS2-DOYLuXG1vrXFbLtSImVkAN6hOM9VxQCyUzZ1JbNFo4tivi-vUcMb8Vic1F7Dv6R64XVOwutY6RIoHqxYkNC_aRYonNEoGUkvVWb4UMM0hnI6lZxn9exQN-o64WiyR-fxjh3za6jWA..&type=2&query=%E7%94%B5%E5%8C%96%E5%AD%A6%E5%82%A8%E8%83%BD %E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90 %E6%8A%80%E6%9C%AF %E8%A7%84%E8%8C%83&token=062ADA9CF19027E03B3C654685C9616B3B5AA9DC6AEBE164",
+   "token": "062ADA9CF19027E03B3C654685C9616B3B5AA9DC6AEBE164",
+   "resolved_url": ""
+  },
+  {
+   "title": "标准丨《大型并网光伏发电站储能系统技术规范(征求意见稿)》",
+   "account": "北极星储能网",
+   "snippet": "内蒙古太阳能行业协会发布征求《大型并网光伏发电站储能系统技术规范(征求意见稿)》意见的函.标准适用于储能方式为电化学的...",
+   "publish_time": "2022-04-04",
+   "link_url": "https://weixin.sogou.com/link?url=dn9a_-gY295K0Rci_xozVXfdMkSQTLW6cwJThYulHEtVjXrGTiVgS4T3V7gUeopmoLpUz0jl_3pnfUbQrSbHbVqXa8Fplpd9owq9n9PPcRyKUdq27qPTfsGIsXAHU__FuqovcLkCzQA1u74N3hjHw-Sk6wm9BMc1-ko5R856FjdleuyA-mJ1KTXMaF3qlEzUgerQFjTn-spbgBykjO6X9QDA5_M5sKdk1IHaPE9wq0-N0Zv1b0rZ29xZielGqPQwY2d5L9QYis3drgozfSg6bw..&type=2&query=%E7%94%B5%E5%8C%96%E5%AD%A6%E5%82%A8%E8%83%BD %E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90 %E6%8A%80%E6%9C%AF %E8%A7%84%E8%8C%83&token=062ADA9CF19027E03B3C654685C9616B3B5AA9DC6AEBE164",
+   "token": "062ADA9CF19027E03B3C654685C9616B3B5AA9DC6AEBE164",
+   "resolved_url": ""
+  },
+  {
+   "title": "科陆参编的《电化学储能系统储能变流器技术要求》国标正式发布",
+   "account": "科陆",
+   "snippet": "全面反映了电化学储能系统用储能变流器的技术水平.科陆电子是... 极大促进了行业的规范发展.作为国内少数进入海外高端市场的储...",
+   "publish_time": "2024-01-10",
+   "link_url": "https://weixin.sogou.com/link?url=dn9a_-gY295K0Rci_xozVXfdMkSQTLW6cwJThYulHEtVjXrGTiVgS4T3V7gUeopmoLpUz0jl_3pnfUbQrSbHbVqXa8Fplpd9tZoAV-s4gTn2gE2Z9z3dhGwHwx9NArUOd0zS_6jAtvDFgR_aDf_BT1qY30AepzKX-vKQrMmuM-ov9cqtJFVudpcsThHuI1sROh0WMF0R4s80enr8Zuz-nduz9n5BthZ7dWQVbdGSPiqkLVtS9rPBkErjOZKcv7KsoREYQM2cEEzP28temKTOwg..&type=2&query=%E7%94%B5%E5%8C%96%E5%AD%A6%E5%82%A8%E8%83%BD %E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90 %E6%8A%80%E6%9C%AF %E8%A7%84%E8%8C%83&token=062ADA9CF19027E03B3C654685C9616B3B5AA9DC6AEBE164",
+   "token": "062ADA9CF19027E03B3C654685C9616B3B5AA9DC6AEBE164",
+   "resolved_url": ""
+  }
+ ],
+ "articles": [
+  {
+   "url": "https://mp.weixin.qq.com/s?src=11&timestamp=1793843556&ver=7069&signature=jSmG206vuXGvl7yLHNignC8gJS8mWz*tDTuDVSzuoWZGngmgOadVj4AFntsg77ZvaCFxoguptrDcHaHmS-iS0uBfQ-UudBPxRw4jzsRATlXkmxT010588v3yQxQVrsMG&new=1",
+   "permanent_url": "",
+   "title": "电化学储能系统集成技术痛点及发展趋势分析",
+   "account": "电气思享",
+   "publish_time": "2026-02-07 08:00",
+   "text": "本文分析了电化学储能系统集成技术的关键痛点及发展趋势，涵盖了技术概念、现状、冷却与安全管理系统、储能单元集成方式及中电工程储能院的介绍。报告强调了系统集成设计及控制系统研发的重要性，并指出复合型储能技术是未来发展方向。AI导读请点击下方 阅读原文 ，下载更多资料。（本文仅供学习交流、我们注重分享，勿作商用，版权归原作者。如有异议请告知，我们会及时删除。）欢迎扫码联系小编，交流猜您喜欢★  关于推进“人工智能+”能源高质量发展实施意见的解读★  电力系统潮流计算★  广东虚拟电厂参与市场盈利商业逻辑★  智慧零碳园区解决方案★  高压电缆线路空地隧全域覆盖无人化巡视技术及应用★  基于深度神经网络的非侵入式负荷监测(NILM)★  内燃应急发电技术在电网中的应用★  关于容量-电能-绿电-辅助服务一体化设计的思考★  分布式智能电网技术体系研究★  十五五新型储能的商业模式与投资策略",
+   "html": "",
+   "images": [
+    "https://mmbiz.qpic.cn/mmbiz/OkeHUdGwqibosEaIlR1m6nNPTQT4ySnIpm76ia42PcD3Ch9fjeXoomoUfsElEtnhWWibicy5GvmUibXp77cPgpusMKw/640?wx_fmt=gif",
+    "https://mmbiz.qpic.cn/mmbiz_png/4RibiaAzdwicxkLCVl1C3YeZtUFjf7kDOhDiaeeN7CYHia2svibAOyfsiaSSPALBZRg1pke1GByVniak3lQb4WOOyiaQRZ5CmaNVstiaK9TucMHZJGrMY/640?wx_fmt=png&amp;from=appmsg",
+    "https://mmbiz.qpic.cn/mmbiz_png/4RibiaAzdwicxkPmgYMhhGOChRH4zO8lHcFE2HILhDrM169VI2h29hW3xCcTG84VNLFxiccLvbyDibTdVic31icdkhPvo01Y5QX8vhgJicdnqxTO2nA/640?wx_fmt=png&amp;from=appmsg",
+    "https://mmbiz.qpic.cn/mmbiz_png/4RibiaAzdwicxkV6xH3gDZ0Sicf0t6qd6PLkR5mbMhBK5v7duYajqZHrwSpIiazJP4hyeWbb0UcL1UFT0JEHbBeE0UNqO8dVIZsz6GvahWLQ5ZSY/640?wx_fmt=png&amp;from=appmsg",
+    "https://mmbiz.qpic.cn/mmbiz_png/4RibiaAzdwicxkunOMLRLBNUrNicGd91kvj2tpK6T8ox6AHCPMcL9Ecib5Q30R2HwsWwiaepCEwflkhTuQ9r8AgUias93VlQyI1SUWfZxJSWqyiaR78/640?wx_fmt=png&amp;from=appmsg",
+    "https://mmbiz.qpic.cn/mmbiz_png/4RibiaAzdwicxkzeZx1Lzvj8mWtlzYpFuHUEZMaKQFKKZNvCiaGc2FAzsmLoEoZ3DKBWHT5920kP72E9lr2WoqicG7jticDicjohiaCWPaq5fb8ONIY/640?wx_fmt=png&amp;from=appmsg",
+    "https://mmbiz.qpic.cn/mmbiz_png/4RibiaAzdwicxl0rTC3q4ofibCpSXPL6rY3KP9HhZJyBUdO5FW5OqtgTDa5tku0fs8YVYXvMH2Iyic1e6UFIfW0iaN6ziaDLBTsFQBLowQHE6Hl5zo/640?wx_fmt=png&amp;from=appmsg",
+    "https://mmbiz.qpic.cn/mmbiz_png/4RibiaAzdwicxl9WCgicD6UbjENbPFOwoPmykoUAEZBibiaeJibiaJyIRTiafoA7mz6dmadTFBNFvic5cDZH7aTmIfHbibNmtvXMAOqRWsxqf9I0ViasW5U/640?wx_fmt=png&amp;from=appmsg",
+    "https://mmbiz.qpic.cn/mmbiz_png/4RibiaAzdwicxlib3af0S6bh0XbAQyMnXs5xAIbqtxPSpHGbG19pW3dFEhibO2yCWdWjwegjLq5ELZyUnphC6WibD9BIg0FVkv0gbibSia0UMTFEhPI/640?wx_fmt=png&amp;from=appmsg",
+    "https://mmbiz.qpic.cn/mmbiz_png/4RibiaAzdwicxlmnIequtAv91ibKvKRm3aZucLn5J2PKSj86KgmaLuuJhNTEz75wJTWt1F3JmgYtoWicN9g6UIQB1kbZEFtLG8saRicfwSDicMAcnE/640?wx_fmt=png&amp;from=appmsg",
+    "https://mmbiz.qpic.cn/mmbiz_png/4RibiaAzdwicxmCib6tvzywlzbo33tGKUMjsTskeFYQjzqibW8zBZ4OOONYOwYfxEVxxg3XWRNKje5R1bw55qUeRCBElHHPbS2pJMic98SIvdjars/640?wx_fmt=png&amp;from=appmsg",
+    "https://mmbiz.qpic.cn/mmbiz_png/4RibiaAzdwicxmRENvSI7TQeVs1lorOmqpLeVLCDNV2z1OycUofl2yay3L596hYkkqia0m7rzaxuDynnQwAdKvf2zbS3lyj2HYNyrxY7QKNt21g/640?wx_fmt=png&amp;from=appmsg",
+    "https://mmbiz.qpic.cn/mmbiz_png/4RibiaAzdwicxma8tbsHMpJibTnLdeSBUlRrmib7pP8icHIsiaKl4icdHYRbrCGW2Y2e4Lrm8hO3nbTKUu8zticicmpzuVC4nibdWHj0lsT7jUeAue9wcY/640?wx_fmt=png&amp;from=appmsg",
+    "https://mmbiz.qpic.cn/mmbiz_png/4RibiaAzdwicxmzA3S0vNzib7vwKibQiczFLBYZKOrYK3wmBOzfFuCWRnrQKkWhFYfKklE2gtehibea8ib6uemyUtdF50aBTMrukIMntUQZBSS0lBgU/640?wx_fmt=png&amp;from=appmsg",
+    "https://mmbiz.qpic.cn/mmbiz_png/4RibiaAzdwicxnXmMyNmEzqJiaQ6Zpra0siba2QdXXKFA0HYS40aIAkEz52edj493p63bG1GYKr4Gwppfk2LyTiaymmTuhOBZFKNCeDPdS5XQjSu8/640?wx_fmt=png&amp;from=appmsg",
+    "https://mmbiz.qpic.cn/sz_mmbiz_jpg/Jg38L4an05rFiaecFZjmGpicS8HDaibJhj0qpFUBZHEHhicibOaYjCWzk4LQTo9EUrDJVxShtvoR5g9DlSeOaPRwibNQ/640?wx_fmt=jpeg&amp;from=appmsg",
+    "https://mmbiz.qpic.cn/sz_mmbiz_png/4RibiaAzdwicxk7CVGabauBZbFAWzEjKV1r8GGF1wFOnvvFqwu3x2Rm40tNMFnjn86ziaFjXPXyHyPFsiaTcBhs5SYS4xLITCllCJKuG5E7Ks70k/640?wx_fmt=png&amp;from=appmsg",
+    "https://mmbiz.qpic.cn/sz_mmbiz_png/4RibiaAzdwicxkItxL7Mqicxbs55KqTDGkPp3GvNIjJ9bDpicnj2ibZBRjl1mibicatEOknu4oGEM7rzn66PpDF9CI2u4u6ppc0tetesOGbfmf9b0lg/640?wx_fmt=png&amp;from=appmsg",
+    "https://mmbiz.qpic.cn/sz_mmbiz_png/4RibiaAzdwicxl7fGDBsegzSw2lMA8kdYLRIUo5iaKUEHGUZxMkIZP4NhOnmibXaOtNDk8c90h1LJejZ8IMCTgd3diaGElynj7Be1joV9U4oS8BkI/640?wx_fmt=png&amp;from=appmsg",
+    "https://mmbiz.qpic.cn/sz_mmbiz_png/4RibiaAzdwicxlGkM02Sy4iaFgV0r0gWMCPgKw0RhnFqdMCCvm6ssBbhYuoS1w3JmEdgqLuuStswVicUWFC3ibfIRVRXIgNRfqxh8v3twBticzNRrM/640?wx_fmt=png&amp;from=appmsg",
+    "https://mmbiz.qpic.cn/sz_mmbiz_png/4RibiaAzdwicxlKZzbVE5yW6InvA0QB8FHkvHcqq5Afo2CsIsJPe0Picfiae8JgNLdWlCrcGZhbZdlPSopVbynauMDssZicuyDsnATplEJ4wkt3s4/640?wx_fmt=png&amp;from=appmsg",
+    "https://mmbiz.qpic.cn/sz_mmbiz_png/4RibiaAzdwicxlRCNe9OI6Aicnl3LLkk3iahFWte7QHgxbZ5AsL9N4sDjHcohN3Ebjibbice8jCJBwrbuT3wp1IkAXBLlIm1WSMCicFLWrMSJsh0was/640?wx_fmt=png&amp;from=appmsg",
+    "https://mmbiz.qpic.cn/sz_mmbiz_png/4RibiaAzdwicxlknMytibGTGzDr9OAA1tVscWbTgoWjich5FwYpKc7cgrv1wtEhzT1sy7askhQDEvXylibU1mdTmq9K4biacfsnK6hhvYze6wdwmCg/640?wx_fmt=png&amp;from=appmsg",
+    "https://mmbiz.qpic.cn/sz_mmbiz_png/4RibiaAzdwicxm3iazRPlRKKdaiaibIbtBuN3NXLGzviaDbOtibeZIPp1YwaCe3wNSQxOEiac2f9JcQPkwSibgzE5IPib37DQDeNA7Xia9Mu5lnj9TyAjCo/640?wx_fmt=png&amp;from=appmsg",
+    "https://mmbiz.qpic.cn/sz_mmbiz_png/4RibiaAzdwicxmBxaDvwMlYdibOZb7SWib
+
