@@ -121,6 +121,12 @@ CHANNEL_ALIASES: dict[str, list[str]] = {
     # 「最长别名优先」规则保证 bduss 注册表条目别名「百度网盘(bduss扫码+离线下载)」
     # 命中时 bdn 的短别名「百度网盘」让位, 两键并存零冲突。
     "bdn": ["bdn", "百度网盘检索下载", "百度网盘"],
+    # 1031 pan_hunter 接入令: 全网网盘资源检索渠道 (ph.py 九活源聚合搜索 21盘
+    # 红绿灯; 绿5盘 UC/lanzou/ilanzou/feijipan/ecpan 免登直下, 黄盘免登发现;
+    # fit=数据集+通用网研; 腿=legs/pan_hunter_leg.py, 桥=api_replica_bridge
+    # CLI_ENGINES[pan_hunter]; 渠道册同步登记 named_channels — 登记=接线完成)。
+    # 与既有 pansou 渠道 (单源聚合器) 并存: pan_hunter=九源+绿盘交付面, 不吞并。
+    "pan_hunter": ["pan_hunter", "panhunter", "全网网盘资源检索"],
 }
 
 

@@ -98,6 +98,7 @@ EXTRA_TAGS: dict[str, str] = {
     "dangdang": "数据集",              # 当当图书情报 (1024 专项令)
     "metaso_kb": "数据集",             # 秘塔知识库专题·工程行业大脑 (1024 专项令)
     "bdn": "数据集/工商招投标/通用网研",   # 百度网盘检索下载 (1030 接入令, 自有SVIP8账号面)
+    "pan_hunter": "数据集/通用网研",       # 全网网盘资源检索 ph.py 九活源 (1031 接入令, 绿盘免登直下)
 }
 
 #: ---- EEI → 域标签路由 (channels_hint 渠道 id → fit 标签域) ----------------
@@ -145,6 +146,9 @@ def build_cmd(engine: str, leg: Path, campaign: str, queries: list[str],
     if engine == "bdn":                            # 下载腿: 收紧下载预算 3 件 (1030 接入令)
         return base + ["--campaign", campaign, "--queries", *queries,
                        "--download-limit", "3", "--max-mb", "100"]
+    if engine == "pan_hunter":                     # 网盘下载腿: 预算 3 件+尺寸熔断 (1031 接入令)
+        return base + ["--campaign", campaign, "--queries", *queries,
+                       "--download-limit", "3", "--max-mb", "200"]
     return base + ["--campaign", campaign, "--queries", *queries,
                    "--rows", str(rows)]
 

@@ -243,9 +243,28 @@ def add_table(doc, rows):
     if not cells:
         return
     ncol = max(len(r) for r in cells)
+    # 计算每列最优宽度(基于内容长度, 最小2cm, 按比例分配总宽约15cm)
+    col_max = [2] * ncol
+    for row in cells:
+        for j in range(min(ncol, len(row))):
+            l = len(row[j])
+            if l > col_max[j]:
+                col_max[j] = l
+    total = sum(col_max)
+    avail = 15.0  # cm
+    widths = [max(1.5, avail * c / total) for c in col_max]
+    # 归一化到总宽
+    wsum = sum(widths)
+    widths = [w * avail / wsum for w in widths]
+
     tb = doc.add_table(rows=len(cells), cols=ncol)
     tb.style = "Table Grid"
     tb.alignment = WD_TABLE_ALIGNMENT.CENTER
+    # 设置列宽
+    for j, w in enumerate(widths):
+        for i in range(len(cells)):
+            tb.cell(i, j).width = Cm(w)
+    # 填充内容
     for i, row in enumerate(cells):
         for j in range(ncol):
             txt = row[j] if j < len(row) else ""

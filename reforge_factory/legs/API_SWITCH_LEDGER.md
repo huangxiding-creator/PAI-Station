@@ -99,3 +99,15 @@ stock_financial_abstract(同花顺)+stock_zygc_em 海外收入(东财, 半年报
 `api_replica_bridge.py.bak_1030_pre_bdn` / `channel_manifest.json.bak_1030_pre_bdn`
 (+ `channels_dispatcher.py.bak_1030_pre_bdn`)。腿件 --num 兼容 --rows 别名,
 下载预算 --download-limit 全程总口径 (跨查询远端路径去重)。
+
+## 1031 增补: pan_hunter 全网网盘资源检索渠道 (用户令: PAN-HUNTER ph.py 接入调研渠道体系)
+
+| 渠道 | 数据链 | 接入点 | 冒烟结果 (实测) | 说明 |
+|---|---|---|---|---|
+| pan_hunter (全网网盘资源检索) | ph.py 九活源聚合搜索 (melost/mikuclub/panhunt/hunhepan/naspt/pansearch/tg_tgsearchers7/bixin/miosou, 零登录零凭据, 源间隔≥2s) → 21盘红绿灯命中清单 (交付层绿盘/发现层黄盘) → 三层价值判定 (绿盘免登直下+80; URL解百分码×campaign tiers T1+60/T2+25/查询词+10; 下载后门=扩展名文档面+增长熔断) → 绿盘 download (ph.py adapter 直链流式+sha1, 自写审计行 purpose=research) 落 staging → ingest | `reforge_factory/legs/pan_hunter_leg.py` (search→judge_hit 判值→download_with_cap 增长熔断→staging/files→ingest engine=pan_hunter cred=media, url=纯分享链稳定去重) + 桥 `api_replica_bridge.py CLI_ENGINES["pan_hunter"]` + 渠道册 `channel_manifest.json` named_channels (37位, id=pan_hunter) + `channel_matrix.py CHANNEL_ALIASES` (fit=数据集+通用网研) + 调度器 `channels_dispatcher.py` EXTRA_TAGS/build_cmd (下载预算 3 件×200MB 熔断) | ✅ EPC-TOP50「工程总承包 EPC」+「工程 图集」: 命中 101 条 (绿 2/黄 99, 九源实测) → 绿盘 2 件直下尝试 (1 件 UC 403 如实失败/1 件 backdrop.jpg 下载成功但 jpg 不入文档面留 staging — 扩展名门如实拦) → 命中面简报 2 件入池 7,708 字 → judge **1 有效 1 废弃** (工程总承包-EPC.md 2,083 字有效; 图集简报 off_topic 废弃) → 门槛账 60,972,439→60,974,522 (+2,083), T1 直接层 207,512→209,595 (45→46 件), 信源域 163→164; by_engine[pan_hunter]=2,083; C 轴 pan_hunter 点亮 (channels_hit 9→10, miss_not_invoked 清空 green=true) | 铁律: 只 search/download (子命令白名单代码化), **不转存/不分享/不删**; 下载物一律落 `staging/pan_hunter/<ts>/` 再入池; 零登录零凭据 (BDCLND 等分享面派生令牌除外); 法务四原则 (收割物仅内部调研语料, ph.py 自写 download_audit.jsonl); 数字零造假 (hits/字数全 CLI 实收; 绿盘面研究词稀缺=如实 0, 绿链常见媒体件=扩展名门如实拦) |
+
+.bak 四件先行: `channel_matrix.py.bak_1031_pre_panhunter` /
+`api_replica_bridge.py.bak_1031_pre_panhunter` / `channel_manifest.json.bak_1031_pre_panhunter`
++ `channels_dispatcher.py.bak_1031_pre_panhunter`。--rows 为调度器兼容别名 (ph.py search
+无 rows 形参, 收下不转发); 下载增长熔断=轮询落盘件超 --max-mb 杀进程留部分件 (网盘大文件
+护栏, ph.py 自身 1.5GB 硬帽之下的腿级护栏)。
