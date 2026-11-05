@@ -99,12 +99,12 @@ def cover(doc: Document) -> None:
     for _ in range(5):
         doc.add_paragraph()
     p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    set_font(p.add_run(TITLE), "方正小标宋简体", "SimHei", 26, True, INK)
+    set_font(p.add_run("几内亚福米多功能大坝工程"), "方正小标宋简体", "SimHei", 26, True, INK)
     p2 = doc.add_paragraph(); p2.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    set_font(p2.add_run("（送审稿）"), "楷体", "KaiTi", 16, False, GRAY)
+    set_font(p2.add_run("EPC建设管理策划方案"), "方正小标宋简体", "SimHei", 26, True, INK)
     for _ in range(6):
         doc.add_paragraph()
-    for line in ("编制单位：黄河勘测规划设计研究院有限公司", "二〇二六年十一月"):
+    for line in ("黄河勘测规划设计研究院有限公司", "二〇二六年十一月"):
         p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
         set_font(p.add_run(line), "仿宋", "FangSong", 15)
     doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
