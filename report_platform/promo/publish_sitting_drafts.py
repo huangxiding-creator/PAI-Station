@@ -16,13 +16,14 @@ from __future__ import annotations
 
 import argparse
 import io
+import os
 import sys
 import time
 from pathlib import Path
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8",
                               errors="replace")
-AUTOPUB = Path(r"E:\CPOPC\We-AIPO\autopub")
+AUTOPUB = Path(os.environ.get("WEAIPO_AUTOPUB_ROOT", r"F:\We-AIPO\autopub"))
 
 
 def main() -> int:
