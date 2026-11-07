@@ -218,3 +218,8 @@ signals_pull(19:56)七适配器零错误零发全dup(viaim4/wechat_insight48/mom
 
 ## 1107 20:05 RadarCycle轻量轮(五巡,周六;上巡19:56四巡no_proposal第52行,提前档=四巡后9分钟)——no_proposal第53行:零增量值守巡
 signals_pull(20:05)七适配器零错误零发全dup(viaim4/wechat_insight48/moments641/demand_ledger1278/topic_radar3+skip16/revision_flywheel1/refund_score0)与四巡19:56逐桶一致;主账wc实测2636行零增长(有效2632笔max_seq2632不变)→**四巡终审即本轮终审维持**:seq2631私人医疗场景过滤/seq2632自家BD三重因不入队,无翻案无重推;源龄8.9h实测(20261107.jsonl=11:11,现20:05)<24h免刷=三巡预言兑现;近3h窗(17:05→20:05)=0笔空窗实测。三族(研报/解决方案/在线部署工具)screen维持:研报=零新信号零新候选+81册SKU对抗扫描判例维持;方案=零客户锚;工具=零工具形诉求;KB禁推n25零新增→**零合格候选=radar_light_pass第53行(物理行259)静默零推送**。值守(approvals实测12行=9req+3dec零新decision,ts现算20:06):8a2e 350.7h/371d 276.0h/d8c6 191.9h/2828 122.8h/cb30 101.9h/**3bad 98.8h(死线≈11-09剩约2天最高优先值守)**全PENDING防打扰不重推;本会话无微信批复=无consume;viaim零新录音(尾=11-07 14:43 seq2631已过滤);产线=第15份EPC-OVERSEAS S2在役(框架阶段)雷达让路(串行全链令)。红线:零浏览器/无删除/未push/数字全实测。下巡23:05(源龄届时约11.9h免刷)。
+
+## 1107 20:2x 更正令 (主会话)
+- 「产线第15份EPC-OVERSEAS S2在役」为陈账作废: OVERSEAS实为第9份已收官1025, 1107误判重复生产已全线止血(m2/overseas隔离标注_DUPLICATE_INCIDENT_NOTE.md)
+- 现役=第14份ESS收官中(ch12 NBLM版收编换稿→再版→S8复盘)
+- 第15份选型: 待雷达合格候选(本轮no_proposal), 选型必验report.json在架SKU账(新铁律selection-verify-ledger-first)
