@@ -1,0 +1,116 @@
+﻿py : E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\audit\audit_nblm_run.py:79: DeprecationWarning: Non-def
+ault legacy NotebookLMClient.from_storage tuning arguments are deprecated; group them under config=ClientConfig(...). T
+hey will be removed in v1.0. Offending arguments: keepalive, limits, max_concurrent_rpcs, max_concurrent_uploads, timeo
+ut.
+At line:1 char:603
++ ... curl_cffi"; py -3 -X utf8 audit_nblm_run.py --phase chapters --chapte ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (E:\AI-Station\_...loads, timeout.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  return await NotebookLMClient.from_storage(
+E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\audit\audit_nblm_run.py:79: DeprecationWarning: Awaiting Not
+ebookLMClient.from_storage(...) is deprecated; use `async with NotebookLMClient.from_storage(...) as client:` instead. 
+The await form will be removed in v1.0.
+  return await NotebookLMClient.from_storage(
+[exit] 当前出口 🇺🇸 美国 01 (组=🇺🇸美国节点, :48899) — 只读确认, 不切换
+[conn] NB via http://127.0.0.1:7895: http=301 redirect=https://notebook.google.com/ -> 可达
+[通道] NB 可达, transport=curl_cffi 单会话开产
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\audit\audit_nblm_run.py:79: DeprecationWarning: Non-default 
+legacy NotebookLMClient.from_storage tuning arguments are deprecated; group them under config=ClientConfig(...). They w
+ill be removed in v1.0. Offending arguments: keepalive, limits, max_concurrent_rpcs, max_concurrent_uploads, timeout.
+  return await NotebookLMClient.from_storage(
+E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\audit\audit_nblm_run.py:79: DeprecationWarning: Awaiting Not
+ebookLMClient.from_storage(...) is deprecated; use `async with NotebookLMClient.from_storage(...) as client:` instead. 
+The await form will be removed in v1.0.
+  return await NotebookLMClient.from_storage(
+[!!] 第7章第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(RequestError: Failed to perform, curl: (35) Recv failure: Connection was reset. See https://curl.se/libc) — 冷却300s 后重试 (不切出口)
+[!!] 第7章第2次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(RequestError: Failed to perform, curl: (35) Recv failure: Connection was reset. See https://curl.se/libc) — 冷却300s 后重试 (不切出口)
+[!!] 第7章第3次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第7章第4次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(RequestError: Failed to perform, curl: (35) Recv failure: Connection was reset. See https://curl.se/libc) — 冷却300s 后重试 (不切出口)
+[!!] 第7章第5次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(RequestError: Failed to perform, curl: (35) Recv failure: Connection was reset. See https://curl.se/libc) — 冷却300s 后重试 (不切出口)
+[!!] 第7章第6次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——放弃续跑
+[auth] from_storage 第1次失败(RequestError: Failed to perform, curl: (35) Recv failure: Connection was reset. See https://curl.se/libc) — 冷却300s 后重试 (不切出口)
+[!!] 第8章第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第8章第2次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第8章第3次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第8章第4次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第8章第5次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第8章第6次失败(RequestError: Failed to perform, curl: (35) BoringSSL SSL_connect: Connection closed abruptly (SSL_ERROR_SYSCALL; error queue empty) i)——放弃续跑
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第9章第1次失败(RequestError: Failed to perform, curl: (35) BoringSSL SSL_connect: Connection closed abruptly (SSL_ERROR_SYSCALL; error queue empty) i)——420s后重试(新client)
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第9章第2次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(RequestError: Failed to perform, curl: (35) BoringSSL SSL_connect: Connection closed abruptly (SSL_ERROR) — 冷却300s 后重试 (不切出口)
+[!!] 第9章第3次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第9章第4次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第9章第5次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第9章第6次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——放弃续跑
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第10章第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第10章第2次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第10章第3次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第10章第4次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第10章第5次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第10章第6次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——放弃续跑
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第11章第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第11章第2次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第11章第3次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第11章第4次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第11章第5次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第11章第6次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——放弃续跑
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第12章第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第12章第2次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第12章第3次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第12章第4次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第12章第5次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[!!] 第12章第6次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——放弃续跑
+[11-11 04:16] 追版哨第1日: 睡73分钟
+[11-11 05:30] 追版第1日单发
+E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\audit\audit_nblm_run.py:79: DeprecationWarning: Non-default legacy NotebookLMClient.from_storage tuning arguments are deprecated; group them under config=ClientConfig(...). They will be removed in v1.0. Offending arguments: keepalive, limits, max_concurrent_rpcs, max_concurrent_uploads, timeout.
+  return await NotebookLMClient.from_storage(
+E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\audit\audit_nblm_run.py:79: DeprecationWarning: Awaiting NotebookLMClient.from_storage(...) is deprecated; use `async with NotebookLMClient.from_storage(...) as client:` instead. The await form will be removed in v1.0.
+  return await NotebookLMClient.from_storage(
+[exit] 当前出口 🇺🇸 美国 01 (组=🇺🇸美国节点, :48899) — 只读确认, 不切换
+[conn] NB via http://127.0.0.1:7895: http=301 redirect=https://notebook.google.com/ -> 可达
+[通道] NB 可达, transport=curl_cffi 单会话开产
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\audit\audit_nblm_run.py:79: DeprecationWarning: Non-default legacy NotebookLMClient.from_storage tuning arguments are deprecated; group them under config=ClientConfig(...). They will be removed in v1.0. Offending arguments: keepalive, limits, max_concurrent_rpcs, max_concurrent_uploads, timeout.
+  return await NotebookLMClient.from_storage(
+E:\AI-Station\_proposals\flagship-paid-report-1007\work\m2\audit\audit_nblm_run.py:79: DeprecationWarning: Awaiting NotebookLMClient.from_storage(...) is deprecated; use `async with NotebookLMClient.from_storage(...) as client:` instead. The await form will be removed in v1.0.
+  return await NotebookLMClient.from_storage(
+[!!] 第7章第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://notebook.google/ (location=unsupporte)——420s后重试(新client)
+[auth] from_storage 第1次失败(ValueError: NotebookLM redirected this request to its region / anti-abuse access gate: https://noteboo) — 冷却300s 后重试 (不切出口)
+[11-11 05:43] 第1日毕 落盘6/12
+[11-11 05:43] 追版哨第2日: 睡1426分钟
