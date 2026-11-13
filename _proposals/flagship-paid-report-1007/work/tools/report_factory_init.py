@@ -50,12 +50,16 @@ def main() -> int:
     (dst / "sched").mkdir(parents=True, exist_ok=True)
     M = {
         "EPC-ESS": ns.campaign,
-        "ess": ns.slug.lower(),
         "ESS-第14份": f"{ns.slug.upper()}-第{ns.no}份",
         "第14份": f"第{ns.no}份",
         "国际储能与光伏EPC总承包投标实战研究报告·2026": ns.report,
         "新能源EPC总承包企业高管、市场开发与投标报价人员、技术方案与成本控制工程师": ns.buyers,
         "储能与光伏EPC": ns.topic,
+        "ess_bank": f"{ns.slug.lower()}_bank",
+        'work" / "m2" / "ess"': f'work" / "m2" / "{ns.slug}"',
+        "ess_nblm": f"{ns.slug.lower()}_nblm",
+        "ess_collation": f"{ns.slug.lower()}_collation",
+        "ess_merge": f"{ns.slug.lower()}_merge",
     }
     GEN = [
         ("ess_nblm_run.py", f"{ns.slug.lower()}_nblm_run.py"),
