@@ -41,3 +41,14 @@
 断点残骸 17.75GB ｜ 战役浏览器 profile 2.4GB ｜ 缓存/临时/旧日志 ~1.5GB ｜ 跨战役重复 PDF 硬链回收 87GB（内容原位可读）｜ git gc（进行中）｜ E 批待云后删 38GB
 
 **净效果：E 盘余量 84.9GB → 208GB+**
+
+## 1114 目录梳理战役（根 221→103 项）
+
+| 变化 | 明细 |
+|---|---|
+| 新增 `90归档/` | 25 个冷项目（19-298天零活动/零引用/记忆仲裁非守护型）: AIUI-Migrate/Linzhu-Auto/Linzhu2Dify/MyDayflow/Policy-Tracking/Super-Dev/WeArticleDS3/WeChat-AI/WeChat-Report/Video-AutoPub/WenXian-AutoDown/KNOWLEDGE_BASE/zongbao-ks/zongbao_voice/docs_jev/rf_surgery/总包君资料/_vendors/_clones/_quark_recon/_bigassets_local 等 |
+| 散件归位 | md族31→`revenue-engine/docs/`(私域引擎规划档)；主题语料18→`corpus/topics/`；工具脚本8→`tools/`；fomi残件15+法国投资法典→福米任务区`synth_raw/`；SCORECARD/RESEARCH_PROJECTS/gb-data→research与docs |
+| 根目录残留 | 仅治理与配置件（CLAUDE/CONSTITUTION/DIRECTORY/README/LICENSE/.gitignore/.gitmodules/.mcp.json/cloudbaserc/conftest/pyproject/skills-lock/network_changelog） |
+| 纪律 | 活产线目录（守护型/在役型/技能引用型）一律不动；新顶层目录必须在此登记 |
+
+> 坑账：①批量归位的KEEP白名单会失效——治理件(CLAUDE/CONSTITUTION等6件)被误搬后已全部归位复核；②含空格目录名("90 归档")在bash/robocopy多层转译下全线失败——归档区定名`90归档`无空格；③目录改名被拒=进程CWD驻留，内容可搬空壳后清。
