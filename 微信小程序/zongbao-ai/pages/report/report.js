@@ -4,6 +4,7 @@
 // 合规铁律：iOS 不展示购买入口（paySupported() 门控），已解锁内容 iOS 可正常阅读。
 const theme = require('../../utils/theme');
 const api = require('../../utils/api');
+const saveToAlbum = require('../../utils/album_save').saveToAlbum;
 const pay = require('../../utils/pay');
 const md2blocks = require('../../utils/md2blocks');
 const tel = require('../../utils/telemetry'); // v0.9.6：购买入口打点（对照组——此链在真机已活）
@@ -271,21 +272,46 @@ Page({
       .then((path) => {
         pop.hideLoading(this);
         this.setData({ posterBusy: false });
-        if (wx.showShareImageMenu) {
-          wx.showShareImageMenu({
-            path,
-            entrancePath: '/pages/ask/ask', // 分享图携带小程序入口，海报码回流同页路由
-            fail: () => this._previewPoster(path)
-          });
-        } else {
-          this._previewPoster(path); // 老基础库：预览菜单可长按转发
-        }
+        // 1114 用户令：海报直存相册——保存为第一动作（修复原生分享面板
+        // 内置「保存图片」在相册权限被拒时的「暂无图片保存权限」死路）
+        this._posterPath = path;
+        // v0.9.9 硬门：自绘 sheet（图纸盘）替代原生 actionSheet
+        pop.sheet(this, {
+          kicker: 'POSTER · 海报已生成',
+          items: [{ t: '保存到相册' }, { t: '分享给朋友' }],
+        }).then((i) => {
+          if (i === 0) this._savePosterAlbum(path);
+          else this._sharePoster(path); // -1 取消/其余 → 分享面（含老面板兜底）
+        });
       })
       .catch((err) => {
         pop.hideLoading(this);
         this.setData({ posterBusy: false });
         wx.showToast({ title: api.errMsg(err, '海报生成失败'), icon: 'none' });
       });
+  },
+
+  _savePosterAlbum(path) {
+    saveToAlbum(path, this, pop)
+      .then(() => wx.showToast({ title: '已保存到相册', icon: 'success' }))
+      .catch((e) => {
+        const m = (e && e.errMsg) || '';
+        if (m.indexOf('cancel') < 0 && m.indexOf('still-denied') < 0) {
+          wx.showToast({ title: '保存未成功，请重试', icon: 'none' });
+        } // cancel/still-denied=用户主动放弃，不再打扰
+      });
+  },
+
+  _sharePoster(path) {
+    if (wx.showShareImageMenu) {
+      wx.showShareImageMenu({
+        path,
+        entrancePath: '/pages/ask/ask',
+        fail: () => this._previewPoster(path),
+      });
+    } else {
+      this._previewPoster(path);
+    }
   },
 
   _previewPoster(path) {

@@ -30,10 +30,11 @@ def read(path):
 
 # 1) app.json 结构：十页（问/锅/智/研/答/报/我 + legal + invoice + home 兼容跳板）+ 五页签
 app_json = json.load(open(os.path.join(ROOT, "app.json"), encoding="utf-8"))
-check("app.json pages 十页（问/锅/智/研/答/报/我+legal+invoice+home 兼容）", app_json["pages"] == [
+check("app.json pages 十一页（问/锅/智/研/答/报/我+legal+invoice+home+kbfactory 兼容）", app_json["pages"] == [
     "pages/ask/ask", "pages/pot/pot", "pages/zhiku/zhiku", "pages/research/research",
     "pages/report/report", "pages/answer/answer",
-    "pages/my/my", "pages/legal/privacy", "pages/invoice/invoice", "pages/home/home"])
+    "pages/my/my", "pages/legal/privacy", "pages/invoice/invoice", "pages/home/home",
+    "pages/kbfactory/kbfactory"])
 check("app.json 入口页仍是 ask（第一位）", app_json["pages"][0] == "pages/ask/ask")
 check("app.json tabBar.custom=true", app_json["tabBar"].get("custom") is True)
 check("app.json lazyCodeLoading", app_json.get("lazyCodeLoading") == "requiredComponents")
@@ -165,9 +166,9 @@ check("api potList 客户端", "potList" in api_js)
 check("api optimize 客户端（shareReward 已随分享激励下线）", "optimize" in api_js and "shareReward" not in api_js)
 
 # 版本与定位（v0.9.0）
-check("my 版本标记 v0.9.25（1019 免费优先改版+统一池）", "v0.9.25" in my_wxml)
+check("my 版本标记 v0.9.26（1114 海报直存相册）", "v0.9.26" in my_wxml)
 pkg = json.load(open(os.path.join(ROOT, "package.json"), encoding="utf-8"))
-check("package.json version=0.9.25", pkg["version"] == "0.9.25")
+check("package.json version=0.9.26", pkg["version"] == "0.9.26")
 # 1009 用户令：外观沉底（个性化低频项按用户习惯放设置区，高频额度/记录在前）——顺序即断言
 check("my 布局顺序=额度→记录→书架→外观（外观在咨询记录之后，1009 用户令）",
       my_wxml.find("外观 · APPEARANCE") > my_wxml.find("咨询记录 · RECORDS")
@@ -317,7 +318,7 @@ for _base, _dirs, _files in os.walk(ROOT):
                 _src = open(_p, encoding="utf-8").read()
             except Exception:
                 continue
-            if "onCopy" in _src or ("setClipboardData" in _src and "zhiku" not in _p and "report" not in _p) or "bindtap=\"onCopy\"" in _src:
+            if "onCopy" in _src or ("setClipboardData" in _src and "zhiku" not in _p and "report" not in _p and "kbfactory" not in _p) or "bindtap=\"onCopy\"" in _src:
                 copy_hits.append(os.path.relpath(_p, ROOT))
 check("复制全文/onCopy 全局归零（zhiku 复制链接+问报告分享除外）", not copy_hits, str(copy_hits))
 check("answer 赠次只在真实互动（v0.7.6：有用/纠错/共享入锅圈三动作，无分享导出赠次）",
@@ -441,7 +442,7 @@ check("session_key 服务端落库供查单签名（不下发客户端）",
       and "session_key=\"," not in _app_py)
 
 # E. 分享回流注释中性化 + 等待预期管理
-check("answer 分享回流注释中性（无病毒环措辞）", "携带小程序入口" in ans_js and "病毒" not in ans_js)
+check("answer 分享回流注释中性（1114 分享方法化后注释位移动）", "entrancePath: '/pages/ask/ask'" in ans_js and "病毒" not in ans_js)
 check("answer 等待文案=1020 高级感（好答案，值得等待）", "好答案，值得等待" in ans_wxml)
 
 # ══ v0.8.0 用户令 1008（咨询全免费 + 导出 ¥0.1/条 + 智库四库 34 分组同步）══
@@ -988,8 +989,8 @@ check("api.potList 带分类参数（encodeURIComponent 防中文乱码）", "en
 check("服务端公开统计端点（注册用户+咨询总数，种子不计入）",
       "public_stats" in _app_py and "POT_OPENID" in _store_py)
 # ── v0.9.11 提审前对抗审计四修（12 agents 三镜头+对抗核验，4 CONFIRMED 全修）──
-check("服务端 stats 只数 ready 行（error/孤儿 pending 不虚增公开咨询数）",
-      "AND status = 'ready'" in _store_py)
+check("服务端 stats=1029 口径（ready 全计含种子=大脑回答；error/孤儿不虚增）",
+      "WHERE status = 'ready'" in _store_py)
 check("ask 票根大数字命名诚实（v0.9.13 用户令：主位=咨询总额度 total_left，标签不标免费）",
       'qt-num-hero">{{quota.total_left}}' in ask_wxml
       and "{{quota.free_left}}" in ask_wxml
@@ -1081,11 +1082,16 @@ check("引擎道具图路由（/static/goods/{name} 白名单+防穿越+长缓�
 check("引擎道具图素材随包（static_goods/zongbaojun.jpg）",
       "GOODS_STATIC_DIR" in _app_py
       and os.path.exists(os.path.join(ENGINE, "qianwen_engine", "static_goods", "zongbaojun.jpg")))
-check("telemetry VER=0.9.25（版本横幅同步）", "var VER = '0.9.25'" in _tel_js)
+check("telemetry VER=0.9.26（版本横幅同步）", "var VER = '0.9.26'" in _tel_js)
 
 # ══ v0.9.15（1011 用户令：报告详情页 有用/分享给同行 赠次 + 研报转化海报）══
 _rp_wxml_3 = read("pages/report/report.wxml")
 _rp_js_3 = read("pages/report/report.js")
+
+check("海报直存相册 1114（两页 actionSheet 保存优先+saveImageToPhotosAlbum+openSetting 引导）",
+      "saveImageToPhotosAlbum" in read("utils/album_save.js") and "openSetting" in read("utils/album_save.js")
+      and "保存到相册" in _rp_js_3 and "_savePosterAlbum" in _rp_js_3
+      and "保存到相册" in ans_js and "_savePosterAlbum" in ans_js)
 _rp_wxss_3 = read("pages/report/report.wxss")
 _api_js_3 = read("utils/api.js")
 # 互动三件客户端腿：三 pill 在场 + 各自绑定（share=open-type 转发面板）
@@ -1194,9 +1200,9 @@ check("详情页 卷头样式在役（色带+实底卷号徽标+章行缩进）"
 check("研究页 起价数据驱动（¥498 写死根除，stats.pmin 驱动）",
       "stats.pmin" in _rsh_wxml and ">¥498<" not in _rsh_wxml
       and "pmin" in _rsh_js)
-check("版本信标 0.9.25（telemetry + my 页脚）",
-      "VER = '0.9.25'" in read("utils/telemetry.js")
-      and "v0.9.25" in read("pages/my/my.wxml"))
+check("版本信标 0.9.26（telemetry + my 页脚）",
+      "VER = '0.9.26'" in read("utils/telemetry.js")
+      and "v0.9.26" in read("pages/my/my.wxml"))
 
 # ── v0.9.18（1013 用户令①：分享全量——灰按钮根因=缺 handler，「每一个页面都可以」）──
 # REQ-001.AC1 逐页锚：本轮新补 6 页（ask/home/my/pot/invoice/legal），在役 4 页（answer/report/research/zhiku）
@@ -1225,7 +1231,7 @@ check("REQ-001.AC2 转发 path 逐页枚举（ask/home/my/invoice/legal→主入
       ",".join(p for p, exp in _share_path.items() if exp not in _share_block(_share_js[p])))
 # REQ-001.AC3 标题闭集：新补 6 页 title 字面量须以三个过审品牌前缀之一开头（静态，无诱导承诺）
 _title_re = re.compile(r"onShareAppMessage\(\)\s*\{.{0,200}?title:\s*'([^']+)'", re.S)
-_share_prefix = ("总包AI顾问-", "总包研究 · ", "总包智库 · ")
+_share_prefix = ("总包AI顾问-", "总包研究 · ", "总包智库 · ", "知识库工厂 · ")
 
 
 def _share_title(p):
@@ -1498,7 +1504,7 @@ check("api.js reportBump 端点（POST /api/report/{sku}/bump/{field} 公开计�
       "reportBump" in _api21_js and "'/api/report/' + sku + '/bump/' + field" in _api21_js,
       "reportBump 封装缺失")
 check("v0.9.25 版本横幅（my 页脚 + telemetry VER 同步 0.9.25）",
-      "v0.9.25" in _my21_wxml and "VER = '0.9.25'" in _tel21_js,
+      "v0.9.26" in _my21_wxml and "VER = '0.9.26'" in _tel21_js,
       "版本横幅不同步")
 
 fails = [c for c in checks if not c[1]]

@@ -7,6 +7,7 @@
 // v0.7.4 提审合规：AI 生成标识上屏 / 极限词归零 / 依据解读口径 / 分享回流注释中性化
 // v0.7.3（用户令）：观看/转发计数展示；互动得次授勋动画（徽章+光芒+火花+震动）；周换装主题
 const api = require('../../utils/api');
+const saveToAlbum = require('../../utils/album_save').saveToAlbum;
 const md2blocks = require('../../utils/md2blocks');
 const theme = require('../../utils/theme');
 const pay = require('../../utils/pay');
@@ -607,21 +608,45 @@ Page({
       .then((path) => {
         pop.hideLoading(this);
         this.setData({ posterBusy: false });
-        if (wx.showShareImageMenu) {
-          wx.showShareImageMenu({
-            path,
-            entrancePath: '/pages/ask/ask',   // 分享图携带小程序入口，便于扫码回流
-            fail: () => this._previewPoster(path)
-          });
-        } else {
-          this._previewPoster(path);   // 老基础库：预览菜单可长按转发
-        }
+        // 1114：海报直存相册优先（同 report 页——修复原生面板保存权限死路）
+        this._posterPath = path;
+        // v0.9.9 硬门：自绘 sheet（图纸盘）替代原生 actionSheet
+        pop.sheet(this, {
+          kicker: 'POSTER · 海报已生成',
+          items: [{ t: '保存到相册' }, { t: '分享给朋友' }],
+        }).then((i) => {
+          if (i === 0) this._savePosterAlbum(path);
+          else this._sharePoster(path); // -1 取消/其余 → 分享面（含老面板兜底）
+        });
       })
       .catch((err) => {
         pop.hideLoading(this);
         this.setData({ posterBusy: false });
         wx.showToast({ title: api.errMsg(err, '海报生成失败'), icon: 'none' });
       });
+  },
+
+  _savePosterAlbum(path) {
+    saveToAlbum(path, this, pop)
+      .then(() => wx.showToast({ title: '已保存到相册', icon: 'success' }))
+      .catch((e) => {
+        const m = (e && e.errMsg) || '';
+        if (m.indexOf('cancel') < 0 && m.indexOf('still-denied') < 0) {
+          wx.showToast({ title: '保存未成功，请重试', icon: 'none' });
+        }
+      });
+  },
+
+  _sharePoster(path) {
+    if (wx.showShareImageMenu) {
+      wx.showShareImageMenu({
+        path,
+        entrancePath: '/pages/ask/ask',
+        fail: () => this._previewPoster(path),
+      });
+    } else {
+      this._previewPoster(path);
+    }
   },
 
   _previewPoster(path) {

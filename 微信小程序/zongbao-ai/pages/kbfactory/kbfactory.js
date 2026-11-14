@@ -304,7 +304,7 @@ Page({
   onExport() {
     wx.vibrateShort({ type: 'light', fail: () => {} });
     if (!pay.paySupported()) { // iOS 双门之二（wxml 已隐藏；此为兜底守卫）
-      wx.showModal({ title: '暂不支持', content: 'iOS 暂不支持应用内购买，请在安卓设备完成解锁', showCancel: false });
+      pop.modal(this, { kicker: 'PAY · 告知', title: '暂不支持', content: 'iOS 暂不支持应用内购买，请在安卓设备完成解锁' });
       return;
     }
     if (!this.data.bp || this.data.exporting) return;
@@ -319,7 +319,7 @@ Page({
           this.setData({ exporting: false });
           pop.hideLoading(this);
           if (String(r.message || '').indexOf('取消') < 0) {
-            wx.showModal({ title: '解锁未完成', content: r.message || '支付未完成，请重试', showCancel: false });
+            pop.modal(this, { kicker: 'PAY · 告知', title: '解锁未完成', content: r.message || '支付未完成，请重试' });
           }
           return;
         }
@@ -443,7 +443,7 @@ Page({
         if (!r.ok) {
           this.setData({ ordBusy: false });
           if (String(r.message || '').indexOf('取消') < 0) {
-            wx.showModal({ title: '购买未完成', content: r.message || '支付未完成，请重试', showCancel: false });
+            pop.modal(this, { kicker: 'PAY · 告知', title: '购买未完成', content: r.message || '支付未完成，请重试' });
           }
           return;
         }
@@ -460,7 +460,7 @@ Page({
       .catch((err) => {
         this.setData({ ordBusy: false });
         console.error('[kbf-order] catch:', err);
-        wx.showModal({ title: '网络波动', content: (err && err.message) || '网络波动，请稍后重试', showCancel: false });
+        pop.modal(this, { kicker: 'NET · 告知', title: '网络波动', content: (err && err.message) || '网络波动，请稍后重试' });
       });
   },
 
@@ -475,5 +475,10 @@ Page({
       title: '知识库工厂 · 一句话免费设计你的知识库',
       path: '/pages/kbfactory/kbfactory',
     };
+  },
+
+  // 1114：全页朋友圈分享（两步门槛成对，同 report/answer 纪律）
+  onShareTimeline() {
+    return { title: '知识库工厂 · 一句话免费设计你的知识库' };
   },
 });
