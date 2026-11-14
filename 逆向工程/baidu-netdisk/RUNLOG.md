@@ -25,3 +25,7 @@
 | 10-30 00:5x | 主会话 transfer 终测：新建分享(1发)→全参转存 errno=-12（服务端拒自转，非参数问题）→取消分享(护栏真跑 errno=0)→**transfer 条件门定格 N/A（如实）**；全量单测 115/115 终验 | 3 发 |
 | 10-30 00:5x | 终局打包：项目 .gitignore（挡 484MB 流/嵌套仓/密钥）→ staged 真值扫描 CLEAN → **本地 commit（123 件/24856 行，push 冻结待令）**；记忆沉淀 bdpan-factory-project + MEMORY.md 索引 | - |
 | 10-30 01:1x | **用户令「清理，push」执行**：① 云端围栏 /API复刻测试_1029/ 整删（bdn rm --confirm errno=0，入网盘回收站可恢复，ls 复核根目录已无）② 本地 share_create.json.orig + _tmp_v1_credcheck 删除 ③ 根库存旧 mitm CA 出库（证书删除 1 确认）④ push：主仓直推实测阻断（未推区间 50353 对象含 103MB blob>GitHub 100MiB 硬限，15.03GiB pack——既账复现）→ **手术枝单树备份推送成功**（8e81e3c7 → origin/backup/bdpan-1030，SSH 443 直通）⑤ 备份常令兑现：bdpan-factory-1030.tar.gz(1.8MB) 经 **bdn 本体**上传 /AI-Station-archive/baidu-netdisk/1030/（errno=0，远端 size 对账一致） | 全清+双推 |
+| 10-30 06:3x | 治理役开役（用户令「请启动治理」）：普查纠偏（最大 blob 98.3MiB 未破硬限，真阻断=16.74GiB 总载荷）→ 分段推送守护（第3段撞 GitHub 2GiB 单包硬限）→ 他席 slim-unblock 交汇（剔12836件+快进，曾挤出 bdpan 提交→内容零丢失+补推 f9e37daf5）；两会话协调对齐；pre-commit 防膨胀闸+记忆固化 | 治理收官 |
+| 10-30 06:3x- | 剔件归档链（12,836件分桶→/AI-Station-archive/slim-excised-1030/）：三启三败（MSYS 路径翻译三连坑）→ 五启 MSYS_NO_PATHCONV=1 封死 | 后台 |
+| 10-30 09:0x | **W7 提升波收官**（用户四批全批）：--svip 提速 1.65x 命中/pull 恢复腿闭环/熔断跨进程持久化/连接池/止损/单遍哈希/尺寸门/STOKEN 自愈/clean/扫描旋钮；如实红：restore 双死/空文件死/filediff GET 挂死(新发现)/秒传回喂死；163/163 单测(+48) → judge 终审中 | 32/33 发 |
+| 10-30 12:46 | **剔件归档终账：24 件 v2 全量 20.41GiB 零缺口闭环**（乐奇 11 片[1-11]+corpus 4+9 桶各 1；垃圾 11 件 12.32GiB 已按用户令清入回收站）。九启曲折账：MSYS 三坑/清单三倍膨胀(事故)/真 20012 限流(W7 熔断首功)/'w'模式单行雷/片3 两连败→DATA_TIMEOUT (10,300)→(30,900) 根治。唯一缺口：源清单 1 件文件名编码损坏（09 发布桶 webm）无法定位，如实留案 | 12,835/12,836 |

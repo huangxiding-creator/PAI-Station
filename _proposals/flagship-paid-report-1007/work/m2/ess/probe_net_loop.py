@@ -18,7 +18,22 @@ def probe():
     return code, redir
 
 
+def runner_alive() -> bool:
+    r = subprocess.run(
+        ["powershell.exe", "-NoProfile", "-Command",
+         "(Get-CimInstance Win32_Process -Filter \"Name like 'python%'\" | "
+         "Where-Object {$_.CommandLine -match 'ess_nblm_run'}).Count"],
+        capture_output=True, text=True, timeout=60)
+    try:
+        return int((r.stdout or "0").strip()) > 0
+    except ValueError:
+        return False
+
+
 def launch_ch12():
+    if runner_alive():
+        print("跑者已在位, 不重复拉起 (防双开)", flush=True)
+        return
     r = subprocess.run(
         ["powershell.exe", "-NoProfile", "-Command",
          "$env:NBLM_PROXY='http://127.0.0.1:7895';"
@@ -29,8 +44,8 @@ def launch_ch12():
          "-RedirectStandardOutput 'E:\\AI-Station\\_proposals\\flagship-paid-report-1007\\work\\m2\\ess\\nblm_ch12.log' "
          "-RedirectStandardError 'E:\\AI-Station\\_proposals\\flagship-paid-report-1007\\work\\m2\\ess\\nblm_ch12.err.log' "
          "-PassThru; Write-Output ('RUNNER-UP:' + $p.Id)"],
-        capture_output=True, text=True, timeout=30)
-    print(r.stdout.strip() or r.stderr.strip()[:100], flush=True)
+        capture_output=True, text=True, timeout=120)
+    print((r.stdout or r.stderr[:100]).strip(), flush=True)
 
 
 if __name__ == "__main__":
@@ -41,10 +56,25 @@ if __name__ == "__main__":
             code, redir = probe()
         except Exception as e:
             code, redir = "ERR", str(e)[:40]
-        print(f"[netprobe {i} {time.strftime('%H:%M')}] http={code} redir={redir[:60]}", flush=True)
+        mark = ""
         if code in ("200", "301", "302") and "unsupported" not in redir:
-            print("NET-RECOVERED! 拉跑者补ch12", flush=True)
-            launch_ch12()
-            raise SystemExit(0)
-    print("6小时未恢复 — 等用户网络动作", flush=True)
+            mark = " [GOOD窗口]"
+        print(f"[netprobe {i} {time.strftime('%H:%M')}] http={code} redir={redir[:60]}{mark}", flush=True)
+        if mark:
+            try:
+                launch_ch12()
+            except Exception as e:
+                print("launch 异常:", str(e)[:80], flush=True)
+        # 章账12 = 终局
+        try:
+            import json as _j
+            st = _j.load(open("sched/nblm_state.json", encoding="utf-8"))
+            if len(st.get("chapters", {})) >= 12:
+                print("ALL-12! ch12 已落账, 哨兵收岗", flush=True)
+                raise SystemExit(0)
+        except SystemExit:
+            raise
+        except Exception:
+            pass
+    print("6小时窗口哨耗尽 — 等用户网络动作", flush=True)
     raise SystemExit(1)

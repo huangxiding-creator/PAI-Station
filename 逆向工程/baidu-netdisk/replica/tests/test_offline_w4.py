@@ -497,8 +497,9 @@ class TestDownloadEngine(unittest.TestCase):
         log = []
         dst = os.path.join(tempfile.gettempdir(), "bdnw4_dl_resume.bin")
         self.addCleanup(os.remove, dst)
-        with open(dst, "wb") as f:                       # 预存在部分文件
-            f.write(blob[:4 * MB])
+        with open(dst, "wb") as f:                       # 预存在满尺寸文件
+            f.write(blob[:4 * MB])                       # （W7 A6 起：续传前置=
+            f.write(b"\0" * (len(blob) - 4 * MB))        #  本地 size==total，不符重下）
         with open(dst + ".bdn_dl_state.json", "w", encoding="utf-8") as f:
             json.dump({"remote": "/t/f.bin", "total": len(blob),
                        "chunk": DL_CHUNK, "done": [0], "md5": md5}, f)

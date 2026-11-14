@@ -53,6 +53,7 @@ except ImportError:  # pragma: no cover
     AES = None
 
 # ---- 头表（1102 Frida spawn 在线 dump 真值；UA 与会话注册设备逐字一致是 200 的硬条件）----
+# 1105迁移评估终局: MuMu15无root且weread allowBackup=false → 令牌农场永留雷电(emulator-5554)
 APPVER = "10.2.2.10167650"
 UA = ("WeRead/10.2.2 WRBrand/redmi Dalvik/2.1.0 "
       "(Linux; U; Android 9; 25102RKBEC Build/PQ3A.190705.09211140)")
@@ -305,7 +306,7 @@ def download(bid: str, out: str = "", budget: int = 15) -> int:
 
 # ---------------- 令牌自动恢复 SOP ----------------
 def token_refresh() -> int:
-    dev = "emulator-5554"
+    dev = "emulator-5554"  # 1105终局: 令牌农场=雷电(MuMu15无root不可迁)
     subprocess.run([ADB, "-s", dev, "shell",
                     "monkey -p com.tencent.weread -c android.intent.category.LAUNCHER 1"],
                    capture_output=True, timeout=60)

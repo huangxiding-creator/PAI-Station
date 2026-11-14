@@ -210,6 +210,96 @@ class BdnApi:
         p["entries"] = list(p.get("list") or [])
         return p
 
+    # ---------- 回收站写面（W7 C12 探针：蓝本三端点直译；活性以围栏实测为准） ----------
+
+    def recycle_restore(self, fsids: list) -> dict:
+        """回收站还原：POST pcs.baidu.com/rest/2.0/pcs/file?method=restore，
+        multipart 字段 param={"list":[{"fs_id":N},…]}（蓝本 prepare.go:839-867
+        + recycle.go RecycleRestore；成功 extra.list 回还原清单）。"""
+        if not fsids:
+            raise BdnApiError(-7, "fsids 不能为空")
+        param = json.dumps({"list": [{"fs_id": int(x)} for x in fsids]},
+                           separators=(",", ":"))
+        return self._post_multipart(
+            "https://pcs.baidu.com/rest/2.0/pcs/file",
+            {"method": "restore", "app_id": APP_ID}, "param", param)
+
+    def _post_multipart(self, url: str, params: dict, field: str, value: str) -> dict:
+        """multipart 表单 POST（session.request 的 files 透传形态）。"""
+        return self.s.request("POST", url, params=params,
+                              data=None, files={field: (None, value)})
+
+    def recycle_delete(self, fsids: list) -> dict:
+        """回收站彻底删除（不可逆）：POST /api/recycle/delete body fidlist=[N,…]
+        （蓝本 prepare.go:870-882）。CLI 层强制 --confirm + 属主复核。"""
+        if not fsids:
+            raise BdnApiError(-7, "fsids 不能为空")
+        return self.s.post("/api/recycle/delete",
+                           params=dict(_WEB_Q),
+                           data={"fidlist": json.dumps(
+                               [int(x) for x in fsids],
+                               separators=(",", ":"))})
+
+    def recycle_clear(self) -> dict:
+        """清空回收站（整箱不可逆）：GET pcs file?method=delete&type=recycle
+        （蓝本 prepare.go:885-896）。仅实现——CLI 默认拒绝，须 --i-mean-it；
+        本战役活测禁用（围栏内自建自删闭环即可，勿清全箱）。"""
+        return self.s.get("https://pcs.baidu.com/rest/2.0/pcs/file",
+                          params={"method": "delete", "type": "recycle",
+                                  "app_id": APP_ID})
+
+    # ---------- locatedownload（W7 C10 探针：安卓端直链定位，LocateDownloadSign） ----------
+
+    def locate_download(self, remote_path: str, uid: int) -> dict:
+        """安卓腿下载定位：GET pcs.baidu.com/rest/2.0/pcs/file?method=locatedownload
+        + LocateDownloadSign 四参数（蓝本 prepare.go:455-496 全参直译；
+        UA 必须 NetdiskUA——prepare.go:493）。响应 urls[]（取 encrypt==0 明文条目）
+        或 dlink；uid=账号 uk（loginStatus）。"""
+        from .sign import NETDISK_UA, locate_download_url_param
+        _ensure_abs(remote_path)
+        params = {"ant": 1, "check_blue": 1, "es": 1, "esl": 1,
+                  "app_id": APP_ID, "method": "locatedownload",
+                  "path": remote_path, "ver": "4.0", "clienttype": 17,
+                  "channel": 0, "apn_id": "1_0", "freeisp": 0,
+                  "queryfree": 0, "use": 0}
+        sign = locate_download_url_param(uid, self.s.bduss)
+        for kv in sign.split("&"):
+            k, _, v = kv.partition("=")
+            params[k] = v
+        old_ua = self.s.ua
+        self.s.ua = NETDISK_UA                     # 本调用内换安卓 UA
+        try:
+            p = self.s.get("https://pcs.baidu.com/rest/2.0/pcs/file",
+                           params=params)
+        finally:
+            self.s.ua = old_ua
+        urls = []
+        for u in p.get("urls") or []:
+            if isinstance(u, dict) and int(u.get("encrypt") or 0) == 0:
+                urls.append(u.get("url") or "")
+        p["plain_urls"] = [u for u in urls if u]
+        return p
+
+    # ---------- filediff GET 游标腿（W7 C13 加餐：蓝本 batch/filediff 形态） ----------
+
+    def filediff_get(self, cursor: str | None, uid: int | None = None) -> dict:
+        """秒级增量（蓝本旧形态）：GET /api/batch/filediff?cursor=…&clienttype=1
+        + LocateDownloadSign 四参数（prepare.go:199-215：cursor 空→"null"）。
+        与 POST /api/filediff（捕获形态）对照——命中即 mirror/pull 的 O(1) 增量轴。"""
+        from .sign import NETDISK_UA, locate_download_url_param
+        params = {"cursor": cursor if cursor else "null", "clienttype": 1}
+        if uid is not None:
+            sign = locate_download_url_param(uid, self.s.bduss)
+            for kv in sign.split("&"):
+                k, _, v = kv.partition("=")
+                params[k] = v
+        old_ua = self.s.ua
+        self.s.ua = NETDISK_UA                     # 蓝本 diff 腿同用安卓 UA 族
+        try:
+            return self.s.get("/api/batch/filediff", params=params)
+        finally:
+            self.s.ua = old_ua
+
     # ---------- 分享写面 + 转存链（W5：条件门；蓝本 prepare.go:739-821 + transfer.go:43-236） ----------
 
     def share_create(self, path: str, pwd: str = "", period: int = 0,

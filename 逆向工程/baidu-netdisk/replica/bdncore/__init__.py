@@ -11,25 +11,29 @@
 """
 from .errors import (BdnApiError, BdnAuthError, BdnCircuitOpen, BdnError,
                      BdnNetworkError, CIRCUIT_ERRNOS, ERRNO_MAP, describe)
-from .session import BdnSession, Throttle, mask
+from .session import AUTH_REGUIDE, CIRCUIT_TTL, BdnSession, Throttle, mask
 from .api import BdnApi
 from .transfer import (BdnTransferError, DownloadEngine, UploadEngine,
-                       block_md5s, block_ranges, choose_block_size, md5_file,
-                       slice_md5_file)
+                       block_md5s, block_ranges, choose_block_size,
+                       hash_upload_digests, md5_file, slice_md5_file)
 from .router import (READ_CHAINS, WRITE_FAMILY, BdpanSubprocessChannel,
                      RoutedApi, should_fallback)
 from .doctor import run_doctor
-from .mirror import MirrorEngine
+from .mirror import MirrorEngine, PullEngine
+from .sign import (NETDISK_UA, dev_uid, locate_download_sign,
+                   locate_download_url_param)
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 __all__ = [
     "BdnApiError", "BdnAuthError", "BdnCircuitOpen", "BdnError",
     "BdnNetworkError", "CIRCUIT_ERRNOS", "ERRNO_MAP", "describe",
-    "BdnSession", "Throttle", "mask", "BdnApi",
+    "AUTH_REGUIDE", "CIRCUIT_TTL", "BdnSession", "Throttle", "mask", "BdnApi",
     "BdnTransferError", "UploadEngine", "DownloadEngine",
     "block_md5s", "block_ranges", "choose_block_size", "md5_file",
-    "slice_md5_file",
+    "slice_md5_file", "hash_upload_digests",
     "READ_CHAINS", "WRITE_FAMILY", "BdpanSubprocessChannel", "RoutedApi",
-    "should_fallback", "run_doctor", "MirrorEngine", "__version__",
+    "should_fallback", "run_doctor", "MirrorEngine", "PullEngine",
+    "NETDISK_UA", "dev_uid", "locate_download_sign",
+    "locate_download_url_param", "__version__",
 ]

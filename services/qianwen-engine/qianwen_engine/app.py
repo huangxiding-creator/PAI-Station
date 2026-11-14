@@ -1012,7 +1012,7 @@ def content_full(name: str):
     """1102 用户令: 详情页封面图静态路由 (仅 full 下 png/jpg, PDF仍走签名API)."""
     if not re.fullmatch(r"[A-Za-z0-9._-]+\.(?:png|jpg|jpeg)", name):
         raise HTTPException(404, "not found")
-    p = Path(config.REPORT_CONTENT_DIR) / "full" / name
+    p = config.REPORT_CONTENT_DIR / "full" / name   # 已是Path, app.py无Path import勿包
     if not p.is_file():
         raise HTTPException(404, "not found")
     return FileResponse(p)

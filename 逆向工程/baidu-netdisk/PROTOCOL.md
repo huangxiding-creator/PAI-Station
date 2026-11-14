@@ -94,7 +94,7 @@ W1 出口门核对：8.2.5 实测端点 A 级 50 条（≥50 ✓）= 抓包 41 �
 
 | 端点 | 家族 | 方法 | 用途 | 认证 | 关键参数 | 证据级 | 活性 | rand必要性 | 备注 |
 |---|---|---|---|---|---|---|---|---|---|
-| pan.baidu.com/api/precreate（xpan/file?method=precreate） | xpan/api | POST | 上传① 预创建 | Cookie 或 access_token | path&size&isdir&block_list=MD5 数组&autoinit=1&rtype&content-md5&slice-md5(前 256KB)&local_ctime/mtime&web=1&app_id=250528 | B+D | **0 (W4 2026-10-29)** | 实证不需要 | 响应 uploadid+block_list=待传分片序号；**return_type=2 秒传在本账号未达成**（V1/V2/V3-数据腿/V4-服务端指纹四变体全 miss，疑服务端 md5 混淆阻断索引，漂移账 #14）；errno -7/-10 |
+| pan.baidu.com/api/precreate（xpan/file?method=precreate） | xpan/api | POST | 上传① 预创建 | Cookie 或 access_token | path&size&isdir&block_list=MD5 数组&autoinit=1&rtype&content-md5&slice-md5(前 256KB)&local_ctime/mtime&web=1&app_id=250528 | B+D | **0 (W4 2026-10-29)** | 实证不需要 | 响应 uploadid+block_list=待传分片序号；**return_type=2 秒传在本账号未达成**（V1/V2/V3-数据腿/V4-服务端指纹四变体全 miss，疑服务端 md5 混淆阻断索引，漂移账 #14；**W7 回喂加证**：metas 服务端混淆 md5（非 hex）回喂 precreate → return_type=1 不变）；errno -7/-10；**空文件形态 errno 2**（W7：恒定 md5 d41d8…+空 block_list 不放行，`--allow-empty` 后备） |
 | {UPLOAD_HOST}/rest/2.0/pcs/superfile2?method=upload&type=tmpfile | d.pcs | POST | 上传② 分片 | Cookie(BDUSS) | query: uploadid&partseq&vip=2&web=1&app_id&path；form: path+file(multipart) | B+D+C | **0 (W4 2026-10-29)** | 实证不需要 | **门=参数完整度（path query+form 双放+vip=2+web=1+app_id）；UA 双腿均放行**（ss-judge 1029 重放：native UA+全参=200/md5 回执；W4 初判「CEF UA 必带」系诊断矩阵变量未隔离误归因，勘误见 replica/ERRATA_1029.md）；失败信使=error_code（31023=缺参/31024=缺 app_id）非 errno；host 从 locateupload servers[] 取（c5.pcs.baidu.com 实测）；分片 4/16/64MB；superfile3 灰度中 |
 | pan.baidu.com/api/create（xpan/file?method=create） | xpan/api | POST | 上传③ 合并/建文件 | 同上 | path&size&isdir&block_list&uploadid&rtype&clienttype=8&app_id&web=1 | B+D | **0 (W4 2026-10-29)** | 实证不需要 | errno=0 回 fs_id+md5（**md5 为混淆体，含非 hex 字符**）；分片未注册时 errno=404；zip_quality/is_revision 可选 |
 | pcs.baidu.com/rest/2.0/pcs/file?method=upload | pcs遗产 | POST | 单步上传≤2GB（含旧 tmpfile 分片形态） | Cookie(BDUSS) | path&ondup&file（multipart） | B+D | 未实测 | 蓝本不带 | prepare.go:526-577 两形态；errno 31061/31064 |
@@ -106,7 +106,7 @@ W1 出口门核对：8.2.5 实测端点 A 级 50 条（≥50 ✓）= 抓包 41 �
 
 | 端点 | 家族 | 方法 | 用途 | 认证 | 关键参数 | 证据级 | 活性 | rand必要性 | 备注 |
 |---|---|---|---|---|---|---|---|---|---|
-| pcs.baidu.com/rest/2.0/pcs/file?method=locatedownload | pcs遗产 | GET | 下载直链定位（安卓伪装） | Cookie(BDUSS) | ant=1&check_blue=1&es=1&esl=1&ver=4.0&clienttype=17 + sign 四参数(time/rand/devuid/cuid) | B | 未实测（8.2.5 零出现） | **带 LocateDownloadSign（唯一真签名腿）** | 漂移：8.2.5 客户端已不用此腿 |
+| pcs.baidu.com/rest/2.0/pcs/file?method=locatedownload | pcs遗产 | GET | 下载直链定位（安卓伪装） | Cookie(BDUSS) | ant=1&check_blue=1&es=1&esl=1&ver=4.0&clienttype=17 + sign 四参数(time/rand/devuid/cuid) | **A** | **0 (W7 2026-10-30，1 发：urls=6/明文 6；LocateDownloadSign 直译放行；单块 4.21MB/s vs web dlink 2.55MB/s=1.65x)** | **带 LocateDownloadSign（唯一真签名腿）——W7 实证签名链有效且免 rand 强校验** | 8.2.5 客户端已不用此腿但服务端仍放行；bdn `download --svip` 在役（失败自动回退 dlink）；URL 域=bd-cu22.baidupcs.com 系 |
 | pan.baidu.com/api/download | api | POST | web 下载直链 | Cookie(BDUSS+STOKEN) | sign=Base64(Sign2(sign3,sign1))&timestamp&fidlist | B | 未实测 | 无 rand（有 RC4 sign） | sign1/3 来自 /disk/home；errno 112/113 自愈重取 |
 | pan.baidu.com/rest/2.0/xpan/file?method=download | xpan | GET | 官方直连下载 | access_token | check_blue=1&esl=1&path | D | 未实测 | 无 | — |
 | dlink（d.pcs.baidu.com 系列域） | d.pcs | GET | 实际文件传输 | Cookie(BDUSS+STOKEN) 或 dlink 追加 access_token | Range 有界 ≤~5MB（CT11 节点 403 31326） | D+B | **0 (W4 2026-10-29：4MB×3 块 Range 多线程，md5 与源一致，2.21MB/s)** | 无 | web dlink 实测**浏览器 UA+Cookie 直收**（蓝本坑位口吻一致）；8h 有效；302 跟随保留鉴权 |
@@ -142,8 +142,9 @@ W1 出口门核对：8.2.5 实测端点 A 级 50 条（≥50 ✓）= 抓包 41 �
 | 端点 | 家族 | 方法 | 用途 | 认证 | 关键参数 | 证据级 | 活性 | rand必要性 | 备注 |
 |---|---|---|---|---|---|---|---|---|---|
 | pan.baidu.com/api/recycle/list | api | GET | 回收站列表 | Cookie(BDUSS) | num=100&page | A | **0 (W1 2026-10-29)** | **实证不需要** | 条件门读面证据成立 |
-| pcs.baidu.com/rest/2.0/pcs/file?method=restore | pcs遗产 | POST | 回收站还原 | Cookie(BDUSS) | multipart param=fsids | B | 未实测（W2/W4 写面） | 蓝本不带 | prepare.go:839-867 |
-| pan.baidu.com/api/recycle/delete | api | POST | 回收站删除 | Cookie(BDUSS+STOKEN) | fidlist | B | 未实测 | 蓝本不带 | prepare.go:870-882 |
+| pcs.baidu.com/rest/2.0/pcs/file?method=restore | pcs遗产 | POST | 回收站还原 | Cookie(BDUSS) | multipart param=fsids | B | **死 (W7 2026-10-30：蓝本全参形态 1 发 → error_code 31030 "pcs token not exist"——cookie 腿无 pcs token；同域 locatedownload 却放行=家族内逐端点异质)** | 蓝本不带 | prepare.go:839-867；bdn recycle restore 命令在库待通道复活 |
+| pan.baidu.com/api/recycle/restore | api | POST | 回收站还原（api 族猜形） | Cookie(BDUSS+STOKEN) | body fsids | C | **2 (W7 2026-10-30，1 发猜形=参数错——形态未证，非官方口径在案)** | 蓝本不带 | W7 探针；两形态双死 → 回收站还原通道对本账号关闭 |
+| pan.baidu.com/api/recycle/delete | api | POST | 回收站删除 | Cookie(BDUSS+STOKEN) | fidlist | B | 未实测 | 蓝本不带 | prepare.go:870-882；bdn recycle delete --confirm 已实装（活测留用令） |
 | pcs.baidu.com/rest/2.0/pcs/file?method=delete&type=recycle | pcs遗产 | GET | 回收站清空 | Cookie(BDUSS) | type=recycle | B | 未实测 | 蓝本不带 | prepare.go:885-896 |
 
 ### G13 mirror（增量镜像）
@@ -151,7 +152,7 @@ W1 出口门核对：8.2.5 实测端点 A 级 50 条（≥50 ✓）= 抓包 41 �
 | 端点 | 家族 | 方法 | 用途 | 认证 | 关键参数 | 证据级 | 活性 | rand必要性 | 备注 |
 |---|---|---|---|---|---|---|---|---|---|
 | pan.baidu.com/api/filediff | api | POST | 秒级增量游标轮询（mirror 主通道） | Cookie(BDUSS) | query: block_list=1&clienttype=8&deviceid&dname；body: cursor(base64)&action=manual | A | **2 (W1 2026-10-29，空 cursor=参数错非拒；抓包 970 次在役)** | **实证不需要**（200 JSON 无签名墙；极简 query 被 RST→参数完整度有门） | 响应回新 cursor；**W4 冷启动三形态（无 cursor 键/空串/"0"）全 errno=2——游标引导链未激活，遗留**（首游标疑来自客户端本地持久化或 rand 族强校验，见 §4.2）；**W5 mirror 增量暂走「本地扫描+远端 ls 对账」面（当日 26 文件两遍增量=0 实证），本游标链恢复后可换轴** |
-| pan.baidu.com/api/batch/filediff | api | GET | 增量（蓝本旧形态） | Cookie(BDUSS) | cursor+LocateDownloadSign 四参数 | B | 未实测（8.2.5 零出现） | 带 sign | 同域两代实现→漂移账 #9 |
+| pan.baidu.com/api/batch/filediff | api | GET | 增量（蓝本旧形态） | Cookie(BDUSS) | cursor+LocateDownloadSign 四参数 | B | **挂死 (W7 2026-10-30：cursor=null+sign 全参 1 发 → 服务端回无终 chunked 流，requests 读超时被逐块绕过，10 分钟不返回)** | 带 sign | 同域两代实现→漂移账 #9；**调用方必须自备截止护栏**（smoke_w7_live_part2.bounded 范式）；O(1) 增量轴维持未激活 |
 
 ### G14 doctor（通道健康/漂移复验）
 
@@ -317,3 +318,25 @@ replica/tests/smoke_w5_live.py + _diag_w5_transfer.py 全序活体：围栏 /API
 - **share 写面**：pset 创建 errno=0（1 发，shareid=65048642201，带提取码）；cancel errno=0（1 发）；record 列表复核该 shareid 消失。
 - **transfer 链**：surlinfoinrecord（errno 0，顶层 pwd）→ verify（errno 0，randsk 48 位）→ share/list（errno 0，去前导'1'形态）→ share/transfer **errno 2**（两发硬帽用尽；缺 bdstoken 实测定位，携带形态已实装+单测，复测 1 发留 W6）——b 腿按纪律未硬闯，条件门收口=参数门非 9019/付费墙。【W6 勘误 1030：复测带 bdstoken 仍 errno 2，「缺 bdstoken」单因证伪；真因=缺 shareid/from 全参（蓝本 transfer.go:79-85），全参形态已实装待 W7——ERRATA_1030.md】
 - **账本（如实）**：主账 doctor+share/transfer 族 27 发（≤80；含 transfer CLI 子进程 6 发与诊断探针 6 发两笔未回 JSON 事后补记）；mirror 单列 64 发（≤120）；数据面 26 发/5,112,199B；share create 1/2 发、transfer POST 2/2；远端零删除。
+
+## 10. W7 回执（2026-10-30，12 强提升波；围栏 /API复刻测试_1030/）
+
+replica/tests/smoke_w7_live.py（part1）+ smoke_w7_live_part2.py（part2，part1 在 batch/filediff
+无终 chunked 流挂死后按预算续跑）全序活体；原始输出全档 tests/_diag_archive/w7/。
+
+- **locatedownload 命中（A 级升格）**：LocateDownloadSign 直译（sha1 链+盐 32B+devuid）1 发 errno=0，
+  urls=6/明文 6（bd-cu22.baidupcs.com）；单块 4MB 计速 locatedl 4.21MB/s vs web dlink 2.55MB/s
+  （1.65x，netdisk/browser UA 双腿均 206）→ `bdn download --svip` 上线（10MB 全链直收复证）。
+- **空文件死**：precreate 恒定 md5 d41d8…+空 block_list → errno 2 参数错（引擎维持拒绝）。
+- **回收站 restore 双死**：pcs file?method=restore（蓝本全参）=error_code 31030 "pcs token not
+  exist"；api 族 recycle/restore 猜形=errno 2 → 还原通道对本账号关闭（命令在库待复活）；
+  围栏 rm 件以重传找回，回收站原件留待用户官方客户端处置。
+- **filediff**：POST 捕获形态 errno 2（W4 同）；GET batch/filediff（cursor=null+sign）=**无终
+  chunked 流挂死**（读超时被逐块绕过——探针须带截止护栏）；O(1) 轴维持未激活。
+- **秒传回喂**：服务端混淆 md5 回喂 precreate → return_type=1 不变（漂移账 #14 加证）。
+- **新能力活体**：pull pass1 下载 1/1 md5 一致+pass2 增量=0；熔断跨进程持久化（标记→新进程
+  rc=2 零请求拦截→doctor --reset 双清→1 发流通）；STOKEN 自愈/止损/单遍哈希/Session 池为
+  离线单测覆盖（163/163）。
+- **账本（如实）**：C 探针 8/8 恰满（locatedl 1+空文件 1+回收站 3+filediff 2+回喂 1）；
+  D 冒烟 24/25（mkdir1+upload2+download2+login1+meta2 | recycle定位1+重传3+meta2+pull3+pull1+
+  复位验证1 | --svip CLI 4+pull CLI 1）；数据面 18 发/约 44MB 另计；远端零删除（rm 件已重传找回）。

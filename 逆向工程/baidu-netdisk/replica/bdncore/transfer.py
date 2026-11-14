@@ -40,7 +40,8 @@ CEF_UA = ("Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 "
           "10.0.19045;WindowsBaiduYunGuanJia")
 BROWSER_UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
               "(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
-DATA_TIMEOUT = (10, 300)             # 数据面（connect, read）
+DATA_TIMEOUT = (30, 900)             # 数据面（connect, read/write）— 1030 八启两连败复盘：
+                                     # 4MB 分片遇网络抖动时 10s 连接窗过脆、写超时余量不足，放宽后由重试兜底
 PART_ATTEMPTS = 3                    # 单分片/单块传输重试（含首发）
 
 
@@ -102,21 +103,82 @@ def block_md5s(path: str, ranges: list) -> list:
     return out
 
 
-# ---------------- 状态文件 ----------------
+def hash_upload_digests(path: str, ranges: list) -> tuple:
+    """W7 A5：预哈希单遍读盘——content-md5 + slice-md5 + block_list 一次顺序读出。
+
+    （旧法 = md5_file 全量一遍 + slice_md5_file 再读头 + block_md5s 逐块 seek，
+    大文件三遍读盘；本函数哈希态叠加单遍完成，对拍单测见 test_offline_w7）。
+    ranges 必须由 block_ranges(size, bs) 生成的**连续全覆盖**区间。
+    → (content_md5, slice_md5, [block_md5s])；空文件=(d41d8…, d41d8…, [])。
+    """
+    content_h = hashlib.md5()
+    slice_h = hashlib.md5()
+    slice_seen = 0
+    digests = []
+    with open(path, "rb") as f:
+        for _, _off, n in ranges:
+            block_h = hashlib.md5()
+            got = 0
+            while got < n:
+                b = f.read(min(1024 * 1024, n - got))
+                if not b:
+                    raise BdnTransferError(
+                        f"读块不完整 off={_off}+{got} want={n} got={got}")
+                block_h.update(b)
+                content_h.update(b)
+                if slice_seen < SLICE_MD5_SIZE:
+                    take = min(len(b), SLICE_MD5_SIZE - slice_seen)
+                    slice_h.update(b[:take])
+                    slice_seen += take
+                got += len(b)
+            digests.append(block_h.hexdigest())
+    return content_h.hexdigest(), slice_h.hexdigest(), digests
+
+
+# ---------------- 状态文件（W7 B9：健壮性——同步盘锁文件场景给中文错误） ----------------
 
 def _save_json_atomic(path: str, obj: dict):
+    """原子写状态文件。目录缺失自动建；被锁（同步盘/杀软占用）→ 中文错误不裸崩。"""
+    d = os.path.dirname(os.path.abspath(path))
+    if d and not os.path.isdir(d):
+        try:
+            os.makedirs(d, exist_ok=True)
+        except OSError as e:
+            raise BdnTransferError(
+                f"断点目录无法创建: {d}（{type(e).__name__}: {e}）"
+                "——请检查磁盘权限/路径合法性") from e
     tmp = path + ".tmp"
-    with open(tmp, "w", encoding="utf-8") as f:
-        json.dump(obj, f, ensure_ascii=False)
-    os.replace(tmp, path)
+    try:
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump(obj, f, ensure_ascii=False)
+        os.replace(tmp, path)
+    except OSError as e:
+        raise BdnTransferError(
+            f"状态文件写入失败: {path}（{type(e).__name__}: {e}）"
+            "——常见于同步盘/杀毒软件锁定文件；可暂停同步后重试，"
+            "或用 bdn clean --confirm 清理残留断点后重来") from e
 
 
-def _load_json(path: str):
+def _load_json(path: str, strict: bool = False):
+    """读状态文件。
+
+    strict=True（传输断点 .bdn_*_state 专用，W7 B9）：文件存在但读不了/解析不了
+    → 中文错误如实上报（锁文件/坏 JSON 不静默吞，防错位续传）。
+    strict=False（mirror state 等宽容形态）：任何异常 → None（调用方自会重建）。
+    文件不存在 → None（正常断点首跑）。
+    """
+    if not os.path.exists(path):
+        return None
     try:
         with open(path, "r", encoding="utf-8") as f:
             return json.load(f)
-    except (OSError, ValueError):
-        return None
+    except (OSError, ValueError) as e:
+        if not strict:
+            return None
+        raise BdnTransferError(
+            f"断点状态文件读取失败: {path}（{type(e).__name__}: {e}）"
+            "——常见于同步盘锁定或文件损坏；请关闭占用后重试，"
+            "或用 bdn clean --confirm 清掉该断点（会放弃续传重来）") from e
 
 
 def _looks_hex32(s: str) -> bool:
@@ -127,21 +189,41 @@ def _looks_hex32(s: str) -> bool:
 # ---------------- 上传引擎 ----------------
 
 class UploadEngine:
-    def __init__(self, api, workers: int = MAX_WORKERS, poster=None):
-        """api=BdnApi；poster 可注入（离线单测）：fn(url, params, data, files, headers) -> dict。"""
+    def __init__(self, api, workers: int = MAX_WORKERS, poster=None,
+                 allow_empty: bool = False):
+        """api=BdnApi；poster 可注入（离线单测）：fn(url, params, data, files, headers) -> dict。
+        allow_empty（W7 C11）：空文件放行——precreate 恒定 md5 d41d8…+空 block_list
+        （蓝本 EmptyContentMD5 特例）；探针实证放行后 CLI 默认开。"""
         self.api = api
         self.workers = max(1, min(int(workers), MAX_WORKERS))
         self._poster = poster or self._real_post
+        self.allow_empty = bool(allow_empty)
         self._host = None
         self._lock = threading.Lock()
         self.bytes_sent = 0          # 本次运行发出的数据面字节（分片体）
         self.data_requests = 0       # 数据面请求数（superfile2）
+        # W7 A1：数据面 Session 复用（连接池）——每分片裸建连接 → 池化 keep-alive。
+        # pool_maxsize=workers+2 容纳并发满载；并发≤8 红线不变。
+        self._http = requests.Session()
+        self._http.mount("https://", requests.adapters.HTTPAdapter(
+            pool_connections=self.workers + 2,
+            pool_maxsize=self.workers + 2))
+        self._http.mount("http://", requests.adapters.HTTPAdapter(
+            pool_connections=self.workers + 2,
+            pool_maxsize=self.workers + 2))
+
+    def close(self):
+        """释放数据面连接池（长命进程用；短命 CLI 随进程回收）。"""
+        try:
+            self._http.close()
+        except Exception:                                     # noqa: BLE001
+            pass
 
     # ---- 数据面传输 ----
 
     def _real_post(self, url, params, data, files, headers):
-        r = requests.post(url, params=params, data=data, files=files,
-                          headers=headers, timeout=DATA_TIMEOUT)
+        r = self._http.post(url, params=params, data=data, files=files,
+                            headers=headers, timeout=DATA_TIMEOUT)
         if r.status_code >= 500:
             raise requests.HTTPError(f"HTTP {r.status_code}")
         try:
@@ -208,17 +290,17 @@ class UploadEngine:
         if not os.path.isfile(local):
             raise BdnTransferError(f"本地文件不存在: {local}")
         size = os.path.getsize(local)
-        if size == 0:
-            raise BdnTransferError("空文件不支持三段流（蓝本 EmptyContentMD5 特例，遗留）")
+        if size == 0 and not self.allow_empty:
+            raise BdnTransferError(
+                "空文件默认拒绝（三段流历史限制；W7 C11 围栏探针实证 precreate "
+                "恒定 md5 d41d8…+空 block_list 可走通后放行——加 --allow-empty）")
         mtime = int(os.path.getmtime(local))
         block_size = choose_block_size(size)
         ranges = block_ranges(size, block_size)
         fname = os.path.basename(local)
 
-        # 全量 md5 预算（秒传与 create 都要全量 block_list）
-        content_md5 = md5_file(local)
-        slice_md5 = slice_md5_file(local)
-        digests = block_md5s(local, ranges)
+        # 预哈希（W7 A5 单遍读盘：content+slice+block_list 一次顺序读出）
+        content_md5, slice_md5, digests = hash_upload_digests(local, ranges)
 
         fresh = False                      # False=允许吃断点状态；True=状态作废重走
         for _round in range(2):            # 第二轮=uploadid 失效兜底重启
@@ -260,7 +342,7 @@ class UploadEngine:
         uploadid=None 即秒传成功（pre_payload 直接贯通给上层）。"""
         sp = self._state_path(local)
         if not fresh:
-            st = _load_json(sp)
+            st = _load_json(sp, strict=True)      # W7 B9：锁/坏文件如实报中文错
             if (st and st.get("remote") == remote and st.get("size") == size
                     and st.get("content_md5") == content_md5
                     and st.get("block_size") == block_size and st.get("uploadid")):
@@ -308,10 +390,19 @@ class UploadEngine:
                 _save_json_atomic(self._state_path(local), st)
             return seq
 
-        with ThreadPoolExecutor(max_workers=self.workers) as pool:
+        # W7 A4：分片失败止损——首异常后取消未起跑的排队分片（cancel_futures）+
+        # 不等待在飞分片收尾（shutdown(wait=False)），别让剩余分片白传。
+        pool = ThreadPoolExecutor(max_workers=self.workers)
+        try:
             futs = {pool.submit(work, seq): seq for seq in (r[0] for r in todo)}
             for fut in as_completed(futs):
                 fut.result()               # 异常向上冒泡（含熔断）
+        except BaseException:
+            for f in futs:
+                f.cancel()
+            pool.shutdown(wait=False, cancel_futures=True)
+            raise
+        pool.shutdown(wait=True)
 
     def _clear_state(self, local: str):
         try:
@@ -340,23 +431,51 @@ class DownloadEngine:
         self._lock = threading.Lock()
         self.bytes_received = 0
         self.data_requests = 0
+        # W7 A1：数据面 Session 复用（dlink 同 host 多块 Range 复用 TCP/TLS 连接）
+        self._http = requests.Session()
+        self._http.mount("https://", requests.adapters.HTTPAdapter(
+            pool_connections=self.workers + 2,
+            pool_maxsize=self.workers + 2))
+        self._http.mount("http://", requests.adapters.HTTPAdapter(
+            pool_connections=self.workers + 2,
+            pool_maxsize=self.workers + 2))
+
+    def close(self):
+        try:
+            self._http.close()
+        except Exception:                                     # noqa: BLE001
+            pass
 
     def _real_fetch(self, url, start, end, headers):
         h = dict(headers)
         h["Range"] = f"bytes={start}-{end}"
-        r = requests.get(url, headers=h, timeout=DATA_TIMEOUT, allow_redirects=True)
+        r = self._http.get(url, headers=h, timeout=DATA_TIMEOUT,
+                           allow_redirects=True)
         return r.status_code, r.content
 
     @staticmethod
     def _state_path(local: str) -> str:
         return local + ".bdn_dl_state.json"
 
-    def download(self, remote: str, local: str, expected_md5: str | None = None) -> dict:
+    def download(self, remote: str, local: str, expected_md5: str | None = None,
+                 use_locatedl: bool = False, uid: int | None = None,
+                 fetch_ua: str | None = None) -> dict:
+        """use_locatedl（W7 C10）：走安卓腿 locatedownload 直链（SVIP 通道，
+        LocateDownloadSign）；uid=账号 uk。失败自动回退 web dlink（零损失）。"""
         t0 = time.perf_counter()
         self.api.s._check_circuit()
         meta = self.api.meta_by_path(remote, dlink=1)
         dlink = meta.get("dlink")
         total = int(meta.get("size") or 0)
+        loc_note = None
+        if use_locatedl and uid is not None:
+            try:
+                loc = self.api.locate_download(remote, uid)
+                cand = (loc.get("plain_urls") or [None])[0] or loc.get("dlink")
+                if cand:
+                    dlink, loc_note = cand, "locatedownload"
+            except BdnError as e:
+                loc_note = f"locatedownload 失败回退 dlink({getattr(e, 'errno', '?')})"
         if not dlink:
             raise BdnTransferError(f"metas 未返回 dlink（source={meta.get('_meta_source')}）")
         want_md5 = (expected_md5 or meta.get("md5") or "").lower() or None
@@ -365,14 +484,26 @@ class DownloadEngine:
             want_md5 = None
 
         sp = self._state_path(local)
-        st = _load_json(sp)
+        st = _load_json(sp, strict=True)          # W7 B9：锁/坏文件如实报中文错
         ranges = block_ranges(total, self.chunk)
         all_ids = {r[0] for r in ranges}
+        # W7 A6：续传前置条件加本地尺寸全等校验——不符（本地文件被动过/截断/
+        # 被同步盘改写）即作废断点重下，防静默拼出坏文件。
+        _local_ok = (os.path.exists(local)
+                     and os.path.getsize(local) == total)
         if (st and st.get("remote") == remote and st.get("total") == total
-                and st.get("chunk") == self.chunk and os.path.exists(local)):
+                and st.get("chunk") == self.chunk and _local_ok):
             done = set(int(x) for x in st.get("done") or []) & all_ids
         else:
             done = set()
+            # 落盘目录缺失自动建（W7 B9：断点目录不存在自动建）
+            d = os.path.dirname(os.path.abspath(local))
+            if d and not os.path.isdir(d):
+                try:
+                    os.makedirs(d, exist_ok=True)
+                except OSError as e:
+                    raise BdnTransferError(
+                        f"下载目录无法创建: {d}（{type(e).__name__}: {e}）") from e
             # 预占位（稀疏文件）
             with open(local, "wb") as f:
                 if total > 0:
@@ -384,7 +515,7 @@ class DownloadEngine:
         idx_map = {r[0]: r for r in ranges}
         todo = [i for i in sorted(all_ids) if i not in done]
         headers = {"Cookie": self.api.s.cookie_header(),
-                   "User-Agent": BROWSER_UA,     # 蓝本坑位：web dlink 必须浏览器 UA
+                   "User-Agent": fetch_ua or BROWSER_UA,  # 蓝本坑位：web dlink 浏览器 UA
                    "Referer": "https://pan.baidu.com/disk/main"}
 
         def work(seq):
@@ -411,17 +542,25 @@ class DownloadEngine:
                 done.add(seq)
                 self.bytes_received += n
                 self.data_requests += 1
-                st_now = _load_json(sp) or {}
+                st_now = _load_json(sp, strict=True) or {}
                 st_now.update({"remote": remote, "total": total,
                                "chunk": self.chunk, "done": sorted(done),
                                "md5": want_md5})
                 _save_json_atomic(sp, st_now)
             return seq
 
-        with ThreadPoolExecutor(max_workers=self.workers) as pool:
+        # W7 A4：下载块失败止损（同上传：首异常 cancel_futures + 不等在飞块）
+        pool = ThreadPoolExecutor(max_workers=self.workers)
+        try:
             futs = [pool.submit(work, seq) for seq in todo]
             for fut in as_completed(futs):
                 fut.result()
+        except BaseException:
+            for f in futs:
+                f.cancel()
+            pool.shutdown(wait=False, cancel_futures=True)
+            raise
+        pool.shutdown(wait=True)
 
         md5_ok = None
         if want_md5:
@@ -436,6 +575,7 @@ class DownloadEngine:
             pass
         elapsed = time.perf_counter() - t0
         return {"errno": 0, "path": remote, "local": local, "size": total,
+                "dlink_source": loc_note or "web_dlink",
                 "chunks_total": len(ranges), "chunks_this_run": len(todo),
                 "resumed": len(done) - len(todo) > 0,
                 "bytes_received": self.bytes_received,

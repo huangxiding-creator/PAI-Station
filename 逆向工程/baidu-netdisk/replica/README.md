@@ -1,6 +1,6 @@
-# bdncore + bdn — 百度网盘协议核心库与 CLI（W3 只读 + W4 写命令/传输 + W5 路由/体检/镜像/分享 + W6 QA 总门）
+# bdncore + bdn — 百度网盘协议核心库与 CLI（W3 只读 + W4 写命令/传输 + W5 路由/体检/镜像/分享 + W6 QA 总门 + W7 12 强提升波）
 
-> BDPAN-FACTORY 战役 W3「核心库+CLI」+ W4「写命令+传输引擎」+ W5「路由/doctor/mirror/share-transfer」+ W6「judge 修正+QA 总门+Ralph 微优化」。2026-10-29/30。
+> BDPAN-FACTORY 战役 W3「核心库+CLI」+ W4「写命令+传输引擎」+ W5「路由/doctor/mirror/share-transfer」+ W6「judge 修正+QA 总门+Ralph 微优化」+ W7「12 强提升波（pull/clean/回收站写面/--svip 直链/熔断持久化/STOKEN 自愈等 12+1 项）」。2026-10-29/30。
 > 基于 8.2.5 PC 客户端抓包逆向（../analysis/CAPTURE_INVENTORY.md）与 BaiduPCS-Go 蓝本（../analysis/BLUEPRINT_MAP.md）。
 > W4 起：mkdir/rename/mv/cp/rm + 上传三段（秒传探测/分片并发/断点续传）+ 下载（dlink+Range 多线程+md5 校验）。
 > **写面通道结论（W4 实测）**：唯一可靠通道=/api 家族（api/create + api/filemanager，web 客户端同款）；
@@ -18,10 +18,15 @@
 bdncore/session.py   凭据(JSON直读,BDUSS含'-')/Cookie头/UA/重试退避(3次1.5s→3s)/
                      控制面节流(并发≤2,间隔≥1.5s)/熔断器(errno 31119|31329|20012|31034全局停)/
                      跨域绝对URL(d.pcs/pcs) + 裸数组响应容忍(W4) + 附加Cookie段(W5 转存链 BDCLND)
+                     + W7: STOKEN失效自愈(-6/111重读凭据重试一次,蓝本#546) +
+                     熔断跨进程持久化(.bdn_circuit.json, TTL 30分钟, doctor --reset清)
+bdncore/sign.py      W7 netdisksign 直译: LocateDownloadSign(sha1链+盐32B)+devuid+
+                     URLParam四参 + NETDISK_UA(安卓腿); locatedownload/batch-filediff 用
 bdncore/errors.py    errno→中文语义映射 + BdnError 异常族(业务1/凭据与熔断2)
 bdncore/api.py       只读9件套 + 写面W4(mkdir/rename/mv/cp/rm/上传三段/locate_upload/
                      metas?dlink=1/filediff) + W5分享转存族(share_create/ share_cancel/
                      share_surl_info/ share_verify/ share_list/ share_transfer/ surl_from_link)
+                     + W7: recycle_restore/delete/clear + locate_download + filediff_get
 bdncore/router.py    W5通道路由: READ_CHAINS(ls/share_records=api→xpan降级链, meta/quota=内置,
                      search=xpan独占) + WRITE_FAMILY=api唯一(xpan写面9019墙结构性排除) +
                      should_fallback钩子(5xx/超时→xpan重试一次; 业务errno不降级; 熔断/凭据不降级) +
@@ -31,17 +36,27 @@ bdncore/doctor.py    W5复验器: 八针只读体检(凭据活性/读探针/quot
 bdncore/mirror.py    W5镜像: 本地扫描(size+mtime+md5缓存) + 远端递归ls对账 → 只传缺失/变更
                      (rtype=3覆盖), **远端只增不删**(remote_only只报告); 空文件跳过;
                      state=.bdn_mirror_<h>.json(恒排除扫描); 换远端目标缓存作废
+                     + W7: 扫描预算如实报(--max-scan-requests, 耗尽列未扫目录不硬崩) +
+                     PullEngine(远端→本地恢复腿, 本地多余只报告不删)
 bdncore/transfer.py  传输引擎W4: UploadEngine(precreate试秒传→superfile2分片并发≤8→create收尾;
                      .bdn_upload_state.json断点续传,uploadid失效自动重走precreate) +
                      DownloadEngine(metas dlink→浏览器UA+Range 4MB×≤8线程→md5校验; 混淆md5免疫)
+                     + W7: 数据面Session池化复用 + 预哈希单遍读盘(hash_upload_digests) +
+                     分片失败止损(cancel_futures) + 续传尺寸门(local_size==total) +
+                     locatedl直链模式(--svip) + 空文件闸(--allow-empty,探针死) +
+                     状态文件中文报错+断点目录自动建
 bdn.py               CLI: whoami|quota|ls|tree|search|meta|shares|recycle|doctor|
-                     mkdir|rename|mv|cp|rm(--confirm铁律)|upload|download|
-                     mirror|share-create|share-cancel|transfer，
+                     mkdir|rename|mv|cp|rm(--confirm铁律)|upload|download(--svip)|
+                     mirror(--max-scan-requests)|pull|clean|share-create|share-cancel|
+                     transfer + recycle restore/delete/clear 子命令 + doctor --reset，
                      全支持 --json，退出码 0/1/2/3
 tests/test_offline.py      W3 离线单测 35 项（节流/映射/熔断/退避/翻页钳制/归一）
 tests/test_offline_w4.py   W4 离线单测 35 项（分块数学/md5/写面形态/三段+断点/下载+校验/rm双段）
 tests/test_offline_w5.py   W5 离线单测 31 项（路由降级/doctor八针/mirror计划/分享转存形态）
 tests/test_offline_w6.py   W6 离线单测 14 项（share-cancel属主护栏/mirror目标护栏/归档清洗器）
+tests/test_offline_w7.py   W7 离线单测 48 项（sign直译/STOKEN自愈/熔断持久化/单遍哈希对拍/
+                     止损/续传尺寸门/状态健壮性/扫描旋钮/PullEngine/新端点形态/空文件闸/
+                     CLI clean+recycle双确认+doctor复位；总分 163/163）
 tests/smoke_live.py        W3 活体冒烟（8 命令+doctor+CLI，预算 40 发）
 tests/smoke_w4_live.py     W4 活体验收（a-h 全序，写面围栏+控制面≤80+数据面分账）
 tests/smoke_w5_live.py     W5 活体验收（doctor/mirror两遍/share-transfer条件门，主账≤80+mirror单列≤120）
@@ -196,6 +211,39 @@ precreate 门在位与松动）、mirror（state 排除/md5 缓存复用/计划�
 
 W6 离线单测新增 14 项（**总分 115/115 OK**，0.7s 零网络）。
 
+## W7 实测（2026-10-30，数字零造假；12 强提升波，新围栏 /API复刻测试_1030/）
+
+用户四批全批（纯代码 7+参数 2+围栏探针+加餐）。全档 `tests\_diag_archive\w7\`；
+离线单测 **163/163 OK**（115→163，+48）；控制面总账 **C 探针 8/8 恰满 + D 冒烟 24/25 内**；
+数据面 18 发/约 44MB 另计。smoke_w7_live.py part1 在 filediff GET 被服务端**无终
+chunked 流**挂死后按预算续跑 part2（该挂死本身=探针发现）。
+
+### A/B 纯代码+参数 11 项
+
+| 项 | 结果 | 关键数字/证据 |
+|---|---|---|
+| 1 数据面 Session 复用 | 双引擎自持 requests.Session+HTTPAdapter 池（pool=workers+2），并发≤8 不变 | 单测验证池挂载+池尺寸 |
+| 2 pull 恢复腿 | `bdn pull <remote> <local>`：递归扫描+对账+下载（本地多余**只报告不删**）；活体 pass1 下载 1/1 md5 一致、pass2 增量=0；CLI dry-run 1 发 | r5/r6 件；防路径穿越单测 |
+| 3 mirror 扫描旋钮 | `--max-scan-requests N`（默认 100）：耗尽**如实报已用/上限+未扫目录清单**不硬崩（原=抛错中止） | 单测 3 件（截断账/继续镜像/默认 100） |
+| 4 分片失败止损 | 首异常 cancel_futures+shutdown(wait=False)，排队分片零白传 | 单测：上载 5 片 3 试耗尽即停 ≤6 调用（无止损基线 15） |
+| 5 预哈希单遍读盘 | content+slice+block_list 哈希态叠加单遍出（旧法三遍）；随机 5MB 双法对拍同值 | 单测 3 件（对拍/空文件恒定值/短文件） |
+| 6 下载续传尺寸校验 | 续传前置+`local_size==total`，不符作废重下（防静默拼坏）；W4 旧测同步新契约 | 单测 2 件（被动过→全量重下/满尺寸→正常续传） |
+| 7 STOKEN 失效自愈 | errno -6/111→凭据文件重读→**有新值才**退避 1.5s 重试一次；无新值/仍败→中文重收指引（蓝本 #546）；creds= 注入态零重读 | 单测 4 件（换 token 重试/无新值指引/注入态直抛） |
+| 8 熔断跨进程持久化 | 标记=凭据同目录 `.bdn_circuit.json`（errno+ts），TTL 30 分钟，新进程预开熔断；`bdn doctor --reset` 双清 | 活体：预置标记→新进程 rc=2 **零请求拦截**→复位→1 发流通（r7） |
+| 9 状态文件健壮性+clean | 读写下锁/坏文件→中文错误（同步盘场景）；断点目录自动建；`bdn clean` 列残留清单 `--confirm` 才删（Temp 实扫 8 件零删） | 单测 6 件 |
+
+### C 围栏探针（8 发恰满）
+
+| 探针 | 发数 | 结果 |
+|---|---|---|
+| locatedownload（LocateDownloadSign 直译） | 1 | **命中**：errno=0，urls=6/明文 6（bd-cu22.baidupcs.com）；速度 locatedl 4.21MB/s vs dlink 2.55MB/s=**1.65x**（netdisk/browser UA 双腿均 206/4MB）→ `download --svip` 上线（活体全链 10MB 直收，本轮 1.13MB/s 网络波动） |
+| 空文件 precreate | 1 | **死**：errno=2 参数错（恒定 md5 d41d8…+空 block_list 不放行）→ 维持拒绝，`--allow-empty` 旗标留作通道复活后备 |
+| 回收站 rm→restore→ls | 3 | rm 进站 ✓（filemanager delete）；**restore 双形态死**：pcs `file?method=restore`（蓝本全参形态）=error_code 31030 "pcs token not exist"；api 族猜形 `/api/recycle/restore` body fsids=errno 2 → `recycle restore` 命令在库、通道死文档化；围栏 10MB 以重传找回（回收站内原件 fs_id 816249646875864 留待用户官方客户端处置） |
+| filediff 双形态 | 2 | POST 捕获形态=errno 2（W4 同，无游标）；**GET batch/filediff（cursor=null+sign 四参）=无终 chunked 流挂死**（读超时被逐块绕过，25s 守护线程截止才脱身）→ O(1) 轴未激活，且此端点有挂死风险，调用方必须带截止护栏 |
+| 秒传回喂（加餐） | 1 | 服务端 md5 混淆形态（`852a67996o99…` 含非 hex）回喂 precreate → return_type=1 **不变**（混淆 md5 不能作秒传索引，漂移账 #14 再证） |
+
+W7 离线单测新增 48 项（**总分 163/163 OK**，1.2s 零网络，五连跑稳定）。
+
 ### W4 关键诊断链（tests/_diag_w4*.py，战役记录）
 
 1. xpan 写面 9019 need verify（风控墙）；pcs mkdir 假成功（errno=0 不落盘）→ 写面唯一可靠通道=**/api 家族**（api/create + api/filemanager）。
@@ -213,8 +261,11 @@ W6 离线单测新增 14 项（**总分 115/115 OK**，0.7s 零网络）。
 6. 回收站 100 项 = 单页满页，`recycle --page 2` 可续（未测，预算纪律）。
 7. **秒传（W4 遗留）**：本账号 /api 通道 precreate return_type=2 不可达（四变体诊断全 miss）——服务端 md5 混淆疑似根因（漂移账 #14）；引擎秒传探测逻辑在位，通道恢复即零改自动生效。
 8. **filediff 冷启动（W4 遗留）**：见怪癖 4；带游标的轮询形态已具备（库 filediff(cursor)）。
-9. 空文件上传不支持（蓝本 EmptyContentMD5 特例，引擎显式拒绝并报错；mirror 对空文件跳过并如实列名）。
+9. 空文件上传不支持（蓝本 EmptyContentMD5 特例，引擎显式拒绝并报错；mirror 对空文件跳过并如实列名）。**W7 实证加码**：围栏 1 发 precreate（恒定 md5 d41d8…+空 block_list）= errno 2 参数错——服务端此形态不放行，`--allow-empty` 旗标留作通道复活后备；pull 侧空文件可正常拉取（下载引擎 0 字节天然支持）。
 10. 围栏 /API复刻测试_1029/ 内测试产物（六轮冒烟+七件诊断+**W5 mirror_test 26 文件/transfer_in**+**W6 qa_gate_tmp（sub/qa_100k_rn.bin 等）**）全部保留，待用户明示处置（零删除纪律）。
 11. **share/transfer 复测（W6 收口→W7 遗留）**：W6 复测 1 发（带 bdstoken）仍 errno 2——W5「缺 bdstoken」单因**证伪**（跳级探针钉死断点在 transfer POST，前置五跳全绿；ERRATA_1030.md）；蓝本全参形态（query shareid+from+bdstoken，transfer.go:79-85）已实装（api.share_transfer+cmd_transfer+单测），1 发复测留 W7/用户令；cmd_transfer 异常路径已补 JSON 回显（errno+payload 可归档）。
 12. **T1 bdpan 子进程通道（W5 留接口）**：默认 off——启用=接受官方二进制遥测/rand 签名族/OAuth 沙箱路径，与零遥测+全盘绝对路径红线冲突；仅 /api 家族整面死亡时评估（需独立审批）。
 13. Git Bash 直调 bdn.py 传远端绝对路径会被 MSYS 路径转换吃掉（→C:/Program Files/Git/…）；须 `MSYS_NO_PATHCONV=1` 或走 PowerShell（errno -7 客户端护栏即拦，零误发）。
+14. **回收站 restore 双形态死（W7 实测）**：pcs `file?method=restore`（蓝本 multipart param 全参形态）= error_code 31030 "pcs token not exist"（cookie 腿无 pcs token——locatedownload 同域却放行，家族内逐端点异质）；api 族 `/api/recycle/restore` body fsids 猜形 = errno 2。`bdn recycle restore` 命令在库+双确认单测，通道复活即用；recycle delete（api 族）实现+单测在库未活测。
+15. **GET /api/batch/filediff 有挂死风险（W7 实测）**：cursor=null+LocateDownloadSign 全参形态 → 服务端回**无终 chunked 流**，requests 读超时被逐块到达绕过（10 分钟不返回，py-spy 定位在 read_chunked）；smoke part1 因此挂死杀进程。filediff_get 保留为探针件，任何调用方必须自备截止护栏（见 smoke_w7_live_part2.bounded）；O(1) 增量轴维持未激活。
+16. W6 遗留 transfer 复测（蓝本全参 shareid+from+bdstoken 1 发）本波未做——W7 任务书未列且 C 探针预算 8/8 已满，留用户令。

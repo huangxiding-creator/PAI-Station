@@ -38,6 +38,15 @@ BACKOFF_BASE = 1.5         # 首次退避秒数，之后 ×2（1.5 → 3.0）
 MIN_INTERVAL = 1.5         # 物理请求最小间隔（秒）
 MAX_CONCURRENCY = 2        # 控制面并发上限
 HTTP_TIMEOUT = (10, 30)    # (connect, read)
+CIRCUIT_TTL = 30 * 60      # 熔断标记跨进程 TTL（秒）——W7 B8：30 分钟
+CIRCUIT_MARKER = ".bdn_circuit.json"   # 标记文件名（放凭据同目录）
+
+# W7 A7：STOKEN 失效（蓝本 issue #546）自愈编排的中文指引
+AUTH_REGUIDE = (
+    "登录凭据失效（errno={errno}），且从凭据文件重读后仍无新值——不再盲目复用旧 token。\n"
+    "请手动重收凭据：按 README「凭据重收 runbook」重新抓取 BDUSS/STOKEN 写入 "
+    f"{DEFAULT_CRED_PATH}，或以 --cred 指定新凭据文件后重试；"
+    "重收后可先跑 bdn doctor 验活（若此前熔断，用 bdn doctor --reset 清标记）。")
 
 
 def _backoff_sleep(seconds: float):
@@ -102,6 +111,7 @@ class BdnSession:
                  creds: dict | None = None,
                  transport=None, throttle: Throttle | None = None):
         self.cred_path = cred_path or os.environ.get("BDN_CREDENTIALS", DEFAULT_CRED_PATH)
+        self._creds_from_file = creds is None      # 生产 CLI 路径（凭据重读自愈的前提）
         if creds is None:
             creds = self.load_credentials(self.cred_path)
         self.bduss = creds["bduss"]
@@ -114,6 +124,15 @@ class BdnSession:
         # 熔断状态
         self._circuit_reason: str | None = None
         self._circuit_errno = None
+        # W7 B8：跨进程熔断标记预装载（仅生产路径；creds= 注入的测试会话不受影响）
+        if self._creds_from_file:
+            m = self._read_circuit_marker()
+            if m is not None:
+                self._circuit_errno = m.get("errno")
+                self._circuit_reason = (
+                    f"跨进程持久化: errno={m.get('errno')} "
+                    f"{describe(m.get('errno'))}（标记于 {m.get('time')}，"
+                    f"TTL {CIRCUIT_TTL // 60} 分钟内）")
         # 请求台账（只记方法+路径+状态+耗时，永不记 Cookie/凭据）
         self.request_log: list[dict] = []
         self.requests_sent = 0
@@ -162,28 +181,112 @@ class BdnSession:
     def _check_circuit(self):
         if self._circuit_reason is not None:
             raise BdnCircuitOpen(
-                f"熔断已打开: {self._circuit_reason}；本进程内停止一切请求", self._circuit_errno)
+                f"熔断已打开: {self._circuit_reason}；本进程内停止一切请求"
+                "（bdn doctor --reset 可清标记）", self._circuit_errno)
 
     def _trip(self, errno):
         self._circuit_errno = errno
         self._circuit_reason = f"errno={errno} {describe(errno)}"
+        if self._creds_from_file:               # 仅生产路径落标记（离线注入态不写盘）
+            self._write_circuit_marker(errno)
+
+    # ---- W7 B8：熔断标记跨进程持久化（凭据同目录 .bdn_circuit.json，TTL 30 分钟） ----
+
+    def circuit_marker_path(self) -> str:
+        d = os.path.dirname(os.path.abspath(self.cred_path)) or "."
+        return os.path.join(d, CIRCUIT_MARKER)
+
+    def _write_circuit_marker(self, errno):
+        """落标记（errno+时间戳）。写失败不掩盖原熔断异常——静默容忍。"""
+        try:
+            with open(self.circuit_marker_path(), "w", encoding="utf-8") as f:
+                json.dump({"errno": errno,
+                           "ts": time.time(),
+                           "time": time.strftime("%Y-%m-%d %H:%M:%S")}, f)
+        except OSError:
+            pass
+
+    def _read_circuit_marker(self) -> dict | None:
+        """读未过期标记；无标记/过期/坏文件 → None（过期顺手清掉）。"""
+        try:
+            with open(self.circuit_marker_path(), "r", encoding="utf-8") as f:
+                m = json.load(f)
+        except (OSError, ValueError):
+            return None
+        if not isinstance(m, dict) or "errno" not in m:
+            return None
+        try:
+            fresh = time.time() - float(m.get("ts", 0)) < CIRCUIT_TTL
+        except (TypeError, ValueError):
+            return None
+        if not fresh:
+            self.clear_circuit_marker()
+            return None
+        return m
+
+    def clear_circuit_marker(self) -> bool:
+        """清标记文件（bdn doctor --reset 调用）。返回是否确实删了文件。"""
+        try:
+            os.remove(self.circuit_marker_path())
+            return True
+        except OSError:
+            return False
+
+    def reset_circuit(self) -> dict:
+        """熔断复位（内存+标记双清）。doctor --reset 用。"""
+        removed = self.clear_circuit_marker()
+        reason, errno = self._circuit_reason, self._circuit_errno
+        self._circuit_reason = None
+        self._circuit_errno = None
+        return {"reset": True, "marker_removed": removed,
+                "previous_reason": reason, "previous_errno": errno}
 
     # ---------- 请求 ----------
 
     def request(self, method: str, path: str, params: dict | None = None,
-                data: dict | None = None, cookies: str | None = None) -> dict:
-        """发一次受控请求，返回解析后的 JSON dict。
+                data: dict | None = None, cookies: str | None = None,
+                files: dict | None = None) -> dict:
+        """受控请求编排壳（W7 A7：STOKEN 失效自愈）。
 
-        - path 以 / 开头（pan.baidu.com 域内路径）或完整 https:// URL（跨域端点：
-          d.pcs.baidu.com 上传定位等，W4 起支持；台账记 netloc+path）；
-        - cookies（W5）：附加 Cookie 段（如转存链 randsk → "BDCLND=…"），拼在
-          BDUSS+STOKEN 之后；台账/输出永不记 Cookie 值；
-        - 裸 JSON 数组响应（xpan task?method=querytask 形态）→ 包成 {"errno":0,"_list":[...]}；
-        - errno==0 或缺省 → 返回 payload；
-        - errno 命中 CIRCUIT_ERRNOS → 熔断 + BdnCircuitOpen；
-        - errno==-6/111 → BdnAuthError；其余 → BdnApiError；
-        - 传输异常/HTTP≥500 → 指数退避重试（共 3 次），耗尽抛 BdnNetworkError。
+        errno -6/111（蓝本 issue #546 stoken 族失效）→ 从凭据文件重读一次：
+        拿到**不同**的 BDUSS/STOKEN 才退避 1.5s 重试一次；重读无新值或重试仍败
+        → BdnAuthError 附中文重收指引（绝不盲目复用旧 token 重试）。
+        files（W7）：multipart 表单（recycle restore 的 param 字段形态）。
         """
+        for cred_round in range(2):
+            try:
+                return self._request_once(method, path, params, data, cookies,
+                                          files)
+            except BdnAuthError as e:
+                if e.errno not in (-6, 111) or cred_round > 0:
+                    raise
+                if self._reload_credentials():
+                    continue                    # 拿到新凭据 → 退避后重试一次
+                raise BdnAuthError(
+                    AUTH_REGUIDE.format(errno=e.errno), errno=e.errno) from e
+        raise BdnAuthError("unreachable", errno=-6)   # pragma: no cover
+
+    def _reload_credentials(self) -> bool:
+        """凭据文件重读（仅 _creds_from_file 生产路径）。有新值→更新+退避→True。"""
+        if not self._creds_from_file:
+            return False
+        try:
+            fresh = self.load_credentials(self.cred_path)
+        except BdnAuthError:
+            return False
+        if fresh["bduss"] == self.bduss and fresh["stoken"] == self.stoken:
+            return False                         # 文件无新值（没换 token 白试）
+        self.bduss, self.stoken = fresh["bduss"], fresh["stoken"]
+        if fresh.get("ua"):
+            self.ua = fresh["ua"]
+        _backoff_sleep(BACKOFF_BASE)             # 退避 1.5s 再重试（W7 A7）
+        return True
+
+    def _request_once(self, method: str, path: str, params: dict | None = None,
+                      data: dict | None = None, cookies: str | None = None,
+                      files: dict | None = None) -> dict:
+        """单轮受控请求（原 request() 主体，重试/熔断/台账语义不变；
+        -6/111 的凭据自愈由外层 request() 编排）。"""
         self._check_circuit()
         if path.startswith("https://") or path.startswith("http://"):
             url = path
@@ -202,9 +305,14 @@ class BdnSession:
             with self.throttle.slot():
                 t0 = time.perf_counter()
                 try:
-                    resp = self._transport.request(
-                        method, url, params=params, data=data,
-                        headers=headers, timeout=HTTP_TIMEOUT)
+                    if files is not None:
+                        resp = self._transport.request(
+                            method, url, params=params, data=data, files=files,
+                            headers=headers, timeout=HTTP_TIMEOUT)
+                    else:
+                        resp = self._transport.request(
+                            method, url, params=params, data=data,
+                            headers=headers, timeout=HTTP_TIMEOUT)
                     status = resp.status_code
                     if status >= 500:
                         raise requests.HTTPError(f"HTTP {status}")

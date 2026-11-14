@@ -38,6 +38,13 @@ def collect_feedback() -> int:
             quote = (it.get("transcript") or "").strip()
             if not quote:
                 continue
+            # 1031 值守补丁: 剔探针/运维自测 openid + 非pending态(已消化addressed/已忽略ignored)
+            # 对齐 feedback_revision_loop 剔探针铁律; 根因=probe_051/052/chips 三条连续3天伪阳性入雷达
+            oid = (it.get("openid") or "").lower()
+            if "probe" in oid or "test" in oid or oid.startswith("ops_"):
+                continue
+            if (it.get("status") or "") != "pending":
+                continue
             scores = {}
             try:
                 scores = json.loads(it.get("scores_json") or "{}")

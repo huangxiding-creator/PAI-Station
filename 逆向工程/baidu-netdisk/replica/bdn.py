@@ -26,7 +26,7 @@ if hasattr(sys.stderr, "reconfigure"):
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from bdncore import (BdnApi, BdnApiError, BdnError, BdnSession,  # noqa: E402
-                     DownloadEngine, MirrorEngine, RoutedApi,
+                     DownloadEngine, MirrorEngine, PullEngine, RoutedApi,
                      UploadEngine, mask, run_doctor)
 
 
@@ -183,10 +183,206 @@ def cmd_recycle(api, args):
     return info
 
 
+# ---------------- W7：回收站写面 / pull / clean ----------------
+
+def _recycle_find(api, target: str) -> dict:
+    """fsid 或路径 → 回收站条目（路径=在回收站列表中按 path 尾段匹配）。"""
+    if str(target).isdigit():
+        want = int(target)
+        for page in range(1, 4):                       # 翻 ≤3 页护栏
+            r = api.recycle_list(page=page, num=200)
+            for e in r.get("entries") or []:
+                if int(e.get("fs_id") or 0) == want:
+                    return e
+            if len(r.get("entries") or []) < 200:
+                break
+        raise BdnApiError(-9, f"回收站中无此 fs_id: {target}")
+    # 路径形态：按 path 匹配（回收站条目带原始 path）
+    tgt = str(target).rstrip("/")
+    for page in range(1, 4):
+        r = api.recycle_list(page=page, num=200)
+        for e in r.get("entries") or []:
+            if (e.get("path") or "").rstrip("/") == tgt:
+                return e
+        if len(r.get("entries") or []) < 200:
+            break
+    raise BdnApiError(-9, f"回收站中无此路径: {target}")
+
+
+def _recycle_row(e: dict) -> dict:
+    return {"fs_id": e.get("fs_id"), "path": e.get("path"),
+            "name": e.get("server_filename") or e.get("filename") or e.get("name"),
+            "size": e.get("size"), "isdir": bool(e.get("isdir", 0))}
+
+
+def cmd_recycle_restore(api, args):
+    """回收站还原（双确认：先列目标清单，--confirm 才执行；未加=退出码 3）。"""
+    sent0 = api.s.requests_sent
+    e = _recycle_find(api, args.target)
+    row = _recycle_row(e)
+    print("# 待还原清单（回收站 → 原位置）:")
+    print(f"  {'d' if row['isdir'] else '-'} fs_id={row['fs_id']}  "
+          f"{human_size(row['size']):>10}  {row['path']}")
+    if not args.confirm:
+        info = {"errno": 0, "executed": False, "exit": 3,
+                "entries": [row], "requests": api.s.requests_sent - sent0,
+                "note": "未加 --confirm：只列清单，未执行任何还原"}
+        _emit(args, info)
+        if not args.json:
+            print("未加 --confirm，未执行（退出码 3）")
+        return 3
+    r = api.recycle_restore([row["fs_id"]])
+    info = {"errno": r.get("errno", 0), "executed": True,
+            "restored": [row["fs_id"]], "entries": [row],
+            "response": r, "requests": api.s.requests_sent - sent0}
+    _emit(args, info)
+    if not args.json:
+        ok = info["errno"] == 0
+        print(f"{'已还原' if ok else '还原失败 errno=' + str(info['errno'])}: "
+              f"{row['path']}（fs_id={row['fs_id']}）")
+    return 0 if info["errno"] == 0 else 1
+
+
+def cmd_recycle_delete(api, args):
+    """回收站彻底删除（不可逆；必须 --confirm）。"""
+    sent0 = api.s.requests_sent
+    e = _recycle_find(api, args.target)
+    row = _recycle_row(e)
+    print("# 待彻底删除清单（**不可逆**，回收站直接抹除）:")
+    print(f"  {'d' if row['isdir'] else '-'} fs_id={row['fs_id']}  "
+          f"{human_size(row['size']):>10}  {row['path']}")
+    if not args.confirm:
+        info = {"errno": 0, "executed": False, "exit": 3,
+                "entries": [row], "requests": api.s.requests_sent - sent0,
+                "note": "未加 --confirm：只列清单，未执行任何删除"}
+        _emit(args, info)
+        if not args.json:
+            print("未加 --confirm，未执行（退出码 3）")
+        return 3
+    r = api.recycle_delete([row["fs_id"]])
+    info = {"errno": r.get("errno", 0), "executed": True,
+            "deleted": [row["fs_id"]], "entries": [row],
+            "response": r, "requests": api.s.requests_sent - sent0}
+    _emit(args, info)
+    if not args.json:
+        print(f"彻底删除 errno={info['errno']}: {row['path']}")
+    return 0 if info["errno"] == 0 else 1
+
+
+def cmd_recycle_clear(api, args):
+    """清空回收站（整箱不可逆）——默认拒绝；仅 --i-mean-it 才执行（本战役不活测）。"""
+    if not args.i_mean_it:
+        info = {"errno": 0, "executed": False, "exit": 3,
+                "note": "清空回收站=整箱不可逆：默认拒绝。确认整箱清空请加 --i-mean-it"}
+        _emit(args, info)
+        if not args.json:
+            print(info["note"])
+        return 3
+    r = api.recycle_clear()
+    info = {"errno": r.get("errno", 0), "executed": True, "response": r}
+    _emit(args, info)
+    return 0 if info["errno"] == 0 else 1
+
+
+def cmd_pull(api, args):
+    """pull 恢复腿：远端目录 → 本地（mirror 反向件；本地多余只报告不删）。"""
+    eng = PullEngine(api, max_scan_requests=args.max_scan_requests)
+    r = eng.run(args.remote, args.local, dry_run=args.dry_run)
+    _emit(args, r)
+    if not args.json:
+        head = "dry-run 计划" if args.dry_run else "拉取完成"
+        print(f"{head}: {args.remote} → {args.local}")
+        print(f"  远端 {r['remote_files']} 文件/{human_size(r['bytes_total'])} "
+              f"扫描 {r['scan_used']}/{r['scan_limit']} 发"
+              + ("（预算耗尽截断）" if r["scan_truncated"] else ""))
+        print(f"  下载 {r['downloads_done']}/{r['downloads_planned']} "
+              f"({human_size(r['bytes_received'])}, 数据面 {r['data_requests']} 发) "
+              f"未变 {r['unchanged']}")
+        if r["local_only_count"]:
+            print(f"  本地多余 {r['local_only_count']} 项（**只报告不删**，样本 "
+                  f"{r['local_only_sample'][:5]}）")
+        if r["unscanned_count"]:
+            print(f"  未扫目录 {r['unscanned_count']} 个（详见 --json unscanned_dirs）")
+        if r["downloads_failed"]:
+            print(f"  失败 {len(r['downloads_failed'])} 件（详见 --json）")
+    return 0 if not r["downloads_failed"] else 1
+
+
+# bdn clean 残留状态件清单/清理（W7 B9；对齐删除铁律：--confirm 才删）
+_RESIDUE_PATTERNS = (".bdn_upload_state.json", ".bdn_dl_state.json")
+
+
+def _scan_residue(root: str) -> list:
+    import re
+    mirror_re = re.compile(r"^\.bdn_mirror_[0-9a-f]{8}\.json$")
+    out = []
+    for dirpath, _dirnames, filenames in os.walk(root):
+        for fn in filenames:
+            full = os.path.join(dirpath, fn)
+            kind = None
+            if fn.endswith(_RESIDUE_PATTERNS):
+                kind = "transfer_state"
+            elif mirror_re.match(fn):
+                kind = "mirror_state"
+            elif fn == ".bdn_circuit.json":
+                kind = "circuit_marker"
+            if kind:
+                try:
+                    sz = os.path.getsize(full)
+                except OSError:
+                    sz = -1
+                out.append({"path": full, "kind": kind, "size": sz})
+    return out
+
+
+def cmd_clean(api, args):
+    """bdn clean：列本地残留状态件；--confirm 才删（无网络零请求，api 不用）。"""
+    rows = _scan_residue(args.dir)
+    print(f"# 残留状态文件清单（{args.dir} 下共 {len(rows)} 件）:")
+    for r in rows:
+        print(f"  [{r['kind']:<15}] {human_size(r['size']):>10}  {r['path']}")
+    if not rows:
+        info = {"errno": 0, "count": 0, "deleted": [], "note": "无残留"}
+        _emit(args, info)
+        return 0
+    if not args.confirm:
+        info = {"errno": 0, "executed": False, "exit": 3, "count": len(rows),
+                "entries": rows,
+                "note": "未加 --confirm：只列清单，未删除任何文件"}
+        _emit(args, info)
+        if not args.json:
+            print(f"共 {len(rows)} 件；未加 --confirm，未删除（退出码 3）")
+        return 3
+    deleted, failed = [], []
+    for r in rows:
+        try:
+            os.remove(r["path"])
+            deleted.append(r["path"])
+        except OSError as e:
+            failed.append({"path": r["path"], "error": str(e)})
+    info = {"errno": 0 if not failed else 1, "executed": True,
+            "count": len(rows), "deleted": deleted, "failed": failed}
+    _emit(args, info)
+    if not args.json:
+        print(f"已删除 {len(deleted)}/{len(rows)} 件断点残留"
+              + (f"；失败 {len(failed)} 件" if failed else ""))
+    return 0 if not failed else 1
+
+
 def cmd_doctor(api, args):
-    """W5 复验器：八针体检（凭据活性/读探针/配额/协议指纹漂移）→ ok/degraded/dead。"""
+    """W5 复验器：八针体检（凭据活性/读探针/配额/协议指纹漂移）→ ok/degraded/dead。
+    W7 B8：--reset 先清跨进程熔断标记（内存+标记文件双清）再体检。"""
     sess = api.s
+    reset_info = None
+    if getattr(args, "reset", False):
+        reset_info = sess.reset_circuit()
+        if not args.json:
+            prev = reset_info["previous_reason"] or "无"
+            print(f"熔断复位: 标记文件删除={reset_info['marker_removed']} "
+                  f"（此前: {prev}）")
     rep = run_doctor(api)
+    if reset_info is not None:
+        rep["circuit_reset"] = reset_info
     rep["credentials"] = _cred_summary(sess)
     rep["requests_total_session"] = sess.requests_sent
     _emit(args, rep)
@@ -307,8 +503,11 @@ def cmd_rm(api, args):
 
 def cmd_upload(api, args):
     sent0 = api.s.requests_sent
-    eng = UploadEngine(api)
-    r = eng.upload(args.local, args.remote, rtype=3)
+    eng = UploadEngine(api, allow_empty=args.allow_empty)
+    try:
+        r = eng.upload(args.local, args.remote, rtype=3)
+    finally:
+        eng.close()  # judge W7-#1：短命进程无害，长命宿主防连接池积累
     r["control_requests"] = api.s.requests_sent - sent0
     r["requests"] = api.s.requests_sent - sent0
     _emit(args, r)
@@ -323,12 +522,20 @@ def cmd_upload(api, args):
 def cmd_download(api, args):
     sent0 = api.s.requests_sent
     eng = DownloadEngine(api)
-    r = eng.download(args.remote, args.local)
+    uid = None
+    if args.svip:
+        acc = (api.login_status().get("account") or {})
+        uid = acc.get("uk")
+    try:
+        r = eng.download(args.remote, args.local, use_locatedl=args.svip, uid=uid)
+    finally:
+        eng.close()  # judge W7-#1：同 upload
     r["control_requests"] = api.s.requests_sent - sent0
     r["requests"] = api.s.requests_sent - sent0
     _emit(args, r)
     if not args.json:
-        print(f"已下载: {args.remote} → {args.local} "
+        src = r.get("dlink_source") or "web_dlink"
+        print(f"已下载[{src}]: {args.remote} → {args.local} "
               f"size={human_size(r['size'])} 块={r['chunks_this_run']}/{r['chunks_total']} "
               f"md5校验={'通过' if r['md5_ok'] else '未比对'} "
               f"{r['speed_mb_s']}MB/s 用时{r['elapsed_s']}s")
@@ -352,14 +559,16 @@ def guard_mirror_remote(remote: str, allow_root: bool = False):
 
 def cmd_mirror(api, args):
     guard_mirror_remote(args.remote, getattr(args, "allow_root", False))
-    eng = MirrorEngine(api)
+    eng = MirrorEngine(api, max_scan_requests=args.max_scan_requests)
     r = eng.run(args.local, args.remote, dry_run=args.dry_run)
     _emit(args, r)
     if not args.json:
         head = "dry-run 计划" if args.dry_run else "镜像完成"
         print(f"{head}: {args.local} → {args.remote}")
         print(f"  本地 {r['files_scanned']} 文件/{human_size(r['bytes_total'])} "
-              f"(md5 重哈希 {r['md5_rehashed']})  远端扫描 {r['remote_scan_requests']} 发")
+              f"(md5 重哈希 {r['md5_rehashed']})  远端扫描 {r['remote_scan_requests']} 发"
+              + (f"（预算耗尽 {r['scan_used']}/{r['scan_limit']}，未扫 "
+                 f"{r['unscanned_count']} 目录）" if r["scan_truncated"] else ""))
         print(f"  上传 {r['uploads_done']}/{r['uploads_planned']} "
               f"({human_size(r['bytes_uploaded'])}, 数据面 {r['data_requests']} 发) "
               f"未变 {r['unchanged']} 补账 {r['assumed_unchanged']} "
@@ -568,12 +777,26 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--page", type=int, default=1)
     common(sp); sp.set_defaults(fn=cmd_shares)
 
-    sp = sub.add_parser("recycle", help="回收站列表（只读）")
+    sp = sub.add_parser("recycle", help="回收站（默认列表；restore/delete/clear 写面子命令）")
     sp.add_argument("--page", type=int, default=1)
     sp.add_argument("--num", type=int, default=100)
     common(sp); sp.set_defaults(fn=cmd_recycle)
+    rsub = sp.add_subparsers(dest="recycle_cmd")
+    rsp = rsub.add_parser("restore", help="还原回收站条目（双确认：先列清单，--confirm 才执行）")
+    rsp.add_argument("target", help="fs_id 或原始路径（/ 开头）")
+    rsp.add_argument("--confirm", action="store_true")
+    common(rsp); rsp.set_defaults(fn=cmd_recycle_restore, page=1, num=100)
+    rsp = rsub.add_parser("delete", help="彻底删除回收站条目（不可逆，必须 --confirm）")
+    rsp.add_argument("target", help="fs_id 或原始路径")
+    rsp.add_argument("--confirm", action="store_true")
+    common(rsp); rsp.set_defaults(fn=cmd_recycle_delete, page=1, num=100)
+    rsp = rsub.add_parser("clear", help="清空回收站（整箱不可逆；默认拒绝，仅 --i-mean-it）")
+    rsp.add_argument("--i-mean-it", dest="i_mean_it", action="store_true")
+    common(rsp); rsp.set_defaults(fn=cmd_recycle_clear)
 
     sp = sub.add_parser("doctor", help="链路体检（W5 复验器：八针+协议指纹漂移，全只读）")
+    sp.add_argument("--reset", action="store_true",
+                    help="先清跨进程熔断标记（凭据同目录 .bdn_circuit.json）再体检")
     common(sp); sp.set_defaults(fn=cmd_doctor)
 
     # ---- 写命令（W4）----
@@ -606,11 +829,15 @@ def build_parser() -> argparse.ArgumentParser:
     sp = sub.add_parser("upload", help="上传（三段+秒传+断点续传；分片并发≤8）")
     sp.add_argument("local", help="本地文件路径")
     sp.add_argument("remote", help="远端绝对路径（含文件名）")
+    sp.add_argument("--allow-empty", dest="allow_empty", action="store_true",
+                    help="放行 0 字节文件（precreate 恒定 md5 d41d8…+空 block_list）")
     common(sp); sp.set_defaults(fn=cmd_upload)
 
     sp = sub.add_parser("download", help="下载（dlink+Range 多线程≤8+分片4MB+md5 校验+断点续传）")
     sp.add_argument("remote", help="远端绝对路径")
     sp.add_argument("local", help="本地落盘路径")
+    sp.add_argument("--svip", action="store_true",
+                    help="走安卓腿 locatedownload 直链（LocateDownloadSign；失败自动回退 dlink）")
     common(sp); sp.set_defaults(fn=cmd_download)
 
     # ---- W5：镜像 / 分享 / 转存 ----
@@ -619,9 +846,27 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("local", help="本地目录")
     sp.add_argument("remote", help="远端绝对目录（如 /API复刻测试_1029/mirror_test）")
     sp.add_argument("--dry-run", action="store_true", help="只出计划零上传")
+    sp.add_argument("--max-scan-requests", dest="max_scan_requests", type=int,
+                    default=100,
+                    help="远端递归扫描预算（默认 100 发；耗尽如实报已用/上限+未扫目录清单）")
     sp.add_argument("--allow-root", action="store_true",
                     help="显式放行远端目标为 / 或一级根目录（默认拒绝防误铺根）")
     common(sp); sp.set_defaults(fn=cmd_mirror)
+
+    sp = sub.add_parser("pull", help="拉取恢复 远端目录→本地（mirror 反向件；"
+                                    "本地多余只报告不删；下载带 md5 校验+断点续传）")
+    sp.add_argument("remote", help="远端绝对目录（如 /API复刻测试_1030）")
+    sp.add_argument("local", help="本地落盘目录（不存在自动建）")
+    sp.add_argument("--dry-run", action="store_true", help="只出计划零下载")
+    sp.add_argument("--max-scan-requests", dest="max_scan_requests", type=int,
+                    default=100, help="远端递归扫描预算（默认 100 发）")
+    common(sp); sp.set_defaults(fn=cmd_pull)
+
+    sp = sub.add_parser("clean", help="列本地残留断点/状态文件清单（--confirm 才删；零网络）")
+    sp.add_argument("dir", help="本地目录（递归扫 .bdn_*_state/.bdn_mirror_*/.bdn_circuit）")
+    sp.add_argument("--confirm", action="store_true",
+                    help="显式确认删除清单内残留文件（无此旗标只列清单退出码 3）")
+    common(sp); sp.set_defaults(fn=cmd_clean)
 
     sp = sub.add_parser("share-create", help="创建分享（/share/pset 旧代写面；≤2 发）")
     sp.add_argument("path", help="远端绝对路径（文件/目录）")
