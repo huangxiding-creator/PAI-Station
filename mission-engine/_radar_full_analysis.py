@@ -3,7 +3,7 @@
 import json, re, collections, datetime as dt
 
 LEDGER = "ledger/signals.jsonl"
-NOW = dt.datetime(2026, 10, 27, 17, 5, 40)
+NOW = dt.datetime.now()  # 1115修:原硬编码2026-10-27致时间加权全失效,前两巡内联绕行
 
 rows = []
 with open(LEDGER, encoding="utf-8") as f:
