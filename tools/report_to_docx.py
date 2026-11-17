@@ -66,12 +66,8 @@ def report_to_docx(md_path: str, out_path: str) -> str:
         _center(doc, line, size=11, color=GRAY)
     doc.add_page_break()
 
-    doc.add_heading("目 录", level=1)
-    for ch in chapters:
-        _toc_line(doc, ch["title"])
-        for kind, payload in ch["children"]:
-            if kind == "h2":
-                _toc_line(doc, payload, level=2)
+    # 1117修复: 不再加手动目录(与正文Heading重复致章重复), TOC由WPS AI引擎/pipeline插入
+    # 原手动目录逻辑: add_heading("目 录")+_toc_line每章每节 → 已删
     doc.add_page_break()
 
     for ch in chapters:
