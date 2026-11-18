@@ -83,7 +83,9 @@ Page({
         const chapters = d.chapters || [];
         const volCount = chapters.filter((c) => c.vol).length;
         const chCount = chapters.length - volCount;
-        this.setData({ d, volCount, chCount, loading: false });
+        // 1118 知识库 SKU（KB 只存百度网盘）：解锁后交付=网盘链接卡，非 PDF
+        this.setData({ d, volCount, chCount, loading: false,
+          isKb: !!(d && d.product_type === 'knowledge_base') });
         // v0.9.23：问答区初始态实值化——解锁者直接亮「已解锁·无限问」，未解锁者取统一池真余量
         if (d && d.unlocked) {
           this.setData({ askUnlimited: true, askLeft: 999 });
@@ -169,6 +171,8 @@ Page({
 
   // 打开 PDF 全文（已解锁；downloadFile 须带 Bearer 头）
   openPdf() {
+    // 知识库 SKU 无 PDF（1118：内容只存百度网盘）——兜底转交付卡复制
+    if (this.data.isKb) { this.copyDelivery(); return; }
     if (this.data.opening) return;
     this.setData({ opening: true });
     pop.loading(this, '打开报告中');
@@ -199,6 +203,24 @@ Page({
     pop.hideLoading(this);
     this.setData({ opening: false });
     wx.showToast({ title: msg, icon: 'none', duration: 2500 });
+  },
+
+  // ══ 1118 知识库交付（用户令：KB 内容只存百度网盘，小程序只发链接）══
+  // 解锁后 detail 附 delivery 块（服务端仅对已购本人下发）；复制永久链接
+  // + 提取码一步到位，引导用百度网盘App打开/转存整库。
+  copyDelivery() {
+    const dl = (this.data.d || {}).delivery;
+    if (!dl || !dl.url) {
+      wx.showToast({ title: '交付链接整理中，请稍后重进本页', icon: 'none', duration: 2500 });
+      return;
+    }
+    tel.ping('kb_delivery_copy', { sku: String(this.data.sku || '').slice(0, 24) });
+    const text = dl.pwd ? (dl.url + ' 提取码：' + dl.pwd) : dl.url;
+    wx.setClipboardData({
+      data: text,
+      success: () => wx.showToast({ title: '网盘链接已复制，去百度网盘App打开', icon: 'none', duration: 2800 }),
+      fail: () => wx.showToast({ title: '复制失败，请长按链接手动复制', icon: 'none', duration: 2500 }),
+    });
   },
 
   // ══ v0.9.15（用户令 1011）互动三件：有用 / 分享给同行 / 生成海报 ══
@@ -272,6 +294,7 @@ Page({
       .then((path) => {
         pop.hideLoading(this);
         this.setData({ posterBusy: false });
+        tel.ping('poster_ok', { sku: String(this.data.sku || '').slice(0, 24) });
         // 1114 用户令：海报直存相册——保存为第一动作（修复原生分享面板
         // 内置「保存图片」在相册权限被拒时的「暂无图片保存权限」死路）
         this._posterPath = path;
@@ -292,13 +315,18 @@ Page({
   },
 
   _savePosterAlbum(path) {
+    tel.ping('poster_save_tap', { sku: String(this.data.sku || '').slice(0, 24) });
     saveToAlbum(path, this, pop)
       .then(() => wx.showToast({ title: '已保存到相册', icon: 'success' }))
       .catch((e) => {
         const m = (e && e.errMsg) || '';
-        if (m.indexOf('cancel') < 0 && m.indexOf('still-denied') < 0) {
-          wx.showToast({ title: '保存未成功，请重试', icon: 'none' });
-        } // cancel/still-denied=用户主动放弃，不再打扰
+        if (m.indexOf('cancel') >= 0) return; // 用户主动放弃引导弹窗，不打扰
+        if (m.indexOf('still-denied') >= 0) {
+          // 1118 修：从设置页返回仍未开启——零反馈=「点了没反应」，必须如实告知
+          wx.showToast({ title: '相册权限未开启，海报未保存', icon: 'none', duration: 2200 });
+          return;
+        }
+        wx.showToast({ title: '保存未成功，请重试', icon: 'none' });
       });
   },
 

@@ -103,9 +103,15 @@
       </view>
     </view>
 
-    <!-- 主行动条：未购=购买（iOS 隐藏），已购=打开 PDF -->
+    <!-- 主行动条：未购=购买（iOS 隐藏），已购=打开 PDF；知识库=复制网盘链接（1118：KB 只存百度网盘） -->
     <button
-      wx:if="{{d.unlocked}}"
+      wx:if="{{d.unlocked && isKb}}"
+      class="btn-primary rp-act"
+      hover-class="btn-hover"
+      bindtap="copyDelivery"
+    >📋 复制网盘链接 · 取整库</button>
+    <button
+      wx:elif="{{d.unlocked}}"
       class="btn-primary rp-act"
       hover-class="btn-hover"
       disabled="{{opening}}"
@@ -121,6 +127,16 @@
     <view wx:else class="rp-ios-note muted">本报告 PDF 整理中，开放购买前可先试读</view>
 
     <view class="muted rp-note">先试读、先提问，值不值得，您说了算——每一页，皆出自总包智库对公开资料的逐项核实</view>
+  </view>
+
+  <!-- 知识库网盘交付卡（1118 用户令：KB 内容只存百度网盘；仅已解锁本人，链接服务端按解锁态下发） -->
+  <view class="card ticks rise" wx:if="{{isKb && d.unlocked && d.delivery}}">
+    <view class="kicker kicker-on-paper rp-kicker">DELIVERY · 网盘交付</view>
+    <view class="rp-lede">整库已就绪：百度网盘{{d.delivery.period == 'permanent' ? '永久链接' : '链接'}}，可在线查阅、可转存到自己网盘长期使用。</view>
+    <view class="rp-delivery-url" user-select>{{d.delivery.url}}</view>
+    <view class="rp-delivery-pwd" wx:if="{{d.delivery.pwd}}">提取码：<text class="mono" user-select>{{d.delivery.pwd}}</text></view>
+    <button class="btn-primary rp-act" hover-class="btn-hover" bindtap="copyDelivery">{{d.delivery.pwd ? '复制链接+提取码' : '复制链接'}}</button>
+    <view class="muted rp-note">复制后在浏览器或百度网盘App打开即可；5,953 件原始材料按四大类编目，完整目录见免费蓝图</view>
   </view>
 
   <!-- 简介 -->
@@ -254,10 +270,16 @@
   </view>
   <view class="rp-bar-info" wx:if="{{d.unlocked}}">
     <view class="rp-bar-price">已解锁</view>
-    <view class="rp-bar-sub muted">全量阅读 · 可下载保存</view>
+    <view class="rp-bar-sub muted">{{isKb ? '整库网盘交付 · 永久可用' : '全量阅读 · 可下载保存'}}</view>
   </view>
   <button
-    wx:if="{{d.unlocked}}"
+    wx:if="{{d.unlocked && isKb}}"
+    class="btn-primary rp-bar-btn"
+    hover-class="btn-hover"
+    bindtap="copyDelivery"
+  >📋 复制网盘链接</button>
+  <button
+    wx:elif="{{d.unlocked}}"
     class="btn-primary rp-bar-btn"
     hover-class="btn-hover"
     disabled="{{opening}}"
