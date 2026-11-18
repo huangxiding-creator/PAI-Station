@@ -34,8 +34,15 @@ from docx.parts.hdrftr import FooterPart, HeaderPart
 from docx.shared import Cm, Pt, RGBColor
 
 HERE = Path(__file__).resolve().parent
-OUTDIR = HERE.parent / "_proposals" / "flagship-paid-report-1007" / "work" / "m2" / "visa" / "sched" / "out"
-SRC = OUTDIR / "REPORT_FULL.docx"
+# 1118修: 支持命令行传入路径; 无参时默认visa(向后兼容)
+import sys as _sys
+_args = [a for a in _sys.argv[1:] if not a.startswith("-")]
+if len(_args) >= 1:
+    SRC = Path(_args[0])
+    OUTDIR = SRC.parent
+else:
+    OUTDIR = HERE.parent / "_proposals" / "flagship-paid-report-1007" / "work" / "m2" / "visa" / "sched" / "out"
+    SRC = OUTDIR / "REPORT_FULL.docx"
 OUT = OUTDIR / "REPORT_FULL_v3出版级.docx"
 
 F_BODY = "微软雅黑"
