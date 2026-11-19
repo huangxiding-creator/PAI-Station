@@ -37,6 +37,26 @@
     <view class="kbf-section-note">为您定制新知识库 · 与下方精选智库内容相互独立</view>
   </view>
 
+  <!-- ══ 1119 知识库市场：整库知识库商品发售（研究页不列；点击进详情购买→网盘交付） ══ -->
+  <view class="card ticks rise" style="animation-delay: 45ms" wx:if="{{kbMarket.length}}">
+    <view class="zk-kicker kicker kicker-on-paper">MARKET · 知识库市场</view>
+    <view class="zk-mk-row" hover-class="zk-mk-press" hover-stay-time="80" wx:for="{{kbMarket}}" wx:key="sku" data-sku="{{item.sku}}" bindtap="goKbSku">
+      <view class="zk-mk-glyph"><text>库</text></view>
+      <view class="zk-mk-body">
+        <view class="zk-mk-title">{{item.title}}</view>
+        <view class="zk-mk-sub muted">{{item.subtitle}}</view>
+        <view class="zk-mk-badges">
+          <text class="zk-mk-badge" wx:for="{{item.badges}}" wx:for-item="b" wx:key="k" wx:if="{{index < 2}}">{{b.k}} {{b.v}}</text>
+        </view>
+      </view>
+      <view class="zk-mk-side">
+        <view class="zk-mk-price mono">{{item.unlocked ? '已解锁' : item.price_label}}</view>
+        <view class="zk-mk-cta">{{item.unlocked ? '查看交付' : '了解整库'}}<text class="kbf-e-arrow">›</text></view>
+      </view>
+    </view>
+    <view class="muted zk-note">整库原始材料 · 百度网盘交付 · 支持免费试读蓝图</view>
+  </view>
+
   <!-- ══ 总包智库 · 六库图纸目录（手风琴 · 分组编号索引；1009 与飞书一级目录同步） ══ -->
   <view class="card ticks rise" style="animation-delay: 60ms">
     <view class="zk-kicker kicker kicker-on-paper">DRAWING INDEX · 六库 49 分组</view>

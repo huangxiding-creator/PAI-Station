@@ -6,7 +6,7 @@
 var BASE_URL = '';
 try { BASE_URL = require('./config').BASE_URL || ''; } catch (e) { BASE_URL = ''; }
 
-var VER = '0.9.26';
+var VER = '0.9.28';
 
 // 匿名 boot id：一次安装生命周期一个（storage 持久，清缓存才换），
 // 形如 b3x9k2m1（b + 时间36进制 + 随机），不含任何可识别个人的信息
@@ -53,8 +53,11 @@ function boot() {
     info.pixelRatio = win.pixelRatio;
   } catch (e) { /* 可选字段 */ }
   try {
+    // 1118 修：线上 extra 实证 getAppBaseInfo().platform 真机返回空（只见 sdk/pixelRatio）——
+    // getDeviceInfo（2.20.1+）优先，两级兜底；区分 iOS/Android 是真机排障的第一手数据
+    var dev = wx.getDeviceInfo ? wx.getDeviceInfo() : null;
     var app = wx.getAppBaseInfo ? wx.getAppBaseInfo() : {};
-    info.platform = app.platform;
+    info.platform = (dev && dev.platform) || app.platform || '';
     info.sdk = (app.SDKVersion || '').slice(0, 12);
     info.enableDebug = !!app.enableDebug;
   } catch (e) { /* 可选字段 */ }

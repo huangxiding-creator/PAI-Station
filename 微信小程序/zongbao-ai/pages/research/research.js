@@ -3,6 +3,7 @@
 // 目录公开浏览（漏斗前宽），解锁态随登录态刷新。
 const theme = require('../../utils/theme');
 const api = require('../../utils/api');
+const tel = require('../../utils/telemetry');
 
 // 分类筛（cat 键与目录数据一致；「已购」独立一档）
 // v0.9.6（用户令 1009）：去掉「旗舰」「独家」两档（标签概念整体下线，目录数据同步 recat）
@@ -27,6 +28,7 @@ Page({
     statsReady: false, // 首次目录到货前 hero 数据带显示占位，不闪 0
     loading: true,
     errMsg: '',
+    query: '',   // 1118 检索：标题/副题/分类/SKU 即输即筛（本地全量，零后端往返）
   },
 
   onLoad() {
@@ -57,17 +59,19 @@ Page({
         const fixCat = (r) => (
           r.cat_name ? r : { ...r, cat_name: r.title && r.title.indexOf('蓝皮书') === 0 ? '蓝皮书' : '其他' }
         );
-        const reports = (d.reports || []).map(fixCat);
+        // 1119 用户令：知识库 SKU 归智库页「知识库市场」——研究页全分区（含 latest/hot/stats）剔除
+        const isKb = (r) => r.product_type === 'knowledge_base';
+        const reports = (d.reports || []).map(fixCat).filter((r) => !isKb(r));
         // v0.9.21 双分区（用户令 1018）：latest=引擎目录序前 3（TOP 3 恒定不受筛选）；
         // hot=互动热度倒序（heat=views+likes+shares；引擎缺字段时客户端兜底同规则再排序）
         const withHeat = (r) => ({
           ...r,
           heat: (typeof r.heat === 'number') ? r.heat : ((r.views || 0) + (r.likes || 0) + (r.shares || 0)),
         });
-        const latestSrc = (d.latest || []).length ? d.latest : reports;
-        const latest = latestSrc.slice(0, 3).map(fixCat);
-        const hotSrc = (d.hot || []).length ? d.hot : reports;
-        const hot = hotSrc.map(fixCat).map(withHeat)
+        const latestSrc = ((d.latest || []).length ? d.latest : reports).filter((r) => !isKb(r));
+        const latest = (latestSrc.length ? latestSrc : reports.filter((r) => r.sellable)).slice(0, 3).map(fixCat);
+        const hotSrc = ((d.hot || []).length ? d.hot : reports).filter((r) => !isKb(r));
+        const hot = (hotSrc.length ? hotSrc : reports).map(fixCat).map(withHeat)
           .sort((a, b) => (b.heat || 0) - (a.heat || 0));
         const mine = reports.filter((r) => r.unlocked).length;
         const sellable = reports.filter((r) => r.sellable).length;
@@ -97,12 +101,39 @@ Page({
   },
 
   // v0.9.21：分类筛子只作用于最热区（shown=hot 的过滤视图；最新区恒为 TOP 3 不受筛选影响）
+  // 1118：检索词先行过滤（title/subtitle/cat_name/sku 小写包含；覆盖研报+知识库全目录），
+  // 再叠分类筛——hot 区本就是全量目录的热度排序视图，检索范围=在架全集。
   applyFilter() {
-    const { hot, active } = this.data;
+    const { hot, active, query } = this.data;
+    const q = String(query || '').trim().toLowerCase();
     let shown = hot;
-    if (active === 'mine') shown = hot.filter((r) => r.unlocked);
-    else if (active !== 'all') shown = hot.filter((r) => r.cat === active);
+    if (q) {
+      shown = shown.filter((r) => (
+        (r.title || '').toLowerCase().indexOf(q) >= 0
+        || (r.subtitle || '').toLowerCase().indexOf(q) >= 0
+        || (r.cat_name || '').toLowerCase().indexOf(q) >= 0
+        || (r.sku || '').toLowerCase().indexOf(q) >= 0
+      ));
+    }
+    if (active === 'mine') shown = shown.filter((r) => r.unlocked);
+    else if (active !== 'all') shown = shown.filter((r) => r.cat === active);
     this.setData({ shown });
+  },
+
+  // ── 1118 检索 ──
+  onSearchInput(e) {
+    this.setData({ query: e.detail.value });
+    this.applyFilter();
+    const q = String(e.detail.value || '').trim();
+    if (q) {
+      // 隐私纪律（telemetry 头注）：不上报检索内容本身——只上长度与命中数
+      tel.ping('research_search', { len: Math.min(q.length, 40), hits: this.data.shown.length });
+    }
+  },
+
+  onSearchClear() {
+    this.setData({ query: '' });
+    this.applyFilter();
   },
 
   tapFilter(e) {

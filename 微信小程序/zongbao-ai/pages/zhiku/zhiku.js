@@ -3,6 +3,7 @@
 // v0.7.4 提审合规基线保留：撤二维码/长按识别/引导外部App文案（运营规范导流红线），只留低姿态复制链接
 const theme = require('../../utils/theme');
 const kbstats = require('../../utils/kbstats');
+const api = require('../../utils/api');
 const tel = require('../../utils/telemetry'); // v0.9.13：广告触达打点（运营转化面）
 
 Page({
@@ -47,6 +48,9 @@ Page({
     // 诚实库存（可证成口径）：v0.9.5 审计修（L18）改共享出处——与 ask 信任带同源 utils/kbstats.js
     stats: kbstats.KB_STATS,
     buyModal: false, // v0.9.13：全库购买弹窗（点触式，绝不自动弹出）
+    // 1119 用户令：知识库市场——整库知识库商品在本页发售（研究页不再列 KB SKU）
+    kbMarket: [],
+    kbReady: false,
   },
 
   onLoad() {
@@ -63,6 +67,26 @@ Page({
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 2 });
     }
+    this.loadKbMarket();
+  },
+
+  // 1119 知识库市场：目录里 product_type=knowledge_base 的 SKU 在本页发售
+  // （同源 /api/reports；购买/交付链走既有报告详情页——KB 分支交付卡已实测 18/18）
+  loadKbMarket() {
+    api.reportList()
+      .then((d) => {
+        const kbs = (d.reports || []).filter((r) => r.product_type === 'knowledge_base');
+        this.setData({ kbMarket: kbs, kbReady: true });
+      })
+      .catch(() => this.setData({ kbReady: true })); // 市场位失败不拖垮本页其余内容
+  },
+
+  goKbSku(e) {
+    const sku = e.currentTarget.dataset.sku;
+    if (!sku) return;
+    api.reportBump(sku, 'views').catch(() => {});
+    tel.ping('kb_market_tap', { sku: String(sku || '').slice(0, 24) });
+    wx.navigateTo({ url: '/pages/report/report?sku=' + sku });
   },
 
   // 六库图纸目录手风琴：逐库展开/收起

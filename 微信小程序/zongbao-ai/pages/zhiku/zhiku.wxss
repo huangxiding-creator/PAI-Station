@@ -356,3 +356,45 @@
   letter-spacing: 1rpx;
 }
 .zk-sheet-close { margin-top: 30rpx; width: 100%; }
+
+/* ══ 1119 知识库市场（MARKET）：整库知识库商品发售行（glyph 同构六库手风琴） ══ */
+.zk-mk-row {
+  display: flex;
+  align-items: center;
+  gap: 18rpx;
+  padding: 22rpx 4rpx;
+  border-bottom: 2rpx solid var(--line, rgba(0, 0, 0, 0.06));
+}
+.zk-mk-press { opacity: 0.72; }
+.zk-mk-glyph {
+  width: 64rpx; height: 64rpx;
+  flex-shrink: 0;
+  border-radius: 10rpx;
+  border: 3rpx solid var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30rpx; font-weight: 800;
+  color: var(--accent);
+  background: rgba(var(--t-accent-rgb), 0.07);
+}
+.zk-mk-body { flex: 1; min-width: 0; }
+.zk-mk-title {
+  font-size: 29rpx; font-weight: 700; line-height: 1.45;
+  color: var(--ink, var(--navy-0));
+}
+.zk-mk-sub { margin-top: 4rpx; font-size: 22rpx; line-height: 1.5; }
+.zk-mk-badges { margin-top: 8rpx; display: flex; flex-wrap: wrap; gap: 8rpx; }
+.zk-mk-badge {
+  font-size: 19rpx;
+  padding: 3rpx 12rpx;
+  border-radius: 999rpx;
+  border: 2rpx solid var(--line, rgba(0, 0, 0, 0.1));
+  color: var(--muted);
+}
+.zk-mk-side { flex-shrink: 0; text-align: right; max-width: 200rpx; }
+.zk-mk-price { font-size: 30rpx; font-weight: 800; color: var(--accent); }
+.zk-mk-cta {
+  margin-top: 8rpx;
+  font-size: 21rpx;
+  color: var(--muted);
+  display: inline-flex; align-items: center;
+}
