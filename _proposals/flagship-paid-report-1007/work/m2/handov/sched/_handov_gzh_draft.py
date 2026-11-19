@@ -150,14 +150,102 @@ def main() -> int:
         set_clipboard_dib(img_path)
         page.actions.key_down("ctrl").type("v").key_up("ctrl")
         time.sleep(4)
-        save = page.ele("text=保存为草稿", timeout=5) or page.ele("text:保存", timeout=3)
-        if save:
-            save.click()
-            time.sleep(3)
-            print(f"[OK] {acct}({EXPECT[acct]}) 草稿已保存: {title}")
-            return 0
-        print(f"[warn] {acct} 未找到保存按钮")
-        return 4
+        # 保存为草稿: JS 全文匹配 + 兜底模糊, 保存后处理确认弹窗
+        r = page.run_js("""
+return (function(){
+  function vis(el){var e=el;while(e&&e!==document.body){var st=getComputedStyle(e);if(st.display==='none'||st.visibility==='hidden')return false;e=e.parentElement;}return !!(el.offsetParent);}
+  var els=document.querySelectorAll('button, .weui-desktop-btn, [role=button], a');
+  var names=[];
+  for (var i=0;i<els.length;i++){
+    var t=(els[i].innerText||'').trim();
+    if(!t) continue; names.push(t);
+    if(t==='保存为草稿' && vis(els[i])){ els[i].click(); return 'clicked:保存为草稿'; }
+  }
+  return 'notfound:'+names.slice(0,14).join(',');
+})()
+""")
+        print("[save]", str(r)[:120], flush=True)
+        if not str(r).startswith("clicked"):
+            # 兜底: 模糊找含保存的可见按钮
+            r2 = page.run_js("""
+return (function(){
+  function vis(el){var e=el;while(e&&e!==document.body){var st=getComputedStyle(e);if(st.display==='none'||st.visibility==='hidden')return false;e=e.parentElement;}return !!(el.offsetParent);}
+  var els=document.querySelectorAll('button, .weui-desktop-btn, [role=button]');
+  for (var i=0;i<els.length;i++){
+    var t=(els[i].innerText||'').trim();
+    if(t.indexOf('保存')>=0 && t.indexOf('发布')<0 && vis(els[i])){ els[i].click(); return 'clicked-fuzzy:'+t; }
+  }
+  return '';
+})()
+""")
+            print("[save-fuzzy]", str(r2)[:80], flush=True)
+        time.sleep(3)
+        # 保存可能弹确认框 (如「确认保存草稿」) — 自动点确定/确认
+        for _ in range(6):
+            s = page.run_js("""
+return (function(){
+  function vis(el){var e=el;while(e&&e!==document.body){var st=getComputedStyle(e);if(st.display==='none'||st.visibility==='hidden')return false;e=e.parentElement;}return !!(el.offsetParent);}
+  var mods=document.querySelectorAll('.weui-desktop-dialog, .weui-desktop-modal, .dialog, .modal');
+  for (var i=0;i<mods.length;i++){
+    if (!vis(mods[i])) continue;
+    var bs=mods[i].querySelectorAll('button');
+    var names=[]; for (var b=0;b<bs.length;b++){ if(vis(bs[b])){var t=(bs[b].innerText||'').trim(); if(t)names.push(t);} }
+    var txt=(mods[i].innerText||'').replace(/\\s+/g,' ').slice(0,60);
+    if (txt) return txt+'||'+names.join(',');
+  }
+  return '';
+})()
+""")
+            if not s:
+                break
+            head, _, btns = s.partition("||")
+            print("  [modal]", head[:40], "|", btns, flush=True)
+            done = False
+            for want in ("确定", "确认", "保存"):
+                if want in (btns or ""):
+                    page.run_js("""
+return (function(){
+  function vis(el){var e=el;while(e&&e!==document.body){var st=getComputedStyle(e);if(st.display==='none'||st.visibility==='hidden')return false;e=e.parentElement;}return !!(el.offsetParent);}
+  var mods=document.querySelectorAll('.weui-desktop-dialog, .weui-desktop-modal, .dialog, .modal');
+  for (var i=0;i<mods.length;i++){
+    if (!vis(mods[i])) continue;
+    var bs=mods[i].querySelectorAll('button');
+    for (var b=0;b<bs.length;b++){
+      var t=(bs[b].innerText||'').trim();
+      if (t==='%WANT%' && vis(bs[b])){ bs[b].click(); return 'ok'; }
+    }
+  }
+  return '';
+})()
+""".replace("%WANT%", want))
+                    time.sleep(2); done = True; break
+            if not done:
+                break
+        time.sleep(4)
+        # 落箱验证: 活会话同源拉 list_ex
+        m2 = re.search(r"token=(\d+)", page.url or "")
+        vtok = m2.group(1) if m2 else live_token
+        try:
+            page.get(f"https://mp.weixin.qq.com/cgi-bin/appmsg?t=media/appmsg_list&action=list_card&token={vtok}&lang=zh_CN")
+            time.sleep(2)
+            raw = page.run_js("""
+return (function(){
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', '/cgi-bin/appmsg?action=list_ex&type=77&token=%s&lang=zh_CN&begin=0&count=10', false);
+  xhr.withCredentials = true; xhr.send(); return xhr.responseText;
+})()
+""" % vtok)
+            dd = json.loads(raw or "{}")
+            items = dd.get("app_msg_list") or []
+            in_box = any(title[:12] in (it.get("title") or "") for it in items)
+            print(f"[verify] {acct} 落箱验证: {'PASS' if in_box else 'FAIL'} (箱内近10条已比对)")
+            if not in_box:
+                for it in items[:5]:
+                    print("   -", (it.get("title") or "")[:40])
+            return 0 if in_box else 5
+        except Exception as e:
+            print(f"[verify] 验证异常: {str(e)[:60]}")
+            return 5
     finally:
         if len(sys.argv) <= 5:  # 自起浏览器才关; 骑活会话不动
             try:
