@@ -1,0 +1,305 @@
+# EPC50 首战运行实录 —— 中石化南京工程有限公司
+
+> 用户令（2026-09-24）：把第一份研究报告作为真正的练兵，**详细记录运行过程，便于后续复盘迭代升级**。
+> 本文件=战役唯一过程账本。所有动作/决策/故障/里程碑按时间序记账，事后复盘以本文件为准。
+
+## 战役宪法（用户令汇总，逐条钉死）
+
+| # | 令 | 落地口径 |
+|---|---|---|
+| C1 | 调研搜集到的**增量资料字数 ≥1000 万**才能停，才能进下一个环节 | 门槛只算本次新增（存量 80_本地存量语料 不计账）；有效性判断通过才计数；机器账=`_pipeline/epc50_gate_report.json` |
+| C2 | 调研搜集的资料**全部存 md 格式** | 所有渠道产物统一 .md（sougo 原生合并 md；pdf/html 收割时转 md） |
+| C3 | 全渠道上阵 | 17 条源渠道逐条过账（`_pipeline/channel_ledger.json`），静默缺席不许收官 |
+| C4 | 证据饱和引擎双门 | 字数门 ∧ 饱和门（同题 ≥2 独立源）双门准入 + ACH 假设对抗 |
+| C5 | 链=EPC50（Auto_Manus 机组），非 EPC100 runtime | 主题树 v1(72)→v2(560 问)为任务源；metaso/sougo/corps/cnki 等腿直驱 |
+| C6 | 账号安全四件套+节流 | sougo 每词冷却 600s、metaso 20-40s/查、Manus 每账号每日 ≤2 任务（300 积分帽） |
+| C7 | Manus 三用途铁律+反编造 | 只用于调研规划/调研问题树生成/原始资料搜集整理（12:5x 用户明示）；提示词反编造（原文摘录+URL 必带+无出处不写）；弹药门引用密度核验（35_Manus军团 ≥1 URL/2000字，低引用不计数出声） |
+| C8 | 全渠道统一调度不留遗漏 | 27 条渠道账逐条过账，blocked/queued 逐条解封或给出书面理由，静默缺席不许收官 |
+
+## 时间线
+
+### 2026-09-23（首日，前会话驱动）
+- 主题树 v1 落地（10 维 × 石化特色 72 主题，`epc50_topics.py`）；v2 扩容 560 子问题（`epc50_topics2.py`，56 主题×10 问法模板）。
+- 渠道首轮：metaso 12 查询落 30_秘塔AI（scholar 4+web 8）；sougo 词 1-7 实际完成（当时账本误记"词1 进行中"）；Manus 军团 T001-T007 派发（7 账号各 1 任务）；lark 31 命中×2；rss 1 篇；cnki PaperDown 32 文件落 60_论文学术；ima 0 命中；djyanbao 两腿 0（积分制付费墙）；website blocked（www.snei.com.cn 双超时，域名存疑）；video blocked（首搜空回）；opencli/weread queued。
+- 军团派发台账：19 账号 × 1-2 任务（`Auto_Manus/data/dispatch_ledger.json`），16:47 末条。
+- **当日弹药：84,736 字（0.85%）**——9-23 14:48 用户暂停令（给自媒永动机让路）+ 会话收尾，战役中断。
+
+### 2026-09-24（恢复日，本会话）
+- **10:45** 用户令：启动第 50 名企业全量生产。勘察 EPC100 runtime（PAUSE 在位、双进程死、NB 窗 11-19）。
+- **10:5x** 用户纠偏 ×3：①增量字数 1000 万才停 ②走 EPC50 链不是 EPC100 链 ③资料全存 md。EPC100 run-one 方案废弃，PAUSE 保持不动（全厂其余部分不在本令范围）。
+- **10:5x** 战场盘点：00/02/04 结构在位；调研层 84,736 字；channel_ledger 17 渠道账在位。
+- **11:0x** **sougo 收割**：发现 SouGouWeDown2 output/ 躺着 7 份中石化南京工程合并 md（9-23 已完成词 1,2,4-8，账本陈账未记）→ 拷入 `04.../20_微信文章/`，**+698,576 字**。
+- **11:0x** 环境勘察：SouGouWeDown2 服务（:3000）未起；发现 playwright chromium 孤儿进程（pid 20260）在向 127.0.0.1:19825 空连——判定为 **#89 中铁五院战役的孤儿采集链**（其 sougo 产物今日仍在新），纪律=不碰。我方改用 **CDP 19826** 避免交叉接线。
+- **11:1x** 本实录建立（练兵令落地）；弹药门脚本 `epc50_gate.py` 建立并跑基线。
+
+## 弹药门进度（增量有效字数，账=epc50_gate_report.json）
+
+| 时点 | 字数 | 占 1000 万 | 备注 |
+|---|---|---|---|
+| 09-23 首日 | 84,736 | 0.85% | metaso 43K + cnki 38K + 零头 |
+| 09-24 11:1x | 783,312 | 7.8% | +sougo 7 词收割 698,576 |
+
+## 渠道台账快照（channel_ledger.json）
+
+manus: run(7 派待收) | sougo: run(7/12 词完) | metaso: done(12 查) | djyanbao: done(0,付费墙) | website: blocked(域名待核) | rss: done(1) | opencli: queued(166 站) | video: blocked | ima: done(0) | weread: queued | lark: done(2) | cnki: run(32 文件) | （余见账本）
+
+## 待办队列（按优先级）
+
+1. ⏳ SouGouWeDown2 服务起（msedge headless CDP:19826 + BB_BROWSER_CDP_URL）→ 续采 5 词（总承包/海外项目/安全生产/数字化转型/科技创新）
+2. ⏳ metaso v2 驱动器：560 子问题批量 web 查询（20-40s 节流，预计 6-8h）
+3. ⏳ Manus 军团：T001-T007 成果收割 + 今日新预算派发（DAILY_PER_ACCOUNT=2 日重置）
+4. ⏳ cnki PaperDown 续跑（conductor 9-23 死后停摆）
+5. ⏳ opencli 166 站 / weread 书目 两腿解封
+6. ⏳ website 域名核正 / video 代理+cookie
+7. ⏳ 饱和引擎接线（同题 ≥2 独立源覆盖度账）
+
+## 复盘钩子（事后回填）
+
+- **H1 陈账风险**：channel_ledger 9-23 09:20 一次快照后再未更新，sougo 实际进度（7 词完）与账本（词1 进行中）脱节——**教训：腿的终态必须回写账本，否则恢复日靠考古**。
+- **H2 中断代价**：9-23 14:48 暂停令后 sougo 服务带任务死掉但产物已落盘——恢复靠 output/ 考古而非账本，佐证 H1。
+- （后续按事件追加）
+
+## 09-24 中午：Manus 军团网络攻坚（用户令：请自行调整好网络/可用新加坡出口/查昨天成功经验）
+
+**现象**：corps --all 首账号登录失败 → 实锤 https://manus.im/login 重定向 /unavailable（"Manus 在你所在的地区不可用"），#email 缺失。
+
+**排查链**：
+1. urllib 轮换探针（美05/01/03/04/06）全回 "unknown"——**探针失明**：/unavailable 是 SPA 客户端 JS 跳转，urllib 只见首屏 HTML，判据失效（教训：SPA 区域墙必须浏览器级验证）。
+2. 查昨天成功经验（manus-channel 记忆 + corps_log）：09-23 16:10-16:47 北京下午浏览器派 29 单全成功 → **时段收紧论不成立**；当时出口=美国 LA（手动切换零切组）。
+3. 浏览器级轮换验证（probe_nodes.py，逐节点真加载判 #email）：新加坡 01-04 ✗ / 美国 01 ✗ / 美国 03 ✗ / **美国 04 ✓**（login 页+邮箱框在，截图 probe_net_OK.png）。
+
+**根因**：Manus 对出口 IP 逐个区域点名——昨天的美国 05 今天也被点名，新加坡 4 节点全灭，美国 04 幸存。**IP 信誉墙，非时段非选择器漂移。**
+
+**处置**：
+- 🚀手动切换 美国05→**美国04**（用户明示授权调网；军团轮期间保留，收工不自动还原，下次漂移再轮换）
+- 新工具沉淀：`probe_net.py`（单节点截图诊断）/ `probe_nodes.py`（多节点轮换至命中）——下次区域墙直接跑后者（坑：bash 双引号内反引号被命令替换吃掉文件名，写文件改用 Edit 工具）
+- 11:2x 重发 `epc50_corps.py --all`（267 账号 × 日限 2 任务，出口美国04）
+
+**复盘钩子 H3**：Manus 区域墙是 IP 级漂移的，昨天可用的节点今天可能失效——军团腿启动前应把 probe_nodes.py 挂进 ensure_network 失败自愈链（当前 ensure_network 只查 api 面通+组链海外名，web 面墙查不到；api 面免疫区域判定是 09-22 实锤，但派发必须走 web composer）。
+
+## 09-24 11:22 检查点：网络攻克后三腿态势
+
+| 腿 | 状态 | 明细 |
+|---|---|---|
+| Manus 军团 | 🟢 跑 | 美国04 出口，267 账号待派，T030/T031 已派（sid 落树+账本），节奏约 1 账号/2min，预计 7-9h 跑完 |
+| metaso v2 | 🟢 跑 | 14/560 问，1 次空回（T002Q02，间歇故障，<500B 文件下轮自动重试=自愈设计）；手动复测同问正常 |
+| sougo 5 词 | 🟡 撞墙 | 词1-2 完成，词3 撞验证码后服务卡 captcha 态，词4-5 全 409；晚间重攻前须重启 SouGouWeDown2 服务清态（疑似与 #89 孤儿链同 IP 并发采搜狗互触发） |
+| 弹药门 | 881,642 / 10,000,000 | **8.8%**（微信文章 69.9万 + 秘塔 14.3万 + 论文 3.8万 + 零头） |
+
+**用户令（11:2x）**：打开的浏览器全部最小化运行 → `minimize_browsers.py`（识别=命令行我方标记 chrome_profile/9333/19825/19826/headless，**绝不碰用户自己开的浏览器**）+ 20s 看护常驻（切号弹窗自动压回）。
+
+## 09-24 12:0x-12:3x：军团串号事故（用户截图举报：单账号超 2 任务+并发上限）
+
+**现象**：用户在 Manus 界面看到多账号安排了 >2 任务、报"已达到并发上限"。
+
+**审计（纯 token API 地面真值）**：
+- j2phz0tkfk@cam.ac.cn 实背 **16 单**（T014-T029，昨下午堆它头上）
+- xwd8lu0drf 实背 6 单（T008-T013）；5nemn9mj0t 实背 6 单（T003-T007+T030）
+- 今日 23 单散在 ~13 真实账号（各 1-2，基本合规）；违规账号当前 0 在跑，无封号词命中
+
+**双重根因**：
+1. **身份核对同义反复**：ensure_login 拿"目标账号自己的 token"查 UserInfo——查回来的永远是目标账号自己（≠浏览器现役者），无 token 账号更是直接跳过核对 → 派单全落在浏览器里上一个登录者头上（用户判断"没有切换账户"完全正确）
+2. **token 库污染**：110 个 token 文件实际只有 23 把真 token（bootcamp 采集时未验归属就落盘，35 个文件是同一把）——身份核对的数据源本身就是脏的
+
+**根治五件套**：
+1. `whoami_browser()`：唯一可信判据=浏览器现役 token 的 UserInfo（capture_token→urllib 实证），不符/查不到=完整登录；login() 出口同样实证+固化正确 token
+2. token 库清洗：88 个错配文件隔离至 `data/tokens_quarantine_0924/`，22 个归属正确的原位保留（只增不删）
+3. 账本保守重置：16 个真实受载账号今日封账（置 2=休）；名义串号账清零
+4. 禁用名单：`EXCLUDE_EMAILS={51817@qq.com}`（用户个人 QQ 主账号=身份锚，不进研磨机，启用须用户明示）
+5. 烟测实证：2 账号全绿（"实证 w5uo09qm56 → T053；身份不符(≠18c1iqzd2j)→切换→实证→T054"）→ 12:3x 全量重启（251 账号待派）+ 收割器 `--loop 600` 常驻
+
+**连带修复**：Clash 组链读取在 controller 口漂移（config.yaml→24126 命中另一活 core 无组名）时直接判死 → 改为续试下一口（20225 实通：手动切换→美国04）。
+
+**战果追认**：事故不掩功——昨 29 单+今晨单成果已全收（epc50_collector 首轮：done 27 / partial 3，文件直落战场 04/35_Manus军团/）。
+
+**复盘钩子 H4**：token_bootcamp.py 采集出口未验归属=污染源头，须补同款实证（待办）；军团调度的一切"账号"概念必须以实证身份为准，文件名/配置名不可信。
+
+## 09-24 12:2x-12:5x：用户三连令——解禁个人主账号/额度用满/每账号2单
+
+- **51817@qq.com 解禁**（用户明示"可以用，也用上"）：移出禁用名单，账本按真实用量置 1（今晨 T035 实收 1 单）；12:25 派出第 2 单，**今日额度 2/2 打满**
+- **额度填满器** `epc50_corps_fill.sh`：循环跑 corps 直到"今日待派 0"或某轮发出 0（死账号消化不动即收）；每轮给有余量账号派 1 单 → 两轮后每账号 2/2
+- **里程碑：v1 规划轮收官**（56/56 主题全部派发，T056 于 12:2x 派出），军团进入 **v2 采集轮**（560 子问题量产，弹药主力）
+- 运行态：填满器(轮1) + 收割器(--loop 600) + 压窗看护 + metaso v2 四线并行；时间预估：轮1 ~20:30 完，轮2 过夜至明晨，明早 08:00 积分刷新后满血再战
+- 12:2x 落地验证：51817@qq.com 第2单=12:25:01（Q=T001Q05）；账本 22 账号（20家=2、2家=1），今日累计 42 单；v2 问库按序推进（T001Q05→Q07）
+
+## 09-24 12:3x：用户令——调研问题树也交给 Manus 生成
+
+- **设计**：survey_plan 种子队列 `epc50_survey_seeds.json`（8 颗，按 v1 十维度全覆盖配对：S01 基本面沿革 / S02 战略+对标 / S03 组织人才 / S04 项目管理+设计 / S05 采购供应链 / S06 施工+HSE / S07 风险合规 / S08 创新+数字化+海外）；`epc50_corps.py` 加 `_next_survey_seed()`+`_dispatch_seed()`，派发优先级=种子>v1 pending>v2 问题，走同一账本（≤2/日铁律不破）
+- **时序设计（防浏览器互斥冲突）**：轮1 进程已加载旧码不受影响，种子在 fill 轮2（~20:30 新进程）头部派发——8 单 survey_plan 先行，产出今晚收割
+- **后续闭环（待办）**：收割 survey_plan.md → 抽取问题清单 → 与 v2 问库去重 → 并入新 pending 问题（v2.1）→ 正好赶上明早 08:00 积分刷新后的额度（本地模板问 vs Manus 生成问=方法论升级，站巨人肩膀）
+- 验证：py_compile 过 + `_next_survey_seed()` 干跑取到 S01
+
+## 09-24 13:0x：反编造门 + Manus 三用途铁律 + 全渠道令（用户三连令）
+
+**① 反编造令**（「Manus 编写成果时会胡编乱造，主要用 Manus 搜集资料，基于原始资料整理，不要编造」）：
+- 提示词加固（manus_lib.build_prompt）：collect=每条必带来源名称+URL+发布时间+**原文摘录照抄不改写**，数据无出处不写；research_plan/survey_plan 加"不要编造具体数字/不预设未证实事实"
+- 弹药门引用密度核验（epc50_gate.py）：35_Manus军团 件 ≥1 URL/2000字才算弹药，低引用不计数只出声（文件留盘可复核）
+- **首跑验收**：拦 47 件/721,276 字——抽查全对：due_diligence.md(102K×3)/company_analysis.md(59K×3)/SKILL.md=Manus 自带静态样板件（跨任务字节数一模一样），research_plan/survey_plan=规划文档本就不算资料弹药；**31 件 collected_materials.md（302,753 字）全部带 URL 通过**。门保留现阈值，零误杀
+- 连带发现：collector 把 Manus 样板附件也存盘了（due_diligence/company_analysis/SKILL）——留作逆向素材不删，但可做采集端跳过清单（待办小优化）
+
+**② Manus 三用途铁律**（「Manus 只用来做调研规划、调研问题树生成和原始资料搜集和整理」）：
+- 代码面天然收口：build_prompt use_case 枚举恰好=research_plan/survey_plan/collect 三用途，未知用途直接 ValueError——无需改动
+- 与反编造门互锁：Manus 自带的编写类附件（company_analysis 等）已被门拦在弹药外
+- 军团任务源结构就此定型：v1 规划轮(56)→S01-S08 问题树种子→v2/v2.1 采集轮，全部落三用途内
+
+**③ 全渠道统一调度令**（「本报告任务要把所有调研渠道都用起来，统一调度，不要遗漏」）：
+- 渠道账本对账（27 条）：真实状态=manus 跑(填满器)、metaso 跑(v2 560问, 已 87 万字)、sougo 卡 captcha、cnki 随 conductor 9-23 死停摆、website/video/opencli/weread/ima/court/govlist/wechat_local/browser360 十条腿闲置，djyanbao 积分墙(有效 0)
+- 解封行动分波推进（详见后续时间线条目），账本同步回写真态（治 H1 陈账病）
+
+## 09-24 13:2x-13:4x：全渠道解封 Wave A——sougo/cnki/conductor 三具复活 + 官网域名破案
+
+**① sougo 服务复活**：9-23 死掉的服务查明卡在 captcha 态 → 杀残留进程，复用幸存的 headless msedge（CDP 19826，bb_profile_epc50，与 #89 孤儿链 19825 物理隔离）→ `BB_BROWSER_CDP_URL npm start` 复活，状态就绪 → 客户端 5 词续采开跑（词1-2 完成，词3 撞验证码自动跳词——headless 无法人工解，词间 600s 冷却）。
+
+**② cnki 复活**：死因实锤=conductor schtask 9-23 被 Disabled（腿随调度器死）。独立腿 `epc100_cnki.py` 重启（PaperDown 管线，PY311，90min 超时）。
+
+**③ conductor 复活**：`PAIStation-ChannelConductor` Enable + 手动启动 + `seed_epc50.py` 重跑收编（sougo/manus 在跑进程收编 + 8 条 opencli 检索入 heavy 夜间窗队列 + website 重试）。7min tick 恢复。
+
+**④ 官网域名破案（website 渠道解封）**：WebSearch/web_reader 双配额 429（09-26 复）→ 换代理 curl 直探三候选域名：`www.snei.com.cn`→502（9-23 双超时真相=域名已死）、`snei.sinopec.com`→**301→200「南京工程公司-首页」**（SINOPEC NANJING ENGINEERING，1958 沿革+沙特阿美合作线索齐）——公司已迁入中石化集团子域。BFS 爬虫开跑（depth4/300页/1.5s延迟，PY311 依赖栈），产物落 `04/50_官网资料/`。
+
+**⑤ video 探针**：yt-dlp 首挂死因=subprocess 未继承代理（youtube 直连超时×3）；重挂显式 `--proxy 7890`。bili 搜索 412 反爬需 cookie，晚窗再攻。
+
+**⑥ 账本回写**：channel_ledger 8 条真态更新（manus 填满器/sougo 复活/metaso v2/cnki 独立腿/website run/video run/opencli scheduled/websearch quota尽）——治 H1 陈账病。
+
+**复盘钩子 H5**：域名核正被 WebSearch 配额卡住一小时——备径（代理 curl 直探候选域）本可 30 秒完成。教训：**渠道死时先列备径矩阵再等主径**，官网类目标有强先验（集团子域 snei.sinopec.com），候选直探比搜索引擎更快。
+
+## 09-24 13:5x：用户令「军团派发完后切国内直连」+ 直连切换事故止血
+
+**用户令**：「Manus 军团的任务全部安排完成之后，等待它完成的期间，网络可以切回国内直连」。
+
+**前置实证**（只读探测）：api.manus.im 直连 404=网络层通（1.6s）→ 收割面（纯 token API 轮询）不受直连影响；baidu 直连 200。
+
+**事故发现与止血**：
+- 实测 mode 已=direct（用户发令时已自行手动切换，changelog 无记录=用户手切）。
+- 切换时刻 13:01 恰好打断军团 fill 轮1：**派发停摆于 13:01:55**（direct 下 web 面过不了区域墙），此后 50min 进程空转；连带发现 stdout tee 链断（日志静默）+ 双 corps 进程竞态写账本致**账本清零**。
+- 止血三连：停 fill 循环 → 杀僵死进程对（PID 26540+2028）→ **CORPS_LOG（append-only 铁证）重建账本**：今日实派 44 单 / 28 家（11 家 2 单+17 家 1 单）。
+- 副产物发现：账本清零曾致 corps 进度视图丢失、T001 重派（同一主题派多账号）——**教训 H6：账本竞态双写是结构风险，军团必须单进程，或账本改 append-only + 派发前重读**。
+
+**决策（对齐两条令的交集）**：今日军团收兵——已派 44 单云端继续跑，收割照常（api 直连）；**今日剩余额度不再追**（direct 常态保住，避免来回切网踩多系统互踩祸源）；余量并入**明日 08:00 积分刷新后统一再战**（届时 probe_nodes 轮换海外窗派发，变更登记 changelog）。
+
+**同波收获**：
+- 官网爬收官：**300 页 / 48.3 万字**（合并 2 个 md 落 50_官网资料；沙特 Maaden GIS 交付/LTI-free 百万工时/询价公告/校园招聘全一手料）
+- 视频腿三路全试诚实记账：bili 412 反爬（晚窗+cookie）、yt 出口对 Google 系全灭（军团收兵后可试直连失败再轮换）、metaso video 域 0 命中（企业视频内容本稀少）
+- weread 腿解封：书目池 8 本（EPC 总承包 4+国际工程总承包 4，含《石油石化工程EPC总承包项目进度管理》垂直金矿）；今晚 22:07 schtask 自动提取 2 本（日限内，`epc50_weread_night.py`+`epc50_weread_night.cmd` 启动器），明晨归位战场
+
+**sougo 5 词白日攻失败**：词1 撞验证码（headless 无法解）→ 跳词后服务卡 captcha 挂起态 → 词2-5 全 409。已 POST captcha-resolved 清态；根因=家宽 IP 短窗高频搜索触发反爬（9-23 已采 7 词+今日续搜）。**排 23:07 低谷窗 schtask 重试**（`epc50_sougo_night.cmd`），撞码即收——渠道安全优先于词量。9-23 的 7 词 70 万字已在手，5 词为增量补充。
+
+## 09-24 14:0x 收束态：在跑全家
+
+| 线 | 状态 | 备注 |
+|---|---|---|
+| 收割器 | 🟢 --loop 600 | api 直连实证通，44 单成果持续落盘 |
+| metaso v2 | 🟢 560 问推进 | 直连利好 |
+| cnki | 🟢 PaperDown | 90min 管线 |
+| sougo 服务 | 🟢 态已清 | 23:07 夜间重试 5 词 |
+| weread | ⏰ 22:07 | 夜提取 2 本 |
+| conductor | 🟢 7min tick | 8 条 opencli 夜间 heavy 窗 |
+| 压窗看护 | 🟢 20s | 军团浏览器留守（保登录态） |
+| 军团派发 | ⏸ 今日收兵 | 明早 08:00 刷新后海外窗再战 |
+
+## 09-24 14:1x：用户令——metaso 是积分制付费资源，只用在非常必要处
+
+- **立即停 metaso v2 批量腿**（停在 149/560 问）。已产出 148 件 / 113 万字保留在账（已花积分不浪费，成果有效弹药）。
+- **教训 H7**：把 metaso API 当免费腿批量跑是误判——积分制付费资源按查询计费，560 问全量跑=重度消耗。**今后 metaso 只做必要性单查**（如官网域名核正类、无替代源的定向问题），批量信息需求改走免费渠道（Manus 军团 collect=sougo/官网/opencli 等）。
+- 弹药缺口影响：metaso v2 原是主力放量腿（预估 500+ 万字），停后缺口由——明日军团 44+ 单放量（免费）、sougo 词扩容、Wave 2 闲置腿（法院涉诉/微信本地库/360 明文库/govlist）、opencli 166 站夜间窗补位。
+
+## 09-24 14:3x-14:5x：用户令「论文渠道是重点」——CNKI 跑偏审计+扩容重跑
+
+**用户令**：论文渠道是重点之一。
+
+**审计发现**：60_论文学术/CNKI 的 29 件中混入 9 件不相关论文（AI 综述/智慧课堂/电子招投标/包装设计/轨交平台/安徽 AI 政策——工厂侧别课题关键词串入）。根因方向：PaperDown 管线的关键词文件写-还原机制在 9-23 首轮跑时可能被工厂侧词覆盖（今日腿启动 1h 内被停，基本未落新件）。
+**处置**：9 件隔离至 `_pipeline/quarantine_cnki_0924/`（不删可复核）；剩 20 件全相关（含金矿：《数智化赋能下石油工程建设EPC项目成本控制研究》《国外大型油气建设项目管理模式研究及启示》《海外EPC联营项目"十大理念"》）。注意「苦练内功 开拓创新.md」标题张冠李戴、正文实为铁路 EPC 进度研究——**CNKI 文件名不可信，以内容为准**（教训 H8）。
+**扩容重跑**：22 关键词三线制（企业线 3+行业线 7+方法论线 12：进度/成本/质量/分包/FIDIC/长周期设备催交/数字化交付/变更索赔等），--limit 40，90min 管线后台跑。后续补充源评估：万方/维普（无现成 CLI 不急造）、OpenAlex 免费 API（英文线）、ima 总包语料换词复探。
+
+## 09-24 13:35-15:00：用户五连令——collect 优先/全账号原则/美东晚窗/15点让路
+
+- **「collect 17 太少」**：S01-S08 survey 种子 8 颗 pending→deferred（问题树已有 18 单成果+560 问库够用）——**派发唯一优先=collect**（v2 问库还有 ~540 问待派）。
+- **「所有账号都用起来（强调！原则）」**：立即开窗执行链——mode=direct→rule（登记 changelog）→浏览器级验证美国04 存活→fill 重启（blzskbvah）。13:36:40 恢复出单（T002Q08 collect）。
+- **「美东晚上时间，马上用起来，这个时间段非常好」**：Manus 服务宽松窗，fill 全速遍历 267 账号全名单。
+- **「运行到 15 点给自媒永动机让路」**：挂 15:00 一次性 schtask 让路器（`epc50_yield_1500.py`）——停军团派发链+9333 浏览器+CNKI 腿+sougo 服务+收割器+压窗（按命令行特征精确杀，绝不碰 WeAIPO/用户进程）→ 切回 direct（登记，原因=让路）。
+- **常态化解锁**：明早 08:05 起每日 `PAIStation-EPC50-MorningBlitz`（`epc50_morning_blitz.py`：防重入门→rule 开窗→probe_nodes 轮换（fail-safe：无节点自动切回 direct 收线）→fill 满额度 collect→派完自动切回 direct）——「全账号用起来」从一次令固化为每日原则。
+- 保留夜间低谷任务（不与自媒争白峰）：22:07 weread 提取 / 23:07 sougo 重试。若用户不许可一句话取消。
+- 收割器随让路器停：云端成果不丢（Manus 服务端保存），明早 blitz 后一并收割。
+
+## 09-24 13:4x-13:5x：用户令升级「24h 全天候运行，唯一避开自媒永动机」——心跳条件让路
+
+**用户令**：「本项目可以全天候24小时运行，唯一需要避开的是自媒永动机」——让路语义从「15:00 定时停」升级为「按自媒实际运行状态条件让路」。
+
+**判据（复用 EPC100 工厂同款）**：WeAIPO 心跳文件 `E:\CPOPC\We-AIPO\data\state\production_heartbeat`，10 分钟内更新=引擎在线（忙）。实证：引擎未跑时该文件不存在（今日 13:46 实测 FILE_NOT_FOUND）→ 闲判定正确；其日引擎 15:00 起跑=原 15 点让路令的由来。
+
+**新器 `epc50_yield_guard.py`（常驻状态机，300s 一拍，状态落 data/yield_guard_state.json）**：
+- **忙** → 收线：杀重腿（fill bash 循环+corps python+metaso+9333 浏览器）+ 切回 direct；**轻腿照常**（收割器 api 直连轮询/cnki 国内线/weread 夜提取）——对齐 EPC100「NB 让路 pre-NB 照常」
+- **闲** → 自动开窗：rule（登记 changelog）→ probe_nodes 浏览器级节点验证 → fill 全账号 collect；WeAIPO 收工即自动恢复，循环往复
+- **fill 收官**（待派0/发出0）→ quota_done 休眠至下一 08:05（积分刷新感知），切回 direct
+- **外部切网防护**：fill 在跑而 mode 被外部切 direct → 杀孤儿军团 + 冷却 60min（13:01 事故重演防护；尊重用户/推送脚本手动切网）
+
+**沉淀两坑（复盘钩子 H9）**：
+1. `probe_nodes.py` 的 `main()` 无 return → **退出码恒 0**，blitz 里 `rc != 0` 判据失效（全灭也会继续派发）——守护改判 stdout「命中节点」标记
+2. `epc50_corps_fill.sh` 是 bash 六轮循环——**只杀 python 不杀 bash，下一轮立即 respawn**，让路被 defeating——kill 清单必须全进程匹配 `epc50_corps_fill`（含 bash/sh 包装）
+
+**调度统一（H6 单进程纪律延伸——单一调度源防互踩）**：
+- 删 `PAIStation-EPC50-MorningBlitz`（每日 08:05，被守护取代）+ 停 netback watch 循环（守护接管切网）
+- `Yield1500` 改造为今日 15:00 一次性整点兜底班（WeAIPO 整点起跑，守护判忙最多迟一拍；杀单对齐守护=只停重腿，收割器/cnki/weread 不再误伤）——今日执行后自动消亡
+- 新挂 `PAIStation-EPC50-YieldGuard-Keeper`（每 30min 幂等保活：守护不在即拉起，防随父会话消亡；实测判活幂等 ✓）
+- 保留 22:07 weread / 23:07 sougo 低谷单次任务
+
+**13:48 首拍实测**：weaipo=闲 / corps=跑 / mode=rule → 正常不打扰 fill ✓。守护上线即接管：fill 继续跑，15:00 WeAIPO 起跑后心跳变新鲜 → 双保险收线（兜底班整点 + 守护 ≤5min 内）。
+
+## 09-24 14:3x-14:5x：全渠道贡献盘点（用户令）+ lark 幽灵索引破案转正
+
+**用户令**：「把所有渠道的调研搜集贡献详细列出来，看哪些渠道没有做贡献」→ 全景表见会话汇报；真欠账=lark 转正/wechat_local/court/browser360/govlist 五条。
+
+**lark 破案（H10 教训：搜索命中≠文档活着）**：
+- 9-23 的 31 条命中（2 个 JSON 元数据）逐条 fetch → **三 API（export markdown/export pdf/docs+fetch）全报 3380002 文档不存在**；对照实验：SELF_PROFILE inventory 的活 token fetch 全通 → 实锤 **search 索引=已删文档幽灵残影**（edit_user 显示本人 2024 年创建后已清理）
+- **换路正文直检**：SELF_PROFILE/feishu/raw/docs/ 275 篇活文档（9-15 自画像管线已落盘）全文检关键词（中石化南京工程/南京工程公司/SNEI/EPC总承包/炼化工程/石化工程）→ **49 篇命中 222.9 万字**，转 md 落 50_飞书语料/（头部 frontmatter 标记来源）
+- 弹药价值：大佬逐字稿系列（李芊 2020 版总包合同精讲/王先伟结算实务/郝运新能源海外法律风险/尹贻林投资管控/杨靖 EPC 成本管控/张陵乐设计+总包处境/熊俊波总包人才）+《总包专家百人名录》（含石化工程专家）——方法论线精准弹药
+
+**C1 口径堵漏**：gate 加「存量语料复用」识别（frontmatter 标记 → 不计 1000 万门槛，legacy_reuse 单列）——飞书 49 件 2,084,597 字进引用账不进门槛账，机器账保持纯增量语义。
+
+**弹药门 14:5x**：3,531,661（35.3%）；legacy_reuse 49 件 / 2,084,597 字（不计门槛）。
+
+**余下四条欠账排程**：wechat_local（reader.sh 检索企业名）/ court 涉诉（五线）/ browser360 明文库 / govlist 政府公示——今晚闲窗逐条补（避开 15:00-自媒窗）。
+
+## 09-26 11:55：生产环节发射——工厂最新生产链全接管（用户令「用最新生产代码交付顶级研究报告成果」）
+
+- **桥接器** `EPC100/runtime/epc50_bridge_to_factory.py`：①04 全渠道语料 16 项（2344 件，含 80_本地存量语料——「存量不计门槛但成稿可引用」铁律）原子搬入 `02 初次网络调研/`（工厂链 framework1/gap/pack 只吃 02）；②铸 `search_keywords.json`（战役种子 S01-S08，NB 前置门卫件）；③注检查点 `state/research_studio_中石化南京工程有限公司怎么干EPC总承包.json`（profile/survey1=战役全渠道采集、survey2+framework2=军团饱和引擎在役不重复）——链自 framework1 起跑。
+- **发射** `epc100_factory.py run-one --rank 50`（11:57，11-19 NB 窗口内）：链一国内网 cli --resume --stop-before-nb（insight 六大+P6共20工法 → 框架v1 → 缺口分析 → 打包≤280件）→ 链二 NB 隧道（基线代理探测 200=零网络变更，env 认领 7890）→ 认证预检 → NB 三阶段（上传→13视角炼金→逐章 10×~万字，引用纪律≥5/千字）→ 质量飞轮 → 交付七件套 → 后置链（排版→Word定稿→总包之声草稿箱）。19:30 硬停线兜底让路自媒，断点检查点次窗续跑。
+- **实证**：12:02 cli CPU 307s 满载挖矿中；profile 解析目标 10 万字 ✓；state.json rank50=running。
+- 军团/收割/守卫四环接力链不受影响（NB 走 HTTP env 认领，与 9333 军团无冲突；_djyanbao_profile 浏览器壳不进打包）。
+
+## 09-26 12:10：让路时点用户正——15:00 非 19:30，全链重启
+
+- 用户正：自媒永动机让路时点是 **15:00**（WeAIPO 日引擎 15:00 起跑），工厂码 NB_HARD_END=19:30 系误记 19:00 三连发所写。
+- 修：`epc100_factory.py` 三常量——NB_WINDOW=(11,15)、NB_HARD_END=15:00、LANE_CLOSE_BLACKOUT=14:55（COMPILE_OK，实测导入验证）。杀 11:57 首发链（framework1 才 15min，损失最小）→ 12:10 重发射 run-one --rank 50（cli 14676 挖矿中）。
+- 兜底：schtasks 一次性 `PAIStation-EPC50-R50-Resume`（09-27 11:05）——今日 15:00 断点后次窗自动接续 NB 剩余章（检查点续跑，不重跑调研/框架/打包）。
+- 记忆同步：epc100-factory-runtime.md 窗口/让路线全部改正。
+
+## 2026-09-26 14:48 ima 知识库补料进 NB + 让路准备
+
+- ima 收割成品 (总承包电子书库 50件/924MB) 精选 25件/455MB 注入笔记本 29e3d865:
+  尹贻林EPC价款管理系列/2018-2021总承包争议观察/总包论文合集/PMBOK 8th双语/163MB案例集;
+  排除中东国家通史 13件/452MB (国别背景书, 信号密度低, 留盘不占配额).
+- 首轮 13 件落地 (13:50-13:59); 14:24 重跑事故: NB sources.list 对新源有 30min+ 索引延迟,
+  幂等去重致盲 → 重传制造 2 组重复源 (尹贻林3.1/精选文集2017), 已杀停; 注入器根修 =
+  双源去重(实时清单∪本地报告史)+清残(delete幂等)+repr错误. 剩 11 件含大书.
+- 大件首传失败根因: 与 cli 并发上传挤同一条 7890 道 → 超时异常 str 为空被静默跳过
+  (独占带宽时同件 66s 实测通).
+- 让路令 (用户 14:40): 15:08 终局pass撤, 改 durable schtask PAIStation-EPC50-ImaTopup
+  明晨 10:40 (入口 epc50_ima_topup_task.py: 开道→补传→11:00前还道, 19min硬上限) —
+  赶在 11:05 resume 实时重列之前落地 → ima 源进 manifest 被逐章选中 (比今晚更优整合点).
+- 让路现场: kill_heavy 收军团重腿 (5壳+3python+metaso+浏览器); 守卫 14:43 闲窗复拉 fill 属
+  设计行为, 15:00 心跳上线后守卫自杀之并切 direct; 工厂 run-one 在位保 15:00 NB 硬停.
+
+## 09-26 15:00 用户令「全部暂停」——让路从心跳动态改为硬停
+- 14:56 核查实锤: 守卫 14:43 闲窗复拉 fill(心跳文件不存在=引擎 15:00 才起跑)→epc50_corps --all 新世代在跑(54 chrome/9333 活连接), harvest_after_quota+production_kickoff 同跑, mode=global; 14:59/15:00/15:19 还有 4 个 schtask 将再拉
+- 14:59 全停四步: ①7 任务钉死(ManusHookHarvest/AlwaysOn-Keepalive/Logon/ChannelConductor/YieldGuard-Keeper/SougoNight/WereadNight, 赶在整点触发前) ②守卫 23980 先树杀(否则 rule 下杀 fill 会被复拉) ③kill_heavy(fill:27780/corps:17728/metaso:30768)+逐树 taskkill /T(收割 24720/kickoff 27496/工厂 run-one 13564 全链含 NB cli 23584) ④set_mode direct+log_change 登记簿
+- cli 中止时已传 152+源(14:33 实测后约续 25min), 明晨 11:05 resume 实时重列自动收编+补尾件
+- 15:00/15:02 两轮复扫零残留; rank50 账本归位 nb_waiting; 15:21 验证 cron 撤销
+- 保留: 明晨 10:40 ImaTopup / 11:05 R50-Resume(自带 15:00 硬停) / Yield1500(一次性今日已耗); 常驻基础设施(laya-server/微信桥×2/live_watch/signal_stream)未动
+- 恢复=逐任务 /Enable+重启守卫, 用户一句令
+
+
+## 09-26 23:0x 深夜恢复（用户令「接续第50家生产」+「请自行解决好」）
+- 恢复四步: ①rm EPC100/PAUSE ②seed_epc50.py 收编+tick（账面21腿 16 done/5 queued/2 failed）③python subprocess 列表参数 /Enable 8 任务（ManusHookHarvest 真名=PAIStation-ManusHookHarvest；bash 循环传 /TN 丢变量是 MSYS 坑）④Keeper 23:19 自动拉守卫
+- 副作用实证: 军团网络腿复活切主干道 → wb.cmd OSS 中转断（InternalError/connection closed）→ 官网部署改走云助手 gzip+base64 分块直写（3块×13.7K），本地 md5 对账字节级一致
+- 保留链原样: ImaTopup 次日 10:40 / R50-Resume 11:05（自带 15:00 硬停）
+- 09-27 06:51 晨检: 夜班战果 1726 件有效文件（02 调研 1545 + 05 粗加工 185 + _pipeline 92）；NB 初稿 0 待 11:05 resume 续章

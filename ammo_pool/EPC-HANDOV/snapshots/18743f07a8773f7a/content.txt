@@ -1,0 +1,115 @@
+# 研报检索·全国 固定总价EPC合同的计价、调价与风险管控实
+
+来源: djyanbao | 检索词: 见manifest | URL: https://api.djyanbao.com
+
+{
+ "itemCount": 10000,
+ "n": 10,
+ "cards": [
+  {
+   "id": 4723863,
+   "title": "四川路桥（600039）：营收利润小幅增长，费用管控持续优化",
+   "org": "华源证券",
+   "authors": "王彬鹏,戴铭余,郦悦轩",
+   "publish_at": "2026-10-30",
+   "page_total": 3,
+   "file_size": 271787,
+   "uploader": "阿克塞尔",
+   "type_id": 16,
+   "stock_name": "四川路桥",
+   "report_score": null,
+   "snippet": "",
+   "web_url": "https://www.djyanbao.com/report/4723863"
+  },
+  {
+   "id": 4719452,
+   "title": "丰盛生活服务 2025-2026 年报",
+   "org": "港交所",
+   "authors": "",
+   "publish_at": "2026-10-28",
+   "page_total": 227,
+   "file_size": 16002472,
+   "uploader": "珉林流婉",
+   "type_id": 18,
+   "stock_name": "丰盛生活服务",
+   "report_score": null,
+   "snippet": "我們真誠地為各界服務：\n\n\n \n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2025-2026\n1\n\n\n2 \n4 \n7 \n10 \n16 \n24 \n40 \n62 \n106 \n121 \n126 \n127 \n128",
+   "web_url": "https://www.djyanbao.com/report/4719452"
+  },
+  {
+   "id": 4723979,
+   "title": "华夏水务集团 年度报告2025-2026",
+   "org": "港交所",
+   "authors": "",
+   "publish_at": "2026-10-30",
+   "page_total": 103,
+   "file_size": 4683466,
+   "uploader": "David",
+   "type_id": 18,
+   "stock_name": "华夏水务集团",
+   "report_score": null,
+   "snippet": "GEM\n1\n • 2025-2026\nGEM\n\nGEMGEM\nGEM\n\n\nGEMGEM\n\n\n\n\n\n2\n • 2025-2026\n3\n5\n6\n7\n17\n21\n32\n44\n49\n50\n51\n52\n53",
+   "web_url": "https://www.djyanbao.com/report/4723979"
+  },
+  {
+   "id": 4715764,
+   "title": "南方传媒（601900）：渠道整合与成本管控持续见效",
+   "org": "华泰证券",
+   "authors": "夏路路,郑裕佳",
+   "publish_at": "2026-10-26",
+   "page_total": 6,
+   "file_size": 588135,
+   "uploader": "伊娃",
+   "type_id": 16,
+   "stock_name": "南方传媒",
+   "report_score": null,
+   "snippet": "作为全国首\n家试水微短剧的地方出版单位，广东人民出版社推出80集微短剧《厌朱墙》，\n热度值最高达4000万；旗下《包拯在端州》六集微短剧已于10月21日上\n线爱奇艺、优酷、搜狐。",
+   "web_url": "https://www.djyanbao.com/report/4715764"
+  },
+  {
+   "id": 4725555,
+   "title": "凯格精机（301338）：2026年三季报点评：营收利润双增长，费用管控较得当",
+   "org": "国元证券",
+   "authors": "龚斯闻,楼珈利",
+   "publish_at": "2026-10-30",
+   "page_total": 3,
+   "file_size": 646410,
+   "uploader": "熊猫没有黑眼圈",
+   "type_id": 16,
+   "stock_name": "凯格精机",
+   "report_score": null,
+   "snippet": "",
+   "web_url": "https://www.djyanbao.com/report/4725555"
+  },
+  {
+   "id": 4725665,
+   "title": "五新智能（920174）：北交所信息更新：2026Q1-3铁路市场营收增长333.58%，毛利率提升40.99%",
+   "org": "开源证券",
+   "authors": "诸海滨,余中天",
+   "publish_at": "2026-11-01",
+   "page_total": 4,
+   "file_size": 788459,
+   "uploader": "Peggie",
+   "type_id": 16,
+   "stock_name": null,
+   "report_score": null,
+   "snippet": "2025-2026年，五新为国家级示范项目黄山旅游T1提供14条PC轨道梁生\n产线，其中包括9条曲线梁生产线和5条直线梁生产线，以成套装备支撑轨道梁\n高精度、规模化生产。",
+   "web_url": "https://www.djyanbao.com/report/4725665"
+  },
+  {
+   "id": 4725097,
+   "title": "2026年三季度点评：营收同比下降，收款 合同负债提升",
+   "org": "东吴证券",
+   "authors": "吴劲草,杜玥莹",
+   "publish_at": "2026-10-30",
+   "page_total": 3,
+   "file_size": 505651,
+   "uploader": "Adara",
+   "type_id": 16,
+   "stock_name": "华图山鼎",
+   "report_score": null,
+   "snippet": "",
+   "web_url": "https://www.djyanbao.com/report/4725097"
+  },
+  {
+   "i
