@@ -66,7 +66,7 @@ time.sleep(3)
 raw = page.run_js("""
 return (function(){
   var xhr = new XMLHttpRequest();
-  xhr.open('GET', '/cgi-bin/appmsg?action=list_ex&type=77&token=%s&lang=zh_CN', false);
+  xhr.open('GET', '/cgi-bin/appmsg?action=list_ex&type=77&token=%s&lang=zh_CN&begin=0&count=50', false);
   xhr.withCredentials = true;
   xhr.send();
   return xhr.responseText;
@@ -82,34 +82,32 @@ if not hit:
     print("[2X] 未找到目标稿"); sys.exit(4)
 print("[2] 命中:", hit.get("title")[:44], "| appmsgid:", hit.get("appmsgid"))
 
-# 3. 列表页行内「发表」
+# 3. 列表页行内发表 (新版: 图标钮 .weui-desktop-publish__op, 悬停显现)
 page.get(f"https://mp.weixin.qq.com/cgi-bin/appmsg?t=media/appmsg_list&action=list_card&token={tok}&lang=zh_CN&type=77")
 r = ""
-for tick in range(30):
+for tick in range(20):
     time.sleep(2)
     try:
         r = page.run_js("""
 return (function(){
-  function vis(el){var e=el;while(e&&e!==document.body){var st=getComputedStyle(e);if(st.display==='none'||st.visibility==='hidden')return false;e=e.parentElement;}return !!(el.offsetParent);}
-  var els=document.querySelectorAll('*');
-  for (var i=0;i<els.length;i++){
-    var t=(els[i].innerText||'');
-    if (t.indexOf('%TITLE%')>=0 && t.length < 400){
-      var row=els[i];
-      for (var d=0;d<8 && row;d++){
-        var bs=row.querySelectorAll('button, .weui-desktop-btn, a.weui-desktop-link, [role=button]');
-        for (var b=0;b<bs.length;b++){
-          var bt=(bs[b].innerText||'').trim();
-          if (bt==='发表' && vis(bs[b])){ bs[b].click(); return 'row-clicked-发表'; }
-        }
-        row=row.parentElement;
-      }
-    }
+  var all=document.querySelectorAll('*'); var target=null;
+  for (var i=0;i<all.length;i++){
+    var t=(all[i].innerText||'');
+    if(t.indexOf('%KEY%')>=0 && (!target || all[i].innerText.length<target.innerText.length)) target=all[i];
   }
-  var anyBtn=[]; document.querySelectorAll('button').forEach(function(b){var x=(b.innerText||'').trim(); if(x)anyBtn.push(x);});
-  return 'wait:' + anyBtn.slice(0,10).join(',');
+  if(!target) return 'row-not-found';
+  var row=target;
+  for (var d=0;d<10 && row;d++){
+    var ops=row.querySelectorAll('.weui-desktop-publish__op, [class*=publish__op]');
+    if(ops.length){
+      var ev=new MouseEvent('mouseover',{bubbles:true}); row.dispatchEvent(ev);
+      ops[0].click(); return 'row-clicked-publish-op';
+    }
+    row=row.parentElement;
+  }
+  return 'no-publish-op';
 })()
-""".replace("%TITLE%", TITLE_KEY))
+""".replace("%KEY%", TITLE_KEY))
     except Exception as e:
         r = "err:" + str(e)[:40]
     if str(r).startswith("row-clicked"):
