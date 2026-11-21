@@ -1,0 +1,35 @@
+# -*- coding: utf-8 -*-
+"""_acct_alive_check — 只读探活: 手工起Chrome→看首页是否登录超时→关. 不注入任何cookie."""
+import os, subprocess, sys, time
+from DrissionPage import ChromiumPage, ChromiumOptions
+
+CHROME = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
+PROFILE = r"F:\We-AIPO\autopub\data\browser_profiles"
+PORTS = {"acct01": 9362, "acct05": 9361, "acct07": 9363}
+accts = sys.argv[1:] or ["acct05", "acct01", "acct07"]
+for acct in accts:
+    port = PORTS[acct]
+    proc = subprocess.Popen([CHROME, f"--remote-debugging-port={port}", f"--user-data-dir={os.path.join(PROFILE, acct)}",
+                             "--window-position=-32000,-32000", "--disable-blink-features=AutomationControlled", "--no-first-run", "about:blank"],
+                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    time.sleep(7)
+    try:
+        co = ChromiumOptions(); co.set_local_port(port)
+        page = ChromiumPage(co)
+        page.get("https://mp.weixin.qq.com/")
+        time.sleep(5)
+        src = page.html or ""
+        dead = ("登录超时" in src) or ("请重新登录" in src) or ("扫码登录" in src)
+        page.get("https://mp.weixin.qq.com/cgi-bin/appmsg?t=media/appmsg_list&action=list_card&lang=zh_CN")
+        time.sleep(4)
+        src2 = page.html or ""
+        dead2 = ("登录超时" in src2) or ("请重新登录" in src2)
+        print(f"{acct}: alive={not (dead or dead2)} url={(page.url or '')[:60]}", flush=True)
+        try: page.quit()
+        except Exception: pass
+    except Exception as e:
+        print(f"{acct}: ERR {str(e)[:60]}", flush=True)
+    finally:
+        try: proc.terminate()
+        except Exception: pass
+    time.sleep(3)
