@@ -27,7 +27,8 @@ def cjk(t): return len(re.findall(r"[一-鿿]", t))
 
 
 def campaign_paths(camp: str) -> dict:
-    d = M2 / camp.lower()
+    # 战役目录 = m2/<去EPC-前缀的小写> (如 EPC-F8EF8 → f8ef8)
+    d = M2 / camp.replace('EPC-', '').lower()
     return {"root": d, "sched": d / "sched", "slices": JS / camp}
 
 
