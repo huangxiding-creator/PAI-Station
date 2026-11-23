@@ -121,15 +121,106 @@ def sku_titles() -> list[str]:
         return []
 
 
-def produced_recently(days: int = 90) -> list[str]:
-    """近N天 m2 下有产出(含 final 或 out) 的战役目录名 → 已产主题."""
-    out = []
-    cutoff = time.time() - days * 86400
-    if M2.is_dir():
-        for d in M2.iterdir():
-            if d.is_dir() and any(x.name.startswith("_ch12") or x.name == "out" for x in d.rglob("*") if x.is_file() and x.stat().st_mtime > cutoff):
-                out.append(d.name)
+GROUP_SIG_DIR = REPO / "wechat-24h-ops" / "data" / "topic-signals"   # 微信群聊/朋友圈洞察 (社群直接需求源)
+FACTORY_STATE = REPO / "data" / "factory" / "factory_state.json"
+
+# 主题 → “在架 SKU 已覆盖该主题”的判定词. 命中任一在架报告标题即视为已做过, 不再重复选.
+# (原先只比较主题名与长标题的整体相似度, 阈值几乎永远触发不了 — 1123 修)
+COVER_WORDS = {
+    "EPC工程总承包": ["总承包"], "招投标与投标": ["招投标", "投标", "招标"],
+    "合同与索赔": ["合同", "索赔", "签证"], "工程结算与造价": ["结算", "造价", "计价", "审计", "决算"],
+    "竣工验收与移交": ["竣工", "验收", "移交"], "分包与劳务": ["分包"],
+    "安全生产": ["安全生产", "安全事故"], "保险与保函": ["保险", "保函"],
+    "融资与投资": ["融资"], "税务": ["税务"], "国际工程": ["出海", "海外", "国际工程"],
+    "新能源与储能": ["储能", "光伏"], "水利水电": ["水利"], "交通基建": ["公路", "桥梁", "隧道", "铁路"],
+    "房建与市政": ["房建", "市政"], "数字化转型": ["数字化", "BIM"],
+    "司法鉴定与诉讼": ["司法鉴定", "判例"], "设计院转型": ["设计院"],
+    "企业研究": ["怎么干", "全景洞察"], "政策与法规": ["合规指南", "蓝皮书"],
+}
+
+
+def covered_by_sku(theme: str, titles: list[str]) -> str | None:
+    for w in COVER_WORDS.get(theme, []):
+        for t in titles:
+            if w in t:
+                return t
+    return None
+
+
+def taken_themes() -> list[dict]:
+    """工厂已建过战役的主题 (在途或已上架都算占住 — 一份没做完不开下一份)."""
+    try:
+        st = json.loads(FACTORY_STATE.read_text(encoding="utf-8"))
+        return [h for h in st.get("history", []) if h.get("theme")]
+    except Exception:
+        return []
+
+
+def read_group_signals() -> list[dict]:
+    """微信群聊原话 (用户的直接需求与分享). 按原话前 24 字去重."""
+    out, seen = [], set()
+    if not GROUP_SIG_DIR.is_dir():
+        return out
+    for fp in sorted(GROUP_SIG_DIR.glob("*.jsonl")):
+        for ln in fp.read_text(encoding="utf-8", errors="replace").splitlines():
+            try:
+                d = json.loads(ln)
+            except json.JSONDecodeError:
+                continue
+            q = str(d.get("demand_quote") or "").strip()
+            if not q or str(d.get("source_face")) != "group":
+                continue
+            k = q[:24]
+            if k in seen:
+                continue
+            seen.add(k)
+            out.append({"quote": q, "face": "group", "score": d.get("score") or 0,
+                        "urgency": str(d.get("urgency") or ""), "freq7": d.get("frequency_7d") or 0,
+                        "trigger": str((d.get("jtbd") or {}).get("trigger") or ""),
+                        # “分享/《…》”开头的是转发的文章标题(供给侧), 不是提问
+                        "is_share": q.startswith("分享") or q.startswith("《") or q.startswith("转发")})
     return out
+
+
+def read_buyer_feedback() -> list[dict]:
+    """已售报告的买家反馈 (公众号留言面), 按反馈编号去重. 这是“回到用户中去”最直接的信号,
+    单独呈现, 不并入主题评分."""
+    out, seen = [], set()
+    p = REPO / "data" / "demand_ledger" / "signals.jsonl"
+    if not p.is_file():
+        return out
+    for ln in p.read_text(encoding="utf-8", errors="replace").splitlines():
+        try:
+            d = json.loads(ln)
+        except json.JSONDecodeError:
+            continue
+        if d.get("source_face") != "mp_feedback":
+            continue
+        ref = str(d.get("source_ref") or "")
+        if ref in seen:
+            continue
+        seen.add(ref)
+        out.append({"ref": ref[-22:], "sku": ref.split("_")[-1][:12] if "_" in ref else "",
+                    "quote": str(d.get("demand_quote") or "")[:160],
+                    "score": d.get("score") or 0, "ts": str(d.get("ts") or "")[:10]})
+    return out
+
+
+def read_sales_signal() -> dict:
+    """销售回流: 漏斗事件按 SKU 与层级计数. 数据有多少算多少 (没有就如实是空)."""
+    res: dict[str, dict] = {}
+    if not FUNNEL.is_file():
+        return {"n_events": 0, "by_sku": {}}
+    n = 0
+    for ln in FUNNEL.read_text(encoding="utf-8", errors="replace").splitlines():
+        try:
+            d = json.loads(ln)
+        except json.JSONDecodeError:
+            continue
+        n += 1
+        res.setdefault(str(d.get("sku")), {})[str(d.get("level"))] = \
+            res.setdefault(str(d.get("sku")), {}).get(str(d.get("level")), 0) + 1
+    return {"n_events": n, "by_sku": res}
 
 
 def similarity(a: str, b: str) -> float:
@@ -148,39 +239,60 @@ def main() -> int:
     W = [x / sum(W) for x in W]
 
     articles = read_rss(ns.days)
-    ledger = read_ledger_topics()
+    group = read_group_signals()
+    feedback = read_buyer_feedback()
+    sales = read_sales_signal()
     titles = sku_titles()
-    produced = produced_recently()
+    taken = taken_themes()
+    taken_themes_set = {h["theme"] for h in taken}
     vetoes = []
     if VETOES.is_file():
         try:
             vetoes = json.loads(VETOES.read_text(encoding="utf-8")).get("vetoed", [])
         except Exception:
             pass
-    print(f"[demand] rss文章{len(articles)} | ledger族{len(ledger)} | 在架{len(titles)}SKU | 近90天已产{len(produced)} | 否决{len(vetoes)}")
+    n_ask = sum(1 for g in group if not g["is_share"])
+    print(f"[demand] 公众号文章 {len(articles)} 篇 | 社群原话 {len(group)} 条 "
+          f"(提问/原生 {n_ask}, 转发文章 {len(group) - n_ask}) | 在架 {len(titles)} SKU | "
+          f"工厂已占主题 {len(taken_themes_set)} | 否决 {len(vetoes)} | 漏斗事件 {sales['n_events']} | "
+          f"买家反馈(去重) {len(feedback)}")
 
-    # 主题聚合 (rss全文 + ledger句)
+    # 主题聚合: 公众号文章 + 社群原话 (提问/原生发言权重高于转发的文章标题)
     agg: dict[str, dict] = {}
+    ENG = ["工程", "建筑", "施工", "设计院", "总包", "承包", "造价", "监理",
+           "招投标", "EPC", "基建", "市政", "水利", "电力", "公路", "铁路"]
+
+    def bucket(theme: str) -> dict:
+        return agg.setdefault(theme, {"heat": 0, "pain": 0, "buyer": 0, "fresh": 0,
+                                      "arts": 0, "eng": 0, "asks": 0, "samples": [], "asks_samples": []})
+
     for art in articles:
         for theme in map_theme(art["title"] + " " + art["text"]):
-            a = agg.setdefault(theme, {"heat": 0, "pain": 0, "buyer": 0, "fresh": 0, "arts": 0, "samples": []})
+            a = bucket(theme)
             a["arts"] += 1
             a["heat"] += 1
             txt = art["title"] + art["text"][:300]
             a["pain"] += sum(txt.count(k) for k in PAIN)
             a["buyer"] += sum(txt.count(k) for k in BUYER)
             a["fresh"] += sum(txt.count(k) for k in FRESH)
-            if any(k in art["title"] + art["text"][:300] for k in ["工程","建筑","施工","设计院","总包","承包","造价","监理","招投标","EPC","基建","市政","水利","电力","公路","铁路"]):
-                a["eng"] = a.get("eng", 0) + 1
+            if any(k in txt for k in ENG):
+                a["eng"] += 1
             if len(a["samples"]) < 3:
                 a["samples"].append(art["title"][:50])
-    for sent, weight in ledger:
-        for theme in map_theme(sent):
-            a = agg.setdefault(theme, {"heat": 0, "pain": 0, "buyer": 0, "fresh": 0, "arts": 0, "samples": []})
-            a["heat"] += weight
-            a["pain"] += sum(sent.count(k) for k in PAIN) * weight
-            if len(a["samples"]) < 3:
-                a["samples"].append(sent[:50])
+    for g in group:
+        for theme in map_theme(g["quote"]):
+            a = bucket(theme)
+            if g["is_share"]:
+                a["heat"] += 1
+            else:
+                # 直接需求: 一条真实提问抵得上多篇转发文章
+                w = 6 + (4 if g["urgency"] == "high" else 0) + min(4, int(g["freq7"] or 0))
+                a["heat"] += w
+                a["asks"] += 1
+                a["pain"] += 2
+                a["eng"] += 1
+                if len(a["asks_samples"]) < 4:
+                    a["asks_samples"].append(g["quote"][:70])
 
     # 归一化评分
     if not agg:
@@ -188,12 +300,11 @@ def main() -> int:
         return 1
     mx = {k: max(1, max(a[k] for a in agg.values())) for k in ("heat", "pain", "buyer", "fresh")}
     rows = []
-    ENG_KWS = ["工程", "建筑", "施工", "设计院", "总包", "承包", "造价", "监理",
-               "招投标", "EPC", "基建", "市政", "水利", "电力", "公路", "铁路"]
     for theme, a in agg.items():
         heat = a["heat"] / mx["heat"]
-        # 工程域纯度: 样例文中工程锚词覆盖 (泛科技/时政主题自动降权)
-        pure = min(1.0, a.get("eng", 0) / max(3, a["arts"] * 0.25)) if a["arts"] else 1.0
+        # 工程域纯度: 命中工程锚词的条数占比 (泛科技/时政主题自动降权)
+        denom = max(3, (a["arts"] + a["asks"]) * 0.25)
+        pure = min(1.0, a["eng"] / denom) if (a["arts"] or a["asks"]) else 1.0
         pain = min(1.0, a["pain"] / 30)
         buyer = min(1.0, a["buyer"] / 20)
         fresh = min(1.0, a["fresh"] / 15)
@@ -209,19 +320,25 @@ def main() -> int:
         rows.append({"theme": theme, "score": round(score * 10, 2),  # 0-10
                      "heat": round(heat * 10, 1), "pay": round(pay * 10, 1),
                      "blank": round(blank * 10, 1), "fresh": round(timeliness * 10, 1),
-                     "arts": a["arts"], "samples": a["samples"][:3]})
-    # 剔除: 否决 / 近产 / 与在架强重叠(score惩罚在blank已计, 强重叠直接跳过)
+                     "arts": a["arts"], "asks": a["asks"],
+                     "samples": a["samples"][:3], "asks_samples": a["asks_samples"][:4]})
+
+    # 剔除: 否决 / 工厂已占(在途或已上架) / 在架SKU已覆盖该主题
     def culled(r):
         if any(v in r["theme"] for v in vetoes):
             return "vetoed"
-        if any(similarity(r["theme"], t) >= 0.7 for t in titles):
-            return "onshelf-dup"
+        if r["theme"] in taken_themes_set:
+            return "factory-taken"
+        if covered_by_sku(r["theme"], titles):
+            return "onshelf-covered"
         return None
-    kept = []
+
+    kept, culled_rows = [], []
     for r in sorted(rows, key=lambda x: -x["score"]):
         c = culled(r)
         if c:
             r["culled"] = c
+            culled_rows.append(r)
             continue
         kept.append(r)
         if len(kept) >= ns.top:
@@ -229,18 +346,29 @@ def main() -> int:
     OUT.parent.mkdir(parents=True, exist_ok=True)
     doc = {"ts": time.strftime("%Y-%m-%d %H:%M:%S"), "days": ns.days,
            "weights": ns.weights, "top": kept,
-           "culled_count": len(rows) - len(kept)}
+           "culled": [{"theme": r["theme"], "score": r["score"], "why": r["culled"]} for r in culled_rows],
+           "sources": {"rss_articles": len(articles), "group_quotes": len(group),
+                       "group_asks": n_ask, "skus": len(titles), "funnel_events": sales["n_events"],
+                       "funnel_by_sku": sales["by_sku"]},
+           "buyer_feedback": sorted(feedback, key=lambda x: -x["score"])[:20]}
     OUT.write_text(json.dumps(doc, ensure_ascii=False, indent=1), encoding="utf-8")
-    print(f"[demand] Top{len(kept)} → {OUT}")
+    print(f"[demand] 可选主题 {len(kept)} 个 → {OUT} | 已剔除 {len(culled_rows)} 个:")
+    bywhy = {}
+    for r in culled_rows:
+        bywhy.setdefault(r["culled"], []).append(f"{r['theme']}({r['score']})")
+    for why, lst in bywhy.items():
+        print(f"   剔除·{why}: {'、'.join(lst)}")
     for i, r in enumerate(kept, 1):
-        print(f"  {i:2d}. [{r['score']:5.2f}] {r['theme']} (热{r['heat']} 付{r['pay']} 空{r['blank']} 鲜{r['fresh']} 文{r['arts']})")
-        print(f"       样例: {r['samples'][0][:46] if r['samples'] else '-'}")
+        print(f"  {i:2d}. [{r['score']:5.2f}] {r['theme']} (热{r['heat']} 付{r['pay']} 空{r['blank']} 鲜{r['fresh']} "
+              f"文章{r['arts']} 提问{r['asks']})")
+        if r["asks_samples"]:
+            print(f"       社群提问: {r['asks_samples'][0][:64]}")
     if ns.push:
-        lines = [f"**{i}. [{r['score']}] {r['theme']}** (热{r['heat']}/付{r['pay']}/空{r['blank']}/鲜{r['fresh']})" for i, r in enumerate(kept[:3], 1)]
-        body = "工厂需求塔Top3(全文见factory_top10.json, 否决请回复「否N号」):\\n" + "\\n".join(lines)
-        import subprocess
+        lines = [f"**{i}. [{r['score']}] {r['theme']}** (社群提问{r['asks']}条, 文章{r['arts']}篇)"
+                 for i, r in enumerate(kept[:3], 1)]
+        body = "研究工厂·需求清单前3 (完整清单见 factory_top10.json; 否决某方向请回复「否N号\"):\n" + "\n".join(lines)
         subprocess.run([sys.executable, "-X", "utf8", str(REPO / "tools" / "notify_wecom.py"),
-                        "工厂需求塔日摘要", body], capture_output=True, timeout=60)
+                        "研究工厂需求清单", body], capture_output=True, timeout=60)
         print("[demand] 企微摘要已推")
     return 0
 

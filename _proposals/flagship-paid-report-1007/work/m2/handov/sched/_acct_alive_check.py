@@ -17,14 +17,14 @@ for acct in accts:
         co = ChromiumOptions(); co.set_local_port(port)
         page = ChromiumPage(co)
         page.get("https://mp.weixin.qq.com/")
-        time.sleep(5)
+        time.sleep(6)
         src = page.html or ""
-        dead = ("登录超时" in src) or ("请重新登录" in src) or ("扫码登录" in src)
-        page.get("https://mp.weixin.qq.com/cgi-bin/appmsg?t=media/appmsg_list&action=list_card&lang=zh_CN")
-        time.sleep(4)
-        src2 = page.html or ""
-        dead2 = ("登录超时" in src2) or ("请重新登录" in src2)
-        print(f"{acct}: alive={not (dead or dead2)} url={(page.url or '')[:60]}", flush=True)
+        url = page.url or ""
+        # 以首页判活 (列表页不带token一律回登录超时, 不可作探活页 — 1122修)
+        import re as _re
+        dead = ("登录超时" in src) or ("请重新登录" in src)
+        alive = (not dead) and (bool(_re.search(r"token=\d+", url)) or ("新的创作" in src))
+        print(f"{acct}: alive={alive} url={url[:60]}", flush=True)
         try: page.quit()
         except Exception: pass
     except Exception as e:
