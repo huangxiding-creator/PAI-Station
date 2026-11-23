@@ -57,7 +57,14 @@ def _patched_access_token():
 wechat._access_token = _patched_access_token
 # ── 猴补丁完 ──
 
-ITEM_URL = "https://res.wx.qq.com/a/wx_fsp/assets/favicon.ico"  # 微信CDN必达（原static/goods/ 404致上传静默失败→publish 268490002，1022实锤）
+def item_url_for(gid: str) -> str:
+    """道具封面 URL（引擎 static_goods/<名>.jpg 公网承载，1124 实锤：icon 404=上传假成功→publish 268490002）。
+    注意：/static/goods/{name} 路由自己拼 .jpg 后缀且正则拒点号——URL 必须不带 .jpg（1124 二次实锤）。"""
+    m = {"report_9800": "kbflagship", "report_599": "kbstd", "report_499": "kbstd",
+         "report_399": "kbstd"}
+    return BASE_GOODS_URL + m.get(gid, gid)
+
+BASE_GOODS_URL = "https://ai.epcschool.top/static/goods/"
 STATE_FILE = config.REPO / "data" / "state" / "vpay_goods_publish.json"
 API_BASE = "https://api.weixin.qq.com"
 
@@ -82,6 +89,17 @@ GOODS = [
     # 1022 知识库工厂：整库动态价（¥1道具×buyQuantity=金额分/100）
     {"id": "kb_goods", "name": "知识库整库交付", "price": 100,
      "remark": "专业知识库整库交付，按容量计价"},
+    # 1123 超级总包知识库上架（《100×总案》E1/E2）：旗舰+标准包四档
+    # 1124 实锤：item_url 图片必须恰好 200×200 像素（512×512 → upload_status=3
+    # 「图片非200*200像素」→ publish 268490002）。查真态用 /xpay/query_upload_goods。
+    {"id": "report_9800", "name": "知识库旗舰全库-年度订阅", "price": 980000,
+     "remark": "超级总包知识库旗舰全库年度订阅，45库全量每日更新"},
+    {"id": "report_599", "name": "知识库标准包-标准版", "price": 59900,
+     "remark": "知识库标准包单库购买，一次购买永久访问"},
+    {"id": "report_499", "name": "知识库标准包-进阶版", "price": 49900,
+     "remark": "知识库标准包单库购买，一次购买永久访问"},
+    {"id": "report_399", "name": "知识库标准包-入门版", "price": 39900,
+     "remark": "知识库标准包单库购买，一次购买永久访问"},
 ]
 
 
@@ -104,12 +122,15 @@ def build_goods(vp: dict) -> list[dict]:
               "report_product_498": "report_498", "report_product_598": "report_598",
               "report_product_698": "report_698", "report_product_1999": "report_1999",
               "report_product_10000": "report_10000",
-              "kb_product_id": "kb_goods"}
+              "report_product_9800": "report_9800", "report_product_599": "report_599",
+              "report_product_499": "report_499", "report_product_399": "report_399"}
+    # 1123 实况：kb_product_id 实配为 report_1999（KB 动态价走 1999 道具）——按 secret 实况对账
+    expect["kb_product_id"] = vp.get("kb_product_id", "report_1999")
     for k, gid in expect.items():
         actual = vp.get(k)
         if actual != gid:
             sys.exit(f"FATAL: secret {k}={actual!r} 与道具清单 {gid!r} 不一致——先对账再发布")
-    return [{**g, "item_url": ITEM_URL} for g in GOODS]
+    return [{**g, "item_url": item_url_for(g["id"])} for g in GOODS]
 
 
 def appkey_for(vp: dict, env: int) -> str:
