@@ -86,6 +86,12 @@ REPORT_CONTENT_DIR = Path(os.environ.get("REPORT_CONTENT_DIR")
 REPORT_PDF_MAX_BYTES = _env_int("REPORT_PDF_MAX_BYTES", 20 * 1024 * 1024)  # 20MB 手机端可流畅打开的上限
 REPORT_HIDDEN_SKUS: tuple = ()   # 强制隐藏（目录不展示）；整理中（可看不可买）走 PDF 判定
 
+# ── v1.0.0 知识库栏目（1123 用户令《超级总包知识库 100× 总案》C1/C2）──
+# 内容目录：镜像内 /app/kb_content（kb_catalog.json + kb_updates.json，由建库产线
+# kb_engine_data.py 生成后随镜像部署）；本地缺省指建库产线状态目录。
+KB_CONTENT_DIR = Path(os.environ.get("KB_CONTENT_DIR")
+                      or (Path(__file__).resolve().parents[1] / "kb_content"))
+
 # ── v0.9.20 报告对话官（1018 用户令 REQ-005）：回答策略常量——ENV 可覆写，
 # 运营调策略不发版（system 提示词/门槛/日限全部本块，answer-policy.md 为正本）──
 RQA_DAILY_LIMIT = _env_int("RQA_DAILY_LIMIT", 3)   # 每用户每 sku 每日免费问答（成本硬顶）
