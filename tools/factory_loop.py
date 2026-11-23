@@ -117,75 +117,81 @@ def release_lock():
 # ───────────────────────── 状态机各阶段 ─────────────────────────
 
 def stage_select() -> dict | None:
-    """需求塔: 跑词频层+语义层, **逐顺位过SCOUT门** (Top1被拒自动降Top2…)."""
-    log("[SELECT] 需求塔运行…")
-    rc, out = run([PY, "-X", "utf8", str(REPO / "tools" / "factory_demand.py"),
-                   "--days", "3", "--top", "10"], timeout=600)
-    if rc != 0:
-        log(f"[SELECT] 需求层失败: {out[-200:]}")
-        return None
-    doc = json.loads((FACT / "factory_top10.json").read_text(encoding="utf-8"))
-    top = doc.get("top") or []
-    if not top:
-        log("[SELECT] Top10 为空")
-        return None
-    # 语义挖掘 (前3主题)
-    run([PY, "-X", "utf8", str(REPO / "tools" / "factory_demand_mine.py"),
-         "--themes", "3", "--per-theme", "5"], timeout=1800)
-    mined_map = {}
-    mp = FACT / "factory_mined.json"
-    if mp.is_file():
+    """选题: 优先用细方向清单 (factory_topics.json), 回退到粗主题 (factory_top10.json).
+    逐顺位过 SCOUT 门 (Top1 被拒自动降下一顺位)."""
+    log("[SELECT] 选题运行…")
+    # 优先: 细方向清单 (factory_topics.py 产出)
+    topics_file = FACT / "factory_topics.json"
+    top, source = [], "topics"
+    if topics_file.is_file():
         try:
-            md = json.loads(mp.read_text(encoding="utf-8"))
-            for e in md.get("themes", []):
-                mined_map[e.get("theme", "")] = e
+            tdoc = json.loads(topics_file.read_text(encoding="utf-8"))
+            top = [r for r in tdoc.get("top", []) if r.get("topic")]
+            if top:
+                source = "细方向"
+                log(f"[SELECT] 细方向清单 {len(top)} 条")
         except Exception:
             pass
+    # 回退: 粗主题 (factory_demand.py)
+    if not top:
+        rc, out = run([PY, "-X", "utf8", str(REPO / "tools" / "factory_demand.py"),
+                       "--days", "3", "--top", "10"], timeout=600)
+        if rc != 0:
+            log(f"[SELECT] 需求层失败: {out[-200:]}")
+            return None
+        doc = json.loads((FACT / "factory_top10.json").read_text(encoding="utf-8"))
+        top = doc.get("top") or []
+        source = "粗主题"
+        if not top:
+            log("[SELECT] Top10 为空")
+            return None
     # 逐顺位: SCOUT 门不过 → 下一个 (最多试5个)
     for pick in top[:5]:
-        sel = {"theme": pick["theme"], "score": pick["score"], "detail": pick,
-               "mined": mined_map.get(pick["theme"])}
+        topic = pick.get("topic") or pick.get("theme") or ""
+        score = pick.get("score") or pick.get("score", 0)
+        sel = {"theme": topic, "score": score, "detail": pick, "source": source}
         if stage_scout(sel):
-            log(f"[SELECT] 选定(过门): {sel['theme']} [{sel['score']}] "
-                + (f" 方向: {sel['mined']['directions'][0][:40]}"
-                   if sel["mined"] and sel["mined"].get("directions") else ""))
-            ledger_write("SELECT", sel["theme"],
-                         {"score": sel["score"],
-                          "directions": (sel["mined"] or {}).get("directions", [])[:3]})
+            log(f"[SELECT] 选定(过门): {sel['theme']} [{sel['score']}] ({source})")
+            ledger_write("SELECT", sel["theme"], {"score": sel["score"], "source": source})
             return sel
-        log(f"[SELECT] {pick['theme']} 未过SCOUT门, 降下一顺位")
-        ledger_write("SELECT_PASS", pick["theme"], {"reason": "scout_fail"})
+        log(f"[SELECT] {topic[:20]} 未过SCOUT门, 降下一顺位")
+        ledger_write("SELECT_PASS", topic[:20], {"reason": "scout_fail"})
     return None
 
 
 def stage_scout(sel: dict) -> bool:
-    """六渠道快侦: 跨池+库内 grep 命中量 (30分钟可行性)."""
+    """快侦: rss 文章命中数 (≥3 篇过门) + 本地判例命中 (加分, 不做硬门).
+    1124 修: 旧版只匹配判例切片文件名, 对细方向（来自 rss/社群信号）永远 0 命中.
+    新版: 用细方向标题的前 4 字在 rss 近 30 天文章中搜索, 命中即说明有素材."""
     theme = sel["theme"]
-    # 主题→争点词表 (切片按争点命名: 结算审减/变更签证/优先受偿权…)
-    THEME_KWS = {
-        "EPC工程总承包": ["EPC", "总承包"], "招投标与投标": ["招投标", "招标", "投标", "中标", "评标"],
-        "合同与索赔": ["变更签证", "索赔", "费用索赔", "黑白合同", "合同"], "工程结算与造价": ["结算", "造价", "审减", "审计", "计价"],
-        "竣工验收与移交": ["验收", "竣工", "移交"], "分包与劳务": ["分包", "转包", "挂靠", "实际施工人", "劳务"],
-        "安全生产": ["安全责任", "安全事故"], "保险与保函": ["保函", "保险"],
-        "融资与投资": ["融资", "BOT", "PPP"], "税务": ["发票", "税"],
-        "国际工程": ["国际", "FIDIC", "海外"], "新能源与储能": ["储能", "光伏", "风电"],
-        "水利水电": ["水利", "水电"], "交通基建": ["公路", "桥梁", "隧道", "铁路"],
-        "房建与市政": ["房建", "市政", "管廊"], "数字化转型": ["BIM", "数字化"],
-        "司法鉴定与诉讼": ["鉴定", "诉讼", "管辖"], "政策与法规": ["法规", "条例"],
-    }
-    kws = THEME_KWS.get(theme, [theme[:4]])
+    kw = theme[:4]   # 取前 4 字作为检索词
+    n_rss = 0
+    rss_root = REPO / "data" / "rss_harvest" / "articles"
+    for d in range(30):
+        day = time.strftime("%Y-%m-%d", time.localtime(time.time() - d * 86400))
+        p = rss_root / day
+        if not p.is_dir():
+            continue
+        for f in p.glob("*.md"):
+            try:
+                t = f.read_text(encoding="utf-8", errors="replace")[:3000]
+                if kw in t:
+                    n_rss += 1
+            except OSError:
+                pass
+    # 本地判例命中 (加分)
+    n_slice = 0
     js = REPO / "data" / "harvest" / "judgment_slices"
-    n = 0
     seen = set()
     for f in js.rglob("*.md"):
         if f.stem in seen:
             continue
-        if any(k in f.stem for k in kws):
+        if kw in f.stem or any(k in f.stem for k in [theme[:2], theme[2:4]]):
             seen.add(f.stem)
-            n += 1
-    log(f"[SCOUT] 判例切片命中 {n} 卷 (词表={kws[:3]})")
-    ok = n >= 3
-    ledger_write("SCOUT", theme, {"slices": n, "pass": ok})
+            n_slice += 1
+    log(f"[SCOUT] {theme[:20]} | rss 命中 {n_rss} 篇 | 判例切片 {n_slice} 卷")
+    ok = n_rss >= 3 or n_slice >= 2
+    ledger_write("SCOUT", theme[:20], {"rss_hits": n_rss, "slices": n_slice, "pass": ok})
     return ok
 
 
