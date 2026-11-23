@@ -194,8 +194,16 @@ MERGE_PROMPT = """你是研究报告的总编辑。下面有两类材料：
 
 
 def run_batch(items, fn, workers=3):
+    """并发跑一批. 单条出错只丢那一条并计数, 不让整批归零."""
+    def safe(x):
+        try:
+            return fn(x)
+        except Exception:
+            with _lock:
+                _stats["fail"] += 1
+            return None
     with ThreadPoolExecutor(max_workers=workers) as ex:
-        return list(ex.map(fn, items))
+        return [r for r in ex.map(safe, items) if r is not None]
 
 
 def main() -> int:
@@ -211,25 +219,39 @@ def main() -> int:
         return 1
     t0 = time.time()
 
-    # A. 专家文章
-    arts = pick_articles(ns.days, ns.per_theme)
-    print(f"[topics] 选出工程类专家文章 {len(arts)} 篇，逐篇抽取…", flush=True)
-    def mine_one(a):
-        txt = glm([{"role": "user", "content": ARTICLE_PROMPT.format(title=a["title"], text=a["text"][:2600])}],
-                  keys, 900)
-        d = parse_json_array(txt)
-        d = d[0] if d and isinstance(d[0], dict) else {}
-        return {"src": a["title"][:60], "dir": str(d.get("direction") or "").strip(),
-                "unsolved": [str(u)[:120] for u in (d.get("unsolved") or []) if u],
-                "worth": bool(d.get("worth", True))}
-    mined = run_batch(arts, mine_one)
-    good = [m for m in mined if m["worth"] and (m["dir"] or m["unsolved"])]
-    print(f"[topics] 文章抽取: {len(good)}/{len(mined)} 篇有方向或未解题 "
-          f"({time.time() - t0:.0f}s, 调用{_stats['calls']}次 失败{_stats['fail']}次)", flush=True)
-
-    # B. 社群需求
-    comm = mine_community(keys)
-    print(f"[topics] 社群需求归纳: {len(comm)} 条 ({time.time() - t0:.0f}s)", flush=True)
+    # A. 专家文章 + B. 社群需求 (抽取结果缓存 24 小时: 调归并/查重时不必重跑这最慢的两步)
+    cache_p = REPO / "data" / "factory" / "_topics_cache.json"
+    ckey = f"{ns.days}d_{ns.per_theme}t"
+    cache = {}
+    if cache_p.is_file():
+        try:
+            cache = json.loads(cache_p.read_text(encoding="utf-8"))
+        except Exception:
+            cache = {}
+    if ckey in cache and time.time() - cache[ckey].get("ts", 0) < 86400:
+        mined, good, comm = cache[ckey]["mined"], cache[ckey]["good"], cache[ckey]["comm"]
+        print(f"[topics] 复用 {int((time.time() - cache[ckey]['ts']) / 60)} 分钟前的抽取结果: "
+              f"文章 {len(mined)} 篇, 社群需求 {len(comm)} 条", flush=True)
+    else:
+        arts = pick_articles(ns.days, ns.per_theme)
+        print(f"[topics] 选出工程类专家文章 {len(arts)} 篇，逐篇抽取…", flush=True)
+        def mine_one(a):
+            txt = glm([{"role": "user", "content": ARTICLE_PROMPT.format(title=a["title"], text=a["text"][:2600])}],
+                      keys, 900)
+            d = parse_json_array(txt)
+            d = d[0] if d and isinstance(d[0], dict) else {}
+            return {"src": a["title"][:60], "dir": str(d.get("direction") or "").strip(),
+                    "unsolved": [str(u)[:120] for u in (d.get("unsolved") or []) if u],
+                    "worth": bool(d.get("worth", True))}
+        mined = run_batch(arts, mine_one)
+        good = [m for m in mined if m["worth"] and (m["dir"] or m["unsolved"])]
+        print(f"[topics] 文章抽取: {len(good)}/{len(mined)} 篇有方向或未解题 "
+              f"({time.time() - t0:.0f}s, 调用{_stats['calls']}次 失败{_stats['fail']}次)", flush=True)
+        comm = mine_community(keys)
+        print(f"[topics] 社群需求归纳: {len(comm)} 条 ({time.time() - t0:.0f}s)", flush=True)
+        cache[ckey] = {"ts": time.time(), "mined": mined, "good": good, "comm": comm}
+        cache_p.parent.mkdir(parents=True, exist_ok=True)
+        cache_p.write_text(json.dumps(cache, ensure_ascii=False), encoding="utf-8")
 
     # C. 归并 (每批 28 条方向材料)
     lines = [f"- [文章] {m['dir']}" + (f"｜未解: {'；'.join(m['unsolved'][:2])}" if m["unsolved"] else "")
@@ -243,22 +265,37 @@ def main() -> int:
         return [x for x in parse_json_array(txt) if isinstance(x, dict) and x.get("topic")]
     merged = [x for part in run_batch(batches, merge_one) for x in part]
     print(f"[topics] 一级归并: {len(merged)} 个方向 ({time.time() - t0:.0f}s)", flush=True)
-    # 二级归并: 一级是分批做的, 批与批之间还会重叠 → 全局再并一次
+
+    # 二级归并: 一级是分批做的, 批与批之间还会重叠 → 再并.
+    # 1123 教训: 把 50 多个方向一次丢给模型让它输出合并结果, 输出太长被截断, 返回空, 却照常往下走.
+    # 所以小批做: 每批 ≤16 条并到 ≤6 个, 最后把总量不多的结果再终并一次; 每一步没得到有效结果都如实打印.
+    def compact(lst):
+        return [f"- {m['topic']}（文章{m.get('article_dirs', 1)} 社群{m.get('community_msgs', 0)}"
+                + (f"；未解: {'；'.join(str(u) for u in (m.get('unsolved') or [])[:2])}" if m.get('unsolved') else "")
+                + "）" for m in lst]
+
+    def merge_small(items, cap):
+        if len(items) <= cap:
+            return list(items)
+        txt = glm([{"role": "user", "content": MERGE_PROMPT.format(cap=cap, arts="\n".join(compact(items)),
+                                                                    comm="已并入上方各条")}], keys, 2600)
+        out = [x for x in parse_json_array(txt) if isinstance(x, dict) and x.get("topic")]
+        return out if len(out) >= max(3, cap // 2) else []       # 返回太少 = 输出被截断, 当作失败
+
     if len(merged) > 12:
-        arts_txt = "\n".join(
-            f"- {m['topic']}（文章{m.get('article_dirs', 1)} 社群{m.get('community_msgs', 0)}"
-            + (f"；未解: {'；'.join(str(u) for u in (m.get('unsolved') or [])[:2])}" if m.get('unsolved') else "")
-            + ")" for m in merged)
-        for cap in (18, 24):
-            txt = glm([{"role": "user", "content": MERGE_PROMPT.format(cap=cap, arts=arts_txt, comm="已并入上方各条")}],
-                      keys, 5200)
-            m2 = [x for x in parse_json_array(txt) if isinstance(x, dict) and x.get("topic")]
-            if len(m2) >= 8:
-                merged = m2
-                break
-            print(f"[topics] 二级归并(上限{cap})没有得到有效结果 (返回 {len(m2)} 条), "
-                  f"{'再试一次' if cap == 18 else '保留一级结果'}", flush=True)
-    print(f"[topics] 归并后 {len(merged)} 个方向 ({time.time() - t0:.0f}s)", flush=True)
+        chunks = [merged[i:i + 16] for i in range(0, len(merged), 16)]
+        lvl2 = [x for part in run_batch(chunks, lambda ch: merge_small(ch, 6)) for x in part]
+        print(f"[topics] 二级归并·分批: {len(chunks)} 批 {len(merged)} → {len(lvl2)} 个"
+              + ("" if 4 <= len(lvl2) < len(merged) else "  (没有得到有效结果, 保留一级结果)"), flush=True)
+        if 4 <= len(lvl2) < len(merged):
+            merged = lvl2
+            if len(merged) > 12:
+                lvl3 = merge_small(merged, 10)
+                print(f"[topics] 二级归并·终并: {len(lvl2)} → {len(lvl3)} 个"
+                      + ("" if 5 <= len(lvl3) <= 14 else "  (没有得到有效结果, 保留分批结果)"), flush=True)
+                if 5 <= len(lvl3) <= 14:
+                    merged = lvl3
+    print("[topics] 归并后 %d 个方向 (%ds)" % (len(merged), time.time() - t0), flush=True)
 
     # D. 与在架 SKU / 工厂已占主题 查重 — 两道: 模型对照在架报告逐条判断, 再加字符串片段兜底
     d = json.loads(fd.REPORTS.read_text(encoding="utf-8"))
@@ -266,27 +303,32 @@ def main() -> int:
     taken = fd.taken_themes()
     taken_titles = [f"（研究工厂已产）{h.get('theme', '')}" for h in taken]
     model_overlap: dict[str, str] = {}
+    dedup_missing = 0
     shelf = "\n".join(f"{i+1}. {t}" for i, (_, t) in enumerate(skus)) or "（无）"
-    cand = "\n".join(f"{i+1}. {m['topic']}" for i, m in enumerate(merged))
-    dup_prompt = (
-        "下面是一份“已经出版、正在售卖的研究报告清单”（在架报告），以及一份“候选研究方向清单”。\n"
-        "请逐条判断：每个候选方向，是否已经有一份在架报告实质覆盖了同一个题目"
-        "（读者买了在架那份就不需要再买这个方向的另一本）。角度明显不同的不算重复。\n"
-        "严格按 JSON 数组输出，不要输出其他文字，候选有几条就输出几条，顺序不变：\n"
-        "{{\"i\": 候选序号, \"dup\": true 或 false, \"sku\": \"重复的在架报告序号（数字字符串），不重复则为空字符串\"}}\n\n"
-        "【在架报告】\n" + shelf + "\n\n【候选研究方向】\n" + cand)
-    dup_res = [x for x in parse_json_array(glm([{"role": "user", "content": dup_prompt}], keys, 3200))
+    # 判重也小批做 (每批 10 个候选): 一次丢 50 多个候选同样会被截断 (1123 实测返回 0 条)
+    for ci in range(0, len(merged), 10):
+        chunk = merged[ci:ci + 10]
+        cand = "\n".join(f"{j+1}. {m['topic']}" for j, m in enumerate(chunk))
+        dup_prompt = (
+            "下面是一份“已经出版、正在售卖的研究报告清单”（在架报告），以及一份“候选研究方向清单”。\n"
+            "请逐条判断：每个候选方向，是否已经有一份在架报告实质覆盖了同一个题目"
+            "（读者买了在架那份就不需要再买这个方向的另一本）。角度明显不同的不算重复。\n"
+            "严格按 JSON 数组输出，不要输出其他文字，候选有几条就输出几条，顺序不变：\n"
+            "{{\"i\": 候选序号, \"dup\": true 或 false, \"sku\": \"重复的在架报告序号（数字字符串），不重复则为空字符串\"}}\n\n"
+            "【在架报告】\n" + shelf + "\n\n【候选研究方向】\n" + cand)
+        res = [x for x in parse_json_array(glm([{"role": "user", "content": dup_prompt}], keys, 1800))
                if isinstance(x, dict) and "i" in x]
-    for x in dup_res:
-        try:
-            if x.get("dup") and 1 <= int(x["i"]) <= len(merged):
-                sku_no = str(x.get("sku") or "")
-                name = skus[int(sku_no) - 1][0] if sku_no.isdigit() and 1 <= int(sku_no) <= len(skus) else "在架报告"
-                model_overlap[merged[int(x["i"]) - 1]["topic"]] = name
-        except Exception:
-            continue
-    print(f"[topics] 模型判重: {len(model_overlap)} 个方向与在架报告重复 "
-          f"(判重返回 {len(dup_res)}/{len(merged)} 条)", flush=True)
+        dedup_missing += len(chunk) - min(len(chunk), len(res))
+        for x in res:
+            try:
+                if x.get("dup") and 1 <= int(x["i"]) <= len(chunk):
+                    no = str(x.get("sku") or "")
+                    name = skus[int(no) - 1][0] if no.isdigit() and 1 <= int(no) <= len(skus) else "在架报告"
+                    model_overlap[chunk[int(x["i"]) - 1]["topic"]] = name
+            except Exception:
+                continue
+    print(f"[topics] 模型判重: {len(model_overlap)} 个方向与在架报告重复"
+          + (f"; 有 {dedup_missing} 个候选没拿到判重结论" if dedup_missing else ""), flush=True)
 
     def norm(s: str) -> str:
         return re.sub(r"[《》（）()·、，,：:“”\"｜|\sA-Za-z0-9\-—+]", "", str(s))
