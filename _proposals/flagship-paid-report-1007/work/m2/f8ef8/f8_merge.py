@@ -20,7 +20,7 @@ OUT.mkdir(exist_ok=True)
 REPO = HERE.parents[4]  # E:/AI-Station (ess→m2→work→flagship-paid-report-1007→_proposals→AI-Station)
 TOOLS = REPO / "tools"
 CJK_GATE = 200_000
-TITLE = "《建工司法解释二逐条实务与多立场应对实战研究报告》"
+TITLE = "《招投标程序争议与判例攻防实战研究报告》"
 CAMPAIGN = "EPC-JES2"
 
 
