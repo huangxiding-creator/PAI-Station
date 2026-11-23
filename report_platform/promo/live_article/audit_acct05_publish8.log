@@ -1,0 +1,39 @@
+Traceback (most recent call last):
+  File "E:\AI-Station\tools\mp_publish_weaipo.py", line 71, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "E:\AI-Station\tools\mp_publish_weaipo.py", line 56, in main
+    rep = orch.run_for_profile(ns.profile, ns.nickname or "")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\We-AIPO\autopub\src\core\orchestrator.py", line 611, in run_for_profile
+    return self._run_account_pipeline(session, profile, nickname,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\We-AIPO\autopub\src\core\orchestrator.py", line 535, in _run_account_pipeline
+    ).publish_article_drafts()
+      ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\We-AIPO\autopub\src\browser\drafts.py", line 429, in publish_article_drafts
+    return self._publish_loop([], picpost_tab=False)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\We-AIPO\autopub\src\browser\drafts.py", line 485, in _publish_loop
+    if picpost_tab else self._parse_cards())
+                        ^^^^^^^^^^^^^^^^^^^
+  File "F:\We-AIPO\autopub\src\browser\drafts.py", line 732, in _parse_cards
+    cards = self._parse_cards_once()
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\We-AIPO\autopub\src\browser\drafts.py", line 787, in _parse_cards_once
+    raw = self._first_text(el, DRAFT_TITLE_SELECTORS) or (el.text or "")
+                                                          ^^^^^^^
+  File "F:\We-AIPO\.venv\Lib\site-packages\DrissionPage\_elements\chromium_element.py", line 113, in text
+    return get_ele_txt(make_session_ele(self.html))
+                                        ^^^^^^^^^
+  File "F:\We-AIPO\.venv\Lib\site-packages\DrissionPage\_elements\chromium_element.py", line 93, in html
+    return self.owner._run_cdp('DOM.getOuterHTML', backendNodeId=self._backend_id)['outerHTML']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\We-AIPO\.venv\Lib\site-packages\DrissionPage\_pages\chromium_base.py", line 389, in _run_cdp
+    return r if __ERROR__ not in r else raise_error(r, self.browser, ignore)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\We-AIPO\.venv\Lib\site-packages\DrissionPage\_functions\tools.py", line 199, in raise_error
+    raise r
+DrissionPage.errors.ElementLostError: 
+元素对象已失效。可能是页面整体刷新，或js局部刷新把元素替换或去除了。
+版本: 4.1.1.4

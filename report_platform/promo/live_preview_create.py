@@ -202,7 +202,8 @@ class LiveCreator:
         """)
         time.sleep(2)
 
-    def set_datetime(self, day: int, hour: int, minute: int) -> bool:
+    def set_datetime(self, day: int, hour: int, minute: int,
+                     month: int = 11) -> bool:
         # 1) 开日期面板 (可见实例才算)
         ok = self.act("""
             return (function(){
@@ -217,8 +218,29 @@ class LiveCreator:
         time.sleep(2)
         title = self.expr(VIS_TITLE)
         log(f"面板月份: {title}")
-        if "2026年11月" not in str(title):
-            log("✗ 非2026年11月 (面板未开或月份不对)")
+        want_month = f"2026年{month}月"
+        # 1b) 月份导航: 面板月 != 目标月 → 点下月箭头 (nav 两个, 取可见的第二个=next)
+        hops = 0
+        while want_month not in str(title) and hops < 4:
+            nav_ok = self.act("""
+                return (function(){
+                    var navs = document.querySelectorAll('.date-time-picker__nav');
+                    var vis = [];
+                    for (var i=0;i<navs.length;i++){
+                        if (navs[i].getBoundingClientRect().width>0) vis.push(navs[i]);
+                    }
+                    return (vis.length>=2) ? vis[vis.length-1] : (vis.length?vis[0]:null);
+                })();
+            """, tag="下月箭头")
+            if not nav_ok:
+                log("✗ 月份导航箭头不可见")
+                return False
+            time.sleep(1.2)
+            title = self.expr(VIS_TITLE)
+            hops += 1
+            log(f"翻月至: {title} (hop{hops})")
+        if want_month not in str(title):
+            log(f"✗ 未达 {want_month}")
             return False
         # 2) 点日期格 (失败→重开面板再试一次)
         day_find = f"""
@@ -373,7 +395,7 @@ class LiveCreator:
             })()
         """)
         log(f"时间框回读: {val}")
-        want_full = f"2026-11-{day:02d} {hour:02d}:{minute:02d}"
+        want_full = f"2026-{month:02d}-{day:02d} {hour:02d}:{minute:02d}"
         return str(val) == want_full
 
     def fill_topic_desc(self, topic: str, desc: str) -> bool:
@@ -599,7 +621,8 @@ def main() -> int:
                 log("✗ 创建对话框未开")
                 rc_all = 1
                 continue
-            if not c.set_datetime(s["day"], HOUR, MINUTE):
+            if not c.set_datetime(s["day"], HOUR, MINUTE,
+                                   month=s.get("month", 11)):
                 log("✗ 时间设置失败 — 取消防残留")
                 c.cancel_dialog()
                 rc_all = 1
