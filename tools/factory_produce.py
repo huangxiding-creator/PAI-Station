@@ -288,6 +288,10 @@ def stage_promo(ns) -> tuple[bool, str]:
         f" 文末 {{回QRCODE回}} 占位 (写成双大括号包裹QRCODE); 数字全部对齐书实测 (章数/万字数/页数/¥价格"
         f"从 {REPO / 'report_platform' / 'content' / 'report.json'} 的 {ns.sku} 条目取); "
         f"案号金额逐字取自书; 「法院认定」与「本研究归纳」严格分开; 不提AI。\n"
+        f"另产出文件: {ns.campaign_dir} 的 sched 目录下 h3_prompts.json — 内容为 JSON 对象, "
+        f"含 sku(={ns.sku}) 与 cards 数组共3项; 每项含: slug(sku小写加_h3_v1/v2/v3)、"
+        f"prompt(竖屏9:16,10秒,墨绿×金工程实务风,纯图形动画,从书里取最锋利的判例/数字/规则做三张卡,数字逐字取自书)、"
+        f"title(不超过30字)、desc(含书名+12章+字数页数+第1章免费试读)、tags(4个)。\n"
         f"完成后回三个文件名+各篇字数。")
     rc, out = sh([str(claude), "-p", brief, "--permission-mode", "acceptEdits"],
                  timeout=3600)
@@ -318,7 +322,19 @@ def stage_promo(ns) -> tuple[bool, str]:
     return len(pushed) >= 1, " ".join(pushed)
 
 
-STAGES = ["harvest", "collate", "merge", "gate", "shelf", "promo", "finalize"]
+def stage_h3(ns) -> tuple[bool, str]:
+    """先消化待发队列 (上一班9222未复活的卡), 再为本书生成+上传. 9222死=留队自愈."""
+    rcq, outq = sh([sys.executable, "-X", "utf8", str(REPO / "tools" / "h3_pipeline.py"),
+                    "queue", "--cap", "4"], timeout=3600)
+    print(outq[-300:])
+    rcg, outg = sh([sys.executable, "-X", "utf8", str(REPO / "tools" / "h3_pipeline.py"),
+                    "gen", "--campaign-dir", ns.campaign_dir, "--sku", ns.sku],
+                   timeout=3600)
+    print(outg[-300:])
+    return rcg == 0, f"queue={rcq} gen={rcg}"
+
+
+STAGES = ["harvest", "collate", "merge", "gate", "shelf", "promo", "h3", "finalize"]
 
 
 def main() -> int:
