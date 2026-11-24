@@ -1,0 +1,2235 @@
+[
+ {
+  "summary": "发布载荷不在 404 里组装：404.3c829d34.js 只提供接口表与 service 封装（createPost(e,t) 把 data 原样 POST 到 /cgi-bin/mmfinderassistant-bin/post/post_create，store 层补 clientid），真正的 payload builder 是 chunk-common.ec025662.js 中 PostPage 组件的 getCreateOrPreviewParams()，产出 {post, clientId}，结构为 {...tempPost, isFullPost:1, handleFlag:2, videoClipTaskId, traceInfo:{traceKey,...}, objectDesc:<描述对象>, effectiveTime, report?, clientid}。post_draft 复用同一 builder，但体外再包一层 {postReq:{...载荷, clientid}, objectId: 草稿id|null}（新建草稿为 null，覆盖已有草稿为草稿 objectId）。visibleType 枚举 _j 为 public=1 / follow=2 / self=3，且 create 载荷里没有 visibleType、permissionFlag、commentClose 字段——它们只出现在响应对象以及 post_update_visible / post_update_comment_auth 的请求体里。上传不返回 objectId/objectNonce：CDN 上传只回 httpsUrl（旧版 fileurl、新版 DownloadURL 换域名），被放进 objectDesc.media[0].url，objectId/objectNonce 是服务端分配的作品标识（草稿 objectId 只出现在 post_draft 顶层 objectId 与 media[0]._objectId）。封面字段是 media[0].thumbUrl/coverUrl/fullCoverUrl/shareCoverUrl，标题是 objectDesc.mpTitle（视频，≤30字）或 finderNewlifeDesc.richTextTitle（图文，≤22字），描述是 objectDesc.description；post_create 不带 draftId，从草稿发布只是把草稿对象回填表单后走同一条 create 载荷。",
+  "findings": [
+   {
+    "topic": "接口表、请求封装与传输方式（所有发布/草稿/删除接口的共同底座）",
+    "endpoint": "/cgi-bin/mmfinderassistant-bin/post/post_create",
+    "method": "POST",
+    "headers": [
+     "Content-Type: application/json"
+    ],
+    "evidence": [
+     "404.3c829d34.js: {name:\"create\",path:\"/post/post_create\"},{name:\"specialPost\",path:\"/post/post_special_create\"},{name:\"getVideoHdrInfo\",path:\"/helper/helper_get_video_type\"},{name:\"preview\",path:\"/post/post_preview\"},{name:\"delete\",path:\"/post/post_delete\"},{name:\"getPostInfo\",path:\"/post/get_post_info\"},{name:\"updateVisible\",path:\"/post/post_update_visible\"},{name:\"updateCommentAuth\",path:\"/post/post_update_comment_auth\"}",
+     "404.3c829d34.js: {name:\"getDraftList\",path:\"/post/get_draft_list\"},{name:\"getDraftInfo\",path:\"/post/get_draft_info\"},{name:\"postDraft\",path:\"/post/post_draft\"},{name:\"postAdDraft\",path:\"/post/post_ad_create_draft\"},{name:\"delDraft\",path:\"/post/del_draft\"},{name:\"getFinderPostTraceKey\",path:\"/post/get-finder-post-trace-key\"}",
+     "404.3c829d34.js: }async post(e){return e.method=\"POST\",await this.request(e)}constructor(e,i,a){super({baseURL:i||t||\"/cgi-bin/mmfinderassistant-bin\",...a??{}}),this.API=new Map,e.forEach(e=>{this.API.set(e.name,Object.assign({},e,{url:`${e.path}`}))})}}let s=o(a.RequestService)",
+     "404.3c829d34.js: async createPost(e,t){return t&&t>1&&o.kK.report({customCount:1,customCountName:o.$c.postCreateRetry,msg:`count: ${t};timestamp: ${Date.now()}`}),await this.post({url:this.getApiUrl(\"create\"),data:e})}",
+     "404.3c829d34.js: async createPost(e){let t=Object.assign({},e,{clientid:e.clientid||(0,h.Z)()}),i=await l.ZP.postService.createPost(t);return i&&i.errCode===d.X.Ok&&this.initPost(),{res:i,payload:e}}",
+     "404.3c829d34.js: (0,a.gn)([(0,r.Z)(3,1e3)],c.prototype,\"getClipVideoResult\",null),(0,a.gn)([(0,r.Z)(3,1e4)],c.prototype,\"createPost\",null)",
+     "816.c7a59812.js: if(t.isObject(e)||r&&\"application/json\"===r[\"Content-Type\"]){o(r,\"application/json\");if(t.isString(e))try{return(0,JSON.parse)(e),t.trim(e)}catch(e){if(\"SyntaxError\"!==e.name)throw e}return(0,JSON.stringify)(e)}"
+    ],
+    "notes": "完整 URL = origin + /cgi-bin/mmfinderassistant-bin + 接口 path。postService.createPost(e,t) 的 e 即整个请求体（原样透传），第二参 t 只是重试计数（仅用于埋点上报），createPost 挂 10 秒超时装饰器。请求体是普通对象，由 axios transformRequest 直接 JSON.stringify 并置 Content-Type: application/json。针对这些接口的显式自定义请求头未找到；会话凭证依赖 RequestService(axios) 默认行为（withCredentials / xsrfCookieName:\"XSRF-TOKEN\"→请求头 X-XSRF-TOKEN，见 816.c7a59812.js xhr adapter），未逐项实证。"
+   },
+   {
+    "topic": "1. /post/post_create 请求体完整字段树 — 顶层字段（payload builder = PostPage.getCreateOrPreviewParams）",
+    "endpoint": "/cgi-bin/mmfinderassistant-bin/post/post_create",
+    "method": "POST",
+    "headers": [
+     "Content-Type: application/json"
+    ],
+    "body_fields": [
+     {
+      "name": "objectType",
+      "type": "number",
+      "note": "来自 tempPost；默认 ff.d.default=0，勾选“设为新闻动态”时 = ff.d.news=1；404 的 q1 枚举另含 image=7"
+     },
+     {
+      "name": "longitude",
+      "type": "number",
+      "note": "tempPost 默认 0；本批 bundle 未找到其它赋值点"
+     },
+     {
+      "name": "latitude",
+      "type": "number",
+      "note": "tempPost 默认 0；未找到其它赋值点"
+     },
+     {
+      "name": "feedLongitude",
+      "type": "number",
+      "note": "tempPost 默认 0；未找到其它赋值点"
+     },
+     {
+      "name": "feedLatitude",
+      "type": "number",
+      "note": "tempPost 默认 0；未找到其它赋值点"
+     },
+     {
+      "name": "originalFlag",
+      "type": "number",
+      "note": "tempPost 默认 0；本批 bundle 未找到其它赋值点（原创标记现在走 postFlag 位）"
+     },
+     {
+      "name": "topics",
+      "type": "string[]",
+      "note": "updateTempPost({topics})，由描述编辑器解析 #话题 得到的字符串数组"
+     },
+     {
+      "name": "postFlag",
+      "type": "number",
+      "note": "位掩码，originState 默认 0；bit1 = MMFinderPostFlagAttachOriginalFlag（原创标记）"
+     },
+     {
+      "name": "isFullPost",
+      "type": "number",
+      "note": "硬编码常量 1"
+     },
+     {
+      "name": "handleFlag",
+      "type": "number",
+      "note": "硬编码常量 2"
+     },
+     {
+      "name": "videoClipTaskId",
+      "type": "string",
+      "note": "= createPostStatus.clipTicket.draftId || \"\"，是 post_clip_video 返回的裁剪/转码任务 id（不是作品草稿 id）"
+     },
+     {
+      "name": "traceInfo",
+      "type": "object",
+      "note": "Object.assign({}, createPostStatus.traceInfo, {traceKey})"
+     },
+     {
+      "name": "traceInfo.traceKey",
+      "type": "string",
+      "note": "/post/get-finder-post-trace-key 返回的 data.traceKey，请求参数 {objectId: this.draftObjectId}"
+     },
+     {
+      "name": "traceInfo.uploadCdnStart",
+      "type": "number",
+      "note": "秒级时间戳，默认取初始化时刻，视频上传开始时刷新"
+     },
+     {
+      "name": "traceInfo.uploadCdnEnd",
+      "type": "number",
+      "note": "秒级时间戳，视频上传完成时刷新"
+     },
+     {
+      "name": "objectDesc",
+      "type": "object",
+      "note": "描述对象（请求侧键名是 objectDesc，响应侧是 desc），结构见下一条 finding"
+     },
+     {
+      "name": "effectiveTime",
+      "type": "number|undefined",
+      "note": "定时发表秒级时间戳 Math.floor(ms/1000)；不定时为 undefined，JSON 序列化时省略"
+     },
+     {
+      "name": "report",
+      "type": "object",
+      "note": "可选：{...clipTicket, height, width, duration, fileSize, uploadCost}；仅 originState.report.fileSize 有值时才带上"
+     },
+     {
+      "name": "clientid",
+      "type": "string",
+      "note": "postStore.createPost 追加：e.clientid || 新生成的客户端 id"
+     }
+    ],
+    "evidence": [
+     "chunk-common.ec025662.js: {key:\"getCreateOrPreviewParams\",value:function(){var e,t=this.combinedStore.tempPost,n=this.combinedStore.postObjDesc,r=this.combinedStore.createPostStatus,o=Object.assign({},t,{isFullPost:1,handleFlag:2,",
+     "chunk-common.ec025662.js: videoClipTaskId:(null==r||null==(e=r.clipTicket)?void 0:e.draftId)||\"\",traceInfo:Object.assign({},r.traceInfo,{traceKey:this.traceKey}),objectDesc:n,effectiveTime:void 0});",
+     "chunk-common.ec025662.js: this.originState.report&&this.originState.report.fileSize&&Object.assign(o,{report:Bf(Bf({},this.combinedStore.createPostStatus.clipTicket),this.originState.report)}),this.originState.effectiveTime&&Object.assign(o,{effectiveTime:this.originState.effectiveTime});try{return{post:Object(fu.b)(o),clientId:this.clientId}}",
+     "chunk-common.ec025662.js: var BO=function(){return{objectType:ff.d.default,longitude:0,latitude:0,feedLongitude:0,feedLatitude:0,originalFlag:0,topics:[]}},Bj=function(){return{mpTitle:\"\",description:\"\",extReading:{link:\"\",title:\"\"},mediaType:2,location:{},topic:{finderTopicInfo:\"\"},event:{},mentionedUser:[],media:[]}}",
+     "chunk-common.ec025662.js: :!1,canSaveDraft:!0,disablePostTip:\"\",effectiveTime:null,postFlag:0,createPostStatus:this.getInitTempPostStatus(),tempPost:BO(),postObjDesc:Bj()}}",
+     "chunk-common.ec025662.js: videoType:ff.e.null,fullVideo:{},clipTicket:{clipKey:\"\",draftId:\"\"},traceInfo:{traceKey:this.traceKey||\"\",uploadCdnStart:Math.floor(Date.now()/1e3),uploadCdnEnd:Math.floor(Date.now()/1e3)}}}",
+     "chunk-common.ec025662.js: L=function e(t){var n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:[];if(!t||\"object\"!==s(t))return t;if(n.includes(t))return null;var r=n.concat([t]);return Array.isArray(t)?t.map(function(t){return e(t,r)}):Object.fromEntries(Object.entries(t).map(function(t){var n=c(t,2);return[n[0],e(n[1],r)]}))}",
+     "404.3c829d34.js: O=()=>({objectType:r.q1.default,longitude:0,latitude:0,feedLongitude:0,feedLatitude:0,originalFlag:0,topics:[]}),m=()=>({description:\"\",extReading:{link:\"\",title:\"\"},mediaType:2,location:{},topic:{finderTopicInfo:\"\"},mentionedUser:[],media:[]})",
+     "chunk-common.ec025662.js: function(e){e[e.MMFinderPostFlagAttachOriginalFlag=1]=\"MMFinderPostFlagAttachOriginalFlag\"}(g||(g={}));var Se=\"_finder_setted_original_mark_protocol\"",
+     "chunk-common.ec025662.js: {key:\"updatePostOriginalMark\",value:function(){fl.b.$emit(fl.a.updateTempPost,{postFlag:this.isChecked?this.postStore.createPostStatus.postFlag|g.MMFinderPostFlagAttachOriginalFlag:this.postStore.createPostStatus.postFlag&~g.MMFinderPostFlagAttachOriginalFlag})}}",
+     "chunk-common.ec025662.js: {key:\"updatePostObjectType\",value:function(){fl.b.$emit(fl.a.updateTempPost,{objectType:this.isChecked?ff.d.news:ff.d.default})}}",
+     "chunk-common.ec025662.js: function(e){e[e.default=0]=\"default\",e[e.news=1]=\"news\"}(l||(l={})),function(e){e[e.Mp=1]=\"Mp\",e[e.Game=2]=\"Game\",e[e.RedPacket=3]=\"RedPacket\"}(d||(d={}))",
+     "chunk-common.ec025662.js: {key:\"handleTimeChange\",value:function(){this.errMsg=\"\";var e=this.time?Math.floor(Math.max(this.time,this.minTime)/1e3):null;fl.b.$emit(fl.a.updateEffectTime,e),this.startIntervalIfNeeded()}}",
+     "chunk-common.ec025662.js: t={height:n.height,width:n.width,duration:n.duration,fileSize:this.mediaList[0].size,uploadCost:this.mediaList[0].uploadCost}}fl.b.$emit(fl.a.updateState,{canPost:e,report:t})",
+     "chunk-common.ec025662.js: BC(BS(e),\"originState\",e.getPostOriginState()),BC(BS(e),\"clientId\",Object(pe.a)()),BC(BS(e),\"traceKey\",\"\")",
+     "chunk-common.ec025662.js: t=fd.b.postService.getFinderPostTraceKey.bind(fd.b.postService),e.next=5,t({objectId:this.draftObjectId});case 5:if(!((null==(n=e.sent)?void 0:n.errCode)===s.Ok&&n.data)){e.next=12;break}"
+    ],
+    "notes": "fu.b(=模块 7925 的 L) 只是去环深拷贝，不改键名，所以 post 对象的键与上表完全一致。校验入口 validPost()：视频模式必须 objectDesc.media[0].thumbUrl 存在，否则报“请设置视频封面”；validBaseForm 还校验 media[0] 存在、图文标题、描述长度(descLengthLimit=me.j/2=1000)、mpTitle 长度、扩展链接、定时时间。"
+   },
+   {
+    "topic": "1b. objectDesc 内层字段（描述对象，请求侧键名 objectDesc）",
+    "body_fields": [
+     {
+      "name": "objectDesc.description",
+      "type": "string",
+      "note": "描述纯文本 inputEditor.innerText"
+     },
+     {
+      "name": "objectDesc.mpTitle",
+      "type": "string",
+      "note": "视频模式标题；去空白；非 ASCII 按 2 计 >60 即报“标题超过30字限制”"
+     },
+     {
+      "name": "objectDesc.extReading.link",
+      "type": "string",
+      "note": "扩展链接（公众号文章等），经 /helper/helper_parse_mp_link 校验"
+     },
+     {
+      "name": "objectDesc.extReading.title",
+      "type": "string",
+      "note": "parseMpLink 返回的 data.title；清空链接时为 \"\""
+     },
+     {
+      "name": "objectDesc.extReading.type",
+      "type": "number",
+      "note": "parseMpLink 返回的 data.linkType，缺省 ff.b.Mp=1（Mp=1/Game=2/RedPacket=3）"
+     },
+     {
+      "name": "objectDesc.mediaType",
+      "type": "number",
+      "note": "ff.c.image=2 / ff.c.video=4，随 media 一起写入"
+     },
+     {
+      "name": "objectDesc.location.latitude",
+      "type": "number",
+      "note": "所选位置；选“不显示位置”时 location = {}"
+     },
+     {
+      "name": "objectDesc.location.longitude",
+      "type": "number",
+      "note": "同上"
+     },
+     {
+      "name": "objectDesc.location.city",
+      "type": "string",
+      "note": "同上"
+     },
+     {
+      "name": "objectDesc.location.poiName",
+      "type": "string",
+      "note": "= 位置项 name"
+     },
+     {
+      "name": "objectDesc.location.address",
+      "type": "string",
+      "note": "= 位置项 fullAddress"
+     },
+     {
+      "name": "objectDesc.location.poiClassifyId",
+      "type": "string",
+      "note": "= 位置项 uid || \"\""
+     },
+     {
+      "name": "objectDesc.topic.finderTopicInfo",
+      "type": "string",
+      "note": "XML 字符串 <finder><version>1</version><valuecount>N</valuecount><style><at>…</at></style><valueN>…</valueN></finder>，由描述编辑器解析 @ 与 # 生成"
+     },
+     {
+      "name": "objectDesc.topic.collectionId",
+      "type": "string",
+      "note": "可选，绑定合集时写入"
+     },
+     {
+      "name": "objectDesc.topic.collectionName",
+      "type": "string",
+      "note": "可选，绑定合集时写入"
+     },
+     {
+      "name": "objectDesc.event",
+      "type": "object",
+      "note": "活动对象(含 eventTopicId/eventName 等)，来自 /post/post_search_event；无活动为 {}"
+     },
+     {
+      "name": "objectDesc.mentionedUser",
+      "type": "array",
+      "note": "元素结构 {nickname: string}，由描述中的 @ 解析得到"
+     },
+     {
+      "name": "objectDesc.media",
+      "type": "array",
+      "note": "见 media 元素结构 finding"
+     },
+     {
+      "name": "objectDesc.finderNewlifeDesc.richTextTitle",
+      "type": "string",
+      "note": "图文模式标题，≤me.k=22 字"
+     },
+     {
+      "name": "objectDesc.finderNewlifeDesc.richTextJson",
+      "type": "string",
+      "note": "图文富文本，JSON.stringify 后的 quill ops"
+     },
+     {
+      "name": "objectDesc.finderNewlifeDesc.fromRichPublisher",
+      "type": "number",
+      "note": "固定 1（仅图文模式写入）"
+     }
+    ],
+    "evidence": [
+     "chunk-common.ec025662.js: fl.b.$emit(fl.a.updatePostDesc,{description:n.innerText,mentionedUser:i,topic:fy(fy({},(null==(e=this.postStore)||null==(t=e.postObjDesc)?void 0:t.topic)||{}),{},{finderTopicInfo:a})}),fl.b.$emit(fl.a.updateCreatePostStatus,{isShowDescLengthError:s}),fl.b.$emit(fl.a.updateTempPost,{topics:o})",
+     "chunk-common.ec025662.js: o=Array.from(n).map(function(e){return e.innerText.replace(/#/g,\"\").trim()}).filter(function(e){return!!e}),i=Array.from(r).map(function(e){return{nickname:e.innerHTML.replace(/@/g,\"\")}})",
+     "chunk-common.ec025662.js: return{topics:o,mentionedUser:i,finderTopicInfo:\"<finder><version>1</version><valuecount>\".concat(u,\"</valuecount><style><at>\").concat(l,\"</at></style>\").concat(d,\"</finder>\")}}",
+     "chunk-common.ec025662.js: var s=Object.assign({},this.finderNewLifeDesc);s.richTextJson=JSON.stringify(a),s.fromRichPublisher=1,fl.b.$emit(fl.a.updatePostDesc,{finderNewlifeDesc:s})",
+     "chunk-common.ec025662.js: fl.b.$emit(fl.a.updatePostDesc,{finderNewlifeDesc:{richTextTitle:this.title,richTextJson:i,fromRichPublisher:1}})",
+     "chunk-common.ec025662.js: {key:\"handleInput\",value:function(e){var t=e.replace(/\\s|​/g,\"\");fl.b.$emit(fl.a.updatePostDesc,{mpTitle:t});var n=Object(fu.p)(t)>60;fl.b.$emit(fl.a.updateCreatePostStatus,{isShowMpTitleLengthError:n})}",
+     "chunk-common.ec025662.js: var e={latitude:this.location.latitude,longitude:this.location.longitude,city:this.location.city,poiName:this.location.name,address:this.location.fullAddress,poiClassifyId:this.location.uid||\"\"};fl.b.$emit(fl.a.updatePostDesc,{location:e})",
+     "chunk-common.ec025662.js: fl.b.$emit(fl.a.updatePostDesc,{extReading:{link:a,title:this.title,type:null!=(u=this.linkType)?u:ff.b.Mp}})",
+     "chunk-common.ec025662.js: this.linkError=\"\",fl.b.$emit(fl.a.updateCreatePostStatus,{hasExtLinkError:!1}),fl.b.$emit(fl.a.updatePostDesc,{extReading:{link:\"\",title:\"\",type:ff.b.Mp}})",
+     "chunk-common.ec025662.js: e?fl.b.$emit(fl.a.updatePostDesc,{topic:{finderTopicInfo:r.finderTopicInfo,collectionId:e.id,collectionName:e.name}}):fl.b.$emit(fl.a.updatePostDesc,{topic:{finderTopicInfo:r.finderTopicInfo}})",
+     "chunk-common.ec025662.js: if(!this.activity.eventTopicId)return fl.b.$emit(fl.a.updatePostDesc,{event:{}});fl.b.$emit(fl.a.updatePostDesc,{event:this.activity})",
+     "chunk-common.ec025662.js: if(null==(r=n.postObjDesc)||null==(o=r.finderNewlifeDesc)?void 0:o.richTextTitle){e.next=10;break}return fU.b.error(\"请输入图文标题\"),e.abrupt(\"return\",!1);case 10:if(!n.createPostStatus.isShowTitleLenErr){e.next=13;break}return fU.b.error(\"图文标题超过\".concat(me.k,\"字限制\"))",
+     "chunk-common.ec025662.js: return fU.b.error(\"标题超过30字限制\"),e.abrupt(\"return\",!1);case 22:if(!n.createPostStatus.hasExtLinkError){e.next=25;break}return fU.b.error(\"请添加正确的扩展链接\"),e.abrupt(\"return\",!1)",
+     "chunk-common.ec025662.js: m=\"finder_username\",v=2e3,y=22,b=",
+     "chunk-common.ec025662.js: descLengthLimit:me.j/2},this.originState)",
+     "404.3c829d34.js: async parseMpLink(e){return await this.post({url:this.getApiUrl(\"parseMpLink\"),data:{url:e}})}async getUploadParams(){return await this.post({url:this.getApiUrl(\"uploadParams\")})}"
+    ],
+    "notes": "每个子字段都经事件 fl.a.updatePostDesc 合并进 postObjDesc（updatePostDesc=Object.assign({},postObjDesc,e)），最后整包作为 objectDesc。描述长度上限 1000（me.j=2000 的一半）。"
+   },
+   {
+    "topic": "1c. media 数组元素结构 与 上传/裁剪返回值落点",
+    "body_fields": [
+     {
+      "name": "media[].url",
+      "type": "string",
+      "note": "视频：裁剪转码结果 processedResponse.url，否则上传响应 response.httpsUrl；图片：uploadRes.httpsUrl"
+     },
+     {
+      "name": "media[].fileSize",
+      "type": "number",
+      "note": "processedResponse.fileSize || 文件 size"
+     },
+     {
+      "name": "media[].thumbUrl",
+      "type": "string",
+      "note": "封面缩略图 URL（视频模式发表必填，否则“请设置视频封面”）"
+     },
+     {
+      "name": "media[].fullThumbUrl",
+      "type": "string",
+      "note": "= thumbUrl"
+     },
+     {
+      "name": "media[].mediaType",
+      "type": "number",
+      "note": "ff.c.image=2 / ff.c.video=4"
+     },
+     {
+      "name": "media[].videoPlayLen",
+      "type": "number",
+      "note": "时长秒：processedResponse.duration || extInfo.duration"
+     },
+     {
+      "name": "media[].width",
+      "type": "number",
+      "note": "processedResponse.width || extInfo.width"
+     },
+     {
+      "name": "media[].height",
+      "type": "number",
+      "note": "processedResponse.height || extInfo.height"
+     },
+     {
+      "name": "media[].md5sum",
+      "type": "string",
+      "note": "实为客户端生成的 fileuuid（h.uuid），不是真实 md5"
+     },
+     {
+      "name": "media[].cardShowStyle",
+      "type": "number",
+      "note": "卡片样式 Default=0/Tile=1/Center=2；横屏视频(ratio>1)缺省置 Center=2"
+     },
+     {
+      "name": "media[].coverUrl",
+      "type": "string",
+      "note": "仅视频：自定义封面 URL"
+     },
+     {
+      "name": "media[].fullCoverUrl",
+      "type": "string",
+      "note": "仅视频：原图封面 URL"
+     },
+     {
+      "name": "media[].shareCoverUrl",
+      "type": "string",
+      "note": "仅横屏视频(ratio>1)：分享封面"
+     },
+     {
+      "name": "media[].urlCdnTaskId",
+      "type": "string",
+      "note": "仅异步裁剪(asyncClip)：= clipTicket.draftId"
+     },
+     {
+      "name": "media[]._objectId",
+      "type": "string",
+      "note": "编辑已有草稿/作品时 = defaultValue.objectId || \"\""
+     }
+    ],
+    "evidence": [
+     "chunk-common.ec025662.js: b=v?v.url:m.httpsUrl,g=v?v.fileSize:h.size,_=v?v.width:h.width,w=v?v.height:h.height,S=v?v.duration:h.duration,x=\"number\"==typeof h.cardShowStyle?h.cardShowStyle:null==(n=t.postStore)||null==(r=n.postObjDesc)||null==(o=r.media[0])?void 0:o.cardShowStyle,",
+     "chunk-common.ec025662.js: k={url:b,fileSize:g,thumbUrl:h.thumbUrl,fullThumbUrl:h.thumbUrl,mediaType:t.postType,videoPlayLen:S||y.duration,width:_||y.width,height:w||y.height,md5sum:h.uuid,cardShowStyle:x};return t.postType===ff.c.video&&(h.coverUrl&&Object.assign(k,{coverUrl:h.coverUrl,fullCoverUrl:h.fullCoverUrl})",
+     "chunk-common.ec025662.js: (null==h||null==(u=h.extInfo)?void 0:u.ratio)>1&&(k.shareCoverUrl=h.shareCoverUrl,",
+     "chunk-common.ec025662.js: t.postStore.asyncClip&&Object.assign(k,{urlCdnTaskId:null==(l=t.postStore.createPostStatus)||null==(d=l.clipTicket)?void 0:d.draftId}),(null==(i=t.postStore)||null==(a=i.defaultValue)?void 0:a.objectId)&&Object.assign(k,{_objectId:(null==(f=t.postStore)||null==(p=f.defaultValue)?void 0:p.objectId)||\"\"})",
+     "chunk-common.ec025662.js: fl.b.$emit(fl.a.updatePostDesc,{mediaType:this.postType,media:n})",
+     "chunk-common.ec025662.js: var r=n.data;r.uploadfinish&&(r.httpsUrl=r.fileurl.replace(\"http://wxapp.tc.qq.com\",e.ReplaceHost)),t(n)",
+     "chunk-common.ec025662.js: p.data.httpsUrl=p.data.DownloadURL.replace(\"http://wxapp.tc.qq.com\",E.ReplaceHost),this.uploadSuccessResp={data:null==p?void 0:p.data},this.updateSuccessResult()",
+     "chunk-common.ec025662.js: startUpload\",value:function(e){this.uploadEventHandlerCb=e,this.uuid=Object(c.a)(),this.loadChunk(),this.startTime=Date.now()}",
+     "chunk-common.ec025662.js: d.append(\"ver\",\"1\"),d.append(\"seq\",\"\".concat(Math.random()+Date.now())),d.append(\"weixinnum\",\"\".concat(f.uin)),d.append(\"apptype\",\"\".concat(f.appType)),d.append(\"filetype\",\"\".concat(f[u])),d.append(\"authkey\",\"\".concat(f.authKey))",
+     "chunk-common.ec025662.js: response:u.uploadRes,fullResponse:Object.assign({},f,{width:p,height:h}),fullThumbUrl:f.httpsUrl,thumbUrl:l.httpsUrl,coverUrl:u.uploadRes.httpsUrl",
+     "chunk-common.ec025662.js: n={url:t.url,timeStart:0,cropDuration:0,height:t.height,width:t.width,x:0,y:0,clipOriginVideoInfo:{width:t.width,height:t.height,duration:t.duration,fileSize:t.fileSize},traceInfo:this.postStore.createPostStatus.traceInfo}",
+     "chunk-common.ec025662.js: e.next=3,r(Object.assign({},t,{type:4,useAstraThumbCover:this.useAstraThumbCover}));",
+     "chunk-common.ec025662.js: a=i,fl.b.$emit(fl.a.updateCreatePostStatus,{clipTicket:a})",
+     "chunk-common.ec025662.js: i=o.data.flag)===l.success?(h.updateVideo({status:c.done,processedResponse:o.data})",
+     "chunk-common.ec025662.js: function(e){e[e.FinderMediaCardShowStyleDefault=0]=\"FinderMediaCardShowStyleDefault\",e[e.FinderMediaCardShowStyleTile=1]=\"FinderMediaCardShowStyleTile\",e[e.FinderMediaCardShowStyleCenter=2]=\"FinderMediaCardShowStyleCenter\"}",
+     "chunk-common.ec025662.js: n.fullResponse=t.fullUrl?{url:t.fullUrl,httpsUrl:t.fullUrl,duration:t.videoPlayLen,width:t.fullWidth,height:t.fullHeight,fileSize:t.fullFileSize}:n.response,n.fullThumbUrl=t.fullThumbUrl,n.shareCoverUrl=t.shareCoverUrl,n.fullCoverUrl=t.fullCoverUrl",
+     "chunk-common.ec025662.js: n.isValid=!0,n.lastModified=Date.now(),n.lastModifiedDate=new Date,n.name=\"finder_video.mp4\",n.percent=100,n.size=t.fileSize,n.status=c.done,n.uuid=t.md5sum,n.uid=t.md5sum"
+    ],
+    "notes": "视频链路：CDN 上传(旧版 //cdnHost/snsuploadbig 分片表单，参数来自 /helper/helper_upload_params；新版 finderpre.video.qq.com 分片上传) 得 httpsUrl → /post/post_clip_video 发起转码裁剪(返回 clipTicket，含 clipKey/draftId) → 轮询 /post/post_clip_video_result(5 秒一次，flag===success) 取 processedResponse(url/fileSize/width/height/duration) → 组装 media[0]。封面图由 canvas 截帧再上传得到 httpsUrl，分别写入 thumbUrl / coverUrl / fullCoverUrl / shareCoverUrl。回填草稿/已有作品时还读到 fullUrl/fullWidth/fullHeight/fullFileSize 等响应侧字段，新建发表时不写入。"
+   },
+   {
+    "topic": "2. /post/post_draft 请求体 与 create 的差异",
+    "endpoint": "/cgi-bin/mmfinderassistant-bin/post/post_draft",
+    "method": "POST",
+    "headers": [
+     "Content-Type: application/json"
+    ],
+    "body_fields": [
+     {
+      "name": "postReq",
+      "type": "object",
+      "note": "草稿载荷主体：与 create 的 post 同一个 builder(getCreateOrPreviewParams) 产出"
+     },
+     {
+      "name": "postReq.clientid",
+      "type": "string",
+      "note": "Object.assign(e,{clientid:t}) 强制覆盖为调用方传入的 clientId"
+     },
+     {
+      "name": "objectId",
+      "type": "string|null",
+      "note": "与 postReq 平级；新建草稿 = null，覆盖已有草稿 = draftStore.objectId(草稿 objectId)"
+     }
+    ],
+    "evidence": [
+     "404.3c829d34.js: async getDraftList(e){return await this.post({url:this.getApiUrl(\"getDraftList\"),data:e})}async getDraftInfo(e){return await this.post({url:this.getApiUrl(\"getDraftInfo\"),data:e})}async deleteDraft(e){return await this.post({url:this.getApiUrl(\"delDraft\"),data:{objectId:e}})}async postDraft(e,t,i){return await this.post({url:this.getApiUrl(\"postDraft\"),data:{postReq:Object.assign(e,{clientid:t}),objectId:i||null}})}",
+     "404.3c829d34.js: async createDraft(e,t){return{res:await s.ZP.postService.postDraft(e,t),payload:e}}async saveDraft(e,t){return{res:await s.ZP.postService.postDraft(e,t,this.objectId),payload:e}}setDraftObjectId(e){this.objectId=e}initDraftObje",
+     "404.3c829d34.js: class _{get isEditingDraft(){return!!this.objectId}initPost(){this.objectId=null,this.post=null}async getDraftList(){let{data:e}=await s.ZP.postService.getDraftList({pageSize:this.pageSize,currentPage:this.curPage});",
+     "404.3c829d34.js: this.list=null==(t=e.list)?void 0:t.map(e=>{var t,i;return Object.assign({},e,{thumbUrl:(null==(i=e.desc)||null==(t=i.media[0])?void 0:t.thumbUrl)||\"\",mediaType:e.desc.mediaType})})",
+     "chunk-common.ec025662.js: {key:\"validDraft\",value:function(){var e=Bh(ft.a.mark(function e){return ft.a.wrap(function(e){for(;;)switch(e.prev=e.next){case 0:return e.next=2,this.validBaseForm();case 2:if(!e.sent){e.next=5;break}return e.abrupt(\"return\",this.getCreateOrPrev",
+     "chunk-common.ec025662.js: r=(n=this.combinedStore).postObjDesc.media[0],e.next=5,this.validBaseForm(t);case 5:if(o=e.sent,!(n.postType===ff.c.video&&!(null==r?void 0:r.thumbUrl))||this.enableAllowAstraThumbCover){e.next=10;break}return fU.b.error(\"请设置视频封面\"),e.abrupt(\"return\",!1);case 10:if(!o){e.next=12;break}return e.abrupt(\"return\",this.getCreateOrPreviewParams())",
+     "chunk-common.ec025662.js: canSaveDraft\",get:function(){return this.allUploaded&&!this.postStore.createPostStatus.hasExtLinkError&&!this.postStore.createPostStatus.isShowDescLengthError&&!this.postStore.createPostStatus.isShowMpTitleLengthError}"
+    ],
+    "notes": "差异：①体外多一层信封 {postReq, objectId}，create 是裸对象；②create 的 clientid 在顶层且“已存在则不覆盖”，draft 的 clientid 在 postReq 内且强制覆盖；③校验不同：validDraft() 只跑 validBaseForm()（不强制视频封面 thumbUrl），validPost() 额外要求视频必须有封面；④两者都由同一个 getCreateOrPreviewParams() 产出 post 对象，因此 postReq 内同样含 isFullPost:1/handleFlag:2/videoClipTaskId/traceInfo/objectDesc/effectiveTime/report。get_draft_list 请求 {pageSize:20, currentPage}，响应 list 元素带 desc.media[0].thumbUrl、desc.mediaType。"
+   },
+   {
+    "topic": "3. visibleType 枚举值：r._j.public / r._j.self",
+    "body_fields": [
+     {
+      "name": "visibleType",
+      "type": "number",
+      "note": "public=1, follow=2, self=3"
+     },
+     {
+      "name": "objectId",
+      "type": "string",
+      "note": "post_update_visible 请求体；取 \"finder\" in e ? e.finder.finderObjectId : e.objectId"
+     }
+    ],
+    "evidence": [
+     "404.3c829d34.js: 51890:function(e,t,i){let a,n,o,s,r,l,_,d,u,c,p,E,g,h,N,C,S,I,T,R,O,m,A,D,y,L,P,v,U,F,M,f,k,G,w,b,Z,B;i.d(t,{$h:()=>n,A7:()=>a,E9:()=>H,NB:()=>V,Vr:()=>_,_c:()=>r,_j:()=>o,bx:()=>T,jf:()=>E,n_:()=>l,q1:()=>c,xf:()=>u})",
+     "404.3c829d34.js: (R=a||(a={}))[R.all=0]=\"all\",R[R.image=2]=\"image\",R[R.video=4]=\"video\",(O=n||(n={}))[O.null=-1]=\"null\",O[O.normal=0]=\"normal\",O[O.mega=1]=\"mega\",O[O.full=2]=\"full\";let V=20;(m=o||(o={}))[m.public=1]=\"public\",m[m.follow=2]=\"follow\",m[m.self=3]=\"self\"",
+     "404.3c829d34.js: e.visibleType===r._j.public?(t=\"设为仅自己可见\",a=r._j.self,n=\"已设为仅自己可见\"):e.visibleType===r._j.self&&(t=\"设为公开可见\",i=`完整${this.sceneText}也将设置为公开可见`,n=\"已设为公开可见\")",
+     "404.3c829d34.js: async handleSetVisible(e,t){var i;let a=this.curPost,n=await (null==(i=this.postStore)?void 0:i.updateVisible({objectId:this.getPostObjectId(a),visibleType:e}));",
+     "404.3c829d34.js: getPostObjectId(e){return\"finder\"in e?e.finder.finderObjectId:e.objectId}",
+     "chunk-common.ec025662.js: function(e){e[e.public=1]=\"public\",e[e.follow=2]=\"follow\",e[e.self=3]=\"self\"}(i||(i={}))"
+    ],
+    "notes": "模块 51890(404) 导出 _j：public=1、follow=2、self=3；chunk-common 模块 c45b 内有同一份枚举(未导出)。visibleType 不在 create/draft 载荷里（chunk-common 全文 0 次出现），它是作品对象的响应字段，改可见性走 POST /post/post_update_visible，请求体 {objectId, visibleType}。任务提到的 other 值未找到。"
+   },
+   {
+    "topic": "4. objectId / objectNonce 的来源与落点",
+    "evidence": [
+     "chunk-common.ec025662.js: (null==(i=t.postStore)||null==(a=i.defaultValue)?void 0:a.objectId)&&Object.assign(k,{_objectId:(null==(f=t.postStore)||null==(p=f.defaultValue)?void 0:p.objectId)||\"\"})",
+     "chunk-common.ec025662.js: var r=n.data;r.uploadfinish&&(r.httpsUrl=r.fileurl.replace(\"http://wxapp.tc.qq.com\",e.ReplaceHost)),t(n)",
+     "404.3c829d34.js: async deletePost(e){return await this.post({url:this.getApiUrl(\"delete\"),data:{objectId:e}})}async specialPost(e){return await this.post({url:this.getApiUrl(\"specialPost\"),data:{objectId:e}})}",
+     "404.3c829d34.js: async getShortLink(e){var t;let i={action:\"openFinderFeed\",feedID:e.objectId,nonceID:e.objectNonce,notGetReleatedList:1,shareScene:40,commentScene:40,",
+     "404.3c829d34.js: n=await d.WY.getObjectShortLink({exportId:e.objectId,nonceId:e.objectNonce,scene:a});",
+     "404.3c829d34.js: async getFinderObjectByExportId(e){let t=await this.service.getFeedDetail({exportId:e});if(t.data&&t.errCode===I.X.Ok){var i;this.currentFeed=t.data.object,this.commentCount=(null==(i=t.data.object)?void 0:i.commentCount)??0}}",
+     "404.3c829d34.js: Object.assign({},e,{flagMap:(0,p.F4)(e.flag,r.Vr),thumbUrl:null==(a=e.desc)||null==(i=a.media)||null==(t=i[0])?void 0:t.thumbUrl,mediaType:e.desc.mediaType})",
+     "index.b1f5e380.js: thumbUrl:(null==e||null==(r=e.desc)||null==(i=r.media)||null==(t=i[0])?void 0:t.thumbUrl)||\"\",coverUrl:(null==e||null==(l=e.desc)||null==(s=l.media)||null==(a=s[0])?void 0:a.coverUrl)||\"\",videoLength:(null==e||null==(u=e.desc)||null==(d=u.media)||null==(c=d[0])?void 0:c.videoPlayLen)||0,mediaType:null==e||null==(p=e.desc)?void 0:p.mediaType"
+    ],
+    "notes": "上传接口不返回 objectId/objectNonce：CDN 上传只回 fileurl/DownloadURL(→httpsUrl)，被放进 objectDesc.media[0].url；media[0].md5sum 是客户端 uuid。objectNonce 在全部 bundle 中只出现 2 次(404 getShortLink)，都是已发布作品对象(e.objectId / e.objectNonce)上的响应字段，用作 get_object_short_link 的 {exportId, nonceId}，不在任何发布载荷里。objectId 进入请求体的只有三处：① post_draft 顶层 objectId(草稿 id)；② media[0]._objectId(编辑草稿/作品时的 defaultValue.objectId)；③ 删除/特别发表/改可见性/改评论 {objectId}。post_create 自身不带 objectId/draftId。post_create 响应体结构未找到。"
+   },
+   {
+    "topic": "5. 封面 / 标题 / 描述的字段名",
+    "body_fields": [
+     {
+      "name": "objectDesc.media[0].thumbUrl",
+      "type": "string",
+      "note": "封面缩略图，视频模式发表必填"
+     },
+     {
+      "name": "objectDesc.media[0].coverUrl",
+      "type": "string",
+      "note": "自定义封面(裁剪后)"
+     },
+     {
+      "name": "objectDesc.media[0].fullCoverUrl",
+      "type": "string",
+      "note": "封面原图"
+     },
+     {
+      "name": "objectDesc.media[0].shareCoverUrl",
+      "type": "string",
+      "note": "横屏视频分享封面"
+     },
+     {
+      "name": "objectDesc.media[0].fullThumbUrl",
+      "type": "string",
+      "note": "= thumbUrl"
+     },
+     {
+      "name": "objectDesc.mpTitle",
+      "type": "string",
+      "note": "视频模式标题(≤30字)"
+     },
+     {
+      "name": "objectDesc.finderNewlifeDesc.richTextTitle",
+      "type": "string",
+      "note": "图文模式标题(≤22字)"
+     },
+     {
+      "name": "objectDesc.description",
+      "type": "string",
+      "note": "描述(纯文本)"
+     },
+     {
+      "name": "objectDesc.finderNewlifeDesc.richTextJson",
+      "type": "string",
+      "note": "图文模式富文本描述"
+     }
+    ],
+    "evidence": [
+     "chunk-common.ec025662.js: if(o=e.sent,!(n.postType===ff.c.video&&!(null==r?void 0:r.thumbUrl))||this.enableAllowAstraThumbCover){e.next=10;break}return fU.b.error(\"请设置视频封面\"),e.abrupt(\"return\",!1)",
+     "chunk-common.ec025662.js: }),this.setCoverUrl(a),this.updateVideo({fullCoverUrl:a}),this.canGenKeyFrames&&(this.startGenKeyFrames=!0,",
+     "chunk-common.ec025662.js: this.video.thumbUrl||this.updateVideo({thumbUrl:i.httpsUrl,startGenKeyFra",
+     "chunk-common.ec025662.js: {key:\"setShareCoverUrl\",value:function(e){this.ratio>1&&this.updateVideo({shareCoverUrl:e})}},{key:\"setCoverUrl\",value:function(e){this.updateVideo({coverUrl:e})}",
+     "chunk-common.ec025662.js: (null==(t=this.originState)||null==(n=t.postObjDesc)?void 0:n.media[0])&&(this.originState.postObjDesc.media[0].cardShowStyle=e)",
+     "chunk-common.ec025662.js: mpTitle\",get:function(){var e,t;return null==(e=this.postStore)||null==(t=e.postObjDesc)?void 0:t.mpTitle}",
+     "chunk-common.ec025662.js: this.title=(null==(t=e.postStore.defaultValue)||null==(n=t.objectDesc)||null==(r=n.finderNewlifeDesc)?void 0:r.richTextTitle)||\"\"",
+     "chunk-common.ec025662.js: {key:\"descLengthLimit\",get:function(){return this.isMegaVideo?c._A:c.U8)/2}"
+    ],
+    "notes": "没有独立的“封面元素”：media 是图片数组(图文模式，最多 18 张)或单个视频(视频模式，最多 1 个)，封面就是 media[0] 上的 thumbUrl/coverUrl/fullCoverUrl/shareCoverUrl 字段，图文模式第一张图即封面。shortTitle 未找到；标题字段是 objectDesc.mpTitle(视频)与 objectDesc.finderNewlifeDesc.richTextTitle(图文)。注意请求侧键名 objectDesc，响应侧(post_list / get_draft_list)键名是 desc。"
+   },
+   {
+    "topic": "6. 草稿 → 正式发布 数据流（post_create 是否支持 draftId）",
+    "evidence": [
+     "chunk-common.ec025662.js: {key:\"initState\",value:function(){if(this.defaultValue){var e,t=null==(e=this.defaultValue.objectDesc.media)?void 0:e[0];this.originState.postObjDesc=this.defaultValue.objectDesc,",
+     "chunk-common.ec025662.js: this.originState.createPostStatus.ratio=(null==t?void 0:t.width)/(null==t?void 0:t.height),this.originState.tempPost=this.defaultValue,this.originState.tempPost.objectType=this.combinedStore.isNewsAccount?this.defaultValue.objectType:ff.d.default,",
+     "chunk-common.ec025662.js: BC(BS(e),\"videoOnly\",void 0),BC(BS(e),\"disabled\",void 0),BC(BS(e),\"asyncClip\",void 0),BC(BS(e),\"draftObjectId\",void 0),BC(BS(e),\"checkb",
+     "chunk-common.ec025662.js: this.updateCreatePostStatus({traceInfo:Object.assign({},this.originState.createPostStatus.traceInfo,{traceKey:n.data.traceKey})}),fd.b.setTraceKey&&fd.b.setTraceKey(n.data.traceKey),this.traceKey=n.data.traceKey,",
+     "chunk-common.ec025662.js: if(t.urlCdnTaskId&&fl.b.$emit(fl.a.updateCreatePostStatus,{clipTicket:{draftId:t.urlCdnTaskId}})",
+     "404.3c829d34.js: async createPost(e){let t=Object.assign({},e,{clientid:e.clientid||(0,h.Z)()}),i=await l.ZP.postService.createPost(t);return i&&i.errCode===d.X.Ok&&this.initPost(),{res:i,payload:e}}",
+     "chunk-common.ec025662.js: {key:\"validPost\",value:function(){var e=Bh(ft.a.mark(function e(){var t,n,r,o,i=arguments;return ft.a.wrap(function(e){for(;;)switch(e.prev=e.next){case 0:return t=i.length>0&&void 0!==i[0]&&i[0]"
+    ],
+    "notes": "结论：post_create 不支持 draftId，载荷里没有任何 draftId/objectId 字段。数据流是：宿主页把草稿对象(含 objectId/objectType/objectDesc)作为 PostPage 的 defaultValue 传入、草稿 objectId 作为 draftObjectId 传入 → initState() 用 defaultValue 回填 tempPost/postObjDesc(并读 objectDesc.media[0] 的 urlCdnTaskId 恢复 clipTicket.draftId) → get-finder-post-trace-key({objectId: draftObjectId}) 取 traceKey → 用户点发表走 validPost() → getCreateOrPreviewParams() 生成与全新发表完全相同的 post → postStore.createPost() 补 clientid → POST /post/post_create；成功后 initPost() 清空表单。草稿身份在载荷里唯一的痕迹是 media[0]._objectId(=草稿 objectId)。代码里的 draftId 一律是裁剪任务 id(clipTicket.draftId → videoClipTaskId / urlCdnTaskId)，与作品草稿无关。"
+   },
+   {
+    "topic": "写操作清单：删除与其余发布相关写接口（请求体逐条）",
+    "method": "POST",
+    "body_fields": [
+     {
+      "name": "objectId",
+      "type": "string",
+      "note": "post_delete / post_special_create / del_draft 请求体均为 {objectId}"
+     },
+     {
+      "name": "postReq / objectId / scene",
+      "type": "object|string|number",
+      "note": "post_preview: {postReq:{...post, clientid}, scene:7}；post_ad_create_draft: {postReq:{...post, clientid}, objectId: t||null, scene:2}"
+     },
+     {
+      "name": "objectId / visibleType",
+      "type": "string|number",
+      "note": "post_update_visible"
+     },
+     {
+      "name": "objectId / commentFlag / commentSelectionFlag",
+      "type": "string|number|number",
+      "note": "post_update_comment_auth；open=0 close=1"
+     },
+     {
+      "name": "objectId / flag",
+      "type": "string|number",
+      "note": "update_finder_bullet_comment_auth；flag=+e"
+     },
+     {
+      "name": "videoId / videoNonceId / opType",
+      "type": "string|number",
+      "note": "post_update_bullet_auth(长视频)"
+     },
+     {
+      "name": "url / timeStart / cropDuration / height / width / x / y / clipOriginVideoInfo / traceInfo / targetWidth / targetHeight / type / useAstraThumbCover",
+      "type": "object",
+      "note": "post_clip_video 发起裁剪，type=4"
+     },
+     {
+      "name": "clipTicket",
+      "type": "object",
+      "note": "post_clip_video_result 轮询入参(=clip_video 返回的 data)"
+     }
+    ],
+    "evidence": [
+     "404.3c829d34.js: async createPostPreview(e){let t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:n.WN.FinderAssistant;return await this.post({url:this.getApiUrl(\"preview\"),data:{postReq:Object.assign(e,{clientid:(0,l.Z)()}),scene:t}})}",
+     "404.3c829d34.js: async createAdPostDraft(e,t){return await this.post({url:this.getApiUrl(\"postAdDraft\"),data:{postReq:Object.assign(e,{clientid:e.clientid||(0,l.Z)()}),objectId:t||null,scene:n.WN.Ad}})}",
+     "404.3c829d34.js: async updateVisible(e){return await this.post({url:this.getApiUrl(\"updateVisible\"),data:e})}async updateCommentAuth(e){return await this.post({url:this.getApiUrl(\"updateCommentAuth\"),data:e})}async updateBulletAuth(e){return await this.post({url:this.getApiUrl(\"updateBulletAuth\"),data:e})}",
+     "404.3c829d34.js: async handleDeletePost(e){var t;let i=await (null==(t=this.postStore)?void 0:t.deletePost(this.getPostObjectId(e)));(0,u.Wb)(i)?c.Z.info(\"已删除\"):c.Z.warn((0,u.L1)(i)||\"删除失败\")}",
+     "404.3c829d34.js: async deletePost(e){let t=await s.ZP.postService.deleteDraft(e);return t&&t.errCode===l.X.Ok&&this.getDraftList(),t}",
+     "404.3c829d34.js: let t=await this.postStore.specialPost(this.getPostObjectId(e));(0,u.Wb)(t)?c.Z.success(\"已发表\"):c.Z.warn(\"发表失败\")",
+     "404.3c829d34.js: n=await (null==(i=this.postStore)?void 0:i.updateFinderBulletCommentAuth({objectId:this.getPostObjectId(a),flag:+e}))",
+     "404.3c829d34.js: async toggleDanmuAuth(e,t){let i=await l.WY.updateBulletAuth({videoId:e.id,videoNonceId:e.videoNonceId,opType:t})}",
+     "index.b1f5e380.js: 949:function(e,t,i){var o,n,r,a,s,l;i.d(t,{WN:()=>o,gt:()=>n}),(a=o||(o={}))[a.Default=0]=\"Default\",a[a.FinderAssistant=7]=\"FinderAssistant\",a[a.Ad=2]=\"Ad\",a[a.Mp=3]=\"Mp\"",
+     "404.3c829d34.js: {name:\"clipVideo\",path:\"/post/post_clip_video\"},{name:\"getClipVideoResult\",path:\"/post/post_clip_video_result\"},{name:\"list\",path:\"/post/post_list\"}"
+    ],
+    "notes": "端点全在 baseURL /cgi-bin/mmfinderassistant-bin 下：POST /post/post_delete {objectId}；POST /post/del_draft {objectId}(成功后刷新草稿列表)；POST /post/post_special_create {objectId}(特别发表，每天最多一次)；POST /post/post_update_visible {objectId, visibleType}；POST /post/post_update_comment_auth {objectId, commentFlag(open=0/close=1), commentSelectionFlag}；POST /post/update_finder_bullet_comment_auth {objectId, flag}；POST /post/post_update_bullet_auth {videoId, videoNonceId, opType}(长视频弹幕)；POST /post/post_preview {postReq:{...post, clientid}, scene:7}；POST /post/post_ad_create_draft {postReq:{...post, clientid}, objectId, scene:2}；POST /post/post_clip_video 与 /post/post_clip_video_result。删除作品时 objectId 取 getPostObjectId(e) = \"finder\" in e ? e.finder.finderObjectId : e.objectId。saveMpPostDraft(/post/post_mp_create_draft) 仅见 data:e 透传，字段未解析。"
+   },
+   {
+    "topic": "附：permissionFlag / commentClose / commentFlag（响应侧字段与改写接口，不在 create 载荷）",
+    "body_fields": [
+     {
+      "name": "permissionFlag",
+      "type": "number",
+      "note": "响应字段(长视频列表)，位掩码 CloseLike=1/CloseFav=2/CloseForward=4/CloseBullet=8，前端解码为 permission 对象"
+     },
+     {
+      "name": "commentClose",
+      "type": "number",
+      "note": "响应字段，open=0/close=1；写入走 post_update_comment_auth 的 commentFlag"
+     },
+     {
+      "name": "commentFlag",
+      "type": "number",
+      "note": "post_update_comment_auth 请求体，open=0/close=1"
+     },
+     {
+      "name": "commentSelectionFlag",
+      "type": "number",
+      "note": "open=0/close=1"
+     }
+    ],
+    "evidence": [
+     "404.3c829d34.js: this.list=null==(t=e.list)?void 0:t.map(e=>Object.assign({},e,{permission:(0,p.F4)(e.permissionFlag,r.E9),thumbUrl:e.desc.media[0].thumbUrl,mediaType:e.desc.mediaType}))",
+     "404.3c829d34.js: (P=d||(d={}))[P.ok=0]=\"ok\",P[P.banFeedFlow=1]=\"banFeedFlow\";let H={CloseLike:1,CloseFav:2,CloseForward:4,CloseBullet:8};(v=u||(u={}))[v.open=0]=\"open\",v[v.close=1]=\"close\",(U=c||(c={}))[U.default=0]=\"default\",U[U.news=1]=\"news\",U[U.image=7]=\"image\"",
+     "404.3c829d34.js: (D=r||(r={}))[D.open=0]=\"open\",D[D.close=1]=\"close\",(y=l||(l={}))[y.open=0]=\"open\",y[y.close=1]=\"close\"",
+     "404.3c829d34.js: get isFeedCloseComment(){var e;return(null==(e=this.currentFeed)?void 0:e.commentClose)==h._c.close||!this.rootStore.userStore.editCommentAuthSwitch}",
+     "404.3c829d34.js: async setFeedCommentPermission(e){let t=await this.postService.updateCommentAuth({objectId:this.currentFeed.objectId,commentFlag:e.commentFlag?h._c.open:h._c.close,commentSelectionFlag:e.commentSelectionFlag?h.n_.open:h.n_.close});",
+     "404.3c829d34.js: n=await (null==(i=this.postStore)?void 0:i.updateCommentAuth({objectId:this.getPostObjectId(a),commentFlag:e,commentSelectionFlag:1}));"
+    ],
+    "notes": "任务列出的 permissionFlag、commentClose 在 chunk-common 的发布组件里 0 次出现，只存在于 404 的作品列表/评论 store：它们是服务端返回的作品属性。发布后再改用 /post/post_update_comment_auth 与弹幕接口；发布载荷本身不含这些字段。Vr(flag) 位掩码：ForbiddenSpecialPostMp=1 HasBroadcastToMp=2 Selectable=4 canUseBulletChat=16 showBanBulletChatButton=64 FromMpImport=128 Member=256 LiveReplay=512 MemberLiveReplay=1024。"
+   }
+  ],
+  "unknowns": [
+   "调用 validPost()/validDraft() 并把 {post, clientId} 传给 postStore.createPost / draftStore.createDraft / saveDraft 的宿主页面代码不在本批 bundle（应为未下载的懒加载路由 chunk）；因此“草稿 postReq 原样等于 create 载荷(含 isFullPost:1/handleFlag:2)”是基于 validDraft 复用同一 builder 的推断，未见直接调用点。",
+   "/post/post_create 与 /post/post_draft 的响应体结构未找到（是否返回 objectId/objectNonce、baseResp.errmsg 等均无代码证据）。",
+   "/post/get_draft_info 的请求参数名未找到（service 只做 data:e 透传）；且 PostPage 读的是 defaultValue.objectDesc，而 get_draft_list 元素用 desc，get_draft_info 返回的是 objectDesc 还是 desc 未见证据。",
+   "发表成功后是否自动调用 /post/del_draft 删除源草稿：未找到调用点。",
+   "配乐(bgm)相关载荷字段：PostPage 模板里 uiCtl.bgm 是具名插槽(slot \"bgm\")，组装逻辑在缺失 chunk，未找到。",
+   "顶层 longitude/latitude/feedLongitude/feedLatitude/originalFlag 只有默认值 0，本批 bundle 未见赋值点（定位校验 updateLocationCheckSum 等逻辑不在本批）。",
+   "这些接口的显式 HTTP 请求头（Cookie/CSRF）未找到专门设置；仅有 RequestService/axios 默认行为证据，X-XSRF-TOKEN 是否实际随请求发出未实证。",
+   "visibleType 的 other 取值未找到；代码中仅有 public=1/follow=2/self=3。",
+   "saveMpPostDraft(/post/post_mp_create_draft) 的请求体字段未解析（仅 data:e 透传）。"
+  ]
+ },
+ {
+  "summary": "视频号助手前端内置三套上传实现：主上传器（模块 6ab5，生产在用）、isolated 上传器（FinderUpload 组件库 version \"2.13.30\"，同协议精简版）和旧 snsuploadbig multipart 协议（仅 envInfo.uploadVersion 为假时启用；探测样本 envInfo.uploadVersion=1，走新协议）。主协议四步：PUT /applyuploaddfs（JSON body {BlockSum,BlockPartLength}）拿 UploadID → 每片 PUT //<CDN主机>/uploadpartdfs?PartNumber=&UploadID=&QuickUpload=（原始二进制 Blob + Content-Type: application/octet-stream）→ 用过 Quick 模式时先 PUT /applyuploaddfs?UploadID=&PartNumberMarker= 确认已落盘分片并补传 → POST /completepartuploaddfs?UploadID=（JSON body {TransFlag,PartInfo:[{PartNumber,ETag}]}）拿 DownloadURL。鉴权不带 Cookie，靠三个头：Authorization=<authKey 原值>、X-Arguments（apptype/filetype/weixinnum/filekey/filesize/taskid/scene，可选 dis_k/dis_t/ext）、Content-MD5（分片 MD5 hex，init/confirm/complete 为字面量 \"null\"）。分片默认 8MiB、并发 4（仅 >10MiB 大文件并发，否则单链顺序）、断点续传记录存 localStorage 键 AssistantUploadedInfoStorageKey_<uin>。X-Errno/TransFlag/ETag 均读自响应 JSON body（o.data），不是 HTTP header；最后一片无特殊标记，靠客户端 partInfo 数=chunkCount 后才发 complete。封面图/图文与视频走同一个上传类与同一组端点，只是 X-Arguments 的 filetype 取 authParams[cdnFileType]：video→authParams.videoFileType、图片→pictureFileType、缩略→thumbFileType（数值均由 helper_upload_params 服务端下发，代码无常量），normalFile=20310 是前端硬编码，但在已下载 bundle 内没有任何调用点使用 cdnFileType=\"normalFile\"。",
+  "findings": [
+   {
+    "topic": "0. 上传凭证来源：authParams = POST helper/helper_upload_params 的响应 data（整包当作 authParams）",
+    "endpoint": "/cgi-bin/mmfinderassistant-bin/helper/helper_upload_params",
+    "method": "POST（无 body data）",
+    "headers": [],
+    "body_fields": [],
+    "evidence": [
+     "404.3c829d34.js@24459: super({baseURL:i||t||\"/cgi-bin/mmfinderassistant-bin\"",
+     "404.3c829d34.js@100315: {name:\"uploadParams\",path:\"/helper/helper_upload_params\"}",
+     "404.3c829d34.js@93984: async getUploadParams(){return await this.post({url:this.getApiUrl(\"uploadParams\")})}",
+     "index.b1f5e380.js@215146: async getUploadParams(){if(N.authParams)return N.authParams;let e=await a.ZP.postService.getUploadParams();return e&&e.data&&(N.setAuthParams(e.data),this.uploadParams=e.data,this.uploadParams.normalFile=20310,this.fakeUin=e.data.uin),e}"
+    ],
+    "notes": "authParams 上代码里实际引用的字段：uin、authKey、appType、scene、disKey、disTime、ext，以及以 cdnFileType 字符串为键的 filetype 数值键（videoFileType/pictureFileType/thumbFileType/pagFileType/zipType/normalFile）。normalFile=20310 是前端在拿到响应后硬写进去的；其余 filetype 数值、authKey/appType/scene 实值均由服务端下发，代码无常量，api_probe 目录也未抓到该接口响应 → 未找到。"
+   },
+   {
+    "topic": "1. 每个上传请求的公共请求头 getUploadHeader（Authorization / X-Arguments / Content-MD5）",
+    "endpoint": "（请求头构造，非端点）",
+    "method": "PUT/POST/GET 共用",
+    "headers": [
+     "Authorization: <authParams.authKey 原值，无 Bearer 前缀>",
+     "X-Arguments: apptype=<authParams.appType>&filetype=<authParams[cdnFileType]>&weixinnum=<authParams.uin>&filekey=<encodeURIComponent(file.name)>&filesize=<file.size>&taskid=<uuid>&scene=<authParams.scene||0>[&dis_k=<disKey>&dis_t=<disTime>&ext=<ext>]",
+     "Content-MD5: <md5 hex 字符串；未传 md5 时为字面量 null>"
+    ],
+    "body_fields": [
+     {
+      "name": "apptype",
+      "type": "authParams.appType",
+      "note": "X-Arguments 内"
+     },
+     {
+      "name": "filetype",
+      "type": "authParams[cdnFileType]",
+      "note": "cdnFileType 取值 videoFileType/pictureFileType/thumbFileType/pagFileType/zipType/normalFile"
+     },
+     {
+      "name": "weixinnum",
+      "type": "authParams.uin",
+      "note": ""
+     },
+     {
+      "name": "filekey",
+      "type": "encodeURIComponent(file.name)",
+      "note": "即文件名 URL 编码，不是服务端下发的 key"
+     },
+     {
+      "name": "filesize",
+      "type": "file.size",
+      "note": "整文件字节数"
+     },
+     {
+      "name": "taskid",
+      "type": "uuid",
+      "note": "每次 startUpload 生成（模块 ec26 uuid 库）"
+     },
+     {
+      "name": "scene",
+      "type": "authParams.scene||0",
+      "note": ""
+     },
+     {
+      "name": "dis_k / dis_t / ext",
+      "type": "authParams.disKey / disTime / ext",
+      "note": "三者同时存在才追加"
+     }
+    ],
+    "evidence": [
+     "chunk-common.ec025662.js@891762: key:\"getUploadHeader\",value:function(e){var t=e.file,n=e.uuid,r=e.md5,o=e.cdnFileType,i=this.authParams,a=\"apptype=\".concat(i.appType,\"&filetype=\").concat(i[o],\"&weixinnum=\").concat(i.uin,\"&filekey=\").concat(encodeURIComponent(t.name),\"&filesize=\").concat(t.size,\"&taskid=\").concat(n,\"&scene=\").concat(i.scene||0);",
+     "chunk-common.ec025662.js@891962: .concat(encodeURIComponent(t.name),\"&filesize=\").concat(t.size,\"&taskid=\").concat(n,\"&scene=\").concat(i.scene||0);return i.disKey&&void 0!==i.disTime&&i.ext&&(a+=\"&dis_k=\".concat(i.disKey,\"&dis_t=\".concat(i.disTime,\"&ext=\".concat(i.ext)),{Authorization:i.authKey,\"X-Arguments\":a,\"Content-MD5\":r||\"null\"}}",
+     "chunk-common.ec025662.js@896251: key:\"getMd5\",value:function(){var e=this;this.getMd5Task=new Promise(function(t,n){var r=new FileReader,o=5242880,a=5242880>e.file.size?e.file.size:o,s=e.blobSlice(0,a);",
+     "chunk-common.ec025662.js@882555: return this._finish(i,o),n=u(this._hash),e&&(n=h(n)),this.reset(),n}",
+     "chunk-common.ec025662.js@880954: function u(e){var t;for(t=0;t<e.length;t+=1)e[t]=c(e[t]);return e.join(\"\")}"
+    ],
+    "notes": "md5 由 spark-md5 的 ArrayBuffer.end() 无参调用得到，u() 把 hash 字拼成字符串，raw 字节 h() 仅在传参时启用 → Content-MD5 是 hex 文本而非 base64。分片请求传分片 MD5（Content-MD5=分片 hex）；apply/confirm/complete 调 getUploadHeader 时未传 md5 → Content-MD5 为字面量字符串 null。文件级 MD5 只算前 5,242,880 字节（文件更小则整文件），只用于断点续传 key，不进请求头。isolated 上传器（chunk-common.ec025662.js@2365187）有一模一样的 getUploadHeader，但 authParams 缺失时抛 Error(\"authParams is required for upload\")。"
+   },
+   {
+    "topic": "2. 分片上传完整 HTTP 形状（主上传器 uploadChunk）",
+    "endpoint": "//<cdnHostList/spareCdnHostList 随机一项 或 envInfo.cdnHost>/uploadpartdfs?PartNumber=<chunkIndex+1>&UploadID=<uploadTaskId>&QuickUpload=<1|2>",
+    "method": "PUT",
+    "headers": [
+     "Content-Type: application/octet-stream",
+     "Authorization: <authKey>",
+     "X-Arguments: apptype=..&filetype=..&weixinnum=..&filekey=..&filesize=..&taskid=..&scene=..",
+     "Content-MD5: <本片 MD5 hex>"
+    ],
+    "body_fields": [
+     {
+      "name": "(body)",
+      "type": "原始二进制 Blob = file.slice(start,end)",
+      "note": "非 multipart、非 FormData；axios 直接送 Blob"
+     }
+    ],
+    "evidence": [
+     "chunk-common.ec025662.js@888607: key:\"uploadChunkUrl\",value:function(e,t){var n,r,o,i=arguments.length>2&&void 0!==arguments[2]?arguments[2]:h.c.Normal,a=(this.useBackUpHost?null==(n=d.b.envInfo)?void 0:n.spareCdnHostList:null==(r=d.b.envInfo)?void 0:r.cdnHostList)||[]",
+     "chunk-common.ec025662.js@888844: s=(null==a?void 0:a.length)?a[Math.floor(Math.random()*a.length)]:null==(o=d.b.envInfo)?void 0:o.cdnHost;return\"//\".concat(s||this.HOST,\"/uploadpartdfs?PartNumber=\").concat(e,\"&UploadID=\").concat(t,\"&QuickUpload=\").concat(i)}",
+     "chunk-common.ec025662.js@890069: {key:\"uploadChunk\",value:function(e){var t=this;if(!(null==e?void 0:e.chunk))return Promise.reject(Error(\"chunk is empty\"));var n=e.chunk,r=e.file,o=e.uuid,i=e.uploadProgressCallBack,a=this.authParams,s=this.uploadChunkUrl(e.chunkIndex+1,e.uploadId,e.quickUpload?h.c.Quick:h.c.Normal),u=this.getUploadHeader(e);",
+     "chunk-common.ec025662.js@890717: v={timeout:121e3,timeoutErrorMessage:\"response timeout\",cancelToken:p.token,headers:Object.assign({},u,{\"Content-Type\":\"application/octet-stream\"}),onUploadProgress:function(e){i&&i(Object.assign({delta:e.loaded-m})),m=e.loaded}};c.a.put(s,n,v)",
+     "chunk-common.ec025662.js@904775: u=this.blobSlice(s,c),f=this.strategy,p=new FileReader;return p.readAsArrayBuffer(u)",
+     "chunk-common.ec025662.js@887829: T(this,\"HOST\",\"https://finderpre.video.qq.com\"),T(this,\"tIdList\",[])",
+     "chunk-common.ec025662.js@889329: {key:\"setHost\",value:function(e){this.HOST=\"//\".concat(e)}}",
+     "chunk-common.ec025662.js@198908: function(e){e[e.Confirm=0]=\"Confirm\",e[e.Quick=1]=\"Quick\",e[e.Normal=2]=\"Normal\"}(c||(c={}))"
+    ],
+    "notes": "URL 拼接原文：\"//\".concat(s||this.HOST,\"/uploadpartdfs?PartNumber=\").concat(e,\"&UploadID=\").concat(t,\"&QuickUpload=\").concat(i)。PartNumber 从 1 开始（chunkIndex+1）。主机：未切备用时每次请求从 envInfo.cdnHostList 随机取一台，切到备用主机（localStorage AssistantUploadBackUpFlag 且 24h 内）后从 spareCdnHostList 随机取；列表为空则用 envInfo.cdnHost；都没有则落到 HOST（预发默认 https://finderpre.video.qq.com，经 setHost(envInfo.cdnHost) 后变为 \"//\"+cdnHost）。QuickUpload：Quick=1 / Normal=2（Confirm=0 仅定义未使用）。超时：120s 未完成主动 cancel 并报 \"connect timeout\"，axios timeout 121s。请求库是 axios 0.22.0（c=n.n(n(\"cebe\"))），无自定义拦截器。"
+   },
+   {
+    "topic": "3. 环境真实值（探测样本）：CDN 主机名与 uploadVersion（决定走哪套协议）",
+    "endpoint": "auth/auth_data 响应 data.envInfo",
+    "method": "",
+    "headers": [],
+    "body_fields": [
+     {
+      "name": "cdnHostList",
+      "type": "string[]",
+      "note": "finderassistancea..e.video.qq.com"
+     },
+     {
+      "name": "spareCdnHostList",
+      "type": "string[]",
+      "note": "snsaispuploada..e.video.qq.com"
+     },
+     {
+      "name": "cdnHost",
+      "type": "string",
+      "note": "finderassistancea.video.qq.com"
+     },
+     {
+      "name": "uploadVersion",
+      "type": "number",
+      "note": "1"
+     }
+    ],
+    "evidence": [
+     "work/api_probe/auth_auth_data.json: \"envInfo\":{\"cdnHostList\":[\"finderassistancea.video.qq.com\",\"finderassistanceb.video.qq.com\",\"finderassistancec.video.qq.com\",\"finderassistanced.video.qq.com\",\"finderassistancee.video.qq.com\"],\"spareCdnHostList\":[\"snsaispuploada.video.qq.com\",\"snsaispuploadb.video.qq.com\",\"snsaispuploadc.video.qq.com\",\"snsaispuploadd.video.qq.com\",\"snsaispuploade.video.qq.com\"]",
+     "work/api_probe/auth_auth_data.json: \"invalidVideoList\":[\"av1\"],\"productEnv\":0,\"cdnHost\":\"finderassistancea.video.qq.com\",\"uploadVersion\":1}",
+     "index.b1f5e380.js@214154: N.setHost(i.envInfo.cdnHost)",
+     "chunk-common.ec025662.js@730536: var c=function(e,t){if(e){\"object\"===a(e)?Object.assign(s,e):s[e]=t;var n=o.f;s.envInfo&&s.envInfo.uploadVersion&&(n=i.uploadService),s.uploadParams&&n.setAuthParams(s.uploadParams),s.cdnHost&&n.setHost(s.cdnHost)}};t.b=s",
+     "chunk-common.ec025662.js@1786034: r=hF.a.video,n.isImage&&(r=hF.a.picture),o=new(fd.b.envInfo.uploadVersion?hV.default:hF.d)(n,{cdnFileType:r})"
+    ],
+    "notes": "envInfo 来自 auth/auth_data 响应，经宿主 injectPostCreateDeps（=3e13 模块的 c）注入上传 store：uploadVersion 为真用新分片协议（模块 6ab5），否则用旧 snsuploadbig（模块 3afc）。注入时同时调 setAuthParams(uploadParams) 与 setHost(cdnHost)。injectPostCreateDeps 的宿主调用点不在已下载 bundle 内。"
+   },
+   {
+    "topic": "4. 初始化请求：PUT /applyuploaddfs 拿 UploadID（没有单独的 fileKey 概念，filekey 就是文件名）",
+    "endpoint": "<HOST>/applyuploaddfs   （HOST=\"//\"+envInfo.cdnHost，即 //finderassistancea.video.qq.com/applyuploaddfs）",
+    "method": "PUT",
+    "headers": [
+     "Authorization: <authKey>",
+     "X-Arguments: apptype=..&filetype=..&weixinnum=..&filekey=..&filesize=..&taskid=<uuid>&scene=..",
+     "Content-MD5: null"
+    ],
+    "body_fields": [
+     {
+      "name": "BlockSum",
+      "type": "number",
+      "note": "= Math.ceil(file.size/chunkSize)"
+     },
+     {
+      "name": "BlockPartLength",
+      "type": "number[]",
+      "note": "每片累计结束偏移，最后一片为 file.size"
+     }
+    ],
+    "evidence": [
+     "chunk-common.ec025662.js@892271: key:\"getUploadId\",value:function(e,t){return c.a.put(this.getUploadIdUrl,e,{headers:t})}",
+     "chunk-common.ec025662.js@892490: singleUploadUrl\",get:function(){return\"\".concat(this.HOST,\"/simpleuploaddfs\")}},{key:\"getUploadIdUrl\",get:function(){return\"\".concat(this.HOST,\"/applyuploaddfs\")}}]),e}();T(E,\"ReplaceHost\",\"https://finder.video.qq.com\")",
+     "chunk-common.ec025662.js@901011: getUploadId({BlockSum:this.chunkCount,BlockPartLength:Array(this.chunkCount).fill(1).map(function(e,t){var n=(t+1)*a.chunkSize;return n>a.file.size?a.file.size:n})},t)",
+     "chunk-common.ec025662.js@901324: throw new l.LogicError(\"Error_No_UploadId;\".concat(this.uuid,\";\").concat(JSON.stringify(n)),\"upload\");case 9:e.next=16;break;",
+     "chunk-common.ec025662.js@901729: case 16:this.uploadTaskId=n.data.UploadID,this.uploadTaskIdTimeStamp=Date.now();case 18:case\"end\":return e.stop()"
+    ],
+    "notes": "流程：startUpload → 等 MD5 → 生成 uuid → reuseUpload()（查 localStorage 有无可续传记录，没有才 initTaskId）→ chunkUpload()。响应体取 data.UploadID（取不到抛 LogicError(\"Error_No_UploadId;…\")）。URL 拼接原文：\"\".concat(this.HOST,\"/applyuploaddfs\")。body 为普通对象，按 axios 默认序列化为 JSON（推断自库行为，代码未显式写 Content-Type）。"
+   },
+   {
+    "topic": "5. 分片响应判定：X-Errno / TransFlag / ETag 都在响应 JSON body（o.data），不在 header",
+    "endpoint": "/uploadpartdfs 响应",
+    "method": "",
+    "headers": [],
+    "body_fields": [
+     {
+      "name": "X-Errno",
+      "type": "number",
+      "note": "响应 body；===0 视为服务端成功"
+     },
+     {
+      "name": "TransFlag",
+      "type": "服务端下发的不透明标记",
+      "note": "响应 body；非 Quick 片必须 truthy，存入 this.transFlag，complete 请求原样回传"
+     },
+     {
+      "name": "ETag",
+      "type": "string",
+      "note": "响应 body；存入 partInfo[chunkIndex]={PartNumber:chunkIndex+1,ETag}"
+     }
+    ],
+    "evidence": [
+     "chunk-common.ec025662.js@905567: var p=(null==(i=o.data)?void 0:i[\"X-Errno\"])===0;if(!b&&!(null==o||null==(a=o.data)?void 0:a.TransFlag)||!b&&!p)throw new l.LogicError(o,\"upload\");return(p&&(n.uploadChunkRecord[y].success=!0,(null==(s=o.data)?void 0:s.TransFlag)&&(n.transFlag=null==(u=o.data)?void 0:u.TransFlag)",
+     "chunk-common.ec025662.js@905884: n.partInfo[r]={PartNumber:r+1,ETag:null==(d=o.data)?void 0:d.ETag}",
+     "687.d60c19be.js@117473: H=class e extends x{constructor(e,t,r={}){super(e,r),this.scene=t,this.name=\"LogicError\"}"
+    ],
+    "notes": "o 是 axios 响应对象，o.data 是已解析的响应体；全仓仅此一处读 X-Errno，无任何代码读响应 header（o.headers）。判定规则：b=本片是否 Quick 模式。非 Quick 片要求 body.TransFlag 为真且 body.X-Errno===0，否则抛 LogicError(响应对象,\"upload\")；Quick 片只要 HTTP 2xx 即过（不校验这两个字段）。LogicError 签名 (message, scene)，message 可为对象。TransFlag 的服务端含义代码无注释 → 未找到；客户端语义是「非 Quick 分片已被服务端受理」的凭证，每个分片响应会覆盖 this.transFlag，最后随 complete 请求回传，并写入断点续传记录。"
+   },
+   {
+    "topic": "6. 分片逻辑：片大小、分片数、并发数、Quick 模式条件",
+    "endpoint": "",
+    "method": "",
+    "headers": [],
+    "body_fields": [
+     {
+      "name": "chunkSize",
+      "type": "number",
+      "note": "1024*(localStorage[AssistantDebugUploadChunkSize]||8)*1024，默认 8,388,608"
+     },
+     {
+      "name": "chunkCount",
+      "type": "number",
+      "note": "Math.ceil(file.size/chunkSize)"
+     },
+     {
+      "name": "ConcurrentLimit",
+      "type": "number",
+      "note": "localStorage[AssistantDebugUploadChunkConcurrentLimit]||4"
+     },
+     {
+      "name": "singleFileSize",
+      "type": "number",
+      "note": "0xa00000=10,485,760；isBigFile = size > 此值"
+     }
+    ],
+    "evidence": [
+     "chunk-common.ec025662.js@892807: T(this,\"singleFileSize\",0xa00000),T(this,\"cdnFileType\",void 0),T(this,\"chunkSize\",1024*(Number(localStorage.getItem(p.b))||8)*1024),T(this,\"ConcurrentLimit\",Number(localStorage.getItem(p.a))||4),T(this,\"ReuseInfoLimit\",5)",
+     "chunk-common.ec025662.js@898779: key:\"shouldUseQuickChunkUpload\",value:function(e){return!(0===e||e>this.chunkCount-this.ConcurrentLimit)}}",
+     "chunk-common.ec025662.js@903077: this.isBigFile?Array(this.ConcurrentLimit).fill(1).forEach(function(e,n){0===n?t.loadChunk():t.loadNextChunk()}):this.loadChunk()",
+     "chunk-common.ec025662.js@908189: key:\"loadNextChunk\",value:function(){this.curChunkIndex=this.curChunkIndex+1,this.curChunkIndex<this.chunkCount&&!this.break&&this.loadChunk()}"
+    ],
+    "notes": "片大小=8MiB 默认（调试面板可改 localStorage 后 reload）。并发：>10MiB 的大文件启动 ConcurrentLimit=4 条上传链并行，≤10MiB 的文件只启动 1 条链顺序上传（每片成功回调里 loadNextChunk）。第 i 片字节区间 [i*chunkSize, min((i+1)*chunkSize, file.size))。Quick 模式条件：!(0===index || index > chunkCount-ConcurrentLimit)，即「既不是第 1 片、也不在最后 4 片内」的中间片带 QuickUpload=1，其余为 QuickUpload=2；补传缺片时强制 quickUpload=false。"
+   },
+   {
+    "topic": "7. 断点续传：uploadChunkRecord 字段结构、落盘位置与过期规则、四种 ReuseUploadType",
+    "endpoint": "localStorage",
+    "method": "",
+    "headers": [],
+    "body_fields": [
+     {
+      "name": "uploadChunkRecord[]",
+      "type": "Array<{index:number,reqTime:number(ms),resTime:number(ms),cost:number(ms),success:boolean}>",
+      "note": "index=0 起的分片序号；每片发请求前 addUploadRecord 写入"
+     },
+     {
+      "name": "fileUploadedInfo（落盘对象）",
+      "type": "{fileUploadedInfoKey,isUsedQuickUpload,uploadChunkRecord,uuid,uploadTaskId,uploadTaskIdTimeStamp,transFlag,partInfo,uploadSuccessResp}",
+      "note": "仅大文件(endUpload 时 isBigFile)保存"
+     },
+     {
+      "name": "fileUploadedInfoKey",
+      "type": "string",
+      "note": "name:lastModified:size:type:md5（md5=文件前 5MiB 的 MD5）"
+     },
+     {
+      "name": "partInfo[]",
+      "type": "Array<{PartNumber:number,ETag:string}>",
+      "note": "按分片下标稀疏存放"
+     }
+    ],
+    "evidence": [
+     "chunk-common.ec025662.js@905034: y=n.addUploadRecord({index:r,reqTime:Date.now(),resTime:0,cost:0,success:!1}),b=n.shouldUseQuickChunkUpload(r);",
+     "chunk-common.ec025662.js@900211: key:\"addUploadRecord\",value:function(e){var t=this.uploadChunkRecord.findIndex(function(t){return t.index===e.index});return t>-1?(this.uploadChunkRecord[t]=e,t):(this.uploadChunkRecord.push(e),this.uploadChunkRecord.length-1)}",
+     "chunk-common.ec025662.js@894172: key:\"fileUploadedInfo\",get:function(){return{fileUploadedInfoKey:this.fileUploadedInfoKey,isUsedQuickUpload:this.isUsedQuickUpload,uploadChunkRecord:this.uploadChunkRecord,uuid:this.uuid,uploadTaskId:this.uploadTaskId,uploadTaskIdTimeStamp:this.uploadTaskIdTimeStamp,transFlag:this.transFlag,partInfo:this.partInfo,uploadSuccessResp:this.uploadSuccessResp}}",
+     "chunk-common.ec025662.js@893986: key:\"fileUploadedInfoKey\",get:function(){return\"\".concat(this.file.name,\":\").concat(this.file.lastModified,\":\").concat(this.file.size,\":\").concat(this.file.type,\":\").concat(this.md5)}",
+     "chunk-common.ec025662.js@913307: key:\"uploadedInfoStorageKeyByUin\",get:function(){var e=L.getUserUin();return\"\".concat(p.s,\"_\").concat(e)}}",
+     "chunk-common.ec025662.js@1041312: _=\"AssistantUploadBackUpFlag\",w=\"AssistantDebugUploadChunkSize\",S=\"AssistantDebugUploadChunkConcurrentLimit\",x=\"AssistantUploadedInfoStorageKey\"",
+     "chunk-common.ec025662.js@903873: localStorage.setItem(this.uploadedInfoStorageKeyByUin,JSON.stringify(t))",
+     "chunk-common.ec025662.js@900601: return t?Date.now()-Number(t.uploadTaskIdTimeStamp)>this.uploadTaskIdExpiredTimeout||17228736e5>Number(t.uploadTaskIdTimeStamp)?h.d.Expired:t:h.d.None",
+     "chunk-common.ec025662.js@893572: T(this,\"uploadTaskIdExpiredTimeout\",858e5)",
+     "chunk-common.ec025662.js@198426: function(e){e[e.Quick=1]=\"Quick\",e[e.Normal=2]=\"Normal\",e[e.Slow=3]=\"Slow\",e[e.BackUp=4]=\"BackUp\"}(i||(i={})),function(e){e[e.None=1]=\"None\",e[e.Expired=2]=\"Expired\",e[e.ReuseByChunks=3]=\"ReuseByChunks\",e[e.ReuseByConfirm=4]=\"ReuseByConfirm\",e[e.ReuseByUrl=5]=\"ReuseByUrl\"}(a||(a={}))",
+     "chunk-common.ec025662.js@898170: case 17:i===h.d.ReuseByChunks?this.chunkUpload():i===h.d.ReuseByUrl?this.handleComplete(!1):i===h.d.ReuseByConfirm&&this.handleComplete();case 18:case\"end\":return e.stop()}"
+    ],
+    "notes": "存储键 = AssistantUploadedInfoStorageKey_<uin>，值是 JSON 数组，最多留 ReuseInfoLimit=5 条，只保留 uploadTaskIdTimeStamp 未超 858e5 ms（=8,580,000ms≈143 分钟）的记录。再次选同一文件时：按 fileUploadedInfoKey 命中且未过期 → 恢复 uploadTaskId/uploadChunkRecord/transFlag/partInfo/uuid，curChunkIndex=已连续成功片数+1；有 uploadSuccessResp.data → ReuseByUrl（直接走完成回调）；curChunkIndex>=chunkCount-1 → ReuseByConfirm（跳过传片直接 confirm+complete）；否则 ReuseByChunks 续传。过期(Expired)或不存在(None) → 重新 apply 拿新 UploadID。这是纯客户端记录，服务端是否保留分片由 confirm 接口的 ListPartsResult 决定。"
+   },
+   {
+    "topic": "8. 分片失败的重试与降级（Strategy：Quick→Normal→BackUp）",
+    "endpoint": "",
+    "method": "",
+    "headers": [],
+    "body_fields": [],
+    "evidence": [
+     "chunk-common.ec025662.js@907296: n.reloadChunkTime+=1,n.uploadQueue.push(i()),e.next=24;break;case 12:if(n.strategy!==h.f.Quick){e.next=23;break}if(n.isBigFile){e.next=16;break}return u(),e.abrupt(\"return\");case 16:c(\"UploadVideoByLevel2\"),n.strategy=h.f.Normal,n.reloadChunkTime=0,n.curChunkIndex=n.uploadedSuccessIndex,n.loadNextChunk()",
+     "chunk-common.ec025662.js@907626: n.strategy!==h.f.Normal||L.useBackUpHost?u():(c(\"UploadVideoByLevel4\"),n.endUpload(),n.partInfo=[],n.strategy=h.f.BackUp,L.toggleToBackUpHost(),n.reloadChunkTime=0,n.startUpload(n.uploadEventHandlerCb,!0))"
+    ],
+    "notes": "片失败（非超时类错误且 reloadChunkTime<=4）→ 原片重排队，最多 4 次；仍失败：Quick 策略下大文件降 Normal（从已成功片之后续传）、小文件直接整体失败；Normal 策略且未切备用 → endUpload、清 partInfo、策略 BackUp、toggleToBackUpHost()（localStorage AssistantUploadBackUpFlag=Date.now()，24h 内所有上传走 spareCdnHostList）并整体重启 startUpload；再失败 → 上报失败。"
+   },
+   {
+    "topic": "9. 确认分片 confirmChunks（用过 Quick 模式时，complete 前先查服务端已落盘分片并补传）",
+    "endpoint": "<HOST>/applyuploaddfs?UploadID=<uploadTaskId>&PartNumberMarker=<标记，首页为字符串 \"1\">",
+    "method": "PUT（isolated 上传器为 GET）",
+    "headers": [
+     "Authorization: <authKey>",
+     "X-Arguments: …（同上）",
+     "Content-MD5: null"
+    ],
+    "body_fields": [
+     {
+      "name": "(body)",
+      "type": "{}",
+      "note": "空对象"
+     },
+     {
+      "name": "ListPartsResult.Part[]",
+      "type": "Array<{PartNumber,ETag}>",
+      "note": "响应"
+     },
+     {
+      "name": "ListPartsResult.IsTruncated",
+      "type": "string \"true\"",
+      "note": "为字符串 true 时翻页"
+     },
+     {
+      "name": "ListPartsResult.NextPartNumberMarker",
+      "type": "string",
+      "note": "下一页标记"
+     }
+    ],
+    "evidence": [
+     "chunk-common.ec025662.js@891356: key:\"confirmChunks\",value:function(e){var t=this.getUploadHeader(e);return c.a.put(this.confirmChunkUrl(e.uploadId,e.PartNumberMarker||\"\"),{},{headers:t})}",
+     "chunk-common.ec025662.js@889072: key:\"uploadCompleteUrl\",value:function(e){return\"\".concat(this.HOST,\"/completepartuploaddfs?UploadID=\").concat(e)}},{key:\"confirmChunkUrl\",value:function(e,t){return\"\".concat(this.HOST,\"/applyuploaddfs?UploadID=\").concat(e,\"&PartNumberMarker=\").concat(t)}}",
+     "chunk-common.ec025662.js@909459: L.confirmChunks({file:y.file,uuid:y.uuid,uploadId:y.uploadTaskId,cdnFileType:y.cdnFileType,transFlag:y.transFlag,partInfo:y.partInfo,PartNumberMarker:s})",
+     "chunk-common.ec025662.js@909699: throw new l.LogicError(\"confirm upload fail: \".concat(JSON.stringify(i.data),\";\").concat(i.status),\"upload\");case 5:if(u=null==i||null==(n=i.data)?void 0:n.ListPartsResult,(r=a).push.apply(r,m(u.Part||[])),(null==u?void 0:u.IsTruncated)!==\"true\"){e.next=11;break}return s=u.NextPartNumberMarker,e.next=11,c()",
+     "chunk-common.ec025662.js@910755: y.partInfo[t]={PartNumber:t+1,ETag:e.ETag}"
+    ],
+    "notes": "触发条件：isUsedQuickUpload 且 handleComplete() 被无参调用。注意同一端点 /applyuploaddfs 既做初始化（PUT+JSON body）又做已传分片列举（PUT+query UploadID/PartNumberMarker）。响应无 ListPartsResult 即视为失败。去重后若返回分片数≠chunkCount → reUploadMissingChunks（缺片以 quickUpload=false 重传），再用服务端 ETag 填充 partInfo。"
+   },
+   {
+    "topic": "10. 完成请求 finishUpload：POST /completepartuploaddfs（最后一片无特殊标记）",
+    "endpoint": "<HOST>/completepartuploaddfs?UploadID=<uploadTaskId>",
+    "method": "POST",
+    "headers": [
+     "Authorization: <authKey>",
+     "X-Arguments: …（同上）",
+     "Content-MD5: null"
+    ],
+    "body_fields": [
+     {
+      "name": "TransFlag",
+      "type": "string",
+      "note": "分片响应里拿到的 transFlag"
+     },
+     {
+      "name": "PartInfo",
+      "type": "Array<{PartNumber:number,ETag:string}>",
+      "note": "partInfo.filter(Boolean) 后按 PartNumber 升序"
+     }
+    ],
+    "evidence": [
+     "chunk-common.ec025662.js@891514: key:\"finishUpload\",value:function(e){var t=this.getUploadHeader(e);return c.a.post(this.uploadCompleteUrl(e.uploadId),{TransFlag:e.transFlag,PartInfo:e.partInfo.filter(Boolean).sort(function(e,t){return e.PartNumber-t.PartNumber})},{headers:t})}",
+     "chunk-common.ec025662.js@911872: p.data.httpsUrl=p.data.DownloadURL.replace(\"http://wxapp.tc.qq.com\",E.ReplaceHost),this.uploadSuccessResp={data:null==p?void 0:p.data},this.updateSuccessResult()"
+    ],
+    "notes": "URL 拼接原文：\"\".concat(this.HOST,\"/completepartuploaddfs?UploadID=\").concat(e)。请求里没有 last/complete 标志位，也没有把 UploadID 放 body；「最后一片」只体现在客户端：第 chunkCount 片成功后 Promise.all(uploadQueue) → handleComplete，校验 partInfo 数量=chunkCount（不足先补传，仍不足抛 LogicError(\"partInfo incomplete after re-upload: …\")）才发 complete。响应 body 取 data.DownloadURL，无则抛；客户端把 http://wxapp.tc.qq.com 替换成 https://finder.video.qq.com 得 httpsUrl，回调给发布流程。X-Errno 不在 complete 响应里被读取。"
+   },
+   {
+    "topic": "11. 单文件直传 /simpleuploaddfs：已定义但已下载 bundle 内无调用点",
+    "endpoint": "<HOST>/simpleuploaddfs",
+    "method": "PUT（multipart FormData）",
+    "headers": [
+     "Authorization / X-Arguments（同 getUploadHeader）",
+     "Content-MD5: <整文件 MD5 hex>"
+    ],
+    "body_fields": [
+     {
+      "name": "file",
+      "type": "FormData 字段",
+      "note": "n.append(\"file\",e)"
+     }
+    ],
+    "evidence": [
+     "chunk-common.ec025662.js@891170: key:\"uploadSingleFile\",value:function(e,t){var n=new FormData;return n.append(\"file\",e),c.a.put(this.singleUploadUrl,n,{timeout:3e4,timeoutErrorMessage:\"response timeout\",headers:t})}"
+    ],
+    "notes": "调用它的任务类方法 singleFileUpload（chunk-common.ec025662.js@898416，整文件读 ArrayBuffer 算 MD5）在 11 个已下载 bundle 中只有定义、没有任何调用点；isBigFile/singleFileSize 只用于并发与续传判断，不触发单文件直传。即所有大小的文件都走 apply→uploadpart×N→complete。"
+   },
+   {
+    "topic": "12. Cookie / withCredentials：上传请求跨域不带 Cookie，鉴权全在自定义头",
+    "endpoint": "",
+    "method": "",
+    "headers": [],
+    "body_fields": [],
+    "evidence": [
+     "chunk-common.ec025662.js@2952696: version:\"0.22.0\"",
+     "chunk-common.ec025662.js@2943846: r.isUndefined(e.withCredentials)||(b.withCredentials=!!e.withCredentials)",
+     "chunk-common.ec025662.js@890717: v={timeout:121e3,timeoutErrorMessage:\"response timeout\",cancelToken:p.token,headers:Object.assign({},u,{\"Content-Type\":\"application/octet-stream\"}),onUploadProgress:function(e){i&&i(Object.assign({delta:e.loaded-m})),m=e.loaded}};c.a.put(s,n,v)"
+    ],
+    "notes": "axios 0.22.0，defaults 对象里没有 withCredentials 键，xhr 适配器仅在配置显式给出时才设置；上传调用配置只有 timeout/timeoutErrorMessage/cancelToken/headers/onUploadProgress，且 CDN 主机（finderassistance*.video.qq.com）与助手站不同源 → 推断不带 Cookie。全仓无 interceptors.request.use / response.use 注册，axios defaults 未被改写。"
+   },
+   {
+    "topic": "13. 旧协议 snsuploadbig（multipart，仅 envInfo.uploadVersion 为假时使用）",
+    "endpoint": "//<cdnHost>/snsuploadbig",
+    "method": "POST（multipart/form-data）",
+    "headers": [],
+    "body_fields": [
+     {
+      "name": "ver",
+      "type": "string",
+      "note": "固定 \"1\""
+     },
+     {
+      "name": "seq",
+      "type": "string",
+      "note": "Math.random()+Date.now()"
+     },
+     {
+      "name": "weixinnum",
+      "type": "string",
+      "note": "uin"
+     },
+     {
+      "name": "apptype",
+      "type": "string",
+      "note": ""
+     },
+     {
+      "name": "filetype",
+      "type": "string",
+      "note": "authParams[cdnFileType]"
+     },
+     {
+      "name": "authkey",
+      "type": "string",
+      "note": "authKey"
+     },
+     {
+      "name": "hasthumb",
+      "type": "string",
+      "note": "\"0\""
+     },
+     {
+      "name": "filekey",
+      "type": "string",
+      "note": "file.name"
+     },
+     {
+      "name": "totalsize",
+      "type": "string",
+      "note": "file.size"
+     },
+     {
+      "name": "fileuuid",
+      "type": "string",
+      "note": "uuid"
+     },
+     {
+      "name": "rangestart",
+      "type": "string",
+      "note": "片起始字节"
+     },
+     {
+      "name": "rangeend",
+      "type": "string",
+      "note": "片结束字节（含，=end-1）"
+     },
+     {
+      "name": "blockmd5",
+      "type": "string",
+      "note": "分片 MD5"
+     },
+     {
+      "name": "filedata",
+      "type": "Blob",
+      "note": "分片二进制"
+     },
+     {
+      "name": "forcetranscode",
+      "type": "string",
+      "note": "\"0\""
+     }
+    ],
+    "evidence": [
+     "chunk-common.ec025662.js@708261: key:\"setHost\",value:function(e){this.HOST=e,this.URL=\"//\".concat(this.HOST,\"/snsuploadbig\")}",
+     "chunk-common.ec025662.js@708523: d.append(\"ver\",\"1\"),d.append(\"seq\",\"\".concat(Math.random()+Date.now())),d.append(\"weixinnum\",\"\".concat(f.uin)),d.append(\"apptype\",\"\".concat(f.appType)),d.append(\"filetype\",\"\".concat(f[u])),d.append(\"authkey\",\"\".concat(f.authKey)),d.append(\"hasthumb\",\"0\"),d.append(\"filekey\",\"\".concat(o.name)),d.append(\"totalsize\",\"\".concat(o.size))",
+     "chunk-common.ec025662.js@708856: d.append(\"fileuuid\",\"\".concat(i)),d.append(\"rangestart\",\"\".concat(s)),d.append(\"rangeend\",\"\".concat(a)),d.append(\"blockmd5\",\"\".concat(c)),d.append(\"filedata\",r),d.append(\"forcetranscode\",\"0\")",
+     "chunk-common.ec025662.js@709360: l.a.post(n.URL,d,{timeout:3e4,timeoutErrorMessage:\"response timeout\",cancelToken:c.token}).then(function(n){s=!0;var r=n.data;r.uploadfinish&&(r.httpsUrl=r.fileurl.replace(\"http://wxapp.tc.qq.com\",e.ReplaceHost)),t(n)})",
+     "chunk-common.ec025662.js@709682: retcode,n=[-5202163,-5202156,-5202157],o=\"retCode: \".concat(t,\";status: \").concat(e.response.status,\";\").concat(a,\";serverip:\").concat(e.response.data.serverip);if(n.includes(t))return void r({needReload:!0,bitmapstart:e.response.data.bitmapstart,errMsg:o,response:e.response})",
+     "chunk-common.ec025662.js@710577: g(this,\"chunkSize\",524288),g(this,\"singlePackLimit\",3)",
+     "chunk-common.ec025662.js@711903: x.uploadChunk({chunk:o,file:e.file,cdnFileType:e.cdnFileType,chunkStart:t,chunkEnd:n-1,uuid:e.uuid,md5:u})"
+    ],
+    "notes": "模块 3afc（404.3c829d34.js@254118 另有一份等价 class T，用于私信发图）。片 512KiB，每 3 片一批（singlePackLimit=3），无 apply/complete 步骤；响应 body.uploadfinish 为真时 fileurl→httpsUrl；错误响应 body.retcode∈{-5202163,-5202156,-5202157} 时按 bitmapstart/512/1024 指定片重传。生产 envInfo.uploadVersion=1 → 不走此协议，仅留档对照。"
+   },
+   {
+    "topic": "14. isolated 上传器（FinderUpload 组件库 version \"2.13.30\"）：同协议精简版",
+    "endpoint": "https://<customCdnHostList 或 envInfo.cdnHostList 随机一项 或 HOST>/uploadpartdfs?PartNumber=<n>&UploadID=<id>（无 QuickUpload 参数）",
+    "method": "PUT / GET / POST",
+    "headers": [
+     "Authorization / X-Arguments / Content-MD5（同 getUploadHeader；complete 的 X-Arguments 追加 &originalurl=<0|1>）"
+    ],
+    "body_fields": [
+     {
+      "name": "BlockSum / BlockPartLength",
+      "type": "同主上传器",
+      "note": "PUT /applyuploaddfs"
+     },
+     {
+      "name": "PartInfo",
+      "type": "Array<{PartNumber,ETag}>",
+      "note": "POST /completepartuploaddfs，未排序"
+     },
+     {
+      "name": "TransFlag",
+      "type": "string",
+      "note": "仅 truthy 时才带"
+     }
+    ],
+    "evidence": [
+     "chunk-common.ec025662.js@2362639: YN(this,\"HOST\",\"finderpre.video.qq.com\"),YN(this,\"tIdList\",[])",
+     "chunk-common.ec025662.js@2363966: return\"https://\".concat(a||this.HOST.replace(/^https?:\\/\\//,\"\"),\"/uploadpartdfs?PartNumber=\").concat(e,\"&UploadID=\").concat(t)}",
+     "chunk-common.ec025662.js@2366520: YO.a.put(s,n,{headers:c,cancelToken:f.token,onUploadProgress:function(e){if(i){var t=e.loaded-h;h=e.loaded,i(Object.assign(e,{delta:t}))}}})",
+     "chunk-common.ec025662.js@2367079: YO.a.get(this.confirmChunkUrl(e.uploadId,e.PartNumberMarker||\"\"),{headers:t})",
+     "chunk-common.ec025662.js@2367197: var t=this.getUploadHeader({file:e.file,cdnFileType:e.cdnFileType,uuid:e.uuid}),n={PartInfo:e.partInfo};e.transFlag&&(n.TransFlag=e.transFlag);var r=+!!e.originalUrl,o=YA(YA({},t),{},{\"X-Arguments\":\"\".concat(t[\"X-Arguments\"],\"&originalurl=\").concat(r)});return YO.a.post(this.uploadCompleteUrl(e.uploadId),n,{headers:o})",
+     "chunk-common.ec025662.js@2368016: YN(this,\"chunkSize\",8388608),YN(this,\"cdnFileType\",wK.a.video)",
+     "chunk-common.ec025662.js@2372335: key:\"loadNextChunk\",value:function(){for(var e=this.strategy===wK.f.Quick?4:1;this.uploadQueue.length<e&&this.curChunkIndex<this.chunkCount&&!this.break;){var t=this.loadChunk();this.uploadQueue.push(t),this.curChunkIndex++}}}",
+     "chunk-common.ec025662.js@2371417: this.uploadService.getUploadId({BlockSum:this.chunkCount,BlockPartLength:this.calculateBlockPartLengths()},n)",
+     "chunk-common.ec025662.js@2371756: this.uploadTaskId=r.data.UploadID,this.reuseUploadType=r.data.ReuseUploadType||wK.d.None",
+     "chunk-common.ec025662.js@2376008: n.data.httpsUrl=n.data.DownloadURL.replace(\"http://wxapp.tc.qq.com\",YU.ReplaceHost)"
+    ],
+    "notes": "差异：片大小固定 8,388,608；URL 带 https:// 且无 QuickUpload 参数；分片 PUT 不显式设 Content-Type；Quick 策略最多 4 片在飞、Normal 1 片；apply 响应额外读 data.ReuseUploadType；失败降级同主上传器（3 次重试→Normal→BackUp）；不读 X-Errno，只看 TransFlag/ETag；无 confirm 步骤；complete 的 X-Arguments 追加 &originalurl=<0|1>。"
+   },
+   {
+    "topic": "15. 封面图/图文上传：与视频同一条链，仅 filetype 键不同；normalFile=20310 为前端硬编码且无调用点",
+    "endpoint": "同上（/applyuploaddfs → /uploadpartdfs → /completepartuploaddfs）",
+    "method": "",
+    "headers": [],
+    "body_fields": [
+     {
+      "name": "cdnFileType=videoFileType",
+      "type": "视频",
+      "note": "filetype=authParams.videoFileType（服务端下发）"
+     },
+     {
+      "name": "cdnFileType=pictureFileType",
+      "type": "封面/图文",
+      "note": "filetype=authParams.pictureFileType"
+     },
+     {
+      "name": "cdnFileType=thumbFileType",
+      "type": "缩略图",
+      "note": "filetype=authParams.thumbFileType"
+     },
+     {
+      "name": "cdnFileType=normalFile",
+      "type": "普通文件",
+      "note": "filetype=20310；已下载 bundle 内未找到调用点"
+     }
+    ],
+    "evidence": [
+     "chunk-common.ec025662.js@198109: function(e){e.video=\"videoFileType\",e.picture=\"pictureFileType\",e.thumb=\"thumbFileType\",e.pag=\"pagFileType\",e.zip=\"zipType\",e.normal=\"normalFile\"}(r||(r={}))",
+     "chunk-common.ec025662.js@198711: function(e){e[e.videoFileType=0]=\"videoFileType\",e[e.pictureFileType=1]=\"pictureFileType\",e[e.thumbFileType=2]=\"thumbFileType\",e[e.pagFileType=3]=\"pagFileType\",e[e.zipType=4]=\"zipType\"}(s||(s={}))",
+     "index.b1f5e380.js@215146: async getUploadParams(){if(N.authParams)return N.authParams;let e=await a.ZP.postService.getUploadParams();return e&&e.data&&(N.setAuthParams(e.data),this.uploadParams=e.data,this.uploadParams.normalFile=20310,this.fakeUin=e.data.uin),e}",
+     "chunk-common.ec025662.js@913992: t.name=\"finder_video_img.jpeg\";var r=new P(t,{cdnFileType:n});r.startUpload(function(t,n){t===h.e.success?e(n.data):t===h.e.fail&&i(n||new l.LogicError(\"upload img fail\",\"upload\"))})",
+     "chunk-common.ec025662.js@1080906: n=w.b.envInfo.uploadVersion?g.uploadImgByCanvas:b.e",
+     "chunk-common.ec025662.js@1816087: r=fd.b.envInfo.uploadVersion?hV.uploadImgByCanvas:hF.e,e.next=6,r(t,me.n.quality,hV.CdnFileType.picture)",
+     "chunk-common.ec025662.js@1798828: s=fd.b.envInfo.uploadVersion?hV.compressAndUpload:hF.c",
+     "chunk-common.ec025662.js@1798893: s(i,me.m.width,me.m.height,me.m.quality,hF.a.picture);case 23:return u=e.sent,e.next=26,s(i,me.q.width,me.q.height,me.q.quality,hF.a.thumb);",
+     "chunk-common.ec025662.js@1928718: new hV.default(e,{cdnFileType:hF.a.picture}).startUpload"
+    ],
+    "notes": "封面（裁帧/裁剪封面）：canvas.toBlob 得 image/jpeg，文件名 finder_video_img.jpeg（uploadImgByCanvasBuffer 为 finder_video_img.png），new P(blob,{cdnFileType:\"pictureFileType\"}).startUpload —— 与视频同一个类、同三组端点，只是分片数=1、X-Arguments.filetype 取 authParams.pictureFileType。图文帖发 3 次上传（picture / thumb / picture 三种画布尺寸）。上传入口统一为 new (uploadVersion? 主上传器 : 旧上传器)(file,{cdnFileType: video|picture})。枚举 CdnFileTypeNum（0..4）只用于埋报 mmData(23803,{18:h.b[cdnFileType]})，不进请求。\"normalFile\" 在 11 个 bundle 里仅出现 2 处（枚举定义、=20310 赋值），没有任何 cdnFileType:\"normalFile\" 的调用 → 20310 与视频 filetype 的「差异」只是：normalFile 数值由前端写死，其余 filetype 数值由 helper_upload_params 下发（数值未找到）。"
+   },
+   {
+    "topic": "16. 目标符号 vc-upload- 的归属：antd rc-upload 组件的请求 uid 前缀，与分片协议无关",
+    "endpoint": "",
+    "method": "",
+    "headers": [],
+    "body_fields": [
+     {
+      "name": "uid",
+      "type": "string",
+      "note": "\"vc-upload-\"<页面加载时间戳>-<自增序号>"
+     }
+    ],
+    "evidence": [
+     "chunk-common.ec025662.js@1694589: function dP(){return\"vc-upload-\"+dE+\"-\"+ ++dL}",
+     "chunk-pc.fc4a9227.js@386076: 62240:function(e,t,n){n.d(t,{Z:()=>r});var i=+new Date,o=0;function r(){return\"vc-upload-\"+i+\"-\"+ ++o}}"
+    ],
+    "notes": "同文件内的 dj/dT/dO 是 rc-upload 的通用 XHR 上传函数（FormData + e.action），属 ant-design-vue Upload 组件，不被 6ab5/3afc 上传器使用。fileKey 在全仓只有两处：一处埋报字符串 \" fileKey: \"+file.name，一处 404.3c829d34.js 的私信 getImg({fileKey:e.token})，与新分片协议无关。"
+   }
+  ],
+  "unknowns": [
+   "helper_upload_params 响应中 videoFileType / pictureFileType / thumbFileType / pagFileType / zipType 的具体数值，以及 authKey、appType、scene、disKey、disTime、ext 的实值：代码只按键名读取，无常量；api_probe 目录未抓到该接口响应 → 未找到（需实抓一次 POST /cgi-bin/mmfinderassistant-bin/helper/helper_upload_params）",
+   "TransFlag 与 X-Errno 的服务端语义、各取值含义：代码无注释，仅知客户端判定规则（非 Quick 片需 TransFlag 为真且 X-Errno===0）",
+   "UploadID 有效期（服务端多久后失效）：客户端只有本地记录过期常量 858e5 ms，服务端值未知",
+   "injectPostCreateDeps 的宿主调用点（传入 envInfo/uploadParams/cdnHost/postService 的对象字面量）不在已下载的 11 个 bundle 内；index.b1f5e380.js 中 N=i(1277) 对应 chunk-common 的空模块 1277:function(e,t,n){}，store 的静态 setHost/setAuthParams 定义未找到",
+   "cdnFileType=\"normalFile\"（filetype=20310）的实际调用点：已下载 bundle 内未找到",
+   "singleFileUpload(/simpleuploaddfs) 与 QuickChunkUploadMode.Confirm=0、UploadStrategy.Slow=3 的调用点：已下载 bundle 内未找到",
+   "apply/confirm/complete 的 JSON body 的 Content-Type 是 axios 对普通对象的默认行为（推断），代码未显式写该头",
+   "分片 PUT 在 isolated 上传器中未显式设 Content-Type，实际请求头由浏览器按 Blob.type 决定（推断，未抓包验证）",
+   "helper_upload_params POST 自身携带的请求头（基类 request 实现，71948/m.kK）未追"
+  ]
+ },
+ {
+  "summary": "在 11 个 bundle 中定位到 postService 路由表与「UI 处理器→MobX store→postService」三层调用链。/post/post_delete 与 /post/del_draft 请求体均为 {objectId}（无 draftId 键）：前者删已发表/定时作品（文案「删除视频/图文」「删除定时…将不再定时发表」，成功后刷新 post_list），后者属 draftStore（成功后刷新 get_draft_list）；/post/take_down_album 为 {exportTytAlbumId}。/post/post_update_visible 为 {objectId, visibleType}（1 public / 2 follow / 3 self），/post/post_update_comment_auth 为 {objectId, commentFlag(0 开/1 关), commentSelectionFlag(0/1)}。二次确认是纯前端 showConfirm 事件总线，请求不带任何 confirm token，仅加 X-WECHAT-UIN 头并并入 timestamp/_log_finder_uin/_log_finder_id/rawKeyBuff/pluginSessionId/scene/reqScene 公共参数。未找到：take_down_song 与 finder_del_audio 的载荷键名（store 原样透传，UI 调用点在未抓取的懒加载 chunk）、liveService 同名方法的调用点、get_post_info 的 status UI 映射。",
+  "findings": [
+   {
+    "topic": "路由表：删除/下架/可见性端点（postService=模块71592；liveService=模块73129）",
+    "endpoint": "/cgi-bin/mmfinderassistant-bin/post/{post_delete | del_draft | take_down_album | take_down_song | finder_del_audio | post_update_visible | post_update_comment_auth | post_update_bullet_auth | update_finder_bullet_comment_auth | get_post_info}",
+    "method": "POST",
+    "evidence": [
+     "404.3c829d34.js: {name:\"delete\",path:\"/post/post_delete\"},{name:\"getPostInfo\",path:\"/post/get_post_info\"},{name:\"updateVisible\",path:\"/post/post_update_visible\"},{name:\"updateCommentAuth\",path:\"/post/post_update_comment_auth\"},{name:\"updateBulletAuth\",path:\"/post/post_update_bullet_auth\"},{name:\"getDraftList\",path:\"/post/get_draft_list\"}",
+     "404.3c829d34.js: {name:\"getDraftInfo\",path:\"/post/get_draft_info\"},{name:\"postDraft\",path:\"/post/post_draft\"},{name:\"postAdDraft\",path:\"/post/post_ad_create_draft\"},{name:\"delDraft\",path:\"/post/del_draft\"}",
+     "404.3c829d34.js: {name:\"getSongs\",path:\"/post/get_songs\"},{name:\"getAlbums\",path:\"/post/get_albums\"},{name:\"takeDownAlbum\",path:\"/post/take_down_album\"},{name:\"takeDownSong\",path:\"/post/take_down_song\"},{name:\"saveSong\",path:\"/post/save_song\"}",
+     "404.3c829d34.js: {name:\"issueSongBySinger\",path:\"/post/issue_song_by_singer\"},{name:\"getMusicCategory\",path:\"/post/get_music_category\"},{name:\"getShortLink\",path:\"/post/get_object_short_link\"},{name:\"updateFinderBulletCommentAuth\",path:\"/post/update_finder_bullet_comment_auth\"}",
+     "404.3c829d34.js: {name:\"finderGetAudioList\",path:\"/post/finder_get_audio_list\"},{name:\"finderDelAudio\",path:\"/post/finder_del_audio\"},{name:\"finderPostAudio\",path:\"/post/finder_post_audio\"},{name:\"finderUpdateAudio\",path:\"/post/update_finder_audio\"}",
+     "404.3c829d34.js: {name:\"getLiveReplayFeedList\",path:\"/post/post_list\"},{name:\"updateFeedVisible\",path:\"/post/post_update_visible\"},{name:\"updateFeedCommentAuth\",path:\"/post/post_update_comment_auth\"},{name:\"getFeedShortLink\",path:\"/post/get_object_short_link\"},{name:\"post_delete\",path:\"/post/post_delete\"}",
+     "404.3c829d34.js: super({baseURL:i||t||\"/cgi-bin/mmfinderassistant-bin\",...a??{}}),this.API=new Map,e.forEach(e=>{this.API.set(e.name,Object.assign({},e,{url:`${e.path}`}))})",
+     "404.3c829d34.js: async get(e){return e.method=\"GET\",await this.request(e)}async post(e){return e.method=\"POST\",await this.request(e)}"
+    ],
+    "notes": "postService 路由以 {name,path} 注册，getApiUrl(name) 取 path，baseURL=/cgi-bin/mmfinderassistant-bin（83452.lG 基类）。liveService（直播回放）用不同 name 注册同一路径：updateFeedVisible→/post/post_update_visible、updateFeedCommentAuth→/post/post_update_comment_auth、post_delete→/post/post_delete、getFeedShortLink→/post/get_object_short_link、getLiveReplayFeedList→/post/post_list。"
+   },
+   {
+    "topic": "post/post_delete 请求体 = {objectId}（删已发表/定时作品）",
+    "endpoint": "/cgi-bin/mmfinderassistant-bin/post/post_delete",
+    "method": "POST",
+    "headers": [
+     "X-WECHAT-UIN: window._store.userStore.fakeUin || \"0000000000\"",
+     "Content-Type: application/json（axios 默认 transformRequest 对普通对象；adapter 选择未完整追踪）"
+    ],
+    "body_fields": [
+     {
+      "name": "objectId",
+      "type": "代码中作为不透明 id 透传，类型未体现",
+      "note": "getPostObjectId(e) = 'finder' in e ? e.finder.finderObjectId : e.objectId；服务层包成 data:{objectId:e}"
+     }
+    ],
+    "evidence": [
+     "404.3c829d34.js: async deletePost(e){return await this.post({url:this.getApiUrl(\"delete\"),data:{objectId:e}})}",
+     "404.3c829d34.js: async deletePost(e){let t=await l.ZP.postService.deletePost(e);return t&&t.errCode===d.X.Ok&&this.getPostList(),t}",
+     "404.3c829d34.js: async handleDeletePost(e){var t;let i=await (null==(t=this.postStore)?void 0:t.deletePost(this.getPostObjectId(e)));(0,u.Wb)(i)?c.Z.info(\"已删除\"):c.Z.warn((0,u.L1)(i)||\"删除失败\")}",
+     "404.3c829d34.js: getPostObjectId(e){return\"finder\"in e?e.finder.finderObjectId:e.objectId}",
+     "404.3c829d34.js: 39658:function(e,t,i){let a;i.d(t,{Z:()=>E});var n=i(1729),o=i(16103),s=i(94721),r=i(51890),l=i(36927),_=i(24580),d=i(91847),u=i(58307),c=i(62604),p=new WeakSet;class E{get postStore(){",
+     "404.3c829d34.js: (0,o.gn)([s.aD.bound,_.Z],A.prototype,\"deletePost\",null),(0,o.gn)([s.aD.bound,_.Z],A.prototype,\"specialPost\",null),(0,o.gn)([s.aD.bound,_.Z],A.prototype,\"updateVisible\",null),(0,o.gn)([s.aD.bound,_.Z],A.prototype,\"updatePostBulltChat\",null),(0,o.gn)([s.aD.bound,_.Z],A.prototype,\"updateCommentAuth\",null)",
+     "404.3c829d34.js: let{data:t}=await l.ZP.postService.getPostList({pageSize:this.pageSize,currentPage:this.curPage,userpageType:e});",
+     "404.3c829d34.js: async getPostList(e){e.onlyUnread&&null==e.onlyUnread&&(e.onlyUnread=!1);let t=e.forMcn?this.getApiUrl(\"mcnPostList\"):this.getApiUrl(\"list\");return await this.post({url:t,data:e})}",
+     "404.3c829d34.js: name:\"list\",path:\"/post/post_list\"}",
+     "404.3c829d34.js: (n=a||(a={}))[n.Ok=0]=\"Ok\",n[n.MinNeedLogin=300330]=\"MinNeedLogin\",n[n.MaxNeedLogin=300350]=\"MaxNeedLogin\",n[n.OtherDeviceLogin=300334]=\"OtherDeviceLogin\",n[n.NoUserFound=300021]=\"NoUserFound\"",
+     "404.3c829d34.js: function n(e){var t,i;return e&&0===e.errCode&&e.data&&(null==(i=e.data)||null==(t=i.baseResp)?void 0:t.errcode)===0}function o(e){var t,i;return!e.errCode&&(null==e||null==(i=e.data)||null==(t=i.baseResp)||!t.errcode)}"
+    ],
+    "notes": "三层链路：模块39658 处理器 E.handleDeletePost(e) → rootStore.postStore（模块8531 类A）.deletePost(id) → 91847.ZP.postService（模块71592）.deletePost(id) → this.post({url:getApiUrl('delete'),data:{objectId:id}})。成功判定：store 用 errCode===0（24484.X.Ok），UI 用 58307.Wb（!errCode 且 data.baseResp.errcode 为假）；成功 toast「已删除」，失败「删除失败」或 baseResp.errmsg；成功后 getPostList() 刷新 /post/post_list。除公共参数外无其它业务字段。"
+   },
+   {
+    "topic": "post/del_draft 请求体 = {objectId}（删草稿；键名不是 draftId）",
+    "endpoint": "/cgi-bin/mmfinderassistant-bin/post/del_draft",
+    "method": "POST",
+    "headers": [
+     "X-WECHAT-UIN: window._store.userStore.fakeUin || \"0000000000\"",
+     "Content-Type: application/json（axios 默认 transformRequest 对普通对象；adapter 选择未完整追踪）"
+    ],
+    "body_fields": [
+     {
+      "name": "objectId",
+      "type": "代码中作为不透明 id 透传，类型未体现",
+      "note": "草稿对象 id（draftStore.objectId，由 setDraftObjectId 设置）；服务层包成 data:{objectId:e}"
+     }
+    ],
+    "evidence": [
+     "404.3c829d34.js: async deleteDraft(e){return await this.post({url:this.getApiUrl(\"delDraft\"),data:{objectId:e}})}",
+     "404.3c829d34.js: 47657:function(e,t,i){i.d(t,{Z:()=>_});var a=i(94721),n=i(36927),o=i(51890),s=i(91847),r=i(16320),l=i(24484);class _{get isEditingDraft(){return!!this.objectId}",
+     "404.3c829d34.js: async getDraftList(){let{data:e}=await s.ZP.postService.getDraftList({pageSize:this.pageSize,currentPage:this.curPage});",
+     "404.3c829d34.js: async deletePost(e){let t=await s.ZP.postService.deleteDraft(e);return t&&t.errCode===l.X.Ok&&this.getDraftList(),t}async createDraft(e,t){return{res:await s.ZP.postService.postDraft(e,t),payload:e}}async saveDraft(e,t){return{res:await s.ZP.postService.postDraft(e,t,this.objectId),payload:e}}",
+     "index.b1f5e380.js: c=i(1669),d=i(8531),u=i(373),p=i(80102),m=i(18228),_=i(50977),h=i(78547),E=i(5728),g=i(21607),f=i(94971),v=i(13346),I=i(47657),N=i(15288),C=i(49643)",
+     "index.b1f5e380.js: this.postStore=new d.Z(this),this.draftStore=new I.Z(this),this.certificationStore=new s.Z(this)",
+     "404.3c829d34.js: {name:\"getDraftInfo\",path:\"/post/get_draft_info\"},{name:\"postDraft\",path:\"/post/post_draft\"},{name:\"postAdDraft\",path:\"/post/post_ad_create_draft\"},{name:\"delDraft\",path:\"/post/del_draft\"}"
+    ],
+    "notes": "调用方是 draftStore（模块47657 类_）：deletePost(e)→postService.deleteDraft(e)→/post/del_draft，成功后 getDraftList()（/post/get_draft_list）。根 store（index 模块35392）中 this.postStore=new 8531.Z、this.draftStore=new 47657.Z。UI 层调用点与确认文案不在本批 bundle（DraftListManager 路由 chunk 未抓取）。"
+   },
+   {
+    "topic": "post_delete 与 del_draft 的语义区分（UI 文案佐证）",
+    "evidence": [
+     "404.3c829d34.js: openDeleteDialog(e){if(!(null===this||void 0===this?void 0:this.postStore))return;let t=e.effectiveTime&&e.effectiveTime>0;e.flagMap.FromMpImport?_.Z.$emit(_.B.showConfirm,{okText:\"确定\",title:`删除${this.sceneText}`,content:`删除${this.sceneText}后，绑定公众号的${this.sceneText}消息也将同步删除`,ok:()=>{this.handleDeletePost(e)}})",
+     "404.3c829d34.js: :_.Z.$emit(_.B.showConfirm,{okText:\"确定\",title:t?`删除定时${this.sceneText}`:`删除${this.sceneText}`,content:t?`删除定时${this.sceneText}后${this.sceneText}将不再定时发表`:\"\",ok:()=>{this.handleDeletePost(e)}})}",
+     "404.3c829d34.js: get sceneText(){return this.isImageMode?\"图文\":\"视频\"}",
+     "404.3c829d34.js: async handleDeletePost(e){var t;let i=await (null==(t=this.postStore)?void 0:t.deletePost(this.getPostObjectId(e)));(0,u.Wb)(i)?c.Z.info(\"已删除\"):c.Z.warn((0,u.L1)(i)||\"删除失败\")}",
+     "404.3c829d34.js: async deletePost(e){let t=await l.ZP.postService.deletePost(e);return t&&t.errCode===d.X.Ok&&this.getPostList(),t}",
+     "404.3c829d34.js: let{data:t}=await l.ZP.postService.getPostList({pageSize:this.pageSize,currentPage:this.curPage,userpageType:e});",
+     "404.3c829d34.js: flagMap:(0,p.F4)(e.flag,r.Vr),thumbUrl:null==(a=e.desc)||null==(i=a.media)||null==(t=i[0])?void 0:t.thumbUrl,mediaType:e.desc.mediaType})})}catch(e){console.error(e),this.list=[]}}}",
+     "404.3c829d34.js: async deletePost(e){let t=await s.ZP.postService.deleteDraft(e);return t&&t.errCode===l.X.Ok&&this.getDraftList(),t}async createDraft(e,t){return{res:await s.ZP.postService.postDraft(e,t),payload:e}}async saveDraft(e,t){return{res:await s.ZP.postService.postDraft(e,t,this.objectId),payload:e}}",
+     "index.b1f5e380.js: [e._v(\"草稿箱\")]"
+    ],
+    "notes": "post_delete = 删除已发表或定时发表的作品：确认弹窗标题 `删除${sceneText}`（sceneText=「图文」或「视频」）；定时作品（effectiveTime>0）标题 `删除定时${sceneText}`、正文「删除定时…后…将不再定时发表」；公众号导入作品（flagMap.FromMpImport=128）正文「删除…后，绑定公众号的…消息也将同步删除」；入参是 /post/post_list 列表项（含 objectId/flag/effectiveTime/desc.media 等），成功后刷新 post_list。del_draft = 草稿箱删除：走 draftStore，同 store 的 getDraftList/createDraft/saveDraft 对应 /post/get_draft_list、/post/post_draft，成功后刷新草稿列表。本批 bundle 内与草稿有关的 UI 文案仅见导航项「草稿箱」（routerToName('DraftListManager')）；「删除草稿」确认文案未找到。"
+   },
+   {
+    "topic": "post/post_update_visible 请求体 = {objectId, visibleType}",
+    "endpoint": "/cgi-bin/mmfinderassistant-bin/post/post_update_visible",
+    "method": "POST",
+    "headers": [
+     "X-WECHAT-UIN: window._store.userStore.fakeUin || \"0000000000\"",
+     "Content-Type: application/json（axios 默认 transformRequest 对普通对象；adapter 选择未完整追踪）"
+    ],
+    "body_fields": [
+     {
+      "name": "objectId",
+      "type": "代码中作为不透明 id 透传，类型未体现",
+      "note": "getPostObjectId(this.curPost)"
+     },
+     {
+      "name": "visibleType",
+      "type": "number",
+      "note": "1=public 公开，2=follow，3=self 仅自己可见（模块51890 导出 _j）；UI 只在 public↔self 间切换"
+     }
+    ],
+    "evidence": [
+     "404.3c829d34.js: openVisibleSetDialog(e){if(!this.postStore)return;let t=\"\",i=\"\",a=r._j.public,n=\"\";e.visibleType===r._j.public?(t=\"设为仅自己可见\",a=r._j.self,n=\"已设为仅自己可见\"):e.visibleType===r._j.self&&(t=\"设为公开可见\",i=`完整${this.sceneText}也将设置为公开可见`,n=\"已设为公开可见\"),this.curPost=e,",
+     "404.3c829d34.js: _.Z.$emit(_.B.showConfirm,{okText:\"确定\",title:t,content:i,ok:()=>{this.handleSetVisible(a,n)}})}",
+     "404.3c829d34.js: async handleSetVisible(e,t){var i;let a=this.curPost,n=await (null==(i=this.postStore)?void 0:i.updateVisible({objectId:this.getPostObjectId(a),visibleType:e}));(0,u.Wb)(n)?c.Z.success(t):c.Z.warn((0,u.L1)(n)||\"设置失败\")}",
+     "404.3c829d34.js: async updateVisible(e){return await this.post({url:this.getApiUrl(\"updateVisible\"),data:e})}",
+     "404.3c829d34.js: async updateVisible(e){let t=await l.ZP.postService.updateVisible(e);return t&&t.errCode===d.X.Ok&&this.getPostList(),t}",
+     "404.3c829d34.js: {name:\"delete\",path:\"/post/post_delete\"},{name:\"getPostInfo\",path:\"/post/get_post_info\"},{name:\"updateVisible\",path:\"/post/post_update_visible\"},{name:\"updateCommentAuth\",path:\"/post/post_update_comment_auth\"},{name:\"updateBulletAuth\",path:\"/post/post_update_bullet_auth\"},{name:\"getDraftList\",path:\"/post/get_draft_list\"}",
+     "404.3c829d34.js: i.d(t,{$h:()=>n,A7:()=>a,E9:()=>H,NB:()=>V,Vr:()=>_,_c:()=>r,_j:()=>o,bx:()=>T,jf:()=>E,n_:()=>l,q1:()=>c,xf:()=>u}),(R=a||(a={}))[R.all=0]=\"all\",R[R.image=2]=\"image\",R[R.video=4]=\"video\"",
+     "404.3c829d34.js: let V=20;(m=o||(o={}))[m.public=1]=\"public\",m[m.follow=2]=\"follow\",m[m.self=3]=\"self\",(A=s||(s={}))[A.normal=1]=\"normal\",A[A.deleted=2]=\"deleted\",A[A.spam=3]=\"spam\",(D=r||(r={}))[D.open=0]=\"open\",D[D.close=1]=\"close\""
+    ],
+    "notes": "openVisibleSetDialog(e)：当前 visibleType===public(1) → 弹「设为仅自己可见」，确定后 handleSetVisible(3,'已设为仅自己可见')；当前 ===self(3) → 弹「设为公开可见」，正文 `完整${sceneText}也将设置为公开可见`，确定后 handleSetVisible(1,'已设为公开可见')。follow=2 仅存在于枚举，未见 UI 使用。服务层 updateVisible(e) 原样透传 e；成功后 getPostList()。列表项自带 visibleType 字段。"
+   },
+   {
+    "topic": "post/post_update_comment_auth 请求体 = {objectId, commentFlag, commentSelectionFlag}",
+    "endpoint": "/cgi-bin/mmfinderassistant-bin/post/post_update_comment_auth",
+    "method": "POST",
+    "headers": [
+     "X-WECHAT-UIN: window._store.userStore.fakeUin || \"0000000000\"",
+     "Content-Type: application/json（axios 默认 transformRequest 对普通对象；adapter 选择未完整追踪）"
+    ],
+    "body_fields": [
+     {
+      "name": "objectId",
+      "type": "代码中作为不透明 id 透传，类型未体现",
+      "note": "作品页用 getPostObjectId(curPost)；评论管理页直接用 currentFeed.objectId"
+     },
+     {
+      "name": "commentFlag",
+      "type": "number",
+      "note": "0=open 开启评论，1=close 关闭评论（模块51890 导出 _c）"
+     },
+     {
+      "name": "commentSelectionFlag",
+      "type": "number",
+      "note": "0=open/1=close（导出 n_）；作品列表页固定传 1，评论管理页按 e.commentSelectionFlag 传 0/1；对应列表项 flag 的 Selectable(4) 位"
+     }
+    ],
+    "evidence": [
+     "404.3c829d34.js: async handleSetCommentAuth(e,t){var i;let a=this.curPost,n=await (null==(i=this.postStore)?void 0:i.updateCommentAuth({objectId:this.getPostObjectId(a),commentFlag:e,commentSelectionFlag:1}));(0,u.Wb)(n)?c.Z.success(t):c.Z.warn((0,u.L1)(n)||\"设置失败\")}",
+     "404.3c829d34.js: async updateCommentAuth(e){return await this.post({url:this.getApiUrl(\"updateCommentAuth\"),data:e})}",
+     "404.3c829d34.js: this.rootStore.userStore.editCommentAuthSwitch?e.commentClose===r._c.open?(t=r._c.close,i=\"已关闭评论\",_.Z.$emit(_.B.showConfirm,{okText:\"关闭\",title:\"关闭评论\",content:\"关闭评论后，其他人看不到已发的评论，也无法发布新的评论。\",isDanger:!0,justifyContent:\"right\",ok:()=>{this.handleSetCommentAuth(t,i)}}))",
+     "404.3c829d34.js: :e.commentClose===r._c.close&&(t=r._c.open,i=\"已开启评论\",this.handleSetCommentAuth(t,i)):_.Z.$emit(_.B.showConfirm,{cancelText:\"我知道了\",width:392,showConfirmButton:!1,title:\"无法打开评论\",content:\"您已停用评论功能。可在视频号手机端个人资料页「设置」-「隐私管理」中打开。\",justifyContent:\"right\"})}",
+     "404.3c829d34.js: async updateCommentAuth(e){let t=await l.ZP.postService.updateCommentAuth(e);return t&&t.errCode===d.X.Ok&&this.getPostList(),t}",
+     "404.3c829d34.js: async setFeedCommentPermission(e){let t=await this.postService.updateCommentAuth({objectId:this.currentFeed.objectId,commentFlag:e.commentFlag?h._c.open:h._c.close,commentSelectionFlag:e.commentSelectionFlag?h.n_.open:h.n_.close});",
+     "404.3c829d34.js: var h=i(51890),N=i(91847),C=i(36927),S=i(32699),I=i(24484),T=i(16258),R=i(40873);class O{",
+     "404.3c829d34.js: (y=l||(l={}))[y.open=0]=\"open\",y[y.close=1]=\"close\",",
+     "404.3c829d34.js: this.currentFeed=Object.assign({},this.currentFeed,{commentClose:e.commentFlag?h._c.open:h._c.close,flag:e.commentSelectionFlag?this.currentFeed.flag|h.Vr.Selectable:this.currentFeed.flag&~h.Vr.Selectable}),this.commentFeeds[this.currentFeedIndex]=this.currentFeed),t}"
+    ],
+    "notes": "openCommentAuthDialog(e)：先看 rootStore.userStore.editCommentAuthSwitch；当前 commentClose===open(0) → 弹确认「关闭评论 / 关闭评论后，其他人看不到已发的评论，也无法发布新的评论。」(isDanger) → commentFlag=1；当前 ===close(1) → 不弹确认直接 handleSetCommentAuth(0,'已开启评论')；总开关关闭时弹「无法打开评论 / 您已停用评论功能。可在视频号手机端个人资料页「设置」-「隐私管理」中打开。」。评论管理页 setFeedCommentPermission 成功后本地更新 currentFeed.commentClose 与 flag 的 Selectable 位。"
+   },
+   {
+    "topic": "二次确认机制：纯前端 showConfirm 事件总线，无 confirm token",
+    "evidence": [
+     "404.3c829d34.js: openDeleteDialog(e){if(!(null===this||void 0===this?void 0:this.postStore))return;let t=e.effectiveTime&&e.effectiveTime>0;e.flagMap.FromMpImport?_.Z.$emit(_.B.showConfirm,{okText:\"确定\",title:`删除${this.sceneText}`,content:`删除${this.sceneText}后，绑定公众号的${this.sceneText}消息也将同步删除`,ok:()=>{this.handleDeletePost(e)}})",
+     "404.3c829d34.js: :_.Z.$emit(_.B.showConfirm,{okText:\"确定\",title:t?`删除定时${this.sceneText}`:`删除${this.sceneText}`,content:t?`删除定时${this.sceneText}后${this.sceneText}将不再定时发表`:\"\",ok:()=>{this.handleDeletePost(e)}})}",
+     "index.b1f5e380.js: mounted(){iQ.Z.$on(iQ.B.showConfirm,this.handleShowConfirm)}",
+     "index.b1f5e380.js: handleShowConfirm(e){let{title:t,titleIcon:i,content:o,okText:n,cancelText:r,ok:a,isDanger:s,justifyContent:l,cancel:c,showConfirmButton:d,width:u}=e;this.showConfirm=!0,",
+     "index.b1f5e380.js: async handleConfirmOk(){this.isConfirmBtnLoading=!0,await this.confirmOk(),this.isConfirmBtnLoading=!1,this.init()}",
+     "index.b1f5e380.js: return e.headers={\"X-WECHAT-UIN\":window._store.userStore.fakeUin||\"0000000000\"},this.helperRequest(e)}async helperRequest(e){e.method||(e.method=\"POST\");let t=e.data||e.params||{},{scene:i}=t,n=await _();",
+     "index.b1f5e380.js: t instanceof FormData?(Object.entries(n).forEach(e=>{let[i,o]=e;o&&t.append(i,`${o}`)}),i&&t.append(\"scene\",i)):(Object.assign(t,n),i&&(t.scene=i)),\"get\"===e.method.toLocaleLowerCase()?e.params=t:e.data=t;"
+    ],
+    "notes": "确认弹窗=index 中的全局组件：$on(B.showConfirm) → handleShowConfirm({title,content,okText,cancelText,ok,isDanger,…}) → 点确定 handleConfirmOk 直接 await confirmOk()。ok 回调里只调 handleDeletePost(e)/handleSetVisible(a,n)，最终请求体不含任何 ticket/token；请求层只设置 X-WECHAT-UIN 头，并把公共参数 Object.assign 进 body。批内检索 confirmToken/deleteTicket/delToken 0 命中（检索结论，非代码原文）。客户端前置条件仅有：postStore 存在；effectiveTime>0 或 FromMpImport 只改文案；评论/弹幕受 editCommentAuthSwitch 限制；音乐下架受 isTakeDownTsValid（距上次下架 takeDownSongTs 需 >86400 秒）限制。"
+   },
+   {
+    "topic": "take_down_album 请求体 = {exportTytAlbumId}",
+    "endpoint": "/cgi-bin/mmfinderassistant-bin/post/take_down_album",
+    "method": "POST",
+    "headers": [
+     "X-WECHAT-UIN: window._store.userStore.fakeUin || \"0000000000\"",
+     "Content-Type: application/json（axios 默认 transformRequest 对普通对象；adapter 选择未完整追踪）"
+    ],
+    "body_fields": [
+     {
+      "name": "exportTytAlbumId",
+      "type": "代码中作为不透明 id 透传，类型未体现",
+      "note": "键名原文如此（含 Tyt 拼写）；值为专辑 id"
+     }
+    ],
+    "evidence": [
+     "404.3c829d34.js: async takeDownAlbum(e){return await this.post({url:this.getApiUrl(\"takeDownAlbum\"),data:e})}async takeDownSong(e){return await this.post({url:this.getApiUrl(\"takeDownSong\"),data:e})}",
+     "404.3c829d34.js: async takeDownAlbum(e){let t=await X.ZP.postService.takeDownAlbum({exportTytAlbumId:e});if((0,$.Zn)(t))return Q.Z.success(\"下架专辑成功\"),!0;{var i,a;let e=t.message||(null==t||null==(a=t.data)||null==(i=a.baseResp)?void 0:i.errmsg)||\"\";return Q.Z.warn(e?`下架专辑失败: ${e}`:\"下架专辑失败\"),!1}}",
+     "404.3c829d34.js: 2538:function(e,t,i){let a;i.d(t,{Z:()=>eC});var n,o,s,r,l,_,d,u,c,p,E,g,h,N,C,S,I,T,R,O,m,A,D,y,L,P,v,U,F,M,f,k,G,w,b,Z,B,V,H,Y,W,x,j,K,z=i(94721),q=i(36927),X=i(91847),Q=i(62604),$=i(58307);class J{",
+     "404.3c829d34.js: async loadAlbumList(e){e=e||{pageIndex:this.currentPage,pageSize:this.pageSize};let t=await X.ZP.postService.getAlbums(e);",
+     "404.3c829d34.js: this.albumList=(null==e?void 0:e.albums)||[],this.totalCount=null==e?void 0:e.totalCount;for(let e=0;e<this.albumList.length;e++){let t=this.albumList[e];t.issueTimeObj={issueTime:t.issueTime,status:t.albumStatus},t.statusObj={status:t.albumStatus,desc:t.albumStatusDesc,index:e}",
+     "404.3c829d34.js: {name:\"getSongs\",path:\"/post/get_songs\"},{name:\"getAlbums\",path:\"/post/get_albums\"},{name:\"takeDownAlbum\",path:\"/post/take_down_album\"},{name:\"takeDownSong\",path:\"/post/take_down_song\"},{name:\"saveSong\",path:\"/post/save_song\"}",
+     "404.3c829d34.js: (u=M||(M={}))[u.kAlbumAuditStatus_Init=0]=\"kAlbumAuditStatus_Init\",u[u.kAlbumAuditStatus_InAudit=1]=\"kAlbumAuditStatus_InAudit\",u[u.kAlbumAuditStatus_AuditPass=2]=\"kAlbumAuditStatus_AuditPass\",u[u.kAlbumAuditStatus_AuditFailed=3]=\"kAlbumAuditStatus_AuditFailed\",u[u.kAlbumAuditStatus_TakeDown=4]=\"kAlbumAuditStatus_TakeDown\",",
+     "404.3c829d34.js: u[u.kAlbumAuditStatus_ReEdit=5]=\"kAlbumAuditStatus_ReEdit\",u[u.kAlbumAuditStatus_UserDel=6]=\"kAlbumAuditStatus_UserDel\",u[u.kAlbumAuditStatus_Draft=101]=\"kAlbumAuditStatus_Draft\",u[u.UNRECOGNIZED=-1]=\"UNRECOGNIZED\""
+    ],
+    "notes": "albumListStore（模块2538 类ee）.takeDownAlbum(e) 调 postService.takeDownAlbum({exportTytAlbumId:e})；toast「下架专辑成功」/ `下架专辑失败: ${message||data.baseResp.errmsg}`。专辑列表来自 /post/get_albums({pageIndex,pageSize}) 的 data.albums，项字段含 issueTime/albumStatus/albumStatusDesc。kAlbumAuditStatus：Init=0,InAudit=1,AuditPass=2,AuditFailed=3,TakeDown=4,ReEdit=5,UserDel=6,Draft=101。UI 按钮调用点不在本批 bundle。"
+   },
+   {
+    "topic": "take_down_song 载荷键名未找到（store 原样透传 e；旁证指向 exportTytSongId）",
+    "endpoint": "/cgi-bin/mmfinderassistant-bin/post/take_down_song",
+    "method": "POST",
+    "evidence": [
+     "404.3c829d34.js: async takeDownAlbum(e){return await this.post({url:this.getApiUrl(\"takeDownAlbum\"),data:e})}async takeDownSong(e){return await this.post({url:this.getApiUrl(\"takeDownSong\"),data:e})}",
+     "404.3c829d34.js: async takeDownSong(e){let t=await X.ZP.postService.takeDownSong(e);if((0,$.Zn)(t))return Q.Z.success(\"下架成功\"),!0;{let e=(0,$.L1)(t);return e?Q.Z.error(\"音乐下架失败: \"+e):Q.Z.error(\"音乐下架失败\"),!1}}",
+     "404.3c829d34.js: this.musicList=(null==e?void 0:e.songs)||[];for(let e=0;e<this.musicList.length;e++){let t=this.musicList[e];t.songInfo={songName:t.songName,musicDataUrl:t.musicDataUrl,index:e},t.issueTimeObj={issueTime:t.issueTime,status:t.songStatus},t.index=e+1,t.statusObj={status:t.songStatus,desc:t.songStatusDesc,index:e,exportTytSongId:t.exportTytSongId,tsObj:t.timestamp}",
+     "404.3c829d34.js: async bindSongMV(e,t){let i=await X.ZP.postService.bindSongMV({exportTytSongId:e,feedObjectId:t});",
+     "404.3c829d34.js: async getSongInfo(e){let t=await X.ZP.postService.getUploadSong({exportTytSongId:e});",
+     "404.3c829d34.js: isTakeDownTsValid(e){if(!e)return!0;let t=e.takeDownSongTs;return!t||Date.now()/1e3-t>86400}",
+     "404.3c829d34.js: isStatusPublish(e){return e===f.kSongAuditStatus_IssuedInFinder||e===M.kAlbumAuditStatus_AuditPass}getStatusText(e){return this.isStatusFailed(e)?\"审核失败\":this.isStatusTakeDown(e)?\"已下架\":this.isStatusPublish(e)?\"已上架\":this.isStatusDraft(e)?\"已保存\":\"审核中\"}",
+     "404.3c829d34.js: (c=f||(f={}))[c.kSongAuditStatus_Init=0]=\"kSongAuditStatus_Init\",c[c.kSongAuditStatus_InAudit=1]=\"kSongAuditStatus_InAudit\",c[c.kSongAuditStatus_AuditFailed=3]=\"kSongAuditStatus_AuditFailed\",",
+     "404.3c829d34.js: c[c.kSongAuditStatus_SecFailed=5]=\"kSongAuditStatus_SecFailed\",c[c.kSongAuditStatus_IssuedInFinder=7]=\"kSongAuditStatus_IssuedInFinder\",c[c.kSongAuditStatus_TakeDown=8]=\"kSongAuditStatus_TakeDown\"",
+     "404.3c829d34.js: c[c.kSongAuditStatus_ReEdit=9]=\"kSongAuditStatus_ReEdit\",c[c.kSongAuditStatus_Importing=10]=\"kSongAuditStatus_Importing\",c[c.kSongAuditStatus_ImportFail=11]=\"kSongAuditStatus_ImportFail\",c[c.kSongAuditStatus_ImportDel=12]=\"kSongAuditStatus_ImportDel\"",
+     "404.3c829d34.js: c[c.kSongAuditStatus_UserDel=13]=\"kSongAuditStatus_UserDel\",c[c.kSongAuditStatus_SystemDel=14]=\"kSongAuditStatus_SystemDel\",c[c.kSongAuditStatus_PreIssue=15]=\"kSongAuditStatus_PreIssue\",c[c.kSongAuditStatus_Draft=101]=\"kSongAuditStatus_Draft\""
+    ],
+    "notes": "musicListStore（模块2538 类J）.takeDownSong(e) 把 e 原样传给 postService.takeDownSong(e)，toast「下架成功」/「音乐下架失败: …」；构造 e 的 UI 调用点不在本批 bundle，故请求体键名【未找到】。旁证（推断，非实证）：同 store 的 bindSongMV({exportTytSongId:e,feedObjectId:t})、getUploadSong({exportTytSongId:e})，且 /post/get_songs 列表项带 exportTytSongId/songStatus/songStatusDesc/takeDownSongTs。kSongAuditStatus：Init=0,InAudit=1,AuditFailed=3,SecFailed=5,IssuedInFinder=7,TakeDown=8,ReEdit=9,Importing=10,ImportFail=11,ImportDel=12,UserDel=13,SystemDel=14,PreIssue=15,Draft=101。"
+   },
+   {
+    "topic": "finder_del_audio 载荷键名未找到（store 原样透传 e；旁证指向 objectId）",
+    "endpoint": "/cgi-bin/mmfinderassistant-bin/post/finder_del_audio",
+    "method": "POST",
+    "evidence": [
+     "404.3c829d34.js: async finderGetAudioList(e){return await this.post({url:this.getApiUrl(\"finderGetAudioList\"),data:e})}async finderDelAudio(e){return await this.post({url:this.getApiUrl(\"finderDelAudio\"),data:e})}async finderPostAudio(e){return await this.post({url:this.getApiUrl(\"finderPostAudio\"),data:e})}",
+     "404.3c829d34.js: 92026:function(e,t,i){i.d(t,{Z:()=>I});var a,n,o,s,r=i(94721),l=i(36927),_=i(91847),d=i(62604),u=i(40873),c=i(58307);class p{async deleteAudio(e){let t=await _.ZP.postService.finderDelAudio(e);if(!(0,c.Wb)(t)){let e=(0,c.L1)(t)||\"网络错误\";return d.Z.error(\"音频删除失败: \"+e),!1}return d.Z.success(\"删除成功\"),!0}",
+     "404.3c829d34.js: async loadAudioList(){let e=await _.ZP.postService.finderGetAudioList({pageIndex:this.currentPage,pageSize:this.pageSize}),{data:t}=e;",
+     "404.3c829d34.js: async modifyAudio(e){let t=await _.ZP.postService.finderUpdateAudio({objectId:e,title:this.audioInfo.audioName,desc:this.audioInfo.audioDesc});",
+     "404.3c829d34.js: initFinderObject(e,t){return e.info=Object.assign({},e.audioDesc),e.info.index=t,e.info.objectId=e.objectId,e.info.checked=!1,e.info.status=e.status,e.action=Object.assign({},e),",
+     "404.3c829d34.js: (s=D||(D={}))[s.FinderAudioStatus_Valid=1]=\"FinderAudioStatus_Valid\",s[s.FinderAudioStatus_Transcoding=2]=\"FinderAudioStatus_Transcoding\",s[s.FinderAudioStatus_Failed=3]=\"FinderAudioStatus_Failed\",s[s.FinderAudioStatus_PostWaiting=4]=\"FinderAudioStatus_PostWaiting\",s[s.UNRECOGNIZED=-1]=\"UNRECOGNIZED\"",
+     "404.3c829d34.js: getAudioStatusText(e){return e===u.$x.FinderAudioStatus_Transcoding?\"转码中\":e===u.$x.FinderAudioStatus_Valid?\"已发表\":e===u.$x.FinderAudioStatus_PostWaiting?\"等待发表\":\"\"}",
+     "404.3c829d34.js: {name:\"finderGetAudioList\",path:\"/post/finder_get_audio_list\"},{name:\"finderDelAudio\",path:\"/post/finder_del_audio\"},{name:\"finderPostAudio\",path:\"/post/finder_post_audio\"},{name:\"finderUpdateAudio\",path:\"/post/update_finder_audio\"}"
+    ],
+    "notes": "audioPostManagerStore（模块92026 类p）.deleteAudio(e) 把 e 原样传给 postService.finderDelAudio(e)，toast「删除成功」/ `音频删除失败: ${errmsg}`；UI 调用点不在本批 bundle，键名【未找到】。旁证（推断，非实证）：同族 /post/update_finder_audio 用 {objectId,title,desc}；音频列表项带 objectId/status/audioDesc/effectiveTime/createTime。FinderAudioStatus：Valid=1,Transcoding=2,Failed=3,PostWaiting=4；文案 转码中/已发表/等待发表。"
+   },
+   {
+    "topic": "liveService 同名方法（updateFeedVisible/updateFeedCommentAuth/deleteFeed）无调用点",
+    "endpoint": "/post/post_update_visible | /post/post_update_comment_auth | /post/post_delete（liveService 路由名 updateFeedVisible/updateFeedCommentAuth/post_delete）",
+    "method": "POST",
+    "evidence": [
+     "404.3c829d34.js: async updateFeedVisible(e){return await this.post({url:this.getApiUrl(\"updateFeedVisible\"),data:e})}async updateFeedCommentAuth(e){return await this.post({url:this.getApiUrl(\"updateFeedCommentAuth\"),data:e})}async deleteFeed(e){return await this.post({url:this.getApiUrl(\"post_delete\"),data:e})}",
+     "404.3c829d34.js: {name:\"getLiveReplayFeedList\",path:\"/post/post_list\"},{name:\"updateFeedVisible\",path:\"/post/post_update_visible\"},{name:\"updateFeedCommentAuth\",path:\"/post/post_update_comment_auth\"},{name:\"getFeedShortLink\",path:\"/post/get_object_short_link\"},{name:\"post_delete\",path:\"/post/post_delete\"}",
+     "index.b1f5e380.js: var o=i(28706),n=i(84420),r=i(26189),a=i(71592),s=i(99324),l=i(29172),c=i(73129),d=i(62465),u=i(10530),p=i(58090),m=i(80453),_=i(44162),h=i(60786),E=i(34202),g=i(73720),f=i(45857),v=i(30750),I=i(1467),N=i(1277),C=i(14079),y=i(41512),T=i(4974),R=i(51516),M=i(88223),S=i(13987),P=i(32952);",
+     "index.b1f5e380.js: let A=new n.Z,L=new r.Z,O=new o.Z,D=new a.Z,F=m.kK,w=new _.Z,U=new s.Z,b=new l.Z,k=new E.Z,x=new c.ZP,G=new d.Z,V=new u.Z,B=new p.Z,Z=new h.ZP,H=new g.Z,Y=new f.Z,W=new v.Z,q=new I.Z,$=new C.Z,j=new y.Z,J=new T.Z,K=new R.Z,z=new M.Z,X=new N.Z,Q=new S.Z,ee=new P.Z,",
+     "404.3c829d34.js: 73129:function(e,t,i){i.d(t,{$R:()=>l,ZP:()=>N});var a,n,o,s,r,l,_,d,u,c,p=i(22712),E=i(71948),g=i(40637),h=i(16258);",
+     "404.3c829d34.js: (r=c||(c={}))[r.rename=1]=\"rename\",r[r.delete=2]=\"delete\",r[r.download=3]=\"download\";class N extends E.ZP{async request(e){",
+     "index.b1f5e380.js: et={userService:A,memberService:L,authService:O,postService:D,helperService:F,certificationService:w,statisticService:U,liveService:x,",
+     "index.b1f5e380.js: i.d(t,{Dz:()=>Y,J9:()=>U,LI:()=>x,ON:()=>O,W4:()=>A,WY:()=>D,Yq:()=>B,ZP:()=>et,"
+    ],
+    "notes": "liveService（模块73129 类N，index 模块91847 中 x=new c.ZP 并注册为 et.liveService）三个方法均 data:e 透传；11 个 bundle 内 .deleteFeed( / .updateFeedVisible( / .updateFeedCommentAuth( 调用点 0 命中，载荷字段【未找到】。另注：91847 的 WY 是 postService 的别名导出（WY:()=>D，D=new 71592.Z，et.postService=D），不是 liveService。"
+   },
+   {
+    "topic": "get_post_info 的 status 枚举 UI 映射未找到",
+    "endpoint": "/cgi-bin/mmfinderassistant-bin/post/get_post_info",
+    "method": "POST",
+    "evidence": [
+     "404.3c829d34.js: {name:\"delete\",path:\"/post/post_delete\"},{name:\"getPostInfo\",path:\"/post/get_post_info\"},{name:\"updateVisible\",path:\"/post/post_update_visible\"},{name:\"updateCommentAuth\",path:\"/post/post_update_comment_auth\"},{name:\"updateBulletAuth\",path:\"/post/post_update_bullet_auth\"},{name:\"getDraftList\",path:\"/post/get_draft_list\"}",
+     "404.3c829d34.js: async getPostDetail(e){return await this.post({url:this.getApiUrl(\"getPostInfo\"),data:e})}",
+     "404.3c829d34.js: let V=20;(m=o||(o={}))[m.public=1]=\"public\",m[m.follow=2]=\"follow\",m[m.self=3]=\"self\",(A=s||(s={}))[A.normal=1]=\"normal\",A[A.deleted=2]=\"deleted\",A[A.spam=3]=\"spam\",(D=r||(r={}))[D.open=0]=\"open\",D[D.close=1]=\"close\"",
+     "chunk-common.ec025662.js: n.d(t,\"c\",function(){return r}),n.d(t,\"e\",function(){return o}),n.d(t,\"a\",function(){return c}),n.d(t,\"d\",function(){return l}),n.d(t,\"b\",function(){return d})",
+     "chunk-common.ec025662.js: function(e){e[e.public=1]=\"public\",e[e.follow=2]=\"follow\",e[e.self=3]=\"self\"}(i||(i={})),function(e){e[e.normal=1]=\"normal\",e[e.deleted=2]=\"deleted\",e[e.spam=3]=\"spam\"}(a||(a={})),function(e){e[e.open=0]=\"open\",e[e.close=1]=\"close\"}(s||(s={}))"
+    ],
+    "notes": "路由 {name:'getPostInfo',path:'/post/get_post_info'}，服务方法 getPostDetail(e) 原样透传 e；11 个 bundle 内 .getPostDetail( 调用点 0 命中，status 的 UI 文案映射【未找到】。批内与 status 相关的枚举只有：(a) 模块51890（404）与 chunk-common 模块 c45b 中声明但未导出的 {normal=1,deleted=2,spam=3}——无任何引用，无法证明对应 get_post_info.status；(b) 音频 FinderAudioStatus、歌曲/专辑审核状态枚举（见上），与帖子 status 无关。"
+   },
+   {
+    "topic": "通用请求管线与成功判定（实现写操作所需）",
+    "endpoint": "baseURL=/cgi-bin/mmfinderassistant-bin",
+    "method": "POST",
+    "headers": [
+     "X-WECHAT-UIN: window._store.userStore.fakeUin || \"0000000000\"",
+     "Content-Type: application/json（axios 默认 transformRequest 对普通对象；adapter 选择未完整追踪）"
+    ],
+    "body_fields": [
+     {
+      "name": "timestamp",
+      "type": "string",
+      "note": "`${Date.now()}` 公共参数，自动并入每个请求"
+     },
+     {
+      "name": "_log_finder_uin",
+      "type": "string",
+      "note": "localStorage 'finder_uin'（32490.Wk）"
+     },
+     {
+      "name": "_log_finder_id",
+      "type": "string",
+      "note": "localStorage 'finder_username'（32490.PC）"
+     },
+     {
+      "name": "rawKeyBuff",
+      "type": "string",
+      "note": "localStorage 'finder_raw'（32490.vL），取不到则 ''"
+     },
+     {
+      "name": "pluginSessionId",
+      "type": "string",
+      "note": "localStorage 'FinderHelperIframeSessionId'（32490.c8）"
+     },
+     {
+      "name": "scene",
+      "type": "number",
+      "note": "949.WN.FinderAssistant=7"
+     },
+     {
+      "name": "reqScene",
+      "type": "number",
+      "note": "当前场景 (0,s.oU)()，FinderAssistant=7"
+     }
+    ],
+    "evidence": [
+     "404.3c829d34.js: super({baseURL:i||t||\"/cgi-bin/mmfinderassistant-bin\",...a??{}}),this.API=new Map,e.forEach(e=>{this.API.set(e.name,Object.assign({},e,{url:`${e.path}`}))})",
+     "404.3c829d34.js: async get(e){return e.method=\"GET\",await this.request(e)}async post(e){return e.method=\"POST\",await this.request(e)}",
+     "index.b1f5e380.js: return e.headers={\"X-WECHAT-UIN\":window._store.userStore.fakeUin||\"0000000000\"},this.helperRequest(e)}async helperRequest(e){e.method||(e.method=\"POST\");let t=e.data||e.params||{},{scene:i}=t,n=await _();",
+     "index.b1f5e380.js: window.location.href=\"https://channels.weixin.qq.com/login.html\",{};if(m.includes(e.url??\"\")&&!location.pathname.includes(\"login-for-iframe\"))return{}}return e.headers=",
+     "index.b1f5e380.js: t instanceof FormData?(Object.entries(n).forEach(e=>{let[i,o]=e;o&&t.append(i,`${o}`)}),i&&t.append(\"scene\",i)):(Object.assign(t,n),i&&(t.scene=i)),\"get\"===e.method.toLocaleLowerCase()?e.params=t:e.data=t;",
+     "index.b1f5e380.js: let i={timestamp:`${Date.now()}`,_log_finder_uin:await (0,c.c)(s.Wk),_log_finder_id:await (0,c.c)(s.PC),rawKeyBuff:t,pluginSessionId:await (0,c.c)(s.c8),scene:a.WN.FinderAssistant,reqScene:e};",
+     "index.b1f5e380.js: let M=\"finder_username\",S=\"finder_uin\",P=\"finder_external_key\",A=\"finder_login_token\",L=\"finder_ua_report_data\",O=\"finder_raw\",D=\"finder_route_meta\",",
+     "index.b1f5e380.js: PC:()=>M,U8:()=>b,VM:()=>A,Wk:()=>S,Xb:()=>_,_A:()=>U,c8:()=>k,kh:()=>G,mm:()=>Z,nX:()=>h,oU:()=>B,t8:()=>x,ub:()=>D,vL:()=>O});",
+     "index.b1f5e380.js: let k=\"FinderHelperIframeSessionId\";",
+     "index.b1f5e380.js: (a=o||(o={}))[a.Default=0]=\"Default\",a[a.FinderAssistant=7]=\"FinderAssistant\",a[a.Ad=2]=\"Ad\",a[a.Mp=3]=\"Mp\",a[a.AdPlatform=4]=\"AdPlatform\",a[a.WxAdPlatform=5]=\"WxAdPlatform\",a[a.FinderPromote=6]=\"FinderPromote\",",
+     "index.b1f5e380.js: 71948:function(e,t,i){i.d(t,{MV:()=>h,Y_:()=>g,ZP:()=>f,pF:()=>_});var o=i(83452),n=i(24484),r=i(24580),a=i(949),s=i(32490),l=i(16258),c=i(59738),d=i(1144),u=i(63872),p=i(11755);",
+     "index.b1f5e380.js: constructor(e,i){super(e,i||t||\"/cgi-bin/mmfinderassistant-bin\",{enableFingerPrintId:!0,requestMiddles:[p.P],enableAid:!0,validateResult:d})}",
+     "404.3c829d34.js: (n=a||(a={}))[n.Ok=0]=\"Ok\",n[n.MinNeedLogin=300330]=\"MinNeedLogin\",n[n.MaxNeedLogin=300350]=\"MaxNeedLogin\",n[n.OtherDeviceLogin=300334]=\"OtherDeviceLogin\",n[n.NoUserFound=300021]=\"NoUserFound\"",
+     "404.3c829d34.js: function n(e){var t,i;return e&&0===e.errCode&&e.data&&(null==(i=e.data)||null==(t=i.baseResp)?void 0:t.errcode)===0}function o(e){var t,i;return!e.errCode&&(null==e||null==(i=e.data)||null==(t=i.baseResp)||!t.errcode)}",
+     "816.c7a59812.js: if(t.isObject(e)||r&&\"application/json\"===r[\"Content-Type\"]){o(r,\"application/json\");if(t.isString(e))try{return(0,JSON.parse)(e),t.trim(e)}catch(e){if(\"SyntaxError\"!==e.name)throw e}return(0,JSON.stringify)(e)}return e}]",
+     "816.c7a59812.js: this.axiosInstance=eB.create(Object.assign({baseURL:n,adapter:s instanceof eV?s.sendRequest.bind(s):s},u))}getDefaultAdapter(){let e;return ez?e=te:(eH||eY)&&(e=tn),e}"
+    ],
+    "notes": "链路：postService（extends 71948.ZP = 83452.lG(RequestService)）.post(e) 设 method=POST → 71948.Y_ 的 request 设 X-WECHAT-UIN → helperRequest 把 _() 公共参数 Object.assign 进 e.data（GET 则进 params）→ RequestService（816 模块1144，axios 实例）。无 sessionid 时跳 https://channels.weixin.qq.com/login.html。成功判定 errCode===0 且 data.baseResp.errcode===0；错误文案取 data.baseResp.errmsg 或 message。"
+   },
+   {
+    "topic": "顺带：弹幕开关端点字段（post_update_bullet_auth / update_finder_bullet_comment_auth）",
+    "endpoint": "/cgi-bin/mmfinderassistant-bin/post/post_update_bullet_auth ; /cgi-bin/mmfinderassistant-bin/post/update_finder_bullet_comment_auth",
+    "method": "POST",
+    "body_fields": [
+     {
+      "name": "videoId",
+      "note": "/post/post_update_bullet_auth：长视频(mega)列表项 e.id"
+     },
+     {
+      "name": "videoNonceId",
+      "note": "/post/post_update_bullet_auth：e.videoNonceId"
+     },
+     {
+      "name": "opType",
+      "note": "/post/post_update_bullet_auth：0=open 开启，1=close 关闭（xf）"
+     },
+     {
+      "name": "objectId",
+      "note": "/post/update_finder_bullet_comment_auth：getPostObjectId(curPost)"
+     },
+     {
+      "name": "flag",
+      "note": "/post/update_finder_bullet_comment_auth：+e，false→0 启用弹幕，true→1 停用弹幕"
+     }
+    ],
+    "evidence": [
+     "404.3c829d34.js: {name:\"delete\",path:\"/post/post_delete\"},{name:\"getPostInfo\",path:\"/post/get_post_info\"},{name:\"updateVisible\",path:\"/post/post_update_visible\"},{name:\"updateCommentAuth\",path:\"/post/post_update_comment_auth\"},{name:\"updateBulletAuth\",path:\"/post/post_update_bullet_auth\"},{name:\"getDraftList\",path:\"/post/get_draft_list\"}",
+     "404.3c829d34.js: {name:\"issueSongBySinger\",path:\"/post/issue_song_by_singer\"},{name:\"getMusicCategory\",path:\"/post/get_music_category\"},{name:\"getShortLink\",path:\"/post/get_object_short_link\"},{name:\"updateFinderBulletCommentAuth\",path:\"/post/update_finder_bullet_comment_auth\"}",
+     "404.3c829d34.js: async toggleDanmuAuth(e,t){let i=await l.WY.updateBulletAuth({videoId:e.id,videoNonceId:e.videoNonceId,opType:t});return i&&i.errCode===d.X.Ok&&this.getMegaPostList(),i}",
+     "404.3c829d34.js: async updateBulletAuth(e){return await this.post({url:this.getApiUrl(\"updateBulletAuth\"),data:e})}",
+     "404.3c829d34.js: async updateFinderBulletCommentAuth(e){return await this.post({url:this.getApiUrl(\"updateFinderBulletCommentAuth\"),data:e})}",
+     "404.3c829d34.js: async updatePostBulltChat(e){let t=await l.ZP.postService.updateFinderBulletCommentAuth(e);return t&&t.errCode===d.X.Ok&&this.getPostList(),t}",
+     "404.3c829d34.js: async handleSetBulletChat(e,t){var i;let a=this.curPost,n=await (null==(i=this.postStore)?void 0:i.updatePostBulltChat({objectId:this.getPostObjectId(a),flag:+e}));(0,u.Wb)(n)?c.Z.success(t):c.Z.warn((0,u.L1)(n)||\"设置失败\")}",
+     "404.3c829d34.js: e.permission.CloseBullet?(t=r.xf.open,i=\"已开启弹幕\"):(t=r.xf.close,i=\"已关闭弹幕\");let a=await this.postStore.mega.toggleDanmuAuth(e,t);",
+     "404.3c829d34.js: let H={CloseLike:1,CloseFav:2,CloseForward:4,CloseBullet:8};(v=u||(u={}))[v.open=0]=\"open\",v[v.close=1]=\"close\",",
+     "404.3c829d34.js: this.rootStore.userStore.editCommentAuthSwitch?e.flagMap.canUseBulletChat?this.handleSetBulletChat(!1,\"已启用弹幕\"):_.Z.$emit(_.B.showConfirm,{okText:\"停用\",title:\"停用弹幕\",content:\"停用弹幕后，其他人将看不到这个视频的弹幕，也无法发送新弹幕。\",isDanger:!0,justifyContent:\"right\",ok:()=>{this.handleSetBulletChat(!0,\"已停用弹幕\")}})",
+     "404.3c829d34.js: (L=_||(_={}))[L.ForbiddenSpecialPostMp=1]=\"ForbiddenSpecialPostMp\",L[L.HasBroadcastToMp=2]=\"HasBroadcastToMp\",L[L.Selectable=4]=\"Selectable\",L[L.canUseBulletChat=16]=\"canUseBulletChat\",",
+     "404.3c829d34.js: L[L.showBanBulletChatButton=64]=\"showBanBulletChatButton\",L[L.FromMpImport=128]=\"FromMpImport\",L[L.Member=256]=\"Member\",L[L.LiveReplay=512]=\"LiveReplay\",L[L.MemberLiveReplay=1024]=\"MemberLiveReplay\"",
+     "404.3c829d34.js: async getMegaPostList(){let{data:e}=await l.WY.getMegaPostList({pageSize:this.pageSize,currentPage:this.curPage});if(e){this.total=e.totalCount;try{var t;this.list=null==(t=e.list)?void 0:t.map(e=>Object.assign({},e,{permission:(0,p.F4)(e.permissionFlag,r.E9),thumbUrl:e.desc.media[0].thumbUrl,mediaType:e.desc.mediaType}))}catch(e){console.error(e),this.list=[]}}}",
+     "404.3c829d34.js: name:\"megaList\",path:\"/post/post_mega_list\"},{name:\"create\",path:\"/post/post_create\"}"
+    ],
+    "notes": "updateBulletAuth 经 91847.WY（=postService）调用，数据源是 /post/post_mega_list（getMegaPostList），permission 由 permissionFlag 对 E9 位（CloseLike=1,CloseFav=2,CloseForward=4,CloseBullet=8）解码。updateFinderBulletCommentAuth 经 postStore.updatePostBulltChat，flagMap.canUseBulletChat=16 为假时需先弹「停用弹幕」确认。两者不在目标符号表内，仅作可见性修改的邻接端点记录。"
+   }
+  ],
+  "unknowns": [
+   "/post/take_down_song 请求体键名：构造载荷的音乐管理页 chunk 未抓取；仅有旁证（同 store 的 bindSongMV/getUploadSong 用 exportTytSongId，get_songs 列表项带 exportTytSongId），属推断未实证。",
+   "/post/finder_del_audio 请求体键名：音频管理页 chunk 未抓取；仅有旁证（同族 finderUpdateAudio 用 {objectId}，音频列表项带 objectId），属推断未实证。",
+   "/post/del_draft 的 UI 调用点与「删除草稿」确认文案：DraftListManager 路由 chunk 未抓取，批内只见服务层 {objectId} 与 draftStore 包装。",
+   "liveService.updateFeedVisible / updateFeedCommentAuth / deleteFeed 的调用点与载荷：11 个 bundle 内 0 命中。",
+   "/post/get_post_info 响应 status 的枚举含义与 UI 文案：getPostDetail 无调用点；normal=1/deleted=2/spam=3 枚举仅声明未导出，无法建立对应。",
+   "请求体序列化的 adapter 选择未完整追踪：RequestService 用 axios 实例，默认 transformRequest 对普通对象用 application/json + JSON.stringify，getDefaultAdapter 在小程序环境会切 mpAdapter；Web 端实际 adapter 未逐行确认。",
+   "调用 openDeleteDialog/openVisibleSetDialog 的作品列表页组件 chunk 不在批内（不影响端点字段结论）；批内还见合集/短剧/课程的 collectionService.deleteCollection({collectionId[,collectionScene]}) 等其它删除端点，不在本任务目标内，未深挖。"
+  ]
+ },
+ {
+  "summary": "已定位 /helper/helper_upload_params 全链：POST 同源 /cgi-bin/mmfinderassistant-bin/helper/helper_upload_params，由 window._store.userStore.getUploadParams()（index.b1f5e380.js 模块 3668）调 postService.getUploadParams()（404.3c829d34.js 模块 71592），请求体是通用信封 {timestamp,_log_finder_uin,_log_finder_id,rawKeyBuff,pluginSessionId,scene,reqScene}，头带 X-WECHAT-UIN（响应前为 0000000000）。响应只消费 data：uin / appType / authKey / scene(可选) / disKey+disTime+ext(可选三件套)，以及按 CDN 文件类别取的 videoFileType / pictureFileType / thumbFileType / pagFileType / zipType；未发现读取 appid、上传域名、签名或 token——上传域名实际来自 /auth/auth_data 的 envInfo。normalFile 是 CdnFileType 枚举键（chunk-common 模块 \"32d2\"），前端在拿到响应后硬编码 20310，经 getUploadHeader 拼成 X-Arguments 的 filetype=（旧版 snsuploadbig 是表单 filetype 字段）；已给的 11 个 bundle 内未找到传 cdnFileType:\"normalFile\" 的调用点。变量流：userStore.uploadParams 与 Component.Uploader.uploadService（chunk-common 模块 \"6ab5\" 的单例 L，类 E）的 authParams 是同一个对象；发布页按 envInfo.uploadVersion 选新版分片上传器（PUT applyuploaddfs / uploadpartdfs / completepartuploaddfs）或旧版 //HOST/snsuploadbig。主机名：finder.video.qq.com 是旧版默认 HOST 并作为结果 URL 的 ReplaceHost，finderpre.video.qq.com 是新版 dfs 上传服务的默认 HOST，线上实际由 auth_data 下发 finderassistancea–e.video.qq.com（备用 snsaispuploada–e.video.qq.com，既有探针产物可证）。目标符号 uploadSetting 在全部 bundle 中未找到；本步骤只做静态分析与读取既有探针产物，未发起任何线上请求。",
+  "findings": [
+   {
+    "topic": "1. 端点定义与调用链：/helper/helper_upload_params",
+    "endpoint": "/cgi-bin/mmfinderassistant-bin/helper/helper_upload_params（路由原文 path=\"/helper/helper_upload_params\" + baseURL \"/cgi-bin/mmfinderassistant-bin\"，同源相对路径；页面域 https://channels.weixin.qq.com）",
+    "method": "POST（getUploadParams() 不传 data）",
+    "headers": [
+     "X-WECHAT-UIN: <window._store.userStore.fakeUin 或 \"0000000000\">",
+     "finger-print-device-id: <设备指纹，取到才带>",
+     "Cookie: sessionid 等同源 cookie"
+    ],
+    "body_fields": [
+     {
+      "name": "timestamp",
+      "type": "string",
+      "note": "`${Date.now()}` 毫秒时间戳字符串"
+     },
+     {
+      "name": "_log_finder_uin",
+      "type": "string|null",
+      "note": "localStorage.getItem(\"finder_uin\")（模块 32490 导出 Wk）"
+     },
+     {
+      "name": "_log_finder_id",
+      "type": "string|null",
+      "note": "localStorage.getItem(\"finder_username\")（导出 PC）"
+     },
+     {
+      "name": "rawKeyBuff",
+      "type": "string",
+      "note": "localStorage.getItem(\"finder_raw\")（导出 vL），取不到则空串 \"\""
+     },
+     {
+      "name": "pluginSessionId",
+      "type": "string|null",
+      "note": "localStorage.getItem(\"FinderHelperIframeSessionId\")（导出 c8）"
+     },
+     {
+      "name": "scene",
+      "type": "number",
+      "note": "WN.FinderAssistant；index 模块 949 中 =7"
+     },
+     {
+      "name": "reqScene",
+      "type": "number",
+      "note": "oU() 当前场景；平台下 = FinderAssistant =7"
+     }
+    ],
+    "evidence": [
+     "404.3c829d34.js: async getUploadParams(){return await this.post({url:this.getApiUrl(\"uploadParams\")})}",
+     "404.3c829d34.js: {name:\"uploadParams\",path:\"/helper/helper_upload_params\"}",
+     "404.3c829d34.js: 71592:function(e,t,i){i.d(t,{Z:()=>c});var a=i(94721),n=i(949),o=i(80453),s=i(71948),r=i(74810),l=i(71257),_=i(62604),d=i(75108),u=i.n(d);class c extends s.ZP{",
+     "404.3c829d34.js: async post(e){return e.method=\"POST\",await this.request(e)}constructor(e,i,a){super({baseURL:i||t||\"/cgi-bin/mmfinderassistant-bin\",...a??{}}),this.API=new Map,e.forEach(e=>{this.API.set(e.name,Object.assign({},e,{url:`${e.path}`}))})}}",
+     "404.3c829d34.js: getApiUrl(e){return this.API.get(e).url}",
+     "index.b1f5e380.js: ee=new P.Z,et={userService:A,memberService:L,authService:O,postService:D,helperService:F,",
+     "index.b1f5e380.js: a=i(71592),s=i(99324),l=i(29172),c=i(73129),d=i(62465),u=i(10530),p=i(58090),m=i(80453),_=i(44162),h=i(60786),E=i(34202),g=i(73720),f=i(45857),v=i(30750),I=i(1467),N=i(1277),C=i(14079),y=i(41512),T=i(4974),R=i(51516),M=i(88223),S=i(13987),P=i(32952);let A=new n.Z,L=new r.Z,O=new o.Z,D=new a.Z,",
+     "index.b1f5e380.js: constructor(e,i){super(e,i||t||\"/cgi-bin/mmfinderassistant-bin\",{enableFingerPrintId:!0,requestMiddles:[p.P],enableAid:!0,validateResult:d})}}}let f=g(d.RequestService)}",
+     "index.b1f5e380.js: async helperRequest(e){e.method||(e.method=\"POST\");let t=e.data||e.params||{},{scene:i}=t,n=await _();t instanceof FormData?(Object.entries(n).forEach(e=>{let[i,o]=e;o&&t.append(i,`${o}`)}),i&&t.append(\"scene\",i)):(Object.assign(t,n),i&&(t.scene=i)),\"get\"===e.method.toLocaleLowerCase()?e.params=t:e.data=t;"
+    ],
+    "notes": "调用链（观察）：路由表把 name=uploadParams 映射到 /helper/helper_upload_params（404.3c829d34.js@100322）；postService = window._store.postService = 404 模块 71592 的类 c（index 模块 91847 里 D=new a.Z, a=i(71592)，挂为 et.postService）；类 c 继承 index 模块 71948 的请求包装类（加头+合并信封），再继承 404 模块 83452 的 getApiUrl/post/baseURL 类，最底层是 816.c7a59812.js 模块 1144 的 RequestService(axios)。helperRequest 里 t=e.data||e.params||{} 为空对象，Object.assign(t,n) 后请求体就是上面的 7 个字段（无业务参数）。URL 查询串由 1144 的中间件追加：_rid、_aid、_pageUrl（页面地址去掉 ? 之后的部分），页面 URL 带 exportkey 时再加 exportkey。响应信封：{errCode, message?, data}，errCode!==0 时走 errCodeConsume 并弹错后原样返回响应，调用方以 e&&e.data 判成功。"
+   },
+   {
+    "topic": "2. 请求头与登录态门禁（X-WECHAT-UIN / sessionid / 设备指纹）",
+    "endpoint": "/cgi-bin/mmfinderassistant-bin/helper/helper_upload_params",
+    "method": "POST",
+    "headers": [
+     "X-WECHAT-UIN: <fakeUin 或 \"0000000000\">（e.headers 被整体赋值）",
+     "finger-print-device-id: <localStorage _finger_print_device_id 或 visitorId>",
+     "Cookie: sessionid（无则跳转登录）"
+    ],
+    "body_fields": [],
+    "evidence": [
+     "index.b1f5e380.js: if(m.includes(e.url?\"\")&&!location.pathname.includes(\"login-for-iframe\"))return{}}return e.headers={\"X-WECHAT-UIN\":window._store.userStore.fakeUin||\"0000000000\"},this.helperRequest(e)}",
+     "index.b1f5e380.js: &!(0,l.WJ)(\"sessionid\")){if(!([\"/platform/login\",\"/platform/login-for-iframe\",\"/login.html\"].some(e=>e===location.pathname)||(0,l.X4)()||(0,l.Hq)()||(0,l.em)()))",
+     "index.b1f5e380.js: u=e=>document.cookie.split(\";\").reduce((e,t)=>{if(!t)return e;let[i,o]=t.split(\"=\");return e[i.trim()]=o.trim(),e},{})[e]",
+     "index.b1f5e380.js: i.d(t,{Ec:()=>d,FY:()=>p,Hq:()=>g,JY:()=>c,Mb:()=>N,Nu:()=>l,OF:()=>C,Pg:()=>m,Vp:()=>_,WJ:()=>u,X4:()=>E,af:()=>y,bV:()=>a,eY:()=>s,em:()=>I,ve:()=>h});",
+     "chunk-common.ec025662.js: if(e.enableFingerPrintId&&a)try{let t=yield(0,c.B)();e.headers||(e.headers={}),e.headers[s.OL]=t}",
+     "chunk-common.ec025662.js: let r=\"finger-print-device-id\",o=\"_finger_print_device_id\"",
+     "index.b1f5e380.js: try{let t=await super.request(e);if(t&&0!==t.errCode)return this.errCodeConsume&&await this.errCodeConsume(t.errCode),t.message?(0,o.$b)(t.message,t.errCode):",
+     "816.c7a59812.js: \"get\"===e.method.toLocaleLowerCase()?e.params=e.params||e.data||{}:e.data=e.data||e.params||{};let n=yield this.axiosInstance.request(Object.assign(Object.assign({},e),{"
+    ],
+    "notes": "观察：request(e)（index@200178 附近）在非 FinderPromote/WxAdPlatform 场景下要求 document.cookie 里有 sessionid（WJ 就是 cookie 读取函数，模块 16258），否则记 localStorage FINDER_HELPER_REDIRECT_PATH 并跳 https://channels.weixin.qq.com/login.html；放行后 e.headers={\"X-WECHAT-UIN\": fakeUin||\"0000000000\"}，再由 requestMiddles:[p.P]（chunk-common 模块 11755）在 enableFingerPrintId 时追加 finger-print-device-id 头（头名来自 chunk-common 模块 22692 的 OL）。bundle 内未显式设置 Content-Type，data 为普通对象时走 axios 默认 JSON 序列化（推断）；既有探针用 application/json 可用（见 work/tools/sph_probe.py）。"
+   },
+   {
+    "topic": "3. 请求体字段来源与场景值（哪个 localStorage 键、scene 取多少）",
+    "endpoint": "/cgi-bin/mmfinderassistant-bin/helper/helper_upload_params?_rid=..&_aid=..&_pageUrl=..[&exportkey=..]",
+    "method": "POST",
+    "headers": [
+     "Content-Type: application/json（bundle 未显式设置，axios 默认；推断）"
+    ],
+    "body_fields": [
+     {
+      "name": "timestamp",
+      "type": "string",
+      "note": "Date.now() 字符串"
+     },
+     {
+      "name": "_log_finder_uin",
+      "type": "string|null",
+      "note": "finder_uin"
+     },
+     {
+      "name": "_log_finder_id",
+      "type": "string|null",
+      "note": "finder_username"
+     },
+     {
+      "name": "rawKeyBuff",
+      "type": "string",
+      "note": "finder_raw，缺省空串"
+     },
+     {
+      "name": "pluginSessionId",
+      "type": "string|null",
+      "note": "FinderHelperIframeSessionId"
+     },
+     {
+      "name": "scene",
+      "type": "number",
+      "note": "7 = WN.FinderAssistant（FinderPromote 分支也是 scene:FinderAssistant）"
+     },
+     {
+      "name": "reqScene",
+      "type": "number",
+      "note": "oU()，平台下 =7；WxAdPlatform 分支 =5 且删 pluginSessionId"
+     }
+    ],
+    "evidence": [
+     "index.b1f5e380.js: if(e===a.WN.FinderPromote)return{timestamp:`${Date.now()}`,scene:a.WN.FinderAssistant,reqScene:e};let t=await (0,c.c)(s.vL);\"undefined\"!==t&&t||(t=\"\");",
+     "index.b1f5e380.js: let i={timestamp:`${Date.now()}`,_log_finder_uin:await (0,c.c)(s.Wk),_log_finder_id:await (0,c.c)(s.PC),rawKeyBuff:t,pluginSessionId:await (0,c.c)(s.c8),scene:a.WN.FinderAssistant,reqScene:e};",
+     "index.b1f5e380.js: return e===a.WN.WxAdPlatform&&(Object.assign(i,{_log_finder_id:localStorage.getItem(s.Hn),rawKeyBuff:localStorage.getItem(s.A),scene:a.WN.WxAdPlatform}),delete i.pluginSessionId),i},",
+     "index.b1f5e380.js: let M=\"finder_username\",S=\"finder_uin\",P=\"finder_external_key\",A=\"finder_login_token\",L=\"finder_ua_report_data\",O=\"finder_raw\",D=\"finder_route_meta\",F=\"finder_helper_wxad_iframe_raw_key_buff\",w=\"finder_helper_wxad_iframe_username_key\",",
+     "index.b1f5e380.js: i.d(t,{A:()=>F,D1:()=>P,Hn:()=>w,IJ:()=>C,N$:()=>L,Om:()=>N,PC:()=>M,U8:()=>b,VM:()=>A,Wk:()=>S,Xb:()=>_,_A:()=>U,c8:()=>k,kh:()=>G,mm:()=>Z,nX:()=>h,oU:()=>B,t8:()=>x,ub:()=>D,vL:()=>O});",
+     "index.b1f5e380.js: let k=\"FinderHelperIframeSessionId\";location.host;",
+     "index.b1f5e380.js: G=\"//ssl.captcha.qq.com/TCaptcha.js\",V=R.WN.FinderAssistant,B=()=>V,Z=\"FINDER_HELPER_REDIRECT_PATH\"}",
+     "index.b1f5e380.js: 949:function(e,t,i){var o,n,r,a,s,l;i.d(t,{WN:()=>o,gt:()=>n}),(a=o||(o={}))[a.Default=0]=\"Default\",a[a.FinderAssistant=7]=\"FinderAssistant\",a[a.Ad=2]=\"Ad\",a[a.Mp=3]=\"Mp\",a[a.AdPlatform=4]=\"AdPlatform\",a[a.WxAdPlatform=5]=\"WxAdPlatform\",a[a.FinderPromote=6]=\"FinderPromote\",",
+     "404.3c829d34.js: 59738:function(e,t,i){i.d(t,{c:()=>a,p:()=>n});let a=async e=>window.localStorage.getItem(e),n=async(e,t)=>window.localStorage.setItem(e,t)}",
+     "816.c7a59812.js: return!1!==e.enableRid&&t.unshift(this.addRidMiddleware.bind(this)),e.enableAid&&t.unshift(this.addAidMiddleware.bind(this))",
+     "816.c7a59812.js: !e.disabledPassExportKey&&eF&&t.push(this.addExportKeyMiddleware.bind(this)),!1!==e.enablePassPageUrl&&t.push(this.addPageUrlMiddleware.bind(this))",
+     "816.c7a59812.js: return e.rid=`${Math.floor(Date.now()/1e3).toString(16)}-${[...Array(8)].map(()=>Math.floor(16*Math.random()).toString(16)).join(\"\"})`,e.params||(e.params={}),e.params._rid=e.rid,t(e)})}",
+     "816.c7a59812.js: return yield this.generateAidPromise,e.params||(e.params={}),e.params._aid=this.aid.replace(/\"/gi,\"\"),t(e)})}",
+     "816.c7a59812.js: addPageUrlMiddleware(e,t){return(0,eg.mG)(this,void 0,void 0,function*(){return e.params=e.params||{},e.params._pageUrl=tv(),t(e)})}",
+     "816.c7a59812.js: addExportKeyMiddleware(e,t){return(0,eg.mG)(this,void 0,void 0,function*(){return e.params=e.params||{},e.params.exportkey=eF,t(e)})}",
+     "816.c7a59812.js: tm=\"_finger_print_device_id\",tg=\"__rx::aid\";"
+    ],
+    "notes": "观察：信封函数 `_()`（index 模块 71948，导出 pF）分三支——FinderPromote(6) 只发 {timestamp,scene:FinderAssistant,reqScene:6}；默认支读 localStorage 四个键；WxAdPlatform(5) 改读 finder_helper_wxad_iframe_username_key / finder_helper_wxad_iframe_raw_key_buff 并删 pluginSessionId。c.c 就是 localStorage.getItem（404 模块 59738）。_rid = 16 进制秒时间戳 + '-' + 8 位随机 16 进制；_aid 存在 __rx::aid，另一键 _finger_print_device_id；_pageUrl = 当前 location.href 去掉 ? 之后；exportkey 仅当页面 URL 带 exportkey 参数。与既有 API_MAP.md 的出入：API_MAP 写 scene=1=FinderAssistant，而发起 HTTP 请求的 index 模块 949 枚举是 FinderAssistant=7（见 finding 14）。"
+   },
+   {
+    "topic": "4. 响应结构：helper_upload_params 的 data 被消费的字段（除 uin 外还有什么）",
+    "endpoint": "/cgi-bin/mmfinderassistant-bin/helper/helper_upload_params（响应 {errCode,message?,data}）",
+    "method": "POST → 响应",
+    "headers": [],
+    "body_fields": [
+     {
+      "name": "uin",
+      "type": "未知（代码只做模板串拼接）",
+      "note": "→ userStore.fakeUin（请求头 X-WECHAT-UIN）；X-Arguments weixinnum=；旧表单 weixinnum；getUserUin() 用它判 authParams 是否就绪"
+     },
+     {
+      "name": "appType",
+      "type": "未知",
+      "note": "→ X-Arguments apptype=；旧表单 apptype"
+     },
+     {
+      "name": "authKey",
+      "type": "未知",
+      "note": "→ 上传请求头 Authorization；旧表单 authkey"
+     },
+     {
+      "name": "scene",
+      "type": "可选",
+      "note": "→ X-Arguments scene=，缺省 0"
+     },
+     {
+      "name": "disKey",
+      "type": "可选",
+      "note": "与 disTime、ext 三者齐备才追加 &dis_k=..&dis_t=..&ext=.."
+     },
+     {
+      "name": "disTime",
+      "type": "可选",
+      "note": "须 void 0 !==；→ dis_t="
+     },
+     {
+      "name": "ext",
+      "type": "可选",
+      "note": "→ ext="
+     },
+     {
+      "name": "videoFileType",
+      "type": "未知",
+      "note": "cdnFileType=\"videoFileType\" 时 authParams[cdnFileType] → filetype="
+     },
+     {
+      "name": "pictureFileType",
+      "type": "未知",
+      "note": "cdnFileType=\"pictureFileType\" → filetype="
+     },
+     {
+      "name": "thumbFileType",
+      "type": "未知",
+      "note": "cdnFileType=\"thumbFileType\" → filetype="
+     },
+     {
+      "name": "pagFileType",
+      "type": "未知",
+      "note": "cdnFileType=\"pagFileType\" → filetype="
+     },
+     {
+      "name": "zipType",
+      "type": "未知",
+      "note": "cdnFileType=\"zipType\" → filetype="
+     },
+     {
+      "name": "normalFile",
+      "type": "number",
+      "note": "不是服务端下发：前端在响应后硬编码 20310（同对象，N.authParams 也带上）"
+     }
+    ],
+    "evidence": [
+     "index.b1f5e380.js: async getUploadParams(){if(N.authParams)return N.authParams;let e=await a.ZP.postService.getUploadParams();return e&&e.data&&(N.setAuthParams(e.data),this.uploadParams=e.data,this.uploadParams.normalFile=20310,this.fakeUin=e.data.uin),e}",
+     "chunk-common.ec025662.js: a=\"apptype=\".concat(i.appType,\"&filetype=\").concat(i[o],\"&weixinnum=\").concat(i.uin,\"&filekey=\")",
+     "chunk-common.ec025662.js: \"&filesize=\").concat(t.size,\"&taskid=\").concat(n,\"&scene=\").concat(i.scene||0);",
+     "chunk-common.ec025662.js: return i.disKey&&void 0!==i.disTime&&i.ext&&(a+=\"&dis_k=\".concat(i.disKey,\"&dis_t=\").concat(i.disTime,\"&ext=\").concat(i.ext)),{Authorization:i.authKey,\"X-Arguments\":a,\"Content-MD5\":r||\"null\"}}",
+     "chunk-common.ec025662.js: getUserUin\",value:function(){return this.authParams.uin}",
+     "chunk-common.ec025662.js: d=new FormData,f=this.authParams;return d.append(\"ver\",\"1\"),d.append(\"seq\",\"\".concat(Math.random()+Date.now())),d.append(\"weixinnum\",\"\".concat(f.uin)),d.append(\"apptype\",\"\".concat(f.appType)),d.append(\"filetype\",\"\".concat(f[u])),d.append(\"authkey\",\"\".concat(f.authKey)),",
+     "chunk-common.ec025662.js: function(e){e.video=\"videoFileType\",e.picture=\"pictureFileType\",e.thumb=\"thumbFileType\",e.pag=\"pagFileType\",e.zip=\"zipType\",e.normal=\"normalFile\"}(r||(r={}))",
+     "chunk-common.ec025662.js: function(e){e[e.videoFileType=0]=\"videoFileType\",e[e.pictureFileType=1]=\"pictureFileType\",e[e.thumbFileType=2]=\"thumbFileType\",e[e.pagFileType=3]=\"pagFileType\",e[e.zipType=4]=\"zipType\"}(s||(s={}))"
+    ],
+    "notes": "观察：消费点只有三处上传服务类的 getUploadHeader / uploadChunk（新版 chunk-common@891855 起的类 E、@2365xxx 的类 YU、旧版 @708xxx 的类 S 以及 404@254xxx 的类 T），全部通过 this.authParams.xxx 读取，字段名就是上表；全 bundle 检索 authKey/appType/disKey/disTime 的出现点仅限这些类。结论：响应里除 uin 外被读取的是 appType、authKey、可选的 scene、可选的 disKey+disTime+ext、以及按文件类别取值的 5 个 *FileType/zipType 槽位；没有名为 appid / key / token / 签名 的字段被读取，也没有上传域名（域名来自 /auth/auth_data 的 envInfo，见 finding 12）。各字段真实 JSON 类型无法从代码确定（只做字符串拼接）。服务端是否返回了客户端没用到的字段，需抓包确认。"
+   },
+   {
+    "topic": "5. fakeUin：来源与用途",
+    "endpoint": "X-WECHAT-UIN（所有走 helperRequest 的后台请求头）",
+    "method": "n/a",
+    "headers": [
+     "X-WECHAT-UIN: <userStore.fakeUin || \"0000000000\">"
+    ],
+    "body_fields": [],
+    "evidence": [
+     "index.b1f5e380.js: async getUploadParams(){if(N.authParams)return N.authParams;let e=await a.ZP.postService.getUploadParams();return e&&e.data&&(N.setAuthParams(e.data),this.uploadParams=e.data,this.uploadParams.normalFile=20310,this.fakeUin=e.data.uin),e}",
+     "index.b1f5e380.js: if(m.includes(e.url?\"\")&&!location.pathname.includes(\"login-for-iframe\"))return{}}return e.headers={\"X-WECHAT-UIN\":window._store.userStore.fakeUin||\"0000000000\"},this.helperRequest(e)}",
+     "index.b1f5e380.js: (0,o.gn)([r.LO],C.prototype,\"fakeUin\",void 0)",
+     "index.b1f5e380.js: (0,o.gn)([r.LO],C.prototype,\"uploadParams\",void 0),(0,o.gn)([r.LO],C.prototype,\"envInfo\",void 0)"
+    ],
+    "notes": "观察：fakeUin 是 userStore（index 模块 3668 类 C）上的 observable，唯一赋值点是 userStore.getUploadParams()：this.fakeUin=e.data.uin；全 bundle 仅 3 处出现（赋值、请求头读取、装饰器），没有默认值。因此 helper_upload_params 这一次请求本身的 X-WECHAT-UIN 是 \"0000000000\"（响应尚未返回），之后的请求才带真实 uin。fakeUin 与 CDN 上传无关（CDN 上传走 Authorization/X-Arguments，weixinnum 取 authParams.uin）。"
+   },
+   {
+    "topic": "6. normalFile = 20310：是什么、如何参与上传请求",
+    "endpoint": "X-Arguments 的 filetype= 槽位（新版 dfs 上传）/ 表单字段 filetype（旧版 snsuploadbig）",
+    "method": "n/a",
+    "headers": [],
+    "body_fields": [
+     {
+      "name": "normalFile",
+      "type": "number",
+      "note": "前端硬编码 20310，写入 uploadParams（=authParams）对象的 normalFile 键"
+     },
+     {
+      "name": "filetype",
+      "type": "string(拼接后)",
+      "note": "= authParams[cdnFileType]；cdnFileType 是 CdnFileType 枚举成员的值（\"videoFileType\"/\"pictureFileType\"/\"thumbFileType\"/\"pagFileType\"/\"zipType\"/\"normalFile\"）"
+     }
+    ],
+    "evidence": [
+     "index.b1f5e380.js: async getUploadParams(){if(N.authParams)return N.authParams;let e=await a.ZP.postService.getUploadParams();return e&&e.data&&(N.setAuthParams(e.data),this.uploadParams=e.data,this.uploadParams.normalFile=20310,this.fakeUin=e.data.uin),e}",
+     "chunk-common.ec025662.js: function(e){e.video=\"videoFileType\",e.picture=\"pictureFileType\",e.thumb=\"thumbFileType\",e.pag=\"pagFileType\",e.zip=\"zipType\",e.normal=\"normalFile\"}(r||(r={}))",
+     "chunk-common.ec025662.js: function(e){e[e.videoFileType=0]=\"videoFileType\",e[e.pictureFileType=1]=\"pictureFileType\",e[e.thumbFileType=2]=\"thumbFileType\",e[e.pagFileType=3]=\"pagFileType\",e[e.zipType=4]=\"zipType\"}(s||(s={}))",
+     "chunk-common.ec025662.js: a=\"apptype=\".concat(i.appType,\"&filetype=\").concat(i[o],\"&weixinnum=\").concat(i.uin,\"&filekey=\")",
+     "chunk-common.ec025662.js: d=new FormData,f=this.authParams;return d.append(\"ver\",\"1\"),d.append(\"seq\",\"\".concat(Math.random()+Date.now())),d.append(\"weixinnum\",\"\".concat(f.uin)),d.append(\"apptype\",\"\".concat(f.appType)),d.append(\"filetype\",\"\".concat(f[u])),d.append(\"authkey\",\"\".concat(f.authKey)),",
+     "chunk-common.ec025662.js: r=hF.a.video,n.isImage&&(r=hF.a.picture),o=new(fd.b.envInfo.uploadVersion?hV.default:hF.d)(n,{cdnFileType:r}),this.updateFile(n,{uploader:o}),i=Date.now(),o.startUpload(function(e,t){e===hF.b.chunkSuccess?a.updateFile(n,{percent:t}):e===hF.b.success?(",
+     "chunk-common.ec025662.js: new d.default(e,{cdnFileType:f.a.picture}).startUpload(function(n,o){if(n===d.UploadEvent.chunkSuccess)t.uploadPercent=o;",
+     "404.3c829d34.js: (n=s||(s={})).video=\"videoFileType\",n.picture=\"pictureFileType\",n.thumb=\"thumbFileType\";"
+    ],
+    "notes": "观察：normalFile 是 CdnFileType 枚举（chunk-common 模块 \"32d2\" 导出 a）的第 6 个成员 normal 的字符串值；其余 5 个成员对应的键（videoFileType/pictureFileType/thumbFileType/pagFileType/zipType）是从 helper_upload_params 响应里按同样方式取值的，所以 normalFile=20310 是前端给“普通文件”这一类别补的 filetype 编号（覆盖写入同一对象，N.setAuthParams 在前、赋值在后但对象相同，因此上传服务的 authParams.normalFile 也是 20310）。参与方式：上传服务的 getUploadHeader 用 i[o]（o=cdnFileType）取值拼进 X-Arguments 的 filetype=；旧版用 f[u] 写表单 filetype 字段。在已给的 11 个 bundle 里，所有实例化上传器的调用点传的 cdnFileType 只有 hF.a.video / hF.a.picture / f.a.picture，没有 \"normalFile\"（.normal 的出现点全是裁剪模式等别的枚举），也没有 \"fileType\" 字面量把它带进 post_create；20310 在 bundle 内只有这一处出现。即：20310 的实际使用点（哪类文件以 normalFile 上传）未找到，且“是否为文件格式/MIME 编号”无代码证据——只能确定它是 CDN 上传协议里的 filetype 取值。另：上报用的 CdnFileTypeNum 枚举（videoFileType=0…zipType=4）不含 normalFile。"
+   },
+   {
+    "topic": "7. 变量流：谁保存 uploadParams、谁消费（传给哪个上传器类/函数）",
+    "endpoint": "n/a",
+    "method": "n/a",
+    "headers": [],
+    "body_fields": [],
+    "evidence": [
+     "index.b1f5e380.js: g=i(949),f=i(39980),v=i(16460),I=i(58458);let{uploadService:N}=s.Component.Uploader;",
+     "index.b1f5e380.js: a=i(91847),s=i(18465),l=i(32490),c=i(24484),d=i(74099),u=i(59738),p=i(16258),m=i(63872),_=i(18646),h=i(67929),E=i.n(h),",
+     "chunk-common.ec025662.js: hF=n(\"3afc\"),hV=n(\"6ab5\")",
+     "chunk-common.ec025662.js: injectPostCreateDeps:fd.c,PostCreateEvent:fl.b,PostCreateEventName:fl.a,TopTip:fU.b,PostMedia:yp,PostCreate:BP,Uploader:hV,FinderUpload:h9,CoverEditor:B6},Yx)",
+     "chunk-common.ec025662.js: YY=\"2.13.30\",YW=YC,",
+     "chunk-common.ec025662.js: n.d(t,\"Component\",function(){return YW})",
+     "chunk-common.ec025662.js: n(n.s=\"fae3\")}({",
+     "chunk-common.ec025662.js: n.d(t,\"uploadService\",function(){return L}),n.d(t,\"default\",function(){return P}),n.d(t,\"uploadImgByCanvasBuffer\",function(){return A}),n.d(t,\"uploadImgByCanvas\",function(){return I}),n.d(t,\"compressAndUpload\",function(){return D});",
+     "chunk-common.ec025662.js: T(E,\"ReplaceHost\",\"https://finder.video.qq.com\");var L=new E,",
+     "chunk-common.ec025662.js: uploadParams:null,envInfo:{},cdnHost:\"\",postService:{},",
+     "chunk-common.ec025662.js: \"3e13\":function(e,t,n){\"use strict\";n.d(t,\"a\",function(){return r}),n.d(t,\"c\",function(){return c})",
+     "chunk-common.ec025662.js: var c=function(e,t){if(e){\"object\"===a(e)?Object.assign(s,e):s[e]=t;var n=o.f;s.envInfo&&s.envInfo.uploadVersion&&(n=i.uploadService),s.uploadParams&&n.setAuthParams(s.uploadParams),s.cdnHost&&n.setHost(s.cdnHost)}};t.b=s}",
+     "chunk-common.ec025662.js: \"3afc\":function(e,t,n){\"use strict\";n.d(t,\"f\",function(){return x}),n.d(t,\"b\",function(){return r}),n.d(t,\"a\",function(){return o}),n.d(t,\"d\",function(){return k}),",
+     "chunk-common.ec025662.js: t.sceneType&&(this.sceneType=t.sceneType),t.authParams&&L.setAuthParams(t.authParams)),this.chunkCount=Math.ceil(this.file.size/this.chunkSize),this.getMd5()}",
+     "index.b1f5e380.js: async getAuthData(e){let t=await a.W4.getAuthData(e),{data:i}=t;if(i&&i.finderUser){",
+     "index.b1f5e380.js: this.finder=this.extendFinder(i.finderUser),this.user=i.userAttr,this.envInfo=i.envInfo,this.canUseStatistic=i.datacenterEntarnce,this.canUseLive=i.livesvrEnter,this.entranceInfo=i.entranceInfo,this.switchInfo=i.switchInfo,",
+     "index.b1f5e380.js: this.liveReplaySettingEntrance=i.entranceInfo.liveReplaySettingEntrance||0,N.setHost(i.envInfo.cdnHost),"
+    ],
+    "notes": "变量流（观察）：① 保存者 = window._store.userStore.getUploadParams()（index 模块 3668，类 C，@215152）：let{uploadService:N}=s.Component.Uploader（s=i(18465)，嵌套 lib bundle，入口模块 \"fae3\"，其导出 Component=YW=YC，YC.Uploader=hV=n(\"6ab5\")），N 就是模块 \"6ab5\" 的 uploadService 单例 L=new E（新版上传服务类 E，持 this.authParams）；N.setAuthParams(e.data) 与 this.uploadParams=e.data 是同一对象引用。② 第二条通路 = lib 内共享 store（chunk-common 模块 \"3e13\"，导出 b=store、c=setter）：store 默认 uploadParams:null/envInfo:{}/cdnHost:\"\"，setter c(key,val) 或 c(obj) 写入后，按 s.envInfo.uploadVersion 选目标——真值用 i.uploadService（=L），否则用 o.f（模块 \"3afc\" 导出 f，即旧版服务单例 x=new S）——再调 n.setAuthParams(s.uploadParams) 和 n.setHost(s.cdnHost)。该 setter 以 Component.injectPostCreateDeps:fd.c 暴露给宿主，但调用点（传入 postService/uploadParams/envInfo/cdnHost 的那一处）在已给 bundle 内未找到（11 个文件里 uploadParams 字面量只有 index 3 处、chunk-common 3 处，injectPostCreateDeps 只有定义）。③ 上传器类实例可在构造参数里自带 authParams：新版分片上传器 P（模块 \"6ab5\" 的 default）的 init 里 t.authParams&&L.setAuthParams(t.authParams)；独立上传器 IsolatedFileUpload（类 YB）自己 new YU(n.authParams)，缺 uin 直接 throw（见 finding 11）。④ userStore.uploadParams 本身在已给 bundle 内没有读取方（只有赋值 2 次 + 装饰器 1 次）。⑤ 主机设置：userStore.getAuthData() 在处理 /auth/auth_data 响应时执行 N.setHost(i.envInfo.cdnHost)。"
+   },
+   {
+    "topic": "8. 上传器选择 + 新版分片上传请求（dfs 协议）如何使用这些参数",
+    "endpoint": "PUT {HOST}/applyuploaddfs | PUT //{cdnHostList 随机一员 或 cdnHost}/uploadpartdfs?PartNumber={n}&UploadID={id}&QuickUpload={1|2} | PUT {HOST}/applyuploaddfs?UploadID={id}&PartNumberMarker={marker} | POST {HOST}/completepartuploaddfs?UploadID={id} | PUT {HOST}/simpleuploaddfs | {HOST}/251/20304/stodownload?m=..&filekey=..&hy=SZ&storeid=..&dotrans=0&bizid=1023&adaptivelytrans=0",
+    "method": "PUT / POST",
+    "headers": [
+     "Authorization: <authParams.authKey>",
+     "X-Arguments: apptype={appType}&filetype={authParams[cdnFileType]}&weixinnum={uin}&filekey={encodeURIComponent(file.name)}&filesize={file.size}&taskid={uuid}&scene={authParams.scene||0}[&dis_k={disKey}&dis_t={disTime}&ext={ext}]",
+     "Content-MD5: <分片 md5 或 \"null\">",
+     "Content-Type: application/octet-stream（分片 PUT）"
+    ],
+    "body_fields": [
+     {
+      "name": "BlockSum",
+      "type": "number",
+      "note": "PUT /applyuploaddfs 请求体：分片总数 chunkCount"
+     },
+     {
+      "name": "BlockPartLength",
+      "type": "number[]",
+      "note": "各分片字节数，末片截到 file.size"
+     },
+     {
+      "name": "UploadID",
+      "type": "string",
+      "note": "applyuploaddfs 响应 data.UploadID → uploadTaskId；缺则 throw Error_No_UploadId"
+     },
+     {
+      "name": "X-Errno",
+      "type": "number",
+      "note": "分片响应 data[\"X-Errno\"]===0 记该分片成功"
+     },
+     {
+      "name": "TransFlag",
+      "type": "string",
+      "note": "分片/确认响应回传，completepartuploaddfs 请求体透传"
+     },
+     {
+      "name": "ETag",
+      "type": "string",
+      "note": "分片响应 → partInfo[r]={PartNumber:r+1,ETag}"
+     },
+     {
+      "name": "PartInfo",
+      "type": "array<{PartNumber,ETag}>",
+      "note": "POST /completepartuploaddfs 请求体，按 PartNumber 升序"
+     },
+     {
+      "name": "ListPartsResult",
+      "type": "object",
+      "note": "确认响应：Part[{PartNumber,ETag}]、IsTruncated(\"true\" 则续拉)、NextPartNumberMarker"
+     },
+     {
+      "name": "DownloadURL",
+      "type": "string",
+      "note": "完成响应 data.DownloadURL → httpsUrl（http://wxapp.tc.qq.com 替换为 ReplaceHost）；缺则当失败"
+     }
+    ],
+    "evidence": [
+     "chunk-common.ec025662.js: r=hF.a.video,n.isImage&&(r=hF.a.picture),o=new(fd.b.envInfo.uploadVersion?hV.default:hF.d)(n,{cdnFileType:r}),this.updateFile(n,{uploader:o}),i=Date.now(),o.startUpload(function(e,t){e===hF.b.chunkSuccess?a.updateFile(n,{percent:t}):e===hF.b.success?(",
+     "chunk-common.ec025662.js: T(this,\"singleFileSize\",0xa00000),T(this,\"cdnFileType\",void 0),T(this,\"chunkSize\",1024*(Number(localStorage.getItem(p.b))||8)*1024),T(this,\"ConcurrentLimit\",Number(localStorage.getItem(p.a))||4),",
+     "chunk-common.ec025662.js: shouldUseQuickChunkUpload\",value:function(e){return!(0===e||e>this.chunkCount-this.ConcurrentLimit)}",
+     "chunk-common.ec025662.js: s=this.uploadChunkUrl(e.chunkIndex+1,e.uploadId,e.quickUpload?h.c.Quick:h.c.Normal),u=this.getUploadHeader(e);",
+     "chunk-common.ec025662.js: var E=function(){function e(){k(this,e),T(this,\"HOST\",\"https://finderpre.video.qq.com\"),T(this,\"tIdList\",[]),T(this,\"useBackUpHost\",!!Number(window.localStorage.getItem(p.c))&&Number(window.localStorage.getItem(p.c))+864e5>Date.now()),T(this,\"authParams\",void 0)}",
+     "chunk-common.ec025662.js: a=(this.useBackUpHost?null==(n=d.b.envInfo)?void 0:n.spareCdnHostList:null==(r=d.b.envInfo)?void 0:r.cdnHostList)||[]",
+     "chunk-common.ec025662.js: return\"//\".concat(s||this.HOST,\"/uploadpartdfs?PartNumber=\").concat(e,\"&UploadID=\").concat(t,\"&QuickUpload=\").concat(i)}",
+     "{key:\"setHost\",value:function(e){this.HOST=\"//\".concat(e)}}",
+     "chunk-common.ec025662.js: \"getUploadId\",value:function(e,t){return c.a.put(this.getUploadIdUrl,e,{headers:t})}",
+     "chunk-common.ec025662.js: getUploadIdUrl\",get:function(){return\"\".concat(this.HOST,\"/applyuploaddfs\")}",
+     "chunk-common.ec025662.js: L.getUploadId({BlockSum:this.chunkCount,BlockPartLength:Array(this.chunkCount).fill(1).map(function(e,t){var n=(t+1)*a.chunkSize;return n>a.file.size?a.file.size:n})},t);",
+     "chunk-common.ec025662.js: this.uploadTaskId=n.data.UploadID,this.uploadTaskIdTimeStamp=Date.now();",
+     "chunk-common.ec025662.js: v={timeout:121e3,timeoutErrorMessage:\"response timeout\",cancelToken:p.token,headers:Object.assign({},u,{\"Content-Type\":\"application/octet-stream\"}),",
+     "chunk-common.ec025662.js: c.a.put(s,n,v).then(function(n){t.removeTid(h),e(n)})",
+     "chunk-common.ec025662.js: var p=(null==(i=o.data)?void 0:i[\"X-Errno\"])===0;if(!b&&!(null==o||null==(a=o.data)?void 0:a.TransFlag)||!b&&!p)throw new l.LogicError(o,\"upload\");",
+     "chunk-common.ec025662.js: (null==(s=o.data)?void 0:s.TransFlag)&&(n.transFlag=null==(u=o.data)?void 0:u.TransFlag),(null==(c=o.data)?void 0:c.ETag)&&(n.partInfo[r]={PartNumber:r+1,ETag:null==(d=o.data)?void 0:d.ETag}),",
+     "chunk-common.ec025662.js: confirmChunks\",value:function(e){var t=this.getUploadHeader(e);return c.a.put(this.confirmChunkUrl(e.uploadId,e.PartNumberMarker||\"\"),{},{headers:t})}",
+     "chunk-common.ec025662.js: \"confirmChunkUrl\",value:function(e,t){return\"\".concat(this.HOST,\"/applyuploaddfs?UploadID=\").concat(e,\"&PartNumberMarker=\").concat(t)}",
+     "chunk-common.ec025662.js: u=null==i||null==(n=i.data)?void 0:n.ListPartsResult,(r=a).push.apply(r,m(u.Part||[])),(null==u?void 0:u.IsTruncated)!==\"true\"){e.next=11;break}return s=u.NextPartNumberMarker,",
+     "chunk-common.ec025662.js: \"finishUpload\",value:function(e){var t=this.getUploadHeader(e);return c.a.post(this.uploadCompleteUrl(e.uploadId),{TransFlag:e.transFlag,PartInfo:e.partInfo.filter(Boolean).sort(function(e,t){return e.PartNumber-t.PartNumber})},{headers:t})}",
+     "chunk-common.ec025662.js: uploadCompleteUrl\",value:function(e){return\"\".concat(this.HOST,\"/completepartuploaddfs?UploadID=\").concat(e)}",
+     "chunk-common.ec025662.js: p.data.httpsUrl=p.data.DownloadURL.replace(\"http://wxapp.tc.qq.com\",E.ReplaceHost),this.uploadSuccessResp={data:null==p?void 0:p.data},",
+     "chunk-common.ec025662.js: uploadSingleFile\",value:function(e,t){var n=new FormData;return n.append(\"file\",e),c.a.put(this.singleUploadUrl,n,{timeout:3e4,timeoutErrorMessage:\"response timeout\",headers:t})}",
+     "chunk-common.ec025662.js: singleUploadUrl\",get:function(){return\"\".concat(this.HOST,\"/simpleuploaddfs\")}",
+     "chunk-common.ec025662.js: path:\"/251/20304/stodownload?m=022d27bae7d0f662bd764cfd47f28010&filekey=30450201010420301e020200fb0402535a0410022d27bae7d0f662bd764cfd47f280100202580f041e000000046274667300000001310000000861707073746f72650000000131",
+     "chunk-common.ec025662.js: toggleToBackUpHost\",value:function(){this.useBackUpHost=!0,window.localStorage.setItem(p.c,\"\".concat(Date.now()))}",
+     "chunk-common.ec025662.js: _=\"AssistantUploadBackUpFlag\",w=\"AssistantDebugUploadChunkSize\",S=\"AssistantDebugUploadChunkConcurrentLimit\",x=\"AssistantUploadedInfoStorageKey\",",
+     "chunk-common.ec025662.js: n.endUpload(),n.partInfo=[],n.strategy=h.f.BackUp,L.toggleToBackUpHost(),n.reloadChunkTime=0,n.startUpload(n.uploadEventHandlerCb,!0)",
+     "chunk-common.ec025662.js: function(e){e[e.Quick=1]=\"Quick\",e[e.Normal=2]=\"Normal\",e[e.Slow=3]=\"Slow\",e[e.BackUp=4]=\"BackUp\"}(i||(i={}))",
+     "chunk-common.ec025662.js: function(e){e[e.Confirm=0]=\"Confirm\",e[e.Quick=1]=\"Quick\",e[e.Normal=2]=\"Normal\"}(c||(c={}))"
+    ],
+    "notes": "观察（chunk-common 嵌套 lib 模块 \"6ab5\"，服务类 E@887852、上传器类 P@8928xx）：发布页(@1786128)按 fd.b.envInfo.uploadVersion 选上传器——真值用 hV.default（新版 P），否则 hF.d（旧版 k）；cdnFileType 视频为 hF.a.video、图片为 hF.a.picture。P 默认：chunkSize=8MB（可用 localStorage AssistantDebugUploadChunkSize 调）、并发 4（AssistantDebugUploadChunkConcurrentLimit）、singleFileSize=10MB（isBigFile）。顺序：算 md5（前 5MB）→ initTaskId：PUT {HOST}/applyuploaddfs，体 {BlockSum,BlockPartLength}，头同上 → 取 data.UploadID → 逐片 PUT //host/uploadpartdfs?PartNumber=&UploadID=&QuickUpload=（QuickUpload=Quick(1) 或 Normal(2)；主机：useBackUpHost 时从 envInfo.spareCdnHostList 随机取，否则从 envInfo.cdnHostList 随机取，两表都空才用 envInfo.cdnHost，再空才用 this.HOST），体为分片二进制，Content-Type application/octet-stream，超时 121s；响应 data[\"X-Errno\"]===0 记成功并存 data.ETag / data.TransFlag → 快传成功后 confirmChunks：PUT {HOST}/applyuploaddfs?UploadID=&PartNumberMarker=，空体，读 data.ListPartsResult（Part/IsTruncated/NextPartNumberMarker）→ finishUpload：POST {HOST}/completepartuploaddfs?UploadID=，体 {TransFlag,PartInfo:[{PartNumber,ETag}]} → data.DownloadURL 换域成 httpsUrl。另有 singleFileUpload：PUT {HOST}/simpleuploaddfs，FormData 字段 file。失败降级：strategy 切 Normal/BackUp 并 toggleToBackUpHost（localStorage AssistantUploadBackUpFlag 记时间戳，24h 内走备用主机表）；detectNetwork 用 {HOST}/251/20304/stodownload?... 做网络探测。"
+   },
+   {
+    "topic": "9. 旧版上传（snsuploadbig，FormData）如何使用这些参数",
+    "endpoint": "//{HOST}/snsuploadbig（HOST 默认 finder.video.qq.com，setHost(cdnHost) 后为 cdnHost）",
+    "method": "POST (multipart/form-data)",
+    "headers": [],
+    "body_fields": [
+     {
+      "name": "ver",
+      "type": "string",
+      "note": "固定 \"1\""
+     },
+     {
+      "name": "seq",
+      "type": "string",
+      "note": "Math.random()+Date.now()"
+     },
+     {
+      "name": "weixinnum",
+      "type": "string",
+      "note": "= authParams.uin"
+     },
+     {
+      "name": "apptype",
+      "type": "string",
+      "note": "= authParams.appType"
+     },
+     {
+      "name": "filetype",
+      "type": "string",
+      "note": "= authParams[cdnFileType]"
+     },
+     {
+      "name": "authkey",
+      "type": "string",
+      "note": "= authParams.authKey"
+     },
+     {
+      "name": "hasthumb",
+      "type": "string",
+      "note": "固定 \"0\""
+     },
+     {
+      "name": "filekey",
+      "type": "string",
+      "note": "file.name"
+     },
+     {
+      "name": "totalsize",
+      "type": "string",
+      "note": "file.size"
+     },
+     {
+      "name": "fileuuid",
+      "type": "string",
+      "note": "本次上传 uuid"
+     },
+     {
+      "name": "rangestart",
+      "type": "string",
+      "note": "分片起始字节"
+     },
+     {
+      "name": "rangeend",
+      "type": "string",
+      "note": "分片结束字节（chunkEnd=n-1）"
+     },
+     {
+      "name": "blockmd5",
+      "type": "string",
+      "note": "分片 md5"
+     },
+     {
+      "name": "filedata",
+      "type": "Blob",
+      "note": "分片二进制"
+     },
+     {
+      "name": "forcetranscode",
+      "type": "string",
+      "note": "固定 \"0\""
+     },
+     {
+      "name": "uploadfinish / fileurl",
+      "type": "响应",
+      "note": "成功：httpsUrl = fileurl 把 http://wxapp.tc.qq.com 换成 ReplaceHost"
+     },
+     {
+      "name": "retcode / bitmapstart / serverip",
+      "type": "响应(错误)",
+      "note": "retcode ∈ {-5202163,-5202156,-5202157} 时 needReload 并从 bitmapstart 重传"
+     }
+    ],
+    "evidence": [
+     "chunk-common.ec025662.js: g(this,\"HOST\",\"finder.video.qq.com\"),g(this,\"URL\",\"\"),g(this,\"authParams\",void 0)",
+     "chunk-common.ec025662.js: {key:\"setHost\",value:function(e){this.HOST=e,this.URL=\"//\".concat(this.HOST,\"/snsuploadbig\")}",
+     "chunk-common.ec025662.js: d=new FormData,f=this.authParams;return d.append(\"ver\",\"1\"),d.append(\"seq\",\"\".concat(Math.random()+Date.now())),d.append(\"weixinnum\",\"\".concat(f.uin)),d.append(\"apptype\",\"\".concat(f.appType)),d.append(\"filetype\",\"\".concat(f[u])),d.append(\"authkey\",\"\".concat(f.authKey)),",
+     "chunk-common.ec025662.js: d.append(\"hasthumb\",\"0\"),d.append(\"filekey\",\"\".concat(o.name)),d.append(\"totalsize\",\"\".concat(o.size)),d.append(\"fileuuid\",\"\".concat(i)),d.append(\"rangestart\",\"\".concat(s)),d.append(\"rangeend\",\"\".concat(a)),d.append(\"blockmd5\",\"\".concat(c)),d.append(\"filedata\",r),d.append(\"forcetranscode\",\"0\"),",
+     "chunk-common.ec025662.js: l.a.post(n.URL,d,{timeout:3e4,timeoutErrorMessage:\"response timeout\",cancelToken:c.token}).then(function(n){s=!0;var r=n.data;r.uploadfinish&&(r.httpsUrl=r.fileurl.replace(\"http://wxapp.tc.qq.com\",e.ReplaceHost)),t(n)})",
+     "chunk-common.ec025662.js: if(n.includes(t))return void r({needReload:!0,bitmapstart:e.response.data.bitmapstart,errMsg:o,response:e.response});",
+     "chunk-common.ec025662.js: g(S,\"ReplaceHost\",\"https://finder.video.qq.com\");var x=new S;",
+     "chunk-common.ec025662.js: g(this,\"chunkSize\",524288),g(this,\"singlePackLimit\",3),",
+     "404.3c829d34.js: class T{setHost(e){this.HOST=e,this.URL=`//${this.HOST}/snsuploadbig`}",
+     "404.3c829d34.js: setAuthParams(e){this.authParams=e}constructor(){this.HOST=\"finder.video.qq.com\",this.URL=\"\"}}T.ReplaceHost=\"https://finder.video.qq.com\""
+    ],
+    "notes": "观察：旧版服务类 S（chunk-common 模块 \"3afc\"，单例 x=new S，@708181；404.3c829d34.js@254xxx 另有一份同构的类 T），配套分片上传器类 k（模块 \"3afc\" 导出 d）：chunkSize=524288（512KB）、singlePackLimit=3。S 初始 URL 为空串，靠 setHost(cdnHost) 得到 //{HOST}/snsuploadbig——而 setHost 由模块 \"3e13\" 的 setter 在 cdnHost 写入时调用，所以 finder.video.qq.com 只是默认 HOST 字面量，实际主机取决于注入的 cdnHost。此通路用 f.uin/f.appType/f[cdnFileType]/f.authKey，同样依赖 helper_upload_params 的响应。"
+   },
+   {
+    "topic": "10. 独立上传器 IsolatedFileUpload（类 YB + 服务类 YU）",
+    "endpoint": "https://{HOST}/applyuploaddfs | https://{HOST}/uploadpartdfs?PartNumber=&UploadID= | https://{HOST}/completepartuploaddfs?UploadID= | https://{HOST}/applyuploaddfs?UploadID=&PartNumberMarker= | https://{HOST}/simpleuploaddfs",
+    "method": "PUT / GET / POST",
+    "headers": [
+     "Authorization: <authKey>",
+     "X-Arguments: 同 finding 8，完成时追加 &originalurl=<0|1>",
+     "Content-MD5: <md5|null>"
+    ],
+    "body_fields": [
+     {
+      "name": "PartInfo",
+      "type": "array",
+      "note": "completepartuploaddfs 请求体；transFlag 为真时加 TransFlag"
+     },
+     {
+      "name": "originalUrl",
+      "type": "boolean",
+      "note": "构造参数，转成 +!! 后以 &originalurl= 追加到 X-Arguments"
+     }
+    ],
+    "evidence": [
+     "chunk-common.ec025662.js: var YU=function(){function e(t){YR(this,e),YN(this,\"HOST\",\"finderpre.video.qq.com\"),YN(this,\"tIdList\",[]),YN(this,\"useBackUpHost\",void 0),YN(this,\"authParams\",void 0),YN(this,\"customCdnHostList\",void 0),YN(this,\"customSpareCdnHostList\",void 0),",
+     "chunk-common.ec025662.js: this.uploadService=new YU(null==n?void 0:n.authParams),this.init(t,n)}",
+     "chunk-common.ec025662.js: t.authParams&&this.uploadService.setAuthParams(t.authParams)),!this.uploadService.getUserUin())throw Error(\"authParams is required for IsolatedFileUpload\");",
+     "chunk-common.ec025662.js: YN(YU,\"ReplaceHost\",\"https://finder.video.qq.com\");var YB=",
+     "chunk-common.ec025662.js: \"X-Arguments\":\"\".concat(t[\"X-Arguments\"],\"&originalurl=\").concat(r)});return YO.a.post(this.uploadCompleteUrl(e.uploadId),n,{headers:o})}",
+     "chunk-common.ec025662.js: n.d(t,\"IsolatedFileUpload\",function(){return YB}),n.d(t,\"version\",function(){return YY}),",
+     "chunk-common.ec025662.js: YN(this,\"chunkSize\",8388608),YN(this,\"cdnFileType\",wK.a.video),"
+    ],
+    "notes": "观察：chunk-common@2362655 起的独立上传服务类 YU（HOST 默认 finderpre.video.qq.com，setHost 去协议头；主机优先 customCdnHostList/customSpareCdnHostList，否则读模块 \"3e13\" store 的 envInfo.cdnHostList/spareCdnHostList/cdnHost；URL 固定 https:// 前缀；confirmChunks 用 GET），上传器类 YB（chunkSize 8MB，cdnFileType 默认 video，构造时 this.uploadService=new YU(n.authParams)，init 里 authParams 无 uin 直接 throw \"authParams is required for IsolatedFileUpload\"）。YB 经模块 \"fae3\" 以 IsolatedFileUpload 名导出（version=\"2.13.30\"），但 new YB 的调用点在已给 bundle 内未找到——它需要调用方显式传 authParams（即可传 userStore.uploadParams 同一对象）。"
+   },
+   {
+    "topic": "11/12. 主机名：finder.video.qq.com 与 finderpre.video.qq.com 各自用途 + 线上实际下发",
+    "endpoint": "finder.video.qq.com | finderpre.video.qq.com | wxapp.tc.qq.com（结果 URL 原域） | finderassistancea–e.video.qq.com（线上 cdnHostList/cdnHost） | snsaispuploada–e.video.qq.com（线上 spareCdnHostList）",
+    "method": "n/a",
+    "headers": [],
+    "body_fields": [
+     {
+      "name": "cdnHost",
+      "type": "string",
+      "note": "envInfo.cdnHost → N.setHost(...) → HOST=\"//cdnHost\"（applyuploaddfs/completepartuploaddfs/simpleuploaddfs 用它；也是分片主机的最终兜底）"
+     },
+     {
+      "name": "cdnHostList",
+      "type": "string[]",
+      "note": "分片 PUT 主机池（随机取一员）"
+     },
+     {
+      "name": "spareCdnHostList",
+      "type": "string[]",
+      "note": "useBackUpHost 为真时的分片主机池"
+     },
+     {
+      "name": "uploadVersion",
+      "type": "number",
+      "note": "真值 → 选新版上传器并把 authParams 注入 uploadService；线上实测 =1"
+     },
+     {
+      "name": "invalidVideoList / productEnv",
+      "type": "-",
+      "note": "envInfo 内另见字段（[\"av1\"] / 0），代码消费点未追"
+     }
+    ],
+    "evidence": [
+     "chunk-common.ec025662.js: g(this,\"HOST\",\"finder.video.qq.com\"),g(this,\"URL\",\"\"),g(this,\"authParams\",void 0)",
+     "chunk-common.ec025662.js: g(S,\"ReplaceHost\",\"https://finder.video.qq.com\");var x=new S;",
+     "404.3c829d34.js: setAuthParams(e){this.authParams=e}constructor(){this.HOST=\"finder.video.qq.com\",this.URL=\"\"}}T.ReplaceHost=\"https://finder.video.qq.com\"",
+     "chunk-common.ec025662.js: var E=function(){function e(){k(this,e),T(this,\"HOST\",\"https://finderpre.video.qq.com\"),T(this,\"tIdList\",[]),T(this,\"useBackUpHost\",!!Number(window.localStorage.getItem(p.c))&&Number(window.localStorage.getItem(p.c))+864e5>Date.now()),T(this,\"authParams\",void 0)}",
+     "chunk-common.ec025662.js: T(E,\"ReplaceHost\",\"https://finder.video.qq.com\");var L=new E,",
+     "chunk-common.ec025662.js: YN(YU,\"ReplaceHost\",\"https://finder.video.qq.com\");var YB=",
+     "chunk-common.ec025662.js: return\"//\".concat(s||this.HOST,\"/uploadpartdfs?PartNumber=\").concat(e,\"&UploadID=\").concat(t,\"&QuickUpload=\").concat(i)}",
+     "{key:\"setHost\",value:function(e){this.HOST=\"//\".concat(e)}}",
+     "chunk-common.ec025662.js: path:\"/251/20304/stodownload?m=022d27bae7d0f662bd764cfd47f28010&filekey=30450201010420301e020200fb0402535a0410022d27bae7d0f662bd764cfd47f280100202580f041e000000046274667300000001310000000861707073746f72650000000131",
+     "index.b1f5e380.js: async getAuthData(e){let t=await a.W4.getAuthData(e),{data:i}=t;if(i&&i.finderUser){",
+     "index.b1f5e380.js: this.finder=this.extendFinder(i.finderUser),this.user=i.userAttr,this.envInfo=i.envInfo,this.canUseStatistic=i.datacenterEntarnce,this.canUseLive=i.livesvrEnter,this.entranceInfo=i.entranceInfo,this.switchInfo=i.switchInfo,",
+     "index.b1f5e380.js: this.liveReplaySettingEntrance=i.entranceInfo.liveReplaySettingEntrance||0,N.setHost(i.envInfo.cdnHost),",
+     "404.3c829d34.js: async getAuthData(e){return await this.post({url:this.getApiUrl(\"authData\"),data:{pluginSessionAppid:null==e?void 0:e.appid,pluginSessionToken:null==e?void 0:e.token}})}",
+     "404.3c829d34.js: {name:\"authData\",path:\"/auth/auth_data\"}",
+     "404.3c829d34.js: 84420:function(e,t,i){i.d(t,{Z:()=>s});var a=i(94721),n=i(71948),o=i(74810);class s extends n.ZP{",
+     "work/api_probe/auth_auth_data.json（res.body 解码后）: \"envInfo\":{\"cdnHostList\":[\"finderassistancea.video.qq.com\",\"finderassistanceb.video.qq.com\",\"finderassistancec.video.qq.com\",\"finderassistanced.video.qq.com\",\"finderassistancee.video.qq.com\"],",
+     "work/api_probe/auth_auth_data.json（res.body 解码后）: \"spareCdnHostList\":[\"snsaispuploada.video.qq.com\",\"snsaispuploadb.video.qq.com\",\"snsaispuploadc.video.qq.com\",\"snsaispuploadd.video.qq.com\",\"snsaispuploade.video.qq.com\"],\"invalidVideoList\":[\"av1\"],\"productEnv\":0,\"cdnHost\":\"finderassistancea.video.qq.com\",\"uploadVersion\":1}",
+     "work/api_probe/auth_auth_data.json: \"path\": \"auth/auth_data\""
+    ],
+    "notes": "观察：finder.video.qq.com 在代码里有两个角色——(a) 旧版服务类 S/T 的默认 HOST（拼 //{HOST}/snsuploadbig）；(b) 三个上传服务类的静态 ReplaceHost=\"https://finder.video.qq.com\"，把 CDN 返回的 http://wxapp.tc.qq.com 结果 URL（fileurl / DownloadURL）替换成 https 域；另有两处用 thumbUrl.startsWith(\"https://finder.video.qq.com\") 判断缩略图是否已在 CDN（chunk-common@1815224/@1971753）。finderpre.video.qq.com 是新版服务类 E（https://finderpre.video.qq.com）与独立服务类 YU（finderpre.video.qq.com）的默认 HOST，用于 /applyuploaddfs、/completepartuploaddfs、/simpleuploaddfs、确认分片和 stodownload 探测；分片 PUT 的主机不直接用它，而是 envInfo.cdnHostList/spareCdnHostList 随机一员 → envInfo.cdnHost → 最后才落到 this.HOST。实际主机不来自 helper_upload_params，而来自 /auth/auth_data（userService.getAuthData，404 模块 84420）响应的 envInfo：userStore.getAuthData 执行 this.envInfo=i.envInfo 与 N.setHost(i.envInfo.cdnHost)（把 HOST 改成 \"//cdnHost\"）。既有探针产物 work/api_probe/auth_auth_data.json 实证：cdnHost=finderassistancea.video.qq.com，cdnHostList=finderassistancea–e，spareCdnHostList=snsaispuploada–e，uploadVersion=1（→ 新版上传器）。推断（非代码直证）：E.uploadChunkUrl 的写法是 \"//\"+主机，若 setHost 未被调用，\"//\"+\"https://finderpre.video.qq.com\" 会拼成畸形 URL，故线上分片上传依赖 auth_data 先下发 cdnHost；finderpre 的 pre（预发环境？）语义代码无法证明。"
+   },
+   {
+    "topic": "13. 调用时机与缓存",
+    "endpoint": "n/a",
+    "method": "n/a",
+    "headers": [],
+    "body_fields": [],
+    "evidence": [
+     "index.b1f5e380.js: ip.ZP.reportPerf(\"oauth_login\",\"valid_login\"),id.HP.getUploadParams(),id.HP.isPortraitInWhitelist??id.HP.loadPortraitWhiteList();",
+     "index.b1f5e380.js: (0,o.gn)([r.aD.bound],C.prototype,\"getUploadParams\",null)",
+     "index.b1f5e380.js: async getUploadParams(){if(N.authParams)return N.authParams;let e=await a.ZP.postService.getUploadParams();return e&&e.data&&(N.setAuthParams(e.data),this.uploadParams=e.data,this.uploadParams.normalFile=20310,this.fakeUin=e.data.uin),e}"
+    ],
+    "notes": "观察：userStore.getUploadParams 被 @bound 装饰，在路由守卫校验 finderUsername 之后不等待地调用（index@187089）。缓存逻辑：若上传服务单例已有 authParams 则直接返回该对象不再请求；否则请求一次，成功后把 data 写入 N.authParams / userStore.uploadParams / fakeUin，并返回完整响应（e）。未发现 authParams 的过期/刷新逻辑（uploadTaskIdExpiredTimeout 858e5 针对的是分片任务 ID 的本地复用记录，不是 authKey）。"
+   },
+   {
+    "topic": "14. scene 取值与既有 API_MAP.md 的出入 + 证据校验方法",
+    "endpoint": "n/a",
+    "method": "n/a",
+    "headers": [],
+    "body_fields": [],
+    "evidence": [
+     "index.b1f5e380.js: 949:function(e,t,i){var o,n,r,a,s,l;i.d(t,{WN:()=>o,gt:()=>n}),(a=o||(o={}))[a.Default=0]=\"Default\",a[a.FinderAssistant=7]=\"FinderAssistant\",a[a.Ad=2]=\"Ad\",a[a.Mp=3]=\"Mp\",a[a.AdPlatform=4]=\"AdPlatform\",a[a.WxAdPlatform=5]=\"WxAdPlatform\",a[a.FinderPromote=6]=\"FinderPromote\",",
+     "chunk-common.ec025662.js: !function(e){e[e.Default=0]=\"Default\",e[e.FinderAssistant=1]=\"FinderAssistant\",e[e.Ad=2]=\"Ad\"}(y||(y={}))",
+     "index.b1f5e380.js: G=\"//ssl.captcha.qq.com/TCaptcha.js\",V=R.WN.FinderAssistant,B=()=>V,Z=\"FINDER_HELPER_REDIRECT_PATH\"}",
+     "index.b1f5e380.js: ON:()=>O,W4:()=>A,WY:()=>D,Yq:()=>B,ZP:()=>et",
+     "work/api_probe/auth_auth_data.json: \"path\": \"auth/auth_data\""
+    ],
+    "notes": "观察：发起 HTTP 请求的信封函数用的是 index.b1f5e380.js 模块 949 的 WN 枚举——FinderAssistant=7（Default 0 / Ad 2 / Mp 3 / AdPlatform 4 / WxAdPlatform 5 / FinderPromote 6 / Company 8），oU() 在平台下恒返回它，故按 bundle，浏览器对 helper_upload_params 发的是 scene:7、reqScene:7。chunk-common@2000184 另有一份 protobuf 风格的枚举副本是 FinderAssistant=1（紧邻 MMFinderContactAdditionalFlag* 等 proto 枚举），不是 HTTP 信封用的那份。既有 API_MAP.md 写“scene=1 = FinderAssistant”、探针 auth_auth_data.json 的请求体是 {\"scene\":1,\"reqScene\":1} 且返回 errCode 0——说明服务端对 auth_data 至少不拒绝 scene=1；helper_upload_params 对 scene 是否敏感未验证。方法说明：以上所有 evidence 片段已用脚本逐条校验为对应源文件的精确子串且 ≤400 字符（C:\\Users\\91216\\AppData\\Local\\Temp\\sph_rx\\ev_check.py，120 条全过；辅助脚本 ctx.py/rng.py/cut.py/near.py/mod.py 同目录，按清理铁律未删除，未写入仓库）；探针产物两段 envInfo 片段取自该 JSON 的 res.body 解码后文本（文件内存的是转义串）。"
+   }
+  ],
+  "unknowns": [
+   "helper_upload_params 的真实响应未抓包：work/api_probe/ 下 6 个探针产物均不含此端点（batch_results.json 的 25 个端点里没有它）；上表响应字段只是客户端消费点，服务端是否还返回 appid/上传域名/签名/token 或其它字段无法从代码确定，各字段的 JSON 类型亦未知。",
+   "目标符号 uploadSetting：11 个 bundle（102/4/404/687/816/908/942/chunk-common/chunk-dynamic/chunk-pc/index）全部 0 命中，未找到。",
+   "normalFile=20310 的实际使用点：已给 bundle 内实例化上传器时传的 cdnFileType 只有 hF.a.video / hF.a.picture / f.a.picture，没有 \"normalFile\"；也没有把 20310 带进 post_create 的代码。消费点很可能在未提供的懒加载 chunk，未找到。",
+   "Component.injectPostCreateDeps(...) 的调用点（把 postService/uploadParams/envInfo/cdnHost 注入 lib 内 \"3e13\" store，进而触发 n.setAuthParams/n.setHost）在已给 bundle 内未找到；injectPostCreateDeps 只有定义。",
+   "IsolatedFileUpload（new YB）的调用点在已给 bundle 内未找到（只有导出与类定义）。",
+   "scene 取值：bundle 证据是 7（index 模块 949），既有 API_MAP.md/探针用 1 且 auth_data 返回 errCode 0；helper_upload_params 是否接受 scene=1、以及线上是否已与 11-24 抓取的 bundle 一致，未验证。",
+   "请求 Content-Type：bundle 未显式设置（e.data 为普通对象，走 axios 默认序列化，推断为 application/json）；既有探针用 application/json 可用，但 helper_upload_params 本身未实测。",
+   "X-WECHAT-UIN：首次请求（即取上传参数这一次）头值为 \"0000000000\"，服务端是否校验该头未验证。",
+   "finderpre.video.qq.com 的 pre 语义（是否预发环境）无法由代码证明；线上实际主机由 /auth/auth_data 的 envInfo 下发（探针实证 finderassistancea–e / 备用 snsaispuploada–e）。",
+   "本步骤只做静态分析 + 读取既有探针产物，未发起任何线上请求（helper_upload_params 是 POST，留给获授权的步骤用 work/tools/sph_probe.py 实测：python sph_probe.py helper/helper_upload_params）。",
+   "用户令“写操作也加上，发布和删除都实现”涉及 post_create / post_delete 等写协议，不在本步骤（上传参数获取协议）范围内，未分析。"
+  ]
+ }
+]
