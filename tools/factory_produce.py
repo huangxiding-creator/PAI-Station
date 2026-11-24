@@ -161,6 +161,7 @@ def stage_gate(ns) -> tuple[bool, str]:
     args = [sys.executable, "-X", "utf8", str(REPO / "tools" / "publish_gate.py"),
             "--campaign-dir", ns.campaign_dir, "--sku", ns.sku]
     sched = REPO / ns.campaign_dir / "sched"
+    args.append("--pre-shelf")
     if not any((sched / f"_ch{i:02d}_nb_draft.md").is_file() for i in range(1, 13)):
         args.append("--allow-no-nb-draft")
         wecom(f"{ns.campaign} 出厂门: NB初稿缺席 (正身令降级披露) — bank收编+特赦放行")
@@ -199,8 +200,12 @@ def stage_shelf(ns) -> tuple[bool, str]:
     rc4, _ = sh([sys.executable, "-X", "utf8", str(REPO / "report_platform" / "tools" /
                  "poster_fetch.py"), "--sku", ns.sku], timeout=600,
                 cwd=REPO / "report_platform" / "promo")
-    ok = rc2 == 0 and rc3 == 0 and rc4 == 0
-    return ok, f"site={rc2} tcb={rc3} poster={rc4} (ECS scp 需编排外人工/密钥通道)"
+    rc5, out5 = sh([sys.executable, "-X", "utf8", str(REPO / "tools" / "publish_gate.py"),
+                    "--campaign-dir", ns.campaign_dir, "--sku", ns.sku,
+                    "--allow-no-nb-draft"], timeout=1800)
+    print(out5[-400:])
+    ok = rc2 == 0 and rc3 == 0 and rc4 == 0 and rc5 == 0
+    return ok, f"site={rc2} tcb={rc3} poster={rc4} 门复验={rc5} (ECS scp 需编排外人工/密钥通道)"
 
 
 def stage_promo(ns) -> tuple[bool, str]:
