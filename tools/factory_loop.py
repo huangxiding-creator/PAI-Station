@@ -164,8 +164,10 @@ def stage_select() -> dict | None:
         log(f"[SELECT] {topic[:20]} 未过SCOUT门, 降下一顺位")
         ledger_write("SELECT_PASS", topic[:20], {"reason": "scout_fail"})
     # 动态任务清单 24h (1125用户令): 清单耗尽自动重挖
-    log("[SELECT] 清单耗尽 — 重跑 factory_topics 动态重挖")
+    log("[SELECT] 清单耗尽 — 微信洞察信号桥+factory_topics 动态重挖")
     ledger_write("SELECT_PASS", "-", {"reason": "topics_exhausted_refresh"})
+    run([PY, "-X", "utf8", str(REPO / "tools" / "topic_signals_to_radar.py"),
+         "--min", "1"], timeout=1800)
     run([PY, "-X", "utf8", str(REPO / "tools" / "factory_topics.py"),
          "--days", "5", "--per-theme", "8", "--top", "10"], timeout=1800)
     topics_file = FACT / "factory_topics.json"

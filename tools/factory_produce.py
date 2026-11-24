@@ -256,12 +256,21 @@ def stage_shelf(ns) -> tuple[bool, str]:
         print("[wedrive] rc=", rc7)
     except Exception as e:
         print("[wedrive] EXC", e)
+    # 企微 PDF 推送 (1120常令: 报告转PDF推企微手机审阅)
+    try:
+        rc8, _ = sh([sys.executable, "-X", "utf8", str(REPO / "tools" / "send_wecom_file.py"),
+                     str(REPO / "report_platform" / "content" / "full" / f"{ns.sku}.pdf"),
+                     f"{ns.title.strip('《》')} · 12章 · 上架审阅版"], timeout=600)
+        print("[wecom-pdf] rc=", rc8)
+    except Exception as e:
+        rc8 = 1
+        print("[wecom-pdf] EXC", e)
     rc5, out5 = sh([sys.executable, "-X", "utf8", str(REPO / "tools" / "publish_gate.py"),
                     "--campaign-dir", ns.campaign_dir, "--sku", ns.sku,
                     "--allow-no-nb-draft"], timeout=1800)
     print(out5[-400:])
-    ok = rc2 == 0 and rc3 == 0 and rc4 == 0 and rc5 == 0 and rc6 == 0 and rc7 == 0
-    return ok, f"site={rc2} tcb={rc3} poster={rc4} 门复验={rc5} ecs={rc6} wedrive={rc7}"
+    ok = rc2 == 0 and rc3 == 0 and rc4 == 0 and rc5 == 0 and rc6 == 0 and rc7 == 0 and rc8 == 0
+    return ok, f"site={rc2} tcb={rc3} poster={rc4} 门复验={rc5} ecs={rc6} wedrive={rc7} wecompdf={rc8}"
 
 
 def stage_promo(ns) -> tuple[bool, str]:
