@@ -207,6 +207,36 @@ def campaign_dir(campaign: str) -> Path:
     return M2 / campaign.replace("EPC-", "").lower()
 
 
+
+def _salvage_json_array(raw: str) -> list:
+    """截断 JSON 容错: 括号配平逐对象抢救 (1124 章节生成连两役死于此)."""
+    out, depth, in_str, esc, obj_start = [], 0, False, False, -1
+    for i, ch in enumerate(raw):
+        if in_str:
+            if esc:
+                esc = False
+            elif ch == "\\":
+                esc = True
+            elif ch == '"':
+                in_str = False
+            continue
+        if ch == '"':
+            in_str = True
+        elif ch in "{[":
+            if depth == 1 and ch == "{":
+                obj_start = i
+            depth += 1
+        elif ch in "}]":
+            depth -= 1
+            if depth == 1 and obj_start >= 0:
+                frag = raw[obj_start:i + 1]
+                try:
+                    out.append(json.loads(frag))
+                except Exception:
+                    pass
+                obj_start = -1
+    return out
+
 def gen_chapters(theme: str, sel: dict) -> list[dict] | None:
     """用语义挖掘结果生成针对该主题的 12 章目录. 失败返回 None (调用方回退并如实标注)."""
     try:
@@ -224,11 +254,24 @@ def gen_chapters(theme: str, sel: dict) -> list[dict] | None:
             "\"kws\":[\"检索词1\",\"检索词2\",\"检索词3\",\"检索词4\"],\"question\":\"这一章要回答读者的什么问题\"}。"
             "第 1 章是全景与规则地图，最后一章是可落地的行动清单与自查表，中间各章围绕上面的方向和未解难题展开，"
             "每章的 kws 要能直接拿去资料库里检索。不要输出 JSON 以外的任何文字。")
-        model, content = glm([{"role": "user", "content": prompt}], load_keys())
-        if not content:
-            return None
-        arr = json.loads(content[content.find("["):content.rfind("]") + 1])
-        arr = [x for x in arr if isinstance(x, dict) and x.get("title")][:12]
+        arr = []
+        for attempt, compact in enumerate((False, True)):  # 第2次要求紧凑输出防截断
+            p = prompt
+            if compact:
+                p += "注意：每章标题不超过30字，kws只给2个，question不超过40字，总输出控制在2500字以内。"
+            model, content = glm([{"role": "user", "content": p}], load_keys())
+            if not content:
+                continue
+            try:
+                arr = json.loads(content[content.find("["):content.rfind("]") + 1])
+            except Exception:
+                arr = _salvage_json_array(content[content.find("["):]) if "[" in content else []
+                if arr:
+                    log(f"[S1] 章节JSON截断已抢救 {len(arr)} 项 (第{attempt + 1}次)")
+            arr = [x for x in arr if isinstance(x, dict) and x.get("title")]
+            if len(arr) >= 8:
+                break
+        arr = arr[:12]
         if len(arr) < 8:
             return None
         out = []
