@@ -816,6 +816,9 @@ def cmd_live_stream(c, a):
     注意：这会创建一个 liveObjectId（准备态，不公开）；不用请立即 live close 回收。"""
     j = call("live/create_live_prepare", env(), c)
     d = j.get("data") or {}
+    if getattr(a, "json", False):
+        emit(j, a)
+        return
     print(f"errCode={j.get('errCode')}")
     print(f"  liveObjectId   = {d.get('liveObjectId')}")
     print(f"  推流地址        = {d.get('anchorStreamingUrl')}")
@@ -829,6 +832,9 @@ def cmd_live_stream(c, a):
 def cmd_live_status(c, a):
     j = call("live/check_live_status", env(), c)
     d = j.get("data") or {}
+    if getattr(a, "json", False):
+        emit(d, a)
+        return
     print(f"status={d.get('status')} liveObjectId={d.get('liveObjectId')} 昵称={d.get('wxNickname')}")
     if a.json:
         emit(d, a)

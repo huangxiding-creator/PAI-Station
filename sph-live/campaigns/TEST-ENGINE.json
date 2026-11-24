@@ -1,0 +1,225 @@
+{
+ "id": "TEST-ENGINE",
+ "title": "引擎验收测试战役(假想直播)",
+ "start_time": "2027-01-15 19:00",
+ "end_time": "",
+ "partner": "测试伙伴",
+ "created_at": "2026-11-25T06:52:03",
+ "stages": {
+  "S1_notice": {
+   "done": true,
+   "ts": "2026-11-25T06:53:06",
+   "detail": "adapter_dispatched: 预告创建适配器：当前走 live-campaign-autopub 浏览器链（1104 五场实战）——由会话执行该技能（素材=本账本 title/start_time/partner）；API 路径(live_notice_operate "
+  },
+  "S2_poster": {
+   "done": true,
+   "ts": "2026-11-25T06:53:07",
+   "detail": "E:\\AI-Station\\sph-live\\campaigns\\TEST-ENGINE_poster.png"
+  },
+  "S3_article": {
+   "done": true,
+   "ts": "2026-11-25T06:53:07",
+   "detail": "adapter_pending: claude CLI 不在 PATH——由会话代生成（super-skill 宣传文链），产出回填 set TEST-ENGINE asset:article=<path>"
+  },
+  "S6_monitor": {
+   "done": true,
+   "ts": "2026-11-25T06:53:13",
+   "detail": "status=2"
+  },
+  "S7_highlights": {
+   "done": true,
+   "ts": "2026-11-25T07:05:04",
+   "detail": "wv_rc=0 ed=1, dry_run=False, errors=())\n\n==================================================\n运行结束，耗时 0:11:49.157144\n  回放：见 2，处理 1，跳过 0\n  高光：见 9，发表 4，跳过 0，失败 1\n"
+  },
+  "S4_stream": {
+   "done": true,
+   "ts": "2026-11-25T07:05:42",
+   "detail": "liveObjectId=15062261404588449345 rtmp=rtmp://push-m1.wxlivecdn.com/trtc_1400439699/"
+  },
+  "S5_dispatch": {
+   "done": true,
+   "ts": "2026-11-25T07:05:42",
+   "detail": "wecom=ok cover=TEST-ENGINE_cover.png"
+  },
+  "S8_archive": {
+   "done": true,
+   "ts": "2026-11-25T07:05:44",
+   "detail": "retrospect: no_stats"
+  }
+ },
+ "assets": {
+  "retrospect_stats": "",
+  "live_status": 2,
+  "ended_at": "2026-11-25T06:53:12",
+  "stream_url": "rtmp://push-m1.wxlivecdn.com/trtc_1400439699/",
+  "stream_key": "live_2079010448416892196?txSecret=ca402a492a03cedeee296cb38457d723&txTime=6B08BB09&txAddP2PSei=1&txAddP2PMeta=1",
+  "live_object_id": "15062261404588449345"
+ },
+ "history": [
+  {
+   "ts": "2026-11-25T06:52:10",
+   "event": "S1_notice",
+   "detail": "done=True adapter_dispatched: 预告创建适配器：当前走 live-campaign-autopub 浏览器链（1104 五场实战）——由会话执行该技能（素材=本账本 title/start_time/partner）；API 路径(live_notice_operate "
+  },
+  {
+   "ts": "2026-11-25T06:52:10",
+   "event": "S2_poster",
+   "detail": "done=True E:\\AI-Station\\sph-live\\campaigns\\TEST-ENGINE_poster.png"
+  },
+  {
+   "ts": "2026-11-25T06:52:10",
+   "event": "S3_article",
+   "detail": "done=True article_error: rc=1 EXC:[WinError 2] 系统找不到指定的文件。"
+  },
+  {
+   "ts": "2026-11-25T06:52:11",
+   "event": "S4_stream",
+   "detail": "done=True stream_error: h [-h] [--vault VAULT] [--cookie COOKIE] [--json]\n           {whoami,post,stat,live,comment,msg,shop,notify,income,member,collection,profile}\n           ...\nsph: error: unrecognized arguments: --json\n"
+  },
+  {
+   "ts": "2026-11-25T06:52:11",
+   "event": "S5_dispatch",
+   "detail": "done=True no_stream_yet"
+  },
+  {
+   "ts": "2026-11-25T06:52:11",
+   "event": "S6_monitor",
+   "detail": "done=True monitor_parse_error: Expecting property name enclosed in double quotes: line 1 column 2 (char 1) ive,comment,msg,shop,notify,income,member,collection,profile}\n           ...\nsph: error: unrecognized arguments: --json\n"
+  },
+  {
+   "ts": "2026-11-25T06:52:11",
+   "event": "S7_highlights",
+   "detail": "done=True live_not_ended_yet"
+  },
+  {
+   "ts": "2026-11-25T06:52:12",
+   "event": "S8_archive",
+   "detail": "done=True retrospect: no_stats"
+  },
+  {
+   "ts": "2026-11-25T06:52:50",
+   "event": "S1_notice",
+   "detail": "done=True adapter_dispatched: 预告创建适配器：当前走 live-campaign-autopub 浏览器链（1104 五场实战）——由会话执行该技能（素材=本账本 title/start_time/partner）；API 路径(live_notice_operate "
+  },
+  {
+   "ts": "2026-11-25T06:52:51",
+   "event": "S2_poster",
+   "detail": "done=True E:\\AI-Station\\sph-live\\campaigns\\TEST-ENGINE_poster.png"
+  },
+  {
+   "ts": "2026-11-25T06:52:51",
+   "event": "S3_article",
+   "detail": "done=True adapter_pending: claude CLI 不在 PATH——由会话代生成（super-skill 宣传文链），产出回填 set TEST-ENGINE asset:article=<path>"
+  },
+  {
+   "ts": "2026-11-25T06:52:52",
+   "event": "S4_stream",
+   "detail": "done=True stream_error: h [-h] [--vault VAULT] [--cookie COOKIE] [--json]\n           {whoami,post,stat,live,comment,msg,shop,notify,income,member,collection,profile}\n           ...\nsph: error: unrecognized arguments: --json\n"
+  },
+  {
+   "ts": "2026-11-25T06:52:52",
+   "event": "S5_dispatch",
+   "detail": "done=True no_stream_yet"
+  },
+  {
+   "ts": "2026-11-25T06:52:52",
+   "event": "S6_monitor",
+   "detail": "done=True monitor_parse_error: Expecting property name enclosed in double quotes: line 1 column 2 (char 1) ive,comment,msg,shop,notify,income,member,collection,profile}\n           ...\nsph: error: unrecognized arguments: --json\n"
+  },
+  {
+   "ts": "2026-11-25T06:52:52",
+   "event": "S7_highlights",
+   "detail": "done=True live_not_ended_yet"
+  },
+  {
+   "ts": "2026-11-25T06:52:53",
+   "event": "S8_archive",
+   "detail": "done=True retrospect: no_stats"
+  },
+  {
+   "ts": "2026-11-25T06:53:06",
+   "event": "S1_notice",
+   "detail": "done=True adapter_dispatched: 预告创建适配器：当前走 live-campaign-autopub 浏览器链（1104 五场实战）——由会话执行该技能（素材=本账本 title/start_time/partner）；API 路径(live_notice_operate "
+  },
+  {
+   "ts": "2026-11-25T06:53:07",
+   "event": "S2_poster",
+   "detail": "done=True E:\\AI-Station\\sph-live\\campaigns\\TEST-ENGINE_poster.png"
+  },
+  {
+   "ts": "2026-11-25T06:53:07",
+   "event": "S3_article",
+   "detail": "done=True adapter_pending: claude CLI 不在 PATH——由会话代生成（super-skill 宣传文链），产出回填 set TEST-ENGINE asset:article=<path>"
+  },
+  {
+   "ts": "2026-11-25T06:53:10",
+   "event": "S4_stream",
+   "detail": "done=True stream_error: 45c5af820&cdntagname=wjh420&combuf=IZUoLqFoBsrsEaqcxjHw4g2e9JrQLZMOhHlFG7vvfQzYmhKIKvq%2FOmc2%2Byjjj7eAH99bXciDpcx7a1EG9lsL9R%2FG8Th4H24nU%2F6j&sc=7&wu=1\",\n \"descReviewRes\": {\n  \"checkResult\": 0\n }\n}\n"
+  },
+  {
+   "ts": "2026-11-25T06:53:10",
+   "event": "S5_dispatch",
+   "detail": "done=True no_stream_yet"
+  },
+  {
+   "ts": "2026-11-25T06:53:12",
+   "event": "live_status=2",
+   "detail": ""
+  },
+  {
+   "ts": "2026-11-25T06:53:12",
+   "event": "live_ended",
+   "detail": ""
+  },
+  {
+   "ts": "2026-11-25T06:53:13",
+   "event": "S6_monitor",
+   "detail": "done=True status=2"
+  },
+  {
+   "ts": "2026-11-25T07:05:04",
+   "event": "S7_highlights",
+   "detail": "done=True wv_rc=0 ed=1, dry_run=False, errors=())\n\n==================================================\n运行结束，耗时 0:11:49.157144\n  回放：见 2，处理 1，跳过 0\n  高光：见 9，发表 4，跳过 0，失败 1\n"
+  },
+  {
+   "ts": "2026-11-25T07:05:06",
+   "event": "S8_archive",
+   "detail": "done=True retrospect: no_stats"
+  },
+  {
+   "ts": "2026-11-25T07:05:23",
+   "event": "stream_acquired",
+   "detail": ""
+  },
+  {
+   "ts": "2026-11-25T07:05:23",
+   "event": "S4_stream",
+   "detail": "done=True liveObjectId=None rtmp=None"
+  },
+  {
+   "ts": "2026-11-25T07:05:23",
+   "event": "S5_dispatch",
+   "detail": "done=True no_stream_yet"
+  },
+  {
+   "ts": "2026-11-25T07:05:42",
+   "event": "stream_acquired",
+   "detail": ""
+  },
+  {
+   "ts": "2026-11-25T07:05:42",
+   "event": "S4_stream",
+   "detail": "done=True liveObjectId=15062261404588449345 rtmp=rtmp://push-m1.wxlivecdn.com/trtc_1400439699/"
+  },
+  {
+   "ts": "2026-11-25T07:05:42",
+   "event": "S5_dispatch",
+   "detail": "done=True wecom=ok cover=TEST-ENGINE_cover.png"
+  },
+  {
+   "ts": "2026-11-25T07:05:44",
+   "event": "S8_archive",
+   "detail": "done=True retrospect: no_stats"
+  }
+ ]
+}
