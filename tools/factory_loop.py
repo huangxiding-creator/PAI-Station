@@ -145,9 +145,15 @@ def stage_select() -> dict | None:
         if not top:
             log("[SELECT] Top10 为空")
             return None
+    # 1124 修复: 已出版/已在史主题查重 (今日 F176D 同题重产事故)
+    done_themes = {h.get("theme", "") for h in state_load().get("history", [])}
     # 逐顺位: SCOUT 门不过 → 下一个 (最多试5个)
     for pick in top[:5]:
         topic = pick.get("topic") or pick.get("theme") or ""
+        if topic and any(topic[:12] in dt or dt[:12] in topic for dt in done_themes if dt):
+            log(f"[SELECT] {topic[:20]} 已在史 (查重跳过)")
+            ledger_write("SELECT_PASS", topic[:20], {"reason": "theme_dup"})
+            continue
         score = pick.get("score") or pick.get("score", 0)
         sel = {"theme": topic, "score": score, "detail": pick, "source": source}
         if stage_scout(sel):
@@ -368,7 +374,8 @@ def heartbeat():
 def has_inflight() -> dict | None:
     """返回第一个已建战役但尚未做完的条目 (没有则 None). 一次只做一份: 在途未完成不开新题."""
     for h in state_load().get("history", []):
-        if h.get("status", "handed_off") != "published":
+        st = h.get("status", "handed_off")
+        if st != "published" and not st.startswith("superseded"):
             return h
     return None
 
@@ -449,9 +456,22 @@ def main() -> int:
             title = f"《{theme}实战研究报告》"
             sku = f"{campaign}-2026"
             log(f"[produce] {campaign} / {title} / {sku}")
+            # 通用骨架拦截: 章节生成失败的骨架不配成书 (1124 首跑事故)
+            chj = campaign_dir(campaign) / "sched" / "chapters.json"
+            if chj.is_file():
+                _t = chj.read_text(encoding="utf-8")
+                if "·第1部分" in _t or "·第12部分" in _t:
+                    log("[produce] 章节生成失败(通用骨架) — 拦截, 需人工重写章表")
+                    ledger_write("PRODUCE_ABORT", campaign, {"reason": "generic_skeleton"})
+                    subprocess.run([PY, "-X", "utf8", str(REPO / "tools" / "notify_wecom.py"),
+                                    "研究工厂生产拦截",
+                                    f"{campaign} 章节生成为通用骨架 — 已拦截不产书, 需人工重写章表"],
+                                   capture_output=True, timeout=60)
+                    return 1
+            cdir_abs = str(campaign_dir(campaign))
             rc = subprocess.run(
                 [sys.executable, "-X", "utf8", str(REPO / "tools" / "factory_produce.py"),
-                 "--campaign-dir", f"work/m2/{campaign.replace('EPC-', '').lower()}", "--campaign", campaign,
+                 "--campaign-dir", cdir_abs, "--campaign", campaign,
                  "--title", title, "--sku", sku],
                 capture_output=True, text=True, encoding="utf-8", errors="replace",
                 timeout=8 * 3600)
