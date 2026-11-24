@@ -41,3 +41,17 @@
 - 稿箱盘点: report_platform/promo/_draft_inventory.py
 - 出口切换/体检: m2/ess/_switch_exit.py + _exit_health.py
 - 守门: tools/wecom_perm_keeper.py(按需) + tools/ess_supervisor.sh + tools/ess_lane_keeper.sh
+
+## 1124 五杠杆升维（用户令：全部实施+投产）
+
+| 杠杆 | 落地件 | 接线 |
+|---|---|---|
+| ① 出厂门 | tools/publish_gate.py (四维确定性硬门: 章审计重跑/书名连环替换门/PDF目录占位符/页数账实/在架资产/宣传稿64B+120B门) | S7.5 硬门: 不过不上架; factory_produce gate 阶段自动跑 |
+| ② 编排器 | tools/factory_produce.py (harvest→collate(claude无头编队≤4并发+断链重试)→merge→gate→shelf→promo→finalize) + factory_loop.py --produce | 在途战役一条令全自动; 失败→企微+过账 |
+| ③ 语料×100 | tools/corpus_index.py (68k切片/3.38亿字总索引, v4样本2000字) + tools/bank_harvest.py (分章打分+配额兜底+案号≤2章) | 实测 34案→**360案/书**; 每章30锚直出bank |
+| ④ 锚头摘要 | tools/bank_index.py (bank→bank_chNN.index.md, 每锚一行) | 收编工人跳过读卷三角化, 直奔精读写作 |
+| ⑤ 一书裂变 | tools/book_derivs.py (速读版/行动清单/专栏连载×12/KB条目包, 零模型调用) | 每书+15个分发形态; EPC-F176D 已产出首批 |
+
+**NB正身令（1124 用户裁定）**: NBLM 各章初稿=正身; 战役无NB产线时降级必须披露 (produce 的 gate 阶段自动带 --allow-no-nb-draft+企微声明)。
+**claude 无头通道**: VSCode 扩展二进制 (mission-engine 同款发现逻辑), npm 壳与本机 Windows 不兼容勿用。
+**已知边界**: 巨块伪切片 (>20000字) 已过滤; 跨章查重为软门 (>8组FAIL); ECS 部署仍在编排器外 (SSH/scp 需要时人工)。

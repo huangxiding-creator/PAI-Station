@@ -404,6 +404,8 @@ def main() -> int:
                     help="把某个在途战役标为已上架 (只有真正上架完成后才应调用)")
     ap.add_argument("--force-new", action="store_true",
                     help="已有在途战役时仍强行再建一个 (默认不做: 一份没做完不开下一份)")
+    ap.add_argument("--produce", action="store_true",
+                    help="在途(或新建)战役→全自动生产: harvest→collate→merge→gate→shelf→promo→finalize")
     ns = ap.parse_args()
 
     if ns.install_guard:
@@ -432,6 +434,38 @@ def main() -> int:
         log("[lock] 已有实例在跑, 退出")
         return 0
     try:
+        if getattr(ns, "produce", False):
+            infl = has_inflight()
+            if not infl:
+                log("[produce] 无在途战役 — 先跑一轮选题建战役")
+                one_cycle()
+                infl = has_inflight()
+                if not infl:
+                    log("[produce] 选题未过门, 本轮不生产")
+                    return 1
+            campaign = infl["campaign"]
+            theme = infl.get("theme", "")
+            short = campaign.split("F")[-1][:4]
+            title = f"《{theme}实战研究报告》"
+            sku = f"{campaign}-2026"
+            log(f"[produce] {campaign} / {title} / {sku}")
+            rc = subprocess.run(
+                [sys.executable, "-X", "utf8", str(REPO / "tools" / "factory_produce.py"),
+                 "--campaign-dir", f"work/m2/{campaign.replace('EPC-', '').lower()}", "--campaign", campaign,
+                 "--title", title, "--sku", sku],
+                capture_output=True, text=True, encoding="utf-8", errors="replace",
+                timeout=8 * 3600)
+            log(f"[produce] rc={rc} 尾部: {(rc.stdout or '')[-400:]}")
+            if rc.returncode == 0:
+                st = state_load()
+                for h in st["history"]:
+                    if h.get("campaign") == campaign and h.get("status") != "published":
+                        h["status"] = "published"
+                        h["published_ts"] = time.strftime("%Y-%m-%d %H:%M")
+                        h["sku"] = sku
+                state_save(st)
+                log(f"[produce] {campaign} 全自动生产收官 → published ({sku})")
+            return rc.returncode
         if ns.once:
             infl = has_inflight()
             if infl and not ns.force_new:
