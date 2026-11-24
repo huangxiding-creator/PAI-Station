@@ -120,7 +120,7 @@ def stage_collate(ns) -> tuple[bool, str]:
             (sched / f"_worker_ch{nn}.flag").write_text("running", encoding="utf-8")
             running[i] = subprocess.Popen(
                 [str(claude), "-p", briefs[i], "--permission-mode", "acceptEdits"],
-                capture_output=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                 cwd=str(REPO), creationflags=subprocess.CREATE_NO_WINDOW)
             print(f"[collate] ch{nn} 派工 ({len(running)}在役/{len(queue)}排队)")
         time.sleep(60)
