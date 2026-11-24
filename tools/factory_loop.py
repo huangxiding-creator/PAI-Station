@@ -504,13 +504,21 @@ def main() -> int:
             if chj.is_file():
                 _t = chj.read_text(encoding="utf-8")
                 if "·第1部分" in _t or "·第12部分" in _t:
-                    log("[produce] 章节生成失败(通用骨架) — 拦截, 需人工重写章表")
-                    ledger_write("PRODUCE_ABORT", campaign, {"reason": "generic_skeleton"})
-                    subprocess.run([PY, "-X", "utf8", str(REPO / "tools" / "notify_wecom.py"),
-                                    "研究工厂生产拦截",
-                                    f"{campaign} 章节生成为通用骨架 — 已拦截不产书, 需人工重写章表"],
-                                   capture_output=True, timeout=60)
-                    return 1
+                    # 1124: 骨架战役带伤重生 — 用加固后的 gen_chapters 重写章表, 成了就续产
+                    log("[produce] 骨架章表在案 — 重跑加固版章节生成")
+                    chs = gen_chapters(infl.get("theme", ""), {"mined": {}})
+                    if chs:
+                        chj.write_text(json.dumps(chs, ensure_ascii=False, indent=1),
+                                       encoding="utf-8")
+                        log(f"[produce] 章表重生 ✓ ({len(chs)}章) — 续产")
+                    else:
+                        log("[produce] 章节生成再败 — 拦截, 需人工重写章表")
+                        ledger_write("PRODUCE_ABORT", campaign, {"reason": "generic_skeleton"})
+                        subprocess.run([PY, "-X", "utf8", str(REPO / "tools" / "notify_wecom.py"),
+                                        "研究工厂生产拦截",
+                                        f"{campaign} 章节生成两次失败 — 已拦截不产书, 需人工重写章表"],
+                                       capture_output=True, timeout=60)
+                        return 1
             cdir_abs = str(campaign_dir(campaign))
             rc = subprocess.run(
                 [sys.executable, "-X", "utf8", str(REPO / "tools" / "factory_produce.py"),
