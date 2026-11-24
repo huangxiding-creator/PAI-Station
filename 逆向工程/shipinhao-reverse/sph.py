@@ -809,6 +809,54 @@ def cmd_post_upload_raw(c, a):
 
 
 
+# ---------- W1 直播/推流码命令（1125 实测） ----------
+
+def cmd_live_stream(c, a):
+    """创建准备态直播对象并取推流地址+密钥（rtmp://push-m1.wxlivecdn.com/... + txSecret）。
+    注意：这会创建一个 liveObjectId（准备态，不公开）；不用请立即 live close 回收。"""
+    j = call("live/create_live_prepare", env(), c)
+    d = j.get("data") or {}
+    print(f"errCode={j.get('errCode')}")
+    print(f"  liveObjectId   = {d.get('liveObjectId')}")
+    print(f"  推流地址        = {d.get('anchorStreamingUrl')}")
+    print(f"  推流密钥        = {str(d.get('anchorStreamingKey'))[:60]}...")
+    print(f"  回放地址        = {str(d.get('playbackUrl') or '')[:60]}")
+    print("  (回收: python sph.py live close <liveObjectId> --confirm)")
+    if a.json:
+        emit(d, a)
+
+
+def cmd_live_status(c, a):
+    j = call("live/check_live_status", env(), c)
+    d = j.get("data") or {}
+    print(f"status={d.get('status')} liveObjectId={d.get('liveObjectId')} 昵称={d.get('wxNickname')}")
+    if a.json:
+        emit(d, a)
+
+
+def cmd_live_close(c, a):
+    _confirm_guard(a, "关闭直播对象")
+    j = call("live/close_live", env(liveObjectId=a.live_id), c)
+    print(f"close: errCode={j.get('errCode')} {j.get('errMsg')}")
+    if a.json:
+        emit(j, a)
+
+
+def cmd_live_notices(c, a):
+    j = call("live/current_live_notice", env(), c)
+    d = j.get("data") or {}
+    for r in d.get("noticeRecords") or []:
+        print(f"[预告] {r.get('nickname','')} 通知数={r.get('reserveNoticeUserCount')}")
+        for s in r.get("reserveNoticeUserCountByScene") or []:
+            print(f"    {s.get('sceneName')}: {s.get('reserveNoticeUserCount')}")
+    j2 = call("live/live_notice_list", env(), c)
+    d2 = j2.get("data") or {}
+    print(f"历史预告总数: {d2.get('totalCount')}")
+
+    if getattr(a, "json", False):
+        emit({"current": d, "list": d2}, a)
+
+
 # ---------- 装配 ----------
 
 def main(argv=None):
@@ -854,6 +902,8 @@ def main(argv=None):
     q.add_argument("--page", type=int, default=1)
     q = psp.add_parser("replays"); q.add_argument("--count", type=int, default=10)
     psp.add_parser("last")
+    psp.add_parser("stream"); psp.add_parser("status"); psp.add_parser("notices")
+    q = psp.add_parser("close"); q.add_argument("live_id"); q.add_argument("--confirm", action="store_true")
 
     sp = sub.add_parser("comment"); psp = sp.add_subparsers(dest="op", required=True)
     q = psp.add_parser("list"); q.add_argument("export_id")
@@ -899,6 +949,8 @@ def main(argv=None):
         ("stat", "fans-portrait"): cmd_stat_fans_portrait,
         ("live", "history"): cmd_live_history, ("live", "replays"): cmd_live_replays,
         ("live", "last"): cmd_live_last,
+        ("live", "stream"): cmd_live_stream, ("live", "status"): cmd_live_status,
+        ("live", "close"): cmd_live_close, ("live", "notices"): cmd_live_notices,
         ("comment", "list"): cmd_comment_list, ("comment", "feeds"): cmd_comment_feeds,
         ("msg", "sessions"): cmd_msg_sessions, ("msg", "new"): cmd_msg_new,
         ("shop", "status"): cmd_shop_status, ("shop", "products"): cmd_shop_products,

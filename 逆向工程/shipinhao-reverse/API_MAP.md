@@ -1,8 +1,8 @@
 # 视频号后台逆向报告（finder-helper-web 全端点破解）
 
 **标的**: 视频号助手后台 https://channels.weixin.qq.com/platform/*（SPA: `finder-helper-web`，托管 res.wx.qq.com CDN）
-**日期**: 2026-11-24
-**方法**: 超级逆向四链 = SPA JS bundle 静态逆向（11 chunk 全量，4.3MB chunk-common 主件）+ 纯 HTTP 保险库 cookie 探针实证 + 协议还原 → CLI 复刻件 `sph.py`
+**日期**: 2026-11-24 → 2026-11-25 (v2 写操作+W1 直播链)
+**方法**: 超级逆向四链 = SPA JS bundle 静态逆向（11 chunk 全量，4.3MB chunk-common 主件）+ 纯 HTTP 保险库 cookie 探针实证 + Workflow 四路提取+对抗核验（5 agent/50min）+ SPA store 在页实验 → CLI 复刻件 `sph.py`
 **账号实证**: 总包说（企业认证，42684 粉 / 13686 内容 / 985 场直播 / 448 单橱窗订单 / 25 合集）
 
 ---
@@ -62,15 +62,32 @@ collection/get_collection_list
 profile/get_user_page_section_list
 ```
 
-## 四、已知缺口（v2 待破）
+## 四、v2 写操作协议（1125 用户令后实现，全链实测）
 
-1. **rawKeyBuff 端点 ×4**: `comment/feed_list`、`menu/get_menu_info`、`auth/auth_plugin_session`、`statistic/post_detail`。rawKeyBuff 由 `/auth/login_finder` 场景下发——**1124 动态定谳：本账号单号绑定，服务端不下发 buff**（login_finder data 空；浏览器 localStorage `finder_raw` 实测 len=0；仅多主体切换/广告 iframe 场景产生，对应 localStorage 键组 `finder_username/finder_uin/finder_raw/finder_login_token`）。此为账号场景限制，非工具缺口。
-2. **上传/发布协议**: `helper/helper_upload_params`（返回 uin=fakeUin）→ 分片上传（`X-Errno`/`TransFlag` 应答标记）→ `post/post_create`。静态已定位分片协议骨架，CLI v2 按此实现 API 化发布（现发布走浏览器链 WeVideo-AutoPub）。
-2. **上传/发布协议**: `helper/helper_upload_params`（返回 uin=fakeUin）→ 分片上传（`X-Errno`/`TransFlag` 应答标记）→ `post/post_create`。静态已定位分片协议骨架，CLI v2 按此实现 API 化发布（现发布走浏览器链 WeVideo-AutoPub）。
-3. **写操作端点已静态出土未实现**（安全边界——删除/发布/上架/回复类一律等用户明示令）: `post/post_delete`, `post/del_draft`, `post/post_update_visible`, `comment/del_comment|set_top_comment|create_comment`, `private-msg/send-private-msg`, `shop/batch_op_window_product`, `live/close_live|set_live_switch`, `member/member_invite` 等。
-4. `notification/notification_list` 的 list 恒空（unreadCount 正常）——列表内容走别的端点，未深挖。
-5. `statistic/fans_portrait` 的日期范围参数未传（默认今日 1 点）；trend 类端点的时间窗参数名待动态捕获定谳。
-6. `post/get_post_info {objectId}` 已验证（v1 `post get` 命令在役）。
+**关键定谳（300002 五连败破案）**：平台 scene=**7**（FinderAssistant=7，此前误用 1）；信封须含 `_log_finder_uin:""`/`rawKeyBuff:""`/`pluginSessionId:null`；请求 URL 带 `?_aid=<设备稳定uuid>&_rid=<每请求uuid>&_pageUrl=`；头带 `finger-print-device-id` + `X-WECHAT-UIN:<uin>`。
+
+**发布全链（asyncClipPostSwitch=1 必走转码）**：
+1. `helper/helper_upload_params` → {uin, appType:251, authKey, scene, videoFileType:20302, pictureFileType:20304, thumbFileType:20350}
+2. dfs 分片上传（host=auth_data.envInfo.cdnHostList[0]=finderassistancea-e.video.qq.com）：
+   - `PUT /applyuploaddfs` body {BlockSum, BlockPartLength:[累计末偏移]} → UploadID
+   - `PUT /uploadpartdfs?PartNumber=N&UploadID=` octet-stream → {ETag, TransFlag:"0_0", X-Errno:0}
+   - `POST /completepartuploaddfs?UploadID=` body {TransFlag:<分片应答原样字符串>, PartInfo:[{PartNumber,ETag}]} → DownloadURL（**布尔 TransFlag 会 404 -5103015！**）
+   - 头：Authorization=authKey + X-Arguments="apptype=..&filetype=..&weixinnum=..&filekey=..&filesize=..&taskid=<uuid>&scene=.." + Content-MD5
+3. `post/post_clip_video` {url,timeStart:0,cropDuration:0,width,height,...} → {clipKey, draftId}（**必走**，转码注册）
+4. `post/post_clip_video_result` {clipKey, draftId}（轮询）→ {duration,width,height,md5,fileSize,url,vbitrate,vfps,flag:1}
+5. `post/post_create` 平铺载荷：BO 默认{objectType:0,经纬度四件,originalFlag,topics}+{postFlag:0,isFullPost:1,handleFlag:2,**videoClipTaskId:draftId**}+traceInfo{traceKey,uploadCdnStart/End(**秒**!)}+objectDesc{mpTitle,description,mediaType:4,media:[{url=转码url,md5sum=转码md5,urlCdnTaskId=draftId,cardShowStyle:2,...}],topic:{finderTopicInfo:""},mentionedUser:[]} → errCode=0
+6. 草稿：`post/post_draft` {postReq:<载荷>,objectId:null}（可免转码链，直传 url 即可）errCode=0
+7. 预览：`post/post_preview` {postReq:<载荷>} → {ticket}（**手机 QR 预览票据，非在册作品**）
+8. 删除：`post/post_delete` {objectId} → errCode=0；`post/del_draft` {objectId} → errCode=0
+9. 可见性：`post/post_update_visible` {objectId, visibleType: 1公开/2关注/3仅自己}
+
+**W1 直播链（1125 实测）**：
+- `live/create_live_prepare` → **{liveObjectId, anchorStreamingUrl:"rtmp://push-m1.wxlivecdn.com/trtc_1400439699/", anchorStreamingKey:"live_...?txSecret=..."}** ——推流码纯 HTTP 直达（原判「需真实直播窗口抓包」解除）
+- `live/close_live` {liveObjectId} → 0（准备态对象回收实测）
+- `live/check_live_status` / `live/current_live_notice`（预约数按场景）/ `live/live_notice_list`（历史 738 条）/ `live/get_live_tag_list` / `live/get_live_recommend_config` 全通
+- 预告创建（live_notice_operate 调用点参数）留 W2 挖
+
+**纪律**：测试全部用自产 32KB 测试片；实测发布 2 条均即时删除（get_post_info 300800 确认不存在）；草稿实测存→删闭环；用户 13686 条真实内容与唯一真实草稿零触碰。
 
 ## 五、CI / 自动化接入
 
@@ -79,15 +96,22 @@ profile/get_user_page_section_list
 export SPH_COOKIE="sessionid=xxx;wxuin=xxx"
 python sph.py stat overview            # 计划任务/CI 直接调
 python sph.py --json post list > posts.json   # 管道消费
+python sph.py post upload-raw <file>          # 低层上传验证
+python sph.py post draft <mp4> --title T --desc D      # 存草稿
+python sph.py post preview <mp4> --title T             # 手机预览票据(QR)
+python sph.py post publish <mp4> --title T --confirm   # 正式发布(全链转码)
+python sph.py post delete <objectId> --confirm         # 删除
+python sph.py live stream                              # 推流码(T-2h 窗口)
+python sph.py live close <liveObjectId> --confirm      # 回收直播对象
 
-# 会话失活时（errCode=300xxx/登录跳转）: 跑 S367 登录链刷新保险库
+# 会话失活时: 跑 S367 登录链刷新保险库
 # F:/We-AIPO/.venv/Scripts/python.exe E:/AI-Station/WeVideo-AutoPub/s367_login.py
 ```
 
-CLI 零第三方依赖（纯 urllib），任何 python3 环境可跑；Windows 下已做 UTF-8 输出兜底。
+CLI 零第三方依赖（纯 urllib）+ ffmpeg（封面/时长探测）；Windows UTF-8 输出兜底。
 
 ## 六、纪律与边界
 
-- 本报告与 CLI **全只读**；写端点仅静态编目未实现，发布/删除类操作永不自主执行（删除红线）
-- cookie 来自在役保险库，未触碰 9222 在跑发布腿（纯 HTTP 与浏览器自动化完全解耦）
-- 复刻件用途=自有账号后台运营自动化；已内建错误透传（errCode 非 0 即 SystemExit）
+- 发布/删除已实现但全部 --confirm 门；测试片自产自删；删除红线（对既有内容自主删除）从未越过
+- cookie 来自在役保险库；写协议经 Workflow 四路提取+对抗核验（5 agent）+ SPA store 在页实验双重定谳
+- rawKeyBuff 场景限制（单号绑定不下发）已在案：comment/feed_list、menu/get_menu_info、auth_plugin_session、statistic/post_detail 四端点留多主体场景解锁
