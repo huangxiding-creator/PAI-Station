@@ -77,6 +77,17 @@ def docx_to_pdf(docx: Path) -> Path | None:
     word.DisplayAlerts = 0
     try:
         doc = word.Documents.Open(str(docx), ReadOnly=True)
+        try:
+            # 1124 修复: 目录域从未更新 → 付费PDF第3页一直印着「Ctrl+A→F9」占位符(姊妹书同病).
+            # ReadOnly 打开仅内存更新, 不落盘, 只影响导出的 PDF.
+            n_toc = doc.TablesOfContents.Count
+            for i in range(1, n_toc + 1):
+                doc.TablesOfContents(i).Update()
+            doc.Fields.Update()
+            if n_toc:
+                print(f"[pdf] 目录域已更新 ({n_toc} 处)")
+        except Exception as e:  # noqa: BLE001 — 无目录/域更新失败=照旧导出
+            print(f"[pdf] 目录域更新跳过: {e}")
         doc.ExportAsFixedFormat(str(pdf), 17)
         pages = doc.ComputeStatistics(2)
         doc.Close(False)

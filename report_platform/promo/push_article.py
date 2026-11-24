@@ -76,10 +76,18 @@ def main() -> int:
 
     title_m = re.search(r"^#\s*(.+)$", md, re.M)
     title = title_m.group(1).strip()[:64]
-    # digest = md 第 2 行 (剥掉 blockquote/标题标记, 防止 "> " 前缀泄漏到摘要卡)
-    raw2 = (md.split("\n", 2)[1] or "").strip()
-    digest_line = re.sub(r"^[>#\s]+", "", raw2).strip()
-    digest = re.sub(r"\s+", " ", digest_line or title)[:110]
+    # digest = 首个 blockquote 导语行 (1124 修复: 旧取第2行落成「出品：」行——
+    # 11-06 起版式第2行是出品行, 三篇已发表文章的摘要卡全部错挂出品行, push_result 可证)
+    digest_src = ""
+    for ln in md.splitlines()[:8]:
+        s = ln.strip()
+        if s.startswith(">"):
+            digest_src = s.lstrip("> ").strip()
+            break
+    # digest 上限 120 字节 (45004 实锤 1124; 字节安全截断)
+    raw_d = re.sub(r"\s+", " ", digest_src or title)
+    _b = raw_d.encode("utf-8")
+    digest = raw_d if len(_b) <= 120 else _b[:120].decode("utf-8", errors="ignore")
 
     # ---- promo_guard 七门守门 (推前) ----
     ok, reasons = promo_guard.check(md, html, title, ns.account, ns.sku)

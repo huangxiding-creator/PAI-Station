@@ -170,11 +170,16 @@ def check(md_text: str, html: str, title: str, account: str,
     if used >= cap:
         reasons.append(f"③日帽: {account} 今日已投 {used}/{cap}")
 
-    # ④ digest 第 2 行非空 (与 push_article 同口径: md 第 2 行)
-    lines = [ln for ln in md_text.split("\n")]
-    digest_line = lines[1].strip() if len(lines) > 1 else ""
+    # ④ digest 首个 blockquote 导语行非空 (1124 与 push_article 同口径改齐:
+    # 旧「第2行」口径落成「出品：」行——11-06 起版式出品行在第2行, blockquote 在第4行)
+    digest_line = ""
+    for ln in md_text.split("\n")[:8]:
+        s = ln.strip()
+        if s.startswith(">"):
+            digest_line = s.lstrip("> ").strip()
+            break
     if not digest_line:
-        reasons.append("④digest: md 第 2 行为空 (digest 将回退为标题)")
+        reasons.append("④digest: 前8行无 blockquote 导语行 (digest 将回退为标题)")
 
     # ⑤ 正文 ≥2000 字 (非空白字符计)
     body_chars = len(re.sub(r"\s", "", md_text))
@@ -186,10 +191,11 @@ def check(md_text: str, html: str, title: str, account: str,
         reasons.append(f"⑥HTML超限: {len(html)} > {MAX_HTML_CHARS} 字符")
 
     # ⑦ We-AIPO 已发主题查重 + 标题长
-    # 1124 修正: 微信标题上限=64字符(非UTF-8字节); 26字JES2 launch(83B)实发成功实证.
-    # 字节口径会误杀「发布| 全名称」铁律格式标题 → 改字符口径, 平台合规意图不变.
-    if len(title) > MAX_TITLE_CHARS:
-        reasons.append(f"⑦标题超64字符: {len(title)}字符")
+    # 1124 二次修正: draft API 上限实为 64 字节 (draft/update 26字78B 被 45003 拒、
+    # 24字62B 过 — 实锤; state.db 的 39字标题走 autopub UI 通道限额不同).
+    # 发标题前先把 md 标题压进 64B (全称去《》), 此处按字节守门与 API 物理一致.
+    if len(title.encode("utf-8")) > MAX_TITLE_BYTES:
+        reasons.append(f"⑦标题超64字节: {len(title.encode('utf-8'))}B")
     for t in _weaipo_titles():
         if t and t == title.strip():
             reasons.append(f"⑦撞We-AIPO已发主题: 「{title[:24]}」")

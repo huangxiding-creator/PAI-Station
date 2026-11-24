@@ -101,12 +101,12 @@ def cmd_sync(ns) -> int:
         capture_output=True, text=True, encoding="utf-8", errors="replace").stdout
     print("[sync] 上游新commit:")
     print("\n".join(("  " + ln) for ln in log.strip().splitlines()[:10]))
-    # 子模块指针变动 (上游把哪些辖区推到了新版本)
+    # 子模块指针变动 (上游把哪些辖区推到了新版本; depth-1 快照下 diff 仅指针文件)
     sub = subprocess.run(
-        ["git", "-C", str(REPO), "diff", "--stat", head0, head1, "--", "*"],
+        ["git", "-C", str(REPO), "diff", "--stat", head0, head1],
         capture_output=True, text=True, encoding="utf-8", errors="replace").stdout
     if sub.strip():
-        print("[sync] 子模块指针变动:")
+        print("[sync] 上游变动 (子模块指针/清单文件):")
         print("\n".join(("  " + ln) for ln in sub.strip().splitlines()[:20]))
     if ns.pull:
         subprocess.run(["git", "-C", str(REPO), "reset", "--hard", "FETCH_HEAD"],
