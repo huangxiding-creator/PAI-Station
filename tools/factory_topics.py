@@ -169,11 +169,56 @@ def mine_community(keys: list[str]) -> list[dict]:
     return demands
 
 
+# ───────────── B2. 耳机洽谈录音: 客户原话需求 (1125 用户令接入) ─────────────
+
+VIAIM_PROMPT = """下面是工程企业负责人用讯飞耳机录下的洽谈/工作对话摘要，每条一段（编号: 标题|摘要）。
+请归纳其中反映的**真实业务需求或难题**：客户/合作方在要什么、承诺了什么场景落地、卡在什么条件上。
+剔除三类：纯寒暄行程安排、与工程业务无关的私人内容、空洞没有具体需求的长谈。
+严格按 JSON 数组输出，不要输出其他文字，最多 10 条，按业务强度从强到弱：
+{{"topic": "具体需求，一句话，具体到场景或问题",
+ "n_msgs": 涉及的录音条数（整数）,
+ "examples": ["最有代表性的原话或摘要句，最多2条，尽量照抄"]}}
+如果整批都没有真实需求，输出 []。
+
+录音摘要：
+{lines}"""
+
+
+def mine_viaim(keys: list[str]) -> list[dict]:
+    sig_file = REPO / "data" / "factory" / "viaim_signals.jsonl"
+    if not sig_file.is_file():
+        return []
+    recs = []
+    for ln in sig_file.read_text(encoding="utf-8", errors="replace").splitlines():
+        try:
+            recs.append(json.loads(ln))
+        except Exception:
+            pass
+    if not recs:
+        return []
+    demands = []
+    B = 6
+    batches = [recs[i:i + B] for i in range(0, len(recs), B)]
+
+    def one(batch):
+        lines = chr(10).join(
+            f"{i+1}. {r.get('title','无题')} | {r.get('overview','')[:220]}"
+            for i, r in enumerate(batch))
+        txt = glm([{"role": "user", "content": VIAIM_PROMPT.format(lines=lines)}], keys, 1400)
+        return [x for x in parse_json_array(txt) if isinstance(x, dict) and x.get("topic")]
+
+    with ThreadPoolExecutor(max_workers=2) as ex:
+        for part in ex.map(one, batches):
+            demands.extend(part)
+    return demands
+
+
 # ───────────── C. 归并 ─────────────
 
 MERGE_PROMPT = """你是研究报告的总编辑。下面有两类材料：
 【专家文章】每篇抽出的研究方向、作者没解决的难题；
-【社群需求】微信群里从业者的具体需求。
+【社群需求】微信群里从业者的具体需求；
+【耳机洽谈】企业负责人洽谈录音里客户/合作方的真实需求（分量最重——这是客户原话）。
 请把它们归并成不超过 {cap} 个互不重叠的**具体研究方向**。要求：
 1. 每个方向具体到争点、规则或场景（例如“招标文件量身定制负面清单的禁止情形与合规边界”），不要“某某领域研究”这种泛标题。
 2. 同义或高度相近的合并成一个；泛泛而谈、没有具体内容的条目直接丢掉。
@@ -190,7 +235,10 @@ MERGE_PROMPT = """你是研究报告的总编辑。下面有两类材料：
 {arts}
 
 【社群需求】
-{comm}"""
+{comm}
+
+【耳机洽谈】
+{viaim}"""
 
 
 def run_batch(items, fn, workers=3):
@@ -253,14 +301,17 @@ def main() -> int:
         cache_p.parent.mkdir(parents=True, exist_ok=True)
         cache_p.write_text(json.dumps(cache, ensure_ascii=False), encoding="utf-8")
 
-    # C. 归并 (每批 28 条方向材料)
-    lines = [f"- [文章] {m['dir']}" + (f"｜未解: {'；'.join(m['unsolved'][:2])}" if m["unsolved"] else "")
+    # C. 归并 (每批 28 条方向材料); B2 耳机洽谈 = 客户原话, 排最前分量最重 (1125 用户令)
+    via = mine_viaim(keys)
+    print(f"[topics] 耳机洽谈需求归纳: {len(via)} 条 ({time.time() - t0:.0f}s)", flush=True)
+    lines = [f"- [洽谈×{v.get('n_msgs', 1)}] {v.get('topic', '')}" for v in via]
+    lines += [f"- [文章] {m['dir']}" + (f"｜未解: {'；'.join(m['unsolved'][:2])}" if m["unsolved"] else "")
              for m in good]
     lines += [f"- [社群×{c.get('n_msgs', 1)}] {c.get('topic', '')}" for c in comm]
     batches = [lines[i:i + 28] for i in range(0, len(lines), 28)]
     print(f"[topics] 方向材料 {len(lines)} 条 → {len(batches)} 批归并…", flush=True)
     def merge_one(b):
-        txt = glm([{"role": "user", "content": MERGE_PROMPT.format(cap=7, arts="\n".join(b), comm="见上方【社群】条目")}],
+        txt = glm([{"role": "user", "content": MERGE_PROMPT.format(cap=7, arts="\n".join(b), comm="见上方【社群】条目", viaim="见上方【洽谈】条目(客户原话, 分量最重)")}],
                   keys, 2600)
         return [x for x in parse_json_array(txt) if isinstance(x, dict) and x.get("topic")]
     merged = [x for part in run_batch(batches, merge_one) for x in part]
@@ -278,7 +329,8 @@ def main() -> int:
         if len(items) <= cap:
             return list(items)
         txt = glm([{"role": "user", "content": MERGE_PROMPT.format(cap=cap, arts="\n".join(compact(items)),
-                                                                    comm="已并入上方各条")}], keys, 2600)
+                                                                    comm="已并入上方各条",
+                                                                    viaim="洽谈录音需求已按[洽谈×N]标注在上方材料中, 客户原话分量最重")}], keys, 2600)
         out = [x for x in parse_json_array(txt) if isinstance(x, dict) and x.get("topic")]
         return out if len(out) >= max(3, cap // 2) else []       # 返回太少 = 输出被截断, 当作失败
 

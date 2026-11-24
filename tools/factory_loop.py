@@ -164,8 +164,10 @@ def stage_select() -> dict | None:
         log(f"[SELECT] {topic[:20]} 未过SCOUT门, 降下一顺位")
         ledger_write("SELECT_PASS", topic[:20], {"reason": "scout_fail"})
     # 动态任务清单 24h (1125用户令): 清单耗尽自动重挖
-    log("[SELECT] 清单耗尽 — 微信洞察信号桥+factory_topics 动态重挖")
+    log("[SELECT] 清单耗尽 — 讯飞耳机拉取+微信洞察桥+factory_topics 动态重挖")
     ledger_write("SELECT_PASS", "-", {"reason": "topics_exhausted_refresh"})
+    run([PY, "-X", "utf8", str(REPO / "tools" / "viaim_signals.py"), "pull", "--days", "7"],
+        timeout=600)
     run([PY, "-X", "utf8", str(REPO / "tools" / "topic_signals_to_radar.py"),
          "--min", "1"], timeout=1800)
     run([PY, "-X", "utf8", str(REPO / "tools" / "factory_topics.py"),
@@ -437,6 +439,9 @@ def heartbeat():
             + " | 交接单之后的生产环节仍需人工接力")
     subprocess.run([PY, "-X", "utf8", str(REPO / "tools" / "notify_wecom.py"),
                     "研究工厂心跳", body], capture_output=True, timeout=60)
+    # 讯飞耳机需求信号日拉 (1125 用户令: 录音洽谈接需求洞察)
+    subprocess.run([PY, "-X", "utf8", str(REPO / "tools" / "viaim_signals.py"), "pull",
+                    "--days", "7"], capture_output=True, timeout=600)
     log(f"[heartbeat] 企微心跳已推: {body}")
 
 
