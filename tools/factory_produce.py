@@ -334,7 +334,45 @@ def stage_h3(ns) -> tuple[bool, str]:
     return rcg == 0, f"queue={rcq} gen={rcg}"
 
 
-STAGES = ["harvest", "collate", "merge", "gate", "shelf", "promo", "h3", "finalize"]
+def stage_kb(ns) -> tuple[bool, str]:
+    """成书+稀缺研究资料包 → 网盘 /总包知识库/ → 夜班 kb_build update 自动挂入库64.
+    1125 用户令: 书与产线调研稀缺/顶级/深度成果资料均入库. 策划口径=白名单类目.
+    bdn mirror 只增不删, 幂等可重跑."""
+    import shutil
+    staging = REPO / "data" / "factory" / "kb_staging" / ns.campaign / time.strftime("%Y%m%d_%H%M%S")
+    staging.mkdir(parents=True)  # 时间戳暂存区 (清理纪律: 不删任何旧目录)
+    # ① 书
+    pdf = REPO / "report_platform" / "content" / "full" / f"{ns.sku}.pdf"
+    if pdf.is_file():
+        shutil.copyfile(pdf, staging / f"{ns.title.strip('《》')}.pdf")
+    # ② 研究资料包 (稀缺/顶级/深度: 判例切片池/收编台账/锚头索引/章表/裂变件)
+    sched = REPO / ns.campaign_dir / "sched"
+    research = staging / "研究资料包"
+    research.mkdir(exist_ok=True)
+    js = REPO / "data" / "harvest" / "judgment_slices" / ns.campaign
+    if js.is_dir():
+        shutil.copytree(js, research / "判例切片池", dirs_exist_ok=True)
+    for pat in ("_ch*_collation_ledger.md", "bank_ch*.index.md", "chapters.json",
+                "h3_prompts.json"):
+        for f in sched.glob(pat):
+            shutil.copyfile(f, research / f.name)
+    prods = REPO / "data" / "factory" / "products" / ns.campaign
+    if prods.is_dir():
+        shutil.copytree(prods, research / "多形态裂变件", dirs_exist_ok=True)
+    # ③ bdn mirror → /总包知识库/产线自动入库/<campaign>/
+    bdn = REPO / "逆向工程" / "baidu-netdisk" / "replica" / "bdn.py"
+    remote = f"/总包知识库/产线自动入库/{ns.campaign}"
+    r = subprocess.run([sys.executable, "-X", "utf8", str(bdn), "mirror",
+                        str(staging), remote],
+                       capture_output=True, text=True, encoding="utf-8",
+                       errors="replace", timeout=1800,
+                       cwd=str(bdn.parent))
+    out = (r.stdout or "") + (r.stderr or "")[-200:]
+    print("[kb]", out[-300:])
+    return r.returncode == 0, f"mirror rc={r.returncode}"
+
+
+STAGES = ["harvest", "collate", "merge", "gate", "shelf", "promo", "h3", "kb", "finalize"]
 
 
 def main() -> int:
