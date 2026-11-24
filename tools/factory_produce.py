@@ -231,7 +231,11 @@ def stage_promo(ns) -> tuple[bool, str]:
         return False, "promo drafting 失败"
     # 落箱: 找本 SKU 的三篇 (文件名含 sku 前缀钩子), 每号一篇; 冷却/日帽拦截=如实记录不硬闯
     promo_dir = REPO / "report_platform" / "promo"
-    new_mds = sorted(promo_dir.glob("2026-*_*.md"), key=lambda p: p.stat().st_mtime)[-6:]
+    t_start = time.time()
+    # 1124 修复: 只认本次运行期间新写且内容含本书书名的稿 (旧稿同号位撞车事故)
+    new_mds = [p for p in promo_dir.glob("2026-*_*.md")
+               if p.stat().st_mtime > t_start - 5400
+               and ns.title.strip("《》")[:12] in p.read_text(encoding="utf-8", errors="replace")]
     env = dict(os.environ, WECHAT_ACCOUNTS_FILE=r"F:\We-AIPO\data\wechat_accounts.json")
     acct_by = {"zbzs": "总包之声", "zbshuo": "总包说", "gchyd": "工程行业大脑"}
     pushed = []
