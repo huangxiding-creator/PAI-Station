@@ -55,3 +55,11 @@
 **NB正身令（1124 用户裁定）**: NBLM 各章初稿=正身; 战役无NB产线时降级必须披露 (produce 的 gate 阶段自动带 --allow-no-nb-draft+企微声明)。
 **claude 无头通道**: VSCode 扩展二进制 (mission-engine 同款发现逻辑), npm 壳与本机 Windows 不兼容勿用。
 **已知边界**: 巨块伪切片 (>20000字) 已过滤; 跨章查重为软门 (>8组FAIL); ECS 部署仍在编排器外 (SSH/scp 需要时人工)。
+
+## 1125 365天全年连续运行 (用户令: 动态任务清单24h/365d)
+
+- **班表**: FactoryLoopMain 09:13 / Backup 13:43 / Evening 20:23 / Night 03:33 — 四班全 --produce (选题→章表→收割→编队→总装→出厂门→上架→三稿→裂变→过账企微); Heartbeat 07:53
+- **动态任务清单**: 细方向耗尽自动重挖 (factory_topics.py, SELECT_PASS topics_exhausted_refresh); 已出版主题查重跳过; SCOUT 门 (rss≥3) 筛薄题
+- **install_guard**: py tools/factory_loop.py --install-guard 重注册 (改班表后必跑); 实跑验证=schtasks /run + 看 FactoryLoopMain.log
+- **自愈**: 锁串行防并发重产; finals 在盘的章跳过重编; ⑧同号SKU门防重复推稿; 失败→企微+过账→下一班重试
+- **诚实边界**: NB初稿正身未接自动化 (无NB产线战役降级披露); H3三卡+视频号发未入编排器 (9222依赖); 工程行业大脑日帽1/日

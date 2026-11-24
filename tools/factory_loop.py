@@ -162,6 +162,29 @@ def stage_select() -> dict | None:
             return sel
         log(f"[SELECT] {topic[:20]} 未过SCOUT门, 降下一顺位")
         ledger_write("SELECT_PASS", topic[:20], {"reason": "scout_fail"})
+    # 动态任务清单 24h (1125用户令): 清单耗尽自动重挖
+    log("[SELECT] 清单耗尽 — 重跑 factory_topics 动态重挖")
+    ledger_write("SELECT_PASS", "-", {"reason": "topics_exhausted_refresh"})
+    run([PY, "-X", "utf8", str(REPO / "tools" / "factory_topics.py"),
+         "--days", "5", "--per-theme", "8", "--top", "10"], timeout=1800)
+    topics_file = FACT / "factory_topics.json"
+    if topics_file.is_file():
+        try:
+            tdoc = json.loads(topics_file.read_text(encoding="utf-8"))
+            done = {h.get("theme", "") for h in state_load().get("history", [])}
+            for pick in (tdoc.get("top") or [])[:5]:
+                topic = pick.get("topic") or ""
+                if topic and any(topic[:12] in d or d[:12] in topic for d in done if d):
+                    continue
+                sel = {"theme": topic, "score": pick.get("score") or 0,
+                       "detail": pick, "source": "细方向(动态重挖)"}
+                if stage_scout(sel):
+                    log(f"[SELECT] 重挖选定: {sel['theme']} [{sel['score']}]")
+                    ledger_write("SELECT", sel["theme"], {"score": sel["score"],
+                                                          "source": "细方向(动态重挖)"})
+                    return sel
+        except Exception as e:
+            log(f"[SELECT] 重挖失败: {str(e)[:60]}")
     return None
 
 
@@ -364,9 +387,10 @@ def stage_rest(campaign: str, sel: dict) -> dict:
 # ───────────────────────── 守护与心跳 ─────────────────────────
 
 GUARD_TASKS = [
-    ("FactoryLoopMain", "09:13", "--once"),
-    ("FactoryLoopBackup", "13:43", "--once"),
-    ("FactoryLoopEvening", "20:23", "--once"),
+    ("FactoryLoopMain", "09:13", "--produce"),
+    ("FactoryLoopBackup", "13:43", "--produce"),
+    ("FactoryLoopEvening", "20:23", "--produce"),
+    ("FactoryLoopNight", "03:33", "--produce"),
     ("FactoryLoopHeartbeat", "07:53", "--heartbeat"),
 ]
 

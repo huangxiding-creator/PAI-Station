@@ -197,15 +197,71 @@ def stage_shelf(ns) -> tuple[bool, str]:
                 timeout=1200, cwd=REPO / "report_platform")
     rc3, _ = sh([sys.executable, "-X", "utf8", str(REPO / "tools" / "mp_list_report.py"),
                  "--sku", ns.sku], timeout=1800)
-    rc4, _ = sh([sys.executable, "-X", "utf8", str(REPO / "report_platform" / "tools" /
-                 "poster_fetch.py"), "--sku", ns.sku], timeout=600,
-                cwd=REPO / "report_platform" / "promo")
+    # 海报重试×3 (引擎端点随 TCB 传播有时序差, 1124 首跑实锤)
+    rc4 = 1
+    for attempt in range(3):
+        rc4, _ = sh([sys.executable, "-X", "utf8", str(REPO / "report_platform" / "tools" /
+                     "poster_fetch.py"), "--sku", ns.sku], timeout=600,
+                    cwd=REPO / "report_platform" / "promo")
+        if rc4 == 0 and (REPO / "report_platform" / "promo" / "posters" /
+                         f"{ns.sku}.png").is_file():
+            break
+        time.sleep(60)
+    # ECS 四件同步 (SSH 通道, 1124 实测多次; RunCommand AK风控不可用)
+    rc6 = 1
+    try:
+        import shutil as _sh
+        tar = Path(os.environ.get("TEMP", "/tmp")) / "rp_site.tgz"
+        subprocess.run(["tar", "czf", str(tar), "site"], cwd=str(REPO / "report_platform"),
+                       capture_output=True, timeout=300)
+        ecs = "root@47.120.43.20"
+        for f in ("content/report.json", f"content/full/{ns.sku}.pdf"):
+            src = REPO / "report_platform" / f
+            if src.is_file():
+                subprocess.run(["scp", "-o", "BatchMode=yes", str(src), f"{ecs}:/tmp/"],
+                               capture_output=True, timeout=300)
+        subprocess.run(["scp", "-o", "BatchMode=yes", str(tar), f"{ecs}:/tmp/rp_site.tgz"],
+                       capture_output=True, timeout=600)
+        rj_remote = "/www/report_platform/content/report.json"
+        script = "\n".join([
+            "set -e",
+            "python3 -c 'import json; json.load(open(\"/tmp/report.json\"))'",
+            f"cp {rj_remote} {rj_remote}.bak",
+            "mv /tmp/report.json /www/report_platform/content/report.json",
+            f"[ -f /tmp/{ns.sku}.pdf ] && mv /tmp/{ns.sku}.pdf /www/report_platform/content/full/{ns.sku}.pdf",
+            "cd /www/report_platform && rm -rf site_old site_new && mkdir site_new",
+            "tar -xzf /tmp/rp_site.tgz -C site_new --strip-components=1",
+            "[ -f site_new/index.html ] && mv site site_old && mv site_new site && rm -rf site_old /tmp/rp_site.tgz",
+            "systemctl restart report-platform; sleep 3",
+            "curl -s http://127.0.0.1:8885/ -o /dev/null -w 'index:%{http_code}'",
+        ])
+        r = subprocess.run(["ssh", "-o", "BatchMode=yes", ecs, script],
+                           capture_output=True, text=True, encoding="utf-8",
+                           errors="replace", timeout=300)
+        rc6 = r.returncode
+        print("[ecs]", (r.stdout or "")[-160:])
+    except Exception as e:
+        print("[ecs] EXC", e)
+    # 微盘存档
+    rc7 = 1
+    try:
+        cli = Path.home() / "AppData" / "Roaming" / "npm" / "wecom-cli.cmd"
+        r = subprocess.run([str(cli), "disk", "files", "upload", "--json",
+                            json.dumps({"folder_id": "fiECFVszxfZBXNxhuL-v_FBzMyBFyIQ8jjywjzzPb0yGKsr0WLzTyLK0hVIuOUOlnUb1NEb6Nf3oVeXgHrgN9bPQ",
+                                        "file_name": f"{ns.title.strip('《》')}.pdf",
+                                        "file_path": str(REPO / "report_platform" / "content" / "full" / f"{ns.sku}.pdf").replace(chr(92), '/')})],
+                           capture_output=True, text=True, encoding="utf-8",
+                           errors="replace", timeout=600)
+        rc7 = 0 if '"file_size"' in (r.stdout or "") else 1
+        print("[wedrive] rc=", rc7)
+    except Exception as e:
+        print("[wedrive] EXC", e)
     rc5, out5 = sh([sys.executable, "-X", "utf8", str(REPO / "tools" / "publish_gate.py"),
                     "--campaign-dir", ns.campaign_dir, "--sku", ns.sku,
                     "--allow-no-nb-draft"], timeout=1800)
     print(out5[-400:])
-    ok = rc2 == 0 and rc3 == 0 and rc4 == 0 and rc5 == 0
-    return ok, f"site={rc2} tcb={rc3} poster={rc4} 门复验={rc5} (ECS scp 需编排外人工/密钥通道)"
+    ok = rc2 == 0 and rc3 == 0 and rc4 == 0 and rc5 == 0 and rc6 == 0 and rc7 == 0
+    return ok, f"site={rc2} tcb={rc3} poster={rc4} 门复验={rc5} ecs={rc6} wedrive={rc7}"
 
 
 def stage_promo(ns) -> tuple[bool, str]:
