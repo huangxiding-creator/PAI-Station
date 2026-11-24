@@ -32,7 +32,8 @@ TITLE_DEDUP_HOURS = 24
 SKU_COOLDOWN_DAYS = 7
 MIN_BODY_CHARS = 2000
 MAX_HTML_CHARS = 18000
-MAX_TITLE_BYTES = 64
+MAX_TITLE_BYTES = 64  # (deprecated 1124: 字节口径误杀铁律标题, 门⑦已改用 MAX_TITLE_CHARS)
+MAX_TITLE_CHARS = 64
 # We-AIPO 已发主题 (只读对照, 缺席=跳过该门)
 WEAIPO_PUBLISHED_TOPICS = Path(
     r"E:\CPOPC\We-AIPO\data\published_topics.json")
@@ -184,9 +185,11 @@ def check(md_text: str, html: str, title: str, account: str,
     if len(html) > MAX_HTML_CHARS:
         reasons.append(f"⑥HTML超限: {len(html)} > {MAX_HTML_CHARS} 字符")
 
-    # ⑦ We-AIPO 已发主题查重 + 标题字节长
-    if len(title.encode("utf-8")) > MAX_TITLE_BYTES:
-        reasons.append(f"⑦标题超64字节: {len(title.encode('utf-8'))}B")
+    # ⑦ We-AIPO 已发主题查重 + 标题长
+    # 1124 修正: 微信标题上限=64字符(非UTF-8字节); 26字JES2 launch(83B)实发成功实证.
+    # 字节口径会误杀「发布| 全名称」铁律格式标题 → 改字符口径, 平台合规意图不变.
+    if len(title) > MAX_TITLE_CHARS:
+        reasons.append(f"⑦标题超64字符: {len(title)}字符")
     for t in _weaipo_titles():
         if t and t == title.strip():
             reasons.append(f"⑦撞We-AIPO已发主题: 「{title[:24]}」")
