@@ -275,7 +275,7 @@ def gen_chapters(theme: str, sel: dict) -> list[dict] | None:
             f"从近期专家文章中挖掘到的研究方向：{json.dumps(mined.get('directions', [])[:6], ensure_ascii=False)}\n"
             f"专家们指出但尚未解决的难题：{json.dumps(mined.get('unsolved_all', [])[:8], ensure_ascii=False)}\n"
             f"近期相关文章标题样例：{json.dumps((sel.get('detail') or {}).get('samples', [])[:3], ensure_ascii=False)}\n\n"
-            "要求：只输出 JSON 数组，共 12 项，每项形如 "
+            "要求：只输出 JSON 数组（12 至 18 项），每项形如 "
             "{\"no\":1,\"title\":\"章标题：副标题（具体到争点或场景，不要泛泛而谈）\","
             "\"kws\":[\"检索词1\",\"检索词2\",\"检索词3\",\"检索词4\"],\"question\":\"这一章要回答读者的什么问题\"}。"
             "第 1 章是全景与规则地图，最后一章是可落地的行动清单与自查表，中间各章围绕上面的方向和未解难题展开，"
@@ -297,8 +297,8 @@ def gen_chapters(theme: str, sel: dict) -> list[dict] | None:
             arr = [x for x in arr if isinstance(x, dict) and x.get("title")]
             if len(arr) >= 8:
                 break
-        arr = arr[:12]
-        if len(arr) < 8:
+        arr = arr[:20]  # 章数不封顶原则: 20 为防御性上限(模型跑飞保护), 常态12-18
+        if len(arr) < 12:
             return None
         out = []
         for i, x in enumerate(arr, 1):
@@ -307,7 +307,7 @@ def gen_chapters(theme: str, sel: dict) -> list[dict] | None:
                         "kws": [str(k)[:12] for k in (x.get("kws") or [])[:4]],
                         "question": str(x.get("question", ""))[:160],
                         "subqs": [f"Q{i}"]})
-        while len(out) < 12:  # 不足 12 章时补足通用章, 避免总装缺章
+        while len(out) < 12:  # 不足 12 章时补足 (1125令: 下限12, 上不封顶)
             out.append({"no": len(out) + 1, "title": f"{theme}·专题延伸之{len(out) + 1}", "type": "融合",
                         "kws": [theme[:4]], "subqs": [f"Q{len(out) + 1}"]})
         return out

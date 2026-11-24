@@ -60,9 +60,11 @@ def main() -> int:
     # ---------- A 书体 ----------
     # 逐章重跑审计脚本 (目录内 _audit_*.py, 如 _audit_f176d.py)
     audits = sorted(sched.glob("_audit_*.py"))
+    chj_gate = sched / "chapters.json"
+    n_ch = len(json.loads(chj_gate.read_text(encoding="utf-8"))) if chj_gate.is_file() else 12
     audit_py = audits[0] if audits else None
     if audit_py:
-        nums = " ".join(f"{i:02d}" for i in range(1, 13))
+        nums = " ".join(f"{i:02d}" for i in range(1, n_ch + 1))
         rr = subprocess.run([sys.executable, "-X", "utf8", audit_py.name] + nums.split(),
                             capture_output=True, text=True, encoding="utf-8",
                             errors="replace", cwd=str(sched))
@@ -103,8 +105,11 @@ def main() -> int:
             fails.append(f"A4 书名连环替换: 书L1「{book_title[:24]}…」≠ SKU「{sku_title[:24]}…」")
         else:
             print(f"[A4] 书名==SKU title ✓ {l1[:40]}")
-        if (entry.get("chapters") and len(entry["chapters"]) != 12):
-            fails.append(f"A5 SKU chapters={len(entry['chapters'])} ≠ 12")
+        if entry and chj_gate.is_file():
+            want_n = len(json.loads(chj_gate.read_text(encoding="utf-8")))
+            got_n = len(entry.get("chapters") or [])
+            if got_n != want_n:
+                fails.append(f"A5 SKU chapters={got_n} ≠ 章表{want_n}")
 
     # chapters.json ↔ h1 逐字
     chj = sched / "chapters.json"

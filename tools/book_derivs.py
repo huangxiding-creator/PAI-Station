@@ -45,7 +45,9 @@ def main() -> int:
     sudu = [f"# {ns.title}·速读版", ""]
     chk = [f"# {ns.title}·行动清单版", ""]
     zhuanlan = []
-    for f in sorted(sched.glob("_ch*_final.md")):
+    finals = sorted(sched.glob("_ch*_final.md"))
+    n_total = len(finals)
+    for f in finals:
         t = f.read_text(encoding="utf-8", errors="replace")
         p = chapter_parts(t)
         if not p["title"]:
@@ -57,7 +59,7 @@ def main() -> int:
                 chk.append(f"- [{p['title'][1:5]}] {line.strip()[:130]}")
         # 专栏连载: 导语+金句+小结 = 每章一篇独立可发的专栏稿
         col = [f"# {ns.title}·连载{int(nn)} | {p['title']}", "",
-               f"> {ns.title} 第{int(nn)}/12 篇连载 · 出品：总包创研院研究团队", ""]
+               f"> {ns.title} 第{int(nn)}/{n_total} 篇连载 · 出品：总包创研院研究团队", ""]
         if p["lead"]:
             col += [p["lead"], ""]
         for b in p["bolds"][:3]:

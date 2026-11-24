@@ -37,7 +37,7 @@ def main() -> int:
     entry = {
         "sku": ns.sku,
         "title": ns.title,
-        "subtitle": (f"12 章 · {ns.words_wan} 万字 · {ns.pages} 页（判例四段式 + 条款范本 + "
+        "subtitle": (f"{len(chapters)} 章 · {ns.words_wan} 万字 · {ns.pages} 页（判例四段式 + 条款范本 + "
                      f"自查台账{ns.subtitle_extra}）"),
         "price": ns.price,
         "price_label": f"¥{ns.price:,}",
@@ -46,7 +46,7 @@ def main() -> int:
         "cat_name": "专题实战",
         "badges": [
             {"k": "全书字数", "v": f"{ns.words_wan} 万字级（总装实测）"},
-            {"k": "章节体量", "v": f"12 章 · {ns.pages} 页 PDF"},
+            {"k": "章节体量", "v": f"{len(chapters)} 章 · {ns.pages} 页 PDF"},
             {"k": "证据纪律", "v": "全量语料定向收割 + 数字逐字对勘零造假 + 截断防御声明"},
             {"k": "覆盖谱系", "v": " / ".join(c["title"].split(" ", 1)[1] for c in chapters[:6])},
             {"k": "实战深度", "v": "判例四段式 + 失效模式目录 + 条款范本 + 合规自查清单"},

@@ -52,7 +52,7 @@ def main() -> int:
         parts.append(t.rstrip() + "\n")
     book = "\n".join(parts)
     book_cjk = cjk_len(book)
-    print(f"[merge] 章:{12 - len(missing)}/12 缺:{missing or '无'} 全书 {book_cjk:,} CJK")
+    print(f"[merge] 章:{len(nos) - len(missing)}/{len(nos)} 缺:{missing or '无'} 全书 {book_cjk:,} CJK")
     if missing and not ns.allow_partial:
         print(f"[merge] 缺章 {missing} — 拒绝总装")
         return 1
@@ -79,7 +79,7 @@ def main() -> int:
     (out / "s3_run_manifest.json").write_text(json.dumps({
         "ts": time.strftime("%Y-%m-%d %H:%M:%S"), "campaign": ns.campaign,
         "title": ns.title, "version_date": ns.version_date,
-        "merge": {"sha256_16": sha, "cjk_total": book_cjk, "chapters": 12 - len(missing),
+        "merge": {"sha256_16": sha, "cjk_total": book_cjk, "chapters": len(nos) - len(missing),
                   "missing": missing, "mode": "interim" if missing else "passthrough"},
     }, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"[manifest] sha16={sha}")

@@ -90,12 +90,20 @@ def stage_harvest(ns) -> tuple[bool, str]:
     return rc2 == 0, out2[-300:]
 
 
+def campaign_chapters(sched: Path) -> list[dict]:
+    """章表动态读取 (1125令: 章数≥12按需, 不固定)."""
+    chj = sched / "chapters.json"
+    return json.loads(chj.read_text(encoding="utf-8")) if chj.is_file() else []
+
+
 def stage_collate(ns) -> tuple[bool, str]:
     sched = REPO / ns.campaign_dir / "sched"
     ensure_audit(sched, ns.slug)
     claude = find_claude()
+    chapters = campaign_chapters(sched)
     todo = []
-    for i in range(1, 13):
+    for ch in chapters:
+        i = ch["no"]
         nn = f"{i:02d}"
         final = sched / f"_ch{nn}_final.md"
         if final.is_file():
@@ -103,7 +111,7 @@ def stage_collate(ns) -> tuple[bool, str]:
             continue
         todo.append(i)
     if not todo:
-        return True, "12章终稿齐"
+        return True, f"{len(chapters)}章终稿齐"
     briefs = {}
     for i in todo:
         nn = f"{i:02d}"
@@ -145,8 +153,8 @@ def stage_collate(ns) -> tuple[bool, str]:
                     print(f"[collate] ch{nn} 二次失败 — 放弃")
         if time.time() - t0 > 6 * 3600:
             break
-    ok = all((sched / f"_ch{i:02d}_final.md").is_file() for i in range(1, 13))
-    return ok, f"完成{len(done)} 失败{[i for i in range(1,13) if i not in done]}"
+    ok = all((sched / f"_ch{ch['no']:02d}_final.md").is_file() for ch in chapters)
+    return ok, f"完成{len(done)}/{len(chapters)}章"
 
 
 def stage_merge(ns) -> tuple[bool, str]:
