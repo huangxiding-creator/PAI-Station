@@ -290,7 +290,10 @@ def st_highlights(c: dict) -> str:
 
 
 def st_archive(c: dict) -> str:
-    """S8 归档复盘：bdn 上传高光产物→分享→企微+复盘。归档目录=campaigns 下最新高光产物。"""
+    """S8 归档复盘：整场回放增量备份到超级总包知识库 + 复盘统计 → 企微。"""
+    # 回放增量备份（增量器自带远端对账跳过，收播后回放生成需时间，允许本轮无产出）
+    rc, out = _run([PY, "-I", ROOT / "replay_backup.py", "--limit", "1"], timeout=7200)
+    replay_note = out.strip().splitlines()[-1] if out.strip() else "no_output"
     # 复盘：直播历史取最近一场数据
     rc, out = sph("live", "history", "--count", "3")
     stats = ""
@@ -304,9 +307,9 @@ def st_archive(c: dict) -> str:
     except Exception:
         pass
     wecom(f"[直播舱] S8 归档复盘: {c['id']}",
-          f"复盘字段已采集。{stats}｜高光产物归档走 wevideo-highlights 网盘腿（产物目录随 S7 产出）。")
+          f"{stats}｜回放增量: {replay_note[:80]}｜高光产物走 wevideo-highlights 网盘腿。")
     c.setdefault("assets", {})["retrospect_stats"] = stats
-    return f"retrospect: {stats or 'no_stats'}"
+    return f"retrospect: {stats or 'no_stats'} replay: {replay_note[:80]}"
 
 
 STAGE_FN = {"S1_notice": st_notice, "S2_poster": st_poster, "S3_article": st_article,

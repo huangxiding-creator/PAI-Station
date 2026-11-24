@@ -287,6 +287,9 @@ def cmd_stat_fans_portrait(c, a):
 
 def cmd_live_history(c, a):
     d = api(c, "live/get_live_history", pageSize=a.count, currentPage=a.page, count=a.count)
+    if getattr(a, "json", False):
+        emit(d, a)
+        return
     print(f"直播总数 {d.get('totalLiveCount')} 场, 累计时长(s) {d.get('totalLiveDuration')}")
     items = d.get("liveObjectList") or []
     for i, it in enumerate(items, 1):
@@ -295,8 +298,6 @@ def cmd_live_history(c, a):
               f"在线峰值={it.get('maxOnlineCount', st.get('maxOnlineCount','-'))}  "
               f"GMV={it.get('payedGmv','-')}  付款人数={it.get('payedNum','-')}  "
               f"{str(it.get('description') or '')[:40]}")
-    if a.json:
-        emit(d, a)
 
 
 def cmd_live_replays(c, a):
