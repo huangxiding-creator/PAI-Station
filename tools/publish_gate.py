@@ -47,6 +47,8 @@ def main() -> int:
     ap.add_argument("--skip-online", action="store_true")
     ap.add_argument("--allow-no-nb-draft", action="store_true",
                     help="1124前出版战役特赦 (正身令之前纯bank出版)")
+    ap.add_argument("--pre-shelf", action="store_true",
+                    help="上架前过门模式: SKU条目/资产类检查降为WARN (sku_insert 自带安全门兜底)")
     ns = ap.parse_args()
 
     cd = REPO / ns.campaign_dir
@@ -92,8 +94,9 @@ def main() -> int:
     d = json.loads(rj.read_text(encoding="utf-8"))
     entry = next((x for x in d["reports"] if x.get("sku") == ns.sku), None)
     if not entry:
-        fails.append(f"A4 report.json 无 {ns.sku} 条目 — 先头插再过门")
-    else:
+        (warns if ns.pre_shelf else fails).append(
+            f"A4 report.json 无 {ns.sku} 条目" + (" (pre-shelf, sku_insert 兜底)" if ns.pre_shelf else " — 先头插再过门"))
+    if entry:
         sku_title = (entry.get("title") or "").strip("《》")
         book_title = l1.strip("《》")
         if sku_title != book_title:

@@ -276,7 +276,8 @@ def gen_chapters(theme: str, sel: dict) -> list[dict] | None:
             return None
         out = []
         for i, x in enumerate(arr, 1):
-            out.append({"no": i, "title": str(x["title"])[:80], "type": "融合",
+            ttl = re.sub(r'^章标题[:：]\s*', '', str(x["title"]))[:80]
+            out.append({"no": i, "title": ttl, "type": "融合",
                         "kws": [str(k)[:12] for k in (x.get("kws") or [])[:4]],
                         "question": str(x.get("question", ""))[:160],
                         "subqs": [f"Q{i}"]})

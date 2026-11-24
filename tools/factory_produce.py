@@ -264,6 +264,10 @@ def main() -> int:
         print(f"\n===== STAGE {st} =====")
         fn = globals().get(f"stage_{st}")
         if st == "finalize":
+            rc_d, out_d = sh([sys.executable, "-X", "utf8", str(REPO / "tools" / "book_derivs.py"),
+                              "--campaign-dir", ns.campaign_dir, "--campaign", ns.campaign,
+                              "--title", ns.title], timeout=600)
+            print(out_d[-300:])
             ledger_write("PRODUCE_DONE", ns.campaign,
                          {k: v[1][:80] for k, v in results.items()})
             wecom(f"{ns.campaign} ({ns.title}) 编排器生产完成: " +
