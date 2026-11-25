@@ -42,7 +42,9 @@ def main() -> int:
     if daolun.is_file():
         parts.append(daolun.read_text(encoding="utf-8").rstrip() + "\n")
     missing, cjk_total = [], 0
-    for nn in [f"{i:02d}" for i in range(1, 13)]:
+    chj = sched / "chapters.json"
+    nos = [c["no"] for c in json.loads(chj.read_text(encoding="utf-8"))] if chj.is_file() else list(range(1, 13))
+    for nn in [f"{i:02d}" for i in nos]:
         f = sched / f"_ch{nn}_final.md"
         if not f.is_file():
             missing.append(nn)

@@ -62,6 +62,8 @@ COLLATE_BRIEF = """你是《{title}》研究报告的章节收编工 (战役 {ca
 任务: 收编第{no}章 (bank_ch{nn}.md), 产出 _ch{nn}_final.md + _ch{nn}_collation_ledger.md + 审计PASS。
 第一步 格式对齐: 读 chapters.json (本章title逐字作首行)、_ch02_final.md 头80行+尾130行 (体例正身)、_ch02_collation_ledger.md (台账五节体例)。
 第二步 选锚: 先读 bank_ch{nn}.index.md (锚头索引, 每锚一行=锚号|案号|法院|日期|案名|摘要), 挑与本章相关的锚, 再对选中锚分段读原bank精读记笔记。同案多锚=同篇重复锚: 正文引主锚, 其余尾注表并列注明。
+法规核验无头纪律: 本会话为无头模式, **禁用 WebFetch**(会话内必 400 [1210] 死亡);
+法规核验改用 mcp__web_reader__webReader 或 curl 直连官方页; 核不到逐字就转述+台账声明, 不要反复重试。
 第三步 写 _ch{nn}_final.md: 首行「# 第{no}章 <章题逐字>」; 两段导语 (面向工程企业+全书位置+底料截断声明: 每份文书头部约6000字); h2 {no}.1..连续 / h3 {no}.Y.1..连续; 主判例【事实】【争点】【裁判】【启示】四段式; 行内锚 (P000000/hash锚) 只引 bank 实锚段尾标注; 法规条文逐字转述现行文本 (WebFetch/mcp__web_reader__webReader 官方页核验, 核不到改转述并台账声明); 表题独立行 `表{no}-1 …（本研究归纳）`; 3-5处整行加粗金句; 禁代码围栏/ASCII框线/无序列表/四级标题/LaTeX/出品行/纪律声明/NBLM/AI生成/计算机术语; 尾部三件套=本章小结(10条)+本章证据边界与数据说明(五声明)+本章尾注(表); 20000-30000中文字; 数字零造假 (案号金额日期逐字取自bank)。
 第四步 写 _ch{nn}_collation_ledger.md 照 ch02 台账五节体例。
 第五步 审计: PowerShell: Set-Location '{sched}'; py -X utf8 _audit_{slug}.py {nn} → 全PASS (FAIL修终稿重跑)。
@@ -189,7 +191,7 @@ def stage_shelf(ns) -> tuple[bool, str]:
     words_wan = str(round(len(re.findall(r"[一-鿿]", book_l1)) if False else 0))  # 占位
     book_cjk = len(re.findall(r"[一-鿿]", (sched / "out" / "REPORT_FULL.md").read_text(encoding="utf-8")))
     words_wan = str(round(book_cjk / 10000))
-    sample = f"{ns.sku.split('-')[0].lower()}_sample.md"
+    sample = f"{ns.sku.lower()}_sample.md"
     import shutil
     shutil.copyfile((sched / "_ch01_final.md"),
                     REPO / "report_platform" / "content" / "sample" / sample)
@@ -208,7 +210,7 @@ def stage_shelf(ns) -> tuple[bool, str]:
     # 海报重试×3 (引擎端点随 TCB 传播有时序差, 1124 首跑实锤)
     rc4 = 1
     for attempt in range(3):
-        rc4, _ = sh([sys.executable, "-X", "utf8", str(REPO / "report_platform" / "tools" /
+        rc4, _ = sh([sys.executable, "-X", "utf8", str(REPO / "report_platform" / "promo" /
                      "poster_fetch.py"), "--sku", ns.sku], timeout=600,
                     cwd=REPO / "report_platform" / "promo")
         if rc4 == 0 and (REPO / "report_platform" / "promo" / "posters" /
@@ -416,9 +418,9 @@ def main() -> int:
         results[st] = (ok, msg)
         ledger_write(f"PRODUCE_{st.upper()}", ns.campaign,
                      {"ok": ok, "msg": str(msg)[:200]})
-        if not ok and st in ("harvest", "collate", "merge", "gate"):
+        if not ok:
             wecom(f"{ns.campaign} 编排器在 {st} 阶段失败: {str(msg)[:120]} — 需接力")
-            return 1
+            return 1  # 1125复核: 任何阶段失败都不许标published (虚报教训)
     print(f"\n[produce] 完成: {[(k, v[0]) for k, v in results.items()]}")
     return 0
 

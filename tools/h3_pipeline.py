@@ -112,7 +112,9 @@ def cmd_gen(ns) -> int:
             (VIDEOS / f"{slug}.json").write_text(
                 json.dumps(meta, ensure_ascii=False, indent=1), encoding="utf-8")
             okn += 1
-            print(f"[gen] ✓ {slug}.mp4 ({mp4.stat().st_size:,}B)")
+            pending.append({"sku": ns.sku, "slug": slug, "card": {},
+                            "why": "gen_ok_待上传", "ts": time.strftime("%F %T")})
+            print(f"[gen] ✓ {slug}.mp4 ({mp4.stat().st_size:,}B) — 入待发队列")
         else:
             pending.append({"sku": ns.sku, "slug": slug, "card": card,
                             "why": "download_failed", "ts": time.strftime("%F %T")})

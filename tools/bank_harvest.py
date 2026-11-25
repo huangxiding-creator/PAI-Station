@@ -107,18 +107,21 @@ def main() -> int:
                 scored.append((s, rec.get("chars", 0), rec))
         scored.sort(key=lambda x: (-x[0], -x[1]))
         picked = []
+        topical = 0
         seen_case_ch: set[str] = set()
         for s, _, rec in scored:
+            if len(picked) >= ns.per_chapter:
+                break
             an = rec.get("an", "") or rec["h"]
             if an in seen_case_ch:
                 continue
             seen_case_ch.add(an)
             picked.append(rec)
             used_hashes.add(rec["h"])
+            if s >= 3:
+                topical += 1
             if an:
                 case_use[an] = case_use.get(an, 0) + 1
-            if len(picked) >= ns.per_chapter:
-                break
         # 配额兜底: 软词/最新案补齐 (每章额度硬保证, 稀疏题才走到这)
         if len(picked) < ns.per_chapter:
             soft = [r for r in recs

@@ -36,9 +36,9 @@ MAX_TITLE_BYTES = 64  # (deprecated 1124: 字节口径误杀铁律标题, 门⑦
 MAX_TITLE_CHARS = 64
 # We-AIPO 已发主题 (只读对照, 缺席=跳过该门)
 WEAIPO_PUBLISHED_TOPICS = Path(
-    r"E:\CPOPC\We-AIPO\data\published_topics.json")
+    r"F:\We-AIPO\data\published_topics.json")
 # autopub 发表金标准库 (只读, gate ⑧)
-AUTOPUB_STATE_DB = Path(r"E:\CPOPC\We-AIPO\autopub\data\state.db")
+AUTOPUB_STATE_DB = Path(r"F:\We-AIPO\autopub\data\state.db")
 
 
 def title_hash(title: str) -> str:

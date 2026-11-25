@@ -148,12 +148,26 @@ def stage_select() -> dict | None:
             return None
     # 1124 修复: 已出版/已在史主题查重 (今日 F176D 同题重产事故)
     done_themes = {h.get("theme", "") for h in state_load().get("history", [])}
+    try:
+        rj = json.loads((REPO / "report_platform" / "content" / "report.json").read_text(encoding="utf-8"))
+        shelf_titles = [r.get("title", "").strip("《》") for r in rj.get("reports", [])]
+    except Exception:
+        shelf_titles = []
+    import re as _re
+    def _sig(s):
+        return _re.sub(r"[\W]", "", s)[:10]
+    shelf_sigs = {_sig(x) for x in shelf_titles if x}
     # 逐顺位: SCOUT 门不过 → 下一个 (最多试5个)
     for pick in top[:5]:
         topic = pick.get("topic") or pick.get("theme") or ""
+        sig = _sig(topic)
         if topic and any(topic[:12] in dt or dt[:12] in topic for dt in done_themes if dt):
             log(f"[SELECT] {topic[:20]} 已在史 (查重跳过)")
             ledger_write("SELECT_PASS", topic[:20], {"reason": "theme_dup"})
+            continue
+        if sig and sig in {_sig(x[:12]) for x in shelf_titles if x}:
+            log(f"[SELECT] {topic[:20]} 与在架SKU同题材 (查重跳过)")
+            ledger_write("SELECT_PASS", topic[:20], {"reason": "shelf_dup"})
             continue
         score = pick.get("score") or pick.get("score", 0)
         sel = {"theme": topic, "score": score, "detail": pick, "source": source}
@@ -198,7 +212,14 @@ def stage_scout(sel: dict) -> bool:
     1124 修: 旧版只匹配判例切片文件名, 对细方向（来自 rss/社群信号）永远 0 命中.
     新版: 用细方向标题的前 4 字在 rss 近 30 天文章中搜索, 命中即说明有素材."""
     theme = sel["theme"]
-    kw = theme[:4]   # 取前 4 字作为检索词
+    # 1125复核修复: 去标点+切多段检索 (theme[:4] 曾把「开标、投标及评标…」切成
+    # 「开标、投」仅命中1篇, 把社群需求最强的候选永久挡死)
+    segs = [s for s in re.split(r"[、，,：:？?（）\(\)\s]+", theme) if len(s) >= 3]
+    kws = []
+    for s in segs[:3]:
+        kws.append(s[:6])
+    if not kws:
+        kws = [re.sub(r"[\W]", "", theme)[:4]]
     n_rss = 0
     rss_root = REPO / "data" / "rss_harvest" / "articles"
     for d in range(30):
@@ -287,7 +308,7 @@ def gen_chapters(theme: str, sel: dict) -> list[dict] | None:
             p = prompt
             if compact:
                 p += "注意：每章标题不超过30字，kws只给2个，question不超过40字，总输出控制在2500字以内。"
-            model, content = glm([{"role": "user", "content": p}], load_keys())
+            model, content = glm([{"role": "user", "content": p}], load_keys(), 2600)
             if not content:
                 continue
             try:
@@ -536,7 +557,7 @@ def main() -> int:
             chj = campaign_dir(campaign) / "sched" / "chapters.json"
             if chj.is_file():
                 _t = chj.read_text(encoding="utf-8")
-                if "·第1部分" in _t or "·第12部分" in _t:
+                if "·第1部分" in _t or "·第12部分" in _t or "·专题延伸之" in _t:
                     # 1124: 骨架战役带伤重生 — 用加固后的 gen_chapters 重写章表, 成了就续产
                     log("[produce] 骨架章表在案 — 重跑加固版章节生成")
                     chs = gen_chapters(infl.get("theme", ""), {"mined": {}})
